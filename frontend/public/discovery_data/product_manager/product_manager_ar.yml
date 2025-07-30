@@ -1,42 +1,39 @@
 # Product Manager Discovery Path - Arabic
-# PLACEHOLDER FILE - يحتاج إلى ترجمة
 path_id: product_manager
 category: business
 difficulty_range: beginner_to_expert
 metadata:
-  title: Product Alchemist - Product Manager
-  short_description: Forge perfect products in the market crucible
+  title: "كيميائي المنتجات - Product Manager"
+  short_description: "اصنع منتجات مثالية في بوتقة السوق"
   long_description: |
-    You are a newly minted alchemist at the "Product Alchemy Workshop," skilled at 
-    fusing user needs, technical capabilities, and business goals into powerful products. 
-    In this workshop filled with innovation sparks, every iteration is an alchemical 
-    experiment, and your goal is to create perfect products that can change the world.
+    أنت كيميائي حديث التخرج من "ورشة كيمياء المنتجات"، ماهر في دمج احتياجات 
+    المستخدمين والقدرات التقنية والأهداف التجارية في منتجات قوية. في هذه الورشة 
+    المليئة بشرارات الابتكار، كل تكرار هو تجربة كيميائية، وهدفك هو إنشاء 
+    منتجات مثالية يمكنها تغيير العالم.
+  
   estimated_hours: 55
   skill_focus:
     - requirement_alchemy
     - roadmap_prophecy
     - team_coordination_magic
     - user_resonance
-  translation_notice: يحتاج إلى ترجمة - This is a placeholder file
-  original_language: en
-  target_language: ar
-  generated_date: "2025-07-16T07:00:56.520Z"
 world_setting:
-  name: Product Alchemy Workshop
+  name: "ورشة كيمياء المنتجات"
   description: |
-    The Product Alchemy Workshop is a magical forge where ideas are transformed into 
-    actual products. Here, product managers learn the ancient art of balancing user 
-    desires, technical constraints, and business objectives to create products that 
-    resonate with millions.
-  atmosphere: dynamic_creative
-  visual_theme: innovation_forge
+    ورشة كيمياء المنتجات هي مسبك سحري حيث تتحول الأفكار إلى منتجات حقيقية. 
+    هنا يتعلم مديرو المنتجات الفن القديم لموازنة رغبات المستخدمين والقيود 
+    التقنية والأهداف التجارية لإنشاء منتجات تلقى صدى لدى الملايين.
+  
+  atmosphere: "dynamic_creative"
+  visual_theme: "innovation_forge"
 starting_scenario:
-  title: The Alchemist's Challenge
+  title: "تحدي الكيميائي"
   description: |
-    Strategy Master welcomes you to the workshop with a warning: Deadline, the Time 
-    Tyrant, is forcing teams to sacrifice product quality for speed. Meanwhile, Voice 
-    of Users grows louder with conflicting demands. You must find the philosopher's 
-    stone of product management - balancing quality, speed, and user satisfaction.
+    يرحب بك أستاذ الاستراتيجية في الورشة مع تحذير: الموعد النهائي، طاغية الوقت، 
+    يجبر الفرق على التضحية بجودة المنتج من أجل السرعة. وفي الوقت نفسه، يزداد 
+    صوت المستخدمين بمطالب متضاربة. يجب أن تجد حجر الفلاسفة لإدارة المنتجات - 
+    توازن الجودة والسرعة ورضا المستخدم.
+  
   initial_tasks:
     - understand_users
     - analyze_market
@@ -44,59 +41,59 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: user_research
-      name: User Mind Reading
-      description: Deeply understand user needs and behaviors
+      name: قراءة عقول المستخدمين
+      description: فهم احتياجات وسلوكيات المستخدمين بعمق
       max_level: 10
       unlocks:
         - persona_creation
         - journey_mapping
     - id: product_strategy
-      name: Strategic Vision
-      description: Craft winning product strategies
+      name: الرؤية الاستراتيجية
+      description: صياغة استراتيجيات منتجات رابحة
       max_level: 10
       unlocks:
         - competitive_analysis
         - positioning_mastery
     - id: feature_prioritization
-      name: Priority Alchemy
-      description: Master the art of feature prioritization
+      name: كيمياء الأولويات
+      description: إتقان فن تحديد أولويات الميزات
       max_level: 10
       unlocks:
         - roadmap_planning
         - mvp_design
     - id: stakeholder_management
-      name: Harmony Orchestration
-      description: Align diverse stakeholder interests
+      name: أوركسترا التناغم
+      description: توحيد مصالح أصحاب المصلحة المتنوعين
       max_level: 10
       unlocks:
         - executive_communication
         - cross_team_collaboration
   advanced_skills:
     - id: growth_hacking
-      name: Growth Sorcery
-      description: Drive exponential product growth
+      name: سحر النمو
+      description: قيادة النمو الأسي للمنتج
       max_level: 15
       requires:
         - product_strategy
         - user_research
     - id: data_driven_decisions
-      name: Metrics Mastery
-      description: Make decisions based on data insights
+      name: إتقان المقاييس
+      description: اتخاذ قرارات مبنية على رؤى البيانات
       max_level: 15
       requires:
         - feature_prioritization
         - user_research
     - id: platform_thinking
-      name: Ecosystem Architecture
-      description: Build product platforms and ecosystems
+      name: هندسة النظام البيئي
+      description: بناء منصات المنتجات والأنظمة البيئية
       max_level: 15
       requires:
         - product_strategy
         - stakeholder_management
 milestone_quests:
   - id: first_launch
-    name: Product Genesis
-    description: Successfully launch your first product
+    name: تكوين المنتج
+    description: إطلاق منتجك الأول بنجاح
     required_level: 5
     skills_tested:
       - user_research
@@ -106,8 +103,8 @@ milestone_quests:
       - launch_specialist_badge
       - user_testimonials
   - id: deadline_balance
-    name: Time vs Quality
-    description: Deliver quality product despite time pressure
+    name: الوقت مقابل الجودة
+    description: تسليم منتج عالي الجودة رغم ضغط الوقت
     required_level: 10
     skills_tested:
       - stakeholder_management
@@ -117,8 +114,8 @@ milestone_quests:
       - balance_master_title
       - deadline_immunity
   - id: unicorn_product
-    name: Billion User Product
-    description: Create a product used by millions
+    name: منتج المليار مستخدم
+    description: إنشاء منتج يستخدمه الملايين
     required_level: 20
     skills_tested:
       - growth_hacking
@@ -129,39 +126,39 @@ milestone_quests:
       - industry_influence
 achievements:
   - id: first_spec
-    name: Spec Writer
-    description: Write your first product specification
+    name: كاتب المواصفات
+    description: كتابة مواصفات منتجك الأولى
     xp_reward: 100
     badge_type: bronze
   - id: user_champion
-    name: User Advocate
-    description: Implement 20 user-requested features
+    name: مدافع عن المستخدمين
+    description: تنفيذ 20 ميزة طلبها المستخدمون
     xp_reward: 300
     badge_type: silver
   - id: revenue_generator
-    name: Revenue Alchemist
-    description: Drive $1M in product revenue
+    name: كيميائي الإيرادات
+    description: تحقيق إيرادات بقيمة مليون دولار من المنتج
     xp_reward: 600
     badge_type: gold
   - id: pm_legend
-    name: Product Sage
-    description: Complete all product challenges
+    name: حكيم المنتجات
+    description: إكمال جميع تحديات المنتج
     xp_reward: 1200
     badge_type: platinum
 example_tasks:
   beginner:
     - id: user_interviews
       type: analysis
-      title: Voice Collection
-      description: Conduct user interviews to gather insights
+      title: جمع الأصوات
+      description: إجراء مقابلات مع المستخدمين لجمع الرؤى
       skills_improved:
         - user_research
         - user_resonance
       xp_reward: 60
     - id: competitive_analysis
       type: analysis
-      title: Market Scanning
-      description: Analyze competitor products
+      title: مسح السوق
+      description: تحليل منتجات المنافسين
       skills_improved:
         - product_strategy
         - requirement_alchemy
@@ -169,16 +166,16 @@ example_tasks:
   intermediate:
     - id: roadmap_creation
       type: creation
-      title: Future Path Design
-      description: Create a product roadmap
+      title: تصميم المسار المستقبلي
+      description: إنشاء خارطة طريق المنتج
       skills_improved:
         - roadmap_planning
         - roadmap_prophecy
       xp_reward: 180
     - id: feature_launch
       type: creation
-      title: Feature Alchemy
-      description: Launch a major product feature
+      title: كيمياء الميزات
+      description: إطلاق ميزة رئيسية في المنتج
       skills_improved:
         - feature_prioritization
         - stakeholder_management
@@ -186,35 +183,36 @@ example_tasks:
   advanced:
     - id: platform_design
       type: creation
-      title: Ecosystem Creation
-      description: Design a product platform
+      title: إنشاء النظام البيئي
+      description: تصميم منصة المنتج
       skills_improved:
         - platform_thinking
         - product_strategy
       xp_reward: 400
     - id: growth_experiment
       type: analysis
-      title: Growth Formula
-      description: Run growth experiments to scale product
+      title: معادلة النمو
+      description: تشغيل تجارب النمو لتوسيع المنتج
       skills_improved:
         - growth_hacking
         - data_driven_decisions
       xp_reward: 350
 learning_objectives:
-  - Master user research and empathy techniques
-  - Develop strategic product thinking
-  - Learn to prioritize features effectively
-  - Build consensus among diverse stakeholders
-  - Use data to drive product decisions
-  - Create and communicate product vision
-  - Balance business goals with user needs
-  - Scale products from inception to maturity
+  - "إتقان تقنيات البحث والتعاطف مع المستخدمين"
+  - "تطوير التفكير الاستراتيجي للمنتج"
+  - "تعلم تحديد أولويات الميزات بفعالية"
+  - "بناء إجماع بين أصحاب المصلحة المتنوعين"
+  - "استخدام البيانات لقيادة قرارات المنتج"
+  - "إنشاء وتوصيل رؤية المنتج"
+  - "توازن الأهداف التجارية مع احتياجات المستخدمين"
+  - "توسيع المنتجات من البداية إلى النضج"
+
 career_outcomes:
-  - Product Manager
-  - Senior Product Manager
-  - Product Director
-  - Chief Product Officer
-  - Product Strategy Consultant
-  - Startup Product Lead
-  - Growth Product Manager
-  - Platform Product Manager
+  - "مدير منتجات"
+  - "مدير منتجات أول"
+  - "مدير إدارة المنتجات"
+  - "كبير مسؤولي المنتجات"
+  - "استشاري استراتيجية المنتجات"
+  - "قائد المنتجات في الشركات الناشئة"
+  - "مدير منتجات النمو"
+  - "مدير منتجات المنصة"

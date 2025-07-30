@@ -1,41 +1,36 @@
 # App Developer Discovery Path - Thai
-# PLACEHOLDER FILE - ต้องการการแปล
 path_id: app_developer
 category: technology
 difficulty_range: beginner_to_expert
 metadata:
-  title: Digital Craftsman - App Developer
-  short_description: Craft life-changing applications in the world of code
+  title: ช่างฝีมือดิจิทัล - นักพัฒนาแอป
+  short_description: สร้างแอปพลิเคชันที่เปลี่ยนชีวิตในโลกของโค้ด
   long_description: |
-    You are a new member of the "Digital Craftsmen Alliance," skilled at weaving 
-    practical and beautiful applications with code. In this workshop filled with logic 
-    and creativity, every line of code is a spell, and your goal is to create digital 
-    tools that make people's lives more convenient and better.
+    คุณเป็นสมาชิกใหม่ของ "สมาคมช่างฝีมือดิจิทัล" มีทักษะในการถักทอ 
+    แอปพลิเคชันที่ใช้งานได้จริงและสวยงามด้วยโค้ด ในเวิร์กช็อปที่เต็มไปด้วย 
+    ตรรกะและความคิดสร้างสรรค์ ทุกบรรทัดของโค้ดคือคาถา และเป้าหมายของคุณคือ 
+    การสร้างเครื่องมือดิจิทัลที่ทำให้ชีวิตของผู้คนสะดวกและดีขึ้น
   estimated_hours: 60
   skill_focus:
     - code_weaving
     - interface_sculpting
     - logic_architecture
     - user_experience_magic
-  translation_notice: ต้องการการแปล - This is a placeholder file
-  original_language: en
-  target_language: th
-  generated_date: "2025-07-16T07:00:56.461Z"
 world_setting:
-  name: Digital Craftsmen Alliance
+  name: สมาคมช่างฝีมือดิจิทัล
   description: |
-    The Digital Craftsmen Alliance is a mysterious organization gathering top app 
-    developers. Here, code is treated as an art form, and developers learn to create 
-    applications that not only function flawlessly but also bring joy to users' daily lives.
+    สมาคมช่างฝีมือดิจิทัลเป็นองค์กรลึกลับที่รวบรวมนักพัฒนาแอปชั้นแนวหน้า 
+    ที่นี่โค้ดถูกมองว่าเป็นศิลปะ และนักพัฒนาเรียนรู้ที่จะสร้าง 
+    แอปพลิเคชันที่ไม่เพียงทำงานได้อย่างไร้ที่ติ แต่ยังนำความสุขมาสู่ชีวิตประจำวันของผู้ใช้
   atmosphere: innovative_collaborative
   visual_theme: tech_workshop
 starting_scenario:
-  title: Joining the Alliance
+  title: การเข้าร่วมสมาคม
   description: |
-    Master Code welcomes you to the alliance, but warns of a constant threat: Bug, 
-    the chaos demon, spreads errors and vulnerabilities in code. Meanwhile, Design 
-    and Code often conflict over priorities. You must use wisdom to balance technology 
-    with aesthetics while keeping applications stable.
+    อาจารย์โค้ดต้อนรับคุณเข้าสู่สมาคม แต่เตือนถึงภัยคุกคามที่มีอยู่ตลอดเวลา: บั๊ก 
+    ปีศาจแห่งความวุ่นวาย แพร่กระจายข้อผิดพลาดและช่องโหว่ในโค้ด ในขณะเดียวกัน 
+    ดีไซน์และโค้ดมักขัดแย้งกันเรื่องความสำคัญ คุณต้องใช้ปัญญาในการสร้างสมดุล 
+    ระหว่างเทคโนโลยีกับความสวยงาม พร้อมรักษาความเสถียรของแอปพลิเคชัน
   initial_tasks:
     - learn_fundamentals
     - choose_platform
@@ -43,59 +38,59 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: programming_fundamentals
-      name: Code Foundations
-      description: Master core programming concepts
+      name: รากฐานโค้ด
+      description: เชี่ยวชาญแนวคิดหลักการเขียนโปรแกรม
       max_level: 10
       unlocks:
         - advanced_patterns
         - clean_code
     - id: ui_development
-      name: Interface Crafting
-      description: Build beautiful user interfaces
+      name: การสร้างสรรค์อินเทอร์เฟซ
+      description: สร้างส่วนติดต่อผู้ใช้ที่สวยงาม
       max_level: 10
       unlocks:
         - responsive_design
         - animation_magic
     - id: backend_architecture
-      name: Logic Engineering
-      description: Design robust backend systems
+      name: วิศวกรรมตรรกะ
+      description: ออกแบบระบบแบ็กเอนด์ที่แข็งแกร่ง
       max_level: 10
       unlocks:
         - api_design
         - database_mastery
     - id: mobile_development
-      name: Mobile Sorcery
-      description: Create native mobile experiences
+      name: เวทมนตร์มือถือ
+      description: สร้างประสบการณ์มือถือแบบเนทีฟ
       max_level: 10
       unlocks:
         - cross_platform
         - device_features
   advanced_skills:
     - id: performance_optimization
-      name: Speed Magic
-      description: Optimize apps for peak performance
+      name: เวทมนตร์ความเร็ว
+      description: ปรับแต่งแอปให้มีประสิทธิภาพสูงสุด
       max_level: 15
       requires:
         - programming_fundamentals
         - backend_architecture
     - id: security_mastery
-      name: Protection Spells
-      description: Secure applications against threats
+      name: คาถาป้องกัน
+      description: รักษาความปลอดภัยแอปพลิเคชันจากภัยคุกคาม
       max_level: 15
       requires:
         - backend_architecture
         - mobile_development
     - id: ai_integration
-      name: Intelligence Infusion
-      description: Integrate AI capabilities into apps
+      name: การผสมผสานปัญญาประดิษฐ์
+      description: ผนวกความสามารถ AI เข้ากับแอป
       max_level: 15
       requires:
         - programming_fundamentals
         - ui_development
 milestone_quests:
   - id: first_release
-    name: App Store Debut
-    description: Release your first app to users
+    name: เดบิวต์ App Store
+    description: ปล่อยแอปแรกของคุณให้ผู้ใช้
     required_level: 5
     skills_tested:
       - programming_fundamentals
@@ -105,8 +100,8 @@ milestone_quests:
       - publisher_badge
       - user_feedback_access
   - id: bug_hunter
-    name: Bug Slayer
-    description: Create a bug-free app with perfect stability
+    name: นักล่าบั๊ก
+    description: สร้างแอปที่ปราศจากบั๊กด้วยความเสถียรที่สมบูรณ์แบบ
     required_level: 10
     skills_tested:
       - security_mastery
@@ -116,8 +111,8 @@ milestone_quests:
       - stability_master_title
       - advanced_debugging_tools
   - id: million_users
-    name: Million User App
-    description: Create an app used by millions
+    name: แอปล้านผู้ใช้
+    description: สร้างแอปที่มีผู้ใช้หลายล้านคน
     required_level: 20
     skills_tested:
       - ai_integration
@@ -128,39 +123,39 @@ milestone_quests:
       - alliance_hall_of_fame
 achievements:
   - id: hello_world
-    name: First Spell
-    description: Write your first working app
+    name: คาถาแรก
+    description: เขียนแอปแรกที่ทำงานได้
     xp_reward: 100
     badge_type: bronze
   - id: five_star_app
-    name: User Favorite
-    description: Achieve 5-star rating on app store
+    name: ที่โปรดของผู้ใช้
+    description: ได้รับคะแนน 5 ดาวบนแอปสโตร์
     xp_reward: 300
     badge_type: silver
   - id: polyglot_developer
-    name: Code Polyglot
-    description: Master 5 programming languages
+    name: นักภาษาโค้ด
+    description: เชี่ยวชาญภาษาโปรแกรมมิ่ง 5 ภาษา
     xp_reward: 600
     badge_type: gold
   - id: app_legend
-    name: Legendary Craftsman
-    description: Complete all development challenges
+    name: ช่างฝีมืออันเลื่องลือ
+    description: ผ่านความท้าทายการพัฒนาทั้งหมด
     xp_reward: 1200
     badge_type: platinum
 example_tasks:
   beginner:
     - id: todo_app
       type: creation
-      title: Task Organizer
-      description: Build a simple todo list app
+      title: ตัวจัดการงาน
+      description: สร้างแอปรายการสิ่งที่ต้องทำอย่างง่าย
       skills_improved:
         - programming_fundamentals
         - ui_development
       xp_reward: 70
     - id: calculator_app
       type: creation
-      title: Digital Calculator
-      description: Create a functional calculator
+      title: เครื่องคิดเลขดิจิทัล
+      description: สร้างเครื่องคิดเลขที่ใช้งานได้
       skills_improved:
         - programming_fundamentals
         - logic_architecture
@@ -168,16 +163,16 @@ example_tasks:
   intermediate:
     - id: social_app
       type: creation
-      title: Community Connector
-      description: Build a social networking app
+      title: ตัวเชื่อมชุมชน
+      description: สร้างแอปเครือข่ายสังคม
       skills_improved:
         - backend_architecture
         - mobile_development
       xp_reward: 200
     - id: game_app
       type: creation
-      title: Entertainment Spell
-      description: Create an engaging mobile game
+      title: คาถาความบันเทิง
+      description: สร้างเกมมือถือที่ดึงดูดใจ
       skills_improved:
         - ui_development
         - performance_optimization
@@ -185,35 +180,35 @@ example_tasks:
   advanced:
     - id: ai_assistant
       type: creation
-      title: Intelligent Companion
-      description: Build an AI-powered assistant app
+      title: เพื่อนอัจฉริยะ
+      description: สร้างแอปผู้ช่วยที่ขับเคลื่อนด้วย AI
       skills_improved:
         - ai_integration
         - backend_architecture
       xp_reward: 400
     - id: ar_experience
       type: creation
-      title: Reality Enhancer
-      description: Create an augmented reality app
+      title: ตัวเสริมความจริง
+      description: สร้างแอปเสริมความจริง
       skills_improved:
         - mobile_development
         - performance_optimization
       xp_reward: 450
 learning_objectives:
-  - Master multiple programming languages and frameworks
-  - Design intuitive and beautiful user interfaces
-  - Build scalable and maintainable backend systems
-  - Create native and cross-platform mobile apps
-  - Implement security best practices
-  - Optimize app performance and user experience
-  - Integrate cutting-edge technologies like AI and AR
-  - Deploy and maintain apps in production
+  - เชี่ยวชาญหลายภาษาโปรแกรมมิ่งและเฟรมเวิร์ก
+  - ออกแบบส่วนติดต่อผู้ใช้ที่ใช้งานง่ายและสวยงาม
+  - สร้างระบบแบ็กเอนด์ที่ขยายได้และดูแลง่าย
+  - สร้างแอปมือถือแบบเนทีฟและข้ามแพลตฟอร์ม
+  - นำแนวทางปฏิบัติด้านความปลอดภัยที่ดีที่สุดไปใช้
+  - ปรับประสิทธิภาพแอปและประสบการณ์ผู้ใช้
+  - ผสมผสานเทคโนโลยีล้ำสมัยเช่น AI และ AR
+  - นำแอปไปใช้งานจริงและดูแลรักษา
 career_outcomes:
-  - Mobile App Developer
-  - Full-Stack Developer
-  - iOS/Android Developer
-  - Software Engineer
-  - Technical Lead
-  - App Development Consultant
-  - Startup CTO
-  - Freelance App Developer
+  - นักพัฒนาแอปมือถือ
+  - นักพัฒนา Full-Stack
+  - นักพัฒนา iOS/Android
+  - วิศวกรซอฟต์แวร์
+  - หัวหน้าทีมเทคนิค
+  - ที่ปรึกษาการพัฒนาแอป
+  - CTO สตาร์ทอัพ
+  - นักพัฒนาแอปอิสระ

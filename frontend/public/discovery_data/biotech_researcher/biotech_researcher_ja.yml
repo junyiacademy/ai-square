@@ -1,16 +1,17 @@
 # Biotech Researcher Discovery Path - Japanese
-# PLACEHOLDER FILE - 翻訳が必要です
 path_id: biotech_researcher
 category: science
 difficulty_range: beginner_to_expert
+
 metadata:
-  title: Life Code Architect - Biotech Researcher
-  short_description: Unlock the secrets of life through AI and biotechnology
+  title: "生命コード設計者 - バイオテクノロジー研究者"
+  short_description: "AIとバイオテクノロジーで生命の秘密を解き明かす"
   long_description: |
-    You are a junior researcher at the "BioSynthesis Institute," where the boundaries 
-    between biology and artificial intelligence blur. Armed with AI tools and genetic 
-    engineering techniques, you'll explore the fundamental codes of life and create 
-    solutions that could revolutionize medicine, agriculture, and human enhancement.
+    あなたは「バイオシンセシス研究所」のジュニア研究者で、生物学と人工知能の
+    境界線が曖昧になる場所で働いています。AIツールと遺伝子工学技術を武器に、
+    生命の基本コードを探求し、医学、農業、人間の能力向上を革命的に変える
+    ソリューションを創造します。
+  
   estimated_hours: 70
   skill_focus:
     - genetic_engineering
@@ -18,204 +19,201 @@ metadata:
     - lab_techniques
     - ethical_biotech
     - data_driven_discovery
-  translation_notice: 翻訳が必要です - This is a placeholder file
-  original_language: en
-  target_language: ja
-  generated_date: "2025-07-16T07:00:56.470Z"
+
 world_setting:
-  name: BioSynthesis Institute
+  name: "バイオシンセシス研究所"
   description: |
-    The BioSynthesis Institute is a cutting-edge research facility where biology meets 
-    artificial intelligence. Researchers here use AI to decode genetic mysteries, design 
-    new organisms, and push the boundaries of what's possible in biotechnology while 
-    grappling with profound ethical questions.
-  atmosphere: scientific_innovative
-  visual_theme: biotech_laboratory
+    バイオシンセシス研究所は、生物学と人工知能が融合する最先端の研究施設です。
+    ここの研究者たちは、AIを使って遺伝子の謎を解読し、新しい生物を設計し、
+    深い倫理的問題と格闘しながらバイオテクノロジーの可能性の限界を押し広げています。
+  
+  atmosphere: "scientific_innovative"
+  visual_theme: "biotech_laboratory"
+
 starting_scenario:
-  title: The Living Algorithm
+  title: "生きているアルゴリズム"
   description: |
-    Dr. Elena Helix welcomes you to the institute with an urgent mission: a mysterious 
-    genetic sequence has been discovered that seems to respond to AI algorithms. But 
-    Dr. Splice from the rival BioCorp is racing to weaponize genetic modifications. 
-    You must unlock life's secrets responsibly while preventing catastrophic misuse.
+    エレナ・ヘリックス博士があなたを研究所に迎え、緊急の任務を与えます：AIアルゴリズムに
+    反応するように見える謎の遺伝子配列が発見されました。しかし、ライバルのバイオコープの
+    スプライス博士が遺伝子改変を兵器化しようと競っています。あなたは破滅的な悪用を防ぎながら、
+    責任を持って生命の秘密を解き明かさなければなりません。
+  
   initial_tasks:
     - understand_crispr
     - learn_ai_modeling
     - first_experiment
+
 skill_tree:
   core_skills:
     - id: molecular_biology
-      name: Molecular Mastery
-      description: Master fundamental molecular biology concepts
+      name: "分子生物学マスタリー"
+      description: "分子生物学の基本概念をマスターする"
       max_level: 10
       unlocks:
         - gene_editing
         - protein_design
+    
     - id: bioinformatics
-      name: Bio-Data Fusion
-      description: Analyze biological data with AI
+      name: "バイオデータ融合"
+      description: "AIで生体データを解析する"
       max_level: 10
       unlocks:
         - sequence_analysis
         - structure_prediction
+    
     - id: synthetic_biology
-      name: Life Design
-      description: Engineer new biological systems
+      name: "生命設計"
+      description: "新しい生物システムを設計する"
       max_level: 10
       unlocks:
         - organism_engineering
         - metabolic_pathways
+    
     - id: ai_integration
-      name: AI-Bio Interface
-      description: Integrate AI with biological research
+      name: "AI-バイオインターフェース"
+      description: "AIを生物学研究に統合する"
       max_level: 10
       unlocks:
         - ml_drug_discovery
         - ai_protein_folding
+
   advanced_skills:
     - id: gene_therapy
-      name: Therapeutic Engineering
-      description: Design treatments at the genetic level
+      name: "治療工学"
+      description: "遺伝子レベルで治療法を設計する"
       max_level: 15
-      requires:
-        - molecular_biology
-        - synthetic_biology
+      requires: [molecular_biology, synthetic_biology]
+    
     - id: biocomputing
-      name: Living Computers
-      description: Create biological computing systems
+      name: "生体コンピューター"
+      description: "生物学的コンピューティングシステムを作成する"
       max_level: 15
-      requires:
-        - bioinformatics
-        - ai_integration
+      requires: [bioinformatics, ai_integration]
+    
     - id: enhancement_tech
-      name: Human Augmentation
-      description: Develop ethical enhancement technologies
+      name: "人間拡張技術"
+      description: "倫理的な拡張技術を開発する"
       max_level: 15
-      requires:
-        - gene_therapy
-        - ethical_biotech
+      requires: [gene_therapy, ethical_biotech]
+
 milestone_quests:
   - id: first_cure
-    name: Disease Decoder
-    description: Develop a cure for a genetic disease
+    name: "疾病デコーダー"
+    description: "遺伝性疾患の治療法を開発する"
     required_level: 5
-    skills_tested:
-      - molecular_biology
-      - bioinformatics
+    skills_tested: [molecular_biology, bioinformatics]
     xp_reward: 800
     unlocks:
       - medical_breakthrough_badge
       - patient_testimonials
+  
   - id: splice_confrontation
-    name: Ethics vs Profit
-    description: Stop Dr. Splice's dangerous experiments
+    name: "倫理対利益"
+    description: "スプライス博士の危険な実験を阻止する"
     required_level: 10
-    skills_tested:
-      - synthetic_biology
-      - ethical_biotech
+    skills_tested: [synthetic_biology, ethical_biotech]
     xp_reward: 1500
     unlocks:
       - ethical_guardian_title
       - regulatory_influence
+  
   - id: life_creation
-    name: Genesis Project
-    description: Create a beneficial synthetic organism
+    name: "創世記プロジェクト"
+    description: "有益な合成生物を創造する"
     required_level: 20
-    skills_tested:
-      - biocomputing
-      - enhancement_tech
+    skills_tested: [biocomputing, enhancement_tech]
     xp_reward: 3000
     unlocks:
       - master_biotechnologist_title
       - nobel_consideration
+
 achievements:
   - id: first_sequence
-    name: Code Reader
-    description: Successfully sequence your first genome
+    name: "コードリーダー"
+    description: "初めてのゲノム配列決定に成功する"
     xp_reward: 100
     badge_type: bronze
+  
   - id: publication_success
-    name: Published Researcher
-    description: Publish 5 peer-reviewed papers
+    name: "発表研究者"
+    description: "査読付き論文を5本発表する"
     xp_reward: 400
     badge_type: silver
+  
   - id: patent_holder
-    name: Innovation Pioneer
-    description: File a breakthrough biotech patent
+    name: "イノベーションパイオニア"
+    description: "画期的なバイオテク特許を出願する"
     xp_reward: 700
     badge_type: gold
+  
   - id: biotech_legend
-    name: Life Code Master
-    description: Complete all biotech challenges
+    name: "生命コードマスター"
+    description: "すべてのバイオテクチャレンジを完了する"
     xp_reward: 1500
     badge_type: platinum
+
 example_tasks:
   beginner:
     - id: dna_extraction
       type: analysis
-      title: Genetic Blueprint
-      description: Extract and analyze DNA samples
-      skills_improved:
-        - molecular_biology
-        - lab_techniques
+      title: "遺伝子青写真"
+      description: "DNAサンプルを抽出し解析する"
+      skills_improved: [molecular_biology, lab_techniques]
       xp_reward: 70
+    
     - id: ai_sequence_analysis
       type: analysis
-      title: Pattern Recognition
-      description: Use AI to find patterns in genetic data
-      skills_improved:
-        - bioinformatics
-        - ai_bio_modeling
+      title: "パターン認識"
+      description: "AIを使用して遺伝子データのパターンを発見する"
+      skills_improved: [bioinformatics, ai_bio_modeling]
       xp_reward: 80
+  
   intermediate:
     - id: crispr_edit
       type: creation
-      title: Gene Editor
-      description: Perform targeted gene editing
-      skills_improved:
-        - gene_editing
-        - synthetic_biology
+      title: "遺伝子エディター"
+      description: "標的遺伝子編集を実行する"
+      skills_improved: [gene_editing, synthetic_biology]
       xp_reward: 200
+    
     - id: drug_design
       type: creation
-      title: Molecular Medicine
-      description: Design a new drug using AI
-      skills_improved:
-        - ml_drug_discovery
-        - bioinformatics
+      title: "分子医学"
+      description: "AIを使用して新薬を設計する"
+      skills_improved: [ml_drug_discovery, bioinformatics]
       xp_reward: 250
+  
   advanced:
     - id: synthetic_life
       type: creation
-      title: Life Architect
-      description: Design a synthetic organism
-      skills_improved:
-        - organism_engineering
-        - biocomputing
+      title: "生命建築家"
+      description: "合成生物を設計する"
+      skills_improved: [organism_engineering, biocomputing]
       xp_reward: 450
+    
     - id: enhancement_protocol
       type: creation
-      title: Evolution Accelerator
-      description: Develop ethical enhancement technology
-      skills_improved:
-        - enhancement_tech
-        - gene_therapy
+      title: "進化加速器"
+      description: "倫理的な拡張技術を開発する"
+      skills_improved: [enhancement_tech, gene_therapy]
       xp_reward: 500
+
 learning_objectives:
-  - Master molecular biology and genetic engineering
-  - Apply AI to biological research and discovery
-  - Design and engineer biological systems
-  - Develop treatments for genetic diseases
-  - Navigate ethical considerations in biotechnology
-  - Conduct rigorous scientific experiments
-  - Collaborate on interdisciplinary research
-  - Translate research into real-world applications
+  - "分子生物学と遺伝子工学をマスターする"
+  - "AIを生物学研究と発見に応用する"
+  - "生物システムを設計・工学する"
+  - "遺伝性疾患の治療法を開発する"
+  - "バイオテクノロジーの倫理的考慮事項をナビゲートする"
+  - "厳密な科学実験を実施する"
+  - "学際的研究で協力する"
+  - "研究を実世界の応用に翻訳する"
+
 career_outcomes:
-  - Biotechnology Research Scientist
-  - Bioinformatics Specialist
-  - Synthetic Biology Engineer
-  - Pharmaceutical Researcher
-  - Genetic Counselor
-  - Biotech Startup Founder
-  - Research Director
-  - Science Policy Advisor
+  - "バイオテクノロジー研究科学者"
+  - "バイオインフォマティクス専門家"
+  - "合成生物学エンジニア"
+  - "製薬研究者"
+  - "遺伝カウンセラー"
+  - "バイオテクスタートアップ創設者"
+  - "研究ディレクター"
+  - "科学政策アドバイザー"

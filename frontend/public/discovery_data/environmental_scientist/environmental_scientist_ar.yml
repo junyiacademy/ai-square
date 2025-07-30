@@ -1,16 +1,17 @@
 # Environmental Scientist Discovery Path - Arabic
-# PLACEHOLDER FILE - يحتاج إلى ترجمة
 path_id: environmental_scientist
 category: science
 difficulty_range: beginner_to_expert
+
 metadata:
-  title: Planet Guardian - Environmental Scientist
-  short_description: Protect Earth through data-driven environmental solutions
+  title: "حارس الكوكب - عالم البيئة"
+  short_description: "احمِ الأرض من خلال الحلول البيئية المدعومة بالبيانات"
   long_description: |
-    You are a junior scientist at the "Global Climate Response Center," where AI-powered 
-    monitoring systems track planetary health in real-time. Armed with cutting-edge 
-    technology and environmental science knowledge, you'll work to understand and 
-    reverse climate damage while developing sustainable solutions for the future.
+    أنت عالم مبتدئ في "مركز الاستجابة المناخية العالمي"، حيث تتتبع أنظمة 
+    المراقبة المدعومة بالذكاء الاصطناعي صحة الكوكب في الوقت الفعلي. مسلحاً 
+    بالتكنولوجيا المتطورة ومعرفة علوم البيئة، ستعمل على فهم وعكس أضرار 
+    المناخ بينما تطور حلولاً مستدامة للمستقبل.
+  
   estimated_hours: 60
   skill_focus:
     - climate_modeling
@@ -18,26 +19,26 @@ metadata:
     - pollution_tracking
     - sustainable_solutions
     - data_visualization
-  translation_notice: يحتاج إلى ترجمة - This is a placeholder file
-  original_language: en
-  target_language: ar
-  generated_date: "2025-07-16T07:00:56.502Z"
+
 world_setting:
-  name: Global Climate Response Center
+  name: "مركز الاستجابة المناخية العالمي"
   description: |
-    The Global Climate Response Center is a high-tech facility where environmental 
-    scientists use AI, satellite data, and field research to monitor and protect 
-    Earth's ecosystems. Scientists here race against time to develop solutions 
-    before critical tipping points are reached.
-  atmosphere: urgent_hopeful
-  visual_theme: eco_tech_fusion
+    مركز الاستجابة المناخية العالمي هو منشأة عالية التقنية حيث يستخدم 
+    علماء البيئة الذكاء الاصطناعي وبيانات الأقمار الصناعية والبحث الميداني 
+    لمراقبة وحماية النظم البيئية للأرض. يتسابق العلماء هنا مع الزمن لتطوير 
+    الحلول قبل الوصول إلى نقاط التحول الحرجة.
+  
+  atmosphere: "urgent_hopeful"
+  visual_theme: "eco_tech_fusion"
+
 starting_scenario:
-  title: "Code Red: Climate Crisis"
+  title: "الإنذار الأحمر: أزمة المناخ"
   description: |
-    Dr. Gaia Earth welcomes you with alarming news: multiple environmental systems 
-    are approaching critical thresholds. Meanwhile, CEO Polluto of MegaCorp continues 
-    destructive practices for profit. You must use science and innovation to save 
-    ecosystems while exposing corporate environmental crimes.
+    الدكتورة غايا إيرث ترحب بك بأخبار مثيرة للقلق: عدة أنظمة بيئية تقترب 
+    من عتبات حرجة. في الوقت نفسه، يواصل الرئيس التنفيذي بولوتو من شركة 
+    ميغاكورب الممارسات المدمرة من أجل الربح. يجب عليك استخدام العلم والابتكار 
+    لإنقاذ النظم البيئية بينما تكشف الجرائم البيئية للشركات.
+  
   initial_tasks:
     - analyze_climate_data
     - identify_hotspots
@@ -202,20 +203,21 @@ example_tasks:
         - sustainable_solutions
       xp_reward: 470
 learning_objectives:
-  - Master environmental monitoring techniques
-  - Use AI and data science for environmental analysis
-  - Develop sustainable technology solutions
-  - Understand climate systems and predictions
-  - Design ecosystem restoration projects
-  - Influence environmental policy and regulation
-  - Communicate science to public and policymakers
-  - Balance human needs with environmental protection
+  - "إتقان تقنيات المراقبة البيئية"
+  - "استخدام الذكاء الاصطناعي وعلم البيانات للتحليل البيئي"
+  - "تطوير حلول التكنولوجيا المستدامة"
+  - "فهم النظم المناخية والتنبؤات"
+  - "تصميم مشاريع استعادة النظم البيئية"
+  - "التأثير على السياسة البيئية والتنظيم"
+  - "إيصال العلم للجمهور وصانعي السياسات"
+  - "موازنة الاحتياجات البشرية مع الحماية البيئية"
+
 career_outcomes:
-  - Environmental Scientist
-  - Climate Researcher
-  - Conservation Biologist
-  - Environmental Consultant
-  - Sustainability Director
-  - Environmental Policy Analyst
-  - Ecological Restoration Specialist
-  - Chief Sustainability Officer
+  - "عالم البيئة"
+  - "باحث المناخ"
+  - "عالم أحياء الحفظ"
+  - "استشاري بيئي"
+  - "مدير الاستدامة"
+  - "محلل السياسة البيئية"
+  - "أخصائي استعادة النظم البيئية"
+  - "مدير الاستدامة الرئيسي"

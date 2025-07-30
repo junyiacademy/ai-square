@@ -1,16 +1,15 @@
 # Biotech Researcher Discovery Path - Italian
-# PLACEHOLDER FILE - Necessita traduzione
 path_id: biotech_researcher
 category: science
 difficulty_range: beginner_to_expert
 metadata:
-  title: Life Code Architect - Biotech Researcher
-  short_description: Unlock the secrets of life through AI and biotechnology
+  title: Architetto del Codice della Vita - Ricercatore Biotecnologico
+  short_description: Scopri i segreti della vita attraverso l'IA e la biotecnologia
   long_description: |
-    You are a junior researcher at the "BioSynthesis Institute," where the boundaries 
-    between biology and artificial intelligence blur. Armed with AI tools and genetic 
-    engineering techniques, you'll explore the fundamental codes of life and create 
-    solutions that could revolutionize medicine, agriculture, and human enhancement.
+    Sei un ricercatore junior all'"Istituto di BioSintesi", dove i confini tra biologia 
+    e intelligenza artificiale si confondono. Armato di strumenti IA e tecniche di 
+    ingegneria genetica, esplorerai i codici fondamentali della vita e creerai soluzioni 
+    che potrebbero rivoluzionare la medicina, l'agricoltura e il potenziamento umano.
   estimated_hours: 70
   skill_focus:
     - genetic_engineering
@@ -18,26 +17,23 @@ metadata:
     - lab_techniques
     - ethical_biotech
     - data_driven_discovery
-  translation_notice: Necessita traduzione - This is a placeholder file
-  original_language: en
-  target_language: it
-  generated_date: "2025-07-16T07:00:56.469Z"
 world_setting:
-  name: BioSynthesis Institute
+  name: Istituto di BioSintesi
   description: |
-    The BioSynthesis Institute is a cutting-edge research facility where biology meets 
-    artificial intelligence. Researchers here use AI to decode genetic mysteries, design 
-    new organisms, and push the boundaries of what's possible in biotechnology while 
-    grappling with profound ethical questions.
+    L'Istituto di BioSintesi è una struttura di ricerca all'avanguardia dove la biologia 
+    incontra l'intelligenza artificiale. I ricercatori qui usano l'IA per decodificare 
+    i misteri genetici, progettare nuovi organismi e spingere i limiti del possibile 
+    nella biotecnologia mentre affrontano profondi quesiti etici.
   atmosphere: scientific_innovative
   visual_theme: biotech_laboratory
 starting_scenario:
-  title: The Living Algorithm
+  title: L'Algoritmo Vivente
   description: |
-    Dr. Elena Helix welcomes you to the institute with an urgent mission: a mysterious 
-    genetic sequence has been discovered that seems to respond to AI algorithms. But 
-    Dr. Splice from the rival BioCorp is racing to weaponize genetic modifications. 
-    You must unlock life's secrets responsibly while preventing catastrophic misuse.
+    La Dott.ssa Elena Helix ti dà il benvenuto all'istituto con una missione urgente: 
+    è stata scoperta una misteriosa sequenza genetica che sembra rispondere agli algoritmi 
+    IA. Ma il Dott. Splice della rivale BioCorp sta correndo per trasformare le modifiche 
+    genetiche in armi. Devi sbloccare i segreti della vita responsabilmente mentre 
+    previeni un uso catastrofico.
   initial_tasks:
     - understand_crispr
     - learn_ai_modeling
@@ -45,59 +41,59 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: molecular_biology
-      name: Molecular Mastery
-      description: Master fundamental molecular biology concepts
+      name: Maestria Molecolare
+      description: Padroneggiare i concetti fondamentali di biologia molecolare
       max_level: 10
       unlocks:
         - gene_editing
         - protein_design
     - id: bioinformatics
-      name: Bio-Data Fusion
-      description: Analyze biological data with AI
+      name: Fusione Bio-Dati
+      description: Analizzare dati biologici con l'IA
       max_level: 10
       unlocks:
         - sequence_analysis
         - structure_prediction
     - id: synthetic_biology
-      name: Life Design
-      description: Engineer new biological systems
+      name: Design della Vita
+      description: Progettare nuovi sistemi biologici
       max_level: 10
       unlocks:
         - organism_engineering
         - metabolic_pathways
     - id: ai_integration
-      name: AI-Bio Interface
-      description: Integrate AI with biological research
+      name: Interfaccia IA-Bio
+      description: Integrare l'IA con la ricerca biologica
       max_level: 10
       unlocks:
         - ml_drug_discovery
         - ai_protein_folding
   advanced_skills:
     - id: gene_therapy
-      name: Therapeutic Engineering
-      description: Design treatments at the genetic level
+      name: Ingegneria Terapeutica
+      description: Progettare trattamenti a livello genetico
       max_level: 15
       requires:
         - molecular_biology
         - synthetic_biology
     - id: biocomputing
-      name: Living Computers
-      description: Create biological computing systems
+      name: Computer Viventi
+      description: Creare sistemi di calcolo biologici
       max_level: 15
       requires:
         - bioinformatics
         - ai_integration
     - id: enhancement_tech
-      name: Human Augmentation
-      description: Develop ethical enhancement technologies
+      name: Potenziamento Umano
+      description: Sviluppare tecnologie di potenziamento etiche
       max_level: 15
       requires:
         - gene_therapy
         - ethical_biotech
 milestone_quests:
   - id: first_cure
-    name: Disease Decoder
-    description: Develop a cure for a genetic disease
+    name: Decodificatore di Malattie
+    description: Sviluppare una cura per una malattia genetica
     required_level: 5
     skills_tested:
       - molecular_biology
@@ -107,8 +103,8 @@ milestone_quests:
       - medical_breakthrough_badge
       - patient_testimonials
   - id: splice_confrontation
-    name: Ethics vs Profit
-    description: Stop Dr. Splice's dangerous experiments
+    name: Etica vs Profitto
+    description: Fermare i pericolosi esperimenti del Dott. Splice
     required_level: 10
     skills_tested:
       - synthetic_biology
@@ -118,8 +114,8 @@ milestone_quests:
       - ethical_guardian_title
       - regulatory_influence
   - id: life_creation
-    name: Genesis Project
-    description: Create a beneficial synthetic organism
+    name: Progetto Genesi
+    description: Creare un organismo sintetico benefico
     required_level: 20
     skills_tested:
       - biocomputing
@@ -130,39 +126,39 @@ milestone_quests:
       - nobel_consideration
 achievements:
   - id: first_sequence
-    name: Code Reader
-    description: Successfully sequence your first genome
+    name: Lettore di Codice
+    description: Sequenziare con successo il tuo primo genoma
     xp_reward: 100
     badge_type: bronze
   - id: publication_success
-    name: Published Researcher
-    description: Publish 5 peer-reviewed papers
+    name: Ricercatore Pubblicato
+    description: Pubblicare 5 articoli revisionati da pari
     xp_reward: 400
     badge_type: silver
   - id: patent_holder
-    name: Innovation Pioneer
-    description: File a breakthrough biotech patent
+    name: Pioniere dell'Innovazione
+    description: Depositare un brevetto rivoluzionario in biotecnologia
     xp_reward: 700
     badge_type: gold
   - id: biotech_legend
-    name: Life Code Master
-    description: Complete all biotech challenges
+    name: Maestro del Codice della Vita
+    description: Completare tutte le sfide biotecnologiche
     xp_reward: 1500
     badge_type: platinum
 example_tasks:
   beginner:
     - id: dna_extraction
       type: analysis
-      title: Genetic Blueprint
-      description: Extract and analyze DNA samples
+      title: Schema Genetico
+      description: Estrarre e analizzare campioni di DNA
       skills_improved:
         - molecular_biology
         - lab_techniques
       xp_reward: 70
     - id: ai_sequence_analysis
       type: analysis
-      title: Pattern Recognition
-      description: Use AI to find patterns in genetic data
+      title: Riconoscimento di Pattern
+      description: Usare l'IA per trovare pattern nei dati genetici
       skills_improved:
         - bioinformatics
         - ai_bio_modeling
@@ -170,16 +166,16 @@ example_tasks:
   intermediate:
     - id: crispr_edit
       type: creation
-      title: Gene Editor
-      description: Perform targeted gene editing
+      title: Editor Genetico
+      description: Eseguire editing genetico mirato
       skills_improved:
         - gene_editing
         - synthetic_biology
       xp_reward: 200
     - id: drug_design
       type: creation
-      title: Molecular Medicine
-      description: Design a new drug using AI
+      title: Medicina Molecolare
+      description: Progettare un nuovo farmaco usando l'IA
       skills_improved:
         - ml_drug_discovery
         - bioinformatics
@@ -187,35 +183,35 @@ example_tasks:
   advanced:
     - id: synthetic_life
       type: creation
-      title: Life Architect
-      description: Design a synthetic organism
+      title: Architetto della Vita
+      description: Progettare un organismo sintetico
       skills_improved:
         - organism_engineering
         - biocomputing
       xp_reward: 450
     - id: enhancement_protocol
       type: creation
-      title: Evolution Accelerator
-      description: Develop ethical enhancement technology
+      title: Acceleratore dell'Evoluzione
+      description: Sviluppare tecnologia di potenziamento etica
       skills_improved:
         - enhancement_tech
         - gene_therapy
       xp_reward: 500
 learning_objectives:
-  - Master molecular biology and genetic engineering
-  - Apply AI to biological research and discovery
-  - Design and engineer biological systems
-  - Develop treatments for genetic diseases
-  - Navigate ethical considerations in biotechnology
-  - Conduct rigorous scientific experiments
-  - Collaborate on interdisciplinary research
-  - Translate research into real-world applications
+  - Padroneggiare la biologia molecolare e l'ingegneria genetica
+  - Applicare l'IA alla ricerca e scoperta biologica
+  - Progettare e sviluppare sistemi biologici
+  - Sviluppare trattamenti per malattie genetiche
+  - Navigare le considerazioni etiche nella biotecnologia
+  - Condurre esperimenti scientifici rigorosi
+  - Collaborare nella ricerca interdisciplinare
+  - Tradurre la ricerca in applicazioni del mondo reale
 career_outcomes:
-  - Biotechnology Research Scientist
-  - Bioinformatics Specialist
-  - Synthetic Biology Engineer
-  - Pharmaceutical Researcher
-  - Genetic Counselor
-  - Biotech Startup Founder
-  - Research Director
-  - Science Policy Advisor
+  - Scienziato di Ricerca Biotecnologica
+  - Specialista in Bioinformatica
+  - Ingegnere di Biologia Sintetica
+  - Ricercatore Farmaceutico
+  - Consulente Genetico
+  - Fondatore di Startup Biotech
+  - Direttore di Ricerca
+  - Consulente di Politica Scientifica

@@ -1,42 +1,37 @@
 # Product Manager Discovery Path - Simplified Chinese
-# PLACEHOLDER FILE - 需要翻译
 path_id: product_manager
 category: business
 difficulty_range: beginner_to_expert
 metadata:
-  title: Product Alchemist - Product Manager
-  short_description: Forge perfect products in the market crucible
+  title: "产品炼金师 - Product Manager"
+  short_description: "在市场熔炉中锻造完美产品"
   long_description: |
-    You are a newly minted alchemist at the "Product Alchemy Workshop," skilled at 
-    fusing user needs, technical capabilities, and business goals into powerful products. 
-    In this workshop filled with innovation sparks, every iteration is an alchemical 
-    experiment, and your goal is to create perfect products that can change the world.
+    你是「产品炼金工坊」的新晋炼金师，擅长将用户需求、技术能力和商业目标
+    融合成强大的产品。在这个充满创新火花的工坊里，每次迭代都是炼金实验，
+    你的目标是创造能够改变世界的完美产品。
+  
   estimated_hours: 55
   skill_focus:
     - requirement_alchemy
     - roadmap_prophecy
     - team_coordination_magic
     - user_resonance
-  translation_notice: 需要翻译 - This is a placeholder file
-  original_language: en
-  target_language: zhCN
-  generated_date: "2025-07-16T07:00:56.528Z"
 world_setting:
-  name: Product Alchemy Workshop
+  name: "产品炼金工坊"
   description: |
-    The Product Alchemy Workshop is a magical forge where ideas are transformed into 
-    actual products. Here, product managers learn the ancient art of balancing user 
-    desires, technical constraints, and business objectives to create products that 
-    resonate with millions.
-  atmosphere: dynamic_creative
-  visual_theme: innovation_forge
+    产品炼金工坊是一个神奇的熔炉，想法在这里转化为实际产品。在这里，产品
+    经理学习平衡用户需求、技术约束和商业目标的古老艺术，创造出能够与数百万
+    人产生共鸣的产品。
+  
+  atmosphere: "dynamic_creative"
+  visual_theme: "innovation_forge"
 starting_scenario:
-  title: The Alchemist's Challenge
+  title: "炼金师的挑战"
   description: |
-    Strategy Master welcomes you to the workshop with a warning: Deadline, the Time 
-    Tyrant, is forcing teams to sacrifice product quality for speed. Meanwhile, Voice 
-    of Users grows louder with conflicting demands. You must find the philosopher's 
-    stone of product management - balancing quality, speed, and user satisfaction.
+    策略大师在工坊里欢迎你，并发出警告：截止日期这个时间暴君正在迫使团队
+    为了速度而牺牲产品质量。与此同时，用户之声越来越响亮，带着相互冲突的
+    需求。你必须找到产品管理的哲人石——平衡质量、速度和用户满意度。
+  
   initial_tasks:
     - understand_users
     - analyze_market
@@ -44,59 +39,59 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: user_research
-      name: User Mind Reading
-      description: Deeply understand user needs and behaviors
+      name: 用户心灵感应
+      description: 深度理解用户需求和行为
       max_level: 10
       unlocks:
         - persona_creation
         - journey_mapping
     - id: product_strategy
-      name: Strategic Vision
-      description: Craft winning product strategies
+      name: 战略愿景
+      description: 制定获胜的产品策略
       max_level: 10
       unlocks:
         - competitive_analysis
         - positioning_mastery
     - id: feature_prioritization
-      name: Priority Alchemy
-      description: Master the art of feature prioritization
+      name: 优先级炼金术
+      description: 掌握功能优先级排序的艺术
       max_level: 10
       unlocks:
         - roadmap_planning
         - mvp_design
     - id: stakeholder_management
-      name: Harmony Orchestration
-      description: Align diverse stakeholder interests
+      name: 和谐指挥
+      description: 协调各方利益相关者的利益
       max_level: 10
       unlocks:
         - executive_communication
         - cross_team_collaboration
   advanced_skills:
     - id: growth_hacking
-      name: Growth Sorcery
-      description: Drive exponential product growth
+      name: 增长魔法
+      description: 推动产品指数级增长
       max_level: 15
       requires:
         - product_strategy
         - user_research
     - id: data_driven_decisions
-      name: Metrics Mastery
-      description: Make decisions based on data insights
+      name: 数据大师
+      description: 基于数据洞察做决策
       max_level: 15
       requires:
         - feature_prioritization
         - user_research
     - id: platform_thinking
-      name: Ecosystem Architecture
-      description: Build product platforms and ecosystems
+      name: 生态系统架构
+      description: 构建产品平台和生态系统
       max_level: 15
       requires:
         - product_strategy
         - stakeholder_management
 milestone_quests:
   - id: first_launch
-    name: Product Genesis
-    description: Successfully launch your first product
+    name: 产品创世记
+    description: 成功发布你的第一个产品
     required_level: 5
     skills_tested:
       - user_research
@@ -106,8 +101,8 @@ milestone_quests:
       - launch_specialist_badge
       - user_testimonials
   - id: deadline_balance
-    name: Time vs Quality
-    description: Deliver quality product despite time pressure
+    name: 时间与质量
+    description: 在时间压力下交付高质量产品
     required_level: 10
     skills_tested:
       - stakeholder_management
@@ -117,8 +112,8 @@ milestone_quests:
       - balance_master_title
       - deadline_immunity
   - id: unicorn_product
-    name: Billion User Product
-    description: Create a product used by millions
+    name: 十亿用户产品
+    description: 创造被数百万人使用的产品
     required_level: 20
     skills_tested:
       - growth_hacking
@@ -129,39 +124,39 @@ milestone_quests:
       - industry_influence
 achievements:
   - id: first_spec
-    name: Spec Writer
-    description: Write your first product specification
+    name: 规格书写者
+    description: 编写你的第一份产品规格书
     xp_reward: 100
     badge_type: bronze
   - id: user_champion
-    name: User Advocate
-    description: Implement 20 user-requested features
+    name: 用户代言人
+    description: 实现20个用户要求的功能
     xp_reward: 300
     badge_type: silver
   - id: revenue_generator
-    name: Revenue Alchemist
-    description: Drive $1M in product revenue
+    name: 收入炼金师
+    description: 为产品带来100万美元收入
     xp_reward: 600
     badge_type: gold
   - id: pm_legend
-    name: Product Sage
-    description: Complete all product challenges
+    name: 产品贤者
+    description: 完成所有产品挑战
     xp_reward: 1200
     badge_type: platinum
 example_tasks:
   beginner:
     - id: user_interviews
       type: analysis
-      title: Voice Collection
-      description: Conduct user interviews to gather insights
+      title: 声音收集
+      description: 进行用户访谈收集洞察
       skills_improved:
         - user_research
         - user_resonance
       xp_reward: 60
     - id: competitive_analysis
       type: analysis
-      title: Market Scanning
-      description: Analyze competitor products
+      title: 市场扫描
+      description: 分析竞争对手产品
       skills_improved:
         - product_strategy
         - requirement_alchemy
@@ -169,16 +164,16 @@ example_tasks:
   intermediate:
     - id: roadmap_creation
       type: creation
-      title: Future Path Design
-      description: Create a product roadmap
+      title: 未来路径设计
+      description: 创建产品路线图
       skills_improved:
         - roadmap_planning
         - roadmap_prophecy
       xp_reward: 180
     - id: feature_launch
       type: creation
-      title: Feature Alchemy
-      description: Launch a major product feature
+      title: 功能炼金术
+      description: 发布重要产品功能
       skills_improved:
         - feature_prioritization
         - stakeholder_management
@@ -186,35 +181,36 @@ example_tasks:
   advanced:
     - id: platform_design
       type: creation
-      title: Ecosystem Creation
-      description: Design a product platform
+      title: 生态系统创造
+      description: 设计产品平台
       skills_improved:
         - platform_thinking
         - product_strategy
       xp_reward: 400
     - id: growth_experiment
       type: analysis
-      title: Growth Formula
-      description: Run growth experiments to scale product
+      title: 增长公式
+      description: 运行增长实验来扩展产品
       skills_improved:
         - growth_hacking
         - data_driven_decisions
       xp_reward: 350
 learning_objectives:
-  - Master user research and empathy techniques
-  - Develop strategic product thinking
-  - Learn to prioritize features effectively
-  - Build consensus among diverse stakeholders
-  - Use data to drive product decisions
-  - Create and communicate product vision
-  - Balance business goals with user needs
-  - Scale products from inception to maturity
+  - "掌握用户研究和同理心技巧"
+  - "发展战略性产品思维"
+  - "学会有效地优先排序功能"
+  - "在不同利益相关者之间建立共识"
+  - "使用数据驱动产品决策"
+  - "创建和传达产品愿景"
+  - "平衡商业目标与用户需求"
+  - "将产品从构想扩展到成熟"
+
 career_outcomes:
-  - Product Manager
-  - Senior Product Manager
-  - Product Director
-  - Chief Product Officer
-  - Product Strategy Consultant
-  - Startup Product Lead
-  - Growth Product Manager
-  - Platform Product Manager
+  - "产品经理"
+  - "高级产品经理"
+  - "产品总监"
+  - "首席产品官"
+  - "产品策略顾问"
+  - "创业公司产品负责人"
+  - "增长产品经理"
+  - "平台产品经理"

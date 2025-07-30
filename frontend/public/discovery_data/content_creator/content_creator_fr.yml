@@ -1,219 +1,219 @@
 # Content Creator Discovery Path - French
-# PLACEHOLDER FILE - Traduction nécessaire
 path_id: content_creator
 category: arts
 difficulty_range: beginner_to_expert
+
 metadata:
-  title: Digital Wizard - Content Creator
-  short_description: Weave captivating stories in the virtual kingdom
+  title: "Magicien Numérique - Créateur de Contenu"
+  short_description: "Tissez des histoires captivantes dans le royaume virtuel"
   long_description: |
-    You are a newly ordained wizard of the "Creative Empire," possessing the mysterious 
-    power to transform ideas into viral content. In this digital kingdom, every like 
-    and share is proof of your magic, and your mentor Luna will teach you to master 
-    the secrets of algorithms.
+    Vous êtes un magicien nouvellement ordonné de "l'Empire Créatif", possédant 
+    le pouvoir mystérieux de transformer les idées en contenu viral. Dans ce royaume 
+    numérique, chaque like et partage est la preuve de votre magie, et votre mentor 
+    Luna vous enseignera à maîtriser les secrets des algorithmes.
+  
   estimated_hours: 50
   skill_focus:
     - content_magic
     - visual_spells
     - word_alchemy
     - community_summoning
-  translation_notice: Traduction nécessaire - This is a placeholder file
-  original_language: en
-  target_language: fr
-  generated_date: "2025-07-16T07:00:56.478Z"
+
 world_setting:
-  name: Creative Empire
+  name: "Empire Créatif"
   description: |
-    The Creative Empire is a digital kingdom powered by creative energy. Content creators 
-    here learn to harness the mysterious forces of algorithms, engagement, and viral 
-    mechanics to build their influence and impact millions of lives.
-  atmosphere: vibrant_magical
-  visual_theme: digital_fantasy
+    L'Empire Créatif est un royaume numérique alimenté par l'énergie créative. 
+    Les créateurs de contenu apprennent ici à exploiter les forces mystérieuses 
+    des algorithmes, de l'engagement et des mécaniques virales pour construire 
+    leur influence et impacter des millions de vies.
+  
+  atmosphere: "vibrant_magical"
+  visual_theme: "digital_fantasy"
+
 starting_scenario:
-  title: The Shadow's Challenge
+  title: "Le Défi de l'Ombre"
   description: |
-    Creative Mentor Luna welcomes you to the empire with urgent news: Shadow, a fallen 
-    wizard, is spreading false content using forbidden magic, threatening the harmony 
-    of the Creative Empire. You must use the power of authentic creativity to combat 
-    his dark influence.
+    La Mentor Créative Luna vous accueille dans l'empire avec des nouvelles urgentes : 
+    Ombre, un magicien déchu, répand du faux contenu en utilisant une magie interdite, 
+    menaçant l'harmonie de l'Empire Créatif. Vous devez utiliser le pouvoir de la 
+    créativité authentique pour combattre son influence sombre.
+  
   initial_tasks:
     - understand_algorithms
     - learn_content_basics
     - create_first_spell
+
 skill_tree:
   core_skills:
     - id: content_strategy
-      name: Strategic Vision
-      description: Master content planning and strategy
+      name: "Vision Stratégique"
+      description: "Maîtrisez la planification et la stratégie de contenu"
       max_level: 10
       unlocks:
         - trend_analysis
         - audience_targeting
+    
     - id: visual_creation
-      name: Visual Sorcery
-      description: Create compelling visual content
+      name: "Sorcellerie Visuelle"
+      description: "Créez du contenu visuel convaincant"
       max_level: 10
       unlocks:
         - photo_magic
         - video_enchantment
+    
     - id: storytelling
-      name: Narrative Weaving
-      description: Craft engaging stories
+      name: "Tissage Narratif"
+      description: "Créez des histoires captivantes"
       max_level: 10
       unlocks:
         - emotional_resonance
         - viral_mechanics
+    
     - id: community_building
-      name: Tribe Summoning
-      description: Build and engage communities
+      name: "Invocation de Tribu"
+      description: "Construisez et engagez des communautés"
       max_level: 10
       unlocks:
         - engagement_rituals
         - loyalty_spells
+
   advanced_skills:
     - id: algorithm_mastery
-      name: Algorithm Whisperer
-      description: Understand and work with platform algorithms
+      name: "Chuchoteur d'Algorithmes"
+      description: "Comprenez et travaillez avec les algorithmes de plateformes"
       max_level: 15
-      requires:
-        - content_strategy
-        - community_building
+      requires: [content_strategy, community_building]
+    
     - id: monetization_magic
-      name: Revenue Alchemy
-      description: Transform content into income
+      name: "Alchimie des Revenus"
+      description: "Transformez le contenu en revenus"
       max_level: 15
-      requires:
-        - community_building
-        - visual_creation
+      requires: [community_building, visual_creation]
+    
     - id: brand_building
-      name: Empire Construction
-      description: Build a powerful personal brand
+      name: "Construction d'Empire"
+      description: "Construisez une marque personnelle puissante"
       max_level: 15
-      requires:
-        - storytelling
-        - content_strategy
+      requires: [storytelling, content_strategy]
+
 milestone_quests:
   - id: first_viral
-    name: Viral Breakthrough
-    description: Create your first viral content
+    name: "Percée Virale"
+    description: "Créez votre premier contenu viral"
     required_level: 5
-    skills_tested:
-      - content_strategy
-      - visual_creation
+    skills_tested: [content_strategy, visual_creation]
     xp_reward: 500
     unlocks:
       - viral_creator_badge
       - algorithm_insights
+  
   - id: shadow_confrontation
-    name: Truth vs Deception
-    description: Defeat Shadow's misinformation campaign
+    name: "Vérité contre Tromperie"
+    description: "Battez la campagne de désinformation d'Ombre"
     required_level: 10
-    skills_tested:
-      - storytelling
-      - community_building
+    skills_tested: [storytelling, community_building]
     xp_reward: 1000
     unlocks:
       - truth_guardian_title
       - authentic_voice
+  
   - id: empire_builder
-    name: Creative Empire
-    description: Build a content empire with 1M followers
+    name: "Empire Créatif"
+    description: "Construisez un empire de contenu avec 1M d'abonnés"
     required_level: 20
-    skills_tested:
-      - algorithm_mastery
-      - brand_building
+    skills_tested: [algorithm_mastery, brand_building]
     xp_reward: 2000
     unlocks:
       - empire_ruler_title
       - legacy_creator
+
 achievements:
   - id: first_post
-    name: First Spell
-    description: Create your first piece of content
+    name: "Premier Sort"
+    description: "Créez votre premier contenu"
     xp_reward: 50
     badge_type: bronze
+  
   - id: engagement_master
-    name: Community Champion
-    description: Achieve 10K total engagements
+    name: "Champion de la Communauté"
+    description: "Atteignez 10K engagements totaux"
     xp_reward: 200
     badge_type: silver
+  
   - id: consistency_king
-    name: Daily Wizard
-    description: Post consistently for 30 days
+    name: "Magicien Quotidien"
+    description: "Publiez régulièrement pendant 30 jours"
     xp_reward: 400
     badge_type: gold
+  
   - id: content_legend
-    name: Legendary Creator
-    description: Complete all content challenges
+    name: "Créateur Légendaire"
+    description: "Complétez tous les défis de contenu"
     xp_reward: 800
     badge_type: platinum
+
 example_tasks:
   beginner:
     - id: content_planning
       type: creation
-      title: Magic Recipe Development
-      description: Develop content formulas that touch hearts
-      skills_improved:
-        - content_strategy
-        - storytelling
+      title: "Développement de Recette Magique"
+      description: "Développez des formules de contenu qui touchent les cœurs"
+      skills_improved: [content_strategy, storytelling]
       xp_reward: 50
+    
     - id: visual_basics
       type: creation
-      title: Visual Spell Practice
-      description: Create your first visual content
-      skills_improved:
-        - visual_creation
-        - content_magic
+      title: "Pratique de Sort Visuel"
+      description: "Créez votre premier contenu visuel"
+      skills_improved: [visual_creation, content_magic]
       xp_reward: 60
+  
   intermediate:
     - id: engagement_analysis
       type: analysis
-      title: Oracle's Trial
-      description: Analyze content performance and audience behavior
-      skills_improved:
-        - algorithm_mastery
-        - community_building
+      title: "Épreuve de l'Oracle"
+      description: "Analysez la performance du contenu et le comportement de l'audience"
+      skills_improved: [algorithm_mastery, community_building]
       xp_reward: 150
+    
     - id: series_creation
       type: creation
-      title: Saga Weaving
-      description: Create a content series
-      skills_improved:
-        - storytelling
-        - brand_building
+      title: "Tissage de Saga"
+      description: "Créez une série de contenu"
+      skills_improved: [storytelling, brand_building]
       xp_reward: 180
+  
   advanced:
     - id: viral_campaign
       type: creation
-      title: Empire Expansion
-      description: Launch a viral content campaign
-      skills_improved:
-        - algorithm_mastery
-        - viral_mechanics
+      title: "Expansion d'Empire"
+      description: "Lancez une campagne de contenu viral"
+      skills_improved: [algorithm_mastery, viral_mechanics]
       xp_reward: 350
+    
     - id: monetization_setup
       type: creation
-      title: Gold Transmutation
-      description: Set up multiple revenue streams
-      skills_improved:
-        - monetization_magic
-        - brand_building
+      title: "Transmutation d'Or"
+      description: "Configurez plusieurs sources de revenus"
+      skills_improved: [monetization_magic, brand_building]
       xp_reward: 400
+
 learning_objectives:
-  - Master content strategy and planning
-  - Create engaging visual and written content
-  - Build and nurture online communities
-  - Understand platform algorithms and trends
-  - Develop a unique creative voice
-  - Monetize content effectively
-  - Combat misinformation with truth
-  - Build a sustainable content business
+  - "Maîtriser la stratégie et la planification de contenu"
+  - "Créer du contenu visuel et écrit engageant"
+  - "Construire et entretenir des communautés en ligne"
+  - "Comprendre les algorithmes de plateformes et les tendances"
+  - "Développer une voix créative unique"
+  - "Monétiser le contenu efficacement"
+  - "Combattre la désinformation avec la vérité"
+  - "Construire une entreprise de contenu durable"
+
 career_outcomes:
-  - Social Media Influencer
-  - Content Strategist
-  - Brand Ambassador
-  - Digital Marketing Manager
-  - Creative Director
-  - Community Manager
-  - Content Marketing Lead
-  - Chief Content Officer
+  - "Influenceur des Réseaux Sociaux"
+  - "Stratège de Contenu"
+  - "Ambassadeur de Marque"
+  - "Directeur Marketing Digital"
+  - "Directeur Créatif"
+  - "Gestionnaire de Communauté"
+  - "Responsable Marketing de Contenu"
+  - "Directeur de Contenu"

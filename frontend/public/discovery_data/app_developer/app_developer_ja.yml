@@ -1,41 +1,36 @@
 # App Developer Discovery Path - Japanese
-# PLACEHOLDER FILE - 翻訳が必要です
 path_id: app_developer
 category: technology
 difficulty_range: beginner_to_expert
 metadata:
-  title: Digital Craftsman - App Developer
-  short_description: Craft life-changing applications in the world of code
+  title: デジタル職人 - アプリ開発者
+  short_description: コードの世界で人生を変えるアプリケーションを作る
   long_description: |
-    You are a new member of the "Digital Craftsmen Alliance," skilled at weaving 
-    practical and beautiful applications with code. In this workshop filled with logic 
-    and creativity, every line of code is a spell, and your goal is to create digital 
-    tools that make people's lives more convenient and better.
+    あなたは「デジタル職人同盟」の新メンバーで、コードで実用的で美しい
+    アプリケーションを織りなすスキルを持っています。論理と創造性に満ちた
+    このワークショップでは、コードの一行一行が呪文であり、人々の生活を
+    より便利で良いものにするデジタルツールを作ることが目標です。
   estimated_hours: 60
   skill_focus:
     - code_weaving
     - interface_sculpting
     - logic_architecture
     - user_experience_magic
-  translation_notice: 翻訳が必要です - This is a placeholder file
-  original_language: en
-  target_language: ja
-  generated_date: "2025-07-16T07:00:56.456Z"
 world_setting:
-  name: Digital Craftsmen Alliance
+  name: デジタル職人同盟
   description: |
-    The Digital Craftsmen Alliance is a mysterious organization gathering top app 
-    developers. Here, code is treated as an art form, and developers learn to create 
-    applications that not only function flawlessly but also bring joy to users' daily lives.
+    デジタル職人同盟は、トップアプリ開発者たちが集まる神秘的な組織です。
+    ここではコードが芸術形式として扱われ、開発者たちは完璧に機能するだけでなく、
+    ユーザーの日常生活に喜びをもたらすアプリケーションを作ることを学びます。
   atmosphere: innovative_collaborative
   visual_theme: tech_workshop
 starting_scenario:
-  title: Joining the Alliance
+  title: 同盟への加入
   description: |
-    Master Code welcomes you to the alliance, but warns of a constant threat: Bug, 
-    the chaos demon, spreads errors and vulnerabilities in code. Meanwhile, Design 
-    and Code often conflict over priorities. You must use wisdom to balance technology 
-    with aesthetics while keeping applications stable.
+    マスター・コードは同盟へあなたを歓迎しますが、常にある脅威について警告します：
+    混沌の悪魔であるバグは、コードにエラーと脆弱性を広めます。一方、デザインと
+    コードはしばしば優先事項をめぐって対立します。アプリケーションを安定させながら、
+    技術と美学のバランスを取るために叡智を使わなければなりません。
   initial_tasks:
     - learn_fundamentals
     - choose_platform
@@ -43,59 +38,59 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: programming_fundamentals
-      name: Code Foundations
-      description: Master core programming concepts
+      name: コードの基礎
+      description: プログラミングのコア概念をマスターする
       max_level: 10
       unlocks:
         - advanced_patterns
         - clean_code
     - id: ui_development
-      name: Interface Crafting
-      description: Build beautiful user interfaces
+      name: インターフェース製作
+      description: 美しいユーザーインターフェースを構築する
       max_level: 10
       unlocks:
         - responsive_design
         - animation_magic
     - id: backend_architecture
-      name: Logic Engineering
-      description: Design robust backend systems
+      name: ロジックエンジニアリング
+      description: 堅牢なバックエンドシステムを設計する
       max_level: 10
       unlocks:
         - api_design
         - database_mastery
     - id: mobile_development
-      name: Mobile Sorcery
-      description: Create native mobile experiences
+      name: モバイル魔法
+      description: ネイティブモバイル体験を作成する
       max_level: 10
       unlocks:
         - cross_platform
         - device_features
   advanced_skills:
     - id: performance_optimization
-      name: Speed Magic
-      description: Optimize apps for peak performance
+      name: スピードマジック
+      description: アプリを最高のパフォーマンスに最適化する
       max_level: 15
       requires:
         - programming_fundamentals
         - backend_architecture
     - id: security_mastery
-      name: Protection Spells
-      description: Secure applications against threats
+      name: 保護の呪文
+      description: 脅威からアプリケーションを守る
       max_level: 15
       requires:
         - backend_architecture
         - mobile_development
     - id: ai_integration
-      name: Intelligence Infusion
-      description: Integrate AI capabilities into apps
+      name: 知能の注入
+      description: AI機能をアプリに統合する
       max_level: 15
       requires:
         - programming_fundamentals
         - ui_development
 milestone_quests:
   - id: first_release
-    name: App Store Debut
-    description: Release your first app to users
+    name: App Storeデビュー
+    description: 初めてのアプリをユーザーにリリースする
     required_level: 5
     skills_tested:
       - programming_fundamentals
@@ -105,8 +100,8 @@ milestone_quests:
       - publisher_badge
       - user_feedback_access
   - id: bug_hunter
-    name: Bug Slayer
-    description: Create a bug-free app with perfect stability
+    name: バグスレイヤー
+    description: 完璧な安定性を持つバグのないアプリを作成する
     required_level: 10
     skills_tested:
       - security_mastery
@@ -116,8 +111,8 @@ milestone_quests:
       - stability_master_title
       - advanced_debugging_tools
   - id: million_users
-    name: Million User App
-    description: Create an app used by millions
+    name: 100万ユーザーアプリ
+    description: 数百万人が使用するアプリを作成する
     required_level: 20
     skills_tested:
       - ai_integration
@@ -128,39 +123,39 @@ milestone_quests:
       - alliance_hall_of_fame
 achievements:
   - id: hello_world
-    name: First Spell
-    description: Write your first working app
+    name: 最初の呪文
+    description: 初めて動作するアプリを書く
     xp_reward: 100
     badge_type: bronze
   - id: five_star_app
-    name: User Favorite
-    description: Achieve 5-star rating on app store
+    name: ユーザーのお気に入り
+    description: アプリストアで星5つの評価を獲得する
     xp_reward: 300
     badge_type: silver
   - id: polyglot_developer
-    name: Code Polyglot
-    description: Master 5 programming languages
+    name: コードの多言語話者
+    description: 5つのプログラミング言語をマスターする
     xp_reward: 600
     badge_type: gold
   - id: app_legend
-    name: Legendary Craftsman
-    description: Complete all development challenges
+    name: 伝説の職人
+    description: すべての開発チャレンジを完了する
     xp_reward: 1200
     badge_type: platinum
 example_tasks:
   beginner:
     - id: todo_app
       type: creation
-      title: Task Organizer
-      description: Build a simple todo list app
+      title: タスクオーガナイザー
+      description: シンプルなToDoリストアプリを構築する
       skills_improved:
         - programming_fundamentals
         - ui_development
       xp_reward: 70
     - id: calculator_app
       type: creation
-      title: Digital Calculator
-      description: Create a functional calculator
+      title: デジタル計算機
+      description: 機能的な計算機を作成する
       skills_improved:
         - programming_fundamentals
         - logic_architecture
@@ -168,16 +163,16 @@ example_tasks:
   intermediate:
     - id: social_app
       type: creation
-      title: Community Connector
-      description: Build a social networking app
+      title: コミュニティコネクター
+      description: ソーシャルネットワーキングアプリを構築する
       skills_improved:
         - backend_architecture
         - mobile_development
       xp_reward: 200
     - id: game_app
       type: creation
-      title: Entertainment Spell
-      description: Create an engaging mobile game
+      title: エンターテインメントの呪文
+      description: 魅力的なモバイルゲームを作成する
       skills_improved:
         - ui_development
         - performance_optimization
@@ -185,35 +180,35 @@ example_tasks:
   advanced:
     - id: ai_assistant
       type: creation
-      title: Intelligent Companion
-      description: Build an AI-powered assistant app
+      title: 知的なコンパニオン
+      description: AI搭載のアシスタントアプリを構築する
       skills_improved:
         - ai_integration
         - backend_architecture
       xp_reward: 400
     - id: ar_experience
       type: creation
-      title: Reality Enhancer
-      description: Create an augmented reality app
+      title: リアリティエンハンサー
+      description: 拡張現実アプリを作成する
       skills_improved:
         - mobile_development
         - performance_optimization
       xp_reward: 450
 learning_objectives:
-  - Master multiple programming languages and frameworks
-  - Design intuitive and beautiful user interfaces
-  - Build scalable and maintainable backend systems
-  - Create native and cross-platform mobile apps
-  - Implement security best practices
-  - Optimize app performance and user experience
-  - Integrate cutting-edge technologies like AI and AR
-  - Deploy and maintain apps in production
+  - 複数のプログラミング言語とフレームワークをマスターする
+  - 直感的で美しいユーザーインターフェースを設計する
+  - スケーラブルでメンテナンスしやすいバックエンドシステムを構築する
+  - ネイティブおよびクロスプラットフォームモバイルアプリを作成する
+  - セキュリティのベストプラクティスを実装する
+  - アプリのパフォーマンスとユーザーエクスペリエンスを最適化する
+  - AIやARなどの最先端技術を統合する
+  - アプリを本番環境にデプロイしメンテナンスする
 career_outcomes:
-  - Mobile App Developer
-  - Full-Stack Developer
-  - iOS/Android Developer
-  - Software Engineer
-  - Technical Lead
-  - App Development Consultant
-  - Startup CTO
-  - Freelance App Developer
+  - モバイルアプリ開発者
+  - フルスタック開発者
+  - iOS/Android開発者
+  - ソフトウェアエンジニア
+  - テクニカルリード
+  - アプリ開発コンサルタント
+  - スタートアップCTO
+  - フリーランスアプリ開発者

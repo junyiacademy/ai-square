@@ -1,42 +1,43 @@
 # Product Manager Discovery Path - French
-# PLACEHOLDER FILE - Traduction nécessaire
 path_id: product_manager
 category: business
 difficulty_range: beginner_to_expert
+
 metadata:
-  title: Product Alchemist - Product Manager
-  short_description: Forge perfect products in the market crucible
+  title: "Alchimiste Produit - Product Manager"
+  short_description: "Forgez des produits parfaits dans le creuset du marché"
   long_description: |
-    You are a newly minted alchemist at the "Product Alchemy Workshop," skilled at 
-    fusing user needs, technical capabilities, and business goals into powerful products. 
-    In this workshop filled with innovation sparks, every iteration is an alchemical 
-    experiment, and your goal is to create perfect products that can change the world.
+    Vous êtes un alchimiste fraîchement diplômé de l'"Atelier d'Alchimie Produit", 
+    expert dans la fusion des besoins utilisateurs, des capacités techniques et 
+    des objectifs commerciaux en produits puissants. Dans cet atelier rempli 
+    d'étincelles d'innovation, chaque itération est une expérience alchimique, 
+    et votre objectif est de créer des produits parfaits qui peuvent changer le monde.
+  
   estimated_hours: 55
   skill_focus:
     - requirement_alchemy
     - roadmap_prophecy
     - team_coordination_magic
     - user_resonance
-  translation_notice: Traduction nécessaire - This is a placeholder file
-  original_language: en
-  target_language: fr
-  generated_date: "2025-07-16T07:00:56.522Z"
 world_setting:
-  name: Product Alchemy Workshop
+  name: "Atelier d'Alchimie Produit"
   description: |
-    The Product Alchemy Workshop is a magical forge where ideas are transformed into 
-    actual products. Here, product managers learn the ancient art of balancing user 
-    desires, technical constraints, and business objectives to create products that 
-    resonate with millions.
-  atmosphere: dynamic_creative
-  visual_theme: innovation_forge
+    L'Atelier d'Alchimie Produit est une forge magique où les idées sont transformées 
+    en produits réels. Ici, les product managers apprennent l'art ancien d'équilibrer 
+    les désirs des utilisateurs, les contraintes techniques et les objectifs 
+    commerciaux pour créer des produits qui résonnent avec des millions de personnes.
+  
+  atmosphere: "dynamic_creative"
+  visual_theme: "innovation_forge"
 starting_scenario:
-  title: The Alchemist's Challenge
+  title: "Le Défi de l'Alchimiste"
   description: |
-    Strategy Master welcomes you to the workshop with a warning: Deadline, the Time 
-    Tyrant, is forcing teams to sacrifice product quality for speed. Meanwhile, Voice 
-    of Users grows louder with conflicting demands. You must find the philosopher's 
-    stone of product management - balancing quality, speed, and user satisfaction.
+    Maître Stratégie vous accueille dans l'atelier avec un avertissement : Délai, 
+    le Tyran du Temps, force les équipes à sacrifier la qualité du produit pour 
+    la vitesse. Pendant ce temps, la Voix des Utilisateurs devient plus forte 
+    avec des demandes contradictoires. Vous devez trouver la pierre philosophale 
+    du product management - équilibrer qualité, vitesse et satisfaction utilisateur.
+  
   initial_tasks:
     - understand_users
     - analyze_market
@@ -44,59 +45,59 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: user_research
-      name: User Mind Reading
-      description: Deeply understand user needs and behaviors
+      name: Lecture des Esprits Utilisateurs
+      description: Comprendre profondément les besoins et comportements utilisateurs
       max_level: 10
       unlocks:
         - persona_creation
         - journey_mapping
     - id: product_strategy
-      name: Strategic Vision
-      description: Craft winning product strategies
+      name: Vision Stratégique
+      description: Créer des stratégies produit gagnantes
       max_level: 10
       unlocks:
         - competitive_analysis
         - positioning_mastery
     - id: feature_prioritization
-      name: Priority Alchemy
-      description: Master the art of feature prioritization
+      name: Alchimie des Priorités
+      description: Maîtriser l'art de la priorisation des fonctionnalités
       max_level: 10
       unlocks:
         - roadmap_planning
         - mvp_design
     - id: stakeholder_management
-      name: Harmony Orchestration
-      description: Align diverse stakeholder interests
+      name: Orchestration de l'Harmonie
+      description: Aligner les intérêts de parties prenantes diverses
       max_level: 10
       unlocks:
         - executive_communication
         - cross_team_collaboration
   advanced_skills:
     - id: growth_hacking
-      name: Growth Sorcery
-      description: Drive exponential product growth
+      name: Sorcellerie de Croissance
+      description: Diriger la croissance exponentielle du produit
       max_level: 15
       requires:
         - product_strategy
         - user_research
     - id: data_driven_decisions
-      name: Metrics Mastery
-      description: Make decisions based on data insights
+      name: Maîtrise des Métriques
+      description: Prendre des décisions basées sur les insights de données
       max_level: 15
       requires:
         - feature_prioritization
         - user_research
     - id: platform_thinking
-      name: Ecosystem Architecture
-      description: Build product platforms and ecosystems
+      name: Architecture d'Écosystème
+      description: Construire des plateformes produits et écosystèmes
       max_level: 15
       requires:
         - product_strategy
         - stakeholder_management
 milestone_quests:
   - id: first_launch
-    name: Product Genesis
-    description: Successfully launch your first product
+    name: Genèse du Produit
+    description: Lancer avec succès votre premier produit
     required_level: 5
     skills_tested:
       - user_research
@@ -106,8 +107,8 @@ milestone_quests:
       - launch_specialist_badge
       - user_testimonials
   - id: deadline_balance
-    name: Time vs Quality
-    description: Deliver quality product despite time pressure
+    name: Temps vs Qualité
+    description: Livrer un produit de qualité malgré la pression temporelle
     required_level: 10
     skills_tested:
       - stakeholder_management
@@ -117,8 +118,8 @@ milestone_quests:
       - balance_master_title
       - deadline_immunity
   - id: unicorn_product
-    name: Billion User Product
-    description: Create a product used by millions
+    name: Produit Milliard d'Utilisateurs
+    description: Créer un produit utilisé par des millions
     required_level: 20
     skills_tested:
       - growth_hacking
@@ -129,39 +130,39 @@ milestone_quests:
       - industry_influence
 achievements:
   - id: first_spec
-    name: Spec Writer
-    description: Write your first product specification
+    name: Rédacteur de Spécifications
+    description: Écrire votre première spécification produit
     xp_reward: 100
     badge_type: bronze
   - id: user_champion
-    name: User Advocate
-    description: Implement 20 user-requested features
+    name: Défenseur des Utilisateurs
+    description: Implémenter 20 fonctionnalités demandées par les utilisateurs
     xp_reward: 300
     badge_type: silver
   - id: revenue_generator
-    name: Revenue Alchemist
-    description: Drive $1M in product revenue
+    name: Alchimiste des Revenus
+    description: Générer $1M de revenus produit
     xp_reward: 600
     badge_type: gold
   - id: pm_legend
-    name: Product Sage
-    description: Complete all product challenges
+    name: Sage du Produit
+    description: Compléter tous les défis produit
     xp_reward: 1200
     badge_type: platinum
 example_tasks:
   beginner:
     - id: user_interviews
       type: analysis
-      title: Voice Collection
-      description: Conduct user interviews to gather insights
+      title: Collecte de Voix
+      description: Mener des entretiens utilisateurs pour recueillir des insights
       skills_improved:
         - user_research
         - user_resonance
       xp_reward: 60
     - id: competitive_analysis
       type: analysis
-      title: Market Scanning
-      description: Analyze competitor products
+      title: Scan du Marché
+      description: Analyser les produits concurrents
       skills_improved:
         - product_strategy
         - requirement_alchemy
@@ -169,16 +170,16 @@ example_tasks:
   intermediate:
     - id: roadmap_creation
       type: creation
-      title: Future Path Design
-      description: Create a product roadmap
+      title: Design du Chemin Futur
+      description: Créer une roadmap produit
       skills_improved:
         - roadmap_planning
         - roadmap_prophecy
       xp_reward: 180
     - id: feature_launch
       type: creation
-      title: Feature Alchemy
-      description: Launch a major product feature
+      title: Alchimie de Fonctionnalité
+      description: Lancer une fonctionnalité produit majeure
       skills_improved:
         - feature_prioritization
         - stakeholder_management
@@ -186,35 +187,36 @@ example_tasks:
   advanced:
     - id: platform_design
       type: creation
-      title: Ecosystem Creation
-      description: Design a product platform
+      title: Création d'Écosystème
+      description: Concevoir une plateforme produit
       skills_improved:
         - platform_thinking
         - product_strategy
       xp_reward: 400
     - id: growth_experiment
       type: analysis
-      title: Growth Formula
-      description: Run growth experiments to scale product
+      title: Formule de Croissance
+      description: Mener des expériences de croissance pour échelle le produit
       skills_improved:
         - growth_hacking
         - data_driven_decisions
       xp_reward: 350
 learning_objectives:
-  - Master user research and empathy techniques
-  - Develop strategic product thinking
-  - Learn to prioritize features effectively
-  - Build consensus among diverse stakeholders
-  - Use data to drive product decisions
-  - Create and communicate product vision
-  - Balance business goals with user needs
-  - Scale products from inception to maturity
+  - "Maîtriser les techniques de recherche utilisateur et d'empathie"
+  - "Développer la pensée stratégique produit"
+  - "Apprendre à prioriser les fonctionnalités efficacement"
+  - "Construire un consensus parmi diverses parties prenantes"
+  - "Utiliser les données pour guider les décisions produit"
+  - "Créer et communiquer la vision produit"
+  - "Équilibrer les objectifs commerciaux avec les besoins utilisateurs"
+  - "Écheller les produits de la conception à la maturité"
+
 career_outcomes:
-  - Product Manager
-  - Senior Product Manager
-  - Product Director
-  - Chief Product Officer
-  - Product Strategy Consultant
-  - Startup Product Lead
-  - Growth Product Manager
-  - Platform Product Manager
+  - "Product Manager"
+  - "Senior Product Manager"
+  - "Product Director"
+  - "Chief Product Officer"
+  - "Consultant en Stratégie Produit"
+  - "Product Lead de Startup"
+  - "Growth Product Manager"
+  - "Platform Product Manager"

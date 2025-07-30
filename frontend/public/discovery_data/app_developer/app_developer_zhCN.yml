@@ -1,41 +1,35 @@
 # App Developer Discovery Path - Simplified Chinese
-# PLACEHOLDER FILE - 需要翻译
 path_id: app_developer
 category: technology
 difficulty_range: beginner_to_expert
 metadata:
-  title: Digital Craftsman - App Developer
-  short_description: Craft life-changing applications in the world of code
+  title: 数字工匠 - 应用开发者
+  short_description: 在代码世界中打造改变生活的应用
   long_description: |
-    You are a new member of the "Digital Craftsmen Alliance," skilled at weaving 
-    practical and beautiful applications with code. In this workshop filled with logic 
-    and creativity, every line of code is a spell, and your goal is to create digital 
-    tools that make people's lives more convenient and better.
+    你是“数字工匠联盟”的新成员，擅长用代码编织实用而美观的应用程序。
+    在这个充满逻辑和创造力的工坊中，每一行代码都是一个咒语，
+    你的目标是创造让人们生活更加便捷和美好的数字工具。
   estimated_hours: 60
   skill_focus:
     - code_weaving
     - interface_sculpting
     - logic_architecture
     - user_experience_magic
-  translation_notice: 需要翻译 - This is a placeholder file
-  original_language: en
-  target_language: zhCN
-  generated_date: "2025-07-16T07:00:56.462Z"
 world_setting:
-  name: Digital Craftsmen Alliance
+  name: 数字工匠联盟
   description: |
-    The Digital Craftsmen Alliance is a mysterious organization gathering top app 
-    developers. Here, code is treated as an art form, and developers learn to create 
-    applications that not only function flawlessly but also bring joy to users' daily lives.
+    数字工匠联盟是一个神秘的组织，汇聚了顶尖的应用开发者。
+    在这里，代码被视为一种艺术形式，开发者们学习创造不仅功能完美，
+    而且能为用户的日常生活带来欢乐的应用程序。
   atmosphere: innovative_collaborative
   visual_theme: tech_workshop
 starting_scenario:
-  title: Joining the Alliance
+  title: 加入联盟
   description: |
-    Master Code welcomes you to the alliance, but warns of a constant threat: Bug, 
-    the chaos demon, spreads errors and vulnerabilities in code. Meanwhile, Design 
-    and Code often conflict over priorities. You must use wisdom to balance technology 
-    with aesthetics while keeping applications stable.
+    代码大师欢迎你加入联盟，但警告着一个持续的威胁：Bug，
+    这个混沌恶魔，在代码中传播错误和漏洞。与此同时，设计和代码
+    经常在优先级上产生冲突。你必须运用智慧来平衡技术与美学，
+    同时保持应用程序的稳定。
   initial_tasks:
     - learn_fundamentals
     - choose_platform
@@ -43,59 +37,59 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: programming_fundamentals
-      name: Code Foundations
-      description: Master core programming concepts
+      name: 代码基础
+      description: 掌握核心编程概念
       max_level: 10
       unlocks:
         - advanced_patterns
         - clean_code
     - id: ui_development
-      name: Interface Crafting
-      description: Build beautiful user interfaces
+      name: 界面工艺
+      description: 构建美观的用户界面
       max_level: 10
       unlocks:
         - responsive_design
         - animation_magic
     - id: backend_architecture
-      name: Logic Engineering
-      description: Design robust backend systems
+      name: 逻辑工程
+      description: 设计强大的后端系统
       max_level: 10
       unlocks:
         - api_design
         - database_mastery
     - id: mobile_development
-      name: Mobile Sorcery
-      description: Create native mobile experiences
+      name: 移动魔法
+      description: 创造原生移动体验
       max_level: 10
       unlocks:
         - cross_platform
         - device_features
   advanced_skills:
     - id: performance_optimization
-      name: Speed Magic
-      description: Optimize apps for peak performance
+      name: 速度魔法
+      description: 优化应用以达到巅峰性能
       max_level: 15
       requires:
         - programming_fundamentals
         - backend_architecture
     - id: security_mastery
-      name: Protection Spells
-      description: Secure applications against threats
+      name: 保护咒语
+      description: 保护应用免受威胁
       max_level: 15
       requires:
         - backend_architecture
         - mobile_development
     - id: ai_integration
-      name: Intelligence Infusion
-      description: Integrate AI capabilities into apps
+      name: 智能注入
+      description: 将AI能力集成到应用中
       max_level: 15
       requires:
         - programming_fundamentals
         - ui_development
 milestone_quests:
   - id: first_release
-    name: App Store Debut
-    description: Release your first app to users
+    name: 应用商店首秀
+    description: 向用户发布你的第一个应用
     required_level: 5
     skills_tested:
       - programming_fundamentals
@@ -105,8 +99,8 @@ milestone_quests:
       - publisher_badge
       - user_feedback_access
   - id: bug_hunter
-    name: Bug Slayer
-    description: Create a bug-free app with perfect stability
+    name: Bug猎人
+    description: 创建一个无错误且完美稳定的应用
     required_level: 10
     skills_tested:
       - security_mastery
@@ -116,8 +110,8 @@ milestone_quests:
       - stability_master_title
       - advanced_debugging_tools
   - id: million_users
-    name: Million User App
-    description: Create an app used by millions
+    name: 百万用户应用
+    description: 创建一个被数百万人使用的应用
     required_level: 20
     skills_tested:
       - ai_integration
@@ -128,39 +122,39 @@ milestone_quests:
       - alliance_hall_of_fame
 achievements:
   - id: hello_world
-    name: First Spell
-    description: Write your first working app
+    name: 第一个咒语
+    description: 编写你的第一个可运行应用
     xp_reward: 100
     badge_type: bronze
   - id: five_star_app
-    name: User Favorite
-    description: Achieve 5-star rating on app store
+    name: 用户最爱
+    description: 在应用商店获得5星评价
     xp_reward: 300
     badge_type: silver
   - id: polyglot_developer
-    name: Code Polyglot
-    description: Master 5 programming languages
+    name: 代码多语通
+    description: 掌握5种编程语言
     xp_reward: 600
     badge_type: gold
   - id: app_legend
-    name: Legendary Craftsman
-    description: Complete all development challenges
+    name: 传奇工匠
+    description: 完成所有开发挑战
     xp_reward: 1200
     badge_type: platinum
 example_tasks:
   beginner:
     - id: todo_app
       type: creation
-      title: Task Organizer
-      description: Build a simple todo list app
+      title: 任务管理器
+      description: 构建一个简单的待办事项应用
       skills_improved:
         - programming_fundamentals
         - ui_development
       xp_reward: 70
     - id: calculator_app
       type: creation
-      title: Digital Calculator
-      description: Create a functional calculator
+      title: 数字计算器
+      description: 创建一个功能完善的计算器
       skills_improved:
         - programming_fundamentals
         - logic_architecture
@@ -168,16 +162,16 @@ example_tasks:
   intermediate:
     - id: social_app
       type: creation
-      title: Community Connector
-      description: Build a social networking app
+      title: 社区连接器
+      description: 构建一个社交网络应用
       skills_improved:
         - backend_architecture
         - mobile_development
       xp_reward: 200
     - id: game_app
       type: creation
-      title: Entertainment Spell
-      description: Create an engaging mobile game
+      title: 娱乐咒语
+      description: 创建一个引人入胜的手机游戏
       skills_improved:
         - ui_development
         - performance_optimization
@@ -185,35 +179,35 @@ example_tasks:
   advanced:
     - id: ai_assistant
       type: creation
-      title: Intelligent Companion
-      description: Build an AI-powered assistant app
+      title: 智能伴侣
+      description: 构建一个AI驱动的助手应用
       skills_improved:
         - ai_integration
         - backend_architecture
       xp_reward: 400
     - id: ar_experience
       type: creation
-      title: Reality Enhancer
-      description: Create an augmented reality app
+      title: 现实增强器
+      description: 创建一个增强现实应用
       skills_improved:
         - mobile_development
         - performance_optimization
       xp_reward: 450
 learning_objectives:
-  - Master multiple programming languages and frameworks
-  - Design intuitive and beautiful user interfaces
-  - Build scalable and maintainable backend systems
-  - Create native and cross-platform mobile apps
-  - Implement security best practices
-  - Optimize app performance and user experience
-  - Integrate cutting-edge technologies like AI and AR
-  - Deploy and maintain apps in production
+  - 掌握多种编程语言和框架
+  - 设计直观美观的用户界面
+  - 构建可扩展且易维护的后端系统
+  - 创建原生和跨平台移动应用
+  - 实施安全最佳实践
+  - 优化应用性能和用户体验
+  - 集成AI和AR等尖端技术
+  - 部署并维护生产中的应用
 career_outcomes:
-  - Mobile App Developer
-  - Full-Stack Developer
-  - iOS/Android Developer
-  - Software Engineer
-  - Technical Lead
-  - App Development Consultant
-  - Startup CTO
-  - Freelance App Developer
+  - 移动应用开发者
+  - 全栈开发者
+  - iOS/Android开发者
+  - 软件工程师
+  - 技术负责人
+  - 应用开发顾问
+  - 创业公司CTO
+  - 自由职业应用开发者

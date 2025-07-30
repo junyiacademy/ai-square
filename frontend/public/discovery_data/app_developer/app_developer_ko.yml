@@ -1,41 +1,36 @@
 # App Developer Discovery Path - Korean
-# PLACEHOLDER FILE - 번역이 필요합니다
 path_id: app_developer
 category: technology
 difficulty_range: beginner_to_expert
 metadata:
-  title: Digital Craftsman - App Developer
-  short_description: Craft life-changing applications in the world of code
+  title: 디지털 장인 - 앱 개발자
+  short_description: 코드의 세계에서 삶을 바꾸는 애플리케이션을 만들어보세요
   long_description: |
-    You are a new member of the "Digital Craftsmen Alliance," skilled at weaving 
-    practical and beautiful applications with code. In this workshop filled with logic 
-    and creativity, every line of code is a spell, and your goal is to create digital 
-    tools that make people's lives more convenient and better.
+    당신은 "디지털 장인 연합"의 새로운 회원으로, 코드로 실용적이고 아름다운 
+    애플리케이션을 짜는 기술을 가지고 있습니다. 논리와 창의성으로 가득 찬 
+    이 워크샵에서 코드의 모든 줄은 주문이며, 사람들의 삶을 더 편리하고 
+    더 나은 것으로 만드는 디지털 도구를 만드는 것이 목표입니다.
   estimated_hours: 60
   skill_focus:
     - code_weaving
     - interface_sculpting
     - logic_architecture
     - user_experience_magic
-  translation_notice: 번역이 필요합니다 - This is a placeholder file
-  original_language: en
-  target_language: ko
-  generated_date: "2025-07-16T07:00:56.457Z"
 world_setting:
-  name: Digital Craftsmen Alliance
+  name: 디지털 장인 연합
   description: |
-    The Digital Craftsmen Alliance is a mysterious organization gathering top app 
-    developers. Here, code is treated as an art form, and developers learn to create 
-    applications that not only function flawlessly but also bring joy to users' daily lives.
+    디지털 장인 연합은 최고의 앱 개발자들이 모인 신비한 조직입니다. 
+    여기서는 코드를 하나의 예술 형식으로 다루며, 개발자들은 완벽하게 작동할 뿐만 아니라 
+    사용자의 일상생활에 기쁨을 가져다주는 애플리케이션을 만드는 법을 배웁니다.
   atmosphere: innovative_collaborative
   visual_theme: tech_workshop
 starting_scenario:
-  title: Joining the Alliance
+  title: 연합에 가입하기
   description: |
-    Master Code welcomes you to the alliance, but warns of a constant threat: Bug, 
-    the chaos demon, spreads errors and vulnerabilities in code. Meanwhile, Design 
-    and Code often conflict over priorities. You must use wisdom to balance technology 
-    with aesthetics while keeping applications stable.
+    마스터 코드는 당신을 연합으로 환영하지만, 끊임없는 위협에 대해 경고합니다: 
+    혼돈의 악마인 버그는 코드에 오류와 취약점을 퍼뜨립니다. 한편, 디자인과 
+    코드는 종종 우선순위를 두고 충돌합니다. 애플리케이션을 안정적으로 유지하면서 
+    기술과 미학의 균형을 맞추기 위해 지혜를 사용해야 합니다.
   initial_tasks:
     - learn_fundamentals
     - choose_platform
@@ -43,59 +38,59 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: programming_fundamentals
-      name: Code Foundations
-      description: Master core programming concepts
+      name: 코드 기초
+      description: 핵심 프로그래밍 개념 마스터하기
       max_level: 10
       unlocks:
         - advanced_patterns
         - clean_code
     - id: ui_development
-      name: Interface Crafting
-      description: Build beautiful user interfaces
+      name: 인터페이스 제작
+      description: 아름다운 사용자 인터페이스 구축하기
       max_level: 10
       unlocks:
         - responsive_design
         - animation_magic
     - id: backend_architecture
-      name: Logic Engineering
-      description: Design robust backend systems
+      name: 논리 엔지니어링
+      description: 견고한 백엔드 시스템 설계하기
       max_level: 10
       unlocks:
         - api_design
         - database_mastery
     - id: mobile_development
-      name: Mobile Sorcery
-      description: Create native mobile experiences
+      name: 모바일 마법
+      description: 네이티브 모바일 경험 만들기
       max_level: 10
       unlocks:
         - cross_platform
         - device_features
   advanced_skills:
     - id: performance_optimization
-      name: Speed Magic
-      description: Optimize apps for peak performance
+      name: 속도 마법
+      description: 최고 성능을 위한 앱 최적화
       max_level: 15
       requires:
         - programming_fundamentals
         - backend_architecture
     - id: security_mastery
-      name: Protection Spells
-      description: Secure applications against threats
+      name: 보호 주문
+      description: 위협으로부터 애플리케이션 보호하기
       max_level: 15
       requires:
         - backend_architecture
         - mobile_development
     - id: ai_integration
-      name: Intelligence Infusion
-      description: Integrate AI capabilities into apps
+      name: 지능 주입
+      description: 앱에 AI 기능 통합하기
       max_level: 15
       requires:
         - programming_fundamentals
         - ui_development
 milestone_quests:
   - id: first_release
-    name: App Store Debut
-    description: Release your first app to users
+    name: 앱 스토어 데뷔
+    description: 첫 번째 앱을 사용자에게 출시하기
     required_level: 5
     skills_tested:
       - programming_fundamentals
@@ -105,8 +100,8 @@ milestone_quests:
       - publisher_badge
       - user_feedback_access
   - id: bug_hunter
-    name: Bug Slayer
-    description: Create a bug-free app with perfect stability
+    name: 버그 슬레이어
+    description: 완벽한 안정성을 가진 버그 없는 앱 만들기
     required_level: 10
     skills_tested:
       - security_mastery
@@ -116,8 +111,8 @@ milestone_quests:
       - stability_master_title
       - advanced_debugging_tools
   - id: million_users
-    name: Million User App
-    description: Create an app used by millions
+    name: 백만 사용자 앱
+    description: 수백만 명이 사용하는 앱 만들기
     required_level: 20
     skills_tested:
       - ai_integration
@@ -128,39 +123,39 @@ milestone_quests:
       - alliance_hall_of_fame
 achievements:
   - id: hello_world
-    name: First Spell
-    description: Write your first working app
+    name: 첫 번째 주문
+    description: 첫 번째로 작동하는 앱 작성하기
     xp_reward: 100
     badge_type: bronze
   - id: five_star_app
-    name: User Favorite
-    description: Achieve 5-star rating on app store
+    name: 사용자 선호
+    description: 앱 스토어에서 5성 평점 달성하기
     xp_reward: 300
     badge_type: silver
   - id: polyglot_developer
-    name: Code Polyglot
-    description: Master 5 programming languages
+    name: 코드 폴리글롯
+    description: 5가지 프로그래밍 언어 마스터하기
     xp_reward: 600
     badge_type: gold
   - id: app_legend
-    name: Legendary Craftsman
-    description: Complete all development challenges
+    name: 전설의 장인
+    description: 모든 개발 도전 과제 완료하기
     xp_reward: 1200
     badge_type: platinum
 example_tasks:
   beginner:
     - id: todo_app
       type: creation
-      title: Task Organizer
-      description: Build a simple todo list app
+      title: 작업 관리자
+      description: 간단한 할 일 목록 앱 만들기
       skills_improved:
         - programming_fundamentals
         - ui_development
       xp_reward: 70
     - id: calculator_app
       type: creation
-      title: Digital Calculator
-      description: Create a functional calculator
+      title: 디지털 계산기
+      description: 기능적인 계산기 만들기
       skills_improved:
         - programming_fundamentals
         - logic_architecture
@@ -168,16 +163,16 @@ example_tasks:
   intermediate:
     - id: social_app
       type: creation
-      title: Community Connector
-      description: Build a social networking app
+      title: 커뮤니티 커넥터
+      description: 소셜 네트워킹 앱 만들기
       skills_improved:
         - backend_architecture
         - mobile_development
       xp_reward: 200
     - id: game_app
       type: creation
-      title: Entertainment Spell
-      description: Create an engaging mobile game
+      title: 엔터테인먼트 주문
+      description: 매력적인 모바일 게임 만들기
       skills_improved:
         - ui_development
         - performance_optimization
@@ -185,35 +180,35 @@ example_tasks:
   advanced:
     - id: ai_assistant
       type: creation
-      title: Intelligent Companion
-      description: Build an AI-powered assistant app
+      title: 지능형 동반자
+      description: AI 기반 비서 앱 만들기
       skills_improved:
         - ai_integration
         - backend_architecture
       xp_reward: 400
     - id: ar_experience
       type: creation
-      title: Reality Enhancer
-      description: Create an augmented reality app
+      title: 현실 증강기
+      description: 증강 현실 앱 만들기
       skills_improved:
         - mobile_development
         - performance_optimization
       xp_reward: 450
 learning_objectives:
-  - Master multiple programming languages and frameworks
-  - Design intuitive and beautiful user interfaces
-  - Build scalable and maintainable backend systems
-  - Create native and cross-platform mobile apps
-  - Implement security best practices
-  - Optimize app performance and user experience
-  - Integrate cutting-edge technologies like AI and AR
-  - Deploy and maintain apps in production
+  - 여러 프로그래밍 언어와 프레임워크 마스터하기
+  - 직관적이고 아름다운 사용자 인터페이스 디자인하기
+  - 확장 가능하고 유지 관리가 가능한 백엔드 시스템 구축하기
+  - 네이티브 및 크로스 플랫폼 모바일 앱 만들기
+  - 보안 모범 사례 구현하기
+  - 앱 성능과 사용자 경험 최적화하기
+  - AI와 AR 같은 최첫단 기술 통합하기
+  - 프로덕션에서 앱 배포 및 유지 관리하기
 career_outcomes:
-  - Mobile App Developer
-  - Full-Stack Developer
-  - iOS/Android Developer
-  - Software Engineer
-  - Technical Lead
-  - App Development Consultant
-  - Startup CTO
-  - Freelance App Developer
+  - 모바일 앱 개발자
+  - 풀스택 개발자
+  - iOS/Android 개발자
+  - 소프트웨어 엔지니어
+  - 기술 리드
+  - 앱 개발 컨설턴트
+  - 스타트업 CTO
+  - 프리랜서 앱 개발자

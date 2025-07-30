@@ -1,42 +1,43 @@
 # Product Manager Discovery Path - Thai
-# PLACEHOLDER FILE - ต้องการการแปล
 path_id: product_manager
 category: business
 difficulty_range: beginner_to_expert
+
 metadata:
-  title: Product Alchemist - Product Manager
-  short_description: Forge perfect products in the market crucible
+  title: "นักเล่นแบบผลิตภัณฑ์ - Product Manager"
+  short_description: "สร้างผลิตภัณฑ์ที่สมบูรณ์แบบในเตากลั่นของตลาด"
   long_description: |
-    You are a newly minted alchemist at the "Product Alchemy Workshop," skilled at 
-    fusing user needs, technical capabilities, and business goals into powerful products. 
-    In this workshop filled with innovation sparks, every iteration is an alchemical 
-    experiment, and your goal is to create perfect products that can change the world.
+    คุณเป็นนักเล่นแบบที่พึ่งจบการศึกษาจาก "โรงงานเล่นแบบผลิตภัณฑ์" 
+    ซึ่งชำนาญในการผสมผสานความต้องการของผู้ใช้ ความสามารถทางเทคนิค 
+    และเป้าหมายทางธุรกิจเข้าด้วยกันเป็นผลิตภัณฑ์ที่ทรงพลัง ในโรงงานที่
+    เต็มไปด้วยประกายการนวัตกรรมนี้ ทุกการทำซ้ำคือการทดลองทางเล่นแบบ 
+    และเป้าหมายของคุณคือการสร้างผลิตภัณฑ์ที่สมบูรณ์ซึ่งสามารถเปลี่ยนโลกได้
+  
   estimated_hours: 55
   skill_focus:
     - requirement_alchemy
     - roadmap_prophecy
     - team_coordination_magic
     - user_resonance
-  translation_notice: ต้องการการแปล - This is a placeholder file
-  original_language: en
-  target_language: th
-  generated_date: "2025-07-16T07:00:56.527Z"
 world_setting:
-  name: Product Alchemy Workshop
+  name: "โรงงานเล่นแบบผลิตภัณฑ์"
   description: |
-    The Product Alchemy Workshop is a magical forge where ideas are transformed into 
-    actual products. Here, product managers learn the ancient art of balancing user 
-    desires, technical constraints, and business objectives to create products that 
-    resonate with millions.
-  atmosphere: dynamic_creative
-  visual_theme: innovation_forge
+    โรงงานเล่นแบบผลิตภัณฑ์คือโรงหล่อวิเศษที่ไอเดียถูกเปลี่ยนเป็นผลิตภัณฑ์จริง 
+    ที่นี่ Product Manager จะได้เรียนรู้ศิลปะโบราณในการสร้างสมดุลระหว่าง
+    ความปรารถนาของผู้ใช้ ข้อจำกัดทางเทคนิค และวัตถุประสงค์ทางธุรกิจ 
+    เพื่อสร้างผลิตภัณฑ์ที่โดนใจผู้คนนับล้านคน
+  
+  atmosphere: "dynamic_creative"
+  visual_theme: "innovation_forge"
 starting_scenario:
-  title: The Alchemist's Challenge
+  title: "ความท้าทายของนักเล่นแบบ"
   description: |
-    Strategy Master welcomes you to the workshop with a warning: Deadline, the Time 
-    Tyrant, is forcing teams to sacrifice product quality for speed. Meanwhile, Voice 
-    of Users grows louder with conflicting demands. You must find the philosopher's 
-    stone of product management - balancing quality, speed, and user satisfaction.
+    อาจารย์กลยุทธ์ต้อนรับคุณเข้าสู่โรงงานด้วยคำเตือน: เดดไลน์ จักรพรรดิแห่งเวลา 
+    กำลังบังคับให้ทีมงานยอมเสียสละคุณภาพของผลิตภัณฑ์เพื่อความรวดเร็ว 
+    ขณะเดียวกันนั้น เสียงของผู้ใช้ก็ดังขึ้นด้วยความต้องการที่ขัดแย้งกัน 
+    คุณต้องค้นหาศิลาประสาของการจัดการผลิตภัณฑ์ - การสร้าง
+    สมดุลระหว่างคุณภาพ ความรวดเร็ว และความพึงพอใจของผู้ใช้
+  
   initial_tasks:
     - understand_users
     - analyze_market
@@ -44,59 +45,59 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: user_research
-      name: User Mind Reading
-      description: Deeply understand user needs and behaviors
+      name: การอ่านใจผู้ใช้
+      description: เข้าใจความต้องการและพฤติกรรมของผู้ใช้อย่างลึกซึ้ง
       max_level: 10
       unlocks:
         - persona_creation
         - journey_mapping
     - id: product_strategy
-      name: Strategic Vision
-      description: Craft winning product strategies
+      name: วิสัยทัศน์เชิงยุทธศาสตร์
+      description: สร้างกลยุทธ์ผลิตภัณฑ์ที่ชนะ
       max_level: 10
       unlocks:
         - competitive_analysis
         - positioning_mastery
     - id: feature_prioritization
-      name: Priority Alchemy
-      description: Master the art of feature prioritization
+      name: เล่นแบบการจัดลำดับความสำคัญ
+      description: เชี่ยวชาญศิลปะการจัดลำดับความสำคัญของฟีเจอร์
       max_level: 10
       unlocks:
         - roadmap_planning
         - mvp_design
     - id: stakeholder_management
-      name: Harmony Orchestration
-      description: Align diverse stakeholder interests
+      name: การจัดการส่วนได้ส่วนเสีย
+      description: จัดการผลประโยชน์ของผู้มีส่วนได้ส่วนเสียที่หลากหลาย
       max_level: 10
       unlocks:
         - executive_communication
         - cross_team_collaboration
   advanced_skills:
     - id: growth_hacking
-      name: Growth Sorcery
-      description: Drive exponential product growth
+      name: เวทมนตร์การเติบโต
+      description: ขับเคลื่อนการเติบโตแบบเลขยกำลังสองของผลิตภัณฑ์
       max_level: 15
       requires:
         - product_strategy
         - user_research
     - id: data_driven_decisions
-      name: Metrics Mastery
-      description: Make decisions based on data insights
+      name: การตัดสินใจด้วยข้อมูล
+      description: ตัดสินใจจากข้อมูลเชิงลึก
       max_level: 15
       requires:
         - feature_prioritization
         - user_research
     - id: platform_thinking
-      name: Ecosystem Architecture
-      description: Build product platforms and ecosystems
+      name: สถาปัตยกรรมนิเวศ
+      description: สร้างแพลตฟอร์มผลิตภัณฑ์และระบบนิเวศ
       max_level: 15
       requires:
         - product_strategy
         - stakeholder_management
 milestone_quests:
   - id: first_launch
-    name: Product Genesis
-    description: Successfully launch your first product
+    name: กำเนิดผลิตภัณฑ์
+    description: เปิดตัวผลิตภัณฑ์แรกของคุณอย่างสำเร็จ
     required_level: 5
     skills_tested:
       - user_research
@@ -106,8 +107,8 @@ milestone_quests:
       - launch_specialist_badge
       - user_testimonials
   - id: deadline_balance
-    name: Time vs Quality
-    description: Deliver quality product despite time pressure
+    name: เวลา ประทับ คุณภาพ
+    description: ส่งมอบผลิตภัณฑ์คุณภาพดีทั้งที่มีความกดดันด้านเวลา
     required_level: 10
     skills_tested:
       - stakeholder_management
@@ -117,8 +118,8 @@ milestone_quests:
       - balance_master_title
       - deadline_immunity
   - id: unicorn_product
-    name: Billion User Product
-    description: Create a product used by millions
+    name: ผลิตภัณฑ์พันล้านผู้ใช้
+    description: สร้างผลิตภัณฑ์ที่มีผู้ใช้นับล้านคน
     required_level: 20
     skills_tested:
       - growth_hacking
@@ -129,39 +130,39 @@ milestone_quests:
       - industry_influence
 achievements:
   - id: first_spec
-    name: Spec Writer
-    description: Write your first product specification
+    name: นักเขียนสเป็ค
+    description: เขียนสเป็คผลิตภัณฑ์ฉบับแรกของคุณ
     xp_reward: 100
     badge_type: bronze
   - id: user_champion
-    name: User Advocate
-    description: Implement 20 user-requested features
+    name: ตัวแทนผู้ใช้
+    description: พัฒนาฟีเจอร์ 20 อันที่ผู้ใช้ขอ
     xp_reward: 300
     badge_type: silver
   - id: revenue_generator
-    name: Revenue Alchemist
-    description: Drive $1M in product revenue
+    name: นักเล่นแบบสร้างรายได้
+    description: สร้างรายได้จากผลิตภัณฑ์ 1 ล้านดอลลาร์
     xp_reward: 600
     badge_type: gold
   - id: pm_legend
-    name: Product Sage
-    description: Complete all product challenges
+    name: นักปราญญ์ผลิตภัณฑ์
+    description: ผ่านความท้าทายผลิตภัณฑ์ทั้งหมด
     xp_reward: 1200
     badge_type: platinum
 example_tasks:
   beginner:
     - id: user_interviews
       type: analysis
-      title: Voice Collection
-      description: Conduct user interviews to gather insights
+      title: การรวบรวมเสียง
+      description: สัมภาษณ์ผู้ใช้เพื่อรวบรวมข้อมูลเชิงลึก
       skills_improved:
         - user_research
         - user_resonance
       xp_reward: 60
     - id: competitive_analysis
       type: analysis
-      title: Market Scanning
-      description: Analyze competitor products
+      title: การสำรวจตลาด
+      description: วิเคราะห์ผลิตภัณฑ์ของคู่แข่ง
       skills_improved:
         - product_strategy
         - requirement_alchemy
@@ -169,16 +170,16 @@ example_tasks:
   intermediate:
     - id: roadmap_creation
       type: creation
-      title: Future Path Design
-      description: Create a product roadmap
+      title: การออกแบบเส้นทางอนาคต
+      description: สร้างแผนที่ผลิตภัณฑ์
       skills_improved:
         - roadmap_planning
         - roadmap_prophecy
       xp_reward: 180
     - id: feature_launch
       type: creation
-      title: Feature Alchemy
-      description: Launch a major product feature
+      title: เล่นแบบการเปิดตัวฟีเจอร์
+      description: เปิดตัวฟีเจอร์สำคัญของผลิตภัณฑ์
       skills_improved:
         - feature_prioritization
         - stakeholder_management
@@ -186,35 +187,36 @@ example_tasks:
   advanced:
     - id: platform_design
       type: creation
-      title: Ecosystem Creation
-      description: Design a product platform
+      title: การสร้างระบบนิเวศ
+      description: ออกแบบแพลตฟอร์มผลิตภัณฑ์
       skills_improved:
         - platform_thinking
         - product_strategy
       xp_reward: 400
     - id: growth_experiment
       type: analysis
-      title: Growth Formula
-      description: Run growth experiments to scale product
+      title: สูตรการเติบโต
+      description: ทดลองการทดสอบการเติบโตเพื่อขยายผลิตภัณฑ์
       skills_improved:
         - growth_hacking
         - data_driven_decisions
       xp_reward: 350
 learning_objectives:
-  - Master user research and empathy techniques
-  - Develop strategic product thinking
-  - Learn to prioritize features effectively
-  - Build consensus among diverse stakeholders
-  - Use data to drive product decisions
-  - Create and communicate product vision
-  - Balance business goals with user needs
-  - Scale products from inception to maturity
+  - "เชี่ยวชาญเทคนิคการวิจัยผู้ใช้และการเข้าใจ"
+  - "พัฒนาความคิดเชิงยุทธศาสตร์ด้านผลิตภัณฑ์"
+  - "เรียนรู้การจัดลำดับความสำคัญของฟีเจอร์อย่างมีประสิทธิภาพ"
+  - "สร้างฉันทามติในกลุ่มผู้มีส่วนได้ส่วนเสียที่หลากหลาย"
+  - "ใช้ข้อมูลในการตัดสินใจผลิตภัณฑ์"
+  - "สร้างและสื่อสารวิสัยทัศน์ผลิตภัณฑ์"
+  - "สร้างสมดุลระหว่างเป้าหมายทางธุรกิจกับความต้องการของผู้ใช้"
+  - "ขยายผลิตภัณฑ์จากจุดเริ่มต้นสู่ความโตเต็มที่"
+
 career_outcomes:
-  - Product Manager
-  - Senior Product Manager
-  - Product Director
-  - Chief Product Officer
-  - Product Strategy Consultant
-  - Startup Product Lead
-  - Growth Product Manager
-  - Platform Product Manager
+  - "Product Manager"
+  - "Senior Product Manager"
+  - "Product Director"
+  - "Chief Product Officer"
+  - "ที่ปรึกษากลยุทธ์ผลิตภัณฑ์"
+  - "Startup Product Lead"
+  - "Growth Product Manager"
+  - "Platform Product Manager"

@@ -1,42 +1,40 @@
 # Product Manager Discovery Path - Japanese
-# PLACEHOLDER FILE - 翻訳が必要です
 path_id: product_manager
 category: business
 difficulty_range: beginner_to_expert
+
 metadata:
-  title: Product Alchemist - Product Manager
-  short_description: Forge perfect products in the market crucible
+  title: "プロダクト錬金術師 - Product Manager"
+  short_description: "市場の坩堝で完璧な製品を鍛え上げよう"
   long_description: |
-    You are a newly minted alchemist at the "Product Alchemy Workshop," skilled at 
-    fusing user needs, technical capabilities, and business goals into powerful products. 
-    In this workshop filled with innovation sparks, every iteration is an alchemical 
-    experiment, and your goal is to create perfect products that can change the world.
+    あなたは「プロダクト錬金術工房」の新米錬金術師です。ユーザーのニーズ、技術的能力、
+    ビジネス目標を強力な製品へと融合させるスキルを持っています。イノベーションの火花が
+    飛び交うこの工房では、すべての反復が錬金術的実験であり、あなたの目標は世界を
+    変えることができる完璧な製品を創造することです。
+  
   estimated_hours: 55
   skill_focus:
     - requirement_alchemy
     - roadmap_prophecy
     - team_coordination_magic
     - user_resonance
-  translation_notice: 翻訳が必要です - This is a placeholder file
-  original_language: en
-  target_language: ja
-  generated_date: "2025-07-16T07:00:56.524Z"
 world_setting:
-  name: Product Alchemy Workshop
+  name: "プロダクト錬金術工房"
   description: |
-    The Product Alchemy Workshop is a magical forge where ideas are transformed into 
-    actual products. Here, product managers learn the ancient art of balancing user 
-    desires, technical constraints, and business objectives to create products that 
-    resonate with millions.
-  atmosphere: dynamic_creative
-  visual_theme: innovation_forge
+    プロダクト錬金術工房は、アイデアが実際の製品に変換される魔法の鍛冶場です。
+    ここでプロダクトマネージャーは、ユーザーの欲求、技術的制約、ビジネス目標の
+    バランスを取り、何百万人もの人々に響く製品を創造する古代の技術を学びます。
+  
+  atmosphere: "dynamic_creative"
+  visual_theme: "innovation_forge"
 starting_scenario:
-  title: The Alchemist's Challenge
+  title: "錬金術師の挑戦"
   description: |
-    Strategy Master welcomes you to the workshop with a warning: Deadline, the Time 
-    Tyrant, is forcing teams to sacrifice product quality for speed. Meanwhile, Voice 
-    of Users grows louder with conflicting demands. You must find the philosopher's 
-    stone of product management - balancing quality, speed, and user satisfaction.
+    戦略マスターがあなたを工房に迎え入れ、警告を発します：時の暴君デッドラインが
+    チームに速度のために製品品質を犠牲にするよう強要しています。一方、ユーザーの声は
+    相反する要求でますます大きくなっています。あなたはプロダクトマネジメントの
+    賢者の石を見つけなければなりません - 品質、速度、ユーザー満足のバランスです。
+  
   initial_tasks:
     - understand_users
     - analyze_market
@@ -44,59 +42,59 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: user_research
-      name: User Mind Reading
-      description: Deeply understand user needs and behaviors
+      name: ユーザー心理読解
+      description: ユーザーのニーズと行動を深く理解する
       max_level: 10
       unlocks:
         - persona_creation
         - journey_mapping
     - id: product_strategy
-      name: Strategic Vision
-      description: Craft winning product strategies
+      name: 戦略的ビジョン
+      description: 勝利をもたらす製品戦略を練る
       max_level: 10
       unlocks:
         - competitive_analysis
         - positioning_mastery
     - id: feature_prioritization
-      name: Priority Alchemy
-      description: Master the art of feature prioritization
+      name: 優先度錬金術
+      description: 機能優先順位付けの技術をマスターする
       max_level: 10
       unlocks:
         - roadmap_planning
         - mvp_design
     - id: stakeholder_management
-      name: Harmony Orchestration
-      description: Align diverse stakeholder interests
+      name: 調和の指揮法
+      description: 多様なステークホルダーの利益を調整する
       max_level: 10
       unlocks:
         - executive_communication
         - cross_team_collaboration
   advanced_skills:
     - id: growth_hacking
-      name: Growth Sorcery
-      description: Drive exponential product growth
+      name: 成長魔術
+      description: 製品の指数関数的成長を推進する
       max_level: 15
       requires:
         - product_strategy
         - user_research
     - id: data_driven_decisions
-      name: Metrics Mastery
-      description: Make decisions based on data insights
+      name: メトリクス熟練
+      description: データインサイトに基づいて意思決定を行う
       max_level: 15
       requires:
         - feature_prioritization
         - user_research
     - id: platform_thinking
-      name: Ecosystem Architecture
-      description: Build product platforms and ecosystems
+      name: エコシステム設計
+      description: 製品プラットフォームとエコシステムを構築する
       max_level: 15
       requires:
         - product_strategy
         - stakeholder_management
 milestone_quests:
   - id: first_launch
-    name: Product Genesis
-    description: Successfully launch your first product
+    name: プロダクト創世記
+    description: 初めての製品ローンチを成功させる
     required_level: 5
     skills_tested:
       - user_research
@@ -106,8 +104,8 @@ milestone_quests:
       - launch_specialist_badge
       - user_testimonials
   - id: deadline_balance
-    name: Time vs Quality
-    description: Deliver quality product despite time pressure
+    name: 時間 vs 品質
+    description: 時間的プレッシャーの中でも品質の高い製品を提供する
     required_level: 10
     skills_tested:
       - stakeholder_management
@@ -117,8 +115,8 @@ milestone_quests:
       - balance_master_title
       - deadline_immunity
   - id: unicorn_product
-    name: Billion User Product
-    description: Create a product used by millions
+    name: 十億ユーザー製品
+    description: 何百万人に使われる製品を創造する
     required_level: 20
     skills_tested:
       - growth_hacking
@@ -129,39 +127,39 @@ milestone_quests:
       - industry_influence
 achievements:
   - id: first_spec
-    name: Spec Writer
-    description: Write your first product specification
+    name: 仕様書執筆者
+    description: 初めての製品仕様書を書く
     xp_reward: 100
     badge_type: bronze
   - id: user_champion
-    name: User Advocate
-    description: Implement 20 user-requested features
+    name: ユーザー代弁者
+    description: ユーザー要求機能を20個実装する
     xp_reward: 300
     badge_type: silver
   - id: revenue_generator
-    name: Revenue Alchemist
-    description: Drive $1M in product revenue
+    name: 収益錬金術師
+    description: 製品で100万ドルの収益を上げる
     xp_reward: 600
     badge_type: gold
   - id: pm_legend
-    name: Product Sage
-    description: Complete all product challenges
+    name: プロダクト賢者
+    description: すべての製品チャレンジを完了する
     xp_reward: 1200
     badge_type: platinum
 example_tasks:
   beginner:
     - id: user_interviews
       type: analysis
-      title: Voice Collection
-      description: Conduct user interviews to gather insights
+      title: 声の収集
+      description: ユーザーインタビューを実施してインサイトを収集する
       skills_improved:
         - user_research
         - user_resonance
       xp_reward: 60
     - id: competitive_analysis
       type: analysis
-      title: Market Scanning
-      description: Analyze competitor products
+      title: 市場スキャニング
+      description: 競合製品を分析する
       skills_improved:
         - product_strategy
         - requirement_alchemy
@@ -169,16 +167,16 @@ example_tasks:
   intermediate:
     - id: roadmap_creation
       type: creation
-      title: Future Path Design
-      description: Create a product roadmap
+      title: 未来経路設計
+      description: 製品ロードマップを作成する
       skills_improved:
         - roadmap_planning
         - roadmap_prophecy
       xp_reward: 180
     - id: feature_launch
       type: creation
-      title: Feature Alchemy
-      description: Launch a major product feature
+      title: 機能錬金術
+      description: 主要な製品機能をローンチする
       skills_improved:
         - feature_prioritization
         - stakeholder_management
@@ -186,35 +184,36 @@ example_tasks:
   advanced:
     - id: platform_design
       type: creation
-      title: Ecosystem Creation
-      description: Design a product platform
+      title: エコシステム創造
+      description: 製品プラットフォームを設計する
       skills_improved:
         - platform_thinking
         - product_strategy
       xp_reward: 400
     - id: growth_experiment
       type: analysis
-      title: Growth Formula
-      description: Run growth experiments to scale product
+      title: 成長の方程式
+      description: 製品スケールのための成長実験を実行する
       skills_improved:
         - growth_hacking
         - data_driven_decisions
       xp_reward: 350
 learning_objectives:
-  - Master user research and empathy techniques
-  - Develop strategic product thinking
-  - Learn to prioritize features effectively
-  - Build consensus among diverse stakeholders
-  - Use data to drive product decisions
-  - Create and communicate product vision
-  - Balance business goals with user needs
-  - Scale products from inception to maturity
+  - "ユーザーリサーチと共感技術をマスターする"
+  - "戦略的製品思考を発達させる"
+  - "機能を効果的に優先順位付けする方法を学ぶ"
+  - "多様なステークホルダー間でコンセンサスを構築する"
+  - "データを使って製品の意思決定を行う"
+  - "製品ビジョンを創造し伝達する"
+  - "ビジネス目標とユーザーニーズのバランスを取る"
+  - "製品を構想から成熟まで拡張する"
+
 career_outcomes:
-  - Product Manager
-  - Senior Product Manager
-  - Product Director
-  - Chief Product Officer
-  - Product Strategy Consultant
-  - Startup Product Lead
-  - Growth Product Manager
-  - Platform Product Manager
+  - "プロダクトマネージャー"
+  - "シニアプロダクトマネージャー"
+  - "プロダクトディレクター"
+  - "最高プロダクト責任者(CPO)"
+  - "製品戦略コンサルタント"
+  - "スタートアッププロダクトリード"
+  - "グロースプロダクトマネージャー"
+  - "プラットフォームプロダクトマネージャー"

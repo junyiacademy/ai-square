@@ -1,218 +1,220 @@
 # Data Analyst Discovery Path - German
-# PLACEHOLDER FILE - Übersetzung erforderlich
 path_id: data_analyst
 category: technology
 difficulty_range: beginner_to_expert
+
 metadata:
-  title: Data Oracle - Data Analyst
-  short_description: Discover hidden truths in the ocean of data
+  title: "Daten-Orakel - Datenanalyst"
+  short_description: "Entdecke verborgene Wahrheiten im Ozean der Daten"
   long_description: |
-    You are an apprentice oracle at the "Data Oracle Temple," possessing the mystical 
-    ability to see future trends in chaotic data. In this temple filled with numbers 
-    and charts, every data point contains important messages, and your mission is to 
-    decipher the secrets behind these numbers.
+    Du bist ein Lehrlings-Orakel im "Daten-Orakel-Tempel" und besitzt die mystische 
+    Fähigkeit, zukünftige Trends in chaotischen Daten zu sehen. In diesem Tempel 
+    voller Zahlen und Diagramme enthält jeder Datenpunkt wichtige Botschaften, 
+    und deine Mission ist es, die Geheimnisse hinter diesen Zahlen zu entschlüsseln.
+  
   estimated_hours: 50
   skill_focus:
     - data_alchemy
     - predictive_statistics
     - visualization_magic
     - insight_summoning
-  translation_notice: Übersetzung erforderlich - This is a placeholder file
-  original_language: en
-  target_language: de
-  generated_date: "2025-07-16T07:00:56.495Z"
+
 world_setting:
-  name: Data Oracle Temple
+  name: "Daten-Orakel-Tempel"
   description: |
-    The Data Oracle Temple is a mysterious sanctuary that collects data from all over 
-    the world. Here, data analysts are trained as oracles who can interpret the language 
-    of numbers and reveal truths that shape decisions across realms.
-  atmosphere: mystical_analytical
-  visual_theme: digital_temple
+    Der Daten-Orakel-Tempel ist ein mysteriöses Heiligtum, das Daten aus der 
+    ganzen Welt sammelt. Hier werden Datenanalysten als Orakel ausgebildet, 
+    die die Sprache der Zahlen interpretieren und Wahrheiten offenbaren können, 
+    die Entscheidungen in allen Bereichen prägen.
+  
+  atmosphere: "mystical_analytical"
+  visual_theme: "digital_temple"
+
 starting_scenario:
-  title: Initiation at the Temple
+  title: "Initiation im Tempel"
   description: |
-    Wise Mentor Oracle welcomes you to the temple, speaking in riddles about data's 
-    secrets. But a threat looms: Chaos, the data destroyer, is polluting data sources 
-    and spreading misleading analyses. You must use pure statistical methods to find 
-    the truth amidst the confusion.
+    Das weise Mentor-Orakel begrüßt dich im Tempel und spricht in Rätseln über 
+    die Geheimnisse der Daten. Aber eine Bedrohung schwebt in der Luft: Chaos, 
+    der Datenvernichter, vergiftet Datenquellen und verbreitet irreführende 
+    Analysen. Du musst reine statistische Methoden verwenden, um die Wahrheit 
+    inmitten der Verwirrung zu finden.
+  
   initial_tasks:
     - learn_data_basics
     - master_tools
     - first_analysis
+
 skill_tree:
   core_skills:
     - id: data_collection
-      name: Data Gathering
-      description: Master the art of collecting and cleaning data
+      name: "Datensammlung"
+      description: "Meistere die Kunst des Sammelns und Bereinigens von Daten"
       max_level: 10
       unlocks:
         - web_scraping
         - api_mastery
+    
     - id: statistical_analysis
-      name: Statistical Sorcery
-      description: Wield statistical methods to reveal patterns
+      name: "Statistische Zauberei"
+      description: "Verwende statistische Methoden zur Mustererkennung"
       max_level: 10
       unlocks:
         - hypothesis_testing
         - regression_magic
+    
     - id: data_visualization
-      name: Visual Prophecy
-      description: Transform data into compelling visual stories
+      name: "Visuelle Prophezeiung"
+      description: "Verwandle Daten in überzeugende visuelle Geschichten"
       max_level: 10
       unlocks:
         - dashboard_creation
         - interactive_charts
+    
     - id: business_intelligence
-      name: Strategic Insights
-      description: Convert data into actionable business wisdom
+      name: "Strategische Einsichten"
+      description: "Verwandle Daten in umsetzbare Business-Weisheit"
       max_level: 10
       unlocks:
         - kpi_tracking
         - forecasting
+
   advanced_skills:
     - id: machine_learning
-      name: Predictive Arts
-      description: Use ML to predict future outcomes
+      name: "Vorhersagekunst"
+      description: "Nutze ML zur Vorhersage zukünftiger Ergebnisse"
       max_level: 15
-      requires:
-        - statistical_analysis
-        - data_collection
+      requires: [statistical_analysis, data_collection]
+    
     - id: big_data_mastery
-      name: Massive Data Manipulation
-      description: Handle and analyze enormous datasets
+      name: "Massive Datenmanipulation"
+      description: "Verwalte und analysiere riesige Datensätze"
       max_level: 15
-      requires:
-        - data_collection
-        - business_intelligence
+      requires: [data_collection, business_intelligence]
+    
     - id: real_time_analytics
-      name: Instant Oracle
-      description: Perform real-time data analysis
+      name: "Sofort-Orakel"
+      description: "Führe Echtzeitdatenanalyse durch"
       max_level: 15
-      requires:
-        - data_visualization
-        - statistical_analysis
+      requires: [data_visualization, statistical_analysis]
+
 milestone_quests:
   - id: first_insight
-    name: First Revelation
-    description: Discover your first meaningful business insight
+    name: "Erste Offenbarung"
+    description: "Entdecke deine erste bedeutungsvolle Business-Einsicht"
     required_level: 5
-    skills_tested:
-      - data_collection
-      - statistical_analysis
+    skills_tested: [data_collection, statistical_analysis]
     xp_reward: 500
     unlocks:
       - insight_badge
       - temple_recognition
+  
   - id: chaos_detection
-    name: Chaos Hunter
-    description: Detect and correct misleading data manipulations
+    name: "Chaos-Jäger"
+    description: "Erkenne und korrigiere irreführende Datenmanipulationen"
     required_level: 10
-    skills_tested:
-      - data_visualization
-      - business_intelligence
+    skills_tested: [data_visualization, business_intelligence]
     xp_reward: 1000
     unlocks:
       - truth_seeker_title
       - advanced_access
+  
   - id: oracle_ascension
-    name: Master Oracle
-    description: Predict a major trend before it happens
+    name: "Meister-Orakel"
+    description: "Sage einen großen Trend vorher, bevor er eintritt"
     required_level: 20
-    skills_tested:
-      - machine_learning
-      - real_time_analytics
+    skills_tested: [machine_learning, real_time_analytics]
     xp_reward: 2500
     unlocks:
       - oracle_master_title
       - temple_leadership
+
 achievements:
   - id: first_dashboard
-    name: First Vision
-    description: Create your first data dashboard
+    name: "Erste Vision"
+    description: "Erstelle dein erstes Daten-Dashboard"
     xp_reward: 100
     badge_type: bronze
+  
   - id: data_detective
-    name: Data Detective
-    description: Find 10 data quality issues
+    name: "Daten-Detektiv"
+    description: "Finde 10 Datenqualitätsprobleme"
     xp_reward: 250
     badge_type: silver
+  
   - id: prediction_master
-    name: Prediction Master
-    description: Make 5 accurate predictions
+    name: "Vorhersage-Meister"
+    description: "Mache 5 genaue Vorhersagen"
     xp_reward: 500
     badge_type: gold
+  
   - id: oracle_legend
-    name: Oracle of Legend
-    description: Complete all data challenges
+    name: "Orakel der Legende"
+    description: "Beende alle Daten-Herausforderungen"
     xp_reward: 1000
     badge_type: platinum
+
 example_tasks:
   beginner:
     - id: data_cleaning
       type: analysis
-      title: Oracle Data Collection
-      description: Collect and clean a messy dataset
-      skills_improved:
-        - data_collection
-        - data_alchemy
+      title: "Orakel-Datensammlung"
+      description: "Sammle und bereinige einen chaotischen Datensatz"
+      skills_improved: [data_collection, data_alchemy]
       xp_reward: 60
+    
     - id: basic_stats
       type: analysis
-      title: Statistical Foundations
-      description: Perform basic statistical analysis
-      skills_improved:
-        - statistical_analysis
+      title: "Statistische Grundlagen"
+      description: "Führe grundlegende statistische Analysen durch"
+      skills_improved: [statistical_analysis]
       xp_reward: 50
+  
   intermediate:
     - id: trend_analysis
       type: analysis
-      title: Truth Analysis Spell
-      description: Conduct deep trend analysis
-      skills_improved:
-        - statistical_analysis
-        - business_intelligence
+      title: "Wahrheits-Analyse-Zauber"
+      description: "Führe tiefgreifende Trendanalysen durch"
+      skills_improved: [statistical_analysis, business_intelligence]
       xp_reward: 180
+    
     - id: dashboard_design
       type: creation
-      title: Vision Dashboard
-      description: Create an interactive business dashboard
-      skills_improved:
-        - data_visualization
-        - visualization_magic
+      title: "Visions-Dashboard"
+      description: "Erstelle ein interaktives Business-Dashboard"
+      skills_improved: [data_visualization, visualization_magic]
       xp_reward: 200
+  
   advanced:
     - id: predictive_model
       type: creation
-      title: Future Sight
-      description: Build a predictive model
-      skills_improved:
-        - machine_learning
-        - predictive_statistics
+      title: "Zukunftsblick"
+      description: "Baue ein Vorhersagemodell"
+      skills_improved: [machine_learning, predictive_statistics]
       xp_reward: 350
+    
     - id: real_time_system
       type: creation
-      title: Instant Oracle System
-      description: Create real-time analytics system
-      skills_improved:
-        - real_time_analytics
-        - big_data_mastery
+      title: "Sofort-Orakel-System"
+      description: "Erstelle ein Echtzeitanalysesystem"
+      skills_improved: [real_time_analytics, big_data_mastery]
       xp_reward: 400
+
 learning_objectives:
-  - Master data collection and cleaning techniques
-  - Apply statistical methods to uncover insights
-  - Create compelling data visualizations
-  - Transform data into business recommendations
-  - Build predictive models using machine learning
-  - Handle big data efficiently
-  - Communicate findings effectively
-  - Maintain data integrity and ethics
+  - "Meistere Datensammlung und Bereinigungstechniken"
+  - "Wende statistische Methoden zur Erkenntnisgewinnung an"
+  - "Erstelle überzeugende Datenvisualisierungen"
+  - "Verwandle Daten in Business-Empfehlungen"
+  - "Baue Vorhersagemodelle mit Machine Learning"
+  - "Verwalte Big Data effizient"
+  - "Kommuniziere Erkenntnisse effektiv"
+  - "Bewahre Datenintegrität und Ethik"
+
 career_outcomes:
-  - Data Analyst
-  - Business Intelligence Analyst
-  - Data Scientist
-  - Analytics Consultant
-  - Market Research Analyst
-  - Financial Analyst
-  - Operations Analyst
-  - Data Analytics Manager
+  - "Datenanalyst"
+  - "Business Intelligence Analyst"
+  - "Data Scientist"
+  - "Analytics-Berater"
+  - "Marktforscher"
+  - "Finanzanalyst"
+  - "Operations-Analyst"
+  - "Datenanalyse-Manager"

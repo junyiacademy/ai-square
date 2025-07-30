@@ -1,40 +1,41 @@
 # Game Designer Discovery Path - Arabic
-# PLACEHOLDER FILE - يحتاج إلى ترجمة
 path_id: game_designer
 category: arts
 difficulty_range: beginner_to_expert
+
 metadata:
-  title: Dream Architect - Game Designer
-  short_description: Create infinite possibilities in virtual worlds
+  title: "مهندس الأحلام - مصمم الألعاب"
+  short_description: "ابتكر إمكانيات لا متناهية في العوالم الافتراضية"
   long_description: |
-    You are a talented designer at the "Dream Architecture Academy," possessing the 
-    magic to transform imagination into interactive experiences. In this academy filled 
-    with creativity and fun, every game mechanic is a door to new worlds, and your 
-    mission is to create immersive digital dreams that captivate players.
+    أنت مصمم موهوب في "أكاديمية هندسة الأحلام"، تمتلك السحر لتحويل 
+    الخيال إلى تجارب تفاعلية. في هذه الأكاديمية المليئة بالإبداع والمرح، 
+    كل آلية لعبة هي باب إلى عوالم جديدة، ومهمتك هي إنشاء أحلام رقمية 
+    مغمورة تأسر اللاعبين.
+  
   estimated_hours: 60
   skill_focus:
     - world_building
     - mechanics_design
     - emotional_manipulation
     - fun_summoning
-  translation_notice: يحتاج إلى ترجمة - This is a placeholder file
-  original_language: en
-  target_language: ar
-  generated_date: "2025-07-16T07:00:56.511Z"
+
 world_setting:
-  name: Dream Architecture Academy
+  name: "أكاديمية هندسة الأحلام"
   description: |
-    The Dream Architecture Academy is a magical institution dedicated to training game 
-    designers. Here, students learn to balance creativity with technical constraints, 
-    fun with challenge, and create experiences that resonate with players worldwide.
-  atmosphere: playful_creative
-  visual_theme: fantasy_academy
+    أكاديمية هندسة الأحلام هي مؤسسة سحرية مخصصة لتدريب مصممي الألعاب. 
+    هنا، يتعلم الطلاب موازنة الإبداع مع القيود التقنية، والمتعة مع التحدي، 
+    وإنشاء تجارب ترنّ مع اللاعبين حول العالم.
+  
+  atmosphere: "playful_creative"
+  visual_theme: "fantasy_academy"
+
 starting_scenario:
-  title: The Grind Invasion
+  title: "غزو الرتابة"
   description: |
-    Creative God Dream welcomes you with troubling news: Grind, the King of Boredom, 
-    is turning all games into mindless number farms, pursuing efficiency over fun. 
-    You must use creativity and joy to combat the mechanization of gaming experiences.
+    الإله المبدع حلم يرحب بك بأخبار مقلقة: الرتابة، ملك الملل، يحوّل 
+    جميع الألعاب إلى مزارع أرقام بلا عقل، متابعاً الكفاءة على حساب 
+    المتعة. يجب عليك استخدام الإبداع والفرح لمحاربة ميكنة تجارب الألعاب.
+  
   initial_tasks:
     - understand_game_design
     - learn_player_psychology
@@ -199,20 +200,21 @@ example_tasks:
         - player_experience
       xp_reward: 420
 learning_objectives:
-  - Master game design fundamentals
-  - Create engaging game mechanics
-  - Design immersive game worlds
-  - Understand player psychology
-  - Balance challenge and fun
-  - Develop unique gameplay experiences
-  - Implement fair monetization
-  - Build games that bring joy
+  - "إتقان أساسيات تصميم الألعاب"
+  - "إنشاء آليات لعب جذابة"
+  - "تصميم عوالم لعب مغمورة"
+  - "فهم علم نفس اللاعبين"
+  - "موازنة التحدي والمتعة"
+  - "تطوير تجارب لعب فريدة"
+  - "تطبيق نظم تحقيق الربح العادلة"
+  - "بناء ألعاب تجلب الفرح"
+
 career_outcomes:
-  - Game Designer
-  - Level Designer
-  - Systems Designer
-  - Narrative Designer
-  - Game Director
-  - Design Lead
-  - Creative Director
-  - Studio Founder
+  - "مصمم ألعاب"
+  - "مصمم مستويات"
+  - "مصمم أنظمة"
+  - "مصمم قصص"
+  - "مخرج ألعاب"
+  - "قائد تصميم"
+  - "مخرج إبداعي"
+  - "مؤسس استوديو"

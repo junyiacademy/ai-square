@@ -1,219 +1,219 @@
 # Content Creator Discovery Path - Indonesian
-# PLACEHOLDER FILE - Perlu diterjemahkan
 path_id: content_creator
 category: arts
 difficulty_range: beginner_to_expert
+
 metadata:
-  title: Digital Wizard - Content Creator
-  short_description: Weave captivating stories in the virtual kingdom
+  title: "Penyihir Digital - Pembuat Konten"
+  short_description: "Rajut cerita menawan di kerajaan virtual"
   long_description: |
-    You are a newly ordained wizard of the "Creative Empire," possessing the mysterious 
-    power to transform ideas into viral content. In this digital kingdom, every like 
-    and share is proof of your magic, and your mentor Luna will teach you to master 
-    the secrets of algorithms.
+    Anda adalah penyihir yang baru ditahbiskan dari "Kerajaan Kreatif", memiliki 
+    kekuatan misterius untuk mengubah ide menjadi konten viral. Di kerajaan digital 
+    ini, setiap like dan share adalah bukti sihir Anda, dan mentor Luna akan 
+    mengajarkan Anda menguasai rahasia algoritma.
+  
   estimated_hours: 50
   skill_focus:
     - content_magic
     - visual_spells
     - word_alchemy
     - community_summoning
-  translation_notice: Perlu diterjemahkan - This is a placeholder file
-  original_language: en
-  target_language: id
-  generated_date: "2025-07-16T07:00:56.479Z"
+
 world_setting:
-  name: Creative Empire
+  name: "Kerajaan Kreatif"
   description: |
-    The Creative Empire is a digital kingdom powered by creative energy. Content creators 
-    here learn to harness the mysterious forces of algorithms, engagement, and viral 
-    mechanics to build their influence and impact millions of lives.
-  atmosphere: vibrant_magical
-  visual_theme: digital_fantasy
+    Kerajaan Kreatif adalah kerajaan digital yang digerakkan oleh energi kreatif. 
+    Para pembuat konten di sini belajar memanfaatkan kekuatan misterius algoritma, 
+    engagement, dan mekanik viral untuk membangun pengaruh mereka dan berdampak 
+    pada jutaan kehidupan.
+  
+  atmosphere: "vibrant_magical"
+  visual_theme: "digital_fantasy"
+
 starting_scenario:
-  title: The Shadow's Challenge
+  title: "Tantangan Bayangan"
   description: |
-    Creative Mentor Luna welcomes you to the empire with urgent news: Shadow, a fallen 
-    wizard, is spreading false content using forbidden magic, threatening the harmony 
-    of the Creative Empire. You must use the power of authentic creativity to combat 
-    his dark influence.
+    Mentor Kreatif Luna menyambut Anda di kerajaan dengan berita mendesak: Bayangan, 
+    seorang penyihir yang jatuh, menyebarkan konten palsu menggunakan sihir terlarang, 
+    mengancam keharmonisan Kerajaan Kreatif. Anda harus menggunakan kekuatan 
+    kreativitas autentik untuk melawan pengaruh gelapnya.
+  
   initial_tasks:
     - understand_algorithms
     - learn_content_basics
     - create_first_spell
+
 skill_tree:
   core_skills:
     - id: content_strategy
-      name: Strategic Vision
-      description: Master content planning and strategy
+      name: "Visi Strategis"
+      description: "Kuasai perencanaan dan strategi konten"
       max_level: 10
       unlocks:
         - trend_analysis
         - audience_targeting
+    
     - id: visual_creation
-      name: Visual Sorcery
-      description: Create compelling visual content
+      name: "Sihir Visual"
+      description: "Ciptakan konten visual yang menarik"
       max_level: 10
       unlocks:
         - photo_magic
         - video_enchantment
+    
     - id: storytelling
-      name: Narrative Weaving
-      description: Craft engaging stories
+      name: "Penenun Narasi"
+      description: "Ciptakan cerita yang menawan"
       max_level: 10
       unlocks:
         - emotional_resonance
         - viral_mechanics
+    
     - id: community_building
-      name: Tribe Summoning
-      description: Build and engage communities
+      name: "Pemanggil Suku"
+      description: "Bangun dan libatkan komunitas"
       max_level: 10
       unlocks:
         - engagement_rituals
         - loyalty_spells
+
   advanced_skills:
     - id: algorithm_mastery
-      name: Algorithm Whisperer
-      description: Understand and work with platform algorithms
+      name: "Pembisik Algoritma"
+      description: "Pahami dan bekerja dengan algoritma platform"
       max_level: 15
-      requires:
-        - content_strategy
-        - community_building
+      requires: [content_strategy, community_building]
+    
     - id: monetization_magic
-      name: Revenue Alchemy
-      description: Transform content into income
+      name: "Alkimia Pendapatan"
+      description: "Ubah konten menjadi pendapatan"
       max_level: 15
-      requires:
-        - community_building
-        - visual_creation
+      requires: [community_building, visual_creation]
+    
     - id: brand_building
-      name: Empire Construction
-      description: Build a powerful personal brand
+      name: "Konstruksi Kerajaan"
+      description: "Bangun merek personal yang kuat"
       max_level: 15
-      requires:
-        - storytelling
-        - content_strategy
+      requires: [storytelling, content_strategy]
+
 milestone_quests:
   - id: first_viral
-    name: Viral Breakthrough
-    description: Create your first viral content
+    name: "Terobosan Viral"
+    description: "Ciptakan konten viral pertama Anda"
     required_level: 5
-    skills_tested:
-      - content_strategy
-      - visual_creation
+    skills_tested: [content_strategy, visual_creation]
     xp_reward: 500
     unlocks:
       - viral_creator_badge
       - algorithm_insights
+  
   - id: shadow_confrontation
-    name: Truth vs Deception
-    description: Defeat Shadow's misinformation campaign
+    name: "Kebenaran vs Penipuan"
+    description: "Kalahkan kampanye misinformasi Bayangan"
     required_level: 10
-    skills_tested:
-      - storytelling
-      - community_building
+    skills_tested: [storytelling, community_building]
     xp_reward: 1000
     unlocks:
       - truth_guardian_title
       - authentic_voice
+  
   - id: empire_builder
-    name: Creative Empire
-    description: Build a content empire with 1M followers
+    name: "Kerajaan Kreatif"
+    description: "Bangun kerajaan konten dengan 1 juta pengikut"
     required_level: 20
-    skills_tested:
-      - algorithm_mastery
-      - brand_building
+    skills_tested: [algorithm_mastery, brand_building]
     xp_reward: 2000
     unlocks:
       - empire_ruler_title
       - legacy_creator
+
 achievements:
   - id: first_post
-    name: First Spell
-    description: Create your first piece of content
+    name: "Mantra Pertama"
+    description: "Ciptakan konten pertama Anda"
     xp_reward: 50
     badge_type: bronze
+  
   - id: engagement_master
-    name: Community Champion
-    description: Achieve 10K total engagements
+    name: "Juara Komunitas"
+    description: "Capai 10 ribu total engagement"
     xp_reward: 200
     badge_type: silver
+  
   - id: consistency_king
-    name: Daily Wizard
-    description: Post consistently for 30 days
+    name: "Penyihir Harian"
+    description: "Posting secara konsisten selama 30 hari"
     xp_reward: 400
     badge_type: gold
+  
   - id: content_legend
-    name: Legendary Creator
-    description: Complete all content challenges
+    name: "Pembuat Konten Legendaris"
+    description: "Selesaikan semua tantangan konten"
     xp_reward: 800
     badge_type: platinum
+
 example_tasks:
   beginner:
     - id: content_planning
       type: creation
-      title: Magic Recipe Development
-      description: Develop content formulas that touch hearts
-      skills_improved:
-        - content_strategy
-        - storytelling
+      title: "Pengembangan Resep Sihir"
+      description: "Kembangkan formula konten yang menyentuh hati"
+      skills_improved: [content_strategy, storytelling]
       xp_reward: 50
+    
     - id: visual_basics
       type: creation
-      title: Visual Spell Practice
-      description: Create your first visual content
-      skills_improved:
-        - visual_creation
-        - content_magic
+      title: "Latihan Mantra Visual"
+      description: "Ciptakan konten visual pertama Anda"
+      skills_improved: [visual_creation, content_magic]
       xp_reward: 60
+  
   intermediate:
     - id: engagement_analysis
       type: analysis
-      title: Oracle's Trial
-      description: Analyze content performance and audience behavior
-      skills_improved:
-        - algorithm_mastery
-        - community_building
+      title: "Ujian Oracle"
+      description: "Analisis performa konten dan perilaku audiens"
+      skills_improved: [algorithm_mastery, community_building]
       xp_reward: 150
+    
     - id: series_creation
       type: creation
-      title: Saga Weaving
-      description: Create a content series
-      skills_improved:
-        - storytelling
-        - brand_building
+      title: "Penenun Saga"
+      description: "Ciptakan serial konten"
+      skills_improved: [storytelling, brand_building]
       xp_reward: 180
+  
   advanced:
     - id: viral_campaign
       type: creation
-      title: Empire Expansion
-      description: Launch a viral content campaign
-      skills_improved:
-        - algorithm_mastery
-        - viral_mechanics
+      title: "Ekspansi Kerajaan"
+      description: "Luncurkan kampanye konten viral"
+      skills_improved: [algorithm_mastery, viral_mechanics]
       xp_reward: 350
+    
     - id: monetization_setup
       type: creation
-      title: Gold Transmutation
-      description: Set up multiple revenue streams
-      skills_improved:
-        - monetization_magic
-        - brand_building
+      title: "Transmutasi Emas"
+      description: "Siapkan berbagai sumber pendapatan"
+      skills_improved: [monetization_magic, brand_building]
       xp_reward: 400
+
 learning_objectives:
-  - Master content strategy and planning
-  - Create engaging visual and written content
-  - Build and nurture online communities
-  - Understand platform algorithms and trends
-  - Develop a unique creative voice
-  - Monetize content effectively
-  - Combat misinformation with truth
-  - Build a sustainable content business
+  - "Kuasai strategi dan perencanaan konten"
+  - "Ciptakan konten visual dan tertulis yang menarik"
+  - "Bangun dan rawat komunitas online"
+  - "Pahami algoritma platform dan tren"
+  - "Kembangkan suara kreatif yang unik"
+  - "Monetisasi konten secara efektif"
+  - "Lawan misinformasi dengan kebenaran"
+  - "Bangun bisnis konten yang berkelanjutan"
+
 career_outcomes:
-  - Social Media Influencer
-  - Content Strategist
-  - Brand Ambassador
-  - Digital Marketing Manager
-  - Creative Director
-  - Community Manager
-  - Content Marketing Lead
-  - Chief Content Officer
+  - "Influencer Media Sosial"
+  - "Strategi Konten"
+  - "Duta Merek"
+  - "Manajer Marketing Digital"
+  - "Direktur Kreatif"
+  - "Manajer Komunitas"
+  - "Pemimpin Marketing Konten"
+  - "Chief Content Officer"

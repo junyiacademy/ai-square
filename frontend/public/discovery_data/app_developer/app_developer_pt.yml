@@ -1,41 +1,37 @@
 # App Developer Discovery Path - Portuguese
-# PLACEHOLDER FILE - Precisa de tradução
 path_id: app_developer
 category: technology
 difficulty_range: beginner_to_expert
 metadata:
-  title: Digital Craftsman - App Developer
-  short_description: Craft life-changing applications in the world of code
+  title: Artesão Digital - Desenvolvedor de Apps
+  short_description: Crie aplicações que mudam vidas no mundo do código
   long_description: |
-    You are a new member of the "Digital Craftsmen Alliance," skilled at weaving 
-    practical and beautiful applications with code. In this workshop filled with logic 
-    and creativity, every line of code is a spell, and your goal is to create digital 
-    tools that make people's lives more convenient and better.
+    Você é um novo membro da "Aliança dos Artesãos Digitais", hábil em tecer 
+    aplicações práticas e bonitas com código. Nesta oficina cheia de lógica 
+    e criatividade, cada linha de código é um feitiço, e seu objetivo é criar ferramentas 
+    digitais que tornem a vida das pessoas mais conveniente e melhor.
   estimated_hours: 60
   skill_focus:
     - code_weaving
     - interface_sculpting
     - logic_architecture
     - user_experience_magic
-  translation_notice: Precisa de tradução - This is a placeholder file
-  original_language: en
-  target_language: pt
-  generated_date: "2025-07-16T07:00:56.459Z"
 world_setting:
-  name: Digital Craftsmen Alliance
+  name: Aliança dos Artesãos Digitais
   description: |
-    The Digital Craftsmen Alliance is a mysterious organization gathering top app 
-    developers. Here, code is treated as an art form, and developers learn to create 
-    applications that not only function flawlessly but also bring joy to users' daily lives.
+    A Aliança dos Artesãos Digitais é uma organização misteriosa que reúne os melhores 
+    desenvolvedores de aplicativos. Aqui, o código é tratado como uma forma de arte, e os 
+    desenvolvedores aprendem a criar aplicações que não apenas funcionam perfeitamente, 
+    mas também trazem alegria para a vida diária dos usuários.
   atmosphere: innovative_collaborative
   visual_theme: tech_workshop
 starting_scenario:
-  title: Joining the Alliance
+  title: Ingressando na Aliança
   description: |
-    Master Code welcomes you to the alliance, but warns of a constant threat: Bug, 
-    the chaos demon, spreads errors and vulnerabilities in code. Meanwhile, Design 
-    and Code often conflict over priorities. You must use wisdom to balance technology 
-    with aesthetics while keeping applications stable.
+    Mestre Código dá as boas-vindas à aliança, mas avisa sobre uma ameaça constante: Bug, 
+    o demônio do caos, espalha erros e vulnerabilidades no código. Enquanto isso, Design 
+    e Código frequentemente entram em conflito sobre prioridades. Você deve usar sabedoria 
+    para equilibrar tecnologia com estética enquanto mantém as aplicações estáveis.
   initial_tasks:
     - learn_fundamentals
     - choose_platform
@@ -43,59 +39,59 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: programming_fundamentals
-      name: Code Foundations
-      description: Master core programming concepts
+      name: Fundamentos do Código
+      description: Domine os conceitos fundamentais de programação
       max_level: 10
       unlocks:
         - advanced_patterns
         - clean_code
     - id: ui_development
-      name: Interface Crafting
-      description: Build beautiful user interfaces
+      name: Criação de Interfaces
+      description: Construa interfaces de usuário bonitas
       max_level: 10
       unlocks:
         - responsive_design
         - animation_magic
     - id: backend_architecture
-      name: Logic Engineering
-      description: Design robust backend systems
+      name: Engenharia Lógica
+      description: Projete sistemas backend robustos
       max_level: 10
       unlocks:
         - api_design
         - database_mastery
     - id: mobile_development
-      name: Mobile Sorcery
-      description: Create native mobile experiences
+      name: Feiticeiria Móvel
+      description: Crie experiências móveis nativas
       max_level: 10
       unlocks:
         - cross_platform
         - device_features
   advanced_skills:
     - id: performance_optimization
-      name: Speed Magic
-      description: Optimize apps for peak performance
+      name: Magia da Velocidade
+      description: Otimize apps para desempenho máximo
       max_level: 15
       requires:
         - programming_fundamentals
         - backend_architecture
     - id: security_mastery
-      name: Protection Spells
-      description: Secure applications against threats
+      name: Feitiços de Proteção
+      description: Proteja aplicações contra ameaças
       max_level: 15
       requires:
         - backend_architecture
         - mobile_development
     - id: ai_integration
-      name: Intelligence Infusion
-      description: Integrate AI capabilities into apps
+      name: Infusão de Inteligência
+      description: Integre capacidades de IA em apps
       max_level: 15
       requires:
         - programming_fundamentals
         - ui_development
 milestone_quests:
   - id: first_release
-    name: App Store Debut
-    description: Release your first app to users
+    name: Estreia na App Store
+    description: Lance seu primeiro app para os usuários
     required_level: 5
     skills_tested:
       - programming_fundamentals
@@ -105,8 +101,8 @@ milestone_quests:
       - publisher_badge
       - user_feedback_access
   - id: bug_hunter
-    name: Bug Slayer
-    description: Create a bug-free app with perfect stability
+    name: Caçador de Bugs
+    description: Crie um app livre de bugs com estabilidade perfeita
     required_level: 10
     skills_tested:
       - security_mastery
@@ -116,8 +112,8 @@ milestone_quests:
       - stability_master_title
       - advanced_debugging_tools
   - id: million_users
-    name: Million User App
-    description: Create an app used by millions
+    name: App de Um Milhão de Usuários
+    description: Crie um app usado por milhões
     required_level: 20
     skills_tested:
       - ai_integration
@@ -128,39 +124,39 @@ milestone_quests:
       - alliance_hall_of_fame
 achievements:
   - id: hello_world
-    name: First Spell
-    description: Write your first working app
+    name: Primeiro Feitiço
+    description: Escreva seu primeiro app funcional
     xp_reward: 100
     badge_type: bronze
   - id: five_star_app
-    name: User Favorite
-    description: Achieve 5-star rating on app store
+    name: Favorito dos Usuários
+    description: Alcance classificação de 5 estrelas na app store
     xp_reward: 300
     badge_type: silver
   - id: polyglot_developer
-    name: Code Polyglot
-    description: Master 5 programming languages
+    name: Poliglota do Código
+    description: Domine 5 linguagens de programação
     xp_reward: 600
     badge_type: gold
   - id: app_legend
-    name: Legendary Craftsman
-    description: Complete all development challenges
+    name: Artesão Lendário
+    description: Complete todos os desafios de desenvolvimento
     xp_reward: 1200
     badge_type: platinum
 example_tasks:
   beginner:
     - id: todo_app
       type: creation
-      title: Task Organizer
-      description: Build a simple todo list app
+      title: Organizador de Tarefas
+      description: Construa um app simples de lista de tarefas
       skills_improved:
         - programming_fundamentals
         - ui_development
       xp_reward: 70
     - id: calculator_app
       type: creation
-      title: Digital Calculator
-      description: Create a functional calculator
+      title: Calculadora Digital
+      description: Crie uma calculadora funcional
       skills_improved:
         - programming_fundamentals
         - logic_architecture
@@ -168,16 +164,16 @@ example_tasks:
   intermediate:
     - id: social_app
       type: creation
-      title: Community Connector
-      description: Build a social networking app
+      title: Conector de Comunidade
+      description: Construa um app de redes sociais
       skills_improved:
         - backend_architecture
         - mobile_development
       xp_reward: 200
     - id: game_app
       type: creation
-      title: Entertainment Spell
-      description: Create an engaging mobile game
+      title: Feitiço de Entretenimento
+      description: Crie um jogo móvel envolvente
       skills_improved:
         - ui_development
         - performance_optimization
@@ -185,35 +181,35 @@ example_tasks:
   advanced:
     - id: ai_assistant
       type: creation
-      title: Intelligent Companion
-      description: Build an AI-powered assistant app
+      title: Companheiro Inteligente
+      description: Construa um app assistente alimentado por IA
       skills_improved:
         - ai_integration
         - backend_architecture
       xp_reward: 400
     - id: ar_experience
       type: creation
-      title: Reality Enhancer
-      description: Create an augmented reality app
+      title: Aprimorador de Realidade
+      description: Crie um app de realidade aumentada
       skills_improved:
         - mobile_development
         - performance_optimization
       xp_reward: 450
 learning_objectives:
-  - Master multiple programming languages and frameworks
-  - Design intuitive and beautiful user interfaces
-  - Build scalable and maintainable backend systems
-  - Create native and cross-platform mobile apps
-  - Implement security best practices
-  - Optimize app performance and user experience
-  - Integrate cutting-edge technologies like AI and AR
-  - Deploy and maintain apps in production
+  - Dominar múltiplas linguagens de programação e frameworks
+  - Projetar interfaces de usuário intuitivas e bonitas
+  - Construir sistemas backend escaláveis e manteníveis
+  - Criar apps móveis nativos e multiplataforma
+  - Implementar melhores práticas de segurança
+  - Otimizar desempenho de apps e experiência do usuário
+  - Integrar tecnologias de ponta como IA e RA
+  - Implantar e manter apps em produção
 career_outcomes:
-  - Mobile App Developer
-  - Full-Stack Developer
-  - iOS/Android Developer
-  - Software Engineer
-  - Technical Lead
-  - App Development Consultant
-  - Startup CTO
-  - Freelance App Developer
+  - Desenvolvedor de Apps Móveis
+  - Desenvolvedor Full-Stack
+  - Desenvolvedor iOS/Android
+  - Engenheiro de Software
+  - Líder Técnico
+  - Consultor de Desenvolvimento de Apps
+  - CTO de Startup
+  - Desenvolvedor de Apps Freelance

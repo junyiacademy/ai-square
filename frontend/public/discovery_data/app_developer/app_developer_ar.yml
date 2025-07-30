@@ -1,41 +1,36 @@
 # App Developer Discovery Path - Arabic
-# PLACEHOLDER FILE - يحتاج إلى ترجمة
 path_id: app_developer
 category: technology
 difficulty_range: beginner_to_expert
 metadata:
-  title: Digital Craftsman - App Developer
-  short_description: Craft life-changing applications in the world of code
+  title: الحرفي الرقمي - مطور التطبيقات
+  short_description: صناعة تطبيقات تغير الحياة في عالم البرمجة
   long_description: |
-    You are a new member of the "Digital Craftsmen Alliance," skilled at weaving 
-    practical and beautiful applications with code. In this workshop filled with logic 
-    and creativity, every line of code is a spell, and your goal is to create digital 
-    tools that make people's lives more convenient and better.
+    أنت عضو جديد في "تحالف الحرفيين الرقميين"، ماهر في نسج التطبيقات 
+    العملية والجميلة بالبرمجة. في هذه الورشة المليئة بالمنطق والإبداع، 
+    كل سطر من البرمجة هو تعويذة سحرية، وهدفك هو إنشاء أدوات رقمية 
+    تجعل حياة الناس أكثر سهولة وأفضل.
   estimated_hours: 60
   skill_focus:
     - code_weaving
     - interface_sculpting
     - logic_architecture
     - user_experience_magic
-  translation_notice: يحتاج إلى ترجمة - This is a placeholder file
-  original_language: en
-  target_language: ar
-  generated_date: "2025-07-16T07:00:56.442Z"
 world_setting:
-  name: Digital Craftsmen Alliance
+  name: تحالف الحرفيين الرقميين
   description: |
-    The Digital Craftsmen Alliance is a mysterious organization gathering top app 
-    developers. Here, code is treated as an art form, and developers learn to create 
-    applications that not only function flawlessly but also bring joy to users' daily lives.
+    تحالف الحرفيين الرقميين هو منظمة غامضة تجمع أفضل مطوري التطبيقات. 
+    هنا، تُعامل البرمجة كشكل من أشكال الفن، ويتعلم المطورون إنشاء 
+    تطبيقات لا تعمل بشكل مثالي فحسب، بل تجلب أيضًا البهجة لحياة المستخدمين اليومية.
   atmosphere: innovative_collaborative
   visual_theme: tech_workshop
 starting_scenario:
-  title: Joining the Alliance
+  title: الانضمام إلى التحالف
   description: |
-    Master Code welcomes you to the alliance, but warns of a constant threat: Bug, 
-    the chaos demon, spreads errors and vulnerabilities in code. Meanwhile, Design 
-    and Code often conflict over priorities. You must use wisdom to balance technology 
-    with aesthetics while keeping applications stable.
+    يرحب بك الأستاذ كود في التحالف، لكنه يحذر من تهديد دائم: باغ، 
+    شيطان الفوضى، ينشر الأخطاء ونقاط الضعف في البرمجة. في غضون ذلك، 
+    غالبًا ما يتعارض التصميم والبرمجة حول الأولويات. يجب عليك استخدام الحكمة 
+    لتحقيق التوازن بين التكنولوجيا والجماليات مع الحفاظ على استقرار التطبيقات.
   initial_tasks:
     - learn_fundamentals
     - choose_platform
@@ -43,59 +38,59 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: programming_fundamentals
-      name: Code Foundations
-      description: Master core programming concepts
+      name: أسس البرمجة
+      description: إتقان مفاهيم البرمجة الأساسية
       max_level: 10
       unlocks:
         - advanced_patterns
         - clean_code
     - id: ui_development
-      name: Interface Crafting
-      description: Build beautiful user interfaces
+      name: صناعة الواجهات
+      description: بناء واجهات مستخدم جميلة
       max_level: 10
       unlocks:
         - responsive_design
         - animation_magic
     - id: backend_architecture
-      name: Logic Engineering
-      description: Design robust backend systems
+      name: هندسة المنطق
+      description: تصميم أنظمة خلفية قوية
       max_level: 10
       unlocks:
         - api_design
         - database_mastery
     - id: mobile_development
-      name: Mobile Sorcery
-      description: Create native mobile experiences
+      name: سحر الهواتف المحمولة
+      description: إنشاء تجارب أصلية للهواتف المحمولة
       max_level: 10
       unlocks:
         - cross_platform
         - device_features
   advanced_skills:
     - id: performance_optimization
-      name: Speed Magic
-      description: Optimize apps for peak performance
+      name: سحر السرعة
+      description: تحسين التطبيقات لأقصى أداء
       max_level: 15
       requires:
         - programming_fundamentals
         - backend_architecture
     - id: security_mastery
-      name: Protection Spells
-      description: Secure applications against threats
+      name: تعاويذ الحماية
+      description: تأمين التطبيقات ضد التهديدات
       max_level: 15
       requires:
         - backend_architecture
         - mobile_development
     - id: ai_integration
-      name: Intelligence Infusion
-      description: Integrate AI capabilities into apps
+      name: دمج الذكاء
+      description: دمج قدرات الذكاء الاصطناعي في التطبيقات
       max_level: 15
       requires:
         - programming_fundamentals
         - ui_development
 milestone_quests:
   - id: first_release
-    name: App Store Debut
-    description: Release your first app to users
+    name: الظهور الأول في متجر التطبيقات
+    description: إطلاق أول تطبيق لك للمستخدمين
     required_level: 5
     skills_tested:
       - programming_fundamentals
@@ -105,8 +100,8 @@ milestone_quests:
       - publisher_badge
       - user_feedback_access
   - id: bug_hunter
-    name: Bug Slayer
-    description: Create a bug-free app with perfect stability
+    name: قاتل الأخطاء
+    description: إنشاء تطبيق خالٍ من الأخطاء مع استقرار مثالي
     required_level: 10
     skills_tested:
       - security_mastery
@@ -116,8 +111,8 @@ milestone_quests:
       - stability_master_title
       - advanced_debugging_tools
   - id: million_users
-    name: Million User App
-    description: Create an app used by millions
+    name: تطبيق المليون مستخدم
+    description: إنشاء تطبيق يستخدمه الملايين
     required_level: 20
     skills_tested:
       - ai_integration
@@ -128,39 +123,39 @@ milestone_quests:
       - alliance_hall_of_fame
 achievements:
   - id: hello_world
-    name: First Spell
-    description: Write your first working app
+    name: التعويذة الأولى
+    description: اكتب أول تطبيق يعمل لك
     xp_reward: 100
     badge_type: bronze
   - id: five_star_app
-    name: User Favorite
-    description: Achieve 5-star rating on app store
+    name: المفضل لدى المستخدمين
+    description: الحصول على تقييم 5 نجوم في متجر التطبيقات
     xp_reward: 300
     badge_type: silver
   - id: polyglot_developer
-    name: Code Polyglot
-    description: Master 5 programming languages
+    name: متعدد لغات البرمجة
+    description: إتقان 5 لغات برمجة
     xp_reward: 600
     badge_type: gold
   - id: app_legend
-    name: Legendary Craftsman
-    description: Complete all development challenges
+    name: الحرفي الأسطوري
+    description: إكمال جميع تحديات التطوير
     xp_reward: 1200
     badge_type: platinum
 example_tasks:
   beginner:
     - id: todo_app
       type: creation
-      title: Task Organizer
-      description: Build a simple todo list app
+      title: منظم المهام
+      description: بناء تطبيق قائمة مهام بسيط
       skills_improved:
         - programming_fundamentals
         - ui_development
       xp_reward: 70
     - id: calculator_app
       type: creation
-      title: Digital Calculator
-      description: Create a functional calculator
+      title: الآلة الحاسبة الرقمية
+      description: إنشاء آلة حاسبة وظيفية
       skills_improved:
         - programming_fundamentals
         - logic_architecture
@@ -168,16 +163,16 @@ example_tasks:
   intermediate:
     - id: social_app
       type: creation
-      title: Community Connector
-      description: Build a social networking app
+      title: موصل المجتمع
+      description: بناء تطبيق شبكات اجتماعية
       skills_improved:
         - backend_architecture
         - mobile_development
       xp_reward: 200
     - id: game_app
       type: creation
-      title: Entertainment Spell
-      description: Create an engaging mobile game
+      title: تعويذة الترفيه
+      description: إنشاء لعبة محمولة جذابة
       skills_improved:
         - ui_development
         - performance_optimization
@@ -185,35 +180,35 @@ example_tasks:
   advanced:
     - id: ai_assistant
       type: creation
-      title: Intelligent Companion
-      description: Build an AI-powered assistant app
+      title: الرفيق الذكي
+      description: بناء تطبيق مساعد مدعوم بالذكاء الاصطناعي
       skills_improved:
         - ai_integration
         - backend_architecture
       xp_reward: 400
     - id: ar_experience
       type: creation
-      title: Reality Enhancer
-      description: Create an augmented reality app
+      title: محسن الواقع
+      description: إنشاء تطبيق واقع معزز
       skills_improved:
         - mobile_development
         - performance_optimization
       xp_reward: 450
 learning_objectives:
-  - Master multiple programming languages and frameworks
-  - Design intuitive and beautiful user interfaces
-  - Build scalable and maintainable backend systems
-  - Create native and cross-platform mobile apps
-  - Implement security best practices
-  - Optimize app performance and user experience
-  - Integrate cutting-edge technologies like AI and AR
-  - Deploy and maintain apps in production
+  - إتقان لغات البرمجة وأطر العمل المتعددة
+  - تصميم واجهات مستخدم بديهية وجميلة
+  - بناء أنظمة خلفية قابلة للتوسع وسهلة الصيانة
+  - إنشاء تطبيقات محمولة أصلية ومتعددة المنصات
+  - تطبيق أفضل ممارسات الأمان
+  - تحسين أداء التطبيق وتجربة المستخدم
+  - دمج التقنيات المتطورة مثل الذكاء الاصطناعي والواقع المعزز
+  - نشر وصيانة التطبيقات في الإنتاج
 career_outcomes:
-  - Mobile App Developer
-  - Full-Stack Developer
-  - iOS/Android Developer
-  - Software Engineer
-  - Technical Lead
-  - App Development Consultant
-  - Startup CTO
-  - Freelance App Developer
+  - مطور تطبيقات الهواتف المحمولة
+  - مطور متكامل
+  - مطور iOS/Android
+  - مهندس برمجيات
+  - قائد تقني
+  - استشاري تطوير التطبيقات
+  - المدير التقني للشركة الناشئة
+  - مطور تطبيقات مستقل

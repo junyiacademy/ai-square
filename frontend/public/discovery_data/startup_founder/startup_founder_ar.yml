@@ -1,41 +1,42 @@
 # Startup Founder Discovery Path - Arabic
-# PLACEHOLDER FILE - يحتاج إلى ترجمة
 path_id: startup_founder
 category: business
 difficulty_range: beginner_to_expert
+
 metadata:
-  title: Business Adventurer - Startup Founder
-  short_description: Pioneer new trade routes in the business wilderness
+  title: "مغامر الأعمال - مؤسس شركة ناشئة"
+  short_description: "ارتد طرق تجارية جديدة في برية الأعمال"
   long_description: |
-    You are an explorer of the "New Business Continent," tasked with establishing 
-    new outposts in unknown business territories. In this wilderness full of opportunities 
-    and dangers, every decision could change your destiny, and loyal companions will 
-    face challenges alongside you.
+    أنت مستكشف في "قارة الأعمال الجديدة"، مكلف بإنشاء نقاط ارتكاز 
+    جديدة في مناطق أعمال غير معروفة. في هذه البرية المليئة بالفرص 
+    والمخاطر، كل قرار يمكن أن يغير مصيرك، والرفاق المخلصين 
+    سيواجهون التحديات بجانبك.
+  
   estimated_hours: 60
   skill_focus:
     - business_intuition
     - market_exploration
     - resource_alchemy
     - risk_navigation
-  translation_notice: يحتاج إلى ترجمة - This is a placeholder file
-  original_language: en
-  target_language: ar
-  generated_date: "2025-07-16T07:00:56.529Z"
+
 world_setting:
-  name: New Business Continent
+  name: "قارة الأعمال الجديدة"
   description: |
-    The New Business Continent is a vast unexplored business wilderness where brave 
-    entrepreneurs venture to establish new trade routes and build empires. Success 
-    requires cunning, courage, and the ability to turn scarce resources into gold.
-  atmosphere: adventurous_challenging
-  visual_theme: frontier_exploration
+    قارة الأعمال الجديدة هي برية أعمال شاسعة غير مستكشفة حيث يغامر 
+    رجال الأعمال الشجعان لإنشاء طرق تجارية جديدة وبناء الإمبراطوريات. 
+    النجاح يتطلب الدهاء والشجاعة والقدرة على تحويل الموارد النادرة إلى ذهب.
+  
+  atmosphere: "adventurous_challenging"
+  visual_theme: "frontier_exploration"
+
 starting_scenario:
-  title: The Baron's Blockade
+  title: "حصار البارون"
   description: |
-    Scout, your expedition partner, brings dire news: Baron Greed controls most 
-    resources and is crushing new merchants. Meanwhile, supplier Lily has backed 
-    out at a crucial moment. You must find creative ways to break through and 
-    establish your trading post.
+    سكاوت، شريك رحلتك الاستكشافية، يحمل أخباراً مريعة: البارون طمع يسيطر 
+    على معظم الموارد ويسحق التجار الجدد. في الوقت نفسه، المورد ليلي 
+    تراجعت في لحظة حرجة. يجب عليك إيجاد طرق إبداعية للاختراق وإنشاء 
+    مركزك التجاري.
+  
   initial_tasks:
     - survey_market
     - find_resources
@@ -200,20 +201,21 @@ example_tasks:
         - market_exploration
       xp_reward: 410
 learning_objectives:
-  - Identify and validate business opportunities
-  - Build products customers love
-  - Master lean startup methodology
-  - Develop leadership skills
-  - Navigate uncertainty and risk
-  - Build strong company culture
-  - Secure funding and manage finances
-  - Scale businesses sustainably
+  - "تحديد والتحقق من فرص الأعمال"
+  - "بناء منتجات يحبها العملاء"
+  - "إتقان منهجية الشركة الناشئة اللينة"
+  - "تطوير مهارات القيادة"
+  - "التنقل في عدم اليقين والمخاطر"
+  - "بناء ثقافة شركة قوية"
+  - "تأمين التمويل وإدارة المالية"
+  - "توسيع الأعمال بشكل مستدام"
+
 career_outcomes:
-  - Startup Founder/CEO
-  - Serial Entrepreneur
-  - Venture Partner
-  - Innovation Consultant
-  - Startup Advisor
-  - Corporate Entrepreneur
-  - Accelerator Director
-  - Angel Investor
+  - "مؤسس/رئيس تنفيذي لشركة ناشئة"
+  - "ريادي أعمال متسلسل"
+  - "شريك في صندوق رأس مال مخاطر"
+  - "استشاري ابتكار"
+  - "مستشار شركة ناشئة"
+  - "ريادي أعمال شركاتي"
+  - "مدير حاضنة أعمال"
+  - "مستثمر ملائكي"

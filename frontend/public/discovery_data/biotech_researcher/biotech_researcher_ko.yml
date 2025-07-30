@@ -1,16 +1,16 @@
 # Biotech Researcher Discovery Path - Korean
-# PLACEHOLDER FILE - 번역이 필요합니다
 path_id: biotech_researcher
 category: science
 difficulty_range: beginner_to_expert
+
 metadata:
-  title: Life Code Architect - Biotech Researcher
-  short_description: Unlock the secrets of life through AI and biotechnology
+  title: "생명코드 설계자 - 바이오테크놀로지 연구원"
+  short_description: "AI와 바이오테크놀로지로 생명의 비밀을 풀어내세요"
   long_description: |
-    You are a junior researcher at the "BioSynthesis Institute," where the boundaries 
-    between biology and artificial intelligence blur. Armed with AI tools and genetic 
-    engineering techniques, you'll explore the fundamental codes of life and create 
-    solutions that could revolutionize medicine, agriculture, and human enhancement.
+    당신은 생물학과 인공지능의 경계가 흐려지는 곳, "바이오신세시스 연구소"의 
+    주니어 연구원입니다. AI 도구와 유전공학 기술로 무장하여 생명의 기본 코드를 
+    탐구하고, 의학, 농업, 인간 향상을 혁신적으로 변화시킬 솔루션을 창조합니다.
+  
   estimated_hours: 70
   skill_focus:
     - genetic_engineering
@@ -18,204 +18,203 @@ metadata:
     - lab_techniques
     - ethical_biotech
     - data_driven_discovery
-  translation_notice: 번역이 필요합니다 - This is a placeholder file
-  original_language: en
-  target_language: ko
-  generated_date: "2025-07-16T07:00:56.471Z"
+
 world_setting:
-  name: BioSynthesis Institute
+  name: "바이오신세시스 연구소"
   description: |
-    The BioSynthesis Institute is a cutting-edge research facility where biology meets 
-    artificial intelligence. Researchers here use AI to decode genetic mysteries, design 
-    new organisms, and push the boundaries of what's possible in biotechnology while 
-    grappling with profound ethical questions.
-  atmosphere: scientific_innovative
-  visual_theme: biotech_laboratory
+    바이오신세시스 연구소는 생물학과 인공지능이 만나는 최첨단 연구 시설입니다.
+    이곳의 연구원들은 AI를 사용하여 유전자의 미스터리를 해독하고, 새로운 생물체를 
+    설계하며, 심오한 윤리적 질문과 씨름하면서 바이오테크놀로지의 가능성의 한계를 
+    넓혀나갑니다.
+  
+  atmosphere: "scientific_innovative"
+  visual_theme: "biotech_laboratory"
+
 starting_scenario:
-  title: The Living Algorithm
+  title: "살아있는 알고리즘"
   description: |
-    Dr. Elena Helix welcomes you to the institute with an urgent mission: a mysterious 
-    genetic sequence has been discovered that seems to respond to AI algorithms. But 
-    Dr. Splice from the rival BioCorp is racing to weaponize genetic modifications. 
-    You must unlock life's secrets responsibly while preventing catastrophic misuse.
+    엘레나 헬릭스 박사가 당신을 연구소에 환영하며 긴급한 미션을 제시합니다: 
+    AI 알고리즘에 반응하는 것처럼 보이는 신비한 유전자 서열이 발견되었습니다. 
+    하지만 라이벌 바이오코프의 스플라이스 박사가 유전자 변형을 무기화하려고 
+    경쟁하고 있습니다. 당신은 파괴적인 오용을 막으면서 책임감 있게 생명의 
+    비밀을 풀어야 합니다.
+  
   initial_tasks:
     - understand_crispr
     - learn_ai_modeling
     - first_experiment
+
 skill_tree:
   core_skills:
     - id: molecular_biology
-      name: Molecular Mastery
-      description: Master fundamental molecular biology concepts
+      name: "분자생물학 마스터리"
+      description: "분자생물학의 기본 개념을 마스터합니다"
       max_level: 10
       unlocks:
         - gene_editing
         - protein_design
+    
     - id: bioinformatics
-      name: Bio-Data Fusion
-      description: Analyze biological data with AI
+      name: "바이오데이터 융합"
+      description: "AI로 생물학적 데이터를 분석합니다"
       max_level: 10
       unlocks:
         - sequence_analysis
         - structure_prediction
+    
     - id: synthetic_biology
-      name: Life Design
-      description: Engineer new biological systems
+      name: "생명 설계"
+      description: "새로운 생물학적 시스템을 설계합니다"
       max_level: 10
       unlocks:
         - organism_engineering
         - metabolic_pathways
+    
     - id: ai_integration
-      name: AI-Bio Interface
-      description: Integrate AI with biological research
+      name: "AI-바이오 인터페이스"
+      description: "AI를 생물학 연구에 통합합니다"
       max_level: 10
       unlocks:
         - ml_drug_discovery
         - ai_protein_folding
+
   advanced_skills:
     - id: gene_therapy
-      name: Therapeutic Engineering
-      description: Design treatments at the genetic level
+      name: "치료 공학"
+      description: "유전자 수준에서 치료법을 설계합니다"
       max_level: 15
-      requires:
-        - molecular_biology
-        - synthetic_biology
+      requires: [molecular_biology, synthetic_biology]
+    
     - id: biocomputing
-      name: Living Computers
-      description: Create biological computing systems
+      name: "생체 컴퓨터"
+      description: "생물학적 컴퓨팅 시스템을 만듭니다"
       max_level: 15
-      requires:
-        - bioinformatics
-        - ai_integration
+      requires: [bioinformatics, ai_integration]
+    
     - id: enhancement_tech
-      name: Human Augmentation
-      description: Develop ethical enhancement technologies
+      name: "인간 증강 기술"
+      description: "윤리적인 증강 기술을 개발합니다"
       max_level: 15
-      requires:
-        - gene_therapy
-        - ethical_biotech
+      requires: [gene_therapy, ethical_biotech]
+
 milestone_quests:
   - id: first_cure
-    name: Disease Decoder
-    description: Develop a cure for a genetic disease
+    name: "질병 해독자"
+    description: "유전질환의 치료법을 개발하세요"
     required_level: 5
-    skills_tested:
-      - molecular_biology
-      - bioinformatics
+    skills_tested: [molecular_biology, bioinformatics]
     xp_reward: 800
     unlocks:
       - medical_breakthrough_badge
       - patient_testimonials
+  
   - id: splice_confrontation
-    name: Ethics vs Profit
-    description: Stop Dr. Splice's dangerous experiments
+    name: "윤리 대 이익"
+    description: "스플라이스 박사의 위험한 실험을 저지하세요"
     required_level: 10
-    skills_tested:
-      - synthetic_biology
-      - ethical_biotech
+    skills_tested: [synthetic_biology, ethical_biotech]
     xp_reward: 1500
     unlocks:
       - ethical_guardian_title
       - regulatory_influence
+  
   - id: life_creation
-    name: Genesis Project
-    description: Create a beneficial synthetic organism
+    name: "창세기 프로젝트"
+    description: "유익한 합성 생물체를 창조하세요"
     required_level: 20
-    skills_tested:
-      - biocomputing
-      - enhancement_tech
+    skills_tested: [biocomputing, enhancement_tech]
     xp_reward: 3000
     unlocks:
       - master_biotechnologist_title
       - nobel_consideration
+
 achievements:
   - id: first_sequence
-    name: Code Reader
-    description: Successfully sequence your first genome
+    name: "코드 리더"
+    description: "첫 번째 게놈 서열 분석에 성공하세요"
     xp_reward: 100
     badge_type: bronze
+  
   - id: publication_success
-    name: Published Researcher
-    description: Publish 5 peer-reviewed papers
+    name: "출간 연구자"
+    description: "동료 심사 논문 5편을 게재하세요"
     xp_reward: 400
     badge_type: silver
+  
   - id: patent_holder
-    name: Innovation Pioneer
-    description: File a breakthrough biotech patent
+    name: "혁신 개척자"
+    description: "획기적인 바이오테크 특허를 출원하세요"
     xp_reward: 700
     badge_type: gold
+  
   - id: biotech_legend
-    name: Life Code Master
-    description: Complete all biotech challenges
+    name: "생명코드 마스터"
+    description: "모든 바이오테크 챌린지를 완료하세요"
     xp_reward: 1500
     badge_type: platinum
+
 example_tasks:
   beginner:
     - id: dna_extraction
       type: analysis
-      title: Genetic Blueprint
-      description: Extract and analyze DNA samples
-      skills_improved:
-        - molecular_biology
-        - lab_techniques
+      title: "유전자 청사진"
+      description: "DNA 샘플을 추출하고 분석하세요"
+      skills_improved: [molecular_biology, lab_techniques]
       xp_reward: 70
+    
     - id: ai_sequence_analysis
       type: analysis
-      title: Pattern Recognition
-      description: Use AI to find patterns in genetic data
-      skills_improved:
-        - bioinformatics
-        - ai_bio_modeling
+      title: "패턴 인식"
+      description: "AI를 사용하여 유전자 데이터의 패턴을 찾으세요"
+      skills_improved: [bioinformatics, ai_bio_modeling]
       xp_reward: 80
+  
   intermediate:
     - id: crispr_edit
       type: creation
-      title: Gene Editor
-      description: Perform targeted gene editing
-      skills_improved:
-        - gene_editing
-        - synthetic_biology
+      title: "유전자 편집기"
+      description: "표적 유전자 편집을 수행하세요"
+      skills_improved: [gene_editing, synthetic_biology]
       xp_reward: 200
+    
     - id: drug_design
       type: creation
-      title: Molecular Medicine
-      description: Design a new drug using AI
-      skills_improved:
-        - ml_drug_discovery
-        - bioinformatics
+      title: "분자 의학"
+      description: "AI를 사용하여 새로운 약물을 설계하세요"
+      skills_improved: [ml_drug_discovery, bioinformatics]
       xp_reward: 250
+  
   advanced:
     - id: synthetic_life
       type: creation
-      title: Life Architect
-      description: Design a synthetic organism
-      skills_improved:
-        - organism_engineering
-        - biocomputing
+      title: "생명 건축가"
+      description: "합성 생물체를 설계하세요"
+      skills_improved: [organism_engineering, biocomputing]
       xp_reward: 450
+    
     - id: enhancement_protocol
       type: creation
-      title: Evolution Accelerator
-      description: Develop ethical enhancement technology
-      skills_improved:
-        - enhancement_tech
-        - gene_therapy
+      title: "진화 가속기"
+      description: "윤리적인 증강 기술을 개발하세요"
+      skills_improved: [enhancement_tech, gene_therapy]
       xp_reward: 500
+
 learning_objectives:
-  - Master molecular biology and genetic engineering
-  - Apply AI to biological research and discovery
-  - Design and engineer biological systems
-  - Develop treatments for genetic diseases
-  - Navigate ethical considerations in biotechnology
-  - Conduct rigorous scientific experiments
-  - Collaborate on interdisciplinary research
-  - Translate research into real-world applications
+  - "분자생물학과 유전공학을 마스터하기"
+  - "AI를 생물학 연구와 발견에 적용하기"
+  - "생물학적 시스템을 설계하고 엔지니어링하기"
+  - "유전질환 치료법 개발하기"
+  - "바이오테크놀로지의 윤리적 고려사항 탐색하기"
+  - "엄격한 과학 실험 수행하기"
+  - "학제간 연구에서 협력하기"
+  - "연구를 실제 응용으로 번역하기"
+
 career_outcomes:
-  - Biotechnology Research Scientist
-  - Bioinformatics Specialist
-  - Synthetic Biology Engineer
-  - Pharmaceutical Researcher
-  - Genetic Counselor
-  - Biotech Startup Founder
-  - Research Director
-  - Science Policy Advisor
+  - "바이오테크놀로지 연구 과학자"
+  - "바이오인포매틱스 전문가"
+  - "합성생물학 엔지니어"
+  - "제약 연구원"
+  - "유전 상담사"
+  - "바이오테크 스타트업 창업자"
+  - "연구 디렉터"
+  - "과학 정책 고문"

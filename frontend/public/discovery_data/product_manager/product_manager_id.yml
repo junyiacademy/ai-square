@@ -1,42 +1,43 @@
 # Product Manager Discovery Path - Indonesian
-# PLACEHOLDER FILE - Perlu diterjemahkan
 path_id: product_manager
 category: business
 difficulty_range: beginner_to_expert
+
 metadata:
-  title: Product Alchemist - Product Manager
-  short_description: Forge perfect products in the market crucible
+  title: "Alkemis Produk - Product Manager"
+  short_description: "Ciptakan produk sempurna di dalam tungku pasar"
   long_description: |
-    You are a newly minted alchemist at the "Product Alchemy Workshop," skilled at 
-    fusing user needs, technical capabilities, and business goals into powerful products. 
-    In this workshop filled with innovation sparks, every iteration is an alchemical 
-    experiment, and your goal is to create perfect products that can change the world.
+    Anda adalah alkemis yang baru lulus dari "Bengkel Alkimia Produk", terampil dalam 
+    menggabungkan kebutuhan pengguna, kemampuan teknis, dan tujuan bisnis menjadi produk 
+    yang kuat. Di bengkel yang penuh dengan percikan inovasi ini, setiap iterasi adalah 
+    eksperimen alkimia, dan tujuan Anda adalah menciptakan produk sempurna yang dapat 
+    mengubah dunia.
+  
   estimated_hours: 55
   skill_focus:
     - requirement_alchemy
     - roadmap_prophecy
     - team_coordination_magic
     - user_resonance
-  translation_notice: Perlu diterjemahkan - This is a placeholder file
-  original_language: en
-  target_language: id
-  generated_date: "2025-07-16T07:00:56.523Z"
 world_setting:
-  name: Product Alchemy Workshop
+  name: "Bengkel Alkimia Produk"
   description: |
-    The Product Alchemy Workshop is a magical forge where ideas are transformed into 
-    actual products. Here, product managers learn the ancient art of balancing user 
-    desires, technical constraints, and business objectives to create products that 
-    resonate with millions.
-  atmosphere: dynamic_creative
-  visual_theme: innovation_forge
+    Bengkel Alkimia Produk adalah bengkel magis tempat ide-ide diubah menjadi produk 
+    nyata. Di sini, product manager mempelajari seni kuno menyeimbangkan keinginan 
+    pengguna, kendala teknis, dan tujuan bisnis untuk menciptakan produk yang resonan 
+    dengan jutaan orang.
+  
+  atmosphere: "dynamic_creative"
+  visual_theme: "innovation_forge"
 starting_scenario:
-  title: The Alchemist's Challenge
+  title: "Tantangan Alkemis"
   description: |
-    Strategy Master welcomes you to the workshop with a warning: Deadline, the Time 
-    Tyrant, is forcing teams to sacrifice product quality for speed. Meanwhile, Voice 
-    of Users grows louder with conflicting demands. You must find the philosopher's 
-    stone of product management - balancing quality, speed, and user satisfaction.
+    Master Strategi menyambut Anda di bengkel dengan peringatan: Deadline, Tiran Waktu, 
+    memaksa tim untuk mengorbankan kualitas produk demi kecepatan. Sementara itu, 
+    Suara Pengguna menjadi semakin keras dengan tuntutan yang bertentangan. Anda harus 
+    menemukan batu filosofis manajemen produk - menyeimbangkan kualitas, kecepatan, 
+    dan kepuasan pengguna.
+  
   initial_tasks:
     - understand_users
     - analyze_market
@@ -44,59 +45,59 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: user_research
-      name: User Mind Reading
-      description: Deeply understand user needs and behaviors
+      name: Pembacaan Pikiran Pengguna
+      description: Memahami secara mendalam kebutuhan dan perilaku pengguna
       max_level: 10
       unlocks:
         - persona_creation
         - journey_mapping
     - id: product_strategy
-      name: Strategic Vision
-      description: Craft winning product strategies
+      name: Visi Strategis
+      description: Menciptakan strategi produk yang menang
       max_level: 10
       unlocks:
         - competitive_analysis
         - positioning_mastery
     - id: feature_prioritization
-      name: Priority Alchemy
-      description: Master the art of feature prioritization
+      name: Alkimia Prioritas
+      description: Menguasai seni prioritisasi fitur
       max_level: 10
       unlocks:
         - roadmap_planning
         - mvp_design
     - id: stakeholder_management
-      name: Harmony Orchestration
-      description: Align diverse stakeholder interests
+      name: Orkestrasi Harmoni
+      description: Menyelaraskan kepentingan stakeholder yang beragam
       max_level: 10
       unlocks:
         - executive_communication
         - cross_team_collaboration
   advanced_skills:
     - id: growth_hacking
-      name: Growth Sorcery
-      description: Drive exponential product growth
+      name: Sihir Pertumbuhan
+      description: Mendorong pertumbuhan produk eksponensial
       max_level: 15
       requires:
         - product_strategy
         - user_research
     - id: data_driven_decisions
-      name: Metrics Mastery
-      description: Make decisions based on data insights
+      name: Penguasaan Metrik
+      description: Membuat keputusan berdasarkan wawasan data
       max_level: 15
       requires:
         - feature_prioritization
         - user_research
     - id: platform_thinking
-      name: Ecosystem Architecture
-      description: Build product platforms and ecosystems
+      name: Arsitektur Ekosistem
+      description: Membangun platform produk dan ekosistem
       max_level: 15
       requires:
         - product_strategy
         - stakeholder_management
 milestone_quests:
   - id: first_launch
-    name: Product Genesis
-    description: Successfully launch your first product
+    name: Genesis Produk
+    description: Berhasil meluncurkan produk pertama Anda
     required_level: 5
     skills_tested:
       - user_research
@@ -106,8 +107,8 @@ milestone_quests:
       - launch_specialist_badge
       - user_testimonials
   - id: deadline_balance
-    name: Time vs Quality
-    description: Deliver quality product despite time pressure
+    name: Waktu vs Kualitas
+    description: Mengantarkan produk berkualitas meski dalam tekanan waktu
     required_level: 10
     skills_tested:
       - stakeholder_management
@@ -117,8 +118,8 @@ milestone_quests:
       - balance_master_title
       - deadline_immunity
   - id: unicorn_product
-    name: Billion User Product
-    description: Create a product used by millions
+    name: Produk Miliaran Pengguna
+    description: Menciptakan produk yang digunakan jutaan orang
     required_level: 20
     skills_tested:
       - growth_hacking
@@ -129,39 +130,39 @@ milestone_quests:
       - industry_influence
 achievements:
   - id: first_spec
-    name: Spec Writer
-    description: Write your first product specification
+    name: Penulis Spesifikasi
+    description: Menulis spesifikasi produk pertama Anda
     xp_reward: 100
     badge_type: bronze
   - id: user_champion
-    name: User Advocate
-    description: Implement 20 user-requested features
+    name: Advokat Pengguna
+    description: Mengimplementasikan 20 fitur yang diminta pengguna
     xp_reward: 300
     badge_type: silver
   - id: revenue_generator
-    name: Revenue Alchemist
-    description: Drive $1M in product revenue
+    name: Alkemis Pendapatan
+    description: Menghasilkan $1M pendapatan produk
     xp_reward: 600
     badge_type: gold
   - id: pm_legend
-    name: Product Sage
-    description: Complete all product challenges
+    name: Bijak Produk
+    description: Menyelesaikan semua tantangan produk
     xp_reward: 1200
     badge_type: platinum
 example_tasks:
   beginner:
     - id: user_interviews
       type: analysis
-      title: Voice Collection
-      description: Conduct user interviews to gather insights
+      title: Pengumpulan Suara
+      description: Melakukan wawancara pengguna untuk mengumpulkan wawasan
       skills_improved:
         - user_research
         - user_resonance
       xp_reward: 60
     - id: competitive_analysis
       type: analysis
-      title: Market Scanning
-      description: Analyze competitor products
+      title: Pemindaian Pasar
+      description: Menganalisis produk pesaing
       skills_improved:
         - product_strategy
         - requirement_alchemy
@@ -169,16 +170,16 @@ example_tasks:
   intermediate:
     - id: roadmap_creation
       type: creation
-      title: Future Path Design
-      description: Create a product roadmap
+      title: Desain Jalur Masa Depan
+      description: Membuat roadmap produk
       skills_improved:
         - roadmap_planning
         - roadmap_prophecy
       xp_reward: 180
     - id: feature_launch
       type: creation
-      title: Feature Alchemy
-      description: Launch a major product feature
+      title: Alkimia Fitur
+      description: Meluncurkan fitur produk utama
       skills_improved:
         - feature_prioritization
         - stakeholder_management
@@ -186,35 +187,36 @@ example_tasks:
   advanced:
     - id: platform_design
       type: creation
-      title: Ecosystem Creation
-      description: Design a product platform
+      title: Penciptaan Ekosistem
+      description: Merancang platform produk
       skills_improved:
         - platform_thinking
         - product_strategy
       xp_reward: 400
     - id: growth_experiment
       type: analysis
-      title: Growth Formula
-      description: Run growth experiments to scale product
+      title: Formula Pertumbuhan
+      description: Menjalankan eksperimen pertumbuhan untuk menskalakan produk
       skills_improved:
         - growth_hacking
         - data_driven_decisions
       xp_reward: 350
 learning_objectives:
-  - Master user research and empathy techniques
-  - Develop strategic product thinking
-  - Learn to prioritize features effectively
-  - Build consensus among diverse stakeholders
-  - Use data to drive product decisions
-  - Create and communicate product vision
-  - Balance business goals with user needs
-  - Scale products from inception to maturity
+  - "Menguasai teknik riset pengguna dan empati"
+  - "Mengembangkan pemikiran strategis produk"
+  - "Belajar memprioritaskan fitur secara efektif"
+  - "Membangun konsensus di antara stakeholder yang beragam"
+  - "Menggunakan data untuk mendorong keputusan produk"
+  - "Menciptakan dan mengkomunikasikan visi produk"
+  - "Menyeimbangkan tujuan bisnis dengan kebutuhan pengguna"
+  - "Menskalakan produk dari konsepsi hingga matang"
+
 career_outcomes:
-  - Product Manager
-  - Senior Product Manager
-  - Product Director
-  - Chief Product Officer
-  - Product Strategy Consultant
-  - Startup Product Lead
-  - Growth Product Manager
-  - Platform Product Manager
+  - "Product Manager"
+  - "Senior Product Manager"
+  - "Product Director"
+  - "Chief Product Officer"
+  - "Konsultan Strategi Produk"
+  - "Product Lead Startup"
+  - "Growth Product Manager"
+  - "Platform Product Manager"
