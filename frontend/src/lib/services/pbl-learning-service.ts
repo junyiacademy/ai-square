@@ -61,6 +61,9 @@ export class PBLLearningService implements BaseLearningService {
       throw new Error('Scenario is not a PBL scenario');
     }
 
+    // 取得任務模板（從 scenario.task_templates 而非 pblData）
+    const taskTemplates = scenario.taskTemplates || [];
+
     // 3. 創建 Program
     const program = await this.programRepo.create({
       userId,
@@ -69,7 +72,7 @@ export class PBLLearningService implements BaseLearningService {
       status: 'active',
       currentTaskIndex: 0,
       completedTaskCount: 0,
-      totalTaskCount: (scenario.pblData as unknown as PBLScenarioData).taskTemplates.length,
+      totalTaskCount: taskTemplates.length,
       totalScore: 0,
       domainScores: {},
       xpEarned: 0,
@@ -91,7 +94,6 @@ export class PBLLearningService implements BaseLearningService {
     });
 
     // 4. 創建 Tasks
-    const taskTemplates = (scenario.pblData as unknown as PBLScenarioData).taskTemplates;
     for (let i = 0; i < taskTemplates.length; i++) {
       const template = taskTemplates[i];
       await this.taskRepo.create({

@@ -23,17 +23,30 @@ import type {
 } from './base-learning-service';
 
 export interface DiscoveryScenarioData {
-  career: {
-    id: string;
-    title: Record<string, string>;
-    description: Record<string, string>;
-    requiredSkills: string[];
-    relatedDomains: string[];
+  pathId: string;
+  category: string;
+  skillTree?: {
+    core_skills: Array<{
+      id: string;
+      name: string;
+      unlocks: string[];
+      max_level: number;
+      description: string;
+    }>;
+    advanced_skills?: Array<{
+      id: string;
+      name: string;
+      requires: string[];
+      max_level: number;
+      description: string;
+    }>;
   };
   worldSetting: {
     name: Record<string, string>;
     description: Record<string, string>;
-    challenges: Array<{
+    atmosphere?: string;
+    visualTheme?: string;
+    challenges?: Array<{
       id: string;
       title: Record<string, string>;
       difficulty: 'beginner' | 'intermediate' | 'advanced';
@@ -41,7 +54,23 @@ export interface DiscoveryScenarioData {
       skills: string[];
     }>;
   };
-  progressionPath: Array<{
+  careerInsights?: {
+    typical_day: Record<string, string>;
+  };
+  difficultyRange?: string;
+  startingScenario?: {
+    title: Record<string, string>;
+    description: Record<string, string>;
+  };
+  // Legacy fields for backward compatibility
+  career?: {
+    id: string;
+    title: Record<string, string>;
+    description: Record<string, string>;
+    requiredSkills: string[];
+    relatedDomains: string[];
+  };
+  progressionPath?: Array<{
     level: number;
     title: Record<string, string>;
     requiredXP: number;
@@ -106,8 +135,8 @@ export class DiscoveryLearningService implements BaseLearningService {
         achievements: [],
         unlockedSkills: [],
         completedChallenges: [],
-        currentCareer: discoveryData.career.id,
-        worldSetting: discoveryData.worldSetting.name[options?.language || 'en']
+        currentCareer: discoveryData.pathId || 'unknown',
+        worldSetting: discoveryData.worldSetting?.name?.[options?.language || 'en'] || 'Adventure World'
       },
       assessmentData: {},
       metadata: {
@@ -382,9 +411,9 @@ export class DiscoveryLearningService implements BaseLearningService {
       type: 'chat',
       status: 'active',
       content: {
-        instructions: discoveryData.worldSetting.description[language],
-        career: discoveryData.career.title[language],
-        worldSetting: discoveryData.worldSetting.name[language]
+        instructions: discoveryData.worldSetting.description[language] || 'Welcome to your career journey!',
+        career: (scenario.title as Record<string, string>)[language] || 'Career Path',
+        worldSetting: discoveryData.worldSetting.name[language] || 'Adventure World'
       },
       interactions: [],
       interactionCount: 0,
@@ -408,45 +437,49 @@ export class DiscoveryLearningService implements BaseLearningService {
     });
     tasks.push(welcomeTask);
 
-    // 2. 生成初始挑戰（基於難度）
-    const beginnerChallenges = discoveryData.worldSetting.challenges
-      .filter(c => c.difficulty === 'beginner')
-      .slice(0, 3); // 前3個初級挑戰
+    // 2. 生成初始技能挑戰（基於 core_skills）
+    const coreSkills = discoveryData.skillTree?.core_skills || [];
+    const initialSkills = coreSkills.slice(0, 3); // 前3個核心技能
 
-    for (let i = 0; i < beginnerChallenges.length; i++) {
-      const challenge = beginnerChallenges[i];
+    for (let i = 0; i < initialSkills.length; i++) {
+      const skill = initialSkills[i];
       const task = await this.taskRepo.create({
         programId: program.id,
         mode: 'discovery',
         taskIndex: i + 1,
-        title: challenge.title,
+        title: {
+          en: `Learn ${skill.name}`,
+          zh: `學習 ${skill.name}`,
+          es: `Aprender ${skill.name}`
+        },
         type: 'creation',
         status: 'pending',
         content: {
-          instructions: `Complete this challenge to earn XP and unlock new skills!`,
-          challengeId: challenge.id,
-          difficulty: challenge.difficulty,
-          requiredSkills: challenge.skills
+          instructions: skill.description,
+          skillId: skill.id,
+          difficulty: 'beginner',
+          unlocks: skill.unlocks
         },
         interactions: [],
         interactionCount: 0,
         userResponse: {},
         score: 0,
-        maxScore: challenge.xpReward,
+        maxScore: 100,
         allowedAttempts: 3,
         attemptCount: 0,
         timeSpentSeconds: 0,
         aiConfig: {
-          evaluationCriteria: challenge.skills
+          evaluationCriteria: [skill.id]
         },
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
         pblData: {},
         discoveryData: {
-          xpReward: challenge.xpReward,
-          challengeType: 'skill_challenge',
-          difficulty: challenge.difficulty,
-          skills: challenge.skills
+          xpReward: 100,
+          challengeType: 'skill_development',
+          difficulty: 'beginner',
+          skills: [skill.id],
+          skillName: skill.name
         },
         assessmentData: {},
         metadata: {}
@@ -511,39 +544,48 @@ export class DiscoveryLearningService implements BaseLearningService {
     const discoveryData = scenario.discoveryData as unknown as DiscoveryScenarioData;
     const programDiscoveryData = program.discoveryData as unknown as DiscoveryProgress;
     
-    // 根據等級選擇適當難度的挑戰
-    const difficulty = programDiscoveryData.level < 3 ? 'beginner' :
-                      programDiscoveryData.level < 6 ? 'intermediate' :
-                      'advanced';
+    // 根據等級選擇適當的技能挑戰
+    const coreSkills = discoveryData.skillTree?.core_skills || [];
+    const advancedSkills = discoveryData.skillTree?.advanced_skills || [];
+    
+    // 基於等級選擇技能
+    const availableSkills = programDiscoveryData.level < 3 ? coreSkills : 
+                           programDiscoveryData.level < 6 ? [...coreSkills, ...advancedSkills.slice(0, 2)] :
+                           [...coreSkills, ...advancedSkills];
 
-    const availableChallenges = discoveryData.worldSetting.challenges
-      .filter(c => 
-        c.difficulty === difficulty && 
-        !programDiscoveryData.completedChallenges.includes(c.id)
-      );
+    // 找到還未完成的技能
+    const uncompletedSkills = availableSkills.filter(skill => 
+      !programDiscoveryData.completedChallenges.includes(skill.id)
+    );
 
-    if (availableChallenges.length > 0) {
-      const nextChallenge = availableChallenges[0];
+    if (uncompletedSkills.length > 0) {
+      const nextSkill = uncompletedSkills[0];
       const tasks = await this.taskRepo.findByProgram(program.id);
+      const isAdvancedSkill = advancedSkills.some(skill => skill.id === nextSkill.id);
+      const difficulty = isAdvancedSkill ? 'advanced' : 'intermediate';
       
       await this.taskRepo.create({
         programId: program.id,
         mode: 'discovery',
         taskIndex: tasks.length,
-        title: nextChallenge.title,
+        title: {
+          en: `Master ${nextSkill.name}`,
+          zh: `掌握 ${nextSkill.name}`,
+          es: `Dominar ${nextSkill.name}`
+        },
         type: 'creation',
         status: 'pending',
         content: {
-          instructions: `New challenge unlocked! This ${difficulty} challenge will test your skills.`,
-          challengeId: nextChallenge.id,
-          difficulty: nextChallenge.difficulty,
-          requiredSkills: nextChallenge.skills
+          instructions: `${difficulty.charAt(0).toUpperCase() + difficulty.slice(1)} skill unlocked! ${nextSkill.description}`,
+          skillId: nextSkill.id,
+          difficulty,
+          unlocks: 'unlocks' in nextSkill ? nextSkill.unlocks : []
         },
         interactions: [],
         interactionCount: 0,
         userResponse: {},
         score: 0,
-        maxScore: nextChallenge.xpReward,
+        maxScore: difficulty === 'advanced' ? 150 : 100,
         allowedAttempts: 3,
         attemptCount: 0,
         timeSpentSeconds: 0,
@@ -552,10 +594,11 @@ export class DiscoveryLearningService implements BaseLearningService {
         updatedAt: new Date().toISOString(),
         pblData: {},
         discoveryData: {
-          xpReward: nextChallenge.xpReward,
-          challengeType: 'skill_challenge',
-          difficulty: nextChallenge.difficulty,
-          skills: nextChallenge.skills
+          xpReward: difficulty === 'advanced' ? 150 : 100,
+          challengeType: 'skill_advancement',
+          difficulty,
+          skills: [nextSkill.id],
+          skillName: nextSkill.name
         },
         assessmentData: {},
         metadata: {}

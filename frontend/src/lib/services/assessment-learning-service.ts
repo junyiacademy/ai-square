@@ -409,10 +409,22 @@ export class AssessmentLearningService implements BaseLearningService {
 
   private selectQuestions(scenario: IScenario, language: string): Array<Record<string, unknown>> {
     const assessmentData = scenario.assessmentData as Record<string, unknown> || {};
+    
+    // 支援兩種資料格式：questionBankByLanguage 和 questionBank
     const questionBankByLanguage = assessmentData.questionBankByLanguage as Record<string, Array<Record<string, unknown>>> || {};
-    const questionBank = questionBankByLanguage[language] || 
-                        questionBankByLanguage['en'] || 
-                        [];
+    let questionBank: Array<Record<string, unknown>>;
+    
+    if (questionBankByLanguage[language] || questionBankByLanguage['en']) {
+      // 格式 1: questionBankByLanguage
+      questionBank = questionBankByLanguage[language] || questionBankByLanguage['en'] || [];
+    } else {
+      // 格式 2: questionBank (扁平化結構)
+      const flatQuestionBank = assessmentData.questionBank as Array<Record<string, unknown>> || [];
+      questionBank = flatQuestionBank.flatMap((domain: Record<string, unknown>) => {
+        const questions = domain.questions as Array<Record<string, unknown>> || [];
+        return questions;
+      });
+    }
     
     const totalQuestions = (assessmentData.totalQuestions as number) || 12;
     
