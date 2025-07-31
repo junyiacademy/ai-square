@@ -4,13 +4,13 @@ path_id: environmental_scientist
 category: science
 difficulty_range: beginner_to_expert
 metadata:
-  title: Planet Guardian - Environmental Scientist
-  short_description: Protect Earth through data-driven environmental solutions
+  title: "惑星の守護者 - 環境科学者"
+  short_description: "データ駆動型の環境ソリューションで地球を守る"
   long_description: |
-    You are a junior scientist at the "Global Climate Response Center," where AI-powered 
-    monitoring systems track planetary health in real-time. Armed with cutting-edge 
-    technology and environmental science knowledge, you'll work to understand and 
-    reverse climate damage while developing sustainable solutions for the future.
+    あなたは「グローバル気候対策センター」のジュニア科学者です。ここではAIを搭載した
+    監視システムが地球の健康状態をリアルタイムで追跡しています。最先端技術と環境科学の
+    知識を武器に、気候変動のダメージを理解し、逆転させながら、未来のための持続可能な
+    ソリューションを開発していきます。
   estimated_hours: 60
   skill_focus:
     - climate_modeling
@@ -23,21 +23,20 @@ metadata:
   target_language: ja
   generated_date: "2025-07-16T07:00:56.506Z"
 world_setting:
-  name: Global Climate Response Center
+  name: "グローバル気候対策センター"
   description: |
-    The Global Climate Response Center is a high-tech facility where environmental 
-    scientists use AI, satellite data, and field research to monitor and protect 
-    Earth's ecosystems. Scientists here race against time to develop solutions 
-    before critical tipping points are reached.
+    グローバル気候対策センターは、環境科学者たちがAI、衛星データ、フィールド調査を
+    駆使して地球の生態系を監視・保護するハイテク施設です。ここの科学者たちは、
+    重要な転換点に達する前に解決策を開発するため、時間との競争に挑んでいます。
   atmosphere: urgent_hopeful
   visual_theme: eco_tech_fusion
 starting_scenario:
-  title: "Code Red: Climate Crisis"
+  title: "コードレッド：気候危機"
   description: |
-    Dr. Gaia Earth welcomes you with alarming news: multiple environmental systems 
-    are approaching critical thresholds. Meanwhile, CEO Polluto of MegaCorp continues 
-    destructive practices for profit. You must use science and innovation to save 
-    ecosystems while exposing corporate environmental crimes.
+    ガイア・アース博士が警戒すべきニュースとともにあなたを迎えます：複数の環境システムが
+    臨界閾値に近づいています。一方、メガコープのポルート社長は利益のために破壊的な
+    慣行を続けています。あなたは科学とイノベーションを使って生態系を救い、同時に
+    企業の環境犯罪を暴かなければなりません。
   initial_tasks:
     - analyze_climate_data
     - identify_hotspots
@@ -45,59 +44,59 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: climate_science
-      name: Climate Dynamics
-      description: Understand Earth's climate systems
+      name: "気候ダイナミクス"
+      description: "地球の気候システムを理解する"
       max_level: 10
       unlocks:
         - weather_prediction
         - carbon_cycle_analysis
     - id: ecosystem_monitoring
-      name: Living Systems
-      description: Track and analyze ecosystems
+      name: "生命システム"
+      description: "生態系を追跡・分析する"
       max_level: 10
       unlocks:
         - biodiversity_assessment
         - habitat_mapping
     - id: pollution_detection
-      name: Contamination Tracking
-      description: Identify and trace pollutants
+      name: "汚染追跡"
+      description: "汚染物質を特定・追跡する"
       max_level: 10
       unlocks:
         - water_quality_analysis
         - air_monitoring
     - id: sustainable_tech
-      name: Green Innovation
-      description: Develop eco-friendly technologies
+      name: "グリーンイノベーション"
+      description: "環境に優しい技術を開発する"
       max_level: 10
       unlocks:
         - renewable_energy
         - circular_economy
   advanced_skills:
     - id: climate_modeling
-      name: Future Forecasting
-      description: Predict climate scenarios with AI
+      name: "未来予測"
+      description: "AIで気候シナリオを予測する"
       max_level: 15
       requires:
         - climate_science
         - ecosystem_monitoring
     - id: restoration_ecology
-      name: Ecosystem Healing
-      description: Restore damaged environments
+      name: "生態系の癒し"
+      description: "損傷した環境を修復する"
       max_level: 15
       requires:
         - ecosystem_monitoring
         - sustainable_tech
     - id: policy_influence
-      name: Environmental Advocacy
-      description: Shape environmental policies
+      name: "環境擁護"
+      description: "環境政策を形成する"
       max_level: 15
       requires:
         - pollution_detection
         - climate_science
 milestone_quests:
   - id: first_discovery
-    name: Pollution Exposed
-    description: Uncover major environmental violation
+    name: "汚染暴露"
+    description: "重大な環境違反を明らかにする"
     required_level: 5
     skills_tested:
       - pollution_detection
@@ -107,8 +106,8 @@ milestone_quests:
       - whistleblower_badge
       - media_attention
   - id: ecosystem_save
-    name: Habitat Hero
-    description: Save an endangered ecosystem
+    name: "生息地の英雄"
+    description: "絶滅危惧の生態系を救う"
     required_level: 10
     skills_tested:
       - restoration_ecology
@@ -118,8 +117,8 @@ milestone_quests:
       - conservation_champion_title
       - wildlife_alliance
   - id: climate_solution
-    name: Global Game Changer
-    description: Develop breakthrough climate solution
+    name: "グローバルゲームチェンジャー"
+    description: "画期的な気候解決策を開発する"
     required_level: 20
     skills_tested:
       - climate_modeling
@@ -130,39 +129,39 @@ milestone_quests:
       - un_recognition
 achievements:
   - id: first_sample
-    name: Field Researcher
-    description: Collect and analyze first environmental sample
+    name: "フィールド研究者"
+    description: "最初の環境サンプルを収集・分析する"
     xp_reward: 100
     badge_type: bronze
   - id: data_detective
-    name: Pattern Finder
-    description: Identify 10 environmental anomalies
+    name: "パターン発見者"
+    description: "10の環境異常を特定する"
     xp_reward: 350
     badge_type: silver
   - id: solution_provider
-    name: Innovation Champion
-    description: Implement 5 sustainable solutions
+    name: "イノベーションチャンピオン"
+    description: "5つの持続可能な解決策を実施する"
     xp_reward: 650
     badge_type: gold
   - id: planet_protector
-    name: Earth's Guardian
-    description: Complete all environmental challenges
+    name: "地球の守護者"
+    description: "すべての環境チャレンジを完了する"
     xp_reward: 1300
     badge_type: platinum
 example_tasks:
   beginner:
     - id: water_testing
       type: analysis
-      title: Aqua Analysis
-      description: Test water quality in local rivers
+      title: "水質分析"
+      description: "地元の川の水質をテストする"
       skills_improved:
         - pollution_detection
         - data_visualization
       xp_reward: 65
     - id: carbon_footprint
       type: analysis
-      title: Carbon Calculator
-      description: Measure carbon emissions
+      title: "カーボン計算機"
+      description: "炭素排出量を測定する"
       skills_improved:
         - climate_science
         - sustainable_solutions
@@ -170,16 +169,16 @@ example_tasks:
   intermediate:
     - id: habitat_restoration
       type: creation
-      title: Ecosystem Revival
-      description: Design habitat restoration plan
+      title: "生態系の復活"
+      description: "生息地修復計画を設計する"
       skills_improved:
         - restoration_ecology
         - ecosystem_analysis
       xp_reward: 190
     - id: pollution_tracking
       type: analysis
-      title: Contamination Hunt
-      description: Track pollution to its source
+      title: "汚染ハント"
+      description: "汚染を発生源まで追跡する"
       skills_improved:
         - pollution_detection
         - data_visualization
@@ -187,35 +186,35 @@ example_tasks:
   advanced:
     - id: climate_model
       type: creation
-      title: Future Simulator
-      description: Build AI climate prediction model
+      title: "未来シミュレーター"
+      description: "AI気候予測モデルを構築する"
       skills_improved:
         - climate_modeling
         - data_visualization
       xp_reward: 420
     - id: policy_proposal
       type: creation
-      title: Law of the Land
-      description: Draft environmental protection policy
+      title: "大地の法"
+      description: "環境保護政策を起草する"
       skills_improved:
         - policy_influence
         - sustainable_solutions
       xp_reward: 470
 learning_objectives:
-  - Master environmental monitoring techniques
-  - Use AI and data science for environmental analysis
-  - Develop sustainable technology solutions
-  - Understand climate systems and predictions
-  - Design ecosystem restoration projects
-  - Influence environmental policy and regulation
-  - Communicate science to public and policymakers
-  - Balance human needs with environmental protection
+  - "環境モニタリング技術をマスターする"
+  - "環境分析にAIとデータサイエンスを活用する"
+  - "持続可能な技術ソリューションを開発する"
+  - "気候システムと予測を理解する"
+  - "生態系修復プロジェクトを設計する"
+  - "環境政策と規制に影響を与える"
+  - "科学を一般市民と政策立案者に伝える"
+  - "人間のニーズと環境保護のバランスをとる"
 career_outcomes:
-  - Environmental Scientist
-  - Climate Researcher
-  - Conservation Biologist
-  - Environmental Consultant
-  - Sustainability Director
-  - Environmental Policy Analyst
-  - Ecological Restoration Specialist
-  - Chief Sustainability Officer
+  - "環境科学者"
+  - "気候研究者"
+  - "保全生物学者"
+  - "環境コンサルタント"
+  - "サステナビリティ・ディレクター"
+  - "環境政策アナリスト"
+  - "生態系修復スペシャリスト"
+  - "最高サステナビリティ責任者"

@@ -1,41 +1,33 @@
 # Ux Designer Discovery Path - Simplified Chinese
-# PLACEHOLDER FILE - 需要翻译
 path_id: ux_designer
 category: arts
 difficulty_range: beginner_to_expert
 metadata:
-  title: Experience Architect - UX Designer
-  short_description: Build perfect experience worlds in digital spaces
+  title: "体验设计师 - UX设计师"
+  short_description: "在数字空间中构建完美的体验世界"
   long_description: |
-    You are an apprentice architect at the "Experience Design Academy," skilled at 
-    building unforgettable experience spaces in the digital world. Every click and 
-    swipe is a carefully designed journey, and your mission is to make users feel 
-    joy and satisfaction in these spaces.
+    你是“体验设计学院”的学徒建筑师，擅长在数字世界中构建难忘的体验空间。
+    每一次点击和滑动都是精心设计的旅程，你的使命是让用户在这些空间中
+    感受到快乐和满足。
   estimated_hours: 55
   skill_focus:
     - user_psychology
     - experience_magic
     - prototype_sculpting
     - communication_arts
-  translation_notice: 需要翻译 - This is a placeholder file
-  original_language: en
-  target_language: zhCN
-  generated_date: "2025-07-16T07:00:56.555Z"
 world_setting:
-  name: Experience Design Academy
+  name: "体验设计学院"
   description: |
-    The Experience Design Academy is a mysterious institution dedicated to studying 
-    human experiences. Designers here learn to balance aesthetics with functionality, 
-    emotion with efficiency, creating digital spaces that heal and inspire.
+    体验设计学院是一个专门研究人类体验的神秘机构。这里的设计师学习如何
+    平衡美学与功能性、情感与效率，创造出治愈和启发人心的数字空间。
   atmosphere: harmonious_innovative
   visual_theme: minimalist_magic
 starting_scenario:
-  title: The Indifference Crisis
+  title: "冷漠危机"
   description: |
-    Design Sage Maya welcomes you with an urgent mission: Indifference, the cold 
-    corporate giant, is standardizing all designs, eliminating personalized experiences. 
-    You must use soulful design to combat mechanization and restore humanity to 
-    digital interactions.
+    设计智者玛雅带着紧急任务欢迎你：冷漠这个冰冷的企业巨头正在标准化
+    所有设计，消除个性化体验。你必须使用有灵魂的设计来对抗机械化，
+    并在数字交互中恢复人性。
   initial_tasks:
     - understand_users
     - learn_design_principles
@@ -43,59 +35,59 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: user_research
-      name: Mind Reading
-      description: Understand user needs deeply
+      name: "读心术"
+      description: "深入理解用户需求"
       max_level: 10
       unlocks:
         - empathy_mapping
         - user_interviews
     - id: interaction_design
-      name: Touch Magic
-      description: Design intuitive interactions
+      name: "触摸魔法"
+      description: "设计直观的交互"
       max_level: 10
       unlocks:
         - gesture_design
         - microinteractions
     - id: visual_design
-      name: Aesthetic Alchemy
-      description: Create beautiful interfaces
+      name: "美学炼金术"
+      description: "创造美丽的界面"
       max_level: 10
       unlocks:
         - color_theory
         - typography_mastery
     - id: prototyping
-      name: Reality Shaping
-      description: Build interactive prototypes
+      name: "现实塑造术"
+      description: "构建交互式原型"
       max_level: 10
       unlocks:
         - rapid_prototyping
         - high_fidelity_design
   advanced_skills:
     - id: design_systems
-      name: System Harmony
-      description: Create scalable design systems
+      name: "系统和谐术"
+      description: "创建可扩展的设计系统"
       max_level: 15
       requires:
         - visual_design
         - interaction_design
     - id: accessibility_design
-      name: Universal Magic
-      description: Design for all users
+      name: "普世魔法"
+      description: "为所有用户设计"
       max_level: 15
       requires:
         - user_research
         - interaction_design
     - id: strategic_design
-      name: Business Empathy
-      description: Align design with business goals
+      name: "商业共情术"
+      description: "将设计与商业目标对齐"
       max_level: 15
       requires:
         - user_research
         - prototyping
 milestone_quests:
   - id: first_design
-    name: Soul Touch
-    description: Create your first user-loved design
+    name: "灵魂触碰"
+    description: "创造你的第一个用户喜爱的设计"
     required_level: 5
     skills_tested:
       - user_research
@@ -105,8 +97,8 @@ milestone_quests:
       - empathy_designer_badge
       - user_testimonials
   - id: indifference_challenge
-    name: Humanity Restored
-    description: Defeat Indifference with personalized design
+    name: "人性复归"
+    description: "用个性化设计击败冷漠"
     required_level: 10
     skills_tested:
       - interaction_design
@@ -116,8 +108,8 @@ milestone_quests:
       - humanity_champion_title
       - emotional_resonance
   - id: design_legacy
-    name: Experience Revolution
-    description: Create design used by millions
+    name: "体验革命"
+    description: "创造一个被数百万人使用的设计"
     required_level: 20
     skills_tested:
       - design_systems
@@ -128,39 +120,39 @@ milestone_quests:
       - design_philosophy
 achievements:
   - id: first_prototype
-    name: First Creation
-    description: Build your first interactive prototype
+    name: "初创作品"
+    description: "构建你的第一个交互式原型"
     xp_reward: 70
     badge_type: bronze
   - id: user_advocate
-    name: User Champion
-    description: Conduct 50 user research sessions
+    name: "用户守护者"
+    description: "进行50次用户研究会议"
     xp_reward: 250
     badge_type: silver
   - id: pixel_perfect
-    name: Perfection Achieved
-    description: Create flawless high-fidelity designs
+    name: "完美达成"
+    description: "创造完美无瑕的高保真设计"
     xp_reward: 450
     badge_type: gold
   - id: design_master
-    name: Experience Sage
-    description: Complete all design challenges
+    name: "体验智者"
+    description: "完成所有设计挑战"
     xp_reward: 900
     badge_type: platinum
 example_tasks:
   beginner:
     - id: user_research
       type: analysis
-      title: Soul Mining Mission
-      description: Understand user needs and pain points
+      title: "心灵挖掘任务"
+      description: "理解用户需求和痛点"
       skills_improved:
         - user_research
         - user_psychology
       xp_reward: 60
     - id: wireframe_creation
       type: creation
-      title: Blueprint Magic
-      description: Create your first wireframes
+      title: "蓝图魔法"
+      description: "创建你的第一个线框图"
       skills_improved:
         - interaction_design
         - prototype_sculpting
@@ -168,16 +160,16 @@ example_tasks:
   intermediate:
     - id: prototype_design
       type: creation
-      title: Warm Prototype Building
-      description: Design interactive prototype
+      title: "温暖原型构建"
+      description: "设计交互式原型"
       skills_improved:
         - prototyping
         - experience_magic
       xp_reward: 170
     - id: design_system
       type: creation
-      title: Harmony Framework
-      description: Create cohesive design system
+      title: "和谐框架"
+      description: "创建一个统一的设计系统"
       skills_improved:
         - design_systems
         - visual_design
@@ -185,35 +177,35 @@ example_tasks:
   advanced:
     - id: accessibility_audit
       type: analysis
-      title: Universal Gateway
-      description: Ensure design works for everyone
+      title: "普世门户"
+      description: "确保设计适用于所有人"
       skills_improved:
         - accessibility_design
         - user_psychology
       xp_reward: 340
     - id: strategic_redesign
       type: creation
-      title: Business Soul Fusion
-      description: Redesign for user and business success
+      title: "商业灵魂融合"
+      description: "为用户和商业成功而重新设计"
       skills_improved:
         - strategic_design
         - communication_arts
       xp_reward: 380
 learning_objectives:
-  - Master user research techniques
-  - Create intuitive user interfaces
-  - Design beautiful visual experiences
-  - Build interactive prototypes
-  - Understand human psychology
-  - Implement accessibility standards
-  - Develop design systems
-  - Balance user needs with business goals
+  - "掌握用户研究技术"
+  - "创建直观的用户界面"
+  - "设计美丽的视觉体验"
+  - "构建交互式原型"
+  - "理解人类心理学"
+  - "实施无障碍标准"
+  - "开发设计系统"
+  - "平衡用户需求与商业目标"
 career_outcomes:
-  - UX Designer
-  - UI Designer
-  - Product Designer
-  - Design System Lead
-  - UX Research Manager
-  - Design Director
-  - Chief Design Officer
-  - Design Consultant
+  - "UX设计师"
+  - "UI设计师"
+  - "产品设计师"
+  - "设计系统负责人"
+  - "UX研究经理"
+  - "设计总监"
+  - "首席设计官"
+  - "设计顾问"

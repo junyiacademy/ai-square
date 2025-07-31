@@ -1,41 +1,37 @@
 # Youtuber Discovery Path - Thai
-# PLACEHOLDER FILE - ต้องการการแปล
 path_id: youtuber
 category: arts
 difficulty_range: beginner_to_expert
 metadata:
-  title: Video Bard - YouTuber
-  short_description: Perform captivating video stories on digital stages
+  title: "กวีดิจิทัล - YouTuber"
+  short_description: "แสดงเรื่องราววิดีโอที่ดึงดูดใจบนเวทีดิจิทัล"
   long_description: |
-    You are a new member of the "Video Bard Guild," gifted with telling stories through 
-    lenses and entertaining audiences. In this digital kingdom of creativity and technology, 
-    every video is a performance, every subscriber is your audience, and your mission 
-    is to create video content that touches hearts and sparks resonance.
+    คุณเป็นสมาชิกใหม่ของ "กิลด์กวีดิจิทัล" ผู้มีพรสวรรค์ในการเล่าเรื่องผ่านเลนส์
+    และสร้างความบันเทิงให้ผู้ชม ในอาณาจักรดิจิทัลแห่งความคิดสร้างสรรค์และเทคโนโลยีนี้ 
+    ทุกวิดีโอคือการแสดง ทุกผู้ติดตามคือผู้ชมของคุณ และภารกิจของคุณคือ
+    การสร้างเนื้อหาวิดีโอที่สัมผัสหัวใจและสร้างกระแสตอบรับ
   estimated_hours: 55
   skill_focus:
     - storytelling_arts
     - video_magic
     - audience_resonance
     - algorithm_studies
-  translation_notice: ต้องการการแปล - This is a placeholder file
-  original_language: en
-  target_language: th
-  generated_date: "2025-07-16T07:00:56.563Z"
 world_setting:
-  name: Video Bard Guild
+  name: "กิลด์กวีดิจิทัล"
   description: |
-    The Video Bard Guild is an artistic guild that cultivates top content creators. 
-    Here, creators learn to balance creativity with algorithm demands, authenticity 
-    with audience expectations, building channels that inspire and entertain millions.
+    กิลด์กวีดิจิทัลเป็นกิลด์ศิลปะที่ปลูกฝังผู้สร้างเนื้อหาชั้นยอด 
+    ที่นี่ผู้สร้างเรียนรู้การสมดุลระหว่างความคิดสร้างสรรค์กับความต้องการ
+    ของอัลกอริทึม ความแท้จริงกับความคาดหวังของผู้ชม 
+    สร้างช่องที่สร้างแรงบันดาลใจและสร้างความบันเทิงให้ผู้คนหลายล้านคน
   atmosphere: creative_dynamic
   visual_theme: digital_stage
 starting_scenario:
-  title: The Algorithm Shift
+  title: "การเปลี่ยนแปลงของอัลกอริทึม"
   description: |
-    Creative Director welcomes you with concerning news: Algorithm, the capricious 
-    king, has suddenly changed preferences, burying many creators' work. You must 
-    find balance between maintaining creative integrity and adapting to algorithmic 
-    demands.
+    ผู้อำนวยการครีเอทีฟต้อนรับคุณด้วยข่าวที่น่ากังวล: อัลกอริทึม 
+    ราชาผู้เอาแต่ใจ ได้เปลี่ยนความชอบอย่างกะทันหัน ฝังงานของผู้สร้าง
+    จำนวนมาก คุณต้องหาสมดุลระหว่างการรักษาความซื่อตรงทางครีเอทีฟ
+    และการปรับตัวตามความต้องการของอัลกอริทึม
   initial_tasks:
     - understand_youtube
     - learn_video_basics
@@ -43,59 +39,59 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: content_planning
-      name: Story Weaving
-      description: Plan engaging video content
+      name: "การทอเรื่องราว"
+      description: "วางแผนเนื้อหาวิดีโอที่ดึงดูดใจ"
       max_level: 10
       unlocks:
         - series_planning
         - content_calendar
     - id: video_production
-      name: Visual Craft
-      description: Master video filming techniques
+      name: "ศิลปะการมองเห็น"
+      description: "เชี่ยวชาญเทคนิคการถ่ายทำวิดีโอ"
       max_level: 10
       unlocks:
         - camera_mastery
         - lighting_magic
     - id: video_editing
-      name: Time Sculpting
-      description: Edit compelling videos
+      name: "การแกะสลักเวลา"
+      description: "ตัดต่อวิดีโอที่น่าจับตามอง"
       max_level: 10
       unlocks:
         - pacing_rhythm
         - effects_wizardry
     - id: audience_growth
-      name: Community Building
-      description: Grow and engage audience
+      name: "การสร้างชุมชน"
+      description: "เพิ่มและดึงดูดผู้ชม"
       max_level: 10
       unlocks:
         - engagement_tactics
         - collaboration_networks
   advanced_skills:
     - id: algorithm_optimization
-      name: Algorithm Whispering
-      description: Master YouTube's algorithm
+      name: "การกระซิบอัลกอริทึม"
+      description: "เชี่ยวชาญอัลกอริทึมของ YouTube"
       max_level: 15
       requires:
         - content_planning
         - audience_growth
     - id: monetization_mastery
-      name: Revenue Streams
-      description: Diversify income sources
+      name: "กระแสรายได้"
+      description: "กระจายแหล่งรายได้"
       max_level: 15
       requires:
         - audience_growth
         - video_production
     - id: brand_partnerships
-      name: Alliance Forging
-      description: Build strategic partnerships
+      name: "การสร้างพันธมิตร"
+      description: "สร้างความร่วมมือเชิงกลยุทธ์"
       max_level: 15
       requires:
         - algorithm_optimization
         - audience_growth
 milestone_quests:
   - id: first_viral
-    name: Viral Debut
-    description: Create your first viral video
+    name: "การเปิดตัวไวรัล"
+    description: "สร้างวิดีโอไวรัลแรกของคุณ"
     required_level: 5
     skills_tested:
       - content_planning
@@ -105,8 +101,8 @@ milestone_quests:
       - viral_creator_badge
       - algorithm_favor
   - id: algorithm_mastery
-    name: Taming the Algorithm
-    description: Achieve consistent growth despite algorithm changes
+    name: "การฝึกอัลกอริทึม"
+    description: "บรรลุการเติบโตที่สม่ำเสมอแม้อัลกอริทึมเปลี่ยนแปลง"
     required_level: 10
     skills_tested:
       - algorithm_optimization
@@ -116,8 +112,8 @@ milestone_quests:
       - algorithm_tamer_title
       - stable_growth
   - id: channel_empire
-    name: Digital Empire
-    description: Build channel with 1M subscribers
+    name: "อาณาจักรดิจิทัล"
+    description: "สร้างช่องที่มีผู้ติดตาม 1 ล้านคน"
     required_level: 20
     skills_tested:
       - brand_partnerships
@@ -128,39 +124,39 @@ milestone_quests:
       - creator_influence
 achievements:
   - id: first_upload
-    name: First Performance
-    description: Upload your first video
+    name: "การแสดงครั้งแรก"
+    description: "อัพโหลดวิดีโอแรกของคุณ"
     xp_reward: 60
     badge_type: bronze
   - id: engagement_king
-    name: Audience Favorite
-    description: Achieve 90% like ratio on 10 videos
+    name: "ขวัญใจผู้ชม"
+    description: "บรรลุอัตราการกดถูกใจ 90% ใน 10 วิดีโอ"
     xp_reward: 280
     badge_type: silver
   - id: consistency_master
-    name: Reliable Bard
-    description: Upload weekly for 6 months
+    name: "กวีที่ไว้ใจได้"
+    description: "อัพโหลดทุกสัปดาห์เป็นเวลา 6 เดือน"
     xp_reward: 480
     badge_type: gold
   - id: youtube_sage
-    name: Content Sage
-    description: Complete all creator challenges
+    name: "ปราชญ์แห่งเนื้อหา"
+    description: "เสร็จสิ้นความท้าทายของผู้สร้างทั้งหมด"
     xp_reward: 960
     badge_type: platinum
 example_tasks:
   beginner:
     - id: content_planning
       type: creation
-      title: Story Script Creation
-      description: Plan video content and script
+      title: "การสร้างบทเรื่อง"
+      description: "วางแผนเนื้อหาวิดีโอและบทพูด"
       skills_improved:
         - content_planning
         - storytelling_arts
       xp_reward: 65
     - id: basic_filming
       type: creation
-      title: First Recording
-      description: Film your first video
+      title: "การบันทึกครั้งแรก"
+      description: "ถ่ายทำวิดีโอแรกของคุณ"
       skills_improved:
         - video_production
         - video_magic
@@ -168,16 +164,16 @@ example_tasks:
   intermediate:
     - id: video_production
       type: creation
-      title: Video Magic Production
-      description: Film and edit video
+      title: "การผลิตเวทมนตร์วิดีโอ"
+      description: "ถ่ายทำและตัดต่อวิดีโอ"
       skills_improved:
         - video_editing
         - audience_resonance
       xp_reward: 185
     - id: thumbnail_design
       type: creation
-      title: Click Magic
-      description: Design compelling thumbnails
+      title: "เวทมนตร์คลิก"
+      description: "ออกแบบธัมเนลที่ดึงดูดใจ"
       skills_improved:
         - visual_craft
         - algorithm_studies
@@ -185,35 +181,35 @@ example_tasks:
   advanced:
     - id: series_creation
       type: creation
-      title: Epic Saga
-      description: Create successful video series
+      title: "มหากาพย์อันยิ่งใหญ่"
+      description: "สร้างซีรีส์วิดีโอที่ประสบความสำเร็จ"
       skills_improved:
         - series_planning
         - audience_growth
       xp_reward: 360
     - id: live_streaming
       type: chat
-      title: Real-time Performance
-      description: Host engaging live streams
+      title: "การแสดงสด"
+      description: "จัดการถ่ายทอดสดที่ดึงดูดใจ"
       skills_improved:
         - community_building
         - monetization_mastery
       xp_reward: 400
 learning_objectives:
-  - Master video production techniques
-  - Develop unique content style
-  - Understand YouTube algorithms
-  - Build engaged communities
-  - Create consistent content
-  - Optimize for discovery
-  - Monetize content effectively
-  - Balance creativity with strategy
+  - "เชี่ยวชาญเทคนิคการผลิตวิดีโอ"
+  - "พัฒนาสไตล์เนื้อหาที่เป็นเอกลักษณ์"
+  - "เข้าใจอัลกอริทึมของ YouTube"
+  - "สร้างชุมชนที่มีส่วนร่วม"
+  - "สร้างเนื้อหาอย่างสม่ำเสมอ"
+  - "ปรับให้เหมาะสมเพื่อการค้นหา"
+  - "สร้างรายได้จากเนื้อหาอย่างมีประสิทธิภาพ"
+  - "สมดุลความคิดสร้างสรรค์กับกลยุทธ์"
 career_outcomes:
-  - Full-time YouTuber
-  - Content Creator
-  - Video Producer
-  - Creative Director
-  - Social Media Manager
-  - Brand Partnership Manager
-  - Media Company Founder
-  - Digital Influencer
+  - "YouTuber เต็มเวลา"
+  - "ผู้สร้างเนื้อหา"
+  - "โปรดิวเซอร์วิดีโอ"
+  - "ผู้อำนวยการครีเอทีฟ"
+  - "ผู้จัดการโซเชียลมีเดีย"
+  - "ผู้จัดการความร่วมมือกับแบรนด์"
+  - "ผู้ก่อตั้งบริษัทสื่อ"
+  - "อินฟลูเอนเซอร์ดิจิทัล"

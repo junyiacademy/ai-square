@@ -4,13 +4,14 @@ path_id: environmental_scientist
 category: science
 difficulty_range: beginner_to_expert
 metadata:
-  title: Planet Guardian - Environmental Scientist
-  short_description: Protect Earth through data-driven environmental solutions
+  title: "Gardien de la Planète - Scientifique Environnemental"
+  short_description: "Protégez la Terre grâce à des solutions environnementales basées sur les données"
   long_description: |
-    You are a junior scientist at the "Global Climate Response Center," where AI-powered 
-    monitoring systems track planetary health in real-time. Armed with cutting-edge 
-    technology and environmental science knowledge, you'll work to understand and 
-    reverse climate damage while developing sustainable solutions for the future.
+    Vous êtes un scientifique junior au "Centre Mondial de Réponse Climatique", où des 
+    systèmes de surveillance alimentés par l'IA suivent la santé planétaire en temps réel. 
+    Armé de technologies de pointe et de connaissances en sciences environnementales, 
+    vous travaillerez à comprendre et inverser les dommages climatiques tout en développant 
+    des solutions durables pour l'avenir.
   estimated_hours: 60
   skill_focus:
     - climate_modeling
@@ -23,21 +24,23 @@ metadata:
   target_language: fr
   generated_date: "2025-07-16T07:00:56.504Z"
 world_setting:
-  name: Global Climate Response Center
+  name: "Centre Mondial de Réponse Climatique"
   description: |
-    The Global Climate Response Center is a high-tech facility where environmental 
-    scientists use AI, satellite data, and field research to monitor and protect 
-    Earth's ecosystems. Scientists here race against time to develop solutions 
-    before critical tipping points are reached.
+    Le Centre Mondial de Réponse Climatique est une installation de haute technologie 
+    où les scientifiques environnementaux utilisent l'IA, les données satellites et 
+    la recherche de terrain pour surveiller et protéger les écosystèmes de la Terre. 
+    Les scientifiques ici font la course contre la montre pour développer des solutions 
+    avant que des points de basculement critiques ne soient atteints.
   atmosphere: urgent_hopeful
   visual_theme: eco_tech_fusion
 starting_scenario:
-  title: "Code Red: Climate Crisis"
+  title: "Code Rouge : Crise Climatique"
   description: |
-    Dr. Gaia Earth welcomes you with alarming news: multiple environmental systems 
-    are approaching critical thresholds. Meanwhile, CEO Polluto of MegaCorp continues 
-    destructive practices for profit. You must use science and innovation to save 
-    ecosystems while exposing corporate environmental crimes.
+    Dr. Gaïa Terre vous accueille avec des nouvelles alarmantes : plusieurs systèmes 
+    environnementaux approchent des seuils critiques. Pendant ce temps, le PDG Polluto 
+    de MegaCorp continue ses pratiques destructrices pour le profit. Vous devez utiliser 
+    la science et l'innovation pour sauver les écosystèmes tout en exposant les crimes 
+    environnementaux des entreprises.
   initial_tasks:
     - analyze_climate_data
     - identify_hotspots
@@ -45,59 +48,59 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: climate_science
-      name: Climate Dynamics
-      description: Understand Earth's climate systems
+      name: "Dynamique Climatique"
+      description: "Comprendre les systèmes climatiques de la Terre"
       max_level: 10
       unlocks:
         - weather_prediction
         - carbon_cycle_analysis
     - id: ecosystem_monitoring
-      name: Living Systems
-      description: Track and analyze ecosystems
+      name: "Systèmes Vivants"
+      description: "Suivre et analyser les écosystèmes"
       max_level: 10
       unlocks:
         - biodiversity_assessment
         - habitat_mapping
     - id: pollution_detection
-      name: Contamination Tracking
-      description: Identify and trace pollutants
+      name: "Suivi de Contamination"
+      description: "Identifier et tracer les polluants"
       max_level: 10
       unlocks:
         - water_quality_analysis
         - air_monitoring
     - id: sustainable_tech
-      name: Green Innovation
-      description: Develop eco-friendly technologies
+      name: "Innovation Verte"
+      description: "Développer des technologies écologiques"
       max_level: 10
       unlocks:
         - renewable_energy
         - circular_economy
   advanced_skills:
     - id: climate_modeling
-      name: Future Forecasting
-      description: Predict climate scenarios with AI
+      name: "Prévision du Futur"
+      description: "Prédire les scénarios climatiques avec l'IA"
       max_level: 15
       requires:
         - climate_science
         - ecosystem_monitoring
     - id: restoration_ecology
-      name: Ecosystem Healing
-      description: Restore damaged environments
+      name: "Guérison des Écosystèmes"
+      description: "Restaurer les environnements endommagés"
       max_level: 15
       requires:
         - ecosystem_monitoring
         - sustainable_tech
     - id: policy_influence
-      name: Environmental Advocacy
-      description: Shape environmental policies
+      name: "Plaidoyer Environnemental"
+      description: "Façonner les politiques environnementales"
       max_level: 15
       requires:
         - pollution_detection
         - climate_science
 milestone_quests:
   - id: first_discovery
-    name: Pollution Exposed
-    description: Uncover major environmental violation
+    name: "Pollution Révélée"
+    description: "Découvrir une violation environnementale majeure"
     required_level: 5
     skills_tested:
       - pollution_detection
@@ -107,8 +110,8 @@ milestone_quests:
       - whistleblower_badge
       - media_attention
   - id: ecosystem_save
-    name: Habitat Hero
-    description: Save an endangered ecosystem
+    name: "Héros de l'Habitat"
+    description: "Sauver un écosystème en danger"
     required_level: 10
     skills_tested:
       - restoration_ecology
@@ -118,8 +121,8 @@ milestone_quests:
       - conservation_champion_title
       - wildlife_alliance
   - id: climate_solution
-    name: Global Game Changer
-    description: Develop breakthrough climate solution
+    name: "Révolutionnaire Mondial"
+    description: "Développer une solution climatique révolutionnaire"
     required_level: 20
     skills_tested:
       - climate_modeling
@@ -130,39 +133,39 @@ milestone_quests:
       - un_recognition
 achievements:
   - id: first_sample
-    name: Field Researcher
-    description: Collect and analyze first environmental sample
+    name: "Chercheur de Terrain"
+    description: "Collecter et analyser le premier échantillon environnemental"
     xp_reward: 100
     badge_type: bronze
   - id: data_detective
-    name: Pattern Finder
-    description: Identify 10 environmental anomalies
+    name: "Détecteur de Modèles"
+    description: "Identifier 10 anomalies environnementales"
     xp_reward: 350
     badge_type: silver
   - id: solution_provider
-    name: Innovation Champion
-    description: Implement 5 sustainable solutions
+    name: "Champion de l'Innovation"
+    description: "Mettre en œuvre 5 solutions durables"
     xp_reward: 650
     badge_type: gold
   - id: planet_protector
-    name: Earth's Guardian
-    description: Complete all environmental challenges
+    name: "Gardien de la Terre"
+    description: "Compléter tous les défis environnementaux"
     xp_reward: 1300
     badge_type: platinum
 example_tasks:
   beginner:
     - id: water_testing
       type: analysis
-      title: Aqua Analysis
-      description: Test water quality in local rivers
+      title: "Analyse Aquatique"
+      description: "Tester la qualité de l'eau dans les rivières locales"
       skills_improved:
         - pollution_detection
         - data_visualization
       xp_reward: 65
     - id: carbon_footprint
       type: analysis
-      title: Carbon Calculator
-      description: Measure carbon emissions
+      title: "Calculateur de Carbone"
+      description: "Mesurer les émissions de carbone"
       skills_improved:
         - climate_science
         - sustainable_solutions
@@ -170,16 +173,16 @@ example_tasks:
   intermediate:
     - id: habitat_restoration
       type: creation
-      title: Ecosystem Revival
-      description: Design habitat restoration plan
+      title: "Renaissance Écosystémique"
+      description: "Concevoir un plan de restauration d'habitat"
       skills_improved:
         - restoration_ecology
         - ecosystem_analysis
       xp_reward: 190
     - id: pollution_tracking
       type: analysis
-      title: Contamination Hunt
-      description: Track pollution to its source
+      title: "Chasse à la Contamination"
+      description: "Traquer la pollution jusqu'à sa source"
       skills_improved:
         - pollution_detection
         - data_visualization
@@ -187,35 +190,35 @@ example_tasks:
   advanced:
     - id: climate_model
       type: creation
-      title: Future Simulator
-      description: Build AI climate prediction model
+      title: "Simulateur du Futur"
+      description: "Construire un modèle de prédiction climatique IA"
       skills_improved:
         - climate_modeling
         - data_visualization
       xp_reward: 420
     - id: policy_proposal
       type: creation
-      title: Law of the Land
-      description: Draft environmental protection policy
+      title: "Loi de la Terre"
+      description: "Rédiger une politique de protection environnementale"
       skills_improved:
         - policy_influence
         - sustainable_solutions
       xp_reward: 470
 learning_objectives:
-  - Master environmental monitoring techniques
-  - Use AI and data science for environmental analysis
-  - Develop sustainable technology solutions
-  - Understand climate systems and predictions
-  - Design ecosystem restoration projects
-  - Influence environmental policy and regulation
-  - Communicate science to public and policymakers
-  - Balance human needs with environmental protection
+  - "Maîtriser les techniques de surveillance environnementale"
+  - "Utiliser l'IA et la science des données pour l'analyse environnementale"
+  - "Développer des solutions technologiques durables"
+  - "Comprendre les systèmes climatiques et les prévisions"
+  - "Concevoir des projets de restauration d'écosystèmes"
+  - "Influencer la politique et la réglementation environnementales"
+  - "Communiquer la science au public et aux décideurs"
+  - "Équilibrer les besoins humains avec la protection de l'environnement"
 career_outcomes:
-  - Environmental Scientist
-  - Climate Researcher
-  - Conservation Biologist
-  - Environmental Consultant
-  - Sustainability Director
-  - Environmental Policy Analyst
-  - Ecological Restoration Specialist
-  - Chief Sustainability Officer
+  - "Scientifique Environnemental"
+  - "Chercheur Climatique"
+  - "Biologiste de Conservation"
+  - "Consultant Environnemental"
+  - "Directeur du Développement Durable"
+  - "Analyste des Politiques Environnementales"
+  - "Spécialiste en Restauration Écologique"
+  - "Directeur du Développement Durable"

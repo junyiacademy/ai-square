@@ -1,41 +1,36 @@
 # Youtuber Discovery Path - Korean
-# PLACEHOLDER FILE - 번역이 필요합니다
 path_id: youtuber
 category: arts
 difficulty_range: beginner_to_expert
 metadata:
-  title: Video Bard - YouTuber
-  short_description: Perform captivating video stories on digital stages
+  title: "비디오 음유시인 - 유튜버"
+  short_description: "디지털 무대에서 매혹적인 비디오 이야기를 선보이다"
   long_description: |
-    You are a new member of the "Video Bard Guild," gifted with telling stories through 
-    lenses and entertaining audiences. In this digital kingdom of creativity and technology, 
-    every video is a performance, every subscriber is your audience, and your mission 
-    is to create video content that touches hearts and sparks resonance.
+    당신은 "비디오 음유시인 길드"의 신입 회원으로, 렌즈를 통해 이야기를 전달하고 
+    관객을 즐겁게 하는 재능을 가지고 있습니다. 창의성과 기술의 이 디지털 왕국에서 
+    모든 비디오는 공연이며, 모든 구독자는 당신의 관객이고, 당신의 임무는 
+    마음을 움직이고 공명을 불러일으키는 비디오 콘텐츠를 만드는 것입니다.
   estimated_hours: 55
   skill_focus:
     - storytelling_arts
     - video_magic
     - audience_resonance
     - algorithm_studies
-  translation_notice: 번역이 필요합니다 - This is a placeholder file
-  original_language: en
-  target_language: ko
-  generated_date: "2025-07-16T07:00:56.561Z"
 world_setting:
-  name: Video Bard Guild
+  name: "비디오 음유시인 길드"
   description: |
-    The Video Bard Guild is an artistic guild that cultivates top content creators. 
-    Here, creators learn to balance creativity with algorithm demands, authenticity 
-    with audience expectations, building channels that inspire and entertain millions.
+    비디오 음유시인 길드는 최고의 콘텐츠 크리에이터를 양성하는 예술 길드입니다. 
+    여기서 크리에이터들은 창의성과 알고리즘의 요구, 진정성과 시청자의 기대 
+    사이의 균형을 배우며, 수백만 명에게 영감을 주고 즐겁게 하는 채널을 구축합니다.
   atmosphere: creative_dynamic
   visual_theme: digital_stage
 starting_scenario:
-  title: The Algorithm Shift
+  title: "알고리즘의 변화"
   description: |
-    Creative Director welcomes you with concerning news: Algorithm, the capricious 
-    king, has suddenly changed preferences, burying many creators' work. You must 
-    find balance between maintaining creative integrity and adapting to algorithmic 
-    demands.
+    크리에이티브 디렉터가 우려스러운 소식을 전합니다: 변덕스러운 왕 알고리즘이 
+    갑작스럽게 취향을 바꿔 많은 크리에이터의 작품을 묻혀버렸습니다. 당신은 
+    창작의 무결성을 유지하는 것과 알고리즘의 요구에 적응하는 것 사이에서 
+    균형을 찾아야 합니다.
   initial_tasks:
     - understand_youtube
     - learn_video_basics
@@ -43,59 +38,59 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: content_planning
-      name: Story Weaving
-      description: Plan engaging video content
+      name: "이야기 짜기"
+      description: "매력적인 비디오 콘텐츠 계획하기"
       max_level: 10
       unlocks:
         - series_planning
         - content_calendar
     - id: video_production
-      name: Visual Craft
-      description: Master video filming techniques
+      name: "시각 기술"
+      description: "비디오 촬영 기법 마스터하기"
       max_level: 10
       unlocks:
         - camera_mastery
         - lighting_magic
     - id: video_editing
-      name: Time Sculpting
-      description: Edit compelling videos
+      name: "시간 조각"
+      description: "매력적인 비디오 편집하기"
       max_level: 10
       unlocks:
         - pacing_rhythm
         - effects_wizardry
     - id: audience_growth
-      name: Community Building
-      description: Grow and engage audience
+      name: "커뮤니티 구축"
+      description: "시청자 성장과 참여 유도"
       max_level: 10
       unlocks:
         - engagement_tactics
         - collaboration_networks
   advanced_skills:
     - id: algorithm_optimization
-      name: Algorithm Whispering
-      description: Master YouTube's algorithm
+      name: "알고리즘 속삭임"
+      description: "유튜브 알고리즘 마스터하기"
       max_level: 15
       requires:
         - content_planning
         - audience_growth
     - id: monetization_mastery
-      name: Revenue Streams
-      description: Diversify income sources
+      name: "수익 흐름"
+      description: "수입원 다각화하기"
       max_level: 15
       requires:
         - audience_growth
         - video_production
     - id: brand_partnerships
-      name: Alliance Forging
-      description: Build strategic partnerships
+      name: "동맹 구축"
+      description: "전략적 파트너십 구축하기"
       max_level: 15
       requires:
         - algorithm_optimization
         - audience_growth
 milestone_quests:
   - id: first_viral
-    name: Viral Debut
-    description: Create your first viral video
+    name: "바이럴 데뷔"
+    description: "첫 번째 바이럴 비디오 제작하기"
     required_level: 5
     skills_tested:
       - content_planning
@@ -105,8 +100,8 @@ milestone_quests:
       - viral_creator_badge
       - algorithm_favor
   - id: algorithm_mastery
-    name: Taming the Algorithm
-    description: Achieve consistent growth despite algorithm changes
+    name: "알고리즘 길들이기"
+    description: "알고리즘 변화에도 불구하고 지속적인 성장 달성하기"
     required_level: 10
     skills_tested:
       - algorithm_optimization
@@ -116,8 +111,8 @@ milestone_quests:
       - algorithm_tamer_title
       - stable_growth
   - id: channel_empire
-    name: Digital Empire
-    description: Build channel with 1M subscribers
+    name: "디지털 제국"
+    description: "100만 구독자 채널 구축하기"
     required_level: 20
     skills_tested:
       - brand_partnerships
@@ -128,39 +123,39 @@ milestone_quests:
       - creator_influence
 achievements:
   - id: first_upload
-    name: First Performance
-    description: Upload your first video
+    name: "첫 공연"
+    description: "첫 비디오 업로드하기"
     xp_reward: 60
     badge_type: bronze
   - id: engagement_king
-    name: Audience Favorite
-    description: Achieve 90% like ratio on 10 videos
+    name: "시청자의 최애"
+    description: "10개 비디오에서 90% 좋아요 비율 달성하기"
     xp_reward: 280
     badge_type: silver
   - id: consistency_master
-    name: Reliable Bard
-    description: Upload weekly for 6 months
+    name: "믿을 수 있는 음유시인"
+    description: "6개월간 매주 업로드하기"
     xp_reward: 480
     badge_type: gold
   - id: youtube_sage
-    name: Content Sage
-    description: Complete all creator challenges
+    name: "콘텐츠의 현인"
+    description: "모든 크리에이터 도전 과제 완료하기"
     xp_reward: 960
     badge_type: platinum
 example_tasks:
   beginner:
     - id: content_planning
       type: creation
-      title: Story Script Creation
-      description: Plan video content and script
+      title: "스토리 대본 작성"
+      description: "비디오 콘텐츠와 대본 계획하기"
       skills_improved:
         - content_planning
         - storytelling_arts
       xp_reward: 65
     - id: basic_filming
       type: creation
-      title: First Recording
-      description: Film your first video
+      title: "첫 녹화"
+      description: "첫 비디오 촬영하기"
       skills_improved:
         - video_production
         - video_magic
@@ -168,16 +163,16 @@ example_tasks:
   intermediate:
     - id: video_production
       type: creation
-      title: Video Magic Production
-      description: Film and edit video
+      title: "비디오 마법 제작"
+      description: "비디오 촬영과 편집하기"
       skills_improved:
         - video_editing
         - audience_resonance
       xp_reward: 185
     - id: thumbnail_design
       type: creation
-      title: Click Magic
-      description: Design compelling thumbnails
+      title: "클릭 마법"
+      description: "매력적인 썸네일 디자인하기"
       skills_improved:
         - visual_craft
         - algorithm_studies
@@ -185,35 +180,35 @@ example_tasks:
   advanced:
     - id: series_creation
       type: creation
-      title: Epic Saga
-      description: Create successful video series
+      title: "서사시 사가"
+      description: "성공적인 비디오 시리즈 제작하기"
       skills_improved:
         - series_planning
         - audience_growth
       xp_reward: 360
     - id: live_streaming
       type: chat
-      title: Real-time Performance
-      description: Host engaging live streams
+      title: "실시간 공연"
+      description: "매력적인 라이브 스트림 진행하기"
       skills_improved:
         - community_building
         - monetization_mastery
       xp_reward: 400
 learning_objectives:
-  - Master video production techniques
-  - Develop unique content style
-  - Understand YouTube algorithms
-  - Build engaged communities
-  - Create consistent content
-  - Optimize for discovery
-  - Monetize content effectively
-  - Balance creativity with strategy
+  - "비디오 제작 기술 마스터하기"
+  - "독특한 콘텐츠 스타일 개발하기"
+  - "유튜브 알고리즘 이해하기"
+  - "참여도 높은 커뮤니티 구축하기"
+  - "일관된 콘텐츠 제작하기"
+  - "발견을 위한 최적화하기"
+  - "콘텐츠를 효과적으로 수익화하기"
+  - "창의성과 전략의 균형 맞추기"
 career_outcomes:
-  - Full-time YouTuber
-  - Content Creator
-  - Video Producer
-  - Creative Director
-  - Social Media Manager
-  - Brand Partnership Manager
-  - Media Company Founder
-  - Digital Influencer
+  - "풀타임 유튜버"
+  - "콘텐츠 크리에이터"
+  - "비디오 프로듀서"
+  - "크리에이티브 디렉터"
+  - "소셜 미디어 매니저"
+  - "브랜드 파트너십 매니저"
+  - "미디어 회사 창립자"
+  - "디지털 인플루언서"

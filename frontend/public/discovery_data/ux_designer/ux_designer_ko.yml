@@ -1,41 +1,36 @@
 # Ux Designer Discovery Path - Korean
-# PLACEHOLDER FILE - 번역이 필요합니다
 path_id: ux_designer
 category: arts
 difficulty_range: beginner_to_expert
 metadata:
-  title: Experience Architect - UX Designer
-  short_description: Build perfect experience worlds in digital spaces
+  title: "경험 설계자 - UX 디자이너"
+  short_description: "디지털 공간에서 완벽한 경험 세계를 구축하라"
   long_description: |
-    You are an apprentice architect at the "Experience Design Academy," skilled at 
-    building unforgettable experience spaces in the digital world. Every click and 
-    swipe is a carefully designed journey, and your mission is to make users feel 
-    joy and satisfaction in these spaces.
+    당신은 "경험 디자인 아카데미"의 견습 설계자로, 디지털 세상에서 잊을 수 없는 
+    경험 공간을 구축하는 데 숙련되어 있습니다. 모든 클릭과 스와이프는 신중하게 
+    설계된 여정이며, 당신의 사명은 사용자가 이러한 공간에서 기쁨과 만족감을 
+    느끼도록 하는 것입니다.
   estimated_hours: 55
   skill_focus:
     - user_psychology
     - experience_magic
     - prototype_sculpting
     - communication_arts
-  translation_notice: 번역이 필요합니다 - This is a placeholder file
-  original_language: en
-  target_language: ko
-  generated_date: "2025-07-16T07:00:56.552Z"
 world_setting:
-  name: Experience Design Academy
+  name: "경험 디자인 아카데미"
   description: |
-    The Experience Design Academy is a mysterious institution dedicated to studying 
-    human experiences. Designers here learn to balance aesthetics with functionality, 
-    emotion with efficiency, creating digital spaces that heal and inspire.
+    경험 디자인 아카데미는 인간의 경험을 연구하는 데 전념하는 신비로운 기관입니다. 
+    여기서 디자이너들은 미학과 기능성, 감정과 효율성의 균형을 맞추는 법을 배우며, 
+    치유하고 영감을 주는 디지털 공간을 창조합니다.
   atmosphere: harmonious_innovative
   visual_theme: minimalist_magic
 starting_scenario:
-  title: The Indifference Crisis
+  title: "무관심의 위기"
   description: |
-    Design Sage Maya welcomes you with an urgent mission: Indifference, the cold 
-    corporate giant, is standardizing all designs, eliminating personalized experiences. 
-    You must use soulful design to combat mechanization and restore humanity to 
-    digital interactions.
+    디자인 현자 마야가 긴급한 임무로 당신을 맞이합니다: 차가운 기업 거인 '무관심'이 
+    모든 디자인을 표준화하여 개인화된 경험을 제거하고 있습니다. 당신은 영혼이 
+    담긴 디자인을 사용하여 기계화에 맞서고 디지털 상호작용에 인간성을 되돌려야 
+    합니다.
   initial_tasks:
     - understand_users
     - learn_design_principles
@@ -43,59 +38,59 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: user_research
-      name: Mind Reading
-      description: Understand user needs deeply
+      name: "마음 읽기"
+      description: "사용자의 니즈를 깊이 이해하기"
       max_level: 10
       unlocks:
         - empathy_mapping
         - user_interviews
     - id: interaction_design
-      name: Touch Magic
-      description: Design intuitive interactions
+      name: "터치 마술"
+      description: "직관적인 상호작용 디자인하기"
       max_level: 10
       unlocks:
         - gesture_design
         - microinteractions
     - id: visual_design
-      name: Aesthetic Alchemy
-      description: Create beautiful interfaces
+      name: "미적 연금술"
+      description: "아름다운 인터페이스 창조하기"
       max_level: 10
       unlocks:
         - color_theory
         - typography_mastery
     - id: prototyping
-      name: Reality Shaping
-      description: Build interactive prototypes
+      name: "현실 조형술"
+      description: "인터랙티브 프로토타입 구축하기"
       max_level: 10
       unlocks:
         - rapid_prototyping
         - high_fidelity_design
   advanced_skills:
     - id: design_systems
-      name: System Harmony
-      description: Create scalable design systems
+      name: "시스템 조화술"
+      description: "확장 가능한 디자인 시스템 만들기"
       max_level: 15
       requires:
         - visual_design
         - interaction_design
     - id: accessibility_design
-      name: Universal Magic
-      description: Design for all users
+      name: "만능 마술"
+      description: "모든 사용자를 위한 디자인하기"
       max_level: 15
       requires:
         - user_research
         - interaction_design
     - id: strategic_design
-      name: Business Empathy
-      description: Align design with business goals
+      name: "비즈니스 공감술"
+      description: "디자인을 비즈니스 목표와 일치시키기"
       max_level: 15
       requires:
         - user_research
         - prototyping
 milestone_quests:
   - id: first_design
-    name: Soul Touch
-    description: Create your first user-loved design
+    name: "영혼의 터치"
+    description: "사용자가 사랑하는 첫 번째 디자인을 만들어라"
     required_level: 5
     skills_tested:
       - user_research
@@ -105,8 +100,8 @@ milestone_quests:
       - empathy_designer_badge
       - user_testimonials
   - id: indifference_challenge
-    name: Humanity Restored
-    description: Defeat Indifference with personalized design
+    name: "인간성 복원"
+    description: "개인화된 디자인으로 무관심을 물리쳐라"
     required_level: 10
     skills_tested:
       - interaction_design
@@ -116,8 +111,8 @@ milestone_quests:
       - humanity_champion_title
       - emotional_resonance
   - id: design_legacy
-    name: Experience Revolution
-    description: Create design used by millions
+    name: "경험 혁명"
+    description: "수백만 명이 사용하는 디자인을 창조하라"
     required_level: 20
     skills_tested:
       - design_systems
@@ -128,39 +123,39 @@ milestone_quests:
       - design_philosophy
 achievements:
   - id: first_prototype
-    name: First Creation
-    description: Build your first interactive prototype
+    name: "첫 창조물"
+    description: "첫 번째 인터랙티브 프로토타입을 구축하라"
     xp_reward: 70
     badge_type: bronze
   - id: user_advocate
-    name: User Champion
-    description: Conduct 50 user research sessions
+    name: "사용자 챔피언"
+    description: "50회의 사용자 리서치 세션을 진행하라"
     xp_reward: 250
     badge_type: silver
   - id: pixel_perfect
-    name: Perfection Achieved
-    description: Create flawless high-fidelity designs
+    name: "완벽 달성"
+    description: "완벽한 고품질 디자인을 만들어라"
     xp_reward: 450
     badge_type: gold
   - id: design_master
-    name: Experience Sage
-    description: Complete all design challenges
+    name: "경험의 현자"
+    description: "모든 디자인 도전을 완료하라"
     xp_reward: 900
     badge_type: platinum
 example_tasks:
   beginner:
     - id: user_research
       type: analysis
-      title: Soul Mining Mission
-      description: Understand user needs and pain points
+      title: "영혼 채굴 미션"
+      description: "사용자의 니즈와 페인 포인트를 이해하라"
       skills_improved:
         - user_research
         - user_psychology
       xp_reward: 60
     - id: wireframe_creation
       type: creation
-      title: Blueprint Magic
-      description: Create your first wireframes
+      title: "설계도 마술"
+      description: "첫 번째 와이어프레임을 만들어라"
       skills_improved:
         - interaction_design
         - prototype_sculpting
@@ -168,16 +163,16 @@ example_tasks:
   intermediate:
     - id: prototype_design
       type: creation
-      title: Warm Prototype Building
-      description: Design interactive prototype
+      title: "따뜻한 프로토타입 구축"
+      description: "인터랙티브 프로토타입을 디자인하라"
       skills_improved:
         - prototyping
         - experience_magic
       xp_reward: 170
     - id: design_system
       type: creation
-      title: Harmony Framework
-      description: Create cohesive design system
+      title: "조화 프레임워크"
+      description: "일관성 있는 디자인 시스템을 만들어라"
       skills_improved:
         - design_systems
         - visual_design
@@ -185,35 +180,35 @@ example_tasks:
   advanced:
     - id: accessibility_audit
       type: analysis
-      title: Universal Gateway
-      description: Ensure design works for everyone
+      title: "만능 관문"
+      description: "모든 사람을 위해 디자인이 작동하도록 보장하라"
       skills_improved:
         - accessibility_design
         - user_psychology
       xp_reward: 340
     - id: strategic_redesign
       type: creation
-      title: Business Soul Fusion
-      description: Redesign for user and business success
+      title: "비즈니스 영혼 융합"
+      description: "사용자와 비즈니스 성공을 위해 재디자인하라"
       skills_improved:
         - strategic_design
         - communication_arts
       xp_reward: 380
 learning_objectives:
-  - Master user research techniques
-  - Create intuitive user interfaces
-  - Design beautiful visual experiences
-  - Build interactive prototypes
-  - Understand human psychology
-  - Implement accessibility standards
-  - Develop design systems
-  - Balance user needs with business goals
+  - "사용자 리서치 기법 마스터하기"
+  - "직관적인 사용자 인터페이스 만들기"
+  - "아름다운 시각적 경험 디자인하기"
+  - "인터랙티브 프로토타입 구축하기"
+  - "인간 심리학 이해하기"
+  - "접근성 표준 구현하기"
+  - "디자인 시스템 개발하기"
+  - "사용자 니즈와 비즈니스 목표의 균형 맞추기"
 career_outcomes:
-  - UX Designer
-  - UI Designer
-  - Product Designer
-  - Design System Lead
-  - UX Research Manager
-  - Design Director
-  - Chief Design Officer
-  - Design Consultant
+  - "UX 디자이너"
+  - "UI 디자이너"
+  - "프로덕트 디자이너"
+  - "디자인 시스템 리드"
+  - "UX 리서치 매니저"
+  - "디자인 디렉터"
+  - "최고 디자인 책임자"
+  - "디자인 컨설턴트"

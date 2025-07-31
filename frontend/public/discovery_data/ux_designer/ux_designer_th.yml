@@ -1,41 +1,38 @@
 # Ux Designer Discovery Path - Thai
-# PLACEHOLDER FILE - ต้องการการแปล
 path_id: ux_designer
 category: arts
 difficulty_range: beginner_to_expert
 metadata:
-  title: Experience Architect - UX Designer
-  short_description: Build perfect experience worlds in digital spaces
+  title: "สถาปนิกประสบการณ์ - นักออกแบบ UX"
+  short_description: "สร้างโลกประสบการณ์ที่สมบูรณ์แบบในพื้นที่ดิจิทัล"
   long_description: |
-    You are an apprentice architect at the "Experience Design Academy," skilled at 
-    building unforgettable experience spaces in the digital world. Every click and 
-    swipe is a carefully designed journey, and your mission is to make users feel 
-    joy and satisfaction in these spaces.
+    คุณคือสถาปนิกฝึกหัดที่ "อะคาเดมีการออกแบบประสบการณ์" ที่ชำนาญในการสร้าง
+    พื้นที่ประสบการณ์ที่ไม่มีวันลืมในโลกดิจิทัล ทุกการคลิกและการสไลด์
+    คือการเดินทางที่ถูกออกแบบมาอย่างรอบคอบ และภารกิจของคุณคือทำให้
+    ผู้ใช้รู้สึกถึงความสุขและความพึงพอใจในพื้นที่เหล่านี้
   estimated_hours: 55
   skill_focus:
     - user_psychology
     - experience_magic
     - prototype_sculpting
     - communication_arts
-  translation_notice: ต้องการการแปล - This is a placeholder file
-  original_language: en
-  target_language: th
-  generated_date: "2025-07-16T07:00:56.554Z"
 world_setting:
-  name: Experience Design Academy
+  name: "อะคาเดมีการออกแบบประสบการณ์"
   description: |
-    The Experience Design Academy is a mysterious institution dedicated to studying 
-    human experiences. Designers here learn to balance aesthetics with functionality, 
-    emotion with efficiency, creating digital spaces that heal and inspire.
+    อะคาเดมีการออกแบบประสบการณ์เป็นสถาบันลึกลับที่อุทิศให้กับการศึกษา
+    ประสบการณ์ของมนุษย์ นักออกแบบที่นี่เรียนรู้การสมดุลระหว่าง
+    ความงามกับการทำงาน อารมณ์กับประสิทธิภาพ สร้างพื้นที่ดิจิทัล
+    ที่รักษาและให้แรงบันดาลใจ
   atmosphere: harmonious_innovative
   visual_theme: minimalist_magic
 starting_scenario:
-  title: The Indifference Crisis
+  title: "วิกฤตแห่งความเฉยเมย"
   description: |
-    Design Sage Maya welcomes you with an urgent mission: Indifference, the cold 
-    corporate giant, is standardizing all designs, eliminating personalized experiences. 
-    You must use soulful design to combat mechanization and restore humanity to 
-    digital interactions.
+    ประชาญการออกแบบมายาต้อนรับคุณด้วยภารกิจต่อเนื่อง: ความเฉยเมย ยักษ์ใหญ่
+    ของบริษัทที่เย็นชา กำลังทำการทุกการออกแบบให้เป็นมาตรฐาน 
+    ลบล้างประสบการณ์ส่วนบุคคล คุณต้องใช้การออกแบบที่มีจิตวิญญาณ
+    เพื่อต่อสู้กับการทำให้เป็นเครื่องจักร และคืนคอมมนุษยธรรม
+    กลับสู่การโต้ตอบแบบดิจิทัล
   initial_tasks:
     - understand_users
     - learn_design_principles
@@ -43,59 +40,59 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: user_research
-      name: Mind Reading
-      description: Understand user needs deeply
+      name: "การอ่านใจ"
+      description: "เข้าใจความต้องการของผู้ใช้อย่างลึกซึ้ง"
       max_level: 10
       unlocks:
         - empathy_mapping
         - user_interviews
     - id: interaction_design
-      name: Touch Magic
-      description: Design intuitive interactions
+      name: "เวทมนตร์การสัมผัส"
+      description: "ออกแบบการโต้ตอบที่ใช้งานง่าย"
       max_level: 10
       unlocks:
         - gesture_design
         - microinteractions
     - id: visual_design
-      name: Aesthetic Alchemy
-      description: Create beautiful interfaces
+      name: "การเล่นแร่แปรธาตุความงาม"
+      description: "สร้างอินเทอร์เฟซที่สวยงาม"
       max_level: 10
       unlocks:
         - color_theory
         - typography_mastery
     - id: prototyping
-      name: Reality Shaping
-      description: Build interactive prototypes
+      name: "การปั้นแต่งความจริง"
+      description: "สร้างต้นแบบโต้ตอบได้"
       max_level: 10
       unlocks:
         - rapid_prototyping
         - high_fidelity_design
   advanced_skills:
     - id: design_systems
-      name: System Harmony
-      description: Create scalable design systems
+      name: "ความกลมกลืนของระบบ"
+      description: "สร้างระบบการออกแบบที่ขยายได้"
       max_level: 15
       requires:
         - visual_design
         - interaction_design
     - id: accessibility_design
-      name: Universal Magic
-      description: Design for all users
+      name: "เวทมนตร์สากล"
+      description: "ออกแบบสำหรับผู้ใช้ทุกคน"
       max_level: 15
       requires:
         - user_research
         - interaction_design
     - id: strategic_design
-      name: Business Empathy
-      description: Align design with business goals
+      name: "ความเห็นอกเห็นใจทางธุรกิจ"
+      description: "จัดแนวการออกแบบกับเป้าหมายทางธุรกิจ"
       max_level: 15
       requires:
         - user_research
         - prototyping
 milestone_quests:
   - id: first_design
-    name: Soul Touch
-    description: Create your first user-loved design
+    name: "การสัมผัสจิตวิญญาณ"
+    description: "สร้างการออกแบบแรกที่ผู้ใช้รัก"
     required_level: 5
     skills_tested:
       - user_research
@@ -105,8 +102,8 @@ milestone_quests:
       - empathy_designer_badge
       - user_testimonials
   - id: indifference_challenge
-    name: Humanity Restored
-    description: Defeat Indifference with personalized design
+    name: "การคืนคอมมนุษยธรรม"
+    description: "เอาชนะความเฉยเมยด้วยการออกแบบส่วนบุคคล"
     required_level: 10
     skills_tested:
       - interaction_design
@@ -116,8 +113,8 @@ milestone_quests:
       - humanity_champion_title
       - emotional_resonance
   - id: design_legacy
-    name: Experience Revolution
-    description: Create design used by millions
+    name: "ปฏิวัติประสบการณ์"
+    description: "สร้างการออกแบบที่ใช้โดยคนนับล้าน"
     required_level: 20
     skills_tested:
       - design_systems
@@ -128,39 +125,39 @@ milestone_quests:
       - design_philosophy
 achievements:
   - id: first_prototype
-    name: First Creation
-    description: Build your first interactive prototype
+    name: "การสร้างสรรค์ครั้งแรก"
+    description: "สร้างต้นแบบโต้ตอบได้ครั้งแรกของคุณ"
     xp_reward: 70
     badge_type: bronze
   - id: user_advocate
-    name: User Champion
-    description: Conduct 50 user research sessions
+    name: "แชมเปี้ยนผู้ใช้"
+    description: "ดำเนินการวิจัยผู้ใช้ 50 ครั้ง"
     xp_reward: 250
     badge_type: silver
   - id: pixel_perfect
-    name: Perfection Achieved
-    description: Create flawless high-fidelity designs
+    name: "ความสมบูรณ์แบบบรรลุ"
+    description: "สร้างการออกแบบความละเอียดสูงที่ไร้ที่ติ"
     xp_reward: 450
     badge_type: gold
   - id: design_master
-    name: Experience Sage
-    description: Complete all design challenges
+    name: "ปราชญ์แห่งประสบการณ์"
+    description: "จบความท้าทายการออกแบบทั้งหมด"
     xp_reward: 900
     badge_type: platinum
 example_tasks:
   beginner:
     - id: user_research
       type: analysis
-      title: Soul Mining Mission
-      description: Understand user needs and pain points
+      title: "ภารกิจขุดค้นจิตวิญญาณ"
+      description: "เข้าใจความต้องการและจุดเจ็บปวดของผู้ใช้"
       skills_improved:
         - user_research
         - user_psychology
       xp_reward: 60
     - id: wireframe_creation
       type: creation
-      title: Blueprint Magic
-      description: Create your first wireframes
+      title: "เวทมนตร์พิมพ์เขียว"
+      description: "สร้างไวร์เฟรมแรกของคุณ"
       skills_improved:
         - interaction_design
         - prototype_sculpting
@@ -168,16 +165,16 @@ example_tasks:
   intermediate:
     - id: prototype_design
       type: creation
-      title: Warm Prototype Building
-      description: Design interactive prototype
+      title: "การสร้างต้นแบบอบอุ่น"
+      description: "ออกแบบต้นแบบโต้ตอบได้"
       skills_improved:
         - prototyping
         - experience_magic
       xp_reward: 170
     - id: design_system
       type: creation
-      title: Harmony Framework
-      description: Create cohesive design system
+      title: "กรอบความกลมกลืน"
+      description: "สร้างระบบการออกแบบที่เป็นหนึ่งเดียว"
       skills_improved:
         - design_systems
         - visual_design
@@ -185,35 +182,35 @@ example_tasks:
   advanced:
     - id: accessibility_audit
       type: analysis
-      title: Universal Gateway
-      description: Ensure design works for everyone
+      title: "ประตูสากล"
+      description: "ตรวจให้แน่ใจว่าการออกแบบใช้งานได้สำหรับทุกคน"
       skills_improved:
         - accessibility_design
         - user_psychology
       xp_reward: 340
     - id: strategic_redesign
       type: creation
-      title: Business Soul Fusion
-      description: Redesign for user and business success
+      title: "การผสานจิตวิญญาณธุรกิจ"
+      description: "ออกแบบใหม่เพื่อความสำเร็จของผู้ใช้และธุรกิจ"
       skills_improved:
         - strategic_design
         - communication_arts
       xp_reward: 380
 learning_objectives:
-  - Master user research techniques
-  - Create intuitive user interfaces
-  - Design beautiful visual experiences
-  - Build interactive prototypes
-  - Understand human psychology
-  - Implement accessibility standards
-  - Develop design systems
-  - Balance user needs with business goals
+  - "เชี่ยวชาญเทคนิคการวิจัยผู้ใช้"
+  - "สร้างอินเทอร์เฟซผู้ใช้ที่ใช้งานได้ง่าย"
+  - "ออกแบบประสบการณ์ทางสายตาที่สวยงาม"
+  - "สร้างต้นแบบโต้ตอบได้"
+  - "เข้าใจจิตวิทยามนุษย์"
+  - "นำมาตรฐานการเข้าถึงได้มาใช้"
+  - "พัฒนาระบบการออกแบบ"
+  - "สมดุลความต้องการผู้ใช้กับเป้าหมายทางธุรกิจ"
 career_outcomes:
-  - UX Designer
-  - UI Designer
-  - Product Designer
-  - Design System Lead
-  - UX Research Manager
-  - Design Director
-  - Chief Design Officer
-  - Design Consultant
+  - "นักออกแบบ UX"
+  - "นักออกแบบ UI"
+  - "นักออกแบบผลิตภัณฑ์"
+  - "ผู้นำระบบการออกแบบ"
+  - "ผู้จัดการการวิจัย UX"
+  - "ผู้อำนวยการการออกแบบ"
+  - "หัวหน้าการออกแบบ"
+  - "ที่ปรึกษาการออกแบบ"

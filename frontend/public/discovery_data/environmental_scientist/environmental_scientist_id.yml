@@ -4,13 +4,14 @@ path_id: environmental_scientist
 category: science
 difficulty_range: beginner_to_expert
 metadata:
-  title: Planet Guardian - Environmental Scientist
-  short_description: Protect Earth through data-driven environmental solutions
+  title: "Penjaga Planet - Ilmuwan Lingkungan"
+  short_description: "Lindungi Bumi melalui solusi lingkungan berbasis data"
   long_description: |
-    You are a junior scientist at the "Global Climate Response Center," where AI-powered 
-    monitoring systems track planetary health in real-time. Armed with cutting-edge 
-    technology and environmental science knowledge, you'll work to understand and 
-    reverse climate damage while developing sustainable solutions for the future.
+    Anda adalah ilmuwan junior di "Pusat Respons Iklim Global," di mana sistem 
+    pemantauan bertenaga AI melacak kesehatan planet secara real-time. Dilengkapi 
+    dengan teknologi mutakhir dan pengetahuan ilmu lingkungan, Anda akan bekerja 
+    untuk memahami dan membalikkan kerusakan iklim sambil mengembangkan solusi 
+    berkelanjutan untuk masa depan.
   estimated_hours: 60
   skill_focus:
     - climate_modeling
@@ -23,21 +24,22 @@ metadata:
   target_language: id
   generated_date: "2025-07-16T07:00:56.505Z"
 world_setting:
-  name: Global Climate Response Center
+  name: "Pusat Respons Iklim Global"
   description: |
-    The Global Climate Response Center is a high-tech facility where environmental 
-    scientists use AI, satellite data, and field research to monitor and protect 
-    Earth's ecosystems. Scientists here race against time to develop solutions 
-    before critical tipping points are reached.
+    Pusat Respons Iklim Global adalah fasilitas berteknologi tinggi di mana ilmuwan 
+    lingkungan menggunakan AI, data satelit, dan penelitian lapangan untuk memantau 
+    dan melindungi ekosistem Bumi. Ilmuwan di sini berlomba dengan waktu untuk 
+    mengembangkan solusi sebelum titik kritis tercapai.
   atmosphere: urgent_hopeful
   visual_theme: eco_tech_fusion
 starting_scenario:
-  title: "Code Red: Climate Crisis"
+  title: "Kode Merah: Krisis Iklim"
   description: |
-    Dr. Gaia Earth welcomes you with alarming news: multiple environmental systems 
-    are approaching critical thresholds. Meanwhile, CEO Polluto of MegaCorp continues 
-    destructive practices for profit. You must use science and innovation to save 
-    ecosystems while exposing corporate environmental crimes.
+    Dr. Gaia Bumi menyambut Anda dengan berita mengkhawatirkan: beberapa sistem 
+    lingkungan mendekati ambang kritis. Sementara itu, CEO Polluto dari MegaCorp 
+    terus melakukan praktik destruktif demi keuntungan. Anda harus menggunakan 
+    sains dan inovasi untuk menyelamatkan ekosistem sambil mengungkap kejahatan 
+    lingkungan korporat.
   initial_tasks:
     - analyze_climate_data
     - identify_hotspots
@@ -45,59 +47,59 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: climate_science
-      name: Climate Dynamics
-      description: Understand Earth's climate systems
+      name: "Dinamika Iklim"
+      description: "Memahami sistem iklim Bumi"
       max_level: 10
       unlocks:
         - weather_prediction
         - carbon_cycle_analysis
     - id: ecosystem_monitoring
-      name: Living Systems
-      description: Track and analyze ecosystems
+      name: "Sistem Kehidupan"
+      description: "Melacak dan menganalisis ekosistem"
       max_level: 10
       unlocks:
         - biodiversity_assessment
         - habitat_mapping
     - id: pollution_detection
-      name: Contamination Tracking
-      description: Identify and trace pollutants
+      name: "Pelacakan Kontaminasi"
+      description: "Mengidentifikasi dan menelusuri polutan"
       max_level: 10
       unlocks:
         - water_quality_analysis
         - air_monitoring
     - id: sustainable_tech
-      name: Green Innovation
-      description: Develop eco-friendly technologies
+      name: "Inovasi Hijau"
+      description: "Mengembangkan teknologi ramah lingkungan"
       max_level: 10
       unlocks:
         - renewable_energy
         - circular_economy
   advanced_skills:
     - id: climate_modeling
-      name: Future Forecasting
-      description: Predict climate scenarios with AI
+      name: "Peramalan Masa Depan"
+      description: "Memprediksi skenario iklim dengan AI"
       max_level: 15
       requires:
         - climate_science
         - ecosystem_monitoring
     - id: restoration_ecology
-      name: Ecosystem Healing
-      description: Restore damaged environments
+      name: "Penyembuhan Ekosistem"
+      description: "Memulihkan lingkungan yang rusak"
       max_level: 15
       requires:
         - ecosystem_monitoring
         - sustainable_tech
     - id: policy_influence
-      name: Environmental Advocacy
-      description: Shape environmental policies
+      name: "Advokasi Lingkungan"
+      description: "Membentuk kebijakan lingkungan"
       max_level: 15
       requires:
         - pollution_detection
         - climate_science
 milestone_quests:
   - id: first_discovery
-    name: Pollution Exposed
-    description: Uncover major environmental violation
+    name: "Polusi Terungkap"
+    description: "Mengungkap pelanggaran lingkungan besar"
     required_level: 5
     skills_tested:
       - pollution_detection
@@ -107,8 +109,8 @@ milestone_quests:
       - whistleblower_badge
       - media_attention
   - id: ecosystem_save
-    name: Habitat Hero
-    description: Save an endangered ecosystem
+    name: "Pahlawan Habitat"
+    description: "Menyelamatkan ekosistem yang terancam"
     required_level: 10
     skills_tested:
       - restoration_ecology
@@ -118,8 +120,8 @@ milestone_quests:
       - conservation_champion_title
       - wildlife_alliance
   - id: climate_solution
-    name: Global Game Changer
-    description: Develop breakthrough climate solution
+    name: "Pengubah Permainan Global"
+    description: "Mengembangkan solusi iklim terobosan"
     required_level: 20
     skills_tested:
       - climate_modeling
@@ -130,39 +132,39 @@ milestone_quests:
       - un_recognition
 achievements:
   - id: first_sample
-    name: Field Researcher
-    description: Collect and analyze first environmental sample
+    name: "Peneliti Lapangan"
+    description: "Mengumpulkan dan menganalisis sampel lingkungan pertama"
     xp_reward: 100
     badge_type: bronze
   - id: data_detective
-    name: Pattern Finder
-    description: Identify 10 environmental anomalies
+    name: "Pencari Pola"
+    description: "Mengidentifikasi 10 anomali lingkungan"
     xp_reward: 350
     badge_type: silver
   - id: solution_provider
-    name: Innovation Champion
-    description: Implement 5 sustainable solutions
+    name: "Juara Inovasi"
+    description: "Menerapkan 5 solusi berkelanjutan"
     xp_reward: 650
     badge_type: gold
   - id: planet_protector
-    name: Earth's Guardian
-    description: Complete all environmental challenges
+    name: "Penjaga Bumi"
+    description: "Menyelesaikan semua tantangan lingkungan"
     xp_reward: 1300
     badge_type: platinum
 example_tasks:
   beginner:
     - id: water_testing
       type: analysis
-      title: Aqua Analysis
-      description: Test water quality in local rivers
+      title: "Analisis Air"
+      description: "Menguji kualitas air di sungai lokal"
       skills_improved:
         - pollution_detection
         - data_visualization
       xp_reward: 65
     - id: carbon_footprint
       type: analysis
-      title: Carbon Calculator
-      description: Measure carbon emissions
+      title: "Kalkulator Karbon"
+      description: "Mengukur emisi karbon"
       skills_improved:
         - climate_science
         - sustainable_solutions
@@ -170,16 +172,16 @@ example_tasks:
   intermediate:
     - id: habitat_restoration
       type: creation
-      title: Ecosystem Revival
-      description: Design habitat restoration plan
+      title: "Kebangkitan Ekosistem"
+      description: "Merancang rencana restorasi habitat"
       skills_improved:
         - restoration_ecology
         - ecosystem_analysis
       xp_reward: 190
     - id: pollution_tracking
       type: analysis
-      title: Contamination Hunt
-      description: Track pollution to its source
+      title: "Perburuan Kontaminasi"
+      description: "Melacak polusi ke sumbernya"
       skills_improved:
         - pollution_detection
         - data_visualization
@@ -187,35 +189,35 @@ example_tasks:
   advanced:
     - id: climate_model
       type: creation
-      title: Future Simulator
-      description: Build AI climate prediction model
+      title: "Simulator Masa Depan"
+      description: "Membangun model prediksi iklim AI"
       skills_improved:
         - climate_modeling
         - data_visualization
       xp_reward: 420
     - id: policy_proposal
       type: creation
-      title: Law of the Land
-      description: Draft environmental protection policy
+      title: "Hukum Tanah"
+      description: "Menyusun kebijakan perlindungan lingkungan"
       skills_improved:
         - policy_influence
         - sustainable_solutions
       xp_reward: 470
 learning_objectives:
-  - Master environmental monitoring techniques
-  - Use AI and data science for environmental analysis
-  - Develop sustainable technology solutions
-  - Understand climate systems and predictions
-  - Design ecosystem restoration projects
-  - Influence environmental policy and regulation
-  - Communicate science to public and policymakers
-  - Balance human needs with environmental protection
+  - "Menguasai teknik pemantauan lingkungan"
+  - "Menggunakan AI dan ilmu data untuk analisis lingkungan"
+  - "Mengembangkan solusi teknologi berkelanjutan"
+  - "Memahami sistem iklim dan prediksi"
+  - "Merancang proyek restorasi ekosistem"
+  - "Mempengaruhi kebijakan dan regulasi lingkungan"
+  - "Mengkomunikasikan sains kepada publik dan pembuat kebijakan"
+  - "Menyeimbangkan kebutuhan manusia dengan perlindungan lingkungan"
 career_outcomes:
-  - Environmental Scientist
-  - Climate Researcher
-  - Conservation Biologist
-  - Environmental Consultant
-  - Sustainability Director
-  - Environmental Policy Analyst
-  - Ecological Restoration Specialist
-  - Chief Sustainability Officer
+  - "Ilmuwan Lingkungan"
+  - "Peneliti Iklim"
+  - "Ahli Biologi Konservasi"
+  - "Konsultan Lingkungan"
+  - "Direktur Keberlanjutan"
+  - "Analis Kebijakan Lingkungan"
+  - "Spesialis Restorasi Ekologi"
+  - "Chief Sustainability Officer"
