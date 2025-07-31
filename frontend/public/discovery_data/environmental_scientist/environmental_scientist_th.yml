@@ -4,13 +4,13 @@ path_id: environmental_scientist
 category: science
 difficulty_range: beginner_to_expert
 metadata:
-  title: Planet Guardian - Environmental Scientist
-  short_description: Protect Earth through data-driven environmental solutions
+  title: "ผู้พิทักษ์โลก - นักวิทยาศาสตร์สิ่งแวดล้อม"
+  short_description: "ปกป้องโลกด้วยโซลูชั่นสิ่งแวดล้อมที่ขับเคลื่อนด้วยข้อมูล"
   long_description: |
-    You are a junior scientist at the "Global Climate Response Center," where AI-powered 
-    monitoring systems track planetary health in real-time. Armed with cutting-edge 
-    technology and environmental science knowledge, you'll work to understand and 
-    reverse climate damage while developing sustainable solutions for the future.
+    คุณเป็นนักวิทยาศาสตร์รุ่นเยาว์ที่ "ศูนย์ตอบสนองภูมิอากาศโลก" ที่ซึ่งระบบ
+    ติดตามที่ขับเคลื่อนด้วย AI ติดตามสุขภาพของโลกแบบเรียลไทม์ ด้วยเทคโนโลยี
+    ล้ำสมัยและความรู้ด้านวิทยาศาสตร์สิ่งแวดล้อม คุณจะทำงานเพื่อเข้าใจและ
+    พลิกฟื้นความเสียหายจากภูมิอากาศ พร้อมพัฒนาโซลูชั่นที่ยั่งยืนสำหรับอนาคต
   estimated_hours: 60
   skill_focus:
     - climate_modeling
@@ -23,21 +23,21 @@ metadata:
   target_language: th
   generated_date: "2025-07-16T07:00:56.509Z"
 world_setting:
-  name: Global Climate Response Center
+  name: "ศูนย์ตอบสนองภูมิอากาศโลก"
   description: |
-    The Global Climate Response Center is a high-tech facility where environmental 
-    scientists use AI, satellite data, and field research to monitor and protect 
-    Earth's ecosystems. Scientists here race against time to develop solutions 
-    before critical tipping points are reached.
+    ศูนย์ตอบสนองภูมิอากาศโลกเป็นสถานที่ไฮเทคที่นักวิทยาศาสตร์สิ่งแวดล้อม
+    ใช้ AI ข้อมูลดาวเทียม และการวิจัยภาคสนามเพื่อติดตามและปกป้องระบบนิเวศ
+    ของโลก นักวิทยาศาสตร์ที่นี่แข่งกับเวลาเพื่อพัฒนาโซลูชั่นก่อนที่จะถึง
+    จุดวิกฤตที่ไม่อาจย้อนกลับได้
   atmosphere: urgent_hopeful
   visual_theme: eco_tech_fusion
 starting_scenario:
-  title: "Code Red: Climate Crisis"
+  title: "รหัสแดง: วิกฤตภูมิอากาศ"
   description: |
-    Dr. Gaia Earth welcomes you with alarming news: multiple environmental systems 
-    are approaching critical thresholds. Meanwhile, CEO Polluto of MegaCorp continues 
-    destructive practices for profit. You must use science and innovation to save 
-    ecosystems while exposing corporate environmental crimes.
+    ดร.ไกอา เอิร์ธ ต้อนรับคุณด้วยข่าวที่น่าตกใจ: ระบบสิ่งแวดล้อมหลายระบบ
+    กำลังเข้าใกล้เกณฑ์วิกฤต ในขณะเดียวกัน CEO พอลลูโต้ของเมก้าคอร์ปยังคง
+    ดำเนินการทำลายล้างเพื่อผลกำไร คุณต้องใช้วิทยาศาสตร์และนวัตกรรมเพื่อ
+    ช่วยเหลือระบบนิเวศ พร้อมเปิดโปงอาชญากรรมสิ่งแวดล้อมขององค์กร
   initial_tasks:
     - analyze_climate_data
     - identify_hotspots
@@ -45,59 +45,59 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: climate_science
-      name: Climate Dynamics
-      description: Understand Earth's climate systems
+      name: "พลวัตภูมิอากาศ"
+      description: "เข้าใจระบบภูมิอากาศของโลก"
       max_level: 10
       unlocks:
         - weather_prediction
         - carbon_cycle_analysis
     - id: ecosystem_monitoring
-      name: Living Systems
-      description: Track and analyze ecosystems
+      name: "ระบบสิ่งมีชีวิต"
+      description: "ติดตามและวิเคราะห์ระบบนิเวศ"
       max_level: 10
       unlocks:
         - biodiversity_assessment
         - habitat_mapping
     - id: pollution_detection
-      name: Contamination Tracking
-      description: Identify and trace pollutants
+      name: "การติดตามการปนเปื้อน"
+      description: "ระบุและติดตามสารมลพิษ"
       max_level: 10
       unlocks:
         - water_quality_analysis
         - air_monitoring
     - id: sustainable_tech
-      name: Green Innovation
-      description: Develop eco-friendly technologies
+      name: "นวัตกรรมสีเขียว"
+      description: "พัฒนาเทคโนโลยีที่เป็นมิตรกับสิ่งแวดล้อม"
       max_level: 10
       unlocks:
         - renewable_energy
         - circular_economy
   advanced_skills:
     - id: climate_modeling
-      name: Future Forecasting
-      description: Predict climate scenarios with AI
+      name: "การพยากรณ์อนาคต"
+      description: "ทำนายสถานการณ์ภูมิอากาศด้วย AI"
       max_level: 15
       requires:
         - climate_science
         - ecosystem_monitoring
     - id: restoration_ecology
-      name: Ecosystem Healing
-      description: Restore damaged environments
+      name: "การเยียวยาระบบนิเวศ"
+      description: "ฟื้นฟูสิ่งแวดล้อมที่เสียหาย"
       max_level: 15
       requires:
         - ecosystem_monitoring
         - sustainable_tech
     - id: policy_influence
-      name: Environmental Advocacy
-      description: Shape environmental policies
+      name: "การสนับสนุนสิ่งแวดล้อม"
+      description: "กำหนดนโยบายสิ่งแวดล้อม"
       max_level: 15
       requires:
         - pollution_detection
         - climate_science
 milestone_quests:
   - id: first_discovery
-    name: Pollution Exposed
-    description: Uncover major environmental violation
+    name: "เปิดโปงมลพิษ"
+    description: "เปิดเผยการละเมิดสิ่งแวดล้อมครั้งใหญ่"
     required_level: 5
     skills_tested:
       - pollution_detection
@@ -107,8 +107,8 @@ milestone_quests:
       - whistleblower_badge
       - media_attention
   - id: ecosystem_save
-    name: Habitat Hero
-    description: Save an endangered ecosystem
+    name: "วีรบุรุษแห่งถิ่นที่อยู่"
+    description: "ช่วยเหลือระบบนิเวศที่ใกล้สูญพันธุ์"
     required_level: 10
     skills_tested:
       - restoration_ecology
@@ -118,8 +118,8 @@ milestone_quests:
       - conservation_champion_title
       - wildlife_alliance
   - id: climate_solution
-    name: Global Game Changer
-    description: Develop breakthrough climate solution
+    name: "ผู้เปลี่ยนเกมระดับโลก"
+    description: "พัฒนาโซลูชั่นภูมิอากาศที่ก้าวหน้า"
     required_level: 20
     skills_tested:
       - climate_modeling
@@ -130,39 +130,39 @@ milestone_quests:
       - un_recognition
 achievements:
   - id: first_sample
-    name: Field Researcher
-    description: Collect and analyze first environmental sample
+    name: "นักวิจัยภาคสนาม"
+    description: "เก็บและวิเคราะห์ตัวอย่างสิ่งแวดล้อมชิ้นแรก"
     xp_reward: 100
     badge_type: bronze
   - id: data_detective
-    name: Pattern Finder
-    description: Identify 10 environmental anomalies
+    name: "ผู้ค้นหารูปแบบ"
+    description: "ระบุความผิดปกติทางสิ่งแวดล้อม 10 รายการ"
     xp_reward: 350
     badge_type: silver
   - id: solution_provider
-    name: Innovation Champion
-    description: Implement 5 sustainable solutions
+    name: "แชมป์นวัตกรรม"
+    description: "ดำเนินการโซลูชั่นที่ยั่งยืน 5 รายการ"
     xp_reward: 650
     badge_type: gold
   - id: planet_protector
-    name: Earth's Guardian
-    description: Complete all environmental challenges
+    name: "ผู้พิทักษ์โลก"
+    description: "เสร็จสิ้นความท้าทายด้านสิ่งแวดล้อมทั้งหมด"
     xp_reward: 1300
     badge_type: platinum
 example_tasks:
   beginner:
     - id: water_testing
       type: analysis
-      title: Aqua Analysis
-      description: Test water quality in local rivers
+      title: "การวิเคราะห์น้ำ"
+      description: "ทดสอบคุณภาพน้ำในแม่น้ำท้องถิ่น"
       skills_improved:
         - pollution_detection
         - data_visualization
       xp_reward: 65
     - id: carbon_footprint
       type: analysis
-      title: Carbon Calculator
-      description: Measure carbon emissions
+      title: "เครื่องคำนวณคาร์บอน"
+      description: "วัดการปล่อยคาร์บอน"
       skills_improved:
         - climate_science
         - sustainable_solutions
@@ -170,16 +170,16 @@ example_tasks:
   intermediate:
     - id: habitat_restoration
       type: creation
-      title: Ecosystem Revival
-      description: Design habitat restoration plan
+      title: "การฟื้นฟูระบบนิเวศ"
+      description: "ออกแบบแผนการฟื้นฟูที่อยู่อาศัย"
       skills_improved:
         - restoration_ecology
         - ecosystem_analysis
       xp_reward: 190
     - id: pollution_tracking
       type: analysis
-      title: Contamination Hunt
-      description: Track pollution to its source
+      title: "การล่าหาการปนเปื้อน"
+      description: "ติดตามมลพิษถึงแหล่งที่มา"
       skills_improved:
         - pollution_detection
         - data_visualization
@@ -187,35 +187,35 @@ example_tasks:
   advanced:
     - id: climate_model
       type: creation
-      title: Future Simulator
-      description: Build AI climate prediction model
+      title: "ตัวจำลองอนาคต"
+      description: "สร้างแบบจำลองการทำนายภูมิอากาศด้วย AI"
       skills_improved:
         - climate_modeling
         - data_visualization
       xp_reward: 420
     - id: policy_proposal
       type: creation
-      title: Law of the Land
-      description: Draft environmental protection policy
+      title: "กฎหมายแห่งแผ่นดิน"
+      description: "ร่างนโยบายการคุ้มครองสิ่งแวดล้อม"
       skills_improved:
         - policy_influence
         - sustainable_solutions
       xp_reward: 470
 learning_objectives:
-  - Master environmental monitoring techniques
-  - Use AI and data science for environmental analysis
-  - Develop sustainable technology solutions
-  - Understand climate systems and predictions
-  - Design ecosystem restoration projects
-  - Influence environmental policy and regulation
-  - Communicate science to public and policymakers
-  - Balance human needs with environmental protection
+  - "เชี่ยวชาญเทคนิคการติดตามสิ่งแวดล้อม"
+  - "ใช้ AI และวิทยาศาสตร์ข้อมูลสำหรับการวิเคราะห์สิ่งแวดล้อม"
+  - "พัฒนาโซลูชั่นเทคโนโลยีที่ยั่งยืน"
+  - "เข้าใจระบบภูมิอากาศและการทำนาย"
+  - "ออกแบบโครงการฟื้นฟูระบบนิเวศ"
+  - "มีอิทธิพลต่อนโยบายและกฎระเบียบด้านสิ่งแวดล้อม"
+  - "สื่อสารวิทยาศาสตร์สู่สาธารณะและผู้กำหนดนโยบาย"
+  - "สร้างสมดุลระหว่างความต้องการของมนุษย์กับการคุ้มครองสิ่งแวดล้อม"
 career_outcomes:
-  - Environmental Scientist
-  - Climate Researcher
-  - Conservation Biologist
-  - Environmental Consultant
-  - Sustainability Director
-  - Environmental Policy Analyst
-  - Ecological Restoration Specialist
-  - Chief Sustainability Officer
+  - "นักวิทยาศาสตร์สิ่งแวดล้อม"
+  - "นักวิจัยภูมิอากาศ"
+  - "นักชีววิทยาการอนุรักษ์"
+  - "ที่ปรึกษาสิ่งแวดล้อม"
+  - "ผู้อำนวยการด้านความยั่งยืน"
+  - "นักวิเคราะห์นโยบายสิ่งแวดล้อม"
+  - "ผู้เชี่ยวชาญการฟื้นฟูระบบนิเวศ"
+  - "ประธานเจ้าหน้าที่ฝ่ายความยั่งยืน"

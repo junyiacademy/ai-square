@@ -46,59 +46,59 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: climate_science
-      name: Climate Dynamics
-      description: Understand Earth's climate systems
+      name: "ديناميكيات المناخ"
+      description: "فهم النظم المناخية للأرض"
       max_level: 10
       unlocks:
         - weather_prediction
         - carbon_cycle_analysis
     - id: ecosystem_monitoring
-      name: Living Systems
-      description: Track and analyze ecosystems
+      name: "الأنظمة الحية"
+      description: "تتبع وتحليل النظم البيئية"
       max_level: 10
       unlocks:
         - biodiversity_assessment
         - habitat_mapping
     - id: pollution_detection
-      name: Contamination Tracking
-      description: Identify and trace pollutants
+      name: "تتبع التلوث"
+      description: "تحديد وتتبع الملوثات"
       max_level: 10
       unlocks:
         - water_quality_analysis
         - air_monitoring
     - id: sustainable_tech
-      name: Green Innovation
-      description: Develop eco-friendly technologies
+      name: "الابتكار الأخضر"
+      description: "تطوير تقنيات صديقة للبيئة"
       max_level: 10
       unlocks:
         - renewable_energy
         - circular_economy
   advanced_skills:
     - id: climate_modeling
-      name: Future Forecasting
-      description: Predict climate scenarios with AI
+      name: "التنبؤ بالمستقبل"
+      description: "التنبؤ بسيناريوهات المناخ باستخدام الذكاء الاصطناعي"
       max_level: 15
       requires:
         - climate_science
         - ecosystem_monitoring
     - id: restoration_ecology
-      name: Ecosystem Healing
-      description: Restore damaged environments
+      name: "شفاء النظم البيئية"
+      description: "استعادة البيئات المتضررة"
       max_level: 15
       requires:
         - ecosystem_monitoring
         - sustainable_tech
     - id: policy_influence
-      name: Environmental Advocacy
-      description: Shape environmental policies
+      name: "الدفاع عن البيئة"
+      description: "تشكيل السياسات البيئية"
       max_level: 15
       requires:
         - pollution_detection
         - climate_science
 milestone_quests:
   - id: first_discovery
-    name: Pollution Exposed
-    description: Uncover major environmental violation
+    name: "كشف التلوث"
+    description: "اكتشف انتهاكاً بيئياً كبيراً"
     required_level: 5
     skills_tested:
       - pollution_detection
@@ -108,8 +108,8 @@ milestone_quests:
       - whistleblower_badge
       - media_attention
   - id: ecosystem_save
-    name: Habitat Hero
-    description: Save an endangered ecosystem
+    name: "بطل الموائل"
+    description: "أنقذ نظاماً بيئياً مهدداً بالانقراض"
     required_level: 10
     skills_tested:
       - restoration_ecology
@@ -119,8 +119,8 @@ milestone_quests:
       - conservation_champion_title
       - wildlife_alliance
   - id: climate_solution
-    name: Global Game Changer
-    description: Develop breakthrough climate solution
+    name: "مغير قواعد اللعبة العالمي"
+    description: "تطوير حل مناخي ثوري"
     required_level: 20
     skills_tested:
       - climate_modeling
@@ -131,39 +131,39 @@ milestone_quests:
       - un_recognition
 achievements:
   - id: first_sample
-    name: Field Researcher
-    description: Collect and analyze first environmental sample
+    name: "باحث ميداني"
+    description: "جمع وتحليل أول عينة بيئية"
     xp_reward: 100
     badge_type: bronze
   - id: data_detective
-    name: Pattern Finder
-    description: Identify 10 environmental anomalies
+    name: "مكتشف الأنماط"
+    description: "تحديد 10 شذوذات بيئية"
     xp_reward: 350
     badge_type: silver
   - id: solution_provider
-    name: Innovation Champion
-    description: Implement 5 sustainable solutions
+    name: "بطل الابتكار"
+    description: "تنفيذ 5 حلول مستدامة"
     xp_reward: 650
     badge_type: gold
   - id: planet_protector
-    name: Earth's Guardian
-    description: Complete all environmental challenges
+    name: "حارس الأرض"
+    description: "إكمال جميع التحديات البيئية"
     xp_reward: 1300
     badge_type: platinum
 example_tasks:
   beginner:
     - id: water_testing
       type: analysis
-      title: Aqua Analysis
-      description: Test water quality in local rivers
+      title: "تحليل المياه"
+      description: "اختبار جودة المياه في الأنهار المحلية"
       skills_improved:
         - pollution_detection
         - data_visualization
       xp_reward: 65
     - id: carbon_footprint
       type: analysis
-      title: Carbon Calculator
-      description: Measure carbon emissions
+      title: "حاسبة الكربون"
+      description: "قياس انبعاثات الكربون"
       skills_improved:
         - climate_science
         - sustainable_solutions
@@ -171,16 +171,16 @@ example_tasks:
   intermediate:
     - id: habitat_restoration
       type: creation
-      title: Ecosystem Revival
-      description: Design habitat restoration plan
+      title: "إحياء النظام البيئي"
+      description: "تصميم خطة استعادة الموائل"
       skills_improved:
         - restoration_ecology
         - ecosystem_analysis
       xp_reward: 190
     - id: pollution_tracking
       type: analysis
-      title: Contamination Hunt
-      description: Track pollution to its source
+      title: "صيد التلوث"
+      description: "تتبع التلوث إلى مصدره"
       skills_improved:
         - pollution_detection
         - data_visualization
@@ -188,16 +188,16 @@ example_tasks:
   advanced:
     - id: climate_model
       type: creation
-      title: Future Simulator
-      description: Build AI climate prediction model
+      title: "محاكي المستقبل"
+      description: "بناء نموذج التنبؤ المناخي بالذكاء الاصطناعي"
       skills_improved:
         - climate_modeling
         - data_visualization
       xp_reward: 420
     - id: policy_proposal
       type: creation
-      title: Law of the Land
-      description: Draft environmental protection policy
+      title: "قانون الأرض"
+      description: "صياغة سياسة حماية البيئة"
       skills_improved:
         - policy_influence
         - sustainable_solutions
