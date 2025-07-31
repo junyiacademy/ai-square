@@ -4,13 +4,12 @@ path_id: game_designer
 category: arts
 difficulty_range: beginner_to_expert
 metadata:
-  title: Dream Architect - Game Designer
-  short_description: Create infinite possibilities in virtual worlds
+  title: "梦境建筑师 - 游戏设计师"
+  short_description: "在虚拟世界中创造无限可能"
   long_description: |
-    You are a talented designer at the "Dream Architecture Academy," possessing the 
-    magic to transform imagination into interactive experiences. In this academy filled 
-    with creativity and fun, every game mechanic is a door to new worlds, and your 
-    mission is to create immersive digital dreams that captivate players.
+    你是"梦境建筑学院"的天才设计师，拥有将想象力转化为互动体验的魔法。
+    在这个充满创意和乐趣的学院里，每一个游戏机制都是通往新世界的大门，
+    你的使命是创造令玩家着迷的沉浸式数字梦境。
   estimated_hours: 60
   skill_focus:
     - world_building
@@ -22,19 +21,19 @@ metadata:
   target_language: zhCN
   generated_date: "2025-07-16T07:00:56.519Z"
 world_setting:
-  name: Dream Architecture Academy
+  name: "梦境建筑学院"
   description: |
-    The Dream Architecture Academy is a magical institution dedicated to training game 
-    designers. Here, students learn to balance creativity with technical constraints, 
-    fun with challenge, and create experiences that resonate with players worldwide.
+    梦境建筑学院是一所致力于培养游戏设计师的魔法学府。在这里，
+    学生们学习如何平衡创意与技术限制、乐趣与挑战，
+    创造能够引起全球玩家共鸣的体验。
   atmosphere: playful_creative
   visual_theme: fantasy_academy
 starting_scenario:
-  title: The Grind Invasion
+  title: "枯燥入侵"
   description: |
-    Creative God Dream welcomes you with troubling news: Grind, the King of Boredom, 
-    is turning all games into mindless number farms, pursuing efficiency over fun. 
-    You must use creativity and joy to combat the mechanization of gaming experiences.
+    创意之神梦想带着令人担忧的消息迎接你：无聊之王Grind正在将所有游戏
+    变成无脑的数值农场，追求效率而非乐趣。你必须用创意和欢乐
+    来对抗游戏体验的机械化。
   initial_tasks:
     - understand_game_design
     - learn_player_psychology
@@ -42,59 +41,59 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: game_mechanics
-      name: Mechanics Mastery
-      description: Design engaging game mechanics
+      name: "机制精通"
+      description: "设计引人入胜的游戏机制"
       max_level: 10
       unlocks:
         - combat_systems
         - puzzle_design
     - id: level_design
-      name: World Crafting
-      description: Create immersive game levels
+      name: "世界工艺"
+      description: "创建沉浸式游戏关卡"
       max_level: 10
       unlocks:
         - environment_storytelling
         - difficulty_curves
     - id: narrative_design
-      name: Story Architecture
-      description: Weave compelling game narratives
+      name: "故事架构"
+      description: "编织引人入胜的游戏叙事"
       max_level: 10
       unlocks:
         - character_development
         - branching_stories
     - id: player_experience
-      name: Experience Engineering
-      description: Optimize player enjoyment
+      name: "体验工程"
+      description: "优化玩家享受"
       max_level: 10
       unlocks:
         - flow_states
         - reward_systems
   advanced_skills:
     - id: systems_design
-      name: System Symphony
-      description: Create complex interconnected systems
+      name: "系统交响乐"
+      description: "创建复杂的互联系统"
       max_level: 15
       requires:
         - game_mechanics
         - level_design
     - id: monetization_design
-      name: Ethical Economics
-      description: Design fair monetization systems
+      name: "道德经济学"
+      description: "设计公平的盈利系统"
       max_level: 15
       requires:
         - player_experience
         - game_mechanics
     - id: multiplayer_design
-      name: Social Architecture
-      description: Design engaging multiplayer experiences
+      name: "社交架构"
+      description: "设计引人入胜的多人游戏体验"
       max_level: 15
       requires:
         - systems_design
         - player_experience
 milestone_quests:
   - id: first_game
-    name: Prototype Pioneer
-    description: Create your first playable game
+    name: "原型先锋"
+    description: "创建你的第一个可玩游戏"
     required_level: 5
     skills_tested:
       - game_mechanics
@@ -104,8 +103,8 @@ milestone_quests:
       - game_creator_badge
       - player_feedback
   - id: grind_battle
-    name: Fun vs Formula
-    description: Create a game that defeats Grind's boring mechanics
+    name: "乐趣对抗公式"
+    description: "创建一个打败Grind无聊机制的游戏"
     required_level: 10
     skills_tested:
       - narrative_design
@@ -115,8 +114,8 @@ milestone_quests:
       - fun_guardian_title
       - creative_freedom
   - id: dream_masterpiece
-    name: Digital Dream
-    description: Create a game played by millions
+    name: "数字梦境"
+    description: "创建一个被数百万人游玩的游戏"
     required_level: 20
     skills_tested:
       - systems_design
@@ -127,39 +126,39 @@ milestone_quests:
       - industry_legend
 achievements:
   - id: first_mechanic
-    name: Mechanics Birth
-    description: Design your first game mechanic
+    name: "机制诞生"
+    description: "设计你的第一个游戏机制"
     xp_reward: 80
     badge_type: bronze
   - id: playtester_favorite
-    name: Player's Choice
-    description: Receive positive feedback from 100 playtesters
+    name: "玩家之选"
+    description: "从100名测试玩家那里获得积极反馈"
     xp_reward: 300
     badge_type: silver
   - id: innovation_award
-    name: Innovation Master
-    description: Create a truly original game concept
+    name: "创新大师"
+    description: "创造真正原创的游戏概念"
     xp_reward: 500
     badge_type: gold
   - id: design_legend
-    name: Legendary Designer
-    description: Complete all design challenges
+    name: "传奇设计师"
+    description: "完成所有设计挑战"
     xp_reward: 1000
     badge_type: platinum
 example_tasks:
   beginner:
     - id: world_building
       type: creation
-      title: Dream World Construction
-      description: Design game world and backstory
+      title: "梦境世界构建"
+      description: "设计游戏世界和背景故事"
       skills_improved:
         - world_building
         - narrative_design
       xp_reward: 70
     - id: core_loop
       type: creation
-      title: Fun Formula
-      description: Design the core game loop
+      title: "乐趣公式"
+      description: "设计核心游戏循环"
       skills_improved:
         - game_mechanics
         - fun_summoning
@@ -167,16 +166,16 @@ example_tasks:
   intermediate:
     - id: mechanics_design
       type: creation
-      title: Joy Mechanics Forge
-      description: Design core game mechanics
+      title: "欢乐机制熔炉"
+      description: "设计核心游戏机制"
       skills_improved:
         - mechanics_design
         - player_experience
       xp_reward: 180
     - id: level_creation
       type: creation
-      title: Experience Sculpting
-      description: Create engaging game levels
+      title: "体验雕塑"
+      description: "创建引人入胜的游戏关卡"
       skills_improved:
         - level_design
         - emotional_manipulation
@@ -184,35 +183,35 @@ example_tasks:
   advanced:
     - id: systems_integration
       type: creation
-      title: System Orchestra
-      description: Design interconnected game systems
+      title: "系统乐团"
+      description: "设计互联的游戏系统"
       skills_improved:
         - systems_design
         - game_mechanics
       xp_reward: 380
     - id: multiplayer_experience
       type: creation
-      title: Social Playground
-      description: Design multiplayer features
+      title: "社交游乐场"
+      description: "设计多人游戏功能"
       skills_improved:
         - multiplayer_design
         - player_experience
       xp_reward: 420
 learning_objectives:
-  - Master game design fundamentals
-  - Create engaging game mechanics
-  - Design immersive game worlds
-  - Understand player psychology
-  - Balance challenge and fun
-  - Develop unique gameplay experiences
-  - Implement fair monetization
-  - Build games that bring joy
+  - "掌握游戏设计基础"
+  - "创建引人入胜的游戏机制"
+  - "设计沉浸式游戏世界"
+  - "理解玩家心理"
+  - "平衡挑战与乐趣"
+  - "开发独特的游戏体验"
+  - "实施公平的盈利方式"
+  - "构建带来欢乐的游戏"
 career_outcomes:
-  - Game Designer
-  - Level Designer
-  - Systems Designer
-  - Narrative Designer
-  - Game Director
-  - Design Lead
-  - Creative Director
-  - Studio Founder
+  - "游戏设计师"
+  - "关卡设计师"
+  - "系统设计师"
+  - "叙事设计师"
+  - "游戏总监"
+  - "设计主管"
+  - "创意总监"
+  - "工作室创始人"

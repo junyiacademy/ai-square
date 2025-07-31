@@ -4,13 +4,12 @@ path_id: startup_founder
 category: business
 difficulty_range: beginner_to_expert
 metadata:
-  title: Business Adventurer - Startup Founder
-  short_description: Pioneer new trade routes in the business wilderness
+  title: "商业冒险家 - 创业创始人"
+  short_description: "在商业荒野中开拓新的贸易路线"
   long_description: |
-    You are an explorer of the "New Business Continent," tasked with establishing 
-    new outposts in unknown business territories. In this wilderness full of opportunities 
-    and dangers, every decision could change your destiny, and loyal companions will 
-    face challenges alongside you.
+    你是"新商业大陆"的探险家，肩负着在未知商业领土建立新前哨站的使命。
+    在这片充满机遇与危险的荒野中，每一个决定都可能改变你的命运，
+    而忠诚的伙伴将与你一同面对挑战。
   estimated_hours: 60
   skill_focus:
     - business_intuition
@@ -22,20 +21,19 @@ metadata:
   target_language: zhCN
   generated_date: "2025-07-16T07:00:56.537Z"
 world_setting:
-  name: New Business Continent
+  name: "新商业大陆"
   description: |
-    The New Business Continent is a vast unexplored business wilderness where brave 
-    entrepreneurs venture to establish new trade routes and build empires. Success 
-    requires cunning, courage, and the ability to turn scarce resources into gold.
+    新商业大陆是一片广阔的未探索商业荒野，勇敢的企业家们在这里冒险，
+    建立新的贸易路线，构建商业帝国。成功需要智慧、勇气，
+    以及将稀缺资源转化为黄金的能力。
   atmosphere: adventurous_challenging
   visual_theme: frontier_exploration
 starting_scenario:
-  title: The Baron's Blockade
+  title: "男爵的封锁"
   description: |
-    Scout, your expedition partner, brings dire news: Baron Greed controls most 
-    resources and is crushing new merchants. Meanwhile, supplier Lily has backed 
-    out at a crucial moment. You must find creative ways to break through and 
-    establish your trading post.
+    你的探险伙伴斯卡特带来了糟糕的消息：贪婪男爵控制了大部分资源，
+    正在打压新商人。与此同时，供应商莉莉在关键时刻撤退了。
+    你必须找到创造性的方法突破封锁，建立你的贸易站。
   initial_tasks:
     - survey_market
     - find_resources
@@ -43,59 +41,59 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: market_analysis
-      name: Market Sensing
-      description: Detect business opportunities
+      name: "市场感知"
+      description: "探测商业机会"
       max_level: 10
       unlocks:
         - trend_spotting
         - competitor_analysis
     - id: resource_management
-      name: Resource Alchemy
-      description: Transform limited resources into value
+      name: "资源炼金术"
+      description: "将有限资源转化为价值"
       max_level: 10
       unlocks:
         - bootstrap_mastery
         - efficiency_optimization
     - id: team_building
-      name: Ally Summoning
-      description: Build strong founding teams
+      name: "盟友召唤"
+      description: "构建强大的创始团队"
       max_level: 10
       unlocks:
         - talent_attraction
         - culture_creation
     - id: product_development
-      name: Innovation Forge
-      description: Create market-winning products
+      name: "创新熔炉"
+      description: "创造赢得市场的产品"
       max_level: 10
       unlocks:
         - mvp_design
         - iteration_mastery
   advanced_skills:
     - id: fundraising
-      name: Capital Magic
-      description: Master the art of raising funds
+      name: "资本魔法"
+      description: "掌握融资的艺术"
       max_level: 15
       requires:
         - market_analysis
         - resource_management
     - id: scaling_operations
-      name: Empire Building
-      description: Scale businesses efficiently
+      name: "帝国建设"
+      description: "高效扩展业务"
       max_level: 15
       requires:
         - team_building
         - product_development
     - id: strategic_pivoting
-      name: Adaptation Arts
-      description: Pivot strategically when needed
+      name: "适应艺术"
+      description: "在需要时进行战略转型"
       max_level: 15
       requires:
         - market_analysis
         - product_development
 milestone_quests:
   - id: first_customer
-    name: First Gold
-    description: Acquire your first paying customer
+    name: "第一桶金"
+    description: "获得你的第一位付费客户"
     required_level: 5
     skills_tested:
       - market_analysis
@@ -105,8 +103,8 @@ milestone_quests:
       - merchant_badge
       - market_credibility
   - id: baron_challenge
-    name: Breaking the Monopoly
-    description: Overcome Baron Greed's market control
+    name: "打破垄断"
+    description: "克服贪婪男爵的市场控制"
     required_level: 10
     skills_tested:
       - resource_management
@@ -116,8 +114,8 @@ milestone_quests:
       - freedom_trader_title
       - supplier_network
   - id: empire_established
-    name: Trade Empire
-    description: Build a sustainable business empire
+    name: "贸易帝国"
+    description: "建立可持续的商业帝国"
     required_level: 20
     skills_tested:
       - scaling_operations
@@ -128,39 +126,39 @@ milestone_quests:
       - legacy_founder
 achievements:
   - id: first_sale
-    name: First Trade
-    description: Make your first successful sale
+    name: "首次交易"
+    description: "完成你的第一笔成功销售"
     xp_reward: 75
     badge_type: bronze
   - id: team_assembled
-    name: Fellowship Formed
-    description: Build a team of 5+ members
+    name: "团队成立"
+    description: "组建5人以上的团队"
     xp_reward: 300
     badge_type: silver
   - id: profitable_quarter
-    name: Gold Flow
-    description: Achieve first profitable quarter
+    name: "金流涌动"
+    description: "实现首个盈利季度"
     xp_reward: 550
     badge_type: gold
   - id: startup_legend
-    name: Legendary Founder
-    description: Complete all founder challenges
+    name: "传奇创始人"
+    description: "完成所有创始人挑战"
     xp_reward: 1100
     badge_type: platinum
 example_tasks:
   beginner:
     - id: market_research
       type: analysis
-      title: Wilderness Market Survey
-      description: Deeply understand target market needs
+      title: "荒野市场调研"
+      description: "深入了解目标市场需求"
       skills_improved:
         - market_analysis
         - business_intuition
       xp_reward: 65
     - id: prototype_creation
       type: creation
-      title: First Trading Post
-      description: Build minimum viable product
+      title: "首个贸易站"
+      description: "构建最小可行产品"
       skills_improved:
         - product_development
         - resource_alchemy
@@ -168,16 +166,16 @@ example_tasks:
   intermediate:
     - id: customer_interviews
       type: chat
-      title: Merchant Negotiations
-      description: Validate product-market fit
+      title: "商人谈判"
+      description: "验证产品市场契合度"
       skills_improved:
         - market_exploration
         - business_intuition
       xp_reward: 175
     - id: growth_planning
       type: creation
-      title: Empire Expansion Plans
-      description: Develop growth strategies
+      title: "帝国扩张计划"
+      description: "制定增长策略"
       skills_improved:
         - scaling_operations
         - risk_navigation
@@ -185,35 +183,35 @@ example_tasks:
   advanced:
     - id: series_a_prep
       type: creation
-      title: Capital Quest
-      description: Prepare for major fundraising
+      title: "资本之旅"
+      description: "为重大融资做准备"
       skills_improved:
         - fundraising
         - resource_alchemy
       xp_reward: 370
     - id: market_expansion
       type: creation
-      title: Continental Conquest
-      description: Expand to new markets
+      title: "大陆征服"
+      description: "扩展到新市场"
       skills_improved:
         - strategic_pivoting
         - market_exploration
       xp_reward: 410
 learning_objectives:
-  - Identify and validate business opportunities
-  - Build products customers love
-  - Master lean startup methodology
-  - Develop leadership skills
-  - Navigate uncertainty and risk
-  - Build strong company culture
-  - Secure funding and manage finances
-  - Scale businesses sustainably
+  - "识别和验证商业机会"
+  - "构建客户喜爱的产品"
+  - "掌握精益创业方法论"
+  - "发展领导力技能"
+  - "应对不确定性和风险"
+  - "构建强大的公司文化"
+  - "获得资金并管理财务"
+  - "可持续地扩展业务"
 career_outcomes:
-  - Startup Founder/CEO
-  - Serial Entrepreneur
-  - Venture Partner
-  - Innovation Consultant
-  - Startup Advisor
-  - Corporate Entrepreneur
-  - Accelerator Director
-  - Angel Investor
+  - "创业公司创始人/CEO"
+  - "连续创业者"
+  - "风险投资合伙人"
+  - "创新顾问"
+  - "创业公司顾问"
+  - "企业内部创业者"
+  - "加速器总监"
+  - "天使投资人"

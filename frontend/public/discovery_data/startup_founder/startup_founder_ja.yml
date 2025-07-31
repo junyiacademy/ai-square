@@ -4,13 +4,13 @@ path_id: startup_founder
 category: business
 difficulty_range: beginner_to_expert
 metadata:
-  title: Business Adventurer - Startup Founder
-  short_description: Pioneer new trade routes in the business wilderness
+  title: "ビジネス冒険者 - スタートアップ創業者"
+  short_description: "ビジネスの荒野で新しい交易ルートを開拓せよ"
   long_description: |
-    You are an explorer of the "New Business Continent," tasked with establishing 
-    new outposts in unknown business territories. In this wilderness full of opportunities 
-    and dangers, every decision could change your destiny, and loyal companions will 
-    face challenges alongside you.
+    あなたは「新ビジネス大陸」の探検家として、未知のビジネス領域に新しい
+    前哨基地を築く任務を負っています。機会と危険に満ちたこの荒野では、
+    すべての決断があなたの運命を変える可能性があり、忠実な仲間たちが
+    あなたと共に挑戦に立ち向かいます。
   estimated_hours: 60
   skill_focus:
     - business_intuition
@@ -22,20 +22,21 @@ metadata:
   target_language: ja
   generated_date: "2025-07-16T07:00:56.533Z"
 world_setting:
-  name: New Business Continent
+  name: "新ビジネス大陸"
   description: |
-    The New Business Continent is a vast unexplored business wilderness where brave 
-    entrepreneurs venture to establish new trade routes and build empires. Success 
-    requires cunning, courage, and the ability to turn scarce resources into gold.
+    新ビジネス大陸は、勇敢な起業家たちが新しい交易ルートを確立し、
+    帝国を築くために冒険する広大な未開拓ビジネス荒野です。成功には
+    知恵、勇気、そして乏しい資源を黄金に変える能力が必要です。
   atmosphere: adventurous_challenging
   visual_theme: frontier_exploration
 starting_scenario:
-  title: The Baron's Blockade
+  title: "男爵の封鎖"
   description: |
-    Scout, your expedition partner, brings dire news: Baron Greed controls most 
-    resources and is crushing new merchants. Meanwhile, supplier Lily has backed 
-    out at a crucial moment. You must find creative ways to break through and 
-    establish your trading post.
+    あなたの探検パートナーであるスカウトが深刻なニュースをもたらしました：
+    強欲男爵がほとんどの資源を支配し、新しい商人たちを圧殺しています。
+    一方、サプライヤーのリリーは決定的な瞬間に撤退してしまいました。
+    あなたは創造的な方法を見つけて突破し、交易拠点を確立しなければ
+    なりません。
   initial_tasks:
     - survey_market
     - find_resources
@@ -43,59 +44,59 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: market_analysis
-      name: Market Sensing
-      description: Detect business opportunities
+      name: "市場センシング"
+      description: "ビジネス機会を検知する"
       max_level: 10
       unlocks:
         - trend_spotting
         - competitor_analysis
     - id: resource_management
-      name: Resource Alchemy
-      description: Transform limited resources into value
+      name: "リソース錬金術"
+      description: "限られた資源を価値に変換する"
       max_level: 10
       unlocks:
         - bootstrap_mastery
         - efficiency_optimization
     - id: team_building
-      name: Ally Summoning
-      description: Build strong founding teams
+      name: "同盟召喚"
+      description: "強力な創業チームを構築する"
       max_level: 10
       unlocks:
         - talent_attraction
         - culture_creation
     - id: product_development
-      name: Innovation Forge
-      description: Create market-winning products
+      name: "イノベーション鍛冶場"
+      description: "市場を制する製品を創り出す"
       max_level: 10
       unlocks:
         - mvp_design
         - iteration_mastery
   advanced_skills:
     - id: fundraising
-      name: Capital Magic
-      description: Master the art of raising funds
+      name: "資本魔法"
+      description: "資金調達の技をマスターする"
       max_level: 15
       requires:
         - market_analysis
         - resource_management
     - id: scaling_operations
-      name: Empire Building
-      description: Scale businesses efficiently
+      name: "帝国建設"
+      description: "ビジネスを効率的に拡張する"
       max_level: 15
       requires:
         - team_building
         - product_development
     - id: strategic_pivoting
-      name: Adaptation Arts
-      description: Pivot strategically when needed
+      name: "適応の技"
+      description: "必要に応じて戦略的にピボットする"
       max_level: 15
       requires:
         - market_analysis
         - product_development
 milestone_quests:
   - id: first_customer
-    name: First Gold
-    description: Acquire your first paying customer
+    name: "最初の黄金"
+    description: "初めての有料顧客を獲得する"
     required_level: 5
     skills_tested:
       - market_analysis
@@ -105,8 +106,8 @@ milestone_quests:
       - merchant_badge
       - market_credibility
   - id: baron_challenge
-    name: Breaking the Monopoly
-    description: Overcome Baron Greed's market control
+    name: "独占を打破せよ"
+    description: "強欲男爵の市場支配を克服する"
     required_level: 10
     skills_tested:
       - resource_management
@@ -116,8 +117,8 @@ milestone_quests:
       - freedom_trader_title
       - supplier_network
   - id: empire_established
-    name: Trade Empire
-    description: Build a sustainable business empire
+    name: "交易帝国"
+    description: "持続可能なビジネス帝国を築く"
     required_level: 20
     skills_tested:
       - scaling_operations
@@ -128,39 +129,39 @@ milestone_quests:
       - legacy_founder
 achievements:
   - id: first_sale
-    name: First Trade
-    description: Make your first successful sale
+    name: "初めての取引"
+    description: "初めての成功した販売を行う"
     xp_reward: 75
     badge_type: bronze
   - id: team_assembled
-    name: Fellowship Formed
-    description: Build a team of 5+ members
+    name: "仲間団の結成"
+    description: "5名以上のチームを組織する"
     xp_reward: 300
     badge_type: silver
   - id: profitable_quarter
-    name: Gold Flow
-    description: Achieve first profitable quarter
+    name: "黄金の流れ"
+    description: "初めての黒字四半期を達成する"
     xp_reward: 550
     badge_type: gold
   - id: startup_legend
-    name: Legendary Founder
-    description: Complete all founder challenges
+    name: "伝説の創業者"
+    description: "すべての創業者チャレンジを完了する"
     xp_reward: 1100
     badge_type: platinum
 example_tasks:
   beginner:
     - id: market_research
       type: analysis
-      title: Wilderness Market Survey
-      description: Deeply understand target market needs
+      title: "荒野の市場調査"
+      description: "ターゲット市場のニーズを深く理解する"
       skills_improved:
         - market_analysis
         - business_intuition
       xp_reward: 65
     - id: prototype_creation
       type: creation
-      title: First Trading Post
-      description: Build minimum viable product
+      title: "最初の交易拠点"
+      description: "最小限の実行可能な製品を作る"
       skills_improved:
         - product_development
         - resource_alchemy
@@ -168,16 +169,16 @@ example_tasks:
   intermediate:
     - id: customer_interviews
       type: chat
-      title: Merchant Negotiations
-      description: Validate product-market fit
+      title: "商人交渉"
+      description: "製品と市場の適合性を検証する"
       skills_improved:
         - market_exploration
         - business_intuition
       xp_reward: 175
     - id: growth_planning
       type: creation
-      title: Empire Expansion Plans
-      description: Develop growth strategies
+      title: "帝国拡張計画"
+      description: "成長戦略を開発する"
       skills_improved:
         - scaling_operations
         - risk_navigation
@@ -185,35 +186,35 @@ example_tasks:
   advanced:
     - id: series_a_prep
       type: creation
-      title: Capital Quest
-      description: Prepare for major fundraising
+      title: "資本クエスト"
+      description: "大規模な資金調達に備える"
       skills_improved:
         - fundraising
         - resource_alchemy
       xp_reward: 370
     - id: market_expansion
       type: creation
-      title: Continental Conquest
-      description: Expand to new markets
+      title: "大陸制覇"
+      description: "新しい市場に拡大する"
       skills_improved:
         - strategic_pivoting
         - market_exploration
       xp_reward: 410
 learning_objectives:
-  - Identify and validate business opportunities
-  - Build products customers love
-  - Master lean startup methodology
-  - Develop leadership skills
-  - Navigate uncertainty and risk
-  - Build strong company culture
-  - Secure funding and manage finances
-  - Scale businesses sustainably
+  - "ビジネス機会を特定し検証する"
+  - "顧客が愛する製品を作る"
+  - "リーンスタートアップ手法をマスターする"
+  - "リーダーシップスキルを開発する"
+  - "不確実性とリスクを乗り越える"
+  - "強固な企業文化を構築する"
+  - "資金を確保し財務を管理する"
+  - "ビジネスを持続可能に拡大する"
 career_outcomes:
-  - Startup Founder/CEO
-  - Serial Entrepreneur
-  - Venture Partner
-  - Innovation Consultant
-  - Startup Advisor
-  - Corporate Entrepreneur
-  - Accelerator Director
-  - Angel Investor
+  - "スタートアップ創業者/CEO"
+  - "シリアルアントレプレナー"
+  - "ベンチャーパートナー"
+  - "イノベーションコンサルタント"
+  - "スタートアップアドバイザー"
+  - "企業内起業家"
+  - "アクセラレーターディレクター"
+  - "エンジェル投資家"

@@ -4,13 +4,13 @@ path_id: startup_founder
 category: business
 difficulty_range: beginner_to_expert
 metadata:
-  title: Business Adventurer - Startup Founder
-  short_description: Pioneer new trade routes in the business wilderness
+  title: "นักผจญภัยธุรกิจ - ผู้ก่อตั้งสตาร์ทอัพ"
+  short_description: "บุกเบิกเส้นทางการค้าใหม่ในดินแดนธุรกิจ"
   long_description: |
-    You are an explorer of the "New Business Continent," tasked with establishing 
-    new outposts in unknown business territories. In this wilderness full of opportunities 
-    and dangers, every decision could change your destiny, and loyal companions will 
-    face challenges alongside you.
+    คุณคือนักสำรวจแห่ง "ทวีปธุรกิจใหม่" ได้รับมอบหมายให้สร้าง
+    ฐานที่มั่นใหม่ในดินแดนธุรกิจที่ไม่รู้จัก ในดินแดนที่เต็มไปด้วย
+    โอกาสและอันตรายนี้ ทุกการตัดสินใจอาจเปลี่ยนชะตากรรมของคุณ
+    และเพื่อนร่วมทางที่ซื่อสัตย์จะเผชิญความท้าทายเคียงข้างคุณ
   estimated_hours: 60
   skill_focus:
     - business_intuition
@@ -22,20 +22,22 @@ metadata:
   target_language: th
   generated_date: "2025-07-16T07:00:56.536Z"
 world_setting:
-  name: New Business Continent
+  name: "ทวีปธุรกิจใหม่"
   description: |
-    The New Business Continent is a vast unexplored business wilderness where brave 
-    entrepreneurs venture to establish new trade routes and build empires. Success 
-    requires cunning, courage, and the ability to turn scarce resources into gold.
+    ทวีปธุรกิจใหม่คือดินแดนธุรกิจที่กว้างใหญ่และยังไม่ถูกสำรวจ
+    ที่ผู้ประกอบการที่กล้าหาญออกไปผจญภัยเพื่อสร้างเส้นทาง
+    การค้าใหม่และสร้างอาณาจักร ความสำเร็จต้องการไหวพริบ
+    ความกล้าหาญ และความสามารถในการเปลี่ยนทรัพยากร
+    ที่ขาดแคลนให้กลายเป็นทอง
   atmosphere: adventurous_challenging
   visual_theme: frontier_exploration
 starting_scenario:
-  title: The Baron's Blockade
+  title: "การปิดกั้นของแบรอน"
   description: |
-    Scout, your expedition partner, brings dire news: Baron Greed controls most 
-    resources and is crushing new merchants. Meanwhile, supplier Lily has backed 
-    out at a crucial moment. You must find creative ways to break through and 
-    establish your trading post.
+    สเก้าท์ คู่หูสำรวจของคุณ นำข่าวร้ายมา: แบรอนโลภควบคุม
+    ทรัพยากรส่วนใหญ่และกำลังบดขยี้พ่อค้ารายใหม่ ในขณะเดียวกัน
+    ลิลลี่ ซัพพลายเออร์ ถอนตัวในช่วงเวลาสำคัญ คุณต้องหา
+    วิธีที่สร้างสรรค์เพื่อฝ่าวิกฤตและสร้างจุดขายของคุณ
   initial_tasks:
     - survey_market
     - find_resources
@@ -43,59 +45,59 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: market_analysis
-      name: Market Sensing
-      description: Detect business opportunities
+      name: "การสัมผัสตลาด"
+      description: "ตรวจจับโอกาสทางธุรกิจ"
       max_level: 10
       unlocks:
         - trend_spotting
         - competitor_analysis
     - id: resource_management
-      name: Resource Alchemy
-      description: Transform limited resources into value
+      name: "การเสกทรัพยากร"
+      description: "แปลงทรัพยากรที่จำกัดให้เป็นคุณค่า"
       max_level: 10
       unlocks:
         - bootstrap_mastery
         - efficiency_optimization
     - id: team_building
-      name: Ally Summoning
-      description: Build strong founding teams
+      name: "การเรียกพันธมิตร"
+      description: "สร้างทีมผู้ก่อตั้งที่แข็งแกร่ง"
       max_level: 10
       unlocks:
         - talent_attraction
         - culture_creation
     - id: product_development
-      name: Innovation Forge
-      description: Create market-winning products
+      name: "โรงหล่อนวัตกรรม"
+      description: "สร้างผลิตภัณฑ์ที่ชนะตลาด"
       max_level: 10
       unlocks:
         - mvp_design
         - iteration_mastery
   advanced_skills:
     - id: fundraising
-      name: Capital Magic
-      description: Master the art of raising funds
+      name: "เวทมนตร์ทุน"
+      description: "เชี่ยวชาญศิลปะการระดมทุน"
       max_level: 15
       requires:
         - market_analysis
         - resource_management
     - id: scaling_operations
-      name: Empire Building
-      description: Scale businesses efficiently
+      name: "การสร้างอาณาจักร"
+      description: "ขยายธุรกิจอย่างมีประสิทธิภาพ"
       max_level: 15
       requires:
         - team_building
         - product_development
     - id: strategic_pivoting
-      name: Adaptation Arts
-      description: Pivot strategically when needed
+      name: "ศิลปะการปรับตัว"
+      description: "ปรับเปลี่ยนกลยุทธ์เมื่อจำเป็น"
       max_level: 15
       requires:
         - market_analysis
         - product_development
 milestone_quests:
   - id: first_customer
-    name: First Gold
-    description: Acquire your first paying customer
+    name: "ทองแรก"
+    description: "ได้ลูกค้าที่จ่ายเงินคนแรก"
     required_level: 5
     skills_tested:
       - market_analysis
@@ -105,8 +107,8 @@ milestone_quests:
       - merchant_badge
       - market_credibility
   - id: baron_challenge
-    name: Breaking the Monopoly
-    description: Overcome Baron Greed's market control
+    name: "ทำลายการผูกขาด"
+    description: "เอาชนะการควบคุมตลาดของแบรอนโลภ"
     required_level: 10
     skills_tested:
       - resource_management
@@ -116,8 +118,8 @@ milestone_quests:
       - freedom_trader_title
       - supplier_network
   - id: empire_established
-    name: Trade Empire
-    description: Build a sustainable business empire
+    name: "อาณาจักรการค้า"
+    description: "สร้างอาณาจักรธุรกิจที่ยั่งยืน"
     required_level: 20
     skills_tested:
       - scaling_operations
@@ -128,39 +130,39 @@ milestone_quests:
       - legacy_founder
 achievements:
   - id: first_sale
-    name: First Trade
-    description: Make your first successful sale
+    name: "การค้าครั้งแรก"
+    description: "ทำการขายที่ประสบความสำเร็จครั้งแรก"
     xp_reward: 75
     badge_type: bronze
   - id: team_assembled
-    name: Fellowship Formed
-    description: Build a team of 5+ members
+    name: "ก่อตั้งสหายธรรม"
+    description: "สร้างทีมที่มีสมาชิก 5 คนขึ้นไป"
     xp_reward: 300
     badge_type: silver
   - id: profitable_quarter
-    name: Gold Flow
-    description: Achieve first profitable quarter
+    name: "กระแสทอง"
+    description: "บรรลุไตรมาสแรกที่มีกำไร"
     xp_reward: 550
     badge_type: gold
   - id: startup_legend
-    name: Legendary Founder
-    description: Complete all founder challenges
+    name: "ผู้ก่อตั้งในตำนาน"
+    description: "ผ่านความท้าทายของผู้ก่อตั้งทั้งหมด"
     xp_reward: 1100
     badge_type: platinum
 example_tasks:
   beginner:
     - id: market_research
       type: analysis
-      title: Wilderness Market Survey
-      description: Deeply understand target market needs
+      title: "สำรวจตลาดในแดนเถื่อน"
+      description: "เข้าใจความต้องการของตลาดเป้าหมายอย่างลึกซึ้ง"
       skills_improved:
         - market_analysis
         - business_intuition
       xp_reward: 65
     - id: prototype_creation
       type: creation
-      title: First Trading Post
-      description: Build minimum viable product
+      title: "เสาการค้าแรก"
+      description: "สร้างผลิตภัณฑ์ที่ใช้งานได้ขั้นต่ำ"
       skills_improved:
         - product_development
         - resource_alchemy
@@ -168,16 +170,16 @@ example_tasks:
   intermediate:
     - id: customer_interviews
       type: chat
-      title: Merchant Negotiations
-      description: Validate product-market fit
+      title: "การเจรจากับพ่อค้า"
+      description: "ตรวจสอบความเหมาะสมของผลิตภัณฑ์กับตลาด"
       skills_improved:
         - market_exploration
         - business_intuition
       xp_reward: 175
     - id: growth_planning
       type: creation
-      title: Empire Expansion Plans
-      description: Develop growth strategies
+      title: "แผนขยายอาณาจักร"
+      description: "พัฒนากลยุทธ์การเติบโต"
       skills_improved:
         - scaling_operations
         - risk_navigation
@@ -185,35 +187,35 @@ example_tasks:
   advanced:
     - id: series_a_prep
       type: creation
-      title: Capital Quest
-      description: Prepare for major fundraising
+      title: "ภารกิจทุน"
+      description: "เตรียมพร้อมสำหรับการระดมทุนครั้งใหญ่"
       skills_improved:
         - fundraising
         - resource_alchemy
       xp_reward: 370
     - id: market_expansion
       type: creation
-      title: Continental Conquest
-      description: Expand to new markets
+      title: "พิชิตทวีป"
+      description: "ขยายสู่ตลาดใหม่"
       skills_improved:
         - strategic_pivoting
         - market_exploration
       xp_reward: 410
 learning_objectives:
-  - Identify and validate business opportunities
-  - Build products customers love
-  - Master lean startup methodology
-  - Develop leadership skills
-  - Navigate uncertainty and risk
-  - Build strong company culture
-  - Secure funding and manage finances
-  - Scale businesses sustainably
+  - "ระบุและตรวจสอบโอกาสทางธุรกิจ"
+  - "สร้างผลิตภัณฑ์ที่ลูกค้ารัก"
+  - "เชี่ยวชาญวิธีการลีนสตาร์ทอัพ"
+  - "พัฒนาทักษะความเป็นผู้นำ"
+  - "ฝ่าฟันความไม่แน่นอนและความเสี่ยง"
+  - "สร้างวัฒนธรรมองค์กรที่แข็งแกร่ง"
+  - "ระดมทุนและจัดการการเงิน"
+  - "ขยายธุรกิจอย่างยั่งยืน"
 career_outcomes:
-  - Startup Founder/CEO
-  - Serial Entrepreneur
-  - Venture Partner
-  - Innovation Consultant
-  - Startup Advisor
-  - Corporate Entrepreneur
-  - Accelerator Director
-  - Angel Investor
+  - "ผู้ก่อตั้ง/CEO สตาร์ทอัพ"
+  - "ผู้ประกอบการหลายกิจการ"
+  - "หุ้นส่วนกองทุนเสี่ยงภัย"
+  - "ที่ปรึกษาด้านนวัตกรรม"
+  - "ที่ปรึกษาสตาร์ทอัพ"
+  - "ผู้ประกอบการในองค์กร"
+  - "ผู้อำนวยการโครงการเร่งธุรกิจ"
+  - "นักลงทุนเอ็นเจล"

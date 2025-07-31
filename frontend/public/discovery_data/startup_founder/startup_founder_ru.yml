@@ -4,13 +4,14 @@ path_id: startup_founder
 category: business
 difficulty_range: beginner_to_expert
 metadata:
-  title: Business Adventurer - Startup Founder
-  short_description: Pioneer new trade routes in the business wilderness
+  title: "Бизнес-Авантюрист - Основатель Стартапа"
+  short_description: "Прокладывайте новые торговые пути в бизнес-дикости"
   long_description: |
-    You are an explorer of the "New Business Continent," tasked with establishing 
-    new outposts in unknown business territories. In this wilderness full of opportunities 
-    and dangers, every decision could change your destiny, and loyal companions will 
-    face challenges alongside you.
+    Вы - исследователь "Нового Бизнес-Континента", перед вами стоит задача 
+    создать новые форпосты на неизведанных бизнес-территориях. В этой 
+    дикости, полной возможностей и опасностей, каждое решение может 
+    изменить вашу судьбу, а верные спутники будут преодолевать 
+    вызовы вместе с вами.
   estimated_hours: 60
   skill_focus:
     - business_intuition
@@ -22,20 +23,22 @@ metadata:
   target_language: ru
   generated_date: "2025-07-16T07:00:56.535Z"
 world_setting:
-  name: New Business Continent
+  name: "Новый Бизнес-Континент"
   description: |
-    The New Business Continent is a vast unexplored business wilderness where brave 
-    entrepreneurs venture to establish new trade routes and build empires. Success 
-    requires cunning, courage, and the ability to turn scarce resources into gold.
+    Новый Бизнес-Континент - это обширная неисследованная бизнес-дикость, 
+    где отважные предприниматели отправляются создавать новые торговые 
+    пути и строить империи. Успех требует хитрости, смелости и 
+    способности превращать скудные ресурсы в золото.
   atmosphere: adventurous_challenging
   visual_theme: frontier_exploration
 starting_scenario:
-  title: The Baron's Blockade
+  title: "Блокада Барона"
   description: |
-    Scout, your expedition partner, brings dire news: Baron Greed controls most 
-    resources and is crushing new merchants. Meanwhile, supplier Lily has backed 
-    out at a crucial moment. You must find creative ways to break through and 
-    establish your trading post.
+    Скаут, ваш товарищ по экспедиции, приносит ужасные новости: Барон 
+    Жадность контролирует большую часть ресурсов и давит новых торговцев. 
+    Тем временем, поставщица Лили отказалась в критический момент. 
+    Вы должны найти креативные способы прорваться и создать свой 
+    торговый пост.
   initial_tasks:
     - survey_market
     - find_resources
@@ -43,59 +46,59 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: market_analysis
-      name: Market Sensing
-      description: Detect business opportunities
+      name: "Чутьё Рынка"
+      description: "Обнаруживать бизнес-возможности"
       max_level: 10
       unlocks:
         - trend_spotting
         - competitor_analysis
     - id: resource_management
-      name: Resource Alchemy
-      description: Transform limited resources into value
+      name: "Алхимия Ресурсов"
+      description: "Превращать ограниченные ресурсы в ценность"
       max_level: 10
       unlocks:
         - bootstrap_mastery
         - efficiency_optimization
     - id: team_building
-      name: Ally Summoning
-      description: Build strong founding teams
+      name: "Призыв Союзников"
+      description: "Создавать сильные команды основателей"
       max_level: 10
       unlocks:
         - talent_attraction
         - culture_creation
     - id: product_development
-      name: Innovation Forge
-      description: Create market-winning products
+      name: "Кузница Инноваций"
+      description: "Создавать побеждающие на рынке продукты"
       max_level: 10
       unlocks:
         - mvp_design
         - iteration_mastery
   advanced_skills:
     - id: fundraising
-      name: Capital Magic
-      description: Master the art of raising funds
+      name: "Магия Капитала"
+      description: "Освоить искусство привлечения средств"
       max_level: 15
       requires:
         - market_analysis
         - resource_management
     - id: scaling_operations
-      name: Empire Building
-      description: Scale businesses efficiently
+      name: "Строительство Империи"
+      description: "Эффективно масштабировать бизнес"
       max_level: 15
       requires:
         - team_building
         - product_development
     - id: strategic_pivoting
-      name: Adaptation Arts
-      description: Pivot strategically when needed
+      name: "Искусство Адаптации"
+      description: "Стратегически менять направление при необходимости"
       max_level: 15
       requires:
         - market_analysis
         - product_development
 milestone_quests:
   - id: first_customer
-    name: First Gold
-    description: Acquire your first paying customer
+    name: "Первое Золото"
+    description: "Приобрести первого платящего клиента"
     required_level: 5
     skills_tested:
       - market_analysis
@@ -105,8 +108,8 @@ milestone_quests:
       - merchant_badge
       - market_credibility
   - id: baron_challenge
-    name: Breaking the Monopoly
-    description: Overcome Baron Greed's market control
+    name: "Сломить Монополию"
+    description: "Преодолеть контроль рынка Барона Жадность"
     required_level: 10
     skills_tested:
       - resource_management
@@ -116,8 +119,8 @@ milestone_quests:
       - freedom_trader_title
       - supplier_network
   - id: empire_established
-    name: Trade Empire
-    description: Build a sustainable business empire
+    name: "Торговая Империя"
+    description: "Построить устойчивую бизнес-империю"
     required_level: 20
     skills_tested:
       - scaling_operations
@@ -128,39 +131,39 @@ milestone_quests:
       - legacy_founder
 achievements:
   - id: first_sale
-    name: First Trade
-    description: Make your first successful sale
+    name: "Первая Сделка"
+    description: "Совершить первую успешную продажу"
     xp_reward: 75
     badge_type: bronze
   - id: team_assembled
-    name: Fellowship Formed
-    description: Build a team of 5+ members
+    name: "Братство Сформировано"
+    description: "Собрать команду из 5+ человек"
     xp_reward: 300
     badge_type: silver
   - id: profitable_quarter
-    name: Gold Flow
-    description: Achieve first profitable quarter
+    name: "Золотой Поток"
+    description: "Достичь первого прибыльного квартала"
     xp_reward: 550
     badge_type: gold
   - id: startup_legend
-    name: Legendary Founder
-    description: Complete all founder challenges
+    name: "Легендарный Основатель"
+    description: "Завершить все вызовы основателя"
     xp_reward: 1100
     badge_type: platinum
 example_tasks:
   beginner:
     - id: market_research
       type: analysis
-      title: Wilderness Market Survey
-      description: Deeply understand target market needs
+      title: "Исследование Дикого Рынка"
+      description: "Глубоко понять потребности целевого рынка"
       skills_improved:
         - market_analysis
         - business_intuition
       xp_reward: 65
     - id: prototype_creation
       type: creation
-      title: First Trading Post
-      description: Build minimum viable product
+      title: "Первый Торговый Пост"
+      description: "Создать минимально жизнеспособный продукт"
       skills_improved:
         - product_development
         - resource_alchemy
@@ -168,16 +171,16 @@ example_tasks:
   intermediate:
     - id: customer_interviews
       type: chat
-      title: Merchant Negotiations
-      description: Validate product-market fit
+      title: "Переговоры с Купцами"
+      description: "Проверить соответствие продукта рынку"
       skills_improved:
         - market_exploration
         - business_intuition
       xp_reward: 175
     - id: growth_planning
       type: creation
-      title: Empire Expansion Plans
-      description: Develop growth strategies
+      title: "Планы Расширения Империи"
+      description: "Разработать стратегии роста"
       skills_improved:
         - scaling_operations
         - risk_navigation
@@ -185,35 +188,35 @@ example_tasks:
   advanced:
     - id: series_a_prep
       type: creation
-      title: Capital Quest
-      description: Prepare for major fundraising
+      title: "Квест за Капиталом"
+      description: "Подготовиться к крупному привлечению средств"
       skills_improved:
         - fundraising
         - resource_alchemy
       xp_reward: 370
     - id: market_expansion
       type: creation
-      title: Continental Conquest
-      description: Expand to new markets
+      title: "Континентальное Завоевание"
+      description: "Расшириться на новые рынки"
       skills_improved:
         - strategic_pivoting
         - market_exploration
       xp_reward: 410
 learning_objectives:
-  - Identify and validate business opportunities
-  - Build products customers love
-  - Master lean startup methodology
-  - Develop leadership skills
-  - Navigate uncertainty and risk
-  - Build strong company culture
-  - Secure funding and manage finances
-  - Scale businesses sustainably
+  - "Определять и проверять бизнес-возможности"
+  - "Создавать продукты, которые любят клиенты"
+  - "Освоить методологию бережливого стартапа"
+  - "Развивать лидерские навыки"
+  - "Навигировать в неопределённости и рисках"
+  - "Строить сильную корпоративную культуру"
+  - "Привлекать финансирование и управлять финансами"
+  - "Масштабировать бизнес устойчиво"
 career_outcomes:
-  - Startup Founder/CEO
-  - Serial Entrepreneur
-  - Venture Partner
-  - Innovation Consultant
-  - Startup Advisor
-  - Corporate Entrepreneur
-  - Accelerator Director
-  - Angel Investor
+  - "Основатель/CEO Стартапа"
+  - "Серийный Предприниматель"
+  - "Венчурный Партнёр"
+  - "Консультант по Инновациям"
+  - "Советник Стартапов"
+  - "Корпоративный Предприниматель"
+  - "Директор Акселератора"
+  - "Бизнес-ангел"

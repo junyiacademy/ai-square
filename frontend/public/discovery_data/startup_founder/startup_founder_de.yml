@@ -4,13 +4,13 @@ path_id: startup_founder
 category: business
 difficulty_range: beginner_to_expert
 metadata:
-  title: Business Adventurer - Startup Founder
-  short_description: Pioneer new trade routes in the business wilderness
+  title: "Geschäftsabenteurer - Startup-Gründer"
+  short_description: "Erschließe neue Handelsrouten in der Geschäftswildnis"
   long_description: |
-    You are an explorer of the "New Business Continent," tasked with establishing 
-    new outposts in unknown business territories. In this wilderness full of opportunities 
-    and dangers, every decision could change your destiny, and loyal companions will 
-    face challenges alongside you.
+    Du bist ein Entdecker des "Neuen Geschäftskontinents", beauftragt mit der Errichtung 
+    neuer Außenposten in unbekannten Geschäftsgebieten. In dieser Wildnis voller 
+    Möglichkeiten und Gefahren kann jede Entscheidung dein Schicksal verändern, und 
+    treue Gefährten werden Herausforderungen an deiner Seite meistern.
   estimated_hours: 60
   skill_focus:
     - business_intuition
@@ -22,20 +22,21 @@ metadata:
   target_language: de
   generated_date: "2025-07-16T07:00:56.530Z"
 world_setting:
-  name: New Business Continent
+  name: "Neuer Geschäftskontinent"
   description: |
-    The New Business Continent is a vast unexplored business wilderness where brave 
-    entrepreneurs venture to establish new trade routes and build empires. Success 
-    requires cunning, courage, and the ability to turn scarce resources into gold.
+    Der Neue Geschäftskontinent ist eine weite, unerforschte Geschäftswildnis, in der 
+    mutige Unternehmer sich wagen, neue Handelsrouten zu etablieren und Imperien zu 
+    errichten. Erfolg erfordert List, Mut und die Fähigkeit, knappe Ressourcen in 
+    Gold zu verwandeln.
   atmosphere: adventurous_challenging
   visual_theme: frontier_exploration
 starting_scenario:
-  title: The Baron's Blockade
+  title: "Die Blockade des Barons"
   description: |
-    Scout, your expedition partner, brings dire news: Baron Greed controls most 
-    resources and is crushing new merchants. Meanwhile, supplier Lily has backed 
-    out at a crucial moment. You must find creative ways to break through and 
-    establish your trading post.
+    Scout, dein Expeditionspartner, bringt schlechte Nachrichten: Baron Gier kontrolliert 
+    die meisten Ressourcen und zerdrückt neue Händler. Gleichzeitig hat sich Lieferantin 
+    Lily in einem kritischen Moment zurückgezogen. Du musst kreative Wege finden, um 
+    durchzubrechen und deinen Handelsposten zu errichten.
   initial_tasks:
     - survey_market
     - find_resources
@@ -43,59 +44,59 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: market_analysis
-      name: Market Sensing
-      description: Detect business opportunities
+      name: "Marktgespür"
+      description: "Geschäftsmöglichkeiten aufspüren"
       max_level: 10
       unlocks:
         - trend_spotting
         - competitor_analysis
     - id: resource_management
-      name: Resource Alchemy
-      description: Transform limited resources into value
+      name: "Ressourcen-Alchemie"
+      description: "Begrenzte Ressourcen in Wert verwandeln"
       max_level: 10
       unlocks:
         - bootstrap_mastery
         - efficiency_optimization
     - id: team_building
-      name: Ally Summoning
-      description: Build strong founding teams
+      name: "Verbündeten-Beschwörung"
+      description: "Starke Gründerteams aufbauen"
       max_level: 10
       unlocks:
         - talent_attraction
         - culture_creation
     - id: product_development
-      name: Innovation Forge
-      description: Create market-winning products
+      name: "Innovationsschmiede"
+      description: "Marktgewinnende Produkte erschaffen"
       max_level: 10
       unlocks:
         - mvp_design
         - iteration_mastery
   advanced_skills:
     - id: fundraising
-      name: Capital Magic
-      description: Master the art of raising funds
+      name: "Kapitalmagie"
+      description: "Die Kunst der Kapitalbeschaffung meistern"
       max_level: 15
       requires:
         - market_analysis
         - resource_management
     - id: scaling_operations
-      name: Empire Building
-      description: Scale businesses efficiently
+      name: "Imperiumsaufbau"
+      description: "Geschäfte effizient skalieren"
       max_level: 15
       requires:
         - team_building
         - product_development
     - id: strategic_pivoting
-      name: Adaptation Arts
-      description: Pivot strategically when needed
+      name: "Anpassungskünste"
+      description: "Strategisch schwenken wenn nötig"
       max_level: 15
       requires:
         - market_analysis
         - product_development
 milestone_quests:
   - id: first_customer
-    name: First Gold
-    description: Acquire your first paying customer
+    name: "Erstes Gold"
+    description: "Ersten zahlenden Kunden gewinnen"
     required_level: 5
     skills_tested:
       - market_analysis
@@ -105,8 +106,8 @@ milestone_quests:
       - merchant_badge
       - market_credibility
   - id: baron_challenge
-    name: Breaking the Monopoly
-    description: Overcome Baron Greed's market control
+    name: "Das Monopol brechen"
+    description: "Baron Giers Marktkontrolle überwinden"
     required_level: 10
     skills_tested:
       - resource_management
@@ -116,8 +117,8 @@ milestone_quests:
       - freedom_trader_title
       - supplier_network
   - id: empire_established
-    name: Trade Empire
-    description: Build a sustainable business empire
+    name: "Handelsimperium"
+    description: "Ein nachhaltiges Geschäftsimperium aufbauen"
     required_level: 20
     skills_tested:
       - scaling_operations
@@ -128,39 +129,39 @@ milestone_quests:
       - legacy_founder
 achievements:
   - id: first_sale
-    name: First Trade
-    description: Make your first successful sale
+    name: "Erster Handel"
+    description: "Ersten erfolgreichen Verkauf tätigen"
     xp_reward: 75
     badge_type: bronze
   - id: team_assembled
-    name: Fellowship Formed
-    description: Build a team of 5+ members
+    name: "Gefährtenschaft gebildet"
+    description: "Ein Team von 5+ Mitgliedern aufbauen"
     xp_reward: 300
     badge_type: silver
   - id: profitable_quarter
-    name: Gold Flow
-    description: Achieve first profitable quarter
+    name: "Goldfluss"
+    description: "Erstes profitables Quartal erreichen"
     xp_reward: 550
     badge_type: gold
   - id: startup_legend
-    name: Legendary Founder
-    description: Complete all founder challenges
+    name: "Legendärer Gründer"
+    description: "Alle Gründer-Herausforderungen abschließen"
     xp_reward: 1100
     badge_type: platinum
 example_tasks:
   beginner:
     - id: market_research
       type: analysis
-      title: Wilderness Market Survey
-      description: Deeply understand target market needs
+      title: "Wildnis-Markterkundung"
+      description: "Zielmarktbedürfnisse tiefgreifend verstehen"
       skills_improved:
         - market_analysis
         - business_intuition
       xp_reward: 65
     - id: prototype_creation
       type: creation
-      title: First Trading Post
-      description: Build minimum viable product
+      title: "Erster Handelsposten"
+      description: "Minimal lebensfähiges Produkt erstellen"
       skills_improved:
         - product_development
         - resource_alchemy
@@ -168,16 +169,16 @@ example_tasks:
   intermediate:
     - id: customer_interviews
       type: chat
-      title: Merchant Negotiations
-      description: Validate product-market fit
+      title: "Händlerverhandlungen"
+      description: "Produkt-Markt-Passung validieren"
       skills_improved:
         - market_exploration
         - business_intuition
       xp_reward: 175
     - id: growth_planning
       type: creation
-      title: Empire Expansion Plans
-      description: Develop growth strategies
+      title: "Imperiums-Expansionspläne"
+      description: "Wachstumsstrategien entwickeln"
       skills_improved:
         - scaling_operations
         - risk_navigation
@@ -185,35 +186,35 @@ example_tasks:
   advanced:
     - id: series_a_prep
       type: creation
-      title: Capital Quest
-      description: Prepare for major fundraising
+      title: "Kapital-Quest"
+      description: "Auf große Kapitalbeschaffung vorbereiten"
       skills_improved:
         - fundraising
         - resource_alchemy
       xp_reward: 370
     - id: market_expansion
       type: creation
-      title: Continental Conquest
-      description: Expand to new markets
+      title: "Kontinentale Eroberung"
+      description: "In neue Märkte expandieren"
       skills_improved:
         - strategic_pivoting
         - market_exploration
       xp_reward: 410
 learning_objectives:
-  - Identify and validate business opportunities
-  - Build products customers love
-  - Master lean startup methodology
-  - Develop leadership skills
-  - Navigate uncertainty and risk
-  - Build strong company culture
-  - Secure funding and manage finances
-  - Scale businesses sustainably
+  - "Geschäftsmöglichkeiten identifizieren und validieren"
+  - "Produkte bauen, die Kunden lieben"
+  - "Lean-Startup-Methodik meistern"
+  - "Führungsfähigkeiten entwickeln"
+  - "Unsicherheit und Risiko navigieren"
+  - "Starke Unternehmenskultur aufbauen"
+  - "Finanzierung sichern und Finanzen verwalten"
+  - "Geschäfte nachhaltig skalieren"
 career_outcomes:
-  - Startup Founder/CEO
-  - Serial Entrepreneur
-  - Venture Partner
-  - Innovation Consultant
-  - Startup Advisor
-  - Corporate Entrepreneur
-  - Accelerator Director
-  - Angel Investor
+  - "Startup-Gründer/CEO"
+  - "Serienunternehmer"
+  - "Venture Partner"
+  - "Innovationsberater"
+  - "Startup-Berater"
+  - "Corporate Entrepreneur"
+  - "Accelerator-Direktor"
+  - "Business Angel"

@@ -4,13 +4,13 @@ path_id: startup_founder
 category: business
 difficulty_range: beginner_to_expert
 metadata:
-  title: Business Adventurer - Startup Founder
-  short_description: Pioneer new trade routes in the business wilderness
+  title: "비즈니스 모험가 - 스타트업 창업자"
+  short_description: "비즈니스 황무지에서 새로운 무역로를 개척하라"
   long_description: |
-    You are an explorer of the "New Business Continent," tasked with establishing 
-    new outposts in unknown business territories. In this wilderness full of opportunities 
-    and dangers, every decision could change your destiny, and loyal companions will 
-    face challenges alongside you.
+    당신은 "새로운 비즈니스 대륙"의 탐험가로서, 미지의 비즈니스 영토에 새로운 
+    전초기지를 건설하는 임무를 맡았습니다. 기회와 위험이 가득한 이 황무지에서 
+    모든 결정은 당신의 운명을 바꿀 수 있으며, 충성스러운 동료들이 함께 
+    도전에 맞서게 될 것입니다.
   estimated_hours: 60
   skill_focus:
     - business_intuition
@@ -22,20 +22,21 @@ metadata:
   target_language: ko
   generated_date: "2025-07-16T07:00:56.534Z"
 world_setting:
-  name: New Business Continent
+  name: "새로운 비즈니스 대륙"
   description: |
-    The New Business Continent is a vast unexplored business wilderness where brave 
-    entrepreneurs venture to establish new trade routes and build empires. Success 
-    requires cunning, courage, and the ability to turn scarce resources into gold.
+    새로운 비즈니스 대륙은 용감한 기업가들이 새로운 무역로를 개척하고 
+    제국을 건설하기 위해 모험을 떠나는 광활한 미개척 비즈니스 황무지입니다. 
+    성공은 기지, 용기, 그리고 희소한 자원을 황금으로 바꾸는 능력을 
+    요구합니다.
   atmosphere: adventurous_challenging
   visual_theme: frontier_exploration
 starting_scenario:
-  title: The Baron's Blockade
+  title: "남작의 봉쇄"
   description: |
-    Scout, your expedition partner, brings dire news: Baron Greed controls most 
-    resources and is crushing new merchants. Meanwhile, supplier Lily has backed 
-    out at a crucial moment. You must find creative ways to break through and 
-    establish your trading post.
+    당신의 탐험 파트너인 스카우트가 비극적인 소식을 가져옵니다: 탐욕 남작이 
+    대부분의 자원을 통제하며 새로운 상인들을 짓밟고 있습니다. 한편, 공급업자 
+    릴리는 결정적인 순간에 발을 빼버렸습니다. 당신은 창의적인 방법을 찾아 
+    돌파하고 무역 전초기지를 설립해야 합니다.
   initial_tasks:
     - survey_market
     - find_resources
@@ -43,59 +44,59 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: market_analysis
-      name: Market Sensing
-      description: Detect business opportunities
+      name: "시장 감각"
+      description: "비즈니스 기회를 감지하라"
       max_level: 10
       unlocks:
         - trend_spotting
         - competitor_analysis
     - id: resource_management
-      name: Resource Alchemy
-      description: Transform limited resources into value
+      name: "자원 연금술"
+      description: "제한된 자원을 가치로 변환하라"
       max_level: 10
       unlocks:
         - bootstrap_mastery
         - efficiency_optimization
     - id: team_building
-      name: Ally Summoning
-      description: Build strong founding teams
+      name: "동맹 소환"
+      description: "강력한 창업 팀을 구축하라"
       max_level: 10
       unlocks:
         - talent_attraction
         - culture_creation
     - id: product_development
-      name: Innovation Forge
-      description: Create market-winning products
+      name: "혁신의 대장간"
+      description: "시장을 장악할 제품을 만들어라"
       max_level: 10
       unlocks:
         - mvp_design
         - iteration_mastery
   advanced_skills:
     - id: fundraising
-      name: Capital Magic
-      description: Master the art of raising funds
+      name: "자본 마법"
+      description: "자금 조달의 기술을 마스터하라"
       max_level: 15
       requires:
         - market_analysis
         - resource_management
     - id: scaling_operations
-      name: Empire Building
-      description: Scale businesses efficiently
+      name: "제국 건설"
+      description: "비즈니스를 효율적으로 확장하라"
       max_level: 15
       requires:
         - team_building
         - product_development
     - id: strategic_pivoting
-      name: Adaptation Arts
-      description: Pivot strategically when needed
+      name: "적응의 예술"
+      description: "필요할 때 전략적으로 피벗하라"
       max_level: 15
       requires:
         - market_analysis
         - product_development
 milestone_quests:
   - id: first_customer
-    name: First Gold
-    description: Acquire your first paying customer
+    name: "첫 번째 황금"
+    description: "첫 유료 고객을 확보하라"
     required_level: 5
     skills_tested:
       - market_analysis
@@ -105,8 +106,8 @@ milestone_quests:
       - merchant_badge
       - market_credibility
   - id: baron_challenge
-    name: Breaking the Monopoly
-    description: Overcome Baron Greed's market control
+    name: "독점을 깨뜨리다"
+    description: "탐욕 남작의 시장 통제를 극복하라"
     required_level: 10
     skills_tested:
       - resource_management
@@ -116,8 +117,8 @@ milestone_quests:
       - freedom_trader_title
       - supplier_network
   - id: empire_established
-    name: Trade Empire
-    description: Build a sustainable business empire
+    name: "무역 제국"
+    description: "지속가능한 비즈니스 제국을 건설하라"
     required_level: 20
     skills_tested:
       - scaling_operations
@@ -128,39 +129,39 @@ milestone_quests:
       - legacy_founder
 achievements:
   - id: first_sale
-    name: First Trade
-    description: Make your first successful sale
+    name: "첫 거래"
+    description: "첫 성공적인 판매를 달성하라"
     xp_reward: 75
     badge_type: bronze
   - id: team_assembled
-    name: Fellowship Formed
-    description: Build a team of 5+ members
+    name: "동료 조합 완성"
+    description: "5명 이상의 팀을 구성하라"
     xp_reward: 300
     badge_type: silver
   - id: profitable_quarter
-    name: Gold Flow
-    description: Achieve first profitable quarter
+    name: "황금 흐름"
+    description: "첫 흑자 분기를 달성하라"
     xp_reward: 550
     badge_type: gold
   - id: startup_legend
-    name: Legendary Founder
-    description: Complete all founder challenges
+    name: "전설의 창업자"
+    description: "모든 창업자 도전을 완료하라"
     xp_reward: 1100
     badge_type: platinum
 example_tasks:
   beginner:
     - id: market_research
       type: analysis
-      title: Wilderness Market Survey
-      description: Deeply understand target market needs
+      title: "황무지 시장 조사"
+      description: "목표 시장의 니즈를 깊이 이해하라"
       skills_improved:
         - market_analysis
         - business_intuition
       xp_reward: 65
     - id: prototype_creation
       type: creation
-      title: First Trading Post
-      description: Build minimum viable product
+      title: "첫 무역 전초기지"
+      description: "최소 기능 제품을 만들어라"
       skills_improved:
         - product_development
         - resource_alchemy
@@ -168,16 +169,16 @@ example_tasks:
   intermediate:
     - id: customer_interviews
       type: chat
-      title: Merchant Negotiations
-      description: Validate product-market fit
+      title: "상인 협상"
+      description: "제품-시장 적합성을 검증하라"
       skills_improved:
         - market_exploration
         - business_intuition
       xp_reward: 175
     - id: growth_planning
       type: creation
-      title: Empire Expansion Plans
-      description: Develop growth strategies
+      title: "제국 확장 계획"
+      description: "성장 전략을 개발하라"
       skills_improved:
         - scaling_operations
         - risk_navigation
@@ -185,35 +186,35 @@ example_tasks:
   advanced:
     - id: series_a_prep
       type: creation
-      title: Capital Quest
-      description: Prepare for major fundraising
+      title: "자본 탐사"
+      description: "대규모 자금 조달을 준비하라"
       skills_improved:
         - fundraising
         - resource_alchemy
       xp_reward: 370
     - id: market_expansion
       type: creation
-      title: Continental Conquest
-      description: Expand to new markets
+      title: "대륙 정복"
+      description: "새로운 시장으로 확장하라"
       skills_improved:
         - strategic_pivoting
         - market_exploration
       xp_reward: 410
 learning_objectives:
-  - Identify and validate business opportunities
-  - Build products customers love
-  - Master lean startup methodology
-  - Develop leadership skills
-  - Navigate uncertainty and risk
-  - Build strong company culture
-  - Secure funding and manage finances
-  - Scale businesses sustainably
+  - "비즈니스 기회를 파악하고 검증하기"
+  - "고객이 사랑하는 제품 만들기"
+  - "린 스타트업 방법론 마스터하기"
+  - "리더십 능력 개발하기"
+  - "불확실성과 리스크 헤쳐나가기"
+  - "강력한 기업 문화 구축하기"
+  - "자금 확보하고 재정 관리하기"
+  - "비즈니스를 지속가능하게 확장하기"
 career_outcomes:
-  - Startup Founder/CEO
-  - Serial Entrepreneur
-  - Venture Partner
-  - Innovation Consultant
-  - Startup Advisor
-  - Corporate Entrepreneur
-  - Accelerator Director
-  - Angel Investor
+  - "스타트업 창업자/CEO"
+  - "연속 기업가"
+  - "벤처 파트너"
+  - "혁신 컨설턴트"
+  - "스타트업 어드바이저"
+  - "기업 내 기업가"
+  - "액셀러레이터 디렉터"
+  - "엔젤 투자자"

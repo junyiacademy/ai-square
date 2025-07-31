@@ -4,13 +4,14 @@ path_id: game_designer
 category: arts
 difficulty_range: beginner_to_expert
 metadata:
-  title: Dream Architect - Game Designer
-  short_description: Create infinite possibilities in virtual worlds
+  title: "สถาปนิกแห่งความฝัน - นักออกแบบเกม"
+  short_description: "สร้างความเป็นไปได้ไม่สิ้นสุดในโลกเสมือน"
   long_description: |
-    You are a talented designer at the "Dream Architecture Academy," possessing the 
-    magic to transform imagination into interactive experiences. In this academy filled 
-    with creativity and fun, every game mechanic is a door to new worlds, and your 
-    mission is to create immersive digital dreams that captivate players.
+    คุณคือนักออกแบบผู้มีพรสวรรค์ใน "สถาบันสถาปัตยกรรมแห่งความฝัน" 
+    ผู้ครอบครองเวทมนตร์ในการเปลี่ยนจินตนาการให้เป็นประสบการณ์แบบโต้ตอบ 
+    ในสถาบันที่เต็มไปด้วยความคิดสร้างสรรค์และความสนุกนี้ ทุกกลไกเกม
+    คือประตูสู่โลกใหม่ และภารกิจของคุณคือการสร้างความฝันดิจิทัล
+    ที่ดึงดึงใจที่ทำให้ผู้เล่นหลงใหล
   estimated_hours: 60
   skill_focus:
     - world_building
@@ -22,19 +23,22 @@ metadata:
   target_language: th
   generated_date: "2025-07-16T07:00:56.518Z"
 world_setting:
-  name: Dream Architecture Academy
+  name: "สถาบันสถาปัตยกรรมแห่งความฝัน"
   description: |
-    The Dream Architecture Academy is a magical institution dedicated to training game 
-    designers. Here, students learn to balance creativity with technical constraints, 
-    fun with challenge, and create experiences that resonate with players worldwide.
+    สถาบันสถาปัตยกรรมแห่งความฝันคือสถาบันเวทมนตร์ที่อุทิศตน
+    เพื่อฝึกอบรมนักออกแบบเกม ที่นี่นักเรียนเรียนรู้การสมดุล
+    ระหว่างความคิดสร้างสรรค์กับข้อจำกัดทางเทคนิค ความสนุกกับความท้าทาย
+    และสร้างประสบการณ์ที่โดนใจผู้เล่นทั่วโลก
   atmosphere: playful_creative
   visual_theme: fantasy_academy
 starting_scenario:
-  title: The Grind Invasion
+  title: "การรุกรานของความน่าเบื่อ"
   description: |
-    Creative God Dream welcomes you with troubling news: Grind, the King of Boredom, 
-    is turning all games into mindless number farms, pursuing efficiency over fun. 
-    You must use creativity and joy to combat the mechanization of gaming experiences.
+    เทพแห่งความคิดสร้างสรรค์ ดรีม ต้อนรับคุณพร้อมข่าวร้าย: 
+    กรินด์ ราชาแห่งความน่าเบื่อ กำลังเปลี่ยนเกมทั้งหมดให้กลายเป็น
+    ฟาร์มตัวเลขไร้สาระ ไล่ตามประสิทธิภาพมากกว่าความสนุก
+    คุณต้องใช้ความคิดสร้างสรรค์และความสุขเพื่อต่อสู้กับการทำให้
+    ประสบการณ์การเล่นเกมกลายเป็นเครื่องจักร
   initial_tasks:
     - understand_game_design
     - learn_player_psychology
@@ -42,59 +46,59 @@ starting_scenario:
 skill_tree:
   core_skills:
     - id: game_mechanics
-      name: Mechanics Mastery
-      description: Design engaging game mechanics
+      name: "ความชำนาญกลไก"
+      description: "ออกแบบกลไกเกมที่ดึงดูดใจ"
       max_level: 10
       unlocks:
         - combat_systems
         - puzzle_design
     - id: level_design
-      name: World Crafting
-      description: Create immersive game levels
+      name: "งานฝีมือโลก"
+      description: "สร้างด่านเกมที่ดึงดื่ม"
       max_level: 10
       unlocks:
         - environment_storytelling
         - difficulty_curves
     - id: narrative_design
-      name: Story Architecture
-      description: Weave compelling game narratives
+      name: "สถาปัตยกรรมเรื่องราว"
+      description: "ถักทอเรื่องเล่าเกมที่น่าสนใจ"
       max_level: 10
       unlocks:
         - character_development
         - branching_stories
     - id: player_experience
-      name: Experience Engineering
-      description: Optimize player enjoyment
+      name: "วิศวกรรมประสบการณ์"
+      description: "ปรับแต่งความสนุกสนานของผู้เล่น"
       max_level: 10
       unlocks:
         - flow_states
         - reward_systems
   advanced_skills:
     - id: systems_design
-      name: System Symphony
-      description: Create complex interconnected systems
+      name: "ซิมโฟนีระบบ"
+      description: "สร้างระบบที่ซับซ้อนเชื่อมโยงกัน"
       max_level: 15
       requires:
         - game_mechanics
         - level_design
     - id: monetization_design
-      name: Ethical Economics
-      description: Design fair monetization systems
+      name: "เศรษฐศาสตร์จริยธรรม"
+      description: "ออกแบบระบบการหารายได้ที่ยุติธรรม"
       max_level: 15
       requires:
         - player_experience
         - game_mechanics
     - id: multiplayer_design
-      name: Social Architecture
-      description: Design engaging multiplayer experiences
+      name: "สถาปัตยกรรมสังคม"
+      description: "ออกแบบประสบการณ์เล่นหลายคนที่ดึงดูดใจ"
       max_level: 15
       requires:
         - systems_design
         - player_experience
 milestone_quests:
   - id: first_game
-    name: Prototype Pioneer
-    description: Create your first playable game
+    name: "ผู้บุกเบิกต้นแบบ"
+    description: "สร้างเกมที่เล่นได้เกมแรกของคุณ"
     required_level: 5
     skills_tested:
       - game_mechanics
@@ -104,8 +108,8 @@ milestone_quests:
       - game_creator_badge
       - player_feedback
   - id: grind_battle
-    name: Fun vs Formula
-    description: Create a game that defeats Grind's boring mechanics
+    name: "ความสนุก vs สูตรสำเร็จ"
+    description: "สร้างเกมที่เอาชนะกลไกน่าเบื่อของกรินด์"
     required_level: 10
     skills_tested:
       - narrative_design
@@ -115,8 +119,8 @@ milestone_quests:
       - fun_guardian_title
       - creative_freedom
   - id: dream_masterpiece
-    name: Digital Dream
-    description: Create a game played by millions
+    name: "ความฝันดิจิทัล"
+    description: "สร้างเกมที่มีคนเล่นนับล้าน"
     required_level: 20
     skills_tested:
       - systems_design
@@ -127,39 +131,39 @@ milestone_quests:
       - industry_legend
 achievements:
   - id: first_mechanic
-    name: Mechanics Birth
-    description: Design your first game mechanic
+    name: "กำเนิดกลไก"
+    description: "ออกแบบกลไกเกมแรกของคุณ"
     xp_reward: 80
     badge_type: bronze
   - id: playtester_favorite
-    name: Player's Choice
-    description: Receive positive feedback from 100 playtesters
+    name: "ตัวเลือกของผู้เล่น"
+    description: "ได้รับข้อเสนอแนะเชิงบวกจากผู้ทดสอบเกม 100 คน"
     xp_reward: 300
     badge_type: silver
   - id: innovation_award
-    name: Innovation Master
-    description: Create a truly original game concept
+    name: "ปรมาจารย์นวัตกรรม"
+    description: "สร้างแนวคิดเกมที่แท้จริงแปลกใหม่"
     xp_reward: 500
     badge_type: gold
   - id: design_legend
-    name: Legendary Designer
-    description: Complete all design challenges
+    name: "นักออกแบบในตำนาน"
+    description: "ผ่านความท้าทายการออกแบบทั้งหมด"
     xp_reward: 1000
     badge_type: platinum
 example_tasks:
   beginner:
     - id: world_building
       type: creation
-      title: Dream World Construction
-      description: Design game world and backstory
+      title: "ก่อสร้างโลกแห่งความฝัน"
+      description: "ออกแบบโลกเกมและเรื่องราวเบื้องหลัง"
       skills_improved:
         - world_building
         - narrative_design
       xp_reward: 70
     - id: core_loop
       type: creation
-      title: Fun Formula
-      description: Design the core game loop
+      title: "สูตรความสนุก"
+      description: "ออกแบบลูปเกมหลัก"
       skills_improved:
         - game_mechanics
         - fun_summoning
@@ -167,16 +171,16 @@ example_tasks:
   intermediate:
     - id: mechanics_design
       type: creation
-      title: Joy Mechanics Forge
-      description: Design core game mechanics
+      title: "โรงตีเหล็กกลไกแห่งความสุข"
+      description: "ออกแบบกลไกเกมหลัก"
       skills_improved:
         - mechanics_design
         - player_experience
       xp_reward: 180
     - id: level_creation
       type: creation
-      title: Experience Sculpting
-      description: Create engaging game levels
+      title: "ปั้นประสบการณ์"
+      description: "สร้างด่านเกมที่ดึงดูดใจ"
       skills_improved:
         - level_design
         - emotional_manipulation
@@ -184,35 +188,35 @@ example_tasks:
   advanced:
     - id: systems_integration
       type: creation
-      title: System Orchestra
-      description: Design interconnected game systems
+      title: "วงดุริยางค์ระบบ"
+      description: "ออกแบบระบบเกมที่เชื่อมโยงกัน"
       skills_improved:
         - systems_design
         - game_mechanics
       xp_reward: 380
     - id: multiplayer_experience
       type: creation
-      title: Social Playground
-      description: Design multiplayer features
+      title: "สนามเด็กเล่นสังคม"
+      description: "ออกแบบฟีเจอร์เล่นหลายคน"
       skills_improved:
         - multiplayer_design
         - player_experience
       xp_reward: 420
 learning_objectives:
-  - Master game design fundamentals
-  - Create engaging game mechanics
-  - Design immersive game worlds
-  - Understand player psychology
-  - Balance challenge and fun
-  - Develop unique gameplay experiences
-  - Implement fair monetization
-  - Build games that bring joy
+  - "เชี่ยวชาญพื้นฐานการออกแบบเกม"
+  - "สร้างกลไกเกมที่ดึงดูดใจ"
+  - "ออกแบบโลกเกมที่ดึงดื่ม"
+  - "เข้าใจจิตวิทยาผู้เล่น"
+  - "สมดุลความท้าทายกับความสนุก"
+  - "พัฒนาประสบการณ์การเล่นที่ไม่เหมือนใคร"
+  - "ใช้ระบบการหารายได้ที่ยุติธรรม"
+  - "สร้างเกมที่นำความสุขมาสู่ผู้เล่น"
 career_outcomes:
-  - Game Designer
-  - Level Designer
-  - Systems Designer
-  - Narrative Designer
-  - Game Director
-  - Design Lead
-  - Creative Director
-  - Studio Founder
+  - "นักออกแบบเกม"
+  - "นักออกแบบด่าน"
+  - "นักออกแบบระบบ"
+  - "นักออกแบบเรื่องราว"
+  - "ผู้กำกับเกม"
+  - "หัวหน้าทีมออกแบบ"
+  - "ผู้อำนวยการสร้างสรรค์"
+  - "ผู้ก่อตั้งสตูดิโอ"
