@@ -3,7 +3,7 @@
  * 使用 TDD 方式驗證頭部導航欄的登入狀態顯示功能
  */
 
-import { render, screen } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Header } from './Header'
 import { useTheme } from '../../contexts/ThemeContext'
@@ -25,10 +25,56 @@ jest.mock('../../contexts/ThemeContext', () => ({
   })),
 }))
 
+// Mock AuthContext
+const mockLogout = jest.fn()
+let mockAuthState = {
+  user: null as any,
+  isLoggedIn: false,
+  isLoading: false,
+  tokenExpiringSoon: false,
+  login: jest.fn(),
+  logout: mockLogout,
+  checkAuth: jest.fn(),
+  refreshToken: jest.fn(),
+}
+
+jest.mock('@/contexts/AuthContext', () => ({
+  useAuth: () => mockAuthState,
+  AuthProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+}))
+
+// Mock LanguageSelector
+jest.mock('@/components/ui/LanguageSelector', () => ({
+  LanguageSelector: ({ className }: { className?: string }) => (
+    <select 
+      aria-label="選擇語言" 
+      className={className}
+      data-testid="language-selector"
+    >
+      <option value="en">🇺🇸 English</option>
+      <option value="zhTW">🇹🇼 繁體中文</option>
+    </select>
+  )
+}))
+
 // Mock react-i18next
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({
-    t: (key: string) => key,
+    t: (key: string) => {
+      // Provide minimal translations needed for tests
+      const translations: Record<string, string> = {
+        'theme': 'theme',
+        'dashboard': 'dashboard',
+        'assessment': 'assessment',
+        'pbl': 'pbl',
+        'discovery': 'discovery',
+        'more': 'more',
+        'relations': 'relations',
+        'ksa': 'ksa',
+        'history': 'history',
+      }
+      return translations[key] || key
+    },
     i18n: { 
       language: 'en',
       changeLanguage: jest.fn()
@@ -53,6 +99,12 @@ describe('Header 組件測試', () => {
     mockLocalStorage.getItem.mockClear()
     mockLocalStorage.setItem.mockClear()
     mockLocalStorage.removeItem.mockClear()
+    
+    // Reset auth state to default (logged out)
+    mockAuthState.user = null
+    mockAuthState.isLoggedIn = false
+    mockAuthState.isLoading = false
+    mockAuthState.tokenExpiringSoon = false
   })
 
   describe('🔴 紅燈測試 - 基本渲染', () => {
@@ -80,11 +132,7 @@ describe('Header 組件測試', () => {
 
   describe('🟡 未登入狀態測試', () => {
     beforeEach(() => {
-      mockLocalStorage.getItem.mockImplementation((key) => {
-        if (key === 'isLoggedIn') return null
-        if (key === 'user') return null
-        return null
-      })
+      // Auth state is already reset to logged out in main beforeEach
     })
 
     it('應該顯示登入按鈕當用戶未登入', () => {
@@ -126,23 +174,23 @@ describe('Header 組件測試', () => {
     }
 
     beforeEach(() => {
-      mockLocalStorage.getItem.mockImplementation((key) => {
-        if (key === 'isLoggedIn') return 'true'
-        if (key === 'user') return JSON.stringify(mockUser)
-        return null
-      })
+      // Set up logged in auth state
+      mockAuthState.user = mockUser
+      mockAuthState.isLoggedIn = true
     })
 
     it('應該顯示用戶 email 當已登入', () => {
       render(<Header />)
 
-      expect(screen.getAllByText('student@example.com')).toHaveLength(2) // 桌面版和移動版
+      // Email appears in the dropdown when user info is shown
+      expect(screen.getByText('student@example.com')).toBeInTheDocument()
     })
 
     it('應該顯示用戶角色當已登入', () => {
       render(<Header />)
 
-      expect(screen.getAllByText('userRole.student')).toHaveLength(2) // 桌面版和移動版
+      // Role appears in the dropdown
+      expect(screen.getByText('userRole.student')).toBeInTheDocument()
     })
 
     it('應該顯示登出按鈕當已登入', () => {
@@ -165,16 +213,13 @@ describe('Header 組件測試', () => {
       const logoutButton = screen.getByRole('button', { name: 'signOut' })
       await user.click(logoutButton)
 
-      // 檢查 localStorage 被清除
-      expect(mockLocalStorage.removeItem).toHaveBeenCalledWith('isLoggedIn')
-      expect(mockLocalStorage.removeItem).toHaveBeenCalledWith('user')
+      // 檢查 logout 函數被呼叫
+      expect(mockLogout).toHaveBeenCalled()
     })
   })
 
   describe('🎨 UI 樣式測試', () => {
     it('應該有響應式設計類別', () => {
-      mockLocalStorage.getItem.mockReturnValue(null)
-      
       render(<Header />)
 
       const header = screen.getByRole('banner')
@@ -182,8 +227,6 @@ describe('Header 組件測試', () => {
     })
 
     it('登入按鈕應該有正確的樣式', () => {
-      mockLocalStorage.getItem.mockReturnValue(null)
-      
       render(<Header />)
 
       const loginButton = screen.getByRole('button', { name: 'signIn' })
@@ -198,27 +241,23 @@ describe('Header 組件測試', () => {
         name: 'Student User'
       }
 
-      mockLocalStorage.getItem.mockImplementation((key) => {
-        if (key === 'isLoggedIn') return 'true'
-        if (key === 'user') return JSON.stringify(mockUser)
-        return null
-      })
+      // Set up logged in auth state
+      mockAuthState.user = mockUser
+      mockAuthState.isLoggedIn = true
       
       render(<Header />)
 
-      const userInfoElements = screen.getAllByText('student@example.com')
-      expect(userInfoElements).toHaveLength(2) // 桌面版和移動版
+      const userInfoElement = screen.getByText('student@example.com')
+      expect(userInfoElement).toBeInTheDocument()
       
       // 檢查用戶資訊區域的存在即可，因為樣式類別可能會變化
-      const desktopUserInfo = userInfoElements[0] // 桌面版是第一個
-      expect(desktopUserInfo).toBeInTheDocument()
+      expect(userInfoElement).toBeInTheDocument()
     })
   })
 
   describe('🔄 狀態變化測試', () => {
     it('應該在登入狀態變化時重新渲染', () => {
       // 初始未登入狀態
-      mockLocalStorage.getItem.mockReturnValue(null)
       const { unmount } = render(<Header />)
 
       expect(screen.getByRole('button', { name: 'signIn' })).toBeInTheDocument()
@@ -234,24 +273,20 @@ describe('Header 組件測試', () => {
         name: 'Teacher User'
       }
 
-      mockLocalStorage.getItem.mockImplementation((key) => {
-        if (key === 'isLoggedIn') return 'true'
-        if (key === 'user') return JSON.stringify(mockUser)
-        return null
-      })
+      // Set up logged in auth state
+      mockAuthState.user = mockUser
+      mockAuthState.isLoggedIn = true
 
       // 重新渲染組件
       render(<Header />)
 
-      expect(screen.getAllByText('teacher@example.com')).toHaveLength(2) // 桌面版和移動版
+      expect(screen.getByText('teacher@example.com')).toBeInTheDocument()
       expect(screen.getByRole('button', { name: 'signOut' })).toBeInTheDocument()
     })
   })
 
   describe('♿ 可訪問性測試', () => {
     it('應該有正確的語義結構', () => {
-      mockLocalStorage.getItem.mockReturnValue(null)
-      
       render(<Header />)
 
       // Header 應該是 banner landmark
@@ -262,8 +297,6 @@ describe('Header 組件測試', () => {
     })
 
     it('按鈕應該有可訪問的名稱', () => {
-      mockLocalStorage.getItem.mockReturnValue(null)
-      
       render(<Header />)
 
       const loginButton = screen.getByRole('button', { name: 'signIn' })
@@ -272,38 +305,38 @@ describe('Header 組件測試', () => {
 
     it('應該支援鍵盤導航', async () => {
       const user = userEvent.setup()
-      mockLocalStorage.getItem.mockReturnValue(null)
       
       render(<Header />)
 
       const languageSelector = screen.getByLabelText(/選擇語言|select language/i)
       const loginButton = screen.getByRole('button', { name: 'signIn' })
       
-      // Tab through elements - there may be other focusable elements first
+      // Tab through elements - the More dropdown opens sub-menu when focused
       await user.tab() // Logo link
-      await user.tab() // Relations link  
-      await user.tab() // KSA link
-      await user.tab() // PBL link (newly added)
+      await user.tab() // Dashboard link  
       await user.tab() // Assessment link
-      await user.tab() // Assessment History link
+      await user.tab() // PBL link
+      await user.tab() // Discovery link
+      await user.tab() // More dropdown button
+      
+      // Since the dropdown has opened, we need to tab through its items
+      await user.tab() // Relations link in dropdown
+      await user.tab() // KSA link in dropdown  
+      await user.tab() // History link in dropdown
       await user.tab() // Language selector
       expect(languageSelector).toHaveFocus()
       
       // Continue to next element
-      await user.tab() // Theme toggle
-      await user.tab() // Mobile menu or login button
-      await user.tab() // Login button (if not already focused)
+      await user.tab() // Mobile menu button
+      await user.tab() // Login button
       
-      // Check if login button eventually gets focus
-      const focusedElement = document.activeElement
-      expect(focusedElement).toBe(loginButton)
+      // Check if login button gets focus
+      expect(loginButton).toHaveFocus()
     })
   })
 
   describe('🌐 國際化測試', () => {
     it('應該使用翻譯鍵值', () => {
-      mockLocalStorage.getItem.mockReturnValue(null)
-      
       render(<Header />)
 
       // 檢查是否使用了翻譯系統
@@ -319,8 +352,6 @@ describe('Header 組件測試', () => {
         configurable: true,
         value: 375,
       })
-
-      mockLocalStorage.getItem.mockReturnValue(null)
       
       render(<Header />)
 
@@ -338,8 +369,17 @@ describe('Header 組件測試', () => {
       mockUseTheme.mockClear()
     })
 
-    it('應該顯示主題切換按鈕', () => {
-      mockLocalStorage.getItem.mockReturnValue(null)
+    it('應該在登入時顯示主題切換按鈕', () => {
+      // Set up logged in state
+      const mockUser = {
+        id: 1,
+        email: 'test@example.com',
+        role: 'student',
+        name: 'Test User'
+      }
+      mockAuthState.user = mockUser
+      mockAuthState.isLoggedIn = true
+      
       mockUseTheme.mockReturnValue({
         theme: 'light',
         toggleTheme: jest.fn(),
@@ -347,12 +387,26 @@ describe('Header 組件測試', () => {
       
       render(<Header />)
 
-      const themeButton = screen.getByRole('button', { name: /toggleTheme/i })
+      // Click user dropdown to open it
+      const userButton = screen.getByText('T').parentElement
+      fireEvent.click(userButton!)
+
+      // Theme toggle is in the dropdown
+      const themeButton = screen.getByText('theme').closest('button')
       expect(themeButton).toBeInTheDocument()
     })
 
-    it('應該在淺色模式時顯示月亮圖標', () => {
-      mockLocalStorage.getItem.mockReturnValue(null)
+    it('應該在淺色模式時顯示太陽圖標', () => {
+      // Set up logged in state
+      const mockUser = {
+        id: 1,
+        email: 'test@example.com',
+        role: 'student',
+        name: 'Test User'
+      }
+      mockAuthState.user = mockUser
+      mockAuthState.isLoggedIn = true
+      
       mockUseTheme.mockReturnValue({
         theme: 'light',
         toggleTheme: jest.fn(),
@@ -360,14 +414,27 @@ describe('Header 組件測試', () => {
       
       render(<Header />)
 
-      const themeButton = screen.getByRole('button', { name: /toggleTheme/i })
-      // 檢查按鈕內有月亮圖標（SVG）
-      const moonIcon = themeButton.querySelector('svg')
-      expect(moonIcon).toBeInTheDocument()
+      // Click user dropdown to open it
+      const userButton = screen.getByText('T').parentElement
+      fireEvent.click(userButton!)
+
+      // 檢查按鈕內有太陽圖標（淺色模式顯示太陽）
+      const themeButton = screen.getByText('theme').closest('button')
+      const sunIcon = themeButton?.querySelector('svg path[d*="M12 3v1m0"]')
+      expect(sunIcon).toBeInTheDocument()
     })
 
-    it('應該在深色模式時顯示太陽圖標', () => {
-      mockLocalStorage.getItem.mockReturnValue(null)
+    it('應該在深色模式時顯示月亮圖標', () => {
+      // Set up logged in state
+      const mockUser = {
+        id: 1,
+        email: 'test@example.com',
+        role: 'student',
+        name: 'Test User'
+      }
+      mockAuthState.user = mockUser
+      mockAuthState.isLoggedIn = true
+      
       mockUseTheme.mockReturnValue({
         theme: 'dark',
         toggleTheme: jest.fn(),
@@ -375,17 +442,30 @@ describe('Header 組件測試', () => {
       
       render(<Header />)
 
-      const themeButton = screen.getByRole('button', { name: /toggleTheme/i })
-      // 檢查按鈕內有太陽圖標（SVG）
-      const sunIcon = themeButton.querySelector('svg')
-      expect(sunIcon).toBeInTheDocument()
+      // Click user dropdown to open it
+      const userButton = screen.getByText('T').parentElement
+      fireEvent.click(userButton!)
+
+      // 檢查按鈕內有月亮圖標（深色模式顯示月亮）
+      const themeButton = screen.getByText('theme').closest('button')
+      const moonIcon = themeButton?.querySelector('svg path[d*="M20.354 15.354A9"]')
+      expect(moonIcon).toBeInTheDocument()
     })
 
     it('應該在點擊時調用 toggleTheme', async () => {
       const user = userEvent.setup()
       const mockToggleTheme = jest.fn()
       
-      mockLocalStorage.getItem.mockReturnValue(null)
+      // Set up logged in state
+      const mockUser = {
+        id: 1,
+        email: 'test@example.com',
+        role: 'student',
+        name: 'Test User'
+      }
+      mockAuthState.user = mockUser
+      mockAuthState.isLoggedIn = true
+      
       mockUseTheme.mockReturnValue({
         theme: 'light',
         toggleTheme: mockToggleTheme,
@@ -393,14 +473,27 @@ describe('Header 組件測試', () => {
       
       render(<Header />)
 
-      const themeButton = screen.getByRole('button', { name: /toggleTheme/i })
-      await user.click(themeButton)
+      // Click user dropdown to open it
+      const userButton = screen.getByText('T').parentElement
+      await user.click(userButton!)
+
+      const themeButton = screen.getByText('theme').closest('button')
+      await user.click(themeButton!)
 
       expect(mockToggleTheme).toHaveBeenCalledTimes(1)
     })
 
-    it('主題切換按鈕應該在語言選擇器旁邊', () => {
-      mockLocalStorage.getItem.mockReturnValue(null)
+    it('主題切換在登入後的下拉選單中', () => {
+      // Set up logged in state
+      const mockUser = {
+        id: 1,
+        email: 'test@example.com',
+        role: 'student',
+        name: 'Test User'
+      }
+      mockAuthState.user = mockUser
+      mockAuthState.isLoggedIn = true
+      
       mockUseTheme.mockReturnValue({
         theme: 'light',
         toggleTheme: jest.fn(),
@@ -409,37 +502,51 @@ describe('Header 組件測試', () => {
       render(<Header />)
 
       const languageSelector = screen.getByLabelText(/選擇語言|select language/i)
-      const themeButton = screen.getByRole('button', { name: /toggleTheme/i })
       
-      // 檢查兩者都存在
+      // 檢查語言選擇器存在
       expect(languageSelector).toBeInTheDocument()
-      expect(themeButton).toBeInTheDocument()
       
-      // 確認兩者在相同的父元素內部
-      const rightSection = languageSelector.closest('.flex.items-center.space-x-4')
-      expect(rightSection).toContainElement(languageSelector)
-      expect(rightSection).toContainElement(themeButton)
+      // Click user dropdown to find theme button
+      const userButton = screen.getByText('T').parentElement
+      fireEvent.click(userButton!)
+      
+      // 主題切換在下拉選單中
+      const themeButton = screen.getByText('theme').closest('button')
+      expect(themeButton).toBeInTheDocument()
     })
 
-    it('應該支援鍵盤導航到主題切換按鈕', async () => {
+    it('主題切換按鈕在登入後可以使用', async () => {
       const user = userEvent.setup()
-      mockLocalStorage.getItem.mockReturnValue(null)
+      const mockToggleTheme = jest.fn()
+      
+      // Set up logged in state
+      const mockUser = {
+        id: 1,
+        email: 'test@example.com',
+        role: 'student',
+        name: 'Test User'
+      }
+      mockAuthState.user = mockUser
+      mockAuthState.isLoggedIn = true
+      
       mockUseTheme.mockReturnValue({
         theme: 'light',
-        toggleTheme: jest.fn(),
+        toggleTheme: mockToggleTheme,
       })
       
       render(<Header />)
 
-      const themeButton = screen.getByRole('button', { name: /toggleTheme/i })
+      // Click user dropdown to open it
+      const userButton = screen.getByText('T').parentElement
+      await user.click(userButton!)
       
-      // 確認主題切換按鈕可以被聚焦
-      themeButton.focus()
-      expect(themeButton).toHaveFocus()
+      // 確認主題切換按鈕存在於下拉選單中
+      const themeButton = screen.getByText('theme').closest('button')
+      expect(themeButton).toBeInTheDocument()
       
-      // 確認可以通過點擊觸發
-      await user.click(themeButton)
-      expect(mockUseTheme().toggleTheme).toHaveBeenCalled()
+      // 確認可以透過點擊觸發
+      await user.click(themeButton!)
+      expect(mockToggleTheme).toHaveBeenCalled()
     })
   })
 })

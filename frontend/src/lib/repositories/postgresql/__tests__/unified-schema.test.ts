@@ -362,14 +362,16 @@ describe('Unified Schema Tests', () => {
           program_id, task_index, title, type, status,
           content, pbl_data
         ) VALUES 
-        ($1, 0, 'Resume Analysis', 'analysis', 'active',
-         $2, $3),
-        ($1, 1, 'Interview Practice', 'chat', 'pending',
-         $4, $5)
+        ($1, 0, $2, 'analysis', 'active',
+         $3, $4),
+        ($1, 1, $5, 'chat', 'pending',
+         $6, $7)
       `, [
         testProgramIds.pbl,
+        JSON.stringify({ en: 'Resume Analysis' }),
         JSON.stringify({ instructions: 'Analyze your resume' }),
         JSON.stringify({ ksaFocus: { primary: ['K1.1'], secondary: ['S1.2'] } }),
+        JSON.stringify({ en: 'Interview Practice' }),
         JSON.stringify({ instructions: 'Practice interview questions' }),
         JSON.stringify({ ksaFocus: { primary: ['S3.1'], secondary: ['A2.1'] } })
       ]);
@@ -380,14 +382,16 @@ describe('Unified Schema Tests', () => {
           program_id, task_index, title, type, status,
           content, discovery_data
         ) VALUES 
-        ($1, 0, 'First App', 'exploration', 'active',
-         $2, $3),
-        ($1, 1, 'UI Challenge', 'challenge', 'pending',
-         $4, $5)
+        ($1, 0, $2, 'exploration', 'active',
+         $3, $4),
+        ($1, 1, $5, 'challenge', 'pending',
+         $6, $7)
       `, [
         testProgramIds.discovery,
+        JSON.stringify({ en: 'First App' }),
         JSON.stringify({ instructions: 'Build a simple app' }),
         JSON.stringify({ skillRequirements: { programming: 2, design: 1 } }),
+        JSON.stringify({ en: 'UI Challenge' }),
         JSON.stringify({ instructions: 'Design innovative UI' }),
         JSON.stringify({ skillRequirements: { design: 3, creativity: 2 } })
       ]);
@@ -398,17 +402,19 @@ describe('Unified Schema Tests', () => {
           program_id, task_index, title, type, status,
           content, assessment_data, time_limit_seconds
         ) VALUES 
-        ($1, 0, 'ML Question', 'question', 'active',
-         $2, $3, 120),
-        ($1, 1, 'Ethics Question', 'question', 'pending',
-         $4, $5, 120)
+        ($1, 0, $2, 'question', 'active',
+         $3, $4, 120),
+        ($1, 1, $5, 'question', 'pending',
+         $6, $7, 120)
       `, [
         testProgramIds.assessment,
+        JSON.stringify({ en: 'ML Question' }),
         JSON.stringify({ 
           question: 'Which best describes machine learning?',
           options: ['Pattern recognition', 'Rule-based system', 'Database', 'Spreadsheet']
         }),
         JSON.stringify({ correctAnswer: 0, domain: 'engaging_with_ai' }),
+        JSON.stringify({ en: 'Ethics Question' }),
         JSON.stringify({
           question: 'What is AI bias?',
           options: ['A bug', 'Unfair outcomes', 'Speed issue', 'Cost problem']

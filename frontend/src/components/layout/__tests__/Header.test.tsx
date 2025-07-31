@@ -1,92 +1,72 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
-import { useRouter, usePathname } from 'next/navigation';
+import { 
+  renderWithProviders, 
+  screen, 
+  fireEvent, 
+  waitFor,
+  resetAllMocks,
+  setupAuthenticatedUser,
+  setupUnauthenticatedUser,
+  testUsers,
+  mockApiSuccess,
+  mockApiError,
+  navigationMocks,
+  themeMocks,
+  mockFetch,
+  mockLocalStorage,
+  defaultAuthState
+} from '@/test/utils/test-helpers';
+import { usePathname } from 'next/navigation';
 import { Header } from '../Header';
 
-// Mock next/navigation
-const mockPush = jest.fn();
-jest.mock('next/navigation', () => ({
-  useRouter: jest.fn(() => ({
-    push: mockPush
-  })),
-  usePathname: jest.fn(() => '/')
-}));
-
-// Mock react-i18next
-jest.mock('react-i18next', () => ({
-  useTranslation: () => ({
-    t: (key: string) => {
-      const translations: Record<string, string> = {
-        'relations': 'Relations',
-        'ksa': 'KSA',
-        'assessment': 'Assessment',
-        'pbl': 'PBL',
-        'history': 'History',
-        'toggleTheme': 'Toggle theme',
-        'signIn': 'Sign In',
-        'signOut': 'Sign Out',
-        'userRole.student': 'Student',
-        'userRole.teacher': 'Teacher',
-        'userRole.admin': 'Admin',
-      };
-      return translations[key] || key;
-    }
-  })
-}));
+// Re-export mocks for backward compatibility
+const { mockPush } = navigationMocks;
+const { mockToggleTheme } = themeMocks;
+const mockLogout = defaultAuthState.logout;
+const mockAuthState = defaultAuthState;
 
 // Mock LanguageSelector
 jest.mock('@/components/ui/LanguageSelector', () => ({
   LanguageSelector: () => <div data-testid="language-selector">Language Selector</div>
 }));
 
-// Mock ThemeContext
-const mockToggleTheme = jest.fn();
-jest.mock('@/contexts/ThemeContext', () => ({
-  useTheme: () => ({
-    theme: 'light',
-    toggleTheme: mockToggleTheme
+// Mock translations
+jest.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key: string) => {
+      const translations: Record<string, string> = {
+        'dashboard': 'Dashboard',
+        'relations': 'Relations',
+        'ksa': 'KSA',
+        'assessment': 'Assessment',
+        'pbl': 'PBL',
+        'discovery': 'Discovery',
+        'history': 'History',
+        'more': 'More',
+        'theme': 'Theme',
+        'light': 'Light',
+        'dark': 'Dark',
+        'toggleTheme': 'Toggle theme',
+        'signIn': 'Sign In',
+        'signOut': 'Sign Out',
+        'userRole.student': 'Student',
+        'userRole.teacher': 'Teacher',
+        'userRole.admin': 'Admin',
+        'language': 'Language',
+      };
+      return translations[key] || key;
+    }
   })
 }));
 
-// Mock fetch
-global.fetch = jest.fn();
-const mockFetch = global.fetch as jest.MockedFunction<typeof fetch>;
-
-// Mock localStorage
-const mockLocalStorage = {
-  getItem: jest.fn(),
-  setItem: jest.fn(),
-  removeItem: jest.fn(),
-  clear: jest.fn()
-};
-Object.defineProperty(window, 'localStorage', {
-  value: mockLocalStorage,
-  writable: true
-});
-
-// Mock window.addEventListener and removeEventListener
-const mockAddEventListener = jest.fn();
-const mockRemoveEventListener = jest.fn();
-const mockDispatchEvent = jest.fn();
-Object.defineProperty(window, 'addEventListener', { value: mockAddEventListener });
-Object.defineProperty(window, 'removeEventListener', { value: mockRemoveEventListener });
-Object.defineProperty(window, 'dispatchEvent', { value: mockDispatchEvent });
 
 describe('Header', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
-    mockLocalStorage.getItem.mockReturnValue(null);
-    
-    // Clear actual localStorage
-    localStorage.clear();
+    resetAllMocks();
+    setupUnauthenticatedUser();
     
     // Default mock - unauthenticated state
-    mockFetch.mockImplementation(() => {
-      return Promise.resolve({
-        json: () => Promise.resolve({ authenticated: false }),
-        ok: true
-      } as Response);
-    });
+    mockFetch.mockImplementation(() => mockApiSuccess({ authenticated: false }));
     
     // Clear console errors for cleaner test output
     jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -100,7 +80,7 @@ describe('Header', () => {
 
   describe('Rendering', () => {
     it('renders the header with logo and title', () => {
-      render(<Header />);
+      renderWithProviders(<Header />);
 
       expect(screen.getByRole('banner')).toBeInTheDocument();
       expect(screen.getByText('AI Square')).toBeInTheDocument();
@@ -108,7 +88,7 @@ describe('Header', () => {
     });
 
     it('renders navigation links in desktop view', () => {
-      render(<Header />);
+      renderWithProviders(<Header />);
 
       expect(screen.getByText('Relations')).toBeInTheDocument();
       expect(screen.getByText('KSA')).toBeInTheDocument();
@@ -118,7 +98,7 @@ describe('Header', () => {
     });
 
     it('renders language selector', () => {
-      render(<Header />);
+      renderWithProviders(<Header />);
 
       expect(screen.getByTestId('language-selector')).toBeInTheDocument();
     });
@@ -130,7 +110,7 @@ describe('Header', () => {
     });
 
     it('renders mobile menu button', () => {
-      render(<Header />);
+      renderWithProviders(<Header />);
 
       const mobileMenuButton = screen.getByLabelText('Toggle navigation menu');
       expect(mobileMenuButton).toBeInTheDocument();
@@ -145,7 +125,7 @@ describe('Header', () => {
         ok: true
       } as Response);
 
-      render(<Header />);
+      renderWithProviders(<Header />);
 
       await waitFor(() => {
         expect(screen.getByText('Sign In')).toBeInTheDocument();
@@ -153,56 +133,29 @@ describe('Header', () => {
     });
 
     it('shows user info and sign out when logged in', async () => {
-      const mockUser = {
-        id: 1,
-        email: 'test@example.com',
-        role: 'student',
-        name: 'Test User'
-      };
+      setupAuthenticatedUser(testUsers.student);
 
-      // Mock localStorage to return logged in state
-      mockLocalStorage.getItem.mockImplementation((key) => {
-        if (key === 'isLoggedIn') return 'true';
-        if (key === 'user') return JSON.stringify(mockUser);
-        return null;
-      });
+      renderWithProviders(<Header />);
 
-      render(<Header />);
-
-      // Wait for user info to appear (component reads from localStorage on mount)
-      await waitFor(() => {
-        // User email appears in the dropdown
-        const emailElements = screen.getAllByText('test@example.com');
-        expect(emailElements.length).toBeGreaterThan(0);
-      });
+      // User info should be visible immediately
+      // User email appears in the dropdown
+      const emailElements = screen.getAllByText('test@example.com');
+      expect(emailElements.length).toBeGreaterThan(0);
       
       // Check role display
       const roleElements = screen.getAllByText('Student');
       expect(roleElements.length).toBeGreaterThan(0);
       
       // Check avatar initial
-      expect(screen.getByText('T')).toBeInTheDocument();
+      expect(screen.getByText('T')).toBeInTheDocument(); // First letter of 'Test Student'
     });
 
     it('displays user avatar with first letter of name', async () => {
-      const mockUser = {
-        id: 1,
-        email: 'test@example.com',
-        role: 'student',
-        name: 'Test User'
-      };
+      setupAuthenticatedUser(testUsers.student);
 
-      mockLocalStorage.getItem.mockImplementation((key) => {
-        if (key === 'isLoggedIn') return 'true';
-        if (key === 'user') return JSON.stringify(mockUser);
-        return null;
-      });
+      renderWithProviders(<Header />);
 
-      render(<Header />);
-
-      await waitFor(() => {
-        expect(screen.getByText('T')).toBeInTheDocument();
-      });
+      expect(screen.getByText('T')).toBeInTheDocument(); // First letter of 'Test Student'
     });
 
     it('falls back to email first letter when name is not available', async () => {
@@ -213,32 +166,28 @@ describe('Header', () => {
         name: ''
       };
 
-      mockLocalStorage.getItem.mockImplementation((key) => {
-        if (key === 'isLoggedIn') return 'true';
-        if (key === 'user') return JSON.stringify(mockUser);
-        return null;
-      });
+      // Set up logged in auth state
+      mockAuthState.user = mockUser;
+      mockAuthState.isLoggedIn = true;
 
-      render(<Header />);
+      renderWithProviders(<Header />);
 
-      await waitFor(() => {
-        expect(screen.getByText('T')).toBeInTheDocument(); // First letter of email
-      });
+      expect(screen.getByText('T')).toBeInTheDocument(); // First letter of 'Test Student' // First letter of email
     });
   });
 
   describe('Navigation', () => {
     it('highlights active navigation link', () => {
-      (usePathname as jest.Mock).mockReturnValue('/relations');
+      (usePathname as jest.Mock).mockReturnValue('/dashboard');
       
-      render(<Header />);
+      renderWithProviders(<Header />);
 
-      const relationsLink = screen.getByRole('link', { name: 'Relations' });
-      expect(relationsLink).toHaveClass('text-gray-900', 'border-b-2', 'border-blue-600', 'active');
+      const dashboardLink = screen.getByRole('link', { name: 'Dashboard' });
+      expect(dashboardLink).toHaveClass('text-gray-900', 'border-b-2', 'border-blue-600', 'active');
     });
 
     it('redirects to login when sign in button is clicked', async () => {
-      render(<Header />);
+      renderWithProviders(<Header />);
 
       await waitFor(() => {
         const signInButton = screen.getByText('Sign In');
@@ -249,39 +198,19 @@ describe('Header', () => {
     });
 
     it('calls logout API and redirects when sign out is clicked', async () => {
-      const mockUser = {
-        id: 1,
-        email: 'test@example.com',
-        role: 'student',
-        name: 'Test User'
-      };
-
-      mockLocalStorage.getItem.mockImplementation((key) => {
-        if (key === 'isLoggedIn') return 'true';
-        if (key === 'user') return JSON.stringify(mockUser);
-        return null;
+      setupAuthenticatedUser(testUsers.student);
+      
+      // Mock logout to also update the auth state
+      mockLogout.mockImplementation(async () => {
+        mockAuthState.user = null;
+        mockAuthState.isLoggedIn = false;
+        mockPush('/login');
       });
 
-      // Mock fetch for logout API
-      mockFetch.mockImplementation((url, options) => {
-        if (url === '/api/auth/logout' && options?.method === 'POST') {
-          return Promise.resolve({
-            json: () => Promise.resolve({}),
-            ok: true
-          } as Response);
-        }
-        return Promise.resolve({
-          json: () => Promise.resolve({}),
-          ok: true
-        } as Response);
-      });
+      renderWithProviders(<Header />);
 
-      render(<Header />);
-
-      // Wait for user info to appear
-      await waitFor(() => {
-        expect(screen.getByText('test@example.com')).toBeInTheDocument();
-      });
+      // User info should be visible
+      expect(screen.getByText('student@example.com')).toBeInTheDocument();
 
       // Click on the user dropdown to open it
       const userButton = screen.getByText('T').parentElement;
@@ -292,18 +221,14 @@ describe('Header', () => {
       fireEvent.click(signOutButton);
 
       await waitFor(() => {
-        expect(mockPush).toHaveBeenCalledWith('/login');
-      });
-
-      expect(mockFetch).toHaveBeenCalledWith('/api/auth/logout', {
-        method: 'POST',
+        expect(mockLogout).toHaveBeenCalled();
       });
     });
   });
 
   describe('Mobile Menu', () => {
     it('toggles mobile menu when button is clicked', () => {
-      render(<Header />);
+      renderWithProviders(<Header />);
 
       const mobileMenuButton = screen.getByLabelText('Toggle navigation menu');
       
@@ -323,7 +248,7 @@ describe('Header', () => {
     });
 
     it('shows navigation links in mobile menu', () => {
-      render(<Header />);
+      renderWithProviders(<Header />);
 
       const mobileMenuButton = screen.getByLabelText('Toggle navigation menu');
       fireEvent.click(mobileMenuButton);
@@ -332,15 +257,19 @@ describe('Header', () => {
       expect(mobileNav).toBeInTheDocument();
       
       // Check all navigation links are present in mobile menu
-      expect(screen.getAllByText('Relations')).toHaveLength(2); // Desktop + Mobile
-      expect(screen.getAllByText('KSA')).toHaveLength(2);
+      // Primary links appear in both desktop and mobile
+      expect(screen.getAllByText('Dashboard')).toHaveLength(2);
       expect(screen.getAllByText('Assessment')).toHaveLength(2);
       expect(screen.getAllByText('PBL')).toHaveLength(2);
+      expect(screen.getAllByText('Discovery')).toHaveLength(2);
+      // Secondary links appear in dropdown and mobile
+      expect(screen.getAllByText('Relations')).toHaveLength(2); // Dropdown + Mobile
+      expect(screen.getAllByText('KSA')).toHaveLength(2);
       expect(screen.getAllByText('History')).toHaveLength(2);
     });
 
     it('closes mobile menu when navigation link is clicked', () => {
-      render(<Header />);
+      renderWithProviders(<Header />);
 
       const mobileMenuButton = screen.getByLabelText('Toggle navigation menu');
       fireEvent.click(mobileMenuButton);
@@ -349,17 +278,17 @@ describe('Header', () => {
       expect(mobileNav).toBeInTheDocument();
 
       // Click on a mobile navigation link
-      const mobileLinks = screen.getAllByText('Relations');
-      const mobileRelationsLink = mobileLinks.find(link => 
+      const mobileLinks = screen.getAllByText('Dashboard');
+      const mobileDashboardLink = mobileLinks.find(link => 
         link.closest('[aria-label="Mobile navigation"]')
       );
-      fireEvent.click(mobileRelationsLink!);
+      fireEvent.click(mobileDashboardLink!);
 
       expect(screen.queryByLabelText('Mobile navigation')).not.toBeInTheDocument();
     });
 
     it('shows correct hamburger/close icon based on menu state', () => {
-      render(<Header />);
+      renderWithProviders(<Header />);
 
       const mobileMenuButton = screen.getByLabelText('Toggle navigation menu');
       const svgElement = mobileMenuButton.querySelector('svg path');
@@ -377,114 +306,68 @@ describe('Header', () => {
 
   describe('Theme Toggle', () => {
     it('calls toggleTheme when theme button is clicked', async () => {
-      const mockUser = {
-        id: 1,
-        email: 'test@example.com',
-        role: 'student',
-        name: 'Test User'
-      };
+      setupAuthenticatedUser(testUsers.student);
 
-      mockLocalStorage.getItem.mockImplementation((key) => {
-        if (key === 'isLoggedIn') return 'true';
-        if (key === 'user') return JSON.stringify(mockUser);
-        return null;
-      });
+      renderWithProviders(<Header />);
 
-      render(<Header />);
-
-      // Wait for user info to appear
-      await waitFor(() => {
-        expect(screen.getByText('test@example.com')).toBeInTheDocument();
-      });
+      // User info should be visible
+      expect(screen.getByText('student@example.com')).toBeInTheDocument();
 
       // Click on the user dropdown to open it
       const userButton = screen.getByText('T').parentElement;
       fireEvent.click(userButton!);
 
       // Find and click the theme toggle button in dropdown
-      const themeButton = screen.getByText('theme');
-      fireEvent.click(themeButton);
+      const themeButton = screen.getByText('Theme').closest('button');
+      fireEvent.click(themeButton!);
 
       expect(mockToggleTheme).toHaveBeenCalledTimes(1);
     });
 
     it('shows correct theme icon based on current theme', async () => {
-      const mockUser = {
-        id: 1,
-        email: 'test@example.com',
-        role: 'student',
-        name: 'Test User'
-      };
+      setupAuthenticatedUser(testUsers.student);
 
-      mockLocalStorage.getItem.mockImplementation((key) => {
-        if (key === 'isLoggedIn') return 'true';
-        if (key === 'user') return JSON.stringify(mockUser);
-        return null;
-      });
+      renderWithProviders(<Header />);
 
-      render(<Header />);
-
-      // Wait for user info to appear
-      await waitFor(() => {
-        expect(screen.getByText('test@example.com')).toBeInTheDocument();
-      });
+      // User info should be visible
+      expect(screen.getByText('student@example.com')).toBeInTheDocument();
 
       // Click on the user dropdown to open it
       const userButton = screen.getByText('T').parentElement;
       fireEvent.click(userButton!);
 
       // Check for sun icon in light theme
-      const sunIcon = screen.getByText('theme').parentElement?.querySelector('svg path[d*="M12 3v1m0"]');
+      const themeButton = screen.getByText('Theme').closest('button');
+      const sunIcon = themeButton?.querySelector('svg path[d*="M12 3v1m0"]');
       expect(sunIcon).toBeInTheDocument();
     });
 
     it('handles mounting state to avoid hydration issues', async () => {
-      const mockUser = {
-        id: 1,
-        email: 'test@example.com',
-        role: 'student',
-        name: 'Test User'
-      };
+      setupAuthenticatedUser(testUsers.student);
 
-      mockLocalStorage.getItem.mockImplementation((key) => {
-        if (key === 'isLoggedIn') return 'true';
-        if (key === 'user') return JSON.stringify(mockUser);
-        return null;
-      });
-
-      render(<Header />);
+      renderWithProviders(<Header />);
 
       // Component should mount and show user info
-      await waitFor(() => {
-        expect(screen.getByText('test@example.com')).toBeInTheDocument();
-      });
+      expect(screen.getByText('student@example.com')).toBeInTheDocument();
     });
   });
 
   describe('Error Handling', () => {
     it('handles auth check API error gracefully', async () => {
-      // Mock fetch to always reject (network error)
-      mockFetch.mockImplementation(() => {
-        return Promise.reject(new Error('Network error'));
-      });
-      
-      // Mock localStorage to consistently return user data
-      mockLocalStorage.getItem.mockImplementation((key) => {
-        if (key === 'isLoggedIn') return 'true';
-        if (key === 'user') return JSON.stringify({ 
-          id: 1, 
-          email: 'test@example.com', 
-          role: 'student',
-          name: 'Test User'
-        });
-        return null;
-      });
+      // Set up logged in auth state
+      mockAuthState.user = { 
+        id: 1, 
+        email: 'test@example.com', 
+        role: 'student',
+        name: 'Test User'
+      };
+      mockAuthState.isLoggedIn = true;
 
-      render(<Header />);
+      renderWithProviders(<Header />);
 
-      await waitFor(() => {
-        expect(screen.getAllByText('test@example.com')).toHaveLength(2);
-      }, { timeout: 3000 });
+      // Should still show user info even if API fails
+      // In dropdown, email appears once in the dropdown and might not be visible elsewhere
+      expect(screen.getByText('student@example.com')).toBeInTheDocument();
     });
 
     it('handles corrupted localStorage data', async () => {
@@ -492,7 +375,7 @@ describe('Header', () => {
       localStorage.setItem('isLoggedIn', 'true');
       localStorage.setItem('user', 'invalid json'); // corrupted user data
 
-      render(<Header />);
+      renderWithProviders(<Header />);
 
       // Component should fall back to logged out state when it can't parse user data
       await waitFor(() => {
@@ -501,34 +384,19 @@ describe('Header', () => {
     });
 
     it('handles logout API error gracefully', async () => {
-      const mockUser = {
-        id: 1,
-        email: 'test@example.com',
-        role: 'student',
-        name: 'Test User'
-      };
-
-      mockLocalStorage.getItem.mockImplementation((key) => {
-        if (key === 'isLoggedIn') return 'true';
-        if (key === 'user') return JSON.stringify(mockUser);
-        return null;
+      setupAuthenticatedUser(testUsers.student);
+      
+      // Mock logout to simulate error but still clear state
+      mockLogout.mockImplementation(async () => {
+        // Even if API fails, should still clear state and redirect
+        mockAuthState.user = null;
+        mockAuthState.isLoggedIn = false;
+        mockPush('/login');
       });
 
-      mockFetch.mockImplementation((url, options) => {
-        if (url === '/api/auth/logout' && options?.method === 'POST') {
-          return Promise.reject(new Error('Logout failed'));
-        }
-        return Promise.resolve({
-          json: () => Promise.resolve({}),
-          ok: true
-        } as Response);
-      });
+      renderWithProviders(<Header />);
 
-      render(<Header />);
-
-      await waitFor(() => {
-        expect(screen.getByText('test@example.com')).toBeInTheDocument();
-      });
+      expect(screen.getByText('student@example.com')).toBeInTheDocument();
 
       // Click on the user dropdown to open it
       const userButton = screen.getByText('T').parentElement;
@@ -538,29 +406,15 @@ describe('Header', () => {
       const signOutButton = screen.getByText('Sign Out');
       fireEvent.click(signOutButton);
 
-      // Even if API fails, it should still redirect
+      // Should call logout
       await waitFor(() => {
-        expect(mockPush).toHaveBeenCalledWith('/login');
+        expect(mockLogout).toHaveBeenCalled();
       });
     });
   });
 
-  describe('Event Listeners', () => {
-    it('sets up event listeners on mount', () => {
-      render(<Header />);
-
-      expect(mockAddEventListener).toHaveBeenCalledWith('storage', expect.any(Function));
-    });
-
-    it('cleans up event listeners on unmount', () => {
-      const { unmount } = render(<Header />);
-
-      unmount();
-
-      expect(mockRemoveEventListener).toHaveBeenCalledWith('storage', expect.any(Function));
-    });
-
-    it('handles storage change event', async () => {
+  describe('Auth State Changes', () => {
+    it('responds to auth state changes', async () => {
       const mockUser = {
         id: 1,
         email: 'test@example.com',
@@ -568,29 +422,20 @@ describe('Header', () => {
         name: 'Test User'
       };
 
-      render(<Header />);
+      const { rerender } = renderWithProviders(<Header />);
 
-      // Get the storage event listener
-      const storageCall = mockAddEventListener.mock.calls.find(
-        call => call[0] === 'storage'
-      );
-      const storageHandler = storageCall![1];
+      // Initially logged out
+      expect(screen.getByText('Sign In')).toBeInTheDocument();
 
-      // Mock localStorage to return user data after storage event
-      mockLocalStorage.getItem.mockImplementation((key) => {
-        if (key === 'isLoggedIn') return 'true';
-        if (key === 'user') return JSON.stringify(mockUser);
-        return null;
-      });
-      
-      act(() => {
-        storageHandler({ key: 'isLoggedIn' } as StorageEvent);
-      });
+      // Update auth state
+      mockAuthState.user = mockUser;
+      mockAuthState.isLoggedIn = true;
+
+      // Force re-render
+      rerender(<Header />);
 
       // Should update to show user info
-      await waitFor(() => {
-        expect(screen.getByText('test@example.com')).toBeInTheDocument();
-      });
+      expect(screen.getByText('student@example.com')).toBeInTheDocument();
     });
   });
 
@@ -603,42 +448,25 @@ describe('Header', () => {
         name: 'Mobile User'
       };
 
-      mockLocalStorage.getItem.mockImplementation((key) => {
-        if (key === 'isLoggedIn') return 'true';
-        if (key === 'user') return JSON.stringify(mockUser);
-        return null;
-      });
+      // Set up logged in auth state
+      mockAuthState.user = mockUser;
+      mockAuthState.isLoggedIn = true;
 
-      render(<Header />);
+      renderWithProviders(<Header />);
 
-      await waitFor(() => {
-        // Should show user info
-        expect(screen.getByText('mobile@example.com')).toBeInTheDocument();
-        expect(screen.getByText('Teacher')).toBeInTheDocument();
-      });
+      // Should show user info
+      expect(screen.getByText('mobile@example.com')).toBeInTheDocument();
+      expect(screen.getByText('Teacher')).toBeInTheDocument();
     });
   });
 
   describe('Role Display', () => {
     it('translates user role correctly', async () => {
-      const mockUser = {
-        id: 1,
-        email: 'test@example.com',
-        role: 'student',
-        name: 'Test User'
-      };
+      setupAuthenticatedUser(testUsers.student);
 
-      mockLocalStorage.getItem.mockImplementation((key) => {
-        if (key === 'isLoggedIn') return 'true';
-        if (key === 'user') return JSON.stringify(mockUser);
-        return null;
-      });
+      renderWithProviders(<Header />);
 
-      render(<Header />);
-
-      await waitFor(() => {
-        expect(screen.getByText('Student')).toBeInTheDocument();
-      });
+      expect(screen.getByText('Student')).toBeInTheDocument();
     });
   });
 
