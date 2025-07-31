@@ -60,6 +60,39 @@ claude -p "prompt"      # Single query mode
 
 Always follow the instructions in plan.md. When I say "go", find the next unmarked test in plan.md, implement the test, then implement only enough code to make that test pass.
 
+## 🤖 Sub-Agent Usage Rules
+
+### 使用 Sub-Agent 的時機與選擇
+
+**主動性原則**: 看到任務時，先思考「哪個 agent 最適合？」不要等待提醒。
+
+#### 1. TypeScript/ESLint 問題 → 使用 typescript-eslint-fixer agent
+- **觸發關鍵字**: tsc, typecheck, eslint, lint, TS errors, build error
+- **範例情境**: "tsc eslint commit" → 優先使用 typescript-eslint-fixer
+- **用途**: 專門修復 TypeScript 編譯錯誤和 ESLint 警告
+
+#### 2. 進度管理 → 使用 progress-memory-coach agent
+- **儲存進度**: 在工作里程碑時保存
+- **回憶之前工作**: "我們上次做了什麼？"
+- **儲存內容**: 重要決策、模式、專案洞察
+- **用途**: 維持跨工作階段的連續性
+
+#### 3. 複雜搜尋任務 → 使用 general-purpose agent
+- **多檔案搜尋**: 跨程式碼庫搜尋
+- **未知位置**: 在不確定的位置找檔案
+- **模式分析**: 跨多個檔案的模式分析
+- **用途**: 進階搜尋和探索能力
+
+#### 4. Slash Commands → 使用 Task tool 執行
+- **指令**: /compact, /check-file 等
+- **直接執行**: 針對特定指令的工具執行
+- **用途**: 快速指令執行
+
+### 關鍵原則
+- 分析任務需求，立即選擇合適的 sub-agent
+- 不要等待提醒或建議
+- 每個 sub-agent 都有其專長領域，善用它們的能力
+
 ## 🧪 TDD + Tidy First: Kent Beck Guidelines
 
 ### Role and Expertise
