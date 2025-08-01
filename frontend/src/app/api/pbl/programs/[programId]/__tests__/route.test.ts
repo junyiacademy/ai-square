@@ -1,5 +1,4 @@
 import { NextRequest } from 'next/server'
-import { GET } from '../route'
 
 // Mock auth session
 const mockGetServerSession = jest.fn()
@@ -8,14 +7,18 @@ jest.mock('@/lib/auth/session', () => ({
 }))
 
 // Mock repository factory
-const mockRepositoryFactory = {
-  getProgramRepository: jest.fn(),
-  getTaskRepository: jest.fn(),
-  getEvaluationRepository: jest.fn(),
-}
+const mockGetProgramRepository = jest.fn()
+const mockGetTaskRepository = jest.fn()
+const mockGetEvaluationRepository = jest.fn()
 jest.mock('@/lib/repositories/base/repository-factory', () => ({
-  repositoryFactory: mockRepositoryFactory
+  repositoryFactory: {
+    getProgramRepository: mockGetProgramRepository,
+    getTaskRepository: mockGetTaskRepository,
+    getEvaluationRepository: mockGetEvaluationRepository,
+  }
 }))
+
+import { GET } from '../route'
 
 describe('/api/pbl/programs/[programId]', () => {
   // Mock repositories
@@ -32,9 +35,9 @@ describe('/api/pbl/programs/[programId]', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
-    mockRepositoryFactory.getProgramRepository.mockReturnValue(mockProgramRepo)
-    mockRepositoryFactory.getTaskRepository.mockReturnValue(mockTaskRepo)
-    mockRepositoryFactory.getEvaluationRepository.mockReturnValue(mockEvaluationRepo)
+    mockGetProgramRepository.mockReturnValue(mockProgramRepo)
+    mockGetTaskRepository.mockReturnValue(mockTaskRepo)
+    mockGetEvaluationRepository.mockReturnValue(mockEvaluationRepo)
     
     // Default auth mock
     mockGetServerSession.mockResolvedValue({

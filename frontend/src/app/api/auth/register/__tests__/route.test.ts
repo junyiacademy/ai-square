@@ -3,9 +3,7 @@
  * 測試用戶註冊功能
  */
 
-import { POST, OPTIONS } from '../route';
 import { NextRequest } from 'next/server';
-import { Storage } from '@google-cloud/storage';
 
 // Mock Google Cloud Storage
 const mockSave = jest.fn();
@@ -14,13 +12,15 @@ const mockBucket = jest.fn();
 
 jest.mock('@google-cloud/storage', () => ({
   Storage: jest.fn().mockImplementation(() => ({
-    bucket: mockBucket.mockImplementation(() => ({
-      file: mockFile.mockImplementation(() => ({
+    bucket: () => ({
+      file: () => ({
         save: mockSave,
-      })),
-    })),
+      }),
+    }),
   })),
 }));
+
+import { POST, OPTIONS } from '../route';
 
 // Mock console methods
 const mockConsoleLog = jest.spyOn(console, 'log').mockImplementation();
@@ -69,8 +69,6 @@ describe('/api/auth/register', () => {
     it('should save user data to GCS on successful registration', async () => {
       // Reset mocks for this test
       mockSave.mockClear();
-      mockFile.mockClear();
-      mockBucket.mockClear();
 
       const requestData = {
         email: 'gcstest@example.com',
@@ -87,9 +85,6 @@ describe('/api/auth/register', () => {
       expect(response.status).toBe(200);
 
       // Verify GCS save was called
-      // Verify GCS methods were called in sequence
-      expect(mockBucket).toHaveBeenCalled();
-      expect(mockFile).toHaveBeenCalled();
       expect(mockSave).toHaveBeenCalled();
       
       // Check the save was called with JSON data

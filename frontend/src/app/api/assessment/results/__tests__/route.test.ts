@@ -1,11 +1,342 @@
-/**
- * This test file has been temporarily disabled due to GCS v2 removal.
- * TODO: Update to use PostgreSQL repositories
- */
+import { NextRequest } from 'next/server';
+import { POST, GET } from '../route';
+
+// Mock repositories
+const mockFindByEmail = jest.fn();
+const mockFindById = jest.fn();
+const mockUpdate = jest.fn();
+const mockFindByUser = jest.fn();
+const mockCreateProgram = jest.fn();
+const mockUpdateProgram = jest.fn();
+const mockCreateEvaluation = jest.fn();
+const mockFindByProgram = jest.fn();
+const mockGetCompletedPrograms = jest.fn();
+
+jest.mock('@/lib/repositories/base/repository-factory', () => ({
+  repositoryFactory: {
+    getUserRepository: () => ({
+      findByEmail: mockFindByEmail,
+      findById: mockFindById,
+      update: mockUpdate,
+    }),
+    getProgramRepository: () => ({
+      findByUser: mockFindByUser,
+      create: mockCreateProgram,
+      update: mockUpdateProgram,
+      getCompletedPrograms: mockGetCompletedPrograms,
+    }),
+    getEvaluationRepository: () => ({
+      create: mockCreateEvaluation,
+      findByProgram: mockFindByProgram,
+    }),
+  },
+}));
+
+// Mock API optimization utils
+jest.mock('@/lib/api/optimization-utils', () => ({
+  cachedGET: jest.fn((request, handler, options) => handler()),
+  getPaginationParams: jest.fn(() => ({ page: 1, limit: 10 })),
+  createPaginatedResponse: jest.fn((data, total, params) => ({
+    data,
+    total,
+    page: params.page,
+    totalPages: Math.ceil(total / params.limit),
+  })),
+}));
 
 describe('Assessment Results API', () => {
-  it('placeholder test - TODO: implement with PostgreSQL', () => {
-    expect(true).toBe(true);
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  describe('POST', () => {
+    const mockUser = {
+      id: 'user123',
+      email: 'test@example.com',
+      totalXp: 1000,
+    };
+
+    const mockRequestData = {
+      userId: 'user123',
+      userEmail: 'test@example.com',
+      language: 'en',
+      scenarioId: 'assessment-001',
+      answers: [
+        { questionId: 'q1', answer: 'a', isCorrect: true },
+        { questionId: 'q2', answer: 'b', isCorrect: false },
+      ],
+      questions: [
+        { id: 'q1', ksaCodes: ['K1', 'S2'] },
+        { id: 'q2', ksaCodes: ['A3'] },
+      ],
+      result: {
+        overallScore: 85,
+        domainScores: {
+          Engaging_with_AI: 90,
+          Creating_with_AI: 80,
+          Managing_with_AI: 85,
+          Designing_with_AI: 85,
+        },
+        level: 'advanced',
+        timeSpentSeconds: 1200,
+        totalQuestions: 12,
+        correctAnswers: 10,
+        completedAt: new Date().toISOString(),
+        recommendations: ['Focus on Creating with AI'],
+      },
+    };
+
+    it('saves assessment results successfully', async () => {
+      mockFindByEmail.mockResolvedValue(mockUser);
+      mockFindByUser.mockResolvedValue([]);
+      const mockProgram = { id: 'program123', metadata: {} };
+      mockCreateProgram.mockResolvedValue(mockProgram);
+      mockCreateEvaluation.mockResolvedValue({ id: 'eval123' });
+
+      const request = new NextRequest('http://localhost:3000/api/assessment/results', {
+        method: 'POST',
+        body: JSON.stringify(mockRequestData),
+      });
+
+      const response = await POST(request);
+      const data = await response.json();
+
+      expect(response.status).toBe(200);
+      expect(data).toEqual({
+        success: true,
+        assessmentId: 'eval123',
+        programId: 'program123',
+        message: 'Assessment result saved successfully',
+        xpEarned: 850, // 85 * 10
+      });
+
+      expect(mockCreateProgram).toHaveBeenCalledWith(
+        expect.objectContaining({
+          userId: 'user123',
+          scenarioId: 'assessment-001',
+          mode: 'assessment',
+          status: 'active',
+        })
+      );
+
+      expect(mockCreateEvaluation).toHaveBeenCalledWith(
+        expect.objectContaining({
+          userId: 'user123',
+          programId: 'program123',
+          mode: 'assessment',
+          evaluationType: 'assessment_complete',
+          score: 85,
+        })
+      );
+
+      expect(mockUpdate).toHaveBeenCalledWith('user123', {
+        totalXp: 1850, // 1000 + 850
+      });
+    });
+
+    it('uses existing active assessment program', async () => {
+      const existingProgram = {
+        id: 'existing-program',
+        scenarioId: 'assessment-001',
+        status: 'active',
+        metadata: {},
+      };
+
+      mockFindByEmail.mockResolvedValue(mockUser);
+      mockFindByUser.mockResolvedValue([existingProgram]);
+      mockCreateEvaluation.mockResolvedValue({ id: 'eval123' });
+
+      const request = new NextRequest('http://localhost:3000/api/assessment/results', {
+        method: 'POST',
+        body: JSON.stringify(mockRequestData),
+      });
+
+      const response = await POST(request);
+      const data = await response.json();
+
+      expect(response.status).toBe(200);
+      expect(mockCreateProgram).not.toHaveBeenCalled();
+      expect(data.programId).toBe('existing-program');
+    });
+
+    it('returns 400 when required fields are missing', async () => {
+      const incompleteData = {
+        userId: 'user123',
+        // Missing answers and result
+      };
+
+      const request = new NextRequest('http://localhost:3000/api/assessment/results', {
+        method: 'POST',
+        body: JSON.stringify(incompleteData),
+      });
+
+      const response = await POST(request);
+      const data = await response.json();
+
+      expect(response.status).toBe(400);
+      expect(data).toEqual({
+        error: 'Missing required fields',
+      });
+    });
+
+    it('returns 404 when user not found', async () => {
+      mockFindByEmail.mockResolvedValue(null);
+
+      const request = new NextRequest('http://localhost:3000/api/assessment/results', {
+        method: 'POST',
+        body: JSON.stringify(mockRequestData),
+      });
+
+      const response = await POST(request);
+      const data = await response.json();
+
+      expect(response.status).toBe(404);
+      expect(data).toEqual({
+        error: 'User not found',
+      });
+    });
+
+    it('handles database errors gracefully', async () => {
+      mockFindByEmail.mockResolvedValue(mockUser);
+      mockFindByUser.mockRejectedValue(new Error('Database connection failed'));
+
+      const request = new NextRequest('http://localhost:3000/api/assessment/results', {
+        method: 'POST',
+        body: JSON.stringify(mockRequestData),
+      });
+
+      const response = await POST(request);
+      const data = await response.json();
+
+      expect(response.status).toBe(500);
+      expect(data).toEqual({
+        error: 'Failed to save assessment result',
+      });
+    });
+  });
+
+  describe('GET', () => {
+    const mockUser = {
+      id: 'user123',
+      email: 'test@example.com',
+    };
+
+    const mockPrograms = [
+      {
+        id: 'prog1',
+        scenarioId: 'assessment-001',
+        metadata: { type: 'assessment' },
+      },
+    ];
+
+    const mockEvaluations = [
+      {
+        id: 'eval1',
+        evaluationType: 'assessment_complete',
+        score: 85,
+        timeTakenSeconds: 1200,
+        createdAt: '2024-01-01T12:00:00Z',
+        domainScores: {
+          Engaging_with_AI: 90,
+          Creating_with_AI: 80,
+          Managing_with_AI: 85,
+          Designing_with_AI: 85,
+        },
+        metadata: {
+          language: 'en',
+          totalQuestions: 12,
+          correctAnswers: 10,
+          level: 'advanced',
+          answers: [],
+        },
+      },
+    ];
+
+    it('retrieves assessment results by userId', async () => {
+      mockFindById.mockResolvedValue(mockUser);
+      mockGetCompletedPrograms.mockResolvedValue(mockPrograms);
+      mockFindByProgram.mockResolvedValue(mockEvaluations);
+
+      const request = new NextRequest('http://localhost:3000/api/assessment/results?userId=user123');
+      const response = await GET(request);
+      const data = await response.json();
+
+      expect(response.status).toBe(200);
+      expect(data.data).toHaveLength(1);
+      expect(data.data[0]).toMatchObject({
+        assessment_id: 'eval1',
+        user_id: 'user123',
+        user_email: 'test@example.com',
+        scores: {
+          overall: 85,
+          domains: {
+            engaging_with_ai: 90,
+            creating_with_ai: 80,
+            managing_ai: 85,
+            designing_ai: 85,
+          },
+        },
+      });
+    });
+
+    it('retrieves assessment results by userEmail', async () => {
+      mockFindByEmail.mockResolvedValue(mockUser);
+      mockGetCompletedPrograms.mockResolvedValue(mockPrograms);
+      mockFindByProgram.mockResolvedValue(mockEvaluations);
+
+      const request = new NextRequest('http://localhost:3000/api/assessment/results?userEmail=test@example.com');
+      const response = await GET(request);
+      const data = await response.json();
+
+      expect(response.status).toBe(200);
+      expect(data.data).toHaveLength(1);
+    });
+
+    it('returns 400 when neither userId nor userEmail provided', async () => {
+      const request = new NextRequest('http://localhost:3000/api/assessment/results');
+      const response = await GET(request);
+      const data = await response.json();
+
+      expect(response.status).toBe(400);
+      expect(data).toEqual({
+        error: 'userId or userEmail is required',
+      });
+    });
+
+    it('returns empty array when user not found', async () => {
+      mockFindById.mockResolvedValue(null);
+
+      const request = new NextRequest('http://localhost:3000/api/assessment/results?userId=nonexistent');
+      const response = await GET(request);
+      const data = await response.json();
+
+      expect(response.status).toBe(200);
+      expect(data).toEqual({
+        data: [],
+        total: 0,
+        page: 1,
+        totalPages: 1,
+        storage: 'postgresql',
+      });
+    });
+
+    it('sorts results by timestamp (newest first)', async () => {
+      const multipleEvaluations = [
+        { ...mockEvaluations[0], id: 'eval1', createdAt: '2024-01-01T12:00:00Z' },
+        { ...mockEvaluations[0], id: 'eval2', createdAt: '2024-01-02T12:00:00Z' },
+      ];
+
+      mockFindById.mockResolvedValue(mockUser);
+      mockGetCompletedPrograms.mockResolvedValue(mockPrograms);
+      mockFindByProgram.mockResolvedValue(multipleEvaluations);
+
+      const request = new NextRequest('http://localhost:3000/api/assessment/results?userId=user123');
+      const response = await GET(request);
+      const data = await response.json();
+
+      expect(data.data[0].assessment_id).toBe('eval2');
+      expect(data.data[1].assessment_id).toBe('eval1');
+    });
   });
 });
 

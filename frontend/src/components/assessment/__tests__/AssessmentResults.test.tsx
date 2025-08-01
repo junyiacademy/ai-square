@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { useTranslation } from 'react-i18next';
 import AssessmentResults from '../AssessmentResults';
 import { AssessmentResult } from '../../../types/assessment';
@@ -9,42 +9,36 @@ jest.mock('react-i18next', () => ({
   useTranslation: jest.fn(),
 }));
 
-// Mock recharts to avoid canvas issues in tests
-jest.mock('recharts', () => ({
-  ResponsiveContainer: ({ children }: any) => <div data-testid="responsive-container">{children}</div>,
-  RadarChart: ({ children }: any) => <div data-testid="radar-chart">{children}</div>,
-  Radar: () => <div data-testid="radar" />,
-  PolarGrid: () => <div data-testid="polar-grid" />,
-  PolarAngleAxis: () => <div data-testid="polar-angle-axis" />,
-  PolarRadiusAxis: () => <div data-testid="polar-radius-axis" />,
-  Legend: () => <div data-testid="legend" />,
-}));
-
-// Mock d3
-jest.mock('d3', () => ({
-  select: jest.fn(() => ({
-    selectAll: jest.fn(() => ({ remove: jest.fn() })),
-    append: jest.fn(() => ({ attr: jest.fn() })),
-  })),
-  forceSimulation: jest.fn(() => ({
-    force: jest.fn().mockReturnThis(),
-    nodes: jest.fn().mockReturnThis(),
-    on: jest.fn().mockReturnThis(),
-  })),
-  forceLink: jest.fn(() => ({ id: jest.fn() })),
-  forceManyBody: jest.fn(),
-  forceCenter: jest.fn(),
-  drag: jest.fn(() => ({
-    on: jest.fn().mockReturnThis(),
-  })),
-  scaleOrdinal: jest.fn(() => jest.fn()),
-  schemeCategory10: [],
+// Mock dynamic imports
+jest.mock('@/lib/dynamic-imports', () => ({
+  DynamicDomainRadarChart: ({ data }: any) => (
+    <div data-testid="domain-radar-chart" data-chart-data={JSON.stringify(data)}>
+      Domain Radar Chart
+    </div>
+  ),
 }));
 
 // Mock CompetencyKnowledgeGraph
 jest.mock('../CompetencyKnowledgeGraph', () => ({
   __esModule: true,
   default: () => <div data-testid="competency-knowledge-graph">Knowledge Graph</div>,
+}));
+
+// Mock content service
+jest.mock('@/services/content-service', () => ({
+  contentService: {
+    getRelationsTree: jest.fn().mockResolvedValue({
+      domains: [],
+      kMap: {},
+      sMap: {},
+      aMap: {},
+    }),
+  },
+}));
+
+// Mock formatDateWithLocale
+jest.mock('@/utils/locale', () => ({
+  formatDateWithLocale: (date: Date) => '2025-06-25',
 }));
 
 const mockT = jest.fn((key, options) => {
@@ -70,15 +64,22 @@ const mockT = jest.fn((key, options) => {
     'level.advanced': 'Advanced',
     'level.expert': 'Expert',
     'results.skillRadar': 'Skill Radar',
-    'results.tabs.domains': 'Domains',
-    'results.tabs.recommendations': 'Recommendations',
     'results.tabs.overview': 'Overview',
-    'results.tabs.ksa': 'KSA Analysis',
+    'results.tabs.recommendations': 'Recommendations',
     'results.tabs.knowledge-graph': 'Knowledge Graph',
     'results.personalizedRecommendations': 'Personalized Recommendations',
+    'results.nextSteps': 'Next Steps',
     'results.nextStep1': 'Take advanced AI courses',
+    'results.nextStep2': 'Practice with AI tools',
+    'results.nextStep3': 'Join AI communities',
     'results.retakeAssessment': 'Retake Assessment',
     'results.downloadReport': 'Download Report',
+    'results.saveResults': 'Save Results',
+    'results.saving': 'Saving...',
+    'results.saved': 'Saved',
+    'results.saveSuccess': 'Results saved successfully',
+    'results.saveError': 'Failed to save results',
+    'results.viewLearningPath': 'View Learning Path',
     'domains.engaging_with_ai': 'Engaging with AI',
     'domains.creating_with_ai': 'Creating with AI',
     'domains.managing_with_ai': 'Managing AI',
@@ -145,6 +146,21 @@ describe('AssessmentResults', () => {
       i18n: { language: 'en' },
     } as any);
     jest.clearAllMocks();
+    
+    // Mock localStorage
+    const localStorageMock = {
+      getItem: jest.fn(),
+      setItem: jest.fn(),
+      removeItem: jest.fn(),
+      clear: jest.fn(),
+    };
+    Object.defineProperty(window, 'localStorage', {
+      value: localStorageMock,
+      writable: true,
+    });
+    
+    // Mock fetch
+    global.fetch = jest.fn();
   });
 
   it('renders results overview correctly', () => {
@@ -172,8 +188,7 @@ describe('AssessmentResults', () => {
       />
     );
 
-    expect(screen.getByTestId('responsive-container')).toBeInTheDocument();
-    expect(screen.getByTestId('radar-chart')).toBeInTheDocument();
+    expect(screen.getByTestId('domain-radar-chart')).toBeInTheDocument();
   });
 
   it('switches between tabs correctly', () => {
@@ -188,13 +203,13 @@ describe('AssessmentResults', () => {
     // Check initial tab (overview)
     expect(screen.getByText('Skill Radar')).toBeInTheDocument();
 
-    // Switch to domains tab
-    fireEvent.click(screen.getByText('Domains'));
-    expect(screen.getByText('Domain Breakdown')).toBeInTheDocument();
-
     // Switch to recommendations tab
     fireEvent.click(screen.getByText('Recommendations'));
     expect(screen.getByText('Personalized Recommendations')).toBeInTheDocument();
+
+    // Switch to knowledge graph tab
+    fireEvent.click(screen.getByText('Knowledge Graph'));
+    expect(screen.getByTestId('competency-knowledge-graph')).toBeInTheDocument();
   });
 
   it('displays domain breakdown correctly', () => {
@@ -206,9 +221,8 @@ describe('AssessmentResults', () => {
       />
     );
 
-    // Switch to domains tab
-    fireEvent.click(screen.getByText('Domains'));
-
+    // Domain breakdown is now on the overview tab
+    expect(screen.getByText('Domain Breakdown')).toBeInTheDocument();
     expect(screen.getByText('Engaging with AI')).toBeInTheDocument();
     expect(screen.getByText('90%')).toBeInTheDocument();
     expect(screen.getByText('Creating with AI')).toBeInTheDocument();
@@ -229,7 +243,10 @@ describe('AssessmentResults', () => {
 
     expect(screen.getByText(/Focus on improving Creating with AI/)).toBeInTheDocument();
     expect(screen.getByText(/Focus on improving Managing AI/)).toBeInTheDocument();
+    expect(screen.getByText('Next Steps')).toBeInTheDocument();
     expect(screen.getByText('• Take advanced AI courses')).toBeInTheDocument();
+    expect(screen.getByText('• Practice with AI tools')).toBeInTheDocument();
+    expect(screen.getByText('• Join AI communities')).toBeInTheDocument();
   });
 
   it('calls onRetake when retake button is clicked', () => {
@@ -290,6 +307,7 @@ describe('AssessmentResults', () => {
       />
     );
 
+    expect(screen.getByText('Summary')).toBeInTheDocument();
     expect(screen.getByText(/You achieved Expert level with 85% overall score/)).toBeInTheDocument();
   });
 
@@ -309,5 +327,112 @@ describe('AssessmentResults', () => {
     expect(window.print).toHaveBeenCalledTimes(1);
 
     window.print = originalPrint;
+  });
+
+  it('displays completed date correctly', () => {
+    render(
+      <AssessmentResults
+        result={mockResult}
+        domains={mockDomains}
+        onRetake={mockOnRetake}
+      />
+    );
+
+    expect(screen.getByText('2025-06-25')).toBeInTheDocument();
+    expect(screen.getByText('Completed At')).toBeInTheDocument();
+  });
+
+  it('auto-saves results when user is logged in', async () => {
+    // Mock logged in user
+    (window.localStorage.getItem as jest.Mock).mockImplementation((key) => {
+      if (key === 'isLoggedIn') return 'true';
+      if (key === 'user') return JSON.stringify({ id: 1, email: 'test@example.com' });
+      return null;
+    });
+
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ assessmentId: '123' }),
+    });
+
+    render(
+      <AssessmentResults
+        result={mockResult}
+        domains={mockDomains}
+        onRetake={mockOnRetake}
+      />
+    );
+
+    // Wait for auto-save
+    await waitFor(() => {
+      expect(global.fetch).toHaveBeenCalledWith('/api/assessment/results', expect.objectContaining({
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: expect.stringContaining('"userId":"1"'),
+      }));
+    });
+  });
+
+  it('shows save button for non-logged in users', () => {
+    // Mock not logged in
+    (window.localStorage.getItem as jest.Mock).mockReturnValue(null);
+
+    render(
+      <AssessmentResults
+        result={mockResult}
+        domains={mockDomains}
+        onRetake={mockOnRetake}
+      />
+    );
+
+    expect(screen.getByText('Save Results')).toBeInTheDocument();
+  });
+
+  it('shows learning path button after saving', async () => {
+    // Mock logged in user
+    (window.localStorage.getItem as jest.Mock).mockImplementation((key) => {
+      if (key === 'isLoggedIn') return 'true';
+      if (key === 'user') return JSON.stringify({ id: 1, email: 'test@example.com' });
+      return null;
+    });
+
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ assessmentId: '123' }),
+    });
+
+    render(
+      <AssessmentResults
+        result={mockResult}
+        domains={mockDomains}
+        onRetake={mockOnRetake}
+      />
+    );
+
+    // Wait for auto-save to complete
+    await waitFor(() => {
+      expect(screen.getByText('View Learning Path')).toBeInTheDocument();
+    });
+  });
+
+  it('does not auto-save in review mode', () => {
+    // Mock logged in user
+    (window.localStorage.getItem as jest.Mock).mockImplementation((key) => {
+      if (key === 'isLoggedIn') return 'true';
+      if (key === 'user') return JSON.stringify({ id: 1, email: 'test@example.com' });
+      return null;
+    });
+
+    render(
+      <AssessmentResults
+        result={mockResult}
+        domains={mockDomains}
+        onRetake={mockOnRetake}
+        isReview={true}
+      />
+    );
+
+    // Should not call fetch for auto-save
+    expect(global.fetch).not.toHaveBeenCalled();
   });
 });
