@@ -305,19 +305,25 @@ describe('LoginForm', () => {
   });
 
   describe('Edge cases', () => {
-    it('handles rapid demo account clicks gracefully', () => {
+    it('handles rapid demo account clicks gracefully', async () => {
       jest.useFakeTimers();
       const onSubmit = jest.fn();
       render(<LoginForm {...defaultProps} onSubmit={onSubmit} />);
 
       const buttons = screen.getAllByRole('button').slice(1);
+      expect(buttons).toHaveLength(3); // Should have 3 demo buttons
       
       // Click all demo buttons rapidly
-      buttons.forEach(button => fireEvent.click(button));
+      buttons.forEach(button => {
+        fireEvent.click(button);
+      });
       
-      jest.advanceTimersByTime(300);
+      // Wait for all timers to complete
+      act(() => {
+        jest.runAllTimers();
+      });
 
-      // Should only submit once for the last clicked button
+      // Each button click should trigger a submit
       expect(onSubmit).toHaveBeenCalledTimes(3);
       
       jest.useRealTimers();

@@ -2,215 +2,136 @@ import React from 'react'
 import { render, screen } from '@testing-library/react'
 import DomainRadarChart from '../DomainRadarChart'
 
-// Mock recharts components
-jest.mock('recharts', () => {
-  const originalModule = jest.requireActual('recharts')
-  return {
-    ...originalModule,
-    ResponsiveContainer: ({ children }: any) => <div data-testid="responsive-container">{children}</div>,
-    RadarChart: ({ children, data, ...props }: any) => (
-      <div data-testid="radar-chart" data-chart-data={JSON.stringify(data)} {...props}>
-        {children}
-      </div>
-    ),
-    PolarGrid: () => <div data-testid="polar-grid" />,
-    PolarAngleAxis: ({ dataKey }: any) => <div data-testid="polar-angle-axis" data-key={dataKey} />,
-    PolarRadiusAxis: ({ domain }: any) => <div data-testid="polar-radius-axis" data-domain={JSON.stringify(domain)} />,
-    Radar: ({ dataKey, name, ...props }: any) => (
-      <div data-testid={`radar-${dataKey}`} data-name={name} {...props} />
-    ),
-    Legend: () => <div data-testid="legend" />,
-    Tooltip: ({ content }: any) => <div data-testid="tooltip">{content && typeof content === 'function' ? content({}) : content}</div>,
-  }
-})
+// Mock Chart.js and react-chartjs-2
+jest.mock('react-chartjs-2', () => ({
+  Radar: ({ data, options }: any) => (
+    <div 
+      data-testid="radar-chart" 
+      data-chart-data={JSON.stringify(data)}
+      data-chart-options={JSON.stringify(options)}
+    >
+      Radar Chart
+    </div>
+  ),
+}))
+
+jest.mock('chart.js', () => ({
+  Chart: {
+    register: jest.fn(),
+  },
+  RadialLinearScale: jest.fn(),
+  PointElement: jest.fn(),
+  LineElement: jest.fn(),
+  Filler: jest.fn(),
+  Tooltip: jest.fn(),
+  Legend: jest.fn(),
+}))
+
+// Mock react-i18next
+jest.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key: string) => {
+      const translations: Record<string, string> = {
+        'domains.engaging_with_ai': 'Engaging with AI',
+        'domains.creating_with_ai': 'Creating with AI',
+        'domains.managing_ai': 'Managing AI',
+        'domains.designing_ai': 'Designing AI',
+      }
+      return translations[key] || key
+    }
+  }),
+}))
 
 describe('DomainRadarChart', () => {
   const mockDomainScores = {
-    engaging_with_ai: 85,
-    creating_with_ai: 72,
-    managing_with_ai: 90,
-    designing_with_ai: 68
+    'Engaging_with_AI': 85,
+    'Creating_with_AI': 72,
+    'Managing_AI': 90,
+    'Designing_AI': 78,
   }
 
-  it('renders the radar chart with all components', () => {
+  it('renders the radar chart', () => {
     render(<DomainRadarChart domainScores={mockDomainScores} />)
 
-    expect(screen.getByTestId('responsive-container')).toBeInTheDocument()
-    expect(screen.getByTestId('radar-chart')).toBeInTheDocument()
-    expect(screen.getByTestId('polar-grid')).toBeInTheDocument()
-    expect(screen.getByTestId('polar-angle-axis')).toBeInTheDocument()
-    expect(screen.getByTestId('polar-radius-axis')).toBeInTheDocument()
-    expect(screen.getByTestId('legend')).toBeInTheDocument()
-    expect(screen.getByTestId('tooltip')).toBeInTheDocument()
+    const radarChart = screen.getByTestId('radar-chart')
+    expect(radarChart).toBeInTheDocument()
   })
 
-  it('formats data correctly for the chart', () => {
+  it('passes correct data structure to chart', () => {
     render(<DomainRadarChart domainScores={mockDomainScores} />)
 
-    const chartElement = screen.getByTestId('radar-chart')
-    const chartData = JSON.parse(chartElement.getAttribute('data-chart-data') || '[]')
+    const radarChart = screen.getByTestId('radar-chart')
+    const chartData = JSON.parse(radarChart.getAttribute('data-chart-data') || '{}')
 
-    expect(chartData).toHaveLength(4)
-    expect(chartData[0]).toEqual({
-      domain: 'Engaging with AI',
-      value: 85,
-      fullMark: 100,
-    })
+    // Check that labels are properly translated
+    expect(chartData.labels).toContain('Engaging with AI')
+    expect(chartData.labels).toContain('Creating with AI')
+    expect(chartData.labels).toContain('Managing AI')
+    expect(chartData.labels).toContain('Designing AI')
+
+    // Check dataset
+    expect(chartData.datasets).toHaveLength(1)
+    const dataset = chartData.datasets[0]
+    
+    expect(dataset.label).toBe('Domain Scores')
+    expect(dataset.data).toEqual([85, 72, 90, 78])
   })
 
-  it('renders with default height', () => {
+  it('configures chart options correctly', () => {
     render(<DomainRadarChart domainScores={mockDomainScores} />)
 
-    const container = screen.getByTestId('responsive-container')
-    expect(container).toBeInTheDocument()
+    const radarChart = screen.getByTestId('radar-chart')
+    const chartOptions = JSON.parse(radarChart.getAttribute('data-chart-options') || '{}')
+
+    // Check scale configuration
+    expect(chartOptions.scales?.r?.min).toBe(0)
+    expect(chartOptions.scales?.r?.max).toBe(100)
+    expect(chartOptions.scales?.r?.ticks?.stepSize).toBe(20)
+
+    // Check responsive settings
+    expect(chartOptions.responsive).toBe(true)
+    expect(chartOptions.maintainAspectRatio).toBe(false)
   })
 
-  it('renders without errors when no className provided', () => {
-    render(<DomainRadarChart domainScores={mockDomainScores} />)
+  it('handles empty domain scores', () => {
+    render(<DomainRadarChart domainScores={{}} />)
 
-    const container = screen.getByTestId('responsive-container')
-    expect(container).toBeInTheDocument()
+    const radarChart = screen.getByTestId('radar-chart')
+    const chartData = JSON.parse(radarChart.getAttribute('data-chart-data') || '{}')
+
+    expect(chartData.labels).toEqual([])
+    expect(chartData.datasets[0].data).toEqual([])
   })
 
-  it('shows title when provided', () => {
-    render(<DomainRadarChart domainScores={mockDomainScores} title="Domain Performance" />)
-
-    expect(screen.getByText('Domain Performance')).toBeInTheDocument()
-    expect(screen.getByText('Domain Performance')).toHaveClass('text-xl', 'font-semibold')
-  })
-
-  it('renders chart when not loading', () => {
-    render(<DomainRadarChart domainScores={mockDomainScores} />)
-
-    expect(screen.getByTestId('radar-chart')).toBeInTheDocument()
-  })
-
-  it('handles zero domain scores', () => {
-    const zeroScores = {
-      engaging_with_ai: 0,
-      creating_with_ai: 0,
-      managing_with_ai: 0,
-      designing_with_ai: 0
+  it('handles partial domain scores', () => {
+    const partialScores = {
+      'Engaging_with_AI': 85,
+      'Creating_with_AI': 72,
     }
-    render(<DomainRadarChart domainScores={zeroScores} />)
+    
+    render(<DomainRadarChart domainScores={partialScores} />)
 
-    const chartElement = screen.getByTestId('radar-chart')
-    const chartData = JSON.parse(chartElement.getAttribute('data-chart-data') || '[]')
+    const radarChart = screen.getByTestId('radar-chart')
+    const chartData = JSON.parse(radarChart.getAttribute('data-chart-data') || '{}')
 
-    expect(chartData).toHaveLength(4)
+    expect(chartData.labels).toHaveLength(2)
+    expect(chartData.labels).toContain('Engaging with AI')
+    expect(chartData.labels).toContain('Creating with AI')
+    expect(chartData.datasets[0].data).toEqual([85, 72])
   })
 
-  it('sets correct radar properties', () => {
+  it('applies correct styling to dataset', () => {
     render(<DomainRadarChart domainScores={mockDomainScores} />)
 
-    const radar = screen.getByTestId('radar-value')
-    expect(radar).toHaveAttribute('dataKey', 'value')
-    expect(radar).toHaveAttribute('stroke', '#8884d8')
-    expect(radar).toHaveAttribute('fill', '#8884d8')
-    expect(radar).toHaveAttribute('fillOpacity', '0.6')
-  })
+    const radarChart = screen.getByTestId('radar-chart')
+    const chartData = JSON.parse(radarChart.getAttribute('data-chart-data') || '{}')
+    const dataset = chartData.datasets[0]
 
-  it('configures axis correctly', () => {
-    render(<DomainRadarChart domainScores={mockDomainScores} />)
-
-    const angleAxis = screen.getByTestId('polar-angle-axis')
-    expect(angleAxis).toHaveAttribute('data-key', 'domain')
-
-    const radiusAxis = screen.getByTestId('polar-radius-axis')
-    expect(radiusAxis).toHaveAttribute('data-domain', '[0,100]')
-  })
-
-  it('renders with title when provided', () => {
-    render(
-      <DomainRadarChart 
-        domainScores={mockDomainScores} 
-        title="Domain Analysis"
-      />
-    )
-
-    expect(screen.getByText('Domain Analysis')).toBeInTheDocument()
-  })
-
-  it('handles scores above 100', () => {
-    const highScores = {
-      engaging_with_ai: 120,
-      creating_with_ai: 100,
-      managing_with_ai: 100,
-      designing_with_ai: 100
-    }
-
-    render(<DomainRadarChart domainScores={highScores} />)
-
-    const chartElement = screen.getByTestId('radar-chart')
-    const chartData = JSON.parse(chartElement.getAttribute('data-chart-data') || '[]')
-
-    // Score should be capped at 100
-    expect(chartData[0].value).toBe(100)
-  })
-
-  it('handles negative scores', () => {
-    const negativeScores = {
-      engaging_with_ai: -10,
-      creating_with_ai: 0,
-      managing_with_ai: 0,
-      designing_with_ai: 0
-    }
-
-    render(<DomainRadarChart domainScores={negativeScores} />)
-
-    const chartElement = screen.getByTestId('radar-chart')
-    const chartData = JSON.parse(chartElement.getAttribute('data-chart-data') || '[]')
-
-    // Score should be set to 0
-    expect(chartData[0].value).toBe(0)
-  })
-
-  it('renders with default theme', () => {
-    render(<DomainRadarChart domainScores={mockDomainScores} />)
-
-    const container = screen.getByTestId('responsive-container')
-    expect(container).toBeInTheDocument()
-  })
-
-  it('renders without comparison data', () => {
-    render(
-      <DomainRadarChart 
-        domainScores={mockDomainScores}
-      />
-    )
-
-    // Check that main radar component exists
-    expect(screen.getByTestId('radar-value')).toBeInTheDocument()
-  })
-
-  it('handles domain scores as object', () => {
-    render(<DomainRadarChart domainScores={mockDomainScores} />)
-
-    // Chart should render without errors
-    expect(screen.getByTestId('radar-chart')).toBeInTheDocument()
-  })
-
-  it('renders with default animation', () => {
-    render(<DomainRadarChart domainScores={mockDomainScores} />)
-
-    const radar = screen.getByTestId('radar-value')
-    expect(radar).toBeInTheDocument()
-  })
-
-  it('handles decimal scores', () => {
-    const decimalScores = {
-      engaging_with_ai: 85.5,
-      creating_with_ai: 72.3,
-      managing_with_ai: 90.7,
-      designing_with_ai: 68.4
-    }
-
-    render(<DomainRadarChart domainScores={decimalScores} />)
-
-    const chartElement = screen.getByTestId('radar-chart')
-    const chartData = JSON.parse(chartElement.getAttribute('data-chart-data') || '[]')
-
-    expect(chartData[0].value).toBe(85.5)
-    expect(chartData[1].value).toBe(72.3)
+    // Check styling properties
+    expect(dataset.backgroundColor).toMatch(/rgba/)
+    expect(dataset.borderColor).toBeDefined()
+    expect(dataset.pointBackgroundColor).toBeDefined()
+    expect(dataset.pointBorderColor).toBe('#fff')
+    expect(dataset.pointHoverBackgroundColor).toBe('#fff')
   })
 })

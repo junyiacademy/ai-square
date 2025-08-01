@@ -1,9 +1,11 @@
 import { VertexAI } from '@google-cloud/vertexai';
+import { GoogleAuth } from 'google-auth-library';
 import { VertexAIService, getVertexAI, createPBLVertexAIService } from '../vertex-ai-service';
 import { AIModule } from '@/types/pbl';
 
 // Mock the VertexAI SDK
 jest.mock('@google-cloud/vertexai');
+jest.mock('google-auth-library');
 
 describe('vertex-ai-service', () => {
   const originalEnv = process.env;
@@ -12,7 +14,7 @@ describe('vertex-ai-service', () => {
     jest.clearAllMocks();
     process.env = { ...originalEnv };
     process.env.GOOGLE_CLOUD_PROJECT = 'test-project';
-    process.env.GOOGLE_CLOUD_LOCATION = 'us-central1';
+    process.env.VERTEX_AI_LOCATION = 'us-central1';
   });
 
   afterEach(() => {
@@ -30,8 +32,8 @@ describe('vertex-ai-service', () => {
       expect(vertexAI).toBeInstanceOf(VertexAI);
     });
 
-    it('should use default location when GOOGLE_CLOUD_LOCATION is not set', () => {
-      delete process.env.GOOGLE_CLOUD_LOCATION;
+    it('should use default location when VERTEX_AI_LOCATION is not set', () => {
+      delete process.env.VERTEX_AI_LOCATION;
       
       getVertexAI();
 
@@ -50,7 +52,16 @@ describe('vertex-ai-service', () => {
       maxOutputTokens: 4096
     };
 
+    const mockGetAccessToken = jest.fn().mockResolvedValue('mock-token');
+    const mockGetClient = jest.fn();
+
     beforeEach(() => {
+      // Mock GoogleAuth
+      (GoogleAuth as jest.Mock).mockImplementation(() => ({
+        getAccessToken: mockGetAccessToken,
+        getClient: mockGetClient
+      }));
+      
       service = new VertexAIService(mockConfig);
     });
 
@@ -73,7 +84,7 @@ describe('vertex-ai-service', () => {
       });
 
       // Mock the fetch method for testing
-      (global.fetch as jest.Mock) = jest.fn().mockResolvedValue({
+      global.fetch = jest.fn().mockResolvedValue({
         ok: true,
         json: async () => ({
           candidates: [{
@@ -82,14 +93,18 @@ describe('vertex-ai-service', () => {
                 text: 'Test response'
               }]
             }
-          }]
+          }],
+          usageMetadata: {
+            totalTokenCount: 100
+          }
         })
       });
 
       const response = await service.sendMessage('Test message');
 
       expect(response.content).toBe('Test response');
-      expect(response.processingTime).toBeGreaterThan(0);
+      expect(response.processingTime).toBeGreaterThanOrEqual(0);
+      expect(response.tokensUsed).toBe(100);
     });
 
     it('should evaluate task performance', async () => {

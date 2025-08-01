@@ -12,13 +12,17 @@ describe('Discovery Chat API Route', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     
+    // Setup environment variables
+    process.env.GOOGLE_CLOUD_PROJECT = 'test-project';
+    process.env.GOOGLE_CLOUD_LOCATION = 'us-central1';
+    
     // Setup Vertex AI mocks
     mockGenerateContent = jest.fn();
     mockGetGenerativeModel = jest.fn().mockReturnValue({
       generateContent: mockGenerateContent
     });
     
-    (VertexAI as jest.MockedClass<typeof VertexAI>).mockImplementation(() => ({
+    (VertexAI as jest.Mock).mockImplementation(() => ({
       preview: {
         getGenerativeModel: mockGetGenerativeModel
       }
