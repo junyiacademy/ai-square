@@ -9,12 +9,16 @@ import { Storage } from '@google-cloud/storage';
 
 // Mock Google Cloud Storage
 const mockSave = jest.fn();
-const mockFile = jest.fn(() => ({ save: mockSave }));
-const mockBucket = jest.fn(() => ({ file: mockFile }));
+const mockFile = jest.fn();
+const mockBucket = jest.fn();
 
 jest.mock('@google-cloud/storage', () => ({
-  Storage: jest.fn(() => ({
-    bucket: mockBucket,
+  Storage: jest.fn().mockImplementation(() => ({
+    bucket: mockBucket.mockImplementation(() => ({
+      file: mockFile.mockImplementation(() => ({
+        save: mockSave,
+      })),
+    })),
   })),
 }));
 

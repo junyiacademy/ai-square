@@ -29,6 +29,15 @@ jest.mock('../../../contexts/ThemeContext', () => ({
   })),
 }))
 
+// Mock AuthContext
+jest.mock('../../../contexts/AuthContext', () => ({
+  useAuth: jest.fn(() => ({
+    user: null,
+    isLoggedIn: false,
+    logout: jest.fn(),
+  })),
+}))
+
 // Mock Link component
 jest.mock('next/link', () => {
   return {
@@ -45,8 +54,13 @@ jest.mock('react-i18next', () => ({
     t: (key: string) => {
       const translations: { [key: string]: string } = {
         'home': 'Home',
+        'dashboard': 'Dashboard',
+        'assessment': 'Assessment',
+        'pbl': 'Problem-Based Learning',
+        'discovery': 'Discovery',
         'relations': 'Relations',
         'ksa': 'KSA Framework',
+        'history': 'History',
         'signIn': 'Sign in',
         'signOut': 'Sign out',
         'userRole.student': 'Student',
@@ -86,9 +100,11 @@ describe('Header Navigation Tests', () => {
       
       render(<Header />)
 
-      // Check for navigation links
-      expect(screen.getByText('Relations')).toBeInTheDocument()
-      expect(screen.getByText('KSA Framework')).toBeInTheDocument()
+      // Check for primary navigation links
+      expect(screen.getByText('Dashboard')).toBeInTheDocument()
+      expect(screen.getByText('Assessment')).toBeInTheDocument()
+      expect(screen.getByText('Problem-Based Learning')).toBeInTheDocument()
+      expect(screen.getByText('Discovery')).toBeInTheDocument()
     })
 
     it('should have correct href attributes', () => {
@@ -96,20 +112,20 @@ describe('Header Navigation Tests', () => {
       
       render(<Header />)
 
-      const relationsLink = screen.getByText('Relations').closest('a')
-      const ksaLink = screen.getByText('KSA Framework').closest('a')
+      const dashboardLink = screen.getByText('Dashboard').closest('a')
+      const assessmentLink = screen.getByText('Assessment').closest('a')
 
-      expect(relationsLink).toHaveAttribute('href', '/relations')
-      expect(ksaLink).toHaveAttribute('href', '/ksa')
+      expect(dashboardLink).toHaveAttribute('href', '/dashboard')
+      expect(assessmentLink).toHaveAttribute('href', '/assessment/scenarios')
     })
 
     it('should highlight active page', () => {
-      mockUsePathname.mockReturnValue('/relations')
+      mockUsePathname.mockReturnValue('/dashboard')
       
       render(<Header />)
 
-      const relationsLink = screen.getByText('Relations').closest('a')
-      expect(relationsLink).toHaveClass('active')
+      const dashboardLink = screen.getByText('Dashboard').closest('a')
+      expect(dashboardLink?.parentElement).toHaveClass('text-blue-600')
     })
   })
 

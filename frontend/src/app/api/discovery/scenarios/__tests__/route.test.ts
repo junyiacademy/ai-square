@@ -1,364 +1,359 @@
 /**
  * Discovery Scenarios API Route Tests
- * 測試 Discovery 場景列表 API
+ * 測試探索情境 API
  */
 
-import { NextRequest } from 'next/server';
 import { GET } from '../route';
-import type { IScenario } from '@/types/unified-learning';
-import type { TaskType } from '@/types/database';
+import { NextRequest } from 'next/server';
+import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 
-// Mock repository factory
-jest.mock('@/lib/repositories/base/repository-factory', () => ({
-  repositoryFactory: {
-    getScenarioRepository: jest.fn()
-  }
+// Mock dependencies
+jest.mock('@/lib/repositories/base/repository-factory');
+jest.mock('@/lib/auth/session', () => ({
+  getServerSession: jest.fn(),
 }));
 
-// Get the mocked repository factory after mocking
-import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-const mockRepositoryFactory = repositoryFactory as jest.Mocked<typeof repositoryFactory>;
+// Mock console
+const mockConsoleError = jest.spyOn(console, 'error').mockImplementation();
 
-describe('GET /api/discovery/scenarios', () => {
-  let mockScenarioRepo: any;
+describe('/api/discovery/scenarios', () => {
+  // Mock repositories
+  const mockScenarioRepo = {
+    findByMode: jest.fn(),
+  };
 
-  const mockScenarios: IScenario[] = [
-    {
-      id: '550e8400-e29b-41d4-a716-446655440001',
-      mode: 'discovery',
-      status: 'active',
-      version: '1.0',
-      sourceType: 'yaml',
-      sourcePath: 'discovery/software-developer.yaml',
-      sourceId: 'software-developer',
-      sourceMetadata: {},
-      title: { 
-        en: 'Software Developer',
-        zh: '軟體開發工程師'
-      },
-      description: { 
-        en: 'Build amazing software applications',
-        zh: '建構優秀的軟體應用'
-      },
-      objectives: ['Learn programming', 'Build projects'],
-      difficulty: 'intermediate',
-      estimatedMinutes: 180,
-      prerequisites: [],
-      taskTemplates: [
-        { id: 'task-1', title: { en: 'Introduction' }, type: 'exploration' as TaskType },
-        { id: 'task-2', title: { en: 'Build First App' }, type: 'project' as TaskType }
-      ],
-      taskCount: 2,
-      xpRewards: { completion: 1000 },
-      unlockRequirements: {},
-      pblData: {},
-      discoveryData: {
-        careerPath: 'software-developer',
-        requiredSkills: ['JavaScript', 'Python', 'Git', 'Problem Solving'],
-        industryInsights: {
-          growth: 'High',
-          demand: 'Very High'
-        },
-        careerLevel: 'intermediate',
-        estimatedSalaryRange: { min: 60000, max: 120000, currency: 'USD' },
-        relatedCareers: ['full-stack-developer', 'frontend-developer'],
-        dayInLife: { 
-          en: 'A typical day involves coding, debugging, and collaborating with team members',
-          zh: '典型的一天包括編程、調試和與團隊成員協作'
-        },
-        challenges: { 
-          en: ['Keeping up with new technologies', 'Debugging complex issues'],
-          zh: ['跟上新技術', '調試複雜問題']
-        },
-        rewards: { 
-          en: ['Creative problem solving', 'Good salary', 'Remote work opportunities'],
-          zh: ['創意解決問題', '良好薪資', '遠程工作機會']
-        }
-      },
-      assessmentData: {},
-      aiModules: {},
-      resources: [],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      metadata: {}
-    },
-    {
-      id: '550e8400-e29b-41d4-a716-446655440002',
-      mode: 'discovery',
-      status: 'active',
-      version: '1.0',
-      sourceType: 'yaml',
-      sourcePath: 'discovery/data-scientist.yaml',
-      sourceId: 'data-scientist',
-      sourceMetadata: {},
-      title: { 
-        en: 'Data Scientist',
-        zh: '數據科學家'
-      },
-      description: { 
-        en: 'Extract insights from data',
-        zh: '從數據中提取洞察'
-      },
-      objectives: ['Analyze data', 'Build ML models'],
-      difficulty: 'advanced',
-      estimatedMinutes: 240,
-      prerequisites: ['Statistics', 'Programming'],
-      taskTemplates: [],
-      taskCount: 0,
-      xpRewards: { completion: 1500 },
-      unlockRequirements: {},
-      pblData: {},
-      discoveryData: {
-        careerPath: 'data-scientist',
-        requiredSkills: ['Python', 'Statistics', 'Machine Learning', 'SQL'],
-        industryInsights: {},
-        careerLevel: 'senior',
-        estimatedSalaryRange: { min: 80000, max: 150000, currency: 'USD' },
-        relatedCareers: ['ml-engineer', 'data-analyst'],
-        dayInLife: { en: 'Analyzing datasets and building predictive models' },
-        challenges: { en: ['Complex data problems', 'Communicating insights'] },
-        rewards: { en: ['High impact work', 'Excellent compensation'] }
-      },
-      assessmentData: {},
-      aiModules: {},
-      resources: [],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      metadata: {}
-    }
-  ];
+  const mockProgramRepo = {
+    findByUser: jest.fn(),
+  };
 
   beforeEach(() => {
     jest.clearAllMocks();
-    // clearCache is not exported from route, so we can't clear it directly
-
-    // Mock repository
-    mockScenarioRepo = {
-      findByMode: jest.fn()
-    };
-
-    // Setup mocks
-    mockRepositoryFactory.getScenarioRepository.mockReturnValue(mockScenarioRepo);
+    
+    // Setup repository factory mocks
+    (repositoryFactory.getScenarioRepository as jest.Mock).mockReturnValue(mockScenarioRepo);
+    (repositoryFactory.getProgramRepository as jest.Mock).mockReturnValue(mockProgramRepo);
   });
 
-  afterEach(() => {
-    // Clear cache by resetting module
-    jest.resetModules();
+  afterAll(() => {
+    mockConsoleError.mockRestore();
   });
 
-  describe('Success Cases', () => {
-    it('should return all active discovery scenarios', async () => {
-      // Arrange
+  describe('GET - Discovery Scenarios', () => {
+    const mockScenarios = [
+      {
+        id: 'scenario-1',
+        mode: 'discovery',
+        title: { en: 'Career Explorer', zh: '職業探索' },
+        description: { en: 'Explore AI careers', zh: '探索 AI 職業' },
+        discoveryData: { careerType: 'tech' },
+        difficulty: 'beginner',
+        estimatedMinutes: 30,
+      },
+      {
+        id: 'scenario-2',
+        mode: 'discovery',
+        title: { en: 'Data Scientist Path', zh: '數據科學家之路' },
+        description: { en: 'Learn about data science', zh: '了解數據科學' },
+        discoveryData: { careerType: 'data' },
+        difficulty: 'intermediate',
+        estimatedMinutes: 45,
+      },
+    ];
+
+    it('should return discovery scenarios with default language', async () => {
       mockScenarioRepo.findByMode.mockResolvedValue(mockScenarios);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios');
-
-      // Act
       const response = await GET(request);
       const data = await response.json();
 
-      // Assert
       expect(response.status).toBe(200);
       expect(data.success).toBe(true);
       expect(data.data.scenarios).toHaveLength(2);
-      expect(data.data.scenarios[0].title).toBe('Software Developer');
-      expect(data.data.total).toBe(2);
-      expect(data.meta.source).toBe('unified');
+      expect(data.data.scenarios[0]).toMatchObject({
+        id: 'scenario-1',
+        title: 'Career Explorer', // English by default
+        description: 'Explore AI careers',
+        titleObj: { en: 'Career Explorer', zh: '職業探索' },
+        descObj: { en: 'Explore AI careers', zh: '探索 AI 職業' },
+        discovery_data: { careerType: 'tech' },
+        primaryStatus: 'new',
+        currentProgress: 0,
+      });
+      expect(mockScenarioRepo.findByMode).toHaveBeenCalledWith('discovery');
     });
 
-    it('should process language parameter correctly', async () => {
-      // Arrange
+    it('should return scenarios with specified language', async () => {
       mockScenarioRepo.findByMode.mockResolvedValue(mockScenarios);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios?lang=zh');
-
-      // Act
       const response = await GET(request);
       const data = await response.json();
 
-
-      // Assert
       expect(response.status).toBe(200);
-      // The route correctly processes multilingual fields from scenarios
-      expect(data.data.scenarios[0].title).toBe('軟體開發工程師');
-      expect(data.data.scenarios[0].description).toBe('建構優秀的軟體應用');
+      expect(data.data.scenarios[0].title).toBe('職業探索'); // Chinese title
+      expect(data.data.scenarios[0].description).toBe('探索 AI 職業');
       expect(data.meta.language).toBe('zh');
     });
 
-    it('should fallback to English when translation not available', async () => {
-      // Arrange
-      const scenarioWithMissingTranslation = {
-        ...mockScenarios[0],
-        title: { en: 'English Only' }, // No zh translation
-        description: { en: 'English Description' }
-      };
-      mockScenarioRepo.findByMode.mockResolvedValue([scenarioWithMissingTranslation]);
+    it('should include user progress when authenticated', async () => {
+      const { getServerSession } = await import('@/lib/auth/session');
+      (getServerSession as jest.Mock).mockResolvedValue({
+        user: { id: 'user-123', email: 'user@example.com' },
+      });
 
-      const request = new NextRequest('http://localhost:3000/api/discovery/scenarios?lang=zh');
-
-      // Act
-      const response = await GET(request);
-      const data = await response.json();
-
-      // Assert
-      expect(response.status).toBe(200);
-      expect(data.data.scenarios[0].title).toBe('English Only');
-      expect(data.data.scenarios[0].description).toBe('English Description');
-    });
-
-    it('should preserve original multilingual objects in response', async () => {
-      // Arrange
       mockScenarioRepo.findByMode.mockResolvedValue(mockScenarios);
+      mockProgramRepo.findByUser.mockResolvedValue([
+        {
+          id: 'prog-1',
+          scenarioId: 'scenario-1',
+          mode: 'discovery',
+          status: 'completed',
+          totalScore: 95,
+          completedTaskCount: 5,
+          totalTaskCount: 5,
+        },
+        {
+          id: 'prog-2',
+          scenarioId: 'scenario-2',
+          mode: 'discovery',
+          status: 'active',
+          totalScore: 0,
+          completedTaskCount: 2,
+          totalTaskCount: 4,
+        },
+      ]);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios');
-
-      // Act
       const response = await GET(request);
       const data = await response.json();
 
-      // Assert
       expect(response.status).toBe(200);
-      expect(data.data.scenarios[0].titleObj).toEqual({
-        en: 'Software Developer',
-        zh: '軟體開發工程師'
+      
+      // Check first scenario (completed)
+      expect(data.data.scenarios[0]).toMatchObject({
+        id: 'scenario-1',
+        primaryStatus: 'mastered',
+        currentProgress: 100,
+        stats: {
+          completedCount: 1,
+          activeCount: 0,
+          totalAttempts: 1,
+          bestScore: 95,
+        },
+        completedCount: 1,
+        progress: 100,
+        isActive: false,
       });
-      expect(data.data.scenarios[0].descObj).toEqual({
-        en: 'Build amazing software applications',
-        zh: '建構優秀的軟體應用'
+
+      // Check second scenario (in progress)
+      expect(data.data.scenarios[1]).toMatchObject({
+        id: 'scenario-2',
+        primaryStatus: 'in-progress',
+        currentProgress: 50, // 2/4 * 100
+        stats: {
+          completedCount: 0,
+          activeCount: 1,
+          totalAttempts: 1,
+          bestScore: 0,
+        },
+        isActive: true,
       });
+
+      expect(mockProgramRepo.findByUser).toHaveBeenCalledWith('user-123');
     });
 
-    it('should use cache on subsequent requests', async () => {
-      // Arrange
-      mockScenarioRepo.findByMode.mockResolvedValue(mockScenarios);
-
-      const request1 = new NextRequest('http://localhost:3000/api/discovery/scenarios', {
-        method: 'GET'
-      });
-
-      const request2 = new NextRequest('http://localhost:3000/api/discovery/scenarios', {
-        method: 'GET'
-      });
-
-      // Act
-      const response1 = await GET(request1);
-      const response2 = await GET(request2);
-
-      // Assert
-      expect(response1.status).toBe(200);
-      expect(response2.status).toBe(200);
-      expect(mockScenarioRepo.findByMode).toHaveBeenCalledTimes(1); // Called only once due to cache
-    });
-  });
-
-  describe('Error Cases', () => {
-    it('should handle repository errors gracefully', async () => {
-      // Arrange
-      mockScenarioRepo.findByMode.mockRejectedValue(
-        new Error('Database connection failed')
-      );
-
-      const request = new NextRequest('http://localhost:3000/api/discovery/scenarios');
-
-      // Act
-      const response = await GET(request);
-      const data = await response.json();
-
-      // Assert
-      expect(response.status).toBe(500);
-      expect(data.error).toBe('Internal server error');
-    });
-
-    it('should handle empty results', async () => {
-      // Arrange
+    it('should handle empty scenarios', async () => {
       mockScenarioRepo.findByMode.mockResolvedValue([]);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios');
-
-      // Act
       const response = await GET(request);
       const data = await response.json();
 
-      // Assert
       expect(response.status).toBe(200);
       expect(data.success).toBe(true);
-      expect(data.data.scenarios).toHaveLength(0);
+      expect(data.data.scenarios).toEqual([]);
       expect(data.data.total).toBe(0);
     });
 
-    it('should handle null repository response', async () => {
-      // Arrange
-      mockScenarioRepo.findByMode.mockResolvedValue(null);
+    it('should handle missing findByMode method', async () => {
+      mockScenarioRepo.findByMode = undefined;
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios');
-
-      // Act
       const response = await GET(request);
       const data = await response.json();
 
-      // Assert
       expect(response.status).toBe(200);
-      expect(data.data.scenarios).toHaveLength(0);
+      expect(data.success).toBe(true);
+      expect(data.data.scenarios).toEqual([]);
+    });
+
+    it('should fallback to English when language not available', async () => {
+      const scenarioWithLimitedLanguages = [{
+        id: 'scenario-3',
+        mode: 'discovery',
+        title: { en: 'English Only' }, // No Chinese
+        description: { en: 'English description' },
+      }];
+
+      mockScenarioRepo.findByMode.mockResolvedValue(scenarioWithLimitedLanguages);
+
+      const request = new NextRequest('http://localhost:3000/api/discovery/scenarios?lang=zh');
+      const response = await GET(request);
+      const data = await response.json();
+
+      expect(response.status).toBe(200);
+      expect(data.data.scenarios[0].title).toBe('English Only'); // Falls back to English
+      expect(data.data.scenarios[0].description).toBe('English description');
     });
 
     it('should handle malformed title/description objects', async () => {
-      // Arrange
-      const malformedScenario = {
-        ...mockScenarios[0],
-        title: 'Plain string title', // Not an object
-        description: null // Null description
-      };
-      mockScenarioRepo.findByMode.mockResolvedValue([malformedScenario]);
+      const malformedScenarios = [{
+        id: 'scenario-4',
+        mode: 'discovery',
+        title: 'String title instead of object' as any,
+        description: null as any,
+      }];
+
+      mockScenarioRepo.findByMode.mockResolvedValue(malformedScenarios);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios');
-
-      // Act
       const response = await GET(request);
       const data = await response.json();
 
-      // Assert
       expect(response.status).toBe(200);
       expect(data.data.scenarios[0].title).toBe('Untitled');
       expect(data.data.scenarios[0].description).toBe('No description');
     });
-  });
 
-  describe('Response Format', () => {
-    it('should include proper metadata', async () => {
-      // Arrange
-      mockScenarioRepo.findByMode.mockResolvedValue(mockScenarios);
+    it('should handle multiple programs for same scenario', async () => {
+      const { getServerSession } = await import('@/lib/auth/session');
+      (getServerSession as jest.Mock).mockResolvedValue({
+        user: { email: 'user@example.com' },
+      });
+
+      mockScenarioRepo.findByMode.mockResolvedValue([mockScenarios[0]]);
+      mockProgramRepo.findByUser.mockResolvedValue([
+        {
+          id: 'prog-1',
+          scenarioId: 'scenario-1',
+          mode: 'discovery',
+          status: 'completed',
+          totalScore: 85,
+        },
+        {
+          id: 'prog-2',
+          scenarioId: 'scenario-1',
+          mode: 'discovery',
+          status: 'completed',
+          totalScore: 95, // Better score
+        },
+        {
+          id: 'prog-3',
+          scenarioId: 'scenario-1',
+          mode: 'discovery',
+          status: 'active',
+          completedTaskCount: 1,
+          totalTaskCount: 5,
+        },
+      ]);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios');
-
-      // Act
       const response = await GET(request);
       const data = await response.json();
 
-      // Assert
-      expect(data.meta).toBeDefined();
-      expect(data.meta.timestamp).toBeDefined();
-      expect(data.meta.version).toBe('1.0.0');
-      expect(data.meta.language).toBe('en');
-      expect(data.meta.source).toBe('unified');
+      expect(response.status).toBe(200);
+      expect(data.data.scenarios[0].stats).toMatchObject({
+        completedCount: 2,
+        activeCount: 1,
+        totalAttempts: 3,
+        bestScore: 95, // Best of the two completed
+      });
     });
 
-    it('should maintain consistent response structure', async () => {
-      // Arrange
+    it('should cache responses for non-authenticated users', async () => {
+      const { getServerSession } = await import('@/lib/auth/session');
+      (getServerSession as jest.Mock).mockResolvedValue(null);
+
       mockScenarioRepo.findByMode.mockResolvedValue(mockScenarios);
 
-      const request = new NextRequest('http://localhost:3000/api/discovery/scenarios');
+      // First request
+      const request1 = new NextRequest('http://localhost:3000/api/discovery/scenarios');
+      const response1 = await GET(request1);
+      expect(response1.status).toBe(200);
+      expect(mockScenarioRepo.findByMode).toHaveBeenCalledTimes(1);
 
-      // Act
+      // Second request (should use cache)
+      const request2 = new NextRequest('http://localhost:3000/api/discovery/scenarios');
+      const response2 = await GET(request2);
+      const data2 = await response2.json();
+      
+      expect(response2.status).toBe(200);
+      expect(mockScenarioRepo.findByMode).toHaveBeenCalledTimes(1); // Not called again
+      expect(data2.data.scenarios).toHaveLength(2);
+    });
+
+    it('should not cache responses for authenticated users', async () => {
+      const { getServerSession } = await import('@/lib/auth/session');
+      (getServerSession as jest.Mock).mockResolvedValue({
+        user: { id: 'user-123' },
+      });
+
+      mockScenarioRepo.findByMode.mockResolvedValue(mockScenarios);
+      mockProgramRepo.findByUser.mockResolvedValue([]);
+
+      // First request
+      await GET(new NextRequest('http://localhost:3000/api/discovery/scenarios'));
+      expect(mockScenarioRepo.findByMode).toHaveBeenCalledTimes(1);
+
+      // Second request (should not use cache)
+      await GET(new NextRequest('http://localhost:3000/api/discovery/scenarios'));
+      expect(mockScenarioRepo.findByMode).toHaveBeenCalledTimes(2);
+    });
+
+    it('should handle repository errors', async () => {
+      const error = new Error('Database error');
+      mockScenarioRepo.findByMode.mockRejectedValue(error);
+
+      const request = new NextRequest('http://localhost:3000/api/discovery/scenarios');
       const response = await GET(request);
       const data = await response.json();
 
-      // Assert
-      expect(data).toHaveProperty('success');
-      expect(data).toHaveProperty('data');
-      expect(data).toHaveProperty('meta');
-      expect(data.data).toHaveProperty('scenarios');
-      expect(data.data).toHaveProperty('total');
-      expect(data.data).toHaveProperty('available');
+      expect(response.status).toBe(500);
+      expect(data.error).toBe('Internal server error');
+      expect(mockConsoleError).toHaveBeenCalledWith(
+        'Error in GET /api/discovery/scenarios:',
+        error
+      );
     });
   });
 });
+
+/**
+ * Discovery Scenarios API Considerations:
+ * 
+ * 1. Multilingual Support:
+ *    - Supports language parameter
+ *    - Falls back to English
+ *    - Preserves original language objects
+ * 
+ * 2. User Progress:
+ *    - Tracks completed/active programs
+ *    - Calculates best scores
+ *    - Shows completion status
+ * 
+ * 3. Caching:
+ *    - 5-minute cache for non-authenticated users
+ *    - No cache for authenticated users
+ *    - Language-specific caching
+ * 
+ * 4. Data Structure:
+ *    - Unified learning architecture
+ *    - Discovery-specific data preserved
+ *    - Legacy field compatibility
+ * 
+ * 5. Performance:
+ *    - Efficient program grouping
+ *    - Single database query
+ *    - Memory caching for repeated requests
+ */

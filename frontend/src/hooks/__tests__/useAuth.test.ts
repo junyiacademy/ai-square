@@ -89,7 +89,7 @@ describe('useAuth', () => {
         expect(result.current.isLoading).toBe(false)
       })
 
-      expect(mockFetch).toHaveBeenCalledWith('/api/auth/check')
+      expect(mockFetch).toHaveBeenCalledWith('/api/auth/check', { credentials: 'include' })
       expect(result.current.isLoggedIn).toBe(true)
       expect(result.current.user).toEqual({
         id: 1,
@@ -306,7 +306,10 @@ describe('useAuth', () => {
         await result.current.logout()
       })
 
-      expect(mockFetch).toHaveBeenCalledWith('/api/auth/logout', { method: 'POST' })
+      expect(mockFetch).toHaveBeenCalledWith('/api/auth/logout', { 
+        method: 'POST',
+        credentials: 'include'
+      })
       expect(result.current.isLoggedIn).toBe(false)
       expect(result.current.user).toBeNull()
       expect(localStorageMock.removeItem).toHaveBeenCalledWith('isLoggedIn')
@@ -352,7 +355,10 @@ describe('useAuth', () => {
       })
 
       expect(refreshResult!).toBe(true)
-      expect(mockFetch).toHaveBeenCalledWith('/api/auth/refresh', { method: 'POST' })
+      expect(mockFetch).toHaveBeenCalledWith('/api/auth/refresh', { 
+        method: 'POST',
+        credentials: 'include' 
+      })
     })
 
     it('should return false on refresh failure', async () => {
@@ -411,7 +417,7 @@ describe('useAuth', () => {
       })
 
       await waitFor(() => {
-        expect(mockFetch).toHaveBeenCalledWith('/api/auth/check')
+        expect(mockFetch).toHaveBeenCalledWith('/api/auth/check', { credentials: 'include' })
       })
     })
 
@@ -439,7 +445,7 @@ describe('useAuth', () => {
       })
 
       await waitFor(() => {
-        expect(mockFetch).toHaveBeenCalledWith('/api/auth/check')
+        expect(mockFetch).toHaveBeenCalledWith('/api/auth/check', { credentials: 'include' })
       })
     })
 
@@ -486,7 +492,10 @@ describe('useAuth', () => {
         expect(mockFetch).toHaveBeenCalledTimes(3) // Initial check + refresh + check after refresh
       })
 
-      expect(mockFetch).toHaveBeenNthCalledWith(2, '/api/auth/refresh', { method: 'POST' })
+      expect(mockFetch).toHaveBeenNthCalledWith(2, '/api/auth/refresh', { 
+        method: 'POST',
+        credentials: 'include'
+      })
     })
   })
 

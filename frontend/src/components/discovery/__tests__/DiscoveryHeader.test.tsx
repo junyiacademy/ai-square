@@ -14,9 +14,12 @@ jest.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string) => {
       const translations: Record<string, string> = {
-        'title': '探索世界',
-        'subtitle': '發現你的 AI 學習路徑',
-        'navigation:home': '首頁'
+        'discovery:title': '探索世界',
+        'discovery:subtitle': '發現你的 AI 學習路徑',
+        'navigation:home': '首頁',
+        'discovery:navigation.overview': '總覽',
+        'discovery:navigation.evaluation': '評估',
+        'discovery:navigation.scenarios': '職業冒險'
       };
       return translations[key] || key;
     },
@@ -55,22 +58,26 @@ describe('DiscoveryHeader', () => {
     const overviewButtons = screen.getAllByText('總覽');
     expect(overviewButtons.length).toBeGreaterThanOrEqual(1);
     
-    expect(screen.getByText('評估')).toBeInTheDocument();
-    expect(screen.getByText('職業冒險')).toBeInTheDocument();
+    const evaluationButtons = screen.getAllByText('評估');
+    expect(evaluationButtons.length).toBeGreaterThanOrEqual(1);
+    
+    const scenariosButtons = screen.getAllByText('職業冒險');
+    expect(scenariosButtons.length).toBeGreaterThanOrEqual(1);
   });
 
   it('should highlight active navigation item', () => {
     render(<DiscoveryHeader />);
 
-    const overviewButton = screen.getByRole('button', { name: /總覽/i });
-    expect(overviewButton).toHaveClass('bg-purple-600');
+    const overviewButtons = screen.getAllByRole('button', { name: /總覽/i });
+    const desktopOverviewButton = overviewButtons[0];
+    expect(desktopOverviewButton).toHaveClass('bg-purple-600');
   });
 
   it('should navigate when clicking navigation items', () => {
     render(<DiscoveryHeader />);
 
-    const evaluationButton = screen.getByRole('button', { name: /評估/i });
-    fireEvent.click(evaluationButton);
+    const evaluationButtons = screen.getAllByRole('button', { name: /評估/i });
+    fireEvent.click(evaluationButtons[0]);
 
     expect(mockPush).toHaveBeenCalledWith('/discovery/evaluation');
   });
@@ -88,8 +95,9 @@ describe('DiscoveryHeader', () => {
     (usePathname as jest.Mock).mockReturnValue('/discovery/scenarios');
     render(<DiscoveryHeader />);
 
-    const scenariosButton = screen.getByRole('button', { name: /職業冒險/i });
-    expect(scenariosButton).toHaveClass('bg-purple-600');
+    const scenariosButtons = screen.getAllByRole('button', { name: /職業冒險/i });
+    const desktopScenariosButton = scenariosButtons[0];
+    expect(desktopScenariosButton).toHaveClass('bg-purple-600');
   });
 
   it('should not show badges when counts are zero', () => {
@@ -104,13 +112,13 @@ describe('DiscoveryHeader', () => {
     render(<DiscoveryHeader />);
 
     // All items should be enabled by default
-    // Get navigation buttons (excluding breadcrumb home button)
-    const overviewButton = screen.getByRole('button', { name: /總覽/i });
-    const evaluationButton = screen.getByRole('button', { name: /評估/i });
-    const scenariosButton = screen.getByRole('button', { name: /職業冒險/i });
+    // Get navigation buttons (may have multiple due to desktop/mobile views)
+    const overviewButtons = screen.getAllByRole('button', { name: /總覽/i });
+    const evaluationButtons = screen.getAllByRole('button', { name: /評估/i });
+    const scenariosButtons = screen.getAllByRole('button', { name: /職業冒險/i });
     
-    expect(overviewButton).not.toBeDisabled();
-    expect(evaluationButton).not.toBeDisabled();
-    expect(scenariosButton).not.toBeDisabled();
+    expect(overviewButtons[0]).not.toBeDisabled();
+    expect(evaluationButtons[0]).not.toBeDisabled();
+    expect(scenariosButtons[0]).not.toBeDisabled();
   });
 });

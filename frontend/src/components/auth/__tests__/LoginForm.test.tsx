@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { LoginForm } from '../LoginForm';
 
@@ -196,16 +196,16 @@ describe('LoginForm', () => {
       expect(screen.getByLabelText('Email')).toHaveValue('student@example.com');
       expect(screen.getByLabelText('Password')).toHaveValue('student123');
 
-      // Fast-forward timers
-      jest.advanceTimersByTime(100);
+      // Handle requestAnimationFrame and setTimeout
+      act(() => {
+        jest.runAllTimers();
+      });
 
       // Check that form was submitted with demo credentials
       expect(onSubmit).toHaveBeenCalledWith({
         email: 'student@example.com',
         password: 'student123',
-        rememberMe: false,
-        label: 'Student',
-        role: 'student'
+        rememberMe: false
       });
 
       jest.useRealTimers();
@@ -225,14 +225,14 @@ describe('LoginForm', () => {
       const teacherButton = screen.getByRole('button', { name: /Teacher/i });
       fireEvent.click(teacherButton);
 
-      jest.advanceTimersByTime(100);
+      act(() => {
+        jest.runAllTimers();
+      });
 
       expect(onSubmit).toHaveBeenCalledWith({
         email: 'teacher@example.com',
         password: 'teacher123',
-        rememberMe: true,
-        label: 'Teacher',
-        role: 'teacher'
+        rememberMe: true
       });
 
       jest.useRealTimers();

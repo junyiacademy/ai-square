@@ -3,9 +3,7 @@ import { cookies } from 'next/headers'
 
 // Mock cookies
 jest.mock('next/headers', () => ({
-  cookies: jest.fn(() => ({
-    delete: jest.fn(),
-  })),
+  cookies: jest.fn(),
 }))
 
 describe('/api/auth/logout', () => {
@@ -22,7 +20,7 @@ describe('/api/auth/logout', () => {
     expect(data.success).toBe(true)
     expect(data.message).toBe('Logged out successfully')
 
-    // Check delete methods were called
+    // Check delete methods were called on cookieStore
     expect(mockCookieStore.delete).toHaveBeenCalledWith('accessToken')
     expect(mockCookieStore.delete).toHaveBeenCalledWith('refreshToken')
     expect(mockCookieStore.delete).toHaveBeenCalledWith('isLoggedIn')
