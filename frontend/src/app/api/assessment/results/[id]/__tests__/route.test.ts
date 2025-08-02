@@ -278,7 +278,7 @@ describe('/api/assessment/results/[id]', () => {
       });
 
       mockProgramRepo.findById.mockResolvedValue(mockProgram);
-      mockEvaluationRepo.findByProgram = undefined; // Missing method
+      (mockEvaluationRepo as Partial<typeof mockEvaluationRepo>).findByProgram = undefined; // Missing method
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
 
       const request = new NextRequest('http://localhost:3000/api/assessment/results/prog-123');

@@ -34,8 +34,8 @@ jest.mock('react-i18next', () => ({
       const translations: Record<string, string> = {
         'domains.engaging_with_ai': 'Engaging with AI',
         'domains.creating_with_ai': 'Creating with AI',
-        'domains.managing_ai': 'Managing AI',
-        'domains.designing_ai': 'Designing AI',
+        'domains.managing_with_ai': 'Managing AI',
+        'domains.designing_with_ai': 'Designing AI',
       }
       return translations[key] || key
     }
@@ -44,10 +44,10 @@ jest.mock('react-i18next', () => ({
 
 describe('DomainRadarChart', () => {
   const mockDomainScores = {
-    'Engaging_with_AI': 85,
-    'Creating_with_AI': 72,
-    'Managing_AI': 90,
-    'Designing_AI': 78,
+    engaging_with_ai: 85,
+    creating_with_ai: 72,
+    managing_with_ai: 90,
+    designing_with_ai: 78,
   }
 
   it('renders the radar chart', () => {
@@ -94,7 +94,13 @@ describe('DomainRadarChart', () => {
   })
 
   it('handles empty domain scores', () => {
-    render(<DomainRadarChart domainScores={{}} />)
+    const emptyScores = {
+      engaging_with_ai: 0,
+      creating_with_ai: 0,
+      managing_with_ai: 0,
+      designing_with_ai: 0,
+    };
+    render(<DomainRadarChart domainScores={emptyScores} />)
 
     const radarChart = screen.getByTestId('radar-chart')
     const chartData = JSON.parse(radarChart.getAttribute('data-chart-data') || '{}')
@@ -105,8 +111,10 @@ describe('DomainRadarChart', () => {
 
   it('handles partial domain scores', () => {
     const partialScores = {
-      'Engaging_with_AI': 85,
-      'Creating_with_AI': 72,
+      engaging_with_ai: 85,
+      creating_with_ai: 72,
+      managing_with_ai: 0,
+      designing_with_ai: 0,
     }
     
     render(<DomainRadarChart domainScores={partialScores} />)

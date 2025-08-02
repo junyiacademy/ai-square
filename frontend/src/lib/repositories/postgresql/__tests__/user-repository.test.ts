@@ -1,5 +1,5 @@
 import { PostgreSQLUserRepository } from '../user-repository';
-import type { IUser } from '@/types/unified-learning';
+import type { User } from '@/lib/repositories/interfaces';
 import type { Pool } from 'pg';
 
 // Mock Pool
@@ -30,7 +30,7 @@ describe('PostgreSQLUserRepository', () => {
     updated_at: '2024-01-02T00:00:00Z'
   };
 
-  const mockUser: IUser = {
+  const mockUser: User = {
     id: 'user-123',
     email: 'test@example.com',
     passwordHash: 'hashed',

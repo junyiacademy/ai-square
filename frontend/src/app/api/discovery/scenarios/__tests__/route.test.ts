@@ -177,7 +177,7 @@ describe('/api/discovery/scenarios', () => {
     });
 
     it('should handle missing findByMode method', async () => {
-      mockScenarioRepo.findByMode = undefined;
+      (mockScenarioRepo as Partial<typeof mockScenarioRepo>).findByMode = undefined;
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios');
       const response = await GET(request);

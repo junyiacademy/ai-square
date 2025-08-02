@@ -152,7 +152,7 @@ describe('/api/scenarios', () => {
     });
 
     it('should handle missing findByMode method', async () => {
-      mockScenarioRepo.findByMode = undefined;
+      (mockScenarioRepo as Partial<typeof mockScenarioRepo>).findByMode = undefined;
       mockScenarioRepo.findAll.mockResolvedValue(mockScenarios);
 
       const request = new NextRequest('http://localhost/api/scenarios?mode=pbl');

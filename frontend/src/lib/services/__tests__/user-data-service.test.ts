@@ -41,8 +41,17 @@ describe('UserDataService', () => {
       const userData: UserData = {
         id: mockUserId,
         email: 'test@example.com',
-        assessmentResults: [],
-        achievements: [],
+        assessmentResults: {
+          tech: 75,
+          creative: 80,
+          business: 70
+        },
+        achievements: {
+          badges: [],
+          totalXp: 0,
+          level: 1,
+          completedTasks: []
+        },
         lastUpdated: new Date().toISOString(),
         assessmentSessions: [],
       };
@@ -59,8 +68,17 @@ describe('UserDataService', () => {
       const userData: UserData = {
         id: mockUserId,
         email: 'test@example.com',
-        assessmentResults: [],
-        achievements: [],
+        assessmentResults: {
+          tech: 75,
+          creative: 80,
+          business: 70
+        },
+        achievements: {
+          badges: [],
+          totalXp: 0,
+          level: 1,
+          completedTasks: []
+        },
         lastUpdated: new Date().toISOString(),
         assessmentSessions: [],
       };
@@ -68,7 +86,7 @@ describe('UserDataService', () => {
       // Create circular reference
       const circular: any = { data: userData };
       circular.self = circular;
-      userData.assessmentResults = [circular];
+      userData.assessmentResults = [circular] as any;
 
       // Should not throw
       await expect(service.saveUserData(mockUserId, userData)).resolves.not.toThrow();
@@ -80,8 +98,17 @@ describe('UserDataService', () => {
       const userData: UserData = {
         id: mockUserId,
         email: 'test@example.com',
-        assessmentResults: [],
-        achievements: [],
+        assessmentResults: {
+          tech: 75,
+          creative: 80,
+          business: 70
+        },
+        achievements: {
+          badges: [],
+          totalXp: 0,
+          level: 1,
+          completedTasks: []
+        },
         lastUpdated: new Date().toISOString(),
         assessmentSessions: [],
       };
@@ -112,8 +139,17 @@ describe('UserDataService', () => {
       const userData: UserData = {
         id: mockUserId,
         email: 'test@example.com',
-        assessmentResults: [],
-        achievements: [],
+        assessmentResults: {
+          tech: 75,
+          creative: 80,
+          business: 70
+        },
+        achievements: {
+          badges: [],
+          totalXp: 0,
+          level: 1,
+          completedTasks: []
+        },
         lastUpdated: new Date().toISOString(),
         assessmentSessions: [],
       };
@@ -153,17 +189,17 @@ describe('UserDataService', () => {
       const existingData: UserData = {
         id: mockUserId,
         email: 'test@example.com',
-        assessmentResults: [
-          {
-            userId: mockUserId,
-            assessmentId: 'assessment-1',
-            score: 75,
-            domainScores: { 'AI_Literacy': 80 },
-            timestamp: new Date().toISOString(),
-            answers: [],
-          },
-        ],
-        achievements: [],
+        assessmentResults: {
+          tech: 75,
+          creative: 80,
+          business: 70
+        },
+        achievements: {
+          badges: [],
+          totalXp: 0,
+          level: 1,
+          completedTasks: []
+        },
         lastUpdated: new Date().toISOString(),
         assessmentSessions: [],
       };
@@ -235,8 +271,17 @@ describe('UserDataService', () => {
       const userData: UserData = {
         id: mockUserId,
         email: 'test@example.com',
-        assessmentResults: [oldResults, newResults],
-        achievements: [],
+        assessmentResults: {
+          tech: 75,
+          creative: 80,
+          business: 70
+        },
+        achievements: {
+          badges: [],
+          totalXp: 0,
+          level: 1,
+          completedTasks: []
+        },
         lastUpdated: new Date().toISOString(),
         assessmentSessions: [],
       };
@@ -251,8 +296,17 @@ describe('UserDataService', () => {
       const userData: UserData = {
         id: mockUserId,
         email: 'test@example.com',
-        assessmentResults: [],
-        achievements: [],
+        assessmentResults: {
+          tech: 75,
+          creative: 80,
+          business: 70
+        },
+        achievements: {
+          badges: [],
+          totalXp: 0,
+          level: 1,
+          completedTasks: []
+        },
         lastUpdated: new Date().toISOString(),
         assessmentSessions: [],
       };
@@ -269,8 +323,17 @@ describe('UserDataService', () => {
       const userData: UserData = {
         id: mockUserId,
         email: 'test@example.com',
-        assessmentResults: [],
-        achievements: [],
+        assessmentResults: {
+          tech: 75,
+          creative: 80,
+          business: 70
+        },
+        achievements: {
+          badges: [],
+          totalXp: 0,
+          level: 1,
+          completedTasks: []
+        },
         lastUpdated: new Date().toISOString(),
         assessmentSessions: [],
       };
@@ -300,25 +363,26 @@ describe('UserDataService', () => {
       const userData: UserData = {
         id: mockUserId,
         email: 'test@example.com',
-        assessmentResults: [
-          {
-            userId: mockUserId,
-            assessmentId: 'assessment-1',
-            score: 85,
-            domainScores: { 'AI_Literacy': 90 },
-            timestamp: new Date().toISOString(),
-            answers: [],
-          },
-        ],
-        achievements: [
-          {
-            id: 'ach-1',
-            name: 'First Steps',
-            description: 'Complete your first assessment',
-            earnedAt: new Date().toISOString(),
-            type: 'milestone',
-          },
-        ],
+        assessmentResults: {
+          tech: 85,
+          creative: 90,
+          business: 75
+        },
+        achievements: {
+          badges: [
+            {
+              id: 'ach-1',
+              name: 'First Steps',
+              description: 'Complete your first assessment',
+              unlockedAt: new Date().toISOString(),
+              category: 'learning',
+              xpReward: 100
+            }
+          ],
+          totalXp: 100,
+          level: 1,
+          completedTasks: []
+        },
         lastUpdated: new Date().toISOString(),
         assessmentSessions: [],
       };
@@ -335,8 +399,17 @@ describe('UserDataService', () => {
       const importData: UserData = {
         id: mockUserId,
         email: 'imported@example.com',
-        assessmentResults: [],
-        achievements: [],
+        assessmentResults: {
+          tech: 75,
+          creative: 80,
+          business: 70
+        },
+        achievements: {
+          badges: [],
+          totalXp: 0,
+          level: 1,
+          completedTasks: []
+        },
         lastUpdated: new Date().toISOString(),
         assessmentSessions: [],
       };

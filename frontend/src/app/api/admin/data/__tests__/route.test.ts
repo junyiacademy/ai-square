@@ -163,7 +163,7 @@ describe('/api/admin/data', () => {
       });
 
       // Some repos don't have count method
-      mockUserRepo.count = undefined;
+      (mockUserRepo as Partial<typeof mockUserRepo>).count = undefined;
       mockProgramRepo.count.mockResolvedValue(100);
 
       const request = new NextRequest('http://localhost:3000/api/admin/data');

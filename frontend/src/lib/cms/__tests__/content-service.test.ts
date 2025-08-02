@@ -1,4 +1,4 @@
-import { cmsService } from '../content-service';
+import { contentService } from '../content-service';
 import type { 
   ContentType, 
   CMSContent, 
@@ -37,7 +37,7 @@ describe('CMSContentService', () => {
         json: async () => ({ success: true, content: mockContent })
       } as Response);
 
-      const result = await cmsService.fetchContent('test-scenario', 'pbl');
+      const result = await contentService.fetchContent('test-scenario', 'pbl');
       
       expect(result).toEqual(mockContent);
       expect(mockFetch).toHaveBeenCalledWith('/api/admin/content/test-scenario?type=pbl');
@@ -49,7 +49,7 @@ describe('CMSContentService', () => {
         statusText: 'Not Found'
       } as Response);
 
-      await expect(cmsService.fetchContent('invalid', 'pbl'))
+      await expect(contentService.fetchContent('invalid', 'pbl'))
         .rejects.toThrow('Failed to fetch content: Not Found');
     });
 
@@ -59,7 +59,7 @@ describe('CMSContentService', () => {
         json: async () => ({ success: false, error: 'Content not found' })
       } as Response);
 
-      await expect(cmsService.fetchContent('test', 'pbl'))
+      await expect(contentService.fetchContent('test', 'pbl'))
         .rejects.toThrow('Content not found');
     });
   });
@@ -76,7 +76,7 @@ describe('CMSContentService', () => {
         json: async () => ({ success: true })
       } as Response);
 
-      await cmsService.saveContent('test-id', 'pbl', mockContent, saveOptions);
+      await contentService.saveContent('test-id', 'pbl', mockContent, saveOptions);
       
       expect(mockFetch).toHaveBeenCalledWith('/api/admin/content/test-id', {
         method: 'PUT',
@@ -96,7 +96,7 @@ describe('CMSContentService', () => {
         statusText: 'Internal Server Error'
       } as Response);
 
-      await expect(cmsService.saveContent('test', 'pbl', mockContent, saveOptions))
+      await expect(contentService.saveContent('test', 'pbl', mockContent, saveOptions))
         .rejects.toThrow('Failed to save content: Internal Server Error');
     });
   });
@@ -108,7 +108,7 @@ describe('CMSContentService', () => {
         json: async () => ({ success: true })
       } as Response);
 
-      await cmsService.deleteContent('test-id', 'pbl', 'Delete test content');
+      await contentService.deleteContent('test-id', 'pbl', 'Delete test content');
       
       expect(mockFetch).toHaveBeenCalledWith('/api/admin/content/test-id', {
         method: 'DELETE',
@@ -133,7 +133,7 @@ describe('CMSContentService', () => {
         json: async () => ({ success: true, items: mockList })
       } as Response);
 
-      const result = await cmsService.listContent('pbl');
+      const result = await contentService.listContent('pbl');
       
       expect(result).toEqual(mockList);
       expect(mockFetch).toHaveBeenCalledWith('/api/admin/content?type=pbl');
@@ -145,7 +145,7 @@ describe('CMSContentService', () => {
         json: async () => ({ success: true, items: [] })
       } as Response);
 
-      await cmsService.listContent();
+      await contentService.listContent();
       
       expect(mockFetch).toHaveBeenCalledWith('/api/admin/content');
     });
@@ -167,7 +167,7 @@ describe('CMSContentService', () => {
         json: async () => ({ success: true, history: mockHistory })
       } as Response);
 
-      const result = await cmsService.getHistory('test-id', 'pbl', 10);
+      const result = await contentService.getHistory('test-id', 'pbl', 10);
       
       expect(result).toEqual(mockHistory);
       expect(mockFetch).toHaveBeenCalledWith('/api/admin/history?id=test-id&type=pbl&limit=10');
@@ -187,7 +187,7 @@ describe('CMSContentService', () => {
         json: async () => ({ success: true, result: mockResult })
       } as Response);
 
-      const result = await cmsService.commitChanges('Test commit', 'main');
+      const result = await contentService.commitChanges('Test commit', 'main');
       
       expect(result).toEqual(mockResult);
       expect(mockFetch).toHaveBeenCalledWith('/api/admin/content/commit', {
@@ -211,7 +211,7 @@ describe('CMSContentService', () => {
         json: async () => ({ success: true, pullRequest: mockPR })
       } as Response);
 
-      const result = await cmsService.createPullRequest(
+      const result = await contentService.createPullRequest(
         'Test PR',
         'Test description',
         'feature',

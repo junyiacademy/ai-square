@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { getAuthFromRequest, getUserIdFromAuth } from '../auth-utils';
+import { getAuthFromRequest, hasRole, hasAnyRole, mockUser } from '../auth-utils';
 import { verifyAccessToken } from '../jwt';
 import { verifySessionToken } from '../session-simple';
 import type { TokenPayload } from '../jwt';
@@ -175,58 +175,105 @@ describe('auth-utils', () => {
     });
   });
 
-  describe('getUserIdFromAuth', () => {
-    it('extracts userId from valid auth response', async () => {
-      const request = new NextRequest('http://localhost:3000/api/test', {
-        headers: {
-          authorization: 'Bearer validtoken',
-        },
-      });
+  describe('hasRole', () => {
+    it('returns true when user has required role', () => {
+      const user: TokenPayload = {
+        userId: 123,
+        email: 'admin@example.com',
+        role: 'admin',
+        name: 'Admin User',
+      };
 
-      mockVerifyAccessToken.mockResolvedValueOnce({
-        userId: 999,
+      expect(hasRole(user, 'admin')).toBe(true);
+    });
+
+    it('returns false when user has different role', () => {
+      const user: TokenPayload = {
+        userId: 123,
+        email: 'student@example.com',
+        role: 'student',
+        name: 'Student User',
+      };
+
+      expect(hasRole(user, 'admin')).toBe(false);
+    });
+
+    it('returns false when user is null', () => {
+      expect(hasRole(null, 'admin')).toBe(false);
+    });
+  });
+
+  describe('hasAnyRole', () => {
+    it('returns true when user has one of the required roles', () => {
+      const user: TokenPayload = {
+        userId: 123,
+        email: 'teacher@example.com',
+        role: 'teacher',
+        name: 'Teacher User',
+      };
+
+      expect(hasAnyRole(user, ['admin', 'teacher', 'moderator'])).toBe(true);
+    });
+
+    it('returns false when user has none of the required roles', () => {
+      const user: TokenPayload = {
+        userId: 123,
+        email: 'student@example.com',
+        role: 'student',
+        name: 'Student User',
+      };
+
+      expect(hasAnyRole(user, ['admin', 'teacher', 'moderator'])).toBe(false);
+    });
+
+    it('returns false when user is null', () => {
+      expect(hasAnyRole(null, ['admin', 'teacher'])).toBe(false);
+    });
+
+    it('returns false when required roles array is empty', () => {
+      const user: TokenPayload = {
+        userId: 123,
         email: 'user@example.com',
+        role: 'student',
+        name: 'User',
+      };
+
+      expect(hasAnyRole(user, [])).toBe(false);
+    });
+  });
+
+  describe('mockUser', () => {
+    it('provides a mock user for testing', () => {
+      expect(mockUser).toEqual({
+        userId: 123,
+        email: 'test@example.com',
         role: 'student',
         name: 'Test User',
       });
-
-      const userId = await getUserIdFromAuth(request);
-
-      expect(userId).toBe(999);
-    });
-
-    it('returns null when no auth is present', async () => {
-      const request = new NextRequest('http://localhost:3000/api/test');
-      Object.defineProperty(request, 'cookies', {
-        value: {
-          get: jest.fn(() => undefined),
-        },
-      });
-
-      mockVerifyAccessToken.mockResolvedValue(null);
-
-      const userId = await getUserIdFromAuth(request);
-
-      expect(userId).toBeNull();
-    });
-
-    it('handles zero userId gracefully', async () => {
-      const request = new NextRequest('http://localhost:3000/api/test', {
-        headers: {
-          authorization: 'Bearer validtoken',
-        },
-      });
-
-      mockVerifyAccessToken.mockResolvedValueOnce({
-        userId: 0,
-        email: 'zero@example.com',
-        role: 'student',
-        name: 'Zero User',
-      });
-
-      const userId = await getUserIdFromAuth(request);
-
-      expect(userId).toBe(0);
     });
   });
 });
+
+/**
+ * Auth Utils Test Considerations:
+ * 
+ * 1. Token Verification:
+ *    - Tests both JWT and session token verification
+ *    - Validates fallback mechanisms
+ *    - Handles invalid tokens gracefully
+ * 
+ * 2. Cookie Handling:
+ *    - Tests legacy cookie authentication
+ *    - Handles missing cookies
+ *    - Validates cookie extraction
+ * 
+ * 3. Role Authorization:
+ *    - Tests single role checking
+ *    - Tests multiple role checking
+ *    - Handles null user cases
+ * 
+ * 4. Error Handling:
+ *    - Graceful handling of malformed headers
+ *    - Proper fallback chains
+ *    - Console logging for debugging
+ */

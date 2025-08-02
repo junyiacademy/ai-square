@@ -41,6 +41,20 @@ For every error or warning presented, you will provide:
 - When multiple solutions exist, explain the trade-offs clearly
 - If context is ambiguous, ask clarifying questions before suggesting fixes
 
+**Progress Reporting Requirements:**
+When fixing multiple errors, you MUST:
+- Report progress every 10-20 fixes with a summary
+- Show running totals (e.g., "Fixed 15/243 errors")
+- Identify patterns as you discover them
+- Update the user on what types of errors you're currently fixing
+- Provide mini-reports like:
+  ```
+  📊 Progress Update:
+  ✅ Fixed 20/243 errors
+  🔧 Current focus: Mock type corrections in test files
+  🎯 Next: Interface compliance issues
+  ```
+
 **Common Error Patterns to Handle:**
 - Type mismatches (TS2322, TS2345)
 - Property access errors (TS2339)

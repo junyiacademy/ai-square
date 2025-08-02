@@ -122,9 +122,9 @@ describe('/api/monitoring/status', () => {
   });
 
   it('should handle missing repository methods', async () => {
-    mockUserRepo.count = undefined;
-    mockProgramRepo.count = undefined;
-    mockScenarioRepo.count = undefined;
+    (mockUserRepo as Partial<typeof mockUserRepo>).count = undefined;
+    (mockProgramRepo as Partial<typeof mockProgramRepo>).count = undefined;
+    (mockScenarioRepo as Partial<typeof mockScenarioRepo>).count = undefined;
 
     const request = new NextRequest('http://localhost/api/monitoring/status');
     const response = await GET(request);

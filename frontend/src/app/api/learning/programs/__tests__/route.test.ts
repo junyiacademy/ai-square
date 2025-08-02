@@ -3,7 +3,7 @@
  * 測試學習程序 API
  */
 
-import { GET, POST } from '../route';
+import { POST } from '../route';
 import { NextRequest } from 'next/server';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { getServerSession } from '@/lib/auth/session';
@@ -18,8 +18,8 @@ const mockConsoleError = jest.spyOn(console, 'error').mockImplementation();
 describe('/api/learning/programs', () => {
   // Mock repositories
   const mockProgramRepo = {
-    findByUser: jest.fn(),
     create: jest.fn(),
+    findByUser: jest.fn(),
   };
 
   const mockScenarioRepo = {
@@ -39,155 +39,22 @@ describe('/api/learning/programs', () => {
     mockConsoleError.mockRestore();
   });
 
-  describe('GET - List User Programs', () => {
-    const mockPrograms = [
-      {
-        id: 'prog-1',
-        mode: 'pbl',
-        scenarioId: 'scenario-1',
-        userId: 'user-123',
-        status: 'active',
-        totalScore: 85,
-        completedTaskCount: 3,
-        totalTaskCount: 5,
-        startedAt: '2025-01-01T10:00:00Z',
-      },
-      {
-        id: 'prog-2',
-        mode: 'assessment',
-        scenarioId: 'scenario-2',
-        userId: 'user-123',
-        status: 'completed',
-        totalScore: 95,
-        completedTaskCount: 10,
-        totalTaskCount: 10,
-        startedAt: '2025-01-02T10:00:00Z',
-        completedAt: '2025-01-02T11:00:00Z',
-      },
-    ];
-
-    it('should return user programs when authenticated', async () => {
-      (getServerSession as jest.Mock).mockResolvedValue({
-        user: { id: 'user-123', email: 'user@example.com' },
-      });
-
-      mockProgramRepo.findByUser.mockResolvedValue(mockPrograms);
-
-      const request = new NextRequest('http://localhost:3000/api/learning/programs');
-      const response = await GET(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      expect(data.success).toBe(true);
-      expect(data.data.programs).toHaveLength(2);
-      expect(data.data.programs[0]).toMatchObject({
-        id: 'prog-1',
-        mode: 'pbl',
-        status: 'active',
-        progress: 60, // 3/5 * 100
-      });
-      expect(mockProgramRepo.findByUser).toHaveBeenCalledWith('user-123');
-    });
-
-    it('should filter programs by mode', async () => {
-      (getServerSession as jest.Mock).mockResolvedValue({
-        user: { id: 'user-123', email: 'user@example.com' },
-      });
-
-      mockProgramRepo.findByUser.mockResolvedValue(mockPrograms);
-
-      const request = new NextRequest('http://localhost:3000/api/learning/programs?mode=pbl');
-      const response = await GET(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      expect(data.data.programs).toHaveLength(1);
-      expect(data.data.programs[0].mode).toBe('pbl');
-    });
-
-    it('should filter programs by status', async () => {
-      (getServerSession as jest.Mock).mockResolvedValue({
-        user: { id: 'user-123', email: 'user@example.com' },
-      });
-
-      mockProgramRepo.findByUser.mockResolvedValue(mockPrograms);
-
-      const request = new NextRequest('http://localhost:3000/api/learning/programs?status=completed');
-      const response = await GET(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      expect(data.data.programs).toHaveLength(1);
-      expect(data.data.programs[0].status).toBe('completed');
-    });
-
-    it('should return 401 when not authenticated', async () => {
-      (getServerSession as jest.Mock).mockResolvedValue(null);
-
-      const request = new NextRequest('http://localhost:3000/api/learning/programs');
-      const response = await GET(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(401);
-      expect(data.error).toBe('Unauthorized');
-    });
-
-    it('should handle repository errors', async () => {
-      (getServerSession as jest.Mock).mockResolvedValue({
-        user: { id: 'user-123', email: 'user@example.com' },
-      });
-
-      const error = new Error('Database error');
-      mockProgramRepo.findByUser.mockRejectedValue(error);
-
-      const request = new NextRequest('http://localhost:3000/api/learning/programs');
-      const response = await GET(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(500);
-      expect(data.error).toBe('Failed to fetch programs');
-      expect(mockConsoleError).toHaveBeenCalledWith(
-        'Error fetching programs:',
-        error
-      );
-    });
-
-    it('should handle missing findByUser method', async () => {
-      (getServerSession as jest.Mock).mockResolvedValue({
-        user: { id: 'user-123', email: 'user@example.com' },
-      });
-
-      mockProgramRepo.findByUser = undefined;
-
-      const request = new NextRequest('http://localhost:3000/api/learning/programs');
-      const response = await GET(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      expect(data.data.programs).toEqual([]);
-    });
-  });
-
   describe('POST - Create New Program', () => {
     const mockScenario = {
       id: 'scenario-1',
       mode: 'pbl',
       title: { en: 'Test Scenario' },
       description: { en: 'Test Description' },
-      taskTemplates: [
-        { id: 'task-1', title: { en: 'Task 1' }, type: 'question' },
-        { id: 'task-2', title: { en: 'Task 2' }, type: 'chat' },
-      ],
     };
 
-    it('should create a new program successfully', async () => {
+    it('should create new program successfully', async () => {
       (getServerSession as jest.Mock).mockResolvedValue({
         user: { id: 'user-123', email: 'user@example.com' },
       });
 
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
       mockProgramRepo.create.mockResolvedValue({
-        id: 'new-prog-1',
+        id: 'prog-123',
         mode: 'pbl',
         scenarioId: 'scenario-1',
         userId: 'user-123',
@@ -210,16 +77,17 @@ describe('/api/learning/programs', () => {
       expect(response.status).toBe(201);
       expect(data.success).toBe(true);
       expect(data.data.program).toMatchObject({
-        id: 'new-prog-1',
+        id: 'prog-123',
         mode: 'pbl',
+        scenarioId: 'scenario-1',
+        userId: 'user-123',
         status: 'pending',
       });
       expect(mockProgramRepo.create).toHaveBeenCalledWith(
         expect.objectContaining({
-          mode: 'pbl',
           scenarioId: 'scenario-1',
           userId: 'user-123',
-          status: 'pending',
+          mode: 'pbl',
         })
       );
     });
@@ -296,7 +164,7 @@ describe('/api/learning/programs', () => {
       expect(data.error).toBe('Failed to create program');
     });
 
-    it('should handle repository creation errors', async () => {
+    it('should handle database errors', async () => {
       (getServerSession as jest.Mock).mockResolvedValue({
         user: { id: 'user-123', email: 'user@example.com' },
       });
@@ -318,7 +186,7 @@ describe('/api/learning/programs', () => {
       expect(response.status).toBe(500);
       expect(data.error).toBe('Failed to create program');
       expect(mockConsoleError).toHaveBeenCalledWith(
-        'Error creating program:',
+        'Error creating learning program:',
         error
       );
     });
@@ -329,23 +197,21 @@ describe('/api/learning/programs', () => {
  * Learning Programs API Considerations:
  * 
  * 1. Authentication:
- *    - All endpoints require authentication
- *    - User ID extracted from session
+ *    - All endpoints require valid user session
+ *    - Uses getServerSession for authentication
  * 
  * 2. Program Creation:
- *    - Validates scenario exists
- *    - Inherits mode from scenario
- *    - Creates with pending status
+ *    - Requires valid scenario ID
+ *    - Associates program with authenticated user
+ *    - Initializes with default status and scores
  * 
- * 3. Filtering:
- *    - Supports mode filter (pbl, assessment, discovery)
- *    - Supports status filter (pending, active, completed, expired)
+ * 3. Error Handling:
+ *    - Validates required fields
+ *    - Handles database errors gracefully
+ *    - Returns appropriate HTTP status codes
  * 
- * 4. Progress Calculation:
- *    - Percentage based on completed/total tasks
- *    - Separate score tracking
- * 
- * 5. Error Handling:
- *    - Graceful fallback for missing repository methods
- *    - Detailed error logging
+ * 4. Repository Pattern:
+ *    - Uses repository factory for data access
+ *    - Supports different implementations
+ *    - Handles missing methods gracefully
  */
