@@ -30,7 +30,7 @@ describe('production-monitor', () => {
     jest.useRealTimers();
     console.log = originalConsoleLog;
     console.error = originalConsoleError;
-    process.env.NODE_ENV = originalNodeEnv;
+    (process.env as any).NODE_ENV = originalNodeEnv;
     delete process.env.ALERT_WEBHOOK_URL;
     delete process.env.ALERT_RESPONSE_TIME;
     delete process.env.ALERT_ERROR_RATE;
@@ -39,7 +39,7 @@ describe('production-monitor', () => {
 
   describe('getStatus method', () => {
     it('returns monitoring status in production', () => {
-      process.env.NODE_ENV = 'production';
+      (process.env as any).NODE_ENV = 'production';
       // Re-import to apply NODE_ENV change
       jest.resetModules();
       const { productionMonitor: prodMonitor } = require('../production-monitor');
@@ -58,7 +58,7 @@ describe('production-monitor', () => {
     });
 
     it('returns disabled status in non-production', () => {
-      process.env.NODE_ENV = 'development';
+      (process.env as any).NODE_ENV = 'development';
       jest.resetModules();
       const { productionMonitor: devMonitor } = require('../production-monitor');
       
@@ -68,7 +68,7 @@ describe('production-monitor', () => {
     });
 
     it('uses custom alert thresholds from env vars', () => {
-      process.env.NODE_ENV = 'production';
+      (process.env as any).NODE_ENV = 'production';
       process.env.ALERT_RESPONSE_TIME = '3000';
       process.env.ALERT_ERROR_RATE = '10';
       process.env.ALERT_CACHE_HIT_RATE = '60';

@@ -166,16 +166,16 @@ describe('PostgreSQLProgramRepository', () => {
     });
   });
 
-  describe('findByUserAndScenario', () => {
-    it('finds programs by user and scenario', async () => {
+  describe('findByScenario', () => {
+    it('finds programs by scenario', async () => {
       mockQuery.mockResolvedValue({ rows: [mockProgramRow] });
 
-      const result = await repository.findByUserAndScenario?.('user-123', 'scenario-123');
+      const result = await repository.findByScenario('scenario-123');
 
       expect(result).toHaveLength(1);
       expect(mockQuery).toHaveBeenCalledWith(
-        expect.stringContaining('WHERE user_id = $1 AND scenario_id = $2'),
-        ['user-123', 'scenario-123']
+        expect.stringContaining('WHERE scenario_id = $1'),
+        ['scenario-123']
       );
     });
   });

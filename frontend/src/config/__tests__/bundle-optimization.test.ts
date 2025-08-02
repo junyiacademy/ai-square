@@ -13,7 +13,7 @@ describe('bundle-optimization config', () => {
   const originalNodeEnv = process.env.NODE_ENV;
 
   afterEach(() => {
-    process.env.NODE_ENV = originalNodeEnv;
+    (process.env as any).NODE_ENV = originalNodeEnv;
   });
 
   describe('LAZY_ROUTES', () => {
@@ -59,7 +59,7 @@ describe('bundle-optimization config', () => {
 
   describe('CDN_LIBRARIES', () => {
     it('returns empty object in non-production', () => {
-      process.env.NODE_ENV = 'development';
+      (process.env as any).NODE_ENV = 'development';
       // Re-import to get fresh value
       jest.resetModules();
       const { CDN_LIBRARIES: devCdn } = require('../bundle-optimization');
@@ -67,7 +67,7 @@ describe('bundle-optimization config', () => {
     });
 
     it('returns CDN URLs in production', () => {
-      process.env.NODE_ENV = 'production';
+      (process.env as any).NODE_ENV = 'production';
       jest.resetModules();
       const { CDN_LIBRARIES: prodCdn } = require('../bundle-optimization');
       expect(prodCdn).toEqual({

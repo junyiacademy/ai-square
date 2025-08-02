@@ -66,7 +66,7 @@ describe('env configuration', () => {
 
   describe('environment helpers', () => {
     it('identifies production environment', () => {
-      process.env.NODE_ENV = 'production';
+      (process.env as any).NODE_ENV = 'production';
       
       const { isProduction: isProd, isDevelopment: isDev, isTest: isTst } = require('../env');
       
@@ -76,7 +76,7 @@ describe('env configuration', () => {
     });
 
     it('identifies development environment', () => {
-      process.env.NODE_ENV = 'development';
+      (process.env as any).NODE_ENV = 'development';
       
       const { isProduction: isProd, isDevelopment: isDev, isTest: isTst } = require('../env');
       
@@ -86,7 +86,7 @@ describe('env configuration', () => {
     });
 
     it('identifies test environment', () => {
-      process.env.NODE_ENV = 'test';
+      (process.env as any).NODE_ENV = 'test';
       
       const { isProduction: isProd, isDevelopment: isDev, isTest: isTst } = require('../env');
       

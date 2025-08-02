@@ -148,14 +148,14 @@ describe('UserDataServiceClient', () => {
     });
   });
 
-  describe('clearUserData', () => {
-    it('clears all user data', () => {
+  describe('clearAllData', () => {
+    it('clears all user data', async () => {
       mockLocalStorage.getItem.mockImplementation((key) => {
         if (key.startsWith('user_')) return 'some data';
         return null;
       });
 
-      service.clearUserData('user-123');
+      await service.clearAllData();
 
       expect(mockLocalStorage.removeItem).toHaveBeenCalledWith('user_profile_user-123');
       expect(mockLocalStorage.removeItem).toHaveBeenCalledWith('user_prefs_user-123');

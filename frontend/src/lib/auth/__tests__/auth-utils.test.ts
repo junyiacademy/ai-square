@@ -81,6 +81,7 @@ describe('auth-utils', () => {
       mockVerifySessionToken.mockReturnValueOnce({
         userId: '456',
         email: 'session@example.com',
+        timestamp: Date.now(),
       });
 
       const result = await getAuthFromRequest(request);

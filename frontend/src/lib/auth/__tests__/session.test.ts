@@ -37,6 +37,7 @@ describe('session', () => {
       mockVerifySessionToken.mockReturnValue({
         userId: '123',
         email: 'test@example.com',
+        timestamp: Date.now(),
       });
 
       const session = await getServerSession();
@@ -68,6 +69,7 @@ describe('session', () => {
       mockVerifySessionToken.mockReturnValue({
         userId: '456',
         email: 'header@example.com',
+        timestamp: Date.now(),
       });
 
       const session = await getServerSession();

@@ -34,7 +34,7 @@ describe('error-logger', () => {
     logger.clearLogs();
     
     // Set environment
-    process.env.NODE_ENV = 'development';
+    (process.env as any).NODE_ENV = 'development';
   });
 
   afterEach(() => {
@@ -178,14 +178,14 @@ describe('error-logger', () => {
 
   describe('environment behavior', () => {
     it('logs to console in development', () => {
-      process.env.NODE_ENV = 'development';
+      (process.env as any).NODE_ENV = 'development';
       logger.info('Dev message');
 
       expect(mockConsole.info).toHaveBeenCalled();
     });
 
     it('does not log to console in production', () => {
-      process.env.NODE_ENV = 'production';
+      (process.env as any).NODE_ENV = 'production';
       logger.info('Prod message');
 
       expect(mockConsole.info).not.toHaveBeenCalled();
@@ -195,7 +195,7 @@ describe('error-logger', () => {
     });
 
     it('does not log to console in test environment', () => {
-      process.env.NODE_ENV = 'test';
+      (process.env as any).NODE_ENV = 'test';
       logger.error('Test error', new Error('test'));
 
       expect(mockConsole.error).not.toHaveBeenCalled();
