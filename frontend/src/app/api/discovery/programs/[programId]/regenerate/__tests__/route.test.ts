@@ -47,8 +47,8 @@ const mockTranslationService = {
 (repositoryFactory.getTaskRepository as jest.Mock) = mockGetTaskRepository;
 (repositoryFactory.getEvaluationRepository as jest.Mock) = mockGetEvaluationRepository;
 (repositoryFactory.getScenarioRepository as jest.Mock) = mockGetScenarioRepository;
-(VertexAIService as jest.Mock).mockImplementation(() => mockVertexAIService);
-(TranslationService as jest.Mock).mockImplementation(() => mockTranslationService);
+(VertexAIService as unknown as jest.Mock).mockImplementation(() => mockVertexAIService);
+(TranslationService as unknown as jest.Mock).mockImplementation(() => mockTranslationService);
 
 describe('/api/discovery/programs/[programId]/regenerate', () => {
   beforeEach(() => {

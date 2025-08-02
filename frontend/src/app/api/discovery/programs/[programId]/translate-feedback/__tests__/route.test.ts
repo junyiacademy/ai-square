@@ -27,7 +27,7 @@ const mockTranslationService = {
 
 (repositoryFactory.getProgramRepository as jest.Mock) = mockGetProgramRepository;
 (repositoryFactory.getEvaluationRepository as jest.Mock) = mockGetEvaluationRepository;
-(TranslationService as jest.Mock).mockImplementation(() => mockTranslationService);
+(TranslationService as unknown as jest.Mock).mockImplementation(() => mockTranslationService);
 
 describe('/api/discovery/programs/[programId]/translate-feedback', () => {
   beforeEach(() => {
