@@ -21,9 +21,9 @@ describe('/api/discovery/translate', () => {
     jest.clearAllMocks();
     
     // Setup translation service mock
-    (HybridTranslationService.getInstance as jest.Mock).mockReturnValue({
+    (HybridTranslationService as unknown as jest.Mock).mockImplementation(() => ({
       translateContent: mockTranslate,
-    });
+    }));
   });
 
   afterAll(() => {

@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server';
 import { POST } from '../route';
 import { getServerSession } from '@/lib/auth/session';
 import { postgresqlLearningService } from '@/lib/services/postgresql-learning-service';
+import type { ITask, IEvaluation } from '@/types/unified-learning';
 
 // Mock dependencies
 jest.mock('@/lib/auth/session');
@@ -24,19 +25,61 @@ describe('/api/learning/tasks/[taskId]/complete', () => {
       }
     };
 
+    const mockTask: ITask = {
+      id: 'task123',
+      programId: 'program123',
+      mode: 'pbl',
+      taskIndex: 0,
+      status: 'completed',
+      type: 'question',
+      title: { en: 'Test Task' },
+      description: { en: 'Test Description' },
+      content: { instructions: 'Complete this task' },
+      interactions: [],
+      interactionCount: 0,
+      userResponse: {},
+      score: 85,
+      maxScore: 100,
+      allowedAttempts: 3,
+      attemptCount: 1,
+      timeSpentSeconds: 300,
+      aiConfig: {},
+      createdAt: new Date().toISOString(),
+      startedAt: new Date().toISOString(),
+      completedAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      pblData: {},
+      discoveryData: {},
+      assessmentData: {},
+      metadata: {}
+    };
+
+    const mockEvaluation: IEvaluation = {
+      id: 'eval123',
+      taskId: 'task123',
+      userId: 'test@example.com',
+      mode: 'pbl',
+      evaluationType: 'formative',
+      score: 85,
+      maxScore: 100,
+      feedback: { en: 'Great job!' },
+      criteria: {},
+      rubric: {},
+      evaluatedAt: new Date().toISOString(),
+      evaluatedBy: 'system',
+      aiConfig: {},
+      aiResponse: {},
+      pblData: {},
+      discoveryData: {},
+      assessmentData: {},
+      metadata: {},
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+
     const mockTaskResult = {
-      task: {
-        id: 'task123',
-        programId: 'program123',
-        status: 'completed',
-        completedAt: new Date().toISOString()
-      },
-      evaluation: {
-        id: 'eval123',
-        taskId: 'task123',
-        score: 85,
-        feedback: 'Great job!'
-      },
+      task: mockTask,
+      evaluation: mockEvaluation,
       programProgress: {
         tasksCompleted: 3,
         totalTasks: 5,
