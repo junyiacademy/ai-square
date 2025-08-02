@@ -57,6 +57,15 @@ describe('useAuth', () => {
     jest.clearAllMocks()
     localStorageMock.store = {}
     ;(useRouter as jest.Mock).mockReturnValue(mockRouter)
+    
+    // Mock fetch to always return something to prevent undefined errors
+    // This handles the setTimeout auth check calls
+    mockFetch.mockImplementation(() => 
+      Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({ authenticated: false })
+      } as Response)
+    )
   })
 
   afterEach(() => {
@@ -103,6 +112,23 @@ describe('useAuth', () => {
   describe('checkAuth', () => {
     it('should set user data when authenticated', async () => {
       const mockUser = { id: 1, email: 'test@example.com', role: 'student', name: 'Test User' }
+      
+      // First mock for initial checkAuth during hook mount
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          authenticated: false
+        })
+      } as Response)
+
+      const { result } = renderHook(() => useAuth())
+      
+      // Wait for initial check to complete
+      await waitFor(() => {
+        expect(result.current.isLoading).toBe(false)
+      })
+      
+      // Now mock for manual checkAuth call
       mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => ({
@@ -111,8 +137,6 @@ describe('useAuth', () => {
           tokenExpiringSoon: true
         })
       } as Response)
-
-      const { result } = renderHook(() => useAuth())
 
       await act(async () => {
         await result.current.checkAuth()
@@ -185,6 +209,22 @@ describe('useAuth', () => {
       const credentials = { email: 'test@example.com', password: 'password123' }
       const mockUser = { id: 1, email: 'test@example.com', role: 'student', name: 'Test User' }
       
+      // Mock initial checkAuth call
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          authenticated: false
+        })
+      } as Response)
+      
+      const { result } = renderHook(() => useAuth())
+      
+      // Wait for initial check to complete
+      await waitFor(() => {
+        expect(result.current.isLoading).toBe(false)
+      })
+      
+      // Now mock the login call
       mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => ({
@@ -193,8 +233,9 @@ describe('useAuth', () => {
         })
       } as Response)
 
-      const { result } = renderHook(() => useAuth())
-
+      // Spy on dispatchEvent before login
+      const dispatchEventSpy = jest.spyOn(window, 'dispatchEvent')
+      
       let loginResult: any
       await act(async () => {
         loginResult = await result.current.login(credentials)
@@ -207,10 +248,6 @@ describe('useAuth', () => {
       expect(localStorageMock.setItem).toHaveBeenCalledWith('isLoggedIn', 'true')
       
       // Check if auth-changed event was dispatched
-      const dispatchEventSpy = jest.spyOn(window, 'dispatchEvent')
-      await act(async () => {
-        await result.current.login(credentials)
-      })
       expect(dispatchEventSpy).toHaveBeenCalledWith(expect.objectContaining({
         type: 'auth-changed'
       }))
@@ -219,6 +256,22 @@ describe('useAuth', () => {
     it('should handle login failure', async () => {
       const credentials = { email: 'test@example.com', password: 'wrong' }
       
+      // Mock initial checkAuth call
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          authenticated: false
+        })
+      } as Response)
+      
+      const { result } = renderHook(() => useAuth())
+      
+      // Wait for initial check to complete
+      await waitFor(() => {
+        expect(result.current.isLoading).toBe(false)
+      })
+      
+      // Now mock the failed login call
       mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => ({
@@ -226,8 +279,6 @@ describe('useAuth', () => {
           error: 'Invalid credentials'
         })
       } as Response)
-
-      const { result } = renderHook(() => useAuth())
 
       let loginResult: any
       await act(async () => {
@@ -242,9 +293,23 @@ describe('useAuth', () => {
     it('should handle network error during login', async () => {
       const credentials = { email: 'test@example.com', password: 'password' }
       
-      mockFetch.mockRejectedValueOnce(new Error('Network error'))
+      // Mock initial checkAuth call
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          authenticated: false
+        })
+      } as Response)
 
       const { result } = renderHook(() => useAuth())
+      
+      // Wait for initial check to complete
+      await waitFor(() => {
+        expect(result.current.isLoading).toBe(false)
+      })
+      
+      // Now mock the network error
+      mockFetch.mockRejectedValueOnce(new Error('Network error'))
 
       let loginResult: any
       await act(async () => {
@@ -258,6 +323,22 @@ describe('useAuth', () => {
     it('should include rememberMe in login request', async () => {
       const credentials = { email: 'test@example.com', password: 'password', rememberMe: true }
       
+      // Mock initial checkAuth call
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          authenticated: false
+        })
+      } as Response)
+
+      const { result } = renderHook(() => useAuth())
+      
+      // Wait for initial check to complete
+      await waitFor(() => {
+        expect(result.current.isLoading).toBe(false)
+      })
+      
+      // Now mock the login call
       mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => ({
@@ -266,8 +347,6 @@ describe('useAuth', () => {
         })
       } as Response)
 
-      const { result } = renderHook(() => useAuth())
-
       await act(async () => {
         await result.current.login(credentials)
       })
@@ -275,6 +354,7 @@ describe('useAuth', () => {
       expect(mockFetch).toHaveBeenCalledWith('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(credentials)
       })
     })
@@ -318,9 +398,23 @@ describe('useAuth', () => {
     })
 
     it('should handle logout API error gracefully', async () => {
-      mockFetch.mockRejectedValueOnce(new Error('Network error'))
+      // Mock initial checkAuth call
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          authenticated: false
+        })
+      } as Response)
 
       const { result } = renderHook(() => useAuth())
+      
+      // Wait for initial check to complete
+      await waitFor(() => {
+        expect(result.current.isLoading).toBe(false)
+      })
+      
+      // Now mock the logout error
+      mockFetch.mockRejectedValueOnce(new Error('Network error'))
 
       await act(async () => {
         await result.current.logout()
@@ -334,6 +428,22 @@ describe('useAuth', () => {
 
   describe('refreshToken', () => {
     it('should refresh token successfully', async () => {
+      // Mock initial checkAuth call
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          authenticated: false
+        })
+      } as Response)
+
+      const { result } = renderHook(() => useAuth())
+      
+      // Wait for initial check to complete
+      await waitFor(() => {
+        expect(result.current.isLoading).toBe(false)
+      })
+      
+      // Now mock the refresh token calls
       mockFetch
         .mockResolvedValueOnce({
           ok: true,
@@ -346,8 +456,6 @@ describe('useAuth', () => {
             user: { id: 1, email: 'test@example.com', role: 'student', name: 'Test' }
           })
         } as Response)
-
-      const { result } = renderHook(() => useAuth())
 
       let refreshResult: boolean
       await act(async () => {
@@ -362,12 +470,26 @@ describe('useAuth', () => {
     })
 
     it('should return false on refresh failure', async () => {
+      // Mock initial checkAuth call
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          authenticated: false
+        })
+      } as Response)
+
+      const { result } = renderHook(() => useAuth())
+      
+      // Wait for initial check to complete
+      await waitFor(() => {
+        expect(result.current.isLoading).toBe(false)
+      })
+      
+      // Now mock the failed refresh
       mockFetch.mockResolvedValueOnce({
         ok: false,
         status: 401
       } as Response)
-
-      const { result } = renderHook(() => useAuth())
 
       let refreshResult: boolean
       await act(async () => {
@@ -378,9 +500,23 @@ describe('useAuth', () => {
     })
 
     it('should handle refresh network error', async () => {
-      mockFetch.mockRejectedValueOnce(new Error('Network error'))
+      // Mock initial checkAuth call
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          authenticated: false
+        })
+      } as Response)
 
       const { result } = renderHook(() => useAuth())
+      
+      // Wait for initial check to complete
+      await waitFor(() => {
+        expect(result.current.isLoading).toBe(false)
+      })
+      
+      // Now mock the network error
+      mockFetch.mockRejectedValueOnce(new Error('Network error'))
 
       let refreshResult: boolean
       await act(async () => {

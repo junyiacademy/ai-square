@@ -167,10 +167,10 @@ describe('Header Navigation Tests', () => {
       
       render(<Header />)
 
-      // All text should come from translations
-      expect(screen.getByText('Relations')).toBeInTheDocument()
-      expect(screen.getByText('KSA Framework')).toBeInTheDocument()
-      expect(screen.getByText('Sign in')).toBeInTheDocument()
+      // All text should come from translations - use translation keys
+      expect(screen.getByText('relations')).toBeInTheDocument()
+      expect(screen.getByText('ksa')).toBeInTheDocument()
+      expect(screen.getByText('signIn')).toBeInTheDocument()
     })
 
     it('should translate user roles', () => {
@@ -189,8 +189,8 @@ describe('Header Navigation Tests', () => {
 
       render(<Header />)
 
-      // Should display teacher role text twice (desktop and mobile)
-      const teacherRoles = screen.getAllByText('Teacher')
+      // Should display teacher role key twice (desktop and mobile)
+      const teacherRoles = screen.getAllByText('userRole.teacher')
       expect(teacherRoles).toHaveLength(2)
     })
   })

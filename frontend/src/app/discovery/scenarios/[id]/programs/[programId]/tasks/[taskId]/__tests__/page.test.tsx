@@ -2,14 +2,19 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useRouter, useParams } from 'next/navigation';
 import TaskDetailPage from '../page';
-import { useAuth } from '@/hooks/useAuth';
 
 // Mock dependencies
 jest.mock('next/navigation');
-jest.mock('@/hooks/useAuth');
+jest.mock('@/contexts/AuthContext', () => ({
+  useAuth: jest.fn()
+}));
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({
-    t: (key: string) => key
+    t: (key: string) => key,
+    i18n: {
+      language: 'en',
+      changeLanguage: jest.fn()
+    }
   })
 }));
 
@@ -27,6 +32,9 @@ const mockRouter = {
 
 const mockUseRouter = useRouter as jest.MockedFunction<typeof useRouter>;
 const mockUseParams = useParams as jest.MockedFunction<typeof useParams>;
+
+// Import useAuth after the mock is set up
+import { useAuth } from '@/contexts/AuthContext';
 const mockUseAuth = useAuth as jest.MockedFunction<typeof useAuth>;
 
 describe('TaskDetailPage', () => {
