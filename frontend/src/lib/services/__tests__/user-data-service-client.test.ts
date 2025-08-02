@@ -34,7 +34,14 @@ describe('UserDataServiceClient', () => {
 
   const mockUserData: UserData = {
     achievements: {
-      badges: ['first-assessment'],
+      badges: [{
+        id: 'badge-1',
+        name: 'first-assessment',
+        description: 'First assessment completed',
+        unlockedAt: '2024-01-01T00:00:00Z',
+        category: 'learning',
+        xpReward: 50
+      }],
       totalXp: 100,
       level: 2,
       completedTasks: ['task-1', 'task-2']
@@ -42,22 +49,20 @@ describe('UserDataServiceClient', () => {
     assessmentSessions: [
       {
         id: 'session-1',
-        scenarioId: 'ai-literacy',
-        startedAt: '2024-01-20T10:00:00Z',
-        completedAt: '2024-01-20T10:30:00Z',
+        createdAt: '2024-01-20T10:00:00Z',
         results: {
-          totalQuestions: 20,
-          correctAnswers: 18,
-          score: 90,
-          domains: {}
-        }
+          tech: 85,
+          creative: 90,
+          business: 88
+        },
+        answers: {},
+        generatedPaths: []
       }
     ],
     assessmentResults: {
-      totalQuestions: 20,
-      correctAnswers: 18,
-      score: 90,
-      domains: {}
+      tech: 85,
+      creative: 90,
+      business: 88
     },
     lastUpdated: '2024-01-20T10:30:00Z',
     version: '2.0'
@@ -271,10 +276,9 @@ describe('UserDataServiceClient', () => {
 
     it('should save assessment results', async () => {
       const newResults: AssessmentResults = {
-        totalQuestions: 30,
-        correctAnswers: 28,
-        score: 93,
-        domains: { AI_Ethics: 95 }
+        tech: 90,
+        creative: 85,
+        business: 93
       };
 
       await service.saveAssessmentResults(newResults);
@@ -287,7 +291,14 @@ describe('UserDataServiceClient', () => {
 
     it('should save achievements', async () => {
       const newAchievements: UserAchievements = {
-        badges: ['master-learner'],
+        badges: [{
+          id: 'badge-2',
+          name: 'master-learner',
+          description: 'Master learner achievement',
+          unlockedAt: '2024-01-02T00:00:00Z',
+          category: 'mastery',
+          xpReward: 100
+        }],
         totalXp: 500,
         level: 5,
         completedTasks: ['task-1', 'task-2', 'task-3']
@@ -304,15 +315,14 @@ describe('UserDataServiceClient', () => {
     it('should add assessment session', async () => {
       const newSession: AssessmentSession = {
         id: 'session-2',
-        scenarioId: 'ai-ethics',
-        startedAt: '2024-01-21T10:00:00Z',
-        completedAt: '2024-01-21T10:45:00Z',
+        createdAt: '2024-01-21T10:00:00Z',
         results: {
-          totalQuestions: 25,
-          correctAnswers: 23,
-          score: 92,
-          domains: {}
-        }
+          tech: 88,
+          creative: 92,
+          business: 85
+        },
+        answers: {},
+        generatedPaths: []
       };
 
       await service.addAssessmentSession(newSession);

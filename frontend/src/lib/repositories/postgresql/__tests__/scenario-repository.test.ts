@@ -33,14 +33,14 @@ describe('PostgreSQLScenarioRepository', () => {
     source_metadata: { author: 'Test Author' },
     title: { en: 'Test Scenario', zh: '測試場景' },
     description: { en: 'Test Description', zh: '測試描述' },
-    objectives: { en: ['Objective 1', 'Objective 2'] },
+    objectives: ['Objective 1', 'Objective 2'],
     difficulty: 'intermediate',
     estimated_minutes: 60,
     prerequisites: ['prerequisite-1'],
     task_templates: [
       {
         id: 'task-1',
-        title: { en: 'Task 1' },
+        title: 'Task 1',
         type: 'question',
         status: 'active',
         content: { instructions: 'Do this task' }
@@ -50,9 +50,9 @@ describe('PostgreSQLScenarioRepository', () => {
     xp_rewards: { completion: 100, bonus: 50 },
     unlock_requirements: { minLevel: 5 },
     pbl_data: { projectType: 'web-app' },
-    discovery_data: null,
-    assessment_data: null,
-    ai_modules: [{ id: 'tutor-1', type: 'tutor' }],
+    discovery_data: {},
+    assessment_data: {},
+    ai_modules: { 'tutor-1': { type: 'tutor' } },
     resources: [{ id: 'resource-1', type: 'document' }],
     metadata: { tags: ['web', 'javascript'] },
     created_at: '2024-01-20T10:00:00Z',
@@ -76,10 +76,10 @@ describe('PostgreSQLScenarioRepository', () => {
 
   describe('findById', () => {
     it('should find scenario by id', async () => {
-      mockPool.query.mockResolvedValue({
+      (mockPool.query as jest.Mock).mockResolvedValue({
         rows: [mockDBScenario],
         rowCount: 1
-      } as any);
+      });
 
       const result = await repository.findById('scenario-123');
 
@@ -103,10 +103,10 @@ describe('PostgreSQLScenarioRepository', () => {
     });
 
     it('should return null when scenario not found', async () => {
-      mockPool.query.mockResolvedValue({
+      (mockPool.query as jest.Mock).mockResolvedValue({
         rows: [],
         rowCount: 0
-      } as any);
+      });
 
       const result = await repository.findById('non-existent');
 
@@ -116,10 +116,10 @@ describe('PostgreSQLScenarioRepository', () => {
 
   describe('findBySource', () => {
     it('should find scenarios by source type', async () => {
-      mockPool.query.mockResolvedValue({
+      (mockPool.query as jest.Mock).mockResolvedValue({
         rows: [mockDBScenario, { ...mockDBScenario, id: 'scenario-456' }],
         rowCount: 2
-      } as any);
+      });
 
       const result = await repository.findBySource('yaml');
 
@@ -132,10 +132,10 @@ describe('PostgreSQLScenarioRepository', () => {
     });
 
     it('should find scenarios by source type and id', async () => {
-      mockPool.query.mockResolvedValue({
+      (mockPool.query as jest.Mock).mockResolvedValue({
         rows: [mockDBScenario],
         rowCount: 1
-      } as any);
+      });
 
       const result = await repository.findBySource('yaml', 'source-123');
 
@@ -148,10 +148,10 @@ describe('PostgreSQLScenarioRepository', () => {
     });
 
     it('should return empty array when no scenarios found', async () => {
-      mockPool.query.mockResolvedValue({
+      (mockPool.query as jest.Mock).mockResolvedValue({
         rows: [],
         rowCount: 0
-      } as any);
+      });
 
       const result = await repository.findBySource('api');
 
@@ -164,18 +164,33 @@ describe('PostgreSQLScenarioRepository', () => {
       const newScenario: Omit<IScenario, 'id'> = {
         mode: 'pbl',
         status: 'draft',
+        version: '1.0',
         sourceType: 'yaml',
+        sourceMetadata: {},
         title: { en: 'New Scenario' },
         description: { en: 'New Description' },
-        objectives: {},
+        objectives: [],
+        difficulty: 'beginner',
+        estimatedMinutes: 60,
+        prerequisites: [],
+        taskTemplates: [],
+        taskCount: 0,
+        xpRewards: {},
+        unlockRequirements: {},
+        pblData: {},
+        discoveryData: {},
+        assessmentData: {},
+        aiModules: {},
+        resources: [],
+        metadata: {},
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
       };
 
-      mockPool.query.mockResolvedValue({
+      (mockPool.query as jest.Mock).mockResolvedValue({
         rows: [{ ...mockDBScenario, ...newScenario, id: 'new-scenario-id' }],
         rowCount: 1
-      } as any);
+      });
 
       const result = await repository.create(newScenario);
 
@@ -209,7 +224,7 @@ describe('PostgreSQLScenarioRepository', () => {
         sourceMetadata: { source: 'external' },
         title: { en: 'Assessment' },
         description: { en: 'Assessment Description' },
-        objectives: { en: ['Learn', 'Apply'] },
+        objectives: ['Learn', 'Apply'],
         difficulty: 'advanced',
         estimatedMinutes: 90,
         prerequisites: ['math', 'logic'],
@@ -221,20 +236,23 @@ describe('PostgreSQLScenarioRepository', () => {
             status: 'active'
           } as ITaskTemplate
         ],
+        taskCount: 1,
         xpRewards: { completion: 200 },
         unlockRequirements: { minLevel: 10 },
+        pblData: {},
+        discoveryData: {},
         assessmentData: { questionBank: [] },
-        aiModules: [{ type: 'evaluator' }],
+        aiModules: { 'evaluator-1': { type: 'evaluator' } },
         resources: [{ type: 'video' }],
         metadata: { category: 'advanced' },
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
       };
 
-      mockPool.query.mockResolvedValue({
+      (mockPool.query as jest.Mock).mockResolvedValue({
         rows: [{ ...mockDBScenario, ...newScenario, id: 'new-id' }],
         rowCount: 1
-      } as any);
+      });
 
       const result = await repository.create(newScenario);
 
@@ -249,10 +267,10 @@ describe('PostgreSQLScenarioRepository', () => {
 
   describe('update', () => {
     it('should update scenario status', async () => {
-      mockPool.query.mockResolvedValue({
+      (mockPool.query as jest.Mock).mockResolvedValue({
         rows: [{ ...mockDBScenario, status: 'archived' }],
         rowCount: 1
-      } as any);
+      });
 
       const result = await repository.update('scenario-123', { status: 'archived' });
 
@@ -264,10 +282,10 @@ describe('PostgreSQLScenarioRepository', () => {
     });
 
     it('should set published_at when status becomes active', async () => {
-      mockPool.query.mockResolvedValue({
+      (mockPool.query as jest.Mock).mockResolvedValue({
         rows: [{ ...mockDBScenario }],
         rowCount: 1
-      } as any);
+      });
 
       await repository.update('scenario-123', { status: 'active' });
 
@@ -286,10 +304,10 @@ describe('PostgreSQLScenarioRepository', () => {
         metadata: { updated: true }
       };
 
-      mockPool.query.mockResolvedValue({
+      (mockPool.query as jest.Mock).mockResolvedValue({
         rows: [{ ...mockDBScenario, ...updates }],
         rowCount: 1
-      } as any);
+      });
 
       const result = await repository.update('scenario-123', updates);
 
@@ -311,10 +329,10 @@ describe('PostgreSQLScenarioRepository', () => {
         sourceMetadata: { version: 2 }
       };
 
-      mockPool.query.mockResolvedValue({
+      (mockPool.query as jest.Mock).mockResolvedValue({
         rows: [{ ...mockDBScenario, ...updates }],
         rowCount: 1
-      } as any);
+      });
 
       await repository.update('scenario-123', updates);
 
@@ -329,10 +347,10 @@ describe('PostgreSQLScenarioRepository', () => {
     });
 
     it('should handle empty updates', async () => {
-      mockPool.query.mockResolvedValue({
+      (mockPool.query as jest.Mock).mockResolvedValue({
         rows: [mockDBScenario],
         rowCount: 1
-      } as any);
+      });
 
       // Empty updates should throw an error
       await expect(repository.update('scenario-123', {})).rejects.toThrow('No fields to update');
@@ -341,10 +359,10 @@ describe('PostgreSQLScenarioRepository', () => {
 
   describe('findActive', () => {
     it('should find all active scenarios', async () => {
-      mockPool.query.mockResolvedValue({
+      (mockPool.query as jest.Mock).mockResolvedValue({
         rows: [mockDBScenario, { ...mockDBScenario, id: 'scenario-456' }],
         rowCount: 2
-      } as any);
+      });
 
       const result = await repository.findActive();
 
@@ -357,10 +375,10 @@ describe('PostgreSQLScenarioRepository', () => {
 
   describe('findByDifficulty', () => {
     it('should find scenarios by difficulty level', async () => {
-      mockPool.query.mockResolvedValue({
+      (mockPool.query as jest.Mock).mockResolvedValue({
         rows: [mockDBScenario],
         rowCount: 1
-      } as any);
+      });
 
       const result = await repository.findByDifficulty('intermediate');
 
@@ -374,10 +392,10 @@ describe('PostgreSQLScenarioRepository', () => {
 
   describe('updateStatus', () => {
     it('should update scenario status', async () => {
-      mockPool.query.mockResolvedValue({
+      (mockPool.query as jest.Mock).mockResolvedValue({
         rows: [],
         rowCount: 1
-      } as any);
+      });
 
       await repository.updateStatus('scenario-123', 'archived');
 
@@ -388,10 +406,10 @@ describe('PostgreSQLScenarioRepository', () => {
     });
 
     it('should set published_at when activating', async () => {
-      mockPool.query.mockResolvedValue({
+      (mockPool.query as jest.Mock).mockResolvedValue({
         rows: [],
         rowCount: 1
-      } as any);
+      });
 
       await repository.updateStatus('scenario-123', 'active');
 
@@ -413,10 +431,10 @@ describe('PostgreSQLScenarioRepository', () => {
         averageTimeSpent: '3600'
       };
 
-      mockPool.query.mockResolvedValue({
+      (mockPool.query as jest.Mock).mockResolvedValue({
         rows: [mockRowWithStats],
         rowCount: 1
-      } as any);
+      });
 
       const result = await repository.getScenariosWithStats();
 
@@ -443,10 +461,10 @@ describe('PostgreSQLScenarioRepository', () => {
         averageTimeSpent: null
       };
 
-      mockPool.query.mockResolvedValue({
+      (mockPool.query as jest.Mock).mockResolvedValue({
         rows: [mockRowWithNullStats],
         rowCount: 1
-      } as any);
+      });
 
       const result = await repository.getScenariosWithStats();
 
@@ -463,10 +481,10 @@ describe('PostgreSQLScenarioRepository', () => {
 
   describe('getCompletionRate', () => {
     it('should calculate completion rate', async () => {
-      mockPool.query.mockResolvedValue({
+      (mockPool.query as jest.Mock).mockResolvedValue({
         rows: [{ completion_rate: 0.75 }],
         rowCount: 1
-      } as any);
+      });
 
       const result = await repository.getCompletionRate('scenario-123');
 
@@ -478,10 +496,10 @@ describe('PostgreSQLScenarioRepository', () => {
     });
 
     it('should return 0 when no programs exist', async () => {
-      mockPool.query.mockResolvedValue({
+      (mockPool.query as jest.Mock).mockResolvedValue({
         rows: [{ completion_rate: null }],
         rowCount: 1
-      } as any);
+      });
 
       const result = await repository.getCompletionRate('scenario-123');
 
@@ -491,10 +509,10 @@ describe('PostgreSQLScenarioRepository', () => {
 
   describe('checkPrerequisites', () => {
     it('should check if user meets prerequisites', async () => {
-      mockPool.query.mockResolvedValue({
+      (mockPool.query as jest.Mock).mockResolvedValue({
         rows: [{ meets_prerequisites: true }],
         rowCount: 1
-      } as any);
+      });
 
       const result = await repository.checkPrerequisites('scenario-123', 'user-456');
 
@@ -506,10 +524,10 @@ describe('PostgreSQLScenarioRepository', () => {
     });
 
     it('should return false when prerequisites not met', async () => {
-      mockPool.query.mockResolvedValue({
+      (mockPool.query as jest.Mock).mockResolvedValue({
         rows: [{ meets_prerequisites: false }],
         rowCount: 1
-      } as any);
+      });
 
       const result = await repository.checkPrerequisites('scenario-123', 'user-456');
 
@@ -519,10 +537,10 @@ describe('PostgreSQLScenarioRepository', () => {
 
   describe('addDomainMapping', () => {
     it('should add domain mapping', async () => {
-      mockPool.query.mockResolvedValue({
+      (mockPool.query as jest.Mock).mockResolvedValue({
         rows: [],
         rowCount: 1
-      } as any);
+      });
 
       await repository.addDomainMapping('scenario-123', 'domain-456', true);
 
@@ -535,10 +553,10 @@ describe('PostgreSQLScenarioRepository', () => {
 
   describe('findByDomain', () => {
     it('should find scenarios by domain', async () => {
-      mockPool.query.mockResolvedValue({
+      (mockPool.query as jest.Mock).mockResolvedValue({
         rows: [mockDBScenario],
         rowCount: 1
-      } as any);
+      });
 
       const result = await repository.findByDomain('domain-456');
 
@@ -552,10 +570,10 @@ describe('PostgreSQLScenarioRepository', () => {
 
   describe('findAll', () => {
     it('should find all scenarios without pagination', async () => {
-      mockPool.query.mockResolvedValue({
+      (mockPool.query as jest.Mock).mockResolvedValue({
         rows: [mockDBScenario, { ...mockDBScenario, id: 'scenario-456' }],
         rowCount: 2
-      } as any);
+      });
 
       const result = await repository.findAll();
 
@@ -567,10 +585,10 @@ describe('PostgreSQLScenarioRepository', () => {
     });
 
     it('should find scenarios with pagination', async () => {
-      mockPool.query.mockResolvedValue({
+      (mockPool.query as jest.Mock).mockResolvedValue({
         rows: [mockDBScenario],
         rowCount: 1
-      } as any);
+      });
 
       const result = await repository.findAll({ limit: 10, offset: 20 });
 
@@ -583,10 +601,10 @@ describe('PostgreSQLScenarioRepository', () => {
 
   describe('findBySourcePath', () => {
     it('should find scenario by source path', async () => {
-      mockPool.query.mockResolvedValue({
+      (mockPool.query as jest.Mock).mockResolvedValue({
         rows: [mockDBScenario],
         rowCount: 1
-      } as any);
+      });
 
       const result = await repository.findBySourcePath('/path/to/scenario.yaml');
 
@@ -598,10 +616,10 @@ describe('PostgreSQLScenarioRepository', () => {
     });
 
     it('should return null when not found', async () => {
-      mockPool.query.mockResolvedValue({
+      (mockPool.query as jest.Mock).mockResolvedValue({
         rows: [],
         rowCount: 0
-      } as any);
+      });
 
       const result = await repository.findBySourcePath('/non-existent.yaml');
 
@@ -611,10 +629,10 @@ describe('PostgreSQLScenarioRepository', () => {
 
   describe('findByMode', () => {
     it('should find scenarios by mode', async () => {
-      mockPool.query.mockResolvedValue({
+      (mockPool.query as jest.Mock).mockResolvedValue({
         rows: [mockDBScenario, { ...mockDBScenario, id: 'scenario-456' }],
         rowCount: 2
-      } as any);
+      });
 
       const result = await repository.findByMode('pbl');
 
@@ -635,18 +653,18 @@ describe('PostgreSQLScenarioRepository', () => {
         source_path: null,
         source_id: null,
         published_at: null,
-        task_templates: null,
-        pbl_data: null,
-        discovery_data: null,
-        assessment_data: null,
-        ai_modules: null,
-        resources: null
+        task_templates: [],
+        pbl_data: {},
+        discovery_data: {},
+        assessment_data: {},
+        ai_modules: {},
+        resources: []
       };
 
-      mockPool.query.mockResolvedValue({
+      (mockPool.query as jest.Mock).mockResolvedValue({
         rows: [minimalDBScenario],
         rowCount: 1
-      } as any);
+      });
 
       const result = await repository.findById('scenario-123');
 
@@ -663,17 +681,17 @@ describe('PostgreSQLScenarioRepository', () => {
         task_templates: [
           {
             id: 'task-1',
-            title: { en: 'Task 1' },
+            title: 'Task 1',
             type: 'question'
             // No description or other optional fields
           }
         ]
       };
 
-      mockPool.query.mockResolvedValue({
+      (mockPool.query as jest.Mock).mockResolvedValue({
         rows: [scenarioWithMinimalTasks],
         rowCount: 1
-      } as any);
+      });
 
       const result = await repository.findById('scenario-123');
 

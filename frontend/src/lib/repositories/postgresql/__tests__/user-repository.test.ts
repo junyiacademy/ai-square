@@ -35,11 +35,11 @@ describe('PostgreSQLUserRepository', () => {
     preferredLanguage: 'en',
     level: 1,
     totalXp: 0,
-    learningPreferences: { style: 'visual' },
+    learningPreferences: { learningStyle: 'visual' },
     onboardingCompleted: false,
-    createdAt: '2024-01-01T00:00:00Z',
-    updatedAt: '2024-01-02T00:00:00Z',
-    lastActiveAt: '2024-01-02T00:00:00Z',
+    createdAt: new Date('2024-01-01T00:00:00Z'),
+    updatedAt: new Date('2024-01-02T00:00:00Z'),
+    lastActiveAt: new Date('2024-01-02T00:00:00Z'),
     metadata: { theme: 'dark' }
   };
 
@@ -93,7 +93,7 @@ describe('PostgreSQLUserRepository', () => {
         email: 'NEW@EXAMPLE.COM',
         name: 'New User',
         preferredLanguage: 'zh',
-        learningPreferences: { style: 'audio' }
+        learningPreferences: { learningStyle: 'audio' }
       };
 
       mockQuery.mockResolvedValue({ 
@@ -178,7 +178,12 @@ describe('PostgreSQLUserRepository', () => {
     });
 
     it('updates learning preferences', async () => {
-      const newPreferences = { style: 'kinesthetic', pace: 'slow' };
+      const newPreferences = { 
+        goals: ['improve skills'],
+        interests: ['technology'],
+        learningPreferences: ['hands-on'],
+        learningStyle: 'kinesthetic'
+      };
       mockQuery.mockResolvedValue({ 
         rows: [{ ...mockUser, learningPreferences: newPreferences }] 
       });
@@ -344,7 +349,7 @@ describe('PostgreSQLUserRepository', () => {
         techScore: 85,
         creativeScore: 90,
         businessScore: 88,
-        answers: { q1: 'a' },
+        answers: { 'question1': ['a'] },
         generatedPaths: ['path1']
       };
 
@@ -354,7 +359,7 @@ describe('PostgreSQLUserRepository', () => {
           rows: [{
             id: 'eval-123',
             userId: 'user-123',
-            createdAt: '2024-01-20T10:00:00Z',
+            createdAt: new Date('2024-01-20T10:00:00Z'),
             overallScore: 87.67,
             feedback: {},
             metadata: { sessionKey: 'session-123' }
@@ -387,7 +392,7 @@ describe('PostgreSQLUserRepository', () => {
           rows: [{
             id: 'eval-123',
             userId: 'user-123',
-            createdAt: '2024-01-20T10:00:00Z',
+            createdAt: new Date('2024-01-20T10:00:00Z'),
             overallScore: 82.33,
             feedback: {},
             metadata: {}
@@ -421,7 +426,7 @@ describe('PostgreSQLUserRepository', () => {
         name: 'First Steps',
         description: 'Complete first task',
         imageUrl: '/badges/first.png',
-        category: 'progress',
+        category: 'mastery',
         xpReward: 50
       };
 
@@ -433,9 +438,9 @@ describe('PostgreSQLUserRepository', () => {
           name: 'First Steps',
           description: 'Complete first task',
           imageUrl: '/badges/first.png',
-          category: 'progress',
+          category: 'mastery',
           xpReward: 50,
-          unlockedAt: '2024-01-20T10:00:00Z',
+          unlockedAt: new Date('2024-01-20T10:00:00Z'),
           metadata: {}
         }]
       });
@@ -503,21 +508,25 @@ describe('PostgreSQLUserRepository', () => {
             name: 'Master',
             description: 'Master badge',
             imageUrl: '/badges/master.png',
-            category: 'skill',
+            category: 'learning' as const,
             xpReward: 500,
             unlockedAt: '2024-01-20T10:00:00Z'
-          }]
+          }],
+          completedTasks: ['task-1', 'task-2']
         },
         assessmentSessions: [{
           id: 'session-123',
+          createdAt: new Date().toISOString(),
           results: {
             tech: 90,
             creative: 85,
             business: 88
           },
-          answers: { q1: 'a' },
+          answers: { 'question1': ['a'] },
           generatedPaths: ['path1']
-        }]
+        }],
+        lastUpdated: new Date().toISOString(),
+        version: '3.0'
       };
 
       mockQuery.mockResolvedValueOnce({ rows: [mockUser] }); // find user
@@ -531,9 +540,9 @@ describe('PostgreSQLUserRepository', () => {
         techScore: 90,
         creativeScore: 85,
         businessScore: 88,
-        answers: { q1: 'a' },
+        answers: { 'question1': ['a'] },
         generatedPaths: ['path1'],
-        createdAt: '2024-01-20T10:00:00Z',
+        createdAt: new Date('2024-01-20T10:00:00Z'),
         metadata: {}
       });
       jest.spyOn(repository, 'addBadge').mockResolvedValue({
@@ -543,9 +552,9 @@ describe('PostgreSQLUserRepository', () => {
         name: 'Master',
         description: 'Master badge',
         imageUrl: '/badges/master.png',
-        category: 'skill',
+        category: 'learning',
         xpReward: 500,
-        unlockedAt: '2024-01-20T10:00:00Z',
+        unlockedAt: new Date('2024-01-20T10:00:00Z'),
         metadata: {}
       });
       jest.spyOn(repository, 'getUserData').mockResolvedValue({
@@ -591,7 +600,17 @@ describe('PostgreSQLUserRepository', () => {
         version: '3.0'
       });
 
-      await repository.saveUserData('new@example.com', {});
+      await repository.saveUserData('new@example.com', {
+        achievements: {
+          level: 1,
+          totalXp: 0,
+          badges: [],
+          completedTasks: []
+        },
+        assessmentSessions: [],
+        lastUpdated: new Date().toISOString(),
+        version: '3.0'
+      });
 
       expect(mockQuery).toHaveBeenCalledWith(
         expect.stringContaining('INSERT INTO users'),
@@ -604,7 +623,15 @@ describe('PostgreSQLUserRepository', () => {
       jest.spyOn(repository, 'update').mockRejectedValue(new Error('Update failed'));
 
       await expect(repository.saveUserData('test@example.com', {
-        achievements: { level: 5, totalXp: 1500 }
+        achievements: { 
+          level: 5, 
+          totalXp: 1500,
+          badges: [],
+          completedTasks: []
+        },
+        assessmentSessions: [],
+        lastUpdated: new Date().toISOString(),
+        version: '3.0'
       })).rejects.toThrow('Update failed');
 
       expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK');

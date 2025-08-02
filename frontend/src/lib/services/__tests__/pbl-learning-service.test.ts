@@ -56,6 +56,7 @@ describe('PBLLearningService', () => {
     status: 'active',
     sourceType: 'yaml',
     sourcePath: 'pbl/ai_ethics',
+    sourceMetadata: { category: 'pbl' },
     title: { en: 'AI Ethics Challenge' },
     description: { en: 'Explore AI ethics' },
     objectives: ['Understand AI ethics', 'Create ethical guidelines'],
@@ -185,7 +186,7 @@ describe('PBLLearningService', () => {
     it('should start a PBL learning journey', async () => {
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
       mockProgramRepo.create.mockResolvedValue(mockProgram);
-      mockTaskRepo.create.mockImplementation((task) => 
+      mockTaskRepo.create.mockImplementation((task: any) => 
         Promise.resolve({ ...task, id: `task-${Date.now()}` })
       );
 
@@ -222,7 +223,7 @@ describe('PBLLearningService', () => {
     it('should use specified language', async () => {
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
       mockProgramRepo.create.mockResolvedValue(mockProgram);
-      mockTaskRepo.create.mockImplementation((task) => 
+      mockTaskRepo.create.mockImplementation((task: any) => 
         Promise.resolve({ ...task, id: `task-${Date.now()}` })
       );
 
@@ -264,7 +265,7 @@ describe('PBLLearningService', () => {
     it('should set correct phases for tasks', async () => {
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
       mockProgramRepo.create.mockResolvedValue(mockProgram);
-      mockTaskRepo.create.mockImplementation((task) => 
+      mockTaskRepo.create.mockImplementation((task: any) => 
         Promise.resolve({ ...task, id: `task-${Date.now()}` })
       );
 
@@ -376,7 +377,7 @@ describe('PBLLearningService', () => {
 
       const result = await service.getProgress('program-123');
 
-      expect(result.metadata.currentTaskId).toBeUndefined();
+      expect(result.metadata?.currentTaskId).toBeUndefined();
     });
   });
 
@@ -436,7 +437,7 @@ describe('PBLLearningService', () => {
 
       const result = await service.submitResponse('program-123', 'task-123', {});
 
-      expect(result.metadata.aiResponse).toMatchObject({
+      expect(result.metadata?.aiResponse).toMatchObject({
         message: expect.stringContaining('Excellent research'),
         feedback: expect.stringContaining('exploration is thorough')
       });
@@ -503,7 +504,7 @@ describe('PBLLearningService', () => {
 
       const result = await service.submitResponse('program-123', 'task-123', {});
 
-      expect(result.metadata.aiResponse).toMatchObject({
+      expect(result.metadata?.aiResponse).toMatchObject({
         message: expect.stringContaining('Your solution is innovative'),
         feedback: expect.stringContaining('Creative problem-solving')
       });
@@ -516,7 +517,7 @@ describe('PBLLearningService', () => {
       const result = await service.submitResponse('program-123', 'task-123', {});
 
       // Should default to understanding phase
-      expect(result.metadata.aiResponse).toMatchObject({
+      expect(result.metadata?.aiResponse).toMatchObject({
         message: expect.stringContaining("That's a good observation"),
         feedback: expect.stringContaining("showing good understanding")
       });
@@ -795,7 +796,7 @@ describe('PBLLearningService', () => {
 
       const result = await service.getProgress('program-123');
 
-      expect(result.metadata.currentPhase).toBeUndefined();
+      expect(result.metadata?.currentPhase).toBeUndefined();
     });
 
     it('should handle task without pblData in AI response generation', async () => {
@@ -808,7 +809,7 @@ describe('PBLLearningService', () => {
       const result = await service.submitResponse('program-123', 'task-123', {});
 
       // Should default to understanding phase
-      expect(result.metadata.aiResponse).toMatchObject({
+      expect(result.metadata?.aiResponse).toMatchObject({
         message: expect.stringContaining("That's a good observation")
       });
     });

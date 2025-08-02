@@ -65,6 +65,7 @@ describe('DiscoveryLearningService', () => {
     status: 'active',
     sourceType: 'yaml',
     sourcePath: 'discovery/content_creator',
+    sourceMetadata: { category: 'discovery' },
     title: { en: 'Content Creator Path' },
     description: { en: 'Explore content creation' },
     objectives: ['Learn skills', 'Build portfolio'],
@@ -191,7 +192,7 @@ describe('DiscoveryLearningService', () => {
     it('should start a discovery learning journey', async () => {
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
       mockProgramRepo.create.mockResolvedValue(mockProgram);
-      mockTaskRepo.create.mockImplementation((task) => 
+      mockTaskRepo.create.mockImplementation((task: any) => 
         Promise.resolve({ ...task, id: `task-${Date.now()}` })
       );
 
@@ -227,7 +228,7 @@ describe('DiscoveryLearningService', () => {
     it('should use specified language', async () => {
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
       mockProgramRepo.create.mockResolvedValue(mockProgram);
-      mockTaskRepo.create.mockImplementation((task) => 
+      mockTaskRepo.create.mockImplementation((task: any) => 
         Promise.resolve({ ...task, id: `task-${Date.now()}` })
       );
 
@@ -308,7 +309,7 @@ describe('DiscoveryLearningService', () => {
     it('should submit response and complete task', async () => {
       mockTaskRepo.findById.mockResolvedValue(mockTask);
       mockProgramRepo.findById.mockResolvedValue(mockProgram);
-      mockTaskRepo.create.mockImplementation((task) => 
+      mockTaskRepo.create.mockImplementation((task: any) => 
         Promise.resolve({ ...task, id: `task-new-${Date.now()}` })
       );
 
@@ -575,7 +576,7 @@ describe('DiscoveryLearningService', () => {
 
       const result = await service.submitResponse('program-123', 'task-123', { completed: true });
 
-      expect(result.metadata.newAchievements).toContain('Advanced Challenge Master');
+      expect(result.metadata?.newAchievements).toContain('Advanced Challenge Master');
     });
 
     it('should handle tasks with skills to unlock', async () => {
@@ -591,7 +592,7 @@ describe('DiscoveryLearningService', () => {
 
       const result = await service.submitResponse('program-123', 'task-123', { completed: true });
 
-      expect(result.metadata.skillsUnlocked).toEqual(['writing', 'design']);
+      expect(result.metadata?.skillsUnlocked).toEqual(['writing', 'design']);
     });
 
     it('should handle empty skill progress normalization', async () => {
@@ -726,7 +727,7 @@ describe('DiscoveryLearningService', () => {
       const advancedProgram = {
         ...mockProgram,
         discoveryData: {
-          ...mockProgram.discoveryData as DiscoveryProgress,
+          ...(mockProgram.discoveryData as unknown as DiscoveryProgress),
           level: 6,
           completedChallenges: ['writing', 'design']
         }

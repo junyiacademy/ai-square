@@ -91,8 +91,16 @@ describe('ScenarioInitializationService', () => {
       difficultyRange: ['beginner', 'intermediate'],
       estimatedHours: 20,
       skillFocus: ['writing', 'design'],
-      worldSetting: {},
-      skillTree: {}
+      worldSetting: {
+        name: 'AI World',
+        description: 'AI learning environment',
+        atmosphere: 'collaborative',
+        visual_theme: 'modern'
+      },
+      skillTree: {
+        core_skills: [],
+        advanced_skills: []
+      }
     },
     assessmentData: {},
     aiModules: {},
@@ -192,39 +200,61 @@ describe('ScenarioInitializationService', () => {
       // Mock load methods
       mockPBLLoader.loadScenario.mockResolvedValue({
         scenario_info: {
+          id: 'ai-ethics',
           title: 'AI Ethics Challenge',
           description: 'Explore AI ethics',
           learning_objectives: ['Understand AI ethics'],
           difficulty: 'intermediate',
-          estimated_duration: '120 minutes',
+          estimated_duration: 120,
           target_domains: ['Engaging_with_AI']
         },
-        programs: [{ tasks: [{}, {}, {}] }],
+        programs: [{
+          id: 'program-1',
+          title: 'Main Program',
+          tasks: [
+            { id: 'task-1', title: 'Task 1', type: 'question' },
+            { id: 'task-2', title: 'Task 2', type: 'creation' },
+            { id: 'task-3', title: 'Task 3', type: 'analysis' }
+          ]
+        }],
         ksa_mappings: [],
         ai_modules: {}
       });
 
       mockDiscoveryLoader.loadPath.mockResolvedValue({
+        path_id: 'content-creator-path',
         metadata: {
           title: 'Content Creator Path',
+          short_description: 'Brief description',
           long_description: 'Create engaging content',
           estimated_hours: 20,
           skill_focus: ['writing', 'design']
         },
         category: 'creative',
-        difficulty_range: ['beginner', 'intermediate'],
-        world_setting: {},
-        skill_tree: {}
+        difficulty_range: 'beginner-intermediate',
+        world_setting: {
+          name: 'Creative World',
+          description: 'A world for creativity',
+          atmosphere: 'inspiring',
+          visual_theme: 'modern'
+        },
+        starting_scenario: {
+          title: 'Getting Started',
+          description: 'Begin your content creation journey',
+          initial_tasks: ['intro-task']
+        },
+        skill_tree: {
+          core_skills: [],
+          advanced_skills: []
+        },
+        milestone_quests: []
       });
 
       mockAssessmentLoader.loadAssessment.mockResolvedValue({
-        metadata: {
-          name: 'AI Literacy Assessment',
-          purpose: 'Test your AI knowledge',
-          duration: '30 minutes',
-          available_languages: ['en']
+        config: {
+          title: 'AI Literacy Assessment'
         },
-        domains: []
+        questions: []
       });
 
       // Mock getAvailableLanguages for assessments
@@ -237,7 +267,7 @@ describe('ScenarioInitializationService', () => {
 
       // Mock repo methods
       mockScenarioRepo.findByMode.mockResolvedValue([]);
-      mockScenarioRepo.create.mockImplementation((data) => 
+      mockScenarioRepo.create.mockImplementation((data: any) => 
         Promise.resolve({ ...data, id: `${data.mode}-scenario-123` })
       );
 
@@ -258,20 +288,29 @@ describe('ScenarioInitializationService', () => {
       mockPBLLoader.scanScenarios.mockResolvedValue(['ai_ethics', 'data_privacy']);
       mockPBLLoader.loadScenario.mockResolvedValue({
         scenario_info: {
+          id: 'ai-ethics',
           title: 'AI Ethics Challenge',
           description: 'Explore AI ethics',
           learning_objectives: ['Understand AI ethics'],
           difficulty: 'intermediate',
-          estimated_duration: '120 minutes',
+          estimated_duration: 120,
           target_domains: ['Engaging_with_AI']
         },
-        programs: [{ tasks: [{}, {}, {}] }],
+        programs: [{
+          id: 'program-1',
+          title: 'Main Program',
+          tasks: [
+            { id: 'task-1', title: 'Task 1', type: 'question' },
+            { id: 'task-2', title: 'Task 2', type: 'creation' },
+            { id: 'task-3', title: 'Task 3', type: 'analysis' }
+          ]
+        }],
         ksa_mappings: [],
         ai_modules: {}
       });
 
       mockScenarioRepo.findByMode.mockResolvedValue([]);
-      mockScenarioRepo.create.mockImplementation((data) => 
+      mockScenarioRepo.create.mockImplementation((data: any) => 
         Promise.resolve({ ...data, id: 'pbl-123' })
       );
 
@@ -298,13 +337,24 @@ describe('ScenarioInitializationService', () => {
       mockPBLLoader.scanScenarios.mockResolvedValue(['ai_ethics']);
       mockPBLLoader.loadScenario.mockResolvedValue({
         scenario_info: {
+          id: 'ai-ethics',  
           title: 'Updated AI Ethics Challenge',
           description: 'Updated description',
           learning_objectives: ['New objective'],
           difficulty: 'advanced',
-          estimated_duration: '180 minutes'
+          estimated_duration: 180,
+          target_domains: ['Engaging_with_AI']
         },
-        programs: [{ tasks: [{}, {}, {}, {}] }]
+        programs: [{
+          id: 'program-1',
+          title: 'Main Program',
+          tasks: [
+            { id: 'task-1', title: 'Task 1', type: 'question' },
+            { id: 'task-2', title: 'Task 2', type: 'creation' },
+            { id: 'task-3', title: 'Task 3', type: 'analysis' },
+            { id: 'task-4', title: 'Task 4', type: 'chat' }
+          ]
+        }]
       });
 
       mockScenarioRepo.findByMode.mockResolvedValue([mockPBLScenario]);
@@ -326,7 +376,19 @@ describe('ScenarioInitializationService', () => {
     it('should handle dry run mode', async () => {
       mockPBLLoader.scanScenarios.mockResolvedValue(['ai_ethics']);
       mockPBLLoader.loadScenario.mockResolvedValue({
-        scenario_info: { title: 'AI Ethics Challenge' }
+        scenario_info: {
+          id: 'scenario-1',
+          title: 'AI Ethics Challenge',
+          description: 'Test description',
+          difficulty: 'intermediate',
+          estimated_duration: 60,
+          target_domains: ['Engaging_with_AI']
+        },
+        programs: [{
+          id: 'program-1',
+          title: 'Test Program',
+          tasks: []
+        }]
       });
 
       mockScenarioRepo.findByMode.mockResolvedValue([]);
@@ -340,7 +402,17 @@ describe('ScenarioInitializationService', () => {
     it('should handle errors during processing', async () => {
       mockPBLLoader.scanScenarios.mockResolvedValue(['ai_ethics', 'broken_scenario']);
       mockPBLLoader.loadScenario
-        .mockResolvedValueOnce({ scenario_info: { title: 'AI Ethics' } })
+        .mockResolvedValueOnce({ 
+          scenario_info: {
+            id: 'scenario-1',
+            title: 'AI Ethics',
+            description: 'Test description',
+            difficulty: 'intermediate',
+            estimated_duration: 60,
+            target_domains: ['Engaging_with_AI']
+          },
+          programs: []
+        })
         .mockRejectedValueOnce(new Error('Failed to load'));
 
       mockScenarioRepo.findByMode.mockResolvedValue([]);
@@ -369,20 +441,36 @@ describe('ScenarioInitializationService', () => {
     it('should initialize Discovery scenarios for multiple languages', async () => {
       mockDiscoveryLoader.scanPaths.mockResolvedValue(['content_creator', 'youtuber']);
       mockDiscoveryLoader.loadPath.mockResolvedValue({
+        path_id: 'content-creator-path',
         metadata: {
           title: 'Content Creator Path',
+          short_description: 'Brief description',
           long_description: 'Create engaging content',
           estimated_hours: 20,
           skill_focus: ['writing', 'design']
         },
         category: 'creative',
-        difficulty_range: ['beginner', 'intermediate'],
-        world_setting: {},
-        skill_tree: {}
+        difficulty_range: 'beginner-intermediate',
+        world_setting: {
+          name: 'Creative World',
+          description: 'A world for creativity',
+          atmosphere: 'inspiring',
+          visual_theme: 'modern'
+        },
+        starting_scenario: {
+          title: 'Getting Started',
+          description: 'Begin your content creation journey',
+          initial_tasks: ['intro-task']
+        },
+        skill_tree: {
+          core_skills: [],
+          advanced_skills: []
+        },
+        milestone_quests: []
       });
 
       mockScenarioRepo.findByMode.mockResolvedValue([]);
-      mockScenarioRepo.create.mockImplementation((data) => 
+      mockScenarioRepo.create.mockImplementation((data: any) => 
         Promise.resolve({ ...data, id: 'discovery-123' })
       );
 
@@ -412,12 +500,36 @@ describe('ScenarioInitializationService', () => {
     it('should handle missing metadata', async () => {
       mockDiscoveryLoader.scanPaths.mockResolvedValue(['minimal']);
       mockDiscoveryLoader.loadPath.mockResolvedValue({
-        category: 'test'
-        // No metadata
+        path_id: 'minimal-path',
+        category: 'test',
+        difficulty_range: 'beginner',
+        metadata: {
+          title: 'Minimal Path',
+          short_description: 'Minimal description',
+          long_description: 'Minimal long description',
+          estimated_hours: 1,
+          skill_focus: []
+        },
+        world_setting: {
+          name: 'Test World',
+          description: 'A test world',
+          atmosphere: 'neutral',
+          visual_theme: 'minimal'
+        },
+        starting_scenario: {
+          title: 'Start',
+          description: 'Starting scenario',
+          initial_tasks: []
+        },
+        skill_tree: {
+          core_skills: [],
+          advanced_skills: []
+        },
+        milestone_quests: []
       });
 
       mockScenarioRepo.findByMode.mockResolvedValue([]);
-      mockScenarioRepo.create.mockImplementation((data) => 
+      mockScenarioRepo.create.mockImplementation((data: any) => 
         Promise.resolve({ ...data, id: 'discovery-min' })
       );
 
@@ -443,18 +555,12 @@ describe('ScenarioInitializationService', () => {
     it('should initialize Assessment scenarios', async () => {
       mockAssessmentLoader.scanAssessments.mockResolvedValue(['ai_literacy', 'data_ethics']);
       mockAssessmentLoader.loadAssessment.mockResolvedValue({
-        metadata: {
-          name: 'AI Literacy Assessment',
-          purpose: 'Test your AI knowledge',
-          duration: '30 minutes',
-          available_languages: ['en', 'zh', 'es']
-        },
-        domains: [
-          {
-            name: 'Understanding AI',
-            competencies: ['Basic concepts'],
-            questions: [{}, {}, {}, {}]
-          }
+        config: { title: 'AI Literacy Assessment' },
+        questions: [
+          { id: 'q1', domain: 'AI', competency: 'basic', question: 'What is AI?', options: ['a', 'b', 'c'], correct_answer: 'a' },
+          { id: 'q2', domain: 'ML', competency: 'basic', question: 'Define ML', options: ['a', 'b', 'c'], correct_answer: 'b' },
+          { id: 'q3', domain: 'NLP', competency: 'basic', question: 'Explain NLP', options: ['a', 'b', 'c'], correct_answer: 'c' },
+          { id: 'q4', domain: 'CV', competency: 'basic', question: 'Computer Vision', options: ['a', 'b', 'c'], correct_answer: 'a' }
         ]
       });
 
@@ -467,7 +573,7 @@ describe('ScenarioInitializationService', () => {
       });
 
       mockScenarioRepo.findByMode.mockResolvedValue([]);
-      mockScenarioRepo.create.mockImplementation((data) => 
+      mockScenarioRepo.create.mockImplementation((data: any) => 
         Promise.resolve({ ...data, id: 'assessment-123' })
       );
 
@@ -481,10 +587,13 @@ describe('ScenarioInitializationService', () => {
     it('should calculate question count from domains', async () => {
       mockAssessmentLoader.scanAssessments.mockResolvedValue(['ai_literacy']);
       mockAssessmentLoader.loadAssessment.mockResolvedValue({
-        metadata: { name: 'AI Literacy' },
-        domains: [
-          { questions: [{}, {}, {}] },
-          { questions: [{}, {}] }
+        config: { title: 'AI Literacy' },
+        questions: [
+          { id: 'q1', domain: 'AI', competency: 'basic', question: 'Question 1', options: ['a', 'b'], correct_answer: 'a' },
+          { id: 'q2', domain: 'AI', competency: 'basic', question: 'Question 2', options: ['a', 'b'], correct_answer: 'b' },
+          { id: 'q3', domain: 'AI', competency: 'basic', question: 'Question 3', options: ['a', 'b'], correct_answer: 'a' },
+          { id: 'q4', domain: 'AI', competency: 'basic', question: 'Question 4', options: ['a', 'b'], correct_answer: 'b' },
+          { id: 'q5', domain: 'AI', competency: 'basic', question: 'Question 5', options: ['a', 'b'], correct_answer: 'a' }
         ]
       });
 
@@ -493,7 +602,7 @@ describe('ScenarioInitializationService', () => {
       mockAssessmentLoader.getTranslatedField = jest.fn().mockReturnValue('');
 
       mockScenarioRepo.findByMode.mockResolvedValue([]);
-      mockScenarioRepo.create.mockImplementation((data) => {
+      mockScenarioRepo.create.mockImplementation((data: any) => {
         expect(data.taskCount).toBe(5); // 3 + 2 questions
         return Promise.resolve({ ...data, id: 'assessment-123' });
       });
@@ -504,7 +613,8 @@ describe('ScenarioInitializationService', () => {
     it('should use default values for missing fields', async () => {
       mockAssessmentLoader.scanAssessments.mockResolvedValue(['minimal']);
       mockAssessmentLoader.loadAssessment.mockResolvedValue({
-        // Minimal data
+        config: { title: 'Minimal Assessment' },
+        questions: []
       });
 
       // Mock getAvailableLanguages for assessments
@@ -512,7 +622,7 @@ describe('ScenarioInitializationService', () => {
       mockAssessmentLoader.getTranslatedField = jest.fn().mockReturnValue('');
 
       mockScenarioRepo.findByMode.mockResolvedValue([]);
-      mockScenarioRepo.create.mockImplementation((data) => {
+      mockScenarioRepo.create.mockImplementation((data: any) => {
         expect(data.title).toEqual({ en: 'minimal Assessment' });
         expect(data.estimatedMinutes).toBe(15);
         return Promise.resolve({ ...data, id: 'assessment-min' });
@@ -526,7 +636,15 @@ describe('ScenarioInitializationService', () => {
     it('should handle scenario without sourceMetadata in findExistingScenario', async () => {
       mockPBLLoader.scanScenarios.mockResolvedValue(['ai_ethics']);
       mockPBLLoader.loadScenario.mockResolvedValue({
-        scenario_info: { title: 'AI Ethics' }
+        scenario_info: {
+          id: 'scenario-1',
+          title: 'AI Ethics',
+          description: 'Test description',
+          difficulty: 'intermediate',
+          estimated_duration: 60,
+          target_domains: ['Engaging_with_AI']
+        },
+        programs: []
       });
 
       // Create a scenario without sourceMetadata but with matching sourcePath
@@ -547,8 +665,32 @@ describe('ScenarioInitializationService', () => {
     it('should handle missing language match in Discovery path loading', async () => {
       mockDiscoveryLoader.scanPaths.mockResolvedValue(['app_developer']);
       mockDiscoveryLoader.loadPath.mockResolvedValue({
-        metadata: { title: 'App Developer' },
-        category: 'tech'
+        path_id: 'app-developer-path',
+        metadata: {
+          title: 'App Developer',
+          short_description: 'Test description',
+          long_description: 'Comprehensive app development path',
+          estimated_hours: 60,
+          skill_focus: ['programming', 'design']
+        },
+        category: 'tech',
+        difficulty_range: 'intermediate',
+        world_setting: {
+          name: 'Developer World',
+          description: 'A world for app development',
+          atmosphere: 'productive',
+          visual_theme: 'modern'
+        },
+        starting_scenario: {
+          title: 'Getting Started',
+          description: 'Begin your app development journey',
+          initial_tasks: ['intro-task']
+        },
+        skill_tree: {
+          core_skills: [],
+          advanced_skills: []
+        },
+        milestone_quests: []
       });
 
       mockScenarioRepo.findByMode.mockResolvedValue([]);
@@ -562,8 +704,8 @@ describe('ScenarioInitializationService', () => {
     it('should handle assessment with no domains', async () => {
       mockAssessmentLoader.scanAssessments.mockResolvedValue(['empty']);
       mockAssessmentLoader.loadAssessment.mockResolvedValue({
-        metadata: { name: 'Empty Assessment' }
-        // No domains
+        config: { title: 'Empty Assessment' },
+        questions: []
       });
 
       // Mock getAvailableLanguages for assessments
@@ -571,7 +713,7 @@ describe('ScenarioInitializationService', () => {
       mockAssessmentLoader.getTranslatedField = jest.fn().mockReturnValue('');
 
       mockScenarioRepo.findByMode.mockResolvedValue([]);
-      mockScenarioRepo.create.mockImplementation((data) => {
+      mockScenarioRepo.create.mockImplementation((data: any) => {
         expect(data.taskCount).toBe(12); // Default value
         expect(data.assessmentData.totalQuestions).toBe(12); // Default value
         return Promise.resolve({ ...data, id: 'assessment-empty' });
@@ -583,12 +725,19 @@ describe('ScenarioInitializationService', () => {
     it('should handle PBL scenario with no programs', async () => {
       mockPBLLoader.scanScenarios.mockResolvedValue(['no_programs']);
       mockPBLLoader.loadScenario.mockResolvedValue({
-        scenario_info: { title: 'No Programs' }
-        // No programs array
+        scenario_info: {
+          id: 'scenario-1',
+          title: 'No Programs',
+          description: 'Test description',
+          difficulty: 'intermediate',
+          estimated_duration: 60,
+          target_domains: ['Engaging_with_AI']
+        },
+        programs: []
       });
 
       mockScenarioRepo.findByMode.mockResolvedValue([]);
-      mockScenarioRepo.create.mockImplementation((data) => {
+      mockScenarioRepo.create.mockImplementation((data: any) => {
         expect(data.taskCount).toBe(0);
         expect(data.pblData.programs).toEqual([]);
         return Promise.resolve({ ...data, id: 'pbl-no-prog' });
@@ -602,7 +751,15 @@ describe('ScenarioInitializationService', () => {
 
       mockPBLLoader.scanScenarios.mockResolvedValue(['ai_ethics']);
       mockPBLLoader.loadScenario.mockResolvedValue({
-        scenario_info: { title: 'AI Ethics' }
+        scenario_info: {
+          id: 'scenario-1',
+          title: 'AI Ethics',
+          description: 'Test description',
+          difficulty: 'intermediate',
+          estimated_duration: 60,
+          target_domains: ['Engaging_with_AI']
+        },
+        programs: []
       });
 
       const result = await service.initializePBLScenarios();
@@ -614,13 +771,18 @@ describe('ScenarioInitializationService', () => {
       mockPBLLoader.scanScenarios.mockResolvedValue(['test']);
       mockPBLLoader.loadScenario.mockResolvedValue({
         scenario_info: {
+          id: 'test',
           title: 'Test',
-          estimated_duration: '90 minutes'
-        }
+          description: 'Test description',
+          difficulty: 'beginner',
+          estimated_duration: 90,
+          target_domains: ['Engaging_with_AI']
+        },
+        programs: []
       });
 
       mockScenarioRepo.findByMode.mockResolvedValue([]);
-      mockScenarioRepo.create.mockImplementation((data) => {
+      mockScenarioRepo.create.mockImplementation((data: any) => {
         expect(data.estimatedMinutes).toBe(90);
         return Promise.resolve({ ...data, id: 'pbl-test' });
       });
@@ -632,13 +794,18 @@ describe('ScenarioInitializationService', () => {
       mockPBLLoader.scanScenarios.mockResolvedValue(['test']);
       mockPBLLoader.loadScenario.mockResolvedValue({
         scenario_info: {
-          title: 'Test'
-          // No estimated_duration
-        }
+          id: 'test',
+          title: 'Test',
+          description: 'Test description',
+          difficulty: 'beginner',
+          estimated_duration: 0,
+          target_domains: ['Engaging_with_AI']
+        },
+        programs: []
       });
 
       mockScenarioRepo.findByMode.mockResolvedValue([]);
-      mockScenarioRepo.create.mockImplementation((data) => {
+      mockScenarioRepo.create.mockImplementation((data: any) => {
         expect(data.estimatedMinutes).toBe(60); // Default
         return Promise.resolve({ ...data, id: 'pbl-test' });
       });
@@ -677,14 +844,11 @@ describe('ScenarioInitializationService', () => {
     it('should handle assessment metadata with different fields', async () => {
       mockAssessmentLoader.scanAssessments.mockResolvedValue(['custom']);
       mockAssessmentLoader.loadAssessment.mockResolvedValue({
-        metadata: {
-          name: 'Custom Assessment',
-          purpose: 'Custom purpose',
-          duration: '45 minutes' // Will be ignored, use default
-        },
-        questionBankByLanguage: {
-          en: { domains: [{ questions: [{}, {}] }] }
-        }
+        config: { title: 'Custom Assessment' },
+        questions: [
+          { id: 'q1', domain: 'AI', competency: 'basic', question: 'Question 1', options: ['a', 'b'], correct_answer: 'a' },
+          { id: 'q2', domain: 'AI', competency: 'basic', question: 'Question 2', options: ['a', 'b'], correct_answer: 'b' }
+        ]
       });
 
       // Mock getAvailableLanguages for assessments
@@ -696,7 +860,7 @@ describe('ScenarioInitializationService', () => {
       });
 
       mockScenarioRepo.findByMode.mockResolvedValue([]);
-      mockScenarioRepo.create.mockImplementation((data) => {
+      mockScenarioRepo.create.mockImplementation((data: any) => {
         expect(data.description).toEqual({ en: 'Custom purpose' });
         expect(data.taskCount).toBe(12); // Default value when no domains at root level
         return Promise.resolve({ ...data, id: 'assessment-custom' });

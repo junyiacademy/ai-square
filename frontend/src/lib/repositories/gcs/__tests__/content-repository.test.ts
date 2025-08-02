@@ -57,7 +57,7 @@ tasks:
   - id: task1
     type: question
 `;
-      mockFile.download.mockResolvedValue([Buffer.from(yamlContent)]);
+      (mockFile.download as jest.Mock).mockResolvedValue([Buffer.from(yamlContent)]);
 
       const result = await repository.getYamlContent('test.yaml');
 
@@ -72,14 +72,14 @@ tasks:
     });
 
     it('should throw error when file not found', async () => {
-      mockFile.exists.mockResolvedValue([false]);
+      (mockFile.exists as jest.Mock).mockResolvedValue([false]);
 
       await expect(repository.getYamlContent('missing.yaml'))
         .rejects.toThrow('File not found: missing.yaml');
     });
 
     it('should handle download errors', async () => {
-      mockFile.download.mockRejectedValue(new Error('Download failed'));
+      (mockFile.download as jest.Mock).mockRejectedValue(new Error('Download failed'));
 
       await expect(repository.getYamlContent('error.yaml'))
         .rejects.toThrow('Download failed');
@@ -99,7 +99,7 @@ tasks:
         { name: 'test3.json' },
         { name: 'test4.yaml' }
       ];
-      mockBucket.getFiles.mockResolvedValue([mockFiles as any, null as any, null as any]);
+      (mockBucket.getFiles as jest.Mock).mockResolvedValue([mockFiles, {}, {}]);
 
       const result = await repository.listYamlFiles('scenarios/');
 
@@ -111,7 +111,7 @@ tasks:
     });
 
     it('should handle listing errors', async () => {
-      mockBucket.getFiles.mockRejectedValue(new Error('List failed'));
+      (mockBucket.getFiles as jest.Mock).mockRejectedValue(new Error('List failed'));
 
       await expect(repository.listYamlFiles('error/'))
         .rejects.toThrow('List failed');
@@ -150,7 +150,7 @@ tasks:
     };
 
     it('should get scenario content with language-specific file', async () => {
-      mockFile.download.mockResolvedValue([Buffer.from(JSON.stringify(mockScenarioYaml))]);
+      (mockFile.download as jest.Mock).mockResolvedValue([Buffer.from(JSON.stringify(mockScenarioYaml))]);
       jest.spyOn(repository as any, 'getYamlContent')
         .mockResolvedValueOnce(mockScenarioYaml);
 
@@ -222,11 +222,11 @@ tasks:
         'pbl_data/scenario2_scenario.yaml',
         'pbl_data/other.yaml'
       ];
-      mockBucket.getFiles.mockResolvedValue([[
+      (mockBucket.getFiles as jest.Mock).mockResolvedValue([[
         { name: mockFiles[0] },
         { name: mockFiles[1] },
         { name: mockFiles[2] }
-      ] as any, null as any, null as any]);
+      ], {}, {}]);
 
       const mockScenarioContent = {
         type: 'pbl',
@@ -247,7 +247,7 @@ tasks:
     });
 
     it('should get all scenarios when no type specified', async () => {
-      mockBucket.getFiles.mockResolvedValue([[] as any, null as any, null as any]);
+      (mockBucket.getFiles as jest.Mock).mockResolvedValue([[], {}, {}]);
 
       const result = await repository.getAllScenarios();
 
@@ -256,9 +256,9 @@ tasks:
     });
 
     it('should handle errors when loading individual scenarios', async () => {
-      mockBucket.getFiles.mockResolvedValue([[
+      (mockBucket.getFiles as jest.Mock).mockResolvedValue([[
         { name: 'pbl_data/error_scenario.yaml' }
-      ] as any, null as any, null as any]);
+      ], {}, {}]);
 
       jest.spyOn(repository as any, 'getYamlContent')
         .mockRejectedValue(new Error('Parse error'));
