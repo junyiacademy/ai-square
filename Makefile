@@ -148,6 +148,10 @@ help:
 	@echo "  $(GREEN)make dev-lint$(NC)                                  - 執行程式碼檢查"
 	@echo "  $(GREEN)make dev-typecheck$(NC)                             - 執行型別檢查"
 	@echo ""
+	@echo "$(CYAN)TypeScript 錯誤防護:$(NC)"
+	@echo "  $(YELLOW)make ts-safe-test$(NC)                              - 🛡️ 開始安全測試開發模式"
+	@echo "  $(YELLOW)make ts-safe-check$(NC)                             - ✅ 檢查測試開發是否引入新錯誤"
+	@echo ""
 	@echo "$(CYAN)測試:$(NC)"
 	@echo "  $(GREEN)make test-all$(NC)                                  - 執行所有測試"
 	@echo "  $(GREEN)make test-frontend$(NC)                             - 執行前端測試"
@@ -468,13 +472,13 @@ dev-quality: dev-lint dev-typecheck validate-scenarios
 ## Pre-commit 檢查 - 確保遵守 CLAUDE.md 規則
 pre-commit-check:
 	@echo "$(BLUE)🔍 執行 pre-commit 檢查...$(NC)"
-	@echo "$(YELLOW)1️⃣ ESLint 檢查變更的檔案...$(NC)"
+	@echo "$(YELLOW)1️⃣  TypeScript 類型檢查 (最優先)...$(NC)"
+	@cd frontend && npm run typecheck || (echo "$(RED)❌ TypeScript 檢查失敗$(NC)" && exit 1)
+	@echo "$(GREEN)✅ TypeScript 檢查通過$(NC)"
+	@echo ""
+	@echo "$(YELLOW)2️⃣ ESLint 檢查變更的檔案...$(NC)"
 	@cd frontend && npx eslint $$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(ts|tsx|js|jsx)$$') || (echo "$(RED)❌ ESLint 檢查失敗$(NC)" && exit 1)
 	@echo "$(GREEN)✅ ESLint 檢查通過$(NC)"
-	@echo ""
-	@echo "$(YELLOW)2️⃣ TypeScript 類型檢查...$(NC)"
-	@cd frontend && npx tsc --noEmit || (echo "$(RED)❌ TypeScript 檢查失敗$(NC)" && exit 1)
-	@echo "$(GREEN)✅ TypeScript 檢查通過$(NC)"
 	@echo ""
 	@echo "$(YELLOW)3️⃣ 執行測試...$(NC)"
 	@cd frontend && npm run test:ci || (echo "$(RED)❌ 測試失敗$(NC)" && exit 1)
@@ -495,6 +499,14 @@ pre-commit-check:
 	@echo "   $(CYAN)[ ]$(NC) 等待用戶確認後才 commit"
 	@echo ""
 	@echo "$(GREEN)✅ 所有自動化檢查通過！手動確認後即可 commit。$(NC)"
+
+## TypeScript 錯誤防護 - 測試開發輔助
+ts-safe-test:
+	@cd frontend && bash scripts/safe-test-development.sh
+
+## TypeScript 錯誤防護 - 檢查測試開發
+ts-safe-check:
+	@cd frontend && bash scripts/safe-test-development.sh --check
 
 #=============================================================================
 # 清理命令
