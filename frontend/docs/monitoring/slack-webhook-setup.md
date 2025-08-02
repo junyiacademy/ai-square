@@ -14,7 +14,11 @@
 
 Add to `.env.local`:
 ```bash
-SLACK_WEBHOOK_URL=https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX
+# For development work
+SLACK_AISQUARE_DEV_WEBHOOK_URL=https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX
+
+# For production notifications (optional)
+SLACK_AISQUARE_WEBHOOK_URL=https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX
 ```
 
 ## 3. Test It

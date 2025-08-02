@@ -196,10 +196,16 @@ export class SlackWebhookAgent {
 
 // Factory function
 export function createSlackWebhookAgent(): SlackWebhookAgent | null {
-  const webhookUrl = process.env.SLACK_WEBHOOK_URL;
+  // Use development webhook URL if available, otherwise fall back to general webhook
+  const webhookUrl = process.env.SLACK_AISQUARE_DEV_WEBHOOK_URL || 
+                     process.env.SLACK_WEBHOOK_URL ||
+                     process.env.SLACK_AISQUARE_WEBHOOK_URL;
   
   if (!webhookUrl) {
-    console.warn('SLACK_WEBHOOK_URL not configured in environment variables');
+    console.warn('No Slack webhook URL configured. Please set one of:');
+    console.warn('- SLACK_AISQUARE_DEV_WEBHOOK_URL (for development)');
+    console.warn('- SLACK_AISQUARE_WEBHOOK_URL (for production)');
+    console.warn('- SLACK_WEBHOOK_URL (legacy)');
     return null;
   }
 
@@ -215,7 +221,7 @@ export const slackWebhookExample = async () => {
     return;
   }
 
-  // Track work
+  // Track work (development example)
   agent.addProgress({
     taskName: 'TypeScript Migration',
     status: 'completed',
