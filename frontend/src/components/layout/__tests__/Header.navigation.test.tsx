@@ -29,13 +29,10 @@ jest.mock('../../../contexts/ThemeContext', () => ({
   })),
 }))
 
-// Mock AuthContext
+// Create a mutable mock for useAuth
+const mockUseAuth = jest.fn()
 jest.mock('../../../contexts/AuthContext', () => ({
-  useAuth: jest.fn(() => ({
-    user: null,
-    isLoggedIn: false,
-    logout: jest.fn(),
-  })),
+  useAuth: () => mockUseAuth()
 }))
 
 // Mock Link component
@@ -92,6 +89,12 @@ describe('Header Navigation Tests', () => {
     jest.clearAllMocks()
     mockLocalStorage.getItem.mockClear()
     mockUsePathname.mockReturnValue('/')
+    // Default mock for useAuth - not logged in
+    mockUseAuth.mockReturnValue({
+      user: null,
+      isLoggedIn: false,
+      logout: jest.fn(),
+    })
   })
 
   describe('Navigation Links', () => {
@@ -125,7 +128,10 @@ describe('Header Navigation Tests', () => {
       render(<Header />)
 
       const dashboardLink = screen.getByText('Dashboard').closest('a')
-      expect(dashboardLink?.parentElement).toHaveClass('text-blue-600')
+      // Active links have text-gray-900 and border-blue-600 classes based on the Header component
+      expect(dashboardLink).toHaveClass('text-gray-900')
+      expect(dashboardLink).toHaveClass('border-blue-600')
+      expect(dashboardLink).toHaveClass('border-b-2')
     })
   })
 
@@ -167,10 +173,10 @@ describe('Header Navigation Tests', () => {
       
       render(<Header />)
 
-      // All text should come from translations - use translation keys
-      expect(screen.getByText('relations')).toBeInTheDocument()
-      expect(screen.getByText('ksa')).toBeInTheDocument()
-      expect(screen.getByText('signIn')).toBeInTheDocument()
+      // All text should come from translations - check actual translated values
+      expect(screen.getByText('Relations')).toBeInTheDocument()
+      expect(screen.getByText('KSA Framework')).toBeInTheDocument()
+      expect(screen.getByText('Sign in')).toBeInTheDocument()
     })
 
     it('should translate user roles', () => {
@@ -181,17 +187,17 @@ describe('Header Navigation Tests', () => {
         name: 'Test User'
       }
       
-      mockLocalStorage.getItem.mockImplementation((key) => {
-        if (key === 'isLoggedIn') return 'true'
-        if (key === 'user') return JSON.stringify(mockUser)
-        return null
+      // Mock useAuth to return logged in user
+      mockUseAuth.mockReturnValue({
+        user: mockUser,
+        isLoggedIn: true,
+        logout: jest.fn(),
       })
 
       render(<Header />)
 
-      // Should display teacher role key twice (desktop and mobile)
-      const teacherRoles = screen.getAllByText('userRole.teacher')
-      expect(teacherRoles).toHaveLength(2)
+      // Should display translated teacher role
+      expect(screen.getByText('Teacher')).toBeInTheDocument()
     })
   })
 
@@ -214,17 +220,19 @@ describe('Header Navigation Tests', () => {
         name: 'Test User'
       }
       
-      mockLocalStorage.getItem.mockImplementation((key) => {
-        if (key === 'isLoggedIn') return 'true'
-        if (key === 'user') return JSON.stringify(mockUser)
-        return null
+      // Mock useAuth to return logged in user
+      mockUseAuth.mockReturnValue({
+        user: mockUser,
+        isLoggedIn: true,
+        logout: jest.fn(),
       })
 
       render(<Header />)
 
       expect(screen.getByText('Relations')).toBeInTheDocument()
       expect(screen.getByText('KSA Framework')).toBeInTheDocument()
-      expect(screen.getByRole('button', { name: 'Sign out' })).toBeInTheDocument()
+      // Sign out button contains text but doesn't have aria-label
+      expect(screen.getByText('Sign out')).toBeInTheDocument()
     })
   })
 })

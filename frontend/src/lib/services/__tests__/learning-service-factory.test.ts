@@ -97,11 +97,13 @@ describe('LearningServiceFactory', () => {
       const assessmentService = factory.getService('assessment');
       
       // Check that it implements BaseLearningService interface
-      expect(assessmentService).toHaveProperty('createScenario');
-      expect(assessmentService).toHaveProperty('getScenario');
-      expect(assessmentService).toHaveProperty('updateScenario');
-      expect(assessmentService).toHaveProperty('deleteScenario');
-      expect(assessmentService).toHaveProperty('listScenarios');
+      expect(assessmentService).toHaveProperty('startLearning');
+      expect(assessmentService).toHaveProperty('getProgress');
+      expect(assessmentService).toHaveProperty('submitResponse');
+      expect(assessmentService).toHaveProperty('completeLearning');
+      expect(assessmentService).toHaveProperty('getNextTask');
+      expect(assessmentService).toHaveProperty('evaluateTask');
+      expect(assessmentService).toHaveProperty('generateFeedback');
     });
 
     it('adapter methods call underlying service', async () => {
@@ -128,13 +130,14 @@ describe('LearningServiceFactory', () => {
       modes.forEach(mode => {
         const service = factory.getService(mode);
         
-        // TODO: These methods don't exist on BaseLearningService
-        // The actual methods are createLearningProgram, completeTask, etc.
-        // expect(typeof service.createScenario).toBe('function');
-        // expect(typeof service.getScenario).toBe('function');
-        // expect(typeof service.updateScenario).toBe('function');
-        // expect(typeof service.deleteScenario).toBe('function');
-        // expect(typeof service.listScenarios).toBe('function');
+        // Check that all required methods exist
+        expect(typeof service.startLearning).toBe('function');
+        expect(typeof service.getProgress).toBe('function');
+        expect(typeof service.submitResponse).toBe('function');
+        expect(typeof service.completeLearning).toBe('function');
+        expect(typeof service.getNextTask).toBe('function');
+        expect(typeof service.evaluateTask).toBe('function');
+        expect(typeof service.generateFeedback).toBe('function');
       });
     });
   });

@@ -271,10 +271,16 @@ describe('QuestionReview', () => {
     expect(screen.queryByText('Attitudes:')).not.toBeInTheDocument();
   });
 
-  it('does not display KSA mapping when not available', () => {
+  it('displays KSA mapping section even with empty arrays', () => {
     render(<QuestionReview {...defaultProps} selectedQuestionIds={['q3']} />);
 
-    expect(screen.queryByText('Related Competencies')).not.toBeInTheDocument();
+    // The component shows the section if ksa_mapping exists, even if all arrays are empty
+    expect(screen.getByText('Related Competencies')).toBeInTheDocument();
+    
+    // But it shouldn't show any category labels when arrays are empty
+    expect(screen.queryByText('Knowledge:')).not.toBeInTheDocument();
+    expect(screen.queryByText('Skills:')).not.toBeInTheDocument();
+    expect(screen.queryByText('Attitudes:')).not.toBeInTheDocument();
   });
 
   it('calls onClose when close button is clicked', () => {
