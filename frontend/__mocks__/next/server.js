@@ -11,6 +11,25 @@ class NextRequest {
     if (typeof this.body === 'string') {
       this._bodyText = this.body;
     }
+    
+    // Mock nextUrl with searchParams
+    this.nextUrl = {
+      searchParams: new URLSearchParams(new URL(url).search)
+    };
+    
+    // Mock cookies with a basic Map-like interface
+    this._cookieStore = new Map();
+    this.cookies = {
+      get: (name) => {
+        const value = this._cookieStore.get(name);
+        return value ? { value } : undefined;
+      },
+      set: (name, value) => {
+        this._cookieStore.set(name, value);
+      },
+      has: (name) => this._cookieStore.has(name),
+      delete: (name) => this._cookieStore.delete(name)
+    };
   }
 
   async json() {
@@ -30,14 +49,27 @@ class NextRequest {
 }
 
 class NextResponse extends Response {
+  constructor(body, init = {}) {
+    super(body, init);
+    // Ensure headers are available
+    if (!this.headers) {
+      this.headers = new Headers(init.headers || {});
+    }
+  }
+  
   static json(body, init = {}) {
-    return new Response(JSON.stringify(body), {
+    const response = new NextResponse(JSON.stringify(body), {
       ...init,
       headers: {
         'content-type': 'application/json',
         ...(init.headers || {})
       }
     });
+    
+    // Add json method to the response
+    response.json = async () => body;
+    
+    return response;
   }
 }
 

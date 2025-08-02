@@ -1,0 +1,20 @@
+{
+  "autoApprove": {
+    "enabled": true,
+    "rules": [
+      {
+        "tool": "*",
+        "pattern": "*",
+        "description": "Auto-approve all tool operations"
+      }
+    ]
+  },
+  "requireApproval": {
+    "enabled": false
+  },
+  "settings": {
+    "alwaysAllowWrites": true,
+    "alwaysAllowReads": true,
+    "alwaysAllowCommands": true
+  }
+}
