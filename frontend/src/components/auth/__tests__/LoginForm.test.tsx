@@ -205,7 +205,9 @@ describe('LoginForm', () => {
       expect(onSubmit).toHaveBeenCalledWith({
         email: 'student@example.com',
         password: 'student123',
-        rememberMe: false
+        rememberMe: false,
+        label: 'Student',
+        role: 'student'
       });
 
       jest.useRealTimers();
@@ -232,7 +234,9 @@ describe('LoginForm', () => {
       expect(onSubmit).toHaveBeenCalledWith({
         email: 'teacher@example.com',
         password: 'teacher123',
-        rememberMe: true
+        rememberMe: true,
+        label: 'Teacher',
+        role: 'teacher'
       });
 
       jest.useRealTimers();

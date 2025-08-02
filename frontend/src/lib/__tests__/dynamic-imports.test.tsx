@@ -38,9 +38,10 @@ jest.mock('next/dynamic', () => ({
 describe('Dynamic Imports', () => {
   describe('DynamicDomainRadarChart', () => {
     it('shows loading state initially', () => {
-      render(<DynamicDomainRadarChart />);
+      const { container } = render(<DynamicDomainRadarChart />);
       
-      const loadingElement = screen.getByRole('generic');
+      const loadingElement = container.querySelector('.animate-pulse');
+      expect(loadingElement).toBeInTheDocument();
       expect(loadingElement).toHaveClass('h-64', 'w-full', 'animate-pulse', 'bg-gray-100', 'rounded');
     });
     
@@ -67,9 +68,10 @@ describe('Dynamic Imports', () => {
   
   describe('DynamicKSARadarChart', () => {
     it('shows loading state initially', () => {
-      render(<DynamicKSARadarChart />);
+      const { container } = render(<DynamicKSARadarChart />);
       
-      const loadingElement = screen.getByRole('generic');
+      const loadingElement = container.querySelector('.animate-pulse');
+      expect(loadingElement).toBeInTheDocument();
       expect(loadingElement).toHaveClass('h-64', 'w-full', 'animate-pulse', 'bg-gray-100', 'rounded');
     });
     
@@ -84,9 +86,10 @@ describe('Dynamic Imports', () => {
   
   describe('DynamicPBLRadarChart', () => {
     it('shows loading state initially', () => {
-      render(<DynamicPBLRadarChart />);
+      const { container } = render(<DynamicPBLRadarChart />);
       
-      const loadingElement = screen.getByRole('generic');
+      const loadingElement = container.querySelector('.animate-pulse');
+      expect(loadingElement).toBeInTheDocument();
       expect(loadingElement).toHaveClass('h-64', 'w-full', 'animate-pulse', 'bg-gray-100', 'rounded');
     });
     
