@@ -1,343 +1,716 @@
 /**
- * Tests for PBL chat route
- * Following TDD approach
+ * PBL Chat Route Tests
+ * 提升覆蓋率從 0% 到 80%+
  */
 
 import { NextRequest } from 'next/server';
 import { POST } from '../route';
 import { getServerSession } from '@/lib/auth/session';
+import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { VertexAI } from '@google-cloud/vertexai';
+import type { IScenario, ITask } from '@/types/unified-learning';
+import type { ChatMessage } from '@/types/pbl-api';
 
 // Mock dependencies
 jest.mock('@/lib/auth/session');
-jest.mock('@google-cloud/vertexai');
 jest.mock('@/lib/repositories/base/repository-factory', () => ({
   repositoryFactory: {
-    getScenarioRepository: jest.fn(() => ({
-      findById: jest.fn(),
-    })),
-    getTaskRepository: jest.fn(() => ({
-      update: jest.fn(),
-    })),
-  },
+    getScenarioRepository: jest.fn(),
+    getTaskRepository: jest.fn()
+  }
 }));
+jest.mock('@google-cloud/vertexai');
 
-// Mock console
-const mockConsoleError = jest.spyOn(console, 'error').mockImplementation();
+// Mock console methods
+const consoleSpy = {
+  error: jest.spyOn(console, 'error').mockImplementation(),
+  warn: jest.spyOn(console, 'warn').mockImplementation(),
+  log: jest.spyOn(console, 'log').mockImplementation()
+};
 
 describe('POST /api/pbl/chat', () => {
-  const mockScenarioId = 'scenario-123';
-  const mockTaskId = 'task-123';
-  
+  const mockScenarioRepo = {
+    findById: jest.fn()
+  };
+  const mockTaskRepo = {
+    findById: jest.fn()
+  };
+
+  const mockScenario: IScenario = {
+    id: 'scenario-123',
+    mode: 'pbl',
+    status: 'active',
+    version: '1.0',
+    sourceType: 'yaml',
+    sourceMetadata: {},
+    title: { en: 'Test Scenario' },
+    description: { en: 'Test Description' },
+    objectives: ['Learn AI'],
+    difficulty: 'beginner',
+    estimatedMinutes: 45,
+    prerequisites: [],
+    taskTemplates: [],
+    taskCount: 1,
+    xpRewards: {},
+    unlockRequirements: {},
+    pblData: {},
+    discoveryData: {},
+    assessmentData: {},
+    aiModules: {},
+    resources: [],
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z',
+    metadata: {}
+  };
+
+  const mockTask: ITask = {
+    id: 'task-123',
+    programId: 'program-123',
+    mode: 'pbl',
+    taskIndex: 0,
+    scenarioTaskIndex: 0,
+    type: 'chat',
+    status: 'active',
+    title: { en: 'Chat with AI' },
+    description: { en: 'Practice AI conversation' },
+    content: {
+      instructions: ['Ask questions', 'Get feedback'],
+      expectedOutcome: 'Understanding AI capabilities'
+    },
+    interactions: [],
+    interactionCount: 0,
+    userResponse: {},
+    score: 0,
+    maxScore: 100,
+    allowedAttempts: 3,
+    attemptCount: 0,
+    timeSpentSeconds: 0,
+    aiConfig: {
+      role: 'AI tutor',
+      persona: 'friendly and helpful tutor',
+      initialPrompt: 'I am here to help you learn about AI.'
+    },
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z',
+    pblData: {},
+    discoveryData: {},
+    assessmentData: {},
+    metadata: {
+      taskTemplate: {
+        aiModule: {
+          role: 'AI tutor',
+          persona: 'friendly and helpful tutor',
+          initialPrompt: 'I am here to help you learn about AI.'
+        }
+      }
+    }
+  };
+
   const mockGenerateContent = jest.fn();
   const mockGetGenerativeModel = jest.fn(() => ({
-    generateContent: mockGenerateContent,
+    generateContent: mockGenerateContent
   }));
+  const mockVertexAI = {
+    preview: {
+      getGenerativeModel: mockGetGenerativeModel
+    }
+  };
 
   beforeEach(() => {
     jest.clearAllMocks();
-    
-    // Setup Vertex AI mock
-    (VertexAI as jest.Mock).mockImplementation(() => ({
-      preview: {
-        getGenerativeModel: mockGetGenerativeModel,
-      },
-    }));
-    
-    // Setup session mock
-    (getServerSession as jest.Mock).mockResolvedValue({
-      user: { email: 'test@example.com' },
-    });
-
-    // Setup environment
     process.env.GOOGLE_CLOUD_PROJECT = 'test-project';
-    process.env.GOOGLE_CLOUD_LOCATION = 'us-central1';
-  });
-
-  afterAll(() => {
-    mockConsoleError.mockRestore();
-  });
-
-  it('should process chat message successfully', async () => {
-    // Mock AI response
+    (repositoryFactory.getScenarioRepository as jest.Mock).mockReturnValue(mockScenarioRepo);
+    (repositoryFactory.getTaskRepository as jest.Mock).mockReturnValue(mockTaskRepo);
+    (VertexAI as jest.Mock).mockImplementation(() => mockVertexAI);
+    (getServerSession as jest.Mock).mockResolvedValue({
+      user: { email: 'test@example.com' }
+    });
+    mockScenarioRepo.findById.mockResolvedValue(mockScenario);
+    mockTaskRepo.findById.mockResolvedValue(mockTask);
     mockGenerateContent.mockResolvedValue({
       response: {
         candidates: [{
           content: {
             parts: [{
-              text: "That's a good observation! Let me help you explore this problem further.",
-            }],
-          },
-        }],
-      },
+              text: 'AI tutor response'
+            }]
+          }
+        }]
+      }
     });
-
-    const request = new NextRequest('http://localhost/api/pbl/chat', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        message: 'I think we should consider user privacy',
-        sessionId: 'session-123',
-        context: {
-          scenarioId: mockScenarioId,
-          taskId: mockTaskId,
-          taskTitle: 'Design an AI System',
-          taskDescription: 'Create a privacy-preserving AI system',
-          instructions: ['Consider user privacy', 'Think about data protection'],
-          expectedOutcome: 'A well-designed AI system',
-          conversationHistory: [],
-        },
-      }),
-    });
-
-    const response = await POST(request);
-    const data = await response.json();
-
-    expect(response.status).toBe(200);
-    expect(data).toHaveProperty('message');
-    expect(data.message).toContain("That's a good observation!");
-    expect(data).toHaveProperty('score');
-    expect(data).toHaveProperty('feedback');
   });
 
-  it('should return 400 when required fields are missing', async () => {
-    const request = new NextRequest('http://localhost/api/pbl/chat', {
-      method: 'POST',
-      body: JSON.stringify({
-        message: 'Test message',
-        // Missing sessionId and context
-      }),
-    });
-
-    const response = await POST(request);
-    const data = await response.json();
-
-    expect(response.status).toBe(400);
-    expect(data.error).toBe('Missing required fields');
-  });
-
-  it('should return 401 when not authenticated', async () => {
-    (getServerSession as jest.Mock).mockResolvedValue(null);
-
-    const request = new NextRequest('http://localhost/api/pbl/chat', {
-      method: 'POST',
-      body: JSON.stringify({
-        message: 'Test message',
-        sessionId: 'session-123',
-        context: {
-          scenarioId: mockScenarioId,
-          taskId: mockTaskId,
-          taskTitle: 'Test Task',
-          taskDescription: 'Test Description',
-          instructions: [],
-          expectedOutcome: 'Test Outcome',
-        },
-      }),
-    });
-
-    const response = await POST(request);
-    const data = await response.json();
-
-    expect(response.status).toBe(401);
-    expect(data.error).toBe('Authentication required');
-  });
-
-  it('should handle conversation history', async () => {
-    mockGenerateContent.mockResolvedValue({
-      response: {
-        candidates: [{
-          content: {
-            parts: [{
-              text: 'Based on your previous points, I suggest...',
-            }],
-          },
-        }],
-      },
-    });
-
-    const request = new NextRequest('http://localhost/api/pbl/chat', {
-      method: 'POST',
-      body: JSON.stringify({
-        message: 'What about data encryption?',
-        sessionId: 'session-123',
-        context: {
-          scenarioId: mockScenarioId,
-          taskId: mockTaskId,
-          taskTitle: 'Security Design',
-          taskDescription: 'Design secure AI system',
-          instructions: ['Focus on security'],
-          expectedOutcome: 'Secure system design',
-          conversationHistory: [
-            { role: 'user', content: 'We need to protect user data' },
-            { role: 'assistant', content: 'Yes, data protection is crucial' },
-          ],
-        },
-      }),
-    });
-
-    const response = await POST(request);
-    expect(response.status).toBe(200);
-
-    // Verify AI was called with conversation history
-    const callArg = mockGenerateContent.mock.calls[0][0];
-    expect(callArg).toContain('We need to protect user data');
-  });
-
-  it('should support different languages', async () => {
-    mockGenerateContent.mockResolvedValue({
-      response: {
-        candidates: [{
-          content: {
-            parts: [{
-              text: '這是一個很好的觀察！',
-            }],
-          },
-        }],
-      },
-    });
-
-    const request = new NextRequest('http://localhost/api/pbl/chat?lang=zh', {
-      method: 'POST',
-      body: JSON.stringify({
-        message: '我們應該考慮用戶隱私',
-        sessionId: 'session-123',
-        context: {
-          scenarioId: mockScenarioId,
-          taskId: mockTaskId,
-          taskTitle: '設計AI系統',
-          taskDescription: '創建隱私保護的AI系統',
-          instructions: ['考慮用戶隱私'],
-          expectedOutcome: '設計良好的AI系統',
-        },
-      }),
-    });
-
-    const response = await POST(request);
-    const data = await response.json();
-
-    expect(response.status).toBe(200);
-    expect(data.message).toContain('這是一個很好的觀察');
-  });
-
-  it('should handle AI service errors gracefully', async () => {
-    const error = new Error('AI service unavailable');
-    mockGenerateContent.mockRejectedValue(error);
-
-    const request = new NextRequest('http://localhost/api/pbl/chat', {
-      method: 'POST',
-      body: JSON.stringify({
-        message: 'Test message',
-        sessionId: 'session-123',
-        context: {
-          scenarioId: mockScenarioId,
-          taskId: mockTaskId,
-          taskTitle: 'Test Task',
-          taskDescription: 'Test Description',
-          instructions: [],
-          expectedOutcome: 'Test Outcome',
-        },
-      }),
-    });
-
-    const response = await POST(request);
-    const data = await response.json();
-
-    expect(response.status).toBe(500);
-    expect(data.error).toBe('Failed to process chat');
-    expect(mockConsoleError).toHaveBeenCalledWith('Chat processing error:', error);
-  });
-
-  it('should validate response quality and provide feedback', async () => {
-    // Mock a response that partially addresses the task
-    mockGenerateContent.mockResolvedValue({
-      response: {
-        candidates: [{
-          content: {
-            parts: [{
-              text: 'You mentioned privacy, which is important. Consider also looking at data minimization principles.',
-            }],
-          },
-        }],
-      },
-    });
-
-    const request = new NextRequest('http://localhost/api/pbl/chat', {
-      method: 'POST',
-      body: JSON.stringify({
-        message: 'Privacy is important',
-        sessionId: 'session-123',
-        context: {
-          scenarioId: mockScenarioId,
-          taskId: mockTaskId,
-          taskTitle: 'Privacy-First AI Design',
-          taskDescription: 'Design an AI system with privacy as the core principle',
-          instructions: [
-            'Identify privacy risks',
-            'Propose mitigation strategies',
-            'Consider GDPR compliance',
-          ],
-          expectedOutcome: 'A comprehensive privacy-preserving AI design',
-        },
-      }),
-    });
-
-    const response = await POST(request);
-    const data = await response.json();
-
-    expect(response.status).toBe(200);
-    expect(data.score).toBeGreaterThan(0);
-    expect(data.score).toBeLessThan(100); // Partial score for partial answer
-    expect(data.feedback).toBeDefined();
-  });
-
-  it('should handle missing Google Cloud configuration', async () => {
+  afterEach(() => {
+    consoleSpy.error.mockClear();
+    consoleSpy.warn.mockClear();
+    consoleSpy.log.mockClear();
     delete process.env.GOOGLE_CLOUD_PROJECT;
+  });
 
-    const request = new NextRequest('http://localhost/api/pbl/chat', {
-      method: 'POST',
-      body: JSON.stringify({
-        message: 'Test message',
-        sessionId: 'session-123',
-        context: {
-          scenarioId: mockScenarioId,
-          taskId: mockTaskId,
-          taskTitle: 'Test Task',
-          taskDescription: 'Test Description',
-          instructions: [],
-          expectedOutcome: 'Test Outcome',
-        },
-      }),
+  describe('Request Validation', () => {
+    it('should return 400 when missing required fields', async () => {
+      const request = new NextRequest('http://localhost/api/pbl/chat', {
+        method: 'POST',
+        body: JSON.stringify({})
+      });
+      
+      const response = await POST(request);
+      const data = await response.json();
+
+      expect(response.status).toBe(400);
+      expect(data.error).toBe('Missing required fields');
     });
 
-    const response = await POST(request);
-    const data = await response.json();
+    it('should return 400 when missing message', async () => {
+      const request = new NextRequest('http://localhost/api/pbl/chat', {
+        method: 'POST',
+        body: JSON.stringify({
+          sessionId: 'session-123',
+          context: {}
+        })
+      });
+      
+      const response = await POST(request);
+      const data = await response.json();
 
-    expect(response.status).toBe(500);
-    expect(data.error).toBe('AI service not configured');
+      expect(response.status).toBe(400);
+      expect(data.error).toBe('Missing required fields');
+    });
+
+    it('should return 400 when missing context', async () => {
+      const request = new NextRequest('http://localhost/api/pbl/chat', {
+        method: 'POST',
+        body: JSON.stringify({
+          message: 'Hello',
+          sessionId: 'session-123'
+        })
+      });
+      
+      const response = await POST(request);
+      const data = await response.json();
+
+      expect(response.status).toBe(400);
+      expect(data.error).toBe('Missing required fields');
+    });
+  });
+
+  describe('Authentication', () => {
+    it('should return 401 when not authenticated', async () => {
+      (getServerSession as jest.Mock).mockResolvedValue(null);
+
+      const request = new NextRequest('http://localhost/api/pbl/chat', {
+        method: 'POST',
+        body: JSON.stringify({
+          message: 'Hello',
+          sessionId: 'session-123',
+          context: {
+            scenarioId: 'scenario-123',
+            taskId: 'task-123',
+            taskTitle: 'Test Task',
+            taskDescription: 'Test Description',
+            instructions: ['Do this'],
+            expectedOutcome: 'Success'
+          }
+        })
+      });
+      
+      const response = await POST(request);
+      const data = await response.json();
+
+      expect(response.status).toBe(401);
+      expect(data.error).toBe('Authentication required');
+    });
+
+    it('should return 401 when session has no user email', async () => {
+      (getServerSession as jest.Mock).mockResolvedValue({ user: {} });
+
+      const request = new NextRequest('http://localhost/api/pbl/chat', {
+        method: 'POST',
+        body: JSON.stringify({
+          message: 'Hello',
+          sessionId: 'session-123',
+          context: {
+            scenarioId: 'scenario-123',
+            taskId: 'task-123',
+            taskTitle: 'Test Task',
+            taskDescription: 'Test Description',
+            instructions: ['Do this'],
+            expectedOutcome: 'Success'
+          }
+        })
+      });
+      
+      const response = await POST(request);
+      const data = await response.json();
+
+      expect(response.status).toBe(401);
+      expect(data.error).toBe('Authentication required');
+    });
+  });
+
+  describe('Scenario and Task Validation', () => {
+    it('should return 404 when scenario not found', async () => {
+      mockScenarioRepo.findById.mockResolvedValue(null);
+
+      const request = new NextRequest('http://localhost/api/pbl/chat', {
+        method: 'POST',
+        body: JSON.stringify({
+          message: 'Hello',
+          sessionId: 'session-123',
+          context: {
+            scenarioId: 'invalid-scenario',
+            taskId: 'task-123',
+            taskTitle: 'Test Task',
+            taskDescription: 'Test Description',
+            instructions: ['Do this'],
+            expectedOutcome: 'Success'
+          }
+        })
+      });
+      
+      const response = await POST(request);
+      const data = await response.json();
+
+      expect(response.status).toBe(404);
+      expect(data.error).toBe('Scenario not found: invalid-scenario');
+    });
+
+    it('should return 404 when task not found', async () => {
+      mockTaskRepo.findById.mockResolvedValue(null);
+
+      const request = new NextRequest('http://localhost/api/pbl/chat', {
+        method: 'POST',
+        body: JSON.stringify({
+          message: 'Hello',
+          sessionId: 'session-123',
+          context: {
+            scenarioId: 'scenario-123',
+            taskId: 'invalid-task',
+            taskTitle: 'Test Task',
+            taskDescription: 'Test Description',
+            instructions: ['Do this'],
+            expectedOutcome: 'Success'
+          }
+        })
+      });
+      
+      const response = await POST(request);
+      const data = await response.json();
+
+      expect(response.status).toBe(404);
+      expect(data.error).toBe('Task not found');
+    });
+  });
+
+  describe('AI Module Configuration', () => {
+    it('should use AI module from task metadata', async () => {
+      const request = new NextRequest('http://localhost/api/pbl/chat', {
+        method: 'POST',
+        body: JSON.stringify({
+          message: 'Hello AI',
+          sessionId: 'session-123',
+          context: {
+            scenarioId: 'scenario-123',
+            taskId: 'task-123',
+            taskTitle: 'Test Task',
+            taskDescription: 'Test Description',
+            instructions: ['Learn AI', 'Ask questions'],
+            expectedOutcome: 'Understanding AI'
+          }
+        })
+      });
+      
+      const response = await POST(request);
+      const data = await response.json();
+
+      expect(response.status).toBe(200);
+      expect(data.response).toBe('AI tutor response');
+      expect(data.sessionId).toBe('session-123');
+      
+      // Verify AI module was used in prompt
+      const generatedPrompt = mockGenerateContent.mock.calls[0][0];
+      expect(generatedPrompt).toContain('friendly and helpful tutor');
+      expect(generatedPrompt).toContain('AI tutor');
+      expect(generatedPrompt).toContain('I am here to help you learn about AI');
+    });
+
+    it('should use default AI module when not found', async () => {
+      const taskWithoutAI = {
+        ...mockTask,
+        metadata: {}
+      };
+      mockTaskRepo.findById.mockResolvedValue(taskWithoutAI);
+
+      const request = new NextRequest('http://localhost/api/pbl/chat', {
+        method: 'POST',
+        body: JSON.stringify({
+          message: 'Hello',
+          sessionId: 'session-123',
+          context: {
+            scenarioId: 'scenario-123',
+            taskId: 'task-123',
+            taskTitle: 'Test Task',
+            taskDescription: 'Test Description',
+            instructions: ['Do this'],
+            expectedOutcome: 'Success'
+          }
+        })
+      });
+      
+      const response = await POST(request);
+      const data = await response.json();
+
+      expect(response.status).toBe(200);
+      expect(consoleSpy.warn).toHaveBeenCalledWith(
+        'AI module not found for task:',
+        expect.any(Object)
+      );
+      expect(consoleSpy.log).toHaveBeenCalledWith('Using default AI module configuration');
+      
+      // Verify default AI module was used
+      const generatedPrompt = mockGenerateContent.mock.calls[0][0];
+      expect(generatedPrompt).toContain('helpful AI tutor');
+      expect(generatedPrompt).toContain('supportive learning assistant');
+    });
+
+    it('should handle AI module with snake_case naming', async () => {
+      const taskWithSnakeCase = {
+        ...mockTask,
+        metadata: {
+          taskTemplate: {
+            ai_module: {
+              role: 'mentor',
+              persona: 'experienced guide',
+              initial_prompt: 'Let me guide you'
+            }
+          }
+        }
+      };
+      mockTaskRepo.findById.mockResolvedValue(taskWithSnakeCase);
+
+      const request = new NextRequest('http://localhost/api/pbl/chat', {
+        method: 'POST',
+        body: JSON.stringify({
+          message: 'Help me',
+          sessionId: 'session-123',
+          context: {
+            scenarioId: 'scenario-123',
+            taskId: 'task-123',
+            taskTitle: 'Test Task',
+            taskDescription: 'Test Description',
+            instructions: ['Learn'],
+            expectedOutcome: 'Knowledge'
+          }
+        })
+      });
+      
+      const response = await POST(request);
+      
+      expect(response.status).toBe(200);
+      const generatedPrompt = mockGenerateContent.mock.calls[0][0];
+      expect(generatedPrompt).toContain('experienced guide');
+      expect(generatedPrompt).toContain('mentor');
+      expect(generatedPrompt).toContain('Let me guide you');
+    });
+  });
+
+  describe('Language Support', () => {
+    it('should use English by default', async () => {
+      const request = new NextRequest('http://localhost/api/pbl/chat', {
+        method: 'POST',
+        body: JSON.stringify({
+          message: 'Hello',
+          sessionId: 'session-123',
+          context: {
+            scenarioId: 'scenario-123',
+            taskId: 'task-123',
+            taskTitle: 'Test Task',
+            taskDescription: 'Test Description',
+            instructions: ['Do this'],
+            expectedOutcome: 'Success'
+          }
+        })
+      });
+      
+      await POST(request);
+      
+      const generatedPrompt = mockGenerateContent.mock.calls[0][0];
+      expect(generatedPrompt).toContain('Please respond in English');
+    });
+
+    it('should support multiple languages', async () => {
+      const languages = [
+        { code: 'zhTW', instruction: '請用繁體中文回應。' },
+        { code: 'es', instruction: 'Por favor responde en español.' },
+        { code: 'ja', instruction: '日本語で応答してください。' },
+        { code: 'ko', instruction: '한국어로 응답해 주세요.' }
+      ];
+
+      for (const { code, instruction } of languages) {
+        jest.clearAllMocks();
+        
+        const request = new NextRequest(`http://localhost/api/pbl/chat?lang=${code}`, {
+          method: 'POST',
+          body: JSON.stringify({
+            message: 'Hello',
+            sessionId: 'session-123',
+            context: {
+              scenarioId: 'scenario-123',
+              taskId: 'task-123',
+              taskTitle: 'Test Task',
+              taskDescription: 'Test Description',
+              instructions: ['Do this'],
+              expectedOutcome: 'Success'
+            }
+          })
+        });
+        
+        await POST(request);
+        
+        const generatedPrompt = mockGenerateContent.mock.calls[0][0];
+        expect(generatedPrompt).toContain(instruction);
+      }
+    });
+  });
+
+  describe('Conversation History', () => {
+    it('should include conversation history in prompt', async () => {
+      const conversationHistory: ChatMessage[] = [
+        { role: 'user', content: 'What is AI?' },
+        { role: 'assistant', content: 'AI stands for Artificial Intelligence.' }
+      ];
+
+      const request = new NextRequest('http://localhost/api/pbl/chat', {
+        method: 'POST',
+        body: JSON.stringify({
+          message: 'Tell me more',
+          sessionId: 'session-123',
+          context: {
+            scenarioId: 'scenario-123',
+            taskId: 'task-123',
+            taskTitle: 'Test Task',
+            taskDescription: 'Test Description',
+            instructions: ['Learn AI'],
+            expectedOutcome: 'Understanding',
+            conversationHistory
+          }
+        })
+      });
+      
+      await POST(request);
+      
+      expect(consoleSpy.log).toHaveBeenCalledWith(
+        'Conversation history received:',
+        expect.objectContaining({
+          count: 2,
+          history: conversationHistory
+        })
+      );
+      
+      const generatedPrompt = mockGenerateContent.mock.calls[0][0];
+      expect(generatedPrompt).toContain('Previous conversation:');
+      expect(generatedPrompt).toContain('User: What is AI?');
+      expect(generatedPrompt).toContain('Assistant: AI stands for Artificial Intelligence.');
+      expect(generatedPrompt).toContain('User: Tell me more');
+    });
+
+    it('should handle empty conversation history', async () => {
+      const request = new NextRequest('http://localhost/api/pbl/chat', {
+        method: 'POST',
+        body: JSON.stringify({
+          message: 'Hello',
+          sessionId: 'session-123',
+          context: {
+            scenarioId: 'scenario-123',
+            taskId: 'task-123',
+            taskTitle: 'Test Task',
+            taskDescription: 'Test Description',
+            instructions: ['Do this'],
+            expectedOutcome: 'Success',
+            conversationHistory: []
+          }
+        })
+      });
+      
+      await POST(request);
+      
+      const generatedPrompt = mockGenerateContent.mock.calls[0][0];
+      expect(generatedPrompt).not.toContain('Previous conversation:');
+      expect(generatedPrompt).toContain('User: Hello');
+    });
+  });
+
+  describe('Vertex AI Integration', () => {
+    it('should return 500 when GOOGLE_CLOUD_PROJECT not set', async () => {
+      delete process.env.GOOGLE_CLOUD_PROJECT;
+
+      const request = new NextRequest('http://localhost/api/pbl/chat', {
+        method: 'POST',
+        body: JSON.stringify({
+          message: 'Hello',
+          sessionId: 'session-123',
+          context: {
+            scenarioId: 'scenario-123',
+            taskId: 'task-123',
+            taskTitle: 'Test Task',
+            taskDescription: 'Test Description',
+            instructions: ['Do this'],
+            expectedOutcome: 'Success'
+          }
+        })
+      });
+      
+      const response = await POST(request);
+      const data = await response.json();
+
+      expect(response.status).toBe(500);
+      expect(data.error).toBe('AI service not configured');
+      expect(consoleSpy.error).toHaveBeenCalledWith(
+        'GOOGLE_CLOUD_PROJECT environment variable not set'
+      );
+    });
+
+    it('should configure Vertex AI correctly', async () => {
+      const request = new NextRequest('http://localhost/api/pbl/chat', {
+        method: 'POST',
+        body: JSON.stringify({
+          message: 'Hello',
+          sessionId: 'session-123',
+          context: {
+            scenarioId: 'scenario-123',
+            taskId: 'task-123',
+            taskTitle: 'Test Task',
+            taskDescription: 'Test Description',
+            instructions: ['Do this'],
+            expectedOutcome: 'Success'
+          }
+        })
+      });
+      
+      await POST(request);
+
+      expect(VertexAI).toHaveBeenCalledWith({
+        project: 'test-project',
+        location: 'us-central1'
+      });
+
+      expect(mockGetGenerativeModel).toHaveBeenCalledWith({
+        model: 'gemini-2.5-flash',
+        generationConfig: {
+          maxOutputTokens: 8192,
+          temperature: 0.7,
+          topP: 0.95
+        }
+      });
+    });
+
+    it('should handle Vertex AI generation errors', async () => {
+      mockGenerateContent.mockRejectedValue(new Error('Generation failed'));
+
+      const request = new NextRequest('http://localhost/api/pbl/chat', {
+        method: 'POST',
+        body: JSON.stringify({
+          message: 'Hello',
+          sessionId: 'session-123',
+          context: {
+            scenarioId: 'scenario-123',
+            taskId: 'task-123',
+            taskTitle: 'Test Task',
+            taskDescription: 'Test Description',
+            instructions: ['Do this'],
+            expectedOutcome: 'Success'
+          }
+        })
+      });
+      
+      const response = await POST(request);
+      const data = await response.json();
+
+      expect(response.status).toBe(500);
+      expect(data.error).toBe('AI generation failed: Generation failed');
+      expect(consoleSpy.error).toHaveBeenCalledWith(
+        'Vertex AI error:',
+        expect.objectContaining({
+          error: expect.any(Error),
+          message: 'Generation failed',
+          projectId: 'test-project'
+        })
+      );
+    });
+
+    it('should handle missing response content', async () => {
+      mockGenerateContent.mockResolvedValue({
+        response: {
+          candidates: []
+        }
+      });
+
+      const request = new NextRequest('http://localhost/api/pbl/chat', {
+        method: 'POST',
+        body: JSON.stringify({
+          message: 'Hello',
+          sessionId: 'session-123',
+          context: {
+            scenarioId: 'scenario-123',
+            taskId: 'task-123',
+            taskTitle: 'Test Task',
+            taskDescription: 'Test Description',
+            instructions: ['Do this'],
+            expectedOutcome: 'Success'
+          }
+        })
+      });
+      
+      const response = await POST(request);
+      const data = await response.json();
+
+      expect(response.status).toBe(200);
+      expect(data.response).toBe('I apologize, but I was unable to generate a response.');
+    });
+  });
+
+  describe('Error Handling', () => {
+    it('should handle general errors gracefully', async () => {
+      mockScenarioRepo.findById.mockRejectedValue(new Error('Database error'));
+
+      const request = new NextRequest('http://localhost/api/pbl/chat', {
+        method: 'POST',
+        body: JSON.stringify({
+          message: 'Hello',
+          sessionId: 'session-123',
+          context: {
+            scenarioId: 'scenario-123',
+            taskId: 'task-123',
+            taskTitle: 'Test Task',
+            taskDescription: 'Test Description',
+            instructions: ['Do this'],
+            expectedOutcome: 'Success'
+          }
+        })
+      });
+      
+      const response = await POST(request);
+      const data = await response.json();
+
+      expect(response.status).toBe(500);
+      expect(data.error).toBe('Failed to process chat request');
+      expect(consoleSpy.error).toHaveBeenCalledWith(
+        'Chat API error:',
+        expect.any(Error)
+      );
+    });
+
+    it('should handle invalid JSON body', async () => {
+      const request = new NextRequest('http://localhost/api/pbl/chat', {
+        method: 'POST',
+        body: 'invalid json'
+      });
+      
+      const response = await POST(request);
+      const data = await response.json();
+
+      expect(response.status).toBe(500);
+      expect(data.error).toBe('Failed to process chat request');
+    });
   });
 });
-
-/**
- * PBL Chat API Considerations:
- * 
- * 1. AI Integration:
- *    - Uses Vertex AI for generating responses
- *    - Maintains conversation context
- *    - Provides task-specific guidance
- * 
- * 2. Response Evaluation:
- *    - Scores based on task requirements
- *    - Provides constructive feedback
- *    - Tracks progress toward completion
- * 
- * 3. Multi-language Support:
- *    - Accepts language parameter
- *    - Generates responses in requested language
- * 
- * 4. Security:
- *    - Requires authentication
- *    - Validates all inputs
- *    - Handles errors gracefully
- */

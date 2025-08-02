@@ -70,13 +70,27 @@ describe('Assessment Scenario API Route', () => {
         id: 'test-scenario-id',
         mode: 'assessment',
         status: 'active',
+        version: '1.0',
         sourceType: 'yaml',
+        sourceMetadata: {},
         title: { en: 'Test Assessment', zh: '測試評估' },
         description: { en: 'Test Description', zh: '測試說明' },
-        objectives: {},
+        objectives: [],
+        difficulty: 'beginner',
+        estimatedMinutes: 30,
+        prerequisites: [],
+        taskTemplates: mockTaskTemplates,
+        taskCount: 2,
+        xpRewards: {},
+        unlockRequirements: {},
+        pblData: {},
+        discoveryData: {},
+        assessmentData: {},
+        aiModules: {},
+        resources: [],
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-        taskTemplates: mockTaskTemplates
+        metadata: {}
       };
 
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
@@ -107,12 +121,27 @@ describe('Assessment Scenario API Route', () => {
         id: 'test-scenario-id',
         mode: 'assessment',
         status: 'active',
+        version: '1.0',
         sourceType: 'yaml',
+        sourceMetadata: {},
         title: { en: 'English Title', zh: '中文標題' },
         description: { en: 'English Description', zh: '中文說明' },
-        objectives: {},
+        objectives: [],
+        difficulty: 'beginner',
+        estimatedMinutes: 30,
+        prerequisites: [],
+        taskTemplates: [],
+        taskCount: 0,
+        xpRewards: {},
+        unlockRequirements: {},
+        pblData: {},
+        discoveryData: {},
+        assessmentData: {},
+        aiModules: {},
+        resources: [],
         createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
+        metadata: {}
       };
 
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
@@ -133,12 +162,27 @@ describe('Assessment Scenario API Route', () => {
         id: 'test-scenario-id',
         mode: 'assessment',
         status: 'active',
+        version: '1.0',
         sourceType: 'yaml',
+        sourceMetadata: {},
         title: 'String Title' as any, // Simulating legacy data
         description: 'String Description' as any,
-        objectives: {},
+        objectives: [],
+        difficulty: 'beginner',
+        estimatedMinutes: 30,
+        prerequisites: [],
+        taskTemplates: [],
+        taskCount: 0,
+        xpRewards: {},
+        unlockRequirements: {},
+        pblData: {},
+        discoveryData: {},
+        assessmentData: {},
+        aiModules: {},
+        resources: [],
         createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
+        metadata: {}
       };
 
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
@@ -172,12 +216,27 @@ describe('Assessment Scenario API Route', () => {
         id: 'test-scenario-id',
         mode: 'assessment',
         status: 'active',
+        version: '1.0',
         sourceType: 'yaml',
+        sourceMetadata: {},
         title: { en: 'Test Assessment' },
         description: { en: 'Test Description' },
-        objectives: {},
+        objectives: [],
+        difficulty: 'beginner',
+        estimatedMinutes: 30,
+        prerequisites: [],
+        taskTemplates: [],
+        taskCount: 0,
+        xpRewards: {},
+        unlockRequirements: {},
+        pblData: {},
+        discoveryData: {},
+        assessmentData: {},
+        aiModules: {},
+        resources: [],
         createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
+        metadata: {}
         // No taskTemplates
       };
 
@@ -226,13 +285,27 @@ describe('Assessment Scenario API Route', () => {
         id: 'test-scenario-id',
         mode: 'assessment',
         status: 'active',
+        version: '1.0',
         sourceType: 'yaml',
+        sourceMetadata: {},
         title: { en: 'Test Assessment' },
         description: { en: 'Test Description' },
-        objectives: {},
+        objectives: [],
+        difficulty: 'beginner',
+        estimatedMinutes: 30,
+        prerequisites: [],
+        taskTemplates: mockTaskTemplates,
+        taskCount: 2,
+        xpRewards: {},
+        unlockRequirements: {},
+        pblData: {},
+        discoveryData: {},
+        assessmentData: {},
+        aiModules: {},
+        resources: [],
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-        taskTemplates: mockTaskTemplates
+        metadata: {}
       };
 
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
@@ -257,12 +330,27 @@ describe('Assessment Scenario API Route', () => {
         id: 'test-scenario-id',
         mode: 'assessment',
         status: 'active',
+        version: '1.0',
         sourceType: 'yaml',
+        sourceMetadata: {},
         title: { en: 'English Title', zh: '中文標題' },
         description: { en: 'English Description', zh: '中文說明' },
-        objectives: {},
+        objectives: [],
+        difficulty: 'beginner',
+        estimatedMinutes: 30,
+        prerequisites: [],
+        taskTemplates: [],
+        taskCount: 0,
+        xpRewards: {},
+        unlockRequirements: {},
+        pblData: {},
+        discoveryData: {},
+        assessmentData: {},
+        aiModules: {},
+        resources: [],
         createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
+        metadata: {}
       };
 
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
@@ -283,12 +371,27 @@ describe('Assessment Scenario API Route', () => {
         id: 'test-scenario-id',
         mode: 'assessment',
         status: 'active',
+        version: '1.0',
         sourceType: 'yaml',
+        sourceMetadata: {},
         title: undefined as any, // Missing title
         description: undefined as any, // Missing description
-        objectives: {},
+        objectives: [],
+        difficulty: 'beginner',
+        estimatedMinutes: 30,
+        prerequisites: [],
+        taskTemplates: [],
+        taskCount: 0,
+        xpRewards: {},
+        unlockRequirements: {},
+        pblData: {},
+        discoveryData: {},
+        assessmentData: {},
+        aiModules: {},
+        resources: [],
         createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
+        metadata: {}
       };
 
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
@@ -326,12 +429,27 @@ describe('Assessment Scenario API Route', () => {
         id: 'test-scenario-id',
         mode: 'assessment',
         status: 'active',
+        version: '1.0',
         sourceType: 'yaml',
+        sourceMetadata: {},
         title: { en: 'English Title', zh: '中文標題' },
         description: { en: 'English Description', zh: '中文說明' },
-        objectives: {},
+        objectives: [],
+        difficulty: 'beginner',
+        estimatedMinutes: 30,
+        prerequisites: [],
+        taskTemplates: [],
+        taskCount: 0,
+        xpRewards: {},
+        unlockRequirements: {},
+        pblData: {},
+        discoveryData: {},
+        assessmentData: {},
+        aiModules: {},
+        resources: [],
         createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
+        metadata: {}
       };
 
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);

@@ -164,7 +164,7 @@ export class GCSContentRepository implements IContentRepository {
           if (typeof data === 'object' && data !== null) {
             mappings.push({
               code,
-              type: type.slice(0, -1) as 'knowledge' | 'skill' | 'attitude',
+              type: (type === 'knowledge' ? 'knowledge' : type === 'skills' ? 'skill' : 'attitude') as 'knowledge' | 'skill' | 'attitude',
               domain: (data as Record<string, unknown>).domain as string || '',
               description: this.extractMultilingualField(data as Record<string, unknown>, 'description')
             });
