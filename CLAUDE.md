@@ -83,7 +83,12 @@ Always follow the instructions in plan.md. When I say "go", find the next unmark
 - **模式分析**: 跨多個檔案的模式分析
 - **用途**: 進階搜尋和探索能力
 
-#### 4. Slash Commands → 使用 Task tool 執行
+#### 4. Slack 追蹤整合 → 使用 slack-tracker-integration agent
+- **觸發關鍵字**: Slack tracking, development tracker, CEO report, webhook
+- **範例情境**: "設定開發追蹤到 Slack" → 使用 slack-tracker-integration
+- **用途**: 實作開發進度追蹤和 CEO 報告系統
+
+#### 5. Slash Commands → 使用 Task tool 執行
 - **指令**: /compact, /check-file 等
 - **直接執行**: 針對特定指令的工具執行
 - **用途**: 快速指令執行
@@ -92,6 +97,30 @@ Always follow the instructions in plan.md. When I say "go", find the next unmark
 - 分析任務需求，立即選擇合適的 sub-agent
 - 不要等待提醒或建議
 - 每個 sub-agent 都有其專長領域，善用它們的能力
+
+### 📁 .claude/agents/ 目錄說明
+
+**.claude/agents/** 目錄包含了專門的 sub-agent 定義文件，每個文件都描述了特定 agent 的能力和使用場景：
+
+```
+.claude/
+└── agents/
+    ├── progress-memory-coach.md      # 進度與記憶管理 agent
+    ├── slack-tracker-integration.md  # Slack 追蹤整合 agent  
+    └── typescript-eslint-fixer.md    # TypeScript/ESLint 修復 agent
+```
+
+**使用方式**：
+1. 當遇到符合 agent 專長的任務時，Claude 會自動調用相應的 agent
+2. 每個 agent 都有特定的觸發條件和專業領域
+3. Agent 定義文件包含詳細的使用說明和範例
+
+**新增 Agent**：
+如需新增專門的 agent，在 `.claude/agents/` 目錄下創建新的 `.md` 文件，包含：
+- Agent 名稱和用途
+- 觸發條件
+- 使用範例
+- 專業能力描述
 
 ## 🧪 TDD + Tidy First: Kent Beck Guidelines
 
