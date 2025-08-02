@@ -5,6 +5,7 @@ import {
   DynamicKSARadarChart,
   DynamicPBLRadarChart,
 } from '../dynamic-imports';
+import type { RadarChartData } from '@/types/assessment';
 
 // Mock next/dynamic
 jest.mock('next/dynamic', () => ({
@@ -37,8 +38,13 @@ jest.mock('next/dynamic', () => ({
 
 describe('Dynamic Imports', () => {
   describe('DynamicDomainRadarChart', () => {
+    const mockData: RadarChartData[] = [
+      { domain: 'Engaging', score: 80, fullMark: 100 },
+      { domain: 'Creating', score: 70, fullMark: 100 }
+    ];
+    
     it('shows loading state initially', () => {
-      const { container } = render(<DynamicDomainRadarChart />);
+      const { container } = render(<DynamicDomainRadarChart data={mockData} />);
       
       const loadingElement = container.querySelector('.animate-pulse');
       expect(loadingElement).toBeInTheDocument();
@@ -46,7 +52,7 @@ describe('Dynamic Imports', () => {
     });
     
     it('loads the component after delay', async () => {
-      render(<DynamicDomainRadarChart />);
+      render(<DynamicDomainRadarChart data={mockData} />);
       
       // Wait for component to load
       await waitFor(() => {
@@ -57,7 +63,7 @@ describe('Dynamic Imports', () => {
     });
     
     it('passes props to loaded component', async () => {
-      const testProps = { data: 'test' };
+      const testProps = { data: mockData };
       render(<DynamicDomainRadarChart {...testProps} />);
       
       await waitFor(() => {
@@ -67,8 +73,14 @@ describe('Dynamic Imports', () => {
   });
   
   describe('DynamicKSARadarChart', () => {
+    const mockKsaScores = {
+      K1: { score: 85, category: 'knowledge' as const },
+      S1: { score: 75, category: 'skills' as const },
+      A1: { score: 90, category: 'attitudes' as const }
+    };
+    
     it('shows loading state initially', () => {
-      const { container } = render(<DynamicKSARadarChart />);
+      const { container } = render(<DynamicKSARadarChart ksaScores={mockKsaScores} />);
       
       const loadingElement = container.querySelector('.animate-pulse');
       expect(loadingElement).toBeInTheDocument();
@@ -76,7 +88,7 @@ describe('Dynamic Imports', () => {
     });
     
     it('loads the component after delay', async () => {
-      render(<DynamicKSARadarChart />);
+      render(<DynamicKSARadarChart ksaScores={mockKsaScores} />);
       
       await waitFor(() => {
         expect(screen.getByTestId('loaded-component')).toBeInTheDocument();
@@ -85,8 +97,15 @@ describe('Dynamic Imports', () => {
   });
   
   describe('DynamicPBLRadarChart', () => {
+    const mockDomainScores = {
+      engaging_with_ai: 80,
+      creating_with_ai: 75,
+      managing_with_ai: 85,
+      designing_with_ai: 70
+    };
+    
     it('shows loading state initially', () => {
-      const { container } = render(<DynamicPBLRadarChart />);
+      const { container } = render(<DynamicPBLRadarChart domainScores={mockDomainScores} />);
       
       const loadingElement = container.querySelector('.animate-pulse');
       expect(loadingElement).toBeInTheDocument();
@@ -94,7 +113,7 @@ describe('Dynamic Imports', () => {
     });
     
     it('loads the component after delay', async () => {
-      render(<DynamicPBLRadarChart />);
+      render(<DynamicPBLRadarChart domainScores={mockDomainScores} />);
       
       await waitFor(() => {
         expect(screen.getByTestId('loaded-component')).toBeInTheDocument();
@@ -104,9 +123,22 @@ describe('Dynamic Imports', () => {
   
   describe('Loading states', () => {
     it('all dynamic imports use consistent loading UI', () => {
-      const { container: container1 } = render(<DynamicDomainRadarChart />);
-      const { container: container2 } = render(<DynamicKSARadarChart />);
-      const { container: container3 } = render(<DynamicPBLRadarChart />);
+      const mockData: RadarChartData[] = [
+        { domain: 'Test', score: 50, fullMark: 100 }
+      ];
+      const mockKsaScores = {
+        K1: { score: 50, category: 'knowledge' as const }
+      };
+      const mockDomainScores = {
+        engaging_with_ai: 50,
+        creating_with_ai: 50,
+        managing_with_ai: 50,
+        designing_with_ai: 50
+      };
+      
+      const { container: container1 } = render(<DynamicDomainRadarChart data={mockData} />);
+      const { container: container2 } = render(<DynamicKSARadarChart ksaScores={mockKsaScores} />);
+      const { container: container3 } = render(<DynamicPBLRadarChart domainScores={mockDomainScores} />);
       
       const loadingDiv1 = container1.querySelector('.animate-pulse');
       const loadingDiv2 = container2.querySelector('.animate-pulse');

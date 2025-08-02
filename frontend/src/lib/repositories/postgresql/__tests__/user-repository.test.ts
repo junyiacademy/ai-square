@@ -95,7 +95,7 @@ describe('PostgreSQLUserRepository', () => {
 
   describe('create', () => {
     it('creates a new user', async () => {
-      const newUser: CreateUserDto = {
+      const newUser = {
         email: 'new@example.com',
         name: 'New User',
         preferredLanguage: 'en'
@@ -106,10 +106,10 @@ describe('PostgreSQLUserRepository', () => {
       const result = await repository.create(newUser);
 
       expect(result.email).toBe(newUser.email);
-      expect(result.role).toBe(newUser.role);
+      expect(result.name).toBe(newUser.name);
       expect(mockQuery).toHaveBeenCalledWith(
         expect.stringContaining('INSERT INTO users'),
-        expect.arrayContaining([newUser.email, newUser.passwordHash])
+        expect.arrayContaining([newUser.email.toLowerCase()])
       );
     });
 

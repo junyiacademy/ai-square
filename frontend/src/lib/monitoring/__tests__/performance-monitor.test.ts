@@ -108,7 +108,7 @@ describe('performance-monitor', () => {
 
       const mockFn = jest.fn().mockResolvedValue('result');
       
-      const result = await withPerformanceTracking(mockFn);
+      const result = await withPerformanceTracking(mockFn, '/api/test');
 
       expect(result).toBe('result');
     });

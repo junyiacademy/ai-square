@@ -135,7 +135,7 @@ describe('GET /api/discovery/scenarios/find-by-career', () => {
       },
     ];
 
-    const mockProgramsSE = [];
+    const mockProgramsSE: Array<{ id: string; userId: string; status: string }> = [];
     const mockProgramsDS = [
       {
         id: 'prog2',

@@ -18,7 +18,7 @@ jest.mock('path', () => ({
 const mockFs = fs as jest.Mocked<typeof fs>;
 
 describe('MigrationRunner', () => {
-  let mockPool: jest.Mocked<Pool>;
+  let mockPool: { query: jest.Mock };
   let runner: MigrationRunner;
   const originalCwd = process.cwd;
 
@@ -28,9 +28,9 @@ describe('MigrationRunner', () => {
     // Mock pool
     mockPool = {
       query: jest.fn(),
-    } as any;
+    };
     
-    runner = new MigrationRunner(mockPool);
+    runner = new MigrationRunner(mockPool as any);
     
     // Mock process.cwd
     process.cwd = jest.fn(() => '/test/project');

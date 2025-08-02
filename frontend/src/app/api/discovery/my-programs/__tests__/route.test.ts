@@ -148,8 +148,8 @@ describe('GET /api/discovery/my-programs', () => {
     ];
 
     mockFindByUser.mockResolvedValue(mockPrograms);
-    mockFindById.mockImplementation((id) => 
-      Promise.resolve(mockScenarios[id] || null)
+    mockFindById.mockImplementation((id: string) => 
+      Promise.resolve(mockScenarios[id as keyof typeof mockScenarios] || null)
     );
     mockFindByProgram.mockResolvedValue(mockTasks);
 

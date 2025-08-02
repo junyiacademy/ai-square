@@ -62,19 +62,16 @@ describe('/api/learning/tasks/[taskId]/complete', () => {
       evaluationType: 'formative',
       score: 85,
       maxScore: 100,
-      feedback: { en: 'Great job!' },
-      criteria: {},
-      rubric: {},
-      evaluatedAt: new Date().toISOString(),
-      evaluatedBy: 'system',
-      aiConfig: {},
-      aiResponse: {},
+      domainScores: { problem_solving: 85, creativity: 90 },
+      feedbackText: 'Great job!',
+      feedbackData: { detailed: { en: 'Great job!' } },
+      timeTakenSeconds: 120,
+      aiAnalysis: {},
       pblData: {},
       discoveryData: {},
       assessmentData: {},
       metadata: {},
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      createdAt: new Date().toISOString()
     };
 
     const mockTaskResult = {

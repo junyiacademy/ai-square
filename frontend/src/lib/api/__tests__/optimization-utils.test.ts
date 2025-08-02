@@ -134,7 +134,7 @@ describe('optimization-utils', () => {
     const testData = Array.from({ length: 50 }, (_, i) => ({ id: i, name: `Item ${i}` }));
 
     it('creates paginated response with correct structure', () => {
-      const result = createPaginatedResponse(testData, 20, 1, 50);
+      const result = createPaginatedResponse(testData.slice(0, 20), 50, { page: 1, limit: 20 });
       
       expect(result.data).toHaveLength(20);
       expect(result.pagination).toEqual({
@@ -148,7 +148,7 @@ describe('optimization-utils', () => {
     });
 
     it('handles last page correctly', () => {
-      const result = createPaginatedResponse(testData.slice(40), 20, 3, 50);
+      const result = createPaginatedResponse(testData.slice(40), 50, { page: 3, limit: 20 });
       
       expect(result.data).toHaveLength(10);
       expect(result.pagination).toEqual({
@@ -162,7 +162,7 @@ describe('optimization-utils', () => {
     });
 
     it('handles empty data', () => {
-      const result = createPaginatedResponse([], 20, 1, 0);
+      const result = createPaginatedResponse([], 0, { page: 1, limit: 20 });
       
       expect(result.data).toHaveLength(0);
       expect(result.pagination).toEqual({

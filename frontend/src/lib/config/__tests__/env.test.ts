@@ -96,13 +96,24 @@ describe('env configuration', () => {
     });
 
     it('handles undefined NODE_ENV', () => {
-      delete process.env.NODE_ENV;
+      const originalNodeEnv = process.env.NODE_ENV;
+      Object.defineProperty(process.env, 'NODE_ENV', {
+        value: undefined,
+        writable: true,
+        configurable: true
+      });
       
       const { isProduction: isProd, isDevelopment: isDev, isTest: isTst } = require('../env');
       
       expect(isProd()).toBe(false);
       expect(isDev()).toBe(false);
       expect(isTst()).toBe(false);
+      
+      Object.defineProperty(process.env, 'NODE_ENV', {
+        value: originalNodeEnv,
+        writable: true,
+        configurable: true
+      });
     });
   });
 
