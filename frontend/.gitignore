@@ -75,3 +75,7 @@ test-*.md
 test-*.png
 screenshot-*.png
 *.screenshot.png
+
+# Dynamic tracking files
+.project-status.json
+.dev-session.json

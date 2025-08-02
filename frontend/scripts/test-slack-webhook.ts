@@ -1,7 +1,7 @@
-#!/usr/bin/env node
+#!/usr/bin/env npx tsx
 /**
- * Test Slack webhook integration
- * Usage: npx tsx scripts/test-slack-webhook.ts
+ * Test Slack webhook integration (Direct version)
+ * Usage: npm run slack:test
  */
 
 import * as dotenv from 'dotenv';
@@ -10,13 +10,14 @@ import * as path from 'path';
 // Load environment variables from .env.local
 dotenv.config({ path: path.resolve(process.cwd(), '.env.local') });
 
-import { createSlackWebhookAgent } from '../src/lib/agents/slack-webhook-agent';
-
 async function testSlackWebhook() {
   console.log('🧪 Testing Slack Webhook Integration...\n');
 
-  const agent = createSlackWebhookAgent();
-  if (!agent) {
+  const webhookUrl = process.env.SLACK_AISQUARE_WEBHOOK_URL || 
+                     process.env.SLACK_AISQUARE_DEV_WEBHOOK_URL || 
+                     process.env.SLACK_WEBHOOK_URL;
+
+  if (!webhookUrl) {
     console.log('❌ Slack webhook not configured\n');
     console.log('Setup instructions:');
     console.log('1. Go to your Slack workspace');
@@ -25,7 +26,7 @@ async function testSlackWebhook() {
     console.log('4. Add new webhook to workspace');
     console.log('5. Copy the webhook URL');
     console.log('6. Add to .env.local:');
-    console.log('   SLACK_WEBHOOK_URL=https://hooks.slack.com/services/YOUR/WEBHOOK/URL\n');
+    console.log('   SLACK_AISQUARE_WEBHOOK_URL=https://hooks.slack.com/services/YOUR/WEBHOOK/URL\n');
     return;
   }
 
@@ -34,66 +35,88 @@ async function testSlackWebhook() {
   // Test 1: Simple notification
   console.log('📤 Sending test notification...');
   try {
-    await agent.sendNotification('AI Square Slack webhook test successful! 🎉', 'success');
-    console.log('✅ Notification sent\n');
+    const response = await fetch(webhookUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        text: '🎉 AI Square Slack webhook test successful!',
+        attachments: [{
+          color: 'good',
+          fields: [
+            {
+              title: 'Test Type',
+              value: 'Connection Test',
+              short: true
+            },
+            {
+              title: 'Timestamp',
+              value: new Date().toLocaleString('zh-TW'),
+              short: true
+            }
+          ]
+        }]
+      })
+    });
+
+    if (response.ok) {
+      console.log('✅ Test notification sent successfully\n');
+    } else {
+      console.error('❌ Failed to send notification:', response.statusText);
+      return;
+    }
   } catch (error) {
-    console.error('❌ Failed to send notification:', error);
+    console.error('❌ Error sending notification:', error);
     return;
   }
 
-  // Test 2: Work progress summary
-  console.log('📊 Testing work progress summary...');
+  // Test 2: Sample report
+  console.log('📊 Sending sample report...');
   
-  // Add some test data
-  agent.addProgress({
-    taskName: 'Test Coverage Improvement',
-    status: 'completed',
-    duration: '30m',
-    details: 'Increased coverage from 39.44% to 40.2%',
-    metrics: {
-      'Tests Added': 15,
-      'Lines Covered': 81,
-      'Final Coverage (%)': 40.2
-    }
-  });
+  const sampleReport = `📊 *AI Square 系統狀態報告*
+${new Date().toLocaleString('zh-TW')}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  agent.addProgress({
-    taskName: 'TypeScript Error Fixes',
-    status: 'completed',
-    duration: '1h 15m',
-    details: 'Fixed all TypeScript errors in test files',
-    metrics: {
-      'Errors Fixed': 102,
-      'Files Updated': 45
-    }
-  });
+🟢 *系統健康度: 95%*
 
-  agent.addProgress({
-    taskName: 'Slack Integration',
-    status: 'completed',
-    duration: '45m',
-    details: 'Implemented Slack webhook agent'
-  });
+📈 *今日統計*
+• Commits: 5 次
+• 測試通過率: 98%
+• 程式碼覆蓋率: 40.2%
+• TypeScript 錯誤: 0 個
 
-  agent.addProgress({
-    taskName: 'Production Deploy',
-    status: 'failed',
-    errors: [
-      'Cloud Run deployment timeout',
-      'Health check failed'
-    ]
-  });
+🚀 *最近部署*
+• 環境: Staging
+• 版本: v1.5.0
+• 狀態: ✅ 成功
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━`;
 
   try {
-    await agent.sendSummary();
-    console.log('✅ Summary sent\n');
+    const response = await fetch(webhookUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        text: sampleReport,
+        mrkdwn: true
+      })
+    });
+
+    if (response.ok) {
+      console.log('✅ Sample report sent successfully\n');
+    } else {
+      console.error('❌ Failed to send report:', response.statusText);
+      return;
+    }
   } catch (error) {
-    console.error('❌ Failed to send summary:', error);
+    console.error('❌ Error sending report:', error);
     return;
   }
 
   console.log('🎉 All tests completed!');
   console.log('Check your Slack channel for the messages.');
+  console.log('\n💡 Tip: Use the dynamic reporting commands for real data:');
+  console.log('   npm run report:ceo  - Send CEO progress report');
+  console.log('   npm run report:dev  - Send development metrics report');
 }
 
 // Run test
