@@ -1,12 +1,12 @@
 /**
  * Scenario Translation Service Tests
- * Following TDD: Red → Green → Refactor
+ * Tests for the YAML-based translation loading service
  */
 
 import { ScenarioTranslationService } from '../scenario-translation-service';
-import { IScenario } from '@/types/unified-learning';
 import * as fs from 'fs/promises';
 import * as yaml from 'js-yaml';
+import type { IScenario } from '@/types/unified-learning';
 
 // Mock dependencies
 jest.mock('fs/promises');
@@ -14,366 +14,409 @@ jest.mock('js-yaml');
 
 describe('ScenarioTranslationService', () => {
   let service: ScenarioTranslationService;
-  const mockFs = fs as jest.Mocked<typeof fs>;
-  const mockYaml = yaml as jest.Mocked<typeof yaml>;
+  let mockTime: number;
+
+  const mockScenario: IScenario = {
+    id: 'test-scenario-123',
+    mode: 'assessment',
+    status: 'active',
+    version: '1.0',
+    sourceType: 'yaml',
+    sourcePath: 'assessment_data/ai_literacy/ai_literacy_questions_en.yaml',
+    sourceId: 'ai_literacy',
+    sourceMetadata: { folderName: 'ai_literacy' },
+    title: { en: 'AI Literacy Test' },
+    description: { en: 'Test your AI knowledge' },
+    objectives: [],
+    difficulty: 'intermediate',
+    estimatedMinutes: 30,
+    prerequisites: [],
+    taskCount: 20,
+    taskTemplates: [],
+    xpRewards: {},
+    unlockRequirements: {},
+    pblData: {},
+    discoveryData: {},
+    assessmentData: {},
+    aiModules: {},
+    resources: [],
+    metadata: {},
+    createdAt: '2024-01-01',
+    updatedAt: '2024-01-01'
+  };
+
+  const mockYamlContent = {
+    assessment_config: {
+      title: 'AI 素養測試',
+      description: '測試您的 AI 知識',
+      total_questions: 20,
+      time_limit_minutes: 30,
+      passing_score: 70
+    }
+  };
 
   beforeEach(() => {
-    service = new ScenarioTranslationService();
     jest.clearAllMocks();
+    mockTime = Date.now();
+    
+    service = new ScenarioTranslationService();
+    service.setTimeProvider(() => mockTime);
+
+    // Setup default mocks
+    (fs.readFile as jest.Mock).mockResolvedValue('yaml content');
+    (yaml.load as jest.Mock).mockReturnValue(mockYamlContent);
   });
 
   describe('loadTranslation', () => {
-    const mockScenario: IScenario = {
-      id: 'scenario-123',
-      mode: 'assessment',
-      status: 'active',
-      version: '1.0.0',
-      sourceType: 'yaml',
-      sourceId: 'ai_literacy',
-      sourceMetadata: {
-        folderName: 'ai_literacy',
-        basePath: 'assessment_data/ai_literacy'
-      },
-      title: { en: 'AI Literacy Assessment' },
-      description: { en: 'Evaluate your understanding' },
-      objectives: [],
-      difficulty: 'intermediate',
-      estimatedMinutes: 30,
-      prerequisites: [],
-      taskTemplates: [],
-      taskCount: 0,
-      xpRewards: {},
-      unlockRequirements: {},
-      pblData: {},
-      discoveryData: {},
-      assessmentData: {},
-      aiModules: {},
-      resources: [],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      metadata: {}
-    };
+    it('should return null for English language', async () => {
+      const result = await service.loadTranslation(mockScenario, 'en');
+      expect(result).toBeNull();
+      expect(fs.readFile).not.toHaveBeenCalled();
+    });
 
     it('should load translation from YAML file for non-English language', async () => {
-      // Arrange
-      const expectedTranslation = {
-        title: 'AI 素養評估',
-        description: '評估您對 AI 系統的理解',
-        config: {
-          totalQuestions: 12,
-          timeLimit: 15,
-          passingScore: 60
-        }
-      };
+      const result = await service.loadTranslation(mockScenario, 'zh');
 
-      mockFs.readFile.mockResolvedValue(`
-assessment_config:
-  title: AI 素養評估
-  description: 評估您對 AI 系統的理解
-  total_questions: 12
-  time_limit_minutes: 15
-  passing_score: 60
-`);
-
-      mockYaml.load.mockReturnValue({
-        assessment_config: {
-          title: 'AI 素養評估',
-          description: '評估您對 AI 系統的理解',
-          total_questions: 12,
-          time_limit_minutes: 15,
-          passing_score: 60
-        }
-      });
-
-      // Act
-      const result = await service.loadTranslation(mockScenario, 'zhTW');
-
-      // Assert
-      expect(result).toEqual(expectedTranslation);
-      expect(mockFs.readFile).toHaveBeenCalledWith(
-        expect.stringContaining('ai_literacy_questions_zhTW.yaml'),
+      expect(fs.readFile).toHaveBeenCalledWith(
+        expect.stringContaining('ai_literacy_questions_zh.yaml'),
         'utf-8'
       );
+      expect(yaml.load).toHaveBeenCalledWith('yaml content');
+      expect(result).toEqual({
+        title: 'AI 素養測試',
+        description: '測試您的 AI 知識',
+        config: {
+          totalQuestions: 20,
+          timeLimit: 30,
+          passingScore: 70
+        }
+      });
     });
 
-    it('should return null for English language', async () => {
-      // Act
-      const result = await service.loadTranslation(mockScenario, 'en');
+    it('should use cache for subsequent requests', async () => {
+      // First call
+      await service.loadTranslation(mockScenario, 'zh');
+      expect(fs.readFile).toHaveBeenCalledTimes(1);
 
-      // Assert
+      // Second call should use cache
+      await service.loadTranslation(mockScenario, 'zh');
+      expect(fs.readFile).toHaveBeenCalledTimes(1);
+    });
+
+    it('should refresh cache after TTL expires', async () => {
+      // First call
+      await service.loadTranslation(mockScenario, 'zh');
+      expect(fs.readFile).toHaveBeenCalledTimes(1);
+
+      // Advance time beyond TTL
+      mockTime += 11 * 60 * 1000; // 11 minutes
+
+      // Second call should refresh cache
+      await service.loadTranslation(mockScenario, 'zh');
+      expect(fs.readFile).toHaveBeenCalledTimes(2);
+    });
+
+    it('should return null when scenario has no folderName', async () => {
+      const scenarioWithoutFolder = {
+        ...mockScenario,
+        sourceMetadata: {}
+      };
+
+      const result = await service.loadTranslation(scenarioWithoutFolder, 'zh');
       expect(result).toBeNull();
-      expect(mockFs.readFile).not.toHaveBeenCalled();
+      expect(fs.readFile).not.toHaveBeenCalled();
     });
 
-    it('should return null when YAML file does not exist', async () => {
-      // Arrange
-      mockFs.readFile.mockRejectedValue(new Error('File not found'));
+    it('should return null when file does not exist', async () => {
+      (fs.readFile as jest.Mock).mockRejectedValue(new Error('File not found'));
 
-      // Act
-      const result = await service.loadTranslation(mockScenario, 'ja');
-
-      // Assert
+      const result = await service.loadTranslation(mockScenario, 'zh');
       expect(result).toBeNull();
     });
 
-    it('should handle malformed YAML gracefully', async () => {
-      // Arrange
-      mockFs.readFile.mockResolvedValue('invalid yaml content');
-      mockYaml.load.mockImplementation(() => {
+    it('should return null when YAML parsing fails', async () => {
+      (yaml.load as jest.Mock).mockImplementation(() => {
         throw new Error('Invalid YAML');
       });
 
-      // Act
-      const result = await service.loadTranslation(mockScenario, 'zhTW');
-
-      // Assert
+      const result = await service.loadTranslation(mockScenario, 'zh');
       expect(result).toBeNull();
+    });
+
+    it('should handle different YAML structures', async () => {
+      const alternativeYaml = {
+        config: {
+          title: 'Alternative Title',
+          description: 'Alternative Description',
+          total_questions: 15,
+          time_limit_minutes: 20,
+          passing_score: 60
+        }
+      };
+      (yaml.load as jest.Mock).mockReturnValue(alternativeYaml);
+
+      const result = await service.loadTranslation(mockScenario, 'zh');
+      expect(result).toEqual({
+        title: 'Alternative Title',
+        description: 'Alternative Description',
+        config: {
+          totalQuestions: 15,
+          timeLimit: 20,
+          passingScore: 60
+        }
+      });
+    });
+
+    it('should handle non-assessment scenarios', async () => {
+      const pblScenario = {
+        ...mockScenario,
+        mode: 'pbl' as const
+      };
+      const yamlData = { someData: 'value' };
+      (yaml.load as jest.Mock).mockReturnValue(yamlData);
+
+      const result = await service.loadTranslation(pblScenario, 'zh');
+      expect(result).toEqual(yamlData);
+    });
+
+    it('should handle process.cwd() variations', async () => {
+      const originalCwd = process.cwd;
+      
+      // Test when cwd ends with /frontend
+      process.cwd = jest.fn().mockReturnValue('/path/to/frontend');
+      const service1 = new ScenarioTranslationService();
+      service1.setTimeProvider(() => mockTime);
+      await service1.loadTranslation(mockScenario, 'zh');
+      expect(fs.readFile).toHaveBeenCalledWith(
+        expect.stringContaining('/path/to/frontend/public/assessment_data'),
+        'utf-8'
+      );
+
+      // Test when cwd doesn't end with /frontend
+      jest.clearAllMocks();
+      (fs.readFile as jest.Mock).mockResolvedValue('yaml content');
+      process.cwd = jest.fn().mockReturnValue('/path/to/project');
+      const service2 = new ScenarioTranslationService();
+      service2.setTimeProvider(() => mockTime);
+      await service2.loadTranslation(mockScenario, 'zh');
+      expect(fs.readFile).toHaveBeenCalledWith(
+        expect.stringContaining('/path/to/project/frontend/public/assessment_data'),
+        'utf-8'
+      );
+
+      process.cwd = originalCwd;
     });
   });
 
   describe('translateScenario', () => {
-    const mockScenario: IScenario = {
-      id: 'scenario-123',
-      mode: 'assessment',
-      status: 'active',
-      version: '1.0.0',
-      sourceType: 'yaml',
-      sourceId: 'ai_literacy',
-      sourceMetadata: {
-        folderName: 'ai_literacy'
-      },
-      title: { en: 'AI Literacy Assessment' },
-      description: { en: 'Evaluate your understanding' },
-      objectives: [],
-      difficulty: 'intermediate',
-      estimatedMinutes: 30,
-      prerequisites: [],
-      taskTemplates: [],
-      taskCount: 0,
-      xpRewards: {},
-      unlockRequirements: {},
-      pblData: {},
-      discoveryData: {},
-      assessmentData: {},
-      aiModules: {},
-      resources: [],
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      metadata: {}
-    };
-
     it('should return original scenario for English', async () => {
-      // Act
       const result = await service.translateScenario(mockScenario, 'en');
-
-      // Assert
-      expect(result).toEqual(mockScenario);
+      expect(result).toBe(mockScenario);
+      expect(fs.readFile).not.toHaveBeenCalled();
     });
 
-    it('should merge translation with original scenario', async () => {
-      // Arrange
-      const translation = {
-        title: 'AI 素養評估',
-        description: '評估您對 AI 系統的理解',
-        config: { totalQuestions: 12 }
+    it('should merge translation content with scenario', async () => {
+      const result = await service.translateScenario(mockScenario, 'zh');
+
+      expect(result).toEqual({
+        ...mockScenario,
+        title: { zh: 'AI 素養測試' },
+        description: { zh: '測試您的 AI 知識' },
+        metadata: {
+          translatedFrom: 'yaml',
+          config: {
+            totalQuestions: 20,
+            timeLimit: 30,
+            passingScore: 70
+          }
+        }
+      });
+    });
+
+    it('should add translationFailed flag when translation fails', async () => {
+      (fs.readFile as jest.Mock).mockRejectedValue(new Error('File not found'));
+
+      const result = await service.translateScenario(mockScenario, 'zh');
+
+      expect(result).toEqual({
+        ...mockScenario,
+        metadata: {
+          translationFailed: true
+        }
+      });
+    });
+
+    it('should preserve existing metadata', async () => {
+      const scenarioWithMetadata = {
+        ...mockScenario,
+        metadata: { existingKey: 'existingValue' }
       };
 
-      jest.spyOn(service, 'loadTranslation').mockResolvedValue(translation);
+      const result = await service.translateScenario(scenarioWithMetadata, 'zh');
 
-      // Act
-      const result = await service.translateScenario(mockScenario, 'zhTW');
-
-      // Assert
-      expect(result.title).toEqual({ zhTW: 'AI 素養評估' });
-      expect(result.description).toEqual({ zhTW: '評估您對 AI 系統的理解' });
-      expect(result.metadata.translatedFrom).toBe('yaml');
-      expect(result.metadata.config).toEqual({ totalQuestions: 12 });
+      expect(result.metadata).toEqual({
+        existingKey: 'existingValue',
+        translatedFrom: 'yaml',
+        config: {
+          totalQuestions: 20,
+          timeLimit: 30,
+          passingScore: 70
+        }
+      });
     });
 
-    it('should fall back to original when translation fails', async () => {
-      // Arrange
-      jest.spyOn(service, 'loadTranslation').mockResolvedValue(null);
+    it('should handle non-string translation values', async () => {
+      (yaml.load as jest.Mock).mockReturnValue({
+        assessment_config: {
+          title: { unexpected: 'object' },
+          description: null
+        }
+      });
 
-      // Act
-      const result = await service.translateScenario(mockScenario, 'zhTW');
+      const result = await service.translateScenario(mockScenario, 'zh');
 
-      // Assert
       expect(result.title).toBe(mockScenario.title);
       expect(result.description).toBe(mockScenario.description);
-      expect(result.metadata.translationFailed).toBe(true);
     });
   });
 
   describe('translateMultipleScenarios', () => {
     it('should translate multiple scenarios in parallel', async () => {
-      // Arrange
-      const scenarios: IScenario[] = [
-        {
-          id: '1',
-          mode: 'assessment',
-          status: 'active',
-          version: '1.0.0',
-          sourceType: 'yaml',
-          sourceId: 'test1',
-          sourceMetadata: { folderName: 'test1' },
-          title: { en: 'Test 1' },
-          description: { en: 'Desc 1' },
-          objectives: [],
-          difficulty: 'intermediate',
-          estimatedMinutes: 30,
-          prerequisites: [],
-          taskTemplates: [],
-          taskCount: 0,
-          xpRewards: {},
-          unlockRequirements: {},
-          pblData: {},
-          discoveryData: {},
-          assessmentData: {},
-          aiModules: {},
-          resources: [],
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-          metadata: {}
-        },
-        {
-          id: '2',
-          mode: 'assessment',
-          status: 'active',
-          version: '1.0.0',
-          sourceType: 'yaml',
-          sourceId: 'test2',
-          sourceMetadata: { folderName: 'test2' },
-          title: { en: 'Test 2' },
-          description: { en: 'Desc 2' },
-          objectives: [],
-          difficulty: 'intermediate',
-          estimatedMinutes: 30,
-          prerequisites: [],
-          taskTemplates: [],
-          taskCount: 0,
-          xpRewards: {},
-          unlockRequirements: {},
-          pblData: {},
-          discoveryData: {},
-          assessmentData: {},
-          aiModules: {},
-          resources: [],
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-          metadata: {}
-        }
+      const scenarios = [
+        mockScenario,
+        { ...mockScenario, id: 'scenario-2', sourceId: 'ai_ethics' }
       ];
 
-      const translateSpy = jest.spyOn(service, 'translateScenario')
-        .mockImplementation(async (scenario: IScenario, language: string): Promise<IScenario> => ({
-          ...scenario,
-          title: { [language]: `Translated ${scenario.title.en || ''}` }
-        }));
+      const results = await service.translateMultipleScenarios(scenarios, 'zh');
 
-      // Act
-      const results = await service.translateMultipleScenarios(scenarios, 'zhTW');
-
-      // Assert
       expect(results).toHaveLength(2);
-      expect(results[0].title.zhTW).toBe('Translated Test 1');
-      expect(results[1].title.zhTW).toBe('Translated Test 2');
-      expect(translateSpy).toHaveBeenCalledTimes(2);
+      expect(results[0].title).toEqual({ zh: 'AI 素養測試' });
+      expect(results[1].title).toEqual({ zh: 'AI 素養測試' });
+      expect(fs.readFile).toHaveBeenCalledTimes(2);
+    });
+
+    it('should handle empty array', async () => {
+      const results = await service.translateMultipleScenarios([], 'zh');
+      expect(results).toEqual([]);
+      expect(fs.readFile).not.toHaveBeenCalled();
+    });
+
+    it('should return original scenarios for English', async () => {
+      const scenarios = [mockScenario, { ...mockScenario, id: 'scenario-2' }];
+      const results = await service.translateMultipleScenarios(scenarios, 'en');
+
+      expect(results).toEqual(scenarios);
+      expect(fs.readFile).not.toHaveBeenCalled();
     });
   });
 
-  describe('caching', () => {
-    it('should cache translation results', async () => {
-      // Arrange
-      const scenario: IScenario = {
-        id: 'scenario-123',
-        mode: 'assessment',
-        status: 'active',
-        version: '1.0.0',
-        sourceType: 'yaml',
-        sourceId: 'test',
-        sourceMetadata: { folderName: 'test' },
-        title: { en: 'Test' },
-        description: { en: 'Test' },
-        objectives: [],
-        difficulty: 'intermediate',
-        estimatedMinutes: 30,
-        prerequisites: [],
-        taskTemplates: [],
-        taskCount: 0,
-        xpRewards: {},
-        unlockRequirements: {},
-        pblData: {},
-        discoveryData: {},
-        assessmentData: {},
-        aiModules: {},
-        resources: [],
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        metadata: {}
-      };
-
-      mockFs.readFile.mockResolvedValue('title: 測試');
-      mockYaml.load.mockReturnValue({ assessment_config: { title: '測試' } });
-
-      // Act - First call
-      await service.loadTranslation(scenario, 'zhTW');
+  describe('clearExpiredCache', () => {
+    it('should clear expired cache entries', async () => {
+      // Load some translations
+      await service.loadTranslation(mockScenario, 'zh');
+      await service.loadTranslation(mockScenario, 'es');
       
-      // Act - Second call (should use cache)
-      await service.loadTranslation(scenario, 'zhTW');
+      let stats = service.getCacheStats();
+      expect(stats.size).toBe(2);
 
-      // Assert
-      expect(mockFs.readFile).toHaveBeenCalledTimes(1); // Only called once due to cache
+      // Advance time to expire first entry
+      mockTime += 11 * 60 * 1000;
+      
+      // Load another translation
+      await service.loadTranslation(mockScenario, 'fr');
+
+      // Clear expired cache
+      service.clearExpiredCache();
+
+      stats = service.getCacheStats();
+      expect(stats.size).toBe(1);
+      expect(stats.entries).toContain('ai_literacy-fr');
     });
 
-    it('should expire cache after TTL', async () => {
-      // Arrange
-      let currentTime = 0;
-      const mockTimeProvider = () => currentTime;
-      service.setTimeProvider(mockTimeProvider);
-      
-      const scenario: IScenario = {
-        id: 'scenario-123',
-        mode: 'assessment',
-        status: 'active',
-        version: '1.0.0',
-        sourceType: 'yaml',
-        sourceId: 'test',
-        sourceMetadata: { folderName: 'test' },
-        title: { en: 'Test' },
-        description: { en: 'Test' },
-        objectives: [],
-        difficulty: 'intermediate',
-        estimatedMinutes: 30,
-        prerequisites: [],
-        taskTemplates: [],
-        taskCount: 0,
-        xpRewards: {},
-        unlockRequirements: {},
-        pblData: {},
-        discoveryData: {},
-        assessmentData: {},
-        aiModules: {},
-        resources: [],
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        metadata: {}
+    it('should not clear non-expired entries', () => {
+      // Manually add cache entries for testing
+      service['cache'].set('key1', { content: {}, timestamp: mockTime - 5 * 60 * 1000 });
+      service['cache'].set('key2', { content: {}, timestamp: mockTime - 15 * 60 * 1000 });
+
+      service.clearExpiredCache();
+
+      const stats = service.getCacheStats();
+      expect(stats.size).toBe(1);
+      expect(stats.entries).toContain('key1');
+    });
+  });
+
+  describe('getCacheStats', () => {
+    it('should return cache statistics', async () => {
+      const stats1 = service.getCacheStats();
+      expect(stats1).toEqual({ size: 0, entries: [] });
+
+      await service.loadTranslation(mockScenario, 'zh');
+      await service.loadTranslation(mockScenario, 'es');
+
+      const stats2 = service.getCacheStats();
+      expect(stats2.size).toBe(2);
+      expect(stats2.entries).toContain('ai_literacy-zh');
+      expect(stats2.entries).toContain('ai_literacy-es');
+    });
+  });
+
+  describe('edge cases', () => {
+    it('should handle undefined sourceMetadata', async () => {
+      const scenarioWithoutMetadata = {
+        ...mockScenario,
+        sourceMetadata: undefined as any
       };
 
-      mockFs.readFile.mockResolvedValue('title: 測試');
-      mockYaml.load.mockReturnValue({ assessment_config: { title: '測試' } });
+      const result = await service.loadTranslation(scenarioWithoutMetadata, 'zh');
+      expect(result).toBeNull();
+    });
 
-      // Act - First call at time 0
-      currentTime = 0;
-      await service.loadTranslation(scenario, 'zhTW');
+    it('should handle empty assessment config', async () => {
+      (yaml.load as jest.Mock).mockReturnValue({});
 
-      // Simulate cache expiry (advance time by 11 minutes)
-      currentTime = 11 * 60 * 1000;
+      const result = await service.loadTranslation(mockScenario, 'zh');
+      expect(result).toEqual({
+        title: undefined,
+        description: undefined,
+        config: {
+          totalQuestions: undefined,
+          timeLimit: undefined,
+          passingScore: undefined
+        }
+      });
+    });
 
-      // Act - Second call after expiry
-      await service.loadTranslation(scenario, 'zhTW');
+    it('should handle concurrent requests for same translation', async () => {
+      // Reset mock to track calls properly
+      jest.clearAllMocks();
+      (fs.readFile as jest.Mock).mockResolvedValue('yaml content');
+      
+      // Create a new service instance for this test
+      const concurrentService = new ScenarioTranslationService();
+      concurrentService.setTimeProvider(() => mockTime);
+      
+      const promises = [
+        concurrentService.loadTranslation(mockScenario, 'zh'),
+        concurrentService.loadTranslation(mockScenario, 'zh'),
+        concurrentService.loadTranslation(mockScenario, 'zh')
+      ];
 
-      // Assert
-      expect(mockFs.readFile).toHaveBeenCalledTimes(2);
+      const results = await Promise.all(promises);
+      
+      // All should return same result
+      expect(results[0]).toEqual(results[1]);
+      expect(results[1]).toEqual(results[2]);
+      
+      // Since these are truly concurrent, they might all hit the file system
+      // before any of them can populate the cache
+      expect(fs.readFile).toHaveBeenCalled();
+      
+      // But subsequent calls should use cache
+      jest.clearAllMocks();
+      const cachedResult = await concurrentService.loadTranslation(mockScenario, 'zh');
+      expect(fs.readFile).not.toHaveBeenCalled();
+      expect(cachedResult).toEqual(results[0]);
     });
   });
 });

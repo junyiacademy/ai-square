@@ -100,12 +100,10 @@ export interface DiscoveryPath {
 export class DiscoveryYAMLLoader extends BaseYAMLLoader<DiscoveryPath> {
   protected readonly loaderName = 'DiscoveryYAMLLoader';
 
-  private basePath: string;
-
   constructor() {
-    super();
-    // Set base path for discovery data
-    this.basePath = path.join(process.cwd(), 'public', 'discovery_data');
+    super({
+      basePath: path.join(process.cwd(), 'public', 'discovery_data')
+    });
   }
 
   /**
@@ -130,7 +128,7 @@ export class DiscoveryYAMLLoader extends BaseYAMLLoader<DiscoveryPath> {
    * Get file path for discovery path
    */
   protected getFilePath(fileName: string): string {
-    return path.join(this.basePath, `${fileName}.yml`);
+    return path.join(this.options.basePath!, `${fileName}.yml`);
   }
 
   /**
