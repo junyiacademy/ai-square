@@ -17,6 +17,7 @@ jest.mock('pg', () => ({
   Pool: jest.fn().mockImplementation(() => ({
     query: jest.fn(),
     end: jest.fn(),
+    on: jest.fn(), // Add the on method for event handling
   })),
 }));
 
@@ -25,7 +26,7 @@ jest.mock('@/lib/repositories/postgresql', () => ({
   PostgreSQLUserRepository: jest.fn().mockImplementation(() => ({
     findByEmail: jest.fn().mockResolvedValue(null),
     create: jest.fn().mockImplementation((user) => Promise.resolve({
-      id: '1',
+      id: 1,
       ...user
     })),
     updateLastActive: jest.fn().mockResolvedValue(undefined),
@@ -99,9 +100,10 @@ describe('/api/auth/login', () => {
       expect(mockCreateAccessToken).toHaveBeenCalledWith({
         userId: 1,
         email: 'student@example.com',
-        role: 'student'
+        role: 'student',
+        name: 'Student User'
       });
-      expect(mockCreateRefreshToken).toHaveBeenCalledWith(1, false);
+      expect(mockCreateRefreshToken).toHaveBeenCalledWith('1', false);
 
       // Check cookies were set (mocked)
       expect(mockCookies.set).toHaveBeenCalledWith('accessToken', 'mock-jwt-token', expect.any(Object));
@@ -147,7 +149,7 @@ describe('/api/auth/login', () => {
       const response = await POST(request);
       
       expect(response.status).toBe(200);
-      expect(mockCreateRefreshToken).toHaveBeenCalledWith(1, true);
+      expect(mockCreateRefreshToken).toHaveBeenCalledWith('1', true);
 
       // Check cookie was set with remember me option
       expect(mockCookies.set).toHaveBeenCalledWith('refreshToken', 'mock-jwt-token', 

@@ -282,9 +282,12 @@ describe('/api/error-tracking', () => {
 
       expect(response.status).toBe(200)
       const data = await response.json()
-      expect(data.errors).toBeDefined()
-      expect(Array.isArray(data.errors)).toBe(true)
-      expect(data.totalCount).toBeGreaterThanOrEqual(2)
+      expect(data.success).toBe(true)
+      expect(data.data).toBeDefined()
+      expect(data.data.data).toBeDefined()
+      expect(Array.isArray(data.data.data)).toBe(true)
+      expect(data.data.pagination).toBeDefined()
+      expect(data.data.pagination.total).toBeGreaterThanOrEqual(2)
     })
 
     it('should return filtered errors by severity', async () => {
@@ -293,11 +296,13 @@ describe('/api/error-tracking', () => {
 
       expect(response.status).toBe(200)
       const data = await response.json()
-      expect(data.errors).toBeDefined()
-      expect(Array.isArray(data.errors)).toBe(true)
+      expect(data.success).toBe(true)
+      expect(data.data).toBeDefined()
+      expect(data.data.data).toBeDefined()
+      expect(Array.isArray(data.data.data)).toBe(true)
       
       // All returned errors should have critical severity
-      data.errors.forEach((error: ErrorReport) => {
+      data.data.data.forEach((error: ErrorReport) => {
         if (error.severity) {
           expect(error.severity).toBe('critical')
         }
@@ -310,10 +315,12 @@ describe('/api/error-tracking', () => {
 
       expect(response.status).toBe(200)
       const data = await response.json()
-      expect(data.errors).toBeDefined()
+      expect(data.success).toBe(true)
+      expect(data.data).toBeDefined()
+      expect(data.data.data).toBeDefined()
       
       // All returned errors should have server source
-      data.errors.forEach((error: ErrorReport) => {
+      data.data.data.forEach((error: ErrorReport) => {
         // Source check removed - not part of ErrorReport interface
       })
     })
@@ -324,8 +331,10 @@ describe('/api/error-tracking', () => {
 
       expect(response.status).toBe(200)
       const data = await response.json()
-      expect(data.errors).toBeDefined()
-      expect(data.errors.length).toBeLessThanOrEqual(5)
+      expect(data.success).toBe(true)
+      expect(data.data).toBeDefined()
+      expect(data.data.data).toBeDefined()
+      expect(data.data.data.length).toBeLessThanOrEqual(5)
     })
 
     it('should handle invalid query parameters gracefully', async () => {
@@ -334,8 +343,10 @@ describe('/api/error-tracking', () => {
 
       expect(response.status).toBe(200)
       const data = await response.json()
-      expect(data.errors).toBeDefined()
-      expect(Array.isArray(data.errors)).toBe(true)
+      expect(data.success).toBe(true)
+      expect(data.data).toBeDefined()
+      expect(data.data.data).toBeDefined()
+      expect(Array.isArray(data.data.data)).toBe(true)
     })
   })
 })

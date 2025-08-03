@@ -95,9 +95,13 @@ export async function GET(request: NextRequest) {
       recentErrors: errorStore.slice(0, 10)
     };
 
-    // Apply pagination
+    // Apply pagination - slice the array based on pagination params
+    const startIndex = paginationParams.offset;
+    const endIndex = startIndex + paginationParams.limit;
+    const paginatedErrors = filteredErrors.slice(startIndex, endIndex);
+    
     const paginatedResponse = createPaginatedResponse(
-      filteredErrors,
+      paginatedErrors,
       filteredErrors.length,
       paginationParams
     );

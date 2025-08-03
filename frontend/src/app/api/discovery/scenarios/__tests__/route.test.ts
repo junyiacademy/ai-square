@@ -7,6 +7,7 @@ import { GET } from '../route';
 import { NextRequest } from 'next/server';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { mockConsoleError as createMockConsoleError } from '@/test-utils/helpers/console';
+import { createMockScenarioRepository, createMockProgramRepository } from '@/test-utils/mocks/repository-helpers';
 
 // Mock dependencies
 jest.mock('@/lib/repositories/base/repository-factory');
@@ -19,13 +20,8 @@ const mockConsoleError = createMockConsoleError();
 
 describe('/api/discovery/scenarios', () => {
   // Mock repositories
-  const mockScenarioRepo = {
-    findByMode: jest.fn(),
-  };
-
-  const mockProgramRepo = {
-    findByUser: jest.fn(),
-  };
+  const mockScenarioRepo = createMockScenarioRepository();
+  const mockProgramRepo = createMockProgramRepository();
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -33,6 +29,11 @@ describe('/api/discovery/scenarios', () => {
     // Setup repository factory mocks
     (repositoryFactory.getScenarioRepository as jest.Mock).mockReturnValue(mockScenarioRepo);
     (repositoryFactory.getProgramRepository as jest.Mock).mockReturnValue(mockProgramRepo);
+    
+    // Reset the module to clear cache between tests
+    jest.isolateModules(() => {
+      jest.resetModules();
+    });
   });
 
   afterAll(() => {
@@ -62,7 +63,7 @@ describe('/api/discovery/scenarios', () => {
     ];
 
     it('should return discovery scenarios with default language', async () => {
-      mockScenarioRepo.findByMode.mockResolvedValue(mockScenarios);
+      mockScenarioRepo.findByMode?.mockResolvedValue(mockScenarios);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios');
       const response = await GET(request);
@@ -85,14 +86,16 @@ describe('/api/discovery/scenarios', () => {
     });
 
     it('should return scenarios with specified language', async () => {
-      mockScenarioRepo.findByMode.mockResolvedValue(mockScenarios);
+      mockScenarioRepo.findByMode?.mockResolvedValue(mockScenarios);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios?lang=zh');
       const response = await GET(request);
       const data = await response.json();
 
       expect(response.status).toBe(200);
+      // The API returns both the extracted title and the original titleObj
       expect(data.data.scenarios[0].title).toBe('職業探索'); // Chinese title
+      expect(data.data.scenarios[0].titleObj).toEqual({ en: 'Career Explorer', zh: '職業探索' });
       expect(data.data.scenarios[0].description).toBe('探索 AI 職業');
       expect(data.meta.language).toBe('zh');
     });
@@ -103,8 +106,8 @@ describe('/api/discovery/scenarios', () => {
         user: { id: 'user-123', email: 'user@example.com' },
       });
 
-      mockScenarioRepo.findByMode.mockResolvedValue(mockScenarios);
-      mockProgramRepo.findByUser.mockResolvedValue([
+      mockScenarioRepo.findByMode?.mockResolvedValue(mockScenarios);
+      mockProgramRepo.findByUser?.mockResolvedValue([
         {
           id: 'prog-1',
           scenarioId: 'scenario-1',
@@ -165,7 +168,7 @@ describe('/api/discovery/scenarios', () => {
     });
 
     it('should handle empty scenarios', async () => {
-      mockScenarioRepo.findByMode.mockResolvedValue([]);
+      mockScenarioRepo.findByMode?.mockResolvedValue([]);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios');
       const response = await GET(request);
@@ -178,7 +181,15 @@ describe('/api/discovery/scenarios', () => {
     });
 
     it('should handle missing findByMode method', async () => {
-      (mockScenarioRepo as Partial<typeof mockScenarioRepo>).findByMode = undefined;
+      // Create a mock without findByMode
+      const incompleteRepo = {
+        findById: jest.fn(),
+        findAll: jest.fn(),  
+        findBySourcePath: jest.fn(),
+        update: jest.fn(),
+        create: jest.fn(),
+      };
+      (repositoryFactory.getScenarioRepository as jest.Mock).mockReturnValue(incompleteRepo);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios');
       const response = await GET(request);
@@ -197,7 +208,7 @@ describe('/api/discovery/scenarios', () => {
         description: { en: 'English description' },
       }];
 
-      mockScenarioRepo.findByMode.mockResolvedValue(scenarioWithLimitedLanguages);
+      mockScenarioRepo.findByMode?.mockResolvedValue(scenarioWithLimitedLanguages);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios?lang=zh');
       const response = await GET(request);
@@ -216,7 +227,7 @@ describe('/api/discovery/scenarios', () => {
         description: null as any,
       }];
 
-      mockScenarioRepo.findByMode.mockResolvedValue(malformedScenarios);
+      mockScenarioRepo.findByMode?.mockResolvedValue(malformedScenarios);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios');
       const response = await GET(request);
@@ -233,8 +244,8 @@ describe('/api/discovery/scenarios', () => {
         user: { email: 'user@example.com' },
       });
 
-      mockScenarioRepo.findByMode.mockResolvedValue([mockScenarios[0]]);
-      mockProgramRepo.findByUser.mockResolvedValue([
+      mockScenarioRepo.findByMode?.mockResolvedValue([mockScenarios[0]]);
+      mockProgramRepo.findByUser?.mockResolvedValue([
         {
           id: 'prog-1',
           scenarioId: 'scenario-1',
@@ -276,7 +287,7 @@ describe('/api/discovery/scenarios', () => {
       const { getServerSession } = await import('@/lib/auth/session');
       (getServerSession as jest.Mock).mockResolvedValue(null);
 
-      mockScenarioRepo.findByMode.mockResolvedValue(mockScenarios);
+      mockScenarioRepo.findByMode?.mockResolvedValue(mockScenarios);
 
       // First request
       const request1 = new NextRequest('http://localhost:3000/api/discovery/scenarios');
@@ -300,8 +311,8 @@ describe('/api/discovery/scenarios', () => {
         user: { id: 'user-123' },
       });
 
-      mockScenarioRepo.findByMode.mockResolvedValue(mockScenarios);
-      mockProgramRepo.findByUser.mockResolvedValue([]);
+      mockScenarioRepo.findByMode?.mockResolvedValue(mockScenarios);
+      mockProgramRepo.findByUser?.mockResolvedValue([]);
 
       // First request
       await GET(new NextRequest('http://localhost:3000/api/discovery/scenarios'));
@@ -314,7 +325,7 @@ describe('/api/discovery/scenarios', () => {
 
     it('should handle repository errors', async () => {
       const error = new Error('Database error');
-      mockScenarioRepo.findByMode.mockRejectedValue(error);
+      mockScenarioRepo.findByMode?.mockRejectedValue(error);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios');
       const response = await GET(request);

@@ -3,6 +3,7 @@ import { NextRequest } from 'next/server';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { cacheService } from '@/lib/cache/cache-service';
 import { mockConsoleError as createMockConsoleError } from '@/test-utils/helpers/console';
+import { createMockScenarioRepository } from '@/test-utils/mocks/repository-helpers';
 
 // Mock dependencies
 jest.mock('@/lib/repositories/base/repository-factory');
@@ -13,9 +14,7 @@ const mockConsoleLog = jest.spyOn(console, 'log').mockImplementation();
 const mockConsoleError = createMockConsoleError();
 
 describe('/api/assessment', () => {
-  const mockScenarioRepo = {
-    findByMode: jest.fn(),
-  };
+  const mockScenarioRepo = createMockScenarioRepository();
 
   const mockAssessmentScenario = {
     id: 'scenario-123',
@@ -56,23 +55,40 @@ describe('/api/assessment', () => {
           questions: 3,
         },
       },
-      questions: [
-        {
-          id: 'E001',
-          domain: 'engaging_with_ai',
-          difficulty: 'basic',
-          type: 'multiple_choice',
-          question: 'What is AI?',
-          question_zhTW: 'AI是什麼？',
-          options: [
-            { id: 'a', text: 'Artificial Intelligence' },
-            { id: 'b', text: 'Animal Intelligence' },
-            { id: 'c', text: 'Automated Internet' },
-            { id: 'd', text: 'Advanced Infrastructure' },
-          ],
-          correct_answer: 'a',
-        },
-      ],
+      questions: {
+        en: [
+          {
+            id: 'E001',
+            domain: 'engaging_with_ai',
+            difficulty: 'basic',
+            type: 'multiple_choice',
+            question: 'What is AI?',
+            options: [
+              { id: 'a', text: 'Artificial Intelligence' },
+              { id: 'b', text: 'Animal Intelligence' },
+              { id: 'c', text: 'Automated Internet' },
+              { id: 'd', text: 'Advanced Infrastructure' },
+            ],
+            correct_answer: 'a',
+          },
+        ],
+        zh: [
+          {
+            id: 'E001',
+            domain: 'engaging_with_ai',
+            difficulty: 'basic',
+            type: 'multiple_choice',
+            question: 'AI是什麼？',
+            options: [
+              { id: 'a', text: '人工智慧' },
+              { id: 'b', text: '動物智慧' },
+              { id: 'c', text: '自動化網路' },
+              { id: 'd', text: '先進基礎設施' },
+            ],
+            correct_answer: 'a',
+          },
+        ],
+      },
     },
   };
 
@@ -153,7 +169,15 @@ describe('/api/assessment', () => {
   });
 
   it('should handle missing findByMode method', async () => {
-    (mockScenarioRepo as Partial<typeof mockScenarioRepo>).findByMode = undefined;
+    // Create a mock without findByMode
+    const incompleteRepo = {
+      findById: jest.fn(),
+      findAll: jest.fn(),
+      findBySourcePath: jest.fn(),
+      update: jest.fn(),
+      create: jest.fn(),
+    };
+    (repositoryFactory.getScenarioRepository as jest.Mock).mockReturnValue(incompleteRepo);
 
     const request = new NextRequest('http://localhost:3000/api/assessment');
     const response = await GET(request);
@@ -234,28 +258,53 @@ describe('/api/assessment', () => {
       ...mockAssessmentScenario,
       assessmentData: {
         ...mockAssessmentScenario.assessmentData,
-        questions: [
-          {
-            id: 'Q001',
-            domain: 'engaging_with_ai',
-            type: 'multiple_choice',
-            question: 'What is machine learning?',
-            question_zhTW: '什麼是機器學習？',
-            question_es: '¿Qué es el aprendizaje automático?',
-            options: [
-              { 
-                id: 'a', 
-                text: 'A type of AI',
-                text_zhTW: '一種AI技術',
-                text_es: 'Un tipo de IA',
-              },
-              { id: 'b', text: 'A programming language' },
-              { id: 'c', text: 'A database' },
-              { id: 'd', text: 'A hardware device' },
-            ],
-            correct_answer: 'a',
-          },
-        ],
+        questions: {
+          en: [
+            {
+              id: 'Q001',
+              domain: 'engaging_with_ai',
+              type: 'multiple_choice',
+              question: 'What is machine learning?',
+              options: [
+                { id: 'a', text: 'A type of AI' },
+                { id: 'b', text: 'A programming language' },
+                { id: 'c', text: 'A database' },
+                { id: 'd', text: 'A hardware device' },
+              ],
+              correct_answer: 'a',
+            },
+          ],
+          zh: [
+            {
+              id: 'Q001',
+              domain: 'engaging_with_ai',
+              type: 'multiple_choice',
+              question: '什麼是機器學習？',
+              options: [
+                { id: 'a', text: '一種AI技術' },
+                { id: 'b', text: '一種程式語言' },
+                { id: 'c', text: '一個資料庫' },
+                { id: 'd', text: '一個硬體設備' },
+              ],
+              correct_answer: 'a',
+            },
+          ],
+          es: [
+            {
+              id: 'Q001',
+              domain: 'engaging_with_ai',
+              type: 'multiple_choice',
+              question: '¿Qué es el aprendizaje automático?',
+              options: [
+                { id: 'a', text: 'Un tipo de IA' },
+                { id: 'b', text: 'Un lenguaje de programación' },
+                { id: 'c', text: 'Una base de datos' },
+                { id: 'd', text: 'Un dispositivo de hardware' },
+              ],
+              correct_answer: 'a',
+            },
+          ],
+        },
       },
     };
 

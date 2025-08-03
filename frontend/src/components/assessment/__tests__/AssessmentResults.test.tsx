@@ -173,7 +173,9 @@ describe('AssessmentResults', () => {
     );
 
     expect(screen.getByText('Assessment Results')).toBeInTheDocument();
-    expect(screen.getByText('85%')).toBeInTheDocument();
+    // Multiple elements have 85%, so use getAllByText
+    const scoreElements = screen.getAllByText('85%');
+    expect(scoreElements.length).toBeGreaterThan(0);
     expect(screen.getByText('Expert')).toBeInTheDocument();
     expect(screen.getByText('10/12')).toBeInTheDocument();
     expect(screen.getByText('12:00')).toBeInTheDocument();

@@ -89,7 +89,7 @@ describe('/api/scenarios', () => {
 
     it('should filter scenarios by mode', async () => {
       const pblScenarios = mockScenarios.filter(s => s.mode === 'pbl');
-      mockScenarioRepo.findByMode.mockResolvedValue(pblScenarios);
+      mockScenarioRepo.findByMode?.mockResolvedValue(pblScenarios);
 
       const request = new NextRequest('http://localhost/api/scenarios?mode=pbl');
       const response = await GET(request);

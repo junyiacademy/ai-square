@@ -215,6 +215,14 @@ describe('ChatPage', () => {
   it('shows assessment results and progress when available', async () => {
     // Mock assessment result in localStorage
     (Storage.prototype.getItem as jest.Mock).mockImplementation((key) => {
+      if (key === 'user') {
+        return JSON.stringify({
+          id: '1',
+          email: 'test@example.com',
+          name: 'Test User',
+          role: 'student'
+        });
+      }
       if (key === 'assessmentResult') {
         return JSON.stringify({
           overallScore: 75,

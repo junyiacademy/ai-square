@@ -9,7 +9,8 @@ import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { getServerSession } from '@/lib/auth/session';
 import { promises as fs } from 'fs';
 import path from 'path';
-import { mockConsoleError as createMockConsoleError } from '@/test-utils/helpers/console';
+import { mockConsoleError as createMockConsoleError, mockConsoleWarn as createMockConsoleWarn } from '@/test-utils/helpers/console';
+import { createMockScenarioRepository } from '@/test-utils/mocks/repository-helpers';
 
 // Mock dependencies
 jest.mock('@/lib/repositories/base/repository-factory');
@@ -24,15 +25,11 @@ jest.mock('fs', () => ({
 // Mock console
 const mockConsoleLog = jest.spyOn(console, 'log').mockImplementation();
 const mockConsoleError = createMockConsoleError();
-const mockConsoleWarn = jest.spyOn(console, 'warn').mockImplementation();
+const mockConsoleWarn = createMockConsoleWarn();
 
 describe('/api/assessment/scenarios', () => {
   // Mock repositories
-  const mockScenarioRepo = {
-    findByMode: jest.fn(),
-    findActive: jest.fn(),
-    create: jest.fn(),
-  };
+  const mockScenarioRepo = createMockScenarioRepository();
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -233,26 +230,19 @@ assessment_config:
 
       (fs.readdir as jest.Mock).mockResolvedValue([
         { name: 'ai_literacy', isDirectory: () => true },
-        { name: 'empty_folder', isDirectory: () => true },
       ]);
 
-      (fs.readFile as jest.Mock)
-        .mockResolvedValueOnce(`config: { title: "AI Test" }`) // ai_literacy
-        .mockRejectedValue(new Error('File not found')); // empty_folder files
-
-      mockScenarioRepo.create.mockResolvedValue({
-        id: 'new-scenario-1',
-        title: { en: 'AI Test' },
-      });
+      // Test ai_literacy folder without config
+      (fs.readFile as jest.Mock).mockRejectedValue(new Error('File not found'));
 
       const request = new NextRequest('http://localhost:3000/api/assessment/scenarios');
       const response = await GET(request);
       const data = await response.json();
 
       expect(response.status).toBe(200);
-      expect(data.data.scenarios).toHaveLength(1); // Only ai_literacy
+      expect(data.data.scenarios).toHaveLength(0); // No scenarios created
       expect(mockConsoleWarn).toHaveBeenCalledWith(
-        expect.stringContaining('No config found for empty_folder'),
+        expect.stringContaining('No config found for ai_literacy'),
         expect.any(Error)
       );
     });

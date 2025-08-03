@@ -3,12 +3,14 @@
  */
 import { GET } from '../route';
 import { NextRequest } from 'next/server';
-import fs from 'fs';
-import yaml from 'js-yaml';
+import { jsonYamlLoader } from '@/lib/json-yaml-loader';
 
-// Mock fs and yaml modules
-jest.mock('fs');
-jest.mock('js-yaml');
+// Mock jsonYamlLoader
+jest.mock('@/lib/json-yaml-loader', () => ({
+  jsonYamlLoader: {
+    load: jest.fn()
+  }
+}));
 
 // Mock NextRequest for Node.js environment
 const createMockRequest = (url: string): NextRequest => {
@@ -51,8 +53,7 @@ const createMockRequest = (url: string): NextRequest => {
   } as unknown as NextRequest;
 };
 
-const mockFs = fs as jest.Mocked<typeof fs>;
-const mockYaml = yaml as jest.Mocked<typeof yaml>;
+const mockJsonYamlLoader = jsonYamlLoader as jest.Mocked<typeof jsonYamlLoader>;
 
 describe('/api/ksa route', () => {
   const mockYamlData = {
@@ -110,8 +111,7 @@ describe('/api/ksa route', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    mockFs.readFileSync.mockReturnValue('yaml content');
-    mockYaml.load.mockReturnValue(mockYamlData);
+    mockJsonYamlLoader.load.mockResolvedValue(mockYamlData);
   });
 
   describe('Language Parameter Handling', () => {
@@ -121,6 +121,7 @@ describe('/api/ksa route', () => {
       const response = await GET(request);
       const data = await response.json();
 
+      expect(mockJsonYamlLoader.load).toHaveBeenCalledWith('ksa_codes', { preferJson: true });
       expect(data.knowledge_codes.description).toBe('Knowledge description');
       expect(data.knowledge_codes.themes.Theme1.explanation).toBe('Theme explanation');
     });
@@ -131,9 +132,10 @@ describe('/api/ksa route', () => {
       const response = await GET(request);
       const data = await response.json();
 
-      expect(data.knowledge_codes.description).toBe('知識描述');
-      expect(data.knowledge_codes.themes.Theme1.explanation).toBe('主題解釋');
-      expect(data.knowledge_codes.themes.Theme1.codes['K1.1'].summary).toBe('代碼摘要');
+      expect(mockJsonYamlLoader.load).toHaveBeenCalledWith('ksa_codes_zhTW', { preferJson: true });
+      expect(data.knowledge_codes.description).toBe('Knowledge description');
+      expect(data.knowledge_codes.themes.Theme1.explanation).toBe('Theme explanation');
+      expect(data.knowledge_codes.themes.Theme1.codes['K1.1'].summary).toBe('Code summary');
     });
 
     it('should fallback to English when translation is not available', async () => {
@@ -142,6 +144,7 @@ describe('/api/ksa route', () => {
       const response = await GET(request);
       const data = await response.json();
 
+      expect(mockJsonYamlLoader.load).toHaveBeenCalledWith('ksa_codes_fr', { preferJson: true });
       // Should fallback to English when French translation is not available
       expect(data.knowledge_codes.description).toBe('Knowledge description');
       expect(data.knowledge_codes.themes.Theme1.explanation).toBe('Theme explanation');
@@ -182,9 +185,7 @@ describe('/api/ksa route', () => {
 
   describe('Error Handling', () => {
     it('should return 500 error when file reading fails', async () => {
-      mockFs.readFileSync.mockImplementation(() => {
-        throw new Error('File not found');
-      });
+      mockJsonYamlLoader.load.mockRejectedValue(new Error('File not found'));
 
       const request = createMockRequest('http://localhost:3000/api/ksa');
       

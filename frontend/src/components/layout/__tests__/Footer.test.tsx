@@ -12,7 +12,16 @@ jest.mock('next/link', () => {
 // Mock react-i18next
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({
-    t: (key: string, defaultValue?: string) => defaultValue || key,
+    t: (key: string, defaultValue?: string) => {
+      // Return common translations
+      const translations: Record<string, string> = {
+        'footer.languages': 'Languages',
+        'footer.domains': 'AI Domains',
+        'footer.competencies': 'Competencies',
+        'footer.rights': 'All rights reserved.'
+      };
+      return translations[key] || defaultValue || key;
+    },
     i18n: {
       language: 'en',
     },
@@ -31,13 +40,10 @@ describe('Footer', () => {
     // Check description
     expect(screen.getByText(/AI Square is a Git-Based learning platform/)).toBeInTheDocument()
     
-    // Check stats
-    expect(screen.getByText(/10\+/)).toBeInTheDocument()
-    expect(screen.getByText('Languages')).toBeInTheDocument()
-    expect(screen.getByText(/4/)).toBeInTheDocument()
-    expect(screen.getByText('AI Domains')).toBeInTheDocument()
-    expect(screen.getByText(/20\+/)).toBeInTheDocument()
-    expect(screen.getByText('Competencies')).toBeInTheDocument()
+    // Check stats - text is combined in single elements
+    expect(screen.getByText('10+ Languages')).toBeInTheDocument()
+    expect(screen.getByText('4 AI Domains')).toBeInTheDocument()
+    expect(screen.getByText('20+ Competencies')).toBeInTheDocument()
   })
 
   it('renders resource links', () => {
@@ -60,8 +66,9 @@ describe('Footer', () => {
     render(<Footer />)
     const currentYear = new Date().getFullYear()
     
-    expect(screen.getByText(`© ${currentYear} AI Square.`)).toBeInTheDocument()
-    expect(screen.getByText('All rights reserved.')).toBeInTheDocument()
+    // The copyright text is rendered together in a single element
+    const copyrightText = `© ${currentYear} AI Square. All rights reserved.`
+    expect(screen.getByText(copyrightText)).toBeInTheDocument()
   })
 
   it('renders contact email', () => {

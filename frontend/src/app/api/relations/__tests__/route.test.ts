@@ -302,8 +302,8 @@ describe('/api/relations', () => {
       await response.json();
 
       expect(mockCacheService.get).toHaveBeenCalledWith('relations-en');
-      expect(mockJsonYamlLoader.load).toHaveBeenCalledWith('ai_lit_domains_en', { preferJson: true });
-      expect(mockJsonYamlLoader.load).toHaveBeenCalledWith('ksa_codes_en', { preferJson: true });
+      expect(mockJsonYamlLoader.load).toHaveBeenCalledWith('rubrics_data/ai_lit_domains/ai_lit_domains_en', { preferJson: false });
+      expect(mockJsonYamlLoader.load).toHaveBeenCalledWith('rubrics_data/ksa_codes/ksa_codes_en', { preferJson: false });
       expect(mockCacheService.set).toHaveBeenCalledWith(
         'relations-en',
         expect.any(Object),

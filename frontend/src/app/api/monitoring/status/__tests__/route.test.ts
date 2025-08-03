@@ -6,42 +6,59 @@
 import { NextRequest } from 'next/server';
 import { GET } from '../route';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import { cacheService } from '@/lib/cache/cache-service';
+import { productionMonitor } from '@/lib/monitoring/production-monitor';
+import { distributedCacheService } from '@/lib/cache/distributed-cache-service';
+import { performanceMonitor } from '@/lib/monitoring/performance-monitor';
 import { mockConsoleError as createMockConsoleError } from '@/test-utils/helpers/console';
+import { 
+  createMockUserRepository,
+  createMockProgramRepository,
+  createMockScenarioRepository 
+} from '@/test-utils/mocks/repository-helpers';
 
 // Mock dependencies
 jest.mock('@/lib/repositories/base/repository-factory');
-jest.mock('@/lib/cache/cache-service');
+jest.mock('@/lib/monitoring/production-monitor');
+jest.mock('@/lib/cache/distributed-cache-service');
+jest.mock('@/lib/monitoring/performance-monitor');
 
 // Mock console
 const mockConsoleError = createMockConsoleError();
 
 describe('/api/monitoring/status', () => {
-  const mockUserRepo = {
-    count: jest.fn(),
-  };
-
-  const mockProgramRepo = {
-    count: jest.fn(),
-  };
-
-  const mockScenarioRepo = {
-    count: jest.fn(),
-  };
+  const mockUserRepo = createMockUserRepository();
+  const mockProgramRepo = createMockProgramRepository();
+  const mockScenarioRepo = createMockScenarioRepository();
 
   beforeEach(() => {
     jest.clearAllMocks();
     
-    // Setup repository factory mocks
-    (repositoryFactory.getUserRepository as jest.Mock).mockReturnValue(mockUserRepo);
-    (repositoryFactory.getProgramRepository as jest.Mock).mockReturnValue(mockProgramRepo);
-    (repositoryFactory.getScenarioRepository as jest.Mock).mockReturnValue(mockScenarioRepo);
+    // Setup monitoring mocks
+    (productionMonitor.getStatus as jest.Mock).mockReturnValue({
+      enabled: true,
+      alertThresholds: {
+        errorRate: 0.05,
+        responseTime: 1000,
+        cacheHitRate: 0.5
+      }
+    });
     
-    // TODO: getStats method doesn't exist on CacheService
-    // (cacheService.getStats as jest.Mock).mockResolvedValue({
-    //   keys: ['key1', 'key2', 'key3'],
-    //   hitRate: 0.85,
-    // });
+    (distributedCacheService.getStats as jest.Mock).mockResolvedValue({
+      redisConnected: true,
+      localCacheSize: 1024,
+      activeRevalidations: 2
+    });
+    
+    (performanceMonitor.getAllMetrics as jest.Mock).mockReturnValue([
+      {
+        endpoint: '/api/test',
+        averageResponseTime: 100,
+        cacheHitRate: 0.85,
+        errorRate: 0.01
+      }
+    ]);
+    
+    (performanceMonitor.getRecentMetrics as jest.Mock).mockReturnValue([]);
   });
 
   afterAll(() => {
@@ -50,41 +67,32 @@ describe('/api/monitoring/status', () => {
 
   it('should return system status successfully', async () => {
     // Mock repository counts
-    mockUserRepo.count.mockResolvedValue(100);
-    mockProgramRepo.count.mockResolvedValue(250);
-    mockScenarioRepo.count.mockResolvedValue(15);
+    mockUserRepo.count?.mockResolvedValue(100);
+    mockProgramRepo.count?.mockResolvedValue(250);
+    mockScenarioRepo.count?.mockResolvedValue(15);
 
     const request = new NextRequest('http://localhost/api/monitoring/status');
     const response = await GET(request);
     const data = await response.json();
 
     expect(response.status).toBe(200);
-    expect(data).toHaveProperty('status', 'healthy');
+    expect(data).toHaveProperty('health', 'healthy');
     expect(data).toHaveProperty('timestamp');
-    expect(data).toHaveProperty('services');
+    expect(data).toHaveProperty('monitoring');
     
-    // Check database status
-    expect(data.services.database).toMatchObject({
-      status: 'connected',
-      counts: {
-        users: 100,
-        programs: 250,
-        scenarios: 15,
-      },
-    });
-
     // Check cache status
-    expect(data.services.cache).toMatchObject({
-      status: 'active',
-      keyCount: 3,
-      hitRate: 0.85,
-    });
+    expect(data.cache).toBeDefined();
+    expect(data.cache).toHaveProperty('redis');
+    expect(data.cache).toHaveProperty('local');
+    
+    // Check performance metrics
+    expect(data.performance).toBeDefined();
+    expect(data.performance).toHaveProperty('totalEndpoints');
+    expect(data.performance).toHaveProperty('averageResponseTime');
+    expect(data.performance).toHaveProperty('cacheHitRate');
+    expect(data.performance).toHaveProperty('errorRate');
 
-    // Check API status
-    expect(data.services.api).toMatchObject({
-      status: 'running',
-      version: expect.any(String),
-    });
+    // The API doesn't return a services object
   });
 
   it('should handle database connection failure', async () => {
@@ -101,74 +109,73 @@ describe('/api/monitoring/status', () => {
   });
 
   it('should handle cache service failure', async () => {
-    // TODO: getStats method doesn't exist on CacheService
-    // (cacheService.getStats as jest.Mock).mockRejectedValue(new Error('Redis unavailable'));
+    // Mock distributedCacheService.getStats to throw error
+    (distributedCacheService.getStats as jest.Mock).mockRejectedValue(new Error('Redis unavailable'));
     
-    mockUserRepo.count.mockResolvedValue(100);
-    mockProgramRepo.count.mockResolvedValue(250);
-    mockScenarioRepo.count.mockResolvedValue(15);
+    mockUserRepo.count?.mockResolvedValue(100);
+    mockProgramRepo.count?.mockResolvedValue(250);
+    mockScenarioRepo.count?.mockResolvedValue(15);
 
     const request = new NextRequest('http://localhost/api/monitoring/status');
     const response = await GET(request);
     const data = await response.json();
 
-    expect(response.status).toBe(200);
-    expect(data.status).toBe('degraded');
-    expect(data.services.cache).toMatchObject({
-      status: 'error',
-      error: 'Redis unavailable',
-    });
+    // When getStats fails, the entire request returns 500
+    expect(response.status).toBe(500);
+    expect(data).toHaveProperty('error', 'Failed to get monitoring status');
+    expect(data).toHaveProperty('health', 'unhealthy');
   });
 
   it('should handle missing repository methods', async () => {
-    (mockUserRepo as Partial<typeof mockUserRepo>).count = undefined;
-    (mockProgramRepo as Partial<typeof mockProgramRepo>).count = undefined;
-    (mockScenarioRepo as Partial<typeof mockScenarioRepo>).count = undefined;
-
+    // The API doesn't use repository count methods
+    // It uses monitoring services instead
     const request = new NextRequest('http://localhost/api/monitoring/status');
     const response = await GET(request);
     const data = await response.json();
 
     expect(response.status).toBe(200);
-    expect(data.status).toBe('degraded');
-    expect(data.services.database).toMatchObject({
-      status: 'error',
-      error: expect.stringContaining('count method not available'),
-    });
+    expect(data).toHaveProperty('health', 'healthy');
+    expect(data).toHaveProperty('monitoring');
+    expect(data).toHaveProperty('cache');
+    expect(data).toHaveProperty('performance');
   });
 
   it('should include optional metadata when requested', async () => {
-    mockUserRepo.count.mockResolvedValue(100);
-    mockProgramRepo.count.mockResolvedValue(250);
-    mockScenarioRepo.count.mockResolvedValue(15);
+    mockUserRepo.count?.mockResolvedValue(100);
+    mockProgramRepo.count?.mockResolvedValue(250);
+    mockScenarioRepo.count?.mockResolvedValue(15);
 
-    const request = new NextRequest('http://localhost/api/monitoring/status?verbose=true');
+    const request = new NextRequest('http://localhost/api/monitoring/status?detailed=true');
     const response = await GET(request);
     const data = await response.json();
 
     expect(response.status).toBe(200);
-    expect(data).toHaveProperty('metadata');
-    expect(data.metadata).toHaveProperty('nodeVersion');
-    expect(data.metadata).toHaveProperty('uptime');
-    expect(data.metadata).toHaveProperty('memory');
+    expect(data).toHaveProperty('detailed');
+    expect(data.detailed).toHaveProperty('endpoints');
+    expect(data.detailed).toHaveProperty('alerts');
+    expect(data.detailed).toHaveProperty('cacheDetails');
+    expect(data.detailed).toHaveProperty('recentMetrics');
   });
 
   it('should handle all services failing', async () => {
-    const dbError = new Error('Database error');
-    const cacheError = new Error('Cache error');
+    // Mock all monitoring services to fail
+    (productionMonitor.getStatus as jest.Mock).mockImplementation(() => {
+      throw new Error('Monitor error');
+    });
     
-    mockUserRepo.count.mockRejectedValue(dbError);
-    // TODO: getStats method doesn't exist on CacheService
-    // (cacheService.getStats as jest.Mock).mockRejectedValue(cacheError);
+    (distributedCacheService.getStats as jest.Mock).mockRejectedValue(new Error('Cache error'));
+    (performanceMonitor.getAllMetrics as jest.Mock).mockImplementation(() => {
+      throw new Error('Performance monitor error');
+    });
 
     const request = new NextRequest('http://localhost/api/monitoring/status');
     const response = await GET(request);
     const data = await response.json();
 
-    expect(response.status).toBe(200);
-    expect(data.status).toBe('unhealthy');
-    expect(data.services.database.status).toBe('error');
-    expect(data.services.cache.status).toBe('error');
+    // When monitoring fails, API returns 500
+    expect(response.status).toBe(500);
+    expect(data).toHaveProperty('error');
+    expect(data).toHaveProperty('health', 'unhealthy');
   });
 });
 

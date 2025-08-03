@@ -9,20 +9,22 @@ import { cleanup } from '@testing-library/react';
 process.env.NEXT_PUBLIC_API_URL = 'http://localhost:3000';
 // NODE_ENV is already set by Jest, no need to override
 
-// 修復 window.matchMedia
-Object.defineProperty(window, 'matchMedia', {
-  writable: true,
-  value: jest.fn().mockImplementation(query => ({
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: jest.fn(),
-    removeListener: jest.fn(),
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
-    dispatchEvent: jest.fn(),
-  })),
-});
+// 修復 window.matchMedia - only if window is defined (not in Node environment)
+if (typeof window !== 'undefined') {
+  Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: jest.fn().mockImplementation(query => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: jest.fn(),
+      removeListener: jest.fn(),
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    })),
+  });
+}
 
 // 修復 ResizeObserver
 global.ResizeObserver = jest.fn().mockImplementation(() => ({

@@ -54,11 +54,14 @@ jest.mock('react-i18next', () => ({
   })
 }));
 
+// Import console mock helper
+import { mockConsoleError } from '@/test-utils/helpers/console';
+
 // Mock console methods to reduce noise in tests
 const consoleSpy = {
-  log: jest.spyOn(console, 'log').mockImplementation(),
-  error: jest.spyOn(console, 'error').mockImplementation()
+  log: jest.spyOn(console, 'log').mockImplementation()
 };
+const mockConsoleErrorFn = mockConsoleError();
 
 describe('LoginPage', () => {
   const mockPush = jest.fn();
@@ -73,7 +76,6 @@ describe('LoginPage', () => {
 
   afterEach(() => {
     consoleSpy.log.mockClear();
-    consoleSpy.error.mockClear();
   });
 
   it('should render login page with correct title and subtitle', () => {
@@ -313,13 +315,16 @@ describe('LoginPage', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Network error occurred')).toBeInTheDocument();
-      expect(consoleSpy.error).toHaveBeenCalledWith('Login error:', expect.any(Error));
+      expect(mockConsoleErrorFn).toHaveBeenCalledWith('Login error:', expect.any(Error));
     });
   });
 
   it('should show loading state during login', async () => {
+    let resolveLogin: ((value: any) => void) | null = null;
     mockLogin.mockImplementation(() => 
-      new Promise(resolve => setTimeout(() => resolve({ success: true, user: {} }), 100))
+      new Promise(resolve => {
+        resolveLogin = resolve;
+      })
     );
 
     render(<LoginPage />);
@@ -327,7 +332,15 @@ describe('LoginPage', () => {
     const loginButton = screen.getByText('Login');
     loginButton.click();
 
-    expect(screen.getByText('Loading...')).toBeInTheDocument();
+    // The mock LoginForm shows loading state differently
+    await waitFor(() => {
+      expect(screen.getByText('Loading...')).toBeInTheDocument();
+    });
+
+    // Resolve the login promise
+    if (resolveLogin) {
+      resolveLogin({ success: true, user: {} });
+    }
 
     await waitFor(() => {
       expect(screen.queryByText('Loading...')).not.toBeInTheDocument();

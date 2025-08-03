@@ -1,48 +1,55 @@
 import { NextRequest } from 'next/server';
-import { GET } from '../route';
 
 // Mock auth utils
-const mockGetAuthFromRequest = jest.fn();
 jest.mock('@/lib/auth/auth-utils', () => ({
-  getAuthFromRequest: mockGetAuthFromRequest,
+  getAuthFromRequest: jest.fn(),
 }));
 
 // Mock cache service
-const mockCacheGet = jest.fn();
-const mockCacheSet = jest.fn();
 jest.mock('@/lib/cache/cache-service', () => ({
   cacheService: {
-    get: mockCacheGet,
-    set: mockCacheSet,
+    get: jest.fn(),
+    set: jest.fn(),
   },
 }));
+
+// Create stable mock repositories
+const mockProgramRepository = {
+  findByUser: jest.fn(),
+};
+
+const mockTaskRepository = {
+  findByProgram: jest.fn(),
+};
+
+const mockScenarioRepository = {
+  findById: jest.fn(),
+};
 
 // Mock repositories
-const mockFindByUser = jest.fn();
-const mockFindByProgram = jest.fn();
-const mockFindById = jest.fn();
-
 jest.mock('@/lib/repositories/base/repository-factory', () => ({
   repositoryFactory: {
-    getProgramRepository: () => ({
-      findByUser: mockFindByUser,
-    }),
-    getTaskRepository: () => ({
-      findByProgram: mockFindByProgram,
-    }),
-    getScenarioRepository: () => ({
-      findById: mockFindById,
-    }),
+    getProgramRepository: () => mockProgramRepository,
+    getTaskRepository: () => mockTaskRepository,
+    getScenarioRepository: () => mockScenarioRepository,
   },
 }));
 
+import { GET } from '../route';
+import { getAuthFromRequest } from '@/lib/auth/auth-utils';
+import { cacheService } from '@/lib/cache/cache-service';
+import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
+
 describe('GET /api/discovery/my-programs', () => {
+  const mockedGetAuthFromRequest = getAuthFromRequest as jest.MockedFunction<typeof getAuthFromRequest>;
+  const mockedCacheService = cacheService as jest.Mocked<typeof cacheService>;
+
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
   it('returns 401 when not authenticated', async () => {
-    mockGetAuthFromRequest.mockResolvedValue(null);
+    mockedGetAuthFromRequest.mockResolvedValue(null);
 
     const request = new NextRequest('http://localhost:3000/api/discovery/my-programs');
     const response = await GET(request);
@@ -55,7 +62,7 @@ describe('GET /api/discovery/my-programs', () => {
   });
 
   it('returns cached data when available', async () => {
-    mockGetAuthFromRequest.mockResolvedValue({
+    mockedGetAuthFromRequest.mockResolvedValue({
       id: 'user123',
       email: 'test@example.com',
     });
@@ -63,7 +70,7 @@ describe('GET /api/discovery/my-programs', () => {
     const cachedData = [
       { id: 'scenario1', title: 'Cached Scenario' },
     ];
-    mockCacheGet.mockResolvedValue(cachedData);
+    mockedCacheService.get.mockResolvedValue(cachedData);
 
     const request = new NextRequest('http://localhost:3000/api/discovery/my-programs');
     const response = await GET(request);
@@ -71,17 +78,17 @@ describe('GET /api/discovery/my-programs', () => {
 
     expect(response.status).toBe(200);
     expect(data).toEqual(cachedData);
-    expect(mockCacheGet).toHaveBeenCalledWith('discovery-my-scenarios-test@example.com');
-    expect(mockFindByUser).not.toHaveBeenCalled();
+    expect(mockedCacheService.get).toHaveBeenCalledWith('discovery-my-scenarios-test@example.com');
+    expect(mockProgramRepository.findByUser).not.toHaveBeenCalled();
   });
 
   it('returns empty array when user has no discovery programs', async () => {
-    mockGetAuthFromRequest.mockResolvedValue({
+    mockedGetAuthFromRequest.mockResolvedValue({
       id: 'user123',
       email: 'test@example.com',
     });
-    mockCacheGet.mockResolvedValue(null);
-    mockFindByUser.mockResolvedValue([]);
+    mockedCacheService.get.mockResolvedValue(null);
+    mockProgramRepository.findByUser.mockResolvedValue([]);
 
     const request = new NextRequest('http://localhost:3000/api/discovery/my-programs');
     const response = await GET(request);
@@ -89,7 +96,7 @@ describe('GET /api/discovery/my-programs', () => {
 
     expect(response.status).toBe(200);
     expect(data).toEqual([]);
-    expect(mockCacheSet).toHaveBeenCalledWith(
+    expect(mockedCacheService.set).toHaveBeenCalledWith(
       'discovery-my-scenarios-test@example.com',
       [],
       { ttl: 30000 }
@@ -97,11 +104,11 @@ describe('GET /api/discovery/my-programs', () => {
   });
 
   it('filters and returns only discovery programs with scenario details', async () => {
-    mockGetAuthFromRequest.mockResolvedValue({
+    mockedGetAuthFromRequest.mockResolvedValue({
       id: 'user123',
       email: 'test@example.com',
     });
-    mockCacheGet.mockResolvedValue(null);
+    mockedCacheService.get.mockResolvedValue(null);
 
     const mockPrograms = [
       {
@@ -147,11 +154,11 @@ describe('GET /api/discovery/my-programs', () => {
       { id: 'task4', status: 'pending' },
     ];
 
-    mockFindByUser.mockResolvedValue(mockPrograms);
-    mockFindById.mockImplementation((id: string) => 
+    mockProgramRepository.findByUser.mockResolvedValue(mockPrograms);
+    mockScenarioRepository.findById.mockImplementation((id: string) => 
       Promise.resolve(mockScenarios[id as keyof typeof mockScenarios] || null)
     );
-    mockFindByProgram.mockResolvedValue(mockTasks);
+    mockTaskRepository.findByProgram.mockResolvedValue(mockTasks);
 
     const request = new NextRequest('http://localhost:3000/api/discovery/my-programs');
     const response = await GET(request);
@@ -182,7 +189,7 @@ describe('GET /api/discovery/my-programs', () => {
       completed: 0,
     });
 
-    expect(mockCacheSet).toHaveBeenCalledWith(
+    expect(mockedCacheService.set).toHaveBeenCalledWith(
       'discovery-my-scenarios-test@example.com',
       expect.any(Array),
       { ttl: 60000 }
@@ -190,13 +197,13 @@ describe('GET /api/discovery/my-programs', () => {
   });
 
   it('handles scenario loading errors gracefully', async () => {
-    mockGetAuthFromRequest.mockResolvedValue({
+    mockedGetAuthFromRequest.mockResolvedValue({
       id: 'user123',
       email: 'test@example.com',
     });
-    mockCacheGet.mockResolvedValue(null);
+    mockedCacheService.get.mockResolvedValue(null);
 
-    mockFindByUser.mockResolvedValue([
+    mockProgramRepository.findByUser.mockResolvedValue([
       {
         id: 'prog1',
         scenarioId: 'discovery-career-1',
@@ -205,7 +212,7 @@ describe('GET /api/discovery/my-programs', () => {
       },
     ]);
 
-    mockFindById.mockRejectedValue(new Error('Scenario not found'));
+    mockScenarioRepository.findById.mockRejectedValue(new Error('Scenario not found'));
 
     const request = new NextRequest('http://localhost:3000/api/discovery/my-programs');
     const response = await GET(request);
@@ -216,17 +223,17 @@ describe('GET /api/discovery/my-programs', () => {
   });
 
   it('calculates latest activity correctly', async () => {
-    mockGetAuthFromRequest.mockResolvedValue({
+    mockedGetAuthFromRequest.mockResolvedValue({
       id: 'user123',
       email: 'test@example.com',
     });
-    mockCacheGet.mockResolvedValue(null);
+    mockedCacheService.get.mockResolvedValue(null);
 
     const now = new Date();
     const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);
     const lastWeek = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
 
-    mockFindByUser.mockResolvedValue([
+    mockProgramRepository.findByUser.mockResolvedValue([
       {
         id: 'prog1',
         scenarioId: 'discovery-career-1',
@@ -238,12 +245,12 @@ describe('GET /api/discovery/my-programs', () => {
       },
     ]);
 
-    mockFindById.mockResolvedValue({
+    mockScenarioRepository.findById.mockResolvedValue({
       id: 'discovery-career-1',
       title: { en: 'Career Path' },
     });
 
-    mockFindByProgram.mockResolvedValue([
+    mockTaskRepository.findByProgram.mockResolvedValue([
       { id: 'task1', status: 'completed', completedAt: yesterday.toISOString() },
       { id: 'task2', status: 'active', startedAt: now.toISOString() },
     ]);
@@ -260,12 +267,12 @@ describe('GET /api/discovery/my-programs', () => {
   });
 
   it('handles repository errors', async () => {
-    mockGetAuthFromRequest.mockResolvedValue({
+    mockedGetAuthFromRequest.mockResolvedValue({
       id: 'user123',
       email: 'test@example.com',
     });
-    mockCacheGet.mockResolvedValue(null);
-    mockFindByUser.mockRejectedValue(new Error('Database error'));
+    mockedCacheService.get.mockResolvedValue(null);
+    mockProgramRepository.findByUser.mockRejectedValue(new Error('Database error'));
 
     const request = new NextRequest('http://localhost:3000/api/discovery/my-programs');
     const response = await GET(request);
