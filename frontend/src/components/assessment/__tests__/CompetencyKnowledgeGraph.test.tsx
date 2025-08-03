@@ -48,6 +48,12 @@ jest.mock('d3', () => ({
   forceCollide: jest.fn().mockReturnValue({
     radius: jest.fn().mockReturnThis(),
   }),
+  forceRadial: jest.fn().mockReturnValue({
+    radius: jest.fn().mockReturnThis(),
+    x: jest.fn().mockReturnThis(),
+    y: jest.fn().mockReturnThis(),
+    strength: jest.fn().mockReturnThis(),
+  }),
   zoom: jest.fn().mockReturnValue({
     scaleExtent: jest.fn().mockReturnThis(),
     on: jest.fn().mockReturnThis(),

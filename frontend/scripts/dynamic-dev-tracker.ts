@@ -57,20 +57,31 @@ class DynamicDevTracker {
 
     // 測試結果
     try {
-      const testResult = execSync('npm run test:ci -- --json --outputFile=test-results.json', { 
+      // 執行測試並捕獲輸出（不使用 JSON，因為失敗時無法生成）
+      const testOutput = execSync('npm run test:ci 2>&1 || true', { 
         encoding: 'utf-8',
-        stdio: 'pipe' 
+        stdio: 'pipe',
+        maxBuffer: 10 * 1024 * 1024 // 10MB buffer
       });
       
-      if (fs.existsSync('test-results.json')) {
-        const results = JSON.parse(fs.readFileSync('test-results.json', 'utf-8'));
-        metrics.testsRun = results.numTotalTests || 0;
-        metrics.testsPassed = results.numPassedTests || 0;
-        metrics.testsFailed = results.numFailedTests || 0;
-        fs.unlinkSync('test-results.json');
+      // 解析測試輸出
+      const testsMatch = testOutput.match(/Tests:\s+(\d+) failed(?:, (\d+) skipped)?, (\d+) passed, (\d+) total/);
+      if (testsMatch) {
+        metrics.testsFailed = parseInt(testsMatch[1]) || 0;
+        metrics.testsPassed = parseInt(testsMatch[3]) || 0;
+        metrics.testsRun = parseInt(testsMatch[4]) || 0;
+      } else {
+        // 備用：檢查是否所有測試都通過
+        const allPassMatch = testOutput.match(/Tests:\s+(\d+) passed, (\d+) total/);
+        if (allPassMatch) {
+          metrics.testsPassed = parseInt(allPassMatch[1]) || 0;
+          metrics.testsRun = parseInt(allPassMatch[2]) || 0;
+          metrics.testsFailed = 0;
+        }
       }
-    } catch {
-      // 測試失敗
+    } catch (error) {
+      // 即使命令失敗也嘗試解析輸出
+      console.error('測試執行錯誤，但會嘗試解析結果');
       metrics.testsFailed = 1;
     }
 
