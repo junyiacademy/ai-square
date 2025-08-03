@@ -46,7 +46,7 @@ const customJestConfig = {
   moduleNameMapper: {
     '^jose$': '<rootDir>/__mocks__/jose.js',
     '^next/server$': '<rootDir>/__mocks__/next/server.js',
-    '^d3$': '<rootDir>/__mocks__/d3.js',
+    '^d3$': '<rootDir>/src/__mocks__/d3.ts',
     '^@/(.*)$': '<rootDir>/src/$1',
   },
 }

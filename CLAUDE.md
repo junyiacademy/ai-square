@@ -269,6 +269,142 @@ For a new feature:
 
 ✅ One test at a time → Make it pass → Improve structure → Always run tests
 
+## 🚀 High-Efficiency Testing Strategy
+
+### 🎯 Core Principle: Quality Over Quantity
+**Goal**: Achieve 90%+ coverage with ALL tests passing, not just high coverage with failing tests.
+
+### 📊 Understanding the Relationship
+```
+TypeScript (tsc) → Compile-time type safety → ✅ 0 errors
+ESLint → Code quality & style → ✅ 0 warnings  
+Jest Tests → Runtime behavior validation → ❌ 432 failures
+
+Coverage ≠ Quality: Failed tests provide coverage but no confidence
+```
+
+### 🔄 The Problem with Rush Testing
+```
+Write tests quickly → Coverage ↑ → Tests fail → Need fixes → Waste time
+```
+
+### ✅ The Efficient Approach
+```
+1. Build test infrastructure → 2. Fix systematically → 3. Write quality tests → 4. Maintain green
+```
+
+### 📋 Implementation Strategy
+
+#### Phase 1: Test Infrastructure (2 hours)
+```typescript
+// Create centralized test utilities
+src/test-utils/
+├── setup.ts              // Global Jest configuration
+├── mocks/
+│   ├── d3.ts            // Centralized D3 mock
+│   ├── next-auth.ts     // Auth mock
+│   ├── repositories.ts  // Repository mocks
+│   └── i18n.ts         // Translation mocks
+└── helpers/
+    ├── render.tsx       // Custom render with providers
+    └── api.ts          // API test utilities
+```
+
+#### Phase 2: Fix Common Issues (3 hours)
+1. **D3.js errors**: Use centralized mock
+2. **Response.json errors**: Create API test template
+3. **React act() warnings**: Create async helpers
+4. **Translation errors**: Standardize i18n mocks
+
+#### Phase 3: Systematic Fixes
+```bash
+# Group by error type
+1. D3 chart tests (~10 files)
+2. API route tests (~50 files)  
+3. React component tests (~30 files)
+4. Other tests
+```
+
+#### Phase 4: Quality Test Patterns
+
+**❌ Bad: Coverage-focused**
+```typescript
+test('renders', () => {
+  render(<Component />);
+  // No assertions = useless test
+});
+```
+
+**✅ Good: Behavior-focused**
+```typescript
+test('displays error when form is invalid', async () => {
+  const { user } = renderWithProviders(<Form />);
+  
+  await user.click(screen.getByRole('button', { name: /submit/i }));
+  
+  expect(screen.getByRole('alert')).toHaveTextContent('Email is required');
+});
+```
+
+### 🏗️ Test Templates
+
+#### Component Test Template
+```typescript
+import { renderWithProviders, screen, waitFor } from '@/test-utils';
+
+describe('ComponentName', () => {
+  it('should handle user interaction correctly', async () => {
+    const mockHandler = jest.fn();
+    renderWithProviders(<Component onSubmit={mockHandler} />);
+    
+    await waitFor(() => {
+      expect(screen.getByRole('button')).toBeEnabled();
+    });
+    
+    await userEvent.click(screen.getByRole('button'));
+    expect(mockHandler).toHaveBeenCalledWith(expect.any(Object));
+  });
+});
+```
+
+#### API Route Test Template
+```typescript
+import { createMockRequest, mockSession } from '@/test-utils';
+
+describe('GET /api/resource', () => {
+  it('should return data for authenticated user', async () => {
+    mockSession({ user: { email: 'test@example.com' } });
+    
+    const request = createMockRequest('/api/resource');
+    const response = await GET(request);
+    const data = await response.json();
+    
+    expect(response.status).toBe(200);
+    expect(data).toMatchObject({
+      success: true,
+      data: expect.any(Array)
+    });
+  });
+});
+```
+
+### 📈 Expected Outcomes
+- **Old way**: 100 tests → 50 fail → fix later → 20 hours total
+- **New way**: Infrastructure (2h) + Fix existing (4h) + Quality tests (8h) → 14 hours total
+
+### 🎯 Key Principles
+1. **One source of truth**: Centralize all mocks and helpers
+2. **Test behavior, not implementation**: Focus on user outcomes
+3. **Maintain green**: Fix immediately, don't accumulate debt
+4. **Document through tests**: Clear test names explain features
+
+### 🚨 Pre-Test Checklist
+- [ ] Does this test verify actual behavior?
+- [ ] Will it catch real bugs?
+- [ ] Is it maintainable?
+- [ ] Does it use shared utilities?
+- [ ] Will it stay green?
+
 ## 🔧 TypeScript Error Fix Guidelines
 
 ### 🚨 Key Principle: Zero-Risk Fix Strategy

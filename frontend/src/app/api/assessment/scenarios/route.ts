@@ -231,7 +231,7 @@ export async function GET(request: NextRequest) {
       } : undefined
     }));
     
-    return Response.json({ 
+    return NextResponse.json({ 
       success: true,
       data: {
         scenarios: scenariosWithProgress,
@@ -240,7 +240,7 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error('Error in assessment scenarios API:', error);
-    return Response.json(
+    return NextResponse.json(
       { success: false, error: 'Failed to load assessment scenarios' },
       { status: 500 }
     );

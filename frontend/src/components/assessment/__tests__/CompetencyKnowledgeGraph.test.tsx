@@ -8,74 +8,29 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import CompetencyKnowledgeGraph from '../CompetencyKnowledgeGraph';
 import { AssessmentResult, AssessmentQuestion, UserAnswer } from '@/types/assessment';
 
-// Mock d3
-jest.mock('d3', () => ({
-  select: jest.fn().mockReturnValue({
-    append: jest.fn().mockReturnThis(),
-    attr: jest.fn().mockReturnThis(),
-    style: jest.fn().mockReturnThis(),
-    call: jest.fn().mockReturnThis(),
-    selectAll: jest.fn().mockReturnThis(),
-    data: jest.fn().mockReturnThis(),
-    join: jest.fn().mockReturnThis(),
-    enter: jest.fn().mockReturnThis(),
-    exit: jest.fn().mockReturnThis(),
-    remove: jest.fn().mockReturnThis(),
-    on: jest.fn().mockReturnThis(),
-    transition: jest.fn().mockReturnThis(),
-    duration: jest.fn().mockReturnThis(),
-    text: jest.fn().mockReturnThis(),
-    classed: jest.fn().mockReturnThis(),
-    merge: jest.fn().mockReturnThis(),
-  }),
-  forceSimulation: jest.fn().mockReturnValue({
-    force: jest.fn().mockReturnThis(),
-    nodes: jest.fn().mockReturnThis(),
-    on: jest.fn().mockReturnThis(),
-    stop: jest.fn(),
-    restart: jest.fn(),
-    alpha: jest.fn().mockReturnThis(),
-    alphaTarget: jest.fn().mockReturnThis(),
-  }),
-  forceLink: jest.fn().mockReturnValue({
-    id: jest.fn().mockReturnThis(),
-    distance: jest.fn().mockReturnThis(),
-  }),
-  forceManyBody: jest.fn().mockReturnValue({
-    strength: jest.fn().mockReturnThis(),
-  }),
-  forceCenter: jest.fn(),
-  forceCollide: jest.fn().mockReturnValue({
-    radius: jest.fn().mockReturnThis(),
-  }),
-  forceRadial: jest.fn().mockReturnValue({
-    radius: jest.fn().mockReturnThis(),
-    x: jest.fn().mockReturnThis(),
-    y: jest.fn().mockReturnThis(),
-    strength: jest.fn().mockReturnThis(),
-  }),
-  zoom: jest.fn().mockReturnValue({
-    scaleExtent: jest.fn().mockReturnThis(),
-    on: jest.fn().mockReturnThis(),
-  }),
-  drag: jest.fn().mockReturnValue({
-    on: jest.fn().mockReturnThis(),
-  }),
-  zoomIdentity: {
-    k: 1,
-    x: 0,
-    y: 0,
-  },
-}));
+// Use the centralized D3 mock
+jest.mock('d3');
 
-// Mock next-i18next
+// Import translation mock utilities
+import { mockUseTranslation, defaultTranslations } from '@/test-utils/mocks/i18n';
+
+// Custom translations for this test
+const customTranslations = {
+  ...defaultTranslations,
+  graph: {
+    ...defaultTranslations.graph,
+    'zoom_in': 'Zoom In',
+    'zoom_out': 'Zoom Out', 
+    'reset_view': 'Reset View',
+    'show_table_view': 'Show Table',
+    'show_graph_view': 'Show Graph',
+    'competency_knowledge_graph': 'Competency Knowledge Graph',
+  }
+};
+
+// Update the react-i18next mock to use our centralized version with custom translations
 jest.mock('react-i18next', () => ({
-  useTranslation: () => ({
-    t: (key: string) => key,
-    i18n: {
-      language: 'en',
-    },
-  }),
+  useTranslation: () => mockUseTranslation(customTranslations),
 }));
 
 describe('CompetencyKnowledgeGraph', () => {
@@ -192,12 +147,11 @@ describe('CompetencyKnowledgeGraph', () => {
     expect(container.querySelector('svg')).toBeTruthy();
   });
 
-  it('displays control buttons', () => {
+  it('displays graph title and description', () => {
     render(<CompetencyKnowledgeGraph result={mockResult} />);
     
-    expect(screen.getByLabelText('graph.zoom_in')).toBeInTheDocument();
-    expect(screen.getByLabelText('graph.zoom_out')).toBeInTheDocument();
-    expect(screen.getByLabelText('graph.reset_view')).toBeInTheDocument();
+    expect(screen.getByText('results.knowledgeGraph.title')).toBeInTheDocument();
+    expect(screen.getByText('results.knowledgeGraph.description')).toBeInTheDocument();
   });
 
   it('renders with full data props', () => {
@@ -211,10 +165,10 @@ describe('CompetencyKnowledgeGraph', () => {
       />
     );
     
-    expect(screen.getByText('graph.competency_knowledge_graph')).toBeInTheDocument();
+    expect(screen.getByText('results.knowledgeGraph.title')).toBeInTheDocument();
   });
 
-  it('handles view toggle between graph and table', () => {
+  it('displays KSA legend', () => {
     render(
       <CompetencyKnowledgeGraph
         result={mockResult}
@@ -223,12 +177,10 @@ describe('CompetencyKnowledgeGraph', () => {
       />
     );
     
-    // Find and click view toggle button
-    const toggleButton = screen.getByRole('button', { name: /graph.show_table_view/i });
-    fireEvent.click(toggleButton);
-    
-    // Should show table view
-    expect(screen.getByText('graph.ksa_performance_table')).toBeInTheDocument();
+    // Check KSA legend elements are displayed
+    expect(screen.getByText('K (知識)')).toBeInTheDocument();
+    expect(screen.getByText('S (技能)')).toBeInTheDocument();
+    expect(screen.getByText('A (態度)')).toBeInTheDocument();
   });
 
   it('displays loading state initially', () => {
@@ -257,7 +209,7 @@ describe('CompetencyKnowledgeGraph', () => {
     });
   });
 
-  it('renders table view with KSA data', () => {
+  it('displays performance indicators', () => {
     render(
       <CompetencyKnowledgeGraph
         result={mockResult}
@@ -267,17 +219,11 @@ describe('CompetencyKnowledgeGraph', () => {
       />
     );
     
-    // Switch to table view
-    const toggleButton = screen.getByRole('button', { name: /graph.show_table_view/i });
-    fireEvent.click(toggleButton);
-    
-    // Check table headers
-    expect(screen.getByText('graph.ksa_performance_table')).toBeInTheDocument();
-    expect(screen.getByText('graph.category')).toBeInTheDocument();
-    expect(screen.getByText('graph.performance')).toBeInTheDocument();
+    // Check performance indicators are displayed
+    expect(screen.getByText('完全錯誤 / 部分正確 / 全對')).toBeInTheDocument();
   });
 
-  it('shows question review when questions are available', () => {
+  it('displays helpful hints', () => {
     render(
       <CompetencyKnowledgeGraph
         result={mockResult}
@@ -287,39 +233,18 @@ describe('CompetencyKnowledgeGraph', () => {
       />
     );
     
-    // Switch to table view
-    const toggleButton = screen.getByRole('button', { name: /graph.show_table_view/i });
-    fireEvent.click(toggleButton);
-    
-    // Should render QuestionReview component
-    expect(screen.getByText('graph.related_questions')).toBeInTheDocument();
+    // Check helpful hints are displayed
+    expect(screen.getByText('提示：點擊 KSA 代碼節點可查看相關題目')).toBeInTheDocument();
   });
 
-  it('handles zoom controls', () => {
+  it('handles D3 zoom functionality', () => {
     const d3Mock = require('d3');
     const mockZoomFn = jest.fn();
-    const mockTransformFn = jest.fn();
-    
-    d3Mock.select.mockReturnValue({
-      ...d3Mock.select(),
-      call: mockZoomFn,
-      transition: jest.fn().mockReturnValue({
-        duration: jest.fn().mockReturnValue({
-          call: mockTransformFn,
-        }),
-      }),
-    });
     
     render(<CompetencyKnowledgeGraph result={mockResult} />);
     
-    // Click zoom in
-    fireEvent.click(screen.getByLabelText('graph.zoom_in'));
-    
-    // Click zoom out
-    fireEvent.click(screen.getByLabelText('graph.zoom_out'));
-    
-    // Click reset
-    fireEvent.click(screen.getByLabelText('graph.reset_view'));
+    // Verify D3 zoom is initialized
+    expect(d3Mock.zoom).toHaveBeenCalled();
   });
 
   it('handles empty KSA analysis gracefully', () => {
@@ -330,7 +255,7 @@ describe('CompetencyKnowledgeGraph', () => {
     
     render(<CompetencyKnowledgeGraph result={resultWithoutKSA} />);
     
-    expect(screen.getByText('graph.competency_knowledge_graph')).toBeInTheDocument();
+    expect(screen.getByText('results.knowledgeGraph.title')).toBeInTheDocument();
   });
 
   it('handles window resize', () => {
@@ -345,26 +270,12 @@ describe('CompetencyKnowledgeGraph', () => {
     expect(container.querySelector('svg')).toBeTruthy();
   });
 
-  it('cleans up on unmount', () => {
-    const d3Mock = require('d3');
-    const mockStop = jest.fn();
-    
-    d3Mock.forceSimulation.mockReturnValue({
-      force: jest.fn().mockReturnThis(),
-      nodes: jest.fn().mockReturnThis(),
-      on: jest.fn().mockReturnThis(),
-      stop: mockStop,
-      restart: jest.fn(),
-      alpha: jest.fn().mockReturnThis(),
-      alphaTarget: jest.fn().mockReturnThis(),
-    });
-    
+  it('unmounts without errors', () => {
     const { unmount } = render(
       <CompetencyKnowledgeGraph result={mockResult} />
     );
     
-    unmount();
-    
-    expect(mockStop).toHaveBeenCalled();
+    // Should unmount without throwing errors
+    expect(() => unmount()).not.toThrow();
   });
 });

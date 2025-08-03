@@ -1,10 +1,9 @@
-// Optional: configure or set up a testing framework before each test.
-// If you delete this file, remove `setupFilesAfterEnv` from `jest.config.js`
-
-// Used for __tests__/testing-library.js
-// Learn more: https://github.com/testing-library/jest-dom
+// Jest setup file - imports our centralized test utilities
 import '@testing-library/jest-dom'
 import 'jest-extended'
+
+// Import our centralized test setup
+import './src/test-utils/setup'
 
 // Add TextEncoder/TextDecoder polyfills for Node.js environment
 import { TextEncoder, TextDecoder } from 'util'
@@ -27,51 +26,30 @@ jest.mock('next/navigation', () => ({
   usePathname: () => '/',
 }))
 
+// Import centralized i18n mock instead of duplicating here
+const { createTranslationMock } = require('./src/test-utils/mocks/i18n')
+
 // Mock react-i18next
 jest.mock('react-i18next', () => ({
   useTranslation: (namespace) => ({
-    t: (key) => {
-      // Handle nested key translation
-      const translations = {
-        // Direct keys
-        'email': 'Email',
-        'password': 'Password',
-        'login': 'Login',
-        'loading': 'Signing in...',
-        'loginTitle': 'Sign in to AI Square',
-        
-        // Nested keys
-        'error.invalidCredentials': 'Invalid email or password',
-        'error.networkError': 'Network error, please try again',
-        'testAccounts.title': 'Test Accounts',
-        'testAccounts.student': 'Student: student@example.com / student123',
-        'testAccounts.teacher': 'Teacher: teacher@example.com / teacher123',
-        'testAccounts.admin': 'Admin: admin@example.com / admin123',
-        
-        // Auth namespace keys
-        'auth.email': 'Email',
-        'auth.password': 'Password',
-        'auth.login': 'Login',
-        'auth.loading': 'Signing in...',
-        'auth.loginTitle': 'Sign in to AI Square',
-        'auth.error.invalidCredentials': 'Invalid email or password',
-        'auth.error.networkError': 'Network error, please try again',
-        'auth.testAccounts.title': 'Test Accounts',
-        'auth.testAccounts.student': 'Student: student@example.com / student123',
-        'auth.testAccounts.teacher': 'Teacher: teacher@example.com / teacher123',
-        'auth.testAccounts.admin': 'Admin: admin@example.com / admin123',
-      }
-      return translations[key] || key
-    },
+    t: createTranslationMock(),
     i18n: {
       changeLanguage: jest.fn(),
       language: 'en',
+      languages: ['en', 'zh', 'es', 'pt', 'ar', 'id', 'th', 'ja', 'ko', 'fr', 'de', 'ru', 'it'],
+      isInitialized: true,
+      resolvedLanguage: 'en',
+      options: {},
     },
+    ready: true,
   }),
+  Trans: ({ children }) => children,
+  I18nextProvider: ({ children }) => children,
   initReactI18next: {
     type: '3rdParty',
     init: jest.fn(),
   },
+  withTranslation: () => (Component) => Component,
 }))
 
 // Mock i18next module

@@ -1,98 +1,11 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import KSAKnowledgeGraph from '../KSAKnowledgeGraph';
 import * as d3 from 'd3';
+import KSAKnowledgeGraph from '../KSAKnowledgeGraph';
 
-// Mock D3
-jest.mock('d3', () => ({
-  select: jest.fn(() => ({
-    selectAll: jest.fn(() => ({
-      remove: jest.fn()
-    })),
-    attr: jest.fn(() => ({
-      attr: jest.fn(() => ({
-        attr: jest.fn()
-      }))
-    })),
-    append: jest.fn(() => ({
-      selectAll: jest.fn(() => ({
-        data: jest.fn(() => ({
-          enter: jest.fn(() => ({
-            append: jest.fn(() => ({
-              attr: jest.fn(() => ({
-                attr: jest.fn(() => ({
-                  attr: jest.fn(() => ({
-                    attr: jest.fn()
-                  }))
-                }))
-              })),
-              style: jest.fn(),
-              on: jest.fn(),
-              call: jest.fn()
-            }))
-          }))
-        }))
-      })),
-      append: jest.fn()
-    })),
-    call: jest.fn(),
-    on: jest.fn(),
-    transition: jest.fn(() => ({
-      duration: jest.fn(() => ({
-        call: jest.fn()
-      })),
-      call: jest.fn()
-    }))
-  })),
-  forceSimulation: jest.fn(() => ({
-    force: jest.fn(() => ({
-      force: jest.fn(() => ({
-        force: jest.fn(() => ({
-          force: jest.fn(),
-          on: jest.fn(),
-          stop: jest.fn(),
-          alphaTarget: jest.fn(() => ({
-            restart: jest.fn()
-          }))
-        }))
-      }))
-    })),
-    on: jest.fn(),
-    stop: jest.fn()
-  })),
-  forceLink: jest.fn(() => ({
-    id: jest.fn(() => ({
-      distance: jest.fn()
-    }))
-  })),
-  forceManyBody: jest.fn(() => ({
-    strength: jest.fn()
-  })),
-  forceCenter: jest.fn(),
-  forceCollide: jest.fn(() => ({
-    radius: jest.fn()
-  })),
-  drag: jest.fn(() => ({
-    on: jest.fn(() => ({
-      on: jest.fn(() => ({
-        on: jest.fn()
-      }))
-    }))
-  })),
-  zoom: jest.fn(() => ({
-    scaleExtent: jest.fn(() => ({
-      on: jest.fn()
-    })),
-    transform: jest.fn(),
-    scaleBy: jest.fn()
-  })),
-  zoomIdentity: {
-    translate: jest.fn(() => ({
-      scale: jest.fn()
-    }))
-  }
-}));
+// Use the centralized D3 mock
+jest.mock('d3');
 
 describe('KSAKnowledgeGraph', () => {
   const mockKsaScores = {
