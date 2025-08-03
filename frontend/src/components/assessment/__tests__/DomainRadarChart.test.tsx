@@ -47,19 +47,23 @@ describe('DomainRadarChart', () => {
   const mockData: RadarChartData[] = [
     {
       domain: 'Engaging with AI',
-      score: 85
+      score: 85,
+      fullMark: 100
     },
     {
       domain: 'Creating with AI',
-      score: 75
+      score: 75,
+      fullMark: 100
     },
     {
       domain: 'Managing AI',
-      score: 90
+      score: 90,
+      fullMark: 100
     },
     {
       domain: 'Designing AI',
-      score: 70
+      score: 70,
+      fullMark: 100
     }
   ];
 
@@ -118,7 +122,7 @@ describe('DomainRadarChart', () => {
 
   it('handles single data point', () => {
     const singleData: RadarChartData[] = [
-      { domain: 'Only Domain', score: 50 }
+      { domain: 'Only Domain', score: 50, fullMark: 100 }
     ];
     
     render(<DomainRadarChart data={singleData} />);
@@ -129,8 +133,8 @@ describe('DomainRadarChart', () => {
 
   it('handles maximum score values', () => {
     const maxScoreData: RadarChartData[] = [
-      { domain: 'Perfect Score', score: 100 },
-      { domain: 'Also Perfect', score: 100 }
+      { domain: 'Perfect Score', score: 100, fullMark: 100 },
+      { domain: 'Also Perfect', score: 100, fullMark: 100 }
     ];
     
     render(<DomainRadarChart data={maxScoreData} />);
@@ -141,8 +145,8 @@ describe('DomainRadarChart', () => {
 
   it('handles zero score values', () => {
     const zeroScoreData: RadarChartData[] = [
-      { domain: 'No Score', score: 0 },
-      { domain: 'Also No Score', score: 0 }
+      { domain: 'No Score', score: 0, fullMark: 100 },
+      { domain: 'Also No Score', score: 0, fullMark: 100 }
     ];
     
     render(<DomainRadarChart data={zeroScoreData} />);
@@ -159,10 +163,10 @@ describe('DomainRadarChart', () => {
 
   it('renders with mixed score values', () => {
     const mixedData: RadarChartData[] = [
-      { domain: 'Low', score: 25 },
-      { domain: 'Medium', score: 50 },
-      { domain: 'High', score: 75 },
-      { domain: 'Perfect', score: 100 }
+      { domain: 'Low', score: 25, fullMark: 100 },
+      { domain: 'Medium', score: 50, fullMark: 100 },
+      { domain: 'High', score: 75, fullMark: 100 },
+      { domain: 'Perfect', score: 100, fullMark: 100 }
     ];
     
     render(<DomainRadarChart data={mixedData} />);
@@ -173,8 +177,8 @@ describe('DomainRadarChart', () => {
 
   it('handles long domain names', () => {
     const longNameData: RadarChartData[] = [
-      { domain: 'This is a very long domain name that might wrap', score: 80 },
-      { domain: 'Another extremely long domain name for testing purposes', score: 60 }
+      { domain: 'This is a very long domain name that might wrap', score: 80, fullMark: 100 },
+      { domain: 'Another extremely long domain name for testing purposes', score: 60, fullMark: 100 }
     ];
     
     render(<DomainRadarChart data={longNameData} />);
@@ -195,9 +199,9 @@ describe('DomainRadarChart', () => {
 
   it('renders with decimal score values', () => {
     const decimalData: RadarChartData[] = [
-      { domain: 'Domain A', score: 85.5 },
-      { domain: 'Domain B', score: 72.3 },
-      { domain: 'Domain C', score: 91.7 }
+      { domain: 'Domain A', score: 85.5, fullMark: 100 },
+      { domain: 'Domain B', score: 72.3, fullMark: 100 },
+      { domain: 'Domain C', score: 91.7, fullMark: 100 }
     ];
     
     render(<DomainRadarChart data={decimalData} />);

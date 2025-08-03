@@ -74,68 +74,65 @@ jest.mock('react-i18next', () => ({
 
 describe('CompetencyKnowledgeGraph', () => {
   const mockResult: AssessmentResult = {
-    score: 80,
-    totalScore: 100,
+    overallScore: 80,
     correctAnswers: 16,
     totalQuestions: 20,
     domainScores: {
-      'Engaging_with_AI': 85,
-      'Creating_with_AI': 75,
-      'Managing_AI': 80,
-      'Designing_AI': 70,
+      engaging_with_ai: 85,
+      creating_with_ai: 75,
+      managing_with_ai: 80,
+      designing_with_ai: 70,
     },
-    competencyScores: {
-      'C1': 90,
-      'C2': 80,
-      'C3': 70,
-      'C4': 85,
-    },
-    ksaBreakdown: {
-      knowledge: { 
-        correct: 8, 
-        total: 10,
-        breakdown: {
-          'K1': { correct: 4, total: 5, questions: [0, 1, 2, 3, 4] },
-          'K2': { correct: 4, total: 5, questions: [5, 6, 7, 8, 9] },
-        }
+    timeSpentSeconds: 1800,
+    completedAt: new Date(),
+    level: 'intermediate',
+    recommendations: ['Focus on AI ethics', 'Practice with AI tools'],
+    ksaAnalysis: {
+      knowledge: {
+        score: 80,
+        strong: ['K1'],
+        weak: ['K2']
       },
-      skills: { 
-        correct: 5, 
-        total: 6,
-        breakdown: {
-          'S1': { correct: 3, total: 3, questions: [10, 11, 12] },
-          'S2': { correct: 2, total: 3, questions: [13, 14, 15] },
-        }
+      skills: {
+        score: 75,
+        strong: ['S1'],
+        weak: ['S2']
       },
-      attitudes: { 
-        correct: 3, 
-        total: 4,
-        breakdown: {
-          'A1': { correct: 2, total: 2, questions: [16, 17] },
-          'A2': { correct: 1, total: 2, questions: [18, 19] },
-        }
-      },
-    },
-    timestamp: new Date().toISOString(),
+      attitudes: {
+        score: 85,
+        strong: ['A1'],
+        weak: ['A2']
+      }
+    }
   };
 
   const mockQuestions: AssessmentQuestion[] = [
     {
-      id: 0,
+      id: '0',
       question: 'Test question 1',
-      options: ['A', 'B', 'C', 'D'],
-      correctAnswer: 0,
-      domain: 'Engaging_with_AI',
-      competency: 'C1',
-      ksaCategory: 'knowledge',
-      ksaCodes: ['K1'],
+      options: {
+        a: 'Option A',
+        b: 'Option B', 
+        c: 'Option C',
+        d: 'Option D'
+      },
+      correct_answer: 'a',
+      domain: 'engaging_with_ai',
+      difficulty: 'basic',
+      type: 'multiple_choice',
+      explanation: 'Test explanation',
+      ksa_mapping: {
+        knowledge: ['K1'],
+        skills: [],
+        attitudes: []
+      },
     },
   ];
 
   const mockUserAnswers: UserAnswer[] = [
     {
-      questionId: 0,
-      selectedOption: 0,
+      questionId: '0',
+      selectedAnswer: 'a',
       isCorrect: true,
       timeSpent: 30,
     },
@@ -319,10 +316,10 @@ describe('CompetencyKnowledgeGraph', () => {
     fireEvent.click(screen.getByLabelText('graph.reset_view'));
   });
 
-  it('handles empty KSA breakdown gracefully', () => {
+  it('handles empty KSA analysis gracefully', () => {
     const resultWithoutKSA = {
       ...mockResult,
-      ksaBreakdown: undefined,
+      ksaAnalysis: undefined,
     };
     
     render(<CompetencyKnowledgeGraph result={resultWithoutKSA} />);
