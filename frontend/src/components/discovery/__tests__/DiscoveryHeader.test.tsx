@@ -14,8 +14,8 @@ jest.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string) => {
       const translations: Record<string, string> = {
-        'discovery:title': '探索世界',
-        'discovery:subtitle': '發現你的 AI 學習路徑',
+        'title': '探索世界',
+        'subtitle': '發現你的 AI 學習路徑',
         'navigation:home': '首頁',
         'discovery:navigation.overview': '總覽',
         'discovery:navigation.evaluation': '評估',

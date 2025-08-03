@@ -7,7 +7,8 @@ import { NextRequest } from 'next/server';
 import { PATCH } from '../route';
 import { getServerSession } from '@/lib/auth/session';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import type { IUser, IProgram, ITask } from '@/types/unified-learning';
+import type { IProgram, ITask } from '@/types/unified-learning';
+import type { User } from '@/lib/repositories/interfaces';
 
 // Mock dependencies
 jest.mock('@/lib/auth/session');
@@ -33,15 +34,18 @@ describe('PATCH /api/discovery/programs/[programId]/tasks/[taskId]', () => {
     update: jest.Mock;
   };
 
-  const mockUser: IUser = {
+  const mockUser: User = {
     id: 'user-123',
     email: 'test@example.com',
     name: 'Test User',
     preferredLanguage: 'en',
+    level: 1,
+    totalXp: 0,
+    learningPreferences: {},
     onboardingCompleted: true,
-    isActive: true,
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
+    lastActiveAt: new Date()
   };
 
   const mockProgram: IProgram = {
@@ -432,6 +436,7 @@ describe('PATCH /api/discovery/programs/[programId]/tasks/[taskId]', () => {
   });
 
   it('should handle repository update method not available', async () => {
+    // @ts-expect-error - testing when update method is not available
     mockTaskRepo.update = undefined;
 
     const request = new NextRequest('http://localhost:3000/api/discovery/programs/program-123/tasks/task-123', {
