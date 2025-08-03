@@ -7,6 +7,7 @@ import { POST } from '../route';
 import { NextRequest } from 'next/server';
 import { Storage } from '@google-cloud/storage';
 import { VertexAI } from '@google-cloud/vertexai';
+import { mockConsoleError as createMockConsoleError } from '@/test-utils/helpers/console';
 
 // Mock Google Cloud Storage
 const mockDownload = jest.fn();
@@ -50,7 +51,7 @@ jest.mock('uuid', () => ({
 }));
 
 // Mock console
-const mockConsoleError = jest.spyOn(console, 'error').mockImplementation();
+const mockConsoleError = createMockConsoleError();
 
 describe('/api/chat', () => {
   const originalEnv = process.env;

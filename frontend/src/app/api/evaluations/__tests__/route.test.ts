@@ -7,13 +7,14 @@ import { GET, POST } from '../route';
 import { NextRequest } from 'next/server';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { getVertexAI } from '@/lib/ai/vertex-ai-service';
+import { mockConsoleError as createMockConsoleError } from '@/test-utils/helpers/console';
 
 // Mock dependencies
 jest.mock('@/lib/repositories/base/repository-factory');
 jest.mock('@/lib/ai/vertex-ai-service');
 
 // Mock console
-const mockConsoleError = jest.spyOn(console, 'error').mockImplementation();
+const mockConsoleError = createMockConsoleError();
 
 describe('/api/evaluations', () => {
   // Mock repositories
@@ -261,9 +262,9 @@ describe('/api/evaluations', () => {
 
     it('should update program progress when task is completed', async () => {
       const mockTasks = [
-        { id: 'task-1', status: 'completed', score: 90 },
-        { id: 'task-2', status: 'completed', score: 85 },
-        { id: 'task-3', status: 'active', score: 0 },
+        { id: 'task-1', status: 'completed', score: 90, programId: 'prog-456' },
+        { id: 'task-2', status: 'completed', score: 85, programId: 'prog-456' },
+        { id: 'task-3', status: 'active', score: 0, programId: 'prog-456', taskIndex: 2 },
       ];
 
       const mockProgram = {
@@ -301,9 +302,9 @@ describe('/api/evaluations', () => {
 
     it('should mark program as completed when all tasks done', async () => {
       const mockTasks = [
-        { id: 'task-1', status: 'completed', score: 90 },
-        { id: 'task-2', status: 'completed', score: 85 },
-        { id: 'task-3', status: 'completed', score: 92 },
+        { id: 'task-1', status: 'completed', score: 90, programId: 'prog-456' },
+        { id: 'task-2', status: 'completed', score: 85, programId: 'prog-456' },
+        { id: 'task-3', status: 'completed', score: 92, programId: 'prog-456', taskIndex: 2 },
       ];
 
       const mockProgram = {

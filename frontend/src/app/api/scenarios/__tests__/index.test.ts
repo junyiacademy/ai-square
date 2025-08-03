@@ -8,6 +8,7 @@ import { GET } from '../index/route';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { getServerSession } from '@/lib/auth/session';
 import { cacheService } from '@/lib/cache/cache-service';
+import { mockConsoleError as createMockConsoleError } from '@/test-utils/helpers/console';
 
 // Mock dependencies
 jest.mock('@/lib/repositories/base/repository-factory');
@@ -15,7 +16,7 @@ jest.mock('@/lib/auth/session');
 jest.mock('@/lib/cache/cache-service');
 
 // Mock console
-const mockConsoleError = jest.spyOn(console, 'error').mockImplementation();
+const mockConsoleError = createMockConsoleError();
 
 describe('/api/scenarios', () => {
   const mockScenarioRepo = {

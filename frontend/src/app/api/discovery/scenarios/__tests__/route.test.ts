@@ -6,6 +6,7 @@
 import { GET } from '../route';
 import { NextRequest } from 'next/server';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
+import { mockConsoleError as createMockConsoleError } from '@/test-utils/helpers/console';
 
 // Mock dependencies
 jest.mock('@/lib/repositories/base/repository-factory');
@@ -14,7 +15,7 @@ jest.mock('@/lib/auth/session', () => ({
 }));
 
 // Mock console
-const mockConsoleError = jest.spyOn(console, 'error').mockImplementation();
+const mockConsoleError = createMockConsoleError();
 
 describe('/api/discovery/scenarios', () => {
   // Mock repositories

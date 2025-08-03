@@ -25,9 +25,10 @@ jest.mock('@google-cloud/storage', () => ({
 import { GET } from '../route';
 import { NextRequest } from 'next/server';
 import { Storage } from '@google-cloud/storage';
+import { mockConsoleError as createMockConsoleError } from '@/test-utils/helpers/console';
 
 // Mock console
-const mockConsoleError = jest.spyOn(console, 'error').mockImplementation();
+const mockConsoleError = createMockConsoleError();
 
 describe('/api/chat/sessions', () => {
   beforeEach(() => {

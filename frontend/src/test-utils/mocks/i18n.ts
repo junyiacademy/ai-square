@@ -97,12 +97,12 @@ export const defaultTranslations: Record<string, Record<string, string>> = {
 };
 
 // 翻譯函數 mock
-export const createTranslationMock = (customTranslations?: Record<string, Record<string, string>>) => {
+export const createTranslationMock = (customTranslations?: Record<string, Record<string, string>>, defaultNamespace = 'common') => {
   const translations = { ...defaultTranslations, ...customTranslations };
   
   return (key: string, options?: any) => {
     // 支援 namespace:key 格式
-    const [namespace, actualKey] = key.includes(':') ? key.split(':') : ['common', key];
+    const [namespace, actualKey] = key.includes(':') ? key.split(':') : [defaultNamespace, key];
     
     // 支援 namespace.key 格式（點號分隔）
     const dotParts = key.split('.');
@@ -110,12 +110,15 @@ export const createTranslationMock = (customTranslations?: Record<string, Record
     
     if (dotParts.length > 1) {
       // 嘗試使用點號格式查找
-      translation = translations[dotParts[0]]?.[dotParts.slice(1).join('.')] || 
+      translation = translations[namespace]?.[key] ||
+                   translations[dotParts[0]]?.[dotParts.slice(1).join('.')] || 
                    translations[dotParts[0]]?.[dotParts[1]] ||
+                   translations[defaultNamespace]?.[key] ||
                    key;
     } else {
       // 使用冒號格式或直接查找
       translation = translations[namespace]?.[actualKey] || 
+                   translations[defaultNamespace]?.[actualKey] ||
                    translations.common?.[actualKey] || 
                    key;
     }
@@ -130,8 +133,8 @@ export const createTranslationMock = (customTranslations?: Record<string, Record
 };
 
 // Mock useTranslation hook
-export const mockUseTranslation = (customTranslations?: Record<string, Record<string, string>>) => ({
-  t: createTranslationMock(customTranslations),
+export const mockUseTranslation = (customTranslations?: Record<string, Record<string, string>>, namespace?: string) => ({
+  t: createTranslationMock(customTranslations, namespace),
   i18n: {
     language: 'en',
     changeLanguage: jest.fn(),

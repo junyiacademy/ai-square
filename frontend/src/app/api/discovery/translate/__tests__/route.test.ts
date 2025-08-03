@@ -6,12 +6,13 @@
 import { POST } from '../route';
 import { NextRequest } from 'next/server';
 import { HybridTranslationService } from '@/lib/services/hybrid-translation-service';
+import { mockConsoleError as createMockConsoleError } from '@/test-utils/helpers/console';
 
 // Mock dependencies
 jest.mock('@/lib/services/hybrid-translation-service');
 
 // Mock console
-const mockConsoleError = jest.spyOn(console, 'error').mockImplementation();
+const mockConsoleError = createMockConsoleError();
 const mockConsoleLog = jest.spyOn(console, 'log').mockImplementation();
 
 describe('/api/discovery/translate', () => {

@@ -7,6 +7,7 @@ import { GET } from '../route';
 import { NextRequest } from 'next/server';
 import { getServerSession } from '@/lib/auth/session';
 import { postgresqlLearningService } from '@/lib/services/postgresql-learning-service';
+import { mockConsoleError as createMockConsoleError } from '@/test-utils/helpers/console';
 
 // Mock dependencies
 jest.mock('@/lib/auth/session', () => ({
@@ -20,7 +21,7 @@ jest.mock('@/lib/services/postgresql-learning-service', () => ({
 }));
 
 // Mock console
-const mockConsoleError = jest.spyOn(console, 'error').mockImplementation();
+const mockConsoleError = createMockConsoleError();
 
 describe('/api/learning/progress', () => {
   beforeEach(() => {

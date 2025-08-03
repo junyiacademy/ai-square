@@ -32,7 +32,7 @@ const { createTranslationMock } = require('./src/test-utils/mocks/i18n')
 // Mock react-i18next
 jest.mock('react-i18next', () => ({
   useTranslation: (namespace) => ({
-    t: createTranslationMock(),
+    t: createTranslationMock({}, namespace),
     i18n: {
       changeLanguage: jest.fn(),
       language: 'en',

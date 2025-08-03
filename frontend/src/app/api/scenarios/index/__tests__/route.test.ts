@@ -7,6 +7,7 @@ import { GET, DELETE } from '../route';
 import { NextRequest } from 'next/server';
 import { scenarioIndexService } from '@/lib/services/scenario-index-service';
 import { scenarioIndexBuilder } from '@/lib/services/scenario-index-builder';
+import { mockConsoleError as createMockConsoleError } from '@/test-utils/helpers/console';
 
 // Mock dependencies
 jest.mock('@/lib/services/scenario-index-service', () => ({
@@ -25,7 +26,7 @@ jest.mock('@/lib/services/scenario-index-builder', () => ({
 }));
 
 // Mock console
-const mockConsoleError = jest.spyOn(console, 'error').mockImplementation();
+const mockConsoleError = createMockConsoleError();
 
 describe('/api/scenarios/index', () => {
   beforeEach(() => {

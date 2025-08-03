@@ -7,6 +7,7 @@ import { GET, DELETE } from '../route';
 import { NextRequest } from 'next/server';
 import { distributedCacheService } from '@/lib/cache/distributed-cache-service';
 import { redisCacheService } from '@/lib/cache/redis-cache-service';
+import { mockConsoleError as createMockConsoleError } from '@/test-utils/helpers/console';
 
 // Mock cache services
 jest.mock('@/lib/cache/distributed-cache-service', () => ({
@@ -24,7 +25,7 @@ jest.mock('@/lib/cache/redis-cache-service', () => ({
 }));
 
 // Mock console methods
-const mockConsoleError = jest.spyOn(console, 'error').mockImplementation();
+const mockConsoleError = createMockConsoleError();
 
 describe('/api/monitoring/cache', () => {
   beforeEach(() => {

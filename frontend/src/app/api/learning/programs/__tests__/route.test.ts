@@ -7,13 +7,14 @@ import { POST } from '../route';
 import { NextRequest } from 'next/server';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { getServerSession } from '@/lib/auth/session';
+import { mockConsoleError as createMockConsoleError } from '@/test-utils/helpers/console';
 
 // Mock dependencies
 jest.mock('@/lib/repositories/base/repository-factory');
 jest.mock('@/lib/auth/session');
 
 // Mock console
-const mockConsoleError = jest.spyOn(console, 'error').mockImplementation();
+const mockConsoleError = createMockConsoleError();
 
 describe('/api/learning/programs', () => {
   // Mock repositories

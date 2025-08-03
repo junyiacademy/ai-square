@@ -21,10 +21,11 @@ jest.mock('@google-cloud/storage', () => ({
 }));
 
 import { POST, OPTIONS } from '../route';
+import { mockConsoleError as createMockConsoleError } from '@/test-utils/helpers/console';
 
 // Mock console methods
 const mockConsoleLog = jest.spyOn(console, 'log').mockImplementation();
-const mockConsoleError = jest.spyOn(console, 'error').mockImplementation();
+const mockConsoleError = createMockConsoleError();
 
 describe('/api/auth/register', () => {
   beforeEach(() => {

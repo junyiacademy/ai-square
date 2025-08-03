@@ -9,6 +9,7 @@ import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { getServerSession } from '@/lib/auth/session';
 import { promises as fs } from 'fs';
 import path from 'path';
+import { mockConsoleError as createMockConsoleError } from '@/test-utils/helpers/console';
 
 // Mock dependencies
 jest.mock('@/lib/repositories/base/repository-factory');
@@ -22,7 +23,7 @@ jest.mock('fs', () => ({
 
 // Mock console
 const mockConsoleLog = jest.spyOn(console, 'log').mockImplementation();
-const mockConsoleError = jest.spyOn(console, 'error').mockImplementation();
+const mockConsoleError = createMockConsoleError();
 const mockConsoleWarn = jest.spyOn(console, 'warn').mockImplementation();
 
 describe('/api/assessment/scenarios', () => {

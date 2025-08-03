@@ -119,7 +119,16 @@ export async function POST(request: NextRequest) {
 
     const result = await model.generateContent(evaluationPrompt);
     const response = result.response;
-    const aiEvaluation = JSON.parse(response.candidates?.[0]?.content?.parts?.[0]?.text || '{}');
+    
+    // Parse AI response with error handling
+    let aiEvaluation;
+    try {
+      const aiText = response.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+      aiEvaluation = JSON.parse(aiText);
+    } catch (parseError) {
+      console.warn('Failed to parse AI response, using defaults:', parseError);
+      aiEvaluation = {};
+    }
 
     // Create evaluation record
     const evaluation = await evaluationRepo.create({
