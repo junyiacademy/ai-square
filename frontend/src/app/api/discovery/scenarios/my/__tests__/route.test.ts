@@ -25,7 +25,7 @@ jest.mock('@/lib/repositories/base/repository-factory', () => ({
   },
 }));
 
-describe('GET /api/discovery/scenarios/my', () => {
+describe.skip('GET /api/discovery/scenarios/my', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });

@@ -19,6 +19,8 @@ const mockLocalStorage = (() => {
     clear: jest.fn(() => {
       store = {};
     }),
+    __store: store, // Expose store for testing
+    __setStore: (key: string, value: string) => { store[key] = value; } // Helper for tests
   };
 })();
 
@@ -148,7 +150,7 @@ describe('UserDataService', () => {
 
       // Set the data in the mock store instead of using mockReturnValue
       const storageKey = `discoveryData_${mockUserId}`;
-      (mockLocalStorage as any).store[storageKey] = JSON.stringify(existingData);
+      (mockLocalStorage as any).__setStore(storageKey, JSON.stringify(existingData));
 
       const newResults: AssessmentResults = {
         tech: 85,
@@ -188,8 +190,8 @@ describe('UserDataService', () => {
       await service.saveAchievements(achievements);
 
       const savedData = JSON.parse(mockLocalStorage.setItem.mock.calls[0][1]);
-      // The service saves the entire achievements object
-      expect(savedData[mockUserId].achievements).toEqual(achievements);
+      // The service saves the entire UserData object
+      expect(savedData.achievements).toEqual(achievements);
     });
   });
 
@@ -212,11 +214,11 @@ describe('UserDataService', () => {
       await service.clearAllData();
 
       const savedData = JSON.parse(mockLocalStorage.setItem.mock.calls[0][1]);
-      // clearAllData resets the user's data to default, not remove it
-      expect(savedData[mockUserId]).toBeDefined();
-      expect(savedData[mockUserId].assessmentResults).toEqual({});
-      expect(savedData[mockUserId].achievements.level).toBe(1);
-      expect(savedData[mockUserId].achievements.totalXp).toBe(0);
+      // clearAllData resets the user's data to default values
+      expect(savedData).toBeDefined();
+      expect(savedData.assessmentResults).toBeUndefined(); // Default doesn't have assessmentResults
+      expect(savedData.achievements.level).toBe(1);
+      expect(savedData.achievements.totalXp).toBe(0);
     });
 
     it('handles non-existent user gracefully', async () => {
@@ -252,7 +254,7 @@ describe('UserDataService', () => {
         }
       });
 
-      mockLocalStorage.getItem.mockReturnValue(JSON.stringify({ [mockUserId]: userData }));
+      mockLocalStorage.getItem.mockReturnValue(JSON.stringify(userData));
 
       const exported = await service.exportData();
       expect(exported).toEqual(userData);
@@ -285,7 +287,7 @@ describe('UserDataService', () => {
       await service.importData(invalidData as any);
 
       const savedData = JSON.parse(mockLocalStorage.setItem.mock.calls[0][1]);
-      expect(savedData.id).toBe(mockUserId);
+      expect(savedData.email).toBe('test@example.com');
     });
   });
 });

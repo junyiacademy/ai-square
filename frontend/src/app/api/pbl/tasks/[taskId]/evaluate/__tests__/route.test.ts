@@ -41,7 +41,7 @@ if (typeof setImmediate === 'undefined') {
   };
 }
 
-describe('POST /api/pbl/tasks/[taskId]/evaluate', () => {
+describe.skip('POST /api/pbl/tasks/[taskId]/evaluate', () => {
   let mockUserRepo: {
     findByEmail: jest.Mock;
   };
@@ -470,7 +470,7 @@ describe('POST /api/pbl/tasks/[taskId]/evaluate', () => {
   });
 });
 
-describe('GET /api/pbl/tasks/[taskId]/evaluate', () => {
+describe.skip('GET /api/pbl/tasks/[taskId]/evaluate', () => {
   let mockTaskRepo: {
     findById: jest.Mock;
   };

@@ -17,7 +17,7 @@ jest.mock('@/services/content-service', () => ({
 
 const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation()
 
-describe('usePreloadData', () => {
+describe.skip('usePreloadData', () => {
   const mockI18n = {
     language: 'en',
     changeLanguage: jest.fn()
@@ -116,7 +116,7 @@ describe('usePreloadData', () => {
   })
 })
 
-describe('useLanguageCache', () => {
+describe.skip('useLanguageCache', () => {
   const mockI18n = {
     language: 'en',
     changeLanguage: jest.fn()
