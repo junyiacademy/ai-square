@@ -1,11 +1,14 @@
 import { NextRequest } from 'next/server';
 import { POST } from '../route';
+import { getServerSession } from '@/lib/auth/session';
 
 // Mock auth session
-const mockGetServerSession = jest.fn();
 jest.mock('@/lib/auth/session', () => ({
-  getServerSession: mockGetServerSession
+  getServerSession: jest.fn()
 }));
+
+// Get mocked function
+const mockGetServerSession = getServerSession as jest.MockedFunction<typeof getServerSession>;
 
 // Mock repositories
 const mockFindById = jest.fn();

@@ -7,6 +7,7 @@ import { DiscoveryYAMLLoader, DiscoveryPath, DiscoveryMetadata } from '../discov
 import { cacheService } from '@/lib/cache/cache-service';
 import * as yaml from 'js-yaml';
 import path from 'path';
+import { mockConsoleError } from '@/test-utils/helpers/console';
 
 // Mock the cache service
 jest.mock('@/lib/cache/cache-service');
@@ -28,9 +29,7 @@ const mockCacheService = cacheService as jest.Mocked<typeof cacheService>;
 const mockYaml = yaml as jest.Mocked<typeof yaml>;
 
 // Mock console
-const consoleSpy = {
-  error: jest.spyOn(console, 'error').mockImplementation()
-};
+const mockError = mockConsoleError();
 
 describe('DiscoveryYAMLLoader', () => {
   let loader: DiscoveryYAMLLoader;
@@ -106,7 +105,7 @@ describe('DiscoveryYAMLLoader', () => {
   });
 
   afterEach(() => {
-    consoleSpy.error.mockClear();
+    mockError.mockClear();
   });
 
   describe('constructor', () => {
@@ -248,7 +247,7 @@ describe('DiscoveryYAMLLoader', () => {
       const paths = await testLoader.scanPaths();
       
       expect(paths).toEqual([]);
-      expect(consoleSpy.error).toHaveBeenCalledWith(
+      expect(mockError).toHaveBeenCalledWith(
         'Error scanning Discovery paths:',
         expect.any(Error)
       );

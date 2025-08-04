@@ -21,6 +21,14 @@ jest.mock('pg', () => ({
   })),
 }))
 
+// Mock getPool
+jest.mock('../../../../lib/db/get-pool', () => ({
+  getPool: jest.fn().mockReturnValue({
+    query: jest.fn(),
+    end: jest.fn(),
+  })
+}))
+
 // Mock PostgreSQL repository
 jest.mock('../../../../lib/repositories/postgresql', () => ({
   PostgreSQLUserRepository: jest.fn().mockImplementation(() => ({

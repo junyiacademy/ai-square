@@ -1,18 +1,31 @@
 import { NextRequest } from 'next/server';
 import { GET, DELETE } from '../route';
 
-// Mock content service
-const mockGetContent = jest.fn();
-const mockListContent = jest.fn();
-const mockDeleteOverride = jest.fn();
+// Mock content service - must be defined before jest.mock
+jest.mock('@/lib/cms/content-service', () => {
+  const mockGetContent = jest.fn();
+  const mockListContent = jest.fn();
+  const mockDeleteOverride = jest.fn();
+  
+  return {
+    contentService: {
+      getContent: mockGetContent,
+      listContent: mockListContent,
+      deleteOverride: mockDeleteOverride,
+    },
+    __mocks: {
+      mockGetContent,
+      mockListContent,
+      mockDeleteOverride,
+    }
+  };
+});
 
-jest.mock('@/lib/cms/content-service', () => ({
-  contentService: {
-    getContent: mockGetContent,
-    listContent: mockListContent,
-    deleteOverride: mockDeleteOverride,
-  },
-}));
+// Import mocks after jest.mock
+const { contentService } = require('@/lib/cms/content-service');
+const mockGetContent = contentService.getContent as jest.Mock;
+const mockListContent = contentService.listContent as jest.Mock;
+const mockDeleteOverride = contentService.deleteOverride as jest.Mock;
 
 describe('Admin Content [id] API', () => {
   beforeEach(() => {

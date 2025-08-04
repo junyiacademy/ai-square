@@ -9,6 +9,7 @@ import { getServerSession } from '@/lib/auth/session';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import type { IProgram, ITask } from '@/types/unified-learning';
 import type { User } from '@/lib/repositories/interfaces';
+import { mockConsoleError as createMockConsoleError } from '@/test-utils/helpers/console';
 
 // Mock dependencies
 jest.mock('@/lib/auth/session');
@@ -17,8 +18,8 @@ jest.mock('@/lib/repositories/base/repository-factory');
 const mockGetServerSession = getServerSession as jest.MockedFunction<typeof getServerSession>;
 const mockRepositoryFactory = repositoryFactory as jest.Mocked<typeof repositoryFactory>;
 
-// Mock console.error to reduce noise in tests
-const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+// Mock console
+const mockConsoleError = createMockConsoleError();
 
 describe('PATCH /api/discovery/programs/[programId]/tasks/[taskId]', () => {
   let mockUserRepo: {
@@ -137,8 +138,8 @@ describe('PATCH /api/discovery/programs/[programId]/tasks/[taskId]', () => {
     } as any);
   });
 
-  afterEach(() => {
-    consoleSpy.mockClear();
+  afterAll(() => {
+    mockConsoleError.mockRestore();
   });
 
   it('should require authentication', async () => {
@@ -465,7 +466,7 @@ describe('PATCH /api/discovery/programs/[programId]/tasks/[taskId]', () => {
     expect(response.status).toBe(500);
     expect(data.success).toBe(false);
     expect(data.error).toBe('Internal server error');
-    expect(consoleSpy).toHaveBeenCalledWith(
+    expect(mockConsoleError).toHaveBeenCalledWith(
       expect.stringContaining('Error in PATCH /api/discovery/programs/[programId]/tasks/[taskId]:'),
       expect.any(Error)
     );

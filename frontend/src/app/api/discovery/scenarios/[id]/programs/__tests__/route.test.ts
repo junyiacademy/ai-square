@@ -178,7 +178,7 @@ describe('POST /api/discovery/scenarios/[id]/programs', () => {
     it('should create a new discovery program', async () => {
       // Arrange
       mockUserRepo.findByEmail.mockResolvedValue(mockUser);
-      mockScenarioRepo.findById.mockResolvedValue(mockScenario);
+      (mockScenarioRepo.findById as jest.Mock).mockResolvedValue(mockScenario);
       mockProgramRepo.findByUser.mockResolvedValue([]);
       mockDiscoveryService.exploreCareer.mockResolvedValue(mockProgram);
 
@@ -213,7 +213,7 @@ describe('POST /api/discovery/scenarios/[id]/programs', () => {
       };
       
       mockUserRepo.findByEmail.mockResolvedValue(mockUser);
-      mockScenarioRepo.findById.mockResolvedValue(mockScenario);
+      (mockScenarioRepo.findById as jest.Mock).mockResolvedValue(mockScenario);
       mockProgramRepo.findByUser.mockResolvedValue([existingProgram]);
 
       const request = new NextRequest(
@@ -247,7 +247,7 @@ describe('POST /api/discovery/scenarios/[id]/programs', () => {
       };
       
       mockUserRepo.findByEmail.mockResolvedValue(mockUser);
-      mockScenarioRepo.findById.mockResolvedValue(mockScenario);
+      (mockScenarioRepo.findById as jest.Mock).mockResolvedValue(mockScenario);
       mockProgramRepo.findByUser.mockResolvedValue([completedProgram]);
       mockDiscoveryService.exploreCareer.mockResolvedValue({
         ...mockProgram,
@@ -276,7 +276,7 @@ describe('POST /api/discovery/scenarios/[id]/programs', () => {
     it('should include enriched data in response', async () => {
       // Arrange
       mockUserRepo.findByEmail.mockResolvedValue(mockUser);
-      mockScenarioRepo.findById.mockResolvedValue(mockScenario);
+      (mockScenarioRepo.findById as jest.Mock).mockResolvedValue(mockScenario);
       mockProgramRepo.findByUser.mockResolvedValue([]);
       mockDiscoveryService.exploreCareer.mockResolvedValue(mockProgram);
 
@@ -348,7 +348,7 @@ describe('POST /api/discovery/scenarios/[id]/programs', () => {
     it('should return 404 when scenario not found', async () => {
       // Arrange
       mockUserRepo.findByEmail.mockResolvedValue(mockUser);
-      mockScenarioRepo.findById.mockResolvedValue(null);
+      (mockScenarioRepo.findById as jest.Mock).mockResolvedValue(null);
 
       const request = new NextRequest(
         `http://localhost:3000/api/discovery/scenarios/invalid-id/programs`,
@@ -371,7 +371,7 @@ describe('POST /api/discovery/scenarios/[id]/programs', () => {
     it('should handle service errors gracefully', async () => {
       // Arrange
       mockUserRepo.findByEmail.mockResolvedValue(mockUser);
-      mockScenarioRepo.findById.mockResolvedValue(mockScenario);
+      (mockScenarioRepo.findById as jest.Mock).mockResolvedValue(mockScenario);
       mockProgramRepo.findByUser.mockResolvedValue([]);
       mockDiscoveryService.exploreCareer.mockRejectedValue(
         new Error('Service unavailable')
@@ -443,7 +443,7 @@ describe('POST /api/discovery/scenarios/[id]/programs', () => {
       };
       
       mockUserRepo.findByEmail.mockResolvedValue(ineligibleUser);
-      mockScenarioRepo.findById.mockResolvedValue(mockScenario);
+      (mockScenarioRepo.findById as jest.Mock).mockResolvedValue(mockScenario);
 
       const request = new NextRequest(
         `http://localhost:3000/api/discovery/scenarios/${testScenarioId}/programs`,
@@ -468,7 +468,7 @@ describe('POST /api/discovery/scenarios/[id]/programs', () => {
     it('should track career exploration start event', async () => {
       // Arrange
       mockUserRepo.findByEmail.mockResolvedValue(mockUser);
-      mockScenarioRepo.findById.mockResolvedValue(mockScenario);
+      (mockScenarioRepo.findById as jest.Mock).mockResolvedValue(mockScenario);
       mockProgramRepo.findByUser.mockResolvedValue([]);
       mockDiscoveryService.exploreCareer.mockResolvedValue(mockProgram);
 
@@ -508,7 +508,7 @@ describe('POST /api/discovery/scenarios/[id]/programs', () => {
       };
       
       mockUserRepo.findByEmail.mockResolvedValue(userWithPreferences);
-      mockScenarioRepo.findById.mockResolvedValue(mockScenario);
+      (mockScenarioRepo.findById as jest.Mock).mockResolvedValue(mockScenario);
       mockProgramRepo.findByUser.mockResolvedValue([]);
       mockDiscoveryService.exploreCareer.mockResolvedValue({
         ...mockProgram,

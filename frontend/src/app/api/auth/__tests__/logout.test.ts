@@ -1,6 +1,19 @@
 import { POST } from '../logout/route'
 import { cookies } from 'next/headers'
 
+// Mock NextResponse
+jest.mock('next/server', () => ({
+  NextResponse: {
+    json: jest.fn((data) => ({
+      json: jest.fn().mockResolvedValue(data),
+      status: 200,
+      cookies: {
+        set: jest.fn()
+      }
+    }))
+  }
+}))
+
 // Mock cookies
 jest.mock('next/headers', () => ({
   cookies: jest.fn(),

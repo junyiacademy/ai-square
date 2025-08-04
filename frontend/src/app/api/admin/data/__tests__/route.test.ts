@@ -70,7 +70,7 @@ describe('/api/admin/data', () => {
       // Mock counts
       mockUserRepo.count.mockResolvedValue(150);
       mockProgramRepo.count.mockResolvedValue(450);
-      mockScenarioRepo.count.mockResolvedValue(25);
+      (mockScenarioRepo.count as jest.Mock).mockResolvedValue(25);
       mockTaskRepo.count.mockResolvedValue(1200);
       mockEvaluationRepo.count.mockResolvedValue(3500);
 
@@ -120,7 +120,7 @@ describe('/api/admin/data', () => {
       // Setup mocks
       mockUserRepo.count.mockResolvedValue(50);
       mockProgramRepo.count.mockResolvedValue(100);
-      mockScenarioRepo.count.mockResolvedValue(10);
+      (mockScenarioRepo.count as jest.Mock).mockResolvedValue(10);
       mockTaskRepo.count.mockResolvedValue(500);
       mockEvaluationRepo.count.mockResolvedValue(1000);
 
@@ -237,7 +237,7 @@ describe('/api/admin/data', () => {
 
       mockUserRepo.findAll.mockResolvedValue([{ id: 'user-1' }]);
       mockProgramRepo.findAll.mockResolvedValue([{ id: 'prog-1' }]);
-      mockScenarioRepo.findAll.mockResolvedValue([{ id: 'scenario-1' }]);
+      (mockScenarioRepo.findAll as jest.Mock).mockResolvedValue([{ id: 'scenario-1' }]);
 
       const request = new NextRequest('http://localhost:3000/api/admin/data', {
         method: 'POST',

@@ -9,15 +9,14 @@ import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { getServerSession } from '@/lib/auth/session';
 import type { IProgram, ITask, IInteraction } from '@/types/unified-learning';
 import type { User } from '@/lib/repositories/interfaces';
+import { mockConsoleError as createMockConsoleError } from '@/test-utils/helpers/console';
 
 // Mock dependencies
 jest.mock('@/lib/repositories/base/repository-factory');
 jest.mock('@/lib/auth/session');
 
-// Mock console methods
-const consoleSpy = {
-  error: jest.spyOn(console, 'error').mockImplementation()
-};
+// Mock console
+const mockConsoleError = createMockConsoleError();
 
 describe('Assessment Task Interactions API', () => {
   const mockTaskRepo = {
@@ -117,7 +116,11 @@ describe('Assessment Task Interactions API', () => {
   });
 
   afterEach(() => {
-    consoleSpy.error.mockClear();
+    jest.clearAllMocks();
+  });
+
+  afterAll(() => {
+    mockConsoleError.mockRestore();
   });
 
   describe('GET /api/assessment/programs/[programId]/tasks/[taskId]/interactions', () => {
@@ -386,7 +389,7 @@ describe('Assessment Task Interactions API', () => {
         expect(response.status).toBe(500);
         expect(data.success).toBe(false);
         expect(data.error).toBe('Failed to fetch interactions');
-        expect(consoleSpy.error).toHaveBeenCalledWith(
+        expect(mockConsoleError).toHaveBeenCalledWith(
           'Error fetching assessment task interactions:',
           expect.any(Error)
         );
@@ -823,7 +826,7 @@ describe('Assessment Task Interactions API', () => {
         expect(response.status).toBe(500);
         expect(data.success).toBe(false);
         expect(data.error).toBe('Failed to add interaction');
-        expect(consoleSpy.error).toHaveBeenCalledWith(
+        expect(mockConsoleError).toHaveBeenCalledWith(
           'Error adding assessment task interaction:',
           expect.any(Error)
         );

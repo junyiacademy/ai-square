@@ -48,8 +48,10 @@ export const SPLIT_CHUNKS = {
   vendor: {
     test: /[\\/]node_modules[\\/]/,
     name(module: WebpackModule) {
-      const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)?.[1] || 'unknown'
-      return `vendor.${packageName.replace('@', '')}`
+      // Handle both regular and scoped packages
+      const match = module.context.match(/[\\/]node_modules[\\/]((?:@[^/\\]+[\\/])?[^/\\]+)/);
+      const packageName = match?.[1] || 'unknown';
+      return `vendor.${packageName.replace('@', '')}`;
     },
   },
   // 通用元件分組

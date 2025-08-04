@@ -8,6 +8,7 @@ import { NextRequest } from 'next/server';
 import { getServerSession } from '@/lib/auth/session';
 import { postgresqlLearningService } from '@/lib/services/postgresql-learning-service';
 import { mockConsoleError as createMockConsoleError } from '@/test-utils/helpers/console';
+import { createMockProgram, createMockScenario } from '@/test-utils/mocks/repository-helpers';
 
 // Mock dependencies
 jest.mock('@/lib/services/postgresql-learning-service');
@@ -45,7 +46,13 @@ describe('/api/learning/programs', () => {
       });
 
       mockLearningService.createLearningProgram.mockResolvedValue({
-        program: {
+        scenario: createMockScenario({
+          id: mockScenario.id,
+          mode: 'pbl',
+          title: mockScenario.title,
+          description: mockScenario.description,
+        }),
+        program: createMockProgram({
           id: 'prog-123',
           mode: 'pbl',
           scenarioId: 'scenario-1',
@@ -54,8 +61,8 @@ describe('/api/learning/programs', () => {
           totalScore: 0,
           completedTaskCount: 0,
           totalTaskCount: 2,
-        },
-        scenario: mockScenario,
+        }),
+        tasks: [],
       });
 
       const request = new NextRequest('http://localhost:3000/api/learning/programs', {

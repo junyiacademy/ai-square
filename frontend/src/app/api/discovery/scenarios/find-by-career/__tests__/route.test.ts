@@ -1,30 +1,42 @@
 import { NextRequest } from 'next/server';
 import { GET } from '../route';
+import { getServerSession } from '@/lib/auth/session';
+import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 
 // Mock auth session
-const mockGetServerSession = jest.fn();
 jest.mock('@/lib/auth/session', () => ({
-  getServerSession: mockGetServerSession
+  getServerSession: jest.fn()
 }));
 
 // Mock repositories
-const mockFindByMode = jest.fn();
-const mockFindByScenario = jest.fn();
-
 jest.mock('@/lib/repositories/base/repository-factory', () => ({
   repositoryFactory: {
-    getScenarioRepository: () => ({
-      findByMode: mockFindByMode,
-    }),
-    getProgramRepository: () => ({
-      findByScenario: mockFindByScenario,
-    }),
+    getScenarioRepository: jest.fn(),
+    getProgramRepository: jest.fn(),
   },
 }));
 
+// Get mocked functions
+const mockGetServerSession = getServerSession as jest.MockedFunction<typeof getServerSession>;
+const mockGetScenarioRepository = repositoryFactory.getScenarioRepository as jest.MockedFunction<typeof repositoryFactory.getScenarioRepository>;
+const mockGetProgramRepository = repositoryFactory.getProgramRepository as jest.MockedFunction<typeof repositoryFactory.getProgramRepository>;
+
 describe('GET /api/discovery/scenarios/find-by-career', () => {
+  // Mock repository implementations
+  const mockFindByMode = jest.fn();
+  const mockFindByScenario = jest.fn();
+
   beforeEach(() => {
     jest.clearAllMocks();
+    
+    // Setup repository mocks
+    mockGetScenarioRepository.mockReturnValue({
+      findByMode: mockFindByMode,
+    } as any);
+    
+    mockGetProgramRepository.mockReturnValue({
+      findByScenario: mockFindByScenario,
+    } as any);
   });
 
   it('returns 401 when not authenticated', async () => {
@@ -39,7 +51,7 @@ describe('GET /api/discovery/scenarios/find-by-career', () => {
   });
 
   it('returns 400 when career type is missing', async () => {
-    mockGetServerSession.mockResolvedValue({ user: { email: 'test@example.com' } });
+    mockGetServerSession.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com' } });
 
     const request = new NextRequest('http://localhost:3000/api/discovery/scenarios/find-by-career');
     const response = await GET(request);
@@ -50,7 +62,7 @@ describe('GET /api/discovery/scenarios/find-by-career', () => {
   });
 
   it('returns null when no scenarios found for career type', async () => {
-    mockGetServerSession.mockResolvedValue({ user: { email: 'test@example.com' } });
+    mockGetServerSession.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com' } });
     mockFindByMode.mockResolvedValue([]);
 
     const request = new NextRequest('http://localhost:3000/api/discovery/scenarios/find-by-career?career=data-scientist');
@@ -82,7 +94,7 @@ describe('GET /api/discovery/scenarios/find-by-career', () => {
       },
     ];
 
-    mockGetServerSession.mockResolvedValue({ user: { email: 'test@example.com' } });
+    mockGetServerSession.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com' } });
     mockFindByMode.mockResolvedValue(mockScenarios);
     mockFindByScenario.mockResolvedValue(mockPrograms);
 
@@ -111,7 +123,7 @@ describe('GET /api/discovery/scenarios/find-by-career', () => {
       },
     ];
 
-    mockGetServerSession.mockResolvedValue({ user: { email: 'test@example.com' } });
+    mockGetServerSession.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com' } });
     mockFindByMode.mockResolvedValue(mockScenarios);
     mockFindByScenario.mockResolvedValue(mockPrograms);
 
@@ -144,7 +156,7 @@ describe('GET /api/discovery/scenarios/find-by-career', () => {
       },
     ];
 
-    mockGetServerSession.mockResolvedValue({ user: { email: 'test@example.com' } });
+    mockGetServerSession.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com' } });
     mockFindByMode.mockResolvedValue(mockScenarios);
     mockFindByScenario
       .mockResolvedValueOnce(mockProgramsDS) // First call for data-scientist
@@ -193,7 +205,7 @@ describe('GET /api/discovery/scenarios/find-by-career', () => {
       },
     ];
 
-    mockGetServerSession.mockResolvedValue({ user: { email: 'test@example.com' } });
+    mockGetServerSession.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com' } });
     mockFindByMode.mockResolvedValue(mockScenarios);
     mockFindByScenario
       .mockResolvedValueOnce(mockPrograms1)
@@ -209,7 +221,7 @@ describe('GET /api/discovery/scenarios/find-by-career', () => {
   });
 
   it('handles repository errors gracefully', async () => {
-    mockGetServerSession.mockResolvedValue({ user: { email: 'test@example.com' } });
+    mockGetServerSession.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com' } });
     mockFindByMode.mockRejectedValue(new Error('Database error'));
 
     const request = new NextRequest('http://localhost:3000/api/discovery/scenarios/find-by-career?career=software-engineer');
@@ -240,7 +252,7 @@ describe('GET /api/discovery/scenarios/find-by-career', () => {
       },
     ];
 
-    mockGetServerSession.mockResolvedValue({ user: { email: 'test@example.com' } });
+    mockGetServerSession.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com' } });
     mockFindByMode.mockResolvedValue(mockScenarios);
     mockFindByScenario.mockResolvedValue(mockPrograms);
 

@@ -339,7 +339,7 @@ describe('LoginPage', () => {
 
     // Resolve the login promise
     if (resolveLogin) {
-      resolveLogin({ success: true, user: {} });
+      (resolveLogin as (value: any) => void)({ success: true, user: {} });
     }
 
     await waitFor(() => {

@@ -5,14 +5,13 @@
 
 import { TranslationService } from '../translation-service';
 import { VertexAIService } from '@/lib/ai/vertex-ai-service';
+import { mockConsoleError } from '@/test-utils/helpers/console';
 
 // Mock VertexAIService
 jest.mock('@/lib/ai/vertex-ai-service');
 
 // Mock console
-const consoleSpy = {
-  error: jest.spyOn(console, 'error').mockImplementation()
-};
+const mockError = mockConsoleError();
 
 describe('TranslationService', () => {
   let service: TranslationService;
@@ -31,10 +30,6 @@ describe('TranslationService', () => {
     }) as any);
     
     service = new TranslationService();
-  });
-
-  afterEach(() => {
-    consoleSpy.error.mockClear();
   });
 
   describe('constructor', () => {
@@ -180,7 +175,7 @@ describe('TranslationService', () => {
       await expect(service.translateFeedback(originalFeedback, 'zhTW'))
         .rejects.toThrow('Failed to translate feedback to zhTW');
       
-      expect(consoleSpy.error).toHaveBeenCalledWith('Translation failed:', error);
+      expect(mockError).toHaveBeenCalledWith('Translation failed:', error);
     });
 
     it('includes all required prompt elements', async () => {
@@ -256,7 +251,7 @@ describe('TranslationService', () => {
         ja: 'よくできました！'
       });
 
-      expect(consoleSpy.error).toHaveBeenCalledWith(
+      expect(mockError).toHaveBeenCalledWith(
         'Translation failed for es:',
         expect.any(Error)
       );
@@ -273,7 +268,7 @@ describe('TranslationService', () => {
     });
 
     it('handles all failures', async () => {
-      consoleSpy.error.mockClear();
+      mockError.mockClear();
       mockSendMessage.mockReset();
       mockSendMessage.mockRejectedValue(new Error('Service unavailable'));
 
@@ -289,7 +284,7 @@ describe('TranslationService', () => {
       });
 
       // Each failed translation logs an error, plus one for each language in translateFeedbackBatch
-      expect(consoleSpy.error.mock.calls.length).toBeGreaterThanOrEqual(3);
+      expect(mockError.mock.calls.length).toBeGreaterThanOrEqual(3);
     });
   });
 

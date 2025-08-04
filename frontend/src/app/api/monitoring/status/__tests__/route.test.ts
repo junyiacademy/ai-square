@@ -66,10 +66,11 @@ describe('/api/monitoring/status', () => {
   });
 
   it('should return system status successfully', async () => {
-    // Mock repository counts
-    mockUserRepo.count?.mockResolvedValue(100);
-    mockProgramRepo.count?.mockResolvedValue(250);
-    mockScenarioRepo.count?.mockResolvedValue(15);
+    // Mock repository calls - since count methods don't exist in interfaces,
+    // the actual implementation likely uses findAll().length or similar patterns
+    mockUserRepo.findAll?.mockResolvedValue(new Array(100));
+    mockProgramRepo.findByUser?.mockResolvedValue(new Array(250));
+    (mockScenarioRepo.findActive as jest.Mock)?.mockResolvedValue(new Array(15));
 
     const request = new NextRequest('http://localhost/api/monitoring/status');
     const response = await GET(request);
@@ -97,7 +98,7 @@ describe('/api/monitoring/status', () => {
 
   it('should handle database connection failure', async () => {
     const dbError = new Error('Connection refused');
-    mockUserRepo.count.mockRejectedValue(dbError);
+    mockUserRepo.findAll?.mockRejectedValue(dbError);
 
     const request = new NextRequest('http://localhost/api/monitoring/status');
     const response = await GET(request);
@@ -112,9 +113,9 @@ describe('/api/monitoring/status', () => {
     // Mock distributedCacheService.getStats to throw error
     (distributedCacheService.getStats as jest.Mock).mockRejectedValue(new Error('Redis unavailable'));
     
-    mockUserRepo.count?.mockResolvedValue(100);
-    mockProgramRepo.count?.mockResolvedValue(250);
-    mockScenarioRepo.count?.mockResolvedValue(15);
+    mockUserRepo.findAll?.mockResolvedValue(new Array(100));
+    mockProgramRepo.findByUser?.mockResolvedValue(new Array(250));
+    (mockScenarioRepo.findActive as jest.Mock)?.mockResolvedValue(new Array(15));
 
     const request = new NextRequest('http://localhost/api/monitoring/status');
     const response = await GET(request);
@@ -141,9 +142,9 @@ describe('/api/monitoring/status', () => {
   });
 
   it('should include optional metadata when requested', async () => {
-    mockUserRepo.count?.mockResolvedValue(100);
-    mockProgramRepo.count?.mockResolvedValue(250);
-    mockScenarioRepo.count?.mockResolvedValue(15);
+    mockUserRepo.findAll?.mockResolvedValue(new Array(100));
+    mockProgramRepo.findByUser?.mockResolvedValue(new Array(250));
+    (mockScenarioRepo.findActive as jest.Mock)?.mockResolvedValue(new Array(15));
 
     const request = new NextRequest('http://localhost/api/monitoring/status?detailed=true');
     const response = await GET(request);

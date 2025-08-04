@@ -77,7 +77,7 @@ describe('Home Page', () => {
     expect(sectionIds).toEqual([
       'hero-section',
       'features-section',
-      'knowledge-graph',
+      'knowledge-graph-section',
       'how-it-works-section',
       'target-audience-section',
       'cta-section'

@@ -8,12 +8,16 @@ import { GET } from '../index/route';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { getServerSession } from '@/lib/auth/session';
 import { cacheService } from '@/lib/cache/cache-service';
+import { scenarioIndexService } from '@/lib/services/scenario-index-service';
+import { scenarioIndexBuilder } from '@/lib/services/scenario-index-builder';
 import { mockConsoleError as createMockConsoleError } from '@/test-utils/helpers/console';
 
 // Mock dependencies
 jest.mock('@/lib/repositories/base/repository-factory');
 jest.mock('@/lib/auth/session');
 jest.mock('@/lib/cache/cache-service');
+jest.mock('@/lib/services/scenario-index-service');
+jest.mock('@/lib/services/scenario-index-builder');
 
 // Mock console
 const mockConsoleError = createMockConsoleError();
@@ -63,6 +67,20 @@ describe('/api/scenarios', () => {
     // Setup cache service mock
     (cacheService.get as jest.Mock).mockResolvedValue(null);
     (cacheService.set as jest.Mock).mockResolvedValue(undefined);
+
+    // Setup scenario service mocks - these are needed for the index route
+    (scenarioIndexService.getIndex as jest.Mock).mockResolvedValue({
+      scenarios: mockScenarios,
+      lastUpdated: new Date().toISOString(),
+      version: '1.0'
+    });
+    (scenarioIndexBuilder.buildFullIndex as jest.Mock).mockResolvedValue(undefined);
+    (scenarioIndexBuilder.ensureIndex as jest.Mock).mockResolvedValue(undefined);
+    (scenarioIndexBuilder.getStatus as jest.Mock).mockReturnValue({
+      isBuilding: false,
+      lastBuildTime: new Date(),
+      totalScenarios: 2
+    });
   });
 
   afterAll(() => {
@@ -71,7 +89,7 @@ describe('/api/scenarios', () => {
 
   describe('GET /api/scenarios', () => {
     it('should return all scenarios successfully', async () => {
-      mockScenarioRepo.findAll.mockResolvedValue(mockScenarios);
+      (mockScenarioRepo.findAll as jest.Mock).mockResolvedValue(mockScenarios);
 
       const request = new NextRequest('http://localhost/api/scenarios');
       const response = await GET(request);
@@ -103,7 +121,7 @@ describe('/api/scenarios', () => {
 
     it('should filter scenarios by status', async () => {
       const activeScenarios = mockScenarios.filter(s => s.status === 'active');
-      mockScenarioRepo.findAll.mockResolvedValue(activeScenarios);
+      (mockScenarioRepo.findAll as jest.Mock).mockResolvedValue(activeScenarios);
 
       const request = new NextRequest('http://localhost/api/scenarios?status=active');
       const response = await GET(request);
@@ -115,7 +133,7 @@ describe('/api/scenarios', () => {
     });
 
     it('should support language parameter', async () => {
-      mockScenarioRepo.findAll.mockResolvedValue(mockScenarios);
+      (mockScenarioRepo.findAll as jest.Mock).mockResolvedValue(mockScenarios);
 
       const request = new NextRequest('http://localhost/api/scenarios?lang=zh');
       const response = await GET(request);
@@ -141,7 +159,7 @@ describe('/api/scenarios', () => {
 
     it('should handle repository errors gracefully', async () => {
       const error = new Error('Database connection failed');
-      mockScenarioRepo.findAll.mockRejectedValue(error);
+      (mockScenarioRepo.findAll as jest.Mock).mockRejectedValue(error);
 
       const request = new NextRequest('http://localhost/api/scenarios');
       const response = await GET(request);
@@ -154,7 +172,7 @@ describe('/api/scenarios', () => {
 
     it('should handle missing findByMode method', async () => {
       (mockScenarioRepo as Partial<typeof mockScenarioRepo>).findByMode = undefined;
-      mockScenarioRepo.findAll.mockResolvedValue(mockScenarios);
+      (mockScenarioRepo.findAll as jest.Mock).mockResolvedValue(mockScenarios);
 
       const request = new NextRequest('http://localhost/api/scenarios?mode=pbl');
       const response = await GET(request);
@@ -191,7 +209,7 @@ describe('/api/scenarios', () => {
         updatedAt: new Date(),
       };
 
-      mockScenarioRepo.create.mockResolvedValue(createdScenario);
+      (mockScenarioRepo.create as jest.Mock).mockResolvedValue(createdScenario);
 
       const request = new NextRequest('http://localhost/api/scenarios', {
         method: 'POST',
@@ -261,7 +279,7 @@ describe('/api/scenarios', () => {
       });
 
       const error = new Error('Database error');
-      mockScenarioRepo.create.mockRejectedValue(error);
+      (mockScenarioRepo.create as jest.Mock).mockRejectedValue(error);
 
       const request = new NextRequest('http://localhost/api/scenarios', {
         method: 'POST',

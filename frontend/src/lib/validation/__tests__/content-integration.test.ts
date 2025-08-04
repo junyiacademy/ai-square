@@ -133,6 +133,8 @@ describe('Content Integration Tests', () => {
   describe('資料完整性測試', () => {
     it('應該確保每個 competency 至少有一個 K、S、A 參考', () => {
       const testCompetency = {
+        code: 'C1.1',
+        name: 'Test Competency',
         description: 'Test competency',
         description_zhTW: '測試能力',
         description_es: 'Competencia de prueba',
@@ -142,9 +144,11 @@ describe('Content Integration Tests', () => {
         description_de: 'Testkompetenz',
         description_ru: 'Тестовая компетенция',
         description_it: 'Competenza di test',
-        knowledge: ['K1.1'],
-        skills: ['S1.1'],
-        attitudes: ['A1.1'],
+        ksa_codes: {
+          knowledge: ['K1.1'],
+          skills: ['S1.1'],
+          attitudes: ['A1.1']
+        },
         content: 'Content',
         content_zhTW: '內容',
         content_es: 'Contenido',
@@ -192,9 +196,11 @@ describe('Content Integration Tests', () => {
       // Test with empty arrays (should fail if we add such validation)
       const emptyCompetency = {
         ...testCompetency,
-        knowledge: [],
-        skills: [],
-        attitudes: []
+        ksa_codes: {
+          knowledge: [],
+          skills: [],
+          attitudes: []
+        }
       };
       
       // This should still pass with current schema, but we could add minItems validation
@@ -295,6 +301,8 @@ describe('Content Integration Tests', () => {
         for (let j = 1; j <= 4; j++) {
           const competencyId = `C${i}.${j}`;
           (largeDomainFile.domains.Engaging_with_AI.competencies as any)[competencyId] = {
+            code: competencyId,
+            name: `Competency ${competencyId}`,
             description: `Competency ${competencyId}`,
             description_zhTW: `能力 ${competencyId}`,
             description_es: `Competencia ${competencyId}`,
@@ -304,9 +312,11 @@ describe('Content Integration Tests', () => {
             description_de: `Kompetenz ${competencyId}`,
             description_ru: `Компетенция ${competencyId}`,
             description_it: `Competenza ${competencyId}`,
-            knowledge: ['K1.1', 'K1.2'],
-            skills: ['S1.1'],
-            attitudes: ['A1.1'],
+            ksa_codes: {
+              knowledge: ['K1.1', 'K1.2'],
+              skills: ['S1.1'],
+              attitudes: ['A1.1']
+            },
             content: `Content for ${competencyId}`,
             content_zhTW: `內容 ${competencyId}`,
             content_es: `Contenido ${competencyId}`,

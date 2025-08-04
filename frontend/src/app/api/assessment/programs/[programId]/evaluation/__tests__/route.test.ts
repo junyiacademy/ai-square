@@ -7,6 +7,7 @@ import { NextRequest } from 'next/server';
 import { GET } from '../route';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { getServerSession } from '@/lib/auth/session';
+import { mockConsoleError as createMockConsoleError } from '@/test-utils/helpers/console';
 import type { IProgram, IEvaluation } from '@/types/unified-learning';
 import type { User } from '@/lib/repositories/interfaces';
 
@@ -14,11 +15,8 @@ import type { User } from '@/lib/repositories/interfaces';
 jest.mock('@/lib/repositories/base/repository-factory');
 jest.mock('@/lib/auth/session');
 
-// Mock console methods
-const consoleSpy = {
-  error: jest.spyOn(console, 'error').mockImplementation(),
-  log: jest.spyOn(console, 'log').mockImplementation()
-};
+// Mock console
+const mockConsoleError = createMockConsoleError();
 
 describe('GET /api/assessment/programs/[programId]/evaluation', () => {
   const mockProgramRepo = {
@@ -152,8 +150,11 @@ describe('GET /api/assessment/programs/[programId]/evaluation', () => {
   });
 
   afterEach(() => {
-    consoleSpy.error.mockClear();
-    consoleSpy.log.mockClear();
+    jest.clearAllMocks();
+  });
+
+  afterAll(() => {
+    mockConsoleError.mockRestore();
   });
 
   describe('Authentication', () => {
@@ -287,7 +288,7 @@ describe('GET /api/assessment/programs/[programId]/evaluation', () => {
 
       expect(response.status).toBe(404);
       expect(data.error).toBe('Evaluation not found');
-      expect(consoleSpy.error).toHaveBeenCalledWith(
+      expect(mockConsoleError).toHaveBeenCalledWith(
         'No assessment_complete evaluation found for program',
         'program-123',
         expect.objectContaining({
@@ -309,7 +310,7 @@ describe('GET /api/assessment/programs/[programId]/evaluation', () => {
 
       expect(response.status).toBe(404);
       expect(data.error).toBe('Evaluation not found');
-      expect(consoleSpy.error).toHaveBeenCalledWith(
+      expect(mockConsoleError).toHaveBeenCalledWith(
         'No assessment_complete evaluation found for program',
         'program-123',
         expect.objectContaining({
@@ -321,19 +322,24 @@ describe('GET /api/assessment/programs/[programId]/evaluation', () => {
       );
     });
 
-    it('should log evaluation details', async () => {
+    it('should process multiple evaluations correctly', async () => {
       mockEvaluationRepo.findByProgram.mockResolvedValue(mockEvaluations);
 
       const request = new NextRequest('http://localhost/api/assessment/programs/program-123/evaluation');
-      await GET(request, { params: Promise.resolve({ programId: 'program-123' }) });
+      const response = await GET(request, { params: Promise.resolve({ programId: 'program-123' }) });
+      const data = await response.json();
 
-      expect(consoleSpy.log).toHaveBeenCalledWith(
-        'Found evaluations for program',
-        'program-123',
+      expect(response.status).toBe(200);
+      expect(data).toEqual(
         expect.objectContaining({
-          evaluationsCount: 3,
-          evaluationTypes: ['task', 'program', 'task'],
-          evaluationIds: ['eval-1', 'eval-2', 'eval-3']
+          program: expect.objectContaining({
+            id: 'program-123'
+          }),
+          evaluation: expect.objectContaining({
+            id: 'eval-2',
+            evaluationType: 'program',
+            evaluationSubtype: 'assessment_complete'
+          })
         })
       );
     });
@@ -370,7 +376,7 @@ describe('GET /api/assessment/programs/[programId]/evaluation', () => {
 
       expect(response.status).toBe(500);
       expect(data.error).toBe('Failed to load evaluation');
-      expect(consoleSpy.error).toHaveBeenCalledWith(
+      expect(mockConsoleError).toHaveBeenCalledWith(
         'Error getting evaluation:',
         expect.any(Error)
       );

@@ -1,19 +1,23 @@
 import { NextRequest } from 'next/server';
 import { GET } from '../route';
+import { getServerSession } from '@/lib/auth/session';
+import { postgresqlLearningService } from '@/lib/services/postgresql-learning-service';
 
 // Mock auth session
-const mockGetServerSession = jest.fn();
 jest.mock('@/lib/auth/session', () => ({
-  getServerSession: mockGetServerSession
+  getServerSession: jest.fn()
 }));
 
 // Mock learning service
-const mockGetProgramStatus = jest.fn();
 jest.mock('@/lib/services/postgresql-learning-service', () => ({
   postgresqlLearningService: {
-    getProgramStatus: mockGetProgramStatus,
+    getProgramStatus: jest.fn(),
   },
 }));
+
+// Get mocked functions
+const mockGetServerSession = getServerSession as jest.MockedFunction<typeof getServerSession>;
+const mockGetProgramStatus = postgresqlLearningService.getProgramStatus as jest.MockedFunction<typeof postgresqlLearningService.getProgramStatus>;
 
 describe('GET /api/learning/programs/[programId]/status', () => {
   beforeEach(() => {
@@ -35,7 +39,7 @@ describe('GET /api/learning/programs/[programId]/status', () => {
   });
 
   it('returns 401 when session has no email', async () => {
-    mockGetServerSession.mockResolvedValue({ user: {} });
+    mockGetServerSession.mockResolvedValue({ user: { id: 'user123' } as { id: string; email?: string } });
 
     const request = new NextRequest('http://localhost:3000/api/learning/programs/prog123/status');
     const response = await GET(request, { params: Promise.resolve({ programId: 'prog123' }) });
@@ -75,7 +79,7 @@ describe('GET /api/learning/programs/[programId]/status', () => {
       ],
     };
 
-    mockGetServerSession.mockResolvedValue({ user: { email: 'test@example.com' } });
+    mockGetServerSession.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com' } });
     mockGetProgramStatus.mockResolvedValue(mockStatus);
 
     const request = new NextRequest('http://localhost:3000/api/learning/programs/prog123/status');
@@ -91,7 +95,7 @@ describe('GET /api/learning/programs/[programId]/status', () => {
   });
 
   it('returns 404 when program not found', async () => {
-    mockGetServerSession.mockResolvedValue({ user: { email: 'test@example.com' } });
+    mockGetServerSession.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com' } });
     mockGetProgramStatus.mockRejectedValue(new Error('Program not found'));
 
     const request = new NextRequest('http://localhost:3000/api/learning/programs/nonexistent/status');
@@ -106,7 +110,7 @@ describe('GET /api/learning/programs/[programId]/status', () => {
   });
 
   it('returns 500 for other errors', async () => {
-    mockGetServerSession.mockResolvedValue({ user: { email: 'test@example.com' } });
+    mockGetServerSession.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com' } });
     mockGetProgramStatus.mockRejectedValue(new Error('Database connection failed'));
 
     const request = new NextRequest('http://localhost:3000/api/learning/programs/prog123/status');
@@ -135,7 +139,7 @@ describe('GET /api/learning/programs/[programId]/status', () => {
       achievements: [],
     };
 
-    mockGetServerSession.mockResolvedValue({ user: { email: 'test@example.com' } });
+    mockGetServerSession.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com' } });
     mockGetProgramStatus.mockResolvedValue(emptyStatus);
 
     const request = new NextRequest('http://localhost:3000/api/learning/programs/prog123/status');
@@ -172,7 +176,7 @@ describe('GET /api/learning/programs/[programId]/status', () => {
       ],
     };
 
-    mockGetServerSession.mockResolvedValue({ user: { email: 'test@example.com' } });
+    mockGetServerSession.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com' } });
     mockGetProgramStatus.mockResolvedValue(completedStatus);
 
     const request = new NextRequest('http://localhost:3000/api/learning/programs/prog123/status');

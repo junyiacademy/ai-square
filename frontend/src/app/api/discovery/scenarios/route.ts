@@ -10,9 +10,9 @@ import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
  * GET /api/discovery/scenarios
  * 獲取所有 Discovery Scenarios
  */
-// 簡單的記憶體快取
-let cachedScenarios: unknown | null = null;
-let cacheTimestamp: number = 0;
+// 簡單的記憶體快取 - 按語言分別快取
+const cachedScenarios: Map<string, unknown> = new Map();
+const cacheTimestamps: Map<string, number> = new Map();
 const CACHE_DURATION = 5 * 60 * 1000; // 5 分鐘
 
 
@@ -29,8 +29,12 @@ export async function GET(request: NextRequest) {
     
     // 檢查語言特定快取 - 不快取有用戶的請求
     const now = Date.now();
-    if (!userId && cachedScenarios && (now - cacheTimestamp) < CACHE_DURATION) {
-      return NextResponse.json(cachedScenarios);
+    const cacheKey = language;
+    const cachedData = cachedScenarios.get(cacheKey);
+    const cacheTime = cacheTimestamps.get(cacheKey) || 0;
+    
+    if (!userId && cachedData && (now - cacheTime) < CACHE_DURATION) {
+      return NextResponse.json(cachedData);
     }
     
     const scenarioRepo = repositoryFactory.getScenarioRepository();
@@ -153,9 +157,11 @@ export async function GET(request: NextRequest) {
       }
     };
     
-    // 更新快取
-    cachedScenarios = responseData;
-    cacheTimestamp = now;
+    // 更新語言特定快取 - 只快取沒有用戶的請求
+    if (!userId) {
+      cachedScenarios.set(cacheKey, responseData);
+      cacheTimestamps.set(cacheKey, now);
+    }
     
     // Return in consistent format with other APIs
     return NextResponse.json(responseData);

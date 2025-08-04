@@ -7,6 +7,7 @@ import { NextRequest } from 'next/server';
 import { GET } from '../route';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { getServerSession } from '@/lib/auth/session';
+import { mockConsoleError as createMockConsoleError } from '@/test-utils/helpers/console';
 import type { IProgram, ITask } from '@/types/unified-learning';
 import type { User } from '@/lib/repositories/interfaces';
 
@@ -14,11 +15,8 @@ import type { User } from '@/lib/repositories/interfaces';
 jest.mock('@/lib/repositories/base/repository-factory');
 jest.mock('@/lib/auth/session');
 
-// Mock console methods
-const consoleSpy = {
-  error: jest.spyOn(console, 'error').mockImplementation(),
-  log: jest.spyOn(console, 'log').mockImplementation()
-};
+// Mock console
+const mockConsoleError = createMockConsoleError();
 
 describe('GET /api/assessment/programs/[programId]', () => {
   const mockProgramRepo = {
@@ -146,8 +144,11 @@ describe('GET /api/assessment/programs/[programId]', () => {
   });
 
   afterEach(() => {
-    consoleSpy.error.mockClear();
-    consoleSpy.log.mockClear();
+    jest.clearAllMocks();
+  });
+
+  afterAll(() => {
+    mockConsoleError.mockRestore();
   });
 
   describe('Authentication', () => {
@@ -240,7 +241,7 @@ describe('GET /api/assessment/programs/[programId]', () => {
 
       expect(response.status).toBe(403);
       expect(data.error).toBe('Access denied');
-      expect(consoleSpy.error).toHaveBeenCalledWith(
+      expect(mockConsoleError).toHaveBeenCalledWith(
         'Access denied:',
         expect.objectContaining({
           programUserId: 'other-user-id',
@@ -268,7 +269,7 @@ describe('GET /api/assessment/programs/[programId]', () => {
 
       expect(response.status).toBe(404);
       expect(data.error).toBe('No tasks found');
-      expect(consoleSpy.error).toHaveBeenCalledWith(
+      expect(mockConsoleError).toHaveBeenCalledWith(
         'No tasks found for program',
         'program-123',
         expect.any(Object)
@@ -387,22 +388,26 @@ describe('GET /api/assessment/programs/[programId]', () => {
       expect(data.totalTasks).toBe(1);
     });
 
-    it('should log debug information', async () => {
+    it('should process tasks correctly', async () => {
       mockTaskRepo.findByProgram.mockResolvedValue(mockTasks);
 
       const request = new NextRequest('http://localhost/api/assessment/programs/program-123');
-      await GET(request, { params: Promise.resolve({ programId: 'program-123' }) });
+      const response = await GET(request, { params: Promise.resolve({ programId: 'program-123' }) });
+      const data = await response.json();
 
-      expect(consoleSpy.log).toHaveBeenCalledWith(
-        'Debug: Tasks loaded for program',
-        'program-123',
+      expect(response.status).toBe(200);
+      expect(data).toEqual(
         expect.objectContaining({
-          tasksCount: 2,
-          includeAllTasks: false,
+          program: expect.objectContaining({
+            id: 'program-123'
+          }),
+          currentTask: expect.objectContaining({
+            id: 'task-1'
+          }),
           tasks: expect.arrayContaining([
             expect.objectContaining({
               id: 'task-1',
-              hasQuestions: true
+              questionsCount: 2
             })
           ])
         })
@@ -427,7 +432,7 @@ describe('GET /api/assessment/programs/[programId]', () => {
 
       expect(response.status).toBe(500);
       expect(data.error).toBe('Failed to load program');
-      expect(consoleSpy.error).toHaveBeenCalledWith(
+      expect(mockConsoleError).toHaveBeenCalledWith(
         'Error getting program:',
         expect.any(Error)
       );

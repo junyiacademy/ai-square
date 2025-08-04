@@ -9,6 +9,7 @@ import { getServerSession } from '@/lib/auth/session';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import type { IProgram, ITask, IEvaluation } from '@/types/unified-learning';
 import type { User } from '@/lib/repositories/interfaces';
+import { mockConsoleError as createMockConsoleError } from '@/test-utils/helpers/console';
 
 // Mock dependencies
 jest.mock('@/lib/auth/session');
@@ -20,10 +21,8 @@ jest.mock('@/lib/utils/language', () => ({
 const mockGetServerSession = getServerSession as jest.MockedFunction<typeof getServerSession>;
 const mockRepositoryFactory = repositoryFactory as jest.Mocked<typeof repositoryFactory>;
 
-// Mock console methods
-const consoleSpy = {
-  error: jest.spyOn(console, 'error').mockImplementation()
-};
+// Mock console
+const mockConsoleError = createMockConsoleError();
 
 // Valid UUID for testing
 const VALID_UUID = '12345678-1234-1234-1234-123456789012';
@@ -148,7 +147,11 @@ describe('GET /api/assessment/programs/[programId]/tasks/[taskId]', () => {
   });
 
   afterEach(() => {
-    consoleSpy.error.mockClear();
+    jest.clearAllMocks();
+  });
+
+  afterAll(() => {
+    mockConsoleError.mockRestore();
   });
 
   describe('Parameter validation', () => {
@@ -305,7 +308,7 @@ describe('GET /api/assessment/programs/[programId]/tasks/[taskId]', () => {
       expect(response.status).toBe(500);
       expect(data.success).toBe(false);
       expect(data.error).toBe('Failed to fetch task');
-      expect(consoleSpy.error).toHaveBeenCalledWith(
+      expect(mockConsoleError).toHaveBeenCalledWith(
         'Error fetching assessment task:',
         expect.any(Error)
       );
@@ -678,7 +681,7 @@ describe('PATCH /api/assessment/programs/[programId]/tasks/[taskId]', () => {
       expect(response.status).toBe(500);
       expect(data.success).toBe(false);
       expect(data.error).toBe('Failed to update task');
-      expect(consoleSpy.error).toHaveBeenCalledWith(
+      expect(mockConsoleError).toHaveBeenCalledWith(
         'Error updating assessment task:',
         expect.any(Error)
       );

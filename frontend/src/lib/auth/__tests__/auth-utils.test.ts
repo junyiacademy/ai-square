@@ -57,7 +57,7 @@ describe('auth-utils', () => {
         },
       });
 
-      mockVerifyAccessToken.mockResolvedValueOnce(null).mockResolvedValueOnce(mockTokenPayload);
+      mockVerifyAccessToken.mockResolvedValueOnce(mockTokenPayload);
 
       const result = await getAuthFromRequest(request);
 
@@ -123,8 +123,14 @@ describe('auth-utils', () => {
         value: {
           get: jest.fn((name: string) => {
             if (name === 'isLoggedIn') return { value: 'true' };
-            if (name === 'userId') return { value: '789' };
-            if (name === 'email') return { value: 'legacy@example.com' };
+            if (name === 'user') return { 
+              value: JSON.stringify({
+                id: 789,
+                email: 'legacy@example.com',
+                role: 'student',
+                name: 'Legacy User'
+              })
+            };
             return undefined;
           }),
         },
@@ -138,7 +144,7 @@ describe('auth-utils', () => {
         userId: 789,
         email: 'legacy@example.com',
         role: 'student',
-        name: 'legacy@example.com',
+        name: 'Legacy User',
       });
     });
 
@@ -246,7 +252,7 @@ describe('auth-utils', () => {
   describe('mockUser', () => {
     it('provides a mock user for testing', () => {
       expect(mockUser).toEqual({
-        userId: 123,
+        userId: 1,
         email: 'test@example.com',
         role: 'student',
         name: 'Test User',

@@ -103,7 +103,7 @@ describe('/api/discovery/programs/[programId]', () => {
 
       mockProgramRepo.findById.mockResolvedValue(mockProgram);
       mockTaskRepo.findByProgram.mockResolvedValue(mockTasks);
-      mockScenarioRepo.findById.mockResolvedValue(mockScenario);
+      (mockScenarioRepo.findById as jest.Mock).mockResolvedValue(mockScenario);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/programs/prog-123');
       const response = await GET(request, { params: Promise.resolve({ programId: 'prog-123' }) });

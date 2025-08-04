@@ -1,11 +1,14 @@
 import { NextRequest } from 'next/server';
 import { GET, POST } from '../route';
+import { getServerSession } from '@/lib/auth/session';
 
 // Mock auth session
-const mockGetServerSession = jest.fn();
 jest.mock('@/lib/auth/session', () => ({
-  getServerSession: mockGetServerSession
+  getServerSession: jest.fn()
 }));
+
+// Get mocked function
+const mockGetServerSession = getServerSession as jest.MockedFunction<typeof getServerSession>;
 
 // Mock repositories
 const mockFindByUser = jest.fn();
@@ -66,7 +69,7 @@ describe('Assessment Scenarios Programs API', () => {
     });
 
     it('returns 404 when user not found', async () => {
-      mockGetServerSession.mockResolvedValue({ user: { email: 'test@example.com' } });
+      mockGetServerSession.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com' } });
       mockFindByEmail.mockResolvedValue(null);
 
       const request = new NextRequest('http://localhost:3000/api/assessment/scenarios/scenario123/programs');
@@ -78,7 +81,7 @@ describe('Assessment Scenarios Programs API', () => {
     });
 
     it('returns empty array when user has no programs', async () => {
-      mockGetServerSession.mockResolvedValue({ user: { email: 'test@example.com' } });
+      mockGetServerSession.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com' } });
       mockFindByEmail.mockResolvedValue({ id: 'user123', email: 'test@example.com' });
       mockFindByUser.mockResolvedValue([]);
 
@@ -129,7 +132,7 @@ describe('Assessment Scenarios Programs API', () => {
         },
       };
 
-      mockGetServerSession.mockResolvedValue({ user: { email: 'test@example.com' } });
+      mockGetServerSession.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com' } });
       mockFindByEmail.mockResolvedValue({ id: 'user123', email: 'test@example.com' });
       mockFindByUser.mockResolvedValue(mockPrograms);
       mockFindById.mockResolvedValue(mockEvaluation); // For evaluation lookup
@@ -157,7 +160,7 @@ describe('Assessment Scenarios Programs API', () => {
         },
       ];
 
-      mockGetServerSession.mockResolvedValue({ user: { email: 'test@example.com' } });
+      mockGetServerSession.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com' } });
       mockFindByEmail.mockResolvedValue({ id: 'user123', email: 'test@example.com' });
       mockFindByUser.mockResolvedValue(mockPrograms);
       mockFindById.mockResolvedValue(null); // Evaluation not found
@@ -189,7 +192,7 @@ describe('Assessment Scenarios Programs API', () => {
     });
 
     it('returns 400 for invalid action', async () => {
-      mockGetServerSession.mockResolvedValue({ user: { email: 'test@example.com' } });
+      mockGetServerSession.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com' } });
 
       const request = new NextRequest('http://localhost:3000/api/assessment/scenarios/scenario123/programs', {
         method: 'POST',
@@ -227,7 +230,7 @@ describe('Assessment Scenarios Programs API', () => {
         { id: 'task2', content: { questions: [4, 5] } },
       ];
 
-      mockGetServerSession.mockResolvedValue({ user: { email: 'newuser@example.com' } });
+      mockGetServerSession.mockResolvedValue({ user: { id: 'newuser123', email: 'newuser@example.com' } });
       mockFindByEmail.mockResolvedValueOnce(null); // User doesn't exist
       mockCreate.mockResolvedValue(mockNewUser); // Create user
       mockFindById.mockResolvedValue(mockScenario);
@@ -266,7 +269,7 @@ describe('Assessment Scenarios Programs API', () => {
         { id: 'task1', content: { questions: [1, 2] } },
       ];
 
-      mockGetServerSession.mockResolvedValue({ user: { email: 'test@example.com' } });
+      mockGetServerSession.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com' } });
       mockFindByEmail.mockResolvedValue(mockUser);
       mockFindById.mockResolvedValue(mockScenario);
       mockFindByUser.mockResolvedValue([mockExistingProgram]);
@@ -287,7 +290,7 @@ describe('Assessment Scenarios Programs API', () => {
     });
 
     it('returns 404 when scenario not found', async () => {
-      mockGetServerSession.mockResolvedValue({ user: { email: 'test@example.com' } });
+      mockGetServerSession.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com' } });
       mockFindByEmail.mockResolvedValue({ id: 'user123', email: 'test@example.com' });
       mockFindById.mockResolvedValue(null);
 
@@ -306,7 +309,7 @@ describe('Assessment Scenarios Programs API', () => {
     it('returns 400 when scenario is not assessment type', async () => {
       const mockScenario = { id: 'scenario123', mode: 'pbl' }; // Not assessment
 
-      mockGetServerSession.mockResolvedValue({ user: { email: 'test@example.com' } });
+      mockGetServerSession.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com' } });
       mockFindByEmail.mockResolvedValue({ id: 'user123', email: 'test@example.com' });
       mockFindById.mockResolvedValue(mockScenario);
 
@@ -323,7 +326,7 @@ describe('Assessment Scenarios Programs API', () => {
     });
 
     it('handles errors gracefully', async () => {
-      mockGetServerSession.mockResolvedValue({ user: { email: 'test@example.com' } });
+      mockGetServerSession.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com' } });
       mockFindByEmail.mockRejectedValue(new Error('Database error'));
 
       const request = new NextRequest('http://localhost:3000/api/assessment/scenarios/scenario123/programs', {

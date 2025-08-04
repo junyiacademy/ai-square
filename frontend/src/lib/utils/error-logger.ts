@@ -45,7 +45,9 @@ export class ErrorLogger {
 
     // In production, you might want to send this to a logging service
     if (process.env.NODE_ENV === 'development') {
-      const consoleMethod = console[level as keyof Console] as (...args: unknown[]) => void;
+      // Map FATAL to error since console.fatal doesn't exist
+      const consoleLevel = level === LogLevel.FATAL ? 'error' : level;
+      const consoleMethod = console[consoleLevel as keyof Console] as (...args: unknown[]) => void;
       if (typeof consoleMethod === 'function') {
         consoleMethod(message, error, context);
       }

@@ -119,7 +119,7 @@ describe('Discovery Programs API', () => {
     it('should create a new discovery program', async () => {
       // Arrange
       mockUserRepo.findByEmail.mockResolvedValue(mockUser);
-      mockScenarioRepo.findById.mockResolvedValue(mockScenario);
+      (mockScenarioRepo.findById as jest.Mock).mockResolvedValue(mockScenario);
       mockProgramRepo.create.mockResolvedValue(mockProgram);
 
       const request = createMockNextRequest('http://localhost:3000/api/discovery/programs', {
@@ -143,7 +143,7 @@ describe('Discovery Programs API', () => {
     it('should include skill gap analysis in new program', async () => {
       // Arrange
       mockUserRepo.findByEmail.mockResolvedValue(mockUser);
-      mockScenarioRepo.findById.mockResolvedValue(mockScenario);
+      (mockScenarioRepo.findById as jest.Mock).mockResolvedValue(mockScenario);
       mockProgramRepo.create.mockResolvedValue(mockProgram);
 
       const request = createMockNextRequest('http://localhost:3000/api/discovery/programs', {
@@ -184,7 +184,7 @@ describe('Discovery Programs API', () => {
     it('should validate scenario exists', async () => {
       // Arrange
       mockUserRepo.findByEmail.mockResolvedValue(mockUser);
-      mockScenarioRepo.findById.mockResolvedValue(null);
+      (mockScenarioRepo.findById as jest.Mock).mockResolvedValue(null);
 
       const request = createMockNextRequest('http://localhost:3000/api/discovery/programs', {
         method: 'POST',
@@ -204,7 +204,7 @@ describe('Discovery Programs API', () => {
     it('should validate scenario is discovery mode', async () => {
       // Arrange
       mockUserRepo.findByEmail.mockResolvedValue(mockUser);
-      mockScenarioRepo.findById.mockResolvedValue({
+      (mockScenarioRepo.findById as jest.Mock).mockResolvedValue({
         ...mockScenario,
         mode: 'pbl'
       });
@@ -347,7 +347,7 @@ describe('Discovery Programs API', () => {
     it('should handle repository errors gracefully', async () => {
       // Arrange
       mockUserRepo.findByEmail.mockResolvedValue(mockUser);
-      mockScenarioRepo.findById.mockRejectedValue(new Error('Database error'));
+      (mockScenarioRepo.findById as jest.Mock).mockRejectedValue(new Error('Database error'));
 
       const request = createMockNextRequest('http://localhost:3000/api/discovery/programs', {
         method: 'POST',

@@ -7,6 +7,7 @@ import { NextRequest } from 'next/server';
 import { GET } from '../route';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import type { IEvaluation } from '@/types/unified-learning';
+import { mockConsoleError as createMockConsoleError } from '@/test-utils/helpers/console';
 
 // Mock dependencies
 jest.mock('@/lib/repositories/base/repository-factory');
@@ -14,9 +15,9 @@ jest.mock('@/lib/repositories/base/repository-factory');
 const mockRepositoryFactory = repositoryFactory as jest.Mocked<typeof repositoryFactory>;
 
 // Mock console methods
+const mockConsoleError = createMockConsoleError();
 const consoleSpy = {
-  log: jest.spyOn(console, 'log').mockImplementation(),
-  error: jest.spyOn(console, 'error').mockImplementation()
+  log: jest.spyOn(console, 'log').mockImplementation()
 };
 
 describe('GET /api/pbl/evaluations', () => {
@@ -98,7 +99,11 @@ describe('GET /api/pbl/evaluations', () => {
 
   afterEach(() => {
     consoleSpy.log.mockClear();
-    consoleSpy.error.mockClear();
+  });
+
+  afterAll(() => {
+    mockConsoleError.mockRestore();
+    consoleSpy.log.mockRestore();
   });
 
   function createRequest(params: Record<string, string> = {}, userEmail?: string) {
@@ -330,7 +335,7 @@ describe('GET /api/pbl/evaluations', () => {
       expect(response.status).toBe(500);
       expect(data.success).toBe(false);
       expect(data.error).toBe('Failed to get evaluations');
-      expect(consoleSpy.error).toHaveBeenCalledWith(
+      expect(mockConsoleError).toHaveBeenCalledWith(
         'Error getting evaluations:',
         expect.any(Error)
       );

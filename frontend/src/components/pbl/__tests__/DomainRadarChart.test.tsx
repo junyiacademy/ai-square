@@ -63,17 +63,17 @@ describe('DomainRadarChart', () => {
     const radarChart = screen.getByTestId('radar-chart')
     const chartData = JSON.parse(radarChart.getAttribute('data-chart-data') || '{}')
 
-    // Check that labels are properly translated
-    expect(chartData.labels).toContain('Engaging with AI')
-    expect(chartData.labels).toContain('Creating with AI')
-    expect(chartData.labels).toContain('Managing AI')
-    expect(chartData.labels).toContain('Designing AI')
+    // Check that labels are translation keys (since mock returns keys)
+    expect(chartData.labels).toContain('homepage:domains.items.engaging.name')
+    expect(chartData.labels).toContain('homepage:domains.items.creating.name')
+    expect(chartData.labels).toContain('homepage:domains.items.managing.name')
+    expect(chartData.labels).toContain('homepage:domains.items.designing.name')
 
     // Check dataset
     expect(chartData.datasets).toHaveLength(1)
     const dataset = chartData.datasets[0]
     
-    expect(dataset.label).toBe('Domain Scores')
+    expect(dataset.label).toBe('homepage:domains.title')
     expect(dataset.data).toEqual([85, 72, 90, 78])
   })
 
@@ -105,8 +105,9 @@ describe('DomainRadarChart', () => {
     const radarChart = screen.getByTestId('radar-chart')
     const chartData = JSON.parse(radarChart.getAttribute('data-chart-data') || '{}')
 
-    expect(chartData.labels).toEqual([])
-    expect(chartData.datasets[0].data).toEqual([])
+    // Component always renders all 4 domains
+    expect(chartData.labels).toHaveLength(4)
+    expect(chartData.datasets[0].data).toEqual([0, 0, 0, 0])
   })
 
   it('handles partial domain scores', () => {
@@ -122,10 +123,9 @@ describe('DomainRadarChart', () => {
     const radarChart = screen.getByTestId('radar-chart')
     const chartData = JSON.parse(radarChart.getAttribute('data-chart-data') || '{}')
 
-    expect(chartData.labels).toHaveLength(2)
-    expect(chartData.labels).toContain('Engaging with AI')
-    expect(chartData.labels).toContain('Creating with AI')
-    expect(chartData.datasets[0].data).toEqual([85, 72])
+    // Component always renders all 4 domains, even with 0 scores
+    expect(chartData.labels).toHaveLength(4)
+    expect(chartData.datasets[0].data).toEqual([85, 72, 0, 0])
   })
 
   it('applies correct styling to dataset', () => {

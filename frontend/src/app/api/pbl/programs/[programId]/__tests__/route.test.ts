@@ -1,37 +1,39 @@
 import { NextRequest } from 'next/server'
+import { 
+  createMockProgramRepository, 
+  createMockTaskRepository,
+  createMockEvaluationRepository
+} from '@/test-utils/mocks/repository-helpers'
 
 // Mock auth session
-const mockGetServerSession = jest.fn()
 jest.mock('@/lib/auth/session', () => ({
-  getServerSession: mockGetServerSession
+  getServerSession: jest.fn()
 }))
 
 // Mock repository factory
-const mockGetProgramRepository = jest.fn()
-const mockGetTaskRepository = jest.fn()
-const mockGetEvaluationRepository = jest.fn()
 jest.mock('@/lib/repositories/base/repository-factory', () => ({
   repositoryFactory: {
-    getProgramRepository: mockGetProgramRepository,
-    getTaskRepository: mockGetTaskRepository,
-    getEvaluationRepository: mockGetEvaluationRepository,
+    getProgramRepository: jest.fn(),
+    getTaskRepository: jest.fn(),
+    getEvaluationRepository: jest.fn(),
   }
 }))
 
 import { GET } from '../route'
+import { getServerSession } from '@/lib/auth/session'
+import { repositoryFactory } from '@/lib/repositories/base/repository-factory'
+
+// Get mocked functions
+const mockGetServerSession = getServerSession as jest.MockedFunction<typeof getServerSession>
+const mockGetProgramRepository = repositoryFactory.getProgramRepository as jest.MockedFunction<typeof repositoryFactory.getProgramRepository>
+const mockGetTaskRepository = repositoryFactory.getTaskRepository as jest.MockedFunction<typeof repositoryFactory.getTaskRepository>
+const mockGetEvaluationRepository = repositoryFactory.getEvaluationRepository as jest.MockedFunction<typeof repositoryFactory.getEvaluationRepository>
 
 describe('/api/pbl/programs/[programId]', () => {
-  // Mock repositories
-  const mockProgramRepo = {
-    findById: jest.fn(),
-    update: jest.fn(),
-  }
-  const mockTaskRepo = {
-    findByProgram: jest.fn(),
-  }
-  const mockEvaluationRepo = {
-    findByProgram: jest.fn(),
-  }
+  // Mock repositories using proper helpers
+  const mockProgramRepo = createMockProgramRepository()
+  const mockTaskRepo = createMockTaskRepository()
+  const mockEvaluationRepo = createMockEvaluationRepository()
 
   beforeEach(() => {
     jest.clearAllMocks()

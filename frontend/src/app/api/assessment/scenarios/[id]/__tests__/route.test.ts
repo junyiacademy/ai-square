@@ -93,7 +93,7 @@ describe('Assessment Scenario API Route', () => {
         metadata: {}
       };
 
-      mockScenarioRepo.findById.mockResolvedValue(mockScenario);
+      (mockScenarioRepo.findById as jest.Mock).mockResolvedValue(mockScenario);
 
       const request = new NextRequest('http://localhost:3000/api/assessment/scenarios/test-scenario-id?lang=en');
       const params = Promise.resolve({ id: 'test-scenario-id' });
@@ -144,7 +144,7 @@ describe('Assessment Scenario API Route', () => {
         metadata: {}
       };
 
-      mockScenarioRepo.findById.mockResolvedValue(mockScenario);
+      (mockScenarioRepo.findById as jest.Mock).mockResolvedValue(mockScenario);
 
       const request = new NextRequest('http://localhost:3000/api/assessment/scenarios/test-scenario-id?lang=zh');
       const params = Promise.resolve({ id: 'test-scenario-id' });
@@ -185,7 +185,7 @@ describe('Assessment Scenario API Route', () => {
         metadata: {}
       };
 
-      mockScenarioRepo.findById.mockResolvedValue(mockScenario);
+      (mockScenarioRepo.findById as jest.Mock).mockResolvedValue(mockScenario);
 
       const request = new NextRequest('http://localhost:3000/api/assessment/scenarios/test-scenario-id');
       const params = Promise.resolve({ id: 'test-scenario-id' });
@@ -199,7 +199,7 @@ describe('Assessment Scenario API Route', () => {
     });
 
     it('should return 404 when scenario not found', async () => {
-      mockScenarioRepo.findById.mockResolvedValue(null);
+      (mockScenarioRepo.findById as jest.Mock).mockResolvedValue(null);
 
       const request = new NextRequest('http://localhost:3000/api/assessment/scenarios/non-existent');
       const params = Promise.resolve({ id: 'non-existent' });
@@ -240,7 +240,7 @@ describe('Assessment Scenario API Route', () => {
         // No taskTemplates
       };
 
-      mockScenarioRepo.findById.mockResolvedValue(mockScenario);
+      (mockScenarioRepo.findById as jest.Mock).mockResolvedValue(mockScenario);
 
       const request = new NextRequest('http://localhost:3000/api/assessment/scenarios/test-scenario-id');
       const params = Promise.resolve({ id: 'test-scenario-id' });
@@ -308,7 +308,7 @@ describe('Assessment Scenario API Route', () => {
         metadata: {}
       };
 
-      mockScenarioRepo.findById.mockResolvedValue(mockScenario);
+      (mockScenarioRepo.findById as jest.Mock).mockResolvedValue(mockScenario);
 
       const request = new NextRequest('http://localhost:3000/api/assessment/scenarios/test-scenario-id');
       const params = Promise.resolve({ id: 'test-scenario-id' });
@@ -353,7 +353,7 @@ describe('Assessment Scenario API Route', () => {
         metadata: {}
       };
 
-      mockScenarioRepo.findById.mockResolvedValue(mockScenario);
+      (mockScenarioRepo.findById as jest.Mock).mockResolvedValue(mockScenario);
 
       const request = new NextRequest('http://localhost:3000/api/assessment/scenarios/test-scenario-id?lang=fr');
       const params = Promise.resolve({ id: 'test-scenario-id' });
@@ -394,7 +394,7 @@ describe('Assessment Scenario API Route', () => {
         metadata: {}
       };
 
-      mockScenarioRepo.findById.mockResolvedValue(mockScenario);
+      (mockScenarioRepo.findById as jest.Mock).mockResolvedValue(mockScenario);
 
       const request = new NextRequest('http://localhost:3000/api/assessment/scenarios/test-scenario-id');
       const params = Promise.resolve({ id: 'test-scenario-id' });
@@ -408,7 +408,7 @@ describe('Assessment Scenario API Route', () => {
     });
 
     it('should handle repository errors', async () => {
-      mockScenarioRepo.findById.mockRejectedValue(new Error('Database error'));
+      (mockScenarioRepo.findById as jest.Mock).mockRejectedValue(new Error('Database error'));
 
       const request = new NextRequest('http://localhost:3000/api/assessment/scenarios/test-scenario-id');
       const params = Promise.resolve({ id: 'test-scenario-id' });
@@ -452,7 +452,7 @@ describe('Assessment Scenario API Route', () => {
         metadata: {}
       };
 
-      mockScenarioRepo.findById.mockResolvedValue(mockScenario);
+      (mockScenarioRepo.findById as jest.Mock).mockResolvedValue(mockScenario);
 
       const request = new NextRequest('http://localhost:3000/api/assessment/scenarios/test-scenario-id');
       const params = Promise.resolve({ id: 'test-scenario-id' });

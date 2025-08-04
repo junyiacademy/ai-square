@@ -10,7 +10,7 @@ import { getServerSession } from '@/lib/auth/session';
 import { promises as fs } from 'fs';
 import path from 'path';
 import { mockConsoleError as createMockConsoleError, mockConsoleWarn as createMockConsoleWarn } from '@/test-utils/helpers/console';
-import { createMockScenarioRepository } from '@/test-utils/mocks/repository-helpers';
+import { createMockScenarioRepository, createMockScenario } from '@/test-utils/mocks/repository-helpers';
 
 // Mock dependencies
 jest.mock('@/lib/repositories/base/repository-factory');
@@ -47,7 +47,7 @@ describe('/api/assessment/scenarios', () => {
 
   describe('GET - Assessment Scenarios', () => {
     const mockDbScenarios = [
-      {
+      createMockScenario({
         id: 'scenario-1',
         mode: 'assessment',
         title: { en: 'AI Literacy Assessment', zh: 'AI 素養評估' },
@@ -59,8 +59,8 @@ describe('/api/assessment/scenarios', () => {
           passingScore: 70,
           domains: ['engaging_with_ai', 'creating_with_ai'],
         },
-      },
-      {
+      }),
+      createMockScenario({
         id: 'scenario-2',
         mode: 'assessment',
         title: { en: 'Data Science Assessment' },
@@ -72,11 +72,11 @@ describe('/api/assessment/scenarios', () => {
           passingScore: 65,
           domains: ['analyzing_data', 'machine_learning'],
         },
-      },
+      }),
     ];
 
     it('should return scenarios from database with default language', async () => {
-      mockScenarioRepo.findByMode.mockResolvedValue(mockDbScenarios);
+      (mockScenarioRepo.findByMode as jest.Mock).mockResolvedValue(mockDbScenarios);
 
       const request = new NextRequest('http://localhost:3000/api/assessment/scenarios');
       const response = await GET(request);
@@ -101,7 +101,7 @@ describe('/api/assessment/scenarios', () => {
     });
 
     it('should return scenarios with specified language', async () => {
-      mockScenarioRepo.findByMode.mockResolvedValue(mockDbScenarios);
+      (mockScenarioRepo.findByMode as jest.Mock).mockResolvedValue(mockDbScenarios);
 
       const request = new NextRequest('http://localhost:3000/api/assessment/scenarios?lang=zh');
       const response = await GET(request);
@@ -117,7 +117,7 @@ describe('/api/assessment/scenarios', () => {
         user: { id: 'user-123', email: 'user@example.com' },
       });
 
-      mockScenarioRepo.findByMode.mockResolvedValue(mockDbScenarios);
+      (mockScenarioRepo.findByMode as jest.Mock).mockResolvedValue(mockDbScenarios);
 
       const request = new NextRequest('http://localhost:3000/api/assessment/scenarios');
       const response = await GET(request);
@@ -132,8 +132,8 @@ describe('/api/assessment/scenarios', () => {
     });
 
     it('should fallback to filesystem when no scenarios in database', async () => {
-      mockScenarioRepo.findByMode.mockResolvedValue([]);
-      mockScenarioRepo.findActive.mockResolvedValue([]);
+      (mockScenarioRepo.findByMode as jest.Mock).mockResolvedValue([]);
+      (mockScenarioRepo.findActive as jest.Mock).mockResolvedValue([]);
 
       // Mock filesystem operations
       (fs.readdir as jest.Mock).mockResolvedValue([
@@ -154,12 +154,12 @@ assessment_config:
 
       (fs.readFile as jest.Mock).mockResolvedValue(mockYamlContent);
 
-      mockScenarioRepo.create.mockResolvedValue({
+      (mockScenarioRepo.create as jest.Mock).mockResolvedValue(createMockScenario({
         id: 'new-scenario-1',
         mode: 'assessment',
         title: { en: 'AI Literacy Test' },
         description: { en: 'Comprehensive AI assessment' },
-      });
+      }));
 
       const request = new NextRequest('http://localhost:3000/api/assessment/scenarios');
       const response = await GET(request);
@@ -192,8 +192,8 @@ assessment_config:
     });
 
     it('should handle language fallback for filesystem scenarios', async () => {
-      mockScenarioRepo.findByMode.mockResolvedValue([]);
-      mockScenarioRepo.findActive.mockResolvedValue([]);
+      (mockScenarioRepo.findByMode as jest.Mock).mockResolvedValue([]);
+      (mockScenarioRepo.findActive as jest.Mock).mockResolvedValue([]);
 
       (fs.readdir as jest.Mock).mockResolvedValue([
         { name: 'ai_literacy', isDirectory: () => true },
@@ -204,10 +204,10 @@ assessment_config:
         .mockRejectedValueOnce(new Error('File not found')) // zh file
         .mockResolvedValueOnce(`config: { title: "English Title" }`); // en file
 
-      mockScenarioRepo.create.mockResolvedValue({
+      (mockScenarioRepo.create as jest.Mock).mockResolvedValue(createMockScenario({
         id: 'new-scenario-1',
         title: { en: 'English Title' },
-      });
+      }));
 
       const request = new NextRequest('http://localhost:3000/api/assessment/scenarios?lang=zh');
       const response = await GET(request);
@@ -225,8 +225,8 @@ assessment_config:
     });
 
     it('should skip folders without config files', async () => {
-      mockScenarioRepo.findByMode.mockResolvedValue([]);
-      mockScenarioRepo.findActive.mockResolvedValue([]);
+      (mockScenarioRepo.findByMode as jest.Mock).mockResolvedValue([]);
+      (mockScenarioRepo.findActive as jest.Mock).mockResolvedValue([]);
 
       (fs.readdir as jest.Mock).mockResolvedValue([
         { name: 'ai_literacy', isDirectory: () => true },
@@ -248,19 +248,19 @@ assessment_config:
     });
 
     it('should use existing scenarios from filesystem cache', async () => {
-      mockScenarioRepo.findByMode.mockResolvedValue([]);
+      (mockScenarioRepo.findByMode as jest.Mock).mockResolvedValue([]);
       
       // Mock existing scenario in findActive
-      const existingScenario = {
+      const existingScenario = createMockScenario({
         id: 'existing-1',
         sourceMetadata: { 
           configPath: 'assessment_data/ai_literacy/ai_literacy_questions_en.yaml' 
         },
         title: { en: 'Existing Assessment' },
         description: { en: 'Already in DB' },
-      };
+      });
       
-      mockScenarioRepo.findActive.mockResolvedValue([existingScenario]);
+      (mockScenarioRepo.findActive as jest.Mock).mockResolvedValue([existingScenario]);
 
       (fs.readdir as jest.Mock).mockResolvedValue([
         { name: 'ai_literacy', isDirectory: () => true },
@@ -287,8 +287,8 @@ config:
     });
 
     it('should handle filesystem read errors', async () => {
-      mockScenarioRepo.findByMode.mockResolvedValue([]);
-      mockScenarioRepo.findActive.mockResolvedValue([]);
+      (mockScenarioRepo.findByMode as jest.Mock).mockResolvedValue([]);
+      (mockScenarioRepo.findActive as jest.Mock).mockResolvedValue([]);
 
       const error = new Error('Permission denied');
       (fs.readdir as jest.Mock).mockRejectedValue(error);
@@ -307,8 +307,8 @@ config:
     });
 
     it('should handle scenario creation errors', async () => {
-      mockScenarioRepo.findByMode.mockResolvedValue([]);
-      mockScenarioRepo.findActive.mockResolvedValue([]);
+      (mockScenarioRepo.findByMode as jest.Mock).mockResolvedValue([]);
+      (mockScenarioRepo.findActive as jest.Mock).mockResolvedValue([]);
 
       (fs.readdir as jest.Mock).mockResolvedValue([
         { name: 'ai_literacy', isDirectory: () => true },
@@ -317,7 +317,7 @@ config:
       (fs.readFile as jest.Mock).mockResolvedValue(`config: { title: "Test" }`);
 
       const createError = new Error('Database error');
-      mockScenarioRepo.create.mockRejectedValue(createError);
+      (mockScenarioRepo.create as jest.Mock).mockRejectedValue(createError);
 
       const request = new NextRequest('http://localhost:3000/api/assessment/scenarios');
       const response = await GET(request);
@@ -333,7 +333,7 @@ config:
 
     it('should handle general API errors', async () => {
       const error = new Error('Unexpected error');
-      mockScenarioRepo.findByMode.mockRejectedValue(error);
+      (mockScenarioRepo.findByMode as jest.Mock).mockRejectedValue(error);
 
       const request = new NextRequest('http://localhost:3000/api/assessment/scenarios');
       const response = await GET(request);
@@ -349,14 +349,14 @@ config:
     });
 
     it('should handle default values for missing config fields', async () => {
-      mockScenarioRepo.findByMode.mockResolvedValue([
-        {
+      (mockScenarioRepo.findByMode as jest.Mock).mockResolvedValue([
+        createMockScenario({
           id: 'scenario-3',
           mode: 'assessment',
           title: { en: 'Basic Assessment' },
           description: { en: 'Simple test' },
           assessmentData: {}, // Empty assessment data
-        },
+        }),
       ]);
 
       const request = new NextRequest('http://localhost:3000/api/assessment/scenarios');

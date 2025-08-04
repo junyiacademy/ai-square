@@ -126,8 +126,8 @@ describe('error-logger', () => {
       const error = new Error('Fatal error');
       logger.fatal('Fatal error occurred', error, { severity: 'critical' });
 
-      // fatal maps to console.log in default console
-      expect(mockConsole.log).toHaveBeenCalledWith(
+      // fatal maps to console.error since console.fatal doesn't exist
+      expect(mockConsole.error).toHaveBeenCalledWith(
         'Fatal error occurred',
         error,
         { severity: 'critical' }

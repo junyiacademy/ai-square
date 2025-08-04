@@ -261,8 +261,8 @@ describe('Module-specific Types', () => {
         }
       };
 
-      expect(assessmentTask.content.questions).toHaveLength(1);
-      expect(assessmentTask.content.timeLimit).toBe(1800);
+      expect((assessmentTask.content.context as Record<string, unknown>).questions).toHaveLength(1);
+      expect((assessmentTask.content.context as Record<string, unknown>).timeLimit).toBe(1800);
     });
 
     it('should create valid Assessment evaluation', () => {

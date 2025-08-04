@@ -1,11 +1,14 @@
 import { NextRequest } from 'next/server';
 import { GET } from '../route';
+import { getServerSession } from '@/lib/auth/session';
 
 // Mock auth session
-const mockGetServerSession = jest.fn();
 jest.mock('@/lib/auth/session', () => ({
-  getServerSession: mockGetServerSession
+  getServerSession: jest.fn()
 }));
+
+// Get mocked function
+const mockGetServerSession = getServerSession as jest.MockedFunction<typeof getServerSession>;
 
 // Mock repositories
 const mockFindByUser = jest.fn();
@@ -39,7 +42,7 @@ describe('GET /api/discovery/scenarios/my', () => {
   });
 
   it('returns empty array when user has no discovery programs', async () => {
-    mockGetServerSession.mockResolvedValue({ user: { email: 'test@example.com' } });
+    mockGetServerSession.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com' } });
     mockFindByUser.mockResolvedValue([]);
 
     const request = new NextRequest('http://localhost:3000/api/discovery/scenarios/my');
@@ -84,7 +87,7 @@ describe('GET /api/discovery/scenarios/my', () => {
       },
     };
 
-    mockGetServerSession.mockResolvedValue({ user: { email: 'test@example.com' } });
+    mockGetServerSession.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com' } });
     mockFindByUser.mockResolvedValue(mockPrograms);
     mockFindById.mockResolvedValue(mockScenario);
 
@@ -188,7 +191,7 @@ describe('GET /api/discovery/scenarios/my', () => {
       },
     ];
 
-    mockGetServerSession.mockResolvedValue({ user: { email: 'test@example.com' } });
+    mockGetServerSession.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com' } });
     mockFindByUser.mockResolvedValue(mockPrograms);
     mockFindById.mockResolvedValue({
       id: 'scenario1',
@@ -229,7 +232,7 @@ describe('GET /api/discovery/scenarios/my', () => {
       metadata: { careerType: 'ai-engineer' },
     };
 
-    mockGetServerSession.mockResolvedValue({ user: { email: 'test@example.com' } });
+    mockGetServerSession.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com' } });
     mockFindByUser.mockResolvedValue(mockPrograms);
     mockFindById.mockResolvedValue(mockScenario);
 
@@ -263,7 +266,7 @@ describe('GET /api/discovery/scenarios/my', () => {
       metadata: { careerType: 'product-manager' },
     };
 
-    mockGetServerSession.mockResolvedValue({ user: { email: 'test@example.com' } });
+    mockGetServerSession.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com' } });
     mockFindByUser.mockResolvedValue(mockPrograms);
     mockFindById.mockResolvedValue(mockScenario);
 
@@ -300,7 +303,7 @@ describe('GET /api/discovery/scenarios/my', () => {
       },
     ];
 
-    mockGetServerSession.mockResolvedValue({ user: { email: 'test@example.com' } });
+    mockGetServerSession.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com' } });
     mockFindByUser.mockResolvedValue(mockPrograms);
     mockFindById
       .mockResolvedValueOnce({ id: 'scenario1', title: 'Scenario 1', metadata: { careerType: 'type1' } })
@@ -334,7 +337,7 @@ describe('GET /api/discovery/scenarios/my', () => {
       },
     ];
 
-    mockGetServerSession.mockResolvedValue({ user: { email: 'test@example.com' } });
+    mockGetServerSession.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com' } });
     mockFindByUser.mockResolvedValue(mockPrograms);
     mockFindById
       .mockResolvedValueOnce({ id: 'scenario1', title: 'Valid Scenario', metadata: { careerType: 'valid' } })
@@ -350,7 +353,7 @@ describe('GET /api/discovery/scenarios/my', () => {
   });
 
   it('handles database errors gracefully', async () => {
-    mockGetServerSession.mockResolvedValue({ user: { email: 'test@example.com' } });
+    mockGetServerSession.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com' } });
     mockFindByUser.mockRejectedValue(new Error('Database error'));
 
     const request = new NextRequest('http://localhost:3000/api/discovery/scenarios/my');

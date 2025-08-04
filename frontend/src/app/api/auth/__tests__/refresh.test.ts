@@ -1,6 +1,23 @@
 import { POST } from '../refresh/route'
 import { cookies } from 'next/headers'
 import * as jwt from '../../../../lib/auth/jwt'
+import { NextResponse } from 'next/server'
+
+// Mock NextResponse
+jest.mock('next/server', () => ({
+  NextResponse: {
+    json: jest.fn((data, init) => {
+      const response = {
+        json: jest.fn().mockResolvedValue(data),
+        status: init?.status || 200,
+        cookies: {
+          set: jest.fn()
+        }
+      }
+      return response
+    })
+  }
+}))
 
 // Mock dependencies
 jest.mock('next/headers', () => ({

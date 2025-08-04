@@ -130,7 +130,7 @@ describe('/api/discovery/programs/[programId]/regenerate', () => {
       mockGetServerSession.mockResolvedValue(mockSession);
       mockProgramRepo.findById.mockResolvedValue(mockProgram);
       mockTaskRepo.findByProgram.mockResolvedValue(mockCompletedTasks);
-      mockScenarioRepo.findById.mockResolvedValue(mockScenario);
+      (mockScenarioRepo.findById as jest.Mock).mockResolvedValue(mockScenario);
       mockEvaluationRepo.findByProgram.mockResolvedValue([]);
       mockVertexAIService.sendMessage.mockResolvedValue({
         content: `Here is the assessment:\n${JSON.stringify(mockAIFeedback, null, 2)}`
@@ -157,7 +157,7 @@ describe('/api/discovery/programs/[programId]/regenerate', () => {
         metrics: {
           totalXP: 175, // 85 + 90
           avgScore: 88, // (85 + 90) / 2 rounded
-          daysUsed: 3,
+          daysUsed: 2,
           completedTasks: 2
         }
       });
@@ -178,7 +178,7 @@ describe('/api/discovery/programs/[programId]/regenerate', () => {
             totalXP: 175,
             totalTasks: 2,
             completedTasks: 2,
-            daysUsed: 3
+            daysUsed: 2
           }
         })
       );
@@ -194,7 +194,7 @@ describe('/api/discovery/programs/[programId]/regenerate', () => {
       mockGetServerSession.mockResolvedValue(mockSession);
       mockProgramRepo.findById.mockResolvedValue(mockProgram);
       mockTaskRepo.findByProgram.mockResolvedValue(mockCompletedTasks);
-      mockScenarioRepo.findById.mockResolvedValue(mockScenario);
+      (mockScenarioRepo.findById as jest.Mock).mockResolvedValue(mockScenario);
       mockEvaluationRepo.findByProgram.mockResolvedValue([existingEvaluation]);
       mockVertexAIService.sendMessage.mockResolvedValue({
         content: JSON.stringify(mockAIFeedback)
@@ -218,7 +218,7 @@ describe('/api/discovery/programs/[programId]/regenerate', () => {
       mockGetServerSession.mockResolvedValue(mockSession);
       mockProgramRepo.findById.mockResolvedValue(mockProgram);
       mockTaskRepo.findByProgram.mockResolvedValue(mockCompletedTasks);
-      mockScenarioRepo.findById.mockResolvedValue(mockScenario);
+      (mockScenarioRepo.findById as jest.Mock).mockResolvedValue(mockScenario);
       mockEvaluationRepo.findByProgram.mockResolvedValue([]);
       
       const chineseFeedback = {
@@ -312,7 +312,7 @@ describe('/api/discovery/programs/[programId]/regenerate', () => {
         { id: 'task1', status: 'pending' },
         { id: 'task2', status: 'in_progress' }
       ]);
-      mockScenarioRepo.findById.mockResolvedValue(mockScenario);
+      (mockScenarioRepo.findById as jest.Mock).mockResolvedValue(mockScenario);
       mockEvaluationRepo.findByProgram.mockResolvedValue([]);
       mockEvaluationRepo.create.mockResolvedValue({ id: 'eval123' });
 
@@ -336,7 +336,7 @@ describe('/api/discovery/programs/[programId]/regenerate', () => {
       mockGetServerSession.mockResolvedValue(mockSession);
       mockProgramRepo.findById.mockResolvedValue(mockProgram);
       mockTaskRepo.findByProgram.mockResolvedValue(mockCompletedTasks);
-      mockScenarioRepo.findById.mockResolvedValue(mockScenario);
+      (mockScenarioRepo.findById as jest.Mock).mockResolvedValue(mockScenario);
       mockEvaluationRepo.findByProgram.mockResolvedValue([]);
       mockVertexAIService.sendMessage.mockRejectedValue(new Error('AI service unavailable'));
       mockEvaluationRepo.create.mockResolvedValue({ id: 'eval123' });

@@ -95,9 +95,9 @@ export function convertScenarioToIScenario(scenario: Scenario): IScenario {
     resources,
     
     // Timestamps
-    createdAt: scenario.created_at,
-    updatedAt: scenario.updated_at,
-    publishedAt: scenario.published_at || undefined,
+    createdAt: new Date(scenario.created_at).toISOString(),
+    updatedAt: new Date(scenario.updated_at).toISOString(),
+    publishedAt: scenario.published_at ? new Date(scenario.published_at).toISOString() : undefined,
     
     // Extensible metadata
     metadata
@@ -137,11 +137,11 @@ export function convertProgramToIProgram(program: Program): IProgram {
     badgesEarned,
     
     // Timestamps (unified naming)
-    createdAt: program.created_at,
-    startedAt: program.started_at || undefined,
-    completedAt: program.completed_at || undefined,
-    updatedAt: program.updated_at,
-    lastActivityAt: program.last_activity_at,
+    createdAt: new Date(program.created_at).toISOString(),
+    startedAt: program.started_at ? new Date(program.started_at).toISOString() : undefined,
+    completedAt: program.completed_at ? new Date(program.completed_at).toISOString() : undefined,
+    updatedAt: new Date(program.updated_at).toISOString(),
+    lastActivityAt: new Date(program.last_activity_at).toISOString(),
     
     // Time tracking
     timeSpentSeconds: program.time_spent_seconds,
@@ -178,8 +178,12 @@ export function convertTaskToITask(task: Task): ITask {
     scenarioTaskIndex: task.scenario_task_index || undefined,
     
     // Basic info
-    title: task.title as unknown as Record<string, string> | undefined,
-    description: task.description as unknown as Record<string, string> | undefined,
+    title: typeof task.title === 'string' 
+      ? { en: task.title } 
+      : task.title as unknown as Record<string, string> | undefined,
+    description: typeof task.description === 'string'
+      ? { en: task.description }
+      : task.description as unknown as Record<string, string> | undefined,
     type: task.type as TaskType,
     status: task.status as TaskStatus,
     
@@ -207,10 +211,10 @@ export function convertTaskToITask(task: Task): ITask {
     aiConfig,
     
     // Timestamps
-    createdAt: task.created_at,
-    startedAt: task.started_at || undefined,
-    completedAt: task.completed_at || undefined,
-    updatedAt: task.updated_at,
+    createdAt: new Date(task.created_at).toISOString(),
+    startedAt: task.started_at ? new Date(task.started_at).toISOString() : undefined,
+    completedAt: task.completed_at ? new Date(task.completed_at).toISOString() : undefined,
+    updatedAt: new Date(task.updated_at).toISOString(),
     
     // Mode-specific data
     pblData,
@@ -266,7 +270,7 @@ export function convertEvaluationToIEvaluation(evaluation: Evaluation): IEvaluat
     timeTakenSeconds: evaluation.time_taken_seconds,
     
     // Timestamps
-    createdAt: evaluation.created_at,
+    createdAt: new Date(evaluation.created_at).toISOString(),
     
     // Mode-specific data
     pblData,

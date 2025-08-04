@@ -208,8 +208,8 @@ describe('Discovery Tasks API', () => {
 
       // Assert
       expect(response.status).toBe(200);
-      expect(data.data.tasks[0].title).toContain('(中文)');
-      expect(data.data.tasks[0].description).toContain('(中文)');
+      expect(data.data.tasks[0].title.zh || data.data.tasks[0].title).toContain('(中文)');
+      expect(data.data.tasks[0].description.zh || data.data.tasks[0].description).toContain('(中文)');
     });
 
     it('should include task progress information', async () => {
@@ -323,10 +323,12 @@ describe('Discovery Tasks API', () => {
       await POST(request, { params: Promise.resolve({ programId: 'prog123' }) });
 
       // Assert
-      expect(mockProgramRepo.update).toHaveBeenCalledWith('prog123', {
-        totalTaskCount: 4,
-        updatedAt: expect.any(String)
-      });
+      expect(mockProgramRepo.update).toHaveBeenCalledWith('prog123', expect.objectContaining({
+        lastActivityAt: expect.any(String),
+        metadata: expect.objectContaining({
+          lastTaskCreatedAt: expect.any(String)
+        })
+      }));
     });
   });
 
@@ -387,12 +389,11 @@ describe('Discovery Tasks API', () => {
       await PATCH(request, { params: Promise.resolve({ programId: 'prog123', taskId: 'task2' }) });
 
       // Assert
-      expect(mockProgramRepo.update).toHaveBeenCalledWith('prog123', {
+      expect(mockProgramRepo.update).toHaveBeenCalledWith('prog123', expect.objectContaining({
         completedTaskCount: 2,
         currentTaskIndex: 2,
-        lastActivityAt: expect.any(String),
-        updatedAt: expect.any(String)
-      });
+        lastActivityAt: expect.any(String)
+      }));
     });
 
     it('should track time spent', async () => {

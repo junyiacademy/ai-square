@@ -10,6 +10,7 @@ import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { VertexAI } from '@google-cloud/vertexai';
 import type { IScenario, ITask } from '@/types/unified-learning';
 import type { ChatMessage } from '@/types/pbl-api';
+import { mockConsoleError, mockConsoleWarn, mockConsoleLog } from '@/test-utils/helpers/console';
 
 // Mock dependencies
 jest.mock('@/lib/auth/session');
@@ -22,11 +23,9 @@ jest.mock('@/lib/repositories/base/repository-factory', () => ({
 jest.mock('@google-cloud/vertexai');
 
 // Mock console methods
-const consoleSpy = {
-  error: jest.spyOn(console, 'error').mockImplementation(),
-  warn: jest.spyOn(console, 'warn').mockImplementation(),
-  log: jest.spyOn(console, 'log').mockImplementation()
-};
+const mockError = mockConsoleError();
+const mockWarn = mockConsoleWarn();
+const mockLog = mockConsoleLog();
 
 describe('POST /api/pbl/chat', () => {
   const mockScenarioRepo = {
@@ -125,7 +124,7 @@ describe('POST /api/pbl/chat', () => {
     (getServerSession as jest.Mock).mockResolvedValue({
       user: { email: 'test@example.com' }
     });
-    mockScenarioRepo.findById.mockResolvedValue(mockScenario);
+    (mockScenarioRepo.findById as jest.Mock).mockResolvedValue(mockScenario);
     mockTaskRepo.findById.mockResolvedValue(mockTask);
     mockGenerateContent.mockResolvedValue({
       response: {
@@ -141,9 +140,9 @@ describe('POST /api/pbl/chat', () => {
   });
 
   afterEach(() => {
-    consoleSpy.error.mockClear();
-    consoleSpy.warn.mockClear();
-    consoleSpy.log.mockClear();
+    mockError.mockClear();
+    mockWarn.mockClear();
+    mockLog.mockClear();
     delete process.env.GOOGLE_CLOUD_PROJECT;
   });
 
@@ -250,7 +249,7 @@ describe('POST /api/pbl/chat', () => {
 
   describe('Scenario and Task Validation', () => {
     it('should return 404 when scenario not found', async () => {
-      mockScenarioRepo.findById.mockResolvedValue(null);
+      (mockScenarioRepo.findById as jest.Mock).mockResolvedValue(null);
 
       const request = new NextRequest('http://localhost/api/pbl/chat', {
         method: 'POST',
@@ -361,11 +360,11 @@ describe('POST /api/pbl/chat', () => {
       const data = await response.json();
 
       expect(response.status).toBe(200);
-      expect(consoleSpy.warn).toHaveBeenCalledWith(
+      expect(mockWarn).toHaveBeenCalledWith(
         'AI module not found for task:',
         expect.any(Object)
       );
-      expect(consoleSpy.log).toHaveBeenCalledWith('Using default AI module configuration');
+      expect(mockLog).toHaveBeenCalledWith('Using default AI module configuration');
       
       // Verify default AI module was used
       const generatedPrompt = mockGenerateContent.mock.calls[0][0];
@@ -499,7 +498,7 @@ describe('POST /api/pbl/chat', () => {
       
       await POST(request);
       
-      expect(consoleSpy.log).toHaveBeenCalledWith(
+      expect(mockLog).toHaveBeenCalledWith(
         'Conversation history received:',
         expect.objectContaining({
           count: 2,
@@ -565,7 +564,7 @@ describe('POST /api/pbl/chat', () => {
 
       expect(response.status).toBe(500);
       expect(data.error).toBe('AI service not configured');
-      expect(consoleSpy.error).toHaveBeenCalledWith(
+      expect(mockError).toHaveBeenCalledWith(
         'GOOGLE_CLOUD_PROJECT environment variable not set'
       );
     });
@@ -628,7 +627,7 @@ describe('POST /api/pbl/chat', () => {
 
       expect(response.status).toBe(500);
       expect(data.error).toBe('AI generation failed: Generation failed');
-      expect(consoleSpy.error).toHaveBeenCalledWith(
+      expect(mockError).toHaveBeenCalledWith(
         'Vertex AI error:',
         expect.objectContaining({
           error: expect.any(Error),
@@ -671,7 +670,7 @@ describe('POST /api/pbl/chat', () => {
 
   describe('Error Handling', () => {
     it('should handle general errors gracefully', async () => {
-      mockScenarioRepo.findById.mockRejectedValue(new Error('Database error'));
+      (mockScenarioRepo.findById as jest.Mock).mockRejectedValue(new Error('Database error'));
 
       const request = new NextRequest('http://localhost/api/pbl/chat', {
         method: 'POST',
@@ -694,7 +693,7 @@ describe('POST /api/pbl/chat', () => {
 
       expect(response.status).toBe(500);
       expect(data.error).toBe('Failed to process chat request');
-      expect(consoleSpy.error).toHaveBeenCalledWith(
+      expect(mockError).toHaveBeenCalledWith(
         'Chat API error:',
         expect.any(Error)
       );

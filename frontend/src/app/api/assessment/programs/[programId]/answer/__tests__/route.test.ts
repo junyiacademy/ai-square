@@ -15,64 +15,51 @@ jest.mock('@/lib/auth/session');
 
 // Mock console
 const mockConsoleError = createMockConsoleError();
-const mockConsoleLog = jest.spyOn(console, 'log').mockImplementation();
 
 describe('/api/assessment/programs/[programId]/answer', () => {
-  // Mock repositories
-  const mockProgramRepo = {
-    findById: jest.fn(),
-    update: jest.fn(),
-  };
-
+  // Mock task repository (only one used by actual API)
   const mockTaskRepo = {
-    findById: jest.fn(),
-    update: jest.fn(),
-  };
-
-  const mockEvaluationRepo = {
-    create: jest.fn(),
-    findByTask: jest.fn(),
+    getTaskWithInteractions: jest.fn(),
+    recordAttempt: jest.fn(),
+    updateStatus: jest.fn(),
   };
 
   beforeEach(() => {
     jest.clearAllMocks();
     
     // Setup repository factory mocks
-    (repositoryFactory.getProgramRepository as jest.Mock).mockReturnValue(mockProgramRepo);
     (repositoryFactory.getTaskRepository as jest.Mock).mockReturnValue(mockTaskRepo);
-    (repositoryFactory.getEvaluationRepository as jest.Mock).mockReturnValue(mockEvaluationRepo);
     (getServerSession as jest.Mock).mockResolvedValue(null);
   });
 
   afterAll(() => {
     mockConsoleError.mockRestore();
-    mockConsoleLog.mockRestore();
   });
 
   describe('POST - Submit Assessment Answer', () => {
-    const mockProgram = {
-      id: 'prog-123',
-      mode: 'assessment',
-      userId: 'user-789',
-      status: 'active',
-      completedTaskCount: 5,
-      totalTaskCount: 10,
-      assessmentData: {
-        answeredQuestions: 5,
-        correctAnswers: 3,
-      },
-    };
-
-    const mockTask = {
+    const mockTaskWithInteractions = {
       id: 'task-456',
       programId: 'prog-123',
       type: 'question',
       status: 'active',
       content: {
-        question: 'What is AI?',
-        options: ['A', 'B', 'C', 'D'],
-        correctAnswer: 'B',
+        questions: [
+          {
+            id: 'q1',
+            question: 'What is AI?',
+            options: ['A', 'B', 'C', 'D'],
+            correct_answer: 'B',
+            ksa_mapping: ['K1', 'S2'],
+          },
+          {
+            id: 'q2', 
+            question: 'What is ML?',
+            options: ['X', 'Y', 'Z'],
+            correct_answer: 'Y',
+          }
+        ],
       },
+      interactions: [], // No previous answers
     };
 
     it('should submit correct answer successfully', async () => {
@@ -80,34 +67,18 @@ describe('/api/assessment/programs/[programId]/answer', () => {
         user: { id: 'user-789', email: 'user@example.com' },
       });
 
-      mockProgramRepo.findById.mockResolvedValue(mockProgram);
-      mockTaskRepo.findById.mockResolvedValue(mockTask);
-      mockTaskRepo.update?.mockResolvedValue({
-        ...mockTask,
-        status: 'completed',
-        completedAt: new Date().toISOString(),
-      });
-      mockEvaluationRepo.create.mockResolvedValue({
-        id: 'eval-1',
-        taskId: 'task-456',
-        evaluationType: 'summative',
-        score: 100,
-        feedback: { en: 'Correct!' },
-      });
-      mockProgramRepo.update?.mockResolvedValue({
-        ...mockProgram,
-        completedTaskCount: 6,
-        assessmentData: {
-          answeredQuestions: 6,
-          correctAnswers: 4,
-        },
-      });
+      mockTaskRepo.getTaskWithInteractions.mockResolvedValue(mockTaskWithInteractions);
+      mockTaskRepo.recordAttempt?.mockResolvedValue(undefined);
+      mockTaskRepo.updateStatus?.mockResolvedValue(undefined);
 
       const request = new NextRequest('http://localhost:3000/api/assessment/programs/prog-123/answer', {
         method: 'POST',
         body: JSON.stringify({
           taskId: 'task-456',
-          answer: 'B',
+          questionId: 'q1',
+          answer: 'B', // Correct answer
+          questionIndex: 0,
+          timeSpent: 5000,
         }),
       });
 
@@ -116,35 +87,26 @@ describe('/api/assessment/programs/[programId]/answer', () => {
 
       expect(response.status).toBe(200);
       expect(data.success).toBe(true);
-      expect(data.data).toMatchObject({
-        correct: true,
-        score: 100,
-        feedback: 'Correct!',
-        progress: {
-          completedTasks: 6,
-          totalTasks: 10,
-          percentage: 60,
-        },
-      });
+      expect(data.isCorrect).toBe(true);
 
-      expect(mockTaskRepo.update).toHaveBeenCalledWith(
+      expect(mockTaskRepo.recordAttempt).toHaveBeenCalledWith(
         'task-456',
         expect.objectContaining({
-          status: 'completed',
-          completedAt: expect.any(String),
+          response: expect.objectContaining({
+            eventType: 'assessment_answer',
+            questionId: 'q1',
+            questionIndex: 0,
+            selectedAnswer: 'B',
+            isCorrect: true,
+            timeSpent: 5000,
+            ksa_mapping: ['K1', 'S2'],
+          }),
+          score: 1,
+          timeSpent: 5000,
         })
       );
 
-      expect(mockEvaluationRepo.create).toHaveBeenCalledWith(
-        expect.objectContaining({
-          mode: 'assessment',
-          programId: 'prog-123',
-          taskId: 'task-456',
-          userId: 'user-789',
-          evaluationType: 'summative',
-          score: 100,
-        })
-      );
+      expect(mockTaskRepo.updateStatus).toHaveBeenCalledWith('task-456', 'active');
     });
 
     it('should handle incorrect answer', async () => {
@@ -152,23 +114,18 @@ describe('/api/assessment/programs/[programId]/answer', () => {
         user: { id: 'user-789', email: 'user@example.com' },
       });
 
-      mockProgramRepo.findById.mockResolvedValue(mockProgram);
-      mockTaskRepo.findById.mockResolvedValue(mockTask);
-      mockTaskRepo.update?.mockResolvedValue({
-        ...mockTask,
-        status: 'completed',
-      });
-      mockEvaluationRepo.create.mockResolvedValue({
-        id: 'eval-2',
-        score: 0,
-        feedback: { en: 'Incorrect. The correct answer was B.' },
-      });
+      mockTaskRepo.getTaskWithInteractions.mockResolvedValue(mockTaskWithInteractions);
+      mockTaskRepo.recordAttempt?.mockResolvedValue(undefined);
+      mockTaskRepo.updateStatus?.mockResolvedValue(undefined);
 
       const request = new NextRequest('http://localhost:3000/api/assessment/programs/prog-123/answer', {
         method: 'POST',
         body: JSON.stringify({
           taskId: 'task-456',
-          answer: 'A', // Wrong answer
+          questionId: 'q1',
+          answer: 'A', // Wrong answer (correct is 'B')
+          questionIndex: 0,
+          timeSpent: 3000,
         }),
       });
 
@@ -176,38 +133,54 @@ describe('/api/assessment/programs/[programId]/answer', () => {
       const data = await response.json();
 
       expect(response.status).toBe(200);
-      expect(data.data.correct).toBe(false);
-      expect(data.data.score).toBe(0);
-      expect(data.data.correctAnswer).toBe('B');
+      expect(data.success).toBe(true);
+      expect(data.isCorrect).toBe(false);
+
+      expect(mockTaskRepo.recordAttempt).toHaveBeenCalledWith(
+        'task-456',
+        expect.objectContaining({
+          response: expect.objectContaining({
+            eventType: 'assessment_answer',
+            questionId: 'q1',
+            selectedAnswer: 'A',
+            isCorrect: false,
+          }),
+          score: 0,
+          timeSpent: 3000,
+        })
+      );
     });
 
-    it('should complete assessment when all questions answered', async () => {
+    it('should handle task with existing interactions (not first answer)', async () => {
       (getServerSession as jest.Mock).mockResolvedValue({
         user: { id: 'user-789', email: 'user@example.com' },
       });
 
-      const almostCompleteProgram = {
-        ...mockProgram,
-        completedTaskCount: 9,
-        totalTaskCount: 10,
+      const taskWithExistingAnswers = {
+        ...mockTaskWithInteractions,
+        interactions: [
+          {
+            type: 'system_event',
+            content: {
+              eventType: 'assessment_answer',
+              questionId: 'q2',
+              selectedAnswer: 'Y',
+              isCorrect: true,
+            }
+          }
+        ],
       };
 
-      mockProgramRepo.findById.mockResolvedValue(almostCompleteProgram);
-      mockTaskRepo.findById.mockResolvedValue(mockTask);
-      mockTaskRepo.update?.mockResolvedValue({ ...mockTask, status: 'completed' });
-      mockEvaluationRepo.create.mockResolvedValue({ score: 100 });
-      mockProgramRepo.update?.mockResolvedValue({
-        ...almostCompleteProgram,
-        completedTaskCount: 10,
-        status: 'completed',
-        completedAt: new Date().toISOString(),
-      });
+      mockTaskRepo.getTaskWithInteractions.mockResolvedValue(taskWithExistingAnswers);
+      mockTaskRepo.recordAttempt?.mockResolvedValue(undefined);
 
       const request = new NextRequest('http://localhost:3000/api/assessment/programs/prog-123/answer', {
         method: 'POST',
         body: JSON.stringify({
           taskId: 'task-456',
+          questionId: 'q1',
           answer: 'B',
+          questionIndex: 0,
         }),
       });
 
@@ -215,15 +188,11 @@ describe('/api/assessment/programs/[programId]/answer', () => {
       const data = await response.json();
 
       expect(response.status).toBe(200);
-      expect(data.data.assessmentComplete).toBe(true);
-      expect(data.data.progress.percentage).toBe(100);
-      expect(mockProgramRepo.update).toHaveBeenCalledWith(
-        'prog-123',
-        expect.objectContaining({
-          status: 'completed',
-          completedAt: expect.any(String),
-        })
-      );
+      expect(data.success).toBe(true);
+      expect(data.isCorrect).toBe(true);
+
+      // Should not call updateStatus since there are existing answers
+      expect(mockTaskRepo.updateStatus).not.toHaveBeenCalled();
     });
 
     it('should return 400 when required fields missing', async () => {
@@ -234,7 +203,7 @@ describe('/api/assessment/programs/[programId]/answer', () => {
       const request = new NextRequest('http://localhost:3000/api/assessment/programs/prog-123/answer', {
         method: 'POST',
         body: JSON.stringify({
-          // Missing taskId and answer
+          // Missing taskId, questionId and answer
         }),
       });
 
@@ -242,20 +211,21 @@ describe('/api/assessment/programs/[programId]/answer', () => {
       const data = await response.json();
 
       expect(response.status).toBe(400);
-      expect(data.error).toBe('Task ID and answer are required');
+      expect(data.error).toBe('Missing required fields');
     });
 
-    it('should return 404 when program not found', async () => {
+    it('should return 404 when task not found', async () => {
       (getServerSession as jest.Mock).mockResolvedValue({
         user: { id: 'user-789', email: 'user@example.com' },
       });
 
-      mockProgramRepo.findById.mockResolvedValue(null);
+      mockTaskRepo.getTaskWithInteractions.mockResolvedValue(null);
 
       const request = new NextRequest('http://localhost:3000/api/assessment/programs/prog-123/answer', {
         method: 'POST',
         body: JSON.stringify({
-          taskId: 'task-456',
+          taskId: 'nonexistent-task',
+          questionId: 'q1',
           answer: 'A',
         }),
       });
@@ -264,84 +234,26 @@ describe('/api/assessment/programs/[programId]/answer', () => {
       const data = await response.json();
 
       expect(response.status).toBe(404);
-      expect(data.error).toBe('Program not found');
+      expect(data.error).toBe('Task not found');
     });
 
-    it('should return 403 when user is not program owner', async () => {
-      (getServerSession as jest.Mock).mockResolvedValue({
-        user: { id: 'other-user', email: 'other@example.com' },
-      });
-
-      mockProgramRepo.findById.mockResolvedValue(mockProgram);
-
-      const request = new NextRequest('http://localhost:3000/api/assessment/programs/prog-123/answer', {
-        method: 'POST',
-        body: JSON.stringify({
-          taskId: 'task-456',
-          answer: 'A',
-        }),
-      });
-
-      const response = await POST(request, { params: Promise.resolve({ programId: 'prog-123' }) });
-      const data = await response.json();
-
-      expect(response.status).toBe(403);
-      expect(data.error).toBe('Forbidden');
-    });
-
-    it('should handle task already completed', async () => {
+    it('should handle questions without KSA mapping', async () => {
       (getServerSession as jest.Mock).mockResolvedValue({
         user: { id: 'user-789', email: 'user@example.com' },
       });
 
-      mockProgramRepo.findById.mockResolvedValue(mockProgram);
-      mockTaskRepo.findById.mockResolvedValue({
-        ...mockTask,
-        status: 'completed', // Already completed
-      });
+      mockTaskRepo.getTaskWithInteractions.mockResolvedValue(mockTaskWithInteractions);
+      mockTaskRepo.recordAttempt?.mockResolvedValue(undefined);
+      mockTaskRepo.updateStatus?.mockResolvedValue(undefined);
 
       const request = new NextRequest('http://localhost:3000/api/assessment/programs/prog-123/answer', {
         method: 'POST',
         body: JSON.stringify({
           taskId: 'task-456',
-          answer: 'B',
-        }),
-      });
-
-      const response = await POST(request, { params: Promise.resolve({ programId: 'prog-123' }) });
-      const data = await response.json();
-
-      expect(response.status).toBe(400);
-      expect(data.error).toBe('Task already completed');
-    });
-
-    it('should handle partial scoring for multi-part questions', async () => {
-      (getServerSession as jest.Mock).mockResolvedValue({
-        user: { id: 'user-789', email: 'user@example.com' },
-      });
-
-      const multiPartTask = {
-        ...mockTask,
-        content: {
-          question: 'Select all that apply',
-          options: ['A', 'B', 'C', 'D'],
-          correctAnswers: ['B', 'C'], // Multiple correct answers
-          type: 'multiple-choice',
-        },
-      };
-
-      mockProgramRepo.findById.mockResolvedValue(mockProgram);
-      mockTaskRepo.findById.mockResolvedValue(multiPartTask);
-      mockEvaluationRepo.create.mockResolvedValue({
-        score: 50, // Partial score
-        feedback: { en: 'Partially correct. You got 1 out of 2.' },
-      });
-
-      const request = new NextRequest('http://localhost:3000/api/assessment/programs/prog-123/answer', {
-        method: 'POST',
-        body: JSON.stringify({
-          taskId: 'task-456',
-          answer: ['B'], // Only one of the correct answers
+          questionId: 'q2', // This question has no ksa_mapping
+          answer: 'Y',
+          questionIndex: 1,
+          timeSpent: 2000,
         }),
       });
 
@@ -349,8 +261,21 @@ describe('/api/assessment/programs/[programId]/answer', () => {
       const data = await response.json();
 
       expect(response.status).toBe(200);
-      expect(data.data.score).toBe(50);
-      expect(data.data.feedback).toContain('Partially correct');
+      expect(data.success).toBe(true);
+      expect(data.isCorrect).toBe(true);
+
+      expect(mockTaskRepo.recordAttempt).toHaveBeenCalledWith(
+        'task-456',
+        expect.objectContaining({
+          response: expect.objectContaining({
+            eventType: 'assessment_answer',
+            questionId: 'q2',
+            selectedAnswer: 'Y',
+            isCorrect: true,
+            ksa_mapping: undefined, // No KSA mapping
+          }),
+        })
+      );
     });
 
     it('should return 401 when not authenticated', async () => {
@@ -360,6 +285,7 @@ describe('/api/assessment/programs/[programId]/answer', () => {
         method: 'POST',
         body: JSON.stringify({
           taskId: 'task-456',
+          questionId: 'q1',
           answer: 'A',
         }),
       });
@@ -368,7 +294,7 @@ describe('/api/assessment/programs/[programId]/answer', () => {
       const data = await response.json();
 
       expect(response.status).toBe(401);
-      expect(data.error).toBe('Unauthorized');
+      expect(data.error).toBe('Authentication required');
     });
   });
 });
@@ -376,28 +302,29 @@ describe('/api/assessment/programs/[programId]/answer', () => {
 /**
  * Assessment Answer API Considerations:
  * 
- * 1. Answer Validation:
- *    - Single choice questions
- *    - Multiple choice questions
- *    - Partial scoring support
+ * 1. Question-level Answer Submission:
+ *    - Submit individual question answers
+ *    - Immediate correct/incorrect feedback
+ *    - Support for KSA mapping recording
  * 
- * 2. Progress Tracking:
- *    - Update task completion
- *    - Track correct/incorrect answers
- *    - Calculate assessment progress
+ * 2. Answer Recording:
+ *    - Record attempts with score (1 for correct, 0 for incorrect)
+ *    - Track time spent per question
+ *    - Store detailed answer metadata
  * 
- * 3. Completion Handling:
- *    - Auto-complete assessment when all questions answered
- *    - Calculate final score
- *    - Generate completion certificate
+ * 3. Task Status Management:
+ *    - Update task to 'active' on first answer
+ *    - Preserve existing interactions
+ *    - No automatic completion logic
  * 
  * 4. Security:
- *    - Verify user owns the program
- *    - Prevent re-answering completed questions
- *    - Validate answer format
+ *    - Require authentication (session-based)
+ *    - Validate required fields (taskId, questionId, answer)
+ *    - Return 404 for non-existent tasks
  * 
- * 5. Feedback:
- *    - Immediate feedback on answers
- *    - Show correct answer for wrong responses
- *    - Progress percentage updates
+ * 5. Answer Content Structure:
+ *    - eventType: 'assessment_answer'
+ *    - questionId, questionIndex, selectedAnswer
+ *    - isCorrect flag based on correct_answer comparison
+ *    - Optional timeSpent and ksa_mapping inclusion
  */

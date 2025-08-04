@@ -49,13 +49,15 @@ describe('HeroSection', () => {
   it('renders CTA links with correct hrefs', () => {
     render(<HeroSection />);
 
-    const getStartedLink = screen.getByText('hero.cta.getStarted').closest('a');
-    expect(getStartedLink).toHaveAttribute('href', '/register');
+    // The first CTA is a button, not a link, so test it differently
+    const getStartedButton = screen.getByRole('button', { name: /hero\.cta\.getStarted/i });
+    expect(getStartedButton).toBeInTheDocument();
 
-    const assessmentLink = screen.getByText('hero.cta.assessment').closest('a');
+    // These are actual links
+    const assessmentLink = screen.getByRole('link', { name: /hero\.cta\.assessment/i });
     expect(assessmentLink).toHaveAttribute('href', '/assessment');
 
-    const exploreLink = screen.getByText('hero.cta.explore').closest('a');
+    const exploreLink = screen.getByRole('link', { name: /hero\.cta\.explore/i });
     expect(exploreLink).toHaveAttribute('href', '/relations');
   });
 

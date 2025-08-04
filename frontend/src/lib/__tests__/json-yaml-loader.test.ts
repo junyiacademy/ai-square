@@ -132,7 +132,7 @@ describe('jsonYamlLoader', () => {
 
       expect(result).toBeNull();
       expect(console.error).toHaveBeenCalledWith(
-        'Error loading JSON file:',
+        'Failed to load JSON missing.json:',
         expect.any(Error)
       );
     });
@@ -144,7 +144,7 @@ describe('jsonYamlLoader', () => {
 
       expect(result).toBeNull();
       expect(console.error).toHaveBeenCalledWith(
-        'Error loading JSON file:',
+        'Failed to load JSON invalid.json:',
         expect.any(Error)
       );
     });
@@ -169,7 +169,7 @@ describe('jsonYamlLoader', () => {
 
       expect(result).toBeNull();
       expect(console.error).toHaveBeenCalledWith(
-        'Error loading YAML file:',
+        'Failed to load YAML missing.yaml:',
         expect.any(Error)
       );
     });
@@ -184,7 +184,7 @@ describe('jsonYamlLoader', () => {
 
       expect(result).toBeNull();
       expect(console.error).toHaveBeenCalledWith(
-        'Error loading YAML file:',
+        'Failed to load YAML invalid.yaml:',
         expect.any(Error)
       );
     });

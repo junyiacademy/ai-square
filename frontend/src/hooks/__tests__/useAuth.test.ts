@@ -1,6 +1,7 @@
 import { renderHook, act, waitFor } from '@testing-library/react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '../useAuth'
+import { mockConsoleError as createMockConsoleError } from '@/test-utils/helpers/console'
 
 // Mock next/navigation
 jest.mock('next/navigation', () => ({
@@ -46,7 +47,7 @@ Object.defineProperty(window, 'localStorage', {
 })
 
 // Mock console methods
-const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation()
+const mockConsoleError = createMockConsoleError()
 
 describe('useAuth', () => {
   const mockPush = jest.fn()
@@ -69,7 +70,11 @@ describe('useAuth', () => {
   })
 
   afterEach(() => {
-    consoleErrorSpy.mockClear()
+    jest.clearAllMocks()
+  })
+
+  afterAll(() => {
+    mockConsoleError.mockRestore()
   })
 
   describe('initial state', () => {
@@ -184,7 +189,7 @@ describe('useAuth', () => {
 
       expect(result.current.isLoggedIn).toBe(true)
       expect(result.current.user).toEqual(storedUser)
-      expect(consoleErrorSpy).toHaveBeenCalledWith('Error checking auth:', expect.any(Error))
+      expect(mockConsoleError).toHaveBeenCalledWith('Error checking auth:', expect.any(Error))
     })
 
     it('should clear auth state on invalid localStorage data', async () => {
@@ -317,7 +322,7 @@ describe('useAuth', () => {
       })
 
       expect(loginResult).toEqual({ success: false, error: 'Network error' })
-      expect(consoleErrorSpy).toHaveBeenCalledWith('Login error:', expect.any(Error))
+      expect(mockConsoleError).toHaveBeenCalledWith('Login error:', expect.any(Error))
     })
 
     it('should include rememberMe in login request', async () => {
@@ -420,7 +425,7 @@ describe('useAuth', () => {
         await result.current.logout()
       })
 
-      expect(consoleErrorSpy).toHaveBeenCalledWith('Logout error:', expect.any(Error))
+      expect(mockConsoleError).toHaveBeenCalledWith('Logout error:', expect.any(Error))
       expect(result.current.isLoggedIn).toBe(false)
       expect(mockPush).toHaveBeenCalledWith('/login')
     })
@@ -524,7 +529,7 @@ describe('useAuth', () => {
       })
 
       expect(refreshResult!).toBe(false)
-      expect(consoleErrorSpy).toHaveBeenCalledWith('Token refresh error:', expect.any(Error))
+      expect(mockConsoleError).toHaveBeenCalledWith('Token refresh error:', expect.any(Error))
     })
   })
 

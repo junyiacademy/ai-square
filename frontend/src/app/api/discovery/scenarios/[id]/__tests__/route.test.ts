@@ -96,7 +96,7 @@ describe('GET /api/discovery/scenarios/[id]', () => {
   describe('Success Cases', () => {
     it('should return scenario details by ID', async () => {
       // Arrange
-      mockScenarioRepo.findById.mockResolvedValue(mockScenario);
+      (mockScenarioRepo.findById as jest.Mock).mockResolvedValue(mockScenario);
 
       const request = createMockNextRequest('http://localhost:3000/api/discovery/scenarios/550e8400-e29b-41d4-a716-446655440001');
 
@@ -114,7 +114,7 @@ describe('GET /api/discovery/scenarios/[id]', () => {
 
     it('should process language parameter correctly', async () => {
       // Arrange
-      mockScenarioRepo.findById.mockResolvedValue(mockScenario);
+      (mockScenarioRepo.findById as jest.Mock).mockResolvedValue(mockScenario);
 
       const request = createMockNextRequest('http://localhost:3000/api/discovery/scenarios/550e8400-e29b-41d4-a716-446655440001?lang=zh');
 
@@ -131,7 +131,7 @@ describe('GET /api/discovery/scenarios/[id]', () => {
 
     it('should include discovery-specific data', async () => {
       // Arrange
-      mockScenarioRepo.findById.mockResolvedValue(mockScenario);
+      (mockScenarioRepo.findById as jest.Mock).mockResolvedValue(mockScenario);
 
       const request = createMockNextRequest('http://localhost:3000/api/discovery/scenarios/550e8400-e29b-41d4-a716-446655440001');
 
@@ -149,7 +149,7 @@ describe('GET /api/discovery/scenarios/[id]', () => {
 
     it('should process multilingual discovery data', async () => {
       // Arrange
-      mockScenarioRepo.findById.mockResolvedValue(mockScenario);
+      (mockScenarioRepo.findById as jest.Mock).mockResolvedValue(mockScenario);
 
       const request = createMockNextRequest('http://localhost:3000/api/discovery/scenarios/550e8400-e29b-41d4-a716-446655440001?lang=zh');
 
@@ -168,7 +168,7 @@ describe('GET /api/discovery/scenarios/[id]', () => {
   describe('Error Cases', () => {
     it('should return 404 for non-existent scenario', async () => {
       // Arrange
-      mockScenarioRepo.findById.mockResolvedValue(null);
+      (mockScenarioRepo.findById as jest.Mock).mockResolvedValue(null);
 
       const request = createMockNextRequest('http://localhost:3000/api/discovery/scenarios/non-existent-id');
 
@@ -188,7 +188,7 @@ describe('GET /api/discovery/scenarios/[id]', () => {
         ...mockScenario,
         mode: 'pbl'
       };
-      mockScenarioRepo.findById.mockResolvedValue(pblScenario);
+      (mockScenarioRepo.findById as jest.Mock).mockResolvedValue(pblScenario);
 
       const request = createMockNextRequest('http://localhost:3000/api/discovery/scenarios/550e8400-e29b-41d4-a716-446655440001');
 
@@ -203,7 +203,7 @@ describe('GET /api/discovery/scenarios/[id]', () => {
 
     it('should handle repository errors gracefully', async () => {
       // Arrange
-      mockScenarioRepo.findById.mockRejectedValue(new Error('Database connection failed'));
+      (mockScenarioRepo.findById as jest.Mock).mockRejectedValue(new Error('Database connection failed'));
 
       const request = createMockNextRequest('http://localhost:3000/api/discovery/scenarios/550e8400-e29b-41d4-a716-446655440001');
 
@@ -221,7 +221,7 @@ describe('GET /api/discovery/scenarios/[id]', () => {
   describe('Response Format', () => {
     it('should include proper metadata', async () => {
       // Arrange
-      mockScenarioRepo.findById.mockResolvedValue(mockScenario);
+      (mockScenarioRepo.findById as jest.Mock).mockResolvedValue(mockScenario);
 
       const request = createMockNextRequest('http://localhost:3000/api/discovery/scenarios/550e8400-e29b-41d4-a716-446655440001');
 
@@ -238,7 +238,7 @@ describe('GET /api/discovery/scenarios/[id]', () => {
 
     it('should preserve original multilingual objects', async () => {
       // Arrange
-      mockScenarioRepo.findById.mockResolvedValue(mockScenario);
+      (mockScenarioRepo.findById as jest.Mock).mockResolvedValue(mockScenario);
 
       const request = createMockNextRequest('http://localhost:3000/api/discovery/scenarios/550e8400-e29b-41d4-a716-446655440001');
 
@@ -268,7 +268,7 @@ describe('GET /api/discovery/scenarios/[id]', () => {
           rewards: null // Null value
         }
       };
-      mockScenarioRepo.findById.mockResolvedValue(scenarioWithMissingTranslation);
+      (mockScenarioRepo.findById as jest.Mock).mockResolvedValue(scenarioWithMissingTranslation);
 
       const request = createMockNextRequest('http://localhost:3000/api/discovery/scenarios/550e8400-e29b-41d4-a716-446655440001?lang=zh');
 

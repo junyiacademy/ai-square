@@ -26,6 +26,7 @@ jest.mock('@/lib/cache/distributed-cache-service', () => ({
   distributedCacheService: {
     get: jest.fn().mockResolvedValue(null),
     set: jest.fn().mockResolvedValue(undefined),
+    delete: jest.fn().mockResolvedValue(undefined),
     getWithRevalidation: jest.fn(async (key, handler) => handler())
   }
 }));

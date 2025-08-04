@@ -63,8 +63,10 @@ describe('GET /api/discovery/my-programs', () => {
 
   it('returns cached data when available', async () => {
     mockedGetAuthFromRequest.mockResolvedValue({
-      id: 'user123',
+      userId: 123,
       email: 'test@example.com',
+      role: 'student',
+      name: 'Test User',
     });
 
     const cachedData = [
@@ -84,8 +86,10 @@ describe('GET /api/discovery/my-programs', () => {
 
   it('returns empty array when user has no discovery programs', async () => {
     mockedGetAuthFromRequest.mockResolvedValue({
-      id: 'user123',
+      userId: 123,
       email: 'test@example.com',
+      role: 'student',
+      name: 'Test User',
     });
     mockedCacheService.get.mockResolvedValue(null);
     mockProgramRepository.findByUser.mockResolvedValue([]);
@@ -105,8 +109,10 @@ describe('GET /api/discovery/my-programs', () => {
 
   it('filters and returns only discovery programs with scenario details', async () => {
     mockedGetAuthFromRequest.mockResolvedValue({
-      id: 'user123',
+      userId: 123,
       email: 'test@example.com',
+      role: 'student',
+      name: 'Test User',
     });
     mockedCacheService.get.mockResolvedValue(null);
 
@@ -198,8 +204,10 @@ describe('GET /api/discovery/my-programs', () => {
 
   it('handles scenario loading errors gracefully', async () => {
     mockedGetAuthFromRequest.mockResolvedValue({
-      id: 'user123',
+      userId: 123,
       email: 'test@example.com',
+      role: 'student',
+      name: 'Test User',
     });
     mockedCacheService.get.mockResolvedValue(null);
 
@@ -224,8 +232,10 @@ describe('GET /api/discovery/my-programs', () => {
 
   it('calculates latest activity correctly', async () => {
     mockedGetAuthFromRequest.mockResolvedValue({
-      id: 'user123',
+      userId: 123,
       email: 'test@example.com',
+      role: 'student',
+      name: 'Test User',
     });
     mockedCacheService.get.mockResolvedValue(null);
 
@@ -268,8 +278,10 @@ describe('GET /api/discovery/my-programs', () => {
 
   it('handles repository errors', async () => {
     mockedGetAuthFromRequest.mockResolvedValue({
-      id: 'user123',
+      userId: 123,
       email: 'test@example.com',
+      role: 'student',
+      name: 'Test User',
     });
     mockedCacheService.get.mockResolvedValue(null);
     mockProgramRepository.findByUser.mockRejectedValue(new Error('Database error'));

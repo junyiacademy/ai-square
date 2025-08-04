@@ -132,6 +132,9 @@ describe('session-simple', () => {
       // @ts-ignore
       delete global.window;
       
+      // Clear any previous calls
+      jest.clearAllMocks();
+      
       storeSessionToken('test-token');
       
       expect(mockLocalStorage.setItem).not.toHaveBeenCalled();
@@ -163,6 +166,9 @@ describe('session-simple', () => {
       // @ts-ignore
       delete global.window;
       
+      // Clear any previous calls
+      jest.clearAllMocks();
+      
       const token = getSessionToken();
       
       expect(token).toBeNull();
@@ -183,6 +189,9 @@ describe('session-simple', () => {
       const originalWindow = global.window;
       // @ts-ignore
       delete global.window;
+      
+      // Clear any previous calls
+      jest.clearAllMocks();
       
       clearSessionToken();
       

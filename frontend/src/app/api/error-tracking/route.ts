@@ -96,8 +96,8 @@ export async function GET(request: NextRequest) {
     };
 
     // Apply pagination - slice the array based on pagination params
-    const startIndex = paginationParams.offset;
-    const endIndex = startIndex + paginationParams.limit;
+    const startIndex = paginationParams.offset || 0;
+    const endIndex = startIndex + (paginationParams.limit || 20);
     const paginatedErrors = filteredErrors.slice(startIndex, endIndex);
     
     const paginatedResponse = createPaginatedResponse(

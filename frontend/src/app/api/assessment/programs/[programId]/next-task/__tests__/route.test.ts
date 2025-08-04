@@ -9,14 +9,15 @@ import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { getServerSession } from '@/lib/auth/session';
 import type { IProgram, ITask } from '@/types/unified-learning';
 import type { User } from '@/lib/repositories/interfaces';
+import { mockConsoleError as createMockConsoleError } from '@/test-utils/helpers/console';
 
 // Mock dependencies
 jest.mock('@/lib/repositories/base/repository-factory');
 jest.mock('@/lib/auth/session');
 
 // Mock console methods
+const mockConsoleError = createMockConsoleError();
 const consoleSpy = {
-  error: jest.spyOn(console, 'error').mockImplementation(),
   log: jest.spyOn(console, 'log').mockImplementation()
 };
 
@@ -184,8 +185,12 @@ describe('POST /api/assessment/programs/[programId]/next-task', () => {
   });
 
   afterEach(() => {
-    consoleSpy.error.mockClear();
     consoleSpy.log.mockClear();
+  });
+
+  afterAll(() => {
+    mockConsoleError.mockRestore();
+    consoleSpy.log.mockRestore();
   });
 
   describe('Authentication', () => {
@@ -461,7 +466,7 @@ describe('POST /api/assessment/programs/[programId]/next-task', () => {
 
       expect(response.status).toBe(500);
       expect(data.error).toBe('Failed to move to next task');
-      expect(consoleSpy.error).toHaveBeenCalledWith(
+      expect(mockConsoleError).toHaveBeenCalledWith(
         'Error moving to next task:',
         expect.any(Error)
       );

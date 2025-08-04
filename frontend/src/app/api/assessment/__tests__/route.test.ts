@@ -3,7 +3,7 @@ import { NextRequest } from 'next/server';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { cacheService } from '@/lib/cache/cache-service';
 import { mockConsoleError as createMockConsoleError } from '@/test-utils/helpers/console';
-import { createMockScenarioRepository } from '@/test-utils/mocks/repository-helpers';
+import { createMockScenarioRepository, createMockScenario } from '@/test-utils/mocks/repository-helpers';
 
 // Mock dependencies
 jest.mock('@/lib/repositories/base/repository-factory');
@@ -16,81 +16,13 @@ const mockConsoleError = createMockConsoleError();
 describe('/api/assessment', () => {
   const mockScenarioRepo = createMockScenarioRepository();
 
-  const mockAssessmentScenario = {
+  const mockAssessmentScenario = createMockScenario({
     id: 'scenario-123',
     mode: 'assessment',
     status: 'active',
     title: { en: 'AI Literacy Assessment', zh: 'AI素養評估' },
     description: { en: 'Test your AI knowledge', zh: '測試您的AI知識' },
-    assessmentData: {
-      config: {
-        total_questions: 12,
-        time_limit_minutes: 15,
-        passing_score: 60,
-        domains: ['engaging_with_ai', 'creating_with_ai', 'managing_ai', 'designing_ai'],
-      },
-      domains: {
-        engaging_with_ai: {
-          name: 'Engaging with AI',
-          name_zhTW: '與 AI 互動',
-          description: 'Understanding and effectively communicating with AI systems',
-          questions: 3,
-        },
-        creating_with_ai: {
-          name: 'Creating with AI',
-          name_zhTW: '與 AI 共創',
-          description: 'Using AI tools to enhance creativity and productivity',
-          questions: 3,
-        },
-        managing_ai: {
-          name: 'Managing AI',
-          name_zhTW: '管理 AI',
-          description: 'Understanding AI limitations, privacy, and ethical considerations',
-          questions: 3,
-        },
-        designing_ai: {
-          name: 'Designing AI',
-          name_zhTW: '設計 AI',
-          description: 'Strategic thinking about AI implementation and innovation',
-          questions: 3,
-        },
-      },
-      questions: {
-        en: [
-          {
-            id: 'E001',
-            domain: 'engaging_with_ai',
-            difficulty: 'basic',
-            type: 'multiple_choice',
-            question: 'What is AI?',
-            options: [
-              { id: 'a', text: 'Artificial Intelligence' },
-              { id: 'b', text: 'Animal Intelligence' },
-              { id: 'c', text: 'Automated Internet' },
-              { id: 'd', text: 'Advanced Infrastructure' },
-            ],
-            correct_answer: 'a',
-          },
-        ],
-        zh: [
-          {
-            id: 'E001',
-            domain: 'engaging_with_ai',
-            difficulty: 'basic',
-            type: 'multiple_choice',
-            question: 'AI是什麼？',
-            options: [
-              { id: 'a', text: '人工智慧' },
-              { id: 'b', text: '動物智慧' },
-              { id: 'c', text: '自動化網路' },
-              { id: 'd', text: '先進基礎設施' },
-            ],
-            correct_answer: 'a',
-          },
-        ],
-      },
-    },
-  };
+  });
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -109,7 +41,7 @@ describe('/api/assessment', () => {
   });
 
   it('should return assessment data successfully', async () => {
-    mockScenarioRepo.findByMode.mockResolvedValue([mockAssessmentScenario]);
+    (mockScenarioRepo.findByMode as jest.Mock).mockResolvedValue([mockAssessmentScenario]);
 
     const request = new NextRequest('http://localhost:3000/api/assessment');
     const response = await GET(request);
@@ -147,7 +79,7 @@ describe('/api/assessment', () => {
   });
 
   it('should support language parameter', async () => {
-    mockScenarioRepo.findByMode.mockResolvedValue([mockAssessmentScenario]);
+    (mockScenarioRepo.findByMode as jest.Mock).mockResolvedValue([mockAssessmentScenario]);
 
     const request = new NextRequest('http://localhost:3000/api/assessment?lang=zh');
     const response = await GET(request);
@@ -158,7 +90,7 @@ describe('/api/assessment', () => {
   });
 
   it('should return 404 when no assessment scenarios found', async () => {
-    mockScenarioRepo.findByMode.mockResolvedValue([]);
+    (mockScenarioRepo.findByMode as jest.Mock).mockResolvedValue([]);
 
     const request = new NextRequest('http://localhost:3000/api/assessment');
     const response = await GET(request);
@@ -191,7 +123,7 @@ describe('/api/assessment', () => {
     const inactiveScenario = { ...mockAssessmentScenario, id: 'inactive-1', status: 'draft' };
     const activeScenario = { ...mockAssessmentScenario, id: 'active-1', status: 'active' };
     
-    mockScenarioRepo.findByMode.mockResolvedValue([inactiveScenario, activeScenario]);
+    (mockScenarioRepo.findByMode as jest.Mock).mockResolvedValue([inactiveScenario, activeScenario]);
 
     const request = new NextRequest('http://localhost:3000/api/assessment');
     await GET(request);
@@ -207,7 +139,7 @@ describe('/api/assessment', () => {
       assessmentData: null,
     };
 
-    mockScenarioRepo.findByMode.mockResolvedValue([malformedScenario]);
+    (mockScenarioRepo.findByMode as jest.Mock).mockResolvedValue([malformedScenario]);
 
     const request = new NextRequest('http://localhost:3000/api/assessment');
     const response = await GET(request);
@@ -221,7 +153,7 @@ describe('/api/assessment', () => {
   });
 
   it('should set proper cache headers', async () => {
-    mockScenarioRepo.findByMode.mockResolvedValue([mockAssessmentScenario]);
+    (mockScenarioRepo.findByMode as jest.Mock).mockResolvedValue([mockAssessmentScenario]);
 
     const request = new NextRequest('http://localhost:3000/api/assessment');
     const response = await GET(request);
@@ -242,7 +174,7 @@ describe('/api/assessment', () => {
 
   it('should handle repository errors gracefully', async () => {
     const error = new Error('Database error');
-    mockScenarioRepo.findByMode.mockRejectedValue(error);
+    (mockScenarioRepo.findByMode as jest.Mock).mockRejectedValue(error);
 
     const request = new NextRequest('http://localhost:3000/api/assessment');
     const response = await GET(request);
@@ -308,7 +240,7 @@ describe('/api/assessment', () => {
       },
     };
 
-    mockScenarioRepo.findByMode.mockResolvedValue([multilingualScenario]);
+    (mockScenarioRepo.findByMode as jest.Mock).mockResolvedValue([multilingualScenario]);
 
     // Test Chinese
     const requestZh = new NextRequest('http://localhost:3000/api/assessment?lang=zh');

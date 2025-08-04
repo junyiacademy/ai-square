@@ -7,16 +7,15 @@ import { NextRequest } from 'next/server';
 import { POST } from '../route';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { getServerSession } from '@/lib/auth/session';
+import { mockConsoleError as createMockConsoleError } from '@/test-utils/helpers/console';
 import type { ITask, IInteraction } from '@/types/unified-learning';
 
 // Mock dependencies
 jest.mock('@/lib/repositories/base/repository-factory');
 jest.mock('@/lib/auth/session');
 
-// Mock console methods
-const consoleSpy = {
-  error: jest.spyOn(console, 'error').mockImplementation()
-};
+// Mock console
+const mockConsoleError = createMockConsoleError();
 
 describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
   const mockTaskRepo = {
@@ -84,8 +83,8 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
     mockTaskRepo.findById.mockResolvedValue(mockTask);
   });
 
-  afterEach(() => {
-    consoleSpy.error.mockClear();
+  afterAll(() => {
+    mockConsoleError.mockRestore();
   });
 
   describe('Authentication', () => {
@@ -622,7 +621,7 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
 
       expect(response.status).toBe(500);
       expect(data.error).toBe('Failed to submit answers');
-      expect(consoleSpy.error).toHaveBeenCalledWith(
+      expect(mockConsoleError).toHaveBeenCalledWith(
         'Error submitting batch answers:',
         expect.any(Error)
       );

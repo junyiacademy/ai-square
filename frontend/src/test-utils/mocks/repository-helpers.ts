@@ -9,9 +9,9 @@ import type {
   ITaskRepository,
   IEvaluationRepository,
   IScenarioRepository,
-  IAchievementRepository,
-  IDiscoveryNodeRepository
+  IDiscoveryRepository
 } from '@/lib/repositories/interfaces';
+import type { IScenario, IProgram } from '@/types/unified-learning';
 
 /**
  * Create a complete mock for UserRepository
@@ -22,8 +22,18 @@ export function createMockUserRepository(): jest.Mocked<IUserRepository> {
     findByEmail: jest.fn(),
     create: jest.fn(),
     update: jest.fn(),
+    delete: jest.fn(),
+    findAll: jest.fn(),
     updateLastActive: jest.fn(),
-    count: jest.fn(),
+    addAchievement: jest.fn(),
+    saveAssessmentSession: jest.fn(),
+    getAssessmentSessions: jest.fn(),
+    getLatestAssessmentResults: jest.fn(),
+    addBadge: jest.fn(),
+    getUserBadges: jest.fn(),
+    getUserData: jest.fn(),
+    saveUserData: jest.fn(),
+    deleteUserData: jest.fn(),
   };
 }
 
@@ -36,10 +46,12 @@ export function createMockProgramRepository(): jest.Mocked<IProgramRepository> {
     findByUser: jest.fn(),
     findByScenario: jest.fn(),
     create: jest.fn(),
+    updateProgress: jest.fn(),
+    complete: jest.fn(),
     update: jest.fn(),
     updateStatus: jest.fn(),
-    getActiveProgram: jest.fn(),
-    count: jest.fn(),
+    getActivePrograms: jest.fn(),
+    getCompletedPrograms: jest.fn(),
   };
 }
 
@@ -51,10 +63,13 @@ export function createMockTaskRepository(): jest.Mocked<ITaskRepository> {
     findById: jest.fn(),
     findByProgram: jest.fn(),
     create: jest.fn(),
+    createBatch: jest.fn(),
+    updateInteractions: jest.fn(),
+    complete: jest.fn(),
     update: jest.fn(),
     updateStatus: jest.fn(),
-    recordInteraction: jest.fn(),
-    getTasksWithStatus: jest.fn(),
+    recordAttempt: jest.fn(),
+    getTaskWithInteractions: jest.fn(),
   };
 }
 
@@ -64,13 +79,14 @@ export function createMockTaskRepository(): jest.Mocked<ITaskRepository> {
 export function createMockEvaluationRepository(): jest.Mocked<IEvaluationRepository> {
   return {
     findById: jest.fn(),
-    findByTask: jest.fn(),
     findByProgram: jest.fn(),
+    findByTask: jest.fn(),
     findByUser: jest.fn(),
+    findByType: jest.fn(),
     create: jest.fn(),
     update: jest.fn(),
+    getLatestForTask: jest.fn(),
     getUserProgress: jest.fn(),
-    getLatestByTask: jest.fn(),
   };
 }
 
@@ -80,47 +96,32 @@ export function createMockEvaluationRepository(): jest.Mocked<IEvaluationReposit
 export function createMockScenarioRepository(): jest.Mocked<IScenarioRepository> {
   return {
     findById: jest.fn(),
-    findAll: jest.fn(),
-    findBySourcePath: jest.fn(),
+    findBySource: jest.fn(),
     update: jest.fn(),
     create: jest.fn(),
     findByMode: jest.fn(),
     findActive: jest.fn(),
     updateStatus: jest.fn(),
-    count: jest.fn(),
   };
 }
 
 /**
- * Create a complete mock for AchievementRepository
+ * Create a complete mock for DiscoveryRepository
  */
-export function createMockAchievementRepository(): jest.Mocked<IAchievementRepository> {
+export function createMockDiscoveryRepository(): jest.Mocked<IDiscoveryRepository> {
   return {
-    findById: jest.fn(),
-    findByUser: jest.fn(),
-    create: jest.fn(),
-    hasAchievement: jest.fn(),
-    grantAchievement: jest.fn(),
-    getUnlockedAchievements: jest.fn(),
+    findCareerPaths: jest.fn(),
+    findCareerPathById: jest.fn(),
+    findCareerPathBySlug: jest.fn(),
+    getCareerRecommendations: jest.fn(),
+    getUserDiscoveryProgress: jest.fn(),
+    addPortfolioItem: jest.fn(),
+    updatePortfolioItem: jest.fn(),
+    deletePortfolioItem: jest.fn(),
+    getPortfolioItems: jest.fn(),
   };
 }
 
-/**
- * Create a complete mock for DiscoveryNodeRepository
- */
-export function createMockDiscoveryNodeRepository(): jest.Mocked<IDiscoveryNodeRepository> {
-  return {
-    findById: jest.fn(),
-    findByScenario: jest.fn(),
-    findByType: jest.fn(),
-    create: jest.fn(),
-    update: jest.fn(),
-    updateStatus: jest.fn(),
-    recordInteraction: jest.fn(),
-    getConnectedNodes: jest.fn(),
-    getNodePath: jest.fn(),
-  };
-}
 
 /**
  * Create all repository mocks with default behaviors
@@ -132,8 +133,7 @@ export function createAllRepositoryMocks() {
     taskRepo: createMockTaskRepository(),
     evaluationRepo: createMockEvaluationRepository(),
     scenarioRepo: createMockScenarioRepository(),
-    achievementRepo: createMockAchievementRepository(),
-    discoveryNodeRepo: createMockDiscoveryNodeRepository(),
+    discoveryRepo: createMockDiscoveryRepository(),
   };
 }
 
@@ -150,10 +150,105 @@ export function setupRepositoryFactoryMock() {
       getTaskRepository: jest.fn(() => mocks.taskRepo),
       getEvaluationRepository: jest.fn(() => mocks.evaluationRepo),
       getScenarioRepository: jest.fn(() => mocks.scenarioRepo),
-      getAchievementRepository: jest.fn(() => mocks.achievementRepo),
-      getDiscoveryNodeRepository: jest.fn(() => mocks.discoveryNodeRepo),
+      getDiscoveryRepository: jest.fn(() => mocks.discoveryRepo),
     }
   }));
   
   return mocks;
+}
+
+/**
+ * Create a complete mock IScenario object
+ */
+export function createMockScenario(overrides: Partial<IScenario> = {}): IScenario {
+  return {
+    id: 'mock-scenario-id',
+    mode: 'assessment',
+    status: 'active',
+    version: '1.0.0',
+    sourceType: 'yaml',
+    sourcePath: '/mock/path',
+    sourceId: undefined,
+    sourceMetadata: {},
+    title: { en: 'Mock Scenario', zh: '模擬情境' },
+    description: { en: 'Mock scenario description', zh: '模擬情境描述' },
+    objectives: ['Learn AI concepts'],
+    difficulty: 'beginner',
+    estimatedMinutes: 30,
+    prerequisites: [],
+    taskTemplates: [],
+    taskCount: 1,
+    xpRewards: { completion: 100 },
+    unlockRequirements: {},
+    pblData: {},
+    discoveryData: {},
+    assessmentData: {
+      config: {
+        total_questions: 12,
+        time_limit_minutes: 15,
+        passing_score: 60,
+        domains: ['engaging_with_ai', 'creating_with_ai', 'managing_ai', 'designing_ai'],
+      },
+      domains: {
+        engaging_with_ai: {
+          name: 'Engaging with AI',
+          name_zhTW: '與 AI 互動',
+          description: 'Understanding and effectively communicating with AI systems',
+          questions: 3,
+        },
+      },
+      questions: {
+        en: [{
+          id: 'Q001',
+          domain: 'engaging_with_ai',
+          difficulty: 'basic',
+          type: 'multiple_choice',
+          question: 'What is AI?',
+          options: [
+            { id: 'a', text: 'Artificial Intelligence' },
+            { id: 'b', text: 'Animal Intelligence' },
+          ],
+          correct_answer: 'a',
+        }],
+      },
+    },
+    aiModules: {},
+    resources: [],
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    publishedAt: new Date().toISOString(),
+    metadata: {},
+    ...overrides,
+  };
+}
+
+/**
+ * Create a complete mock IProgram object
+ */
+export function createMockProgram(overrides: Partial<IProgram> = {}): IProgram {
+  return {
+    id: 'mock-program-id',
+    userId: 'mock-user-id',
+    scenarioId: 'mock-scenario-id',
+    mode: 'assessment',
+    status: 'active',
+    currentTaskIndex: 0,
+    completedTaskCount: 0,
+    totalTaskCount: 5,
+    totalScore: 0,
+    domainScores: {},
+    xpEarned: 0,
+    badgesEarned: [],
+    createdAt: new Date().toISOString(),
+    startedAt: new Date().toISOString(),
+    completedAt: undefined,
+    updatedAt: new Date().toISOString(),
+    lastActivityAt: new Date().toISOString(),
+    timeSpentSeconds: 0,
+    pblData: {},
+    discoveryData: {},
+    assessmentData: {},
+    metadata: {},
+    ...overrides,
+  };
 }

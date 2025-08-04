@@ -26,6 +26,11 @@ export function verifySessionToken(token: string): SessionData | null {
   try {
     const sessionData = JSON.parse(Buffer.from(token, 'base64').toString()) as SessionData;
     
+    // Check required fields
+    if (!sessionData.userId || !sessionData.email || !sessionData.timestamp) {
+      return null;
+    }
+    
     // Check expiry
     if (Date.now() - sessionData.timestamp > SESSION_TTL) {
       return null;

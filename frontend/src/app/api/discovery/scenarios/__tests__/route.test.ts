@@ -7,7 +7,7 @@ import { GET } from '../route';
 import { NextRequest } from 'next/server';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { mockConsoleError as createMockConsoleError } from '@/test-utils/helpers/console';
-import { createMockScenarioRepository, createMockProgramRepository } from '@/test-utils/mocks/repository-helpers';
+import { createMockScenarioRepository, createMockProgramRepository, createMockScenario, createMockProgram } from '@/test-utils/mocks/repository-helpers';
 
 // Mock dependencies
 jest.mock('@/lib/repositories/base/repository-factory');
@@ -63,7 +63,7 @@ describe('/api/discovery/scenarios', () => {
     ];
 
     it('should return discovery scenarios with default language', async () => {
-      mockScenarioRepo.findByMode?.mockResolvedValue(mockScenarios);
+      (mockScenarioRepo.findByMode as jest.Mock).mockResolvedValue(mockScenarios);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios');
       const response = await GET(request);
@@ -86,7 +86,7 @@ describe('/api/discovery/scenarios', () => {
     });
 
     it('should return scenarios with specified language', async () => {
-      mockScenarioRepo.findByMode?.mockResolvedValue(mockScenarios);
+      (mockScenarioRepo.findByMode as jest.Mock).mockResolvedValue(mockScenarios);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios?lang=zh');
       const response = await GET(request);
@@ -106,9 +106,9 @@ describe('/api/discovery/scenarios', () => {
         user: { id: 'user-123', email: 'user@example.com' },
       });
 
-      mockScenarioRepo.findByMode?.mockResolvedValue(mockScenarios);
+      (mockScenarioRepo.findByMode as jest.Mock).mockResolvedValue(mockScenarios);
       mockProgramRepo.findByUser?.mockResolvedValue([
-        {
+        createMockProgram({
           id: 'prog-1',
           scenarioId: 'scenario-1',
           mode: 'discovery',
@@ -116,8 +116,8 @@ describe('/api/discovery/scenarios', () => {
           totalScore: 95,
           completedTaskCount: 5,
           totalTaskCount: 5,
-        },
-        {
+        }),
+        createMockProgram({
           id: 'prog-2',
           scenarioId: 'scenario-2',
           mode: 'discovery',
@@ -125,7 +125,7 @@ describe('/api/discovery/scenarios', () => {
           totalScore: 0,
           completedTaskCount: 2,
           totalTaskCount: 4,
-        },
+        }),
       ]);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios');
@@ -168,7 +168,7 @@ describe('/api/discovery/scenarios', () => {
     });
 
     it('should handle empty scenarios', async () => {
-      mockScenarioRepo.findByMode?.mockResolvedValue([]);
+      (mockScenarioRepo.findByMode as jest.Mock).mockResolvedValue([]);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios');
       const response = await GET(request);
@@ -208,7 +208,7 @@ describe('/api/discovery/scenarios', () => {
         description: { en: 'English description' },
       }];
 
-      mockScenarioRepo.findByMode?.mockResolvedValue(scenarioWithLimitedLanguages);
+      (mockScenarioRepo.findByMode as jest.Mock).mockResolvedValue(scenarioWithLimitedLanguages);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios?lang=zh');
       const response = await GET(request);
@@ -227,7 +227,7 @@ describe('/api/discovery/scenarios', () => {
         description: null as any,
       }];
 
-      mockScenarioRepo.findByMode?.mockResolvedValue(malformedScenarios);
+      (mockScenarioRepo.findByMode as jest.Mock).mockResolvedValue(malformedScenarios);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios');
       const response = await GET(request);
@@ -244,30 +244,30 @@ describe('/api/discovery/scenarios', () => {
         user: { email: 'user@example.com' },
       });
 
-      mockScenarioRepo.findByMode?.mockResolvedValue([mockScenarios[0]]);
+      (mockScenarioRepo.findByMode as jest.Mock).mockResolvedValue([mockScenarios[0]]);
       mockProgramRepo.findByUser?.mockResolvedValue([
-        {
+        createMockProgram({
           id: 'prog-1',
           scenarioId: 'scenario-1',
           mode: 'discovery',
           status: 'completed',
           totalScore: 85,
-        },
-        {
+        }),
+        createMockProgram({
           id: 'prog-2',
           scenarioId: 'scenario-1',
           mode: 'discovery',
           status: 'completed',
           totalScore: 95, // Better score
-        },
-        {
+        }),
+        createMockProgram({
           id: 'prog-3',
           scenarioId: 'scenario-1',
           mode: 'discovery',
           status: 'active',
           completedTaskCount: 1,
           totalTaskCount: 5,
-        },
+        }),
       ]);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios');
@@ -287,7 +287,7 @@ describe('/api/discovery/scenarios', () => {
       const { getServerSession } = await import('@/lib/auth/session');
       (getServerSession as jest.Mock).mockResolvedValue(null);
 
-      mockScenarioRepo.findByMode?.mockResolvedValue(mockScenarios);
+      (mockScenarioRepo.findByMode as jest.Mock).mockResolvedValue(mockScenarios);
 
       // First request
       const request1 = new NextRequest('http://localhost:3000/api/discovery/scenarios');
@@ -311,7 +311,7 @@ describe('/api/discovery/scenarios', () => {
         user: { id: 'user-123' },
       });
 
-      mockScenarioRepo.findByMode?.mockResolvedValue(mockScenarios);
+      (mockScenarioRepo.findByMode as jest.Mock).mockResolvedValue(mockScenarios);
       mockProgramRepo.findByUser?.mockResolvedValue([]);
 
       // First request
@@ -325,7 +325,7 @@ describe('/api/discovery/scenarios', () => {
 
     it('should handle repository errors', async () => {
       const error = new Error('Database error');
-      mockScenarioRepo.findByMode?.mockRejectedValue(error);
+      (mockScenarioRepo.findByMode as jest.Mock).mockRejectedValue(error);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios');
       const response = await GET(request);

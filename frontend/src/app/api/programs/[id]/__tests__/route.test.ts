@@ -33,9 +33,8 @@ describe('/api/programs/[id] Route', () => {
 
   beforeEach(() => {
     mockProgramRepo = {
-      getProgramWithScenario: jest.fn(),
-      update: jest.fn(),
-      updateStatus: jest.fn()
+      findById: jest.fn(),
+      update: jest.fn()
     };
 
     mockTaskRepo = {
@@ -63,7 +62,7 @@ describe('/api/programs/[id] Route', () => {
 
   describe('GET /api/programs/[id]', () => {
     it('should handle async params correctly in Next.js 15', async () => {
-      mockProgramRepo.getProgramWithScenario.mockResolvedValue(mockProgram);
+      mockProgramRepo.findById.mockResolvedValue(mockProgram);
       mockTaskRepo.findByProgram.mockResolvedValue(mockTasks);
       mockEvaluationRepo.findByProgram.mockResolvedValue(mockEvaluations);
 
@@ -73,7 +72,7 @@ describe('/api/programs/[id] Route', () => {
       const response = await GET(request, { params });
       const data = await response.json();
 
-      expect(mockProgramRepo.getProgramWithScenario).toHaveBeenCalledWith('test-program-id');
+      expect(mockProgramRepo.findById).toHaveBeenCalledWith('test-program-id');
       expect(mockTaskRepo.findByProgram).toHaveBeenCalledWith('test-program-id');
       expect(mockEvaluationRepo.findByProgram).toHaveBeenCalledWith('test-program-id');
       
@@ -85,7 +84,7 @@ describe('/api/programs/[id] Route', () => {
     });
 
     it('should return 404 when program not found', async () => {
-      mockProgramRepo.getProgramWithScenario.mockResolvedValue(null);
+      mockProgramRepo.findById.mockResolvedValue(null);
 
       const request = new NextRequest('http://localhost:3000/api/programs/nonexistent');
       const params = Promise.resolve({ id: 'nonexistent' });
@@ -105,7 +104,7 @@ describe('/api/programs/[id] Route', () => {
       const updatedProgram = { ...mockProgram, ...updateData, endTime: endTime.toISOString() };
       
       mockProgramRepo.update.mockResolvedValue(updatedProgram);
-      mockScenarioRepo.findById.mockResolvedValue({ xpRewards: { completion: 100 } });
+      (mockScenarioRepo.findById as jest.Mock).mockResolvedValue({ xpRewards: { completion: 100 } });
 
       const request = new NextRequest('http://localhost:3000/api/programs/test-program-id', {
         method: 'PATCH',
@@ -129,7 +128,7 @@ describe('/api/programs/[id] Route', () => {
       const updatedProgram = { ...mockProgram, ...updateData };
       
       mockProgramRepo.update.mockResolvedValue(updatedProgram);
-      mockScenarioRepo.findById.mockResolvedValue({ xpRewards: { completion: 150 } });
+      (mockScenarioRepo.findById as jest.Mock).mockResolvedValue({ xpRewards: { completion: 150 } });
 
       const request = new NextRequest('http://localhost:3000/api/programs/test-program-id', {
         method: 'PATCH',
@@ -147,7 +146,7 @@ describe('/api/programs/[id] Route', () => {
 
   describe('DELETE /api/programs/[id]', () => {
     it('should handle async params and mark program as abandoned', async () => {
-      mockProgramRepo.updateStatus.mockResolvedValue(true);
+      mockProgramRepo.update.mockResolvedValue(true);
 
       const request = new NextRequest('http://localhost:3000/api/programs/test-program-id', {
         method: 'DELETE'
@@ -157,7 +156,7 @@ describe('/api/programs/[id] Route', () => {
       const response = await DELETE(request, { params });
       const data = await response.json();
 
-      expect(mockProgramRepo.updateStatus).toHaveBeenCalledWith('test-program-id', 'abandoned');
+      expect(mockProgramRepo.update).toHaveBeenCalledWith('test-program-id', { status: 'abandoned' });
       expect(data).toEqual({ message: 'Program marked as abandoned' });
     });
   });
