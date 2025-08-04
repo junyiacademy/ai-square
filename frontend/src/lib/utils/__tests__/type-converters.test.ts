@@ -138,7 +138,7 @@ describe('type-converters', () => {
         status: 'active',
         currentTaskIndex: 1,
         totalTaskCount: 5,
-        startedAt: expect.any(Date),
+        startedAt: '2024-01-01T00:00:00.000Z',
         completedAt: undefined
       });
     });

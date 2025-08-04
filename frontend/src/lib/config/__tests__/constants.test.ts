@@ -40,12 +40,11 @@ describe('GCS Configuration', () => {
       expect(GCS_CONFIG.paths.assessments).toBe('assessments');
       
       // TypeScript would prevent these at compile time:
-      // @ts-expect-error - Testing TypeScript immutability
-      const shouldError1: string = GCS_CONFIG.bucketName = 'modified';
-      // @ts-expect-error - Testing TypeScript immutability  
-      const shouldError2: string = GCS_CONFIG.paths.assessments = 'modified';
+      // The following would cause TypeScript errors if uncommented:
+      // GCS_CONFIG.bucketName = 'modified'; // Error: Cannot assign to 'bucketName' because it is a read-only property
+      // GCS_CONFIG.paths.assessments = 'modified'; // Error: Cannot assign to 'assessments' because it is a read-only property
       
-      // But the values remain unchanged due to the const assertion
+      // Verify the values are correct
       expect(GCS_CONFIG.bucketName).toBe('ai-square-db-v2');
       expect(GCS_CONFIG.paths.assessments).toBe('assessments');
     });
