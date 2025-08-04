@@ -146,7 +146,9 @@ describe('UserDataService', () => {
         }
       });
 
-      mockLocalStorage.getItem.mockReturnValue(JSON.stringify({ [mockUserId]: existingData }));
+      // Set the data in the mock store instead of using mockReturnValue
+      const storageKey = `discoveryData_${mockUserId}`;
+      (mockLocalStorage as any).store[storageKey] = JSON.stringify(existingData);
 
       const newResults: AssessmentResults = {
         tech: 85,
@@ -158,7 +160,7 @@ describe('UserDataService', () => {
 
       const savedData = JSON.parse(mockLocalStorage.setItem.mock.calls[0][1]);
       // The implementation overwrites the results, not append
-      expect(savedData[mockUserId].assessmentResults).toEqual(newResults);
+      expect(savedData.assessmentResults).toEqual(newResults);
     });
   });
 
@@ -270,7 +272,7 @@ describe('UserDataService', () => {
       await service.importData(importData);
 
       const savedData = JSON.parse(mockLocalStorage.setItem.mock.calls[0][1]);
-      expect(savedData[mockUserId]).toEqual(importData);
+      expect(savedData).toEqual(importData);
     });
 
     it('validates imported data format', async () => {
@@ -283,7 +285,7 @@ describe('UserDataService', () => {
       await service.importData(invalidData as any);
 
       const savedData = JSON.parse(mockLocalStorage.setItem.mock.calls[0][1]);
-      expect(savedData[mockUserId].id).toBe(mockUserId);
+      expect(savedData.id).toBe(mockUserId);
     });
   });
 });
