@@ -33,32 +33,28 @@ describe('UserDataServiceClient', () => {
   const mockFetch = global.fetch as jest.MockedFunction<typeof fetch>;
 
   const mockUserData: UserData = {
-    achievements: {
-      badges: ['first-assessment'],
-      totalXp: 100,
-      level: 2,
-      completedTasks: ['task-1', 'task-2']
-    },
+      achievements: {
+        badges: [],
+        totalXp: 100,
+        level: 2,
+        completedTasks: ['task-1', 'task-2']
+      },
     assessmentSessions: [
-      {
-        id: 'session-1',
-        scenarioId: 'ai-literacy',
-        startedAt: '2024-01-20T10:00:00Z',
-        completedAt: '2024-01-20T10:30:00Z',
-        results: {
-          totalQuestions: 20,
-          correctAnswers: 18,
-          score: 90,
-          domains: {}
+        {
+          id: 'session-1',
+          createdAt: '2024-01-20T10:00:00Z',
+          results: {
+            tech: 50,
+            creative: 40,
+            business: 30
+          }
         }
-      }
     ],
-    assessmentResults: {
-      totalQuestions: 20,
-      correctAnswers: 18,
-      score: 90,
-      domains: {}
-    },
+      assessmentResults: {
+        tech: 50,
+        creative: 40,
+        business: 30
+      },
     lastUpdated: '2024-01-20T10:30:00Z',
     version: '2.0'
   };
@@ -270,28 +266,30 @@ describe('UserDataServiceClient', () => {
     });
 
     it('should save assessment results', async () => {
-      const newResults: AssessmentResults = {
-        totalQuestions: 30,
-        correctAnswers: 28,
-        score: 93,
-        domains: { AI_Ethics: 95 }
-      };
+        const newResults: AssessmentResults = {
+          tech: 80,
+          creative: 70,
+          business: 60
+        };
 
-      await service.saveAssessmentResults(newResults);
+        await service.saveAssessmentResults(newResults);
 
-      expect(mockFetch).toHaveBeenCalledWith('/api/user-data', expect.objectContaining({
-        method: 'POST',
-        body: expect.stringContaining('"score":93')
-      }));
+        expect(mockFetch).toHaveBeenCalledWith(
+          '/api/user-data',
+          expect.objectContaining({
+            method: 'POST',
+            body: expect.stringContaining('"tech":80')
+          })
+        );
     });
 
     it('should save achievements', async () => {
-      const newAchievements: UserAchievements = {
-        badges: ['master-learner'],
-        totalXp: 500,
-        level: 5,
-        completedTasks: ['task-1', 'task-2', 'task-3']
-      };
+        const newAchievements: UserAchievements = {
+          badges: [],
+          totalXp: 500,
+          level: 5,
+          completedTasks: ['task-1', 'task-2', 'task-3']
+        };
 
       await service.saveAchievements(newAchievements);
 
@@ -302,18 +300,15 @@ describe('UserDataServiceClient', () => {
     });
 
     it('should add assessment session', async () => {
-      const newSession: AssessmentSession = {
-        id: 'session-2',
-        scenarioId: 'ai-ethics',
-        startedAt: '2024-01-21T10:00:00Z',
-        completedAt: '2024-01-21T10:45:00Z',
-        results: {
-          totalQuestions: 25,
-          correctAnswers: 23,
-          score: 92,
-          domains: {}
-        }
-      };
+        const newSession: AssessmentSession = {
+          id: 'session-2',
+          createdAt: '2024-01-21T10:00:00Z',
+          results: {
+            tech: 60,
+            creative: 55,
+            business: 70
+          }
+        };
 
       await service.addAssessmentSession(newSession);
 

@@ -66,18 +66,18 @@ describe('Assessment Scenario API Route', () => {
         } as ITaskTemplate
       ];
 
-      const mockScenario: IScenario = {
-        id: 'test-scenario-id',
-        mode: 'assessment',
-        status: 'active',
-        sourceType: 'yaml',
-        title: { en: 'Test Assessment', zh: '測試評估' },
-        description: { en: 'Test Description', zh: '測試說明' },
-        objectives: {},
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        taskTemplates: mockTaskTemplates
-      };
+        const mockScenario: IScenario = {
+          id: 'test-scenario-id',
+          mode: 'assessment',
+          status: 'active',
+          sourceType: 'yaml',
+          title: { en: 'Test Assessment', zh: '測試評估' },
+          description: { en: 'Test Description', zh: '測試說明' },
+          objectives: [],
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          taskTemplates: mockTaskTemplates
+        } as any;
 
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
 
@@ -103,17 +103,17 @@ describe('Assessment Scenario API Route', () => {
     });
 
     it('should use language-specific title and description', async () => {
-      const mockScenario: IScenario = {
-        id: 'test-scenario-id',
-        mode: 'assessment',
-        status: 'active',
-        sourceType: 'yaml',
-        title: { en: 'English Title', zh: '中文標題' },
-        description: { en: 'English Description', zh: '中文說明' },
-        objectives: {},
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      };
+        const mockScenario: IScenario = {
+          id: 'test-scenario-id',
+          mode: 'assessment',
+          status: 'active',
+          sourceType: 'yaml',
+          title: { en: 'English Title', zh: '中文標題' },
+          description: { en: 'English Description', zh: '中文說明' },
+          objectives: [],
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        } as any;
 
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
 
@@ -129,17 +129,17 @@ describe('Assessment Scenario API Route', () => {
     });
 
     it('should handle string title and description', async () => {
-      const mockScenario: IScenario = {
-        id: 'test-scenario-id',
-        mode: 'assessment',
-        status: 'active',
-        sourceType: 'yaml',
-        title: 'String Title' as any, // Simulating legacy data
-        description: 'String Description' as any,
-        objectives: {},
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      };
+        const mockScenario: IScenario = {
+          id: 'test-scenario-id',
+          mode: 'assessment',
+          status: 'active',
+          sourceType: 'yaml',
+          title: 'String Title' as any, // Simulating legacy data
+          description: 'String Description' as any,
+          objectives: [],
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        } as any;
 
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
 
@@ -168,18 +168,18 @@ describe('Assessment Scenario API Route', () => {
     });
 
     it('should use default config when no taskTemplates', async () => {
-      const mockScenario: IScenario = {
+      const mockScenario = {
         id: 'test-scenario-id',
         mode: 'assessment',
         status: 'active',
         sourceType: 'yaml',
         title: { en: 'Test Assessment' },
         description: { en: 'Test Description' },
-        objectives: {},
+          objectives: [],
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
         // No taskTemplates
-      };
+      } as any;
 
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
 
@@ -222,18 +222,18 @@ describe('Assessment Scenario API Route', () => {
         } as ITaskTemplate
       ];
 
-      const mockScenario: IScenario = {
-        id: 'test-scenario-id',
-        mode: 'assessment',
-        status: 'active',
-        sourceType: 'yaml',
-        title: { en: 'Test Assessment' },
-        description: { en: 'Test Description' },
-        objectives: {},
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        taskTemplates: mockTaskTemplates
-      };
+        const mockScenario: IScenario = {
+          id: 'test-scenario-id',
+          mode: 'assessment',
+          status: 'active',
+          sourceType: 'yaml',
+          title: { en: 'Test Assessment' },
+          description: { en: 'Test Description' },
+          objectives: [],
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          taskTemplates: mockTaskTemplates
+        } as any;
 
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
 
@@ -253,17 +253,17 @@ describe('Assessment Scenario API Route', () => {
     });
 
     it('should fallback to English for missing language', async () => {
-      const mockScenario: IScenario = {
-        id: 'test-scenario-id',
-        mode: 'assessment',
-        status: 'active',
-        sourceType: 'yaml',
-        title: { en: 'English Title', zh: '中文標題' },
-        description: { en: 'English Description', zh: '中文說明' },
-        objectives: {},
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      };
+        const mockScenario: IScenario = {
+          id: 'test-scenario-id',
+          mode: 'assessment',
+          status: 'active',
+          sourceType: 'yaml',
+          title: { en: 'English Title', zh: '中文標題' },
+          description: { en: 'English Description', zh: '中文說明' },
+          objectives: [],
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        } as any;
 
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
 
@@ -279,17 +279,17 @@ describe('Assessment Scenario API Route', () => {
     });
 
     it('should handle missing title and description', async () => {
-      const mockScenario: IScenario = {
-        id: 'test-scenario-id',
-        mode: 'assessment',
-        status: 'active',
-        sourceType: 'yaml',
-        title: undefined as any, // Missing title
-        description: undefined as any, // Missing description
-        objectives: {},
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      };
+        const mockScenario: IScenario = {
+          id: 'test-scenario-id',
+          mode: 'assessment',
+          status: 'active',
+          sourceType: 'yaml',
+          title: undefined as any, // Missing title
+          description: undefined as any, // Missing description
+          objectives: [],
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        } as any;
 
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
 
@@ -322,17 +322,17 @@ describe('Assessment Scenario API Route', () => {
     });
 
     it('should default to English when no lang parameter', async () => {
-      const mockScenario: IScenario = {
-        id: 'test-scenario-id',
-        mode: 'assessment',
-        status: 'active',
-        sourceType: 'yaml',
-        title: { en: 'English Title', zh: '中文標題' },
-        description: { en: 'English Description', zh: '中文說明' },
-        objectives: {},
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      };
+        const mockScenario: IScenario = {
+          id: 'test-scenario-id',
+          mode: 'assessment',
+          status: 'active',
+          sourceType: 'yaml',
+          title: { en: 'English Title', zh: '中文標題' },
+          description: { en: 'English Description', zh: '中文說明' },
+          objectives: [],
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        } as any;
 
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
 

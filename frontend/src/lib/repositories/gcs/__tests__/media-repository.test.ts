@@ -65,7 +65,7 @@ describe('GCSMediaRepository', () => {
       };
 
       mockFile.createWriteStream.mockReturnValue(mockStream as any);
-      mockFile.makePublic.mockResolvedValue([{}] as any);
+      (mockFile.makePublic as any).mockResolvedValue([{}]);
 
       // Simulate successful upload
       mockStream.on.mockImplementation((event, callback) => {
@@ -130,8 +130,8 @@ describe('GCSMediaRepository', () => {
 
   describe('getFileUrl', () => {
     it('should return public URL for public files', async () => {
-      mockFile.exists.mockResolvedValue([true]);
-      mockFile.getMetadata.mockResolvedValue([{
+        (mockFile.exists as any).mockResolvedValue([true]);
+        (mockFile.getMetadata as any).mockResolvedValue([{
         acl: [{ entity: 'allUsers', role: 'READER' }]
       }]);
 
@@ -141,11 +141,11 @@ describe('GCSMediaRepository', () => {
     });
 
     it('should return signed URL for private files', async () => {
-      mockFile.exists.mockResolvedValue([true]);
-      mockFile.getMetadata.mockResolvedValue([{
-        acl: []
-      }]);
-      mockFile.getSignedUrl.mockResolvedValue(['https://signed-url']);
+      (mockFile.exists as any).mockResolvedValue([true]);
+      (mockFile.getMetadata as any).mockResolvedValue([
+          { acl: [] }
+        ]);
+      (mockFile.getSignedUrl as any).mockResolvedValue(['https://signed-url']);
 
       const url = await repository.getFileUrl('images/test.jpg');
 
@@ -158,7 +158,7 @@ describe('GCSMediaRepository', () => {
     });
 
     it('should throw error for non-existent files', async () => {
-      mockFile.exists.mockResolvedValue([false]);
+      (mockFile.exists as any).mockResolvedValue([false]);
 
       await expect(repository.getFileUrl('images/test.jpg'))
         .rejects.toThrow('File not found: images/test.jpg');
@@ -169,7 +169,7 @@ describe('GCSMediaRepository', () => {
 
   describe('deleteFile', () => {
     it('should delete file successfully', async () => {
-      mockFile.delete.mockResolvedValue([{}] as any);
+      (mockFile.delete as any).mockResolvedValue([{}] as any);
 
       const result = await repository.deleteFile('images/test.jpg');
 
@@ -178,7 +178,7 @@ describe('GCSMediaRepository', () => {
     });
 
     it('should return false on deletion error', async () => {
-      mockFile.delete.mockRejectedValue(new Error('Delete failed'));
+      (mockFile.delete as any).mockRejectedValue(new Error('Delete failed'));
 
       const result = await repository.deleteFile('images/test.jpg');
 
@@ -208,7 +208,7 @@ describe('GCSMediaRepository', () => {
         }
       ];
 
-      mockBucket.getFiles.mockResolvedValue([mockFiles as any, null, null]);
+        (mockBucket.getFiles as any).mockResolvedValue([mockFiles as any, null, null]);
       
       // Mock getFileUrl for each file
       const getFileUrlSpy = jest.spyOn(repository, 'getFileUrl');
@@ -216,7 +216,7 @@ describe('GCSMediaRepository', () => {
 
       const result = await repository.listFiles('images/');
 
-      expect(mockBucket.getFiles).toHaveBeenCalledWith({
+      expect((mockBucket.getFiles as any)).toHaveBeenCalledWith({
         prefix: 'images/',
         delimiter: '/'
       });
@@ -239,7 +239,7 @@ describe('GCSMediaRepository', () => {
     });
 
     it('should handle listing errors', async () => {
-      mockBucket.getFiles.mockRejectedValue(new Error('List failed'));
+      (mockBucket.getFiles as any).mockRejectedValue(new Error('List failed'));
 
       await expect(repository.listFiles('images/'))
         .rejects.toThrow('List failed');
@@ -255,7 +255,7 @@ describe('GCSMediaRepository', () => {
         }
       ];
 
-      mockBucket.getFiles.mockResolvedValue([mockFiles as any, null, null]);
+      (mockBucket.getFiles as any).mockResolvedValue([mockFiles as any, null, null]);
       
       const getFileUrlSpy = jest.spyOn(repository, 'getFileUrl');
       getFileUrlSpy.mockResolvedValue('https://storage.googleapis.com/test-bucket/images/file1.jpg');
@@ -307,7 +307,7 @@ describe('GCSMediaRepository', () => {
 
   describe('getUploadUrl', () => {
     it('should generate pre-signed upload URL', async () => {
-      mockFile.getSignedUrl.mockResolvedValue(['https://signed-upload-url']);
+      (mockFile.getSignedUrl as any).mockResolvedValue(['https://signed-upload-url']);
 
       const result = await repository.getUploadUrl('images/test.jpg', 'image/jpeg', 60);
 
@@ -324,12 +324,12 @@ describe('GCSMediaRepository', () => {
     });
 
     it('should use default expiry time', async () => {
-      mockFile.getSignedUrl.mockResolvedValue(['https://signed-upload-url']);
+      (mockFile.getSignedUrl as any).mockResolvedValue(['https://signed-upload-url']);
 
       await repository.getUploadUrl('images/test.jpg', 'image/jpeg');
 
-      const call = mockFile.getSignedUrl.mock.calls[0][0];
-      const expiryTime = call.expires - Date.now();
+      const call = (mockFile.getSignedUrl.mock.calls[0][0] as any);
+      const expiryTime = (call.expires as number) - Date.now();
       
       // Should be approximately 30 minutes
       expect(expiryTime).toBeGreaterThan(29 * 60 * 1000);
@@ -338,8 +338,8 @@ describe('GCSMediaRepository', () => {
   });
 
   describe('copyFile', () => {
-    it('should copy file successfully', async () => {
-      mockFile.copy.mockResolvedValue([{} as any, {}]);
+      it('should copy file successfully', async () => {
+        (mockFile.copy as any).mockResolvedValue([{} as any, {}]);
       const getFileUrlSpy = jest.spyOn(repository, 'getFileUrl');
       getFileUrlSpy.mockResolvedValue('https://storage.googleapis.com/test-bucket/images/copy.jpg');
 
@@ -352,7 +352,7 @@ describe('GCSMediaRepository', () => {
     });
 
     it('should handle copy errors', async () => {
-      mockFile.copy.mockRejectedValue(new Error('Copy failed'));
+      (mockFile.copy as any).mockRejectedValue(new Error('Copy failed'));
 
       await expect(repository.copyFile('images/original.jpg', 'images/copy.jpg'))
         .rejects.toThrow('Copy failed');
@@ -379,7 +379,7 @@ describe('GCSMediaRepository', () => {
 
   describe('exists', () => {
     it('should return true for existing files', async () => {
-      mockFile.exists.mockResolvedValue([true]);
+      (mockFile.exists as any).mockResolvedValue([true]);
 
       const result = await repository.exists('images/test.jpg');
 
@@ -387,7 +387,7 @@ describe('GCSMediaRepository', () => {
     });
 
     it('should return false for non-existent files', async () => {
-      mockFile.exists.mockResolvedValue([false]);
+      (mockFile.exists as any).mockResolvedValue([false]);
 
       const result = await repository.exists('images/test.jpg');
 
@@ -395,7 +395,7 @@ describe('GCSMediaRepository', () => {
     });
 
     it('should return false on error', async () => {
-      mockFile.exists.mockRejectedValue(new Error('Check failed'));
+      (mockFile.exists as any).mockRejectedValue(new Error('Check failed'));
 
       const result = await repository.exists('images/test.jpg');
 
@@ -411,7 +411,7 @@ describe('GCSMediaRepository', () => {
         contentType: 'image/jpeg',
         updated: '2024-01-20T10:00:00Z'
       };
-      mockFile.getMetadata.mockResolvedValue([mockMetadata]);
+      (mockFile.getMetadata as any).mockResolvedValue([mockMetadata]);
 
       const result = await repository.getMetadata('images/test.jpg');
 
@@ -419,7 +419,7 @@ describe('GCSMediaRepository', () => {
     });
 
     it('should handle metadata errors', async () => {
-      mockFile.getMetadata.mockRejectedValue(new Error('Metadata failed'));
+      (mockFile.getMetadata as any).mockRejectedValue(new Error('Metadata failed'));
 
       await expect(repository.getMetadata('images/test.jpg'))
         .rejects.toThrow('Metadata failed');
@@ -430,7 +430,7 @@ describe('GCSMediaRepository', () => {
 
   describe('setMetadata', () => {
     it('should set custom metadata successfully', async () => {
-      mockFile.setMetadata.mockResolvedValue([{}] as any);
+      (mockFile.setMetadata as any).mockResolvedValue([{}] as any);
 
       await repository.setMetadata('images/test.jpg', { author: 'John Doe' });
 
@@ -440,7 +440,7 @@ describe('GCSMediaRepository', () => {
     });
 
     it('should handle set metadata errors', async () => {
-      mockFile.setMetadata.mockRejectedValue(new Error('Set metadata failed'));
+      (mockFile.setMetadata as any).mockRejectedValue(new Error('Set metadata failed'));
 
       await expect(repository.setMetadata('images/test.jpg', { author: 'John Doe' }))
         .rejects.toThrow('Set metadata failed');
@@ -452,7 +452,7 @@ describe('GCSMediaRepository', () => {
   describe('downloadFile', () => {
     it('should download file content successfully', async () => {
       const mockContent = Buffer.from('file content');
-      mockFile.download.mockResolvedValue([mockContent]);
+      (mockFile.download as any).mockResolvedValue([mockContent]);
 
       const result = await repository.downloadFile('images/test.jpg');
 
@@ -460,7 +460,7 @@ describe('GCSMediaRepository', () => {
     });
 
     it('should handle download errors', async () => {
-      mockFile.download.mockRejectedValue(new Error('Download failed'));
+      (mockFile.download as any).mockRejectedValue(new Error('Download failed'));
 
       await expect(repository.downloadFile('images/test.jpg'))
         .rejects.toThrow('Download failed');
@@ -472,8 +472,8 @@ describe('GCSMediaRepository', () => {
   describe('isPublic (private method)', () => {
     it('should identify public files correctly', async () => {
       // Test through getFileUrl which uses isPublic
-      mockFile.exists.mockResolvedValue([true]);
-      mockFile.getMetadata.mockResolvedValue([{
+        (mockFile.exists as any).mockResolvedValue([true]);
+        (mockFile.getMetadata as any).mockResolvedValue([{
         acl: [
           { entity: 'user-123', role: 'OWNER' },
           { entity: 'allUsers', role: 'READER' }
@@ -488,9 +488,9 @@ describe('GCSMediaRepository', () => {
     });
 
     it('should handle missing ACL', async () => {
-      mockFile.exists.mockResolvedValue([true]);
-      mockFile.getMetadata.mockResolvedValue([{}]); // No ACL
-      mockFile.getSignedUrl.mockResolvedValue(['https://signed-url']);
+        (mockFile.exists as any).mockResolvedValue([true]);
+        (mockFile.getMetadata as any).mockResolvedValue([{}]); // No ACL
+        (mockFile.getSignedUrl as any).mockResolvedValue(['https://signed-url']);
 
       const url = await repository.getFileUrl('images/test.jpg');
 

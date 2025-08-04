@@ -27,8 +27,8 @@ describe('PostgreSQLTaskRepository', () => {
     mode: 'pbl',
     task_index: 0,
     scenario_task_index: 1,
-    title: { en: 'Test Task', zh: '測試任務' },
-    description: { en: 'Test Description' },
+    title: { en: 'Test Task', zh: '測試任務' } as any,
+    description: { en: 'Test Description' } as any,
     type: 'question' as TaskType,
     status: 'active' as TaskStatus,
     content: { instructions: 'Do this task' },
@@ -214,6 +214,7 @@ describe('PostgreSQLTaskRepository', () => {
         discoveryData: {},
         assessmentData: {},
         metadata: {},
+        status: 'active' as TaskStatus,
         createdAt: '',
         updatedAt: ''
       };
