@@ -3,7 +3,6 @@
  * 測試探索情境 API
  */
 
-import { GET } from '../route';
 import { NextRequest } from 'next/server';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { mockConsoleError as createMockConsoleError } from '@/test-utils/helpers/console';
@@ -20,20 +19,20 @@ const mockConsoleError = createMockConsoleError();
 
 describe('/api/discovery/scenarios', () => {
   // Mock repositories
-  const mockScenarioRepo = createMockScenarioRepository();
-  const mockProgramRepo = createMockProgramRepository();
+  let mockScenarioRepo: ReturnType<typeof createMockScenarioRepository>;
+  let mockProgramRepo: ReturnType<typeof createMockProgramRepository>;
 
   beforeEach(() => {
     jest.clearAllMocks();
+    jest.resetModules(); // Clear module cache to reset the cachedScenarios Map
+    
+    // Create fresh mocks for each test
+    mockScenarioRepo = createMockScenarioRepository();
+    mockProgramRepo = createMockProgramRepository();
     
     // Setup repository factory mocks
     (repositoryFactory.getScenarioRepository as jest.Mock).mockReturnValue(mockScenarioRepo);
     (repositoryFactory.getProgramRepository as jest.Mock).mockReturnValue(mockProgramRepo);
-    
-    // Reset the module to clear cache between tests
-    jest.isolateModules(() => {
-      jest.resetModules();
-    });
   });
 
   afterAll(() => {
@@ -41,6 +40,14 @@ describe('/api/discovery/scenarios', () => {
   });
 
   describe('GET - Discovery Scenarios', () => {
+    let GET: typeof import('../route').GET;
+    
+    beforeEach(async () => {
+      // Re-import GET after module reset to get fresh cache
+      const module = await import('../route');
+      GET = module.GET;
+    });
+    
     const mockScenarios = [
       {
         id: 'scenario-1',
@@ -222,9 +229,9 @@ describe('/api/discovery/scenarios', () => {
     it('should handle malformed title/description objects', async () => {
       const malformedScenarios = [{
         id: 'scenario-4',
-        mode: 'discovery',
-        title: 'String title instead of object' as any,
-        description: null as any,
+        mode: 'discovery' as const,
+        title: 'String title instead of object' as unknown as Record<string, string>,
+        description: null as unknown as Record<string, string>,
       }];
 
       (mockScenarioRepo.findByMode as jest.Mock).mockResolvedValue(malformedScenarios);

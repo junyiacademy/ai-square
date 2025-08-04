@@ -16,7 +16,12 @@ const mockRepositoryFactory = repositoryFactory as jest.Mocked<typeof repository
 
 describe('ScenarioIndexBuilder', () => {
   let builder: typeof scenarioIndexBuilder;
-  let mockScenarioRepo: any;
+  let mockScenarioRepo: {
+    findBySource: jest.Mock;
+    findById: jest.Mock;
+    update: jest.Mock;
+    create: jest.Mock;
+  };
   let consoleLogSpy: jest.SpyInstance;
   let consoleErrorSpy: jest.SpyInstance;
 
@@ -116,7 +121,10 @@ describe('ScenarioIndexBuilder', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     
-    // Note: Can't reset singleton instance since it's already created
+    // Reset the singleton's cache by accessing private properties
+    // This is needed to test cache behavior
+    (scenarioIndexBuilder as unknown as Record<string, unknown>)['lastBuildTime'] = null;
+    (scenarioIndexBuilder as unknown as Record<string, unknown>)['isBuilding'] = false;
     
     // Setup mocks
     mockScenarioRepo = {
@@ -131,7 +139,10 @@ describe('ScenarioIndexBuilder', () => {
           default:
             return Promise.resolve([]);
         }
-      })
+      }),
+      findById: jest.fn(),
+      update: jest.fn(),
+      create: jest.fn()
     };
 
     mockRepositoryFactory.getScenarioRepository.mockReturnValue(mockScenarioRepo);

@@ -1,4 +1,5 @@
 import { POST } from '../login/route'
+import { NextRequest } from 'next/server'
 
 // Mock JWT functions
 jest.mock('../../../../lib/auth/jwt', () => ({
@@ -101,7 +102,7 @@ describe('/api/auth/login', () => {
       }),
     })
 
-    const response = await POST(request as any)
+    const response = await POST(request as unknown as NextRequest)
     const data = await response.json()
     
     // Log the error if status is not 200
@@ -124,7 +125,7 @@ describe('/api/auth/login', () => {
       }),
     })
 
-    const response = await POST(request as any)
+    const response = await POST(request as unknown as NextRequest)
     const data = await response.json()
 
     expect(response.status).toBe(401)
@@ -142,7 +143,7 @@ describe('/api/auth/login', () => {
       }),
     })
 
-    const response = await POST(request as any)
+    const response = await POST(request as unknown as NextRequest)
     const data = await response.json()
 
     expect(response.status).toBe(200)
@@ -163,7 +164,7 @@ describe('/api/auth/login', () => {
       }),
     })
 
-    const response = await POST(request as any)
+    const response = await POST(request as unknown as NextRequest)
     const data = await response.json()
     
     expect(response.status).toBe(200)
@@ -182,7 +183,7 @@ describe('/api/auth/login', () => {
       }),
     })
 
-    const response = await POST(request as any)
+    const response = await POST(request as unknown as NextRequest)
     const data = await response.json()
 
     expect(response.status).toBe(400)

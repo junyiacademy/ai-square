@@ -252,7 +252,7 @@ describe('type-converters', () => {
 
     it('handles string timestamp', () => {
       const dbInteraction: DBInteraction = {
-        timestamp: '2024-01-01T12:00:00Z' as any,
+        timestamp: '2024-01-01T12:00:00Z' as unknown as Date,
         type: 'ai_response',
         content: 'AI message',
         metadata: undefined

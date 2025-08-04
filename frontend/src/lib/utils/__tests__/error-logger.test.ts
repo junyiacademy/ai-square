@@ -34,7 +34,8 @@ describe('error-logger', () => {
     logger.clearLogs();
     
     // Set environment
-    (process.env as any).NODE_ENV = 'development';
+    // @ts-expect-error - NODE_ENV is read-only but we need to set it for tests
+    process.env.NODE_ENV = 'development';
   });
 
   afterEach(() => {
@@ -178,14 +179,16 @@ describe('error-logger', () => {
 
   describe('environment behavior', () => {
     it('logs to console in development', () => {
-      (process.env as any).NODE_ENV = 'development';
+      // @ts-expect-error - NODE_ENV is read-only but we need to set it for tests
+      process.env.NODE_ENV = 'development';
       logger.info('Dev message');
 
       expect(mockConsole.info).toHaveBeenCalled();
     });
 
     it('does not log to console in production', () => {
-      (process.env as any).NODE_ENV = 'production';
+      // @ts-expect-error - NODE_ENV is read-only but we need to set it for tests
+      process.env.NODE_ENV = 'production';
       logger.info('Prod message');
 
       expect(mockConsole.info).not.toHaveBeenCalled();
@@ -195,7 +198,8 @@ describe('error-logger', () => {
     });
 
     it('does not log to console in test environment', () => {
-      (process.env as any).NODE_ENV = 'test';
+      // @ts-expect-error - NODE_ENV is read-only but we need to set it for tests
+      process.env.NODE_ENV = 'test';
       logger.error('Test error', new Error('test'));
 
       expect(mockConsole.error).not.toHaveBeenCalled();
@@ -225,9 +229,9 @@ describe('error-logger', () => {
 
     it('handles console method not being a function', () => {
       // Mock a console without a specific method
-      const brokenConsole = { ...console };
-      delete (brokenConsole as any).debug;
-      console.debug = undefined as any;
+      const brokenConsole = { ...console } as Record<string, unknown>;
+      delete brokenConsole.debug;
+      console.debug = undefined as unknown as typeof console.debug;
 
       expect(() => {
         logger.debug('Test message');
