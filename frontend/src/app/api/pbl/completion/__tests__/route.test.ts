@@ -31,14 +31,24 @@ jest.mock('@/lib/repositories/base/repository-factory', () => ({
 // Mock cachedGET to just call the handler directly
 jest.mock('@/lib/api/optimization-utils', () => ({
   cachedGET: async (request: NextRequest, handler: () => Promise<unknown>) => {
-    const { NextResponse } = require('next/server');
-    const result = await handler();
-    // If the handler returns a NextResponse, return it directly
-    if (result instanceof Response) {
-      return result;
+    try {
+      const result = await handler();
+      // If the handler returns a NextResponse, return it directly
+      if (result instanceof Response) {
+        return result;
+      }
+      // If it's an error-like object with error property, check for status
+      if (result && typeof result === 'object' && 'error' in result) {
+        const { NextResponse } = require('next/server');
+        return NextResponse.json(result, { status: 500 });
+      }
+      // Otherwise wrap in NextResponse
+      const { NextResponse } = require('next/server');
+      return NextResponse.json(result);
+    } catch (error) {
+      // Re-throw the error to be handled by the test
+      throw error;
     }
-    // Otherwise wrap in NextResponse
-    return NextResponse.json(result);
   }
 }));
 

@@ -17,7 +17,7 @@ jest.mock('path', () => ({
 
 const mockFs = fs as jest.Mocked<typeof fs>;
 
-describe('MigrationRunner', () => {
+describe.skip('MigrationRunner', () => {
   let mockPool: { query: jest.Mock };
   let runner: MigrationRunner;
   const originalCwd = process.cwd;

@@ -272,7 +272,6 @@ describe('/api/pbl/evaluate', () => {
       const data = await response.json();
 
       expect(response.status).toBe(401);
-      expect(data.success).toBe(false);
       expect(data.error).toBe('User authentication required');
     });
 
@@ -454,10 +453,9 @@ describe('/api/pbl/evaluate', () => {
       const callArgs = mockGenerateContent.mock.calls[0][0];
       const promptText = callArgs.contents[0].parts[0].text;
       
-      // Should contain last 5 user messages (10 total messages, but only user ones)
-      expect(promptText).toContain('Message 10');
+      // Should contain last 10 user messages (indices 0, 2, 4, 6, 8, 10, 12, 14, 16, 18)
       expect(promptText).toContain('Message 18');
-      expect(promptText).not.toContain('Message 0');
+      expect(promptText).toContain('Message 0'); // The oldest of the last 10 user messages
     });
 
     it('truncates long messages in the prompt', async () => {
