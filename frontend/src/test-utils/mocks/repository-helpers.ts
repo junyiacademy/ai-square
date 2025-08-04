@@ -223,6 +223,98 @@ export function createMockScenario(overrides: Partial<IScenario> = {}): IScenari
 }
 
 /**
+ * Create a complete mock User object
+ */
+export function createMockUser(overrides: Partial<import('@/lib/repositories/interfaces').User> = {}): import('@/lib/repositories/interfaces').User {
+  return {
+    id: 'mock-user-id',
+    email: 'test@example.com',
+    name: 'Test User',
+    preferredLanguage: 'en',
+    level: 1,
+    totalXp: 0,
+    learningPreferences: {
+      goals: [],
+      interests: [],
+      learningPreferences: [],
+      learningStyle: 'visual',
+    },
+    onboardingCompleted: true,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    lastActiveAt: new Date(),
+    metadata: {},
+    ...overrides,
+  };
+}
+
+/**
+ * Create a complete mock ITask object
+ */
+export function createMockTask(overrides: Partial<import('@/types/unified-learning').ITask> = {}): import('@/types/unified-learning').ITask {
+  return {
+    id: 'mock-task-id',
+    programId: 'mock-program-id',
+    mode: 'assessment',
+    taskIndex: 0,
+    type: 'question',
+    status: 'pending',
+    title: { en: 'Mock Task' },
+    description: { en: 'Mock task description' },
+    content: { question: 'What is AI?' },
+    interactions: [],
+    interactionCount: 0,
+    userResponse: {},
+    score: 0,
+    maxScore: 100,
+    allowedAttempts: 3,
+    attemptCount: 0,
+    timeLimitSeconds: undefined,
+    timeSpentSeconds: 0,
+    aiConfig: {},
+    createdAt: new Date().toISOString(),
+    startedAt: undefined,
+    completedAt: undefined,
+    updatedAt: new Date().toISOString(),
+    pblData: {},
+    discoveryData: {},
+    assessmentData: {},
+    metadata: {},
+    ...overrides,
+  };
+}
+
+/**
+ * Create a complete mock IEvaluation object
+ */
+export function createMockEvaluation(overrides: Partial<import('@/types/unified-learning').IEvaluation> = {}): import('@/types/unified-learning').IEvaluation {
+  return {
+    id: 'mock-eval-id',
+    userId: 'mock-user-id',
+    programId: 'mock-program-id',
+    taskId: 'mock-task-id',
+    mode: 'assessment',
+    evaluationType: 'formative',
+    evaluationSubtype: undefined,
+    score: 85,
+    maxScore: 100,
+    domainScores: {},
+    feedbackText: 'Good job!',
+    feedbackData: {},
+    aiProvider: 'vertex-ai',
+    aiModel: 'gemini-2.5-flash',
+    aiAnalysis: {},
+    timeTakenSeconds: 120,
+    createdAt: new Date().toISOString(),
+    pblData: {},
+    discoveryData: {},
+    assessmentData: {},
+    metadata: {},
+    ...overrides,
+  };
+}
+
+/**
  * Create a complete mock IProgram object
  */
 export function createMockProgram(overrides: Partial<IProgram> = {}): IProgram {

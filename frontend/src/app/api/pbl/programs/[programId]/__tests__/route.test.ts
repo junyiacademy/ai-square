@@ -2,7 +2,10 @@ import { NextRequest } from 'next/server'
 import { 
   createMockProgramRepository, 
   createMockTaskRepository,
-  createMockEvaluationRepository
+  createMockEvaluationRepository,
+  createMockProgram,
+  createMockTask,
+  createMockEvaluation
 } from '@/test-utils/mocks/repository-helpers'
 
 // Mock auth session
@@ -48,29 +51,28 @@ describe('/api/pbl/programs/[programId]', () => {
   })
 
   describe('GET', () => {
-    const mockProgram = {
+    const mockProgram = createMockProgram({
       id: 'prog123',
       userId: 'user123',
       scenarioId: 'scenario456',
       status: 'active',
       currentTaskIndex: 1,
-      completedTasks: 1,
-      totalTasks: 3,
+      completedTaskCount: 1,
+      totalTaskCount: 3,
       totalScore: 80,
-      createdAt: new Date('2024-01-01T00:00:00Z'),
-      lastActivityAt: new Date('2024-01-01T00:00:00Z'),
+      createdAt: '2024-01-01T00:00:00Z',
+      lastActivityAt: '2024-01-01T00:00:00Z',
       timeSpentSeconds: 1800,
-      taskIds: ['task1', 'task2', 'task3']
-    }
+    })
 
     const mockTasks = [
-      { id: 'task1', status: 'completed', score: 80 },
-      { id: 'task2', status: 'active' },
-      { id: 'task3', status: 'pending' },
+      createMockTask({ id: 'task1', status: 'completed', score: 80 }),
+      createMockTask({ id: 'task2', status: 'active' }),
+      createMockTask({ id: 'task3', status: 'pending' }),
     ]
 
     const mockEvaluations = [
-      { id: 'eval1', taskId: 'task1', score: 80 }
+      createMockEvaluation({ id: 'eval1', taskId: 'task1', score: 80 })
     ]
 
     it('returns program details with tasks and evaluations', async () => {

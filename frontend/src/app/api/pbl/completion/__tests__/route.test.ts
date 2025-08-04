@@ -6,7 +6,11 @@ import {
   createMockProgramRepository, 
   createMockTaskRepository,
   createMockEvaluationRepository,
-  createMockUserRepository
+  createMockUserRepository,
+  createMockUser,
+  createMockProgram,
+  createMockTask,
+  createMockEvaluation
 } from '@/test-utils/mocks/repository-helpers';
 
 // Mock auth session
@@ -64,31 +68,31 @@ describe('/api/pbl/completion', () => {
         user: { id: 'user123', email: 'test@example.com' }
       });
 
-      const mockUser = {
+      const mockUser = createMockUser({
         id: 'user123',
         email: 'test@example.com',
-      };
+      });
 
-      const mockProgram = {
+      const mockProgram = createMockProgram({
         id: 'prog1',
         userId: 'user123',
         scenarioId: 'scenario1',
         status: 'completed',
-        completedTasks: 3,
-        totalTasks: 3,
-        endTime: new Date('2024-01-01T00:00:00Z'),
-      };
+        completedTaskCount: 3,
+        totalTaskCount: 3,
+        completedAt: '2024-01-01T00:00:00Z',
+      });
 
       const mockTasks = [
-        { id: 'task1', programId: 'prog1', status: 'completed' },
-        { id: 'task2', programId: 'prog1', status: 'completed' },
-        { id: 'task3', programId: 'prog1', status: 'completed' },
+        createMockTask({ id: 'task1', programId: 'prog1', status: 'completed' }),
+        createMockTask({ id: 'task2', programId: 'prog1', status: 'completed' }),
+        createMockTask({ id: 'task3', programId: 'prog1', status: 'completed' }),
       ];
 
       const mockEvaluations = [
-        { id: 'eval1', taskId: 'task1', score: 90 },
-        { id: 'eval2', taskId: 'task2', score: 85 },
-        { id: 'eval3', programId: 'prog1', score: 88 },
+        createMockEvaluation({ id: 'eval1', taskId: 'task1', score: 90 }),
+        createMockEvaluation({ id: 'eval2', taskId: 'task2', score: 85 }),
+        createMockEvaluation({ id: 'eval3', programId: 'prog1', score: 88 }),
       ];
 
       mockUserRepo.findByEmail.mockResolvedValue(mockUser);
@@ -116,7 +120,7 @@ describe('/api/pbl/completion', () => {
         user: { id: 'user123', email: 'test@example.com' }
       });
 
-      mockUserRepo.findByEmail.mockResolvedValue({ id: 'user123', email: 'test@example.com' });
+      mockUserRepo.findByEmail.mockResolvedValue(createMockUser({ id: 'user123', email: 'test@example.com' }));
       mockProgramRepo.findById.mockResolvedValue(null);
 
       const request = new NextRequest('http://localhost:3000/api/pbl/completion?programId=invalid&scenarioId=scenario1');
@@ -147,7 +151,7 @@ describe('/api/pbl/completion', () => {
         user: { id: 'user123', email: 'test@example.com' }
       });
 
-      mockUserRepo.findByEmail.mockResolvedValue({ id: 'user123', email: 'test@example.com' });
+      mockUserRepo.findByEmail.mockResolvedValue(createMockUser({ id: 'user123', email: 'test@example.com' }));
       mockProgramRepo.findById.mockRejectedValue(new Error('Database connection failed'));
 
       const request = new NextRequest('http://localhost:3000/api/pbl/completion?programId=prog1&scenarioId=scenario1');
