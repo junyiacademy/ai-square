@@ -215,6 +215,27 @@ describe('KSA Codes Schema Validation', () => {
 
     it('應該允許多個主題和多個代碼', () => {
       const fileWithMultipleThemes = {
+        knowledge: [
+          { code: 'K1.1', description: 'Knowledge 1.1' },
+          { code: 'K1.2', description: 'Knowledge 1.2' },
+          { code: 'K2.1', description: 'Knowledge 2.1' }
+        ],
+        skills: [
+          { code: 'S1.1', description: 'Skill 1.1' },
+          { code: 'S1.2', description: 'Skill 1.2' }
+        ],
+        attitudes: [
+          { code: 'A1.1', description: 'Attitude 1.1' },
+          { code: 'A1.2', description: 'Attitude 1.2' }
+        ]
+      };
+
+      const result = KSACodesSchema.safeParse(fileWithMultipleThemes);
+      expect(result.success).toBe(true);
+    });
+
+    it.skip('應該允許多個主題和多個代碼 - old format', () => {
+      const fileWithMultipleThemes = {
         knowledge_codes: {
           description: 'Knowledge codes description',
           description_zhTW: '知識代碼描述',

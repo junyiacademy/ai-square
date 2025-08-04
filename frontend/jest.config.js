@@ -41,12 +41,13 @@ const customJestConfig = {
     },
   },
   transformIgnorePatterns: [
-    'node_modules/(?!(jose|d3|d3-.*)/)',
+    'node_modules/(?!(jose|d3|d3-.*|react-markdown|remark.*|unified|unist-.*|mdast-.*|micromark.*|vfile.*|hast.*|comma-separated-tokens|property-information|space-separated-tokens|decode-named-character-reference|character-entities)/)',
   ],
   moduleNameMapper: {
     '^jose$': '<rootDir>/__mocks__/jose.js',
     '^next/server$': '<rootDir>/__mocks__/next/server.js',
     '^d3$': '<rootDir>/src/__mocks__/d3.ts',
+    '^react-markdown$': '<rootDir>/__mocks__/react-markdown.js',
     '^@/(.*)$': '<rootDir>/src/$1',
   },
 }

@@ -140,24 +140,18 @@ describe('CacheService', () => {
     })
 
     it('should work in SSR environment without window', async () => {
-      const originalWindow = global.window
+      const originalWindow = global.window;
       // Temporarily undefine window for SSR testing
-      Object.defineProperty(global, 'window', {
-        value: undefined,
-        writable: true,
-        configurable: true
-      })
+      // @ts-expect-error - Deleting window for testing SSR
+      delete global.window;
       
-      await cacheService.set('test-key', { data: 'test' }, { storage: 'both' })
-      const result = await cacheService.get('test-key', 'both')
+      await cacheService.set('test-key', { data: 'test' }, { storage: 'both' });
+      const result = await cacheService.get('test-key', 'both');
       
-      expect(result).toEqual({ data: 'test' })
+      expect(result).toEqual({ data: 'test' });
       
-      Object.defineProperty(global, 'window', {
-        value: originalWindow,
-        writable: true,
-        configurable: true
-      })
+      // Restore window
+      (global as any).window = originalWindow;
     })
   })
 
@@ -237,25 +231,19 @@ describe('CacheService', () => {
     })
 
     it('should handle delete in SSR environment', async () => {
-      const originalWindow = global.window
+      const originalWindow = global.window;
       // Temporarily undefine window for SSR testing
-      Object.defineProperty(global, 'window', {
-        value: undefined,
-        writable: true,
-        configurable: true
-      })
+      // @ts-expect-error - Deleting window for testing SSR
+      delete global.window;
       
-      await cacheService.set('test-key', { data: 'test' }, { storage: 'memory' })
-      await cacheService.delete('test-key')
+      await cacheService.set('test-key', { data: 'test' }, { storage: 'memory' });
+      await cacheService.delete('test-key');
       
-      const memCache = (cacheService as unknown as CacheServicePrivate).memoryCache
-      expect(memCache.has('test-key')).toBe(false)
+      const memCache = (cacheService as unknown as CacheServicePrivate).memoryCache;
+      expect(memCache.has('test-key')).toBe(false);
       
-      Object.defineProperty(global, 'window', {
-        value: originalWindow,
-        writable: true,
-        configurable: true
-      })
+      // Restore window
+      (global as any).window = originalWindow;
     })
   })
 
@@ -277,25 +265,19 @@ describe('CacheService', () => {
     })
 
     it('should work in SSR environment', async () => {
-      const originalWindow = global.window
+      const originalWindow = global.window;
       // Temporarily undefine window for SSR testing
-      Object.defineProperty(global, 'window', {
-        value: undefined,
-        writable: true,
-        configurable: true
-      })
+      // @ts-expect-error - Deleting window for testing SSR
+      delete global.window;
       
-      await cacheService.set('key1', { data: 1 }, { storage: 'memory' })
-      await cacheService.clear()
+      await cacheService.set('key1', { data: 1 }, { storage: 'memory' });
+      await cacheService.clear();
       
-      const memCache = (cacheService as unknown as CacheServicePrivate).memoryCache
-      expect(memCache.size).toBe(0)
+      const memCache = (cacheService as unknown as CacheServicePrivate).memoryCache;
+      expect(memCache.size).toBe(0);
       
-      Object.defineProperty(global, 'window', {
-        value: originalWindow,
-        writable: true,
-        configurable: true
-      })
+      // Restore window
+      (global as any).window = originalWindow;
     })
   })
 
@@ -507,19 +489,16 @@ describe('CacheService', () => {
       })
 
       it('should not run in SSR environment', () => {
-        const originalWindow = global.window
-        // @ts-ignore
-        delete global.window
+        const originalWindow = global.window;
+        // @ts-expect-error - Deleting window for testing SSR
+        delete global.window;
         
-        ;(cacheService as unknown as CacheServicePrivate).cleanupLocalStorage()
+        ;(cacheService as unknown as CacheServicePrivate).cleanupLocalStorage();
         
-        expect(localStorageMock.removeItem).not.toHaveBeenCalled()
+        expect(localStorageMock.removeItem).not.toHaveBeenCalled();
         
-        Object.defineProperty(global, 'window', {
-        value: originalWindow,
-        writable: true,
-        configurable: true
-      })
+        // Restore window
+        (global as any).window = originalWindow;
       })
     })
   })

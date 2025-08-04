@@ -95,16 +95,20 @@ describe('POST /api/assessment/programs/[programId]/complete', () => {
     expect(data.score).toBe(100);
 
     // Verify evaluation was created with correct data
-    expect(mockEvaluationRepo.create).toHaveBeenCalledWith(expect.objectContaining({
+    expect(mockEvaluationRepo.create).toHaveBeenCalled();
+    const evaluationCall = mockEvaluationRepo.create.mock.calls[0][0];
+    expect(evaluationCall).toMatchObject({
       userId: 'user-123',
       programId: 'program-123',
       mode: 'assessment',
       evaluationType: 'program',
       evaluationSubtype: 'assessment_complete',
-      score: 100,
+      score: 100
+    });
+    expect(evaluationCall.metadata).toMatchObject({
       totalQuestions: 1,
       correctAnswers: 1
-    }));
+    });
 
     // Verify program was updated
     expect(mockProgramRepo.update).toHaveBeenCalledWith('program-123', expect.objectContaining({

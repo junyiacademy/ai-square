@@ -15,6 +15,16 @@ const cachedScenarios: Map<string, unknown> = new Map();
 const cacheTimestamps: Map<string, number> = new Map();
 const CACHE_DURATION = 5 * 60 * 1000; // 5 分鐘
 
+// Function for clearing cache (used internally)
+function clearCache() {
+  cachedScenarios.clear();
+  cacheTimestamps.clear();
+}
+
+// Export for testing only
+if (process.env.NODE_ENV === 'test') {
+  (global as Record<string, unknown>).__clearDiscoveryScenariosCache = clearCache;
+}
 
 export async function GET(request: NextRequest) {
   try {

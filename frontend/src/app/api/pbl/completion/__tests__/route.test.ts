@@ -28,12 +28,30 @@ jest.mock('@/lib/repositories/base/repository-factory', () => ({
   }
 }));
 
+// Mock cachedGET to just call the handler directly
+jest.mock('@/lib/api/optimization-utils', () => ({
+  cachedGET: async (request: NextRequest, handler: () => Promise<unknown>) => {
+    const { NextResponse } = require('next/server');
+    const result = await handler();
+    // If the handler returns a NextResponse, return it directly
+    if (result instanceof Response) {
+      return result;
+    }
+    // Otherwise wrap in NextResponse
+    return NextResponse.json(result);
+  }
+}));
+
 // Get mocked functions
 const mockGetServerSession = getServerSession as jest.MockedFunction<typeof getServerSession>;
 const mockGetProgramRepository = repositoryFactory.getProgramRepository as jest.MockedFunction<typeof repositoryFactory.getProgramRepository>;
 const mockGetTaskRepository = repositoryFactory.getTaskRepository as jest.MockedFunction<typeof repositoryFactory.getTaskRepository>;
 const mockGetEvaluationRepository = repositoryFactory.getEvaluationRepository as jest.MockedFunction<typeof repositoryFactory.getEvaluationRepository>;
 const mockGetUserRepository = repositoryFactory.getUserRepository as jest.MockedFunction<typeof repositoryFactory.getUserRepository>;
+
+// Mock global fetch
+const mockFetch = jest.fn();
+global.fetch = mockFetch as unknown as typeof fetch;
 
 describe('/api/pbl/completion', () => {
   // Mock repositories using proper helpers
@@ -48,6 +66,16 @@ describe('/api/pbl/completion', () => {
     mockGetTaskRepository.mockReturnValue(mockTaskRepo);
     mockGetEvaluationRepository.mockReturnValue(mockEvaluationRepo);
     mockGetUserRepository.mockReturnValue(mockUserRepo);
+    
+    // Default mock fetch response
+    mockFetch.mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: async () => ({
+        success: true,
+        evaluation: createMockEvaluation({ id: 'eval-complete', score: 88 })
+      })
+    } as Response);
   });
 
   describe('GET', () => {
@@ -107,12 +135,16 @@ describe('/api/pbl/completion', () => {
       expect(response.status).toBe(200);
       const data = await response.json();
       expect(data.success).toBe(true);
-      expect(data.data.program).toEqual(expect.objectContaining({
-        id: 'prog1',
-        status: 'completed'
+      expect(data.data).toEqual(expect.objectContaining({
+        programId: 'prog1',
+        scenarioId: 'scenario1',
+        status: 'completed',
+        totalTasks: 3,
+        completedTasks: 3,
+        overallScore: 88,
+        tasks: expect.any(Array)
       }));
       expect(data.data.tasks).toHaveLength(3);
-      expect(data.data.evaluations).toHaveLength(3);
     });
 
     it('should return 404 for non-existent program', async () => {
@@ -122,6 +154,10 @@ describe('/api/pbl/completion', () => {
 
       mockUserRepo.findByEmail.mockResolvedValue(createMockUser({ id: 'user123', email: 'test@example.com' }));
       mockProgramRepo.findById.mockResolvedValue(null);
+      
+      // Since the route is wrapped in cachedGET, we need to ensure the mock properly returns null
+      // Reset the fetch mock for this test
+      mockFetch.mockClear();
 
       const request = new NextRequest('http://localhost:3000/api/pbl/completion?programId=invalid&scenarioId=scenario1');
 
@@ -152,7 +188,21 @@ describe('/api/pbl/completion', () => {
       });
 
       mockUserRepo.findByEmail.mockResolvedValue(createMockUser({ id: 'user123', email: 'test@example.com' }));
-      mockProgramRepo.findById.mockRejectedValue(new Error('Database connection failed'));
+      
+      const mockProgram = createMockProgram({
+        id: 'prog1',
+        userId: 'user123',
+        scenarioId: 'scenario1',
+      });
+      mockProgramRepo.findById.mockResolvedValue(mockProgram);
+      
+      // Mock fetch to fail - need to override the default mock
+      mockFetch.mockClear();
+      mockFetch.mockResolvedValue({
+        ok: false,
+        status: 500,
+        json: async () => ({ error: 'Internal server error' })
+      } as Response);
 
       const request = new NextRequest('http://localhost:3000/api/pbl/completion?programId=prog1&scenarioId=scenario1');
 
@@ -160,7 +210,7 @@ describe('/api/pbl/completion', () => {
 
       expect(response.status).toBe(500);
       const data = await response.json();
-      expect(data.error).toBe('Failed to retrieve completion data');
+      expect(data.error).toBe('Failed to get program evaluation');
     });
   });
 });

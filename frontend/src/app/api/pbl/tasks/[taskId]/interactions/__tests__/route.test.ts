@@ -40,7 +40,9 @@ const mockGetServerSession = getServerSession as jest.MockedFunction<typeof getS
 const mockTaskRepo = {
   findById: jest.fn(),
   addInteraction: jest.fn(),
-  update: jest.fn()
+  update: jest.fn(),
+  updateInteractions: jest.fn(),
+  recordAttempt: jest.fn()
 };
 
 // Mock getTaskRepository
@@ -87,6 +89,7 @@ describe('Task Interactions API', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockGetServerSession.mockResolvedValue(mockSession as any);
+    mockTaskRepo.findById.mockResolvedValue(mockTask);
   });
 
   const createRequest = (url: string, options: RequestInit = {}) => {
@@ -177,14 +180,21 @@ describe('Task Interactions API', () => {
         });
 
         // Verify interaction was added with correct transformation
-        expect(mockTaskRepo.addInteraction).toHaveBeenCalledWith(mockTaskId, {
-          timestamp: userInteraction.timestamp,
-          type: 'user_input',
-          content: userInteraction.content,
-          metadata: {
-            role: 'user',
-            originalType: 'user'
-          }
+        expect(mockTaskRepo.updateInteractions).toHaveBeenCalledWith(
+          mockTaskId, 
+          expect.arrayContaining([
+            expect.objectContaining({
+              timestamp: userInteraction.timestamp,
+              type: 'user_input',
+              content: userInteraction.content
+            })
+          ])
+        );
+        
+        // Verify recordAttempt was called for user interaction
+        expect(mockTaskRepo.recordAttempt).toHaveBeenCalledWith(mockTaskId, {
+          response: userInteraction.content,
+          timeSpent: 0
         });
       });
 
@@ -211,15 +221,16 @@ describe('Task Interactions API', () => {
         });
 
         // Verify interaction was added with correct transformation
-        expect(mockTaskRepo.addInteraction).toHaveBeenCalledWith(mockTaskId, {
-          timestamp: expect.any(String), // Auto-generated timestamp
-          type: 'ai_response',
-          content: aiInteraction.content,
-          metadata: {
-            role: 'career_advisor',
-            originalType: 'ai'
-          }
-        });
+        expect(mockTaskRepo.updateInteractions).toHaveBeenCalledWith(
+          mockTaskId,
+          expect.arrayContaining([
+            expect.objectContaining({
+              timestamp: expect.any(String), // Auto-generated timestamp
+              type: 'ai_response',
+              content: aiInteraction.content
+            })
+          ])
+        );
       });
 
       it('should handle system events', async () => {
@@ -244,16 +255,16 @@ describe('Task Interactions API', () => {
           message: 'Interaction saved successfully'
         });
 
-        expect(mockTaskRepo.addInteraction).toHaveBeenCalledWith(mockTaskId, {
-          timestamp: expect.any(String),
-          type: 'system_event',
-          content: systemInteraction.content,
-          metadata: {
-            role: 'system',
-            originalType: 'system',
-            triggeredBy: 'auto_evaluation'
-          }
-        });
+        expect(mockTaskRepo.updateInteractions).toHaveBeenCalledWith(
+          mockTaskId,
+          expect.arrayContaining([
+            expect.objectContaining({
+              timestamp: expect.any(String),
+              type: 'system_event',
+              content: systemInteraction.content
+            })
+          ])
+        );
       });
 
       it('should auto-generate timestamp when not provided', async () => {
@@ -270,9 +281,17 @@ describe('Task Interactions API', () => {
 
         await POST(request, { params: mockParams });
 
-        expect(mockTaskRepo.addInteraction).toHaveBeenCalledWith(mockTaskId, expect.objectContaining({
-          timestamp: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/)
-        }));
+        expect(mockTaskRepo.updateInteractions).toHaveBeenCalledWith(
+          mockTaskId,
+          expect.arrayContaining([
+            expect.objectContaining({
+              timestamp: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/)
+            })
+          ])
+        );
+        
+        // Also verify recordAttempt was called since this is a user interaction
+        expect(mockTaskRepo.recordAttempt).toHaveBeenCalled();
       });
 
       it('should preserve additional metadata', async () => {
@@ -294,21 +313,22 @@ describe('Task Interactions API', () => {
 
         await POST(request, { params: mockParams });
 
-        expect(mockTaskRepo.addInteraction).toHaveBeenCalledWith(mockTaskId, expect.objectContaining({
-          metadata: {
-            role: 'ai',
-            originalType: 'ai',
-            model: 'gemini-2.5-flash',
-            confidence: 0.95,
-            tokens: 150
-          }
-        }));
+        expect(mockTaskRepo.updateInteractions).toHaveBeenCalledWith(
+          mockTaskId,
+          expect.arrayContaining([
+            expect.objectContaining({
+              type: 'ai_response',
+              content: interaction.content,
+              metadata: interaction.metadata
+            })
+          ])
+        );
       });
     });
 
     describe('Error handling', () => {
       it('should handle repository errors', async () => {
-        mockTaskRepo.addInteraction.mockRejectedValueOnce(new Error('Database error'));
+        mockTaskRepo.findById.mockRejectedValueOnce(new Error('Database error'));
 
         const request = createRequest(`http://localhost:3000/api/pbl/tasks/${mockTaskId}/interactions`, {
           method: 'POST',

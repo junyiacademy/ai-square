@@ -8,7 +8,14 @@ jest.mock('@google-cloud/vertexai', () => ({
     getGenerativeModel: jest.fn().mockReturnValue({
       generateContent: jest.fn()
     })
-  }))
+  })),
+  SchemaType: {
+    OBJECT: 'OBJECT',
+    STRING: 'STRING',
+    NUMBER: 'NUMBER',
+    ARRAY: 'ARRAY',
+    BOOLEAN: 'BOOLEAN'
+  }
 }));
 
 describe('/api/pbl/evaluate', () => {

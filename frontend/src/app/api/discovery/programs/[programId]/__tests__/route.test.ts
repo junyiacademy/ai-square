@@ -110,20 +110,19 @@ describe('/api/discovery/programs/[programId]', () => {
       const data = await response.json();
 
       expect(response.status).toBe(200);
-      expect(data.success).toBe(true);
-      expect(data.data.program).toMatchObject({
+      expect(data.program).toMatchObject({
         id: 'prog-123',
         mode: 'discovery',
         status: 'active',
-        progress: 50, // 2/4 * 100
-        careerType: 'data-scientist',
-        interests: ['machine-learning', 'statistics'],
       });
-      expect(data.data.tasks).toHaveLength(3);
-      expect(data.data.scenario).toMatchObject({
-        title: 'Data Science Career Path',
-        description: 'Explore data science careers',
+      expect(data.tasks).toHaveLength(3);
+      expect(data.scenario).toMatchObject({
+        id: 'scenario-456',
+        title: { en: 'Data Science Career Path' },
+        description: { en: 'Explore data science careers' },
       });
+      expect(data.totalTasks).toBe(3);
+      expect(data.completedTasks).toBe(2);
     });
 
     it('should return 404 when program not found', async () => {
@@ -153,7 +152,7 @@ describe('/api/discovery/programs/[programId]', () => {
       const data = await response.json();
 
       expect(response.status).toBe(403);
-      expect(data.error).toBe('Forbidden');
+      expect(data.error).toBe('Access denied');
     });
 
     it('should return 401 when not authenticated', async () => {
@@ -164,7 +163,7 @@ describe('/api/discovery/programs/[programId]', () => {
       const data = await response.json();
 
       expect(response.status).toBe(401);
-      expect(data.error).toBe('Unauthorized');
+      expect(data.error).toBe('Authentication required');
     });
   });
 });

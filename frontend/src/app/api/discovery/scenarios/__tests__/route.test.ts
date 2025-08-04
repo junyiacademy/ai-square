@@ -7,6 +7,11 @@ import { NextRequest } from 'next/server';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { mockConsoleError as createMockConsoleError } from '@/test-utils/helpers/console';
 import { createMockScenarioRepository, createMockProgramRepository, createMockScenario, createMockProgram } from '@/test-utils/mocks/repository-helpers';
+import { getServerSession } from '@/lib/auth/session';
+
+// Import the route module to set up the global clearCache function
+import '../route';
+import { GET } from '../route';
 
 // Mock dependencies
 jest.mock('@/lib/repositories/base/repository-factory');
@@ -16,6 +21,7 @@ jest.mock('@/lib/auth/session', () => ({
 
 // Mock console
 const mockConsoleError = createMockConsoleError();
+const mockGetServerSession = getServerSession as jest.MockedFunction<typeof getServerSession>;
 
 describe('/api/discovery/scenarios', () => {
   // Mock repositories
@@ -24,7 +30,10 @@ describe('/api/discovery/scenarios', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    jest.resetModules(); // Clear module cache to reset the cachedScenarios Map
+    // Clear the cache between tests using the test-only global
+    if ((global as any).__clearDiscoveryScenariosCache) {
+      (global as any).__clearDiscoveryScenariosCache();
+    }
     
     // Create fresh mocks for each test
     mockScenarioRepo = createMockScenarioRepository();
@@ -33,6 +42,9 @@ describe('/api/discovery/scenarios', () => {
     // Setup repository factory mocks
     (repositoryFactory.getScenarioRepository as jest.Mock).mockReturnValue(mockScenarioRepo);
     (repositoryFactory.getProgramRepository as jest.Mock).mockReturnValue(mockProgramRepo);
+    
+    // Default to no session
+    mockGetServerSession.mockResolvedValue(null);
   });
 
   afterAll(() => {
@@ -40,13 +52,6 @@ describe('/api/discovery/scenarios', () => {
   });
 
   describe('GET - Discovery Scenarios', () => {
-    let GET: typeof import('../route').GET;
-    
-    beforeEach(async () => {
-      // Re-import GET after module reset to get fresh cache
-      const module = await import('../route');
-      GET = module.GET;
-    });
     
     const mockScenarios = [
       {
@@ -108,8 +113,7 @@ describe('/api/discovery/scenarios', () => {
     });
 
     it('should include user progress when authenticated', async () => {
-      const { getServerSession } = await import('@/lib/auth/session');
-      (getServerSession as jest.Mock).mockResolvedValue({
+      mockGetServerSession.mockResolvedValue({
         user: { id: 'user-123', email: 'user@example.com' },
       });
 
@@ -246,9 +250,8 @@ describe('/api/discovery/scenarios', () => {
     });
 
     it('should handle multiple programs for same scenario', async () => {
-      const { getServerSession } = await import('@/lib/auth/session');
-      (getServerSession as jest.Mock).mockResolvedValue({
-        user: { email: 'user@example.com' },
+      mockGetServerSession.mockResolvedValue({
+        user: { id: 'user-123', email: 'user@example.com' },
       });
 
       (mockScenarioRepo.findByMode as jest.Mock).mockResolvedValue([mockScenarios[0]]);
@@ -291,8 +294,7 @@ describe('/api/discovery/scenarios', () => {
     });
 
     it('should cache responses for non-authenticated users', async () => {
-      const { getServerSession } = await import('@/lib/auth/session');
-      (getServerSession as jest.Mock).mockResolvedValue(null);
+      mockGetServerSession.mockResolvedValue(null);
 
       (mockScenarioRepo.findByMode as jest.Mock).mockResolvedValue(mockScenarios);
 
@@ -313,9 +315,8 @@ describe('/api/discovery/scenarios', () => {
     });
 
     it('should not cache responses for authenticated users', async () => {
-      const { getServerSession } = await import('@/lib/auth/session');
-      (getServerSession as jest.Mock).mockResolvedValue({
-        user: { id: 'user-123' },
+      mockGetServerSession.mockResolvedValue({
+        user: { id: 'user-123', email: 'user@example.com' },
       });
 
       (mockScenarioRepo.findByMode as jest.Mock).mockResolvedValue(mockScenarios);

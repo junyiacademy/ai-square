@@ -16,10 +16,67 @@ jest.mock('js-yaml');
 jest.mock('../../../../../lib/cache/cache-service');
 jest.mock('../../../../../lib/services/pbl-scenario-service');
 jest.mock('../../../../../lib/services/hybrid-translation-service');
+jest.mock('../../../../../lib/services/scenario-index-service', () => ({
+  scenarioIndexService: {
+    buildIndex: jest.fn().mockResolvedValue(undefined)
+  }
+}));
+// Create mock scenarios
+const createMockScenario = (id: string, lang: string = 'en') => {
+  const titleMap: Record<string, Record<string, string>> = {
+    'ai-job-search': {
+      'en': 'AI-Powered Job Search Assistant',
+      'zhTW': 'AI 求職助手',
+      'ja': 'AI就職活動アシスタント',
+      'ko': 'AI 구직 도우미',
+      'es': 'Asistente de Búsqueda de Empleo con IA'
+    }
+  };
+  const descMap: Record<string, Record<string, string>> = {
+    'ai-job-search': {
+      'en': 'Learn to use AI for job searching',
+      'zhTW': '學習使用 AI 進行求職',
+      'ja': 'AIを使った就職活動を學ぶ',
+      'ko': 'AI를 사용한 구직 활동 배우기',
+      'es': 'Aprende a usar IA para buscar empleo'
+    }
+  };
+  
+  return {
+    id,
+    sourceType: 'yaml',
+    sourcePath: `pbl_data/${id}_scenario.yaml`,
+    sourceId: id,
+    mode: 'pbl',
+    status: 'active',
+    title: titleMap[id] || { en: `${id} Title` },
+    description: descMap[id] || { en: `${id} Description` },
+    difficulty: 'intermediate',
+    estimatedMinutes: 90,
+    taskTemplates: [],
+    metadata: {
+      yamlId: id,
+      targetDomains: ['engaging_with_ai', 'creating_with_ai']
+    }
+  };
+};
+
+const mockScenarios = [
+  createMockScenario('ai-job-search'),
+  createMockScenario('ai-education-design'),
+  createMockScenario('ai-stablecoin-trading'),
+  createMockScenario('ai-robotics-development'),
+  createMockScenario('high-school-climate-change'),
+  createMockScenario('high-school-digital-wellness'),
+  createMockScenario('high-school-smart-city'),
+  createMockScenario('temp-scenario-1'),
+  createMockScenario('temp-scenario-2')
+];
+
 jest.mock('../../../../../lib/repositories/base/repository-factory', () => ({
   repositoryFactory: {
     getScenarioRepository: jest.fn(() => ({
-      findByMode: jest.fn().mockResolvedValue([])
+      findByMode: jest.fn().mockResolvedValue(mockScenarios)
     }))
   }
 }));

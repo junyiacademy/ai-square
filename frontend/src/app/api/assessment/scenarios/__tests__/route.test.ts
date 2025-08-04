@@ -356,6 +356,7 @@ config:
           title: { en: 'Basic Assessment' },
           description: { en: 'Simple test' },
           assessmentData: {}, // Empty assessment data
+          estimatedMinutes: undefined, // Clear the default to test fallback
         }),
       ]);
 

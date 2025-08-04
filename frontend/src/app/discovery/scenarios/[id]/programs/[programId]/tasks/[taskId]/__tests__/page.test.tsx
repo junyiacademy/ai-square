@@ -4,10 +4,25 @@ import { useRouter, useParams } from 'next/navigation';
 import TaskDetailPage from '../page';
 
 // Mock dependencies
-jest.mock('next/navigation');
+const mockRouter = {
+  push: jest.fn(),
+  back: jest.fn(),
+  forward: jest.fn(),
+  refresh: jest.fn(),
+  replace: jest.fn(),
+  prefetch: jest.fn()
+};
+
+jest.mock('next/navigation', () => ({
+  useRouter: jest.fn(() => mockRouter),
+  useParams: jest.fn(),
+  usePathname: jest.fn(() => '/discovery/scenarios/scenario-1/programs/program-1/tasks/task-1')
+}));
+
 jest.mock('@/contexts/AuthContext', () => ({
   useAuth: jest.fn()
 }));
+
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string) => key,
@@ -21,16 +36,6 @@ jest.mock('react-i18next', () => ({
 // Mock fetch globally
 global.fetch = jest.fn();
 
-const mockRouter = {
-  push: jest.fn(),
-  back: jest.fn(),
-  forward: jest.fn(),
-  refresh: jest.fn(),
-  replace: jest.fn(),
-  prefetch: jest.fn()
-};
-
-const mockUseRouter = useRouter as jest.MockedFunction<typeof useRouter>;
 const mockUseParams = useParams as jest.MockedFunction<typeof useParams>;
 
 // Import useAuth after the mock is set up
@@ -60,7 +65,6 @@ describe('TaskDetailPage', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     
-    mockUseRouter.mockReturnValue(mockRouter);
     mockUseParams.mockReturnValue({
       id: 'scenario-1',
       programId: 'program-1',

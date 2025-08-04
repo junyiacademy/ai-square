@@ -6,7 +6,8 @@ import ProgramDetailPage from '../page';
 // Mock dependencies
 jest.mock('next/navigation', () => ({
   useRouter: jest.fn(),
-  useParams: jest.fn()
+  useParams: jest.fn(),
+  usePathname: jest.fn(() => '/discovery/scenarios/scenario-1/programs/program-1')
 }));
 jest.mock('@/contexts/AuthContext', () => ({
   useAuth: jest.fn()

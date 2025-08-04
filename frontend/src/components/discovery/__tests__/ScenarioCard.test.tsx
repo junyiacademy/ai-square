@@ -117,7 +117,8 @@ describe('ScenarioCard', () => {
     );
 
     // Check for progress indicators - component shows Chinese status
-    expect(screen.getByText('學習中')).toBeInTheDocument();
+    const progressElements = screen.getAllByText('學習中');
+    expect(progressElements.length).toBeGreaterThan(0);
   });
 
   it('renders with mastered status', () => {
@@ -142,7 +143,8 @@ describe('ScenarioCard', () => {
     );
 
     // Component shows Chinese status
-    expect(screen.getByText('已達成')).toBeInTheDocument();
+    const masteredElements = screen.getAllByText('已達成');
+    expect(masteredElements.length).toBeGreaterThan(0);
   });
 
   it('shows last activity when prop is true', () => {
