@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
+import bcrypt from 'bcryptjs'
 import { createAccessToken, createRefreshToken } from '@/lib/auth/jwt'
 import { createSessionToken } from '@/lib/auth/session-simple'
 import { getPool } from '@/lib/db/get-pool'
 import { PostgreSQLUserRepository } from '@/lib/repositories/postgresql'
+import { z } from 'zod'
+import { getUserWithPassword, updateUserPasswordHash } from '@/lib/auth/password-utils'
 
 // Lazy initialize repository
 let userRepo: PostgreSQLUserRepository | null = null
@@ -15,7 +18,14 @@ function getUserRepository() {
   return userRepo
 }
 
-// Mock users for testing (in production, these would be in the database with hashed passwords)
+// Input validation schema
+const loginSchema = z.object({
+  email: z.string().email('Invalid email format'),
+  password: z.string().min(1, 'Password is required'),
+  rememberMe: z.boolean().optional().default(false)
+})
+
+// Legacy mock users for backward compatibility (will be removed after migration)
 const MOCK_USERS = [
   {
     email: 'student@example.com',
@@ -46,53 +56,139 @@ const MOCK_USERS = [
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { email, password, rememberMe = false } = body
-
-    // Basic validation
-    if (!email || !password) {
+    
+    // Validate input
+    const validationResult = loginSchema.safeParse(body)
+    if (!validationResult.success) {
+      const errors = validationResult.error.errors.map(e => e.message).join(', ')
       return NextResponse.json(
-        { success: false, error: 'Email and password are required' },
+        { success: false, error: errors },
         { status: 400 }
       )
     }
 
-    // For testing purposes, check against mock users
-    // In production, this would query the database and verify hashed passwords
-    const mockUser = MOCK_USERS.find(u => u.email === email && u.password === password)
+    const { email, password, rememberMe } = validationResult.data
+
+    // Get database pool
+    const pool = getPool()
+
+    // Find user in database with password
+    const user = await getUserWithPassword(pool, email.toLowerCase())
     
-    if (!mockUser) {
+    if (!user) {
+      // Get user repository for fallback
+      const userRepo = getUserRepository()
+      // Check against legacy mock users for backward compatibility
+      const mockUser = MOCK_USERS.find(u => u.email === email && u.password === password)
+      
+      if (mockUser) {
+        // Create user if it's a mock user (for testing purposes)
+        const newUser = await userRepo.create({
+          email: mockUser.email,
+          name: mockUser.name,
+          preferredLanguage: 'en'
+        })
+        
+        // Store password hash and role directly in database columns
+        await updateUserPasswordHash(pool, newUser.id, await bcrypt.hash(mockUser.password, 10), mockUser.role)
+        
+        // Create JWT tokens
+        const accessToken = await createAccessToken({
+          userId: 1, // TODO: Fix TokenPayload to use string for UUID
+          email: newUser.email,
+          role: mockUser.role,
+          name: newUser.name || mockUser.name
+        })
+        
+        const refreshToken = await createRefreshToken(newUser.id.toString(), rememberMe)
+        const sessionToken = createSessionToken(newUser.id, newUser.email)
+
+        // Update last active
+        await userRepo.updateLastActive(newUser.id)
+
+        // Create response with tokens
+        const response = NextResponse.json({
+          success: true,
+          user: {
+            id: newUser.id,
+            email: newUser.email,
+            name: newUser.name,
+            role: mockUser.role,
+            preferredLanguage: newUser.preferredLanguage
+          },
+          accessToken,
+          refreshToken,
+          sessionToken
+        })
+
+        // Set HTTP-only secure cookies
+        response.cookies.set('ai_square_session', sessionToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'lax',
+          maxAge: rememberMe ? 30 * 24 * 60 * 60 : 7 * 24 * 60 * 60, // 30 days if remember me, else 7 days
+          path: '/'
+        })
+
+        response.cookies.set('ai_square_refresh', refreshToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'lax',
+          maxAge: rememberMe ? 90 * 24 * 60 * 60 : 30 * 24 * 60 * 60, // 90 days if remember me, else 30 days
+          path: '/'
+        })
+
+        return response
+      }
+      
+      // User not found
       return NextResponse.json(
         { success: false, error: 'Invalid email or password' },
         { status: 401 }
       )
     }
 
-
-    // Get user repository
-    const userRepo = getUserRepository()
-
-    // Try to find or create user in database
-    let user = await userRepo.findByEmail(email)
+    // Verify password with bcrypt
+    const passwordHash = user.passwordHash
     
-    if (!user) {
-      // Create user if doesn't exist (for testing purposes)
-      user = await userRepo.create({
-        email: mockUser.email,
-        name: mockUser.name,
-        preferredLanguage: 'en'
-      })
+    if (!passwordHash) {
+      // No password set (shouldn't happen in production)
+      return NextResponse.json(
+        { success: false, error: 'Account not properly configured. Please reset your password.' },
+        { status: 401 }
+      )
     }
 
+    const isValidPassword = await bcrypt.compare(password, passwordHash)
+    
+    if (!isValidPassword) {
+      return NextResponse.json(
+        { success: false, error: 'Invalid email or password' },
+        { status: 401 }
+      )
+    }
+
+    // Check if email is verified
+    if (!user.emailVerified) {
+      // Allow login but remind user to verify email
+      console.log('⚠️ User logged in with unverified email:', email)
+    }
+
+    // Get user role (default to 'student')
+    const userRole = user.role || 'student'
+
+    // Get user repository for updating last active
+    const userRepo = getUserRepository()
+
     // Create JWT tokens
-    const userId = user.id // Keep UUID as string
     const accessToken = await createAccessToken({
       userId: 1, // TODO: Fix TokenPayload to use string for UUID
       email: user.email,
-      role: mockUser.role,
-      name: user.name || mockUser.name
+      role: userRole,
+      name: user.name
     })
     
-    const refreshToken = await createRefreshToken(userId.toString(), rememberMe)
+    const refreshToken = await createRefreshToken(user.id.toString(), rememberMe)
     
     // Create session token
     const sessionToken = createSessionToken(user.id, user.email)
@@ -100,77 +196,53 @@ export async function POST(request: NextRequest) {
     // Update last active
     await userRepo.updateLastActive(user.id)
 
-    // Create response
+    // Create response with tokens
     const response = NextResponse.json({
       success: true,
-      message: 'Login successful',
       user: {
-        id: userId,
+        id: user.id,
         email: user.email,
         name: user.name,
-        role: mockUser.role
-      }
+        role: userRole,
+        preferredLanguage: user.preferredLanguage,
+        emailVerified: user.emailVerified,
+        onboardingCompleted: user.onboardingCompleted
+      },
+      accessToken,
+      refreshToken,
+      sessionToken
     })
 
-    // Set cookies
-    const cookieOptions = {
+    // Set HTTP-only secure cookies
+    response.cookies.set('ai_square_session', sessionToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax' as const,
-      path: '/',
-    }
-
-    response.cookies.set('accessToken', accessToken, {
-      ...cookieOptions,
-      maxAge: 60 * 60, // 1 hour
+      sameSite: 'lax',
+      maxAge: rememberMe ? 30 * 24 * 60 * 60 : 7 * 24 * 60 * 60, // 30 days if remember me, else 7 days
+      path: '/'
     })
 
-    response.cookies.set('refreshToken', refreshToken, {
-      ...cookieOptions,
-      maxAge: rememberMe ? 60 * 60 * 24 * 30 : 60 * 60 * 24 * 7, // 30 days or 7 days
-    })
-
-    response.cookies.set('sessionToken', sessionToken, {
-      ...cookieOptions,
-      maxAge: 60 * 60 * 24, // 24 hours
-    })
-
-    // Also set legacy cookies for auth check API compatibility
-    response.cookies.set('isLoggedIn', 'true', {
-      ...cookieOptions,
-      httpOnly: false, // Make it accessible to client-side code
-      maxAge: 60 * 60 * 24, // 24 hours
-    })
-
-    response.cookies.set('user', JSON.stringify({
-      id: userId,
-      email: user.email,
-      name: user.name,
-      role: mockUser.role
-    }), {
-      ...cookieOptions,
-      httpOnly: false, // Make it accessible to client-side code
-      maxAge: 60 * 60 * 24, // 24 hours
-    })
-
-    response.cookies.set('userRole', mockUser.role, {
-      ...cookieOptions,
-      httpOnly: false, // Make it accessible to client-side code
-      maxAge: 60 * 60 * 24, // 24 hours
+    response.cookies.set('ai_square_refresh', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: rememberMe ? 90 * 24 * 60 * 60 : 30 * 24 * 60 * 60, // 90 days if remember me, else 30 days
+      path: '/'
     })
 
     return response
+
   } catch (error) {
-    console.error('Login API error:', error)
-    console.error('Error details:', error instanceof Error ? error.message : 'Unknown error')
+    console.error('Login error:', error)
+    
     return NextResponse.json(
-      { success: false, error: 'Internal server error' },
+      { success: false, error: 'An error occurred during login. Please try again.' },
       { status: 500 }
     )
   }
 }
 
-// Support OPTIONS request (CORS)
+// Support OPTIONS for CORS
 export async function OPTIONS() {
   return new NextResponse(null, {
     status: 200,

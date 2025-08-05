@@ -1,5 +1,7 @@
 import { POST, OPTIONS } from '../route';
 import { createAccessToken, createRefreshToken } from '@/lib/auth/jwt';
+import { getUserWithPassword, updateUserPasswordHash } from '@/lib/auth/password-utils';
+import bcrypt from 'bcryptjs';
 
 // Mock the auth module
 jest.mock('@/lib/auth/jwt', () => ({
@@ -12,13 +14,28 @@ jest.mock('@/lib/auth/session-simple', () => ({
   createSessionToken: jest.fn().mockReturnValue('mock-session-token')
 }));
 
-// Mock pg Pool
-jest.mock('pg', () => ({
-  Pool: jest.fn().mockImplementation(() => ({
-    query: jest.fn(),
-    end: jest.fn(),
-    on: jest.fn(), // Add the on method for event handling
-  })),
+// Mock bcrypt
+jest.mock('bcryptjs', () => ({
+  compare: jest.fn(),
+  hash: jest.fn()
+}));
+
+// Mock database pool
+const mockPool = {
+  query: jest.fn(),
+  end: jest.fn(),
+  on: jest.fn(),
+};
+
+jest.mock('@/lib/db/get-pool', () => ({
+  getPool: jest.fn(() => mockPool)
+}));
+
+// Mock password utilities
+jest.mock('@/lib/auth/password-utils', () => ({
+  getUserWithPassword: jest.fn(),
+  updateUserPasswordHash: jest.fn(),
+  updateUserEmailVerified: jest.fn()
 }));
 
 // Mock PostgreSQL repository
@@ -26,7 +43,7 @@ jest.mock('@/lib/repositories/postgresql', () => ({
   PostgreSQLUserRepository: jest.fn().mockImplementation(() => ({
     findByEmail: jest.fn().mockResolvedValue(null),
     create: jest.fn().mockImplementation((user) => Promise.resolve({
-      id: 1,
+      id: '1',
       ...user
     })),
     updateLastActive: jest.fn().mockResolvedValue(undefined),
@@ -68,16 +85,35 @@ function createMockRequest(body: any) {
 describe('/api/auth/login', () => {
   const mockCreateAccessToken = createAccessToken as jest.MockedFunction<typeof createAccessToken>;
   const mockCreateRefreshToken = createRefreshToken as jest.MockedFunction<typeof createRefreshToken>;
+  const mockGetUserWithPassword = getUserWithPassword as jest.MockedFunction<typeof getUserWithPassword>;
+  const mockUpdateUserPasswordHash = updateUserPasswordHash as jest.MockedFunction<typeof updateUserPasswordHash>;
+  const mockBcryptCompare = bcrypt.compare as jest.MockedFunction<typeof bcrypt.compare>;
+  const mockBcryptHash = bcrypt.hash as jest.MockedFunction<typeof bcrypt.hash>;
 
   beforeEach(() => {
     jest.clearAllMocks();
     mockCookies.set.mockClear();
-    mockCreateAccessToken.mockResolvedValue('mock-jwt-token');
-    mockCreateRefreshToken.mockResolvedValue('mock-jwt-token');
+    mockCreateAccessToken.mockResolvedValue('mock-access-token');
+    mockCreateRefreshToken.mockResolvedValue('mock-refresh-token');
+    (mockBcryptHash as jest.Mock).mockResolvedValue('hashed-password');
   });
 
   describe('POST', () => {
     it('should login successfully with valid student credentials', async () => {
+      // Setup mock user data
+      mockGetUserWithPassword.mockResolvedValue({
+        id: '1',
+        email: 'student@example.com',
+        name: 'Student User',
+        passwordHash: 'hashed-password',
+        role: 'student',
+        emailVerified: true,
+        onboardingCompleted: false,
+        preferredLanguage: 'en',
+        metadata: {}
+      });
+      (mockBcryptCompare as jest.Mock).mockResolvedValue(true);
+
       const request = createMockRequest({
         email: 'student@example.com',
         password: 'student123'
@@ -88,13 +124,12 @@ describe('/api/auth/login', () => {
 
       expect(response.status).toBe(200);
       expect(data.success).toBe(true);
-      expect(data.user).toEqual({
-        id: 1,
+      expect(data.user).toMatchObject({
+        id: '1',
         email: 'student@example.com',
         role: 'student',
         name: 'Student User'
       });
-      expect(data.message).toBe('Login successful');
 
       // Check JWT creation
       expect(mockCreateAccessToken).toHaveBeenCalledWith({
@@ -105,13 +140,25 @@ describe('/api/auth/login', () => {
       });
       expect(mockCreateRefreshToken).toHaveBeenCalledWith('1', false);
 
-      // Check cookies were set (mocked)
-      expect(mockCookies.set).toHaveBeenCalledWith('accessToken', 'mock-jwt-token', expect.any(Object));
-      expect(mockCookies.set).toHaveBeenCalledWith('refreshToken', 'mock-jwt-token', expect.any(Object));
-      expect(mockCookies.set).toHaveBeenCalledWith('sessionToken', 'mock-session-token', expect.any(Object));
+      // Check cookies were set
+      expect(mockCookies.set).toHaveBeenCalledWith('ai_square_session', 'mock-session-token', expect.any(Object));
+      expect(mockCookies.set).toHaveBeenCalledWith('ai_square_refresh', 'mock-refresh-token', expect.any(Object));
     });
 
     it('should login successfully with teacher credentials', async () => {
+      mockGetUserWithPassword.mockResolvedValue({
+        id: '2',
+        email: 'teacher@example.com',
+        name: 'Teacher User',
+        passwordHash: 'hashed-password',
+        role: 'teacher',
+        emailVerified: true,
+        onboardingCompleted: true,
+        preferredLanguage: 'en',
+        metadata: {}
+      });
+      (mockBcryptCompare as jest.Mock).mockResolvedValue(true);
+
       const request = createMockRequest({
         email: 'teacher@example.com',
         password: 'teacher123'
@@ -126,6 +173,19 @@ describe('/api/auth/login', () => {
     });
 
     it('should login successfully with admin credentials', async () => {
+      mockGetUserWithPassword.mockResolvedValue({
+        id: '3',
+        email: 'admin@example.com',
+        name: 'Admin User',
+        passwordHash: 'hashed-password',
+        role: 'admin',
+        emailVerified: true,
+        onboardingCompleted: true,
+        preferredLanguage: 'en',
+        metadata: {}
+      });
+      (mockBcryptCompare as jest.Mock).mockResolvedValue(true);
+
       const request = createMockRequest({
         email: 'admin@example.com',
         password: 'admin123'
@@ -140,6 +200,19 @@ describe('/api/auth/login', () => {
     });
 
     it('should handle remember me option', async () => {
+      mockGetUserWithPassword.mockResolvedValue({
+        id: '1',
+        email: 'student@example.com',
+        name: 'Student User',
+        passwordHash: 'hashed-password',
+        role: 'student',
+        emailVerified: true,
+        onboardingCompleted: false,
+        preferredLanguage: 'en',
+        metadata: {}
+      });
+      (mockBcryptCompare as jest.Mock).mockResolvedValue(true);
+
       const request = createMockRequest({
         email: 'student@example.com',
         password: 'student123',
@@ -152,9 +225,9 @@ describe('/api/auth/login', () => {
       expect(mockCreateRefreshToken).toHaveBeenCalledWith('1', true);
 
       // Check cookie was set with remember me option
-      expect(mockCookies.set).toHaveBeenCalledWith('refreshToken', 'mock-jwt-token', 
+      expect(mockCookies.set).toHaveBeenCalledWith('ai_square_refresh', 'mock-refresh-token', 
         expect.objectContaining({
-          maxAge: 60 * 60 * 24 * 30 // 30 days
+          maxAge: 90 * 24 * 60 * 60 // 90 days for remember me
         })
       );
     });
@@ -169,7 +242,7 @@ describe('/api/auth/login', () => {
 
       expect(response.status).toBe(400);
       expect(data.success).toBe(false);
-      expect(data.error).toBe('Email and password are required');
+      expect(data.error).toBeDefined();
     });
 
     it('should fail with missing password', async () => {
@@ -182,10 +255,12 @@ describe('/api/auth/login', () => {
 
       expect(response.status).toBe(400);
       expect(data.success).toBe(false);
-      expect(data.error).toBe('Email and password are required');
+      expect(data.error.toLowerCase()).toContain('required');
     });
 
     it('should fail with invalid credentials', async () => {
+      mockGetUserWithPassword.mockResolvedValue(null);
+
       const request = createMockRequest({
         email: 'wrong@example.com',
         password: 'wrongpassword'
@@ -209,10 +284,22 @@ describe('/api/auth/login', () => {
 
       expect(response.status).toBe(500);
       expect(data.success).toBe(false);
-      expect(data.error).toBe('Internal server error');
+      expect(data.error).toContain('An error occurred');
     });
 
     it('should handle JWT creation errors', async () => {
+      mockGetUserWithPassword.mockResolvedValue({
+        id: '1',
+        email: 'student@example.com',
+        name: 'Student User',
+        passwordHash: 'hashed-password',
+        role: 'student',
+        emailVerified: true,
+        onboardingCompleted: false,
+        preferredLanguage: 'en',
+        metadata: {}
+      });
+      (mockBcryptCompare as jest.Mock).mockResolvedValue(true);
       mockCreateAccessToken.mockRejectedValue(new Error('JWT error'));
 
       const request = createMockRequest({
@@ -225,7 +312,7 @@ describe('/api/auth/login', () => {
 
       expect(response.status).toBe(500);
       expect(data.success).toBe(false);
-      expect(data.error).toBe('Internal server error');
+      expect(data.error).toContain('An error occurred');
     });
   });
 

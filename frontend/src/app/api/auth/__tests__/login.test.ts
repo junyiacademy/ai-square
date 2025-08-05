@@ -1,5 +1,7 @@
 import { POST } from '../login/route'
 import { NextRequest } from 'next/server'
+import { getUserWithPassword, updateUserPasswordHash } from '@/lib/auth/password-utils'
+import bcrypt from 'bcryptjs'
 
 // Mock JWT functions
 jest.mock('../../../../lib/auth/jwt', () => ({
@@ -14,20 +16,29 @@ jest.mock('../../../../lib/auth/session-simple', () => ({
   createSessionToken: jest.fn().mockReturnValue('mock-session-token')
 }))
 
-// Mock pg Pool
-jest.mock('pg', () => ({
-  Pool: jest.fn().mockImplementation(() => ({
-    query: jest.fn(),
-    end: jest.fn(),
-  })),
+// Mock bcrypt
+jest.mock('bcryptjs', () => ({
+  compare: jest.fn(),
+  hash: jest.fn()
 }))
+
+// Mock database pool
+const mockPool = {
+  query: jest.fn(),
+  end: jest.fn(),
+  on: jest.fn(),
+}
 
 // Mock getPool
 jest.mock('../../../../lib/db/get-pool', () => ({
-  getPool: jest.fn().mockReturnValue({
-    query: jest.fn(),
-    end: jest.fn(),
-  })
+  getPool: jest.fn(() => mockPool)
+}))
+
+// Mock password utilities
+jest.mock('../../../../lib/auth/password-utils', () => ({
+  getUserWithPassword: jest.fn(),
+  updateUserPasswordHash: jest.fn(),
+  updateUserEmailVerified: jest.fn()
 }))
 
 // Mock PostgreSQL repository
@@ -93,7 +104,28 @@ class MockNextRequest {
 }
 
 describe('/api/auth/login', () => {
+  const mockGetUserWithPassword = getUserWithPassword as jest.Mock
+  const mockBcryptCompare = bcrypt.compare as jest.Mock
+  
+  beforeEach(() => {
+    jest.clearAllMocks()
+    mockCookies.set.mockClear()
+  })
+
   it('should login successfully with valid credentials', async () => {
+    // Setup mock user data
+    mockGetUserWithPassword.mockResolvedValue({
+      id: '1',
+      email: 'student@example.com',
+      name: 'Student User',
+      passwordHash: 'hashed-password',
+      role: 'student',
+      emailVerified: true,
+      onboardingCompleted: false,
+      preferredLanguage: 'en',
+      metadata: {}
+    })
+    mockBcryptCompare.mockResolvedValue(true)
     const request = new MockNextRequest('http://localhost:3000/api/auth/login', {
       method: 'POST',
       body: JSON.stringify({
@@ -114,9 +146,12 @@ describe('/api/auth/login', () => {
     expect(data.success).toBe(true)
     expect(data.user.email).toBe('student@example.com')
     expect(data.user.password).toBeUndefined()
+    expect(mockCookies.set).toHaveBeenCalledWith('ai_square_session', 'mock-session-token', expect.any(Object))
+    expect(mockCookies.set).toHaveBeenCalledWith('ai_square_refresh', 'mock-refresh-token-7d', expect.any(Object))
   })
 
   it('should fail with invalid credentials', async () => {
+    mockGetUserWithPassword.mockResolvedValue(null)
     const request = new MockNextRequest('http://localhost:3000/api/auth/login', {
       method: 'POST',
       body: JSON.stringify({
@@ -134,6 +169,18 @@ describe('/api/auth/login', () => {
   })
 
   it('should handle Remember Me option correctly', async () => {
+    mockGetUserWithPassword.mockResolvedValue({
+      id: '1',
+      email: 'student@example.com',
+      name: 'Student User',
+      passwordHash: 'hashed-password',
+      role: 'student',
+      emailVerified: true,
+      onboardingCompleted: false,
+      preferredLanguage: 'en',
+      metadata: {}
+    })
+    mockBcryptCompare.mockResolvedValue(true)
     const request = new MockNextRequest('http://localhost:3000/api/auth/login', {
       method: 'POST',
       body: JSON.stringify({
@@ -188,6 +235,6 @@ describe('/api/auth/login', () => {
 
     expect(response.status).toBe(400)
     expect(data.success).toBe(false)
-    expect(data.error).toContain('required')
+    expect(data.error.toLowerCase()).toContain('required')
   })
 })

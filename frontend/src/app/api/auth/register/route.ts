@@ -1,303 +1,211 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { Storage } from '@google-cloud/storage';
+import bcrypt from 'bcryptjs';
+import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
+import { z } from 'zod';
+import crypto from 'crypto';
+import { getPool } from '@/lib/db/get-pool';
+import { updateUserPasswordHash, updateUserEmailVerified } from '@/lib/auth/password-utils';
 
-// Mock database - in production, this would be a real database
-const USERS_DB: Array<{
-  id: number;
-  email: string;
-  password: string;
-  name: string;
-  role: string;
-  hasCompletedAssessment: boolean;
-  hasCompletedOnboarding: boolean;
-  createdAt: string;
-  registrationSource: string;
-  lastLogin: string;
-  preferences: {
-    language: string;
-    theme: string;
-  };
-  identity?: string;
-  lastUpdated?: string;
-  lastModified?: string;
-  onboarding?: {
-    welcomeCompleted: boolean;
-    identityCompleted: boolean;
-    goalsCompleted: boolean;
-    completedAt: string;
-    welcomeCompletedAt?: string;
-    identityCompletedAt?: string;
-    goalsCompletedAt?: string;
-  };
-  interests?: string[];
-  learningGoals?: string[];
-  assessmentCompleted?: boolean;
-  assessmentCompletedAt?: string;
-  assessmentResult?: {
-    overallScore: number;
-    domainScores: {
-      engaging_with_ai: number;
-      creating_with_ai: number;
-      managing_with_ai: number;
-      designing_with_ai: number;
-    };
-    totalQuestions: number;
-    correctAnswers: number;
-    timeSpentSeconds: number;
-    completedAt: string;
-    level: string;
-    recommendations?: string[];
-  };
-}> = [
-  {
-    id: 1,
-    email: 'student@example.com',
-    password: 'student123',
-    name: 'Student User',
-    role: 'student',
-    hasCompletedAssessment: false,
-    hasCompletedOnboarding: false,
-    createdAt: '2024-01-01T00:00:00.000Z',
-    registrationSource: 'web',
-    lastLogin: '2025-07-02T14:38:11.656Z',
-    preferences: {
-      language: 'en',
-      theme: 'light'
-    }
-  },
-  {
-    id: 2,
-    email: 'teacher@example.com',
-    password: 'teacher123',
-    name: 'Teacher User',
-    role: 'teacher',
-    hasCompletedAssessment: true,
-    hasCompletedOnboarding: true,
-    createdAt: '2024-01-01T00:00:00.000Z',
-    registrationSource: 'web',
-    lastLogin: '2025-07-02T07:28:38.521Z',
-    preferences: {
-      language: 'en',
-      theme: 'light'
-    },
-    identity: 'teacher',
-    lastUpdated: '2025-07-02T05:06:58.768Z',
-    onboarding: {
-      welcomeCompleted: true,
-      identityCompleted: true,
-      goalsCompleted: true,
-      completedAt: '2025-07-02T07:27:10.190Z',
-      welcomeCompletedAt: '2025-07-02T07:26:22.078Z',
-      identityCompletedAt: '2025-07-02T07:27:06.257Z',
-      goalsCompletedAt: '2025-07-02T07:27:10.190Z'
-    },
-    lastModified: '2025-07-02T07:28:29.241Z',
-    interests: [
-      'analyze-data',
-      'create-content'
-    ],
-    learningGoals: [
-      'analyze-data',
-      'create-content'
-    ],
-    assessmentCompleted: true,
-    assessmentCompletedAt: '2025-07-02T07:28:29.241Z',
-    assessmentResult: {
-      overallScore: 42,
-      domainScores: {
-        engaging_with_ai: 33,
-        creating_with_ai: 67,
-        managing_with_ai: 33,
-        designing_with_ai: 33
-      },
-      totalQuestions: 12,
-      correctAnswers: 5,
-      timeSpentSeconds: 27,
-      completedAt: '2025-07-02T07:28:25.904Z',
-      level: 'beginner',
-      recommendations: [
-        'Focus on improving Engaging with AI: Understanding AI limitations, privacy concerns, and ethical considerations when interacting with AI systems',
-        'Focus on improving Managing AI: Developing skills for AI-assisted decision making, workflow automation, and team collaboration'
-      ]
-    }
-  },
-  {
-    id: 3,
-    email: 'admin@example.com',
-    password: 'admin123',
-    name: 'Admin User',
-    role: 'admin',
-    hasCompletedAssessment: true,
-    hasCompletedOnboarding: true,
-    createdAt: '2024-01-01T00:00:00.000Z',
-    registrationSource: 'web',
-    lastLogin: '2025-07-02T10:00:00.000Z',
-    preferences: {
-      language: 'en',
-      theme: 'light'
-    },
-    identity: 'educator',
-    onboarding: {
-      welcomeCompleted: true,
-      identityCompleted: true,
-      goalsCompleted: true,
-      completedAt: '2025-01-15T10:00:00.000Z'
-    },
-    interests: ['manage-ai', 'ethical-ai'],
-    learningGoals: ['manage-ai', 'ethical-ai'],
-    assessmentCompleted: true,
-    assessmentCompletedAt: '2025-01-15T10:05:00.000Z',
-    assessmentResult: {
-      overallScore: 92,
-      domainScores: {
-        engaging_with_ai: 100,
-        creating_with_ai: 83,
-        managing_with_ai: 100,
-        designing_with_ai: 83
-      },
-      totalQuestions: 12,
-      correctAnswers: 11,
-      timeSpentSeconds: 180,
-      completedAt: '2025-01-15T10:05:00.000Z',
-      level: 'advanced'
-    }
-  },
-  {
-    id: 4,
-    email: 'test@example.com',
-    password: 'password123',
-    name: 'Test User',
-    role: 'student',
-    hasCompletedAssessment: false,
-    hasCompletedOnboarding: false,
-    createdAt: '2024-01-01T00:00:00.000Z',
-    registrationSource: 'web',
-    lastLogin: '2025-07-02T14:38:11.656Z',
-    preferences: {
-      language: 'en',
-      theme: 'light'
-    }
-  }
-];
-
-// Simple ID generator
-let nextUserId = 5;
-
-// Initialize GCS
-const storage = new Storage({
-  projectId: process.env.GOOGLE_CLOUD_PROJECT,
-  keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS,
+// Input validation schema
+const registerSchema = z.object({
+  email: z.string().email('Invalid email format'),
+  password: z.string().min(8, 'Password must be at least 8 characters')
+    .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
+    .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
+    .regex(/[0-9]/, 'Password must contain at least one number'),
+  name: z.string().min(2, 'Name must be at least 2 characters').max(100, 'Name is too long'),
+  preferredLanguage: z.string().optional().default('en'),
+  acceptTerms: z.boolean().refine(val => val === true, 'You must accept the terms and conditions')
 });
 
-const BUCKET_NAME = process.env.GCS_BUCKET_NAME || 'ai-square-db';
-const bucket = storage.bucket(BUCKET_NAME);
+// Email verification token storage (in production, use Redis or database)
+const verificationTokens = new Map<string, { email: string; expiresAt: Date }>();
 
-// Function to save user data to GCS
-async function saveUserToGCS(userData: { email: string; password: string; name?: string; role?: string; id?: string | number }) {
-  const sanitizedEmail = userData.email.replace('@', '_at_').replace(/\./g, '_');
-  const filePath = `user/${sanitizedEmail}/user_data.json`;
-  const file = bucket.file(filePath);
+// Generate verification token
+function generateVerificationToken(): string {
+  return crypto.randomBytes(32).toString('hex');
+}
+
+// Send verification email (placeholder - implement with email service)
+async function sendVerificationEmail(email: string, token: string) {
+  // In production, integrate with email service like SendGrid, AWS SES, etc.
+  const verificationUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/verify-email?token=${token}`;
   
-  const userDataToSave = {
-    ...userData,
-    registrationSource: 'web',
-    lastLogin: new Date().toISOString(),
-    preferences: {
-      language: 'en',
-      theme: 'light'
-    }
-  };
+  console.log(`📧 Verification email would be sent to ${email}`);
+  console.log(`🔗 Verification URL: ${verificationUrl}`);
   
-  try {
-    await file.save(JSON.stringify(userDataToSave, null, 2), {
-      metadata: {
-        contentType: 'application/json',
-      },
-    });
-    console.log(`✅ User data saved to GCS: ${filePath}`);
-  } catch (error) {
-    console.error('❌ Error saving user to GCS:', error);
-    // Don't throw - allow registration to continue even if GCS fails
-  }
+  // TODO: Implement actual email sending
+  // Example with SendGrid:
+  // await sendgrid.send({
+  //   to: email,
+  //   from: 'noreply@ai-square.com',
+  //   subject: 'Verify your AI Square account',
+  //   html: `Click <a href="${verificationUrl}">here</a> to verify your email.`
+  // });
 }
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { email, password, name } = body;
-
-    // Validation
-    if (!email || !password || !name) {
+    
+    // Validate input
+    const validationResult = registerSchema.safeParse(body);
+    if (!validationResult.success) {
+      const errors = validationResult.error.errors.map(e => e.message).join(', ');
       return NextResponse.json(
-        { success: false, error: 'All fields are required' },
+        { success: false, error: errors },
         { status: 400 }
       );
     }
 
-    // Check email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid email format' },
-        { status: 400 }
-      );
-    }
+    const { email, password, name, preferredLanguage } = validationResult.data;
 
-    // Check password length
-    if (password.length < 8) {
-      return NextResponse.json(
-        { success: false, error: 'Password must be at least 8 characters' },
-        { status: 400 }
-      );
-    }
-
+    // Get user repository
+    const userRepo = repositoryFactory.getUserRepository();
+    
     // Check if user already exists
-    const existingUser = USERS_DB.find(u => u.email === email);
+    const existingUser = await userRepo.findByEmail(email);
     if (existingUser) {
       return NextResponse.json(
-        { success: false, error: 'Email already registered' },
+        { success: false, error: 'An account with this email already exists' },
         { status: 409 }
       );
     }
 
-    // Create new user
-    const newUser = {
-      id: nextUserId++,
-      email,
-      password, // In production, this should be hashed
+    // Hash password with bcrypt
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    // Create user in database
+    const newUser = await userRepo.create({
+      email: email.toLowerCase(),
       name,
-      role: 'student', // Default role
-      hasCompletedAssessment: false,
-      hasCompletedOnboarding: false,
-      createdAt: new Date().toISOString(),
-      registrationSource: 'web',
-      lastLogin: new Date().toISOString(),
-      preferences: {
-        language: 'en',
-        theme: 'light'
+      preferredLanguage,
+      learningPreferences: {
+        goals: [],
+        interests: [],
+        learningStyle: 'visual'
       }
-    };
-
-    // Add to mock database
-    USERS_DB.push(newUser);
-
-    // Save to GCS (including password for now - in production should be hashed)
-    await saveUserToGCS(newUser);
-
-    // Return success (without password)
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password: _, ...userWithoutPassword } = newUser;
-    
-    return NextResponse.json({
-      success: true,
-      message: 'Registration successful',
-      user: userWithoutPassword
     });
+
+    // Update user with password hash in the proper column
+    const pool = getPool();
+    await updateUserPasswordHash(pool, newUser.id, hashedPassword, 'student');
+
+    // Generate email verification token
+    const verificationToken = generateVerificationToken();
+    verificationTokens.set(verificationToken, {
+      email: newUser.email,
+      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours
+    });
+
+    // Send verification email
+    await sendVerificationEmail(newUser.email, verificationToken);
+
+    // Create session (simplified - in production use proper session management)
+    const sessionToken = crypto.randomBytes(32).toString('hex');
+    
+    // Set secure cookie
+    const response = NextResponse.json({
+      success: true,
+      message: 'Registration successful! Please check your email to verify your account.',
+      user: {
+        id: newUser.id,
+        email: newUser.email,
+        name: newUser.name,
+        preferredLanguage: newUser.preferredLanguage,
+        emailVerified: false
+      },
+      sessionToken // For client-side storage if needed
+    });
+
+    // Set HTTP-only secure cookie
+    response.cookies.set('ai_square_session', sessionToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60, // 7 days
+      path: '/'
+    });
+
+    return response;
 
   } catch (error) {
     console.error('Registration error:', error);
+    
+    // Check for specific database errors
+    if (error instanceof Error) {
+      if (error.message.includes('duplicate key')) {
+        return NextResponse.json(
+          { success: false, error: 'This email is already registered' },
+          { status: 409 }
+        );
+      }
+    }
+    
     return NextResponse.json(
-      { success: false, error: 'Internal server error' },
+      { success: false, error: 'Registration failed. Please try again later.' },
+      { status: 500 }
+    );
+  }
+}
+
+// Email verification endpoint
+export async function GET(request: NextRequest) {
+  const searchParams = request.nextUrl.searchParams;
+  const token = searchParams.get('token');
+  
+  if (!token) {
+    return NextResponse.json(
+      { success: false, error: 'Verification token is required' },
+      { status: 400 }
+    );
+  }
+
+  const tokenData = verificationTokens.get(token);
+  
+  if (!tokenData) {
+    return NextResponse.json(
+      { success: false, error: 'Invalid verification token' },
+      { status: 400 }
+    );
+  }
+
+  if (tokenData.expiresAt < new Date()) {
+    verificationTokens.delete(token);
+    return NextResponse.json(
+      { success: false, error: 'Verification token has expired' },
+      { status: 400 }
+    );
+  }
+
+  try {
+    const userRepo = repositoryFactory.getUserRepository();
+    const user = await userRepo.findByEmail(tokenData.email);
+    
+    if (!user) {
+      return NextResponse.json(
+        { success: false, error: 'User not found' },
+        { status: 404 }
+      );
+    }
+
+    // Update user's email verification status directly in database
+    const pool = getPool();
+    await updateUserEmailVerified(pool, user.id);
+
+    // Clean up token
+    verificationTokens.delete(token);
+
+    return NextResponse.json({
+      success: true,
+      message: 'Email verified successfully!'
+    });
+    
+  } catch (error) {
+    console.error('Email verification error:', error);
+    return NextResponse.json(
+      { success: false, error: 'Verification failed. Please try again.' },
       { status: 500 }
     );
   }
@@ -309,7 +217,7 @@ export async function OPTIONS() {
     status: 200,
     headers: {
       'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type',
     },
   });

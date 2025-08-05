@@ -15,7 +15,8 @@ function RegisterContent() {
     email: '',
     password: '',
     confirmPassword: '',
-    agreeToTerms: false
+    acceptTerms: false,
+    preferredLanguage: 'en'
   });
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -43,8 +44,8 @@ function RegisterContent() {
       newErrors.confirmPassword = t('auth:register.errors.passwordMismatch');
     }
 
-    if (!formData.agreeToTerms) {
-      newErrors.agreeToTerms = t('auth:register.errors.termsRequired');
+    if (!formData.acceptTerms) {
+      newErrors.acceptTerms = t('auth:register.errors.termsRequired');
     }
 
     setErrors(newErrors);
@@ -68,6 +69,8 @@ function RegisterContent() {
           name: formData.name,
           email: formData.email,
           password: formData.password,
+          preferredLanguage: formData.preferredLanguage,
+          acceptTerms: formData.acceptTerms
         }),
       });
 
@@ -270,16 +273,16 @@ function RegisterContent() {
           <div className="flex items-start">
             <div className="flex items-center h-5">
               <input
-                id="agreeToTerms"
-                name="agreeToTerms"
+                id="acceptTerms"
+                name="acceptTerms"
                 type="checkbox"
                 className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                checked={formData.agreeToTerms}
+                checked={formData.acceptTerms}
                 onChange={handleChange}
               />
             </div>
             <div className="ml-3 text-sm">
-              <label htmlFor="agreeToTerms" className="font-medium text-gray-700 dark:text-gray-300">
+              <label htmlFor="acceptTerms" className="font-medium text-gray-700 dark:text-gray-300">
                 {t('auth:register.agreeToTerms')}{' '}
                 <a href="#" className="text-blue-600 hover:text-blue-500">
                   {t('auth:register.termsOfService')}
@@ -289,8 +292,8 @@ function RegisterContent() {
                   {t('auth:register.privacyPolicy')}
                 </a>
               </label>
-              {errors.agreeToTerms && (
-                <p className="mt-1 text-sm text-red-600">{errors.agreeToTerms}</p>
+              {errors.acceptTerms && (
+                <p className="mt-1 text-sm text-red-600">{errors.acceptTerms}</p>
               )}
             </div>
           </div>
