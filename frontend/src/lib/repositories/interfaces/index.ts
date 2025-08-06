@@ -173,6 +173,9 @@ export interface User {
   updatedAt: Date;
   lastActiveAt: Date;
   metadata?: Record<string, unknown>;
+  role?: string;
+  emailVerified?: boolean;
+  emailVerifiedAt?: Date;
 }
 
 // Legacy type aliases for compatibility

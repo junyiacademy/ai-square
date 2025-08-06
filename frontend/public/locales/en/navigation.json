@@ -11,6 +11,7 @@
   "history": "History",
   "signIn": "Sign in",
   "signOut": "Sign out",
+  "profile": "Profile",
   "userRole": {
     "student": "Student",
     "teacher": "Teacher",

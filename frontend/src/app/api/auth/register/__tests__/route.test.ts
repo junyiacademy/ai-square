@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { POST, GET } from '../route';
+import { POST } from '../route';
 import bcrypt from 'bcryptjs';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { createMockUserRepository, createMockUser } from '@/test-utils/mocks/repository-helpers';
@@ -275,40 +275,5 @@ describe('/api/auth/register', () => {
     });
   });
 
-  describe('GET - Email Verification', () => {
-    it('should verify email with valid token', async () => {
-      // Note: In the actual implementation, we'd need to mock the verificationTokens Map
-      // For now, this is a placeholder test
-      const request = new NextRequest('http://localhost:3000/api/auth/register?token=valid-token');
-
-      const response = await GET(request);
-      const data = await response.json();
-
-      // This test will fail until we properly mock the token storage
-      expect(response.status).toBe(400);
-      expect(data.error).toBe('Invalid verification token');
-    });
-
-    it('should reject invalid verification token', async () => {
-      const request = new NextRequest('http://localhost:3000/api/auth/register?token=invalid-token');
-
-      const response = await GET(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(400);
-      expect(data.success).toBe(false);
-      expect(data.error).toBe('Invalid verification token');
-    });
-
-    it('should require verification token', async () => {
-      const request = new NextRequest('http://localhost:3000/api/auth/register');
-
-      const response = await GET(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(400);
-      expect(data.success).toBe(false);
-      expect(data.error).toBe('Verification token is required');
-    });
-  });
+  // Email verification tests moved to /api/auth/verify-email/__tests__/route.test.ts
 });

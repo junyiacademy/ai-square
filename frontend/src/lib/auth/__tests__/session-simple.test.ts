@@ -54,6 +54,7 @@ describe('session-simple', () => {
         userId,
         email,
         timestamp: now,
+        rememberMe: false,
       });
     });
 

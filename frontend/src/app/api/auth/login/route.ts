@@ -101,7 +101,7 @@ export async function POST(request: NextRequest) {
         })
         
         const refreshToken = await createRefreshToken(newUser.id.toString(), rememberMe)
-        const sessionToken = createSessionToken(newUser.id, newUser.email)
+        const sessionToken = createSessionToken(newUser.id, newUser.email, rememberMe)
 
         // Update last active
         await userRepo.updateLastActive(newUser.id)
@@ -191,7 +191,7 @@ export async function POST(request: NextRequest) {
     const refreshToken = await createRefreshToken(user.id.toString(), rememberMe)
     
     // Create session token
-    const sessionToken = createSessionToken(user.id, user.email)
+    const sessionToken = createSessionToken(user.id, user.email, rememberMe)
 
     // Update last active
     await userRepo.updateLastActive(user.id)
@@ -214,11 +214,45 @@ export async function POST(request: NextRequest) {
     })
 
     // Set HTTP-only secure cookies
+    response.cookies.set('session_token', sessionToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: rememberMe ? 30 * 24 * 60 * 60 : 24 * 60 * 60, // 30 days if remember me, else 24 hours
+      path: '/'
+    })
+    
+    // Also set the old cookie name for backward compatibility
     response.cookies.set('ai_square_session', sessionToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       maxAge: rememberMe ? 30 * 24 * 60 * 60 : 7 * 24 * 60 * 60, // 30 days if remember me, else 7 days
+      path: '/'
+    })
+    
+    // Set cookies that middleware expects
+    response.cookies.set('isLoggedIn', 'true', {
+      httpOnly: false, // Allow client-side access
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: rememberMe ? 30 * 24 * 60 * 60 : 24 * 60 * 60,
+      path: '/'
+    })
+    
+    response.cookies.set('sessionToken', sessionToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: rememberMe ? 30 * 24 * 60 * 60 : 24 * 60 * 60,
+      path: '/'
+    })
+    
+    response.cookies.set('accessToken', sessionToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: rememberMe ? 30 * 24 * 60 * 60 : 24 * 60 * 60,
       path: '/'
     })
 

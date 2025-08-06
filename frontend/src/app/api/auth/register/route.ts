@@ -4,7 +4,8 @@ import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { z } from 'zod';
 import crypto from 'crypto';
 import { getPool } from '@/lib/db/get-pool';
-import { updateUserPasswordHash, updateUserEmailVerified } from '@/lib/auth/password-utils';
+import { updateUserPasswordHash } from '@/lib/auth/password-utils';
+import { verificationTokens } from '@/lib/auth/verification-tokens';
 
 // Input validation schema
 const registerSchema = z.object({
@@ -18,30 +19,28 @@ const registerSchema = z.object({
   acceptTerms: z.boolean().refine(val => val === true, 'You must accept the terms and conditions')
 });
 
-// Email verification token storage (in production, use Redis or database)
-const verificationTokens = new Map<string, { email: string; expiresAt: Date }>();
-
 // Generate verification token
 function generateVerificationToken(): string {
   return crypto.randomBytes(32).toString('hex');
 }
 
-// Send verification email (placeholder - implement with email service)
+import { emailService } from '@/lib/email/email-service';
+
+// Send verification email
 async function sendVerificationEmail(email: string, token: string) {
-  // In production, integrate with email service like SendGrid, AWS SES, etc.
   const verificationUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/verify-email?token=${token}`;
   
-  console.log(`📧 Verification email would be sent to ${email}`);
-  console.log(`🔗 Verification URL: ${verificationUrl}`);
+  console.log(`📧 Sending verification email to ${email}`);
   
-  // TODO: Implement actual email sending
-  // Example with SendGrid:
-  // await sendgrid.send({
-  //   to: email,
-  //   from: 'noreply@ai-square.com',
-  //   subject: 'Verify your AI Square account',
-  //   html: `Click <a href="${verificationUrl}">here</a> to verify your email.`
-  // });
+  // 使用 email service 發送真實郵件
+  const sent = await emailService.sendVerificationEmail(email, verificationUrl);
+  
+  if (!sent) {
+    console.warn('⚠️ Failed to send verification email, but registration continues');
+    console.log(`🔗 Verification URL (for manual access): ${verificationUrl}`);
+  }
+  
+  return sent;
 }
 
 export async function POST(request: NextRequest) {
@@ -150,66 +149,6 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// Email verification endpoint
-export async function GET(request: NextRequest) {
-  const searchParams = request.nextUrl.searchParams;
-  const token = searchParams.get('token');
-  
-  if (!token) {
-    return NextResponse.json(
-      { success: false, error: 'Verification token is required' },
-      { status: 400 }
-    );
-  }
-
-  const tokenData = verificationTokens.get(token);
-  
-  if (!tokenData) {
-    return NextResponse.json(
-      { success: false, error: 'Invalid verification token' },
-      { status: 400 }
-    );
-  }
-
-  if (tokenData.expiresAt < new Date()) {
-    verificationTokens.delete(token);
-    return NextResponse.json(
-      { success: false, error: 'Verification token has expired' },
-      { status: 400 }
-    );
-  }
-
-  try {
-    const userRepo = repositoryFactory.getUserRepository();
-    const user = await userRepo.findByEmail(tokenData.email);
-    
-    if (!user) {
-      return NextResponse.json(
-        { success: false, error: 'User not found' },
-        { status: 404 }
-      );
-    }
-
-    // Update user's email verification status directly in database
-    const pool = getPool();
-    await updateUserEmailVerified(pool, user.id);
-
-    // Clean up token
-    verificationTokens.delete(token);
-
-    return NextResponse.json({
-      success: true,
-      message: 'Email verified successfully!'
-    });
-    
-  } catch (error) {
-    console.error('Email verification error:', error);
-    return NextResponse.json(
-      { success: false, error: 'Verification failed. Please try again.' },
-      { status: 500 }
-    );
-  }
-}
 
 // Support OPTIONS for CORS
 export async function OPTIONS() {

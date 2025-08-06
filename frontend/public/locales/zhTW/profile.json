@@ -1,0 +1,22 @@
+{
+  "title": "我的個人資料",
+  "basicInfo": "基本資訊",
+  "name": "姓名",
+  "preferredLanguage": "偏好語言",
+  "accountType": "帳號類型",
+  "security": "安全設定",
+  "changePassword": "變更密碼",
+  "currentPassword": "目前密碼",
+  "currentPasswordRequired": "變更密碼需要輸入目前密碼",
+  "memberSince": "註冊日期",
+  "saveChanges": "儲存變更",
+  "saving": "儲存中...",
+  "updateSuccess": "個人資料更新成功",
+  "updateError": "更新個人資料失敗",
+  "emailNotVerified": "電子郵件尚未驗證",
+  "cancel": "取消",
+  "resendVerification": "重新發送驗證郵件",
+  "resending": "發送中...",
+  "verificationEmailSent": "驗證郵件已發送！請檢查您的信箱。",
+  "resendError": "重新發送驗證郵件失敗"
+}

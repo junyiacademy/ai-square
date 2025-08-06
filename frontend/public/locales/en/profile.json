@@ -1,0 +1,22 @@
+{
+  "title": "My Profile",
+  "basicInfo": "Basic Information",
+  "name": "Name",
+  "preferredLanguage": "Preferred Language",
+  "accountType": "Account Type",
+  "security": "Security",
+  "changePassword": "Change Password",
+  "currentPassword": "Current Password",
+  "currentPasswordRequired": "Current password is required to change password",
+  "memberSince": "Member Since",
+  "saveChanges": "Save Changes",
+  "saving": "Saving...",
+  "updateSuccess": "Profile updated successfully",
+  "updateError": "Failed to update profile",
+  "emailNotVerified": "Email not verified",
+  "cancel": "Cancel",
+  "resendVerification": "Resend verification email",
+  "resending": "Sending...",
+  "verificationEmailSent": "Verification email sent! Please check your inbox.",
+  "resendError": "Failed to resend verification email"
+}

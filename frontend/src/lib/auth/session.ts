@@ -54,3 +54,6 @@ export async function getServerSession(): Promise<Session | null> {
   
   return null;
 }
+
+// Alias for getServerSession
+export const getSession = getServerSession;

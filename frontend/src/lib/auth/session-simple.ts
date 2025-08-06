@@ -5,17 +5,20 @@ interface SessionData {
   userId: string;
   email: string;
   timestamp: number;
+  rememberMe?: boolean;
 }
 
 const SESSION_KEY = 'ai_square_session';
-const SESSION_TTL = 24 * 60 * 60 * 1000; // 24 hours
+const SESSION_TTL = 24 * 60 * 60 * 1000; // 24 hours (default)
+const SESSION_TTL_REMEMBER = 30 * 24 * 60 * 60 * 1000; // 30 days (remember me)
 
 // Server-side only: Create a simple session token
-export function createSessionToken(userId: string, email: string): string {
+export function createSessionToken(userId: string, email: string, rememberMe: boolean = false): string {
   const sessionData: SessionData = {
     userId,
     email,
-    timestamp: Date.now()
+    timestamp: Date.now(),
+    rememberMe
   };
   
   return Buffer.from(JSON.stringify(sessionData)).toString('base64');
@@ -31,8 +34,9 @@ export function verifySessionToken(token: string): SessionData | null {
       return null;
     }
     
-    // Check expiry
-    if (Date.now() - sessionData.timestamp > SESSION_TTL) {
+    // Check expiry based on rememberMe flag
+    const ttl = sessionData.rememberMe ? SESSION_TTL_REMEMBER : SESSION_TTL;
+    if (Date.now() - sessionData.timestamp > ttl) {
       return null;
     }
     

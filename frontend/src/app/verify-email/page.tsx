@@ -25,7 +25,7 @@ function VerifyEmailContent() {
     // Verify the email token
     const verifyEmail = async () => {
       try {
-        const response = await fetch(`/api/auth/register?token=${token}`);
+        const response = await fetch(`/api/auth/verify-email?token=${token}`);
         const data = await response.json();
 
         if (response.ok && data.success) {

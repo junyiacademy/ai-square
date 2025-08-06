@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { useTranslation } from 'react-i18next'
 
 interface LoginFormProps {
@@ -142,9 +143,9 @@ export function LoginForm({ onSubmit, loading = false, error }: LoginFormProps) 
               {t('rememberMe', 'Remember me')}
             </span>
           </label>
-          <a href="#" className="text-sm text-blue-600 hover:text-blue-500">
+          <Link href="/forgot-password" className="text-sm text-blue-600 hover:text-blue-500">
             {t('forgotPassword', 'Forgot password?')}
-          </a>
+          </Link>
         </div>
 
         <button

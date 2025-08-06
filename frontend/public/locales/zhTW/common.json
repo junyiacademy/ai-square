@@ -162,5 +162,27 @@
   "resetZoom": "重置縮放",
   "noData": "無可用資料",
   "pleaseLogin": "請登入",
-  "start": "開始"
+  "start": "開始",
+  "processing": "處理中...",
+  "accountSettings": {
+    "title": "帳號設定",
+    "legalDocuments": "法律文件",
+    "consentedDocuments": "已接受的文件",
+    "newDocuments": "需要同意的新文件",
+    "version": "版本",
+    "consentedOn": "接受日期",
+    "newVersion": "新版本",
+    "reviewAndAccept": "檢視並接受",
+    "dangerZone": "危險區域",
+    "deleteWarning": "一旦您刪除帳號，將無法復原。請確定您的決定。",
+    "deleteAccount": "刪除我的帳號",
+    "confirmDelete": "確認刪除帳號",
+    "confirmRequired": "請確認您要刪除帳號",
+    "deleteError": "刪除帳號失敗",
+    "enterPassword": "輸入密碼以確認",
+    "reason": "離開的原因",
+    "reasonPlaceholder": "告訴我們您離開的原因（選填）",
+    "confirmDeleteText": "我了解我的帳號將被永久刪除",
+    "deleteForever": "永久刪除我的帳號"
+  }
 }

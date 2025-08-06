@@ -33,5 +33,28 @@
   "pleaseLogin": "Please log in",
   "start": "Start",
   "reset": "Reset",
-  "confirm": "Confirm"
+  "confirm": "Confirm",
+  "optional": "optional",
+  "processing": "Processing...",
+  "accountSettings": {
+    "title": "Account Settings",
+    "legalDocuments": "Legal Documents",
+    "consentedDocuments": "Accepted Documents",
+    "newDocuments": "New Documents Requiring Consent",
+    "version": "Version",
+    "consentedOn": "Accepted on",
+    "newVersion": "New version",
+    "reviewAndAccept": "Review and Accept",
+    "dangerZone": "Danger Zone",
+    "deleteWarning": "Once you delete your account, there is no going back. Please be certain.",
+    "deleteAccount": "Delete My Account",
+    "confirmDelete": "Confirm Account Deletion",
+    "confirmRequired": "Please confirm that you want to delete your account",
+    "deleteError": "Failed to delete account",
+    "enterPassword": "Enter your password to confirm",
+    "reason": "Reason for leaving",
+    "reasonPlaceholder": "Tell us why you're leaving (optional)",
+    "confirmDeleteText": "I understand that my account will be permanently deleted",
+    "deleteForever": "Delete My Account Forever"
+  }
 }

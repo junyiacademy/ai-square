@@ -30,7 +30,9 @@ export class PostgreSQLUserRepository implements IUserRepository {
         level, total_xp as "totalXp", learning_preferences as "learningPreferences",
         onboarding_completed as "onboardingCompleted",
         created_at as "createdAt", updated_at as "updatedAt",
-        last_active_at as "lastActiveAt", metadata
+        last_active_at as "lastActiveAt", metadata,
+        role, email_verified as "emailVerified",
+        email_verified_at as "emailVerifiedAt"
       FROM users
       WHERE id = $1
     `;
