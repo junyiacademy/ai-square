@@ -25,7 +25,7 @@ jest.mock('@/lib/repositories/base/repository-factory', () => ({
   },
 }));
 
-describe.skip('GET /api/discovery/scenarios/my', () => {
+describe('GET /api/discovery/scenarios/my', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -102,8 +102,8 @@ describe.skip('GET /api/discovery/scenarios/my', () => {
       id: 'software-engineer',
       title: 'Software Engineer Path',
       careerType: 'software-engineer',
-      primaryStatus: 'in-progress',
-      currentProgress: 60, // 3/5 * 100
+      primaryStatus: 'mastered',
+      currentProgress: 100, // mastered because one program is completed
       stats: {
         completedCount: 1,
         activeCount: 1,

@@ -14,15 +14,11 @@ jest.mock('pg', () => {
 
 describe.skip('get-pool', () => {
   let mockPool: any;
+  let originalEnv: any;
   
   beforeEach(() => {
-    // Reset the pool singleton
-    const poolModule = require('../get-pool');
-    poolModule['pool'] = null;
-    
-    // Get mock pool instance
-    const { Pool: MockPool } = require('pg');
-    mockPool = new MockPool();
+    // Store original environment variables
+    originalEnv = { ...process.env };
     
     // Clear environment variables
     delete process.env.DB_HOST;
@@ -30,14 +26,32 @@ describe.skip('get-pool', () => {
     delete process.env.DB_NAME;
     delete process.env.DB_USER;
     delete process.env.DB_PASSWORD;
+    
+    // Reset modules to clear singleton
+    jest.resetModules();
+    
+    // Create fresh mock pool
+    mockPool = {
+      on: jest.fn(),
+      end: jest.fn()
+    };
+    
+    // Mock the Pool constructor to return our mock
+    const { Pool } = require('pg');
+    Pool.mockImplementation(() => mockPool);
   });
 
   afterEach(() => {
+    // Restore environment variables
+    process.env = originalEnv;
     jest.clearAllMocks();
   });
 
   describe('getPool', () => {
     it('creates pool with default configuration', () => {
+      const { getPool } = require('../get-pool');
+      const { Pool } = require('pg');
+      
       const pool = getPool();
       
       expect(pool).toBeDefined();
@@ -62,6 +76,9 @@ describe.skip('get-pool', () => {
       process.env.DB_NAME = 'custom_db';
       process.env.DB_USER = 'custom_user';
       process.env.DB_PASSWORD = 'custom_pass';
+      
+      const { getPool } = require('../get-pool');
+      const { Pool } = require('pg');
       
       const pool = getPool();
       

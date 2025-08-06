@@ -20,7 +20,7 @@ jest.mock('@/lib/services/postgresql-learning-service', () => ({
 const mockGetServerSession = getServerSession as jest.MockedFunction<typeof getServerSession>;
 const mockGetProgramStatus = postgresqlLearningService.getProgramStatus as jest.MockedFunction<typeof postgresqlLearningService.getProgramStatus>;
 
-describe.skip('GET /api/learning/programs/[programId]/status', () => {
+describe('GET /api/learning/programs/[programId]/status', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -40,8 +40,7 @@ describe.skip('GET /api/learning/programs/[programId]/status', () => {
   });
 
   it('returns 401 when session has no email', async () => {
-    // @ts-expect-error - Testing undefined email scenario
-    mockGetServerSession.mockResolvedValue({ user: { id: 'user123', email: undefined } });
+    mockGetServerSession.mockResolvedValue({ user: { id: 'user123', email: undefined as any } });
 
     const request = new NextRequest('http://localhost:3000/api/learning/programs/prog123/status');
     const response = await GET(request, { params: Promise.resolve({ programId: 'prog123' }) });
@@ -194,6 +193,6 @@ describe.skip('GET /api/learning/programs/[programId]/status', () => {
 
     expect(response.status).toBe(200);
     expect(data.data.program.status).toBe('completed');
-    expect(data.data.program.progress).toBe(100);
+    expect(data.data.completionRate).toBe(100);
   });
 });

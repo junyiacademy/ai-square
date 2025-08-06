@@ -16,7 +16,7 @@ const consoleSpy = {
   error: jest.spyOn(console, 'error').mockImplementation()
 };
 
-describe.skip('Assessment Scenario API Route', () => {
+describe('Assessment Scenario API Route', () => {
   const mockScenarioRepo = {
     findById: jest.fn()
   };
@@ -253,7 +253,7 @@ describe.skip('Assessment Scenario API Route', () => {
         totalQuestions: 12,
         timeLimit: 15,
         passingScore: 60,
-        domains: ['engaging_with_ai', 'creating_with_ai', 'managing_with_ai', 'designing_with_ai']
+        domains: [] // Empty array because taskTemplates is empty array, not undefined
       });
     });
 
@@ -318,7 +318,7 @@ describe.skip('Assessment Scenario API Route', () => {
 
       expect(response.status).toBe(200);
       expect(data.config).toEqual({
-        totalQuestions: 12, // Default since no questions found
+        totalQuestions: 12, // Falls back to default because totalQuestions || 12
         timeLimit: 8, // 240/60 + 240/60 = 4 + 4
         passingScore: 60,
         domains: ['task-1', 'task-2']

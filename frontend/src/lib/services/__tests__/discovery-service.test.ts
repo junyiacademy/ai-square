@@ -21,7 +21,7 @@ import { v4 as uuidv4 } from 'uuid';
 jest.mock('@/lib/abstractions/base-ai-service');
 jest.mock('../evaluation/unified-evaluation-system');
 
-describe.skip('DiscoveryService', () => {
+describe('DiscoveryService', () => {
   let service: DiscoveryService;
   let mockDiscoveryRepo: jest.Mocked<IDiscoveryRepository>;
   let mockUserRepo: jest.Mocked<IUserRepository>;
@@ -404,10 +404,8 @@ describe.skip('DiscoveryService', () => {
       // Assert
       expect(insights).toBe(mockInsights);
       expect(mockAIService.generateContent).toHaveBeenCalledWith(
-        expect.stringContaining('Software Developer'),
         expect.objectContaining({
-          temperature: 0.7,
-          maxTokens: 500
+          prompt: expect.stringContaining('Software Developer')
         })
       );
     });

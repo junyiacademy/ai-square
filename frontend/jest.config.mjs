@@ -14,7 +14,7 @@ const config = {
     '^@/(.*)$': '<rootDir>/src/$1',
     '^@/i18n$': '<rootDir>/src/__mocks__/i18n.ts',
   },
-  testPathIgnorePatterns: ['/node_modules/', '/.next/'],
+  testPathIgnorePatterns: ['/node_modules/', '/.next/', '/e2e/'],
   transform: {
     // Use babel-jest to transpile tests with the next/babel preset
     // https://jestjs.io/docs/configuration#transform-objectstring-pathtotransformer--pathtotransformer-object

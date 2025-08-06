@@ -1,6 +1,14 @@
 import { NextRequest } from 'next/server';
 import { POST } from '../route';
 import { getServerSession } from '@/lib/auth/session';
+import type { IProgram, ITask, IEvaluation } from '@/types/unified-learning';
+import type { AssessmentQuestion, AssessmentInteraction } from '@/types/assessment-types';
+import { mockConsoleError, mockConsoleLog, mockConsoleWarn } from '@/test-utils/helpers/console';
+
+// Mock console methods for testing
+const mockError = mockConsoleError();
+const mockLog = mockConsoleLog();
+const mockWarn = mockConsoleWarn();
 
 // Mock auth session
 jest.mock('@/lib/auth/session', () => ({
@@ -10,7 +18,7 @@ jest.mock('@/lib/auth/session', () => ({
 // Get mocked function
 const mockGetServerSession = getServerSession as jest.MockedFunction<typeof getServerSession>;
 
-// Mock repositories
+// Mock repositories with proper typing
 const mockFindById = jest.fn();
 const mockFindByEmail = jest.fn();
 const mockUpdate = jest.fn();
@@ -40,7 +48,7 @@ jest.mock('@/lib/repositories/base/repository-factory', () => ({
   },
 }));
 
-describe.skip('POST /api/assessment/programs/[programId]/complete', () => {
+describe('POST /api/assessment/programs/[programId]/complete', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });

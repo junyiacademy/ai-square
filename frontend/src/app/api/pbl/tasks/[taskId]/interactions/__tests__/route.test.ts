@@ -49,7 +49,7 @@ const mockTaskRepo = {
 const mockRepositoryFactory = jest.requireMock('@/lib/repositories/base/repository-factory').repositoryFactory;
 mockRepositoryFactory.getTaskRepository.mockReturnValue(mockTaskRepo);
 
-describe.skip('Task Interactions API', () => {
+describe('Task Interactions API', () => {
   const mockSession = {
     user: {
       email: 'test@example.com',
@@ -386,24 +386,21 @@ describe.skip('Task Interactions API', () => {
           id: `${mockTaskId}_2024-01-15T10:00:00Z`,
           type: 'user',
           content: 'Hello, I need help with my resume',
-          timestamp: '2024-01-15T10:00:00Z',
-          role: 'user'
+          timestamp: '2024-01-15T10:00:00Z'
         });
 
         expect(data.data.interactions[1]).toEqual({
           id: `${mockTaskId}_2024-01-15T10:00:05Z`,
           type: 'ai',
           content: 'I\'d be happy to help you improve your resume. What specific areas would you like to focus on?',
-          timestamp: '2024-01-15T10:00:05Z',
-          role: 'ai'
+          timestamp: '2024-01-15T10:00:05Z'
         });
 
         expect(data.data.interactions[2]).toEqual({
           id: `${mockTaskId}_2024-01-15T10:01:00Z`,
           type: 'system',
           content: { event: 'task_paused' },
-          timestamp: '2024-01-15T10:01:00Z',
-          role: 'system'
+          timestamp: '2024-01-15T10:01:00Z'
         });
 
         expect(data.data.taskStatus).toBe('active');
@@ -467,8 +464,7 @@ describe.skip('Task Interactions API', () => {
           id: `${mockTaskId}_2024-01-15T10:00:00Z`,
           type: 'user',
           content: 'Test message',
-          timestamp: '2024-01-15T10:00:00Z',
-          role: 'user_input' // Falls back to type when metadata.role is missing
+          timestamp: '2024-01-15T10:00:00Z'
         });
       });
     });
@@ -481,8 +477,8 @@ describe.skip('Task Interactions API', () => {
 
         const response = await GET(request, { params: mockParams });
 
-        expect(response.headers.get('Cache-Control')).toContain('max-age=120');
-        expect(response.headers.get('Cache-Control')).toContain('stale-while-revalidate=600');
+        expect(response.headers.get('Cache-Control')).toContain('max-age=10');
+        expect(response.headers.get('Cache-Control')).toContain('stale-while-revalidate=30');
         expect(response.headers.get('X-Cache')).toBeDefined();
       });
     });

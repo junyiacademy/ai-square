@@ -28,6 +28,8 @@ class EmailService {
 
     try {
       // 建立 Nodemailer transporter 使用 Gmail SMTP
+      console.log('EmailService: About to call createTransport, function is:', typeof nodemailer.createTransport);
+      console.log('EmailService: Is createTransport mocked?', jest?.isMockFunction?.(nodemailer.createTransport));
       this.transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -35,6 +37,7 @@ class EmailService {
           pass, // 使用應用程式專用密碼
         },
       });
+      console.log('EmailService: createTransport returned:', this.transporter);
 
       this.isConfigured = true;
       console.log('✅ Email service configured with Gmail SMTP');

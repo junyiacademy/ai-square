@@ -101,12 +101,14 @@ export async function POST(request: NextRequest) {
       });
 
       // 清除所有認證相關的 cookies
-      response.cookies.delete('session_token');
-      response.cookies.delete('ai_square_session');
-      response.cookies.delete('isLoggedIn');
-      response.cookies.delete('sessionToken');
-      response.cookies.delete('accessToken');
-      response.cookies.delete('ai_square_refresh');
+      if (response.cookies && typeof response.cookies.delete === 'function') {
+        response.cookies.delete('session_token');
+        response.cookies.delete('ai_square_session');
+        response.cookies.delete('isLoggedIn');
+        response.cookies.delete('sessionToken');
+        response.cookies.delete('accessToken');
+        response.cookies.delete('ai_square_refresh');
+      }
 
       return response;
 

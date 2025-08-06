@@ -177,7 +177,7 @@ class TestLearningService extends BaseLearningService {
   }
 }
 
-describe.skip('BaseLearningService', () => {
+describe('BaseLearningService', () => {
   let service: TestLearningService;
   let mockScenarioRepo: MockScenarioRepository;
   let mockProgramRepo: MockProgramRepository;

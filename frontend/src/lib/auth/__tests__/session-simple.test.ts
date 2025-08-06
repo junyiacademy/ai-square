@@ -130,8 +130,7 @@ describe('session-simple', () => {
 
     it.skip('does nothing when window is undefined', () => {
       const originalWindow = global.window;
-      // @ts-expect-error
-      delete global.window;
+      delete (global as any).window;
       
       // Clear any previous calls
       jest.clearAllMocks();

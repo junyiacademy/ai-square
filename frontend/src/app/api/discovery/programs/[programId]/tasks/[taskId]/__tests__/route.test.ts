@@ -437,8 +437,7 @@ describe('PATCH /api/discovery/programs/[programId]/tasks/[taskId]', () => {
   });
 
   it('should handle repository update method not available', async () => {
-    // @ts-expect-error - testing when update method is not available
-    mockTaskRepo.update = undefined;
+    (mockTaskRepo as any).update = undefined;
 
     const request = new NextRequest('http://localhost:3000/api/discovery/programs/program-123/tasks/task-123', {
       method: 'PATCH',

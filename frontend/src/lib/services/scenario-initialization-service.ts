@@ -9,9 +9,9 @@
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { IScenario } from '@/types/unified-learning';
 import { DifficultyLevel, LearningMode as DBLearningMode } from '@/types/database';
-import { AssessmentYAMLLoader } from './assessment-yaml-loader';
-import { PBLYAMLLoader } from './pbl-yaml-loader';
-import { DiscoveryYAMLLoader } from './discovery-yaml-loader';
+import { assessmentYAMLLoader } from './assessment-yaml-loader';
+import { pblYAMLLoader } from './pbl-yaml-loader';
+import { discoveryYAMLLoader } from './discovery-yaml-loader';
 import path from 'path';
 
 export interface ScenarioInitConfig {
@@ -243,10 +243,10 @@ interface IYAMLProcessor {
  * PBL YAML 處理器
  */
 class PBLYAMLProcessor implements IYAMLProcessor {
-  private loader: PBLYAMLLoader;
+  private loader: typeof pblYAMLLoader;
 
   constructor() {
-    this.loader = new PBLYAMLLoader();
+    this.loader = pblYAMLLoader;
   }
 
   async scanYAMLFiles(basePath: string): Promise<string[]> {
@@ -331,10 +331,10 @@ class PBLYAMLProcessor implements IYAMLProcessor {
  * Discovery YAML 處理器
  */
 class DiscoveryYAMLProcessor implements IYAMLProcessor {
-  private loader: DiscoveryYAMLLoader;
+  private loader: typeof discoveryYAMLLoader;
 
   constructor() {
-    this.loader = new DiscoveryYAMLLoader();
+    this.loader = discoveryYAMLLoader;
   }
 
   async scanYAMLFiles(basePath: string): Promise<string[]> {
@@ -432,10 +432,10 @@ class DiscoveryYAMLProcessor implements IYAMLProcessor {
  * Assessment YAML 處理器
  */
 class AssessmentYAMLProcessor implements IYAMLProcessor {
-  private loader: AssessmentYAMLLoader;
+  private loader: typeof assessmentYAMLLoader;
 
   constructor() {
-    this.loader = new AssessmentYAMLLoader();
+    this.loader = assessmentYAMLLoader;
   }
 
   async scanYAMLFiles(basePath: string): Promise<string[]> {

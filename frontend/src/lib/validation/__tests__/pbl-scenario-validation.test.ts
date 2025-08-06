@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { PBLScenarioSchema, TaskSchema, Task } from '../schemas/pbl-scenario.schema';
 
-describe.skip('PBL Scenario Validation', () => {
+describe('PBL Scenario Validation', () => {
   describe('taskSchema', () => {
     it('應該驗證有效的任務資料', () => {
       const validTask: Task = {

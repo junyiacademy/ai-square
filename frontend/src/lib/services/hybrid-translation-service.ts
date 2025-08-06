@@ -106,7 +106,12 @@ export class HybridTranslationService {
       this.cache.set(cacheKey, scenarios);
       return scenarios;
     } catch (error) {
-      this.cache.delete(cacheKey);
+      // Clear all list caches on error since storage failure might affect all languages
+      for (const key of this.cache.keys()) {
+        if (key.startsWith('list:scenarios:')) {
+          this.cache.delete(key);
+        }
+      }
       throw error;
     }
   }
