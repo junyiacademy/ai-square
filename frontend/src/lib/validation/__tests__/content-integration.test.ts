@@ -6,7 +6,7 @@ import * as path from 'path';
 import * as yaml from 'js-yaml';
 
 describe('Content Integration Tests', () => {
-  describe('YAML 檔案驗證', () => {
+  describe('YAML 檔案驗證 - requires physical files', () => {
     const publicDir = path.join(process.cwd(), 'public', 'rubrics_data');
     
     // Helper function to load YAML file

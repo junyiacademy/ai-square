@@ -291,7 +291,7 @@ describe('PostgreSQLUserRepository', () => {
 
       expect(mockPool.query).toHaveBeenCalledWith(
         expect.stringContaining('learning_preferences = $1'),
-        [JSON.stringify({ learningStyle: 'advanced', style: 'visual' }), 'user-123']
+        [JSON.stringify({ learningStyle: 'visual' }), 'user-123']
       );
     });
 

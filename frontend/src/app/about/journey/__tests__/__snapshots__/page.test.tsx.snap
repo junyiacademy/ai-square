@@ -1,0 +1,1516 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`JourneyPage should match snapshot 1`] = `
+<div
+  class="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-slate-900 dark:to-slate-800"
+>
+  <div
+    class="bg-white dark:bg-slate-800 shadow-sm"
+  >
+    <div
+      class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6"
+    >
+      <div
+        class="flex items-center justify-between"
+      >
+        <div>
+          <h1
+            class="text-3xl font-bold text-gray-900 dark:text-white"
+          >
+            AI Square 用戶旅程
+          </h1>
+          <p
+            class="mt-2 text-lg text-gray-600 dark:text-gray-400"
+          >
+            六大關鍵路徑，打造完整 AI 學習體驗
+          </p>
+        </div>
+        <a
+          class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          href="/"
+        >
+          立即體驗
+        </a>
+      </div>
+    </div>
+  </div>
+  <div
+    class="sticky top-0 z-10 bg-white dark:bg-slate-800 border-b border-gray-200 dark:border-slate-700"
+  >
+    <div
+      class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+    >
+      <div
+        class="flex space-x-8 overflow-x-auto py-4"
+      >
+        <button
+          class="flex items-center space-x-3 px-6 py-3 rounded-lg whitespace-nowrap transition-all bg-blue-600 text-white shadow-lg"
+        >
+          <span
+            class="text-2xl font-bold"
+          >
+            1
+          </span>
+          <div
+            class="text-left"
+          >
+            <div
+              class="font-semibold"
+            >
+              儀表板
+            </div>
+            <div
+              class="text-sm opacity-80"
+            >
+              學習指揮中心
+            </div>
+          </div>
+        </button>
+        <button
+          class="flex items-center space-x-3 px-6 py-3 rounded-lg whitespace-nowrap transition-all bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-600"
+        >
+          <span
+            class="text-2xl font-bold"
+          >
+            2
+          </span>
+          <div
+            class="text-left"
+          >
+            <div
+              class="font-semibold"
+            >
+              評估
+            </div>
+            <div
+              class="text-sm opacity-80"
+            >
+              AI 素養測驗
+            </div>
+          </div>
+        </button>
+        <button
+          class="flex items-center space-x-3 px-6 py-3 rounded-lg whitespace-nowrap transition-all bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-600"
+        >
+          <span
+            class="text-2xl font-bold"
+          >
+            3
+          </span>
+          <div
+            class="text-left"
+          >
+            <div
+              class="font-semibold"
+            >
+              學習路徑
+            </div>
+            <div
+              class="text-sm opacity-80"
+            >
+              個人化成長計畫
+            </div>
+          </div>
+        </button>
+        <button
+          class="flex items-center space-x-3 px-6 py-3 rounded-lg whitespace-nowrap transition-all bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-600"
+        >
+          <span
+            class="text-2xl font-bold"
+          >
+            4
+          </span>
+          <div
+            class="text-left"
+          >
+            <div
+              class="font-semibold"
+            >
+              PBL 實作
+            </div>
+            <div
+              class="text-sm opacity-80"
+            >
+              真實情境練習
+            </div>
+          </div>
+        </button>
+        <button
+          class="flex items-center space-x-3 px-6 py-3 rounded-lg whitespace-nowrap transition-all bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-600"
+        >
+          <span
+            class="text-2xl font-bold"
+          >
+            5
+          </span>
+          <div
+            class="text-left"
+          >
+            <div
+              class="font-semibold"
+            >
+              AI 顧問
+            </div>
+            <div
+              class="text-sm opacity-80"
+            >
+              隨時諮詢支援
+            </div>
+          </div>
+        </button>
+        <button
+          class="flex items-center space-x-3 px-6 py-3 rounded-lg whitespace-nowrap transition-all bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-slate-600"
+        >
+          <span
+            class="text-2xl font-bold"
+          >
+            6
+          </span>
+          <div
+            class="text-left"
+          >
+            <div
+              class="font-semibold"
+            >
+              Discovery 探索
+            </div>
+            <div
+              class="text-sm opacity-80"
+            >
+              個人化職涯冒險
+            </div>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div
+    class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12"
+  >
+    <div
+      class="block"
+    >
+      <div
+        class="grid lg:grid-cols-2 gap-12 items-start"
+      >
+        <div
+          class="space-y-8"
+        >
+          <div>
+            <div
+              class="flex items-center space-x-4 mb-4"
+            >
+              <span
+                class="text-5xl font-bold text-blue-600"
+              >
+                1
+              </span>
+              <div>
+                <h2
+                  class="text-3xl font-bold text-gray-900 dark:text-white"
+                >
+                  儀表板
+                </h2>
+                <p
+                  class="text-xl text-gray-600 dark:text-gray-400"
+                >
+                  學習指揮中心
+                </p>
+              </div>
+            </div>
+            <p
+              class="text-lg text-gray-700 dark:text-gray-300 leading-relaxed"
+            >
+              一站式掌握您的 AI 學習全貌，追蹤進度、查看成就、規劃下一步。
+            </p>
+          </div>
+          <div
+            class="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-6"
+          >
+            <h3
+              class="text-lg font-semibold text-blue-900 dark:text-blue-300 mb-2"
+            >
+              解決的用戶需求
+            </h3>
+            <p
+              class="text-xl text-blue-800 dark:text-blue-400"
+            >
+              「
+              我想知道我的學習成效如何？
+              」
+            </p>
+          </div>
+          <div>
+            <h3
+              class="text-xl font-semibold text-gray-900 dark:text-white mb-4"
+            >
+              核心功能
+            </h3>
+            <ul
+              class="space-y-3"
+            >
+              <li
+                class="flex items-start"
+              >
+                <svg
+                  class="w-6 h-6 text-green-500 mt-0.5 mr-3 flex-shrink-0"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+                <span
+                  class="text-gray-700 dark:text-gray-300"
+                >
+                  AI 素養進度視覺化
+                </span>
+              </li>
+              <li
+                class="flex items-start"
+              >
+                <svg
+                  class="w-6 h-6 text-green-500 mt-0.5 mr-3 flex-shrink-0"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+                <span
+                  class="text-gray-700 dark:text-gray-300"
+                >
+                  學習統計一目了然
+                </span>
+              </li>
+              <li
+                class="flex items-start"
+              >
+                <svg
+                  class="w-6 h-6 text-green-500 mt-0.5 mr-3 flex-shrink-0"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+                <span
+                  class="text-gray-700 dark:text-gray-300"
+                >
+                  個人化推薦行動
+                </span>
+              </li>
+              <li
+                class="flex items-start"
+              >
+                <svg
+                  class="w-6 h-6 text-green-500 mt-0.5 mr-3 flex-shrink-0"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+                <span
+                  class="text-gray-700 dark:text-gray-300"
+                >
+                  快速功能導航
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div
+            class="flex flex-wrap gap-4"
+          >
+            <a
+              class="px-8 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold"
+              href="/dashboard"
+            >
+              立即體驗此功能
+            </a>
+            <button
+              class="px-8 py-4 bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-slate-600 transition-colors font-semibold"
+            >
+              下一個路徑 →
+            </button>
+          </div>
+        </div>
+        <div
+          class="relative"
+        >
+          <div
+            class="rounded-xl overflow-hidden shadow-2xl"
+          >
+            <img
+              alt="儀表板 截圖"
+              class="w-full h-auto"
+              data-nimg="1"
+              decoding="async"
+              height="600"
+              loading="lazy"
+              src="/_next/image?url=%2Fscreenshots%2F1-dashboard.png&w=1920&q=75"
+              srcset="/_next/image?url=%2Fscreenshots%2F1-dashboard.png&w=828&q=75 1x, /_next/image?url=%2Fscreenshots%2F1-dashboard.png&w=1920&q=75 2x"
+              style="color: transparent;"
+              width="800"
+            />
+          </div>
+          <div
+            class="absolute -bottom-4 -right-4 bg-blue-600 text-white rounded-full w-20 h-20 flex items-center justify-center font-bold text-2xl shadow-lg"
+          >
+            1
+            /6
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="hidden"
+    >
+      <div
+        class="grid lg:grid-cols-2 gap-12 items-start"
+      >
+        <div
+          class="space-y-8"
+        >
+          <div>
+            <div
+              class="flex items-center space-x-4 mb-4"
+            >
+              <span
+                class="text-5xl font-bold text-blue-600"
+              >
+                2
+              </span>
+              <div>
+                <h2
+                  class="text-3xl font-bold text-gray-900 dark:text-white"
+                >
+                  評估
+                </h2>
+                <p
+                  class="text-xl text-gray-600 dark:text-gray-400"
+                >
+                  AI 素養測驗
+                </p>
+              </div>
+            </div>
+            <p
+              class="text-lg text-gray-700 dark:text-gray-300 leading-relaxed"
+            >
+              25 題專業評估，深入了解您在 AI 四大領域的能力水平。
+            </p>
+          </div>
+          <div
+            class="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-6"
+          >
+            <h3
+              class="text-lg font-semibold text-blue-900 dark:text-blue-300 mb-2"
+            >
+              解決的用戶需求
+            </h3>
+            <p
+              class="text-xl text-blue-800 dark:text-blue-400"
+            >
+              「
+              我的 AI 能力在哪個程度？
+              」
+            </p>
+          </div>
+          <div>
+            <h3
+              class="text-xl font-semibold text-gray-900 dark:text-white mb-4"
+            >
+              核心功能
+            </h3>
+            <ul
+              class="space-y-3"
+            >
+              <li
+                class="flex items-start"
+              >
+                <svg
+                  class="w-6 h-6 text-green-500 mt-0.5 mr-3 flex-shrink-0"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+                <span
+                  class="text-gray-700 dark:text-gray-300"
+                >
+                  四大 AI 素養領域
+                </span>
+              </li>
+              <li
+                class="flex items-start"
+              >
+                <svg
+                  class="w-6 h-6 text-green-500 mt-0.5 mr-3 flex-shrink-0"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+                <span
+                  class="text-gray-700 dark:text-gray-300"
+                >
+                  25 題情境式題目
+                </span>
+              </li>
+              <li
+                class="flex items-start"
+              >
+                <svg
+                  class="w-6 h-6 text-green-500 mt-0.5 mr-3 flex-shrink-0"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+                <span
+                  class="text-gray-700 dark:text-gray-300"
+                >
+                  雷達圖能力分析
+                </span>
+              </li>
+              <li
+                class="flex items-start"
+              >
+                <svg
+                  class="w-6 h-6 text-green-500 mt-0.5 mr-3 flex-shrink-0"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+                <span
+                  class="text-gray-700 dark:text-gray-300"
+                >
+                  個人化建議報告
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div
+            class="flex flex-wrap gap-4"
+          >
+            <a
+              class="px-8 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold"
+              href="/assessment"
+            >
+              立即體驗此功能
+            </a>
+            <button
+              class="px-8 py-4 bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-slate-600 transition-colors font-semibold"
+            >
+              下一個路徑 →
+            </button>
+          </div>
+        </div>
+        <div
+          class="relative"
+        >
+          <div
+            class="rounded-xl overflow-hidden shadow-2xl"
+          >
+            <img
+              alt="評估 截圖"
+              class="w-full h-auto"
+              data-nimg="1"
+              decoding="async"
+              height="600"
+              loading="lazy"
+              src="/_next/image?url=%2Fscreenshots%2F2-assessment.png&w=1920&q=75"
+              srcset="/_next/image?url=%2Fscreenshots%2F2-assessment.png&w=828&q=75 1x, /_next/image?url=%2Fscreenshots%2F2-assessment.png&w=1920&q=75 2x"
+              style="color: transparent;"
+              width="800"
+            />
+          </div>
+          <div
+            class="absolute -bottom-4 -right-4 bg-blue-600 text-white rounded-full w-20 h-20 flex items-center justify-center font-bold text-2xl shadow-lg"
+          >
+            2
+            /6
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="hidden"
+    >
+      <div
+        class="grid lg:grid-cols-2 gap-12 items-start"
+      >
+        <div
+          class="space-y-8"
+        >
+          <div>
+            <div
+              class="flex items-center space-x-4 mb-4"
+            >
+              <span
+                class="text-5xl font-bold text-blue-600"
+              >
+                3
+              </span>
+              <div>
+                <h2
+                  class="text-3xl font-bold text-gray-900 dark:text-white"
+                >
+                  學習路徑
+                </h2>
+                <p
+                  class="text-xl text-gray-600 dark:text-gray-400"
+                >
+                  個人化成長計畫
+                </p>
+              </div>
+            </div>
+            <p
+              class="text-lg text-gray-700 dark:text-gray-300 leading-relaxed"
+            >
+              基於您的評估結果，推薦最適合的學習內容與進度安排。
+            </p>
+          </div>
+          <div
+            class="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-6"
+          >
+            <h3
+              class="text-lg font-semibold text-blue-900 dark:text-blue-300 mb-2"
+            >
+              解決的用戶需求
+            </h3>
+            <p
+              class="text-xl text-blue-800 dark:text-blue-400"
+            >
+              「
+              什麼課程適合我？
+              」
+            </p>
+          </div>
+          <div>
+            <h3
+              class="text-xl font-semibold text-gray-900 dark:text-white mb-4"
+            >
+              核心功能
+            </h3>
+            <ul
+              class="space-y-3"
+            >
+              <li
+                class="flex items-start"
+              >
+                <svg
+                  class="w-6 h-6 text-green-500 mt-0.5 mr-3 flex-shrink-0"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+                <span
+                  class="text-gray-700 dark:text-gray-300"
+                >
+                  客製化課程推薦
+                </span>
+              </li>
+              <li
+                class="flex items-start"
+              >
+                <svg
+                  class="w-6 h-6 text-green-500 mt-0.5 mr-3 flex-shrink-0"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+                <span
+                  class="text-gray-700 dark:text-gray-300"
+                >
+                  分級學習內容
+                </span>
+              </li>
+              <li
+                class="flex items-start"
+              >
+                <svg
+                  class="w-6 h-6 text-green-500 mt-0.5 mr-3 flex-shrink-0"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+                <span
+                  class="text-gray-700 dark:text-gray-300"
+                >
+                  循序漸進規劃
+                </span>
+              </li>
+              <li
+                class="flex items-start"
+              >
+                <svg
+                  class="w-6 h-6 text-green-500 mt-0.5 mr-3 flex-shrink-0"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+                <span
+                  class="text-gray-700 dark:text-gray-300"
+                >
+                  彈性學習時程
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div
+            class="flex flex-wrap gap-4"
+          >
+            <a
+              class="px-8 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold"
+              href="/learning-path"
+            >
+              立即體驗此功能
+            </a>
+            <button
+              class="px-8 py-4 bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-slate-600 transition-colors font-semibold"
+            >
+              下一個路徑 →
+            </button>
+          </div>
+        </div>
+        <div
+          class="relative"
+        >
+          <div
+            class="rounded-xl overflow-hidden shadow-2xl"
+          >
+            <img
+              alt="學習路徑 截圖"
+              class="w-full h-auto"
+              data-nimg="1"
+              decoding="async"
+              height="600"
+              loading="lazy"
+              src="/_next/image?url=%2Fscreenshots%2F3-learning-path.png&w=1920&q=75"
+              srcset="/_next/image?url=%2Fscreenshots%2F3-learning-path.png&w=828&q=75 1x, /_next/image?url=%2Fscreenshots%2F3-learning-path.png&w=1920&q=75 2x"
+              style="color: transparent;"
+              width="800"
+            />
+          </div>
+          <div
+            class="absolute -bottom-4 -right-4 bg-blue-600 text-white rounded-full w-20 h-20 flex items-center justify-center font-bold text-2xl shadow-lg"
+          >
+            3
+            /6
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="hidden"
+    >
+      <div
+        class="grid lg:grid-cols-2 gap-12 items-start"
+      >
+        <div
+          class="space-y-8"
+        >
+          <div>
+            <div
+              class="flex items-center space-x-4 mb-4"
+            >
+              <span
+                class="text-5xl font-bold text-blue-600"
+              >
+                4
+              </span>
+              <div>
+                <h2
+                  class="text-3xl font-bold text-gray-900 dark:text-white"
+                >
+                  PBL 實作
+                </h2>
+                <p
+                  class="text-xl text-gray-600 dark:text-gray-400"
+                >
+                  真實情境練習
+                </p>
+              </div>
+            </div>
+            <p
+              class="text-lg text-gray-700 dark:text-gray-300 leading-relaxed"
+            >
+              9 大實務情境，在 AI 導師陪伴下，做中學習 AI 應用。
+            </p>
+          </div>
+          <div
+            class="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-6"
+          >
+            <h3
+              class="text-lg font-semibold text-blue-900 dark:text-blue-300 mb-2"
+            >
+              解決的用戶需求
+            </h3>
+            <p
+              class="text-xl text-blue-800 dark:text-blue-400"
+            >
+              「
+              如何實際應用 AI？
+              」
+            </p>
+          </div>
+          <div>
+            <h3
+              class="text-xl font-semibold text-gray-900 dark:text-white mb-4"
+            >
+              核心功能
+            </h3>
+            <ul
+              class="space-y-3"
+            >
+              <li
+                class="flex items-start"
+              >
+                <svg
+                  class="w-6 h-6 text-green-500 mt-0.5 mr-3 flex-shrink-0"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+                <span
+                  class="text-gray-700 dark:text-gray-300"
+                >
+                  AI 機器人開發
+                </span>
+              </li>
+              <li
+                class="flex items-start"
+              >
+                <svg
+                  class="w-6 h-6 text-green-500 mt-0.5 mr-3 flex-shrink-0"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+                <span
+                  class="text-gray-700 dark:text-gray-300"
+                >
+                  AI 穩定幣交易
+                </span>
+              </li>
+              <li
+                class="flex items-start"
+              >
+                <svg
+                  class="w-6 h-6 text-green-500 mt-0.5 mr-3 flex-shrink-0"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+                <span
+                  class="text-gray-700 dark:text-gray-300"
+                >
+                  AI 求職訓練
+                </span>
+              </li>
+              <li
+                class="flex items-start"
+              >
+                <svg
+                  class="w-6 h-6 text-green-500 mt-0.5 mr-3 flex-shrink-0"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+                <span
+                  class="text-gray-700 dark:text-gray-300"
+                >
+                  即時 AI 輔導
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div
+            class="flex flex-wrap gap-4"
+          >
+            <a
+              class="px-8 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold"
+              href="/pbl"
+            >
+              立即體驗此功能
+            </a>
+            <button
+              class="px-8 py-4 bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-slate-600 transition-colors font-semibold"
+            >
+              下一個路徑 →
+            </button>
+          </div>
+        </div>
+        <div
+          class="relative"
+        >
+          <div
+            class="rounded-xl overflow-hidden shadow-2xl"
+          >
+            <img
+              alt="PBL 實作 截圖"
+              class="w-full h-auto"
+              data-nimg="1"
+              decoding="async"
+              height="600"
+              loading="lazy"
+              src="/_next/image?url=%2Fscreenshots%2F4-pbl.png&w=1920&q=75"
+              srcset="/_next/image?url=%2Fscreenshots%2F4-pbl.png&w=828&q=75 1x, /_next/image?url=%2Fscreenshots%2F4-pbl.png&w=1920&q=75 2x"
+              style="color: transparent;"
+              width="800"
+            />
+          </div>
+          <div
+            class="absolute -bottom-4 -right-4 bg-blue-600 text-white rounded-full w-20 h-20 flex items-center justify-center font-bold text-2xl shadow-lg"
+          >
+            4
+            /6
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="hidden"
+    >
+      <div
+        class="grid lg:grid-cols-2 gap-12 items-start"
+      >
+        <div
+          class="space-y-8"
+        >
+          <div>
+            <div
+              class="flex items-center space-x-4 mb-4"
+            >
+              <span
+                class="text-5xl font-bold text-blue-600"
+              >
+                5
+              </span>
+              <div>
+                <h2
+                  class="text-3xl font-bold text-gray-900 dark:text-white"
+                >
+                  AI 顧問
+                </h2>
+                <p
+                  class="text-xl text-gray-600 dark:text-gray-400"
+                >
+                  隨時諮詢支援
+                </p>
+              </div>
+            </div>
+            <p
+              class="text-lg text-gray-700 dark:text-gray-300 leading-relaxed"
+            >
+              24/7 智能學習夥伴，記得您的學習脈絡，提供個人化建議。
+            </p>
+          </div>
+          <div
+            class="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-6"
+          >
+            <h3
+              class="text-lg font-semibold text-blue-900 dark:text-blue-300 mb-2"
+            >
+              解決的用戶需求
+            </h3>
+            <p
+              class="text-xl text-blue-800 dark:text-blue-400"
+            >
+              「
+              遇到問題找誰問？
+              」
+            </p>
+          </div>
+          <div>
+            <h3
+              class="text-xl font-semibold text-gray-900 dark:text-white mb-4"
+            >
+              核心功能
+            </h3>
+            <ul
+              class="space-y-3"
+            >
+              <li
+                class="flex items-start"
+              >
+                <svg
+                  class="w-6 h-6 text-green-500 mt-0.5 mr-3 flex-shrink-0"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+                <span
+                  class="text-gray-700 dark:text-gray-300"
+                >
+                  持續對話記憶
+                </span>
+              </li>
+              <li
+                class="flex items-start"
+              >
+                <svg
+                  class="w-6 h-6 text-green-500 mt-0.5 mr-3 flex-shrink-0"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+                <span
+                  class="text-gray-700 dark:text-gray-300"
+                >
+                  個人化學習建議
+                </span>
+              </li>
+              <li
+                class="flex items-start"
+              >
+                <svg
+                  class="w-6 h-6 text-green-500 mt-0.5 mr-3 flex-shrink-0"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+                <span
+                  class="text-gray-700 dark:text-gray-300"
+                >
+                  多輪深度對話
+                </span>
+              </li>
+              <li
+                class="flex items-start"
+              >
+                <svg
+                  class="w-6 h-6 text-green-500 mt-0.5 mr-3 flex-shrink-0"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+                <span
+                  class="text-gray-700 dark:text-gray-300"
+                >
+                  學習問題解答
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div
+            class="flex flex-wrap gap-4"
+          >
+            <a
+              class="px-8 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold"
+              href="/chat"
+            >
+              立即體驗此功能
+            </a>
+            <button
+              class="px-8 py-4 bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-slate-600 transition-colors font-semibold"
+            >
+              下一個路徑 →
+            </button>
+          </div>
+        </div>
+        <div
+          class="relative"
+        >
+          <div
+            class="rounded-xl overflow-hidden shadow-2xl"
+          >
+            <img
+              alt="AI 顧問 截圖"
+              class="w-full h-auto"
+              data-nimg="1"
+              decoding="async"
+              height="600"
+              loading="lazy"
+              src="/_next/image?url=%2Fscreenshots%2F5-chat.png&w=1920&q=75"
+              srcset="/_next/image?url=%2Fscreenshots%2F5-chat.png&w=828&q=75 1x, /_next/image?url=%2Fscreenshots%2F5-chat.png&w=1920&q=75 2x"
+              style="color: transparent;"
+              width="800"
+            />
+          </div>
+          <div
+            class="absolute -bottom-4 -right-4 bg-blue-600 text-white rounded-full w-20 h-20 flex items-center justify-center font-bold text-2xl shadow-lg"
+          >
+            5
+            /6
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="hidden"
+    >
+      <div
+        class="grid lg:grid-cols-2 gap-12 items-start"
+      >
+        <div
+          class="space-y-8"
+        >
+          <div>
+            <div
+              class="flex items-center space-x-4 mb-4"
+            >
+              <span
+                class="text-5xl font-bold text-blue-600"
+              >
+                6
+              </span>
+              <div>
+                <h2
+                  class="text-3xl font-bold text-gray-900 dark:text-white"
+                >
+                  Discovery 探索
+                </h2>
+                <p
+                  class="text-xl text-gray-600 dark:text-gray-400"
+                >
+                  個人化職涯冒險
+                </p>
+              </div>
+            </div>
+            <p
+              class="text-lg text-gray-700 dark:text-gray-300 leading-relaxed"
+            >
+              透過 AI 評估找到適合的職涯路徑，在遊戲化的冒險中培養專業技能。
+            </p>
+          </div>
+          <div
+            class="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-6"
+          >
+            <h3
+              class="text-lg font-semibold text-blue-900 dark:text-blue-300 mb-2"
+            >
+              解決的用戶需求
+            </h3>
+            <p
+              class="text-xl text-blue-800 dark:text-blue-400"
+            >
+              「
+              哪個職涯方向適合我？
+              」
+            </p>
+          </div>
+          <div>
+            <h3
+              class="text-xl font-semibold text-gray-900 dark:text-white mb-4"
+            >
+              核心功能
+            </h3>
+            <ul
+              class="space-y-3"
+            >
+              <li
+                class="flex items-start"
+              >
+                <svg
+                  class="w-6 h-6 text-green-500 mt-0.5 mr-3 flex-shrink-0"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+                <span
+                  class="text-gray-700 dark:text-gray-300"
+                >
+                  AI 職涯匹配評估
+                </span>
+              </li>
+              <li
+                class="flex items-start"
+              >
+                <svg
+                  class="w-6 h-6 text-green-500 mt-0.5 mr-3 flex-shrink-0"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+                <span
+                  class="text-gray-700 dark:text-gray-300"
+                >
+                  無限任務生成系統
+                </span>
+              </li>
+              <li
+                class="flex items-start"
+              >
+                <svg
+                  class="w-6 h-6 text-green-500 mt-0.5 mr-3 flex-shrink-0"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+                <span
+                  class="text-gray-700 dark:text-gray-300"
+                >
+                  遊戲化學習體驗
+                </span>
+              </li>
+              <li
+                class="flex items-start"
+              >
+                <svg
+                  class="w-6 h-6 text-green-500 mt-0.5 mr-3 flex-shrink-0"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    clip-rule="evenodd"
+                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                    fill-rule="evenodd"
+                  />
+                </svg>
+                <span
+                  class="text-gray-700 dark:text-gray-300"
+                >
+                  動態任務調整難度
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div
+            class="flex flex-wrap gap-4"
+          >
+            <a
+              class="px-8 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold"
+              href="/discovery"
+            >
+              立即體驗此功能
+            </a>
+            <button
+              class="px-8 py-4 bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-slate-600 transition-colors font-semibold"
+            >
+              下一個路徑 →
+            </button>
+          </div>
+        </div>
+        <div
+          class="relative"
+        >
+          <div
+            class="rounded-xl overflow-hidden shadow-2xl"
+          >
+            <img
+              alt="Discovery 探索 截圖"
+              class="w-full h-auto"
+              data-nimg="1"
+              decoding="async"
+              height="600"
+              loading="lazy"
+              src="/_next/image?url=%2Fscreenshots%2F6-discovery.png&w=1920&q=75"
+              srcset="/_next/image?url=%2Fscreenshots%2F6-discovery.png&w=828&q=75 1x, /_next/image?url=%2Fscreenshots%2F6-discovery.png&w=1920&q=75 2x"
+              style="color: transparent;"
+              width="800"
+            />
+          </div>
+          <div
+            class="absolute -bottom-4 -right-4 bg-blue-600 text-white rounded-full w-20 h-20 flex items-center justify-center font-bold text-2xl shadow-lg"
+          >
+            6
+            /6
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="bg-gray-100 dark:bg-slate-800 py-12"
+  >
+    <div
+      class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+    >
+      <h3
+        class="text-2xl font-bold text-gray-900 dark:text-white mb-8 text-center"
+      >
+        完整學習循環
+      </h3>
+      <div
+        class="flex flex-wrap justify-center items-center gap-4"
+      >
+        <div
+          class="flex items-center"
+        >
+          <button
+            class="px-6 py-3 bg-white dark:bg-slate-700 rounded-lg shadow hover:shadow-lg transition-all cursor-pointer"
+          >
+            <span
+              class="font-bold text-blue-600"
+            >
+              1
+              .
+            </span>
+            <span
+              class="ml-2 text-gray-700 dark:text-gray-300"
+            >
+              儀表板
+            </span>
+          </button>
+          <svg
+            class="w-8 h-8 text-gray-400 mx-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M9 5l7 7-7 7"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+            />
+          </svg>
+        </div>
+        <div
+          class="flex items-center"
+        >
+          <button
+            class="px-6 py-3 bg-white dark:bg-slate-700 rounded-lg shadow hover:shadow-lg transition-all cursor-pointer"
+          >
+            <span
+              class="font-bold text-blue-600"
+            >
+              2
+              .
+            </span>
+            <span
+              class="ml-2 text-gray-700 dark:text-gray-300"
+            >
+              評估
+            </span>
+          </button>
+          <svg
+            class="w-8 h-8 text-gray-400 mx-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M9 5l7 7-7 7"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+            />
+          </svg>
+        </div>
+        <div
+          class="flex items-center"
+        >
+          <button
+            class="px-6 py-3 bg-white dark:bg-slate-700 rounded-lg shadow hover:shadow-lg transition-all cursor-pointer"
+          >
+            <span
+              class="font-bold text-blue-600"
+            >
+              3
+              .
+            </span>
+            <span
+              class="ml-2 text-gray-700 dark:text-gray-300"
+            >
+              學習路徑
+            </span>
+          </button>
+          <svg
+            class="w-8 h-8 text-gray-400 mx-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M9 5l7 7-7 7"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+            />
+          </svg>
+        </div>
+        <div
+          class="flex items-center"
+        >
+          <button
+            class="px-6 py-3 bg-white dark:bg-slate-700 rounded-lg shadow hover:shadow-lg transition-all cursor-pointer"
+          >
+            <span
+              class="font-bold text-blue-600"
+            >
+              4
+              .
+            </span>
+            <span
+              class="ml-2 text-gray-700 dark:text-gray-300"
+            >
+              PBL 實作
+            </span>
+          </button>
+          <svg
+            class="w-8 h-8 text-gray-400 mx-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M9 5l7 7-7 7"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+            />
+          </svg>
+        </div>
+        <div
+          class="flex items-center"
+        >
+          <button
+            class="px-6 py-3 bg-white dark:bg-slate-700 rounded-lg shadow hover:shadow-lg transition-all cursor-pointer"
+          >
+            <span
+              class="font-bold text-blue-600"
+            >
+              5
+              .
+            </span>
+            <span
+              class="ml-2 text-gray-700 dark:text-gray-300"
+            >
+              AI 顧問
+            </span>
+          </button>
+          <svg
+            class="w-8 h-8 text-gray-400 mx-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M9 5l7 7-7 7"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+            />
+          </svg>
+        </div>
+        <div
+          class="flex items-center"
+        >
+          <button
+            class="px-6 py-3 bg-white dark:bg-slate-700 rounded-lg shadow hover:shadow-lg transition-all cursor-pointer"
+          >
+            <span
+              class="font-bold text-blue-600"
+            >
+              6
+              .
+            </span>
+            <span
+              class="ml-2 text-gray-700 dark:text-gray-300"
+            >
+              Discovery 探索
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

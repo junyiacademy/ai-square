@@ -54,7 +54,7 @@ const mockUseParams = useParams as jest.Mock;
 import { useAuth } from '@/contexts/AuthContext';
 const mockUseAuth = useAuth as jest.Mock;
 
-describe.skip('ProgramDetailPage', () => {
+describe('ProgramDetailPage', () => {
   const mockProgramData = {
     id: 'program-1',
     scenarioId: 'scenario-1',

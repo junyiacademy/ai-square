@@ -42,7 +42,7 @@ const mockUseParams = useParams as jest.MockedFunction<typeof useParams>;
 import { useAuth } from '@/contexts/AuthContext';
 const mockUseAuth = useAuth as jest.MockedFunction<typeof useAuth>;
 
-describe.skip('TaskDetailPage', () => {
+describe('TaskDetailPage', () => {
   const mockTaskData = {
     id: 'task-1',
     title: 'Understand Algorithms',
@@ -480,7 +480,7 @@ describe.skip('TaskDetailPage', () => {
     });
   });
 
-  describe.skip('Task Completion Flow', () => {
+  describe('Task Completion Flow', () => {
     const passedTaskData = {
       ...mockTaskData,
       interactions: [

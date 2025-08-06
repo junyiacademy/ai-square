@@ -69,7 +69,7 @@ describe('POST /api/assessment/programs/[programId]/complete', () => {
   const mockTasks = [
     {
       id: 'task1',
-      title: 'Domain Knowledge',
+      title: { en: 'Domain Knowledge' },
       status: 'active',
       content: {
         questions: [
@@ -95,20 +95,20 @@ describe('POST /api/assessment/programs/[programId]/complete', () => {
       },
       interactions: [
         {
-          type: 'assessment_answer',
+          type: 'system_event',
           timestamp: new Date().toISOString(),
-          content: {},
-          context: {
+          content: {
+            eventType: 'assessment_answer',
             questionId: 'q1',
             selectedAnswer: 'a',
             isCorrect: true,
           },
         },
         {
-          type: 'assessment_answer',
+          type: 'system_event',
           timestamp: new Date().toISOString(),
-          content: {},
-          context: {
+          content: {
+            eventType: 'assessment_answer',
             questionId: 'q2',
             selectedAnswer: 'b',
             isCorrect: false,
@@ -194,12 +194,13 @@ describe('POST /api/assessment/programs/[programId]/complete', () => {
   it('returns error if assessment is incomplete', async () => {
     const incompleteTask = {
       ...mockTasks[0],
+      title: { en: 'Domain Knowledge' },
       interactions: [
         {
-          type: 'assessment_answer',
+          type: 'system_event',
           timestamp: new Date().toISOString(),
-          content: {},
-          context: {
+          content: {
+            eventType: 'assessment_answer',
             questionId: 'q1',
             selectedAnswer: 'a',
             isCorrect: true,
@@ -243,6 +244,7 @@ describe('POST /api/assessment/programs/[programId]/complete', () => {
       .mockResolvedValueOnce(mockTasks) // For tasks
       .mockResolvedValueOnce([]); // For existing evaluations
     mockCreate.mockResolvedValue({ id: 'eval-new' });
+    
 
     const request = new NextRequest('http://localhost:3000/api/assessment/programs/program123/complete', {
       method: 'POST',
@@ -302,7 +304,7 @@ describe('POST /api/assessment/programs/[programId]/complete', () => {
     const multiDomainTasks = [
       {
         id: 'task1',
-        title: 'Multi-domain Assessment',
+        title: { en: 'Multi-domain Assessment' },
         status: 'active',
         content: {
           questions: [
@@ -325,22 +327,34 @@ describe('POST /api/assessment/programs/[programId]/complete', () => {
         },
         interactions: [
           {
-            type: 'assessment_answer',
+            type: 'system_event',
             timestamp: new Date().toISOString(),
-            content: {},
-            context: { questionId: 'q1', selectedAnswer: 'a', isCorrect: true },
+            content: {
+              eventType: 'assessment_answer',
+              questionId: 'q1',
+              selectedAnswer: 'a',
+              isCorrect: true,
+            },
           },
           {
-            type: 'assessment_answer',
+            type: 'system_event',
             timestamp: new Date().toISOString(),
-            content: {},
-            context: { questionId: 'q2', selectedAnswer: 'b', isCorrect: false },
+            content: {
+              eventType: 'assessment_answer',
+              questionId: 'q2',
+              selectedAnswer: 'b',
+              isCorrect: false,
+            },
           },
           {
-            type: 'assessment_answer',
+            type: 'system_event',
             timestamp: new Date().toISOString(),
-            content: {},
-            context: { questionId: 'q3', selectedAnswer: 'c', isCorrect: true },
+            content: {
+              eventType: 'assessment_answer',
+              questionId: 'q3',
+              selectedAnswer: 'c',
+              isCorrect: true,
+            },
           },
         ],
       },

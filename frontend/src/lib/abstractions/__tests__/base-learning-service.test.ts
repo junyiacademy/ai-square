@@ -71,15 +71,20 @@ class MockProgramRepository implements BaseProgramRepository<IProgram> {
     const program = this.programs.get(id);
     if (!program) throw new Error('Program not found');
     program.currentTaskIndex = currentTaskIndex;
+    this.programs.set(id, program); // Ensure the updated program is stored back
     return program;
   }
 
   async complete(id: string): Promise<IProgram> {
     const program = this.programs.get(id);
     if (!program) throw new Error('Program not found');
-    program.status = 'completed';
-    program.completedAt = new Date().toISOString();
-    return program;
+    const updated = { 
+      ...program, 
+      status: 'completed' as const,
+      completedAt: new Date().toISOString()
+    };
+    this.programs.set(id, updated); // Ensure the updated program is stored back
+    return updated;
   }
 }
 
@@ -126,9 +131,10 @@ class MockTaskRepository implements BaseTaskRepository<ITask> {
 
 class MockEvaluationRepository implements BaseEvaluationRepository<IEvaluation> {
   private evaluations: Map<string, IEvaluation> = new Map();
+  private counter = 0;
 
   async create(evaluation: Omit<IEvaluation, 'id'>): Promise<IEvaluation> {
-    const newEval = { ...evaluation, id: 'eval-' + Date.now() } as IEvaluation;
+    const newEval = { ...evaluation, id: 'eval-' + (++this.counter) } as IEvaluation;
     this.evaluations.set(newEval.id, newEval);
     return newEval;
   }
@@ -252,8 +258,8 @@ describe('BaseLearningService', () => {
       expect(result.program.status).toBe('active');
       expect(result.program.metadata?.beforeCreateCalled).toBe(true); // Hook was called
       expect(result.tasks).toHaveLength(2);
-      expect(result.tasks[0].title).toBe('Task 1');
-      expect(result.tasks[1].title).toBe('Task 2');
+      expect(result.tasks[0].title).toEqual({ en: 'Task 1' });
+      expect(result.tasks[1].title).toEqual({ en: 'Task 2' });
     });
 
     it('should throw error if scenario not found', async () => {
@@ -439,7 +445,7 @@ describe('BaseLearningService', () => {
         metadata: {}
       });
 
-      await mockEvaluationRepo.create({
+      const eval1 = await mockEvaluationRepo.create({
         evaluationType: 'task',
         taskId: 'task-1',
         programId: program1.id,
@@ -458,7 +464,7 @@ describe('BaseLearningService', () => {
         metadata: {}
       });
 
-      await mockEvaluationRepo.create({
+      const eval2 = await mockEvaluationRepo.create({
         evaluationType: 'task',
         taskId: 'task-2',
         programId: program1.id,

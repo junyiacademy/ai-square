@@ -12,7 +12,7 @@ jest.mock('pg', () => {
   };
 });
 
-describe.skip('get-pool', () => {
+describe('get-pool', () => {
   let mockPool: any;
   let originalEnv: any;
   

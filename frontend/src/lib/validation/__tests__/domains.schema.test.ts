@@ -121,7 +121,7 @@ describe('Domains Schema Validation', () => {
       expect(result.success).toBe(true); // Schema doesn't validate KSA format
     });
 
-    it.skip('應該處理 scenarios 字串轉換為陣列', () => {
+    it('應該處理 scenarios 字串轉換為陣列', () => {
       const fileWithScenarios = {
         domains: {
           Engaging_with_AI: {
@@ -217,7 +217,7 @@ describe('Domains Schema Validation', () => {
     });
   });
 
-  describe.skip('validateKSAReferences', () => {
+  describe('validateKSAReferences', () => {
     const validKSAIds = {
       knowledgeIds: ['K1.1', 'K1.2', 'K2.1'],
       skillIds: ['S1.1', 'S1.2', 'S2.1'],

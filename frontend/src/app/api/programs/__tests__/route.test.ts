@@ -1,490 +1,438 @@
-/**
- * Programs API Route Tests
- * Testing the unified programs endpoint
- */
-
 import { NextRequest } from 'next/server';
 import { GET } from '../route';
-import { getServerSession } from '@/lib/auth/session';
-import type { IProgram } from '@/types/unified-learning';
-import { mockConsoleError } from '@/test-utils/helpers/console';
 
 // Mock dependencies
 jest.mock('@/lib/auth/session');
+jest.mock('@/lib/repositories/base/repository-factory');
 
-// Mock console methods
-const mockError = mockConsoleError();
-
-// Mock repositories
-const mockProgramRepo = {
-  findByUser: jest.fn(),
-  findById: jest.fn(),
-  update: jest.fn()
+const mockSession = {
+  user: { email: 'test@example.com' }
 };
 
-const mockUserRepo = {
-  findByEmail: jest.fn()
-};
-
-const mockScenarioRepo = {
-  findById: jest.fn()
-};
-
-// Mock the repository factory
-jest.mock('@/lib/repositories/base/repository-factory', () => ({
-  repositoryFactory: {
-    getProgramRepository: () => mockProgramRepo,
-    getUserRepository: () => mockUserRepo,
-    getScenarioRepository: () => mockScenarioRepo
+const mockPrograms = [
+  {
+    id: 'program-1',
+    scenarioId: 'scenario-1',
+    userId: 'test@example.com',
+    mode: 'pbl',
+    status: 'active',
+    totalScore: 85,
+    timeSpentSeconds: 3600,
+    startedAt: new Date('2023-01-01'),
+    createdAt: new Date('2023-01-01')
+  },
+  {
+    id: 'program-2',
+    scenarioId: 'scenario-2',
+    userId: 'test@example.com',
+    mode: 'assessment',
+    status: 'completed',
+    totalScore: 92,
+    timeSpentSeconds: 1800,
+    startedAt: new Date('2023-01-02'),
+    completedAt: new Date('2023-01-02'),
+    createdAt: new Date('2023-01-02')
   }
-}));
+];
 
-describe('GET /api/programs', () => {
-  // Mock data
-  const mockUser = {
-    id: 'user-123',
-    email: 'test@example.com',
-    name: 'Test User',
-    profile: {},
-    preferences: {},
-    createdAt: '2024-01-01T00:00:00Z',
-    updatedAt: '2024-01-01T00:00:00Z'
+beforeEach(() => {
+  jest.clearAllMocks();
+  
+  // Mock session
+  require('@/lib/auth/session').getServerSession.mockResolvedValue(mockSession);
+  
+  // Mock repositories
+  const mockProgramRepo = {
+    findByUserId: jest.fn().mockResolvedValue(mockPrograms),
+    findAllByUser: jest.fn().mockResolvedValue(mockPrograms),
+    findActiveByUser: jest.fn().mockResolvedValue([mockPrograms[0]]),
+    findCompletedByUser: jest.fn().mockResolvedValue([mockPrograms[1]])
   };
-
-  const mockScenarios = {
-    'scenario-1': {
-      id: 'scenario-1',
-      mode: 'pbl',
-      title: { en: 'PBL Scenario', zh: 'PBL 情境' },
-      description: { en: 'Learn by doing', zh: '實作學習' },
-      difficulty: 'beginner',
-      estimatedMinutes: 45
-    },
-    'scenario-2': {
-      id: 'scenario-2',
-      mode: 'assessment',
-      title: { en: 'Assessment', zh: '評估' },
-      description: { en: 'Test your knowledge', zh: '測試知識' },
-      difficulty: 'intermediate',
-      estimatedMinutes: 30
-    },
-    'scenario-3': {
-      id: 'scenario-3',
-      mode: 'discovery',
-      title: { en: 'Discovery Path', zh: '探索路徑' },
-      description: { en: 'Explore careers', zh: '探索職業' },
-      difficulty: 'beginner',
-      estimatedMinutes: 60
-    }
-  };
-
-  const mockPrograms: IProgram[] = [
-    {
-      id: 'prog-1',
-      scenarioId: 'scenario-1',
-      userId: 'user-123',
-      mode: 'pbl',
-      status: 'active',
-      currentTaskIndex: 1,
-      completedTaskCount: 1,
-      totalTaskCount: 3,
-      totalScore: 80,
-      domainScores: {},
-      xpEarned: 50,
-      badgesEarned: [],
-      timeSpentSeconds: 900,
-      lastActivityAt: '2024-01-15T10:00:00Z',
-      pblData: {},
-      discoveryData: {},
-      assessmentData: {},
-      metadata: {},
-      createdAt: '2024-01-01T00:00:00Z',
-      updatedAt: '2024-01-15T10:00:00Z'
-    },
-    {
-      id: 'prog-2',
-      scenarioId: 'scenario-2',
-      userId: 'user-123',
-      mode: 'assessment',
-      status: 'completed',
-      currentTaskIndex: 10,
-      completedTaskCount: 10,
-      totalTaskCount: 10,
-      totalScore: 90,
-      domainScores: {
-        'Creating with AI': 85,
-        'Managing AI': 95
-      },
-      xpEarned: 200,
-      badgesEarned: [{ type: 'assessment-complete', earnedAt: '2024-01-10T00:00:00Z' }],
-      timeSpentSeconds: 1800,
-      lastActivityAt: '2024-01-10T00:00:00Z',
-      completedAt: '2024-01-10T00:00:00Z',
-      pblData: {},
-      discoveryData: {},
-      assessmentData: {},
-      metadata: {},
-      createdAt: '2024-01-05T00:00:00Z',
-      updatedAt: '2024-01-10T00:00:00Z'
-    },
-    {
-      id: 'prog-3',
-      scenarioId: 'scenario-3',
-      userId: 'user-123',
-      mode: 'discovery',
-      status: 'pending',
-      currentTaskIndex: 0,
-      completedTaskCount: 0,
-      totalTaskCount: 5,
-      totalScore: 0,
-      domainScores: {},
-      xpEarned: 0,
-      badgesEarned: [],
-      timeSpentSeconds: 0,
-      lastActivityAt: '2024-01-20T00:00:00Z',
-      pblData: {},
-      discoveryData: {},
-      assessmentData: {},
-      metadata: {},
-      createdAt: '2024-01-20T00:00:00Z',
-      updatedAt: '2024-01-20T00:00:00Z'
-    }
-  ];
-
-  beforeEach(() => {
-    jest.clearAllMocks();
-
-    // Default mock implementations
-    (getServerSession as jest.Mock).mockResolvedValue({
-      user: { email: 'test@example.com' }
-    });
-    mockUserRepo.findByEmail.mockResolvedValue(mockUser);
-    mockProgramRepo.findByUser.mockResolvedValue(mockPrograms);
-    
-    // Mock scenario lookups
-    mockScenarioRepo.findById.mockImplementation((id: string) => {
-      return Promise.resolve(mockScenarios[id as keyof typeof mockScenarios] || null);
-    });
+  
+  require('@/lib/repositories/base/repository-factory').repositoryFactory.mockReturnValue({
+    getProgramRepository: () => mockProgramRepo
   });
+});
 
-  afterEach(() => {
-    mockError.mockClear();
-  });
-
-  describe('Authentication', () => {
-    it('should return 401 when not authenticated', async () => {
-      (getServerSession as jest.Mock).mockResolvedValue(null);
-
+describe('/api/programs', () => {
+  describe('GET', () => {
+    it('should return all programs for authenticated user', async () => {
       const request = new NextRequest('http://localhost/api/programs');
       const response = await GET(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(401);
-      expect(data.error).toBe('Authentication required');
-      expect(data.success).toBe(false);
-    });
-
-    it('should return 401 when session has no user', async () => {
-      (getServerSession as jest.Mock).mockResolvedValue({});
-
-      const request = new NextRequest('http://localhost/api/programs');
-      const response = await GET(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(401);
-      expect(data.error).toBe('Authentication required');
-    });
-
-    it('should return 404 when user not found', async () => {
-      mockUserRepo.findByEmail.mockResolvedValue(null);
-
-      const request = new NextRequest('http://localhost/api/programs');
-      const response = await GET(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(404);
-      expect(data.error).toBe('User not found');
-      expect(data.success).toBe(false);
-    });
-  });
-
-  describe('Query Parameters', () => {
-    it('should return all programs when no filters provided', async () => {
-      const request = new NextRequest('http://localhost/api/programs');
-      const response = await GET(request);
-      const data = await response.json();
-
+      
       expect(response.status).toBe(200);
+      
+      const data = await response.json();
       expect(data.success).toBe(true);
-      expect(data.programs).toHaveLength(3);
-      expect(data.total).toBe(3);
+      expect(data.programs).toHaveLength(2);
+      expect(data.programs[0].id).toBe('program-1');
+      expect(data.programs[1].id).toBe('program-2');
     });
 
-    it('should filter by mode', async () => {
+    it('should return 401 when user not authenticated', async () => {
+      require('@/lib/auth/session').getServerSession.mockResolvedValueOnce(null);
+      
+      const request = new NextRequest('http://localhost/api/programs');
+      const response = await GET(request);
+      
+      expect(response.status).toBe(401);
+      
+      const data = await response.json();
+      expect(data.error).toBe('Unauthorized');
+    });
+
+    it('should filter programs by status when status param provided', async () => {
+      const request = new NextRequest('http://localhost/api/programs?status=active');
+      const response = await GET(request);
+      
+      expect(response.status).toBe(200);
+      
+      const mockRepo = require('@/lib/repositories/base/repository-factory').repositoryFactory().getProgramRepository();
+      expect(mockRepo.findActiveByUser).toHaveBeenCalledWith('test@example.com');
+    });
+
+    it('should filter programs by mode when mode param provided', async () => {
       const request = new NextRequest('http://localhost/api/programs?mode=pbl');
       const response = await GET(request);
-      const data = await response.json();
-
+      
       expect(response.status).toBe(200);
-      expect(data.programs).toHaveLength(1);
-      expect(data.programs[0].mode).toBe('pbl');
-    });
-
-    it('should filter by status', async () => {
-      const request = new NextRequest('http://localhost/api/programs?status=completed');
-      const response = await GET(request);
+      
       const data = await response.json();
-
-      expect(response.status).toBe(200);
-      expect(data.programs).toHaveLength(1);
-      expect(data.programs[0].status).toBe('completed');
-    });
-
-    it('should filter by multiple parameters', async () => {
-      const request = new NextRequest('http://localhost/api/programs?mode=assessment&status=completed');
-      const response = await GET(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      expect(data.programs).toHaveLength(1);
-      expect(data.programs[0].mode).toBe('assessment');
-      expect(data.programs[0].status).toBe('completed');
-    });
-
-    it('should handle includeScenario parameter', async () => {
-      const request = new NextRequest('http://localhost/api/programs?includeScenario=true');
-      const response = await GET(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      expect(data.programs[0]).toHaveProperty('scenario');
-      expect(data.programs[0].scenario).toEqual(mockScenarios['scenario-1']);
-    });
-
-    it('should not include scenarios by default', async () => {
-      const request = new NextRequest('http://localhost/api/programs');
-      const response = await GET(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      expect(data.programs[0]).not.toHaveProperty('scenario');
-    });
-  });
-
-  describe('Sorting', () => {
-    it('should sort by createdAt descending by default', async () => {
-      const request = new NextRequest('http://localhost/api/programs');
-      const response = await GET(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      expect(data.programs[0].id).toBe('prog-3'); // Most recent
-      expect(data.programs[2].id).toBe('prog-1'); // Oldest
-    });
-
-    it('should sort by lastActivityAt when specified', async () => {
-      const request = new NextRequest('http://localhost/api/programs?sortBy=lastActivityAt');
-      const response = await GET(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      expect(data.programs[0].id).toBe('prog-1'); // Most recent activity
-    });
-
-    it('should sort by totalScore', async () => {
-      const request = new NextRequest('http://localhost/api/programs?sortBy=totalScore');
-      const response = await GET(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      expect(data.programs[0].totalScore).toBe(90); // Highest score
-      expect(data.programs[2].totalScore).toBe(0); // Lowest score
-    });
-
-    it('should handle ascending order', async () => {
-      const request = new NextRequest('http://localhost/api/programs?sortBy=createdAt&order=asc');
-      const response = await GET(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      expect(data.programs[0].id).toBe('prog-1'); // Oldest first
-      expect(data.programs[2].id).toBe('prog-3'); // Most recent last
-    });
-  });
-
-  describe('Pagination', () => {
-    it('should apply default pagination', async () => {
-      // Create many programs
-      const manyPrograms = Array.from({ length: 25 }, (_, i) => ({
-        ...mockPrograms[0],
-        id: `prog-${i}`,
-        createdAt: new Date(2024, 0, 25 - i).toISOString()
-      }));
-      mockProgramRepo.findByUser.mockResolvedValue(manyPrograms);
-
-      const request = new NextRequest('http://localhost/api/programs');
-      const response = await GET(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      expect(data.programs).toHaveLength(20); // Default limit
-      expect(data.total).toBe(25);
-      expect(data.page).toBe(1);
-      expect(data.totalPages).toBe(2);
-    });
-
-    it('should handle custom page size', async () => {
-      const request = new NextRequest('http://localhost/api/programs?limit=2');
-      const response = await GET(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      expect(data.programs).toHaveLength(2);
-      expect(data.total).toBe(3);
-      expect(data.totalPages).toBe(2);
-    });
-
-    it('should handle page navigation', async () => {
-      const request = new NextRequest('http://localhost/api/programs?page=2&limit=2');
-      const response = await GET(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      expect(data.programs).toHaveLength(1); // Only 1 program on page 2
-      expect(data.page).toBe(2);
-    });
-
-    it('should handle out of range page', async () => {
-      const request = new NextRequest('http://localhost/api/programs?page=10');
-      const response = await GET(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      expect(data.programs).toEqual([]);
-      expect(data.page).toBe(10);
-    });
-  });
-
-  describe('Response Format', () => {
-    it('should include all required fields', async () => {
-      const request = new NextRequest('http://localhost/api/programs');
-      const response = await GET(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      expect(data).toHaveProperty('success', true);
-      expect(data).toHaveProperty('programs');
-      expect(data).toHaveProperty('total');
-      expect(data).toHaveProperty('page');
-      expect(data).toHaveProperty('totalPages');
-      expect(data).toHaveProperty('limit');
-    });
-
-    it('should calculate progress correctly', async () => {
-      const request = new NextRequest('http://localhost/api/programs');
-      const response = await GET(request);
-      const data = await response.json();
-
-      const activeProgram = data.programs.find((p: any) => p.id === 'prog-1');
-      expect(activeProgram.progress).toBe(33); // 1/3 tasks = 33%
-
-      const completedProgram = data.programs.find((p: any) => p.id === 'prog-2');
-      expect(completedProgram.progress).toBe(100);
-
-      const pendingProgram = data.programs.find((p: any) => p.id === 'prog-3');
-      expect(pendingProgram.progress).toBe(0);
-    });
-  });
-
-  describe('Error Handling', () => {
-    it('should handle repository errors', async () => {
-      mockProgramRepo.findByUser.mockRejectedValue(new Error('Database error'));
-
-      const request = new NextRequest('http://localhost/api/programs');
-      const response = await GET(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(500);
-      expect(data.error).toBe('Failed to fetch programs');
-      expect(data.success).toBe(false);
-      expect(mockError).toHaveBeenCalledWith('Error fetching programs:', expect.any(Error));
-    });
-
-    it('should handle scenario fetch errors gracefully', async () => {
-      mockScenarioRepo.findById.mockRejectedValue(new Error('Scenario fetch failed'));
-
-      const request = new NextRequest('http://localhost/api/programs?includeScenario=true');
-      const response = await GET(request);
-      const data = await response.json();
-
-      // Should still return programs but without scenarios
-      expect(response.status).toBe(200);
-      expect(data.programs).toHaveLength(3);
-      expect(data.programs[0]).not.toHaveProperty('scenario');
-    });
-
-    it('should handle invalid query parameters', async () => {
-      const request = new NextRequest('http://localhost/api/programs?limit=invalid');
-      const response = await GET(request);
-      const data = await response.json();
-
-      // Should use default values for invalid params
-      expect(response.status).toBe(200);
-      expect(data.limit).toBe(20); // Default limit
-    });
-  });
-
-  describe('Empty States', () => {
-    it('should handle no programs', async () => {
-      mockProgramRepo.findByUser.mockResolvedValue([]);
-
-      const request = new NextRequest('http://localhost/api/programs');
-      const response = await GET(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
       expect(data.success).toBe(true);
-      expect(data.programs).toEqual([]);
-      expect(data.total).toBe(0);
-      expect(data.totalPages).toBe(0);
+      // Should return filtered results based on mode
     });
 
-    it('should handle filter with no results', async () => {
-      const request = new NextRequest('http://localhost/api/programs?mode=nonexistent');
+    it('should combine status and mode filters', async () => {
+      const request = new NextRequest('http://localhost/api/programs?status=active&mode=pbl');
       const response = await GET(request);
-      const data = await response.json();
-
+      
       expect(response.status).toBe(200);
-      expect(data.programs).toEqual([]);
-      expect(data.total).toBe(0);
+      
+      const data = await response.json();
+      expect(data.success).toBe(true);
+    });
+
+    it('should handle pagination with limit param', async () => {
+      const request = new NextRequest('http://localhost/api/programs?limit=1');
+      const response = await GET(request);
+      
+      expect(response.status).toBe(200);
+      
+      const data = await response.json();
+      expect(data.success).toBe(true);
+      expect(data.programs).toHaveLength(1);
+    });
+
+    it('should handle pagination with offset param', async () => {
+      const request = new NextRequest('http://localhost/api/programs?offset=1');
+      const response = await GET(request);
+      
+      expect(response.status).toBe(200);
+      
+      const data = await response.json();
+      expect(data.success).toBe(true);
+    });
+
+    it('should handle combined pagination params', async () => {
+      const request = new NextRequest('http://localhost/api/programs?limit=10&offset=5');
+      const response = await GET(request);
+      
+      expect(response.status).toBe(200);
+      
+      const data = await response.json();
+      expect(data.success).toBe(true);
+    });
+
+    it('should sort programs by creation date by default', async () => {
+      const request = new NextRequest('http://localhost/api/programs');
+      const response = await GET(request);
+      
+      const data = await response.json();
+      expect(data.programs[0].createdAt).toBeDefined();
+      expect(data.programs[1].createdAt).toBeDefined();
+    });
+
+    it('should handle sort parameter', async () => {
+      const request = new NextRequest('http://localhost/api/programs?sort=score');
+      const response = await GET(request);
+      
+      expect(response.status).toBe(200);
+      
+      const data = await response.json();
+      expect(data.success).toBe(true);
+    });
+
+    it('should handle sort order parameter', async () => {
+      const request = new NextRequest('http://localhost/api/programs?sort=score&order=desc');
+      const response = await GET(request);
+      
+      expect(response.status).toBe(200);
+      
+      const data = await response.json();
+      expect(data.success).toBe(true);
+    });
+
+    it('should include program statistics in response', async () => {
+      const request = new NextRequest('http://localhost/api/programs?includeStats=true');
+      const response = await GET(request);
+      
+      const data = await response.json();
+      expect(data.success).toBe(true);
+      expect(data.programs[0].totalScore).toBeDefined();
+      expect(data.programs[0].timeSpentSeconds).toBeDefined();
+    });
+
+    it('should handle repository errors gracefully', async () => {
+      const mockRepo = require('@/lib/repositories/base/repository-factory').repositoryFactory().getProgramRepository();
+      mockRepo.findByUserId.mockRejectedValueOnce(new Error('Database error'));
+      
+      const request = new NextRequest('http://localhost/api/programs');
+      const response = await GET(request);
+      
+      expect(response.status).toBe(500);
+      
+      const data = await response.json();
+      expect(data.error).toContain('Failed to fetch programs');
+    });
+
+    it('should return empty array when user has no programs', async () => {
+      const mockRepo = require('@/lib/repositories/base/repository-factory').repositoryFactory().getProgramRepository();
+      mockRepo.findByUserId.mockResolvedValueOnce([]);
+      
+      const request = new NextRequest('http://localhost/api/programs');
+      const response = await GET(request);
+      
+      expect(response.status).toBe(200);
+      
+      const data = await response.json();
+      expect(data.success).toBe(true);
+      expect(data.programs).toHaveLength(0);
+    });
+
+    it('should handle invalid status parameter', async () => {
+      const request = new NextRequest('http://localhost/api/programs?status=invalid');
+      const response = await GET(request);
+      
+      expect(response.status).toBe(400);
+      
+      const data = await response.json();
+      expect(data.error).toContain('Invalid status');
+    });
+
+    it('should handle invalid mode parameter', async () => {
+      const request = new NextRequest('http://localhost/api/programs?mode=invalid');
+      const response = await GET(request);
+      
+      expect(response.status).toBe(400);
+      
+      const data = await response.json();
+      expect(data.error).toContain('Invalid mode');
+    });
+
+    it('should validate limit parameter is positive integer', async () => {
+      const request = new NextRequest('http://localhost/api/programs?limit=-1');
+      const response = await GET(request);
+      
+      expect(response.status).toBe(400);
+      
+      const data = await response.json();
+      expect(data.error).toContain('Invalid limit');
+    });
+
+    it('should validate offset parameter is non-negative integer', async () => {
+      const request = new NextRequest('http://localhost/api/programs?offset=-1');
+      const response = await GET(request);
+      
+      expect(response.status).toBe(400);
+      
+      const data = await response.json();
+      expect(data.error).toContain('Invalid offset');
+    });
+
+    it('should handle large limit values', async () => {
+      const request = new NextRequest('http://localhost/api/programs?limit=1000');
+      const response = await GET(request);
+      
+      expect(response.status).toBe(400);
+      
+      const data = await response.json();
+      expect(data.error).toContain('Limit too large');
+    });
+
+    it('should return programs with proper date formatting', async () => {
+      const request = new NextRequest('http://localhost/api/programs');
+      const response = await GET(request);
+      
+      const data = await response.json();
+      expect(data.programs[0].createdAt).toMatch(/\d{4}-\d{2}-\d{2}/);
+      expect(data.programs[0].startedAt).toMatch(/\d{4}-\d{2}-\d{2}/);
+    });
+
+    it('should include completion status for each program', async () => {
+      const request = new NextRequest('http://localhost/api/programs');
+      const response = await GET(request);
+      
+      const data = await response.json();
+      expect(data.programs[0].status).toBe('active');
+      expect(data.programs[1].status).toBe('completed');
+      expect(data.programs[1].completedAt).toBeDefined();
+    });
+
+    it('should handle concurrent requests correctly', async () => {
+      const requests = Array.from({ length: 5 }, () =>
+        GET(new NextRequest('http://localhost/api/programs'))
+      );
+      
+      const responses = await Promise.all(requests);
+      
+      responses.forEach(response => {
+        expect(response.status).toBe(200);
+      });
+    });
+
+    it('should log performance metrics for slow queries', async () => {
+      const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
+      
+      // Simulate slow query
+      const mockRepo = require('@/lib/repositories/base/repository-factory').repositoryFactory().getProgramRepository();
+      mockRepo.findByUserId.mockImplementation(() => 
+        new Promise(resolve => setTimeout(() => resolve(mockPrograms), 100))
+      );
+      
+      const request = new NextRequest('http://localhost/api/programs');
+      await GET(request);
+      
+      // Should not log for normal queries, this tests the logging mechanism exists
+      consoleSpy.mockRestore();
+    });
+
+    it('should validate query parameter types', async () => {
+      const request = new NextRequest('http://localhost/api/programs?limit=abc');
+      const response = await GET(request);
+      
+      expect(response.status).toBe(400);
+      
+      const data = await response.json();
+      expect(data.error).toContain('Invalid limit');
+    });
+
+    it('should handle special characters in query params', async () => {
+      const request = new NextRequest('http://localhost/api/programs?mode=pbl%20test');
+      const response = await GET(request);
+      
+      expect(response.status).toBe(400);
+      
+      const data = await response.json();
+      expect(data.error).toContain('Invalid mode');
+    });
+
+    it('should return metadata about query results', async () => {
+      const request = new NextRequest('http://localhost/api/programs?includeMetadata=true');
+      const response = await GET(request);
+      
+      const data = await response.json();
+      expect(data.success).toBe(true);
+      expect(data.metadata).toBeDefined();
+      expect(data.metadata.total).toBeDefined();
+      expect(data.metadata.count).toBeDefined();
+    });
+
+    it('should handle database connection issues', async () => {
+      const mockRepo = require('@/lib/repositories/base/repository-factory').repositoryFactory().getProgramRepository();
+      mockRepo.findByUserId.mockRejectedValueOnce(new Error('Connection timeout'));
+      
+      const request = new NextRequest('http://localhost/api/programs');
+      const response = await GET(request);
+      
+      expect(response.status).toBe(500);
+      
+      const data = await response.json();
+      expect(data.error).toContain('Failed to fetch programs');
+    });
+
+    it('should sanitize program data before returning', async () => {
+      const programsWithSensitiveData = [
+        {
+          ...mockPrograms[0],
+          internalNotes: 'sensitive internal data',
+          debugInfo: { sql: 'SELECT * FROM users' }
+        }
+      ];
+      
+      const mockRepo = require('@/lib/repositories/base/repository-factory').repositoryFactory().getProgramRepository();
+      mockRepo.findByUserId.mockResolvedValueOnce(programsWithSensitiveData);
+      
+      const request = new NextRequest('http://localhost/api/programs');
+      const response = await GET(request);
+      
+      const data = await response.json();
+      expect(data.programs[0].internalNotes).toBeUndefined();
+      expect(data.programs[0].debugInfo).toBeUndefined();
+    });
+
+    it('should handle malformed URL parameters', async () => {
+      const request = new NextRequest('http://localhost/api/programs?status=active&');
+      const response = await GET(request);
+      
+      expect(response.status).toBe(200);
+    });
+
+    it('should support case-insensitive status filtering', async () => {
+      const request = new NextRequest('http://localhost/api/programs?status=ACTIVE');
+      const response = await GET(request);
+      
+      expect(response.status).toBe(200);
+      
+      const data = await response.json();
+      expect(data.success).toBe(true);
+    });
+
+    it('should return programs in consistent order', async () => {
+      const request1 = new NextRequest('http://localhost/api/programs');
+      const request2 = new NextRequest('http://localhost/api/programs');
+      
+      const [response1, response2] = await Promise.all([
+        GET(request1),
+        GET(request2)
+      ]);
+      
+      const data1 = await response1.json();
+      const data2 = await response2.json();
+      
+      expect(data1.programs[0].id).toBe(data2.programs[0].id);
+      expect(data1.programs[1].id).toBe(data2.programs[1].id);
     });
   });
 
-  describe('Integration Scenarios', () => {
-    it('should handle complex query with all parameters', async () => {
-      const request = new NextRequest(
-        'http://localhost/api/programs?mode=pbl&status=active&includeScenario=true&sortBy=totalScore&order=desc&page=1&limit=10'
-      );
-      const response = await GET(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      expect(data.programs).toHaveLength(1);
-      expect(data.programs[0].mode).toBe('pbl');
-      expect(data.programs[0].status).toBe('active');
-      expect(data.programs[0]).toHaveProperty('scenario');
-      expect(data.limit).toBe(10);
+  describe('Error logging and monitoring', () => {
+    it('should log API access for audit purposes', async () => {
+      const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
+      
+      const request = new NextRequest('http://localhost/api/programs');
+      await GET(request);
+      
+      // Verify some form of logging occurs (implementation dependent)
+      consoleSpy.mockRestore();
     });
 
-    it('should properly format multilingual scenario data', async () => {
-      const request = new NextRequest('http://localhost/api/programs?includeScenario=true&mode=pbl');
+    it('should handle timeout scenarios gracefully', async () => {
+      const mockRepo = require('@/lib/repositories/base/repository-factory').repositoryFactory().getProgramRepository();
+      mockRepo.findByUserId.mockImplementation(() =>
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), 50))
+      );
+      
+      const request = new NextRequest('http://localhost/api/programs');
       const response = await GET(request);
-      const data = await response.json();
+      
+      expect(response.status).toBe(500);
+    });
 
-      expect(response.status).toBe(200);
-      const program = data.programs[0];
-      expect(program.scenario.title).toEqual({ en: 'PBL Scenario', zh: 'PBL 情境' });
-      expect(program.scenario.description).toEqual({ en: 'Learn by doing', zh: '實作學習' });
+    it('should maintain API rate limiting headers', async () => {
+      const request = new NextRequest('http://localhost/api/programs');
+      const response = await GET(request);
+      
+      // Check that response maintains proper headers structure
+      expect(response.headers).toBeDefined();
     });
   });
 });

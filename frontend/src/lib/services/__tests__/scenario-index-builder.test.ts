@@ -14,7 +14,7 @@ jest.mock('@/lib/repositories/base/repository-factory', () => ({
 const mockScenarioIndexService = scenarioIndexService as jest.Mocked<typeof scenarioIndexService>;
 const mockRepositoryFactory = repositoryFactory as jest.Mocked<typeof repositoryFactory>;
 
-describe.skip('ScenarioIndexBuilder', () => {
+describe('ScenarioIndexBuilder', () => {
   let builder: typeof scenarioIndexBuilder;
   let mockScenarioRepo: {
     findBySource: jest.Mock;

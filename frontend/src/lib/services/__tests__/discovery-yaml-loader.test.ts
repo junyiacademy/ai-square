@@ -271,7 +271,7 @@ describe('DiscoveryYAMLLoader', () => {
   });
 
   describe('getPathMetadata', () => {
-    it.skip('should return metadata from loaded path', async () => {
+    it('should return metadata from loaded path', async () => {
       // This test passes in isolation but fails when run with all tests
       // due to mock interference. Skipping for now.
       const metadata = await loader.getPathMetadata('software_engineer');

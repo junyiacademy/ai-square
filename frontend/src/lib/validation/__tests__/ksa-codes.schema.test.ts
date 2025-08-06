@@ -24,7 +24,7 @@ describe('KSA Codes Schema Validation', () => {
       expect(result.success).toBe(true);
     });
     
-    it.skip('應該驗證有效的 KSA codes 檔案結構 - old format', () => {
+    it('應該驗證有效的 KSA codes 檔案結構 - old format', () => {
       const validKSAFile = {
         knowledge_codes: {
           description: 'Knowledge codes description',
@@ -234,7 +234,7 @@ describe('KSA Codes Schema Validation', () => {
       expect(result.success).toBe(true);
     });
 
-    it.skip('應該允許多個主題和多個代碼 - old format', () => {
+    it('應該允許多個主題和多個代碼 - old format', () => {
       const fileWithMultipleThemes = {
         knowledge_codes: {
           description: 'Knowledge codes description',
@@ -353,7 +353,7 @@ describe('KSA Codes Schema Validation', () => {
     });
   });
 
-  describe.skip('extractKSAIds', () => {
+  describe('extractKSAIds', () => {
     const createValidKSAFile = (): any => ({
       knowledge_codes: {
         description: 'Knowledge codes',

@@ -20,7 +20,7 @@ jest.mock('@/lib/auth/session', () => ({
   getServerSession: jest.fn()
 }));
 
-describe.skip('POST /api/discovery/scenarios/[id]/programs', () => {
+describe('POST /api/discovery/scenarios/[id]/programs', () => {
   let mockDiscoveryRepo: any;
   let mockUserRepo: any;
   let mockProgramRepo: any;

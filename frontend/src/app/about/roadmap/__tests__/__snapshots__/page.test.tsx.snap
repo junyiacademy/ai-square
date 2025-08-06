@@ -1,0 +1,233 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`RoadmapPage should match snapshot 1`] = `
+<div
+  class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800"
+>
+  <div
+    class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700"
+  >
+    <div
+      class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+    >
+      <div
+        class="py-6"
+      >
+        <div
+          class="flex items-center justify-between"
+        >
+          <div>
+            <h1
+              class="text-3xl font-bold text-gray-900 dark:text-white"
+            >
+              AI Square 產品路線圖
+            </h1>
+            <p
+              class="mt-2 text-gray-600 dark:text-gray-400"
+            >
+              產品願景、開發進度與技術架構
+            </p>
+          </div>
+          <a
+            class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+            href="/"
+          >
+            返回首頁
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700"
+  >
+    <div
+      class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+    >
+      <nav
+        aria-label="Tabs"
+        class="flex space-x-8"
+      >
+        <button
+          class="py-4 px-1 border-b-2 font-medium text-sm transition-colors border-purple-500 text-purple-600"
+        >
+          總覽
+        </button>
+        <button
+          class="py-4 px-1 border-b-2 font-medium text-sm transition-colors border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+        >
+          系統架構
+        </button>
+        <button
+          class="py-4 px-1 border-b-2 font-medium text-sm transition-colors border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+        >
+          開發進度
+        </button>
+        <button
+          class="py-4 px-1 border-b-2 font-medium text-sm transition-colors border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+        >
+          市場洞察
+        </button>
+        <button
+          class="py-4 px-1 border-b-2 font-medium text-sm transition-colors border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+        >
+          技術棧
+        </button>
+      </nav>
+    </div>
+  </div>
+  <div
+    class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"
+  >
+    <div
+      class="space-y-8"
+    >
+      <div
+        class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8"
+      >
+        <h2
+          class="text-2xl font-bold mb-4"
+        >
+          🎯 
+          產品願景
+        </h2>
+        <p
+          class="text-lg text-gray-700 dark:text-gray-300"
+        >
+          AI Square 是一個「用 AI 學 AI 素養」的創新學習平台，基於國際 AI Literacy 框架，透過 AI 技術本身來提升學習者的 AI 素養能力。
+        </p>
+      </div>
+      <div
+        class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8"
+      >
+        <h2
+          class="text-2xl font-bold mb-6"
+        >
+          💡 核心價值
+        </h2>
+        <div
+          class="grid grid-cols-1 md:grid-cols-3 gap-6"
+        >
+          <div
+            class="text-center"
+          >
+            <div
+              class="text-4xl mb-3"
+            >
+              🤝
+            </div>
+            <h3
+              class="font-semibold text-lg mb-2"
+            >
+              智能櫃檯
+            </h3>
+            <p
+              class="text-gray-600 dark:text-gray-400"
+            >
+              隨時接待的個人化引導
+            </p>
+          </div>
+          <div
+            class="text-center"
+          >
+            <div
+              class="text-4xl mb-3"
+            >
+              🥋
+            </div>
+            <h3
+              class="font-semibold text-lg mb-2"
+            >
+              PBL 道場
+            </h3>
+            <p
+              class="text-gray-600 dark:text-gray-400"
+            >
+              固定目標但彈性的學習體驗
+            </p>
+          </div>
+          <div
+            class="text-center"
+          >
+            <div
+              class="text-4xl mb-3"
+            >
+              👥
+            </div>
+            <h3
+              class="font-semibold text-lg mb-2"
+            >
+              學習社群
+            </h3>
+            <p
+              class="text-gray-600 dark:text-gray-400"
+            >
+              共學、競爭、分享的社交體驗
+            </p>
+          </div>
+        </div>
+      </div>
+      <div
+        class="grid grid-cols-1 md:grid-cols-4 gap-4"
+      >
+        <div
+          class="bg-purple-100 dark:bg-purple-900 rounded-lg p-6 text-center"
+        >
+          <div
+            class="text-3xl font-bold text-purple-800 dark:text-purple-200"
+          >
+            9
+          </div>
+          <div
+            class="text-sm text-purple-600 dark:text-purple-300"
+          >
+            支援語言
+          </div>
+        </div>
+        <div
+          class="bg-blue-100 dark:bg-blue-900 rounded-lg p-6 text-center"
+        >
+          <div
+            class="text-3xl font-bold text-blue-800 dark:text-blue-200"
+          >
+            5+
+          </div>
+          <div
+            class="text-sm text-blue-600 dark:text-blue-300"
+          >
+            PBL 情境
+          </div>
+        </div>
+        <div
+          class="bg-green-100 dark:bg-green-900 rounded-lg p-6 text-center"
+        >
+          <div
+            class="text-3xl font-bold text-green-800 dark:text-green-200"
+          >
+            100%
+          </div>
+          <div
+            class="text-sm text-green-600 dark:text-green-300"
+          >
+            Phase 1 完成
+          </div>
+        </div>
+        <div
+          class="bg-yellow-100 dark:bg-yellow-900 rounded-lg p-6 text-center"
+        >
+          <div
+            class="text-3xl font-bold text-yellow-800 dark:text-yellow-200"
+          >
+            Q3
+          </div>
+          <div
+            class="text-sm text-yellow-600 dark:text-yellow-300"
+          >
+            Agent 系統
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

@@ -128,7 +128,7 @@ describe('session-simple', () => {
       expect(mockLocalStorage.setItem).toHaveBeenCalledWith('ai_square_session', token);
     });
 
-    it.skip('does nothing when window is undefined', () => {
+    it('does nothing when window is undefined', () => {
       const originalWindow = global.window;
       delete (global as any).window;
       
@@ -161,7 +161,7 @@ describe('session-simple', () => {
       expect(token).toBeNull();
     });
 
-    it.skip('returns null when window is undefined', () => {
+    it('returns null when window is undefined', () => {
       const originalWindow = global.window;
       // @ts-expect-error - Testing SSR scenario
       delete global.window;
@@ -189,7 +189,7 @@ describe('session-simple', () => {
       expect(mockLocalStorage.removeItem).toHaveBeenCalledWith('ai_square_session');
     });
 
-    it.skip('does nothing when window is undefined', () => {
+    it('does nothing when window is undefined', () => {
       const originalWindow = global.window;
       // @ts-expect-error - Testing SSR scenario
       delete global.window;

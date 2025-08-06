@@ -58,7 +58,7 @@ describe('PBL Scenario Validation', () => {
   });
 
   describe('Stage validation', () => {
-    it.skip('應該驗證有效的階段資料 - Stage type no longer exists', () => {
+    it('應該驗證有效的階段資料 - Stage type no longer exists', () => {
       const validStage = {
         id: 'stage-1',
         name: 'Job Search',
@@ -127,7 +127,7 @@ describe('PBL Scenario Validation', () => {
       // expect(result.data).toEqual(validStage);
     });
 
-    it.skip('應該驗證 stageType 的有效值 - Stage type no longer exists', () => {
+    it('應該驗證 stageType 的有效值 - Stage type no longer exists', () => {
       const invalidStage = {
         id: 'stage-1',
         name: 'Test Stage',
@@ -150,7 +150,7 @@ describe('PBL Scenario Validation', () => {
       // expect(result.success).toBe(false);
     });
 
-    it.skip('應該驗證 rubrics 權重總和 - Stage type no longer exists', () => {
+    it('應該驗證 rubrics 權重總和 - Stage type no longer exists', () => {
       const stageWithInvalidWeights = {
         id: 'stage-1',
         name: 'Test Stage',
@@ -254,19 +254,12 @@ describe('PBL Scenario Validation', () => {
 
     it('應該接受最小化的場景資料', () => {
       const minimalScenario = {
-        id: 'minimal-scenario',
+        scenario_id: 'minimal-scenario',
         title: 'Minimal Scenario',
         description: 'A minimal scenario',
-        targetDomain: ['engaging_with_ai'],
-        ksaMapping: {
-          knowledge: [],
-          skills: [],
-          attitudes: [],
-        },
-        stages: [],
-        estimatedDuration: 30,
+        domain: 'Engaging_with_AI',
         difficulty: 'beginner',
-        learningObjectives: ['Learn something'],
+        tasks: [],
       };
 
       const result = PBLScenarioSchema.safeParse(minimalScenario);

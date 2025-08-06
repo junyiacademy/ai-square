@@ -1,0 +1,622 @@
+import React from 'react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useTranslation } from 'react-i18next';
+import RegisterPage from '../page';
+import '@testing-library/jest-dom';
+
+// Mock Next.js router and search params
+jest.mock('next/navigation', () => ({
+  useRouter: jest.fn(),
+  useSearchParams: jest.fn(),
+}));
+
+// Mock translation
+jest.mock('react-i18next', () => ({
+  useTranslation: jest.fn(),
+}));
+
+// Mock Image component
+jest.mock('next/image', () => ({
+  __esModule: true,
+  default: ({ src, alt, ...props }: any) => (
+    <img src={src} alt={alt} {...props} />
+  ),
+}));
+
+// Mock fetch
+global.fetch = jest.fn();
+
+// Mock localStorage
+const mockLocalStorage = {
+  getItem: jest.fn(),
+  setItem: jest.fn(),
+  removeItem: jest.fn(),
+  clear: jest.fn(),
+};
+Object.defineProperty(window, 'localStorage', {
+  value: mockLocalStorage,
+});
+
+// Mock window.dispatchEvent
+const mockDispatchEvent = jest.fn();
+Object.defineProperty(window, 'dispatchEvent', {
+  value: mockDispatchEvent,
+});
+
+const mockRouter = {
+  push: jest.fn(),
+  back: jest.fn(),
+  forward: jest.fn(),
+  refresh: jest.fn(),
+  replace: jest.fn(),
+};
+
+const mockSearchParams = {
+  get: jest.fn(),
+  has: jest.fn(),
+  getAll: jest.fn(),
+  keys: jest.fn(),
+  values: jest.fn(),
+  entries: jest.fn(),
+  forEach: jest.fn(),
+  toString: jest.fn(),
+  size: 0,
+};
+
+const mockT = jest.fn((key: string, defaultValue?: string) => {
+  const translations: Record<string, string> = {
+    'auth:register.title': 'Create Account',
+    'auth:register.subtitle': 'Already have an account?',
+    'auth:register.signIn': 'Sign in',
+    'auth:register.name': 'Full Name',
+    'auth:register.namePlaceholder': 'Enter your full name',
+    'auth:register.email': 'Email Address',
+    'auth:register.emailPlaceholder': 'Enter your email',
+    'auth:register.password': 'Password',
+    'auth:register.passwordPlaceholder': 'Create a password',
+    'auth:register.confirmPassword': 'Confirm Password',
+    'auth:register.confirmPasswordPlaceholder': 'Confirm your password',
+    'auth:register.agreeToTerms': 'I agree to the',
+    'auth:register.termsOfService': 'Terms of Service',
+    'auth:register.and': 'and',
+    'auth:register.privacyPolicy': 'Privacy Policy',
+    'auth:register.createAccount': 'Create Account',
+    'auth:register.orContinueWith': 'Or continue with',
+    'auth:register.errors.nameRequired': 'Full name is required',
+    'auth:register.errors.emailRequired': 'Email is required',
+    'auth:register.errors.emailInvalid': 'Please enter a valid email',
+    'auth:register.errors.passwordRequired': 'Password is required',
+    'auth:register.errors.passwordTooShort': 'Password must be at least 8 characters',
+    'auth:register.errors.passwordMismatch': 'Passwords do not match',
+    'auth:register.errors.termsRequired': 'You must accept the terms',
+    'auth:register.errors.registrationFailed': 'Registration failed',
+    'auth:register.errors.networkError': 'Network error occurred',
+    'common:loading': 'Loading...',
+  };
+  return translations[key] || defaultValue || key;
+});
+
+describe('RegisterPage', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    (useRouter as jest.Mock).mockReturnValue(mockRouter);
+    (useSearchParams as jest.Mock).mockReturnValue(mockSearchParams);
+    (useTranslation as jest.Mock).mockReturnValue({ t: mockT });
+    mockSearchParams.get.mockReturnValue(null);
+    (global.fetch as jest.Mock).mockClear();
+  });
+
+  it('should render registration form with all fields', () => {
+    render(<RegisterPage />);
+    
+    expect(screen.getByText('Create Account')).toBeInTheDocument();
+    expect(screen.getByLabelText('Full Name')).toBeInTheDocument();
+    expect(screen.getByLabelText('Email Address')).toBeInTheDocument();
+    expect(screen.getByLabelText('Password')).toBeInTheDocument();
+    expect(screen.getByLabelText('Confirm Password')).toBeInTheDocument();
+    expect(screen.getByLabelText(/I agree to the/)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Create Account' })).toBeInTheDocument();
+  });
+
+  it('should display logo image', () => {
+    render(<RegisterPage />);
+    
+    const logo = screen.getByAltText('AI Square Logo');
+    expect(logo).toBeInTheDocument();
+    expect(logo).toHaveAttribute('src', '/images/logo.png');
+  });
+
+  it('should display sign in link without redirect', () => {
+    render(<RegisterPage />);
+    
+    const signInLink = screen.getByText('Sign in');
+    expect(signInLink).toHaveAttribute('href', '/login');
+  });
+
+  it('should display sign in link with redirect parameter', () => {
+    mockSearchParams.get.mockImplementation((key) => 
+      key === 'redirect' ? '/dashboard' : null
+    );
+    
+    render(<RegisterPage />);
+    
+    const signInLink = screen.getByText('Sign in');
+    expect(signInLink).toHaveAttribute('href', '/login?redirect=%2Fdashboard');
+  });
+
+  it('should validate required name field', async () => {
+    render(<RegisterPage />);
+    
+    const submitButton = screen.getByRole('button', { name: 'Create Account' });
+    fireEvent.click(submitButton);
+    
+    await waitFor(() => {
+      expect(screen.getByText('Full name is required')).toBeInTheDocument();
+    });
+  });
+
+  it('should validate required email field', async () => {
+    render(<RegisterPage />);
+    
+    const submitButton = screen.getByRole('button', { name: 'Create Account' });
+    fireEvent.click(submitButton);
+    
+    await waitFor(() => {
+      expect(screen.getByText('Email is required')).toBeInTheDocument();
+    });
+  });
+
+  it('should validate email format', async () => {
+    render(<RegisterPage />);
+    
+    const emailInput = screen.getByLabelText('Email Address');
+    fireEvent.change(emailInput, { target: { value: 'invalid-email' } });
+    
+    const submitButton = screen.getByRole('button', { name: 'Create Account' });
+    fireEvent.click(submitButton);
+    
+    await waitFor(() => {
+      expect(screen.getByText('Please enter a valid email')).toBeInTheDocument();
+    });
+  });
+
+  it('should validate required password field', async () => {
+    render(<RegisterPage />);
+    
+    const submitButton = screen.getByRole('button', { name: 'Create Account' });
+    fireEvent.click(submitButton);
+    
+    await waitFor(() => {
+      expect(screen.getByText('Password is required')).toBeInTheDocument();
+    });
+  });
+
+  it('should validate password length', async () => {
+    render(<RegisterPage />);
+    
+    const passwordInput = screen.getByLabelText('Password');
+    fireEvent.change(passwordInput, { target: { value: '123' } });
+    
+    const submitButton = screen.getByRole('button', { name: 'Create Account' });
+    fireEvent.click(submitButton);
+    
+    await waitFor(() => {
+      expect(screen.getByText('Password must be at least 8 characters')).toBeInTheDocument();
+    });
+  });
+
+  it('should validate password confirmation', async () => {
+    render(<RegisterPage />);
+    
+    const passwordInput = screen.getByLabelText('Password');
+    const confirmInput = screen.getByLabelText('Confirm Password');
+    
+    fireEvent.change(passwordInput, { target: { value: 'password123' } });
+    fireEvent.change(confirmInput, { target: { value: 'different' } });
+    
+    const submitButton = screen.getByRole('button', { name: 'Create Account' });
+    fireEvent.click(submitButton);
+    
+    await waitFor(() => {
+      expect(screen.getByText('Passwords do not match')).toBeInTheDocument();
+    });
+  });
+
+  it('should validate terms acceptance', async () => {
+    render(<RegisterPage />);
+    
+    // Fill all other fields
+    fireEvent.change(screen.getByLabelText('Full Name'), { target: { value: 'John Doe' } });
+    fireEvent.change(screen.getByLabelText('Email Address'), { target: { value: 'john@example.com' } });
+    fireEvent.change(screen.getByLabelText('Password'), { target: { value: 'password123' } });
+    fireEvent.change(screen.getByLabelText('Confirm Password'), { target: { value: 'password123' } });
+    
+    const submitButton = screen.getByRole('button', { name: 'Create Account' });
+    fireEvent.click(submitButton);
+    
+    await waitFor(() => {
+      expect(screen.getByText('You must accept the terms')).toBeInTheDocument();
+    });
+  });
+
+  it('should clear field errors when user starts typing', async () => {
+    render(<RegisterPage />);
+    
+    // Trigger validation error
+    const submitButton = screen.getByRole('button', { name: 'Create Account' });
+    fireEvent.click(submitButton);
+    
+    await waitFor(() => {
+      expect(screen.getByText('Full name is required')).toBeInTheDocument();
+    });
+    
+    // Start typing in the field
+    const nameInput = screen.getByLabelText('Full Name');
+    fireEvent.change(nameInput, { target: { value: 'J' } });
+    
+    await waitFor(() => {
+      expect(screen.queryByText('Full name is required')).not.toBeInTheDocument();
+    });
+  });
+
+  it('should handle successful registration and auto-login', async () => {
+    // Mock successful registration
+    (global.fetch as jest.Mock)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ success: true }),
+      })
+      // Mock successful login
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({
+          success: true,
+          sessionToken: 'test-token-123',
+        }),
+      });
+    
+    render(<RegisterPage />);
+    
+    // Fill out form
+    fireEvent.change(screen.getByLabelText('Full Name'), { target: { value: 'John Doe' } });
+    fireEvent.change(screen.getByLabelText('Email Address'), { target: { value: 'john@example.com' } });
+    fireEvent.change(screen.getByLabelText('Password'), { target: { value: 'password123' } });
+    fireEvent.change(screen.getByLabelText('Confirm Password'), { target: { value: 'password123' } });
+    fireEvent.click(screen.getByLabelText(/I agree to the/));
+    
+    const submitButton = screen.getByRole('button', { name: 'Create Account' });
+    fireEvent.click(submitButton);
+    
+    await waitFor(() => {
+      expect(global.fetch).toHaveBeenCalledWith('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: 'John Doe',
+          email: 'john@example.com',
+          password: 'password123',
+          preferredLanguage: 'en',
+          acceptTerms: true,
+        }),
+      });
+    });
+    
+    await waitFor(() => {
+      expect(global.fetch).toHaveBeenCalledWith('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: 'john@example.com',
+          password: 'password123',
+        }),
+      });
+    });
+    
+    await waitFor(() => {
+      expect(mockLocalStorage.setItem).toHaveBeenCalledWith('ai_square_session', 'test-token-123');
+      expect(mockDispatchEvent).toHaveBeenCalledWith(new CustomEvent('auth-changed'));
+      expect(mockRouter.push).toHaveBeenCalledWith('/onboarding/welcome');
+    });
+  });
+
+  it('should handle successful registration with redirect URL', async () => {
+    mockSearchParams.get.mockImplementation((key) => 
+      key === 'redirect' ? '/pbl' : null
+    );
+    
+    (global.fetch as jest.Mock)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ success: true }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({
+          success: true,
+          sessionToken: 'test-token-123',
+        }),
+      });
+    
+    render(<RegisterPage />);
+    
+    // Fill out form
+    fireEvent.change(screen.getByLabelText('Full Name'), { target: { value: 'John Doe' } });
+    fireEvent.change(screen.getByLabelText('Email Address'), { target: { value: 'john@example.com' } });
+    fireEvent.change(screen.getByLabelText('Password'), { target: { value: 'password123' } });
+    fireEvent.change(screen.getByLabelText('Confirm Password'), { target: { value: 'password123' } });
+    fireEvent.click(screen.getByLabelText(/I agree to the/));
+    
+    const submitButton = screen.getByRole('button', { name: 'Create Account' });
+    fireEvent.click(submitButton);
+    
+    await waitFor(() => {
+      expect(mockRouter.push).toHaveBeenCalledWith('/pbl');
+    });
+  });
+
+  it('should prevent open redirect vulnerabilities', async () => {
+    mockSearchParams.get.mockImplementation((key) => 
+      key === 'redirect' ? '//malicious-site.com' : null
+    );
+    
+    (global.fetch as jest.Mock)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ success: true }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ success: true }),
+      });
+    
+    render(<RegisterPage />);
+    
+    // Fill out form
+    fireEvent.change(screen.getByLabelText('Full Name'), { target: { value: 'John Doe' } });
+    fireEvent.change(screen.getByLabelText('Email Address'), { target: { value: 'john@example.com' } });
+    fireEvent.change(screen.getByLabelText('Password'), { target: { value: 'password123' } });
+    fireEvent.change(screen.getByLabelText('Confirm Password'), { target: { value: 'password123' } });
+    fireEvent.click(screen.getByLabelText(/I agree to the/));
+    
+    const submitButton = screen.getByRole('button', { name: 'Create Account' });
+    fireEvent.click(submitButton);
+    
+    await waitFor(() => {
+      expect(mockRouter.push).toHaveBeenCalledWith('/onboarding/welcome');
+      expect(mockRouter.push).not.toHaveBeenCalledWith('//malicious-site.com');
+    });
+  });
+
+  it('should handle registration failure', async () => {
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve({
+        success: false,
+        error: 'Email already exists',
+      }),
+    });
+    
+    render(<RegisterPage />);
+    
+    // Fill out form
+    fireEvent.change(screen.getByLabelText('Full Name'), { target: { value: 'John Doe' } });
+    fireEvent.change(screen.getByLabelText('Email Address'), { target: { value: 'john@example.com' } });
+    fireEvent.change(screen.getByLabelText('Password'), { target: { value: 'password123' } });
+    fireEvent.change(screen.getByLabelText('Confirm Password'), { target: { value: 'password123' } });
+    fireEvent.click(screen.getByLabelText(/I agree to the/));
+    
+    const submitButton = screen.getByRole('button', { name: 'Create Account' });
+    fireEvent.click(submitButton);
+    
+    await waitFor(() => {
+      expect(screen.getByText('Email already exists')).toBeInTheDocument();
+      expect(mockRouter.push).not.toHaveBeenCalled();
+    });
+  });
+
+  it('should handle network error', async () => {
+    (global.fetch as jest.Mock).mockRejectedValueOnce(new Error('Network error'));
+    
+    render(<RegisterPage />);
+    
+    // Fill out form
+    fireEvent.change(screen.getByLabelText('Full Name'), { target: { value: 'John Doe' } });
+    fireEvent.change(screen.getByLabelText('Email Address'), { target: { value: 'john@example.com' } });
+    fireEvent.change(screen.getByLabelText('Password'), { target: { value: 'password123' } });
+    fireEvent.change(screen.getByLabelText('Confirm Password'), { target: { value: 'password123' } });
+    fireEvent.click(screen.getByLabelText(/I agree to the/));
+    
+    const submitButton = screen.getByRole('button', { name: 'Create Account' });
+    fireEvent.click(submitButton);
+    
+    await waitFor(() => {
+      expect(screen.getByText('Network error occurred')).toBeInTheDocument();
+    });
+  });
+
+  it('should show loading state during submission', async () => {
+    let resolveRegister: (value: any) => void;
+    (global.fetch as jest.Mock).mockImplementation(() => 
+      new Promise(resolve => {
+        resolveRegister = resolve;
+      })
+    );
+    
+    render(<RegisterPage />);
+    
+    // Fill out form
+    fireEvent.change(screen.getByLabelText('Full Name'), { target: { value: 'John Doe' } });
+    fireEvent.change(screen.getByLabelText('Email Address'), { target: { value: 'john@example.com' } });
+    fireEvent.change(screen.getByLabelText('Password'), { target: { value: 'password123' } });
+    fireEvent.change(screen.getByLabelText('Confirm Password'), { target: { value: 'password123' } });
+    fireEvent.click(screen.getByLabelText(/I agree to the/));
+    
+    const submitButton = screen.getByRole('button', { name: 'Create Account' });
+    fireEvent.click(submitButton);
+    
+    expect(screen.getByText('Loading...')).toBeInTheDocument();
+    expect(submitButton).toBeDisabled();
+    
+    resolveRegister!({
+      ok: true,
+      json: () => Promise.resolve({ success: true }),
+    });
+    
+    await waitFor(() => {
+      expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+    });
+  });
+
+  it('should handle auto-login failure after successful registration', async () => {
+    (global.fetch as jest.Mock)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ success: true }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ success: false, error: 'Login failed' }),
+      });
+    
+    render(<RegisterPage />);
+    
+    // Fill out form
+    fireEvent.change(screen.getByLabelText('Full Name'), { target: { value: 'John Doe' } });
+    fireEvent.change(screen.getByLabelText('Email Address'), { target: { value: 'john@example.com' } });
+    fireEvent.change(screen.getByLabelText('Password'), { target: { value: 'password123' } });
+    fireEvent.change(screen.getByLabelText('Confirm Password'), { target: { value: 'password123' } });
+    fireEvent.click(screen.getByLabelText(/I agree to the/));
+    
+    const submitButton = screen.getByRole('button', { name: 'Create Account' });
+    fireEvent.click(submitButton);
+    
+    await waitFor(() => {
+      expect(mockRouter.push).not.toHaveBeenCalled();
+      expect(mockLocalStorage.setItem).not.toHaveBeenCalled();
+    });
+  });
+
+  it('should render Google and GitHub OAuth buttons', () => {
+    render(<RegisterPage />);
+    
+    expect(screen.getByText('Google')).toBeInTheDocument();
+    expect(screen.getByText('GitHub')).toBeInTheDocument();
+  });
+
+  it('should render terms of service and privacy policy links', () => {
+    render(<RegisterPage />);
+    
+    expect(screen.getByText('Terms of Service')).toBeInTheDocument();
+    expect(screen.getByText('Privacy Policy')).toBeInTheDocument();
+  });
+
+  it('should handle checkbox state changes', () => {
+    render(<RegisterPage />);
+    
+    const checkbox = screen.getByLabelText(/I agree to the/) as HTMLInputElement;
+    expect(checkbox.checked).toBe(false);
+    
+    fireEvent.click(checkbox);
+    expect(checkbox.checked).toBe(true);
+    
+    fireEvent.click(checkbox);
+    expect(checkbox.checked).toBe(false);
+  });
+
+  it('should validate all edge cases for email', async () => {
+    render(<RegisterPage />);
+    
+    const emailInput = screen.getByLabelText('Email Address');
+    const submitButton = screen.getByRole('button', { name: 'Create Account' });
+    
+    const testCases = [
+      { email: '', expected: 'Email is required' },
+      { email: '   ', expected: 'Email is required' },
+      { email: 'invalid', expected: 'Please enter a valid email' },
+      { email: '@domain.com', expected: 'Please enter a valid email' },
+      { email: 'user@', expected: 'Please enter a valid email' },
+      { email: 'user@domain', expected: 'Please enter a valid email' },
+    ];
+    
+    for (const testCase of testCases) {
+      fireEvent.change(emailInput, { target: { value: testCase.email } });
+      fireEvent.click(submitButton);
+      
+      await waitFor(() => {
+        expect(screen.getByText(testCase.expected)).toBeInTheDocument();
+      });
+    }
+  });
+
+  it('should handle successful registration without session token', async () => {
+    (global.fetch as jest.Mock)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ success: true }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ success: true }),
+      });
+    
+    render(<RegisterPage />);
+    
+    // Fill out form
+    fireEvent.change(screen.getByLabelText('Full Name'), { target: { value: 'John Doe' } });
+    fireEvent.change(screen.getByLabelText('Email Address'), { target: { value: 'john@example.com' } });
+    fireEvent.change(screen.getByLabelText('Password'), { target: { value: 'password123' } });
+    fireEvent.change(screen.getByLabelText('Confirm Password'), { target: { value: 'password123' } });
+    fireEvent.click(screen.getByLabelText(/I agree to the/));
+    
+    const submitButton = screen.getByRole('button', { name: 'Create Account' });
+    fireEvent.click(submitButton);
+    
+    await waitFor(() => {
+      expect(mockLocalStorage.setItem).not.toHaveBeenCalled();
+      expect(mockDispatchEvent).toHaveBeenCalledWith(new CustomEvent('auth-changed'));
+      expect(mockRouter.push).toHaveBeenCalledWith('/onboarding/welcome');
+    });
+  });
+
+  it('should handle multiple validation errors at once', async () => {
+    render(<RegisterPage />);
+    
+    const submitButton = screen.getByRole('button', { name: 'Create Account' });
+    fireEvent.click(submitButton);
+    
+    await waitFor(() => {
+      expect(screen.getByText('Full name is required')).toBeInTheDocument();
+      expect(screen.getByText('Email is required')).toBeInTheDocument();
+      expect(screen.getByText('Password is required')).toBeInTheDocument();
+      expect(screen.getByText('You must accept the terms')).toBeInTheDocument();
+    });
+  });
+
+  it('should render error message with proper styling', async () => {
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve({
+        success: false,
+        error: 'Test error message',
+      }),
+    });
+    
+    render(<RegisterPage />);
+    
+    // Fill out form
+    fireEvent.change(screen.getByLabelText('Full Name'), { target: { value: 'John Doe' } });
+    fireEvent.change(screen.getByLabelText('Email Address'), { target: { value: 'john@example.com' } });
+    fireEvent.change(screen.getByLabelText('Password'), { target: { value: 'password123' } });
+    fireEvent.change(screen.getByLabelText('Confirm Password'), { target: { value: 'password123' } });
+    fireEvent.click(screen.getByLabelText(/I agree to the/));
+    
+    const submitButton = screen.getByRole('button', { name: 'Create Account' });
+    fireEvent.click(submitButton);
+    
+    await waitFor(() => {
+      const errorContainer = screen.getByText('Test error message').closest('.rounded-md');
+      expect(errorContainer).toHaveClass('bg-red-50');
+    });
+  });
+});
