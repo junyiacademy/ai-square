@@ -12,6 +12,7 @@ const config = {
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
+    '^@/i18n$': '<rootDir>/src/__mocks__/i18n.ts',
   },
   testPathIgnorePatterns: ['/node_modules/', '/.next/'],
   transform: {
@@ -30,12 +31,14 @@ const config = {
     '!src/**/*.stories.{js,jsx,ts,tsx}',
     '!src/**/__tests__/**',
   ],
+  modulePathIgnorePatterns: ['<rootDir>/src/i18n.ts'],
+  automock: false,
   coverageThreshold: {
     global: {
-      branches: 30,
-      functions: 30,
-      lines: 30,
-      statements: 30,
+      branches: 37,
+      functions: 52,
+      lines: 52,
+      statements: 52,
     },
   },
 }

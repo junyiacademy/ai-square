@@ -39,10 +39,19 @@ if (!global.Response) {
 
 if (!global.Request) {
   global.Request = class Request {
-    constructor(public url: string, public init: any = {}) {
+    private _url: string
+    private _init: any
+    
+    constructor(url: string, init: any = {}) {
+      this._url = url
+      this._init = init
       this.method = init.method || 'GET'
       this.headers = new Map(Object.entries(init.headers || {}))
       this.body = init.body
+    }
+    
+    get url() {
+      return this._url
     }
     
     method: string
@@ -58,7 +67,7 @@ if (!global.Request) {
     }
     
     clone() {
-      return new Request(this.url, this.init)
+      return new Request(this._url, this._init)
     }
   } as any
 }
@@ -67,3 +76,50 @@ if (!global.Request) {
 if (!global.Headers) {
   global.Headers = Map as any
 }
+
+// Mock i18n module
+jest.mock('./src/i18n', () => ({
+  default: {
+    use: jest.fn().mockReturnThis(),
+    init: jest.fn().mockReturnThis(),
+    changeLanguage: jest.fn(() => Promise.resolve()),
+    language: 'en',
+    languages: ['en', 'zhTW', 'zhCN'],
+  }
+}))
+
+// Mock react-i18next
+jest.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key: string) => key,
+    i18n: {
+      changeLanguage: jest.fn(() => Promise.resolve()),
+      language: 'en',
+      languages: ['en', 'zhTW', 'zhCN'],
+    },
+    ready: true,
+  }),
+  Trans: ({ children }: { children: React.ReactNode }) => children,
+  initReactI18next: {
+    type: '3rdParty',
+    init: jest.fn(),
+  },
+  I18nextProvider: ({ children }: { children: React.ReactNode }) => children,
+}))
+
+// Mock next/navigation
+jest.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: jest.fn(),
+    replace: jest.fn(),
+    prefetch: jest.fn(),
+    back: jest.fn(),
+    forward: jest.fn(),
+    refresh: jest.fn(),
+  }),
+  useSearchParams: () => ({
+    get: jest.fn(),
+  }),
+  usePathname: () => '/test-path',
+  useParams: () => ({}),
+}))

@@ -20,19 +20,19 @@ describe('LoginForm 組件測試', () => {
     it('應該正確渲染登入表單的所有元素', () => {
       render(<LoginForm onSubmit={mockOnSubmit} />)
 
-      // 檢查表單標題
-      expect(screen.getByText('Test Accounts')).toBeInTheDocument()
+      // 檢查表單標題 (使用翻譯鍵值)
+      expect(screen.getByText('testAccounts.title')).toBeInTheDocument()
 
-      // 檢查表單輸入欄位
-      expect(screen.getByLabelText('Email')).toBeInTheDocument()
-      expect(screen.getByLabelText('Password')).toBeInTheDocument()
+      // 檢查表單輸入欄位 (使用翻譯鍵值作為 label)
+      expect(screen.getByLabelText('email')).toBeInTheDocument()
+      expect(screen.getByLabelText('password')).toBeInTheDocument()
       
-      // 檢查登入按鈕
-      expect(screen.getByRole('button', { name: 'Login' })).toBeInTheDocument()
+      // 檢查登入按鈕 (使用翻譯鍵值)
+      expect(screen.getByRole('button', { name: 'login' })).toBeInTheDocument()
 
       // 檢查輸入欄位類型正確
-      expect(screen.getByLabelText('Email')).toHaveAttribute('type', 'email')
-      expect(screen.getByLabelText('Password')).toHaveAttribute('type', 'password')
+      expect(screen.getByLabelText('email')).toHaveAttribute('type', 'email')
+      expect(screen.getByLabelText('password')).toHaveAttribute('type', 'password')
     })
 
     it('應該顯示所有測試帳戶按鈕', () => {
@@ -49,8 +49,8 @@ describe('LoginForm 組件測試', () => {
       const user = userEvent.setup()
       render(<LoginForm onSubmit={mockOnSubmit} />)
 
-      const emailInput = screen.getByLabelText('Email') as HTMLInputElement
-      const passwordInput = screen.getByLabelText('Password') as HTMLInputElement
+      const emailInput = screen.getByLabelText('email') as HTMLInputElement
+      const passwordInput = screen.getByLabelText('password') as HTMLInputElement
 
       await user.type(emailInput, 'test@example.com')
       await user.type(passwordInput, 'password123')
@@ -63,9 +63,9 @@ describe('LoginForm 組件測試', () => {
       const user = userEvent.setup()
       render(<LoginForm onSubmit={mockOnSubmit} />)
 
-      const emailInput = screen.getByLabelText('Email')
-      const passwordInput = screen.getByLabelText('Password')
-      const submitButton = screen.getByRole('button', { name: 'Login' })
+      const emailInput = screen.getByLabelText('email')
+      const passwordInput = screen.getByLabelText('password')
+      const submitButton = screen.getByRole('button', { name: 'login' })
 
       await user.type(emailInput, 'student@example.com')
       await user.type(passwordInput, 'student123')
@@ -83,10 +83,10 @@ describe('LoginForm 組件測試', () => {
       const user = userEvent.setup()
       render(<LoginForm onSubmit={mockOnSubmit} />)
 
-      const emailInput = screen.getByLabelText('Email')
-      const passwordInput = screen.getByLabelText('Password')
+      const emailInput = screen.getByLabelText('email')
+      const passwordInput = screen.getByLabelText('password')
       const rememberMeCheckbox = screen.getByRole('checkbox', { name: 'rememberMe' })
-      const submitButton = screen.getByRole('button', { name: 'Login' })
+      const submitButton = screen.getByRole('button', { name: 'login' })
 
       await user.type(emailInput, 'student@example.com')
       await user.type(passwordInput, 'student123')
@@ -104,8 +104,8 @@ describe('LoginForm 組件測試', () => {
       const user = userEvent.setup()
       render(<LoginForm onSubmit={mockOnSubmit} />)
 
-      const emailInput = screen.getByLabelText('Email')
-      const passwordInput = screen.getByLabelText('Password')
+      const emailInput = screen.getByLabelText('email')
+      const passwordInput = screen.getByLabelText('password')
 
       await user.type(emailInput, 'test@example.com')
       await user.type(passwordInput, 'password123')
@@ -123,16 +123,16 @@ describe('LoginForm 組件測試', () => {
     it('應該在載入狀態時顯示載入文字和禁用按鈕', () => {
       render(<LoginForm onSubmit={mockOnSubmit} loading={true} />)
 
-      const submitButton = screen.getByRole('button', { name: 'Signing in...' })
-      expect(submitButton).toHaveTextContent('Signing in...')
+      const submitButton = screen.getByRole('button', { name: 'loading' })
+      expect(submitButton).toHaveTextContent('loading')
       expect(submitButton).toBeDisabled()
     })
 
     it('應該在載入狀態時禁用輸入欄位', () => {
       render(<LoginForm onSubmit={mockOnSubmit} loading={true} />)
 
-      expect(screen.getByLabelText('Email')).toBeDisabled()
-      expect(screen.getByLabelText('Password')).toBeDisabled()
+      expect(screen.getByLabelText('email')).toBeDisabled()
+      expect(screen.getByLabelText('password')).toBeDisabled()
     })
 
     it('應該在有錯誤時顯示錯誤訊息', () => {
@@ -149,7 +149,7 @@ describe('LoginForm 組件測試', () => {
     it('應該在表單不完整時禁用提交按鈕', () => {
       render(<LoginForm onSubmit={mockOnSubmit} />)
 
-      const submitButton = screen.getByRole('button', { name: 'Login' })
+      const submitButton = screen.getByRole('button', { name: 'login' })
       expect(submitButton).toBeDisabled()
     })
 
@@ -157,8 +157,8 @@ describe('LoginForm 組件測試', () => {
       const user = userEvent.setup()
       render(<LoginForm onSubmit={mockOnSubmit} />)
 
-      const emailInput = screen.getByLabelText('Email')
-      const submitButton = screen.getByRole('button', { name: 'Login' })
+      const emailInput = screen.getByLabelText('email')
+      const submitButton = screen.getByRole('button', { name: 'login' })
 
       await user.type(emailInput, 'test@example.com')
       
@@ -169,8 +169,8 @@ describe('LoginForm 組件測試', () => {
       const user = userEvent.setup()
       render(<LoginForm onSubmit={mockOnSubmit} />)
 
-      const passwordInput = screen.getByLabelText('Password')
-      const submitButton = screen.getByRole('button', { name: 'Login' })
+      const passwordInput = screen.getByLabelText('password')
+      const submitButton = screen.getByRole('button', { name: 'login' })
 
       await user.type(passwordInput, 'password123')
       
@@ -181,9 +181,9 @@ describe('LoginForm 組件測試', () => {
       const user = userEvent.setup()
       render(<LoginForm onSubmit={mockOnSubmit} />)
 
-      const emailInput = screen.getByLabelText('Email')
-      const passwordInput = screen.getByLabelText('Password')
-      const submitButton = screen.getByRole('button', { name: 'Login' })
+      const emailInput = screen.getByLabelText('email')
+      const passwordInput = screen.getByLabelText('password')
+      const submitButton = screen.getByRole('button', { name: 'login' })
 
       await user.type(emailInput, 'test@example.com')
       await user.type(passwordInput, 'password123')
@@ -197,14 +197,14 @@ describe('LoginForm 組件測試', () => {
       const user = userEvent.setup()
       render(<LoginForm onSubmit={mockOnSubmit} />)
 
-      const emailInput = screen.getByLabelText('Email')
-      const passwordInput = screen.getByLabelText('Password')
+      const emailInput = screen.getByLabelText('email')
+      const passwordInput = screen.getByLabelText('password')
 
       await user.type(emailInput, 'test@example.com')
       await user.type(passwordInput, 'password')
       await user.clear(passwordInput)
 
-      const submitButton = screen.getByRole('button', { name: 'Login' })
+      const submitButton = screen.getByRole('button', { name: 'login' })
       expect(submitButton).toBeDisabled()
     })
 
@@ -213,7 +213,7 @@ describe('LoginForm 組件測試', () => {
       render(<LoginForm onSubmit={mockOnSubmit} loading={true} />)
 
       // 即使表單看起來完整，在載入狀態時也不應該能提交
-      const submitButton = screen.getByRole('button', { name: 'Signing in...' })
+      const submitButton = screen.getByRole('button', { name: 'loading' })
       await user.click(submitButton)
 
       expect(mockOnSubmit).not.toHaveBeenCalled()
@@ -223,9 +223,9 @@ describe('LoginForm 組件測試', () => {
       const user = userEvent.setup()
       render(<LoginForm onSubmit={mockOnSubmit} />)
 
-      const emailInput = screen.getByLabelText('Email')
-      const passwordInput = screen.getByLabelText('Password')
-      const submitButton = screen.getByRole('button', { name: 'Login' })
+      const emailInput = screen.getByLabelText('email')
+      const passwordInput = screen.getByLabelText('password')
+      const submitButton = screen.getByRole('button', { name: 'login' })
 
       await user.type(emailInput, 'test+special@example.com')
       await user.type(passwordInput, 'pass@word#123!')
@@ -245,9 +245,9 @@ describe('LoginForm 組件測試', () => {
       const longEmail = 'a'.repeat(50) + '@example.com'
       const longPassword = 'password' + 'a'.repeat(100)
 
-      const emailInput = screen.getByLabelText('Email')
-      const passwordInput = screen.getByLabelText('Password')
-      const submitButton = screen.getByRole('button', { name: 'Login' })
+      const emailInput = screen.getByLabelText('email')
+      const passwordInput = screen.getByLabelText('password')
+      const submitButton = screen.getByRole('button', { name: 'login' })
 
       await user.type(emailInput, longEmail)
       await user.type(passwordInput, longPassword)
@@ -265,8 +265,8 @@ describe('LoginForm 組件測試', () => {
     it('應該有正確的 ARIA 屬性', () => {
       render(<LoginForm onSubmit={mockOnSubmit} />)
 
-      const emailInput = screen.getByLabelText('Email')
-      const passwordInput = screen.getByLabelText('Password')
+      const emailInput = screen.getByLabelText('email')
+      const passwordInput = screen.getByLabelText('password')
 
       expect(emailInput).toHaveAttribute('required')
       expect(passwordInput).toHaveAttribute('required')
@@ -278,8 +278,8 @@ describe('LoginForm 組件測試', () => {
       const user = userEvent.setup()
       render(<LoginForm onSubmit={mockOnSubmit} />)
 
-      const emailInput = screen.getByLabelText('Email')
-      const passwordInput = screen.getByLabelText('Password')
+      const emailInput = screen.getByLabelText('email')
+      const passwordInput = screen.getByLabelText('password')
       const rememberMeCheckbox = screen.getByRole('checkbox')
 
       // Tab 導航測試
@@ -307,7 +307,7 @@ describe('LoginForm 組件測試', () => {
       await user.tab() // to remember me
       await user.tab() // to forgot password
       await user.tab() // to submit button
-      const submitButton = screen.getByRole('button', { name: 'Login' })
+      const submitButton = screen.getByRole('button', { name: 'login' })
       expect(submitButton).toHaveFocus()
     })
 
@@ -324,9 +324,9 @@ describe('LoginForm 組件測試', () => {
     it('應該有正確的 CSS 類別', () => {
       render(<LoginForm onSubmit={mockOnSubmit} />)
 
-      const emailInput = screen.getByLabelText('Email')
-      const passwordInput = screen.getByLabelText('Password')
-      const submitButton = screen.getByRole('button', { name: 'Login' })
+      const emailInput = screen.getByLabelText('email')
+      const passwordInput = screen.getByLabelText('password')
+      const submitButton = screen.getByRole('button', { name: 'login' })
 
       // 檢查輸入欄位樣式
       expect(emailInput).toHaveClass('w-full', 'px-4', 'py-3', 'border', 'rounded-lg')
@@ -339,7 +339,7 @@ describe('LoginForm 組件測試', () => {
     it('應該在禁用狀態時有正確的樣式', () => {
       render(<LoginForm onSubmit={mockOnSubmit} loading={true} />)
 
-      const submitButton = screen.getByRole('button', { name: 'Signing in...' })
+      const submitButton = screen.getByRole('button', { name: 'loading' })
       expect(submitButton).toHaveClass('disabled:opacity-50', 'disabled:cursor-not-allowed')
     })
   })
@@ -348,11 +348,11 @@ describe('LoginForm 組件測試', () => {
     it('應該使用翻譯鍵值而不是硬編碼文字', () => {
       render(<LoginForm onSubmit={mockOnSubmit} />)
 
-      // 我們的 mock 會將翻譯鍵值轉換為對應的英文
-      expect(screen.getByText('Email')).toBeInTheDocument()
-      expect(screen.getByText('Password')).toBeInTheDocument()
-      expect(screen.getByText('Login')).toBeInTheDocument()
-      expect(screen.getByText('Test Accounts')).toBeInTheDocument()
+      // 我們的 mock 會返回翻譯鍵值
+      expect(screen.getByText('email')).toBeInTheDocument()
+      expect(screen.getByText('password')).toBeInTheDocument()
+      expect(screen.getByText('login')).toBeInTheDocument()
+      expect(screen.getByText('testAccounts.title')).toBeInTheDocument()
     })
   })
 })
