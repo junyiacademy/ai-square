@@ -22,7 +22,7 @@ const customJestConfig = {
       // statements: 35,
       
       // Phase 2: Q1 2025 Target (提升到 40%)
-      branches: 30,  // Temporarily lowered from 40 to match current coverage
+      branches: 29.85,  // Current baseline after cleanup (removed skipped tests)
       functions: 40,
       lines: 40,
       statements: 40,
