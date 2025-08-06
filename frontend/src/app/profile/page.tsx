@@ -76,7 +76,7 @@ export default function ProfilePage() {
       } else {
         setError(data.error || 'Failed to load profile');
       }
-    } catch (err) {
+    } catch {
       setError('Failed to load profile');
     } finally {
       setIsLoading(false);
@@ -103,7 +103,7 @@ export default function ProfilePage() {
     setIsSaving(true);
 
     try {
-      const updates: any = {};
+      const updates: Record<string, unknown> = {};
       
       // 只發送有變更的欄位
       if (name !== profile?.name) updates.name = name;
@@ -140,7 +140,7 @@ export default function ProfilePage() {
       } else {
         setError(data.error || t('profile.updateError'));
       }
-    } catch (err) {
+    } catch {
       setError(t('profile.updateError'));
     } finally {
       setIsSaving(false);
@@ -166,7 +166,7 @@ export default function ProfilePage() {
       } else {
         setError(data.error || t('profile.resendError'));
       }
-    } catch (err) {
+    } catch {
       setError(t('profile.resendError'));
     } finally {
       setIsResending(false);

@@ -8,7 +8,7 @@ export async function GET() {
   // Development mode: Skip strict JWT verification
   const isDevelopment = process.env.NODE_ENV === 'development'
   
-  // In development, skip JWT entirely and use legacy cookies
+  // Production mode: Use JWT access token first  
   if (!isDevelopment) {
     // Production mode: Use JWT access token
     const accessToken = cookieStore.get('accessToken')

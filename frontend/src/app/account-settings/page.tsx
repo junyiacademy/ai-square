@@ -91,7 +91,7 @@ export default function AccountSettingsPage() {
       } else {
         setError(data.error || t('accountSettings.deleteError'));
       }
-    } catch (err) {
+    } catch {
       setError(t('accountSettings.deleteError'));
     } finally {
       setIsDeleting(false);

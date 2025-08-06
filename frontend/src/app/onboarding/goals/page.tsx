@@ -129,11 +129,130 @@ export default function OnboardingGoalsPage() {
         });
       }
 
-      // Proceed to assessment
-      router.push('/assessment');
+      // Check both frontend and backend authentication status
+      console.log('Checking user authentication...');
+      
+      // First check frontend state
+      const authUserStr = localStorage.getItem('user');
+      const frontendUser = authUserStr ? JSON.parse(authUserStr) : null;
+      console.log('Frontend user state:', frontendUser ? 'logged in' : 'not logged in');
+      
+      // Then check backend API
+      const authCheckResponse = await fetch('/api/auth/check');
+      const authData = await authCheckResponse.json();
+      console.log('Backend auth response:', authData);
+      
+      // If backend auth fails but frontend shows user is logged in, try to proceed anyway
+      if (!authData.authenticated && !frontendUser) {
+        console.log('Neither frontend nor backend shows user as authenticated');
+        alert('請先完成登入，然後選擇評估項目開始您的 AI 學習之旅！');
+        router.push('/assessment/scenarios');
+        return;
+      }
+      
+      if (!authData.authenticated && frontendUser) {
+        console.log('Frontend shows user logged in but backend auth failed - proceeding with frontend user info');
+        console.log('This might be a session sync issue, but we\'ll try to create the program');
+      }
+      
+      console.log('User authenticated, proceeding with automatic program creation');
+
+      // Get first assessment scenario and auto-create program
+      console.log('Fetching assessment scenarios...');
+      const scenariosResponse = await fetch('/api/assessment/scenarios?lang=en');
+      
+      if (!scenariosResponse.ok) {
+        console.error('Failed to fetch scenarios:', scenariosResponse.status, scenariosResponse.statusText);
+        const errorText = await scenariosResponse.text();
+        console.error('Error details:', errorText);
+        router.push('/assessment/scenarios');
+        return;
+      }
+
+      const scenariosData = await scenariosResponse.json();
+      console.log('Scenarios API response:', scenariosData);
+      
+      // 確保正確提取 scenarios 陣列
+      let scenarios = [];
+      if (Array.isArray(scenariosData)) {
+        scenarios = scenariosData;
+      } else if (scenariosData.scenarios && Array.isArray(scenariosData.scenarios)) {
+        scenarios = scenariosData.scenarios;
+      } else if (scenariosData.data && scenariosData.data.scenarios && Array.isArray(scenariosData.data.scenarios)) {
+        // API 返回的格式是 { success: true, data: { scenarios: [...] } }
+        scenarios = scenariosData.data.scenarios;
+      } else if (scenariosData.data && Array.isArray(scenariosData.data)) {
+        scenarios = scenariosData.data;
+      }
+      
+      console.log('Extracted scenarios:', scenarios.length, 'scenarios found');
+      
+      if (!scenarios || scenarios.length === 0) {
+        console.error('No assessment scenarios found');
+        router.push('/assessment/scenarios');
+        return;
+      }
+
+      // Get first scenario
+      const firstScenario = scenarios[0];
+      if (!firstScenario || !firstScenario.id) {
+        console.error('Invalid scenario structure:', firstScenario);
+        router.push('/assessment/scenarios');
+        return;
+      }
+      
+      console.log('Creating program for first scenario:', firstScenario.id);
+
+      // Create program for the first scenario
+      console.log('Attempting to create program with current auth state...');
+      const programResponse = await fetch(`/api/assessment/scenarios/${firstScenario.id}/programs`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action: 'start',
+          language: 'en'
+        }),
+        credentials: 'include' // Include cookies in the request
+      });
+
+      if (!programResponse.ok) {
+        console.error('Failed to create program:', programResponse.status, programResponse.statusText);
+        const errorText = await programResponse.text();
+        console.error('Program creation error details:', errorText);
+        
+        // If program creation fails due to auth, redirect to scenarios page
+        if (programResponse.status === 401 || programResponse.status === 403) {
+          console.log('Program creation failed due to authentication - redirecting to scenarios page');
+          alert('將為您開啟評估項目清單，請手動選擇第一個項目開始測驗。');
+          router.push('/assessment/scenarios');
+        } else {
+          console.log('Program creation failed for other reasons - redirecting to scenarios page');
+          router.push('/assessment/scenarios');
+        }
+        return;
+      }
+
+      const programData = await programResponse.json();
+      console.log('Program created successfully:', programData.program?.id);
+
+      // Navigate to the assessment program using correct route structure
+      const scenarioId = firstScenario.id;
+      const programId = programData.program.id;
+      
+      if (programData.existing) {
+        // Use existing program
+        router.push(`/assessment/scenarios/${scenarioId}/programs/${programId}`);
+      } else {
+        // New program created
+        router.push(`/assessment/scenarios/${scenarioId}/programs/${programId}`);
+      }
+
     } catch (error) {
-      console.error('Error saving goals:', error);
-      router.push('/assessment'); // Still proceed even if save fails
+      console.error('Error in onboarding completion:', error);
+      // Fallback to assessment scenarios page
+      router.push('/assessment/scenarios');
     } finally {
       setLoading(false);
     }
@@ -295,7 +414,7 @@ export default function OnboardingGoalsPage() {
               </>
             ) : (
               <>
-                {t('onboarding:goals.continue')}
+                Continue to Assessment
                 <svg className="ml-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>

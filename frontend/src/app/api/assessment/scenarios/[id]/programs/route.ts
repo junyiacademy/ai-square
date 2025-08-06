@@ -146,16 +146,35 @@ export async function POST(
     const body = await request.json();
     const { action, language = 'en' } = body;
     
-    // Get user session using consistent method
+    // Try multiple authentication methods
     const session = await getServerSession();
-    if (!session?.user?.email) {
+    let email: string | null = null;
+    
+    if (session?.user?.email) {
+      email = session.user.email;
+    } else {
+      // Fallback: Check for user cookie directly
+      const cookies = request.cookies;
+      const userCookie = cookies.get('user')?.value;
+      
+      if (userCookie) {
+        try {
+          const userData = JSON.parse(userCookie);
+          email = userData.email;
+          console.log('Using fallback authentication from user cookie');
+        } catch (error) {
+          console.error('Error parsing user cookie:', error);
+        }
+      }
+    }
+    
+    if (!email) {
+      console.log('No authentication found in session or cookies');
       return NextResponse.json(
         { error: 'Authentication required' },
         { status: 401 }
       );
     }
-    
-    const email = session.user.email;
     
     if (action !== 'start') {
       return NextResponse.json(
@@ -225,32 +244,42 @@ export async function POST(
     }
     
     console.log('   Using Assessment Learning Service to start learning...');
+    console.log('   User ID:', user.id);
+    console.log('   Scenario ID:', id);
+    console.log('   Language:', language);
     
     // Use the new service layer
     const assessmentService = learningServiceFactory.getService('assessment');
-    const program = await assessmentService.startLearning(
-      user.id,
-      id,
-      { language }
-    );
     
-    console.log('   ✅ Program created with UUID:', program.id);
-    
-    // Get created tasks
-    const tasks = await taskRepo.findByProgram(program.id);
-    
-    return NextResponse.json({ 
-      program,
-      tasks,
-      questionsCount: tasks.reduce((sum, t) => {
-        const content = t.content as { questions?: unknown[] } | undefined;
-        return sum + (content?.questions?.length || 0);
-      }, 0)
-    });
+    try {
+      const program = await assessmentService.startLearning(
+        user.id,
+        id,
+        { language }
+      );
+      
+      console.log('   ✅ Program created with UUID:', program.id);
+      
+      // Get created tasks
+      const tasks = await taskRepo.findByProgram(program.id);
+      
+      return NextResponse.json({ 
+        program,
+        tasks,
+        questionsCount: tasks.reduce((sum, t) => {
+          const content = t.content as { questions?: unknown[] } | undefined;
+          return sum + (content?.questions?.length || 0);
+        }, 0)
+      });
+    } catch (serviceError) {
+      console.error('   ❌ Service error:', serviceError);
+      throw serviceError;
+    }
   } catch (error) {
     console.error('Error creating program:', error);
+    console.error('Error stack:', (error as Error).stack);
     return NextResponse.json(
-      { error: 'Failed to create program' },
+      { error: 'Failed to create program', details: (error as Error).message },
       { status: 500 }
     );
   }

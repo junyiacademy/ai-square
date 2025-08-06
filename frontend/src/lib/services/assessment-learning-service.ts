@@ -146,14 +146,19 @@ export class AssessmentLearningService implements BaseLearningService {
       programId: program.id,
       mode: 'assessment',
       taskIndex: 0,
-      title: scenario.taskTemplates[0]?.title || { en: 'Assessment' },
+      title: scenario.taskTemplates?.[0]?.title || { en: 'Assessment' },
       type: 'question',
       status: 'active',
       content: {
         instructions: 'Complete the assessment',
+        context: {
+          questions,
+          timeLimit: (scenario.assessmentData as Record<string, unknown>)?.timeLimitMinutes || 15,
+          language
+        },
+        // Also keep questions at root level for backward compatibility
         questions,
-        timeLimit: scenario.assessmentData.timeLimit,
-        language
+        timeLimit: (scenario.assessmentData as Record<string, unknown>)?.timeLimitMinutes || 15
       },
       interactions: [],
       interactionCount: 0,
@@ -410,28 +415,70 @@ export class AssessmentLearningService implements BaseLearningService {
   private selectQuestions(scenario: IScenario, language: string): Array<Record<string, unknown>> {
     const assessmentData = scenario.assessmentData as Record<string, unknown> || {};
     
-    // 支援兩種資料格式：questionBankByLanguage 和 questionBank
-    const questionBankByLanguage = assessmentData.questionBankByLanguage as Record<string, Array<Record<string, unknown>>> || {};
-    let questionBank: Array<Record<string, unknown>>;
+    console.log('selectQuestions - assessmentData keys:', Object.keys(assessmentData));
+    console.log('selectQuestions - assessmentData.questionBank type:', typeof assessmentData.questionBank);
     
-    if (questionBankByLanguage[language] || questionBankByLanguage['en']) {
-      // 格式 1: questionBankByLanguage
-      questionBank = questionBankByLanguage[language] || questionBankByLanguage['en'] || [];
-    } else {
-      // 格式 2: questionBank (扁平化結構)
-      const flatQuestionBank = assessmentData.questionBank as Array<Record<string, unknown>> || [];
-      questionBank = flatQuestionBank.flatMap((domain: Record<string, unknown>) => {
-        const questions = domain.questions as Array<Record<string, unknown>> || [];
-        return questions;
+    let allQuestions: Array<Record<string, unknown>> = [];
+    
+    // Check for questionBankByLanguage first (multi-language format)
+    const questionBankByLanguage = assessmentData.questionBankByLanguage as Record<string, Array<Record<string, unknown>>>;
+    
+    if (questionBankByLanguage && (questionBankByLanguage[language] || questionBankByLanguage['en'])) {
+      // Format 1: questionBankByLanguage
+      console.log('Using questionBankByLanguage format');
+      allQuestions = questionBankByLanguage[language] || questionBankByLanguage['en'] || [];
+    } else if (assessmentData.questionBank) {
+      // Format 2: questionBank (domain-grouped structure)
+      console.log('Using questionBank format');
+      const questionBank = assessmentData.questionBank;
+      
+      // PostgreSQL JSONB might return as object or array
+      let bankArray: Array<Record<string, unknown>> = [];
+      
+      if (Array.isArray(questionBank)) {
+        bankArray = questionBank;
+      } else if (typeof questionBank === 'object' && questionBank !== null) {
+        // If it's an object, try to convert it to array
+        // Check if it has numeric keys (like {0: {...}, 1: {...}})
+        const keys = Object.keys(questionBank);
+        if (keys.every(k => !isNaN(Number(k)))) {
+          // It's an array-like object
+          bankArray = Object.values(questionBank) as Array<Record<string, unknown>>;
+        } else {
+          // It might be a single domain object
+          bankArray = [questionBank as Record<string, unknown>];
+        }
+      }
+      
+      console.log(`questionBank converted to array with ${bankArray.length} domains`);
+      
+      // Extract questions from all domains
+      allQuestions = bankArray.flatMap((domain: Record<string, unknown>) => {
+        const domainQuestions = domain.questions as Array<Record<string, unknown>> || [];
+        console.log(`Domain ${domain.id}: ${domainQuestions.length} questions`);
+        return domainQuestions.map(q => ({
+          ...q,
+          domainId: domain.id // Add domain ID to each question
+        }));
       });
+    }
+    
+    console.log(`Found ${allQuestions.length} questions total`);
+    
+    if (allQuestions.length === 0) {
+      console.error('No questions found. AssessmentData:', JSON.stringify(assessmentData, null, 2));
+      throw new Error('No questions found in assessment data');
     }
     
     const totalQuestions = (assessmentData.totalQuestions as number) || 12;
     
     // Simple random selection for now
     // TODO: Implement domain-based selection
-    const shuffled = [...questionBank].sort(() => Math.random() - 0.5);
-    return shuffled.slice(0, Math.min(totalQuestions, shuffled.length));
+    const shuffled = [...allQuestions].sort(() => Math.random() - 0.5);
+    const selected = shuffled.slice(0, Math.min(totalQuestions, shuffled.length));
+    
+    console.log(`Selected ${selected.length} questions`);
+    return selected;
   }
 
   private calculateTimeSpent(task: ITask): number {

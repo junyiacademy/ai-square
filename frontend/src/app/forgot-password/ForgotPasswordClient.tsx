@@ -1,13 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import i18n from '@/i18n';
 
 export default function ForgotPasswordClient() {
-  const router = useRouter();
   const { t } = useTranslation('auth');
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -44,7 +42,7 @@ export default function ForgotPasswordClient() {
       } else {
         setError(data.error || t('forgotPassword.error'));
       }
-    } catch (err) {
+    } catch {
       setError(t('forgotPassword.error'));
     } finally {
       setIsLoading(false);

@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
       FROM legal_documents
       WHERE 1=1
     `;
-    const params: any[] = [];
+    const params: (string | boolean)[] = [];
 
     if (type) {
       params.push(type);

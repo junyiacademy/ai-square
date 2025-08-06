@@ -130,6 +130,29 @@ export async function POST(request: NextRequest) {
           path: '/'
         })
 
+        // Set cookies that middleware expects for mock users
+        response.cookies.set('isLoggedIn', 'true', {
+          httpOnly: false,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'lax',
+          maxAge: rememberMe ? 30 * 24 * 60 * 60 : 24 * 60 * 60,
+          path: '/'
+        })
+
+        response.cookies.set('user', JSON.stringify({
+          id: newUser.id,
+          email: newUser.email,
+          name: newUser.name,
+          role: mockUser.role,
+          preferredLanguage: newUser.preferredLanguage
+        }), {
+          httpOnly: false,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'lax',
+          maxAge: rememberMe ? 30 * 24 * 60 * 60 : 24 * 60 * 60,
+          path: '/'
+        })
+
         response.cookies.set('ai_square_refresh', refreshToken, {
           httpOnly: true,
           secure: process.env.NODE_ENV === 'production',
@@ -233,6 +256,21 @@ export async function POST(request: NextRequest) {
     
     // Set cookies that middleware expects
     response.cookies.set('isLoggedIn', 'true', {
+      httpOnly: false, // Allow client-side access
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: rememberMe ? 30 * 24 * 60 * 60 : 24 * 60 * 60,
+      path: '/'
+    })
+    
+    // Set user data cookie for auth check
+    response.cookies.set('user', JSON.stringify({
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      role: userRole,
+      preferredLanguage: user.preferredLanguage
+    }), {
       httpOnly: false, // Allow client-side access
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',

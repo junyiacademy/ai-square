@@ -88,7 +88,7 @@ export async function POST(request: NextRequest) {
 }
 
 // GET - 獲取用戶的同意記錄
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const session = await getSession();
     

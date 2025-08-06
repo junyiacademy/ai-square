@@ -79,7 +79,7 @@ function ResetPasswordContent() {
       } else {
         setError(data.error || t('resetPassword.error'));
       }
-    } catch (err) {
+    } catch {
       setError(t('resetPassword.error'));
     } finally {
       setIsLoading(false);
