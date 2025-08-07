@@ -6,31 +6,27 @@ describe('verification-tokens', () => {
       expect(verificationTokens).toBeDefined();
     });
     
-    it('should work with valid input', () => {
-      // Test with valid parameters
-      const result = typeof verificationTokens === 'function' ? verificationTokens() : verificationTokens;
-      expect(result).toBeDefined();
+    it('should be a Map', () => {
+      expect(verificationTokens).toBeInstanceOf(Map);
     });
     
-    it('should handle edge cases', () => {
-      // Test edge cases
-      expect(() => {
-        if (typeof verificationTokens === 'function') {
-          verificationTokens(null);
-          verificationTokens(undefined);
-          verificationTokens({});
-        }
-      }).not.toThrow();
+    it('should support basic Map operations', () => {
+      const testToken = { email: 'test@example.com', expiresAt: new Date() };
+      verificationTokens.set('test-key', testToken);
+      
+      expect(verificationTokens.has('test-key')).toBe(true);
+      expect(verificationTokens.get('test-key')).toEqual(testToken);
+      
+      verificationTokens.delete('test-key');
+      expect(verificationTokens.has('test-key')).toBe(false);
     });
     
-    it('should handle errors gracefully', () => {
-      // Test error handling
-      expect(() => {
-        // Intentionally cause an error
-        if (typeof verificationTokens === 'function') {
-          verificationTokens(Symbol('test'));
-        }
-      }).not.toThrow();
+    it('should clear all tokens', () => {
+      verificationTokens.set('key1', { email: 'test1@example.com', expiresAt: new Date() });
+      verificationTokens.set('key2', { email: 'test2@example.com', expiresAt: new Date() });
+      
+      verificationTokens.clear();
+      expect(verificationTokens.size).toBe(0);
     });
   });
 });

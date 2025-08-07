@@ -1,32 +1,45 @@
-/**
- * Tests for DistributedCacheService.ts
- */
-
 import { distributedCacheService } from '../distributed-cache-service';
 
-describe('DistributedCacheService', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
+describe('distributedCacheService', () => {
+  describe('initialization', () => {
+    it('should be defined', () => {
+      expect(distributedCacheService).toBeDefined();
+    });
   });
-
-  it('should be defined', () => {
-    expect(DistributedCacheService).toBeDefined();
+  
+  describe('get and set', () => {
+    it('should set and get values', async () => {
+      await distributedCacheService.set('test-key', 'test-value', { ttl: 60 });
+      const value = await distributedCacheService.get('test-key');
+      expect(value).toBe('test-value');
+    });
+    
+    it('should return null for missing keys', async () => {
+      const value = await distributedCacheService.get('non-existent-key');
+      expect(value).toBeNull();
+    });
   });
-
-  it('should work correctly', () => {
-    // Add specific tests based on the module's functionality
-    // DistributedCacheService is a class/module
-    // Test implementation
+  
+  describe('delete', () => {
+    it('should delete values', async () => {
+      await distributedCacheService.set('test-key', 'test-value', { ttl: 60 });
+      await distributedCacheService.delete('test-key');
+      const value = await distributedCacheService.get('test-key');
+      expect(value).toBeNull();
+    });
   });
-
-  it('should handle edge cases', () => {
-    // Test edge cases
-    // Test edge cases for DistributedCacheService
-    // Test edge cases
-  });
-
-  it('should handle errors gracefully', () => {
-    // Test error handling
-    // Test error handling for DistributedCacheService
+  
+  describe('clear', () => {
+    it('should clear all values', async () => {
+      await distributedCacheService.set('key1', 'value1', { ttl: 60 });
+      await distributedCacheService.set('key2', 'value2', { ttl: 60 });
+      await distributedCacheService.clear();
+      
+      const value1 = await distributedCacheService.get('key1');
+      const value2 = await distributedCacheService.get('key2');
+      
+      expect(value1).toBeNull();
+      expect(value2).toBeNull();
+    });
   });
 });

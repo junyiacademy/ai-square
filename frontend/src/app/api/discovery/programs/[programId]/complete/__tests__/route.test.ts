@@ -112,7 +112,7 @@ describe('POST /api/discovery/programs/[programId]/complete', () => {
       method: 'POST',
     });
 
-    const response = await POST(request, { params: Promise.resolve({ programId: 'program123' }) });
+    const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
     const data = await response.json();
 
     expect(response.status).toBe(401);
@@ -127,7 +127,7 @@ describe('POST /api/discovery/programs/[programId]/complete', () => {
       method: 'POST',
     });
 
-    const response = await POST(request, { params: Promise.resolve({ programId: 'program123' }) });
+    const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
     const data = await response.json();
 
     expect(response.status).toBe(404);
@@ -142,7 +142,7 @@ describe('POST /api/discovery/programs/[programId]/complete', () => {
       method: 'POST',
     });
 
-    const response = await POST(request, { params: Promise.resolve({ programId: 'program123' }) });
+    const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
     const data = await response.json();
 
     expect(response.status).toBe(404);
@@ -167,7 +167,7 @@ describe('POST /api/discovery/programs/[programId]/complete', () => {
       method: 'POST',
     });
 
-    const response = await POST(request, { params: Promise.resolve({ programId: 'program123' }) });
+    const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
     const data = await response.json();
 
     expect(response.status).toBe(200);
@@ -190,7 +190,7 @@ describe('POST /api/discovery/programs/[programId]/complete', () => {
       headers: { 'accept-language': 'zhTW' },
     });
 
-    const response = await POST(request, { params: Promise.resolve({ programId: 'program123' }) });
+    const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
     const data = await response.json();
 
     expect(response.status).toBe(200);
@@ -285,7 +285,7 @@ describe('POST /api/discovery/programs/[programId]/complete', () => {
       method: 'POST',
     });
 
-    const response = await POST(request, { params: Promise.resolve({ programId: 'program123' }) });
+    const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
     const data = await response.json();
 
     expect(response.status).toBe(200);
@@ -305,7 +305,7 @@ describe('POST /api/discovery/programs/[programId]/complete', () => {
       method: 'POST',
     });
 
-    const response = await POST(request, { params: Promise.resolve({ programId: 'program123' }) });
+    const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
     const data = await response.json();
 
     expect(response.status).toBe(500);

@@ -217,7 +217,7 @@ describe('POST /api/discovery/scenarios/[id]/programs', () => {
       );
 
       // Act
-      const response = await POST(request, { params: Promise.resolve({ id: testScenarioId }) });
+      const response = await POST(request, { params: Promise.resolve({'id':'test-id'}) });
       const data = await response.json();
 
       // Assert
@@ -251,7 +251,7 @@ describe('POST /api/discovery/scenarios/[id]/programs', () => {
       );
 
       // Act
-      const response = await POST(request, { params: Promise.resolve({ id: testScenarioId }) });
+      const response = await POST(request, { params: Promise.resolve({'id':'test-id'}) });
       const data = await response.json();
 
       // Assert - The route actually creates a new program even if one exists
@@ -288,7 +288,7 @@ describe('POST /api/discovery/scenarios/[id]/programs', () => {
       );
 
       // Act
-      const response = await POST(request, { params: Promise.resolve({ id: testScenarioId }) });
+      const response = await POST(request, { params: Promise.resolve({'id':'test-id'}) });
       const data = await response.json();
 
       // Assert
@@ -315,7 +315,7 @@ describe('POST /api/discovery/scenarios/[id]/programs', () => {
       );
 
       // Act
-      const response = await POST(request, { params: Promise.resolve({ id: testScenarioId }) });
+      const response = await POST(request, { params: Promise.resolve({'id':'test-id'}) });
       const data = await response.json();
 
       // Assert - The simplified handler doesn't include enrichedData
@@ -341,7 +341,7 @@ describe('POST /api/discovery/scenarios/[id]/programs', () => {
       );
 
       // Act
-      const response = await POST(request, { params: Promise.resolve({ id: testScenarioId }) });
+      const response = await POST(request, { params: Promise.resolve({'id':'test-id'}) });
       const data = await response.json();
 
       // Assert
@@ -365,7 +365,7 @@ describe('POST /api/discovery/scenarios/[id]/programs', () => {
       );
 
       // Act
-      const response = await POST(request, { params: Promise.resolve({ id: 'invalid-id' }) });
+      const response = await POST(request, { params: Promise.resolve({'id':'test-id'}) });
       const data = await response.json();
 
       // Assert
@@ -392,7 +392,7 @@ describe('POST /api/discovery/scenarios/[id]/programs', () => {
       );
 
       // Act
-      const response = await POST(request, { params: Promise.resolve({ id: testScenarioId }) });
+      const response = await POST(request, { params: Promise.resolve({'id':'test-id'}) });
       const data = await response.json();
 
       // Assert
@@ -411,7 +411,7 @@ describe('POST /api/discovery/scenarios/[id]/programs', () => {
       });
 
       // Act
-      const response = await POST(request, { params: Promise.resolve({ id: 'invalid-uuid' }) });
+      const response = await POST(request, { params: Promise.resolve({'id':'test-id'}) });
       const data = await response.json();
 
       // Assert - The simplified handler returns 404 for invalid scenarios
@@ -434,7 +434,7 @@ describe('POST /api/discovery/scenarios/[id]/programs', () => {
       // Act - Will create program regardless of email format
       mockUserRepo.findByEmail.mockResolvedValue(mockUser);
       (mockScenarioRepo.findById as jest.Mock).mockResolvedValue(mockScenario);
-      const response = await POST(request, { params: Promise.resolve({ id: testScenarioId }) });
+      const response = await POST(request, { params: Promise.resolve({'id':'test-id'}) });
       const data = await response.json();
 
       // Assert - Should succeed with session
@@ -463,7 +463,7 @@ describe('POST /api/discovery/scenarios/[id]/programs', () => {
       );
 
       // Act
-      const response = await POST(request, { params: Promise.resolve({ id: testScenarioId }) });
+      const response = await POST(request, { params: Promise.resolve({'id':'test-id'}) });
       const data = await response.json();
 
       // Assert - The simplified handler doesn't check user eligibility
@@ -496,7 +496,7 @@ describe('POST /api/discovery/scenarios/[id]/programs', () => {
       );
 
       // Act
-      const response = await POST(request, { params: Promise.resolve({ id: testScenarioId }) });
+      const response = await POST(request, { params: Promise.resolve({'id':'test-id'}) });
 
       // Assert
       expect(response.status).toBe(200);
@@ -536,7 +536,7 @@ describe('POST /api/discovery/scenarios/[id]/programs', () => {
       );
 
       // Act
-      const response = await POST(request, { params: Promise.resolve({ id: testScenarioId }) });
+      const response = await POST(request, { params: Promise.resolve({'id':'test-id'}) });
       const data = await response.json();
 
       // Assert - The simplified handler returns the response directly

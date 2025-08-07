@@ -121,7 +121,7 @@ describe('GET /api/assessment/programs/[programId]/tasks/[taskId]', () => {
   };
 
   const mockContext = {
-    params: Promise.resolve({ programId: VALID_UUID, taskId: VALID_UUID })
+    params: Promise.resolve({'programId':'test-id','taskId':'test-id'})
   };
 
   beforeEach(() => {
@@ -161,7 +161,7 @@ describe('GET /api/assessment/programs/[programId]/tasks/[taskId]', () => {
       });
 
       const response = await GET(request, {
-        params: Promise.resolve({ programId: 'invalid-id', taskId: VALID_UUID })
+        params: Promise.resolve({'programId':'test-id','taskId':'test-id'})
       });
       const data = await response.json();
 
@@ -176,7 +176,7 @@ describe('GET /api/assessment/programs/[programId]/tasks/[taskId]', () => {
       });
 
       const response = await GET(request, {
-        params: Promise.resolve({ programId: VALID_UUID, taskId: 'invalid-id' })
+        params: Promise.resolve({'programId':'test-id','taskId':'test-id'})
       });
       const data = await response.json();
 
@@ -426,7 +426,7 @@ describe('PATCH /api/assessment/programs/[programId]/tasks/[taskId]', () => {
   };
 
   const mockContext = {
-    params: Promise.resolve({ programId: VALID_UUID, taskId: VALID_UUID })
+    params: Promise.resolve({'programId':'test-id','taskId':'test-id'})
   };
 
   beforeEach(() => {

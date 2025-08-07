@@ -1,12 +1,8 @@
-import module from '../index';
+import * as errors from '../index';
 
-describe('index', () => {
-  it('should be defined', () => {
-    expect(module).toBeDefined();
-  });
-  
-  it('should work correctly', () => {
-    // Add specific tests
-    expect(true).toBe(true);
+describe('errors/index', () => {
+  it('should export error classes', () => {
+    expect(errors).toBeDefined();
+    expect(Object.keys(errors).length).toBeGreaterThan(0);
   });
 });

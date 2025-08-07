@@ -83,7 +83,7 @@ describe('/api/assessment/programs/[programId]/answer', () => {
         }),
       });
 
-      const response = await POST(request, { params: Promise.resolve({ programId: 'prog-123' }) });
+      const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -130,7 +130,7 @@ describe('/api/assessment/programs/[programId]/answer', () => {
         }),
       });
 
-      const response = await POST(request, { params: Promise.resolve({ programId: 'prog-123' }) });
+      const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -185,7 +185,7 @@ describe('/api/assessment/programs/[programId]/answer', () => {
         }),
       });
 
-      const response = await POST(request, { params: Promise.resolve({ programId: 'prog-123' }) });
+      const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -208,7 +208,7 @@ describe('/api/assessment/programs/[programId]/answer', () => {
         }),
       });
 
-      const response = await POST(request, { params: Promise.resolve({ programId: 'prog-123' }) });
+      const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(400);
@@ -231,7 +231,7 @@ describe('/api/assessment/programs/[programId]/answer', () => {
         }),
       });
 
-      const response = await POST(request, { params: Promise.resolve({ programId: 'prog-123' }) });
+      const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(404);
@@ -258,7 +258,7 @@ describe('/api/assessment/programs/[programId]/answer', () => {
         }),
       });
 
-      const response = await POST(request, { params: Promise.resolve({ programId: 'prog-123' }) });
+      const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -291,7 +291,7 @@ describe('/api/assessment/programs/[programId]/answer', () => {
         }),
       });
 
-      const response = await POST(request, { params: Promise.resolve({ programId: 'prog-123' }) });
+      const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(401);

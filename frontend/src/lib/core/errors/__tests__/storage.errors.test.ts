@@ -1,4 +1,11 @@
-import { StorageError, StorageNotFoundError, StorageQuotaExceededError, StorageConnectionError, StoragePermissionError, StorageValidationError } from '../storage.errors';
+import { 
+  StorageError, 
+  StorageNotFoundError, 
+  StorageQuotaExceededError,
+  StorageConnectionError,
+  StoragePermissionError,
+  StorageValidationError
+} from '../storage.errors';
 
 describe('storage.errors', () => {
   describe('StorageError', () => {
@@ -6,196 +13,106 @@ describe('storage.errors', () => {
       expect(StorageError).toBeDefined();
     });
     
-    it('should work with valid input', () => {
-      // Test with valid parameters
-      const result = typeof StorageError === 'function' ? StorageError() : StorageError;
-      expect(result).toBeDefined();
+    it('should create error with message', () => {
+      const error = new StorageError('Test error', 'TEST_ERROR');
+      expect(error.message).toBe('Test error');
+      expect(error.code).toBe('TEST_ERROR');
     });
     
-    it('should handle edge cases', () => {
-      // Test edge cases
-      expect(() => {
-        if (typeof StorageError === 'function') {
-          StorageError(null);
-          StorageError(undefined);
-          StorageError({});
-        }
-      }).not.toThrow();
-    });
-    
-    it('should handle errors gracefully', () => {
-      // Test error handling
-      expect(() => {
-        // Intentionally cause an error
-        if (typeof StorageError === 'function') {
-          StorageError(Symbol('test'));
-        }
-      }).not.toThrow();
+    it('should be an instance of Error', () => {
+      const error = new StorageError('Test', 'TEST');
+      expect(error).toBeInstanceOf(Error);
+      expect(error).toBeInstanceOf(StorageError);
     });
   });
-
+  
   describe('StorageNotFoundError', () => {
     it('should be defined', () => {
       expect(StorageNotFoundError).toBeDefined();
     });
     
-    it('should work with valid input', () => {
-      // Test with valid parameters
-      const result = typeof StorageNotFoundError === 'function' ? StorageNotFoundError() : StorageNotFoundError;
-      expect(result).toBeDefined();
+    it('should create error with message', () => {
+      const error = new StorageNotFoundError('File not found');
+      expect(error.message).toBe('File not found');
     });
     
-    it('should handle edge cases', () => {
-      // Test edge cases
-      expect(() => {
-        if (typeof StorageNotFoundError === 'function') {
-          StorageNotFoundError(null);
-          StorageNotFoundError(undefined);
-          StorageNotFoundError({});
-        }
-      }).not.toThrow();
-    });
-    
-    it('should handle errors gracefully', () => {
-      // Test error handling
-      expect(() => {
-        // Intentionally cause an error
-        if (typeof StorageNotFoundError === 'function') {
-          StorageNotFoundError(Symbol('test'));
-        }
-      }).not.toThrow();
+    it('should be an instance of StorageError', () => {
+      const error = new StorageNotFoundError('Not found');
+      expect(error).toBeInstanceOf(Error);
+      expect(error).toBeInstanceOf(StorageError);
+      expect(error).toBeInstanceOf(StorageNotFoundError);
     });
   });
-
+  
   describe('StorageQuotaExceededError', () => {
     it('should be defined', () => {
       expect(StorageQuotaExceededError).toBeDefined();
     });
     
-    it('should work with valid input', () => {
-      // Test with valid parameters
-      const result = typeof StorageQuotaExceededError === 'function' ? StorageQuotaExceededError() : StorageQuotaExceededError;
-      expect(result).toBeDefined();
+    it('should create error with message', () => {
+      const error = new StorageQuotaExceededError('Quota exceeded');
+      expect(error.message).toBe('Quota exceeded');
     });
     
-    it('should handle edge cases', () => {
-      // Test edge cases
-      expect(() => {
-        if (typeof StorageQuotaExceededError === 'function') {
-          StorageQuotaExceededError(null);
-          StorageQuotaExceededError(undefined);
-          StorageQuotaExceededError({});
-        }
-      }).not.toThrow();
-    });
-    
-    it('should handle errors gracefully', () => {
-      // Test error handling
-      expect(() => {
-        // Intentionally cause an error
-        if (typeof StorageQuotaExceededError === 'function') {
-          StorageQuotaExceededError(Symbol('test'));
-        }
-      }).not.toThrow();
+    it('should be an instance of StorageError', () => {
+      const error = new StorageQuotaExceededError('Quota');
+      expect(error).toBeInstanceOf(Error);
+      expect(error).toBeInstanceOf(StorageError);
+      expect(error).toBeInstanceOf(StorageQuotaExceededError);
     });
   });
-
+  
   describe('StorageConnectionError', () => {
     it('should be defined', () => {
       expect(StorageConnectionError).toBeDefined();
     });
     
-    it('should work with valid input', () => {
-      // Test with valid parameters
-      const result = typeof StorageConnectionError === 'function' ? StorageConnectionError() : StorageConnectionError;
-      expect(result).toBeDefined();
+    it('should create error with message', () => {
+      const error = new StorageConnectionError('Connection failed');
+      expect(error.message).toBe('Connection failed');
     });
     
-    it('should handle edge cases', () => {
-      // Test edge cases
-      expect(() => {
-        if (typeof StorageConnectionError === 'function') {
-          StorageConnectionError(null);
-          StorageConnectionError(undefined);
-          StorageConnectionError({});
-        }
-      }).not.toThrow();
-    });
-    
-    it('should handle errors gracefully', () => {
-      // Test error handling
-      expect(() => {
-        // Intentionally cause an error
-        if (typeof StorageConnectionError === 'function') {
-          StorageConnectionError(Symbol('test'));
-        }
-      }).not.toThrow();
+    it('should be an instance of StorageError', () => {
+      const error = new StorageConnectionError('Connection');
+      expect(error).toBeInstanceOf(Error);
+      expect(error).toBeInstanceOf(StorageError);
+      expect(error).toBeInstanceOf(StorageConnectionError);
     });
   });
-
+  
   describe('StoragePermissionError', () => {
     it('should be defined', () => {
       expect(StoragePermissionError).toBeDefined();
     });
     
-    it('should work with valid input', () => {
-      // Test with valid parameters
-      const result = typeof StoragePermissionError === 'function' ? StoragePermissionError() : StoragePermissionError;
-      expect(result).toBeDefined();
+    it('should create error with message', () => {
+      const error = new StoragePermissionError('Permission denied');
+      expect(error.message).toBe('Permission denied');
     });
     
-    it('should handle edge cases', () => {
-      // Test edge cases
-      expect(() => {
-        if (typeof StoragePermissionError === 'function') {
-          StoragePermissionError(null);
-          StoragePermissionError(undefined);
-          StoragePermissionError({});
-        }
-      }).not.toThrow();
-    });
-    
-    it('should handle errors gracefully', () => {
-      // Test error handling
-      expect(() => {
-        // Intentionally cause an error
-        if (typeof StoragePermissionError === 'function') {
-          StoragePermissionError(Symbol('test'));
-        }
-      }).not.toThrow();
+    it('should be an instance of StorageError', () => {
+      const error = new StoragePermissionError('Permission');
+      expect(error).toBeInstanceOf(Error);
+      expect(error).toBeInstanceOf(StorageError);
+      expect(error).toBeInstanceOf(StoragePermissionError);
     });
   });
-
+  
   describe('StorageValidationError', () => {
     it('should be defined', () => {
       expect(StorageValidationError).toBeDefined();
     });
     
-    it('should work with valid input', () => {
-      // Test with valid parameters
-      const result = typeof StorageValidationError === 'function' ? StorageValidationError() : StorageValidationError;
-      expect(result).toBeDefined();
+    it('should create error with message', () => {
+      const error = new StorageValidationError('Validation failed');
+      expect(error.message).toBe('Validation failed');
     });
     
-    it('should handle edge cases', () => {
-      // Test edge cases
-      expect(() => {
-        if (typeof StorageValidationError === 'function') {
-          StorageValidationError(null);
-          StorageValidationError(undefined);
-          StorageValidationError({});
-        }
-      }).not.toThrow();
-    });
-    
-    it('should handle errors gracefully', () => {
-      // Test error handling
-      expect(() => {
-        // Intentionally cause an error
-        if (typeof StorageValidationError === 'function') {
-          StorageValidationError(Symbol('test'));
-        }
-      }).not.toThrow();
+    it('should be an instance of StorageError', () => {
+      const error = new StorageValidationError('Validation');
+      expect(error).toBeInstanceOf(Error);
+      expect(error).toBeInstanceOf(StorageError);
+      expect(error).toBeInstanceOf(StorageValidationError);
     });
   });
 });

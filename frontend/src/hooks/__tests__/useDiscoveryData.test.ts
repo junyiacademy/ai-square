@@ -1,5 +1,5 @@
 import { renderHook, act, waitFor } from '@testing-library/react';
-import useDiscoveryData from '../useDiscoveryData';
+import { useDiscoveryData } from '../useDiscoveryData';
 
 describe('useDiscoveryData', () => {
   it('should initialize correctly', () => {

@@ -59,7 +59,7 @@ describe('Assessment Scenarios Programs API', () => {
       mockGetServerSession.mockResolvedValue(null);
 
       const request = new NextRequest('http://localhost:3000/api/assessment/scenarios/scenario123/programs');
-      const response = await GET(request, { params: Promise.resolve({ id: 'scenario123' }) });
+      const response = await GET(request, { params: Promise.resolve({'id':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(401);
@@ -74,7 +74,7 @@ describe('Assessment Scenarios Programs API', () => {
       mockFindByEmail.mockResolvedValue(null);
 
       const request = new NextRequest('http://localhost:3000/api/assessment/scenarios/scenario123/programs');
-      const response = await GET(request, { params: Promise.resolve({ id: 'scenario123' }) });
+      const response = await GET(request, { params: Promise.resolve({'id':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(404);
@@ -87,7 +87,7 @@ describe('Assessment Scenarios Programs API', () => {
       mockFindByUser.mockResolvedValue([]);
 
       const request = new NextRequest('http://localhost:3000/api/assessment/scenarios/scenario123/programs');
-      const response = await GET(request, { params: Promise.resolve({ id: 'scenario123' }) });
+      const response = await GET(request, { params: Promise.resolve({'id':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -139,7 +139,7 @@ describe('Assessment Scenarios Programs API', () => {
       mockFindById.mockResolvedValue(mockEvaluation); // For evaluation lookup
 
       const request = new NextRequest('http://localhost:3000/api/assessment/scenarios/scenario123/programs');
-      const response = await GET(request, { params: Promise.resolve({ id: 'scenario123' }) });
+      const response = await GET(request, { params: Promise.resolve({'id':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -167,7 +167,7 @@ describe('Assessment Scenarios Programs API', () => {
       mockFindById.mockResolvedValue(null); // Evaluation not found
 
       const request = new NextRequest('http://localhost:3000/api/assessment/scenarios/scenario123/programs');
-      const response = await GET(request, { params: Promise.resolve({ id: 'scenario123' }) });
+      const response = await GET(request, { params: Promise.resolve({'id':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -185,7 +185,7 @@ describe('Assessment Scenarios Programs API', () => {
         body: JSON.stringify({ action: 'start' }),
       });
 
-      const response = await POST(request, { params: Promise.resolve({ id: 'scenario123' }) });
+      const response = await POST(request, { params: Promise.resolve({'id':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(401);
@@ -200,7 +200,7 @@ describe('Assessment Scenarios Programs API', () => {
         body: JSON.stringify({ action: 'invalid' }),
       });
 
-      const response = await POST(request, { params: Promise.resolve({ id: 'scenario123' }) });
+      const response = await POST(request, { params: Promise.resolve({'id':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(400);
@@ -244,7 +244,7 @@ describe('Assessment Scenarios Programs API', () => {
         body: JSON.stringify({ action: 'start', language: 'zh' }),
       });
 
-      const response = await POST(request, { params: Promise.resolve({ id: 'scenario123' }) });
+      const response = await POST(request, { params: Promise.resolve({'id':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -281,7 +281,7 @@ describe('Assessment Scenarios Programs API', () => {
         body: JSON.stringify({ action: 'start' }),
       });
 
-      const response = await POST(request, { params: Promise.resolve({ id: 'scenario123' }) });
+      const response = await POST(request, { params: Promise.resolve({'id':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -300,7 +300,7 @@ describe('Assessment Scenarios Programs API', () => {
         body: JSON.stringify({ action: 'start' }),
       });
 
-      const response = await POST(request, { params: Promise.resolve({ id: 'nonexistent' }) });
+      const response = await POST(request, { params: Promise.resolve({'id':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(404);
@@ -319,7 +319,7 @@ describe('Assessment Scenarios Programs API', () => {
         body: JSON.stringify({ action: 'start' }),
       });
 
-      const response = await POST(request, { params: Promise.resolve({ id: 'scenario123' }) });
+      const response = await POST(request, { params: Promise.resolve({'id':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(400);
@@ -335,7 +335,7 @@ describe('Assessment Scenarios Programs API', () => {
         body: JSON.stringify({ action: 'start' }),
       });
 
-      const response = await POST(request, { params: Promise.resolve({ id: 'scenario123' }) });
+      const response = await POST(request, { params: Promise.resolve({'id':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(500);

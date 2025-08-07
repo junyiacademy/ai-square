@@ -1,5 +1,5 @@
 import { renderHook, act, waitFor } from '@testing-library/react';
-import useUserData from '../useUserData';
+import { useUserData } from '../useUserData';
 
 describe('useUserData', () => {
   it('should initialize correctly', () => {

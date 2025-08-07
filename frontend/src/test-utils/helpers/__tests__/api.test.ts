@@ -1,32 +1,31 @@
-/**
- * Tests for api.ts
- */
+import { createMockRequest, createMockContext } from '../api';
 
-import { api } from '../api';
-
-describe('api', () => {
+describe('api test helpers', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it('should be defined', () => {
-    expect(api).toBeDefined();
+  describe('createMockRequest', () => {
+    it('should create a mock NextRequest', () => {
+      const request = createMockRequest('http://localhost:3000/api/test');
+      expect(request).toBeDefined();
+      expect(request.url).toBe('http://localhost:3000/api/test');
+    });
+
+    it('should handle JSON body', () => {
+      const request = createMockRequest('http://localhost:3000/api/test', {
+        method: 'POST',
+        json: { test: 'data' }
+      });
+      expect(request.method).toBe('POST');
+    });
   });
 
-  it('should work correctly', () => {
-    // Add specific tests based on the module's functionality
-    const result = api();
-    expect(result).toBeDefined();
-  });
-
-  it('should handle edge cases', () => {
-    // Test edge cases
-    const edgeCase = api(null);
-    expect(edgeCase).toBeDefined();
-  });
-
-  it('should handle errors gracefully', () => {
-    // Test error handling
-    expect(() => api(undefined)).not.toThrow();
+  describe('createMockContext', () => {
+    it('should create a mock API context', () => {
+      const context = createMockContext({ id: 'test-id' });
+      expect(context).toBeDefined();
+      expect(context.params).toBeDefined();
+    });
   });
 });

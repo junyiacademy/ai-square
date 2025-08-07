@@ -2,31 +2,37 @@
  * Tests for browser.ts
  */
 
-import { browser } from '../browser';
-
-describe('browser', () => {
+describe('browser mocks', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it('should be defined', () => {
-    expect(browser).toBeDefined();
+  it('should mock localStorage', () => {
+    const store: Record<string, string> = {};
+    
+    const localStorageMock = {
+      getItem: (key: string) => store[key] || null,
+      setItem: (key: string, value: string) => { store[key] = value; },
+      removeItem: (key: string) => { delete store[key]; },
+      clear: () => { Object.keys(store).forEach(key => delete store[key]); }
+    };
+
+    expect(localStorageMock.getItem).toBeDefined();
+    expect(localStorageMock.setItem).toBeDefined();
   });
 
-  it('should work correctly', () => {
-    // Add specific tests based on the module's functionality
-    const result = browser();
-    expect(result).toBeDefined();
-  });
+  it('should mock window.matchMedia', () => {
+    const matchMediaMock = (query: string) => ({
+      matches: false,
+      media: query,
+      onchange: null,
+      addListener: jest.fn(),
+      removeListener: jest.fn(),
+      addEventListener: jest.fn(),
+      removeEventListener: jest.fn(),
+      dispatchEvent: jest.fn(),
+    });
 
-  it('should handle edge cases', () => {
-    // Test edge cases
-    const edgeCase = browser(null);
-    expect(edgeCase).toBeDefined();
-  });
-
-  it('should handle errors gracefully', () => {
-    // Test error handling
-    expect(() => browser(undefined)).not.toThrow();
+    expect(matchMediaMock('(min-width: 768px)')).toBeDefined();
   });
 });

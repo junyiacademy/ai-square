@@ -141,7 +141,7 @@ describe('POST /api/pbl/scenarios/[id]/start', () => {
       const request = createRequestWithUser('test@example.com');
 
       // Act
-      const response = await POST(request, { params: Promise.resolve({ id: mockScenarioId }) });
+      const response = await POST(request, { params: Promise.resolve({'id':'test-id'}) });
       const data = await response.json();
 
       // Assert
@@ -177,7 +177,7 @@ describe('POST /api/pbl/scenarios/[id]/start', () => {
       const request = createRequestWithUser('test@example.com');
 
       // Act
-      const response = await POST(request, { params: Promise.resolve({ id: mockScenarioId }) });
+      const response = await POST(request, { params: Promise.resolve({'id':'test-id'}) });
       const data = await response.json();
 
       // Assert
@@ -191,7 +191,7 @@ describe('POST /api/pbl/scenarios/[id]/start', () => {
       const request = createRequestWithUser('test@example.com');
 
       // Act
-      const response = await POST(request, { params: Promise.resolve({ id: 'invalid-id' }) });
+      const response = await POST(request, { params: Promise.resolve({'id':'test-id'}) });
       const data = await response.json();
 
       // Assert
@@ -212,7 +212,7 @@ describe('POST /api/pbl/scenarios/[id]/start', () => {
       });
 
       // Act
-      const response = await POST(request, { params: Promise.resolve({ id: mockScenarioId }) });
+      const response = await POST(request, { params: Promise.resolve({'id':'test-id'}) });
       const data = await response.json();
 
       // Assert
@@ -243,7 +243,7 @@ describe('POST /api/pbl/scenarios/[id]/start', () => {
       const request = createRequestWithUser('new@example.com');
 
       // Act
-      const response = await POST(request, { params: Promise.resolve({ id: mockScenarioId }) });
+      const response = await POST(request, { params: Promise.resolve({'id':'test-id'}) });
       const data = await response.json();
 
       // Assert

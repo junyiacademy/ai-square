@@ -13,20 +13,20 @@ describe('i18n', () => {
     expect(i18n).toBeDefined();
   });
 
-  it('should work correctly', () => {
-    // Add specific tests based on the module's functionality
-    const result = i18n();
-    expect(result).toBeDefined();
+  it('should have required properties', () => {
+    expect(i18n.language).toBe('en');
+    expect(i18n.languages).toEqual(['en', 'zhTW', 'zhCN']);
+    expect(typeof i18n.t).toBe('function');
+    expect(typeof i18n.changeLanguage).toBe('function');
   });
 
-  it('should handle edge cases', () => {
-    // Test edge cases
-    const edgeCase = i18n(null);
-    expect(edgeCase).toBeDefined();
+  it('should translate keys', () => {
+    const translated = i18n.t('test.key');
+    expect(translated).toBe('test.key');
   });
 
-  it('should handle errors gracefully', () => {
-    // Test error handling
-    expect(() => i18n(undefined)).not.toThrow();
+  it('should handle language change', async () => {
+    await i18n.changeLanguage('zh');
+    expect(i18n.changeLanguage).toHaveBeenCalled();
   });
 });

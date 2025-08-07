@@ -27,7 +27,7 @@ describe('API Route: src/app/api/pbl/programs/[programId]', () => {
         
       });
       
-      const response = await GET(request, { params: Promise.resolve({ id: 'test-id' }) });
+      const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
       
       expect(response).toBeDefined();
       expect(response.status).toBeLessThanOrEqual(500);
@@ -38,7 +38,7 @@ describe('API Route: src/app/api/pbl/programs/[programId]', () => {
         method: 'GET',
       });
       
-      const response = await GET(request, { params: Promise.resolve({}) });
+      const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
       
       expect(response).toBeDefined();
     });
@@ -49,7 +49,7 @@ describe('API Route: src/app/api/pbl/programs/[programId]', () => {
         
       });
       
-      const response = await GET(request, { params: Promise.resolve({ id: 'test' }) });
+      const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
       
       expect(response).toBeDefined();
       expect(response.status).toBeLessThanOrEqual(500);

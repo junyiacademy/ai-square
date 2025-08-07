@@ -1,32 +1,26 @@
-/**
- * Tests for repositories.ts
- */
+import { createMockRepository, createMockEvaluation } from '../repositories';
 
-import { repositories } from '../repositories';
-
-describe('repositories', () => {
+describe('repository mocks', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it('should be defined', () => {
-    expect(repositories).toBeDefined();
+  describe('createMockRepository', () => {
+    it('should create a base mock repository', () => {
+      const repo = createMockRepository();
+      expect(repo.findById).toBeDefined();
+      expect(repo.findAll).toBeDefined();
+      expect(repo.create).toBeDefined();
+      expect(repo.update).toBeDefined();
+      expect(repo.delete).toBeDefined();
+    });
   });
 
-  it('should work correctly', () => {
-    // Add specific tests based on the module's functionality
-    const result = repositories();
-    expect(result).toBeDefined();
-  });
-
-  it('should handle edge cases', () => {
-    // Test edge cases
-    const edgeCase = repositories(null);
-    expect(edgeCase).toBeDefined();
-  });
-
-  it('should handle errors gracefully', () => {
-    // Test error handling
-    expect(() => repositories(undefined)).not.toThrow();
+  describe('createMockEvaluation', () => {
+    it('should create a mock evaluation', () => {
+      const evaluation = createMockEvaluation();
+      expect(evaluation).toBeDefined();
+      expect(evaluation.id).toBeDefined();
+    });
   });
 });

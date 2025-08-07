@@ -1,5 +1,5 @@
 import { renderHook, act } from '@testing-library/react';
-import useErrorTracking from '../useErrorTracking';
+import { useErrorTracking } from '../useErrorTracking';
 import { getErrorTracker } from '../../lib/error-tracking/error-tracker';
 
 // Mock the error tracker

@@ -1,6 +1,5 @@
 import { NextRequest } from 'next/server';
-import { GET } from '../route';
-import { POST } from '../route';
+import { GET, POST } from '../route';
 
 // Mock dependencies
 jest.mock('@/lib/auth/session', () => ({
@@ -25,10 +24,9 @@ describe('API Route: src/app/api/discovery/translate', () => {
     it('should handle successful request', async () => {
       const request = new NextRequest('http://localhost:3000/api/test', {
         method: 'GET',
-        
       });
       
-      const response = await GET(request);
+      const response = await GET();
       
       expect(response).toBeDefined();
       expect(response.status).toBeLessThanOrEqual(500);
@@ -39,7 +37,7 @@ describe('API Route: src/app/api/discovery/translate', () => {
         method: 'GET',
       });
       
-      const response = await GET(request);
+      const response = await GET();
       
       expect(response).toBeDefined();
     });
@@ -47,16 +45,15 @@ describe('API Route: src/app/api/discovery/translate', () => {
     it('should handle errors gracefully', async () => {
       const request = new NextRequest('http://localhost:3000/api/test', {
         method: 'GET',
-        
       });
       
-      const response = await GET(request);
+      const response = await GET();
       
       expect(response).toBeDefined();
       expect(response.status).toBeLessThanOrEqual(500);
     });
   });
-
+  
   describe('POST', () => {
     it('should handle successful request', async () => {
       const request = new NextRequest('http://localhost:3000/api/test', {
@@ -70,7 +67,7 @@ describe('API Route: src/app/api/discovery/translate', () => {
       expect(response.status).toBeLessThanOrEqual(500);
     });
     
-    it('should handle missing parameters', async () => {
+    it('should handle missing body', async () => {
       const request = new NextRequest('http://localhost:3000/api/test', {
         method: 'POST',
       });
@@ -83,7 +80,7 @@ describe('API Route: src/app/api/discovery/translate', () => {
     it('should handle errors gracefully', async () => {
       const request = new NextRequest('http://localhost:3000/api/test', {
         method: 'POST',
-        body: 'invalid json',
+        body: JSON.stringify({ invalid: 'data' }),
       });
       
       const response = await POST(request);

@@ -101,7 +101,7 @@ describe('/api/learning/tasks/[taskId]/complete', () => {
         body: JSON.stringify(requestBody)
       });
 
-      const response = await POST(request, { params: Promise.resolve({ taskId: 'task123' }) });
+      const response = await POST(request, { params: Promise.resolve({'taskId':'test-id'}) });
       const data = await response.json();
 
       expect(mockPostgresqlLearningService.completeTask).toHaveBeenCalledWith(
@@ -125,7 +125,7 @@ describe('/api/learning/tasks/[taskId]/complete', () => {
         body: JSON.stringify({ response: 'test' })
       });
 
-      const response = await POST(request, { params: Promise.resolve({ taskId: 'task123' }) });
+      const response = await POST(request, { params: Promise.resolve({'taskId':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(401);
@@ -144,7 +144,7 @@ describe('/api/learning/tasks/[taskId]/complete', () => {
         body: JSON.stringify({ response: 'test' })
       });
 
-      const response = await POST(request, { params: Promise.resolve({ taskId: 'task123' }) });
+      const response = await POST(request, { params: Promise.resolve({'taskId':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(401);
@@ -165,7 +165,7 @@ describe('/api/learning/tasks/[taskId]/complete', () => {
         body: JSON.stringify({ response: 'test' })
       });
 
-      const response = await POST(request, { params: Promise.resolve({ taskId: 'nonexistent' }) });
+      const response = await POST(request, { params: Promise.resolve({'taskId':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(404);
@@ -184,7 +184,7 @@ describe('/api/learning/tasks/[taskId]/complete', () => {
         body: JSON.stringify({})
       });
 
-      const response = await POST(request, { params: Promise.resolve({ taskId: 'task123' }) });
+      const response = await POST(request, { params: Promise.resolve({'taskId':'test-id'}) });
       const data = await response.json();
 
       expect(mockPostgresqlLearningService.completeTask).toHaveBeenCalledWith(
@@ -207,7 +207,7 @@ describe('/api/learning/tasks/[taskId]/complete', () => {
         body: JSON.stringify({ response: 'test' })
       });
 
-      const response = await POST(request, { params: Promise.resolve({ taskId: 'task123' }) });
+      const response = await POST(request, { params: Promise.resolve({'taskId':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(500);

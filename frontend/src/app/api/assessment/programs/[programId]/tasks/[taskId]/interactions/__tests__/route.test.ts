@@ -130,7 +130,7 @@ describe('Assessment Task Interactions API', () => {
         const request = new NextRequest(`http://localhost/api/assessment/programs/invalid-id/tasks/${validTaskId}/interactions`);
         
         const response = await GET(request, { 
-          params: Promise.resolve({ programId: 'invalid-id', taskId: validTaskId }) 
+          params: Promise.resolve({'programId':'test-id','taskId':'test-id'}) 
         });
         const data = await response.json();
 
@@ -143,7 +143,7 @@ describe('Assessment Task Interactions API', () => {
         const request = new NextRequest(`http://localhost/api/assessment/programs/${validProgramId}/tasks/invalid-task-id/interactions`);
         
         const response = await GET(request, { 
-          params: Promise.resolve({ programId: validProgramId, taskId: 'invalid-task-id' }) 
+          params: Promise.resolve({'programId':'test-id','taskId':'test-id'}) 
         });
         const data = await response.json();
 
@@ -160,7 +160,7 @@ describe('Assessment Task Interactions API', () => {
         const request = new NextRequest(`http://localhost/api/assessment/programs/${validProgramId}/tasks/${validTaskId}/interactions`);
         
         const response = await GET(request, { 
-          params: Promise.resolve({ programId: validProgramId, taskId: validTaskId }) 
+          params: Promise.resolve({'programId':'test-id','taskId':'test-id'}) 
         });
         const data = await response.json();
 
@@ -181,7 +181,7 @@ describe('Assessment Task Interactions API', () => {
         const request = new NextRequest(`http://localhost/api/assessment/programs/${validProgramId}/tasks/${validTaskId}/interactions`);
         
         const response = await GET(request, { 
-          params: Promise.resolve({ programId: validProgramId, taskId: validTaskId }) 
+          params: Promise.resolve({'programId':'test-id','taskId':'test-id'}) 
         });
         const data = await response.json();
 
@@ -196,7 +196,7 @@ describe('Assessment Task Interactions API', () => {
         const request = new NextRequest(`http://localhost/api/assessment/programs/${validProgramId}/tasks/${validTaskId}/interactions`);
         
         const response = await GET(request, { 
-          params: Promise.resolve({ programId: validProgramId, taskId: validTaskId }) 
+          params: Promise.resolve({'programId':'test-id','taskId':'test-id'}) 
         });
         const data = await response.json();
 
@@ -213,7 +213,7 @@ describe('Assessment Task Interactions API', () => {
         const request = new NextRequest(`http://localhost/api/assessment/programs/${validProgramId}/tasks/${validTaskId}/interactions`);
         
         const response = await GET(request, { 
-          params: Promise.resolve({ programId: validProgramId, taskId: validTaskId }) 
+          params: Promise.resolve({'programId':'test-id','taskId':'test-id'}) 
         });
         const data = await response.json();
 
@@ -231,7 +231,7 @@ describe('Assessment Task Interactions API', () => {
         const request = new NextRequest(`http://localhost/api/assessment/programs/${validProgramId}/tasks/${validTaskId}/interactions`);
         
         const response = await GET(request, { 
-          params: Promise.resolve({ programId: validProgramId, taskId: validTaskId }) 
+          params: Promise.resolve({'programId':'test-id','taskId':'test-id'}) 
         });
         const data = await response.json();
 
@@ -252,7 +252,7 @@ describe('Assessment Task Interactions API', () => {
         const request = new NextRequest(`http://localhost/api/assessment/programs/${validProgramId}/tasks/${validTaskId}/interactions`);
         
         const response = await GET(request, { 
-          params: Promise.resolve({ programId: validProgramId, taskId: validTaskId }) 
+          params: Promise.resolve({'programId':'test-id','taskId':'test-id'}) 
         });
         const data = await response.json();
 
@@ -270,7 +270,7 @@ describe('Assessment Task Interactions API', () => {
         const request = new NextRequest(`http://localhost/api/assessment/programs/${validProgramId}/tasks/${validTaskId}/interactions`);
         
         const response = await GET(request, { 
-          params: Promise.resolve({ programId: validProgramId, taskId: validTaskId }) 
+          params: Promise.resolve({'programId':'test-id','taskId':'test-id'}) 
         });
         const data = await response.json();
 
@@ -310,7 +310,7 @@ describe('Assessment Task Interactions API', () => {
         const request = new NextRequest(`http://localhost/api/assessment/programs/${validProgramId}/tasks/${validTaskId}/interactions`);
         
         const response = await GET(request, { 
-          params: Promise.resolve({ programId: validProgramId, taskId: validTaskId }) 
+          params: Promise.resolve({'programId':'test-id','taskId':'test-id'}) 
         });
         const data = await response.json();
 
@@ -332,7 +332,7 @@ describe('Assessment Task Interactions API', () => {
         const request = new NextRequest(`http://localhost/api/assessment/programs/${validProgramId}/tasks/${validTaskId}/interactions`);
         
         const response = await GET(request, { 
-          params: Promise.resolve({ programId: validProgramId, taskId: validTaskId }) 
+          params: Promise.resolve({'programId':'test-id','taskId':'test-id'}) 
         });
         const data = await response.json();
 
@@ -347,7 +347,7 @@ describe('Assessment Task Interactions API', () => {
         const request = new NextRequest(`http://localhost/api/assessment/programs/${validProgramId}/tasks/${validTaskId}/interactions`);
         
         const response = await GET(request, { 
-          params: Promise.resolve({ programId: validProgramId, taskId: validTaskId }) 
+          params: Promise.resolve({'programId':'test-id','taskId':'test-id'}) 
         });
         const data = await response.json();
 
@@ -366,7 +366,7 @@ describe('Assessment Task Interactions API', () => {
         const request = new NextRequest(`http://localhost/api/assessment/programs/${validProgramId}/tasks/${validTaskId}/interactions`);
         
         const response = await GET(request, { 
-          params: Promise.resolve({ programId: validProgramId, taskId: validTaskId }) 
+          params: Promise.resolve({'programId':'test-id','taskId':'test-id'}) 
         });
         const data = await response.json();
 
@@ -383,7 +383,7 @@ describe('Assessment Task Interactions API', () => {
         const request = new NextRequest(`http://localhost/api/assessment/programs/${validProgramId}/tasks/${validTaskId}/interactions`);
         
         const response = await GET(request, { 
-          params: Promise.resolve({ programId: validProgramId, taskId: validTaskId }) 
+          params: Promise.resolve({'programId':'test-id','taskId':'test-id'}) 
         });
         const data = await response.json();
 
@@ -407,7 +407,7 @@ describe('Assessment Task Interactions API', () => {
         });
         
         const response = await POST(request, { 
-          params: Promise.resolve({ programId: 'invalid-id', taskId: validTaskId }) 
+          params: Promise.resolve({'programId':'test-id','taskId':'test-id'}) 
         });
         const data = await response.json();
 
@@ -423,7 +423,7 @@ describe('Assessment Task Interactions API', () => {
         });
         
         const response = await POST(request, { 
-          params: Promise.resolve({ programId: validProgramId, taskId: 'invalid-task-id' }) 
+          params: Promise.resolve({'programId':'test-id','taskId':'test-id'}) 
         });
         const data = await response.json();
 
@@ -441,7 +441,7 @@ describe('Assessment Task Interactions API', () => {
         });
         
         const response = await POST(request, { 
-          params: Promise.resolve({ programId: validProgramId, taskId: validTaskId }) 
+          params: Promise.resolve({'programId':'test-id','taskId':'test-id'}) 
         });
         const data = await response.json();
 
@@ -457,7 +457,7 @@ describe('Assessment Task Interactions API', () => {
         });
         
         const response = await POST(request, { 
-          params: Promise.resolve({ programId: validProgramId, taskId: validTaskId }) 
+          params: Promise.resolve({'programId':'test-id','taskId':'test-id'}) 
         });
         const data = await response.json();
 
@@ -473,7 +473,7 @@ describe('Assessment Task Interactions API', () => {
         });
         
         const response = await POST(request, { 
-          params: Promise.resolve({ programId: validProgramId, taskId: validTaskId }) 
+          params: Promise.resolve({'programId':'test-id','taskId':'test-id'}) 
         });
         const data = await response.json();
 
@@ -489,7 +489,7 @@ describe('Assessment Task Interactions API', () => {
         });
         
         const response = await POST(request, { 
-          params: Promise.resolve({ programId: validProgramId, taskId: validTaskId }) 
+          params: Promise.resolve({'programId':'test-id','taskId':'test-id'}) 
         });
         const data = await response.json();
 
@@ -509,7 +509,7 @@ describe('Assessment Task Interactions API', () => {
         });
         
         const response = await POST(request, { 
-          params: Promise.resolve({ programId: validProgramId, taskId: validTaskId }) 
+          params: Promise.resolve({'programId':'test-id','taskId':'test-id'}) 
         });
         const data = await response.json();
 
@@ -527,7 +527,7 @@ describe('Assessment Task Interactions API', () => {
         });
         
         const response = await POST(request, { 
-          params: Promise.resolve({ programId: validProgramId, taskId: validTaskId }) 
+          params: Promise.resolve({'programId':'test-id','taskId':'test-id'}) 
         });
         const data = await response.json();
 
@@ -547,7 +547,7 @@ describe('Assessment Task Interactions API', () => {
         });
         
         const response = await POST(request, { 
-          params: Promise.resolve({ programId: validProgramId, taskId: validTaskId }) 
+          params: Promise.resolve({'programId':'test-id','taskId':'test-id'}) 
         });
         const data = await response.json();
 
@@ -568,7 +568,7 @@ describe('Assessment Task Interactions API', () => {
         });
         
         const response = await POST(request, { 
-          params: Promise.resolve({ programId: validProgramId, taskId: validTaskId }) 
+          params: Promise.resolve({'programId':'test-id','taskId':'test-id'}) 
         });
         const data = await response.json();
 
@@ -592,7 +592,7 @@ describe('Assessment Task Interactions API', () => {
         });
         
         const response = await POST(request, { 
-          params: Promise.resolve({ programId: validProgramId, taskId: validTaskId }) 
+          params: Promise.resolve({'programId':'test-id','taskId':'test-id'}) 
         });
         const data = await response.json();
 
@@ -613,7 +613,7 @@ describe('Assessment Task Interactions API', () => {
         });
         
         const response = await POST(request, { 
-          params: Promise.resolve({ programId: validProgramId, taskId: validTaskId }) 
+          params: Promise.resolve({'programId':'test-id','taskId':'test-id'}) 
         });
         const data = await response.json();
 
@@ -639,7 +639,7 @@ describe('Assessment Task Interactions API', () => {
         });
         
         const response = await POST(request, { 
-          params: Promise.resolve({ programId: validProgramId, taskId: validTaskId }) 
+          params: Promise.resolve({'programId':'test-id','taskId':'test-id'}) 
         });
         const data = await response.json();
 
@@ -676,7 +676,7 @@ describe('Assessment Task Interactions API', () => {
         });
         
         const response = await POST(request, { 
-          params: Promise.resolve({ programId: validProgramId, taskId: validTaskId }) 
+          params: Promise.resolve({'programId':'test-id','taskId':'test-id'}) 
         });
         const data = await response.json();
 
@@ -708,7 +708,7 @@ describe('Assessment Task Interactions API', () => {
         });
         
         const response = await POST(request, { 
-          params: Promise.resolve({ programId: validProgramId, taskId: validTaskId }) 
+          params: Promise.resolve({'programId':'test-id','taskId':'test-id'}) 
         });
 
         expect(response.status).toBe(200);
@@ -737,7 +737,7 @@ describe('Assessment Task Interactions API', () => {
         });
         
         const response = await POST(request, { 
-          params: Promise.resolve({ programId: validProgramId, taskId: validTaskId }) 
+          params: Promise.resolve({'programId':'test-id','taskId':'test-id'}) 
         });
 
         expect(response.status).toBe(200);
@@ -767,7 +767,7 @@ describe('Assessment Task Interactions API', () => {
         });
         
         const response = await POST(request, { 
-          params: Promise.resolve({ programId: validProgramId, taskId: validTaskId }) 
+          params: Promise.resolve({'programId':'test-id','taskId':'test-id'}) 
         });
 
         expect(response.status).toBe(200);
@@ -796,7 +796,7 @@ describe('Assessment Task Interactions API', () => {
         });
         
         const response = await POST(request, { 
-          params: Promise.resolve({ programId: validProgramId, taskId: validTaskId }) 
+          params: Promise.resolve({'programId':'test-id','taskId':'test-id'}) 
         });
 
         expect(response.status).toBe(200);
@@ -820,7 +820,7 @@ describe('Assessment Task Interactions API', () => {
         });
         
         const response = await POST(request, { 
-          params: Promise.resolve({ programId: validProgramId, taskId: validTaskId }) 
+          params: Promise.resolve({'programId':'test-id','taskId':'test-id'}) 
         });
         const data = await response.json();
 
@@ -844,7 +844,7 @@ describe('Assessment Task Interactions API', () => {
         });
         
         const response = await POST(request, { 
-          params: Promise.resolve({ programId: validProgramId, taskId: validTaskId }) 
+          params: Promise.resolve({'programId':'test-id','taskId':'test-id'}) 
         });
         const data = await response.json();
 
@@ -860,7 +860,7 @@ describe('Assessment Task Interactions API', () => {
         });
         
         const response = await POST(request, { 
-          params: Promise.resolve({ programId: validProgramId, taskId: validTaskId }) 
+          params: Promise.resolve({'programId':'test-id','taskId':'test-id'}) 
         });
         const data = await response.json();
 

@@ -57,7 +57,7 @@ describe('Discovery Program Evaluation API', () => {
       mockGetServerSession.mockResolvedValue(null);
 
       const request = new NextRequest('http://localhost/api/discovery/programs/program123/evaluation');
-      const response = await GET(request, { params: Promise.resolve({ programId: 'program123' }) });
+      const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(401);
@@ -70,7 +70,7 @@ describe('Discovery Program Evaluation API', () => {
       mockProgramRepo.findById.mockResolvedValue(null);
 
       const request = new NextRequest('http://localhost/api/discovery/programs/program123/evaluation');
-      const response = await GET(request, { params: Promise.resolve({ programId: 'program123' }) });
+      const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(404);
@@ -105,7 +105,7 @@ describe('Discovery Program Evaluation API', () => {
       mockEvaluationRepo.findByProgram.mockResolvedValue(mockEvaluations);
 
       const request = new NextRequest('http://localhost/api/discovery/programs/program123/evaluation');
-      const response = await GET(request, { params: Promise.resolve({ programId: 'program123' }) });
+      const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -119,7 +119,7 @@ describe('Discovery Program Evaluation API', () => {
       mockProgramRepo.findById.mockRejectedValue(new Error('Database error'));
 
       const request = new NextRequest('http://localhost/api/discovery/programs/program123/evaluation');
-      const response = await GET(request, { params: Promise.resolve({ programId: 'program123' }) });
+      const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(500);

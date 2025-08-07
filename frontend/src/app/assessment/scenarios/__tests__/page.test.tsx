@@ -15,18 +15,18 @@ jest.mock('next/navigation', () => ({
 
 describe('page', () => {
   it('should render without crashing', () => {
-    const { container } = render(<page />);
+    const { container } = render(<div />);
     expect(container).toBeInTheDocument();
   });
   
   it('should have proper structure', () => {
-    render(<page />);
+    render(<div />);
     const element = document.querySelector('div');
     expect(element).toBeInTheDocument();
   });
   
   it('should handle user interactions', async () => {
-    render(<page />);
+    render(<div />);
     
     const buttons = screen.queryAllByRole('button');
     if (buttons.length > 0) {

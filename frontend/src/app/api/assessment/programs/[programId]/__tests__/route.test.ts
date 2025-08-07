@@ -162,7 +162,7 @@ describe('GET /api/assessment/programs/[programId]', () => {
       mockTaskRepo.findByProgram.mockResolvedValue(mockTasks);
 
       const request = new NextRequest('http://localhost/api/assessment/programs/program-123');
-      const response = await GET(request, { params: Promise.resolve({ programId: 'program-123' }) });
+      const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -177,7 +177,7 @@ describe('GET /api/assessment/programs/[programId]', () => {
       mockTaskRepo.findByProgram.mockResolvedValue(mockTasks);
 
       const request = new NextRequest('http://localhost/api/assessment/programs/program-123?userEmail=test@example.com');
-      const response = await GET(request, { params: Promise.resolve({ programId: 'program-123' }) });
+      const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -189,7 +189,7 @@ describe('GET /api/assessment/programs/[programId]', () => {
       (getServerSession as jest.Mock).mockResolvedValue(null);
 
       const request = new NextRequest('http://localhost/api/assessment/programs/program-123');
-      const response = await GET(request, { params: Promise.resolve({ programId: 'program-123' }) });
+      const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(401);
@@ -210,7 +210,7 @@ describe('GET /api/assessment/programs/[programId]', () => {
       mockTaskRepo.findByProgram.mockResolvedValue(mockTasks);
 
       const request = new NextRequest('http://localhost/api/assessment/programs/program-123');
-      const response = await GET(request, { params: Promise.resolve({ programId: 'program-123' }) });
+      const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -223,7 +223,7 @@ describe('GET /api/assessment/programs/[programId]', () => {
       mockProgramRepo.findById.mockResolvedValue(null);
 
       const request = new NextRequest('http://localhost/api/assessment/programs/invalid-id');
-      const response = await GET(request, { params: Promise.resolve({ programId: 'invalid-id' }) });
+      const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(404);
@@ -237,7 +237,7 @@ describe('GET /api/assessment/programs/[programId]', () => {
       });
 
       const request = new NextRequest('http://localhost/api/assessment/programs/program-123');
-      const response = await GET(request, { params: Promise.resolve({ programId: 'program-123' }) });
+      const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(403);
@@ -265,7 +265,7 @@ describe('GET /api/assessment/programs/[programId]', () => {
       mockTaskRepo.findByProgram.mockResolvedValue([]);
 
       const request = new NextRequest('http://localhost/api/assessment/programs/program-123');
-      const response = await GET(request, { params: Promise.resolve({ programId: 'program-123' }) });
+      const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(404);
@@ -281,7 +281,7 @@ describe('GET /api/assessment/programs/[programId]', () => {
       mockTaskRepo.findByProgram.mockResolvedValue(null);
 
       const request = new NextRequest('http://localhost/api/assessment/programs/program-123');
-      const response = await GET(request, { params: Promise.resolve({ programId: 'program-123' }) });
+      const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(404);
@@ -292,7 +292,7 @@ describe('GET /api/assessment/programs/[programId]', () => {
       mockTaskRepo.findByProgram.mockResolvedValue([mockTasks[0]]);
 
       const request = new NextRequest('http://localhost/api/assessment/programs/program-123');
-      const response = await GET(request, { params: Promise.resolve({ programId: 'program-123' }) });
+      const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -306,7 +306,7 @@ describe('GET /api/assessment/programs/[programId]', () => {
       mockTaskRepo.findByProgram.mockResolvedValue(mockTasks);
 
       const request = new NextRequest('http://localhost/api/assessment/programs/program-123?includeAllTasks=true');
-      const response = await GET(request, { params: Promise.resolve({ programId: 'program-123' }) });
+      const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -325,7 +325,7 @@ describe('GET /api/assessment/programs/[programId]', () => {
       mockTaskRepo.findByProgram.mockResolvedValue(mockTasks);
 
       const request = new NextRequest('http://localhost/api/assessment/programs/program-123');
-      const response = await GET(request, { params: Promise.resolve({ programId: 'program-123' }) });
+      const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -349,7 +349,7 @@ describe('GET /api/assessment/programs/[programId]', () => {
       mockTaskRepo.findByProgram.mockResolvedValue(mockTasks);
 
       const request = new NextRequest('http://localhost/api/assessment/programs/program-123');
-      const response = await GET(request, { params: Promise.resolve({ programId: 'program-123' }) });
+      const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -365,7 +365,7 @@ describe('GET /api/assessment/programs/[programId]', () => {
       mockTaskRepo.findByProgram.mockResolvedValue(mockTasks);
 
       const request = new NextRequest('http://localhost/api/assessment/programs/program-123');
-      const response = await GET(request, { params: Promise.resolve({ programId: 'program-123' }) });
+      const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -382,7 +382,7 @@ describe('GET /api/assessment/programs/[programId]', () => {
       mockTaskRepo.findByProgram.mockResolvedValue(tasksWithoutQuestions);
 
       const request = new NextRequest('http://localhost/api/assessment/programs/program-123');
-      const response = await GET(request, { params: Promise.resolve({ programId: 'program-123' }) });
+      const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -393,7 +393,7 @@ describe('GET /api/assessment/programs/[programId]', () => {
       mockTaskRepo.findByProgram.mockResolvedValue(mockTasks);
 
       const request = new NextRequest('http://localhost/api/assessment/programs/program-123');
-      const response = await GET(request, { params: Promise.resolve({ programId: 'program-123' }) });
+      const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -428,7 +428,7 @@ describe('GET /api/assessment/programs/[programId]', () => {
       mockProgramRepo.findById.mockRejectedValue(new Error('Database error'));
 
       const request = new NextRequest('http://localhost/api/assessment/programs/program-123');
-      const response = await GET(request, { params: Promise.resolve({ programId: 'program-123' }) });
+      const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(500);
@@ -448,7 +448,7 @@ describe('GET /api/assessment/programs/[programId]', () => {
       mockTaskRepo.findByProgram.mockResolvedValue(mockTasks);
 
       const request = new NextRequest('http://localhost/api/assessment/programs/program-123');
-      const response = await GET(request, { params: Promise.resolve({ programId: 'program-123' }) });
+      const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(403);

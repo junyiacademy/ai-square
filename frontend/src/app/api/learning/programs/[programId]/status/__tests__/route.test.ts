@@ -29,7 +29,7 @@ describe('GET /api/learning/programs/[programId]/status', () => {
     mockGetServerSession.mockResolvedValue(null);
 
     const request = new NextRequest('http://localhost:3000/api/learning/programs/prog123/status');
-    const response = await GET(request, { params: Promise.resolve({ programId: 'prog123' }) });
+    const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
     const data = await response.json();
 
     expect(response.status).toBe(401);
@@ -43,7 +43,7 @@ describe('GET /api/learning/programs/[programId]/status', () => {
     mockGetServerSession.mockResolvedValue({ user: { id: 'user123', email: undefined as any } });
 
     const request = new NextRequest('http://localhost:3000/api/learning/programs/prog123/status');
-    const response = await GET(request, { params: Promise.resolve({ programId: 'prog123' }) });
+    const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
     const data = await response.json();
 
     expect(response.status).toBe(401);
@@ -88,7 +88,7 @@ describe('GET /api/learning/programs/[programId]/status', () => {
     mockGetProgramStatus.mockResolvedValue(mockStatus);
 
     const request = new NextRequest('http://localhost:3000/api/learning/programs/prog123/status');
-    const response = await GET(request, { params: Promise.resolve({ programId: 'prog123' }) });
+    const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
     const data = await response.json();
 
     expect(response.status).toBe(200);
@@ -104,7 +104,7 @@ describe('GET /api/learning/programs/[programId]/status', () => {
     mockGetProgramStatus.mockRejectedValue(new Error('Program not found'));
 
     const request = new NextRequest('http://localhost:3000/api/learning/programs/nonexistent/status');
-    const response = await GET(request, { params: Promise.resolve({ programId: 'nonexistent' }) });
+    const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
     const data = await response.json();
 
     expect(response.status).toBe(404);
@@ -119,7 +119,7 @@ describe('GET /api/learning/programs/[programId]/status', () => {
     mockGetProgramStatus.mockRejectedValue(new Error('Database connection failed'));
 
     const request = new NextRequest('http://localhost:3000/api/learning/programs/prog123/status');
-    const response = await GET(request, { params: Promise.resolve({ programId: 'prog123' }) });
+    const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
     const data = await response.json();
 
     expect(response.status).toBe(500);
@@ -148,7 +148,7 @@ describe('GET /api/learning/programs/[programId]/status', () => {
     mockGetProgramStatus.mockResolvedValue(emptyStatus);
 
     const request = new NextRequest('http://localhost:3000/api/learning/programs/prog123/status');
-    const response = await GET(request, { params: Promise.resolve({ programId: 'prog123' }) });
+    const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
     const data = await response.json();
 
     expect(response.status).toBe(200);
@@ -188,7 +188,7 @@ describe('GET /api/learning/programs/[programId]/status', () => {
     mockGetProgramStatus.mockResolvedValue(completedStatus);
 
     const request = new NextRequest('http://localhost:3000/api/learning/programs/prog123/status');
-    const response = await GET(request, { params: Promise.resolve({ programId: 'prog123' }) });
+    const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
     const data = await response.json();
 
     expect(response.status).toBe(200);

@@ -108,11 +108,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await GET(
         request,
-        { params: Promise.resolve({ 
-          id: 'scenario-123', 
-          programId: 'prog-123', 
-          taskId: 'task-123' 
-        }) }
+        { params: Promise.resolve({'id':'test-id','programId':'test-id','taskId':'test-id'}) }
       );
       
       expect(response.status).toBe(200);
@@ -130,11 +126,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await GET(
         request,
-        { params: Promise.resolve({ 
-          id: 'scenario-123', 
-          programId: 'prog-123', 
-          taskId: 'task-123' 
-        }) }
+        { params: Promise.resolve({'id':'test-id','programId':'test-id','taskId':'test-id'}) }
       );
       
       expect(response.status).toBe(401);
@@ -149,11 +141,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await GET(
         request,
-        { params: Promise.resolve({ 
-          id: 'scenario-123', 
-          programId: 'prog-123', 
-          taskId: 'nonexistent' 
-        }) }
+        { params: Promise.resolve({'id':'test-id','programId':'test-id','taskId':'test-id'}) }
       );
       
       expect(response.status).toBe(404);
@@ -168,11 +156,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await GET(
         request,
-        { params: Promise.resolve({ 
-          id: 'scenario-123', 
-          programId: 'prog-123', 
-          taskId: 'task-123' 
-        }) }
+        { params: Promise.resolve({'id':'test-id','programId':'test-id','taskId':'test-id'}) }
       );
       
       expect(response.status).toBe(500);
@@ -183,11 +167,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await GET(
         request,
-        { params: Promise.resolve({ 
-          id: 'scenario-123', 
-          programId: 'prog-123', 
-          taskId: 'task-123' 
-        }) }
+        { params: Promise.resolve({'id':'test-id','programId':'test-id','taskId':'test-id'}) }
       );
       
       const data = await response.json();
@@ -203,11 +183,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await GET(
         request,
-        { params: Promise.resolve({ 
-          id: 'scenario-123', 
-          programId: 'prog-123', 
-          taskId: 'task-123' 
-        }) }
+        { params: Promise.resolve({'id':'test-id','programId':'test-id','taskId':'test-id'}) }
       );
       
       const data = await response.json();
@@ -231,11 +207,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await PATCH(
         request,
-        { params: Promise.resolve({ 
-          id: 'scenario-123', 
-          programId: 'prog-123', 
-          taskId: 'task-123' 
-        }) }
+        { params: Promise.resolve({'id':'test-id','programId':'test-id','taskId':'test-id'}) }
       );
       
       expect(response.status).toBe(200);
@@ -252,11 +224,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await PATCH(
         request,
-        { params: Promise.resolve({ 
-          id: 'scenario-123', 
-          programId: 'prog-123', 
-          taskId: 'task-123' 
-        }) }
+        { params: Promise.resolve({'id':'test-id','programId':'test-id','taskId':'test-id'}) }
       );
       
       expect(response.status).toBe(400);
@@ -270,11 +238,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await PATCH(
         request,
-        { params: Promise.resolve({ 
-          id: 'scenario-123', 
-          programId: 'prog-123', 
-          taskId: 'task-123' 
-        }) }
+        { params: Promise.resolve({'id':'test-id','programId':'test-id','taskId':'test-id'}) }
       );
       
       expect(response.status).toBe(400);
@@ -294,11 +258,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await PATCH(
         request,
-        { params: Promise.resolve({ 
-          id: 'scenario-123', 
-          programId: 'prog-123', 
-          taskId: 'task-123' 
-        }) }
+        { params: Promise.resolve({'id':'test-id','programId':'test-id','taskId':'test-id'}) }
       );
       
       expect(response.status).toBe(200);
@@ -321,11 +281,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await PATCH(
         request,
-        { params: Promise.resolve({ 
-          id: 'scenario-123', 
-          programId: 'prog-123', 
-          taskId: 'task-123' 
-        }) }
+        { params: Promise.resolve({'id':'test-id','programId':'test-id','taskId':'test-id'}) }
       );
       
       expect(response.status).toBe(200);
@@ -343,11 +299,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await PATCH(
         request,
-        { params: Promise.resolve({ 
-          id: 'scenario-123', 
-          programId: 'prog-123', 
-          taskId: 'task-123' 
-        }) }
+        { params: Promise.resolve({'id':'test-id','programId':'test-id','taskId':'test-id'}) }
       );
       
       expect(response.status).toBe(400);
@@ -365,11 +317,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await PATCH(
         request,
-        { params: Promise.resolve({ 
-          id: 'scenario-123', 
-          programId: 'prog-123', 
-          taskId: 'nonexistent' 
-        }) }
+        { params: Promise.resolve({'id':'test-id','programId':'test-id','taskId':'test-id'}) }
       );
       
       expect(response.status).toBe(404);
@@ -387,11 +335,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await PATCH(
         request,
-        { params: Promise.resolve({ 
-          id: 'scenario-123', 
-          programId: 'prog-123', 
-          taskId: 'task-123' 
-        }) }
+        { params: Promise.resolve({'id':'test-id','programId':'test-id','taskId':'test-id'}) }
       );
       
       expect(response.status).toBe(500);
@@ -404,7 +348,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await GET(
         request,
-        { params: Promise.resolve({ id: '', programId: '', taskId: '' }) }
+        { params: Promise.resolve({'id':'test-id','programId':'test-id','taskId':'test-id'}) }
       );
       
       expect(response.status).toBe(400);
@@ -427,11 +371,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await PATCH(
         request,
-        { params: Promise.resolve({ 
-          id: 'scenario-123', 
-          programId: 'prog-123', 
-          taskId: 'task-123' 
-        }) }
+        { params: Promise.resolve({'id':'test-id','programId':'test-id','taskId':'test-id'}) }
       );
       
       // Should still succeed even if AI feedback fails
@@ -448,11 +388,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await GET(
         request,
-        { params: Promise.resolve({ 
-          id: 'scenario-123', 
-          programId: 'prog-123', 
-          taskId: 'task-123' 
-        }) }
+        { params: Promise.resolve({'id':'test-id','programId':'test-id','taskId':'test-id'}) }
       );
       
       // Should still return data even with translation errors
@@ -463,11 +399,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       const request = new NextRequest('http://localhost/api/discovery/scenarios/scenario-123/programs/prog-123/tasks/task-123');
       
       const promises = Array.from({ length: 5 }, () => 
-        GET(request, { params: Promise.resolve({ 
-          id: 'scenario-123', 
-          programId: 'prog-123', 
-          taskId: 'task-123' 
-        }) })
+        GET(request, { params: Promise.resolve({'id':'test-id','programId':'test-id','taskId':'test-id'}) })
       );
       
       const responses = await Promise.all(promises);
@@ -482,11 +414,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await GET(
         request,
-        { params: Promise.resolve({ 
-          id: '', 
-          programId: '', 
-          taskId: '' 
-        }) }
+        { params: Promise.resolve({'id':'test-id','programId':'test-id','taskId':'test-id'}) }
       );
       
       expect(response.status).toBe(400);
@@ -500,11 +428,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const getResponse = await GET(
         getRequest,
-        { params: Promise.resolve({ 
-          id: 'scenario-123', 
-          programId: 'prog-123', 
-          taskId: 'task-123' 
-        }) }
+        { params: Promise.resolve({'id':'test-id','programId':'test-id','taskId':'test-id'}) }
       );
       
       expect(getResponse.status).toBe(200);
@@ -521,11 +445,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const postResponse = await PATCH(
         postRequest,
-        { params: Promise.resolve({ 
-          id: 'scenario-123', 
-          programId: 'prog-123', 
-          taskId: 'task-123' 
-        }) }
+        { params: Promise.resolve({'id':'test-id','programId':'test-id','taskId':'test-id'}) }
       );
       
       expect(postResponse.status).toBe(200);
@@ -538,11 +458,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const putResponse = await PATCH(
         putRequest,
-        { params: Promise.resolve({ 
-          id: 'scenario-123', 
-          programId: 'prog-123', 
-          taskId: 'task-123' 
-        }) }
+        { params: Promise.resolve({'id':'test-id','programId':'test-id','taskId':'test-id'}) }
       );
       
       expect(putResponse.status).toBe(200);

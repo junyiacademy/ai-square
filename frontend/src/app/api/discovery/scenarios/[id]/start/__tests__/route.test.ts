@@ -122,7 +122,7 @@ describe('POST /api/discovery/scenarios/[id]/start', () => {
       });
 
       // Act
-      const response = await POST(request, { params: Promise.resolve({ id: mockScenarioId }) });
+      const response = await POST(request, { params: Promise.resolve({'id':'test-id'}) });
       const data = await response.json();
 
       // Assert
@@ -168,7 +168,7 @@ describe('POST /api/discovery/scenarios/[id]/start', () => {
       });
 
       // Act
-      const response = await POST(request, { params: Promise.resolve({ id: mockScenarioId }) });
+      const response = await POST(request, { params: Promise.resolve({'id':'test-id'}) });
       const data = await response.json();
 
       // Assert
@@ -192,7 +192,7 @@ describe('POST /api/discovery/scenarios/[id]/start', () => {
       });
 
       // Act
-      const response = await POST(request, { params: Promise.resolve({ id: 'invalid-id' }) });
+      const response = await POST(request, { params: Promise.resolve({'id':'test-id'}) });
       const data = await response.json();
 
       // Assert
@@ -214,7 +214,7 @@ describe('POST /api/discovery/scenarios/[id]/start', () => {
       });
 
       // Act
-      const response = await POST(request, { params: Promise.resolve({ id: mockScenarioId }) });
+      const response = await POST(request, { params: Promise.resolve({'id':'test-id'}) });
       const data = await response.json();
 
       // Assert
@@ -259,7 +259,7 @@ describe('POST /api/discovery/scenarios/[id]/start', () => {
       });
 
       // Act
-      const response = await POST(request, { params: Promise.resolve({ id: mockScenarioId }) });
+      const response = await POST(request, { params: Promise.resolve({'id':'test-id'}) });
       const data = await response.json();
 
       // Assert
@@ -296,7 +296,7 @@ describe('POST /api/discovery/scenarios/[id]/start', () => {
       });
 
       // Act
-      const response = await POST(request, { params: Promise.resolve({ id: mockScenarioId }) });
+      const response = await POST(request, { params: Promise.resolve({'id':'test-id'}) });
       const data = await response.json();
 
       // Assert

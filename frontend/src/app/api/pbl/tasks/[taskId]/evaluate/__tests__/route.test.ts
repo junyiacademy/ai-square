@@ -133,7 +133,7 @@ describe('POST /api/pbl/tasks/[taskId]/evaluate', () => {
   };
 
   const mockContext = {
-    params: Promise.resolve({ taskId: 'task-123' })
+    params: Promise.resolve({'taskId':'test-id'})
   };
 
   beforeEach(() => {
@@ -539,7 +539,7 @@ describe('GET /api/pbl/tasks/[taskId]/evaluate', () => {
   };
 
   const mockContext = {
-    params: Promise.resolve({ taskId: 'task-123' })
+    params: Promise.resolve({'taskId':'test-id'})
   };
 
   beforeEach(() => {

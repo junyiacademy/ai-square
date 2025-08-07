@@ -1,12 +1,15 @@
-import module from '../base-ai-service';
+import { BaseAIService } from '../base-ai-service';
 
-describe('base-ai-service', () => {
+describe('BaseAIService', () => {
   it('should be defined', () => {
-    expect(module).toBeDefined();
+    expect(BaseAIService).toBeDefined();
   });
   
-  it('should work correctly', () => {
-    // Add specific tests
-    expect(true).toBe(true);
+  it('should be an abstract class', () => {
+    // BaseAIService is abstract and cannot be instantiated directly
+    expect(() => {
+      // @ts-expect-error - Testing abstract class
+      new BaseAIService();
+    }).toThrow();
   });
 });

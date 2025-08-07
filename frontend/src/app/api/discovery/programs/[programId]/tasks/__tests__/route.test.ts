@@ -178,7 +178,7 @@ describe('Discovery Tasks API', () => {
       const request = createMockNextRequest('http://localhost:3000/api/discovery/programs/prog123/tasks');
 
       // Act
-      const response = await GET(request, { params: Promise.resolve({ programId: 'prog123' }) });
+      const response = await GET(request, { params: Promise.resolve({'programId':'test-id','taskId':'test-id'}) });
       const data = await response.json();
 
       // Assert
@@ -203,7 +203,7 @@ describe('Discovery Tasks API', () => {
       const request = createMockNextRequest('http://localhost:3000/api/discovery/programs/prog123/tasks?lang=zh');
 
       // Act
-      const response = await GET(request, { params: Promise.resolve({ programId: 'prog123' }) });
+      const response = await GET(request, { params: Promise.resolve({'programId':'test-id','taskId':'test-id'}) });
       const data = await response.json();
 
       // Assert
@@ -221,7 +221,7 @@ describe('Discovery Tasks API', () => {
       const request = createMockNextRequest('http://localhost:3000/api/discovery/programs/prog123/tasks');
 
       // Act
-      const response = await GET(request, { params: Promise.resolve({ programId: 'prog123' }) });
+      const response = await GET(request, { params: Promise.resolve({'programId':'test-id','taskId':'test-id'}) });
       const data = await response.json();
 
       // Assert
@@ -239,7 +239,7 @@ describe('Discovery Tasks API', () => {
       const request = createMockNextRequest('http://localhost:3000/api/discovery/programs/prog123/tasks');
 
       // Act
-      const response = await GET(request, { params: Promise.resolve({ programId: 'prog123' }) });
+      const response = await GET(request, { params: Promise.resolve({'programId':'test-id','taskId':'test-id'}) });
       const data = await response.json();
 
       // Assert
@@ -258,7 +258,7 @@ describe('Discovery Tasks API', () => {
       const request = createMockNextRequest('http://localhost:3000/api/discovery/programs/prog123/tasks');
 
       // Act
-      const response = await GET(request, { params: Promise.resolve({ programId: 'prog123' }) });
+      const response = await GET(request, { params: Promise.resolve({'programId':'test-id','taskId':'test-id'}) });
       const data = await response.json();
 
       // Assert
@@ -293,7 +293,7 @@ describe('Discovery Tasks API', () => {
       });
 
       // Act
-      const response = await POST(request, { params: Promise.resolve({ programId: 'prog123' }) });
+      const response = await POST(request, { params: Promise.resolve({'programId':'test-id','taskId':'test-id'}) });
       const data = await response.json();
 
       // Assert
@@ -320,7 +320,7 @@ describe('Discovery Tasks API', () => {
       });
 
       // Act
-      await POST(request, { params: Promise.resolve({ programId: 'prog123' }) });
+      await POST(request, { params: Promise.resolve({'programId':'test-id','taskId':'test-id'}) });
 
       // Assert
       expect(mockProgramRepo.update).toHaveBeenCalledWith('prog123', expect.objectContaining({
@@ -358,7 +358,7 @@ describe('Discovery Tasks API', () => {
       });
 
       // Act
-      const response = await PATCH(request, { params: Promise.resolve({ programId: 'prog123', taskId: 'task2' }) });
+      const response = await PATCH(request, { params: Promise.resolve({'programId':'test-id','taskId':'test-id'}) });
       const data = await response.json();
 
       // Assert
@@ -386,7 +386,7 @@ describe('Discovery Tasks API', () => {
       });
 
       // Act
-      await PATCH(request, { params: Promise.resolve({ programId: 'prog123', taskId: 'task2' }) });
+      await PATCH(request, { params: Promise.resolve({'programId':'test-id','taskId':'test-id'}) });
 
       // Assert
       expect(mockProgramRepo.update).toHaveBeenCalledWith('prog123', expect.objectContaining({
@@ -414,7 +414,7 @@ describe('Discovery Tasks API', () => {
       });
 
       // Act
-      const response = await PATCH(request, { params: Promise.resolve({ programId: 'prog123', taskId: 'task2' }) });
+      const response = await PATCH(request, { params: Promise.resolve({'programId':'test-id','taskId':'test-id'}) });
 
       // Assert
       expect(response.status).toBe(200);
@@ -442,7 +442,7 @@ describe('Discovery Tasks API', () => {
       });
 
       // Act
-      const response = await PATCH(request, { params: Promise.resolve({ programId: 'prog123', taskId: 'task1' }) });
+      const response = await PATCH(request, { params: Promise.resolve({'programId':'test-id','taskId':'test-id'}) });
       const data = await response.json();
 
       // Assert
@@ -460,7 +460,7 @@ describe('Discovery Tasks API', () => {
       const request = createMockNextRequest('http://localhost:3000/api/discovery/programs/prog123/tasks');
 
       // Act
-      const response = await GET(request, { params: Promise.resolve({ programId: 'prog123' }) });
+      const response = await GET(request, { params: Promise.resolve({'programId':'test-id','taskId':'test-id'}) });
       const data = await response.json();
 
       // Assert
@@ -484,7 +484,7 @@ describe('Discovery Tasks API', () => {
       });
 
       // Act
-      const response = await POST(request, { params: Promise.resolve({ programId: 'prog123' }) });
+      const response = await POST(request, { params: Promise.resolve({'programId':'test-id','taskId':'test-id'}) });
       const data = await response.json();
 
       // Assert

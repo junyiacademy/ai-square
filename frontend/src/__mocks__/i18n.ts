@@ -26,15 +26,15 @@ const i18n = {
     backendConnector: { backend: null },
     i18nFormat: { addLookupKeys: jest.fn() },
     formatter: { add: jest.fn() },
-  } as any,
+  } as Record<string, unknown>,
   store: {
     data: {},
     options: {}
-  } as any,
+  } as Record<string, unknown>,
   format: jest.fn(),
   options: {},
   isInitialized: true,
-  logger: { log: jest.fn() } as any,
-} as any;
+  logger: { log: jest.fn() } as Record<string, unknown>,
+} as unknown as typeof import('i18next').default;
 
 export default i18n;

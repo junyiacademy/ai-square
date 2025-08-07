@@ -107,7 +107,7 @@ describe('/api/discovery/programs/[programId]', () => {
       (mockScenarioRepo.findById as jest.Mock).mockResolvedValue(mockScenario);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/programs/prog-123');
-      const response = await GET(request, { params: Promise.resolve({ programId: 'prog-123' }) });
+      const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -134,7 +134,7 @@ describe('/api/discovery/programs/[programId]', () => {
       mockProgramRepo.findById.mockResolvedValue(null);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/programs/non-existent');
-      const response = await GET(request, { params: Promise.resolve({ programId: 'non-existent' }) });
+      const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(404);
@@ -149,7 +149,7 @@ describe('/api/discovery/programs/[programId]', () => {
       mockProgramRepo.findById.mockResolvedValue(mockProgram);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/programs/prog-123');
-      const response = await GET(request, { params: Promise.resolve({ programId: 'prog-123' }) });
+      const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(403);
@@ -160,7 +160,7 @@ describe('/api/discovery/programs/[programId]', () => {
       (getServerSession as jest.Mock).mockResolvedValue(null);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/programs/prog-123');
-      const response = await GET(request, { params: Promise.resolve({ programId: 'prog-123' }) });
+      const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(401);

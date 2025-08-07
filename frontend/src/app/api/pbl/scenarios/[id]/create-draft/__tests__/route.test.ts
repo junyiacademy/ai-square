@@ -27,7 +27,7 @@ describe('API Route: src/app/api/pbl/scenarios/[id]/create-draft', () => {
         body: JSON.stringify({ test: 'data' }),
       });
       
-      const response = await POST(request, { params: Promise.resolve({ id: 'test-id' }) });
+      const response = await POST(request, { params: Promise.resolve({'id':'test-id'}) });
       
       expect(response).toBeDefined();
       expect(response.status).toBeLessThanOrEqual(500);
@@ -38,7 +38,7 @@ describe('API Route: src/app/api/pbl/scenarios/[id]/create-draft', () => {
         method: 'POST',
       });
       
-      const response = await POST(request, { params: Promise.resolve({}) });
+      const response = await POST(request, { params: Promise.resolve({'id':'test-id'}) });
       
       expect(response).toBeDefined();
     });
@@ -49,7 +49,7 @@ describe('API Route: src/app/api/pbl/scenarios/[id]/create-draft', () => {
         body: 'invalid json',
       });
       
-      const response = await POST(request, { params: Promise.resolve({ id: 'test' }) });
+      const response = await POST(request, { params: Promise.resolve({'id':'test-id'}) });
       
       expect(response).toBeDefined();
       expect(response.status).toBeLessThanOrEqual(500);

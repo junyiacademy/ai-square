@@ -247,7 +247,7 @@ describe('/api/pbl/programs/[programId]/complete', () => {
           method: 'POST'
         });
 
-        const response = await POST(request, { params: Promise.resolve({ programId: 'prog-123' }) });
+        const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
 
         expect(response.status).toBe(401);
         const data = await response.json();
@@ -264,7 +264,7 @@ describe('/api/pbl/programs/[programId]/complete', () => {
           method: 'POST'
         });
 
-        const response = await POST(request, { params: Promise.resolve({ programId: 'prog-123' }) });
+        const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
 
         expect(response.status).toBe(404);
         const data = await response.json();
@@ -282,7 +282,7 @@ describe('/api/pbl/programs/[programId]/complete', () => {
           method: 'POST'
         });
 
-        const response = await POST(request, { params: Promise.resolve({ programId: 'prog-123' }) });
+        const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
 
         expect(response.status).toBe(404);
         const data = await response.json();
@@ -303,7 +303,7 @@ describe('/api/pbl/programs/[programId]/complete', () => {
           method: 'POST'
         });
 
-        const response = await POST(request, { params: Promise.resolve({ programId: 'prog-123' }) });
+        const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
 
         expect(response.status).toBe(403);
         const data = await response.json();
@@ -341,7 +341,7 @@ describe('/api/pbl/programs/[programId]/complete', () => {
           method: 'POST'
         });
 
-        const response = await POST(request, { params: Promise.resolve({ programId: 'prog-123' }) });
+        const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
 
         expect(response.status).toBe(200);
         const data = await response.json();
@@ -459,7 +459,7 @@ describe('/api/pbl/programs/[programId]/complete', () => {
           method: 'POST'
         });
 
-        const response = await POST(request, { params: Promise.resolve({ programId: 'prog-123' }) });
+        const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
 
         expect(response.status).toBe(200);
         const data = await response.json();
@@ -514,7 +514,7 @@ describe('/api/pbl/programs/[programId]/complete', () => {
           method: 'POST'
         });
 
-        const response = await POST(request, { params: Promise.resolve({ programId: 'prog-123' }) });
+        const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
 
         expect(response.status).toBe(200);
         const data = await response.json();
@@ -554,7 +554,7 @@ describe('/api/pbl/programs/[programId]/complete', () => {
           method: 'POST'
         });
 
-        const response = await POST(request, { params: Promise.resolve({ programId: 'prog-123' }) });
+        const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
 
         expect(response.status).toBe(200);
         const data = await response.json();
@@ -593,7 +593,7 @@ describe('/api/pbl/programs/[programId]/complete', () => {
           method: 'POST'
         });
 
-        const response = await POST(request, { params: Promise.resolve({ programId: 'prog-123' }) });
+        const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
 
         expect(response.status).toBe(200);
         const data = await response.json();
@@ -654,7 +654,7 @@ describe('/api/pbl/programs/[programId]/complete', () => {
           method: 'POST'
         });
 
-        const response = await POST(request, { params: Promise.resolve({ programId: 'prog-123' }) });
+        const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
 
         expect(response.status).toBe(200);
         const data = await response.json();
@@ -716,7 +716,7 @@ describe('/api/pbl/programs/[programId]/complete', () => {
           method: 'POST'
         });
 
-        const response = await POST(request, { params: Promise.resolve({ programId: 'prog-123' }) });
+        const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
 
         expect(response.status).toBe(200);
         const data = await response.json();
@@ -759,7 +759,7 @@ describe('/api/pbl/programs/[programId]/complete', () => {
           method: 'POST'
         });
 
-        const response = await POST(request, { params: Promise.resolve({ programId: 'prog-123' }) });
+        const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
 
         expect(response.status).toBe(200);
         const data = await response.json();
@@ -827,7 +827,7 @@ describe('/api/pbl/programs/[programId]/complete', () => {
           method: 'POST'
         });
 
-        const response = await POST(request, { params: Promise.resolve({ programId: 'prog-123' }) });
+        const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
 
         expect(response.status).toBe(200);
         const data = await response.json();
@@ -878,7 +878,7 @@ describe('/api/pbl/programs/[programId]/complete', () => {
           method: 'POST'
         });
 
-        const response = await POST(request, { params: Promise.resolve({ programId: 'prog-123' }) });
+        const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
 
         expect(response.status).toBe(200);
         expect(mockEvalRepo.create).toHaveBeenCalledWith(
@@ -920,7 +920,7 @@ describe('/api/pbl/programs/[programId]/complete', () => {
           method: 'POST'
         });
 
-        const response = await POST(request, { params: Promise.resolve({ programId: 'prog-123' }) });
+        const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
 
         expect(response.status).toBe(200);
         expect(mockEvalRepo.create).toHaveBeenCalledWith(
@@ -995,7 +995,7 @@ describe('/api/pbl/programs/[programId]/complete', () => {
           method: 'POST'
         });
 
-        const response = await POST(request, { params: Promise.resolve({ programId: 'prog-123' }) });
+        const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
 
         expect(response.status).toBe(200);
         const data = await response.json();
@@ -1045,7 +1045,7 @@ describe('/api/pbl/programs/[programId]/complete', () => {
           method: 'POST'
         });
 
-        const response = await POST(request, { params: Promise.resolve({ programId: 'prog-123' }) });
+        const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
 
         expect(response.status).toBe(200);
         expect(mockEvalRepo.create).toHaveBeenCalledWith(
@@ -1071,7 +1071,7 @@ describe('/api/pbl/programs/[programId]/complete', () => {
           method: 'POST'
         });
 
-        const response = await POST(request, { params: Promise.resolve({ programId: 'prog-123' }) });
+        const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
 
         expect(response.status).toBe(500);
         const data = await response.json();
@@ -1096,7 +1096,7 @@ describe('/api/pbl/programs/[programId]/complete', () => {
           method: 'POST'
         });
 
-        const response = await POST(request, { params: Promise.resolve({ programId: 'prog-123' }) });
+        const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
 
         expect(response.status).toBe(500);
         const data = await response.json();
@@ -1120,7 +1120,7 @@ describe('/api/pbl/programs/[programId]/complete', () => {
 
         const request = new NextRequest('http://localhost:3000/api/pbl/programs/prog-123/complete');
 
-        const response = await GET(request, { params: Promise.resolve({ programId: 'prog-123' }) });
+        const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
 
         expect(response.status).toBe(401);
         const data = await response.json();
@@ -1135,7 +1135,7 @@ describe('/api/pbl/programs/[programId]/complete', () => {
 
         const request = new NextRequest('http://localhost:3000/api/pbl/programs/prog-123/complete');
 
-        const response = await GET(request, { params: Promise.resolve({ programId: 'prog-123' }) });
+        const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
 
         expect(response.status).toBe(404);
         const data = await response.json();
@@ -1150,7 +1150,7 @@ describe('/api/pbl/programs/[programId]/complete', () => {
 
         const request = new NextRequest('http://localhost:3000/api/pbl/programs/prog-123/complete');
 
-        const response = await GET(request, { params: Promise.resolve({ programId: 'prog-123' }) });
+        const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
 
         expect(response.status).toBe(404);
         const data = await response.json();
@@ -1168,7 +1168,7 @@ describe('/api/pbl/programs/[programId]/complete', () => {
 
         const request = new NextRequest('http://localhost:3000/api/pbl/programs/prog-123/complete');
 
-        const response = await GET(request, { params: Promise.resolve({ programId: 'prog-123' }) });
+        const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
 
         expect(response.status).toBe(403);
         const data = await response.json();
@@ -1205,7 +1205,7 @@ describe('/api/pbl/programs/[programId]/complete', () => {
 
         const request = new NextRequest('http://localhost:3000/api/pbl/programs/prog-123/complete?language=en');
 
-        const response = await GET(request, { params: Promise.resolve({ programId: 'prog-123' }) });
+        const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
 
         expect(response.status).toBe(200);
         const data = await response.json();
@@ -1233,7 +1233,7 @@ describe('/api/pbl/programs/[programId]/complete', () => {
 
         const request = new NextRequest('http://localhost:3000/api/pbl/programs/prog-123/complete');
 
-        const response = await GET(request, { params: Promise.resolve({ programId: 'prog-123' }) });
+        const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
 
         expect(response.status).toBe(200);
         const data = await response.json();
@@ -1263,7 +1263,7 @@ describe('/api/pbl/programs/[programId]/complete', () => {
 
         const request = new NextRequest('http://localhost:3000/api/pbl/programs/prog-123/complete?language=zh');
 
-        const response = await GET(request, { params: Promise.resolve({ programId: 'prog-123' }) });
+        const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
 
         expect(response.status).toBe(200);
         const data = await response.json();
@@ -1284,7 +1284,7 @@ describe('/api/pbl/programs/[programId]/complete', () => {
 
         const request = new NextRequest('http://localhost:3000/api/pbl/programs/prog-123/complete');
 
-        const response = await GET(request, { params: Promise.resolve({ programId: 'prog-123' }) });
+        const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
 
         expect(response.status).toBe(200);
         const data = await response.json();
@@ -1304,7 +1304,7 @@ describe('/api/pbl/programs/[programId]/complete', () => {
 
         const request = new NextRequest('http://localhost:3000/api/pbl/programs/prog-123/complete');
 
-        const response = await GET(request, { params: Promise.resolve({ programId: 'prog-123' }) });
+        const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
 
         expect(response.status).toBe(500);
         const data = await response.json();
@@ -1331,7 +1331,7 @@ describe('/api/pbl/programs/[programId]/complete', () => {
 
         const request = new NextRequest('http://localhost:3000/api/pbl/programs/prog-123/complete');
 
-        const response = await GET(request, { params: Promise.resolve({ programId: 'prog-123' }) });
+        const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
 
         expect(response.status).toBe(500);
         const data = await response.json();

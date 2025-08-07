@@ -1,32 +1,23 @@
-/**
- * Tests for RedisCacheService.ts
- */
-
 import { redisCacheService } from '../redis-cache-service';
 
-describe('RedisCacheService', () => {
+describe('redisCacheService', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
   it('should be defined', () => {
-    expect(RedisCacheService).toBeDefined();
+    expect(redisCacheService).toBeDefined();
   });
-
-  it('should work correctly', () => {
-    // Add specific tests based on the module's functionality
-    // RedisCacheService is a class/module
-    // Test implementation
+  
+  it('should have required methods', () => {
+    expect(typeof redisCacheService.get).toBe('function');
+    expect(typeof redisCacheService.set).toBe('function');
+    expect(typeof redisCacheService.delete).toBe('function');
+    expect(typeof redisCacheService.clear).toBe('function');
   });
-
-  it('should handle edge cases', () => {
-    // Test edge cases
-    // Test edge cases for RedisCacheService
-    // Test edge cases
-  });
-
-  it('should handle errors gracefully', () => {
-    // Test error handling
-    // Test error handling for RedisCacheService
+  
+  it('should handle get operations', async () => {
+    const result = await redisCacheService.get('test-key');
+    expect(result === null || typeof result === 'string').toBe(true);
   });
 });
