@@ -114,15 +114,15 @@ describe('/api/pbl/scenarios route', () => {
 
   describe('GET /api/pbl/scenarios', () => {
     it('should return scenarios from database successfully', async () => {
-      const request = new NextRequest('http://localhost/api/pbl/scenarios?language=en');
+      const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
       
       const response = await GET(request);
       const data = await response.json();
 
       expect(response.status).toBe(200);
       expect(data.success).toBe(true);
-      expect(data.scenarios).toHaveLength(3);
-      expect(data.scenarios[0]).toMatchObject({
+      expect(data.data.scenarios).toHaveLength(3);
+      expect(data.data.scenarios[0]).toMatchObject({
         id: 'scenario-uuid-1',
         yamlId: 'ai-job-search',
         title: 'AI Job Search Assistant',
@@ -134,46 +134,48 @@ describe('/api/pbl/scenarios route', () => {
     });
 
     it('should handle Chinese language parameter', async () => {
-      const request = new NextRequest('http://localhost/api/pbl/scenarios?language=zh');
+      const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=zh');
       
       const response = await GET(request);
       const data = await response.json();
 
       expect(response.status).toBe(200);
-      expect(data.scenarios[0].title).toBe('AI 求職助手');
-      expect(data.scenarios[0].description).toBe('使用 AI 增強求職');
+      expect(data.data.scenarios[0].title).toBe('AI 求職助手');
+      expect(data.data.scenarios[0].description).toBe('使用 AI 增強求職');
     });
 
     it('should fallback to English when language not available', async () => {
-      const request = new NextRequest('http://localhost/api/pbl/scenarios?language=fr');
+      const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=fr');
       
       const response = await GET(request);
       const data = await response.json();
 
       expect(response.status).toBe(200);
-      expect(data.scenarios[0].title).toBe('AI Job Search Assistant');
-      expect(data.scenarios[0].description).toBe('Use AI to enhance your job search');
+      expect(data.data.scenarios[0].title).toBe('AI Job Search Assistant');
+      expect(data.data.scenarios[0].description).toBe('Use AI to enhance your job search');
     });
 
     it('should handle string-type titles and descriptions', async () => {
-      const request = new NextRequest('http://localhost/api/pbl/scenarios?language=en');
+      const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
       
       const response = await GET(request);
       const data = await response.json();
 
       expect(response.status).toBe(200);
-      expect(data.scenarios[2].title).toBe('Simple Scenario');
-      expect(data.scenarios[2].description).toBe('A simple scenario');
+      expect(data.data.scenarios[2].title).toBe('Simple Scenario');
+      expect(data.data.scenarios[2].description).toBe('A simple scenario');
     });
 
     it('should use cache when available', async () => {
       const cachedData = {
-        scenarios: [{ id: 'cached-1', title: 'Cached Scenario' }],
+        data: {
+          scenarios: [{ id: 'cached-1', title: 'Cached Scenario' }]
+        },
         success: true
       };
       mockCacheService.get.mockResolvedValue(cachedData);
 
-      const request = new NextRequest('http://localhost/api/pbl/scenarios?language=en');
+      const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
       
       const response = await GET(request);
       const data = await response.json();
@@ -184,7 +186,7 @@ describe('/api/pbl/scenarios route', () => {
     });
 
     it('should build scenario index', async () => {
-      const request = new NextRequest('http://localhost/api/pbl/scenarios?language=en');
+      const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
       
       await GET(request);
 
@@ -192,72 +194,72 @@ describe('/api/pbl/scenarios route', () => {
     });
 
     it('should extract yamlId from different sources', async () => {
-      const request = new NextRequest('http://localhost/api/pbl/scenarios?language=en');
+      const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
       
       const response = await GET(request);
       const data = await response.json();
 
-      expect(data.scenarios[0].yamlId).toBe('ai-job-search'); // from metadata.yamlId
-      expect(data.scenarios[1].yamlId).toBe('ai-education-design'); // from metadata.yamlId
-      expect(data.scenarios[2].yamlId).toBe('simple-scenario'); // from sourceId
+      expect(data.data.scenarios[0].yamlId).toBe('ai-job-search'); // from metadata.yamlId
+      expect(data.data.scenarios[1].yamlId).toBe('ai-education-design'); // from metadata.yamlId
+      expect(data.data.scenarios[2].yamlId).toBe('simple-scenario'); // from sourceId
     });
 
     it('should handle targetDomains from different sources', async () => {
-      const request = new NextRequest('http://localhost/api/pbl/scenarios?language=en');
+      const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
       
       const response = await GET(request);
       const data = await response.json();
 
-      expect(data.scenarios[0].targetDomains).toEqual(['creating_with_ai', 'engaging_with_ai']);
-      expect(data.scenarios[0].targetDomain).toEqual(['creating_with_ai', 'engaging_with_ai']);
-      expect(data.scenarios[0].domains).toEqual(['creating_with_ai', 'engaging_with_ai']);
+      expect(data.data.scenarios[0].targetDomains).toEqual(['creating_with_ai', 'engaging_with_ai']);
+      expect(data.data.scenarios[0].targetDomain).toEqual(['creating_with_ai', 'engaging_with_ai']);
+      expect(data.data.scenarios[0].domains).toEqual(['creating_with_ai', 'engaging_with_ai']);
     });
 
     it('should calculate task count correctly', async () => {
-      const request = new NextRequest('http://localhost/api/pbl/scenarios?language=en');
+      const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
       
       const response = await GET(request);
       const data = await response.json();
 
-      expect(data.scenarios[0].taskCount).toBe(2);
-      expect(data.scenarios[1].taskCount).toBe(3);
-      expect(data.scenarios[2].taskCount).toBe(0);
+      expect(data.data.scenarios[0].taskCount).toBe(2);
+      expect(data.data.scenarios[1].taskCount).toBe(3);
+      expect(data.data.scenarios[2].taskCount).toBe(0);
     });
 
     it('should assign correct emoji based on scenario ID', async () => {
-      const request = new NextRequest('http://localhost/api/pbl/scenarios?language=en');
+      const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
       
       const response = await GET(request);
       const data = await response.json();
 
-      expect(data.scenarios[0].thumbnailEmoji).toBe('💼'); // ai-job-search
-      expect(data.scenarios[1].thumbnailEmoji).toBe('🎓'); // ai-education-design
-      expect(data.scenarios[2].thumbnailEmoji).toBe('🤖'); // default emoji
+      expect(data.data.scenarios[0].thumbnailEmoji).toBe('💼'); // ai-job-search
+      expect(data.data.scenarios[1].thumbnailEmoji).toBe('🎓'); // ai-education-design
+      expect(data.data.scenarios[2].thumbnailEmoji).toBe('🤖'); // default emoji
     });
 
     it('should handle empty scenarios list', async () => {
       mockScenarioRepo.findByMode.mockResolvedValue([]);
 
-      const request = new NextRequest('http://localhost/api/pbl/scenarios?language=en');
+      const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
       
       const response = await GET(request);
       const data = await response.json();
 
       expect(response.status).toBe(200);
-      expect(data.scenarios).toEqual([]);
+      expect(data.data.scenarios).toEqual([]);
       expect(data.success).toBe(true);
     });
 
     it('should handle repository errors gracefully', async () => {
       mockScenarioRepo.findByMode.mockRejectedValue(new Error('Database error'));
 
-      const request = new NextRequest('http://localhost/api/pbl/scenarios?language=en');
+      const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
       
       const response = await GET(request);
       const data = await response.json();
 
       expect(response.status).toBe(200);
-      expect(data.scenarios).toEqual([]);
+      expect(data.data.scenarios).toEqual([]);
       expect(data.success).toBe(true);
       expect(console.error).toHaveBeenCalledWith('Error loading scenarios from database:', expect.any(Error));
     });
@@ -271,13 +273,13 @@ describe('/api/pbl/scenarios route', () => {
       };
       mockScenarioRepo.findByMode.mockResolvedValue([...mockScenarios, invalidScenario]);
 
-      const request = new NextRequest('http://localhost/api/pbl/scenarios?language=en');
+      const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
       
       const response = await GET(request);
       const data = await response.json();
 
       expect(response.status).toBe(200);
-      expect(data.scenarios).toHaveLength(3); // Should skip the invalid scenario
+      expect(data.data.scenarios).toHaveLength(3); // Should skip the invalid scenario
       expect(console.error).toHaveBeenCalledWith(
         `Error processing scenario invalid-scenario:`, 
         expect.any(Error)
@@ -287,20 +289,20 @@ describe('/api/pbl/scenarios route', () => {
     it('should handle missing repository findByMode method', async () => {
       mockScenarioRepo.findByMode = undefined;
 
-      const request = new NextRequest('http://localhost/api/pbl/scenarios?language=en');
+      const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
       
       const response = await GET(request);
       const data = await response.json();
 
       expect(response.status).toBe(200);
-      expect(data.scenarios).toEqual([]);
+      expect(data.data.scenarios).toEqual([]);
       expect(console.log).toHaveBeenCalledWith('[PBL API] Repository findByMode exists?', false);
     });
 
     it('should handle cache set failure', async () => {
       mockCacheService.set.mockRejectedValue(new Error('Cache error'));
 
-      const request = new NextRequest('http://localhost/api/pbl/scenarios?language=en');
+      const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
       
       const response = await GET(request);
       
@@ -311,7 +313,7 @@ describe('/api/pbl/scenarios route', () => {
     it('should handle scenario index build failure', async () => {
       mockScenarioIndexService.buildIndex.mockRejectedValue(new Error('Index error'));
 
-      const request = new NextRequest('http://localhost/api/pbl/scenarios?language=en');
+      const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
       
       const response = await GET(request);
       
@@ -320,7 +322,7 @@ describe('/api/pbl/scenarios route', () => {
     });
 
     it('should log scenario details when scenarios exist', async () => {
-      const request = new NextRequest('http://localhost/api/pbl/scenarios?language=en');
+      const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
       
       await GET(request);
 
@@ -337,7 +339,7 @@ describe('/api/pbl/scenarios route', () => {
     it('should log when no scenarios found', async () => {
       mockScenarioRepo.findByMode.mockResolvedValue([]);
 
-      const request = new NextRequest('http://localhost/api/pbl/scenarios?language=en');
+      const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
       
       await GET(request);
 
@@ -356,14 +358,14 @@ describe('/api/pbl/scenarios route', () => {
       };
       mockScenarioRepo.findByMode.mockResolvedValue([scenarioWithUndefinedFields]);
 
-      const request = new NextRequest('http://localhost/api/pbl/scenarios?language=en');
+      const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
       
       const response = await GET(request);
       const data = await response.json();
 
       expect(response.status).toBe(200);
-      expect(data.scenarios[0].title).toBe('');
-      expect(data.scenarios[0].description).toBe('');
+      expect(data.data.scenarios[0].title).toBe('');
+      expect(data.data.scenarios[0].description).toBe('');
     });
 
     it('should handle missing metadata gracefully', async () => {
@@ -377,15 +379,15 @@ describe('/api/pbl/scenarios route', () => {
       };
       mockScenarioRepo.findByMode.mockResolvedValue([scenarioWithoutMetadata]);
 
-      const request = new NextRequest('http://localhost/api/pbl/scenarios?language=en');
+      const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
       
       const response = await GET(request);
       const data = await response.json();
 
       expect(response.status).toBe(200);
-      expect(data.scenarios[0].yamlId).toBe('scenario-no-metadata'); // falls back to id
-      expect(data.scenarios[0].difficulty).toBeUndefined();
-      expect(data.scenarios[0].estimatedDuration).toBeUndefined();
+      expect(data.data.scenarios[0].yamlId).toBe('scenario-no-metadata'); // falls back to id
+      expect(data.data.scenarios[0].difficulty).toBeUndefined();
+      expect(data.data.scenarios[0].estimatedDuration).toBeUndefined();
     });
 
     it('should prefer estimatedMinutes over metadata.estimatedDuration', async () => {
@@ -403,17 +405,17 @@ describe('/api/pbl/scenarios route', () => {
       };
       mockScenarioRepo.findByMode.mockResolvedValue([scenarioWithBothDurations]);
 
-      const request = new NextRequest('http://localhost/api/pbl/scenarios?language=en');
+      const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
       
       const response = await GET(request);
       const data = await response.json();
 
       expect(response.status).toBe(200);
-      expect(data.scenarios[0].estimatedDuration).toBe(30); // prefers estimatedMinutes
+      expect(data.data.scenarios[0].estimatedDuration).toBe(30); // prefers estimatedMinutes
     });
 
     it('should handle malformed URL gracefully', async () => {
-      const request = new NextRequest('http://localhost/api/pbl/scenarios?language=en&invalid=param');
+      const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en&invalid=param');
       
       const response = await GET(request);
       
@@ -422,7 +424,7 @@ describe('/api/pbl/scenarios route', () => {
     });
 
     it('should set correct response headers', async () => {
-      const request = new NextRequest('http://localhost/api/pbl/scenarios?language=en');
+      const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
       
       const response = await GET(request);
 
@@ -442,19 +444,19 @@ describe('/api/pbl/scenarios route', () => {
       ];
       mockScenarioRepo.findByMode.mockResolvedValue(specialScenarios);
 
-      const request = new NextRequest('http://localhost/api/pbl/scenarios?language=en');
+      const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
       
       const response = await GET(request);
       const data = await response.json();
 
-      expect(data.scenarios[0].thumbnailEmoji).toBe('₿'); // stablecoin
-      expect(data.scenarios[1].thumbnailEmoji).toBe('🤖'); // robotics
-      expect(data.scenarios[2].thumbnailEmoji).toBe('🌍'); // climate
-      expect(data.scenarios[3].thumbnailEmoji).toBe('📱'); // digital wellness
-      expect(data.scenarios[4].thumbnailEmoji).toBe('🏙️'); // smart city
-      expect(data.scenarios[5].thumbnailEmoji).toBe('🎨'); // creative arts
-      expect(data.scenarios[6].thumbnailEmoji).toBe('💗'); // health assistant
-      expect(data.scenarios[7].thumbnailEmoji).toBe('🤖'); // default
+      expect(data.data.scenarios[0].thumbnailEmoji).toBe('₿'); // stablecoin
+      expect(data.data.scenarios[1].thumbnailEmoji).toBe('🤖'); // robotics
+      expect(data.data.scenarios[2].thumbnailEmoji).toBe('🌍'); // climate
+      expect(data.data.scenarios[3].thumbnailEmoji).toBe('📱'); // digital wellness
+      expect(data.data.scenarios[4].thumbnailEmoji).toBe('🏙️'); // smart city
+      expect(data.data.scenarios[5].thumbnailEmoji).toBe('🎨'); // creative arts
+      expect(data.data.scenarios[6].thumbnailEmoji).toBe('💗'); // health assistant
+      expect(data.data.scenarios[7].thumbnailEmoji).toBe('🤖'); // default
     });
 
     it('should handle various taskCount scenarios', async () => {
@@ -466,22 +468,22 @@ describe('/api/pbl/scenarios route', () => {
       ];
       mockScenarioRepo.findByMode.mockResolvedValue(taskCountScenarios);
 
-      const request = new NextRequest('http://localhost/api/pbl/scenarios?language=en');
+      const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
       
       const response = await GET(request);
       const data = await response.json();
 
-      expect(data.scenarios[0].taskCount).toBe(5); // prefers taskTemplates.length
-      expect(data.scenarios[1].taskCount).toBe(7); // uses taskCount when no taskTemplates
-      expect(data.scenarios[2].taskCount).toBe(0); // handles null taskTemplates
-      expect(data.scenarios[3].taskCount).toBe(0); // handles missing both
+      expect(data.data.scenarios[0].taskCount).toBe(5); // prefers taskTemplates.length
+      expect(data.data.scenarios[1].taskCount).toBe(7); // uses taskCount when no taskTemplates
+      expect(data.data.scenarios[2].taskCount).toBe(0); // handles null taskTemplates
+      expect(data.data.scenarios[3].taskCount).toBe(0); // handles missing both
     });
   });
 
   describe('Cache behavior', () => {
     it('should use different cache keys for different languages', async () => {
-      const enRequest = new NextRequest('http://localhost/api/pbl/scenarios?language=en');
-      const zhRequest = new NextRequest('http://localhost/api/pbl/scenarios?language=zh');
+      const enRequest = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
+      const zhRequest = new NextRequest('http://localhost/api/pbl/scenarios?lang=zh');
       
       await GET(enRequest);
       await GET(zhRequest);
@@ -491,7 +493,7 @@ describe('/api/pbl/scenarios route', () => {
     });
 
     it('should set cache with appropriate TTL', async () => {
-      const request = new NextRequest('http://localhost/api/pbl/scenarios?language=en');
+      const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
       
       await GET(request);
 
@@ -505,7 +507,7 @@ describe('/api/pbl/scenarios route', () => {
     it('should handle cache get errors gracefully', async () => {
       mockCacheService.get.mockRejectedValue(new Error('Cache get error'));
 
-      const request = new NextRequest('http://localhost/api/pbl/scenarios?language=en');
+      const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
       
       const response = await GET(request);
       
@@ -527,7 +529,7 @@ describe('/api/pbl/scenarios route', () => {
       }));
       mockScenarioRepo.findByMode.mockResolvedValue(largeScenarioSet);
 
-      const request = new NextRequest('http://localhost/api/pbl/scenarios?language=en');
+      const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
       
       const startTime = performance.now();
       const response = await GET(request);
@@ -536,7 +538,7 @@ describe('/api/pbl/scenarios route', () => {
       const data = await response.json();
 
       expect(response.status).toBe(200);
-      expect(data.scenarios).toHaveLength(100);
+      expect(data.data.scenarios).toHaveLength(100);
       expect(endTime - startTime).toBeLessThan(5000); // Should complete within 5 seconds
     });
 
@@ -547,7 +549,7 @@ describe('/api/pbl/scenarios route', () => {
       });
       mockCacheService.set.mockReturnValue(cacheSetPromise);
 
-      const request = new NextRequest('http://localhost/api/pbl/scenarios?language=en');
+      const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
       
       const responsePromise = GET(request);
       
@@ -568,13 +570,13 @@ describe('/api/pbl/scenarios route', () => {
         throw new Error('Repository factory failed');
       });
 
-      const request = new NextRequest('http://localhost/api/pbl/scenarios?language=en');
+      const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
       
       const response = await GET(request);
       const data = await response.json();
 
       expect(response.status).toBe(200);
-      expect(data.scenarios).toEqual([]);
+      expect(data.data.scenarios).toEqual([]);
       expect(console.error).toHaveBeenCalledWith('Error loading scenarios from database:', expect.any(Error));
     });
 
@@ -583,7 +585,7 @@ describe('/api/pbl/scenarios route', () => {
         throw new Error('Service import failed');
       });
 
-      const request = new NextRequest('http://localhost/api/pbl/scenarios?language=en');
+      const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
       
       const response = await GET(request);
       
@@ -596,13 +598,13 @@ describe('/api/pbl/scenarios route', () => {
     it('should handle null scenario repo response', async () => {
       mockScenarioRepo.findByMode.mockResolvedValue(null);
 
-      const request = new NextRequest('http://localhost/api/pbl/scenarios?language=en');
+      const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
       
       const response = await GET(request);
       const data = await response.json();
 
       expect(response.status).toBe(200);
-      expect(data.scenarios).toEqual([]);
+      expect(data.data.scenarios).toEqual([]);
     });
 
     it('should handle scenarios with missing required fields', async () => {
@@ -614,7 +616,7 @@ describe('/api/pbl/scenarios route', () => {
       ];
       mockScenarioRepo.findByMode.mockResolvedValue(incompleteScenarios);
 
-      const request = new NextRequest('http://localhost/api/pbl/scenarios?language=en');
+      const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
       
       const response = await GET(request);
       const data = await response.json();
@@ -648,13 +650,13 @@ describe('/api/pbl/scenarios route', () => {
       };
       mockScenarioRepo.findByMode.mockResolvedValue([complexScenario]);
 
-      const request = new NextRequest('http://localhost/api/pbl/scenarios?language=en');
+      const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
       
       const response = await GET(request);
       const data = await response.json();
 
       expect(response.status).toBe(200);
-      expect(data.scenarios[0].targetDomains).toEqual(['shallow_domain']); // Should use shallow metadata
+      expect(data.data.scenarios[0].targetDomains).toEqual(['shallow_domain']); // Should use shallow metadata
     });
   });
 });
