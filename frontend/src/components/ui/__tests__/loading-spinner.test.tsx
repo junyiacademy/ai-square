@@ -1,80 +1,76 @@
-import React from 'react'
-import { renderWithProviders, screen, waitFor } from '@/test-utils/helpers/render'
-import { LoadingSpinner } from '../loading-spinner'
+import React from 'react';
+import { render, screen } from '@testing-library/react';
+import { LoadingSpinner } from '../loading-spinner';
 
-describe('LoadingSpinner', () => {
-  it('renders with default props', async () => {
-    renderWithProviders(<LoadingSpinner />)
-    
-    const spinner = screen.getByRole('status')
-    expect(spinner).toBeInTheDocument()
-    expect(spinner).toHaveClass('animate-spin')
-    
-    // Check for sr-only loading text (Chinese text)
-    expect(screen.getByText('載入中...')).toBeInTheDocument()
-  })
+describe('LoadingSpinner Component', () => {
+  it('renders with default props', () => {
+    render(<LoadingSpinner />);
+    const spinner = screen.getByRole('status');
+    expect(spinner).toBeInTheDocument();
+    expect(spinner).toHaveClass('h-8', 'w-8'); // default md size
+    expect(spinner).toHaveAttribute('aria-label', '載入中');
+  });
 
-  it('renders with large size', async () => {
-    renderWithProviders(<LoadingSpinner size="lg" />)
-    
-    const spinner = screen.getByRole('status')
-    expect(spinner).toHaveClass('h-12', 'w-12')
-  })
+  it('renders with small size', () => {
+    render(<LoadingSpinner size="sm" />);
+    const spinner = screen.getByRole('status');
+    expect(spinner).toHaveClass('h-4', 'w-4');
+  });
 
-  it('renders with small size', async () => {
-    renderWithProviders(<LoadingSpinner size="sm" />)
-    
-    const spinner = screen.getByRole('status')
-    expect(spinner).toHaveClass('h-4', 'w-4')
-  })
+  it('renders with medium size', () => {
+    render(<LoadingSpinner size="md" />);
+    const spinner = screen.getByRole('status');
+    expect(spinner).toHaveClass('h-8', 'w-8');
+  });
 
-  it('renders with medium size (default)', async () => {
-    renderWithProviders(<LoadingSpinner size="md" />)
-    
-    const spinner = screen.getByRole('status')
-    expect(spinner).toHaveClass('h-8', 'w-8')
-  })
+  it('renders with large size', () => {
+    render(<LoadingSpinner size="lg" />);
+    const spinner = screen.getByRole('status');
+    expect(spinner).toHaveClass('h-12', 'w-12');
+  });
 
-  it('renders with custom className', async () => {
-    renderWithProviders(<LoadingSpinner className="mt-4 mb-4" />)
-    
-    const container = screen.getByRole('status').parentElement
-    expect(container).toHaveClass('mt-4', 'mb-4')
-  })
+  it('applies custom className', () => {
+    render(<LoadingSpinner className="custom-class" />);
+    const container = screen.getByRole('status').parentElement;
+    expect(container).toHaveClass('custom-class');
+  });
 
-  it('maintains accessibility with aria-label', async () => {
-    renderWithProviders(<LoadingSpinner />)
-    
-    const spinner = screen.getByRole('status')
-    expect(spinner).toHaveAttribute('aria-label', '載入中')
-  })
+  it('includes animation classes', () => {
+    render(<LoadingSpinner />);
+    const spinner = screen.getByRole('status');
+    expect(spinner).toHaveClass('animate-spin');
+    expect(spinner).toHaveClass('rounded-full');
+    expect(spinner).toHaveClass('border-b-2');
+    expect(spinner).toHaveClass('border-blue-600');
+  });
 
-  it('combines size and className props correctly', async () => {
-    renderWithProviders(
-      <LoadingSpinner 
-        size="lg" 
-        className="text-blue-500" 
-      />
-    )
-    
-    const spinner = screen.getByRole('status')
-    expect(spinner).toHaveClass('h-12', 'w-12')
-    
-    const container = spinner.parentElement
-    expect(container).toHaveClass('text-blue-500')
-  })
+  it('includes screen reader text', () => {
+    render(<LoadingSpinner />);
+    const srText = screen.getByText('載入中...');
+    expect(srText).toBeInTheDocument();
+    expect(srText).toHaveClass('sr-only');
+  });
 
-  it('has correct default spinner styling', async () => {
-    renderWithProviders(<LoadingSpinner />)
-    
-    const spinner = screen.getByRole('status')
-    expect(spinner).toHaveClass('animate-spin', 'rounded-full', 'border-b-2', 'border-blue-600')
-  })
+  it('has proper accessibility attributes', () => {
+    render(<LoadingSpinner />);
+    const spinner = screen.getByRole('status');
+    expect(spinner).toHaveAttribute('aria-label', '載入中');
+  });
 
-  it('renders with flex container for centering', async () => {
-    renderWithProviders(<LoadingSpinner />)
+  it('container has flex layout classes', () => {
+    render(<LoadingSpinner />);
+    const container = screen.getByRole('status').parentElement;
+    expect(container).toHaveClass('flex');
+    expect(container).toHaveClass('items-center');
+    expect(container).toHaveClass('justify-center');
+  });
+
+  it('combines size and className properly', () => {
+    render(<LoadingSpinner size="lg" className="mt-4" />);
+    const spinner = screen.getByRole('status');
+    const container = spinner.parentElement;
     
-    const container = screen.getByRole('status').parentElement
-    expect(container).toHaveClass('flex', 'items-center', 'justify-center')
-  })
-})
+    expect(spinner).toHaveClass('h-12', 'w-12'); // lg size
+    expect(container).toHaveClass('mt-4'); // custom class
+  });
+});
