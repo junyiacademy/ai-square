@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
     // Check if user has an active program for any of these scenarios
     for (const scenario of discoveryScenarios) {
       const rawPrograms = await programRepo.findByScenario(scenario.id);
-      const allPrograms = rawPrograms;
+      const allPrograms = rawPrograms || [];
       const userPrograms = allPrograms.filter((p) => p.userId === userEmail);
       const activeProgram = userPrograms.find((p) => p.status === 'active');
       
