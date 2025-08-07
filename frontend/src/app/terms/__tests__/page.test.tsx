@@ -30,12 +30,13 @@ describe('page', () => {
   it('should have proper structure', () => {
     render(<Page />);
     
-    // Check for basic elements - adjust based on component
-    const element = screen.getByRole('main', { hidden: true }) || 
-                   screen.getByRole('article', { hidden: true }) ||
-                   screen.getByRole('section', { hidden: true }) ||
-                   document.querySelector('div');
-    expect(element).toBeInTheDocument();
+    // Check for basic elements - terms page has headings
+    const titleElement = screen.getByRole('heading', { name: /terms.title/i });
+    expect(titleElement).toBeInTheDocument();
+    
+    // Check that the main container exists
+    const container = document.querySelector('.min-h-screen');
+    expect(container).toBeInTheDocument();
   });
 
   it('should handle user interactions', async () => {
