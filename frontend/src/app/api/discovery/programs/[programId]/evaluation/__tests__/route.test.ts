@@ -12,6 +12,7 @@ jest.mock('@/lib/repositories/base/repository-factory', () => ({
     getProgramRepository: jest.fn(),
     getEvaluationRepository: jest.fn(),
     getUserRepository: jest.fn(),
+    getTaskRepository: jest.fn(),
   },
 }));
 
@@ -29,6 +30,7 @@ describe('Discovery Program Evaluation API', () => {
   let mockProgramRepo: any;
   let mockEvaluationRepo: any;
   let mockUserRepo: any;
+  let mockTaskRepo: any;
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -46,10 +48,15 @@ describe('Discovery Program Evaluation API', () => {
     mockUserRepo = {
       findByEmail: jest.fn(),
     };
+    
+    mockTaskRepo = {
+      findByProgram: jest.fn(),
+    };
 
     (repositoryFactory.getProgramRepository as jest.Mock).mockReturnValue(mockProgramRepo);
     (repositoryFactory.getEvaluationRepository as jest.Mock).mockReturnValue(mockEvaluationRepo);
     (repositoryFactory.getUserRepository as jest.Mock).mockReturnValue(mockUserRepo);
+    (repositoryFactory.getTaskRepository as jest.Mock).mockReturnValue(mockTaskRepo);
   });
 
   describe('GET /api/discovery/programs/[programId]/evaluation', () => {
@@ -57,7 +64,7 @@ describe('Discovery Program Evaluation API', () => {
       mockGetServerSession.mockResolvedValue(null);
 
       const request = new NextRequest('http://localhost/api/discovery/programs/program123/evaluation');
-      const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
+      const response = await GET(request, { params: Promise.resolve({'programId':'program123'}) });
       const data = await response.json();
 
       expect(response.status).toBe(401);
@@ -70,11 +77,11 @@ describe('Discovery Program Evaluation API', () => {
       mockProgramRepo.findById.mockResolvedValue(null);
 
       const request = new NextRequest('http://localhost/api/discovery/programs/program123/evaluation');
-      const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
+      const response = await GET(request, { params: Promise.resolve({'programId':'program123'}) });
       const data = await response.json();
 
       expect(response.status).toBe(404);
-      expect(data.error).toBe('Program not found');
+      expect(data.error).toBe('Program not found or access denied');
     });
 
     it('should return evaluations for valid program', async () => {
@@ -102,14 +109,16 @@ describe('Discovery Program Evaluation API', () => {
       mockGetServerSession.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com' } });
       mockUserRepo.findByEmail.mockResolvedValue({ id: 'user123', email: 'test@example.com' });
       mockProgramRepo.findById.mockResolvedValue(mockProgram);
+      mockTaskRepo.findByProgram.mockResolvedValue([]);
       mockEvaluationRepo.findByProgram.mockResolvedValue(mockEvaluations);
 
       const request = new NextRequest('http://localhost/api/discovery/programs/program123/evaluation');
-      const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
+      const response = await GET(request, { params: Promise.resolve({'programId':'program123'}) });
       const data = await response.json();
 
       expect(response.status).toBe(200);
-      expect(data).toEqual(mockEvaluations);
+      expect(data.evaluation).toBeDefined();
+      expect(data.program.id).toBe('program123');
       expect(mockEvaluationRepo.findByProgram).toHaveBeenCalledWith('program123');
     });
 
@@ -119,11 +128,11 @@ describe('Discovery Program Evaluation API', () => {
       mockProgramRepo.findById.mockRejectedValue(new Error('Database error'));
 
       const request = new NextRequest('http://localhost/api/discovery/programs/program123/evaluation');
-      const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
+      const response = await GET(request, { params: Promise.resolve({'programId':'program123'}) });
       const data = await response.json();
 
       expect(response.status).toBe(500);
-      expect(data.error).toBe('Failed to fetch evaluations');
+      expect(data.error).toBe('Failed to load evaluation');
     });
   });
 
