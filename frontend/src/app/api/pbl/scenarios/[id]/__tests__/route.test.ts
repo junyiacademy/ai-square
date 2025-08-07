@@ -15,44 +15,178 @@ jest.mock('@/lib/db/pool', () => ({
   }),
 }));
 
+jest.mock('@/lib/repositories/base/repository-factory', () => ({
+  repositoryFactory: {
+    getScenarioRepository: jest.fn()
+  }
+}));
+
+jest.mock('@/lib/cache/distributed-cache-service', () => {
+  const mockInstance = {
+    getWithRevalidation: jest.fn(),
+    set: jest.fn(),
+    get: jest.fn(),
+  };
+  
+  return {
+    DistributedCacheService: jest.fn().mockImplementation(() => mockInstance),
+    distributedCacheService: mockInstance
+  };
+});
+
+jest.mock('@/lib/services/scenario-index-service', () => ({
+  scenarioIndexService: {
+    buildIndex: jest.fn(),
+    getIndex: jest.fn(),
+    updateIndex: jest.fn(),
+    exists: jest.fn().mockResolvedValue(true),
+    getUuidByYamlId: jest.fn().mockImplementation((yamlId) => {
+      // Return test-id for our test scenarios
+      if (yamlId === 'test-id') {
+        return Promise.resolve('test-id');
+      }
+      return Promise.resolve(null);
+    })
+  }
+}));
+
+// Mock KSA loading function
+jest.mock('fs/promises', () => ({
+  readFile: jest.fn().mockResolvedValue(`
+domains:
+  - id: creating_with_ai
+    name: Creating with AI
+knowledge:
+  - code: K1
+    description: Basic AI knowledge
+skills:
+  - code: S1
+    description: Basic AI skills
+attitudes:
+  - code: A1
+    description: Basic AI attitudes
+`)
+}));
+
+jest.mock('yaml', () => ({
+  load: jest.fn().mockReturnValue({
+    domains: [{ id: 'creating_with_ai', name: 'Creating with AI' }],
+    knowledge: [{ code: 'K1', description: 'Basic AI knowledge' }],
+    skills: [{ code: 'S1', description: 'Basic AI skills' }],
+    attitudes: [{ code: 'A1', description: 'Basic AI attitudes' }]
+  }),
+  parse: jest.fn().mockReturnValue({})
+}));
+
 describe('API Route: src/app/api/pbl/scenarios/[id]', () => {
+  let mockScenarioRepo: any;
+  let mockDistributedCache: any;
+
+  const mockScenario = {
+    id: 'test-id',
+    mode: 'pbl',
+    status: 'active',
+    title: { en: 'Test Scenario', zh: '測試場景' },
+    description: { en: 'Test description', zh: '測試描述' },
+    objectives: { en: 'Test objectives', zh: '測試目標' },
+    estimatedMinutes: 60,
+    difficulty: 'intermediate',
+    taskTemplates: [
+      { id: 'task1', title: { en: 'Task 1' } },
+      { id: 'task2', title: { en: 'Task 2' } }
+    ],
+    metadata: {
+      targetDomains: ['creating_with_ai', 'designing_with_ai'],
+      yamlId: 'test-scenario'
+    },
+    pblData: {
+      aiModules: ['tutor', 'evaluator']
+    }
+  };
+
   beforeEach(() => {
     jest.clearAllMocks();
+
+    // Setup scenario repository mock
+    mockScenarioRepo = {
+      findById: jest.fn(),
+      findByYamlId: jest.fn()
+    };
+
+    const { repositoryFactory } = require('@/lib/repositories/base/repository-factory');
+    repositoryFactory.getScenarioRepository.mockReturnValue(mockScenarioRepo);
+
+    // Get the distributed cache mock
+    mockDistributedCache = require('@/lib/cache/distributed-cache-service').distributedCacheService;
+
+    // Default mock implementations
+    mockScenarioRepo.findById.mockResolvedValue(mockScenario);
+    mockScenarioRepo.findByYamlId.mockResolvedValue(mockScenario);
+    
+    // Mock the cache to call the handler function (second argument) to process the scenario
+    mockDistributedCache.getWithRevalidation.mockImplementation(async (key: string, handler: () => Promise<any>) => {
+      // Call the handler to get the processed result
+      return await handler();
+    });
   });
   
   describe('GET', () => {
     it('should handle successful request', async () => {
-      const request = new NextRequest('http://localhost:3000/api/test', {
+      const request = new NextRequest('http://localhost:3000/api/pbl/scenarios/test-id?lang=en', {
         method: 'GET',
-        
       });
       
-      const response = await GET(request, { params: Promise.resolve({'id':'test-id'}) });
+      const response = await GET(request, { params: Promise.resolve({ id: 'test-id' }) });
+      const result = await response.json();
       
       expect(response).toBeDefined();
-      expect(response.status).toBeLessThanOrEqual(500);
+      expect(response.status).toBe(200);
+      expect(result.success).toBe(true);
+      expect(result.data.id).toBe('test-id');
+      expect(result.data.title).toBe('Test Scenario');
+      expect(result.data.description).toBe('Test description');
     });
     
-    it('should handle missing parameters', async () => {
-      const request = new NextRequest('http://localhost:3000/api/test', {
+    it('should handle Chinese language parameter', async () => {
+      const request = new NextRequest('http://localhost:3000/api/pbl/scenarios/test-id?lang=zh', {
         method: 'GET',
       });
       
-      const response = await GET(request, { params: Promise.resolve({'id':'test-id'}) });
+      const response = await GET(request, { params: Promise.resolve({ id: 'test-id' }) });
+      const result = await response.json();
       
       expect(response).toBeDefined();
+      expect(response.status).toBe(200);
+      expect(result.success).toBe(true);
+      expect(result.data.title).toBe('測試場景');
+      expect(result.data.description).toBe('測試描述');
     });
     
-    it('should handle errors gracefully', async () => {
-      const request = new NextRequest('http://localhost:3000/api/test', {
-        method: 'GET',
-        
+    it('should handle scenario not found', async () => {
+      // When scenario is not found, the handler should return null which causes an error
+      mockScenarioRepo.findById.mockResolvedValue(null);
+      mockScenarioRepo.findByYamlId.mockResolvedValue(null);
+      
+      // Mock getWithRevalidation to call the handler and let it fail naturally
+      mockDistributedCache.getWithRevalidation.mockImplementation(async (key: string, handler: () => Promise<any>) => {
+        // Call the handler which will fail when scenario is null
+        return await handler();
       });
       
-      const response = await GET(request, { params: Promise.resolve({'id':'test-id'}) });
+      const request = new NextRequest('http://localhost:3000/api/pbl/scenarios/nonexistent', {
+        method: 'GET',
+      });
+      
+      // The GET should handle the error gracefully
+      const response = await GET(request, { params: Promise.resolve({ id: 'nonexistent' }) });
+      const data = await response.json();
       
       expect(response).toBeDefined();
-      expect(response.status).toBeLessThanOrEqual(500);
+      // The cachedGET wrapper returns 500 for errors
+      expect(response.status).toBe(500);
+      // Should have an error property
+      expect(data.error).toBeDefined();
+      expect(typeof data.error).toBe('string');
     });
   });
 });
