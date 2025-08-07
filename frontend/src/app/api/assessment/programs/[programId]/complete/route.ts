@@ -125,7 +125,9 @@ export async function POST(
                            (task.metadata as { questions?: AssessmentQuestion[] })?.questions || [];
       totalExpectedQuestions += taskQuestions.length;
       
-      const taskAnswers = task.interactions?.filter(i => {
+      // Ensure interactions is an array before filtering
+      const interactions = Array.isArray(task.interactions) ? task.interactions : [];
+      const taskAnswers = interactions.filter(i => {
         // Check if it's already an assessment interaction
         if (isAssessmentInteraction(i as unknown as AssessmentInteraction)) return true;
         // Or check if it's a system_event with assessment_answer
@@ -134,7 +136,7 @@ export async function POST(
                i.content !== null &&
                'eventType' in i.content &&
                i.content.eventType === 'assessment_answer';
-      }) || [];
+      });
       totalAnsweredQuestions += taskAnswers.length;
     }
     
@@ -169,7 +171,9 @@ export async function POST(
     
     for (const task of tasks) {
       // Handle both old format (system_event) and new format (assessment_answer)
-      const taskAnswers = task.interactions
+      // Ensure interactions is an array before processing
+      const interactions = Array.isArray(task.interactions) ? task.interactions : [];
+      const taskAnswers = interactions
         .map(i => {
           // Try to convert from IInteraction format first
           const converted = fromIInteraction(i);
@@ -456,8 +460,9 @@ export async function POST(
     });
   } catch (error) {
     console.error('Error completing assessment:', error);
+    console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace');
     return NextResponse.json(
-      { error: 'Failed to complete assessment' },
+      { error: 'Failed to complete assessment', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     );
   }

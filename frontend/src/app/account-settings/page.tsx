@@ -143,7 +143,7 @@ export default function AccountSettingsPage() {
           </h2>
 
           {/* 已同意的文件 */}
-          {consents.length > 0 && (
+          {consents && consents.length > 0 && (
             <div className="mb-4">
               <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 {t('accountSettings.consentedDocuments')}
@@ -166,7 +166,7 @@ export default function AccountSettingsPage() {
           )}
 
           {/* 需要同意的新文件 */}
-          {requiredConsents.length > 0 && (
+          {requiredConsents && requiredConsents.length > 0 && (
             <div>
               <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 {t('accountSettings.newDocuments')}
@@ -223,10 +223,11 @@ export default function AccountSettingsPage() {
 
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <label htmlFor="deletePassword" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     {t('auth:password')}
                   </label>
                   <input
+                    id="deletePassword"
                     type="password"
                     value={deletePassword}
                     onChange={(e) => setDeletePassword(e.target.value)}
@@ -236,10 +237,11 @@ export default function AccountSettingsPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <label htmlFor="deleteReason" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     {t('accountSettings.reason')} ({t('common.optional')})
                   </label>
                   <textarea
+                    id="deleteReason"
                     value={deleteReason}
                     onChange={(e) => setDeleteReason(e.target.value)}
                     rows={3}

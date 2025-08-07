@@ -12,7 +12,7 @@ import type { CacheOptions } from '../cache-service';
 const localStorageMock = (() => {
   let store: Record<string, string> = {};
 
-  return {
+  const mockStorage = {
     getItem: (key: string) => store[key] || null,
     setItem: (key: string, value: string) => {
       if (Object.keys(store).length >= 100) {
@@ -32,6 +32,17 @@ const localStorageMock = (() => {
     },
     key: (index: number) => Object.keys(store)[index] || null
   };
+
+  // Make the store keys accessible via Object.keys()
+  return new Proxy(mockStorage, {
+    ownKeys: () => Object.keys(store),
+    getOwnPropertyDescriptor: (target, key) => {
+      if (typeof key === 'string' && store[key] !== undefined) {
+        return { enumerable: true, configurable: true, value: store[key] };
+      }
+      return Object.getOwnPropertyDescriptor(target, key);
+    }
+  });
 })();
 
 Object.defineProperty(window, 'localStorage', {

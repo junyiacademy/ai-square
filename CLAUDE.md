@@ -274,6 +274,226 @@ For a new feature:
 ### 🎯 Core Principle: Quality Over Quantity
 **Goal**: Achieve 90%+ coverage with ALL tests passing, not just high coverage with failing tests.
 
+## 🔍 Efficient Test Debugging & Fixing Strategy
+
+### 🎯 Core Philosophy: One File at a Time
+**Focus on fixing one test file completely before moving to the next.**
+
+### 📋 Step-by-Step Process
+
+#### Step 1: Identify Failing Test Files
+```bash
+# Quick way to find failing test files without running full suite
+node scripts/find-failing-tests.js
+
+# Or use Jest's --listTests to get all test files
+npx jest --listTests | head -20
+```
+
+#### Step 2: Fix One File at a Time
+```bash
+# Test single file with --no-coverage for speed
+npm test -- path/to/test.test.ts --no-coverage
+
+# Watch mode for rapid iteration
+npm test -- path/to/test.test.ts --watch --no-coverage
+```
+
+#### Step 3: Common Patterns & Quick Fixes
+
+##### Pattern 1: Multilingual Fields
+```typescript
+// ❌ Wrong in tests
+const mockData = {
+  title: 'Test Title',
+  description: 'Test Description'
+};
+
+// ✅ Correct
+const mockData = {
+  title: { en: 'Test Title' },
+  description: { en: 'Test Description' }
+};
+```
+
+##### Pattern 2: Next.js 15 Route Parameters
+```typescript
+// ❌ Wrong
+{ params: { id: 'test-id' } }
+
+// ✅ Correct
+{ params: Promise.resolve({ id: 'test-id' }) }
+```
+
+##### Pattern 3: Mock Session Data
+```typescript
+// ✅ Complete session mock
+const mockSession = {
+  user: { 
+    id: 'user-123',  // Required field
+    email: 'user@example.com' 
+  }
+};
+```
+
+##### Pattern 4: localStorage Mock with Proxy
+```typescript
+// ✅ Make localStorage enumerable
+const createLocalStorageMock = () => {
+  const store: Record<string, string> = {};
+  return new Proxy(mockStorage, {
+    ownKeys: () => Object.keys(store),
+    getOwnPropertyDescriptor: (target, key) => {
+      if (typeof key === 'string' && store[key] !== undefined) {
+        return { enumerable: true, configurable: true, value: store[key] };
+      }
+      return Object.getOwnPropertyDescriptor(target, key);
+    }
+  });
+};
+```
+
+#### Step 4: Speed Optimization Techniques
+
+1. **Use --no-coverage flag**
+   ```bash
+   npm test -- file.test.ts --no-coverage  # 2-3x faster
+   ```
+
+2. **Run specific test suites**
+   ```bash
+   npm test -- --testNamePattern="should handle errors"
+   ```
+
+3. **Skip unrelated test setup**
+   ```typescript
+   describe.skip('unrelated tests', () => {
+     // Temporarily skip while fixing other tests
+   });
+   ```
+
+4. **Use focused tests during debugging**
+   ```typescript
+   it.only('test to debug', () => {
+     // Only this test will run
+   });
+   ```
+
+#### Step 5: Batch Similar Fixes
+
+Group files by error type for efficient fixing:
+
+1. **API Route Tests** (similar patterns)
+   - Next.js 15 params Promise
+   - Response mocking
+   - Session handling
+
+2. **Component Tests** (similar patterns) 
+   - Provider wrapping
+   - Translation mocking
+   - Event handling
+
+3. **Service Tests** (similar patterns)
+   - Repository mocking
+   - Async operations
+   - Error handling
+
+#### Step 6: Validation Before Moving On
+
+Before marking a file as "fixed":
+```bash
+# 1. Run the single file test
+npm test -- file.test.ts --no-coverage
+
+# 2. Check TypeScript compliance
+npx tsc --noEmit file.test.ts
+
+# 3. Check ESLint
+npx eslint file.test.ts
+```
+
+### 🚀 Performance Tips
+
+1. **Parallel Terminal Windows**
+   - Terminal 1: Run single test file
+   - Terminal 2: TypeScript checking
+   - Terminal 3: ESLint checking
+
+2. **Smart File Selection**
+   - Start with files having fewer failures
+   - Fix similar files in batches
+   - Leave complex integrations for last
+
+3. **Use Helper Script**
+   ```bash
+   # Create a test-fix helper
+   alias testfix='npm test -- $1 --no-coverage --watch'
+   # Usage: testfix src/app/api/test.test.ts
+   ```
+
+### 📊 Progress Tracking
+
+Track your progress systematically:
+```bash
+# Before starting
+npm test 2>&1 | grep "Test Suites:" > test-baseline.txt
+
+# After each file fix
+npm test 2>&1 | grep "Test Suites:" >> test-progress.txt
+
+# Compare progress
+diff test-baseline.txt test-progress.txt
+```
+
+### 🎯 Final Verification
+
+Only after ALL individual files pass:
+```bash
+# 1. Run full test suite
+npm run test:ci
+
+# 2. TypeScript check
+npm run typecheck
+
+# 3. ESLint check  
+npm run lint
+
+# 4. Build check
+npm run build
+
+# 5. If all pass, commit
+git add -A && git commit -m "test: fix all test failures"
+```
+
+### ⚡ Quick Reference Commands
+
+```bash
+# Find failing tests
+node scripts/find-failing-tests.js
+
+# Test single file (fast)
+npm test -- file.test.ts --no-coverage
+
+# Test with watch mode
+npm test -- file.test.ts --watch --no-coverage
+
+# Test specific suite
+npm test -- --testNamePattern="ComponentName"
+
+# Full validation
+npm run typecheck && npm run lint && npm run test:ci
+```
+
+### 🔥 Pro Tips
+
+1. **Don't run full test suite until the end** - wastes time
+2. **Fix TypeScript errors in test files first** - prevents runtime issues
+3. **Use --no-coverage during fixing** - 2-3x speed improvement
+4. **Group similar files** - apply same fix patterns
+5. **Keep terminal history** - reuse commands with ↑ arrow
+
+**Remember**: One completely fixed file is better than 10 partially fixed files!
+
 ### 📊 Understanding the Relationship
 ```
 TypeScript (tsc) → Compile-time type safety → ✅ 0 errors

@@ -148,9 +148,14 @@ function LearningPathContent() {
     }
     
     // 4. Scenario-specific value proposition
-    if (scenario.title?.toLowerCase().includes('job') && userProfile.identity === 'professional') {
+    const scenarioTitle = typeof scenario.title === 'string' 
+      ? scenario.title 
+      : typeof scenario.title === 'object' && scenario.title 
+        ? ((scenario.title as Record<string, string>).en || (scenario.title as Record<string, string>).zh || '')
+        : '';
+    if (scenarioTitle.toLowerCase().includes('job') && userProfile.identity === 'professional') {
       reasons.push('Directly applicable to your career development');
-    } else if (scenario.title?.toLowerCase().includes('educat') && userProfile.identity === 'teacher') {
+    } else if (scenarioTitle.toLowerCase().includes('educat') && userProfile.identity === 'teacher') {
       reasons.push('Enhance your teaching with AI tools');
     }
     

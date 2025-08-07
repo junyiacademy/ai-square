@@ -903,7 +903,7 @@ describe('User Data Types', () => {
     it('should handle Unicode and special characters in strings', () => {
       const unicodeBadge: Badge = {
         id: 'unicode-badge-🏆',
-        name: 'Unicode Badge 中文 العربية 日本語',
+        name: 'Unicode Badge 🏆 中文 العربية 日本語',
         description: 'Emoji: 🎯📚💡🚀 Math: ∑∆π∞ Symbols: ™©®§',
         unlockedAt: '2024-01-01T00:00:00Z',
         category: 'special',

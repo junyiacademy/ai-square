@@ -341,7 +341,7 @@ describe('/api/pbl/programs/[programId]/complete', () => {
           method: 'POST'
         });
 
-        const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
+        const response = await POST(request, { params: Promise.resolve({'programId':'prog-123'}) });
 
         expect(response.status).toBe(200);
         const data = await response.json();
