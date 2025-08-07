@@ -6,6 +6,27 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import Page from '../page';
 
+// Mock i18n module - need to match what ForgotPasswordClient expects
+jest.mock('@/i18n', () => ({
+  __esModule: true,
+  default: {
+    hasResourceBundle: jest.fn(() => true),
+    loadNamespaces: jest.fn(),
+    language: 'en'
+  }
+}));
+
+// Mock react-i18next
+jest.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key: string) => key,
+    i18n: {
+      language: 'en',
+      changeLanguage: jest.fn(),
+    }
+  }),
+}));
+
 // Mock dependencies
 jest.mock('next/navigation', () => ({
   useRouter: () => ({
@@ -30,43 +51,76 @@ describe('page', () => {
   it('should have proper structure', () => {
     render(<Page />);
     
-    // Check for basic elements - adjust based on component
-    const element = screen.getByRole('main', { hidden: true }) || 
-                   screen.getByRole('article', { hidden: true }) ||
-                   screen.getByRole('section', { hidden: true }) ||
-                   document.querySelector('div');
-    expect(element).toBeInTheDocument();
+    // Check for the title and form elements
+    expect(screen.getByText('forgotPassword.title')).toBeInTheDocument();
+    expect(screen.getByText('forgotPassword.subtitle')).toBeInTheDocument();
+    
+    // Check for email input
+    const emailInput = screen.getByRole('textbox');
+    expect(emailInput).toBeInTheDocument();
+    expect(emailInput).toHaveAttribute('type', 'email');
+    
+    // Check for submit button
+    const submitButton = screen.getByRole('button');
+    expect(submitButton).toBeInTheDocument();
+    
+    // Check for back to login link
+    const backLink = screen.getByRole('link');
+    expect(backLink).toBeInTheDocument();
+    expect(backLink).toHaveAttribute('href', '/login');
   });
 
-  it('should handle user interactions', async () => {
+  it('should handle form submission', async () => {
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        json: () => Promise.resolve({ success: true }),
+      } as Response)
+    );
+    
     render(<Page />);
     
-    // Look for interactive elements
-    const buttons = screen.queryAllByRole('button');
-    const links = screen.queryAllByRole('link');
-    const inputs = screen.queryAllByRole('textbox');
+    const emailInput = screen.getByRole('textbox');
+    const submitButton = screen.getByRole('button');
     
-    // Test at least one interaction if available
-    if (buttons.length > 0) {
-      fireEvent.click(buttons[0]);
-      // Add assertion based on expected behavior
-    }
+    // Enter email
+    fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
+    expect(emailInput).toHaveValue('test@example.com');
     
-    if (inputs.length > 0) {
-      fireEvent.change(inputs[0], { target: { value: 'test' } });
-      expect(inputs[0]).toHaveValue('test');
-    }
+    // Submit form
+    fireEvent.click(submitButton);
+    
+    // Wait for success message
+    await waitFor(() => {
+      expect(screen.getByText('forgotPassword.successMessage')).toBeInTheDocument();
+    });
+    
+    // Check that fetch was called
+    expect(global.fetch).toHaveBeenCalledWith('/api/auth/forgot-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: 'test@example.com' }),
+    });
   });
 
-  it('should be accessible', () => {
-    const { container } = render(<Page />);
+  it('should handle submission error', async () => {
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        json: () => Promise.resolve({ success: false, error: 'User not found' }),
+      } as Response)
+    );
     
-    // Basic accessibility checks
-    const headings = container.querySelectorAll('h1, h2, h3, h4, h5, h6');
-    const images = container.querySelectorAll('img');
+    render(<Page />);
     
-    images.forEach(img => {
-      expect(img).toHaveAttribute('alt');
+    const emailInput = screen.getByRole('textbox');
+    const submitButton = screen.getByRole('button');
+    
+    // Enter email and submit
+    fireEvent.change(emailInput, { target: { value: 'notfound@example.com' } });
+    fireEvent.click(submitButton);
+    
+    // Wait for error message
+    await waitFor(() => {
+      expect(screen.getByText('User not found')).toBeInTheDocument();
     });
   });
 
