@@ -30,12 +30,12 @@ describe('page', () => {
   it('should have proper structure', () => {
     render(<Page />);
     
-    // Check for basic elements - adjust based on component
-    const element = screen.getByRole('main', { hidden: true }) || 
-                   screen.getByRole('article', { hidden: true }) ||
-                   screen.getByRole('section', { hidden: true }) ||
-                   document.querySelector('div');
-    expect(element).toBeInTheDocument();
+    // Check for basic elements - verify-email page has heading and links
+    const heading = screen.getByRole('heading');
+    expect(heading).toBeInTheDocument();
+    
+    const links = screen.getAllByRole('link');
+    expect(links.length).toBeGreaterThan(0);
   });
 
   it('should handle user interactions', async () => {
