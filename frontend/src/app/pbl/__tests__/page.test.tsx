@@ -7,11 +7,13 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import Page from '../page';
 
 // Mock dependencies
+const mockReplace = jest.fn();
 jest.mock('next/navigation', () => ({
   useRouter: () => ({
     push: jest.fn(),
     back: jest.fn(),
     refresh: jest.fn(),
+    replace: mockReplace,
   }),
   usePathname: () => '/',
   useSearchParams: () => new URLSearchParams(),
@@ -27,47 +29,25 @@ describe('page', () => {
     expect(container).toBeInTheDocument();
   });
 
-  it('should have proper structure', () => {
+  it('should redirect to /pbl/scenarios', () => {
     render(<Page />);
     
-    // Check for basic elements - adjust based on component
-    const element = screen.getByRole('main', { hidden: true }) || 
-                   screen.getByRole('article', { hidden: true }) ||
-                   screen.getByRole('section', { hidden: true }) ||
-                   document.querySelector('div');
-    expect(element).toBeInTheDocument();
+    // Check that replace was called with the correct path
+    expect(mockReplace).toHaveBeenCalledWith('/pbl/scenarios');
   });
 
-  it('should handle user interactions', async () => {
-    render(<Page />);
-    
-    // Look for interactive elements
-    const buttons = screen.queryAllByRole('button');
-    const links = screen.queryAllByRole('link');
-    const inputs = screen.queryAllByRole('textbox');
-    
-    // Test at least one interaction if available
-    if (buttons.length > 0) {
-      fireEvent.click(buttons[0]);
-      // Add assertion based on expected behavior
-    }
-    
-    if (inputs.length > 0) {
-      fireEvent.change(inputs[0], { target: { value: 'test' } });
-      expect(inputs[0]).toHaveValue('test');
-    }
-  });
-
-  it('should be accessible', () => {
+  it('should render null while redirecting', () => {
     const { container } = render(<Page />);
     
-    // Basic accessibility checks
-    const headings = container.querySelectorAll('h1, h2, h3, h4, h5, h6');
-    const images = container.querySelectorAll('img');
+    // The component returns null, so the container should be empty
+    expect(container.firstChild).toBeNull();
+  });
+
+  it('should call redirect in useEffect', () => {
+    render(<Page />);
     
-    images.forEach(img => {
-      expect(img).toHaveAttribute('alt');
-    });
+    // Ensure the redirect happens on mount
+    expect(mockReplace).toHaveBeenCalledTimes(1);
   });
 
   it('should match snapshot', () => {
