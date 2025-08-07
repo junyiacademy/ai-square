@@ -21,12 +21,12 @@ describe('useMultilingualScenarios', () => {
 
   it('should handle edge cases', () => {
     // Test edge cases
-    const edgeCase = useMultilingualScenarios(null);
+    const edgeCase = useMultilingualScenarios();
     expect(edgeCase).toBeDefined();
   });
 
   it('should handle errors gracefully', () => {
     // Test error handling
-    expect(() => useMultilingualScenarios(undefined)).not.toThrow();
+    expect(() => useMultilingualScenarios()).not.toThrow();
   });
 });

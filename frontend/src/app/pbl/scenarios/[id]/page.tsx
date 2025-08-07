@@ -285,11 +285,11 @@ export default function ScenarioDetailPage() {
                             ) : null}
                           </div>
                           <div>
-                            {t('common:startedAt', 'Started')}: {new Date(program.startedAt, i18n.language)}
+                            {t('common:startedAt', 'Started')}: {program.startedAt ? new Date(program.startedAt).toLocaleDateString(i18n.language) : 'Not started'}
                             {program.completedAt && (
                               <>
                                 <span className="mx-2">•</span>
-                                {t('common:completedAt', 'Completed')}: {new Date(program.completedAt, i18n.language)}
+                                {t('common:completedAt', 'Completed')}: {new Date(program.completedAt).toLocaleDateString(i18n.language)}
                               </>
                             )}
                           </div>

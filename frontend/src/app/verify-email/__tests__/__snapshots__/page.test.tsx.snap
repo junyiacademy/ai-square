@@ -1,0 +1,94 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`page should match snapshot 1`] = `
+<div
+  class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-slate-900 dark:to-indigo-900 py-12 px-4 sm:px-6 lg:px-8"
+>
+  <div
+    class="max-w-md w-full space-y-8 text-center"
+  >
+    <div>
+      <div
+        class="mx-auto h-12 w-12 flex items-center justify-center mb-4"
+      >
+        <img
+          alt="AI Square Logo"
+          class="rounded-xl"
+          data-nimg="1"
+          decoding="async"
+          height="48"
+          src="/_next/image?url=%2Fimages%2Flogo.png&w=96&q=75"
+          srcset="/_next/image?url=%2Fimages%2Flogo.png&w=48&q=75 1x, /_next/image?url=%2Fimages%2Flogo.png&w=96&q=75 2x"
+          style="color: transparent;"
+          width="48"
+        />
+      </div>
+      <h2
+        class="mt-6 text-3xl font-extrabold text-gray-900 dark:text-white"
+      >
+        auth:verifyEmail.title
+      </h2>
+    </div>
+    <div
+      class="mt-8"
+    >
+      <div
+        class="space-y-4"
+      >
+        <div
+          class="rounded-full bg-red-100 dark:bg-red-900 p-3 mx-auto w-fit"
+        >
+          <svg
+            class="h-8 w-8 text-red-600 dark:text-red-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M6 18L18 6M6 6l12 12"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+            />
+          </svg>
+        </div>
+        <div
+          class="space-y-2"
+        >
+          <p
+            class="text-lg font-medium text-gray-900 dark:text-white"
+          >
+            auth:verifyEmail.errorTitle
+          </p>
+          <p
+            class="text-sm text-gray-600 dark:text-gray-400"
+          >
+            auth:verifyEmail.noToken
+          </p>
+        </div>
+        <div
+          class="mt-6 space-y-2"
+        >
+          <a
+            class="inline-block text-sm font-medium text-blue-600 hover:text-blue-500"
+            href="/register"
+          >
+            auth:verifyEmail.tryAgain
+          </a>
+          <span
+            class="mx-2 text-gray-400"
+          >
+            |
+          </span>
+          <a
+            class="inline-block text-sm font-medium text-blue-600 hover:text-blue-500"
+            href="/contact"
+          >
+            auth:verifyEmail.contactSupport
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

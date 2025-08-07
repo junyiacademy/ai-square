@@ -6,19 +6,19 @@ import React from 'react';
 
 // Framer Motion Mock
 export const motionMock = {
-  div: ({ children, className, style, initial, animate, transition, ...props }: any) => (
+  div: ({ children, className, style, ...props }: any) => (
     <div className={className} style={style} {...props}>{children}</div>
   ),
-  span: ({ children, className, style, initial, animate, transition, ...props }: any) => (
+  span: ({ children, className, style, ...props }: any) => (
     <span className={className} style={style} {...props}>{children}</span>
   ),
-  button: ({ children, className, style, initial, animate, transition, ...props }: any) => (
+  button: ({ children, className, style, ...props }: any) => (
     <button className={className} style={style} {...props}>{children}</button>
   ),
-  section: ({ children, className, style, initial, animate, transition, ...props }: any) => (
+  section: ({ children, className, style, ...props }: any) => (
     <section className={className} style={style} {...props}>{children}</section>
   ),
-  article: ({ children, className, style, initial, animate, transition, ...props }: any) => (
+  article: ({ children, className, style, ...props }: any) => (
     <article className={className} style={style} {...props}>{children}</article>
   )
 };

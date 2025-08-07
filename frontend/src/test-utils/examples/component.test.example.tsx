@@ -3,7 +3,7 @@
  * 這個檔案展示如何使用 renderWithProviders 和其他工具
  */
 
-import { renderWithProviders, screen, waitFor } from '@/test-utils';
+import { renderWithProviders, screen, waitFor, userEvent } from '@/test-utils';
 import { mockUseSession } from '@/test-utils/mocks/next-auth';
 
 // 範例元件
@@ -39,7 +39,7 @@ describe('UserProfile Component (Example)', () => {
   
   it('should show user info when authenticated', async () => {
     // 使用預設的 mock session（已認證）
-    const { user } = renderWithProviders(<UserProfile />);
+    const { container } = renderWithProviders(<UserProfile />);
     
     await waitFor(() => {
       expect(screen.getByText('Welcome, Test User')).toBeInTheDocument();
@@ -49,6 +49,7 @@ describe('UserProfile Component (Example)', () => {
     
     // 測試使用者互動
     const editButton = screen.getByRole('button', { name: /edit profile/i });
+    const user = userEvent.setup();
     await user.click(editButton);
     
     // 這裡可以斷言按鈕點擊後的行為

@@ -54,10 +54,10 @@ export const createMockRequest = (
 export const createAuthenticatedRequest = (
   url: string,
   options: Parameters<typeof createMockRequest>[1] = {},
-  session: unknown = mockSession
+  session: typeof mockSession | null = mockSession
 ): NextRequest => {
   // 設定 mock session
-  mockGetServerSession.mockResolvedValueOnce(session);
+  mockGetServerSession.mockResolvedValueOnce(session as any);
   
   return createMockRequest(url, options);
 };
@@ -72,7 +72,7 @@ export const createUnauthenticatedRequest = (
   options: Parameters<typeof createMockRequest>[1] = {}
 ): NextRequest => {
   // 設定 null session
-  mockGetServerSession.mockResolvedValueOnce(null);
+  mockGetServerSession.mockResolvedValueOnce(null as any);
   
   return createMockRequest(url, options);
 };

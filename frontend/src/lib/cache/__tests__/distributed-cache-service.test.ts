@@ -2,7 +2,7 @@
  * Tests for DistributedCacheService.ts
  */
 
-import { DistributedCacheService } from '../DistributedCacheService';
+import { distributedCacheService } from '../distributed-cache-service';
 
 describe('DistributedCacheService', () => {
   beforeEach(() => {

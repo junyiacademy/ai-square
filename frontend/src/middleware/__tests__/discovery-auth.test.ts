@@ -2,7 +2,7 @@
  * Tests for discoveryAuth.ts
  */
 
-import discoveryAuth from '../discoveryAuth';
+import { checkDiscoveryAuth } from '../discovery-auth';
 
 describe('discoveryAuth', () => {
   beforeEach(() => {

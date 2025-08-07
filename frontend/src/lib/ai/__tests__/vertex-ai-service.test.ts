@@ -2,7 +2,7 @@
  * Tests for VertexAIService.ts
  */
 
-import { VertexAIService } from '../VertexAIService';
+import { VertexAIService } from '../vertex-ai-service';
 
 describe('VertexAIService', () => {
   beforeEach(() => {

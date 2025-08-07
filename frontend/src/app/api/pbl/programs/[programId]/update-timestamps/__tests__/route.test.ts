@@ -527,7 +527,12 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
 
   it('should handle update method not available error', async () => {
     const repoWithoutUpdate = {
-      findById: jest.fn().mockResolvedValue(mockProgram)
+      findById: jest.fn().mockResolvedValue(mockProgram),
+      findByUser: jest.fn().mockResolvedValue([]),
+      findByScenario: jest.fn().mockResolvedValue([]),
+      create: jest.fn().mockResolvedValue(mockProgram),
+      updateProgress: jest.fn().mockResolvedValue(mockProgram),
+      complete: jest.fn().mockResolvedValue(mockProgram)
       // No update method
     };
     

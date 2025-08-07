@@ -1,0 +1,398 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`page should match snapshot 1`] = `
+<div
+  class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800"
+>
+  <div
+    class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12"
+  >
+    <div
+      class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8"
+    >
+      <div
+        class="mb-8"
+      >
+        <h1
+          class="text-3xl font-bold text-gray-900 dark:text-white mb-4"
+        >
+          terms.title
+        </h1>
+        <p
+          class="text-sm text-gray-600 dark:text-gray-400"
+        >
+          terms.effectiveDate
+          : 
+          2025-07-01
+           | 
+          terms.lastUpdated
+          : 
+          2025-06-30
+        </p>
+      </div>
+      <div
+        class="prose prose-lg dark:prose-invert max-w-none"
+      >
+        <section
+          class="mb-8"
+        >
+          <p
+            class="text-gray-700 dark:text-gray-300"
+          >
+            terms.intro
+          </p>
+        </section>
+        <section
+          class="mb-8"
+        >
+          <h2
+            class="text-2xl font-semibold mb-4"
+          >
+            terms.acceptance.title
+          </h2>
+          <p
+            class="mb-4"
+          >
+            terms.acceptance.content
+          </p>
+          <p>
+            terms.acceptance.capacity
+          </p>
+        </section>
+        <section
+          class="mb-8"
+        >
+          <h2
+            class="text-2xl font-semibold mb-4"
+          >
+            terms.service.title
+          </h2>
+          <p
+            class="mb-4"
+          >
+            terms.service.intro
+          </p>
+          <ul
+            class="list-disc pl-6 space-y-2"
+          >
+            <li>
+              terms.service.literacy
+            </li>
+            <li>
+              terms.service.pbl
+            </li>
+            <li>
+              terms.service.ai
+            </li>
+            <li>
+              terms.service.tracking
+            </li>
+            <li>
+              terms.service.multi
+            </li>
+          </ul>
+        </section>
+        <section
+          class="mb-8"
+        >
+          <h2
+            class="text-2xl font-semibold mb-4"
+          >
+            terms.accounts.title
+          </h2>
+          <h3
+            class="text-xl font-medium mb-3"
+          >
+            terms.accounts.registration
+          </h3>
+          <ul
+            class="list-disc pl-6 mb-4 space-y-2"
+          >
+            <li>
+              terms.accounts.accurate
+            </li>
+            <li>
+              terms.accounts.maintain
+            </li>
+            <li>
+              terms.accounts.secure
+            </li>
+            <li>
+              terms.accounts.responsible
+            </li>
+          </ul>
+          <h3
+            class="text-xl font-medium mb-3"
+          >
+            terms.accounts.types
+          </h3>
+          <ul
+            class="list-disc pl-6 space-y-2"
+          >
+            <li>
+              terms.accounts.student
+            </li>
+            <li>
+              terms.accounts.teacher
+            </li>
+            <li>
+              terms.accounts.admin
+            </li>
+          </ul>
+        </section>
+        <section
+          class="mb-8"
+        >
+          <h2
+            class="text-2xl font-semibold mb-4"
+          >
+            terms.use.title
+          </h2>
+          <h3
+            class="text-xl font-medium mb-3"
+          >
+            terms.use.permitted
+          </h3>
+          <ul
+            class="list-disc pl-6 mb-4 space-y-2"
+          >
+            <li>
+              terms.use.educational
+            </li>
+            <li>
+              terms.use.share
+            </li>
+            <li>
+              terms.use.feedback
+            </li>
+          </ul>
+          <h3
+            class="text-xl font-medium mb-3"
+          >
+            terms.use.prohibited
+          </h3>
+          <ul
+            class="list-disc pl-6 space-y-2"
+          >
+            <li>
+              terms.use.misuse
+            </li>
+            <li>
+              terms.use.share_credentials
+            </li>
+            <li>
+              terms.use.cheat
+            </li>
+            <li>
+              terms.use.harm
+            </li>
+            <li>
+              terms.use.illegal
+            </li>
+            <li>
+              terms.use.scrape
+            </li>
+          </ul>
+        </section>
+        <section
+          class="mb-8"
+        >
+          <h2
+            class="text-2xl font-semibold mb-4"
+          >
+            terms.ip.title
+          </h2>
+          <h3
+            class="text-xl font-medium mb-3"
+          >
+            terms.ip.platform
+          </h3>
+          <p
+            class="mb-4"
+          >
+            terms.ip.ownership
+          </p>
+          <h3
+            class="text-xl font-medium mb-3"
+          >
+            terms.ip.user
+          </h3>
+          <p
+            class="mb-4"
+          >
+            terms.ip.retain
+          </p>
+          <h3
+            class="text-xl font-medium mb-3"
+          >
+            terms.ip.open
+          </h3>
+          <p>
+            terms.ip.git
+          </p>
+        </section>
+        <section
+          class="mb-8"
+        >
+          <h2
+            class="text-2xl font-semibold mb-4"
+          >
+            terms.privacy.title
+          </h2>
+          <p>
+            terms.privacy.content
+          </p>
+        </section>
+        <section
+          class="mb-8"
+        >
+          <h2
+            class="text-2xl font-semibold mb-4"
+          >
+            terms.ai.title
+          </h2>
+          <p
+            class="mb-4"
+          >
+            terms.ai.disclaimer
+          </p>
+          <ul
+            class="list-disc pl-6 space-y-2"
+          >
+            <li>
+              terms.ai.educational
+            </li>
+            <li>
+              terms.ai.verify
+            </li>
+            <li>
+              terms.ai.improve
+            </li>
+          </ul>
+        </section>
+        <section
+          class="mb-8"
+        >
+          <h2
+            class="text-2xl font-semibold mb-4"
+          >
+            terms.disclaimers.title
+          </h2>
+          <p
+            class="mb-4 uppercase font-semibold"
+          >
+            terms.disclaimers.asis
+          </p>
+          <p
+            class="mb-4"
+          >
+            terms.disclaimers.liability
+          </p>
+        </section>
+        <section
+          class="mb-8"
+        >
+          <h2
+            class="text-2xl font-semibold mb-4"
+          >
+            terms.modifications.title
+          </h2>
+          <p>
+            terms.modifications.content
+          </p>
+        </section>
+        <section
+          class="mb-8"
+        >
+          <h2
+            class="text-2xl font-semibold mb-4"
+          >
+            terms.termination.title
+          </h2>
+          <p
+            class="mb-4"
+          >
+            terms.termination.rights
+          </p>
+        </section>
+        <section
+          class="mb-8"
+        >
+          <h2
+            class="text-2xl font-semibold mb-4"
+          >
+            terms.law.title
+          </h2>
+          <p>
+            terms.law.content
+          </p>
+        </section>
+        <section
+          class="mb-8"
+        >
+          <h2
+            class="text-2xl font-semibold mb-4"
+          >
+            terms.contact.title
+          </h2>
+          <p
+            class="mb-4"
+          >
+            terms.contact.intro
+          </p>
+          <div
+            class="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg"
+          >
+            <p
+              class="font-medium"
+            >
+              AI Square
+            </p>
+            <p>
+              Email: 
+              <a
+                class="text-blue-600 hover:underline"
+                href="mailto:support@junyiacademy.org"
+              >
+                support@junyiacademy.org
+              </a>
+            </p>
+          </div>
+        </section>
+      </div>
+      <div
+        class="mt-8 p-6 bg-blue-50 dark:bg-blue-900/20 rounded-lg"
+      >
+        <p
+          class="text-center text-gray-700 dark:text-gray-300 mb-4"
+        >
+          terms.agreement
+        </p>
+      </div>
+      <div
+        class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700"
+      >
+        <a
+          class="inline-flex items-center text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+          href="/"
+        >
+          <svg
+            class="w-4 h-4 mr-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M10 19l-7-7m0 0l7-7m-7 7h18"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+            />
+          </svg>
+          common.backToHome
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+`;

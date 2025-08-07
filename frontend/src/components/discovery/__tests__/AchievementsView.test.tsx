@@ -41,16 +41,12 @@ describe('AchievementsView', () => {
   };
 
   it('should render without crashing', () => {
-    renderWithProviders(<AchievementsView achievements={mockAchievements} />, {
-      translations: testTranslations
-    });
+    renderWithProviders(<AchievementsView achievements={mockAchievements} />);
     expect(screen.getByText('Your Achievements')).toBeInTheDocument();
   });
 
   it('should display user level, XP and badge count', () => {
-    renderWithProviders(<AchievementsView achievements={mockAchievements} />, {
-      translations: testTranslations
-    });
+    renderWithProviders(<AchievementsView achievements={mockAchievements} />);
 
     // Use context-specific queries to avoid ambiguity
     expect(getByTextWithContext('Level 3', '目前等級')).toBeInTheDocument();
@@ -59,9 +55,7 @@ describe('AchievementsView', () => {
   });
 
   it('should render earned badges correctly', () => {
-    renderWithProviders(<AchievementsView achievements={mockAchievements} />, {
-      translations: testTranslations
-    });
+    renderWithProviders(<AchievementsView achievements={mockAchievements} />);
 
     expect(getBadgeByCategory('First Task', 'earned')).toBeInTheDocument();
     expect(getBadgeByCategory('Creative Thinker', 'earned')).toBeInTheDocument();
@@ -73,9 +67,7 @@ describe('AchievementsView', () => {
   });
 
   it('should render available badges correctly', () => {
-    renderWithProviders(<AchievementsView achievements={mockAchievements} />, {
-      translations: testTranslations
-    });
+    renderWithProviders(<AchievementsView achievements={mockAchievements} />);
 
     expect(getBadgeByCategory('AI Collaborator', 'available')).toBeInTheDocument();
     expect(getBadgeByCategory('Problem Solver', 'available')).toBeInTheDocument();
@@ -86,9 +78,7 @@ describe('AchievementsView', () => {
   });
 
   it('should calculate and display level progress correctly', () => {
-    renderWithProviders(<AchievementsView achievements={mockAchievements} />, {
-      translations: testTranslations
-    });
+    renderWithProviders(<AchievementsView achievements={mockAchievements} />);
 
     // Level 3 with 250 XP
     // Current level XP = 250 - (2 * 100) = 50
@@ -101,9 +91,7 @@ describe('AchievementsView', () => {
   });
 
   it('should display statistics correctly', () => {
-    renderWithProviders(<AchievementsView achievements={mockAchievements} />, {
-      translations: testTranslations
-    });
+    renderWithProviders(<AchievementsView achievements={mockAchievements} />);
 
     // Use context-specific queries for statistics
     expect(getByTextWithContext('5', '已完成任務')).toBeInTheDocument();
@@ -113,9 +101,7 @@ describe('AchievementsView', () => {
   });
 
   it('should show level benefits when level > 1', () => {
-    renderWithProviders(<AchievementsView achievements={mockAchievements} />, {
-      translations: testTranslations
-    });
+    renderWithProviders(<AchievementsView achievements={mockAchievements} />);
 
     expect(screen.getByText('等級特權')).toBeInTheDocument();
     expect(screen.getByText('解鎖進階任務')).toBeInTheDocument();
@@ -129,9 +115,7 @@ describe('AchievementsView', () => {
       totalXp: 50
     };
 
-    renderWithProviders(<AchievementsView achievements={lowLevelAchievements} />, {
-      translations: testTranslations
-    });
+    renderWithProviders(<AchievementsView achievements={lowLevelAchievements} />);
 
     expect(screen.queryByText('等級特權')).not.toBeInTheDocument();
   });
@@ -144,9 +128,7 @@ describe('AchievementsView', () => {
       completedTasks: []
     };
 
-    renderWithProviders(<AchievementsView achievements={noBadgesAchievements} />, {
-      translations: testTranslations
-    });
+    renderWithProviders(<AchievementsView achievements={noBadgesAchievements} />);
 
     expect(screen.getByText('還沒有獲得任何徽章')).toBeInTheDocument();
     expect(screen.getByText('完成任務來獲得你的第一個徽章！')).toBeInTheDocument();
@@ -166,9 +148,7 @@ describe('AchievementsView', () => {
       completedTasks: ['task1', 'task2', 'task3']
     };
 
-    renderWithProviders(<AchievementsView achievements={allBadgesAchievements} />, {
-      translations: testTranslations
-    });
+    renderWithProviders(<AchievementsView achievements={allBadgesAchievements} />);
 
     // All badges should be in earned section
     expect(getBadgeByCategory('First Task', 'earned')).toBeInTheDocument();
@@ -183,9 +163,7 @@ describe('AchievementsView', () => {
   });
 
   it('should display correct icons for each badge type', () => {
-    renderWithProviders(<AchievementsView achievements={mockAchievements} />, {
-      translations: testTranslations
-    });
+    renderWithProviders(<AchievementsView achievements={mockAchievements} />);
 
     // Trophy icon in header
     expect(screen.getByTestId('trophy-icon-solid')).toBeInTheDocument();
@@ -205,9 +183,7 @@ describe('AchievementsView', () => {
       completedTasks: []
     };
 
-    renderWithProviders(<AchievementsView achievements={zeroAchievements} />, {
-      translations: testTranslations
-    });
+    renderWithProviders(<AchievementsView achievements={zeroAchievements} />);
 
     expect(getByTextWithContext('Level 1', '目前等級')).toBeInTheDocument();
     expect(getByTextWithContext('0', '總經驗值')).toBeInTheDocument();
@@ -223,9 +199,7 @@ describe('AchievementsView', () => {
       completedTasks: []
     };
 
-    renderWithProviders(<AchievementsView achievements={highLevelAchievements} />, {
-      translations: testTranslations
-    });
+    renderWithProviders(<AchievementsView achievements={highLevelAchievements} />);
 
     expect(screen.getByText('解鎖進階任務')).toBeInTheDocument();
     expect(screen.getByText('獲得專屬稱號')).toBeInTheDocument();
@@ -241,9 +215,7 @@ describe('AchievementsView', () => {
       completedTasks: []
     };
 
-    renderWithProviders(<AchievementsView achievements={exactLevelAchievements} />, {
-      translations: testTranslations
-    });
+    renderWithProviders(<AchievementsView achievements={exactLevelAchievements} />);
 
     // Current level XP = 300 - (2 * 100) = 100
     // Progress = (100 / 100) * 100 = 100%
@@ -252,9 +224,7 @@ describe('AchievementsView', () => {
   });
 
   it('should render section headers correctly', () => {
-    renderWithProviders(<AchievementsView achievements={mockAchievements} />, {
-      translations: testTranslations
-    });
+    renderWithProviders(<AchievementsView achievements={mockAchievements} />);
 
     expect(screen.getByText('已獲得徽章')).toBeInTheDocument();
     expect(screen.getByText('可獲得徽章')).toBeInTheDocument();
@@ -272,9 +242,7 @@ describe('AchievementsView', () => {
       completedTasks: []
     };
 
-    renderWithProviders(<AchievementsView achievements={invalidBadgeAchievements} />, {
-      translations: testTranslations
-    });
+    renderWithProviders(<AchievementsView achievements={invalidBadgeAchievements} />);
 
     // Should only show valid badge
     expect(getBadgeByCategory('First Task', 'earned')).toBeInTheDocument();
@@ -282,17 +250,13 @@ describe('AchievementsView', () => {
   });
 
   it('should display subtitle text', () => {
-    renderWithProviders(<AchievementsView achievements={mockAchievements} />, {
-      translations: testTranslations
-    });
+    renderWithProviders(<AchievementsView achievements={mockAchievements} />);
 
     expect(screen.getByText('追蹤你的學習成就和技能發展')).toBeInTheDocument();
   });
 
   it('should display static text labels correctly', () => {
-    renderWithProviders(<AchievementsView achievements={mockAchievements} />, {
-      translations: testTranslations
-    });
+    renderWithProviders(<AchievementsView achievements={mockAchievements} />);
 
     // Use getAllByText for labels that might appear multiple times
     expect(screen.getAllByText('目前等級')).toHaveLength(2); // Appears in header and stats
@@ -313,9 +277,7 @@ describe('AchievementsView', () => {
   });
 
   it('should render with proper structure and CSS classes', () => {
-    const { container } = renderWithProviders(<AchievementsView achievements={mockAchievements} />, {
-      translations: testTranslations
-    });
+    const { container } = renderWithProviders(<AchievementsView achievements={mockAchievements} />);
 
     // Main container
     expect(container.querySelector('.max-w-4xl')).toBeInTheDocument();

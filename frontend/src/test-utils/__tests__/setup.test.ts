@@ -2,7 +2,7 @@
  * Tests for setup.ts
  */
 
-import { setup } from '../setup';
+import '../setup';
 
 describe('setup', () => {
   beforeEach(() => {

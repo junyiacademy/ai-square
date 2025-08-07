@@ -4,7 +4,9 @@
 
 import React from 'react';
 import { render as rtlRender, RenderOptions } from '@testing-library/react';
-import { SessionProvider } from 'next-auth/react';
+// import { SessionProvider } from 'next-auth/react';
+// Mock SessionProvider since next-auth isn't available
+const SessionProvider = ({ children }: { children: React.ReactNode; session?: any }) => <>{children}</>;
 import { I18nextProvider } from 'react-i18next';
 import i18n from '@/__mocks__/i18n';
 import { mockSession } from '../mocks/next-auth';

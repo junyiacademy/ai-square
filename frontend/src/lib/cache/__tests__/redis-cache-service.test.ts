@@ -2,7 +2,7 @@
  * Tests for RedisCacheService.ts
  */
 
-import { RedisCacheService } from '../RedisCacheService';
+import { redisCacheService } from '../redis-cache-service';
 
 describe('RedisCacheService', () => {
   beforeEach(() => {

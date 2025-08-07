@@ -9,12 +9,12 @@ import KSAKnowledgeGraph from '../KSAKnowledgeGraph';
 
 const mockProps = {
   ksaScores: {
-    K1: 0.8,
-    K2: 0.6,
-    S1: 0.7,
-    S2: 0.9,
-    A1: 0.5,
-    A2: 0.8
+    K1: { score: 0.8, category: 'knowledge' as const },
+    K2: { score: 0.6, category: 'knowledge' as const },
+    S1: { score: 0.7, category: 'skills' as const },
+    S2: { score: 0.9, category: 'skills' as const },
+    A1: { score: 0.5, category: 'attitudes' as const },
+    A2: { score: 0.8, category: 'attitudes' as const }
   },
   title: 'Test KSA Graph'
 };

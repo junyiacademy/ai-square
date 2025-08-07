@@ -2,7 +2,7 @@
  * Tests for ProductionMonitor.ts
  */
 
-import { ProductionMonitor } from '../ProductionMonitor';
+import { productionMonitor } from '../production-monitor';
 
 describe('ProductionMonitor', () => {
   beforeEach(() => {

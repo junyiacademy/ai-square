@@ -1,0 +1,155 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`page should match snapshot 1`] = `
+<main
+  class="p-8 bg-gray-50 min-h-screen"
+>
+  <div
+    class="w-full flex justify-center mb-6"
+  >
+    <div
+      class="w-[320px] h-[120px] bg-gradient-to-r from-blue-200 to-purple-200 rounded-2xl animate-pulse"
+    />
+  </div>
+  <div
+    class="max-w-3xl mx-auto"
+  >
+    <div
+      class="space-y-4"
+    >
+      <div
+        class="bg-gradient-to-r from-blue-100 to-purple-100 px-6 py-4 rounded-lg shadow"
+      >
+        <div
+          class="flex items-center justify-between"
+        >
+          <div
+            class="flex items-center"
+          >
+            <div
+              class="
+        bg-gray-200 rounded
+        animate-pulse
+        h-8 w-8 rounded mr-3
+      "
+            />
+            <div
+              class="
+        bg-gray-200 rounded
+        animate-pulse
+        h-6 w-48
+      "
+            />
+          </div>
+          <div
+            class="
+        bg-gray-200 rounded
+        animate-pulse
+        h-6 w-6
+      "
+          />
+        </div>
+      </div>
+      <div
+        class="bg-gradient-to-r from-blue-100 to-purple-100 px-6 py-4 rounded-lg shadow"
+      >
+        <div
+          class="flex items-center justify-between"
+        >
+          <div
+            class="flex items-center"
+          >
+            <div
+              class="
+        bg-gray-200 rounded
+        animate-pulse
+        h-8 w-8 rounded mr-3
+      "
+            />
+            <div
+              class="
+        bg-gray-200 rounded
+        animate-pulse
+        h-6 w-48
+      "
+            />
+          </div>
+          <div
+            class="
+        bg-gray-200 rounded
+        animate-pulse
+        h-6 w-6
+      "
+          />
+        </div>
+      </div>
+      <div
+        class="bg-gradient-to-r from-blue-100 to-purple-100 px-6 py-4 rounded-lg shadow"
+      >
+        <div
+          class="flex items-center justify-between"
+        >
+          <div
+            class="flex items-center"
+          >
+            <div
+              class="
+        bg-gray-200 rounded
+        animate-pulse
+        h-8 w-8 rounded mr-3
+      "
+            />
+            <div
+              class="
+        bg-gray-200 rounded
+        animate-pulse
+        h-6 w-48
+      "
+            />
+          </div>
+          <div
+            class="
+        bg-gray-200 rounded
+        animate-pulse
+        h-6 w-6
+      "
+          />
+        </div>
+      </div>
+      <div
+        class="bg-gradient-to-r from-blue-100 to-purple-100 px-6 py-4 rounded-lg shadow"
+      >
+        <div
+          class="flex items-center justify-between"
+        >
+          <div
+            class="flex items-center"
+          >
+            <div
+              class="
+        bg-gray-200 rounded
+        animate-pulse
+        h-8 w-8 rounded mr-3
+      "
+            />
+            <div
+              class="
+        bg-gray-200 rounded
+        animate-pulse
+        h-6 w-48
+      "
+            />
+          </div>
+          <div
+            class="
+        bg-gray-200 rounded
+        animate-pulse
+        h-6 w-6
+      "
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+`;

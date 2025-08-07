@@ -2,7 +2,7 @@
  * Tests for usePreloadData.ts
  */
 
-import { usePreloadData } from '../usePreloadData';
+import { usePreloadData } from '../use-preload-data';
 
 describe('usePreloadData', () => {
   beforeEach(() => {
@@ -21,12 +21,12 @@ describe('usePreloadData', () => {
 
   it('should handle edge cases', () => {
     // Test edge cases
-    const edgeCase = usePreloadData(null);
+    const edgeCase = usePreloadData();
     expect(edgeCase).toBeDefined();
   });
 
   it('should handle errors gracefully', () => {
     // Test error handling
-    expect(() => usePreloadData(undefined)).not.toThrow();
+    expect(() => usePreloadData()).not.toThrow();
   });
 });

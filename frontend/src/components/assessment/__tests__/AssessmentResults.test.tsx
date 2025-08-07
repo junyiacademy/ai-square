@@ -83,7 +83,7 @@ jest.mock('@/utils/locale', () => ({
   formatDateWithLocale: (date: Date) => '2025-06-25',
 }));
 
-const mockT = jest.fn((key: unknown, options: unknown) => {
+const mockT = jest.fn((key: unknown, options?: { level?: string; score?: number; correct?: number; total?: number; [key: string]: unknown }) => {
   const translations: Record<string, string> = {
     'results.title': 'Assessment Results',
     'results.subtitle': 'Your comprehensive AI literacy assessment results',
@@ -132,7 +132,7 @@ const mockT = jest.fn((key: unknown, options: unknown) => {
     return `You achieved ${options?.level} level with ${options?.score}% overall score, answering ${options?.correct} out of ${options?.total} questions correctly.`;
   }
   
-  return translations[key] || key;
+  return translations[key as string] || String(key);
 });
 
 const mockUseTranslation = useTranslation as jest.MockedFunction<typeof useTranslation>;

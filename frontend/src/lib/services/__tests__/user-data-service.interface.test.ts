@@ -2,7 +2,7 @@
  * Tests for IUserDataService.ts
  */
 
-import type { IUserDataService } from '../IUserDataService';
+import type { IUserDataService } from '../user-data-service.interface';
 
 describe('IUserDataService', () => {
   beforeEach(() => {

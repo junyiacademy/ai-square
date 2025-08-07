@@ -2,7 +2,7 @@
  * Tests for index.ts
  */
 
-import { index } from '../index';
+import * as abstractions from '../index';
 
 describe('index', () => {
   beforeEach(() => {

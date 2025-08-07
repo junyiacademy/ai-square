@@ -7,7 +7,7 @@ import { renderWithProviders, screen, waitFor } from '@/test-utils/helpers/rende
 import userEvent from '@testing-library/user-event'
 import { LoginForm } from './LoginForm'
 
-// Mock react-i18next 已在 jest.setup.js 中設置
+// Mock react-i18next 已在 jest.setup.ts 中設置
 
 describe('LoginForm 組件測試', () => {
   const mockOnSubmit = jest.fn()

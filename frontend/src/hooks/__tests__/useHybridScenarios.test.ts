@@ -21,12 +21,12 @@ describe('useHybridScenarios', () => {
 
   it('should handle edge cases', () => {
     // Test edge cases
-    const edgeCase = useHybridScenarios(null);
+    const edgeCase = useHybridScenarios();
     expect(edgeCase).toBeDefined();
   });
 
   it('should handle errors gracefully', () => {
     // Test error handling
-    expect(() => useHybridScenarios(undefined)).not.toThrow();
+    expect(() => useHybridScenarios()).not.toThrow();
   });
 });

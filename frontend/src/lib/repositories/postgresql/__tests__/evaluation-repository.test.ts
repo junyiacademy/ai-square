@@ -2,7 +2,7 @@
  * Tests for PostgreSQLEvaluationRepository.ts
  */
 
-import { PostgreSQLEvaluationRepository } from '../PostgreSQLEvaluationRepository';
+import { PostgreSQLEvaluationRepository } from '../evaluation-repository';
 
 describe('PostgreSQLEvaluationRepository', () => {
   beforeEach(() => {

@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { AuthContext } from '../AuthContext';
+import { AuthProvider, useAuth } from '../AuthContext';
 
 // Mock dependencies
 jest.mock('next/navigation', () => ({
@@ -23,12 +23,12 @@ describe('AuthContext', () => {
   });
 
   it('should render without crashing', () => {
-    const { container } = render(<AuthContext />);
+    const { container } = render(<AuthProvider><div>Test</div></AuthProvider>);
     expect(container).toBeInTheDocument();
   });
 
   it('should have proper structure', () => {
-    render(<AuthContext />);
+    render(<AuthProvider><div>Test</div></AuthProvider>);
     
     // Check for basic elements - adjust based on component
     const element = screen.getByRole('main', { hidden: true }) || 
@@ -39,7 +39,7 @@ describe('AuthContext', () => {
   });
 
   it('should handle user interactions', async () => {
-    render(<AuthContext />);
+    render(<AuthProvider><div>Test</div></AuthProvider>);
     
     // Look for interactive elements
     const buttons = screen.queryAllByRole('button');
@@ -59,7 +59,7 @@ describe('AuthContext', () => {
   });
 
   it('should be accessible', () => {
-    const { container } = render(<AuthContext />);
+    const { container } = render(<AuthProvider><div>Test</div></AuthProvider>);
     
     // Basic accessibility checks
     const headings = container.querySelectorAll('h1, h2, h3, h4, h5, h6');
@@ -71,7 +71,7 @@ describe('AuthContext', () => {
   });
 
   it('should match snapshot', () => {
-    const { container } = render(<AuthContext />);
+    const { container } = render(<AuthProvider><div>Test</div></AuthProvider>);
     expect(container.firstChild).toMatchSnapshot();
   });
 });

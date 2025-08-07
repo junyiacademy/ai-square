@@ -2,7 +2,7 @@
  * Tests for PostgreSQLDiscoveryRepository.ts
  */
 
-import { PostgreSQLDiscoveryRepository } from '../PostgreSQLDiscoveryRepository';
+import { PostgreSQLDiscoveryRepository } from '../discovery-repository';
 
 describe('PostgreSQLDiscoveryRepository', () => {
   beforeEach(() => {

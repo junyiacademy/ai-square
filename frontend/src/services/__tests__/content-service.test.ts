@@ -2,7 +2,7 @@
  * Tests for ContentService.ts
  */
 
-import { ContentService } from '../ContentService';
+import { ContentService } from '../content-service';
 
 describe('ContentService', () => {
   beforeEach(() => {

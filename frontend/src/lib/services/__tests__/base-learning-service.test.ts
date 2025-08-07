@@ -2,7 +2,7 @@
  * Tests for BaseLearningService.ts
  */
 
-import { BaseLearningService } from '../BaseLearningService';
+import type { BaseLearningService } from '../base-learning-service';
 
 describe('BaseLearningService', () => {
   beforeEach(() => {
