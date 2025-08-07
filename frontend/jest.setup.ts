@@ -1,10 +1,5 @@
-import '@testing-library/jest-dom'
-import 'jest-extended'
-import { TextEncoder, TextDecoder } from 'util'
-
-// Add missing globals for Node.js test environment
-global.TextEncoder = TextEncoder
-global.TextDecoder = TextDecoder as typeof global.TextDecoder
+// Import complete test environment setup
+import './src/test-utils/setup-test-env'
 
 // Mock Response and Request for Node.js environment
 if (!global.Response) {
@@ -123,3 +118,55 @@ jest.mock('next/navigation', () => ({
   usePathname: () => '/test-path',
   useParams: () => ({}),
 }))
+
+// Mock AuthContext
+jest.mock('./src/contexts/AuthContext', () => ({
+  AuthContext: require('react').createContext({
+    user: null,
+    loading: false,
+    error: null,
+    signIn: jest.fn(),
+    signOut: jest.fn(),
+    signUp: jest.fn(),
+  }),
+  AuthProvider: ({ children }: { children: React.ReactNode }) => children,
+  useAuth: () => ({
+    user: null,
+    loading: false,
+    error: null,
+    signIn: jest.fn(),
+    signOut: jest.fn(),
+    signUp: jest.fn(),
+  }),
+}))
+
+// Mock pg module
+jest.mock('pg')
+
+// Mock bcryptjs
+jest.mock('bcryptjs', () => ({
+  hash: jest.fn().mockResolvedValue('hashed-password'),
+  compare: jest.fn().mockResolvedValue(true),
+}))
+
+// Mock jsonwebtoken
+jest.mock('jsonwebtoken', () => ({
+  sign: jest.fn().mockReturnValue('mock-jwt-token'),
+  verify: jest.fn().mockReturnValue({ userId: 'test-user-id' }),
+}))
+
+// Mock uuid
+jest.mock('uuid', () => ({
+  v4: jest.fn(() => 'mock-uuid-' + Math.random().toString(36).substr(2, 9)),
+}))
+
+// Mock fetch for API calls
+global.fetch = jest.fn(() =>
+  Promise.resolve({
+    ok: true,
+    status: 200,
+    json: async () => ({}),
+    text: async () => '',
+    headers: new Map(),
+  })
+) as jest.Mock

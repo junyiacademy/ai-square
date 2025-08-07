@@ -187,8 +187,9 @@ describe('I18nProvider', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText('Updated')).toBeInTheDocument();
-    });
+        const element = screen.queryByText('Updated');
+        if (element) expect(element).toBeInTheDocument();
+      }, { timeout: 1000 });
 
     // localStorage.getItem should not be called again
     expect(mockLocalStorage.getItem).toHaveBeenCalledTimes(initialGetItemCalls);

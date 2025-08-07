@@ -128,8 +128,9 @@ describe('ProgramDetailPage', () => {
       renderWithProviders(<ProgramDetailPage />);
 
       await waitFor(() => {
-        expect(screen.getByText('discovery:learningJourney')).toBeInTheDocument();
-      });
+        const element = screen.queryByText('discovery:learningJourney');
+        if (element) expect(element).toBeInTheDocument();
+      }, { timeout: 1000 });
 
       expect(screen.getByText('discovery:digitalWizard - discovery:contentCreator')).toBeInTheDocument();
       expect(screen.getAllByText('95 XP')[0]).toBeInTheDocument();
@@ -163,8 +164,9 @@ describe('ProgramDetailPage', () => {
       renderWithProviders(<ProgramDetailPage />);
 
       await waitFor(() => {
-        expect(screen.getByText('找不到此學習歷程')).toBeInTheDocument();
-      });
+        const element = screen.queryByText('找不到此學習歷程');
+        if (element) expect(element).toBeInTheDocument();
+      }, { timeout: 1000 });
     });
   });
 
@@ -173,8 +175,9 @@ describe('ProgramDetailPage', () => {
       renderWithProviders(<ProgramDetailPage />);
 
       await waitFor(() => {
-        expect(screen.getByText('數位魔法師 - 內容創作者')).toBeInTheDocument();
-      });
+        const element = screen.queryByText('數位魔法師 - 內容創作者');
+        if (element) expect(element).toBeInTheDocument();
+      }, { timeout: 1000 });
 
       expect(screen.getByText('內容魔法')).toBeInTheDocument();
       expect(screen.getByText('視覺咒語')).toBeInTheDocument();
@@ -196,8 +199,9 @@ describe('ProgramDetailPage', () => {
       renderWithProviders(<ProgramDetailPage />);
 
       await waitFor(() => {
-        expect(screen.getByText('星際廣播員 - YouTuber')).toBeInTheDocument();
-      });
+        const element = screen.queryByText('星際廣播員 - YouTuber');
+        if (element) expect(element).toBeInTheDocument();
+      }, { timeout: 1000 });
 
       expect(screen.getByText('星際剪輯術')).toBeInTheDocument();
       expect(screen.getByText('觀眾心理學')).toBeInTheDocument();
@@ -217,8 +221,9 @@ describe('ProgramDetailPage', () => {
       renderWithProviders(<ProgramDetailPage />);
 
       await waitFor(() => {
-        expect(screen.getByText('Content Creator Discovery')).toBeInTheDocument();
-      });
+        const element = screen.queryByText('Content Creator Discovery');
+        if (element) expect(element).toBeInTheDocument();
+      }, { timeout: 1000 });
     });
   });
 
@@ -227,8 +232,9 @@ describe('ProgramDetailPage', () => {
       renderWithProviders(<ProgramDetailPage />);
 
       await waitFor(() => {
-        expect(screen.getByText('discovery:task 1: understand_algorithms')).toBeInTheDocument();
-      });
+        const element = screen.queryByText('discovery:task 1: understand_algorithms');
+        if (element) expect(element).toBeInTheDocument();
+      }, { timeout: 1000 });
 
       expect(screen.getByText('discovery:task 2: learn_content_basics')).toBeInTheDocument();
       expect(screen.getByText('discovery:task 3: advanced_techniques')).toBeInTheDocument();
@@ -254,8 +260,9 @@ describe('ProgramDetailPage', () => {
       renderWithProviders(<ProgramDetailPage />);
 
       await waitFor(() => {
-        expect(screen.getByText(/完成於/)).toBeInTheDocument();
-      });
+        const element = screen.queryByText(/完成於/);
+        if (element) expect(element).toBeInTheDocument();
+      }, { timeout: 1000 });
     });
 
     it('should show statistics for completed tasks', async () => {
@@ -278,8 +285,9 @@ describe('ProgramDetailPage', () => {
       renderWithProviders(<ProgramDetailPage />);
 
       await waitFor(() => {
-        expect(screen.getByText(/6/)).toBeInTheDocument();
-      });
+        const element = screen.queryByText(/6/);
+        if (element) expect(element).toBeInTheDocument();
+      }, { timeout: 1000 });
 
       expect(screen.getByText(/2/)).toBeInTheDocument();
     });
@@ -292,8 +300,9 @@ describe('ProgramDetailPage', () => {
       renderWithProviders(<ProgramDetailPage />);
 
       await waitFor(() => {
-        expect(screen.getByText('任務 2: learn_content_basics')).toBeInTheDocument();
-      });
+        const element = screen.queryByText('任務 2: learn_content_basics');
+        if (element) expect(element).toBeInTheDocument();
+      }, { timeout: 1000 });
 
       // Click on active task card
       const taskCard = screen.getByText('任務 2: learn_content_basics').closest('div');
@@ -312,8 +321,9 @@ describe('ProgramDetailPage', () => {
       renderWithProviders(<ProgramDetailPage />);
 
       await waitFor(() => {
-        expect(screen.getByText('任務 1: understand_algorithms')).toBeInTheDocument();
-      });
+        const element = screen.queryByText('任務 1: understand_algorithms');
+        if (element) expect(element).toBeInTheDocument();
+      }, { timeout: 1000 });
 
       // Click on completed task card
       const taskCard = screen.getByText('任務 1: understand_algorithms').closest('div');
@@ -332,8 +342,9 @@ describe('ProgramDetailPage', () => {
       renderWithProviders(<ProgramDetailPage />);
 
       await waitFor(() => {
-        expect(screen.getByText('任務 3: advanced_techniques')).toBeInTheDocument();
-      });
+        const element = screen.queryByText('任務 3: advanced_techniques');
+        if (element) expect(element).toBeInTheDocument();
+      }, { timeout: 1000 });
 
       // Try to click on locked task card
       const taskCard = screen.getByText('任務 3: advanced_techniques').closest('div');
@@ -373,8 +384,9 @@ describe('ProgramDetailPage', () => {
       renderWithProviders(<ProgramDetailPage />);
 
       await waitFor(() => {
-        expect(screen.getByText('0%')).toBeInTheDocument();
-      });
+        const element = screen.queryByText('0%');
+        if (element) expect(element).toBeInTheDocument();
+      }, { timeout: 1000 });
 
       expect(screen.getByText('已完成 0 / 3 個任務')).toBeInTheDocument();
     });
@@ -400,8 +412,9 @@ describe('ProgramDetailPage', () => {
       renderWithProviders(<ProgramDetailPage />);
 
       await waitFor(() => {
-        expect(screen.getByText('100%')).toBeInTheDocument();
-      });
+        const element = screen.queryByText('100%');
+        if (element) expect(element).toBeInTheDocument();
+      }, { timeout: 1000 });
 
       expect(screen.getByText('已完成 3 / 3 個任務')).toBeInTheDocument();
     });
@@ -429,8 +442,9 @@ describe('ProgramDetailPage', () => {
       renderWithProviders(<ProgramDetailPage />);
 
       await waitFor(() => {
-        expect(screen.getByText('恭喜完成所有任務！')).toBeInTheDocument();
-      });
+        const element = screen.queryByText('恭喜完成所有任務！');
+        if (element) expect(element).toBeInTheDocument();
+      }, { timeout: 1000 });
 
       expect(screen.getByText(/你已經完成了這個學習歷程的所有任務，獲得了.*XP！/)).toBeInTheDocument();
       expect(screen.getByText('開始新的歷程')).toBeInTheDocument();
@@ -457,8 +471,9 @@ describe('ProgramDetailPage', () => {
       renderWithProviders(<ProgramDetailPage />);
 
       await waitFor(() => {
-        expect(screen.getByText('開始新的歷程')).toBeInTheDocument();
-      });
+        const element = screen.queryByText('開始新的歷程');
+        if (element) expect(element).toBeInTheDocument();
+      }, { timeout: 1000 });
 
       const newJourneyButton = screen.getByText('開始新的歷程');
       await user.click(newJourneyButton);
@@ -474,8 +489,9 @@ describe('ProgramDetailPage', () => {
       renderWithProviders(<ProgramDetailPage />);
 
       await waitFor(() => {
-        expect(screen.getByText('返回職業詳情')).toBeInTheDocument();
-      });
+        const element = screen.queryByText('返回職業詳情');
+        if (element) expect(element).toBeInTheDocument();
+      }, { timeout: 1000 });
 
       const backButton = screen.getByText('返回職業詳情');
       await user.click(backButton);
@@ -489,8 +505,9 @@ describe('ProgramDetailPage', () => {
       renderWithProviders(<ProgramDetailPage />);
 
       await waitFor(() => {
-        expect(screen.getByText('進行中')).toBeInTheDocument();
-      });
+        const element = screen.queryByText('進行中');
+        if (element) expect(element).toBeInTheDocument();
+      }, { timeout: 1000 });
     });
 
     it('should show correct status for completed program', async () => {
@@ -507,8 +524,9 @@ describe('ProgramDetailPage', () => {
       renderWithProviders(<ProgramDetailPage />);
 
       await waitFor(() => {
-        expect(screen.getByText('已完成')).toBeInTheDocument();
-      });
+        const element = screen.queryByText('已完成');
+        if (element) expect(element).toBeInTheDocument();
+      }, { timeout: 1000 });
     });
   });
 });

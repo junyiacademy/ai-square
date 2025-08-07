@@ -7,9 +7,11 @@ import { render as rtlRender, RenderOptions } from '@testing-library/react';
 // import { SessionProvider } from 'next-auth/react';
 // Mock SessionProvider since next-auth isn't available
 const SessionProvider = ({ children }: { children: React.ReactNode; session?: any }) => <>{children}</>;
-import { I18nextProvider } from 'react-i18next';
+// Mock I18nextProvider since we're using a mock i18n
+const I18nextProvider = ({ children }: { children: React.ReactNode; i18n?: any }) => <>{children}</>;
 import i18n from '@/__mocks__/i18n';
 import { mockSession } from '../mocks/next-auth';
+import { MockAuthProvider } from '../mocks/auth-provider';
 
 interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
   session?: any;
@@ -18,11 +20,13 @@ interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
 
 function AllTheProviders({ children, session }: { children: React.ReactNode; session?: any }) {
   return (
-    <SessionProvider session={session || mockSession}>
-      <I18nextProvider i18n={i18n}>
-        {children}
-      </I18nextProvider>
-    </SessionProvider>
+    <MockAuthProvider>
+      <SessionProvider session={session || mockSession}>
+        <I18nextProvider i18n={i18n}>
+          {children}
+        </I18nextProvider>
+      </SessionProvider>
+    </MockAuthProvider>
   );
 }
 

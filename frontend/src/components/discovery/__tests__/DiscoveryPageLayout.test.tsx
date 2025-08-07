@@ -24,13 +24,19 @@ jest.mock('@/hooks/useDiscoveryData', () => ({
 
 const mockUseDiscoveryData = useDiscoveryData as jest.Mock;
 
-// Mock window.location
-Object.defineProperty(window, 'location', {
-  value: {
-    href: '',
-  },
-  writable: true,
-});
+// Mock window.location - only define if not already defined
+if (!window.location) {
+  Object.defineProperty(window, 'location', {
+    value: {
+      href: '',
+    },
+    writable: true,
+  });
+} else {
+  // If location exists, just override href
+  delete (window as any).location;
+  (window as any).location = { href: '' };
+}
 
 describe('DiscoveryPageLayout', () => {
   const mockChildren = <div data-testid="test-children">Test Children Content</div>;

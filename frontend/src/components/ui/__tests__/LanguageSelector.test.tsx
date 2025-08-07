@@ -14,7 +14,7 @@ jest.mock('react-i18next', () => ({
 describe('LanguageSelector', () => {
   beforeEach(() => {
     // Clear localStorage before each test
-    localStorage.clear()
+    if (typeof localStorage !== 'undefined') localStorage.clear()
   })
 
   it('renders language selector with flags', () => {
