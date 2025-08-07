@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { renderWithProviders, screen, waitFor } from '@/test-utils/helpers/render';
 import HeroSection from '../HeroSection';
 import { useTranslation } from 'react-i18next';
 
@@ -28,8 +28,8 @@ describe('HeroSection', () => {
     jest.clearAllMocks();
   });
 
-  it('renders hero section with all elements', () => {
-    render(<HeroSection />);
+  it('renders hero section with all elements', async () => {
+    renderWithProviders(<HeroSection />);
 
     // Check for title
     expect(screen.getByText('hero.title')).toBeInTheDocument();
@@ -46,8 +46,8 @@ describe('HeroSection', () => {
     expect(screen.getByText('hero.cta.explore')).toBeInTheDocument();
   });
 
-  it('renders CTA links with correct hrefs', () => {
-    render(<HeroSection />);
+  it('renders CTA links with correct hrefs', async () => {
+    renderWithProviders(<HeroSection />);
 
     // The first CTA is a button, not a link, so test it differently
     const getStartedButton = screen.getByRole('button', { name: /hero\.cta\.getStarted/i });
@@ -61,8 +61,8 @@ describe('HeroSection', () => {
     expect(exploreLink).toHaveAttribute('href', '/relations');
   });
 
-  it('renders visual elements (emojis)', () => {
-    render(<HeroSection />);
+  it('renders visual elements (emojis)', async () => {
+    renderWithProviders(<HeroSection />);
 
     const emojis = ['🎯', '🎨', '🎮', '🏗️'];
     emojis.forEach(emoji => {
@@ -70,8 +70,8 @@ describe('HeroSection', () => {
     });
   });
 
-  it('applies correct styling classes', () => {
-    const { container } = render(<HeroSection />);
+  it('applies correct styling classes', async () => {
+    const { container } = renderWithProviders(<HeroSection />);
 
     // Check for gradient background
     const section = container.querySelector('section');

@@ -1,3 +1,4 @@
+import { mockRepositoryFactory } from '@/test-utils/mocks/repositories';
 /**
  * Unit tests for forgot-password API route
  * Tests password reset request functionality

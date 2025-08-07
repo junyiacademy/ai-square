@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { renderWithProviders, screen, waitFor } from '@/test-utils/helpers/render';
 import userEvent from '@testing-library/user-event';
 import KSADisplayPage from '../page';
 
@@ -76,8 +76,8 @@ describe('KSA Display Page', () => {
   });
 
   describe('Loading State', () => {
-    it('should show loading spinner initially', () => {
-      render(<KSADisplayPage />);
+    it('should show loading spinner initially', async () => {
+      renderWithProviders(<KSADisplayPage />);
       
       expect(screen.getByText('Loading...')).toBeInTheDocument();
     });
@@ -85,7 +85,7 @@ describe('KSA Display Page', () => {
 
   describe('Data Loading and Display', () => {
     it('should fetch and display KSA data', async () => {
-      render(<KSADisplayPage />);
+      renderWithProviders(<KSADisplayPage />);
       
       await waitFor(() => {
         expect(screen.getByText('title')).toBeInTheDocument();
@@ -99,7 +99,7 @@ describe('KSA Display Page', () => {
     });
 
     it('should display section navigation with correct counts', async () => {
-      render(<KSADisplayPage />);
+      renderWithProviders(<KSADisplayPage />);
       
       await waitFor(() => {
         expect(screen.getByText('title')).toBeInTheDocument();
@@ -114,7 +114,7 @@ describe('KSA Display Page', () => {
 
   describe('Section Navigation', () => {
     it('should switch between Knowledge, Skills, and Attitudes sections', async () => {
-      render(<KSADisplayPage />);
+      renderWithProviders(<KSADisplayPage />);
       
       await waitFor(() => {
         expect(screen.getByText('title')).toBeInTheDocument();
@@ -137,7 +137,7 @@ describe('KSA Display Page', () => {
     });
 
     it('should highlight active section button', async () => {
-      render(<KSADisplayPage />);
+      renderWithProviders(<KSADisplayPage />);
       
       await waitFor(() => {
         expect(screen.getByText('title')).toBeInTheDocument();
@@ -156,7 +156,7 @@ describe('KSA Display Page', () => {
 
   describe('Theme Cards', () => {
     it('should display theme cards with correct information', async () => {
-      render(<KSADisplayPage />);
+      renderWithProviders(<KSADisplayPage />);
       
       await waitFor(() => {
         expect(screen.getByText('title')).toBeInTheDocument();
@@ -178,7 +178,7 @@ describe('KSA Display Page', () => {
     });
 
     it('should expand and collapse theme details', async () => {
-      render(<KSADisplayPage />);
+      renderWithProviders(<KSADisplayPage />);
       
       await waitFor(() => {
         expect(screen.getByText('title')).toBeInTheDocument();
@@ -203,7 +203,7 @@ describe('KSA Display Page', () => {
 
   describe('Search Functionality', () => {
     it('should filter themes based on search term', async () => {
-      render(<KSADisplayPage />);
+      renderWithProviders(<KSADisplayPage />);
       
       await waitFor(() => {
         expect(screen.getByText('title')).toBeInTheDocument();
@@ -219,7 +219,7 @@ describe('KSA Display Page', () => {
     });
 
     it('should show no results message when search yields no matches', async () => {
-      render(<KSADisplayPage />);
+      renderWithProviders(<KSADisplayPage />);
       
       await waitFor(() => {
         expect(screen.getByText('title')).toBeInTheDocument();
@@ -235,7 +235,7 @@ describe('KSA Display Page', () => {
     });
 
     it('should clear search when clear button is clicked', async () => {
-      render(<KSADisplayPage />);
+      renderWithProviders(<KSADisplayPage />);
       
       await waitFor(() => {
         expect(screen.getByText('title')).toBeInTheDocument();
@@ -274,7 +274,7 @@ describe('KSA Display Page', () => {
 
   describe('Questions Display', () => {
     it('should display reflection questions for skills', async () => {
-      render(<KSADisplayPage />);
+      renderWithProviders(<KSADisplayPage />);
       
       await waitFor(() => {
         expect(screen.getByText('title')).toBeInTheDocument();
@@ -298,7 +298,7 @@ describe('KSA Display Page', () => {
     it('should show error message when API fails', async () => {
       (fetch as jest.Mock).mockRejectedValueOnce(new Error('API Error'));
       
-      render(<KSADisplayPage />);
+      renderWithProviders(<KSADisplayPage />);
       
       await waitFor(() => {
         expect(screen.getByText('loadError')).toBeInTheDocument();
@@ -307,8 +307,8 @@ describe('KSA Display Page', () => {
   });
 
   describe('Responsive Design', () => {
-    it('should handle responsive design', () => {
-      render(<KSADisplayPage />);
+    it('should handle responsive design', async () => {
+      renderWithProviders(<KSADisplayPage />);
       
       // Should render without crashing
       expect(screen.getByText('Loading...')).toBeInTheDocument();

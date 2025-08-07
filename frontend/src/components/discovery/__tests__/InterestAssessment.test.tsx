@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { renderWithProviders, screen, waitFor, fireEvent } from '@/test-utils/helpers/render';
 import InterestAssessment from '../InterestAssessment';
 import { useTranslation } from 'react-i18next';
 
@@ -52,8 +52,8 @@ describe('InterestAssessment', () => {
     });
   });
 
-  it('should render the first question', () => {
-    render(<InterestAssessment onComplete={mockOnComplete} />);
+  it('should render the first question', async () => {
+    renderWithProviders(<InterestAssessment onComplete={mockOnComplete} />);
 
     expect(screen.getByText('What interests you most?')).toBeInTheDocument();
     expect(screen.getByText('Building apps')).toBeInTheDocument();
@@ -61,8 +61,8 @@ describe('InterestAssessment', () => {
     expect(screen.getByText('Business strategy')).toBeInTheDocument();
   });
 
-  it('should show progress indicator', () => {
-    render(<InterestAssessment onComplete={mockOnComplete} />);
+  it('should show progress indicator', async () => {
+    renderWithProviders(<InterestAssessment onComplete={mockOnComplete} />);
 
     // Progress is shown as percentage
     expect(screen.getByText('50%')).toBeInTheDocument();
@@ -70,15 +70,15 @@ describe('InterestAssessment', () => {
     expect(screen.getByText('1')).toBeInTheDocument();
   });
 
-  it('should disable next button when no option selected', () => {
-    render(<InterestAssessment onComplete={mockOnComplete} />);
+  it('should disable next button when no option selected', async () => {
+    renderWithProviders(<InterestAssessment onComplete={mockOnComplete} />);
 
     const nextButton = screen.getByText('下一題');
     expect(nextButton.closest('button')).toBeDisabled();
   });
 
-  it('should enable next button when option is selected', () => {
-    render(<InterestAssessment onComplete={mockOnComplete} />);
+  it('should enable next button when option is selected', async () => {
+    renderWithProviders(<InterestAssessment onComplete={mockOnComplete} />);
 
     const option = screen.getByText('Building apps');
     fireEvent.click(option);
@@ -88,7 +88,7 @@ describe('InterestAssessment', () => {
   });
 
   it('should move to next question', async () => {
-    render(<InterestAssessment onComplete={mockOnComplete} />);
+    renderWithProviders(<InterestAssessment onComplete={mockOnComplete} />);
 
     // Select first option
     fireEvent.click(screen.getByText('Building apps'));
@@ -107,7 +107,7 @@ describe('InterestAssessment', () => {
   });
 
   it('should allow going back to previous question', async () => {
-    render(<InterestAssessment onComplete={mockOnComplete} />);
+    renderWithProviders(<InterestAssessment onComplete={mockOnComplete} />);
 
     // Move to second question
     fireEvent.click(screen.getByText('Building apps'));
@@ -128,7 +128,7 @@ describe('InterestAssessment', () => {
   });
 
   it('should calculate results and call onComplete', async () => {
-    render(<InterestAssessment onComplete={mockOnComplete} />);
+    renderWithProviders(<InterestAssessment onComplete={mockOnComplete} />);
 
     // Answer first question (tech)
     fireEvent.click(screen.getByText('Building apps'));
@@ -159,7 +159,7 @@ describe('InterestAssessment', () => {
   });
 
   it('should calculate mixed results correctly', async () => {
-    render(<InterestAssessment onComplete={mockOnComplete} />);
+    renderWithProviders(<InterestAssessment onComplete={mockOnComplete} />);
 
     // Answer first question (creative)
     fireEvent.click(screen.getByText('Creating content'));
@@ -190,7 +190,7 @@ describe('InterestAssessment', () => {
   });
 
   it('should complete assessment flow', async () => {
-    render(<InterestAssessment onComplete={mockOnComplete} />);
+    renderWithProviders(<InterestAssessment onComplete={mockOnComplete} />);
 
     // Answer first question
     fireEvent.click(screen.getByText('Building apps'));

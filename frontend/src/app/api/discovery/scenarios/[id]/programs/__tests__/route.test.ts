@@ -1,3 +1,4 @@
+import { mockRepositoryFactory } from '@/test-utils/mocks/repositories';
 /**
  * Discovery Program Creation API Tests
  * 測試 Discovery 職涯探索程式建立 API

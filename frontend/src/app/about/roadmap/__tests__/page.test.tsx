@@ -2,7 +2,7 @@
  * Roadmap Page Tests
  */
 
-import { render, screen } from '@testing-library/react';
+import { renderWithProviders, screen, waitFor } from '@/test-utils/helpers/render';
 import RoadmapPage from '../page';
 
 // Mock router
@@ -48,20 +48,20 @@ describe('RoadmapPage', () => {
     jest.clearAllMocks();
   });
 
-  it('should render roadmap page title', () => {
-    render(<RoadmapPage />);
+  it('should render roadmap page title', async () => {
+    renderWithProviders(<RoadmapPage />);
     
     expect(screen.getByText('Roadmap')).toBeInTheDocument();
   });
 
-  it('should render development journey subtitle', () => {
-    render(<RoadmapPage />);
+  it('should render development journey subtitle', async () => {
+    renderWithProviders(<RoadmapPage />);
     
     expect(screen.getByText('Our Development Journey')).toBeInTheDocument();
   });
 
-  it('should render quarterly milestones', () => {
-    render(<RoadmapPage />);
+  it('should render quarterly milestones', async () => {
+    renderWithProviders(<RoadmapPage />);
     
     expect(screen.getByText('Q1 2025')).toBeInTheDocument();
     expect(screen.getByText('Q2 2025')).toBeInTheDocument();
@@ -69,56 +69,56 @@ describe('RoadmapPage', () => {
     expect(screen.getByText('Q4 2025')).toBeInTheDocument();
   });
 
-  it('should render status indicators', () => {
-    render(<RoadmapPage />);
+  it('should render status indicators', async () => {
+    renderWithProviders(<RoadmapPage />);
     
     expect(screen.getByText('Current')).toBeInTheDocument();
     expect(screen.getByText('Upcoming')).toBeInTheDocument();
     expect(screen.getByText('Completed')).toBeInTheDocument();
   });
 
-  it('should render back navigation', () => {
-    render(<RoadmapPage />);
+  it('should render back navigation', async () => {
+    renderWithProviders(<RoadmapPage />);
     
     expect(screen.getByText('Back')).toBeInTheDocument();
   });
 
-  it('should render without errors', () => {
-    const { container } = render(<RoadmapPage />);
+  it('should render without errors', async () => {
+    const { container } = renderWithProviders(<RoadmapPage />);
     
     expect(container).toBeInTheDocument();
   });
 
-  it('should have proper heading structure', () => {
-    render(<RoadmapPage />);
+  it('should have proper heading structure', async () => {
+    renderWithProviders(<RoadmapPage />);
     
     const headings = screen.getAllByRole('heading');
     expect(headings.length).toBeGreaterThan(0);
   });
 
-  it('should handle component lifecycle', () => {
-    const { unmount } = render(<RoadmapPage />);
+  it('should handle component lifecycle', async () => {
+    const { unmount } = renderWithProviders(<RoadmapPage />);
     
     expect(() => unmount()).not.toThrow();
   });
 
-  it('should render timeline elements', () => {
-    render(<RoadmapPage />);
+  it('should render timeline elements', async () => {
+    renderWithProviders(<RoadmapPage />);
     
     // Should contain timeline or milestone indicators
     const container = screen.getByText('Roadmap').closest('div');
     expect(container).toBeInTheDocument();
   });
 
-  it('should be accessible', () => {
-    render(<RoadmapPage />);
+  it('should be accessible', async () => {
+    renderWithProviders(<RoadmapPage />);
     
     // Should have proper semantic structure
     expect(screen.getByText('Roadmap')).toBeInTheDocument();
   });
 
-  it('should match snapshot', () => {
-    const { container } = render(<RoadmapPage />);
+  it('should match snapshot', async () => {
+    const { container } = renderWithProviders(<RoadmapPage />);
     expect(container.firstChild).toMatchSnapshot();
   });
 });

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { renderWithProviders, screen, waitFor, fireEvent } from '@/test-utils/helpers/render';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import OnboardingWelcomePage from '../page';
@@ -83,24 +83,24 @@ describe('OnboardingWelcomePage', () => {
     (global.fetch as jest.Mock).mockClear();
   });
 
-  it('should render loading state initially', () => {
+  it('should render loading state initially', async () => {
     mockLocalStorage.getItem.mockReturnValue(null);
     
-    render(<OnboardingWelcomePage />);
+    renderWithProviders(<OnboardingWelcomePage />);
     
     expect(screen.getByRole('status', { hidden: true })).toBeInTheDocument();
   });
 
-  it('should redirect to login if no user in localStorage', () => {
+  it('should redirect to login if no user in localStorage', async () => {
     mockLocalStorage.getItem.mockReturnValue(null);
     
-    render(<OnboardingWelcomePage />);
+    renderWithProviders(<OnboardingWelcomePage />);
     
     expect(mockRouter.push).toHaveBeenCalledWith('/login');
   });
 
   it('should render welcome page with user name', async () => {
-    render(<OnboardingWelcomePage />);
+    renderWithProviders(<OnboardingWelcomePage />);
     
     await waitFor(() => {
       expect(screen.getByText('Welcome, John Doe!')).toBeInTheDocument();
@@ -113,7 +113,7 @@ describe('OnboardingWelcomePage', () => {
       email: 'john@example.com'
     }));
     
-    render(<OnboardingWelcomePage />);
+    renderWithProviders(<OnboardingWelcomePage />);
     
     await waitFor(() => {
       expect(screen.getByText('Welcome, john!')).toBeInTheDocument();
@@ -121,7 +121,7 @@ describe('OnboardingWelcomePage', () => {
   });
 
   it('should render first step content by default', async () => {
-    render(<OnboardingWelcomePage />);
+    renderWithProviders(<OnboardingWelcomePage />);
     
     await waitFor(() => {
       expect(screen.getByText('Discover Your AI Potential')).toBeInTheDocument();
@@ -133,7 +133,7 @@ describe('OnboardingWelcomePage', () => {
   });
 
   it('should show progress indicator with correct active state', async () => {
-    render(<OnboardingWelcomePage />);
+    renderWithProviders(<OnboardingWelcomePage />);
     
     await waitFor(() => {
       const progressBars = screen.getAllByRole('progressbar');
@@ -145,7 +145,7 @@ describe('OnboardingWelcomePage', () => {
   });
 
   it('should navigate to next step when Next button is clicked', async () => {
-    render(<OnboardingWelcomePage />);
+    renderWithProviders(<OnboardingWelcomePage />);
     
     await waitFor(() => {
       expect(screen.getByText('Discover Your AI Potential')).toBeInTheDocument();
@@ -161,7 +161,7 @@ describe('OnboardingWelcomePage', () => {
   });
 
   it('should show Back button on step 2 and later', async () => {
-    render(<OnboardingWelcomePage />);
+    renderWithProviders(<OnboardingWelcomePage />);
     
     await waitFor(() => {
       expect(screen.queryByText('Back')).not.toBeInTheDocument();
@@ -176,7 +176,7 @@ describe('OnboardingWelcomePage', () => {
   });
 
   it('should navigate to previous step when Back button is clicked', async () => {
-    render(<OnboardingWelcomePage />);
+    renderWithProviders(<OnboardingWelcomePage />);
     
     await waitFor(() => {
       const nextButton = screen.getByText('Next');
@@ -194,7 +194,7 @@ describe('OnboardingWelcomePage', () => {
   });
 
   it('should render second step content with AI domains', async () => {
-    render(<OnboardingWelcomePage />);
+    renderWithProviders(<OnboardingWelcomePage />);
     
     await waitFor(() => {
       const nextButton = screen.getByText('Next');
@@ -212,7 +212,7 @@ describe('OnboardingWelcomePage', () => {
   });
 
   it('should render third step content with benefits', async () => {
-    render(<OnboardingWelcomePage />);
+    renderWithProviders(<OnboardingWelcomePage />);
     
     await waitFor(() => {
       const nextButton = screen.getByText('Next');
@@ -234,7 +234,7 @@ describe('OnboardingWelcomePage', () => {
   });
 
   it('should show "Start Journey" button on final step', async () => {
-    render(<OnboardingWelcomePage />);
+    renderWithProviders(<OnboardingWelcomePage />);
     
     // Navigate to final step
     await waitFor(() => {
@@ -259,7 +259,7 @@ describe('OnboardingWelcomePage', () => {
       json: () => Promise.resolve({ success: true }),
     });
     
-    render(<OnboardingWelcomePage />);
+    renderWithProviders(<OnboardingWelcomePage />);
     
     // Navigate to final step
     await waitFor(() => {
@@ -295,7 +295,7 @@ describe('OnboardingWelcomePage', () => {
     (global.fetch as jest.Mock).mockRejectedValue(new Error('API Error'));
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
     
-    render(<OnboardingWelcomePage />);
+    renderWithProviders(<OnboardingWelcomePage />);
     
     // Navigate to final step and click start
     await waitFor(() => {
@@ -322,7 +322,7 @@ describe('OnboardingWelcomePage', () => {
   });
 
   it('should handle skip and navigate to assessment', async () => {
-    render(<OnboardingWelcomePage />);
+    renderWithProviders(<OnboardingWelcomePage />);
     
     await waitFor(() => {
       const skipButton = screen.getByText('Skip');
@@ -342,7 +342,7 @@ describe('OnboardingWelcomePage', () => {
   it('should handle skip when no user in localStorage', async () => {
     mockLocalStorage.getItem.mockReturnValue(null);
     
-    render(<OnboardingWelcomePage />);
+    renderWithProviders(<OnboardingWelcomePage />);
     
     // Wait for redirect check
     await waitFor(() => {
@@ -351,7 +351,7 @@ describe('OnboardingWelcomePage', () => {
   });
 
   it('should render correct emojis for each step', async () => {
-    render(<OnboardingWelcomePage />);
+    renderWithProviders(<OnboardingWelcomePage />);
     
     await waitFor(() => {
       expect(screen.getByText('🎯')).toBeInTheDocument();
@@ -372,7 +372,7 @@ describe('OnboardingWelcomePage', () => {
   });
 
   it('should render domain icons in step 2', async () => {
-    render(<OnboardingWelcomePage />);
+    renderWithProviders(<OnboardingWelcomePage />);
     
     await waitFor(() => {
       const nextButton = screen.getByText('Next');
@@ -388,7 +388,7 @@ describe('OnboardingWelcomePage', () => {
   });
 
   it('should render checkmark icons in step 3', async () => {
-    render(<OnboardingWelcomePage />);
+    renderWithProviders(<OnboardingWelcomePage />);
     
     // Navigate to step 3
     await waitFor(() => {
@@ -408,7 +408,7 @@ describe('OnboardingWelcomePage', () => {
   });
 
   it('should update progress bars correctly as user advances', async () => {
-    render(<OnboardingWelcomePage />);
+    renderWithProviders(<OnboardingWelcomePage />);
     
     // Step 1 - first bar active
     await waitFor(() => {
@@ -446,7 +446,7 @@ describe('OnboardingWelcomePage', () => {
       .mockReturnValueOnce(JSON.stringify({ name: 'John', email: 'john@example.com' }))
       .mockReturnValueOnce(null);
     
-    render(<OnboardingWelcomePage />);
+    renderWithProviders(<OnboardingWelcomePage />);
     
     // Navigate to final step
     await waitFor(() => {
@@ -471,7 +471,7 @@ describe('OnboardingWelcomePage', () => {
   });
 
   it('should render with proper styling and structure', async () => {
-    render(<OnboardingWelcomePage />);
+    renderWithProviders(<OnboardingWelcomePage />);
     
     await waitFor(() => {
       const mainContainer = screen.getByText('Welcome, John Doe!').closest('.min-h-screen');
@@ -483,7 +483,7 @@ describe('OnboardingWelcomePage', () => {
   });
 
   it('should render SVG arrows correctly', async () => {
-    render(<OnboardingWelcomePage />);
+    renderWithProviders(<OnboardingWelcomePage />);
     
     await waitFor(() => {
       const nextButton = screen.getByText('Next');

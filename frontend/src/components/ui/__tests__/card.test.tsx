@@ -1,124 +1,124 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { renderWithProviders, screen, waitFor } from '@/test-utils/helpers/render';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../card';
 
 describe('Card Components', () => {
   describe('Card', () => {
-    it('renders with default classes', () => {
-      render(<Card data-testid="card">Card Content</Card>);
+    it('renders with default classes', async () => {
+      renderWithProviders(<Card data-testid="card">Card Content</Card>);
       const card = screen.getByTestId('card');
       expect(card).toBeInTheDocument();
       expect(card).toHaveClass('rounded-lg', 'border', 'bg-white', 'text-gray-900', 'shadow-sm');
       expect(card).toHaveTextContent('Card Content');
     });
 
-    it('applies custom className', () => {
-      render(<Card className="custom-card" data-testid="card">Content</Card>);
+    it('applies custom className', async () => {
+      renderWithProviders(<Card className="custom-card" data-testid="card">Content</Card>);
       const card = screen.getByTestId('card');
       expect(card).toHaveClass('custom-card');
     });
 
-    it('forwards ref properly', () => {
+    it('forwards ref properly', async () => {
       const ref = React.createRef<HTMLDivElement>();
-      render(<Card ref={ref}>Card</Card>);
+      renderWithProviders(<Card ref={ref}>Card</Card>);
       expect(ref.current).toBeInstanceOf(HTMLDivElement);
     });
 
-    it('passes through additional props', () => {
-      render(<Card data-testid="card" aria-label="Custom Card">Content</Card>);
+    it('passes through additional props', async () => {
+      renderWithProviders(<Card data-testid="card" aria-label="Custom Card">Content</Card>);
       const card = screen.getByTestId('card');
       expect(card).toHaveAttribute('aria-label', 'Custom Card');
     });
   });
 
   describe('CardHeader', () => {
-    it('renders with default classes', () => {
-      render(<CardHeader data-testid="header">Header Content</CardHeader>);
+    it('renders with default classes', async () => {
+      renderWithProviders(<CardHeader data-testid="header">Header Content</CardHeader>);
       const header = screen.getByTestId('header');
       expect(header).toHaveClass('flex', 'flex-col', 'space-y-1.5', 'p-6');
     });
 
-    it('applies custom className', () => {
-      render(<CardHeader className="custom-header" data-testid="header">Header</CardHeader>);
+    it('applies custom className', async () => {
+      renderWithProviders(<CardHeader className="custom-header" data-testid="header">Header</CardHeader>);
       const header = screen.getByTestId('header');
       expect(header).toHaveClass('custom-header');
     });
   });
 
   describe('CardTitle', () => {
-    it('renders as h3 with default classes', () => {
-      render(<CardTitle>Card Title</CardTitle>);
+    it('renders as h3 with default classes', async () => {
+      renderWithProviders(<CardTitle>Card Title</CardTitle>);
       const title = screen.getByText('Card Title');
       expect(title.tagName).toBe('H3');
       expect(title).toHaveClass('text-2xl', 'font-semibold', 'leading-none', 'tracking-tight');
     });
 
-    it('applies custom className', () => {
-      render(<CardTitle className="custom-title">Title</CardTitle>);
+    it('applies custom className', async () => {
+      renderWithProviders(<CardTitle className="custom-title">Title</CardTitle>);
       const title = screen.getByText('Title');
       expect(title).toHaveClass('custom-title');
     });
 
-    it('forwards ref properly', () => {
+    it('forwards ref properly', async () => {
       const ref = React.createRef<HTMLParagraphElement>();
-      render(<CardTitle ref={ref}>Title</CardTitle>);
+      renderWithProviders(<CardTitle ref={ref}>Title</CardTitle>);
       expect(ref.current).toBeInstanceOf(HTMLHeadingElement);
     });
   });
 
   describe('CardDescription', () => {
-    it('renders as paragraph with default classes', () => {
-      render(<CardDescription>Description text</CardDescription>);
+    it('renders as paragraph with default classes', async () => {
+      renderWithProviders(<CardDescription>Description text</CardDescription>);
       const description = screen.getByText('Description text');
       expect(description.tagName).toBe('P');
       expect(description).toHaveClass('text-sm', 'text-gray-600');
     });
 
-    it('applies custom className', () => {
-      render(<CardDescription className="custom-desc">Desc</CardDescription>);
+    it('applies custom className', async () => {
+      renderWithProviders(<CardDescription className="custom-desc">Desc</CardDescription>);
       const description = screen.getByText('Desc');
       expect(description).toHaveClass('custom-desc');
     });
   });
 
   describe('CardContent', () => {
-    it('renders with default classes', () => {
-      render(<CardContent data-testid="content">Main content</CardContent>);
+    it('renders with default classes', async () => {
+      renderWithProviders(<CardContent data-testid="content">Main content</CardContent>);
       const content = screen.getByTestId('content');
       expect(content).toHaveClass('p-6', 'pt-0');
       expect(content).toHaveTextContent('Main content');
     });
 
-    it('applies custom className', () => {
-      render(<CardContent className="custom-content" data-testid="content">Content</CardContent>);
+    it('applies custom className', async () => {
+      renderWithProviders(<CardContent className="custom-content" data-testid="content">Content</CardContent>);
       const content = screen.getByTestId('content');
       expect(content).toHaveClass('custom-content');
     });
   });
 
   describe('CardFooter', () => {
-    it('renders with default classes', () => {
-      render(<CardFooter data-testid="footer">Footer content</CardFooter>);
+    it('renders with default classes', async () => {
+      renderWithProviders(<CardFooter data-testid="footer">Footer content</CardFooter>);
       const footer = screen.getByTestId('footer');
       expect(footer).toHaveClass('flex', 'items-center', 'p-6', 'pt-0');
     });
 
-    it('applies custom className', () => {
-      render(<CardFooter className="custom-footer" data-testid="footer">Footer</CardFooter>);
+    it('applies custom className', async () => {
+      renderWithProviders(<CardFooter className="custom-footer" data-testid="footer">Footer</CardFooter>);
       const footer = screen.getByTestId('footer');
       expect(footer).toHaveClass('custom-footer');
     });
 
-    it('forwards ref properly', () => {
+    it('forwards ref properly', async () => {
       const ref = React.createRef<HTMLDivElement>();
-      render(<CardFooter ref={ref}>Footer</CardFooter>);
+      renderWithProviders(<CardFooter ref={ref}>Footer</CardFooter>);
       expect(ref.current).toBeInstanceOf(HTMLDivElement);
     });
   });
 
   describe('Full Card Composition', () => {
-    it('renders complete card structure', () => {
-      render(
+    it('renders complete card structure', async () => {
+      renderWithProviders(
         <Card data-testid="full-card">
           <CardHeader>
             <CardTitle>Test Card</CardTitle>

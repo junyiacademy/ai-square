@@ -3,7 +3,7 @@
  * 提升覆蓋率從 0% 到 80%+
  */
 
-import { render, screen, waitFor } from '@testing-library/react';
+import { renderWithProviders, screen, waitFor } from '@/test-utils/helpers/render';
 import { useRouter, useSearchParams } from 'next/navigation';
 import LoginPage from '../page';
 
@@ -78,35 +78,35 @@ describe('LoginPage', () => {
     consoleSpy.log.mockClear();
   });
 
-  it('should render login page with correct title and subtitle', () => {
-    render(<LoginPage />);
+  it('should render login page with correct title and subtitle', async () => {
+    renderWithProviders(<LoginPage />);
 
     expect(screen.getByText('Sign In')).toBeInTheDocument();
     expect(screen.getByText('AI Literacy Platform')).toBeInTheDocument();
     expect(screen.getByText('Development version')).toBeInTheDocument();
   });
 
-  it('should show session expired message when expired=true in URL', () => {
+  it('should show session expired message when expired=true in URL', async () => {
     const expiredParams = new URLSearchParams({ expired: 'true' });
     (useSearchParams as jest.Mock).mockReturnValue(expiredParams);
 
-    render(<LoginPage />);
+    renderWithProviders(<LoginPage />);
 
     expect(screen.getByText('Your session has expired. Please login again.')).toBeInTheDocument();
   });
 
-  it('should render sign up link without redirect', () => {
-    render(<LoginPage />);
+  it('should render sign up link without redirect', async () => {
+    renderWithProviders(<LoginPage />);
 
     const signUpLink = screen.getByText('Create one');
     expect(signUpLink).toHaveAttribute('href', '/register');
   });
 
-  it('should render sign up link with redirect parameter', () => {
+  it('should render sign up link with redirect parameter', async () => {
     const redirectParams = new URLSearchParams({ redirect: '/dashboard' });
     (useSearchParams as jest.Mock).mockReturnValue(redirectParams);
 
-    render(<LoginPage />);
+    renderWithProviders(<LoginPage />);
 
     const signUpLink = screen.getByText('Create one');
     expect(signUpLink).toHaveAttribute('href', '/register?redirect=%2Fdashboard');
@@ -125,7 +125,7 @@ describe('LoginPage', () => {
       }
     });
 
-    render(<LoginPage />);
+    renderWithProviders(<LoginPage />);
 
     const loginButton = screen.getByText('Login');
     loginButton.click();
@@ -149,7 +149,7 @@ describe('LoginPage', () => {
       user: {}
     });
 
-    render(<LoginPage />);
+    renderWithProviders(<LoginPage />);
 
     const loginButton = screen.getByText('Login');
     loginButton.click();
@@ -175,7 +175,7 @@ describe('LoginPage', () => {
       }
     });
 
-    render(<LoginPage />);
+    renderWithProviders(<LoginPage />);
 
     const loginButton = screen.getByText('Login');
     loginButton.click();
@@ -197,7 +197,7 @@ describe('LoginPage', () => {
       }
     });
 
-    render(<LoginPage />);
+    renderWithProviders(<LoginPage />);
 
     const loginButton = screen.getByText('Login');
     loginButton.click();
@@ -218,7 +218,7 @@ describe('LoginPage', () => {
       }
     });
 
-    render(<LoginPage />);
+    renderWithProviders(<LoginPage />);
 
     const loginButton = screen.getByText('Login');
     loginButton.click();
@@ -240,7 +240,7 @@ describe('LoginPage', () => {
       }
     });
 
-    render(<LoginPage />);
+    renderWithProviders(<LoginPage />);
 
     const loginButton = screen.getByText('Login');
     loginButton.click();
@@ -263,7 +263,7 @@ describe('LoginPage', () => {
       }
     });
 
-    render(<LoginPage />);
+    renderWithProviders(<LoginPage />);
 
     const loginButton = screen.getByText('Login');
     loginButton.click();
@@ -279,7 +279,7 @@ describe('LoginPage', () => {
       error: 'Invalid credentials'
     });
 
-    render(<LoginPage />);
+    renderWithProviders(<LoginPage />);
 
     const loginButton = screen.getByText('Login');
     loginButton.click();
@@ -295,7 +295,7 @@ describe('LoginPage', () => {
       success: false
     });
 
-    render(<LoginPage />);
+    renderWithProviders(<LoginPage />);
 
     const loginButton = screen.getByText('Login');
     loginButton.click();
@@ -308,7 +308,7 @@ describe('LoginPage', () => {
   it('should handle network error during login', async () => {
     mockLogin.mockRejectedValue(new Error('Network error'));
 
-    render(<LoginPage />);
+    renderWithProviders(<LoginPage />);
 
     const loginButton = screen.getByText('Login');
     loginButton.click();
@@ -327,7 +327,7 @@ describe('LoginPage', () => {
       })
     );
 
-    render(<LoginPage />);
+    renderWithProviders(<LoginPage />);
 
     const loginButton = screen.getByText('Login');
     loginButton.click();
@@ -347,8 +347,8 @@ describe('LoginPage', () => {
     });
   });
 
-  it('should render SVG icon', () => {
-    const { container } = render(<LoginPage />);
+  it('should render SVG icon', async () => {
+    const { container } = renderWithProviders(<LoginPage />);
     
     const svg = container.querySelector('svg');
     expect(svg).toBeInTheDocument();
@@ -361,7 +361,7 @@ describe('LoginPage', () => {
       user: {}  // No onboarding property
     });
 
-    render(<LoginPage />);
+    renderWithProviders(<LoginPage />);
 
     const loginButton = screen.getByText('Login');
     loginButton.click();
@@ -372,9 +372,9 @@ describe('LoginPage', () => {
     });
   });
 
-  it('should render with Suspense fallback', () => {
+  it('should render with Suspense fallback', async () => {
     // This is to ensure the Suspense wrapper is rendered
-    const { container } = render(<LoginPage />);
+    const { container } = renderWithProviders(<LoginPage />);
     expect(container.querySelector('.min-h-screen')).toBeInTheDocument();
   });
 });

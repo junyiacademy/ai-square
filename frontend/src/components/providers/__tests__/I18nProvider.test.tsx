@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { renderWithProviders, screen, waitFor } from '@/test-utils/helpers/render';
 import { I18nProvider } from '../I18nProvider';
 import i18n from '@/i18n';
 
@@ -47,7 +47,7 @@ describe('I18nProvider', () => {
   });
 
   it('renders children within I18nextProvider after initialization', async () => {
-    render(
+    renderWithProviders(
       <I18nProvider>
         <div data-testid="test-child">Test Content</div>
       </I18nProvider>
@@ -63,7 +63,7 @@ describe('I18nProvider', () => {
   it('does not change language when no saved language in localStorage', async () => {
     mockLocalStorage.getItem.mockReturnValue(null);
 
-    render(
+    renderWithProviders(
       <I18nProvider>
         <div>Test</div>
       </I18nProvider>
@@ -81,7 +81,7 @@ describe('I18nProvider', () => {
     mockLocalStorage.getItem.mockReturnValue('zhTW');
     (i18n as any).language = 'en';
 
-    render(
+    renderWithProviders(
       <I18nProvider>
         <div>Test</div>
       </I18nProvider>
@@ -99,7 +99,7 @@ describe('I18nProvider', () => {
     mockLocalStorage.getItem.mockReturnValue('en');
     (i18n as any).language = 'en';
 
-    render(
+    renderWithProviders(
       <I18nProvider>
         <div>Test</div>
       </I18nProvider>
@@ -119,7 +119,7 @@ describe('I18nProvider', () => {
     });
 
     // Should not throw error
-    render(
+    renderWithProviders(
       <I18nProvider>
         <div>Test</div>
       </I18nProvider>
@@ -137,7 +137,7 @@ describe('I18nProvider', () => {
     (i18n.changeLanguage as jest.Mock).mockRejectedValue(new Error('Change language error'));
 
     // Should not throw error
-    render(
+    renderWithProviders(
       <I18nProvider>
         <div>Test</div>
       </I18nProvider>
@@ -153,7 +153,7 @@ describe('I18nProvider', () => {
       <div data-testid={id}>{text}</div>
     );
 
-    render(
+    renderWithProviders(
       <I18nProvider>
         <ChildComponent text="Child 1" id="child-1" />
         <ChildComponent text="Child 2" id="child-2" />
@@ -167,7 +167,7 @@ describe('I18nProvider', () => {
   });
 
   it('only initializes once when re-rendered', async () => {
-    const { rerender } = render(
+    const { rerender } = renderWithProviders(
       <I18nProvider>
         <div>Initial</div>
       </I18nProvider>

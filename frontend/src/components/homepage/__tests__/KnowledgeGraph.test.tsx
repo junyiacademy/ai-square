@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { renderWithProviders, screen, waitFor, fireEvent } from '@/test-utils/helpers/render';
 import KnowledgeGraph from '../KnowledgeGraph';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/navigation';
@@ -76,29 +76,29 @@ describe('KnowledgeGraph', () => {
     jest.restoreAllMocks();
   });
 
-  it('renders the knowledge graph component with title and subtitle', () => {
-    render(<KnowledgeGraph />);
+  it('renders the knowledge graph component with title and subtitle', async () => {
+    renderWithProviders(<KnowledgeGraph />);
     
     expect(screen.getByText('AI Literacy Domains')).toBeInTheDocument();
     expect(screen.getByText('Explore the four key domains of AI literacy')).toBeInTheDocument();
   });
 
-  it('creates canvas element', () => {
-    const { container } = render(<KnowledgeGraph />);
+  it('creates canvas element', async () => {
+    const { container } = renderWithProviders(<KnowledgeGraph />);
     
     const canvas = container.querySelector('canvas');
     expect(canvas).toBeInTheDocument();
     expect(canvas).toHaveClass('w-full', 'h-[400px]', 'cursor-pointer');
   });
 
-  it('initializes canvas context on mount', () => {
-    render(<KnowledgeGraph />);
+  it('initializes canvas context on mount', async () => {
+    renderWithProviders(<KnowledgeGraph />);
     
     expect(mockGetContext).toHaveBeenCalledWith('2d');
   });
 
-  it('handles window resize event', () => {
-    render(<KnowledgeGraph />);
+  it('handles window resize event', async () => {
+    renderWithProviders(<KnowledgeGraph />);
     
     // Simply verify that the component handles resize events without errors
     expect(() => {
@@ -106,8 +106,8 @@ describe('KnowledgeGraph', () => {
     }).not.toThrow();
   });
 
-  it('updates mouse position on canvas mouse move', () => {
-    const { container } = render(<KnowledgeGraph />);
+  it('updates mouse position on canvas mouse move', async () => {
+    const { container } = renderWithProviders(<KnowledgeGraph />);
     const canvas = container.querySelector('canvas')!;
     
     fireEvent.mouseMove(canvas, {
@@ -119,8 +119,8 @@ describe('KnowledgeGraph', () => {
     expect(mockCtx.clearRect).toHaveBeenCalled();
   });
 
-  it('handles canvas click event', () => {
-    const { container } = render(<KnowledgeGraph />);
+  it('handles canvas click event', async () => {
+    const { container } = renderWithProviders(<KnowledgeGraph />);
     const canvas = container.querySelector('canvas')!;
     
     // Click on canvas
@@ -135,17 +135,17 @@ describe('KnowledgeGraph', () => {
     expect(canvas).toBeInTheDocument();
   });
 
-  it('cleans up animation frame on unmount', () => {
+  it('cleans up animation frame on unmount', async () => {
     const cancelSpy = jest.spyOn(window, 'cancelAnimationFrame');
     
-    const { unmount } = render(<KnowledgeGraph />);
+    const { unmount } = renderWithProviders(<KnowledgeGraph />);
     unmount();
     
     expect(cancelSpy).toHaveBeenCalled();
   });
 
   it('displays selected domain details when a domain is clicked', async () => {
-    const { container } = render(<KnowledgeGraph />);
+    const { container } = renderWithProviders(<KnowledgeGraph />);
     const canvas = container.querySelector('canvas')!;
     
     // Since we can't easily determine exact domain positions without running the actual drawing code,
@@ -160,8 +160,8 @@ describe('KnowledgeGraph', () => {
     expect(canvas).toHaveClass('cursor-pointer');
   });
 
-  it('changes cursor style when hovering over domains', () => {
-    const { container } = render(<KnowledgeGraph />);
+  it('changes cursor style when hovering over domains', async () => {
+    const { container } = renderWithProviders(<KnowledgeGraph />);
     const canvas = container.querySelector('canvas')!;
     
     // Initially, cursor should be default

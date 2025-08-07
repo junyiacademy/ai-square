@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
+import { renderWithProviders, screen, waitFor, fireEvent, act } from '@/test-utils/helpers/render';
 import userEvent from '@testing-library/user-event';
 import { useSearchParams } from 'next/navigation';
 import ChatPage from '../page';
@@ -38,6 +38,11 @@ global.fetch = mockFetch;
 const mockUseSearchParams = useSearchParams as jest.MockedFunction<typeof useSearchParams>;
 
 describe('ChatPage', () => {
+// Mock scrollIntoView
+beforeEach(() => {
+  Element.prototype.scrollIntoView = jest.fn();
+});
+
   const mockSearchParams = {
     get: jest.fn(),
   };
@@ -85,7 +90,7 @@ describe('ChatPage', () => {
   describe('Component Rendering', () => {
     it('should render main layout components', async () => {
       await act(async () => {
-        render(<ChatPage />);
+        renderWithProviders(<ChatPage />);
       });
 
       await waitFor(() => {
@@ -96,7 +101,7 @@ describe('ChatPage', () => {
 
     it('should render mobile tab buttons', async () => {
       await act(async () => {
-        render(<ChatPage />);
+        renderWithProviders(<ChatPage />);
       });
 
       await waitFor(() => {
@@ -110,7 +115,7 @@ describe('ChatPage', () => {
       mockFetch.mockImplementation(() => new Promise(() => {})); // Never resolves
 
       await act(async () => {
-        render(<ChatPage />);
+        renderWithProviders(<ChatPage />);
       });
 
       expect(screen.getByText('Loading chat...')).toBeInTheDocument();
@@ -133,7 +138,7 @@ describe('ChatPage', () => {
       });
 
       await act(async () => {
-        render(<ChatPage />);
+        renderWithProviders(<ChatPage />);
       });
 
       await waitFor(() => {
@@ -145,7 +150,7 @@ describe('ChatPage', () => {
   describe('Authentication Flow', () => {
     it('should load user data on mount', async () => {
       await act(async () => {
-        render(<ChatPage />);
+        renderWithProviders(<ChatPage />);
       });
 
       await waitFor(() => {
@@ -167,7 +172,7 @@ describe('ChatPage', () => {
       console.error = jest.fn();
 
       await act(async () => {
-        render(<ChatPage />);
+        renderWithProviders(<ChatPage />);
       });
 
       await waitFor(() => {
@@ -177,7 +182,7 @@ describe('ChatPage', () => {
 
     it('should load chat sessions after successful auth', async () => {
       await act(async () => {
-        render(<ChatPage />);
+        renderWithProviders(<ChatPage />);
       });
 
       await waitFor(() => {
@@ -247,7 +252,7 @@ describe('ChatPage', () => {
 
     it('should display chat sessions', async () => {
       await act(async () => {
-        render(<ChatPage />);
+        renderWithProviders(<ChatPage />);
       });
 
       await waitFor(() => {
@@ -258,7 +263,7 @@ describe('ChatPage', () => {
 
     it('should show session metadata', async () => {
       await act(async () => {
-        render(<ChatPage />);
+        renderWithProviders(<ChatPage />);
       });
 
       await waitFor(() => {
@@ -293,7 +298,7 @@ describe('ChatPage', () => {
       });
 
       await act(async () => {
-        render(<ChatPage />);
+        renderWithProviders(<ChatPage />);
       });
 
       await waitFor(() => {
@@ -355,7 +360,7 @@ describe('ChatPage', () => {
       });
 
       await act(async () => {
-        render(<ChatPage />);
+        renderWithProviders(<ChatPage />);
       });
 
       await waitFor(() => {
@@ -409,7 +414,7 @@ describe('ChatPage', () => {
       console.error = jest.fn();
 
       await act(async () => {
-        render(<ChatPage />);
+        renderWithProviders(<ChatPage />);
       });
 
       await waitFor(() => {
@@ -421,18 +426,18 @@ describe('ChatPage', () => {
   describe('Message Input and Sending', () => {
     beforeEach(async () => {
       await act(async () => {
-        render(<ChatPage />);
+        renderWithProviders(<ChatPage />);
       });
       await waitFor(() => {
         expect(screen.getByPlaceholderText('Type your message...')).toBeInTheDocument();
       });
     });
 
-    it('should render message input textarea', () => {
+    it('should render message input textarea', async () => {
       expect(screen.getByPlaceholderText('Type your message...')).toBeInTheDocument();
     });
 
-    it('should render send button', () => {
+    it('should render send button', async () => {
       expect(screen.getByRole('button', { name: /send/i })).toBeInTheDocument();
     });
 
@@ -621,7 +626,7 @@ describe('ChatPage', () => {
       mockSearchParams.get.mockReturnValue('test-session');
 
       await act(async () => {
-        render(<ChatPage />);
+        renderWithProviders(<ChatPage />);
       });
 
       await waitFor(() => {
@@ -633,7 +638,7 @@ describe('ChatPage', () => {
       mockSearchParams.get.mockReturnValue('test-session');
 
       await act(async () => {
-        render(<ChatPage />);
+        renderWithProviders(<ChatPage />);
       });
 
       await waitFor(() => {
@@ -645,7 +650,7 @@ describe('ChatPage', () => {
       mockSearchParams.get.mockReturnValue('test-session');
 
       await act(async () => {
-        render(<ChatPage />);
+        renderWithProviders(<ChatPage />);
       });
 
       await waitFor(() => {
@@ -684,7 +689,7 @@ describe('ChatPage', () => {
       });
 
       await act(async () => {
-        render(<ChatPage />);
+        renderWithProviders(<ChatPage />);
       });
 
       await waitFor(() => {
@@ -767,7 +772,7 @@ describe('ChatPage', () => {
 
     it('should load and display PBL history', async () => {
       await act(async () => {
-        render(<ChatPage />);
+        renderWithProviders(<ChatPage />);
       });
 
       await waitFor(() => {
@@ -778,7 +783,7 @@ describe('ChatPage', () => {
 
     it('should display scenario scores', async () => {
       await act(async () => {
-        render(<ChatPage />);
+        renderWithProviders(<ChatPage />);
       });
 
       await waitFor(() => {
@@ -789,7 +794,7 @@ describe('ChatPage', () => {
 
     it('should display scenario domains', async () => {
       await act(async () => {
-        render(<ChatPage />);
+        renderWithProviders(<ChatPage />);
       });
 
       await waitFor(() => {
@@ -800,7 +805,7 @@ describe('ChatPage', () => {
 
     it('should calculate and display progress stats', async () => {
       await act(async () => {
-        render(<ChatPage />);
+        renderWithProviders(<ChatPage />);
       });
 
       await waitFor(() => {
@@ -840,7 +845,7 @@ describe('ChatPage', () => {
       console.error = jest.fn();
 
       await act(async () => {
-        render(<ChatPage />);
+        renderWithProviders(<ChatPage />);
       });
 
       await waitFor(() => {
@@ -901,7 +906,7 @@ describe('ChatPage', () => {
       });
 
       await act(async () => {
-        render(<ChatPage />);
+        renderWithProviders(<ChatPage />);
       });
 
       await waitFor(() => {
@@ -927,7 +932,7 @@ describe('ChatPage', () => {
       });
 
       await act(async () => {
-        render(<ChatPage />);
+        renderWithProviders(<ChatPage />);
       });
 
       await waitFor(() => {
@@ -939,7 +944,7 @@ describe('ChatPage', () => {
   describe('Mobile Interface', () => {
     it('should switch between mobile tabs', async () => {
       await act(async () => {
-        render(<ChatPage />);
+        renderWithProviders(<ChatPage />);
       });
 
       const user = userEvent.setup();
@@ -958,7 +963,7 @@ describe('ChatPage', () => {
 
     it('should show appropriate content for each mobile tab', async () => {
       await act(async () => {
-        render(<ChatPage />);
+        renderWithProviders(<ChatPage />);
       });
 
       const user = userEvent.setup();
@@ -986,7 +991,7 @@ describe('ChatPage', () => {
   describe('Panel Collapse/Expand', () => {
     it('should toggle left panel collapse state', async () => {
       await act(async () => {
-        render(<ChatPage />);
+        renderWithProviders(<ChatPage />);
       });
 
       const user = userEvent.setup();
@@ -1001,7 +1006,7 @@ describe('ChatPage', () => {
 
     it('should toggle right panel collapse state', async () => {
       await act(async () => {
-        render(<ChatPage />);
+        renderWithProviders(<ChatPage />);
       });
 
       const user = userEvent.setup();
@@ -1042,7 +1047,7 @@ describe('ChatPage', () => {
 
     it('should show dropdown menu when clicked', async () => {
       await act(async () => {
-        render(<ChatPage />);
+        renderWithProviders(<ChatPage />);
       });
 
       await waitFor(() => {
@@ -1081,7 +1086,7 @@ describe('ChatPage', () => {
       });
 
       await act(async () => {
-        render(<ChatPage />);
+        renderWithProviders(<ChatPage />);
       });
 
       await waitFor(() => {
@@ -1120,7 +1125,7 @@ describe('ChatPage', () => {
       console.error = jest.fn();
 
       await act(async () => {
-        render(<ChatPage />);
+        renderWithProviders(<ChatPage />);
       });
 
       await waitFor(() => {
@@ -1153,7 +1158,7 @@ describe('ChatPage', () => {
       console.error = jest.fn();
 
       await act(async () => {
-        render(<ChatPage />);
+        renderWithProviders(<ChatPage />);
       });
 
       await waitFor(() => {
@@ -1182,7 +1187,7 @@ describe('ChatPage', () => {
       });
 
       await act(async () => {
-        render(<ChatPage />);
+        renderWithProviders(<ChatPage />);
       });
 
       await waitFor(() => {
@@ -1204,7 +1209,7 @@ describe('ChatPage', () => {
       });
 
       await act(async () => {
-        render(<ChatPage />);
+        renderWithProviders(<ChatPage />);
       });
 
       // Simulate showing scroll button
@@ -1223,7 +1228,7 @@ describe('ChatPage', () => {
   describe('Accessibility', () => {
     it('should have proper ARIA labels', async () => {
       await act(async () => {
-        render(<ChatPage />);
+        renderWithProviders(<ChatPage />);
       });
 
       await waitFor(() => {
@@ -1235,7 +1240,7 @@ describe('ChatPage', () => {
 
     it('should support keyboard navigation', async () => {
       await act(async () => {
-        render(<ChatPage />);
+        renderWithProviders(<ChatPage />);
       });
 
       const user = userEvent.setup();
@@ -1261,7 +1266,7 @@ describe('ChatPage', () => {
       });
 
       await act(async () => {
-        render(<ChatPage />);
+        renderWithProviders(<ChatPage />);
       });
 
       expect(screen.getByText('History')).toBeInTheDocument();

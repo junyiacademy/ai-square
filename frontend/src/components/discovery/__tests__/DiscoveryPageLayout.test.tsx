@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { renderWithProviders, screen, waitFor, fireEvent } from '@/test-utils/helpers/render';
 import DiscoveryPageLayout from '../DiscoveryPageLayout';
 import { useDiscoveryData } from '@/hooks/useDiscoveryData';
 import '@testing-library/jest-dom';
@@ -40,14 +40,14 @@ describe('DiscoveryPageLayout', () => {
     window.location.href = '';
   });
 
-  it('should render loading state when isLoading is true', () => {
+  it('should render loading state when isLoading is true', async () => {
     mockUseDiscoveryData.mockReturnValue({
       isLoading: true,
       assessmentResults: null,
       achievementCount: 0,
     });
 
-    render(
+    renderWithProviders(
       <DiscoveryPageLayout>
         {mockChildren}
       </DiscoveryPageLayout>
@@ -59,14 +59,14 @@ describe('DiscoveryPageLayout', () => {
     expect(screen.queryByTestId('discovery-header')).not.toBeInTheDocument();
   });
 
-  it('should render children when loading is complete and no assessment required', () => {
+  it('should render children when loading is complete and no assessment required', async () => {
     mockUseDiscoveryData.mockReturnValue({
       isLoading: false,
       assessmentResults: { someData: 'test' },
       achievementCount: 5,
     });
 
-    render(
+    renderWithProviders(
       <DiscoveryPageLayout>
         {mockChildren}
       </DiscoveryPageLayout>
@@ -80,14 +80,14 @@ describe('DiscoveryPageLayout', () => {
     expect(screen.queryByText('載入中...')).not.toBeInTheDocument();
   });
 
-  it('should render assessment required message when requiresAssessment is true and no results', () => {
+  it('should render assessment required message when requiresAssessment is true and no results', async () => {
     mockUseDiscoveryData.mockReturnValue({
       isLoading: false,
       assessmentResults: null,
       achievementCount: 2,
     });
 
-    render(
+    renderWithProviders(
       <DiscoveryPageLayout requiresAssessment={true}>
         {mockChildren}
       </DiscoveryPageLayout>
@@ -101,14 +101,14 @@ describe('DiscoveryPageLayout', () => {
     expect(screen.queryByTestId('test-children')).not.toBeInTheDocument();
   });
 
-  it('should redirect to evaluation when assessment button is clicked', () => {
+  it('should redirect to evaluation when assessment button is clicked', async () => {
     mockUseDiscoveryData.mockReturnValue({
       isLoading: false,
       assessmentResults: null,
       achievementCount: 2,
     });
 
-    render(
+    renderWithProviders(
       <DiscoveryPageLayout requiresAssessment={true}>
         {mockChildren}
       </DiscoveryPageLayout>
@@ -120,14 +120,14 @@ describe('DiscoveryPageLayout', () => {
     expect(window.location.href).toBe('/discovery/evaluation');
   });
 
-  it('should render children when assessment is required but results exist', () => {
+  it('should render children when assessment is required but results exist', async () => {
     mockUseDiscoveryData.mockReturnValue({
       isLoading: false,
       assessmentResults: { completed: true },
       achievementCount: 8,
     });
 
-    render(
+    renderWithProviders(
       <DiscoveryPageLayout requiresAssessment={true}>
         {mockChildren}
       </DiscoveryPageLayout>
@@ -140,14 +140,14 @@ describe('DiscoveryPageLayout', () => {
     expect(screen.queryByText('需要先完成評估')).not.toBeInTheDocument();
   });
 
-  it('should render with default requiresAssessment as false', () => {
+  it('should render with default requiresAssessment as false', async () => {
     mockUseDiscoveryData.mockReturnValue({
       isLoading: false,
       assessmentResults: null,
       achievementCount: 3,
     });
 
-    render(
+    renderWithProviders(
       <DiscoveryPageLayout>
         {mockChildren}
       </DiscoveryPageLayout>
@@ -157,14 +157,14 @@ describe('DiscoveryPageLayout', () => {
     expect(screen.queryByText('需要先完成評估')).not.toBeInTheDocument();
   });
 
-  it('should handle multiple children', () => {
+  it('should handle multiple children', async () => {
     mockUseDiscoveryData.mockReturnValue({
       isLoading: false,
       assessmentResults: { data: 'test' },
       achievementCount: 1,
     });
 
-    render(
+    renderWithProviders(
       <DiscoveryPageLayout>
         <div data-testid="child-1">Child 1</div>
         <div data-testid="child-2">Child 2</div>
@@ -177,14 +177,14 @@ describe('DiscoveryPageLayout', () => {
     expect(screen.getByTestId('child-3')).toBeInTheDocument();
   });
 
-  it('should handle empty children', () => {
+  it('should handle empty children', async () => {
     mockUseDiscoveryData.mockReturnValue({
       isLoading: false,
       assessmentResults: { data: 'test' },
       achievementCount: 0,
     });
 
-    render(
+    renderWithProviders(
       <DiscoveryPageLayout>
         {null}
       </DiscoveryPageLayout>
@@ -195,14 +195,14 @@ describe('DiscoveryPageLayout', () => {
     expect(container).toBeInTheDocument();
   });
 
-  it('should pass correct props to DiscoveryHeader', () => {
+  it('should pass correct props to DiscoveryHeader', async () => {
     mockUseDiscoveryData.mockReturnValue({
       isLoading: false,
       assessmentResults: { score: 85 },
       achievementCount: 12,
     });
 
-    render(
+    renderWithProviders(
       <DiscoveryPageLayout>
         {mockChildren}
       </DiscoveryPageLayout>
@@ -213,14 +213,14 @@ describe('DiscoveryPageLayout', () => {
     expect(screen.getByTestId('workspace-count')).toHaveTextContent('0');
   });
 
-  it('should pass correct props to DiscoveryHeader when no assessment results', () => {
+  it('should pass correct props to DiscoveryHeader when no assessment results', async () => {
     mockUseDiscoveryData.mockReturnValue({
       isLoading: false,
       assessmentResults: null,
       achievementCount: 7,
     });
 
-    render(
+    renderWithProviders(
       <DiscoveryPageLayout requiresAssessment={true}>
         {mockChildren}
       </DiscoveryPageLayout>
@@ -231,14 +231,14 @@ describe('DiscoveryPageLayout', () => {
     expect(screen.getByTestId('workspace-count')).toHaveTextContent('0');
   });
 
-  it('should render with proper CSS classes and structure', () => {
+  it('should render with proper CSS classes and structure', async () => {
     mockUseDiscoveryData.mockReturnValue({
       isLoading: false,
       assessmentResults: { data: 'test' },
       achievementCount: 4,
     });
 
-    const { container } = render(
+    const { container } = renderWithProviders(
       <DiscoveryPageLayout>
         {mockChildren}
       </DiscoveryPageLayout>
@@ -251,14 +251,14 @@ describe('DiscoveryPageLayout', () => {
     expect(contentContainer).toHaveClass('mx-auto', 'px-4', 'sm:px-6', 'lg:px-8', 'py-8');
   });
 
-  it('should render loading spinner with correct styling', () => {
+  it('should render loading spinner with correct styling', async () => {
     mockUseDiscoveryData.mockReturnValue({
       isLoading: true,
       assessmentResults: null,
       achievementCount: 0,
     });
 
-    render(
+    renderWithProviders(
       <DiscoveryPageLayout>
         {mockChildren}
       </DiscoveryPageLayout>
@@ -276,14 +276,14 @@ describe('DiscoveryPageLayout', () => {
     );
   });
 
-  it('should render assessment required section with correct styling', () => {
+  it('should render assessment required section with correct styling', async () => {
     mockUseDiscoveryData.mockReturnValue({
       isLoading: false,
       assessmentResults: null,
       achievementCount: 1,
     });
 
-    const { container } = render(
+    const { container } = renderWithProviders(
       <DiscoveryPageLayout requiresAssessment={true}>
         {mockChildren}
       </DiscoveryPageLayout>
@@ -304,7 +304,7 @@ describe('DiscoveryPageLayout', () => {
     );
   });
 
-  it('should handle falsy assessment results correctly', () => {
+  it('should handle falsy assessment results correctly', async () => {
     // Test different falsy values
     const falsyValues = [null, undefined, false, 0, ''];
 
@@ -315,7 +315,7 @@ describe('DiscoveryPageLayout', () => {
         achievementCount: 2,
       });
 
-      const { unmount } = render(
+      const { unmount } = renderWithProviders(
         <DiscoveryPageLayout requiresAssessment={true}>
           {mockChildren}
         </DiscoveryPageLayout>
@@ -328,7 +328,7 @@ describe('DiscoveryPageLayout', () => {
     });
   });
 
-  it('should handle truthy assessment results correctly', () => {
+  it('should handle truthy assessment results correctly', async () => {
     // Test different truthy values
     const truthyValues = [
       { data: 'test' },
@@ -346,7 +346,7 @@ describe('DiscoveryPageLayout', () => {
         achievementCount: 3,
       });
 
-      const { unmount } = render(
+      const { unmount } = renderWithProviders(
         <DiscoveryPageLayout requiresAssessment={true}>
           {mockChildren}
         </DiscoveryPageLayout>
@@ -359,7 +359,7 @@ describe('DiscoveryPageLayout', () => {
     });
   });
 
-  it('should render complex children components', () => {
+  it('should render complex children components', async () => {
     mockUseDiscoveryData.mockReturnValue({
       isLoading: false,
       assessmentResults: { completed: true },
@@ -379,7 +379,7 @@ describe('DiscoveryPageLayout', () => {
       </div>
     );
 
-    render(
+    renderWithProviders(
       <DiscoveryPageLayout>
         <ComplexChild />
       </DiscoveryPageLayout>
@@ -392,14 +392,14 @@ describe('DiscoveryPageLayout', () => {
     expect(screen.getByText('List item 2')).toBeInTheDocument();
   });
 
-  it('should have proper accessibility attributes', () => {
+  it('should have proper accessibility attributes', async () => {
     mockUseDiscoveryData.mockReturnValue({
       isLoading: false,
       assessmentResults: null,
       achievementCount: 1,
     });
 
-    render(
+    renderWithProviders(
       <DiscoveryPageLayout requiresAssessment={true}>
         {mockChildren}
       </DiscoveryPageLayout>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { renderWithProviders, screen, waitFor, fireEvent } from '@/test-utils/helpers/render';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import RegisterPage from '../page';
@@ -107,8 +107,8 @@ describe('RegisterPage', () => {
     (global.fetch as jest.Mock).mockClear();
   });
 
-  it('should render registration form with all fields', () => {
-    render(<RegisterPage />);
+  it('should render registration form with all fields', async () => {
+    renderWithProviders(<RegisterPage />);
     
     expect(screen.getByText('Create Account')).toBeInTheDocument();
     expect(screen.getByLabelText('Full Name')).toBeInTheDocument();
@@ -119,34 +119,34 @@ describe('RegisterPage', () => {
     expect(screen.getByRole('button', { name: 'Create Account' })).toBeInTheDocument();
   });
 
-  it('should display logo image', () => {
-    render(<RegisterPage />);
+  it('should display logo image', async () => {
+    renderWithProviders(<RegisterPage />);
     
     const logo = screen.getByAltText('AI Square Logo');
     expect(logo).toBeInTheDocument();
     expect(logo).toHaveAttribute('src', '/images/logo.png');
   });
 
-  it('should display sign in link without redirect', () => {
-    render(<RegisterPage />);
+  it('should display sign in link without redirect', async () => {
+    renderWithProviders(<RegisterPage />);
     
     const signInLink = screen.getByText('Sign in');
     expect(signInLink).toHaveAttribute('href', '/login');
   });
 
-  it('should display sign in link with redirect parameter', () => {
+  it('should display sign in link with redirect parameter', async () => {
     mockSearchParams.get.mockImplementation((key) => 
       key === 'redirect' ? '/dashboard' : null
     );
     
-    render(<RegisterPage />);
+    renderWithProviders(<RegisterPage />);
     
     const signInLink = screen.getByText('Sign in');
     expect(signInLink).toHaveAttribute('href', '/login?redirect=%2Fdashboard');
   });
 
   it('should validate required name field', async () => {
-    render(<RegisterPage />);
+    renderWithProviders(<RegisterPage />);
     
     const submitButton = screen.getByRole('button', { name: 'Create Account' });
     fireEvent.click(submitButton);
@@ -157,7 +157,7 @@ describe('RegisterPage', () => {
   });
 
   it('should validate required email field', async () => {
-    render(<RegisterPage />);
+    renderWithProviders(<RegisterPage />);
     
     const submitButton = screen.getByRole('button', { name: 'Create Account' });
     fireEvent.click(submitButton);
@@ -168,7 +168,7 @@ describe('RegisterPage', () => {
   });
 
   it('should validate email format', async () => {
-    render(<RegisterPage />);
+    renderWithProviders(<RegisterPage />);
     
     const emailInput = screen.getByLabelText('Email Address');
     fireEvent.change(emailInput, { target: { value: 'invalid-email' } });
@@ -182,7 +182,7 @@ describe('RegisterPage', () => {
   });
 
   it('should validate required password field', async () => {
-    render(<RegisterPage />);
+    renderWithProviders(<RegisterPage />);
     
     const submitButton = screen.getByRole('button', { name: 'Create Account' });
     fireEvent.click(submitButton);
@@ -193,7 +193,7 @@ describe('RegisterPage', () => {
   });
 
   it('should validate password length', async () => {
-    render(<RegisterPage />);
+    renderWithProviders(<RegisterPage />);
     
     const passwordInput = screen.getByLabelText('Password');
     fireEvent.change(passwordInput, { target: { value: '123' } });
@@ -207,7 +207,7 @@ describe('RegisterPage', () => {
   });
 
   it('should validate password confirmation', async () => {
-    render(<RegisterPage />);
+    renderWithProviders(<RegisterPage />);
     
     const passwordInput = screen.getByLabelText('Password');
     const confirmInput = screen.getByLabelText('Confirm Password');
@@ -224,7 +224,7 @@ describe('RegisterPage', () => {
   });
 
   it('should validate terms acceptance', async () => {
-    render(<RegisterPage />);
+    renderWithProviders(<RegisterPage />);
     
     // Fill all other fields
     fireEvent.change(screen.getByLabelText('Full Name'), { target: { value: 'John Doe' } });
@@ -241,7 +241,7 @@ describe('RegisterPage', () => {
   });
 
   it('should clear field errors when user starts typing', async () => {
-    render(<RegisterPage />);
+    renderWithProviders(<RegisterPage />);
     
     // Trigger validation error
     const submitButton = screen.getByRole('button', { name: 'Create Account' });
@@ -276,7 +276,7 @@ describe('RegisterPage', () => {
         }),
       });
     
-    render(<RegisterPage />);
+    renderWithProviders(<RegisterPage />);
     
     // Fill out form
     fireEvent.change(screen.getByLabelText('Full Name'), { target: { value: 'John Doe' } });
@@ -338,7 +338,7 @@ describe('RegisterPage', () => {
         }),
       });
     
-    render(<RegisterPage />);
+    renderWithProviders(<RegisterPage />);
     
     // Fill out form
     fireEvent.change(screen.getByLabelText('Full Name'), { target: { value: 'John Doe' } });
@@ -370,7 +370,7 @@ describe('RegisterPage', () => {
         json: () => Promise.resolve({ success: true }),
       });
     
-    render(<RegisterPage />);
+    renderWithProviders(<RegisterPage />);
     
     // Fill out form
     fireEvent.change(screen.getByLabelText('Full Name'), { target: { value: 'John Doe' } });
@@ -397,7 +397,7 @@ describe('RegisterPage', () => {
       }),
     });
     
-    render(<RegisterPage />);
+    renderWithProviders(<RegisterPage />);
     
     // Fill out form
     fireEvent.change(screen.getByLabelText('Full Name'), { target: { value: 'John Doe' } });
@@ -418,7 +418,7 @@ describe('RegisterPage', () => {
   it('should handle network error', async () => {
     (global.fetch as jest.Mock).mockRejectedValueOnce(new Error('Network error'));
     
-    render(<RegisterPage />);
+    renderWithProviders(<RegisterPage />);
     
     // Fill out form
     fireEvent.change(screen.getByLabelText('Full Name'), { target: { value: 'John Doe' } });
@@ -443,7 +443,7 @@ describe('RegisterPage', () => {
       })
     );
     
-    render(<RegisterPage />);
+    renderWithProviders(<RegisterPage />);
     
     // Fill out form
     fireEvent.change(screen.getByLabelText('Full Name'), { target: { value: 'John Doe' } });
@@ -479,7 +479,7 @@ describe('RegisterPage', () => {
         json: () => Promise.resolve({ success: false, error: 'Login failed' }),
       });
     
-    render(<RegisterPage />);
+    renderWithProviders(<RegisterPage />);
     
     // Fill out form
     fireEvent.change(screen.getByLabelText('Full Name'), { target: { value: 'John Doe' } });
@@ -497,22 +497,22 @@ describe('RegisterPage', () => {
     });
   });
 
-  it('should render Google and GitHub OAuth buttons', () => {
-    render(<RegisterPage />);
+  it('should render Google and GitHub OAuth buttons', async () => {
+    renderWithProviders(<RegisterPage />);
     
     expect(screen.getByText('Google')).toBeInTheDocument();
     expect(screen.getByText('GitHub')).toBeInTheDocument();
   });
 
-  it('should render terms of service and privacy policy links', () => {
-    render(<RegisterPage />);
+  it('should render terms of service and privacy policy links', async () => {
+    renderWithProviders(<RegisterPage />);
     
     expect(screen.getByText('Terms of Service')).toBeInTheDocument();
     expect(screen.getByText('Privacy Policy')).toBeInTheDocument();
   });
 
-  it('should handle checkbox state changes', () => {
-    render(<RegisterPage />);
+  it('should handle checkbox state changes', async () => {
+    renderWithProviders(<RegisterPage />);
     
     const checkbox = screen.getByLabelText(/I agree to the/) as HTMLInputElement;
     expect(checkbox.checked).toBe(false);
@@ -525,7 +525,7 @@ describe('RegisterPage', () => {
   });
 
   it('should validate all edge cases for email', async () => {
-    render(<RegisterPage />);
+    renderWithProviders(<RegisterPage />);
     
     const emailInput = screen.getByLabelText('Email Address');
     const submitButton = screen.getByRole('button', { name: 'Create Account' });
@@ -560,7 +560,7 @@ describe('RegisterPage', () => {
         json: () => Promise.resolve({ success: true }),
       });
     
-    render(<RegisterPage />);
+    renderWithProviders(<RegisterPage />);
     
     // Fill out form
     fireEvent.change(screen.getByLabelText('Full Name'), { target: { value: 'John Doe' } });
@@ -580,7 +580,7 @@ describe('RegisterPage', () => {
   });
 
   it('should handle multiple validation errors at once', async () => {
-    render(<RegisterPage />);
+    renderWithProviders(<RegisterPage />);
     
     const submitButton = screen.getByRole('button', { name: 'Create Account' });
     fireEvent.click(submitButton);
@@ -602,7 +602,7 @@ describe('RegisterPage', () => {
       }),
     });
     
-    render(<RegisterPage />);
+    renderWithProviders(<RegisterPage />);
     
     // Fill out form
     fireEvent.change(screen.getByLabelText('Full Name'), { target: { value: 'John Doe' } });

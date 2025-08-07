@@ -1,5 +1,47 @@
+
+jest.mock('d3', () => ({
+  select: jest.fn(() => ({
+    append: jest.fn().mockReturnThis(),
+    attr: jest.fn().mockReturnThis(),
+    style: jest.fn().mockReturnThis(),
+    text: jest.fn().mockReturnThis(),
+    data: jest.fn().mockReturnThis(),
+    enter: jest.fn().mockReturnThis(),
+    exit: jest.fn().mockReturnThis(),
+    remove: jest.fn().mockReturnThis(),
+    selectAll: jest.fn().mockReturnThis(),
+  })),
+  scaleLinear: jest.fn(() => {
+    const scale = (value: unknown) => value;
+    scale.domain = jest.fn().mockReturnThis();
+    scale.range = jest.fn().mockReturnThis();
+    return scale;
+  }),
+  scaleOrdinal: jest.fn(() => {
+    const scale = (value: unknown) => value;
+    scale.domain = jest.fn().mockReturnThis();
+    scale.range = jest.fn().mockReturnThis();
+    return scale;
+  }),
+  arc: jest.fn(() => {
+    const arcFn = jest.fn();
+    Object.assign(arcFn, {
+      innerRadius: jest.fn().mockReturnThis(),
+      outerRadius: jest.fn().mockReturnThis()
+    });
+    return arcFn;
+  }),
+  pie: jest.fn(() => {
+    const pieFn = jest.fn((data: unknown[]) => data.map((d: unknown, i: number) => ({ data: d, index: i })));
+    Object.assign(pieFn, {
+      value: jest.fn().mockReturnThis()
+    });
+    return pieFn;
+  }),
+}));
+
 import React from 'react';
-import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
+import { renderWithProviders, screen, waitFor, fireEvent, act } from '@/test-utils/helpers/render';
 import { useRouter, usePathname } from 'next/navigation';
 import DiscoveryNavigation from '../DiscoveryNavigation';
 import { userDataService } from '@/lib/services/user-data-service';
@@ -99,13 +141,13 @@ describe('DiscoveryNavigation', () => {
     jest.restoreAllMocks();
   });
 
-  it('should render without crashing', () => {
-    render(<DiscoveryNavigation />);
+  it('should render without crashing', async () => {
+    renderWithProviders(<DiscoveryNavigation />);
     expect(screen.getByRole('button', { name: /0%/ })).toBeInTheDocument();
   });
 
   it('should load user achievements on mount', async () => {
-    render(<DiscoveryNavigation />);
+    renderWithProviders(<DiscoveryNavigation />);
 
     await waitFor(() => {
       expect(mockUserDataService.loadUserData).toHaveBeenCalledTimes(1);
@@ -116,7 +158,7 @@ describe('DiscoveryNavigation', () => {
     const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
     mockUserDataService.loadUserData.mockRejectedValue(new Error('Failed to load'));
 
-    render(<DiscoveryNavigation />);
+    renderWithProviders(<DiscoveryNavigation />);
 
     await waitFor(() => {
       expect(consoleErrorSpy).toHaveBeenCalledWith('Failed to load navigation data:', expect.any(Error));
@@ -126,7 +168,7 @@ describe('DiscoveryNavigation', () => {
   });
 
   it('should show side navigation on desktop after scrolling', async () => {
-    render(<DiscoveryNavigation />);
+    renderWithProviders(<DiscoveryNavigation />);
 
     // Initially hidden
     expect(screen.getByTestId('academic-cap-icon').closest('div')).toHaveClass('opacity-0');
@@ -144,7 +186,7 @@ describe('DiscoveryNavigation', () => {
   });
 
   it('should update scroll progress correctly', async () => {
-    render(<DiscoveryNavigation />);
+    renderWithProviders(<DiscoveryNavigation />);
 
     // Simulate scroll to 50% of page
     Object.defineProperty(window, 'scrollY', { value: 600 }); // 600 / (2000 - 800) = 50%
@@ -158,9 +200,9 @@ describe('DiscoveryNavigation', () => {
     });
   });
 
-  it('should highlight active navigation item based on pathname', () => {
+  it('should highlight active navigation item based on pathname', async () => {
     (usePathname as jest.Mock).mockReturnValue('/discovery/scenarios');
-    render(<DiscoveryNavigation />);
+    renderWithProviders(<DiscoveryNavigation />);
 
     // The scenarios button should be active
     const scenariosIcon = screen.getByTestId('globe-alt-icon');
@@ -169,7 +211,7 @@ describe('DiscoveryNavigation', () => {
   });
 
   it('should navigate when clicking desktop navigation buttons', async () => {
-    render(<DiscoveryNavigation />);
+    renderWithProviders(<DiscoveryNavigation />);
 
     // Scroll to make navigation visible
     Object.defineProperty(window, 'scrollY', { value: 150 });
@@ -186,7 +228,7 @@ describe('DiscoveryNavigation', () => {
   });
 
   it('should toggle mobile navigation when clicking progress button', async () => {
-    render(<DiscoveryNavigation />);
+    renderWithProviders(<DiscoveryNavigation />);
 
     const progressButton = screen.getByRole('button', { name: /0%/ });
     fireEvent.click(progressButton);
@@ -199,7 +241,7 @@ describe('DiscoveryNavigation', () => {
   });
 
   it('should navigate and close mobile menu when clicking mobile nav items', async () => {
-    render(<DiscoveryNavigation />);
+    renderWithProviders(<DiscoveryNavigation />);
 
     // Open mobile navigation
     const progressButton = screen.getByRole('button', { name: /0%/ });
@@ -214,7 +256,7 @@ describe('DiscoveryNavigation', () => {
   });
 
   it('should display user level and XP in mobile navigation', async () => {
-    render(<DiscoveryNavigation />);
+    renderWithProviders(<DiscoveryNavigation />);
 
     // Wait for user data to load
     await waitFor(() => {
@@ -230,8 +272,8 @@ describe('DiscoveryNavigation', () => {
     });
   });
 
-  it('should handle disabled navigation items', () => {
-    render(<DiscoveryNavigation />);
+  it('should handle disabled navigation items', async () => {
+    renderWithProviders(<DiscoveryNavigation />);
 
     // Scroll to make navigation visible
     Object.defineProperty(window, 'scrollY', { value: 150 });
@@ -245,7 +287,7 @@ describe('DiscoveryNavigation', () => {
   });
 
   it('should show tooltip on hover for desktop navigation', async () => {
-    render(<DiscoveryNavigation />);
+    renderWithProviders(<DiscoveryNavigation />);
 
     // Scroll to make navigation visible
     Object.defineProperty(window, 'scrollY', { value: 150 });
@@ -259,19 +301,19 @@ describe('DiscoveryNavigation', () => {
     });
   });
 
-  it('should clean up scroll event listener on unmount', () => {
+  it('should clean up scroll event listener on unmount', async () => {
     const removeEventListenerSpy = jest.spyOn(window, 'removeEventListener');
     
-    const { unmount } = render(<DiscoveryNavigation />);
+    const { unmount } = renderWithProviders(<DiscoveryNavigation />);
     unmount();
 
     expect(removeEventListenerSpy).toHaveBeenCalledWith('scroll', expect.any(Function));
     removeEventListenerSpy.mockRestore();
   });
 
-  it('should handle nested route paths correctly', () => {
+  it('should handle nested route paths correctly', async () => {
     (usePathname as jest.Mock).mockReturnValue('/discovery/scenarios/some-scenario');
-    render(<DiscoveryNavigation />);
+    renderWithProviders(<DiscoveryNavigation />);
 
     // The scenarios button should still be active for nested routes
     const scenariosIcon = screen.getByTestId('globe-alt-icon');
@@ -279,9 +321,9 @@ describe('DiscoveryNavigation', () => {
     expect(activeButton).toHaveClass('scale-110');
   });
 
-  it('should display badges when provided', () => {
+  it('should display badges when provided', async () => {
     // Mock navigation items with badges by testing the component structure
-    render(<DiscoveryNavigation />);
+    renderWithProviders(<DiscoveryNavigation />);
     
     // The component structure should support badges, even if not currently used
     // This tests the badge rendering logic exists
@@ -289,7 +331,7 @@ describe('DiscoveryNavigation', () => {
   });
 
   it('should cap scroll progress at 100%', async () => {
-    render(<DiscoveryNavigation />);
+    renderWithProviders(<DiscoveryNavigation />);
 
     // Simulate scroll beyond page height
     Object.defineProperty(window, 'scrollY', { value: 5000 });
@@ -308,7 +350,7 @@ describe('DiscoveryNavigation', () => {
       value: 800, // Same as window height
     });
 
-    render(<DiscoveryNavigation />);
+    renderWithProviders(<DiscoveryNavigation />);
 
     Object.defineProperty(window, 'scrollY', { value: 100 });
     
@@ -322,8 +364,8 @@ describe('DiscoveryNavigation', () => {
     });
   });
 
-  it('should render correct number of navigation items', () => {
-    render(<DiscoveryNavigation />);
+  it('should render correct number of navigation items', async () => {
+    renderWithProviders(<DiscoveryNavigation />);
 
     // Should have 3 navigation items
     expect(screen.getByTestId('academic-cap-icon')).toBeInTheDocument(); // Overview
@@ -334,7 +376,7 @@ describe('DiscoveryNavigation', () => {
   it('should handle missing user data gracefully', async () => {
     mockUserDataService.loadUserData.mockResolvedValue(null);
 
-    render(<DiscoveryNavigation />);
+    renderWithProviders(<DiscoveryNavigation />);
 
     // Open mobile navigation
     const progressButton = screen.getByRole('button', { name: /0%/ });
@@ -346,8 +388,8 @@ describe('DiscoveryNavigation', () => {
     });
   });
 
-  it('should have proper accessibility attributes', () => {
-    render(<DiscoveryNavigation />);
+  it('should have proper accessibility attributes', async () => {
+    renderWithProviders(<DiscoveryNavigation />);
 
     const progressButton = screen.getByRole('button', { name: /0%/ });
     expect(progressButton).toBeInTheDocument();
@@ -358,7 +400,7 @@ describe('DiscoveryNavigation', () => {
   });
 
   it('should update progress ring stroke correctly', async () => {
-    render(<DiscoveryNavigation />);
+    renderWithProviders(<DiscoveryNavigation />);
 
     // Check that SVG elements are rendered
     const svg = screen.getByRole('button', { name: /0%/ }).closest('.relative')?.querySelector('svg');
@@ -377,7 +419,7 @@ describe('DiscoveryNavigation', () => {
   });
 
   it('should handle rapid scroll events without issues', async () => {
-    render(<DiscoveryNavigation />);
+    renderWithProviders(<DiscoveryNavigation />);
 
     // Simulate multiple rapid scroll events
     for (let i = 0; i < 10; i++) {

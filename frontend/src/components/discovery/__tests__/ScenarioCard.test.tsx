@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { renderWithProviders, screen, waitFor, fireEvent } from '@/test-utils/helpers/render';
 import ScenarioCard from '../ScenarioCard';
 import { useTranslation } from 'react-i18next';
 
@@ -50,8 +50,8 @@ describe('ScenarioCard', () => {
     jest.clearAllMocks();
   });
 
-  it('renders scenario card with basic information', () => {
-    render(
+  it('renders scenario card with basic information', async () => {
+    renderWithProviders(
       <ScenarioCard
         scenario={mockScenario}
         index={0}
@@ -65,8 +65,8 @@ describe('ScenarioCard', () => {
     expect(screen.getByTestId('mock-icon')).toBeInTheDocument();
   });
 
-  it('renders skills list', () => {
-    render(
+  it('renders skills list', async () => {
+    renderWithProviders(
       <ScenarioCard
         scenario={mockScenario}
         index={0}
@@ -79,8 +79,8 @@ describe('ScenarioCard', () => {
     });
   });
 
-  it('calls onSelect when clicked', () => {
-    render(
+  it('calls onSelect when clicked', async () => {
+    renderWithProviders(
       <ScenarioCard
         scenario={mockScenario}
         index={0}
@@ -95,7 +95,7 @@ describe('ScenarioCard', () => {
     expect(mockOnSelect).toHaveBeenCalledTimes(1);
   });
 
-  it('renders with in-progress status', () => {
+  it('renders with in-progress status', async () => {
     const inProgressScenario = {
       ...mockScenario,
       primaryStatus: 'in-progress' as const,
@@ -108,7 +108,7 @@ describe('ScenarioCard', () => {
       },
     };
 
-    render(
+    renderWithProviders(
       <ScenarioCard
         scenario={inProgressScenario}
         index={0}
@@ -121,7 +121,7 @@ describe('ScenarioCard', () => {
     expect(progressElements.length).toBeGreaterThan(0);
   });
 
-  it('renders with mastered status', () => {
+  it('renders with mastered status', async () => {
     const masteredScenario = {
       ...mockScenario,
       primaryStatus: 'mastered' as const,
@@ -134,7 +134,7 @@ describe('ScenarioCard', () => {
       },
     };
 
-    render(
+    renderWithProviders(
       <ScenarioCard
         scenario={masteredScenario}
         index={0}
@@ -147,13 +147,13 @@ describe('ScenarioCard', () => {
     expect(masteredElements.length).toBeGreaterThan(0);
   });
 
-  it('shows last activity when prop is true', () => {
+  it('shows last activity when prop is true', async () => {
     const scenarioWithActivity = {
       ...mockScenario,
       lastActivity: '2 days ago',
     };
 
-    render(
+    renderWithProviders(
       <ScenarioCard
         scenario={scenarioWithActivity}
         index={0}
@@ -166,13 +166,13 @@ describe('ScenarioCard', () => {
     expect(screen.getByText(/上次活動/)).toBeInTheDocument();
   });
 
-  it('hides last activity when prop is false', () => {
+  it('hides last activity when prop is false', async () => {
     const scenarioWithActivity = {
       ...mockScenario,
       lastActivity: '2 days ago',
     };
 
-    render(
+    renderWithProviders(
       <ScenarioCard
         scenario={scenarioWithActivity}
         index={0}
@@ -184,13 +184,13 @@ describe('ScenarioCard', () => {
     expect(screen.queryByText('2 days ago')).not.toBeInTheDocument();
   });
 
-  it('handles missing stats gracefully', () => {
+  it('handles missing stats gracefully', async () => {
     const scenarioWithoutStats = {
       ...mockScenario,
       stats: undefined,
     };
 
-    render(
+    renderWithProviders(
       <ScenarioCard
         scenario={scenarioWithoutStats}
         index={0}
@@ -202,8 +202,8 @@ describe('ScenarioCard', () => {
     expect(screen.getByText('Software Engineer')).toBeInTheDocument();
   });
 
-  it('applies animation delay based on index', () => {
-    const { container } = render(
+  it('applies animation delay based on index', async () => {
+    const { container } = renderWithProviders(
       <ScenarioCard
         scenario={mockScenario}
         index={3}
@@ -216,8 +216,8 @@ describe('ScenarioCard', () => {
     expect(motionDiv).toHaveAttribute('transition', '[object Object]');
   });
 
-  it('renders with appropriate color styling', () => {
-    render(
+  it('renders with appropriate color styling', async () => {
+    renderWithProviders(
       <ScenarioCard
         scenario={mockScenario}
         index={0}
@@ -230,7 +230,7 @@ describe('ScenarioCard', () => {
     expect(cardElement.className).toContain('hover:');
   });
 
-  it('displays completed count in stats', () => {
+  it('displays completed count in stats', async () => {
     const scenarioWithStats = {
       ...mockScenario,
       stats: {
@@ -241,7 +241,7 @@ describe('ScenarioCard', () => {
       },
     };
 
-    render(
+    renderWithProviders(
       <ScenarioCard
         scenario={scenarioWithStats}
         index={0}
@@ -253,8 +253,8 @@ describe('ScenarioCard', () => {
     expect(screen.getByText(/5/)).toBeInTheDocument();
   });
 
-  it('handles keyboard navigation', () => {
-    render(
+  it('handles keyboard navigation', async () => {
+    renderWithProviders(
       <ScenarioCard
         scenario={mockScenario}
         index={0}
@@ -269,8 +269,8 @@ describe('ScenarioCard', () => {
     expect(mockOnSelect).toHaveBeenCalledWith(mockScenario);
   });
 
-  it('has accessible attributes', () => {
-    render(
+  it('has accessible attributes', async () => {
+    renderWithProviders(
       <ScenarioCard
         scenario={mockScenario}
         index={0}

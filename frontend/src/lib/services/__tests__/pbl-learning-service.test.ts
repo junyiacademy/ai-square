@@ -1,3 +1,4 @@
+import { mockRepositoryFactory } from '@/test-utils/mocks/repositories';
 /**
  * PBL Learning Service Tests
  * 提升覆蓋率從 5.3% 到 100%

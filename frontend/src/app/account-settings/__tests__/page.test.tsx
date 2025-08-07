@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { renderWithProviders, screen, waitFor, fireEvent } from '@/test-utils/helpers/render';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
@@ -118,32 +118,32 @@ describe('AccountSettingsPage', () => {
     Object.values(consoleSpy).forEach(spy => spy.mockRestore());
   });
 
-  it('should redirect to login if not authenticated', () => {
+  it('should redirect to login if not authenticated', async () => {
     (useAuth as jest.Mock).mockReturnValue({
       user: null,
       isLoading: false,
     });
     
-    render(<AccountSettingsPage />);
+    renderWithProviders(<AccountSettingsPage />);
     
     expect(mockRouter.push).toHaveBeenCalledWith('/login');
   });
 
-  it('should show loading state when auth is loading', () => {
+  it('should show loading state when auth is loading', async () => {
     (useAuth as jest.Mock).mockReturnValue({
       user: null,
       isLoading: true,
     });
     
-    render(<AccountSettingsPage />);
+    renderWithProviders(<AccountSettingsPage />);
     
     expect(screen.getByRole('status', { hidden: true })).toHaveClass('animate-spin');
   });
 
-  it('should show loading state while fetching consents', () => {
+  it('should show loading state while fetching consents', async () => {
     (global.fetch as jest.Mock).mockImplementation(() => new Promise(() => {})); // Never resolves
     
-    render(<AccountSettingsPage />);
+    renderWithProviders(<AccountSettingsPage />);
     
     expect(screen.getByRole('status', { hidden: true })).toBeInTheDocument();
   });
@@ -158,7 +158,7 @@ describe('AccountSettingsPage', () => {
       }),
     });
     
-    render(<AccountSettingsPage />);
+    renderWithProviders(<AccountSettingsPage />);
     
     await waitFor(() => {
       expect(screen.getByText('Account Settings')).toBeInTheDocument();
@@ -177,7 +177,7 @@ describe('AccountSettingsPage', () => {
       }),
     });
     
-    render(<AccountSettingsPage />);
+    renderWithProviders(<AccountSettingsPage />);
     
     await waitFor(() => {
       expect(screen.getByText('Documents You\'ve Agreed To')).toBeInTheDocument();
@@ -198,7 +198,7 @@ describe('AccountSettingsPage', () => {
       }),
     });
     
-    render(<AccountSettingsPage />);
+    renderWithProviders(<AccountSettingsPage />);
     
     await waitFor(() => {
       expect(screen.getByText('New Documents Requiring Consent')).toBeInTheDocument();
@@ -239,7 +239,7 @@ describe('AccountSettingsPage', () => {
         }),
       });
     
-    render(<AccountSettingsPage />);
+    renderWithProviders(<AccountSettingsPage />);
     
     await waitFor(() => {
       const reviewButton = screen.getByText('Review and Accept');
@@ -274,7 +274,7 @@ describe('AccountSettingsPage', () => {
       })
       .mockRejectedValueOnce(new Error('Consent API error'));
     
-    render(<AccountSettingsPage />);
+    renderWithProviders(<AccountSettingsPage />);
     
     await waitFor(() => {
       const reviewButton = screen.getByText('Review and Accept');
@@ -297,7 +297,7 @@ describe('AccountSettingsPage', () => {
       }),
     });
     
-    render(<AccountSettingsPage />);
+    renderWithProviders(<AccountSettingsPage />);
     
     await waitFor(() => {
       const deleteButton = screen.getByText('Delete Account');
@@ -319,7 +319,7 @@ describe('AccountSettingsPage', () => {
       }),
     });
     
-    render(<AccountSettingsPage />);
+    renderWithProviders(<AccountSettingsPage />);
     
     await waitFor(() => {
       const deleteButton = screen.getByText('Delete Account');
@@ -349,7 +349,7 @@ describe('AccountSettingsPage', () => {
       }),
     });
     
-    render(<AccountSettingsPage />);
+    renderWithProviders(<AccountSettingsPage />);
     
     await waitFor(() => {
       const deleteButton = screen.getByText('Delete Account');
@@ -387,7 +387,7 @@ describe('AccountSettingsPage', () => {
         }),
       });
     
-    render(<AccountSettingsPage />);
+    renderWithProviders(<AccountSettingsPage />);
     
     await waitFor(() => {
       const deleteButton = screen.getByText('Delete Account');
@@ -439,7 +439,7 @@ describe('AccountSettingsPage', () => {
         }),
       });
     
-    render(<AccountSettingsPage />);
+    renderWithProviders(<AccountSettingsPage />);
     
     await waitFor(() => {
       const deleteButton = screen.getByText('Delete Account');
@@ -475,7 +475,7 @@ describe('AccountSettingsPage', () => {
       })
       .mockRejectedValueOnce(new Error('Network error'));
     
-    render(<AccountSettingsPage />);
+    renderWithProviders(<AccountSettingsPage />);
     
     await waitFor(() => {
       const deleteButton = screen.getByText('Delete Account');
@@ -506,7 +506,7 @@ describe('AccountSettingsPage', () => {
       }),
     });
     
-    render(<AccountSettingsPage />);
+    renderWithProviders(<AccountSettingsPage />);
     
     await waitFor(() => {
       const deleteButton = screen.getByText('Delete Account');
@@ -551,7 +551,7 @@ describe('AccountSettingsPage', () => {
       }),
     });
     
-    render(<AccountSettingsPage />);
+    renderWithProviders(<AccountSettingsPage />);
     
     await waitFor(() => {
       const deleteButton = screen.getByText('Delete Account');
@@ -584,7 +584,7 @@ describe('AccountSettingsPage', () => {
         })
       );
     
-    render(<AccountSettingsPage />);
+    renderWithProviders(<AccountSettingsPage />);
     
     await waitFor(() => {
       const deleteButton = screen.getByText('Delete Account');
@@ -618,7 +618,7 @@ describe('AccountSettingsPage', () => {
   it('should handle fetch consents API error', async () => {
     (global.fetch as jest.Mock).mockRejectedValue(new Error('API Error'));
     
-    render(<AccountSettingsPage />);
+    renderWithProviders(<AccountSettingsPage />);
     
     await waitFor(() => {
       expect(consoleSpy.error).toHaveBeenCalledWith(
@@ -638,7 +638,7 @@ describe('AccountSettingsPage', () => {
       }),
     });
     
-    render(<AccountSettingsPage />);
+    renderWithProviders(<AccountSettingsPage />);
     
     await waitFor(() => {
       // Should still render the page
@@ -665,7 +665,7 @@ describe('AccountSettingsPage', () => {
       }),
     });
     
-    render(<AccountSettingsPage />);
+    renderWithProviders(<AccountSettingsPage />);
     
     await waitFor(() => {
       // Date formatting may vary by locale, but should include date
@@ -683,7 +683,7 @@ describe('AccountSettingsPage', () => {
       }),
     });
     
-    render(<AccountSettingsPage />);
+    renderWithProviders(<AccountSettingsPage />);
     
     await waitFor(() => {
       expect(screen.getByText('Legal Documents')).toBeInTheDocument();
@@ -702,7 +702,7 @@ describe('AccountSettingsPage', () => {
       }),
     });
     
-    render(<AccountSettingsPage />);
+    renderWithProviders(<AccountSettingsPage />);
     
     await waitFor(() => {
       const deleteButton = screen.getByText('Delete Account');

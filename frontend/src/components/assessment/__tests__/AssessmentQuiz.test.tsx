@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
+import { renderWithProviders, screen, waitFor, fireEvent, act } from '@/test-utils/helpers/render';
 import { useTranslation } from 'react-i18next';
 import AssessmentQuiz from '../AssessmentQuiz';
 import { AssessmentQuestion, AssessmentDomain } from '../../../types/assessment';
@@ -112,8 +112,8 @@ describe('AssessmentQuiz', () => {
     jest.clearAllMocks();
   });
 
-  it('renders quiz interface correctly', () => {
-    render(
+  it('renders quiz interface correctly', async () => {
+    renderWithProviders(
       <AssessmentQuiz
         questions={mockQuestions}
         domains={mockDomains}
@@ -128,8 +128,8 @@ describe('AssessmentQuiz', () => {
     expect(screen.getByText('Provide clear, specific prompts with context')).toBeInTheDocument();
   });
 
-  it('displays progress correctly', () => {
-    render(
+  it('displays progress correctly', async () => {
+    renderWithProviders(
       <AssessmentQuiz
         questions={mockQuestions}
         domains={mockDomains}
@@ -141,8 +141,8 @@ describe('AssessmentQuiz', () => {
     expect(screen.getByText(/1 \/ 2/)).toBeInTheDocument();
   });
 
-  it('allows selecting answers', () => {
-    render(
+  it('allows selecting answers', async () => {
+    renderWithProviders(
       <AssessmentQuiz
         questions={mockQuestions}
         domains={mockDomains}
@@ -157,8 +157,8 @@ describe('AssessmentQuiz', () => {
     expect(optionB.closest('button')).toHaveClass('border-indigo-500');
   });
 
-  it('progresses to next question when answer is selected and next is clicked', () => {
-    render(
+  it('progresses to next question when answer is selected and next is clicked', async () => {
+    renderWithProviders(
       <AssessmentQuiz
         questions={mockQuestions}
         domains={mockDomains}
@@ -177,8 +177,8 @@ describe('AssessmentQuiz', () => {
     expect(screen.getByText(/2 \/ 2/)).toBeInTheDocument();
   });
 
-  it('completes quiz on last question', () => {
-    render(
+  it('completes quiz on last question', async () => {
+    renderWithProviders(
       <AssessmentQuiz
         questions={mockQuestions}
         domains={mockDomains}
@@ -213,8 +213,8 @@ describe('AssessmentQuiz', () => {
     ]);
   });
 
-  it('disables next button when no answer is selected', () => {
-    render(
+  it('disables next button when no answer is selected', async () => {
+    renderWithProviders(
       <AssessmentQuiz
         questions={mockQuestions}
         domains={mockDomains}
@@ -227,8 +227,8 @@ describe('AssessmentQuiz', () => {
     expect(nextButton).toBeDisabled();
   });
 
-  it('enables next button when answer is selected', () => {
-    render(
+  it('enables next button when answer is selected', async () => {
+    renderWithProviders(
       <AssessmentQuiz
         questions={mockQuestions}
         domains={mockDomains}
@@ -244,7 +244,7 @@ describe('AssessmentQuiz', () => {
   });
 
   it('displays timer countdown', async () => {
-    render(
+    renderWithProviders(
       <AssessmentQuiz
         questions={mockQuestions}
         domains={mockDomains}
@@ -259,7 +259,7 @@ describe('AssessmentQuiz', () => {
   it('auto-completes when timer reaches zero', async () => {
     jest.useFakeTimers();
     
-    render(
+    renderWithProviders(
       <AssessmentQuiz
         questions={mockQuestions}
         domains={mockDomains}
@@ -281,8 +281,8 @@ describe('AssessmentQuiz', () => {
     jest.useRealTimers();
   });
 
-  it('displays domain badges correctly', () => {
-    render(
+  it('displays domain badges correctly', async () => {
+    renderWithProviders(
       <AssessmentQuiz
         questions={mockQuestions}
         domains={mockDomains}

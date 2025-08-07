@@ -1,3 +1,4 @@
+import { mockRepositoryFactory } from '@/test-utils/mocks/repositories';
 /**
  * Discovery Learning Service Tests
  * 提升覆蓋率從 4.3% 到 80%+

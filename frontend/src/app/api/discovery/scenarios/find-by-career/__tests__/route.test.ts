@@ -1,3 +1,4 @@
+import { mockRepositoryFactory } from '@/test-utils/mocks/repositories';
 import { NextRequest } from 'next/server';
 import { GET } from '../route';
 import { getServerSession } from '@/lib/auth/session';

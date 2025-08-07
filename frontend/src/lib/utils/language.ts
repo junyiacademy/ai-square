@@ -48,27 +48,48 @@ export function getLanguageFromHeader(request: Request): string {
 }
 
 /**
- * Normalize language code to match our system format
+ * Detect if a language is RTL (Right-to-Left)
  */
-export function normalizeLanguageCode(lang: string): string {
-  // Handle zh-TW format
-  if (lang === 'zh-TW' || lang === 'zh_TW') {
-    return 'zhTW';
+export function isRTL(language: string): boolean {
+  return language === 'ar';
+}
+
+/**
+ * Get the display name for a language code
+ */
+export function getLanguageDisplayName(languageCode: string): string {
+  return LANGUAGE_NAMES[languageCode] || languageCode;
+}
+
+/**
+ * Validate if a language code is supported
+ */
+export function isSupportedLanguage(languageCode: string): boolean {
+  return Object.keys(LANGUAGE_NAMES).includes(languageCode);
+}
+
+/**
+ * Get fallback language for unsupported languages
+ */
+export function getFallbackLanguage(languageCode: string): string {
+  if (isSupportedLanguage(languageCode)) {
+    return languageCode;
   }
   
-  // Handle zh-CN format
-  if (lang === 'zh-CN' || lang === 'zh_CN' || lang === 'zh') {
+  // Handle Chinese variants
+  if (languageCode.startsWith('zh')) {
+    if (languageCode.toLowerCase().includes('tw') || languageCode.toLowerCase().includes('hant')) {
+      return 'zhTW';
+    }
     return 'zhCN';
   }
   
-  // List of supported languages
-  const supportedLangs = ['en', 'zhTW', 'zhCN', 'pt', 'ar', 'id', 'th', 'es', 'ja', 'ko', 'fr', 'de', 'ru', 'it'];
-  
-  // Return if already in correct format
-  if (supportedLangs.includes(lang)) {
-    return lang;
-  }
-  
-  // Default to English
   return 'en';
+}
+
+/**
+ * Normalize language code to supported format
+ */
+export function normalizeLanguageCode(languageCode: string): string {
+  return getFallbackLanguage(languageCode);
 }

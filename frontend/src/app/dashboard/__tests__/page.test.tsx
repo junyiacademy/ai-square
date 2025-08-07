@@ -3,7 +3,7 @@
  * 提升覆蓋率從 0% 到 80%+
  */
 
-import { render, screen, waitFor } from '@testing-library/react';
+import { renderWithProviders, screen, waitFor } from '@/test-utils/helpers/render';
 import { useRouter } from 'next/navigation';
 import DashboardPage from '../page';
 import { suppressActWarnings } from '@/test-utils/helpers/act';
@@ -127,20 +127,20 @@ describe('DashboardPage', () => {
     });
   });
 
-  it('should redirect to login if no user', () => {
+  it('should redirect to login if no user', async () => {
     localStorageMock.getItem.mockImplementation(() => null);
 
-    render(<DashboardPage />);
+    renderWithProviders(<DashboardPage />);
 
     expect(mockPush).toHaveBeenCalledWith('/login');
   });
 
-  it('should show loading state initially', () => {
+  it('should show loading state initially', async () => {
     (global.fetch as jest.Mock).mockImplementation(() => 
       new Promise(() => {}) // Never resolves to keep loading state
     );
 
-    render(<DashboardPage />);
+    renderWithProviders(<DashboardPage />);
 
     const spinner = screen.getByTestId('loading-spinner');
     expect(spinner).toBeInTheDocument();
@@ -175,7 +175,7 @@ describe('DashboardPage', () => {
       json: async () => mockAssessmentData
     });
 
-    render(<DashboardPage />);
+    renderWithProviders(<DashboardPage />);
 
     await waitFor(() => {
       expect(screen.getByText('Welcome back, Test User!')).toBeInTheDocument();
@@ -197,7 +197,7 @@ describe('DashboardPage', () => {
       json: async () => ({ results: [] })
     });
 
-    render(<DashboardPage />);
+    renderWithProviders(<DashboardPage />);
 
     await waitFor(() => {
       expect(screen.getByText('Take Assessment')).toBeInTheDocument();
@@ -214,7 +214,7 @@ describe('DashboardPage', () => {
       json: async () => ({ results: [] })
     });
 
-    render(<DashboardPage />);
+    renderWithProviders(<DashboardPage />);
 
     await waitFor(() => {
       expect(screen.getByText('Learning Statistics')).toBeInTheDocument();
@@ -241,7 +241,7 @@ describe('DashboardPage', () => {
       json: async () => mockAssessmentData
     });
 
-    render(<DashboardPage />);
+    renderWithProviders(<DashboardPage />);
 
     await waitFor(() => {
       expect(screen.getByText('Recent Activities')).toBeInTheDocument();
@@ -257,7 +257,7 @@ describe('DashboardPage', () => {
       json: async () => ({ results: [] })
     });
 
-    render(<DashboardPage />);
+    renderWithProviders(<DashboardPage />);
 
     await waitFor(() => {
       expect(screen.getByText('Welcome back, Test User!')).toBeInTheDocument();
@@ -275,7 +275,7 @@ describe('DashboardPage', () => {
       json: async () => ({ results: [] })
     });
 
-    render(<DashboardPage />);
+    renderWithProviders(<DashboardPage />);
 
     await waitFor(() => {
       expect(screen.getByText('Welcome back, Test User!')).toBeInTheDocument();
@@ -299,7 +299,7 @@ describe('DashboardPage', () => {
 
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
 
-    render(<DashboardPage />);
+    renderWithProviders(<DashboardPage />);
 
     await waitFor(() => {
       expect(screen.getByText('Welcome back, Test User!')).toBeInTheDocument();
@@ -328,7 +328,7 @@ describe('DashboardPage', () => {
       json: async () => ({ results: [] })
     });
 
-    render(<DashboardPage />);
+    renderWithProviders(<DashboardPage />);
 
     await waitFor(() => {
       expect(screen.getByText('Your Goals')).toBeInTheDocument();
@@ -364,7 +364,7 @@ describe('DashboardPage', () => {
       json: async () => mockAssessmentData
     });
 
-    render(<DashboardPage />);
+    renderWithProviders(<DashboardPage />);
 
     await waitFor(() => {
       expect(screen.getByText('Welcome back, Test User!')).toBeInTheDocument();
@@ -393,7 +393,7 @@ describe('DashboardPage', () => {
       json: async () => mockAssessmentData
     });
 
-    render(<DashboardPage />);
+    renderWithProviders(<DashboardPage />);
 
     await waitFor(() => {
       expect(screen.getByText('Welcome back, Test User!')).toBeInTheDocument();
@@ -448,7 +448,7 @@ describe('DashboardPage', () => {
 
     const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
 
-    render(<DashboardPage />);
+    renderWithProviders(<DashboardPage />);
 
     await waitFor(() => {
       expect(screen.getByText('Welcome back, Test User!')).toBeInTheDocument();
@@ -494,7 +494,7 @@ describe('DashboardPage', () => {
       json: async () => mockAssessmentData
     });
 
-    render(<DashboardPage />);
+    renderWithProviders(<DashboardPage />);
 
     await waitFor(() => {
       expect(screen.getByText('Welcome back, Test User!')).toBeInTheDocument();
@@ -529,7 +529,7 @@ describe('DashboardPage', () => {
       json: async () => ({ results: [] })
     });
 
-    render(<DashboardPage />);
+    renderWithProviders(<DashboardPage />);
 
     await waitFor(() => {
       // Should use email prefix as fallback
@@ -564,7 +564,7 @@ describe('DashboardPage', () => {
       json: async () => mockAssessmentData
     });
 
-    render(<DashboardPage />);
+    renderWithProviders(<DashboardPage />);
 
     await waitFor(() => {
       expect(screen.getByText('Welcome back, Test User!')).toBeInTheDocument();
@@ -589,7 +589,7 @@ describe('DashboardPage', () => {
       json: async () => ({ results: [] })
     });
 
-    render(<DashboardPage />);
+    renderWithProviders(<DashboardPage />);
 
     await waitFor(() => {
       expect(screen.getByText('Welcome back, Test User!')).toBeInTheDocument();
@@ -609,7 +609,7 @@ describe('DashboardPage', () => {
       json: async () => ({ results: [] })
     });
 
-    render(<DashboardPage />);
+    renderWithProviders(<DashboardPage />);
 
     await waitFor(() => {
       // Check for emoji icons
@@ -627,7 +627,7 @@ describe('DashboardPage', () => {
       json: async () => ({ results: [] })
     });
 
-    render(<DashboardPage />);
+    renderWithProviders(<DashboardPage />);
 
     await waitFor(() => {
       expect(screen.getByText('No recent activities')).toBeInTheDocument();
@@ -662,7 +662,7 @@ describe('DashboardPage', () => {
       json: async () => mockAssessmentData
     });
 
-    const { container } = render(<DashboardPage />);
+    const { container } = renderWithProviders(<DashboardPage />);
 
     await waitFor(() => {
       expect(screen.getByText('Welcome back, Test User!')).toBeInTheDocument();

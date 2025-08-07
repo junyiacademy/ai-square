@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { renderWithProviders, screen, waitFor } from '@/test-utils/helpers/render';
 import '@testing-library/jest-dom';
 import CTASection from '../CTASection';
 
@@ -30,28 +30,28 @@ describe('CTASection', () => {
     jest.clearAllMocks();
   });
 
-  it('renders without crashing', () => {
-    render(<CTASection />);
+  it('renders without crashing', async () => {
+    renderWithProviders(<CTASection />);
     expect(screen.getByText('Ready to Start Your AI Learning Journey?')).toBeInTheDocument();
   });
 
-  it('displays the main title', () => {
-    render(<CTASection />);
+  it('displays the main title', async () => {
+    renderWithProviders(<CTASection />);
     const title = screen.getByText('Ready to Start Your AI Learning Journey?');
     expect(title).toBeInTheDocument();
     expect(title.tagName).toBe('H2');
     expect(title).toHaveClass('text-3xl', 'md:text-4xl', 'font-bold', 'text-white');
   });
 
-  it('displays the subtitle', () => {
-    render(<CTASection />);
+  it('displays the subtitle', async () => {
+    renderWithProviders(<CTASection />);
     const subtitle = screen.getByText('Join thousands of learners developing AI literacy skills');
     expect(subtitle).toBeInTheDocument();
     expect(subtitle).toHaveClass('text-xl', 'text-blue-100');
   });
 
-  it('renders the CTA button with correct link', () => {
-    render(<CTASection />);
+  it('renders the CTA button with correct link', async () => {
+    renderWithProviders(<CTASection />);
     const button = screen.getByText('Get Started for Free');
     expect(button).toBeInTheDocument();
     const link = button.closest('a');
@@ -59,16 +59,16 @@ describe('CTASection', () => {
     expect(link).toHaveClass('inline-flex', 'items-center', 'justify-center');
   });
 
-  it('renders the sign in link', () => {
-    render(<CTASection />);
+  it('renders the sign in link', async () => {
+    renderWithProviders(<CTASection />);
     const signInLink = screen.getByText('Sign in');
     expect(signInLink).toBeInTheDocument();
     expect(signInLink).toHaveAttribute('href', '/login');
     expect(signInLink).toHaveClass('underline', 'hover:text-blue-200');
   });
 
-  it('displays the decorative statistics', () => {
-    render(<CTASection />);
+  it('displays the decorative statistics', async () => {
+    renderWithProviders(<CTASection />);
     
     // Check statistics numbers
     expect(screen.getByText('9')).toBeInTheDocument();
@@ -83,21 +83,21 @@ describe('CTASection', () => {
     expect(screen.getByText('AI Support')).toBeInTheDocument();
   });
 
-  it('applies gradient background', () => {
-    const { container } = render(<CTASection />);
+  it('applies gradient background', async () => {
+    const { container } = renderWithProviders(<CTASection />);
     const section = container.querySelector('section');
     expect(section).toHaveClass('bg-gradient-to-r', 'from-blue-600', 'to-indigo-700');
   });
 
-  it('renders SVG arrow icon in CTA button', () => {
-    render(<CTASection />);
+  it('renders SVG arrow icon in CTA button', async () => {
+    renderWithProviders(<CTASection />);
     const svg = screen.getByText('Get Started for Free').parentElement?.querySelector('svg');
     expect(svg).toBeInTheDocument();
     expect(svg).toHaveClass('ml-2', 'w-5', 'h-5');
   });
 
-  it('uses responsive layout classes', () => {
-    const { container } = render(<CTASection />);
+  it('uses responsive layout classes', async () => {
+    const { container } = renderWithProviders(<CTASection />);
     
     // Check responsive flex container
     const flexContainer = container.querySelector('.flex-col.sm\\:flex-row');
@@ -108,8 +108,8 @@ describe('CTASection', () => {
     expect(grid).toBeInTheDocument();
   });
 
-  it('properly handles the login text split', () => {
-    render(<CTASection />);
+  it('properly handles the login text split', async () => {
+    renderWithProviders(<CTASection />);
     
     // Check that "Already have an account?" is rendered
     expect(screen.getByText(/Already have an account/)).toBeInTheDocument();
@@ -119,14 +119,14 @@ describe('CTASection', () => {
     expect(signInLink.tagName).toBe('A');
   });
 
-  it('applies hover effects to the CTA button', () => {
-    render(<CTASection />);
+  it('applies hover effects to the CTA button', async () => {
+    renderWithProviders(<CTASection />);
     const link = screen.getByText('Get Started for Free').closest('a');
     expect(link).toHaveClass('hover:bg-gray-100', 'hover:scale-105');
   });
 
-  it('uses proper spacing and padding', () => {
-    const { container } = render(<CTASection />);
+  it('uses proper spacing and padding', async () => {
+    const { container } = renderWithProviders(<CTASection />);
     const section = container.querySelector('section');
     expect(section).toHaveClass('py-20');
     
@@ -134,8 +134,8 @@ describe('CTASection', () => {
     expect(innerContainer).toHaveClass('mx-auto', 'px-4', 'sm:px-6', 'lg:px-8');
   });
 
-  it('centers content properly', () => {
-    const { container } = render(<CTASection />);
+  it('centers content properly', async () => {
+    const { container } = renderWithProviders(<CTASection />);
     const textCenter = container.querySelector('.text-center');
     expect(textCenter).toBeInTheDocument();
     
@@ -143,14 +143,14 @@ describe('CTASection', () => {
     expect(flexCenter).toBeInTheDocument();
   });
 
-  it('applies shadow to CTA button', () => {
-    render(<CTASection />);
+  it('applies shadow to CTA button', async () => {
+    renderWithProviders(<CTASection />);
     const link = screen.getByText('Get Started for Free').closest('a');
     expect(link).toHaveClass('shadow-lg');
   });
 
-  it('uses transition effects', () => {
-    render(<CTASection />);
+  it('uses transition effects', async () => {
+    renderWithProviders(<CTASection />);
     const link = screen.getByText('Get Started for Free').closest('a');
     expect(link).toHaveClass('transition-all', 'duration-200');
   });

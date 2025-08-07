@@ -27,7 +27,7 @@ describe('UserProfile Component (Example)', () => {
   it('should show login message when not authenticated', () => {
     // 設定未認證狀態
     mockUseSession.mockReturnValueOnce({
-      data: null,
+      data: null as any,
       status: 'unauthenticated' as 'authenticated' | 'unauthenticated' | 'loading',
       update: jest.fn(),
     });
@@ -57,7 +57,7 @@ describe('UserProfile Component (Example)', () => {
   it('should handle loading state', () => {
     // 設定載入狀態
     mockUseSession.mockReturnValueOnce({
-      data: null,
+      data: null as any,
       status: 'loading' as 'authenticated' | 'unauthenticated' | 'loading',
       update: jest.fn(),
     });

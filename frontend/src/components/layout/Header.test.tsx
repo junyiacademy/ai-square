@@ -3,7 +3,7 @@
  * 使用 TDD 方式驗證頭部導航欄的登入狀態顯示功能
  */
 
-import { render, screen, fireEvent } from '@testing-library/react'
+import { renderWithProviders, screen, waitFor, fireEvent } from '@/test-utils/helpers/render'
 import userEvent from '@testing-library/user-event'
 import { Header } from './Header'
 import { useTheme } from '../../contexts/ThemeContext'
@@ -108,10 +108,10 @@ describe('Header 組件測試', () => {
   })
 
   describe('🔴 紅燈測試 - 基本渲染', () => {
-    it('應該渲染 Header 基本結構', () => {
+    it('應該渲染 Header 基本結構', async () => {
       mockLocalStorage.getItem.mockReturnValue(null)
       
-      render(<Header />)
+      renderWithProviders(<Header />)
 
       // 檢查 Logo/標題
       expect(screen.getByText('AI Square')).toBeInTheDocument()
@@ -120,10 +120,10 @@ describe('Header 組件測試', () => {
       expect(screen.getByRole('banner')).toBeInTheDocument()
     })
 
-    it('應該有正確的 ARIA 屬性', () => {
+    it('應該有正確的 ARIA 屬性', async () => {
       mockLocalStorage.getItem.mockReturnValue(null)
       
-      render(<Header />)
+      renderWithProviders(<Header />)
 
       const header = screen.getByRole('banner')
       expect(header).toBeInTheDocument()
@@ -135,16 +135,16 @@ describe('Header 組件測試', () => {
       // Auth state is already reset to logged out in main beforeEach
     })
 
-    it('應該顯示登入按鈕當用戶未登入', () => {
-      render(<Header />)
+    it('應該顯示登入按鈕當用戶未登入', async () => {
+      renderWithProviders(<Header />)
 
       const loginButton = screen.getByRole('button', { name: 'signIn' })
       expect(loginButton).toBeInTheDocument()
       expect(loginButton).not.toBeDisabled()
     })
 
-    it('應該不顯示用戶資訊當未登入', () => {
-      render(<Header />)
+    it('應該不顯示用戶資訊當未登入', async () => {
+      renderWithProviders(<Header />)
 
       // 不應該有用戶 email
       expect(screen.queryByText(/@/)).not.toBeInTheDocument()
@@ -155,7 +155,7 @@ describe('Header 組件測試', () => {
 
     it('應該在點擊登入按鈕時導航到登入頁面', async () => {
       const user = userEvent.setup()
-      render(<Header />)
+      renderWithProviders(<Header />)
 
       const loginButton = screen.getByRole('button', { name: 'signIn' })
       await user.click(loginButton)
@@ -179,36 +179,36 @@ describe('Header 組件測試', () => {
       mockAuthState.isLoggedIn = true
     })
 
-    it('應該顯示用戶 email 當已登入', () => {
-      render(<Header />)
+    it('應該顯示用戶 email 當已登入', async () => {
+      renderWithProviders(<Header />)
 
       // Email appears in the dropdown when user info is shown
       expect(screen.getByText('student@example.com')).toBeInTheDocument()
     })
 
-    it('應該顯示用戶角色當已登入', () => {
-      render(<Header />)
+    it('應該顯示用戶角色當已登入', async () => {
+      renderWithProviders(<Header />)
 
       // Role appears in the dropdown
       expect(screen.getByText('userRole.student')).toBeInTheDocument()
     })
 
-    it('應該顯示登出按鈕當已登入', () => {
-      render(<Header />)
+    it('應該顯示登出按鈕當已登入', async () => {
+      renderWithProviders(<Header />)
 
       const logoutButton = screen.getByRole('button', { name: 'signOut' })
       expect(logoutButton).toBeInTheDocument()
     })
 
-    it('應該不顯示登入按鈕當已登入', () => {
-      render(<Header />)
+    it('應該不顯示登入按鈕當已登入', async () => {
+      renderWithProviders(<Header />)
 
       expect(screen.queryByRole('button', { name: 'signIn' })).not.toBeInTheDocument()
     })
 
     it('應該在點擊登出按鈕時清除登入狀態', async () => {
       const user = userEvent.setup()
-      render(<Header />)
+      renderWithProviders(<Header />)
 
       const logoutButton = screen.getByRole('button', { name: 'signOut' })
       await user.click(logoutButton)
@@ -219,21 +219,21 @@ describe('Header 組件測試', () => {
   })
 
   describe('🎨 UI 樣式測試', () => {
-    it('應該有響應式設計類別', () => {
-      render(<Header />)
+    it('應該有響應式設計類別', async () => {
+      renderWithProviders(<Header />)
 
       const header = screen.getByRole('banner')
       expect(header).toHaveClass('bg-white', 'shadow-sm', 'border-b')
     })
 
-    it('登入按鈕應該有正確的樣式', () => {
-      render(<Header />)
+    it('登入按鈕應該有正確的樣式', async () => {
+      renderWithProviders(<Header />)
 
       const loginButton = screen.getByRole('button', { name: 'signIn' })
       expect(loginButton).toHaveClass('bg-blue-600', 'text-white', 'px-4', 'py-2', 'rounded-lg')
     })
 
-    it('用戶資訊區域應該有正確的樣式', () => {
+    it('用戶資訊區域應該有正確的樣式', async () => {
       const mockUser = {
         id: 1,
         email: 'student@example.com',
@@ -245,7 +245,7 @@ describe('Header 組件測試', () => {
       mockAuthState.user = mockUser
       mockAuthState.isLoggedIn = true
       
-      render(<Header />)
+      renderWithProviders(<Header />)
 
       const userInfoElement = screen.getByText('student@example.com')
       expect(userInfoElement).toBeInTheDocument()
@@ -256,9 +256,9 @@ describe('Header 組件測試', () => {
   })
 
   describe('🔄 狀態變化測試', () => {
-    it('應該在登入狀態變化時重新渲染', () => {
+    it('應該在登入狀態變化時重新渲染', async () => {
       // 初始未登入狀態
-      const { unmount } = render(<Header />)
+      const { unmount } = renderWithProviders(<Header />)
 
       expect(screen.getByRole('button', { name: 'signIn' })).toBeInTheDocument()
       
@@ -278,7 +278,7 @@ describe('Header 組件測試', () => {
       mockAuthState.isLoggedIn = true
 
       // 重新渲染組件
-      render(<Header />)
+      renderWithProviders(<Header />)
 
       expect(screen.getByText('teacher@example.com')).toBeInTheDocument()
       expect(screen.getByRole('button', { name: 'signOut' })).toBeInTheDocument()
@@ -286,8 +286,8 @@ describe('Header 組件測試', () => {
   })
 
   describe('♿ 可訪問性測試', () => {
-    it('應該有正確的語義結構', () => {
-      render(<Header />)
+    it('應該有正確的語義結構', async () => {
+      renderWithProviders(<Header />)
 
       // Header 應該是 banner landmark
       expect(screen.getByRole('banner')).toBeInTheDocument()
@@ -296,8 +296,8 @@ describe('Header 組件測試', () => {
       expect(screen.getByRole('navigation')).toBeInTheDocument()
     })
 
-    it('按鈕應該有可訪問的名稱', () => {
-      render(<Header />)
+    it('按鈕應該有可訪問的名稱', async () => {
+      renderWithProviders(<Header />)
 
       const loginButton = screen.getByRole('button', { name: 'signIn' })
       expect(loginButton).toHaveAccessibleName()
@@ -306,7 +306,7 @@ describe('Header 組件測試', () => {
     it('應該支援鍵盤導航', async () => {
       const user = userEvent.setup()
       
-      render(<Header />)
+      renderWithProviders(<Header />)
 
       const languageSelector = screen.getByLabelText(/選擇語言|select language/i)
       const loginButton = screen.getByRole('button', { name: 'signIn' })
@@ -336,8 +336,8 @@ describe('Header 組件測試', () => {
   })
 
   describe('🌐 國際化測試', () => {
-    it('應該使用翻譯鍵值', () => {
-      render(<Header />)
+    it('應該使用翻譯鍵值', async () => {
+      renderWithProviders(<Header />)
 
       // 檢查是否使用了翻譯系統
       expect(screen.getByText('AI Square')).toBeInTheDocument()
@@ -345,7 +345,7 @@ describe('Header 組件測試', () => {
   })
 
   describe('📱 響應式測試', () => {
-    it('應該在小螢幕上正確顯示', () => {
+    it('應該在小螢幕上正確顯示', async () => {
       // 設定小螢幕
       Object.defineProperty(window, 'innerWidth', {
         writable: true,
@@ -353,7 +353,7 @@ describe('Header 組件測試', () => {
         value: 375,
       })
       
-      render(<Header />)
+      renderWithProviders(<Header />)
 
       const header = screen.getByRole('banner')
       expect(header).toBeInTheDocument()
@@ -369,7 +369,7 @@ describe('Header 組件測試', () => {
       mockUseTheme.mockClear()
     })
 
-    it('應該在登入時顯示主題切換按鈕', () => {
+    it('應該在登入時顯示主題切換按鈕', async () => {
       // Set up logged in state
       const mockUser = {
         id: 1,
@@ -385,7 +385,7 @@ describe('Header 組件測試', () => {
         toggleTheme: jest.fn(),
       })
       
-      render(<Header />)
+      renderWithProviders(<Header />)
 
       // Click user dropdown to open it
       const userButton = screen.getByText('T').parentElement
@@ -396,7 +396,7 @@ describe('Header 組件測試', () => {
       expect(themeButton).toBeInTheDocument()
     })
 
-    it('應該在淺色模式時顯示太陽圖標', () => {
+    it('應該在淺色模式時顯示太陽圖標', async () => {
       // Set up logged in state
       const mockUser = {
         id: 1,
@@ -412,7 +412,7 @@ describe('Header 組件測試', () => {
         toggleTheme: jest.fn(),
       })
       
-      render(<Header />)
+      renderWithProviders(<Header />)
 
       // Click user dropdown to open it
       const userButton = screen.getByText('T').parentElement
@@ -424,7 +424,7 @@ describe('Header 組件測試', () => {
       expect(sunIcon).toBeInTheDocument()
     })
 
-    it('應該在深色模式時顯示月亮圖標', () => {
+    it('應該在深色模式時顯示月亮圖標', async () => {
       // Set up logged in state
       const mockUser = {
         id: 1,
@@ -440,7 +440,7 @@ describe('Header 組件測試', () => {
         toggleTheme: jest.fn(),
       })
       
-      render(<Header />)
+      renderWithProviders(<Header />)
 
       // Click user dropdown to open it
       const userButton = screen.getByText('T').parentElement
@@ -471,7 +471,7 @@ describe('Header 組件測試', () => {
         toggleTheme: mockToggleTheme,
       })
       
-      render(<Header />)
+      renderWithProviders(<Header />)
 
       // Click user dropdown to open it
       const userButton = screen.getByText('T').parentElement
@@ -483,7 +483,7 @@ describe('Header 組件測試', () => {
       expect(mockToggleTheme).toHaveBeenCalledTimes(1)
     })
 
-    it('主題切換在登入後的下拉選單中', () => {
+    it('主題切換在登入後的下拉選單中', async () => {
       // Set up logged in state
       const mockUser = {
         id: 1,
@@ -499,7 +499,7 @@ describe('Header 組件測試', () => {
         toggleTheme: jest.fn(),
       })
       
-      render(<Header />)
+      renderWithProviders(<Header />)
 
       const languageSelector = screen.getByLabelText(/選擇語言|select language/i)
       
@@ -534,7 +534,7 @@ describe('Header 組件測試', () => {
         toggleTheme: mockToggleTheme,
       })
       
-      render(<Header />)
+      renderWithProviders(<Header />)
 
       // Click user dropdown to open it
       const userButton = screen.getByText('T').parentElement

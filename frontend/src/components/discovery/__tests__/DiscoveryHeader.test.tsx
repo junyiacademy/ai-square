@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { renderWithProviders, screen, waitFor, fireEvent } from '@/test-utils/helpers/render';
 import { useRouter, usePathname } from 'next/navigation';
 import DiscoveryHeader from '../DiscoveryHeader';
 
@@ -39,8 +39,8 @@ describe('DiscoveryHeader', () => {
     (usePathname as jest.Mock).mockReturnValue('/discovery/overview');
   });
 
-  it('should render header with title and subtitle', () => {
-    render(<DiscoveryHeader />);
+  it('should render header with title and subtitle', async () => {
+    renderWithProviders(<DiscoveryHeader />);
 
     // Title appears twice (breadcrumb and main title)
     const titles = screen.getAllByText('探索世界');
@@ -51,8 +51,8 @@ describe('DiscoveryHeader', () => {
     expect(screen.getByText('發現你的 AI 學習路徑')).toBeInTheDocument();
   });
 
-  it('should render navigation items', () => {
-    render(<DiscoveryHeader />);
+  it('should render navigation items', async () => {
+    renderWithProviders(<DiscoveryHeader />);
 
     // Navigation items appear in both desktop and mobile views
     const overviewButtons = screen.getAllByText('總覽');
@@ -65,16 +65,16 @@ describe('DiscoveryHeader', () => {
     expect(scenariosButtons.length).toBeGreaterThanOrEqual(1);
   });
 
-  it('should highlight active navigation item', () => {
-    render(<DiscoveryHeader />);
+  it('should highlight active navigation item', async () => {
+    renderWithProviders(<DiscoveryHeader />);
 
     const overviewButtons = screen.getAllByRole('button', { name: /總覽/i });
     const desktopOverviewButton = overviewButtons[0];
     expect(desktopOverviewButton).toHaveClass('bg-purple-600');
   });
 
-  it('should navigate when clicking navigation items', () => {
-    render(<DiscoveryHeader />);
+  it('should navigate when clicking navigation items', async () => {
+    renderWithProviders(<DiscoveryHeader />);
 
     const evaluationButtons = screen.getAllByRole('button', { name: /評估/i });
     fireEvent.click(evaluationButtons[0]);
@@ -82,8 +82,8 @@ describe('DiscoveryHeader', () => {
     expect(mockPush).toHaveBeenCalledWith('/discovery/evaluation');
   });
 
-  it('should navigate home when clicking breadcrumb', () => {
-    render(<DiscoveryHeader />);
+  it('should navigate home when clicking breadcrumb', async () => {
+    renderWithProviders(<DiscoveryHeader />);
 
     const homeButton = screen.getByRole('button', { name: /首頁/i });
     fireEvent.click(homeButton);
@@ -91,25 +91,25 @@ describe('DiscoveryHeader', () => {
     expect(mockPush).toHaveBeenCalledWith('/');
   });
 
-  it('should show different active state based on pathname', () => {
+  it('should show different active state based on pathname', async () => {
     (usePathname as jest.Mock).mockReturnValue('/discovery/scenarios');
-    render(<DiscoveryHeader />);
+    renderWithProviders(<DiscoveryHeader />);
 
     const scenariosButtons = screen.getAllByRole('button', { name: /職業冒險/i });
     const desktopScenariosButton = scenariosButtons[0];
     expect(desktopScenariosButton).toHaveClass('bg-purple-600');
   });
 
-  it('should not show badges when counts are zero', () => {
-    render(<DiscoveryHeader achievementCount={0} workspaceCount={0} />);
+  it('should not show badges when counts are zero', async () => {
+    renderWithProviders(<DiscoveryHeader achievementCount={0} workspaceCount={0} />);
 
     // Since workspace and achievements are removed, no badges should exist
     const badges = screen.queryAllByText(/^\d+$/);
     expect(badges).toHaveLength(0);
   });
 
-  it('should handle disabled navigation items', () => {
-    render(<DiscoveryHeader />);
+  it('should handle disabled navigation items', async () => {
+    renderWithProviders(<DiscoveryHeader />);
 
     // All items should be enabled by default
     // Get navigation buttons (may have multiple due to desktop/mobile views)

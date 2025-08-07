@@ -1,3 +1,4 @@
+import { mockRepositoryFactory } from '@/test-utils/mocks/repositories';
 /**
  * Discovery Scenarios API Route Tests
  * 測試探索情境 API

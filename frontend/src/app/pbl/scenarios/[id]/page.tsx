@@ -5,7 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 import { IScenario, IProgram } from '@/types/unified-learning';
-import { formatDateSafely } from '@/lib/utils/date';
+// Date formatting utility
 
 export default function ScenarioDetailPage() {
   const params = useParams();
@@ -285,11 +285,11 @@ export default function ScenarioDetailPage() {
                             ) : null}
                           </div>
                           <div>
-                            {t('common:startedAt', 'Started')}: {formatDateSafely(program.startedAt, i18n.language)}
+                            {t('common:startedAt', 'Started')}: {new Date(program.startedAt, i18n.language)}
                             {program.completedAt && (
                               <>
                                 <span className="mx-2">•</span>
-                                {t('common:completedAt', 'Completed')}: {formatDateSafely(program.completedAt, i18n.language)}
+                                {t('common:completedAt', 'Completed')}: {new Date(program.completedAt, i18n.language)}
                               </>
                             )}
                           </div>

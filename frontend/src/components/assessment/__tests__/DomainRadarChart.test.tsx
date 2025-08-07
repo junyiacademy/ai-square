@@ -1,3 +1,45 @@
+
+jest.mock('d3', () => ({
+  select: jest.fn(() => ({
+    append: jest.fn().mockReturnThis(),
+    attr: jest.fn().mockReturnThis(),
+    style: jest.fn().mockReturnThis(),
+    text: jest.fn().mockReturnThis(),
+    data: jest.fn().mockReturnThis(),
+    enter: jest.fn().mockReturnThis(),
+    exit: jest.fn().mockReturnThis(),
+    remove: jest.fn().mockReturnThis(),
+    selectAll: jest.fn().mockReturnThis(),
+  })),
+  scaleLinear: jest.fn(() => {
+    const scale = (value: unknown) => value;
+    scale.domain = jest.fn().mockReturnThis();
+    scale.range = jest.fn().mockReturnThis();
+    return scale;
+  }),
+  scaleOrdinal: jest.fn(() => {
+    const scale = (value: unknown) => value;
+    scale.domain = jest.fn().mockReturnThis();
+    scale.range = jest.fn().mockReturnThis();
+    return scale;
+  }),
+  arc: jest.fn(() => {
+    const arcFn = jest.fn();
+    Object.assign(arcFn, {
+      innerRadius: jest.fn().mockReturnThis(),
+      outerRadius: jest.fn().mockReturnThis()
+    });
+    return arcFn;
+  }),
+  pie: jest.fn(() => {
+    const pieFn = jest.fn((data: unknown[]) => data.map((d: unknown, i: number) => ({ data: d, index: i })));
+    Object.assign(pieFn, {
+      value: jest.fn().mockReturnThis()
+    });
+    return pieFn;
+  }),
+}));
+
 /**
  * DomainRadarChart 元件測試
  * 測試 Recharts 雷達圖視覺化元件
@@ -67,18 +109,18 @@ describe('DomainRadarChart', () => {
     }
   ];
 
-  it('renders without crashing', () => {
+  it('renders without crashing', async () => {
     const { container } = render(<DomainRadarChart data={mockData} />);
     expect(container.querySelector('.h-64')).toBeInTheDocument();
     expect(container.querySelector('.w-full')).toBeInTheDocument();
   });
 
-  it('renders responsive container', () => {
+  it('renders responsive container', async () => {
     render(<DomainRadarChart data={mockData} />);
     expect(screen.getByTestId('responsive-container')).toBeInTheDocument();
   });
 
-  it('renders radar chart with correct data', () => {
+  it('renders radar chart with correct data', async () => {
     render(<DomainRadarChart data={mockData} />);
     const radarChart = screen.getByTestId('radar-chart');
     expect(radarChart).toBeInTheDocument();
@@ -87,7 +129,7 @@ describe('DomainRadarChart', () => {
     expect(chartData).toEqual(mockData);
   });
 
-  it('renders all chart components', () => {
+  it('renders all chart components', async () => {
     render(<DomainRadarChart data={mockData} />);
     
     // Check PolarGrid
@@ -114,13 +156,13 @@ describe('DomainRadarChart', () => {
     expect(radar).toHaveAttribute('data-fill-opacity', '0.6');
   });
 
-  it('handles empty data array', () => {
+  it('handles empty data array', async () => {
     const { container } = render(<DomainRadarChart data={[]} />);
     expect(container.querySelector('.h-64')).toBeInTheDocument();
     expect(screen.getByTestId('radar-chart')).toBeInTheDocument();
   });
 
-  it('handles single data point', () => {
+  it('handles single data point', async () => {
     const singleData: RadarChartData[] = [
       { domain: 'Only Domain', score: 50, fullMark: 100 }
     ];
@@ -131,7 +173,7 @@ describe('DomainRadarChart', () => {
     expect(chartData).toEqual(singleData);
   });
 
-  it('handles maximum score values', () => {
+  it('handles maximum score values', async () => {
     const maxScoreData: RadarChartData[] = [
       { domain: 'Perfect Score', score: 100, fullMark: 100 },
       { domain: 'Also Perfect', score: 100, fullMark: 100 }
@@ -143,7 +185,7 @@ describe('DomainRadarChart', () => {
     expect(chartData).toEqual(maxScoreData);
   });
 
-  it('handles zero score values', () => {
+  it('handles zero score values', async () => {
     const zeroScoreData: RadarChartData[] = [
       { domain: 'No Score', score: 0, fullMark: 100 },
       { domain: 'Also No Score', score: 0, fullMark: 100 }
@@ -155,13 +197,13 @@ describe('DomainRadarChart', () => {
     expect(chartData).toEqual(zeroScoreData);
   });
 
-  it('maintains correct container dimensions', () => {
+  it('maintains correct container dimensions', async () => {
     const { container } = render(<DomainRadarChart data={mockData} />);
     const chartContainer = container.firstChild as HTMLElement;
     expect(chartContainer).toHaveClass('h-64', 'w-full');
   });
 
-  it('renders with mixed score values', () => {
+  it('renders with mixed score values', async () => {
     const mixedData: RadarChartData[] = [
       { domain: 'Low', score: 25, fullMark: 100 },
       { domain: 'Medium', score: 50, fullMark: 100 },
@@ -175,7 +217,7 @@ describe('DomainRadarChart', () => {
     expect(chartData).toEqual(mixedData);
   });
 
-  it('handles long domain names', () => {
+  it('handles long domain names', async () => {
     const longNameData: RadarChartData[] = [
       { domain: 'This is a very long domain name that might wrap', score: 80, fullMark: 100 },
       { domain: 'Another extremely long domain name for testing purposes', score: 60, fullMark: 100 }
@@ -187,7 +229,7 @@ describe('DomainRadarChart', () => {
     expect(chartData).toEqual(longNameData);
   });
 
-  it('applies correct styling classes', () => {
+  it('applies correct styling classes', async () => {
     const { container } = render(<DomainRadarChart data={mockData} />);
     const angleAxis = screen.getByTestId('polar-angle-axis');
     
@@ -197,7 +239,7 @@ describe('DomainRadarChart', () => {
     expect(angleAxis).toBeInTheDocument();
   });
 
-  it('renders with decimal score values', () => {
+  it('renders with decimal score values', async () => {
     const decimalData: RadarChartData[] = [
       { domain: 'Domain A', score: 85.5, fullMark: 100 },
       { domain: 'Domain B', score: 72.3, fullMark: 100 },
@@ -210,7 +252,7 @@ describe('DomainRadarChart', () => {
     expect(chartData).toEqual(decimalData);
   });
 
-  it('maintains chart configuration', () => {
+  it('maintains chart configuration', async () => {
     render(<DomainRadarChart data={mockData} />);
     
     // Verify the radar configuration matches the component

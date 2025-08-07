@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { renderWithProviders, screen, waitFor } from '@/test-utils/helpers/render';
 import PrivacyPolicyPage from '../page';
 
 // Mock react-i18next
@@ -21,23 +21,23 @@ jest.mock('next/link', () => {
 });
 
 describe('PrivacyPolicyPage', () => {
-  it('should render the privacy policy title', () => {
-    render(<PrivacyPolicyPage />);
+  it('should render the privacy policy title', async () => {
+    renderWithProviders(<PrivacyPolicyPage />);
     
     const title = screen.getByText('Privacy Policy');
     expect(title).toBeInTheDocument();
     expect(title.tagName).toBe('H1');
   });
 
-  it('should display last updated date', () => {
-    render(<PrivacyPolicyPage />);
+  it('should display last updated date', async () => {
+    renderWithProviders(<PrivacyPolicyPage />);
     
     expect(screen.getByText(/Last updated/)).toBeInTheDocument();
     expect(screen.getByText(/2025-06-30/)).toBeInTheDocument();
   });
 
-  it('should render all major sections', () => {
-    render(<PrivacyPolicyPage />);
+  it('should render all major sections', async () => {
+    renderWithProviders(<PrivacyPolicyPage />);
     
     // Check for section headings
     expect(screen.getByText('1. Information We Collect')).toBeInTheDocument();
@@ -52,16 +52,16 @@ describe('PrivacyPolicyPage', () => {
     expect(screen.getByText('10. Contact Us')).toBeInTheDocument();
   });
 
-  it('should render subsections for information collection', () => {
-    render(<PrivacyPolicyPage />);
+  it('should render subsections for information collection', async () => {
+    renderWithProviders(<PrivacyPolicyPage />);
     
     expect(screen.getByText('Personal Information')).toBeInTheDocument();
     expect(screen.getByText('Usage Data')).toBeInTheDocument();
     expect(screen.getByText('Technical Data')).toBeInTheDocument();
   });
 
-  it('should list types of personal information collected', () => {
-    render(<PrivacyPolicyPage />);
+  it('should list types of personal information collected', async () => {
+    renderWithProviders(<PrivacyPolicyPage />);
     
     expect(screen.getByText('Email address')).toBeInTheDocument();
     expect(screen.getByText('Name (optional)')).toBeInTheDocument();
@@ -69,8 +69,8 @@ describe('PrivacyPolicyPage', () => {
     expect(screen.getByText('Language preference')).toBeInTheDocument();
   });
 
-  it('should list usage data collected', () => {
-    render(<PrivacyPolicyPage />);
+  it('should list usage data collected', async () => {
+    renderWithProviders(<PrivacyPolicyPage />);
     
     expect(screen.getByText('Learning progress and assessment results')).toBeInTheDocument();
     expect(screen.getByText('Interactions with AI tutors')).toBeInTheDocument();
@@ -78,8 +78,8 @@ describe('PrivacyPolicyPage', () => {
     expect(screen.getByText('Platform usage analytics')).toBeInTheDocument();
   });
 
-  it('should list user rights', () => {
-    render(<PrivacyPolicyPage />);
+  it('should list user rights', async () => {
+    renderWithProviders(<PrivacyPolicyPage />);
     
     expect(screen.getByText('Access your personal information')).toBeInTheDocument();
     expect(screen.getByText('Correct inaccurate data')).toBeInTheDocument();
@@ -87,50 +87,50 @@ describe('PrivacyPolicyPage', () => {
     expect(screen.getByText('Export your data in a portable format')).toBeInTheDocument();
   });
 
-  it('should include contact information', () => {
-    render(<PrivacyPolicyPage />);
+  it('should include contact information', async () => {
+    renderWithProviders(<PrivacyPolicyPage />);
     
     expect(screen.getByText('AI Square')).toBeInTheDocument();
     expect(screen.getByText('support@junyiacademy.org')).toBeInTheDocument();
   });
 
-  it('should have a mailto link for contact email', () => {
-    render(<PrivacyPolicyPage />);
+  it('should have a mailto link for contact email', async () => {
+    renderWithProviders(<PrivacyPolicyPage />);
     
     const emailLink = screen.getByRole('link', { name: 'support@junyiacademy.org' });
     expect(emailLink).toHaveAttribute('href', 'mailto:support@junyiacademy.org');
   });
 
-  it('should have a back to home link', () => {
-    render(<PrivacyPolicyPage />);
+  it('should have a back to home link', async () => {
+    renderWithProviders(<PrivacyPolicyPage />);
     
     const backLink = screen.getByText('Back to Home');
     expect(backLink.closest('a')).toHaveAttribute('href', '/');
   });
 
-  it('should have proper styling classes', () => {
-    render(<PrivacyPolicyPage />);
+  it('should have proper styling classes', async () => {
+    renderWithProviders(<PrivacyPolicyPage />);
     
     const container = screen.getByText('Privacy Policy').closest('div');
     expect(container?.parentElement).toHaveClass('bg-white', 'dark:bg-gray-800', 'rounded-xl', 'shadow-lg');
   });
 
-  it('should render the introduction text', () => {
-    render(<PrivacyPolicyPage />);
+  it('should render the introduction text', async () => {
+    renderWithProviders(<PrivacyPolicyPage />);
     
     expect(screen.getByText(/AI Square.*is committed to protecting your privacy/)).toBeInTheDocument();
   });
 
-  it('should describe data storage and security', () => {
-    render(<PrivacyPolicyPage />);
+  it('should describe data storage and security', async () => {
+    renderWithProviders(<PrivacyPolicyPage />);
     
     expect(screen.getByText(/Your data is stored securely on Google Cloud Platform servers/)).toBeInTheDocument();
     expect(screen.getByText('Data encryption in transit and at rest')).toBeInTheDocument();
     expect(screen.getByText('Restricted access controls')).toBeInTheDocument();
   });
 
-  it('should mention children privacy policy', () => {
-    render(<PrivacyPolicyPage />);
+  it('should mention children privacy policy', async () => {
+    renderWithProviders(<PrivacyPolicyPage />);
     
     expect(screen.getByText(/Our platform is designed for educational use by students of all ages/)).toBeInTheDocument();
   });

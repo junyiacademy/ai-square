@@ -1,3 +1,4 @@
+import { mockRepositoryFactory } from '@/test-utils/mocks/repositories';
 /**
  * Unit tests for profile API route
  * Tests user profile retrieval and update functionality

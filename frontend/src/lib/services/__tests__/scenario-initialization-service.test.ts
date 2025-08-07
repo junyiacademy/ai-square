@@ -1,3 +1,4 @@
+import { mockRepositoryFactory } from '@/test-utils/mocks/repositories';
 /**
  * Unit tests for ScenarioInitializationService
  * Tests scenario loading and initialization logic

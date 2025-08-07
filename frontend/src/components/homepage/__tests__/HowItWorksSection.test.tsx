@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { renderWithProviders, screen, waitFor } from '@/test-utils/helpers/render';
 import '@testing-library/jest-dom';
 import HowItWorksSection from '../HowItWorksSection';
 
@@ -29,28 +29,28 @@ describe('HowItWorksSection', () => {
     jest.clearAllMocks();
   });
 
-  it('renders without crashing', () => {
-    render(<HowItWorksSection />);
+  it('renders without crashing', async () => {
+    renderWithProviders(<HowItWorksSection />);
     expect(screen.getByText('How AI Square Works')).toBeInTheDocument();
   });
 
-  it('displays the section title', () => {
-    render(<HowItWorksSection />);
+  it('displays the section title', async () => {
+    renderWithProviders(<HowItWorksSection />);
     const title = screen.getByText('How AI Square Works');
     expect(title).toBeInTheDocument();
     expect(title.tagName).toBe('H2');
     expect(title).toHaveClass('text-3xl', 'md:text-4xl', 'font-bold', 'text-gray-900');
   });
 
-  it('displays the section subtitle', () => {
-    render(<HowItWorksSection />);
+  it('displays the section subtitle', async () => {
+    renderWithProviders(<HowItWorksSection />);
     const subtitle = screen.getByText('Your journey to AI literacy in four simple steps');
     expect(subtitle).toBeInTheDocument();
     expect(subtitle).toHaveClass('text-xl', 'text-gray-600');
   });
 
-  it('renders all four steps', () => {
-    render(<HowItWorksSection />);
+  it('renders all four steps', async () => {
+    renderWithProviders(<HowItWorksSection />);
     
     expect(screen.getByText('Take Assessment')).toBeInTheDocument();
     expect(screen.getByText('Get Personalized Path')).toBeInTheDocument();
@@ -58,8 +58,8 @@ describe('HowItWorksSection', () => {
     expect(screen.getByText('Track Progress')).toBeInTheDocument();
   });
 
-  it('renders step descriptions', () => {
-    render(<HowItWorksSection />);
+  it('renders step descriptions', async () => {
+    renderWithProviders(<HowItWorksSection />);
     
     expect(screen.getByText('Complete our AI literacy assessment to identify your current level')).toBeInTheDocument();
     expect(screen.getByText('Receive a customized learning pathway based on your needs')).toBeInTheDocument();
@@ -67,8 +67,8 @@ describe('HowItWorksSection', () => {
     expect(screen.getByText('Monitor your growth and earn certifications')).toBeInTheDocument();
   });
 
-  it('displays step numbers', () => {
-    render(<HowItWorksSection />);
+  it('displays step numbers', async () => {
+    renderWithProviders(<HowItWorksSection />);
     
     expect(screen.getByText('1')).toBeInTheDocument();
     expect(screen.getByText('2')).toBeInTheDocument();
@@ -76,8 +76,8 @@ describe('HowItWorksSection', () => {
     expect(screen.getByText('4')).toBeInTheDocument();
   });
 
-  it('renders SVG icons for each step', () => {
-    const { container } = render(<HowItWorksSection />);
+  it('renders SVG icons for each step', async () => {
+    const { container } = renderWithProviders(<HowItWorksSection />);
     const svgs = container.querySelectorAll('svg');
     
     // Should have 4 SVG icons
@@ -89,8 +89,8 @@ describe('HowItWorksSection', () => {
     });
   });
 
-  it('applies correct color classes to step icons', () => {
-    const { container } = render(<HowItWorksSection />);
+  it('applies correct color classes to step icons', async () => {
+    const { container } = renderWithProviders(<HowItWorksSection />);
     
     const iconContainers = container.querySelectorAll('.inline-flex.rounded-full');
     
@@ -100,8 +100,8 @@ describe('HowItWorksSection', () => {
     expect(iconContainers[3]).toHaveClass('bg-orange-100', 'text-orange-600');
   });
 
-  it('applies hover effects to step cards', () => {
-    const { container } = render(<HowItWorksSection />);
+  it('applies hover effects to step cards', async () => {
+    const { container } = renderWithProviders(<HowItWorksSection />);
     const cards = container.querySelectorAll('.bg-white.rounded-2xl');
     
     cards.forEach(card => {
@@ -109,38 +109,38 @@ describe('HowItWorksSection', () => {
     });
   });
 
-  it('renders connection line for desktop', () => {
-    const { container } = render(<HowItWorksSection />);
+  it('renders connection line for desktop', async () => {
+    const { container } = renderWithProviders(<HowItWorksSection />);
     const connectionLine = container.querySelector('.hidden.lg\\:block.absolute');
     
     expect(connectionLine).toBeInTheDocument();
     expect(connectionLine).toHaveClass('h-0.5', 'bg-gray-300');
   });
 
-  it('uses responsive grid layout', () => {
-    const { container } = render(<HowItWorksSection />);
+  it('uses responsive grid layout', async () => {
+    const { container } = renderWithProviders(<HowItWorksSection />);
     const grid = container.querySelector('.grid');
     
     expect(grid).toHaveClass('grid-cols-1', 'md:grid-cols-2', 'lg:grid-cols-4');
   });
 
-  it('applies proper section styling', () => {
-    const { container } = render(<HowItWorksSection />);
+  it('applies proper section styling', async () => {
+    const { container } = renderWithProviders(<HowItWorksSection />);
     const section = container.querySelector('section');
     
     expect(section).toHaveClass('py-20', 'bg-gray-50');
   });
 
-  it('centers text content', () => {
-    const { container } = render(<HowItWorksSection />);
+  it('centers text content', async () => {
+    const { container } = renderWithProviders(<HowItWorksSection />);
     const textCenterDiv = container.querySelector('.text-center');
     
     expect(textCenterDiv).toBeInTheDocument();
     expect(textCenterDiv).toHaveClass('mb-16');
   });
 
-  it('positions step numbers correctly', () => {
-    const { container } = render(<HowItWorksSection />);
+  it('positions step numbers correctly', async () => {
+    const { container } = renderWithProviders(<HowItWorksSection />);
     const stepNumbers = container.querySelectorAll('.absolute.-top-4');
     
     expect(stepNumbers).toHaveLength(4);
@@ -151,8 +151,8 @@ describe('HowItWorksSection', () => {
     });
   });
 
-  it('applies shadow to step cards', () => {
-    const { container } = render(<HowItWorksSection />);
+  it('applies shadow to step cards', async () => {
+    const { container } = renderWithProviders(<HowItWorksSection />);
     const cards = container.querySelectorAll('.bg-white.rounded-2xl');
     
     cards.forEach(card => {
@@ -160,8 +160,8 @@ describe('HowItWorksSection', () => {
     });
   });
 
-  it('uses proper spacing and padding', () => {
-    const { container } = render(<HowItWorksSection />);
+  it('uses proper spacing and padding', async () => {
+    const { container } = renderWithProviders(<HowItWorksSection />);
     
     const maxWidthContainer = container.querySelector('.max-w-7xl');
     expect(maxWidthContainer).toHaveClass('mx-auto', 'px-4', 'sm:px-6', 'lg:px-8');
@@ -172,15 +172,15 @@ describe('HowItWorksSection', () => {
     });
   });
 
-  it('applies z-index to step numbers', () => {
-    const { container } = render(<HowItWorksSection />);
+  it('applies z-index to step numbers', async () => {
+    const { container } = renderWithProviders(<HowItWorksSection />);
     const stepNumbers = container.querySelectorAll('.z-10');
     
     expect(stepNumbers).toHaveLength(4);
   });
 
-  it('uses gap spacing in grid', () => {
-    const { container } = render(<HowItWorksSection />);
+  it('uses gap spacing in grid', async () => {
+    const { container } = renderWithProviders(<HowItWorksSection />);
     const grid = container.querySelector('.grid');
     
     expect(grid).toHaveClass('gap-8');

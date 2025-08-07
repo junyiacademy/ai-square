@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, screen } from '@testing-library/react'
+import { renderWithProviders, screen, waitFor } from '@/test-utils/helpers/render'
 import { Footer } from '../Footer'
 
 // Mock next/link
@@ -29,8 +29,8 @@ jest.mock('react-i18next', () => ({
 }))
 
 describe('Footer', () => {
-  it('renders footer with all sections', () => {
-    render(<Footer />)
+  it('renders footer with all sections', async () => {
+    renderWithProviders(<Footer />)
     
     // Check main sections based on actual Footer component
     expect(screen.getByText('About AI Square')).toBeInTheDocument()
@@ -46,8 +46,8 @@ describe('Footer', () => {
     expect(screen.getByText('20+ Competencies')).toBeInTheDocument()
   })
 
-  it('renders resource links', () => {
-    render(<Footer />)
+  it('renders resource links', async () => {
+    renderWithProviders(<Footer />)
     
     const journeyLink = screen.getByRole('link', { name: 'User Journey' })
     const roadmapLink = screen.getByRole('link', { name: 'Product Roadmap' })
@@ -62,8 +62,8 @@ describe('Footer', () => {
     expect(termsLink).toHaveAttribute('href', '/terms')
   })
 
-  it('renders copyright text', () => {
-    render(<Footer />)
+  it('renders copyright text', async () => {
+    renderWithProviders(<Footer />)
     const currentYear = new Date().getFullYear()
     
     // The copyright text is rendered together in a single element
@@ -71,15 +71,15 @@ describe('Footer', () => {
     expect(screen.getByText(copyrightText)).toBeInTheDocument()
   })
 
-  it('renders contact email', () => {
-    render(<Footer />)
+  it('renders contact email', async () => {
+    renderWithProviders(<Footer />)
     
     const emailLink = screen.getByRole('link', { name: 'support@junyiacademy.org' })
     expect(emailLink).toHaveAttribute('href', 'mailto:support@junyiacademy.org')
   })
 
-  it('renders footer tagline', () => {
-    render(<Footer />)
+  it('renders footer tagline', async () => {
+    renderWithProviders(<Footer />)
     
     expect(screen.getByText('Made with ❤️ for AI literacy education')).toBeInTheDocument()
   })

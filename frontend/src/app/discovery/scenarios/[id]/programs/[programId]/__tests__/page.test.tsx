@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { renderWithProviders, screen, waitFor } from '@/test-utils/helpers/render';
 import userEvent from '@testing-library/user-event';
 import { useRouter, useParams } from 'next/navigation';
 import ProgramDetailPage from '../page';
@@ -125,7 +125,7 @@ describe('ProgramDetailPage', () => {
 
   describe('Rendering', () => {
     it('should render program details correctly', async () => {
-      render(<ProgramDetailPage />);
+      renderWithProviders(<ProgramDetailPage />);
 
       await waitFor(() => {
         expect(screen.getByText('discovery:learningJourney')).toBeInTheDocument();
@@ -137,19 +137,19 @@ describe('ProgramDetailPage', () => {
       expect(screen.getByText('discovery:completedTaskCount')).toBeInTheDocument();
     });
 
-    it('should show loading state initially', () => {
-      render(<ProgramDetailPage />);
+    it('should show loading state initially', async () => {
+      renderWithProviders(<ProgramDetailPage />);
       expect(screen.getByText('discovery:loading')).toBeInTheDocument();
     });
 
-    it('should redirect to login when not authenticated', () => {
+    it('should redirect to login when not authenticated', async () => {
       mockUseAuth.mockReturnValue({
         user: null,
         isLoggedIn: false,
         isLoading: false
       } as any);
 
-      render(<ProgramDetailPage />);
+      renderWithProviders(<ProgramDetailPage />);
 
       expect(mockRouter.push).toHaveBeenCalledWith('/login?redirect=/discovery/scenarios');
     });
@@ -160,7 +160,7 @@ describe('ProgramDetailPage', () => {
         status: 404
       } as Response);
 
-      render(<ProgramDetailPage />);
+      renderWithProviders(<ProgramDetailPage />);
 
       await waitFor(() => {
         expect(screen.getByText('找不到此學習歷程')).toBeInTheDocument();
@@ -170,7 +170,7 @@ describe('ProgramDetailPage', () => {
 
   describe('Career Information', () => {
     it('should display correct career information for content creator', async () => {
-      render(<ProgramDetailPage />);
+      renderWithProviders(<ProgramDetailPage />);
 
       await waitFor(() => {
         expect(screen.getByText('數位魔法師 - 內容創作者')).toBeInTheDocument();
@@ -193,7 +193,7 @@ describe('ProgramDetailPage', () => {
         json: async () => youtuberProgramData
       } as Response);
 
-      render(<ProgramDetailPage />);
+      renderWithProviders(<ProgramDetailPage />);
 
       await waitFor(() => {
         expect(screen.getByText('星際廣播員 - YouTuber')).toBeInTheDocument();
@@ -214,7 +214,7 @@ describe('ProgramDetailPage', () => {
         json: async () => unknownCareerData
       } as Response);
 
-      render(<ProgramDetailPage />);
+      renderWithProviders(<ProgramDetailPage />);
 
       await waitFor(() => {
         expect(screen.getByText('Content Creator Discovery')).toBeInTheDocument();
@@ -224,7 +224,7 @@ describe('ProgramDetailPage', () => {
 
   describe('Task List', () => {
     it('should render all tasks with correct status', async () => {
-      render(<ProgramDetailPage />);
+      renderWithProviders(<ProgramDetailPage />);
 
       await waitFor(() => {
         expect(screen.getByText('discovery:task 1: understand_algorithms')).toBeInTheDocument();
@@ -240,7 +240,7 @@ describe('ProgramDetailPage', () => {
     });
 
     it('should show correct buttons for different task statuses', async () => {
-      render(<ProgramDetailPage />);
+      renderWithProviders(<ProgramDetailPage />);
 
       await waitFor(() => {
         expect(screen.getByText('discovery:view')).toBeInTheDocument(); // Completed task
@@ -251,7 +251,7 @@ describe('ProgramDetailPage', () => {
     });
 
     it('should show completion date for completed tasks', async () => {
-      render(<ProgramDetailPage />);
+      renderWithProviders(<ProgramDetailPage />);
 
       await waitFor(() => {
         expect(screen.getByText(/完成於/)).toBeInTheDocument();
@@ -275,7 +275,7 @@ describe('ProgramDetailPage', () => {
         json: async () => completedTaskData
       } as Response);
 
-      render(<ProgramDetailPage />);
+      renderWithProviders(<ProgramDetailPage />);
 
       await waitFor(() => {
         expect(screen.getByText(/6/)).toBeInTheDocument();
@@ -289,7 +289,7 @@ describe('ProgramDetailPage', () => {
     it('should navigate to active task when clicked', async () => {
       const user = userEvent.setup();
       
-      render(<ProgramDetailPage />);
+      renderWithProviders(<ProgramDetailPage />);
 
       await waitFor(() => {
         expect(screen.getByText('任務 2: learn_content_basics')).toBeInTheDocument();
@@ -309,7 +309,7 @@ describe('ProgramDetailPage', () => {
     it('should navigate to completed task for viewing', async () => {
       const user = userEvent.setup();
       
-      render(<ProgramDetailPage />);
+      renderWithProviders(<ProgramDetailPage />);
 
       await waitFor(() => {
         expect(screen.getByText('任務 1: understand_algorithms')).toBeInTheDocument();
@@ -329,7 +329,7 @@ describe('ProgramDetailPage', () => {
     it('should not allow navigation to locked tasks', async () => {
       const user = userEvent.setup();
       
-      render(<ProgramDetailPage />);
+      renderWithProviders(<ProgramDetailPage />);
 
       await waitFor(() => {
         expect(screen.getByText('任務 3: advanced_techniques')).toBeInTheDocument();
@@ -349,7 +349,7 @@ describe('ProgramDetailPage', () => {
 
   describe('Progress Tracking', () => {
     it('should display correct progress percentage', async () => {
-      render(<ProgramDetailPage />);
+      renderWithProviders(<ProgramDetailPage />);
 
       await waitFor(() => {
         expect(screen.getByText('33%')).toBeInTheDocument(); // 1/3 = 33%
@@ -370,7 +370,7 @@ describe('ProgramDetailPage', () => {
         json: async () => noProgramData
       } as Response);
 
-      render(<ProgramDetailPage />);
+      renderWithProviders(<ProgramDetailPage />);
 
       await waitFor(() => {
         expect(screen.getByText('0%')).toBeInTheDocument();
@@ -397,7 +397,7 @@ describe('ProgramDetailPage', () => {
         json: async () => completedProgramData
       } as Response);
 
-      render(<ProgramDetailPage />);
+      renderWithProviders(<ProgramDetailPage />);
 
       await waitFor(() => {
         expect(screen.getByText('100%')).toBeInTheDocument();
@@ -426,7 +426,7 @@ describe('ProgramDetailPage', () => {
         json: async () => completedProgramData
       } as Response);
 
-      render(<ProgramDetailPage />);
+      renderWithProviders(<ProgramDetailPage />);
 
       await waitFor(() => {
         expect(screen.getByText('恭喜完成所有任務！')).toBeInTheDocument();
@@ -454,7 +454,7 @@ describe('ProgramDetailPage', () => {
         json: async () => completedProgramData
       } as Response);
 
-      render(<ProgramDetailPage />);
+      renderWithProviders(<ProgramDetailPage />);
 
       await waitFor(() => {
         expect(screen.getByText('開始新的歷程')).toBeInTheDocument();
@@ -471,7 +471,7 @@ describe('ProgramDetailPage', () => {
     it('should have back button to scenario details', async () => {
       const user = userEvent.setup();
       
-      render(<ProgramDetailPage />);
+      renderWithProviders(<ProgramDetailPage />);
 
       await waitFor(() => {
         expect(screen.getByText('返回職業詳情')).toBeInTheDocument();
@@ -486,7 +486,7 @@ describe('ProgramDetailPage', () => {
 
   describe('Status Display', () => {
     it('should show correct status for active program', async () => {
-      render(<ProgramDetailPage />);
+      renderWithProviders(<ProgramDetailPage />);
 
       await waitFor(() => {
         expect(screen.getByText('進行中')).toBeInTheDocument();
@@ -504,7 +504,7 @@ describe('ProgramDetailPage', () => {
         json: async () => completedProgramData
       } as Response);
 
-      render(<ProgramDetailPage />);
+      renderWithProviders(<ProgramDetailPage />);
 
       await waitFor(() => {
         expect(screen.getByText('已完成')).toBeInTheDocument();

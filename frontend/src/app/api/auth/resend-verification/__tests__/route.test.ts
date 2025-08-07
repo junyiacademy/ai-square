@@ -1,3 +1,4 @@
+import { mockRepositoryFactory } from '@/test-utils/mocks/repositories';
 /**
  * Unit tests for resend-verification API route
  * Tests email verification resending functionality

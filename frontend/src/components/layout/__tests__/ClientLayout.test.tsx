@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { renderWithProviders, screen, waitFor } from '@/test-utils/helpers/render';
 import { ClientLayout } from '../ClientLayout';
 
 // Mock the Header component
@@ -27,8 +27,8 @@ jest.mock('@/components/providers/I18nProvider', () => ({
 }));
 
 describe('ClientLayout', () => {
-  it('renders children within the layout structure', () => {
-    render(
+  it('renders children within the layout structure', async () => {
+    renderWithProviders(
       <ClientLayout>
         <div data-testid="test-content">Test Content</div>
       </ClientLayout>
@@ -38,8 +38,8 @@ describe('ClientLayout', () => {
     expect(screen.getByText('Test Content')).toBeInTheDocument();
   });
 
-  it('renders Header component', () => {
-    render(
+  it('renders Header component', async () => {
+    renderWithProviders(
       <ClientLayout>
         <div>Content</div>
       </ClientLayout>
@@ -49,8 +49,8 @@ describe('ClientLayout', () => {
     expect(screen.getByText('Header Content')).toBeInTheDocument();
   });
 
-  it('renders Footer component', () => {
-    render(
+  it('renders Footer component', async () => {
+    renderWithProviders(
       <ClientLayout>
         <div>Content</div>
       </ClientLayout>
@@ -60,8 +60,8 @@ describe('ClientLayout', () => {
     expect(screen.getByText('Footer Content')).toBeInTheDocument();
   });
 
-  it('wraps content with I18nProvider', () => {
-    render(
+  it('wraps content with I18nProvider', async () => {
+    renderWithProviders(
       <ClientLayout>
         <div>Content</div>
       </ClientLayout>
@@ -70,8 +70,8 @@ describe('ClientLayout', () => {
     expect(screen.getByTestId('i18n-provider')).toBeInTheDocument();
   });
 
-  it('wraps content with ThemeProvider', () => {
-    render(
+  it('wraps content with ThemeProvider', async () => {
+    renderWithProviders(
       <ClientLayout>
         <div>Content</div>
       </ClientLayout>
@@ -80,8 +80,8 @@ describe('ClientLayout', () => {
     expect(screen.getByTestId('theme-provider')).toBeInTheDocument();
   });
 
-  it('has correct layout structure with proper CSS classes', () => {
-    render(
+  it('has correct layout structure with proper CSS classes', async () => {
+    renderWithProviders(
       <ClientLayout>
         <div data-testid="test-content">Content</div>
       </ClientLayout>
@@ -102,8 +102,8 @@ describe('ClientLayout', () => {
     );
   });
 
-  it('renders multiple children correctly', () => {
-    render(
+  it('renders multiple children correctly', async () => {
+    renderWithProviders(
       <ClientLayout>
         <div data-testid="child-1">Child 1</div>
         <div data-testid="child-2">Child 2</div>
@@ -119,8 +119,8 @@ describe('ClientLayout', () => {
     expect(screen.getByText('Child 3')).toBeInTheDocument();
   });
 
-  it('maintains correct order of layout elements', () => {
-    render(
+  it('maintains correct order of layout elements', async () => {
+    renderWithProviders(
       <ClientLayout>
         <div data-testid="content">Main Content</div>
       </ClientLayout>
@@ -138,7 +138,7 @@ describe('ClientLayout', () => {
     }
   });
 
-  it('preserves children props and attributes', () => {
+  it('preserves children props and attributes', async () => {
     const CustomComponent = ({ 
       className, 
       'data-value': dataValue 
@@ -151,7 +151,7 @@ describe('ClientLayout', () => {
       </div>
     );
 
-    render(
+    renderWithProviders(
       <ClientLayout>
         <CustomComponent className="custom-class" data-value="test-value" />
       </ClientLayout>
@@ -163,8 +163,8 @@ describe('ClientLayout', () => {
     expect(customElement).toHaveTextContent('Custom Component');
   });
 
-  it('handles empty children gracefully', () => {
-    render(
+  it('handles empty children gracefully', async () => {
+    renderWithProviders(
       <ClientLayout>
         {null}
         {undefined}
@@ -178,8 +178,8 @@ describe('ClientLayout', () => {
     expect(screen.getByRole('main')).toBeInTheDocument();
   });
 
-  it('handles React fragments as children', () => {
-    render(
+  it('handles React fragments as children', async () => {
+    renderWithProviders(
       <ClientLayout>
         <React.Fragment>
           <div data-testid="fragment-child-1">Fragment Child 1</div>
@@ -192,8 +192,8 @@ describe('ClientLayout', () => {
     expect(screen.getByTestId('fragment-child-2')).toBeInTheDocument();
   });
 
-  it('renders with correct semantic HTML structure', () => {
-    render(
+  it('renders with correct semantic HTML structure', async () => {
+    renderWithProviders(
       <ClientLayout>
         <div>Content</div>
       </ClientLayout>

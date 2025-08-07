@@ -1,3 +1,4 @@
+import { mockRepositoryFactory } from '@/test-utils/mocks/repositories';
 /**
  * Discovery Scenario Service Tests
  * 提升覆蓋率從 0% 到 80%+

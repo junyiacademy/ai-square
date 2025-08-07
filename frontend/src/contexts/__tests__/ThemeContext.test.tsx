@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, screen, act } from '@testing-library/react'
+import { renderWithProviders, screen, waitFor, act } from '@/test-utils/helpers/render'
 import userEvent from '@testing-library/user-event'
 
 // Mock localStorage before importing ThemeContext
@@ -47,8 +47,8 @@ describe('ThemeContext', () => {
     localStorageMock.setItem.mockClear()
   })
 
-  it('should provide theme context to children', () => {
-    render(
+  it('should provide theme context to children', async () => {
+    renderWithProviders(
       <ThemeProvider>
         <TestComponent />
       </ThemeProvider>
@@ -57,10 +57,10 @@ describe('ThemeContext', () => {
     expect(screen.getByTestId('theme')).toBeInTheDocument()
   })
 
-  it('should use system preference when no saved preference exists', () => {
+  it('should use system preference when no saved preference exists', async () => {
     localStorageMock.getItem.mockReturnValue(null)
 
-    render(
+    renderWithProviders(
       <ThemeProvider>
         <TestComponent />
       </ThemeProvider>
@@ -69,10 +69,10 @@ describe('ThemeContext', () => {
     expect(screen.getByTestId('theme')).toHaveTextContent('dark')
   })
 
-  it('should use saved theme preference from localStorage', () => {
+  it('should use saved theme preference from localStorage', async () => {
     localStorageMock.getItem.mockReturnValue('light')
 
-    render(
+    renderWithProviders(
       <ThemeProvider>
         <TestComponent />
       </ThemeProvider>
@@ -85,7 +85,7 @@ describe('ThemeContext', () => {
     const user = userEvent.setup()
     localStorageMock.getItem.mockReturnValue('light')
 
-    render(
+    renderWithProviders(
       <ThemeProvider>
         <TestComponent />
       </ThemeProvider>
@@ -105,7 +105,7 @@ describe('ThemeContext', () => {
     const user = userEvent.setup()
     localStorageMock.getItem.mockReturnValue('dark')
 
-    render(
+    renderWithProviders(
       <ThemeProvider>
         <TestComponent />
       </ThemeProvider>
@@ -121,10 +121,10 @@ describe('ThemeContext', () => {
     expect(localStorageMock.setItem).toHaveBeenCalledWith('ai-square-theme', 'light')
   })
 
-  it('should apply theme class to document element', () => {
+  it('should apply theme class to document element', async () => {
     localStorageMock.getItem.mockReturnValue('dark')
 
-    render(
+    renderWithProviders(
       <ThemeProvider>
         <TestComponent />
       </ThemeProvider>
@@ -133,10 +133,10 @@ describe('ThemeContext', () => {
     expect(document.documentElement.classList.contains('dark')).toBe(true)
   })
 
-  it('should remove dark class when theme is light', () => {
+  it('should remove dark class when theme is light', async () => {
     localStorageMock.getItem.mockReturnValue('light')
 
-    render(
+    renderWithProviders(
       <ThemeProvider>
         <TestComponent />
       </ThemeProvider>
@@ -145,11 +145,11 @@ describe('ThemeContext', () => {
     expect(document.documentElement.classList.contains('dark')).toBe(false)
   })
 
-  it('should throw error when useTheme is used outside of ThemeProvider', () => {
+  it('should throw error when useTheme is used outside of ThemeProvider', async () => {
     const consoleError = jest.spyOn(console, 'error').mockImplementation()
     
     expect(() => {
-      render(<TestComponent />)
+      renderWithProviders(<TestComponent />)
     }).toThrow('useTheme must be used within a ThemeProvider')
 
     consoleError.mockRestore()

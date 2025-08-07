@@ -1,10 +1,11 @@
+import { mockRepositoryFactory } from '@/test-utils/mocks/repositories';
 /**
  * This test file has been temporarily disabled due to GCS v2 removal.
  * TODO: Update to use PostgreSQL repositories
  */
 
 describe('PBL History API Route', () => {
-  it('placeholder test - TODO: implement with PostgreSQL', () => {
+  it('placeholder test - TODO: implement with PostgreSQL', async () => {
     expect(true).toBe(true);
   });
 });

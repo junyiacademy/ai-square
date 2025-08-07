@@ -1,3 +1,9 @@
+
+import { createD3Mock } from '@/test-utils/mocks/d3';
+
+jest.mock('d3', () => createD3Mock());
+
+import { mockRepositoryFactory } from '@/test-utils/mocks/repositories';
 /**
  * Tests for Discovery start route with service layer integration
  * Following TDD approach

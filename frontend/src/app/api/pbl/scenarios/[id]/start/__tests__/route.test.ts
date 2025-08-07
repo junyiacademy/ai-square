@@ -1,3 +1,46 @@
+
+jest.mock('d3', () => ({
+  select: jest.fn(() => ({
+    append: jest.fn().mockReturnThis(),
+    attr: jest.fn().mockReturnThis(),
+    style: jest.fn().mockReturnThis(),
+    text: jest.fn().mockReturnThis(),
+    data: jest.fn().mockReturnThis(),
+    enter: jest.fn().mockReturnThis(),
+    exit: jest.fn().mockReturnThis(),
+    remove: jest.fn().mockReturnThis(),
+    selectAll: jest.fn().mockReturnThis(),
+  })),
+  scaleLinear: jest.fn(() => {
+    const scale = (value: unknown) => value;
+    scale.domain = jest.fn().mockReturnThis();
+    scale.range = jest.fn().mockReturnThis();
+    return scale;
+  }),
+  scaleOrdinal: jest.fn(() => {
+    const scale = (value: unknown) => value;
+    scale.domain = jest.fn().mockReturnThis();
+    scale.range = jest.fn().mockReturnThis();
+    return scale;
+  }),
+  arc: jest.fn(() => {
+    const arcFn = jest.fn();
+    Object.assign(arcFn, {
+      innerRadius: jest.fn().mockReturnThis(),
+      outerRadius: jest.fn().mockReturnThis()
+    });
+    return arcFn;
+  }),
+  pie: jest.fn(() => {
+    const pieFn = jest.fn((data: unknown[]) => data.map((d: unknown, i: number) => ({ data: d, index: i })));
+    Object.assign(pieFn, {
+      value: jest.fn().mockReturnThis()
+    });
+    return pieFn;
+  }),
+}));
+
+import { mockRepositoryFactory } from '@/test-utils/mocks/repositories';
 /**
  * Tests for PBL start route with service layer integration
  * Following TDD approach - write tests first

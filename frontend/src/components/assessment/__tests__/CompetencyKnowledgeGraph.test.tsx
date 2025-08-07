@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { renderWithProviders, screen, waitFor } from '@/test-utils/helpers/render';
 import CompetencyKnowledgeGraph from '../CompetencyKnowledgeGraph';
 import { AssessmentResult, AssessmentQuestion, UserAnswer } from '@/types/assessment';
 
@@ -140,22 +140,22 @@ describe('CompetencyKnowledgeGraph', () => {
     }));
   });
 
-  it('renders without crashing', () => {
-    const { container } = render(
+  it('renders without crashing', async () => {
+    const { container } = renderWithProviders(
       <CompetencyKnowledgeGraph result={mockResult} />
     );
     expect(container.querySelector('svg')).toBeTruthy();
   });
 
-  it('displays graph title and description', () => {
-    render(<CompetencyKnowledgeGraph result={mockResult} />);
+  it('displays graph title and description', async () => {
+    renderWithProviders(<CompetencyKnowledgeGraph result={mockResult} />);
     
     expect(screen.getByText('results.knowledgeGraph.title')).toBeInTheDocument();
     expect(screen.getByText('results.knowledgeGraph.description')).toBeInTheDocument();
   });
 
-  it('renders with full data props', () => {
-    render(
+  it('renders with full data props', async () => {
+    renderWithProviders(
       <CompetencyKnowledgeGraph
         result={mockResult}
         questions={mockQuestions}
@@ -168,8 +168,8 @@ describe('CompetencyKnowledgeGraph', () => {
     expect(screen.getByText('results.knowledgeGraph.title')).toBeInTheDocument();
   });
 
-  it('displays KSA legend', () => {
-    render(
+  it('displays KSA legend', async () => {
+    renderWithProviders(
       <CompetencyKnowledgeGraph
         result={mockResult}
         questions={mockQuestions}
@@ -183,8 +183,8 @@ describe('CompetencyKnowledgeGraph', () => {
     expect(screen.getByText('A (態度)')).toBeInTheDocument();
   });
 
-  it('displays loading state initially', () => {
-    const { container } = render(
+  it('displays loading state initially', async () => {
+    const { container } = renderWithProviders(
       <CompetencyKnowledgeGraph result={mockResult} />
     );
     
@@ -193,7 +193,7 @@ describe('CompetencyKnowledgeGraph', () => {
   });
 
   it('handles node click events', async () => {
-    render(
+    renderWithProviders(
       <CompetencyKnowledgeGraph
         result={mockResult}
         questions={mockQuestions}
@@ -209,8 +209,8 @@ describe('CompetencyKnowledgeGraph', () => {
     });
   });
 
-  it('displays performance indicators', () => {
-    render(
+  it('displays performance indicators', async () => {
+    renderWithProviders(
       <CompetencyKnowledgeGraph
         result={mockResult}
         questions={mockQuestions}
@@ -223,8 +223,8 @@ describe('CompetencyKnowledgeGraph', () => {
     expect(screen.getByText('完全錯誤 / 部分正確 / 全對')).toBeInTheDocument();
   });
 
-  it('displays helpful hints', () => {
-    render(
+  it('displays helpful hints', async () => {
+    renderWithProviders(
       <CompetencyKnowledgeGraph
         result={mockResult}
         questions={mockQuestions}
@@ -237,29 +237,29 @@ describe('CompetencyKnowledgeGraph', () => {
     expect(screen.getByText('提示：點擊 KSA 代碼節點可查看相關題目')).toBeInTheDocument();
   });
 
-  it('handles D3 zoom functionality', () => {
+  it('handles D3 zoom functionality', async () => {
     const d3Mock = require('d3');
     const mockZoomFn = jest.fn();
     
-    render(<CompetencyKnowledgeGraph result={mockResult} />);
+    renderWithProviders(<CompetencyKnowledgeGraph result={mockResult} />);
     
     // Verify D3 zoom is initialized
     expect(d3Mock.zoom).toHaveBeenCalled();
   });
 
-  it('handles empty KSA analysis gracefully', () => {
+  it('handles empty KSA analysis gracefully', async () => {
     const resultWithoutKSA = {
       ...mockResult,
       ksaAnalysis: undefined,
     };
     
-    render(<CompetencyKnowledgeGraph result={resultWithoutKSA} />);
+    renderWithProviders(<CompetencyKnowledgeGraph result={resultWithoutKSA} />);
     
     expect(screen.getByText('results.knowledgeGraph.title')).toBeInTheDocument();
   });
 
-  it('handles window resize', () => {
-    const { container } = render(
+  it('handles window resize', async () => {
+    const { container } = renderWithProviders(
       <CompetencyKnowledgeGraph result={mockResult} />
     );
     
@@ -270,8 +270,8 @@ describe('CompetencyKnowledgeGraph', () => {
     expect(container.querySelector('svg')).toBeTruthy();
   });
 
-  it('unmounts without errors', () => {
-    const { unmount } = render(
+  it('unmounts without errors', async () => {
+    const { unmount } = renderWithProviders(
       <CompetencyKnowledgeGraph result={mockResult} />
     );
     

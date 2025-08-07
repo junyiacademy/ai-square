@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { renderWithProviders, screen, waitFor } from '@/test-utils/helpers/render';
 import FeaturesSection from '../FeaturesSection';
 import { useTranslation } from 'react-i18next';
 
@@ -21,15 +21,15 @@ describe('FeaturesSection', () => {
     jest.clearAllMocks();
   });
 
-  it('renders features section with title and subtitle', () => {
-    render(<FeaturesSection />);
+  it('renders features section with title and subtitle', async () => {
+    renderWithProviders(<FeaturesSection />);
 
     expect(screen.getByText('features.title')).toBeInTheDocument();
     expect(screen.getByText('features.subtitle')).toBeInTheDocument();
   });
 
-  it('renders all six feature cards', () => {
-    render(<FeaturesSection />);
+  it('renders all six feature cards', async () => {
+    renderWithProviders(<FeaturesSection />);
 
     const featureKeys = [
       'personalizedLearning',
@@ -46,16 +46,16 @@ describe('FeaturesSection', () => {
     });
   });
 
-  it('renders feature icons', () => {
-    const { container } = render(<FeaturesSection />);
+  it('renders feature icons', async () => {
+    const { container } = renderWithProviders(<FeaturesSection />);
 
     // Check that SVG icons are rendered
     const icons = container.querySelectorAll('svg');
     expect(icons.length).toBe(6); // 6 features, each with an icon
   });
 
-  it('applies hover styles to feature cards', () => {
-    const { container } = render(<FeaturesSection />);
+  it('applies hover styles to feature cards', async () => {
+    const { container } = renderWithProviders(<FeaturesSection />);
 
     // Check for hover classes on feature cards
     const featureCards = container.querySelectorAll('.group');

@@ -1,5 +1,47 @@
+
+jest.mock('d3', () => ({
+  select: jest.fn(() => ({
+    append: jest.fn().mockReturnThis(),
+    attr: jest.fn().mockReturnThis(),
+    style: jest.fn().mockReturnThis(),
+    text: jest.fn().mockReturnThis(),
+    data: jest.fn().mockReturnThis(),
+    enter: jest.fn().mockReturnThis(),
+    exit: jest.fn().mockReturnThis(),
+    remove: jest.fn().mockReturnThis(),
+    selectAll: jest.fn().mockReturnThis(),
+  })),
+  scaleLinear: jest.fn(() => {
+    const scale = (value: unknown) => value;
+    scale.domain = jest.fn().mockReturnThis();
+    scale.range = jest.fn().mockReturnThis();
+    return scale;
+  }),
+  scaleOrdinal: jest.fn(() => {
+    const scale = (value: unknown) => value;
+    scale.domain = jest.fn().mockReturnThis();
+    scale.range = jest.fn().mockReturnThis();
+    return scale;
+  }),
+  arc: jest.fn(() => {
+    const arcFn = jest.fn();
+    Object.assign(arcFn, {
+      innerRadius: jest.fn().mockReturnThis(),
+      outerRadius: jest.fn().mockReturnThis()
+    });
+    return arcFn;
+  }),
+  pie: jest.fn(() => {
+    const pieFn = jest.fn((data: unknown[]) => data.map((d: unknown, i: number) => ({ data: d, index: i })));
+    Object.assign(pieFn, {
+      value: jest.fn().mockReturnThis()
+    });
+    return pieFn;
+  }),
+}));
+
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { renderWithProviders, screen, waitFor, fireEvent } from '@/test-utils/helpers/render';
 import { useTranslation } from 'react-i18next';
 import AssessmentResults from '../AssessmentResults';
 import { AssessmentResult } from '../../../types/assessment';
@@ -41,7 +83,7 @@ jest.mock('@/utils/locale', () => ({
   formatDateWithLocale: (date: Date) => '2025-06-25',
 }));
 
-const mockT = jest.fn((key, options) => {
+const mockT = jest.fn((key: unknown, options: unknown) => {
   const translations: Record<string, string> = {
     'results.title': 'Assessment Results',
     'results.subtitle': 'Your comprehensive AI literacy assessment results',
@@ -163,8 +205,8 @@ describe('AssessmentResults', () => {
     global.fetch = jest.fn();
   });
 
-  it('renders results overview correctly', () => {
-    render(
+  it('renders results overview correctly', async () => {
+    renderWithProviders(
       <AssessmentResults
         result={mockResult}
         domains={mockDomains}
@@ -181,8 +223,8 @@ describe('AssessmentResults', () => {
     expect(screen.getByText('12:00')).toBeInTheDocument();
   });
 
-  it('displays radar chart', () => {
-    render(
+  it('displays radar chart', async () => {
+    renderWithProviders(
       <AssessmentResults
         result={mockResult}
         domains={mockDomains}
@@ -193,8 +235,8 @@ describe('AssessmentResults', () => {
     expect(screen.getByTestId('domain-radar-chart')).toBeInTheDocument();
   });
 
-  it('switches between tabs correctly', () => {
-    render(
+  it('switches between tabs correctly', async () => {
+    renderWithProviders(
       <AssessmentResults
         result={mockResult}
         domains={mockDomains}
@@ -214,8 +256,8 @@ describe('AssessmentResults', () => {
     expect(screen.getByTestId('competency-knowledge-graph')).toBeInTheDocument();
   });
 
-  it('displays domain breakdown correctly', () => {
-    render(
+  it('displays domain breakdown correctly', async () => {
+    renderWithProviders(
       <AssessmentResults
         result={mockResult}
         domains={mockDomains}
@@ -231,8 +273,8 @@ describe('AssessmentResults', () => {
     expect(screen.getByText('80%')).toBeInTheDocument();
   });
 
-  it('displays recommendations correctly', () => {
-    render(
+  it('displays recommendations correctly', async () => {
+    renderWithProviders(
       <AssessmentResults
         result={mockResult}
         domains={mockDomains}
@@ -251,8 +293,8 @@ describe('AssessmentResults', () => {
     expect(screen.getByText('• Join AI communities')).toBeInTheDocument();
   });
 
-  it('calls onRetake when retake button is clicked', () => {
-    render(
+  it('calls onRetake when retake button is clicked', async () => {
+    renderWithProviders(
       <AssessmentResults
         result={mockResult}
         domains={mockDomains}
@@ -264,13 +306,13 @@ describe('AssessmentResults', () => {
     expect(mockOnRetake).toHaveBeenCalledTimes(1);
   });
 
-  it('formats time correctly', () => {
+  it('formats time correctly', async () => {
     const resultWithLongTime = {
       ...mockResult,
       timeSpentSeconds: 3661 // 1 hour, 1 minute, 1 second
     };
 
-    render(
+    renderWithProviders(
       <AssessmentResults
         result={resultWithLongTime}
         domains={mockDomains}
@@ -281,14 +323,14 @@ describe('AssessmentResults', () => {
     expect(screen.getByText('61:01')).toBeInTheDocument();
   });
 
-  it('displays correct level styling', () => {
+  it('displays correct level styling', async () => {
     const beginnerResult = {
       ...mockResult,
       overallScore: 45,
       level: 'beginner' as const
     };
 
-    render(
+    renderWithProviders(
       <AssessmentResults
         result={beginnerResult}
         domains={mockDomains}
@@ -300,8 +342,8 @@ describe('AssessmentResults', () => {
     expect(screen.getByText('Beginner')).toBeInTheDocument();
   });
 
-  it('displays summary text correctly', () => {
-    render(
+  it('displays summary text correctly', async () => {
+    renderWithProviders(
       <AssessmentResults
         result={mockResult}
         domains={mockDomains}
@@ -313,11 +355,11 @@ describe('AssessmentResults', () => {
     expect(screen.getByText(/You achieved Expert level with 85% overall score/)).toBeInTheDocument();
   });
 
-  it('handles print functionality', () => {
+  it('handles print functionality', async () => {
     const originalPrint = window.print;
     window.print = jest.fn();
 
-    render(
+    renderWithProviders(
       <AssessmentResults
         result={mockResult}
         domains={mockDomains}
@@ -331,8 +373,8 @@ describe('AssessmentResults', () => {
     window.print = originalPrint;
   });
 
-  it('displays completed date correctly', () => {
-    render(
+  it('displays completed date correctly', async () => {
+    renderWithProviders(
       <AssessmentResults
         result={mockResult}
         domains={mockDomains}
@@ -346,7 +388,7 @@ describe('AssessmentResults', () => {
 
   it('auto-saves results when user is logged in', async () => {
     // Mock logged in user
-    (window.localStorage.getItem as jest.Mock).mockImplementation((key) => {
+    (window.localStorage.getItem as jest.Mock).mockImplementation((key: unknown) => {
       if (key === 'isLoggedIn') return 'true';
       if (key === 'user') return JSON.stringify({ id: 1, email: 'test@example.com' });
       return null;
@@ -357,7 +399,7 @@ describe('AssessmentResults', () => {
       json: async () => ({ assessmentId: '123' }),
     });
 
-    render(
+    renderWithProviders(
       <AssessmentResults
         result={mockResult}
         domains={mockDomains}
@@ -375,11 +417,11 @@ describe('AssessmentResults', () => {
     });
   });
 
-  it('shows save button for non-logged in users', () => {
+  it('shows save button for non-logged in users', async () => {
     // Mock not logged in
     (window.localStorage.getItem as jest.Mock).mockReturnValue(null);
 
-    render(
+    renderWithProviders(
       <AssessmentResults
         result={mockResult}
         domains={mockDomains}
@@ -392,7 +434,7 @@ describe('AssessmentResults', () => {
 
   it('shows learning path button after saving', async () => {
     // Mock logged in user
-    (window.localStorage.getItem as jest.Mock).mockImplementation((key) => {
+    (window.localStorage.getItem as jest.Mock).mockImplementation((key: unknown) => {
       if (key === 'isLoggedIn') return 'true';
       if (key === 'user') return JSON.stringify({ id: 1, email: 'test@example.com' });
       return null;
@@ -403,7 +445,7 @@ describe('AssessmentResults', () => {
       json: async () => ({ assessmentId: '123' }),
     });
 
-    render(
+    renderWithProviders(
       <AssessmentResults
         result={mockResult}
         domains={mockDomains}
@@ -417,15 +459,15 @@ describe('AssessmentResults', () => {
     });
   });
 
-  it('does not auto-save in review mode', () => {
+  it('does not auto-save in review mode', async () => {
     // Mock logged in user
-    (window.localStorage.getItem as jest.Mock).mockImplementation((key) => {
+    (window.localStorage.getItem as jest.Mock).mockImplementation((key: unknown) => {
       if (key === 'isLoggedIn') return 'true';
       if (key === 'user') return JSON.stringify({ id: 1, email: 'test@example.com' });
       return null;
     });
 
-    render(
+    renderWithProviders(
       <AssessmentResults
         result={mockResult}
         domains={mockDomains}

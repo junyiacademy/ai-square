@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { renderWithProviders, screen, waitFor } from '@/test-utils/helpers/render';
 import '@testing-library/jest-dom';
 import DomainRadarMini from '../DomainRadarMini';
 
@@ -15,22 +15,22 @@ describe('DomainRadarMini', () => {
     jest.clearAllMocks();
   });
 
-  it('renders without crashing', () => {
-    const { container } = render(<DomainRadarMini domainScores={mockDomainScores} />);
+  it('renders without crashing', async () => {
+    const { container } = renderWithProviders(<DomainRadarMini domainScores={mockDomainScores} />);
     const svg = container.querySelector('svg');
     expect(svg).toBeInTheDocument();
   });
 
-  it('renders with correct SVG dimensions', () => {
-    const { container } = render(<DomainRadarMini domainScores={mockDomainScores} />);
+  it('renders with correct SVG dimensions', async () => {
+    const { container } = renderWithProviders(<DomainRadarMini domainScores={mockDomainScores} />);
     const svg = container.querySelector('svg');
     
     expect(svg).toHaveAttribute('width', '120');
     expect(svg).toHaveAttribute('height', '120');
   });
 
-  it('renders all four domain labels', () => {
-    render(<DomainRadarMini domainScores={mockDomainScores} />);
+  it('renders all four domain labels', async () => {
+    renderWithProviders(<DomainRadarMini domainScores={mockDomainScores} />);
     
     expect(screen.getByText('Engaging')).toBeInTheDocument();
     expect(screen.getByText('Creating')).toBeInTheDocument();
@@ -38,24 +38,24 @@ describe('DomainRadarMini', () => {
     expect(screen.getByText('Designing')).toBeInTheDocument();
   });
 
-  it('renders background circles for grid', () => {
-    const { container } = render(<DomainRadarMini domainScores={mockDomainScores} />);
+  it('renders background circles for grid', async () => {
+    const { container } = renderWithProviders(<DomainRadarMini domainScores={mockDomainScores} />);
     const circles = container.querySelectorAll('circle');
     
     // 3 background circles + 4 data point circles = 7 total
     expect(circles).toHaveLength(7);
   });
 
-  it('renders grid lines from center', () => {
-    const { container } = render(<DomainRadarMini domainScores={mockDomainScores} />);
+  it('renders grid lines from center', async () => {
+    const { container } = renderWithProviders(<DomainRadarMini domainScores={mockDomainScores} />);
     const lines = container.querySelectorAll('line');
     
     // 4 grid lines from center to corners
     expect(lines).toHaveLength(4);
   });
 
-  it('renders data polygon', () => {
-    const { container } = render(<DomainRadarMini domainScores={mockDomainScores} />);
+  it('renders data polygon', async () => {
+    const { container } = renderWithProviders(<DomainRadarMini domainScores={mockDomainScores} />);
     const polygon = container.querySelector('polygon');
     
     expect(polygon).toBeInTheDocument();
@@ -64,15 +64,15 @@ describe('DomainRadarMini', () => {
     expect(polygon).toHaveAttribute('stroke-width', '2');
   });
 
-  it('renders data points for each domain', () => {
-    const { container } = render(<DomainRadarMini domainScores={mockDomainScores} />);
+  it('renders data points for each domain', async () => {
+    const { container } = renderWithProviders(<DomainRadarMini domainScores={mockDomainScores} />);
     // Select only the data point circles (radius = 3)
     const dataPoints = container.querySelectorAll('circle[r="3"]');
     
     expect(dataPoints).toHaveLength(4);
   });
 
-  it('handles zero scores correctly', () => {
+  it('handles zero scores correctly', async () => {
     const zeroScores = {
       engaging_with_ai: 0,
       creating_with_ai: 0,
@@ -80,7 +80,7 @@ describe('DomainRadarMini', () => {
       designing_with_ai: 0
     };
     
-    const { container } = render(<DomainRadarMini domainScores={zeroScores} />);
+    const { container } = renderWithProviders(<DomainRadarMini domainScores={zeroScores} />);
     const polygon = container.querySelector('polygon');
     
     expect(polygon).toBeInTheDocument();
@@ -89,7 +89,7 @@ describe('DomainRadarMini', () => {
     expect(points).toBeTruthy();
   });
 
-  it('handles maximum scores correctly', () => {
+  it('handles maximum scores correctly', async () => {
     const maxScores = {
       engaging_with_ai: 100,
       creating_with_ai: 100,
@@ -97,14 +97,14 @@ describe('DomainRadarMini', () => {
       designing_with_ai: 100
     };
     
-    const { container } = render(<DomainRadarMini domainScores={maxScores} />);
+    const { container } = renderWithProviders(<DomainRadarMini domainScores={maxScores} />);
     const polygon = container.querySelector('polygon');
     
     expect(polygon).toBeInTheDocument();
   });
 
-  it('applies correct styling classes', () => {
-    const { container } = render(<DomainRadarMini domainScores={mockDomainScores} />);
+  it('applies correct styling classes', async () => {
+    const { container } = renderWithProviders(<DomainRadarMini domainScores={mockDomainScores} />);
     
     // Check wrapper div
     const wrapper = container.firstChild;
@@ -121,8 +121,8 @@ describe('DomainRadarMini', () => {
     });
   });
 
-  it('correctly positions labels with appropriate text anchors', () => {
-    const { container } = render(<DomainRadarMini domainScores={mockDomainScores} />);
+  it('correctly positions labels with appropriate text anchors', async () => {
+    const { container } = renderWithProviders(<DomainRadarMini domainScores={mockDomainScores} />);
     const texts = container.querySelectorAll('text');
     
     expect(texts).toHaveLength(4);
@@ -134,7 +134,7 @@ describe('DomainRadarMini', () => {
     expect(texts[3]).toHaveAttribute('text-anchor', 'end');    // Left
   });
 
-  it('handles partial scores correctly', () => {
+  it('handles partial scores correctly', async () => {
     const partialScores = {
       engaging_with_ai: 50,
       creating_with_ai: 25,
@@ -142,7 +142,7 @@ describe('DomainRadarMini', () => {
       designing_with_ai: 100
     };
     
-    const { container } = render(<DomainRadarMini domainScores={partialScores} />);
+    const { container } = renderWithProviders(<DomainRadarMini domainScores={partialScores} />);
     const polygon = container.querySelector('polygon');
     const dataPoints = container.querySelectorAll('circle[r="3"]');
     
@@ -150,8 +150,8 @@ describe('DomainRadarMini', () => {
     expect(dataPoints).toHaveLength(4);
   });
 
-  it('renders grid with correct styling', () => {
-    const { container } = render(<DomainRadarMini domainScores={mockDomainScores} />);
+  it('renders grid with correct styling', async () => {
+    const { container } = renderWithProviders(<DomainRadarMini domainScores={mockDomainScores} />);
     
     // Check background circles
     const backgroundCircles = container.querySelectorAll('circle[fill="none"]');
@@ -168,14 +168,14 @@ describe('DomainRadarMini', () => {
     });
   });
 
-  it('uses transform attribute on SVG', () => {
-    const { container } = render(<DomainRadarMini domainScores={mockDomainScores} />);
+  it('uses transform attribute on SVG', async () => {
+    const { container } = renderWithProviders(<DomainRadarMini domainScores={mockDomainScores} />);
     const svg = container.querySelector('svg');
     
     expect(svg).toHaveClass('transform');
   });
 
-  it('calculates polygon points based on scores', () => {
+  it('calculates polygon points based on scores', async () => {
     const scores = {
       engaging_with_ai: 100,  // Top point
       creating_with_ai: 50,   // Right point
@@ -183,7 +183,7 @@ describe('DomainRadarMini', () => {
       designing_with_ai: 25   // Left point
     };
     
-    const { container } = render(<DomainRadarMini domainScores={scores} />);
+    const { container } = renderWithProviders(<DomainRadarMini domainScores={scores} />);
     const polygon = container.querySelector('polygon');
     const points = polygon?.getAttribute('points');
     

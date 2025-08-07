@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
+import { renderWithProviders, screen, waitFor, fireEvent, act } from '@/test-utils/helpers/render';
 import userEvent from '@testing-library/user-event';
 import { LoginForm } from '../LoginForm';
 
@@ -34,8 +34,8 @@ describe('LoginForm', () => {
   });
 
   describe('Rendering', () => {
-    it('renders all form elements correctly', () => {
-      render(<LoginForm {...defaultProps} />);
+    it('renders all form elements correctly', async () => {
+      renderWithProviders(<LoginForm {...defaultProps} />);
 
       // Check for form inputs
       expect(screen.getByLabelText('Email')).toBeInTheDocument();
@@ -53,9 +53,9 @@ describe('LoginForm', () => {
       expect(screen.getAllByRole('button')).toHaveLength(4); // 1 submit + 3 demo buttons
     });
 
-    it('displays error message when error prop is provided', () => {
+    it('displays error message when error prop is provided', async () => {
       const errorMessage = 'Invalid credentials';
-      render(<LoginForm {...defaultProps} error={errorMessage} />);
+      renderWithProviders(<LoginForm {...defaultProps} error={errorMessage} />);
 
       const alert = screen.getByRole('alert');
       expect(alert).toBeInTheDocument();
@@ -63,8 +63,8 @@ describe('LoginForm', () => {
       expect(alert).toHaveClass('bg-red-100', 'border-red-400', 'text-red-700');
     });
 
-    it('shows loading state when loading prop is true', () => {
-      render(<LoginForm {...defaultProps} loading={true} />);
+    it('shows loading state when loading prop is true', async () => {
+      renderWithProviders(<LoginForm {...defaultProps} loading={true} />);
 
       // Button should show loading text
       expect(screen.getByRole('button', { name: 'Loading...' })).toBeInTheDocument();
@@ -75,8 +75,8 @@ describe('LoginForm', () => {
       expect(screen.getByRole('checkbox')).toBeDisabled();
     });
 
-    it('renders demo account buttons with correct styling', () => {
-      render(<LoginForm {...defaultProps} />);
+    it('renders demo account buttons with correct styling', async () => {
+      renderWithProviders(<LoginForm {...defaultProps} />);
 
       const demoButtons = screen.getAllByRole('button').slice(1); // Skip submit button
       expect(demoButtons).toHaveLength(3);
@@ -91,7 +91,7 @@ describe('LoginForm', () => {
   describe('User interactions', () => {
     it('updates input values when user types', async () => {
       const user = userEvent.setup();
-      render(<LoginForm {...defaultProps} />);
+      renderWithProviders(<LoginForm {...defaultProps} />);
 
       const emailInput = screen.getByLabelText('Email');
       const passwordInput = screen.getByLabelText('Password');
@@ -105,7 +105,7 @@ describe('LoginForm', () => {
 
     it('toggles remember me checkbox', async () => {
       const user = userEvent.setup();
-      render(<LoginForm {...defaultProps} />);
+      renderWithProviders(<LoginForm {...defaultProps} />);
 
       const checkbox = screen.getByRole('checkbox', { name: 'Remember me' });
       
@@ -121,7 +121,7 @@ describe('LoginForm', () => {
     it('submits form with correct data on form submission', async () => {
       const user = userEvent.setup();
       const onSubmit = jest.fn();
-      render(<LoginForm {...defaultProps} onSubmit={onSubmit} />);
+      renderWithProviders(<LoginForm {...defaultProps} onSubmit={onSubmit} />);
 
       const emailInput = screen.getByLabelText('Email');
       const passwordInput = screen.getByLabelText('Password');
@@ -144,7 +144,7 @@ describe('LoginForm', () => {
     it('prevents form submission when loading', async () => {
       const user = userEvent.setup();
       const onSubmit = jest.fn();
-      render(<LoginForm {...defaultProps} onSubmit={onSubmit} loading={true} />);
+      renderWithProviders(<LoginForm {...defaultProps} onSubmit={onSubmit} loading={true} />);
 
       const emailInput = screen.getByLabelText('Email');
       const passwordInput = screen.getByLabelText('Password');
@@ -160,8 +160,8 @@ describe('LoginForm', () => {
       expect(onSubmit).not.toHaveBeenCalled();
     });
 
-    it('disables submit button when email or password is empty', () => {
-      render(<LoginForm {...defaultProps} />);
+    it('disables submit button when email or password is empty', async () => {
+      renderWithProviders(<LoginForm {...defaultProps} />);
 
       const submitButton = screen.getByRole('button', { name: 'Login' });
       
@@ -186,7 +186,7 @@ describe('LoginForm', () => {
     it('fills form and auto-submits when demo account button is clicked', async () => {
       jest.useFakeTimers();
       const onSubmit = jest.fn();
-      render(<LoginForm {...defaultProps} onSubmit={onSubmit} />);
+      renderWithProviders(<LoginForm {...defaultProps} onSubmit={onSubmit} />);
 
       const studentButton = screen.getByRole('button', { name: /Student/i });
       
@@ -217,7 +217,7 @@ describe('LoginForm', () => {
       jest.useFakeTimers();
       const user = userEvent.setup({ delay: null });
       const onSubmit = jest.fn();
-      render(<LoginForm {...defaultProps} onSubmit={onSubmit} />);
+      renderWithProviders(<LoginForm {...defaultProps} onSubmit={onSubmit} />);
 
       // First check remember me
       const rememberMeCheckbox = screen.getByRole('checkbox', { name: 'Remember me' });
@@ -242,8 +242,8 @@ describe('LoginForm', () => {
       jest.useRealTimers();
     });
 
-    it('disables demo account buttons when loading', () => {
-      render(<LoginForm {...defaultProps} loading={true} />);
+    it('disables demo account buttons when loading', async () => {
+      renderWithProviders(<LoginForm {...defaultProps} loading={true} />);
 
       const demoButtons = screen.getAllByRole('button').slice(1); // Skip submit button
       demoButtons.forEach(button => {
@@ -253,8 +253,8 @@ describe('LoginForm', () => {
   });
 
   describe('Form validation', () => {
-    it('requires email and password fields', () => {
-      render(<LoginForm {...defaultProps} />);
+    it('requires email and password fields', async () => {
+      renderWithProviders(<LoginForm {...defaultProps} />);
 
       const emailInput = screen.getByLabelText('Email') as HTMLInputElement;
       const passwordInput = screen.getByLabelText('Password') as HTMLInputElement;
@@ -263,15 +263,15 @@ describe('LoginForm', () => {
       expect(passwordInput).toBeRequired();
     });
 
-    it('uses email type for email input', () => {
-      render(<LoginForm {...defaultProps} />);
+    it('uses email type for email input', async () => {
+      renderWithProviders(<LoginForm {...defaultProps} />);
 
       const emailInput = screen.getByLabelText('Email');
       expect(emailInput).toHaveAttribute('type', 'email');
     });
 
-    it('uses password type for password input', () => {
-      render(<LoginForm {...defaultProps} />);
+    it('uses password type for password input', async () => {
+      renderWithProviders(<LoginForm {...defaultProps} />);
 
       const passwordInput = screen.getByLabelText('Password');
       expect(passwordInput).toHaveAttribute('type', 'password');
@@ -279,8 +279,8 @@ describe('LoginForm', () => {
   });
 
   describe('Accessibility', () => {
-    it('has proper labels for all form inputs', () => {
-      render(<LoginForm {...defaultProps} />);
+    it('has proper labels for all form inputs', async () => {
+      renderWithProviders(<LoginForm {...defaultProps} />);
 
       // Check that inputs can be found by their labels
       expect(screen.getByLabelText('Email')).toBeInTheDocument();
@@ -288,15 +288,15 @@ describe('LoginForm', () => {
       expect(screen.getByLabelText('Remember me')).toBeInTheDocument();
     });
 
-    it('has proper ARIA attributes for error messages', () => {
-      render(<LoginForm {...defaultProps} error="Test error" />);
+    it('has proper ARIA attributes for error messages', async () => {
+      renderWithProviders(<LoginForm {...defaultProps} error="Test error" />);
 
       const alert = screen.getByRole('alert');
       expect(alert).toBeInTheDocument();
     });
 
-    it('associates form inputs with their labels correctly', () => {
-      render(<LoginForm {...defaultProps} />);
+    it('associates form inputs with their labels correctly', async () => {
+      renderWithProviders(<LoginForm {...defaultProps} />);
 
       const emailInput = screen.getByLabelText('Email');
       const emailLabel = screen.getByText('Email');
@@ -312,7 +312,7 @@ describe('LoginForm', () => {
     it('handles rapid demo account clicks gracefully', async () => {
       jest.useFakeTimers();
       const onSubmit = jest.fn();
-      render(<LoginForm {...defaultProps} onSubmit={onSubmit} />);
+      renderWithProviders(<LoginForm {...defaultProps} onSubmit={onSubmit} />);
 
       const buttons = screen.getAllByRole('button').slice(1);
       expect(buttons).toHaveLength(3); // Should have 3 demo buttons
@@ -333,9 +333,9 @@ describe('LoginForm', () => {
       jest.useRealTimers();
     });
 
-    it('handles form submission with Enter key', () => {
+    it('handles form submission with Enter key', async () => {
       const onSubmit = jest.fn();
-      render(<LoginForm {...defaultProps} onSubmit={onSubmit} />);
+      renderWithProviders(<LoginForm {...defaultProps} onSubmit={onSubmit} />);
 
       const emailInput = screen.getByLabelText('Email');
       const passwordInput = screen.getByLabelText('Password');

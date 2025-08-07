@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { renderWithProviders, screen, waitFor, fireEvent } from '@/test-utils/helpers/render';
 import QuestionReview from '../QuestionReview';
 import { AssessmentQuestion, UserAnswer } from '../../../types/assessment';
 
@@ -128,34 +128,34 @@ describe('QuestionReview', () => {
     jest.clearAllMocks();
   });
 
-  it('renders question review with title', () => {
-    render(<QuestionReview {...defaultProps} />);
+  it('renders question review with title', async () => {
+    renderWithProviders(<QuestionReview {...defaultProps} />);
 
     expect(screen.getByText('Question Review')).toBeInTheDocument();
   });
 
-  it('shows no questions message when no questions selected', () => {
-    render(<QuestionReview {...defaultProps} selectedQuestionIds={[]} />);
+  it('shows no questions message when no questions selected', async () => {
+    renderWithProviders(<QuestionReview {...defaultProps} selectedQuestionIds={[]} />);
 
     expect(screen.getByText('No questions selected')).toBeInTheDocument();
   });
 
-  it('renders first question by default', () => {
-    render(<QuestionReview {...defaultProps} />);
+  it('renders first question by default', async () => {
+    renderWithProviders(<QuestionReview {...defaultProps} />);
 
     expect(screen.getByText('What is AI?')).toBeInTheDocument();
     expect(screen.getByText('Question 1 of 2')).toBeInTheDocument();
   });
 
-  it('displays question difficulty and domain', () => {
-    render(<QuestionReview {...defaultProps} />);
+  it('displays question difficulty and domain', async () => {
+    renderWithProviders(<QuestionReview {...defaultProps} />);
 
     expect(screen.getByText('Basic')).toBeInTheDocument();
     expect(screen.getByText('Engaging with AI')).toBeInTheDocument();
   });
 
-  it('renders all answer options', () => {
-    render(<QuestionReview {...defaultProps} />);
+  it('renders all answer options', async () => {
+    renderWithProviders(<QuestionReview {...defaultProps} />);
 
     expect(screen.getByText('A.')).toBeInTheDocument();
     expect(screen.getByText('Artificial Intelligence')).toBeInTheDocument();
@@ -167,8 +167,8 @@ describe('QuestionReview', () => {
     expect(screen.getByText('Assisted Intelligence')).toBeInTheDocument();
   });
 
-  it('highlights correct answer with green styling', () => {
-    render(<QuestionReview {...defaultProps} />);
+  it('highlights correct answer with green styling', async () => {
+    renderWithProviders(<QuestionReview {...defaultProps} />);
 
     // Find the parent container with the styling
     const correctOption = screen.getByText('Artificial Intelligence').closest('.border-green-500');
@@ -176,14 +176,14 @@ describe('QuestionReview', () => {
     expect(screen.getByText('✓')).toBeInTheDocument();
   });
 
-  it('shows user answer status for correct answer', () => {
-    render(<QuestionReview {...defaultProps} />);
+  it('shows user answer status for correct answer', async () => {
+    renderWithProviders(<QuestionReview {...defaultProps} />);
 
     expect(screen.getByText('Correct')).toBeInTheDocument();
   });
 
-  it('highlights incorrect answer with red styling', () => {
-    render(<QuestionReview {...defaultProps} />);
+  it('highlights incorrect answer with red styling', async () => {
+    renderWithProviders(<QuestionReview {...defaultProps} />);
 
     // Navigate to second question with incorrect answer
     fireEvent.click(screen.getByText('Next'));
@@ -193,8 +193,8 @@ describe('QuestionReview', () => {
     expect(screen.getByText('✗')).toBeInTheDocument();
   });
 
-  it('shows incorrect status for wrong answer', () => {
-    render(<QuestionReview {...defaultProps} />);
+  it('shows incorrect status for wrong answer', async () => {
+    renderWithProviders(<QuestionReview {...defaultProps} />);
 
     // Navigate to second question
     fireEvent.click(screen.getByText('Next'));
@@ -202,8 +202,8 @@ describe('QuestionReview', () => {
     expect(screen.getByText('Incorrect')).toBeInTheDocument();
   });
 
-  it('navigates between questions using next/previous buttons', () => {
-    render(<QuestionReview {...defaultProps} />);
+  it('navigates between questions using next/previous buttons', async () => {
+    renderWithProviders(<QuestionReview {...defaultProps} />);
 
     // Initially on first question
     expect(screen.getByText('What is AI?')).toBeInTheDocument();
@@ -220,16 +220,16 @@ describe('QuestionReview', () => {
     expect(screen.getByText('Question 1 of 2')).toBeInTheDocument();
   });
 
-  it('disables previous button on first question', () => {
-    render(<QuestionReview {...defaultProps} />);
+  it('disables previous button on first question', async () => {
+    renderWithProviders(<QuestionReview {...defaultProps} />);
 
     const previousButton = screen.getByText('Previous');
     expect(previousButton).toBeDisabled();
     expect(previousButton).toHaveClass('disabled:opacity-50', 'disabled:cursor-not-allowed');
   });
 
-  it('disables next button on last question', () => {
-    render(<QuestionReview {...defaultProps} />);
+  it('disables next button on last question', async () => {
+    renderWithProviders(<QuestionReview {...defaultProps} />);
 
     // Navigate to last question
     fireEvent.click(screen.getByText('Next'));
@@ -239,15 +239,15 @@ describe('QuestionReview', () => {
     expect(nextButton).toHaveClass('disabled:opacity-50', 'disabled:cursor-not-allowed');
   });
 
-  it('displays explanation for question', () => {
-    render(<QuestionReview {...defaultProps} />);
+  it('displays explanation for question', async () => {
+    renderWithProviders(<QuestionReview {...defaultProps} />);
 
     expect(screen.getByText('Explanation')).toBeInTheDocument();
     expect(screen.getByText('AI stands for Artificial Intelligence.')).toBeInTheDocument();
   });
 
-  it('displays KSA mapping when available', () => {
-    render(<QuestionReview {...defaultProps} />);
+  it('displays KSA mapping when available', async () => {
+    renderWithProviders(<QuestionReview {...defaultProps} />);
 
     expect(screen.getByText('Related Competencies')).toBeInTheDocument();
     expect(screen.getByText('Knowledge:')).toBeInTheDocument();
@@ -258,8 +258,8 @@ describe('QuestionReview', () => {
     expect(screen.getByText('A1.1')).toBeInTheDocument();
   });
 
-  it('handles empty KSA arrays', () => {
-    render(<QuestionReview {...defaultProps} />);
+  it('handles empty KSA arrays', async () => {
+    renderWithProviders(<QuestionReview {...defaultProps} />);
 
     // Navigate to second question with empty skills and attitudes
     fireEvent.click(screen.getByText('Next'));
@@ -271,8 +271,8 @@ describe('QuestionReview', () => {
     expect(screen.queryByText('Attitudes:')).not.toBeInTheDocument();
   });
 
-  it('displays KSA mapping section even with empty arrays', () => {
-    render(<QuestionReview {...defaultProps} selectedQuestionIds={['q3']} />);
+  it('displays KSA mapping section even with empty arrays', async () => {
+    renderWithProviders(<QuestionReview {...defaultProps} selectedQuestionIds={['q3']} />);
 
     // The component shows the section if ksa_mapping exists, even if all arrays are empty
     expect(screen.getByText('Related Competencies')).toBeInTheDocument();
@@ -283,9 +283,9 @@ describe('QuestionReview', () => {
     expect(screen.queryByText('Attitudes:')).not.toBeInTheDocument();
   });
 
-  it('calls onClose when close button is clicked', () => {
+  it('calls onClose when close button is clicked', async () => {
     const onCloseMock = jest.fn();
-    render(<QuestionReview {...defaultProps} onClose={onCloseMock} />);
+    renderWithProviders(<QuestionReview {...defaultProps} onClose={onCloseMock} />);
 
     const closeButton = screen.getByRole('button', { name: '' }); // SVG close button
     fireEvent.click(closeButton);
@@ -293,8 +293,8 @@ describe('QuestionReview', () => {
     expect(onCloseMock).toHaveBeenCalledTimes(1);
   });
 
-  it('has practice again button that can be clicked', () => {
-    render(<QuestionReview {...defaultProps} />);
+  it('has practice again button that can be clicked', async () => {
+    renderWithProviders(<QuestionReview {...defaultProps} />);
 
     const practiceButton = screen.getByText('Practice Again');
     expect(practiceButton).toBeInTheDocument();
@@ -303,9 +303,9 @@ describe('QuestionReview', () => {
     fireEvent.click(practiceButton);
   });
 
-  it('calls onClose when close review button is clicked', () => {
+  it('calls onClose when close review button is clicked', async () => {
     const onCloseMock = jest.fn();
-    render(<QuestionReview {...defaultProps} onClose={onCloseMock} />);
+    renderWithProviders(<QuestionReview {...defaultProps} onClose={onCloseMock} />);
 
     const closeReviewButton = screen.getByText('Close Review');
     fireEvent.click(closeReviewButton);
@@ -313,8 +313,8 @@ describe('QuestionReview', () => {
     expect(onCloseMock).toHaveBeenCalledTimes(1);
   });
 
-  it('displays correct difficulty styling', () => {
-    render(<QuestionReview {...defaultProps} selectedQuestionIds={['q1', 'q2', 'q3']} />);
+  it('displays correct difficulty styling', async () => {
+    renderWithProviders(<QuestionReview {...defaultProps} selectedQuestionIds={['q1', 'q2', 'q3']} />);
 
     // Basic difficulty (green)
     expect(screen.getByText('Basic')).toHaveClass('bg-green-100', 'text-green-800');
@@ -328,14 +328,14 @@ describe('QuestionReview', () => {
     expect(screen.getByText('Advanced')).toHaveClass('bg-red-100', 'text-red-800');
   });
 
-  it('handles questions without user answers', () => {
+  it('handles questions without user answers', async () => {
     const propsWithoutAnswers = {
       ...defaultProps,
       userAnswers: [],
       selectedQuestionIds: ['q1']
     };
 
-    render(<QuestionReview {...propsWithoutAnswers} />);
+    renderWithProviders(<QuestionReview {...propsWithoutAnswers} />);
 
     // Should not show answer status
     expect(screen.queryByText('Correct')).not.toBeInTheDocument();
@@ -346,8 +346,8 @@ describe('QuestionReview', () => {
     expect(screen.queryByText('✗')).not.toBeInTheDocument();
   });
 
-  it('filters questions correctly based on selectedQuestionIds', () => {
-    render(<QuestionReview {...defaultProps} selectedQuestionIds={['q2']} />);
+  it('filters questions correctly based on selectedQuestionIds', async () => {
+    renderWithProviders(<QuestionReview {...defaultProps} selectedQuestionIds={['q2']} />);
 
     expect(screen.getByText('How does machine learning work?')).toBeInTheDocument();
     expect(screen.getByText('Question 1 of 1')).toBeInTheDocument();
@@ -356,16 +356,16 @@ describe('QuestionReview', () => {
     expect(screen.getByText('Next')).toBeDisabled();
   });
 
-  it('renders practice section at the bottom', () => {
-    render(<QuestionReview {...defaultProps} />);
+  it('renders practice section at the bottom', async () => {
+    renderWithProviders(<QuestionReview {...defaultProps} />);
 
     expect(screen.getByText('Want to practice more?')).toBeInTheDocument();
     expect(screen.getByText('Practice Again')).toBeInTheDocument();
     expect(screen.getByText('Close Review')).toBeInTheDocument();
   });
 
-  it('maintains state when navigating between questions', () => {
-    render(<QuestionReview {...defaultProps} />);
+  it('maintains state when navigating between questions', async () => {
+    renderWithProviders(<QuestionReview {...defaultProps} />);
 
     // Navigate to second question
     fireEvent.click(screen.getByText('Next'));

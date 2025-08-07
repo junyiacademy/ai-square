@@ -3,7 +3,7 @@
  * 使用 TDD 方式驗證登入表單的所有功能
  */
 
-import { render, screen } from '@testing-library/react'
+import { renderWithProviders, screen, waitFor } from '@/test-utils/helpers/render'
 import userEvent from '@testing-library/user-event'
 import { LoginForm } from './LoginForm'
 
@@ -17,8 +17,8 @@ describe('LoginForm 組件測試', () => {
   })
 
   describe('🔴 紅燈測試 - 基本渲染', () => {
-    it('應該正確渲染登入表單的所有元素', () => {
-      render(<LoginForm onSubmit={mockOnSubmit} />)
+    it('應該正確渲染登入表單的所有元素', async () => {
+      renderWithProviders(<LoginForm onSubmit={mockOnSubmit} />)
 
       // 檢查表單標題 (使用翻譯鍵值)
       expect(screen.getByText('testAccounts.title')).toBeInTheDocument()
@@ -35,8 +35,8 @@ describe('LoginForm 組件測試', () => {
       expect(screen.getByLabelText('password')).toHaveAttribute('type', 'password')
     })
 
-    it('應該顯示所有測試帳戶按鈕', () => {
-      render(<LoginForm onSubmit={mockOnSubmit} />)
+    it('應該顯示所有測試帳戶按鈕', async () => {
+      renderWithProviders(<LoginForm onSubmit={mockOnSubmit} />)
 
       expect(screen.getByRole('button', { name: 'Student' })).toBeInTheDocument()
       expect(screen.getByRole('button', { name: 'Teacher' })).toBeInTheDocument()
@@ -47,7 +47,7 @@ describe('LoginForm 組件測試', () => {
   describe('🟢 綠燈測試 - 表單互動', () => {
     it('應該能夠在輸入欄位中輸入文字', async () => {
       const user = userEvent.setup()
-      render(<LoginForm onSubmit={mockOnSubmit} />)
+      renderWithProviders(<LoginForm onSubmit={mockOnSubmit} />)
 
       const emailInput = screen.getByLabelText('email') as HTMLInputElement
       const passwordInput = screen.getByLabelText('password') as HTMLInputElement
@@ -61,7 +61,7 @@ describe('LoginForm 組件測試', () => {
 
     it('應該在表單完整時提交正確的資料', async () => {
       const user = userEvent.setup()
-      render(<LoginForm onSubmit={mockOnSubmit} />)
+      renderWithProviders(<LoginForm onSubmit={mockOnSubmit} />)
 
       const emailInput = screen.getByLabelText('email')
       const passwordInput = screen.getByLabelText('password')
@@ -81,7 +81,7 @@ describe('LoginForm 組件測試', () => {
     
     it('應該正確處理 Remember Me 勾選框', async () => {
       const user = userEvent.setup()
-      render(<LoginForm onSubmit={mockOnSubmit} />)
+      renderWithProviders(<LoginForm onSubmit={mockOnSubmit} />)
 
       const emailInput = screen.getByLabelText('email')
       const passwordInput = screen.getByLabelText('password')
@@ -102,7 +102,7 @@ describe('LoginForm 組件測試', () => {
 
     it('應該在按下 Enter 鍵時提交表單', async () => {
       const user = userEvent.setup()
-      render(<LoginForm onSubmit={mockOnSubmit} />)
+      renderWithProviders(<LoginForm onSubmit={mockOnSubmit} />)
 
       const emailInput = screen.getByLabelText('email')
       const passwordInput = screen.getByLabelText('password')
@@ -120,24 +120,24 @@ describe('LoginForm 組件測試', () => {
   })
 
   describe('🔵 重構測試 - 狀態管理', () => {
-    it('應該在載入狀態時顯示載入文字和禁用按鈕', () => {
-      render(<LoginForm onSubmit={mockOnSubmit} loading={true} />)
+    it('應該在載入狀態時顯示載入文字和禁用按鈕', async () => {
+      renderWithProviders(<LoginForm onSubmit={mockOnSubmit} loading={true} />)
 
       const submitButton = screen.getByRole('button', { name: 'loading' })
       expect(submitButton).toHaveTextContent('loading')
       expect(submitButton).toBeDisabled()
     })
 
-    it('應該在載入狀態時禁用輸入欄位', () => {
-      render(<LoginForm onSubmit={mockOnSubmit} loading={true} />)
+    it('應該在載入狀態時禁用輸入欄位', async () => {
+      renderWithProviders(<LoginForm onSubmit={mockOnSubmit} loading={true} />)
 
       expect(screen.getByLabelText('email')).toBeDisabled()
       expect(screen.getByLabelText('password')).toBeDisabled()
     })
 
-    it('應該在有錯誤時顯示錯誤訊息', () => {
+    it('應該在有錯誤時顯示錯誤訊息', async () => {
       const errorMessage = 'Invalid email or password'
-      render(<LoginForm onSubmit={mockOnSubmit} error={errorMessage} />)
+      renderWithProviders(<LoginForm onSubmit={mockOnSubmit} error={errorMessage} />)
 
       expect(screen.getByText(errorMessage)).toBeInTheDocument()
       
@@ -146,8 +146,8 @@ describe('LoginForm 組件測試', () => {
       expect(errorElement).toHaveClass('bg-red-100', 'border-red-400', 'text-red-700')
     })
 
-    it('應該在表單不完整時禁用提交按鈕', () => {
-      render(<LoginForm onSubmit={mockOnSubmit} />)
+    it('應該在表單不完整時禁用提交按鈕', async () => {
+      renderWithProviders(<LoginForm onSubmit={mockOnSubmit} />)
 
       const submitButton = screen.getByRole('button', { name: 'login' })
       expect(submitButton).toBeDisabled()
@@ -155,7 +155,7 @@ describe('LoginForm 組件測試', () => {
 
     it('應該在只有 email 時仍然禁用提交按鈕', async () => {
       const user = userEvent.setup()
-      render(<LoginForm onSubmit={mockOnSubmit} />)
+      renderWithProviders(<LoginForm onSubmit={mockOnSubmit} />)
 
       const emailInput = screen.getByLabelText('email')
       const submitButton = screen.getByRole('button', { name: 'login' })
@@ -167,7 +167,7 @@ describe('LoginForm 組件測試', () => {
 
     it('應該在只有 password 時仍然禁用提交按鈕', async () => {
       const user = userEvent.setup()
-      render(<LoginForm onSubmit={mockOnSubmit} />)
+      renderWithProviders(<LoginForm onSubmit={mockOnSubmit} />)
 
       const passwordInput = screen.getByLabelText('password')
       const submitButton = screen.getByRole('button', { name: 'login' })
@@ -179,7 +179,7 @@ describe('LoginForm 組件測試', () => {
 
     it('應該在表單完整時啟用提交按鈕', async () => {
       const user = userEvent.setup()
-      render(<LoginForm onSubmit={mockOnSubmit} />)
+      renderWithProviders(<LoginForm onSubmit={mockOnSubmit} />)
 
       const emailInput = screen.getByLabelText('email')
       const passwordInput = screen.getByLabelText('password')
@@ -195,7 +195,7 @@ describe('LoginForm 組件測試', () => {
   describe('🚨 邊界條件測試', () => {
     it('應該處理空字串輸入', async () => {
       const user = userEvent.setup()
-      render(<LoginForm onSubmit={mockOnSubmit} />)
+      renderWithProviders(<LoginForm onSubmit={mockOnSubmit} />)
 
       const emailInput = screen.getByLabelText('email')
       const passwordInput = screen.getByLabelText('password')
@@ -210,7 +210,7 @@ describe('LoginForm 組件測試', () => {
 
     it('應該處理載入狀態時的表單提交嘗試', async () => {
       const user = userEvent.setup()
-      render(<LoginForm onSubmit={mockOnSubmit} loading={true} />)
+      renderWithProviders(<LoginForm onSubmit={mockOnSubmit} loading={true} />)
 
       // 即使表單看起來完整，在載入狀態時也不應該能提交
       const submitButton = screen.getByRole('button', { name: 'loading' })
@@ -221,7 +221,7 @@ describe('LoginForm 組件測試', () => {
 
     it('應該處理特殊字符輸入', async () => {
       const user = userEvent.setup()
-      render(<LoginForm onSubmit={mockOnSubmit} />)
+      renderWithProviders(<LoginForm onSubmit={mockOnSubmit} />)
 
       const emailInput = screen.getByLabelText('email')
       const passwordInput = screen.getByLabelText('password')
@@ -240,7 +240,7 @@ describe('LoginForm 組件測試', () => {
 
     it('應該處理很長的輸入', async () => {
       const user = userEvent.setup()
-      render(<LoginForm onSubmit={mockOnSubmit} />)
+      renderWithProviders(<LoginForm onSubmit={mockOnSubmit} />)
 
       const longEmail = 'a'.repeat(50) + '@example.com'
       const longPassword = 'password' + 'a'.repeat(100)
@@ -262,8 +262,8 @@ describe('LoginForm 組件測試', () => {
   })
 
   describe('♿ 可訪問性測試', () => {
-    it('應該有正確的 ARIA 屬性', () => {
-      render(<LoginForm onSubmit={mockOnSubmit} />)
+    it('應該有正確的 ARIA 屬性', async () => {
+      renderWithProviders(<LoginForm onSubmit={mockOnSubmit} />)
 
       const emailInput = screen.getByLabelText('email')
       const passwordInput = screen.getByLabelText('password')
@@ -276,7 +276,7 @@ describe('LoginForm 組件測試', () => {
 
     it('應該支援鍵盤導航', async () => {
       const user = userEvent.setup()
-      render(<LoginForm onSubmit={mockOnSubmit} />)
+      renderWithProviders(<LoginForm onSubmit={mockOnSubmit} />)
 
       const emailInput = screen.getByLabelText('email')
       const passwordInput = screen.getByLabelText('password')
@@ -311,9 +311,9 @@ describe('LoginForm 組件測試', () => {
       expect(submitButton).toHaveFocus()
     })
 
-    it('應該在錯誤狀態時有適當的 ARIA 描述', () => {
+    it('應該在錯誤狀態時有適當的 ARIA 描述', async () => {
       const errorMessage = 'Invalid credentials'
-      render(<LoginForm onSubmit={mockOnSubmit} error={errorMessage} />)
+      renderWithProviders(<LoginForm onSubmit={mockOnSubmit} error={errorMessage} />)
 
       const errorElement = screen.getByText(errorMessage)
       expect(errorElement).toHaveAttribute('role', 'alert')
@@ -321,8 +321,8 @@ describe('LoginForm 組件測試', () => {
   })
 
   describe('🎨 樣式和佈局測試', () => {
-    it('應該有正確的 CSS 類別', () => {
-      render(<LoginForm onSubmit={mockOnSubmit} />)
+    it('應該有正確的 CSS 類別', async () => {
+      renderWithProviders(<LoginForm onSubmit={mockOnSubmit} />)
 
       const emailInput = screen.getByLabelText('email')
       const passwordInput = screen.getByLabelText('password')
@@ -336,8 +336,8 @@ describe('LoginForm 組件測試', () => {
       expect(submitButton).toHaveClass('w-full', 'bg-blue-600', 'text-white', 'rounded-lg')
     })
 
-    it('應該在禁用狀態時有正確的樣式', () => {
-      render(<LoginForm onSubmit={mockOnSubmit} loading={true} />)
+    it('應該在禁用狀態時有正確的樣式', async () => {
+      renderWithProviders(<LoginForm onSubmit={mockOnSubmit} loading={true} />)
 
       const submitButton = screen.getByRole('button', { name: 'loading' })
       expect(submitButton).toHaveClass('disabled:opacity-50', 'disabled:cursor-not-allowed')
@@ -345,8 +345,8 @@ describe('LoginForm 組件測試', () => {
   })
 
   describe('🌐 國際化測試', () => {
-    it('應該使用翻譯鍵值而不是硬編碼文字', () => {
-      render(<LoginForm onSubmit={mockOnSubmit} />)
+    it('應該使用翻譯鍵值而不是硬編碼文字', async () => {
+      renderWithProviders(<LoginForm onSubmit={mockOnSubmit} />)
 
       // 我們的 mock 會返回翻譯鍵值
       expect(screen.getByText('email')).toBeInTheDocument()

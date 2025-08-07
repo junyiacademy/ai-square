@@ -9,7 +9,10 @@ jest.mock('@/lib/services/discovery-yaml-loader');
 jest.mock('@/lib/services/translation-service');
 
 const mockSession = {
-  user: { email: 'test@example.com' }
+  user: { 
+    id: 'test-user-123',
+    email: 'test@example.com' 
+  }
 };
 
 const mockTask = {
@@ -27,7 +30,7 @@ const mockTask = {
 const mockProgram = {
   id: 'prog-123',
   scenarioId: 'scenario-123',
-  userId: 'test@example.com',
+  userId: 'test-user-123',
   status: 'active',
   discoveryData: { 
     careerType: 'Software Engineer',
@@ -52,10 +55,26 @@ beforeEach(() => {
     findById: jest.fn().mockResolvedValue(mockProgram)
   };
   
-  require('@/lib/repositories/base/repository-factory').repositoryFactory.mockReturnValue({
-    getTaskRepository: () => mockTaskRepo,
-    getProgramRepository: () => mockProgramRepo
-  });
+  const mockScenarioRepo = {
+    findById: jest.fn().mockResolvedValue({
+      id: 'scenario-123',
+      title: { en: 'Test Scenario' },
+      mode: 'discovery'
+    })
+  };
+  
+  const mockEvaluationRepo = {
+    findByTaskId: jest.fn().mockResolvedValue([]),
+    create: jest.fn().mockResolvedValue({ id: 'eval-123' })
+  };
+
+  const mockRepositoryFactory = require('@/lib/repositories/base/repository-factory');
+  mockRepositoryFactory.repositoryFactory = {
+    getTaskRepository: jest.fn().mockReturnValue(mockTaskRepo),
+    getProgramRepository: jest.fn().mockReturnValue(mockProgramRepo),
+    getScenarioRepository: jest.fn().mockReturnValue(mockScenarioRepo),
+    getEvaluationRepository: jest.fn().mockReturnValue(mockEvaluationRepo)
+  };
   
   // Mock AI service
   require('@/lib/ai/vertex-ai-service').VertexAIService.mockImplementation(() => ({
@@ -122,7 +141,8 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
     });
 
     it('should return 404 when task not found', async () => {
-      const mockTaskRepo = require('@/lib/repositories/base/repository-factory').repositoryFactory().getTaskRepository();
+      const mockRepositoryFactory = require('@/lib/repositories/base/repository-factory');
+      const mockTaskRepo = mockRepositoryFactory.repositoryFactory.getTaskRepository();
       mockTaskRepo.findById.mockResolvedValueOnce(null);
       
       const request = new NextRequest('http://localhost/api/discovery/scenarios/scenario-123/programs/prog-123/tasks/nonexistent');
@@ -140,7 +160,8 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
     });
 
     it('should handle repository errors', async () => {
-      const mockTaskRepo = require('@/lib/repositories/base/repository-factory').repositoryFactory().getTaskRepository();
+      const mockRepositoryFactory = require('@/lib/repositories/base/repository-factory');
+      const mockTaskRepo = mockRepositoryFactory.repositoryFactory.getTaskRepository();
       mockTaskRepo.findById.mockRejectedValueOnce(new Error('Database error'));
       
       const request = new NextRequest('http://localhost/api/discovery/scenarios/scenario-123/programs/prog-123/tasks/task-123');
@@ -333,7 +354,8 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
     });
 
     it('should handle task not found for update', async () => {
-      const mockTaskRepo = require('@/lib/repositories/base/repository-factory').repositoryFactory().getTaskRepository();
+      const mockRepositoryFactory = require('@/lib/repositories/base/repository-factory');
+      const mockTaskRepo = mockRepositoryFactory.repositoryFactory.getTaskRepository();
       mockTaskRepo.findById.mockResolvedValueOnce(null);
       
       const request = new NextRequest('http://localhost/api/discovery/scenarios/scenario-123/programs/prog-123/tasks/nonexistent', {
@@ -354,7 +376,8 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
     });
 
     it('should handle update repository errors', async () => {
-      const mockTaskRepo = require('@/lib/repositories/base/repository-factory').repositoryFactory().getTaskRepository();
+      const mockRepositoryFactory = require('@/lib/repositories/base/repository-factory');
+      const mockTaskRepo = mockRepositoryFactory.repositoryFactory.getTaskRepository();
       mockTaskRepo.update.mockRejectedValueOnce(new Error('Update failed'));
       
       const request = new NextRequest('http://localhost/api/discovery/scenarios/scenario-123/programs/prog-123/tasks/task-123', {

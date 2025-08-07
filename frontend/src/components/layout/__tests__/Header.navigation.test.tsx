@@ -3,7 +3,7 @@
  * 測試導航連結和 i18n 整合
  */
 
-import { render, screen } from '@testing-library/react'
+import { renderWithProviders, screen, waitFor } from '@/test-utils/helpers/render'
 import userEvent from '@testing-library/user-event'
 
 // Mock next/navigation
@@ -98,10 +98,10 @@ describe('Header Navigation Tests', () => {
   })
 
   describe('Navigation Links', () => {
-    it('should display navigation links', () => {
+    it('should display navigation links', async () => {
       mockLocalStorage.getItem.mockReturnValue(null)
       
-      render(<Header />)
+      renderWithProviders(<Header />)
 
       // Check for primary navigation links
       expect(screen.getByText('Dashboard')).toBeInTheDocument()
@@ -110,10 +110,10 @@ describe('Header Navigation Tests', () => {
       expect(screen.getByText('Discovery')).toBeInTheDocument()
     })
 
-    it('should have correct href attributes', () => {
+    it('should have correct href attributes', async () => {
       mockLocalStorage.getItem.mockReturnValue(null)
       
-      render(<Header />)
+      renderWithProviders(<Header />)
 
       const dashboardLink = screen.getByText('Dashboard').closest('a')
       const assessmentLink = screen.getByText('Assessment').closest('a')
@@ -122,10 +122,10 @@ describe('Header Navigation Tests', () => {
       expect(assessmentLink).toHaveAttribute('href', '/assessment/scenarios')
     })
 
-    it('should highlight active page', () => {
+    it('should highlight active page', async () => {
       mockUsePathname.mockReturnValue('/dashboard')
       
-      render(<Header />)
+      renderWithProviders(<Header />)
 
       const dashboardLink = screen.getByText('Dashboard').closest('a')
       // Active links have text-gray-900 and border-blue-600 classes based on the Header component
@@ -136,10 +136,10 @@ describe('Header Navigation Tests', () => {
   })
 
   describe('Mobile Navigation', () => {
-    it('should show hamburger menu on mobile', () => {
+    it('should show hamburger menu on mobile', async () => {
       mockLocalStorage.getItem.mockReturnValue(null)
       
-      render(<Header />)
+      renderWithProviders(<Header />)
 
       // Check for hamburger menu button
       const hamburgerButton = screen.getByLabelText('Toggle navigation menu')
@@ -150,7 +150,7 @@ describe('Header Navigation Tests', () => {
       mockLocalStorage.getItem.mockReturnValue(null)
       const user = userEvent.setup()
       
-      render(<Header />)
+      renderWithProviders(<Header />)
 
       const hamburgerButton = screen.getByLabelText('Toggle navigation menu')
       
@@ -168,10 +168,10 @@ describe('Header Navigation Tests', () => {
   })
 
   describe('i18n Integration', () => {
-    it('should use translated text for navigation', () => {
+    it('should use translated text for navigation', async () => {
       mockLocalStorage.getItem.mockReturnValue(null)
       
-      render(<Header />)
+      renderWithProviders(<Header />)
 
       // All text should come from translations - check actual translated values
       expect(screen.getByText('Relations')).toBeInTheDocument()
@@ -179,7 +179,7 @@ describe('Header Navigation Tests', () => {
       expect(screen.getByText('Sign in')).toBeInTheDocument()
     })
 
-    it('should translate user roles', () => {
+    it('should translate user roles', async () => {
       const mockUser = {
         id: 1,
         email: 'test@example.com',
@@ -194,7 +194,7 @@ describe('Header Navigation Tests', () => {
         logout: jest.fn(),
       })
 
-      render(<Header />)
+      renderWithProviders(<Header />)
 
       // Should display translated teacher role
       expect(screen.getByText('Teacher')).toBeInTheDocument()
@@ -202,17 +202,17 @@ describe('Header Navigation Tests', () => {
   })
 
   describe('Navigation with Auth State', () => {
-    it('should show all navigation links when logged out', () => {
+    it('should show all navigation links when logged out', async () => {
       mockLocalStorage.getItem.mockReturnValue(null)
       
-      render(<Header />)
+      renderWithProviders(<Header />)
 
       expect(screen.getByText('Relations')).toBeInTheDocument()
       expect(screen.getByText('KSA Framework')).toBeInTheDocument()
       expect(screen.getByText('Sign in')).toBeInTheDocument()
     })
 
-    it('should show all navigation links when logged in', () => {
+    it('should show all navigation links when logged in', async () => {
       const mockUser = {
         id: 1,
         email: 'test@example.com',
@@ -227,7 +227,7 @@ describe('Header Navigation Tests', () => {
         logout: jest.fn(),
       })
 
-      render(<Header />)
+      renderWithProviders(<Header />)
 
       expect(screen.getByText('Relations')).toBeInTheDocument()
       expect(screen.getByText('KSA Framework')).toBeInTheDocument()

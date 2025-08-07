@@ -1,4 +1,4 @@
-import { render, screen, waitFor, act, fireEvent } from '@testing-library/react';
+import { renderWithProviders, screen, waitFor, act } from '@/test-utils/helpers/render';
 import userEvent from '@testing-library/user-event';
 import { useRouter, useSearchParams } from 'next/navigation';
 import LearningPathPage from '../page';
@@ -143,32 +143,32 @@ describe('LearningPathPage', () => {
   });
 
   describe('Authentication and Data Loading', () => {
-    it('should redirect to login if user not logged in', () => {
+    it('should redirect to login if user not logged in', async () => {
       localStorageMock.getItem.mockImplementation((key) => {
         if (key === 'user') return null;
         return null;
       });
 
-      render(<LearningPathPage />);
+      renderWithProviders(<LearningPathPage />);
 
       expect(mockPush).toHaveBeenCalledWith('/login');
     });
 
-    it('should redirect to assessment if no assessment result', () => {
+    it('should redirect to assessment if no assessment result', async () => {
       localStorageMock.getItem.mockImplementation((key) => {
         if (key === 'user') return JSON.stringify(mockUser);
         if (key === 'assessmentResult') return null;
         return null;
       });
 
-      render(<LearningPathPage />);
+      renderWithProviders(<LearningPathPage />);
 
       expect(mockPush).toHaveBeenCalledWith('/assessment');
     });
 
     it('should load user profile from localStorage', async () => {
       await act(async () => {
-        render(<LearningPathPage />);
+        renderWithProviders(<LearningPathPage />);
       });
 
       await waitFor(() => {
@@ -178,7 +178,7 @@ describe('LearningPathPage', () => {
 
     it('should load assessment result from localStorage', async () => {
       await act(async () => {
-        render(<LearningPathPage />);
+        renderWithProviders(<LearningPathPage />);
       });
 
       await waitFor(() => {
@@ -188,7 +188,7 @@ describe('LearningPathPage', () => {
 
     it('should fetch PBL scenarios', async () => {
       await act(async () => {
-        render(<LearningPathPage />);
+        renderWithProviders(<LearningPathPage />);
       });
 
       await waitFor(() => {
@@ -204,7 +204,7 @@ describe('LearningPathPage', () => {
       console.error = jest.fn();
 
       await act(async () => {
-        render(<LearningPathPage />);
+        renderWithProviders(<LearningPathPage />);
       });
 
       await waitFor(() => {
@@ -214,17 +214,17 @@ describe('LearningPathPage', () => {
   });
 
   describe('Component Rendering', () => {
-    it('should render loading state initially', () => {
+    it('should render loading state initially', async () => {
       mockFetch.mockImplementation(() => new Promise(() => {})); // Never resolves
 
-      render(<LearningPathPage />);
+      renderWithProviders(<LearningPathPage />);
 
       expect(screen.getByText('Generating your personalized learning path...')).toBeInTheDocument();
     });
 
     it('should render main content after loading', async () => {
       await act(async () => {
-        render(<LearningPathPage />);
+        renderWithProviders(<LearningPathPage />);
       });
 
       await waitFor(() => {
@@ -235,7 +235,7 @@ describe('LearningPathPage', () => {
 
     it('should display assessment score', async () => {
       await act(async () => {
-        render(<LearningPathPage />);
+        renderWithProviders(<LearningPathPage />);
       });
 
       await waitFor(() => {
@@ -245,7 +245,7 @@ describe('LearningPathPage', () => {
 
     it('should display weak domains', async () => {
       await act(async () => {
-        render(<LearningPathPage />);
+        renderWithProviders(<LearningPathPage />);
       });
 
       await waitFor(() => {
@@ -255,7 +255,7 @@ describe('LearningPathPage', () => {
 
     it('should render filter tabs', async () => {
       await act(async () => {
-        render(<LearningPathPage />);
+        renderWithProviders(<LearningPathPage />);
       });
 
       await waitFor(() => {
@@ -266,7 +266,7 @@ describe('LearningPathPage', () => {
 
     it('should render domain filter chips', async () => {
       await act(async () => {
-        render(<LearningPathPage />);
+        renderWithProviders(<LearningPathPage />);
       });
 
       await waitFor(() => {
@@ -281,7 +281,7 @@ describe('LearningPathPage', () => {
   describe('Learning Path Generation', () => {
     it('should generate learning path items from scenarios', async () => {
       await act(async () => {
-        render(<LearningPathPage />);
+        renderWithProviders(<LearningPathPage />);
       });
 
       await waitFor(() => {
@@ -293,7 +293,7 @@ describe('LearningPathPage', () => {
 
     it('should prioritize weak domain scenarios', async () => {
       await act(async () => {
-        render(<LearningPathPage />);
+        renderWithProviders(<LearningPathPage />);
       });
 
       await waitFor(() => {
@@ -305,7 +305,7 @@ describe('LearningPathPage', () => {
 
     it('should calculate relevance scores based on user profile', async () => {
       await act(async () => {
-        render(<LearningPathPage />);
+        renderWithProviders(<LearningPathPage />);
       });
 
       await waitFor(() => {
@@ -317,7 +317,7 @@ describe('LearningPathPage', () => {
 
     it('should display estimated time for each item', async () => {
       await act(async () => {
-        render(<LearningPathPage />);
+        renderWithProviders(<LearningPathPage />);
       });
 
       await waitFor(() => {
@@ -329,7 +329,7 @@ describe('LearningPathPage', () => {
 
     it('should show difficulty levels', async () => {
       await act(async () => {
-        render(<LearningPathPage />);
+        renderWithProviders(<LearningPathPage />);
       });
 
       await waitFor(() => {
@@ -341,7 +341,7 @@ describe('LearningPathPage', () => {
 
     it('should display reasons for recommendations', async () => {
       await act(async () => {
-        render(<LearningPathPage />);
+        renderWithProviders(<LearningPathPage />);
       });
 
       await waitFor(() => {
@@ -360,7 +360,7 @@ describe('LearningPathPage', () => {
       });
 
       await act(async () => {
-        render(<LearningPathPage />);
+        renderWithProviders(<LearningPathPage />);
       });
 
       await waitFor(() => {
@@ -372,7 +372,7 @@ describe('LearningPathPage', () => {
       mockSearchParams.get.mockReturnValue(null);
 
       await act(async () => {
-        render(<LearningPathPage />);
+        renderWithProviders(<LearningPathPage />);
       });
 
       await waitFor(() => {
@@ -384,7 +384,7 @@ describe('LearningPathPage', () => {
   describe('Filtering and Interaction', () => {
     beforeEach(async () => {
       await act(async () => {
-        render(<LearningPathPage />);
+        renderWithProviders(<LearningPathPage />);
       });
 
       await waitFor(() => {
@@ -441,7 +441,7 @@ describe('LearningPathPage', () => {
   describe('Domain Progress Display', () => {
     it('should calculate domain progress correctly', async () => {
       await act(async () => {
-        render(<LearningPathPage />);
+        renderWithProviders(<LearningPathPage />);
       });
 
       await waitFor(() => {
@@ -455,7 +455,7 @@ describe('LearningPathPage', () => {
 
     it('should highlight weak domains', async () => {
       await act(async () => {
-        render(<LearningPathPage />);
+        renderWithProviders(<LearningPathPage />);
       });
 
       await waitFor(() => {
@@ -466,7 +466,7 @@ describe('LearningPathPage', () => {
 
     it('should show improvement potential', async () => {
       await act(async () => {
-        render(<LearningPathPage />);
+        renderWithProviders(<LearningPathPage />);
       });
 
       await waitFor(() => {
@@ -479,7 +479,7 @@ describe('LearningPathPage', () => {
   describe('Learning Item Actions', () => {
     beforeEach(async () => {
       await act(async () => {
-        render(<LearningPathPage />);
+        renderWithProviders(<LearningPathPage />);
       });
 
       await waitFor(() => {
@@ -508,7 +508,7 @@ describe('LearningPathPage', () => {
       });
 
       await act(async () => {
-        render(<LearningPathPage />);
+        renderWithProviders(<LearningPathPage />);
       });
 
       await waitFor(() => {
@@ -527,7 +527,7 @@ describe('LearningPathPage', () => {
       });
 
       await act(async () => {
-        render(<LearningPathPage />);
+        renderWithProviders(<LearningPathPage />);
       });
 
       await waitFor(() => {
@@ -596,7 +596,7 @@ describe('LearningPathPage', () => {
       });
 
       await act(async () => {
-        render(<LearningPathPage />);
+        renderWithProviders(<LearningPathPage />);
       });
 
       await waitFor(() => {
@@ -620,7 +620,7 @@ describe('LearningPathPage', () => {
         });
 
         await act(async () => {
-          const { unmount } = render(<LearningPathPage />);
+          const { unmount } = renderWithProviders(<LearningPathPage />);
           
           await waitFor(() => {
             expect(screen.getByText('Your Personalized Learning Path')).toBeInTheDocument();
@@ -633,7 +633,7 @@ describe('LearningPathPage', () => {
   });
 
   describe('Error Handling', () => {
-    it('should handle malformed assessment result', () => {
+    it('should handle malformed assessment result', async () => {
       localStorageMock.getItem.mockImplementation((key) => {
         if (key === 'user') return JSON.stringify(mockUser);
         if (key === 'assessmentResult') return 'invalid json';
@@ -642,7 +642,7 @@ describe('LearningPathPage', () => {
 
       console.error = jest.fn();
 
-      render(<LearningPathPage />);
+      renderWithProviders(<LearningPathPage />);
 
       expect(mockPush).toHaveBeenCalledWith('/assessment');
     });
@@ -658,7 +658,7 @@ describe('LearningPathPage', () => {
       console.error = jest.fn();
 
       await act(async () => {
-        render(<LearningPathPage />);
+        renderWithProviders(<LearningPathPage />);
       });
 
       await waitFor(() => {
@@ -680,7 +680,7 @@ describe('LearningPathPage', () => {
       console.error = jest.fn();
 
       await act(async () => {
-        render(<LearningPathPage />);
+        renderWithProviders(<LearningPathPage />);
       });
 
       await waitFor(() => {
@@ -696,7 +696,7 @@ describe('LearningPathPage', () => {
       console.error = jest.fn();
 
       await act(async () => {
-        render(<LearningPathPage />);
+        renderWithProviders(<LearningPathPage />);
       });
 
       await waitFor(() => {
@@ -708,7 +708,7 @@ describe('LearningPathPage', () => {
   describe('Priority and Sorting', () => {
     it('should sort learning path items by priority', async () => {
       await act(async () => {
-        render(<LearningPathPage />);
+        renderWithProviders(<LearningPathPage />);
       });
 
       await waitFor(() => {
@@ -724,7 +724,7 @@ describe('LearningPathPage', () => {
 
     it('should assign correct priority levels', async () => {
       await act(async () => {
-        render(<LearningPathPage />);
+        renderWithProviders(<LearningPathPage />);
       });
 
       await waitFor(() => {
@@ -742,7 +742,7 @@ describe('LearningPathPage', () => {
   describe('User Experience Features', () => {
     it('should show total estimated time', async () => {
       await act(async () => {
-        render(<LearningPathPage />);
+        renderWithProviders(<LearningPathPage />);
       });
 
       await waitFor(() => {
@@ -762,7 +762,7 @@ describe('LearningPathPage', () => {
       });
 
       await act(async () => {
-        render(<LearningPathPage />);
+        renderWithProviders(<LearningPathPage />);
       });
 
       await waitFor(() => {
@@ -773,7 +773,7 @@ describe('LearningPathPage', () => {
 
     it('should show next recommended action', async () => {
       await act(async () => {
-        render(<LearningPathPage />);
+        renderWithProviders(<LearningPathPage />);
       });
 
       await waitFor(() => {
@@ -783,7 +783,7 @@ describe('LearningPathPage', () => {
 
     it('should provide clear call-to-action buttons', async () => {
       await act(async () => {
-        render(<LearningPathPage />);
+        renderWithProviders(<LearningPathPage />);
       });
 
       await waitFor(() => {
@@ -799,7 +799,7 @@ describe('LearningPathPage', () => {
   describe('Accessibility', () => {
     it('should have proper ARIA labels', async () => {
       await act(async () => {
-        render(<LearningPathPage />);
+        renderWithProviders(<LearningPathPage />);
       });
 
       await waitFor(() => {
@@ -812,7 +812,7 @@ describe('LearningPathPage', () => {
 
     it('should support keyboard navigation', async () => {
       await act(async () => {
-        render(<LearningPathPage />);
+        renderWithProviders(<LearningPathPage />);
       });
 
       await waitFor(() => {
@@ -825,7 +825,7 @@ describe('LearningPathPage', () => {
 
     it('should have semantic structure', async () => {
       await act(async () => {
-        render(<LearningPathPage />);
+        renderWithProviders(<LearningPathPage />);
       });
 
       await waitFor(() => {
@@ -845,7 +845,7 @@ describe('LearningPathPage', () => {
       });
 
       await act(async () => {
-        render(<LearningPathPage />);
+        renderWithProviders(<LearningPathPage />);
       });
 
       await waitFor(() => {
@@ -862,7 +862,7 @@ describe('LearningPathPage', () => {
       });
 
       await act(async () => {
-        render(<LearningPathPage />);
+        renderWithProviders(<LearningPathPage />);
       });
 
       await waitFor(() => {
@@ -905,7 +905,7 @@ describe('LearningPathPage', () => {
       const startTime = performance.now();
 
       await act(async () => {
-        render(<LearningPathPage />);
+        renderWithProviders(<LearningPathPage />);
       });
 
       await waitFor(() => {
@@ -927,7 +927,7 @@ describe('LearningPathPage', () => {
       };
 
       await act(async () => {
-        render(<TestWrapper />);
+        renderWithProviders(<TestWrapper />);
       });
 
       await waitFor(() => {

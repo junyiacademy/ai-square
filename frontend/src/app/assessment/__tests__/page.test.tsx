@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { renderWithProviders, screen, waitFor, fireEvent } from '@/test-utils/helpers/render';
 import { useTranslation } from 'react-i18next';
 import AssessmentPage from '../page';
 
@@ -134,13 +134,13 @@ describe('AssessmentPage', () => {
     jest.clearAllMocks();
   });
 
-  it('renders loading state initially', () => {
-    render(<AssessmentPage />);
+  it('renders loading state initially', async () => {
+    renderWithProviders(<AssessmentPage />);
     expect(screen.getByText('Loading assessment...')).toBeInTheDocument();
   });
 
   it('renders intro screen after loading', async () => {
-    render(<AssessmentPage />);
+    renderWithProviders(<AssessmentPage />);
     
     await waitFor(() => {
       expect(screen.getByText('AI Literacy Assessment')).toBeInTheDocument();
@@ -150,7 +150,7 @@ describe('AssessmentPage', () => {
   });
 
   it('starts assessment when start button is clicked', async () => {
-    render(<AssessmentPage />);
+    renderWithProviders(<AssessmentPage />);
     
     await waitFor(() => {
       expect(screen.getByText('Start Assessment')).toBeInTheDocument();
@@ -164,7 +164,7 @@ describe('AssessmentPage', () => {
   });
 
   it('completes assessment and shows results', async () => {
-    render(<AssessmentPage />);
+    renderWithProviders(<AssessmentPage />);
     
     await waitFor(() => {
       expect(screen.getByText('Start Assessment')).toBeInTheDocument();
@@ -185,7 +185,7 @@ describe('AssessmentPage', () => {
   });
 
   it('allows retaking assessment', async () => {
-    render(<AssessmentPage />);
+    renderWithProviders(<AssessmentPage />);
     
     // Complete the assessment
     await waitFor(() => {
@@ -216,7 +216,7 @@ describe('AssessmentPage', () => {
   it('handles API error gracefully', async () => {
     (global.fetch as jest.Mock).mockRejectedValue(new Error('API Error'));
     
-    render(<AssessmentPage />);
+    renderWithProviders(<AssessmentPage />);
     
     await waitFor(() => {
       expect(screen.getByText('errorLoading')).toBeInTheDocument();
@@ -224,7 +224,7 @@ describe('AssessmentPage', () => {
   });
 
   it('calculates assessment results correctly', async () => {
-    render(<AssessmentPage />);
+    renderWithProviders(<AssessmentPage />);
     
     await waitFor(() => {
       expect(screen.getByText('Start Assessment')).toBeInTheDocument();

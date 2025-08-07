@@ -1,3 +1,4 @@
+import { mockRepositoryFactory } from '@/test-utils/mocks/repositories';
 /**
  * PostgreSQL Learning Service Tests
  * 提升覆蓋率從 0% 到 95%+
@@ -206,14 +207,14 @@ describe('PostgreSQLLearningService', () => {
   });
 
   describe('constructor', () => {
-    it('should initialize with PostgreSQL repositories', () => {
+    it('should initialize with PostgreSQL repositories', async () => {
       expect(repositoryFactory.getScenarioRepository).toHaveBeenCalled();
       expect(repositoryFactory.getProgramRepository).toHaveBeenCalled();
       expect(repositoryFactory.getTaskRepository).toHaveBeenCalled();
       expect(repositoryFactory.getEvaluationRepository).toHaveBeenCalled();
     });
 
-    it('should enable evaluation and hooks by default', () => {
+    it('should enable evaluation and hooks by default', async () => {
       // Service should be created successfully with default options
       expect(service).toBeDefined();
     });

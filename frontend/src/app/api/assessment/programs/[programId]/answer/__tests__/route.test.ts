@@ -1,3 +1,4 @@
+import { mockRepositoryFactory } from '@/test-utils/mocks/repositories';
 /**
  * Assessment Answer API Route Tests
  * 測試評估答案提交 API

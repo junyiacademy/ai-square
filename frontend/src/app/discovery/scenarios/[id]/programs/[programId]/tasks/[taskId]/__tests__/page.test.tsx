@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { renderWithProviders, screen, waitFor } from '@/test-utils/helpers/render';
 import userEvent from '@testing-library/user-event';
 import { useRouter, useParams } from 'next/navigation';
 import TaskDetailPage from '../page';
@@ -96,7 +96,7 @@ describe('TaskDetailPage', () => {
 
   describe('Rendering', () => {
     it('should render task details correctly', async () => {
-      render(<TaskDetailPage />);
+      renderWithProviders(<TaskDetailPage />);
 
       await waitFor(() => {
         expect(screen.getByText('Understand Algorithms')).toBeInTheDocument();
@@ -108,19 +108,19 @@ describe('TaskDetailPage', () => {
       expect(screen.getByText('完成任務描述')).toBeInTheDocument();
     });
 
-    it('should show loading state initially', () => {
-      render(<TaskDetailPage />);
+    it('should show loading state initially', async () => {
+      renderWithProviders(<TaskDetailPage />);
       expect(screen.getByText('載入中...')).toBeInTheDocument();
     });
 
-    it('should redirect to login when not authenticated', () => {
+    it('should redirect to login when not authenticated', async () => {
       mockUseAuth.mockReturnValue({
         user: null,
         isLoggedIn: false,
         isLoading: false
       } as any);
 
-      render(<TaskDetailPage />);
+      renderWithProviders(<TaskDetailPage />);
 
       expect(mockRouter.push).toHaveBeenCalledWith('/login?redirect=/discovery/scenarios');
     });
@@ -131,7 +131,7 @@ describe('TaskDetailPage', () => {
         status: 404
       } as Response);
 
-      render(<TaskDetailPage />);
+      renderWithProviders(<TaskDetailPage />);
 
       await waitFor(() => {
         expect(screen.getByText('找不到此任務')).toBeInTheDocument();
@@ -185,7 +185,7 @@ describe('TaskDetailPage', () => {
           })
         } as Response);
 
-      render(<TaskDetailPage />);
+      renderWithProviders(<TaskDetailPage />);
 
       await waitFor(() => {
         expect(screen.getByText('Understand Algorithms')).toBeInTheDocument();
@@ -216,7 +216,7 @@ describe('TaskDetailPage', () => {
     });
 
     it('should disable submit button when textarea is empty', async () => {
-      render(<TaskDetailPage />);
+      renderWithProviders(<TaskDetailPage />);
 
       await waitFor(() => {
         expect(screen.getByText('Understand Algorithms')).toBeInTheDocument();
@@ -237,7 +237,7 @@ describe('TaskDetailPage', () => {
         } as Response)
         .mockImplementationOnce(() => new Promise(resolve => setTimeout(resolve, 1000)));
 
-      render(<TaskDetailPage />);
+      renderWithProviders(<TaskDetailPage />);
 
       await waitFor(() => {
         expect(screen.getByText('Understand Algorithms')).toBeInTheDocument();
@@ -283,7 +283,7 @@ describe('TaskDetailPage', () => {
         json: async () => completedTaskData
       } as Response);
 
-      render(<TaskDetailPage />);
+      renderWithProviders(<TaskDetailPage />);
 
       await waitFor(() => {
         expect(screen.getByText('任務已完成！')).toBeInTheDocument();
@@ -301,7 +301,7 @@ describe('TaskDetailPage', () => {
         json: async () => completedTaskData
       } as Response);
 
-      render(<TaskDetailPage />);
+      renderWithProviders(<TaskDetailPage />);
 
       await waitFor(() => {
         expect(screen.getByText('任務已完成！')).toBeInTheDocument();
@@ -319,7 +319,7 @@ describe('TaskDetailPage', () => {
         json: async () => completedTaskData
       } as Response);
 
-      render(<TaskDetailPage />);
+      renderWithProviders(<TaskDetailPage />);
 
       await waitFor(() => {
         expect(screen.getByText('返回學習歷程')).toBeInTheDocument();
@@ -375,7 +375,7 @@ describe('TaskDetailPage', () => {
         json: async () => taskWithHistory
       } as Response);
 
-      render(<TaskDetailPage />);
+      renderWithProviders(<TaskDetailPage />);
 
       await waitFor(() => {
         expect(screen.getByText('學習歷程')).toBeInTheDocument();
@@ -396,7 +396,7 @@ describe('TaskDetailPage', () => {
         json: async () => taskWithHistory
       } as Response);
 
-      render(<TaskDetailPage />);
+      renderWithProviders(<TaskDetailPage />);
 
       await waitFor(() => {
         expect(screen.getByText('第一次嘗試')).toBeInTheDocument();
@@ -422,7 +422,7 @@ describe('TaskDetailPage', () => {
         json: async () => taskWithHistory
       } as Response);
 
-      render(<TaskDetailPage />);
+      renderWithProviders(<TaskDetailPage />);
 
       await waitFor(() => {
         expect(screen.getByText('✓1')).toBeInTheDocument();
@@ -436,7 +436,7 @@ describe('TaskDetailPage', () => {
     it('should toggle hints visibility', async () => {
       const user = userEvent.setup();
 
-      render(<TaskDetailPage />);
+      renderWithProviders(<TaskDetailPage />);
 
       await waitFor(() => {
         expect(screen.getByText('需要提示？')).toBeInTheDocument();
@@ -467,7 +467,7 @@ describe('TaskDetailPage', () => {
         json: async () => taskWithoutHints
       } as Response);
 
-      render(<TaskDetailPage />);
+      renderWithProviders(<TaskDetailPage />);
 
       await waitFor(() => {
         expect(screen.getByText('需要提示？')).toBeInTheDocument();
@@ -502,7 +502,7 @@ describe('TaskDetailPage', () => {
         json: async () => passedTaskData
       } as Response);
 
-      render(<TaskDetailPage />);
+      renderWithProviders(<TaskDetailPage />);
 
       await waitFor(() => {
         expect(screen.getByText('恭喜達到通過標準！')).toBeInTheDocument();
@@ -533,7 +533,7 @@ describe('TaskDetailPage', () => {
           })
         } as Response);
 
-      render(<TaskDetailPage />);
+      renderWithProviders(<TaskDetailPage />);
 
       await waitFor(() => {
         expect(screen.getByText('完成任務 →')).toBeInTheDocument();

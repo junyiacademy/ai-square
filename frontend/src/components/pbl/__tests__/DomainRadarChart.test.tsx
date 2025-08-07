@@ -1,3 +1,45 @@
+
+jest.mock('d3', () => ({
+  select: jest.fn(() => ({
+    append: jest.fn().mockReturnThis(),
+    attr: jest.fn().mockReturnThis(),
+    style: jest.fn().mockReturnThis(),
+    text: jest.fn().mockReturnThis(),
+    data: jest.fn().mockReturnThis(),
+    enter: jest.fn().mockReturnThis(),
+    exit: jest.fn().mockReturnThis(),
+    remove: jest.fn().mockReturnThis(),
+    selectAll: jest.fn().mockReturnThis(),
+  })),
+  scaleLinear: jest.fn(() => {
+    const scale = (value: unknown) => value;
+    scale.domain = jest.fn().mockReturnThis();
+    scale.range = jest.fn().mockReturnThis();
+    return scale;
+  }),
+  scaleOrdinal: jest.fn(() => {
+    const scale = (value: unknown) => value;
+    scale.domain = jest.fn().mockReturnThis();
+    scale.range = jest.fn().mockReturnThis();
+    return scale;
+  }),
+  arc: jest.fn(() => {
+    const arcFn = jest.fn();
+    Object.assign(arcFn, {
+      innerRadius: jest.fn().mockReturnThis(),
+      outerRadius: jest.fn().mockReturnThis()
+    });
+    return arcFn;
+  }),
+  pie: jest.fn(() => {
+    const pieFn = jest.fn((data: unknown[]) => data.map((d: unknown, i: number) => ({ data: d, index: i })));
+    Object.assign(pieFn, {
+      value: jest.fn().mockReturnThis()
+    });
+    return pieFn;
+  }),
+}));
+
 import React from 'react'
 import { render, screen } from '@testing-library/react'
 import DomainRadarChart from '../DomainRadarChart'
@@ -50,14 +92,14 @@ describe('DomainRadarChart', () => {
     designing_with_ai: 78,
   }
 
-  it('renders the radar chart', () => {
+  it('renders the radar chart', async () => {
     render(<DomainRadarChart domainScores={mockDomainScores} />)
 
     const radarChart = screen.getByTestId('radar-chart')
     expect(radarChart).toBeInTheDocument()
   })
 
-  it('passes correct data structure to chart', () => {
+  it('passes correct data structure to chart', async () => {
     render(<DomainRadarChart domainScores={mockDomainScores} />)
 
     const radarChart = screen.getByTestId('radar-chart')
@@ -77,7 +119,7 @@ describe('DomainRadarChart', () => {
     expect(dataset.data).toEqual([85, 72, 90, 78])
   })
 
-  it('configures chart options correctly', () => {
+  it('configures chart options correctly', async () => {
     render(<DomainRadarChart domainScores={mockDomainScores} />)
 
     const radarChart = screen.getByTestId('radar-chart')
@@ -93,7 +135,7 @@ describe('DomainRadarChart', () => {
     expect(chartOptions.maintainAspectRatio).toBe(false)
   })
 
-  it('handles empty domain scores', () => {
+  it('handles empty domain scores', async () => {
     const emptyScores = {
       engaging_with_ai: 0,
       creating_with_ai: 0,
@@ -110,7 +152,7 @@ describe('DomainRadarChart', () => {
     expect(chartData.datasets[0].data).toEqual([0, 0, 0, 0])
   })
 
-  it('handles partial domain scores', () => {
+  it('handles partial domain scores', async () => {
     const partialScores = {
       engaging_with_ai: 85,
       creating_with_ai: 72,
@@ -128,7 +170,7 @@ describe('DomainRadarChart', () => {
     expect(chartData.datasets[0].data).toEqual([85, 72, 0, 0])
   })
 
-  it('applies correct styling to dataset', () => {
+  it('applies correct styling to dataset', async () => {
     render(<DomainRadarChart domainScores={mockDomainScores} />)
 
     const radarChart = screen.getByTestId('radar-chart')

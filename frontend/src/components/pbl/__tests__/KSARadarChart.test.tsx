@@ -1,3 +1,45 @@
+
+jest.mock('d3', () => ({
+  select: jest.fn(() => ({
+    append: jest.fn().mockReturnThis(),
+    attr: jest.fn().mockReturnThis(),
+    style: jest.fn().mockReturnThis(),
+    text: jest.fn().mockReturnThis(),
+    data: jest.fn().mockReturnThis(),
+    enter: jest.fn().mockReturnThis(),
+    exit: jest.fn().mockReturnThis(),
+    remove: jest.fn().mockReturnThis(),
+    selectAll: jest.fn().mockReturnThis(),
+  })),
+  scaleLinear: jest.fn(() => {
+    const scale = (value: unknown) => value;
+    scale.domain = jest.fn().mockReturnThis();
+    scale.range = jest.fn().mockReturnThis();
+    return scale;
+  }),
+  scaleOrdinal: jest.fn(() => {
+    const scale = (value: unknown) => value;
+    scale.domain = jest.fn().mockReturnThis();
+    scale.range = jest.fn().mockReturnThis();
+    return scale;
+  }),
+  arc: jest.fn(() => {
+    const arcFn = jest.fn();
+    Object.assign(arcFn, {
+      innerRadius: jest.fn().mockReturnThis(),
+      outerRadius: jest.fn().mockReturnThis()
+    });
+    return arcFn;
+  }),
+  pie: jest.fn(() => {
+    const pieFn = jest.fn((data: unknown[]) => data.map((d: unknown, i: number) => ({ data: d, index: i })));
+    Object.assign(pieFn, {
+      value: jest.fn().mockReturnThis()
+    });
+    return pieFn;
+  }),
+}));
+
 import React from 'react'
 import { render, screen } from '@testing-library/react'
 import KSARadarChart from '../KSARadarChart'
@@ -54,14 +96,14 @@ describe('KSARadarChart', () => {
     'A3': { score: 77, category: 'attitudes' as const },
   }
 
-  it('renders the radar chart', () => {
+  it('renders the radar chart', async () => {
     render(<KSARadarChart ksaScores={mockKsaScores} />)
 
     const radarChart = screen.getByTestId('radar-chart')
     expect(radarChart).toBeInTheDocument()
   })
 
-  it('passes correct data structure to chart', () => {
+  it('passes correct data structure to chart', async () => {
     render(<KSARadarChart ksaScores={mockKsaScores} />)
 
     const radarChart = screen.getByTestId('radar-chart')
@@ -83,7 +125,7 @@ describe('KSARadarChart', () => {
     expect(knowledgeDataset.data).toContain(90) // K3 score
   })
 
-  it('configures chart options correctly', () => {
+  it('configures chart options correctly', async () => {
     render(<KSARadarChart ksaScores={mockKsaScores} />)
 
     const radarChart = screen.getByTestId('radar-chart')
@@ -99,7 +141,7 @@ describe('KSARadarChart', () => {
     expect(chartOptions.maintainAspectRatio).toBe(false)
   })
 
-  it('handles empty KSA scores', () => {
+  it('handles empty KSA scores', async () => {
     render(<KSARadarChart ksaScores={{}} />)
 
     const radarChart = screen.getByTestId('radar-chart')
@@ -112,7 +154,7 @@ describe('KSARadarChart', () => {
     })
   })
 
-  it('groups scores by category correctly', () => {
+  it('groups scores by category correctly', async () => {
     render(<KSARadarChart ksaScores={mockKsaScores} />)
 
     const radarChart = screen.getByTestId('radar-chart')
