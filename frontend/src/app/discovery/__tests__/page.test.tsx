@@ -12,6 +12,8 @@ jest.mock('next/navigation', () => ({
     push: jest.fn(),
     back: jest.fn(),
     refresh: jest.fn(),
+    replace: jest.fn(),
+    forward: jest.fn(),
   }),
   usePathname: () => '/',
   useSearchParams: () => new URLSearchParams(),
@@ -28,14 +30,10 @@ describe('page', () => {
   });
 
   it('should have proper structure', () => {
-    render(<Page />);
+    const { container } = render(<Page />);
     
-    // Check for basic elements - adjust based on component
-    const element = screen.getByRole('main', { hidden: true }) || 
-                   screen.getByRole('article', { hidden: true }) ||
-                   screen.getByRole('section', { hidden: true }) ||
-                   document.querySelector('div');
-    expect(element).toBeInTheDocument();
+    // This is a redirect page that renders null
+    expect(container.firstChild).toBeNull();
   });
 
   it('should handle user interactions', async () => {
