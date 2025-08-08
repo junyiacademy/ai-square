@@ -20,11 +20,14 @@ describe('EmailService', () => {
     // Reset environment variables
     process.env = { ...originalEnv };
     
-    // Setup mock transporter
-    mockSendMail = jest.fn();
+    // Setup mock transporter with sendMail method
+    mockSendMail = jest.fn().mockResolvedValue({ messageId: 'test-message-id' });
     mockTransporter = {
       sendMail: mockSendMail
     };
+    
+    // Setup default mock for createTransport
+    (nodemailer.createTransport as jest.Mock).mockReturnValue(mockTransporter);
   });
 
   afterEach(() => {
@@ -37,10 +40,6 @@ describe('EmailService', () => {
       process.env.GMAIL_USER = 'test@gmail.com';
       process.env.GMAIL_APP_PASSWORD = 'test-password';
       
-      (nodemailer.createTransport as jest.Mock).mockReturnValue(mockTransporter);
-      
-      // Clear module cache to force re-initialization
-      jest.resetModules();
       const { emailService } = require('../email-service');
       
       expect(nodemailer.createTransport).toHaveBeenCalledWith({
@@ -59,6 +58,10 @@ describe('EmailService', () => {
       const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
       
       jest.resetModules();
+      
+      // Re-setup the mock after resetModules
+      (nodemailer.createTransport as jest.Mock).mockReturnValue(mockTransporter);
+      
       const { emailService } = require('../email-service');
       
       expect(consoleSpy).toHaveBeenCalledWith(
@@ -78,8 +81,8 @@ describe('EmailService', () => {
       
       jest.resetModules();
       
-      // Mock createTransport to return our mockTransporter
-      (nodemailer.createTransport as jest.Mock).mockImplementation(() => mockTransporter);
+      // Mock createTransport to return our mockTransporter AFTER resetModules
+      (nodemailer.createTransport as jest.Mock).mockReturnValue(mockTransporter);
       
       const module = require('../email-service');
       emailService = module.emailService;
@@ -165,7 +168,7 @@ describe('EmailService', () => {
       process.env.GMAIL_APP_PASSWORD = 'test-password';
       
       jest.resetModules();
-      (nodemailer.createTransport as jest.Mock).mockImplementation(() => mockTransporter);
+      (nodemailer.createTransport as jest.Mock).mockReturnValue(mockTransporter);
       
       const module = require('../email-service');
       emailService = module.emailService;
@@ -210,7 +213,7 @@ describe('EmailService', () => {
       process.env.GMAIL_APP_PASSWORD = 'test-password';
       
       jest.resetModules();
-      (nodemailer.createTransport as jest.Mock).mockImplementation(() => mockTransporter);
+      (nodemailer.createTransport as jest.Mock).mockReturnValue(mockTransporter);
       
       const module = require('../email-service');
       emailService = module.emailService;
@@ -255,7 +258,7 @@ describe('EmailService', () => {
       process.env.NEXT_PUBLIC_BASE_URL = 'https://app.example.com';
       
       jest.resetModules();
-      (nodemailer.createTransport as jest.Mock).mockImplementation(() => mockTransporter);
+      (nodemailer.createTransport as jest.Mock).mockReturnValue(mockTransporter);
       
       const module = require('../email-service');
       emailService = module.emailService;
@@ -293,7 +296,7 @@ describe('EmailService', () => {
       delete process.env.NEXT_PUBLIC_BASE_URL;
       
       jest.resetModules();
-      (nodemailer.createTransport as jest.Mock).mockImplementation(() => mockTransporter);
+      (nodemailer.createTransport as jest.Mock).mockReturnValue(mockTransporter);
       
       const module = require('../email-service');
       const service = module.emailService;
@@ -313,11 +316,14 @@ describe('EmailService', () => {
       process.env.GMAIL_APP_PASSWORD = 'test-password';
       
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+      
+      jest.resetModules();
+      
+      // Setup mock after resetModules
       (nodemailer.createTransport as jest.Mock).mockImplementation(() => {
         throw new Error('Transport creation failed');
       });
       
-      jest.resetModules();
       const { emailService } = require('../email-service');
       
       expect(consoleSpy).toHaveBeenCalledWith(
@@ -333,7 +339,7 @@ describe('EmailService', () => {
       process.env.GMAIL_APP_PASSWORD = 'test-password';
       
       jest.resetModules();
-      (nodemailer.createTransport as jest.Mock).mockImplementation(() => mockTransporter);
+      (nodemailer.createTransport as jest.Mock).mockReturnValue(mockTransporter);
       
       const module = require('../email-service');
       const emailService = module.emailService;

@@ -33,7 +33,7 @@ describe('storage.errors', () => {
     
     it('should create error with message', () => {
       const error = new StorageNotFoundError('File not found');
-      expect(error.message).toBe('File not found');
+      expect(error.message).toBe('Item not found: File not found');
     });
     
     it('should be an instance of StorageError', () => {

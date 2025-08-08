@@ -88,7 +88,7 @@ describe('GET /api/learning/programs/[programId]/status', () => {
     mockGetProgramStatus.mockResolvedValue(mockStatus);
 
     const request = new NextRequest('http://localhost:3000/api/learning/programs/prog123/status');
-    const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
+    const response = await GET(request, { params: Promise.resolve({'programId':'prog123'}) });
     const data = await response.json();
 
     expect(response.status).toBe(200);

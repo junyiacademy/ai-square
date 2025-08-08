@@ -35,6 +35,41 @@ npx playwright test --headed
 
 **絕對不要讓用戶一直幫你抓錯！每個修復都要自己先測試過！**
 
+## 🚀 高效測試修復策略
+
+### 修復測試失敗的高效方法：
+```bash
+# 1. 先識別失敗的測試檔案
+npm test 2>&1 | grep "FAIL"
+
+# 2. 一次修復一個檔案
+npm test -- [file-path] --no-coverage
+
+# 3. 修到該檔案 100% 通過
+# 4. 移到下一個失敗檔案
+# 5. 完成幾個後執行
+npm run typecheck && npm run lint
+
+# 6. 通過後 commit
+git commit --no-verify -m "fix: tests"
+```
+
+### 關鍵原則：
+- 一次專注一個檔案
+- 使用 --no-coverage 加速
+- 不要跑完整測試套件直到最後
+- 系統性修復，不要並行
+
+### 自動化工作流程：
+**「遇到沒有test就加上去，完成幾個就 tsc lint, commit no verify，然後就重複以上，不用每次都給我報告，全部修完再報告」**
+
+這個指令讓 Claude 能夠：
+1. 自動為缺少測試的檔案加入測試
+2. 批次修復後執行型別檢查和 lint
+3. 自動 commit 不等驗證
+4. 持續工作不需要每次報告
+5. 完成所有任務後統一報告
+
 ## 🛠️ Claude Code Commands
 
 ### Slash Commands

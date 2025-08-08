@@ -6,6 +6,10 @@ global.fetch = jest.fn()
 // Mock timers
 jest.useFakeTimers()
 
+// Spy on timer functions
+jest.spyOn(global, 'setTimeout')
+jest.spyOn(global, 'clearTimeout')
+
 describe('TokenManager', () => {
   let tokenManager: TokenManager
   const mockFetch = global.fetch as jest.MockedFunction<typeof fetch>

@@ -47,6 +47,7 @@ beforeEach(() => {
   // Mock repositories
   const mockTaskRepo = {
     findById: jest.fn().mockResolvedValue(mockTask),
+    getTaskWithInteractions: jest.fn().mockResolvedValue(mockTask),
     update: jest.fn().mockResolvedValue(mockTask),
     addInteraction: jest.fn().mockResolvedValue(true)
   };
@@ -59,7 +60,8 @@ beforeEach(() => {
     findById: jest.fn().mockResolvedValue({
       id: 'scenario-123',
       title: { en: 'Test Scenario' },
-      mode: 'discovery'
+      mode: 'discovery',
+      metadata: { careerType: 'Software Engineer' }
     })
   };
   
@@ -108,15 +110,15 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await GET(
         request,
-        { params: Promise.resolve({'id':'test-id','programId':'test-id','taskId':'test-id'}) }
+        { params: Promise.resolve({'id':'scenario-123','programId':'prog-123','taskId':'task-123'}) }
       );
       
       expect(response.status).toBe(200);
       
       const data = await response.json();
-      expect(data.success).toBe(true);
-      expect(data.task).toEqual(mockTask);
-      expect(data.program).toEqual(mockProgram);
+      expect(data.id).toBe(mockTask.id);
+      expect(data.status).toBe(mockTask.status);
+      expect(data.careerType).toBe(mockProgram.discoveryData.careerType);
     });
 
     it('should return 401 when user not authenticated', async () => {
@@ -126,7 +128,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await GET(
         request,
-        { params: Promise.resolve({'id':'test-id','programId':'test-id','taskId':'test-id'}) }
+        { params: Promise.resolve({'id':'scenario-123','programId':'prog-123','taskId':'task-123'}) }
       );
       
       expect(response.status).toBe(401);
@@ -135,13 +137,13 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
     it('should return 404 when task not found', async () => {
       const mockRepositoryFactory = require('@/lib/repositories/base/repository-factory');
       const mockTaskRepo = mockRepositoryFactory.repositoryFactory.getTaskRepository();
-      mockTaskRepo.findById.mockResolvedValueOnce(null);
+      mockTaskRepo.getTaskWithInteractions.mockResolvedValueOnce(null);
       
       const request = new NextRequest('http://localhost/api/discovery/scenarios/scenario-123/programs/prog-123/tasks/nonexistent');
       
       const response = await GET(
         request,
-        { params: Promise.resolve({'id':'test-id','programId':'test-id','taskId':'test-id'}) }
+        { params: Promise.resolve({'id':'scenario-123','programId':'prog-123','taskId':'task-123'}) }
       );
       
       expect(response.status).toBe(404);
@@ -150,13 +152,13 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
     it('should handle repository errors', async () => {
       const mockRepositoryFactory = require('@/lib/repositories/base/repository-factory');
       const mockTaskRepo = mockRepositoryFactory.repositoryFactory.getTaskRepository();
-      mockTaskRepo.findById.mockRejectedValueOnce(new Error('Database error'));
+      mockTaskRepo.getTaskWithInteractions.mockRejectedValueOnce(new Error('Database error'));
       
       const request = new NextRequest('http://localhost/api/discovery/scenarios/scenario-123/programs/prog-123/tasks/task-123');
       
       const response = await GET(
         request,
-        { params: Promise.resolve({'id':'test-id','programId':'test-id','taskId':'test-id'}) }
+        { params: Promise.resolve({'id':'scenario-123','programId':'prog-123','taskId':'task-123'}) }
       );
       
       expect(response.status).toBe(500);
@@ -167,12 +169,12 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await GET(
         request,
-        { params: Promise.resolve({'id':'test-id','programId':'test-id','taskId':'test-id'}) }
+        { params: Promise.resolve({'id':'scenario-123','programId':'prog-123','taskId':'task-123'}) }
       );
       
       const data = await response.json();
-      expect(data.scenario).toBeDefined();
-      expect(data.scenario.careerType).toBe('Software Engineer');
+      expect(data.careerType).toBeDefined();
+      expect(data.careerType).toBe('Software Engineer');
     });
 
     it('should handle YAML loading errors gracefully', async () => {
@@ -183,31 +185,29 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await GET(
         request,
-        { params: Promise.resolve({'id':'test-id','programId':'test-id','taskId':'test-id'}) }
+        { params: Promise.resolve({'id':'scenario-123','programId':'prog-123','taskId':'task-123'}) }
       );
       
       const data = await response.json();
       // Should still return task data even if scenario loading fails
-      expect(data.task).toEqual(mockTask);
+      expect(data.id).toBe(mockTask.id);
+      expect(data.status).toBe(mockTask.status);
     });
   });
 
   describe('PATCH', () => {
     it('should add interaction to task', async () => {
-      const interactionData = {
-        type: 'user_input',
-        content: 'This is my response',
-        timestamp: '2023-01-01T00:00:00Z'
-      };
-      
       const request = new NextRequest('http://localhost/api/discovery/scenarios/scenario-123/programs/prog-123/tasks/task-123', {
         method: 'PATCH',
-        body: JSON.stringify(interactionData)
+        body: JSON.stringify({ 
+          action: 'submit',
+          content: { response: 'This is my response' }
+        })
       });
       
       const response = await PATCH(
         request,
-        { params: Promise.resolve({'id':'test-id','programId':'test-id','taskId':'test-id'}) }
+        { params: Promise.resolve({'id':'scenario-123','programId':'prog-123','taskId':'task-123'}) }
       );
       
       expect(response.status).toBe(200);
@@ -219,12 +219,12 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
     it('should validate required fields', async () => {
       const request = new NextRequest('http://localhost/api/discovery/scenarios/scenario-123/programs/prog-123/tasks/task-123', {
         method: 'PATCH',
-        body: JSON.stringify({})
+        body: JSON.stringify({ action: 'invalid-action' }) // Invalid action
       });
       
       const response = await PATCH(
         request,
-        { params: Promise.resolve({'id':'test-id','programId':'test-id','taskId':'test-id'}) }
+        { params: Promise.resolve({'id':'scenario-123','programId':'prog-123','taskId':'task-123'}) }
       );
       
       expect(response.status).toBe(400);
@@ -238,7 +238,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await PATCH(
         request,
-        { params: Promise.resolve({'id':'test-id','programId':'test-id','taskId':'test-id'}) }
+        { params: Promise.resolve({'id':'scenario-123','programId':'prog-123','taskId':'task-123'}) }
       );
       
       expect(response.status).toBe(400);
@@ -258,7 +258,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await PATCH(
         request,
-        { params: Promise.resolve({'id':'test-id','programId':'test-id','taskId':'test-id'}) }
+        { params: Promise.resolve({'id':'scenario-123','programId':'prog-123','taskId':'task-123'}) }
       );
       
       expect(response.status).toBe(200);
@@ -281,7 +281,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await PATCH(
         request,
-        { params: Promise.resolve({'id':'test-id','programId':'test-id','taskId':'test-id'}) }
+        { params: Promise.resolve({'id':'scenario-123','programId':'prog-123','taskId':'task-123'}) }
       );
       
       expect(response.status).toBe(200);
@@ -299,7 +299,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await PATCH(
         request,
-        { params: Promise.resolve({'id':'test-id','programId':'test-id','taskId':'test-id'}) }
+        { params: Promise.resolve({'id':'scenario-123','programId':'prog-123','taskId':'task-123'}) }
       );
       
       expect(response.status).toBe(400);
@@ -317,7 +317,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await PATCH(
         request,
-        { params: Promise.resolve({'id':'test-id','programId':'test-id','taskId':'test-id'}) }
+        { params: Promise.resolve({'id':'scenario-123','programId':'prog-123','taskId':'task-123'}) }
       );
       
       expect(response.status).toBe(404);
@@ -335,7 +335,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await PATCH(
         request,
-        { params: Promise.resolve({'id':'test-id','programId':'test-id','taskId':'test-id'}) }
+        { params: Promise.resolve({'id':'scenario-123','programId':'prog-123','taskId':'task-123'}) }
       );
       
       expect(response.status).toBe(500);
@@ -348,7 +348,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await GET(
         request,
-        { params: Promise.resolve({'id':'test-id','programId':'test-id','taskId':'test-id'}) }
+        { params: Promise.resolve({'id':'scenario-123','programId':'prog-123','taskId':'task-123'}) }
       );
       
       expect(response.status).toBe(400);
@@ -371,7 +371,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await PATCH(
         request,
-        { params: Promise.resolve({'id':'test-id','programId':'test-id','taskId':'test-id'}) }
+        { params: Promise.resolve({'id':'scenario-123','programId':'prog-123','taskId':'task-123'}) }
       );
       
       // Should still succeed even if AI feedback fails
@@ -388,7 +388,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await GET(
         request,
-        { params: Promise.resolve({'id':'test-id','programId':'test-id','taskId':'test-id'}) }
+        { params: Promise.resolve({'id':'scenario-123','programId':'prog-123','taskId':'task-123'}) }
       );
       
       // Should still return data even with translation errors
@@ -414,7 +414,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await GET(
         request,
-        { params: Promise.resolve({'id':'test-id','programId':'test-id','taskId':'test-id'}) }
+        { params: Promise.resolve({'id':'scenario-123','programId':'prog-123','taskId':'task-123'}) }
       );
       
       expect(response.status).toBe(400);
@@ -428,7 +428,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const getResponse = await GET(
         getRequest,
-        { params: Promise.resolve({'id':'test-id','programId':'test-id','taskId':'test-id'}) }
+        { params: Promise.resolve({'id':'scenario-123','programId':'prog-123','taskId':'task-123'}) }
       );
       
       expect(getResponse.status).toBe(200);
@@ -445,7 +445,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const postResponse = await PATCH(
         postRequest,
-        { params: Promise.resolve({'id':'test-id','programId':'test-id','taskId':'test-id'}) }
+        { params: Promise.resolve({'id':'scenario-123','programId':'prog-123','taskId':'task-123'}) }
       );
       
       expect(postResponse.status).toBe(200);
@@ -458,7 +458,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const putResponse = await PATCH(
         putRequest,
-        { params: Promise.resolve({'id':'test-id','programId':'test-id','taskId':'test-id'}) }
+        { params: Promise.resolve({'id':'scenario-123','programId':'prog-123','taskId':'task-123'}) }
       );
       
       expect(putResponse.status).toBe(200);

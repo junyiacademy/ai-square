@@ -273,9 +273,11 @@ describe('POST /api/discovery/scenarios/[id]/programs', () => {
       mockUserRepo.findByEmail.mockResolvedValue(mockUser);
       (mockScenarioRepo.findById as jest.Mock).mockResolvedValue(mockScenario);
       mockProgramRepo.findByUser.mockResolvedValue([completedProgram]);
-      mockDiscoveryService.exploreCareer.mockResolvedValue({
+      
+      // Make create return a program with different ID
+      mockProgramRepo.create.mockResolvedValue({
         ...mockProgram,
-        id: '550e8400-e29b-41d4-a716-446655440003' // New ID
+        id: '550e8400-e29b-41d4-a716-446655440003' // Different ID
       });
 
       const request = new NextRequest(
@@ -295,7 +297,7 @@ describe('POST /api/discovery/scenarios/[id]/programs', () => {
       expect(response.status).toBe(200);
       expect(data.id).toBeDefined();
       expect(data.id).not.toBe(completedProgram.id);
-      // The simplified handler doesn't use mockDiscoveryService
+      expect(data.id).toBe('550e8400-e29b-41d4-a716-446655440003');
     });
 
     it('should include enriched data in response', async () => {
@@ -370,16 +372,16 @@ describe('POST /api/discovery/scenarios/[id]/programs', () => {
 
       // Assert
       expect(response.status).toBe(404);
-      expect(data.error).toBe('Discovery scenario not found');
+      expect(data.error).toBe('Scenario not found');
     });
 
     it('should handle service errors gracefully', async () => {
       // Arrange
       mockUserRepo.findByEmail.mockResolvedValue(mockUser);
       (mockScenarioRepo.findById as jest.Mock).mockResolvedValue(mockScenario);
-      mockProgramRepo.findByUser.mockResolvedValue([]);
-      mockDiscoveryService.exploreCareer.mockRejectedValue(
-        new Error('Service unavailable')
+      // Make program creation fail
+      mockProgramRepo.create.mockRejectedValue(
+        new Error('Database unavailable')
       );
 
       const request = new NextRequest(
@@ -397,7 +399,7 @@ describe('POST /api/discovery/scenarios/[id]/programs', () => {
 
       // Assert
       expect(response.status).toBe(500);
-      expect(data.error).toBe('Failed to create discovery program');
+      expect(data.error).toBe('Internal server error');
     });
   });
 

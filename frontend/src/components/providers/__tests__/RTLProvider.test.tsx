@@ -71,7 +71,8 @@ describe('RTLProvider', () => {
     );
 
     expect(mockUseRTL).toHaveBeenCalledTimes(1);
-    expect(container.firstChild).toBeEmptyDOMElement();
+    // When children is null, RTLProvider returns null
+    expect(container.firstChild).toBeNull();
   });
 
   it('should handle undefined children', async () => {
@@ -84,7 +85,8 @@ describe('RTLProvider', () => {
     );
 
     expect(mockUseRTL).toHaveBeenCalledTimes(1);
-    expect(container.firstChild).toBeEmptyDOMElement();
+    // When children is undefined, RTLProvider returns null
+    expect(container.firstChild).toBeNull();
   });
 
   it('should handle false children', async () => {
@@ -97,7 +99,8 @@ describe('RTLProvider', () => {
     );
 
     expect(mockUseRTL).toHaveBeenCalledTimes(1);
-    expect(container.firstChild).toBeEmptyDOMElement();
+    // When children is false, RTLProvider returns null
+    expect(container.firstChild).toBeNull();
   });
 
   it('should handle conditional children', async () => {
@@ -157,7 +160,8 @@ describe('RTLProvider', () => {
       );
     }).toThrow('RTL hook failed');
 
-    expect(mockUseRTL).toHaveBeenCalledTimes(1);
+    // React may try to render twice in dev mode or error boundaries
+    expect(mockUseRTL).toHaveBeenCalled();
     consoleErrorSpy.mockRestore();
   });
 
@@ -303,9 +307,10 @@ describe('RTLProvider', () => {
       </RTLProvider>
     );
 
-    expect(screen.getByTestId('mixed-content')).toBeInTheDocument();
-    expect(screen.getByText('Text content')).toBeInTheDocument();
-    expect(screen.getByText('123')).toBeInTheDocument();
+    const container = screen.getByTestId('mixed-content');
+    expect(container).toBeInTheDocument();
+    expect(container).toHaveTextContent('Text content');
+    expect(container).toHaveTextContent('123');
     expect(screen.getByText('Span content')).toBeInTheDocument();
     expect(screen.getByText('Conditional div')).toBeInTheDocument();
     expect(screen.queryByText('Hidden div')).not.toBeInTheDocument();

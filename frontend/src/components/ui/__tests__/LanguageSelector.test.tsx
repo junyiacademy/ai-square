@@ -12,9 +12,23 @@ jest.mock('react-i18next', () => ({
 }))
 
 describe('LanguageSelector', () => {
+  let localStorageMock: { [key: string]: string }
+
   beforeEach(() => {
-    // Clear localStorage before each test
-    if (typeof localStorage !== 'undefined') localStorage.clear()
+    // Mock localStorage
+    localStorageMock = {}
+    Object.defineProperty(window, 'localStorage', {
+      value: {
+        getItem: jest.fn((key) => localStorageMock[key] || null),
+        setItem: jest.fn((key, value) => {
+          localStorageMock[key] = value
+        }),
+        clear: jest.fn(() => {
+          localStorageMock = {}
+        }),
+      },
+      writable: true,
+    })
   })
 
   it('renders language selector with flags', () => {

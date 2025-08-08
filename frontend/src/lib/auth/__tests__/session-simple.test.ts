@@ -130,12 +130,16 @@ describe('session-simple', () => {
 
     it('does nothing when window is undefined', () => {
       const originalWindow = global.window;
-      delete (global as any).window;
+      // @ts-ignore - intentionally making window undefined for test
+      global.window = undefined;
       
       // Clear any previous calls
       jest.clearAllMocks();
       
-      storeSessionToken('test-token');
+      jest.isolateModules(() => {
+        const { storeSessionToken: ssrStore } = require('../session-simple');
+        ssrStore('test-token');
+      });
       
       expect(mockLocalStorage.setItem).not.toHaveBeenCalled();
       
@@ -163,8 +167,8 @@ describe('session-simple', () => {
 
     it('returns null when window is undefined', () => {
       const originalWindow = global.window;
-      // @ts-expect-error - Testing SSR scenario
-      delete global.window;
+      // @ts-ignore - intentionally making window undefined for test
+      global.window = undefined;
       
       // Clear any previous calls
       jest.clearAllMocks();
@@ -191,8 +195,8 @@ describe('session-simple', () => {
 
     it('does nothing when window is undefined', () => {
       const originalWindow = global.window;
-      // @ts-expect-error - Testing SSR scenario
-      delete global.window;
+      // @ts-ignore - intentionally making window undefined for test
+      global.window = undefined;
       
       // Clear any previous calls
       jest.clearAllMocks();

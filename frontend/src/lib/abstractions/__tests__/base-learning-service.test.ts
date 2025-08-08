@@ -419,10 +419,10 @@ describe('BaseLearningService', () => {
         metadata: {}
       });
       
-      // Manually update to completed status
-      const completedProgram = await mockProgramRepo.complete(program1.id);
-      // Verify the program was completed
-      expect(completedProgram.status).toBe('completed');
+      // Complete the program by updating its fields directly
+      program1.status = 'completed';
+      program1.completedAt = new Date().toISOString();
+      mockProgramRepo.findByUser = jest.fn().mockResolvedValue([program1]);
 
       const program2 = await mockProgramRepo.create({
         scenarioId: 'scenario-2',
@@ -485,6 +485,9 @@ describe('BaseLearningService', () => {
         metadata: {}
       });
 
+      // Set up mock to return both programs
+      mockProgramRepo.findByUser = jest.fn().mockResolvedValue([program1, program2]);
+      
       // Act
       const progress = await service.getLearningProgress('user-123');
 
