@@ -1,40 +1,66 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import page from '../page';
+import { render, waitFor } from '@testing-library/react';
+import Page from '../page';
 
-// Mock next/navigation
 jest.mock('next/navigation', () => ({
-  useRouter: () => ({
-    push: jest.fn(),
-    back: jest.fn(),
-    refresh: jest.fn(),
-  }),
-  usePathname: () => '/',
+  useRouter: () => ({ push: jest.fn(), back: jest.fn() }),
   useSearchParams: () => new URLSearchParams(),
+  useParams: () => ({ id: 'test-scenario-id', programId: 'test-program-id' })
 }));
 
-describe('page', () => {
-  it('should render without crashing', () => {
-    const { container } = render(<div />);
-    expect(container).toBeInTheDocument();
+jest.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key: string) => key,
+    i18n: { changeLanguage: jest.fn(), language: 'en' }
+  })
+}));
+
+global.fetch = jest.fn();
+
+describe('Discovery Complete Page', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    (global.fetch as jest.Mock).mockResolvedValue({
+      ok: true,
+      json: async () => ({ 
+        success: true,
+        program: {
+          id: 'test-program-id',
+          status: 'completed',
+          totalScore: 95,
+          achievements: [],
+          skills: []
+        },
+        scenario: {
+          id: 'test-scenario-id',
+          title: { en: 'Test Scenario' }
+        }
+      })
+    });
   });
-  
-  it('should have proper structure', () => {
-    render(<div />);
-    const element = document.querySelector('div');
-    expect(element).toBeInTheDocument();
-  });
-  
-  it('should handle user interactions', async () => {
-    render(<div />);
-    
-    const buttons = screen.queryAllByRole('button');
-    if (buttons.length > 0) {
-      fireEvent.click(buttons[0]);
-    }
-    
+
+  it('should render without errors', async () => {
+    const params = Promise.resolve({ id: 'test-scenario-id', programId: 'test-program-id' });
+    const { container } = render(<Page params={params} />);
     await waitFor(() => {
-      expect(document.querySelector('div')).toBeInTheDocument();
+      expect(container).toBeTruthy();
+    });
+  });
+
+  it('should fetch completion data', async () => {
+    const params = Promise.resolve({ id: 'test-scenario-id', programId: 'test-program-id' });
+    render(<Page params={params} />);
+    await waitFor(() => {
+      expect(global.fetch).toHaveBeenCalled();
+    });
+  });
+
+  it('should handle API errors', async () => {
+    (global.fetch as jest.Mock).mockRejectedValueOnce(new Error('API Error'));
+    const params = Promise.resolve({ id: 'test-scenario-id', programId: 'test-program-id' });
+    const { container } = render(<Page params={params} />);
+    await waitFor(() => {
+      expect(container).toBeTruthy();
     });
   });
 });

@@ -1,40 +1,58 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import page from '../page';
+import { render, waitFor } from '@testing-library/react';
+import Page from '../page';
 
-// Mock next/navigation
 jest.mock('next/navigation', () => ({
-  useRouter: () => ({
-    push: jest.fn(),
-    back: jest.fn(),
-    refresh: jest.fn(),
-  }),
-  usePathname: () => '/',
-  useSearchParams: () => new URLSearchParams(),
+  useRouter: () => ({ push: jest.fn(), back: jest.fn() }),
+  useSearchParams: () => new URLSearchParams()
 }));
 
-describe('page', () => {
-  it('should render without crashing', () => {
-    const { container } = render(<div />);
-    expect(container).toBeInTheDocument();
+jest.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key: string) => key,
+    i18n: { changeLanguage: jest.fn(), language: 'en' }
+  })
+}));
+
+global.fetch = jest.fn();
+
+describe('Discovery Scenarios Page', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    (global.fetch as jest.Mock).mockResolvedValue({
+      ok: true,
+      json: async () => ({ 
+        success: true,
+        scenarios: [
+          { id: '1', title: { en: 'Scenario 1' }, description: { en: 'Description 1' } },
+          { id: '2', title: { en: 'Scenario 2' }, description: { en: 'Description 2' } }
+        ]
+      })
+    });
   });
-  
-  it('should have proper structure', () => {
-    render(<div />);
-    const element = document.querySelector('div');
-    expect(element).toBeInTheDocument();
-  });
-  
-  it('should handle user interactions', async () => {
-    render(<div />);
-    
-    const buttons = screen.queryAllByRole('button');
-    if (buttons.length > 0) {
-      fireEvent.click(buttons[0]);
-    }
-    
+
+  it('should render without errors', async () => {
+    const { container } = render(<Page />);
     await waitFor(() => {
-      expect(document.querySelector('div')).toBeInTheDocument();
+      expect(container).toBeTruthy();
+    });
+  });
+
+  it('should fetch scenarios data', async () => {
+    render(<Page />);
+    await waitFor(() => {
+      expect(global.fetch).toHaveBeenCalled();
+    });
+  });
+
+  it('should handle empty scenarios', async () => {
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ success: true, scenarios: [] })
+    });
+    const { container } = render(<Page />);
+    await waitFor(() => {
+      expect(container).toBeTruthy();
     });
   });
 });

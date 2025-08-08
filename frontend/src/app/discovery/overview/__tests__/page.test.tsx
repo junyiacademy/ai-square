@@ -1,40 +1,28 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import page from '../page';
+import { render } from '@testing-library/react';
+import Page from '../page';
 
-// Mock next/navigation
 jest.mock('next/navigation', () => ({
-  useRouter: () => ({
-    push: jest.fn(),
-    back: jest.fn(),
-    refresh: jest.fn(),
-  }),
-  usePathname: () => '/',
-  useSearchParams: () => new URLSearchParams(),
+  useRouter: () => ({ push: jest.fn(), back: jest.fn() }),
+  useSearchParams: () => new URLSearchParams()
 }));
 
-describe('page', () => {
-  it('should render without crashing', () => {
-    const { container } = render(<div />);
-    expect(container).toBeInTheDocument();
+jest.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key: string) => key,
+    i18n: { changeLanguage: jest.fn(), language: 'en' }
+  })
+}));
+
+describe('Discovery Overview Page', () => {
+  it('should render without errors', () => {
+    const { container } = render(<Page />);
+    expect(container).toBeTruthy();
   });
-  
-  it('should have proper structure', () => {
-    render(<div />);
-    const element = document.querySelector('div');
-    expect(element).toBeInTheDocument();
-  });
-  
-  it('should handle user interactions', async () => {
-    render(<div />);
-    
-    const buttons = screen.queryAllByRole('button');
-    if (buttons.length > 0) {
-      fireEvent.click(buttons[0]);
-    }
-    
-    await waitFor(() => {
-      expect(document.querySelector('div')).toBeInTheDocument();
-    });
+
+  it('should display page title', () => {
+    const { container } = render(<Page />);
+    const heading = container.querySelector('h1');
+    expect(heading).toBeTruthy();
   });
 });
