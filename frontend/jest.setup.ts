@@ -119,26 +119,24 @@ jest.mock('next/navigation', () => ({
   useParams: () => ({}),
 }))
 
-// Mock AuthContext
-jest.mock('./src/contexts/AuthContext', () => ({
-  AuthContext: require('react').createContext({
-    user: null,
-    loading: false,
-    error: null,
-    signIn: jest.fn(),
-    signOut: jest.fn(),
-    signUp: jest.fn(),
-  }),
-  AuthProvider: ({ children }: { children: React.ReactNode }) => children,
-  useAuth: () => ({
-    user: null,
-    loading: false,
-    error: null,
-    signIn: jest.fn(),
-    signOut: jest.fn(),
-    signUp: jest.fn(),
-  }),
-}))
+// Mock AuthContext - but allow tests to override
+jest.mock('./src/contexts/AuthContext', () => {
+  const actual = jest.requireActual('./src/contexts/AuthContext');
+  return {
+    ...actual,
+    // Only provide default mock for useAuth if not in AuthContext test
+    useAuth: jest.fn(() => ({
+      user: null,
+      isLoading: false,
+      isLoggedIn: false,
+      tokenExpiringSoon: false,
+      login: jest.fn(),
+      logout: jest.fn(),
+      checkAuth: jest.fn(),
+      refreshToken: jest.fn(),
+    })),
+  };
+})
 
 // Mock pg module
 jest.mock('pg')
