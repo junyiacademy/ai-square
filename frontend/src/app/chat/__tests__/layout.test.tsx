@@ -28,14 +28,13 @@ describe('layout', () => {
   });
 
   it('should have proper structure', () => {
-    render(<Layout>{<div>Test content</div>}</Layout>);
+    const { container } = render(<Layout>{<div>Test content</div>}</Layout>);
     
-    // Check for basic elements - adjust based on component
-    const element = screen.getByRole('main', { hidden: true }) || 
-                   screen.getByRole('article', { hidden: true }) ||
-                   screen.getByRole('section', { hidden: true }) ||
-                   document.querySelector('div');
-    expect(element).toBeInTheDocument();
+    // Check that children are rendered
+    expect(screen.getByText('Test content')).toBeInTheDocument();
+    
+    // Check that layout wrapper exists
+    expect(container.firstChild).toBeInTheDocument();
   });
 
   it('should handle user interactions', async () => {

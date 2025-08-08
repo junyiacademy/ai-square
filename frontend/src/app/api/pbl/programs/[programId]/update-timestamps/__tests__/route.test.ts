@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { POST } from '../route';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
+import { 
+  createAuthenticatedRequestWithCookie,
+  createUnauthenticatedRequest,
+  setupAPITestEnvironment,
+  cleanupAPITestEnvironment
+} from '@/test-utils/helpers/api-test-helpers';
 
 // Mock dependencies
 jest.mock('@/lib/repositories/base/repository-factory');
@@ -14,6 +20,14 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
 
   let mockProgramRepo: any;
   let mockProgram: any;
+
+  beforeAll(() => {
+    setupAPITestEnvironment();
+  });
+
+  afterAll(() => {
+    cleanupAPITestEnvironment();
+  });
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -37,25 +51,15 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
     mockRepositoryFactory.getProgramRepository = jest.fn().mockReturnValue(mockProgramRepo);
   });
 
-  const createMockRequest = (body: any = {}, cookies: Record<string, string> = {}) => {
-    const request = new NextRequest('http://localhost/api/pbl/programs/program-123/update-timestamps', {
-      method: 'POST',
-      body: JSON.stringify(body)
-    });
-
-    // Mock cookies
-    Object.entries(cookies).forEach(([name, value]) => {
-      request.cookies.set(name, value);
-    });
-
-    return request;
-  };
-
   const createMockParams = () => Promise.resolve({ programId: mockProgramId });
 
   // Test 1-5: Authentication tests
   it('should return 401 when no user cookie is present', async () => {
-    const request = createMockRequest({ scenarioId: mockScenarioId });
+    const request = createUnauthenticatedRequest(
+      'http://localhost/api/pbl/programs/program-123/update-timestamps',
+      'POST',
+      { scenarioId: mockScenarioId }
+    );
     const params = createMockParams();
 
     const response = await POST(request, { params });
@@ -69,10 +73,12 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
   });
 
   it('should return 401 when user cookie is invalid JSON', async () => {
-    const request = createMockRequest(
-      { scenarioId: mockScenarioId },
-      { user: 'invalid-json' }
+    const request = createUnauthenticatedRequest(
+      'http://localhost/api/pbl/programs/program-123/update-timestamps',
+      'POST',
+      { scenarioId: mockScenarioId }
     );
+    request.cookies.set('user', 'invalid-json');
     const params = createMockParams();
 
     const response = await POST(request, { params });
@@ -86,10 +92,12 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
   });
 
   it('should return 401 when user cookie missing email', async () => {
-    const request = createMockRequest(
-      { scenarioId: mockScenarioId },
-      { user: JSON.stringify({ name: 'Test User' }) }
+    const request = createUnauthenticatedRequest(
+      'http://localhost/api/pbl/programs/program-123/update-timestamps',
+      'POST',
+      { scenarioId: mockScenarioId }
     );
+    request.cookies.set('user', JSON.stringify({ name: 'Test User' }));
     const params = createMockParams();
 
     const response = await POST(request, { params });
@@ -103,10 +111,12 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
   });
 
   it('should handle empty user cookie', async () => {
-    const request = createMockRequest(
-      { scenarioId: mockScenarioId },
-      { user: '' }
+    const request = createUnauthenticatedRequest(
+      'http://localhost/api/pbl/programs/program-123/update-timestamps',
+      'POST',
+      { scenarioId: mockScenarioId }
     );
+    request.cookies.set('user', '');
     const params = createMockParams();
 
     const response = await POST(request, { params });
@@ -120,10 +130,12 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
   });
 
   it('should handle malformed user cookie gracefully', async () => {
-    const request = createMockRequest(
-      { scenarioId: mockScenarioId },
-      { user: '{"email":}' }
+    const request = createUnauthenticatedRequest(
+      'http://localhost/api/pbl/programs/program-123/update-timestamps',
+      'POST',
+      { scenarioId: mockScenarioId }
     );
+    request.cookies.set('user', '{"email":}');
     const params = createMockParams();
 
     const response = await POST(request, { params });
@@ -138,9 +150,11 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
 
   // Test 6-10: Request body validation tests
   it('should return 400 when request body is empty', async () => {
-    const request = createMockRequest(
+    const request = createAuthenticatedRequestWithCookie(
+      'http://localhost/api/pbl/programs/program-123/update-timestamps',
+      'POST',
       {},
-      { user: JSON.stringify({ email: mockUserEmail }) }
+      { email: mockUserEmail }
     );
     const params = createMockParams();
 
@@ -155,9 +169,11 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
   });
 
   it('should return 400 when scenarioId is missing', async () => {
-    const request = createMockRequest(
+    const request = createAuthenticatedRequestWithCookie(
+      'http://localhost/api/pbl/programs/program-123/update-timestamps',
+      'POST',
       { someOtherField: 'value' },
-      { user: JSON.stringify({ email: mockUserEmail }) }
+      { email: mockUserEmail }
     );
     const params = createMockParams();
 
@@ -172,9 +188,11 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
   });
 
   it('should return 400 when scenarioId is null', async () => {
-    const request = createMockRequest(
+    const request = createAuthenticatedRequestWithCookie(
+      "http://localhost/api/pbl/programs/program-123/update-timestamps",
+      "POST",
       { scenarioId: null },
-      { user: JSON.stringify({ email: mockUserEmail }) }
+      { email: mockUserEmail }
     );
     const params = createMockParams();
 
@@ -189,9 +207,11 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
   });
 
   it('should return 400 when scenarioId is empty string', async () => {
-    const request = createMockRequest(
+    const request = createAuthenticatedRequestWithCookie(
+      "http://localhost/api/pbl/programs/program-123/update-timestamps",
+      "POST",
       { scenarioId: '' },
-      { user: JSON.stringify({ email: mockUserEmail }) }
+      { email: mockUserEmail }
     );
     const params = createMockParams();
 
@@ -228,9 +248,11 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
   it('should return 404 when program does not exist', async () => {
     mockProgramRepo.findById.mockResolvedValue(null);
     
-    const request = createMockRequest(
+    const request = createAuthenticatedRequestWithCookie(
+      "http://localhost/api/pbl/programs/program-123/update-timestamps",
+      "POST",
       { scenarioId: mockScenarioId },
-      { user: JSON.stringify({ email: mockUserEmail }) }
+      { email: mockUserEmail }
     );
     const params = createMockParams();
 
@@ -249,9 +271,11 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
     const mismatchedProgram = { ...mockProgram, scenarioId: 'different-scenario' };
     mockProgramRepo.findById.mockResolvedValue(mismatchedProgram);
     
-    const request = createMockRequest(
+    const request = createAuthenticatedRequestWithCookie(
+      "http://localhost/api/pbl/programs/program-123/update-timestamps",
+      "POST",
       { scenarioId: mockScenarioId },
-      { user: JSON.stringify({ email: mockUserEmail }) }
+      { email: mockUserEmail }
     );
     const params = createMockParams();
 
@@ -268,9 +292,11 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
   it('should handle undefined program response', async () => {
     mockProgramRepo.findById.mockResolvedValue(undefined);
     
-    const request = createMockRequest(
+    const request = createAuthenticatedRequestWithCookie(
+      "http://localhost/api/pbl/programs/program-123/update-timestamps",
+      "POST",
       { scenarioId: mockScenarioId },
-      { user: JSON.stringify({ email: mockUserEmail }) }
+      { email: mockUserEmail }
     );
     const params = createMockParams();
 
@@ -288,9 +314,11 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
     const programWithoutScenario = { ...mockProgram, scenarioId: undefined };
     mockProgramRepo.findById.mockResolvedValue(programWithoutScenario);
     
-    const request = createMockRequest(
+    const request = createAuthenticatedRequestWithCookie(
+      "http://localhost/api/pbl/programs/program-123/update-timestamps",
+      "POST",
       { scenarioId: mockScenarioId },
-      { user: JSON.stringify({ email: mockUserEmail }) }
+      { email: mockUserEmail }
     );
     const params = createMockParams();
 
@@ -308,9 +336,11 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
     const programWithNullScenario = { ...mockProgram, scenarioId: null };
     mockProgramRepo.findById.mockResolvedValue(programWithNullScenario);
     
-    const request = createMockRequest(
+    const request = createAuthenticatedRequestWithCookie(
+      "http://localhost/api/pbl/programs/program-123/update-timestamps",
+      "POST",
       { scenarioId: mockScenarioId },
-      { user: JSON.stringify({ email: mockUserEmail }) }
+      { email: mockUserEmail }
     );
     const params = createMockParams();
 
@@ -338,9 +368,11 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
     mockProgramRepo.findById.mockResolvedValue(mockProgram);
     mockProgramRepo.update.mockResolvedValue(updatedProgram);
     
-    const request = createMockRequest(
+    const request = createAuthenticatedRequestWithCookie(
+      "http://localhost/api/pbl/programs/program-123/update-timestamps",
+      "POST",
       { scenarioId: mockScenarioId },
-      { user: JSON.stringify({ email: mockUserEmail }) }
+      { email: mockUserEmail }
     );
     const params = createMockParams();
 
@@ -372,9 +404,11 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
     mockProgramRepo.findById.mockResolvedValue(programWithExistingMetadata);
     mockProgramRepo.update.mockResolvedValue(programWithExistingMetadata);
     
-    const request = createMockRequest(
+    const request = createAuthenticatedRequestWithCookie(
+      "http://localhost/api/pbl/programs/program-123/update-timestamps",
+      "POST",
       { scenarioId: mockScenarioId },
-      { user: JSON.stringify({ email: mockUserEmail }) }
+      { email: mockUserEmail }
     );
     const params = createMockParams();
 
@@ -398,9 +432,11 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
     mockProgramRepo.findById.mockResolvedValue(programWithoutMetadata);
     mockProgramRepo.update.mockResolvedValue(programWithoutMetadata);
     
-    const request = createMockRequest(
+    const request = createAuthenticatedRequestWithCookie(
+      "http://localhost/api/pbl/programs/program-123/update-timestamps",
+      "POST",
       { scenarioId: mockScenarioId },
-      { user: JSON.stringify({ email: mockUserEmail }) }
+      { email: mockUserEmail }
     );
     const params = createMockParams();
 
@@ -420,9 +456,11 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
     mockProgramRepo.findById.mockResolvedValue(programWithEmptyMetadata);
     mockProgramRepo.update.mockResolvedValue(programWithEmptyMetadata);
     
-    const request = createMockRequest(
+    const request = createAuthenticatedRequestWithCookie(
+      "http://localhost/api/pbl/programs/program-123/update-timestamps",
+      "POST",
       { scenarioId: mockScenarioId },
-      { user: JSON.stringify({ email: mockUserEmail }) }
+      { email: mockUserEmail }
     );
     const params = createMockParams();
 
@@ -449,9 +487,11 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
     mockProgramRepo.findById.mockResolvedValue(mockProgram);
     mockProgramRepo.update.mockResolvedValue(updatedProgram);
     
-    const request = createMockRequest(
+    const request = createAuthenticatedRequestWithCookie(
+      "http://localhost/api/pbl/programs/program-123/update-timestamps",
+      "POST",
       { scenarioId: mockScenarioId },
-      { user: JSON.stringify({ email: mockUserEmail }) }
+      { email: mockUserEmail }
     );
     const params = createMockParams();
 
@@ -468,9 +508,11 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
   it('should handle database findById error', async () => {
     mockProgramRepo.findById.mockRejectedValue(new Error('Database connection error'));
     
-    const request = createMockRequest(
+    const request = createAuthenticatedRequestWithCookie(
+      "http://localhost/api/pbl/programs/program-123/update-timestamps",
+      "POST",
       { scenarioId: mockScenarioId },
-      { user: JSON.stringify({ email: mockUserEmail }) }
+      { email: mockUserEmail }
     );
     const params = createMockParams();
 
@@ -488,9 +530,11 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
     mockProgramRepo.findById.mockResolvedValue(mockProgram);
     mockProgramRepo.update.mockRejectedValue(new Error('Update failed'));
     
-    const request = createMockRequest(
+    const request = createAuthenticatedRequestWithCookie(
+      "http://localhost/api/pbl/programs/program-123/update-timestamps",
+      "POST",
       { scenarioId: mockScenarioId },
-      { user: JSON.stringify({ email: mockUserEmail }) }
+      { email: mockUserEmail }
     );
     const params = createMockParams();
 
@@ -509,9 +553,11 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
       throw new Error('Repository initialization failed');
     });
     
-    const request = createMockRequest(
+    const request = createAuthenticatedRequestWithCookie(
+      "http://localhost/api/pbl/programs/program-123/update-timestamps",
+      "POST",
       { scenarioId: mockScenarioId },
-      { user: JSON.stringify({ email: mockUserEmail }) }
+      { email: mockUserEmail }
     );
     const params = createMockParams();
 
@@ -538,9 +584,11 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
     
     mockRepositoryFactory.getProgramRepository.mockReturnValue(repoWithoutUpdate);
     
-    const request = createMockRequest(
+    const request = createAuthenticatedRequestWithCookie(
+      "http://localhost/api/pbl/programs/program-123/update-timestamps",
+      "POST",
       { scenarioId: mockScenarioId },
-      { user: JSON.stringify({ email: mockUserEmail }) }
+      { email: mockUserEmail }
     );
     const params = createMockParams();
 
@@ -550,14 +598,16 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
     expect(response.status).toBe(500);
     expect(data).toEqual({
       success: false,
-      error: 'Failed to update timestamps'
+      error: 'Update operation not supported'
     });
   });
 
   it('should handle params promise rejection', async () => {
-    const request = createMockRequest(
+    const request = createAuthenticatedRequestWithCookie(
+      "http://localhost/api/pbl/programs/program-123/update-timestamps",
+      "POST",
       { scenarioId: mockScenarioId },
-      { user: JSON.stringify({ email: mockUserEmail }) }
+      { email: mockUserEmail }
     );
     
     const failingParams = Promise.reject(new Error('Params error'));
@@ -577,13 +627,15 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
     mockProgramRepo.findById.mockResolvedValue(mockProgram);
     mockProgramRepo.update.mockResolvedValue(mockProgram);
     
-    const request = createMockRequest(
+    const request = createAuthenticatedRequestWithCookie(
+      "http://localhost/api/pbl/programs/program-123/update-timestamps",
+      "POST",
       { 
         scenarioId: mockScenarioId,
         extraField: 'should be ignored',
         maliciousCode: '<script>alert("hack")</script>'
       },
-      { user: JSON.stringify({ email: mockUserEmail }) }
+      { email: mockUserEmail }
     );
     const params = createMockParams();
 
@@ -599,9 +651,11 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
     mockProgramRepo.findById.mockResolvedValue(mockProgram);
     mockProgramRepo.update.mockResolvedValue(mockProgram);
     
-    const request = createMockRequest(
+    const request = createAuthenticatedRequestWithCookie(
+      "http://localhost/api/pbl/programs/program-123/update-timestamps",
+      "POST",
       { scenarioId: mockScenarioId },
-      { user: JSON.stringify({ email: specialEmail }) }
+      { email: specialEmail }
     );
     const params = createMockParams();
 
@@ -619,9 +673,11 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
     mockProgramRepo.findById.mockResolvedValue(programWithLongScenarioId);
     mockProgramRepo.update.mockResolvedValue(programWithLongScenarioId);
     
-    const request = createMockRequest(
+    const request = createAuthenticatedRequestWithCookie(
+      "http://localhost/api/pbl/programs/program-123/update-timestamps",
+      "POST",
       { scenarioId: longScenarioId },
-      { user: JSON.stringify({ email: mockUserEmail }) }
+      { email: mockUserEmail }
     );
     const params = createMockParams();
 
@@ -639,9 +695,11 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
     mockProgramRepo.findById.mockResolvedValue(programWithUnicodeId);
     mockProgramRepo.update.mockResolvedValue(programWithUnicodeId);
     
-    const request = createMockRequest(
+    const request = createAuthenticatedRequestWithCookie(
+      "http://localhost/api/pbl/programs/program-123/update-timestamps",
+      "POST",
       { scenarioId: unicodeScenarioId },
-      { user: JSON.stringify({ email: mockUserEmail }) }
+      { email: mockUserEmail }
     );
     const params = createMockParams();
 
@@ -662,9 +720,11 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
       return Promise.resolve(mockProgram);
     });
     
-    const request1 = createMockRequest(
+    const request1 = createAuthenticatedRequestWithCookie(
+      "http://localhost/api/pbl/programs/program-123/update-timestamps",
+      "POST",
       { scenarioId: mockScenarioId },
-      { user: JSON.stringify({ email: mockUserEmail }) }
+      { email: mockUserEmail }
     );
     const params1 = createMockParams();
 
@@ -680,9 +740,11 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
       return Promise.resolve(mockProgram);
     });
     
-    const request2 = createMockRequest(
+    const request2 = createAuthenticatedRequestWithCookie(
+      "http://localhost/api/pbl/programs/program-123/update-timestamps",
+      "POST",
       { scenarioId: mockScenarioId },
-      { user: JSON.stringify({ email: mockUserEmail }) }
+      { email: mockUserEmail }
     );
     const params2 = createMockParams();
 

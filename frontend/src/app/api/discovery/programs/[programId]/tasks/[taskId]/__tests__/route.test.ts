@@ -102,7 +102,7 @@ describe('PATCH /api/discovery/programs/[programId]/tasks/[taskId]', () => {
   };
 
   const mockContext = {
-    params: Promise.resolve({'programId':'test-id','taskId':'test-id'})
+    params: Promise.resolve({'programId':'program-123','taskId':'task-123'})
   };
 
   beforeEach(() => {

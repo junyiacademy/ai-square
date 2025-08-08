@@ -141,14 +141,14 @@ describe('POST /api/pbl/scenarios/[id]/start', () => {
       const request = createRequestWithUser('test@example.com');
 
       // Act
-      const response = await POST(request, { params: Promise.resolve({'id':'test-id'}) });
+      const response = await POST(request, { params: Promise.resolve({'id':'123e4567-e89b-12d3-a456-426614174000'}) });
       const data = await response.json();
 
       // Assert
       expect(learningServiceFactory.getService).toHaveBeenCalledWith('pbl');
       expect(mockPBLService.startLearning).toHaveBeenCalledWith(
         mockUserId,
-        mockScenarioId,
+        '123e4567-e89b-12d3-a456-426614174000',
         { language: 'en' }
       );
       expect(response.status).toBe(200);
@@ -177,7 +177,7 @@ describe('POST /api/pbl/scenarios/[id]/start', () => {
       const request = createRequestWithUser('test@example.com');
 
       // Act
-      const response = await POST(request, { params: Promise.resolve({'id':'test-id'}) });
+      const response = await POST(request, { params: Promise.resolve({'id':'123e4567-e89b-12d3-a456-426614174000'}) });
       const data = await response.json();
 
       // Assert
@@ -191,7 +191,7 @@ describe('POST /api/pbl/scenarios/[id]/start', () => {
       const request = createRequestWithUser('test@example.com');
 
       // Act
-      const response = await POST(request, { params: Promise.resolve({'id':'test-id'}) });
+      const response = await POST(request, { params: Promise.resolve({'id':'invalid-uuid'}) });
       const data = await response.json();
 
       // Assert
@@ -212,7 +212,7 @@ describe('POST /api/pbl/scenarios/[id]/start', () => {
       });
 
       // Act
-      const response = await POST(request, { params: Promise.resolve({'id':'test-id'}) });
+      const response = await POST(request, { params: Promise.resolve({'id':'123e4567-e89b-12d3-a456-426614174000'}) });
       const data = await response.json();
 
       // Assert
@@ -243,7 +243,7 @@ describe('POST /api/pbl/scenarios/[id]/start', () => {
       const request = createRequestWithUser('new@example.com');
 
       // Act
-      const response = await POST(request, { params: Promise.resolve({'id':'test-id'}) });
+      const response = await POST(request, { params: Promise.resolve({'id':'123e4567-e89b-12d3-a456-426614174000'}) });
       const data = await response.json();
 
       // Assert

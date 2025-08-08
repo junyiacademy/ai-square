@@ -11,6 +11,8 @@ export interface AuthenticatedUser {
   id?: string;
 }
 
+export type AuthMethod = 'header' | 'cookie';
+
 /**
  * Creates an authenticated API request with x-user-info header
  */
@@ -32,6 +34,33 @@ export function createAuthenticatedRequest(
     ...(body && { body: JSON.stringify(body) }),
     headers
   });
+}
+
+/**
+ * Creates an authenticated API request with user cookie (for PBL/Assessment/Discovery APIs)
+ */
+export function createAuthenticatedRequestWithCookie(
+  url: string,
+  method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' = 'POST',
+  body?: object,
+  user: AuthenticatedUser = { email: 'test@example.com', name: 'Test User' },
+  additionalHeaders: Record<string, string> = {}
+): NextRequest {
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    ...additionalHeaders
+  };
+
+  const request = new NextRequest(url, {
+    method,
+    ...(body && { body: JSON.stringify(body) }),
+    headers
+  });
+
+  // Set user cookie for authentication
+  request.cookies.set('user', JSON.stringify(user));
+
+  return request;
 }
 
 /**
@@ -63,10 +92,13 @@ export function createAuthenticatedRequestWithParams(
   params: Record<string, string>,
   method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' = 'POST',
   body?: object,
-  user: AuthenticatedUser = { email: 'test@example.com', name: 'Test User' }
+  user: AuthenticatedUser = { email: 'test@example.com', name: 'Test User' },
+  authMethod: AuthMethod = 'header'
 ): { request: NextRequest; params: Promise<Record<string, string>> } {
   return {
-    request: createAuthenticatedRequest(url, method, body, user),
+    request: authMethod === 'cookie' 
+      ? createAuthenticatedRequestWithCookie(url, method, body, user)
+      : createAuthenticatedRequest(url, method, body, user),
     params: Promise.resolve(params)
   };
 }

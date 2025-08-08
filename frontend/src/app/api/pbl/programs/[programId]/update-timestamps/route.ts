@@ -50,7 +50,14 @@ export async function POST(
       );
     }
     
-    const updatedProgram = await programRepo.update?.(programId, {
+    if (!programRepo.update) {
+      return NextResponse.json(
+        { success: false, error: 'Update operation not supported' },
+        { status: 500 }
+      );
+    }
+
+    const updatedProgram = await programRepo.update(programId, {
       metadata: {
         ...existingProgram.metadata,
         startedAt: new Date().toISOString(),

@@ -147,7 +147,7 @@ describe('/api/discovery/programs/[programId]/regenerate', () => {
         headers: { 'accept-language': 'en' }
       });
 
-      const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
+      const response = await POST(request, { params: Promise.resolve({'programId':'program123'}) });
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -205,7 +205,7 @@ describe('/api/discovery/programs/[programId]/regenerate', () => {
         method: 'POST'
       });
 
-      const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
+      const response = await POST(request, { params: Promise.resolve({'programId':'program123'}) });
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -251,7 +251,7 @@ describe('/api/discovery/programs/[programId]/regenerate', () => {
         headers: { 'accept-language': 'zhTW' }
       });
 
-      await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
+      await POST(request, { params: Promise.resolve({'programId':'program123'}) });
 
       expect(mockVertexAIService.sendMessage).toHaveBeenCalledWith(
         expect.stringContaining('Traditional Chinese (繁體中文)')
@@ -266,7 +266,7 @@ describe('/api/discovery/programs/[programId]/regenerate', () => {
         method: 'POST'
       });
 
-      const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
+      const response = await POST(request, { params: Promise.resolve({'programId':'program123'}) });
       const data = await response.json();
 
       expect(response.status).toBe(401);
@@ -281,7 +281,7 @@ describe('/api/discovery/programs/[programId]/regenerate', () => {
         method: 'POST'
       });
 
-      const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
+      const response = await POST(request, { params: Promise.resolve({'programId':'program123'}) });
       const data = await response.json();
 
       expect(response.status).toBe(404);
@@ -299,7 +299,7 @@ describe('/api/discovery/programs/[programId]/regenerate', () => {
         method: 'POST'
       });
 
-      const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
+      const response = await POST(request, { params: Promise.resolve({'programId':'program123'}) });
       const data = await response.json();
 
       expect(response.status).toBe(404);
@@ -321,7 +321,7 @@ describe('/api/discovery/programs/[programId]/regenerate', () => {
         method: 'POST'
       });
 
-      const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
+      const response = await POST(request, { params: Promise.resolve({'programId':'program123'}) });
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -346,7 +346,7 @@ describe('/api/discovery/programs/[programId]/regenerate', () => {
         method: 'POST'
       });
 
-      const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
+      const response = await POST(request, { params: Promise.resolve({'programId':'program123'}) });
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -366,7 +366,7 @@ describe('/api/discovery/programs/[programId]/regenerate', () => {
         method: 'POST'
       });
 
-      const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
+      const response = await POST(request, { params: Promise.resolve({'programId':'program123'}) });
       const data = await response.json();
 
       expect(response.status).toBe(500);

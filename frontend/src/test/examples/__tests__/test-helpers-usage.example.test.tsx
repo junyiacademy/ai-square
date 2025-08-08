@@ -28,14 +28,13 @@ describe('testHelpersUsage.example', () => {
   });
 
   it('should have proper structure', () => {
-    render(<div />);
+    const { container } = render(<div data-testid="test-div" />);
     
-    // Check for basic elements - adjust based on component
-    const element = screen.getByRole('main', { hidden: true }) || 
-                   screen.getByRole('article', { hidden: true }) ||
-                   screen.getByRole('section', { hidden: true }) ||
-                   document.querySelector('div');
-    expect(element).toBeInTheDocument();
+    // Check that the element exists
+    expect(screen.getByTestId('test-div')).toBeInTheDocument();
+    
+    // Check that container has the element
+    expect(container.firstChild).toBeInTheDocument();
   });
 
   it('should handle user interactions', async () => {
