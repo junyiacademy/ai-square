@@ -420,7 +420,9 @@ describe('BaseLearningService', () => {
       });
       
       // Manually update to completed status
-      await mockProgramRepo.complete(program1.id);
+      const completedProgram = await mockProgramRepo.complete(program1.id);
+      // Verify the program was completed
+      expect(completedProgram.status).toBe('completed');
 
       const program2 = await mockProgramRepo.create({
         scenarioId: 'scenario-2',

@@ -43,12 +43,17 @@ describe('KSAKnowledgeGraph', () => {
   it('should have proper structure', () => {
     render(<KSAKnowledgeGraph {...mockProps} />);
     
-    // Check for basic elements - adjust based on component
-    const element = screen.getByRole('main', { hidden: true }) || 
-                   screen.getByRole('article', { hidden: true }) ||
-                   screen.getByRole('section', { hidden: true }) ||
-                   document.querySelector('div');
-    expect(element).toBeInTheDocument();
+    // Check for title
+    expect(screen.getByText('Test KSA Graph')).toBeInTheDocument();
+    
+    // Check for zoom controls
+    expect(screen.getByTitle('common:zoomIn')).toBeInTheDocument();
+    expect(screen.getByTitle('common:zoomOut')).toBeInTheDocument();
+    expect(screen.getByTitle('common:resetZoom')).toBeInTheDocument();
+    
+    // Check for SVG graph element
+    const svgElement = document.querySelector('svg');
+    expect(svgElement).toBeInTheDocument();
   });
 
   it('should handle user interactions', async () => {

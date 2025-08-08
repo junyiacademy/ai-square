@@ -17,9 +17,16 @@ describe('repository-factory.ts', () => {
       expect(repositoryFactory).toBeDefined();
     });
     
-    it('should work correctly', () => {
-      // Add specific tests based on the function
-      expect(typeof repositoryFactory).toBe('function');
+    it('should be an instance of RepositoryFactory', () => {
+      expect(repositoryFactory).toBeInstanceOf(RepositoryFactory);
+    });
+    
+    it('should have repository getter methods', () => {
+      expect(typeof repositoryFactory.getUserRepository).toBe('function');
+      expect(typeof repositoryFactory.getProgramRepository).toBe('function');
+      expect(typeof repositoryFactory.getTaskRepository).toBe('function');
+      expect(typeof repositoryFactory.getEvaluationRepository).toBe('function');
+      expect(typeof repositoryFactory.getScenarioRepository).toBe('function');
     });
   });
 });
