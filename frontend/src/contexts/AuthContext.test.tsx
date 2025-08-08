@@ -1,3 +1,6 @@
+// Unmock the AuthContext for this test file
+jest.unmock('./AuthContext');
+
 import React from 'react';
 import { render, waitFor, screen, fireEvent } from '@testing-library/react';
 import { AuthProvider, useAuth } from './AuthContext';
@@ -183,10 +186,18 @@ describe('AuthContext', () => {
   });
 
   it('should throw error when used outside provider', () => {
+    // Suppress console errors for this test
     const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
     
+    // Create a component that uses useAuth outside provider
+    const TestComponentOutsideProvider = () => {
+      useAuth();
+      return <div>Should not render</div>;
+    };
+
+    // Expect the render to throw an error
     expect(() => {
-      render(<TestComponent />);
+      render(<TestComponentOutsideProvider />);
     }).toThrow('useAuth must be used within an AuthProvider');
 
     spy.mockRestore();

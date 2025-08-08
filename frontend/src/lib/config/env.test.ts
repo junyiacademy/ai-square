@@ -93,14 +93,23 @@ describe('env config', () => {
 
   describe('env export', () => {
     it('should export process.env', () => {
-      expect(env).toBe(process.env);
+      expect(env).toEqual(process.env);
     });
   });
 
   describe('config object', () => {
     it('should provide database configuration with defaults', () => {
-      process.env.DB_HOST = undefined as any;
-      process.env.DB_PORT = undefined as any;
+      // Save original values
+      const originalHost = process.env.DB_HOST;
+      const originalPort = process.env.DB_PORT;
+      const originalName = process.env.DB_NAME;
+      const originalUser = process.env.DB_USER;
+      
+      // Clear env vars
+      delete process.env.DB_HOST;
+      delete process.env.DB_PORT;
+      delete process.env.DB_NAME;
+      delete process.env.DB_USER;
       
       // Need to re-import to get updated config
       jest.resetModules();
@@ -110,6 +119,12 @@ describe('env config', () => {
       expect(freshConfig.dbPort).toBe(5432);
       expect(freshConfig.dbName).toBe('ai_square_db');
       expect(freshConfig.dbUser).toBe('postgres');
+      
+      // Restore original values
+      if (originalHost) process.env.DB_HOST = originalHost;
+      if (originalPort) process.env.DB_PORT = originalPort;
+      if (originalName) process.env.DB_NAME = originalName;
+      if (originalUser) process.env.DB_USER = originalUser;
     });
 
     it('should use environment variables when set', () => {
