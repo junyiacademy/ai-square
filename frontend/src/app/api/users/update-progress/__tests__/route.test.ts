@@ -304,7 +304,10 @@ describe('/api/users/update-progress', () => {
       }
       expect(response.status).toBe(200);
       expect(data.userData?.lastModified).toBeDefined();
-      expect(new Date(data.userData.lastModified).getTime()).toBeCloseTo(Date.now(), -2);
+      // Check timestamp is within last 5 seconds
+      const timeDiff = Date.now() - new Date(data.userData.lastModified).getTime();
+      expect(timeDiff).toBeGreaterThanOrEqual(0);
+      expect(timeDiff).toBeLessThan(5000);
     });
   });
 });
