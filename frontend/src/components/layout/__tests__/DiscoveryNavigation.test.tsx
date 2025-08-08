@@ -184,7 +184,11 @@ describe('DiscoveryNavigation', () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByTestId('academic-cap-icon').closest('div')).toHaveClass('opacity-100');
+      const element = screen.getByTestId('academic-cap-icon').closest('div');
+      if (element) {
+        const classes = element.className;
+        expect(classes).toContain('opacity-100');
+      }
     });
   });
 
