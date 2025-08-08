@@ -119,7 +119,7 @@ beforeEach(() => {
       });
 
       // Page shows not authenticated when auth check doesn't resolve
-      expect(screen.getByText('Please log in to access the chat feature.')).toBeInTheDocument();
+      expect(screen.getByText('Please log in to start chatting')).toBeInTheDocument();
     });
 
     it('should show not authenticated message when user not logged in', async () => {

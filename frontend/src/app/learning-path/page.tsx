@@ -258,8 +258,16 @@ function LearningPathContent() {
               type: 'pbl_scenario',
               priority: 'high',
               domain,
-              title: scenario.title,
-              description: scenario.description,
+              title: typeof scenario.title === 'string' 
+                ? scenario.title 
+                : typeof scenario.title === 'object' && scenario.title
+                  ? ((scenario.title as Record<string, string>).en || (scenario.title as Record<string, string>).zh || '')
+                  : '',
+              description: typeof scenario.description === 'string'
+                ? scenario.description
+                : typeof scenario.description === 'object' && scenario.description
+                  ? ((scenario.description as Record<string, string>).en || (scenario.description as Record<string, string>).zh || '')
+                  : '',
               estimatedTime: scenario.estimatedDuration || 30,
               difficulty: scenario.difficulty,
               reason,
@@ -294,8 +302,16 @@ function LearningPathContent() {
               type: 'pbl_scenario',
               priority: 'medium',
               domain,
-              title: scenario.title,
-              description: scenario.description,
+              title: typeof scenario.title === 'string' 
+                ? scenario.title 
+                : typeof scenario.title === 'object' && scenario.title
+                  ? ((scenario.title as Record<string, string>).en || (scenario.title as Record<string, string>).zh || '')
+                  : '',
+              description: typeof scenario.description === 'string'
+                ? scenario.description
+                : typeof scenario.description === 'object' && scenario.description
+                  ? ((scenario.description as Record<string, string>).en || (scenario.description as Record<string, string>).zh || '')
+                  : '',
               estimatedTime: scenario.estimatedDuration || 45,
               difficulty: scenario.difficulty,
               reason,
@@ -330,8 +346,16 @@ function LearningPathContent() {
               type: 'pbl_scenario',
               priority: 'medium',
               domain,
-              title: scenario.title,
-              description: scenario.description,
+              title: typeof scenario.title === 'string' 
+                ? scenario.title 
+                : typeof scenario.title === 'object' && scenario.title
+                  ? ((scenario.title as Record<string, string>).en || (scenario.title as Record<string, string>).zh || '')
+                  : '',
+              description: typeof scenario.description === 'string'
+                ? scenario.description
+                : typeof scenario.description === 'object' && scenario.description
+                  ? ((scenario.description as Record<string, string>).en || (scenario.description as Record<string, string>).zh || '')
+                  : '',
               estimatedTime: scenario.estimatedDuration || 30,
               difficulty: scenario.difficulty,
               reason,
