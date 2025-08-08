@@ -770,6 +770,20 @@ Complexity levels: `simple`, `medium`, `complex`, `debug`
 - Unit: `ComponentName.test.tsx` or `functionName.test.ts`
 - E2E: `feature-name.spec.ts`
 
+### Handling Obsolete Snapshots
+When tests pass but CI fails due to obsolete snapshots:
+```bash
+# Check for obsolete snapshots
+npm run test:ci
+
+# If you see "X snapshots obsolete", remove them:
+npm run test:ci -- -u
+
+# This removes obsolete snapshots without affecting passing tests
+```
+
+**Note**: Obsolete snapshots are NOT test failures - they're just leftover snapshots from tests that no longer exist or no longer use snapshots.
+
 ## 🎯 MVP Development Strategy
 
 ### Priority Order
