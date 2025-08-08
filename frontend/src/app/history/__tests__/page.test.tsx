@@ -24,10 +24,29 @@ global.fetch = jest.fn();
 describe('History Page', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    
+    // Mock localStorage
+    const localStorageMock = {
+      getItem: jest.fn((key) => {
+        if (key === 'isLoggedIn') return 'true';
+        if (key === 'user') return JSON.stringify({ id: 'user-1', email: 'test@example.com' });
+        return null;
+      }),
+      setItem: jest.fn(),
+      removeItem: jest.fn(),
+      clear: jest.fn()
+    };
+    Object.defineProperty(window, 'localStorage', {
+      value: localStorageMock,
+      writable: true
+    });
+    
     (global.fetch as jest.Mock).mockResolvedValue({
       ok: true,
       json: async () => ({ 
         success: true,
+        data: [],
+        results: [],
         history: [
           { id: '1', action: 'created', timestamp: new Date().toISOString() },
           { id: '2', action: 'updated', timestamp: new Date().toISOString() }

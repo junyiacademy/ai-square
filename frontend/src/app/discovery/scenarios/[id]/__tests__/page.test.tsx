@@ -5,7 +5,8 @@ import Page from '../page';
 jest.mock('next/navigation', () => ({
   useRouter: () => ({ push: jest.fn(), back: jest.fn() }),
   useSearchParams: () => new URLSearchParams(),
-  useParams: () => ({ id: 'test-scenario-id' })
+  useParams: () => ({ id: 'test-scenario-id' }),
+  usePathname: () => '/discovery/scenarios/test-scenario-id'
 }));
 
 jest.mock('react-i18next', () => ({
@@ -15,11 +16,31 @@ jest.mock('react-i18next', () => ({
   })
 }));
 
+jest.mock('@/contexts/AuthContext', () => ({
+  useAuth: () => ({
+    isLoggedIn: true,
+    isLoading: false,
+    user: { email: 'test@example.com' }
+  })
+}));
+
 global.fetch = jest.fn();
 
 describe('Discovery Scenario Detail Page', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    // Mock localStorage
+    const localStorageMock = {
+      getItem: jest.fn(() => 'test-session-token'),
+      setItem: jest.fn(),
+      removeItem: jest.fn(),
+      clear: jest.fn()
+    };
+    Object.defineProperty(window, 'localStorage', {
+      value: localStorageMock,
+      writable: true
+    });
+    
     (global.fetch as jest.Mock).mockResolvedValue({
       ok: true,
       json: async () => ({ 
@@ -36,16 +57,14 @@ describe('Discovery Scenario Detail Page', () => {
   });
 
   it('should render without errors', async () => {
-    const params = Promise.resolve({ id: 'test-scenario-id' });
-    const { container } = render(<Page params={params} />);
+    const { container } = render(<Page />);
     await waitFor(() => {
       expect(container).toBeTruthy();
     });
   });
 
   it('should fetch scenario data', async () => {
-    const params = Promise.resolve({ id: 'test-scenario-id' });
-    render(<Page params={params} />);
+    render(<Page />);
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalled();
     });
@@ -53,8 +72,7 @@ describe('Discovery Scenario Detail Page', () => {
 
   it('should handle API errors', async () => {
     (global.fetch as jest.Mock).mockRejectedValueOnce(new Error('API Error'));
-    const params = Promise.resolve({ id: 'test-scenario-id' });
-    const { container } = render(<Page params={params} />);
+    const { container } = render(<Page />);
     await waitFor(() => {
       expect(container).toBeTruthy();
     });

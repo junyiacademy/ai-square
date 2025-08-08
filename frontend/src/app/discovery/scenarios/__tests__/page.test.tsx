@@ -14,6 +14,32 @@ jest.mock('react-i18next', () => ({
   })
 }));
 
+jest.mock('@/hooks/useUserData', () => ({
+  useUserData: () => ({
+    userData: {},
+    loading: false
+  })
+}));
+
+jest.mock('@/contexts/AuthContext', () => ({
+  useAuth: () => ({
+    user: { email: 'test@example.com' },
+    loading: false
+  })
+}));
+
+jest.mock('@/components/discovery/DiscoveryPageLayout', () => {
+  return function DiscoveryPageLayout({ children }: { children: React.ReactNode }) {
+    return <div>{children}</div>;
+  };
+});
+
+jest.mock('@/components/discovery/ScenarioCard', () => {
+  return function ScenarioCard({ scenario }: { scenario: Record<string, unknown> }) {
+    return <div>Scenario: {scenario.id as string}</div>;
+  };
+});
+
 global.fetch = jest.fn();
 
 describe('Discovery Scenarios Page', () => {

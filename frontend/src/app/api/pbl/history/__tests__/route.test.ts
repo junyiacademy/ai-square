@@ -1,10 +1,13 @@
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { GET } from '../route';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 
 jest.mock('@/lib/repositories/base/repository-factory');
 jest.mock('@/lib/api/optimization-utils', () => ({
-  cachedGET: jest.fn((req, fn) => fn()),
+  cachedGET: jest.fn(async (req, fn) => {
+    const result = await fn();
+    return NextResponse.json(result);
+  }),
   getPaginationParams: jest.fn(() => ({ page: 1, limit: 10 })),
   createPaginatedResponse: jest.fn((data) => ({ data, total: data.length })),
   parallel: jest.fn((...promises) => Promise.all(promises))
@@ -62,10 +65,9 @@ describe('GET /api/pbl/history', () => {
       title: { en: 'Test Scenario' }
     });
 
-    const request = new NextRequest('http://localhost:3000/api/pbl/history', {
-      headers: {
-        Cookie: `user=${JSON.stringify({ email: 'test@example.com' })}`
-      }
+    const request = new NextRequest('http://localhost:3000/api/pbl/history');
+    request.cookies.get = jest.fn().mockReturnValue({
+      value: JSON.stringify({ email: 'test@example.com' })
     });
 
     const response = await GET(request);
@@ -96,10 +98,9 @@ describe('GET /api/pbl/history', () => {
     mockRepos.task.findByProgram.mockResolvedValue([]);
     mockRepos.evaluation.findByProgram.mockResolvedValue([]);
 
-    const request = new NextRequest('http://localhost:3000/api/pbl/history?scenarioId=scenario-1', {
-      headers: {
-        Cookie: `user=${JSON.stringify({ email: 'test@example.com' })}`
-      }
+    const request = new NextRequest('http://localhost:3000/api/pbl/history?scenarioId=scenario-1');
+    request.cookies.get = jest.fn().mockReturnValue({
+      value: JSON.stringify({ email: 'test@example.com' })
     });
 
     const response = await GET(request);
@@ -114,10 +115,9 @@ describe('GET /api/pbl/history', () => {
   it('should handle user not found', async () => {
     mockRepos.user.findByEmail.mockResolvedValue(null);
 
-    const request = new NextRequest('http://localhost:3000/api/pbl/history', {
-      headers: {
-        Cookie: `user=${JSON.stringify({ email: 'test@example.com' })}`
-      }
+    const request = new NextRequest('http://localhost:3000/api/pbl/history');
+    request.cookies.get = jest.fn().mockReturnValue({
+      value: JSON.stringify({ email: 'test@example.com' })
     });
 
     const response = await GET(request);
@@ -129,10 +129,9 @@ describe('GET /api/pbl/history', () => {
   });
 
   it('should handle invalid user cookie', async () => {
-    const request = new NextRequest('http://localhost:3000/api/pbl/history', {
-      headers: {
-        Cookie: 'user=invalid-json'
-      }
+    const request = new NextRequest('http://localhost:3000/api/pbl/history');
+    request.cookies.get = jest.fn().mockReturnValue({
+      value: 'invalid-json'
     });
 
     const response = await GET(request);
@@ -165,10 +164,9 @@ describe('GET /api/pbl/history', () => {
     ]);
     mockRepos.content.getScenarioContent.mockRejectedValue(new Error('Not found'));
 
-    const request = new NextRequest('http://localhost:3000/api/pbl/history', {
-      headers: {
-        Cookie: `user=${JSON.stringify({ email: 'test@example.com' })}`
-      }
+    const request = new NextRequest('http://localhost:3000/api/pbl/history');
+    request.cookies.get = jest.fn().mockReturnValue({
+      value: JSON.stringify({ email: 'test@example.com' })
     });
 
     const response = await GET(request);

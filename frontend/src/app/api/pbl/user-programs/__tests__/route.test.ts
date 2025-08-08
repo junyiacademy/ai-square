@@ -103,8 +103,8 @@ describe('PBL User Programs API Route', () => {
     
     const data = await response.json();
     expect(data.success).toBe(true);
-    expect(data.items).toHaveLength(1);
-    expect(data.items[0].id).toBe('prog-1');
+    expect(data.data).toHaveLength(1);
+    expect(data.data[0].id).toBe('prog-1');
   });
 });
 

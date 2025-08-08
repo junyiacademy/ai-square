@@ -4,7 +4,8 @@ import Page from '../page';
 
 jest.mock('next/navigation', () => ({
   useRouter: () => ({ push: jest.fn(), back: jest.fn() }),
-  useSearchParams: () => new URLSearchParams()
+  useSearchParams: () => new URLSearchParams(),
+  usePathname: () => '/discovery/overview'
 }));
 
 jest.mock('react-i18next', () => ({

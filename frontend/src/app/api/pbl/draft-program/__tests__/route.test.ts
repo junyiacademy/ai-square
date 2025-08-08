@@ -35,8 +35,18 @@ describe('API Route: src/app/api/pbl/draft-program', () => {
   });
   
   describe('GET', () => {
-    it('should return 401 when user is not authenticated', async () => {
+    it('should return 400 when scenarioId is missing', async () => {
       const request = new NextRequest('http://localhost:3000/api/pbl/draft-program');
+      request.cookies.get = jest.fn().mockReturnValue({
+        value: JSON.stringify({ email: 'test@example.com' })
+      });
+      
+      const response = await GET(request);
+      expect(response.status).toBe(400);
+    });
+    
+    it('should return 401 when user is not authenticated', async () => {
+      const request = new NextRequest('http://localhost:3000/api/pbl/draft-program?scenarioId=test-scenario');
       
       const response = await GET(request);
       expect(response.status).toBe(401);
@@ -45,13 +55,23 @@ describe('API Route: src/app/api/pbl/draft-program', () => {
     it('should return draft programs for authenticated user', async () => {
       mockUserRepo.findByEmail.mockResolvedValue({ id: 'user-id', email: 'test@example.com' });
       mockProgramRepo.findByUser.mockResolvedValue([
-        { id: 'prog-1', status: 'draft', scenarioId: 'scenario-1' }
+        { 
+          id: 'prog-1', 
+          status: 'active', 
+          scenarioId: 'scenario-1', 
+          userId: 'user-id',
+          currentTaskIndex: 0,
+          completedTaskCount: 0,
+          totalTaskCount: 5,
+          createdAt: new Date().toISOString(),
+          lastActivityAt: new Date().toISOString()
+        }
       ]);
       mockScenarioRepo.findAll.mockResolvedValue([
         { id: 'scenario-1', title: { en: 'Test Scenario' } }
       ]);
       
-      const request = new NextRequest('http://localhost:3000/api/pbl/draft-program');
+      const request = new NextRequest('http://localhost:3000/api/pbl/draft-program?scenarioId=scenario-1');
       request.cookies.get = jest.fn().mockReturnValue({
         value: JSON.stringify({ email: 'test@example.com' })
       });
@@ -61,6 +81,8 @@ describe('API Route: src/app/api/pbl/draft-program', () => {
       
       const data = await response.json();
       expect(data.success).toBe(true);
+      expect(data.program).toBeDefined();
+      expect(data.program.id).toBe('prog-1');
     });
     
     it('should handle errors gracefully', async () => {
