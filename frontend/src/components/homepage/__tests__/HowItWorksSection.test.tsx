@@ -185,4 +185,3 @@ describe('HowItWorksSection', () => {
     
     expect(grid).toHaveClass('gap-8');
   });
-});

@@ -177,4 +177,3 @@ describe('KnowledgeGraph', () => {
     // This test verifies the mousemove event is handled
     expect(mockCtx.clearRect).toHaveBeenCalled();
   });
-});

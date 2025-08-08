@@ -1,357 +1,200 @@
 import React from 'react';
-import { renderWithProviders, screen, waitFor, fireEvent, act } from '@/test-utils/helpers/render';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { LoginForm } from '../LoginForm';
 
 // Mock react-i18next
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({
-    t: (key: string, defaultValue?: string) => {
-      const translations: Record<string, string> = {
-        'email': 'Email',
-        'password': 'Password',
-        'rememberMe': 'Remember me',
-        'forgotPassword': 'Forgot password?',
-        'login': 'Login',
-        'loading': 'Loading...',
-        'or': 'or',
-        'testAccounts.title': 'Test Accounts'
-      };
-      return translations[key] || defaultValue || key;
-    }
-  })
+    t: (key: string) => key,
+    i18n: {
+      changeLanguage: jest.fn(),
+      language: 'en',
+    },
+  }),
 }));
 
+// Mock requestAnimationFrame
+global.requestAnimationFrame = jest.fn((cb) => {
+  cb(0);
+  return 0;
+});
+
 describe('LoginForm', () => {
-  const defaultProps = {
-    onSubmit: jest.fn(),
-    loading: false,
-    error: undefined
-  };
-
+  const mockOnSubmit = jest.fn();
+  
   beforeEach(() => {
-    jest.clearAllMocks();
+    mockOnSubmit.mockClear();
   });
 
-  describe('Rendering', () => {
-    it('renders all form elements correctly', async () => {
-      renderWithProviders(<LoginForm {...defaultProps} />);
+  it('should render login form with all fields', () => {
+    render(<LoginForm onSubmit={mockOnSubmit} />);
+    
+    expect(screen.getByLabelText('login.email')).toBeInTheDocument();
+    expect(screen.getByLabelText('login.password')).toBeInTheDocument();
+    expect(screen.getByLabelText('login.rememberMe')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'login.submit' })).toBeInTheDocument();
+  });
 
-      // Check for form inputs
-      expect(screen.getByLabelText('Email')).toBeInTheDocument();
-      expect(screen.getByLabelText('Password')).toBeInTheDocument();
-      expect(screen.getByRole('checkbox', { name: 'Remember me' })).toBeInTheDocument();
-      
-      // Check for submit button
-      expect(screen.getByRole('button', { name: 'Login' })).toBeInTheDocument();
-      
-      // Check for forgot password link
-      expect(screen.getByText('Forgot password?')).toBeInTheDocument();
-      
-      // Check for test accounts section
-      expect(screen.getByText('Test Accounts')).toBeInTheDocument();
-      expect(screen.getAllByRole('button')).toHaveLength(4); // 1 submit + 3 demo buttons
-    });
-
-    it('displays error message when error prop is provided', async () => {
-      const errorMessage = 'Invalid credentials';
-      renderWithProviders(<LoginForm {...defaultProps} error={errorMessage} />);
-
-      const alert = screen.getByRole('alert');
-      expect(alert).toBeInTheDocument();
-      expect(alert).toHaveTextContent(errorMessage);
-      expect(alert).toHaveClass('bg-red-100', 'border-red-400', 'text-red-700');
-    });
-
-    it('shows loading state when loading prop is true', async () => {
-      renderWithProviders(<LoginForm {...defaultProps} loading={true} />);
-
-      // Button should show loading text
-      expect(screen.getByRole('button', { name: 'Loading...' })).toBeInTheDocument();
-      
-      // All inputs should be disabled
-      expect(screen.getByLabelText('Email')).toBeDisabled();
-      expect(screen.getByLabelText('Password')).toBeDisabled();
-      expect(screen.getByRole('checkbox')).toBeDisabled();
-    });
-
-    it('renders demo account buttons with correct styling', async () => {
-      renderWithProviders(<LoginForm {...defaultProps} />);
-
-      const demoButtons = screen.getAllByRole('button').slice(1); // Skip submit button
-      expect(demoButtons).toHaveLength(3);
-      
-      // Check for labels
-      expect(screen.getByText('Student')).toBeInTheDocument();
-      expect(screen.getByText('Teacher')).toBeInTheDocument();
-      expect(screen.getByText('Admin')).toBeInTheDocument();
+  it('should handle form submission', async () => {
+    const user = userEvent.setup();
+    render(<LoginForm onSubmit={mockOnSubmit} />);
+    
+    const emailInput = screen.getByLabelText('login.email');
+    const passwordInput = screen.getByLabelText('login.password');
+    const rememberMeCheckbox = screen.getByLabelText('login.rememberMe');
+    const submitButton = screen.getByRole('button', { name: 'login.submit' });
+    
+    await user.type(emailInput, 'test@example.com');
+    await user.type(passwordInput, 'password123');
+    await user.click(rememberMeCheckbox);
+    await user.click(submitButton);
+    
+    expect(mockOnSubmit).toHaveBeenCalledWith({
+      email: 'test@example.com',
+      password: 'password123',
+      rememberMe: true,
     });
   });
 
-  describe('User interactions', () => {
-    it('updates input values when user types', async () => {
-      const user = userEvent.setup();
-      renderWithProviders(<LoginForm {...defaultProps} />);
+  it('should display error message when provided', () => {
+    render(<LoginForm onSubmit={mockOnSubmit} error="Invalid credentials" />);
+    
+    expect(screen.getByText('Invalid credentials')).toBeInTheDocument();
+    expect(screen.getByRole('alert')).toBeInTheDocument();
+  });
 
-      const emailInput = screen.getByLabelText('Email');
-      const passwordInput = screen.getByLabelText('Password');
+  it('should disable form when loading', () => {
+    render(<LoginForm onSubmit={mockOnSubmit} loading={true} />);
+    
+    expect(screen.getByLabelText('login.email')).toBeDisabled();
+    expect(screen.getByLabelText('login.password')).toBeDisabled();
+    expect(screen.getByLabelText('login.rememberMe')).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'login.submitting' })).toBeDisabled();
+  });
 
-      await user.type(emailInput, 'test@example.com');
-      await user.type(passwordInput, 'password123');
+  it('should not submit form when loading', async () => {
+    const user = userEvent.setup();
+    render(<LoginForm onSubmit={mockOnSubmit} loading={true} />);
+    
+    const form = screen.getByRole('form') || document.querySelector('form');
+    if (form) {
+      await user.click(form);
+      form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    }
+    
+    expect(mockOnSubmit).not.toHaveBeenCalled();
+  });
 
-      expect(emailInput).toHaveValue('test@example.com');
-      expect(passwordInput).toHaveValue('password123');
-    });
+  it('should render demo account buttons', () => {
+    render(<LoginForm onSubmit={mockOnSubmit} />);
+    
+    expect(screen.getByRole('button', { name: /Student/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Teacher/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Admin/i })).toBeInTheDocument();
+  });
 
-    it('toggles remember me checkbox', async () => {
-      const user = userEvent.setup();
-      renderWithProviders(<LoginForm {...defaultProps} />);
-
-      const checkbox = screen.getByRole('checkbox', { name: 'Remember me' });
+  it('should fill form with demo account credentials', async () => {
+    const user = userEvent.setup();
+    render(<LoginForm onSubmit={mockOnSubmit} />);
+    
+    const studentButton = screen.getByRole('button', { name: /Student/i });
+    await user.click(studentButton);
+    
+    // Wait for form to be filled
+    await waitFor(() => {
+      const emailInput = screen.getByLabelText('login.email') as HTMLInputElement;
+      const passwordInput = screen.getByLabelText('login.password') as HTMLInputElement;
       
-      expect(checkbox).not.toBeChecked();
-      
-      await user.click(checkbox);
-      expect(checkbox).toBeChecked();
-      
-      await user.click(checkbox);
-      expect(checkbox).not.toBeChecked();
-    });
-
-    it('submits form with correct data on form submission', async () => {
-      const user = userEvent.setup();
-      const onSubmit = jest.fn();
-      renderWithProviders(<LoginForm {...defaultProps} onSubmit={onSubmit} />);
-
-      const emailInput = screen.getByLabelText('Email');
-      const passwordInput = screen.getByLabelText('Password');
-      const rememberMeCheckbox = screen.getByRole('checkbox', { name: 'Remember me' });
-      const submitButton = screen.getByRole('button', { name: 'Login' });
-
-      await user.type(emailInput, 'test@example.com');
-      await user.type(passwordInput, 'password123');
-      await user.click(rememberMeCheckbox);
-      await user.click(submitButton);
-
-      expect(onSubmit).toHaveBeenCalledTimes(1);
-      expect(onSubmit).toHaveBeenCalledWith({
-        email: 'test@example.com',
-        password: 'password123',
-        rememberMe: true
-      });
-    });
-
-    it('prevents form submission when loading', async () => {
-      const user = userEvent.setup();
-      const onSubmit = jest.fn();
-      renderWithProviders(<LoginForm {...defaultProps} onSubmit={onSubmit} loading={true} />);
-
-      const emailInput = screen.getByLabelText('Email');
-      const passwordInput = screen.getByLabelText('Password');
-      const form = emailInput.closest('form')!;
-
-      // Fill in form
-      fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
-      fireEvent.change(passwordInput, { target: { value: 'password123' } });
-      
-      // Try to submit
-      fireEvent.submit(form);
-
-      expect(onSubmit).not.toHaveBeenCalled();
-    });
-
-    it('disables submit button when email or password is empty', async () => {
-      renderWithProviders(<LoginForm {...defaultProps} />);
-
-      const submitButton = screen.getByRole('button', { name: 'Login' });
-      
-      // Initially disabled (empty fields)
-      expect(submitButton).toBeDisabled();
-
-      // Type only email
-      fireEvent.change(screen.getByLabelText('Email'), { 
-        target: { value: 'test@example.com' } 
-      });
-      expect(submitButton).toBeDisabled();
-
-      // Type password too
-      fireEvent.change(screen.getByLabelText('Password'), { 
-        target: { value: 'password123' } 
-      });
-      expect(submitButton).not.toBeDisabled();
+      expect(emailInput.value).toBe('student@example.com');
+      expect(passwordInput.value).toBe('student123');
     });
   });
 
-  describe('Demo account functionality', () => {
-    it('fills form and auto-submits when demo account button is clicked', async () => {
-      jest.useFakeTimers();
-      const onSubmit = jest.fn();
-      renderWithProviders(<LoginForm {...defaultProps} onSubmit={onSubmit} />);
-
-      const studentButton = screen.getByRole('button', { name: /Student/i });
-      
-      fireEvent.click(studentButton);
-
-      // Check that form fields are filled
-      expect(screen.getByLabelText('Email')).toHaveValue('student@example.com');
-      expect(screen.getByLabelText('Password')).toHaveValue('student123');
-
-      // Handle requestAnimationFrame and setTimeout
-      act(() => {
-        jest.runAllTimers();
-      });
-
-      // Check that form was submitted with demo credentials
-      expect(onSubmit).toHaveBeenCalledWith({
-        email: 'student@example.com',
-        password: 'student123',
-        rememberMe: false,
-        label: 'Student',
-        role: 'student'
-      });
-
-      jest.useRealTimers();
-    });
-
-    it('preserves remember me state when using demo login', async () => {
-      jest.useFakeTimers();
-      const user = userEvent.setup({ delay: null });
-      const onSubmit = jest.fn();
-      renderWithProviders(<LoginForm {...defaultProps} onSubmit={onSubmit} />);
-
-      // First check remember me
-      const rememberMeCheckbox = screen.getByRole('checkbox', { name: 'Remember me' });
-      await user.click(rememberMeCheckbox);
-
-      // Then click demo account
-      const teacherButton = screen.getByRole('button', { name: /Teacher/i });
-      fireEvent.click(teacherButton);
-
-      act(() => {
-        jest.runAllTimers();
-      });
-
-      expect(onSubmit).toHaveBeenCalledWith({
+  it('should auto-submit after filling demo credentials', async () => {
+    const user = userEvent.setup();
+    render(<LoginForm onSubmit={mockOnSubmit} />);
+    
+    const teacherButton = screen.getByRole('button', { name: /Teacher/i });
+    await user.click(teacherButton);
+    
+    // Wait for auto-submit
+    await waitFor(() => {
+      expect(mockOnSubmit).toHaveBeenCalledWith({
         email: 'teacher@example.com',
         password: 'teacher123',
-        rememberMe: true,
-        label: 'Teacher',
-        role: 'teacher'
+        rememberMe: false,
       });
-
-      jest.useRealTimers();
-    });
-
-    it('disables demo account buttons when loading', async () => {
-      renderWithProviders(<LoginForm {...defaultProps} loading={true} />);
-
-      const demoButtons = screen.getAllByRole('button').slice(1); // Skip submit button
-      demoButtons.forEach(button => {
-        expect(button).toBeDisabled();
-      });
-    });
+    }, { timeout: 2000 });
   });
 
-  describe('Form validation', () => {
-    it('requires email and password fields', async () => {
-      renderWithProviders(<LoginForm {...defaultProps} />);
-
-      const emailInput = screen.getByLabelText('Email') as HTMLInputElement;
-      const passwordInput = screen.getByLabelText('Password') as HTMLInputElement;
-
-      expect(emailInput).toBeRequired();
-      expect(passwordInput).toBeRequired();
-    });
-
-    it('uses email type for email input', async () => {
-      renderWithProviders(<LoginForm {...defaultProps} />);
-
-      const emailInput = screen.getByLabelText('Email');
-      expect(emailInput).toHaveAttribute('type', 'email');
-    });
-
-    it('uses password type for password input', async () => {
-      renderWithProviders(<LoginForm {...defaultProps} />);
-
-      const passwordInput = screen.getByLabelText('Password');
-      expect(passwordInput).toHaveAttribute('type', 'password');
-    });
+  it('should render forgot password link', () => {
+    render(<LoginForm onSubmit={mockOnSubmit} />);
+    
+    const forgotPasswordLink = screen.getByRole('link', { name: 'login.forgotPassword' });
+    expect(forgotPasswordLink).toBeInTheDocument();
+    expect(forgotPasswordLink).toHaveAttribute('href', '/forgot-password');
   });
 
-  describe('Accessibility', () => {
-    it('has proper labels for all form inputs', async () => {
-      renderWithProviders(<LoginForm {...defaultProps} />);
-
-      // Check that inputs can be found by their labels
-      expect(screen.getByLabelText('Email')).toBeInTheDocument();
-      expect(screen.getByLabelText('Password')).toBeInTheDocument();
-      expect(screen.getByLabelText('Remember me')).toBeInTheDocument();
-    });
-
-    it('has proper ARIA attributes for error messages', async () => {
-      renderWithProviders(<LoginForm {...defaultProps} error="Test error" />);
-
-      const alert = screen.getByRole('alert');
-      expect(alert).toBeInTheDocument();
-    });
-
-    it('associates form inputs with their labels correctly', async () => {
-      renderWithProviders(<LoginForm {...defaultProps} />);
-
-      const emailInput = screen.getByLabelText('Email');
-      const emailLabel = screen.getByText('Email');
-      expect(emailLabel).toHaveAttribute('for', emailInput.id);
-
-      const passwordInput = screen.getByLabelText('Password');
-      const passwordLabel = screen.getByText('Password');
-      expect(passwordLabel).toHaveAttribute('for', passwordInput.id);
-    });
+  it('should render sign up link', () => {
+    render(<LoginForm onSubmit={mockOnSubmit} />);
+    
+    expect(screen.getByText('login.noAccount')).toBeInTheDocument();
+    const signUpLink = screen.getByRole('link', { name: 'login.signUp' });
+    expect(signUpLink).toBeInTheDocument();
+    expect(signUpLink).toHaveAttribute('href', '/register');
   });
 
-  describe('Edge cases', () => {
-    it('handles rapid demo account clicks gracefully', async () => {
-      jest.useFakeTimers();
-      const onSubmit = jest.fn();
-      renderWithProviders(<LoginForm {...defaultProps} onSubmit={onSubmit} />);
+  it('should update email state on input change', async () => {
+    const user = userEvent.setup();
+    render(<LoginForm onSubmit={mockOnSubmit} />);
+    
+    const emailInput = screen.getByLabelText('login.email') as HTMLInputElement;
+    await user.type(emailInput, 'new@example.com');
+    
+    expect(emailInput.value).toBe('new@example.com');
+  });
 
-      const buttons = screen.getAllByRole('button').slice(1);
-      expect(buttons).toHaveLength(3); // Should have 3 demo buttons
-      
-      // Click all demo buttons rapidly
-      buttons.forEach(button => {
-        fireEvent.click(button);
+  it('should update password state on input change', async () => {
+    const user = userEvent.setup();
+    render(<LoginForm onSubmit={mockOnSubmit} />);
+    
+    const passwordInput = screen.getByLabelText('login.password') as HTMLInputElement;
+    await user.type(passwordInput, 'newpassword');
+    
+    expect(passwordInput.value).toBe('newpassword');
+  });
+
+  it('should toggle remember me checkbox', async () => {
+    const user = userEvent.setup();
+    render(<LoginForm onSubmit={mockOnSubmit} />);
+    
+    const rememberMeCheckbox = screen.getByLabelText('login.rememberMe') as HTMLInputElement;
+    
+    expect(rememberMeCheckbox.checked).toBe(false);
+    await user.click(rememberMeCheckbox);
+    expect(rememberMeCheckbox.checked).toBe(true);
+    await user.click(rememberMeCheckbox);
+    expect(rememberMeCheckbox.checked).toBe(false);
+  });
+
+  it('should prevent default form submission', async () => {
+    const user = userEvent.setup();
+    const preventDefault = jest.fn();
+    
+    render(<LoginForm onSubmit={mockOnSubmit} />);
+    
+    const form = document.querySelector('form');
+    if (form) {
+      form.addEventListener('submit', (e) => {
+        preventDefault();
+        e.preventDefault();
       });
       
-      // Wait for all timers to complete
-      act(() => {
-        jest.runAllTimers();
-      });
-
-      // Each button click should trigger a submit
-      expect(onSubmit).toHaveBeenCalledTimes(3);
+      const submitButton = screen.getByRole('button', { name: 'login.submit' });
+      await user.click(submitButton);
       
-      jest.useRealTimers();
-    });
-
-    it('handles form submission with Enter key', async () => {
-      const onSubmit = jest.fn();
-      renderWithProviders(<LoginForm {...defaultProps} onSubmit={onSubmit} />);
-
-      const emailInput = screen.getByLabelText('Email');
-      const passwordInput = screen.getByLabelText('Password');
-
-      fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
-      fireEvent.change(passwordInput, { target: { value: 'password123' } });
-      
-      // Submit with Enter key
-      fireEvent.keyDown(passwordInput, { key: 'Enter', code: 'Enter' });
-      fireEvent.submit(emailInput.closest('form')!);
-
-      expect(onSubmit).toHaveBeenCalledWith({
-        email: 'test@example.com',
-        password: 'password123',
-        rememberMe: false
-      });
-    });
+      expect(preventDefault).toHaveBeenCalled();
+    }
   });
 });

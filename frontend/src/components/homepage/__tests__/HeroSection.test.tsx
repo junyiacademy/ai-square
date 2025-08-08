@@ -1,83 +1,165 @@
 import React from 'react';
-import { renderWithProviders, screen, waitFor } from '@/test-utils/helpers/render';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { useRouter } from 'next/navigation';
 import HeroSection from '../HeroSection';
-import { useTranslation } from 'react-i18next';
+
+// Mock next/navigation
+jest.mock('next/navigation', () => ({
+  useRouter: jest.fn(),
+}));
 
 // Mock react-i18next
 jest.mock('react-i18next', () => ({
-  useTranslation: jest.fn(),
+  useTranslation: () => ({
+    t: (key: string) => key,
+    i18n: {
+      changeLanguage: jest.fn(),
+      language: 'en',
+    },
+  }),
 }));
 
-// Mock Next.js Link component
-jest.mock('next/link', () => {
-  return ({ children, href }: { children: React.ReactNode; href: string }) => (
-    <a href={href}>{children}</a>
-  );
-});
-
 describe('HeroSection', () => {
-  const mockT = jest.fn((key: string) => key);
-
+  const mockPush = jest.fn();
+  
   beforeEach(() => {
-    (useTranslation as jest.Mock).mockReturnValue({
-      t: mockT,
+    (useRouter as jest.Mock).mockReturnValue({
+      push: mockPush,
+      prefetch: jest.fn(),
     });
+    
+    // Clear localStorage
+    localStorage.clear();
+    
+    // Clear mock calls
+    mockPush.mockClear();
   });
 
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  it('renders hero section with all elements', async () => {
-    renderWithProviders(<HeroSection />);
-
-    // Check for title
+  it('should render hero section with title and subtitle', () => {
+    render(<HeroSection />);
+    
     expect(screen.getByText('hero.title')).toBeInTheDocument();
-
-    // Check for subtitle
     expect(screen.getByText('hero.subtitle')).toBeInTheDocument();
-
-    // Check for description
-    expect(screen.getByText('hero.description')).toBeInTheDocument();
-
-    // Check for CTA buttons
-    expect(screen.getByText('hero.cta.getStarted')).toBeInTheDocument();
-    expect(screen.getByText('hero.cta.assessment')).toBeInTheDocument();
-    expect(screen.getByText('hero.cta.explore')).toBeInTheDocument();
   });
 
-  it('renders CTA links with correct hrefs', async () => {
-    renderWithProviders(<HeroSection />);
-
-    // The first CTA is a button, not a link, so test it differently
-    const getStartedButton = screen.getByRole('button', { name: /hero\.cta\.getStarted/i });
-    expect(getStartedButton).toBeInTheDocument();
-
-    // These are actual links
-    const assessmentLink = screen.getByRole('link', { name: /hero\.cta\.assessment/i });
-    expect(assessmentLink).toHaveAttribute('href', '/assessment');
-
-    const exploreLink = screen.getByRole('link', { name: /hero\.cta\.explore/i });
-    expect(exploreLink).toHaveAttribute('href', '/relations');
+  it('should render CTA button', () => {
+    render(<HeroSection />);
+    
+    const ctaButton = screen.getByRole('button', { name: 'hero.cta' });
+    expect(ctaButton).toBeInTheDocument();
   });
 
-  it('renders visual elements (emojis)', async () => {
-    renderWithProviders(<HeroSection />);
+  it('should navigate to register when not logged in', async () => {
+    const user = userEvent.setup();
+    render(<HeroSection />);
+    
+    const ctaButton = screen.getByRole('button', { name: 'hero.cta' });
+    await user.click(ctaButton);
+    
+    expect(mockPush).toHaveBeenCalledWith('/register');
+  });
 
-    const emojis = ['🎯', '🎨', '🎮', '🏗️'];
-    emojis.forEach(emoji => {
-      expect(screen.getByText(emoji)).toBeInTheDocument();
+  it('should navigate to assessment when logged in without assessment result', async () => {
+    const user = userEvent.setup();
+    
+    // Set logged in user without assessment result
+    localStorage.setItem('user', JSON.stringify({ id: '123', email: 'test@example.com' }));
+    
+    render(<HeroSection />);
+    
+    // Wait for useEffect to complete
+    await waitFor(() => {
+      const ctaButton = screen.getByRole('button', { name: 'hero.cta' });
+      expect(ctaButton).toBeInTheDocument();
     });
+    
+    const ctaButton = screen.getByRole('button', { name: 'hero.cta' });
+    await user.click(ctaButton);
+    
+    expect(mockPush).toHaveBeenCalledWith('/assessment');
   });
 
-  it('applies correct styling classes', async () => {
-    const { container } = renderWithProviders(<HeroSection />);
+  it('should navigate to PBL when logged in with assessment result', async () => {
+    const user = userEvent.setup();
+    
+    // Set logged in user with assessment result
+    localStorage.setItem('user', JSON.stringify({ id: '123', email: 'test@example.com' }));
+    localStorage.setItem('assessmentResult', JSON.stringify({ score: 80 }));
+    
+    render(<HeroSection />);
+    
+    // Wait for useEffect to complete
+    await waitFor(() => {
+      const ctaButton = screen.getByRole('button', { name: 'hero.cta' });
+      expect(ctaButton).toBeInTheDocument();
+    });
+    
+    const ctaButton = screen.getByRole('button', { name: 'hero.cta' });
+    await user.click(ctaButton);
+    
+    expect(mockPush).toHaveBeenCalledWith('/pbl');
+  });
 
-    // Check for gradient background
-    const section = container.querySelector('section');
-    expect(section).toHaveClass('bg-gradient-to-br', 'from-blue-50', 'via-indigo-50', 'to-purple-50');
+  it('should render background decorations', () => {
+    const { container } = render(<HeroSection />);
+    
+    // Check for background decoration elements
+    const decorations = container.querySelectorAll('.absolute .rounded-full');
+    expect(decorations.length).toBeGreaterThan(0);
+  });
 
-    // Check for responsive padding
-    expect(section).toHaveClass('pt-24', 'pb-20');
+  it('should have proper gradient background', () => {
+    render(<HeroSection />);
+    
+    const section = screen.getByRole('region') || document.querySelector('section');
+    expect(section?.className).toContain('bg-gradient-to-br');
+    expect(section?.className).toContain('from-blue-50');
+    expect(section?.className).toContain('via-indigo-50');
+    expect(section?.className).toContain('to-purple-50');
+  });
+
+  it('should check localStorage on mount', () => {
+    const getItemSpy = jest.spyOn(Storage.prototype, 'getItem');
+    
+    render(<HeroSection />);
+    
+    expect(getItemSpy).toHaveBeenCalledWith('user');
+  });
+
+  it('should handle localStorage without user data', async () => {
+    const user = userEvent.setup();
+    
+    // Ensure localStorage is empty
+    localStorage.clear();
+    
+    render(<HeroSection />);
+    
+    const ctaButton = screen.getByRole('button', { name: 'hero.cta' });
+    await user.click(ctaButton);
+    
+    expect(mockPush).toHaveBeenCalledWith('/register');
+  });
+
+  it('should update state when localStorage changes', async () => {
+    const { rerender } = render(<HeroSection />);
+    
+    // Initially not logged in
+    let ctaButton = screen.getByRole('button', { name: 'hero.cta' });
+    await userEvent.click(ctaButton);
+    expect(mockPush).toHaveBeenCalledWith('/register');
+    
+    // Simulate login
+    localStorage.setItem('user', JSON.stringify({ id: '123' }));
+    mockPush.mockClear();
+    
+    // Re-render to trigger useEffect
+    rerender(<HeroSection />);
+    
+    await waitFor(async () => {
+      ctaButton = screen.getByRole('button', { name: 'hero.cta' });
+      await userEvent.click(ctaButton);
+      expect(mockPush).toHaveBeenCalledWith('/assessment');
+    });
   });
 });

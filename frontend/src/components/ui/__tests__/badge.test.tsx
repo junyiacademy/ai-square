@@ -1,68 +1,108 @@
 import React from 'react';
-import { renderWithProviders, screen, waitFor } from '@/test-utils/helpers/render';
+import { render, screen } from '@testing-library/react';
 import { Badge } from '../badge';
 
-describe('Badge Component', () => {
-  it('renders with default variant', async () => {
-    renderWithProviders(<Badge>Default Badge</Badge>);
-    const badge = screen.getByText('Default Badge');
-    expect(badge).toBeInTheDocument();
-    expect(badge).toHaveClass('bg-blue-600', 'text-white');
+describe('Badge', () => {
+  it('should render badge with text', () => {
+    render(<Badge>New</Badge>);
+    expect(screen.getByText('New')).toBeInTheDocument();
   });
 
-  it('renders with secondary variant', async () => {
-    renderWithProviders(<Badge variant="secondary">Secondary Badge</Badge>);
-    const badge = screen.getByText('Secondary Badge');
-    expect(badge).toBeInTheDocument();
-    expect(badge).toHaveClass('bg-gray-200', 'text-gray-900');
+  it('should apply default variant classes', () => {
+    render(<Badge data-testid="badge">Default</Badge>);
+    const badge = screen.getByTestId('badge');
+    expect(badge.className).toContain('bg-blue-600');
+    expect(badge.className).toContain('text-white');
+    expect(badge.className).toContain('border-transparent');
   });
 
-  it('renders with destructive variant', async () => {
-    renderWithProviders(<Badge variant="destructive">Destructive Badge</Badge>);
-    const badge = screen.getByText('Destructive Badge');
-    expect(badge).toBeInTheDocument();
-    expect(badge).toHaveClass('bg-red-600', 'text-white');
+  it('should apply variant classes correctly', () => {
+    const { rerender } = render(<Badge variant="default" data-testid="badge">Default</Badge>);
+    let badge = screen.getByTestId('badge');
+    expect(badge.className).toContain('bg-blue-600');
+    expect(badge.className).toContain('text-white');
+    
+    rerender(<Badge variant="secondary" data-testid="badge">Secondary</Badge>);
+    badge = screen.getByTestId('badge');
+    expect(badge.className).toContain('bg-gray-200');
+    expect(badge.className).toContain('text-gray-900');
+    
+    rerender(<Badge variant="destructive" data-testid="badge">Destructive</Badge>);
+    badge = screen.getByTestId('badge');
+    expect(badge.className).toContain('bg-red-600');
+    expect(badge.className).toContain('text-white');
+    
+    rerender(<Badge variant="outline" data-testid="badge">Outline</Badge>);
+    badge = screen.getByTestId('badge');
+    expect(badge.className).toContain('text-gray-900');
   });
 
-  it('renders with outline variant', async () => {
-    renderWithProviders(<Badge variant="outline">Outline Badge</Badge>);
-    const badge = screen.getByText('Outline Badge');
-    expect(badge).toBeInTheDocument();
-    expect(badge).toHaveClass('text-gray-900');
+  it('should apply base classes', () => {
+    render(<Badge data-testid="badge">Badge</Badge>);
+    const badge = screen.getByTestId('badge');
+    expect(badge.className).toContain('inline-flex');
+    expect(badge.className).toContain('items-center');
+    expect(badge.className).toContain('rounded-full');
+    expect(badge.className).toContain('border');
+    expect(badge.className).toContain('px-2.5');
+    expect(badge.className).toContain('py-0.5');
+    expect(badge.className).toContain('text-xs');
+    expect(badge.className).toContain('font-semibold');
   });
 
-  it('applies custom className', async () => {
-    renderWithProviders(<Badge className="custom-class">Custom Badge</Badge>);
-    const badge = screen.getByText('Custom Badge');
-    expect(badge).toHaveClass('custom-class');
+  it('should apply custom className', () => {
+    render(<Badge className="custom-badge" data-testid="badge">Custom</Badge>);
+    const badge = screen.getByTestId('badge');
+    expect(badge.className).toContain('custom-badge');
   });
 
-  it('forwards ref properly', async () => {
+  it('should forward ref', () => {
     const ref = React.createRef<HTMLDivElement>();
-    renderWithProviders(<Badge ref={ref}>Ref Badge</Badge>);
+    render(<Badge ref={ref}>Badge</Badge>);
     expect(ref.current).toBeInstanceOf(HTMLDivElement);
-    expect(ref.current?.textContent).toBe('Ref Badge');
   });
 
-  it('passes through additional props', async () => {
-    renderWithProviders(<Badge data-testid="test-badge" aria-label="Test Badge">Props Badge</Badge>);
-    const badge = screen.getByTestId('test-badge');
-    expect(badge).toHaveAttribute('aria-label', 'Test Badge');
-  });
-
-  it('has proper base classes', async () => {
-    renderWithProviders(<Badge>Base Classes Badge</Badge>);
-    const badge = screen.getByText('Base Classes Badge');
-    expect(badge).toHaveClass(
-      'inline-flex',
-      'items-center',
-      'rounded-full',
-      'border',
-      'px-2.5',
-      'py-0.5',
-      'text-xs',
-      'font-semibold',
-      'transition-colors'
+  it('should pass through other props', () => {
+    render(
+      <Badge 
+        id="test-badge"
+        role="status"
+        aria-label="Status badge"
+        data-testid="badge"
+      >
+        Status
+      </Badge>
     );
+    
+    const badge = screen.getByTestId('badge');
+    expect(badge).toHaveAttribute('id', 'test-badge');
+    expect(badge).toHaveAttribute('role', 'status');
+    expect(badge).toHaveAttribute('aria-label', 'Status badge');
+  });
+
+  it('should apply focus styles', () => {
+    render(<Badge data-testid="badge">Focusable</Badge>);
+    const badge = screen.getByTestId('badge');
+    expect(badge.className).toContain('focus:outline-none');
+    expect(badge.className).toContain('focus:ring-2');
+    expect(badge.className).toContain('focus:ring-gray-950');
+    expect(badge.className).toContain('focus:ring-offset-2');
+  });
+
+  it('should apply transition classes', () => {
+    render(<Badge data-testid="badge">Animated</Badge>);
+    const badge = screen.getByTestId('badge');
+    expect(badge.className).toContain('transition-colors');
+  });
+
+  it('should render with children elements', () => {
+    render(
+      <Badge>
+        <span>Icon</span>
+        <span>Text</span>
+      </Badge>
+    );
+    expect(screen.getByText('Icon')).toBeInTheDocument();
+    expect(screen.getByText('Text')).toBeInTheDocument();
   });
 });
