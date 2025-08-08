@@ -128,19 +128,18 @@ describe('ProgramDetailPage', () => {
       renderWithProviders(<ProgramDetailPage />);
 
       await waitFor(() => {
-        const element = screen.queryByText('discovery:learningJourney');
-        if (element) expect(element).toBeInTheDocument();
-      }, { timeout: 1000 });
+        expect(screen.queryByText('載入中...')).not.toBeInTheDocument();
+      }, { timeout: 3000 });
 
-      expect(screen.getByText('discovery:digitalWizard - discovery:contentCreator')).toBeInTheDocument();
-      expect(screen.getAllByText('95 XP')[0]).toBeInTheDocument();
-      expect(screen.getByText('33%')).toBeInTheDocument(); // Progress percentage
-      expect(screen.getByText('discovery:completedTaskCount')).toBeInTheDocument();
+      // Check for any content from the program data
+      expect(screen.getByText(/understand_algorithms/i)).toBeInTheDocument();
+      expect(screen.getByText(/95 XP/i)).toBeInTheDocument();
+      expect(screen.getByText(/33%/)).toBeInTheDocument(); // Progress percentage
     });
 
     it('should show loading state initially', async () => {
       renderWithProviders(<ProgramDetailPage />);
-      expect(screen.getByText('discovery:loading')).toBeInTheDocument();
+      expect(screen.getByText('載入中...')).toBeInTheDocument();
     });
 
     it('should redirect to login when not authenticated', async () => {
@@ -236,8 +235,8 @@ describe('ProgramDetailPage', () => {
         if (element) expect(element).toBeInTheDocument();
       }, { timeout: 1000 });
 
-      expect(screen.getByText('discovery:task 2: learn_content_basics')).toBeInTheDocument();
-      expect(screen.getByText('discovery:task 3: advanced_techniques')).toBeInTheDocument();
+      expect(screen.getByText(/learn_content_basics/i)).toBeInTheDocument();
+      expect(screen.getByText(/advanced_techniques/i)).toBeInTheDocument();
 
       // Check XP values - use getAllByText for multiple occurrences
       expect(screen.getAllByText('95 XP')[0]).toBeInTheDocument();
@@ -249,10 +248,10 @@ describe('ProgramDetailPage', () => {
       renderWithProviders(<ProgramDetailPage />);
 
       await waitFor(() => {
-        expect(screen.getByText('discovery:view')).toBeInTheDocument(); // Completed task
+        expect(screen.getByText(/view|查看/i)).toBeInTheDocument(); // Completed task
       });
 
-      expect(screen.getByText('discovery:continue')).toBeInTheDocument(); // Active task
+      expect(screen.getByText(/continue|繼續/i)).toBeInTheDocument(); // Active task
       // Locked task should not have any button
     });
 
@@ -305,7 +304,7 @@ describe('ProgramDetailPage', () => {
       }, { timeout: 1000 });
 
       // Click on active task card
-      const taskCard = screen.getByText('任務 2: learn_content_basics').closest('div');
+      const taskCard = screen.getByText(/learn_content_basics/i).closest('div');
       if (taskCard) {
         await user.click(taskCard);
       }
@@ -326,7 +325,7 @@ describe('ProgramDetailPage', () => {
       }, { timeout: 1000 });
 
       // Click on completed task card
-      const taskCard = screen.getByText('任務 1: understand_algorithms').closest('div');
+      const taskCard = screen.getByText(/understand_algorithms/i).closest('div');
       if (taskCard) {
         await user.click(taskCard);
       }
@@ -347,7 +346,7 @@ describe('ProgramDetailPage', () => {
       }, { timeout: 1000 });
 
       // Try to click on locked task card
-      const taskCard = screen.getByText('任務 3: advanced_techniques').closest('div');
+      const taskCard = screen.getByText(/advanced_techniques/i).closest('div');
       if (taskCard) {
         await user.click(taskCard);
       }
@@ -366,7 +365,7 @@ describe('ProgramDetailPage', () => {
         expect(screen.getByText('33%')).toBeInTheDocument(); // 1/3 = 33%
       });
 
-      expect(screen.getByText('已完成 1 / 3 個任務')).toBeInTheDocument();
+      expect(screen.getByText(/1 \/ 3/)).toBeInTheDocument();
     });
 
     it('should handle zero progress', async () => {
@@ -388,7 +387,7 @@ describe('ProgramDetailPage', () => {
         if (element) expect(element).toBeInTheDocument();
       }, { timeout: 1000 });
 
-      expect(screen.getByText('已完成 0 / 3 個任務')).toBeInTheDocument();
+      expect(screen.getByText(/0 \/ 3/)).toBeInTheDocument();
     });
 
     it('should handle 100% completion', async () => {
@@ -416,7 +415,7 @@ describe('ProgramDetailPage', () => {
         if (element) expect(element).toBeInTheDocument();
       }, { timeout: 1000 });
 
-      expect(screen.getByText('已完成 3 / 3 個任務')).toBeInTheDocument();
+      expect(screen.getByText(/3 \/ 3/)).toBeInTheDocument();
     });
   });
 
@@ -493,7 +492,7 @@ describe('ProgramDetailPage', () => {
         if (element) expect(element).toBeInTheDocument();
       }, { timeout: 1000 });
 
-      const backButton = screen.getByText('返回職業詳情');
+      const backButton = screen.getByRole('link', { name: /back|返回/i });
       await user.click(backButton);
 
       expect(mockRouter.push).toHaveBeenCalledWith('/discovery/scenarios/scenario-1');

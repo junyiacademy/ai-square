@@ -230,7 +230,7 @@ describe('ScenarioIndexBuilder', () => {
       const error = new Error('Database error');
       mockScenarioRepo.findBySource.mockRejectedValueOnce(error);
 
-      await builder.buildFullIndex();
+      await expect(builder.buildFullIndex()).rejects.toThrow('Database error');
 
       expect(consoleErrorSpy).toHaveBeenCalledWith('Error building scenario index:', error);
       expect(mockScenarioIndexService.buildIndex).not.toHaveBeenCalled();
