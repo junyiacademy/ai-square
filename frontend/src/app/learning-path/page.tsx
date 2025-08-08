@@ -82,7 +82,12 @@ function LearningPathContent() {
     // Get user profile (identity and interests)
     const profileStr = localStorage.getItem('userProfile');
     if (profileStr) {
-      setUserProfile(JSON.parse(profileStr));
+      try {
+        setUserProfile(JSON.parse(profileStr));
+      } catch (error) {
+        console.error('Invalid user profile format:', error);
+        // Continue with empty profile
+      }
     }
 
     // Get assessment result
@@ -93,7 +98,14 @@ function LearningPathContent() {
       return;
     }
 
-    const result = JSON.parse(resultStr) as AssessmentResult;
+    let result: AssessmentResult;
+    try {
+      result = JSON.parse(resultStr) as AssessmentResult;
+    } catch (error) {
+      console.error('Invalid assessment result format:', error);
+      router.push('/assessment');
+      return;
+    }
     setAssessmentResult(result);
 
     // Generate learning path based on assessment
