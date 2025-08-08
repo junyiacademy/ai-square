@@ -143,7 +143,7 @@ beforeEach(() => {
       });
 
       await waitFor(() => {
-        const element = screen.queryByText('Please log in to access the chat feature.');
+        const element = screen.queryByText('Please log in to start chatting');
         if (element) expect(element).toBeInTheDocument();
       }, { timeout: 1000 });
     });

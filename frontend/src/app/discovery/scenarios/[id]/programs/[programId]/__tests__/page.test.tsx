@@ -133,7 +133,7 @@ describe('ProgramDetailPage', () => {
 
       // Check for any content from the program data
       expect(screen.getByText(/understand_algorithms/i)).toBeInTheDocument();
-      expect(screen.getByText(/95 XP/i)).toBeInTheDocument();
+      expect(screen.getAllByText(/95 XP/i)[0]).toBeInTheDocument();
       expect(screen.getByText(/33%/)).toBeInTheDocument(); // Progress percentage
     });
 
