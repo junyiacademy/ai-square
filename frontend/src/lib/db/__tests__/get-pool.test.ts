@@ -118,18 +118,25 @@ describe('get-pool', () => {
 
   describe('closePool', () => {
     it('closes the pool if it exists', async () => {
-      const { Pool } = require('pg');
-      const mockEnd = jest.fn().mockResolvedValue(undefined);
-      Pool.mockImplementation(() => ({
-        on: jest.fn(),
-        end: mockEnd,
-        query: jest.fn(),
+      // Reset the module to clear any previous pool state
+      jest.resetModules();
+      
+      // Re-mock pg module
+      jest.doMock('pg', () => ({
+        Pool: jest.fn().mockImplementation(() => ({
+          on: jest.fn(),
+          end: jest.fn().mockResolvedValue(undefined),
+          query: jest.fn(),
+        }))
       }));
       
-      getPool(); // Create pool
-      await closePool();
+      // Re-import functions after mocking
+      const { getPool: getPoolFresh, closePool: closePoolFresh } = require('../get-pool');
       
-      expect(mockEnd).toHaveBeenCalled();
+      const pool = getPoolFresh(); // Create pool
+      await closePoolFresh();
+      
+      expect(pool.end).toHaveBeenCalled();
     });
 
     it('does nothing if pool does not exist', async () => {

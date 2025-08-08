@@ -30,12 +30,8 @@ describe('AuthContext', () => {
   it('should have proper structure', () => {
     render(<AuthProvider><div>Test</div></AuthProvider>);
     
-    // Check for basic elements - adjust based on component
-    const element = screen.getByRole('main', { hidden: true }) || 
-                   screen.getByRole('article', { hidden: true }) ||
-                   screen.getByRole('section', { hidden: true }) ||
-                   document.querySelector('div');
-    expect(element).toBeInTheDocument();
+    // AuthProvider renders children directly
+    expect(screen.getByText('Test')).toBeInTheDocument();
   });
 
   it('should handle user interactions', async () => {
