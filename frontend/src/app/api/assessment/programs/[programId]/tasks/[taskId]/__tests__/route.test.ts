@@ -25,7 +25,7 @@ const mockRepositoryFactory = repositoryFactory as jest.Mocked<typeof repository
 const mockConsoleError = createMockConsoleError();
 
 // Valid UUID for testing
-const VALID_UUID = '12345678-1234-1234-1234-123456789012';
+const VALID_UUID = '123e4567-e89b-12d3-a456-426614174000';
 const INVALID_UUID = 'invalid-uuid';
 
 describe('GET /api/assessment/programs/[programId]/tasks/[taskId]', () => {
@@ -121,7 +121,7 @@ describe('GET /api/assessment/programs/[programId]/tasks/[taskId]', () => {
   };
 
   const mockContext = {
-    params: Promise.resolve({'programId':'test-id','taskId':'test-id'})
+    params: Promise.resolve({'programId': VALID_UUID, 'taskId': VALID_UUID})
   };
 
   beforeEach(() => {
@@ -161,7 +161,7 @@ describe('GET /api/assessment/programs/[programId]/tasks/[taskId]', () => {
       });
 
       const response = await GET(request, {
-        params: Promise.resolve({'programId':'test-id','taskId':'test-id'})
+        params: Promise.resolve({'programId': INVALID_UUID, 'taskId': VALID_UUID})
       });
       const data = await response.json();
 
@@ -176,7 +176,7 @@ describe('GET /api/assessment/programs/[programId]/tasks/[taskId]', () => {
       });
 
       const response = await GET(request, {
-        params: Promise.resolve({'programId':'test-id','taskId':'test-id'})
+        params: Promise.resolve({'programId': VALID_UUID, 'taskId': INVALID_UUID})
       });
       const data = await response.json();
 
@@ -426,7 +426,7 @@ describe('PATCH /api/assessment/programs/[programId]/tasks/[taskId]', () => {
   };
 
   const mockContext = {
-    params: Promise.resolve({'programId':'test-id','taskId':'test-id'})
+    params: Promise.resolve({'programId': VALID_UUID, 'taskId': VALID_UUID})
   };
 
   beforeEach(() => {

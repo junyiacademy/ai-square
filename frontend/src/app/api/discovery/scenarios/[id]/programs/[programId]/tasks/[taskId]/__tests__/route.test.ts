@@ -16,8 +16,8 @@ const mockSession = {
 };
 
 const mockTask = {
-  id: 'task-123',
-  programId: 'prog-123',
+  id: '123e4567-e89b-12d3-a456-426614174000',
+  programId: '123e4567-e89b-12d3-a456-426614174001',
   type: 'exploration',
   title: { en: 'Test Task' },
   description: { en: 'Test Description' },
@@ -28,8 +28,8 @@ const mockTask = {
 };
 
 const mockProgram = {
-  id: 'prog-123',
-  scenarioId: 'scenario-123',
+  id: '123e4567-e89b-12d3-a456-426614174001',
+  scenarioId: '123e4567-e89b-12d3-a456-426614174002',
   userId: 'test-user-123',
   status: 'active',
   discoveryData: { 
@@ -58,7 +58,7 @@ beforeEach(() => {
   
   const mockScenarioRepo = {
     findById: jest.fn().mockResolvedValue({
-      id: 'scenario-123',
+      id: '123e4567-e89b-12d3-a456-426614174002',
       title: { en: 'Test Scenario' },
       mode: 'discovery',
       metadata: { careerType: 'Software Engineer' }
@@ -67,7 +67,7 @@ beforeEach(() => {
   
   const mockEvaluationRepo = {
     findByTaskId: jest.fn().mockResolvedValue([]),
-    create: jest.fn().mockResolvedValue({ id: 'eval-123' })
+    create: jest.fn().mockResolvedValue({ id: '123e4567-e89b-12d3-a456-426614174003' })
   };
 
   const mockRepositoryFactory = require('@/lib/repositories/base/repository-factory');
@@ -86,7 +86,7 @@ beforeEach(() => {
   // Mock YAML loader
   require('@/lib/services/discovery-yaml-loader').DiscoveryYAMLLoader.mockImplementation(() => ({
     loadScenarioById: jest.fn().mockResolvedValue({
-      id: 'scenario-123',
+      id: '123e4567-e89b-12d3-a456-426614174002',
       title: { en: 'Test Scenario' },
       careerType: 'Software Engineer',
       world_setting: {
@@ -110,7 +110,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await GET(
         request,
-        { params: Promise.resolve({'id':'scenario-123','programId':'prog-123','taskId':'task-123'}) }
+        { params: Promise.resolve({'id':'123e4567-e89b-12d3-a456-426614174002','programId':'123e4567-e89b-12d3-a456-426614174001','taskId':'123e4567-e89b-12d3-a456-426614174000'}) }
       );
       
       expect(response.status).toBe(200);
@@ -128,7 +128,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await GET(
         request,
-        { params: Promise.resolve({'id':'scenario-123','programId':'prog-123','taskId':'task-123'}) }
+        { params: Promise.resolve({'id':'123e4567-e89b-12d3-a456-426614174002','programId':'123e4567-e89b-12d3-a456-426614174001','taskId':'123e4567-e89b-12d3-a456-426614174000'}) }
       );
       
       expect(response.status).toBe(401);
@@ -143,7 +143,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await GET(
         request,
-        { params: Promise.resolve({'id':'scenario-123','programId':'prog-123','taskId':'task-123'}) }
+        { params: Promise.resolve({'id':'123e4567-e89b-12d3-a456-426614174002','programId':'123e4567-e89b-12d3-a456-426614174001','taskId':'123e4567-e89b-12d3-a456-426614174000'}) }
       );
       
       expect(response.status).toBe(404);
@@ -158,7 +158,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await GET(
         request,
-        { params: Promise.resolve({'id':'scenario-123','programId':'prog-123','taskId':'task-123'}) }
+        { params: Promise.resolve({'id':'123e4567-e89b-12d3-a456-426614174002','programId':'123e4567-e89b-12d3-a456-426614174001','taskId':'123e4567-e89b-12d3-a456-426614174000'}) }
       );
       
       expect(response.status).toBe(500);
@@ -169,7 +169,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await GET(
         request,
-        { params: Promise.resolve({'id':'scenario-123','programId':'prog-123','taskId':'task-123'}) }
+        { params: Promise.resolve({'id':'123e4567-e89b-12d3-a456-426614174002','programId':'123e4567-e89b-12d3-a456-426614174001','taskId':'123e4567-e89b-12d3-a456-426614174000'}) }
       );
       
       const data = await response.json();
@@ -185,7 +185,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await GET(
         request,
-        { params: Promise.resolve({'id':'scenario-123','programId':'prog-123','taskId':'task-123'}) }
+        { params: Promise.resolve({'id':'123e4567-e89b-12d3-a456-426614174002','programId':'123e4567-e89b-12d3-a456-426614174001','taskId':'123e4567-e89b-12d3-a456-426614174000'}) }
       );
       
       const data = await response.json();
@@ -207,7 +207,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await PATCH(
         request,
-        { params: Promise.resolve({'id':'scenario-123','programId':'prog-123','taskId':'task-123'}) }
+        { params: Promise.resolve({'id':'123e4567-e89b-12d3-a456-426614174002','programId':'123e4567-e89b-12d3-a456-426614174001','taskId':'123e4567-e89b-12d3-a456-426614174000'}) }
       );
       
       expect(response.status).toBe(200);
@@ -224,7 +224,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await PATCH(
         request,
-        { params: Promise.resolve({'id':'scenario-123','programId':'prog-123','taskId':'task-123'}) }
+        { params: Promise.resolve({'id':'123e4567-e89b-12d3-a456-426614174002','programId':'123e4567-e89b-12d3-a456-426614174001','taskId':'123e4567-e89b-12d3-a456-426614174000'}) }
       );
       
       expect(response.status).toBe(400);
@@ -238,7 +238,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await PATCH(
         request,
-        { params: Promise.resolve({'id':'scenario-123','programId':'prog-123','taskId':'task-123'}) }
+        { params: Promise.resolve({'id':'123e4567-e89b-12d3-a456-426614174002','programId':'123e4567-e89b-12d3-a456-426614174001','taskId':'123e4567-e89b-12d3-a456-426614174000'}) }
       );
       
       expect(response.status).toBe(400);
@@ -258,7 +258,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await PATCH(
         request,
-        { params: Promise.resolve({'id':'scenario-123','programId':'prog-123','taskId':'task-123'}) }
+        { params: Promise.resolve({'id':'123e4567-e89b-12d3-a456-426614174002','programId':'123e4567-e89b-12d3-a456-426614174001','taskId':'123e4567-e89b-12d3-a456-426614174000'}) }
       );
       
       expect(response.status).toBe(200);
@@ -281,7 +281,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await PATCH(
         request,
-        { params: Promise.resolve({'id':'scenario-123','programId':'prog-123','taskId':'task-123'}) }
+        { params: Promise.resolve({'id':'123e4567-e89b-12d3-a456-426614174002','programId':'123e4567-e89b-12d3-a456-426614174001','taskId':'123e4567-e89b-12d3-a456-426614174000'}) }
       );
       
       expect(response.status).toBe(200);
@@ -299,7 +299,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await PATCH(
         request,
-        { params: Promise.resolve({'id':'scenario-123','programId':'prog-123','taskId':'task-123'}) }
+        { params: Promise.resolve({'id':'123e4567-e89b-12d3-a456-426614174002','programId':'123e4567-e89b-12d3-a456-426614174001','taskId':'123e4567-e89b-12d3-a456-426614174000'}) }
       );
       
       expect(response.status).toBe(400);
@@ -317,7 +317,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await PATCH(
         request,
-        { params: Promise.resolve({'id':'scenario-123','programId':'prog-123','taskId':'task-123'}) }
+        { params: Promise.resolve({'id':'123e4567-e89b-12d3-a456-426614174002','programId':'123e4567-e89b-12d3-a456-426614174001','taskId':'123e4567-e89b-12d3-a456-426614174000'}) }
       );
       
       expect(response.status).toBe(404);
@@ -335,7 +335,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await PATCH(
         request,
-        { params: Promise.resolve({'id':'scenario-123','programId':'prog-123','taskId':'task-123'}) }
+        { params: Promise.resolve({'id':'123e4567-e89b-12d3-a456-426614174002','programId':'123e4567-e89b-12d3-a456-426614174001','taskId':'123e4567-e89b-12d3-a456-426614174000'}) }
       );
       
       expect(response.status).toBe(500);
@@ -348,7 +348,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await GET(
         request,
-        { params: Promise.resolve({'id':'scenario-123','programId':'prog-123','taskId':'task-123'}) }
+        { params: Promise.resolve({'id':'123e4567-e89b-12d3-a456-426614174002','programId':'123e4567-e89b-12d3-a456-426614174001','taskId':'123e4567-e89b-12d3-a456-426614174000'}) }
       );
       
       expect(response.status).toBe(400);
@@ -371,7 +371,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await PATCH(
         request,
-        { params: Promise.resolve({'id':'scenario-123','programId':'prog-123','taskId':'task-123'}) }
+        { params: Promise.resolve({'id':'123e4567-e89b-12d3-a456-426614174002','programId':'123e4567-e89b-12d3-a456-426614174001','taskId':'123e4567-e89b-12d3-a456-426614174000'}) }
       );
       
       // Should still succeed even if AI feedback fails
@@ -388,7 +388,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await GET(
         request,
-        { params: Promise.resolve({'id':'scenario-123','programId':'prog-123','taskId':'task-123'}) }
+        { params: Promise.resolve({'id':'123e4567-e89b-12d3-a456-426614174002','programId':'123e4567-e89b-12d3-a456-426614174001','taskId':'123e4567-e89b-12d3-a456-426614174000'}) }
       );
       
       // Should still return data even with translation errors
@@ -399,7 +399,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       const request = new NextRequest('http://localhost/api/discovery/scenarios/scenario-123/programs/prog-123/tasks/task-123');
       
       const promises = Array.from({ length: 5 }, () => 
-        GET(request, { params: Promise.resolve({'id':'test-id','programId':'test-id','taskId':'test-id'}) })
+        GET(request, { params: Promise.resolve({'id':'123e4567-e89b-12d3-a456-426614174002','programId':'123e4567-e89b-12d3-a456-426614174001','taskId':'123e4567-e89b-12d3-a456-426614174000'}) })
       );
       
       const responses = await Promise.all(promises);
@@ -414,7 +414,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const response = await GET(
         request,
-        { params: Promise.resolve({'id':'scenario-123','programId':'prog-123','taskId':'task-123'}) }
+        { params: Promise.resolve({'id':'123e4567-e89b-12d3-a456-426614174002','programId':'123e4567-e89b-12d3-a456-426614174001','taskId':'123e4567-e89b-12d3-a456-426614174000'}) }
       );
       
       expect(response.status).toBe(400);
@@ -428,7 +428,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const getResponse = await GET(
         getRequest,
-        { params: Promise.resolve({'id':'scenario-123','programId':'prog-123','taskId':'task-123'}) }
+        { params: Promise.resolve({'id':'123e4567-e89b-12d3-a456-426614174002','programId':'123e4567-e89b-12d3-a456-426614174001','taskId':'123e4567-e89b-12d3-a456-426614174000'}) }
       );
       
       expect(getResponse.status).toBe(200);
@@ -445,7 +445,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const postResponse = await PATCH(
         postRequest,
-        { params: Promise.resolve({'id':'scenario-123','programId':'prog-123','taskId':'task-123'}) }
+        { params: Promise.resolve({'id':'123e4567-e89b-12d3-a456-426614174002','programId':'123e4567-e89b-12d3-a456-426614174001','taskId':'123e4567-e89b-12d3-a456-426614174000'}) }
       );
       
       expect(postResponse.status).toBe(200);
@@ -458,7 +458,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       
       const putResponse = await PATCH(
         putRequest,
-        { params: Promise.resolve({'id':'scenario-123','programId':'prog-123','taskId':'task-123'}) }
+        { params: Promise.resolve({'id':'123e4567-e89b-12d3-a456-426614174002','programId':'123e4567-e89b-12d3-a456-426614174001','taskId':'123e4567-e89b-12d3-a456-426614174000'}) }
       );
       
       expect(putResponse.status).toBe(200);

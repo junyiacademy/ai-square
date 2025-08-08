@@ -40,6 +40,7 @@ describe('EmailService', () => {
       process.env.GMAIL_USER = 'test@gmail.com';
       process.env.GMAIL_APP_PASSWORD = 'test-password';
       
+      // Require AFTER setting up the mock
       const { emailService } = require('../email-service');
       
       expect(nodemailer.createTransport).toHaveBeenCalledWith({
@@ -57,11 +58,6 @@ describe('EmailService', () => {
       
       const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
       
-      jest.resetModules();
-      
-      // Re-setup the mock after resetModules
-      (nodemailer.createTransport as jest.Mock).mockReturnValue(mockTransporter);
-      
       const { emailService } = require('../email-service');
       
       expect(consoleSpy).toHaveBeenCalledWith(
@@ -78,11 +74,6 @@ describe('EmailService', () => {
     beforeEach(() => {
       process.env.GMAIL_USER = 'test@gmail.com';
       process.env.GMAIL_APP_PASSWORD = 'test-password';
-      
-      jest.resetModules();
-      
-      // Mock createTransport to return our mockTransporter AFTER resetModules
-      (nodemailer.createTransport as jest.Mock).mockReturnValue(mockTransporter);
       
       const module = require('../email-service');
       emailService = module.emailService;
@@ -167,9 +158,6 @@ describe('EmailService', () => {
       process.env.GMAIL_USER = 'test@gmail.com';
       process.env.GMAIL_APP_PASSWORD = 'test-password';
       
-      jest.resetModules();
-      (nodemailer.createTransport as jest.Mock).mockReturnValue(mockTransporter);
-      
       const module = require('../email-service');
       emailService = module.emailService;
     });
@@ -199,6 +187,7 @@ describe('EmailService', () => {
       const verificationUrl = 'https://example.com/verify/token456';
       await emailService.sendVerificationEmail('user@example.com', verificationUrl);
       
+      expect(mockSendMail).toHaveBeenCalled();
       const callArgs = mockSendMail.mock.calls[0][0];
       expect(callArgs.html).toContain(verificationUrl);
       expect(callArgs.html).toContain('24 小時後失效');
@@ -211,9 +200,6 @@ describe('EmailService', () => {
     beforeEach(() => {
       process.env.GMAIL_USER = 'test@gmail.com';
       process.env.GMAIL_APP_PASSWORD = 'test-password';
-      
-      jest.resetModules();
-      (nodemailer.createTransport as jest.Mock).mockReturnValue(mockTransporter);
       
       const module = require('../email-service');
       emailService = module.emailService;
@@ -243,6 +229,7 @@ describe('EmailService', () => {
       const resetUrl = 'https://example.com/reset/token456';
       await emailService.sendPasswordResetEmail('user@example.com', resetUrl);
       
+      expect(mockSendMail).toHaveBeenCalled();
       const callArgs = mockSendMail.mock.calls[0][0];
       expect(callArgs.html).toContain(resetUrl);
       expect(callArgs.html).toContain('1 小時後失效');
@@ -256,9 +243,6 @@ describe('EmailService', () => {
       process.env.GMAIL_USER = 'test@gmail.com';
       process.env.GMAIL_APP_PASSWORD = 'test-password';
       process.env.NEXT_PUBLIC_BASE_URL = 'https://app.example.com';
-      
-      jest.resetModules();
-      (nodemailer.createTransport as jest.Mock).mockReturnValue(mockTransporter);
       
       const module = require('../email-service');
       emailService = module.emailService;
@@ -287,6 +271,7 @@ describe('EmailService', () => {
       
       await emailService.sendWelcomeEmail('user@example.com', 'Jane');
       
+      expect(mockSendMail).toHaveBeenCalled();
       const callArgs = mockSendMail.mock.calls[0][0];
       expect(callArgs.html).toContain('https://app.example.com/dashboard');
       expect(callArgs.html).toContain('開始學習');
@@ -305,6 +290,7 @@ describe('EmailService', () => {
       
       await service.sendWelcomeEmail('user@example.com', 'User');
       
+      expect(mockSendMail).toHaveBeenCalled();
       const callArgs = mockSendMail.mock.calls[0][0];
       expect(callArgs.html).toContain('http://localhost:3000/dashboard');
     });
@@ -316,8 +302,6 @@ describe('EmailService', () => {
       process.env.GMAIL_APP_PASSWORD = 'test-password';
       
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
-      
-      jest.resetModules();
       
       // Setup mock after resetModules
       (nodemailer.createTransport as jest.Mock).mockImplementation(() => {
@@ -338,9 +322,6 @@ describe('EmailService', () => {
       process.env.GMAIL_USER = 'test@gmail.com';
       process.env.GMAIL_APP_PASSWORD = 'test-password';
       
-      jest.resetModules();
-      (nodemailer.createTransport as jest.Mock).mockReturnValue(mockTransporter);
-      
       const module = require('../email-service');
       const emailService = module.emailService;
       
@@ -357,6 +338,22 @@ describe('EmailService', () => {
       expect(consoleSpy).toHaveBeenCalled();
       
       consoleSpy.mockRestore();
+    });
+
+    it('should return false when service not configured', async () => {
+      delete process.env.GMAIL_USER;
+      delete process.env.GMAIL_APP_PASSWORD;
+      
+      const module = require('../email-service');
+      const emailService = module.emailService;
+      
+      const result = await emailService.sendEmail({
+        to: 'test@example.com',
+        subject: 'Test',
+        html: '<p>Test</p>'
+      });
+      
+      expect(result).toBe(false);
     });
   });
 });

@@ -30,12 +30,14 @@ describe('page', () => {
   it('should have proper structure', () => {
     render(<Page />);
     
-    // Check for basic elements - adjust based on component
-    const element = screen.getByRole('main', { hidden: true }) || 
-                   screen.getByRole('article', { hidden: true }) ||
-                   screen.getByRole('section', { hidden: true }) ||
-                   document.querySelector('div');
-    expect(element).toBeInTheDocument();
+    // Check for the page heading
+    expect(screen.getByRole('heading', { name: /resetPassword\.title/i })).toBeInTheDocument();
+    
+    // Check for the error message
+    expect(screen.getByText(/resetPassword\.noToken/i)).toBeInTheDocument();
+    
+    // Check for the link to request new link
+    expect(screen.getByRole('link', { name: /resetPassword\.requestNewLink/i })).toBeInTheDocument();
   });
 
   it('should handle user interactions', async () => {
