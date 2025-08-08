@@ -105,7 +105,7 @@ export async function POST(
     }
     
     // Validate interaction data
-    if (!type || !content) {
+    if (!type || !content || type.trim() === '' || content.trim() === '') {
       return NextResponse.json(
         { success: false, error: 'Invalid interaction data' },
         { status: 400 }
