@@ -11,9 +11,7 @@ import type {
   DBProgram,
   DBTask,
   DBEvaluation,
-  DBProgramInsert,
-  DBTaskInsert,
-  DBEvaluationInsert
+  DBInteraction
 } from '../database';
 
 describe('Database Types', () => {
@@ -99,17 +97,23 @@ describe('Database Types', () => {
         difficulty: 'intermediate',
         estimated_minutes: 30,
         prerequisites: [],
-        task_templates: [],
+        task_templates: [] as Array<{
+          id: string;
+          title: string;
+          type: TaskType;
+          description?: string;
+        }>,
         task_count: 0,
         xp_rewards: { completion: 100 },
         unlock_requirements: {},
-        pbl_data: {},
-        discovery_data: {},
-        assessment_data: {},
-        ai_modules: {},
-        resources: {},
+        pbl_data: {} as Record<string, unknown>,
+        discovery_data: {} as Record<string, unknown>,
+        assessment_data: {} as Record<string, unknown>,
+        ai_modules: {} as Record<string, unknown>,
+        resources: [] as Array<Record<string, unknown>>,
         created_at: '2025-01-01T00:00:00Z',
         updated_at: '2025-01-01T00:00:00Z',
+        published_at: null,
         metadata: {}
       };
 
@@ -141,21 +145,23 @@ describe('Database Types', () => {
     it('should create valid DBProgram object', () => {
       const program: DBProgram = {
         id: 'program-123',
-        scenario_id: 'scenario-123',
         user_id: 'user-123',
+        scenario_id: 'scenario-123',
         mode: 'pbl',
         status: 'active',
         current_task_index: 0,
-        completed_tasks: 0,
-        total_tasks: 5,
+        completed_task_count: 0,
+        total_task_count: 5,
         total_score: 0,
-        max_score: 100,
-        time_spent_seconds: 0,
-        started_at: '2025-01-01T00:00:00Z',
-        completed_at: null,
-        abandoned_at: null,
+        domain_scores: {},
+        xp_earned: 0,
+        badges_earned: [],
         created_at: '2025-01-01T00:00:00Z',
+        started_at: null,
+        completed_at: null,
         updated_at: '2025-01-01T00:00:00Z',
+        last_activity_at: '2025-01-01T00:00:00Z',
+        time_spent_seconds: 0,
         pbl_data: {},
         discovery_data: {},
         assessment_data: {},
@@ -163,8 +169,8 @@ describe('Database Types', () => {
       };
 
       expect(program.status).toBe('active');
-      expect(program.completed_tasks).toBe(0);
-      expect(program.total_tasks).toBe(5);
+      expect(program.completed_task_count).toBe(0);
+      expect(program.total_task_count).toBe(5);
       expect(program.completed_at).toBeNull();
     });
   });
@@ -176,41 +182,63 @@ describe('Database Types', () => {
         program_id: 'program-123',
         mode: 'pbl',
         task_index: 0,
-        status: 'pending',
+        scenario_task_index: null,
+        title: 'Task Title',
+        description: 'Task Description',
         type: 'interactive',
-        title: { en: 'Task Title' },
-        description: { en: 'Task Description' },
-        instructions: { en: 'Do this task' },
-        context: {},
+        status: 'pending',
+        content: { instructions: 'Do this task' },
         interactions: [],
-        score: null,
+        interaction_count: 0,
+        user_response: {},
+        score: 0,
         max_score: 10,
-        feedback: null,
+        allowed_attempts: 3,
+        attempt_count: 0,
+        time_limit_seconds: null,
         time_spent_seconds: 0,
+        ai_config: {},
+        created_at: '2025-01-01T00:00:00Z',
         started_at: null,
         completed_at: null,
-        created_at: '2025-01-01T00:00:00Z',
         updated_at: '2025-01-01T00:00:00Z',
+        pbl_data: {},
+        discovery_data: {},
+        assessment_data: {},
         metadata: {}
       };
 
       expect(task.type).toBe('interactive');
       expect(task.status).toBe('pending');
-      expect(task.score).toBeNull();
+      expect(task.score).toBe(0);
       expect(task.started_at).toBeNull();
     });
 
     it('should handle interactions array', () => {
+      const interactions: DBInteraction[] = [
+        { 
+          timestamp: new Date('2025-01-01T00:00:00Z'), 
+          type: 'user_input', 
+          content: 'User input',
+          metadata: {}
+        },
+        { 
+          timestamp: new Date('2025-01-01T00:01:00Z'), 
+          type: 'ai_response', 
+          content: 'AI response',
+          metadata: {}
+        }
+      ];
+      
       const task: Partial<DBTask> = {
-        interactions: [
-          { type: 'user', content: 'User input', timestamp: '2025-01-01T00:00:00Z' },
-          { type: 'ai', content: 'AI response', timestamp: '2025-01-01T00:01:00Z' }
-        ]
+        interactions: interactions as unknown as Array<Record<string, unknown>>
       };
 
       expect(task.interactions).toHaveLength(2);
-      expect(task.interactions![0].type).toBe('user');
-      expect(task.interactions![1].type).toBe('ai');
+      const firstInteraction = task.interactions![0] as Record<string, unknown>;
+      const secondInteraction = task.interactions![1] as Record<string, unknown>;
+      expect(firstInteraction.type).toBe('user_input');
+      expect(secondInteraction.type).toBe('ai_response');
     });
   });
 
@@ -218,69 +246,47 @@ describe('Database Types', () => {
     it('should create valid DBEvaluation object', () => {
       const evaluation: DBEvaluation = {
         id: 'eval-123',
-        task_id: 'task-123',
         user_id: 'user-123',
+        program_id: 'program-123',
+        task_id: 'task-123',
         mode: 'pbl',
         evaluation_type: 'formative',
+        evaluation_subtype: null,
         score: 8,
         max_score: 10,
-        percentage: 80,
-        feedback: { en: 'Good job!' },
-        strengths: ['Understanding', 'Application'],
-        improvements: ['Speed'],
-        criteria: {},
-        rubric: {},
-        ai_config: {},
-        ai_response: {},
-        evaluated_at: '2025-01-01T00:00:00Z',
+        domain_scores: { 'engaging_with_ai': 80 },
+        feedback_text: 'Good job!',
+        feedback_data: {},
+        ai_provider: 'openai',
+        ai_model: 'gpt-4',
+        ai_analysis: {},
+        time_taken_seconds: 120,
         created_at: '2025-01-01T00:00:00Z',
+        pbl_data: {},
+        discovery_data: {},
+        assessment_data: {},
         metadata: {}
       };
 
       expect(evaluation.evaluation_type).toBe('formative');
       expect(evaluation.score).toBe(8);
-      expect(evaluation.percentage).toBe(80);
-      expect(evaluation.strengths).toHaveLength(2);
+      expect(evaluation.max_score).toBe(10);
+      expect(evaluation.domain_scores['engaging_with_ai']).toBe(80);
     });
   });
 
-  describe('Insert Types', () => {
-    it('should create valid DBProgramInsert', () => {
-      const insert: DBProgramInsert = {
-        scenario_id: 'scenario-123',
-        user_id: 'user-123',
-        status: 'pending'
+  describe('Additional Types', () => {
+    it('should create valid DBInteraction object', () => {
+      const interaction: DBInteraction = {
+        timestamp: new Date('2025-01-01T00:00:00Z'),
+        type: 'user_input',
+        content: 'Test content',
+        metadata: { source: 'chat' }
       };
 
-      expect(insert.scenario_id).toBe('scenario-123');
-      expect(insert.user_id).toBe('user-123');
-      expect(insert.status).toBe('pending');
-    });
-
-    it('should create valid DBTaskInsert', () => {
-      const insert: DBTaskInsert = {
-        program_id: 'program-123',
-        task_index: 0,
-        type: 'interactive',
-        title: { en: 'Task' },
-        instructions: { en: 'Instructions' }
-      };
-
-      expect(insert.program_id).toBe('program-123');
-      expect(insert.type).toBe('interactive');
-    });
-
-    it('should create valid DBEvaluationInsert', () => {
-      const insert: DBEvaluationInsert = {
-        task_id: 'task-123',
-        user_id: 'user-123',
-        evaluation_type: 'summative',
-        score: 9,
-        max_score: 10
-      };
-
-      expect(insert.evaluation_type).toBe('summative');
-      expect(insert.score).toBe(9);
+      expect(interaction.type).toBe('user_input');
+      expect(interaction.content).toBe('Test content');
+      expect(interaction.metadata?.source).toBe('chat');
     });
   });
 });
