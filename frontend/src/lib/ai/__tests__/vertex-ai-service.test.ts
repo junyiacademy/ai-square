@@ -2,17 +2,23 @@
  * Unit tests for Vertex AI Service
  */
 
-import { VertexAIService } from '../vertex-ai-service';
-import type { VertexAIConfig, VertexAIResponse } from '../vertex-ai-service';
-import { GoogleAuth } from 'google-auth-library';
-import { VertexAI } from '@google-cloud/vertexai';
+// Set environment variables before importing the service
+process.env.GOOGLE_CLOUD_PROJECT = 'test-project';
+process.env.VERTEX_AI_LOCATION = 'us-central1';
+process.env.GOOGLE_APPLICATION_CREDENTIALS = '/path/to/credentials.json';
 
-// Mock dependencies
+// Mock dependencies first
 jest.mock('google-auth-library');
 jest.mock('@google-cloud/vertexai');
 jest.mock('path', () => ({
   join: jest.fn((...args) => args.join('/')),
 }));
+
+// Import after mocks and env vars are set
+import { VertexAIService } from '../vertex-ai-service';
+import type { VertexAIConfig, VertexAIResponse } from '../vertex-ai-service';
+import { GoogleAuth } from 'google-auth-library';
+import { VertexAI } from '@google-cloud/vertexai';
 
 describe('VertexAIService', () => {
   const mockConfig: VertexAIConfig = {
@@ -23,11 +29,9 @@ describe('VertexAIService', () => {
     topK: 40,
   };
 
-  let originalEnv: NodeJS.ProcessEnv;
-
   beforeEach(() => {
     jest.clearAllMocks();
-    originalEnv = { ...process.env };
+    // Ensure env vars are set for each test
     process.env.GOOGLE_CLOUD_PROJECT = 'test-project';
     process.env.VERTEX_AI_LOCATION = 'us-central1';
     process.env.GOOGLE_APPLICATION_CREDENTIALS = '/path/to/credentials.json';
@@ -36,10 +40,26 @@ describe('VertexAIService', () => {
     (GoogleAuth as jest.Mock).mockImplementation(() => ({
       getAccessToken: jest.fn().mockResolvedValue({ token: 'mock-token' }),
     }));
-  });
 
-  afterEach(() => {
-    process.env = originalEnv;
+    // Mock VertexAI with a default implementation
+    const mockVertexAI = {
+      preview: {
+        getGenerativeModel: jest.fn().mockReturnValue({
+          generateContent: jest.fn().mockResolvedValue({
+            response: {
+              candidates: [{
+                content: {
+                  parts: [{
+                    text: 'Default AI response',
+                  }],
+                },
+              }],
+            },
+          }),
+        }),
+      },
+    };
+    (VertexAI as jest.Mock).mockImplementation(() => mockVertexAI);
   });
 
   describe('constructor', () => {

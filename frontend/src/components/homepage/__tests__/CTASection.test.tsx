@@ -154,3 +154,4 @@ describe('CTASection', () => {
     const link = screen.getByText('Get Started for Free').closest('a');
     expect(link).toHaveClass('transition-all', 'duration-200');
   });
+});
