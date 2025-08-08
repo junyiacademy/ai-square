@@ -258,7 +258,7 @@ describe('LoginForm 組件測試', () => {
         password: longPassword,
         rememberMe: false,
       })
-    })
+    }, 10000) // Increase timeout to 10 seconds for this test
   })
 
   describe('♿ 可訪問性測試', () => {

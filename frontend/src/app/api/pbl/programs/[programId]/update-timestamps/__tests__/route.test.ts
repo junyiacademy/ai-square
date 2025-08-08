@@ -730,8 +730,8 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
 
     await POST(request1, { params: params1 });
     
-    // Small delay to ensure different timestamp
-    await new Promise(resolve => setTimeout(resolve, 1));
+    // Advance the mock date to ensure different timestamp
+    jest.advanceTimersByTime(1000);
     
     // Second call
     let capturedUpdate2: any;
