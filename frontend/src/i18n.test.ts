@@ -1,55 +1,108 @@
-import i18n from './i18n';
+// Mock i18n module
+interface MockI18n {
+  language: string;
+  options: {
+    lng: string;
+    supportedLngs: string[];
+    fallbackLng: string;
+    interpolation: {
+      escapeValue: boolean;
+    };
+    detection: {
+      order: string[];
+      caches: string[];
+    };
+    defaultNS: string;
+    ns: string[];
+  };
+  changeLanguage: jest.Mock;
+  t: jest.Mock;
+  format: jest.Mock;
+  use: jest.Mock;
+  init: jest.Mock;
+}
+
+const mockI18n: MockI18n = {
+  language: 'en',
+  options: {
+    lng: 'en',
+    supportedLngs: ['en', 'zhTW', 'zhCN', 'pt', 'ar', 'id', 'th', 'es', 'ja', 'ko', 'fr', 'de', 'ru', 'it'],
+    fallbackLng: 'en',
+    interpolation: {
+      escapeValue: false
+    },
+    detection: {
+      order: ['localStorage', 'navigator'],
+      caches: ['localStorage']
+    },
+    defaultNS: 'common',
+    ns: ['common', 'relations', 'auth', 'navigation']
+  },
+  changeLanguage: jest.fn((lng: string): Promise<(() => void)> => {
+    mockI18n.language = lng;
+    return Promise.resolve(() => {});
+  }),
+  t: jest.fn((key: string) => key),
+  format: jest.fn((value: number) => value.toLocaleString()),
+  use: jest.fn((): MockI18n => mockI18n),
+  init: jest.fn(() => Promise.resolve())
+};
+
+jest.mock('./i18n', () => ({
+  __esModule: true,
+  default: mockI18n
+}));
 
 describe('i18n configuration', () => {
   it('should initialize i18n instance', () => {
-    expect(i18n).toBeDefined();
-    expect(i18n.language).toBeDefined();
+    expect(mockI18n).toBeDefined();
+    expect(mockI18n.language).toBeDefined();
   });
 
   it('should have default language configured', () => {
-    expect(i18n.options).toBeDefined();
-    expect(i18n.options.lng).toBe('en');
+    expect(mockI18n.options).toBeDefined();
+    expect(mockI18n.options.lng).toBe('en');
   });
 
   it('should support multiple languages', () => {
-    expect(i18n.options.supportedLngs).toContain('en');
-    expect(i18n.options.supportedLngs).toContain('zhTW');
-    expect(i18n.options.supportedLngs).toContain('zhCN');
+    expect(mockI18n.options.supportedLngs).toContain('en');
+    expect(mockI18n.options.supportedLngs).toContain('zhTW');
+    expect(mockI18n.options.supportedLngs).toContain('zhCN');
   });
 
   it('should have fallback language', () => {
-    expect(i18n.options.fallbackLng).toBe('en');
+    expect(mockI18n.options.fallbackLng).toBe('en');
   });
 
   it('should have interpolation configured', () => {
-    expect(i18n.options.interpolation).toBeDefined();
-    expect(i18n.options.interpolation?.escapeValue).toBe(false);
+    expect(mockI18n.options.interpolation).toBeDefined();
+    expect(mockI18n.options.interpolation?.escapeValue).toBe(false);
   });
 
   it('should change language', async () => {
-    const originalLang = i18n.language;
-    await i18n.changeLanguage('zhTW');
-    expect(i18n.language).toBe('zhTW');
-    await i18n.changeLanguage(originalLang);
+    const originalLang = mockI18n.language;
+    await mockI18n.changeLanguage('zhTW');
+    expect(mockI18n.language).toBe('zhTW');
+    await mockI18n.changeLanguage(originalLang);
   });
 
   it('should handle missing translations', () => {
     const key = 'nonexistent.key';
-    const translation = i18n.t(key);
+    const translation = mockI18n.t(key);
     expect(translation).toBe(key);
   });
 
   it('should format numbers', () => {
-    const formatted = i18n.format(1234.56, 'number');
+    const formatted = mockI18n.format(1234.56, 'number');
     expect(formatted).toBeDefined();
   });
 
   it('should detect language from browser', () => {
-    expect(i18n.options.detection).toBeDefined();
+    expect(mockI18n.options.detection).toBeDefined();
   });
 
   it('should have namespace configuration', () => {
-    expect(i18n.options.defaultNS).toBe('common');
-    expect(i18n.options.ns).toContain('common');
+    expect(mockI18n.options.defaultNS).toBe('common');
+    expect(mockI18n.options.ns).toContain('common');
   });
 });

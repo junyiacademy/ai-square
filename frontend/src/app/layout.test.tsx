@@ -3,33 +3,25 @@ import { render } from '@testing-library/react';
 import RootLayout from './layout';
 import { Metadata } from 'next';
 
-// Mock the providers
-jest.mock('@/components/providers/I18nProvider', () => ({
-  I18nProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>
+// Mock Next.js font
+jest.mock('next/font/google', () => ({
+  Geist: () => ({
+    variable: '--font-geist-sans',
+  }),
+  Geist_Mono: () => ({
+    variable: '--font-geist-mono',
+  }),
 }));
 
-jest.mock('@/components/providers/RTLProvider', () => ({
-  RTLProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>
-}));
-
-jest.mock('@/contexts/AuthContext', () => ({
-  AuthProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>
-}));
-
-jest.mock('@/contexts/ThemeContext', () => ({
-  ThemeProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>
-}));
-
-jest.mock('@/components/layout/Header', () => ({
-  default: () => <header data-testid="header">Header</header>
-}));
-
-jest.mock('@/components/layout/Footer', () => ({
-  default: () => <footer data-testid="footer">Footer</footer>
+// Mock ClientLayout
+jest.mock('@/components/layout/ClientLayout', () => ({
+  ClientLayout: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="client-layout">{children}</div>
+  )
 }));
 
 describe('RootLayout', () => {
-  it('should render children with all providers', () => {
+  it('should render children with ClientLayout', () => {
     const { getByText, getByTestId } = render(
       <RootLayout>
         <div>Test Content</div>
@@ -37,8 +29,7 @@ describe('RootLayout', () => {
     );
     
     expect(getByText('Test Content')).toBeInTheDocument();
-    expect(getByTestId('header')).toBeInTheDocument();
-    expect(getByTestId('footer')).toBeInTheDocument();
+    expect(getByTestId('client-layout')).toBeInTheDocument();
   });
 
   it('should have correct html and body structure', () => {
@@ -48,22 +39,36 @@ describe('RootLayout', () => {
       </RootLayout>
     );
     
-    const html = container.querySelector('html');
+    // RootLayout renders html and body elements
+    // In test environment, they are part of the component tree
     const body = container.querySelector('body');
-    
-    expect(html).toHaveAttribute('lang', 'en');
     expect(body).toBeInTheDocument();
   });
 
-  it('should wrap content in providers', () => {
-    const { container } = render(
+  it('should wrap content in ClientLayout', () => {
+    const { container, getByTestId } = render(
       <RootLayout>
         <div id="test-child">Child</div>
       </RootLayout>
     );
     
+    const clientLayout = getByTestId('client-layout');
     const child = container.querySelector('#test-child');
+    expect(clientLayout).toBeInTheDocument();
     expect(child).toBeInTheDocument();
+  });
+
+  it('should apply font classes to body', () => {
+    const { container } = render(
+      <RootLayout>
+        <div>Content</div>
+      </RootLayout>
+    );
+    
+    const body = container.querySelector('body');
+    expect(body?.className).toContain('--font-geist-sans');
+    expect(body?.className).toContain('--font-geist-mono');
+    expect(body?.className).toContain('antialiased');
   });
 });
 

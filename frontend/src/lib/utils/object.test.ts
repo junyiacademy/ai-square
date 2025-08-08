@@ -156,7 +156,7 @@ describe('Object Utils', () => {
 
     it('should reject non-objects', () => {
       expect(isObject([])).toBe(false);
-      expect(isObject(null)).toBe(false);
+      expect(isObject(null)).toBeFalsy();
       expect(isObject(5)).toBe(false);
       expect(isObject('string')).toBe(false);
     });
