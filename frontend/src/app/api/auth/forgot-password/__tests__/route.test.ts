@@ -224,7 +224,7 @@ describe('Forgot Password API Route', () => {
 
       expect(response.status).toBe(200);
       expect(data.success).toBe(true);
-      expect(data.valid).toBe(true);
+      expect(data.email).toBe('test@example.com');
     });
 
     it('should reject missing token', async () => {
@@ -241,12 +241,10 @@ describe('Forgot Password API Route', () => {
     it('should reject expired token', async () => {
       const request = new NextRequest('http://localhost/api/auth/forgot-password?token=expired-token');
 
+      // The query only returns rows where expires_at > CURRENT_TIMESTAMP, 
+      // so an expired token will return no rows
       mockPool.query.mockResolvedValue({
-        rows: [{
-          user_id: 'user-123',
-          email: 'test@example.com',
-          expires_at: new Date(Date.now() - 3600000) // 1 hour ago
-        }]
+        rows: []
       });
 
       const response = await GET(request);
@@ -254,7 +252,7 @@ describe('Forgot Password API Route', () => {
 
       expect(response.status).toBe(400);
       expect(data.success).toBe(false);
-      expect(data.error).toContain('Token has expired');
+      expect(data.error).toContain('Invalid or expired token');
     });
 
     it('should reject invalid token', async () => {
