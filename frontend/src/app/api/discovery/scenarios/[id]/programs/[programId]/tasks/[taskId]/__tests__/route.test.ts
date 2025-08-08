@@ -80,7 +80,8 @@ beforeEach(() => {
   
   // Mock AI service
   require('@/lib/ai/vertex-ai-service').VertexAIService.mockImplementation(() => ({
-    generateText: jest.fn().mockResolvedValue('AI generated feedback')
+    generateText: jest.fn().mockResolvedValue('AI generated feedback'),
+    sendMessage: jest.fn().mockResolvedValue('AI generated feedback')
   }));
   
   // Mock YAML loader

@@ -22,16 +22,57 @@ jest.mock('@google-cloud/storage', () => {
   return {
     Storage: jest.fn().mockImplementation(() => ({
       bucket: jest.fn().mockReturnValue({
-        file: jest.fn().mockReturnValue({
-          exists: jest.fn().mockResolvedValue([true]),
-          download: jest.fn().mockResolvedValue([JSON.stringify({
-            identity: 'student',
-            goals: ['AI literacy'],
-            assessmentScore: 75,
-            weakDomains: ['Creating with AI'],
-            learningStyle: 'visual'
-          })]),
-          save: jest.fn().mockResolvedValue(undefined)
+        file: jest.fn().mockImplementation((filePath: string) => {
+          // Mock different file types based on path
+          if (filePath.includes('chat/sessions/')) {
+            // Mock chat session file
+            return {
+              exists: jest.fn().mockResolvedValue([true]),
+              download: jest.fn().mockResolvedValue([JSON.stringify({
+                id: 'test-session-123',
+                title: 'Test Chat',
+                created_at: '2023-01-01T00:00:00Z',
+                updated_at: '2023-01-01T00:00:00Z',
+                messages: [],
+                last_message: '',
+                message_count: 0,
+                tags: []
+              })]),
+              save: jest.fn().mockResolvedValue(undefined)
+            };
+          } else if (filePath.includes('chat/index.json')) {
+            // Mock chat index file
+            return {
+              exists: jest.fn().mockResolvedValue([true]),
+              download: jest.fn().mockResolvedValue([JSON.stringify({
+                sessions: []
+              })]),
+              save: jest.fn().mockResolvedValue(undefined)
+            };
+          } else if (filePath.includes('user_data.json')) {
+            // Mock user data file
+            return {
+              exists: jest.fn().mockResolvedValue([true]),
+              download: jest.fn().mockResolvedValue([JSON.stringify({
+                identity: 'student',
+                goals: ['AI literacy'],
+                assessmentResult: {
+                  overallScore: 75,
+                  domainScores: { 'Creating with AI': 50 }
+                },
+                completedPBLs: [],
+                learningStyle: 'visual'
+              })]),
+              save: jest.fn().mockResolvedValue(undefined)
+            };
+          } else {
+            // Default mock for memory files
+            return {
+              exists: jest.fn().mockResolvedValue([false]),
+              download: jest.fn().mockResolvedValue([JSON.stringify({})]),
+              save: jest.fn().mockResolvedValue(undefined)
+            };
+          }
         })
       })
     }))

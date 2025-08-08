@@ -76,9 +76,9 @@ describe('PostgreSQLScenarioRepository', () => {
     taskTemplates: [
       {
         id: 'task-1',
-        title: { en: 'Task 1' },
+        title: 'Task 1' as unknown as Record<string, string>,
         type: 'chat',
-        description: { en: 'Task description' }
+        description: 'Task description' as unknown as Record<string, string>
       }
     ],
     taskCount: 1,

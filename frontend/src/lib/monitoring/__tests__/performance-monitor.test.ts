@@ -8,7 +8,7 @@ describe('performance-monitor.ts', () => {
     
     it('should work correctly', () => {
       // Add specific tests based on the function
-      expect(typeof performanceMonitor).toBe('function');
+      expect(typeof performanceMonitor).toBe('object');
     });
   });
 

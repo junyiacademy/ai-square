@@ -185,7 +185,7 @@ describe('Assessment Scenarios Programs API', () => {
         body: JSON.stringify({ action: 'start' }),
       });
 
-      const response = await POST(request, { params: Promise.resolve({'id':'test-id'}) });
+      const response = await POST(request, { params: Promise.resolve({'id':'123e4567-e89b-12d3-a456-426614174000'}) });
       const data = await response.json();
 
       expect(response.status).toBe(401);
@@ -200,7 +200,7 @@ describe('Assessment Scenarios Programs API', () => {
         body: JSON.stringify({ action: 'invalid' }),
       });
 
-      const response = await POST(request, { params: Promise.resolve({'id':'test-id'}) });
+      const response = await POST(request, { params: Promise.resolve({'id':'123e4567-e89b-12d3-a456-426614174000'}) });
       const data = await response.json();
 
       expect(response.status).toBe(400);
@@ -244,7 +244,7 @@ describe('Assessment Scenarios Programs API', () => {
         body: JSON.stringify({ action: 'start', language: 'zh' }),
       });
 
-      const response = await POST(request, { params: Promise.resolve({'id':'test-id'}) });
+      const response = await POST(request, { params: Promise.resolve({'id':'123e4567-e89b-12d3-a456-426614174000'}) });
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -281,7 +281,7 @@ describe('Assessment Scenarios Programs API', () => {
         body: JSON.stringify({ action: 'start' }),
       });
 
-      const response = await POST(request, { params: Promise.resolve({'id':'test-id'}) });
+      const response = await POST(request, { params: Promise.resolve({'id':'123e4567-e89b-12d3-a456-426614174000'}) });
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -300,7 +300,7 @@ describe('Assessment Scenarios Programs API', () => {
         body: JSON.stringify({ action: 'start' }),
       });
 
-      const response = await POST(request, { params: Promise.resolve({'id':'test-id'}) });
+      const response = await POST(request, { params: Promise.resolve({'id':'123e4567-e89b-12d3-a456-426614174000'}) });
       const data = await response.json();
 
       expect(response.status).toBe(404);
@@ -319,7 +319,7 @@ describe('Assessment Scenarios Programs API', () => {
         body: JSON.stringify({ action: 'start' }),
       });
 
-      const response = await POST(request, { params: Promise.resolve({'id':'test-id'}) });
+      const response = await POST(request, { params: Promise.resolve({'id':'123e4567-e89b-12d3-a456-426614174000'}) });
       const data = await response.json();
 
       expect(response.status).toBe(400);
@@ -335,7 +335,7 @@ describe('Assessment Scenarios Programs API', () => {
         body: JSON.stringify({ action: 'start' }),
       });
 
-      const response = await POST(request, { params: Promise.resolve({'id':'test-id'}) });
+      const response = await POST(request, { params: Promise.resolve({'id':'123e4567-e89b-12d3-a456-426614174000'}) });
       const data = await response.json();
 
       expect(response.status).toBe(500);

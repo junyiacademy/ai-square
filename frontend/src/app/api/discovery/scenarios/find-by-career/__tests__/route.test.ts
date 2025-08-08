@@ -208,9 +208,11 @@ describe('GET /api/discovery/scenarios/find-by-career', () => {
 
     mockGetServerSession.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com' } });
     mockFindByMode.mockResolvedValue(mockScenarios);
-    mockFindByScenario
-      .mockResolvedValueOnce(mockPrograms1)
-      .mockResolvedValueOnce(mockPrograms2);
+    mockFindByScenario.mockImplementation((scenarioId) => {
+      if (scenarioId === 'scenario1') return mockPrograms1;
+      if (scenarioId === 'scenario2') return mockPrograms2;
+      return [];
+    });
 
     const request = new NextRequest('http://localhost:3000/api/discovery/scenarios/find-by-career?career=software-engineer');
     const response = await GET(request);

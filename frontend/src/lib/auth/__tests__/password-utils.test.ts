@@ -34,7 +34,7 @@ describe('Password Utils', () => {
       await updateUserPasswordHash(mockPool, userId, passwordHash);
       
       expect(mockPool.query).toHaveBeenCalledWith(
-        expect.stringMatching(/UPDATE users.*SET password_hash = \$1, role = \$2, updated_at = CURRENT_TIMESTAMP.*WHERE id = \$3/),
+        expect.stringMatching(/UPDATE users[\s\S]*SET password_hash = \$1, role = \$2, updated_at = CURRENT_TIMESTAMP[\s\S]*WHERE id = \$3/),
         [passwordHash, 'student', userId]
       );
     });
@@ -49,7 +49,7 @@ describe('Password Utils', () => {
       await updateUserPasswordHash(mockPool, userId, passwordHash, role);
       
       expect(mockPool.query).toHaveBeenCalledWith(
-        expect.stringMatching(/UPDATE users.*SET password_hash = \$1, role = \$2, updated_at = CURRENT_TIMESTAMP.*WHERE id = \$3/),
+        expect.stringMatching(/UPDATE users[\s\S]*SET password_hash = \$1, role = \$2, updated_at = CURRENT_TIMESTAMP[\s\S]*WHERE id = \$3/),
         [passwordHash, role, userId]
       );
     });
@@ -150,7 +150,7 @@ describe('Password Utils', () => {
       await updateUserEmailVerified(mockPool, userId);
       
       expect(mockPool.query).toHaveBeenCalledWith(
-        expect.stringMatching(/UPDATE users.*SET email_verified = true, email_verified_at = CURRENT_TIMESTAMP.*WHERE id = \$1/),
+        expect.stringMatching(/UPDATE users[\s\S]*SET email_verified = true, email_verified_at = CURRENT_TIMESTAMP[\s\S]*WHERE id = \$1/),
         [userId]
       );
     });
@@ -234,7 +234,7 @@ describe('Password Utils', () => {
       
       expect(result).toEqual(mockUser);
       expect(mockPool.query).toHaveBeenCalledWith(
-        expect.stringMatching(/SELECT.*FROM users.*WHERE LOWER\(email\) = LOWER\(\$1\)/),
+        expect.stringMatching(/SELECT[\s\S]*FROM users[\s\S]*WHERE LOWER\(email\) = LOWER\(\$1\)/),
         ['test@example.com']
       );
     });
