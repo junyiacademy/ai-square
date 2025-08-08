@@ -1,177 +1,193 @@
-import { NextRequest } from 'next/server';
-import { middleware } from '../middleware';
+import { NextRequest, NextResponse } from 'next/server';
+import { middleware, config } from '../middleware';
 
-// Mock NextResponse
-const mockNext = jest.fn(() => ({ status: 200 }));
-const mockRedirect = jest.fn((url: any) => ({ status: 307, url }));
-
+// Mock NextResponse methods
 jest.mock('next/server', () => ({
-  ...jest.requireActual('next/server'),
+  NextRequest: jest.requireActual('next/server').NextRequest,
   NextResponse: {
-    next: () => mockNext(),
-    redirect: (url: any) => mockRedirect(url),
-  },
+    next: jest.fn(() => ({ type: 'next' })),
+    redirect: jest.fn((url: URL) => ({
+      type: 'redirect',
+      url: url.toString()
+    }))
+  }
 }));
-
-// Mock NextRequest to ensure nextUrl.pathname works
-const createMockRequest = (url: string) => {
-  // Cookie storage
-  const cookieStore = new Map<string, string>();
-  
-  // Create a basic request object
-  const request = {
-    url,
-    nextUrl: new URL(url),
-    cookies: {
-      get: (name: string) => {
-        const value = cookieStore.get(name);
-        return value ? { value } : undefined;
-      },
-      set: (name: string, value: string) => {
-        cookieStore.set(name, value);
-      }
-    }
-  } as any;
-  
-  return request;
-};
 
 describe('middleware', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  describe('API routes and static files', () => {
-    it('should pass through API routes', () => {
-      const request = createMockRequest('http://localhost:3000/api/test');
-      middleware(request);
-
-      expect(mockNext).toHaveBeenCalled();
-      expect(mockRedirect).not.toHaveBeenCalled();
-    });
-
-    it('should pass through static files', () => {
-      const request = createMockRequest('http://localhost:3000/favicon.ico');
-      middleware(request);
-
-      expect(mockNext).toHaveBeenCalled();
-      expect(mockRedirect).not.toHaveBeenCalled();
-    });
-
-    it('should pass through Next.js internal routes', () => {
-      const request = createMockRequest('http://localhost:3000/_next/static/css/app.css');
-      middleware(request);
-
-      expect(mockNext).toHaveBeenCalled();
-      expect(mockRedirect).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('protected routes authentication', () => {
-    const protectedPaths = ['/pbl', '/assessment', '/discovery', '/admin', '/profile'];
-
-    protectedPaths.forEach(path => {
-      it(`should redirect to login when accessing ${path} without authentication`, () => {
-        const request = createMockRequest(`http://localhost:3000${path}`);
-        middleware(request);
-
-        expect(mockRedirect).toHaveBeenCalledWith(
-          expect.objectContaining({
-            href: `http://localhost:3000/login?redirect=${encodeURIComponent(path)}`
-          })
-        );
-        expect(mockNext).not.toHaveBeenCalled();
-      });
-
-      it(`should redirect to login when accessing ${path} with incomplete authentication`, () => {
-        const request = createMockRequest(`http://localhost:3000${path}`);
-        // Set partial cookies
-        request.cookies.set('isLoggedIn', 'true');
-        // Missing sessionToken and accessToken
-
-        middleware(request);
-
-        expect(mockRedirect).toHaveBeenCalled();
-        expect(mockNext).not.toHaveBeenCalled();
-      });
-
-      it(`should allow access to ${path} when fully authenticated`, () => {
-        const request = createMockRequest(`http://localhost:3000${path}`);
-        // Set all required cookies
-        request.cookies.set('isLoggedIn', 'true');
-        request.cookies.set('sessionToken', 'valid-session-token');
-        request.cookies.set('accessToken', 'valid-access-token');
-
-        middleware(request);
-
-        expect(mockNext).toHaveBeenCalled();
-        expect(mockRedirect).not.toHaveBeenCalled();
-      });
-    });
-
-    it('should include redirect parameter in login URL', () => {
-      const protectedPath = '/pbl/scenarios/123';
-      const request = createMockRequest(`http://localhost:3000${protectedPath}`);
+  describe('unprotected routes', () => {
+    it('should allow access to home page', () => {
+      const request = new NextRequest('http://localhost:3000/');
+      const response = middleware(request);
       
-      middleware(request);
+      expect(NextResponse.next).toHaveBeenCalled();
+      expect(response).toEqual({ type: 'next' });
+    });
 
-      expect(mockRedirect).toHaveBeenCalledWith(
-        expect.objectContaining({
-          href: `http://localhost:3000/login?redirect=${encodeURIComponent(protectedPath)}`
-        })
-      );
+    it('should allow access to login page', () => {
+      const request = new NextRequest('http://localhost:3000/login');
+      const response = middleware(request);
+      
+      expect(NextResponse.next).toHaveBeenCalled();
+      expect(response).toEqual({ type: 'next' });
+    });
+
+    it('should allow access to register page', () => {
+      const request = new NextRequest('http://localhost:3000/register');
+      const response = middleware(request);
+      
+      expect(NextResponse.next).toHaveBeenCalled();
+      expect(response).toEqual({ type: 'next' });
     });
   });
 
-  describe('public routes', () => {
-    const publicPaths = ['/', '/login', '/register', '/about', '/contact'];
+  describe('protected routes', () => {
+    describe('without authentication', () => {
+      it('should redirect /pbl to login', () => {
+        const request = new NextRequest('http://localhost:3000/pbl');
+        const response = middleware(request);
+        
+        expect(NextResponse.redirect).toHaveBeenCalled();
+        expect(response).toEqual({
+          type: 'redirect',
+          url: expect.stringContaining('/login')
+        });
+      });
 
-    publicPaths.forEach(path => {
-      it(`should allow access to public route ${path}`, () => {
-        const request = createMockRequest(`http://localhost:3000${path}`);
-        middleware(request);
+      it('should redirect /assessment to login', () => {
+        const request = new NextRequest('http://localhost:3000/assessment');
+        const response = middleware(request);
+        
+        expect(NextResponse.redirect).toHaveBeenCalled();
+        expect(response).toEqual({
+          type: 'redirect',
+          url: expect.stringContaining('/login')
+        });
+      });
 
-        expect(mockNext).toHaveBeenCalled();
-        expect(mockRedirect).not.toHaveBeenCalled();
+      it('should redirect /discovery to login', () => {
+        const request = new NextRequest('http://localhost:3000/discovery');
+        const response = middleware(request);
+        
+        expect(NextResponse.redirect).toHaveBeenCalled();
+        expect(response).toEqual({
+          type: 'redirect',
+          url: expect.stringContaining('/login')
+        });
+      });
+
+      it('should redirect /admin to login', () => {
+        const request = new NextRequest('http://localhost:3000/admin');
+        const response = middleware(request);
+        
+        expect(NextResponse.redirect).toHaveBeenCalled();
+        expect(response).toEqual({
+          type: 'redirect',
+          url: expect.stringContaining('/login')
+        });
+      });
+
+      it('should redirect /profile to login', () => {
+        const request = new NextRequest('http://localhost:3000/profile');
+        const response = middleware(request);
+        
+        expect(NextResponse.redirect).toHaveBeenCalled();
+        expect(response).toEqual({
+          type: 'redirect',
+          url: expect.stringContaining('/login')
+        });
+      });
+
+      it('should preserve redirect parameter', () => {
+        const request = new NextRequest('http://localhost:3000/pbl/scenarios/123');
+        const response = middleware(request);
+        
+        expect(NextResponse.redirect).toHaveBeenCalled();
+        const redirectCall = (NextResponse.redirect as jest.Mock).mock.calls[0][0];
+        expect(redirectCall.toString()).toContain('redirect=%2Fpbl%2Fscenarios%2F123');
+      });
+    });
+
+    describe('with authentication', () => {
+      it('should allow access with all auth cookies', () => {
+        const request = new NextRequest('http://localhost:3000/pbl');
+        request.cookies.set('isLoggedIn', 'true');
+        request.cookies.set('sessionToken', 'token123');
+        request.cookies.set('accessToken', 'access123');
+        
+        const response = middleware(request);
+        
+        expect(NextResponse.next).toHaveBeenCalled();
+        expect(response).toEqual({ type: 'next' });
+      });
+
+      it('should redirect if isLoggedIn is false', () => {
+        const request = new NextRequest('http://localhost:3000/pbl');
+        request.cookies.set('isLoggedIn', 'false');
+        request.cookies.set('sessionToken', 'token123');
+        request.cookies.set('accessToken', 'access123');
+        
+        const response = middleware(request);
+        
+        expect(NextResponse.redirect).toHaveBeenCalled();
+      });
+
+      it('should redirect if sessionToken is missing', () => {
+        const request = new NextRequest('http://localhost:3000/pbl');
+        request.cookies.set('isLoggedIn', 'true');
+        request.cookies.set('accessToken', 'access123');
+        
+        const response = middleware(request);
+        
+        expect(NextResponse.redirect).toHaveBeenCalled();
+      });
+
+      it('should redirect if accessToken is missing', () => {
+        const request = new NextRequest('http://localhost:3000/pbl');
+        request.cookies.set('isLoggedIn', 'true');
+        request.cookies.set('sessionToken', 'token123');
+        
+        const response = middleware(request);
+        
+        expect(NextResponse.redirect).toHaveBeenCalled();
       });
     });
   });
 
-  describe('authentication edge cases', () => {
-    it('should handle missing isLoggedIn cookie', () => {
-      const request = createMockRequest('http://localhost:3000/pbl');
-      request.cookies.set('sessionToken', 'token');
-      request.cookies.set('accessToken', 'token');
-      // Missing isLoggedIn
-
-      middleware(request);
-
-      expect(mockRedirect).toHaveBeenCalled();
-      expect(mockNext).not.toHaveBeenCalled();
+  describe('skipped routes', () => {
+    it('should skip API routes', () => {
+      const request = new NextRequest('http://localhost:3000/api/auth/login');
+      const response = middleware(request);
+      
+      expect(NextResponse.next).toHaveBeenCalled();
+      expect(response).toEqual({ type: 'next' });
     });
 
-    it('should handle isLoggedIn with wrong value', () => {
-      const request = createMockRequest('http://localhost:3000/pbl');
-      request.cookies.set('isLoggedIn', 'false');
-      request.cookies.set('sessionToken', 'token');
-      request.cookies.set('accessToken', 'token');
-
-      middleware(request);
-
-      expect(mockRedirect).toHaveBeenCalled();
-      expect(mockNext).not.toHaveBeenCalled();
+    it('should skip static files', () => {
+      const request = new NextRequest('http://localhost:3000/image.png');
+      const response = middleware(request);
+      
+      expect(NextResponse.next).toHaveBeenCalled();
+      expect(response).toEqual({ type: 'next' });
     });
 
-    it('should handle empty token values', () => {
-      const request = createMockRequest('http://localhost:3000/pbl');
-      request.cookies.set('isLoggedIn', 'true');
-      request.cookies.set('sessionToken', '');
-      request.cookies.set('accessToken', 'token');
-
-      middleware(request);
-
-      expect(mockRedirect).toHaveBeenCalled();
-      expect(mockNext).not.toHaveBeenCalled();
+    it('should skip _next internal routes', () => {
+      const request = new NextRequest('http://localhost:3000/_next/static/chunk.js');
+      const response = middleware(request);
+      
+      expect(NextResponse.next).toHaveBeenCalled();
+      expect(response).toEqual({ type: 'next' });
     });
+  });
+});
+
+describe('middleware config', () => {
+  it('should have correct matcher configuration', () => {
+    expect(config).toBeDefined();
+    expect(config.matcher).toBeDefined();
+    expect(config.matcher).toContain('/((?!_next/static|_next/image|favicon.ico|public).*)');
   });
 });

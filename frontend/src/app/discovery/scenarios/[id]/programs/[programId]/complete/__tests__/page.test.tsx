@@ -40,16 +40,14 @@ describe('Discovery Complete Page', () => {
   });
 
   it('should render without errors', async () => {
-    const params = Promise.resolve({ id: 'test-scenario-id', programId: 'test-program-id' });
-    const { container } = render(<Page params={params} />);
+    const { container } = render(<Page />);
     await waitFor(() => {
       expect(container).toBeTruthy();
     });
   });
 
   it('should fetch completion data', async () => {
-    const params = Promise.resolve({ id: 'test-scenario-id', programId: 'test-program-id' });
-    render(<Page params={params} />);
+    render(<Page />);
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalled();
     });
@@ -57,8 +55,7 @@ describe('Discovery Complete Page', () => {
 
   it('should handle API errors', async () => {
     (global.fetch as jest.Mock).mockRejectedValueOnce(new Error('API Error'));
-    const params = Promise.resolve({ id: 'test-scenario-id', programId: 'test-program-id' });
-    const { container } = render(<Page params={params} />);
+    const { container } = render(<Page />);
     await waitFor(() => {
       expect(container).toBeTruthy();
     });

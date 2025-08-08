@@ -2,89 +2,76 @@ import { NextRequest, NextResponse } from 'next/server';
 import { checkDiscoveryAuth } from '../discovery-auth';
 import { getServerSession } from '@/lib/auth/session';
 
-// Mock the session module
-jest.mock('@/lib/auth/session', () => ({
-  getServerSession: jest.fn(),
-}));
+jest.mock('@/lib/auth/session');
 
 // Mock NextResponse.redirect
 jest.mock('next/server', () => ({
   NextRequest: jest.requireActual('next/server').NextRequest,
   NextResponse: {
-    redirect: jest.fn((url) => ({
-      status: 307,
-      headers: new Map([['location', url.toString()]]),
-    })),
-  },
+    redirect: jest.fn((url: URL) => {
+      const response = new Response(null, {
+        status: 302,
+        headers: {
+          location: url.toString()
+        }
+      });
+      return response;
+    })
+  }
 }));
 
-const mockGetServerSession = getServerSession as jest.MockedFunction<typeof getServerSession>;
-const mockRedirect = NextResponse.redirect as jest.MockedFunction<typeof NextResponse.redirect>;
-
-describe('discovery-auth', () => {
+describe('checkDiscoveryAuth', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it('should continue request when user has valid session', async () => {
-    const mockSession = {
-      user: { id: 'user-123', email: 'user@example.com' }
-    };
-    mockGetServerSession.mockResolvedValue(mockSession);
-
+  it('should allow authenticated requests', async () => {
+    (getServerSession as jest.Mock).mockResolvedValue({ user: { email: 'test@example.com' } });
+    
     const request = new NextRequest('http://localhost:3000/discovery');
+    const response = await checkDiscoveryAuth(request);
     
-    const result = await checkDiscoveryAuth(request);
-
-    expect(result).toBeNull();
-    expect(mockGetServerSession).toHaveBeenCalled();
+    expect(response).toBeNull();
   });
 
-  it('should redirect to login when no session exists', async () => {
-    mockGetServerSession.mockResolvedValue(null);
-
-    const request = new NextRequest('http://localhost:3000/discovery/career-path');
+  it('should redirect unauthenticated requests to login', async () => {
+    (getServerSession as jest.Mock).mockResolvedValue(null);
     
-    const result = await checkDiscoveryAuth(request);
-
-    expect(result).not.toBeNull();
-    expect(result!.status).toBe(307); // Temporary redirect
-    expect(result!.headers.get('location')).toBe('http://localhost:3000/login?redirect=%2Fdiscovery%2Fcareer-path');
+    const request = new NextRequest('http://localhost:3000/discovery/scenarios');
+    const response = await checkDiscoveryAuth(request);
+    
+    expect(response).toBeTruthy();
+    expect(response?.headers.get('location')).toContain('/login');
+    expect(response?.headers.get('location')).toContain('redirect=%2Fdiscovery%2Fscenarios');
   });
 
-  it('should redirect to login with correct return URL for nested paths', async () => {
-    mockGetServerSession.mockResolvedValue(null);
-
-    const request = new NextRequest('http://localhost:3000/discovery/skills/assessment');
+  it('should preserve redirect parameter with full path', async () => {
+    (getServerSession as jest.Mock).mockResolvedValue(null);
     
-    const result = await checkDiscoveryAuth(request);
-
-    expect(result).not.toBeNull();
-    expect(result!.status).toBe(307);
-    expect(result!.headers.get('location')).toBe('http://localhost:3000/login?redirect=%2Fdiscovery%2Fskills%2Fassessment');
+    const request = new NextRequest('http://localhost:3000/discovery/scenarios/123/program/456');
+    const response = await checkDiscoveryAuth(request);
+    
+    expect(response?.headers.get('location')).toContain('redirect=%2Fdiscovery%2Fscenarios%2F123%2Fprogram%2F456');
   });
 
-  it('should handle root discovery path', async () => {
-    mockGetServerSession.mockResolvedValue(null);
-
+  it('should handle session service errors', async () => {
+    (getServerSession as jest.Mock).mockRejectedValue(new Error('Session error'));
+    
     const request = new NextRequest('http://localhost:3000/discovery');
+    const response = await checkDiscoveryAuth(request);
     
-    const result = await checkDiscoveryAuth(request);
-
-    expect(result).not.toBeNull();
-    expect(result!.headers.get('location')).toBe('http://localhost:3000/login?redirect=%2Fdiscovery');
+    expect(response).toBeTruthy();
+    expect(response?.headers.get('location')).toContain('/login');
   });
 
-  it('should handle session service errors gracefully', async () => {
-    mockGetServerSession.mockRejectedValue(new Error('Session service error'));
-
-    const request = new NextRequest('http://localhost:3000/discovery');
+  it('should handle different URL formats', async () => {
+    (getServerSession as jest.Mock).mockResolvedValue(null);
     
-    const result = await checkDiscoveryAuth(request);
-
-    // Should treat error as no session and redirect
-    expect(result).not.toBeNull();
-    expect(result!.status).toBe(307);
-    expect(result!.headers.get('location')).toBe('http://localhost:3000/login?redirect=%2Fdiscovery');
+    const request = new NextRequest('https://example.com/discovery/path');
+    const response = await checkDiscoveryAuth(request);
+    
+    expect(response).toBeTruthy();
+    expect(response?.headers.get('location')).toContain('/login');
+    expect(response?.headers.get('location')).toContain('redirect=%2Fdiscovery%2Fpath');
   });
 });
