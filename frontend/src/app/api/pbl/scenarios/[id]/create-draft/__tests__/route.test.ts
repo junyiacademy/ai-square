@@ -4,7 +4,17 @@ import { NextRequest } from 'next/server';
 import { promises as fs } from 'fs';
 import yaml from 'js-yaml';
 
-jest.mock('@/lib/repositories/base/repository-factory');
+jest.mock('@/lib/repositories/base/repository-factory', () => ({
+  repositoryFactory: {
+    getProgramRepository: jest.fn(),
+    getUserRepository: jest.fn(),
+    getTaskRepository: jest.fn(),
+    getScenarioRepository: jest.fn(),
+    getEvaluationRepository: jest.fn(),
+    getContentRepository: jest.fn(),
+    getAchievementRepository: jest.fn()
+  }
+}));
 jest.mock('fs', () => ({
   promises: {
     readFile: jest.fn()
@@ -14,12 +24,22 @@ jest.mock('js-yaml');
 
 describe('POST /api/pbl/scenarios/[id]/create-draft', () => {
   const mockProgramRepo = {
-    create: jest.fn()
+    create: jest.fn(),
+    findById: jest.fn(),
+    findByUser: jest.fn(),
+    update: jest.fn()
+  };
+
+  const mockUserRepo = {
+    findByEmail: jest.fn(),
+    create: jest.fn(),
+    findById: jest.fn()
   };
 
   beforeEach(() => {
     jest.clearAllMocks();
     (repositoryFactory.getProgramRepository as jest.Mock).mockReturnValue(mockProgramRepo);
+    (repositoryFactory.getUserRepository as jest.Mock).mockReturnValue(mockUserRepo);
   });
 
   it('should create draft program for authenticated user', async () => {
@@ -58,10 +78,12 @@ describe('POST /api/pbl/scenarios/[id]/create-draft', () => {
     mockProgramRepo.create.mockResolvedValue(mockProgram);
 
     const request = new NextRequest('http://localhost:3000/api/pbl/scenarios/test-scenario/create-draft', {
-      method: 'POST',
-      headers: {
-        Cookie: `user=${JSON.stringify({ email: 'test@example.com' })}`
-      }
+      method: 'POST'
+    });
+    
+    // Mock the cookies.get method
+    request.cookies.get = jest.fn().mockReturnValue({
+      value: JSON.stringify({ email: 'test@example.com' })
     });
 
     const params = Promise.resolve({ id: 'test-scenario' });
@@ -92,10 +114,12 @@ describe('POST /api/pbl/scenarios/[id]/create-draft', () => {
     (fs.readFile as jest.Mock).mockRejectedValue(new Error('File not found'));
 
     const request = new NextRequest('http://localhost:3000/api/pbl/scenarios/invalid-scenario/create-draft', {
-      method: 'POST',
-      headers: {
-        Cookie: `user=${JSON.stringify({ email: 'test@example.com' })}`
-      }
+      method: 'POST'
+    });
+    
+    // Mock the cookies.get method
+    request.cookies.get = jest.fn().mockReturnValue({
+      value: JSON.stringify({ email: 'test@example.com' })
     });
 
     const params = Promise.resolve({ id: 'invalid-scenario' });
@@ -126,10 +150,12 @@ describe('POST /api/pbl/scenarios/[id]/create-draft', () => {
     mockProgramRepo.create.mockRejectedValue(new Error('Database error'));
 
     const request = new NextRequest('http://localhost:3000/api/pbl/scenarios/test-scenario/create-draft', {
-      method: 'POST',
-      headers: {
-        Cookie: `user=${JSON.stringify({ email: 'test@example.com' })}`
-      }
+      method: 'POST'
+    });
+    
+    // Mock the cookies.get method
+    request.cookies.get = jest.fn().mockReturnValue({
+      value: JSON.stringify({ email: 'test@example.com' })
     });
 
     const params = Promise.resolve({ id: 'test-scenario' });
@@ -214,10 +240,12 @@ describe('POST /api/pbl/scenarios/[id]/create-draft', () => {
     mockProgramRepo.create.mockResolvedValue(mockProgram);
 
     const request = new NextRequest('http://localhost:3000/api/pbl/scenarios/test-scenario/create-draft', {
-      method: 'POST',
-      headers: {
-        Cookie: `user=${JSON.stringify({ email: 'test@example.com' })}`
-      }
+      method: 'POST'
+    });
+    
+    // Mock the cookies.get method
+    request.cookies.get = jest.fn().mockReturnValue({
+      value: JSON.stringify({ email: 'test@example.com' })
     });
 
     const params = Promise.resolve({ id: 'test-scenario' });
@@ -276,10 +304,12 @@ describe('POST /api/pbl/scenarios/[id]/create-draft', () => {
     mockProgramRepo.create.mockResolvedValue(mockProgram);
 
     const request = new NextRequest('http://localhost:3000/api/pbl/scenarios/test-scenario/create-draft', {
-      method: 'POST',
-      headers: {
-        Cookie: `user=${JSON.stringify({ email: 'test@example.com' })}`
-      }
+      method: 'POST'
+    });
+    
+    // Mock the cookies.get method
+    request.cookies.get = jest.fn().mockReturnValue({
+      value: JSON.stringify({ email: 'test@example.com' })
     });
 
     const params = Promise.resolve({ id: 'test-scenario' });

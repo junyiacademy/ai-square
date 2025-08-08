@@ -1,4 +1,4 @@
-// Mock i18n module
+// Mock i18n module with proper types
 interface MockI18n {
   language: string;
   options: {
@@ -15,11 +15,11 @@ interface MockI18n {
     defaultNS: string;
     ns: string[];
   };
-  changeLanguage: jest.Mock;
-  t: jest.Mock;
-  format: jest.Mock;
-  use: jest.Mock;
-  init: jest.Mock;
+  changeLanguage: jest.Mock<Promise<(() => void)>, [string]>;
+  t: jest.Mock<string, [string]>;
+  format: jest.Mock<string, [number, string?]>;
+  use: jest.Mock<MockI18n, []>;
+  init: jest.Mock<Promise<void>, []>;
 }
 
 const mockI18n: MockI18n = {
@@ -93,7 +93,7 @@ describe('i18n configuration', () => {
   });
 
   it('should format numbers', () => {
-    const formatted = mockI18n.format(1234.56, 'number');
+    const formatted = mockI18n.format(1234.56);
     expect(formatted).toBeDefined();
   });
 

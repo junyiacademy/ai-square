@@ -1,12 +1,110 @@
-import { mockRepositoryFactory } from '@/test-utils/mocks/repositories';
-/**
- * This test file has been temporarily disabled due to GCS v2 removal.
- * TODO: Update to use PostgreSQL repositories
- */
+import { NextRequest } from 'next/server';
+import { GET } from '../route';
+import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
+
+jest.mock('@/lib/repositories/base/repository-factory', () => ({
+  repositoryFactory: {
+    getUserRepository: jest.fn(),
+    getProgramRepository: jest.fn(),
+    getTaskRepository: jest.fn(),
+    getScenarioRepository: jest.fn(),
+    getEvaluationRepository: jest.fn(),
+    getContentRepository: jest.fn()
+  }
+}));
 
 describe('PBL User Programs API Route', () => {
-  it('placeholder test - TODO: implement with PostgreSQL', async () => {
-    expect(true).toBe(true);
+  const mockUserRepo = {
+    findById: jest.fn(),
+    findByEmail: jest.fn(),
+    create: jest.fn(),
+    update: jest.fn()
+  };
+  
+  const mockProgramRepo = {
+    findById: jest.fn(),
+    findByUser: jest.fn(),
+    create: jest.fn(),
+    update: jest.fn()
+  };
+  
+  const mockTaskRepo = {
+    findByProgram: jest.fn(),
+    create: jest.fn(),
+    update: jest.fn()
+  };
+  
+  const mockEvaluationRepo = {
+    findByProgram: jest.fn(),
+    create: jest.fn()
+  };
+  
+  const mockContentRepo = {
+    getScenarioContent: jest.fn()
+  };
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    (repositoryFactory.getUserRepository as jest.Mock).mockReturnValue(mockUserRepo);
+    (repositoryFactory.getProgramRepository as jest.Mock).mockReturnValue(mockProgramRepo);
+    (repositoryFactory.getTaskRepository as jest.Mock).mockReturnValue(mockTaskRepo);
+    (repositoryFactory.getEvaluationRepository as jest.Mock).mockReturnValue(mockEvaluationRepo);
+    (repositoryFactory.getContentRepository as jest.Mock).mockReturnValue(mockContentRepo);
+  });
+  
+  it('should return 401 when user is not authenticated', async () => {
+    const request = new NextRequest('http://localhost:3000/api/pbl/user-programs');
+    
+    const response = await GET(request);
+    expect(response.status).toBe(401);
+    
+    const data = await response.json();
+    expect(data.success).toBe(false);
+    expect(data.error).toBe('User authentication required');
+  });
+  
+  it('should return user programs when authenticated', async () => {
+    const mockUser = {
+      id: 'user-123',
+      email: 'test@example.com',
+      preferredLanguage: 'en'
+    };
+    
+    const mockPrograms = [{
+      id: 'prog-1',
+      scenarioId: 'scenario-1',
+      status: 'active',
+      totalTaskCount: 5,
+      createdAt: new Date().toISOString(),
+      lastActivityAt: new Date().toISOString()
+    }];
+    
+    mockUserRepo.findByEmail.mockResolvedValue(mockUser);
+    mockProgramRepo.findByUser.mockResolvedValue(mockPrograms);
+    mockTaskRepo.findByProgram.mockResolvedValue([
+      { id: 'task-1', status: 'completed' },
+      { id: 'task-2', status: 'active' }
+    ]);
+    mockEvaluationRepo.findByProgram.mockResolvedValue([
+      { score: 80 },
+      { score: 90 }
+    ]);
+    mockContentRepo.getScenarioContent.mockResolvedValue({
+      title: { en: 'Test Scenario' }
+    });
+    
+    const request = new NextRequest('http://localhost:3000/api/pbl/user-programs');
+    request.cookies.get = jest.fn().mockReturnValue({
+      value: JSON.stringify({ email: 'test@example.com' })
+    });
+    
+    const response = await GET(request);
+    expect(response.status).toBe(200);
+    
+    const data = await response.json();
+    expect(data.success).toBe(true);
+    expect(data.items).toHaveLength(1);
+    expect(data.items[0].id).toBe('prog-1');
   });
 });
 
