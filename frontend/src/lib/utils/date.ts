@@ -76,8 +76,9 @@ export function isToday(date: Date | string): boolean {
  */
 export function isWithinLastDays(date: Date | string, days: number): boolean {
   const dateObj = typeof date === 'string' ? new Date(date) : date;
+  const now = new Date();
   const cutoff = new Date();
   cutoff.setDate(cutoff.getDate() - days);
   
-  return dateObj >= cutoff;
+  return dateObj >= cutoff && dateObj <= now;
 }

@@ -76,12 +76,23 @@ export function getFallbackLanguage(languageCode: string): string {
     return languageCode;
   }
   
+  const normalized = languageCode.toLowerCase();
+  
   // Handle Chinese variants
-  if (languageCode.startsWith('zh')) {
-    if (languageCode.toLowerCase().includes('tw') || languageCode.toLowerCase().includes('hant')) {
+  if (normalized.startsWith('zh')) {
+    if (normalized.includes('tw') || normalized.includes('hant')) {
       return 'zhTW';
     }
-    return 'zhCN';
+    if (normalized.includes('cn') || normalized.includes('hans')) {
+      return 'zhCN';
+    }
+    return 'zhCN'; // Default Chinese to simplified
+  }
+  
+  // Handle language-region codes (e.g., en-US -> en)
+  const baseLang = normalized.split('-')[0];
+  if (isSupportedLanguage(baseLang)) {
+    return baseLang;
   }
   
   return 'en';
