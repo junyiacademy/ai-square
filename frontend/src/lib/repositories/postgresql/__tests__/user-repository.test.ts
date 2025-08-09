@@ -360,11 +360,28 @@ describe('PostgreSQLUserRepository', () => {
     });
   });
 
-  describe('Complex queries', () => {
-    it('should handle different user statuses', async () => {
-      const activeUser = { ...mockUser, id: 'active-user' };
-      const inactiveUser = { ...mockUser, id: 'inactive-user' };
-      
+  describe('findAll', () => {
+    it('should find all users with default options', async () => {
+      const users = [mockUser, { ...mockUser, id: 'user-456', email: 'user2@example.com' }];
+
+      (mockPool.query as jest.Mock).mockResolvedValue({
+        rows: users,
+        command: 'SELECT',
+        rowCount: 2,
+        oid: 0,
+        fields: []
+      });
+
+      const result = await repository.findAll();
+
+      expect(mockPool.query).toHaveBeenCalledWith(
+        expect.stringContaining('ORDER BY created_at DESC'),
+        [100, 0] // Default limit and offset
+      );
+      expect(result).toHaveLength(2);
+    });
+
+    it('should find all users with custom options', async () => {
       (mockPool.query as jest.Mock).mockResolvedValue({
         rows: [mockUser],
         command: 'SELECT',
@@ -373,56 +390,635 @@ describe('PostgreSQLUserRepository', () => {
         fields: []
       });
 
-      // Test finding by any criteria that makes sense for the actual implementation
-      const result = await repository.findByEmail('test@example.com');
-      
-      expect(result).toEqual(mockUser);
+      await repository.findAll({
+        limit: 10,
+        offset: 20,
+        orderBy: 'email',
+        order: 'ASC'
+      });
+
+      expect(mockPool.query).toHaveBeenCalledWith(
+        expect.stringContaining('ORDER BY email ASC'),
+        [10, 20]
+      );
     });
 
-    it('should handle complex user data operations', async () => {
-      const userDataInput: UserDataInput = {
-        assessmentResults: { score: 85 } as any,
-        achievements: {
-          badges: [],
-          totalXp: 1000,
-          level: 3,
-          completedTasks: ['first-assessment', 'quick-learner']
-        },
-        assessmentSessions: [],
-        currentView: 'dashboard',
-        lastUpdated: new Date().toISOString(),
-        version: '1.0.0'
-      };
-
-      // Mock client for complex operations that use transactions
-      const mockClient = {
-        query: jest.fn().mockResolvedValue({
-          rows: [{ success: true }],
-          command: 'UPDATE',
-          rowCount: 1,
-          oid: 0,
-          fields: []
-        }),
-        release: jest.fn()
-      };
-
-      mockPool.connect = jest.fn().mockResolvedValue(mockClient);
+    it('should handle empty results', async () => {
       (mockPool.query as jest.Mock).mockResolvedValue({
-        rows: [mockUser],
-        command: 'SELECT', 
+        rows: [],
+        command: 'SELECT',
+        rowCount: 0,
+        oid: 0,
+        fields: []
+      });
+
+      const result = await repository.findAll();
+
+      expect(result).toEqual([]);
+    });
+  });
+
+  describe('updateLastActive', () => {
+    it('should update last active timestamp', async () => {
+      (mockPool.query as jest.Mock).mockResolvedValue({
+        rows: [],
+        command: 'UPDATE',
         rowCount: 1,
         oid: 0,
         fields: []
       });
 
-      // Test userData save operation if it exists
-      if (repository.saveUserData) {
-        const result = await repository.saveUserData('user-123', userDataInput);
-        expect(mockClient.release).toHaveBeenCalled();
-      } else {
-        // If method doesn't exist, just verify we have a functional test
-        expect(userDataInput).toBeDefined();
-      }
+      await repository.updateLastActive('user-123');
+
+      expect(mockPool.query).toHaveBeenCalledWith(
+        expect.stringContaining('SET last_active_at = CURRENT_TIMESTAMP'),
+        ['user-123']
+      );
+    });
+
+    it('should handle update when user not found', async () => {
+      (mockPool.query as jest.Mock).mockResolvedValue({
+        rows: [],
+        command: 'UPDATE',
+        rowCount: 0,
+        oid: 0,
+        fields: []
+      });
+
+      // Should not throw error even if user not found
+      await repository.updateLastActive('non-existent');
+    });
+  });
+
+  describe('addAchievement', () => {
+    it('should add achievement to user and update XP', async () => {
+      const mockClient = {
+        query: jest.fn(),
+        release: jest.fn()
+      };
+
+      mockPool.connect = jest.fn().mockResolvedValue(mockClient);
+
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [], command: 'BEGIN' }) // Transaction start
+        .mockResolvedValueOnce({ 
+          rows: [{ id: 'achievement-123', xp_reward: 50 }], 
+          command: 'SELECT' 
+        }) // Achievement lookup
+        .mockResolvedValueOnce({ rows: [], command: 'INSERT' }) // User achievement insert
+        .mockResolvedValueOnce({ rows: [], command: 'UPDATE' }) // User XP update
+        .mockResolvedValueOnce({ rows: [], command: 'COMMIT' }); // Transaction commit
+
+      await repository.addAchievement('user-123', 'achievement-123');
+
+      expect(mockPool.connect).toHaveBeenCalled();
+      expect(mockClient.query).toHaveBeenCalledWith('BEGIN');
+      expect(mockClient.query).toHaveBeenCalledWith(
+        expect.stringContaining('SELECT id, xp_reward FROM achievements'),
+        ['achievement-123']
+      );
+      expect(mockClient.query).toHaveBeenCalledWith(
+        expect.stringContaining('INSERT INTO user_achievements'),
+        ['user-123', 'achievement-123']
+      );
+      expect(mockClient.query).toHaveBeenCalledWith(
+        expect.stringContaining('UPDATE users'),
+        [50, 'user-123']
+      );
+      expect(mockClient.query).toHaveBeenCalledWith('COMMIT');
+      expect(mockClient.release).toHaveBeenCalled();
+    });
+
+    it('should handle duplicate achievement gracefully', async () => {
+      const mockClient = {
+        query: jest.fn(),
+        release: jest.fn()
+      };
+
+      mockPool.connect = jest.fn().mockResolvedValue(mockClient);
+
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [], command: 'BEGIN' })
+        .mockResolvedValueOnce({ 
+          rows: [{ id: 'achievement-123', xp_reward: 30 }], 
+          command: 'SELECT' 
+        })
+        .mockResolvedValueOnce({ rows: [], command: 'INSERT' }) // ON CONFLICT DO NOTHING
+        .mockResolvedValueOnce({ rows: [], command: 'UPDATE' })
+        .mockResolvedValueOnce({ rows: [], command: 'COMMIT' });
+
+      await repository.addAchievement('user-123', 'achievement-123');
+
+      expect(mockClient.query).toHaveBeenCalledWith(
+        expect.stringContaining('ON CONFLICT (user_id, achievement_id) DO NOTHING'),
+        ['user-123', 'achievement-123']
+      );
+    });
+
+    it('should handle achievement not found error', async () => {
+      const mockClient = {
+        query: jest.fn(),
+        release: jest.fn()
+      };
+
+      mockPool.connect = jest.fn().mockResolvedValue(mockClient);
+
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [], command: 'BEGIN' })
+        .mockResolvedValueOnce({ rows: [], command: 'SELECT' }) // No achievement found
+        .mockResolvedValueOnce({ rows: [], command: 'ROLLBACK' });
+
+      await expect(repository.addAchievement('user-123', 'non-existent-achievement'))
+        .rejects.toThrow('Achievement not found');
+
+      expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK');
+      expect(mockClient.release).toHaveBeenCalled();
+    });
+
+    it('should rollback transaction on error', async () => {
+      const mockClient = {
+        query: jest.fn(),
+        release: jest.fn()
+      };
+
+      mockPool.connect = jest.fn().mockResolvedValue(mockClient);
+
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [], command: 'BEGIN' })
+        .mockResolvedValueOnce({ 
+          rows: [{ id: 'achievement-123', xp_reward: 25 }], 
+          command: 'SELECT' 
+        })
+        .mockRejectedValueOnce(new Error('Database constraint error'))
+        .mockResolvedValueOnce({ rows: [], command: 'ROLLBACK' });
+
+      await expect(repository.addAchievement('user-123', 'achievement-123'))
+        .rejects.toThrow('Database constraint error');
+
+      expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK');
+      expect(mockClient.release).toHaveBeenCalled();
+    });
+  });
+
+  describe('saveAssessmentSession', () => {
+    it('should save assessment session to evaluations table', async () => {
+      const sessionData = {
+        sessionKey: 'session-123',
+        techScore: 85,
+        creativeScore: 90,
+        businessScore: 80,
+        answers: { q1: 'answer1', q2: 'answer2' },
+        generatedPaths: ['path1', 'path2']
+      };
+
+      // Mock finding task and creating evaluation
+      (mockPool.query as jest.Mock)
+        .mockResolvedValueOnce({
+          rows: [{ id: 'task-123' }],
+          command: 'SELECT',
+          rowCount: 1
+        })
+        .mockResolvedValueOnce({
+          rows: [{
+            id: 'evaluation-123',
+            userId: 'user-123',
+            createdAt: '2024-01-01T00:00:00.000Z',
+            overallScore: 85,
+            feedback: JSON.stringify({
+              techScore: 85,
+              creativeScore: 90,
+              businessScore: 80
+            }),
+            metadata: JSON.stringify({ sessionKey: 'session-123' })
+          }],
+          command: 'INSERT',
+          rowCount: 1
+        });
+
+      const result = await repository.saveAssessmentSession('user-123', sessionData);
+
+      expect(mockPool.query).toHaveBeenCalledTimes(2);
+      expect(result.id).toBe('evaluation-123');
+      expect(result.sessionKey).toBe('session-123');
+      expect(result.techScore).toBe(85);
+    });
+
+    it('should handle missing task gracefully', async () => {
+      (mockPool.query as jest.Mock)
+        .mockResolvedValueOnce({
+          rows: [],
+          command: 'SELECT',
+          rowCount: 0
+        })
+        .mockResolvedValueOnce({
+          rows: [{
+            id: 'evaluation-123',
+            userId: 'user-123',
+            createdAt: '2024-01-01T00:00:00.000Z',
+            overallScore: 80,
+            feedback: '{}',
+            metadata: '{}'
+          }],
+          command: 'INSERT',
+          rowCount: 1
+        });
+
+      const sessionData = {
+        sessionKey: 'session-456',
+        techScore: 75,
+        creativeScore: 85,
+        businessScore: 80
+      };
+
+      const result = await repository.saveAssessmentSession('user-123', sessionData);
+
+      expect(result.id).toBe('evaluation-123');
+    });
+  });
+
+  describe('getAssessmentSessions', () => {
+    it('should return empty array (TODO implementation)', async () => {
+      const result = await repository.getAssessmentSessions();
+      expect(result).toEqual([]);
+    });
+  });
+
+  describe('getLatestAssessmentResults', () => {
+    it('should return null (TODO implementation)', async () => {
+      const result = await repository.getLatestAssessmentResults();
+      expect(result).toBeNull();
+    });
+  });
+
+  describe('addBadge', () => {
+    it('should add badge to user', async () => {
+      const badgeData = {
+        badgeId: 'badge-123',
+        name: 'First Steps',
+        description: 'Completed first learning module',
+        imageUrl: '/badges/first-steps.png',
+        category: 'progress',
+        xpReward: 25
+      };
+
+      (mockPool.query as jest.Mock).mockResolvedValue({
+        rows: [{
+          id: 'user-badge-123',
+          userId: 'user-123',
+          badgeId: 'badge-123',
+          name: 'First Steps',
+          description: 'Completed first learning module',
+          imageUrl: '/badges/first-steps.png',
+          category: 'progress',
+          xpReward: 25,
+          unlockedAt: '2024-01-01T00:00:00.000Z',
+          metadata: {}
+        }],
+        command: 'INSERT',
+        rowCount: 1,
+        oid: 0,
+        fields: []
+      });
+
+      const result = await repository.addBadge('user-123', badgeData);
+
+      expect(mockPool.query).toHaveBeenCalledWith(
+        expect.stringContaining('INSERT INTO user_badges'),
+        [
+          'user-123',
+          'badge-123',
+          'First Steps',
+          'Completed first learning module',
+          '/badges/first-steps.png',
+          'progress',
+          25
+        ]
+      );
+
+      expect(result.badgeId).toBe('badge-123');
+      expect(result.name).toBe('First Steps');
+      expect(result.xpReward).toBe(25);
+    });
+
+    it('should handle duplicate badge with upsert', async () => {
+      const badgeData = {
+        badgeId: 'existing-badge',
+        name: 'Updated Badge',
+        description: 'Updated description',
+        imageUrl: '/badges/updated.png',
+        category: 'achievement',
+        xpReward: 50
+      };
+
+      (mockPool.query as jest.Mock).mockResolvedValue({
+        rows: [{
+          id: 'user-badge-456',
+          userId: 'user-123',
+          badgeId: 'existing-badge',
+          name: 'Updated Badge',
+          description: 'Updated description',
+          imageUrl: '/badges/updated.png',
+          category: 'achievement',
+          xpReward: 50,
+          unlockedAt: '2024-01-01T00:00:00.000Z',
+          metadata: {}
+        }],
+        command: 'INSERT',
+        rowCount: 1
+      });
+
+      await repository.addBadge('user-123', badgeData);
+
+      expect(mockPool.query).toHaveBeenCalledWith(
+        expect.stringContaining('ON CONFLICT (user_id, badge_id) DO UPDATE SET'),
+        expect.arrayContaining(['user-123', 'existing-badge'])
+      );
+    });
+  });
+
+  describe('getUserBadges', () => {
+    it('should return empty array (TODO implementation)', async () => {
+      const result = await repository.getUserBadges();
+      expect(result).toEqual([]);
+    });
+  });
+
+  describe('getUserData', () => {
+    it('should get complete user data', async () => {
+      // Mock user exists
+      (mockPool.query as jest.Mock).mockResolvedValue({
+        rows: [mockUser],
+        command: 'SELECT',
+        rowCount: 1
+      });
+
+      const result = await repository.getUserData('test@example.com');
+
+      expect(result).toBeDefined();
+      expect(result!.version).toBe('3.0');
+      expect(result!.achievements.totalXp).toBe(mockUser.totalXp);
+      expect(result!.achievements.level).toBe(mockUser.level);
+      expect(result!.achievements.badges).toEqual([]);
+      expect(result!.assessmentSessions).toEqual([]);
+    });
+
+    it('should auto-create user if not exists', async () => {
+      // Mock user not found, then created
+      (mockPool.query as jest.Mock)
+        .mockResolvedValueOnce({
+          rows: [],
+          command: 'SELECT',
+          rowCount: 0
+        })
+        .mockResolvedValueOnce({
+          rows: [{
+            ...mockUser,
+            email: 'newuser@example.com',
+            name: 'newuser'
+          }],
+          command: 'INSERT',
+          rowCount: 1
+        });
+
+      const result = await repository.getUserData('newuser@example.com');
+
+      expect(mockPool.query).toHaveBeenCalledWith(
+        expect.stringContaining('INSERT INTO users'),
+        expect.arrayContaining(['newuser@example.com', 'newuser'])
+      );
+
+      expect(result).toBeDefined();
+    });
+  });
+
+  describe('saveUserData', () => {
+    it('should save complete user data with transaction', async () => {
+      const mockClient = {
+        query: jest.fn(),
+        release: jest.fn()
+      };
+
+      mockPool.connect = jest.fn().mockResolvedValue(mockClient);
+
+      const userDataInput: UserDataInput = {
+        achievements: {
+          totalXp: 1000,
+          level: 5,
+          badges: [],
+          completedTasks: []
+        },
+        assessmentSessions: [],
+        currentView: 'dashboard',
+        lastUpdated: new Date().toISOString(),
+        version: '3.0'
+      };
+
+      // Mock transaction flow
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [], command: 'BEGIN' })
+        .mockResolvedValueOnce({ rows: [], command: 'COMMIT' });
+
+      // Mock user operations
+      (mockPool.query as jest.Mock)
+        .mockResolvedValueOnce({
+          rows: [mockUser],
+          command: 'SELECT',
+          rowCount: 1
+        })
+        .mockResolvedValueOnce({
+          rows: [{ ...mockUser, level: 5, totalXp: 1000 }],
+          command: 'UPDATE',
+          rowCount: 1
+        })
+        .mockResolvedValueOnce({
+          rows: [{ ...mockUser, level: 5, totalXp: 1000 }],
+          command: 'SELECT',
+          rowCount: 1
+        });
+
+      const result = await repository.saveUserData('test@example.com', userDataInput);
+
+      expect(mockPool.connect).toHaveBeenCalled();
+      expect(mockClient.query).toHaveBeenCalledWith('BEGIN');
+      expect(mockClient.query).toHaveBeenCalledWith('COMMIT');
+      expect(mockClient.release).toHaveBeenCalled();
+
+      expect(result).toBeDefined();
+      expect(result.version).toBe('3.0');
+    });
+
+    it('should rollback transaction on error', async () => {
+      const mockClient = {
+        query: jest.fn(),
+        release: jest.fn()
+      };
+
+      mockPool.connect = jest.fn().mockResolvedValue(mockClient);
+
+      mockClient.query
+        .mockResolvedValueOnce({ rows: [], command: 'BEGIN' })
+        .mockRejectedValueOnce(new Error('Save failed'))
+        .mockResolvedValueOnce({ rows: [], command: 'ROLLBACK' });
+
+      (mockPool.query as jest.Mock).mockResolvedValue({
+        rows: [mockUser],
+        command: 'SELECT',
+        rowCount: 1
+      });
+
+      const userDataInput: UserDataInput = {
+        achievements: { totalXp: 500, level: 3, badges: [], completedTasks: [] },
+        assessmentSessions: [],
+        currentView: 'dashboard',
+        lastUpdated: new Date().toISOString(),
+        version: '3.0'
+      };
+
+      await expect(repository.saveUserData('test@example.com', userDataInput))
+        .rejects.toThrow('Save failed');
+
+      expect(mockClient.query).toHaveBeenCalledWith('ROLLBACK');
+      expect(mockClient.release).toHaveBeenCalled();
+    });
+  });
+
+  describe('deleteUserData', () => {
+    it('should delete user data', async () => {
+      // Mock user exists
+      (mockPool.query as jest.Mock)
+        .mockResolvedValueOnce({
+          rows: [mockUser],
+          command: 'SELECT',
+          rowCount: 1
+        })
+        .mockResolvedValueOnce({
+          rows: [],
+          command: 'DELETE',
+          rowCount: 1
+        });
+
+      const result = await repository.deleteUserData('test@example.com');
+
+      expect(result).toBe(true);
+      expect(mockPool.query).toHaveBeenCalledWith(
+        expect.stringContaining('DELETE FROM users WHERE id = $1'),
+        [mockUser.id]
+      );
+    });
+
+    it('should return false if user not found', async () => {
+      (mockPool.query as jest.Mock).mockResolvedValue({
+        rows: [],
+        command: 'SELECT',
+        rowCount: 0
+      });
+
+      const result = await repository.deleteUserData('nonexistent@example.com');
+
+      expect(result).toBe(false);
+    });
+  });
+
+  describe('Edge cases and error handling', () => {
+    it('should handle database connection errors gracefully', async () => {
+      (mockPool.query as jest.Mock).mockRejectedValue(new Error('Connection refused'));
+
+      await expect(repository.findAll())
+        .rejects.toThrow('Connection refused');
+    });
+
+    it('should handle malformed JSON in learning preferences', async () => {
+      const userWithBadJson = {
+        ...mockUser,
+        learningPreferences: 'invalid json string'
+      };
+
+      (mockPool.query as jest.Mock).mockResolvedValue({
+        rows: [userWithBadJson],
+        command: 'SELECT',
+        rowCount: 1
+      });
+
+      const result = await repository.findById('user-123');
+      
+      expect(result).toBeDefined();
+      // The actual behavior depends on how PostgreSQL handles invalid JSON
+    });
+
+    it('should handle very long email addresses', async () => {
+      const longEmail = 'a'.repeat(250) + '@example.com';
+      
+      (mockPool.query as jest.Mock).mockResolvedValue({
+        rows: [],
+        command: 'SELECT',
+        rowCount: 0
+      });
+
+      const result = await repository.findByEmail(longEmail);
+      expect(result).toBeNull();
+    });
+
+    it('should handle special characters in user data', async () => {
+      const specialUser: CreateUserDto = {
+        email: 'test+special@example.com',
+        name: "O'Connor-Smith (Jr.)",
+        preferredLanguage: 'zh-TW',
+        learningPreferences: {
+          specialChars: "Quote: \"Hello\", Backslash: \\, Unicode: 你好"
+        }
+      };
+
+      (mockPool.query as jest.Mock).mockResolvedValue({
+        rows: [{ ...mockUser, ...specialUser }],
+        command: 'INSERT',
+        rowCount: 1
+      });
+
+      const result = await repository.create(specialUser);
+
+      expect(mockPool.query).toHaveBeenCalledWith(
+        expect.stringContaining('INSERT INTO users'),
+        expect.arrayContaining([
+          'test+special@example.com',
+          "O'Connor-Smith (Jr.)",
+          'zh-TW',
+          JSON.stringify(specialUser.learningPreferences)
+        ])
+      );
+
+      expect(result.name).toBe("O'Connor-Smith (Jr.)");
+    });
+
+    it('should handle concurrent updates gracefully', async () => {
+      // Simulate concurrent update scenario  
+      (mockPool.query as jest.Mock)
+        .mockRejectedValueOnce(new Error('Concurrent modification detected'));
+
+      await expect(
+        repository.update('user-123', { name: 'Updated Name' })
+      ).rejects.toThrow('Concurrent modification detected');
+    });
+
+    it('should handle null and undefined values correctly', async () => {
+      const userWithNulls = {
+        ...mockUser,
+        learningPreferences: null,
+        metadata: null,
+        lastActiveAt: null,
+        emailVerifiedAt: null
+      };
+
+      (mockPool.query as jest.Mock).mockResolvedValue({
+        rows: [userWithNulls],
+        command: 'SELECT',
+        rowCount: 1
+      });
+
+      const result = await repository.findById('user-123');
+
+      expect(result).toBeDefined();
+      expect(result!.learningPreferences).toBeNull();
+      expect(result!.metadata).toBeNull();
     });
   });
 });
