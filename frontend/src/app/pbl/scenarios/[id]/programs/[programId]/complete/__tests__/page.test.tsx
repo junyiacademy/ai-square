@@ -1,40 +1,25 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import page from '../page';
+import { render } from '@testing-library/react';
 
-// Mock next/navigation
+// Mock dependencies
 jest.mock('next/navigation', () => ({
-  useRouter: () => ({
-    push: jest.fn(),
-    back: jest.fn(),
-    refresh: jest.fn(),
-  }),
-  usePathname: () => '/',
-  useSearchParams: () => new URLSearchParams(),
+  useRouter: () => ({ push: jest.fn() }),
+  useParams: () => ({ id: 'test-id', programId: 'prog-id' })
 }));
 
-describe('page', () => {
-  it('should render without crashing', () => {
-    const { container } = render(<div />);
-    expect(container).toBeInTheDocument();
-  });
-  
-  it('should have proper structure', () => {
-    render(<div />);
-    const element = document.querySelector('div');
-    expect(element).toBeInTheDocument();
-  });
-  
-  it('should handle user interactions', async () => {
-    render(<div />);
-    
-    const buttons = screen.queryAllByRole('button');
-    if (buttons.length > 0) {
-      fireEvent.click(buttons[0]);
-    }
-    
-    await waitFor(() => {
-      expect(document.querySelector('div')).toBeInTheDocument();
-    });
+jest.mock('react-i18next', () => ({
+  useTranslation: () => ({
+    t: (key: string) => key,
+    i18n: { language: 'en' }
+  })
+}));
+
+// Import after mocks
+const CompletePage = require('../page').default;
+
+describe('PBL Complete Page', () => {
+  it('should render', () => {
+    const { container } = render(<CompletePage />);
+    expect(container).toBeTruthy();
   });
 });

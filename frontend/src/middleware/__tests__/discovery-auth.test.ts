@@ -20,7 +20,8 @@ jest.mock('next/server', () => ({
   }
 }));
 
-describe('checkDiscoveryAuth', () => {
+describe('Discovery Auth Middleware', () => {
+  describe('checkDiscoveryAuth', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -73,5 +74,44 @@ describe('checkDiscoveryAuth', () => {
     expect(response).toBeTruthy();
     expect(response?.headers.get('location')).toContain('/login');
     expect(response?.headers.get('location')).toContain('redirect=%2Fdiscovery%2Fpath');
+  });
+
+  it('should handle empty session', async () => {
+    (getServerSession as jest.Mock).mockResolvedValue({});
+    
+    const request = new NextRequest('http://localhost:3000/discovery');
+    const response = await checkDiscoveryAuth(request);
+    
+    expect(response).toBeNull();
+  });
+
+  it('should handle session with minimal user info', async () => {
+    (getServerSession as jest.Mock).mockResolvedValue({ user: {} });
+    
+    const request = new NextRequest('http://localhost:3000/discovery');
+    const response = await checkDiscoveryAuth(request);
+    
+    expect(response).toBeNull();
+  });
+
+  it('should handle paths with query parameters', async () => {
+    (getServerSession as jest.Mock).mockResolvedValue(null);
+    
+    const request = new NextRequest('http://localhost:3000/discovery/scenarios?filter=active&sort=date');
+    const response = await checkDiscoveryAuth(request);
+    
+    expect(response).toBeTruthy();
+    expect(response?.headers.get('location')).toContain('redirect=%2Fdiscovery%2Fscenarios');
+  });
+
+  it('should handle paths with hash fragments', async () => {
+    (getServerSession as jest.Mock).mockResolvedValue(null);
+    
+    const request = new NextRequest('http://localhost:3000/discovery#section');
+    const response = await checkDiscoveryAuth(request);
+    
+    expect(response).toBeTruthy();
+    expect(response?.headers.get('location')).toContain('redirect=%2Fdiscovery');
+  });
   });
 });

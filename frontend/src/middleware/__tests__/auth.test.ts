@@ -3,12 +3,72 @@ import { checkAdminAuth, withAdminAuth } from '../auth';
 
 // Mock the JWT verification module
 jest.mock('@/lib/auth/jwt', () => ({
-  verifyAccessToken: jest.fn().mockResolvedValue(null)
+  verifyAccessToken: jest.fn()
 }));
 
+import * as jwtModule from '@/lib/auth/jwt';
+
 describe('Auth Middleware', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+    (jwtModule.verifyAccessToken as jest.Mock).mockResolvedValue(null);
+  });
+
   describe('checkAdminAuth', () => {
-    it('should return valid for admin user', async () => {
+    it('should return valid for admin user with JWT token', async () => {
+      const request = new NextRequest('http://localhost:3000/admin');
+      request.cookies.set('accessToken', 'valid-token');
+      
+      (jwtModule.verifyAccessToken as jest.Mock).mockResolvedValue({
+        email: 'admin@example.com',
+        role: 'admin',
+        userId: 1,
+        name: 'Admin User'
+      });
+
+      const result = await checkAdminAuth(request);
+
+      expect(result.isValid).toBe(true);
+      expect(result.user).toEqual({
+        email: 'admin@example.com',
+        role: 'admin',
+        userId: 1,
+        name: 'Admin User'
+      });
+    });
+
+    it('should return invalid for non-admin JWT user', async () => {
+      const request = new NextRequest('http://localhost:3000/admin');
+      request.cookies.set('accessToken', 'valid-token');
+      
+      (jwtModule.verifyAccessToken as jest.Mock).mockResolvedValue({
+        email: 'user@example.com',
+        role: 'user',
+        userId: 2,
+        name: 'Regular User'
+      });
+
+      const result = await checkAdminAuth(request);
+
+      expect(result.isValid).toBe(false);
+      expect(result.user).toBeUndefined();
+    });
+
+    it('should fall back to cookie auth when JWT fails', async () => {
+      const request = new NextRequest('http://localhost:3000/admin');
+      request.cookies.set('accessToken', 'invalid-token');
+      request.cookies.set('isLoggedIn', 'true');
+      request.cookies.set('user', JSON.stringify({ email: 'admin@example.com', role: 'admin' }));
+      
+      (jwtModule.verifyAccessToken as jest.Mock).mockRejectedValue(new Error('Invalid token'));
+
+      const result = await checkAdminAuth(request);
+
+      expect(result.isValid).toBe(true);
+      expect(result.user).toEqual({ email: 'admin@example.com', role: 'admin' });
+    });
+
+    it('should return valid for admin user with cookie auth', async () => {
       const request = new NextRequest('http://localhost:3000/admin');
       request.cookies.set('isLoggedIn', 'true');
       request.cookies.set('user', JSON.stringify({ email: 'admin@example.com', role: 'admin' }));

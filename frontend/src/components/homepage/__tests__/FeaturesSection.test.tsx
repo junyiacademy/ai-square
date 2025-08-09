@@ -25,24 +25,24 @@ describe('FeaturesSection', () => {
   it('should render all feature cards', () => {
     render(<FeaturesSection />);
     
-    // Check for each feature
-    expect(screen.getByText('features.personalizedLearning.title')).toBeInTheDocument();
-    expect(screen.getByText('features.personalizedLearning.description')).toBeInTheDocument();
+    // Check for each feature - using the correct i18n key structure
+    expect(screen.getByText('features.items.personalizedLearning.title')).toBeInTheDocument();
+    expect(screen.getByText('features.items.personalizedLearning.description')).toBeInTheDocument();
     
-    expect(screen.getByText('features.multilingualSupport.title')).toBeInTheDocument();
-    expect(screen.getByText('features.multilingualSupport.description')).toBeInTheDocument();
+    expect(screen.getByText('features.items.multilingualSupport.title')).toBeInTheDocument();
+    expect(screen.getByText('features.items.multilingualSupport.description')).toBeInTheDocument();
     
-    expect(screen.getByText('features.realTimeAI.title')).toBeInTheDocument();
-    expect(screen.getByText('features.realTimeAI.description')).toBeInTheDocument();
+    expect(screen.getByText('features.items.realTimeAI.title')).toBeInTheDocument();
+    expect(screen.getByText('features.items.realTimeAI.description')).toBeInTheDocument();
     
-    expect(screen.getByText('features.comprehensiveAssessment.title')).toBeInTheDocument();
-    expect(screen.getByText('features.comprehensiveAssessment.description')).toBeInTheDocument();
+    expect(screen.getByText('features.items.comprehensiveAssessment.title')).toBeInTheDocument();
+    expect(screen.getByText('features.items.comprehensiveAssessment.description')).toBeInTheDocument();
     
-    expect(screen.getByText('features.interactiveTasks.title')).toBeInTheDocument();
-    expect(screen.getByText('features.interactiveTasks.description')).toBeInTheDocument();
+    expect(screen.getByText('features.items.interactiveTasks.title')).toBeInTheDocument();
+    expect(screen.getByText('features.items.interactiveTasks.description')).toBeInTheDocument();
     
-    expect(screen.getByText('features.progressTracking.title')).toBeInTheDocument();
-    expect(screen.getByText('features.progressTracking.description')).toBeInTheDocument();
+    expect(screen.getByText('features.items.progressTracking.title')).toBeInTheDocument();
+    expect(screen.getByText('features.items.progressTracking.description')).toBeInTheDocument();
   });
 
   it('should render feature icons', () => {
@@ -72,9 +72,9 @@ describe('FeaturesSection', () => {
     
     // Check first card has proper classes
     const firstCard = featureCards[0];
-    expect(firstCard.className).toContain('p-6');
+    expect(firstCard.className).toContain('p-8');
     expect(firstCard.className).toContain('bg-white');
-    expect(firstCard.className).toContain('rounded-xl');
+    expect(firstCard.className).toContain('rounded-2xl');
   });
 
   it('should have hover effects on feature cards', () => {
@@ -83,8 +83,8 @@ describe('FeaturesSection', () => {
     // Check for hover classes
     const featureCards = container.querySelectorAll('.group');
     featureCards.forEach(card => {
-      expect(card.className).toContain('hover:shadow-lg');
-      expect(card.className).toContain('transition-shadow');
+      expect(card.className).toContain('hover:shadow-xl');
+      expect(card.className).toContain('transition-all');
     });
   });
 

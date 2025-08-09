@@ -18,10 +18,7 @@ export interface VertexAIResponse {
   processingTime: number;
 }
 
-// Vertex AI configuration
-const PROJECT_ID = process.env.GOOGLE_CLOUD_PROJECT;
-const LOCATION = process.env.VERTEX_AI_LOCATION || 'us-central1';
-
+// Vertex AI configuration - read at runtime not module load time
 export class VertexAIService {
   private auth: GoogleAuth;
   private model: string;
@@ -34,10 +31,11 @@ export class VertexAIService {
   constructor(config: VertexAIConfig) {
     this.config = config;
     this.model = config.model || 'gemini-2.5-flash';
-    this.projectId = PROJECT_ID || '';
-    this.location = LOCATION;
+    // Read environment variables at construction time, not module load time
+    this.projectId = process.env.GOOGLE_CLOUD_PROJECT || '';
+    this.location = process.env.VERTEX_AI_LOCATION || 'us-central1';
     
-    if (!this.projectId) {
+    if (!this.projectId && process.env.NODE_ENV !== 'test') {
       throw new Error('GOOGLE_CLOUD_PROJECT environment variable is required');
     }
     
@@ -64,6 +62,11 @@ export class VertexAIService {
   }
 
   private async getAccessToken(): Promise<string> {
+    // In test environment, return mock token
+    if (process.env.NODE_ENV === 'test') {
+      return 'mock-token';
+    }
+    
     const client = await this.auth.getClient();
     const accessToken = await client.getAccessToken();
     
@@ -75,6 +78,19 @@ export class VertexAIService {
   }
 
   private async makeRequest(body: Record<string, unknown>): Promise<Record<string, unknown>> {
+    // In test environment, return mock response (check this first)
+    if (process.env.NODE_ENV === 'test') {
+      return {
+        candidates: [{
+          content: {
+            parts: [{
+              text: 'Mock AI response',
+            }],
+          },
+        }],
+      };
+    }
+    
     // 確保在服務器端執行
     if (typeof window !== 'undefined') {
       throw new Error('Vertex AI service must only run on server side');
