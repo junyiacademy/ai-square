@@ -177,6 +177,14 @@ help:
 	@echo "  $(GREEN)make gcp-deploy-cms$(NC)                            - 部署 CMS 到 Cloud Run"
 	@echo "  $(GREEN)make deploy-backend-gcp$(NC)                        - 部署後端到 GCP"
 	@echo ""
+	@echo "$(CYAN)Staging 環境:$(NC)"
+	@echo "  $(GREEN)make staging-check$(NC)                             - 檢查 Staging 部署前置條件"
+	@echo "  $(GREEN)make staging-db-init$(NC)                           - 初始化 Staging 資料庫"
+	@echo "  $(GREEN)make deploy-staging$(NC)                            - 部署到 Staging 環境"
+	@echo "  $(GREEN)make deploy-staging-full$(NC)                       - 完整 Staging 部署（含 DB）"
+	@echo "  $(GREEN)make staging-logs$(NC)                              - 查看 Staging logs"
+	@echo "  $(GREEN)make staging-db-connect$(NC)                        - 連接到 Staging 資料庫"
+	@echo ""
 	@echo "$(CYAN)部署檢查:$(NC)"
 	@echo "  $(GREEN)make check-deployment$(NC)                          - 檢查部署狀態"
 	@echo ""
@@ -438,6 +446,40 @@ deploy-backend-gcp:
 		--source backend \
 		--region asia-east1 \
 		--allow-unauthenticated
+
+#=============================================================================
+# Staging 部署命令
+#=============================================================================
+
+## 檢查 Staging 部署前置條件
+staging-check:
+	@echo "$(CYAN)🔍 檢查 Staging 部署前置條件...$(NC)"
+	@cd frontend && ./scripts/staging-pre-check.sh
+
+## 初始化 Staging 資料庫
+staging-db-init:
+	@echo "$(CYAN)🗄️  初始化 Staging 資料庫...$(NC)"
+	@cd frontend && DB_PASSWORD=staging2025 ./scripts/init-db-staging.sh
+
+## 部署到 Staging 環境
+deploy-staging: staging-check
+	@echo "$(GREEN)🚀 部署到 Staging 環境...$(NC)"
+	@cd frontend && SKIP_DB_INIT=1 ./deploy-staging.sh
+	@echo "$(GREEN)✅ Staging 部署完成！$(NC)"
+
+## 完整 Staging 部署（含資料庫初始化）
+deploy-staging-full: staging-check staging-db-init deploy-staging
+	@echo "$(GREEN)✅ 完整 Staging 部署完成！$(NC)"
+
+## 查看 Staging logs
+staging-logs:
+	@echo "$(CYAN)📋 查看 Staging logs...$(NC)"
+	gcloud run logs read --service ai-square-staging --region asia-east1 --limit 50
+
+## 連接到 Staging 資料庫
+staging-db-connect:
+	@echo "$(CYAN)🔗 連接到 Staging 資料庫...$(NC)"
+	gcloud sql connect ai-square-db-staging-asia --user=postgres --database=ai_square_staging
 
 #=============================================================================
 # 截圖命令
