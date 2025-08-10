@@ -50,7 +50,7 @@ describe('/api/discovery/scenarios/my', () => {
     it('should return 401 when user has no email', async () => {
       mockGetServerSession.mockResolvedValue({
         user: { id: 'user-123' }
-      });
+      } as unknown as { user: { id: string; email: string } });
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios/my');
       const response = await GET(request);
@@ -77,7 +77,7 @@ describe('/api/discovery/scenarios/my', () => {
     it('should work with email only', async () => {
       mockGetServerSession.mockResolvedValue({
         user: { email: 'test@example.com' }
-      });
+      } as unknown as { user: { id: string; email: string } });
 
       mockProgramRepo.findByUser.mockResolvedValue([]);
 

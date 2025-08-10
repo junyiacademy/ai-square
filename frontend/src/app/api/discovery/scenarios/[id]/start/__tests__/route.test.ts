@@ -71,7 +71,7 @@ describe('/api/discovery/scenarios/[id]/start', () => {
     it('should return 401 when user has no email', async () => {
       mockGetServerSession.mockResolvedValue({
         user: { id: 'user-123' }
-      });
+      } as unknown as { user: { id: string; email: string } });
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios/test-id/start', {
         method: 'POST',

@@ -15,6 +15,12 @@ jest.mock('@/lib/repositories/base/repository-factory');
 const mockGetServerSession = getServerSession as jest.MockedFunction<typeof getServerSession>;
 const mockRepositoryFactory = repositoryFactory as jest.Mocked<typeof repositoryFactory>;
 
+// typing for test-only global helper exposed by the module under test
+declare global {
+  // eslint-disable-next-line no-var
+  var __clearDiscoveryScenariosCache: (() => void) | undefined;
+}
+
 describe('/api/discovery/scenarios', () => {
   let mockScenarioRepo: any;
   let mockProgramRepo: any;
@@ -517,7 +523,7 @@ describe('/api/discovery/scenarios', () => {
       mockGetServerSession.mockResolvedValue(null);
       
       // Mock scenario repo without findByMode method
-      const mockScenarioRepoWithoutMethod = {};
+      const mockScenarioRepoWithoutMethod = {} as unknown as import('@/lib/repositories/interfaces').IScenarioRepository;
       mockRepositoryFactory.getScenarioRepository.mockReturnValue(mockScenarioRepoWithoutMethod);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios');
@@ -573,7 +579,7 @@ describe('/api/discovery/scenarios', () => {
     it('should handle user session with email but no id', async () => {
       mockGetServerSession.mockResolvedValue({
         user: { email: 'test@example.com' }
-      });
+      } as unknown as { user: { id: string; email: string } });
 
       mockScenarioRepo.findByMode.mockResolvedValue([
         {
@@ -600,7 +606,7 @@ describe('/api/discovery/scenarios', () => {
     it('should handle programs with missing task count data', async () => {
       mockGetServerSession.mockResolvedValue({
         user: { id: 'user-123' }
-      });
+      } as unknown as { user: { id: string; email: string } });
 
       mockScenarioRepo.findByMode.mockResolvedValue([
         {
