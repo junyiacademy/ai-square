@@ -5,7 +5,7 @@
 - **起始覆蓋率**: 71.58% (Phase 2 完成)
 - **當前覆蓋率**: **更新中（本批新增測試已合併）**
 - **目標覆蓋率**: **80%**
-- **測試通過率**: **100%** (最新 353/353 套件綠燈，4,027 測試，28 skipped) 🚀
+- **測試通過率**: **100%** (最新 353/353 套件綠燈，4,030 測試，28 skipped) 🚀
 - **測試數量**: 3,927 個測試 (28 skipped)
 - **更新時間**: 2025-08-11 01:20
 
@@ -64,6 +64,9 @@
 3. **Discovery Task API（翻譯分支覆蓋）** ✅
    - GET：評估翻譯成功（寫回 `evaluationFeedbackVersions`）
    - GET：翻譯失敗 → 使用 `getFeedbackByLanguage` fallback
+   - GET：英語直通（`en` 已存在時不進行 translate、亦不寫回）
+   - PATCH：`confirm-complete` 在無通過互動時回 400
+   - PATCH：`regenerate-evaluation` 在非 development 環境回 403
    - 補齊跨語言回應一致性
 
 ### 🛠️ **翻譯系統測試** (已存在)

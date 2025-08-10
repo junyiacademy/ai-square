@@ -161,6 +161,27 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       const res = await GET(req, { params: Promise.resolve({ id: 's1', programId: 'p1', taskId: 't1' }) });
       expect(res.status).toBe(500);
     });
+
+    it('returns English version directly without translation when en exists', async () => {
+      const { TranslationService } = require('@/lib/services/translation-service');
+      const translateSpy = jest.spyOn(TranslationService.prototype, 'translateFeedback');
+
+      mockGetServerSession.mockResolvedValue({ user: { email: 'u@test.com', id: 'u1' } } as any);
+      programRepo.findById.mockResolvedValue({ id: 'p1', userId: 'u1', scenarioId: 's1' });
+      taskRepo.getTaskWithInteractions.mockResolvedValue({
+        id: 't1', programId: 'p1', status: 'completed', title: { en: 'T' }, content: {}, metadata: { evaluationId: 'e1' }
+      });
+      scenarioRepo.findById.mockResolvedValue({ id: 's1', title: { en: 'Scenario' }, metadata: { careerType: 'data_analyst' } });
+      evaluationRepo.findById.mockResolvedValue({ id: 'e1', score: 0.9, feedbackData: { en: 'Great job' }, createdAt: '2024-01-01T00:00:00Z' });
+
+      const req = new NextRequest('http://localhost/api/discovery/scenarios/s1/programs/p1/tasks/t1?lang=en');
+      const res = await GET(req, { params: Promise.resolve({ id: 's1', programId: 'p1', taskId: 't1' }) });
+      expect(res.status).toBe(200);
+      // should not translate
+      expect(translateSpy).not.toHaveBeenCalled();
+      // and should not persist new versions
+      expect(taskRepo.update).not.toHaveBeenCalled();
+    });
   });
 
   describe('PATCH', () => {
@@ -228,6 +249,38 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       const data = await res.json();
       expect(data.success).toBe(false);
       expect(data.error).toBe('AI evaluation failed');
+    });
+
+    it('confirm-complete returns 400 when no passed ai_response exists', async () => {
+      mockGetServerSession.mockResolvedValue({ user: { email: 'u@test.com', id: 'u1' } } as any);
+      programRepo.findById.mockResolvedValue({ id: 'p1', userId: 'u1', scenarioId: 's1' });
+      taskRepo.getTaskWithInteractions.mockResolvedValue({
+        id: 't1', programId: 'p1', status: 'pending', // not completed and no passed ai_response
+        interactions: [
+          { type: 'user_input', content: 'answer', timestamp: new Date().toISOString(), metadata: {} },
+          { type: 'ai_response', content: JSON.stringify({ completed: false, feedback: 'no' }), timestamp: new Date().toISOString(), metadata: {} },
+        ],
+        content: { xp: 100 },
+        title: { en: 'T' },
+        metadata: {}
+      });
+      const req = new NextRequest('http://localhost/api/discovery/scenarios/s1/programs/p1/tasks/t1', { method: 'PATCH', body: JSON.stringify({ action: 'confirm-complete' }) });
+      const res = await PATCH(req, { params: Promise.resolve({ id: 's1', programId: 'p1', taskId: 't1' }) });
+      const data = await res.json();
+      expect(res.status).toBe(400);
+      expect(data.error).toBe('Task has not been passed yet');
+    });
+
+    it('regenerate-evaluation returns 403 when not in development', async () => {
+      const originalEnv = process.env.NODE_ENV;
+      Object.defineProperty(process, 'env', { value: { ...process.env, NODE_ENV: 'test' } });
+      mockGetServerSession.mockResolvedValue({ user: { email: 'u@test.com', id: 'u1' } } as any);
+      programRepo.findById.mockResolvedValue({ id: 'p1', userId: 'u1', scenarioId: 's1' });
+      taskRepo.getTaskWithInteractions.mockResolvedValue({ id: 't1', programId: 'p1', status: 'completed', interactions: [], content: { xp: 100 }, title: { en: 'T' }, metadata: { evaluationId: 'e1' } });
+      const req = new NextRequest('http://localhost/api/discovery/scenarios/s1/programs/p1/tasks/t1', { method: 'PATCH', body: JSON.stringify({ action: 'regenerate-evaluation' }) });
+      const res = await PATCH(req, { params: Promise.resolve({ id: 's1', programId: 'p1', taskId: 't1' }) });
+      expect(res.status).toBe(403);
+      Object.defineProperty(process, 'env', { value: { ...process.env, NODE_ENV: originalEnv } });
     });
   });
 }); 
