@@ -264,6 +264,78 @@ describe('/api/auth/login', () => {
     expect(mockCookies.set).toHaveBeenCalledWith('ai_square_refresh', expect.any(String), expect.any(Object))
   })
 
+  it('should persist cookies longer when rememberMe is true (DB user path)', async () => {
+    mockGetUserWithPassword.mockResolvedValue({
+      id: '1', email: 'student@example.com', name: 'Student User', passwordHash: 'hash', role: 'student',
+      emailVerified: true, onboardingCompleted: false, preferredLanguage: 'en', metadata: {}
+    })
+    ;(bcrypt.compare as jest.Mock).mockResolvedValue(true)
+    const req = new MockNextRequest('http://localhost:3000/api/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ email: 'student@example.com', password: 'student123', rememberMe: true })
+    })
+    const res = await POST(req as unknown as NextRequest)
+    const data = await res.json()
+    expect(res.status).toBe(200)
+    expect(data.success).toBe(true)
+    // ai_square_refresh token should reflect 30d
+    const refreshCall = mockCookies.set.mock.calls.find((c: unknown[]) => c[0] === 'ai_square_refresh')
+    expect(refreshCall?.[1]).toContain('mock-refresh-token-30d')
+    // session_token maxAge should be 30 days
+    const sessionTokenCall = mockCookies.set.mock.calls.find((c: unknown[]) => c[0] === 'session_token')
+    expect((sessionTokenCall?.[2] as { maxAge?: number })?.maxAge).toBe(30 * 24 * 60 * 60)
+  })
+
+  it('should set long-lived cookies when rememberMe is true in legacy path', async () => {
+    mockGetUserWithPassword.mockResolvedValue(null)
+    const req = new MockNextRequest('http://localhost:3000/api/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ email: 'student@example.com', password: 'student123', rememberMe: true })
+    })
+    const res = await POST(req as unknown as NextRequest)
+    const data = await res.json()
+    expect(res.status).toBe(200)
+    expect(data.success).toBe(true)
+    // refresh should be 30d
+    const refreshCall = mockCookies.set.mock.calls.find((c: unknown[]) => c[0] === 'ai_square_refresh')
+    expect(refreshCall?.[1]).toContain('mock-refresh-token-30d')
+    // ai_square_session and isLoggedIn should use 30d maxAge
+    const sessionCall = mockCookies.set.mock.calls.find((c: unknown[]) => c[0] === 'ai_square_session')
+    expect((sessionCall?.[2] as { maxAge?: number })?.maxAge).toBe(30 * 24 * 60 * 60)
+    const isLoggedInCall = mockCookies.set.mock.calls.find((c: unknown[]) => c[0] === 'isLoggedIn')
+    expect((isLoggedInCall?.[2] as { maxAge?: number })?.maxAge).toBe(30 * 24 * 60 * 60)
+  })
+
+  it('should treat email case-insensitively and lowercase before query', async () => {
+    mockGetUserWithPassword.mockResolvedValue({
+      id: '1', email: 'student@example.com', name: 'Student User', passwordHash: 'hash', role: 'student',
+      emailVerified: true, onboardingCompleted: false, preferredLanguage: 'en', metadata: {}
+    })
+    ;(bcrypt.compare as jest.Mock).mockResolvedValue(true)
+    const req = new MockNextRequest('http://localhost:3000/api/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ email: 'Student@Example.com', password: 'student123' })
+    })
+    const res = await POST(req as unknown as NextRequest)
+    expect(res.status).toBe(200)
+    // ensure second argument (email) is lowercased when calling getUserWithPassword
+    expect(mockGetUserWithPassword.mock.calls[0]?.[1]).toBe('student@example.com')
+  })
+
+  it('should return 500 if legacy path fails during user creation/update', async () => {
+    mockGetUserWithPassword.mockResolvedValue(null)
+    const { updateUserPasswordHash: mockUpdateHash } = require('../../../../lib/auth/password-utils') as { updateUserPasswordHash: jest.Mock }
+    mockUpdateHash.mockRejectedValue(new Error('hash-fail'))
+    const req = new MockNextRequest('http://localhost:3000/api/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ email: 'student@example.com', password: 'student123' })
+    })
+    const res = await POST(req as unknown as NextRequest)
+    const data = await res.json()
+    expect(res.status).toBe(500)
+    expect(data.success).toBe(false)
+  })
+
   it('should return 401 if account has no password hash configured', async () => {
     mockGetUserWithPassword.mockResolvedValue({
       id: '1',
