@@ -237,4 +237,125 @@ describe('/api/auth/login', () => {
     expect(data.success).toBe(false)
     expect(data.error.toLowerCase()).toContain('required')
   })
+
+  it('should login via legacy MOCK_USERS fallback when DB has no user', async () => {
+    // DB lookup returns null to trigger MOCK_USERS path
+    mockGetUserWithPassword.mockResolvedValue(null)
+    // Provide legacy mock user credentials
+    const request = new MockNextRequest('http://localhost:3000/api/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({
+        email: 'student@example.com',
+        password: 'student123',
+        rememberMe: false,
+      }),
+    })
+
+    const response = await POST(request as unknown as NextRequest)
+    const data = await response.json()
+
+    expect(response.status).toBe(200)
+    expect(data.success).toBe(true)
+    expect(data.user.email).toBe('student@example.com')
+    // cookies set for legacy path
+    expect(mockCookies.set).toHaveBeenCalledWith('ai_square_session', expect.any(String), expect.any(Object))
+    expect(mockCookies.set).toHaveBeenCalledWith('isLoggedIn', 'true', expect.any(Object))
+    expect(mockCookies.set).toHaveBeenCalledWith('user', expect.any(String), expect.any(Object))
+    expect(mockCookies.set).toHaveBeenCalledWith('ai_square_refresh', expect.any(String), expect.any(Object))
+  })
+
+  it('should return 401 if account has no password hash configured', async () => {
+    mockGetUserWithPassword.mockResolvedValue({
+      id: '1',
+      email: 'user@example.com',
+      name: 'User',
+      passwordHash: null,
+      role: 'student',
+      emailVerified: true,
+      onboardingCompleted: false,
+      preferredLanguage: 'en',
+      metadata: {},
+    })
+    const request = new MockNextRequest('http://localhost:3000/api/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ email: 'user@example.com', password: 'x' }),
+    })
+    const response = await POST(request as unknown as NextRequest)
+    const data = await response.json()
+    expect(response.status).toBe(401)
+    expect(data.success).toBe(false)
+    expect((data.error as string).toLowerCase()).toContain('account')
+  })
+
+  it('should return 401 when password is invalid for existing user', async () => {
+    mockGetUserWithPassword.mockResolvedValue({
+      id: '1', email: 'user@example.com', name: 'User', passwordHash: 'hash', role: 'student',
+      emailVerified: true, onboardingCompleted: false, preferredLanguage: 'en', metadata: {}
+    })
+    mockBcryptCompare.mockResolvedValue(false)
+    const request = new MockNextRequest('http://localhost:3000/api/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ email: 'user@example.com', password: 'wrong' }),
+    })
+    const response = await POST(request as unknown as NextRequest)
+    const data = await response.json()
+    expect(response.status).toBe(401)
+    expect(data.success).toBe(false)
+    expect((data.error as string).toLowerCase()).toContain('invalid')
+  })
+
+  it('should validate email format and return 400', async () => {
+    const request = new MockNextRequest('http://localhost:3000/api/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ email: 'not-an-email', password: 'x' }),
+    })
+    const response = await POST(request as unknown as NextRequest)
+    const data = await response.json()
+    expect(response.status).toBe(400)
+    expect(data.success).toBe(false)
+    expect((data.error as string).toLowerCase()).toContain('invalid email')
+  })
+
+  it('should return 500 on unexpected error', async () => {
+    mockGetUserWithPassword.mockRejectedValue(new Error('boom'))
+    const request = new MockNextRequest('http://localhost:3000/api/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ email: 'user@example.com', password: 'x' }),
+    })
+    const response = await POST(request as unknown as NextRequest)
+    const data = await response.json()
+    expect(response.status).toBe(500)
+    expect(data.success).toBe(false)
+  })
+})
+
+// OPTIONS route CORS support
+describe('/api/auth/login OPTIONS', () => {
+  it('should return 200 with CORS headers', async () => {
+    jest.resetModules()
+    jest.doMock('../../../../lib/auth/jwt', () => ({
+      createAccessToken: jest.fn(),
+      createRefreshToken: jest.fn(),
+    }))
+    jest.doMock('../../../../lib/auth/session-simple', () => ({
+      createSessionToken: jest.fn(),
+    }))
+    // Provide a minimal NextResponse constructor for OPTIONS
+    jest.doMock('next/server', () => ({
+      NextResponse: class {
+        status: number
+        headers: Record<string, string>
+        constructor(_: unknown, init?: { status?: number; headers?: Record<string, string> }) {
+          this.status = init?.status ?? 200
+          this.headers = init?.headers ?? {}
+        }
+        static json() {
+          return { status: 200 }
+        }
+      },
+    }))
+    const { OPTIONS } = require('../login/route')
+    const res = await OPTIONS()
+    expect(res.status).toBe(200)
+  })
 })
