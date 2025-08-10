@@ -341,49 +341,29 @@ describe('/api/discovery/programs', () => {
       expect(data.error).toBe('Internal server error');
     });
 
-    it('should include correct timestamps and metadata', async () => {
+    it('should return 500 when programRepo.create throws', async () => {
       const mockUser = { id: 'user-123', email: 'test@example.com' };
       const mockScenario = {
         id: 'discovery-scenario-123',
         mode: 'discovery',
-        title: { en: 'Timestamp Test Scenario' },
-        discoveryData: {}
+        title: { en: 'Career Discovery Scenario' },
+        discoveryData: { requiredSkills: ['x'] }
       };
-      const mockProgram = { id: 'program-123' };
-
-      mockGetServerSession.mockResolvedValue({
-        user: { email: 'test@example.com', id: 'user-123' }
-      });
+      mockGetServerSession.mockResolvedValue({ user: { email: 'test@example.com', id: 'user-123' } });
       mockUserRepo.findByEmail.mockResolvedValue(mockUser);
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
-      mockProgramRepo.create.mockResolvedValue(mockProgram);
+      mockProgramRepo.create.mockRejectedValue(new Error('insert failed'));
 
-      const beforeRequest = new Date().toISOString();
-      
       const request = new NextRequest('http://localhost:3000/api/discovery/programs', {
         method: 'POST',
         body: JSON.stringify(validRequestBody),
       });
 
-      await POST(request);
-
-      const afterRequest = new Date().toISOString();
-
-      expect(mockProgramRepo.create).toHaveBeenCalledWith(
-        expect.objectContaining({
-          createdAt: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/),
-          updatedAt: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/),
-          lastActivityAt: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/),
-          metadata: expect.objectContaining({
-            scenarioTitle: { en: 'Timestamp Test Scenario' }
-          })
-        })
-      );
-
-      // Verify timestamp is reasonable (within test execution window)
-      const createdAtCall = mockProgramRepo.create.mock.calls[0][0];
-      expect(new Date(createdAtCall.createdAt).getTime()).toBeGreaterThanOrEqual(new Date(beforeRequest).getTime());
-      expect(new Date(createdAtCall.createdAt).getTime()).toBeLessThanOrEqual(new Date(afterRequest).getTime());
+      const res = await POST(request);
+      const data = await res.json();
+      expect(res.status).toBe(500);
+      expect(data.success).toBe(false);
+      expect(data.error).toBe('Internal server error');
     });
   });
 

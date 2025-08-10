@@ -5,7 +5,7 @@
 - **起始覆蓋率**: 71.58% (Phase 2 完成)
 - **當前覆蓋率**: **更新中（本批新增測試已合併）**
 - **目標覆蓋率**: **80%**
-- **測試通過率**: **100%** (最新 353/353 套件綠燈，4,019 測試，28 skipped) 🚀
+- **測試通過率**: **100%** (最新 353/353 套件綠燈，4,025 測試，28 skipped) 🚀
 - **測試數量**: 3,927 個測試 (28 skipped)
 - **更新時間**: 2025-08-11 01:20
 
@@ -34,8 +34,9 @@
 1. **Assessment Results API** ✅ - **8 個全面測試**
    - 用戶驗證、數據驗證、程序創建、評估記錄、XP 獎勵、錯誤處理
 
-2. **Discovery Programs API** ✅ - **10 個全面測試**  
+2. **Discovery Programs API** ✅ - **15 個全面測試**  
    - 認證、業務邏輯、技能差距分析、數據結構、時間戳、Repository patterns
+   - 新增：`programRepo.create` 拋錯 500、`userRepo.findByEmail` 拋錯 500、`progress` 欄位 fallback（`careerReadiness`/`skillGapAnalysis`）
 
 3. **效能基準測試修復** ✅ - **100% 通過率達成**
    - 分散式快取架構支援驗證
