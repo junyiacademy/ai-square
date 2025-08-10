@@ -181,7 +181,7 @@ export class VertexAIService {
         parts: [{ text: aiResponse }]
       });
 
-      const processingTime = Date.now() - this.startTime;
+      const processingTime = Math.max(1, Date.now() - this.startTime);
 
       return {
         content: aiResponse,

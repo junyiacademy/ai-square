@@ -30,7 +30,7 @@ describe('PostgreSQLTaskRepository', () => {
     timestamp: '2024-01-01T12:00:00.000Z',
     type: 'user_input',
     content: 'Hello AI mentor',
-    metadata: { source: 'chat' }
+    metadata: { source: 'chat' } as Record<string, unknown>
   };
 
   const mockDBTask: DBTask = {
@@ -39,15 +39,15 @@ describe('PostgreSQLTaskRepository', () => {
     mode: 'pbl',
     task_index: 1,
     scenario_task_index: 2,
-    title: { en: 'Problem Analysis', zh: '問題分析' },
-    description: { en: 'Analyze the given problem', zh: '分析給定的問題' },
+    title: 'Problem Analysis',
+    description: 'Analyze the given problem',
     type: 'analysis',
     status: 'active',
     content: { 
       instructions: 'Read the case study and identify key issues',
       materials: ['case-study.pdf']
     },
-    interactions: [mockInteraction],
+    interactions: [mockInteraction as unknown as Record<string, unknown>],
     interaction_count: 1,
     user_response: { 
       analysis: 'The main issue is ethical conflict',
@@ -82,8 +82,8 @@ describe('PostgreSQLTaskRepository', () => {
     mode: 'pbl',
     taskIndex: 1,
     scenarioTaskIndex: 2,
-    title: { en: 'Problem Analysis', zh: '問題分析' },
-    description: { en: 'Analyze the given problem', zh: '分析給定的問題' },
+    title: { en: 'Problem Analysis' },
+    description: { en: 'Analyze the given problem' },
     type: 'analysis',
     status: 'active',
     content: { 

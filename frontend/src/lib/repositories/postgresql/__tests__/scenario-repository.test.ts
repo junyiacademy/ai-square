@@ -92,9 +92,9 @@ describe('PostgreSQLScenarioRepository', () => {
     taskTemplates: [
       {
         id: 'task-template-1',
-        title: 'First Task',
+        title: 'First Task' as unknown as Record<string, string>,
         type: 'chat',
-        description: 'Chat with AI mentor'
+        description: 'Chat with AI mentor' as unknown as Record<string, string>
       }
     ],
     taskCount: 3,
@@ -324,7 +324,9 @@ describe('PostgreSQLScenarioRepository', () => {
         resources: [],
         createdAt: '2024-01-01T00:00:00.000Z',
         updatedAt: '2024-01-01T00:00:00.000Z',
-        metadata: {}
+        metadata: {},
+        status: 'draft',
+        version: '1.0.0'
       };
 
       (mockPool.query as jest.Mock).mockResolvedValue({
@@ -369,7 +371,9 @@ describe('PostgreSQLScenarioRepository', () => {
         resources: [],
         createdAt: '2024-01-01T00:00:00.000Z',
         updatedAt: '2024-01-01T00:00:00.000Z',
-        metadata: {}
+        metadata: {},
+        status: 'draft',
+        version: '1.0.0'
       };
 
       (mockPool.query as jest.Mock).mockRejectedValue(new Error('Insert failed'));

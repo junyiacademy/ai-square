@@ -567,7 +567,7 @@ describe('PostgreSQLUserRepository', () => {
         techScore: 85,
         creativeScore: 90,
         businessScore: 80,
-        answers: { q1: 'answer1', q2: 'answer2' },
+        answers: { q1: ['answer1'], q2: ['answer2'] },
         generatedPaths: ['path1', 'path2']
       };
 
@@ -657,7 +657,7 @@ describe('PostgreSQLUserRepository', () => {
         name: 'First Steps',
         description: 'Completed first learning module',
         imageUrl: '/badges/first-steps.png',
-        category: 'progress',
+        category: 'learning' as const,
         xpReward: 25
       };
 
@@ -690,7 +690,7 @@ describe('PostgreSQLUserRepository', () => {
           'First Steps',
           'Completed first learning module',
           '/badges/first-steps.png',
-          'progress',
+          'learning',
           25
         ]
       );
@@ -706,7 +706,7 @@ describe('PostgreSQLUserRepository', () => {
         name: 'Updated Badge',
         description: 'Updated description',
         imageUrl: '/badges/updated.png',
-        category: 'achievement',
+        category: 'mastery' as const,
         xpReward: 50
       };
 
@@ -964,7 +964,7 @@ describe('PostgreSQLUserRepository', () => {
         name: "O'Connor-Smith (Jr.)",
         preferredLanguage: 'zh-TW',
         learningPreferences: {
-          specialChars: "Quote: \"Hello\", Backslash: \\, Unicode: 你好"
+          learningStyle: "visual"
         }
       };
 
