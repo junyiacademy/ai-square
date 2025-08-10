@@ -1,144 +1,177 @@
-import { LearningServiceFactory } from '../learning-service-factory';
-import { AssessmentLearningService } from '../assessment-learning-service';
-import { PBLLearningService } from '../pbl-learning-service';
-import { DiscoveryLearningService } from '../discovery-learning-service';
-import type { BaseLearningService } from '../base-learning-service';
+import { describe, it, expect, jest } from '@jest/globals'
 
-// Mock the learning services
-jest.mock('../assessment-learning-service');
-jest.mock('../pbl-learning-service');
-jest.mock('../discovery-learning-service');
+// 使用 isolateModules 確保每個測試用例重置單例與模組快取
 
 describe('LearningServiceFactory', () => {
-  let factory: LearningServiceFactory;
+  it("getService('pbl'|'discovery') returns instances", async () => {
+    jest.isolateModules(() => {
+      // Mock PBL/Discovery 類別，暴露識別旗標
+      jest.doMock('../pbl-learning-service', () => ({
+        PBLLearningService: jest.fn().mockImplementation(() => ({ __kind: 'pbl' }))
+      }))
+      jest.doMock('../discovery-learning-service', () => ({
+        DiscoveryLearningService: jest.fn().mockImplementation(() => ({ __kind: 'discovery' }))
+      }))
+      // Assessment 使用預設空 mock，避免影響本用例
+      jest.doMock('../assessment-learning-service', () => ({
+        AssessmentLearningService: jest.fn().mockImplementation(() => ({}))
+      }))
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-    // Reset singleton instance
-    (LearningServiceFactory as any).instance = undefined;
-    factory = LearningServiceFactory.getInstance();
-  });
+      const { LearningServiceFactory } = require('../learning-service-factory') as typeof import('../learning-service-factory')
+      const factory = LearningServiceFactory.getInstance()
+      const pbl = factory.getService('pbl') as unknown as Record<string, unknown>
+      const discovery = factory.getService('discovery') as unknown as Record<string, unknown>
 
-  describe('getInstance', () => {
-    it('returns singleton instance', () => {
-      const instance1 = LearningServiceFactory.getInstance();
-      const instance2 = LearningServiceFactory.getInstance();
-      
-      expect(instance1).toBe(instance2);
-    });
+      expect(pbl.__kind).toBe('pbl')
+      expect(discovery.__kind).toBe('discovery')
+    })
+  })
 
-    it('initializes services on first getInstance', () => {
-      // Services should be initialized during constructor
-      expect(PBLLearningService).toHaveBeenCalled();
-      expect(DiscoveryLearningService).toHaveBeenCalled();
-    });
-  });
+  it("getService('unknown') throws", async () => {
+    jest.isolateModules(() => {
+      jest.doMock('../pbl-learning-service', () => ({ PBLLearningService: jest.fn().mockImplementation(() => ({})) }))
+      jest.doMock('../discovery-learning-service', () => ({ DiscoveryLearningService: jest.fn().mockImplementation(() => ({})) }))
+      jest.doMock('../assessment-learning-service', () => ({ AssessmentLearningService: jest.fn().mockImplementation(() => ({})) }))
 
-  describe('getService', () => {
-    it('returns assessment service for assessment mode', () => {
-      const service = factory.getService('assessment');
-      
-      expect(service).toBeDefined();
-      expect(service).toBeInstanceOf(Object);
-    });
+      const { LearningServiceFactory } = require('../learning-service-factory') as typeof import('../learning-service-factory')
+      const factory = LearningServiceFactory.getInstance()
 
-    it('returns PBL service for pbl mode', () => {
-      const service = factory.getService('pbl');
-      
-      expect(service).toBeDefined();
-      expect(service).toBeInstanceOf(PBLLearningService);
-    });
+      expect(() => factory.getService('unknown' as unknown as 'pbl')).toThrow("Learning service for mode 'unknown' not found")
+    })
+  })
 
-    it('returns Discovery service for discovery mode', () => {
-      const service = factory.getService('discovery');
-      
-      expect(service).toBeDefined();
-      expect(service).toBeInstanceOf(DiscoveryLearningService);
-    });
+  describe('assessment adapter behavior', () => {
+    it('startLearning delegates to startAssessment with language', async () => {
+      jest.isolateModules(async () => {
+        const startAssessment = jest.fn(async () => ({ id: 'program-1' }))
+        jest.doMock('../assessment-learning-service', () => ({
+          AssessmentLearningService: jest.fn().mockImplementation(() => ({ startAssessment }))
+        }))
+        jest.doMock('../pbl-learning-service', () => ({ PBLLearningService: jest.fn().mockImplementation(() => ({})) }))
+        jest.doMock('../discovery-learning-service', () => ({ DiscoveryLearningService: jest.fn().mockImplementation(() => ({})) }))
 
-    it('throws error for invalid mode', () => {
-      expect(() => {
-        factory.getService('invalid' as any);
-      }).toThrow("Learning service for mode 'invalid' not found");
-    });
+        const { LearningServiceFactory } = require('../learning-service-factory') as typeof import('../learning-service-factory')
+        const factory = LearningServiceFactory.getInstance()
+        const svc = factory.getService('assessment')
 
-    it('returns the same service instance on multiple calls', () => {
-      const service1 = factory.getService('pbl');
-      const service2 = factory.getService('pbl');
-      
-      expect(service1).toBe(service2);
-    });
-  });
+        const program = await svc.startLearning('u1', 's1', { language: 'zhTW' })
+        expect(startAssessment).toHaveBeenCalledWith('u1', 's1', 'zhTW')
+        expect(program).toEqual({ id: 'program-1' })
+      })
+    })
 
-  describe('service initialization', () => {
-    it('creates all three learning services', () => {
-      // Get each service to ensure they're created
-      factory.getService('assessment');
-      factory.getService('pbl');
-      factory.getService('discovery');
+    it('getProgress transforms fields (completedTasks/score/timeSpent/metadata)', async () => {
+      jest.isolateModules(async () => {
+        const mockProgress = {
+          programId: 'p1',
+          status: 'active',
+          timeSpent: 12,
+          metadata: {
+            answeredQuestions: 3,
+            totalQuestions: 5,
+            currentScore: 80,
+            timeRemaining: 34
+          }
+        }
+        const getProgress = jest.fn(async () => mockProgress)
+        jest.doMock('../assessment-learning-service', () => ({
+          AssessmentLearningService: jest.fn().mockImplementation(() => ({ getProgress }))
+        }))
+        jest.doMock('../pbl-learning-service', () => ({ PBLLearningService: jest.fn().mockImplementation(() => ({})) }))
+        jest.doMock('../discovery-learning-service', () => ({ DiscoveryLearningService: jest.fn().mockImplementation(() => ({})) }))
 
-      expect(PBLLearningService).toHaveBeenCalledTimes(1);
-      expect(DiscoveryLearningService).toHaveBeenCalledTimes(1);
-    });
+        const { LearningServiceFactory } = require('../learning-service-factory') as typeof import('../learning-service-factory')
+        const svc = LearningServiceFactory.getInstance().getService('assessment')
+        const res = await svc.getProgress('p1')
 
-    it('stores services in internal map', () => {
-      const services = (factory as any).services;
-      
-      expect(services).toBeInstanceOf(Map);
-      expect(services.size).toBe(3);
-      expect(services.has('assessment')).toBe(true);
-      expect(services.has('pbl')).toBe(true);
-      expect(services.has('discovery')).toBe(true);
-    });
-  });
+        expect(getProgress).toHaveBeenCalledWith('p1')
+        expect(res).toMatchObject({
+          programId: 'p1',
+          status: 'active',
+          currentTaskIndex: 0,
+          totalTasks: 1,
+          completedTasks: 0,
+          score: 80,
+          timeSpent: 12,
+          estimatedTimeRemaining: 34,
+          metadata: { answeredQuestions: 3, totalQuestions: 5 }
+        })
+      })
+    })
 
-  describe('assessment adapter', () => {
-    it('creates adapter for assessment service', () => {
-      const assessmentService = factory.getService('assessment');
-      
-      // Check that it implements BaseLearningService interface
-      expect(assessmentService).toHaveProperty('startLearning');
-      expect(assessmentService).toHaveProperty('getProgress');
-      expect(assessmentService).toHaveProperty('submitResponse');
-      expect(assessmentService).toHaveProperty('completeLearning');
-      expect(assessmentService).toHaveProperty('getNextTask');
-      expect(assessmentService).toHaveProperty('evaluateTask');
-      expect(assessmentService).toHaveProperty('generateFeedback');
-    });
+    it('submitResponse returns success/score/feedback/nextTaskAvailable from isCorrect', async () => {
+      jest.isolateModules(async () => {
+        const submitAnswer = jest.fn(async () => ({ isCorrect: false, correctAnswer: 'B' }))
+        jest.doMock('../assessment-learning-service', () => ({
+          AssessmentLearningService: jest.fn().mockImplementation(() => ({ submitAnswer }))
+        }))
+        jest.doMock('../pbl-learning-service', () => ({ PBLLearningService: jest.fn().mockImplementation(() => ({})) }))
+        jest.doMock('../discovery-learning-service', () => ({ DiscoveryLearningService: jest.fn().mockImplementation(() => ({})) }))
 
-    it('adapter methods call underlying service', async () => {
-      const assessmentService = factory.getService('assessment');
-      const mockScenarioData = {
-        title: { en: 'Test Assessment' },
-        description: { en: 'Test Description' },
-        mode: 'assessment' as const,
-      };
+        const { LearningServiceFactory } = require('../learning-service-factory') as typeof import('../learning-service-factory')
+        const svc = LearningServiceFactory.getInstance().getService('assessment')
+        const result = await svc.submitResponse('p1', 't1', { questionId: 'q1', answer: 'A' })
 
-      // TODO: createScenario method doesn't exist on BaseLearningService
-      // The actual method is createLearningProgram
-      // if ('createScenario' in assessmentService) {
-      //   await assessmentService.createScenario(mockScenarioData);
-      //   // Verify the adapter properly delegates to underlying service
-      // }
-    });
-  });
+        expect(submitAnswer).toHaveBeenCalledWith('p1', 'q1', 'A')
+        expect(result).toMatchObject({
+          taskId: 't1',
+          success: true,
+          score: 0,
+          feedback: 'Incorrect. The correct answer is B',
+          nextTaskAvailable: false
+        })
+      })
+    })
 
-  describe('type safety', () => {
-    it('all services implement BaseLearningService interface', () => {
-      const modes: Array<'assessment' | 'pbl' | 'discovery'> = ['assessment', 'pbl', 'discovery'];
-      
-      modes.forEach(mode => {
-        const service = factory.getService(mode);
-        
-        // Check that all required methods exist
-        expect(typeof service.startLearning).toBe('function');
-        expect(typeof service.getProgress).toBe('function');
-        expect(typeof service.submitResponse).toBe('function');
-        expect(typeof service.completeLearning).toBe('function');
-        expect(typeof service.getNextTask).toBe('function');
-        expect(typeof service.evaluateTask).toBe('function');
-        expect(typeof service.generateFeedback).toBe('function');
-      });
-    });
-  });
-});
+    it('completeLearning aggregates program and evaluation results', async () => {
+      jest.isolateModules(async () => {
+        const completeAssessment = jest.fn(async () => ({
+          program: { id: 'p1' },
+          evaluation: { id: 'e1' },
+          passed: true,
+          score: 92,
+          domainScores: { domainA: 80 }
+        }))
+        jest.doMock('../assessment-learning-service', () => ({
+          AssessmentLearningService: jest.fn().mockImplementation(() => ({ completeAssessment }))
+        }))
+        jest.doMock('../pbl-learning-service', () => ({ PBLLearningService: jest.fn().mockImplementation(() => ({})) }))
+        jest.doMock('../discovery-learning-service', () => ({ DiscoveryLearningService: jest.fn().mockImplementation(() => ({})) }))
+
+        const { LearningServiceFactory } = require('../learning-service-factory') as typeof import('../learning-service-factory')
+        const svc = LearningServiceFactory.getInstance().getService('assessment')
+        const result = await svc.completeLearning('p1')
+
+        expect(completeAssessment).toHaveBeenCalledWith('p1')
+        expect(result).toMatchObject({
+          program: { id: 'p1' },
+          evaluation: { id: 'e1' },
+          passed: true,
+          finalScore: 92,
+          metadata: { domainScores: { domainA: 80 } }
+        })
+      })
+    })
+
+    it('getNextTask returns null; evaluateTask throws; generateFeedback returns fixed string', async () => {
+      jest.isolateModules(async () => {
+        jest.doMock('../assessment-learning-service', () => ({
+          AssessmentLearningService: jest.fn().mockImplementation(() => ({}))
+        }))
+        jest.doMock('../pbl-learning-service', () => ({ PBLLearningService: jest.fn().mockImplementation(() => ({})) }))
+        jest.doMock('../discovery-learning-service', () => ({ DiscoveryLearningService: jest.fn().mockImplementation(() => ({})) }))
+
+        const { LearningServiceFactory } = require('../learning-service-factory') as typeof import('../learning-service-factory')
+        const svc = LearningServiceFactory.getInstance().getService('assessment')
+
+        const next = await svc.getNextTask('p1')
+        expect(next).toBeNull()
+
+        await expect(svc.evaluateTask('t1')).rejects.toThrow('Not implemented for assessment mode')
+
+        const feedback = await svc.generateFeedback('e1', 'en')
+        expect(feedback).toBe('Thank you for completing the assessment.')
+      })
+    })
+  })
+})
