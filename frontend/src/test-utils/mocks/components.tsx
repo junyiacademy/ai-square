@@ -161,10 +161,41 @@ export const setupFramerMotionMocks = () => {
   }));
 };
 
-export const setupHeroIconsMocks = () => {
-  jest.mock('@heroicons/react/24/outline', () => heroIconsOutlineMock);
-  jest.mock('@heroicons/react/24/solid', () => heroIconsSolidMock);
-  jest.mock('@heroicons/react/20/solid', () => heroIconsSolidMock);
+export const setupLucideIconsMocks = () => {
+  jest.mock('lucide-react', () => ({
+    // Common icons used in Discovery components
+    Trophy: ({ className }: { className?: string }) => (
+      <svg className={className} data-testid="trophy-icon"><path /></svg>
+    ),
+    Sparkles: ({ className }: { className?: string }) => (
+      <svg className={className} data-testid="sparkles-icon"><path /></svg>
+    ),
+    Cpu: ({ className }: { className?: string }) => (
+      <svg className={className} data-testid="cpu-icon"><path /></svg>
+    ),
+    GraduationCap: ({ className }: { className?: string }) => (
+      <svg className={className} data-testid="graduation-cap-icon"><path /></svg>
+    ),
+    Globe: ({ className }: { className?: string }) => (
+      <svg className={className} data-testid="globe-icon"><path /></svg>
+    ),
+    BarChart: ({ className }: { className?: string }) => (
+      <svg className={className} data-testid="bar-chart-icon"><path /></svg>
+    ),
+    Rocket: ({ className }: { className?: string }) => (
+      <svg className={className} data-testid="rocket-icon"><path /></svg>
+    ),
+    Star: ({ className }: { className?: string }) => (
+      <svg className={className} data-testid="star-icon"><path /></svg>
+    ),
+    // Add more as needed
+    ChevronLeft: ({ className }: { className?: string }) => (
+      <svg className={className} data-testid="chevron-left-icon"><path /></svg>
+    ),
+    ChevronRight: ({ className }: { className?: string }) => (
+      <svg className={className} data-testid="chevron-right-icon"><path /></svg>
+    ),
+  }));
 };
 
 export const setupNextMocks = () => {

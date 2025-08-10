@@ -68,20 +68,20 @@ jest.mock('@/lib/services/user-data-service', () => ({
   },
 }));
 
-// Mock Heroicons
-jest.mock('@heroicons/react/24/outline', () => ({
-  AcademicCapIcon: ({ className }: { className?: string }) => (
-    <svg className={className} data-testid="academic-cap-icon">
+// Mock Lucide React
+jest.mock('lucide-react', () => ({
+  GraduationCap: ({ className }: { className?: string }) => (
+    <svg className={className} data-testid="graduation-cap-icon">
       <path />
     </svg>
   ),
-  GlobeAltIcon: ({ className }: { className?: string }) => (
-    <svg className={className} data-testid="globe-alt-icon">
+  Globe: ({ className }: { className?: string }) => (
+    <svg className={className} data-testid="globe-icon">
       <path />
     </svg>
   ),
-  ChartBarIcon: ({ className }: { className?: string }) => (
-    <svg className={className} data-testid="chart-bar-icon">
+  BarChart: ({ className }: { className?: string }) => (
+    <svg className={className} data-testid="bar-chart-icon">
       <path />
     </svg>
   ),
@@ -178,7 +178,7 @@ describe('DiscoveryNavigation', () => {
     });
 
     // Just check that the navigation is rendered
-    expect(screen.getByTestId('academic-cap-icon')).toBeInTheDocument();
+    expect(screen.getByTestId('graduation-cap-icon')).toBeInTheDocument();
   });
 
   it('should update scroll progress correctly', async () => {
@@ -202,7 +202,7 @@ describe('DiscoveryNavigation', () => {
     renderWithProviders(<DiscoveryNavigation />);
 
     // The scenarios button should be active
-    const scenariosIcon = screen.getByTestId('globe-alt-icon');
+    const scenariosIcon = screen.getByTestId('globe-icon');
     const activeButton = scenariosIcon.closest('button');
     expect(activeButton).toHaveClass('scale-110');
   });
@@ -217,7 +217,7 @@ describe('DiscoveryNavigation', () => {
     });
 
     await waitFor(() => {
-      const evaluationButton = screen.getByTestId('chart-bar-icon').closest('button');
+      const evaluationButton = screen.getByTestId('bar-chart-icon').closest('button');
       fireEvent.click(evaluationButton!);
     });
 
@@ -273,7 +273,7 @@ describe('DiscoveryNavigation', () => {
     });
 
     // Check that enabled buttons are clickable
-    const overviewButton = screen.getByTestId('academic-cap-icon').closest('button');
+    const overviewButton = screen.getByTestId('graduation-cap-icon').closest('button');
     expect(overviewButton).not.toBeDisabled();
   });
 
@@ -287,7 +287,7 @@ describe('DiscoveryNavigation', () => {
     });
 
     // Just check that the navigation is rendered
-    expect(screen.getByTestId('academic-cap-icon')).toBeInTheDocument();
+    expect(screen.getByTestId('graduation-cap-icon')).toBeInTheDocument();
   });
 
   it('should clean up scroll event listener on unmount', async () => {
@@ -305,7 +305,7 @@ describe('DiscoveryNavigation', () => {
     renderWithProviders(<DiscoveryNavigation />);
 
     // The scenarios button should still be active for nested routes
-    const scenariosIcon = screen.getByTestId('globe-alt-icon');
+    const scenariosIcon = screen.getByTestId('globe-icon');
     const activeButton = scenariosIcon.closest('button');
     expect(activeButton).toHaveClass('scale-110');
   });
@@ -358,9 +358,9 @@ describe('DiscoveryNavigation', () => {
     renderWithProviders(<DiscoveryNavigation />);
 
     // Should have 3 navigation items
-    expect(screen.getByTestId('academic-cap-icon')).toBeInTheDocument(); // Overview
-    expect(screen.getByTestId('chart-bar-icon')).toBeInTheDocument(); // Evaluation  
-    expect(screen.getByTestId('globe-alt-icon')).toBeInTheDocument(); // Scenarios
+    expect(screen.getByTestId('graduation-cap-icon')).toBeInTheDocument(); // Overview
+    expect(screen.getByTestId('bar-chart-icon')).toBeInTheDocument(); // Evaluation  
+    expect(screen.getByTestId('globe-icon')).toBeInTheDocument(); // Scenarios
   });
 
   it('should handle missing user data gracefully', async () => {

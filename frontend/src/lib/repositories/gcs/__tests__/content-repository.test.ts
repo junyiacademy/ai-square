@@ -179,7 +179,7 @@ describe('GCSContentRepository', () => {
 
       expect(repository.getYamlContent).toHaveBeenCalledWith('scenarios/test-scenario/content_zh.yaml');
       expect(result.title).toBe('測試情境');
-      expect(result.transformed).toBe(true);
+      expect(result.type).toBe('pbl');
     });
 
     it('should fallback to default language when specific language not found', async () => {

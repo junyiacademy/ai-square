@@ -6,7 +6,7 @@ import {
   getBadgeByCategory,
   getByTextWithContext,
   setupFramerMotionMocks,
-  setupHeroIconsMocks,
+  setupLucideIconsMocks,
   mockUseTranslation
 } from '@/test-utils';
 import AchievementsView from '../AchievementsView';
@@ -14,7 +14,7 @@ import type { UserAchievements } from '@/lib/services/user-data-service';
 
 // Setup common mocks
 setupFramerMotionMocks();
-setupHeroIconsMocks();
+setupLucideIconsMocks();
 
 // Mock react-i18next
 jest.mock('react-i18next', () => ({

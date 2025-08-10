@@ -28,30 +28,27 @@ jest.mock('react-i18next', () => ({
   useTranslation: jest.fn(),
 }));
 
-// Mock Heroicons
-jest.mock('@heroicons/react/24/outline', () => ({
-  SparklesIcon: ({ className }: { className?: string }) => (
+// Mock Lucide React
+jest.mock('lucide-react', () => ({
+  Sparkles: ({ className }: { className?: string }) => (
     <svg className={className} data-testid="sparkles-icon"><path /></svg>
   ),
-  BoltIcon: ({ className }: { className?: string }) => (
-    <svg className={className} data-testid="bolt-icon"><path /></svg>
+  Zap: ({ className }: { className?: string }) => (
+    <svg className={className} data-testid="zap-icon"><path /></svg>
   ),
-  CpuChipIcon: ({ className }: { className?: string }) => (
-    <svg className={className} data-testid="cpu-chip-icon"><path /></svg>
+  Cpu: ({ className }: { className?: string }) => (
+    <svg className={className} data-testid="cpu-icon"><path /></svg>
   ),
-  RocketLaunchIcon: ({ className }: { className?: string }) => (
-    <svg className={className} data-testid="rocket-launch-icon"><path /></svg>
+  Rocket: ({ className }: { className?: string }) => (
+    <svg className={className} data-testid="rocket-icon"><path /></svg>
   ),
-  CircleStackIcon: ({ className }: { className?: string }) => (
-    <svg className={className} data-testid="circle-stack-icon"><path /></svg>
+  Database: ({ className }: { className?: string }) => (
+    <svg className={className} data-testid="database-icon"><path /></svg>
   ),
-}));
-
-jest.mock('@heroicons/react/24/solid', () => ({
-  FireIcon: ({ className }: { className?: string }) => (
-    <svg className={className} data-testid="fire-icon"><path /></svg>
+  Flame: ({ className }: { className?: string }) => (
+    <svg className={className} data-testid="flame-icon"><path /></svg>
   ),
-  StarIcon: ({ className }: { className?: string }) => (
+  Star: ({ className }: { className?: string }) => (
     <svg className={className} data-testid="star-icon"><path /></svg>
   ),
 }));
@@ -148,11 +145,11 @@ describe('WelcomeScreen', () => {
     renderWithProviders(<WelcomeScreen onStartJourney={mockOnStartJourney} />);
 
     expect(screen.getByTestId('sparkles-icon')).toBeInTheDocument();
-    expect(screen.getAllByTestId('rocket-launch-icon')).toHaveLength(2); // Multiple rocket icons
-    expect(screen.getByTestId('cpu-chip-icon')).toBeInTheDocument();
-    expect(screen.getByTestId('bolt-icon')).toBeInTheDocument();
-    expect(screen.getByTestId('circle-stack-icon')).toBeInTheDocument();
-    expect(screen.getByTestId('fire-icon')).toBeInTheDocument();
+    expect(screen.getAllByTestId('rocket-icon')).toHaveLength(2); // Multiple rocket icons
+    expect(screen.getByTestId('cpu-icon')).toBeInTheDocument();
+    expect(screen.getByTestId('zap-icon')).toBeInTheDocument();
+    expect(screen.getByTestId('database-icon')).toBeInTheDocument();
+    expect(screen.getByTestId('flame-icon')).toBeInTheDocument();
     expect(screen.getAllByTestId('star-icon')).toHaveLength(2);
   });
 
