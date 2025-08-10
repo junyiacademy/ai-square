@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'
+import { CheckCircle } from 'lucide-react';;
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/navigation';
-import { CheckCircleIcon } from '@heroicons/react/24/outline';
+;
 import dynamic from 'next/dynamic';
 import DiscoveryNavigation from '@/components/layout/DiscoveryNavigation';
 
@@ -107,7 +108,7 @@ export default function EvaluationPage() {
         {assessmentResults ? (
           <div className="bg-white rounded-2xl shadow-lg p-8">
             <div className="text-center mb-8">
-              <CheckCircleIcon className="w-16 h-16 text-green-500 mx-auto mb-4" />
+              <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
               <h2 className="text-2xl font-bold text-gray-900 mb-2">
                 {t('discovery:evaluation.completedTitle')}
               </h2>

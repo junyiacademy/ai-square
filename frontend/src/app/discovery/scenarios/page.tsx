@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'
+import { BarChart, Sparkles, Rocket, Cpu, Lightbulb, Paintbrush, Video, Code, Box, Briefcase, Megaphone, Users } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import DiscoveryPageLayout from '@/components/discovery/DiscoveryPageLayout';
@@ -8,39 +9,26 @@ import ScenarioCard from '@/components/discovery/ScenarioCard';
 import { useUserData } from '@/hooks/useUserData';
 import { useAuth } from '@/contexts/AuthContext';
 import { normalizeLanguageCode } from '@/lib/utils/language';
-import { 
-  BriefcaseIcon,
-  CodeBracketIcon,
-  PaintBrushIcon,
-  ChartBarIcon,
-  SparklesIcon,
-  RocketLaunchIcon,
-  CpuChipIcon,
-  VideoCameraIcon,
-  MegaphoneIcon,
-  CubeIcon,
-  LightBulbIcon,
-  UserGroupIcon
-} from '@heroicons/react/24/outline';
+;
 
 // Icon mapping for career types
 const careerIcons: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> = {
-  content_creator: PaintBrushIcon,
-  youtuber: VideoCameraIcon,
-  app_developer: CodeBracketIcon,
-  game_designer: CubeIcon,
-  tech_entrepreneur: RocketLaunchIcon,
-  startup_founder: BriefcaseIcon,
-  data_analyst: ChartBarIcon,
-  ux_designer: SparklesIcon,
-  ai_engineer: CpuChipIcon,
-  ai_developer: CpuChipIcon,
-  digital_marketer: MegaphoneIcon,
-  social_media_manager: UserGroupIcon,
-  product_manager: UserGroupIcon,
-  biotech_researcher: LightBulbIcon,
-  cybersecurity_specialist: CodeBracketIcon,
-  environmental_scientist: ChartBarIcon
+  content_creator: Paintbrush,
+  youtuber: Video,
+  app_developer: Code,
+  game_designer: Box,
+  tech_entrepreneur: Rocket,
+  startup_founder: Briefcase,
+  data_analyst: BarChart,
+  ux_designer: Sparkles,
+  ai_engineer: Cpu,
+  ai_developer: Cpu,
+  digital_marketer: Megaphone,
+  social_media_manager: Users,
+  product_manager: Users,
+  biotech_researcher: Lightbulb,
+  cybersecurity_specialist: Code,
+  environmental_scientist: BarChart
 };
 
 // Color mapping for career types
@@ -65,11 +53,11 @@ const careerColors: Record<string, string> = {
 
 
 const categoryFilters = [
-  { id: 'all', name: '全部', icon: SparklesIcon },
-  { id: 'arts', name: '創意', icon: PaintBrushIcon },
-  { id: 'technology', name: '技術', icon: CodeBracketIcon },
-  { id: 'business', name: '商業', icon: BriefcaseIcon },
-  { id: 'science', name: '科學', icon: LightBulbIcon }
+  { id: 'all', name: '全部', icon: Sparkles },
+  { id: 'arts', name: '創意', icon: Paintbrush },
+  { id: 'technology', name: '技術', icon: Code },
+  { id: 'business', name: '商業', icon: Briefcase },
+  { id: 'science', name: '科學', icon: Lightbulb }
 ];
 
 export default function ScenariosPage() {
@@ -127,7 +115,7 @@ export default function ScenariosPage() {
               title: scenario.title as string, // API now returns localized string
               subtitle: scenario.description as string, // API now returns localized string
               category: (scenario.metadata as Record<string, unknown>)?.category as string || 'general',
-              icon: careerIcons[careerType] || SparklesIcon,
+              icon: careerIcons[careerType] || Sparkles,
               color: careerColors[careerType] || 'from-gray-500 to-gray-600',
               skills: (scenario.metadata as Record<string, unknown>)?.skillFocus as string[] || [],
               // Include user progress data from API
@@ -181,16 +169,16 @@ export default function ScenariosPage() {
                              'general';
             
             // Map icon string to actual icon component
-            const iconName = scenario.icon as string || 'SparklesIcon';
+            const iconName = scenario.icon as string || 'Sparkles';
             const iconMap: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> = {
-              'CodeBracketIcon': CodeBracketIcon,
-              'ChartBarIcon': ChartBarIcon,
-              'PaintBrushIcon': PaintBrushIcon,
-              'AcademicCapIcon': UserGroupIcon,
-              'ScaleIcon': UserGroupIcon,
-              'BeakerIcon': LightBulbIcon,
-              'SparklesIcon': SparklesIcon,
-              'VideoCameraIcon': VideoCameraIcon
+              'CodeBracketIcon': Code,
+              'BarChart': BarChart,
+              'PaintBrushIcon': Paintbrush,
+              'GraduationCap': Users,
+              'ScaleIcon': Users,
+              'TestTube': Lightbulb,
+              'Sparkles': Sparkles,
+              'VideoCameraIcon': Video
             };
             
             return {
@@ -199,7 +187,7 @@ export default function ScenariosPage() {
               title: scenario.title as string,
               subtitle: scenario.subtitle as string,
               category: scenario.category as string || 'general',
-              icon: iconMap[iconName] || careerIcons[careerType] || SparklesIcon,
+              icon: iconMap[iconName] || careerIcons[careerType] || Sparkles,
               color: careerColors[careerType] || 'from-gray-500 to-gray-600',
               skills: scenario.skills as string[] || [],
               // Include progress data for unified display
@@ -294,7 +282,7 @@ export default function ScenariosPage() {
               `}
             >
               <div className="flex items-center space-x-2">
-                <SparklesIcon className="w-4 h-4" />
+                <Sparkles className="w-4 h-4" />
                 <span>全部</span>
               </div>
             </button>
@@ -310,7 +298,7 @@ export default function ScenariosPage() {
                 `}
               >
                 <div className="flex items-center space-x-2">
-                  <RocketLaunchIcon className="w-4 h-4" />
+                  <Rocket className="w-4 h-4" />
                   <span>我的冒險</span>
                 </div>
               </button>
@@ -375,7 +363,7 @@ export default function ScenariosPage() {
           <div className="text-center py-16">
             {activeTab === 'my' ? (
               <div>
-                <SparklesIcon className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                <Sparkles className="w-16 h-16 text-gray-300 mx-auto mb-4" />
                 <p className="text-gray-500 mb-4">還沒有開始任何學習歷程</p>
                 <p className="text-sm text-gray-400 mb-6">選擇一個職業路徑，開始你的探索之旅</p>
                 <button

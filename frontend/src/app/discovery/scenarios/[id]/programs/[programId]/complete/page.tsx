@@ -1,10 +1,11 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react'
+import { CheckCircle, Star, Trophy, Lightbulb, BarChart, Clock, TestTube, MessageSquare, FileText, RefreshCw } from 'lucide-react';;
 import { useParams } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
-import { CheckCircleIcon, StarIcon, TrophyIcon, LightBulbIcon, ChartBarIcon } from '@heroicons/react/24/solid';
-import { ClockIcon, BeakerIcon, ChatBubbleBottomCenterTextIcon, DocumentTextIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
+;
+;
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 import DiscoveryPageLayout from '@/components/discovery/DiscoveryPageLayout';
@@ -255,15 +256,15 @@ export default function DiscoveryCompletePage() {
   const getTaskTypeIcon = (taskType: string) => {
     switch (taskType) {
       case 'question':
-        return <DocumentTextIcon className="h-5 w-5" />;
+        return <FileText className="h-5 w-5" />;
       case 'chat':
-        return <ChatBubbleBottomCenterTextIcon className="h-5 w-5" />;
+        return <MessageSquare className="h-5 w-5" />;
       case 'creation':
-        return <BeakerIcon className="h-5 w-5" />;
+        return <TestTube className="h-5 w-5" />;
       case 'analysis':
-        return <ChartBarIcon className="h-5 w-5" />;
+        return <BarChart className="h-5 w-5" />;
       default:
-        return <DocumentTextIcon className="h-5 w-5" />;
+        return <FileText className="h-5 w-5" />;
     }
   };
 
@@ -300,7 +301,7 @@ export default function DiscoveryCompletePage() {
       {/* Success Header */}
       <div className="text-center mb-8">
         <div className="flex justify-center mb-4">
-          <TrophyIcon className="h-20 w-20 text-yellow-500" />
+          <Trophy className="h-20 w-20 text-yellow-500" />
         </div>
         <h1 className="text-3xl font-bold mb-2">
           {t('discovery:complete.congratulations')}
@@ -335,7 +336,7 @@ export default function DiscoveryCompletePage() {
         
         <div className="bg-white rounded-lg shadow p-6 text-center">
           <div className="flex justify-center items-center text-gray-700 mb-2">
-            <ClockIcon className="h-6 w-6 mr-2" />
+            <Clock className="h-6 w-6 mr-2" />
             <span className="text-xl font-semibold">
               {completionData.daysUsed !== undefined && completionData.daysUsed !== null 
                 ? completionData.daysUsed === 0 ? 1 : completionData.daysUsed
@@ -350,7 +351,7 @@ export default function DiscoveryCompletePage() {
       {completionData.achievementsUnlocked && completionData.achievementsUnlocked.length > 0 && (
         <div className="bg-white rounded-lg shadow p-6 mb-8">
           <h2 className="text-xl font-semibold mb-4 flex items-center">
-            <StarIcon className="h-6 w-6 text-yellow-500 mr-2" />
+            <Star className="h-6 w-6 text-yellow-500 mr-2" />
             {t('discovery:complete.achievementsUnlocked')}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -358,7 +359,7 @@ export default function DiscoveryCompletePage() {
               <div key={achievement.id} className="border rounded-lg p-4 flex items-center">
                 <div className="flex-shrink-0 mr-3">
                   <div className="h-12 w-12 bg-yellow-100 rounded-full flex items-center justify-center">
-                    <StarIcon className="h-6 w-6 text-yellow-600" />
+                    <Star className="h-6 w-6 text-yellow-600" />
                   </div>
                 </div>
                 <div className="flex-grow">
@@ -376,7 +377,7 @@ export default function DiscoveryCompletePage() {
       {completionData.skillImprovements && completionData.skillImprovements.length > 0 && (
         <div className="bg-white rounded-lg shadow p-6 mb-8">
           <h2 className="text-xl font-semibold mb-4 flex items-center">
-            <ChartBarIcon className="h-6 w-6 text-indigo-600 mr-2" />
+            <BarChart className="h-6 w-6 text-indigo-600 mr-2" />
             {t('discovery:complete.skillImprovements')}
           </h2>
           <div className="space-y-3">
@@ -413,7 +414,7 @@ export default function DiscoveryCompletePage() {
       {/* Task Breakdown */}
       <div className="bg-white rounded-lg shadow p-6 mb-8">
         <h2 className="text-xl font-semibold mb-4 flex items-center">
-          <DocumentTextIcon className="h-6 w-6 text-gray-700 mr-2" />
+          <FileText className="h-6 w-6 text-gray-700 mr-2" />
           {t('discovery:complete.taskBreakdown')}
         </h2>
         <div className="overflow-x-auto">
@@ -471,7 +472,7 @@ export default function DiscoveryCompletePage() {
       {completionData.qualitativeFeedback && (
         <div className="bg-white rounded-lg shadow p-6 mb-8">
           <h2 className="text-xl font-semibold mb-4 flex items-center">
-            <LightBulbIcon className="h-6 w-6 text-yellow-500 mr-2" />
+            <Lightbulb className="h-6 w-6 text-yellow-500 mr-2" />
             {t('discovery:complete.aiFeedback')}
             {translatingFeedback && (
               <span className="ml-2 text-sm text-gray-500 animate-pulse">
@@ -559,7 +560,7 @@ export default function DiscoveryCompletePage() {
           href={`/discovery/scenarios/${params.id}`}
           className="inline-flex items-center px-6 py-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
         >
-          <CheckCircleIcon className="h-5 w-5 mr-2" />
+          <CheckCircle className="h-5 w-5 mr-2" />
           {t('discovery:complete.backToScenario')}
         </Link>
         
@@ -578,7 +579,7 @@ export default function DiscoveryCompletePage() {
             disabled={regenerating}
             className="inline-flex items-center px-6 py-3 bg-yellow-600 text-white rounded-md hover:bg-yellow-700 transition-colors disabled:opacity-50"
           >
-            <ArrowPathIcon className={`h-5 w-5 mr-2 ${regenerating ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`h-5 w-5 mr-2 ${regenerating ? 'animate-spin' : ''}`} />
             {regenerating ? 'Regenerating...' : 'Regenerate Evaluation'}
           </button>
         )}

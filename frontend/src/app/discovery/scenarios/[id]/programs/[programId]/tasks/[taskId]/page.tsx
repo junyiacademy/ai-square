@@ -1,25 +1,14 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'
+import { Sparkles, CheckCircle, Lightbulb, Trophy, Clock, RefreshCw, ArrowLeft, MessageCircle, ChevronUp, ChevronDown, AlertCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useParams } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import DiscoveryPageLayout from '@/components/discovery/DiscoveryPageLayout';
 import { useAuth } from '@/contexts/AuthContext';
 import ReactMarkdown from 'react-markdown';
-import { 
-  ArrowLeftIcon,
-  SparklesIcon,
-  CheckCircleIcon,
-  ChatBubbleLeftRightIcon,
-  LightBulbIcon,
-  TrophyIcon,
-  ExclamationCircleIcon,
-  ClockIcon,
-  ChevronUpIcon,
-  ChevronDownIcon,
-  ArrowPathIcon
-} from '@heroicons/react/24/outline';
+;
 
 interface TaskData {
   id: string;
@@ -341,7 +330,7 @@ export default function TaskDetailPage() {
           onClick={() => router.push(`/discovery/scenarios/${scenarioId}/programs/${programId}`)}
           className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 mb-6"
         >
-          <ArrowLeftIcon className="w-5 h-5" />
+          <ArrowLeft className="w-5 h-5" />
           <span>返回學習歷程</span>
         </button>
 
@@ -357,7 +346,7 @@ export default function TaskDetailPage() {
               </p>
             </div>
             <div className="flex items-center space-x-2 px-3 py-1 bg-purple-100 text-purple-700 rounded-full">
-              <TrophyIcon className="w-4 h-4" />
+              <Trophy className="w-4 h-4" />
               <span className="text-sm font-medium">{taskData.content.xp || 0} XP</span>
             </div>
           </div>
@@ -385,7 +374,7 @@ export default function TaskDetailPage() {
           {taskData.content.completionCriteria && taskData.content.completionCriteria.length > 0 && (
             <div className="bg-purple-50 rounded-xl p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center space-x-2">
-                <CheckCircleIcon className="w-5 h-5 text-purple-600" />
+                <CheckCircle className="w-5 h-5 text-purple-600" />
                 <span>完成標準</span>
               </h3>
               <ul className="space-y-2">
@@ -431,7 +420,7 @@ export default function TaskDetailPage() {
                 onClick={() => setShowHints(!showHints)}
                 className="flex items-center space-x-2 text-purple-600 hover:text-purple-700"
               >
-                <LightBulbIcon className="w-5 h-5" />
+                <Lightbulb className="w-5 h-5" />
                 <span>{showHints ? '隱藏提示' : '需要提示？'}</span>
               </button>
               
@@ -453,7 +442,7 @@ export default function TaskDetailPage() {
                   </>
                 ) : (
                   <>
-                    <CheckCircleIcon className="w-5 h-5" />
+                    <CheckCircle className="w-5 h-5" />
                     <span>提交答案</span>
                   </>
                 )}
@@ -469,7 +458,7 @@ export default function TaskDetailPage() {
             <div className="bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 rounded-2xl p-8">
               <div className="flex items-center space-x-4 mb-6">
                 <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center">
-                  <TrophyIcon className="w-8 h-8 text-white" />
+                  <Trophy className="w-8 h-8 text-white" />
                 </div>
                 <div>
                   <h3 className="text-2xl font-bold text-green-900 mb-1">
@@ -505,7 +494,7 @@ export default function TaskDetailPage() {
             {/* Skills Gained */}
             <div className="bg-white rounded-2xl shadow-lg p-6">
               <h4 className="text-lg font-semibold text-gray-900 mb-4 flex items-center space-x-2">
-                <SparklesIcon className="w-5 h-5 text-purple-600" />
+                <Sparkles className="w-5 h-5 text-purple-600" />
                 <span>技能成長</span>
               </h4>
               <div className="flex flex-wrap gap-2">
@@ -541,7 +530,7 @@ export default function TaskDetailPage() {
             <div id="comprehensive-evaluation" className="bg-white rounded-2xl shadow-lg p-6 transition-all duration-500">
               <div className="flex items-center justify-between mb-4">
                 <h4 className="text-lg font-semibold text-gray-900 flex items-center space-x-2">
-                  <ChatBubbleLeftRightIcon className="w-5 h-5 text-blue-600" />
+                  <MessageCircle className="w-5 h-5 text-blue-600" />
                   <span>綜合評價</span>
                 </h4>
                 {/* Refresh button - only show in localhost */}
@@ -552,7 +541,7 @@ export default function TaskDetailPage() {
                     className="flex items-center space-x-1 px-3 py-1 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors disabled:opacity-50"
                     title="重新生成評價 (僅限開發環境)"
                   >
-                    <ArrowPathIcon className={`w-4 h-4 ${regeneratingEvaluation ? 'animate-spin' : ''}`} />
+                    <RefreshCw className={`w-4 h-4 ${regeneratingEvaluation ? 'animate-spin' : ''}`} />
                     <span>{regeneratingEvaluation ? '生成中...' : '重新生成'}</span>
                   </button>
                 )}
@@ -571,7 +560,7 @@ export default function TaskDetailPage() {
                 onClick={() => router.push(`/discovery/scenarios/${scenarioId}/programs/${programId}`)}
                 className="inline-flex items-center space-x-2 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
               >
-                <ArrowLeftIcon className="w-5 h-5" />
+                <ArrowLeft className="w-5 h-5" />
                 <span>返回學習歷程</span>
               </button>
             </div>
@@ -583,7 +572,7 @@ export default function TaskDetailPage() {
           <div className="bg-gray-50 rounded-2xl p-6 mb-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold text-gray-900 flex items-center space-x-2">
-                <ClockIcon className="w-5 h-5 text-gray-600" />
+                <Clock className="w-5 h-5 text-gray-600" />
                 <span>{taskData.status === 'completed' ? '完整學習歷程' : '學習歷程'}</span>
                 <span className="text-sm font-normal text-gray-500 ml-2">
                   (共 {taskData.interactions.filter(i => i.type === 'user_input').length} 次嘗試
@@ -615,9 +604,9 @@ export default function TaskDetailPage() {
                 className="text-gray-600 hover:text-gray-800 transition-transform duration-200"
               >
                 {showHistory ? (
-                  <ChevronUpIcon className="w-5 h-5" />
+                  <ChevronUp className="w-5 h-5" />
                 ) : (
-                  <ChevronDownIcon className="w-5 h-5" />
+                  <ChevronDown className="w-5 h-5" />
                 )}
               </button>
             </div>
@@ -659,7 +648,7 @@ export default function TaskDetailPage() {
                               ? 'bg-green-600' 
                               : 'bg-orange-600'
                           }`}>
-                            <SparklesIcon className="w-4 h-4 text-white" />
+                            <Sparkles className="w-4 h-4 text-white" />
                           </div>
                           <span className={`text-sm font-medium ${
                             (interaction.content as Record<string, unknown>)?.completed 
@@ -715,18 +704,18 @@ export default function TaskDetailPage() {
                               <div className="flex items-center space-x-2">
                                 {(content as Record<string, unknown>)?.completed ? (
                             <>
-                              <CheckCircleIcon className="w-5 h-5 text-green-600" />
+                              <CheckCircle className="w-5 h-5 text-green-600" />
                               <span className="text-sm font-medium text-green-700">任務通過</span>
                               {((content as Record<string, unknown>)?.xpEarned as number) > 0 && (
                                 <div className="flex items-center space-x-1 text-purple-600 font-medium ml-2">
-                                  <TrophyIcon className="w-4 h-4" />
+                                  <Trophy className="w-4 h-4" />
                                   <span>+{String((content as Record<string, unknown>)?.xpEarned)} XP</span>
                                 </div>
                               )}
                             </>
                           ) : (
                             <>
-                              <ExclamationCircleIcon className="w-5 h-5 text-orange-600" />
+                              <AlertCircle className="w-5 h-5 text-orange-600" />
                               <span className="text-sm font-medium text-orange-700">需要改進</span>
                             </>
                           )}
@@ -796,7 +785,7 @@ export default function TaskDetailPage() {
               <div className="flex items-start space-x-4">
                 <div className="flex-shrink-0">
                   <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center">
-                    <CheckCircleIcon className="w-7 h-7 text-white" />
+                    <CheckCircle className="w-7 h-7 text-white" />
                   </div>
                 </div>
                 <div className="flex-1">
@@ -812,11 +801,11 @@ export default function TaskDetailPage() {
                   {passCount > 1 && (
                     <div className="flex items-center space-x-4 mb-2">
                       <div className="flex items-center space-x-1 text-sm">
-                        <TrophyIcon className="w-4 h-4 text-yellow-600" />
+                        <Trophy className="w-4 h-4 text-yellow-600" />
                         <span className="text-green-800">最高分：{bestScore} XP</span>
                       </div>
                       <div className="flex items-center space-x-1 text-sm">
-                        <SparklesIcon className="w-4 h-4 text-purple-600" />
+                        <Sparkles className="w-4 h-4 text-purple-600" />
                         <span className="text-green-800">最新分數：{latestPassScore} XP</span>
                       </div>
                     </div>
@@ -841,7 +830,7 @@ export default function TaskDetailPage() {
                       </>
                     ) : (
                       <>
-                        <TrophyIcon className="w-5 h-5" />
+                        <Trophy className="w-5 h-5" />
                         <span>完成任務 →</span>
                       </>
                     )}
@@ -856,7 +845,7 @@ export default function TaskDetailPage() {
         {showHints && taskData.content.hints && taskData.content.hints.length > 0 && (
           <div className="bg-yellow-50 rounded-xl p-6 border border-yellow-200 mb-6">
             <h4 className="text-lg font-semibold text-gray-900 mb-3 flex items-center space-x-2">
-              <LightBulbIcon className="w-5 h-5 text-yellow-600" />
+              <Lightbulb className="w-5 h-5 text-yellow-600" />
               <span>提示</span>
             </h4>
             <ul className="space-y-2">
@@ -879,18 +868,18 @@ export default function TaskDetailPage() {
               <h3 className="text-xl font-semibold text-gray-900 flex items-center space-x-2">
                 {feedback.completed ? (
                   <>
-                    <CheckCircleIcon className="w-6 h-6 text-green-600" />
+                    <CheckCircle className="w-6 h-6 text-green-600" />
                     <span>任務完成！</span>
                   </>
                 ) : (
                   <>
-                    <ExclamationCircleIcon className="w-6 h-6 text-orange-600" />
+                    <AlertCircle className="w-6 h-6 text-orange-600" />
                     <span>需要改進</span>
                   </>
                 )}
               </h3>
               <div className="flex items-center space-x-2 px-4 py-2 bg-white rounded-full shadow-sm">
-                <TrophyIcon className="w-5 h-5 text-purple-600" />
+                <Trophy className="w-5 h-5 text-purple-600" />
                 <span className="font-semibold text-purple-700">+{feedback.xpEarned} XP</span>
               </div>
             </div>
@@ -947,7 +936,7 @@ export default function TaskDetailPage() {
         {/* AI Assistant Section */}
         <div className="mt-8 bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl p-6">
           <div className="flex items-center space-x-3 mb-3">
-            <ChatBubbleLeftRightIcon className="w-6 h-6 text-purple-600" />
+            <MessageCircle className="w-6 h-6 text-purple-600" />
             <h4 className="text-lg font-semibold text-gray-900">
               AI 學習助手
             </h4>

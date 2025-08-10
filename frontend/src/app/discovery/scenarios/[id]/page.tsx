@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react'
+import { Sparkles, Rocket, Clock, Trophy, ChevronRight, GraduationCap, BarChart, Cpu, Paintbrush, Video, Code, Box, Briefcase, Users, ArrowLeft, Plus, Play } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useParams } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
@@ -8,46 +9,27 @@ import DiscoveryPageLayout from '@/components/discovery/DiscoveryPageLayout';
 import { useAuth } from '@/contexts/AuthContext';
 import { motion } from 'framer-motion';
 import { normalizeLanguageCode } from '@/lib/utils/language';
-import { 
-  ArrowLeftIcon,
-  SparklesIcon,
-  RocketLaunchIcon,
-  ClockIcon,
-  TrophyIcon,
-  PlayIcon,
-  PlusIcon,
-  ChevronRightIcon,
-  AcademicCapIcon
-} from '@heroicons/react/24/outline';
-import {
-  BriefcaseIcon,
-  CodeBracketIcon,
-  PaintBrushIcon,
-  ChartBarIcon,
-  CpuChipIcon,
-  VideoCameraIcon,
-  CubeIcon,
-  UserGroupIcon
-} from '@heroicons/react/24/outline';
+;
+;
 
 // Icon mapping for career types
 const careerIcons: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> = {
-  content_creator: PaintBrushIcon,
-  youtuber: VideoCameraIcon,
-  app_developer: CodeBracketIcon,
-  game_designer: CubeIcon,
-  tech_entrepreneur: RocketLaunchIcon,
-  startup_founder: BriefcaseIcon,
-  data_analyst: ChartBarIcon,
-  ux_designer: SparklesIcon,
-  ai_engineer: CpuChipIcon,
-  ai_developer: CpuChipIcon,
-  digital_marketer: SparklesIcon,
-  social_media_manager: UserGroupIcon,
-  product_manager: UserGroupIcon,
-  biotech_researcher: SparklesIcon,
-  cybersecurity_specialist: CodeBracketIcon,
-  environmental_scientist: ChartBarIcon
+  content_creator: Paintbrush,
+  youtuber: Video,
+  app_developer: Code,
+  game_designer: Box,
+  tech_entrepreneur: Rocket,
+  startup_founder: Briefcase,
+  data_analyst: BarChart,
+  ux_designer: Sparkles,
+  ai_engineer: Cpu,
+  ai_developer: Cpu,
+  digital_marketer: Sparkles,
+  social_media_manager: Users,
+  product_manager: Users,
+  biotech_researcher: Sparkles,
+  cybersecurity_specialist: Code,
+  environmental_scientist: BarChart
 };
 
 // Color mapping for career types
@@ -288,7 +270,7 @@ export default function DiscoveryScenarioDetailPage() {
   }
 
   const careerType = (scenarioData.discoveryData?.pathId || scenarioData.metadata?.yamlId || scenarioData.careerType || 'app_developer') as string;
-  const Icon = careerIcons[careerType as keyof typeof careerIcons] || SparklesIcon;
+  const Icon = careerIcons[careerType as keyof typeof careerIcons] || Sparkles;
   const color = careerColors[careerType as keyof typeof careerColors] || 'from-gray-500 to-gray-600';
   const skills = (scenarioData.metadata?.skillFocus || []) as string[];
 
@@ -300,7 +282,7 @@ export default function DiscoveryScenarioDetailPage() {
           onClick={() => router.push('/discovery/scenarios')}
           className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 mb-6"
         >
-          <ArrowLeftIcon className="w-5 h-5" />
+          <ArrowLeft className="w-5 h-5" />
           <span>{t('discovery:scenarioDetail.backToList')}</span>
         </button>
 
@@ -358,7 +340,7 @@ export default function DiscoveryScenarioDetailPage() {
               disabled={creatingProgram}
               className="flex items-center space-x-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50"
             >
-              <PlusIcon className="w-5 h-5" />
+              <Plus className="w-5 h-5" />
               <span>{creatingProgram ? t('discovery:scenarioDetail.creating') : t('discovery:scenarioDetail.startNewProgram')}</span>
             </button>
           </div>
@@ -410,7 +392,7 @@ export default function DiscoveryScenarioDetailPage() {
                         />
                       </div>
                     </div>
-                    <ChevronRightIcon className="w-5 h-5 text-gray-400" />
+                    <ChevronRight className="w-5 h-5 text-gray-400" />
                   </div>
                 </div>
               ))}
@@ -449,7 +431,7 @@ export default function DiscoveryScenarioDetailPage() {
               {scenarioData.discoveryData.careerInsights.job_market && (
                 <div className="bg-white rounded-xl p-6 shadow-md border border-gray-100">
                   <h3 className="text-lg font-semibold mb-4 flex items-center">
-                    <ChartBarIcon className="w-5 h-5 mr-2 text-purple-600" />
+                    <BarChart className="w-5 h-5 mr-2 text-purple-600" />
                     {t('discovery:scenarioDetail.jobMarket')}
                   </h3>
                   <div className="space-y-2 text-sm">
@@ -470,7 +452,7 @@ export default function DiscoveryScenarioDetailPage() {
               {scenarioData.discoveryData.careerInsights.required_skills && (
                 <div className="bg-white rounded-xl p-6 shadow-md border border-gray-100">
                   <h3 className="text-lg font-semibold mb-4 flex items-center">
-                    <AcademicCapIcon className="w-5 h-5 mr-2 text-purple-600" />
+                    <GraduationCap className="w-5 h-5 mr-2 text-purple-600" />
                     {t('discovery:scenarioDetail.requiredSkills')}
                   </h3>
                   <div className="space-y-3">
@@ -537,11 +519,11 @@ export default function DiscoveryScenarioDetailPage() {
                         
                         <div className="flex items-center space-x-4 text-sm text-gray-600">
                           <div className="flex items-center space-x-1">
-                            <ClockIcon className="w-4 h-4" />
+                            <Clock className="w-4 h-4" />
                             <span>{t('discovery:programCard.startedOn')} {new Date(program.createdAt).toLocaleDateString()}</span>
                           </div>
                           <div className="flex items-center space-x-1">
-                            <TrophyIcon className="w-4 h-4" />
+                            <Trophy className="w-4 h-4" />
                             <span>{(program.metadata?.totalXP as number) || 0} XP</span>
                           </div>
                         </div>
@@ -567,7 +549,7 @@ export default function DiscoveryScenarioDetailPage() {
                       <div className="ml-4 flex items-center">
                         {program.status === 'active' ? (
                           <button className="flex items-center space-x-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
-                            <PlayIcon className="w-4 h-4" />
+                            <Play className="w-4 h-4" />
                             <span>{t('discovery:programCard.continue')}</span>
                           </button>
                         ) : program.status === 'completed' ? (
@@ -578,11 +560,11 @@ export default function DiscoveryScenarioDetailPage() {
                             }}
                             className="flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                           >
-                            <TrophyIcon className="w-4 h-4" />
+                            <Trophy className="w-4 h-4" />
                             <span>{t('discovery:programCard.viewResults')}</span>
                           </button>
                         ) : (
-                          <ChevronRightIcon className="w-5 h-5 text-gray-400" />
+                          <ChevronRight className="w-5 h-5 text-gray-400" />
                         )}
                       </div>
                     </div>

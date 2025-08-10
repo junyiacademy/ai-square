@@ -1,14 +1,10 @@
 'use client';
 
-import React from 'react';
+import React from 'react'
+import { GraduationCap, BarChart, Sparkles, Rocket } from 'lucide-react';;
 import { useRouter, usePathname } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
-import { 
-  AcademicCapIcon, 
-  ChartBarIcon,
-  SparklesIcon,
-  RocketLaunchIcon
-} from '@heroicons/react/24/outline';
+;
 
 interface NavigationItem {
   id: string;
@@ -34,19 +30,19 @@ export default function DiscoveryHeader({}: DiscoveryHeaderProps) {
     {
       id: 'overview',
       label: t('discovery:navigation.overview'),
-      icon: AcademicCapIcon,
+      icon: GraduationCap,
       href: '/discovery/overview'
     },
     {
       id: 'evaluation',
       label: t('discovery:navigation.evaluation'),
-      icon: ChartBarIcon,
+      icon: BarChart,
       href: '/discovery/evaluation'
     },
     {
       id: 'scenarios',
       label: t('discovery:navigation.scenarios'),
-      icon: RocketLaunchIcon,
+      icon: Rocket,
       href: '/discovery/scenarios'
     }
   ];
@@ -73,7 +69,7 @@ export default function DiscoveryHeader({}: DiscoveryHeaderProps) {
         {/* Title and Quick Navigation */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center space-x-3">
-            <SparklesIcon className="w-8 h-8 text-purple-600" />
+            <Sparkles className="w-8 h-8 text-purple-600" />
             <div>
               <h1 className="text-2xl font-bold text-gray-900">{t('title')}</h1>
               <p className="text-sm text-gray-600 mt-1">{t('subtitle')}</p>

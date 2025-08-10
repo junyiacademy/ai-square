@@ -61,7 +61,6 @@
     "@google-cloud/translate": "^9.2.0",
     "@google-cloud/vertexai": "^1.10.0",
     "@google/generative-ai": "^0.24.1",
-    "@heroicons/react": "^2.2.0",
     "@monaco-editor/react": "^4.7.0",
     "@slack/web-api": "^7.9.3",
     "@tailwindcss/typography": "^0.5.16",

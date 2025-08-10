@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'
+import { Sparkles, CheckCircle, Clock, Trophy, BarChart, Rocket, Cpu, Paintbrush, Video, Code, Box, Briefcase, Users, ArrowLeft, Play, Lock } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useParams } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
@@ -8,24 +9,7 @@ import DiscoveryPageLayout from '@/components/discovery/DiscoveryPageLayout';
 import { useAuth } from '@/contexts/AuthContext';
 import { motion } from 'framer-motion';
 import { normalizeLanguageCode } from '@/lib/utils/language';
-import { 
-  ArrowLeftIcon,
-  SparklesIcon,
-  CheckCircleIcon,
-  LockClosedIcon,
-  PlayIcon,
-  ClockIcon,
-  TrophyIcon,
-  BriefcaseIcon,
-  CodeBracketIcon,
-  PaintBrushIcon,
-  ChartBarIcon,
-  RocketLaunchIcon,
-  CpuChipIcon,
-  VideoCameraIcon,
-  CubeIcon,
-  UserGroupIcon
-} from '@heroicons/react/24/outline';
+;
 
 interface Task {
   id: string;
@@ -148,61 +132,61 @@ export default function ProgramDetailPage() {
   const careerInfo: Record<string, { title: string; icon: React.ComponentType<React.SVGProps<SVGSVGElement>>; color: string; skills: string[] }> = {
     'content_creator': {
       title: '數位魔法師 - 內容創作者',
-      icon: PaintBrushIcon,
+      icon: Paintbrush,
       color: 'from-purple-500 to-pink-500',
       skills: ['內容魔法', '視覺咒語', '文字煉金術', '社群召喚術']
     },
     'youtuber': {
       title: '星際廣播員 - YouTuber',
-      icon: VideoCameraIcon,
+      icon: Video,
       color: 'from-red-500 to-orange-500',
       skills: ['星際剪輯術', '觀眾心理學', '宇宙趨勢預測', '跨星系傳播']
     },
     'app_developer': {
       title: '數碼建築師 - 應用程式開發者',
-      icon: CodeBracketIcon,
+      icon: Code,
       color: 'from-blue-500 to-cyan-500',
       skills: ['程式魔法', '介面雕塑', '邏輯工程', '系統煉金術']
     },
     'game_designer': {
       title: '夢境織夢師 - 遊戲設計師',
-      icon: CubeIcon,
+      icon: Box,
       color: 'from-indigo-500 to-purple-500',
       skills: ['夢境編織', '情感調律', '平衡法則', '心理煉金術']
     },
     'tech_entrepreneur': {
       title: '時空商業旅行者 - 科技創業家',
-      icon: RocketLaunchIcon,
+      icon: Rocket,
       color: 'from-yellow-500 to-red-500',
       skills: ['時空商業洞察', '跨維度技術整合', '團隊召喚術', '創新預言術']
     },
     'startup_founder': {
       title: '商業冒險家 - 創業家',
-      icon: BriefcaseIcon,
+      icon: Briefcase,
       color: 'from-green-500 to-teal-500',
       skills: ['商業嗅覺', '市場探勘', '資源煉金術', '風險航海術']
     },
     'data_analyst': {
       title: '數位考古學家 - 數據分析師',
-      icon: ChartBarIcon,
+      icon: BarChart,
       color: 'from-teal-500 to-blue-500',
       skills: ['數位考古術', '模式識別術', '視覺化魔法', '洞察預言術']
     },
     'ux_designer': {
       title: '体驗建築師 - UX 設計師',
-      icon: SparklesIcon,
+      icon: Sparkles,
       color: 'from-pink-500 to-purple-500',
       skills: ['用户心理学', '体験魔法', '原型雕塑', '沟通艺术']
     },
     'product_manager': {
       title: '產品指揮官 - 產品經理',
-      icon: UserGroupIcon,
+      icon: Users,
       color: 'from-orange-500 to-yellow-500',
       skills: ['策略视野', '需求洞察', '資源配置', '團隊协調']
     },
     'ai_developer': {
       title: '機器靈魂鍛造師 - AI 開發者',
-      icon: CpuChipIcon,
+      icon: Cpu,
       color: 'from-violet-500 to-purple-500',
       skills: ['靈魂編碼術', '神經網絡魔法', '智慧藝術', '未來部署術']
     }
@@ -210,7 +194,7 @@ export default function ProgramDetailPage() {
 
   const currentCareer = careerInfo[programData.careerType || 'unknown'] || {
     title: programData.scenarioTitle || 'Discovery Scenario',
-    icon: SparklesIcon,
+    icon: Sparkles,
     color: 'from-gray-500 to-gray-600',
     skills: []
   };
@@ -224,7 +208,7 @@ export default function ProgramDetailPage() {
           onClick={() => router.push(`/discovery/scenarios/${scenarioId}`)}
           className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 mb-6"
         >
-          <ArrowLeftIcon className="w-5 h-5" />
+          <ArrowLeft className="w-5 h-5" />
           <span>返回職業詳情</span>
         </button>
 
@@ -258,11 +242,11 @@ export default function ProgramDetailPage() {
               </h1>
               <div className="flex items-center space-x-4 text-sm text-gray-600">
                 <div className="flex items-center space-x-1">
-                  <ClockIcon className="w-4 h-4" />
+                  <Clock className="w-4 h-4" />
                   <span>開始於 {new Date(programData.createdAt).toLocaleDateString('zh-TW')}</span>
                 </div>
                 <div className="flex items-center space-x-1">
-                  <TrophyIcon className="w-4 h-4" />
+                  <Trophy className="w-4 h-4" />
                   <span>{programData.totalXP} XP</span>
                 </div>
               </div>
@@ -337,13 +321,13 @@ export default function ProgramDetailPage() {
                         }
                       `}>
                         {task.status === 'completed' && (
-                          <CheckCircleIcon className="w-6 h-6 text-green-600" />
+                          <CheckCircle className="w-6 h-6 text-green-600" />
                         )}
                         {((task as Task).status === 'available' || (task as Task).status === 'active') && (
-                          <SparklesIcon className="w-6 h-6 text-purple-600" />
+                          <Sparkles className="w-6 h-6 text-purple-600" />
                         )}
                         {((task as Task).status === 'locked') && (
-                          <LockClosedIcon className="w-6 h-6 text-gray-400" />
+                          <Lock className="w-6 h-6 text-gray-400" />
                         )}
                       </div>
                       
@@ -372,7 +356,7 @@ export default function ProgramDetailPage() {
                         
                         <div className="flex items-center space-x-4 text-sm">
                           <div className="flex items-center space-x-1">
-                            <TrophyIcon className="w-4 h-4 text-yellow-500" />
+                            <Trophy className="w-4 h-4 text-yellow-500" />
                             <span className="text-gray-600">
                               {task.status === 'completed' && task.actualXP 
                                 ? `${task.actualXP} XP (獲得)` 
@@ -407,13 +391,13 @@ export default function ProgramDetailPage() {
                     {/* Action Button */}
                     {((task as Task).status === 'available' || (task as Task).status === 'active') && (
                       <button className="flex items-center space-x-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
-                        <PlayIcon className="w-4 h-4" />
+                        <Play className="w-4 h-4" />
                         <span>開始</span>
                       </button>
                     )}
                     {task.status === 'completed' && (
                       <button className="flex items-center space-x-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
-                        <CheckCircleIcon className="w-4 h-4" />
+                        <CheckCircle className="w-4 h-4" />
                         <span>檢視</span>
                       </button>
                     )}
@@ -427,7 +411,7 @@ export default function ProgramDetailPage() {
         {/* Generate more tasks if all completed */}
         {programData.completedTasks === programData.totalTasks && programData.totalTasks > 0 && (
           <div className="mt-8 bg-gradient-to-r from-purple-50 to-blue-50 rounded-xl p-8 text-center">
-            <TrophyIcon className="w-16 h-16 text-purple-600 mx-auto mb-4" />
+            <Trophy className="w-16 h-16 text-purple-600 mx-auto mb-4" />
             <h3 className="text-2xl font-bold text-gray-900 mb-2">
               恭喜完成所有任務！
             </h3>
@@ -439,14 +423,14 @@ export default function ProgramDetailPage() {
                 onClick={() => router.push(`/discovery/scenarios/${scenarioId}/programs/${programId}/complete`)}
                 className="inline-flex items-center space-x-2 px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
               >
-                <CheckCircleIcon className="w-5 h-5" />
+                <CheckCircle className="w-5 h-5" />
                 <span>查看完整結果</span>
               </button>
               <button
                 onClick={() => router.push(`/discovery/scenarios/${scenarioId}`)}
                 className="inline-flex items-center space-x-2 px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
               >
-                <SparklesIcon className="w-5 h-5" />
+                <Sparkles className="w-5 h-5" />
                 <span>開始新的歷程</span>
               </button>
             </div>

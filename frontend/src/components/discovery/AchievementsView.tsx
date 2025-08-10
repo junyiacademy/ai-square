@@ -1,24 +1,11 @@
 'use client';
 
-import React from 'react';
+import React from 'react'
+import { Trophy, Sparkles, Cpu, Puzzle, Globe, GraduationCap, Star } from 'lucide-react';;
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { 
-  TrophyIcon,
-  SparklesIcon,
-  CpuChipIcon,
-  PuzzlePieceIcon,
-  GlobeAltIcon,
-  AcademicCapIcon,
-  StarIcon
-} from '@heroicons/react/24/outline';
-import {
-  TrophyIcon as TrophyIconSolid,
-  SparklesIcon as SparklesIconSolid,
-  CpuChipIcon as CpuChipIconSolid,
-  PuzzlePieceIcon as PuzzlePieceIconSolid,
-  GlobeAltIcon as GlobeAltIconSolid
-} from '@heroicons/react/24/solid';
+;
+;
 
 // Import types from the unified service
 import type { UserAchievements } from '@/lib/services/user-data-service';
@@ -32,7 +19,7 @@ interface BadgeData {
   title: string;
   description: string;
   icon: React.ComponentType<{ className?: string }>;
-  iconSolid: React.ComponentType<{ className?: string }>;
+  iconSolid?: React.ComponentType<{ className?: string }>;
   color: string;
   bgColor: string;
 }
@@ -46,8 +33,8 @@ export default function AchievementsView({ achievements }: AchievementsViewProps
       id: 'first_task',
       title: t('achievements.badges.first_task.title'),
       description: t('achievements.badges.first_task.description'),
-      icon: AcademicCapIcon,
-      iconSolid: TrophyIconSolid,
+      icon: GraduationCap,
+      iconSolid: Trophy,
       color: 'text-green-600',
       bgColor: 'bg-green-100'
     },
@@ -55,8 +42,8 @@ export default function AchievementsView({ achievements }: AchievementsViewProps
       id: 'creative_thinker',
       title: t('achievements.badges.creative_thinker.title'),
       description: t('achievements.badges.creative_thinker.description'),
-      icon: SparklesIcon,
-      iconSolid: SparklesIconSolid,
+      icon: Sparkles,
+      iconSolid: Sparkles,
       color: 'text-purple-600',
       bgColor: 'bg-purple-100'
     },
@@ -64,8 +51,8 @@ export default function AchievementsView({ achievements }: AchievementsViewProps
       id: 'ai_collaborator',
       title: t('achievements.badges.ai_collaborator.title'),
       description: t('achievements.badges.ai_collaborator.description'),
-      icon: CpuChipIcon,
-      iconSolid: CpuChipIconSolid,
+      icon: Cpu,
+      iconSolid: Cpu,
       color: 'text-blue-600',
       bgColor: 'bg-blue-100'
     },
@@ -73,8 +60,8 @@ export default function AchievementsView({ achievements }: AchievementsViewProps
       id: 'problem_solver',
       title: t('achievements.badges.problem_solver.title'),
       description: t('achievements.badges.problem_solver.description'),
-      icon: PuzzlePieceIcon,
-      iconSolid: PuzzlePieceIconSolid,
+      icon: Puzzle,
+      iconSolid: Puzzle,
       color: 'text-orange-600',
       bgColor: 'bg-orange-100'
     },
@@ -82,8 +69,8 @@ export default function AchievementsView({ achievements }: AchievementsViewProps
       id: 'path_explorer',
       title: t('achievements.badges.path_explorer.title'),
       description: t('achievements.badges.path_explorer.description'),
-      icon: GlobeAltIcon,
-      iconSolid: GlobeAltIconSolid,
+      icon: Globe,
+      iconSolid: Globe,
       color: 'text-indigo-600',
       bgColor: 'bg-indigo-100'
     }
@@ -118,7 +105,7 @@ export default function AchievementsView({ achievements }: AchievementsViewProps
         className="text-center mb-8"
       >
         <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full mb-4">
-          <TrophyIconSolid className="w-8 h-8 text-white" />
+          <Trophy className="w-8 h-8 text-white" />
         </div>
         <h2 className="text-3xl font-bold text-gray-900 mb-2">
           {t('achievements.title')}
@@ -186,7 +173,7 @@ export default function AchievementsView({ achievements }: AchievementsViewProps
           transition={{ duration: 0.5, delay: 0.2 }}
         >
           <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center space-x-2">
-            <StarIcon className="w-5 h-5 text-yellow-500" />
+            <Star className="w-5 h-5 text-yellow-500" />
             <span>已獲得徽章</span>
           </h3>
           
@@ -205,7 +192,7 @@ export default function AchievementsView({ achievements }: AchievementsViewProps
                   >
                     <div className="flex items-center space-x-4">
                       <div className={`w-12 h-12 ${badge.bgColor} rounded-xl flex items-center justify-center`}>
-                        <IconSolid className={`w-6 h-6 ${badge.color}`} />
+                        {IconSolid && <IconSolid className={`w-6 h-6 ${badge.color}`} />}
                       </div>
                       <div className="flex-1">
                         <h4 className="font-semibold text-gray-900">{badge.title}</h4>
@@ -221,7 +208,7 @@ export default function AchievementsView({ achievements }: AchievementsViewProps
             </div>
           ) : (
             <div className="bg-gray-50 rounded-xl p-6 text-center">
-              <TrophyIcon className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+              <Trophy className="w-12 h-12 text-gray-400 mx-auto mb-3" />
               <p className="text-gray-600">還沒有獲得任何徽章</p>
               <p className="text-sm text-gray-500 mt-1">完成任務來獲得你的第一個徽章！</p>
             </div>
@@ -235,7 +222,7 @@ export default function AchievementsView({ achievements }: AchievementsViewProps
           transition={{ duration: 0.5, delay: 0.3 }}
         >
           <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center space-x-2">
-            <TrophyIcon className="w-5 h-5 text-gray-400" />
+            <Trophy className="w-5 h-5 text-gray-400" />
             <span>可獲得徽章</span>
           </h3>
           

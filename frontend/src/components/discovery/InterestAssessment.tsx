@@ -1,13 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState } from 'react'
+import { ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';;
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  ChevronLeftIcon, 
-  ChevronRightIcon,
-  SparklesIcon
-} from '@heroicons/react/24/outline';
+;
 
 interface AssessmentResults {
   tech: number;
@@ -182,7 +179,7 @@ export default function InterestAssessment({ onComplete }: InterestAssessmentPro
               transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
               className="inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full shadow-lg"
             >
-              <SparklesIcon className="w-6 h-6 text-white" />
+              <Sparkles className="w-6 h-6 text-white" />
             </motion.div>
             <h2 className="text-2xl md:text-3xl font-black text-gray-900 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
               AI 興趣分析儀
@@ -455,7 +452,7 @@ export default function InterestAssessment({ onComplete }: InterestAssessmentPro
               }
             `}
           >
-            <ChevronLeftIcon className="w-5 h-5" />
+            <ChevronLeft className="w-5 h-5" />
             <span>上一題</span>
           </motion.button>
 
@@ -475,7 +472,7 @@ export default function InterestAssessment({ onComplete }: InterestAssessmentPro
             <span>
               {isLastQuestion ? '完成分析' : '下一題'}
             </span>
-            {!isLastQuestion && <ChevronRightIcon className="w-5 h-5" />}
+            {!isLastQuestion && <ChevronRight className="w-5 h-5" />}
           </motion.button>
         </div>
 

@@ -1,13 +1,10 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'
+import { GraduationCap, Globe, BarChart } from 'lucide-react';;
 import { useRouter, usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  AcademicCapIcon, 
-  GlobeAltIcon,
-  ChartBarIcon
-} from '@heroicons/react/24/outline';
+;
 import { userDataService, type UserAchievements } from '@/lib/services/user-data-service';
 
 export default function DiscoveryNavigation() {
@@ -65,21 +62,21 @@ export default function DiscoveryNavigation() {
     {
       id: 'overview',
       label: '總覽',
-      icon: AcademicCapIcon,
+      icon: GraduationCap,
       href: '/discovery/overview',
       path: '/discovery/overview'
     },
     {
       id: 'evaluation',
       label: '評估',
-      icon: ChartBarIcon,
+      icon: BarChart,
       href: '/discovery/evaluation',
       path: '/discovery/evaluation'
     },
     {
       id: 'scenarios',
       label: '職業冒險',
-      icon: GlobeAltIcon,
+      icon: Globe,
       href: '/discovery/scenarios',
       path: '/discovery/scenarios'
     }

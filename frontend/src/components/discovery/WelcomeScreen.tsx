@@ -1,19 +1,11 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'
+import { Sparkles, Zap, Cpu, Rocket, Database, Flame, Star } from 'lucide-react';;
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  SparklesIcon,
-  BoltIcon,
-  CpuChipIcon,
-  RocketLaunchIcon,
-  CircleStackIcon
-} from '@heroicons/react/24/outline';
-import { 
-  FireIcon,
-  StarIcon
-} from '@heroicons/react/24/solid';
+;
+;
 
 interface WelcomeScreenProps {
   onStartJourney: () => void;
@@ -75,19 +67,19 @@ export default function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
   const features = [
     {
       key: 'immersive',
-      icon: RocketLaunchIcon,
+      icon: Rocket,
       color: 'from-purple-500 to-pink-500',
       glow: 'shadow-purple-500/25'
     },
     {
       key: 'ai_powered', 
-      icon: CpuChipIcon,
+      icon: Cpu,
       color: 'from-blue-500 to-cyan-500',
       glow: 'shadow-blue-500/25'
     },
     {
       key: 'real_time',
-      icon: BoltIcon,
+      icon: Zap,
       color: 'from-green-500 to-emerald-500',
       glow: 'shadow-green-500/25'
     }
@@ -173,7 +165,7 @@ export default function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
               animate={{ rotate: 360 }}
               transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
             >
-              <SparklesIcon className="w-12 h-12 text-white" />
+              <Sparkles className="w-12 h-12 text-white" />
             </motion.div>
           </motion.div>
           
@@ -210,7 +202,7 @@ export default function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
               animate={{ rotate: 360 }}
               transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
             >
-              <RocketLaunchIcon className="w-6 h-6" />
+              <Rocket className="w-6 h-6" />
             </motion.div>
             <span className="relative z-10">{t('welcomeScreen.startJourney')}</span>
             
@@ -239,14 +231,14 @@ export default function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
               animate={{ y: [0, -4, 0] }}
               transition={{ duration: 1.5, repeat: Infinity }}
             >
-              <StarIcon className="w-4 h-4" />
+              <Star className="w-4 h-4" />
             </motion.div>
             <span className="text-sm">{t('welcomeScreen.instantFeedback')}</span>
             <motion.div
               animate={{ y: [0, -4, 0] }}
               transition={{ duration: 1.5, repeat: Infinity, delay: 0.3 }}
             >
-              <StarIcon className="w-4 h-4" />
+              <Star className="w-4 h-4" />
             </motion.div>
           </motion.div>
         </motion.div>
@@ -323,14 +315,14 @@ export default function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
               animate={{ rotate: 360 }}
               transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
             >
-              <CircleStackIcon className="w-5 h-5" />
+              <Database className="w-5 h-5" />
             </motion.div>
             <span className="text-sm">{t('welcomeScreen.readyToRedefine')}</span>
             <motion.div
               animate={{ scale: [1, 1.2, 1] }}
               transition={{ duration: 1, repeat: Infinity }}
             >
-              <FireIcon className="w-5 h-5 text-orange-400" />
+              <Flame className="w-5 h-5 text-orange-400" />
             </motion.div>
           </div>
         </motion.div>
