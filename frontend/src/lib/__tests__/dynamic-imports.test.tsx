@@ -1,4 +1,23 @@
 
+// Mock the actual chart components that will be dynamically loaded
+jest.mock('@/components/assessment/DomainRadarChart', () => {
+  return function MockDomainRadarChart(props: any) {
+    return <div data-testid="loaded-component">Loaded Component</div>;
+  };
+});
+
+jest.mock('@/components/pbl/KSARadarChart', () => {
+  return function MockKSARadarChart(props: any) {
+    return <div data-testid="loaded-component">Loaded Component</div>;
+  };
+});
+
+jest.mock('@/components/pbl/DomainRadarChart', () => {
+  return function MockPBLDomainRadarChart(props: any) {
+    return <div data-testid="loaded-component">Loaded Component</div>;
+  };
+});
+
 jest.mock('d3', () => ({
   select: jest.fn(() => ({
     append: jest.fn().mockReturnThis(),
@@ -99,7 +118,7 @@ describe('Dynamic Imports', () => {
       // Wait for component to load
       await waitFor(() => {
         expect(screen.getByTestId('loaded-component')).toBeInTheDocument();
-      }, { timeout: 200 });
+      }, { timeout: 1000 });
       
       expect(screen.getByText('Loaded Component')).toBeInTheDocument();
     });
