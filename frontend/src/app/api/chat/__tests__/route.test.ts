@@ -179,4 +179,96 @@ describe('POST /api/chat', () => {
     expect(response.status).toBe(200);
     expect(data).toHaveProperty('response');
   });
+
+  it('should return 503 when AI services not configured (fresh module)', async () => {
+    delete process.env.GOOGLE_CLOUD_PROJECT;
+    jest.resetModules();
+
+    // Re-require route with fresh module state (vertexAI/bucket not initialized)
+    const { POST: FreshPOST } = require('../route');
+
+    const request = createAuthRequest({ message: 'hello' });
+    const res = await FreshPOST(request);
+    const data = await res.json();
+    expect(res.status).toBe(503);
+    expect(data.error).toBe('AI services not configured');
+  });
+
+  it('should return 404 when user context not found (no user_data.json)', async () => {
+    process.env.GOOGLE_CLOUD_PROJECT = 'test-project';
+    jest.resetModules();
+    jest.doMock('@google-cloud/storage', () => ({
+      Storage: jest.fn().mockImplementation(() => ({
+        bucket: jest.fn().mockReturnValue({
+          file: jest.fn().mockImplementation((filePath: string) => {
+            if (filePath.endsWith('user_data.json')) {
+              return {
+                exists: jest.fn().mockResolvedValue([false]),
+                download: jest.fn(),
+                save: jest.fn(),
+              };
+            }
+            // default minimal file mock
+            return {
+              exists: jest.fn().mockResolvedValue([false]),
+              download: jest.fn().mockResolvedValue([JSON.stringify({})]),
+              save: jest.fn().mockResolvedValue(undefined),
+            };
+          }),
+        }),
+      })),
+    }));
+    const { POST: FreshPOST } = require('../route');
+
+    const request = createAuthRequest({ message: 'hi' });
+    const res = await FreshPOST(request);
+    const data = await res.json();
+    expect(res.status).toBe(404);
+    expect(data.error).toBe('User context not found');
+  });
+
+  it('should return 500 when VertexAI sendMessage throws', async () => {
+    process.env.GOOGLE_CLOUD_PROJECT = 'test-project';
+    jest.resetModules();
+
+    jest.doMock('@google-cloud/storage', () => ({
+      Storage: jest.fn().mockImplementation(() => ({
+        bucket: jest.fn().mockReturnValue({
+          file: jest.fn().mockImplementation((filePath: string) => {
+            if (filePath.endsWith('user_data.json')) {
+              return {
+                exists: jest.fn().mockResolvedValue([true]),
+                download: jest.fn().mockResolvedValue([JSON.stringify({
+                  identity: 'student', goals: [], assessmentResult: { overallScore: 50, domainScores: {} }, completedPBLs: [], learningStyle: 'visual'
+                })]),
+                save: jest.fn(),
+              };
+            }
+            if (filePath.includes('chat/')) {
+              return { exists: jest.fn().mockResolvedValue([false]), download: jest.fn(), save: jest.fn() };
+            }
+            return { exists: jest.fn().mockResolvedValue([false]), download: jest.fn(), save: jest.fn() };
+          }),
+        }),
+      })),
+    }));
+
+    jest.doMock('@google-cloud/vertexai', () => ({
+      VertexAI: jest.fn().mockImplementation(() => ({
+        preview: {
+          getGenerativeModel: jest.fn().mockReturnValue({
+            startChat: jest.fn().mockReturnValue({
+              sendMessage: jest.fn(async () => { throw new Error('ai down'); }),
+            }),
+            generateContent: jest.fn().mockResolvedValue({ response: { candidates: [{ content: { parts: [{ text: 'Title' }] } }] } }),
+          }),
+        },
+      })),
+    }));
+
+    const { POST: FreshPOST } = require('../route');
+    const request = createAuthRequest({ message: 'will fail' });
+    const res = await FreshPOST(request);
+    expect(res.status).toBe(500);
+  });
 });

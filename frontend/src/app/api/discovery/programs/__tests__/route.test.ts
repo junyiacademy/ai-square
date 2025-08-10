@@ -386,4 +386,111 @@ describe('/api/discovery/programs', () => {
       expect(new Date(createdAtCall.createdAt).getTime()).toBeLessThanOrEqual(new Date(afterRequest).getTime());
     });
   });
+
+  describe('GET /api/discovery/programs', () => {
+    let mockUserRepo: any;
+    let mockProgramRepo: any;
+
+    beforeEach(() => {
+      mockUserRepo = { findByEmail: jest.fn() };
+      mockProgramRepo = { findByUser: jest.fn() };
+      (repositoryFactory.getUserRepository as jest.Mock).mockReturnValue(mockUserRepo);
+      (repositoryFactory.getProgramRepository as jest.Mock).mockReturnValue(mockProgramRepo);
+    });
+
+    it('should return 401 when not authenticated', async () => {
+      (getServerSession as jest.Mock).mockResolvedValue(null);
+      const request = new NextRequest('http://localhost:3000/api/discovery/programs');
+      const { GET } = require('../route');
+      const res = await GET(request);
+      const data = await res.json();
+      expect(res.status).toBe(401);
+      expect(data.success).toBe(false);
+      expect(data.error).toBe('Authentication required');
+    });
+
+    it('should return 404 when user not found', async () => {
+      (getServerSession as jest.Mock).mockResolvedValue({ user: { email: 'u@e.com' } });
+      mockUserRepo.findByEmail.mockResolvedValue(null);
+      const request = new NextRequest('http://localhost:3000/api/discovery/programs');
+      const { GET } = require('../route');
+      const res = await GET(request);
+      const data = await res.json();
+      expect(res.status).toBe(404);
+      expect(data.error).toBe('User not found');
+    });
+
+    it('should return user programs with progress and default sorting (desc by lastActivityAt)', async () => {
+      (getServerSession as jest.Mock).mockResolvedValue({ user: { email: 'u@e.com' } });
+      mockUserRepo.findByEmail.mockResolvedValue({ id: 'u1', email: 'u@e.com' });
+      const programs = [
+        {
+          id: 'p1', userId: 'u1', mode: 'discovery', status: 'active',
+          completedTaskCount: 2, totalTaskCount: 4,
+          lastActivityAt: '2024-01-02T00:00:00Z',
+          discoveryData: { careerReadiness: 70, skillGapAnalysis: [{}, {}] },
+        },
+        {
+          id: 'p2', userId: 'u1', mode: 'discovery', status: 'completed',
+          completedTaskCount: 4, totalTaskCount: 4,
+          lastActivityAt: '2024-01-03T00:00:00Z',
+          discoveryData: { careerReadiness: 80, skillGapAnalysis: [{}] },
+        },
+        // Non-discovery should be filtered out
+        {
+          id: 'p3', userId: 'u1', mode: 'pbl', status: 'active',
+          completedTaskCount: 1, totalTaskCount: 5,
+          lastActivityAt: '2024-01-04T00:00:00Z',
+          discoveryData: {},
+        },
+      ];
+      mockProgramRepo.findByUser.mockResolvedValue(programs);
+
+      const request = new NextRequest('http://localhost:3000/api/discovery/programs');
+      const { GET } = require('../route');
+      const res = await GET(request);
+      const data = await res.json();
+      expect(res.status).toBe(200);
+      expect(data.success).toBe(true);
+      expect(data.data.total).toBe(2);
+      // Sorted desc by lastActivityAt: p2 then p1
+      expect(data.data.programs[0].id).toBe('p2');
+      expect(data.data.programs[1].id).toBe('p1');
+      // Progress fields
+      expect(data.data.programs[0].progress).toEqual(
+        expect.objectContaining({ completionRate: 100, tasksCompleted: 4, totalTasks: 4, careerReadiness: 80, skillGaps: 1 })
+      );
+      expect(data.meta.filters.status).toBe('all');
+    });
+
+    it('should filter by status query param', async () => {
+      (getServerSession as jest.Mock).mockResolvedValue({ user: { email: 'u@e.com' } });
+      mockUserRepo.findByEmail.mockResolvedValue({ id: 'u1', email: 'u@e.com' });
+      mockProgramRepo.findByUser.mockResolvedValue([
+        { id: 'a', userId: 'u1', mode: 'discovery', status: 'active', completedTaskCount: 0, totalTaskCount: 2, lastActivityAt: '2024-01-01T00:00:00Z', discoveryData: {} },
+        { id: 'b', userId: 'u1', mode: 'discovery', status: 'completed', completedTaskCount: 2, totalTaskCount: 2, lastActivityAt: '2024-01-02T00:00:00Z', discoveryData: {} },
+      ]);
+      const request = new NextRequest('http://localhost:3000/api/discovery/programs?status=completed');
+      const { GET } = require('../route');
+      const res = await GET(request);
+      const data = await res.json();
+      expect(res.status).toBe(200);
+      expect(data.data.total).toBe(1);
+      expect(data.data.programs[0].status).toBe('completed');
+      expect(data.meta.filters.status).toBe('completed');
+    });
+
+    it('should handle repository errors with 500', async () => {
+      (getServerSession as jest.Mock).mockResolvedValue({ user: { email: 'u@e.com' } });
+      mockUserRepo.findByEmail.mockResolvedValue({ id: 'u1', email: 'u@e.com' });
+      mockProgramRepo.findByUser.mockRejectedValue(new Error('db down'));
+      const request = new NextRequest('http://localhost:3000/api/discovery/programs');
+      const { GET } = require('../route');
+      const res = await GET(request);
+      const data = await res.json();
+      expect(res.status).toBe(500);
+      expect(data.success).toBe(false);
+      expect(data.error).toBe('Internal server error');
+    });
+  });
 });

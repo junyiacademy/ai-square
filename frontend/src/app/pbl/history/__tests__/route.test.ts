@@ -1,16 +1,13 @@
-describe('route', () => {
-  it('should pass basic test', () => {
-    expect(true).toBe(true);
-  });
-  
-  it('should handle operations', () => {
-    // Add specific tests based on file content
-    const result = 1 + 1;
-    expect(result).toBe(2);
-  });
-  
-  it('should handle edge cases', () => {
-    expect(null).toBeNull();
-    expect(undefined).toBeUndefined();
+import { GET } from '../route';
+
+jest.mock('next/navigation', () => ({
+  redirect: jest.fn(),
+}));
+
+describe('GET /app/pbl/history (redirect)', () => {
+  it('should call redirect to /history', async () => {
+    const { redirect } = require('next/navigation') as { redirect: jest.Mock };
+    await GET();
+    expect(redirect).toHaveBeenCalledWith('/history');
   });
 });
