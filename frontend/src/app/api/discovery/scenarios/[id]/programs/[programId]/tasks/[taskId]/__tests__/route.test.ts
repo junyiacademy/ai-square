@@ -18,6 +18,21 @@ jest.mock('@/lib/ai/vertex-ai-service', () => {
   };
 });
 
+// Mock TranslationService for GET evaluation translation branch
+jest.mock('@/lib/services/translation-service', () => {
+  class MockTranslationService {
+    // eslint-disable-next-line @typescript-eslint/require-await
+    async translateFeedback(_text: string, _lang: string, _career: string): Promise<string> {
+      return 'translated-feedback';
+    }
+  }
+  // static helper used by route on fallback
+  (MockTranslationService as unknown as { getFeedbackByLanguage?: jest.Mock }).getFeedbackByLanguage = jest
+    .fn()
+    .mockImplementation((versions: Record<string, string>, lang: string) => versions[lang] || versions['en'] || '');
+  return { TranslationService: MockTranslationService };
+});
+
 const mockGetServerSession = getServerSession as jest.MockedFunction<typeof getServerSession>;
 const mockRepositoryFactory = repositoryFactory as jest.Mocked<typeof repositoryFactory>;
 
@@ -94,6 +109,49 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       expect(data.title).toBe('Task Title');
       expect(data.careerType).toBe('data_analyst');
       expect(data.content.description).toBe('Desc');
+    });
+
+    it('translates evaluation to requested language and stores versions', async () => {
+      const { TranslationService } = require('@/lib/services/translation-service');
+      const translateSpy = jest.spyOn(TranslationService.prototype, 'translateFeedback');
+
+      mockGetServerSession.mockResolvedValue({ user: { email: 'u@test.com', id: 'u1' } } as any);
+      programRepo.findById.mockResolvedValue({ id: 'p1', userId: 'u1', scenarioId: 's1' });
+      taskRepo.getTaskWithInteractions.mockResolvedValue({
+        id: 't1', programId: 'p1', status: 'completed', title: { en: 'T' }, content: {}, metadata: { evaluationId: 'e1' }
+      });
+      scenarioRepo.findById.mockResolvedValue({ id: 's1', title: { en: 'Scenario' }, metadata: { careerType: 'data_analyst' } });
+      evaluationRepo.findById.mockResolvedValue({ id: 'e1', score: 0.9, feedbackData: { en: 'Great job' }, createdAt: '2024-01-01T00:00:00Z' });
+
+      const req = new NextRequest('http://localhost/api/discovery/scenarios/s1/programs/p1/tasks/t1?lang=es');
+      const res = await GET(req, { params: Promise.resolve({ id: 's1', programId: 'p1', taskId: 't1' }) });
+      expect(res.status).toBe(200);
+      expect(translateSpy).toHaveBeenCalledWith('Great job', 'es', 'data_analyst');
+      expect(taskRepo.update).toHaveBeenCalledWith('t1', expect.objectContaining({
+        metadata: expect.objectContaining({ evaluationFeedbackVersions: expect.objectContaining({ es: 'translated-feedback' }) })
+      }));
+    });
+
+    it('falls back to existing version when translation or update fails', async () => {
+      const { TranslationService } = require('@/lib/services/translation-service');
+      // Make translate throw to trigger fallback path
+      jest.spyOn(TranslationService.prototype, 'translateFeedback').mockImplementationOnce(async () => { throw new Error('t-fail'); });
+      // Ensure static fallback picks english
+      (TranslationService as unknown as { getFeedbackByLanguage: jest.Mock }).getFeedbackByLanguage.mockReturnValueOnce('Great job');
+
+      mockGetServerSession.mockResolvedValue({ user: { email: 'u@test.com', id: 'u1' } } as any);
+      programRepo.findById.mockResolvedValue({ id: 'p1', userId: 'u1', scenarioId: 's1' });
+      taskRepo.getTaskWithInteractions.mockResolvedValue({
+        id: 't1', programId: 'p1', status: 'completed', title: { en: 'T' }, content: {}, metadata: { evaluationId: 'e1' }
+      });
+      scenarioRepo.findById.mockResolvedValue({ id: 's1', title: { en: 'Scenario' }, metadata: { careerType: 'data_analyst' } });
+      evaluationRepo.findById.mockResolvedValue({ id: 'e1', score: 0.9, feedbackData: { en: 'Great job' }, createdAt: '2024-01-01T00:00:00Z' });
+
+      const req = new NextRequest('http://localhost/api/discovery/scenarios/s1/programs/p1/tasks/t1?lang=es');
+      const res = await GET(req, { params: Promise.resolve({ id: 's1', programId: 'p1', taskId: 't1' }) });
+      expect(res.status).toBe(200);
+      // On failure, update should not be required; translation fallback used instead
+      expect((TranslationService as unknown as { getFeedbackByLanguage: jest.Mock }).getFeedbackByLanguage).toHaveBeenCalled();
     });
 
     it('returns 500 on unexpected error', async () => {
