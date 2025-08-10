@@ -42,10 +42,13 @@ describe('LearningServiceFactory', () => {
 
   describe('assessment adapter behavior', () => {
     it('startLearning delegates to startAssessment with language', async () => {
+      const startAssessmentMock = jest.fn().mockImplementation(async () => ({ id: 'program-1' }))
+      
       jest.isolateModules(async () => {
-        const startAssessment = jest.fn(async () => ({ id: 'program-1' }))
         jest.doMock('../assessment-learning-service', () => ({
-          AssessmentLearningService: jest.fn().mockImplementation(() => ({ startAssessment }))
+          AssessmentLearningService: jest.fn().mockImplementation(() => ({ 
+            startAssessment: startAssessmentMock 
+          }))
         }))
         jest.doMock('../pbl-learning-service', () => ({ PBLLearningService: jest.fn().mockImplementation(() => ({})) }))
         jest.doMock('../discovery-learning-service', () => ({ DiscoveryLearningService: jest.fn().mockImplementation(() => ({})) }))
@@ -55,27 +58,30 @@ describe('LearningServiceFactory', () => {
         const svc = factory.getService('assessment')
 
         const program = await svc.startLearning('u1', 's1', { language: 'zhTW' })
-        expect(startAssessment).toHaveBeenCalledWith('u1', 's1', 'zhTW')
+        expect(startAssessmentMock).toHaveBeenCalledWith('u1', 's1', 'zhTW')
         expect(program).toEqual({ id: 'program-1' })
       })
     })
 
     it('getProgress transforms fields (completedTasks/score/timeSpent/metadata)', async () => {
-      jest.isolateModules(async () => {
-        const mockProgress = {
-          programId: 'p1',
-          status: 'active',
-          timeSpent: 12,
-          metadata: {
-            answeredQuestions: 3,
-            totalQuestions: 5,
-            currentScore: 80,
-            timeRemaining: 34
-          }
+      const mockProgress = {
+        programId: 'p1',
+        status: 'active',
+        timeSpent: 12,
+        metadata: {
+          answeredQuestions: 3,
+          totalQuestions: 5,
+          currentScore: 80,
+          timeRemaining: 34
         }
-        const getProgress = jest.fn(async () => mockProgress)
+      }
+      const getProgressMock = jest.fn().mockImplementation(async () => mockProgress)
+      
+      jest.isolateModules(async () => {
         jest.doMock('../assessment-learning-service', () => ({
-          AssessmentLearningService: jest.fn().mockImplementation(() => ({ getProgress }))
+          AssessmentLearningService: jest.fn().mockImplementation(() => ({ 
+            getProgress: getProgressMock 
+          }))
         }))
         jest.doMock('../pbl-learning-service', () => ({ PBLLearningService: jest.fn().mockImplementation(() => ({})) }))
         jest.doMock('../discovery-learning-service', () => ({ DiscoveryLearningService: jest.fn().mockImplementation(() => ({})) }))
@@ -84,7 +90,7 @@ describe('LearningServiceFactory', () => {
         const svc = LearningServiceFactory.getInstance().getService('assessment')
         const res = await svc.getProgress('p1')
 
-        expect(getProgress).toHaveBeenCalledWith('p1')
+        expect(getProgressMock).toHaveBeenCalledWith('p1')
         expect(res).toMatchObject({
           programId: 'p1',
           status: 'active',
@@ -100,10 +106,13 @@ describe('LearningServiceFactory', () => {
     })
 
     it('submitResponse returns success/score/feedback/nextTaskAvailable from isCorrect', async () => {
+      const submitAnswerMock = jest.fn().mockImplementation(async () => ({ isCorrect: false, correctAnswer: 'B' }))
+      
       jest.isolateModules(async () => {
-        const submitAnswer = jest.fn(async () => ({ isCorrect: false, correctAnswer: 'B' }))
         jest.doMock('../assessment-learning-service', () => ({
-          AssessmentLearningService: jest.fn().mockImplementation(() => ({ submitAnswer }))
+          AssessmentLearningService: jest.fn().mockImplementation(() => ({ 
+            submitAnswer: submitAnswerMock 
+          }))
         }))
         jest.doMock('../pbl-learning-service', () => ({ PBLLearningService: jest.fn().mockImplementation(() => ({})) }))
         jest.doMock('../discovery-learning-service', () => ({ DiscoveryLearningService: jest.fn().mockImplementation(() => ({})) }))
@@ -112,7 +121,7 @@ describe('LearningServiceFactory', () => {
         const svc = LearningServiceFactory.getInstance().getService('assessment')
         const result = await svc.submitResponse('p1', 't1', { questionId: 'q1', answer: 'A' })
 
-        expect(submitAnswer).toHaveBeenCalledWith('p1', 'q1', 'A')
+        expect(submitAnswerMock).toHaveBeenCalledWith('p1', 'q1', 'A')
         expect(result).toMatchObject({
           taskId: 't1',
           success: true,
@@ -124,16 +133,19 @@ describe('LearningServiceFactory', () => {
     })
 
     it('completeLearning aggregates program and evaluation results', async () => {
+      const completeAssessmentMock = jest.fn().mockImplementation(async () => ({
+        program: { id: 'p1' },
+        evaluation: { id: 'e1' },
+        passed: true,
+        score: 92,
+        domainScores: { domainA: 80 }
+      }))
+      
       jest.isolateModules(async () => {
-        const completeAssessment = jest.fn(async () => ({
-          program: { id: 'p1' },
-          evaluation: { id: 'e1' },
-          passed: true,
-          score: 92,
-          domainScores: { domainA: 80 }
-        }))
         jest.doMock('../assessment-learning-service', () => ({
-          AssessmentLearningService: jest.fn().mockImplementation(() => ({ completeAssessment }))
+          AssessmentLearningService: jest.fn().mockImplementation(() => ({ 
+            completeAssessment: completeAssessmentMock 
+          }))
         }))
         jest.doMock('../pbl-learning-service', () => ({ PBLLearningService: jest.fn().mockImplementation(() => ({})) }))
         jest.doMock('../discovery-learning-service', () => ({ DiscoveryLearningService: jest.fn().mockImplementation(() => ({})) }))
@@ -142,7 +154,7 @@ describe('LearningServiceFactory', () => {
         const svc = LearningServiceFactory.getInstance().getService('assessment')
         const result = await svc.completeLearning('p1')
 
-        expect(completeAssessment).toHaveBeenCalledWith('p1')
+        expect(completeAssessmentMock).toHaveBeenCalledWith('p1')
         expect(result).toMatchObject({
           program: { id: 'p1' },
           evaluation: { id: 'e1' },
