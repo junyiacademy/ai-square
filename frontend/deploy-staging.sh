@@ -32,7 +32,7 @@ fi
 # Step 1: Build Docker image
 echo ""
 echo "🔨 Building Docker image..."
-docker build -f Dockerfile.staging -t gcr.io/$PROJECT_ID/$SERVICE_NAME:$IMAGE_TAG .
+docker build --platform linux/amd64 -f Dockerfile.staging -t gcr.io/$PROJECT_ID/$SERVICE_NAME:$IMAGE_TAG .
 
 # Step 2: Push to Google Container Registry
 echo ""
