@@ -20,7 +20,7 @@ describe('PostgreSQLEvaluationRepository', () => {
       score: '90', max_score: '100',
       domain_scores: { K: 80 }, feedback_text: 'good', feedback_data: {},
       ai_provider: 'vertex', ai_model: 'gemini', ai_analysis: {},
-      time_taken_seconds: '30',
+          time_taken_seconds: '30',
       pbl_data: {}, discovery_data: {}, assessment_data: {},
       created_at: '2024-01-01T00:00:00Z', metadata: {},
       ...overrides,
@@ -72,4 +72,4 @@ describe('PostgreSQLEvaluationRepository', () => {
     const rows = await repo.findByType('task', 'pbl_task');
     expect(rows[0].id).toBe('e2');
   });
-}); 
+});
