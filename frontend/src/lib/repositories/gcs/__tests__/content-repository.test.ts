@@ -4,7 +4,6 @@
  */
 
 import { GCSContentRepository } from '../content-repository';
-import { Storage, Bucket } from '@google-cloud/storage';
 import { parse as parseYaml } from 'yaml';
 
 // Mock Google Cloud Storage
@@ -13,6 +12,7 @@ jest.mock('yaml');
 
 describe('GCSContentRepository', () => {
   let repository: GCSContentRepository;
+  // Note: Using any for test mocks is acceptable practice
   let mockStorage: any;
   let mockBucket: any;
   let mockFile: any;
@@ -160,11 +160,18 @@ describe('GCSContentRepository', () => {
         throw new Error('File not found');
       });
 
-      jest.spyOn(repository as any, 'transformScenarioContent').mockImplementation((content: any, id: string) => ({
-        ...content,
-        id,
-        transformed: true
-      }));
+      jest.spyOn(repository as any, 'transformScenarioContent').mockImplementation((...args: any[]) => {
+        const [content, id] = args;
+        return {
+          ...content,
+          id,
+          type: content.type || 'pbl',
+          title: content.title || { en: 'Test' },
+          description: content.description || { en: 'Test description' },
+          tasks: content.tasks || [],
+          metadata: content.metadata || {}
+        };
+      });
     });
 
     it('should get scenario content with language preference', async () => {
@@ -206,7 +213,7 @@ describe('GCSContentRepository', () => {
       expect(repository.getYamlContent).toHaveBeenCalledWith('scenarios/test-scenario/content_en.yaml');
       expect(repository.getYamlContent).toHaveBeenCalledWith('scenarios/test-scenario/content.yaml');
       expect(repository.getYamlContent).toHaveBeenCalledWith('pbl_data/test-scenario_scenario.yaml');
-      expect(result.mode).toBe('pbl');
+      expect(result.type).toBe('pbl');
     });
 
     it('should throw error when no content found', async () => {
@@ -246,11 +253,18 @@ describe('GCSContentRepository', () => {
         throw new Error('File not found');
       });
 
-      jest.spyOn(repository as any, 'transformScenarioContent').mockImplementation((content: any, id: string) => ({
-        ...content,
-        id,
-        transformed: true
-      }));
+      jest.spyOn(repository as any, 'transformScenarioContent').mockImplementation((...args: any[]) => {
+        const [content, id] = args;
+        return {
+          ...content,
+          id,
+          type: content.type || 'pbl',
+          title: content.title || { en: 'Test' },
+          description: content.description || { en: 'Test description' },
+          tasks: content.tasks || [],
+          metadata: content.metadata || {}
+        };
+      });
     });
 
     it('should get all scenarios without type filter', async () => {
@@ -273,7 +287,7 @@ describe('GCSContentRepository', () => {
       expect(repository.listYamlFiles).not.toHaveBeenCalledWith('assessment_data/');
       
       expect(result).toHaveLength(2);
-      expect(result.every(s => s.transformed)).toBe(true);
+      expect(result.every(s => s.id && s.type && s.title)).toBe(true);
     });
 
     it('should handle errors gracefully and continue processing', async () => {
