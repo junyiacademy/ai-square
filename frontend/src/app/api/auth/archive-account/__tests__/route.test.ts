@@ -38,7 +38,8 @@ describe('Archive Account API Route', () => {
     
     // Setup mock database pool
     mockPool = {
-      connect: jest.fn().mockResolvedValue(mockClient)
+      connect: jest.fn().mockResolvedValue(mockClient),
+      query: jest.fn()
     };
     (getPool as jest.Mock).mockReturnValue(mockPool);
     
@@ -310,6 +311,52 @@ describe('Archive Account API Route', () => {
       expect(response.status).toBe(500);
       expect(data.success).toBe(false);
       expect(data.error).toBe('Failed to delete account');
+    });
+  });
+
+  describe('GET /api/auth/archive-account', () => {
+    it('returns 401 when unauthenticated', async () => {
+      const { GET } = require('../route');
+      (getSession as jest.Mock).mockResolvedValue(null);
+      const res = await GET();
+      const data = await res.json();
+      expect(res.status).toBe(401);
+      expect(data.success).toBe(false);
+      expect(data.error).toBe('Not authenticated');
+    });
+
+    it('returns 404 when user not found', async () => {
+      const { GET } = require('../route');
+      (getSession as jest.Mock).mockResolvedValue({ user: { id: 'user-123', email: 'test@example.com' } });
+      // GET 使用 pool.query 直接查 rows
+      (mockPool.query as jest.Mock).mockResolvedValue({ rows: [] });
+      const res = await GET();
+      const data = await res.json();
+      expect(res.status).toBe(404);
+      expect(data.success).toBe(false);
+      expect(data.error).toBe('User not found');
+    });
+
+    it('returns 200 with account status when user exists', async () => {
+      const { GET } = require('../route');
+      (getSession as jest.Mock).mockResolvedValue({ user: { id: 'user-123', email: 'test@example.com' } });
+      (mockPool.query as jest.Mock).mockResolvedValue({ rows: [{ account_status: 'archived', archived_at: '2024-01-01', archive_reason: 'Test' }] });
+      const res = await GET();
+      const data = await res.json();
+      expect(res.status).toBe(200);
+      expect(data.success).toBe(true);
+      expect(data.accountStatus).toBe('archived');
+      expect(data.archiveReason).toBe('Test');
+    });
+
+    it('returns 500 on query error', async () => {
+      const { GET } = require('../route');
+      (getSession as jest.Mock).mockResolvedValue({ user: { id: 'user-123', email: 'test@example.com' } });
+      (mockPool.query as jest.Mock).mockRejectedValue(new Error('db error'));
+      const res = await GET();
+      const data = await res.json();
+      expect(res.status).toBe(500);
+      expect(data.success).toBe(false);
     });
   });
 });
