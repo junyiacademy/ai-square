@@ -12,28 +12,19 @@ import type {
   TaskStatus,
   TaskType
 } from '@/types/database';
+import { getServerSession } from '@/lib/auth/session';
+import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
+
+jest.mock('@/lib/auth/session');
+jest.mock('@/lib/repositories/base/repository-factory');
+
+const mockGetServerSession = getServerSession as jest.MockedFunction<typeof getServerSession>;
+const mockRepositoryFactory = repositoryFactory as jest.Mocked<typeof repositoryFactory>;
 
 // Mock console
 mockConsoleError();
 mockConsoleLog();
 
-// Mock auth session
-const mockGetServerSession = jest.fn();
-jest.mock('@/lib/auth/session', () => ({
-  getServerSession: () => mockGetServerSession()
-}));
-
-// Mock repository factory
-const mockRepositoryFactory = {
-  getProgramRepository: jest.fn(),
-  getTaskRepository: jest.fn(),
-  getEvaluationRepository: jest.fn(),
-  getUserRepository: jest.fn(),
-};
-
-jest.mock('@/lib/repositories/base/repository-factory', () => ({
-  repositoryFactory: mockRepositoryFactory
-}));
 
 // Mock crypto with predictable hash
 jest.mock('crypto', () => ({
@@ -43,6 +34,7 @@ jest.mock('crypto', () => ({
     }))
   }))
 }));
+
 
 describe('/api/pbl/programs/[programId]/complete', () => {
   // Mock repositories
@@ -227,15 +219,23 @@ describe('/api/pbl/programs/[programId]/complete', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    mockRepositoryFactory.getProgramRepository.mockReturnValue(mockProgramRepo);
-    mockRepositoryFactory.getTaskRepository.mockReturnValue(mockTaskRepo);
-    mockRepositoryFactory.getEvaluationRepository.mockReturnValue(mockEvalRepo);
-    mockRepositoryFactory.getUserRepository.mockReturnValue(mockUserRepo);
+    mockRepositoryFactory.getProgramRepository.mockReturnValue(
+      mockProgramRepo as unknown as ReturnType<typeof repositoryFactory.getProgramRepository>
+    );
+    mockRepositoryFactory.getTaskRepository.mockReturnValue(
+      mockTaskRepo as unknown as ReturnType<typeof repositoryFactory.getTaskRepository>
+    );
+    mockRepositoryFactory.getEvaluationRepository.mockReturnValue(
+      mockEvalRepo as unknown as ReturnType<typeof repositoryFactory.getEvaluationRepository>
+    );
+    mockRepositoryFactory.getUserRepository.mockReturnValue(
+      mockUserRepo as unknown as ReturnType<typeof repositoryFactory.getUserRepository>
+    );
 
     // Setup default successful auth
     mockGetServerSession.mockResolvedValue({
-      user: { email: 'test@example.com' }
-    });
+      user: { id: 'user-123', email: 'test@example.com' }
+    } as any);
   });
 
   describe('POST', () => {
@@ -1064,7 +1064,7 @@ describe('/api/pbl/programs/[programId]/complete', () => {
 
     describe('Error Handling', () => {
       it('should return 500 for repository errors', async () => {
-        mockGetServerSession.mockResolvedValue({ user: { email: 'test@example.com' } });
+        mockGetServerSession.mockResolvedValue({ user: { id: 'user-123', email: 'test@example.com' } } as any);
         mockUserRepo.findByEmail.mockRejectedValue(new Error('Database connection failed'));
 
         const request = new NextRequest('http://localhost:3000/api/pbl/programs/prog-123/complete', {
