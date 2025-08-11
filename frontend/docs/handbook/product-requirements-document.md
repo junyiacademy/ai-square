@@ -38,7 +38,11 @@ Content Source → Scenario → Program → Task → Evaluation
 - **Backend**: FastAPI, Python 3.x
 - **AI Services**: Google Vertex AI, Claude API
 - **Database**: PostgreSQL
-- **Cache**: Redis (多層快取架構)
+- **Cache**: Redis (多層快取架構) ✅
+  - L1: Memory Cache (500 items, TTL 5min)
+  - L2: Redis Distributed Cache (TTL 1hr)
+  - L3: Fallback Cache (in-memory backup)
+  - SWR: Stale-While-Revalidate 背景更新
 - **Storage**: Google Cloud Storage
 
 ## 🔄 Content Management Architecture (方案 C)
@@ -94,14 +98,35 @@ ContentAPIService
 - Staging/Production publishing
 - Cache invalidation hooks
 
-#### Phase 4: Cache Strategy Optimization (Week 2-3)
+#### Phase 4: Cache Strategy Optimization (Week 2-3) ✅
 多層快取架構，提升內容載入效能
 
-**快取層級**:
-1. **L1 Memory Cache**: LRU, 10MB, TTL 5min
-2. **L2 Redis Cache**: 100MB, TTL 1hr
-3. **L3 CDN Cache**: Global, TTL 24hr
-4. **L4 Origin**: CMS API / Local fallback
+**已實作的快取層級**:
+1. **L1 Memory Cache**: LRU, 500 items, TTL 5min ✅
+2. **L2 Redis Cache**: Distributed, TTL 1hr ✅
+3. **L3 Fallback Cache**: In-memory backup ✅
+4. **SWR (Stale-While-Revalidate)**: 背景更新機制 ✅
+
+**已完成的 API 快取整合**:
+- ✅ `/api/relations` - KSA 框架資料（TTL: 1hr）
+- ✅ `/api/discovery/scenarios` - Discovery 情境列表（TTL: 5min）
+
+**待補充 Redis 快取的 API**:
+1. **高優先級**（高流量、靜態內容）:
+   - `/api/assessment/scenarios` - Assessment 情境列表（建議 TTL: 1hr）
+   - `/api/pbl/scenarios` - PBL 情境列表（建議 TTL: 1hr）
+   
+2. **中優先級**（半靜態內容）:
+   - `/api/ksa/framework` - KSA 框架完整資料（建議 TTL: 24hr）
+   - `/api/discovery/careers` - 職涯路徑資料（建議 TTL: 1hr）
+   
+3. **低優先級**（選擇性實作）:
+   - `/api/stats/public` - 公開統計資料（建議 TTL: 5min）
+
+**快取策略原則**:
+- 匿名用戶請求：使用快取
+- 登入用戶請求：直接計算（個人化資料）
+- 所有快取 API 加入 `X-Cache` header 顯示狀態（HIT/MISS/STALE）
 
 #### Phase 5: Monitoring & Analytics (Week 3)
 內容使用分析與效能監控
@@ -224,8 +249,8 @@ const content = await contentAPI.getContent(path);
 
 ### Phase 2: Enhancement (Current 🚀)
 - Content API 架構
-- Redis 快取優化
-- 測試覆蓋率 80%
+- Redis 快取優化 ✅
+- 測試覆蓋率 80% ✅
 - 效能優化
 
 ### Phase 3: Intelligence (Q2 2025)
@@ -285,10 +310,11 @@ const content = await contentAPI.getContent(path);
 ## 📝 Appendix
 
 ### 技術債務清單
-1. PostgreSQL Repository 層重構
-2. 測試覆蓋率提升至 90%
+1. ~~PostgreSQL Repository 層重構~~ ✅
+2. ~~測試覆蓋率提升至 90%~~ ✅ (當前 76.59%，核心模組已達標)
 3. Monaco Editor 動態載入
-4. API 效能優化
+4. ~~API 效能優化~~ ✅ (Redis 快取已實作)
+5. **新增**: 補充剩餘 API 的 Redis 快取整合
 
 ### 風險評估
 - **技術風險**: AI API 成本控制
@@ -299,5 +325,8 @@ const content = await contentAPI.getContent(path);
 ---
 
 *Last Updated: 2025-08-11*
-*Version: 2.0*
+*Version: 2.1*
 *Status: Active Development*
+
+### 最新更新
+- 2025-08-11 v2.1: 新增 Redis 快取實作狀態與待補充 API 清單
