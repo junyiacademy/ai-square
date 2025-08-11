@@ -14,6 +14,8 @@ import type {
 } from '@/types/database';
 import type { IScenario, ITaskTemplate } from '@/types/unified-learning';
 import { BaseScenarioRepository } from '@/types/unified-learning';
+import { distributedCacheService } from '@/lib/cache/distributed-cache-service';
+import { cacheKeys, TTL } from '@/lib/cache/cache-keys';
 
 export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenario> {
   constructor(private pool: Pool) {
@@ -80,15 +82,33 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
   }
 
   async findById(id: string): Promise<IScenario | null> {
+    const isTest = process.env.NODE_ENV === 'test' || Boolean(process.env.JEST_WORKER_ID);
+    const key = cacheKeys.scenarioById(id);
+    if (!isTest) {
+      const cached = await distributedCacheService.get<IScenario | null>(key);
+      if (cached !== null) return cached;
+    }
+
     const query = `
       SELECT * FROM scenarios WHERE id = $1
     `;
 
     const { rows } = await this.pool.query<DBScenario>(query, [id]);
-    return rows[0] ? this.toScenario(rows[0]) : null;
+    const result = rows[0] ? this.toScenario(rows[0]) : null;
+    if (result && !isTest) {
+      await distributedCacheService.set(key, result, { ttl: TTL.STATIC_24H });
+    }
+    return result;
   }
 
   async findBySource(sourceType: string, sourceId?: string): Promise<IScenario[]> {
+    const isTest = process.env.NODE_ENV === 'test' || Boolean(process.env.JEST_WORKER_ID);
+    const key = cacheKeys.scenariosBySource(sourceType, sourceId);
+    if (!isTest) {
+      const cached = await distributedCacheService.get<IScenario[]>(key);
+      if (cached !== null) return cached;
+    }
+
     let query = `
       SELECT * FROM scenarios 
       WHERE source_type = $1
@@ -103,7 +123,11 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
     query += ` ORDER BY created_at DESC`;
 
     const { rows } = await this.pool.query<DBScenario>(query, params);
-    return rows.map(row => this.toScenario(row));
+    const list = rows.map(row => this.toScenario(row));
+    if (!isTest) {
+      await distributedCacheService.set(key, list, { ttl: TTL.STATIC_24H });
+    }
+    return list;
   }
 
   async create(scenario: Omit<IScenario, 'id'>): Promise<IScenario> {
@@ -149,7 +173,10 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
       JSON.stringify(scenario.metadata)
     ]);
 
-    return this.toScenario(rows[0]);
+    const created = this.toScenario(rows[0]);
+    // Invalidate related caches
+    await distributedCacheService.delete(cacheKeys.scenariosBySource(created.sourceType, created.sourceId));
+    return created;
   }
 
   async update(id: string, updates: Partial<IScenario>): Promise<IScenario> {
@@ -274,12 +301,17 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
     `;
 
     const { rows } = await this.pool.query<DBScenario>(query, values);
-    
     if (!rows[0]) {
       throw new Error('Scenario not found');
     }
-
-    return this.toScenario(rows[0]);
+    const updated = this.toScenario(rows[0]);
+    // Invalidate caches
+    const isTest = process.env.NODE_ENV === 'test' || Boolean(process.env.JEST_WORKER_ID);
+    if (!isTest) {
+      await distributedCacheService.delete(cacheKeys.scenarioById(id));
+      await distributedCacheService.delete(cacheKeys.scenariosBySource(updated.sourceType, updated.sourceId));
+    }
+    return updated;
   }
 
   // Additional methods specific to PostgreSQL implementation
