@@ -98,4 +98,115 @@ describe('PostgreSQLDiscoveryRepository', () => {
     expect(result?.discoveryData.careerLevel).toBe('intermediate');
     expect(result?.discoveryData.careerPath).toBe('');
   });
+
+  describe('career recommendations and user progress', () => {
+    it('getCareerRecommendations maps required skills and returns sorted recommendations', async () => {
+      // 1) user skills query
+      client.query.mockResolvedValueOnce({
+        rows: [
+          { skill: 'sql', score: 70 },
+          { skill: 'python', score: 60 },
+          { skill: 'excel', score: 90 },
+        ],
+      });
+      // 2) careers query
+      client.query.mockResolvedValueOnce({
+        rows: [
+          scenarioRow({ id: 'scA', discovery_data: { careerPath: 'data_analyst', requiredSkills: ['sql', 'python'] } }),
+          scenarioRow({ id: 'scB', discovery_data: { careerPath: 'bi_analyst', requiredSkills: ['excel'] } }),
+        ],
+      });
+
+      const recs = await repo.getCareerRecommendations('user-1');
+      expect(Array.isArray(recs)).toBe(true);
+      expect(recs.length).toBe(2);
+      // 每個推薦都有基礎欄位
+      expect(recs[0]).toEqual(
+        expect.objectContaining({ careerPath: expect.any(String), requiredSkills: expect.any(Array), reasons: expect.any(Array) })
+      );
+      // 應依 matchScore 降序排序
+      for (let i = 1; i < recs.length; i++) {
+        expect(recs[i - 1].matchScore).toBeGreaterThanOrEqual(recs[i].matchScore);
+      }
+    });
+
+    it('getUserDiscoveryProgress aggregates explored careers, milestones, portfolio and computes progress', async () => {
+      // explored careers
+      client.query.mockResolvedValueOnce({ rows: [{ scenario_id: 'sc1' }, { scenario_id: 'sc2' }] });
+      // milestones
+      client.query.mockResolvedValueOnce({ rows: [
+        { id: 'm1', name: 'Milestone 1', description: 'desc', achieved_at: '2024-01-01T00:00:00Z', criteria: {}, rewards: { xp: 20, badges: ['b1'] } },
+        { id: 'm2', name: 'Milestone 2', description: 'desc', achieved_at: '2024-01-02T00:00:00Z', criteria: {}, rewards: {} }, // xp default 0
+      ]});
+      // portfolio
+      client.query.mockResolvedValueOnce({ rows: [
+        { id: 'p1', title: 'Demo', description: 'D', task_id: 't1', created_at: '2024-01-03T00:00:00Z', artifacts: '[]', skills: '["sql"]' },
+      ]});
+
+      const prog = await repo.getUserDiscoveryProgress('user-1');
+      expect(prog.exploredCareers).toEqual(['sc1', 'sc2']);
+      expect(prog.completedMilestones.length).toBe(2);
+      expect(prog.portfolioItems.length).toBe(1);
+      // progress = min(2*10,30)=20 + min(2*5,40)=10 + min(1*10,30)=10 => 40
+      expect(prog.overallProgress).toBe(40);
+    });
+  });
+
+  describe('portfolio item CRUD', () => {
+    it('addPortfolioItem inserts and maps returned row', async () => {
+      const row = { id: 'pid', title: 'T', description: 'D', task_id: 't1', created_at: '2024-01-01T00:00:00Z', artifacts: '[]', skills: '["python"]' };
+      client.query.mockResolvedValueOnce({ rows: [row] });
+
+      const created = await repo.addPortfolioItem('user-1', {
+        title: 'T', description: 'D', taskId: 't1', artifacts: [], skills: ['python']
+      } as unknown as any);
+      expect(created).toEqual(
+        expect.objectContaining({ id: 'pid', title: 'T', taskId: 't1', artifacts: [], skills: ['python'] })
+      );
+      // 驗證 INSERT 語句有 JSON.stringify 的 artifacts/skills
+      const args = client.query.mock.calls[0][1];
+      expect(args[5]).toBe(JSON.stringify([]));
+      expect(args[6]).toBe(JSON.stringify(['python']));
+    });
+
+    it('updatePortfolioItem updates provided fields and maps row', async () => {
+      const updatedRow = { id: 'pid', title: 'T2', description: 'D2', task_id: 't1', created_at: '2024-01-01T00:00:00Z', artifacts: [], skills: ['python'] };
+      client.query.mockResolvedValueOnce({ rows: [updatedRow] });
+
+      const res = await repo.updatePortfolioItem('user-1', 'pid', { title: 'T2', description: 'D2' });
+      expect(res.title).toBe('T2');
+      expect(res.description).toBe('D2');
+      // 確認 UPDATE 的參數包含 id、userId 與兩個欄位
+      const args = client.query.mock.calls[0][1];
+      expect(args[0]).toBe('pid');
+      expect(args[1]).toBe('user-1');
+      expect(args.includes('T2')).toBe(true);
+      expect(args.includes('D2')).toBe(true);
+    });
+
+    it('updatePortfolioItem throws when no fields to update', async () => {
+      await expect(repo.updatePortfolioItem('u', 'i', {})).rejects.toThrow('No fields to update');
+    });
+
+    it('updatePortfolioItem throws when item not found', async () => {
+      client.query.mockResolvedValueOnce({ rows: [] });
+      await expect(repo.updatePortfolioItem('u', 'i', { title: 'X' })).rejects.toThrow('Portfolio item not found');
+    });
+
+    it('deletePortfolioItem throws when item not found', async () => {
+      client.query.mockResolvedValueOnce({ rowCount: 0 });
+      await expect(repo.deletePortfolioItem('u', 'i')).rejects.toThrow('Portfolio item not found');
+    });
+
+    it('getPortfolioItems returns mapped items', async () => {
+      client.query.mockResolvedValueOnce({ rows: [
+        { id: 'p1', title: 'A', description: 'D', task_id: 't1', created_at: '2024-01-01T00:00:00Z', artifacts: '[]', skills: '["sql"]' },
+        { id: 'p2', title: 'B', description: 'E', task_id: 't2', created_at: '2024-01-02T00:00:00Z', artifacts: [], skills: ['python'] },
+      ]});
+      const list = await repo.getPortfolioItems('user-1');
+      expect(list.map(i => i.id)).toEqual(['p1', 'p2']);
+      expect(list[0].artifacts).toEqual([]);
+      expect(list[1].skills).toEqual(['python']);
+    });
+  });
 });

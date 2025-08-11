@@ -110,15 +110,16 @@ class RedisCacheService {
   async set<T>(key: string, value: T, options: CacheOptions = {}): Promise<void> {
     const { ttl = 300000, serialize = true } = options; // Default 5 minutes
     
+    const serializedValue = serialize ? JSON.stringify(value) : value;
     try {
-      const serializedValue = serialize ? JSON.stringify(value) : value;
-      
       // Try Redis first
       if (this.isConnected && this.redis) {
         await this.redis.setex(key, Math.floor(ttl / 1000), serializedValue as string);
       }
-
-      // Always store in fallback cache
+    } catch (error) {
+      console.error('Cache set error:', error);
+    } finally {
+      // Always store in fallback cache even if redis set fails
       this.fallbackCache.set(key, {
         value,
         expiresAt: Date.now() + ttl,
@@ -129,9 +130,6 @@ class RedisCacheService {
       if (this.fallbackCache.size > this.MAX_FALLBACK_SIZE) {
         this.cleanupFallbackCache();
       }
-
-    } catch (error) {
-      console.error('Cache set error:', error);
     }
   }
 

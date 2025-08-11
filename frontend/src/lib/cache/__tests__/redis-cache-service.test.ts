@@ -1,4 +1,5 @@
 import { redisCacheService } from '../redis-cache-service';
+import { jest } from '@jest/globals';
 
 // We don't set REDIS_URL to force fallback (in-memory) path during tests
 
@@ -62,5 +63,72 @@ describe('redisCacheService (fallback mode)', () => {
     });
     await expect(redisCacheService.get('err')).resolves.toBeNull();
     mapGetSpy.mockRestore();
+  });
+});
+
+describe('redis-cache-service (fallback mode + basic ops)', () => {
+  const loadService = async () => {
+    jest.resetModules();
+    delete process.env.REDIS_URL;
+    delete process.env.REDIS_CONNECTION_STRING;
+    const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    const mod = require('../redis-cache-service');
+    return { service: mod.redisCacheService as unknown as { [k: string]: unknown }, warnSpy, errorSpy };
+  };
+
+  it('uses in-memory fallback when REDIS_URL not configured and supports set/get', async () => {
+    const { service, warnSpy } = await loadService();
+
+    await (service as any).clear();
+    await (service as any).set('k1', { a: 1 });
+    const v = await (service as any).get('k1');
+    expect(v).toEqual({ a: 1 });
+    expect(warnSpy).toHaveBeenCalled();
+  });
+
+  it('supports mset/mget and delete/has/clear/incr operations', async () => {
+    const { service } = await loadService();
+    await (service as any).clear();
+
+    await (service as any).mset([
+      ['u:1', { name: 'A' }],
+      ['u:2', { name: 'B' }],
+    ], { ttl: 1000 });
+
+    const values = await (service as any).mget(['u:1', 'u:2', 'u:3']);
+    expect(values).toEqual([{ name: 'A' }, { name: 'B' }, null]);
+
+    expect(await (service as any).has('u:1')).toBe(true);
+    await (service as any).delete('u:1');
+    expect(await (service as any).has('u:1')).toBe(false);
+
+    const v1 = await (service as any).incr('counter');
+    const v2 = await (service as any).incr('counter', 5);
+    expect(v1).toBe(1);
+    expect(v2).toBe(6);
+
+    await (service as any).clear();
+    expect(await (service as any).has('u:2')).toBe(false);
+  });
+
+  it('getStats returns fallback size and connected=false', async () => {
+    const { service } = await loadService();
+    await (service as any).clear();
+    await (service as any).set('s1', 'x');
+    const stats = await (service as any).getStats();
+    expect(stats.redisConnected).toBe(false);
+    expect(stats.fallbackCacheSize).toBeGreaterThanOrEqual(1);
+  });
+
+  it('handles Redis errors gracefully in get path', async () => {
+    const { service, errorSpy } = await loadService();
+    // Force into Redis path with a throwing client
+    (service as any).isConnected = true;
+    (service as any).redis = { get: jest.fn(async () => { throw new Error('boom'); }) };
+
+    const v = await (service as any).get('X');
+    expect(v).toBeNull();
+    expect(errorSpy).toHaveBeenCalled();
   });
 }); 
