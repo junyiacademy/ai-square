@@ -22,6 +22,11 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
   
+  // Special case: Allow access to fix-demo page without authentication
+  if (pathname === '/admin/fix-demo') {
+    return NextResponse.next();
+  }
+  
   // Check if the route is protected
   const isProtectedRoute = PROTECTED_ROUTES.some(route => 
     pathname.startsWith(route)
