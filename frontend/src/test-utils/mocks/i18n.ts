@@ -157,3 +157,21 @@ export const getMockLanguage = () => currentLanguage;
 
 // Export for use in jest.setup.js global mock
 // Individual test files can import { createTranslationMock } to create custom mocks if needed
+
+// Default export for i18n mock
+const i18n = {
+  language: 'en',
+  changeLanguage: jest.fn((lang: string) => {
+    currentLanguage = lang;
+    return Promise.resolve();
+  }),
+  languages: ['en', 'zh', 'es', 'pt', 'ar', 'id', 'th', 'ja', 'ko', 'fr', 'de', 'ru', 'it'],
+  isInitialized: true,
+  resolvedLanguage: 'en',
+  options: {},
+  t: createTranslationMock(),
+  use: jest.fn(),
+  init: jest.fn(),
+};
+
+export default i18n;

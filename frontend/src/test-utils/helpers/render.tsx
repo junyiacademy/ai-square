@@ -9,7 +9,7 @@ import { render as rtlRender, RenderOptions } from '@testing-library/react';
 const SessionProvider = ({ children }: { children: React.ReactNode; session?: any }) => <>{children}</>;
 // Mock I18nextProvider since we're using a mock i18n
 const I18nextProvider = ({ children }: { children: React.ReactNode; i18n?: any }) => <>{children}</>;
-import i18n from '@/__mocks__/i18n';
+import i18n from '../mocks/i18n';
 import { mockSession } from '../mocks/next-auth';
 import { MockAuthProvider } from '../mocks/auth-provider';
 

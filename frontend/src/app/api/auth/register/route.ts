@@ -28,7 +28,8 @@ import { emailService } from '@/lib/email/email-service';
 
 // Send verification email
 async function sendVerificationEmail(email: string, token: string) {
-  const verificationUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/verify-email?token=${token}`;
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || 'http://localhost:3000';
+  const verificationUrl = `${baseUrl}/verify-email?token=${token}`;
   
   console.log(`📧 Sending verification email to ${email}`);
   
