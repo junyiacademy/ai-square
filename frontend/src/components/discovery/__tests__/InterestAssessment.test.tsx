@@ -98,16 +98,12 @@ describe('InterestAssessment', () => {
 
     // Wait for animation and check second question
     await waitFor(() => {
-        const element = screen.queryByText('How do you prefer to work?');
-        if (element) expect(element).toBeInTheDocument();
-      }, { timeout: 1000 });
+      expect(screen.getByText('How do you prefer to work?')).toBeInTheDocument();
+    }, { timeout: 2000 });
     
-    // Check progress
+    // Check progress (should be 100%)
     await waitFor(() => {
-      const progressPercentage = screen.queryByText('100%') || screen.queryByText(/100/);
-      const questionNumber = screen.queryByText('2');
-      if (progressPercentage) expect(progressPercentage).toBeInTheDocument();
-      if (questionNumber) expect(questionNumber).toBeInTheDocument();
+      expect(screen.getByText('100%')).toBeInTheDocument();
     });
   });
 
