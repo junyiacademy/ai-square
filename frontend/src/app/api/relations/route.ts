@@ -81,6 +81,8 @@ interface KSADataResponse {
 
 export async function GET(request: NextRequest) {
   const lang = request.nextUrl.searchParams.get('lang') || 'en';
+  // Normalize language code to match file naming (e.g., zh-TW / zh_TW -> zhTW)
+  const fileLanguage = lang.replace(/[-_]/g, '');
   const cacheKey = cacheKeys.relationsByLang(lang);
 
   try {
@@ -92,10 +94,14 @@ export async function GET(request: NextRequest) {
         return NextResponse.json(cached);
       }
       // Fallback到原本的 fetcher 計算，並使用 cacheService.set
-      const [domainsData, ksaCodesData] = await Promise.all([
-        jsonYamlLoader.load(`rubrics_data/ai_lit_domains/ai_lit_domains_${lang}`, { preferJson: false }) as Promise<DomainsYaml>,
-        jsonYamlLoader.load(`rubrics_data/ksa_codes/ksa_codes_${lang}`, { preferJson: false }) as Promise<KSACodesYaml>
-      ]);
+      // 嘗試語言檔，失敗回退英文
+      let domainsData = await jsonYamlLoader.load(`rubrics_data/ai_lit_domains/ai_lit_domains_${fileLanguage}`, { preferJson: false }) as DomainsYaml | null;
+      let ksaCodesData = await jsonYamlLoader.load(`rubrics_data/ksa_codes/ksa_codes_${fileLanguage}`, { preferJson: false }) as KSACodesYaml | null;
+      if (!domainsData || !ksaCodesData) {
+        console.warn(`Failed to load ${fileLanguage}, falling back to English`);
+        domainsData = await jsonYamlLoader.load(`rubrics_data/ai_lit_domains/ai_lit_domains_en`, { preferJson: false }) as DomainsYaml | null;
+        ksaCodesData = await jsonYamlLoader.load(`rubrics_data/ksa_codes/ksa_codes_en`, { preferJson: false }) as KSACodesYaml | null;
+      }
       if (!domainsData || !ksaCodesData) {
         return NextResponse.json({ error: 'Failed to load data files' }, { status: 500 });
       }
@@ -143,10 +149,15 @@ export async function GET(request: NextRequest) {
     const fetcher = async () => {
       // Load data using the new hybrid loader with language-specific paths
       // Note: We only have YAML files, not JSON, so disable preferJson
-      const [domainsData, ksaCodesData] = await Promise.all([
-        jsonYamlLoader.load(`rubrics_data/ai_lit_domains/ai_lit_domains_${lang}`, { preferJson: false }) as Promise<DomainsYaml>,
-        jsonYamlLoader.load(`rubrics_data/ksa_codes/ksa_codes_${lang}`, { preferJson: false }) as Promise<KSACodesYaml>
-      ]);
+      let domainsData = await jsonYamlLoader.load(`rubrics_data/ai_lit_domains/ai_lit_domains_${fileLanguage}`, { preferJson: false }) as DomainsYaml | null;
+      let ksaCodesData = await jsonYamlLoader.load(`rubrics_data/ksa_codes/ksa_codes_${fileLanguage}`, { preferJson: false }) as KSACodesYaml | null;
+
+      // 如果指定語言不存在，回退到英文
+      if (!domainsData || !ksaCodesData) {
+        console.warn(`Failed to load ${fileLanguage}, falling back to English`);
+        domainsData = await jsonYamlLoader.load(`rubrics_data/ai_lit_domains/ai_lit_domains_en`, { preferJson: false }) as DomainsYaml | null;
+        ksaCodesData = await jsonYamlLoader.load(`rubrics_data/ksa_codes/ksa_codes_en`, { preferJson: false }) as KSACodesYaml | null;
+      }
 
       if (!domainsData || !ksaCodesData) {
         throw new Error('Failed to load data files');
