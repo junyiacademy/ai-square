@@ -8,4 +8,10 @@ export const cacheKeys = {
   scenarioById: (id: string) => `scenario:byId:${id}`,
   scenariosBySource: (sourceType: string, sourceId?: string) =>
     sourceId ? `scenario:bySource:${sourceType}:${sourceId}` : `scenario:bySource:${sourceType}`,
+
+  // New: relations data keyed by language
+  relationsByLang: (lang: string) => `relations:${lang}`,
+
+  // New: discovery scenarios list (language-scoped, anon only)
+  discoveryScenarios: (lang: string) => `discovery:scenarios:list:${lang}`,
 }; 

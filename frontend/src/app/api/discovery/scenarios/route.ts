@@ -5,25 +5,16 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
+import { distributedCacheService } from '@/lib/cache/distributed-cache-service';
+import { cacheKeys, TTL } from '@/lib/cache/cache-keys';
 
 /**
  * GET /api/discovery/scenarios
  * 獲取所有 Discovery Scenarios
  */
-// 簡單的記憶體快取 - 按語言分別快取
-const cachedScenarios: Map<string, unknown> = new Map();
-const cacheTimestamps: Map<string, number> = new Map();
-const CACHE_DURATION = 5 * 60 * 1000; // 5 分鐘
-
-// Function for clearing cache (used internally)
-function clearCache() {
-  cachedScenarios.clear();
-  cacheTimestamps.clear();
-}
-
-// Export for testing only
+// 保留測試清理介面但改為 no-op（改走分散式快取）
 if (process.env.NODE_ENV === 'test') {
-  (global as Record<string, unknown>).__clearDiscoveryScenariosCache = clearCache;
+  (global as Record<string, unknown>).__clearDiscoveryScenariosCache = () => {};
 }
 
 export async function GET(request: NextRequest) {
@@ -37,59 +28,53 @@ export async function GET(request: NextRequest) {
     const session = await getServerSession();
     const userId = session?.user?.id || session?.user?.email;
     
-    // 檢查語言特定快取 - 不快取有用戶的請求
-    const now = Date.now();
-    const cacheKey = language;
-    const cachedData = cachedScenarios.get(cacheKey);
-    const cacheTime = cacheTimestamps.get(cacheKey) || 0;
-    
-    if (!userId && cachedData && (now - cacheTime) < CACHE_DURATION) {
-      return NextResponse.json(cachedData);
-    }
-    
+    // 匿名請求才使用快取鍵；個人化請求直接算（避免污染）
+    const key = !userId ? cacheKeys.discoveryScenarios(language) : undefined;
+
     const scenarioRepo = repositoryFactory.getScenarioRepository();
     const programRepo = userId ? repositoryFactory.getProgramRepository() : null;
     
-    // 從資料庫獲取 scenarios
-    const rawScenarios = await scenarioRepo.findByMode?.('discovery');
-    const scenarios = rawScenarios || [];
+    const compute = async () => {
+      // 從資料庫獲取 scenarios
+      const rawScenarios = await scenarioRepo.findByMode?.('discovery');
+      const scenarios = rawScenarios || [];
     
-    // Get user programs if logged in
-    const userPrograms: Map<string, unknown> = new Map();
-    if (userId && programRepo) {
-      const programs = await programRepo.findByUser(userId);
-      const discoveryPrograms = programs.filter(p => p.mode === 'discovery');
-      
-      // Group by scenario
-      discoveryPrograms.forEach(program => {
-        const scenarioId = program.scenarioId;
-        if (!userPrograms.has(scenarioId)) {
-          userPrograms.set(scenarioId, {
-            programs: [],
-            completedCount: 0,
-            activeCount: 0,
-            bestScore: 0
-          });
-        }
+      // Get user programs if logged in
+      const userPrograms: Map<string, unknown> = new Map();
+      if (userId && programRepo) {
+        const programs = await programRepo.findByUser(userId);
+        const discoveryPrograms = programs.filter(p => p.mode === 'discovery');
         
-        const entry = userPrograms.get(scenarioId) as Record<string, unknown>;
-        const programsList = entry.programs as unknown[];
-        programsList.push(program);
-        
-        if (program.status === 'completed') {
-          entry.completedCount = (entry.completedCount as number) + 1;
-          const score = program.totalScore || 0;
-          if (score > (entry.bestScore as number)) {
-            entry.bestScore = score;
+        // Group by scenario
+        discoveryPrograms.forEach(program => {
+          const scenarioId = program.scenarioId;
+          if (!userPrograms.has(scenarioId)) {
+            userPrograms.set(scenarioId, {
+              programs: [],
+              completedCount: 0,
+              activeCount: 0,
+              bestScore: 0
+            });
           }
-        } else if (program.status === 'active') {
-          entry.activeCount = (entry.activeCount as number) + 1;
-          if (!entry.activeProgram) {
-            entry.activeProgram = program;
+          
+          const entry = userPrograms.get(scenarioId) as Record<string, unknown>;
+          const programsList = entry.programs as unknown[];
+          programsList.push(program);
+          
+          if (program.status === 'completed') {
+            entry.completedCount = (entry.completedCount as number) + 1;
+            const score = program.totalScore || 0;
+            if (score > (entry.bestScore as number)) {
+              entry.bestScore = score;
+            }
+          } else if (program.status === 'active') {
+            entry.activeCount = (entry.activeCount as number) + 1;
+            if (!entry.activeProgram) {
+              entry.activeProgram = program;
+            }
           }
-        }
-      });
-    }
+        });
+      }
     
     
     // 處理多語言字段並轉換為前端期望的格式
@@ -150,9 +135,9 @@ export async function GET(request: NextRequest) {
         discovery_data: scenario.discoveryData
       };
     });
-    
+
     // 建立回應資料
-    const responseData = {
+    return {
       success: true,
       data: {
         scenarios: processedScenarios,
@@ -166,15 +151,14 @@ export async function GET(request: NextRequest) {
         source: 'unified'
       }
     };
-    
-    // 更新語言特定快取 - 只快取沒有用戶的請求
-    if (!userId) {
-      cachedScenarios.set(cacheKey, responseData);
-      cacheTimestamps.set(cacheKey, now);
-    }
-    
-    // Return in consistent format with other APIs
-    return NextResponse.json(responseData);
+    };
+
+    // 匿名請求用 SWR；個人化請求直接計算
+    const result = key
+      ? await distributedCacheService.getWithRevalidation(key, compute, { ttl: TTL.DYNAMIC_5M, staleWhileRevalidate: TTL.DYNAMIC_5M })
+      : await compute();
+
+    return NextResponse.json(result);
   } catch (error) {
     console.error('Error in GET /api/discovery/scenarios:', error);
     return NextResponse.json(
