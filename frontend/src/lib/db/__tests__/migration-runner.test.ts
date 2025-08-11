@@ -1,7 +1,7 @@
 import { Pool } from 'pg';
 import { promises as fs } from 'fs';
 import path from 'path';
-import { MigrationRunner } from '../migration-runner';
+import { MigrationRunner, runMigrations } from '../migration-runner';
 
 // Mock dependencies
 jest.mock('fs', () => ({
@@ -70,7 +70,7 @@ describe('MigrationRunner', () => {
       mockPool.query.mockResolvedValueOnce({ rows: [], rowCount: 0 } as any);
     });
 
-    it.skip('runs pending migrations in order', async () => {
+    it('runs pending migrations in order', async () => {
       // Mock executed migrations
       mockPool.query.mockResolvedValueOnce({
         rows: [{ filename: '001_initial.sql' }],
@@ -91,7 +91,7 @@ describe('MigrationRunner', () => {
         .mockResolvedValueOnce('CREATE TABLE tasks (id INT);' as any);
 
       // Mock successful execution
-      mockPool.query.mockResolvedValue({ rows: [], rowCount: 0 } as any);
+      mockClient.query.mockResolvedValue({ rows: [], rowCount: 0 } as any);
 
       await runner.runPendingMigrations();
 
@@ -111,19 +111,17 @@ describe('MigrationRunner', () => {
         'utf-8'
       );
 
-      // Should execute migrations via client
+      // Should execute migrations via client with transaction
+      expect(mockClient.query).toHaveBeenCalledWith('BEGIN');
       expect(mockClient.query).toHaveBeenCalledWith('CREATE TABLE users (id INT);');
-      expect(mockClient.query).toHaveBeenCalledWith('CREATE TABLE tasks (id INT);');
-
-      // Should record migrations
-      expect(mockPool.query).toHaveBeenCalledWith(
+      expect(mockClient.query).toHaveBeenCalledWith(
         'INSERT INTO migrations (filename) VALUES ($1)',
         ['002_add_users.sql']
       );
-      expect(mockPool.query).toHaveBeenCalledWith(
-        'INSERT INTO migrations (filename) VALUES ($1)',
-        ['003_add_tasks.sql']
-      );
+      expect(mockClient.query).toHaveBeenCalledWith('COMMIT');
+      
+      // Should release client
+      expect(mockClient.release).toHaveBeenCalled();
     });
 
     it('skips migrations if directory does not exist', async () => {
@@ -142,7 +140,7 @@ describe('MigrationRunner', () => {
       consoleLogSpy.mockRestore();
     });
 
-    it.skip('handles migration execution errors', async () => {
+    it('handles migration execution errors', async () => {
       mockPool.query
         .mockResolvedValueOnce({ rows: [], rowCount: 0 } as any) // initialize
         .mockResolvedValueOnce({ rows: [], rowCount: 0 } as any); // get executed migrations
@@ -162,21 +160,21 @@ describe('MigrationRunner', () => {
       mockPool.connect = jest.fn().mockResolvedValue(failingClient);
 
       const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
+      const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation();
 
-      await runner.runPendingMigrations();
+      await expect(runner.runPendingMigrations()).rejects.toThrow('Syntax error');
 
       expect(consoleErrorSpy).toHaveBeenCalledWith(
-        'Failed to execute migration 001_failing.sql:',
+        '✗ Migration 001_failing.sql failed:',
         expect.any(Error)
       );
 
-      // Should not record failed migration
-      expect(mockPool.query).not.toHaveBeenCalledWith(
-        'INSERT INTO migrations (filename) VALUES ($1)',
-        expect.any(Array)
-      );
+      // Should rollback and release client
+      expect(failingClient.query).toHaveBeenCalledWith('ROLLBACK');
+      expect(failingClient.release).toHaveBeenCalled();
 
       consoleErrorSpy.mockRestore();
+      consoleLogSpy.mockRestore();
     });
 
     it('logs when no pending migrations', async () => {
@@ -213,5 +211,152 @@ describe('MigrationRunner', () => {
 
       consoleLogSpy.mockRestore();
     });
+  });
+
+  describe('checkMigrationStatus', () => {
+    it('returns executed and pending migrations', async () => {
+      // Mock initialization
+      mockPool.query.mockResolvedValueOnce({ rows: [], rowCount: 0 } as any);
+      
+      // Mock executed migrations
+      mockPool.query.mockResolvedValueOnce({
+        rows: [
+          { filename: '001_initial.sql' },
+          { filename: '002_add_users.sql' }
+        ],
+        rowCount: 2
+      } as any);
+
+      // Mock all migration files
+      mockFs.readdir.mockResolvedValue([
+        '001_initial.sql',
+        '002_add_users.sql',
+        '003_add_tasks.sql',
+        '004_add_programs.sql',
+        'readme.md', // Should be filtered out
+      ] as any);
+
+      const status = await runner.checkMigrationStatus();
+
+      expect(status.executed).toEqual([
+        '001_initial.sql',
+        '002_add_users.sql'
+      ]);
+      expect(status.pending).toEqual([
+        '003_add_tasks.sql',
+        '004_add_programs.sql'
+      ]);
+    });
+
+    it('handles missing migrations directory', async () => {
+      // Mock initialization
+      mockPool.query.mockResolvedValueOnce({ rows: [], rowCount: 0 } as any);
+      
+      // Mock executed migrations
+      mockPool.query.mockResolvedValueOnce({
+        rows: [{ filename: '001_initial.sql' }],
+        rowCount: 1
+      } as any);
+
+      // Mock missing directory
+      mockFs.readdir.mockRejectedValue(new Error('ENOENT'));
+
+      const status = await runner.checkMigrationStatus();
+
+      expect(status.executed).toEqual(['001_initial.sql']);
+      expect(status.pending).toEqual([]);
+    });
+
+    it('returns empty arrays when no migrations exist', async () => {
+      // Mock initialization
+      mockPool.query.mockResolvedValueOnce({ rows: [], rowCount: 0 } as any);
+      
+      // Mock no executed migrations
+      mockPool.query.mockResolvedValueOnce({
+        rows: [],
+        rowCount: 0
+      } as any);
+
+      // Mock empty directory
+      mockFs.readdir.mockResolvedValue([] as any);
+
+      const status = await runner.checkMigrationStatus();
+
+      expect(status.executed).toEqual([]);
+      expect(status.pending).toEqual([]);
+    });
+
+    it('filters out non-SQL files', async () => {
+      // Mock initialization
+      mockPool.query.mockResolvedValueOnce({ rows: [], rowCount: 0 } as any);
+      
+      // Mock no executed migrations
+      mockPool.query.mockResolvedValueOnce({
+        rows: [],
+        rowCount: 0
+      } as any);
+
+      // Mock directory with mixed files
+      mockFs.readdir.mockResolvedValue([
+        '001_initial.sql',
+        'README.md',
+        '002_users.sql',
+        'migration.js',
+        '003_tasks.sql',
+        '.DS_Store',
+      ] as any);
+
+      const status = await runner.checkMigrationStatus();
+
+      expect(status.pending).toEqual([
+        '001_initial.sql',
+        '002_users.sql',
+        '003_tasks.sql'
+      ]);
+    });
+  });
+});
+
+describe('runMigrations function', () => {
+  it('creates MigrationRunner and calls runPendingMigrations', async () => {
+    const mockPool = {
+      query: jest.fn().mockResolvedValue({ rows: [], rowCount: 0 }),
+      connect: jest.fn().mockResolvedValue({
+        query: jest.fn().mockResolvedValue({ rows: [], rowCount: 0 }),
+        release: jest.fn()
+      })
+    };
+
+    // Mock no pending migrations
+    mockFs.readdir.mockResolvedValue(['001_initial.sql'] as any);
+    
+    const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation();
+
+    await runMigrations(mockPool as any);
+
+    // Should initialize migrations table
+    expect(mockPool.query).toHaveBeenCalledWith(
+      expect.stringContaining('CREATE TABLE IF NOT EXISTS migrations')
+    );
+
+    consoleLogSpy.mockRestore();
+  });
+
+  it('propagates errors from MigrationRunner', async () => {
+    const mockPool = {
+      query: jest.fn().mockRejectedValue(new Error('Database connection failed')),
+      connect: jest.fn()
+    };
+
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
+
+    await expect(runMigrations(mockPool as any)).rejects.toThrow('Database connection failed');
+
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      'Migration runner error:',
+      expect.any(Error)
+    );
+
+    consoleErrorSpy.mockRestore();
   });
 });
