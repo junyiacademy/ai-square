@@ -65,18 +65,21 @@ export async function POST(request: NextRequest) {
     }
 
     // Calculate initial skill gaps (simplified for now)
-    const discoveryData = scenario.discoveryData as {
-      requiredSkills?: string[];
+    const discoveryData = (scenario.discoveryData as {
+      requiredSkills?: unknown;
       careerPath?: string;
       careerLevel?: string;
-    };
-    const skillGaps = discoveryData.requiredSkills?.map(skill => ({
+    }) || {};
+    const requiredSkills = Array.isArray(discoveryData.requiredSkills)
+      ? (discoveryData.requiredSkills as string[])
+      : [];
+    const skillGaps = requiredSkills.map((skill) => ({
       skill,
       currentLevel: 60, // TODO: Get from user profile
       requiredLevel: 75,
       importance: 'critical' as const,
       suggestedResources: []
-    })) || [];
+    }));
 
     // Create program
     const program: Omit<IProgram, 'id'> = {

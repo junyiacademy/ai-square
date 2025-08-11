@@ -3,9 +3,9 @@
 ## 🎯 **最新成果與目標**
 
 - **起始覆蓋率**: 71.58% (Phase 2 完成)
-- **當前覆蓋率**: **更新中（本批新增測試已合併）**
+- **當前覆蓋率**: **75.19%**（CI 報表）
 - **目標覆蓋率**: **80%**
-- **測試通過率**: **100%** (最新 353/353 套件綠燈，4,057 測試，28 skipped) 🚀
+- **測試通過率**: **100%**（最新 351/351 套件綠燈，4,039 測試，28 skipped）🚀
 - **測試數量**: 3,927 個測試 (28 skipped)
 - **更新時間**: 2025-08-11 01:20
 
@@ -373,8 +373,8 @@ PBL 是主要學習模式之一，但檔案龐大：
 
 ### **Phase 3 最新狀態** (2025-08-11 更新)
 **當前狀態（最新）**
-- **測試通過率**: **100%**（353/353 套件）
-- **測試數量**: **4019**（28 skipped）
+- **測試通過率**: **100%**（351/351 套件）
+- **測試數量**: **4039**（28 skipped）
 - **Repositories(PostgreSQL)** 整體覆蓋提升至 ~71.57%；`monitoring` 子模組關鍵檔案覆蓋提升
 - **下一個目標**: **80%** (差距 4.81%)
 - 本批新增與強化測試重點：
@@ -383,6 +383,11 @@ PBL 是主要學習模式之一，但檔案龐大：
     - `GET /api/discovery/scenarios/[id]/programs/[programId]`：401/404/403、任務多語欄位處理、actualXP 聚合、總進度與總 XP 計算（5 測試）
   - **Discovery 任務執行**
     - `GET/PATCH /api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]`：401/403/404/200/500，`start`、`invalid` 分支；AI 評估錯誤分支 mock 驗證（11 測試）
+  - **Chat 路由**（本批新增）
+    - 新增 3 測試：新 session 自動命名與寫回、既有 session 達門檻更新標題、短期記憶更新失敗不影響回應
+  - **Discovery Programs 路由**（本批新增）
+    - 新增 2 測試：相同 `lastActivityAt` 穩定排序、`requiredSkills` 空/缺失 fallback 建立
+  - **修正**：`/api/discovery/programs/route.ts` 容錯 `discoveryData` 與 `requiredSkills` 類型，避免 TypeError
 
 ### 影響範圍
 - 覆蓋了使用者核心學習路徑（列表 → 程序 → 任務）
