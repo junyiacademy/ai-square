@@ -22,6 +22,7 @@
     "quality-check": "npm run lint && npm run test:all",
     "slack:test": "npx tsx scripts/test-slack-webhook.ts",
     "report:ceo": "npx tsx scripts/dynamic-ceo-report.ts",
+    "report:ceo:dry": "npx tsx scripts/dynamic-ceo-report.ts --dry-run",
     "report:dev": "npx tsx scripts/dynamic-dev-tracker.ts",
     "dev:session:start": "npx tsx scripts/dynamic-dev-tracker.ts -- --start-session",
     "dev:session:end": "npx tsx scripts/dynamic-dev-tracker.ts -- --end-session",

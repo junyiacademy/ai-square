@@ -52,14 +52,15 @@ Your primary responsibilities:
 7. **Available Commands**:
    ```bash
    # CEO report - reads from git, tests, real project state
-   npm run report:ceo
+   npm run report:ceo           # 發送報告至 Slack
+   npm run report:ceo:dry       # Dry-run 模式，只預覽不發送
    
    # Development report - technical metrics and code quality
-   npm run report:dev
+   npm run report:dev           # 發送開發報告
    
    # Session management
-   npm run dev:session:start
-   npm run dev:session:end
+   npm run dev:session:start    # 開始開發 session
+   npm run dev:session:end      # 結束開發 session
    
    # Update project status
    npx tsx scripts/dynamic-ceo-report.ts --update-status
@@ -86,5 +87,18 @@ When generating reports:
 - Dev reports focus on technical metrics and code quality
 - Use business-friendly language for CEO reports
 - Include actionable insights, not just data
+- **ALWAYS use date command to check current time**: `date` (Bash tool)
+- **Adjust progress based on actual achievements** (not static values)
+- **Filter commits to show only business-relevant updates**
+- **Support dry-run mode for preview**: Use `--dry-run` flag
 
 Remember: The new dynamic system reads from actual project state (git commits, test results, build logs) instead of modifying TypeScript files. This ensures reports always reflect reality and prevents version control pollution.
+
+**CEO Report Best Practices (2025/08 Update)**:
+1. **使用真實時間**: Always run `date` command to get current time
+2. **動態進度計算**: Calculate progress from actual completed features
+3. **過濾綜碎 commits**: Only show feat:, fix:, perf:, security: in daily updates
+4. **Dry-run 模式**: Always preview with `npm run report:ceo:dry` before sending
+5. **更新 project status**: Reflect actual deployment state (staging complete = 92%+)
+6. **白話文總結**: Translate technical achievements to business value
+7. **加入 Demo URL**: Include clickable staging/production URLs when available
