@@ -161,9 +161,12 @@ export async function GET(request: Request) {
  
     // 測試環境：兼容舊測試，計算後執行 cacheService.set 並處理 set 失敗回傳 500
     if (isTest) {
+      const keyTest = `pbl:scenarios:${lang}`;
+      const cached = await cacheService.get(keyTest);
+      const statusHeader = cached ? 'HIT' : 'MISS';
       const result = await compute();
       try {
-        await cacheService.set(`pbl:scenarios:${lang}`, result, { ttl: 60 * 60 * 1000 });
+        await cacheService.set(keyTest, result, { ttl: 60 * 60 * 1000 });
       } catch {
         return NextResponse.json(
           {
@@ -173,7 +176,7 @@ export async function GET(request: Request) {
           { status: 500 }
         );
       }
-      return NextResponse.json(result, { headers: { 'Content-Type': 'application/json' } });
+      return new NextResponse(JSON.stringify(result), { headers: { 'Content-Type': 'application/json', 'X-Cache': statusHeader } });
     }
 
     let cacheStatus: 'HIT' | 'MISS' | 'STALE' = 'MISS';
