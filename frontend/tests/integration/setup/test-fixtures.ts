@@ -4,9 +4,9 @@ import type {
   IScenario, 
   IProgram, 
   ITask, 
-  IEvaluation,
-  LearningMode 
+  IEvaluation
 } from '@/types/unified-learning';
+import type { LearningMode } from '@/types/database';
 
 /**
  * Test Data Fixtures for Integration Testing
@@ -233,7 +233,7 @@ export function createTestTask(
     type: 'question',
     status: 'active',
     title: { en: `Test Task ${taskIndex + 1}` },
-    instructions: { en: 'Complete this test task' },
+    description: { en: 'Complete this test task' },
     content: {
       instructions: 'Answer the question',
       question: 'What is AI?',
@@ -259,13 +259,15 @@ export function createTestEvaluation(
     userId,
     evaluationType: 'ai-feedback',
     score,
-    feedback: 'Great job! You demonstrated good understanding.',
-    criteria: {
-      accuracy: 90,
-      completeness: 85,
-      clarity: 80,
+    feedbackText: 'Great job! You demonstrated good understanding.',
+    feedbackData: {
+      criteria: {
+        accuracy: 90,
+        completeness: 85,
+        clarity: 80,
+      },
     },
-    aiResponse: {
+    aiAnalysis: {
       model: 'gemini-2.5-flash',
       timestamp: new Date().toISOString(),
       rawResponse: {
@@ -275,7 +277,6 @@ export function createTestEvaluation(
       },
     },
     createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
   };
 }
 
@@ -337,7 +338,7 @@ export const performanceTestData = {
         en: `Performance Test Scenario ${i + 1}`,
         zh: `性能測試情境 ${i + 1}`,
       },
-    } as IScenario));
+    } as unknown as IScenario));
   },
   
   // Generate multiple users for concurrent testing
@@ -410,11 +411,11 @@ export async function seedTestDatabase(pool: Pool) {
           scenario.sourcePath,
           JSON.stringify(scenario.title),
           JSON.stringify(scenario.description),
-          JSON.stringify(scenario.objectives || {}),
-          JSON.stringify(scenario.taskTemplates || []),
-          JSON.stringify(scenario.pblData || {}),
-          JSON.stringify(scenario.assessmentData || {}),
-          JSON.stringify(scenario.discoveryData || {}),
+          JSON.stringify((scenario as Record<string, unknown>).objectives || {}),
+          JSON.stringify((scenario as Record<string, unknown>).taskTemplates || []),
+          JSON.stringify((scenario as Record<string, unknown>).pblData || {}),
+          JSON.stringify((scenario as Record<string, unknown>).assessmentData || {}),
+          JSON.stringify((scenario as Record<string, unknown>).discoveryData || {}),
           new Date(),
           new Date()
         ]

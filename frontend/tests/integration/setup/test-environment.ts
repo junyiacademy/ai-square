@@ -328,7 +328,7 @@ export class IntegrationTestEnvironment {
     }
   }
 
-  private async setupRedis() {
+  public async setupRedis() {
     // Check if Redis should be enabled for tests
     const redisEnabled = process.env.TEST_REDIS_ENABLED !== 'false';
     
@@ -361,7 +361,14 @@ export class IntegrationTestEnvironment {
 
   private setupEnvironmentVariables() {
     // Set test environment variables
-    process.env.NODE_ENV = 'test';
+    if (process.env.NODE_ENV !== 'test') {
+      Object.defineProperty(process.env, 'NODE_ENV', {
+        value: 'test',
+        writable: true,
+        enumerable: true,
+        configurable: true
+      });
+    }
     process.env.DB_HOST = 'localhost';
     process.env.DB_PORT = '5433';
     process.env.DB_NAME = this.testDbName;

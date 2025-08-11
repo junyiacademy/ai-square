@@ -16,9 +16,10 @@ describe('Integration Test Infrastructure', () => {
     env = new IntegrationTestEnvironment();
     await env.setup();
     
-    if (env.getDbPool()) {
-      dbHelper = new DatabaseTestHelper(env.getDbPool());
-      await seedTestDatabase(env.getDbPool());
+    const pool = env.getDbPool();
+    if (pool) {
+      dbHelper = new DatabaseTestHelper(pool);
+      await seedTestDatabase(pool);
     }
   }, 30000);
   

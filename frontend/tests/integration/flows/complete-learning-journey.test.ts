@@ -1,3 +1,8 @@
+// Unmock database modules for integration tests
+jest.unmock('pg');
+jest.unmock('pg-pool');
+jest.unmock('ioredis');
+
 import { IntegrationTestEnvironment } from '../setup/test-environment';
 import { 
   testUsers, 

@@ -1,3 +1,8 @@
+// Unmock database modules for integration tests
+jest.unmock('pg');
+jest.unmock('pg-pool');
+jest.unmock('ioredis');
+
 import { IntegrationTestEnvironment } from '../setup/test-environment';
 import { 
   testScenarios, 
@@ -23,6 +28,17 @@ describe('Cache Consistency', () => {
   let dbHelper: DatabaseTestHelper;
   let cacheHelper: CacheTestHelper;
   let userToken: string;
+  
+  // Helper function to get header value without using any
+  const getHeaderValue = (headers: Headers | Map<string, string> | Record<string, string>, key: string): string | undefined => {
+    if (headers instanceof Headers) {
+      return headers.get(key) || undefined;
+    } else if (headers instanceof Map) {
+      return headers.get(key);
+    } else {
+      return (headers as Record<string, string>)[key];
+    }
+  };
   
   beforeAll(async () => {
     env = new IntegrationTestEnvironment();
@@ -67,7 +83,7 @@ describe('Cache Consistency', () => {
         userToken
       );
       expect(firstResponse.status).toBe(200);
-      expect(firstResponse.headers['x-cache']).toBe('MISS');
+      expect(getHeaderValue(firstResponse.headers, 'x-cache')).toBe('MISS');
       
       // 2. Second request - HIT (from cache)
       const secondResponse = await apiHelper.authenticatedRequest(
@@ -76,7 +92,7 @@ describe('Cache Consistency', () => {
         userToken
       );
       expect(secondResponse.status).toBe(200);
-      expect(secondResponse.headers['x-cache']).toBe('HIT');
+      expect(getHeaderValue(secondResponse.headers, 'x-cache')).toBe('HIT');
       
       // Response should be identical
       expect(JSON.stringify(secondResponse.body)).toBe(
@@ -149,7 +165,7 @@ describe('Cache Consistency', () => {
         `/api/pbl/scenarios/${scenarioId}`,
         userToken
       );
-      expect(initialResponse.headers['x-cache']).toBe('MISS');
+      expect(getHeaderValue(initialResponse.headers, 'x-cache')).toBe('MISS');
       
       // 2. Verify cache hit
       const cachedResponse = await apiHelper.authenticatedRequest(
@@ -157,7 +173,7 @@ describe('Cache Consistency', () => {
         `/api/pbl/scenarios/${scenarioId}`,
         userToken
       );
-      expect(cachedResponse.headers['x-cache']).toBe('HIT');
+      expect(getHeaderValue(cachedResponse.headers, 'x-cache')).toBe('HIT');
       
       // 3. Start a program (mutation)
       const startResponse = await apiHelper.authenticatedRequest(
@@ -177,7 +193,7 @@ describe('Cache Consistency', () => {
       );
       
       // User-specific data should not be cached
-      expect(userProgramsResponse.headers['x-cache']).toBeUndefined();
+      expect(getHeaderValue(userProgramsResponse.headers, 'x-cache')).toBeUndefined();
     });
     
     it('should handle cache key patterns correctly', async () => {
@@ -275,7 +291,7 @@ describe('Cache Consistency', () => {
       
       // Check cache headers
       const cacheHeaders = successful.map(r => 
-        (r as PromiseFulfilledResult<any>).value.headers['x-cache']
+        getHeaderValue((r as PromiseFulfilledResult<{ headers: Headers | Map<string, string> | Record<string, string> }>).value.headers, 'x-cache')
       );
       
       // Most requests should hit cache (stampede prevented)
@@ -354,7 +370,7 @@ describe('Cache Consistency', () => {
           `${endpoint}?lang=${lang}`,
           userToken
         );
-        expect(cachedResponse.headers['x-cache']).toBe('HIT');
+        expect(getHeaderValue(cachedResponse.headers, 'x-cache')).toBe('HIT');
         expect(cachedResponse.body).toEqual(responses[lang]);
       }
     });

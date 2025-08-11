@@ -1,9 +1,19 @@
-import request from 'supertest';
+import { NextRequest } from 'next/server';
 import { Pool } from 'pg';
 import Redis from 'ioredis';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { testUsers } from './test-fixtures';
+
+// Import API route handlers directly
+import * as authLoginRoute from '@/app/api/auth/login/route';
+import * as authRegisterRoute from '@/app/api/auth/register/route';
+import * as pblScenariosRoute from '@/app/api/pbl/scenarios/route';
+import * as pblScenarioDetailRoute from '@/app/api/pbl/scenarios/[id]/route';
+import * as pblStartRoute from '@/app/api/pbl/scenarios/[id]/start/route';
+import * as pblTaskRoute from '@/app/api/pbl/scenarios/[id]/programs/[programId]/tasks/[taskId]/route';
+import * as pblEvaluateRoute from '@/app/api/pbl/tasks/[taskId]/evaluate/route';
+import * as pblCompleteRoute from '@/app/api/pbl/programs/[programId]/complete/route';
 
 /**
  * Test Helper Functions for Integration Testing
@@ -20,49 +30,102 @@ export class APITestHelper {
   }
   
   /**
-   * Make authenticated API request
+   * Create NextRequest for testing
+   */
+  private createRequest(
+    method: string,
+    path: string,
+    body?: Record<string, unknown>,
+    headers?: Record<string, string>
+  ): NextRequest {
+    const url = `${this.baseUrl}${path}`;
+    const init = {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+        ...headers,
+      },
+      body: body ? JSON.stringify(body) : undefined,
+    };
+    
+    return new NextRequest(url, init);
+  }
+  
+  /**
+   * Make authenticated API request directly to route handler
    */
   async authenticatedRequest(
     method: 'get' | 'post' | 'put' | 'delete',
     path: string,
     token: string,
-    body?: any
+    body?: Record<string, unknown>
   ) {
-    const req = request(this.baseUrl)[method](path)
-      .set('Authorization', `Bearer ${token}`)
-      .set('Content-Type', 'application/json');
+    const request = this.createRequest(method.toUpperCase(), path, body, {
+      'Authorization': `Bearer ${token}`,
+    });
     
-    if (body) {
-      req.send(body);
+    // Route to the appropriate handler based on path
+    let response: Response;
+    
+    if (path === '/api/pbl/scenarios' && method === 'get') {
+      response = await pblScenariosRoute.GET(request);
+    } else if (path.startsWith('/api/pbl/scenarios/') && path.includes('/start')) {
+      const id = path.split('/')[4];
+      response = await pblStartRoute.POST(request, { params: Promise.resolve({ id }) });
+    } else if (path.match(/^\/api\/pbl\/scenarios\/[^/]+$/) && method === 'get') {
+      const id = path.split('/').pop()!;
+      response = await pblScenarioDetailRoute.GET(request, { params: Promise.resolve({ id }) });
+    } else if (path.includes('/tasks/') && path.includes('/evaluate')) {
+      const taskId = path.match(/tasks\/([^/]+)\/evaluate/)?.[1];
+      if (taskId) {
+        response = await pblEvaluateRoute.POST(request, { 
+          params: Promise.resolve({ taskId }) 
+        });
+      } else {
+        throw new Error(`Invalid evaluate path: ${path}`);
+      }
+    } else {
+      throw new Error(`Unhandled path: ${path}`);
     }
     
-    return req;
+    const responseBody = await response.json();
+    
+    return {
+      status: response.status,
+      body: responseBody,
+      headers: response.headers,
+    };
   }
   
   /**
    * Login and get token
    */
   async login(email: string, password: string): Promise<string> {
-    const response = await request(this.baseUrl)
-      .post('/api/auth/login')
-      .send({ email, password });
+    const request = this.createRequest('POST', '/api/auth/login', { email, password });
+    const response = await authLoginRoute.POST(request);
     
     if (response.status !== 200) {
-      throw new Error(`Login failed: ${response.body.error}`);
+      const body = await response.json();
+      throw new Error(`Login failed: ${body.error}`);
     }
     
-    return response.body.token;
+    const body = await response.json();
+    return body.token;
   }
   
   /**
    * Register new user
    */
   async register(email: string, password: string, name: string) {
-    const response = await request(this.baseUrl)
-      .post('/api/auth/register')
-      .send({ email, password, name });
+    const request = this.createRequest('POST', '/api/auth/register', { email, password, name });
+    const response = await authRegisterRoute.POST(request);
+    const body = await response.json();
     
-    return response;
+    return {
+      status: response.status,
+      body,
+      headers: response.headers,
+    };
   }
   
   /**
@@ -79,7 +142,7 @@ export class APITestHelper {
   }
   
   /**
-   * Submit task response
+   * Submit task response via evaluate endpoint
    */
   async submitTaskResponse(
     programId: string,
@@ -89,9 +152,9 @@ export class APITestHelper {
   ) {
     return this.authenticatedRequest(
       'post',
-      `/api/pbl/programs/${programId}/tasks/${taskId}/submit`,
+      `/api/pbl/tasks/${taskId}/evaluate`,
       token,
-      { response }
+      { response, programId }
     );
   }
   
@@ -109,7 +172,7 @@ export class APITestHelper {
 
 // Database Test Helpers
 export class DatabaseTestHelper {
-  private pool: Pool;
+  public pool: Pool;
   
   constructor(pool: Pool) {
     this.pool = pool;

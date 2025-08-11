@@ -1,3 +1,9 @@
+// CRITICAL: Unmock database modules for integration tests
+// This MUST be done before any imports
+jest.unmock('pg');
+jest.unmock('pg-pool');
+jest.unmock('ioredis');
+
 import dotenv from 'dotenv';
 import path from 'path';
 
@@ -6,7 +12,14 @@ dotenv.config({ path: path.resolve(process.cwd(), '.env.test') });
 dotenv.config({ path: path.resolve(process.cwd(), '.env.local') });
 
 // Set test environment
-process.env.NODE_ENV = 'test';
+if (process.env.NODE_ENV !== 'test') {
+  Object.defineProperty(process.env, 'NODE_ENV', {
+    value: 'test',
+    writable: true,
+    enumerable: true,
+    configurable: true
+  });
+}
 process.env.NEXTAUTH_URL = process.env.NEXTAUTH_URL || 'http://localhost:3000';
 process.env.NEXTAUTH_SECRET = process.env.NEXTAUTH_SECRET || 'test-secret-for-integration-tests';
 
