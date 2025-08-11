@@ -4,7 +4,13 @@ import { useState } from 'react';
 
 export default function FixDemoAccountsPage() {
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<{
+    success: boolean;
+    message: string;
+    results?: Array<{ email: string; action: string; role: string }>;
+    verification?: Array<{ email: string; role: string; password_status: string; email_verified: boolean }>;
+    credentials?: Record<string, string>;
+  } | null>(null);
   const [error, setError] = useState<string>('');
 
   const handleFix = async () => {
@@ -81,7 +87,7 @@ export default function FixDemoAccountsPage() {
                   <div>
                     <h4 className="font-medium text-sm text-gray-700">Actions Performed:</h4>
                     <ul className="mt-1 space-y-1">
-                      {result.results?.map((r: any, i: number) => (
+                      {result.results?.map((r, i) => (
                         <li key={i} className="text-sm text-gray-600">
                           • {r.email}: {r.action} (role: {r.role})
                         </li>
@@ -100,7 +106,7 @@ export default function FixDemoAccountsPage() {
                         </tr>
                       </thead>
                       <tbody className="bg-white divide-y divide-gray-200">
-                        {result.verification?.map((v: any, i: number) => (
+                        {result.verification?.map((v, i) => (
                           <tr key={i}>
                             <td className="px-3 py-2 text-sm text-gray-600">{v.email}</td>
                             <td className="px-3 py-2 text-sm text-gray-600">{v.role}</td>

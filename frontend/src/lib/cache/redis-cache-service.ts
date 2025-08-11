@@ -35,11 +35,14 @@ class RedisCacheService {
 
   private async initializeRedis() {
     try {
-      // Allow hard disable via env
+      // Allow hard disable via env, but permit explicit enable in tests
+      const explicitlyEnabled = String(process.env.REDIS_ENABLED || '').toLowerCase() === 'true';
       if (
-        process.env.NODE_ENV === 'test' ||
-        Boolean(process.env.JEST_WORKER_ID) ||
-        String(process.env.REDIS_ENABLED || '').toLowerCase() === 'false'
+        !explicitlyEnabled && (
+          process.env.NODE_ENV === 'test' ||
+          Boolean(process.env.JEST_WORKER_ID) ||
+          String(process.env.REDIS_ENABLED || '').toLowerCase() === 'false'
+        )
       ) {
         console.warn('Redis disabled by REDIS_ENABLED=false, using in-memory fallback');
         return;

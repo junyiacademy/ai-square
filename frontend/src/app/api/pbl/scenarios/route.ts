@@ -148,7 +148,7 @@ export async function GET(request: Request) {
         data: {
           scenarios,
           total: scenarios.length,
-          available: scenarios.filter(s => (s as any).isAvailable).length
+          available: scenarios.filter(s => (s as Record<string, unknown>).isAvailable).length
         },
         meta: {
           timestamp: new Date().toISOString(),
@@ -164,7 +164,7 @@ export async function GET(request: Request) {
       const result = await compute();
       try {
         await cacheService.set(`pbl:scenarios:${lang}`, result, { ttl: 60 * 60 * 1000 });
-      } catch (err) {
+      } catch {
         return NextResponse.json(
           {
             success: false,

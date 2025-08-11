@@ -3,6 +3,7 @@ import { jest } from '@jest/globals';
 describe('redis-cache-service (redis connected branch)', () => {
   const setupRedis = async (overrides: Partial<Record<string, any>> = {}) => {
     jest.resetModules();
+    process.env.REDIS_ENABLED = 'true';
     process.env.REDIS_URL = 'redis://localhost:6379';
     const methodMocks: Record<string, any> = {
       on: jest.fn() as any,
@@ -31,6 +32,12 @@ describe('redis-cache-service (redis connected branch)', () => {
     const svc = mod.redisCacheService as any;
     return { svc, mocks: methodMocks };
   };
+
+  afterEach(() => {
+    delete process.env.REDIS_ENABLED;
+    delete process.env.REDIS_URL;
+    jest.resetModules();
+  });
 
   it('set/get via redis when connected', async () => {
     const { svc, mocks } = await setupRedis();
