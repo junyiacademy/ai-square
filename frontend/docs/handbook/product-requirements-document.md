@@ -110,18 +110,11 @@ ContentAPIService
 **已完成的 API 快取整合**:
 - ✅ `/api/relations` - KSA 框架資料（TTL: 1hr）
 - ✅ `/api/discovery/scenarios` - Discovery 情境列表（TTL: 5min）
+- ✅ `/api/assessment/scenarios` - Assessment 情境列表（TTL: 1hr）
+- ✅ `/api/pbl/scenarios` - PBL 情境列表（TTL: 1hr）
+- ✅ `/api/ksa` - KSA 框架完整資料（TTL: 24hr）
 
-**待補充 Redis 快取的 API**:
-1. **高優先級**（高流量、靜態內容）:
-   - `/api/assessment/scenarios` - Assessment 情境列表（建議 TTL: 1hr）
-   - `/api/pbl/scenarios` - PBL 情境列表（建議 TTL: 1hr）
-   
-2. **中優先級**（半靜態內容）:
-   - `/api/ksa/framework` - KSA 框架完整資料（建議 TTL: 24hr）
-   - `/api/discovery/careers` - 職涯路徑資料（建議 TTL: 1hr）
-   
-3. **低優先級**（選擇性實作）:
-   - `/api/stats/public` - 公開統計資料（建議 TTL: 5min）
+**Redis 快取覆蓋完成**: 所有主要靜態內容 API 都已加入快取機制
 
 **快取策略原則**:
 - 匿名用戶請求：使用快取
@@ -325,8 +318,9 @@ const content = await contentAPI.getContent(path);
 ---
 
 *Last Updated: 2025-08-11*
-*Version: 2.1*
+*Version: 2.2*
 *Status: Active Development*
 
 ### 最新更新
+- 2025-08-11 v2.2: 完成所有主要 API 的 Redis 快取整合（KSA API 加入 24hr TTL）
 - 2025-08-11 v2.1: 新增 Redis 快取實作狀態與待補充 API 清單

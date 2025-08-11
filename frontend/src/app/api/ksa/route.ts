@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { jsonYamlLoader } from '@/lib/json-yaml-loader';
+import { distributedCacheService } from '@/lib/cache/distributed-cache-service';
+import { cacheKeys, TTL } from '@/lib/cache/cache-keys';
 
 interface YAMLCode {
   summary: string;
@@ -27,24 +29,27 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const lang = searchParams.get('lang') || 'en';
+    
+    // Cache key for KSA data
+    const cacheKey = `ksa:${lang}`;
+    let cacheStatus: 'HIT' | 'MISS' | 'STALE' = 'MISS';
+    
+    // Fetcher function for cache
+    const fetcher = async () => {
+      // Load language-specific KSA codes file
+      // For language-specific files, use format: ksa_codes_lang
+      const fileName = lang === 'en' ? 'ksa_codes' : `ksa_codes_${lang}`;
+      const data = await jsonYamlLoader.load(fileName, { 
+        preferJson: true 
+      }) as YAMLData;
 
-    // Load language-specific KSA codes file
-    // For language-specific files, use format: ksa_codes_lang
-    const fileName = lang === 'en' ? 'ksa_codes' : `ksa_codes_${lang}`;
-    const data = await jsonYamlLoader.load(fileName, { 
-      preferJson: true 
-    }) as YAMLData;
+      if (!data) {
+        throw new Error('Failed to load KSA data');
+      }
 
-    if (!data) {
-      return NextResponse.json(
-        { error: 'Failed to load KSA data' },
-        { status: 500 }
-      );
-    }
-
-    // Process each section (knowledge_codes, skill_codes, attitude_codes)
-    // No translation needed as we're loading language-specific files
-    const processSection = (sectionData: YAMLSection) => {
+      // Process each section (knowledge_codes, skill_codes, attitude_codes)
+      // No translation needed as we're loading language-specific files
+      const processSection = (sectionData: YAMLSection) => {
       const processedSection = {
         description: sectionData.description,
         themes: {} as Record<string, { 
@@ -72,13 +77,32 @@ export async function GET(request: NextRequest) {
       return processedSection;
     };
 
-    const response = {
-      knowledge_codes: processSection(data.knowledge_codes),
-      skill_codes: processSection(data.skill_codes),
-      attitude_codes: processSection(data.attitude_codes)
-    };
+      const response = {
+        knowledge_codes: processSection(data.knowledge_codes),
+        skill_codes: processSection(data.skill_codes),
+        attitude_codes: processSection(data.attitude_codes)
+      };
 
-    return NextResponse.json(response);
+      return response;
+    };
+    
+    // Use distributed cache with SWR (24 hour TTL for semi-static KSA data)
+    const response = await distributedCacheService.getWithRevalidation(
+      cacheKey,
+      fetcher,
+      { 
+        ttl: TTL.SEMI_STATIC_1H * 24, // 24 hours
+        staleWhileRevalidate: TTL.SEMI_STATIC_1H * 24,
+        onStatus: (s) => { cacheStatus = s; }
+      }
+    );
+
+    return new NextResponse(JSON.stringify(response), {
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Cache': cacheStatus
+      }
+    });
   } catch (error) {
     console.error('Error loading KSA data:', error);
     return NextResponse.json(

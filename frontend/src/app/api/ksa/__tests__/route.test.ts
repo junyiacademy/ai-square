@@ -4,11 +4,19 @@
 import { GET } from '../route';
 import { NextRequest } from 'next/server';
 import { jsonYamlLoader } from '@/lib/json-yaml-loader';
+import { distributedCacheService } from '@/lib/cache/distributed-cache-service';
 
 // Mock jsonYamlLoader
 jest.mock('@/lib/json-yaml-loader', () => ({
   jsonYamlLoader: {
     load: jest.fn()
+  }
+}));
+
+// Mock distributed cache service
+jest.mock('@/lib/cache/distributed-cache-service', () => ({
+  distributedCacheService: {
+    getWithRevalidation: jest.fn()
   }
 }));
 
@@ -54,6 +62,7 @@ const createMockRequest = (url: string): NextRequest => {
 };
 
 const mockJsonYamlLoader = jsonYamlLoader as jest.Mocked<typeof jsonYamlLoader>;
+const mockDistributedCache = distributedCacheService as jest.Mocked<typeof distributedCacheService>;
 
 describe('/api/ksa route', () => {
   const mockYamlData = {
@@ -112,6 +121,11 @@ describe('/api/ksa route', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockJsonYamlLoader.load.mockResolvedValue(mockYamlData);
+    
+    // Mock distributed cache to call the fetcher function
+    mockDistributedCache.getWithRevalidation.mockImplementation(async (key, fetcher) => {
+      return await fetcher();
+    });
   });
 
   describe('Language Parameter Handling', () => {
