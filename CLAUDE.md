@@ -159,6 +159,46 @@ Always follow the instructions in plan.md. When I say "go", find the next unmark
 
 ## 📊 Slack 動態報告系統 (2025/08 新增)
 
+### 🚨 Slack 報告三大鐵則
+
+#### 鐵則一：狀態必須正確 (State Must Be Correct)
+```bash
+# 執行報告前的強制檢查流程
+1. cat .project-status.json      # 檢查現有狀態
+2. 對照 TODO list 完成狀態       # 確認狀態檔案反映實際進度
+3. 更新不正確的項目              # 只有在需要時才更新
+4. 再執行報告命令                # 狀態正確後才生成報告
+```
+
+#### 鐵則二：Dry Run 優先 (Dry Run First)
+```bash
+# ❌ 絕對錯誤的做法
+npm run report:ceo              # 直接發送到 Slack
+
+# ✅ 正確的做法
+npm run report:ceo -- --dry-run # 步驟 1: 預覽報告內容
+# [顯示預覽給用戶看]
+# [等待用戶說"發送"或"send"]
+npm run report:ceo              # 步驟 2: 只在用戶明確要求時執行
+```
+
+#### 鐵則三：理解用戶意圖 (Understand User Intent)
+- **「dry run」「測試」「預覽」** → 只執行 `--dry-run`，絕不實際發送
+- **「發送」「send」「執行」** → 先詢問確認，再實際發送
+- **「檢查」「check」** → 驗證狀態，不發送任何東西
+
+### 📋 Slack 報告執行檢查清單
+
+執行任何 Slack 報告前必須完成：
+- [ ] 檢查 `.project-status.json` 是否最新
+- [ ] 確認 TODO list 的完成項目都在 `completedFeatures` 中
+- [ ] 確認進行中項目都在 `inProgressFeatures` 中
+- [ ] 執行 `--dry-run` 並顯示預覽
+- [ ] 等待用戶明確說「發送」
+- [ ] 確認 Slack webhook 已設定
+
+## 📊 Slack 動態報告系統
+
 ### 🚨 重要原則：絕不修改 TypeScript 原始碼來生成報告
 
 **動態報告系統**從實際專案狀態讀取數據，包括：
