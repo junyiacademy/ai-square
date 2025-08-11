@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { jsonYamlLoader } from '@/lib/json-yaml-loader';
 import { distributedCacheService } from '@/lib/cache/distributed-cache-service';
-import { cacheKeys, TTL } from '@/lib/cache/cache-keys';
+import { TTL } from '@/lib/cache/cache-keys';
 
 interface YAMLCode {
   summary: string;
