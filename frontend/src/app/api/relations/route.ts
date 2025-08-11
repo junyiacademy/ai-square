@@ -184,13 +184,19 @@ export async function GET(request: NextRequest) {
       };
     };
 
+    let cacheStatus: 'HIT' | 'MISS' | 'STALE' = 'MISS';
     const data = await distributedCacheService.getWithRevalidation(
       cacheKey,
       fetcher,
-      { ttl: TTL.SEMI_STATIC_1H, staleWhileRevalidate: TTL.SEMI_STATIC_1H }
+      { ttl: TTL.SEMI_STATIC_1H, staleWhileRevalidate: TTL.SEMI_STATIC_1H, onStatus: (s) => { cacheStatus = s; } }
     );
 
-    return NextResponse.json(data);
+    return new NextResponse(JSON.stringify(data), {
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Cache': cacheStatus
+      }
+    });
   } catch (error) {
     console.error('Error loading relations data:', error);
     

@@ -21,6 +21,13 @@ class RedisCacheService {
   private isConnected = false;
   private fallbackCache = new Map<string, CacheItem<unknown>>();
   private readonly MAX_FALLBACK_SIZE = 1000;
+  private errorCount = 0;
+  private breakerOpenUntil = 0;
+
+  private applyPrefix(key: string): string {
+    const prefix = process.env.CACHE_KEY_PREFIX || '';
+    return prefix ? `${prefix}:${key}` : key;
+  }
 
   constructor() {
     this.initializeRedis();
@@ -72,6 +79,10 @@ class RedisCacheService {
       this.redis.on('error', (err) => {
         console.error('Redis error:', err);
         this.isConnected = false;
+        this.errorCount += 1;
+        if (this.errorCount >= 3) {
+          this.breakerOpenUntil = Date.now() + 60_000; // 1min cooldown
+        }
       });
 
       this.redis.on('close', () => {
@@ -82,6 +93,7 @@ class RedisCacheService {
       // Test connection
       await this.redis.ping();
       this.isConnected = true;
+      this.errorCount = 0;
 
     } catch (error) {
       console.error('Failed to initialize Redis:', error);
@@ -94,23 +106,25 @@ class RedisCacheService {
    */
   async get<T>(key: string): Promise<T | null> {
     try {
-      // Try Redis first
-      if (this.isConnected && this.redis) {
-        const value = await this.redis.get(key);
+      const realKey = this.applyPrefix(key);
+      if (Date.now() < this.breakerOpenUntil) {
+        // breaker open: skip redis path
+      } else if (this.isConnected && this.redis) {
+        const value = await this.redis.get(realKey);
         if (value !== null) {
           return JSON.parse(value);
         }
       }
 
       // Fallback to in-memory cache
-      const item = this.fallbackCache.get(key);
+      const item = this.fallbackCache.get(realKey);
       if (item && item.expiresAt > Date.now()) {
         return item.value as T;
       }
 
       // Remove expired item
       if (item) {
-        this.fallbackCache.delete(key);
+        this.fallbackCache.delete(realKey);
       }
 
       return null;
@@ -125,18 +139,24 @@ class RedisCacheService {
    */
   async set<T>(key: string, value: T, options: CacheOptions = {}): Promise<void> {
     const { ttl = 300000, serialize = true } = options; // Default 5 minutes
+    const realKey = this.applyPrefix(key);
     
     const serializedValue = serialize ? JSON.stringify(value) : value;
     try {
       // Try Redis first
-      if (this.isConnected && this.redis) {
-        await this.redis.setex(key, Math.floor(ttl / 1000), serializedValue as string);
+      if (Date.now() >= this.breakerOpenUntil && this.isConnected && this.redis) {
+        const seconds = Math.max(1, Math.floor(ttl / 1000));
+        await this.redis.setex(realKey, seconds, serializedValue as string);
       }
     } catch (error) {
       console.error('Cache set error:', error);
+      this.errorCount += 1;
+      if (this.errorCount >= 3) {
+        this.breakerOpenUntil = Date.now() + 60_000;
+      }
     } finally {
       // Always store in fallback cache even if redis set fails
-      this.fallbackCache.set(key, {
+      this.fallbackCache.set(realKey, {
         value,
         expiresAt: Date.now() + ttl,
         createdAt: Date.now()
@@ -154,13 +174,14 @@ class RedisCacheService {
    */
   async delete(key: string): Promise<void> {
     try {
+      const realKey = this.applyPrefix(key);
       // Delete from Redis
-      if (this.isConnected && this.redis) {
-        await this.redis.del(key);
+      if (Date.now() >= this.breakerOpenUntil && this.isConnected && this.redis) {
+        await this.redis.del(realKey);
       }
 
       // Delete from fallback cache
-      this.fallbackCache.delete(key);
+      this.fallbackCache.delete(realKey);
     } catch (error) {
       console.error('Cache delete error:', error);
     }
@@ -188,14 +209,15 @@ class RedisCacheService {
    */
   async has(key: string): Promise<boolean> {
     try {
+      const realKey = this.applyPrefix(key);
       // Check Redis first
-      if (this.isConnected && this.redis) {
-        const exists = await this.redis.exists(key);
+      if (Date.now() >= this.breakerOpenUntil && this.isConnected && this.redis) {
+        const exists = await this.redis.exists(realKey);
         if (exists) return true;
       }
 
       // Check fallback cache
-      const item = this.fallbackCache.get(key);
+      const item = this.fallbackCache.get(realKey);
       if (item && item.expiresAt > Date.now()) {
         return true;
       }
@@ -212,14 +234,15 @@ class RedisCacheService {
    */
   async mget<T>(keys: string[]): Promise<(T | null)[]> {
     try {
+      const prefixed = keys.map(k => this.applyPrefix(k));
       // Try Redis first
-      if (this.isConnected && this.redis) {
-        const values = await this.redis.mget(...keys);
+      if (Date.now() >= this.breakerOpenUntil && this.isConnected && this.redis) {
+        const values = await this.redis.mget(...prefixed);
         return values.map(v => v ? JSON.parse(v) as T : null);
       }
 
       // Fallback to in-memory cache
-      return keys.map(key => {
+      return prefixed.map(key => {
         const item = this.fallbackCache.get(key);
         if (item && item.expiresAt > Date.now()) {
           return item.value as T;
@@ -249,17 +272,18 @@ class RedisCacheService {
    */
   async incr(key: string, amount: number = 1): Promise<number> {
     try {
+      const realKey = this.applyPrefix(key);
       // Try Redis first
-      if (this.isConnected && this.redis) {
-        return await this.redis.incrby(key, amount);
+      if (Date.now() >= this.breakerOpenUntil && this.isConnected && this.redis) {
+        return await this.redis.incrby(realKey, amount);
       }
 
       // Fallback to in-memory cache
-      const item = this.fallbackCache.get(key);
+      const item = this.fallbackCache.get(realKey);
       const currentValue = typeof item?.value === 'number' ? item.value : 0;
       const newValue = currentValue + amount;
       
-      this.fallbackCache.set(key, {
+      this.fallbackCache.set(realKey, {
         value: newValue,
         expiresAt: Date.now() + 300000, // 5 minutes default
         createdAt: Date.now()

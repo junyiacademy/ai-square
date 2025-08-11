@@ -154,10 +154,18 @@ export async function GET(request: NextRequest) {
     };
 
     // 匿名請求用 SWR；個人化請求直接計算
-    const result = key
-      ? await distributedCacheService.getWithRevalidation(key, compute, { ttl: TTL.DYNAMIC_5M, staleWhileRevalidate: TTL.DYNAMIC_5M })
-      : await compute();
+    if (key) {
+      let cacheStatus: 'HIT' | 'MISS' | 'STALE' = 'MISS';
+      const result = await distributedCacheService.getWithRevalidation(key, compute, { ttl: TTL.DYNAMIC_5M, staleWhileRevalidate: TTL.DYNAMIC_5M, onStatus: (s) => { cacheStatus = s; } });
+      return new NextResponse(JSON.stringify(result), {
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Cache': cacheStatus
+        }
+      });
+    }
 
+    const result = await compute();
     return NextResponse.json(result);
   } catch (error) {
     console.error('Error in GET /api/discovery/scenarios:', error);
