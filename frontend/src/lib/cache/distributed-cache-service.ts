@@ -354,7 +354,22 @@ class DistributedCacheService {
     options: CacheOptions = {}
   ): Promise<T> {
     const value = await fetcher();
-    await this.set(key, value, options);
+    // key here已為 applyPrefix 後的 realKey，避免再次加前綴
+    const ttl = this.withJitter(options.ttl) ?? 300000;
+    // 本地
+    this.setLocal(key, value, { ttl });
+    try {
+      // Redis
+      await redisCacheService.set(key, value, { ttl });
+    } catch (e) {
+      console.error('Distributed cache fetchAndCache redis set error:', e);
+    }
+    try {
+      // 後援快取
+      await cacheService.set(key, value, { ttl });
+    } catch (e) {
+      console.error('Distributed cache fetchAndCache fallback set error:', e);
+    }
     return value;
   }
 
