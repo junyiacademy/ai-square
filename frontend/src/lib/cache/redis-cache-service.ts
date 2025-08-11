@@ -28,14 +28,30 @@ class RedisCacheService {
 
   private async initializeRedis() {
     try {
+      // Allow hard disable via env
+      if (String(process.env.REDIS_ENABLED || '').toLowerCase() === 'false') {
+        console.warn('Redis disabled by REDIS_ENABLED=false, using in-memory fallback');
+        return;
+      }
+
       const redisUrl = process.env.REDIS_URL || process.env.REDIS_CONNECTION_STRING;
-      
-      if (!redisUrl) {
+      const host = process.env.REDIS_HOST;
+      const port = process.env.REDIS_PORT;
+      const password = process.env.REDIS_PASSWORD;
+      const db = process.env.REDIS_DB;
+
+      const urlFromHostPort = host
+        ? `redis://${password ? `:${password}@` : ''}${host}${port ? `:${port}` : ''}${db ? `/${db}` : ''}`
+        : undefined;
+       
+      const connectionString = redisUrl || urlFromHostPort;
+
+      if (!connectionString) {
         console.warn('Redis URL not configured, using in-memory fallback');
         return;
       }
 
-      this.redis = new Redis(redisUrl, {
+      this.redis = new Redis(connectionString, {
         maxRetriesPerRequest: 3,
         lazyConnect: true,
         connectTimeout: 5000,
