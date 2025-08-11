@@ -133,21 +133,43 @@ export class IntegrationTestEnvironment {
     
     const sql = fs.readFileSync(schemaPath, 'utf8');
     
-    // Split SQL statements and execute
-    const statements = sql
-      .split(';')
-      .filter(stmt => stmt.trim().length > 0)
-      .map(stmt => stmt.trim() + ';');
+    // Execute the full schema file in one go to preserve PL/pgSQL blocks
+    try {
+      await this.dbPool.query(sql);
+    } catch (error: any) {
+      console.error(`Error executing schema-v3.sql: ${error.message}`);
+    }
     
-    for (const statement of statements) {
+    // After base schema, also apply auth migration to add password/session related structures
+    const authMigrationPath = path.join(
+      process.cwd(),
+      'src/lib/repositories/postgresql/migrations/20250204-add-password-column.sql'
+    );
+    if (fs.existsSync(authMigrationPath)) {
       try {
-        await this.dbPool.query(statement);
+        const authSql = fs.readFileSync(authMigrationPath, 'utf8');
+        await this.dbPool.query(authSql);
       } catch (error: any) {
-        // Ignore certain expected errors
-        if (!error.message?.includes('already exists')) {
-          console.error(`Error executing statement: ${error.message}`);
-        }
+        console.error(`Auth migration error: ${error.message}`);
       }
+    } else {
+      console.warn('⚠️ Auth migration SQL not found, skipping password/session columns');
+    }
+
+    // Ensure compatibility 'sessions' table exists for tests expecting this name
+    try {
+      await this.dbPool.query(`
+        CREATE TABLE IF NOT EXISTS sessions (
+          id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+          user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+          token VARCHAR(255) UNIQUE NOT NULL,
+          expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
+          created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+        );
+      `);
+      await this.dbPool.query('CREATE INDEX IF NOT EXISTS idx_sessions_user_id ON sessions(user_id)');
+    } catch (error: any) {
+      console.error('Error ensuring compatibility sessions table:', error.message);
     }
     
     console.log('📋 Migrations completed');

@@ -66,15 +66,16 @@ describe('Simple Database Integration', () => {
     it('should insert and retrieve user', async () => {
       if (!pool) return;
       
-      const userId = 'test-' + Date.now();
       const email = `test${Date.now()}@example.com`;
       
-      // Insert user
-      await pool.query(
-        `INSERT INTO users (id, email, name, role, email_verified) 
-         VALUES ($1, $2, $3, $4, $5)`,
-        [userId, email, 'Test User', 'user', true]
+      // Insert user and return generated id
+      const insertUser = await pool.query(
+        `INSERT INTO users (email, name, role, email_verified) 
+         VALUES ($1, $2, $3, $4)
+         RETURNING id`,
+        [email, 'Test User', 'user', true]
       );
+      const userId = insertUser.rows[0].id as string;
       
       // Retrieve user
       const result = await pool.query(
@@ -90,24 +91,24 @@ describe('Simple Database Integration', () => {
     it('should create and query scenario', async () => {
       if (!pool) return;
       
-      const scenarioId = 'scenario-' + Date.now();
-      
-      // Create scenario
-      await pool.query(
-        `INSERT INTO scenarios (id, mode, status, title, description) 
-         VALUES ($1, $2, $3, $4, $5)`,
+      // Create scenario with generated id
+      const insertScenario = await pool.query(
+        `INSERT INTO scenarios (mode, status, title, description, pbl_data) 
+         VALUES ($1, $2, $3, $4, $5)
+         RETURNING id`,
         [
-          scenarioId,
           'pbl',
           'active',
           JSON.stringify({ en: 'Test Scenario' }),
-          JSON.stringify({ en: 'Test Description' })
+          JSON.stringify({ en: 'Test Description' }),
+          JSON.stringify({ ksaMapping: {} })
         ]
       );
+      const scenarioId = insertScenario.rows[0].id as string;
       
       // Query scenario
       const result = await pool.query(
-        'SELECT * FROM scenarios WHERE id = $1',
+        'SELECT id, mode, status, title::text as title_text FROM scenarios WHERE id = $1',
         [scenarioId]
       );
       
@@ -115,7 +116,7 @@ describe('Simple Database Integration', () => {
       expect(result.rows[0].mode).toBe('pbl');
       expect(result.rows[0].status).toBe('active');
       
-      const title = JSON.parse(result.rows[0].title);
+      const title = JSON.parse(result.rows[0].title_text as unknown as string);
       expect(title.en).toBe('Test Scenario');
     });
     
@@ -127,27 +128,26 @@ describe('Simple Database Integration', () => {
       try {
         await client.query('BEGIN');
         
-        const userId = 'tx-user-' + Date.now();
-        const scenarioId = 'tx-scenario-' + Date.now();
-        const programId = 'tx-program-' + Date.now();
-        
         // Insert user
-        await client.query(
-          'INSERT INTO users (id, email, name) VALUES ($1, $2, $3)',
-          [userId, `${userId}@test.com`, 'TX User']
+        const insertedUser = await client.query(
+          'INSERT INTO users (email, name) VALUES ($1, $2) RETURNING id',
+          [`tx-${Date.now()}@test.com`, 'TX User']
         );
+        const userId: string = insertedUser.rows[0].id;
         
         // Insert scenario
-        await client.query(
-          'INSERT INTO scenarios (id, mode, title) VALUES ($1, $2, $3)',
-          [scenarioId, 'pbl', JSON.stringify({ en: 'TX Scenario' })]
+        const insertedScenario = await client.query(
+          'INSERT INTO scenarios (mode, title, description, pbl_data) VALUES ($1, $2, $3, $4) RETURNING id',
+          ['pbl', JSON.stringify({ en: 'TX Scenario' }), JSON.stringify({ en: 'TX Description' }), JSON.stringify({ ksaMapping: {} })]
         );
+        const scenarioId: string = insertedScenario.rows[0].id;
         
-        // Insert program
-        await client.query(
-          'INSERT INTO programs (id, user_id, scenario_id, status) VALUES ($1, $2, $3, $4)',
-          [programId, userId, scenarioId, 'active']
+        // Insert program (mode inherited by trigger). total_task_count is required by schema
+        const insertedProgram = await client.query(
+          'INSERT INTO programs (user_id, scenario_id, status, total_task_count) VALUES ($1, $2, $3, $4) RETURNING id',
+          [userId, scenarioId, 'active', 1]
         );
+        const programId: string = insertedProgram.rows[0].id;
         
         await client.query('COMMIT');
         
@@ -189,27 +189,26 @@ describe('Simple Database Integration', () => {
     it('should test mode inheritance trigger', async () => {
       if (!pool) return;
       
-      const scenarioId = 'trigger-scenario-' + Date.now();
-      const programId = 'trigger-program-' + Date.now();
-      const userId = 'trigger-user-' + Date.now();
-      
       // Create user
-      await pool.query(
-        'INSERT INTO users (id, email, name) VALUES ($1, $2, $3)',
-        [userId, `${userId}@test.com`, 'Trigger User']
+      const insertedUser = await pool.query(
+        'INSERT INTO users (email, name) VALUES ($1, $2) RETURNING id',
+        [`trigger-${Date.now()}@test.com`, 'Trigger User']
       );
+      const userId: string = insertedUser.rows[0].id;
       
       // Create scenario with discovery mode
-      await pool.query(
-        'INSERT INTO scenarios (id, mode, title) VALUES ($1, $2, $3)',
-        [scenarioId, 'discovery', JSON.stringify({ en: 'Discovery Scenario' })]
+      const insertedScenario = await pool.query(
+        'INSERT INTO scenarios (mode, title, description) VALUES ($1, $2, $3) RETURNING id',
+        ['discovery', JSON.stringify({ en: 'Discovery Scenario' }), JSON.stringify({ en: 'Discovery Description' })]
       );
+      const scenarioId: string = insertedScenario.rows[0].id;
       
-      // Create program without specifying mode (should inherit)
-      await pool.query(
-        'INSERT INTO programs (id, user_id, scenario_id, status) VALUES ($1, $2, $3, $4)',
-        [programId, userId, scenarioId, 'active']
+      // Create program without specifying mode (should inherit). Provide required total_task_count
+      const insertedProgram = await pool.query(
+        'INSERT INTO programs (user_id, scenario_id, status, total_task_count) VALUES ($1, $2, $3, $4) RETURNING id',
+        [userId, scenarioId, 'active', 1]
       );
+      const programId: string = insertedProgram.rows[0].id;
       
       // Check if mode was inherited
       const result = await pool.query(
