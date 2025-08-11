@@ -92,6 +92,8 @@ export const testScenarios = {
       ksaCodes: ['K1', 'S2', 'A1'],
       scenarioType: 'real-world',
       industry: 'education',
+      // Minimal structure required by validate_scenario_data trigger
+      ksaMapping: {},
       aiModules: {
         tutor: {
           enabled: true,
