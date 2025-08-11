@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import { cacheService } from '@/lib/cache/cache-service';
+import { distributedCacheService } from '@/lib/cache/distributed-cache-service';
+import { cacheKeys, TTL } from '@/lib/cache/cache-keys';
 import { HybridTranslationService } from '@/lib/services/hybrid-translation-service';
 import type { IScenario } from '@/types/unified-learning';
 
@@ -102,78 +103,71 @@ export async function GET(request: Request) {
     const lang = searchParams.get('lang') || 'en';
     const source = searchParams.get('source') || 'unified'; // 'unified', 'hybrid', 'yaml'
     
-    // Use cache with source-specific key
-    const cacheKey = source === 'hybrid' ? `pbl:scenarios:hybrid:${lang}` : `pbl:scenarios:${lang}`;
-    
-    // Temporarily disable cache to debug
-    const useCache = false;
-    const cached = useCache ? await cacheService.get(cacheKey) : null;
-    
-    if (cached) {
-      return NextResponse.json(cached, {
-        headers: {
-          'Cache-Control': 'public, max-age=3600, stale-while-revalidate=86400',
-          'X-Cache': 'HIT'
-        }
-      });
-    }
+    // 匿名使用者才使用快取（此路由未讀取 session，屬於公開列表）
+    const key = cacheKeys.pblScenarios(lang, source);
 
     // Load scenarios based on source parameter
     let scenarios: Record<string, unknown>[];
     let metaSource = source;
     
-    if (source === 'hybrid') {
-      try {
-        // Use hybrid translation service
-        const hybridService = new HybridTranslationService();
-        const hybridScenarios = await hybridService.listScenarios(lang);
-        
-        // Transform to match expected format
-        scenarios = hybridScenarios.map(scenario => ({
-          ...scenario,
-          yamlId: scenario.id,
-          sourceType: 'pbl',
-          estimatedDuration: (scenario.metadata?.estimatedDuration as number | undefined) || 60,
-          targetDomain: scenario.metadata?.targetDomains as string[] | undefined,
-          domains: scenario.metadata?.targetDomains as string[] | undefined,
-          taskCount: scenario.taskTemplates?.length || 0,
-          isAvailable: true,
-          thumbnailEmoji: getScenarioEmoji(scenario.id)
-        }));
-        
-        metaSource = 'hybrid';
-      } catch (error) {
-        console.error('Hybrid service failed, falling back to unified:', error);
+    const compute = async () => {
+      if (source === 'hybrid') {
+        try {
+          // Use hybrid translation service
+          const hybridService = new HybridTranslationService();
+          const hybridScenarios = await hybridService.listScenarios(lang);
+          
+          // Transform to match expected format
+          scenarios = hybridScenarios.map(scenario => ({
+            ...scenario,
+            yamlId: scenario.id,
+            sourceType: 'pbl',
+            estimatedDuration: (scenario.metadata?.estimatedDuration as number | undefined) || 60,
+            targetDomain: scenario.metadata?.targetDomains as string[] | undefined,
+            domains: scenario.metadata?.targetDomains as string[] | undefined,
+            taskCount: scenario.taskTemplates?.length || 0,
+            isAvailable: true,
+            thumbnailEmoji: getScenarioEmoji(scenario.id)
+          }));
+          
+          metaSource = 'hybrid';
+        } catch (error) {
+          console.error('Hybrid service failed, falling back to unified:', error);
+          scenarios = await loadScenariosFromUnifiedArchitecture(lang);
+          metaSource = 'unified-fallback';
+        }
+      } else {
+        // Default to unified architecture
         scenarios = await loadScenariosFromUnifiedArchitecture(lang);
-        metaSource = 'unified-fallback';
       }
-    } else {
-      // Default to unified architecture
-      scenarios = await loadScenariosFromUnifiedArchitecture(lang);
-    }
-
-    const result = {
-      success: true,
-      data: {
-        scenarios,
-        total: scenarios.length,
-        available: scenarios.filter(s => s.isAvailable).length
-      },
-      meta: {
-        timestamp: new Date().toISOString(),
-        version: '1.0.0',
-        language: lang,
-        source: metaSource
-      }
+      
+      return {
+        success: true,
+        data: {
+          scenarios,
+          total: scenarios.length,
+          available: scenarios.filter(s => (s as any).isAvailable).length
+        },
+        meta: {
+          timestamp: new Date().toISOString(),
+          version: '1.0.0',
+          language: lang,
+          source: metaSource
+        }
+      };
     };
+
+    let cacheStatus: 'HIT' | 'MISS' | 'STALE' = 'MISS';
+    const result = await distributedCacheService.getWithRevalidation(
+      key,
+      compute,
+      { ttl: TTL.SEMI_STATIC_1H, staleWhileRevalidate: TTL.SEMI_STATIC_1H, onStatus: (s) => { cacheStatus = s; } }
+    );
     
-    // Store in cache
-    await cacheService.set(cacheKey, result, { ttl: 60 * 60 * 1000 }); // 1 hour
-    
-    return NextResponse.json(result, {
+    return new NextResponse(JSON.stringify(result), {
       headers: {
-        'Cache-Control': 'public, max-age=3600, stale-while-revalidate=86400',
-        'X-Cache': 'MISS'
+        'Content-Type': 'application/json',
+        'X-Cache': cacheStatus
       }
     });
   } catch (error) {

@@ -9,9 +9,13 @@ export const cacheKeys = {
   scenariosBySource: (sourceType: string, sourceId?: string) =>
     sourceId ? `scenario:bySource:${sourceType}:${sourceId}` : `scenario:bySource:${sourceType}`,
 
-  // New: relations data keyed by language
   relationsByLang: (lang: string) => `relations:${lang}`,
-
-  // New: discovery scenarios list (language-scoped, anon only)
   discoveryScenarios: (lang: string) => `discovery:scenarios:list:${lang}`,
+
+  // New keys per request
+  assessmentScenarios: (lang: string) => `assessment:scenarios:${lang}`,
+  pblScenarios: (lang: string, source: string = 'unified') => `pbl:scenarios:${source}:${lang}`,
+  ksaFramework: (lang: string) => `ksa:framework:${lang}`,
+  discoveryCareer: (careerType: string) => `discovery:career:${careerType}`,
+  publicStats: () => 'stats:public',
 }; 

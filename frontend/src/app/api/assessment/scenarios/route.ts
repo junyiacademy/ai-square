@@ -5,6 +5,8 @@ import { getServerSession } from '@/lib/auth/session';
 import path from 'path';
 import { promises as fs } from 'fs';
 import { parse as yamlParse } from 'yaml';
+import { distributedCacheService } from '@/lib/cache/distributed-cache-service';
+import { cacheKeys, TTL } from '@/lib/cache/cache-keys';
 
 interface AssessmentConfig {
   title?: string;
@@ -36,6 +38,7 @@ export async function GET(request: NextRequest) {
     const lang = searchParams.get('lang') || 'en';
     const session = await getServerSession();
     const user = session?.user;
+    const userId = user?.id || user?.email;
     
     // Get scenario repository
     const scenarioRepo = repositoryFactory.getScenarioRepository();
@@ -66,13 +69,20 @@ export async function GET(request: NextRequest) {
         } : undefined
       }));
       
-      return NextResponse.json({ 
-        success: true,
-        data: {
-          scenarios: formattedScenarios,
-          totalCount: formattedScenarios.length
-        }
-      });
+      // 匿名請求才走快取
+      const key = !userId ? cacheKeys.assessmentScenarios(lang) : undefined;
+      if (key) {
+        let cacheStatus: 'HIT' | 'MISS' | 'STALE' = 'MISS';
+        const result = await distributedCacheService.getWithRevalidation(key, async () => ({
+          success: true,
+          data: { scenarios: formattedScenarios, totalCount: formattedScenarios.length }
+        }), { ttl: TTL.SEMI_STATIC_1H, staleWhileRevalidate: TTL.SEMI_STATIC_1H, onStatus: (s) => { cacheStatus = s; } });
+        return new NextResponse(JSON.stringify(result), {
+          headers: { 'Content-Type': 'application/json', 'X-Cache': cacheStatus }
+        });
+      }
+
+      return NextResponse.json({ success: true, data: { scenarios: formattedScenarios, totalCount: formattedScenarios.length } });
     }
     
     // If no scenarios in database, fall back to file system
@@ -219,8 +229,6 @@ export async function GET(request: NextRequest) {
     // Filter out any null results
     const validScenarios = scenarios.filter(s => s !== null);
     
-    // Cache removed - using database for data consistency
-    
     // Add user progress if authenticated
     const scenariosWithProgress = validScenarios.map(scenario => ({
       ...scenario,
@@ -230,14 +238,20 @@ export async function GET(request: NextRequest) {
         bestScore: undefined
       } : undefined
     }));
-    
-    return NextResponse.json({ 
-      success: true,
-      data: {
-        scenarios: scenariosWithProgress,
-        totalCount: scenariosWithProgress.length
-      }
-    });
+    // 匿名請求快取
+    const key = !userId ? cacheKeys.assessmentScenarios(lang) : undefined;
+    if (key) {
+      let cacheStatus: 'HIT' | 'MISS' | 'STALE' = 'MISS';
+      const result = await distributedCacheService.getWithRevalidation(key, async () => ({
+        success: true,
+        data: { scenarios: scenariosWithProgress, totalCount: scenariosWithProgress.length }
+      }), { ttl: TTL.SEMI_STATIC_1H, staleWhileRevalidate: TTL.SEMI_STATIC_1H, onStatus: (s) => { cacheStatus = s; } });
+      return new NextResponse(JSON.stringify(result), {
+        headers: { 'Content-Type': 'application/json', 'X-Cache': cacheStatus }
+      });
+    }
+
+    return NextResponse.json({ success: true, data: { scenarios: scenariosWithProgress, totalCount: scenariosWithProgress.length } });
   } catch (error) {
     console.error('Error in assessment scenarios API:', error);
     return NextResponse.json(
