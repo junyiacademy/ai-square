@@ -1,6 +1,8 @@
 import { spawn, execSync } from 'child_process';
 import { Pool } from 'pg';
 import waitOn from 'wait-on';
+import * as fs from 'fs';
+import * as path from 'path';
 
 /**
  * Global setup for integration tests
@@ -60,20 +62,19 @@ function killPort(port: string, serviceName: string): void {
  */
 async function tryStartContainers(): Promise<void> {
   console.log('🐳 Checking test environment...');
-  
-  // Try to use docker-compose if available
-  try {
-    execSync('docker-compose -f docker-compose.test.yml ps -q 2>/dev/null', { stdio: 'ignore' });
+  // Resolve docker compose command (prefer v2 'docker compose')
+  let composeCmd: string | undefined;
+  try { execSync('docker compose version', { stdio: 'ignore' }); composeCmd = 'docker compose'; } catch {}
+  if (!composeCmd) { try { execSync('docker-compose --version', { stdio: 'ignore' }); composeCmd = 'docker-compose'; } catch {} }
+  if (composeCmd) {
     console.log('   ℹ️ Docker compose is available, ensuring containers are up...');
-    
-    // Try to start/restart containers
     try {
-      execSync('docker-compose -f docker-compose.test.yml up -d 2>/dev/null', { stdio: 'ignore' });
+      execSync(`${composeCmd} -f docker-compose.test.yml up -d`, { stdio: 'ignore' });
       console.log('   ✅ Test containers started/verified');
-    } catch (error) {
+    } catch {
       console.log('   ⚠️ Could not start containers, will try to connect anyway');
     }
-  } catch (error) {
+  } else {
     console.log('   ℹ️ Docker compose not available, assuming services are running elsewhere');
   }
 }
@@ -164,9 +165,46 @@ export default async function globalSetup() {
     }
     
     await dbPool.end();
-    
-    // STEP 4: Start Next.js server on clean test port
-    console.log(`\n📌 Step 4: Starting Next.js server on port ${TEST_PORTS.NEXT}...`);
+
+    // STEP 4: Ensure DB exists and apply schema
+    console.log(`\n📌 Step 4: Ensuring database schema...`);
+    const targetDbName = process.env.DB_NAME || 'ai_square_db';
+    const adminPool = new Pool({
+      host: process.env.DB_HOST || 'localhost',
+      port: parseInt(process.env.DB_PORT || TEST_PORTS.DB),
+      database: 'postgres',
+      user: 'postgres',
+      password: 'postgres',
+    });
+    const exists = await adminPool.query('SELECT 1 FROM pg_database WHERE datname = $1', [targetDbName]);
+    if (exists.rowCount === 0) {
+      await adminPool.query(`CREATE DATABASE ${targetDbName}`);
+      console.log(`   ✅ Created database: ${targetDbName}`);
+    }
+    await adminPool.end();
+
+    const schemaPath = path.join(process.cwd(), 'src', 'lib', 'repositories', 'postgresql', 'schema-v3.sql');
+    if (fs.existsSync(schemaPath)) {
+      const sql = fs.readFileSync(schemaPath, 'utf8');
+      const statements = sql.split(';').map(s => s.trim()).filter(Boolean);
+      const schemaPool = new Pool({
+        host: process.env.DB_HOST || 'localhost',
+        port: parseInt(process.env.DB_PORT || TEST_PORTS.DB),
+        database: targetDbName,
+        user: 'postgres',
+        password: 'postgres',
+      });
+      for (const stmt of statements) {
+        try { await schemaPool.query(stmt); } catch { /* idempotent */ }
+      }
+      await schemaPool.end();
+      console.log('   ✅ Schema applied to test database');
+    } else {
+      console.log('   ⚠️ schema-v3.sql not found; skipping schema apply');
+    }
+
+    // STEP 5: Start Next.js server on clean test port
+    console.log(`\n📌 Step 5: Starting Next.js server on port ${TEST_PORTS.NEXT}...`);
     
     // Start Next.js dev server on test port
     nextProcess = spawn('npm', ['run', 'dev'], {
@@ -196,8 +234,8 @@ export default async function globalSetup() {
     
     console.log(`   ✅ Next.js server is ready on port ${TEST_PORTS.NEXT}`);
     
-    // STEP 5: Setup test database
-    console.log('\n📌 Step 5: Preparing test database...');
+    // STEP 6: Prepare test data
+    console.log('\n📌 Step 6: Preparing test database...');
     const testDbPool = new Pool({
       host: process.env.DB_HOST || 'localhost',
       port: parseInt(TEST_PORTS.DB),
@@ -233,8 +271,8 @@ export default async function globalSetup() {
       await testDbPool.end();
     }
     
-    // STEP 6: Verify Redis connection (optional - tests can run without it)
-    console.log('\n📌 Step 6: Verifying Redis connection...');
+    // STEP 7: Verify Redis connection (optional - tests can run without it)
+    console.log('\n📌 Step 7: Verifying Redis connection...');
     const Redis = require('ioredis');
     
     let redisConnected = false;
@@ -291,7 +329,7 @@ export default async function globalSetup() {
     console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     console.log('✨ Global setup complete!');
     console.log(`   Next.js: http://localhost:${TEST_PORTS.NEXT}`);
-    console.log(`   PostgreSQL: localhost:${process.env.DB_PORT || TEST_PORTS.DB}`);
+    console.log(`   PostgreSQL: localhost:${process.env.DB_PORT || TEST_PORTS.DB} (db: ${process.env.DB_NAME || 'ai_square_db'})`);
     console.log(`   Redis: localhost:${actualRedisPort || 'N/A'}`);
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
     
