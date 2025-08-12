@@ -112,7 +112,7 @@ export default async function globalTeardown() {
     console.log('\n📌 Step 3: Clearing Redis cache...');
     
     try {
-      const Redis = require('ioredis');
+      const { default: Redis } = await import('ioredis');
       const redis = new Redis({
         host: process.env.REDIS_HOST || 'localhost',
         port: parseInt(TEST_PORTS.REDIS),

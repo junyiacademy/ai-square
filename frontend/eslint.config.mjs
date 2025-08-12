@@ -13,12 +13,23 @@ const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
   {
     ignores: [
-      "**/__tests__/**", 
-      "**/*.test.*", 
+      // Tests
+      "**/__tests__/**",
+      "**/*.test.*",
       "**/*.spec.*",
-      // Ignore script files with shebang
-      "src/scripts/**/*.ts",
-      "src/scripts/**/*.js"
+      // Build and coverage artifacts
+      ".next/**",
+      "coverage/**",
+      // Markdown docs
+      "**/*.md",
+      // Public assets
+      "public/**",
+      // Generated reports
+      "coverage-lcov/**",
+      // Scripts directory (ignore all file types)
+      "scripts/**",
+      // Root-level helper scripts
+      "setup-admin.js",
     ],
   },
   {
@@ -30,6 +41,23 @@ const eslintConfig = [
       "prefer-const": "warn",
       "react/jsx-no-undef": "error", // Keep this as error
       "react/no-unescaped-entities": "warn", // Allow unescaped entities
+    },
+  },
+  // Allow CommonJS require in config and tooling files
+  {
+    files: [
+      "next.config.*",
+      "jest*.config.*",
+      "playwright.config.*",
+      "scripts/**/*.*",
+      "tests/integration/**/*.*",
+      "**/test-assessment-staging*.js",
+      "test-with-cookies.js",
+      "setup-admin.js",
+    ],
+    rules: {
+      "@typescript-eslint/no-require-imports": "off",
+      "@typescript-eslint/no-var-requires": "off",
     },
   },
   // Special rules for test-utils directory
