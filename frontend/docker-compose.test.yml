@@ -1,0 +1,34 @@
+services:
+  # PostgreSQL for testing
+  postgres-test:
+    image: postgres:15-alpine
+    container_name: ai-square-test-db
+    ports:
+      - "5434:5432"  # Map to 5434 to avoid conflict
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ai_square_db
+    volumes:
+      - ./src/lib/repositories/postgresql/schema-v3.sql:/docker-entrypoint-initdb.d/01-schema.sql
+      - ./src/lib/repositories/postgresql/migrations/20250204-add-password-column.sql:/docker-entrypoint-initdb.d/02-auth-migration.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    tmpfs:
+      - /var/lib/postgresql/data  # Use memory for faster tests
+
+  # Redis for caching tests
+  redis-test:
+    image: redis:7-alpine
+    container_name: ai-square-test-redis
+    ports:
+      - "6380:6379"  # Use different port to avoid conflicts
+    command: redis-server --appendonly no --save ""  # No persistence for tests
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5 

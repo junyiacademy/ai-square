@@ -23,13 +23,19 @@ export class IntegrationTestEnvironment {
       // 1. Create test database
       await this.createTestDatabase();
       
-      // 2. Run migrations
+      // 2. Wait for database to be ready
+      await this.waitForDatabase();
+      
+      // 3. Run migrations
       await this.runMigrations();
       
-      // 3. Setup Redis test instance
+      // 4. Setup Redis test instance
       await this.setupRedis();
       
-      // 4. Setup environment variables
+      // 5. Wait for Redis to be ready
+      await this.waitForRedis();
+      
+      // 6. Setup environment variables
       this.setupEnvironmentVariables();
       
       this.isSetup = true;
@@ -382,7 +388,7 @@ export class IntegrationTestEnvironment {
   }
 
   private setupEnvironmentVariables() {
-    // Set test environment variables
+    // Set test-specific environment variables
     if (process.env.NODE_ENV !== 'test') {
       Object.defineProperty(process.env, 'NODE_ENV', {
         value: 'test',
@@ -392,22 +398,50 @@ export class IntegrationTestEnvironment {
       });
     }
     process.env.DB_HOST = 'localhost';
-    process.env.DB_PORT = '5433';
+    process.env.DB_PORT = '5434';
     process.env.DB_NAME = this.testDbName;
     process.env.DB_USER = 'postgres';
     process.env.DB_PASSWORD = 'postgres';
-    
-    if (this.redisClient) {
-      process.env.REDIS_ENABLED = 'true';
-      process.env.REDIS_URL = 'redis://localhost:6379/1';
-    } else {
-      process.env.REDIS_ENABLED = 'false';
+    process.env.REDIS_ENABLED = 'true';
+    process.env.REDIS_URL = 'redis://localhost:6379';
+  }
+
+  private async waitForDatabase(maxRetries = 30): Promise<void> {
+    for (let i = 0; i < maxRetries; i++) {
+      try {
+        if (!this.dbPool) {
+          throw new Error('Database pool not initialized');
+        }
+        const client = await this.dbPool.connect();
+        await client.query('SELECT 1');
+        client.release();
+        console.log('✅ Database connection established');
+        return;
+      } catch (error) {
+        console.log(`⏳ Waiting for database... (${i + 1}/${maxRetries})`);
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
     }
-    
-    process.env.NEXTAUTH_URL = 'http://localhost:3000';
-    process.env.NEXTAUTH_SECRET = 'test-secret-for-integration-tests';
-    
-    console.log('🔧 Environment variables configured');
+    throw new Error('Database connection timeout');
+  }
+
+  private async waitForRedis(maxRetries = 30): Promise<void> {
+    if (!this.redisClient) {
+      console.log('⚠️ Redis client not initialized, skipping Redis wait');
+      return;
+    }
+
+    for (let i = 0; i < maxRetries; i++) {
+      try {
+        await this.redisClient.ping();
+        console.log('✅ Redis connection established');
+        return;
+      } catch (error) {
+        console.log(`⏳ Waiting for Redis... (${i + 1}/${maxRetries})`);
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+    }
+    throw new Error('Redis connection timeout');
   }
 
   private async dropTestDatabase() {
