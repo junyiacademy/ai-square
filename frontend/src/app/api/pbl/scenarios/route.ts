@@ -163,7 +163,11 @@ export async function GET(request: Request) {
     if (isTest) {
       const keyTest = `pbl:scenarios:${lang}`;
       const cached = await cacheService.get(keyTest);
-      const statusHeader = cached ? 'HIT' : 'MISS';
+      if (cached) {
+        return new NextResponse(JSON.stringify(cached), {
+          headers: { 'Content-Type': 'application/json', 'X-Cache': 'HIT' }
+        });
+      }
       const result = await compute();
       try {
         await cacheService.set(keyTest, result, { ttl: 60 * 60 * 1000 });
@@ -176,7 +180,7 @@ export async function GET(request: Request) {
           { status: 500 }
         );
       }
-      return new NextResponse(JSON.stringify(result), { headers: { 'Content-Type': 'application/json', 'X-Cache': statusHeader } });
+      return new NextResponse(JSON.stringify(result), { headers: { 'Content-Type': 'application/json', 'X-Cache': 'MISS' } });
     }
 
     let cacheStatus: 'HIT' | 'MISS' | 'STALE' = 'MISS';

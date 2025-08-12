@@ -173,11 +173,15 @@ export async function GET(request: NextRequest) {
     if (key && isTest && __testCache) {
       const cached = __testCache.get(key);
       if (cached) {
-        return NextResponse.json(cached);
+        return new NextResponse(JSON.stringify(cached), {
+          headers: { 'Content-Type': 'application/json', 'X-Cache': 'HIT' }
+        });
       }
       const data = await compute();
       __testCache.set(key, data);
-      return NextResponse.json(data);
+      return new NextResponse(JSON.stringify(data), {
+        headers: { 'Content-Type': 'application/json', 'X-Cache': 'MISS' }
+      });
     }
 
     const result = await compute();

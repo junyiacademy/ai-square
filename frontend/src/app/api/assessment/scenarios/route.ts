@@ -72,7 +72,9 @@ export async function GET(request: NextRequest) {
       
       // 測試環境直接回傳，避免受快取影響
       if (isTest) {
-        return NextResponse.json({ success: true, data: { scenarios: formattedScenarios, totalCount: formattedScenarios.length } });
+        return new NextResponse(JSON.stringify({ success: true, data: { scenarios: formattedScenarios, totalCount: formattedScenarios.length } }), {
+          headers: { 'Content-Type': 'application/json', 'X-Cache': 'MISS' }
+        });
       }
       
       // 匿名請求才走快取
@@ -247,7 +249,9 @@ export async function GET(request: NextRequest) {
 
     // 測試環境直接回傳，避免受快取影響
     if (isTest) {
-      return NextResponse.json({ success: true, data: { scenarios: scenariosWithProgress, totalCount: scenariosWithProgress.length } });
+      return new NextResponse(JSON.stringify({ success: true, data: { scenarios: scenariosWithProgress, totalCount: scenariosWithProgress.length } }), {
+        headers: { 'Content-Type': 'application/json', 'X-Cache': 'MISS' }
+      });
     }
     
     // 匿名請求快取
