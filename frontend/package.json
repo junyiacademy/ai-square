@@ -22,6 +22,7 @@
     "test:e2e:webkit": "playwright test --project=webkit",
     "test:e2e:sequential": "playwright test --workers=1",
     "test:integration": "jest --config jest.integration.config.js --runInBand --forceExit",
+    "test:integration:setup": "bash scripts/test-environment.sh",
     "test:integration:docker": "bash scripts/test-integration.sh",
     "test:integration:watch": "docker-compose -f docker-compose.test.yml up -d && jest --config jest.integration.config.js --watch",
     "test:integration:coverage": "jest --config jest.integration.config.js --coverage",
