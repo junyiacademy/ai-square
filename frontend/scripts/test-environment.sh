@@ -48,6 +48,16 @@ kill_port $TEST_REDIS_PORT "Redis Test Cache"
 # 2. Start Docker containers for test environment
 echo -e "${YELLOW}🐳 Starting Docker test containers...${NC}"
 
+# Resolve docker compose command (prefer v2 'docker compose')
+if docker compose version >/dev/null 2>&1; then
+  DC="docker compose"
+elif command -v docker-compose >/dev/null 2>&1; then
+  DC="docker-compose"
+else
+  echo -e "${RED}❌ Neither 'docker compose' nor 'docker-compose' found${NC}"
+  exit 1
+fi
+
 # Check if docker-compose.test.yml exists
 if [ ! -f "docker-compose.test.yml" ]; then
     echo -e "${RED}❌ docker-compose.test.yml not found${NC}"
@@ -55,10 +65,10 @@ if [ ! -f "docker-compose.test.yml" ]; then
 fi
 
 # Stop any existing test containers
-docker-compose -f docker-compose.test.yml down 2>/dev/null || true
+$DC -f docker-compose.test.yml down 2>/dev/null || true
 
 # Start fresh test containers
-docker-compose -f docker-compose.test.yml up -d
+$DC -f docker-compose.test.yml up -d
 
 # Wait for PostgreSQL to be ready
 echo -e "${YELLOW}⏳ Waiting for PostgreSQL to be ready...${NC}"

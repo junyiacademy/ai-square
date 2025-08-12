@@ -8,13 +8,23 @@ NC='\033[0m' # No Color
 
 echo -e "${YELLOW}🚀 Starting integration test environment...${NC}"
 
+# Resolve docker compose command (prefer v2 'docker compose')
+if docker compose version >/dev/null 2>&1; then
+  DC="docker compose"
+elif command -v docker-compose >/dev/null 2>&1; then
+  DC="docker-compose"
+else
+  echo -e "${RED}❌ Neither 'docker compose' nor 'docker-compose' found${NC}"
+  exit 1
+fi
+
 # Stop any existing containers
 echo "🛑 Stopping existing containers..."
-docker-compose -f docker-compose.test.yml down
+$DC -f docker-compose.test.yml down
 
 # Start test environment
 echo "▶️  Starting test services..."
-docker-compose -f docker-compose.test.yml up -d
+$DC -f docker-compose.test.yml up -d
 
 # Wait for services to be healthy
 echo -e "${YELLOW}⏳ Waiting for services to be ready...${NC}"
@@ -22,8 +32,8 @@ TIMEOUT=60
 ELAPSED=0
 
 while [ $ELAPSED -lt $TIMEOUT ]; do
-    POSTGRES_HEALTHY=$(docker-compose -f docker-compose.test.yml ps postgres-test | grep "healthy" | wc -l)
-    REDIS_HEALTHY=$(docker-compose -f docker-compose.test.yml ps redis-test | grep "healthy" | wc -l)
+    POSTGRES_HEALTHY=$($DC -f docker-compose.test.yml ps postgres-test | grep "healthy" | wc -l)
+    REDIS_HEALTHY=$($DC -f docker-compose.test.yml ps redis-test | grep "healthy" | wc -l)
     
     if [ "$POSTGRES_HEALTHY" -eq 1 ] && [ "$REDIS_HEALTHY" -eq 1 ]; then
         echo -e "${GREEN}✅ All services are ready!${NC}"
@@ -40,8 +50,8 @@ done
 
 if [ $ELAPSED -ge $TIMEOUT ]; then
     echo -e "${RED}❌ Services failed to start within ${TIMEOUT} seconds${NC}"
-    docker-compose -f docker-compose.test.yml logs
-    docker-compose -f docker-compose.test.yml down
+    $DC -f docker-compose.test.yml logs
+    $DC -f docker-compose.test.yml down
     exit 1
 fi
 
@@ -71,7 +81,7 @@ fi
 
 # Cleanup
 echo -e "${YELLOW}🧹 Cleaning up...${NC}"
-docker-compose -f docker-compose.test.yml down
+$DC -f docker-compose.test.yml down
 
 # Exit with test status
 exit $TEST_EXIT_CODE 
