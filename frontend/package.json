@@ -15,6 +15,7 @@
     "test:unit:ci": "jest --ci --coverage --testPathIgnorePatterns='/tests/integration/|/e2e/' --watchAll=false",
     "test:integration:ci": "jest --config jest.integration.config.js --ci --runInBand --forceExit",
     "pre-commit-check": "npm run typecheck && npm run lint && npm run test:unit:ci",
+    "pre-commit-smart": "./scripts/smart-pre-commit.sh",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:chrome": "playwright test --project=chromium",
