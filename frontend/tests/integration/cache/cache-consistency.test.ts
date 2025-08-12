@@ -2,7 +2,9 @@
 jest.unmock('pg');
 jest.unmock('pg-pool');
 jest.unmock('ioredis');
+jest.unmock('uuid'); // Need real UUIDs for integration tests
 
+import { v4 as uuidv4 } from 'uuid';
 import { IntegrationTestEnvironment } from '../setup/test-environment';
 import { 
   testScenarios, 
@@ -52,7 +54,7 @@ describe('Cache Consistency', () => {
     
     // Create a test user and get token
     const user = await dbHelper.createUser({
-      id: 'cache-test-user',
+      id: uuidv4(), // Generate a valid UUID
       email: 'cache@test.com',
       password: 'CacheTest123!',
       passwordHash: '$2b$10$test',

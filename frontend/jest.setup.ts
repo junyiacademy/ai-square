@@ -153,9 +153,15 @@ jest.mock('jsonwebtoken', () => ({
   verify: jest.fn().mockReturnValue({ userId: 'test-user-id' }),
 }))
 
-// Mock uuid
+// Mock uuid with a valid UUID format
+let uuidCounter = 0;
 jest.mock('uuid', () => ({
-  v4: jest.fn(() => 'mock-uuid-' + Math.random().toString(36).substr(2, 9)),
+  v4: jest.fn(() => {
+    // Generate a valid UUID v4 format for testing
+    uuidCounter++;
+    const hex = uuidCounter.toString(16).padStart(8, '0');
+    return `00000000-0000-4000-8000-${hex}00000000`.substr(0, 36);
+  }),
 }))
 
 // Mock fetch for API calls

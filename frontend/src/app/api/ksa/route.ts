@@ -36,11 +36,10 @@ export async function GET(request: NextRequest) {
     
     // Fetcher function for cache
     const fetcher = async () => {
-      // Load language-specific KSA codes file
-      // For language-specific files, use format: ksa_codes_lang
-      const fileName = lang === 'en' ? 'ksa_codes' : `ksa_codes_${lang}`;
-      const data = await jsonYamlLoader.load(fileName, { 
-        preferJson: true 
+      // Load language-specific KSA codes file from rubrics_data/ksa_codes/
+      const fileName = `ksa_codes_${lang}`;
+      const data = await jsonYamlLoader.load(`rubrics_data/ksa_codes/${fileName}`, { 
+        preferJson: false  // Use YAML files
       }) as YAMLData;
 
       if (!data) {

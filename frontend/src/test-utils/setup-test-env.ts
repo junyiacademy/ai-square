@@ -15,11 +15,8 @@ global.TextDecoder = TextDecoder as typeof global.TextDecoder;
 process.env.NEXTAUTH_SECRET = 'test-secret';
 process.env.NEXTAUTH_URL = 'http://localhost:3000';
 process.env.JWT_SECRET = 'test-jwt-secret';
-process.env.DB_HOST = 'localhost';
-process.env.DB_PORT = '5432';
-process.env.DB_NAME = 'test_db';
-process.env.DB_USER = 'test_user';
-process.env.DB_PASSWORD = 'test_password';
+// Don't set DB environment variables here - let integration tests set their own
+// Unit tests should mock the database connections anyway
 
 // Mock window.matchMedia (only in jsdom environment)
 if (typeof window !== 'undefined') {

@@ -135,7 +135,7 @@ describe('/api/ksa route', () => {
       const response = await GET(request);
       const data = await response.json();
 
-      expect(mockJsonYamlLoader.load).toHaveBeenCalledWith('ksa_codes', { preferJson: true });
+      expect(mockJsonYamlLoader.load).toHaveBeenCalledWith('rubrics_data/ksa_codes/ksa_codes_en', { preferJson: false });
       expect(data.knowledge_codes.description).toBe('Knowledge description');
       expect(data.knowledge_codes.themes.Theme1.explanation).toBe('Theme explanation');
     });
@@ -146,7 +146,7 @@ describe('/api/ksa route', () => {
       const response = await GET(request);
       const data = await response.json();
 
-      expect(mockJsonYamlLoader.load).toHaveBeenCalledWith('ksa_codes_zhTW', { preferJson: true });
+      expect(mockJsonYamlLoader.load).toHaveBeenCalledWith('rubrics_data/ksa_codes/ksa_codes_zhTW', { preferJson: false });
       expect(data.knowledge_codes.description).toBe('Knowledge description');
       expect(data.knowledge_codes.themes.Theme1.explanation).toBe('Theme explanation');
       expect(data.knowledge_codes.themes.Theme1.codes['K1.1'].summary).toBe('Code summary');
@@ -158,7 +158,7 @@ describe('/api/ksa route', () => {
       const response = await GET(request);
       const data = await response.json();
 
-      expect(mockJsonYamlLoader.load).toHaveBeenCalledWith('ksa_codes_fr', { preferJson: true });
+      expect(mockJsonYamlLoader.load).toHaveBeenCalledWith('rubrics_data/ksa_codes/ksa_codes_fr', { preferJson: false });
       // Should fallback to English when French translation is not available
       expect(data.knowledge_codes.description).toBe('Knowledge description');
       expect(data.knowledge_codes.themes.Theme1.explanation).toBe('Theme explanation');

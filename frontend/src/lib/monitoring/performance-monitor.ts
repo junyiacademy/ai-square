@@ -32,8 +32,10 @@ class PerformanceMonitor {
   private readonly aggregationInterval = 5 * 60 * 1000; // 5 minutes
 
   constructor() {
-    // Start periodic aggregation
-    setInterval(() => this.aggregateMetrics(), this.aggregationInterval);
+    // Start periodic aggregation only in non-test environments
+    if (process.env.NODE_ENV !== 'test' && !process.env.JEST_WORKER_ID) {
+      setInterval(() => this.aggregateMetrics(), this.aggregationInterval);
+    }
   }
 
   /**

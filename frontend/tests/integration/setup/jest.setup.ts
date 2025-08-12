@@ -3,6 +3,7 @@
 jest.unmock('pg');
 jest.unmock('pg-pool');
 jest.unmock('ioredis');
+jest.unmock('uuid'); // Integration tests need real UUIDs
 
 import dotenv from 'dotenv';
 import path from 'path';
