@@ -99,7 +99,12 @@ export default async function globalSetup() {
     
     // STEP 2: Try to ensure test environment is available
     console.log('\n📌 Step 2: Test environment...');
-    await tryStartContainers();
+    // Allow skipping docker in pre-push by setting SKIP_DOCKER=1
+    if (process.env.SKIP_DOCKER !== '1') {
+      await tryStartContainers();
+    } else {
+      console.log('   ⏭️ SKIP_DOCKER=1, will not start docker compose');
+    }
     await new Promise(resolve => setTimeout(resolve, 2000)); // Give services time to start
     
     // STEP 3: Verify database connection (flexible - try test port first, then dev port)
