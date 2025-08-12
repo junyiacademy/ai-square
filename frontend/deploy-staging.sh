@@ -17,16 +17,16 @@ echo "📦 Project: $PROJECT_ID"
 echo "📍 Region: $REGION"
 echo "🏷️  Image Tag: $IMAGE_TAG"
 
-# Step 0: Database initialization check
+# Step 0: Cloud SQL Smart Initialization (safe to run multiple times)
 echo ""
-echo "🗄️  Checking database initialization..."
-if [ -f "scripts/init-db-staging.sh" ] && [ -z "$SKIP_DB_INIT" ]; then
-    echo "Would you like to initialize the database? (y/N)"
-    read -r INIT_DB
-    if [ "$INIT_DB" = "y" ] || [ "$INIT_DB" = "Y" ]; then
-        echo "Initializing database..."
-        DB_PASSWORD="staging2025" ./scripts/init-db-staging.sh
-    fi
+echo "🗄️  Ensuring Cloud SQL is properly initialized..."
+if [ -f "scripts/init-staging-cloud-sql.sh" ] && [ -z "$SKIP_DB_INIT" ]; then
+    echo "Running smart database initialization (this is safe - won't destroy data)..."
+    chmod +x scripts/init-staging-cloud-sql.sh
+    ./scripts/init-staging-cloud-sql.sh
+    echo ""
+else
+    echo "Skipping database initialization (SKIP_DB_INIT is set or script not found)"
 fi
 
 # Step 1: Build Docker image
@@ -57,6 +57,7 @@ gcloud run deploy $SERVICE_NAME \
   --set-env-vars DB_PORT=5432 \
   --set-env-vars DB_NAME=ai_square_staging \
   --set-env-vars DB_USER=postgres \
+  --set-env-vars DB_PASSWORD=aisquare2025staging \
   --set-env-vars GOOGLE_CLOUD_PROJECT=$PROJECT_ID \
   --set-env-vars GOOGLE_CLOUD_REGION=$REGION \
   --set-env-vars VERTEX_AI_LOCATION=$REGION \

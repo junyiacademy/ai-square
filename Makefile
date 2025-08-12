@@ -520,10 +520,10 @@ staging-check:
 	@echo "$(CYAN)🔍 檢查 Staging 部署前置條件...$(NC)"
 	@cd frontend && ./scripts/staging-pre-check.sh
 
-## 初始化 Staging 資料庫
+## 初始化 Staging Cloud SQL 資料庫（智能初始化，不會破壞資料）
 staging-db-init:
-	@echo "$(CYAN)🗄️  初始化 Staging 資料庫...$(NC)"
-	@cd frontend && DB_PASSWORD=staging2025 ./scripts/init-db-staging.sh
+	@echo "$(CYAN)🗄️  初始化 Staging Cloud SQL 資料庫...$(NC)"
+	@cd frontend && chmod +x scripts/init-staging-cloud-sql.sh && ./scripts/init-staging-cloud-sql.sh
 
 ## 部署到 Staging 環境
 deploy-staging: staging-check
