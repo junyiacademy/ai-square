@@ -24,7 +24,8 @@ describe('Basic Database CRUD', () => {
   });
 
   it('should insert and query test data', async () => {
-    const testId = `test-${Date.now()}`;
+    const { v4: uuidv4 } = require('uuid');
+    const testId = uuidv4();
     const testEmail = `test-${Date.now()}@example.com`;
 
     // Insert test user
@@ -52,8 +53,9 @@ describe('Basic Database CRUD', () => {
   });
 
   it('should handle transactions', async () => {
+    const { v4: uuidv4 } = require('uuid');
     const client = await pool.connect();
-    const testId = `test-tx-${Date.now()}`;
+    const testId = uuidv4();
 
     try {
       await client.query('BEGIN');
@@ -62,7 +64,7 @@ describe('Basic Database CRUD', () => {
       await client.query(
         `INSERT INTO users (id, email, name, role, email_verified) 
          VALUES ($1, $2, $3, $4, $5)`,
-        [testId, `${testId}@example.com`, 'TX Test', 'user', true]
+        [testId, `test-tx-${Date.now()}@example.com`, 'TX Test', 'user', true]
       );
 
       // Verify exists in transaction
@@ -106,17 +108,25 @@ describe('Basic Database CRUD', () => {
   });
 
   it('should handle JSON fields', async () => {
-    const testId = `test-json-${Date.now()}`;
+    const { v4: uuidv4 } = require('uuid');
+    const testId = uuidv4();
     const testData = {
       title: { en: 'Test Title', zh: '測試標題' },
-      description: { en: 'Test Description', zh: '測試描述' }
+      description: { en: 'Test Description', zh: '測試描述' },
+      pbl_data: {
+        ksaMapping: {
+          knowledge: ['K1', 'K2'],
+          skills: ['S1'],
+          attitudes: ['A1']
+        }
+      }
     };
 
-    // Insert with JSONB
+    // Insert with JSONB - include required fields for PBL mode
     await pool.query(
-      `INSERT INTO scenarios (id, mode, status, title, description) 
-       VALUES ($1, $2, $3, $4, $5)`,
-      [testId, 'pbl', 'draft', testData.title, testData.description]
+      `INSERT INTO scenarios (id, mode, status, source_type, title, description, pbl_data) 
+       VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+      [testId, 'pbl', 'draft', 'yaml', testData.title, testData.description, testData.pbl_data]
     );
 
     // Query JSONB
