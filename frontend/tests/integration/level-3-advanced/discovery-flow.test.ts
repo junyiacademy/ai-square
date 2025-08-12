@@ -20,7 +20,7 @@ describe('Discovery Learning Flow', () => {
         password: process.env.DB_PASSWORD || 'postgres',
         connectionTimeoutMillis: 3000,
       });
-      await pool.query('SELECT 1');
+      await pool!.query('SELECT 1');
     } catch (error) {
       console.error('Database connection failed:', error);
       pool = null;

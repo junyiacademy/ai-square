@@ -1,18 +1,15 @@
 import { jest } from '@jest/globals';
 
-// Mocks
-const mockConnect = jest.fn();
-const mockEnd = jest.fn();
-const mockQuery = jest.fn();
-const mockGetBuckets = jest.fn();
+// Mocks with proper typing
+const mockConnect = jest.fn<() => Promise<unknown>>();
+const mockEnd = jest.fn<() => Promise<void>>();
+const mockQuery = jest.fn<() => Promise<unknown>>();
+const mockGetBuckets = jest.fn<() => Promise<unknown[][]>>();
 
 jest.mock('pg', () => {
   class Pool {
     constructor(_config: unknown) {}
-    connect = mockConnect.mockResolvedValue({
-      query: mockQuery.mockResolvedValue({ rows: [{ now: '2025-01-01T00:00:00Z' }] }),
-      release: jest.fn(),
-    });
+    connect = mockConnect;
     end = mockEnd;
   }
   return { Pool };
@@ -21,12 +18,12 @@ jest.mock('pg', () => {
 jest.mock('@google-cloud/storage', () => {
   class Storage {
     constructor(_config?: unknown) {}
-    getBuckets = mockGetBuckets.mockResolvedValue([[]]);
+    getBuckets = mockGetBuckets;
   }
   return { Storage };
 });
 
-const mockRunMigrations = jest.fn().mockResolvedValue(undefined);
+const mockRunMigrations = jest.fn();
 jest.mock('@/lib/db/migration-runner', () => ({
   runMigrations: (...args: unknown[]) => mockRunMigrations(...args),
 }));
@@ -76,8 +73,9 @@ describe('RepositoryFactory', () => {
     const Factory = await reloadFactory();
     const factory = (Factory as typeof RepositoryFactory).getInstance();
 
+    mockQuery.mockResolvedValueOnce({ rows: [{ now: '2025-08-12T00:00:00Z' }] });
     mockConnect.mockResolvedValueOnce({
-      query: mockQuery.mockResolvedValueOnce({ rows: [{ now: '2025-08-12T00:00:00Z' }] }),
+      query: mockQuery,
       release: jest.fn(),
     });
     mockGetBuckets.mockResolvedValueOnce([[{ name: 'bucket-1' }]]);
@@ -104,35 +102,19 @@ describe('RepositoryFactory', () => {
   });
 });
 
-import { RepositoryFactory, repositoryFactory } from '../repository-factory';
-
-describe('repository-factory.ts', () => {
-  describe('RepositoryFactory', () => {
-    it('should be defined', () => {
-      expect(RepositoryFactory).toBeDefined();
-    });
-    
-    it('should work correctly', () => {
-      // Add specific tests based on the function
-      expect(typeof RepositoryFactory).toBe('function');
-    });
+// Additional tests for repositoryFactory instance
+describe('repositoryFactory instance', () => {
+  it('should be an instance of RepositoryFactory', () => {
+    const { repositoryFactory } = require('../repository-factory');
+    expect(repositoryFactory).toBeInstanceOf(RepositoryFactory);
   });
-
-  describe('repositoryFactory', () => {
-    it('should be defined', () => {
-      expect(repositoryFactory).toBeDefined();
-    });
-    
-    it('should be an instance of RepositoryFactory', () => {
-      expect(repositoryFactory).toBeInstanceOf(RepositoryFactory);
-    });
-    
-    it('should have repository getter methods', () => {
-      expect(typeof repositoryFactory.getUserRepository).toBe('function');
-      expect(typeof repositoryFactory.getProgramRepository).toBe('function');
-      expect(typeof repositoryFactory.getTaskRepository).toBe('function');
-      expect(typeof repositoryFactory.getEvaluationRepository).toBe('function');
-      expect(typeof repositoryFactory.getScenarioRepository).toBe('function');
-    });
+  
+  it('should have repository getter methods', () => {
+    const { repositoryFactory } = require('../repository-factory');
+    expect(typeof repositoryFactory.getUserRepository).toBe('function');
+    expect(typeof repositoryFactory.getProgramRepository).toBe('function');
+    expect(typeof repositoryFactory.getTaskRepository).toBe('function');
+    expect(typeof repositoryFactory.getEvaluationRepository).toBe('function');
+    expect(typeof repositoryFactory.getScenarioRepository).toBe('function');
   });
 });

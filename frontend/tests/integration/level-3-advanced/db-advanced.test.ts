@@ -19,7 +19,7 @@ describe('Advanced Database Operations', () => {
         password: process.env.DB_PASSWORD || 'postgres',
         connectionTimeoutMillis: 3000,
       });
-      await pool.query('SELECT 1');
+      await pool!.query('SELECT 1');
     } catch (error) {
       console.error('DB connection failed:', error);
       pool = null;
