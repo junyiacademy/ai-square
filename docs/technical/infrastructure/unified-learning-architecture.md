@@ -3,6 +3,8 @@
 > **更新日期**: 2025-08-12  
 > **狀態**: 部分實作完成（測試與快取基礎設施明顯進展）
 
+> See also: [產品需求文檔（PRD）](../../handbook/product-requirements-document.md)
+
 ## 實作進度摘要
 
 ### ✅ 已完成 (100%)
