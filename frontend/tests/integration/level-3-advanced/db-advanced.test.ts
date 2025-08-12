@@ -3,8 +3,10 @@
  * More complex database operations without API dependencies
  */
 
+import type { Pool, PoolClient } from 'pg';
+
 describe('Advanced Database Operations', () => {
-  let pool: any;
+  let pool: Pool | null = null;
 
   beforeAll(async () => {
     try {
@@ -37,7 +39,11 @@ describe('Advanced Database Operations', () => {
       return;
     }
 
-    const result = await pool.query(`
+    const result = await pool.query<{ 
+      mode: string; 
+      count: string; 
+      active_count: string 
+    }>(`
       SELECT 
         mode,
         COUNT(*) as count,
@@ -58,7 +64,7 @@ describe('Advanced Database Operations', () => {
       return;
     }
 
-    const client = await pool.connect();
+    const client: PoolClient = await pool.connect();
     const { v4: uuidv4 } = require('uuid');
     const userId = uuidv4();
     const programId = uuidv4();
@@ -118,7 +124,12 @@ describe('Advanced Database Operations', () => {
     }
 
     // Check foreign key relationships
-    const result = await pool.query(`
+    const result = await pool.query<{
+      table_name: string;
+      column_name: string;
+      foreign_table_name: string;
+      foreign_column_name: string;
+    }>(`
       SELECT 
         tc.table_name,
         kcu.column_name,
