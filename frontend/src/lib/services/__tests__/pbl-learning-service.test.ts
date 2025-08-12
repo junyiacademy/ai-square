@@ -289,6 +289,56 @@ describe('PBLLearningService', () => {
       );
     });
 
+    it('should handle string format titles and descriptions', async () => {
+      const templateWithStringFields = [
+        {
+          id: 'string-task-1',
+          title: 'Resume Analysis',  // String format instead of multilingual
+          description: 'Analyze your resume with AI',  // String format
+          type: 'analysis' as const,
+          metadata: {}
+        },
+        {
+          id: 'string-task-2',
+          title: 'Interview Preparation',  // String format
+          type: 'chat' as const,
+          metadata: {}
+        }
+      ];
+      
+      const scenarioWithStringTasks = {
+        ...mockScenario,
+        taskTemplates: templateWithStringFields
+      };
+      
+      mockScenarioRepo.findById.mockResolvedValue(scenarioWithStringTasks);
+      mockProgramRepo.create.mockResolvedValue(mockProgram);
+      mockTaskRepo.create.mockImplementation((task: any) => 
+        Promise.resolve({ ...task, id: `task-${Date.now()}` })
+      );
+
+      await service.startLearning('user-123', 'scenario-123');
+
+      // Check that string titles are converted to multilingual format
+      expect(mockTaskRepo.create).toHaveBeenNthCalledWith(1,
+        expect.objectContaining({
+          title: { en: 'Resume Analysis' },  // Converted to multilingual
+          content: expect.objectContaining({
+            instructions: 'Analyze your resume with AI'  // String description used as instructions
+          })
+        })
+      );
+      
+      expect(mockTaskRepo.create).toHaveBeenNthCalledWith(2,
+        expect.objectContaining({
+          title: { en: 'Interview Preparation' },  // Converted to multilingual
+          content: expect.objectContaining({
+            instructions: ''  // No description provided
+          })
+        })
+      );
+    });
+
     it('should handle task templates without optional fields', async () => {
       const minimalTemplate = {
         id: 'minimal',

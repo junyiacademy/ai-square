@@ -96,15 +96,25 @@ export class PBLLearningService implements BaseLearningService {
     // 4. 創建 Tasks
     for (let i = 0; i < taskTemplates.length; i++) {
       const template = taskTemplates[i];
+      
+      // Handle both string and multilingual title/description formats
+      const title = typeof template.title === 'string' 
+        ? { en: template.title } 
+        : template.title;
+      
+      const description = typeof template.description === 'string'
+        ? template.description
+        : template.description?.[options?.language || 'en'] || template.description?.en || '';
+      
       await this.taskRepo.create({
         programId: program.id,
         mode: 'pbl',
         taskIndex: i,
-        title: template.title,
+        title: title,
         type: template.type || 'chat',
         status: i === 0 ? 'active' : 'pending',
         content: {
-          instructions: template.description?.[options?.language || 'en'] || '',
+          instructions: description,
           objectives: template.objectives || [],
           ksaCodes: template.ksaCodes || [],
           aiModules: template.aiModules || []

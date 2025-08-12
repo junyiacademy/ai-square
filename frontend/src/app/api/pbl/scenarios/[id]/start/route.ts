@@ -110,10 +110,18 @@ export async function POST(
     
     console.log('   ✅ Program created with UUID:', program.id);
     
-    // Return response
+    // Get created tasks to return their IDs
+    const taskRepo = repositoryFactory.getTaskRepository();
+    const tasks = await taskRepo.findByProgram(program.id);
+    const taskIds = tasks.map(t => t.id);
+    
+    // Return response compatible with frontend expectations
     return NextResponse.json({
       success: true,
+      id: program.id,  // Frontend expects id at root level
       program,
+      tasks,  // Frontend expects tasks array
+      taskIds,  // Also provide taskIds for compatibility
       language
     });
     

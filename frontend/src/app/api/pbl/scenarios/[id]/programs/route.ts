@@ -116,7 +116,12 @@ export async function GET(
       })
     );
     
-    return NextResponse.json(enrichedPrograms, {
+    return NextResponse.json({
+      success: true,
+      data: {
+        programs: enrichedPrograms
+      }
+    }, {
       headers: {
         'Cache-Control': 'private, max-age=60, stale-while-revalidate=300',
       }
@@ -130,3 +135,9 @@ export async function GET(
     );
   }
 }
+
+// Note: POST endpoint removed - use /api/pbl/scenarios/[id]/start instead
+// The /start endpoint is the established pattern that:
+// 1. Handles user creation if needed
+// 2. Returns tasks and taskIds that frontend expects
+// 3. Is already integrated with the frontend

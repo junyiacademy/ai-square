@@ -115,12 +115,39 @@ describe('POST /api/pbl/scenarios/[id]/start', () => {
     startedAt: new Date().toISOString()
   };
 
+  const mockTasks = [
+    {
+      id: 'task-123',
+      programId: mockProgramId,
+      mode: 'pbl',
+      taskIndex: 0,
+      type: 'chat',
+      status: 'active',
+      title: { en: 'Task 1' },
+      content: {
+        instructions: 'First task instructions'
+      }
+    },
+    {
+      id: 'task-456',
+      programId: mockProgramId,
+      mode: 'pbl',
+      taskIndex: 1,
+      type: 'creation',
+      status: 'pending',
+      title: { en: 'Task 2' },
+      content: {
+        instructions: 'Second task instructions'
+      }
+    }
+  ];
+
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
   describe('Using new service layer', () => {
-    it('should use PBLLearningService to start learning', async () => {
+    it('should use PBLLearningService to start learning and return tasks', async () => {
       // Arrange
       const mockPBLService = {
         startLearning: jest.fn().mockResolvedValue(mockProgram)
@@ -133,10 +160,15 @@ describe('POST /api/pbl/scenarios/[id]/start', () => {
       const mockScenarioRepo = {
         findById: jest.fn().mockResolvedValue(mockScenario)
       };
+      
+      const mockTaskRepo = {
+        findByProgram: jest.fn().mockResolvedValue(mockTasks)
+      };
 
       (learningServiceFactory.getService as jest.Mock).mockReturnValue(mockPBLService);
       (repositoryFactory.getUserRepository as jest.Mock).mockReturnValue(mockUserRepo);
       (repositoryFactory.getScenarioRepository as jest.Mock).mockReturnValue(mockScenarioRepo);
+      (repositoryFactory.getTaskRepository as jest.Mock).mockReturnValue(mockTaskRepo);
 
       const request = createRequestWithUser('test@example.com');
 
@@ -151,9 +183,14 @@ describe('POST /api/pbl/scenarios/[id]/start', () => {
         '123e4567-e89b-12d3-a456-426614174000',
         { language: 'en' }
       );
+      expect(mockTaskRepo.findByProgram).toHaveBeenCalledWith(mockProgramId);
       expect(response.status).toBe(200);
       expect(data.success).toBe(true);
+      expect(data.id).toBe(mockProgramId); // Frontend expects id at root level
       expect(data.program).toEqual(mockProgram);
+      expect(data.tasks).toEqual(mockTasks);
+      expect(data.taskIds).toEqual(['task-123', 'task-456']);
+      expect(data.language).toBe('en');
     });
 
     it('should handle service errors gracefully', async () => {
@@ -253,6 +290,164 @@ describe('POST /api/pbl/scenarios/[id]/start', () => {
         preferredLanguage: 'en'
       });
       expect(data.success).toBe(true);
+    });
+
+    it('should return tasks and taskIds for frontend navigation', async () => {
+      // Arrange
+      const mockPBLService = {
+        startLearning: jest.fn().mockResolvedValue(mockProgram)
+      };
+      
+      const mockUserRepo = {
+        findByEmail: jest.fn().mockResolvedValue({ id: mockUserId, email: 'test@example.com' })
+      };
+      
+      const mockScenarioRepo = {
+        findById: jest.fn().mockResolvedValue(mockScenario)
+      };
+      
+      const mockTaskRepo = {
+        findByProgram: jest.fn().mockResolvedValue(mockTasks)
+      };
+
+      (learningServiceFactory.getService as jest.Mock).mockReturnValue(mockPBLService);
+      (repositoryFactory.getUserRepository as jest.Mock).mockReturnValue(mockUserRepo);
+      (repositoryFactory.getScenarioRepository as jest.Mock).mockReturnValue(mockScenarioRepo);
+      (repositoryFactory.getTaskRepository as jest.Mock).mockReturnValue(mockTaskRepo);
+
+      const request = createRequestWithUser('test@example.com', { language: 'zh' });
+
+      // Act
+      const response = await POST(request, { params: Promise.resolve({'id':'123e4567-e89b-12d3-a456-426614174000'}) });
+      const data = await response.json();
+
+      // Assert
+      expect(data.id).toBe(mockProgramId); // ID at root level for frontend
+      expect(data.tasks).toHaveLength(2);
+      expect(data.taskIds).toEqual(['task-123', 'task-456']);
+      expect(data.language).toBe('zh');
+    });
+
+    it('should handle string format task titles in templates', async () => {
+      // Arrange
+      const scenarioWithStringTitles = {
+        ...mockScenario,
+        taskTemplates: [
+          {
+            id: 'task-1',
+            title: 'Resume Analysis', // String format instead of multilingual
+            type: 'analysis',
+            description: 'Analyze your resume with AI'
+          },
+          {
+            id: 'task-2',
+            title: 'Interview Preparation', // String format
+            type: 'chat',
+            description: 'Prepare for your interview'
+          }
+        ]
+      };
+
+      const mockPBLService = {
+        startLearning: jest.fn().mockResolvedValue(mockProgram)
+      };
+      
+      const mockUserRepo = {
+        findByEmail: jest.fn().mockResolvedValue({ id: mockUserId, email: 'test@example.com' })
+      };
+      
+      const mockScenarioRepo = {
+        findById: jest.fn().mockResolvedValue(scenarioWithStringTitles)
+      };
+      
+      const mockTaskRepo = {
+        findByProgram: jest.fn().mockResolvedValue([
+          {
+            id: 'task-789',
+            programId: mockProgramId,
+            title: { en: 'Resume Analysis' }, // Converted to multilingual
+            type: 'analysis'
+          },
+          {
+            id: 'task-890',
+            programId: mockProgramId,
+            title: { en: 'Interview Preparation' }, // Converted to multilingual
+            type: 'chat'
+          }
+        ])
+      };
+
+      (learningServiceFactory.getService as jest.Mock).mockReturnValue(mockPBLService);
+      (repositoryFactory.getUserRepository as jest.Mock).mockReturnValue(mockUserRepo);
+      (repositoryFactory.getScenarioRepository as jest.Mock).mockReturnValue(mockScenarioRepo);
+      (repositoryFactory.getTaskRepository as jest.Mock).mockReturnValue(mockTaskRepo);
+
+      const request = createRequestWithUser('test@example.com');
+
+      // Act
+      const response = await POST(request, { params: Promise.resolve({'id':'123e4567-e89b-12d3-a456-426614174000'}) });
+      const data = await response.json();
+
+      // Assert
+      expect(response.status).toBe(200);
+      expect(data.success).toBe(true);
+      expect(data.tasks[0].title).toEqual({ en: 'Resume Analysis' });
+      expect(data.tasks[1].title).toEqual({ en: 'Interview Preparation' });
+    });
+
+    it('should verify scenario is PBL type', async () => {
+      // Arrange
+      const nonPBLScenario = {
+        ...mockScenario,
+        mode: 'discovery' // Not a PBL scenario
+      };
+      
+      const mockUserRepo = {
+        findByEmail: jest.fn().mockResolvedValue({ id: mockUserId, email: 'test@example.com' })
+      };
+      
+      const mockScenarioRepo = {
+        findById: jest.fn().mockResolvedValue(nonPBLScenario)
+      };
+
+      (repositoryFactory.getUserRepository as jest.Mock).mockReturnValue(mockUserRepo);
+      (repositoryFactory.getScenarioRepository as jest.Mock).mockReturnValue(mockScenarioRepo);
+
+      const request = createRequestWithUser('test@example.com');
+
+      // Act
+      const response = await POST(request, { params: Promise.resolve({'id':'123e4567-e89b-12d3-a456-426614174000'}) });
+      const data = await response.json();
+
+      // Assert
+      expect(response.status).toBe(400);
+      expect(data.success).toBe(false);
+      expect(data.error).toContain('not a PBL scenario');
+    });
+
+    it('should handle scenario not found', async () => {
+      // Arrange
+      const mockUserRepo = {
+        findByEmail: jest.fn().mockResolvedValue({ id: mockUserId, email: 'test@example.com' })
+      };
+      
+      const mockScenarioRepo = {
+        findById: jest.fn().mockResolvedValue(null)
+      };
+
+      (repositoryFactory.getUserRepository as jest.Mock).mockReturnValue(mockUserRepo);
+      (repositoryFactory.getScenarioRepository as jest.Mock).mockReturnValue(mockScenarioRepo);
+
+      const request = createRequestWithUser('test@example.com');
+
+      // Act
+      const response = await POST(request, { params: Promise.resolve({'id':'123e4567-e89b-12d3-a456-426614174000'}) });
+      const data = await response.json();
+
+      // Assert
+      expect(response.status).toBe(404);
+      expect(data.success).toBe(false);
+      expect(data.error).toContain('Scenario not found');
     });
   });
 });
