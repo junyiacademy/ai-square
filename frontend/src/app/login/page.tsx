@@ -81,8 +81,8 @@ function LoginContent() {
             router.push('/onboarding/welcome');
           }
         } else if (!hasAssessment) {
-          console.log('Onboarding completed, navigating to: /assessment')
-          router.push('/assessment');
+          console.log('Onboarding completed, navigating to: /assessment/scenarios')
+          router.push('/assessment/scenarios');
         } else {
           console.log('Everything completed, navigating to: /dashboard')
           router.push('/dashboard');

@@ -147,11 +147,10 @@ export default async function globalTeardown() {
       console.log('   ℹ️ Keeping Docker containers running for next test run');
     }
     
-    // STEP 5: Final port cleanup
+    // STEP 5: Final port cleanup (only Next.js)
     console.log('\n📌 Step 5: Final port cleanup...');
+    // Only clean application port to avoid killing Docker-mapped DB/Redis
     forceKillPort(TEST_PORTS.NEXT, 'Next.js');
-    forceKillPort(TEST_PORTS.DB, 'PostgreSQL');
-    forceKillPort(TEST_PORTS.REDIS, 'Redis');
     
     // Report final status
     console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
@@ -160,7 +159,7 @@ export default async function globalTeardown() {
     console.log('✅ Next.js server stopped and port freed');
     console.log('✅ Test data cleaned from database');
     console.log('✅ Redis cache cleared');
-    console.log('✅ All test ports cleaned');
+    console.log('✅ Next.js port cleaned (DB/Redis ports preserved)');
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
     
   } catch (error) {
