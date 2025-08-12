@@ -346,7 +346,7 @@ describe('OnboardingWelcomePage', () => {
         hasCompletedOnboarding: true
       })
     );
-    expect(mockRouter.push).toHaveBeenCalledWith('/assessment');
+    expect(mockRouter.push).toHaveBeenCalledWith('/assessment/scenarios');
   });
 
   it('should handle skip when no user in localStorage', async () => {
