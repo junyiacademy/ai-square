@@ -100,8 +100,8 @@ describe('performance-monitor', () => {
         });
       }
 
-      // Trigger aggregation
-      jest.advanceTimersByTime(5 * 60 * 1000);
+      // Trigger aggregation manually in test
+      (performanceMonitor as any).forceAggregation();
 
       const metric = performanceMonitor.getMetrics('/api/test', 'GET');
       expect(metric).not.toBeNull();
@@ -117,7 +117,7 @@ describe('performance-monitor', () => {
 
     it('handles empty metrics in aggregation', () => {
       // Trigger aggregation with no metrics
-      jest.advanceTimersByTime(5 * 60 * 1000);
+      (performanceMonitor as any).forceAggregation();
       
       const allMetrics = performanceMonitor.getAllMetrics();
       expect(allMetrics).toEqual([]);
@@ -140,7 +140,7 @@ describe('performance-monitor', () => {
       }
 
       // Trigger aggregation
-      jest.advanceTimersByTime(5 * 60 * 1000);
+      (performanceMonitor as any).forceAggregation();
 
       const metric = performanceMonitor.getMetrics('/api/p95test', 'GET');
       expect(metric).not.toBeNull();
@@ -162,7 +162,7 @@ describe('performance-monitor', () => {
       });
 
       // Trigger aggregation
-      jest.advanceTimersByTime(5 * 60 * 1000);
+      (performanceMonitor as any).forceAggregation();
 
       // Clear
       performanceMonitor.clearMetrics();
@@ -198,7 +198,7 @@ describe('performance-monitor', () => {
       });
 
       // Trigger aggregation
-      jest.advanceTimersByTime(5 * 60 * 1000);
+      (performanceMonitor as any).forceAggregation();
 
       const report = getPerformanceReport();
       const slowAlert = report.alerts.find(a => a.includes('Slow response time'));
@@ -223,7 +223,7 @@ describe('performance-monitor', () => {
       }
 
       // Trigger aggregation
-      jest.advanceTimersByTime(5 * 60 * 1000);
+      (performanceMonitor as any).forceAggregation();
 
       const report = getPerformanceReport();
       const errorAlert = report.alerts.find(a => a.includes('High error rate'));
@@ -248,7 +248,7 @@ describe('performance-monitor', () => {
       }
 
       // Trigger aggregation
-      jest.advanceTimersByTime(5 * 60 * 1000);
+      (performanceMonitor as any).forceAggregation();
 
       const report = getPerformanceReport();
       const cacheAlert = report.alerts.find(a => a.includes('Low cache hit rate'));
@@ -273,7 +273,7 @@ describe('performance-monitor', () => {
       }
 
       // Trigger aggregation
-      jest.advanceTimersByTime(5 * 60 * 1000);
+      (performanceMonitor as any).forceAggregation();
 
       const report = getPerformanceReport();
       const cacheAlert = report.alerts.find(a => a.includes('Low cache hit rate') && a.includes('/api/post'));
@@ -313,7 +313,7 @@ describe('performance-monitor', () => {
       });
 
       // Trigger aggregation
-      jest.advanceTimersByTime(5 * 60 * 1000);
+      (performanceMonitor as any).forceAggregation();
 
       const report = getPerformanceReport();
       expect(report.endpoints.length).toBe(3);
@@ -340,7 +340,7 @@ describe('performance-monitor', () => {
       }
 
       // Trigger aggregation
-      jest.advanceTimersByTime(5 * 60 * 1000);
+      (performanceMonitor as any).forceAggregation();
 
       const report = getPerformanceReport();
       expect(report.summary.totalEndpoints).toBe(2);

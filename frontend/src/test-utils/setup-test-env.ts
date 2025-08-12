@@ -15,8 +15,15 @@ global.TextDecoder = TextDecoder as typeof global.TextDecoder;
 process.env.NEXTAUTH_SECRET = 'test-secret';
 process.env.NEXTAUTH_URL = 'http://localhost:3000';
 process.env.JWT_SECRET = 'test-jwt-secret';
-// Don't set DB environment variables here - let integration tests set their own
-// Unit tests should mock the database connections anyway
+
+// Set default DB variables for unit tests (integration tests will override)
+if (!process.env.DB_HOST) {
+  process.env.DB_HOST = 'localhost';
+  process.env.DB_PORT = '5432';
+  process.env.DB_NAME = 'test_db';
+  process.env.DB_USER = 'postgres';  // Use postgres for compatibility
+  process.env.DB_PASSWORD = 'postgres';
+}
 
 // Mock window.matchMedia (only in jsdom environment)
 if (typeof window !== 'undefined') {

@@ -30,11 +30,12 @@ class PerformanceMonitor {
   private aggregated: Map<string, AggregatedMetrics> = new Map();
   private readonly maxMetricsSize = 10000; // Keep last 10k metrics
   private readonly aggregationInterval = 5 * 60 * 1000; // 5 minutes
+  private intervalId?: NodeJS.Timeout;
 
   constructor() {
     // Start periodic aggregation only in non-test environments
     if (process.env.NODE_ENV !== 'test' && !process.env.JEST_WORKER_ID) {
-      setInterval(() => this.aggregateMetrics(), this.aggregationInterval);
+      this.intervalId = setInterval(() => this.aggregateMetrics(), this.aggregationInterval);
     }
   }
 
@@ -78,6 +79,13 @@ class PerformanceMonitor {
   clearMetrics() {
     this.metrics = [];
     this.aggregated.clear();
+  }
+
+  /**
+   * Manually trigger aggregation (useful for tests)
+   */
+  public forceAggregation() {
+    this.aggregateMetrics();
   }
 
   /**
