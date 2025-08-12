@@ -269,7 +269,7 @@ describe('LoginPage', () => {
     loginButton.click();
 
     await waitFor(() => {
-      expect(mockPush).toHaveBeenCalledWith('/assessment');
+      expect(mockPush).toHaveBeenCalledWith('/assessment/scenarios');
     });
   });
 

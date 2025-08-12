@@ -196,7 +196,7 @@ export default function OnboardingWelcomePage() {
         console.error('Error updating onboarding status:', error);
       }
     }
-    router.push('/assessment');
+    router.push('/assessment/scenarios');
   };
 
   if (loading) {

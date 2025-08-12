@@ -51,14 +51,21 @@ function LoginContent() {
         }
         
         // Default navigation based on onboarding status
-        const userData = result.user as unknown as { 
-          onboarding?: Record<string, boolean>; 
-          onboardingCompleted?: boolean;
-          assessmentCompleted?: boolean;
-        };
-        const onboarding = userData?.onboarding || {};
-        const isOnboardingCompleted = userData?.onboardingCompleted || false;
-        const hasAssessment = userData?.assessmentCompleted || false;
+        const userData = result.user as unknown as {
+          onboarding?: Record<string, boolean>
+          onboardingCompleted?: boolean
+          assessmentCompleted?: boolean
+        }
+        const onboarding = userData?.onboarding || {}
+        const derivedOnboardingCompleted = Boolean(
+          onboarding.welcomeCompleted &&
+            onboarding.identityCompleted &&
+            onboarding.goalsCompleted
+        )
+        const isOnboardingCompleted = Boolean(
+          userData?.onboardingCompleted || derivedOnboardingCompleted
+        )
+        const hasAssessment = Boolean(userData?.assessmentCompleted)
         console.log('User status:', { onboarding, isOnboardingCompleted, hasAssessment })
         
         // Navigate based on onboarding completion status
@@ -85,7 +92,7 @@ function LoginContent() {
           router.push('/assessment/scenarios');
         } else {
           console.log('Everything completed, navigating to: /dashboard')
-          router.push('/dashboard');
+          router.push('/dashboard')
         }
       } else {
         // 顯示錯誤訊息
