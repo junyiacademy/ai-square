@@ -4,11 +4,11 @@
  */
 
 describe('Simple Load Testing', () => {
-  const baseUrl = process.env.API_URL || 'http://localhost:3000';
+  const baseUrl = process.env.API_URL || 'http://localhost:3456';
 
   it('should handle 5 concurrent requests', async () => {
     const requests = Array(5).fill(null).map(() => 
-      fetch(`${baseUrl}/api/health`)
+      fetch(`${baseUrl}/api/monitoring/health`)
     );
     
     const results = await Promise.allSettled(requests);
@@ -49,7 +49,7 @@ describe('Simple Load Testing', () => {
     // Make 10 sequential requests
     for (let i = 0; i < 10; i++) {
       const start = Date.now();
-      const response = await fetch(`${baseUrl}/api/health`);
+      const response = await fetch(`${baseUrl}/api/monitoring/health`);
       const time = Date.now() - start;
       
       expect(response.ok).toBe(true);
