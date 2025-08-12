@@ -249,7 +249,8 @@ export default async function globalSetup() {
     nextProcess = spawn('npm', ['run', 'dev'], {
       cwd: process.cwd(),
       detached: false,
-      stdio: 'pipe',
+      // Avoid holding open stdio pipes which can keep Jest alive
+      stdio: 'ignore',
       env: {
         ...process.env,
         PORT: TEST_PORTS.NEXT,
@@ -258,6 +259,8 @@ export default async function globalSetup() {
         NODE_ENV: 'test'
       }
     });
+    // Do not keep the parent event loop alive because of the child
+    try { nextProcess.unref(); } catch {}
     
     // Store process reference for cleanup
     (global as unknown as { __NEXT_PROCESS__?: ReturnType<typeof spawn> }).__NEXT_PROCESS__ = nextProcess;
