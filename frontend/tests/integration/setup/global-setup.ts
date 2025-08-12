@@ -29,30 +29,22 @@ const TEST_PORTS = {
 function killPort(port: string, serviceName: string): void {
   console.log(`🧹 Checking port ${port} (${serviceName})...`);
   
-  // Special handling for PostgreSQL and Redis test ports
+  // Special handling for PostgreSQL and Redis test ports - DON'T kill them!
   if ((port === '5434' && serviceName === 'PostgreSQL') || 
       (port === '6380' && serviceName === 'Redis')) {
-    // Check if it's actually accessible before killing
-    try {
-      if (port === '5434') {
-        // Try to connect to PostgreSQL
-        execSync(`PGPASSWORD=postgres psql -h localhost -p ${port} -U postgres -c "SELECT 1" -t 2>/dev/null`, { stdio: 'ignore' });
-        console.log(`   ℹ️ Port ${port} has working ${serviceName}, keeping it`);
-        return;
-      }
-    } catch {
-      // If connection fails, proceed with cleanup
-    }
+    console.log(`   ⏭️ Skipping ${serviceName} on port ${port} (test service)`);
+    return;
   }
   
-  try {
-    // Find and kill all processes using the port
-    execSync(`lsof -ti :${port} | xargs kill -9 2>/dev/null || true`, { stdio: 'ignore' });
-    // Additional check for Docker containers
-    execSync(`docker ps -q --filter "publish=${port}" | xargs docker stop 2>/dev/null || true`, { stdio: 'ignore' });
-    console.log(`   ✅ Port ${port} cleaned`);
-  } catch (error) {
-    // Ignore errors - port might not be in use
+  // Only kill Next.js port
+  if (port === '3456' && serviceName === 'Next.js') {
+    try {
+      // Find and kill only Node.js processes using the port (not Docker containers)
+      execSync(`lsof -ti :${port} | xargs kill -9 2>/dev/null || true`, { stdio: 'ignore' });
+      console.log(`   ✅ Port ${port} cleaned`);
+    } catch (error) {
+      // Ignore errors - port might not be in use
+    }
   }
 }
 
@@ -69,9 +61,22 @@ async function tryStartContainers(): Promise<void> {
   if (composeCmd) {
     console.log('   ℹ️ Docker compose is available, ensuring containers are up...');
     try {
-      execSync(`${composeCmd} -f docker-compose.test.yml up -d`, { stdio: 'ignore' });
-      console.log('   ✅ Test containers started/verified');
-    } catch {
+      // Use absolute path to docker-compose.test.yml
+      const projectRoot = path.resolve(process.cwd(), '..');
+      const frontendRoot = process.cwd();
+      const composeFile = fs.existsSync(path.join(frontendRoot, 'docker-compose.test.yml'))
+        ? path.join(frontendRoot, 'docker-compose.test.yml')
+        : fs.existsSync(path.join(projectRoot, 'frontend', 'docker-compose.test.yml'))
+        ? path.join(projectRoot, 'frontend', 'docker-compose.test.yml')
+        : null;
+      
+      if (composeFile) {
+        execSync(`${composeCmd} -f ${composeFile} up -d`, { stdio: 'ignore' });
+        console.log('   ✅ Test containers started/verified');
+      } else {
+        console.log('   ⚠️ docker-compose.test.yml not found, will try to connect anyway');
+      }
+    } catch (error) {
       console.log('   ⚠️ Could not start containers, will try to connect anyway');
     }
   } else {
