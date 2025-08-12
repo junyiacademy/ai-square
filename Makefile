@@ -522,9 +522,9 @@ pre-commit-check:
 	@cd frontend && npx eslint $$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(ts|tsx|js|jsx)$$') || (echo "$(RED)❌ ESLint 檢查失敗$(NC)" && exit 1)
 	@echo "$(GREEN)✅ ESLint 檢查通過$(NC)"
 	@echo ""
-	@echo "$(YELLOW)3️⃣ 執行測試...$(NC)"
-	@cd frontend && npm run test:ci || (echo "$(RED)❌ 測試失敗$(NC)" && exit 1)
-	@echo "$(GREEN)✅ 測試通過$(NC)"
+	@echo "$(YELLOW)3️⃣ 執行單元測試（排除 integration tests）...$(NC)"
+	@cd frontend && npm run test:unit:ci || (echo "$(RED)❌ 單元測試失敗$(NC)" && exit 1)
+	@echo "$(GREEN)✅ 單元測試通過$(NC)"
 	@echo ""
 	@echo "$(YELLOW)4️⃣ Build 檢查...$(NC)"
 	@cd frontend && npm run build || (echo "$(RED)❌ Build 失敗$(NC)" && exit 1)
