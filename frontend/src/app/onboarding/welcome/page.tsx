@@ -168,13 +168,33 @@ export default function OnboardingWelcomePage() {
     }
   };
 
-  const handleSkip = () => {
+  const handleSkip = async () => {
     // Mark onboarding as completed and go to assessment
     const userStr = localStorage.getItem('user');
     if (userStr) {
       const user = JSON.parse(userStr);
       user.hasCompletedOnboarding = true;
       localStorage.setItem('user', JSON.stringify(user));
+      
+      // Update onboarding status in database
+      try {
+        const updateResponse = await fetch(`/api/users/${user.id}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            onboardingCompleted: true
+          }),
+          credentials: 'include'
+        });
+        
+        if (!updateResponse.ok) {
+          console.error('Failed to update onboarding status in database');
+        }
+      } catch (error) {
+        console.error('Error updating onboarding status:', error);
+      }
     }
     router.push('/assessment');
   };

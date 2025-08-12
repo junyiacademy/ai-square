@@ -90,7 +90,9 @@ export default async function globalSetup() {
   
   // Set test environment variables
   process.env.PORT = TEST_PORTS.NEXT;
+  process.env.DB_HOST = process.env.DB_HOST || '127.0.0.1';
   process.env.DB_PORT = TEST_PORTS.DB;
+  process.env.REDIS_HOST = process.env.REDIS_HOST || '127.0.0.1';
   process.env.REDIS_PORT = TEST_PORTS.REDIS;
   process.env.API_URL = `http://localhost:${TEST_PORTS.NEXT}`;
   
@@ -112,6 +114,15 @@ export default async function globalSetup() {
     }
     await new Promise(resolve => setTimeout(resolve, 2000)); // Give services time to start
     
+    // Optional: wait for DB port to be open when using compose
+    try {
+      await waitOn({
+        resources: [`tcp:127.0.0.1:${TEST_PORTS.DB}`],
+        timeout: 30000,
+        interval: 1000,
+      });
+    } catch {}
+
     // STEP 3: Verify database connection (flexible - try test port first, then dev port)
     console.log('\n📌 Step 3: Verifying database connection...');
     
@@ -128,14 +139,14 @@ export default async function globalSetup() {
     });
     
     // Try to connect to test DB
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 15; i++) {
       try {
         await dbPool.query('SELECT 1');
         dbConnected = true;
         console.log(`   ✅ Test database ready on port ${TEST_PORTS.DB}`);
         break;
       } catch (error) {
-        if (i === 2) {
+        if (i === 14) {
           console.log(`   ⚠️ Test database not available on port ${TEST_PORTS.DB}`);
         }
         await new Promise(resolve => setTimeout(resolve, 1000));
@@ -194,9 +205,9 @@ export default async function globalSetup() {
     await adminPool.end();
 
     const schemaPath = path.join(process.cwd(), 'src', 'lib', 'repositories', 'postgresql', 'schema-v3.sql');
+    const authMigrationPath = path.join(process.cwd(), 'src', 'lib', 'repositories', 'postgresql', 'migrations', '20250204-add-password-column.sql');
     if (fs.existsSync(schemaPath)) {
       const sql = fs.readFileSync(schemaPath, 'utf8');
-      const statements = sql.split(';').map(s => s.trim()).filter(Boolean);
       const schemaPool = new Pool({
         host: process.env.DB_HOST || 'localhost',
         port: parseInt(process.env.DB_PORT || TEST_PORTS.DB),
@@ -204,8 +215,26 @@ export default async function globalSetup() {
         user: 'postgres',
         password: 'postgres',
       });
-      for (const stmt of statements) {
-        try { await schemaPool.query(stmt); } catch { /* idempotent */ }
+      try {
+        await schemaPool.query(sql);
+      } catch (e) {
+        // Fallback safe execution if multi-statement fails: split
+        const statements = sql.split(';').map(s => s.trim()).filter(Boolean);
+        for (const stmt of statements) {
+          try { await schemaPool.query(stmt); } catch { /* idempotent */ }
+        }
+      }
+      // Apply auth migration to ensure password_hash/role columns exist
+      if (fs.existsSync(authMigrationPath)) {
+        const authSql = fs.readFileSync(authMigrationPath, 'utf8');
+        try {
+          await schemaPool.query(authSql);
+        } catch (e) {
+          const stmts = authSql.split(';').map(s => s.trim()).filter(Boolean);
+          for (const stmt of stmts) {
+            try { await schemaPool.query(stmt); } catch { /* idempotent */ }
+          }
+        }
       }
       await schemaPool.end();
       console.log('   ✅ Schema applied to test database');

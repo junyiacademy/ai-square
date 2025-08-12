@@ -104,6 +104,33 @@ export default function OnboardingGoalsPage() {
         user.hasCompletedOnboarding = true;
         localStorage.setItem('user', JSON.stringify(user));
         
+        // Update onboarding status in database
+        try {
+          const updateResponse = await fetch(`/api/users/${user.id}`, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              onboardingCompleted: true,
+              learningPreferences: {
+                goals: selectedGoals,
+                interests: selectedGoals,
+                identity: user.identity || 'learner'
+              }
+            }),
+            credentials: 'include'
+          });
+          
+          if (!updateResponse.ok) {
+            console.error('Failed to update onboarding status in database');
+          } else {
+            console.log('Onboarding status successfully updated in database');
+          }
+        } catch (error) {
+          console.error('Error updating onboarding status:', error);
+        }
+        
         // Save profile including interests to localStorage for personalization
         const userProfile = {
           identity: user.identity || 'learner',

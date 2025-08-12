@@ -25,7 +25,7 @@ import * as pblCompleteRoute from '@/app/api/pbl/programs/[programId]/complete/r
 export class APITestHelper {
   private baseUrl: string;
   
-  constructor(baseUrl: string = 'http://localhost:3000') {
+  constructor(baseUrl: string = (process.env.API_URL || 'http://localhost:3456')) {
     this.baseUrl = baseUrl;
   }
   
@@ -85,7 +85,21 @@ export class APITestHelper {
         throw new Error(`Invalid evaluate path: ${path}`);
       }
     } else {
-      throw new Error(`Unhandled path: ${path}`);
+      // Fallback: call running Next.js server via HTTP for any other API path
+      const url = `${this.baseUrl}${path}`;
+      const res = await fetch(url, {
+        method: method.toUpperCase(),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: body ? JSON.stringify(body) : undefined,
+      });
+      return {
+        status: res.status,
+        body: await res.json().catch(() => ({})),
+        headers: res.headers,
+      };
     }
     
     const responseBody = await response.json();

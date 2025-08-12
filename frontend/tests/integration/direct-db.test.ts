@@ -11,11 +11,11 @@ describe('Direct Database Connection', () => {
   beforeAll(async () => {
     // Create a direct connection to the test database
     pool = new Pool({
-      host: 'localhost',
-      port: 5433,
-      database: 'ai_square_db',
-      user: 'postgres',
-      password: 'postgres',
+      host: process.env.DB_HOST || 'localhost',
+      port: parseInt(process.env.DB_PORT || '5434'),
+      database: process.env.DB_NAME || 'ai_square_db',
+      user: process.env.DB_USER || 'postgres',
+      password: process.env.DB_PASSWORD || 'postgres',
       max: 10,
     });
     

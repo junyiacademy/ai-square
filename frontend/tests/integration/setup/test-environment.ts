@@ -75,7 +75,7 @@ export class IntegrationTestEnvironment {
   private async createTestDatabase() {
     const adminPool = new Pool({
       host: process.env.TEST_DB_HOST || 'localhost',
-      port: parseInt(process.env.TEST_DB_PORT || '5433'),
+      port: parseInt(process.env.TEST_DB_PORT || '5434'),
       database: 'postgres',
       user: 'postgres',
       password: 'postgres',
@@ -100,7 +100,7 @@ export class IntegrationTestEnvironment {
     // Connect to new database
     this.dbPool = new Pool({
       host: process.env.TEST_DB_HOST || 'localhost',
-      port: parseInt(process.env.TEST_DB_PORT || '5433'),
+      port: parseInt(process.env.TEST_DB_PORT || '5434'),
       database: this.testDbName,
       user: 'postgres',
       password: 'postgres',
@@ -368,7 +368,7 @@ export class IntegrationTestEnvironment {
     try {
       this.redisClient = new Redis({
         host: process.env.TEST_REDIS_HOST || 'localhost',
-        port: parseInt(process.env.TEST_REDIS_PORT || '6379'),
+        port: parseInt(process.env.TEST_REDIS_PORT || '6380'),
         db: 1, // Use different db index to avoid conflicts
         retryStrategy: () => null, // Don't retry if Redis is down
       });
@@ -403,7 +403,7 @@ export class IntegrationTestEnvironment {
     process.env.DB_USER = 'postgres';
     process.env.DB_PASSWORD = 'postgres';
     process.env.REDIS_ENABLED = 'true';
-    process.env.REDIS_URL = 'redis://localhost:6379';
+    process.env.REDIS_URL = 'redis://localhost:6380';
   }
 
   private async waitForDatabase(maxRetries = 30): Promise<void> {
@@ -447,7 +447,7 @@ export class IntegrationTestEnvironment {
   private async dropTestDatabase() {
     const adminPool = new Pool({
       host: process.env.TEST_DB_HOST || 'localhost',
-      port: parseInt(process.env.TEST_DB_PORT || '5433'),
+      port: parseInt(process.env.TEST_DB_PORT || '5434'),
       database: 'postgres',
       user: 'postgres',
       password: 'postgres',
