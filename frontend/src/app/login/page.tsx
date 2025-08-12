@@ -51,26 +51,40 @@ function LoginContent() {
         }
         
         // Default navigation based on onboarding status
-        const userData = result.user as unknown as { onboarding?: Record<string, boolean>; assessmentCompleted?: boolean };
+        const userData = result.user as unknown as { 
+          onboarding?: Record<string, boolean>; 
+          onboardingCompleted?: boolean;
+          assessmentCompleted?: boolean;
+        };
         const onboarding = userData?.onboarding || {};
+        const isOnboardingCompleted = userData?.onboardingCompleted || false;
         const hasAssessment = userData?.assessmentCompleted || false;
-        console.log('User status:', { onboarding, hasAssessment })
+        console.log('User status:', { onboarding, isOnboardingCompleted, hasAssessment })
         
-        // Navigate based on actual progress
-        if (!onboarding.welcomeCompleted) {
-          console.log('Navigating to: /onboarding/welcome')
-          router.push('/onboarding/welcome');
-        } else if (!onboarding.identityCompleted) {
-          console.log('Navigating to: /onboarding/identity')
-          router.push('/onboarding/identity');
-        } else if (!onboarding.goalsCompleted) {
-          console.log('Navigating to: /onboarding/goals')
-          router.push('/onboarding/goals');
+        // Navigate based on onboarding completion status
+        if (!isOnboardingCompleted) {
+          console.log('Onboarding not completed, checking detailed progress...')
+          
+          // Check detailed onboarding progress (if available from GCS)
+          if (!onboarding.welcomeCompleted) {
+            console.log('Navigating to: /onboarding/welcome')
+            router.push('/onboarding/welcome');
+          } else if (!onboarding.identityCompleted) {
+            console.log('Navigating to: /onboarding/identity')
+            router.push('/onboarding/identity');
+          } else if (!onboarding.goalsCompleted) {
+            console.log('Navigating to: /onboarding/goals')
+            router.push('/onboarding/goals');
+          } else {
+            // Fallback - start from beginning if no detailed progress
+            console.log('No detailed progress found, starting from welcome')
+            router.push('/onboarding/welcome');
+          }
         } else if (!hasAssessment) {
-          console.log('Navigating to: /assessment')
+          console.log('Onboarding completed, navigating to: /assessment')
           router.push('/assessment');
         } else {
-          console.log('Navigating to: /dashboard')
+          console.log('Everything completed, navigating to: /dashboard')
           router.push('/dashboard');
         }
       } else {
