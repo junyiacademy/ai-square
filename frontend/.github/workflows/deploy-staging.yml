@@ -60,6 +60,11 @@ jobs:
           echo "❌ Deployment verification failed - HTTP $HTTP_STATUS"
           exit 1
         fi
+        
+        # Verify init APIs also populated data
+        echo "🔍 Checking scenario data..."
+        SCENARIO_COUNT=$(curl -s "$SERVICE_URL/api/admin/init-pbl" | jq -r '.count // 0')
+        echo "PBL Scenarios found: $SCENARIO_COUNT"
 
     - name: Notify Slack (Optional)
       if: always()

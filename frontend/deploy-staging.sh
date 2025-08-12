@@ -82,6 +82,30 @@ echo ""
 echo "🔍 Getting service URL..."
 SERVICE_URL=$(gcloud run services describe $SERVICE_NAME --region $REGION --format 'value(status.url)')
 
+# Step 5: Initialize database with scenario data
+echo ""
+echo "🗄️  Initializing database with scenario data..."
+
+# Wait for service to be ready
+echo "Waiting for service to be ready..."
+sleep 10
+
+# Call init APIs to populate database
+echo "📚 Initializing Assessment scenarios..."
+curl -s -X POST "$SERVICE_URL/api/admin/init-assessment" \
+  -H "Content-Type: application/json" \
+  -d '{"force": false}' || echo "Assessment init failed (this is OK if scenarios already exist)"
+
+echo "🎯 Initializing PBL scenarios..."
+curl -s -X POST "$SERVICE_URL/api/admin/init-pbl" \
+  -H "Content-Type: application/json" \
+  -d '{"force": false}' || echo "PBL init failed (this is OK if scenarios already exist)"
+
+echo "🧭 Initializing Discovery scenarios..."
+curl -s -X POST "$SERVICE_URL/api/admin/init-discovery" \
+  -H "Content-Type: application/json" \
+  -d '{"force": false}' || echo "Discovery init failed (this is OK if scenarios already exist)"
+
 echo ""
 echo "✅ Deployment complete!"
 echo "🌐 Service URL: $SERVICE_URL"

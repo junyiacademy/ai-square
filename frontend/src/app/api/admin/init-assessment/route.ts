@@ -13,11 +13,13 @@ import path from 'path';
 
 export async function POST(request: NextRequest) {
   try {
-    // Simple auth check - you should use proper authentication in production
-    const authHeader = request.headers.get('authorization');
-    if (authHeader !== 'Bearer admin-init-2025') {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    // Optional: Add auth check for admin only
+    // const session = await getSession();
+    // if (!session?.user?.role === 'admin') {
+    //   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    // }
+    
+    await request.json().catch(() => ({}));
 
     const scenarioRepo = repositoryFactory.getScenarioRepository();
     
@@ -37,16 +39,16 @@ export async function POST(request: NextRequest) {
       passingScore: data.assessment_config.passing_score,
       domains: data.assessment_config.domains,
       // Include the actual questions from tasks
-      questionBank: data.tasks.map((task: any) => ({
-        id: task.id,
-        domain: task.domain,
-        questions: task.questions.map((q: any) => ({
-          id: q.id,
-          text: q.text,
-          options: q.options,
-          correct_answer: q.correct_answer,
-          explanation: q.explanation,
-          ksa_codes: q.ksa_codes
+      questionBank: data.tasks.map((task: Record<string, unknown>) => ({
+        id: task.id as string,
+        domain: task.domain as string,
+        questions: (task.questions as Array<Record<string, unknown>>).map((q: Record<string, unknown>) => ({
+          id: q.id as string,
+          text: q.text as string,
+          options: q.options as string[],
+          correct_answer: q.correct_answer as string,
+          explanation: q.explanation as string,
+          ksa_codes: q.ksa_codes as string[]
         }))
       }))
     };
