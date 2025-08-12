@@ -57,7 +57,7 @@ gcloud run deploy $SERVICE_NAME \
   --set-env-vars DB_PORT=5432 \
   --set-env-vars DB_NAME=ai_square_staging \
   --set-env-vars DB_USER=postgres \
-  --set-env-vars DB_PASSWORD=aisquare2025staging \
+  --set-env-vars DB_PASSWORD=staging2025 \
   --set-env-vars GOOGLE_CLOUD_PROJECT=$PROJECT_ID \
   --set-env-vars GOOGLE_CLOUD_REGION=$REGION \
   --set-env-vars VERTEX_AI_LOCATION=$REGION \

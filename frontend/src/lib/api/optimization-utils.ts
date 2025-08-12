@@ -50,21 +50,28 @@ export async function cachedGET<T>(
     
     // Use stale-while-revalidate if supported
     if (useDistributedCache && options.staleWhileRevalidate) {
-      const result = await distributedCacheService.getWithRevalidation(
-        cacheKey,
-        handler,
-        {
-          ttl: (options.ttl || 300) * 1000,
-          staleWhileRevalidate: options.staleWhileRevalidate * 1000
-        }
-      );
-      
-      return NextResponse.json({ ...result, cacheHit: false }, {
-        headers: {
-          'X-Cache': 'SWR',
-          'Cache-Control': `public, max-age=${options.ttl || 300}, stale-while-revalidate=${options.staleWhileRevalidate || 3600}`
-        }
-      });
+      try {
+        const result = await distributedCacheService.getWithRevalidation(
+          cacheKey,
+          handler,
+          {
+            ttl: (options.ttl || 300) * 1000,
+            staleWhileRevalidate: options.staleWhileRevalidate * 1000
+          }
+        );
+        
+        return NextResponse.json({ ...result, cacheHit: false }, {
+          headers: {
+            'X-Cache': 'SWR',
+            'Cache-Control': `public, max-age=${options.ttl || 300}, stale-while-revalidate=${options.staleWhileRevalidate || 3600}`
+          }
+        });
+      } catch (error) {
+        return NextResponse.json(
+          { error: (error instanceof Error ? error.message : 'Internal server error') },
+          { status: 500 }
+        );
+      }
     }
     
     // Traditional cache approach

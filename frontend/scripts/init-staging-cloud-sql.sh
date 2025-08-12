@@ -35,7 +35,7 @@ fi
 CLOUD_SQL_INSTANCE="ai-square-db-staging-asia"
 DB_NAME="ai_square_staging"
 DB_USER="postgres"
-DB_PASSWORD="${DB_PASSWORD:-aisquare2025staging}"
+DB_PASSWORD="${DB_PASSWORD:-staging2025}"
 PROJECT_ID="ai-square-463013"
 REGION="asia-east1"
 CLOUD_SQL_IP="35.221.137.78"  # Cloud SQL public IP

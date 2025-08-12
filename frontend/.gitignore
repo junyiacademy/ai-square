@@ -33,7 +33,16 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 .env.local.secret
+.env.staging
+.env.production
 pg_hba.conf
+
+# Staging/Production configs with secrets
+**/secrets/
+**/credentials/
+*.pem
+*.key
+*.cert
 
 # vercel
 .vercel

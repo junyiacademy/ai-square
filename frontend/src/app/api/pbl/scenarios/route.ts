@@ -141,6 +141,27 @@ export async function GET(request: Request) {
       } else {
         // Default to unified architecture
         scenarios = await loadScenariosFromUnifiedArchitecture(lang);
+        // If no scenarios found in DB, fallback to hybrid (YAML) to maintain availability
+        if (!scenarios || scenarios.length === 0) {
+          try {
+            const hybridService = new HybridTranslationService();
+            const hybridScenarios = await hybridService.listScenarios(lang);
+            scenarios = hybridScenarios.map(scenario => ({
+              ...scenario,
+              yamlId: scenario.id,
+              sourceType: 'pbl',
+              estimatedDuration: (scenario.metadata?.estimatedDuration as number | undefined) || 60,
+              targetDomain: scenario.metadata?.targetDomains as string[] | undefined,
+              domains: scenario.metadata?.targetDomains as string[] | undefined,
+              taskCount: scenario.taskTemplates?.length || 0,
+              isAvailable: true,
+              thumbnailEmoji: getScenarioEmoji(scenario.id)
+            }));
+            metaSource = 'hybrid-fallback';
+          } catch (fallbackError) {
+            console.error('Unified returned no scenarios and hybrid fallback failed:', fallbackError);
+          }
+        }
       }
       
       return {
