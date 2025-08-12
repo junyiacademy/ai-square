@@ -61,7 +61,7 @@ describe("/api/assessment/results/[id]", () => {
     expect(data.score).toBe(88);
   });
 
-  it('returns 404-ish error wrapped as 500 when local file missing result', async () => {
+  it('returns 500 when local file missing result', async () => {
     delete process.env.DB_HOST;
     delete process.env.DB_NAME;
 
@@ -72,7 +72,11 @@ describe("/api/assessment/results/[id]", () => {
     const { GET: LocalGET } = require('../route');
 
     const request = new NextRequest('http://localhost:3000/api/assessment/results/xx?userId=u');
-    await expect(LocalGET(request, { params: Promise.resolve({ id: 'xx' }) })).rejects.toThrow('Assessment not found');
+    const response = await LocalGET(request, { params: Promise.resolve({ id: 'xx' }) });
+    const data = await response.json();
+
+    expect(response.status).toBe(500);
+    expect(data.error).toBe('Assessment not found');
   });
 
   it('returns 200 with Postgres evaluation when enabled', async () => {
@@ -111,10 +115,14 @@ describe("/api/assessment/results/[id]", () => {
 
     // Use different ID to avoid cache key collision with previous success test
     const req = new NextRequest('http://localhost:3000/api/assessment/results/e2?userId=nouser@example.com');
-    await expect(GET(req, { params: Promise.resolve({ id: 'e2' }) })).rejects.toThrow('User not found');
+    const response = await GET(req, { params: Promise.resolve({ id: 'e2' }) });
+    const data = await response.json();
+
+    expect(response.status).toBe(500);
+    expect(data.error).toBe('User not found');
   });
 
-  it('throws when evaluation belongs to another user (Postgres)', async () => {
+  it('returns 500 when evaluation belongs to another user (Postgres)', async () => {
     process.env.DB_HOST = '127.0.0.1';
     process.env.DB_NAME = 'ai_square_db';
 
@@ -133,7 +141,11 @@ describe("/api/assessment/results/[id]", () => {
     repositoryFactory.getEvaluationRepository.mockReturnValue(evalRepo);
 
     const req = new NextRequest('http://localhost:3000/api/assessment/results/e3?userId=u@e.com');
-    await expect(GET(req, { params: Promise.resolve({ id: 'e3' }) })).rejects.toThrow('Assessment not found');
+    const response = await GET(req, { params: Promise.resolve({ id: 'e3' }) });
+    const data = await response.json();
+
+    expect(response.status).toBe(500);
+    expect(data.error).toBe('Assessment not found');
     expect(userRepo.findByEmail).toHaveBeenCalledWith('u@e.com');
   });
 
