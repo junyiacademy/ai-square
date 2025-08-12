@@ -371,6 +371,70 @@ deploy-cms-gcp: build-cms-image cms-build-and-push gcp-deploy-cms
 ## 重新命名舊的部署命令以保持向後兼容
 gcp-deploy-service: gcp-deploy-frontend
 
+#=============================================================================
+# 整合測試
+#=============================================================================
+
+## 執行 Level 1 基礎整合測試 (連線測試)
+test-integration-level-1:
+	@echo "$(CYAN)🧪 執行 Level 1 基礎整合測試...$(NC)"
+	@cd frontend && npm run test:integration:level-1
+	@echo "$(GREEN)✅ Level 1 測試通過$(NC)"
+
+## 執行 Level 2 簡單整合測試 (CRUD 操作)
+test-integration-level-2:
+	@echo "$(CYAN)🧪 執行 Level 2 簡單整合測試...$(NC)"
+	@cd frontend && npm run test:integration:level-2
+	@echo "$(GREEN)✅ Level 2 測試通過$(NC)"
+
+## 執行 Level 3 進階整合測試 (完整流程)
+test-integration-level-3:
+	@echo "$(CYAN)🧪 執行 Level 3 進階整合測試...$(NC)"
+	@cd frontend && npm run test:integration:level-3
+	@echo "$(GREEN)✅ Level 3 測試通過$(NC)"
+
+## 執行所有整合測試 (簡單版)
+test-integration-simple:
+	@echo "$(BLUE)🧪 執行簡單整合測試 (Level 1 + 2)...$(NC)"
+	@cd frontend && npm run test:integration:simple
+	@echo "$(GREEN)✅ 簡單整合測試通過$(NC)"
+
+## 執行所有整合測試
+test-integration-all:
+	@echo "$(BLUE)🧪 執行所有整合測試 (Level 1 + 2 + 3)...$(NC)"
+	@cd frontend && npm run test:integration:advanced
+	@echo "$(GREEN)✅ 所有整合測試通過$(NC)"
+
+## 啟動整合測試環境 (Docker)
+test-integration-setup:
+	@echo "$(YELLOW)🐳 啟動整合測試環境...$(NC)"
+	@cd frontend && docker-compose -f docker-compose.test.yml up -d
+	@echo "$(CYAN)等待服務啟動...$(NC)"
+	@sleep 5
+	@echo "$(GREEN)✅ 測試環境已啟動$(NC)"
+
+## 停止整合測試環境
+test-integration-teardown:
+	@echo "$(YELLOW)🛑 停止整合測試環境...$(NC)"
+	@cd frontend && docker-compose -f docker-compose.test.yml down
+	@echo "$(GREEN)✅ 測試環境已停止$(NC)"
+
+## 執行整合測試 with Docker
+test-integration-docker:
+	@echo "$(BLUE)🐳 執行 Docker 整合測試...$(NC)"
+	@cd frontend && npm run test:integration:docker
+	@echo "$(GREEN)✅ Docker 整合測試通過$(NC)"
+
+## 執行 pre-push 整合測試 (Level 1 + 2)
+pre-push-integration:
+	@echo "$(YELLOW)🚀 執行 pre-push 整合測試...$(NC)"
+	@make test-integration-simple
+	@echo "$(GREEN)✅ Pre-push 整合測試通過$(NC)"
+
+## 執行完整 pre-push 檢查（包含整合測試）
+pre-push-check: pre-commit-check pre-push-integration
+	@echo "$(GREEN)✅ 所有 pre-push 檢查通過$(NC)"
+
 ## 設定 Google Secret Manager (前端)
 setup-secrets-frontend:
 	@echo "$(BLUE)🔐 設定前端 Google Secret Manager$(NC)"
