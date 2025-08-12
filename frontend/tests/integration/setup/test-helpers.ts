@@ -3,6 +3,7 @@ import { Pool } from 'pg';
 import Redis from 'ioredis';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
+import crypto from 'crypto';
 import { testUsers } from './test-fixtures';
 
 // Import API route handlers directly
@@ -43,6 +44,8 @@ export class APITestHelper {
       method,
       headers: {
         'Content-Type': 'application/json',
+        // Provide a default user cookie for routes that rely on cookies (e.g., start endpoints)
+        'cookie': `user=${encodeURIComponent(JSON.stringify({ email: 'integration@test.com' }))}`,
         ...headers,
       },
       body: body ? JSON.stringify(body) : undefined,
@@ -131,7 +134,13 @@ export class APITestHelper {
    * Register new user
    */
   async register(email: string, password: string, name: string) {
-    const request = this.createRequest('POST', '/api/auth/register', { email, password, name });
+    const request = this.createRequest('POST', '/api/auth/register', { 
+      email, 
+      password, 
+      name,
+      preferredLanguage: 'en',
+      acceptTerms: true,
+    });
     const response = await authRegisterRoute.POST(request);
     const body = await response.json();
     
@@ -197,6 +206,7 @@ export class DatabaseTestHelper {
    */
   async createUser(userData: typeof testUsers.student) {
     const hashedPassword = await bcrypt.hash(userData.password, 10);
+    const userId = crypto.randomUUID();
     
     try {
       const result = await this.pool.query(
@@ -204,7 +214,7 @@ export class DatabaseTestHelper {
          VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
          RETURNING *`,
         [
-          userData.id,
+          userId,
           userData.email,
           hashedPassword,
           userData.name,
@@ -220,7 +230,7 @@ export class DatabaseTestHelper {
       console.error('Error creating user:', error);
       // Return a mock user for testing purposes
       return {
-        id: userData.id,
+        id: userId,
         email: userData.email,
         name: userData.name,
         role: userData.role,
