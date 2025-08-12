@@ -98,7 +98,7 @@ export class APITestHelper {
       return {
         status: res.status,
         body: await res.json().catch(() => ({})),
-        headers: res.headers,
+        headers: Object.fromEntries(res.headers.entries()) as Record<string, string>,
       };
     }
     
@@ -107,7 +107,7 @@ export class APITestHelper {
     return {
       status: response.status,
       body: responseBody,
-      headers: response.headers,
+      headers: Object.fromEntries(response.headers.entries()) as Record<string, string>,
     };
   }
   
