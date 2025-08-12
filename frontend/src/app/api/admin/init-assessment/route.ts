@@ -19,12 +19,25 @@ export async function POST(request: NextRequest) {
     //   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     // }
     
-    await request.json().catch(() => ({}));
+    const body = await request.json().catch(() => ({})) as { force?: boolean; clean?: boolean };
 
     const scenarioRepo = repositoryFactory.getScenarioRepository();
     
-    // Check existing assessment scenarios
-    const existingScenarios = await scenarioRepo.findBySource('yaml', 'ai_literacy');
+    // Check ALL existing assessment scenarios (not just by source)
+    const allAssessmentScenarios = await scenarioRepo.findByMode?.('assessment') || [];
+    
+    // If clean flag is set, archive ALL assessment scenarios first
+    if (body.clean) {
+      for (const scenario of allAssessmentScenarios) {
+        await scenarioRepo.update?.(scenario.id, { status: 'archived' });
+      }
+    }
+    
+    // Find existing scenarios that match our source (for update)
+    const existingScenarios = allAssessmentScenarios.filter(s => 
+      s.status === 'active' && 
+      (s.sourceId === 'ai_literacy' || s.sourcePath === 'assessment_data/ai_literacy')
+    );
     
     // Load the YAML file
     const yamlPath = path.join(process.cwd(), 'public/assessment_data/ai_literacy/ai_literacy_questions_en.yaml');

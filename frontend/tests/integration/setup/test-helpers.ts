@@ -95,6 +95,8 @@ export class APITestHelper {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
+          // Provide cookie for endpoints that rely on request.cookies
+          'cookie': `user=${encodeURIComponent(JSON.stringify({ email: 'integration@test.com' }))}`,
         },
         body: body ? JSON.stringify(body) : undefined,
       });
@@ -228,7 +230,14 @@ export class DatabaseTestHelper {
       return result.rows[0];
     } catch (error) {
       console.error('Error creating user:', error);
-      // Return a mock user for testing purposes
+      // If duplicate email, fetch existing user and return it
+      try {
+        const existing = await this.pool.query('SELECT * FROM users WHERE email = $1 LIMIT 1', [userData.email]);
+        if (existing.rows[0]) {
+          return existing.rows[0];
+        }
+      } catch {}
+      // Fallback mock (no DB impact)
       return {
         id: userId,
         email: userData.email,
