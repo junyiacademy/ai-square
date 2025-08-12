@@ -80,9 +80,19 @@ fi
 if [ "$NEEDS_SCHEMA_INIT" = true ]; then
     echo -e "${YELLOW}🔨 Initializing Schema...${NC}"
     
-    # Check if schema file exists
-    if [ ! -f "src/lib/repositories/postgresql/schema-v3.sql" ]; then
-        echo -e "${RED}✗ Schema file not found: src/lib/repositories/postgresql/schema-v3.sql${NC}"
+    # Use safe schema file for staging/production
+    SCHEMA_FILE="src/lib/repositories/postgresql/schema-v3-safe.sql"
+    
+    # Check if safe schema file exists, fallback to regular one
+    if [ ! -f "$SCHEMA_FILE" ]; then
+        SCHEMA_FILE="src/lib/repositories/postgresql/schema-v3.sql"
+        echo -e "${YELLOW}⚠ Using regular schema file (be careful!)${NC}"
+    else
+        echo -e "${GREEN}✓ Using safe schema file (no DROP commands)${NC}"
+    fi
+    
+    if [ ! -f "$SCHEMA_FILE" ]; then
+        echo -e "${RED}✗ Schema file not found: $SCHEMA_FILE${NC}"
         exit 1
     fi
     
@@ -98,7 +108,7 @@ if [ "$NEEDS_SCHEMA_INIT" = true ]; then
     echo -e "${YELLOW}Applying schema (with transaction safety)...${NC}"
     (
         echo "BEGIN;"
-        cat src/lib/repositories/postgresql/schema-v3.sql
+        cat "$SCHEMA_FILE"
         echo "COMMIT;"
     ) | PGPASSWORD=$DB_PASSWORD psql -h $CLOUD_SQL_IP -p 5432 -U $DB_USER -d $DB_NAME -v ON_ERROR_STOP=1
     
