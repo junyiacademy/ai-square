@@ -17,18 +17,35 @@ NC='\033[0m'
 echo "🚀 AI Square Cloud SQL Staging Smart Initialization"
 echo "===================================================="
 
-# 防呆：環境確認
+# CI/CD Mode Detection
+CI_MODE="${CI:-false}"
+if [ "$CI_MODE" = "true" ] || [ "${GITHUB_ACTIONS:-}" = "true" ] || [ "${GITLAB_CI:-}" = "true" ] || [ "${CIRCLECI:-}" = "true" ]; then
+    echo -e "${BLUE}🤖 CI/CD mode detected - running non-interactively${NC}"
+    FORCE_INIT="true"
+fi
+
+# 防呆：環境確認（只在非 CI 模式下詢問）
 if [ "${FORCE_INIT:-}" != "true" ]; then
     echo -e "${YELLOW}⚠️  WARNING: This will initialize the STAGING database${NC}"
     echo -e "${YELLOW}   Target: Cloud SQL Staging (ai-square-db-staging-asia)${NC}"
     echo -e "${GREEN}   This script is SAFE - it won't destroy existing data${NC}"
     echo ""
+    
+    # Check if running in non-interactive mode
+    if [ ! -t 0 ]; then
+        echo -e "${YELLOW}📌 Non-interactive mode detected. Use FORCE_INIT=true to skip confirmation${NC}"
+        echo -e "${YELLOW}   Or set CI=true for CI/CD environments${NC}"
+        exit 1
+    fi
+    
     echo -n "Continue? (y/N): "
     read -r CONFIRM
     if [ "$CONFIRM" != "y" ] && [ "$CONFIRM" != "Y" ]; then
         echo -e "${RED}Cancelled by user${NC}"
         exit 0
     fi
+else
+    echo -e "${GREEN}✅ Auto-confirmation enabled (FORCE_INIT=true or CI mode)${NC}"
 fi
 
 # Configuration for Cloud SQL

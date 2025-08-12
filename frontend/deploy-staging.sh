@@ -20,10 +20,20 @@ echo "🏷️  Image Tag: $IMAGE_TAG"
 # Step 0: Cloud SQL Smart Initialization (safe to run multiple times)
 echo ""
 echo "🗄️  Ensuring Cloud SQL is properly initialized..."
+
+# Auto-detect CI/CD environment
+if [ "${CI:-}" = "true" ] || [ "${GITHUB_ACTIONS:-}" = "true" ] || [ "${GITLAB_CI:-}" = "true" ]; then
+    echo "🤖 CI/CD environment detected"
+    export CI=true
+    export FORCE_INIT=true
+fi
+
 if [ -f "scripts/init-staging-cloud-sql.sh" ] && [ -z "$SKIP_DB_INIT" ]; then
     echo "Running smart database initialization (this is safe - won't destroy data)..."
     chmod +x scripts/init-staging-cloud-sql.sh
-    ./scripts/init-staging-cloud-sql.sh
+    
+    # Pass environment variables to the script
+    CI="${CI:-false}" FORCE_INIT="${FORCE_INIT:-false}" ./scripts/init-staging-cloud-sql.sh
     echo ""
 else
     echo "Skipping database initialization (SKIP_DB_INIT is set or script not found)"

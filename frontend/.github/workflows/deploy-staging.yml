@@ -1,0 +1,89 @@
+name: Deploy to Staging
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:  # Allow manual trigger
+
+env:
+  PROJECT_ID: ai-square-463013
+  REGION: asia-east1
+  SERVICE_NAME: ai-square-staging
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: staging
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v1
+      with:
+        service_account_key: ${{ secrets.GCP_SA_KEY }}
+        project_id: ${{ env.PROJECT_ID }}
+        export_default_credentials: true
+
+    - name: Configure Docker for GCR
+      run: |
+        gcloud auth configure-docker
+
+    - name: Deploy to Staging
+      env:
+        CI: true  # This will auto-confirm all prompts
+        SKIP_DB_INIT: ${{ github.event_name == 'push' && 'true' || '' }}  # Skip DB init on regular pushes
+      run: |
+        cd frontend
+        chmod +x deploy-staging.sh
+        ./deploy-staging.sh
+
+    - name: Verify Deployment
+      run: |
+        SERVICE_URL=$(gcloud run services describe ${{ env.SERVICE_NAME }} \
+          --region ${{ env.REGION }} \
+          --format 'value(status.url)')
+        
+        echo "Testing service at: $SERVICE_URL"
+        
+        # Test login endpoint
+        HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+          -X POST "$SERVICE_URL/api/auth/login" \
+          -H "Content-Type: application/json" \
+          -d '{"email": "student@example.com", "password": "student123"}')
+        
+        if [ "$HTTP_STATUS" = "200" ]; then
+          echo "✅ Deployment successful - Login API working"
+        else
+          echo "❌ Deployment verification failed - HTTP $HTTP_STATUS"
+          exit 1
+        fi
+
+    - name: Notify Slack (Optional)
+      if: always()
+      env:
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+      run: |
+        if [ "${{ job.status }}" = "success" ]; then
+          STATUS="✅ Success"
+          COLOR="good"
+        else
+          STATUS="❌ Failed"
+          COLOR="danger"
+        fi
+        
+        if [ -n "$SLACK_WEBHOOK" ]; then
+          curl -X POST $SLACK_WEBHOOK \
+            -H 'Content-Type: application/json' \
+            -d "{
+              \"attachments\": [{
+                \"color\": \"$COLOR\",
+                \"title\": \"Staging Deployment $STATUS\",
+                \"text\": \"Branch: ${{ github.ref_name }}\nCommit: ${{ github.sha }}\",
+                \"footer\": \"GitHub Actions\",
+                \"footer_icon\": \"https://github.githubassets.com/favicon.ico\"
+              }]
+            }"
+        fi
