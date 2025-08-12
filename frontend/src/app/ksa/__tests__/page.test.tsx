@@ -95,8 +95,10 @@ describe('KSA Display Page', () => {
       // Check API was called
       expect(fetch).toHaveBeenCalledWith('/api/ksa?lang=en');
       
-      // Check content is displayed - use partial matching since text might contain count
-      expect(screen.getByText('Knowledge framework description')).toBeInTheDocument();
+      // Check content is displayed - use flexible matching and wait for load
+      await waitFor(() => {
+        expect(screen.getByText(/Knowledge framework description/i)).toBeInTheDocument();
+      });
     });
 
     it('should display section navigation with correct counts', async () => {

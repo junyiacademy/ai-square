@@ -9,6 +9,7 @@ import {
   getByTextWithContext,
   hasClass,
   getComputedStyleProperty,
+  waitForElementWithTimeout,
 } from '../queries';
 
 describe('test-utils/helpers/queries', () => {
@@ -23,7 +24,7 @@ describe('test-utils/helpers/queries', () => {
       </div>
     );
 
-    const el = getByTextInContainer('stats', 'Users');
+    const el = getByTextInContainer('stats', 'Admins');
     expect(el).toBeInTheDocument();
     const elements = expectElementCountInContainer('stats', 'Users', 2);
     expect(elements.length).toBe(2);
@@ -63,6 +64,25 @@ describe('test-utils/helpers/queries', () => {
     const el = screen.getByText('Hello');
     expect(hasClass(el, 'foo')).toBe(true);
     expect(getComputedStyleProperty(el as HTMLElement, 'color')).toBe('rgb(255, 0, 0)');
+  });
+
+  it('waitForElementWithTimeout resolves when element appears', async () => {
+    const Test = () => {
+      const [show, setShow] = React.useState(false);
+      React.useEffect(() => {
+        const id = setTimeout(() => setShow(true), 10);
+        return () => clearTimeout(id);
+      }, []);
+      return <div>{show ? <span data-testid="late">Ready</span> : null}</div>;
+    };
+    render(<Test />);
+    const el = await waitForElementWithTimeout(() => screen.queryByTestId('late'), 200);
+    expect(el).toBeInTheDocument();
+  });
+
+  it('waitForElementWithTimeout throws on timeout', async () => {
+    render(<div />);
+    await expect(waitForElementWithTimeout(() => screen.queryByTestId('never'), 50)).rejects.toThrow('Element not found');
   });
 });
 

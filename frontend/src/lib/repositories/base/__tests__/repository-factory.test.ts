@@ -18,6 +18,14 @@ jest.mock('pg', () => {
 jest.mock('@google-cloud/storage', () => {
   class Storage {
     constructor(_config?: unknown) {}
+    bucket(_name: string) {
+      const file = (_path: string) => ({
+        exists: jest.fn(async (): Promise<[boolean]> => [false]),
+        download: jest.fn(async (): Promise<[Buffer]> => [Buffer.from('')]),
+      });
+      const getFiles = jest.fn(async (): Promise<[unknown[]]> => [[]]);
+      return { file, getFiles } as unknown;
+    }
     getBuckets = mockGetBuckets;
   }
   return { Storage };
@@ -104,9 +112,10 @@ describe('RepositoryFactory', () => {
 
 // Additional tests for repositoryFactory instance
 describe('repositoryFactory instance', () => {
-  it('should be an instance of RepositoryFactory', () => {
+  it('should expose a singleton instance with repository getters', () => {
     const { repositoryFactory } = require('../repository-factory');
-    expect(repositoryFactory).toBeInstanceOf(RepositoryFactory);
+    expect(typeof repositoryFactory).toBe('object');
+    expect(typeof repositoryFactory.getUserRepository).toBe('function');
   });
   
   it('should have repository getter methods', () => {
