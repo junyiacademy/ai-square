@@ -39,7 +39,7 @@ describe('Assessment Learning Flow', () => {
 
   it('should fetch Assessment scenarios from API', async () => {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 5000);
+    const timeoutId = setTimeout(() => controller.abort(), 2000);
     
     try {
       const response = await fetch(`${baseUrl}/api/assessment/scenarios?lang=en`, {

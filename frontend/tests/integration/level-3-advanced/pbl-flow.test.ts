@@ -39,7 +39,7 @@ describe('PBL Learning Flow', () => {
 
   it('should fetch PBL scenarios from API', async () => {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 5000);
+    const timeoutId = setTimeout(() => controller.abort(), 2000);
     
     try {
       const response = await fetch(`${baseUrl}/api/pbl/scenarios?lang=en`, {
