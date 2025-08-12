@@ -22,9 +22,27 @@ const TEST_PORTS = {
 /**
  * Kill all processes using a specific port
  * MUST be done before starting any test services
+ * BUT skip PostgreSQL/Redis if they're our test instances
  */
 function killPort(port: string, serviceName: string): void {
-  console.log(`🧹 Cleaning port ${port} (${serviceName})...`);
+  console.log(`🧹 Checking port ${port} (${serviceName})...`);
+  
+  // Special handling for PostgreSQL and Redis test ports
+  if ((port === '5434' && serviceName === 'PostgreSQL') || 
+      (port === '6380' && serviceName === 'Redis')) {
+    // Check if it's actually accessible before killing
+    try {
+      if (port === '5434') {
+        // Try to connect to PostgreSQL
+        execSync(`PGPASSWORD=postgres psql -h localhost -p ${port} -U postgres -c "SELECT 1" -t 2>/dev/null`, { stdio: 'ignore' });
+        console.log(`   ℹ️ Port ${port} has working ${serviceName}, keeping it`);
+        return;
+      }
+    } catch {
+      // If connection fails, proceed with cleanup
+    }
+  }
+  
   try {
     // Find and kill all processes using the port
     execSync(`lsof -ti :${port} | xargs kill -9 2>/dev/null || true`, { stdio: 'ignore' });
@@ -71,8 +89,8 @@ export default async function globalSetup() {
   process.env.API_URL = `http://localhost:${TEST_PORTS.NEXT}`;
   
   try {
-    // STEP 1: Clean ALL test ports FIRST (critical!)
-    console.log('📌 Step 1: Cleaning all test ports...');
+    // STEP 1: Clean test ports (but keep working PostgreSQL/Redis)
+    console.log('📌 Step 1: Cleaning test ports...');
     killPort(TEST_PORTS.NEXT, 'Next.js');
     killPort(TEST_PORTS.DB, 'PostgreSQL');
     killPort(TEST_PORTS.REDIS, 'Redis');
@@ -237,7 +255,11 @@ export default async function globalSetup() {
       console.log(`   ✅ Test Redis ready on port ${TEST_PORTS.REDIS}`);
       await redis.quit();
     } catch (error) {
-      await redis.quit();
+      try {
+        await redis.quit();
+      } catch {
+        // Ignore quit errors
+      }
       
       // Try development Redis
       console.log('   Trying development Redis on port 6379...');
@@ -257,7 +279,11 @@ export default async function globalSetup() {
         process.env.REDIS_PORT = '6379'; // Update for tests
         await redis.quit();
       } catch (error) {
-        await redis.quit();
+        try {
+          await redis.quit();
+        } catch {
+          // Ignore quit errors
+        }
         console.warn('   ⚠️ Redis not available, tests will run without cache');
       }
     }

@@ -90,11 +90,21 @@ const originalWarn = console.warn;
 beforeAll(() => {
   console.error = jest.fn((message, ...args) => {
     // Only show actual errors, not React warnings
-    if (
-      typeof message === 'string' &&
-      !message.includes('Warning:') &&
-      !message.includes('act(')
-    ) {
+    const msg = typeof message === 'string' ? message : String(message);
+    const suppressed = [
+      'Warning:',
+      'act(',
+      // Suppress expected GCS repository negative-path logs in unit tests
+      'Error getting file URL:',
+      'Error deleting file:',
+      'Error listing files:',
+      'Error copying file:',
+      'Error checking file existence:',
+      'Error getting file metadata:',
+      'Error setting file metadata:',
+      'Error downloading file:',
+    ];
+    if (!suppressed.some((s) => msg.includes(s))) {
       originalError(message, ...args);
     }
   });

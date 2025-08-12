@@ -1,0 +1,98 @@
+name: Integration Tests
+
+on:
+  push:
+    branches: [main, develop, feat/*]
+  pull_request:
+    branches: [main, develop]
+
+env:
+  NODE_VERSION: '20'
+  DB_NAME: ai_square_db
+  DB_USER: postgres
+  DB_PASSWORD: postgres
+
+jobs:
+  integration-test:
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: ai_square_db
+        ports:
+          - 5434:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6380:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Setup test environment
+        run: |
+          cp .env.test.example .env.test
+          echo "DB_HOST=localhost" >> .env.test
+          echo "DB_PORT=5434" >> .env.test
+          echo "DB_NAME=${{ env.DB_NAME }}" >> .env.test
+          echo "DB_USER=${{ env.DB_USER }}" >> .env.test
+          echo "DB_PASSWORD=${{ env.DB_PASSWORD }}" >> .env.test
+          echo "REDIS_HOST=localhost" >> .env.test
+          echo "REDIS_PORT=6380" >> .env.test
+          echo "TEST_PORT=3456" >> .env.test
+          echo "TEST_DB_PORT=5434" >> .env.test
+          echo "TEST_REDIS_PORT=6380" >> .env.test
+      
+      - name: Wait for PostgreSQL
+        run: |
+          until PGPASSWORD=${{ env.DB_PASSWORD }} psql -h localhost -p 5434 -U ${{ env.DB_USER }} -d postgres -c '\q'; do
+            echo "Waiting for PostgreSQL..."
+            sleep 2
+          done
+      
+      - name: Setup database
+        run: |
+          PGPASSWORD=${{ env.DB_PASSWORD }} psql -h localhost -p 5434 -U ${{ env.DB_USER }} -d postgres -c "CREATE DATABASE ${{ env.DB_NAME }} IF NOT EXISTS"
+      
+      - name: Run integration tests
+        run: npm run test:integration
+        env:
+          CI: true
+          NODE_ENV: test
+          DB_HOST: localhost
+          DB_PORT: 5434
+          REDIS_HOST: localhost
+          REDIS_PORT: 6380
+      
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: integration-test-results
+          path: |
+            coverage/
+            test-results/

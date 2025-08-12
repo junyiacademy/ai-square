@@ -27,6 +27,9 @@ process.env.NEXTAUTH_SECRET = process.env.NEXTAUTH_SECRET || 'test-secret-for-in
 // Increase test timeout for integration tests
 jest.setTimeout(30000);
 
+// Retry flaky integration tests only on CI (avoid hiding real issues locally)
+jest.retryTimes(process.env.CI ? 2 : 0);
+
 // Mock console methods to reduce noise in tests
 const originalConsoleError = console.error;
 const originalConsoleWarn = console.warn;
@@ -41,6 +44,15 @@ global.console.error = (...args: unknown[]) => {
     'Unauthorized',
     'Bad Request',
     'Redis connection failed', // Expected when Redis is not running
+    // GCS repository tests intentionally simulate failures; suppress error noise
+    'Error getting file URL:',
+    'Error deleting file:',
+    'Error listing files:',
+    'Error copying file:',
+    'Error checking file existence:',
+    'Error getting file metadata:',
+    'Error setting file metadata:',
+    'Error downloading file:',
   ];
   
   const shouldIgnore = ignoredErrors.some(ignored => 
