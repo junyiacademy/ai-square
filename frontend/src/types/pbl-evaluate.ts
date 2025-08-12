@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 // PBL Evaluation Types
 
 import { Task } from './pbl';

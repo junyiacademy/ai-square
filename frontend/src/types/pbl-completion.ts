@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 /**
  * PBL Completion Types
  * Type definitions for PBL scenario completion and feedback
