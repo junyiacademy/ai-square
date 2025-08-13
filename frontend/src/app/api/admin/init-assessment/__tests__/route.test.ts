@@ -2,14 +2,14 @@ import { NextRequest } from 'next/server';
 import { POST } from '../route';
 
 // Mock the repository factory
-const mockFindBySource = jest.fn();
+const mockFindByMode = jest.fn();
 const mockCreate = jest.fn();
 const mockUpdate = jest.fn();
 
 jest.mock('@/lib/repositories/base/repository-factory', () => ({
   repositoryFactory: {
     getScenarioRepository: () => ({
-      findBySource: mockFindBySource,
+      findByMode: mockFindByMode,
       create: mockCreate,
       update: mockUpdate,
     })
@@ -68,7 +68,7 @@ describe('/api/admin/init-assessment', () => {
 
       (readFileSync as jest.Mock).mockReturnValue('yaml content');
       (parse as jest.Mock).mockReturnValue(mockAssessmentData);
-      mockFindBySource.mockResolvedValue([]);
+      mockFindByMode.mockResolvedValue([]);
       mockCreate.mockResolvedValue({ id: 'new-scenario-id' });
 
       const request = new NextRequest('http://localhost:3001/api/admin/init-assessment', {
@@ -98,11 +98,15 @@ describe('/api/admin/init-assessment', () => {
         tasks: []
       };
 
-      const existingScenario = { id: 'existing-scenario-id' };
+      const existingScenario = { 
+        id: 'existing-scenario-id',
+        status: 'active',
+        sourceId: 'ai_literacy'
+      };
 
       (readFileSync as jest.Mock).mockReturnValue('yaml content');
       (parse as jest.Mock).mockReturnValue(mockAssessmentData);
-      mockFindBySource.mockResolvedValue([existingScenario]);
+      mockFindByMode.mockResolvedValue([existingScenario]);
       mockUpdate.mockResolvedValue(existingScenario);
 
       const request = new NextRequest('http://localhost:3001/api/admin/init-assessment', {
@@ -145,7 +149,7 @@ describe('/api/admin/init-assessment', () => {
 
       (readFileSync as jest.Mock).mockReturnValue('yaml content');
       (parse as jest.Mock).mockReturnValue(mockAssessmentData);
-      mockFindBySource.mockRejectedValue(new Error('Database error'));
+      mockFindByMode.mockRejectedValue(new Error('Database error'));
 
       const request = new NextRequest('http://localhost:3001/api/admin/init-assessment', {
         method: 'POST',

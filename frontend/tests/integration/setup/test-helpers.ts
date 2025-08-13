@@ -136,20 +136,26 @@ export class APITestHelper {
    * Register new user
    */
   async register(email: string, password: string, name: string) {
-    const request = this.createRequest('POST', '/api/auth/register', { 
-      email, 
-      password, 
-      name,
-      preferredLanguage: 'en',
-      acceptTerms: true,
+    // Use HTTP call to ensure Next.js runtime (cookies handling) is consistent
+    const url = `${this.baseUrl}/api/auth/register`;
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        email,
+        password,
+        name,
+        preferredLanguage: 'en',
+        acceptTerms: true,
+      }),
     });
-    const response = await authRegisterRoute.POST(request);
-    const body = await response.json();
-    
+    const body = await res.json().catch(() => ({}));
     return {
-      status: response.status,
+      status: res.status,
       body,
-      headers: response.headers,
+      headers: Object.fromEntries(res.headers.entries()) as Record<string, string>,
     };
   }
   
