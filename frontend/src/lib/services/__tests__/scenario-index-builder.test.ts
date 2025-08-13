@@ -1,10 +1,11 @@
 import { scenarioIndexBuilder } from '../scenario-index-builder';
 import { scenarioIndexService } from '../scenario-index-service';
-import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import type { IScenario } from '@/types/unified-learning';
 
 // Mock dependencies
 jest.mock('../scenario-index-service');
+
+// Mock the dynamic import of repository-factory
 jest.mock('@/lib/repositories/base/repository-factory', () => ({
   repositoryFactory: {
     getScenarioRepository: jest.fn()
@@ -12,7 +13,6 @@ jest.mock('@/lib/repositories/base/repository-factory', () => ({
 }));
 
 const mockScenarioIndexService = scenarioIndexService as jest.Mocked<typeof scenarioIndexService>;
-const mockRepositoryFactory = repositoryFactory as jest.Mocked<typeof repositoryFactory>;
 
 describe('ScenarioIndexBuilder', () => {
   let builder: typeof scenarioIndexBuilder;
@@ -147,12 +147,19 @@ describe('ScenarioIndexBuilder', () => {
       delete: jest.fn()
     };
 
-    mockRepositoryFactory.getScenarioRepository.mockReturnValue(mockScenarioRepo);
+    // Mock the dynamic import
+    const { repositoryFactory } = require('@/lib/repositories/base/repository-factory');
+    repositoryFactory.getScenarioRepository.mockReturnValue(mockScenarioRepo);
+    
     mockScenarioIndexService.buildIndex = jest.fn().mockResolvedValue({
       yamlToUuid: new Map(),
       uuidToYaml: new Map(),
       lastUpdated: new Date().toISOString()
     });
+    
+    // Mock additional methods used by buildSourceIndex and ensureIndex
+    mockScenarioIndexService.getIndex = jest.fn().mockResolvedValue(null);
+    mockScenarioIndexService.exists = jest.fn().mockResolvedValue(false);
 
     // Spy on console methods
     consoleLogSpy = jest.spyOn(console, 'log').mockImplementation();
@@ -246,80 +253,112 @@ describe('ScenarioIndexBuilder', () => {
     });
   });
 
-  // TODO: buildForMode method doesn't exist in ScenarioIndexBuilder
-  // These tests should be updated to use buildSourceIndex instead
-  /*
-  describe('buildForMode', () => {
-    it('builds index for specific mode only', async () => {
-      await builder.buildForMode('pbl');
+  describe('buildSourceIndex', () => {
+    it('builds index for specific source type only', async () => {
+      await builder.buildSourceIndex('pbl');
 
       expect(mockScenarioRepo.findBySource).toHaveBeenCalledWith('pbl');
       expect(mockScenarioRepo.findBySource).toHaveBeenCalledTimes(1);
-      // expect(mockScenarioIndexService.updateModeScenarios).toHaveBeenCalledWith('pbl', mockPblScenarios); // Method doesn't exist
+      expect(mockScenarioIndexService.buildIndex).toHaveBeenCalledWith(mockPblScenarios);
     });
 
-    it('handles assessment mode', async () => {
-      await builder.buildForMode('assessment');
+    it('handles assessment source', async () => {
+      await builder.buildSourceIndex('assessment');
 
       expect(mockScenarioRepo.findBySource).toHaveBeenCalledWith('assessment');
-      // expect(mockScenarioIndexService.updateModeScenarios).toHaveBeenCalledWith('assessment', mockAssessmentScenarios); // Method doesn't exist
+      expect(mockScenarioIndexService.buildIndex).toHaveBeenCalledWith(mockAssessmentScenarios);
     });
 
-    it('handles discovery mode', async () => {
-      await builder.buildForMode('discovery');
+    it('handles discovery source', async () => {
+      await builder.buildSourceIndex('discovery');
 
       expect(mockScenarioRepo.findBySource).toHaveBeenCalledWith('discovery');
-      // expect(mockScenarioIndexService.updateModeScenarios).toHaveBeenCalledWith('discovery', mockDiscoveryScenarios); // Method doesn't exist
+      expect(mockScenarioIndexService.buildIndex).toHaveBeenCalledWith(mockDiscoveryScenarios);
     });
 
-    it('logs mode-specific build info', async () => {
-      await builder.buildForMode('pbl');
-
-      expect(consoleLogSpy).toHaveBeenCalledWith('Building index for mode: pbl');
-      expect(consoleLogSpy).toHaveBeenCalledWith('Found 1 pbl scenarios');
-    });
-
-    it('handles mode build errors', async () => {
-      const error = new Error('Mode fetch error');
-      mockScenarioRepo.findBySource.mockRejectedValueOnce(error);
-
-      await builder.buildForMode('pbl');
-
-      expect(consoleErrorSpy).toHaveBeenCalledWith('Error building index for mode pbl:', error);
-    });
-  });
-  */
-
-  // TODO: clearIndex method doesn't exist in ScenarioIndexBuilder
-  /*
-  describe('clearIndex', () => {
-    it('clears the scenario index', async () => {
-      await builder.clearIndex();
-
-      // expect(mockScenarioIndexService.clearIndex).toHaveBeenCalled(); // Method doesn't exist
-      expect(consoleLogSpy).toHaveBeenCalledWith('Scenario index cleared');
-    });
-  });
-  */
-
-  // TODO: getStats method doesn't exist in ScenarioIndexBuilder
-  /*
-  describe('getStats', () => {
-    it('returns index statistics', () => {
-      const mockStats = {
-        totalScenarios: 10,
-        pbl: 4,
-        assessment: 3,
-        discovery: 3,
+    it('preserves scenarios from other sources when updating', async () => {
+      // Setup existing index with a scenario from another source
+      const existingIndex = {
+        yamlToUuid: new Map(),
+        uuidToYaml: new Map([
+          ['existing-uuid', {
+            yamlId: 'existing-yaml',
+            uuid: 'existing-uuid',
+            sourceType: 'assessment' as const,
+            title: 'Existing Assessment',
+            lastUpdated: new Date().toISOString()
+          }]
+        ]),
         lastUpdated: new Date().toISOString()
       };
-      // mockScenarioIndexService.getStats.mockReturnValue(mockStats); // Method doesn't exist
+      mockScenarioIndexService.getIndex.mockResolvedValueOnce(existingIndex);
 
-      // const stats = builder.getStats(); // Method doesn't exist
+      await builder.buildSourceIndex('pbl');
 
-      // expect(stats).toEqual(mockStats);
-      // expect(mockScenarioIndexService.getStats).toHaveBeenCalled(); // Method doesn't exist
+      // Should preserve the existing assessment scenario and add PBL scenarios
+      expect(mockScenarioIndexService.buildIndex).toHaveBeenCalledWith(
+        expect.arrayContaining([
+          expect.objectContaining({ id: 'existing-uuid' }),
+          ...mockPblScenarios
+        ])
+      );
+    });
+
+    it('logs source-specific build info', async () => {
+      await builder.buildSourceIndex('pbl');
+
+      expect(consoleLogSpy).toHaveBeenCalledWith('Building index for pbl scenarios...');
+      expect(consoleLogSpy).toHaveBeenCalledWith('Index updated with 1 pbl scenarios');
+    });
+
+    it('handles source build errors', async () => {
+      const error = new Error('Source fetch error');
+      mockScenarioRepo.findBySource.mockRejectedValueOnce(error);
+
+      await expect(builder.buildSourceIndex('pbl')).rejects.toThrow('Source fetch error');
+      expect(consoleErrorSpy).toHaveBeenCalledWith('Error building pbl index:', error);
     });
   });
-  */
+
+  describe('ensureIndex', () => {
+    it('builds index if it does not exist', async () => {
+      mockScenarioIndexService.exists.mockResolvedValueOnce(false);
+
+      await builder.ensureIndex();
+
+      expect(mockScenarioIndexService.exists).toHaveBeenCalled();
+      expect(mockScenarioRepo.findBySource).toHaveBeenCalledTimes(3);
+      expect(mockScenarioIndexService.buildIndex).toHaveBeenCalled();
+    });
+
+    it('does not build index if it already exists', async () => {
+      mockScenarioIndexService.exists.mockResolvedValueOnce(true);
+
+      await builder.ensureIndex();
+
+      expect(mockScenarioIndexService.exists).toHaveBeenCalled();
+      expect(mockScenarioRepo.findBySource).not.toHaveBeenCalled();
+      expect(mockScenarioIndexService.buildIndex).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('getStatus', () => {
+    it('returns build status', () => {
+      const status = builder.getStatus();
+
+      expect(status).toEqual({
+        isBuilding: false,
+        lastBuildTime: null
+      });
+    });
+
+    it('returns updated status after build', async () => {
+      await builder.buildFullIndex();
+
+      const status = builder.getStatus();
+
+      expect(status.isBuilding).toBe(false);
+      expect(status.lastBuildTime).toBeInstanceOf(Date);
+    });
+  });
 });
