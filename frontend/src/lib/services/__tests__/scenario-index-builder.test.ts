@@ -169,8 +169,8 @@ describe('ScenarioIndexBuilder', () => {
   });
 
   afterEach(() => {
-    consoleLogSpy.mockRestore();
-    consoleErrorSpy.mockRestore();
+    if (consoleLogSpy) consoleLogSpy.mockRestore();
+    if (consoleErrorSpy) consoleErrorSpy.mockRestore();
   });
 
   describe('singleton', () => {
