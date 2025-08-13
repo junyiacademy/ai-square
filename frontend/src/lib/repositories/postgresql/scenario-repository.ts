@@ -316,12 +316,10 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
 
   // Additional methods specific to PostgreSQL implementation
 
-  async findByMode(mode: LearningMode): Promise<IScenario[]> {
-    const query = `
-      SELECT * FROM scenarios 
-      WHERE mode = $1 AND status = 'active'
-      ORDER BY created_at DESC
-    `;
+  async findByMode(mode: LearningMode, includeArchived = false): Promise<IScenario[]> {
+    const query = includeArchived 
+      ? `SELECT * FROM scenarios WHERE mode = $1 ORDER BY created_at DESC`
+      : `SELECT * FROM scenarios WHERE mode = $1 AND status = 'active' ORDER BY created_at DESC`;
 
     const { rows } = await this.pool.query<DBScenario>(query, [mode]);
     return rows.map(row => this.toScenario(row));
@@ -336,6 +334,16 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
 
     const { rows } = await this.pool.query<DBScenario>(query);
     return rows.map(row => this.toScenario(row));
+  }
+
+  async delete(id: string): Promise<boolean> {
+    const query = `DELETE FROM scenarios WHERE id = $1`;
+    const result = await this.pool.query(query, [id]);
+    
+    // Clear related caches
+    await distributedCacheService.delete(cacheKeys.scenarioById(id));
+    
+    return result.rowCount > 0;
   }
 
   async findByDifficulty(difficulty: DifficultyLevel): Promise<IScenario[]> {

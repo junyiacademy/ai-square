@@ -92,9 +92,12 @@ export default async function globalSetup() {
   process.env.PORT = TEST_PORTS.NEXT;
   process.env.DB_HOST = process.env.DB_HOST || '127.0.0.1';
   process.env.DB_PORT = TEST_PORTS.DB;
+  process.env.DB_NAME = process.env.DB_NAME || 'ai_square_db';
   process.env.REDIS_HOST = process.env.REDIS_HOST || '127.0.0.1';
   process.env.REDIS_PORT = TEST_PORTS.REDIS;
   process.env.API_URL = `http://localhost:${TEST_PORTS.NEXT}`;
+  // Force using shared DB to keep API and tests in sync
+  process.env.USE_SHARED_DB = '1';
   
   try {
     // STEP 1: Clean test ports (but keep working PostgreSQL/Redis)
@@ -255,6 +258,8 @@ export default async function globalSetup() {
         ...process.env,
         PORT: TEST_PORTS.NEXT,
         DB_PORT: TEST_PORTS.DB,
+        DB_NAME: process.env.DB_NAME || 'ai_square_db',
+        USE_SHARED_DB: '1',
         REDIS_PORT: TEST_PORTS.REDIS,
         NODE_ENV: 'test'
       }

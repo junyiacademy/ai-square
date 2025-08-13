@@ -45,7 +45,8 @@ export class APITestHelper {
       headers: {
         'Content-Type': 'application/json',
         // Provide a default user cookie for routes that rely on cookies (e.g., start endpoints)
-        'cookie': `user=${encodeURIComponent(JSON.stringify({ email: 'integration@test.com' }))}`,
+        // Do NOT URL-encode; NextRequest.cookies expects raw JSON string here
+        'cookie': `user=${JSON.stringify({ email: 'integration@test.com' })}`,
         ...headers,
       },
       body: body ? JSON.stringify(body) : undefined,
@@ -96,7 +97,7 @@ export class APITestHelper {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
           // Provide cookie for endpoints that rely on request.cookies
-          'cookie': `user=${encodeURIComponent(JSON.stringify({ email: 'integration@test.com' }))}`,
+          'cookie': `user=${JSON.stringify({ email: 'integration@test.com' })}`,
         },
         body: body ? JSON.stringify(body) : undefined,
       });

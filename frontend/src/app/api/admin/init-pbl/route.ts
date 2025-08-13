@@ -26,10 +26,24 @@ interface PBLScenarioYAML {
 
 export async function POST(request: NextRequest) {
   try {
-    const { force = false } = await request.json().catch(() => ({}));
+    const { force = false, clean = false } = await request.json().catch(() => ({})) as { force?: boolean; clean?: boolean };
 
     // Get repository
     const scenarioRepo = repositoryFactory.getScenarioRepository();
+
+    // If clean flag is set, delete ALL PBL scenarios first (including archived)
+    if (clean) {
+      const allPblScenarios = await scenarioRepo.findByMode?.('pbl', true) || [];
+      console.log(`[Init PBL] Cleaning ${allPblScenarios.length} scenarios`);
+      for (const scenario of allPblScenarios) {
+        try {
+          await scenarioRepo.delete(scenario.id);
+        } catch (error) {
+          console.error(`[Init PBL] Failed to delete scenario ${scenario.id}:`, error);
+          // Continue with other deletions
+        }
+      }
+    }
 
     // Scan PBL YAML files recursively
     const pblDataPath = path.join(process.cwd(), 'public', 'pbl_data', 'scenarios');

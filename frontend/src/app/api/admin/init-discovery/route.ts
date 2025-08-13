@@ -31,10 +31,24 @@ export async function POST(request: NextRequest) {
     //   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     // }
 
-    const { force = false } = await request.json().catch(() => ({}));
+    const { force = false, clean = false } = await request.json().catch(() => ({})) as { force?: boolean; clean?: boolean };
 
     // Get repository
     const scenarioRepo = repositoryFactory.getScenarioRepository();
+
+    // If clean flag is set, delete ALL discovery scenarios first (including archived)
+    if (clean) {
+      const allDiscoveryScenarios = await scenarioRepo.findByMode?.('discovery', true) || [];
+      console.log(`[Init Discovery] Cleaning ${allDiscoveryScenarios.length} scenarios`);
+      for (const scenario of allDiscoveryScenarios) {
+        try {
+          await scenarioRepo.delete(scenario.id);
+        } catch (error) {
+          console.error(`[Init Discovery] Failed to delete scenario ${scenario.id}:`, error);
+          // Continue with other deletions
+        }
+      }
+    }
 
     // Scan Discovery YAML files in subdirectories
     const discoveryDataPath = path.join(process.cwd(), 'public', 'discovery_data');

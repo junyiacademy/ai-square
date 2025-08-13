@@ -23,14 +23,26 @@ export async function POST(request: NextRequest) {
 
     const scenarioRepo = repositoryFactory.getScenarioRepository();
     
-    // Check ALL existing assessment scenarios (not just by source)
-    const allAssessmentScenarios = await scenarioRepo.findByMode?.('assessment') || [];
+    // Check existing assessment scenarios
+    // For clean operation, get ALL scenarios (including archived)
+    // For normal operation, only get active scenarios
+    let allAssessmentScenarios = await scenarioRepo.findByMode?.('assessment', body.clean) || [];
     
-    // If clean flag is set, archive ALL assessment scenarios first
+    // If clean flag is set, delete ALL assessment scenarios first
     if (body.clean) {
+      console.log(`[Init Assessment] Cleaning ${allAssessmentScenarios.length} scenarios`);
       for (const scenario of allAssessmentScenarios) {
-        await scenarioRepo.update?.(scenario.id, { status: 'archived' });
+        console.log(`[Init Assessment] Deleting scenario: ${scenario.id}`);
+        try {
+          const deleted = await scenarioRepo.delete(scenario.id);
+          console.log(`[Init Assessment] Delete result: ${deleted}`);
+        } catch (error) {
+          console.error(`[Init Assessment] Failed to delete scenario ${scenario.id}:`, error);
+          // Continue with other deletions
+        }
       }
+      // After cleaning, there are no existing scenarios
+      allAssessmentScenarios = [];
     }
     
     // Find existing scenarios that match our source (for update)

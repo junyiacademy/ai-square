@@ -8,10 +8,13 @@ export class IntegrationTestEnvironment {
   private redisClient: Redis | null = null;
   private testDbName: string;
   private isSetup: boolean = false;
+  private useSharedDb: boolean;
+  private shouldDropDb: boolean = true;
 
   constructor() {
     // Use timestamp and process ID to ensure uniqueness
     this.testDbName = `test_db_${Date.now()}_${process.pid}`;
+    this.useSharedDb = process.env.USE_SHARED_DB === '1';
   }
 
   async setup() {
@@ -20,7 +23,7 @@ export class IntegrationTestEnvironment {
     console.log(`🚀 Setting up test environment: ${this.testDbName}`);
     
     try {
-      // 1. Create test database
+      // 1. Create or connect database
       await this.createTestDatabase();
       
       // 2. Wait for database to be ready
@@ -73,6 +76,27 @@ export class IntegrationTestEnvironment {
   }
 
   private async createTestDatabase() {
+    if (this.useSharedDb) {
+      // Connect to existing shared DB (keep in sync with Next.js server)
+      const sharedDbName = process.env.DB_NAME || 'ai_square_db';
+      this.dbPool = new Pool({
+        host: process.env.TEST_DB_HOST || process.env.DB_HOST || 'localhost',
+        port: parseInt(process.env.TEST_DB_PORT || process.env.DB_PORT || '5434'),
+        database: sharedDbName,
+        user: process.env.DB_USER || 'postgres',
+        password: process.env.DB_PASSWORD || 'postgres',
+        max: 20,
+        idleTimeoutMillis: 30000,
+        connectionTimeoutMillis: 2000,
+      });
+      this.shouldDropDb = false;
+      // Test the connection
+      const client = await this.dbPool.connect();
+      await client.query('SELECT 1');
+      client.release();
+      return;
+    }
+
     const adminPool = new Pool({
       host: process.env.TEST_DB_HOST || 'localhost',
       port: parseInt(process.env.TEST_DB_PORT || '5434'),
@@ -397,9 +421,12 @@ export class IntegrationTestEnvironment {
         configurable: true
       });
     }
-    process.env.DB_HOST = 'localhost';
-    process.env.DB_PORT = '5434';
-    process.env.DB_NAME = this.testDbName;
+    process.env.DB_HOST = process.env.DB_HOST || 'localhost';
+    process.env.DB_PORT = process.env.DB_PORT || '5434';
+    // If using shared DB, keep existing DB_NAME to match Next.js; otherwise use test DB
+    if (!this.useSharedDb) {
+      process.env.DB_NAME = this.testDbName;
+    }
     process.env.DB_USER = 'postgres';
     process.env.DB_PASSWORD = 'postgres';
     process.env.REDIS_ENABLED = 'true';
@@ -445,6 +472,9 @@ export class IntegrationTestEnvironment {
   }
 
   private async dropTestDatabase() {
+    if (this.useSharedDb || !this.shouldDropDb) {
+      return; // Do not drop shared database
+    }
     const adminPool = new Pool({
       host: process.env.TEST_DB_HOST || 'localhost',
       port: parseInt(process.env.TEST_DB_PORT || '5434'),
