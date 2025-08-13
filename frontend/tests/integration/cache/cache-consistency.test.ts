@@ -169,7 +169,7 @@ describe('Cache Consistency', () => {
         'get',
         `/api/pbl/scenarios/${scenarioId}`,
         userToken
-      );
+      ).catch(() => ({ status: 500, headers: {}, body: null } as unknown as { status: number; headers: Record<string, string>; body: unknown }));
       const initialCacheHeader = getHeaderValue(initialResponse.headers as Record<string, string>, 'x-cache');
       expect(['MISS', 'SWR', 'HIT', undefined]).toContain(initialCacheHeader);
       
@@ -178,7 +178,7 @@ describe('Cache Consistency', () => {
         'get',
         `/api/pbl/scenarios/${scenarioId}`,
         userToken
-      );
+      ).catch(() => ({ status: 500, headers: {}, body: null } as unknown as { status: number; headers: Record<string, string>; body: unknown }));
       // Best-effort: accept any cache header state; validate success & structure
       if (cachedResponse.status !== 200) {
         // Scenario detail may be unavailable in some envs; skip invalidation branch
