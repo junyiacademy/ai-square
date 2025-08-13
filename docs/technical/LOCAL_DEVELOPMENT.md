@@ -61,9 +61,9 @@ After running `make db-init`, the following users are available:
 The database uses these default settings (can be overridden):
 - `DB_HOST`: localhost
 - `DB_PORT`: 5432
-- `DB_NAME`: ai_square_dev
+- `DB_NAME`: ai_square_db
 - `DB_USER`: postgres
-- `DB_PASSWORD`: postgres123
+- `DB_PASSWORD`: postgres
 
 ## Troubleshooting
 
@@ -104,17 +104,17 @@ For staging deployment with Cloud SQL:
 2. Set environment variables in Cloud Run:
    ```
    DB_HOST=/cloudsql/PROJECT:REGION:INSTANCE
-   DB_NAME=ai_square_staging
+   DB_NAME=ai_square_db
    DB_USER=postgres
-   DB_PASSWORD=<secure-password>
+   DB_PASSWORD=postgres
    ```
 3. Initialize the staging database:
    ```bash
    # Connect to Cloud SQL
-   gcloud sql connect INSTANCE_NAME --user=postgres --database=ai_square_staging
+    gcloud sql connect INSTANCE_NAME --user=postgres --database=ai_square_db
    
    # Run initialization scripts
-   \i src/lib/repositories/postgresql/schema-v3.sql
+    \i src/lib/repositories/postgresql/schema-v4.sql
    \i src/scripts/init-demo-users.sql
    ```
 

@@ -31,13 +31,14 @@
 
 ---
 
-### 二、必要憑證與環境變數
+### 二、必要憑證與環境變數（全環境統一）
 
 1) 資料庫（PostgreSQL）
 - DB_HOST（雲端使用 Unix Socket 或 Private IP）
 - DB_PORT（本機預設 5434；雲端若用 Unix Socket 可不設）
-- DB_NAME（標準：`ai_square_db`）
-- DB_USER / DB_PASSWORD
+- DB_NAME：`ai_square_db`（Local/Staging/Prod 全環境統一）
+- DB_USER：`postgres`
+- DB_PASSWORD：`postgres`（建議在 Staging/Prod 以 Secret Manager 管理）
 
 2) Redis（可選）
 - REDIS_ENABLED（true/false）

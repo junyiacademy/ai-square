@@ -120,9 +120,9 @@ CLOUD_RUN_REGION=asia-east1
 ```bash
 # 資料庫 (Cloud SQL)
 DB_HOST=/cloudsql/PROJECT:REGION:INSTANCE
-DB_NAME=ai_square_staging
+DB_NAME=ai_square_db
 DB_USER=postgres
-DB_PASSWORD=<use-secret-manager>
+DB_PASSWORD=postgres
 
 # 其他保持相同
 ```

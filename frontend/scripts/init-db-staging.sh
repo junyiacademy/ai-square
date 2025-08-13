@@ -7,11 +7,12 @@ set -e  # Exit on error
 echo "🚀 AI Square Database Initialization for Staging"
 echo "=============================================="
 
-# Configuration
-DB_HOST="${DB_HOST:-127.0.0.1}"
-DB_PORT="${DB_PORT:-5432}"
-DB_NAME="${DB_NAME:-ai_square_db}"
-DB_USER="${DB_USER:-postgres}"
+# Load environment configuration
+export ENVIRONMENT="staging"
+export USE_CLOUD_SQL_PROXY="true"  # For local connection to Cloud SQL
+source scripts/load-env-config.sh
+
+# Configuration is now loaded from environment
 SCHEMA_FILE="src/lib/repositories/postgresql/schema-v4.sql"
 CHECK_FILE="scripts/check-db-schema.sql"
 

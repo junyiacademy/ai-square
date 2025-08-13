@@ -40,9 +40,9 @@ make gcloud-build-and-deploy-frontend
 # 資料庫連線
 DB_HOST=/cloudsql/PROJECT:REGION:INSTANCE  # Cloud SQL Unix socket
 DB_PORT=5433                                # PostgreSQL port
-DB_NAME=ai_square
+DB_NAME=ai_square_db
 DB_USER=postgres
-DB_PASSWORD=your-secure-password
+DB_PASSWORD=postgres
 
 # Google Cloud
 GOOGLE_CLOUD_PROJECT=your-project-id
@@ -64,12 +64,12 @@ gcloud sql instances create ai-square-db \
   --region=asia-east1
 
 # 2. 創建資料庫
-gcloud sql databases create ai_square --instance=ai-square-db
+gcloud sql databases create ai_square_db --instance=ai-square-db
 
 # 3. 設定密碼
 gcloud sql users set-password postgres \
   --instance=ai-square-db \
-  --password=your-secure-password
+  --password=postgres
 ```
 
 ### 連線設定
