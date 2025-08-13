@@ -61,17 +61,8 @@ export async function POST(request: NextRequest) {
     }
 
     if (action === 'init-full') {
-      // Step 1: Create all tables
-      console.log('Creating database schema...');
-      
-      // Read schema file
-      const schemaPath = path.join(process.cwd(), 'src/lib/repositories/postgresql/schema-v4.sql');
-      const schemaContent = await fs.readFile(schemaPath, 'utf-8');
-      
-      // Execute schema (it has CREATE IF NOT EXISTS, so safe to run)
-      await pool.query(schemaContent);
-      
-      console.log('Schema created successfully');
+      // Step 1: Skip schema creation (already done via Cloud SQL import)
+      console.log('Skipping schema creation (already exists)...');
 
       // Step 2: Load PBL scenarios from YAML files
       console.log('Loading PBL scenarios...');
