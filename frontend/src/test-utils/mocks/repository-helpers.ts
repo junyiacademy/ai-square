@@ -102,6 +102,7 @@ export function createMockScenarioRepository(): jest.Mocked<IScenarioRepository>
     findByMode: jest.fn(),
     findActive: jest.fn(),
     updateStatus: jest.fn(),
+    delete: jest.fn(),
   };
 }
 

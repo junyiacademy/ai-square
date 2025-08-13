@@ -21,6 +21,7 @@ describe('ScenarioIndexBuilder', () => {
     findById: jest.Mock;
     update: jest.Mock;
     create: jest.Mock;
+    delete: jest.Mock;
   };
   let consoleLogSpy: jest.SpyInstance;
   let consoleErrorSpy: jest.SpyInstance;
@@ -142,7 +143,8 @@ describe('ScenarioIndexBuilder', () => {
       }),
       findById: jest.fn(),
       update: jest.fn(),
-      create: jest.fn()
+      create: jest.fn(),
+      delete: jest.fn()
     };
 
     mockRepositoryFactory.getScenarioRepository.mockReturnValue(mockScenarioRepo);

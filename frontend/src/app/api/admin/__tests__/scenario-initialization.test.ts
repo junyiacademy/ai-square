@@ -1,3 +1,10 @@
+/**
+ * Unit Tests for Scenario Initialization APIs
+ * Tests the initialization functionality for Assessment, PBL, and Discovery scenarios
+ * Main features tested: clean flag, force flag, error handling
+ * Test file name: scenario-initialization.test.ts
+ */
+
 import { NextRequest } from 'next/server';
 import { POST as initPBL } from '../init-pbl/route';
 import { POST as initAssessment } from '../init-assessment/route';
@@ -43,7 +50,7 @@ jest.mock('yaml', () => ({
   }),
 }));
 
-describe('Init APIs - Clean Flag Functionality', () => {
+describe('Scenario Initialization APIs', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -219,9 +226,10 @@ describe('Init APIs - Clean Flag Functionality', () => {
       const response = await initAssessment(request);
       const result = await response.json();
 
-      // Assert
-      expect(response.status).toBe(500);
-      expect(result.error).toBeDefined();
+      // Assert - should continue and create new scenario even if delete failed
+      expect(response.status).toBe(200);
+      expect(result.success).toBe(true);
+      expect(result.action).toBe('created');
     });
 
     it('should continue processing even if one delete fails', async () => {

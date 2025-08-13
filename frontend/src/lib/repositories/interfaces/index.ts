@@ -96,9 +96,10 @@ export interface IScenarioRepository {
   findBySource(sourceType: string, sourceId?: string): Promise<IScenario[]>;
   update(id: string, updates: Partial<IScenario>): Promise<IScenario>;
   create(data: Omit<IScenario, 'id'>): Promise<IScenario>;
-  findByMode?(mode: DBLearningMode): Promise<IScenario[]>;
+  findByMode?(mode: DBLearningMode, includeArchived?: boolean): Promise<IScenario[]>;
   findActive?(): Promise<IScenario[]>;
   updateStatus?(id: string, status: DBScenarioStatus): Promise<void>;
+  delete(id: string): Promise<boolean>;
 }
 
 export interface IDiscoveryRepository {

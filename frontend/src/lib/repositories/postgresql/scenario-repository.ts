@@ -343,7 +343,7 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
     // Clear related caches
     await distributedCacheService.delete(cacheKeys.scenarioById(id));
     
-    return result.rowCount > 0;
+    return (result.rowCount ?? 0) > 0;
   }
 
   async findByDifficulty(difficulty: DifficultyLevel): Promise<IScenario[]> {
