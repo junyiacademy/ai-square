@@ -142,9 +142,9 @@ describe('PBL Learning Flow', () => {
       // Create PBL program
       const programId = uuidv4();
       await client.query(
-        `INSERT INTO programs (id, scenario_id, user_id, status, created_at)
-         VALUES ($1, $2, $3, $4, NOW())`,
-        [programId, scenarios.rows[0].id, userId, 'active']
+        `INSERT INTO programs (id, scenario_id, user_id, status, created_at, total_task_count, time_spent_seconds)
+         VALUES ($1, $2, $3, $4, NOW(), $5, $6)`,
+        [programId, scenarios.rows[0].id, userId, 'active', 0, 0]
       );
       
       // Verify program has correct mode (should be inherited via trigger)

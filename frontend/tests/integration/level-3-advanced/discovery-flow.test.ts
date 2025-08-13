@@ -152,14 +152,16 @@ describe('Discovery Learning Flow', () => {
       // Create Discovery program
       const programId = uuidv4();
       await client.query(
-        `INSERT INTO programs (id, scenario_id, user_id, status, created_at, metadata)
-         VALUES ($1, $2, $3, $4, NOW(), $5)`,
+        `INSERT INTO programs (id, scenario_id, user_id, status, created_at, metadata, total_task_count, time_spent_seconds)
+         VALUES ($1, $2, $3, $4, NOW(), $5, $6, $7)`,
         [
           programId, 
           scenarios.rows[0].id, 
           userId, 
           'active',
-          JSON.stringify({ explorationPath: [], milestones: [] })
+          JSON.stringify({ explorationPath: [], milestones: [] }),
+          0,
+          0
         ]
       );
       

@@ -87,9 +87,9 @@ describe('Advanced Database Operations', () => {
       if (scenarios.rows.length > 0) {
         // Create program
         await client.query(
-          `INSERT INTO programs (id, scenario_id, user_id, status) 
-           VALUES ($1, $2, $3, $4)`,
-          [programId, scenarios.rows[0].id, userId, 'pending']
+          `INSERT INTO programs (id, scenario_id, user_id, status, total_task_count, time_spent_seconds) 
+           VALUES ($1, $2, $3, $4, $5, $6)`,
+          [programId, scenarios.rows[0].id, userId, 'pending', 0, 0]
         );
 
         // Verify program was created with inherited mode
