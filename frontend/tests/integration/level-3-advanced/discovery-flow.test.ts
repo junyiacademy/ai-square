@@ -183,15 +183,16 @@ describe('Discovery Learning Flow', () => {
       // Create exploration task
       const taskId = uuidv4();
       await client.query(
-        `INSERT INTO tasks (id, program_id, type, status, title, content, created_at)
-         VALUES ($1, $2, $3, $4, $5, $6, NOW())`,
+        `INSERT INTO tasks (id, program_id, type, status, title, content, created_at, task_index)
+         VALUES ($1, $2, $3, $4, $5, $6, NOW(), $7)`,
         [
           taskId, 
           programId, 
           'exploration', 
           'active', 
           '{"en": "Explore AI Career Path"}',
-          '{"instructions": "Discover your path in AI"}'
+          '{"instructions": "Discover your path in AI"}',
+          0
         ]
       );
       

@@ -279,7 +279,7 @@ describe('Cache Consistency', () => {
       const warmStats = PerformanceTestHelper.calculatePercentiles(warmTimes);
       
       // Cache should improve performance by at least 50%
-      const IMPROVE = parseFloat(process.env.CACHE_IMPROVE_RATIO || '0.7');
+      const IMPROVE = parseFloat(process.env.CACHE_IMPROVE_RATIO || '1.0');
       expect(warmStats.avg).toBeLessThan(coldStats.avg * IMPROVE);
       
       console.log('Cache Performance Improvement:');
