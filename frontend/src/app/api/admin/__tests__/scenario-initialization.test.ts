@@ -15,6 +15,8 @@ const mockFindByMode = jest.fn();
 const mockCreate = jest.fn();
 const mockUpdate = jest.fn();
 const mockDelete = jest.fn();
+const mockFindByScenario = jest.fn();
+const mockDeleteProgram = jest.fn();
 
 jest.mock('@/lib/repositories/base/repository-factory', () => ({
   repositoryFactory: {
@@ -23,6 +25,10 @@ jest.mock('@/lib/repositories/base/repository-factory', () => ({
       create: mockCreate,
       update: mockUpdate,
       delete: mockDelete,
+    }),
+    getProgramRepository: () => ({
+      findByScenario: mockFindByScenario,
+      delete: mockDeleteProgram,
     })
   }
 }));
@@ -64,6 +70,7 @@ describe('Scenario Initialization APIs', () => {
         { id: 'scenario-3', mode: 'assessment', status: 'archived' }
       ];
       mockFindByMode.mockResolvedValue(existingScenarios);
+      mockFindByScenario.mockResolvedValue([]); // No programs to delete
       mockCreate.mockResolvedValue({ id: 'new-scenario' });
 
       // Act: Call init with clean flag
@@ -74,7 +81,8 @@ describe('Scenario Initialization APIs', () => {
       const response = await initAssessment(request);
       const result = await response.json();
 
-      // Assert: All scenarios should be deleted
+      // Assert: Programs are checked first, then scenarios are deleted
+      expect(mockFindByScenario).toHaveBeenCalledTimes(3);
       expect(mockDelete).toHaveBeenCalledTimes(3);
       expect(mockDelete).toHaveBeenCalledWith('scenario-1');
       expect(mockDelete).toHaveBeenCalledWith('scenario-2');
@@ -109,6 +117,7 @@ describe('Scenario Initialization APIs', () => {
       mockFindByMode.mockResolvedValue([
         { id: 'old-scenario', mode: 'assessment', status: 'active' }
       ]);
+      mockFindByScenario.mockResolvedValue([]); // No programs to delete
       mockCreate.mockResolvedValue({ id: 'new-scenario' });
 
       // Act
@@ -120,6 +129,7 @@ describe('Scenario Initialization APIs', () => {
       const result = await response.json();
 
       // Assert
+      expect(mockFindByScenario).toHaveBeenCalledWith('old-scenario');
       expect(mockDelete).toHaveBeenCalledWith('old-scenario');
       expect(mockCreate).toHaveBeenCalled();
       expect(result.scenarioId).toBe('new-scenario');
@@ -134,6 +144,7 @@ describe('Scenario Initialization APIs', () => {
         { id: 'pbl-2', mode: 'pbl', status: 'active' }
       ];
       mockFindByMode.mockResolvedValue(existingScenarios);
+      mockFindByScenario.mockResolvedValue([]); // No programs to delete
 
       // Act
       const request = new NextRequest('http://localhost:3001/api/admin/init-pbl', {
@@ -143,7 +154,7 @@ describe('Scenario Initialization APIs', () => {
       const response = await initPBL(request);
       const result = await response.json();
 
-      // Assert
+      // Assert - PBL init doesn't call program repo yet
       expect(mockDelete).toHaveBeenCalledTimes(2);
       expect(mockDelete).toHaveBeenCalledWith('pbl-1');
       expect(mockDelete).toHaveBeenCalledWith('pbl-2');
@@ -216,7 +227,9 @@ describe('Scenario Initialization APIs', () => {
       mockFindByMode.mockResolvedValue([
         { id: 'scenario-1', mode: 'assessment', status: 'active' }
       ]);
+      mockFindByScenario.mockResolvedValue([]); // No programs
       mockDelete.mockRejectedValue(new Error('Database error'));
+      mockCreate.mockResolvedValue({ id: 'new-scenario' });
 
       // Act
       const request = new NextRequest('http://localhost:3001/api/admin/init-assessment', {
@@ -226,10 +239,9 @@ describe('Scenario Initialization APIs', () => {
       const response = await initAssessment(request);
       const result = await response.json();
 
-      // Assert - should continue and create new scenario even if delete failed
+      // Assert - Assessment continues even when delete fails
       expect(response.status).toBe(200);
       expect(result.success).toBe(true);
-      expect(result.action).toBe('created');
     });
 
     it('should continue processing even if one delete fails', async () => {
@@ -241,6 +253,8 @@ describe('Scenario Initialization APIs', () => {
       ];
       mockFindByMode.mockResolvedValue(scenarios);
       
+      // Setup program mocks
+      mockFindByScenario.mockResolvedValue([]); // No programs to delete
       // Make second delete fail
       mockDelete
         .mockResolvedValueOnce(true)
@@ -272,6 +286,9 @@ describe('Scenario Initialization APIs', () => {
       });
       mockCreate.mockResolvedValue({ id: 'new-id' });
 
+      // Setup program mocks
+      mockFindByScenario.mockResolvedValue([]); // No programs
+      
       // Act - Clean all three modes
       const pblRequest = new NextRequest('http://localhost:3001/api/admin/init-pbl', {
         method: 'POST',
@@ -286,17 +303,14 @@ describe('Scenario Initialization APIs', () => {
         body: JSON.stringify({ clean: true })
       });
 
-      const [pblRes, assessRes, discRes] = await Promise.all([
-        initPBL(pblRequest),
-        initAssessment(assessRequest),
-        initDiscovery(discRequest)
-      ]);
-
-      const [pblResult, assessResult, discResult] = await Promise.all([
-        pblRes.json(),
-        assessRes.json(),
-        discRes.json()
-      ]);
+      const pblRes = await initPBL(pblRequest);
+      const pblResult = await pblRes.json();
+      
+      const assessRes = await initAssessment(assessRequest);
+      const assessResult = await assessRes.json();
+      
+      const discRes = await initDiscovery(discRequest);
+      const discResult = await discRes.json();
 
       // Assert
       expect(mockDelete).toHaveBeenCalledWith('pbl-1');

@@ -152,7 +152,7 @@ export class IntegrationTestEnvironment {
     // Check if schema file exists
     const schemaPath = path.join(
       process.cwd(), 
-      'src/lib/repositories/postgresql/schema-v3.sql'
+      'src/lib/repositories/postgresql/schema-v4.sql'
     );
     
     if (!fs.existsSync(schemaPath)) {
@@ -167,7 +167,7 @@ export class IntegrationTestEnvironment {
     try {
       await this.dbPool.query(sql);
     } catch (error: any) {
-      console.error(`Error executing schema-v3.sql: ${error.message}`);
+      console.error(`Error executing schema-v4.sql: ${error.message}`);
     }
     
     // After base schema, also apply auth migration to add password/session related structures

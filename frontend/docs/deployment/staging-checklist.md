@@ -6,7 +6,7 @@
 ## 📋 Pre-Deployment Checklist
 
 ### 1. Schema 文件準備
-- [ ] 確認 `schema-v3.sql` 是最新版本
+- [ ] 確認 `schema-v4.sql` 是最新版本
 - [ ] 確認包含所有三個 mode 的定義
 - [ ] 確認多語言欄位都使用 JSONB 格式
 
@@ -102,7 +102,7 @@ WHERE mode = 'discovery';
 ```sql
 -- 重建 views
 DROP VIEW IF EXISTS pbl_scenarios_view CASCADE;
--- 然後重新執行 schema-v3.sql 中的 CREATE VIEW 部分
+-- 然後重新執行 schema-v4.sql 中的 CREATE VIEW 部分
 ```
 
 ## 📊 期望結果

@@ -13,8 +13,8 @@
 ### Current Schema Version: v4
 
 We use a **single schema file** approach for simplicity:
-- `schema-v3.sql` - Original schema (without authentication)
-- `schema-v3-safe.sql` - Safe version without DROP commands
+- `schema-v4.sql` - Original schema (without authentication)
+- `schema-v4-safe.sql` - Safe version without DROP commands
 - `schema-v4.sql` - Complete schema with authentication support
 
 ### Why Not Migrations?

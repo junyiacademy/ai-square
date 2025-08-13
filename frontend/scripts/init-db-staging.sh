@@ -12,7 +12,7 @@ DB_HOST="${DB_HOST:-127.0.0.1}"
 DB_PORT="${DB_PORT:-5432}"
 DB_NAME="${DB_NAME:-ai_square_db}"
 DB_USER="${DB_USER:-postgres}"
-SCHEMA_FILE="src/lib/repositories/postgresql/schema-v3.sql"
+SCHEMA_FILE="src/lib/repositories/postgresql/schema-v4.sql"
 CHECK_FILE="scripts/check-db-schema.sql"
 
 # Colors for output
@@ -63,7 +63,7 @@ echo -e "${GREEN}✓ Database ready${NC}"
 # Step 3: Initialize schema
 echo ""
 echo -e "${YELLOW}🔨 Initializing Schema...${NC}"
-if run_sql "$SCHEMA_FILE" "Running schema-v3.sql"; then
+if run_sql "$SCHEMA_FILE" "Running schema-v4.sql"; then
     echo -e "${GREEN}✓ Schema initialized successfully${NC}"
 else
     echo -e "${RED}✗ Schema initialization failed${NC}"

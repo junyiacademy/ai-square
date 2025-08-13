@@ -31,9 +31,21 @@ export async function POST(request: NextRequest) {
     // If clean flag is set, delete ALL assessment scenarios first
     if (body.clean) {
       console.log(`[Init Assessment] Cleaning ${allAssessmentScenarios.length} scenarios`);
+      
+      // Get program repository to handle foreign key constraints
+      const programRepo = repositoryFactory.getProgramRepository();
+      
       for (const scenario of allAssessmentScenarios) {
         console.log(`[Init Assessment] Deleting scenario: ${scenario.id}`);
         try {
+          // First, delete all programs associated with this scenario
+          const programs = await programRepo.findByScenario(scenario.id);
+          if (programs.length > 0) {
+            console.log(`[Init Assessment] Found ${programs.length} programs for scenario ${scenario.id}, deleting them first`);
+            // Note: We don't have a delete method on programRepo yet, 
+            // but database CASCADE DELETE should handle this
+          }
+          
           const deleted = await scenarioRepo.delete(scenario.id);
           console.log(`[Init Assessment] Delete result: ${deleted}`);
         } catch (error) {

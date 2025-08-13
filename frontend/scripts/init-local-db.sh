@@ -42,7 +42,7 @@ TABLE_COUNT=$(psql -U $DB_USER -h $DB_HOST -p $DB_PORT -d $DB_NAME -t -c "SELECT
 
 if [ $TABLE_COUNT -eq 0 ]; then
     echo "  Creating database schema..."
-    psql -U $DB_USER -h $DB_HOST -p $DB_PORT -d $DB_NAME -f src/lib/repositories/postgresql/schema-v3.sql
+    psql -U $DB_USER -h $DB_HOST -p $DB_PORT -d $DB_NAME -f src/lib/repositories/postgresql/schema-v4.sql
     echo "  ✅ Schema created"
 else
     echo "  ✅ Schema already exists ($TABLE_COUNT tables)"

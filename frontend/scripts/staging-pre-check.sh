@@ -73,7 +73,7 @@ echo "----------------------"
 # 4. Application Files
 check "Dockerfile.staging exists" "[[ -f Dockerfile.staging ]]"
 check "package.json exists" "[[ -f package.json ]]"
-check "Database schema exists" "[[ -f src/lib/repositories/postgresql/schema-v3.sql ]]"
+check "Database schema exists" "[[ -f src/lib/repositories/postgresql/schema-v4.sql ]]"
 check ".env.staging exists" "[[ -f .env.staging ]]"
 check "Deploy script exists" "[[ -f deploy-staging.sh ]]"
 check "Deploy script executable" "[[ -x deploy-staging.sh ]]"

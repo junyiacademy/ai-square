@@ -97,16 +97,9 @@ fi
 if [ "$NEEDS_SCHEMA_INIT" = true ]; then
     echo -e "${YELLOW}🔨 Initializing Schema...${NC}"
     
-    # Use safe schema file for staging/production
-    SCHEMA_FILE="src/lib/repositories/postgresql/schema-v3-safe.sql"
-    
-    # Check if safe schema file exists, fallback to regular one
-    if [ ! -f "$SCHEMA_FILE" ]; then
-        SCHEMA_FILE="src/lib/repositories/postgresql/schema-v3.sql"
-        echo -e "${YELLOW}⚠ Using regular schema file (be careful!)${NC}"
-    else
-        echo -e "${GREEN}✓ Using safe schema file (no DROP commands)${NC}"
-    fi
+    # Use schema v4 file
+    SCHEMA_FILE="src/lib/repositories/postgresql/schema-v4.sql"
+    echo -e "${GREEN}✓ Using schema v4 (with CASCADE DELETE)${NC}"
     
     if [ ! -f "$SCHEMA_FILE" ]; then
         echo -e "${RED}✗ Schema file not found: $SCHEMA_FILE${NC}"

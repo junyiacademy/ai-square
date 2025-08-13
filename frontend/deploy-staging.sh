@@ -28,15 +28,13 @@ if [ "${CI:-}" = "true" ] || [ "${GITHUB_ACTIONS:-}" = "true" ] || [ "${GITLAB_C
     export FORCE_INIT=true
 fi
 
-if [ -f "scripts/init-staging-cloud-sql.sh" ] && [ -z "$SKIP_DB_INIT" ]; then
-    echo "Running smart database initialization (this is safe - won't destroy data)..."
+if [ -z "$SKIP_DB_INIT" ]; then
+    echo "Running database initialization with Schema V4 (includes CASCADE DELETE)..."
     chmod +x scripts/init-staging-cloud-sql.sh
-    
-    # Pass environment variables to the script
     CI="${CI:-false}" FORCE_INIT="${FORCE_INIT:-false}" ./scripts/init-staging-cloud-sql.sh
     echo ""
 else
-    echo "Skipping database initialization (SKIP_DB_INIT is set or script not found)"
+    echo "Skipping database initialization (SKIP_DB_INIT is set)"
 fi
 
 # Step 1: Build Docker image

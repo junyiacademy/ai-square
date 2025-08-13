@@ -146,7 +146,7 @@ export class IntegrationTestEnvironment {
   private async runMigrations() {
     const schemaPath = path.join(
       process.cwd(), 
-      'scripts/schema-v3.sql'
+      'scripts/schema-v4.sql'
     );
     
     const sql = fs.readFileSync(schemaPath, 'utf8');

@@ -207,7 +207,7 @@ export default async function globalSetup() {
     }
     await adminPool.end();
 
-    const schemaPath = path.join(process.cwd(), 'src', 'lib', 'repositories', 'postgresql', 'schema-v3.sql');
+    const schemaPath = path.join(process.cwd(), 'src', 'lib', 'repositories', 'postgresql', 'schema-v4.sql');
     const authMigrationPath = path.join(process.cwd(), 'src', 'lib', 'repositories', 'postgresql', 'migrations', '20250204-add-password-column.sql');
     if (fs.existsSync(schemaPath)) {
       const sql = fs.readFileSync(schemaPath, 'utf8');
@@ -242,7 +242,7 @@ export default async function globalSetup() {
       await schemaPool.end();
       console.log('   ✅ Schema applied to test database');
     } else {
-      console.log('   ⚠️ schema-v3.sql not found; skipping schema apply');
+      console.log('   ⚠️ schema-v4.sql not found; skipping schema apply');
     }
 
     // STEP 5: Start Next.js server on clean test port

@@ -42,15 +42,10 @@ echo ""
 echo "✨ 創建新資料庫..."
 PGPASSWORD=$DB_PASSWORD psql -h $DB_HOST -p $DB_PORT -U $DB_USER -d postgres -c "CREATE DATABASE $DB_NAME;"
 
-# 5. 應用 Schema V3
+# 5. 應用 Schema V4
 echo ""
-echo "📊 應用 Schema V3..."
-if [ -f "scripts/apply-schema-v3-auto.sh" ]; then
-  bash scripts/apply-schema-v3-auto.sh
-else
-  echo "❌ 找不到 apply-schema-v3-auto.sh"
-  exit 1
-fi
+echo "📊 應用 Schema V4..."
+PGPASSWORD=$DB_PASSWORD psql -h $DB_HOST -p $DB_PORT -U $DB_USER -d $DB_NAME -f src/lib/repositories/postgresql/schema-v4.sql
 
 # 6. 載入 Assessment scenarios
 echo ""

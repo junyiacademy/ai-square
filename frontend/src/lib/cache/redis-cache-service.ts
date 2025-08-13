@@ -212,6 +212,23 @@ class RedisCacheService {
   }
 
   /**
+   * Flush all cache entries (Redis FLUSHALL equivalent)
+   */
+  async flushAll(): Promise<void> {
+    try {
+      // Flush Redis database
+      if (this.isConnected && this.redis) {
+        await this.redis.flushall();
+      }
+      
+      // Clear fallback cache
+      this.fallbackCache.clear();
+    } catch (error) {
+      console.error('Cache flushAll error:', error);
+    }
+  }
+
+  /**
    * Check if key exists in cache
    */
   async has(key: string): Promise<boolean> {

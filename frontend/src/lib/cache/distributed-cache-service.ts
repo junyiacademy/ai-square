@@ -246,6 +246,30 @@ class DistributedCacheService {
   }
 
   /**
+   * Flush all cache entries
+   */
+  async flushAll(): Promise<void> {
+    this.localCache.clear();
+    this.revalidationPromises.clear();
+    try {
+      await redisCacheService.flushAll();
+    } catch (error) {
+      console.error('Error flushing Redis cache:', error);
+    }
+  }
+
+  /**
+   * Get all cache keys (for debugging/admin)
+   */
+  async getAllKeys(): Promise<string[]> {
+    const keys: string[] = [];
+    for (const key of this.localCache.keys()) {
+      keys.push(key);
+    }
+    return keys;
+  }
+
+  /**
    * Batch operations
    */
   async mget<T>(keys: string[]): Promise<(T | null)[]> {

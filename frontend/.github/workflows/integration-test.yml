@@ -80,7 +80,7 @@ jobs:
       - name: Apply schema
         working-directory: frontend
         run: |
-          PGPASSWORD=${{ env.DB_PASSWORD }} psql -h localhost -p 5434 -U ${{ env.DB_USER }} -d ${{ env.DB_NAME }} -f src/lib/repositories/postgresql/schema-v3.sql
+          PGPASSWORD=${{ env.DB_PASSWORD }} psql -h localhost -p 5434 -U ${{ env.DB_USER }} -d ${{ env.DB_NAME }} -f src/lib/repositories/postgresql/schema-v4.sql
       
       - name: Run integration tests
         run: npm run test:integration

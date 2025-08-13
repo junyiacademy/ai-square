@@ -54,7 +54,7 @@ db-down:
 db-init:
 	@echo "$(GREEN)Initializing database schema...$(NC)"
 	@PGPASSWORD=$(DB_PASSWORD) psql -h $(DB_HOST) -p $(DB_PORT) -U $(DB_USER) -d $(DB_NAME) \
-		-f src/lib/repositories/postgresql/schema-v3.sql \
+		-f src/lib/repositories/postgresql/schema-v4.sql \
 		-v ON_ERROR_STOP=1 || (echo "$(RED)Schema initialization failed$(NC)" && exit 1)
 	@echo "$(GREEN)Database schema initialized successfully$(NC)"
 

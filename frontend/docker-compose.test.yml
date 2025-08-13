@@ -10,7 +10,7 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: ai_square_db
     volumes:
-      - ./src/lib/repositories/postgresql/schema-v3.sql:/docker-entrypoint-initdb.d/01-schema.sql
+      - ./src/lib/repositories/postgresql/schema-v4.sql:/docker-entrypoint-initdb.d/01-schema.sql
       - ./src/lib/repositories/postgresql/migrations/20250204-add-password-column.sql:/docker-entrypoint-initdb.d/02-auth-migration.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]

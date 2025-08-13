@@ -179,7 +179,7 @@ help:
 	@echo ""
 	@echo "$(CYAN)Staging 環境:$(NC)"
 	@echo "  $(GREEN)make staging-check$(NC)                             - 檢查 Staging 部署前置條件"
-	@echo "  $(GREEN)make staging-db-init$(NC)                           - 初始化 Staging 資料庫"
+	@echo "  $(GREEN)make staging-db-init$(NC)                           - 初始化 Staging 資料庫 (Schema V4)"
 	@echo "  $(GREEN)make deploy-staging$(NC)                            - 部署到 Staging 環境"
 	@echo "  $(GREEN)make deploy-staging-full$(NC)                       - 完整 Staging 部署（含 DB）"
 	@echo "  $(GREEN)make staging-logs$(NC)                              - 查看 Staging logs"
@@ -520,9 +520,9 @@ staging-check:
 	@echo "$(CYAN)🔍 檢查 Staging 部署前置條件...$(NC)"
 	@cd frontend && ./scripts/staging-pre-check.sh
 
-## 初始化 Staging Cloud SQL 資料庫（智能初始化，不會破壞資料）
+## 初始化 Staging Cloud SQL 資料庫（Schema V4 with CASCADE DELETE）
 staging-db-init:
-	@echo "$(CYAN)🗄️  初始化 Staging Cloud SQL 資料庫...$(NC)"
+	@echo "$(CYAN)🗄️  初始化 Staging Cloud SQL 資料庫 (Schema V4)...$(NC)"
 	@cd frontend && chmod +x scripts/init-staging-cloud-sql.sh && ./scripts/init-staging-cloud-sql.sh
 
 ## 部署到 Staging 環境
@@ -534,6 +534,10 @@ deploy-staging: staging-check
 ## 完整 Staging 部署（含資料庫初始化）
 deploy-staging-full: staging-check staging-db-init deploy-staging
 	@echo "$(GREEN)✅ 完整 Staging 部署完成！$(NC)"
+	@echo "$(YELLOW)📌 請記得執行 clean flag 初始化資料：$(NC)"
+	@echo "  - /api/admin/init-assessment?clean=true"
+	@echo "  - /api/admin/init-pbl?clean=true"
+	@echo "  - /api/admin/init-discovery?clean=true"
 
 ## 查看 Staging logs
 staging-logs:
