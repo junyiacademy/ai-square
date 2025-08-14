@@ -85,6 +85,50 @@ Key environment variables (stored in Cloud Run):
 - Use Unix socket connection, not IP-based
 - Verify Cloud SQL instance is mounted to Cloud Run service
 
+## Testing Before Deployment
+
+### E2E Test Suite
+We maintain a focused set of E2E tests that verify critical functionality:
+
+```bash
+# Run all E2E tests before deployment
+npx playwright test
+
+# Core tests that must pass:
+- e2e/simple-working-test.spec.ts    # Basic page functionality
+- e2e/basic-health-check.spec.ts     # Health endpoints
+- e2e/test-api-direct.spec.ts        # API endpoints
+- e2e/pbl-simple.spec.ts             # Learning modules with auth
+- e2e/public-pages.spec.ts           # Public page access
+```
+
+### Test User for E2E
+```javascript
+// Test account for automated testing
+Email: test@example.com
+Password: Test123!
+```
+
+### Pre-deployment Checklist
+```bash
+# 1. Run tests locally
+npm run test:e2e
+
+# 2. Check TypeScript
+npm run typecheck
+
+# 3. Check ESLint
+npm run lint
+
+# 4. Build production
+npm run build
+
+# 5. Verify test user exists
+curl -X POST http://localhost:3004/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "test@example.com", "password": "Test123!"}'
+```
+
 ## Future Improvements
 
 When moving to production:
@@ -92,6 +136,8 @@ When moving to production:
 2. Use Secret Manager for database passwords
 3. Set up automated backups
 4. Implement monitoring and alerting
+5. Add smoke tests after deployment
+6. Implement rollback procedures
 
 ---
-Last Updated: 2025-01-12
+Last Updated: 2025-01-14
