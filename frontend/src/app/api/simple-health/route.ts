@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
 // Ultra simple health check - no external dependencies
-export async function GET(request: NextRequest): Promise<NextResponse> {
+export async function GET(): Promise<NextResponse> {
   return NextResponse.json({
     status: 'healthy',
     timestamp: new Date().toISOString(),

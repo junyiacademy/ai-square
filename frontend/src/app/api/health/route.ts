@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { Pool } from 'pg';
 import { getRedisClient } from '@/lib/cache/redis-client';
 
@@ -33,13 +33,12 @@ interface HealthStatus {
   uptime: number;
 }
 
-export async function GET(request: NextRequest): Promise<NextResponse> {
+export async function GET(): Promise<NextResponse> {
   // Add timeout to prevent hanging
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 second total timeout
   
   try {
-    const startTime = Date.now();
     
     const health: HealthStatus = {
       status: 'healthy',
@@ -105,9 +104,9 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       const redisStart = Date.now();
       
       // Wrap Redis check in timeout
-      const redisCheckPromise = getRedisClient().then(async (redis: any) => {
-        if (redis && redis.ping) {
-          await redis.ping();
+      const redisCheckPromise = getRedisClient().then(async (redis: unknown) => {
+        if (redis && typeof redis === 'object' && 'ping' in redis) {
+          await (redis as { ping: () => Promise<void> }).ping();
           return { status: true, responseTime: Date.now() - redisStart };
         } else {
           return { status: false, error: 'Redis client not available' };
@@ -119,7 +118,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       );
       
       const redisResult = await Promise.race([redisCheckPromise, redisTimeoutPromise]);
-      health.checks.redis = redisResult as any;
+      health.checks.redis = redisResult as typeof health.checks.redis;
     } catch (error) {
       health.checks.redis = {
         status: false,
