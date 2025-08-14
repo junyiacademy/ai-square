@@ -169,6 +169,7 @@ CREATE TABLE IF NOT EXISTS scenarios (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     mode learning_mode NOT NULL,
     status scenario_status DEFAULT 'draft',
+    version VARCHAR(20) DEFAULT '1.0',
     
     -- Source tracking
     source_type source_type DEFAULT 'yaml',
@@ -197,6 +198,16 @@ CREATE TABLE IF NOT EXISTS scenarios (
     -- Resources and metadata
     resources JSONB DEFAULT '[]'::jsonb,
     metadata JSONB DEFAULT '{}'::jsonb,
+    
+    -- Additional fields for compatibility
+    difficulty VARCHAR(20) DEFAULT 'intermediate',
+    estimated_minutes INTEGER DEFAULT 30,
+    xp_rewards JSONB DEFAULT '{}',
+    ksa_codes JSONB DEFAULT '[]',
+    unlock_requirements JSONB DEFAULT '{}',
+    media JSONB DEFAULT '{}',
+    image_url TEXT,
+    badge_icon TEXT,
     
     -- Statistics
     enrolled_count INTEGER DEFAULT 0,

@@ -6,7 +6,7 @@
 - **URL**: https://ai-square-staging-731209836128.asia-east1.run.app
 - **Region**: asia-east1
 - **Database**: ai-square-db-staging-asia (Cloud SQL)
-- **Database Name**: ai_square_staging
+- **Database Name**: ai_square_db
 
 ## Database Schema Management
 
@@ -28,7 +28,7 @@ For staging environment, we decided against a migration system because:
 
 ```bash
 # Apply schema v4 (includes authentication)
-PGPASSWORD=staging2025 psql -h [CLOUD_SQL_IP] -p 5432 -U postgres -d ai_square_db -f src/lib/repositories/postgresql/schema-v4.sql
+PGPASSWORD=postgres psql -h [CLOUD_SQL_IP] -p 5432 -U postgres -d ai_square_db -f src/lib/repositories/postgresql/schema-v4.sql
 ```
 
 ## Deployment Process
@@ -62,8 +62,8 @@ curl -X POST https://ai-square-staging-731209836128.asia-east1.run.app/api/auth/
 
 Key environment variables (stored in Cloud Run):
 - `DB_HOST`: /cloudsql/ai-square-463013:asia-east1:ai-square-db-staging-asia
-- `DB_PASSWORD`: staging2025
-- `DB_NAME`: ai_square_staging
+- `DB_PASSWORD`: postgres
+- `DB_NAME`: ai_square_db
 - `NEXTAUTH_URL`: https://ai-square-staging-731209836128.asia-east1.run.app
 
 ## Important Notes

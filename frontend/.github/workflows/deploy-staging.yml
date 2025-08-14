@@ -64,9 +64,12 @@ jobs:
           --set-env-vars GCS_BUCKET_NAME=ai-square-db-v2 \
           --set-env-vars DB_HOST="/cloudsql/ai-square-463013:asia-east1:ai-square-db-staging-asia" \
           --set-env-vars DB_PORT=5432 \
-          --set-env-vars DB_NAME=ai_square_staging \
+          --set-env-vars DB_NAME=ai_square_db \
           --set-env-vars DB_USER=postgres \
+          --set-env-vars DB_PASSWORD=postgres \
           --set-env-vars NEXTAUTH_URL=${{ env.SERVICE_URL }} \
+          --set-env-vars NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }} \
+          --set-env-vars JWT_SECRET=${{ secrets.JWT_SECRET }} \
           --set-env-vars ENABLE_REDIS=false \
           --set-env-vars ENABLE_MONITORING=false
 

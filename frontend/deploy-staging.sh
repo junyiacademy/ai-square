@@ -63,14 +63,18 @@ gcloud run deploy $SERVICE_NAME \
   --set-env-vars NODE_ENV=production,ENVIRONMENT=staging \
   --set-env-vars DB_HOST="/cloudsql/$CLOUD_SQL_INSTANCE" \
   --set-env-vars DB_PORT=5432 \
-  --set-env-vars DB_NAME=ai_square_staging \
+  --set-env-vars DB_NAME=ai_square_db \
   --set-env-vars DB_USER=postgres \
-  --set-env-vars DB_PASSWORD=staging2025 \
+  --set-env-vars DB_PASSWORD=postgres \
+  --set-env-vars DATABASE_URL="postgresql://postgres:postgres@/ai_square_db?host=/cloudsql/$CLOUD_SQL_INSTANCE" \
   --set-env-vars GOOGLE_CLOUD_PROJECT=$PROJECT_ID \
   --set-env-vars GOOGLE_CLOUD_REGION=$REGION \
   --set-env-vars VERTEX_AI_LOCATION=$REGION \
   --set-env-vars VERTEX_AI_MODEL=gemini-2.5-flash \
   --set-env-vars GCS_BUCKET_NAME=ai-square-db-v2 \
+  --set-env-vars NEXTAUTH_URL="https://ai-square-staging-731209836128.asia-east1.run.app" \
+  --set-env-vars NEXTAUTH_SECRET="${NEXTAUTH_SECRET:-staging-secret-2025-change-this-in-production}" \
+  --set-env-vars JWT_SECRET="${JWT_SECRET:-staging-jwt-secret-2025-change-this}" \
   --set-env-vars ENABLE_REDIS=false \
   --set-env-vars ENABLE_MONITORING=false \
   --allow-unauthenticated

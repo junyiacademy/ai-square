@@ -38,14 +38,15 @@
 - DB_PORT（本機預設 5434；雲端若用 Unix Socket 可不設）
 - DB_NAME：`ai_square_db`（Local/Staging/Prod 全環境統一）
 - DB_USER：`postgres`
-- DB_PASSWORD：`postgres`（建議在 Staging/Prod 以 Secret Manager 管理）
+- DB_PASSWORD：`postgres`（全環境統一，建議在 Prod 以 Secret Manager 管理）
 
 2) Redis（可選）
 - REDIS_ENABLED（true/false）
 - REDIS_URL（例：`redis://localhost:6380`）
 
-3) 前端/系統通用
-- NEXTAUTH_SECRET（JWT/Session 用）
+3) 前端/系統通用（必要）
+- NEXTAUTH_SECRET（JWT/Session 用，必須設定）
+- JWT_SECRET（JWT 簽名用，必須設定）
 - 其他第三方金鑰（依服務需要放入 Secret Manager）
 
 建議集中於：
@@ -90,6 +91,16 @@ PGPASSWORD=postgres psql -h "$DB_HOST" -U "$DB_USER" -d "$DB_NAME" \
 
 ### 四、CI/CD 流程（測試 → 建置 → 佈署）
 
+#### 部署前檢查清單：
+- [ ] 確認 DB_NAME 統一為 `ai_square_db`
+- [ ] 確認 DB_PASSWORD 統一為 `postgres`
+- [ ] 確認設定 NEXTAUTH_SECRET 環境變數
+- [ ] 確認設定 JWT_SECRET 環境變數
+- [ ] 確認設定 DATABASE_URL 環境變數（格式：`postgresql://user:pass@host:port/db`）
+- [ ] 確認 Cloud SQL 與 Cloud Run 在同一 Region
+- [ ] 確認 schema-v4.sql 已套用到資料庫
+- [ ] 確認資料庫 schema 版本與程式碼相符（執行 migration 腳本）
+
 推薦最小工作流程（以前端為例）：
 1) 單元測試 & 型別檢查 & Lint
 ```bash
@@ -125,6 +136,22 @@ npm run build
 
 ### 五、前端部署（Next.js）
 
+#### 手動部署（使用部署腳本）
+```bash
+cd frontend
+
+# 設定環境變數（可選，腳本有預設值）
+export NEXTAUTH_SECRET="your-secret-here"  # 或使用預設值
+export JWT_SECRET="your-jwt-secret"        # 或使用預設值
+
+# 執行部署腳本
+./deploy-staging.sh
+
+# 如要跳過資料庫初始化
+SKIP_DB_INIT=1 ./deploy-staging.sh
+```
+
+#### Cloud Run 部署要點
 1) Cloud Run（建議）
 - 以 Docker 方式建置映像 → 推送 Artifact Registry → Cloud Run 部署
 - 關鍵：Cloud Run 與 Cloud SQL 同區域；若走 Unix Socket，將 `DB_HOST` 設為 `/cloudsql/PROJECT:REGION:INSTANCE`
@@ -136,8 +163,9 @@ npm run build
 curl -s "https://<your-service-url>/api/monitoring/health" | jq
 ```
 
-3) 環境變數（常見）
-- `NEXTAUTH_SECRET`
+3) 環境變數（必要）
+- `NEXTAUTH_SECRET`（必須設定，否則認證功能失效）
+- `JWT_SECRET`（必須設定）
 - `DB_*`（Host/Name/User/Password）
 - `REDIS_*`（若啟用）
 
@@ -201,6 +229,22 @@ curl -s "https://<svc>/api/assessment/scenarios?lang=en" | jq '.'
 
 
 ---
+
+### 九、GitHub Actions Secrets 設定
+
+在 GitHub Repository Settings → Secrets and variables → Actions 中設定：
+
+必要的 Secrets：
+- `GCP_SA_KEY`: Google Cloud Service Account JSON key
+- `NEXTAUTH_SECRET`: 用於 NextAuth session 加密（可用 `openssl rand -base64 32` 生成）
+- `JWT_SECRET`: 用於 JWT token 簽名（可用 `openssl rand -base64 32` 生成）
+- `SLACK_WEBHOOK_URL`: （可選）Slack 通知 webhook URL
+
+設定步驟：
+1. 進入 GitHub Repository → Settings → Secrets and variables → Actions
+2. 點擊 "New repository secret"
+3. 輸入 Name（如 `NEXTAUTH_SECRET`）和 Value
+4. 點擊 "Add secret"
 
 ### 附：現有部署腳本/設定（供參考）
 

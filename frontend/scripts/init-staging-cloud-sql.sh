@@ -50,9 +50,9 @@ fi
 
 # Configuration for Cloud SQL
 CLOUD_SQL_INSTANCE="ai-square-db-staging-asia"
-DB_NAME="ai_square_staging"
+DB_NAME="ai_square_db"
 DB_USER="postgres"
-DB_PASSWORD="${DB_PASSWORD:-staging2025}"
+DB_PASSWORD="${DB_PASSWORD:-postgres}"
 PROJECT_ID="ai-square-463013"
 REGION="asia-east1"
 CLOUD_SQL_IP="35.221.137.78"  # Cloud SQL public IP
@@ -203,3 +203,25 @@ echo "  - Uses ON CONFLICT for demo users"
 echo "  - Never drops existing data"
 echo ""
 echo "Ready for staging deployment!"
+
+# Apply hotfix for missing columns (temporary until schema is updated)
+echo ""
+echo -e "${YELLOW}📝 Applying schema hotfix for missing columns...${NC}"
+PGPASSWORD="$DB_PASSWORD" psql -h "$CLOUD_SQL_IP" -p 5432 -U "$DB_USER" -d "$DB_NAME" 2>/dev/null << EOF || true
+-- Add missing columns if they don't exist
+ALTER TABLE scenarios ADD COLUMN IF NOT EXISTS version VARCHAR(20) DEFAULT '1.0';
+ALTER TABLE scenarios ADD COLUMN IF NOT EXISTS difficulty VARCHAR(20) DEFAULT 'intermediate';
+ALTER TABLE scenarios ADD COLUMN IF NOT EXISTS estimated_minutes INTEGER DEFAULT 30;
+ALTER TABLE scenarios ADD COLUMN IF NOT EXISTS xp_rewards JSONB DEFAULT '{}';
+ALTER TABLE scenarios ADD COLUMN IF NOT EXISTS ksa_codes JSONB DEFAULT '[]';
+ALTER TABLE scenarios ADD COLUMN IF NOT EXISTS unlock_requirements JSONB DEFAULT '{}';
+ALTER TABLE scenarios ADD COLUMN IF NOT EXISTS media JSONB DEFAULT '{}';
+ALTER TABLE scenarios ADD COLUMN IF NOT EXISTS image_url TEXT;
+ALTER TABLE scenarios ADD COLUMN IF NOT EXISTS badge_icon TEXT;
+EOF
+
+if [ $? -eq 0 ]; then
+    echo -e "${GREEN}✅ Schema hotfix applied successfully!${NC}"
+else
+    echo -e "${YELLOW}⚠️ Schema hotfix may have already been applied${NC}"
+fi
