@@ -23,20 +23,20 @@ async function checkHealth() {
     console.log(chalk.yellow('📊 PostgreSQL Status:'));
     if (health.postgresql) {
       console.log(chalk.green('  ✓ Connected'));
-      console.log(chalk.gray(`  Time: ${(health.details as any).postgresql?.time}`));
+      console.log(chalk.gray(`  Time: ${(health.details as Record<string, unknown>).postgresql?.time}`));
     } else {
       console.log(chalk.red('  ✗ Connection Failed'));
-      console.log(chalk.red(`  Error: ${(health.details as any).postgresql?.error}`));
+      console.log(chalk.red(`  Error: ${(health.details as Record<string, unknown>).postgresql?.error}`));
     }
 
     // GCS Status
     console.log(chalk.yellow('\n☁️  Google Cloud Storage Status:'));
     if (health.gcs) {
       console.log(chalk.green('  ✓ Connected'));
-      console.log(chalk.gray(`  Buckets Accessible: ${(health.details as any).gcs?.bucketsAccessible}`));
+      console.log(chalk.gray(`  Buckets Accessible: ${(health.details as Record<string, unknown>).gcs?.bucketsAccessible}`));
     } else {
       console.log(chalk.red('  ✗ Connection Failed'));
-      console.log(chalk.red(`  Error: ${(health.details as any).gcs?.error}`));
+      console.log(chalk.red(`  Error: ${(health.details as Record<string, unknown>).gcs?.error}`));
     }
 
     // Quick database stats

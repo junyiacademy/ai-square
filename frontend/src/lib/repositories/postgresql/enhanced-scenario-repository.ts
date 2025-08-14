@@ -16,13 +16,11 @@ import type {
   DifficultyLevel
 } from '@/types/database';
 import type { 
-  IExtendedScenarioRepository,
-  ICascadeOperations,
-  IStatusOperations 
+  IExtendedScenarioRepository
 } from '../interfaces/extended';
 import { cacheInvalidationService } from '@/lib/cache/cache-invalidation-service';
 import { distributedCacheService } from '@/lib/cache/distributed-cache-service';
-import { cacheKeys, TTL } from '@/lib/cache/cache-keys';
+import { TTL } from '@/lib/cache/cache-keys';
 
 export class EnhancedScenarioRepository 
   extends EnhancedBaseRepository<IScenario> 
@@ -254,11 +252,7 @@ export class EnhancedScenarioRepository
   // Cascade Operations
   // ========================================
   
-  async deleteWithCascade(id: string, options?: {
-    deletePrograms?: boolean;
-    deleteTasks?: boolean;
-    deleteEvaluations?: boolean;
-  }): Promise<{
+  async deleteWithCascade(id: string): Promise<{
     deleted: {
       scenario?: boolean;
       programs?: number;

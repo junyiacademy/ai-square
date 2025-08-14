@@ -74,7 +74,7 @@ export async function POST(request: NextRequest) {
       for (const file of pblScenarioFiles) {
         try {
           const content = await fs.readFile(path.join(pblDir, file), 'utf-8');
-          const data = yamlParse(content) as any;
+          const data = yamlParse(content) as Record<string, unknown>;
           
           // Extract scenario ID from filename
           const scenarioId = file.replace('_scenario.yaml', '');
@@ -144,7 +144,7 @@ export async function POST(request: NextRequest) {
             const configFile = `${folder.name}_questions_en.yaml`;
             const configPath = path.join(assessmentDir, folder.name, configFile);
             const content = await fs.readFile(configPath, 'utf-8');
-            const data = yamlParse(content) as any;
+            const data = yamlParse(content) as Record<string, unknown>;
             
             // Check if already exists
             const existing = await pool.query(
@@ -208,7 +208,7 @@ export async function POST(request: NextRequest) {
         for (const file of careerFiles) {
           try {
             const content = await fs.readFile(path.join(discoveryDir, file), 'utf-8');
-            const data = yamlParse(content) as any;
+            const data = yamlParse(content) as Record<string, unknown>;
             const careerId = file.replace('_career.yaml', '');
             
             // Check if exists
