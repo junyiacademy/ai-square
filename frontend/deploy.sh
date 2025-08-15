@@ -54,7 +54,9 @@ case "$ENVIRONMENT" in
         REGION="asia-east1"
         SERVICE_NAME="ai-square-staging"
         CLOUD_SQL_INSTANCE="ai-square-db-staging-asia"
-        CLOUD_SQL_IP="34.80.67.129"
+        # Dynamically get Cloud SQL IP
+        CLOUD_SQL_IP=$(gcloud sql instances describe $CLOUD_SQL_INSTANCE --project=$PROJECT_ID --format="value(ipAddresses[0].ipAddress)" 2>/dev/null || echo "35.221.240.46")
+        echo "  📍 Cloud SQL IP: $CLOUD_SQL_IP"
         DB_NAME="ai_square_db"
         DB_USER="postgres"
         DB_PASSWORD="${DB_PASSWORD:-postgres}"

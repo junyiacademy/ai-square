@@ -119,8 +119,8 @@ check "Container Registry API enabled" "gcloud services list --enabled --project
 echo ""
 echo "🔐 IAM Checks:"
 echo "--------------"
-check "User has Cloud Run permissions" "gcloud projects get-iam-policy $PROJECT_ID --flatten=\"bindings[].members\" --format=\"table(bindings.role)\" --filter=\"bindings.members:$(gcloud config get-value account 2>/dev/null)\" | grep -q roles/run"
-check "User has Cloud SQL permissions" "gcloud projects get-iam-policy $PROJECT_ID --flatten=\"bindings[].members\" --format=\"table(bindings.role)\" --filter=\"bindings.members:$(gcloud config get-value account 2>/dev/null)\" | grep -q roles/cloudsql"
+check "User has Cloud Run permissions" "gcloud projects get-iam-policy $PROJECT_ID --flatten=\"bindings[].members\" --format=\"table(bindings.role)\" --filter=\"bindings.members:$(gcloud config get-value account 2>/dev/null)\" | grep -E -q '(roles/run|roles/owner|roles/editor)'"
+check "User has Cloud SQL permissions" "gcloud projects get-iam-policy $PROJECT_ID --flatten=\"bindings[].members\" --format=\"table(bindings.role)\" --filter=\"bindings.members:$(gcloud config get-value account 2>/dev/null)\" | grep -E -q '(roles/cloudsql|roles/owner|roles/editor)'"
 
 echo ""
 echo "📊 Summary:"

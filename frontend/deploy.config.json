@@ -6,7 +6,7 @@
       "serviceName": "ai-square-staging",
       "cloudSQL": {
         "instance": "ai-square-db-staging-asia",
-        "ip": "34.80.67.129",
+        "ip": "35.221.240.46",
         "database": "ai_square_db",
         "user": "postgres"
       },

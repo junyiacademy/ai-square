@@ -58,7 +58,12 @@ else
             PROJECT_ID="ai-square-463013"
             REGION="asia-east1"
             CLOUD_SQL_INSTANCE="ai-square-db-staging-asia"
-            CLOUD_SQL_IP="34.80.67.129"
+            # Dynamically get Cloud SQL IP
+            CLOUD_SQL_IP=$(gcloud sql instances describe $CLOUD_SQL_INSTANCE --project=$PROJECT_ID --format="value(ipAddresses[0].ipAddress)" 2>/dev/null)
+            if [ -z "$CLOUD_SQL_IP" ]; then
+                echo -e "${RED}❌ Error: Could not get Cloud SQL IP${NC}"
+                exit 1
+            fi
             DB_NAME="ai_square_db"
             DB_USER="postgres"
             ;;

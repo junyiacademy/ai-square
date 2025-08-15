@@ -4,21 +4,31 @@ let pool: Pool | null = null;
 
 export function getPool(): Pool {
   if (!pool) {
-    // Try to connect directly to the Docker container
-    const config = {
-      host: process.env.DB_HOST || '127.0.0.1',
-      port: parseInt(process.env.DB_PORT || '5433'),
+    const dbHost = process.env.DB_HOST || '127.0.0.1';
+    const isCloudSQL = dbHost.startsWith('/cloudsql/');
+    
+    // Build config based on connection type
+    const config: any = {
       database: process.env.DB_NAME || 'ai_square_db',
       user: process.env.DB_USER || 'postgres',
       password: process.env.DB_PASSWORD || 'postgres',
       max: 20,
       idleTimeoutMillis: 30000,
-      connectionTimeoutMillis: 5000,
-      // Add these to help with connection issues
-      ssl: false,
-      keepAlive: true,
-      keepAliveInitialDelayMillis: 0
+      connectionTimeoutMillis: isCloudSQL ? 10000 : 5000,
     };
+    
+    if (isCloudSQL) {
+      // For Cloud SQL Unix socket connections
+      config.host = dbHost;
+      // Don't set port for Unix socket connections
+    } else {
+      // For regular TCP connections (local/staging with IP)
+      config.host = dbHost;
+      config.port = parseInt(process.env.DB_PORT || '5433');
+      config.ssl = false;
+      config.keepAlive = true;
+      config.keepAliveInitialDelayMillis = 0;
+    }
 
     pool = new Pool(config);
 
