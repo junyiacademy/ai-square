@@ -137,19 +137,51 @@ npm run build
 
 ### 五、前端部署（Next.js）
 
-#### 手動部署（使用部署腳本）
+#### 🚀 統一部署系統（2025/01 新增）
+
+**重要改進**：為了確保 Staging 和 Production 環境的一致性，現在使用統一的部署腳本 `deploy.sh`，避免環境間的差異導致問題。
+
+##### 使用統一部署腳本
 ```bash
 cd frontend
 
-# 設定環境變數（可選，腳本有預設值）
-export NEXTAUTH_SECRET="your-secret-here"  # 或使用預設值
-export JWT_SECRET="your-jwt-secret"        # 或使用預設值
+# 部署到 Staging
+./deploy.sh staging
 
-# 執行部署腳本
-./deploy-staging.sh
+# 部署到 Production  
+./deploy.sh production
 
-# 如要跳過資料庫初始化
-SKIP_DB_INIT=1 ./deploy-staging.sh
+# 本地測試
+./deploy.sh local
+```
+
+##### 統一配置檔案
+所有環境配置都在 `deploy.config.json` 中管理：
+- 資料庫連線資訊
+- Cloud SQL 實例名稱
+- Demo 帳號密碼
+- 資源配置（CPU、記憶體）
+
+##### 使用 Makefile 命令（推薦）
+```bash
+# Staging 部署
+make deploy-staging
+
+# Production 部署
+make deploy-production
+
+# 本地測試
+make deploy-local
+```
+
+#### 手動部署（舊方式，僅供參考）
+```bash
+# 舊的分離式腳本（已棄用）
+./deploy-staging.sh     # 僅 Staging
+./deploy-production.sh   # 僅 Production
+
+# 建議改用統一部署系統
+./deploy.sh [staging|production]
 ```
 
 #### Cloud Run 部署要點
@@ -876,6 +908,182 @@ docker build -t ${IMAGE_NAME}:${IMAGE_TAG} -f ${DOCKERFILE} .
    ```
 
 
+
+## 十二、完整重建步驟 (Staging/Production)
+
+### 🔄 Staging 環境完整重建
+
+當需要完全重建 Staging 環境時（例如：schema 版本不一致、資料庫損壞），執行以下步驟：
+
+#### 1. 刪除舊的 Cloud SQL 實例（如果存在）
+```bash
+# 列出現有實例
+gcloud sql instances list --project=ai-square-463013
+
+# 刪除舊實例（如果存在）
+gcloud sql instances delete ai-square-db-staging-asia \
+  --project=ai-square-463013
+```
+
+#### 2. 建立新的 Cloud SQL 實例
+```bash
+gcloud sql instances create ai-square-db-staging-asia \
+  --database-version=POSTGRES_15 \
+  --tier=db-f1-micro \
+  --region=asia-east1 \
+  --project=ai-square-463013
+
+# 設定密碼
+gcloud sql users set-password postgres \
+  --instance=ai-square-db-staging-asia \
+  --password=staging123! \
+  --project=ai-square-463013
+
+# 建立資料庫
+gcloud sql databases create ai_square_staging \
+  --instance=ai-square-db-staging-asia \
+  --project=ai-square-463013
+```
+
+#### 3. 初始化 Schema 和 Seed Data
+```bash
+# 使用 Makefile 命令
+make staging-db-init
+
+# 或手動執行
+gcloud sql connect ai-square-db-staging-asia \
+  --user=postgres \
+  --database=ai_square_staging
+
+# 在 psql 中執行
+\i src/lib/repositories/postgresql/schema-v4.sql
+\i src/lib/repositories/postgresql/seeds/01-demo-accounts.sql
+```
+
+#### 4. 重新部署 Cloud Run
+```bash
+# 使用 Makefile（推薦）
+make deploy-staging
+
+# 或手動部署
+gcloud run deploy ai-square-staging \
+  --image gcr.io/ai-square-463013/ai-square-frontend:latest \
+  --region asia-east1 \
+  --add-cloudsql-instances=ai-square-463013:asia-east1:ai-square-db-staging-asia \
+  --allow-unauthenticated
+```
+
+#### 5. 驗證部署
+```bash
+# 健康檢查
+curl https://ai-square-staging-731209836128.asia-east1.run.app/api/health
+
+# 測試登入
+curl -X POST https://ai-square-staging-731209836128.asia-east1.run.app/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "student@example.com", "password": "student123"}'
+```
+
+### 🚀 Production 環境完整重建
+
+**⚠️ 警告：Production 重建會影響真實用戶，請謹慎操作！**
+
+#### 1. 備份現有資料（重要！）
+```bash
+# 導出現有資料
+gcloud sql export sql ai-square-db-production \
+  gs://ai-square-backups/production-backup-$(date +%Y%m%d-%H%M%S).sql \
+  --database=ai_square_production \
+  --project=ai-square-463013
+```
+
+#### 2. 刪除並重建 Cloud SQL（可選）
+```bash
+# 如果需要完全重建
+gcloud sql instances delete ai-square-db-production \
+  --project=ai-square-463013
+
+# 建立新實例
+gcloud sql instances create ai-square-db-production \
+  --database-version=POSTGRES_15 \
+  --tier=db-n1-standard-1 \
+  --region=asia-east1 \
+  --backup \
+  --backup-start-time=03:00 \
+  --project=ai-square-463013
+
+# 設定強密碼
+gcloud sql users set-password postgres \
+  --instance=ai-square-db-production \
+  --password=YOUR_STRONG_PASSWORD \
+  --project=ai-square-463013
+```
+
+#### 3. 初始化 Production Schema
+```bash
+# 使用 Makefile
+make production-db-init
+
+# 或透過 API（如果已部署）
+curl -X POST https://ai-square-frontend-731209836128.asia-east1.run.app/api/admin/init-schema \
+  -H "x-admin-key: YOUR_ADMIN_KEY" \
+  -H "Content-Type: application/json"
+```
+
+#### 4. 重新部署 Production Cloud Run
+```bash
+# 使用 Makefile（推薦）
+make deploy-production
+
+# 會執行以下步驟：
+# 1. Cloud Build 建置 image
+# 2. 部署到 Cloud Run
+# 3. 設定環境變數和 secrets
+```
+
+#### 5. 初始化 Demo 帳號和 Scenarios
+```bash
+# Demo 帳號
+curl -X POST https://ai-square-frontend-731209836128.asia-east1.run.app/api/admin/fix-demo-accounts \
+  -H "Content-Type: application/json"
+
+# Scenarios
+make production-scenarios-init
+```
+
+#### 6. 驗證和監控
+```bash
+# 健康檢查
+make production-health
+
+# 查看日誌
+make production-logs
+
+# 設定監控
+make production-monitoring
+```
+
+### 🛠️ 快速重建命令彙總
+
+```bash
+# Local 環境
+npm run db:reset              # 完全重建本地資料庫
+
+# Staging 環境  
+make deploy-staging-full      # 完整重建 Staging（含 DB）
+
+# Production 環境
+make deploy-production-full   # 完整重建 Production（需確認）
+```
+
+### ⚠️ 重建前檢查清單
+
+- [ ] 確認是否需要備份現有資料
+- [ ] 確認 Schema 版本（v3 vs v4）
+- [ ] 確認環境變數設定正確
+- [ ] 確認 Service Account 權限
+- [ ] 確認 Secrets 已設定
+- [ ] 準備好回滾計畫
 
 ## 十三、初始化 Demo 帳號 (重要！)
 

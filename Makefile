@@ -177,21 +177,20 @@ help:
 	@echo "  $(GREEN)make gcp-deploy-cms$(NC)                            - 部署 CMS 到 Cloud Run"
 	@echo "  $(GREEN)make deploy-backend-gcp$(NC)                        - 部署後端到 GCP"
 	@echo ""
-	@echo "$(CYAN)Staging 環境:$(NC)"
-	@echo "  $(GREEN)make staging-check$(NC)                             - 檢查 Staging 部署前置條件"
-	@echo "  $(GREEN)make staging-db-init$(NC)                           - 初始化 Staging 資料庫 (Schema V4)"
-	@echo "  $(GREEN)make deploy-staging$(NC)                            - 部署到 Staging 環境"
-	@echo "  $(GREEN)make deploy-staging-full$(NC)                       - 完整 Staging 部署（含 DB）"
-	@echo "  $(GREEN)make staging-logs$(NC)                              - 查看 Staging logs"
-	@echo "  $(GREEN)make staging-db-connect$(NC)                        - 連接到 Staging 資料庫"
+	@echo "$(CYAN)Staging 環境 (統一部署系統):$(NC)"
+	@echo "  $(GREEN)make deploy-staging$(NC)                            - 🚀 部署到 Staging 環境（含資料庫初始化）"
+	@echo "  $(GREEN)make staging-logs$(NC)                              - 📋 查看 Staging logs"
+	@echo "  $(GREEN)make staging-db-connect$(NC)                        - 🔗 連接到 Staging 資料庫"
+	@echo "  $(GREEN)make staging-check$(NC)                             - 🔍 檢查 Staging 部署前置條件"
+	@echo "  $(GREEN)make staging-db-init$(NC)                           - 🗄️ 單獨初始化 Staging 資料庫"
 	@echo ""
-	@echo "$(CYAN)Production 環境:$(NC)"
-	@echo "  $(GREEN)make production-check$(NC)                          - 檢查 Production 部署前置條件"
-	@echo "  $(GREEN)make production-secrets$(NC)                        - 設定 Production Secrets"
-	@echo "  $(GREEN)make deploy-production$(NC)                         - 部署到 Production 環境"
-	@echo "  $(GREEN)make deploy-production-full$(NC)                    - 完整 Production 部署（含 DB）"
-	@echo "  $(GREEN)make production-logs$(NC)                           - 查看 Production logs"
-	@echo "  $(GREEN)make production-health$(NC)                         - 檢查 Production 健康狀態"
+	@echo "$(CYAN)Production 環境 (統一部署系統):$(NC)"
+	@echo "  $(GREEN)make deploy-production$(NC)                         - 🚀 部署到 Production 環境（含資料庫初始化）"
+	@echo "  $(GREEN)make production-logs$(NC)                           - 📋 查看 Production logs"
+	@echo "  $(GREEN)make production-health$(NC)                         - 🏥 檢查 Production 健康狀態"
+	@echo "  $(GREEN)make production-check$(NC)                          - 🔍 檢查 Production 部署前置條件"
+	@echo "  $(GREEN)make production-secrets$(NC)                        - 🔐 設定 Production Secrets"
+	@echo "  $(GREEN)make deploy-production-full$(NC)                    - 🔄 完整 Production 部署（強制重建）"
 	@echo ""
 	@echo "$(CYAN)部署檢查:$(NC)"
 	@echo "  $(GREEN)make check-deployment$(NC)                          - 檢查部署狀態"
@@ -526,27 +525,24 @@ deploy-backend-gcp:
 ## 檢查 Staging 部署前置條件
 staging-check:
 	@echo "$(CYAN)🔍 檢查 Staging 部署前置條件...$(NC)"
-	@cd frontend && ./scripts/staging-pre-check.sh
+	@cd frontend && ./scripts/pre-deploy-check.sh staging
 
 ## 初始化 Staging Cloud SQL 資料庫（Schema V4 with CASCADE DELETE）
 staging-db-init:
 	@echo "$(CYAN)🗄️  初始化 Staging Cloud SQL 資料庫 (Schema V4)...$(NC)"
-	@cd frontend && chmod +x scripts/init-staging-cloud-sql.sh && ./scripts/init-staging-cloud-sql.sh
+	@cd frontend && chmod +x scripts/init-cloud-sql.sh && ./scripts/init-cloud-sql.sh staging
 
-## 部署到 Staging 環境（使用 Cloud Build）
-deploy-staging: staging-check
-	@echo "$(GREEN)🚀 部署到 Staging 環境...$(NC)"
-	@echo "$(YELLOW)💡 提示：預設使用 Cloud Build（快 4 倍）$(NC)"
-	@cd frontend && SKIP_DB_INIT=1 ./deploy-staging.sh
+## 統一部署命令 - Staging
+deploy-staging:
+	@echo "$(GREEN)🚀 部署到 Staging 環境（統一部署系統）...$(NC)"
+	@cd frontend && chmod +x deploy.sh && ./deploy.sh staging
 	@echo "$(GREEN)✅ Staging 部署完成！$(NC)"
 
-## 完整 Staging 部署（含資料庫初始化）
-deploy-staging-full: staging-check staging-db-init deploy-staging
-	@echo "$(GREEN)✅ 完整 Staging 部署完成！$(NC)"
-	@echo "$(YELLOW)📌 請記得執行 clean flag 初始化資料：$(NC)"
-	@echo "  - /api/admin/init-assessment?clean=true"
-	@echo "  - /api/admin/init-pbl?clean=true"
-	@echo "  - /api/admin/init-discovery?clean=true"
+## 統一部署命令 - 本地測試
+deploy-local:
+	@echo "$(GREEN)🚀 本地環境測試...$(NC)"
+	@cd frontend && ./deploy.sh local
+	@echo "$(GREEN)✅ 本地測試完成！$(NC)"
 
 ## 查看 Staging logs
 staging-logs:
@@ -585,29 +581,24 @@ production-check:
 ## 設定 Production Secrets
 production-secrets:
 	@echo "$(BLUE)🔐 設定 Production Secrets...$(NC)"
-	@cd scripts && chmod +x setup-production-secrets.sh && ./setup-production-secrets.sh
+	@echo "$(YELLOW)📝 請手動設定 Production secrets（如果需要）$(NC)"
 
-## 部署到 Production 環境（使用 Cloud Build）
-deploy-production: production-check
-	@echo "$(RED)🚀 部署到 Production 環境...$(NC)"
-	@echo "$(YELLOW)💡 提示：預設使用 Cloud Build（快 4 倍，自動處理平台問題）$(NC)"
+## 統一部署命令 - Production
+deploy-production:
+	@echo "$(GREEN)🚀 部署到 Production 環境（統一部署系統）...$(NC)"
 	@echo "$(YELLOW)⚠️  警告: 這將部署到 PRODUCTION 環境！$(NC)"
 	@echo "按 Ctrl+C 取消，或等待 5 秒繼續..."
 	@sleep 5
-	@cd frontend && chmod +x deploy-production.sh && SKIP_DB_INIT=1 ./deploy-production.sh
+	@cd frontend && chmod +x deploy.sh && ./deploy.sh production
 	@echo "$(GREEN)✅ Production 部署完成！$(NC)"
-	@echo "$(YELLOW)📌 請執行以下命令初始化資料庫:$(NC)"
-	@echo "  curl -X POST \"https://ai-square-frontend-731209836128.asia-east1.run.app/api/admin/init-schema\" \\"
-	@echo "    -H \"x-admin-key: YOUR_ADMIN_KEY\" \\"
-	@echo "    -H \"Content-Type: application/json\""
 
-## 完整 Production 部署（含資料庫初始化）
-deploy-production-full: production-check production-secrets
-	@echo "$(RED)🚀 完整 Production 部署...$(NC)"
+## 完整 Production 部署（含資料庫初始化）- 使用統一部署系統
+deploy-production-full:
+	@echo "$(RED)🚀 執行完整 Production 部署（含資料庫初始化）...$(NC)"
 	@echo "$(YELLOW)⚠️  警告: 這將部署到 PRODUCTION 環境並初始化資料庫！$(NC)"
 	@echo "按 Ctrl+C 取消，或等待 5 秒繼續..."
 	@sleep 5
-	@cd frontend && chmod +x deploy-production.sh && ./deploy-production.sh
+	@cd frontend && chmod +x deploy.sh && ./deploy.sh production
 	@echo "$(GREEN)✅ 完整 Production 部署完成！$(NC)"
 	@echo "$(BLUE)🌐 Production URL: https://ai-square-frontend-731209836128.asia-east1.run.app$(NC)"
 

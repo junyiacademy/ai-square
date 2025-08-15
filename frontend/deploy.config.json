@@ -1,0 +1,99 @@
+{
+  "environments": {
+    "staging": {
+      "projectId": "ai-square-463013",
+      "region": "asia-east1",
+      "serviceName": "ai-square-staging",
+      "cloudSQL": {
+        "instance": "ai-square-db-staging-asia",
+        "ip": "34.80.67.129",
+        "database": "ai_square_db",
+        "user": "postgres"
+      },
+      "resources": {
+        "memory": "512Mi",
+        "cpu": "1",
+        "timeout": 60,
+        "concurrency": 100
+      },
+      "demoAccounts": [
+        {
+          "email": "student@example.com",
+          "password": "student123",
+          "passwordHash": "$2b$10$GSLI4.ooV/jrN5RZMOAyf.SftBwwRsbmC.SMRDeDRLH1uCnIapR5e"
+        },
+        {
+          "email": "teacher@example.com",
+          "password": "teacher123",
+          "passwordHash": "$2b$10$xkTFHLjtA4BvhZrW8Pm6NOV/zJn5SX7gxZB9MSUcaptGrZrMPJJ5e"
+        },
+        {
+          "email": "admin@example.com",
+          "password": "admin123",
+          "passwordHash": "$2b$10$9nEfXi5LULvFjV/LKp8WFuglp9Y5jttH9O4Ix0AwpVg4OZdvtTbiS"
+        }
+      ]
+    },
+    "production": {
+      "projectId": "ai-square-463013",
+      "region": "asia-east1",
+      "serviceName": "ai-square-production",
+      "cloudSQL": {
+        "instance": "ai-square-db-production",
+        "ip": "TBD",
+        "database": "ai_square_db",
+        "user": "postgres"
+      },
+      "resources": {
+        "memory": "1Gi",
+        "cpu": "2",
+        "timeout": 60,
+        "concurrency": 200
+      },
+      "demoAccounts": [
+        {
+          "email": "demo@ai-square.com",
+          "password": "demo2025",
+          "passwordHash": "TBD"
+        }
+      ]
+    },
+    "local": {
+      "database": {
+        "host": "127.0.0.1",
+        "port": 5433,
+        "database": "ai_square_db",
+        "user": "postgres",
+        "password": "postgres"
+      },
+      "demoAccounts": [
+        {
+          "email": "student@example.com",
+          "password": "student123",
+          "passwordHash": "$2b$10$GSLI4.ooV/jrN5RZMOAyf.SftBwwRsbmC.SMRDeDRLH1uCnIapR5e"
+        },
+        {
+          "email": "teacher@example.com",
+          "password": "teacher123",
+          "passwordHash": "$2b$10$xkTFHLjtA4BvhZrW8Pm6NOV/zJn5SX7gxZB9MSUcaptGrZrMPJJ5e"
+        },
+        {
+          "email": "admin@example.com",
+          "password": "admin123",
+          "passwordHash": "$2b$10$9nEfXi5LULvFjV/LKp8WFuglp9Y5jttH9O4Ix0AwpVg4OZdvtTbiS"
+        }
+      ]
+    }
+  },
+  "common": {
+    "schemaFile": "src/lib/repositories/postgresql/schema-v4.sql",
+    "seedFile": "src/lib/repositories/postgresql/seeds/01-demo-accounts.sql",
+    "buildTimeout": "20m",
+    "serviceAccount": "ai-square-service",
+    "apis": {
+      "assessment": "/api/admin/init-assessment",
+      "pbl": "/api/admin/init-pbl",
+      "discovery": "/api/admin/init-discovery"
+    }
+  }
+}
