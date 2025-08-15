@@ -879,7 +879,77 @@ docker build -t ${IMAGE_NAME}:${IMAGE_TAG} -f ${DOCKERFILE} .
 
 ## 十三、初始化 Demo 帳號 (重要！)
 
-### Production Demo 帳號設定
+### 🌱 Database Seed 機制（推薦方式）
+
+從 2025/01 開始，專案使用自動化 seed 機制來管理 demo 帳號。
+
+#### Seed 檔案結構
+```
+src/lib/repositories/postgresql/
+├── schema-v4.sql                    # 主要 schema
+└── seeds/
+    ├── 01-demo-accounts.sql         # Demo 帳號定義
+    └── seed-runner.ts               # TypeScript seed 執行器
+```
+
+#### Local 環境自動 Seed
+
+使用 Docker Compose 時會自動執行 seed：
+
+```bash
+# 完全重建資料庫（包含自動 seed）
+npm run db:reset
+
+# 分別執行
+npm run db:drop    # 清除舊資料庫
+npm run db:init    # 啟動新資料庫（自動執行 schema + seed）
+
+# 手動執行 seed（如果需要）
+npm run seed
+```
+
+Docker Compose 會自動掛載並執行：
+1. `schema-v4.sql` - 建立資料表結構
+2. `01-demo-accounts.sql` - 建立 demo 帳號
+
+#### Demo 帳號列表
+
+| Email | 密碼 | 角色 | 說明 |
+|-------|------|------|------|
+| student@example.com | student123 | student | 學生帳號 |
+| teacher@example.com | teacher123 | teacher | 教師帳號 |
+| admin@example.com | admin123 | admin | 管理員帳號 |
+| parent@example.com | parent123 | parent | 家長帳號 |
+| guest@example.com | guest123 | guest | 訪客帳號 |
+| test@example.com | password123 | student | 自動測試用帳號 |
+
+#### Cloud SQL 初始化（Staging/Production）
+
+對於 Cloud SQL，需要手動執行 seed：
+
+```bash
+# 1. 連線到 Cloud SQL
+gcloud sql connect INSTANCE_NAME --user=postgres --database=ai_square_db
+
+# 2. 執行 schema（如果還沒有）
+\i schema-v4.sql
+
+# 3. 執行 seed
+\i seeds/01-demo-accounts.sql
+
+# 4. 驗證
+SELECT email, role FROM users WHERE email LIKE '%@example.com';
+```
+
+或使用 API 端點（如果有實作）：
+
+```bash
+curl -X POST "https://YOUR-SERVICE-URL/api/admin/seed-demo-accounts" \
+  -H "Content-Type: application/json" \
+  -H "X-Admin-Key: YOUR_ADMIN_KEY"
+```
+
+### Production Demo 帳號設定（舊方式，僅供參考）
 
 Production 環境需要初始化標準 demo 帳號以供測試使用。
 
