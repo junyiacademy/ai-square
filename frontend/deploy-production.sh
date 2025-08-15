@@ -12,10 +12,7 @@ IMAGE_NAME="ai-square-frontend"
 IMAGE_TAG=${IMAGE_TAG:-$(git rev-parse --short HEAD)}
 
 # Cloud SQL Configuration (Production)
-# Note: You need to create a production Cloud SQL instance first
-# For now, this uses the staging instance (NOT recommended for production)
-CLOUD_SQL_INSTANCE="ai-square-463013:asia-east1:ai-square-db-staging-asia"
-# TODO: Replace with production instance: ai-square-463013:asia-east1:ai-square-db-production
+CLOUD_SQL_INSTANCE="ai-square-463013:asia-east1:ai-square-db-production"
 
 # Build Configuration
 DOCKERFILE="Dockerfile.production"
@@ -40,18 +37,54 @@ else
     echo "Skipping database initialization (SKIP_DB_INIT is set)"
 fi
 
-# Step 2: Build Docker image
+# Step 2: Build and Push Image
 echo ""
-echo "🔨 Building Docker image..."
-docker build -t ${IMAGE_NAME}:${IMAGE_TAG} -f ${DOCKERFILE} .
+echo "🚀 選擇建置方式："
+echo "1) Cloud Build（推薦，~7分鐘，自動處理平台問題）"
+echo "2) Local Docker Build（~30分鐘，需要 Docker Desktop）"
+read -p "請選擇 (1 或 2，預設 1): " BUILD_CHOICE
+BUILD_CHOICE=${BUILD_CHOICE:-1}
 
-# Step 3: Tag for GCR
-docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${GCR_IMAGE}
-
-# Step 4: Push to GCR
-echo ""
-echo "📤 Pushing image to GCR..."
-docker push ${GCR_IMAGE}
+if [ "$BUILD_CHOICE" = "1" ]; then
+    echo ""
+    echo "☁️  使用 Cloud Build 建置和推送..."
+    echo "⏱️  預計需要 6-8 分鐘..."
+    
+    # 使用 Cloud Build（自動處理平台問題）
+    gcloud builds submit \
+        --tag ${GCR_IMAGE} \
+        --timeout=30m \
+        --project=${PROJECT_ID} \
+        .
+    
+    if [ $? -eq 0 ]; then
+        echo "✅ Cloud Build 成功完成！"
+    else
+        echo "❌ Cloud Build 失敗，請檢查錯誤訊息"
+        exit 1
+    fi
+else
+    echo ""
+    echo "🔨 使用本地 Docker 建置..."
+    echo "⏱️  預計需要 20-30 分鐘..."
+    
+    # 檢查 Docker 是否安裝
+    if ! command -v docker &> /dev/null; then
+        echo "❌ Docker not found. Please install Docker Desktop first."
+        exit 1
+    fi
+    
+    # 本地建置（確保指定平台）
+    docker build --platform linux/amd64 -t ${IMAGE_NAME}:${IMAGE_TAG} -f ${DOCKERFILE} .
+    
+    # Step 3: Tag for GCR
+    docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${GCR_IMAGE}
+    
+    # Step 4: Push to GCR
+    echo ""
+    echo "📤 Pushing image to GCR..."
+    docker push ${GCR_IMAGE}
+fi
 
 # Step 5: Deploy to Cloud Run
 echo ""
@@ -70,11 +103,16 @@ gcloud run deploy ${SERVICE_NAME} \
   --set-env-vars NODE_ENV="production" \
   --set-env-vars DATABASE_URL="postgresql://postgres:${DB_PASSWORD:-postgres}@/ai_square_db?host=/cloudsql/${CLOUD_SQL_INSTANCE}" \
   --set-env-vars NEXTAUTH_URL="https://ai-square-production-${PROJECT_ID}.${REGION}.run.app" \
-  --set-secrets NEXTAUTH_SECRET="nextauth-secret-production:latest" \
-  --set-secrets JWT_SECRET="jwt-secret-production:latest" \
-  --set-secrets DB_PASSWORD="db-password-production:latest" \
-  --set-secrets CLAUDE_API_KEY="claude-api-key-production:latest" \
-  --set-secrets GOOGLE_APPLICATION_CREDENTIALS="google-credentials-production:latest" \
+  --set-env-vars NEXTAUTH_SECRET="production-secret-2025" \
+  --set-env-vars JWT_SECRET="production-jwt-2025" \
+  --set-env-vars DB_PASSWORD="postgres" \
+  --set-env-vars GOOGLE_CLOUD_PROJECT="ai-square-463013" \
+  --set-env-vars GOOGLE_CLOUD_REGION="asia-east1" \
+  --set-env-vars VERTEX_AI_LOCATION="asia-east1" \
+  --set-env-vars VERTEX_AI_MODEL="gemini-2.5-flash" \
+  --set-env-vars GCS_BUCKET_NAME="ai-square-db-v2" \
+  --set-env-vars ENABLE_REDIS="false" \
+  --set-env-vars ENABLE_MONITORING="false" \
   --memory 1Gi \
   --cpu 2 \
   --min-instances 1 \

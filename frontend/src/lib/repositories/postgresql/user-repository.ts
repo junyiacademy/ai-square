@@ -175,7 +175,7 @@ export class PostgreSQLUserRepository implements IUserRepository {
   async updateLastActive(id: string): Promise<void> {
     const query = `
       UPDATE users
-      SET last_active_at = CURRENT_TIMESTAMP
+      SET last_active_date = CURRENT_DATE
       WHERE id = $1
     `;
 

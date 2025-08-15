@@ -37,15 +37,51 @@ else
     echo "Skipping database initialization (SKIP_DB_INIT is set)"
 fi
 
-# Step 1: Build Docker image
+# Step 1: Build and Push Image
 echo ""
-echo "🔨 Building Docker image..."
-docker build --platform linux/amd64 -f Dockerfile.staging -t gcr.io/$PROJECT_ID/$SERVICE_NAME:$IMAGE_TAG .
+echo "🚀 選擇建置方式："
+echo "1) Cloud Build（推薦，~7分鐘，自動處理平台問題）"
+echo "2) Local Docker Build（~30分鐘，需要 Docker Desktop）"
+read -p "請選擇 (1 或 2，預設 1): " BUILD_CHOICE
+BUILD_CHOICE=${BUILD_CHOICE:-1}
 
-# Step 2: Push to Google Container Registry
-echo ""
-echo "📤 Pushing image to GCR..."
-docker push gcr.io/$PROJECT_ID/$SERVICE_NAME:$IMAGE_TAG
+if [ "$BUILD_CHOICE" = "1" ]; then
+    echo ""
+    echo "☁️  使用 Cloud Build 建置和推送..."
+    echo "⏱️  預計需要 6-8 分鐘..."
+    
+    # 使用 Cloud Build（自動處理平台問題）
+    gcloud builds submit \
+        --tag gcr.io/$PROJECT_ID/$SERVICE_NAME:$IMAGE_TAG \
+        --timeout=30m \
+        --project=$PROJECT_ID \
+        .
+    
+    if [ $? -eq 0 ]; then
+        echo "✅ Cloud Build 成功完成！"
+    else
+        echo "❌ Cloud Build 失敗，請檢查錯誤訊息"
+        exit 1
+    fi
+else
+    echo ""
+    echo "🔨 使用本地 Docker 建置..."
+    echo "⏱️  預計需要 20-30 分鐘..."
+    
+    # 檢查 Docker 是否安裝
+    if ! command -v docker &> /dev/null; then
+        echo "❌ Docker not found. Please install Docker Desktop first."
+        exit 1
+    fi
+    
+    # 本地建置（確保指定平台）
+    docker build --platform linux/amd64 -f Dockerfile.staging -t gcr.io/$PROJECT_ID/$SERVICE_NAME:$IMAGE_TAG .
+    
+    # Step 2: Push to Google Container Registry
+    echo ""
+    echo "📤 Pushing image to GCR..."
+    docker push gcr.io/$PROJECT_ID/$SERVICE_NAME:$IMAGE_TAG
+fi
 
 # Step 3: Deploy to Cloud Run
 echo ""

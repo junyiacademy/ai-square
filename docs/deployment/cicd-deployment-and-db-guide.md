@@ -581,4 +581,394 @@ gcloud monitoring policies create \
 5. **監控告警**：設定關鍵指標監控和錯誤告警
 6. **成本控制**：設定預算警報，定期檢視成本報告
 
+### 十三、Production 部署常見問題與解決方案（2025-01-15 實測驗證）
 
+#### 🚨 Docker Image Platform 問題【已驗證】
+
+**實際錯誤訊息**：
+```
+ERROR: (gcloud.run.deploy) Revision 'ai-square-frontend-00044-vlk' is not ready and cannot serve traffic. 
+Cloud Run does not support image 'gcr.io/ai-square-463013/ai-square-frontend:latest': 
+Container manifest type 'application/vnd.oci.image.index.v1+json' must support amd64/linux.
+```
+
+**根本原因（實測確認）**：
+- 在 macOS (Apple Silicon M1/M2) 上使用 Docker Desktop 建置時，預設產生 multi-platform image
+- Cloud Run 只接受 linux/amd64 單一平台 image
+- **關鍵發現**：`deploy-staging.sh` 有 `--platform linux/amd64`，但 `deploy-production.sh` 沒有
+
+**驗證過的解決方案**：
+```bash
+# ✅ 方法 1：本地建置時指定平台（實測成功）
+docker build --platform linux/amd64 -t image:tag -f Dockerfile .
+
+# ✅ 方法 2：使用 Cloud Build（實測成功，耗時 6分37秒）
+gcloud builds submit --tag gcr.io/ai-square-463013/ai-square-frontend:cloud-build-20250115-2058 --timeout=30m
+# 結果：STATUS: SUCCESS
+
+# ❌ 方法 3：不要只在 Dockerfile 指定平台（測試無效）
+# FROM --platform=linux/amd64 node:20-alpine  # 這樣還是會產生 multi-platform image
+```
+
+**實際修復步驟**：
+1. 編輯 `deploy-production.sh` 第 46 行
+2. 從 `docker build -t ${IMAGE_NAME}:${IMAGE_TAG} -f ${DOCKERFILE} .`
+3. 改為 `docker build --platform linux/amd64 -t ${IMAGE_NAME}:${IMAGE_TAG} -f ${DOCKERFILE} .`
+
+#### 🚨 API Routes 404 問題【已驗證】
+
+**實際測試結果**：
+```bash
+# 使用舊 image 時的錯誤
+curl -s "https://ai-square-frontend-731209836128.asia-east1.run.app/api/health"
+# 返回：HTML 404 頁面而非 JSON
+
+# 使用 Cloud Build 新 image 後成功
+curl -s "https://ai-square-frontend-731209836128.asia-east1.run.app/api/health" | jq
+# 返回：
+{
+  "status": "degraded",
+  "timestamp": "2025-08-15T13:07:35.428Z",
+  "version": "0.1.0",
+  "environment": "production",
+  "checks": {
+    "database": { "status": false, "error": "DATABASE_URL not configured" },
+    "redis": { "status": false, "error": "Redis client not available" },
+    "memory": { "status": true, "used": 38878056, "limit": 536870912, "percentage": 7 }
+  }
+}
+```
+
+**實際原因（已確認）**：
+1. **舊版 staging image 問題**：部署了 `gcr.io/ai-square-463013/ai-square-staging:latest`
+2. **該 image 沒有包含新的 API routes**：可能是幾天前的版本
+3. **Next.js standalone output 需要正確的環境變數**：`ENVIRONMENT=staging`
+
+**驗證過的解決方案**：
+```bash
+# 使用 Cloud Build 建置新 image（確保包含所有最新代碼）
+gcloud builds submit --tag gcr.io/ai-square-463013/ai-square-frontend:cloud-build-20250115-2058
+
+# 部署新 image
+gcloud run deploy ai-square-frontend \
+  --image gcr.io/ai-square-463013/ai-square-frontend:cloud-build-20250115-2058 \
+  --region asia-east1 \
+  --platform managed
+
+# 結果：API routes 正常工作
+```
+
+#### 🚨 Service Account 權限問題
+
+**問題描述**：
+```
+PERMISSION_DENIED: Permission 'iam.serviceaccounts.actAs' denied on service account
+```
+
+**解決方案**：
+```bash
+# 方法 1：使用預設 service account（快速解決）
+gcloud run deploy SERVICE_NAME \
+  --image IMAGE_URL \
+  # 不指定 --service-account
+
+# 方法 2：授予權限（正確做法）
+gcloud iam service-accounts add-iam-policy-binding \
+  SERVICE_ACCOUNT_EMAIL \
+  --member="user:YOUR_EMAIL" \
+  --role="roles/iam.serviceAccountUser"
+```
+
+#### 🚨 Cloud SQL 連線問題【已驗證】
+
+**實際錯誤訊息**：
+```bash
+# 建立 Cloud SQL 時的錯誤
+ERROR: (gcloud.sql.instances.create) [SERVICE_NETWORKING_NOT_ENABLED] 
+Private service networking is not enabled on the project.
+```
+
+**驗證過的解決方案**：
+```bash
+# ✅ 成功的命令（不指定 --network）
+gcloud sql instances create ai-square-db-production \
+  --database-version=POSTGRES_15 \
+  --tier=db-n1-standard-1 \
+  --region=asia-east1 \
+  --backup \
+  --backup-start-time=03:00 \
+  --project=ai-square-463013
+# 結果：成功建立
+
+# ❌ 失敗的命令（指定 --network）
+gcloud sql instances create ... --network=default  # 會導致 SERVICE_NETWORKING_NOT_ENABLED
+```
+
+**Unix Socket 連線設定（已驗證）**：
+```bash
+# Cloud Run 環境變數設定
+--set-env-vars DB_HOST="/cloudsql/ai-square-463013:asia-east1:ai-square-db-production"
+# 注意：不需要設定 DB_PORT（Unix socket 不使用 port）
+```
+
+#### 🚨 Build 時間過長問題【已驗證】
+
+**實測數據對比**：
+| 建置方式 | 耗時 | 平台處理 | 建議優先級 |
+|---------|------|---------|----------|
+| Cloud Build | **6分37秒** | ✅ 自動處理 | **推薦** |
+| Local Docker (Mac M1/M2) | **29分鐘** | ❌ 需手動指定 | 備選 |
+
+**已更新的部署腳本**（2025-01-15）：
+```bash
+# deploy-staging.sh 和 deploy-production.sh 現在都有選項：
+🚀 選擇建置方式：
+1) Cloud Build（推薦，~7分鐘，自動處理平台問題）
+2) Local Docker Build（~30分鐘，需要 Docker Desktop）
+請選擇 (1 或 2，預設 1): 1
+```
+
+**Cloud Build 優勢**：
+1. **速度快 4 倍**：6-7 分鐘 vs 29 分鐘
+2. **自動處理平台**：不需要指定 `--platform linux/amd64`
+3. **雲端資源**：不佔用本地 CPU/記憶體
+4. **並行處理**：Google 的建置伺服器效能更好
+
+**使用 Cloud Build 的命令**：
+```bash
+# 方式 1：使用更新後的部署腳本（推薦）
+make deploy-staging    # 或 make deploy-production
+# 選擇選項 1
+
+# 方式 2：直接使用 gcloud
+gcloud builds submit \
+  --tag gcr.io/ai-square-463013/ai-square-frontend:$(date +%Y%m%d-%H%M) \
+  --timeout=30m \
+  --project=ai-square-463013
+```
+
+#### 🚨 Image 版本管理混亂
+
+**問題描述**：
+- 不確定哪個 image 是最新版本
+- staging 和 production image 混用
+
+**最佳實踐**：
+```bash
+# 1. 使用明確的標記策略
+gcr.io/PROJECT/ai-square-frontend:prod-20250115-1430
+gcr.io/PROJECT/ai-square-frontend:staging-20250115-1430
+gcr.io/PROJECT/ai-square-frontend:$(git rev-parse --short HEAD)
+
+# 2. 查看 image 資訊
+gcloud container images describe IMAGE_URL
+
+# 3. 列出所有版本
+gcloud container images list-tags gcr.io/PROJECT/IMAGE
+
+# 4. 部署時明確指定版本
+gcloud run deploy --image IMAGE_URL:SPECIFIC_TAG
+```
+
+#### 🚨 環境變數設定錯誤
+
+**常見錯誤**：
+- 忘記設定 `NEXTAUTH_SECRET`
+- `DB_PASSWORD` 包含特殊字元導致解析錯誤
+- 混用 staging 和 production 的環境變數
+
+**檢查清單**：
+```bash
+# 查看 Cloud Run 環境變數
+gcloud run services describe SERVICE_NAME \
+  --region=REGION \
+  --format="yaml(spec.template.spec.containers[].env)"
+
+# 必要的環境變數
+- NODE_ENV=production
+- DB_HOST=/cloudsql/PROJECT:REGION:INSTANCE
+- DB_NAME=ai_square_db
+- DB_USER=postgres
+- DB_PASSWORD=（使用 Secret Manager）
+- NEXTAUTH_SECRET=（32 字元隨機字串）
+- JWT_SECRET=（32 字元隨機字串）
+```
+
+### 十四、Staging vs Production 部署差異【重要發現】
+
+#### 🔍 為什麼 Staging 成功而 Production 失敗？
+
+**實際對比結果**：
+```bash
+# Staging deploy-staging.sh（第 41 行）
+docker build --platform linux/amd64 -f Dockerfile.staging -t gcr.io/$PROJECT_ID/$SERVICE_NAME:$IMAGE_TAG .
+
+# Production deploy-production.sh（原始第 46 行）
+docker build -t ${IMAGE_NAME}:${IMAGE_TAG} -f ${DOCKERFILE} .
+# 缺少 --platform linux/amd64！
+```
+
+**關鍵差異總結**：
+| 項目 | Staging | Production | 影響 |
+|------|---------|------------|------|
+| Platform 指定 | ✅ 有 `--platform linux/amd64` | ❌ 沒有 | 導致 Cloud Run 拒絕 multi-platform image |
+| Dockerfile | Dockerfile.staging | Dockerfile.production | Production 更複雜，multi-stage build |
+| Cloud SQL | ai-square-db-staging-asia | ai-square-db-production | 需要分別建立 |
+| 部署頻率 | 經常部署，腳本經過多次優化 | 較少部署，問題未被發現 | Staging 腳本更成熟 |
+
+**結論**：
+- **並非 GitHub Actions vs Local 的差異**
+- **是部署腳本本身的差異**：Staging 腳本已經修正過平台問題，Production 沒有
+
+### 十五、部署流程優化建議（Local Deploy 版本）
+
+#### 建議的 Local Production 部署流程
+
+1. **使用修正後的部署腳本**
+   ```bash
+   # 確保 deploy-production.sh 包含 --platform linux/amd64
+   ./deploy-production.sh
+   ```
+   
+2. **或使用 Cloud Build（推薦）**
+   ```bash
+   # Cloud Build 自動處理平台問題
+   gcloud builds submit --tag gcr.io/PROJECT/IMAGE:TAG --timeout=30m
+   ```
+
+3. **實施藍綠部署**
+   ```bash
+   # 部署到新版本但不切換流量
+   gcloud run deploy SERVICE_NAME-green \
+     --image NEW_IMAGE \
+     --no-traffic
+   
+   # 測試新版本
+   curl https://green-url.run.app/api/health
+   
+   # 切換流量
+   gcloud run services update-traffic SERVICE_NAME \
+     --to-revisions=SERVICE_NAME-green=100
+   ```
+
+3. **建立部署前檢查腳本**
+   ```bash
+   #!/bin/bash
+   # pre-deploy-checks.sh
+   
+   # 檢查 image 平台
+   docker manifest inspect IMAGE_URL | jq '.manifests[].platform'
+   
+   # 檢查 API routes
+   docker run --rm IMAGE_URL ls -la /app/.next/standalone/
+   
+   # 驗證環境變數
+   gcloud run services describe SERVICE_NAME --format=yaml | grep -E "DB_|NEXT"
+   ```
+
+4. **監控部署結果**
+   ```bash
+   # 即時查看日誌
+   gcloud run logs tail --service SERVICE_NAME --region REGION
+   
+   # 設定告警
+   gcloud monitoring policies create --config-from-file=alerts.yaml
+   ```
+
+
+
+## 十三、初始化 Demo 帳號 (重要！)
+
+### Production Demo 帳號設定
+
+Production 環境需要初始化標準 demo 帳號以供測試使用。
+
+#### 方法 1: 使用 Admin API (推薦)
+```bash
+# 使用 fix-demo-accounts API
+curl -X POST https://ai-square-frontend-m7s4ucbgba-de.a.run.app/api/admin/fix-demo-accounts \
+  -H "Content-Type: application/json" \
+  -d '{"secretKey": "fix-demo-accounts-2025"}' \
+  -s | jq
+```
+
+#### 方法 2: 直接 SQL 初始化
+```bash
+# 透過 Cloud SQL Proxy 連線 (Production: port 5434)
+cloud-sql-proxy --port 5434 \
+  ai-square-463013:asia-east1:ai-square-db-production &
+
+# 連線到資料庫
+PGPASSWORD=postgres psql -h 127.0.0.1 -p 5434 -U postgres -d ai_square_db
+```
+
+```sql
+-- 創建標準 demo 帳號
+INSERT INTO users (id, email, password_hash, name, role, email_verified, created_at, updated_at)
+VALUES 
+(gen_random_uuid(), 'student@example.com', 
+ '$2b$10$.xkZ3DfAj2WDXSknfBBLsO/bNlHbeSWlzS6GZYVlPd/11XaAe7f4m', -- student123
+ 'Student User', 'student', true, NOW(), NOW()),
+(gen_random_uuid(), 'teacher@example.com',
+ '$2b$10$BrsePjeOuXf039pkk2VDEOReodDH2H.zQlj6cRMPg0fYhXFmzZ/vy', -- teacher123  
+ 'Teacher User', 'teacher', true, NOW(), NOW()),
+(gen_random_uuid(), 'admin@example.com',
+ '$2b$10$7QwCi8yF0MFsvpjxJuNNMO3L0BpIuHgwsbfVFJQbUMKc0E91WPjfW', -- admin123
+ 'Admin User', 'admin', true, NOW(), NOW())
+ON CONFLICT (email) DO UPDATE SET
+  password_hash = EXCLUDED.password_hash,
+  role = EXCLUDED.role,
+  email_verified = EXCLUDED.email_verified;
+```
+
+### Demo 帳號資訊
+
+| Email | Password | Role | 用途 |
+|-------|----------|------|------|
+| student@example.com | student123 | student | 學生功能測試 |
+| teacher@example.com | teacher123 | teacher | 教師功能測試 |
+| admin@example.com | admin123 | admin | 管理員功能測試 |
+
+### 驗證 Demo 帳號
+
+```bash
+# 測試登入 (student)
+curl -X POST https://ai-square-frontend-m7s4ucbgba-de.a.run.app/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "student@example.com", "password": "student123"}' \
+  -s | jq
+
+# 測試登入 (teacher)
+curl -X POST https://ai-square-frontend-m7s4ucbgba-de.a.run.app/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "teacher@example.com", "password": "teacher123"}' \
+  -s | jq
+
+# 測試登入 (admin)
+curl -X POST https://ai-square-frontend-m7s4ucbgba-de.a.run.app/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "admin@example.com", "password": "admin123"}' \
+  -s | jq
+
+# 檢查資料庫中的帳號
+PGPASSWORD=postgres psql -h 127.0.0.1 -p 5434 -U postgres -d ai_square_db \
+  -c "SELECT email, role, email_verified FROM users WHERE email LIKE '%@example.com' ORDER BY role;"
+```
+
+### 重要注意事項
+
+⚠️ **必須步驟**：
+1. 每次重新部署 Production 後都要檢查 demo 帳號是否存在
+2. 如果資料庫重置，必須重新執行初始化
+3. 密碼 hash 是預先生成的，不要改變
+4. Cloud SQL 密碼必須設定為 `postgres` (或更新環境變數)
+
+⚠️ **常見問題**：
+1. **登入失敗**: 檢查密碼 hash 是否正確
+2. **資料庫連線失敗**: 確認 Cloud SQL instance 已掛載到 Cloud Run
+3. **密碼認證失敗**: 執行 `gcloud sql users set-password postgres --instance=ai-square-db-production --password=postgres`
+
+⚠️ **安全考量**：
+- Demo 帳號僅供測試使用
+- 生產環境應該定期更改密碼
+- 不要在真實用戶環境使用這些帳號

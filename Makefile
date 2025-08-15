@@ -533,9 +533,10 @@ staging-db-init:
 	@echo "$(CYAN)🗄️  初始化 Staging Cloud SQL 資料庫 (Schema V4)...$(NC)"
 	@cd frontend && chmod +x scripts/init-staging-cloud-sql.sh && ./scripts/init-staging-cloud-sql.sh
 
-## 部署到 Staging 環境
+## 部署到 Staging 環境（使用 Cloud Build）
 deploy-staging: staging-check
 	@echo "$(GREEN)🚀 部署到 Staging 環境...$(NC)"
+	@echo "$(YELLOW)💡 提示：預設使用 Cloud Build（快 4 倍）$(NC)"
 	@cd frontend && SKIP_DB_INIT=1 ./deploy-staging.sh
 	@echo "$(GREEN)✅ Staging 部署完成！$(NC)"
 
@@ -586,9 +587,10 @@ production-secrets:
 	@echo "$(BLUE)🔐 設定 Production Secrets...$(NC)"
 	@cd scripts && chmod +x setup-production-secrets.sh && ./setup-production-secrets.sh
 
-## 部署到 Production 環境
+## 部署到 Production 環境（使用 Cloud Build）
 deploy-production: production-check
 	@echo "$(RED)🚀 部署到 Production 環境...$(NC)"
+	@echo "$(YELLOW)💡 提示：預設使用 Cloud Build（快 4 倍，自動處理平台問題）$(NC)"
 	@echo "$(YELLOW)⚠️  警告: 這將部署到 PRODUCTION 環境！$(NC)"
 	@echo "按 Ctrl+C 取消，或等待 5 秒繼續..."
 	@sleep 5

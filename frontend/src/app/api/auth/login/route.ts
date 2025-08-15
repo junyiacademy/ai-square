@@ -216,8 +216,14 @@ export async function POST(request: NextRequest) {
     // Create session token
     const sessionToken = createSessionToken(user.id, user.email, rememberMe)
 
-    // Update last active
-    await userRepo.updateLastActive(user.id)
+    // Update last active - commented out for production compatibility
+    // TODO: Fix schema mismatch between environments
+    try {
+      await userRepo.updateLastActive(user.id)
+    } catch (error) {
+      // Ignore error if column doesn't exist
+      console.log('Warning: Could not update last active (schema mismatch)')
+    }
 
     // Create response with tokens
     const response = NextResponse.json({

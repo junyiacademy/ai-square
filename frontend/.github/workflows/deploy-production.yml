@@ -18,8 +18,7 @@ env:
   PROJECT_ID: ai-square-463013
   REGION: asia-east1
   SERVICE_NAME: ai-square-frontend
-  # TODO: Create production Cloud SQL instance and update this
-  CLOUD_SQL_INSTANCE: ai-square-463013:asia-east1:ai-square-db-staging-asia
+  CLOUD_SQL_INSTANCE: ai-square-463013:asia-east1:ai-square-db-production
 
 jobs:
   deploy:

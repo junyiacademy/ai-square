@@ -431,7 +431,7 @@ describe('PostgreSQLUserRepository', () => {
       await repository.updateLastActive('user-123');
 
       expect(mockPool.query).toHaveBeenCalledWith(
-        expect.stringContaining('SET last_active_at = CURRENT_TIMESTAMP'),
+        expect.stringContaining('SET last_active_date = CURRENT_DATE'),
         ['user-123']
       );
     });
