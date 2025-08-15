@@ -30,7 +30,7 @@ export class PostgreSQLUserRepository implements IUserRepository {
         level, total_xp as "totalXp", learning_preferences as "learningPreferences",
         onboarding_completed as "onboardingCompleted",
         created_at as "createdAt", updated_at as "updatedAt",
-        last_active_at as "lastActiveAt", metadata,
+        last_active_date as "lastActiveAt", metadata,
         role, email_verified as "emailVerified",
         email_verified_at as "emailVerifiedAt"
       FROM users
@@ -48,7 +48,7 @@ export class PostgreSQLUserRepository implements IUserRepository {
         level, total_xp as "totalXp", learning_preferences as "learningPreferences",
         onboarding_completed as "onboardingCompleted",
         created_at as "createdAt", updated_at as "updatedAt",
-        last_active_at as "lastActiveAt", metadata,
+        last_active_date as "lastActiveAt", metadata,
         password_hash as "passwordHash", role, email_verified as "emailVerified",
         email_verified_at as "emailVerifiedAt"
       FROM users
@@ -69,7 +69,7 @@ export class PostgreSQLUserRepository implements IUserRepository {
         level, total_xp as "totalXp", learning_preferences as "learningPreferences",
         onboarding_completed as "onboardingCompleted",
         created_at as "createdAt", updated_at as "updatedAt",
-        last_active_at as "lastActiveAt", metadata
+        last_active_date as "lastActiveAt", metadata
     `;
 
     const { rows } = await this.pool.query(query, [
@@ -130,7 +130,7 @@ export class PostgreSQLUserRepository implements IUserRepository {
         level, total_xp as "totalXp", learning_preferences as "learningPreferences",
         onboarding_completed as "onboardingCompleted",
         created_at as "createdAt", updated_at as "updatedAt",
-        last_active_at as "lastActiveAt", metadata
+        last_active_date as "lastActiveAt", metadata
     `;
 
     const { rows } = await this.pool.query(query, values);
@@ -162,7 +162,7 @@ export class PostgreSQLUserRepository implements IUserRepository {
         level, total_xp as "totalXp", learning_preferences as "learningPreferences",
         onboarding_completed as "onboardingCompleted",
         created_at as "createdAt", updated_at as "updatedAt",
-        last_active_at as "lastActiveAt", metadata
+        last_active_date as "lastActiveAt", metadata
       FROM users
       ORDER BY ${orderBy} ${order}
       LIMIT $1 OFFSET $2
