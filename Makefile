@@ -185,6 +185,14 @@ help:
 	@echo "  $(GREEN)make staging-logs$(NC)                              - 查看 Staging logs"
 	@echo "  $(GREEN)make staging-db-connect$(NC)                        - 連接到 Staging 資料庫"
 	@echo ""
+	@echo "$(CYAN)Production 環境:$(NC)"
+	@echo "  $(GREEN)make production-check$(NC)                          - 檢查 Production 部署前置條件"
+	@echo "  $(GREEN)make production-secrets$(NC)                        - 設定 Production Secrets"
+	@echo "  $(GREEN)make deploy-production$(NC)                         - 部署到 Production 環境"
+	@echo "  $(GREEN)make deploy-production-full$(NC)                    - 完整 Production 部署（含 DB）"
+	@echo "  $(GREEN)make production-logs$(NC)                           - 查看 Production logs"
+	@echo "  $(GREEN)make production-health$(NC)                         - 檢查 Production 健康狀態"
+	@echo ""
 	@echo "$(CYAN)部署檢查:$(NC)"
 	@echo "  $(GREEN)make check-deployment$(NC)                          - 檢查部署狀態"
 	@echo ""
@@ -548,6 +556,126 @@ staging-logs:
 staging-db-connect:
 	@echo "$(CYAN)🔗 連接到 Staging 資料庫...$(NC)"
 	gcloud sql connect ai-square-db-staging-asia --user=postgres --database=ai_square_staging
+
+#=============================================================================
+# Production 部署命令
+#=============================================================================
+
+## 檢查 Production 部署前置條件
+production-check:
+	@echo "$(CYAN)🔍 檢查 Production 部署前置條件...$(NC)"
+	@echo "$(YELLOW)⚠️  Production 部署檢查清單:$(NC)"
+	@echo "  1. Cloud SQL Production instance 是否存在"
+	@echo "  2. 所有 secrets 是否已設定"
+	@echo "  3. Service account 權限是否正確"
+	@echo ""
+	@echo "$(CYAN)檢查 Cloud SQL instances:$(NC)"
+	@gcloud sql instances list --project=ai-square-463013 | grep -E "NAME|production" || echo "  ⚠️  No production instance found"
+	@echo ""
+	@echo "$(CYAN)檢查 Secrets:$(NC)"
+	@gcloud secrets list --project=ai-square-463013 | grep -E "production" || echo "  ⚠️  No production secrets found"
+	@echo ""
+	@echo "$(YELLOW)📝 如果缺少 Cloud SQL instance，請執行:$(NC)"
+	@echo "  gcloud sql instances create ai-square-db-production \\"
+	@echo "    --database-version=POSTGRES_15 \\"
+	@echo "    --tier=db-n1-standard-1 \\"
+	@echo "    --region=asia-east1"
+
+## 設定 Production Secrets
+production-secrets:
+	@echo "$(BLUE)🔐 設定 Production Secrets...$(NC)"
+	@cd scripts && chmod +x setup-production-secrets.sh && ./setup-production-secrets.sh
+
+## 部署到 Production 環境
+deploy-production: production-check
+	@echo "$(RED)🚀 部署到 Production 環境...$(NC)"
+	@echo "$(YELLOW)⚠️  警告: 這將部署到 PRODUCTION 環境！$(NC)"
+	@echo "按 Ctrl+C 取消，或等待 5 秒繼續..."
+	@sleep 5
+	@cd frontend && chmod +x deploy-production.sh && SKIP_DB_INIT=1 ./deploy-production.sh
+	@echo "$(GREEN)✅ Production 部署完成！$(NC)"
+	@echo "$(YELLOW)📌 請執行以下命令初始化資料庫:$(NC)"
+	@echo "  curl -X POST \"https://ai-square-frontend-731209836128.asia-east1.run.app/api/admin/init-schema\" \\"
+	@echo "    -H \"x-admin-key: YOUR_ADMIN_KEY\" \\"
+	@echo "    -H \"Content-Type: application/json\""
+
+## 完整 Production 部署（含資料庫初始化）
+deploy-production-full: production-check production-secrets
+	@echo "$(RED)🚀 完整 Production 部署...$(NC)"
+	@echo "$(YELLOW)⚠️  警告: 這將部署到 PRODUCTION 環境並初始化資料庫！$(NC)"
+	@echo "按 Ctrl+C 取消，或等待 5 秒繼續..."
+	@sleep 5
+	@cd frontend && chmod +x deploy-production.sh && ./deploy-production.sh
+	@echo "$(GREEN)✅ 完整 Production 部署完成！$(NC)"
+	@echo "$(BLUE)🌐 Production URL: https://ai-square-frontend-731209836128.asia-east1.run.app$(NC)"
+
+## 查看 Production logs
+production-logs:
+	@echo "$(CYAN)📋 查看 Production logs...$(NC)"
+	gcloud run logs read --service ai-square-frontend --region asia-east1 --limit 50
+
+## 檢查 Production 健康狀態
+production-health:
+	@echo "$(CYAN)🏥 檢查 Production 健康狀態...$(NC)"
+	@curl -s "https://ai-square-frontend-731209836128.asia-east1.run.app/api/health" | python3 -m json.tool || echo "Health check failed"
+	@echo ""
+	@echo "$(CYAN)📊 檢查 Scenario 數量...$(NC)"
+	@curl -s "https://ai-square-frontend-731209836128.asia-east1.run.app/api/admin/init-schema" | python3 -m json.tool || echo "Schema check failed"
+
+## Production 資料庫初始化（透過 API）
+production-db-init:
+	@echo "$(YELLOW)🗄️  初始化 Production 資料庫（透過 API）...$(NC)"
+	@echo "$(RED)⚠️  需要 admin key！$(NC)"
+	@read -p "請輸入 admin key: " admin_key; \
+	curl -X POST "https://ai-square-frontend-731209836128.asia-east1.run.app/api/admin/init-schema" \
+		-H "x-admin-key: $$admin_key" \
+		-H "Content-Type: application/json" | python3 -m json.tool
+
+## Production Scenario 初始化
+production-scenarios-init:
+	@echo "$(YELLOW)📚 初始化 Production Scenarios...$(NC)"
+	@echo "$(CYAN)初始化 Assessment...$(NC)"
+	@curl -X POST "https://ai-square-frontend-731209836128.asia-east1.run.app/api/admin/init-assessment" \
+		-H "Content-Type: application/json" \
+		-d '{"force": false}' | python3 -m json.tool
+	@echo ""
+	@echo "$(CYAN)初始化 PBL...$(NC)"
+	@curl -X POST "https://ai-square-frontend-731209836128.asia-east1.run.app/api/admin/init-pbl" \
+		-H "Content-Type: application/json" \
+		-d '{"force": false}' | python3 -m json.tool
+	@echo ""
+	@echo "$(CYAN)初始化 Discovery...$(NC)"
+	@curl -X POST "https://ai-square-frontend-731209836128.asia-east1.run.app/api/admin/init-discovery" \
+		-H "Content-Type: application/json" \
+		-d '{"force": false}' | python3 -m json.tool
+
+## Production 監控設定
+production-monitoring:
+	@echo "$(BLUE)📊 設定 Production 監控...$(NC)"
+	@echo "$(CYAN)創建 uptime check...$(NC)"
+	gcloud monitoring uptime-checks create ai-square-production \
+		--display-name="AI Square Production Health" \
+		--resource-type="URL" \
+		--resource-label="host=ai-square-frontend-731209836128.asia-east1.run.app" \
+		--resource-label="project_id=ai-square-463013" \
+		--http-check-path="/api/health" \
+		--check-interval="5m" \
+		--timeout="10s" \
+		--project=ai-square-463013 || echo "Uptime check already exists"
+	@echo "$(GREEN)✅ 監控設定完成$(NC)"
+
+## Production 回滾
+production-rollback:
+	@echo "$(RED)⚠️  執行 Production 回滾...$(NC)"
+	@echo "$(CYAN)列出所有版本...$(NC)"
+	@gcloud run revisions list --service ai-square-frontend --region asia-east1 --project=ai-square-463013
+	@echo ""
+	@read -p "請輸入要回滾到的版本 ID: " revision_id; \
+	gcloud run services update-traffic ai-square-frontend \
+		--to-revisions=$$revision_id=100 \
+		--region asia-east1 \
+		--project=ai-square-463013
+	@echo "$(GREEN)✅ 回滾完成$(NC)"
 
 #=============================================================================
 # 截圖命令

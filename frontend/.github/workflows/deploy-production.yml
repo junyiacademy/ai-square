@@ -1,0 +1,196 @@
+name: Deploy to Production
+
+on:
+  workflow_dispatch:
+    inputs:
+      init_scenarios:
+        description: 'Initialize scenarios (true/false)'
+        required: false
+        default: 'false'
+  push:
+    branches:
+      - production
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/deploy-production.yml'
+
+env:
+  PROJECT_ID: ai-square-463013
+  REGION: asia-east1
+  SERVICE_NAME: ai-square-frontend
+  # TODO: Create production Cloud SQL instance and update this
+  CLOUD_SQL_INSTANCE: ai-square-463013:asia-east1:ai-square-db-staging-asia
+
+jobs:
+  deploy:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    environment: production
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY_PRODUCTION }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+
+      - name: Configure Docker for GCR
+        run: |
+          gcloud auth configure-docker gcr.io
+
+      - name: Build and Push Docker Image
+        working-directory: ./frontend
+        run: |
+          IMAGE_TAG=$(echo $GITHUB_SHA | cut -c1-7)
+          docker build -t gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE_NAME }}:${IMAGE_TAG} \
+            -t gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE_NAME }}:latest \
+            -f Dockerfile.production .
+          docker push gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE_NAME }}:${IMAGE_TAG}
+          docker push gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE_NAME }}:latest
+
+      - name: Deploy to Cloud Run
+        run: |
+          IMAGE_TAG=$(echo $GITHUB_SHA | cut -c1-7)
+          gcloud run deploy ${{ env.SERVICE_NAME }} \
+            --image gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE_NAME }}:${IMAGE_TAG} \
+            --platform managed \
+            --region ${{ env.REGION }} \
+            --port 3000 \
+            --allow-unauthenticated \
+            --add-cloudsql-instances=${{ env.CLOUD_SQL_INSTANCE }} \
+            --set-env-vars NODE_ENV=production \
+            --set-env-vars DB_HOST="/cloudsql/${{ env.CLOUD_SQL_INSTANCE }}" \
+            --set-env-vars DB_PORT=5432 \
+            --set-env-vars DB_NAME=ai_square_db \
+            --set-env-vars DB_USER=postgres \
+            --set-env-vars DATABASE_URL="postgresql://postgres:***@/ai_square_db?host=/cloudsql/${{ env.CLOUD_SQL_INSTANCE }}" \
+            --set-secrets DB_PASSWORD=db-password-production:latest \
+            --set-secrets NEXTAUTH_SECRET=nextauth-secret-production:latest \
+            --set-secrets JWT_SECRET=jwt-secret-production:latest \
+            --set-secrets CLAUDE_API_KEY=claude-api-key-production:latest \
+            --set-secrets GOOGLE_APPLICATION_CREDENTIALS=google-credentials-production:latest \
+            --memory 1Gi \
+            --cpu 2 \
+            --min-instances 1 \
+            --max-instances 10 \
+            --timeout 300
+
+      - name: Get Service URL
+        id: get-url
+        run: |
+          SERVICE_URL=$(gcloud run services describe ${{ env.SERVICE_NAME }} \
+            --region ${{ env.REGION }} \
+            --format 'value(status.url)')
+          echo "SERVICE_URL=${SERVICE_URL}" >> $GITHUB_OUTPUT
+          echo "Deployed to: ${SERVICE_URL}"
+
+      - name: Initialize Database Schema
+        run: |
+          SERVICE_URL=${{ steps.get-url.outputs.SERVICE_URL }}
+          
+          # Wait for service to be ready
+          sleep 10
+          
+          # Check if schema exists
+          SCHEMA_STATUS=$(curl -s "${SERVICE_URL}/api/admin/init-schema" | \
+            python3 -c "import sys, json; print(json.load(sys.stdin).get('success', False))" || echo "false")
+          
+          if [ "$SCHEMA_STATUS" = "false" ]; then
+            echo "Initializing database schema..."
+            curl -X POST "${SERVICE_URL}/api/admin/init-schema" \
+              -H "x-admin-key: ${{ secrets.ADMIN_INIT_KEY }}" \
+              -H "Content-Type: application/json"
+          else
+            echo "Database schema already initialized"
+          fi
+
+      - name: Initialize Scenarios
+        if: github.event.inputs.init_scenarios == 'true'
+        run: |
+          SERVICE_URL=${{ steps.get-url.outputs.SERVICE_URL }}
+          
+          echo "Initializing scenarios..."
+          
+          # Assessment
+          curl -X POST "${SERVICE_URL}/api/admin/init-assessment" \
+            -H "Content-Type: application/json" \
+            -d '{"force": false}'
+          
+          # PBL
+          curl -X POST "${SERVICE_URL}/api/admin/init-pbl" \
+            -H "Content-Type: application/json" \
+            -d '{"force": false}'
+          
+          # Discovery
+          curl -X POST "${SERVICE_URL}/api/admin/init-discovery" \
+            -H "Content-Type: application/json" \
+            -d '{"force": false}'
+
+      - name: Health Check
+        run: |
+          SERVICE_URL=${{ steps.get-url.outputs.SERVICE_URL }}
+          
+          # Perform health check
+          HEALTH_STATUS=$(curl -s "${SERVICE_URL}/api/health" | \
+            python3 -c "import sys, json; print(json.load(sys.stdin).get('status', 'unknown'))" || echo "error")
+          
+          if [ "$HEALTH_STATUS" = "healthy" ]; then
+            echo "✅ Health check passed!"
+          else
+            echo "⚠️ Health check status: $HEALTH_STATUS"
+            exit 1
+          fi
+
+      - name: Notify Slack on Success
+        if: success()
+        uses: slackapi/slack-github-action@v1
+        with:
+          payload: |
+            {
+              "text": "✅ Production deployment successful!",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Production Deployment Successful*\n• Service: ${{ env.SERVICE_NAME }}\n• URL: ${{ steps.get-url.outputs.SERVICE_URL }}\n• Commit: ${{ github.sha }}"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Notify Slack on Failure
+        if: failure()
+        uses: slackapi/slack-github-action@v1
+        with:
+          payload: |
+            {
+              "text": "❌ Production deployment failed!",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Production Deployment Failed*\n• Service: ${{ env.SERVICE_NAME }}\n• Commit: ${{ github.sha }}\n• Check logs for details"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
