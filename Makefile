@@ -621,6 +621,27 @@ terraform-plan-production:
 	@echo "$(CYAN)📋 預覽 Production 環境變更...$(NC)"
 	@cd terraform && terraform plan -var-file="environments/production.tfvars"
 
+## Terraform 導入現有資源
+terraform-import-staging:
+	@echo "$(YELLOW)📥 導入 Staging 環境現有資源到 Terraform...$(NC)"
+	@cd terraform && bash scripts/import-staging.sh
+
+terraform-import-production:
+	@echo "$(RED)📥 導入 Production 環境現有資源到 Terraform...$(NC)"
+	@echo "$(YELLOW)⚠️  警告: 這將導入 PRODUCTION 資源！$(NC)"
+	@echo "按 Ctrl+C 取消，或等待 3 秒繼續..."
+	@sleep 3
+	@cd terraform && bash scripts/import-production.sh
+
+## Terraform 部署驗證
+validate-staging:
+	@echo "$(CYAN)🧪 驗證 Staging 部署...$(NC)"
+	@cd terraform && bash scripts/validate-deployment.sh staging
+
+validate-production:
+	@echo "$(CYAN)🧪 驗證 Production 部署...$(NC)"
+	@cd terraform && bash scripts/validate-deployment.sh production
+
 ## 查看 Production logs
 production-logs:
 	@echo "$(CYAN)📋 查看 Production logs...$(NC)"

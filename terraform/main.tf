@@ -103,7 +103,8 @@ resource "google_project_iam_member" "secret_accessor" {
 # Cloud SQL Database
 # ============================================
 resource "google_sql_database_instance" "main" {
-  name             = "ai-square-db-${var.environment}-asia"
+  # Production instance doesn't have "-asia" suffix for historical reasons
+  name             = var.environment == "production" ? "ai-square-db-${var.environment}" : "ai-square-db-${var.environment}-asia"
   database_version = "POSTGRES_15"
   region          = var.region
 
@@ -129,7 +130,7 @@ resource "google_sql_database_instance" "main" {
     ip_configuration {
       ipv4_enabled    = true
       private_network = null
-      require_ssl     = var.environment == "production" ? true : false
+      ssl_mode        = var.environment == "production" ? "REQUIRE_SSL" : "ALLOW_UNENCRYPTED_AND_ENCRYPTED"
       
       # Only allow specific IPs in production
       dynamic "authorized_networks" {
