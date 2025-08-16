@@ -35,6 +35,43 @@ npx playwright test --headed
 
 **絕對不要讓用戶一直幫你抓錯！每個修復都要自己先測試過！**
 
+## 🚨🚨🚨 部署後強制測試規則 - 每次部署都要測試！！！ 🚨🚨🚨
+
+### 部署完成 ≠ 工作完成
+**部署只是第一步，測試通過才算完成！**
+
+### 每次部署後必須執行：
+1. **實際瀏覽器測試**
+   ```bash
+   npx playwright test --headed  # 必須看著瀏覽器實際操作
+   ```
+
+2. **核心功能驗證清單**
+   - [ ] 登入功能正常
+   - [ ] Discovery 分類篩選器顯示正確數量
+   - [ ] PBL 場景可以載入
+   - [ ] Assessment 可以開始
+   - [ ] 主要頁面無錯誤
+
+3. **API 端點測試**
+   ```bash
+   curl -X POST $URL/api/auth/login --data '...'
+   curl $URL/api/discovery/scenarios?lang=zh
+   curl $URL/api/pbl/scenarios?lang=zh
+   ```
+
+4. **錯誤日誌檢查**
+   ```bash
+   gcloud run services logs read $SERVICE --region=asia-east1 --limit=50 | grep -i error
+   ```
+
+### 🔴 違反規則的後果
+- 用戶會發現問題 → 信任度降低
+- 需要重新部署 → 浪費時間
+- 可能造成生產環境問題 → 嚴重事故
+
+**記住：沒測試就說部署完成 = 不負責任！**
+
 ## 🚨 E2E 測試鐵律 - 必須使用真實瀏覽器 (2025-08-15 血淚教訓)
 
 ### ❌ 絕對禁止的錯誤測試方式

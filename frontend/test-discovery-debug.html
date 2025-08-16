@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Discovery Debug</title>
+</head>
+<body>
+    <h1>Discovery Scenarios Debug</h1>
+    <div id="results"></div>
+    
+    <script>
+        async function testDiscovery() {
+            const resultsDiv = document.getElementById('results');
+            
+            // Fetch scenarios
+            const response = await fetch('http://localhost:3000/api/discovery/scenarios?lang=zh');
+            const data = await response.json();
+            
+            resultsDiv.innerHTML = '<h2>API Response:</h2>';
+            resultsDiv.innerHTML += `<p>Total scenarios: ${data.data.scenarios.length}</p>`;
+            
+            // Group by category
+            const byCategory = {};
+            data.data.scenarios.forEach(s => {
+                const cat = s.discovery_data?.category || 'unknown';
+                if (!byCategory[cat]) byCategory[cat] = [];
+                byCategory[cat].push(s.title);
+            });
+            
+            resultsDiv.innerHTML += '<h3>By Category:</h3>';
+            for (const [cat, titles] of Object.entries(byCategory)) {
+                resultsDiv.innerHTML += `<p><strong>${cat}:</strong> ${titles.length} - ${titles.join(', ')}</p>`;
+            }
+        }
+        
+        testDiscovery();
+    </script>
+</body>
+</html>
