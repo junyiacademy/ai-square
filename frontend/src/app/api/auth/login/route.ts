@@ -242,6 +242,24 @@ export async function POST(request: NextRequest) {
       sessionToken
     })
 
+    // Set access token cookie for production auth check
+    response.cookies.set('accessToken', accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 15 * 60, // 15 minutes (match JWT expiry)
+      path: '/'
+    })
+    
+    // Set refresh token cookie
+    response.cookies.set('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: rememberMe ? 30 * 24 * 60 * 60 : 7 * 24 * 60 * 60, // 30 days if remember me, else 7 days
+      path: '/'
+    })
+    
     // Set HTTP-only secure cookies
     response.cookies.set('session_token', sessionToken, {
       httpOnly: true,
