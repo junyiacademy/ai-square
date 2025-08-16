@@ -1085,7 +1085,41 @@ make deploy-production-full   # 完整重建 Production（需確認）
 - [ ] 確認 Secrets 已設定
 - [ ] 準備好回滾計畫
 
-## 十三、初始化 Demo 帳號 (重要！)
+## 十三、🔥 初始化 Scenarios via API (關鍵步驟！)
+
+**🚨 這是部署後最重要的步驟，經常被遺忘！**
+
+### 部署流程正確順序
+1. **Database Seed**: 創建 demo 帳號（自動執行）
+2. **API 初始化**: 創建 scenarios（必須手動執行）
+
+### 初始化 Scenarios（必須執行）
+
+```bash
+# 設定環境 URL
+# Staging
+BASE_URL="https://ai-square-staging-731209836128.asia-east1.run.app"
+
+# Production
+BASE_URL="https://ai-square-frontend-731209836128.asia-east1.run.app"
+
+# 初始化所有 scenarios（必須執行！）
+curl -X POST "$BASE_URL/api/admin/init-pbl"
+curl -X POST "$BASE_URL/api/admin/init-discovery"
+curl -X POST "$BASE_URL/api/admin/init-assessment"
+```
+
+預期結果：
+- PBL: 9 scenarios
+- Discovery: 12 scenarios (4 arts, 4 technology, 2 business, 2 science)
+- Assessment: 1+ scenarios
+
+**為什麼這很重要？**
+- Database seed 只創建 demo 帳號，不創建 scenarios
+- Scenarios 必須透過 API 從 YAML 檔案初始化
+- 忘記這步驟會導致應用程式看起來是空的
+
+## 十四、初始化 Demo 帳號
 
 ### 🌱 Database Seed 機制（推薦方式）
 

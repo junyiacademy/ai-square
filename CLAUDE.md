@@ -100,6 +100,33 @@ curl /api/pbl/scenarios        # ❌ 無法測試 cookie 和 session
 
 **記住：用戶用瀏覽器，測試也必須用瀏覽器！**
 
+## 🚨 部署初始化關鍵步驟 (2025/01/16 血淚教訓)
+
+### ❌ 最常被遺忘的步驟：Scenario 初始化
+**問題**: 部署完成後，應用程式看起來是空的，沒有任何內容。
+
+**原因**: Database seed 只創建 demo 帳號，scenarios 需要透過 API 初始化。
+
+### ✅ 正確的部署流程
+```bash
+# 1. 部署 Cloud Run 和 Database
+make deploy-staging  # 或 make deploy-production
+
+# 2. 初始化 Scenarios（關鍵！經常被遺忘！）
+BASE_URL="https://your-service-url"
+curl -X POST "$BASE_URL/api/admin/init-pbl"
+curl -X POST "$BASE_URL/api/admin/init-discovery"
+curl -X POST "$BASE_URL/api/admin/init-assessment"
+
+# 3. 驗證部署
+./scripts/verify-deployment.sh staging
+```
+
+### 📝 記住：
+- **Database Seed ≠ Application Data**
+- Seed 創建帳號，API 創建內容
+- 沒有 API 初始化 = 空的應用程式
+
 ## 🚨 測試實作的嚴重教訓 (2025/01/14 血淚經驗)
 
 ### ❌ 絕對禁止的錯誤行為：
