@@ -67,7 +67,7 @@ case "$ENVIRONMENT" in
     production)
         PROJECT_ID="ai-square-463013"
         REGION="asia-east1"
-        SERVICE_NAME="ai-square-production"
+        SERVICE_NAME="ai-square-frontend"
         CLOUD_SQL_INSTANCE="ai-square-db-production"
         CLOUD_SQL_IP="${PROD_SQL_IP:-35.236.132.52}"  # Update with actual production IP
         DB_NAME="ai_square_db"
@@ -215,7 +215,7 @@ deploy_cloud_run() {
         --region $REGION \
         --platform managed \
         --allow-unauthenticated \
-        --set-env-vars="NODE_ENV=production,DB_HOST=/cloudsql/$PROJECT_ID:$REGION:$CLOUD_SQL_INSTANCE,DB_NAME=$DB_NAME,DB_USER=$DB_USER" \
+        --set-env-vars="NODE_ENV=production,DB_HOST=/cloudsql/$PROJECT_ID:$REGION:$CLOUD_SQL_INSTANCE,DB_NAME=$DB_NAME,DB_USER=$DB_USER,DB_PASSWORD=$DB_PASSWORD,DATABASE_URL=postgresql://$DB_USER:$DB_PASSWORD@/$DB_NAME?host=/cloudsql/$PROJECT_ID:$REGION:$CLOUD_SQL_INSTANCE" \
         --add-cloudsql-instances=$PROJECT_ID:$REGION:$CLOUD_SQL_INSTANCE \
         --service-account=ai-square-service@$PROJECT_ID.iam.gserviceaccount.com \
         --memory=512Mi \
