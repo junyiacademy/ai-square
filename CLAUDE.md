@@ -35,6 +35,34 @@ npx playwright test --headed
 
 **絕對不要讓用戶一直幫你抓錯！每個修復都要自己先測試過！**
 
+## 🚨 E2E 測試鐵律 - 必須使用真實瀏覽器 (2025-08-15 血淚教訓)
+
+### ❌ 絕對禁止的錯誤測試方式
+```bash
+# 這種測試會漏掉 session 維持問題！
+curl -X POST /api/auth/login  # ❌ API 正常不代表前端正常
+curl /api/pbl/scenarios        # ❌ 無法測試 cookie 和 session
+```
+
+### ✅ 唯一正確的 E2E 測試方式
+**必須使用瀏覽器工具（Browser MCP、Playwright、Puppeteer）進行測試！**
+
+```typescript
+// 關鍵測試：登入後訪問受保護頁面
+1. 登入 → 2. 訪問 /discovery → 3. 確認沒有被重定向到 /login
+```
+
+### 認證測試必查項目
+1. **Cookies 檢查**: `document.cookie` 必須包含 `accessToken`
+2. **Session 維持**: 訪問受保護頁面不被重定向
+3. **頁面刷新**: 刷新後仍保持登入狀態
+4. **API 狀態**: `/api/auth/check` 返回 `authenticated: true`
+
+### 教訓來源
+2025-08-15 staging 部署時，API 測試全部通過，但用戶實際無法保持登入狀態。原因是只測試了 API 回應，沒有測試瀏覽器中的 session 維持。
+
+**記住：用戶用瀏覽器，測試也必須用瀏覽器！**
+
 ## 🚨 測試實作的嚴重教訓 (2025/01/14 血淚經驗)
 
 ### ❌ 絕對禁止的錯誤行為：

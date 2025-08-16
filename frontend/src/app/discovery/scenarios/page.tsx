@@ -114,7 +114,10 @@ export default function ScenariosPage() {
               scenarioId: scenario.id, // Store the actual scenario UUID
               title: scenario.title as string, // API now returns localized string
               subtitle: scenario.description as string, // API now returns localized string
-              category: (scenario.metadata as Record<string, unknown>)?.category as string || 'general',
+              category: (scenario.discovery_data as Record<string, unknown>)?.category as string || 
+                       (scenario.discoveryData as Record<string, unknown>)?.category as string || 
+                       (scenario.metadata as Record<string, unknown>)?.category as string || 
+                       'general',
               icon: careerIcons[careerType] || Sparkles,
               color: careerColors[careerType] || 'from-gray-500 to-gray-600',
               skills: (scenario.metadata as Record<string, unknown>)?.skillFocus as string[] || [],
