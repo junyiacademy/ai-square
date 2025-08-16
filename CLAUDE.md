@@ -353,7 +353,14 @@ Always follow the instructions in plan.md. When I say "go", find the next unmark
 - **範例情境**: "設定開發追蹤到 Slack" → 使用 slack-tracker-integration
 - **用途**: 實作開發進度追蹤和 CEO 報告系統
 
-#### 5. Slash Commands → 使用 Task tool 執行
+#### 5. 部署驗證與 QA → 使用 deployment-qa agent
+- **觸發關鍵字**: verify deployment, check staging, test production, QA, deployment test, staging issue
+- **範例情境**: "staging API 問題檢查" → 使用 deployment-qa agent
+- **用途**: 自動化部署驗證、API 測試、資料庫檢查、E2E 測試、問題診斷
+- **環境支援**: local, staging, production
+- **核心檢查**: 健康檢查、API 初始化、認證測試、多語言支援、效能指標
+
+#### 6. Slash Commands → 使用 Task tool 執行
 - **指令**: /compact, /check-file 等
 - **直接執行**: 針對特定指令的工具執行
 - **用途**: 快速指令執行
@@ -370,6 +377,7 @@ Always follow the instructions in plan.md. When I say "go", find the next unmark
 ```
 .claude/
 └── agents/
+    ├── deployment-qa.md              # 部署驗證與 QA agent
     ├── progress-memory-coach.md      # 進度與記憶管理 agent
     ├── slack-tracker-integration.md  # Slack 追蹤整合 agent  
     └── typescript-eslint-fixer.md    # TypeScript/ESLint 修復 agent

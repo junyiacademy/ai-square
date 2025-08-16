@@ -1,0 +1,52 @@
+# Dockerfile for Next.js standalone mode (for staging/production)
+# This fixes the /api/health 404 issue
+
+# 1. Build stage
+FROM node:20-alpine AS builder
+WORKDIR /app
+
+# Install dependencies
+COPY package.json package-lock.json ./
+RUN npm ci
+
+# Copy source code
+COPY . .
+
+# Set environment for standalone build
+ENV ENVIRONMENT=staging
+
+# Build the application (will create standalone output)
+RUN npm run build
+
+# 2. Production stage
+FROM node:20-alpine AS runner
+WORKDIR /app
+
+ENV NODE_ENV=production
+ENV ENVIRONMENT=staging
+
+# Add non-root user
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S nextjs -u 1001
+
+# Copy standalone build
+# When output is standalone, Next.js creates a minimal production server
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
+
+# Copy necessary files for the application
+COPY --from=builder --chown=nextjs:nodejs /app/src ./src
+
+# Copy service account key if it exists
+COPY --from=builder --chown=nextjs:nodejs /app/ai-square-key.json* ./
+
+# Set the environment variable for Google Auth
+ENV GOOGLE_APPLICATION_CREDENTIALS=/app/ai-square-key.json
+
+USER nextjs
+
+EXPOSE 3000
+
+# For standalone mode, use node server.js instead of npm start
+CMD ["node", "server.js"]
