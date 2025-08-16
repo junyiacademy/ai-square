@@ -95,6 +95,16 @@ esac
 check_prerequisites() {
     echo -e "${BLUE}🔍 Checking prerequisites...${NC}"
     
+    # Run validation script first
+    if [ -f "scripts/validate-deployment.sh" ]; then
+        echo -e "${BLUE}   Running deployment validation...${NC}"
+        if ! bash scripts/validate-deployment.sh "$ENVIRONMENT"; then
+            echo -e "${RED}❌ Deployment validation failed${NC}"
+            echo "Please fix the issues above before proceeding."
+            exit 1
+        fi
+    fi
+    
     # Run the unified pre-deploy check script
     if [ -f "scripts/pre-deploy-check.sh" ]; then
         bash scripts/pre-deploy-check.sh "$ENVIRONMENT"
@@ -317,6 +327,18 @@ main() {
     
     init_scenarios
     run_e2e_tests
+    
+    # Run comprehensive post-deployment tests
+    if [ -f "scripts/post-deployment-test.sh" ]; then
+        echo ""
+        echo -e "${BLUE}🧪 Running comprehensive post-deployment tests...${NC}"
+        if bash scripts/post-deployment-test.sh "$ENVIRONMENT"; then
+            echo -e "${GREEN}✅ All post-deployment tests passed${NC}"
+        else
+            echo -e "${YELLOW}⚠️ Some post-deployment tests failed${NC}"
+            echo "Please review the test report for details."
+        fi
+    fi
     
     echo ""
     echo -e "${GREEN}════════════════════════════════════════${NC}"
