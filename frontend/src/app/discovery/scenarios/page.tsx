@@ -132,7 +132,6 @@ export default function ScenariosPage() {
               }
             };
           });
-          console.log('Transformed scenarios:', transformedScenarios.map((s: typeof transformedScenarios[0]) => ({ title: s.title, category: s.category })));
           setScenarios(transformedScenarios);
         } else {
           console.error('Failed to fetch scenarios from API');
@@ -232,10 +231,7 @@ export default function ScenariosPage() {
     ? myScenarios
     : selectedCategory === 'all' 
       ? scenarios 
-      : scenarios.filter(s => {
-          console.log(`Filtering: ${s.title}, category: ${s.category}, selectedCategory: ${selectedCategory}, match: ${s.category === selectedCategory}`);
-          return s.category === selectedCategory;
-        });
+      : scenarios.filter(s => s.category === selectedCategory);
 
   const handleScenarioSelect = async (scenarioOrCareer: Scenario | string) => {
     if (!isLoggedIn) {
