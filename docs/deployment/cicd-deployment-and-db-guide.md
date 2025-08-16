@@ -1,53 +1,122 @@
-## CI/CD 部署與資料庫運維指南（給 DevOps/CI 團隊）
+## CI/CD 部署與資料庫運維指南（使用 Terraform）
 
-此文件聚焦「如何正確部署前後端」與「如何正確管理/遷移資料庫」，並將責任分工與操作步驟具體化。對應文件：
+> **🚀 重要更新**：所有部署現在都使用 **Terraform** 進行管理，不再使用 shell scripts。
+
+此文件聚焦「如何使用 Terraform 部署前後端」與「如何正確管理/遷移資料庫」。對應文件：
 
 - PM（產品視角）：`docs/handbook/product-requirements-document.md`
 - RD（技術架構）：`docs/technical/infrastructure/unified-learning-architecture.md`
-- **Local 部署指南**：`docs/deployment/local-deployment-guide.md` （從 Claude Code 直接部署）
+- **Terraform 配置**：`terraform/` 目錄
 
 
 ### 目錄
-- 一、整體架構與環境分層
-- 二、必要憑證與環境變數
-- 三、資料庫（PostgreSQL）管理與遷移
-- 四、CI/CD 流程（測試 → 建置 → 佈署）
-- 五、前端部署（Next.js）
-- 六、後端部署（FastAPI/其他服務）
-- 七、快取（Redis）與健康檢查
+- 一、Terraform 基礎設施管理
+- 二、環境分層與配置
+- 三、必要憑證與 Secret Manager
+- 四、資料庫（Cloud SQL）管理
+- 五、CI/CD 流程（使用 Terraform）
+- 六、部署步驟（Staging & Production）
+- 七、監控與健康檢查
 - 八、常見問題（Troubleshooting）
 
 
 ---
 
-### 一、整體架構與環境分層
+### 一、Terraform 基礎設施管理
 
-建議最少三層環境：
-- Local（開發者本機）
-- Staging（近真實環境，驗證 CI/CD 與資料庫/快取）
-- Production（正式）
+#### 🎯 核心原則：Infrastructure as Code
 
-關鍵原則：Cloud Run 與 Cloud SQL「必須在同一個 Region」。否則會出現連線逾時、看似 "relation does not exist" 的誤導性錯誤。（教訓已納入）
+所有基礎設施都使用 Terraform 管理：
+
+```bash
+# Terraform 目錄結構
+terraform/
+├── main.tf                 # 主配置檔案
+├── environments/
+│   ├── staging.tfvars     # Staging 環境變數
+│   └── production.tfvars  # Production 環境變數
+└── .gitignore             # 忽略敏感資料
+```
+
+#### Terraform 管理的資源
+
+- **Cloud SQL** (PostgreSQL 資料庫)
+- **Cloud Run** (應用程式服務)
+- **Secret Manager** (密碼管理)
+- **Service Account** (IAM 權限)
+- **Monitoring** (監控告警)
+
+#### 關鍵原則
+
+1. **Region 一致性**：Cloud Run 與 Cloud SQL 必須在同一個 Region (`asia-east1`)
+2. **State 管理**：Terraform state 儲存在 GCS bucket
+3. **密碼安全**：所有密碼使用 Secret Manager
 
 
 ---
 
-### 二、必要憑證與環境變數（全環境統一）
+### 二、環境分層與配置
 
-1) 資料庫（PostgreSQL）
-- DB_HOST（雲端使用 Unix Socket 或 Private IP）
-- DB_PORT（本機預設 5434；雲端若用 Unix Socket 可不設）
-- DB_NAME：`ai_square_db`（Local/Staging/Prod 全環境統一）
-- DB_USER：`postgres`
-- DB_PASSWORD：`postgres`（全環境統一，建議在 Prod 以 Secret Manager 管理）
+#### 環境分層
 
-2) Redis（可選）
-- REDIS_ENABLED（true/false）
-- REDIS_URL（例：`redis://localhost:6380`）
+| 環境 | 用途 | Terraform Workspace | 配置檔 |
+|------|------|-------------------|--------|
+| Local | 開發測試 | N/A | `.env.local` |
+| Staging | 整合測試 | staging | `environments/staging.tfvars` |
+| Production | 正式環境 | production | `environments/production.tfvars` |
 
-3) 前端/系統通用（必要）
-- NEXTAUTH_SECRET（JWT/Session 用，必須設定）
-- JWT_SECRET（JWT 簽名用，必須設定）
+#### Terraform 初始化
+
+```bash
+# 1. 初始化 Terraform
+cd terraform
+terraform init
+
+# 2. 切換到正確的 workspace
+terraform workspace select staging  # 或 production
+
+# 3. 預覽變更
+terraform plan -var-file="environments/staging.tfvars"
+
+# 4. 套用變更
+terraform apply -var-file="environments/staging.tfvars"
+```
+
+### 三、必要憑證與 Secret Manager
+
+#### 使用 Secret Manager 管理密碼
+
+Terraform 會自動建立和管理 Secret Manager：
+
+```hcl
+# main.tf 中的 Secret Manager 配置
+resource "google_secret_manager_secret" "db_password" {
+  secret_id = "db-password-${var.environment}"
+  replication {
+    auto {}
+  }
+}
+```
+
+#### 環境變數配置
+
+Terraform 會自動設定以下環境變數：
+
+1) **資料庫配置**
+   - `DB_HOST`: `/cloudsql/PROJECT:REGION:INSTANCE` (Unix Socket)
+   - `DB_NAME`: `ai_square_db`
+   - `DB_USER`: `postgres`
+   - `DB_PASSWORD`: 從 Secret Manager 讀取
+   - `DATABASE_URL`: 完整連線字串
+
+2) **應用程式配置**
+   - `NODE_ENV`: `production`
+   - `NEXTAUTH_SECRET`: 從 Secret Manager 讀取
+   - `JWT_SECRET`: 從 Secret Manager 讀取
+
+3) **Redis 配置** (可選)
+   - `REDIS_ENABLED`: `true`/`false`
+   - `REDIS_URL`: Redis 連線 URL
 - 其他第三方金鑰（依服務需要放入 Secret Manager）
 
 建議集中於：
@@ -57,77 +126,120 @@
 
 ---
 
-### 三、資料庫（PostgreSQL）管理與遷移
+### 四、資料庫（Cloud SQL）管理
 
-1) 版本化 Schema
-- 最新 Schema 檔位於：`frontend/src/lib/repositories/postgresql/schema-v4.sql`
-- 歷史版本（v3/v3.5）仍可參考，但新環境建議直接套 v4。
+#### Terraform 管理 Cloud SQL
 
-2) 本機初始化（Docker 或本機 PostgreSQL）
-```bash
-# 連線參數請依實際調整
-PGPASSWORD=postgres psql -h 127.0.0.1 -p 5434 -U postgres -d ai_square_db -f frontend/src/lib/repositories/postgresql/schema-v4.sql
+Terraform 會自動建立和管理 Cloud SQL 實例：
+
+```hcl
+# main.tf 中的 Cloud SQL 配置
+resource "google_sql_database_instance" "main" {
+  name             = "ai-square-db-${var.environment}-asia"
+  database_version = "POSTGRES_15"
+  region          = var.region
+  
+  settings {
+    tier = var.environment == "production" ? "db-custom-2-4096" : "db-f1-micro"
+    
+    # 安全設定
+    database_flags {
+      name  = "log_connections"
+      value = "on"
+    }
+    
+    # 備份設定
+    backup_configuration {
+      enabled = var.environment == "production"
+      start_time = "03:00"
+    }
+  }
+}
 ```
 
-3) 雲端初始化（Cloud SQL）
-- 建議透過 Cloud Build/CD 步驟或 GitHub Actions job 執行 `psql -f schema-v4.sql`
-- 確保 Cloud Run 與 Cloud SQL 在同區域；使用 Unix Socket 或 VPC Connector
+#### 資料庫 Schema 管理
 
-4) 遷移/升級策略
-- 嚴禁破壞性變更直接覆蓋：請以 `ALTER TABLE/TYPE` 兼容式更新
-- 大版本（v3 → v4）：先在 Staging 測試「備援 + 轉換」，再排程 Production
+1) **Schema 版本**
+   - 目前使用：`schema-v4.sql`
+   - 位置：`frontend/src/lib/repositories/postgresql/schema-v4.sql`
 
-5) 資料校驗（CI Step 建議）
-```bash
-# 基礎健康檢查
-PGPASSWORD=postgres psql -h "$DB_HOST" -U "$DB_USER" -d "$DB_NAME" -c "SELECT NOW();"
+2) **初始化方式**
+   - Terraform 建立資料庫後，透過 API endpoint 初始化
+   - 使用 `/api/admin/init-schema` 套用 schema
 
-# 資料表存在性
-PGPASSWORD=postgres psql -h "$DB_HOST" -U "$DB_USER" -d "$DB_NAME" \
-  -c "SELECT to_regclass('public.scenarios') IS NOT NULL AS ok;"
-```
+3) **備份策略**
+   - Production：每日自動備份（凌晨 3:00）
+   - Staging：不自動備份（節省成本）
+   - 使用 `gcloud sql backups` 手動備份
+
+4) **遷移策略**
+   - 使用 `ALTER TABLE` 進行兼容式更新
+   - 禁止破壞性變更
+   - 先在 Staging 測試，再部署到 Production
 
 
 ---
 
-### 四、CI/CD 流程（測試 → 建置 → 佈署）
+### 五、CI/CD 流程（使用 Terraform）
 
-#### 部署前檢查清單：
-- [ ] 確認 DB_NAME 統一為 `ai_square_db`
-- [ ] 確認 DB_PASSWORD 統一為 `postgres`
-- [ ] 確認設定 NEXTAUTH_SECRET 環境變數
-- [ ] 確認設定 JWT_SECRET 環境變數
-- [ ] 確認設定 DATABASE_URL 環境變數（格式：`postgresql://user:pass@host:port/db`）
-- [ ] 確認 Cloud SQL 與 Cloud Run 在同一 Region
-- [ ] 確認 schema-v4.sql 已套用到資料庫
-- [ ] 確認資料庫 schema 版本與程式碼相符（執行 migration 腳本）
+#### 🚀 部署流程
 
-推薦最小工作流程（以前端為例）：
-1) 單元測試 & 型別檢查 & Lint
 ```bash
-cd frontend
-npm ci
-npm run typecheck
-npm run lint
-npm test -- --ci --no-coverage
+# 1. 初始化 Terraform
+make terraform-init
+
+# 2. 預覽變更
+make terraform-plan-staging    # Staging
+make terraform-plan-production # Production
+
+# 3. 部署
+make deploy-staging    # 部署到 Staging
+make deploy-production # 部署到 Production
 ```
 
-2) 整合測試（可在 Staging Pipeline）
-```bash
-# 需有測試 DB/Redis。可透過 docker 起 Postgres/Redis。
-REDIS_ENABLED=true REDIS_URL=redis://localhost:6380 USE_SHARED_DB=1 \
-  npx jest -c jest.integration.config.js --runInBand --no-coverage
-```
+#### 部署前檢查清單
 
-3) 建置產物
-```bash
-cd frontend
-npm run build
-```
+- [ ] Terraform state 已初始化
+- [ ] 所有資源已導入 Terraform state
+- [ ] Secret Manager 已設定所有密碼
+- [ ] Cloud SQL 與 Cloud Run 在同一 Region
+- [ ] Service Account 權限正確
 
-4) 部署（參考現有設定）
-- GitHub Actions：`frontend/.github/workflows/deploy-staging.yml`
-- Cloud Build（選用）：`frontend/cloudbuild.staging.yaml`
+#### GitHub Actions 整合
+
+```yaml
+# .github/workflows/deploy.yml
+name: Deploy with Terraform
+
+on:
+  push:
+    branches:
+      - main  # Production
+      - staging  # Staging
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        
+      - name: Terraform Init
+        run: |
+          cd terraform
+          terraform init
+          
+      - name: Terraform Apply
+        run: |
+          cd terraform
+          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
+            terraform apply -var-file="environments/production.tfvars" -auto-approve
+          else
+            terraform apply -var-file="environments/staging.tfvars" -auto-approve
+          fi
+```
 - 輔助腳本：`frontend/deploy-staging.sh`、`frontend/scripts/init-staging-cloud-sql.sh`
 
 建議將「DB Schema 套用」做為部署前置或部署後置步驟（migrate job），確保程式碼與資料庫同步。

@@ -168,14 +168,17 @@ help:
 	@echo "  $(GREEN)make setup-service-accounts$(NC)                    - 創建 Service Accounts"
 	@echo "  $(GREEN)make check-deploy-size$(NC)                         - 檢查部署大小"
 	@echo ""
-	@echo "$(CYAN)部署:$(NC)"
-	@echo "  $(GREEN)make deploy-gcp$(NC)                                - 完整部署前端到 Google Cloud"
-	@echo "  $(GREEN)make deploy-cms-gcp$(NC)                            - 完整部署 CMS 到 Google Cloud"
-	@echo "  $(GREEN)make gcp-build-and-push$(NC)                        - Cloud Build 並推送前端"
-	@echo "  $(GREEN)make cms-build-and-push$(NC)                        - Cloud Build 並推送 CMS"
+	@echo "$(CYAN)Terraform 部署 (推薦):$(NC)"
+	@echo "  $(GREEN)make terraform-init$(NC)                            - 初始化 Terraform"
+	@echo "  $(GREEN)make terraform-plan-staging$(NC)                    - 預覽 Staging 變更"
+	@echo "  $(GREEN)make terraform-plan-production$(NC)                 - 預覽 Production 變更"
+	@echo "  $(GREEN)make deploy-staging$(NC)                            - 🚀 部署到 Staging (Terraform)"
+	@echo "  $(GREEN)make deploy-production$(NC)                         - 🚀 部署到 Production (Terraform)"
+	@echo "  $(GREEN)make terraform-status$(NC)                          - 檢查 Terraform 狀態"
+	@echo ""
+	@echo "$(CYAN)舊版部署 (已棄用):$(NC)"
+	@echo "  $(GREEN)make gcp-build-and-push$(NC)                        - Cloud Build 並推送"
 	@echo "  $(GREEN)make gcp-deploy-frontend$(NC)                       - 部署前端到 Cloud Run"
-	@echo "  $(GREEN)make gcp-deploy-cms$(NC)                            - 部署 CMS 到 Cloud Run"
-	@echo "  $(GREEN)make deploy-backend-gcp$(NC)                        - 部署後端到 GCP"
 	@echo ""
 	@echo "$(CYAN)Staging 環境 (統一部署系統):$(NC)"
 	@echo "  $(GREEN)make deploy-staging$(NC)                            - 🚀 部署到 Staging 環境（含資料庫初始化）"
@@ -522,27 +525,38 @@ deploy-backend-gcp:
 # Staging 部署命令
 #=============================================================================
 
-## 檢查 Staging 部署前置條件
-staging-check:
-	@echo "$(CYAN)🔍 檢查 Staging 部署前置條件...$(NC)"
-	@cd frontend && ./scripts/pre-deploy-check.sh staging
+## Terraform 狀態檢查
+terraform-status:
+	@echo "$(CYAN)📊 檢查 Terraform 管理的資源...$(NC)"
+	@cd terraform && terraform state list
+	@echo ""
+	@echo "$(CYAN)目前環境:$(NC)"
+	@cd terraform && terraform workspace show
 
-## 初始化 Staging Cloud SQL 資料庫（Schema V4 with CASCADE DELETE）
-staging-db-init:
-	@echo "$(CYAN)🗄️  初始化 Staging Cloud SQL 資料庫 (Schema V4)...$(NC)"
-	@cd frontend && chmod +x scripts/init-cloud-sql.sh && ./scripts/init-cloud-sql.sh staging
+## Terraform 導入現有資源
+terraform-import-staging:
+	@echo "$(YELLOW)📥 導入現有 Staging 資源到 Terraform...$(NC)"
+	@cd terraform && bash import-staging.sh
+	@echo "$(GREEN)✅ Staging 資源導入完成$(NC)"
 
-## 統一部署命令 - Staging
+terraform-import-production:
+	@echo "$(YELLOW)📥 導入現有 Production 資源到 Terraform...$(NC)"
+	@cd terraform && bash import-production.sh
+	@echo "$(GREEN)✅ Production 資源導入完成$(NC)"
+
+## Terraform 部署 - Staging
 deploy-staging:
-	@echo "$(GREEN)🚀 部署到 Staging 環境（統一部署系統）...$(NC)"
-	@cd frontend && chmod +x deploy.sh && ./deploy.sh staging
+	@echo "$(GREEN)🚀 使用 Terraform 部署到 Staging 環境...$(NC)"
+	@cd terraform && terraform apply -var-file="environments/staging.tfvars" -auto-approve
 	@echo "$(GREEN)✅ Staging 部署完成！$(NC)"
 
-## 統一部署命令 - 本地測試
-deploy-local:
-	@echo "$(GREEN)🚀 本地環境測試...$(NC)"
-	@cd frontend && ./deploy.sh local
-	@echo "$(GREEN)✅ 本地測試完成！$(NC)"
+## Terraform 銷毀資源（危險！）
+terraform-destroy-staging:
+	@echo "$(RED)⚠️  銷毀 Staging 環境資源...$(NC)"
+	@echo "$(YELLOW)⚠️  警告: 這將刪除所有 Staging 資源！$(NC)"
+	@echo "按 Ctrl+C 取消，或等待 10 秒繼續..."
+	@sleep 10
+	@cd terraform && terraform destroy -var-file="environments/staging.tfvars" -auto-approve
 
 ## 查看 Staging logs
 staging-logs:
@@ -583,24 +597,29 @@ production-secrets:
 	@echo "$(BLUE)🔐 設定 Production Secrets...$(NC)"
 	@echo "$(YELLOW)📝 請手動設定 Production secrets（如果需要）$(NC)"
 
-## 統一部署命令 - Production
+## Terraform 部署 - Production
 deploy-production:
-	@echo "$(GREEN)🚀 部署到 Production 環境（統一部署系統）...$(NC)"
+	@echo "$(GREEN)🚀 使用 Terraform 部署到 Production 環境...$(NC)"
 	@echo "$(YELLOW)⚠️  警告: 這將部署到 PRODUCTION 環境！$(NC)"
 	@echo "按 Ctrl+C 取消，或等待 5 秒繼續..."
 	@sleep 5
-	@cd frontend && chmod +x deploy.sh && ./deploy.sh production
+	@cd terraform && terraform apply -var-file="environments/production.tfvars" -auto-approve
 	@echo "$(GREEN)✅ Production 部署完成！$(NC)"
 
-## 完整 Production 部署（含資料庫初始化）- 使用統一部署系統
-deploy-production-full:
-	@echo "$(RED)🚀 執行完整 Production 部署（含資料庫初始化）...$(NC)"
-	@echo "$(YELLOW)⚠️  警告: 這將部署到 PRODUCTION 環境並初始化資料庫！$(NC)"
-	@echo "按 Ctrl+C 取消，或等待 5 秒繼續..."
-	@sleep 5
-	@cd frontend && chmod +x deploy.sh && ./deploy.sh production
-	@echo "$(GREEN)✅ 完整 Production 部署完成！$(NC)"
-	@echo "$(BLUE)🌐 Production URL: https://ai-square-frontend-731209836128.asia-east1.run.app$(NC)"
+## Terraform 初始化
+terraform-init:
+	@echo "$(BLUE)🔧 初始化 Terraform...$(NC)"
+	@cd terraform && terraform init
+	@echo "$(GREEN)✅ Terraform 初始化完成$(NC)"
+
+## Terraform Plan - 預覽變更
+terraform-plan-staging:
+	@echo "$(CYAN)📋 預覽 Staging 環境變更...$(NC)"
+	@cd terraform && terraform plan -var-file="environments/staging.tfvars"
+
+terraform-plan-production:
+	@echo "$(CYAN)📋 預覽 Production 環境變更...$(NC)"
+	@cd terraform && terraform plan -var-file="environments/production.tfvars"
 
 ## 查看 Production logs
 production-logs:

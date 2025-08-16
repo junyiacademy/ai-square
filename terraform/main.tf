@@ -59,9 +59,22 @@ variable "db_password" {
   type        = string
   sensitive   = true
   validation {
-    condition     = length(var.db_password) >= 8
-    error_message = "Database password must be at least 8 characters."
+    condition     = length(var.db_password) >= 12 && can(regex("[A-Z]", var.db_password)) && can(regex("[a-z]", var.db_password)) && can(regex("[0-9]", var.db_password))
+    error_message = "Database password must be at least 12 characters and contain uppercase, lowercase, and numbers."
   }
+}
+
+# Security-related variables
+variable "allowed_ips" {
+  description = "List of allowed IP addresses for database access"
+  type        = list(string)
+  default     = []
+}
+
+variable "enable_deletion_protection" {
+  description = "Enable deletion protection for production resources"
+  type        = bool
+  default     = true
 }
 
 # ============================================
@@ -90,22 +103,40 @@ resource "google_project_iam_member" "secret_accessor" {
 # Cloud SQL Database
 # ============================================
 resource "google_sql_database_instance" "main" {
-  name             = "ai-square-db-${var.environment}"
+  name             = "ai-square-db-${var.environment}-asia"
   database_version = "POSTGRES_15"
   region          = var.region
 
   settings {
     tier = var.environment == "production" ? "db-custom-2-4096" : "db-f1-micro"
     
+    # Security settings
+    database_flags {
+      name  = "log_connections"
+      value = "on"
+    }
+    
+    database_flags {
+      name  = "log_disconnections"
+      value = "on"
+    }
+    
+    database_flags {
+      name  = "log_checkpoints"
+      value = "on"
+    }
+    
     ip_configuration {
       ipv4_enabled    = true
       private_network = null
+      require_ssl     = var.environment == "production" ? true : false
       
+      # Only allow specific IPs in production
       dynamic "authorized_networks" {
-        for_each = var.environment == "production" ? [] : [1]
+        for_each = var.environment == "production" ? var.allowed_ips : ["0.0.0.0/0"]
         content {
-          name  = "allow-all-dev"
-          value = "0.0.0.0/0"
+          name  = var.environment == "production" ? "allowed-ip-${authorized_networks.key}" : "allow-all-dev"
+          value = authorized_networks.value
         }
       }
     }
@@ -254,7 +285,7 @@ resource "google_monitoring_uptime_check_config" "health_check" {
     type = "uptime_url"
     labels = {
       project_id = var.project_id
-      host       = google_cloud_run_service.ai_square.status[0].url
+      host       = replace(replace(google_cloud_run_service.ai_square.status[0].url, "https://", ""), "/", "")
     }
   }
 }
