@@ -34,7 +34,7 @@ describe('Password Utils', () => {
       await updateUserPasswordHash(mockPool, userId, passwordHash);
       
       expect(mockPool.query).toHaveBeenCalledWith(
-        expect.stringMatching(/UPDATE users[\s\S]*SET password_hash = \$1, role = \$2, updated_at = CURRENT_TIMESTAMP[\s\S]*WHERE id = \$3/),
+        expect.stringMatching(/UPDATE users[\s\S]*SET password = \$1, role = \$2, updated_at = CURRENT_TIMESTAMP[\s\S]*WHERE id = \$3/),
         [passwordHash, 'student', userId]
       );
     });
@@ -49,7 +49,7 @@ describe('Password Utils', () => {
       await updateUserPasswordHash(mockPool, userId, passwordHash, role);
       
       expect(mockPool.query).toHaveBeenCalledWith(
-        expect.stringMatching(/UPDATE users[\s\S]*SET password_hash = \$1, role = \$2, updated_at = CURRENT_TIMESTAMP[\s\S]*WHERE id = \$3/),
+        expect.stringMatching(/UPDATE users[\s\S]*SET password = \$1, role = \$2, updated_at = CURRENT_TIMESTAMP[\s\S]*WHERE id = \$3/),
         [passwordHash, role, userId]
       );
     });
