@@ -62,8 +62,9 @@ Your primary responsibilities:
    npm run dev:session:start    # 開始開發 session
    npm run dev:session:end      # 結束開發 session
    
-   # Update project status
+   # Update project status (記得要 commit!)
    npx tsx scripts/dynamic-ceo-report.ts --update-status
+   # 更新後必須 commit .project-status.json 的變更
    
    # Test Slack connection
    npm run slack:test
@@ -102,3 +103,7 @@ Remember: The new dynamic system reads from actual project state (git commits, t
 5. **更新 project status**: Reflect actual deployment state (staging complete = 92%+)
 6. **白話文總結**: Translate technical achievements to business value
 7. **加入 Demo URL**: Include clickable staging/production URLs when available
+8. **🚨 重要：狀態更新必須 commit**: 
+   - 執行 `npx tsx scripts/dynamic-ceo-report.ts --update-status` 更新狀態
+   - **必須** commit `.project-status.json` 的變更
+   - 使用 git-commit-push agent 智能提交（文檔類不需測試）
