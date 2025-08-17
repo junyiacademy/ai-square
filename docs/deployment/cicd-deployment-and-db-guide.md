@@ -187,19 +187,67 @@ resource "google_sql_database_instance" "main" {
 
 ### 五、CI/CD 流程（使用 Terraform）
 
-#### 🚀 部署流程
+#### 🚀 完整自動化部署架構 (2025/01 新增)
+
+##### 最佳實踐部署流程
+
+```mermaid
+sequenceDiagram
+    participant Dev as 開發者
+    participant Make as Makefile
+    participant TF as Terraform
+    participant GCP as Google Cloud
+    participant E2E as E2E Tests
+    participant Report as 報告
+
+    Dev->>Make: make deploy-staging
+    Make->>Make: 檢查 TF_VAR_db_password
+    Make->>TF: terraform apply
+    TF->>GCP: 部署基礎設施
+    GCP-->>TF: 返回 Service URL
+    TF->>TF: 等待健康檢查
+    TF->>E2E: 執行 Playwright E2E 測試
+    E2E-->>TF: 測試結果
+    TF->>TF: 執行 Terraform Tests
+    Make->>Report: 生成部署報告
+```
+
+##### 一鍵部署系統
 
 ```bash
-# 1. 初始化 Terraform
-make terraform-init
+# 設定密碼（只需一次）
+export TF_VAR_db_password="AiSquare2025Db#"
 
-# 2. 預覽變更
-make terraform-plan-staging    # Staging
-make terraform-plan-production # Production
-
-# 3. 部署
+# 完整自動化部署（包含所有測試）
 make deploy-staging    # 部署到 Staging
 make deploy-production # 部署到 Production
+
+# CI/CD 整合（無互動）
+make ci-deploy ENV=staging
+```
+
+##### Terraform 檔案架構
+
+```
+terraform/
+├── 📄 基礎設施定義
+│   ├── main.tf              # Cloud SQL, Cloud Run, IAM
+│   ├── post-deploy.tf       # 資料庫初始化
+│   └── e2e.tf              # E2E 測試整合
+│
+├── 🔧 自動化工具
+│   ├── Makefile            # 簡化命令介面
+│   └── deploy-complete.sh  # 完整部署腳本
+│
+├── 🧪 測試套件
+│   ├── tests_plan.tftest.hcl     # 配置驗證
+│   ├── tests_validate.tftest.hcl # 部署驗證
+│   └── tests_e2e_integration.tftest.hcl # E2E 整合
+│
+└── 🔐 環境設定
+    └── environments/
+        ├── staging.tfvars
+        └── production.tfvars
 ```
 
 #### 部署前檢查清單
@@ -209,6 +257,8 @@ make deploy-production # 部署到 Production
 - [ ] Secret Manager 已設定所有密碼
 - [ ] Cloud SQL 與 Cloud Run 在同一 Region
 - [ ] Service Account 權限正確
+- [ ] E2E 測試檔案已準備
+- [ ] Terraform test 已配置
 
 #### GitHub Actions 整合
 
@@ -729,6 +779,425 @@ gcloud monitoring policies create \
 4. **備份策略**：Production DB 必須啟用自動備份
 5. **監控告警**：設定關鍵指標監控和錯誤告警
 6. **成本控制**：設定預算警報，定期檢視成本報告
+
+---
+
+## 十六、完整部署架構圖 (2025/01 新增)
+
+### 系統架構總覽
+
+```mermaid
+graph TB
+    subgraph "開發環境"
+        Dev[開發者] --> LocalTest[本地測試<br/>localhost:3000]
+        LocalTest --> E2ELocal[E2E Tests<br/>Playwright]
+    end
+
+    subgraph "CI/CD Pipeline"
+        Dev --> GitHub[GitHub Push]
+        GitHub --> Actions[GitHub Actions]
+        Actions --> TFPlan[Terraform Plan]
+        TFPlan --> TFApply[Terraform Apply]
+        TFApply --> Deploy[部署]
+    end
+
+    subgraph "Google Cloud Platform"
+        subgraph "Staging Environment"
+            CloudRunStg[Cloud Run<br/>ai-square-staging]
+            CloudSQLStg[Cloud SQL<br/>PostgreSQL 15]
+            SecretStg[Secret Manager]
+            CloudRunStg --> CloudSQLStg
+            CloudRunStg --> SecretStg
+        end
+
+        subgraph "Production Environment"
+            CloudRunProd[Cloud Run<br/>ai-square-frontend]
+            CloudSQLProd[Cloud SQL<br/>PostgreSQL 15]
+            SecretProd[Secret Manager]
+            CloudRunProd --> CloudSQLProd
+            CloudRunProd --> SecretProd
+        end
+    end
+
+    Deploy --> CloudRunStg
+    Deploy --> CloudRunProd
+
+    subgraph "測試流程"
+        CloudRunStg --> E2EStaging[E2E Tests<br/>對 Staging]
+        CloudRunProd --> E2EProd[E2E Tests<br/>對 Production]
+        E2EStaging --> TFTest[Terraform Tests]
+        E2EProd --> TFTest
+    end
+```
+
+### 資源關聯架構
+
+```mermaid
+graph LR
+    subgraph "Terraform Resources"
+        ServiceAccount[google_service_account<br/>ai-square-service]
+        
+        SQL[google_sql_database_instance<br/>ai-square-db-{env}]
+        DB[google_sql_database<br/>ai_square_db]
+        
+        CloudRun[google_cloud_run_service<br/>ai-square-{env}]
+        
+        Secret[google_secret_manager_secret<br/>db-password-{env}]
+        
+        IAM1[google_project_iam_member<br/>cloudsql.client]
+        IAM2[google_project_iam_member<br/>secretmanager.secretAccessor]
+        
+        Monitor[google_monitoring_uptime_check_config]
+        Alert[google_monitoring_alert_policy]
+    end
+    
+    ServiceAccount --> IAM1
+    ServiceAccount --> IAM2
+    CloudRun --> ServiceAccount
+    CloudRun --> SQL
+    CloudRun --> Secret
+    SQL --> DB
+    CloudRun --> Monitor
+    Monitor --> Alert
+```
+
+### 測試架構
+
+```mermaid
+graph TB
+    subgraph "測試類型"
+        subgraph "Infrastructure Tests"
+            PlanTest[tests_plan.tftest.hcl<br/>配置驗證]
+            ValidateTest[tests_validate.tftest.hcl<br/>部署驗證]
+        end
+        
+        subgraph "Application Tests"
+            E2ETest[E2E Tests<br/>Playwright]
+            HealthTest[Health Check<br/>API 可用性]
+            LoginTest[Login Flow<br/>認證測試]
+        end
+        
+        subgraph "Integration Tests"
+            DBTest[Database Tests<br/>資料完整性]
+            APITest[API Tests<br/>端點測試]
+        end
+    end
+    
+    PlanTest --> ValidateTest
+    ValidateTest --> E2ETest
+    E2ETest --> HealthTest
+    E2ETest --> LoginTest
+    HealthTest --> DBTest
+    LoginTest --> APITest
+```
+
+### 安全架構
+
+```mermaid
+graph TB
+    subgraph "Secret Management"
+        EnvVar[TF_VAR_db_password<br/>環境變數]
+        SecretMgr[Google Secret Manager]
+        CloudRun[Cloud Run Service]
+        
+        EnvVar --> Terraform
+        Terraform --> SecretMgr
+        SecretMgr --> CloudRun
+    end
+    
+    subgraph "Access Control"
+        ServiceAcc[Service Account]
+        IAMRoles[IAM Roles]
+        
+        ServiceAcc --> IAMRoles
+        IAMRoles --> SQLClient[Cloud SQL Client]
+        IAMRoles --> SecretAccess[Secret Accessor]
+    end
+```
+
+### Makefile 命令總覽
+
+```bash
+# 部署命令
+make deploy-staging       # 完整部署到 Staging
+make deploy-production    # 完整部署到 Production
+make ci-deploy           # CI/CD 無互動部署
+
+# 測試命令
+make test               # 執行 Terraform 測試
+make e2e                # 執行 E2E 測試
+
+# 維護命令
+make status             # 查看部署狀態
+make logs               # 查看 Cloud Run 日誌
+make destroy-staging    # 銷毀 Staging 環境
+make destroy-production # 銷毀 Production 環境
+
+# 輔助命令
+make init               # 初始化 Terraform
+make plan               # 預覽變更
+make apply              # 套用變更
+make clean              # 清理檔案
+```
+
+### 關鍵特性
+
+1. **完全自動化**：一個命令完成所有部署步驟
+2. **零人工介入**：除了初始密碼設定，無需任何輸入
+3. **完整測試覆蓋**：基礎設施 + E2E + 整合測試
+4. **安全管理**：Secret Manager 管理所有敏感資訊
+5. **多環境支援**：Staging 和 Production 獨立部署
+6. **錯誤恢復**：自動重試和錯誤處理機制
+7. **部署報告**：自動生成包含測試結果的報告
+8. **安全檢查**：自動執行安全審計，防止洩露敏感資訊
+
+---
+
+## 十七、🔒 安全審計與 CI/CD 整合 (2025/01 新增)
+
+### 部署前安全檢查流程
+
+```mermaid
+graph LR
+    A[開始部署] --> B[安全檢查]
+    B --> C{檢查結果}
+    C -->|通過| D[執行部署]
+    C -->|失敗| E[阻止部署]
+    E --> F[生成安全報告]
+    F --> G[通知開發者]
+    
+    B --> B1[掃描硬編碼密碼]
+    B --> B2[檢查環境變數]
+    B --> B3[驗證 Secret Manager]
+    B --> B4[檢查檔案權限]
+```
+
+### 自動化安全檢查
+
+#### Pre-deployment Security Checklist
+
+```bash
+# 部署前必須通過的安全檢查
+make security-check    # 執行完整安全審計
+```
+
+安全檢查項目：
+
+1. **硬編碼密碼檢查**
+   - 掃描所有檔案中的密碼模式
+   - 檢查 .env 檔案是否在版本控制中
+   - 驗證敏感資訊是否使用環境變數
+
+2. **Secret Manager 驗證**
+   - 確認所有必要的 secrets 已建立
+   - 驗證服務帳號權限
+   - 檢查 secret 版本和輪替策略
+
+3. **配置檔案審計**
+   - 檢查 `.env.production.yaml` 無硬編碼密碼
+   - 驗證 Terraform 變數使用環境變數
+   - 確認 GitHub Actions secrets 設定
+
+### 安全檢查腳本
+
+```bash
+#!/bin/bash
+# security-check.sh - CI/CD 安全檢查腳本
+
+set -e
+
+echo "🔒 執行安全審計..."
+
+# 1. 檢查硬編碼密碼
+echo "檢查硬編碼密碼..."
+HARDCODED=$(grep -r "password\|secret\|key" --include="*.yaml" --include="*.yml" --include="*.env" . 2>/dev/null | grep -v "^\*" | grep -v "example" | grep -v "template" || true)
+
+if [ ! -z "$HARDCODED" ]; then
+    echo "❌ 發現可能的硬編碼密碼："
+    echo "$HARDCODED"
+    exit 1
+fi
+
+# 2. 檢查 .env 檔案
+echo "檢查環境檔案..."
+if git ls-files | grep -E "\.env$|\.env\.production$|\.env\.staging$" | grep -v "\.example"; then
+    echo "❌ 發現 .env 檔案在版本控制中"
+    exit 1
+fi
+
+# 3. 驗證 Secret Manager
+echo "驗證 Secret Manager..."
+REQUIRED_SECRETS=(
+    "db-password-${ENVIRONMENT}"
+    "nextauth-secret-${ENVIRONMENT}"
+    "jwt-secret-${ENVIRONMENT}"
+)
+
+for secret in "${REQUIRED_SECRETS[@]}"; do
+    if ! gcloud secrets describe "$secret" &>/dev/null; then
+        echo "❌ Secret 不存在: $secret"
+        exit 1
+    fi
+done
+
+# 4. 檢查 Terraform 配置
+echo "檢查 Terraform 配置..."
+if grep -r "password.*=.*\"" terraform/ --include="*.tf" | grep -v "var\." | grep -v "data\."; then
+    echo "❌ Terraform 檔案中發現硬編碼密碼"
+    exit 1
+fi
+
+echo "✅ 安全檢查通過"
+```
+
+### CI/CD Pipeline 整合
+
+#### GitHub Actions 安全檢查
+
+```yaml
+# .github/workflows/security-check.yml
+name: Security Audit
+
+on:
+  push:
+    branches: [main, staging, production]
+  pull_request:
+    branches: [main]
+
+jobs:
+  security-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Run Security Check
+        run: |
+          chmod +x ./scripts/security-check.sh
+          ./scripts/security-check.sh
+      
+      - name: Scan for Secrets
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          
+      - name: Check Dependencies
+        run: |
+          npm audit --audit-level=moderate
+          
+      - name: SAST Scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'config'
+          scan-ref: '.'
+```
+
+### 安全最佳實踐
+
+#### 1. 密碼管理
+
+```bash
+# ❌ 錯誤：硬編碼密碼
+DB_PASSWORD: "AiSquare2025Db#"
+
+# ✅ 正確：使用 Secret Manager
+DB_PASSWORD: "${DB_PASSWORD}"  # 從 Secret Manager 讀取
+```
+
+#### 2. 環境變數配置
+
+```yaml
+# .env.example (可以提交到 Git)
+DB_HOST=/cloudsql/PROJECT:REGION:INSTANCE
+DB_NAME=ai_square_db
+DB_USER=postgres
+DB_PASSWORD=your-secure-password-here  # 範例值
+
+# .env.production (不要提交到 Git)
+DB_PASSWORD=ActualSecurePassword123!  # 實際密碼
+```
+
+#### 3. Secret Rotation 策略
+
+```bash
+# 定期輪替密碼（每季度）
+gcloud scheduler jobs create http rotate-secrets \
+  --schedule="0 0 1 */3 *" \
+  --uri="https://YOUR-FUNCTION-URL/rotate-secrets" \
+  --http-method=POST
+```
+
+### 安全監控與告警
+
+```yaml
+# monitoring-rules.yaml
+alertPolicy:
+  displayName: "Suspicious Access Alert"
+  conditions:
+    - displayName: "High rate of 401 errors"
+      conditionThreshold:
+        filter: 'resource.type="cloud_run_revision" 
+                 AND metric.type="run.googleapis.com/request_count"
+                 AND metric.label.response_code="401"'
+        comparison: COMPARISON_GT
+        thresholdValue: 10
+        duration: 60s
+```
+
+### Makefile 安全命令
+
+```makefile
+# 安全相關命令
+security-check: ## 執行完整安全審計
+	@echo "🔒 執行安全審計..."
+	@./scripts/security-check.sh
+	@echo "🔍 掃描敏感資訊..."
+	@trufflehog filesystem . --no-verification
+	@echo "📊 檢查相依套件..."
+	@cd frontend && npm audit
+	@echo "✅ 安全檢查完成"
+
+rotate-secrets: ## 輪替所有 secrets
+	@echo "🔄 輪替 secrets..."
+	@./scripts/rotate-secrets.sh
+
+security-report: ## 生成安全報告
+	@echo "📋 生成安全報告..."
+	@./scripts/generate-security-report.sh > security-report-$(date +%Y%m%d).md
+```
+
+### 安全檢查清單
+
+部署前必須確認：
+
+- [ ] 無硬編碼密碼在程式碼中
+- [ ] 所有 .env 檔案已加入 .gitignore
+- [ ] Secret Manager 已設定所有必要 secrets
+- [ ] 服務帳號權限遵循最小權限原則
+- [ ] HTTPS 已啟用且強制使用
+- [ ] 資料庫備份已啟用
+- [ ] 監控告警已設定
+- [ ] 安全審計日誌已啟用
+- [ ] Rate limiting 已配置
+- [ ] CORS 設定正確
+
+### 事件回應計畫
+
+發現安全問題時：
+
+1. **立即行動**
+   - 撤銷洩露的憑證
+   - 輪替所有相關密碼
+   - 檢查存取日誌
+
+2. **調查範圍**
+   - 確認影響時間範圍
+   - 識別受影響的系統
+   - 評估資料外洩風險
+
+3. **修復與預防**
+   - 修正安全漏洞
+   - 更新安全檢查腳本
+   - 加強監控機制
 
 ### 十三、Production 部署常見問題與解決方案（2025-01-15 實測驗證）
 

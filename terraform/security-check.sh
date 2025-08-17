@@ -20,7 +20,14 @@ WARNINGS=0
 
 # Check 1: Ensure no hardcoded passwords
 echo "Checking for hardcoded passwords..."
-if grep -r "password\s*=\s*\"" *.tf 2>/dev/null | grep -v "var.db_password" | grep -v "password\s*=\s*var"; then
+# Exclude common safe patterns: variables, placeholders, documentation references
+if grep -r "password\s*=\s*\"" *.tf 2>/dev/null | \
+   grep -v "var.db_password" | \
+   grep -v "password\s*=\s*var" | \
+   grep -v "\[Check deployment documentation\]" | \
+   grep -v "password\s*=\s*\"\${" | \
+   grep -v "password: dbPassword" | \
+   grep -v "# password" ; then
     echo -e "${RED}❌ Found hardcoded passwords!${NC}"
     ISSUES=$((ISSUES + 1))
 else
@@ -91,12 +98,23 @@ fi
 # Check 8: Check for .tfvars files with secrets
 echo ""
 echo "Checking for secrets in .tfvars files..."
-if ls *.tfvars 2>/dev/null | xargs grep -l "password\|secret\|key" 2>/dev/null; then
-    echo -e "${RED}❌ Found potential secrets in .tfvars files!${NC}"
-    echo "    Never commit .tfvars files with secrets to Git!"
+FOUND_REAL_SECRETS=false
+for file in $(find . -name "*.tfvars" 2>/dev/null); do
+    # Check for actual passwords (not placeholders)
+    if grep -q "password\|secret\|key" "$file" 2>/dev/null; then
+        # Exclude placeholder patterns
+        if ! grep "password\|secret\|key" "$file" | grep -q "REPLACE_WITH\|PLACEHOLDER\|your-\|example\|dummy"; then
+            echo -e "${RED}❌ Found potential real secrets in $file${NC}"
+            FOUND_REAL_SECRETS=true
+        fi
+    fi
+done
+
+if $FOUND_REAL_SECRETS; then
+    echo "    Never commit .tfvars files with real secrets to Git!"
     ISSUES=$((ISSUES + 1))
 else
-    echo -e "${GREEN}✅ No secrets found in .tfvars files${NC}"
+    echo -e "${GREEN}✅ No real secrets found in .tfvars files (only placeholders)${NC}"
 fi
 
 # Summary

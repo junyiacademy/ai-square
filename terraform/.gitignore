@@ -34,3 +34,10 @@ secrets.auto.tfvars
 passwords.auto.tfvars
 *.secret
 *.password
+
+# Demo credentials (never commit actual passwords)
+demo-credentials.env
+*-credentials.env
+
+# Deployment reports
+deployment-report-*.txt

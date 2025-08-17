@@ -16,6 +16,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 | **progress-memory-coach** | 儲存/回憶進度、專案洞察 | 跨工作階段記憶管理 | 「我們上次做了什麼？」「儲存目前進度」 |
 | **slack-tracker-integration** | Slack 報告、開發追蹤 | 整合 Slack 通知系統 | 設定開發追蹤器、發送 CEO 報告 |
 | **deployment-qa** | 部署驗證、QA 檢查 | 自動化部署測試 | 「檢查 staging」「驗證部署」 |
+| **git-commit-push** | Git 提交、推送決策 | 智能決定是否需要測試驗證 | 「commit 這些變更」「push 到 main」 |
+| **terraform-deploy** | Terraform 部署、基礎設施 | 自動化基礎設施部署 | 「部署到 staging」「terraform apply」 |
 | **general-purpose** | 複雜搜尋、多步驟任務 | 處理需要多次嘗試的任務 | 跨檔案搜尋、不確定位置的查詢 |
 
 ### 🔍 需求分析流程
@@ -25,6 +27,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
    - 部署/測試 → deployment-qa
    - Slack/報告 → slack-tracker-integration
    - 記憶/進度 → progress-memory-coach
+   - Git 操作 → git-commit-push
+   - Terraform/基礎設施 → terraform-deploy
    - 複雜搜尋 → general-purpose
 
 2. **評估任務複雜度**
@@ -68,6 +72,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 # 用戶：「我們上次討論了什麼？」
 # Claude：使用 progress-memory-coach agent
 
+# 用戶：「commit 這些 md 檔案」
+# Claude：使用 git-commit-push agent（會智能判斷不需要測試）
+
+# 用戶：「部署基礎設施到 staging」
+# Claude：使用 terraform-deploy agent
+
 # 用戶：「優化資料庫查詢」
 # Claude：建議創建 database-optimizer agent
 ```
@@ -85,6 +95,33 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 3. **持續優化**
    - 記錄哪些任務缺少專門 agent
    - 定期建議新 agent 創建
+
+### 📁 .claude/agents/ 目錄說明
+
+**.claude/agents/** 目錄包含了專門的 sub-agent 定義文件，每個文件都描述了特定 agent 的能力和使用場景：
+
+```
+.claude/
+└── agents/
+    ├── deployment-qa.md              # 部署驗證與 QA agent
+    ├── git-commit-push.md            # Git 智能提交決策 agent
+    ├── progress-memory-coach.md      # 進度與記憶管理 agent
+    ├── slack-tracker-integration.md  # Slack 追蹤整合 agent
+    ├── terraform-deploy.md           # Terraform 部署 agent
+    └── typescript-eslint-fixer.md    # TypeScript/ESLint 修復 agent
+```
+
+**使用方式**：
+1. 當遇到符合 agent 專長的任務時，Claude 會自動調用相應的 agent
+2. 每個 agent 都有特定的觸發條件和專業領域
+3. Agent 定義文件包含詳細的使用說明和範例
+
+**新增 Agent**：
+如需新增專門的 agent，在 `.claude/agents/` 目錄下創建新的 `.md` 文件，包含：
+- Agent 名稱和用途
+- 觸發條件
+- 使用範例
+- 專業能力描述
 
 ---
 

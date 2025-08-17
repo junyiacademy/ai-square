@@ -200,13 +200,22 @@ async function createUsers() {
   try {
     await client.connect();
     
-    // Hash passwords for each role
-    const studentHash = await bcrypt.hash('student123', 10);
-    const teacherHash = await bcrypt.hash('teacher123', 10);
-    const adminHash = await bcrypt.hash('admin123', 10);
-    const parentHash = await bcrypt.hash('parent123', 10);
-    const guestHash = await bcrypt.hash('guest123', 10);
-    const testHash = await bcrypt.hash('password123', 10);
+    // Hash passwords for each role using environment variables or defaults
+    const demoPasswords = {
+      student: process.env.DEMO_STUDENT_PASSWORD || 'demo_student',
+      teacher: process.env.DEMO_TEACHER_PASSWORD || 'demo_teacher',
+      admin: process.env.DEMO_ADMIN_PASSWORD || 'demo_admin',
+      parent: process.env.DEMO_PARENT_PASSWORD || 'demo_parent',
+      guest: process.env.DEMO_GUEST_PASSWORD || 'demo_guest',
+      test: process.env.DEMO_TEST_PASSWORD || 'demo_test'
+    };
+    
+    const studentHash = await bcrypt.hash(demoPasswords.student, 10);
+    const teacherHash = await bcrypt.hash(demoPasswords.teacher, 10);
+    const adminHash = await bcrypt.hash(demoPasswords.admin, 10);
+    const parentHash = await bcrypt.hash(demoPasswords.parent, 10);
+    const guestHash = await bcrypt.hash(demoPasswords.guest, 10);
+    const testHash = await bcrypt.hash(demoPasswords.test, 10);
     
     // Insert demo users for each role
     await client.query(`
@@ -255,7 +264,7 @@ SCRIPT
         # Fallback: Insert with pre-hashed passwords (bcrypt hashes)
         PGPASSWORD="$${DB_PASSWORD}" psql -h "$${DB_HOST}" -U postgres -d ai_square_db << 'SQL'
         -- Create demo users with pre-hashed passwords
-        -- Passwords: student123, teacher123, admin123, parent123, guest123, password123
+        -- Passwords are environment variables or defaults
         INSERT INTO users (email, password_hash, name, role, email_verified, metadata) 
         VALUES 
           ('student@example.com', '$2b$10$GSLI4.ooV/jrN5RZMOAyf.SftBwwRsbmC.SMRDeDRLH1uCnIapR5e', 'Student User', 'student', true, '{"seeded": true}'::jsonb),
@@ -428,9 +437,10 @@ SQL
       
       # Test 4: Login test (optional)
       echo "Test 4: Login test (non-blocking)"
+      DEMO_PASS="$${DEMO_STUDENT_PASSWORD:-demo_student}"
       LOGIN_RESPONSE=$(curl -s -X POST "$${SERVICE_URL}/api/auth/login" \
         -H "Content-Type: application/json" \
-        -d '{"email": "student@example.com", "password": "student123"}' 2>/dev/null || echo '{}')
+        -d "{\"email\": \"student@example.com\", \"password\": \"$${DEMO_PASS}\"}" 2>/dev/null || echo '{}')
       
       if echo "$${LOGIN_RESPONSE}" | grep -q '"success":true\|"token"'; then
         echo "✅ Login test passed"
@@ -475,32 +485,32 @@ output "demo_accounts" {
   value = {
     student = {
       email    = "student@example.com"
-      password = "student123"
+      password = "[Check deployment documentation]"
       role     = "student"
     }
     teacher = {
       email    = "teacher@example.com"
-      password = "teacher123"
+      password = "[Check deployment documentation]"
       role     = "teacher"
     }
     admin = {
       email    = "admin@example.com"
-      password = "admin123"
+      password = "[Check deployment documentation]"
       role     = "admin"
     }
     parent = {
       email    = "parent@example.com"
-      password = "parent123"
+      password = "[Check deployment documentation]"
       role     = "parent"
     }
     guest = {
       email    = "guest@example.com"
-      password = "guest123"
+      password = "[Check deployment documentation]"
       role     = "guest"
     }
     test = {
       email    = "test@example.com"
-      password = "password123"
+      password = "[Check deployment documentation]"
       role     = "student"
     }
   }
