@@ -30,6 +30,14 @@ help: ## Show this help message
 	@echo "  make deploy-production  # Deploy to production with full pipeline"
 	@echo "  make test ENV=staging   # Run tests for staging environment"
 	@echo ""
+	@echo "E2E Testing:"
+	@echo "  make e2e ENV=staging    # Run all E2E tests"
+	@echo "  make e2e-smoke          # Run smoke tests only"
+	@echo "  make e2e-critical       # Run critical path tests"
+	@echo "  make e2e-auth           # Run authentication tests"
+	@echo "  make e2e-debug          # Run tests in headed mode"
+	@echo "  make e2e-report         # View test report"
+	@echo ""
 
 init: ## Initialize Terraform
 	terraform init -upgrade
@@ -139,14 +147,65 @@ test: check-password ## Run Terraform tests
 	terraform test
 
 e2e: ## Run E2E tests against deployed environment
-	@echo "🧪 Running E2E tests..."
-	@SERVICE_URL=$$(terraform output -raw service_url 2>/dev/null); \
+	@echo "🧪 Running E2E tests against $(ENV) environment..."
+	@terraform workspace select $(ENV) 2>/dev/null || (echo "❌ Workspace $(ENV) not found" && exit 1)
+	@SERVICE_URL=$$(terraform output -raw e2e_service_url 2>/dev/null); \
 	if [ -z "$$SERVICE_URL" ]; then \
 		echo "❌ No service URL found. Deploy first with 'make deploy-$(ENV)'"; \
 		exit 1; \
 	fi; \
+	echo "🌐 Target URL: $$SERVICE_URL"; \
+	echo "📦 Installing dependencies..."; \
 	cd ../frontend && \
-	PLAYWRIGHT_BASE_URL=$$SERVICE_URL npm run test:e2e
+	if [ ! -d "node_modules" ]; then npm install; fi && \
+	if [ ! -d "$$HOME/.cache/ms-playwright" ]; then \
+		echo "🎭 Installing Playwright browsers..."; \
+		npx playwright install chromium --with-deps; \
+	fi && \
+	echo "🧪 Executing E2E tests..."; \
+	PLAYWRIGHT_BASE_URL=$$SERVICE_URL \
+	TEST_EMAIL="student@example.com" \
+	TEST_PASSWORD="student123" \
+	npm run test:e2e -- --reporter=list
+
+e2e-smoke: ## Run only smoke tests
+	@echo "🔥 Running smoke tests against $(ENV)..."
+	@terraform workspace select $(ENV) 2>/dev/null || (echo "❌ Workspace $(ENV) not found" && exit 1)
+	@SERVICE_URL=$$(terraform output -raw e2e_service_url 2>/dev/null); \
+	cd ../frontend && \
+	PLAYWRIGHT_BASE_URL=$$SERVICE_URL npm run test:e2e -- --grep smoke --reporter=list
+
+e2e-critical: ## Run only critical path tests
+	@echo "🚨 Running critical tests against $(ENV)..."
+	@terraform workspace select $(ENV) 2>/dev/null || (echo "❌ Workspace $(ENV) not found" && exit 1)
+	@SERVICE_URL=$$(terraform output -raw e2e_service_url 2>/dev/null); \
+	cd ../frontend && \
+	PLAYWRIGHT_BASE_URL=$$SERVICE_URL npm run test:e2e -- --grep critical --reporter=list
+
+e2e-auth: ## Run authentication tests
+	@echo "🔐 Running auth tests against $(ENV)..."
+	@terraform workspace select $(ENV) 2>/dev/null || (echo "❌ Workspace $(ENV) not found" && exit 1)
+	@SERVICE_URL=$$(terraform output -raw e2e_service_url 2>/dev/null); \
+	cd ../frontend && \
+	PLAYWRIGHT_BASE_URL=$$SERVICE_URL npm run test:e2e -- e2e/auth-flow.spec.ts --reporter=list
+
+e2e-report: ## Generate and open E2E test report
+	@echo "📊 Generating E2E test report..."
+	@cd ../frontend && \
+	if [ -d "playwright-report" ]; then \
+		npx playwright show-report; \
+	else \
+		echo "❌ No test report found. Run 'make e2e' first."; \
+	fi
+
+e2e-debug: ## Run E2E tests in debug mode (headed)
+	@echo "🔍 Running E2E tests in debug mode..."
+	@terraform workspace select $(ENV) 2>/dev/null || (echo "❌ Workspace $(ENV) not found" && exit 1)
+	@SERVICE_URL=$$(terraform output -raw e2e_service_url 2>/dev/null); \
+	cd ../frontend && \
+	PLAYWRIGHT_BASE_URL=$$SERVICE_URL \
+	HEADLESS=false \
+	npm run test:e2e -- --headed --workers=1
 
 # ============================================
 # Maintenance Commands

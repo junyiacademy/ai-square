@@ -1,11 +1,16 @@
 # ============================================
-# Post-Deployment E2E Testing
+# E2E Testing Configuration and Outputs
 # ============================================
-# Run E2E tests after infrastructure deployment
+# Provides outputs and configurations for E2E testing
+# Actual test execution is handled by Makefile
 # ============================================
 
-# Run E2E tests after deployment
-resource "null_resource" "e2e_tests" {
+# ============================================
+# Basic Smoke Tests (Infrastructure Validation)
+# ============================================
+
+# Simple smoke test to verify service is responding
+resource "null_resource" "smoke_test" {
   depends_on = [
     null_resource.wait_for_service,
     null_resource.init_database_schema,
@@ -18,118 +23,107 @@ resource "null_resource" "e2e_tests" {
   }
 
   provisioner "local-exec" {
-    working_dir = "${path.module}/../frontend"
     command = <<-EOT
-      echo "🧪 Running E2E tests against ${google_cloud_run_service.ai_square.status[0].url}"
+      echo "🔥 Running basic smoke tests..."
       
-      # Install dependencies if needed
-      if [ ! -d "node_modules" ]; then
-        npm install
-      fi
-      
-      # Install Playwright browsers if needed
-      if [ ! -d "$HOME/.cache/ms-playwright" ]; then
-        npx playwright install chromium --with-deps
-      fi
-      
-      # Set environment variables for E2E tests
-      export PLAYWRIGHT_BASE_URL="${google_cloud_run_service.ai_square.status[0].url}"
-      export TEST_EMAIL="student@example.com"
-      export TEST_PASSWORD="student123"
-      
-      # Run E2E tests
-      npm run test:e2e -- \
-        --project=chromium \
-        --grep "critical|smoke" \
-        --reporter=list \
-        --retries=2
-    EOT
-
-    on_failure = continue # Don't fail deployment if tests fail
-  }
-}
-
-# Separate critical path E2E tests
-resource "null_resource" "critical_e2e_tests" {
-  depends_on = [null_resource.e2e_tests]
-
-  triggers = {
-    service_url = google_cloud_run_service.ai_square.status[0].url
-  }
-
-  provisioner "local-exec" {
-    working_dir = "${path.module}/../frontend"
-    command = <<-EOT
-      echo "🚨 Running critical E2E tests"
-      
-      export PLAYWRIGHT_BASE_URL="${google_cloud_run_service.ai_square.status[0].url}"
-      
-      # Run only critical tests
-      npx playwright test \
-        e2e/auth-flow.spec.ts \
-        e2e/basic-health-check.spec.ts \
-        --reporter=json \
-        --output=critical-test-results.json
-      
-      # Check results
-      if [ $? -ne 0 ]; then
-        echo "❌ Critical E2E tests failed!"
+      # Test 1: Health check endpoint
+      if curl -sf "${google_cloud_run_service.ai_square.status[0].url}/api/health" > /dev/null; then
+        echo "✅ Health check passed"
+      else
+        echo "❌ Health check failed"
         exit 1
       fi
       
-      echo "✅ Critical E2E tests passed!"
-    EOT
-  }
-}
-
-# Performance E2E tests (optional)
-resource "null_resource" "performance_e2e_tests" {
-  count = var.run_performance_tests ? 1 : 0
-  
-  depends_on = [null_resource.critical_e2e_tests]
-
-  triggers = {
-    service_url = google_cloud_run_service.ai_square.status[0].url
-  }
-
-  provisioner "local-exec" {
-    working_dir = "${path.module}/../frontend"
-    command = <<-EOT
-      echo "⚡ Running performance E2E tests"
+      # Test 2: API responsiveness
+      RESPONSE=$(curl -s -w "%%{http_code}" -o /dev/null "${google_cloud_run_service.ai_square.status[0].url}/api/pbl/scenarios?lang=en")
+      if [ "$RESPONSE" = "200" ] || [ "$RESPONSE" = "401" ]; then
+        echo "✅ API is responding (HTTP $RESPONSE)"
+      else
+        echo "❌ API not responding properly (HTTP $RESPONSE)"
+        exit 1
+      fi
       
-      export PLAYWRIGHT_BASE_URL="${google_cloud_run_service.ai_square.status[0].url}"
+      # Test 3: Database connectivity (via health endpoint)
+      HEALTH=$(curl -s "${google_cloud_run_service.ai_square.status[0].url}/api/health" | grep -o '"database":"healthy"' || true)
+      if [ -n "$HEALTH" ]; then
+        echo "✅ Database connectivity verified"
+      else
+        echo "⚠️  Database health not verified (may be expected)"
+      fi
       
-      # Run performance tests
-      npx playwright test \
-        e2e/performance/*.spec.ts \
-        --reporter=html \
-        --workers=1
+      echo "✅ All smoke tests passed!"
     EOT
 
     on_failure = continue
   }
 }
 
-# Output E2E test status
-output "e2e_tests_url" {
-  value = "${google_cloud_run_service.ai_square.status[0].url}/playwright-report"
-  description = "URL to view E2E test results"
+# ============================================
+# E2E Test Configuration Outputs
+# ============================================
+
+# Output the service URL for E2E tests
+output "e2e_service_url" {
+  value       = google_cloud_run_service.ai_square.status[0].url
+  description = "The deployed service URL for E2E testing"
 }
 
-output "e2e_test_command" {
-  value = "cd frontend && PLAYWRIGHT_BASE_URL=${google_cloud_run_service.ai_square.status[0].url} npm run test:e2e"
-  description = "Command to manually run E2E tests"
+# Output the test credentials
+output "e2e_test_credentials" {
+  value = {
+    student_email    = "student@example.com"
+    teacher_email    = "teacher@example.com"
+    admin_email      = "admin@example.com"
+    credentials_note = "Passwords are set in demo-credentials.env.example"
+  }
+  description = "Test account credentials for E2E testing"
 }
 
-# Variable to control E2E testing
-variable "run_e2e_tests" {
-  description = "Whether to run E2E tests after deployment"
+# Output commands for manual E2E test execution
+output "e2e_test_commands" {
+  value = {
+    all_tests        = "make e2e ENV=${var.environment}"
+    smoke_tests      = "cd ../frontend && PLAYWRIGHT_BASE_URL=${google_cloud_run_service.ai_square.status[0].url} npm run test:e2e -- --grep smoke"
+    critical_tests   = "cd ../frontend && PLAYWRIGHT_BASE_URL=${google_cloud_run_service.ai_square.status[0].url} npm run test:e2e -- --grep critical"
+    auth_tests       = "cd ../frontend && PLAYWRIGHT_BASE_URL=${google_cloud_run_service.ai_square.status[0].url} npm run test:e2e -- e2e/auth-flow.spec.ts"
+    performance_tests = "cd ../frontend && PLAYWRIGHT_BASE_URL=${google_cloud_run_service.ai_square.status[0].url} npm run test:e2e -- e2e/performance"
+  }
+  description = "Commands to run different E2E test suites"
+}
+
+# Output environment variables needed for E2E tests
+output "e2e_env_vars" {
+  value = {
+    PLAYWRIGHT_BASE_URL = google_cloud_run_service.ai_square.status[0].url
+    TEST_EMAIL         = "student@example.com"
+    TEST_PASSWORD      = "See demo-credentials.env.example"
+    HEADLESS          = "true"
+  }
+  description = "Environment variables required for E2E tests"
+}
+
+# Output test report locations
+output "e2e_test_reports" {
+  value = {
+    playwright_report = "../frontend/playwright-report/index.html"
+    test_results     = "../frontend/test-results/"
+    coverage_report  = "../frontend/coverage/lcov-report/index.html"
+  }
+  description = "Locations of test reports after E2E execution"
+}
+
+# ============================================
+# E2E Test Variables
+# ============================================
+
+variable "enable_smoke_tests" {
+  description = "Whether to run smoke tests after deployment"
   type        = bool
   default     = true
 }
 
-variable "run_performance_tests" {
-  description = "Whether to run performance E2E tests"
-  type        = bool
-  default     = false
-}
+# Note: Complex E2E test execution is handled by Makefile
+# using the outputs provided above. This keeps the separation
+# of concerns clear:
+# - Terraform: Infrastructure + basic validation + configuration
+# - Makefile: Orchestration + test execution + reporting

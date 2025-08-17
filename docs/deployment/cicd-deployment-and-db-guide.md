@@ -955,6 +955,67 @@ make clean              # 清理檔案
 
 ## 十七、🔒 安全審計與 CI/CD 整合 (2025/01 新增)
 
+### CI/CD 自動化實際實施狀態
+
+#### ✅ 已完全實施並運作的自動化：
+
+1. **基礎 CI Pipeline** (`/.github/workflows/ci.yml`)
+   - ✅ TypeScript 編譯檢查
+   - ✅ ESLint 程式碼品質檢查  
+   - ✅ Jest 單元測試執行
+   - ✅ 測試覆蓋率報告 (Codecov)
+   - ✅ npm audit 安全掃描
+   - ✅ TruffleHog 敏感資訊掃描
+   - ✅ Conventional commits 檢查
+
+2. **Terraform 自動化** (`/.github/workflows/terraform.yml`)
+   - ✅ Terraform plan 自動執行
+   - ✅ Terraform apply (staging 自動, production 需要審核)
+   - ✅ Security check 腳本執行
+   - ✅ 多環境支援 (workspace)
+   - ✅ 健康檢查驗證
+
+3. **部署自動化** (`/.github/workflows/deploy.yml`)
+   - ✅ Docker image 建置和推送
+   - ✅ Cloud Run 部署
+   - ✅ 環境變數配置
+   - ✅ Slack 通知
+
+#### ⚠️ 已配置但未完全自動化：
+
+1. **容器安全掃描**
+   - 配置位置：`deploy-complete.yml` (Trivy)
+   - 實際狀態：未整合到主要部署流程
+   - 需要手動觸發或使用 `deploy-complete.yml` workflow
+
+2. **藍綠部署**
+   - 配置位置：`terraform/blue-green-deployment.tf`
+   - 實際狀態：Terraform 模組已建立但未在 CI/CD 中使用
+   - 需要手動執行流量切換腳本
+
+3. **E2E 測試自動執行**
+   - 配置位置：`terraform/e2e.tf`, `terraform/Makefile`
+   - 實際狀態：在主要 deploy workflow 中被註解掉
+   - 需要手動執行 `make e2e`
+
+4. **監控告警**
+   - 配置位置：`terraform/monitoring.tf`
+   - 實際狀態：Terraform 已定義但需要確認 Slack webhook 和實際觸發
+
+#### ❌ 尚未實施：
+
+1. **自動回滾機制**
+   - 有配置在 `deploy-complete.yml` 但不是主要部署路徑
+   - 需要手動使用 Terraform 回滾
+
+2. **自動晉升 (Auto-promotion)**
+   - 無自動從 staging 到 production 的機制
+   - 所有 production 部署需要手動觸發
+
+3. **效能測試**
+   - 只有基本的建置時間檢查
+   - 無實際的負載測試或效能基準測試
+
 ### 部署前安全檢查流程
 
 ```mermaid
@@ -983,17 +1044,17 @@ make security-check    # 執行完整安全審計
 
 安全檢查項目：
 
-1. **硬編碼密碼檢查**
+1. **硬編碼密碼檢查** (✅ 已實施)
    - 掃描所有檔案中的密碼模式
    - 檢查 .env 檔案是否在版本控制中
    - 驗證敏感資訊是否使用環境變數
 
-2. **Secret Manager 驗證**
+2. **Secret Manager 驗證** (⚠️ 部分實施)
    - 確認所有必要的 secrets 已建立
    - 驗證服務帳號權限
    - 檢查 secret 版本和輪替策略
 
-3. **配置檔案審計**
+3. **配置檔案審計** (✅ 已實施)
    - 檢查 `.env.production.yaml` 無硬編碼密碼
    - 驗證 Terraform 變數使用環境變數
    - 確認 GitHub Actions secrets 設定
@@ -1198,6 +1259,153 @@ security-report: ## 生成安全報告
    - 修正安全漏洞
    - 更新安全檢查腳本
    - 加強監控機制
+
+## 十八、CI/CD 自動化完善計畫
+
+### 🎯 需要完成的自動化項目
+
+#### 1. 容器安全掃描整合
+```yaml
+# 將 Trivy 掃描加入主要部署流程
+# 在 .github/workflows/deploy.yml 的 security job 中加入：
+- name: Run Trivy container scan
+  uses: aquasecurity/trivy-action@master
+  with:
+    image-ref: 'gcr.io/${{ env.PROJECT_ID }}/ai-square-${{ matrix.environment }}:${{ github.sha }}'
+    format: 'sarif'
+    output: 'trivy-results.sarif'
+    severity: 'CRITICAL,HIGH'
+    exit-code: '1'  # 發現嚴重漏洞時失敗
+```
+
+#### 2. E2E 測試自動執行
+```yaml
+# 取消註解並啟用 E2E 測試
+# 在 deploy-staging job 的步驟中：
+- name: Run E2E tests
+  working-directory: frontend
+  run: |
+    npm ci
+    npx playwright install --with-deps
+    PLAYWRIGHT_BASE_URL=${{ steps.deploy.outputs.url }} npm run test:e2e
+  continue-on-error: false  # E2E 失敗應該阻止部署
+```
+
+#### 3. 藍綠部署實施
+```bash
+# 在 Terraform 中啟用藍綠部署
+# main.tf 中使用 blue_green_deployment module
+module "deployment" {
+  source = "./modules/blue-green"
+  active_color = var.deployment_color
+  # ... 其他配置
+}
+
+# GitHub Actions 中加入流量切換
+- name: Switch traffic to new version
+  run: |
+    cd terraform
+    make canary-deploy PERCENT=10
+    sleep 300  # 監控 5 分鐘
+    make canary-deploy PERCENT=50
+    sleep 300
+    make canary-deploy PERCENT=100
+```
+
+#### 4. 自動回滾機制
+```yaml
+# 在部署後加入健康檢查和自動回滾
+- name: Health check with auto-rollback
+  run: |
+    RETRY_COUNT=0
+    MAX_RETRIES=5
+    while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+      if curl -f ${{ steps.deploy.outputs.url }}/api/health; then
+        echo "Health check passed"
+        break
+      fi
+      RETRY_COUNT=$((RETRY_COUNT+1))
+      sleep 30
+    done
+    
+    if [ $RETRY_COUNT -eq $MAX_RETRIES ]; then
+      echo "Health check failed, rolling back"
+      gcloud run services update-traffic $SERVICE_NAME \
+        --to-revisions=${{ steps.deploy.outputs.previous_revision }}=100
+      exit 1
+    fi
+```
+
+#### 5. 效能測試整合
+```yaml
+# 加入 Lighthouse CI 或類似工具
+- name: Run performance tests
+  uses: treosh/lighthouse-ci-action@v9
+  with:
+    urls: |
+      ${{ steps.deploy.outputs.url }}
+      ${{ steps.deploy.outputs.url }}/pbl/scenarios
+      ${{ steps.deploy.outputs.url }}/discovery/scenarios
+    budgetPath: ./performance-budget.json
+    uploadArtifacts: true
+```
+
+#### 6. 自動晉升機制
+```yaml
+# 建立獨立的 workflow 用於自動晉升
+name: Auto-promote to Production
+on:
+  workflow_run:
+    workflows: ["Deploy to Staging"]
+    types: [completed]
+    
+jobs:
+  promote:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for stability period
+        run: sleep 3600  # 1 小時穩定期
+        
+      - name: Check staging metrics
+        run: |
+          # 檢查錯誤率、延遲等指標
+          ERROR_RATE=$(gcloud monitoring read ...)
+          if [ $ERROR_RATE -gt 1 ]; then
+            echo "Error rate too high, cancelling promotion"
+            exit 1
+          fi
+          
+      - name: Promote to production
+        run: |
+          gh workflow run deploy.yml -f environment=production
+```
+
+### 🚀 實施優先順序
+
+1. **第一階段** (高優先級，低風險)
+   - ✅ 容器安全掃描整合
+   - ✅ E2E 測試自動執行
+   - ✅ 監控告警確認
+
+2. **第二階段** (中優先級，中風險)
+   - 自動回滾機制
+   - 效能測試整合
+
+3. **第三階段** (低優先級，高複雜度)
+   - 藍綠部署完整實施
+   - 自動晉升機制
+
+### 📋 實施檢查清單
+
+- [ ] 更新 `.github/workflows/deploy.yml` 加入容器掃描
+- [ ] 取消註解 E2E 測試步驟
+- [ ] 建立 `performance-budget.json` 效能預算
+- [ ] 測試自動回滾腳本
+- [ ] 建立 `auto-promote.yml` workflow
+- [ ] 更新 Terraform 使用藍綠部署模組
+- [ ] 設定所有必要的 GitHub secrets
+- [ ] 更新文件反映新的 CI/CD 流程
 
 ### 十三、Production 部署常見問題與解決方案（2025-01-15 實測驗證）
 

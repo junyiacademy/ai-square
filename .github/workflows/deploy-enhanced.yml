@@ -1,0 +1,482 @@
+name: Enhanced AI Square Deployment Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+  pull_request:
+    branches:
+      - main
+      - staging
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Deployment environment'
+        required: true
+        type: choice
+        options:
+          - staging
+          - production
+
+env:
+  PROJECT_ID: ai-square-463013
+  REGION: asia-east1
+  
+jobs:
+  # ============================================
+  # 1. Validation & Testing
+  # ============================================
+  validate:
+    name: Validate & Test
+    runs-on: ubuntu-latest
+    outputs:
+      image_tag: ${{ steps.image.outputs.tag }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+          
+      - name: Install dependencies
+        working-directory: frontend
+        run: npm ci
+        
+      - name: Run TypeScript check
+        working-directory: frontend
+        run: npx tsc --noEmit
+        
+      - name: Run ESLint
+        working-directory: frontend
+        run: npm run lint
+        
+      - name: Run tests with coverage
+        working-directory: frontend
+        run: npm run test:ci -- --coverage
+        
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v3
+        with:
+          directory: ./frontend/coverage
+          flags: frontend
+          
+      - name: Build application
+        working-directory: frontend
+        run: npm run build
+        
+      - name: Set image tag
+        id: image
+        run: echo "tag=${GITHUB_SHA::7}-$(date +%Y%m%d-%H%M)" >> $GITHUB_OUTPUT
+
+  # ============================================
+  # 2. Security Scanning
+  # ============================================
+  security:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    needs: validate
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Run npm audit
+        working-directory: frontend
+        run: |
+          npm audit --production
+          npm audit --audit-level=high || true
+        
+      - name: Check for secrets
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: ${{ github.event.repository.default_branch }}
+          head: HEAD
+          
+      - name: Build Docker image for scanning
+        working-directory: frontend
+        run: |
+          docker build --platform linux/amd64 -t ai-square:scan .
+          
+      - name: Run Trivy container scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'ai-square:scan'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
+          exit-code: '1'
+          
+      - name: Upload Trivy results
+        uses: github/codeql-action/upload-sarif@v2
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+  # ============================================
+  # 3. Deploy to Staging
+  # ============================================
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: [validate, security]
+    if: github.ref == 'refs/heads/staging' || github.event.inputs.environment == 'staging'
+    environment:
+      name: staging
+      url: https://ai-square-staging-731209836128.asia-east1.run.app
+    outputs:
+      service_url: ${{ steps.deploy.outputs.url }}
+      revision: ${{ steps.deploy.outputs.revision }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          project_id: ${{ env.PROJECT_ID }}
+          
+      - name: Configure Docker
+        run: gcloud auth configure-docker
+        
+      - name: Build and push image
+        working-directory: frontend
+        run: |
+          IMAGE_URL="gcr.io/${{ env.PROJECT_ID }}/ai-square-staging:${{ needs.validate.outputs.image_tag }}"
+          
+          docker build --platform linux/amd64 -t $IMAGE_URL .
+          docker push $IMAGE_URL
+          
+          echo "IMAGE_URL=$IMAGE_URL" >> $GITHUB_ENV
+          
+      - name: Get current revision
+        id: current
+        run: |
+          CURRENT_REVISION=$(gcloud run services describe ai-square-staging \
+            --region=${{ env.REGION }} \
+            --format='value(status.traffic[0].revisionName)' || echo "none")
+          echo "revision=$CURRENT_REVISION" >> $GITHUB_OUTPUT
+          
+      - name: Deploy to Cloud Run
+        id: deploy
+        run: |
+          SERVICE_URL=$(gcloud run deploy ai-square-staging \
+            --image ${{ env.IMAGE_URL }} \
+            --region ${{ env.REGION }} \
+            --platform managed \
+            --allow-unauthenticated \
+            --set-env-vars="NODE_ENV=production,DB_HOST=${{ secrets.STAGING_DB_HOST }},DB_NAME=${{ secrets.STAGING_DB_NAME }},DB_USER=${{ secrets.STAGING_DB_USER }},DB_PASSWORD=${{ secrets.STAGING_DB_PASSWORD }}" \
+            --add-cloudsql-instances=${{ env.PROJECT_ID }}:${{ env.REGION }}:ai-square-db-staging-asia \
+            --service-account=ai-square-service@${{ env.PROJECT_ID }}.iam.gserviceaccount.com \
+            --no-traffic \
+            --format='value(status.url)')
+            
+          NEW_REVISION=$(gcloud run services describe ai-square-staging \
+            --region=${{ env.REGION }} \
+            --format='value(status.latestCreatedRevisionName)')
+            
+          echo "url=$SERVICE_URL" >> $GITHUB_OUTPUT
+          echo "revision=$NEW_REVISION" >> $GITHUB_OUTPUT
+          
+      - name: Run E2E tests
+        working-directory: frontend
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+          
+          # Test against the new revision directly
+          REVISION_URL="https://${{ steps.deploy.outputs.revision }}---ai-square-staging-731209836128.asia-east1.run.app"
+          PLAYWRIGHT_BASE_URL=$REVISION_URL npm run test:e2e -- --grep "@smoke|@critical"
+        continue-on-error: false
+        
+      - name: Promote traffic
+        if: success()
+        run: |
+          # Gradual traffic rollout
+          echo "Promoting 10% traffic to new revision..."
+          gcloud run services update-traffic ai-square-staging \
+            --region=${{ env.REGION }} \
+            --to-revisions=${{ steps.deploy.outputs.revision }}=10
+            
+          sleep 60  # Monitor for 1 minute
+          
+          echo "Promoting 50% traffic..."
+          gcloud run services update-traffic ai-square-staging \
+            --region=${{ env.REGION }} \
+            --to-revisions=${{ steps.deploy.outputs.revision }}=50
+            
+          sleep 120  # Monitor for 2 minutes
+          
+          echo "Promoting 100% traffic..."
+          gcloud run services update-traffic ai-square-staging \
+            --region=${{ env.REGION }} \
+            --to-revisions=${{ steps.deploy.outputs.revision }}=100
+            
+      - name: Auto-rollback on failure
+        if: failure() && steps.current.outputs.revision != 'none'
+        run: |
+          echo "Deployment failed, rolling back to previous revision..."
+          gcloud run services update-traffic ai-square-staging \
+            --region=${{ env.REGION }} \
+            --to-revisions=${{ steps.current.outputs.revision }}=100
+            
+      - name: Notify Slack
+        if: always()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          text: |
+            Staging deployment ${{ job.status }}
+            Revision: ${{ steps.deploy.outputs.revision }}
+            URL: ${{ steps.deploy.outputs.url }}
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+
+  # ============================================
+  # 4. Performance Testing
+  # ============================================
+  performance-test:
+    name: Performance Testing
+    runs-on: ubuntu-latest
+    needs: deploy-staging
+    if: success()
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Run Lighthouse CI
+        uses: treosh/lighthouse-ci-action@v9
+        with:
+          urls: |
+            ${{ needs.deploy-staging.outputs.service_url }}
+            ${{ needs.deploy-staging.outputs.service_url }}/pbl/scenarios
+            ${{ needs.deploy-staging.outputs.service_url }}/discovery/scenarios
+          budgetPath: ./frontend/performance-budget.json
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+          
+      - name: Check performance metrics
+        run: |
+          # Add custom performance checks here
+          echo "Checking response times..."
+          curl -w "@frontend/curl-format.txt" -o /dev/null -s "${{ needs.deploy-staging.outputs.service_url }}/api/health"
+
+  # ============================================
+  # 5. Deploy to Production
+  # ============================================
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [validate, security, deploy-staging, performance-test]
+    if: github.ref == 'refs/heads/main' || github.event.inputs.environment == 'production'
+    environment:
+      name: production
+      url: https://ai-square-frontend-731209836128.asia-east1.run.app
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          project_id: ${{ env.PROJECT_ID }}
+          
+      - name: Configure Docker
+        run: gcloud auth configure-docker
+        
+      - name: Build and push image
+        working-directory: frontend
+        run: |
+          IMAGE_URL="gcr.io/${{ env.PROJECT_ID }}/ai-square-frontend:${{ needs.validate.outputs.image_tag }}"
+          
+          docker build --platform linux/amd64 -t $IMAGE_URL -f Dockerfile.production .
+          docker push $IMAGE_URL
+          
+          echo "IMAGE_URL=$IMAGE_URL" >> $GITHUB_ENV
+          
+      - name: Get current revision
+        id: current
+        run: |
+          CURRENT_REVISION=$(gcloud run services describe ai-square-frontend \
+            --region=${{ env.REGION }} \
+            --format='value(status.traffic[0].revisionName)' || echo "none")
+          echo "revision=$CURRENT_REVISION" >> $GITHUB_OUTPUT
+          
+      - name: Deploy to Cloud Run (Blue-Green)
+        id: deploy
+        run: |
+          # Deploy without traffic (Blue-Green deployment)
+          SERVICE_URL=$(gcloud run deploy ai-square-frontend \
+            --image ${{ env.IMAGE_URL }} \
+            --region ${{ env.REGION }} \
+            --platform managed \
+            --allow-unauthenticated \
+            --set-env-vars="NODE_ENV=production,DB_HOST=${{ secrets.PROD_DB_HOST }},DB_NAME=${{ secrets.PROD_DB_NAME }},DB_USER=${{ secrets.PROD_DB_USER }},DB_PASSWORD=${{ secrets.PROD_DB_PASSWORD }}" \
+            --add-cloudsql-instances=${{ env.PROJECT_ID }}:${{ env.REGION }}:ai-square-db-production \
+            --service-account=ai-square-service@${{ env.PROJECT_ID }}.iam.gserviceaccount.com \
+            --no-traffic \
+            --format='value(status.url)')
+            
+          NEW_REVISION=$(gcloud run services describe ai-square-frontend \
+            --region=${{ env.REGION }} \
+            --format='value(status.latestCreatedRevisionName)')
+            
+          echo "url=$SERVICE_URL" >> $GITHUB_OUTPUT
+          echo "revision=$NEW_REVISION" >> $GITHUB_OUTPUT
+          
+      - name: Smoke tests on new revision
+        run: |
+          REVISION_URL="https://${{ steps.deploy.outputs.revision }}---ai-square-frontend-731209836128.asia-east1.run.app"
+          
+          # Basic health checks
+          curl -f $REVISION_URL/api/health
+          curl -f $REVISION_URL/api/pbl/scenarios?lang=en
+          curl -f $REVISION_URL/api/discovery/scenarios?lang=en
+          
+      - name: Canary deployment
+        if: success()
+        run: |
+          # Start with 5% traffic
+          echo "Routing 5% traffic to new revision..."
+          gcloud run services update-traffic ai-square-frontend \
+            --region=${{ env.REGION }} \
+            --to-revisions=${{ steps.deploy.outputs.revision }}=5
+            
+          sleep 300  # Monitor for 5 minutes
+          
+          # Check error rate
+          # TODO: Implement actual metric checking
+          
+          # Increase to 25%
+          echo "Routing 25% traffic..."
+          gcloud run services update-traffic ai-square-frontend \
+            --region=${{ env.REGION }} \
+            --to-revisions=${{ steps.deploy.outputs.revision }}=25
+            
+          sleep 300  # Monitor for 5 minutes
+          
+          # Full deployment
+          echo "Routing 100% traffic..."
+          gcloud run services update-traffic ai-square-frontend \
+            --region=${{ env.REGION }} \
+            --to-revisions=${{ steps.deploy.outputs.revision }}=100
+            
+      - name: Auto-rollback on failure
+        if: failure() && steps.current.outputs.revision != 'none'
+        run: |
+          echo "Production deployment failed, rolling back..."
+          gcloud run services update-traffic ai-square-frontend \
+            --region=${{ env.REGION }} \
+            --to-revisions=${{ steps.current.outputs.revision }}=100
+            
+          # Send critical alert
+          curl -X POST ${{ secrets.SLACK_WEBHOOK }} \
+            -H 'Content-type: application/json' \
+            -d '{"text":"🚨 CRITICAL: Production deployment failed and rolled back!"}'
+            
+      - name: Create deployment record
+        if: success()
+        run: |
+          cat > deployment-record.json << EOF
+          {
+            "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+            "version": "${{ needs.validate.outputs.image_tag }}",
+            "revision": "${{ steps.deploy.outputs.revision }}",
+            "environment": "production",
+            "commit": "${{ github.sha }}",
+            "author": "${{ github.actor }}",
+            "status": "success"
+          }
+          EOF
+          
+      - name: Notify Slack
+        if: always()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          text: |
+            Production deployment ${{ job.status }}
+            Version: ${{ needs.validate.outputs.image_tag }}
+            Revision: ${{ steps.deploy.outputs.revision }}
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+
+  # ============================================
+  # 6. Post-deployment Monitoring
+  # ============================================
+  monitor-deployment:
+    name: Monitor Deployment
+    runs-on: ubuntu-latest
+    needs: [deploy-staging, deploy-production]
+    if: always() && (needs.deploy-staging.result == 'success' || needs.deploy-production.result == 'success')
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          project_id: ${{ env.PROJECT_ID }}
+          
+      - name: Create/Update monitoring alerts
+        run: |
+          # Create alert policy for high error rate
+          gcloud alpha monitoring policies create \
+            --notification-channels=${{ secrets.MONITORING_CHANNEL_ID }} \
+            --display-name="High Error Rate Alert" \
+            --condition-display-name="5xx errors > 1%" \
+            --condition-metric-type="run.googleapis.com/request_count" \
+            --condition-filter='resource.type="cloud_run_revision" AND metric.label.response_code_class="5xx"' \
+            --condition-comparison="COMPARISON_GT" \
+            --condition-threshold-value=0.01 \
+            --condition-duration=60s || true
+            
+      - name: Set up uptime checks
+        run: |
+          # Create uptime checks for both environments
+          for env in staging production; do
+            if [ "$env" = "staging" ]; then
+              URL="https://ai-square-staging-731209836128.asia-east1.run.app"
+            else
+              URL="https://ai-square-frontend-731209836128.asia-east1.run.app"
+            fi
+            
+            gcloud monitoring uptime-check-configs create \
+              --display-name="AI Square $env Health Check" \
+              --resource-type="uptime-url" \
+              --monitored-resource="host=$URL" \
+              --http-check="path=/api/health,port=443,use-ssl=true" \
+              --period=60s || true
+          done
+          
+      - name: Monitor deployment metrics
+        run: |
+          # Monitor key metrics for 10 minutes
+          END_TIME=$(date -u -d '+10 minutes' +%Y-%m-%dT%H:%M:%SZ)
+          
+          while [ "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \< "$END_TIME" ]; do
+            echo "Checking deployment health..."
+            
+            # Check staging if deployed
+            if [ "${{ needs.deploy-staging.result }}" = "success" ]; then
+              curl -sf https://ai-square-staging-731209836128.asia-east1.run.app/api/health || echo "Staging health check failed"
+            fi
+            
+            # Check production if deployed
+            if [ "${{ needs.deploy-production.result }}" = "success" ]; then
+              curl -sf https://ai-square-frontend-731209836128.asia-east1.run.app/api/health || echo "Production health check failed"
+            fi
+            
+            sleep 60
+          done

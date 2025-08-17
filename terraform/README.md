@@ -25,30 +25,42 @@ The infrastructure includes:
 terraform/
 ├── main.tf                    # Main Terraform configuration
 ├── post-deploy.tf             # Post-deployment provisioners
-├── e2e.tf                     # E2E test configuration
-├── Makefile                   # All deployment commands
+├── e2e.tf                     # E2E test configuration and outputs
+├── Makefile                   # All deployment and test commands
 ├── environments/              # Environment-specific variables
 │   ├── staging.tfvars        # Staging environment config
 │   └── production.tfvars     # Production environment config
 ├── modules/                   # Terraform modules
-│   └── e2e-tests/           # E2E test module
+│   └── e2e-tests/           # E2E test module (deprecated)
 ├── scripts/                   # Legacy migration scripts (not used for deployment)
 │   ├── import-staging.sh     # Import existing resources
 │   └── import-production.sh  # Import existing resources
 ├── *.tftest.hcl              # Terraform test files
+├── DEPLOYMENT-E2E-ARCHITECTURE.md  # E2E testing architecture documentation
 └── README.md                  # This file
 ```
 
 ## 📋 Available Commands
 
 Run `make help` to see all available commands:
+
+### Deployment Commands
 - `make init` - Initialize Terraform
 - `make deploy-staging` - Complete deployment to staging
 - `make deploy-production` - Complete deployment to production
 - `make plan` - Preview changes
 - `make apply` - Apply infrastructure
 - `make test` - Run Terraform tests
-- `make e2e` - Run E2E tests
+
+### E2E Testing Commands
+- `make e2e` - Run complete E2E test suite
+- `make e2e-smoke` - Run smoke tests only
+- `make e2e-critical` - Run critical path tests
+- `make e2e-auth` - Run authentication tests
+- `make e2e-debug` - Run tests in headed mode
+- `make e2e-report` - View test report
+
+### Maintenance Commands
 - `make security-check` - Run security audit
 - `make status` - Show deployment status
 - `make logs` - View Cloud Run logs
@@ -191,6 +203,39 @@ make logs ENV=production
 gcloud run logs read --service=ai-square-staging --region=asia-east1
 gcloud run logs read --service=ai-square-production --region=asia-east1
 ```
+
+## 🧪 E2E Testing Architecture
+
+### Clean Separation of Concerns
+The E2E testing architecture follows a clean separation between infrastructure and test execution:
+
+- **Terraform (e2e.tf)**: Provides outputs, configurations, and basic smoke tests
+- **Makefile**: Handles complex E2E test orchestration and execution
+
+### Running E2E Tests
+```bash
+# Full test suite
+make e2e ENV=staging
+
+# Targeted test runs
+make e2e-smoke ENV=staging      # Quick validation
+make e2e-critical ENV=staging   # Essential flows only
+make e2e-auth ENV=staging       # Authentication tests
+
+# Debug mode (with browser visible)
+make e2e-debug ENV=staging
+
+# View test report
+make e2e-report
+```
+
+### Test Configuration
+E2E tests automatically use outputs from Terraform:
+- Service URL from `e2e_service_url` output
+- Test credentials from `e2e_test_credentials` output
+- Environment setup handled by Makefile
+
+For more details, see [DEPLOYMENT-E2E-ARCHITECTURE.md](./DEPLOYMENT-E2E-ARCHITECTURE.md).
 
 ## 🔧 Troubleshooting
 
