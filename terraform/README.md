@@ -2,6 +2,14 @@
 
 This directory contains all Terraform configurations for managing AI Square's cloud infrastructure on Google Cloud Platform.
 
+## 🎯 Pure Infrastructure as Code
+
+This Terraform configuration follows pure Infrastructure as Code principles:
+- ✅ **No shell script dependencies** - All deployment logic in Terraform and Makefile
+- ✅ **Integrated security checks** - Built into Make targets, no external scripts
+- ✅ **Native Terraform provisioners** - Post-deployment tasks handled by Terraform
+- ✅ **Single source of truth** - Everything defined in `.tf` files
+
 ## 🏗️ Architecture Overview
 
 The infrastructure includes:
@@ -16,15 +24,35 @@ The infrastructure includes:
 ```
 terraform/
 ├── main.tf                    # Main Terraform configuration
+├── post-deploy.tf             # Post-deployment provisioners
+├── e2e.tf                     # E2E test configuration
+├── Makefile                   # All deployment commands
 ├── environments/              # Environment-specific variables
 │   ├── staging.tfvars        # Staging environment config
 │   └── production.tfvars     # Production environment config
-├── scripts/                   # Automation scripts
-│   ├── import-staging.sh     # Import existing staging resources
-│   └── import-production.sh  # Import existing production resources
-├── security-check.sh          # Security validation script
+├── modules/                   # Terraform modules
+│   └── e2e-tests/           # E2E test module
+├── scripts/                   # Legacy migration scripts (not used for deployment)
+│   ├── import-staging.sh     # Import existing resources
+│   └── import-production.sh  # Import existing resources
+├── *.tftest.hcl              # Terraform test files
 └── README.md                  # This file
 ```
+
+## 📋 Available Commands
+
+Run `make help` to see all available commands:
+- `make init` - Initialize Terraform
+- `make deploy-staging` - Complete deployment to staging
+- `make deploy-production` - Complete deployment to production
+- `make plan` - Preview changes
+- `make apply` - Apply infrastructure
+- `make test` - Run Terraform tests
+- `make e2e` - Run E2E tests
+- `make security-check` - Run security audit
+- `make status` - Show deployment status
+- `make logs` - View Cloud Run logs
+- `make clean` - Clean Terraform files
 
 ## 🚀 Quick Start
 
@@ -36,27 +64,36 @@ terraform/
    gcloud auth application-default login
    ```
 
+### Set Database Password
+```bash
+export TF_VAR_db_password='your-secure-password'
+```
+
 ### Initialize Terraform
 ```bash
-make terraform-init
+make init
 ```
 
 ### Deploy to Staging
 ```bash
-# Preview changes
-make terraform-plan-staging
-
-# Apply changes
+# Complete deployment pipeline (apply + tests + health checks)
 make deploy-staging
+
+# Or individual steps:
+make plan ENV=staging          # Preview changes
+make apply ENV=staging         # Apply infrastructure
+make test ENV=staging          # Run tests
+make e2e ENV=staging           # Run E2E tests
 ```
 
 ### Deploy to Production
 ```bash
-# Preview changes
-make terraform-plan-production
-
-# Apply changes (requires confirmation)
+# Complete deployment pipeline (with confirmation)
 make deploy-production
+
+# Or individual steps:
+make plan ENV=production       # Preview changes
+make apply ENV=production      # Apply infrastructure (manual)
 ```
 
 ## 🔐 Security
@@ -75,9 +112,12 @@ Set these in your environment or tfvars:
 - Automated security checks before deployment
 
 ### Security Validation
-Run security checks before deployment:
+Security checks are automatically run before deployment. To run manually:
 ```bash
-cd terraform && ./security-check.sh
+make security-check
+
+# Fix common issues automatically
+make security-fix
 ```
 
 ## 🌍 Environments
@@ -116,27 +156,40 @@ GitHub Actions automatically:
 3. Deploys to production after staging succeeds
 4. Performs health checks after deployment
 
+### CI/CD Commands
+```bash
+# For CI/CD pipelines (non-interactive)
+make ci-deploy ENV=staging
+make ci-deploy ENV=production
+```
+
 ### Manual Deployment
-Use GitHub Actions workflow dispatch for manual deployments.
+Use GitHub Actions workflow dispatch or run Make commands locally.
 
 ## 📊 Monitoring
 
 ### Health Checks
 ```bash
-# Check staging health
-curl https://ai-square-staging-731209836128.asia-east1.run.app/api/health
+# Check deployment status and health
+make status ENV=staging
+make status ENV=production
 
-# Check production health
-make production-health
+# Wait for service to be healthy
+make wait-for-health ENV=staging
+
+# View deployment summary
+make deployment-summary ENV=staging
 ```
 
 ### Logs
 ```bash
-# View Cloud Run logs
-gcloud run logs read --service=ai-square-frontend --region=asia-east1
+# View Cloud Run logs using Make
+make logs ENV=staging
+make logs ENV=production
 
-# View Cloud SQL logs
-gcloud sql operations list --instance=ai-square-db-production
+# Direct gcloud commands
+gcloud run logs read --service=ai-square-staging --region=asia-east1
+gcloud run logs read --service=ai-square-production --region=asia-east1
 ```
 
 ## 🔧 Troubleshooting
@@ -222,5 +275,6 @@ For issues or questions:
 
 ## 🔄 Version History
 
+- **v3.0** - Pure Infrastructure as Code (2025-01) - Removed all shell script dependencies
 - **v2.0** - Full Terraform migration (2025-01)
 - **v1.0** - Initial shell script deployment (deprecated)
