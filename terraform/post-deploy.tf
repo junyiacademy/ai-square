@@ -241,9 +241,10 @@ SCRIPT
         -- Note: These should be changed on first login
         INSERT INTO users (email, password, name) 
         VALUES 
-          ('demo@aisquare.com', '$2a$10$8K1p/kPGJJWqrBhUvLPqC.0Af0wgLcFNPjXD1xrF7LqQXzFqOXiNu', 'Demo User'),
-          ('test@aisquare.com', '$2a$10$8K1p/kPGJJWqrBhUvLPqC.0Af0wgLcFNPjXD1xrF7LqQXzFqOXiNu', 'Test User')
-        ON CONFLICT (email) DO NOTHING;
+          ('demo@aisquare.com', '$2b$12$/j7NFyHaHcNHK1a5iaMAyuM6fkCl9VUgtUBquVXbfeftB2736sBCO', 'Demo User'),
+          ('test@aisquare.com', '$2b$12$hRxXVQuqt9D6Uo.ujlvmaurzD2bFDojjFxbnkTjwWwewuG5mdGCuG', 'Test User')
+        ON CONFLICT (email) DO UPDATE 
+        SET password = EXCLUDED.password;
         
         SELECT email, name FROM users;
 SQL

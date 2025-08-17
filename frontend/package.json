@@ -130,7 +130,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@next/bundle-analyzer": "^15.3.4",
-    "@playwright/test": "^1.53.1",
+    "@playwright/test": "^1.54.2",
     "@swc/jest": "^0.2.39",
     "@tailwindcss/postcss": "^4.1.11",
     "@testing-library/jest-dom": "^6.6.3",
