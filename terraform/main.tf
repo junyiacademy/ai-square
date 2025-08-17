@@ -130,7 +130,7 @@ resource "google_sql_database_instance" "main" {
     ip_configuration {
       ipv4_enabled    = true
       private_network = null
-      ssl_mode        = var.environment == "production" ? "REQUIRE_SSL" : "ALLOW_UNENCRYPTED_AND_ENCRYPTED"
+      ssl_mode        = var.environment == "production" ? "ENCRYPTED_ONLY" : "ALLOW_UNENCRYPTED_AND_ENCRYPTED"
       
       # Only allow specific IPs in production
       dynamic "authorized_networks" {
@@ -198,7 +198,7 @@ resource "google_cloud_run_service" "ai_square" {
       service_account_name = google_service_account.ai_square_service.email
       
       containers {
-        image = "gcr.io/${var.project_id}/${var.environment == "production" ? "ai-square-frontend" : "ai-square-staging"}:latest"
+        image = "gcr.io/${var.project_id}/ai-square-frontend:latest"
         
         resources {
           limits = {
@@ -240,7 +240,7 @@ resource "google_cloud_run_service" "ai_square" {
         
         env {
           name  = "DATABASE_URL"
-          value = "postgresql://${google_sql_user.postgres.name}:${var.db_password}@/${google_sql_database.ai_square_db.name}?host=/cloudsql/${var.project_id}:${var.region}:${google_sql_database_instance.main.name}"
+          value = "postgresql://${google_sql_user.postgres.name}:${urlencode(var.db_password)}@/${google_sql_database.ai_square_db.name}?host=/cloudsql/${var.project_id}:${var.region}:${google_sql_database_instance.main.name}"
         }
       }
     }

@@ -12,7 +12,7 @@ export async function updateUserPasswordHash(
 ): Promise<void> {
   const query = `
     UPDATE users 
-    SET password = $1, role = $2, updated_at = CURRENT_TIMESTAMP
+    SET password_hash = $1, role = $2, updated_at = CURRENT_TIMESTAMP
     WHERE id = $3
   `;
   
@@ -54,7 +54,7 @@ export async function getUserWithPassword(
 } | null> {
   const query = `
     SELECT 
-      id, email, name, password as "passwordHash",
+      id, email, name, password_hash as "passwordHash",
       role, email_verified as "emailVerified",
       onboarding_completed as "onboardingCompleted",
       preferred_language as "preferredLanguage",

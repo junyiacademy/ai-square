@@ -55,8 +55,16 @@ resource "null_resource" "init_database_schema" {
       CREATE TABLE IF NOT EXISTS users (
         id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
         email VARCHAR(255) UNIQUE NOT NULL,
-        password VARCHAR(255) NOT NULL,
+        password_hash VARCHAR(255) NOT NULL,
         name VARCHAR(255),
+        role VARCHAR(50) DEFAULT 'student',
+        email_verified BOOLEAN DEFAULT false,
+        email_verified_at TIMESTAMP WITH TIME ZONE,
+        preferred_language VARCHAR(10) DEFAULT 'en',
+        level INTEGER DEFAULT 1,
+        total_xp INTEGER DEFAULT 0,
+        onboarding_completed BOOLEAN DEFAULT false,
+        metadata JSONB DEFAULT '{}',
         created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
       );
@@ -192,26 +200,35 @@ async function createUsers() {
   try {
     await client.connect();
     
-    // Hash passwords
-    const demoHash = await bcrypt.hash('Demo123456!', 10);
-    const testHash = await bcrypt.hash('Test123456!', 10);
+    // Hash passwords for each role
+    const studentHash = await bcrypt.hash('student123', 10);
+    const teacherHash = await bcrypt.hash('teacher123', 10);
+    const adminHash = await bcrypt.hash('admin123', 10);
+    const parentHash = await bcrypt.hash('parent123', 10);
+    const guestHash = await bcrypt.hash('guest123', 10);
+    const testHash = await bcrypt.hash('password123', 10);
     
-    // Insert users
+    // Insert demo users for each role
     await client.query(`
-      INSERT INTO users (email, password, name) 
+      INSERT INTO users (email, password_hash, name, role, email_verified, metadata) 
       VALUES 
-        ('demo@aisquare.com', $1, 'Demo User'),
-        ('test@aisquare.com', $2, 'Test User')
+        ('student@example.com', $1, 'Student User', 'student', true, '{"seeded": true}'::jsonb),
+        ('teacher@example.com', $2, 'Teacher User', 'teacher', true, '{"seeded": true}'::jsonb),
+        ('admin@example.com', $3, 'Admin User', 'admin', true, '{"seeded": true}'::jsonb),
+        ('parent@example.com', $4, 'Parent User', 'parent', true, '{"seeded": true}'::jsonb),
+        ('guest@example.com', $5, 'Guest User', 'guest', true, '{"seeded": true}'::jsonb),
+        ('test@example.com', $6, 'Test User', 'student', true, '{"seeded": true}'::jsonb)
       ON CONFLICT (email) DO UPDATE 
-      SET password = EXCLUDED.password,
-          name = EXCLUDED.name
-    `, [demoHash, testHash]);
+      SET password_hash = EXCLUDED.password_hash,
+          name = EXCLUDED.name,
+          role = EXCLUDED.role
+    `, [studentHash, teacherHash, adminHash, parentHash, guestHash, testHash]);
     
     console.log('✅ Demo accounts created successfully');
     
     // Verify
-    const result = await client.query('SELECT email, name FROM users');
-    console.log('Users in database:', result.rows);
+    const result = await client.query('SELECT email, name, role FROM users WHERE email LIKE \'%@example.com\'');
+    console.log('Demo users in database:', result.rows);
     
   } catch (error) {
     console.error('Error creating users:', error.message);
@@ -234,19 +251,24 @@ SCRIPT
         # Clean up
         rm -f /tmp/create_users.js
       else
-        echo "Node.js not available, creating users with plain passwords (for testing only)"
-        # Fallback: Insert with plain passwords (not recommended for production)
+        echo "Node.js not available, creating users with pre-hashed passwords"
+        # Fallback: Insert with pre-hashed passwords (bcrypt hashes)
         PGPASSWORD="$${DB_PASSWORD}" psql -h "$${DB_HOST}" -U postgres -d ai_square_db << 'SQL'
-        -- Create demo users with temporary plain passwords
-        -- Note: These should be changed on first login
-        INSERT INTO users (email, password, name) 
+        -- Create demo users with pre-hashed passwords
+        -- Passwords: student123, teacher123, admin123, parent123, guest123, password123
+        INSERT INTO users (email, password_hash, name, role, email_verified, metadata) 
         VALUES 
-          ('demo@aisquare.com', '$2b$12$/j7NFyHaHcNHK1a5iaMAyuM6fkCl9VUgtUBquVXbfeftB2736sBCO', 'Demo User'),
-          ('test@aisquare.com', '$2b$12$hRxXVQuqt9D6Uo.ujlvmaurzD2bFDojjFxbnkTjwWwewuG5mdGCuG', 'Test User')
+          ('student@example.com', '$2b$10$GSLI4.ooV/jrN5RZMOAyf.SftBwwRsbmC.SMRDeDRLH1uCnIapR5e', 'Student User', 'student', true, '{"seeded": true}'::jsonb),
+          ('teacher@example.com', '$2b$10$xkTFHLjtA4BvhZrW8Pm6NOV/zJn5SX7gxZB9MSUcaptGrZrMPJJ5e', 'Teacher User', 'teacher', true, '{"seeded": true}'::jsonb),
+          ('admin@example.com', '$2b$10$9nEfXi5LULvFjV/LKp8WFuglp9Y5jttH9O4Ix0AwpVg4OZdvtTbiS', 'Admin User', 'admin', true, '{"seeded": true}'::jsonb),
+          ('parent@example.com', '$2b$10$KxjBKURfCyW8rZH5g0BQy.8tGkL8AT6DxUphQyJ.EJHKxR1vAXWJi', 'Parent User', 'parent', true, '{"seeded": true}'::jsonb),
+          ('guest@example.com', '$2b$10$T6Fb/LwXk/3M6vL6M8Jg6OGXvQJFYJ8Hc3JZnUKG5YvdPnFZzwxqC', 'Guest User', 'guest', true, '{"seeded": true}'::jsonb),
+          ('test@example.com', '$2b$10$eUJFf2Vs0qm6L3g5.VO3MOD4xVVZwM8dVPKj5l0Gwe/eQoH9kBGBa', 'Test User', 'student', true, '{"seeded": true}'::jsonb)
         ON CONFLICT (email) DO UPDATE 
-        SET password = EXCLUDED.password;
+        SET password_hash = EXCLUDED.password_hash,
+            role = EXCLUDED.role;
         
-        SELECT email, name FROM users;
+        SELECT email, name, role FROM users WHERE email LIKE '%@example.com';
 SQL
       fi
       
@@ -408,7 +430,7 @@ SQL
       echo "Test 4: Login test (non-blocking)"
       LOGIN_RESPONSE=$(curl -s -X POST "$${SERVICE_URL}/api/auth/login" \
         -H "Content-Type: application/json" \
-        -d '{"email": "demo@aisquare.com", "password": "Demo123456!"}' 2>/dev/null || echo '{}')
+        -d '{"email": "student@example.com", "password": "student123"}' 2>/dev/null || echo '{}')
       
       if echo "$${LOGIN_RESPONSE}" | grep -q '"success":true\|"token"'; then
         echo "✅ Login test passed"
@@ -451,13 +473,35 @@ output "health_check_url" {
 # Demo account credentials (for documentation)
 output "demo_accounts" {
   value = {
-    demo_user = {
-      email    = "demo@aisquare.com"
-      password = "Demo123456!"
+    student = {
+      email    = "student@example.com"
+      password = "student123"
+      role     = "student"
     }
-    test_user = {
-      email    = "test@aisquare.com"
-      password = "Test123456!"
+    teacher = {
+      email    = "teacher@example.com"
+      password = "teacher123"
+      role     = "teacher"
+    }
+    admin = {
+      email    = "admin@example.com"
+      password = "admin123"
+      role     = "admin"
+    }
+    parent = {
+      email    = "parent@example.com"
+      password = "parent123"
+      role     = "parent"
+    }
+    guest = {
+      email    = "guest@example.com"
+      password = "guest123"
+      role     = "guest"
+    }
+    test = {
+      email    = "test@example.com"
+      password = "password123"
+      role     = "student"
     }
   }
   sensitive = true

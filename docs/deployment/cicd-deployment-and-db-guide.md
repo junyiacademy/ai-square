@@ -107,7 +107,12 @@ Terraform 會自動設定以下環境變數：
    - `DB_NAME`: `ai_square_db`
    - `DB_USER`: `postgres`
    - `DB_PASSWORD`: 從 Secret Manager 讀取
-   - `DATABASE_URL`: 完整連線字串
+   - `DATABASE_URL`: 完整連線字串（含 URL 編碼的密碼）
+
+   **⚠️ 重要注意事項**：
+   - 密碼中若含特殊字符（如 `#`、`@`、`%`），必須進行 URL 編碼
+   - Terraform 使用 `urlencode()` 函數自動處理
+   - 應用程式優先使用個別環境變數（DB_HOST、DB_PASSWORD）而非 DATABASE_URL
 
 2) **應用程式配置**
    - `NODE_ENV`: `production`
