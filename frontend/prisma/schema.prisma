@@ -1,0 +1,263 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ==================== USERS ====================
+model User {
+  id                     String    @id @default(uuid())
+  email                  String    @unique
+  passwordHash           String    @map("password_hash")
+  role                   String    @default("student")
+  name                   String?
+  avatarUrl              String?   @map("avatar_url")
+  
+  // Preferences
+  preferredLanguage      String    @default("en") @map("preferred_language")
+  learningPreferences    Json?     @map("learning_preferences")
+  preferences            Json      @default("{}")
+  
+  // Account status
+  emailVerified          Boolean   @default(false) @map("email_verified")
+  emailVerificationToken String?   @map("email_verification_token")
+  resetPasswordToken     String?   @map("reset_password_token")
+  resetPasswordExpires   DateTime? @map("reset_password_expires")
+  
+  // Progress tracking
+  onboardingCompleted    Boolean   @default(false) @map("onboarding_completed")
+  onboardingStep         Int       @default(0) @map("onboarding_step")
+  level                  Int       @default(1)
+  totalXp                Int       @default(0) @map("total_xp")
+  achievements           Json      @default("[]")
+  skills                 Json      @default("[]")
+  
+  // Timestamps
+  lastLoginAt            DateTime? @map("last_login_at")
+  lastActiveDate         DateTime? @map("last_active_date") @db.Date
+  createdAt              DateTime  @default(now()) @map("created_at")
+  updatedAt              DateTime  @updatedAt @map("updated_at")
+  
+  // Metadata
+  metadata               Json      @default("{}")
+  
+  // Relations
+  programs               Program[]
+  evaluations            Evaluation[]
+  createdScenarios       Scenario[] @relation("CreatedScenarios")
+  updatedScenarios       Scenario[] @relation("UpdatedScenarios")
+  
+  @@map("users")
+}
+
+// ==================== SCENARIOS ====================
+model Scenario {
+  id                   String    @id @default(uuid())
+  mode                 String    // pbl, discovery, assessment
+  status               String    @default("active")
+  version              String    @default("1.0.0")
+  
+  // Source tracking
+  sourceType           String?   @map("source_type") // yaml, api, ai-generated
+  sourcePath           String?   @map("source_path") @db.Text
+  sourceId             String?   @map("source_id")
+  sourceMetadata       Json?     @map("source_metadata")
+  
+  // Content (multilingual)
+  title                Json      // { en: "Title", zh: "標題" }
+  description          Json?
+  objectives           Json?
+  taskTemplates        Json?     @map("task_templates")
+  sequenceData         Json?     @map("sequence_data")
+  
+  // Mode-specific data
+  pblData              Json?     @map("pbl_data")
+  discoveryData        Json?     @map("discovery_data")
+  assessmentData       Json?     @map("assessment_data")
+  
+  // Configuration
+  difficulty           String?
+  estimatedTime        Int?      @map("estimated_time") // minutes
+  estimatedMinutes     Int?      @map("estimated_minutes") // legacy support
+  prerequisites        String[]
+  tags                 String[]
+  
+  // AI and resources
+  aiModules            Json?     @map("ai_modules")
+  resources            Json?
+  media                Json      @default("{}")
+  
+  // Visual design
+  imageUrl             String?   @map("image_url") @db.Text
+  icon                 String?   @db.Text
+  color                String?
+  
+  // Gamification
+  xpRewards            Json      @default("{}") @map("xp_rewards")
+  ksaCodes             String[]  @map("ksa_codes")
+  unlockRequirements   Json      @default("{}") @map("unlock_requirements")
+  
+  // Publishing
+  isPublished          Boolean   @default(true) @map("is_published")
+  publishedAt          DateTime  @default(now()) @map("published_at")
+  
+  // Statistics
+  completionRate       Decimal   @default(0) @map("completion_rate") @db.Decimal(5, 2)
+  averageRating        Decimal   @default(0) @map("average_rating") @db.Decimal(3, 2)
+  totalEnrollments     Int       @default(0) @map("total_enrollments")
+  
+  // Timestamps
+  createdAt            DateTime  @default(now()) @map("created_at")
+  updatedAt            DateTime  @updatedAt @map("updated_at")
+  
+  // Relations
+  createdBy            String?   @map("created_by")
+  createdByUser        User?     @relation("CreatedScenarios", fields: [createdBy], references: [id])
+  updatedBy            String?   @map("updated_by")
+  updatedByUser        User?     @relation("UpdatedScenarios", fields: [updatedBy], references: [id])
+  
+  // Metadata
+  metadata             Json      @default("{}")
+  
+  // Relations
+  programs             Program[]
+  tasks                Task[]
+  
+  @@index([mode])
+  @@index([status])
+  @@map("scenarios")
+}
+
+// ==================== PROGRAMS ====================
+model Program {
+  id                    String    @id @default(uuid())
+  mode                  String
+  scenarioId            String    @map("scenario_id")
+  userId                String    @map("user_id")
+  
+  // Status
+  status                String    @default("pending") // pending, active, completed, expired
+  currentTaskIndex      Int       @default(0) @map("current_task_index")
+  
+  // Data
+  context               Json?
+  state                 Json?
+  pblData               Json?     @map("pbl_data")
+  discoveryData         Json?     @map("discovery_data")
+  assessmentData        Json?     @map("assessment_data")
+  
+  // Progress
+  totalScore            Decimal?  @map("total_score") @db.Decimal(10, 2)
+  timeSpentSeconds      Int       @default(0) @map("time_spent_seconds")
+  completionPercentage  Decimal   @default(0) @map("completion_percentage") @db.Decimal(5, 2)
+  achievements          Json      @default("[]")
+  
+  // Timestamps
+  startedAt             DateTime? @map("started_at")
+  completedAt           DateTime? @map("completed_at")
+  expiresAt             DateTime? @map("expires_at")
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime  @updatedAt @map("updated_at")
+  
+  // Relations
+  scenario              Scenario  @relation(fields: [scenarioId], references: [id], onDelete: Cascade)
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tasks                 Task[]
+  evaluations           Evaluation[]
+  
+  @@index([userId])
+  @@index([scenarioId])
+  @@index([status])
+  @@map("programs")
+}
+
+// ==================== TASKS ====================
+model Task {
+  id                String    @id @default(uuid())
+  mode              String
+  programId         String    @map("program_id")
+  scenarioId        String    @map("scenario_id")
+  
+  // Identification
+  taskIndex         Int       @map("task_index")
+  type              String    // question, chat, creation, analysis
+  status            String    @default("pending")
+  
+  // Content (multilingual)
+  title             Json?
+  description       Json?
+  instructions      Json?
+  content           Json?
+  context           Json?
+  metadata          Json?
+  
+  // Interactions
+  interactions      Json      @default("[]")
+  aiFeedback        Json?     @map("ai_feedback")
+  attempts          Int       @default(0)
+  maxAttempts       Int?      @map("max_attempts")
+  
+  // Scoring
+  score             Decimal?  @db.Decimal(10, 2)
+  timeSpentSeconds  Int       @default(0) @map("time_spent_seconds")
+  
+  // Timestamps
+  startedAt         DateTime? @map("started_at")
+  completedAt       DateTime? @map("completed_at")
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+  
+  // Relations
+  program           Program   @relation(fields: [programId], references: [id], onDelete: Cascade)
+  scenario          Scenario  @relation(fields: [scenarioId], references: [id], onDelete: Cascade)
+  evaluations       Evaluation[]
+  
+  @@index([programId])
+  @@map("tasks")
+}
+
+// ==================== EVALUATIONS ====================
+model Evaluation {
+  id               String    @id @default(uuid())
+  mode             String
+  taskId           String    @map("task_id")
+  programId        String    @map("program_id")
+  userId           String    @map("user_id")
+  
+  // Evaluation
+  evaluationType   String    @map("evaluation_type") // formative, summative, diagnostic, ai-feedback
+  score            Decimal?  @db.Decimal(10, 2)
+  maxScore         Decimal?  @map("max_score") @db.Decimal(10, 2)
+  feedback         Json?
+  strengths        String[]
+  improvements     String[]
+  
+  // Criteria
+  criteria         Json?
+  rubric           Json?
+  metadata         Json?
+  
+  // AI
+  aiModel          String?   @map("ai_model")
+  aiConfig         Json?     @map("ai_config")
+  aiResponse       Json?     @map("ai_response")
+  
+  // Timestamps
+  evaluatedAt      DateTime  @default(now()) @map("evaluated_at")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  
+  // Relations
+  task             Task      @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  program          Program   @relation(fields: [programId], references: [id], onDelete: Cascade)
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([taskId])
+  @@index([userId])
+  @@map("evaluations")
+}

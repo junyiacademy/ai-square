@@ -36,7 +36,9 @@ export function middleware(request: NextRequest) {
   if (isProtectedRoute) {
     // Check for authentication cookies
     const isLoggedIn = request.cookies.get('isLoggedIn')?.value === 'true';
-    const sessionToken = request.cookies.get('sessionToken')?.value;
+    const sessionToken = request.cookies.get('sessionToken')?.value || 
+                        request.cookies.get('session_token')?.value ||
+                        request.cookies.get('ai_square_session')?.value;
     const accessToken = request.cookies.get('accessToken')?.value;
     
     // If not authenticated, redirect to login
