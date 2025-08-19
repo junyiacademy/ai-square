@@ -303,7 +303,7 @@ class PBLYAMLProcessor implements IYAMLProcessor {
       objectives: (scenarioInfo.learning_objectives as string[]) || [],
       difficulty: ((scenarioInfo.difficulty as string) || 'intermediate') as DifficultyLevel,
       estimatedMinutes: parseInt((scenarioInfo.estimated_duration as string)?.replace('minutes', '') || '60'),
-      prerequisites: [],
+      prerequisites: (scenarioInfo.prerequisites as string[]) || [],
       taskTemplates: [], // PBL tasks are defined in the YAML
       taskCount: (programs[0]?.tasks as Array<unknown>)?.length || 0,
       xpRewards: {},
@@ -400,7 +400,7 @@ class DiscoveryYAMLProcessor implements IYAMLProcessor {
       ],
       difficulty: 'intermediate' as DifficultyLevel,
       estimatedMinutes: ((metadata.estimated_hours as number) || 1) * 60,
-      prerequisites: [],
+      prerequisites: (metadata.prerequisites as string[]) || [],
       taskTemplates: [], // Discovery generates tasks dynamically
       taskCount: 0,
       xpRewards: {},
@@ -520,7 +520,7 @@ class AssessmentYAMLProcessor implements IYAMLProcessor {
       ],
       difficulty: 'intermediate' as DifficultyLevel,
       estimatedMinutes: (config.time_limit_minutes as number) || 15,
-      prerequisites: [],
+      prerequisites: (config.prerequisites as string[]) || [],
       taskTemplates: [{
         id: 'assessment-task',
         title: { 
