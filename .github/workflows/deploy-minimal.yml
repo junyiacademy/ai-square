@@ -84,7 +84,8 @@ jobs:
           IMAGE_TAG="${GITHUB_SHA::7}"
           IMAGE_URL="gcr.io/${{ env.PROJECT_ID }}/ai-square-staging:$IMAGE_TAG"
           
-          docker build -t $IMAGE_URL .
+          # Use production Dockerfile for consistent builds
+          docker build -t $IMAGE_URL -f Dockerfile.production .
           docker push $IMAGE_URL
           
       - name: Deploy to Cloud Run
@@ -127,19 +128,14 @@ jobs:
           
       - name: Notify Slack
         if: always()
-        uses: 8398a7/action-slack@v3
-        with:
-          status: ${{ job.status }}
-          text: |
-            Minimal Staging deployment ${{ job.status }}
-            
-            🚀 One-step deployment achieved!
-            
-            Service: https://ai-square-staging-731209836128.asia-east1.run.app
-            Commit: ${{ github.sha }}
-            
-            Note: Full tests skipped to prioritize deployment pipeline completion
-          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+        run: |
+          if [ -n "${{ secrets.SLACK_WEBHOOK }}" ]; then
+            curl -X POST "${{ secrets.SLACK_WEBHOOK }}" \
+              -H 'Content-type: application/json' \
+              -d "{\"text\":\"🚀 Minimal Staging deployment ${{ job.status }}\\n\\nService: https://ai-square-staging-731209836128.asia-east1.run.app\\nCommit: ${{ github.sha }}\\n\\nNote: Full tests skipped to prioritize deployment pipeline completion\"}"
+          else
+            echo "Slack webhook not configured, skipping notification"
+          fi
 
   # ============================================
   # 3. Deploy to Production
@@ -213,14 +209,11 @@ jobs:
           
       - name: Notify Slack
         if: always()
-        uses: 8398a7/action-slack@v3
-        with:
-          status: ${{ job.status }}
-          text: |
-            🎯 Production deployment ${{ job.status }}
-            
-            Service: https://ai-square-frontend-731209836128.asia-east1.run.app
-            Commit: ${{ github.sha }}
-            
-            ✅ One-step deployment pipeline is now functional!
-          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+        run: |
+          if [ -n "${{ secrets.SLACK_WEBHOOK }}" ]; then
+            curl -X POST "${{ secrets.SLACK_WEBHOOK }}" \
+              -H 'Content-type: application/json' \
+              -d "{\"text\":\"🎯 Production deployment ${{ job.status }}\\n\\nService: https://ai-square-frontend-731209836128.asia-east1.run.app\\nCommit: ${{ github.sha }}\\n\\n✅ One-step deployment pipeline is now functional!\"}"
+          else
+            echo "Slack webhook not configured, skipping notification"
+          fi
