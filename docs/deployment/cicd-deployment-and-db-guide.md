@@ -24,7 +24,29 @@
 
 ### 一、Terraform 基礎設施管理
 
-#### 🎯 核心原則：Infrastructure as Code
+#### 🎯 核心原則：Infrastructure as Code + 使用既有自動化方案
+
+##### 一步到位原則 (One-Step Deployment)
+**使用成熟的、已經存在的解決方案，而不是不斷創造新的臨時方案。**
+
+優先順序：
+1. **GitHub Actions (CI/CD)** - 最自動化的解決方案
+2. **Terraform + Makefile** - 基礎設施即代碼
+3. **現有部署腳本** - 如果已經有成熟腳本
+4. **gcloud 命令** - 直接使用 GCP CLI
+
+❌ **絕對避免**：
+- 創建新的臨時 shell scripts
+- 寫一次性的部署腳本
+- 重複造輪子
+
+✅ **正確做法**：
+- 使用 Cloud Build 自動構建
+- 使用 Terraform 管理基礎設施
+- 使用 Makefile 標準化命令
+- 使用 GitHub Actions CI/CD
+
+##### Terraform 管理架構
 
 所有基礎設施都使用 Terraform 管理：
 
@@ -366,61 +388,53 @@ jobs:
             terraform apply -var-file="environments/staging.tfvars" -auto-approve
           fi
 ```
-- 輔助腳本：`frontend/deploy-staging.sh`、`frontend/scripts/init-staging-cloud-sql.sh`
 
-建議將「DB Schema 套用」做為部署前置或部署後置步驟（migrate job），確保程式碼與資料庫同步。
+#### 重要：不再使用臨時腳本
+根據「一步到位原則」，請使用 Terraform 和 GitHub Actions 進行部署，不要創建或使用臨時 shell scripts。DB Schema 已整合到 Terraform post-deploy 流程中。
 
 
 ---
 
 ### 五、前端部署（Next.js）
 
-#### 🚀 統一部署系統（2025/01 新增）
+#### 🚀 正確的部署方式（遵循一步到位原則）
 
-**重要改進**：為了確保 Staging 和 Production 環境的一致性，現在使用統一的部署腳本 `deploy.sh`，避免環境間的差異導致問題。
-
-##### 使用統一部署腳本
+##### 使用 Terraform + Makefile（唯一推薦方式）
 ```bash
-cd frontend
+# 進入 Terraform 目錄
+cd terraform
 
-# 部署到 Staging
-./deploy.sh staging
-
-# 部署到 Production  
-./deploy.sh production
-
-# 本地測試
-./deploy.sh local
-```
-
-##### 統一配置檔案
-所有環境配置都在 `deploy.config.json` 中管理：
-- 資料庫連線資訊
-- Cloud SQL 實例名稱
-- Demo 帳號密碼
-- 資源配置（CPU、記憶體）
-
-##### 使用 Makefile 命令（推薦）
-```bash
-# Staging 部署
+# Staging 部署（包含所有基礎設施和應用程式）
 make deploy-staging
 
 # Production 部署
 make deploy-production
 
-# 本地測試
-make deploy-local
+# 部署驗證
+make test ENV=staging
 ```
 
-#### 手動部署（舊方式，僅供參考）
+##### 使用 GitHub Actions（CI/CD 自動化）
+```yaml
+# Push to main branch → 自動部署到 Production
+# Push to develop branch → 自動部署到 Staging
+```
+
+##### 使用 Cloud Build（快速部署）
 ```bash
-# 舊的分離式腳本（已棄用）
-./deploy-staging.sh     # 僅 Staging
-./deploy-production.sh   # 僅 Production
-
-# 建議改用統一部署系統
-./deploy.sh [staging|production]
+# 使用 gcloud 命令直接觸發 Cloud Build
+gcloud builds submit --region=asia-east1 \
+  --config=cloudbuild.yaml \
+  --substitutions=_SERVICE_NAME=ai-square-staging
 ```
+
+#### ❌ 不再使用的方式
+以下方式違反「一步到位原則」，請勿使用：
+- ~~臨時 shell scripts（deploy.sh、deploy-staging.sh 等）~~
+- ~~手動 Docker build 和 push~~
+- ~~分離的資料庫初始化腳本~~
+
+所有部署邏輯都已整合到 Terraform 中，實現真正的一鍵部署。
 
 #### Cloud Run 部署要點
 1) Cloud Run（建議）
@@ -607,66 +621,38 @@ gcloud secrets create google-credentials-production \
   --project=ai-square-463013
 ```
 
-#### Step 4: 更新部署設定檔
+#### Step 4: 更新 Terraform 配置
 
-更新以下檔案中的 Cloud SQL 實例名稱：
+更新 Terraform 環境變數檔案：
 
-1. **frontend/deploy-production.sh**
-```bash
-# 從：
-CLOUD_SQL_INSTANCE="ai-square-463013:asia-east1:ai-square-db-staging-asia"
-# 改為：
-CLOUD_SQL_INSTANCE="ai-square-463013:asia-east1:ai-square-db-production"
+1. **terraform/environments/production.tfvars**
+```hcl
+environment = "production"
+region = "asia-east1"
+# 其他 Production 專屬設定
 ```
 
-2. **frontend/.github/workflows/deploy-production.yml**
-```yaml
-# 從：
-CLOUD_SQL_INSTANCE: ai-square-463013:asia-east1:ai-square-db-staging-asia
-# 改為：
-CLOUD_SQL_INSTANCE: ai-square-463013:asia-east1:ai-square-db-production
-```
+2. **不再需要手動更新的設定**
+Cloud SQL 實例名稱會由 Terraform 自動管理，無需手動設定。
 
-#### Step 5: 初始化資料庫 Schema
+#### Step 5: 初始化資料庫 Schema（已整合到 Terraform）
 
-```bash
-# 方法 1: 使用 Cloud SQL Proxy（推薦）
-# 安裝 Cloud SQL Proxy
-curl -o cloud-sql-proxy \
-  https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.8.0/cloud-sql-proxy.linux.amd64
-chmod +x cloud-sql-proxy
+資料庫 Schema 初始化已完全整合到 Terraform post-deploy 流程中，會自動執行：
+1. Prisma 遷移
+2. Demo 帳號建立
+3. 初始資料 Seed
 
-# 啟動 proxy
-./cloud-sql-proxy --port 5433 \
-  ai-square-463013:asia-east1:ai-square-db-production &
-
-# 套用 schema
-PGPASSWORD="YOUR_STRONG_PASSWORD" psql \
-  -h localhost \
-  -p 5433 \
-  -U postgres \
-  -d ai_square_db \
-  -f frontend/src/lib/repositories/postgresql/schema-v4.sql
-
-# 方法 2: 部署後使用 HTTP API
-# 部署服務後執行
-curl -X POST "https://YOUR-SERVICE-URL/api/admin/init-schema" \
-  -H "x-admin-key: YOUR_ADMIN_KEY" \
-  -H "Content-Type: application/json"
-```
+**不需要手動執行任何 SQL 腳本或 API 呼叫。**
 
 #### Step 6: 執行 Production 部署
 
 ```bash
-# 使用 Makefile
+# 使用 Terraform（唯一推薦方式）
+cd terraform
 make deploy-production
 
-# 或使用部署腳本
-cd frontend
-./deploy-production.sh
-
-# 或使用 GitHub Actions（推薦）
-# Push 到 production 分支會自動觸發
+# 或使用 GitHub Actions（CI/CD）
+# Push 到 main 分支會自動觸發 Production 部署
 ```
 
 #### Step 7: 初始化 Scenarios
@@ -821,33 +807,19 @@ gcloud monitoring policies create \
 - Memory usage
 - Cold start frequency
 
-### 附：現有部署腳本/設定（供參考）
+### 附：推薦的部署資源（遵循一步到位原則）
 
-#### Staging 環境：
-- GitHub Actions Workflow：`frontend/.github/workflows/deploy-staging.yml`
-- Cloud Build 設定（選用）：`frontend/cloudbuild.staging.yaml`
-- Staging 部署腳本：`frontend/deploy-staging.sh`
-- Cloud SQL 初始化腳本：`frontend/scripts/init-staging-cloud-sql.sh`
+#### 推薦的部署方式：
+- **Terraform 配置**：`terraform/` 目錄包含所有基礎設施定義
+- **GitHub Actions Workflow**：自動化 CI/CD 流程
+- **Cloud Build**：快速構建與部署
 
-#### Production 環境：
-- GitHub Actions Workflow：`frontend/.github/workflows/deploy-production.yml`
-- Production 部署腳本：`frontend/deploy-production.sh`
-- Dockerfile：`frontend/Dockerfile.production`
-- Secrets 設定腳本：`scripts/setup-production-secrets.sh`
-- 部署參數文檔：`docs/deployment/production-deployment-parameters.md`
+#### Prisma 資源（資料庫管理）：
+- **Prisma Schema**：`frontend/prisma/schema.prisma` - 單一真實來源
+- **Prisma Migrations**：`frontend/prisma/migrations/` - 版本控制的遷移歷史
+- **Prisma Seed**：`frontend/prisma/seed.ts` - Demo 資料初始化
 
-#### 共用資源：
-- **Prisma Schema（主要）**：`frontend/prisma/schema.prisma`
-- **Prisma Migrations**：`frontend/prisma/migrations/`
-- **Prisma Seed**：`frontend/prisma/seed.ts`
-- **Prisma API Routes**：
-  - `frontend/src/app/api/admin/migrate/route.ts` - Prisma 初始化與 Demo 帳號
-  - `frontend/src/app/api/admin/prisma-init/route.ts` - Prisma 健康檢查
-  - `frontend/src/app/api/admin/prisma-deploy/route.ts` - Prisma 部署與遷移
-- DB Schema（舊版參考）：`frontend/src/lib/repositories/postgresql/schema-v4.sql`
-- Makefile 命令：`make deploy-staging`, `make deploy-production`
-
-以上腳本可直接整合至 CI/CD Pipeline：先測試與型別檢查，套用/驗證 DB Schema，最後部署至 Cloud Run，並以 smoke test 驗證。
+**重要**：所有部署邏輯都已整合到 Terraform 和 GitHub Actions 中，實現真正的一鍵部署。
 
 ### 重要提醒
 

@@ -132,6 +132,44 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 > **"There is nothing more permanent than a temporary solution"**
 > 臨時解決方案會變成永久的技術債
 
+### 🚀 一步到位原則：使用現有系統化自動化方案
+
+**永遠優先使用已經存在的成熟解決方案，不要創建臨時腳本！**
+
+#### ✅ 正確做法：使用現有系統
+```yaml
+部署方式優先順序：
+1. GitHub Actions (CI/CD) - 最自動化
+2. Terraform + Makefile - 基礎設施即代碼
+3. 現有部署腳本 - 如 deploy-staging.sh
+4. gcloud 命令 - 直接使用 GCP CLI
+
+絕對不要：
+❌ 寫新的 shell script 來「解決」部署問題
+❌ 創建「臨時」的自動化腳本
+❌ 重複造輪子
+```
+
+#### 實際案例：Prisma 整合
+```yaml
+錯誤做法：
+- 寫了 deploy-staging-prisma.sh
+- 寫了 auto-staging-deploy.sh
+- 寫了 deploy-with-prisma.sh
+- 每個都是「臨時解決方案」
+
+正確做法：
+- 使用 Terraform Makefile: make deploy-staging
+- 整合到現有 CI/CD pipeline
+- 使用 Prisma 標準工具鏈
+```
+
+#### 關鍵原則：
+1. **先調查現有方案** - 不要假設沒有解決方案
+2. **整合而非創建** - 整合到現有系統，不要創建新系統
+3. **標準化工具** - 使用行業標準工具（Terraform, GitHub Actions, Prisma）
+4. **避免臨時腳本** - 每個「臨時」腳本都會變成技術債
+
 ### 📊 平台開發鐵則
 
 #### 1. **基礎設施優先 (Infrastructure First)**
