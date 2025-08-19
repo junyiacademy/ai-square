@@ -29,7 +29,7 @@ module "blue_green_deployment" {
   blue_image           = "${local.image_repository}:${local.current_deployment_color == "blue" ? local.current_image_tag : "stable"}"
   green_image          = "${local.image_repository}:${local.current_deployment_color == "green" ? local.current_image_tag : "stable"}"
   
-  service_account_email = google_service_account.cloud_run_sa.email
+  service_account_email = google_service_account.ai_square_service.email
   cloudsql_instance    = google_sql_database_instance.main.connection_name
   
   env_vars = {

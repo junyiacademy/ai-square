@@ -78,22 +78,22 @@ export class EnhancedScenarioRepository
     if (entity.sourceType !== undefined) dbRecord.source_type = entity.sourceType as DBSourceType;
     if (entity.sourceId !== undefined) dbRecord.source_id = entity.sourceId;
     if (entity.sourcePath !== undefined) dbRecord.source_path = entity.sourcePath;
-    if (entity.sourceMetadata !== undefined) dbRecord.source_metadata = entity.sourceMetadata;
+    if (entity.sourceMetadata !== undefined) dbRecord.source_metadata = JSON.stringify(entity.sourceMetadata);
     if (entity.status !== undefined) dbRecord.status = entity.status as DBScenarioStatus;
-    if (entity.title !== undefined) dbRecord.title = entity.title;
-    if (entity.description !== undefined) dbRecord.description = entity.description;
-    if (entity.objectives !== undefined) dbRecord.objectives = entity.objectives;
-    if (entity.taskTemplates !== undefined) dbRecord.task_templates = entity.taskTemplates;
+    if (entity.title !== undefined) dbRecord.title = JSON.stringify(entity.title);
+    if (entity.description !== undefined) dbRecord.description = JSON.stringify(entity.description);
+    if (entity.objectives !== undefined) dbRecord.objectives = JSON.stringify(entity.objectives);
+    if (entity.taskTemplates !== undefined) dbRecord.task_templates = JSON.stringify(entity.taskTemplates);
     if (entity.estimatedMinutes !== undefined) dbRecord.estimated_time = entity.estimatedMinutes;
     if (entity.difficulty !== undefined) dbRecord.difficulty = entity.difficulty;
-    if (entity.prerequisites !== undefined) dbRecord.prerequisites = entity.prerequisites;
-    if (entity.metadata !== undefined) dbRecord.metadata = entity.metadata;
-    if (entity.resources !== undefined) dbRecord.resources = entity.resources;
-    if (entity.aiModules !== undefined) dbRecord.ai_modules = entity.aiModules;
+    if (entity.prerequisites !== undefined) dbRecord.prerequisites = JSON.stringify(entity.prerequisites);
+    if (entity.metadata !== undefined) dbRecord.metadata = JSON.stringify(entity.metadata);
+    if (entity.resources !== undefined) dbRecord.resources = JSON.stringify(entity.resources);
+    if (entity.aiModules !== undefined) dbRecord.ai_modules = JSON.stringify(entity.aiModules);
     // Note: rubric is not in IScenario interface
-    if (entity.pblData !== undefined) dbRecord.pbl_data = entity.pblData;
-    if (entity.discoveryData !== undefined) dbRecord.discovery_data = entity.discoveryData;
-    if (entity.assessmentData !== undefined) dbRecord.assessment_data = entity.assessmentData;
+    if (entity.pblData !== undefined) dbRecord.pbl_data = JSON.stringify(entity.pblData);
+    if (entity.discoveryData !== undefined) dbRecord.discovery_data = JSON.stringify(entity.discoveryData);
+    if (entity.assessmentData !== undefined) dbRecord.assessment_data = JSON.stringify(entity.assessmentData);
     
     return dbRecord;
   }
