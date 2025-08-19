@@ -291,7 +291,7 @@ jobs:
           EOF
           
       - name: Upload promotion record
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: promotion-records
           path: promotion-record-*.json
