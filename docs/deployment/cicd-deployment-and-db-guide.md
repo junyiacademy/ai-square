@@ -133,6 +133,44 @@ Terraform 會自動設定以下環境變數：
 
 ### 四、資料庫（Cloud SQL）管理
 
+#### 🎯 資料庫管理策略更新（2025/08 - Prisma Integration）
+
+從 2025/08 開始，專案採用 **Prisma ORM** 作為資料庫 Schema 管理和遷移工具，取代原本的手動 SQL 腳本管理方式。
+
+##### Prisma 架構
+
+```
+frontend/
+├── prisma/
+│   ├── schema.prisma              # Prisma Schema 定義（單一真實來源）
+│   ├── migrations/                # 自動生成的遷移檔案
+│   │   └── 20250818154047_initial_schema/
+│   │       └── migration.sql
+│   └── seed.ts                    # 資料 Seed 腳本（Demo 帳號）
+├── src/
+│   └── app/api/admin/
+│       ├── migrate/route.ts       # Prisma 初始化 API endpoint
+│       ├── prisma-init/route.ts   # Prisma 初始化與健康檢查
+│       └── prisma-deploy/route.ts # Prisma 部署專用 endpoint
+```
+
+##### 使用 Prisma 的優勢
+
+1. **Schema as Code**: Schema 定義在 `schema.prisma`，版本控制追蹤
+2. **自動遷移生成**: 自動產生 SQL 遷移檔案
+3. **Type Safety**: 自動生成 TypeScript 型別
+4. **遷移歷史**: 完整的遷移歷史記錄
+5. **資料 Seeding**: 內建 seed 機制
+6. **GCP 相容性**: 完全支援 Cloud SQL PostgreSQL
+
+##### Prisma 在 GCP 的使用
+
+**Prisma 完全可以在 GCP 上使用！**
+- ✅ 支援 Cloud SQL PostgreSQL
+- ✅ 支援 Cloud Run 部署
+- ✅ 支援 Unix Socket 連線 (`/cloudsql/...`)
+- ✅ 支援 Cloud Build 自動化部署
+
 #### Terraform 管理 Cloud SQL
 
 Terraform 會自動建立和管理 Cloud SQL 實例：
@@ -162,24 +200,57 @@ resource "google_sql_database_instance" "main" {
 }
 ```
 
-#### 資料庫 Schema 管理
+#### 資料庫 Schema 管理（Prisma）
 
-1) **Schema 版本**
-   - 目前使用：`schema-v4.sql`
-   - 位置：`frontend/src/lib/repositories/postgresql/schema-v4.sql`
+1) **Schema 定義**
+   - 位置：`frontend/prisma/schema.prisma`
+   - 包含所有資料表定義、關聯、索引
+   - 使用 Prisma DSL 語法
 
-2) **初始化方式**
-   - Terraform 建立資料庫後，透過 API endpoint 初始化
-   - 使用 `/api/admin/init-schema` 套用 schema
+2) **初始化方式（Prisma）**
+   ```bash
+   # 本地開發
+   npx prisma migrate dev
+   
+   # Staging/Production - 透過 API
+   curl -X POST "$URL/api/admin/migrate"
+   ```
 
-3) **備份策略**
+3) **遷移流程**
+   ```bash
+   # 1. 修改 schema.prisma
+   # 2. 生成遷移
+   npx prisma migrate dev --name descriptive_name
+   # 3. 應用到 Production
+   npx prisma migrate deploy
+   ```
+
+4) **Demo 帳號 Seeding**
+   ```bash
+   # 自動執行（配置在 package.json）
+   npx prisma db seed
+   
+   # 手動執行
+   npx tsx prisma/seed.ts
+   ```
+
+5) **Prisma 部署腳本**
+   ```bash
+   # 完整 Prisma 部署（已整合到 Terraform）
+   cd terraform
+   make deploy-staging    # 包含 Prisma 遷移
+   make deploy-production # 包含 Prisma 遷移
+   ```
+
+5) **備份策略**
    - Production：每日自動備份（凌晨 3:00）
    - Staging：不自動備份（節省成本）
    - 使用 `gcloud sql backups` 手動備份
 
-4) **遷移策略**
-   - 使用 `ALTER TABLE` 進行兼容式更新
-   - 禁止破壞性變更
+6) **遷移最佳實踐**
+   - 永遠先在本地測試遷移
+   - 使用描述性的遷移名稱
+   - 避免破壞性變更（使用 soft delete）
    - 先在 Staging 測試，再部署到 Production
 
 
@@ -766,7 +837,14 @@ gcloud monitoring policies create \
 - 部署參數文檔：`docs/deployment/production-deployment-parameters.md`
 
 #### 共用資源：
-- DB Schema（最新）：`frontend/src/lib/repositories/postgresql/schema-v4.sql`
+- **Prisma Schema（主要）**：`frontend/prisma/schema.prisma`
+- **Prisma Migrations**：`frontend/prisma/migrations/`
+- **Prisma Seed**：`frontend/prisma/seed.ts`
+- **Prisma API Routes**：
+  - `frontend/src/app/api/admin/migrate/route.ts` - Prisma 初始化與 Demo 帳號
+  - `frontend/src/app/api/admin/prisma-init/route.ts` - Prisma 健康檢查
+  - `frontend/src/app/api/admin/prisma-deploy/route.ts` - Prisma 部署與遷移
+- DB Schema（舊版參考）：`frontend/src/lib/repositories/postgresql/schema-v4.sql`
 - Makefile 命令：`make deploy-staging`, `make deploy-production`
 
 以上腳本可直接整合至 CI/CD Pipeline：先測試與型別檢查，套用/驗證 DB Schema，最後部署至 Cloud Run，並以 smoke test 驗證。
@@ -1948,16 +2026,15 @@ Docker Compose 會自動掛載並執行：
 1. `schema-v4.sql` - 建立資料表結構
 2. `01-demo-accounts.sql` - 建立 demo 帳號
 
-#### Demo 帳號列表
+#### Demo 帳號列表（Prisma Seed）
 
 | Email | 密碼 | 角色 | 說明 |
 |-------|------|------|------|
 | student@example.com | student123 | student | 學生帳號 |
 | teacher@example.com | teacher123 | teacher | 教師帳號 |
 | admin@example.com | admin123 | admin | 管理員帳號 |
-| parent@example.com | parent123 | parent | 家長帳號 |
-| guest@example.com | guest123 | guest | 訪客帳號 |
-| test@example.com | password123 | student | 自動測試用帳號 |
+
+**注意**：使用 Prisma 後，demo 帳號由 `prisma/seed.ts` 管理，統一為三個核心帳號。
 
 #### Cloud SQL 初始化（Staging/Production）
 
@@ -2027,13 +2104,42 @@ ON CONFLICT (email) DO UPDATE SET
   email_verified = EXCLUDED.email_verified;
 ```
 
-### Demo 帳號資訊
+### Demo 帳號資訊（Prisma Seed）
+
+從 2025/08 開始，使用 Prisma seed 管理 demo 帳號：
 
 | Email | Password | Role | 用途 |
 |-------|----------|------|------|
 | student@example.com | student123 | student | 學生功能測試 |
 | teacher@example.com | teacher123 | teacher | 教師功能測試 |
 | admin@example.com | admin123 | admin | 管理員功能測試 |
+
+#### Prisma Seed 執行方式
+
+```bash
+# 本地開發（自動執行）
+npm run db:reset  # 包含 schema + seed
+
+# Staging/Production（透過 API）
+curl -X POST "$URL/api/admin/migrate"
+```
+
+#### Prisma 與 GCP 整合重點
+
+1. **環境變數設定**
+   ```bash
+   DATABASE_URL="postgresql://postgres:password@localhost/ai_square_db?host=/cloudsql/PROJECT:REGION:INSTANCE"
+   ```
+
+2. **Cloud Run 部署**
+   - Dockerfile 必須包含 `npx prisma generate`
+   - 部署時複製 `prisma/` 目錄到生產映像
+   - 確保 DATABASE_URL 環境變數正確設定
+
+3. **初始化流程**
+   - Cloud SQL 實例建立後，資料庫是空的
+   - 透過 `/api/admin/migrate` API 初始化 schema 和 demo 帳號
+   - 再透過 `/api/admin/init-*` APIs 初始化 scenarios
 
 ### 驗證 Demo 帳號
 

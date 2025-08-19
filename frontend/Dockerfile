@@ -4,6 +4,8 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
 COPY . .
+# Generate Prisma client
+RUN npx prisma generate
 RUN npm run build
 
 # 2. Production stage
@@ -17,7 +19,8 @@ COPY --from=builder /app/node_modules ./node_modules
 
 # Copy src directory for SQL schema files
 COPY --from=builder /app/src ./src
-# Skip scripts directory for now - it doesn't exist in this project
+# Copy prisma directory for migrations
+COPY --from=builder /app/prisma ./prisma
 
 # Copy service account key if it exists in the project root
 # Note: In production, this should be mounted as a secret or provided via environment variable

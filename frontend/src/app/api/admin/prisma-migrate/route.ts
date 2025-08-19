@@ -1,24 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
-import { execSync } from 'child_process';
 
 export async function POST(request: NextRequest) {
   const prisma = new PrismaClient();
   
   try {
-    // Check if migration is needed by trying to access the User table
-    try {
-      await prisma.user.count();
-      console.log('Database schema is ready');
-    } catch (error) {
-      console.error('Database schema not ready:', error);
-      return NextResponse.json({
-        success: false,
-        error: 'Database schema not initialized. Please run Prisma migrations manually.'
-      }, { status: 500 });
-    }
-    
     // Initialize demo users
     const users = [
       { 
