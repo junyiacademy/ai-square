@@ -123,29 +123,10 @@ describe('/api/assessment/scenarios', () => {
       expect(response.status).toBe(200);
     });
 
-    it('should fallback to filesystem when no scenarios in database', async () => {
+    it('should return empty array when no scenarios in database', async () => {
       (repositoryFactory.getScenarioRepository as jest.Mock).mockReturnValue(mockScenarioRepo);
       (mockScenarioRepo.findByMode as jest.Mock).mockResolvedValue([]);
       (mockScenarioRepo.findActive as jest.Mock).mockResolvedValue([]);
-
-      fsPromises.readdir.mockResolvedValue([
-        { name: 'ai_literacy', isDirectory: () => true },
-        { name: 'other_folder', isDirectory: () => true },
-        { name: 'file.txt', isDirectory: () => false },
-      ]);
-
-      const mockYamlContent = `
-assessment_config:
-  title: "AI Literacy Test"
-  description: "Comprehensive AI assessment"
-  total_questions: 20
-  time_limit_minutes: 30
-  passing_score: 75
-  domains: ["AI_Ethics", "AI_Tools"]
-`;
-      fsPromises.readFile.mockResolvedValue(mockYamlContent);
-
-      (mockScenarioRepo.create as jest.Mock).mockResolvedValue(createMockScenario({ id: 'new-scenario-1', title: { en: 'AI Literacy Test' } }));
 
       const request = new NextRequest('http://localhost:3000/api/assessment/scenarios');
       const response = await LocalGET(request);
@@ -153,40 +134,30 @@ assessment_config:
 
       expect(response.status).toBe(200);
       expect(data.success).toBe(true);
-      expect(data.data.scenarios).toHaveLength(1);
+      expect(data.data.scenarios).toHaveLength(0);
+      // Should NOT try to read from filesystem
+      expect(fsPromises.readdir).not.toHaveBeenCalled();
+      expect(fsPromises.readFile).not.toHaveBeenCalled();
     });
 
-    it('should handle language fallback for filesystem scenarios', async () => {
+    it('should not attempt filesystem fallback for any language', async () => {
       (repositoryFactory.getScenarioRepository as jest.Mock).mockReturnValue(mockScenarioRepo);
       (mockScenarioRepo.findByMode as jest.Mock).mockResolvedValue([]);
       (mockScenarioRepo.findActive as jest.Mock).mockResolvedValue([]);
-
-      fsPromises.readdir.mockResolvedValue([
-        { name: 'ai_literacy', isDirectory: () => true },
-      ]);
-
-      fsPromises.readFile
-        .mockRejectedValueOnce(new Error('File not found'))
-        .mockResolvedValueOnce(`config: { title: "English Title" }`);
-
-      (mockScenarioRepo.create as jest.Mock).mockResolvedValue(createMockScenario({ id: 'new-scenario-1', title: { en: 'English Title' } }));
 
       const request = new NextRequest('http://localhost:3000/api/assessment/scenarios?lang=zh');
       const response = await LocalGET(request);
+      const data = await response.json();
+      
       expect(response.status).toBe(200);
-      expect(fsPromises.readFile).toHaveBeenCalledTimes(2);
+      expect(data.data.scenarios).toHaveLength(0);
+      expect(fsPromises.readFile).not.toHaveBeenCalled();
     });
 
-    it('should skip folders without config files', async () => {
+    it('should not access filesystem when database is empty', async () => {
       (repositoryFactory.getScenarioRepository as jest.Mock).mockReturnValue(mockScenarioRepo);
       (mockScenarioRepo.findByMode as jest.Mock).mockResolvedValue([]);
       (mockScenarioRepo.findActive as jest.Mock).mockResolvedValue([]);
-
-      fsPromises.readdir.mockResolvedValue([
-        { name: 'ai_literacy', isDirectory: () => true },
-      ]);
-
-      fsPromises.readFile.mockRejectedValue(new Error('File not found'));
 
       const request = new NextRequest('http://localhost:3000/api/assessment/scenarios');
       const response = await LocalGET(request);
@@ -194,25 +165,20 @@ assessment_config:
 
       expect(response.status).toBe(200);
       expect(data.data.scenarios).toHaveLength(0);
-      expect(mockConsoleWarn).toHaveBeenCalled();
+      expect(fsPromises.readdir).not.toHaveBeenCalled();
+      expect(mockConsoleWarn).not.toHaveBeenCalled();
     });
 
-    it('should use existing scenarios from filesystem cache', async () => {
+    it('should return existing scenarios from database without filesystem access', async () => {
       (repositoryFactory.getScenarioRepository as jest.Mock).mockReturnValue(mockScenarioRepo);
-      (mockScenarioRepo.findByMode as jest.Mock).mockResolvedValue([]);
-
+      
       const existingScenario = createMockScenario({
         id: 'existing-1',
         sourceMetadata: { configPath: 'assessment_data/ai_literacy/ai_literacy_questions_en.yaml' },
         title: { en: 'Existing Assessment' },
         description: { en: 'Already in DB' },
       });
-      (mockScenarioRepo.findActive as jest.Mock).mockResolvedValue([existingScenario]);
-
-      fsPromises.readdir.mockResolvedValue([
-        { name: 'ai_literacy', isDirectory: () => true },
-      ]);
-      fsPromises.readFile.mockResolvedValue(`config:\n  title: "New Title"\n  description: "New Description"\n`);
+      (mockScenarioRepo.findByMode as jest.Mock).mockResolvedValue([existingScenario]);
 
       const request = new NextRequest('http://localhost:3000/api/assessment/scenarios');
       const response = await LocalGET(request);
@@ -220,15 +186,14 @@ assessment_config:
 
       expect(response.status).toBe(200);
       expect(data.data.scenarios).toHaveLength(1);
+      expect(fsPromises.readdir).not.toHaveBeenCalled();
+      expect(fsPromises.readFile).not.toHaveBeenCalled();
     });
 
-    it('should handle filesystem read errors', async () => {
+    it('should handle empty database without filesystem fallback', async () => {
       (repositoryFactory.getScenarioRepository as jest.Mock).mockReturnValue(mockScenarioRepo);
       (mockScenarioRepo.findByMode as jest.Mock).mockResolvedValue([]);
       (mockScenarioRepo.findActive as jest.Mock).mockResolvedValue([]);
-
-      const error = new Error('Permission denied');
-      fsPromises.readdir.mockRejectedValue(error);
 
       const request = new NextRequest('http://localhost:3000/api/assessment/scenarios');
       const response = await LocalGET(request);
@@ -237,27 +202,24 @@ assessment_config:
       expect(response.status).toBe(200);
       expect(data.success).toBe(true);
       expect(data.data.scenarios).toEqual([]);
+      // Verify no filesystem operations were attempted
+      expect(fsPromises.readdir).not.toHaveBeenCalled();
     });
 
-    it('should handle scenario creation errors', async () => {
+    it('should handle database errors gracefully', async () => {
       (repositoryFactory.getScenarioRepository as jest.Mock).mockReturnValue(mockScenarioRepo);
-      (mockScenarioRepo.findByMode as jest.Mock).mockResolvedValue([]);
-      (mockScenarioRepo.findActive as jest.Mock).mockResolvedValue([]);
-
-      fsPromises.readdir.mockResolvedValue([
-        { name: 'ai_literacy', isDirectory: () => true },
-      ]);
-      fsPromises.readFile.mockResolvedValue(`config: { title: "Test" }`);
-
-      const createError = new Error('Database error');
-      (mockScenarioRepo.create as jest.Mock).mockRejectedValue(createError);
+      
+      // Simulate a database error
+      const dbError = new Error('Database connection failed');
+      (mockScenarioRepo.findByMode as jest.Mock).mockRejectedValue(dbError);
 
       const request = new NextRequest('http://localhost:3000/api/assessment/scenarios');
       const response = await LocalGET(request);
       const data = await response.json();
 
-      expect(response.status).toBe(200);
-      expect(data.data.scenarios).toEqual([]);
+      expect(response.status).toBe(500);
+      expect(data.success).toBe(false);
+      expect(data.error).toContain('Failed to load assessment scenarios');
     });
 
     it('should handle default values for missing config fields', async () => {
