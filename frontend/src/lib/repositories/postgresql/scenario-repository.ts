@@ -161,7 +161,7 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
       JSON.stringify(scenario.objectives),
       scenario.difficulty,
       scenario.estimatedMinutes,
-      JSON.stringify(scenario.prerequisites),
+      scenario.prerequisites || [],
       JSON.stringify(scenario.taskTemplates),
       JSON.stringify(scenario.xpRewards),
       JSON.stringify(scenario.unlockRequirements),
@@ -238,7 +238,7 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
     }
     if (updates.prerequisites !== undefined) {
       updateFields.push(`prerequisites = $${paramCount++}`);
-      values.push(JSON.stringify(updates.prerequisites));
+      values.push(updates.prerequisites || []);
     }
 
     // Task templates

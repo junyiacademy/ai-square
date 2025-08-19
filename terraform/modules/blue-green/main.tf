@@ -159,9 +159,7 @@ resource "google_cloud_run_service" "main" {
   traffic {
     percent         = 100
     latest_revision = false
-    revision_name   = var.active_color == "blue" ? 
-      google_cloud_run_service.blue.status[0].latest_created_revision_name :
-      google_cloud_run_service.green.status[0].latest_created_revision_name
+    revision_name   = var.active_color == "blue" ? google_cloud_run_service.blue.status[0].latest_created_revision_name : google_cloud_run_service.green.status[0].latest_created_revision_name
   }
 }
 
@@ -259,16 +257,12 @@ resource "null_resource" "canary_deployment" {
 # Outputs
 # ============================================
 output "active_service_url" {
-  value = var.active_color == "blue" ? 
-    google_cloud_run_service.blue.status[0].url :
-    google_cloud_run_service.green.status[0].url
+  value = var.active_color == "blue" ? google_cloud_run_service.blue.status[0].url : google_cloud_run_service.green.status[0].url
   description = "URL of the currently active service"
 }
 
 output "inactive_service_url" {
-  value = var.active_color == "blue" ? 
-    google_cloud_run_service.green.status[0].url :
-    google_cloud_run_service.blue.status[0].url
+  value = var.active_color == "blue" ? google_cloud_run_service.green.status[0].url : google_cloud_run_service.blue.status[0].url
   description = "URL of the currently inactive service"
 }
 
@@ -286,13 +280,9 @@ output "green_service_name" {
 }
 
 output "active_revision" {
-  value = var.active_color == "blue" ? 
-    google_cloud_run_service.blue.status[0].latest_created_revision_name :
-    google_cloud_run_service.green.status[0].latest_created_revision_name
+  value = var.active_color == "blue" ? google_cloud_run_service.blue.status[0].latest_created_revision_name : google_cloud_run_service.green.status[0].latest_created_revision_name
 }
 
 output "inactive_revision" {
-  value = var.active_color == "blue" ? 
-    google_cloud_run_service.green.status[0].latest_created_revision_name :
-    google_cloud_run_service.blue.status[0].latest_created_revision_name
+  value = var.active_color == "blue" ? google_cloud_run_service.green.status[0].latest_created_revision_name : google_cloud_run_service.blue.status[0].latest_created_revision_name
 }
