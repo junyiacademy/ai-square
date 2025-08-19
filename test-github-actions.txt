@@ -1,0 +1,7 @@
+Test GitHub Actions deployment workflow
+
+This file is created to test if GitHub Actions can run successfully
+after setting up the required secrets.
+
+Date: 2025-01-19
+Purpose: Verify one-step deployment workflow
