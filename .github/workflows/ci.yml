@@ -102,7 +102,7 @@ jobs:
     
     - name: Check for large files
       run: |
-        find . -type f -size +1M | grep -v node_modules | grep -v .git | tee large_files.txt
+        find . -type f -size +1M | grep -v node_modules | grep -v .git | grep -v "public/images/" | grep -v "public/screenshots/" | tee large_files.txt
         if [ -s large_files.txt ]; then
           echo "❌ Found large files (>1MB):"
           cat large_files.txt

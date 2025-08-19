@@ -57,13 +57,15 @@ fi
 
 # Set environment variables for tests
 export NODE_ENV=test
-export DB_HOST=localhost
+export DB_HOST=127.0.0.1
 export DB_PORT=5434
 export DB_NAME=ai_square_db
 export DB_USER=postgres
 export DB_PASSWORD=postgres
+export TEST_DB_HOST=127.0.0.1
+export TEST_DB_PORT=5434
 export REDIS_ENABLED=true
-export REDIS_URL=redis://localhost:6380
+export REDIS_URL=redis://127.0.0.1:6380
 
 # Run integration tests
 echo -e "${YELLOW}🧪 Running integration tests...${NC}"

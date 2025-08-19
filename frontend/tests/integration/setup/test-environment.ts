@@ -106,7 +106,7 @@ export class IntegrationTestEnvironment {
     });
 
     try {
-      // Check and drop existing test database
+        // Check and drop existing test database
       await adminPool.query(
         `DROP DATABASE IF EXISTS "${this.testDbName}"`
       );
