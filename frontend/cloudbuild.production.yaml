@@ -1,11 +1,11 @@
 steps:
 # Step 1: Build Docker image
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-f', 'Dockerfile.staging', '-t', 'gcr.io/$PROJECT_ID/ai-square-staging:${_IMAGE_TAG}', '.']
+  args: ['build', '-f', 'Dockerfile.production', '-t', 'gcr.io/$PROJECT_ID/ai-square-production:${_IMAGE_TAG}', '.']
 
 # Step 2: Push image to registry
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'gcr.io/$PROJECT_ID/ai-square-staging:${_IMAGE_TAG}']
+  args: ['push', 'gcr.io/$PROJECT_ID/ai-square-production:${_IMAGE_TAG}']
 
 # Step 3: Deploy to Cloud Run (CRITICAL - 避免人為疏失)
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -13,8 +13,8 @@ steps:
   args:
   - 'run'
   - 'deploy'
-  - 'ai-square-staging'
-  - '--image=gcr.io/$PROJECT_ID/ai-square-staging:${_IMAGE_TAG}'
+  - 'ai-square-production'
+  - '--image=gcr.io/$PROJECT_ID/ai-square-production:${_IMAGE_TAG}'
   - '--region=asia-east1'
   - '--platform=managed'
   - '--no-traffic'  # Deploy without routing traffic immediately
@@ -26,7 +26,7 @@ steps:
   - '-c'
   - |
     # Get the new revision URL
-    REVISION_URL=$(gcloud run revisions list --service=ai-square-staging --region=asia-east1 --platform=managed --limit=1 --format="value(status.url)")
+    REVISION_URL=$(gcloud run revisions list --service=ai-square-production --region=asia-east1 --platform=managed --limit=1 --format="value(status.url)")
     echo "Testing new revision: $${REVISION_URL}"
     
     # Health check
@@ -46,12 +46,12 @@ steps:
   - 'run'
   - 'services'
   - 'update-traffic'
-  - 'ai-square-staging'
+  - 'ai-square-production'
   - '--to-latest'
   - '--region=asia-east1'
 
 images:
-- 'gcr.io/$PROJECT_ID/ai-square-staging:${_IMAGE_TAG}'
+- 'gcr.io/$PROJECT_ID/ai-square-production:${_IMAGE_TAG}'
 
 substitutions:
   _IMAGE_TAG: 'latest'
