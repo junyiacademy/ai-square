@@ -84,8 +84,11 @@ jobs:
           IMAGE_TAG="${GITHUB_SHA::7}"
           IMAGE_URL="gcr.io/${{ env.PROJECT_ID }}/ai-square-staging:$IMAGE_TAG"
           
-          # Use production Dockerfile for consistent builds
-          docker build -t $IMAGE_URL -f Dockerfile.production .
+          # Build with staging environment
+          docker build -t $IMAGE_URL \
+            --build-arg NODE_ENV=production \
+            --build-arg ENVIRONMENT=staging \
+            .
           docker push $IMAGE_URL
           
       - name: Deploy to Cloud Run
