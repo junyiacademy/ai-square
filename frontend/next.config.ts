@@ -2,8 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   // 輸出配置 (for Docker deployment)
-  // Note: Removed standalone mode as it causes /api/health to return 404
-  // output: process.env.ENVIRONMENT === 'staging' ? 'standalone' : undefined,
+  output: 'standalone',
   
   // 安全標頭配置
   async headers() {

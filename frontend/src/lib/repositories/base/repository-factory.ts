@@ -40,32 +40,77 @@ export class RepositoryFactory {
 
   private constructor() {
     // Initialize PostgreSQL connection pool
-    const dbHost = process.env.DB_HOST || 'localhost';
-    const isCloudSQL = dbHost.startsWith('/cloudsql/');
+    let poolConfig: Record<string, unknown>;
     
-    const poolConfig: Record<string, unknown> = {
-      database: process.env.DB_NAME || 'ai_square_db',
-      user: process.env.DB_USER || 'postgres',
-      password: process.env.DB_PASSWORD || 'postgres',
-      max: 20, // Maximum number of clients in the pool
-      idleTimeoutMillis: 30000,
-      connectionTimeoutMillis: isCloudSQL ? 10000 : 2000, // Longer timeout for Cloud SQL
-    };
-    
-    if (isCloudSQL) {
-      // For Cloud SQL Unix socket connections
-      poolConfig.host = dbHost;
-      // Don't set port for Unix socket connections
+    // If DATABASE_URL is provided, parse it (for compatibility with Prisma)
+    if (process.env.DATABASE_URL) {
+      try {
+        const url = new URL(process.env.DATABASE_URL);
+        const isCloudSQL = url.searchParams.has('host') && url.searchParams.get('host')?.startsWith('/cloudsql/');
+        
+        poolConfig = {
+          database: url.pathname.slice(1), // Remove leading /
+          user: url.username,
+          password: decodeURIComponent(url.password),
+          max: 20,
+          idleTimeoutMillis: 30000,
+          connectionTimeoutMillis: isCloudSQL ? 10000 : 2000,
+        };
+        
+        if (isCloudSQL) {
+          poolConfig.host = url.searchParams.get('host') as string;
+        } else {
+          poolConfig.host = url.hostname;
+          poolConfig.port = parseInt(url.port || '5432');
+        }
+      } catch (e) {
+        console.error('Failed to parse DATABASE_URL, falling back to individual env vars:', e);
+        // Fall back to individual env vars
+        const dbHost = process.env.DB_HOST || 'localhost';
+        const isCloudSQL = dbHost.startsWith('/cloudsql/');
+        
+        poolConfig = {
+          database: process.env.DB_NAME || 'ai_square_db',
+          user: process.env.DB_USER || 'postgres',
+          password: process.env.DB_PASSWORD || 'postgres',
+          max: 20,
+          idleTimeoutMillis: 30000,
+          connectionTimeoutMillis: isCloudSQL ? 10000 : 2000,
+        };
+        
+        if (isCloudSQL) {
+          poolConfig.host = dbHost;
+        } else {
+          poolConfig.host = dbHost;
+          poolConfig.port = parseInt(process.env.DB_PORT || '5433');
+        }
+      }
     } else {
-      // For regular TCP connections
-      poolConfig.host = dbHost;
-      poolConfig.port = parseInt(process.env.DB_PORT || '5433');
+      // Use individual env vars
+      const dbHost = process.env.DB_HOST || 'localhost';
+      const isCloudSQL = dbHost.startsWith('/cloudsql/');
+      
+      poolConfig = {
+        database: process.env.DB_NAME || 'ai_square_db',
+        user: process.env.DB_USER || 'postgres',
+        password: process.env.DB_PASSWORD || 'postgres',
+        max: 20,
+        idleTimeoutMillis: 30000,
+        connectionTimeoutMillis: isCloudSQL ? 10000 : 2000,
+      };
+      
+      if (isCloudSQL) {
+        poolConfig.host = dbHost;
+      } else {
+        poolConfig.host = dbHost;
+        poolConfig.port = parseInt(process.env.DB_PORT || '5433');
+      }
     }
     
     console.log('Initializing database connection:', {
       host: poolConfig.host,
       database: poolConfig.database,
-      isCloudSQL,
+      isCloudSQL: poolConfig.host && (poolConfig.host as string).startsWith('/cloudsql/'),
       port: poolConfig.port
     });
     
