@@ -255,9 +255,9 @@ class PBLYAMLProcessor implements IYAMLProcessor {
     
     try {
       const scenarios = await this.loader.scanScenarios();
-      // Return full paths relative to project root
+      // Return full paths relative to project root (using English as default language)
       return scenarios.map(scenarioId => 
-        path.join(basePath, scenarioId, `${scenarioId}_scenario.yaml`)
+        path.join(basePath, scenarioId, `${scenarioId}_en.yaml`)
       );
     } catch (error) {
       console.error('Error scanning PBL scenarios:', error);

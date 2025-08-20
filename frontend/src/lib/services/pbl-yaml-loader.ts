@@ -103,9 +103,9 @@ export class PBLYAMLLoader extends BaseYAMLLoader<PBLYAMLData> {
    * Get file path for PBL scenario
    */
   protected getFilePath(fileName: string): string {
-    // PBL files are in subdirectories
+    // PBL files are in subdirectories with language-specific files
     const scenarioId = fileName.replace(/_scenario$/, '');
-    return path.join(this.basePath, scenarioId, `${scenarioId}_scenario.yaml`);
+    return path.join(this.basePath, scenarioId, `${scenarioId}_en.yaml`);
   }
 
   /**
@@ -138,15 +138,15 @@ export class PBLYAMLLoader extends BaseYAMLLoader<PBLYAMLData> {
         .filter(item => item.isDirectory())
         .map(item => item.name);
 
-      // Validate each folder contains a scenario file
+      // Validate each folder contains an English scenario file
       const validScenarios: string[] = [];
       for (const folder of scenarioFolders) {
-        const scenarioFile = path.join(scenariosDir, folder, `${folder}_scenario.yaml`);
+        const scenarioFile = path.join(scenariosDir, folder, `${folder}_en.yaml`);
         try {
           await fs.access(scenarioFile);
           validScenarios.push(folder);
         } catch {
-          console.warn(`No scenario file found in ${folder}`);
+          console.warn(`No English scenario file found in ${folder}`);
         }
       }
 
