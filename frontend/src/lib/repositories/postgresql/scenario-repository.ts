@@ -318,15 +318,19 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
   // Additional methods specific to PostgreSQL implementation
 
   async findByMode(mode: LearningMode, includeArchived = false): Promise<IScenario[]> {
-    // Temporarily include all scenarios to debug
-    const query = `SELECT * FROM scenarios WHERE mode = $1 ORDER BY created_at DESC`;
-    console.log(`[ScenarioRepo] findByMode query: ${query}, mode: ${mode}`);
+    let query = `
+      SELECT * FROM scenarios 
+      WHERE mode = $1
+    `;
+    const params: unknown[] = [mode];
 
-    const { rows } = await this.pool.query<DBScenario>(query, [mode]);
-    console.log(`[ScenarioRepo] Found ${rows.length} scenarios for mode ${mode}`);
-    if (rows.length > 0) {
-      console.log(`[ScenarioRepo] First scenario status: ${rows[0].status}`);
+    if (!includeArchived) {
+      query += ` AND status = 'active'`;
     }
+
+    query += ` ORDER BY created_at DESC`;
+
+    const { rows } = await this.pool.query<DBScenario>(query, params);
     return rows.map(row => this.toScenario(row));
   }
 
