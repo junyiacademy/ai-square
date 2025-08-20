@@ -5,17 +5,35 @@ export async function GET(_request: NextRequest) {
   let pool: Pool | null = null;
   
   try {
-    const dbConfig = {
-      host: process.env.DB_HOST || '127.0.0.1',
-      port: parseInt(process.env.DB_PORT || '5433'),
+    const dbHost = process.env.DB_HOST || '127.0.0.1';
+    const isCloudSQL = dbHost.startsWith('/cloudsql/');
+    
+    // Build config based on connection type (same logic as get-pool.ts)
+    const dbConfig: Record<string, unknown> = {
       database: process.env.DB_NAME || 'ai_square_db',
       user: process.env.DB_USER || 'postgres',
       password: process.env.DB_PASSWORD || 'postgres',
       max: 1,
-      connectionTimeoutMillis: 5000,
+      connectionTimeoutMillis: isCloudSQL ? 10000 : 5000,
     };
+    
+    if (isCloudSQL) {
+      // For Cloud SQL Unix socket connections
+      dbConfig.host = dbHost;
+      // Don't set port for Unix socket connections
+    } else {
+      // For regular TCP connections (local/staging with IP)
+      dbConfig.host = dbHost;
+      dbConfig.port = parseInt(process.env.DB_PORT || '5433');
+      dbConfig.ssl = false;
+    }
 
-    console.log('Connecting to database with config:', { ...dbConfig, password: '***' });
+    console.log('Connecting to database with config:', { 
+      ...dbConfig, 
+      password: '***',
+      isCloudSQL,
+      connectionType: isCloudSQL ? 'unix_socket' : 'tcp'
+    });
     
     pool = new Pool(dbConfig);
     
@@ -25,10 +43,12 @@ export async function GET(_request: NextRequest) {
       success: true,
       database: result.rows[0].db,
       time: result.rows[0].time,
-      config: {
+      connection: {
+        type: isCloudSQL ? 'Cloud SQL (unix socket)' : 'TCP',
         host: dbConfig.host,
-        port: dbConfig.port,
-        database: dbConfig.database
+        port: dbConfig.port || 'N/A (unix socket)',
+        database: dbConfig.database,
+        isCloudSQL
       }
     });
     
