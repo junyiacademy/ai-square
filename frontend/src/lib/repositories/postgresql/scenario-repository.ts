@@ -162,7 +162,9 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
       JSON.stringify(scenario.objectives || []),
       scenario.difficulty,
       scenario.estimatedMinutes,
-      Array.isArray(scenario.prerequisites) ? scenario.prerequisites : [],
+      Array.isArray(scenario.prerequisites) ? scenario.prerequisites : 
+        (typeof scenario.prerequisites === 'string' && (scenario.prerequisites as string).startsWith('[') 
+          ? JSON.parse(scenario.prerequisites as string) : []),
       JSON.stringify(scenario.taskTemplates || []),
       JSON.stringify(scenario.xpRewards || {}),
       JSON.stringify(scenario.unlockRequirements || {}),
