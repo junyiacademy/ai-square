@@ -2,20 +2,20 @@ import { NextRequest, NextResponse } from 'next/server';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import type { IScenario } from '@/types/unified-learning';
 import { getServerSession } from '@/lib/auth/session';
-import path from 'path';
-import { promises as fs } from 'fs';
-import { parse as yamlParse } from 'yaml';
+// import path from 'path';
+// import { promises as fs } from 'fs';
+// import { parse as yamlParse } from 'yaml';
 import { distributedCacheService } from '@/lib/cache/distributed-cache-service';
 import { cacheKeys, TTL } from '@/lib/cache/cache-keys';
 
-interface AssessmentConfig {
-  title?: string;
-  description?: string;
-  total_questions?: number;
-  time_limit_minutes?: number;
-  passing_score?: number;
-  domains?: string[];
-}
+// interface AssessmentConfig {
+//   title?: string;
+//   description?: string;
+//   total_questions?: number;
+//   time_limit_minutes?: number;
+//   passing_score?: number;
+//   domains?: string[];
+// }
 
 interface CachedScenario { // eslint-disable-line @typescript-eslint/no-unused-vars
   id: string;

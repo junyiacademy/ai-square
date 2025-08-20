@@ -171,9 +171,15 @@ export async function POST(request: NextRequest) {
         const scenarioData: Omit<IScenario, 'id'> = {
           mode: 'discovery',
           status: 'active',
+          version: '1.0.0',
           sourceType: 'yaml',
           sourcePath: `discovery_data/${careerDir}`,
           sourceId: pathId,
+          sourceMetadata: {
+            careerDir,
+            pathId,
+            languageFiles: Array.from(languageFiles.keys())
+          },
           title,
           description,
           objectives: Array.isArray((primaryData.metadata as Record<string, unknown>)?.skill_focus) 
@@ -185,6 +191,9 @@ export async function POST(request: NextRequest) {
           taskTemplates: [], // Discovery paths don't have task templates like PBL
           xpRewards: { completion: 75 },
           unlockRequirements: {},
+          pblData: {},
+          assessmentData: {},
+          aiModules: {},
           resources: [],
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),

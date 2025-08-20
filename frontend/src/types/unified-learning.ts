@@ -53,7 +53,7 @@ export interface IScenario {
   
   // Task templates
   taskTemplates: ITaskTemplate[];
-  taskCount: number;  // computed field
+  taskCount?: number;  // computed field - optional
   
   // Rewards and progression
   xpRewards: Record<string, number>;

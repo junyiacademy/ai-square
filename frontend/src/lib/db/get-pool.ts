@@ -8,7 +8,7 @@ export function getPool(): Pool {
     const isCloudSQL = dbHost.startsWith('/cloudsql/');
     
     // Build config based on connection type
-    const config: any = {
+    const config: Record<string, unknown> = {
       database: process.env.DB_NAME || 'ai_square_db',
       user: process.env.DB_USER || 'postgres',
       password: process.env.DB_PASSWORD || '',

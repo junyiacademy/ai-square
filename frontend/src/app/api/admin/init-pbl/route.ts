@@ -160,9 +160,15 @@ export async function POST(request: NextRequest) {
         const scenarioData: Omit<IScenario, 'id'> = {
           mode: 'pbl',
           status: 'active',
+          version: '1.0.0',
           sourceType: 'yaml',
           sourcePath: `pbl_data/scenarios/${scenarioDir}`,
           sourceId: scenarioId,
+          sourceMetadata: {
+            scenarioDir,
+            scenarioId,
+            languageFiles: Array.from(languageFiles.keys())
+          },
           title,
           description,
           objectives: Array.isArray(primaryData.scenario_info.learning_objectives) 
@@ -178,6 +184,9 @@ export async function POST(request: NextRequest) {
             : [],
           xpRewards: { completion: 100 },
           unlockRequirements: {},
+          discoveryData: {},
+          assessmentData: {},
+          aiModules: {},
           resources: [],
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),

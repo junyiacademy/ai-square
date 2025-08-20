@@ -119,7 +119,7 @@ export async function PUT(request: NextRequest) {
     const userRepo = getUserRepository()
     
     // Update user profile
-    const updates: any = {}
+    const updates: Record<string, unknown> = {}
     if (name !== undefined) updates.name = name
     if (preferredLanguage !== undefined) updates.preferredLanguage = preferredLanguage
     

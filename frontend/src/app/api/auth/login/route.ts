@@ -220,7 +220,7 @@ export async function POST(request: NextRequest) {
     // TODO: Fix schema mismatch between environments
     try {
       await userRepo.updateLastActive(user.id)
-    } catch (error) {
+    } catch (_error) {
       // Ignore error if column doesn't exist
       console.log('Warning: Could not update last active (schema mismatch)')
     }

@@ -3,7 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import { execSync } from 'child_process';
 import bcrypt from 'bcryptjs';
 
-export async function POST(request: NextRequest) {
+export async function POST(_request: NextRequest) {
   console.log('🚀 Starting Prisma deployment...');
   
   try {

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Pool } from 'pg';
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   let pool: Pool | null = null;
   
   try {
@@ -32,11 +32,11 @@ export async function GET(request: NextRequest) {
       }
     });
     
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Database test error:', error);
     return NextResponse.json({
       success: false,
-      error: error.message
+      error: error instanceof Error ? error.message : 'Unknown error'
     }, { status: 500 });
   } finally {
     if (pool) {
