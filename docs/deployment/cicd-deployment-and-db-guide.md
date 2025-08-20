@@ -193,6 +193,29 @@ frontend/
 - ✅ 支援 Unix Socket 連線 (`/cloudsql/...`)
 - ✅ 支援 Cloud Build 自動化部署
 
+#### 重要：密碼設定注意事項
+
+**絕對不要在文檔中硬編碼密碼！**
+
+1. **密碼管理原則**
+   - 所有密碼必須使用 Secret Manager 或環境變數
+   - 密碼不應包含特殊字符（如 `#`、`@`、`%`）以避免 URL 編碼問題
+   - 統一使用 `DB_PASSWORD=postgres` 作為開發和測試環境的標準密碼
+
+2. **環境變數設定**
+   ```bash
+   # 使用環境變數檔案
+   # 在 .env.local（已加入 .gitignore）中設定：
+   DB_PASSWORD=postgres
+   
+   # 然後在執行時讀取：
+   export TF_VAR_db_password="${DB_PASSWORD}"
+   ```
+
+3. **DATABASE_URL 處理**
+   - 如果密碼包含特殊字符，必須進行 URL 編碼
+   - Repository Factory 會自動解析 DATABASE_URL 並解碼密碼
+
 #### Terraform 管理 Cloud SQL
 
 Terraform 會自動建立和管理 Cloud SQL 實例：
@@ -308,8 +331,10 @@ sequenceDiagram
 ##### 一鍵部署系統
 
 ```bash
-# 設定密碼（只需一次）
-export TF_VAR_db_password="AiSquare2025Db#"
+# 設定密碼（只需一次，從環境變數讀取）
+# 在 .env.local 中設定：DB_PASSWORD=postgres
+# 然後執行：
+export TF_VAR_db_password="${DB_PASSWORD}"
 
 # 完整自動化部署（包含所有測試）
 make deploy-staging    # 部署到 Staging
@@ -1207,10 +1232,7 @@ jobs:
 #### 1. 密碼管理
 
 ```bash
-# ❌ 錯誤：硬編碼密碼
-DB_PASSWORD: "AiSquare2025Db#"
-
-# ✅ 正確：使用 Secret Manager
+# 使用 Secret Manager 或環境變數
 DB_PASSWORD: "${DB_PASSWORD}"  # 從 Secret Manager 讀取
 ```
 
@@ -1224,7 +1246,7 @@ DB_USER=postgres
 DB_PASSWORD=your-secure-password-here  # 範例值
 
 # .env.production (不要提交到 Git)
-DB_PASSWORD=ActualSecurePassword123!  # 實際密碼
+# 實際密碼應該從 Secret Manager 讀取
 ```
 
 #### 3. Secret Rotation 策略
@@ -1939,6 +1961,15 @@ make deploy-production-full   # 完整重建 Production（需確認）
 
 ### 初始化 Scenarios（必須執行）
 
+#### 自動化方式（使用 Terraform）
+```bash
+# Terraform 會自動在 post-deploy 階段執行初始化
+cd terraform
+make deploy-staging    # 包含自動初始化
+make deploy-production # 包含自動初始化
+```
+
+#### 手動方式（如果 Terraform 初始化失敗）
 ```bash
 # 設定環境 URL
 # Staging
@@ -1962,6 +1993,20 @@ curl -X POST "$BASE_URL/api/admin/init-assessment"
 - Database seed 只創建 demo 帳號，不創建 scenarios
 - Scenarios 必須透過 API 從 YAML 檔案初始化
 - 忘記這步驟會導致應用程式看起來是空的
+
+### 常見初始化問題與解決
+
+1. **密碼認證失敗**
+   - 確保密碼不包含特殊字符（如 `#`、`@`、`%`）
+   - 使用標準密碼：`postgres`
+
+2. **PostgreSQL 陣列格式錯誤**
+   - 確保 prerequisites 欄位正確處理為陣列
+   - 檢查 YAML 解析邏輯
+
+3. **Scenario ID null constraint**
+   - 確保使用 `gen_random_uuid()` 生成 UUID
+   - 檢查 INSERT 語句包含 id 欄位
 
 ## 十四、初始化 Demo 帳號
 

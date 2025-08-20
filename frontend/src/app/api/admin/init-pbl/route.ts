@@ -165,7 +165,9 @@ export async function POST(request: NextRequest) {
           title,
           description,
           objectives: primaryData.scenario_info.learning_objectives || [],
-          prerequisites: primaryData.scenario_info.prerequisites || [],
+          prerequisites: Array.isArray(primaryData.scenario_info.prerequisites) 
+            ? primaryData.scenario_info.prerequisites 
+            : [],
           taskTemplates: (primaryData.tasks as ITaskTemplate[]) || [],
           pblData: {
             challengeStatement,

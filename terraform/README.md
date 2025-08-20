@@ -78,7 +78,9 @@ Run `make help` to see all available commands:
 
 ### Set Database Password
 ```bash
-export TF_VAR_db_password='your-secure-password'
+# 從環境變數檔案讀取（不要在文檔中硬編碼密碼）
+# 在 .env.local 中設定：DB_PASSWORD=your-secure-password
+export TF_VAR_db_password="${DB_PASSWORD}"
 ```
 
 ### Initialize Terraform
