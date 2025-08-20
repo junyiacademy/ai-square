@@ -1,0 +1,6 @@
+# Example staging environment secrets
+# Copy this file to staging.tfvars.local and update the values
+# DO NOT commit staging.tfvars.local to Git!
+
+# Database password (minimum 12 characters, must contain uppercase, lowercase, and numbers)
+db_password = "YourSecurePassword123"

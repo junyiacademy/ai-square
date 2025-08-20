@@ -547,7 +547,7 @@ terraform-import-production:
 ## Terraform 部署 - Staging
 deploy-staging:
 	@echo "$(GREEN)🚀 使用 Terraform 部署到 Staging 環境...$(NC)"
-	@cd terraform && terraform apply -var-file="environments/staging.tfvars" -auto-approve
+	@cd terraform && terraform apply -var-file="environments/staging.tfvars" -var-file="environments/staging.tfvars.local" -auto-approve
 	@echo "$(GREEN)✅ Staging 部署完成！$(NC)"
 
 ## Terraform 銷毀資源（危險！）

@@ -80,6 +80,7 @@ resource "null_resource" "init_database_schema" {
         title JSONB NOT NULL,
         description JSONB,
         objectives JSONB,
+        prerequisites TEXT[] DEFAULT '{}',
         task_templates JSONB,
         pbl_data JSONB,
         discovery_data JSONB,
