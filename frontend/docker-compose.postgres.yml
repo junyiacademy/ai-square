@@ -15,8 +15,6 @@ services:
       POSTGRES_DB: ai_square_db
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./src/lib/repositories/postgresql/schema-v4.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
-      - ./src/lib/repositories/postgresql/seeds/01-demo-accounts.sql:/docker-entrypoint-initdb.d/02-demo-accounts.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
