@@ -106,6 +106,19 @@ terraform apply -var-file="environments/staging.tfvars"
 
 ### 三、必要憑證與 Secret Manager
 
+#### ⚠️ Terraform 密碼要求
+Terraform 配置中對資料庫密碼有以下驗證規則（`main.tf` 第 61-64 行）：
+- **最少 12 個字符**
+- **必須包含大寫字母**
+- **必須包含小寫字母**
+- **必須包含數字**
+- **建議不要使用特殊符號**（避免 URL 編碼問題）
+
+**密碼設定方式**：
+1. 在 `.env.local` 中設定（不要提交到 Git）
+2. 使用環境變數 `export TF_VAR_db_password="你的密碼"`
+3. Production 環境使用 Secret Manager
+
 #### 使用 Secret Manager 管理密碼
 
 Terraform 會自動建立和管理 Secret Manager：
@@ -200,15 +213,16 @@ frontend/
 1. **密碼管理原則**
    - 所有密碼必須使用 Secret Manager 或環境變數
    - 密碼不應包含特殊字符（如 `#`、`@`、`%`）以避免 URL 編碼問題
-   - 統一使用 `DB_PASSWORD=postgres` 作為開發和測試環境的標準密碼
+   - 開發環境密碼需符合 Terraform 要求：12字符以上，包含大小寫和數字
 
 2. **環境變數設定**
    ```bash
    # 使用環境變數檔案
    # 在 .env.local（已加入 .gitignore）中設定：
-   DB_PASSWORD=postgres
+   DB_PASSWORD=你的密碼（需符合要求）
    
    # 然後在執行時讀取：
+   source .env.local
    export TF_VAR_db_password="${DB_PASSWORD}"
    ```
 
@@ -332,8 +346,9 @@ sequenceDiagram
 
 ```bash
 # 設定密碼（只需一次，從環境變數讀取）
-# 在 .env.local 中設定：DB_PASSWORD=postgres
+# 在 .env.local 中設定你的密碼（需符合 Terraform 要求）
 # 然後執行：
+source .env.local
 export TF_VAR_db_password="${DB_PASSWORD}"
 
 # 完整自動化部署（包含所有測試）
