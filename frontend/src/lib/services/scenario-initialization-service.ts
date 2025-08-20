@@ -285,6 +285,14 @@ class PBLYAMLProcessor implements IYAMLProcessor {
     const pblData = yamlData as Record<string, unknown>;
     const scenarioInfo = (pblData.scenario_info || {}) as Record<string, unknown>;
     
+    // Debug: log the data structure to understand the issue
+    console.log('PBL YAML Data for', scenarioId, ':', JSON.stringify({
+      scenarioInfo: scenarioInfo,
+      ksaMapping: pblData.ksa_mapping,
+      tasks: pblData.tasks,
+      aiModules: pblData.ai_modules
+    }, null, 2));
+    
     return {
       mode: 'pbl' as const,
       status: 'active' as const,
@@ -309,12 +317,12 @@ class PBLYAMLProcessor implements IYAMLProcessor {
       unlockRequirements: {},
       pblData: {
         targetDomains: (scenarioInfo.target_domains as string[]) || [],
-        ksaMappings: (pblData.ksa_mapping as Record<string, unknown>) || {},
+        ksaMappings: JSON.parse(JSON.stringify((pblData.ksa_mapping as Record<string, unknown>) || {})),
         tasks: (pblData.tasks as Array<Record<string, unknown>>) || []
       },
       discoveryData: {},
       assessmentData: {},
-      aiModules: (pblData.ai_modules as Record<string, unknown>) || {},
+      aiModules: JSON.parse(JSON.stringify((pblData.ai_modules as Record<string, unknown>) || {})),
       resources: [],
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
