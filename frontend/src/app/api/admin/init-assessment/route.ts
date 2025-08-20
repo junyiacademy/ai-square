@@ -9,6 +9,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { readFileSync } from 'fs';
 import { parse } from 'yaml';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
+import type { DifficultyLevel } from '@/types/database';
 import path from 'path';
 
 export async function POST(request: NextRequest) {
@@ -138,11 +139,10 @@ export async function POST(request: NextRequest) {
           'Identify strengths and gaps',
           'Get personalized recommendations'
         ],
-        difficulty: 'intermediate',
-        estimatedMinutes: data.assessment_config.time_limit_minutes,
+        difficulty: 'intermediate' as DifficultyLevel,
+        estimatedMinutes: data.assessment_config.time_limit_minutes || 60,
         prerequisites: [],
         taskTemplates,
-        taskCount: 1,  // Assessment has 1 task
         xpRewards: { completion: 50 },
         unlockRequirements: {},
         pblData: {},

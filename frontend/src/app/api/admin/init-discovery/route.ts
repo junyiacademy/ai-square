@@ -4,6 +4,7 @@ import path from 'path';
 import yaml from 'js-yaml';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import type { IScenario } from '@/types/unified-learning';
+import type { DifficultyLevel } from '@/types/database';
 
 interface DiscoveryScenarioYAML {
   path_id: string;
@@ -167,7 +168,7 @@ export async function POST(request: NextRequest) {
           description.en = `Career exploration path: ${title.en}`;
         }
 
-        const scenarioData: Partial<IScenario> = {
+        const scenarioData: Omit<IScenario, 'id'> = {
           mode: 'discovery',
           status: 'active',
           sourceType: 'yaml',
@@ -175,16 +176,32 @@ export async function POST(request: NextRequest) {
           sourceId: pathId,
           title,
           description,
-          objectives: (primaryData.metadata as Record<string, unknown>)?.skill_focus as string[] || [],
-          taskTemplates: [],  // Discovery paths don't have task templates like PBL
+          objectives: Array.isArray((primaryData.metadata as Record<string, unknown>)?.skill_focus) 
+            ? (primaryData.metadata as Record<string, unknown>)?.skill_focus as string[] 
+            : [],
+          difficulty: 'beginner' as DifficultyLevel,
+          estimatedMinutes: ((primaryData.metadata as Record<string, unknown>)?.estimated_hours as number) * 60 || 120,
+          prerequisites: [], // No prerequisites for discovery scenarios
+          taskTemplates: [], // Discovery paths don't have task templates like PBL
+          xpRewards: { completion: 75 },
+          unlockRequirements: {},
+          resources: [],
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
           discoveryData: {
             pathId: pathId,
             category: primaryData.category,
             difficultyRange: primaryData.difficulty_range,
-            estimatedHours: (primaryData.metadata as Record<string, unknown>)?.estimated_hours as number,
-            skillFocus: (primaryData.metadata as Record<string, unknown>)?.skill_focus as string[] || [],
-            stages: (primaryData.career_path as Record<string, unknown>)?.stages as unknown[] || [],
-            milestones: (primaryData.career_path as Record<string, unknown>)?.milestones as unknown[] || []
+            estimatedHours: (primaryData.metadata as Record<string, unknown>)?.estimated_hours as number || 2,
+            skillFocus: Array.isArray((primaryData.metadata as Record<string, unknown>)?.skill_focus) 
+              ? (primaryData.metadata as Record<string, unknown>)?.skill_focus as string[] 
+              : [],
+            stages: Array.isArray((primaryData.career_path as Record<string, unknown>)?.stages) 
+              ? (primaryData.career_path as Record<string, unknown>)?.stages as unknown[] 
+              : [],
+            milestones: Array.isArray((primaryData.career_path as Record<string, unknown>)?.milestones) 
+              ? (primaryData.career_path as Record<string, unknown>)?.milestones as unknown[] 
+              : []
           },
           metadata: {
             originalPathId: pathId,
@@ -200,7 +217,7 @@ export async function POST(request: NextRequest) {
           results.updated++;
         } else {
           // Create new
-          await scenarioRepo.create(scenarioData as IScenario);
+          await scenarioRepo.create(scenarioData);
           results.created++;
         }
 

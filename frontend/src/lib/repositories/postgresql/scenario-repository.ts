@@ -56,7 +56,7 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
         description: t.description as Record<string, string> | undefined,
         ...t
       })),
-      taskCount: row.task_count,
+      taskCount: (row.task_templates as Array<Record<string, unknown>> || []).length,
       
       // Rewards and progression
       xpRewards: row.xp_rewards,
@@ -161,7 +161,7 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
       JSON.stringify(scenario.objectives || []),
       scenario.difficulty,
       scenario.estimatedMinutes,
-      scenario.prerequisites || [],
+      Array.isArray(scenario.prerequisites) ? scenario.prerequisites : [],
       JSON.stringify(scenario.taskTemplates || []),
       JSON.stringify(scenario.xpRewards || {}),
       JSON.stringify(scenario.unlockRequirements || {}),
@@ -238,7 +238,7 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
     }
     if (updates.prerequisites !== undefined) {
       updateFields.push(`prerequisites = $${paramCount++}`);
-      values.push(updates.prerequisites || []);
+      values.push(Array.isArray(updates.prerequisites) ? updates.prerequisites : []);
     }
 
     // Task templates
