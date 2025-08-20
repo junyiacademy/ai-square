@@ -284,7 +284,6 @@ class PBLYAMLProcessor implements IYAMLProcessor {
     
     const pblData = yamlData as Record<string, unknown>;
     const scenarioInfo = (pblData.scenario_info || {}) as Record<string, unknown>;
-    const programs = (pblData.programs || []) as Array<Record<string, unknown>>;
     
     return {
       mode: 'pbl' as const,
@@ -305,13 +304,13 @@ class PBLYAMLProcessor implements IYAMLProcessor {
       estimatedMinutes: parseInt((scenarioInfo.estimated_duration as string)?.replace('minutes', '') || '60'),
       prerequisites: (scenarioInfo.prerequisites as string[]) || [],
       taskTemplates: [], // PBL tasks are defined in the YAML
-      taskCount: (programs[0]?.tasks as Array<unknown>)?.length || 0,
+      taskCount: ((pblData.tasks as Array<unknown>) || []).length,
       xpRewards: {},
       unlockRequirements: {},
       pblData: {
         targetDomains: (scenarioInfo.target_domains as string[]) || [],
-        ksaMappings: (pblData.ksa_mappings as Array<Record<string, unknown>>) || [],
-        programs: programs
+        ksaMappings: (pblData.ksa_mapping as Record<string, unknown>) || {},
+        tasks: (pblData.tasks as Array<Record<string, unknown>>) || []
       },
       discoveryData: {},
       assessmentData: {},
