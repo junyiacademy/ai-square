@@ -26,21 +26,34 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
    * Ensure value is a proper PostgreSQL-compatible array
    */
   private ensureArray(value: unknown): string[] {
+    // console.log('ensureArray input:', { value, type: typeof value, isArray: Array.isArray(value) });
+    
     if (Array.isArray(value)) {
-      return value as string[];
+      return value.map(item => String(item));
     }
+    
     if (typeof value === 'string') {
-      try {
-        const parsed = JSON.parse(value);
-        if (Array.isArray(parsed)) {
-          return parsed as string[];
+      // Check if it's a JSON string array
+      if (value.startsWith('[') && value.endsWith(']')) {
+        try {
+          const parsed = JSON.parse(value);
+          if (Array.isArray(parsed)) {
+            return parsed.map(item => String(item));
+          }
+        } catch (error) {
+          console.error('Failed to parse JSON array:', value, error);
         }
-      } catch {
-        // If JSON parsing fails, treat as single string
-        return [value];
       }
+      // Single string value
+      return value.length > 0 ? [value] : [];
     }
-    return [];
+    
+    if (value === null || value === undefined) {
+      return [];
+    }
+    
+    // Fallback: try to convert to string
+    return [String(value)];
   }
 
   /**
@@ -152,13 +165,6 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
   }
 
   async create(scenario: Omit<IScenario, 'id'>): Promise<IScenario> {
-    // Debug: log prerequisites data type and content
-    console.log('Prerequisites debug:', {
-      value: scenario.prerequisites,
-      type: typeof scenario.prerequisites,
-      isArray: Array.isArray(scenario.prerequisites),
-      stringified: JSON.stringify(scenario.prerequisites)
-    });
     const query = `
       INSERT INTO scenarios (
         mode, status, source_type, source_path, source_id, source_metadata,
