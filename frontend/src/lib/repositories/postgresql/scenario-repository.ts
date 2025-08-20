@@ -267,7 +267,7 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
     }
     if (updates.prerequisites !== undefined) {
       updateFields.push(`prerequisites = $${paramCount++}`);
-      values.push(Array.isArray(updates.prerequisites) ? updates.prerequisites : []);
+      values.push(this.ensureArray(updates.prerequisites));
     }
 
     // Task templates
