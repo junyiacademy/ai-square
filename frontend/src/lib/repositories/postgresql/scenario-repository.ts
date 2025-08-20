@@ -23,6 +23,27 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
   }
 
   /**
+   * Ensure value is a proper PostgreSQL-compatible array
+   */
+  private ensureArray(value: unknown): string[] {
+    if (Array.isArray(value)) {
+      return value as string[];
+    }
+    if (typeof value === 'string') {
+      try {
+        const parsed = JSON.parse(value);
+        if (Array.isArray(parsed)) {
+          return parsed as string[];
+        }
+      } catch {
+        // If JSON parsing fails, treat as single string
+        return [value];
+      }
+    }
+    return [];
+  }
+
+  /**
    * Convert database row to IScenario interface
    */
   private toScenario(row: DBScenario): IScenario {
@@ -160,7 +181,7 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
       JSON.stringify(scenario.title || {}),                                 // $7 - title
       JSON.stringify(scenario.description || {}),                           // $8 - description
       JSON.stringify(scenario.objectives || []),                           // $9 - objectives
-      Array.isArray(scenario.prerequisites) ? scenario.prerequisites : [],  // $10 - prerequisites
+      this.ensureArray(scenario.prerequisites),  // $10 - prerequisites
       JSON.stringify(scenario.taskTemplates || []),                        // $11 - task_templates
       JSON.stringify(scenario.pblData || {}),                              // $12 - pbl_data
       JSON.stringify(scenario.discoveryData || {}),                        // $13 - discovery_data
