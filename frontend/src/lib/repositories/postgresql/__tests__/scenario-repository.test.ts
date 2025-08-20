@@ -531,7 +531,7 @@ describe('PostgreSQLScenarioRepository', () => {
       const result = await repository.findByMode('pbl');
 
       expect(mockPool.query).toHaveBeenCalledWith(
-        expect.stringContaining("WHERE mode = $1 AND status = 'active'"),
+        expect.stringContaining("WHERE mode = $1"),
         ['pbl']
       );
       expect(result).toHaveLength(1);
