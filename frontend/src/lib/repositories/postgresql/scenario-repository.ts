@@ -139,11 +139,12 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
         difficulty, estimated_minutes, prerequisites,
         task_templates, xp_rewards, unlock_requirements,
         pbl_data, discovery_data, assessment_data,
-        ai_modules, resources, metadata
+        ai_modules, resources, metadata,
+        created_at, updated_at
       ) VALUES (
         gen_random_uuid(), $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
         $11, $12, $13, $14, $15, $16, $17, $18, $19,
-        $20, $21, $22
+        $20, $21, $22, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
       )
       RETURNING *
     `;
