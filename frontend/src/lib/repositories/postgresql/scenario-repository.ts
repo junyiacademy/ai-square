@@ -131,6 +131,13 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
   }
 
   async create(scenario: Omit<IScenario, 'id'>): Promise<IScenario> {
+    // Debug: log prerequisites data type and content
+    console.log('Prerequisites debug:', {
+      value: scenario.prerequisites,
+      type: typeof scenario.prerequisites,
+      isArray: Array.isArray(scenario.prerequisites),
+      stringified: JSON.stringify(scenario.prerequisites)
+    });
     const query = `
       INSERT INTO scenarios (
         mode, status, source_type, source_path, source_id, source_metadata,
