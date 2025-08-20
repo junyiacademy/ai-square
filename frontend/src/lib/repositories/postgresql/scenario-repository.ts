@@ -144,28 +144,28 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
     `;
 
     const { rows } = await this.pool.query<DBScenario>(query, [
-      scenario.mode,
-      scenario.status || 'draft',
-      scenario.version || '1.0.0',
-      scenario.sourceType,
-      scenario.sourcePath || null,
-      scenario.sourceId || null,
-      JSON.stringify(scenario.sourceMetadata || {}),
-      JSON.stringify(scenario.title || {}),
-      JSON.stringify(scenario.description || {}),
-      JSON.stringify(scenario.objectives || []),
-      scenario.difficulty,
-      scenario.estimatedMinutes,
-      Array.isArray(scenario.prerequisites) ? scenario.prerequisites : [],
-      JSON.stringify(scenario.taskTemplates || []),
-      JSON.stringify(scenario.xpRewards || {}),
-      JSON.stringify(scenario.unlockRequirements || {}),
-      JSON.stringify(scenario.pblData || {}),
-      JSON.stringify(scenario.discoveryData || {}),
-      JSON.stringify(scenario.assessmentData || {}),
-      JSON.stringify(scenario.aiModules || {}),
-      JSON.stringify(scenario.resources || []),
-      JSON.stringify(scenario.metadata || {})
+      scenario.mode,                                                          // $1 - mode
+      scenario.status || 'draft',                                            // $2 - status
+      scenario.sourceType,                                                   // $3 - source_type
+      scenario.sourcePath || null,                                          // $4 - source_path
+      scenario.sourceId || null,                                            // $5 - source_id
+      JSON.stringify(scenario.sourceMetadata || {}),                        // $6 - source_metadata
+      JSON.stringify(scenario.title || {}),                                 // $7 - title
+      JSON.stringify(scenario.description || {}),                           // $8 - description
+      JSON.stringify(scenario.objectives || []),                           // $9 - objectives
+      Array.isArray(scenario.prerequisites) ? scenario.prerequisites : [],  // $10 - prerequisites
+      JSON.stringify(scenario.taskTemplates || []),                        // $11 - task_templates
+      JSON.stringify(scenario.pblData || {}),                              // $12 - pbl_data
+      JSON.stringify(scenario.discoveryData || {}),                        // $13 - discovery_data
+      JSON.stringify(scenario.assessmentData || {}),                       // $14 - assessment_data
+      JSON.stringify(scenario.aiModules || {}),                            // $15 - ai_modules
+      JSON.stringify(scenario.resources || []),                            // $16 - resources
+      scenario.version || '1.0.0',                                         // $17 - version
+      scenario.difficulty,                                                  // $18 - difficulty
+      scenario.estimatedMinutes,                                           // $19 - estimated_minutes
+      JSON.stringify(scenario.xpRewards || {}),                           // $20 - xp_rewards
+      JSON.stringify(scenario.unlockRequirements || {}),                  // $21 - unlock_requirements
+      JSON.stringify(scenario.metadata || {})                             // $22 - metadata
     ]);
 
     const created = this.toScenario(rows[0]);
