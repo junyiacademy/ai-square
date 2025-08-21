@@ -1,21 +1,12 @@
 import { GET } from '../route';
-import { cookies } from 'next/headers';
+import { NextRequest } from 'next/server';
 
-// Mock dependencies
-jest.mock('next/headers');
-
-const mockCookies = cookies as jest.MockedFunction<typeof cookies>;
-
-// Helper function to create mock cookie store
-const createMockCookieStore = (cookies: Record<string, string> = {}) => ({
-  get: jest.fn((name: string) => {
-    return cookies[name] ? { value: cookies[name] } : undefined;
-  }),
-  set: jest.fn(),
-  delete: jest.fn(),
-  has: jest.fn((name: string) => Boolean(cookies[name])),
-  getAll: jest.fn(() => Object.entries(cookies).map(([name, value]) => ({ name, value }))),
-});
+// Mock AuthManager
+jest.mock('@/lib/auth/auth-manager', () => ({
+  AuthManager: {
+    getSessionToken: jest.fn()
+  }
+}));
 
 describe('/api/auth/check', () => {
   beforeEach(() => {
@@ -24,22 +15,20 @@ describe('/api/auth/check', () => {
 
   describe('Session token authentication', () => {
     it('returns authenticated user when valid session token exists', async () => {
+      const { AuthManager } = require('@/lib/auth/auth-manager');
+      
       const sessionTokenData = {
-        userId: '123',
+        userId: '123',  
         email: 'test@example.com',
         timestamp: Date.now(),
         rememberMe: false
       };
       const sessionToken = Buffer.from(JSON.stringify(sessionTokenData)).toString('base64');
 
-      const cookieStore = createMockCookieStore({
-        sessionToken: sessionToken
-      });
-      
-      mockCookies.mockResolvedValue(cookieStore as unknown as ReturnType<typeof mockCookies>);
+      AuthManager.getSessionToken.mockReturnValue(sessionToken);
 
-      const mockRequest = new Request('http://localhost:3000/api/auth/check');
-      const response = await GET(mockRequest as any);
+      const mockRequest = new NextRequest('http://localhost:3000/api/auth/check');
+      const response = await GET(mockRequest);
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -47,18 +36,20 @@ describe('/api/auth/check', () => {
         authenticated: true,
         user: {
           id: '123',
-          email: 'test@example.com'
+          email: 'test@example.com',
+          role: 'user',
+          name: 'User'
         }
       });
     });
 
     it('returns unauthenticated when no session token exists', async () => {
-      const cookieStore = createMockCookieStore({});
+      const { AuthManager } = require('@/lib/auth/auth-manager');
       
-      mockCookies.mockResolvedValue(cookieStore as unknown as ReturnType<typeof mockCookies>);
+      AuthManager.getSessionToken.mockReturnValue(undefined);
 
-      const mockRequest = new Request('http://localhost:3000/api/auth/check');
-      const response = await GET(mockRequest as any);
+      const mockRequest = new NextRequest('http://localhost:3000/api/auth/check');
+      const response = await GET(mockRequest);
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -69,14 +60,12 @@ describe('/api/auth/check', () => {
     });
 
     it('returns unauthenticated when session token is invalid', async () => {
-      const cookieStore = createMockCookieStore({
-        sessionToken: 'invalid-token'
-      });
+      const { AuthManager } = require('@/lib/auth/auth-manager');
       
-      mockCookies.mockResolvedValue(cookieStore as unknown as ReturnType<typeof mockCookies>);
+      AuthManager.getSessionToken.mockReturnValue('invalid-token');
 
-      const mockRequest = new Request('http://localhost:3000/api/auth/check');
-      const response = await GET(mockRequest as any);
+      const mockRequest = new NextRequest('http://localhost:3000/api/auth/check');
+      const response = await GET(mockRequest);
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -87,14 +76,12 @@ describe('/api/auth/check', () => {
     });
 
     it('handles malformed session token gracefully', async () => {
-      const cookieStore = createMockCookieStore({
-        sessionToken: 'not-base64-encoded'
-      });
+      const { AuthManager } = require('@/lib/auth/auth-manager');
       
-      mockCookies.mockResolvedValue(cookieStore as unknown as ReturnType<typeof mockCookies>);
+      AuthManager.getSessionToken.mockReturnValue('not-base64-encoded');
 
-      const mockRequest = new Request('http://localhost:3000/api/auth/check');
-      const response = await GET(mockRequest as any);
+      const mockRequest = new NextRequest('http://localhost:3000/api/auth/check');
+      const response = await GET(mockRequest);
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -107,17 +94,61 @@ describe('/api/auth/check', () => {
 
   describe('response format validation', () => {
     it('always includes required fields in response', async () => {
-      const cookieStore = createMockCookieStore({});
+      const { AuthManager } = require('@/lib/auth/auth-manager');
       
-      mockCookies.mockResolvedValue(cookieStore as unknown as ReturnType<typeof mockCookies>);
+      AuthManager.getSessionToken.mockReturnValue(undefined);
 
-      const mockRequest = new Request('http://localhost:3000/api/auth/check');
-      const response = await GET(mockRequest as any);
+      const mockRequest = new NextRequest('http://localhost:3000/api/auth/check');
+      const response = await GET(mockRequest);
       const data = await response.json();
 
       expect(data).toHaveProperty('authenticated');
       expect(data).toHaveProperty('user');
       expect(typeof data.authenticated).toBe('boolean');
+    });
+  });
+
+  describe('demo account roles', () => {
+    it('returns student role for student@example.com', async () => {
+      const { AuthManager } = require('@/lib/auth/auth-manager');
+      
+      const sessionTokenData = {
+        userId: '123',
+        email: 'student@example.com',
+        timestamp: Date.now(),
+        rememberMe: false
+      };
+      const sessionToken = Buffer.from(JSON.stringify(sessionTokenData)).toString('base64');
+
+      AuthManager.getSessionToken.mockReturnValue(sessionToken);
+
+      const mockRequest = new NextRequest('http://localhost:3000/api/auth/check');
+      const response = await GET(mockRequest);
+      const data = await response.json();
+
+      expect(data.user.role).toBe('student');
+      expect(data.user.name).toBe('Demo Student');
+    });
+
+    it('returns teacher role for teacher@example.com', async () => {
+      const { AuthManager } = require('@/lib/auth/auth-manager');
+      
+      const sessionTokenData = {
+        userId: '456',
+        email: 'teacher@example.com',
+        timestamp: Date.now(),
+        rememberMe: false
+      };
+      const sessionToken = Buffer.from(JSON.stringify(sessionTokenData)).toString('base64');
+
+      AuthManager.getSessionToken.mockReturnValue(sessionToken);
+
+      const mockRequest = new NextRequest('http://localhost:3000/api/auth/check');
+      const response = await GET(mockRequest);
+      const data = await response.json();
+
+      expect(data.user.role).toBe('teacher');
+      expect(data.user.name).toBe('Demo Teacher');
     });
   });
 });

@@ -60,8 +60,10 @@ describe('AuthManager - Centralized Authentication', () => {
     });
 
     it('should check authentication with single cookie', () => {
+      // Create a valid base64 encoded token
+      const validToken = btoa(JSON.stringify({ userId: '123', email: 'test@example.com' }));
       const mockCookies = {
-        get: jest.fn((name: string) => name === 'sessionToken' ? { value: 'valid-token' } : undefined)
+        get: jest.fn((name: string) => name === 'sessionToken' ? { value: validToken } : undefined)
       };
       const request = {
         cookies: mockCookies
