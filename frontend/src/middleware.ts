@@ -34,15 +34,12 @@ export function middleware(request: NextRequest) {
   
   // Check authentication for protected routes
   if (isProtectedRoute) {
-    // Check for authentication cookies
-    const isLoggedIn = request.cookies.get('isLoggedIn')?.value === 'true';
+    // Only check for session token (industry standard)
     const sessionToken = request.cookies.get('sessionToken')?.value || 
-                        request.cookies.get('session_token')?.value ||
                         request.cookies.get('ai_square_session')?.value;
-    const accessToken = request.cookies.get('accessToken')?.value;
     
-    // If not authenticated, redirect to login
-    if (!isLoggedIn || !sessionToken || !accessToken) {
+    // If no session token, redirect to login
+    if (!sessionToken) {
       const loginUrl = new URL('/login', request.url);
       // Add redirect parameter to return user after login
       loginUrl.searchParams.set('redirect', pathname);

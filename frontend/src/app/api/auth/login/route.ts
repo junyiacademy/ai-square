@@ -242,8 +242,8 @@ export async function POST(request: NextRequest) {
       sessionToken
     })
 
-    // Set access token cookie for production auth check
-    response.cookies.set('accessToken', accessToken, {
+    // Set the main session token (ONLY ONE COOKIE FOR AUTH)
+    response.cookies.set('sessionToken', sessionToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
@@ -251,43 +251,16 @@ export async function POST(request: NextRequest) {
       path: '/'
     })
     
-    // Set refresh token cookie
-    response.cookies.set('refreshToken', refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: rememberMe ? 30 * 24 * 60 * 60 : 7 * 24 * 60 * 60, // 30 days if remember me, else 7 days
-      path: '/'
-    })
-    
-    // Set HTTP-only secure cookies
-    response.cookies.set('session_token', sessionToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: rememberMe ? 30 * 24 * 60 * 60 : 24 * 60 * 60, // 30 days if remember me, else 24 hours
-      path: '/'
-    })
-    
-    // Also set the old cookie name for backward compatibility
+    // Keep ai_square_session for backward compatibility (will remove later)
     response.cookies.set('ai_square_session', sessionToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: rememberMe ? 30 * 24 * 60 * 60 : 7 * 24 * 60 * 60, // 30 days if remember me, else 7 days
-      path: '/'
-    })
-    
-    // Set cookies that middleware expects
-    response.cookies.set('isLoggedIn', 'true', {
-      httpOnly: false, // Allow client-side access
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       maxAge: rememberMe ? 30 * 24 * 60 * 60 : 24 * 60 * 60,
       path: '/'
     })
     
-    // Set user data cookie for auth check
+    // Keep user info cookie for client-side access (not for auth)
     response.cookies.set('user', JSON.stringify({
       id: user.id,
       email: user.email,
