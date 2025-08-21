@@ -47,7 +47,7 @@ const MOCK_USERS = [
   },
   {
     email: 'test@example.com',
-    password: 'password123',
+    password: 'test123',
     name: 'Test User',
     role: 'student',
   }
@@ -220,7 +220,7 @@ export async function POST(request: NextRequest) {
     // TODO: Fix schema mismatch between environments
     try {
       await userRepo.updateLastActive(user.id)
-    } catch (_error) {
+    } catch {
       // Ignore error if column doesn't exist
       console.log('Warning: Could not update last active (schema mismatch)')
     }

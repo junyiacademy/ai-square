@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 // import { execSync } from 'child_process'; // TODO: use for migration commands
 
-export async function POST(_request: NextRequest) {
+export async function POST() {
   const prisma = new PrismaClient();
   
   try {

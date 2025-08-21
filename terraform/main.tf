@@ -77,6 +77,27 @@ variable "enable_deletion_protection" {
   default     = true
 }
 
+# Demo account passwords - not sensitive since they're for demo/testing
+variable "demo_passwords" {
+  description = "Passwords for demo accounts"
+  type = object({
+    student = string
+    teacher = string
+    admin   = string
+    parent  = string
+    guest   = string
+    test    = string
+  })
+  default = {
+    student = "student123"
+    teacher = "teacher123"
+    admin   = "admin123"
+    parent  = "parent123"
+    guest   = "guest123"
+    test    = "test123"
+  }
+}
+
 # ============================================
 # Service Account
 # ============================================

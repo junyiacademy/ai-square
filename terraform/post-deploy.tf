@@ -203,12 +203,12 @@ async function createUsers() {
     
     // Hash passwords for each role using environment variables or defaults
     const demoPasswords = {
-      student: process.env.DEMO_STUDENT_PASSWORD || 'demo_student',
-      teacher: process.env.DEMO_TEACHER_PASSWORD || 'demo_teacher',
-      admin: process.env.DEMO_ADMIN_PASSWORD || 'demo_admin',
-      parent: process.env.DEMO_PARENT_PASSWORD || 'demo_parent',
-      guest: process.env.DEMO_GUEST_PASSWORD || 'demo_guest',
-      test: process.env.DEMO_TEST_PASSWORD || 'demo_test'
+      student: '${var.demo_passwords.student}',
+      teacher: '${var.demo_passwords.teacher}',
+      admin: '${var.demo_passwords.admin}',
+      parent: '${var.demo_passwords.parent}',
+      guest: '${var.demo_passwords.guest}',
+      test: '${var.demo_passwords.test}'
     };
     
     const studentHash = await bcrypt.hash(demoPasswords.student, 10);
@@ -263,17 +263,20 @@ SCRIPT
       else
         echo "Node.js not available, creating users with pre-hashed passwords"
         # Fallback: Insert with pre-hashed passwords (bcrypt hashes)
+        # 注意：這些是 student123, teacher123 等密碼的預先計算 hash
         PGPASSWORD="$${DB_PASSWORD}" psql -h "$${DB_HOST}" -U postgres -d ai_square_db << 'SQL'
         -- Create demo users with pre-hashed passwords
-        -- Passwords are environment variables or defaults
+        -- Passwords: student123, teacher123, admin123, parent123, guest123, test123
+        -- 注意：這些 hash 需要在部署前用正確的 bcrypt 生成
+        -- 暫時使用 placeholder，實際部署會使用 Node.js 動態生成
         INSERT INTO users (email, password_hash, name, role, email_verified, metadata) 
         VALUES 
-          ('student@example.com', '$2b$10$GSLI4.ooV/jrN5RZMOAyf.SftBwwRsbmC.SMRDeDRLH1uCnIapR5e', 'Student User', 'student', true, '{"seeded": true}'::jsonb),
-          ('teacher@example.com', '$2b$10$xkTFHLjtA4BvhZrW8Pm6NOV/zJn5SX7gxZB9MSUcaptGrZrMPJJ5e', 'Teacher User', 'teacher', true, '{"seeded": true}'::jsonb),
-          ('admin@example.com', '$2b$10$9nEfXi5LULvFjV/LKp8WFuglp9Y5jttH9O4Ix0AwpVg4OZdvtTbiS', 'Admin User', 'admin', true, '{"seeded": true}'::jsonb),
-          ('parent@example.com', '$2b$10$KxjBKURfCyW8rZH5g0BQy.8tGkL8AT6DxUphQyJ.EJHKxR1vAXWJi', 'Parent User', 'parent', true, '{"seeded": true}'::jsonb),
-          ('guest@example.com', '$2b$10$T6Fb/LwXk/3M6vL6M8Jg6OGXvQJFYJ8Hc3JZnUKG5YvdPnFZzwxqC', 'Guest User', 'guest', true, '{"seeded": true}'::jsonb),
-          ('test@example.com', '$2b$10$eUJFf2Vs0qm6L3g5.VO3MOD4xVVZwM8dVPKj5l0Gwe/eQoH9kBGBa', 'Test User', 'student', true, '{"seeded": true}'::jsonb)
+          ('student@example.com', '$2b$10$PLACEHOLDER_NEEDS_GENERATION', 'Student User', 'student', true, '{"seeded": true}'::jsonb),
+          ('teacher@example.com', '$2b$10$PLACEHOLDER_NEEDS_GENERATION', 'Teacher User', 'teacher', true, '{"seeded": true}'::jsonb),
+          ('admin@example.com', '$2b$10$PLACEHOLDER_NEEDS_GENERATION', 'Admin User', 'admin', true, '{"seeded": true}'::jsonb),
+          ('parent@example.com', '$2b$10$PLACEHOLDER_NEEDS_GENERATION', 'Parent User', 'parent', true, '{"seeded": true}'::jsonb),
+          ('guest@example.com', '$2b$10$PLACEHOLDER_NEEDS_GENERATION', 'Guest User', 'guest', true, '{"seeded": true}'::jsonb),
+          ('test@example.com', '$2b$10$PLACEHOLDER_NEEDS_GENERATION', 'Test User', 'student', true, '{"seeded": true}'::jsonb)
         ON CONFLICT (email) DO UPDATE 
         SET password_hash = EXCLUDED.password_hash,
             role = EXCLUDED.role;

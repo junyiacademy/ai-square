@@ -1,11 +1,11 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { Pool } from 'pg';
 
-export async function GET(_request: NextRequest) {
+export async function GET() {
   let pool: Pool | null = null;
   
   try {
-    let connectionInfo: any;
+    let connectionInfo: { type: string; url?: string; host?: unknown; port?: unknown; database?: unknown; source: string };
     
     // Use DATABASE_URL if available (Cloud Run), fallback to individual env vars (local)
     if (process.env.DATABASE_URL) {
