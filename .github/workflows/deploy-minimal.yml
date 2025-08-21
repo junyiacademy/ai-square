@@ -101,7 +101,7 @@ jobs:
             --allow-unauthenticated \
             --set-env-vars="NODE_ENV=production,DB_HOST=${{ secrets.STAGING_DB_HOST }},DB_NAME=${{ secrets.STAGING_DB_NAME }},DB_USER=${{ secrets.STAGING_DB_USER }},DB_PASSWORD=${{ secrets.STAGING_DB_PASSWORD }}" \
             --add-cloudsql-instances=${{ env.PROJECT_ID }}:${{ env.REGION }}:ai-square-db-staging-asia \
-            --service-account=ai-square-service@${{ env.PROJECT_ID }}.iam.gserviceaccount.com
+            --service-account=ai-square-staging@${{ env.PROJECT_ID }}.iam.gserviceaccount.com
             
       - name: Initialize database (if needed)
         run: |
@@ -187,7 +187,7 @@ jobs:
             --allow-unauthenticated \
             --set-env-vars="NODE_ENV=production,DB_HOST=${{ secrets.PROD_DB_HOST }},DB_NAME=${{ secrets.PROD_DB_NAME }},DB_USER=${{ secrets.PROD_DB_USER }},DB_PASSWORD=${{ secrets.PROD_DB_PASSWORD }}" \
             --add-cloudsql-instances=${{ env.PROJECT_ID }}:${{ env.REGION }}:ai-square-db-production \
-            --service-account=ai-square-service@${{ env.PROJECT_ID }}.iam.gserviceaccount.com
+            --service-account=ai-square-frontend@${{ env.PROJECT_ID }}.iam.gserviceaccount.com
             
       - name: Initialize database (if needed)
         run: |
