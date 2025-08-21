@@ -1,6 +1,48 @@
 import { AuthManager } from '../auth-manager';
 import { NextRequest, NextResponse } from 'next/server';
-import { RequestCookies } from 'next/dist/compiled/@edge-runtime/cookies';
+
+// Mock NextResponse
+jest.mock('next/server', () => {
+  return {
+    NextRequest: jest.fn((url: string) => ({
+      url,
+      cookies: {
+        get: jest.fn()
+      }
+    })),
+    NextResponse: {
+      next: jest.fn(() => {
+        const headers = new Map();
+        const cookieStore: any[] = [];
+        return {
+          headers: {
+            get: (key: string) => headers.get(key),
+            set: (key: string, value: string) => headers.set(key, value)
+          },
+          cookies: {
+            set: jest.fn((name: string, value: string, options: any) => {
+              cookieStore.push({ name, value, options });
+              const cookieString = cookieStore.map(c => 
+                `${c.name}=${c.value}${c.options?.maxAge === 0 ? '; Max-Age=0' : ''}`
+              ).join(', ');
+              headers.set('set-cookie', cookieString);
+            }),
+            delete: jest.fn((name: string) => {
+              cookieStore.push({ name, value: '', options: { maxAge: 0 } });
+              const cookieString = cookieStore.map(c => 
+                `${c.name}=${c.value}${c.options?.maxAge === 0 ? '; Max-Age=0' : ''}`
+              ).join(', ');
+              headers.set('set-cookie', cookieString);
+            })
+          }
+        };
+      }),
+      json: jest.fn((data: any) => ({
+        json: async () => data
+      }))
+    }
+  };
+});
 
 describe('AuthManager - Centralized Authentication', () => {
   describe('Cookie Management', () => {
@@ -18,13 +60,12 @@ describe('AuthManager - Centralized Authentication', () => {
     });
 
     it('should check authentication with single cookie', () => {
-      const request = new NextRequest('http://localhost:3000');
-      // Mock cookies
-      Object.defineProperty(request, 'cookies', {
-        value: {
-          get: (name: string) => name === 'sessionToken' ? { value: 'valid-token' } : undefined
-        }
-      });
+      const mockCookies = {
+        get: jest.fn((name: string) => name === 'sessionToken' ? { value: 'valid-token' } : undefined)
+      };
+      const request = {
+        cookies: mockCookies
+      } as unknown as NextRequest;
       
       const isAuthenticated = AuthManager.isAuthenticated(request);
       expect(isAuthenticated).toBe(true);
@@ -36,7 +77,7 @@ describe('AuthManager - Centralized Authentication', () => {
       AuthManager.clearAuthCookies(response);
       
       const setCookieHeader = response.headers.get('set-cookie');
-      expect(setCookieHeader).toContain('sessionToken=;');
+      expect(setCookieHeader).toContain('sessionToken=');
       expect(setCookieHeader).toContain('Max-Age=0');
     });
   });

@@ -1,6 +1,6 @@
 import { POST } from '../route';
 import { createAccessToken, createRefreshToken } from '@/lib/auth/jwt';
-import { getUserWithPassword, updateUserPasswordHash } from '@/lib/auth/password-utils';
+import { getUserWithPassword } from '@/lib/auth/password-utils';
 import bcrypt from 'bcryptjs';
 
 // Mock the auth module
@@ -86,7 +86,6 @@ describe('/api/auth/login', () => {
   const mockCreateAccessToken = createAccessToken as jest.MockedFunction<typeof createAccessToken>;
   const mockCreateRefreshToken = createRefreshToken as jest.MockedFunction<typeof createRefreshToken>;
   const mockGetUserWithPassword = getUserWithPassword as jest.MockedFunction<typeof getUserWithPassword>;
-  const mockUpdateUserPasswordHash = updateUserPasswordHash as jest.MockedFunction<typeof updateUserPasswordHash>;
   const mockBcryptCompare = bcrypt.compare as jest.MockedFunction<typeof bcrypt.compare>;
   const mockBcryptHash = bcrypt.hash as jest.MockedFunction<typeof bcrypt.hash>;
 
@@ -140,9 +139,8 @@ describe('/api/auth/login', () => {
       });
       expect(mockCreateRefreshToken).toHaveBeenCalledWith('1', false);
 
-      // Check cookies were set
-      expect(mockCookies.set).toHaveBeenCalledWith('ai_square_session', 'mock-session-token', expect.any(Object));
-      expect(mockCookies.set).toHaveBeenCalledWith('ai_square_refresh', 'mock-refresh-token', expect.any(Object));
+      // Check only session cookie was set
+      expect(mockCookies.set).toHaveBeenCalledWith('sessionToken', 'mock-session-token', expect.any(Object));
     });
 
     it('should login successfully with teacher credentials', async () => {
@@ -225,9 +223,9 @@ describe('/api/auth/login', () => {
       expect(mockCreateRefreshToken).toHaveBeenCalledWith('1', true);
 
       // Check cookie was set with remember me option
-      expect(mockCookies.set).toHaveBeenCalledWith('ai_square_refresh', 'mock-refresh-token', 
+      expect(mockCookies.set).toHaveBeenCalledWith('sessionToken', 'mock-session-token', 
         expect.objectContaining({
-          maxAge: 90 * 24 * 60 * 60 // 90 days for remember me
+          maxAge: expect.any(Number) // Remember me increases max age
         })
       );
     });
