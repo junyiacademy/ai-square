@@ -17,12 +17,28 @@ export async function GET(request: NextRequest) {
     try {
       const decoded = JSON.parse(atob(sessionToken))
       
+      // For demo accounts, we can infer the role from email
+      let role = 'user'
+      let name = 'User'
+      
+      if (decoded.email === 'student@example.com') {
+        role = 'student'
+        name = 'Demo Student'
+      } else if (decoded.email === 'teacher@example.com') {
+        role = 'teacher'  
+        name = 'Demo Teacher'
+      } else if (decoded.email === 'admin@example.com') {
+        role = 'admin'
+        name = 'Demo Admin'
+      }
+      
       return NextResponse.json({
         authenticated: true,
         user: {
           id: decoded.userId,
           email: decoded.email,
-          // Other user data can be fetched from database if needed
+          role: role,
+          name: name
         }
       })
     } catch {
