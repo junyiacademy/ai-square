@@ -1,0 +1,335 @@
+# ============================================
+# AI Square Staging Deployment Pipeline
+# ============================================
+# This workflow handles application deployment
+# after Terraform has provisioned infrastructure
+# ============================================
+
+name: Deploy to Staging
+
+on:
+  push:
+    branches:
+      - staging
+  workflow_dispatch:
+    inputs:
+      skip_tests:
+        description: 'Skip E2E tests'
+        required: false
+        default: 'false'
+        type: boolean
+
+env:
+  PROJECT_ID: ai-square-463013
+  REGION: asia-east1
+  SERVICE_NAME: ai-square-staging
+  REPOSITORY: ai-square-frontend
+
+jobs:
+  build-and-deploy:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: read
+      id-token: write
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+      
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+      
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+      
+      - name: Configure Docker to use gcloud as credential helper
+        run: |
+          gcloud auth configure-docker
+      
+      # Build and test locally first
+      - name: Install dependencies
+        working-directory: frontend
+        run: npm ci
+      
+      - name: Run linting
+        working-directory: frontend
+        run: npm run lint
+      
+      - name: Run type checking
+        working-directory: frontend
+        run: npm run typecheck
+      
+      - name: Run unit tests
+        working-directory: frontend
+        run: npm run test:ci
+      
+      - name: Build application
+        working-directory: frontend
+        run: npm run build
+      
+      # Build and push Docker image
+      - name: Build Docker image
+        run: |
+          docker build -f frontend/Dockerfile \
+            -t gcr.io/$PROJECT_ID/$REPOSITORY:$GITHUB_SHA \
+            -t gcr.io/$PROJECT_ID/$REPOSITORY:latest \
+            ./frontend
+      
+      - name: Push Docker image
+        run: |
+          docker push gcr.io/$PROJECT_ID/$REPOSITORY:$GITHUB_SHA
+          docker push gcr.io/$PROJECT_ID/$REPOSITORY:latest
+      
+      # Deploy to Cloud Run
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy $SERVICE_NAME \
+            --image gcr.io/$PROJECT_ID/$REPOSITORY:$GITHUB_SHA \
+            --region $REGION \
+            --platform managed \
+            --no-traffic
+      
+      - name: Get Service URL
+        id: get_url
+        run: |
+          SERVICE_URL=$(gcloud run services describe $SERVICE_NAME --region $REGION --format 'value(status.url)')
+          echo "service_url=$SERVICE_URL" >> $GITHUB_OUTPUT
+          echo "Service URL: $SERVICE_URL"
+      
+      # Wait for service to be ready
+      - name: Wait for service readiness
+        run: |
+          SERVICE_URL="${{ steps.get_url.outputs.service_url }}"
+          echo "Waiting for service at $SERVICE_URL to be ready..."
+          
+          for i in {1..30}; do
+            if curl -sf "$SERVICE_URL/api/health" > /dev/null 2>&1; then
+              echo "Service is ready!"
+              break
+            fi
+            echo "Waiting... ($i/30)"
+            sleep 10
+          done
+          
+          # Final check
+          if ! curl -sf "$SERVICE_URL/api/health"; then
+            echo "Service failed to become ready"
+            exit 1
+          fi
+      
+      # Route traffic to new revision
+      - name: Route traffic to new revision
+        run: |
+          gcloud run services update-traffic $SERVICE_NAME \
+            --region $REGION \
+            --to-latest
+
+  initialize-data:
+    name: Initialize Application Data
+    needs: build-and-deploy
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+      
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+      
+      - name: Get Service URL
+        id: get_url
+        run: |
+          SERVICE_URL=$(gcloud run services describe $SERVICE_NAME --region $REGION --format 'value(status.url)')
+          echo "service_url=$SERVICE_URL" >> $GITHUB_OUTPUT
+      
+      # Initialize database schema via API
+      - name: Initialize Database Schema
+        run: |
+          SERVICE_URL="${{ steps.get_url.outputs.service_url }}"
+          
+          echo "Initializing database schema..."
+          RESPONSE=$(curl -s -X POST "$SERVICE_URL/api/admin/init-schema" \
+            -H "Content-Type: application/json" \
+            -H "X-Admin-Key: ${{ secrets.ADMIN_API_KEY }}")
+          
+          echo "Response: $RESPONSE"
+          
+          if ! echo "$RESPONSE" | grep -q '"success":true'; then
+            echo "Schema initialization failed"
+            exit 1
+          fi
+      
+      # Create demo accounts via API
+      - name: Create Demo Accounts
+        run: |
+          SERVICE_URL="${{ steps.get_url.outputs.service_url }}"
+          
+          echo "Creating demo accounts..."
+          RESPONSE=$(curl -s -X POST "$SERVICE_URL/api/admin/seed-users" \
+            -H "Content-Type: application/json" \
+            -H "X-Admin-Key: ${{ secrets.ADMIN_API_KEY }}" \
+            -d '{
+              "users": [
+                {"email": "student@example.com", "password": "student123", "role": "student"},
+                {"email": "teacher@example.com", "password": "teacher123", "role": "teacher"},
+                {"email": "admin@example.com", "password": "admin123", "role": "admin"},
+                {"email": "parent@example.com", "password": "parent123", "role": "parent"},
+                {"email": "guest@example.com", "password": "guest123", "role": "guest"},
+                {"email": "test@example.com", "password": "test123", "role": "student"}
+              ]
+            }')
+          
+          echo "Response: $RESPONSE"
+          
+          if ! echo "$RESPONSE" | grep -q '"success":true'; then
+            echo "User creation failed"
+            exit 1
+          fi
+      
+      # Initialize scenarios
+      - name: Initialize Scenarios
+        run: |
+          SERVICE_URL="${{ steps.get_url.outputs.service_url }}"
+          
+          # Initialize Assessment
+          echo "Initializing Assessment scenarios..."
+          curl -s -X POST "$SERVICE_URL/api/admin/init-assessment" \
+            -H "Content-Type: application/json" \
+            -H "X-Admin-Key: ${{ secrets.ADMIN_API_KEY }}" \
+            -d '{"force": true}'
+          
+          # Initialize PBL
+          echo "Initializing PBL scenarios..."
+          curl -s -X POST "$SERVICE_URL/api/admin/init-pbl" \
+            -H "Content-Type: application/json" \
+            -H "X-Admin-Key: ${{ secrets.ADMIN_API_KEY }}" \
+            -d '{"force": true}'
+          
+          # Initialize Discovery
+          echo "Initializing Discovery scenarios..."
+          curl -s -X POST "$SERVICE_URL/api/admin/init-discovery" \
+            -H "Content-Type: application/json" \
+            -H "X-Admin-Key: ${{ secrets.ADMIN_API_KEY }}" \
+            -d '{"force": true}'
+      
+      - name: Verify Initialization
+        run: |
+          SERVICE_URL="${{ steps.get_url.outputs.service_url }}"
+          
+          echo "Verifying initialization..."
+          
+          # Check scenarios count
+          SCENARIOS=$(curl -s "$SERVICE_URL/api/admin/stats" \
+            -H "X-Admin-Key: ${{ secrets.ADMIN_API_KEY }}")
+          
+          echo "Current stats: $SCENARIOS"
+          
+          # Extract counts using jq
+          PBL_COUNT=$(echo "$SCENARIOS" | jq -r '.scenarios.pbl // 0')
+          ASSESSMENT_COUNT=$(echo "$SCENARIOS" | jq -r '.scenarios.assessment // 0')
+          DISCOVERY_COUNT=$(echo "$SCENARIOS" | jq -r '.scenarios.discovery // 0')
+          USER_COUNT=$(echo "$SCENARIOS" | jq -r '.users.total // 0')
+          
+          echo "Loaded: PBL($PBL_COUNT) Assessment($ASSESSMENT_COUNT) Discovery($DISCOVERY_COUNT) Users($USER_COUNT)"
+          
+          if [ "$PBL_COUNT" -eq 0 ] || [ "$USER_COUNT" -eq 0 ]; then
+            echo "Initialization incomplete!"
+            exit 1
+          fi
+
+  run-e2e-tests:
+    name: Run E2E Tests
+    needs: initialize-data
+    runs-on: ubuntu-latest
+    if: github.event.inputs.skip_tests != 'true'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+      
+      - name: Install dependencies
+        working-directory: frontend
+        run: |
+          npm ci
+          npx playwright install chromium
+      
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+      
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+      
+      - name: Get Service URL
+        id: get_url
+        run: |
+          SERVICE_URL=$(gcloud run services describe $SERVICE_NAME --region $REGION --format 'value(status.url)')
+          echo "service_url=$SERVICE_URL" >> $GITHUB_OUTPUT
+      
+      - name: Run E2E tests
+        working-directory: frontend
+        env:
+          BASE_URL: ${{ steps.get_url.outputs.service_url }}
+          HEADLESS: true
+        run: |
+          npm run test:e2e -- --grep "@staging"
+      
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: frontend/playwright-report
+
+  post-deployment-notification:
+    name: Send Deployment Notification
+    needs: [build-and-deploy, initialize-data]
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+      - name: Send Slack notification
+        if: env.SLACK_WEBHOOK_URL != ''
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          STATUS="${{ needs.build-and-deploy.result == 'success' && needs.initialize-data.result == 'success' && '✅ Success' || '❌ Failed' }}"
+          
+          curl -X POST $SLACK_WEBHOOK_URL \
+            -H 'Content-type: application/json' \
+            --data "{
+              \"text\": \"Staging Deployment $STATUS\",
+              \"blocks\": [
+                {
+                  \"type\": \"section\",
+                  \"text\": {
+                    \"type\": \"mrkdwn\",
+                    \"text\": \"*AI Square Staging Deployment*\\n\\nBranch: \`${{ github.ref_name }}\`\\nCommit: \`${{ github.sha }}\`\\nStatus: $STATUS\"
+                  }
+                }
+              ]
+            }"

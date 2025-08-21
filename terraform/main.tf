@@ -1,8 +1,8 @@
 # ============================================
-# AI Square Infrastructure as Code
+# AI Square Infrastructure as Code (Clean Version)
 # ============================================
-# This Terraform configuration manages all cloud
-# infrastructure for the AI Square platform
+# Terraform ONLY manages infrastructure
+# NO application logic, NO data initialization
 # ============================================
 
 terraform {
@@ -15,16 +15,12 @@ terraform {
     }
   }
   
-  # Store state in GCS bucket
   backend "gcs" {
     bucket = "ai-square-terraform-state"
     prefix = "terraform/state"
   }
 }
 
-# ============================================
-# Provider Configuration
-# ============================================
 provider "google" {
   project = var.project_id
   region  = var.region
@@ -50,114 +46,33 @@ variable "environment" {
   type        = string
   validation {
     condition     = contains(["staging", "production"], var.environment)
-    error_message = "Environment must be either staging or production."
-  }
-}
-
-variable "db_password" {
-  description = "Database password"
-  type        = string
-  sensitive   = true
-  validation {
-    condition     = length(var.db_password) >= 12 && can(regex("[A-Z]", var.db_password)) && can(regex("[a-z]", var.db_password)) && can(regex("[0-9]", var.db_password))
-    error_message = "Database password must be at least 12 characters and contain uppercase, lowercase, and numbers."
-  }
-}
-
-# Security-related variables
-variable "allowed_ips" {
-  description = "List of allowed IP addresses for database access"
-  type        = list(string)
-  default     = []
-}
-
-variable "enable_deletion_protection" {
-  description = "Enable deletion protection for production resources"
-  type        = bool
-  default     = true
-}
-
-# Demo account passwords - not sensitive since they're for demo/testing
-variable "demo_passwords" {
-  description = "Passwords for demo accounts"
-  type = object({
-    student = string
-    teacher = string
-    admin   = string
-    parent  = string
-    guest   = string
-    test    = string
-  })
-  default = {
-    student = "student123"
-    teacher = "teacher123"
-    admin   = "admin123"
-    parent  = "parent123"
-    guest   = "guest123"
-    test    = "test123"
+    error_message = "Environment must be staging or production"
   }
 }
 
 # ============================================
-# Service Account
-# ============================================
-resource "google_service_account" "ai_square_service" {
-  account_id   = "ai-square-service"
-  display_name = "AI Square Service Account"
-  description  = "Service account for AI Square Cloud Run services"
-}
-
-# Grant necessary roles to service account
-resource "google_project_iam_member" "cloudsql_client" {
-  project = var.project_id
-  role    = "roles/cloudsql.client"
-  member  = "serviceAccount:${google_service_account.ai_square_service.email}"
-}
-
-resource "google_project_iam_member" "secret_accessor" {
-  project = var.project_id
-  role    = "roles/secretmanager.secretAccessor"
-  member  = "serviceAccount:${google_service_account.ai_square_service.email}"
-}
-
-# ============================================
-# Cloud SQL Database
+# Cloud SQL Instance (Database Server)
 # ============================================
 resource "google_sql_database_instance" "main" {
-  # Production instance doesn't have "-asia" suffix for historical reasons
-  name             = var.environment == "production" ? "ai-square-db-${var.environment}" : "ai-square-db-${var.environment}-asia"
+  name             = "ai-square-db-${var.environment}-asia"
   database_version = "POSTGRES_15"
   region          = var.region
-
+  
   settings {
-    tier = var.environment == "production" ? "db-custom-2-4096" : "db-f1-micro"
+    tier = var.environment == "production" ? "db-n1-standard-1" : "db-f1-micro"
     
-    # Security settings
     database_flags {
       name  = "log_connections"
       value = "on"
     }
     
-    database_flags {
-      name  = "log_disconnections"
-      value = "on"
-    }
-    
-    database_flags {
-      name  = "log_checkpoints"
-      value = "on"
-    }
-    
     ip_configuration {
-      ipv4_enabled    = true
-      private_network = null
-      ssl_mode        = var.environment == "production" ? "ENCRYPTED_ONLY" : "ALLOW_UNENCRYPTED_AND_ENCRYPTED"
+      ipv4_enabled = true
       
-      # Only allow specific IPs in production
       dynamic "authorized_networks" {
-        for_each = var.environment == "production" ? var.allowed_ips : ["0.0.0.0/0"]
+        for_each = var.environment == "production" ? [] : ["0.0.0.0/0"]
         content {
-          name  = var.environment == "production" ? "allowed-ip-${authorized_networks.key}" : "allow-all-dev"
+          name  = "allow-all-dev"
           value = authorized_networks.value
         }
       }
@@ -169,22 +84,22 @@ resource "google_sql_database_instance" "main" {
       location          = var.region
       point_in_time_recovery_enabled = var.environment == "production"
     }
-    
-    maintenance_window {
-      day          = 7  # Sunday
-      hour         = 3
-      update_track = "stable"
-    }
   }
   
   deletion_protection = var.environment == "production"
 }
 
+# ============================================
+# Database
+# ============================================
 resource "google_sql_database" "ai_square_db" {
   name     = "ai_square_db"
   instance = google_sql_database_instance.main.name
 }
 
+# ============================================
+# Database User
+# ============================================
 resource "google_sql_user" "postgres" {
   name     = "postgres"
   instance = google_sql_database_instance.main.name
@@ -192,46 +107,45 @@ resource "google_sql_user" "postgres" {
 }
 
 # ============================================
-# Secret Manager
+# Service Account for Cloud Run
 # ============================================
-resource "google_secret_manager_secret" "db_password" {
-  secret_id = "db-password-${var.environment}"
-  
-  replication {
-    auto {}
-  }
+resource "google_service_account" "cloud_run" {
+  account_id   = "ai-square-${var.environment}"
+  display_name = "AI Square ${var.environment} Service Account"
 }
 
-resource "google_secret_manager_secret_version" "db_password" {
-  secret      = google_secret_manager_secret.db_password.id
-  secret_data = var.db_password
+# Grant Cloud SQL Client role
+resource "google_project_iam_member" "cloud_sql_client" {
+  project = var.project_id
+  role    = "roles/cloudsql.client"
+  member  = "serviceAccount:${google_service_account.cloud_run.email}"
 }
 
 # ============================================
 # Cloud Run Service
 # ============================================
 resource "google_cloud_run_service" "ai_square" {
-  name     = var.environment == "production" ? "ai-square-frontend" : "ai-square-staging"
+  name     = "ai-square-${var.environment}"
   location = var.region
-
+  
   template {
     spec {
-      service_account_name = google_service_account.ai_square_service.email
+      service_account_name = google_service_account.cloud_run.email
       
       containers {
-        image = "gcr.io/${var.project_id}/ai-square-frontend:latest"
+        image = "gcr.io/${var.project_id}/ai-square-${var.environment}:latest"
         
         resources {
           limits = {
-            memory = "512Mi"
-            cpu    = "1"
+            cpu    = var.environment == "production" ? "2" : "1"
+            memory = var.environment == "production" ? "2Gi" : "512Mi"
           }
         }
         
-        # Environment variables - ALL required variables defined here
+        # Basic environment variables only
         env {
           name  = "NODE_ENV"
-          value = "production"
+          value = var.environment
         }
         
         env {
@@ -248,39 +162,31 @@ resource "google_cloud_run_service" "ai_square" {
           name  = "DB_USER"
           value = google_sql_user.postgres.name
         }
-        
-        env {
-          name = "DB_PASSWORD"
-          value_from {
-            secret_key_ref {
-              name = google_secret_manager_secret.db_password.secret_id
-              key  = "latest"
-            }
-          }
-        }
-        
-        env {
-          name  = "DATABASE_URL"
-          value = "postgresql://${google_sql_user.postgres.name}:${urlencode(var.db_password)}@/${google_sql_database.ai_square_db.name}?host=/cloudsql/${var.project_id}:${var.region}:${google_sql_database_instance.main.name}"
-        }
       }
     }
     
     metadata {
       annotations = {
-        "run.googleapis.com/cloudsql-instances" = "${var.project_id}:${var.region}:${google_sql_database_instance.main.name}"
-        "run.googleapis.com/cpu-throttling"     = "false"
+        "autoscaling.knative.dev/minScale"      = var.environment == "production" ? "1" : "0"
+        "autoscaling.knative.dev/maxScale"      = var.environment == "production" ? "10" : "5"
+        "run.googleapis.com/cloudsql-instances" = google_sql_database_instance.main.connection_name
       }
     }
   }
-
+  
   traffic {
     percent         = 100
     latest_revision = true
   }
+  
+  depends_on = [
+    google_project_iam_member.cloud_sql_client
+  ]
 }
 
-# Allow unauthenticated access
+# ============================================
+# Public Access
+# ============================================
 resource "google_cloud_run_service_iam_member" "public_access" {
   service  = google_cloud_run_service.ai_square.name
   location = google_cloud_run_service.ai_square.location
@@ -289,70 +195,24 @@ resource "google_cloud_run_service_iam_member" "public_access" {
 }
 
 # ============================================
-# Monitoring & Alerts
-# ============================================
-resource "google_monitoring_uptime_check_config" "health_check" {
-  display_name = "AI Square Health Check - ${var.environment}"
-  timeout      = "10s"
-  period       = "60s"
-
-  http_check {
-    path         = "/api/health"
-    port         = "443"
-    use_ssl      = true
-    validate_ssl = true
-  }
-
-  monitored_resource {
-    type = "uptime_url"
-    labels = {
-      project_id = var.project_id
-      host       = replace(replace(google_cloud_run_service.ai_square.status[0].url, "https://", ""), "/", "")
-    }
-  }
-}
-
-resource "google_monitoring_alert_policy" "api_failure" {
-  display_name = "AI Square API Failure - ${var.environment}"
-  combiner     = "OR"
-  
-  conditions {
-    display_name = "API Health Check Failed"
-    
-    condition_threshold {
-      filter          = "resource.type=\"cloud_run_revision\" AND metric.type=\"run.googleapis.com/request_count\" AND metric.labels.response_code_class=\"5xx\""
-      duration        = "60s"
-      comparison      = "COMPARISON_GT"
-      threshold_value = 10
-      
-      aggregations {
-        alignment_period   = "60s"
-        per_series_aligner = "ALIGN_RATE"
-      }
-    }
-  }
-  
-  notification_channels = [] # Add Slack/Email notification channels here
-  
-  alert_strategy {
-    auto_close = "86400s"
-  }
-}
-
-# ============================================
-# Outputs
+# Outputs for GitHub Actions
 # ============================================
 output "service_url" {
-  description = "URL of the Cloud Run service"
-  value       = google_cloud_run_service.ai_square.status[0].url
+  value = google_cloud_run_service.ai_square.status[0].url
+  description = "The URL of the Cloud Run service"
 }
 
-output "database_connection_name" {
-  description = "Cloud SQL connection name"
-  value       = google_sql_database_instance.main.connection_name
+output "db_connection_name" {
+  value = google_sql_database_instance.main.connection_name
+  description = "Cloud SQL connection name for the app"
+}
+
+output "db_host" {
+  value = "/cloudsql/${google_sql_database_instance.main.connection_name}"
+  description = "Database host for Unix socket connection"
 }
 
 output "service_account_email" {
-  description = "Service account email"
-  value       = google_service_account.ai_square_service.email
+  value = google_service_account.cloud_run.email
+  description = "Service account email for the Cloud Run service"
 }

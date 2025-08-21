@@ -2216,3 +2216,324 @@ PGPASSWORD=postgres psql -h 127.0.0.1 -p 5434 -U postgres -d ai_square_db \
 - Demo 帳號僅供測試使用
 - 生產環境應該定期更改密碼
 - 不要在真實用戶環境使用這些帳號
+
+---
+
+## 十九、🛡️ 環境區分保護策略 - 開發快速、生產安全 (2025/08 新增)
+
+### 🏗️ 新架構：Terraform + GitHub Actions 分離
+
+**2025/08/21 重大更新**: 全面重構部署架構，解決循環依賴問題。
+
+#### 核心改變
+
+1. **基礎設施與應用分離**
+   - **Terraform**: 只管理基礎設施（Cloud SQL, Cloud Run, IAM）
+   - **GitHub Actions**: 處理應用部署（Docker build, schema init, data loading）
+
+2. **消除 `always_run = "${timestamp()}"` 反模式**
+   - 所有操作都是冪等的
+   - 可以安全地重複執行
+   - 狀態管理正確
+
+3. **清晰的部署流程**
+   ```bash
+   # 1. 基礎設施（手動觸發）
+   make terraform-deploy-staging
+   
+   # 2. 應用程式（自動觸發）
+   git push origin staging  # 觸發 GitHub Actions
+   ```
+
+#### 新文件結構
+
+```
+terraform/
+├── main.tf               # 純基礎設施配置
+├── post-deploy.tf        # 基礎設施健康檢查
+├── blue-green-deployment.tf  # 藍綠部署配置
+└── e2e.tf               # E2E 測試配置
+
+.github/workflows/
+├── deploy-staging.yml     # Staging 部署流程
+└── deploy-production.yml  # Production 部署流程（多重保護）
+```
+
+#### 優勢
+
+1. **避免循環依賴**: Terraform 不再依賴應用程式 API
+2. **提升可靠性**: 每個步驟都是獨立的、可測試的
+3. **更好的錯誤處理**: 失敗時可以定位到具體步驟
+4. **環境隔離**: Staging 和 Production 有不同的保護級別
+
+詳細文檔請參考：`docs/deployment/terraform-github-actions-architecture.md`
+
+### 🎯 核心原則：開發要快，生產要穩
+
+**開發環境（Staging）**: 保持靈活性，隨時可重建
+**生產環境（Production）**: 多重保護，防止誤操作
+
+### 📊 環境差異對照表
+
+| 功能 | Staging | Production | 說明 |
+|------|---------|------------|------|
+| 資料庫重建 | ✅ 允許 | ❌ 預設禁止 | Production 需要特殊確認 |
+| 自動初始化 | ✅ 每次部署 | ⚠️ 僅首次 | 避免覆蓋現有資料 |
+| Demo 帳號重置 | ✅ 自動 | ❌ 手動 | 保護用戶密碼 |
+| Scenario 強制更新 | ✅ force: true | ❌ force: false | 保護用戶進度 |
+| 備份要求 | ❌ 可選 | ✅ 強制 | 資料安全優先 |
+| 刪除保護 | ❌ 無 | ✅ 啟用 | deletion_protection = true |
+
+### 🔧 Terraform 環境區分實作
+
+#### 1. 資料庫初始化保護
+
+```hcl
+# post-deploy.tf 修改建議
+
+# 資料庫 Schema 初始化
+resource "null_resource" "init_database_schema" {
+  # Staging: 每次部署都執行
+  count = var.environment == "staging" ? 1 : 0
+  
+  triggers = {
+    always_run = "${timestamp()}"
+  }
+  
+  # ... 現有初始化邏輯
+}
+
+# Production 保護層
+resource "null_resource" "production_init_protection" {
+  count = var.environment == "production" ? 1 : 0
+  
+  provisioner "local-exec" {
+    command = <<-EOT
+      echo "========================================="
+      echo "⚠️  PRODUCTION ENVIRONMENT DETECTED!"
+      echo "========================================="
+      echo "Database initialization is DISABLED by default."
+      echo ""
+      echo "To initialize production database:"
+      echo "1. First time setup: Set TF_VAR_force_production_init=true"
+      echo "2. Use Prisma migrations for schema changes"
+      echo "3. Use API endpoints for data updates"
+      echo "========================================="
+      
+      # 檢查是否強制初始化
+      if [ "${var.force_production_init}" = "true" ]; then
+        echo "🚨 FORCE INITIALIZATION REQUESTED"
+        echo "This will initialize the production database."
+        echo "Sleeping 10 seconds... Press Ctrl+C to cancel"
+        sleep 10
+        # 執行初始化
+        ${path.module}/scripts/init-production-db.sh
+      fi
+    EOT
+  }
+}
+```
+
+#### 2. Demo 帳號管理差異
+
+```hcl
+# Demo 帳號 Seeding
+resource "null_resource" "seed_demo_accounts" {
+  depends_on = [null_resource.init_database_schema]
+  
+  triggers = {
+    # Staging: 每次都更新密碼
+    # Production: 只在 demo_passwords 變更時更新
+    run_trigger = var.environment == "staging" ? 
+      "${timestamp()}" : 
+      "${md5(jsonencode(var.demo_passwords))}"
+  }
+  
+  provisioner "local-exec" {
+    command = <<-EOT
+      if [ "${var.environment}" = "production" ]; then
+        echo "⚠️  Production: Using DO NOTHING for existing accounts"
+        CONFLICT_ACTION="DO NOTHING"
+      else
+        echo "✅ Staging: Will update passwords on conflict"
+        CONFLICT_ACTION="DO UPDATE SET password_hash = EXCLUDED.password_hash"
+      fi
+      
+      # 執行 SQL with appropriate conflict action
+      # ...
+    EOT
+  }
+}
+```
+
+#### 3. Scenario 初始化策略
+
+```hcl
+# Scenario 初始化
+resource "null_resource" "init_scenarios" {
+  depends_on = [null_resource.init_database_schema]
+  
+  triggers = {
+    # Staging: 總是執行
+    # Production: 只在檔案變更時執行
+    run_trigger = var.environment == "staging" ? 
+      "${timestamp()}" : 
+      "${filemd5("${path.module}/scenarios-checksum.txt")}"
+  }
+  
+  provisioner "local-exec" {
+    command = <<-EOT
+      SERVICE_URL="${google_cloud_run_service.ai_square.status[0].url}"
+      
+      # 設定 force 參數
+      if [ "${var.environment}" = "production" ]; then
+        FORCE_UPDATE="false"
+        echo "🛡️ Production: Scenarios will not be force updated"
+      else
+        FORCE_UPDATE="true"
+        echo "🚀 Staging: Scenarios will be force updated"
+      fi
+      
+      # 初始化 scenarios
+      for endpoint in init-assessment init-pbl init-discovery; do
+        curl -s -X POST "$${SERVICE_URL}/api/admin/$${endpoint}" \
+          -H "Content-Type: application/json" \
+          -d "{\"force\": $${FORCE_UPDATE}}"
+      done
+    EOT
+  }
+}
+```
+
+### 🛡️ 多重保護機制
+
+#### 1. 變數控制
+
+```hcl
+# variables.tf
+variable "force_production_init" {
+  description = "Force initialization of production database (危險操作)"
+  type        = bool
+  default     = false
+}
+
+variable "allow_production_destroy" {
+  description = "Allow destruction of production resources (極度危險)"
+  type        = bool
+  default     = false
+}
+```
+
+#### 2. 生命週期保護
+
+```hcl
+# Cloud SQL 實例保護
+resource "google_sql_database_instance" "main" {
+  # ... 其他配置
+  
+  deletion_protection = var.environment == "production"
+  
+  lifecycle {
+    prevent_destroy = var.environment == "production"
+  }
+}
+```
+
+#### 3. 執行前確認
+
+```bash
+# Makefile 中加入確認步驟
+deploy-production:
+	@echo "🚨 WARNING: You are about to deploy to PRODUCTION!"
+	@echo "This action will:"
+	@echo "  - Deploy new code to production"
+	@echo "  - NOT reset database"
+	@echo "  - NOT change existing user passwords"
+	@echo ""
+	@echo "Type 'deploy-production' to confirm: "
+	@read confirm && [ "$$confirm" = "deploy-production" ] || exit 1
+	terraform apply -var-file="environments/production.tfvars"
+```
+
+### 🔄 建議的工作流程
+
+#### Staging 快速迭代流程
+
+```bash
+# 1. 快速重建一切
+make deploy-staging
+
+# 2. 會自動執行：
+#    - 重建 schema
+#    - 重置 demo 密碼
+#    - 強制更新 scenarios
+#    - 清除快取
+
+# 3. 立即可測試最新版本
+```
+
+#### Production 安全部署流程
+
+```bash
+# 1. 先在 staging 測試
+make deploy-staging
+make test-staging
+
+# 2. 確認無誤後部署 production
+make deploy-production
+
+# 3. Production 會：
+#    - 保留現有資料
+#    - 不改變用戶密碼
+#    - 只更新必要的 scenarios
+#    - 自動備份
+
+# 4. 如需初始化（首次部署）
+TF_VAR_force_production_init=true make deploy-production
+```
+
+### 📋 實施檢查清單
+
+- [ ] 修改 `post-deploy.tf` 加入環境判斷
+- [ ] 更新 `variables.tf` 加入保護變數
+- [ ] 修改 API 端點支援 `force` 參數
+- [ ] 更新 Makefile 加入確認步驟
+- [ ] 測試 staging 仍可快速重建
+- [ ] 測試 production 保護機制有效
+- [ ] 更新團隊文件說明差異
+
+### 🚨 緊急情況處理
+
+如果真的需要重置 Production：
+
+```bash
+# 1. 備份現有資料（強制）
+make production-backup
+
+# 2. 設定強制初始化變數
+export TF_VAR_force_production_init=true
+export TF_VAR_allow_production_destroy=true
+
+# 3. 執行重建（需要多次確認）
+make deploy-production-force
+
+# 4. 立即移除危險變數
+unset TF_VAR_force_production_init
+unset TF_VAR_allow_production_destroy
+```
+
+### 💡 最佳實踐總結
+
+1. **Staging = 實驗場**：隨時可以打掉重練
+2. **Production = 堡壘**：多重防護，謹慎操作
+3. **使用 Prisma Migrate**：Production schema 變更的正確方式
+4. **API 優於 SQL**：通過應用層邏輯管理資料
+5. **備份優先**：任何 Production 操作前先備份
+6. **團隊溝通**：Production 變更需要通知團隊
+
+### 🔮 未來改進方向
+
+1. **藍綠部署**：進一步降低 Production 風險
+2. **自動備份驗證**：確保備份可還原
+3. **變更審核流程**：Production 變更需要審核
+4. **災難演練**：定期測試恢復流程
