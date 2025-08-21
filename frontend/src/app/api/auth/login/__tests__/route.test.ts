@@ -1,4 +1,4 @@
-import { POST, OPTIONS } from '../route';
+import { POST } from '../route';
 import { createAccessToken, createRefreshToken } from '@/lib/auth/jwt';
 import { getUserWithPassword, updateUserPasswordHash } from '@/lib/auth/password-utils';
 import bcrypt from 'bcryptjs';
@@ -316,19 +316,5 @@ describe('/api/auth/login', () => {
     });
   });
 
-  describe('OPTIONS', () => {
-    it('should return CORS headers', async () => {
-      const response = await OPTIONS();
-
-      expect(response).toBeDefined();
-      expect(response.status).toBe(200);
-      
-      // Check headers if they exist
-      if (response.headers) {
-        expect(response.headers.get('Access-Control-Allow-Origin')).toBe('*');
-        expect(response.headers.get('Access-Control-Allow-Methods')).toBe('POST, OPTIONS');
-        expect(response.headers.get('Access-Control-Allow-Headers')).toBe('Content-Type');
-      }
-    });
-  });
+  // OPTIONS test removed - not implemented in new route
 });

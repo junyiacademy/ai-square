@@ -5,7 +5,7 @@ import { createSessionToken } from '@/lib/auth/session-simple'
 import { getPool } from '@/lib/db/get-pool'
 import { PostgreSQLUserRepository } from '@/lib/repositories/postgresql'
 import { z } from 'zod'
-import { getUserWithPassword, updateUserPasswordHash } from '@/lib/auth/password-utils'
+import { getUserWithPassword } from '@/lib/auth/password-utils'
 import { AuthManager } from '@/lib/auth/auth-manager'
 
 // Input validation schema
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Verify password
-    const isValidPassword = await bcrypt.compare(password, user.password_hash)
+    const isValidPassword = await bcrypt.compare(password, user.passwordHash || '')
     
     if (!isValidPassword) {
       return NextResponse.json(

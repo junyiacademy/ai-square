@@ -44,7 +44,8 @@ describe('/api/auth/check', () => {
       mockVerifyAccessToken.mockResolvedValue(mockPayload);
       mockIsTokenExpiringSoon.mockReturnValue(false);
 
-      const response = await GET();
+      const mockRequest = new Request('http://localhost:3000/api/auth/check');
+      const response = await GET(mockRequest as any);
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -79,7 +80,8 @@ describe('/api/auth/check', () => {
       mockVerifyAccessToken.mockResolvedValue(mockPayload);
       mockIsTokenExpiringSoon.mockReturnValue(true);
 
-      const response = await GET();
+      const mockRequest = new Request('http://localhost:3000/api/auth/check');
+      const response = await GET(mockRequest as any);
       const data = await response.json();
 
       expect(data.tokenExpiringSoon).toBe(true);
@@ -103,7 +105,8 @@ describe('/api/auth/check', () => {
       mockVerifyAccessToken.mockResolvedValue(mockPayload);
       mockIsTokenExpiringSoon.mockReturnValue(false);
 
-      const response = await GET();
+      const mockRequest = new Request('http://localhost:3000/api/auth/check');
+      const response = await GET(mockRequest as any);
       const data = await response.json();
 
       expect(data.expiresIn).toBe(0); // Should be 0 for expired tokens
@@ -124,7 +127,8 @@ describe('/api/auth/check', () => {
       mockCookies.mockResolvedValue(cookieStore as unknown as ReturnType<typeof mockCookies>);
       mockVerifyAccessToken.mockResolvedValue(null); // JWT verification fails
 
-      const response = await GET();
+      const mockRequest = new Request('http://localhost:3000/api/auth/check');
+      const response = await GET(mockRequest as any);
       const data = await response.json();
 
       expect(data).toEqual({
@@ -155,7 +159,8 @@ describe('/api/auth/check', () => {
       
       mockCookies.mockResolvedValue(cookieStore as unknown as ReturnType<typeof mockCookies>);
 
-      const response = await GET();
+      const mockRequest = new Request('http://localhost:3000/api/auth/check');
+      const response = await GET(mockRequest as any);
       const data = await response.json();
 
       expect(data).toEqual({
@@ -183,7 +188,8 @@ describe('/api/auth/check', () => {
       
       mockCookies.mockResolvedValue(cookieStore as unknown as ReturnType<typeof mockCookies>);
 
-      const response = await GET();
+      const mockRequest = new Request('http://localhost:3000/api/auth/check');
+      const response = await GET(mockRequest as any);
       const data = await response.json();
 
       expect(data.user.role).toBe('student');
@@ -199,7 +205,8 @@ describe('/api/auth/check', () => {
       
       mockCookies.mockResolvedValue(cookieStore as unknown as ReturnType<typeof mockCookies>);
 
-      const response = await GET();
+      const mockRequest = new Request('http://localhost:3000/api/auth/check');
+      const response = await GET(mockRequest as any);
       const data = await response.json();
 
       expect(data).toEqual({
@@ -219,7 +226,8 @@ describe('/api/auth/check', () => {
       
       mockCookies.mockResolvedValue(cookieStore as unknown as ReturnType<typeof mockCookies>);
 
-      const response = await GET();
+      const mockRequest = new Request('http://localhost:3000/api/auth/check');
+      const response = await GET(mockRequest as any);
       const data = await response.json();
 
       expect(data).toEqual({
@@ -237,7 +245,8 @@ describe('/api/auth/check', () => {
       
       mockCookies.mockResolvedValue(cookieStore as unknown as ReturnType<typeof mockCookies>);
 
-      const response = await GET();
+      const mockRequest = new Request('http://localhost:3000/api/auth/check');
+      const response = await GET(mockRequest as any);
       const data = await response.json();
 
       expect(data.authenticated).toBe(false);
@@ -250,7 +259,8 @@ describe('/api/auth/check', () => {
       
       mockCookies.mockResolvedValue(cookieStore as unknown as ReturnType<typeof mockCookies>);
 
-      const response = await GET();
+      const mockRequest = new Request('http://localhost:3000/api/auth/check');
+      const response = await GET(mockRequest as any);
       const data = await response.json();
 
       expect(data.authenticated).toBe(false);
@@ -264,7 +274,8 @@ describe('/api/auth/check', () => {
       mockCookies.mockResolvedValue(cookieStore as unknown as ReturnType<typeof mockCookies>);
       mockVerifyAccessToken.mockResolvedValue(null);
 
-      const response = await GET();
+      const mockRequest = new Request('http://localhost:3000/api/auth/check');
+      const response = await GET(mockRequest as any);
       const data = await response.json();
 
       expect(data.authenticated).toBe(false);
@@ -277,7 +288,8 @@ describe('/api/auth/check', () => {
       
       mockCookies.mockResolvedValue(cookieStore as unknown as ReturnType<typeof mockCookies>);
 
-      const response = await GET();
+      const mockRequest = new Request('http://localhost:3000/api/auth/check');
+      const response = await GET(mockRequest as any);
       const data = await response.json();
 
       expect(data).toHaveProperty('authenticated');
@@ -304,7 +316,8 @@ describe('/api/auth/check', () => {
       mockVerifyAccessToken.mockResolvedValue(mockPayload);
       mockIsTokenExpiringSoon.mockReturnValue(false);
 
-      const response = await GET();
+      const mockRequest = new Request('http://localhost:3000/api/auth/check');
+      const response = await GET(mockRequest as any);
       const data = await response.json();
 
       expect(data).toHaveProperty('expiresIn');
@@ -319,7 +332,8 @@ describe('/api/auth/check', () => {
       
       mockCookies.mockResolvedValue(cookieStore as unknown as ReturnType<typeof mockCookies>);
 
-      const response = await GET();
+      const mockRequest = new Request('http://localhost:3000/api/auth/check');
+      const response = await GET(mockRequest as any);
       const data = await response.json();
 
       expect(data).not.toHaveProperty('expiresIn');
