@@ -201,8 +201,21 @@ export class ScenarioInitializationService {
     sourceType: string,
     yamlPath: string
   ): Promise<IScenario | null> {
+    // Determine the mode based on the yamlPath
+    let mode: DBLearningMode;
+    if (yamlPath.includes('/pbl_data/') || yamlPath.includes('pbl')) {
+      mode = 'pbl';
+    } else if (yamlPath.includes('/discovery_data/') || yamlPath.includes('discovery')) {
+      mode = 'discovery';
+    } else if (yamlPath.includes('/assessment_data/') || yamlPath.includes('assessment')) {
+      mode = 'assessment';
+    } else {
+      // Default to pbl if we can't determine from path
+      mode = 'pbl';
+    }
+    
     // Use findByMode to get scenarios of specific mode
-    const scenarios = await this.scenarioRepo.findByMode?.(sourceType as DBLearningMode) || [];
+    const scenarios = await this.scenarioRepo.findByMode?.(mode) || [];
     
     // Find matching scenario by source path or sourceMetadata.configPath
     const match = scenarios.find((s) => 

@@ -121,7 +121,7 @@ describe('ScenarioInitializationService', () => {
   it('skips when scenario exists and forceUpdate=false', async () => {
     const service = loadService();
 
-    const yamlPath = 'pbl_data/scenarios/ai_job_search/ai_job_search_scenario.yaml';
+    const yamlPath = 'pbl_data/scenarios/ai_job_search/ai_job_search_en.yaml';
     pblYAMLLoader.scanScenarios.mockResolvedValue(['ai_job_search']);
     pblYAMLLoader.loadScenario.mockResolvedValue({ scenario_info: { title: 'exists', description: '' }, programs: [] });
 
@@ -136,7 +136,7 @@ describe('ScenarioInitializationService', () => {
   it('updates when scenario exists and forceUpdate=true', async () => {
     const service = loadService();
 
-    const yamlPath = 'pbl_data/scenarios/ai_job_search/ai_job_search_scenario.yaml';
+    const yamlPath = 'pbl_data/scenarios/ai_job_search/ai_job_search_en.yaml';
     pblYAMLLoader.scanScenarios.mockResolvedValue(['ai_job_search']);
     pblYAMLLoader.loadScenario.mockResolvedValue({ scenario_info: { title: 'exists', description: '' }, programs: [] });
 
