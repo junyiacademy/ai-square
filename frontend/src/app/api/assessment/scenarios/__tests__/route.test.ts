@@ -159,6 +159,9 @@ describe('/api/assessment/scenarios', () => {
       (mockScenarioRepo.findByMode as jest.Mock).mockResolvedValue([]);
       (mockScenarioRepo.findActive as jest.Mock).mockResolvedValue([]);
 
+      // Clear any previous console warnings (Redis fallback warnings are expected)
+      mockConsoleWarn.mockClear();
+
       const request = new NextRequest('http://localhost:3000/api/assessment/scenarios');
       const response = await LocalGET(request);
       const data = await response.json();
@@ -166,7 +169,12 @@ describe('/api/assessment/scenarios', () => {
       expect(response.status).toBe(200);
       expect(data.data.scenarios).toHaveLength(0);
       expect(fsPromises.readdir).not.toHaveBeenCalled();
-      expect(mockConsoleWarn).not.toHaveBeenCalled();
+      
+      // Filter out Redis-related warnings which are expected in test environment
+      const nonRedisWarnings = mockConsoleWarn.mock.calls.filter(
+        call => !call[0]?.includes('Redis disabled') && !call[0]?.includes('using in-memory fallback')
+      );
+      expect(nonRedisWarnings).toHaveLength(0);
     });
 
     it('should return existing scenarios from database without filesystem access', async () => {

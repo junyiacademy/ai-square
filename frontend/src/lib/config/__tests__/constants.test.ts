@@ -60,7 +60,10 @@ describe('GCS Configuration', () => {
       delete process.env.GOOGLE_CLOUD_PROJECT;
       delete process.env.GOOGLE_APPLICATION_CREDENTIALS;
       
-      const config = getStorageConfig();
+      // Re-import to get new values without credentials
+      jest.resetModules();
+      const { getStorageConfig: getConfig } = require('../gcs.config');
+      const config = getConfig();
       
       expect(config).toEqual({
         projectId: undefined,
