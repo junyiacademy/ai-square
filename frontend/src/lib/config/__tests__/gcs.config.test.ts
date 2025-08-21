@@ -60,7 +60,14 @@ describe('gcs.config', () => {
 
   describe('getStorageConfig', () => {
     it('returns config with projectId', () => {
+      // Save original env vars
+      const originalProject = process.env.GOOGLE_CLOUD_PROJECT;
+      const originalKeyFile = process.env.GOOGLE_APPLICATION_CREDENTIALS;
+      
+      // Set test environment
       process.env.GOOGLE_CLOUD_PROJECT = 'test-project';
+      delete process.env.GOOGLE_APPLICATION_CREDENTIALS;
+      
       const { getStorageConfig: getConfig } = require('../gcs.config');
       
       const config = getConfig();
@@ -68,6 +75,10 @@ describe('gcs.config', () => {
       expect(config).toEqual({
         projectId: 'test-project'
       });
+      
+      // Restore original env vars
+      if (originalProject) process.env.GOOGLE_CLOUD_PROJECT = originalProject;
+      if (originalKeyFile) process.env.GOOGLE_APPLICATION_CREDENTIALS = originalKeyFile;
     });
 
     it('includes keyFilename when set', () => {

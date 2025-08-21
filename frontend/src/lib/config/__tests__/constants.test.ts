@@ -52,11 +52,23 @@ describe('GCS Configuration', () => {
 
   describe('getStorageConfig', () => {
     it('returns basic config without credentials', () => {
+      // Save original env vars
+      const originalProject = process.env.GOOGLE_CLOUD_PROJECT;
+      const originalKeyFile = process.env.GOOGLE_APPLICATION_CREDENTIALS;
+      
+      // Clear env vars for this test
+      delete process.env.GOOGLE_CLOUD_PROJECT;
+      delete process.env.GOOGLE_APPLICATION_CREDENTIALS;
+      
       const config = getStorageConfig();
       
       expect(config).toEqual({
         projectId: undefined,
       });
+      
+      // Restore env vars
+      if (originalProject) process.env.GOOGLE_CLOUD_PROJECT = originalProject;
+      if (originalKeyFile) process.env.GOOGLE_APPLICATION_CREDENTIALS = originalKeyFile;
     });
 
     it('includes projectId when environment variable is set', () => {
