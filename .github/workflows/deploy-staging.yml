@@ -99,6 +99,7 @@ jobs:
             --image gcr.io/$PROJECT_ID/$REPOSITORY:$GITHUB_SHA \
             --region $REGION \
             --platform managed \
+            --clear-env-vars \
             --set-env-vars ADMIN_API_KEY=${{ secrets.ADMIN_API_KEY }},DB_HOST=${{ secrets.STAGING_DB_HOST }},DB_NAME=${{ secrets.STAGING_DB_NAME }},DB_USER=${{ secrets.STAGING_DB_USER }},DB_PASSWORD=${{ secrets.STAGING_DB_PASSWORD }} \
             --no-traffic
       
