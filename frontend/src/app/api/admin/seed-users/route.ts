@@ -94,8 +94,8 @@ export async function POST(request: NextRequest) {
             const name = userData.name || `${userData.role.charAt(0).toUpperCase()}${userData.role.slice(1)} User`;
             
             await pool!.query(
-              `INSERT INTO users (id, email, password_hash, name, role, email_verified, metadata)
-               VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, $6)`,
+              `INSERT INTO users (id, email, password_hash, name, role, email_verified, metadata, created_at, updated_at)
+               VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, $6, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
               [userData.email, passwordHash, name, userData.role, true, JSON.stringify({ seeded: true })]
             );
             
