@@ -17,14 +17,7 @@ export async function POST(request: NextRequest) {
   let pool: Pool | null = null;
   
   try {
-    // Verify admin key
-    const adminKey = request.headers.get('X-Admin-Key');
-    if (adminKey !== process.env.ADMIN_API_KEY) {
-      return NextResponse.json(
-        { success: false, error: 'Unauthorized' },
-        { status: 401 }
-      );
-    }
+    // Remove admin key check - keeping API simple
 
     const body = await request.json();
     const users: UserSeed[] = body.users || [];

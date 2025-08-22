@@ -17,7 +17,6 @@ The following secrets must be configured in GitHub Repository Settings → Secre
 
 | Secret Name | Description | Example Format |
 |-------------|-------------|----------------|
-| `ADMIN_API_KEY` | Admin API authentication key | `[SECURE_API_KEY]` |
 
 ### Service Account Secret
 

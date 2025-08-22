@@ -89,7 +89,6 @@ graph LR
    ```bash
    gh secret set GCP_SA_KEY < staging-sa-key.json
    gh secret set GCP_SA_KEY_PROD < prod-sa-key.json
-   gh secret set ADMIN_API_KEY --body "your-secure-key"
    ```
 
 3. **部署應用**

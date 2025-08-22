@@ -115,7 +115,6 @@ terraform/
 GitHub Secrets:
 ├── GCP_SA_KEY            # Staging service account
 ├── GCP_SA_KEY_PROD       # Production service account
-├── ADMIN_API_KEY         # Admin API authentication
 └── SLACK_WEBHOOK_URL     # Deployment notifications
 
 Terraform Variables:
@@ -170,7 +169,6 @@ GET /api/admin/stats
    gh secret set GCP_SA_KEY_PROD < prod-sa-key.json
    
    # Add admin API key
-   gh secret set ADMIN_API_KEY --body "your-secure-admin-key"
    ```
 
 3. **Deploy Infrastructure**
