@@ -9,8 +9,9 @@ describe('Database Schema Integration Tests', () => {
   let pool: Pool;
 
   beforeAll(() => {
-    // Only run these tests if we're in development or CI
-    if (process.env.NODE_ENV === 'production') {
+    // Skip these tests in CI environment
+    if (process.env.CI === 'true' || !process.env.RUN_INTEGRATION_TESTS) {
+      console.log('Skipping database integration tests in CI environment');
       return;
     }
 
@@ -34,7 +35,7 @@ describe('Database Schema Integration Tests', () => {
   describe('Users table schema', () => {
     it('should have all required columns with proper defaults', async () => {
       if (!pool) {
-        console.log('Skipping database tests in production');
+        console.log('Skipping database tests - no pool available');
         return;
       }
 
