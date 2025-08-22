@@ -15,7 +15,9 @@ export async function GET(request: NextRequest) {
 
     // Decode session token to get user info
     try {
-      const decoded = JSON.parse(atob(sessionToken))
+      // Handle URL-encoded tokens (cookies are often URL-encoded)
+      const decodedToken = decodeURIComponent(sessionToken)
+      const decoded = JSON.parse(atob(decodedToken))
       
       // For demo accounts, we can infer the role from email
       let role = 'user'
