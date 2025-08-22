@@ -10,19 +10,63 @@
 
 
 ### 目錄
-- 一、Terraform 基礎設施管理
-- 二、環境分層與配置
-- 三、必要憑證與 Secret Manager
-- 四、資料庫（Cloud SQL）管理
-- 五、CI/CD 流程（使用 Terraform）
-- 六、部署步驟（Staging & Production）
-- 七、監控與健康檢查
-- 八、常見問題（Troubleshooting）
+- 一、Google Cloud Account 配置
+- 二、Terraform 基礎設施管理
+- 三、環境分層與配置
+- 四、必要憑證與 Secret Manager
+- 五、資料庫（Cloud SQL）管理
+- 六、CI/CD 流程（使用 Terraform）
+- 七、部署步驟（Staging & Production）
+- 八、監控與健康檢查
+- 九、常見問題（Troubleshooting）
 
 
 ---
 
-### 一、Terraform 基礎設施管理
+### 一、Google Cloud Account 配置
+
+#### 🔧 重要：使用正確的 Google Cloud 帳號
+
+AI Square 專案必須使用以下配置：
+- **Project ID**: `ai-square-463013`
+- **Account**: `youngtsai@junyiacademy.org`
+- **Region**: `asia-east1`
+
+#### 設定 gcloud 配置
+
+```bash
+# 如果尚未建立 ai-square 配置
+gcloud config configurations create ai-square
+gcloud config set account youngtsai@junyiacademy.org
+gcloud config set project ai-square-463013
+gcloud config set compute/region asia-east1
+
+# 每次開發前確認配置
+gcloud config configurations activate ai-square
+gcloud config list  # 應顯示 project = ai-square-463013
+```
+
+#### 多專案開發提示
+
+如果同時開發其他專案（如 Duotopia），使用環境變數隔離：
+
+```bash
+# Terminal for AI Square
+export CLOUDSDK_ACTIVE_CONFIG_NAME=ai-square
+
+# Terminal for other projects  
+export CLOUDSDK_ACTIVE_CONFIG_NAME=other-config
+```
+
+**部署前必須檢查**：
+```bash
+gcloud config get-value project  # 應顯示 ai-square-463013
+gcloud auth list  # 確認 youngtsai@junyiacademy.org 為 ACTIVE
+```
+
+---
+
+### 二、Terraform 基礎設施管理
 
 #### 🎯 核心原則：Infrastructure as Code + 使用既有自動化方案
 
@@ -77,7 +121,7 @@ terraform/
 
 ---
 
-### 二、環境分層與配置
+### 三、環境分層與配置
 
 #### 環境分層
 
@@ -104,7 +148,7 @@ terraform plan -var-file="environments/staging.tfvars"
 terraform apply -var-file="environments/staging.tfvars"
 ```
 
-### 三、必要憑證與 Secret Manager
+### 四、必要憑證與 Secret Manager
 
 #### ⚠️ Terraform 密碼要求
 Terraform 配置中對資料庫密碼有以下驗證規則（`main.tf` 第 61-64 行）：
@@ -166,7 +210,7 @@ Terraform 會自動設定以下環境變數：
 
 ---
 
-### 四、資料庫（Cloud SQL）管理
+### 五、資料庫（Cloud SQL）管理
 
 #### 🎯 資料庫管理策略更新（2025/08 - Prisma Integration）
 
@@ -315,7 +359,7 @@ resource "google_sql_database_instance" "main" {
 
 ---
 
-### 五、CI/CD 流程（使用 Terraform）
+### 六、CI/CD 流程（使用 Terraform）
 
 #### 🚀 完整自動化部署架構 (2025/01 新增)
 
@@ -530,7 +574,7 @@ curl -s "https://<svc>/api/assessment/scenarios?lang=en" | jq '.'
 
 ---
 
-### 八、常見問題（Troubleshooting）
+### 九、常見問題（Troubleshooting）
 
 1) Cloud Run ↔ Cloud SQL 連線逾時 / relation does not exist
 - 檢查 Region 是否一致
