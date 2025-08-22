@@ -167,12 +167,12 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
   async create(scenario: Omit<IScenario, 'id'>): Promise<IScenario> {
     const query = `
       INSERT INTO scenarios (
-        mode, status, source_type, source_path, source_id, source_metadata,
+        id, mode, status, source_type, source_path, source_id, source_metadata,
         title, description, objectives, prerequisites, task_templates,
         pbl_data, discovery_data, assessment_data, ai_modules, resources,
         version, difficulty, estimated_minutes, xp_rewards, unlock_requirements, metadata
       ) VALUES (
-        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22
+        gen_random_uuid(), $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22
       )
       RETURNING *
     `;
