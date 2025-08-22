@@ -172,14 +172,49 @@ jobs:
           SERVICE_URL=$(gcloud run services describe $SERVICE_NAME --region $REGION --format 'value(status.url)')
           echo "service_url=$SERVICE_URL" >> $GITHUB_OUTPUT
       
+      # Check required secrets
+      - name: Validate Required Secrets
+        run: |
+          echo "Checking required secrets for database migration..."
+          MISSING_SECRETS=""
+          
+          if [ -z "${{ secrets.STAGING_DB_CONNECTION_NAME }}" ]; then
+            MISSING_SECRETS="${MISSING_SECRETS} STAGING_DB_CONNECTION_NAME"
+          fi
+          
+          if [ -z "${{ secrets.STAGING_DB_USER }}" ]; then
+            MISSING_SECRETS="${MISSING_SECRETS} STAGING_DB_USER"
+          fi
+          
+          if [ -z "${{ secrets.STAGING_DB_PASSWORD }}" ]; then
+            MISSING_SECRETS="${MISSING_SECRETS} STAGING_DB_PASSWORD"
+          fi
+          
+          if [ -z "${{ secrets.STAGING_DB_NAME }}" ]; then
+            MISSING_SECRETS="${MISSING_SECRETS} STAGING_DB_NAME"
+          fi
+          
+          if [ ! -z "$MISSING_SECRETS" ]; then
+            echo "❌ ERROR: Missing required secrets:${MISSING_SECRETS}"
+            echo "Please set these secrets in GitHub Repository Settings → Secrets"
+            echo "Skipping database migration..."
+            echo "skip_migration=true" >> $GITHUB_OUTPUT
+          else
+            echo "✅ All required secrets are configured"
+            echo "skip_migration=false" >> $GITHUB_OUTPUT
+          fi
+        id: check_secrets
+      
       # Install PostgreSQL client
       - name: Install PostgreSQL client
+        if: steps.check_secrets.outputs.skip_migration != 'true'
         run: |
           sudo apt-get update
           sudo apt-get install -y postgresql-client
       
       # Setup Cloud SQL Proxy for database connection
       - name: Setup Cloud SQL Proxy
+        if: steps.check_secrets.outputs.skip_migration != 'true'
         run: |
           wget -q https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy
           chmod +x cloud_sql_proxy
@@ -188,6 +223,7 @@ jobs:
       
       # Run Prisma migrations
       - name: Run Database Migrations
+        if: steps.check_secrets.outputs.skip_migration != 'true'
         working-directory: frontend
         env:
           DATABASE_URL: "postgresql://${{ secrets.STAGING_DB_USER }}:${{ secrets.STAGING_DB_PASSWORD }}@localhost:5432/${{ secrets.STAGING_DB_NAME }}"
@@ -207,6 +243,14 @@ jobs:
           
           echo "Generating Prisma client..."
           npx prisma generate
+      
+      # Skip migration warning
+      - name: Migration Skipped Warning
+        if: steps.check_secrets.outputs.skip_migration == 'true'
+        run: |
+          echo "⚠️  WARNING: Database migration was skipped due to missing secrets"
+          echo "The application may not function properly without the database schema"
+          echo "Please configure the required secrets and re-run the deployment"
       
       # Initialize database schema via API (for additional setup)
       - name: Initialize Database Schema

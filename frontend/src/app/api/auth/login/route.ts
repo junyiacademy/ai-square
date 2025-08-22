@@ -106,12 +106,32 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('Login error:', error)
+    
+    // Provide more helpful error messages for common issues
+    let errorMessage = 'Login failed'
+    let statusCode = 500
+    
+    if (error instanceof Error) {
+      if (error.message.includes('relation "users" does not exist')) {
+        errorMessage = 'Database schema not initialized. Please contact administrator to run database migrations.'
+        statusCode = 503 // Service Unavailable
+      } else if (error.message.includes('password authentication failed')) {
+        errorMessage = 'Database connection failed. Please check database credentials.'
+        statusCode = 503
+      } else if (error.message.includes('connect ECONNREFUSED')) {
+        errorMessage = 'Cannot connect to database. Please check if database service is running.'
+        statusCode = 503
+      } else {
+        errorMessage = error.message
+      }
+    }
+    
     return NextResponse.json(
       { 
         success: false, 
-        error: error instanceof Error ? error.message : 'Login failed'
+        error: errorMessage
       },
-      { status: 500 }
+      { status: statusCode }
     )
   }
 }
