@@ -186,6 +186,61 @@ export CLOUDSDK_ACTIVE_CONFIG_NAME=other-config
 ❌ 重複造輪子
 ```
 
+### 🛠️ Terraform vs GitHub Actions 責任分工（2025/01 重要更新）
+
+**🧩 核心原則：把對的工具用在對的地方**
+
+#### Terraform 只管基礎設施（Infrastructure Only）
+```yaml
+✅ Terraform 該管的：
+- Cloud SQL 實例、資料庫、使用者
+- Cloud Run 服務
+- Service Account、IAM 權限
+- Secret Manager
+- 網路設定（VPC、Domain Mapping）
+
+❌ Terraform 不該管的：
+- 資料庫 Schema 初始化
+- 建立 Demo 帳號
+- 載入初始資料
+- 執行測試
+- 任何應用程式邏輯
+```
+
+#### GitHub Actions 管應用程式部署（Application Deployment）
+```yaml
+✅ GitHub Actions 負責：
+- 建構 Docker image
+- 推送到 Container Registry
+- 執行資料庫遷移（Prisma migrate）
+- 初始化場景資料（/api/admin/init）
+- 執行 E2E 測試
+- 健康檢查驗證
+
+工作流程：
+1. Push to branch → 觸發 GitHub Actions
+2. Build & Push Docker image
+3. Deploy to Cloud Run
+4. Run database migrations
+5. Initialize application data
+6. Run E2E tests
+```
+
+#### 正確的部署流程
+```bash
+# Step 1: 基礎設施（只需執行一次）
+cd terraform
+export TF_VAR_db_password="YOUR_SECURE_PASSWORD"
+terraform apply -var-file="environments/staging.tfvars"
+
+# Step 2: 應用程式部署（每次更新都要）
+git add -A
+git commit -m "feat: new feature"
+git push origin staging  # 這會觸發 GitHub Actions
+```
+
+**記住：Terraform 建房子，GitHub Actions 搬家具！**
+
 #### 實際案例：Prisma 整合
 ```yaml
 錯誤做法：

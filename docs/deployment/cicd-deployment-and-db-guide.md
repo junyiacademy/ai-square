@@ -90,6 +90,25 @@ gcloud auth list  # 確認 youngtsai@junyiacademy.org 為 ACTIVE
 - 使用 Makefile 標準化命令
 - 使用 GitHub Actions CI/CD
 
+#### 🛠️ Terraform vs GitHub Actions 責任分工
+
+**🧩 核心原則：把對的工具用在對的地方 - Terraform 建房子，GitHub Actions 搬家具！**
+
+| 工具 | 職責 | 不該做的事 |
+|------|------|------------|
+| **Terraform** | • Cloud SQL 實例<br>• Cloud Run 服務<br>• Service Account<br>• IAM 權限<br>• Secret Manager<br>• 網路設定 | • 資料庫 Schema<br>• Demo 帳號建立<br>• 初始資料載入<br>• 執行測試<br>• 應用程式邏輯 |
+| **GitHub Actions** | • Docker image 建構<br>• Container Registry 推送<br>• 資料庫遷移（Prisma）<br>• 場景資料初始化<br>• E2E 測試執行<br>• 健康檢查驗證 | • 基礎設施建立<br>• Cloud 資源管理<br>• IAM 權限設定 |
+
+**正確的協作流程：**
+```mermaid
+graph LR
+    A[Terraform] -->|建立基礎設施| B[Cloud SQL + Cloud Run]
+    C[Git Push] -->|觸發| D[GitHub Actions]
+    D -->|部署應用| B
+    D -->|執行遷移| E[Database Schema]
+    D -->|初始化| F[Application Data]
+```
+
 ##### Terraform 管理架構
 
 所有基礎設施都使用 Terraform 管理：
@@ -134,6 +153,9 @@ terraform/
 #### Terraform 初始化
 
 ```bash
+# ⚠️ 重要：執行前必須設定 DB_PASSWORD！
+export TF_VAR_db_password="YOUR_SECURE_PASSWORD"  # 符合密碼要求：12字符+大小寫+數字
+
 # 1. 初始化 Terraform
 cd terraform
 terraform init
@@ -141,12 +163,16 @@ terraform init
 # 2. 切換到正確的 workspace
 terraform workspace select staging  # 或 production
 
-# 3. 預覽變更
+# 3. 預覽變更（會提示輸入 db_password 如果沒設定）
 terraform plan -var-file="environments/staging.tfvars"
 
 # 4. 套用變更
 terraform apply -var-file="environments/staging.tfvars"
 ```
+
+**⚠️ 血淚教訓：如果忘記設定 DB_PASSWORD**
+- Terraform 會創建資源但 Cloud Run 無法連接資料庫
+- 需要手動修復：`gcloud run services update ai-square-staging --update-env-vars DB_PASSWORD=xxx`
 
 ### 四、必要憑證與 Secret Manager
 
@@ -575,6 +601,207 @@ curl -s "https://<svc>/api/assessment/scenarios?lang=en" | jq '.'
 ---
 
 ### 九、常見問題（Troubleshooting）
+
+#### 🔥 最常見的三個錯誤（90% 的部署問題）
+
+1. **只跑 Terraform 忘記 push commits**
+   - 症狀：`relation "scenarios" does not exist`
+   - 原因：Terraform 只建立空資料庫，GitHub Actions 才執行 schema migration
+   - 解決：`git push origin staging`
+
+2. **忘記設定 DB_PASSWORD**
+   - 症狀：Health check 顯示 `DATABASE_URL not configured`
+   - 原因：Terraform 需要 db_password 變數但沒設定
+   - 解決：`export TF_VAR_db_password="xxx"` 再跑 Terraform
+
+3. **Google Cloud 帳號錯誤**
+   - 症狀：權限錯誤或部署到錯誤專案
+   - 原因：多專案開發時帳號混亂
+   - 解決：`gcloud config configurations activate ai-square`
+
+#### 🚨 重要教訓：正確理解 Terraform vs GitHub Actions 分工
+
+**問題：為什麼部署後資料庫沒有 schema？**
+
+**根本原因：誤解了工具的職責範圍**
+
+這就像買了一台挖土機（Terraform）來蓋房子，卻期待它還能幫你裝潢和搬家具。Terraform 是基礎設施工具，不是應用程式部署工具！
+
+**正確的理解：**
+- **Terraform** = 建築公司（蓋房子、接水電）
+- **GitHub Actions** = 搬家公司（搬家具、裝潢布置）
+
+| 階段 | 負責工具 | 具體工作 |
+|------|---------|----------|
+| **基礎建設** | Terraform | 建立 Cloud SQL 實例、Cloud Run 服務、設定權限 |
+| **應用部署** | GitHub Actions | 建構 Docker image、執行資料庫遷移、載入初始資料 |
+
+**解決方法：**
+```bash
+# ❌ 錯誤：只執行 Terraform 就期待一切都好
+terraform apply  # 這只是蓋好空房子！
+
+# ✅ 正確：完整的部署流程
+# 1. Terraform 建基礎設施（一次就好）
+terraform apply -var-file="environments/staging.tfvars"
+
+# 2. GitHub Actions 部署應用（每次更新都要）
+git push origin staging  # 這才會搬家具進去！
+```
+
+**記住：沒有 push = 沒有部署 = 空的資料庫！**
+
+#### 🚨 資料庫密碼設定問題
+
+**問題：Health check 顯示 "DATABASE_URL not configured"**
+
+**原因：**
+1. Terraform 沒有設定 DB_PASSWORD（應該從 Secret Manager 讀取）
+2. Health check 只檢查 DATABASE_URL，但應用程式可以使用個別環境變數
+
+**臨時解決：**
+```bash
+# 手動更新 Cloud Run 環境變數
+gcloud run services update ai-square-staging \
+  --region asia-east1 \
+  --update-env-vars DB_PASSWORD=YourPassword
+```
+
+**正確解決：使用 Secret Manager（待實作）**
+
+#### 🚨 測試失敗但想部署
+
+**問題：Pre-push hook 阻止部署**
+
+**解決：**
+```bash
+# 跳過測試（僅限緊急情況）
+git push --no-verify origin staging
+
+# 但記得之後要修復測試！
+```
+
+#### 🚨 資料庫連接錯誤
+
+**問題：relation "scenarios" does not exist**
+
+**原因：資料庫 schema 還沒建立（GitHub Actions 沒執行）**
+
+**診斷步驟：**
+```bash
+# 1. 檢查是否有未 push 的 commits
+git status
+git log origin/staging..HEAD
+
+# 2. 檢查 Cloud Run 使用的 image 版本
+gcloud run services describe ai-square-staging \
+  --region=asia-east1 \
+  --format="value(spec.template.spec.containers[0].image)"
+
+# 3. 檢查 GitHub Actions 執行狀態
+gh run list --branch staging --limit 5
+```
+
+#### 🚨 Google Cloud 帳號切換問題
+
+**問題：在多個專案間切換時搞混帳號**
+
+**解決：使用 gcloud configurations**
+```bash
+# 建立專屬配置
+gcloud config configurations create ai-square
+gcloud config set account youngtsai@junyiacademy.org
+gcloud config set project ai-square-463013
+
+# 切換配置
+gcloud config configurations activate ai-square
+
+# 確認當前配置
+gcloud config list
+```
+
+**注意：Terraform 使用 ADC (Application Default Credentials)**
+```bash
+# 設定 ADC
+gcloud auth application-default login
+gcloud auth application-default set-quota-project ai-square-463013
+```
+
+#### 🚨 部署流程總結
+
+**正確的部署流程：**
+1. **開發** → 在 local 測試
+2. **Commit** → 通過所有檢查
+3. **Push** → 觸發 GitHub Actions
+4. **GitHub Actions** → 建構 image、執行遷移、部署應用
+5. **驗證** → 檢查服務健康狀態
+
+**不要做的事：**
+- ❌ 只跑 Terraform 就以為部署完成
+- ❌ 忘記 push commits
+- ❌ 手動執行資料庫遷移
+- ❌ 跳過測試（除非緊急）
+
+#### 🚨 2025/01 血淚教訓總結
+
+**問題 1: database 'ai_square_db' does not exist**
+- **症狀**: Terraform 執行成功，但應用程式報錯找不到資料庫
+- **根本原因**: 只跑了 Terraform（創建空資料庫）但沒有 push commits 觸發 GitHub Actions（執行 schema 遷移）
+- **教訓**: 改動程式碼後必須 `git push` 才能觸發完整部署流程
+
+**問題 2: DB_PASSWORD not configured**
+- **症狀**: Health check 顯示 DATABASE_URL not configured
+- **根本原因**: Terraform 配置中缺少 DB_PASSWORD 環境變數設定
+- **臨時修復**: `gcloud run services update ai-square-staging --update-env-vars DB_PASSWORD=xxx`
+- **正確做法**: 使用 Secret Manager 管理密碼
+
+**問題 3: 多 Google Cloud 帳號混亂**
+- **症狀**: 部署到錯誤的專案或權限錯誤
+- **根本原因**: 同時開發多個專案（AI Square, Duotopia）時帳號切換混亂
+- **解決方案**: 使用 gcloud configurations 管理多個帳號配置
+- **注意事項**: Terraform 使用 ADC，與 gcloud active account 是分開的
+
+**問題 4: 為什麼「一步部署」一直失敗？**
+- **錯誤認知**: 以為 Terraform 會處理所有事情
+- **實際情況**: 
+  - Terraform = 基礎設施（Cloud SQL 實例、Cloud Run 服務）
+  - GitHub Actions = 應用程式（Docker build、DB migration、初始化資料）
+- **正確理解**: 這是分工合作，不是單一工具能完成的
+
+**最重要的提醒**: 
+```bash
+# 完整部署 = Terraform + GitHub Actions
+# 如果只跑 Terraform，你只會得到空的基礎設施！
+git add -A
+git commit -m "fix: deployment configuration"
+git push origin staging  # 這一步觸發 GitHub Actions！
+```
+
+#### 🚨 部署後驗證檢查清單
+
+**每次部署後必須執行的檢查：**
+```bash
+# 1. 檢查 Health endpoint
+curl -s "https://ai-square-staging-xxxxxxxxx.asia-east1.run.app/api/health" | jq
+
+# 2. 檢查 GitHub Actions 狀態
+gh run list --branch staging --limit 5
+
+# 3. 檢查 Cloud Run logs
+gcloud run services logs read ai-square-staging --region=asia-east1 --limit=50 | grep -i error
+
+# 4. 檢查資料庫連線
+# 如果看到 "relation does not exist"，表示 schema 還沒建立
+
+# 5. 檢查 Docker image 版本
+gcloud run services describe ai-square-staging --region=asia-east1 --format="value(spec.template.spec.containers[0].image)"
+```
+
+**如果發現問題的診斷步驟：**
+1. 確認有沒有未 push 的 commits：`git status`
+2. 確認 GitHub Actions 有沒有執行：查看 Actions 頁面
+3. 確認 Terraform 和 GitHub Actions 都執行成功
+4. 確認環境變數都設定正確（特別是 DB_PASSWORD）
 
 1) Cloud Run ↔ Cloud SQL 連線逾時 / relation does not exist
 - 檢查 Region 是否一致
