@@ -282,7 +282,7 @@ describe('/api/auth/login', () => {
 
       expect(response.status).toBe(500);
       expect(data.success).toBe(false);
-      expect(data.error).toContain('An error occurred');
+      expect(data.error).toBe('Invalid JSON');
     });
 
     it('should handle JWT creation errors', async () => {
@@ -310,7 +310,24 @@ describe('/api/auth/login', () => {
 
       expect(response.status).toBe(500);
       expect(data.success).toBe(false);
-      expect(data.error).toContain('An error occurred');
+      expect(data.error).toBe('JWT error');
+    });
+
+    it('should handle database schema not initialized error', async () => {
+      const dbError = new Error('relation "users" does not exist');
+      mockGetUserWithPassword.mockRejectedValue(dbError);
+
+      const request = createMockRequest({
+        email: 'student@example.com',
+        password: 'student123'
+      });
+
+      const response = await POST(request);
+      const data = await response.json();
+
+      expect(response.status).toBe(503);
+      expect(data.success).toBe(false);
+      expect(data.error).toBe('Database schema not initialized. Please contact administrator to run database migrations.');
     });
   });
 

@@ -112,11 +112,11 @@ describe('middleware', () => {
     });
 
     describe('with authentication', () => {
-      it('should allow access with all auth cookies', () => {
+      it('should allow access with valid sessionToken', () => {
         const request = new NextRequest('http://localhost:3000/pbl');
-        request.cookies.set('isLoggedIn', 'true');
-        request.cookies.set('sessionToken', 'token123');
-        request.cookies.set('accessToken', 'access123');
+        // Create a valid base64 encoded session token
+        const validToken = btoa(JSON.stringify({ userId: '123', email: 'test@example.com' }));
+        request.cookies.set('sessionToken', validToken);
         
         const response = middleware(request);
         
@@ -124,31 +124,26 @@ describe('middleware', () => {
         expect(response).toEqual({ type: 'next' });
       });
 
-      it('should redirect if isLoggedIn is false', () => {
-        const request = new NextRequest('http://localhost:3000/pbl');
-        request.cookies.set('isLoggedIn', 'false');
-        request.cookies.set('sessionToken', 'token123');
-        request.cookies.set('accessToken', 'access123');
-        
-        const response = middleware(request);
-        
-        expect(NextResponse.redirect).toHaveBeenCalled();
-      });
-
       it('should redirect if sessionToken is missing', () => {
         const request = new NextRequest('http://localhost:3000/pbl');
-        request.cookies.set('isLoggedIn', 'true');
-        request.cookies.set('accessToken', 'access123');
         
         const response = middleware(request);
         
         expect(NextResponse.redirect).toHaveBeenCalled();
       });
 
-      it('should redirect if accessToken is missing', () => {
+      it('should redirect if sessionToken is invalid', () => {
         const request = new NextRequest('http://localhost:3000/pbl');
-        request.cookies.set('isLoggedIn', 'true');
-        request.cookies.set('sessionToken', 'token123');
+        request.cookies.set('sessionToken', 'invalid-token');
+        
+        const response = middleware(request);
+        
+        expect(NextResponse.redirect).toHaveBeenCalled();
+      });
+
+      it('should redirect if sessionToken is empty', () => {
+        const request = new NextRequest('http://localhost:3000/pbl');
+        request.cookies.set('sessionToken', '');
         
         const response = middleware(request);
         
