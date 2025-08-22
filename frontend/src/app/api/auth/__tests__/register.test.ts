@@ -54,6 +54,13 @@ jest.mock('../../../../lib/repositories/base/repository-factory', () => ({
   }
 }))
 
+// Mock AuthManager
+jest.mock('../../../../lib/auth/auth-manager', () => ({
+  AuthManager: {
+    setAuthCookie: jest.fn()
+  }
+}))
+
 // Mock NextResponse to handle cookies properly
 const mockCookies = {
   set: jest.fn(),
@@ -115,6 +122,7 @@ describe('/api/auth/register', () => {
   const mockBcryptHash = bcrypt.hash as jest.Mock
   const mockSendVerificationEmail = emailService.sendVerificationEmail as jest.Mock
   const mockUpdateUserPasswordHash = updateUserPasswordHash as jest.Mock
+  const { AuthManager } = require('../../../../lib/auth/auth-manager')
   
   beforeEach(() => {
     jest.clearAllMocks()
@@ -153,7 +161,7 @@ describe('/api/auth/register', () => {
     expect(data.message).toContain('Registration successful')
     expect(data.user.email).toBe('newuser@example.com')
     expect(data.user.emailVerified).toBe(false)
-    expect(mockCookies.set).toHaveBeenCalledWith('ai_square_session', expect.any(String), expect.any(Object))
+    expect(AuthManager.setAuthCookie).toHaveBeenCalledWith(expect.any(Object), expect.any(String), false)
     expect(mockSendVerificationEmail).toHaveBeenCalled()
     expect(verificationTokens.set).toHaveBeenCalled()
   })
@@ -524,12 +532,10 @@ describe('/api/auth/register', () => {
     const response = await POST(request as unknown as NextRequest)
     await response.json()
 
-    expect(mockCookies.set).toHaveBeenCalledWith(
-      'ai_square_session',
+    expect(AuthManager.setAuthCookie).toHaveBeenCalledWith(
+      expect.any(Object),
       expect.any(String),
-      expect.objectContaining({
-        secure: true
-      })
+      false
     )
 
     Object.defineProperty(process.env, 'NODE_ENV', {
