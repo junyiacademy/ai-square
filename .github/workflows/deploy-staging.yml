@@ -344,10 +344,51 @@ jobs:
             return 1
           }
           
-          # Initialize each module with retries
-          initialize_with_retry "Assessment" "/api/admin/init-assessment" || exit 1
-          initialize_with_retry "PBL" "/api/admin/init-pbl" || exit 1  
-          initialize_with_retry "Discovery" "/api/admin/init-discovery" || exit 1
+          # Function to initialize without admin key (for init APIs that don't require it)
+          initialize_without_key() {
+            local module_name=$1
+            local endpoint=$2
+            local max_attempts=3
+            
+            echo "🚀 Initializing $module_name scenarios (no auth)..."
+            
+            for attempt in $(seq 1 $max_attempts); do
+              echo "Attempt $attempt/$max_attempts for $module_name"
+              
+              RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "$SERVICE_URL$endpoint" \
+                -H "Content-Type: application/json" \
+                -d '{"force": true}')
+              
+              HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+              BODY=$(echo "$RESPONSE" | head -n -1)
+              
+              echo "$module_name Response: $BODY"
+              
+              if [ "$HTTP_CODE" = "200" ]; then
+                if echo "$BODY" | grep -q '"success":true'; then
+                  echo "✅ $module_name initialization successful!"
+                  return 0
+                else
+                  echo "❌ $module_name initialization failed (success:false)"
+                fi
+              else
+                echo "❌ $module_name initialization failed (HTTP $HTTP_CODE)"
+              fi
+              
+              if [ $attempt -lt $max_attempts ]; then
+                echo "⏳ Waiting 30 seconds before retry..."
+                sleep 30
+              fi
+            done
+            
+            echo "💥 $module_name initialization failed after $max_attempts attempts"
+            return 1
+          }
+          
+          # Initialize each module (these APIs don't require admin key)
+          initialize_without_key "Assessment" "/api/admin/init-assessment" || exit 1
+          initialize_without_key "PBL" "/api/admin/init-pbl" || exit 1  
+          initialize_without_key "Discovery" "/api/admin/init-discovery" || exit 1
           
           echo "🎉 All scenario initializations completed successfully!"
       
