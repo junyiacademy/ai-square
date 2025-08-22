@@ -90,6 +90,37 @@ describe('/api/auth/check', () => {
         user: null
       });
     });
+
+    it('handles URL-encoded session token from cookies', async () => {
+      const { AuthManager } = require('@/lib/auth/auth-manager');
+      
+      const sessionTokenData = {
+        userId: '123',  
+        email: 'test@example.com',
+        timestamp: Date.now(),
+        rememberMe: false
+      };
+      const sessionToken = Buffer.from(JSON.stringify(sessionTokenData)).toString('base64');
+      // Simulate browser URL encoding (e.g., = becomes %3D)
+      const urlEncodedToken = encodeURIComponent(sessionToken);
+
+      AuthManager.getSessionToken.mockReturnValue(urlEncodedToken);
+
+      const mockRequest = new NextRequest('http://localhost:3000/api/auth/check');
+      const response = await GET(mockRequest);
+      const data = await response.json();
+
+      expect(response.status).toBe(200);
+      expect(data).toEqual({
+        authenticated: true,
+        user: {
+          id: '123',
+          email: 'test@example.com',
+          role: 'user',
+          name: 'User'
+        }
+      });
+    });
   });
 
   describe('response format validation', () => {
