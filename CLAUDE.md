@@ -2,6 +2,42 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## 🔧 Google Cloud 帳號配置 - AI Square 專案
+
+### 重要：使用正確的 Google Cloud 帳號
+AI Square 專案必須使用以下配置：
+- **Project ID**: `ai-square-463013`
+- **Account**: `youngtsai@junyiacademy.org`
+- **Region**: `asia-east1`
+
+### 設定 gcloud 配置
+```bash
+# 如果尚未建立 ai-square 配置
+gcloud config configurations create ai-square
+gcloud config set account youngtsai@junyiacademy.org
+gcloud config set project ai-square-463013
+
+# 每次開發前確認配置
+gcloud config configurations activate ai-square
+gcloud config list  # 應顯示 project = ai-square-463013
+```
+
+### 多專案開發提示
+如果同時開發其他專案（如 Duotopia），使用環境變數隔離：
+```bash
+# Terminal for AI Square
+export CLOUDSDK_ACTIVE_CONFIG_NAME=ai-square
+
+# Terminal for other projects
+export CLOUDSDK_ACTIVE_CONFIG_NAME=other-config
+```
+
+**部署前必須檢查**：`gcloud config get-value project` 應顯示 `ai-square-463013`
+
+詳細部署指南請參考：`frontend/docs/deployment/cicd-deployment-and-db-guide.md`
+
+---
+
 ## 🤖 Sub-Agent 使用規則 - 分析需求，選對工具
 
 ### 🎯 核心原則：先分析需求，再選擇正確的 Sub-Agent
