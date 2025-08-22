@@ -6,6 +6,7 @@ import crypto from 'crypto';
 import { getPool } from '@/lib/db/get-pool';
 import { updateUserPasswordHash } from '@/lib/auth/password-utils';
 import { verificationTokens } from '@/lib/auth/verification-tokens';
+import { AuthManager } from '@/lib/auth/auth-manager';
 
 // Input validation schema
 const registerSchema = z.object({
@@ -119,14 +120,9 @@ export async function POST(request: NextRequest) {
       sessionToken // For client-side storage if needed
     });
 
-    // Set HTTP-only secure cookie
-    response.cookies.set('ai_square_session', sessionToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60, // 7 days
-      path: '/'
-    });
+    // Use centralized AuthManager to set cookie
+    // This ensures consistent cookie management across the app
+    AuthManager.setAuthCookie(response, sessionToken, false);
 
     return response;
 
