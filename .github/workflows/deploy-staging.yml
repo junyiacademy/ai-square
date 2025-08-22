@@ -297,43 +297,72 @@ jobs:
             exit 1
           fi
       
-      # Initialize scenarios
+      # Initialize scenarios with proper error handling and retries
       - name: Initialize Scenarios
         run: |
           SERVICE_URL="${{ steps.get_url.outputs.service_url }}"
           
-          # Initialize Assessment
-          echo "Initializing Assessment scenarios..."
-          curl -s -X POST "$SERVICE_URL/api/admin/init-assessment" \
-            -H "Content-Type: application/json" \
-            -H "X-Admin-Key: ${{ secrets.ADMIN_API_KEY }}" \
-            -d '{"force": true}'
+          # Function to initialize with retries
+          initialize_with_retry() {
+            local module_name=$1
+            local endpoint=$2
+            local max_attempts=3
+            
+            echo "🚀 Initializing $module_name scenarios..."
+            
+            for attempt in $(seq 1 $max_attempts); do
+              echo "Attempt $attempt/$max_attempts for $module_name"
+              
+              RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "$SERVICE_URL$endpoint" \
+                -H "Content-Type: application/json" \
+                -H "X-Admin-Key: ${{ secrets.ADMIN_API_KEY }}" \
+                -d '{"force": true}')
+              
+              HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+              BODY=$(echo "$RESPONSE" | head -n -1)
+              
+              echo "$module_name Response: $BODY"
+              
+              if [ "$HTTP_CODE" = "200" ]; then
+                if echo "$BODY" | grep -q '"success":true'; then
+                  echo "✅ $module_name initialization successful!"
+                  return 0
+                else
+                  echo "❌ $module_name initialization failed (success:false)"
+                fi
+              else
+                echo "❌ $module_name initialization failed (HTTP $HTTP_CODE)"
+              fi
+              
+              if [ $attempt -lt $max_attempts ]; then
+                echo "⏳ Waiting 30 seconds before retry..."
+                sleep 30
+              fi
+            done
+            
+            echo "💥 $module_name initialization failed after $max_attempts attempts"
+            return 1
+          }
           
-          # Initialize PBL
-          echo "Initializing PBL scenarios..."
-          curl -s -X POST "$SERVICE_URL/api/admin/init-pbl" \
-            -H "Content-Type: application/json" \
-            -H "X-Admin-Key: ${{ secrets.ADMIN_API_KEY }}" \
-            -d '{"force": true}'
+          # Initialize each module with retries
+          initialize_with_retry "Assessment" "/api/admin/init-assessment" || exit 1
+          initialize_with_retry "PBL" "/api/admin/init-pbl" || exit 1  
+          initialize_with_retry "Discovery" "/api/admin/init-discovery" || exit 1
           
-          # Initialize Discovery
-          echo "Initializing Discovery scenarios..."
-          curl -s -X POST "$SERVICE_URL/api/admin/init-discovery" \
-            -H "Content-Type: application/json" \
-            -H "X-Admin-Key: ${{ secrets.ADMIN_API_KEY }}" \
-            -d '{"force": true}'
+          echo "🎉 All scenario initializations completed successfully!"
       
       - name: Verify Initialization
         run: |
           SERVICE_URL="${{ steps.get_url.outputs.service_url }}"
           
-          echo "Verifying initialization..."
+          echo "🔍 Verifying complete initialization..."
           
-          # Check scenarios count
+          # Check admin stats
+          echo "📊 Checking admin stats..."
           SCENARIOS=$(curl -s "$SERVICE_URL/api/admin/stats" \
             -H "X-Admin-Key: ${{ secrets.ADMIN_API_KEY }}")
           
-          echo "Current stats: $SCENARIOS"
+          echo "Admin stats response: $SCENARIOS"
           
           # Extract counts using jq
           PBL_COUNT=$(echo "$SCENARIOS" | jq -r '.scenarios.pbl // 0')
@@ -341,12 +370,70 @@ jobs:
           DISCOVERY_COUNT=$(echo "$SCENARIOS" | jq -r '.scenarios.discovery // 0')
           USER_COUNT=$(echo "$SCENARIOS" | jq -r '.users.total // 0')
           
-          echo "Loaded: PBL($PBL_COUNT) Assessment($ASSESSMENT_COUNT) Discovery($DISCOVERY_COUNT) Users($USER_COUNT)"
+          echo "📈 Database counts:"
+          echo "  - PBL scenarios: $PBL_COUNT"
+          echo "  - Assessment scenarios: $ASSESSMENT_COUNT"  
+          echo "  - Discovery scenarios: $DISCOVERY_COUNT"
+          echo "  - Users: $USER_COUNT"
           
-          if [ "$PBL_COUNT" -eq 0 ] || [ "$USER_COUNT" -eq 0 ]; then
-            echo "Initialization incomplete!"
+          # Verify API endpoints return data
+          echo "🔌 Testing public API endpoints..."
+          
+          PBL_API_COUNT=$(curl -s "$SERVICE_URL/api/pbl/scenarios?lang=en" | jq -r '.data.scenarios | length // 0')
+          DISCOVERY_API_COUNT=$(curl -s "$SERVICE_URL/api/discovery/scenarios?lang=en" | jq -r '.data.scenarios | length // 0')
+          ASSESSMENT_API_COUNT=$(curl -s "$SERVICE_URL/api/assessment/scenarios?lang=en" | jq -r '.data.scenarios | length // 0')
+          
+          echo "🌐 API endpoint counts:"
+          echo "  - PBL API: $PBL_API_COUNT scenarios"
+          echo "  - Discovery API: $DISCOVERY_API_COUNT scenarios"  
+          echo "  - Assessment API: $ASSESSMENT_API_COUNT scenarios"
+          
+          # Validation rules
+          ERRORS=0
+          
+          if [ "$USER_COUNT" -eq 0 ]; then
+            echo "❌ ERROR: No users found!"
+            ERRORS=$((ERRORS + 1))
+          else
+            echo "✅ Users loaded successfully"
+          fi
+          
+          if [ "$PBL_COUNT" -eq 0 ]; then
+            echo "❌ ERROR: No PBL scenarios found!"
+            ERRORS=$((ERRORS + 1))
+          elif [ "$PBL_API_COUNT" -eq 0 ]; then
+            echo "❌ ERROR: PBL API returning no scenarios!"
+            ERRORS=$((ERRORS + 1))
+          else
+            echo "✅ PBL scenarios working"
+          fi
+          
+          if [ "$ASSESSMENT_COUNT" -eq 0 ]; then
+            echo "❌ ERROR: No Assessment scenarios found!"
+            ERRORS=$((ERRORS + 1))
+          elif [ "$ASSESSMENT_API_COUNT" -eq 0 ]; then
+            echo "❌ ERROR: Assessment API returning no scenarios!"
+            ERRORS=$((ERRORS + 1))
+          else
+            echo "✅ Assessment scenarios working"
+          fi
+          
+          if [ "$DISCOVERY_COUNT" -eq 0 ]; then
+            echo "❌ ERROR: No Discovery scenarios found!"
+            ERRORS=$((ERRORS + 1))
+          elif [ "$DISCOVERY_API_COUNT" -eq 0 ]; then
+            echo "❌ ERROR: Discovery API returning no scenarios!"
+            ERRORS=$((ERRORS + 1))
+          else
+            echo "✅ Discovery scenarios working"
+          fi
+          
+          if [ $ERRORS -gt 0 ]; then
+            echo "💥 Verification failed with $ERRORS errors!"
             exit 1
           fi
+          
+          echo "🎉 All verifications passed! Deployment successful!"
 
   run-e2e-tests:
     name: Run E2E Tests
