@@ -26,6 +26,7 @@ model User {
   
   // Account status
   emailVerified          Boolean   @default(false) @map("email_verified")
+  emailVerifiedAt        DateTime? @map("email_verified_at")
   emailVerificationToken String?   @map("email_verification_token")
   resetPasswordToken     String?   @map("reset_password_token")
   resetPasswordExpires   DateTime? @map("reset_password_expires")
