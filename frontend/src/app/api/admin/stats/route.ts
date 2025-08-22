@@ -5,7 +5,7 @@ import { Pool } from 'pg';
  * Get database statistics for deployment verification
  * This endpoint is called by GitHub Actions to verify initialization
  */
-export async function GET(request: NextRequest) {
+export async function GET() {
   let pool: Pool | null = null;
   
   try {

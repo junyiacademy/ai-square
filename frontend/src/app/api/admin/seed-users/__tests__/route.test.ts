@@ -22,7 +22,6 @@ describe('/api/admin/seed-users', () => {
     jest.clearAllMocks();
     process.env = {
       ...originalEnv,
-      ADMIN_API_KEY: 'test-admin-key',
       DB_NAME: 'test_db',
       DB_USER: 'test_user',
       DB_PASSWORD: 'test_pass',
@@ -46,7 +45,6 @@ describe('/api/admin/seed-users', () => {
       const request = new NextRequest('http://localhost/api/admin/seed-users', {
         method: 'POST',
         headers: {
-          'X-Admin-Key': 'test-admin-key',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
@@ -84,7 +82,6 @@ describe('/api/admin/seed-users', () => {
       const request = new NextRequest('http://localhost/api/admin/seed-users', {
         method: 'POST',
         headers: {
-          'X-Admin-Key': 'test-admin-key',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
@@ -110,7 +107,6 @@ describe('/api/admin/seed-users', () => {
       const request = new NextRequest('http://localhost/api/admin/seed-users', {
         method: 'POST',
         headers: {
-          'X-Admin-Key': 'test-admin-key',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
@@ -127,34 +123,7 @@ describe('/api/admin/seed-users', () => {
     });
   });
 
-  describe('Authorization', () => {
-    it('should reject request without admin key', async () => {
-      const request = new NextRequest('http://localhost/api/admin/seed-users', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ users: [] }),
-      });
-
-      const response = await POST(request);
-      expect(response.status).toBe(401);
-    });
-
-    it('should reject request with invalid admin key', async () => {
-      const request = new NextRequest('http://localhost/api/admin/seed-users', {
-        method: 'POST',
-        headers: {
-          'X-Admin-Key': 'wrong-key',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ users: [] }),
-      });
-
-      const response = await POST(request);
-      expect(response.status).toBe(401);
-    });
-  });
+  // Authorization tests removed - admin key no longer required
 
   describe('User Creation', () => {
     it('should update existing users', async () => {
@@ -169,7 +138,6 @@ describe('/api/admin/seed-users', () => {
       const request = new NextRequest('http://localhost/api/admin/seed-users', {
         method: 'POST',
         headers: {
-          'X-Admin-Key': 'test-admin-key',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
@@ -208,7 +176,6 @@ describe('/api/admin/seed-users', () => {
       const request = new NextRequest('http://localhost/api/admin/seed-users', {
         method: 'POST',
         headers: {
-          'X-Admin-Key': 'test-admin-key',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({

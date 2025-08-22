@@ -5,7 +5,7 @@ import { Pool } from 'pg';
  * Initialize database schema via API
  * This endpoint is called by GitHub Actions during deployment
  */
-export async function POST(request: NextRequest) {
+export async function POST() {
   let pool: Pool | null = null;
   
   try {
