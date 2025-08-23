@@ -4,6 +4,7 @@ import path from 'path';
 import yaml from 'js-yaml';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import type { IScenario, ITaskTemplate } from '@/types/unified-learning';
+import type { DifficultyLevel } from '@/types/database';
 
 interface PBLScenarioYAML {
   scenario_info?: {
@@ -156,27 +157,49 @@ export async function POST(request: NextRequest) {
           description.en = Object.values(description)[0];
         }
 
-        const scenarioData: Partial<IScenario> = {
+        const scenarioData: Omit<IScenario, 'id'> = {
           mode: 'pbl',
           status: 'active',
+          version: '1.0.0',
           sourceType: 'yaml',
           sourcePath: `pbl_data/scenarios/${scenarioDir}`,
           sourceId: scenarioId,
+          sourceMetadata: {
+            scenarioDir,
+            scenarioId,
+            languageFiles: Array.from(languageFiles.keys())
+          },
           title,
           description,
-          objectives: primaryData.scenario_info.learning_objectives || [],
+          objectives: Array.isArray(primaryData.scenario_info.learning_objectives) 
+            ? primaryData.scenario_info.learning_objectives 
+            : [],
+          difficulty: (primaryData.scenario_info.difficulty as DifficultyLevel) || 'beginner',
+          estimatedMinutes: primaryData.scenario_info.estimated_duration || 60,
           prerequisites: Array.isArray(primaryData.scenario_info.prerequisites) 
             ? primaryData.scenario_info.prerequisites 
             : [],
-          taskTemplates: (primaryData.tasks as ITaskTemplate[]) || [],
+          taskTemplates: Array.isArray(primaryData.tasks) 
+            ? (primaryData.tasks as ITaskTemplate[]) 
+            : [],
+          xpRewards: { completion: 100 },
+          unlockRequirements: {},
+          discoveryData: {},
+          assessmentData: {},
+          aiModules: {},
+          resources: [],
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
           pblData: {
             challengeStatement,
             realWorldContext,
-            difficulty: primaryData.scenario_info.difficulty,
-            estimatedDuration: primaryData.scenario_info.estimated_duration,
-            targetDomains: primaryData.scenario_info.target_domains || [],
+            targetDomains: Array.isArray(primaryData.scenario_info.target_domains) 
+              ? primaryData.scenario_info.target_domains 
+              : [],
             ksaMapping: primaryData.ksa_mapping || {},
-            aiModules: primaryData.ai_modules || []
+            aiModules: Array.isArray(primaryData.ai_modules) 
+              ? primaryData.ai_modules 
+              : []
           },
           metadata: {
             originalYamlId: scenarioId,
@@ -192,7 +215,7 @@ export async function POST(request: NextRequest) {
           results.updated++;
         } else {
           // Create new
-          await scenarioRepo.create(scenarioData as IScenario);
+          await scenarioRepo.create(scenarioData);
           results.created++;
         }
 

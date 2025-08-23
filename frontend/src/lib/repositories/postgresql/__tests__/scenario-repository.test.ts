@@ -52,7 +52,6 @@ describe('PostgreSQLScenarioRepository', () => {
         description: 'Chat with AI mentor'
       }
     ],
-    task_count: 3,
     xp_rewards: { completion: 100, bonus: 50 },
     unlock_requirements: {},
     pbl_data: {
@@ -97,7 +96,7 @@ describe('PostgreSQLScenarioRepository', () => {
         description: 'Chat with AI mentor' as unknown as Record<string, string>
       }
     ],
-    taskCount: 3,
+    taskCount: 1,
     xpRewards: { completion: 100, bonus: 50 },
     unlockRequirements: {},
     pblData: {
@@ -532,7 +531,7 @@ describe('PostgreSQLScenarioRepository', () => {
       const result = await repository.findByMode('pbl');
 
       expect(mockPool.query).toHaveBeenCalledWith(
-        expect.stringContaining("WHERE mode = $1 AND status = 'active'"),
+        expect.stringContaining("WHERE mode = $1"),
         ['pbl']
       );
       expect(result).toHaveLength(1);

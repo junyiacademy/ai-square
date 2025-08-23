@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 import { execSync } from 'child_process';
 import bcrypt from 'bcryptjs';
 
-export async function POST(request: NextRequest) {
+export async function POST() {
   console.log('🚀 Starting Prisma deployment...');
   
   try {

@@ -60,7 +60,7 @@ describe('get-pool', () => {
         port: 5433,
         database: 'ai_square_db',
         user: 'postgres',
-        password: 'postgres',
+        password: '',
         max: 20,
         idleTimeoutMillis: 30000,
         connectionTimeoutMillis: 5000,

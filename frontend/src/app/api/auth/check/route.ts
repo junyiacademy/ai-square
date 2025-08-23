@@ -1,62 +1,59 @@
-import { NextResponse } from 'next/server'
-import { cookies } from 'next/headers'
-import { verifyAccessToken, isTokenExpiringSoon } from '@/lib/auth/jwt'
+import { NextRequest, NextResponse } from 'next/server'
+import { AuthManager } from '@/lib/auth/auth-manager'
 
-export async function GET() {
-  const cookieStore = await cookies()
-  
-  // Development mode: Skip strict JWT verification
-  const isDevelopment = process.env.NODE_ENV === 'development'
-  
-  // Production mode: Use JWT access token first  
-  if (!isDevelopment) {
-    // Production mode: Use JWT access token
-    const accessToken = cookieStore.get('accessToken')
+export async function GET(request: NextRequest) {
+  try {
+    // Use centralized AuthManager to check authentication
+    const sessionToken = AuthManager.getSessionToken(request)
     
-    if (accessToken) {
-      const payload = await verifyAccessToken(accessToken.value)
-      
-      if (payload) {
-        const expiresIn = payload.exp ? payload.exp - Math.floor(Date.now() / 1000) : 0 // 秒數
-        return NextResponse.json({
-          authenticated: true,
-          user: {
-            id: payload.userId,
-            email: payload.email,
-            role: payload.role,
-            name: payload.name
-          },
-          tokenExpiringSoon: payload.exp ? isTokenExpiringSoon(payload.exp) : false,
-          expiresIn: expiresIn > 0 ? expiresIn : 0
-        })
-      }
+    if (!sessionToken) {
+      return NextResponse.json({
+        authenticated: false,
+        user: null
+      })
     }
-  }
-  
-  // Fallback to legacy cookie check (primary method in development)
-  const isLoggedIn = cookieStore.get('isLoggedIn')
-  const userRole = cookieStore.get('userRole')
-  const userCookie = cookieStore.get('user')
-  
-  if (isLoggedIn?.value === 'true' && userCookie?.value) {
+
+    // Decode session token to get user info
     try {
-      const user = JSON.parse(userCookie.value)
+      // Handle URL-encoded tokens (cookies are often URL-encoded)
+      const decodedToken = decodeURIComponent(sessionToken)
+      const decoded = JSON.parse(atob(decodedToken))
+      
+      // For demo accounts, we can infer the role from email
+      let role = 'user'
+      let name = 'User'
+      
+      if (decoded.email === 'student@example.com') {
+        role = 'student'
+        name = 'Demo Student'
+      } else if (decoded.email === 'teacher@example.com') {
+        role = 'teacher'  
+        name = 'Demo Teacher'
+      } else if (decoded.email === 'admin@example.com') {
+        role = 'admin'
+        name = 'Demo Admin'
+      }
+      
       return NextResponse.json({
         authenticated: true,
         user: {
-          ...user,
-          role: userRole?.value || user.role
-        },
-        tokenExpiringSoon: false // Legacy cookies don't expire soon
+          id: decoded.userId,
+          email: decoded.email,
+          role: role,
+          name: name
+        }
       })
-    } catch (error) {
-      console.error('Error parsing user cookie:', error)
+    } catch {
+      return NextResponse.json({
+        authenticated: false,
+        user: null
+      })
     }
+  } catch (error) {
+    console.error('Auth check error:', error)
+    return NextResponse.json({
+      authenticated: false,
+      user: null
+    })
   }
-  
-  return NextResponse.json({
-    authenticated: false,
-    user: null,
-    tokenExpiringSoon: false
-  })
 }

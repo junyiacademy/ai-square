@@ -2,6 +2,42 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## 🔧 Google Cloud 帳號配置 - AI Square 專案
+
+### 重要：使用正確的 Google Cloud 帳號
+AI Square 專案必須使用以下配置：
+- **Project ID**: `ai-square-463013`
+- **Account**: `youngtsai@junyiacademy.org`
+- **Region**: `asia-east1`
+
+### 設定 gcloud 配置
+```bash
+# 如果尚未建立 ai-square 配置
+gcloud config configurations create ai-square
+gcloud config set account youngtsai@junyiacademy.org
+gcloud config set project ai-square-463013
+
+# 每次開發前確認配置
+gcloud config configurations activate ai-square
+gcloud config list  # 應顯示 project = ai-square-463013
+```
+
+### 多專案開發提示
+如果同時開發其他專案（如 Duotopia），使用環境變數隔離：
+```bash
+# Terminal for AI Square
+export CLOUDSDK_ACTIVE_CONFIG_NAME=ai-square
+
+# Terminal for other projects
+export CLOUDSDK_ACTIVE_CONFIG_NAME=other-config
+```
+
+**部署前必須檢查**：`gcloud config get-value project` 應顯示 `ai-square-463013`
+
+詳細部署指南請參考：`frontend/docs/deployment/cicd-deployment-and-db-guide.md`
+
+---
+
 ## 🤖 Sub-Agent 使用規則 - 分析需求，選對工具
 
 ### 🎯 核心原則：先分析需求，再選擇正確的 Sub-Agent
@@ -149,6 +185,61 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ❌ 創建「臨時」的自動化腳本
 ❌ 重複造輪子
 ```
+
+### 🛠️ Terraform vs GitHub Actions 責任分工（2025/01 重要更新）
+
+**🧩 核心原則：把對的工具用在對的地方**
+
+#### Terraform 只管基礎設施（Infrastructure Only）
+```yaml
+✅ Terraform 該管的：
+- Cloud SQL 實例、資料庫、使用者
+- Cloud Run 服務
+- Service Account、IAM 權限
+- Secret Manager
+- 網路設定（VPC、Domain Mapping）
+
+❌ Terraform 不該管的：
+- 資料庫 Schema 初始化
+- 建立 Demo 帳號
+- 載入初始資料
+- 執行測試
+- 任何應用程式邏輯
+```
+
+#### GitHub Actions 管應用程式部署（Application Deployment）
+```yaml
+✅ GitHub Actions 負責：
+- 建構 Docker image
+- 推送到 Container Registry
+- 執行資料庫遷移（Prisma migrate）
+- 初始化場景資料（/api/admin/init）
+- 執行 E2E 測試
+- 健康檢查驗證
+
+工作流程：
+1. Push to branch → 觸發 GitHub Actions
+2. Build & Push Docker image
+3. Deploy to Cloud Run
+4. Run database migrations
+5. Initialize application data
+6. Run E2E tests
+```
+
+#### 正確的部署流程
+```bash
+# Step 1: 基礎設施（只需執行一次）
+cd terraform
+export TF_VAR_db_password="YOUR_SECURE_PASSWORD"
+terraform apply -var-file="environments/staging.tfvars"
+
+# Step 2: 應用程式部署（每次更新都要）
+git add -A
+git commit -m "feat: new feature"
+git push origin staging  # 這會觸發 GitHub Actions
+```
+
+**記住：Terraform 建房子，GitHub Actions 搬家具！**
 
 #### 實際案例：Prisma 整合
 ```yaml

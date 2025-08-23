@@ -8,10 +8,10 @@ export function getPool(): Pool {
     const isCloudSQL = dbHost.startsWith('/cloudsql/');
     
     // Build config based on connection type
-    const config: any = {
+    const config: Record<string, unknown> = {
       database: process.env.DB_NAME || 'ai_square_db',
       user: process.env.DB_USER || 'postgres',
-      password: process.env.DB_PASSWORD || 'postgres',
+      password: process.env.DB_PASSWORD || '',
       max: 20,
       idleTimeoutMillis: 30000,
       connectionTimeoutMillis: isCloudSQL ? 10000 : 5000,

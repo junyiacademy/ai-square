@@ -1,328 +1,185 @@
 import { GET } from '../route';
-import { cookies } from 'next/headers';
-import { verifyAccessToken, isTokenExpiringSoon, type TokenPayload } from '@/lib/auth/jwt';
+import { NextRequest } from 'next/server';
 
-// Mock dependencies
-jest.mock('next/headers');
-jest.mock('@/lib/auth/jwt');
-
-const mockCookies = cookies as jest.MockedFunction<typeof cookies>;
-const mockVerifyAccessToken = verifyAccessToken as jest.MockedFunction<typeof verifyAccessToken>;
-const mockIsTokenExpiringSoon = isTokenExpiringSoon as jest.MockedFunction<typeof isTokenExpiringSoon>;
-
-// Helper function to create mock cookie store
-const createMockCookieStore = (cookies: Record<string, string> = {}) => ({
-  get: jest.fn((name: string) => {
-    return cookies[name] ? { value: cookies[name] } : undefined;
-  }),
-  set: jest.fn(),
-  delete: jest.fn(),
-  has: jest.fn((name: string) => Boolean(cookies[name])),
-  getAll: jest.fn(() => Object.entries(cookies).map(([name, value]) => ({ name, value }))),
-});
+// Mock AuthManager
+jest.mock('@/lib/auth/auth-manager', () => ({
+  AuthManager: {
+    getSessionToken: jest.fn()
+  }
+}));
 
 describe('/api/auth/check', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  describe('JWT access token authentication', () => {
-    it('returns authenticated user when valid access token exists', async () => {
-      const mockPayload: TokenPayload = {
-        userId: 123,
-        email: 'test@example.com',
-        role: 'user',
-        name: 'Test User',
-        exp: Math.floor(Date.now() / 1000) + 3600 // 1 hour from now
-      };
-
-      const cookieStore = createMockCookieStore({
-        accessToken: 'valid.jwt.token'
-      });
+  describe('Session token authentication', () => {
+    it('returns authenticated user when valid session token exists', async () => {
+      const { AuthManager } = require('@/lib/auth/auth-manager');
       
-      mockCookies.mockResolvedValue(cookieStore as unknown as ReturnType<typeof mockCookies>);
-      mockVerifyAccessToken.mockResolvedValue(mockPayload);
-      mockIsTokenExpiringSoon.mockReturnValue(false);
+      const sessionTokenData = {
+        userId: '123',  
+        email: 'test@example.com',
+        timestamp: Date.now(),
+        rememberMe: false
+      };
+      const sessionToken = Buffer.from(JSON.stringify(sessionTokenData)).toString('base64');
 
-      const response = await GET();
+      AuthManager.getSessionToken.mockReturnValue(sessionToken);
+
+      const mockRequest = new NextRequest('http://localhost:3000/api/auth/check');
+      const response = await GET(mockRequest);
       const data = await response.json();
 
       expect(response.status).toBe(200);
       expect(data).toEqual({
         authenticated: true,
         user: {
-          id: 123,
+          id: '123',
           email: 'test@example.com',
           role: 'user',
-          name: 'Test User'
-        },
-        tokenExpiringSoon: false,
-        expiresIn: expect.any(Number)
+          name: 'User'
+        }
       });
-      expect(data.expiresIn).toBeGreaterThan(3500); // Should be close to 3600
     });
 
-    it('returns token expiring soon when token is close to expiry', async () => {
-      const mockPayload = {
-        userId: 123,
+    it('returns unauthenticated when no session token exists', async () => {
+      const { AuthManager } = require('@/lib/auth/auth-manager');
+      
+      AuthManager.getSessionToken.mockReturnValue(undefined);
+
+      const mockRequest = new NextRequest('http://localhost:3000/api/auth/check');
+      const response = await GET(mockRequest);
+      const data = await response.json();
+
+      expect(response.status).toBe(200);
+      expect(data).toEqual({
+        authenticated: false,
+        user: null
+      });
+    });
+
+    it('returns unauthenticated when session token is invalid', async () => {
+      const { AuthManager } = require('@/lib/auth/auth-manager');
+      
+      AuthManager.getSessionToken.mockReturnValue('invalid-token');
+
+      const mockRequest = new NextRequest('http://localhost:3000/api/auth/check');
+      const response = await GET(mockRequest);
+      const data = await response.json();
+
+      expect(response.status).toBe(200);
+      expect(data).toEqual({
+        authenticated: false,
+        user: null
+      });
+    });
+
+    it('handles malformed session token gracefully', async () => {
+      const { AuthManager } = require('@/lib/auth/auth-manager');
+      
+      AuthManager.getSessionToken.mockReturnValue('not-base64-encoded');
+
+      const mockRequest = new NextRequest('http://localhost:3000/api/auth/check');
+      const response = await GET(mockRequest);
+      const data = await response.json();
+
+      expect(response.status).toBe(200);
+      expect(data).toEqual({
+        authenticated: false,
+        user: null
+      });
+    });
+
+    it('handles URL-encoded session token from cookies', async () => {
+      const { AuthManager } = require('@/lib/auth/auth-manager');
+      
+      const sessionTokenData = {
+        userId: '123',  
         email: 'test@example.com',
-        role: 'user',
-        name: 'Test User',
-        exp: Math.floor(Date.now() / 1000) + 300 // 5 minutes from now
+        timestamp: Date.now(),
+        rememberMe: false
       };
+      const sessionToken = Buffer.from(JSON.stringify(sessionTokenData)).toString('base64');
+      // Simulate browser URL encoding (e.g., = becomes %3D)
+      const urlEncodedToken = encodeURIComponent(sessionToken);
 
-      const cookieStore = createMockCookieStore({
-        accessToken: 'expiring.jwt.token'
-      });
-      
-      mockCookies.mockResolvedValue(cookieStore as unknown as ReturnType<typeof mockCookies>);
-      mockVerifyAccessToken.mockResolvedValue(mockPayload);
-      mockIsTokenExpiringSoon.mockReturnValue(true);
+      AuthManager.getSessionToken.mockReturnValue(urlEncodedToken);
 
-      const response = await GET();
+      const mockRequest = new NextRequest('http://localhost:3000/api/auth/check');
+      const response = await GET(mockRequest);
       const data = await response.json();
 
-      expect(data.tokenExpiringSoon).toBe(true);
-      expect(data.expiresIn).toBeLessThan(400);
-    });
-
-    it('handles expired token gracefully', async () => {
-      const mockPayload = {
-        userId: 123,
-        email: 'test@example.com',
-        role: 'user',
-        name: 'Test User',
-        exp: Math.floor(Date.now() / 1000) - 3600 // 1 hour ago (expired)
-      };
-
-      const cookieStore = createMockCookieStore({
-        accessToken: 'expired.jwt.token'
-      });
-      
-      mockCookies.mockResolvedValue(cookieStore as unknown as ReturnType<typeof mockCookies>);
-      mockVerifyAccessToken.mockResolvedValue(mockPayload);
-      mockIsTokenExpiringSoon.mockReturnValue(false);
-
-      const response = await GET();
-      const data = await response.json();
-
-      expect(data.expiresIn).toBe(0); // Should be 0 for expired tokens
-    });
-
-    it('falls back to legacy authentication when JWT verification fails', async () => {
-      const cookieStore = createMockCookieStore({
-        accessToken: 'invalid.jwt.token',
-        isLoggedIn: 'true',
-        userRole: 'admin',
-        user: JSON.stringify({
-          id: 'legacy123',
-          email: 'legacy@example.com',
-          name: 'Legacy User'
-        })
-      });
-      
-      mockCookies.mockResolvedValue(cookieStore as unknown as ReturnType<typeof mockCookies>);
-      mockVerifyAccessToken.mockResolvedValue(null); // JWT verification fails
-
-      const response = await GET();
-      const data = await response.json();
-
+      expect(response.status).toBe(200);
       expect(data).toEqual({
         authenticated: true,
         user: {
-          id: 'legacy123',
-          email: 'legacy@example.com',
-          name: 'Legacy User',
-          role: 'admin'
-        },
-        tokenExpiringSoon: false
+          id: '123',
+          email: 'test@example.com',
+          role: 'user',
+          name: 'User'
+        }
       });
-    });
-  });
-
-  describe('legacy cookie authentication', () => {
-    it('returns authenticated user from legacy cookies when no access token', async () => {
-      const cookieStore = createMockCookieStore({
-        isLoggedIn: 'true',
-        userRole: 'teacher',
-        user: JSON.stringify({
-          id: 'legacy456',
-          email: 'teacher@example.com',
-          name: 'Teacher User',
-          role: 'student' // Should be overridden by userRole cookie
-        })
-      });
-      
-      mockCookies.mockResolvedValue(cookieStore as unknown as ReturnType<typeof mockCookies>);
-
-      const response = await GET();
-      const data = await response.json();
-
-      expect(data).toEqual({
-        authenticated: true,
-        user: {
-          id: 'legacy456',
-          email: 'teacher@example.com',
-          name: 'Teacher User',
-          role: 'teacher' // Should use role from userRole cookie
-        },
-        tokenExpiringSoon: false
-      });
-    });
-
-    it('uses user role from user object when userRole cookie is missing', async () => {
-      const cookieStore = createMockCookieStore({
-        isLoggedIn: 'true',
-        user: JSON.stringify({
-          id: 'legacy789',
-          email: 'user@example.com',
-          name: 'User',
-          role: 'student'
-        })
-      });
-      
-      mockCookies.mockResolvedValue(cookieStore as unknown as ReturnType<typeof mockCookies>);
-
-      const response = await GET();
-      const data = await response.json();
-
-      expect(data.user.role).toBe('student');
-    });
-
-    it('handles malformed user cookie gracefully', async () => {
-      const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
-      
-      const cookieStore = createMockCookieStore({
-        isLoggedIn: 'true',
-        user: 'invalid-json'
-      });
-      
-      mockCookies.mockResolvedValue(cookieStore as unknown as ReturnType<typeof mockCookies>);
-
-      const response = await GET();
-      const data = await response.json();
-
-      expect(data).toEqual({
-        authenticated: false,
-        user: null,
-        tokenExpiringSoon: false
-      });
-      
-      expect(consoleErrorSpy).toHaveBeenCalledWith('Error parsing user cookie:', expect.any(Error));
-      consoleErrorSpy.mockRestore();
-    });
-  });
-
-  describe('unauthenticated states', () => {
-    it('returns unauthenticated when no tokens or cookies exist', async () => {
-      const cookieStore = createMockCookieStore({});
-      
-      mockCookies.mockResolvedValue(cookieStore as unknown as ReturnType<typeof mockCookies>);
-
-      const response = await GET();
-      const data = await response.json();
-
-      expect(data).toEqual({
-        authenticated: false,
-        user: null,
-        tokenExpiringSoon: false
-      });
-    });
-
-    it('returns unauthenticated when isLoggedIn is false', async () => {
-      const cookieStore = createMockCookieStore({
-        isLoggedIn: 'false',
-        user: JSON.stringify({ id: '123', email: 'test@example.com' })
-      });
-      
-      mockCookies.mockResolvedValue(cookieStore as unknown as ReturnType<typeof mockCookies>);
-
-      const response = await GET();
-      const data = await response.json();
-
-      expect(data.authenticated).toBe(false);
-    });
-
-    it('returns unauthenticated when user cookie is missing but isLoggedIn is true', async () => {
-      const cookieStore = createMockCookieStore({
-        isLoggedIn: 'true'
-      });
-      
-      mockCookies.mockResolvedValue(cookieStore as unknown as ReturnType<typeof mockCookies>);
-
-      const response = await GET();
-      const data = await response.json();
-
-      expect(data.authenticated).toBe(false);
-    });
-
-    it('returns unauthenticated when access token exists but verification fails and no legacy cookies', async () => {
-      const cookieStore = createMockCookieStore({
-        accessToken: 'invalid.jwt.token'
-      });
-      
-      mockCookies.mockResolvedValue(cookieStore as unknown as ReturnType<typeof mockCookies>);
-      mockVerifyAccessToken.mockResolvedValue(null);
-
-      const response = await GET();
-      const data = await response.json();
-
-      expect(data.authenticated).toBe(false);
     });
   });
 
   describe('response format validation', () => {
     it('always includes required fields in response', async () => {
-      const cookieStore = createMockCookieStore({});
+      const { AuthManager } = require('@/lib/auth/auth-manager');
       
-      mockCookies.mockResolvedValue(cookieStore as unknown as ReturnType<typeof mockCookies>);
+      AuthManager.getSessionToken.mockReturnValue(undefined);
 
-      const response = await GET();
+      const mockRequest = new NextRequest('http://localhost:3000/api/auth/check');
+      const response = await GET(mockRequest);
       const data = await response.json();
 
       expect(data).toHaveProperty('authenticated');
       expect(data).toHaveProperty('user');
-      expect(data).toHaveProperty('tokenExpiringSoon');
       expect(typeof data.authenticated).toBe('boolean');
-      expect(typeof data.tokenExpiringSoon).toBe('boolean');
     });
+  });
 
-    it('includes expiresIn field only for JWT authentication', async () => {
-      const mockPayload = {
-        userId: 123,
-        email: 'test@example.com',
-        role: 'user',
-        name: 'Test User',
-        exp: Math.floor(Date.now() / 1000) + 3600
+  describe('demo account roles', () => {
+    it('returns student role for student@example.com', async () => {
+      const { AuthManager } = require('@/lib/auth/auth-manager');
+      
+      const sessionTokenData = {
+        userId: '123',
+        email: 'student@example.com',
+        timestamp: Date.now(),
+        rememberMe: false
       };
+      const sessionToken = Buffer.from(JSON.stringify(sessionTokenData)).toString('base64');
 
-      const cookieStore = createMockCookieStore({
-        accessToken: 'valid.jwt.token'
-      });
-      
-      mockCookies.mockResolvedValue(cookieStore as unknown as ReturnType<typeof mockCookies>);
-      mockVerifyAccessToken.mockResolvedValue(mockPayload);
-      mockIsTokenExpiringSoon.mockReturnValue(false);
+      AuthManager.getSessionToken.mockReturnValue(sessionToken);
 
-      const response = await GET();
+      const mockRequest = new NextRequest('http://localhost:3000/api/auth/check');
+      const response = await GET(mockRequest);
       const data = await response.json();
 
-      expect(data).toHaveProperty('expiresIn');
-      expect(typeof data.expiresIn).toBe('number');
+      expect(data.user.role).toBe('student');
+      expect(data.user.name).toBe('Demo Student');
     });
 
-    it('does not include expiresIn field for legacy authentication', async () => {
-      const cookieStore = createMockCookieStore({
-        isLoggedIn: 'true',
-        user: JSON.stringify({ id: '123', email: 'test@example.com', name: 'Test' })
-      });
+    it('returns teacher role for teacher@example.com', async () => {
+      const { AuthManager } = require('@/lib/auth/auth-manager');
       
-      mockCookies.mockResolvedValue(cookieStore as unknown as ReturnType<typeof mockCookies>);
+      const sessionTokenData = {
+        userId: '456',
+        email: 'teacher@example.com',
+        timestamp: Date.now(),
+        rememberMe: false
+      };
+      const sessionToken = Buffer.from(JSON.stringify(sessionTokenData)).toString('base64');
 
-      const response = await GET();
+      AuthManager.getSessionToken.mockReturnValue(sessionToken);
+
+      const mockRequest = new NextRequest('http://localhost:3000/api/auth/check');
+      const response = await GET(mockRequest);
       const data = await response.json();
 
-      expect(data).not.toHaveProperty('expiresIn');
+      expect(data.user.role).toBe('teacher');
+      expect(data.user.name).toBe('Demo Teacher');
     });
   });
 });

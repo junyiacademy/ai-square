@@ -168,13 +168,15 @@ help:
 	@echo "  $(GREEN)make setup-service-accounts$(NC)                    - 創建 Service Accounts"
 	@echo "  $(GREEN)make check-deploy-size$(NC)                         - 檢查部署大小"
 	@echo ""
-	@echo "$(CYAN)Terraform 部署 (推薦):$(NC)"
+	@echo "$(CYAN)Terraform 基礎設施管理 (推薦):$(NC)"
 	@echo "  $(GREEN)make terraform-init$(NC)                            - 初始化 Terraform"
 	@echo "  $(GREEN)make terraform-plan-staging$(NC)                    - 預覽 Staging 變更"
 	@echo "  $(GREEN)make terraform-plan-production$(NC)                 - 預覽 Production 變更"
-	@echo "  $(GREEN)make deploy-staging$(NC)                            - 🚀 部署到 Staging (Terraform)"
-	@echo "  $(GREEN)make deploy-production$(NC)                         - 🚀 部署到 Production (Terraform)"
+	@echo "  $(GREEN)make terraform-deploy-staging$(NC)                  - 🚀 部署基礎設施到 Staging"
+	@echo "  $(GREEN)make terraform-deploy-production$(NC)               - 🚀 部署基礎設施到 Production"
 	@echo "  $(GREEN)make terraform-status$(NC)                          - 檢查 Terraform 狀態"
+	@echo ""
+	@echo "  $(YELLOW)注意: 基礎設施部署後，應用程式會透過 GitHub Actions 自動部署$(NC)"
 	@echo ""
 	@echo "$(CYAN)舊版部署 (已棄用):$(NC)"
 	@echo "  $(GREEN)make gcp-build-and-push$(NC)                        - Cloud Build 並推送"
@@ -544,11 +546,10 @@ terraform-import-production:
 	@cd terraform && bash import-production.sh
 	@echo "$(GREEN)✅ Production 資源導入完成$(NC)"
 
-## Terraform 部署 - Staging
-deploy-staging:
-	@echo "$(GREEN)🚀 使用 Terraform 部署到 Staging 環境...$(NC)"
-	@cd terraform && terraform apply -var-file="environments/staging.tfvars" -auto-approve
-	@echo "$(GREEN)✅ Staging 部署完成！$(NC)"
+## Terraform 部署基礎設施 - Staging
+terraform-deploy-staging:
+	@echo "$(GREEN)🚀 使用 Terraform 部署基礎設施到 Staging...$(NC)"
+	@cd terraform && make deploy-staging
 
 ## Terraform 銷毀資源（危險！）
 terraform-destroy-staging:
@@ -597,14 +598,10 @@ production-secrets:
 	@echo "$(BLUE)🔐 設定 Production Secrets...$(NC)"
 	@echo "$(YELLOW)📝 請手動設定 Production secrets（如果需要）$(NC)"
 
-## Terraform 部署 - Production
-deploy-production:
-	@echo "$(GREEN)🚀 使用 Terraform 部署到 Production 環境...$(NC)"
-	@echo "$(YELLOW)⚠️  警告: 這將部署到 PRODUCTION 環境！$(NC)"
-	@echo "按 Ctrl+C 取消，或等待 5 秒繼續..."
-	@sleep 5
-	@cd terraform && terraform apply -var-file="environments/production.tfvars" -auto-approve
-	@echo "$(GREEN)✅ Production 部署完成！$(NC)"
+## Terraform 部署基礎設施 - Production
+terraform-deploy-production:
+	@echo "$(GREEN)🚀 使用 Terraform 部署基礎設施到 Production...$(NC)"
+	@cd terraform && make deploy-production
 
 ## Terraform 初始化
 terraform-init:

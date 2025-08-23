@@ -19,10 +19,10 @@ describe('session', () => {
   });
 
   describe('getServerSession', () => {
-    it('returns session from session_token cookie', async () => {
+    it('returns session from sessionToken cookie', async () => {
       const mockCookieStore = {
         get: jest.fn((name: string) => {
-          if (name === 'session_token') {
+          if (name === 'sessionToken') {
             return { value: 'valid-session-token' };
           }
           return undefined;
@@ -86,7 +86,7 @@ describe('session', () => {
     it('returns null when session token is invalid', async () => {
       const mockCookieStore = {
         get: jest.fn((name: string) => {
-          if (name === 'session_token') {
+          if (name === 'sessionToken') {
             return { value: 'invalid-token' };
           }
           return undefined;

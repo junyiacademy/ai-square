@@ -23,6 +23,40 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
   }
 
   /**
+   * Ensure value is a proper PostgreSQL-compatible array
+   */
+  private ensureArray(value: unknown): string[] {
+    // console.log('ensureArray input:', { value, type: typeof value, isArray: Array.isArray(value) });
+    
+    if (Array.isArray(value)) {
+      return value.map(item => String(item));
+    }
+    
+    if (typeof value === 'string') {
+      // Check if it's a JSON string array
+      if (value.startsWith('[') && value.endsWith(']')) {
+        try {
+          const parsed = JSON.parse(value);
+          if (Array.isArray(parsed)) {
+            return parsed.map(item => String(item));
+          }
+        } catch (error) {
+          console.error('Failed to parse JSON array:', value, error);
+        }
+      }
+      // Single string value
+      return value.length > 0 ? [value] : [];
+    }
+    
+    if (value === null || value === undefined) {
+      return [];
+    }
+    
+    // Fallback: try to convert to string
+    return [String(value)];
+  }
+
+  /**
    * Convert database row to IScenario interface
    */
   private toScenario(row: DBScenario): IScenario {
@@ -56,7 +90,7 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
         description: t.description as Record<string, string> | undefined,
         ...t
       })),
-      taskCount: row.task_count,
+      taskCount: (row.task_templates as Array<Record<string, unknown>> || []).length,
       
       // Rewards and progression
       xpRewards: row.xp_rewards,
@@ -133,44 +167,41 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
   async create(scenario: Omit<IScenario, 'id'>): Promise<IScenario> {
     const query = `
       INSERT INTO scenarios (
-        id, mode, status, version,
-        source_type, source_path, source_id, source_metadata,
-        title, description, objectives,
-        difficulty, estimated_minutes, prerequisites,
-        task_templates, xp_rewards, unlock_requirements,
-        pbl_data, discovery_data, assessment_data,
-        ai_modules, resources, metadata
+        id, mode, status, source_type, source_path, source_id, source_metadata,
+        title, description, objectives, prerequisites, task_templates,
+        pbl_data, discovery_data, assessment_data, ai_modules, resources,
+        version, difficulty, estimated_minutes, xp_rewards, unlock_requirements, metadata,
+        created_at, updated_at
       ) VALUES (
-        gen_random_uuid(), $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
-        $11, $12, $13, $14, $15, $16, $17, $18, $19,
-        $20, $21, $22
+        gen_random_uuid(), $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22,
+        CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
       )
       RETURNING *
     `;
 
     const { rows } = await this.pool.query<DBScenario>(query, [
-      scenario.mode,
-      scenario.status || 'draft',
-      scenario.version || '1.0.0',
-      scenario.sourceType,
-      scenario.sourcePath || null,
-      scenario.sourceId || null,
-      JSON.stringify(scenario.sourceMetadata || {}),
-      JSON.stringify(scenario.title || {}),
-      JSON.stringify(scenario.description || {}),
-      JSON.stringify(scenario.objectives || []),
-      scenario.difficulty,
-      scenario.estimatedMinutes,
-      scenario.prerequisites || [],
-      JSON.stringify(scenario.taskTemplates || []),
-      JSON.stringify(scenario.xpRewards || {}),
-      JSON.stringify(scenario.unlockRequirements || {}),
-      JSON.stringify(scenario.pblData || {}),
-      JSON.stringify(scenario.discoveryData || {}),
-      JSON.stringify(scenario.assessmentData || {}),
-      JSON.stringify(scenario.aiModules || {}),
-      JSON.stringify(scenario.resources || []),
-      JSON.stringify(scenario.metadata || {})
+      scenario.mode,                                                          // $1 - mode
+      scenario.status || 'draft',                                            // $2 - status
+      scenario.sourceType,                                                   // $3 - source_type
+      scenario.sourcePath || null,                                          // $4 - source_path
+      scenario.sourceId || null,                                            // $5 - source_id
+      JSON.stringify(scenario.sourceMetadata || {}),                        // $6 - source_metadata
+      JSON.stringify(scenario.title || {}),                                 // $7 - title
+      JSON.stringify(scenario.description || {}),                           // $8 - description
+      JSON.stringify(scenario.objectives || []),                           // $9 - objectives
+      this.ensureArray(scenario.prerequisites),  // $10 - prerequisites
+      JSON.stringify(scenario.taskTemplates || []),                        // $11 - task_templates
+      JSON.stringify(scenario.pblData || {}),                              // $12 - pbl_data
+      JSON.stringify(scenario.discoveryData || {}),                        // $13 - discovery_data
+      JSON.stringify(scenario.assessmentData || {}),                       // $14 - assessment_data
+      JSON.stringify(scenario.aiModules || {}),                            // $15 - ai_modules
+      JSON.stringify(scenario.resources || []),                            // $16 - resources
+      scenario.version || '1.0.0',                                         // $17 - version
+      scenario.difficulty,                                                  // $18 - difficulty
+      scenario.estimatedMinutes,                                           // $19 - estimated_minutes
+      JSON.stringify(scenario.xpRewards || {}),                           // $20 - xp_rewards
+      JSON.stringify(scenario.unlockRequirements || {}),                  // $21 - unlock_requirements
+      JSON.stringify(scenario.metadata || {})                             // $22 - metadata
     ]);
 
     const created = this.toScenario(rows[0]);
@@ -238,7 +269,7 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
     }
     if (updates.prerequisites !== undefined) {
       updateFields.push(`prerequisites = $${paramCount++}`);
-      values.push(updates.prerequisites || []);
+      values.push(this.ensureArray(updates.prerequisites));
     }
 
     // Task templates
@@ -317,11 +348,19 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
   // Additional methods specific to PostgreSQL implementation
 
   async findByMode(mode: LearningMode, includeArchived = false): Promise<IScenario[]> {
-    const query = includeArchived 
-      ? `SELECT * FROM scenarios WHERE mode = $1 ORDER BY created_at DESC`
-      : `SELECT * FROM scenarios WHERE mode = $1 AND status = 'active' ORDER BY created_at DESC`;
+    let query = `
+      SELECT * FROM scenarios 
+      WHERE mode = $1
+    `;
+    const params: unknown[] = [mode];
 
-    const { rows } = await this.pool.query<DBScenario>(query, [mode]);
+    if (!includeArchived) {
+      query += ` AND status = 'active'`;
+    }
+
+    query += ` ORDER BY created_at DESC`;
+
+    const { rows } = await this.pool.query<DBScenario>(query, params);
     return rows.map(row => this.toScenario(row));
   }
 

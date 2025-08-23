@@ -10,19 +10,63 @@
 
 
 ### 目錄
-- 一、Terraform 基礎設施管理
-- 二、環境分層與配置
-- 三、必要憑證與 Secret Manager
-- 四、資料庫（Cloud SQL）管理
-- 五、CI/CD 流程（使用 Terraform）
-- 六、部署步驟（Staging & Production）
-- 七、監控與健康檢查
-- 八、常見問題（Troubleshooting）
+- 一、Google Cloud Account 配置
+- 二、Terraform 基礎設施管理
+- 三、環境分層與配置
+- 四、必要憑證與 Secret Manager
+- 五、資料庫（Cloud SQL）管理
+- 六、CI/CD 流程（使用 Terraform）
+- 七、部署步驟（Staging & Production）
+- 八、監控與健康檢查
+- 九、常見問題（Troubleshooting）
 
 
 ---
 
-### 一、Terraform 基礎設施管理
+### 一、Google Cloud Account 配置
+
+#### 🔧 重要：使用正確的 Google Cloud 帳號
+
+AI Square 專案必須使用以下配置：
+- **Project ID**: `ai-square-463013`
+- **Account**: `youngtsai@junyiacademy.org`
+- **Region**: `asia-east1`
+
+#### 設定 gcloud 配置
+
+```bash
+# 如果尚未建立 ai-square 配置
+gcloud config configurations create ai-square
+gcloud config set account youngtsai@junyiacademy.org
+gcloud config set project ai-square-463013
+gcloud config set compute/region asia-east1
+
+# 每次開發前確認配置
+gcloud config configurations activate ai-square
+gcloud config list  # 應顯示 project = ai-square-463013
+```
+
+#### 多專案開發提示
+
+如果同時開發其他專案（如 Duotopia），使用環境變數隔離：
+
+```bash
+# Terminal for AI Square
+export CLOUDSDK_ACTIVE_CONFIG_NAME=ai-square
+
+# Terminal for other projects  
+export CLOUDSDK_ACTIVE_CONFIG_NAME=other-config
+```
+
+**部署前必須檢查**：
+```bash
+gcloud config get-value project  # 應顯示 ai-square-463013
+gcloud auth list  # 確認 youngtsai@junyiacademy.org 為 ACTIVE
+```
+
+---
+
+### 二、Terraform 基礎設施管理
 
 #### 🎯 核心原則：Infrastructure as Code + 使用既有自動化方案
 
@@ -45,6 +89,25 @@
 - 使用 Terraform 管理基礎設施
 - 使用 Makefile 標準化命令
 - 使用 GitHub Actions CI/CD
+
+#### 🛠️ Terraform vs GitHub Actions 責任分工
+
+**🧩 核心原則：把對的工具用在對的地方 - Terraform 建房子，GitHub Actions 搬家具！**
+
+| 工具 | 職責 | 不該做的事 |
+|------|------|------------|
+| **Terraform** | • Cloud SQL 實例<br>• Cloud Run 服務<br>• Service Account<br>• IAM 權限<br>• Secret Manager<br>• 網路設定 | • 資料庫 Schema<br>• Demo 帳號建立<br>• 初始資料載入<br>• 執行測試<br>• 應用程式邏輯 |
+| **GitHub Actions** | • Docker image 建構<br>• Container Registry 推送<br>• 資料庫遷移（Prisma）<br>• 場景資料初始化<br>• E2E 測試執行<br>• 健康檢查驗證 | • 基礎設施建立<br>• Cloud 資源管理<br>• IAM 權限設定 |
+
+**正確的協作流程：**
+```mermaid
+graph LR
+    A[Terraform] -->|建立基礎設施| B[Cloud SQL + Cloud Run]
+    C[Git Push] -->|觸發| D[GitHub Actions]
+    D -->|部署應用| B
+    D -->|執行遷移| E[Database Schema]
+    D -->|初始化| F[Application Data]
+```
 
 ##### Terraform 管理架構
 
@@ -77,7 +140,7 @@ terraform/
 
 ---
 
-### 二、環境分層與配置
+### 三、環境分層與配置
 
 #### 環境分層
 
@@ -90,6 +153,9 @@ terraform/
 #### Terraform 初始化
 
 ```bash
+# ⚠️ 重要：執行前必須設定 DB_PASSWORD！
+export TF_VAR_db_password="YOUR_SECURE_PASSWORD"  # 符合密碼要求：12字符+大小寫+數字
+
 # 1. 初始化 Terraform
 cd terraform
 terraform init
@@ -97,14 +163,31 @@ terraform init
 # 2. 切換到正確的 workspace
 terraform workspace select staging  # 或 production
 
-# 3. 預覽變更
+# 3. 預覽變更（會提示輸入 db_password 如果沒設定）
 terraform plan -var-file="environments/staging.tfvars"
 
 # 4. 套用變更
 terraform apply -var-file="environments/staging.tfvars"
 ```
 
-### 三、必要憑證與 Secret Manager
+**⚠️ 血淚教訓：如果忘記設定 DB_PASSWORD**
+- Terraform 會創建資源但 Cloud Run 無法連接資料庫
+- 需要手動修復：`gcloud run services update ai-square-staging --update-env-vars DB_PASSWORD=xxx`
+
+### 四、必要憑證與 Secret Manager
+
+#### ⚠️ Terraform 密碼要求
+Terraform 配置中對資料庫密碼有以下驗證規則（`main.tf` 第 61-64 行）：
+- **最少 12 個字符**
+- **必須包含大寫字母**
+- **必須包含小寫字母**
+- **必須包含數字**
+- **建議不要使用特殊符號**（避免 URL 編碼問題）
+
+**密碼設定方式**：
+1. 在 `.env.local` 中設定（不要提交到 Git）
+2. 使用環境變數 `export TF_VAR_db_password="你的密碼"`
+3. Production 環境使用 Secret Manager
 
 #### 使用 Secret Manager 管理密碼
 
@@ -153,7 +236,7 @@ Terraform 會自動設定以下環境變數：
 
 ---
 
-### 四、資料庫（Cloud SQL）管理
+### 五、資料庫（Cloud SQL）管理
 
 #### 🎯 資料庫管理策略更新（2025/08 - Prisma Integration）
 
@@ -200,15 +283,16 @@ frontend/
 1. **密碼管理原則**
    - 所有密碼必須使用 Secret Manager 或環境變數
    - 密碼不應包含特殊字符（如 `#`、`@`、`%`）以避免 URL 編碼問題
-   - 統一使用 `DB_PASSWORD=postgres` 作為開發和測試環境的標準密碼
+   - 開發環境密碼需符合 Terraform 要求：12字符以上，包含大小寫和數字
 
 2. **環境變數設定**
    ```bash
    # 使用環境變數檔案
    # 在 .env.local（已加入 .gitignore）中設定：
-   DB_PASSWORD=postgres
+   DB_PASSWORD=你的密碼（需符合要求）
    
    # 然後在執行時讀取：
+   source .env.local
    export TF_VAR_db_password="${DB_PASSWORD}"
    ```
 
@@ -301,7 +385,7 @@ resource "google_sql_database_instance" "main" {
 
 ---
 
-### 五、CI/CD 流程（使用 Terraform）
+### 六、CI/CD 流程（使用 Terraform）
 
 #### 🚀 完整自動化部署架構 (2025/01 新增)
 
@@ -332,8 +416,9 @@ sequenceDiagram
 
 ```bash
 # 設定密碼（只需一次，從環境變數讀取）
-# 在 .env.local 中設定：DB_PASSWORD=postgres
+# 在 .env.local 中設定你的密碼（需符合 Terraform 要求）
 # 然後執行：
+source .env.local
 export TF_VAR_db_password="${DB_PASSWORD}"
 
 # 完整自動化部署（包含所有測試）
@@ -515,7 +600,208 @@ curl -s "https://<svc>/api/assessment/scenarios?lang=en" | jq '.'
 
 ---
 
-### 八、常見問題（Troubleshooting）
+### 九、常見問題（Troubleshooting）
+
+#### 🔥 最常見的三個錯誤（90% 的部署問題）
+
+1. **只跑 Terraform 忘記 push commits**
+   - 症狀：`relation "scenarios" does not exist`
+   - 原因：Terraform 只建立空資料庫，GitHub Actions 才執行 schema migration
+   - 解決：`git push origin staging`
+
+2. **忘記設定 DB_PASSWORD**
+   - 症狀：Health check 顯示 `DATABASE_URL not configured`
+   - 原因：Terraform 需要 db_password 變數但沒設定
+   - 解決：`export TF_VAR_db_password="xxx"` 再跑 Terraform
+
+3. **Google Cloud 帳號錯誤**
+   - 症狀：權限錯誤或部署到錯誤專案
+   - 原因：多專案開發時帳號混亂
+   - 解決：`gcloud config configurations activate ai-square`
+
+#### 🚨 重要教訓：正確理解 Terraform vs GitHub Actions 分工
+
+**問題：為什麼部署後資料庫沒有 schema？**
+
+**根本原因：誤解了工具的職責範圍**
+
+這就像買了一台挖土機（Terraform）來蓋房子，卻期待它還能幫你裝潢和搬家具。Terraform 是基礎設施工具，不是應用程式部署工具！
+
+**正確的理解：**
+- **Terraform** = 建築公司（蓋房子、接水電）
+- **GitHub Actions** = 搬家公司（搬家具、裝潢布置）
+
+| 階段 | 負責工具 | 具體工作 |
+|------|---------|----------|
+| **基礎建設** | Terraform | 建立 Cloud SQL 實例、Cloud Run 服務、設定權限 |
+| **應用部署** | GitHub Actions | 建構 Docker image、執行資料庫遷移、載入初始資料 |
+
+**解決方法：**
+```bash
+# ❌ 錯誤：只執行 Terraform 就期待一切都好
+terraform apply  # 這只是蓋好空房子！
+
+# ✅ 正確：完整的部署流程
+# 1. Terraform 建基礎設施（一次就好）
+terraform apply -var-file="environments/staging.tfvars"
+
+# 2. GitHub Actions 部署應用（每次更新都要）
+git push origin staging  # 這才會搬家具進去！
+```
+
+**記住：沒有 push = 沒有部署 = 空的資料庫！**
+
+#### 🚨 資料庫密碼設定問題
+
+**問題：Health check 顯示 "DATABASE_URL not configured"**
+
+**原因：**
+1. Terraform 沒有設定 DB_PASSWORD（應該從 Secret Manager 讀取）
+2. Health check 只檢查 DATABASE_URL，但應用程式可以使用個別環境變數
+
+**臨時解決：**
+```bash
+# 手動更新 Cloud Run 環境變數
+gcloud run services update ai-square-staging \
+  --region asia-east1 \
+  --update-env-vars DB_PASSWORD=YourPassword
+```
+
+**正確解決：使用 Secret Manager（待實作）**
+
+#### 🚨 測試失敗但想部署
+
+**問題：Pre-push hook 阻止部署**
+
+**解決：**
+```bash
+# 跳過測試（僅限緊急情況）
+git push --no-verify origin staging
+
+# 但記得之後要修復測試！
+```
+
+#### 🚨 資料庫連接錯誤
+
+**問題：relation "scenarios" does not exist**
+
+**原因：資料庫 schema 還沒建立（GitHub Actions 沒執行）**
+
+**診斷步驟：**
+```bash
+# 1. 檢查是否有未 push 的 commits
+git status
+git log origin/staging..HEAD
+
+# 2. 檢查 Cloud Run 使用的 image 版本
+gcloud run services describe ai-square-staging \
+  --region=asia-east1 \
+  --format="value(spec.template.spec.containers[0].image)"
+
+# 3. 檢查 GitHub Actions 執行狀態
+gh run list --branch staging --limit 5
+```
+
+#### 🚨 Google Cloud 帳號切換問題
+
+**問題：在多個專案間切換時搞混帳號**
+
+**解決：使用 gcloud configurations**
+```bash
+# 建立專屬配置
+gcloud config configurations create ai-square
+gcloud config set account youngtsai@junyiacademy.org
+gcloud config set project ai-square-463013
+
+# 切換配置
+gcloud config configurations activate ai-square
+
+# 確認當前配置
+gcloud config list
+```
+
+**注意：Terraform 使用 ADC (Application Default Credentials)**
+```bash
+# 設定 ADC
+gcloud auth application-default login
+gcloud auth application-default set-quota-project ai-square-463013
+```
+
+#### 🚨 部署流程總結
+
+**正確的部署流程：**
+1. **開發** → 在 local 測試
+2. **Commit** → 通過所有檢查
+3. **Push** → 觸發 GitHub Actions
+4. **GitHub Actions** → 建構 image、執行遷移、部署應用
+5. **驗證** → 檢查服務健康狀態
+
+**不要做的事：**
+- ❌ 只跑 Terraform 就以為部署完成
+- ❌ 忘記 push commits
+- ❌ 手動執行資料庫遷移
+- ❌ 跳過測試（除非緊急）
+
+#### 🚨 2025/01 血淚教訓總結
+
+**問題 1: database 'ai_square_db' does not exist**
+- **症狀**: Terraform 執行成功，但應用程式報錯找不到資料庫
+- **根本原因**: 只跑了 Terraform（創建空資料庫）但沒有 push commits 觸發 GitHub Actions（執行 schema 遷移）
+- **教訓**: 改動程式碼後必須 `git push` 才能觸發完整部署流程
+
+**問題 2: DB_PASSWORD not configured**
+- **症狀**: Health check 顯示 DATABASE_URL not configured
+- **根本原因**: Terraform 配置中缺少 DB_PASSWORD 環境變數設定
+- **臨時修復**: `gcloud run services update ai-square-staging --update-env-vars DB_PASSWORD=xxx`
+- **正確做法**: 使用 Secret Manager 管理密碼
+
+**問題 3: 多 Google Cloud 帳號混亂**
+- **症狀**: 部署到錯誤的專案或權限錯誤
+- **根本原因**: 同時開發多個專案（AI Square, Duotopia）時帳號切換混亂
+- **解決方案**: 使用 gcloud configurations 管理多個帳號配置
+- **注意事項**: Terraform 使用 ADC，與 gcloud active account 是分開的
+
+**問題 4: 為什麼「一步部署」一直失敗？**
+- **錯誤認知**: 以為 Terraform 會處理所有事情
+- **實際情況**: 
+  - Terraform = 基礎設施（Cloud SQL 實例、Cloud Run 服務）
+  - GitHub Actions = 應用程式（Docker build、DB migration、初始化資料）
+- **正確理解**: 這是分工合作，不是單一工具能完成的
+
+**最重要的提醒**: 
+```bash
+# 完整部署 = Terraform + GitHub Actions
+# 如果只跑 Terraform，你只會得到空的基礎設施！
+git add -A
+git commit -m "fix: deployment configuration"
+git push origin staging  # 這一步觸發 GitHub Actions！
+```
+
+#### 🚨 部署後驗證檢查清單
+
+**每次部署後必須執行的檢查：**
+```bash
+# 1. 檢查 Health endpoint
+curl -s "https://ai-square-staging-xxxxxxxxx.asia-east1.run.app/api/health" | jq
+
+# 2. 檢查 GitHub Actions 狀態
+gh run list --branch staging --limit 5
+
+# 3. 檢查 Cloud Run logs
+gcloud run services logs read ai-square-staging --region=asia-east1 --limit=50 | grep -i error
+
+# 4. 檢查資料庫連線
+# 如果看到 "relation does not exist"，表示 schema 還沒建立
+
+# 5. 檢查 Docker image 版本
+gcloud run services describe ai-square-staging --region=asia-east1 --format="value(spec.template.spec.containers[0].image)"
+```
+
+**如果發現問題的診斷步驟：**
+1. 確認有沒有未 push 的 commits：`git status`
+2. 確認 GitHub Actions 有沒有執行：查看 Actions 頁面
+3. 確認 Terraform 和 GitHub Actions 都執行成功
+4. 確認環境變數都設定正確（特別是 DB_PASSWORD）
 
 1) Cloud Run ↔ Cloud SQL 連線逾時 / relation does not exist
 - 檢查 Region 是否一致
@@ -2201,3 +2487,324 @@ PGPASSWORD=postgres psql -h 127.0.0.1 -p 5434 -U postgres -d ai_square_db \
 - Demo 帳號僅供測試使用
 - 生產環境應該定期更改密碼
 - 不要在真實用戶環境使用這些帳號
+
+---
+
+## 十九、🛡️ 環境區分保護策略 - 開發快速、生產安全 (2025/08 新增)
+
+### 🏗️ 新架構：Terraform + GitHub Actions 分離
+
+**2025/08/21 重大更新**: 全面重構部署架構，解決循環依賴問題。
+
+#### 核心改變
+
+1. **基礎設施與應用分離**
+   - **Terraform**: 只管理基礎設施（Cloud SQL, Cloud Run, IAM）
+   - **GitHub Actions**: 處理應用部署（Docker build, schema init, data loading）
+
+2. **消除 `always_run = "${timestamp()}"` 反模式**
+   - 所有操作都是冪等的
+   - 可以安全地重複執行
+   - 狀態管理正確
+
+3. **清晰的部署流程**
+   ```bash
+   # 1. 基礎設施（手動觸發）
+   make terraform-deploy-staging
+   
+   # 2. 應用程式（自動觸發）
+   git push origin staging  # 觸發 GitHub Actions
+   ```
+
+#### 新文件結構
+
+```
+terraform/
+├── main.tf               # 純基礎設施配置
+├── post-deploy.tf        # 基礎設施健康檢查
+├── blue-green-deployment.tf  # 藍綠部署配置
+└── e2e.tf               # E2E 測試配置
+
+.github/workflows/
+├── deploy-staging.yml     # Staging 部署流程
+└── deploy-production.yml  # Production 部署流程（多重保護）
+```
+
+#### 優勢
+
+1. **避免循環依賴**: Terraform 不再依賴應用程式 API
+2. **提升可靠性**: 每個步驟都是獨立的、可測試的
+3. **更好的錯誤處理**: 失敗時可以定位到具體步驟
+4. **環境隔離**: Staging 和 Production 有不同的保護級別
+
+詳細文檔請參考：`docs/deployment/terraform-github-actions-architecture.md`
+
+### 🎯 核心原則：開發要快，生產要穩
+
+**開發環境（Staging）**: 保持靈活性，隨時可重建
+**生產環境（Production）**: 多重保護，防止誤操作
+
+### 📊 環境差異對照表
+
+| 功能 | Staging | Production | 說明 |
+|------|---------|------------|------|
+| 資料庫重建 | ✅ 允許 | ❌ 預設禁止 | Production 需要特殊確認 |
+| 自動初始化 | ✅ 每次部署 | ⚠️ 僅首次 | 避免覆蓋現有資料 |
+| Demo 帳號重置 | ✅ 自動 | ❌ 手動 | 保護用戶密碼 |
+| Scenario 強制更新 | ✅ force: true | ❌ force: false | 保護用戶進度 |
+| 備份要求 | ❌ 可選 | ✅ 強制 | 資料安全優先 |
+| 刪除保護 | ❌ 無 | ✅ 啟用 | deletion_protection = true |
+
+### 🔧 Terraform 環境區分實作
+
+#### 1. 資料庫初始化保護
+
+```hcl
+# post-deploy.tf 修改建議
+
+# 資料庫 Schema 初始化
+resource "null_resource" "init_database_schema" {
+  # Staging: 每次部署都執行
+  count = var.environment == "staging" ? 1 : 0
+  
+  triggers = {
+    always_run = "${timestamp()}"
+  }
+  
+  # ... 現有初始化邏輯
+}
+
+# Production 保護層
+resource "null_resource" "production_init_protection" {
+  count = var.environment == "production" ? 1 : 0
+  
+  provisioner "local-exec" {
+    command = <<-EOT
+      echo "========================================="
+      echo "⚠️  PRODUCTION ENVIRONMENT DETECTED!"
+      echo "========================================="
+      echo "Database initialization is DISABLED by default."
+      echo ""
+      echo "To initialize production database:"
+      echo "1. First time setup: Set TF_VAR_force_production_init=true"
+      echo "2. Use Prisma migrations for schema changes"
+      echo "3. Use API endpoints for data updates"
+      echo "========================================="
+      
+      # 檢查是否強制初始化
+      if [ "${var.force_production_init}" = "true" ]; then
+        echo "🚨 FORCE INITIALIZATION REQUESTED"
+        echo "This will initialize the production database."
+        echo "Sleeping 10 seconds... Press Ctrl+C to cancel"
+        sleep 10
+        # 執行初始化
+        ${path.module}/scripts/init-production-db.sh
+      fi
+    EOT
+  }
+}
+```
+
+#### 2. Demo 帳號管理差異
+
+```hcl
+# Demo 帳號 Seeding
+resource "null_resource" "seed_demo_accounts" {
+  depends_on = [null_resource.init_database_schema]
+  
+  triggers = {
+    # Staging: 每次都更新密碼
+    # Production: 只在 demo_passwords 變更時更新
+    run_trigger = var.environment == "staging" ? 
+      "${timestamp()}" : 
+      "${md5(jsonencode(var.demo_passwords))}"
+  }
+  
+  provisioner "local-exec" {
+    command = <<-EOT
+      if [ "${var.environment}" = "production" ]; then
+        echo "⚠️  Production: Using DO NOTHING for existing accounts"
+        CONFLICT_ACTION="DO NOTHING"
+      else
+        echo "✅ Staging: Will update passwords on conflict"
+        CONFLICT_ACTION="DO UPDATE SET password_hash = EXCLUDED.password_hash"
+      fi
+      
+      # 執行 SQL with appropriate conflict action
+      # ...
+    EOT
+  }
+}
+```
+
+#### 3. Scenario 初始化策略
+
+```hcl
+# Scenario 初始化
+resource "null_resource" "init_scenarios" {
+  depends_on = [null_resource.init_database_schema]
+  
+  triggers = {
+    # Staging: 總是執行
+    # Production: 只在檔案變更時執行
+    run_trigger = var.environment == "staging" ? 
+      "${timestamp()}" : 
+      "${filemd5("${path.module}/scenarios-checksum.txt")}"
+  }
+  
+  provisioner "local-exec" {
+    command = <<-EOT
+      SERVICE_URL="${google_cloud_run_service.ai_square.status[0].url}"
+      
+      # 設定 force 參數
+      if [ "${var.environment}" = "production" ]; then
+        FORCE_UPDATE="false"
+        echo "🛡️ Production: Scenarios will not be force updated"
+      else
+        FORCE_UPDATE="true"
+        echo "🚀 Staging: Scenarios will be force updated"
+      fi
+      
+      # 初始化 scenarios
+      for endpoint in init-assessment init-pbl init-discovery; do
+        curl -s -X POST "$${SERVICE_URL}/api/admin/$${endpoint}" \
+          -H "Content-Type: application/json" \
+          -d "{\"force\": $${FORCE_UPDATE}}"
+      done
+    EOT
+  }
+}
+```
+
+### 🛡️ 多重保護機制
+
+#### 1. 變數控制
+
+```hcl
+# variables.tf
+variable "force_production_init" {
+  description = "Force initialization of production database (危險操作)"
+  type        = bool
+  default     = false
+}
+
+variable "allow_production_destroy" {
+  description = "Allow destruction of production resources (極度危險)"
+  type        = bool
+  default     = false
+}
+```
+
+#### 2. 生命週期保護
+
+```hcl
+# Cloud SQL 實例保護
+resource "google_sql_database_instance" "main" {
+  # ... 其他配置
+  
+  deletion_protection = var.environment == "production"
+  
+  lifecycle {
+    prevent_destroy = var.environment == "production"
+  }
+}
+```
+
+#### 3. 執行前確認
+
+```bash
+# Makefile 中加入確認步驟
+deploy-production:
+	@echo "🚨 WARNING: You are about to deploy to PRODUCTION!"
+	@echo "This action will:"
+	@echo "  - Deploy new code to production"
+	@echo "  - NOT reset database"
+	@echo "  - NOT change existing user passwords"
+	@echo ""
+	@echo "Type 'deploy-production' to confirm: "
+	@read confirm && [ "$$confirm" = "deploy-production" ] || exit 1
+	terraform apply -var-file="environments/production.tfvars"
+```
+
+### 🔄 建議的工作流程
+
+#### Staging 快速迭代流程
+
+```bash
+# 1. 快速重建一切
+make deploy-staging
+
+# 2. 會自動執行：
+#    - 重建 schema
+#    - 重置 demo 密碼
+#    - 強制更新 scenarios
+#    - 清除快取
+
+# 3. 立即可測試最新版本
+```
+
+#### Production 安全部署流程
+
+```bash
+# 1. 先在 staging 測試
+make deploy-staging
+make test-staging
+
+# 2. 確認無誤後部署 production
+make deploy-production
+
+# 3. Production 會：
+#    - 保留現有資料
+#    - 不改變用戶密碼
+#    - 只更新必要的 scenarios
+#    - 自動備份
+
+# 4. 如需初始化（首次部署）
+TF_VAR_force_production_init=true make deploy-production
+```
+
+### 📋 實施檢查清單
+
+- [ ] 修改 `post-deploy.tf` 加入環境判斷
+- [ ] 更新 `variables.tf` 加入保護變數
+- [ ] 修改 API 端點支援 `force` 參數
+- [ ] 更新 Makefile 加入確認步驟
+- [ ] 測試 staging 仍可快速重建
+- [ ] 測試 production 保護機制有效
+- [ ] 更新團隊文件說明差異
+
+### 🚨 緊急情況處理
+
+如果真的需要重置 Production：
+
+```bash
+# 1. 備份現有資料（強制）
+make production-backup
+
+# 2. 設定強制初始化變數
+export TF_VAR_force_production_init=true
+export TF_VAR_allow_production_destroy=true
+
+# 3. 執行重建（需要多次確認）
+make deploy-production-force
+
+# 4. 立即移除危險變數
+unset TF_VAR_force_production_init
+unset TF_VAR_allow_production_destroy
+```
+
+### 💡 最佳實踐總結
+
+1. **Staging = 實驗場**：隨時可以打掉重練
+2. **Production = 堡壘**：多重防護，謹慎操作
+3. **使用 Prisma Migrate**：Production schema 變更的正確方式
+4. **API 優於 SQL**：通過應用層邏輯管理資料
+5. **備份優先**：任何 Production 操作前先備份
+6. **團隊溝通**：Production 變更需要通知團隊
+
+### 🔮 未來改進方向
+
+1. **藍綠部署**：進一步降低 Production 風險
+2. **自動備份驗證**：確保備份可還原
+3. **變更審核流程**：Production 變更需要審核
+4. **災難演練**：定期測試恢復流程

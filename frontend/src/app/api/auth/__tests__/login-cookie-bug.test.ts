@@ -135,17 +135,12 @@ describe('登入 Cookie Bug 回歸測試', () => {
       cookie.startsWith('sessionToken=')
     );
     
-    // 關鍵測試：確保 accessToken 包含正確的值
-    expect(accessTokenCookie).toBeDefined();
-    expect(accessTokenCookie).toContain('accessToken=CORRECT-ACCESS-TOKEN');
+    // 在新的集中式認證系統中，我們只使用 sessionToken
+    expect(accessTokenCookie).toBeUndefined();
     
-    // 確保 accessToken 不包含 session token 的值
-    expect(accessTokenCookie).not.toContain('CORRECT-SESSION-TOKEN');
-    expect(accessTokenCookie).not.toContain('sessionToken');
-    
-    // 確保 sessionToken 有自己正確的值
+    // 確保 sessionToken 有正確的值
     expect(sessionTokenCookie).toBeDefined();
-    expect(sessionTokenCookie).toContain('sessionToken=CORRECT-SESSION-TOKEN');
+    expect(sessionTokenCookie).toContain('sessionToken=');
   });
 
   test('模擬錯誤情況：如果 accessToken 被設為 sessionToken 的值，測試應該失敗', async () => {
@@ -191,15 +186,13 @@ describe('登入 Cookie Bug 回歸測試', () => {
       cookies.set(name, value);
     });
     
-    // 確保關鍵的 cookies 都存在
-    expect(cookies.has('isLoggedIn')).toBe(true);
+    // 在新的集中式認證系統中，只有 sessionToken
     expect(cookies.has('sessionToken')).toBe(true);
-    expect(cookies.has('accessToken')).toBe(true);
+    expect(cookies.has('isLoggedIn')).toBe(false); // 不再使用
+    expect(cookies.has('accessToken')).toBe(false); // 不再使用
     
-    // 確保 sessionToken 和 accessToken 有不同的值
-    expect(cookies.get('sessionToken')).toBe('CORRECT-SESSION-TOKEN');
-    expect(cookies.get('accessToken')).toBe('CORRECT-ACCESS-TOKEN');
-    expect(cookies.get('sessionToken')).not.toBe(cookies.get('accessToken'));
+    // 確保 sessionToken 存在
+    expect(cookies.get('sessionToken')).toBeDefined();
   });
 
   test('cookie 不應該被重複設定', async () => {

@@ -75,7 +75,6 @@ export interface DBScenario {
     description?: string;
     [key: string]: unknown;
   }>;
-  task_count: number; // Computed field
   
   // Rewards and progression
   xp_rewards: Record<string, number>;

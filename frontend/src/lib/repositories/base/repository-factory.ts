@@ -93,7 +93,7 @@ export class RepositoryFactory {
       poolConfig = {
         database: process.env.DB_NAME || 'ai_square_db',
         user: process.env.DB_USER || 'postgres',
-        password: process.env.DB_PASSWORD || 'postgres',
+        password: process.env.DB_PASSWORD || '',
         max: 20,
         idleTimeoutMillis: 30000,
         connectionTimeoutMillis: isCloudSQL ? 10000 : 2000,

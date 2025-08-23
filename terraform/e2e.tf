@@ -12,10 +12,8 @@
 # Simple smoke test to verify service is responding
 resource "null_resource" "smoke_test" {
   depends_on = [
-    null_resource.wait_for_service,
-    null_resource.init_database_schema,
-    null_resource.seed_demo_accounts,
-    null_resource.init_scenarios
+    google_cloud_run_service.ai_square,
+    null_resource.service_health_check
   ]
 
   triggers = {

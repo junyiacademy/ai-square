@@ -201,8 +201,21 @@ export class ScenarioInitializationService {
     sourceType: string,
     yamlPath: string
   ): Promise<IScenario | null> {
+    // Determine the mode based on the yamlPath
+    let mode: DBLearningMode;
+    if (yamlPath.includes('/pbl_data/') || yamlPath.includes('pbl')) {
+      mode = 'pbl';
+    } else if (yamlPath.includes('/discovery_data/') || yamlPath.includes('discovery')) {
+      mode = 'discovery';
+    } else if (yamlPath.includes('/assessment_data/') || yamlPath.includes('assessment')) {
+      mode = 'assessment';
+    } else {
+      // Default to pbl if we can't determine from path
+      mode = 'pbl';
+    }
+    
     // Use findByMode to get scenarios of specific mode
-    const scenarios = await this.scenarioRepo.findByMode?.(sourceType as DBLearningMode) || [];
+    const scenarios = await this.scenarioRepo.findByMode?.(mode) || [];
     
     // Find matching scenario by source path or sourceMetadata.configPath
     const match = scenarios.find((s) => 
@@ -255,9 +268,9 @@ class PBLYAMLProcessor implements IYAMLProcessor {
     
     try {
       const scenarios = await this.loader.scanScenarios();
-      // Return full paths relative to project root
+      // Return full paths relative to project root (using English as default language)
       return scenarios.map(scenarioId => 
-        path.join(basePath, scenarioId, `${scenarioId}_scenario.yaml`)
+        path.join(basePath, scenarioId, `${scenarioId}_en.yaml`)
       );
     } catch (error) {
       console.error('Error scanning PBL scenarios:', error);
@@ -284,7 +297,14 @@ class PBLYAMLProcessor implements IYAMLProcessor {
     
     const pblData = yamlData as Record<string, unknown>;
     const scenarioInfo = (pblData.scenario_info || {}) as Record<string, unknown>;
-    const programs = (pblData.programs || []) as Array<Record<string, unknown>>;
+    
+    // Debug: log the data structure to understand the issue
+    console.log('PBL YAML Data for', scenarioId, ':', JSON.stringify({
+      scenarioInfo: scenarioInfo,
+      ksaMapping: pblData.ksa_mapping,
+      tasks: pblData.tasks,
+      aiModules: pblData.ai_modules
+    }, null, 2));
     
     return {
       mode: 'pbl' as const,
@@ -305,17 +325,17 @@ class PBLYAMLProcessor implements IYAMLProcessor {
       estimatedMinutes: parseInt((scenarioInfo.estimated_duration as string)?.replace('minutes', '') || '60'),
       prerequisites: (scenarioInfo.prerequisites as string[]) || [],
       taskTemplates: [], // PBL tasks are defined in the YAML
-      taskCount: (programs[0]?.tasks as Array<unknown>)?.length || 0,
+      taskCount: ((pblData.tasks as Array<unknown>) || []).length,
       xpRewards: {},
       unlockRequirements: {},
       pblData: {
         targetDomains: (scenarioInfo.target_domains as string[]) || [],
-        ksaMappings: (pblData.ksa_mappings as Array<Record<string, unknown>>) || [],
-        programs: programs
+        ksaMappings: JSON.parse(JSON.stringify((pblData.ksa_mapping as Record<string, unknown>) || {})),
+        tasks: (pblData.tasks as Array<Record<string, unknown>>) || []
       },
       discoveryData: {},
       assessmentData: {},
-      aiModules: (pblData.ai_modules as Record<string, unknown>) || {},
+      aiModules: JSON.parse(JSON.stringify((pblData.ai_modules as Record<string, unknown>) || {})),
       resources: [],
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),

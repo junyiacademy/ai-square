@@ -45,12 +45,8 @@ describe('/api/auth/logout', () => {
       expect(data.success).toBe(true);
       expect(data.message).toBe('Logged out successfully');
 
-      // Check that cookies are cleared with maxAge=0
-      expect(mockCookiesSet).toHaveBeenCalledWith('accessToken', '', expect.objectContaining({ maxAge: 0 }));
-      expect(mockCookiesSet).toHaveBeenCalledWith('refreshToken', '', expect.objectContaining({ maxAge: 0 }));
-      expect(mockCookiesSet).toHaveBeenCalledWith('isLoggedIn', '', expect.objectContaining({ maxAge: 0 }));
-      expect(mockCookiesSet).toHaveBeenCalledWith('user', '', expect.objectContaining({ maxAge: 0 }));
-      expect(mockCookiesSet).toHaveBeenCalledWith('rememberMe', '', expect.objectContaining({ maxAge: 0 }));
+      // Check that sessionToken cookie is cleared with maxAge=0
+      expect(mockCookiesSet).toHaveBeenCalledWith('sessionToken', '', expect.objectContaining({ maxAge: 0 }));
     });
 
     it('should have proper cookie settings', async () => {

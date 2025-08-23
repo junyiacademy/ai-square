@@ -13,7 +13,7 @@ export async function getServerSession(): Promise<Session | null> {
   const headersList = await headers();
   
   // Check for session token first (new JWT system)
-  let sessionToken = cookieStore.get('session_token')?.value;
+  let sessionToken = cookieStore.get('sessionToken')?.value;
   
   // If not in cookie, check header (for API calls from client)
   if (!sessionToken) {

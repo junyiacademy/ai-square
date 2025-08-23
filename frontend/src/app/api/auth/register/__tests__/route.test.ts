@@ -20,6 +20,11 @@ jest.mock('@/lib/auth/password-utils', () => ({
   updateUserEmailVerified: jest.fn(),
   getUserWithPassword: jest.fn()
 }));
+jest.mock('@/lib/auth/auth-manager', () => ({
+  AuthManager: {
+    setAuthCookie: jest.fn()
+  }
+}));
 
 // Mock NextResponse to handle cookies properly
 const mockCookies = {
@@ -244,14 +249,13 @@ describe('/api/auth/register', () => {
       
       expect(response.status).toBe(200);
       
-      // Check that cookie was set via mocked cookies object
-      expect(mockCookies.set).toHaveBeenCalledWith('ai_square_session', expect.any(String), {
-        httpOnly: true,
-        secure: false, // NODE_ENV is 'test'
-        sameSite: 'lax',
-        maxAge: 7 * 24 * 60 * 60,
-        path: '/'
-      });
+      // Check that AuthManager.setAuthCookie was called
+      const { AuthManager } = require('@/lib/auth/auth-manager');
+      expect(AuthManager.setAuthCookie).toHaveBeenCalledWith(
+        expect.any(Object), // response object
+        expect.any(String), // sessionToken
+        false // rememberMe
+      );
     });
 
     it('should handle database errors gracefully', async () => {

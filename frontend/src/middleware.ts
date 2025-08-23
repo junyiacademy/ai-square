@@ -1,14 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-
-// Protected routes that require authentication
-const PROTECTED_ROUTES = [
-  '/pbl',
-  '/assessment', 
-  '/discovery',
-  '/admin',
-  '/profile'
-];
+import { AuthManager } from '@/lib/auth/auth-manager';
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -28,25 +20,10 @@ export function middleware(request: NextRequest) {
   }
   
   // Check if the route is protected
-  const isProtectedRoute = PROTECTED_ROUTES.some(route => 
-    pathname.startsWith(route)
-  );
-  
-  // Check authentication for protected routes
-  if (isProtectedRoute) {
-    // Check for authentication cookies
-    const isLoggedIn = request.cookies.get('isLoggedIn')?.value === 'true';
-    const sessionToken = request.cookies.get('sessionToken')?.value || 
-                        request.cookies.get('session_token')?.value ||
-                        request.cookies.get('ai_square_session')?.value;
-    const accessToken = request.cookies.get('accessToken')?.value;
-    
-    // If not authenticated, redirect to login
-    if (!isLoggedIn || !sessionToken || !accessToken) {
-      const loginUrl = new URL('/login', request.url);
-      // Add redirect parameter to return user after login
-      loginUrl.searchParams.set('redirect', pathname);
-      return NextResponse.redirect(loginUrl);
+  if (AuthManager.isProtectedRoute(pathname)) {
+    // Check authentication using centralized AuthManager
+    if (!AuthManager.isAuthenticated(request)) {
+      return AuthManager.createLoginRedirect(request);
     }
   }
   
