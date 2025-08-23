@@ -211,7 +211,6 @@ export class PostgreSQLDiscoveryRepository implements IDiscoveryRepository {
     // TODO: 創建 portfolio_items 表後再實作此功能
     const mockPortfolioItem: IPortfolioItem = {
       id: uuidv4(),
-      userId,
       title: item.title,
       description: item.description,
       taskId: item.taskId,
@@ -238,9 +237,8 @@ export class PostgreSQLDiscoveryRepository implements IDiscoveryRepository {
     
     const mockItem: IPortfolioItem = {
       id: itemId,
-      userId,
-      title: updates.title || { en: 'Mock Portfolio Item' },
-      description: updates.description || { en: 'Mock Description' },
+      title: updates.title || 'Mock Portfolio Item',
+      description: updates.description || 'Mock Description',
       taskId: '',
       artifacts: updates.artifacts || [],
       skills: updates.skills || [],
