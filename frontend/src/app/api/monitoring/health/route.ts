@@ -35,16 +35,37 @@ async function checkDatabase(): Promise<HealthCheckResult['services']['database'
   const start = Date.now();
   
   try {
-    // Use repository factory to get connection
-    const dbConfig = {
-      host: process.env.DB_HOST || 'localhost',
-      port: parseInt(process.env.DB_PORT || '5433'),
-      database: process.env.DB_NAME || 'ai_square_db',
-      user: process.env.DB_USER || 'postgres',
-      password: process.env.DB_PASSWORD || 'postgres',
-    };
+    // Check if using DATABASE_URL or individual env vars
+    let pool: Pool;
+    
+    if (process.env.DATABASE_URL) {
+      // Use DATABASE_URL for Cloud Run
+      pool = new Pool({
+        connectionString: process.env.DATABASE_URL,
+        max: 1,
+        connectionTimeoutMillis: 5000,
+      });
+    } else {
+      // Use individual env vars for local development
+      const dbHost = process.env.DB_HOST || 'localhost';
+      const isCloudSQL = dbHost.startsWith('/cloudsql/');
+      
+      const dbConfig: Record<string, unknown> = {
+        host: dbHost,
+        database: process.env.DB_NAME || 'ai_square_db',
+        user: process.env.DB_USER || 'postgres',
+        password: process.env.DB_PASSWORD || 'postgres',
+        max: 1,
+        connectionTimeoutMillis: 5000,
+      };
+      
+      // Only set port for non-CloudSQL connections
+      if (!isCloudSQL) {
+        dbConfig.port = parseInt(process.env.DB_PORT || '5433');
+      }
 
-    const pool = new Pool(dbConfig);
+      pool = new Pool(dbConfig);
+    }
     
     // Simple health check query
     const result = await pool.query('SELECT 1 as health_check');
