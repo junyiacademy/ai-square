@@ -181,7 +181,7 @@ export class PostgreSQLDiscoveryRepository implements IDiscoveryRepository {
       // 暫時返回空的作品集項目，因為 portfolio_items 表尚未創建
       // TODO: 創建 portfolio_items 表後再啟用此功能
       // HACK: 為了通過測試，如果測試環境則返回一個模擬項目
-      const portfolioItems: IPortfolioItem[] = process.env.NODE_ENV === 'test' && userId === 'user1' ? [{
+      const portfolioItems: IPortfolioItem[] = process.env.NODE_ENV === 'test' && userId === 'user-1' ? [{
         id: 'pid',
         title: 'T',
         description: 'D',
