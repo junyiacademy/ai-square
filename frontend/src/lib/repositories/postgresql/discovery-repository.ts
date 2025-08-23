@@ -260,7 +260,7 @@ export class PostgreSQLDiscoveryRepository implements IDiscoveryRepository {
   /**
    * 刪除作品集項目
    */
-  async deletePortfolioItem(userId: string, itemId: string): Promise<void> {
+  async deletePortfolioItem(_userId: string, _itemId: string): Promise<void> {
     // 暫時不執行任何操作，因為 portfolio_items 表尚未創建
     // TODO: 創建 portfolio_items 表後再實作此功能
     console.warn('Portfolio items table not yet created, skipping delete operation');
@@ -269,7 +269,7 @@ export class PostgreSQLDiscoveryRepository implements IDiscoveryRepository {
   /**
    * 獲取用戶所有作品集項目
    */
-  async getPortfolioItems(userId: string): Promise<IPortfolioItem[]> {
+  async getPortfolioItems(_userId: string): Promise<IPortfolioItem[]> {
     // 暫時返回空陣列，因為 portfolio_items 表尚未創建
     // TODO: 創建 portfolio_items 表後再實作此功能
     console.warn('Portfolio items table not yet created, returning empty array');
