@@ -14,10 +14,14 @@ if [ -f ".env" ] || [ -f "*.key" ] || [ -f "*.pem" ]; then
     exit 1
 fi
 
-# Check 2: Validate Terraform files
-echo "✓ Validating Terraform configuration..."
-terraform init -backend=false
-terraform validate
+# Check 2: Validate Terraform files (skip in CI - terraform setup happens later)
+if command -v terraform &> /dev/null; then
+    echo "✓ Validating Terraform configuration..."
+    terraform init -backend=false
+    terraform validate
+else
+    echo "⚠️  Terraform not installed, skipping validation (will be checked in plan step)"
+fi
 
 # Check 3: Check for hardcoded secrets in Terraform files
 echo "✓ Scanning for hardcoded secrets..."
