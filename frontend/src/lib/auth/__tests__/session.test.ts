@@ -86,7 +86,7 @@ describe('session', () => {
     it('returns null when session token is invalid', async () => {
       const mockCookieStore = {
         get: jest.fn((name: string) => {
-          if (name === 'session_token') {
+          if (name === 'sessionToken') {
             return { value: 'invalid-token' };
           }
           return undefined;
