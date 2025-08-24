@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import DiscoveryPageLayout from '@/components/discovery/DiscoveryPageLayout';
 import { useAuth } from '@/contexts/AuthContext';
 import ReactMarkdown from 'react-markdown';
+import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
 ;
 
 interface TaskData {
@@ -82,7 +83,7 @@ export default function TaskDetailPage() {
     const fetchTaskData = async () => {
       try {
         const currentLanguage = i18n.language || 'en';
-        const res = await fetch(`/api/discovery/scenarios/${scenarioId}/programs/${programId}/tasks/${taskId}?lang=${currentLanguage}`, {
+        const res = await authenticatedFetch(`/api/discovery/scenarios/${scenarioId}/programs/${programId}/tasks/${taskId}?lang=${currentLanguage}`, {
           credentials: 'include',
           headers: {
             'x-session-token': localStorage.getItem('ai_square_session') || ''
@@ -98,7 +99,7 @@ export default function TaskDetailPage() {
         
         // If task is pending, start it
         if (data.status === 'pending') {
-          await fetch(`/api/discovery/scenarios/${scenarioId}/programs/${programId}/tasks/${taskId}`, {
+          await authenticatedFetch(`/api/discovery/scenarios/${scenarioId}/programs/${programId}/tasks/${taskId}`, {
             method: 'PATCH',
             credentials: 'include',
             headers: {
@@ -130,7 +131,7 @@ export default function TaskDetailPage() {
     const startTime = Date.now();
     
     try {
-      const res = await fetch(`/api/discovery/scenarios/${scenarioId}/programs/${programId}/tasks/${taskId}`, {
+      const res = await authenticatedFetch(`/api/discovery/scenarios/${scenarioId}/programs/${programId}/tasks/${taskId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -170,7 +171,7 @@ export default function TaskDetailPage() {
       setUserResponse('');
       
       // Reload task data to get updated interactions
-      const updatedTaskRes = await fetch(`/api/discovery/scenarios/${scenarioId}/programs/${programId}/tasks/${taskId}`, {
+      const updatedTaskRes = await authenticatedFetch(`/api/discovery/scenarios/${scenarioId}/programs/${programId}/tasks/${taskId}`, {
         credentials: 'include',
         headers: {
           'x-session-token': localStorage.getItem('ai_square_session') || ''
@@ -195,7 +196,7 @@ export default function TaskDetailPage() {
   const handleCompleteTask = async () => {
     setCompletingTask(true);
     try {
-      const res = await fetch(`/api/discovery/scenarios/${scenarioId}/programs/${programId}/tasks/${taskId}`, {
+      const res = await authenticatedFetch(`/api/discovery/scenarios/${scenarioId}/programs/${programId}/tasks/${taskId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -247,7 +248,7 @@ export default function TaskDetailPage() {
   const handleRegenerateEvaluation = async () => {
     setRegeneratingEvaluation(true);
     try {
-      const res = await fetch(`/api/discovery/scenarios/${scenarioId}/programs/${programId}/tasks/${taskId}`, {
+      const res = await authenticatedFetch(`/api/discovery/scenarios/${scenarioId}/programs/${programId}/tasks/${taskId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

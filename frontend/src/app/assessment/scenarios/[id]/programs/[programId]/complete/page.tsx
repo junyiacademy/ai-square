@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import AssessmentResults from '@/components/assessment/AssessmentResults';
 import { AssessmentResult, AssessmentData, UserAnswer, DomainScores, AssessmentQuestion } from '@/types/assessment';
+import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
 interface Evaluation {
   id: string;
   score: number;
@@ -72,7 +73,7 @@ export default function AssessmentCompletePage({
       };
       
       // First check if evaluation exists
-      const res = await fetch(`/api/assessment/programs/${progId}/evaluation`, {
+      const res = await authenticatedFetch(`/api/assessment/programs/${progId}/evaluation`, {
         credentials: 'include',
         headers
       });
@@ -81,7 +82,7 @@ export default function AssessmentCompletePage({
         console.log('Evaluation not found, checking program status...');
         
         // Check program status
-        const programRes = await fetch(`/api/assessment/programs/${progId}`, {
+        const programRes = await authenticatedFetch(`/api/assessment/programs/${progId}`, {
           credentials: 'include',
           headers
         });
@@ -106,7 +107,7 @@ export default function AssessmentCompletePage({
           
           // Try to complete the program if not done
           console.log('Attempting to complete the program...');
-          const completeRes = await fetch(`/api/assessment/programs/${progId}/complete`, {
+          const completeRes = await authenticatedFetch(`/api/assessment/programs/${progId}/complete`, {
             method: 'POST',
             credentials: 'include',
             headers
@@ -135,7 +136,7 @@ export default function AssessmentCompletePage({
       setEvaluation(data.evaluation);
       
       // Also load the task to get questions and answers
-      const programRes = await fetch(`/api/assessment/programs/${progId}`, {
+      const programRes = await authenticatedFetch(`/api/assessment/programs/${progId}`, {
         credentials: 'include',
         headers
       });
@@ -143,7 +144,7 @@ export default function AssessmentCompletePage({
       
       // For completed assessments, we need to load ALL tasks data
       // Let's fetch detailed program data with all tasks
-      const detailedRes = await fetch(`/api/assessment/programs/${progId}?includeAllTasks=true`, {
+      const detailedRes = await authenticatedFetch(`/api/assessment/programs/${progId}?includeAllTasks=true`, {
         credentials: 'include',
         headers
       });

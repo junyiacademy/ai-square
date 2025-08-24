@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 import { IScenario, IProgram } from '@/types/unified-learning';
+import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
 // Date formatting utility
 
 export default function ScenarioDetailPage() {
@@ -26,8 +27,8 @@ export default function ScenarioDetailPage() {
         
         // Fetch scenario details
         const [scenarioResponse, programsResponse] = await Promise.all([
-          fetch(`/api/pbl/scenarios/${params.id}?lang=${i18n.language}`),
-          fetch(`/api/pbl/scenarios/${params.id}/programs`)
+          authenticatedFetch(`/api/pbl/scenarios/${params.id}?lang=${i18n.language}`),
+          authenticatedFetch(`/api/pbl/scenarios/${params.id}/programs`)
         ]);
         
         if (ignore) return;
@@ -107,7 +108,7 @@ export default function ScenarioDetailPage() {
         }
       } else {
         // Create new program
-        const response = await fetch(`/api/pbl/scenarios/${scenarioId}/start`, {
+        const response = await authenticatedFetch(`/api/pbl/scenarios/${scenarioId}/start`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

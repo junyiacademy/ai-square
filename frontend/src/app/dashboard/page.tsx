@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 import type { AssessmentResult } from '@/types/assessment';
 import { formatDateWithLocale } from '@/utils/locale';
+import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
 
 interface UserProfile {
   id: string;
@@ -81,7 +82,7 @@ export default function DashboardPage() {
       }
 
       // Then fetch from database (authoritative source)
-      const response = await fetch(`/api/assessment/results?userId=${encodeURIComponent(userData.id)}&userEmail=${encodeURIComponent(userData.email)}`);
+      const response = await authenticatedFetch(`/api/assessment/results?userId=${encodeURIComponent(userData.id)}&userEmail=${encodeURIComponent(userData.email)}`);
       
       if (response.ok) {
         const data = await response.json();

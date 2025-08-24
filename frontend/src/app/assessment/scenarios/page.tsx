@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { FileQuestion, Clock, Target, Users, BookOpen } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
 
 interface AssessmentScenario {
   id: string;
@@ -61,7 +62,7 @@ export default function AssessmentScenariosPage() {
     
     loadingRef.current = true;
     try {
-      const res = await fetch(`/api/assessment/scenarios?lang=${i18n.language}`);
+      const res = await authenticatedFetch(`/api/assessment/scenarios?lang=${i18n.language}`);
       const data = await res.json();
       const loadedScenarios = data.data?.scenarios || [];
       

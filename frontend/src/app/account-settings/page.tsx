@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
+import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
 
 interface LegalConsent {
   type: string;
@@ -48,7 +49,7 @@ export default function AccountSettingsPage() {
 
   const fetchConsents = async () => {
     try {
-      const response = await fetch('/api/legal/consent');
+      const response = await authenticatedFetch('/api/legal/consent');
       const data = await response.json();
 
       if (data.success) {
@@ -72,7 +73,7 @@ export default function AccountSettingsPage() {
     setError('');
 
     try {
-      const response = await fetch('/api/auth/archive-account', {
+      const response = await authenticatedFetch('/api/auth/archive-account', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -100,7 +101,7 @@ export default function AccountSettingsPage() {
 
   const handleConsent = async (documentType: string, documentVersion: string) => {
     try {
-      const response = await fetch('/api/legal/consent', {
+      const response = await authenticatedFetch('/api/legal/consent', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

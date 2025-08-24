@@ -9,6 +9,7 @@ import { Header } from '@/components/layout/Header';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { formatDateWithLocale } from '@/utils/locale';
+import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
 
 interface ChatSession {
   id: string;
@@ -141,7 +142,7 @@ function ChatPageContent() {
   const loadUserAndSessions = async () => {
     try {
       // First check if user is authenticated
-      const authResponse = await fetch('/api/auth/check');
+      const authResponse = await authenticatedFetch('/api/auth/check');
       const authData = await authResponse.json();
       
       if (!authData.authenticated) {
@@ -152,7 +153,7 @@ function ChatPageContent() {
       setCurrentUser(authData.user);
       
       // Then load chat sessions
-      const response = await fetch('/api/chat/sessions', {
+      const response = await authenticatedFetch('/api/chat/sessions', {
         headers: {
           'x-user-info': JSON.stringify(authData.user)
         }
@@ -174,7 +175,7 @@ function ChatPageContent() {
       // Load PBL history if user is logged in
       if (currentUser) {
         try {
-          const response = await fetch('/api/pbl/history');
+          const response = await authenticatedFetch('/api/pbl/history');
           const data = await response.json();
           
           if (data.success && data.history) {
@@ -253,7 +254,7 @@ function ChatPageContent() {
     if (!currentUser) return;
     
     try {
-      const response = await fetch(`/api/chat/sessions/${sessionId}`, {
+      const response = await authenticatedFetch(`/api/chat/sessions/${sessionId}`, {
         headers: {
           'x-user-info': JSON.stringify(currentUser)
         }
@@ -292,7 +293,7 @@ function ChatPageContent() {
     }
     
     try {
-      const response = await fetch('/api/chat', {
+      const response = await authenticatedFetch('/api/chat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -465,7 +466,7 @@ function ChatPageContent() {
     if (!currentUser) return;
     
     try {
-      const response = await fetch(`/api/chat/sessions/${sessionId}`, {
+      const response = await authenticatedFetch(`/api/chat/sessions/${sessionId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

@@ -13,6 +13,7 @@ import {
 } from '@/types/pbl';
 import { TaskEvaluation } from '@/types/pbl-completion';
 import { formatDateWithLocale } from '@/utils/locale';
+import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
 
 interface ConversationEntry {
   id: string;
@@ -106,7 +107,7 @@ export default function ProgramLearningPage() {
       setLoading(true);
       
       // Load scenario data with language parameter using PBL API
-      const scenarioRes = await fetch(`/api/pbl/scenarios/${scenarioId}?lang=${i18n.language}`);
+      const scenarioRes = await authenticatedFetch(`/api/pbl/scenarios/${scenarioId}?lang=${i18n.language}`);
       if (!scenarioRes.ok) throw new Error('Failed to load scenario');
       const scenarioData = await scenarioRes.json();
       // Handle PBL API response structure
@@ -124,7 +125,7 @@ export default function ProgramLearningPage() {
       if (!programId.startsWith('temp_')) {
         try {
           // Use PBL unified architecture API to get program
-          const programRes = await fetch(`/api/pbl/scenarios/${scenarioId}/programs/${programId}`);
+          const programRes = await authenticatedFetch(`/api/pbl/scenarios/${scenarioId}/programs/${programId}`);
           if (programRes.ok) {
             const programData = await programRes.json();
             console.log('Loaded program data:', {
@@ -149,7 +150,7 @@ export default function ProgramLearningPage() {
               // Load task data using PBL unified architecture
               if (taskId) {
                 try {
-                  const taskRes = await fetch(`/api/pbl/scenarios/${scenarioId}/programs/${programId}/tasks/${taskId}`);
+                  const taskRes = await authenticatedFetch(`/api/pbl/scenarios/${scenarioId}/programs/${programId}/tasks/${taskId}`);
                   if (taskRes.ok) {
                     const taskData = await taskRes.json();
                     if (taskData) {
@@ -182,7 +183,7 @@ export default function ProgramLearningPage() {
               // If this is a draft program being accessed, update its timestamps
               if (loadedProgram && loadedProgram.status === 'draft') {
                 try {
-                  const updateRes = await fetch(`/api/pbl/programs/${programId}/update-timestamps`, {
+                  const updateRes = await authenticatedFetch(`/api/pbl/programs/${programId}/update-timestamps`, {
                     method: 'POST',
                     headers: {
                       'Content-Type': 'application/json',
@@ -233,7 +234,7 @@ export default function ProgramLearningPage() {
       if (!programId.startsWith('temp_')) {
         try {
           // Fetch all tasks for the program
-          const tasksRes = await fetch(`/api/pbl/programs/${programId}/tasks`);
+          const tasksRes = await authenticatedFetch(`/api/pbl/programs/${programId}/tasks`);
           if (tasksRes.ok) {
             const tasksData = await tasksRes.json();
             const sortedTasks = tasksData.sort((a: { taskIndex: number }, b: { taskIndex: number }) => a.taskIndex - b.taskIndex);
@@ -245,7 +246,7 @@ export default function ProgramLearningPage() {
             // Load evaluations for all tasks in parallel
             const evalPromises = sortedTasks.map(async (task: { id: string }) => {
               try {
-                const evalRes = await fetch(`/api/pbl/tasks/${task.id}/evaluate`);
+                const evalRes = await authenticatedFetch(`/api/pbl/tasks/${task.id}/evaluate`);
                 if (evalRes.ok) {
                   const evalData = await evalRes.json();
                   if (evalData.success && evalData.data?.evaluation) {
@@ -289,7 +290,7 @@ export default function ProgramLearningPage() {
     if (!taskId || !scenarioId || !programId) return;
     
     try {
-      const taskRes = await fetch(`/api/pbl/scenarios/${scenarioId}/programs/${programId}/tasks/${taskId}`);
+      const taskRes = await authenticatedFetch(`/api/pbl/scenarios/${scenarioId}/programs/${programId}/tasks/${taskId}`);
       if (taskRes.ok) {
         const taskData = await taskRes.json();
         if (taskData) {
@@ -341,7 +342,7 @@ export default function ProgramLearningPage() {
       console.log('Loading task history for:', { programId, taskId, scenarioId });
       
       // Load task conversation history and evaluation
-      const res = await fetch(`/api/pbl/tasks/${taskId}/interactions`);
+      const res = await authenticatedFetch(`/api/pbl/tasks/${taskId}/interactions`);
       if (res.ok) {
         const data = await res.json();
         console.log('Task history response:', data);
@@ -365,7 +366,7 @@ export default function ProgramLearningPage() {
           if (data.data?.evaluationId) {
             console.log('Task has evaluationId:', data.data.evaluationId);
             // Fetch the evaluation details
-            const evalRes = await fetch(`/api/pbl/tasks/${taskId}/evaluate`);
+            const evalRes = await authenticatedFetch(`/api/pbl/tasks/${taskId}/evaluate`);
             if (evalRes.ok) {
               const evalData = await evalRes.json();
               if (evalData.data?.evaluation) {
@@ -427,7 +428,7 @@ export default function ProgramLearningPage() {
       
       if (programId.startsWith('temp_')) {
         // Legacy temp ID - create new program (fallback)
-        const createRes = await fetch(`/api/pbl/scenarios/${scenarioId}/start`, {
+        const createRes = await authenticatedFetch(`/api/pbl/scenarios/${scenarioId}/start`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -455,7 +456,7 @@ export default function ProgramLearningPage() {
         }
       } else if (program?.status === 'draft') {
         // Convert draft to active program on first message
-        const updateRes = await fetch(`/api/pbl/programs/${programId}/activate`, {
+        const updateRes = await authenticatedFetch(`/api/pbl/programs/${programId}/activate`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -482,7 +483,7 @@ export default function ProgramLearningPage() {
       }
       
       // Save user interaction
-      const saveUserRes = await fetch(`/api/pbl/tasks/${currentTask.id}/interactions`, {
+      const saveUserRes = await authenticatedFetch(`/api/pbl/tasks/${currentTask.id}/interactions`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -505,7 +506,7 @@ export default function ProgramLearningPage() {
       await new Promise(resolve => setTimeout(resolve, 200));
       
       // Get AI response
-      const aiRes = await fetch(`/api/pbl/chat?lang=${i18n.language}`, {
+      const aiRes = await authenticatedFetch(`/api/pbl/chat?lang=${i18n.language}`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -571,7 +572,7 @@ export default function ProgramLearningPage() {
       }
       
       // Save AI interaction
-      await fetch(`/api/pbl/tasks/${currentTask.id}/interactions`, {
+      await authenticatedFetch(`/api/pbl/tasks/${currentTask.id}/interactions`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -617,7 +618,7 @@ export default function ProgramLearningPage() {
       const recentConversations = conversations.slice(-10);
       
       // Call evaluate API
-      const response = await fetch('/api/pbl/evaluate', {
+      const response = await authenticatedFetch('/api/pbl/evaluate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -656,7 +657,7 @@ export default function ProgramLearningPage() {
         
         // Save evaluation to GCS
         try {
-          const saveResponse = await fetch(`/api/pbl/tasks/${currentTask.id}/evaluate`, {
+          const saveResponse = await authenticatedFetch(`/api/pbl/tasks/${currentTask.id}/evaluate`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -703,7 +704,7 @@ export default function ProgramLearningPage() {
     
     // Fetch all tasks for the program to find the current and next task
     try {
-      const tasksRes = await fetch(`/api/pbl/programs/${programId}/tasks`);
+      const tasksRes = await authenticatedFetch(`/api/pbl/programs/${programId}/tasks`);
       if (tasksRes.ok) {
         const tasks = await tasksRes.json();
         const sortedTasks = tasks.sort((a: { taskIndex: number }, b: { taskIndex: number }) => a.taskIndex - b.taskIndex);

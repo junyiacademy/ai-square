@@ -7,6 +7,7 @@ import { DynamicDomainRadarChart } from '@/lib/dynamic-imports';
 import CompetencyKnowledgeGraph from './CompetencyKnowledgeGraph';
 import { contentService } from '@/services/content-service';
 import { formatDateWithLocale } from '@/utils/locale';
+import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
 
 interface AssessmentResultsProps {
   result: AssessmentResult;
@@ -147,7 +148,7 @@ export default function AssessmentResults({ result, domains, onRetake, questions
     console.log('Sending request to API with body:', requestBody);
     
     try {
-      const response = await fetch('/api/assessment/results', {
+      const response = await authenticatedFetch('/api/assessment/results', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -167,7 +168,7 @@ export default function AssessmentResults({ result, domains, onRetake, questions
         // Also update progress in GCS
         if (currentUser.email) {
           try {
-            await fetch('/api/users/update-progress', {
+            await authenticatedFetch('/api/users/update-progress', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',

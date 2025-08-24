@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 import { PBLScenariosListSkeleton } from '@/components/pbl/loading-skeletons';
 import { IScenario } from '@/types/unified-learning';
+import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
 
 // Flexible scenario type for API responses that may not fully match unified architecture
 type FlexibleScenario = IScenario | Record<string, unknown>;
@@ -30,7 +31,7 @@ export default function PBLScenariosPage() {
     const fetchScenarios = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`/api/pbl/scenarios?lang=${i18n.language}`, {
+        const response = await authenticatedFetch(`/api/pbl/scenarios?lang=${i18n.language}`, {
           signal: controller.signal
         });
         

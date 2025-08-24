@@ -5,6 +5,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
 
 interface Scenario {
   id: string;
@@ -47,7 +48,7 @@ export function useHybridScenarios() {
     try {
       if (!isPreload) setLoading(true);
       
-      const response = await fetch(`/api/assessment/scenarios?lang=${language}`);
+      const response = await authenticatedFetch(`/api/assessment/scenarios?lang=${language}`);
       const data = await response.json();
       
       if (data.success) {

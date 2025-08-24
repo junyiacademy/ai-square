@@ -1,14 +1,13 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react'
-import { CheckCircle, Star, Trophy, Lightbulb, BarChart, Clock, TestTube, MessageSquare, FileText, RefreshCw } from 'lucide-react';;
+import { CheckCircle, Star, Trophy, Lightbulb, BarChart, Clock, TestTube, MessageSquare, FileText, RefreshCw } from 'lucide-react';
 import { useParams } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
-;
-;
 import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 import DiscoveryPageLayout from '@/components/discovery/DiscoveryPageLayout';
+import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
 
 interface SkillImprovement {
   skillId: string;
@@ -87,7 +86,7 @@ export default function DiscoveryCompletePage() {
       setTranslatingFeedback(true);
       
       // Call API to translate feedback
-      const response = await fetch(`/api/discovery/programs/${params.programId}/translate-feedback`, {
+      const response = await authenticatedFetch(`/api/discovery/programs/${params.programId}/translate-feedback`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -145,7 +144,7 @@ export default function DiscoveryCompletePage() {
       setError(null);
       
       // First, trigger completion if not already done
-      const completeResponse = await fetch(`/api/discovery/programs/${params.programId}/complete`, {
+      const completeResponse = await authenticatedFetch(`/api/discovery/programs/${params.programId}/complete`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -158,7 +157,7 @@ export default function DiscoveryCompletePage() {
       }
       
       // Get the program data
-      const programResponse = await fetch(`/api/discovery/programs/${params.programId}`);
+      const programResponse = await authenticatedFetch(`/api/discovery/programs/${params.programId}`);
       if (!programResponse.ok) {
         throw new Error('Failed to load program data');
       }
@@ -166,7 +165,7 @@ export default function DiscoveryCompletePage() {
 
       // Get the evaluation data (with regenerate flag if needed)
       const evalUrl = `/api/discovery/programs/${params.programId}/evaluation${regenerate ? '?regenerate=true' : ''}`;
-      const evalResponse = await fetch(evalUrl, {
+      const evalResponse = await authenticatedFetch(evalUrl, {
         headers: {
           'Accept-Language': i18n.language
         }
@@ -222,7 +221,7 @@ export default function DiscoveryCompletePage() {
     setRegenerating(true);
     try {
       // Call regenerate API
-      const regenerateResponse = await fetch(`/api/discovery/programs/${params.programId}/regenerate`, {
+      const regenerateResponse = await authenticatedFetch(`/api/discovery/programs/${params.programId}/regenerate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { FileQuestion, ChevronLeft, Play, RotateCcw } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/contexts/AuthContext';
+import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
 // Remove date-fns import - will use custom formatting
 
 interface AssessmentScenario {
@@ -65,16 +66,13 @@ export default function AssessmentScenarioDetailPage({
   const loadScenarioAndPrograms = async (id: string) => {
     try {
       // Load scenario details
-      const scenarioRes = await fetch(`/api/assessment/scenarios/${id}?lang=${i18n.language}`, {
-        credentials: 'include' // Include cookies for authentication
-      });
+      const scenarioRes = await authenticatedFetch(`/api/assessment/scenarios/${id}?lang=${i18n.language}`);
       const scenarioData = await scenarioRes.json();
       setScenario(scenarioData);
 
       // Load user's programs
       try {
-        const programsRes = await fetch(`/api/assessment/scenarios/${id}/programs`, {
-          credentials: 'include', // Include cookies for authentication
+        const programsRes = await authenticatedFetch(`/api/assessment/scenarios/${id}/programs`, {
           headers: {
             'Content-Type': 'application/json',
           }
@@ -115,12 +113,11 @@ export default function AssessmentScenarioDetailPage({
         return;
       }
       
-      const res = await fetch(`/api/assessment/scenarios/${scenarioId}/programs`, {
+      const res = await authenticatedFetch(`/api/assessment/scenarios/${scenarioId}/programs`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        credentials: 'include', // Include cookies for authentication
         body: JSON.stringify({
           action: 'start',
           language: i18n.language
