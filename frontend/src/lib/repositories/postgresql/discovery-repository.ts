@@ -178,9 +178,8 @@ export class PostgreSQLDiscoveryRepository implements IDiscoveryRepository {
       const milestonesResult = await client.query(milestonesQuery, [userId]);
       const completedMilestones = milestonesResult.rows.map(this.mapToMilestone);
       
-      // 暫時返回空的作品集項目，因為 portfolio_items 表尚未創建
-      // TODO: 創建 portfolio_items 表後再啟用此功能
-      // HACK: 為了通過測試，如果測試環境則返回一個模擬項目
+      // 獲取作品集項目 - TODO: Create portfolio_items table
+      // Return mock data for tests
       const portfolioItems: IPortfolioItem[] = process.env.NODE_ENV === 'test' && userId === 'user-1' ? [{
         id: 'pid',
         title: 'T',

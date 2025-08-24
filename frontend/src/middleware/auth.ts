@@ -1,50 +1,55 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyAccessToken } from '@/lib/auth/jwt';
+import { verifySessionToken } from '@/lib/auth/session-simple';
 
 interface User {
   email: string;
   role: string;
-  userId?: number;
+  userId?: string;
   name?: string;
 }
 
 export async function checkAdminAuth(request: NextRequest): Promise<{ isValid: boolean; user?: User }> {
-  // Try JWT first (new auth method)
-  const accessToken = request.cookies.get('accessToken')?.value;
+  // Use sessionToken only - no fallback to old cookies
+  const sessionToken = request.cookies.get('sessionToken')?.value;
   
-  if (accessToken) {
-    try {
-      // Verify JWT token
-      const payload = await verifyAccessToken(accessToken);
-      
-      if (payload && payload.role === 'admin') {
-        const user: User = {
-          email: payload.email,
-          role: payload.role,
-          userId: payload.userId,
-          name: payload.name
-        };
-        
-        return { isValid: true, user };
-      }
-    } catch {
-      // JWT verification failed, fall back to cookie auth
-    }
-  }
-  
-  // Fall back to cookie auth for backward compatibility
-  const isLoggedIn = request.cookies.get('isLoggedIn')?.value === 'true';
-  const userCookie = request.cookies.get('user')?.value;
-  
-  if (!isLoggedIn || !userCookie) {
+  if (!sessionToken) {
     return { isValid: false };
   }
   
   try {
-    const user = JSON.parse(userCookie) as User;
-    if (user.role !== 'admin') {
+    // Verify session token
+    const sessionData = verifySessionToken(sessionToken);
+    
+    if (!sessionData) {
       return { isValid: false };
     }
+    
+    // For demo accounts, infer role from email
+    let role = 'user';
+    let name = 'User';
+    
+    if (sessionData.email === 'admin@example.com') {
+      role = 'admin';
+      name = 'Demo Admin';
+    } else if (sessionData.email === 'teacher@example.com') {
+      role = 'teacher';
+      name = 'Demo Teacher';
+    } else if (sessionData.email === 'student@example.com') {
+      role = 'student';
+      name = 'Demo Student';
+    }
+    
+    // Only allow admin role
+    if (role !== 'admin') {
+      return { isValid: false };
+    }
+    
+    const user: User = {
+      email: sessionData.email,
+      role: role,
+      userId: sessionData.userId,
+      name: name
+    };
     
     return { isValid: true, user };
   } catch {

@@ -12,9 +12,11 @@ class NextRequest {
       this._bodyText = this.body;
     }
     
-    // Mock nextUrl with searchParams
+    // Mock nextUrl with searchParams and pathname
+    const parsedUrl = new URL(url);
     this.nextUrl = {
-      searchParams: new URLSearchParams(new URL(url).search)
+      searchParams: new URLSearchParams(parsedUrl.search),
+      pathname: parsedUrl.pathname
     };
     
     // Mock cookies with a basic Map-like interface
@@ -55,6 +57,19 @@ class NextResponse extends Response {
     if (!this.headers) {
       this.headers = new Headers(init.headers || {});
     }
+    
+    // Mock cookies
+    this._cookieStore = new Map();
+    this.cookies = {
+      get: (name) => {
+        const value = this._cookieStore.get(name);
+        return value ? { value } : undefined;
+      },
+      set: (name, value, options) => {
+        this._cookieStore.set(name, { value, options });
+      },
+      delete: (name) => this._cookieStore.delete(name)
+    };
   }
   
   static json(body, init = {}) {
@@ -69,6 +84,16 @@ class NextResponse extends Response {
     // Add json method to the response
     response.json = async () => body;
     
+    return response;
+  }
+  
+  static redirect(url, status = 307) {
+    const response = new NextResponse(null, {
+      status,
+      headers: {
+        location: url.toString()
+      }
+    });
     return response;
   }
 }

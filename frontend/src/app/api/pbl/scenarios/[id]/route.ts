@@ -3,6 +3,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import yaml from 'js-yaml';
 import { cachedGET, parallel, memoize } from '@/lib/api/optimization-utils';
+import { normalizeLanguageCode } from '@/lib/utils/language';
 // Removed unused import
 import type { Scenario } from '@/lib/repositories/interfaces';
 
@@ -89,7 +90,11 @@ const getLocalizedValue = memoize(((...args: unknown[]) => {
 const loadKSACodes = memoize((async (...args: unknown[]) => {
   const [lang = 'en'] = args as [string?];
   try {
-    const ksaPath = path.join(process.cwd(), 'public', 'rubrics_data', 'ksa_codes', `ksa_codes_${lang}.yaml`);
+    // Normalize language code (e.g., zh -> zhCN)
+    const normalizedLang = normalizeLanguageCode(lang);
+    // Convert to file naming format (e.g., zh-TW -> zhTW)
+    const fileLanguage = normalizedLang.replace(/[-_]/g, '');
+    const ksaPath = path.join(process.cwd(), 'public', 'rubrics_data', 'ksa_codes', `ksa_codes_${fileLanguage}.yaml`);
     const ksaContent = await fs.readFile(ksaPath, 'utf8');
     return yaml.load(ksaContent) as KSAData;
   } catch (error) {

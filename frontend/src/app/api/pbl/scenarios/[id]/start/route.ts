@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { learningServiceFactory } from '@/lib/services/learning-service-factory';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
+import { getServerSession } from '@/lib/auth/session';
 
 export async function POST(
   request: NextRequest,
@@ -21,17 +22,9 @@ export async function POST(
   try {
     const scenarioId = id;
     
-    // Get user info from cookie
-    let userEmail: string | undefined;
-    try {
-      const userCookie = request.cookies.get('user')?.value;
-      if (userCookie) {
-        const user = JSON.parse(userCookie);
-        userEmail = user.email;
-      }
-    } catch {
-      console.log('No user cookie found');
-    }
+    // Get user info from session
+    const session = await getServerSession();
+    const userEmail = session?.user?.email;
     
     console.log('   User email:', userEmail);
     
