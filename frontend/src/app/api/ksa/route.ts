@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { jsonYamlLoader } from '@/lib/json-yaml-loader';
 import { distributedCacheService } from '@/lib/cache/distributed-cache-service';
 import { TTL } from '@/lib/cache/cache-keys';
+import { normalizeLanguageCode } from '@/lib/utils/language';
 
 interface YAMLCode {
   summary: string;
@@ -36,8 +37,12 @@ export async function GET(request: NextRequest) {
     
     // Fetcher function for cache
     const fetcher = async () => {
+      // Normalize language code (e.g., zh -> zhCN)
+      const normalizedLang = normalizeLanguageCode(lang);
+      // Convert to file naming format (e.g., zh-TW -> zhTW)
+      const fileLanguage = normalizedLang.replace(/[-_]/g, '');
       // Load language-specific KSA codes file from rubrics_data/ksa_codes/
-      const fileName = `ksa_codes_${lang}`;
+      const fileName = `ksa_codes_${fileLanguage}`;
       const data = await jsonYamlLoader.load(`rubrics_data/ksa_codes/${fileName}`, { 
         preferJson: false  // Use YAML files
       }) as YAMLData;

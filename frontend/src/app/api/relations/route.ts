@@ -3,6 +3,7 @@ import { distributedCacheService } from '@/lib/cache/distributed-cache-service';
 import { cacheService } from '@/lib/cache/cache-service';
 import { cacheKeys, TTL } from '@/lib/cache/cache-keys';
 import { jsonYamlLoader } from '@/lib/json-yaml-loader';
+import { normalizeLanguageCode } from '@/lib/utils/language';
 
 // Type definitions for language-specific YAML files
 interface CompetencyYaml {
@@ -81,8 +82,10 @@ interface KSADataResponse {
 
 export async function GET(request: NextRequest) {
   const lang = request.nextUrl.searchParams.get('lang') || 'en';
-  // Normalize language code to match file naming (e.g., zh-TW / zh_TW -> zhTW)
-  const fileLanguage = lang.replace(/[-_]/g, '');
+  // Normalize language code to supported format (e.g., zh -> zhCN)
+  const normalizedLang = normalizeLanguageCode(lang);
+  // Convert to file naming format (e.g., zh-TW / zh_TW -> zhTW)
+  const fileLanguage = normalizedLang.replace(/[-_]/g, '');
   const cacheKey = cacheKeys.relationsByLang(lang);
 
   try {
