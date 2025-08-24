@@ -165,7 +165,7 @@ export default function DiscoveryCompletePage() {
 
       // Get the evaluation data (with regenerate flag if needed)
       const evalUrl = `/api/discovery/programs/${params.programId}/evaluation${regenerate ? '?regenerate=true' : ''}`;
-      const evalResponse = await fetch(evalUrl, {
+      const evalResponse = await authenticatedFetch(evalUrl, {
         headers: {
           'Accept-Language': i18n.language
         }
