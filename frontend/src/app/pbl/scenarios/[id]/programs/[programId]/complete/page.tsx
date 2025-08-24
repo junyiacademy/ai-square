@@ -156,7 +156,7 @@ export default function ProgramCompletePage() {
       setGeneratingFeedback(true);
       
       const currentLang = normalizeLanguageCode(i18n.language);
-      const response = await fetch('/api/pbl/generate-feedback', {
+      const response = await authenticatedFetch('/api/pbl/generate-feedback', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
