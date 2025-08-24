@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
+import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
 
 export default function OnboardingWelcomePage() {
   const router = useRouter();
@@ -149,7 +150,7 @@ export default function OnboardingWelcomePage() {
         const user = JSON.parse(userStr);
         
         try {
-          await fetch('/api/users/update-progress', {
+          await authenticatedFetch('/api/users/update-progress', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -178,7 +179,7 @@ export default function OnboardingWelcomePage() {
       
       // Update onboarding status in database
       try {
-        const updateResponse = await fetch(`/api/users/${user.id}`, {
+        const updateResponse = await authenticatedFetch(`/api/users/${user.id}`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',

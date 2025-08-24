@@ -9,6 +9,7 @@ import ScenarioCard from '@/components/discovery/ScenarioCard';
 import { useUserData } from '@/hooks/useUserData';
 import { useAuth } from '@/contexts/AuthContext';
 import { normalizeLanguageCode } from '@/lib/utils/language';
+import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
 ;
 
 // Icon mapping for career types
@@ -101,7 +102,7 @@ export default function ScenariosPage() {
     const fetchScenarios = async () => {
       try {
         const lang = normalizeLanguageCode(i18n.language);
-        const response = await fetch(`/api/discovery/scenarios?lang=${lang}`);
+        const response = await authenticatedFetch(`/api/discovery/scenarios?lang=${lang}`);
         if (response.ok) {
           const result = await response.json();
           const scenarios = result.data?.scenarios || result; // Handle both formats
@@ -159,7 +160,7 @@ export default function ScenariosPage() {
       setIsLoadingMyScenarios(true);
       try {
         const lang = normalizeLanguageCode(i18n.language);
-        const response = await fetch(`/api/discovery/scenarios/my?lang=${lang}`);
+        const response = await authenticatedFetch(`/api/discovery/scenarios/my?lang=${lang}`);
         if (response.ok) {
           const data = await response.json();
           

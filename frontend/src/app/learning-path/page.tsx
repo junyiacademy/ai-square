@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 import type { AssessmentResult } from '@/types/assessment';
 import type { Scenario, ScenarioListItem } from '@/types/pbl';
+import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
 
 interface LearningPathItem {
   id: string;
@@ -214,7 +215,7 @@ function LearningPathContent() {
   const generateLearningPath = async (result: AssessmentResult) => {
     try {
       // Fetch PBL scenarios
-      const response = await fetch('/api/pbl/scenarios');
+      const response = await authenticatedFetch('/api/pbl/scenarios');
       const scenariosData = await response.json();
       
       // Handle the nested data structure

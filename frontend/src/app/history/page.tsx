@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { HistoryPageSkeleton } from '@/components/ui/history-skeletons';
 import { formatDateWithLocale } from '@/utils/locale';
+import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
 
 // Reuse interfaces from existing history pages
 interface AssessmentHistoryItem {
@@ -139,7 +140,7 @@ export default function UnifiedHistoryPage() {
       
       try {
         // Fetch assessment history
-        const assessmentResponse = await fetch(`/api/assessment/results?userId=${currentUser.id}&userEmail=${encodeURIComponent(currentUser.email || currentUser.id)}`);
+        const assessmentResponse = await authenticatedFetch(`/api/assessment/results?userId=${currentUser.id}&userEmail=${encodeURIComponent(currentUser.email || currentUser.id)}`);
         const assessmentData = await assessmentResponse.json();
         const assessmentItems: HistoryItem[] = ((assessmentData.data || assessmentData.results) || []).map((item: AssessmentHistoryItem) => ({
           type: 'assessment' as const,
@@ -150,7 +151,7 @@ export default function UnifiedHistoryPage() {
         // Fetch PBL history using completion data
         let pblItems: HistoryItem[] = [];
         try {
-          const pblResponse = await fetch(`/api/pbl/history?lang=${i18n.language}&t=${Date.now()}`);
+          const pblResponse = await authenticatedFetch(`/api/pbl/history?lang=${i18n.language}&t=${Date.now()}`);
           if (pblResponse.ok) {
             const pblData = await pblResponse.json();
             if (pblData.success && pblData.programs) {
@@ -227,7 +228,7 @@ export default function UnifiedHistoryPage() {
         // Fetch Discovery history
         const discoveryItems: HistoryItem[] = [];
         try {
-          const discoveryResponse = await fetch(`/api/discovery/my-programs?t=${Date.now()}`);
+          const discoveryResponse = await authenticatedFetch(`/api/discovery/my-programs?t=${Date.now()}`);
           if (discoveryResponse.ok) {
             const discoveryScenarios = await discoveryResponse.json();
             
@@ -239,7 +240,7 @@ export default function UnifiedHistoryPage() {
               for (const scenario of discoveryScenarios) {
                 if (scenario.userPrograms?.total > 0) {
                 // Get all programs for this scenario
-                const programsResponse = await fetch(`/api/discovery/scenarios/${scenario.id}/programs?t=${Date.now()}`);
+                const programsResponse = await authenticatedFetch(`/api/discovery/scenarios/${scenario.id}/programs?t=${Date.now()}`);
                 if (programsResponse.ok) {
                   const programs = await programsResponse.json();
                   

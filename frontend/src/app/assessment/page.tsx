@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import AssessmentQuiz from '../../components/assessment/AssessmentQuiz';
 import AssessmentResults from '../../components/assessment/AssessmentResults';
 import { AssessmentData, UserAnswer, AssessmentResult } from '../../types/assessment';
+import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
 
 export default function AssessmentPage() {
   const { t, i18n } = useTranslation('assessment');
@@ -21,7 +22,7 @@ export default function AssessmentPage() {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetch(`/api/assessment?lang=${i18n.language}`);
+        const response = await authenticatedFetch(`/api/assessment?lang=${i18n.language}`);
         if (!response.ok) {
           throw new Error(`Failed to fetch: ${response.status}`);
         }

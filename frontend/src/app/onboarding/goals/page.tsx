@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
+import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
 
 interface LearningGoal {
   id: string;
@@ -106,7 +107,7 @@ export default function OnboardingGoalsPage() {
         
         // Update onboarding status in database
         try {
-          const updateResponse = await fetch(`/api/users/${user.id}`, {
+          const updateResponse = await authenticatedFetch(`/api/users/${user.id}`, {
             method: 'PATCH',
             headers: {
               'Content-Type': 'application/json',
@@ -140,7 +141,7 @@ export default function OnboardingGoalsPage() {
         localStorage.setItem('userProfile', JSON.stringify(userProfile));
         
         // Update progress in GCS
-        await fetch('/api/users/update-progress', {
+        await authenticatedFetch('/api/users/update-progress', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -165,7 +166,7 @@ export default function OnboardingGoalsPage() {
       console.log('Frontend user state:', frontendUser ? 'logged in' : 'not logged in');
       
       // Then check backend API
-      const authCheckResponse = await fetch('/api/auth/check');
+      const authCheckResponse = await authenticatedFetch('/api/auth/check');
       const authData = await authCheckResponse.json();
       console.log('Backend auth response:', authData);
       
@@ -186,7 +187,7 @@ export default function OnboardingGoalsPage() {
 
       // Get first assessment scenario and auto-create program
       console.log('Fetching assessment scenarios...');
-      const scenariosResponse = await fetch('/api/assessment/scenarios?lang=en');
+      const scenariosResponse = await authenticatedFetch('/api/assessment/scenarios?lang=en');
       
       if (!scenariosResponse.ok) {
         console.error('Failed to fetch scenarios:', scenariosResponse.status, scenariosResponse.statusText);
@@ -232,7 +233,7 @@ export default function OnboardingGoalsPage() {
 
       // Create program for the first scenario
       console.log('Attempting to create program with current auth state...');
-      const programResponse = await fetch(`/api/assessment/scenarios/${firstScenario.id}/programs`, {
+      const programResponse = await authenticatedFetch(`/api/assessment/scenarios/${firstScenario.id}/programs`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

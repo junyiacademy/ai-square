@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
 
 interface User {
   id: number;
@@ -50,9 +51,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const checkAuth = useCallback(async () => {
     try {
-      const response = await fetch('/api/auth/check', {
-        credentials: 'include'
-      });
+      const response = await authenticatedFetch('/api/auth/check');
       
       if (!response.ok) {
         throw new Error('Auth check failed');
@@ -91,12 +90,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = useCallback(async (credentials: { email: string; password: string; rememberMe?: boolean }) => {
     try {
-      const response = await fetch('/api/auth/login', {
+      const response = await authenticatedFetch('/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        credentials: 'include',
         body: JSON.stringify(credentials),
       });
 
@@ -121,9 +119,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = useCallback(async () => {
     try {
-      await fetch('/api/auth/logout', {
-        method: 'POST',
-        credentials: 'include'
+      await authenticatedFetch('/api/auth/logout', {
+        method: 'POST'
       });
     } catch (error) {
       console.error('Logout error:', error);
@@ -135,9 +132,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   
   const refreshToken = useCallback(async (): Promise<boolean> => {
     try {
-      const response = await fetch('/api/auth/refresh', {
-        method: 'POST',
-        credentials: 'include'
+      const response = await authenticatedFetch('/api/auth/refresh', {
+        method: 'POST'
       });
       
       if (response.ok) {
@@ -145,9 +141,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (data.success) {
           // Inline auth check to avoid dependency issues
           try {
-            const checkResponse = await fetch('/api/auth/check', {
-              credentials: 'include'
-            });
+            const checkResponse = await authenticatedFetch('/api/auth/check');
             
             if (!checkResponse.ok) {
               throw new Error('Auth check failed');

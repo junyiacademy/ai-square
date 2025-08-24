@@ -9,8 +9,7 @@ import DiscoveryPageLayout from '@/components/discovery/DiscoveryPageLayout';
 import { useAuth } from '@/contexts/AuthContext';
 import { motion } from 'framer-motion';
 import { normalizeLanguageCode } from '@/lib/utils/language';
-;
-;
+import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
 
 // Icon mapping for career types
 const careerIcons: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> = {
@@ -123,7 +122,7 @@ export default function DiscoveryScenarioDetailPage() {
       setLoadingPrograms(true);
       const sessionToken = localStorage.getItem('ai_square_session');
       
-      const response = await fetch(`/api/discovery/scenarios/${scenarioId}/programs?lang=${i18n.language}`, {
+      const response = await authenticatedFetch(`/api/discovery/scenarios/${scenarioId}/programs?lang=${i18n.language}`, {
         credentials: 'include',
         headers: {
           'x-session-token': sessionToken || ''
@@ -160,7 +159,7 @@ export default function DiscoveryScenarioDetailPage() {
       // Get session token from localStorage for API calls
       const sessionToken = localStorage.getItem('ai_square_session');
       
-      const response = await fetch(`/api/discovery/scenarios/${scenarioId}`, {
+      const response = await authenticatedFetch(`/api/discovery/scenarios/${scenarioId}`, {
         credentials: 'include',
         headers: {
           'x-session-token': sessionToken || ''
@@ -205,7 +204,7 @@ export default function DiscoveryScenarioDetailPage() {
       const sessionToken = localStorage.getItem('ai_square_session');
       const lang = normalizeLanguageCode(i18n.language);
       
-      const response = await fetch(`/api/discovery/scenarios/${scenarioId}/programs`, {
+      const response = await authenticatedFetch(`/api/discovery/scenarios/${scenarioId}/programs`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',

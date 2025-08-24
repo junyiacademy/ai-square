@@ -12,6 +12,7 @@ import type {
   LocalizedFeedback
 } from '@/types/pbl-completion';
 import { normalizeLanguageCode } from '@/lib/utils/language';
+import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
 
 export default function ProgramCompletePage() {
   const params = useParams();
@@ -100,7 +101,7 @@ export default function ProgramCompletePage() {
       // Process completion data
       if (!completionRes.ok) {
         // If completion.json doesn't exist, try to create it
-        const updateRes = await fetch(`/api/pbl/completion`, {
+        const updateRes = await authenticatedFetch(`/api/pbl/completion`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ programId, scenarioId })
@@ -108,7 +109,7 @@ export default function ProgramCompletePage() {
         
         if (updateRes.ok) {
           // Try to get the newly created completion data
-          const retryResponse = await fetch(`/api/pbl/completion?programId=${programId}&scenarioId=${scenarioId}`);
+          const retryResponse = await authenticatedFetch(`/api/pbl/completion?programId=${programId}&scenarioId=${scenarioId}`);
           if (retryResponse.ok) {
             const data = await retryResponse.json();
             if (data.success && data.data) {

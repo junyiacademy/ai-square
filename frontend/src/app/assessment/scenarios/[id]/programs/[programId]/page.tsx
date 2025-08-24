@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import AssessmentQuiz from '@/components/assessment/AssessmentQuiz';
 import { AssessmentQuestion, UserAnswer } from '@/types/assessment';
+import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
 
 interface Task {
   id: string;
@@ -86,7 +87,7 @@ export default function AssessmentProgramPage({
         headers['x-session-token'] = sessionToken;
       }
       
-      const res = await fetch(`/api/assessment/programs/${progId}`, {
+      const res = await authenticatedFetch(`/api/assessment/programs/${progId}`, {
         credentials: 'include', // Include cookies for authentication
         headers
       });
@@ -159,7 +160,7 @@ export default function AssessmentProgramPage({
       
       // Batch submit new answers
       if (newAnswers.length > 0) {
-        await fetch(`/api/assessment/programs/${programId}/batch-answers`, {
+        await authenticatedFetch(`/api/assessment/programs/${programId}/batch-answers`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -177,7 +178,7 @@ export default function AssessmentProgramPage({
       }
       
       // Check if there are more tasks
-      const nextTaskRes = await fetch(`/api/assessment/programs/${programId}/next-task`, {
+      const nextTaskRes = await authenticatedFetch(`/api/assessment/programs/${programId}/next-task`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -192,7 +193,7 @@ export default function AssessmentProgramPage({
       
       if (nextTaskData.complete) {
         // All tasks complete, finish the assessment
-        await fetch(`/api/assessment/programs/${programId}/complete`, {
+        await authenticatedFetch(`/api/assessment/programs/${programId}/complete`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

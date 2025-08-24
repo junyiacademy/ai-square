@@ -5,6 +5,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
+import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
 
 interface MultilingualScenario {
   id: string;
@@ -28,7 +29,7 @@ export function useMultilingualScenarios() {
   const loadScenarios = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/assessment/scenarios?allLanguages=true');
+      const response = await authenticatedFetch('/api/assessment/scenarios?allLanguages=true');
       const data = await response.json();
       
       if (data.success) {

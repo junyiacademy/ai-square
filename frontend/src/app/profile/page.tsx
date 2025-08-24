@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/useAuth';
+import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
 
 interface UserProfile {
   id: string;
@@ -66,7 +67,7 @@ export default function ProfilePage() {
 
   const fetchProfile = async () => {
     try {
-      const response = await fetch('/api/auth/profile');
+      const response = await authenticatedFetch('/api/auth/profile');
       const data = await response.json();
 
       if (data.success) {
@@ -115,7 +116,7 @@ export default function ProfilePage() {
         updates.newPassword = newPassword;
       }
 
-      const response = await fetch('/api/auth/profile', {
+      const response = await authenticatedFetch('/api/auth/profile', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updates),
@@ -153,7 +154,7 @@ export default function ProfilePage() {
     setIsResending(true);
 
     try {
-      const response = await fetch('/api/auth/resend-verification', {
+      const response = await authenticatedFetch('/api/auth/resend-verification', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({}), // Session will be used
