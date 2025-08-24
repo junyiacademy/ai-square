@@ -12,7 +12,7 @@ export async function getServerSession(): Promise<Session | null> {
   const cookieStore = await cookies();
   const headersList = await headers();
   
-  // Check for session token first (new JWT system)
+  // Check for session token (new JWT system)
   let sessionToken = cookieStore.get('sessionToken')?.value;
   
   // If not in cookie, check header (for API calls from client)
@@ -32,26 +32,7 @@ export async function getServerSession(): Promise<Session | null> {
     }
   }
   
-  // Fall back to existing cookie-based authentication
-  const isLoggedIn = cookieStore.get('isLoggedIn')?.value === 'true';
-  const userCookie = cookieStore.get('user')?.value;
-  
-  if (isLoggedIn && userCookie) {
-    try {
-      const userData = JSON.parse(userCookie);
-      if (userData.email) {
-        return {
-          user: {
-            id: userData.id?.toString() || userData.email, // Use email as fallback ID
-            email: userData.email
-          }
-        };
-      }
-    } catch (error) {
-      console.error('Error parsing user cookie:', error);
-    }
-  }
-  
+  // NO FALLBACK to old cookies - users must use the new system
   return null;
 }
 
