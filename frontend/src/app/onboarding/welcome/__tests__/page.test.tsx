@@ -296,6 +296,7 @@ describe('OnboardingWelcomePage', () => {
           stage: 'welcome',
           data: {}
         }),
+        credentials: 'include'
       });
       expect(mockRouter.push).toHaveBeenCalledWith('/onboarding/identity');
     });

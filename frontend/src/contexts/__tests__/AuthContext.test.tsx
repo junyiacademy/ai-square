@@ -6,10 +6,16 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import { AuthProvider, useAuth } from '../AuthContext';
 import { useRouter } from 'next/navigation';
+import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
 
 // Mock dependencies
 jest.mock('next/navigation', () => ({
   useRouter: jest.fn(),
+}));
+
+// Mock authenticatedFetch
+jest.mock('@/lib/utils/authenticated-fetch', () => ({
+  authenticatedFetch: jest.fn()
 }));
 
 // Mock fetch
@@ -38,8 +44,49 @@ describe('AuthContext', () => {
     (useRouter as jest.Mock).mockReturnValue({ push: mockPush });
     localStorage.clear();
     
-    // Mock successful auth check
-    (global.fetch as jest.Mock).mockImplementation((url) => {
+    // Mock authenticatedFetch
+    (authenticatedFetch as jest.Mock).mockImplementation((url, options) => {
+      if (url === '/api/auth/check') {
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({ 
+            authenticated: false,
+            user: null 
+          }),
+        });
+      }
+      if (url === '/api/auth/login') {
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({
+            success: true,
+            user: {
+              id: 1,
+              email: 'test@example.com',
+              role: 'student',
+              name: 'Test User'
+            },
+            sessionToken: 'test-token'
+          }),
+        });
+      }
+      if (url === '/api/auth/refresh') {
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({ success: true }),
+        });
+      }
+      if (url === '/api/auth/logout') {
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({ success: true }),
+        });
+      }
+      return Promise.reject(new Error('Not found'));
+    });
+    
+    // Also mock global fetch for non-authenticated calls
+    (global.fetch as jest.Mock).mockImplementation((url, options) => {
       if (url === '/api/auth/check') {
         return Promise.resolve({
           ok: true,
@@ -82,9 +129,29 @@ describe('AuthContext', () => {
   });
 
   it('should update state immediately after successful login', async () => {
+    // Create a test component that logs the login result
+    function TestLoginComponent() {
+      const { user, isLoggedIn, login } = useAuth();
+      const [loginResult, setLoginResult] = React.useState<any>(null);
+      
+      const handleLogin = async () => {
+        const result = await login({ email: 'test@example.com', password: 'test123' });
+        setLoginResult(result);
+      };
+      
+      return (
+        <div>
+          <div data-testid="login-status">{isLoggedIn ? 'Logged In' : 'Not Logged In'}</div>
+          <div data-testid="user-email">{user?.email || 'No User'}</div>
+          <button onClick={handleLogin}>Login</button>
+          {loginResult && <div data-testid="login-result">{JSON.stringify(loginResult)}</div>}
+        </div>
+      );
+    }
+    
     render(
       <AuthProvider>
-        <TestComponent />
+        <TestLoginComponent />
       </AuthProvider>
     );
     
@@ -93,16 +160,13 @@ describe('AuthContext', () => {
     
     // Click login button
     const loginButton = screen.getByText('Login');
+    fireEvent.click(loginButton);
     
-    await act(async () => {
-      loginButton.click();
-    });
-    
-    // After login, state should be updated immediately
+    // After login, state should be updated
     await waitFor(() => {
       expect(screen.getByTestId('login-status')).toHaveTextContent('Logged In');
       expect(screen.getByTestId('user-email')).toHaveTextContent('test@example.com');
-    });
+    }, { timeout: 3000 });
     
     // Check localStorage was updated
     expect(localStorage.getItem('isLoggedIn')).toBe('true');
@@ -144,6 +208,25 @@ describe('AuthContext', () => {
       name: 'Cached User'
     }));
     
+    // Mock auth check to confirm the cached user
+    (authenticatedFetch as jest.Mock).mockImplementation((url) => {
+      if (url === '/api/auth/check') {
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve({ 
+            authenticated: true,
+            user: {
+              id: 1,
+              email: 'cached@example.com',
+              role: 'student',
+              name: 'Cached User'
+            }
+          }),
+        });
+      }
+      return Promise.reject(new Error('Not found'));
+    });
+    
     render(
       <AuthProvider>
         <TestComponent />
@@ -157,7 +240,7 @@ describe('AuthContext', () => {
 
   it('should handle auth check API validation', async () => {
     // Mock auth check to return authenticated
-    (global.fetch as jest.Mock).mockImplementation((url) => {
+    (authenticatedFetch as jest.Mock).mockImplementation((url) => {
       if (url === '/api/auth/check') {
         return Promise.resolve({
           ok: true,

@@ -106,7 +106,7 @@ describe('session', () => {
       expect(session).toBeNull();
     });
 
-    it('falls back to legacy cookie authentication', async () => {
+    it('returns null when no session token exists (legacy auth removed)', async () => {
       const mockUserData = {
         id: 789,
         email: 'legacy@example.com',
@@ -128,15 +128,11 @@ describe('session', () => {
 
       const session = await getServerSession();
 
-      expect(session).toEqual({
-        user: {
-          id: '789',
-          email: 'legacy@example.com',
-        },
-      });
+      // Legacy auth has been removed, should return null
+      expect(session).toBeNull();
     });
 
-    it('uses email as fallback ID when user ID is missing', async () => {
+    it('returns null without session token (no legacy fallback)', async () => {
       const mockUserData = {
         email: 'noid@example.com',
       };
@@ -153,15 +149,12 @@ describe('session', () => {
 
       mockCookies.mockResolvedValue(mockCookieStore as any);
       mockHeaders.mockResolvedValue(mockHeadersList as any);
+      mockVerifySessionToken.mockReturnValue(null);
 
       const session = await getServerSession();
 
-      expect(session).toEqual({
-        user: {
-          id: 'noid@example.com',
-          email: 'noid@example.com',
-        },
-      });
+      // No session token and no legacy support means null
+      expect(session).toBeNull();
     });
 
     it('handles malformed user cookie gracefully', async () => {

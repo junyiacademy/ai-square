@@ -118,6 +118,9 @@ describe('Cookie Migration and Authentication', () => {
       
       (bcrypt.compare as jest.Mock).mockResolvedValue(true);
 
+      // Spy on AuthManager.setAuthCookie BEFORE calling login
+      const setCookieSpy = jest.spyOn(AuthManager, 'setAuthCookie');
+
       const request = new NextRequest('http://localhost/api/auth/login', {
         method: 'POST',
         body: JSON.stringify({
@@ -133,7 +136,6 @@ describe('Cookie Migration and Authentication', () => {
       expect(data.success).toBe(true);
       
       // Check that AuthManager.setAuthCookie was called
-      const setCookieSpy = jest.spyOn(AuthManager, 'setAuthCookie');
       expect(setCookieSpy).toHaveBeenCalledWith(
         expect.any(NextResponse),
         'mock-session-token',
