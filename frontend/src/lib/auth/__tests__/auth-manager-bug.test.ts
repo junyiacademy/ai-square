@@ -2,29 +2,26 @@ import { AuthManager } from '../auth-manager';
 import crypto from 'crypto';
 
 describe('AuthManager Bug Reproduction', () => {
-  describe('Current Implementation Bug', () => {
-    it('should fail to validate hex tokens with current base64 implementation', () => {
+  describe('Fixed Implementation', () => {
+    it('should now correctly validate hex tokens', () => {
       // This is how tokens are generated in register/login routes
       const hexToken = crypto.randomBytes(32).toString('hex');
       
-      // This test will fail with current implementation
-      // proving the bug exists
+      // After fix, this should now pass
       const result = AuthManager.isValidSessionToken(hexToken);
       
-      // Current implementation returns false because hex is not valid base64
-      expect(result).toBe(false); // This is the bug!
+      // Fixed implementation correctly validates hex tokens
+      expect(result).toBe(true); // Bug is fixed!
     });
 
-    it('should show that current validation expects base64 but gets hex', () => {
+    it('should validate hex tokens of correct format', () => {
       const validHexToken = 'a'.repeat(64); // 64 hex chars
       
-      // atob in browser throws on invalid base64, but Node.js might not
-      // Let's test the actual method behavior
+      // Test the fixed method behavior
       const result = AuthManager.isValidSessionToken(validHexToken);
       
-      // Current implementation will return false because
-      // hex token doesn't decode to something containing 'userId' or 'email'
-      expect(result).toBe(false);
+      // Fixed implementation validates hex format tokens
+      expect(result).toBe(true);
     });
   });
 
