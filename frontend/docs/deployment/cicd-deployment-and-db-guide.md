@@ -169,6 +169,8 @@ on:
 - [ ] ESLint no warnings (`npm run lint`)
 - [ ] Build succeeds (`npm run build`)
 - [ ] Database migrations tested locally
+- [ ] Authentication tests pass (`npm test -- auth`)
+- [ ] E2E authentication tests pass (`npm run test:e2e -- auth`)
 
 ### Before Deploying to Production
 - [ ] Staging deployment successful
@@ -211,6 +213,10 @@ gcloud run services update-traffic SERVICE_NAME \
 2. **Always backup database** before production migrations
 3. **Monitor logs** after deployment for errors
 4. **Keep staging and production** in sync
+5. **Verify authentication** works after each deployment
+   - Check middleware is correctly validating tokens
+   - Test protected routes are accessible when logged in
+   - Ensure token format consistency (hex vs base64)
 
 ## 📊 Monitoring
 

@@ -575,6 +575,32 @@ alias test-staging='curl -s https://ai-square-staging-463013.asia-east1.run.app/
 
 **記住：監控 → 驗證 → 測試 → 確認，缺一不可！**
 
+## 🚨 認證系統修復教訓 - Token 格式必須一致 (2025-08-25 血淚教訓)
+
+### ❌ 絕對禁止的錯誤：Token 生成與驗證格式不一致
+```typescript
+// 錯誤：生成 hex token 但用 base64 驗證
+const sessionToken = crypto.randomBytes(32).toString('hex'); // 生成 hex
+// 但驗證時...
+const decoded = atob(token); // 嘗試解碼 base64！
+```
+
+### ✅ 正確的 Token 處理方式
+```typescript
+// 生成 hex token
+const sessionToken = crypto.randomBytes(32).toString('hex');
+
+// 驗證 hex token
+static isValidSessionToken(token: string): boolean {
+  return /^[a-f0-9]{64}$/i.test(token);
+}
+```
+
+### 教訓來源
+2025-08-25 用戶無法訪問受保護頁面，一直被重定向到登入頁。原因是 token 生成使用 hex 格式，但驗證卻期望 base64 格式，導致所有 token 驗證失敗。
+
+**記住：Token 格式必須從生成到驗證保持一致！**
+
 ## 🚨 E2E 測試鐵律 - 必須使用真實瀏覽器 (2025-08-15 血淚教訓)
 
 ### ❌ 絕對禁止的錯誤測試方式

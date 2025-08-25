@@ -62,13 +62,9 @@ export class AuthManager {
   static isValidSessionToken(token: string): boolean {
     if (!token) return false;
     
-    // Basic validation: should be base64 encoded
-    try {
-      const decoded = atob(token);
-      return decoded.includes('userId') || decoded.includes('email');
-    } catch {
-      return false;
-    }
+    // Validate hex token format (32 bytes = 64 hex characters)
+    // Tokens are generated using crypto.randomBytes(32).toString('hex')
+    return /^[a-f0-9]{64}$/i.test(token);
   }
 
   /**

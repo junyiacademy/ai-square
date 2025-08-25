@@ -1,5 +1,6 @@
 import { AuthManager } from '../auth-manager';
 import { NextRequest, NextResponse } from 'next/server';
+import crypto from 'crypto';
 
 // Mock NextResponse
 jest.mock('next/server', () => {
@@ -60,8 +61,8 @@ describe('AuthManager - Centralized Authentication', () => {
     });
 
     it('should check authentication with single cookie', () => {
-      // Create a valid base64 encoded token
-      const validToken = btoa(JSON.stringify({ userId: '123', email: 'test@example.com' }));
+      // Create a valid hex token (32 bytes = 64 hex chars)
+      const validToken = crypto.randomBytes(32).toString('hex');
       const mockCookies = {
         get: jest.fn((name: string) => name === 'sessionToken' ? { value: validToken } : undefined)
       };
@@ -86,7 +87,8 @@ describe('AuthManager - Centralized Authentication', () => {
 
   describe('Session Token Validation', () => {
     it('should validate session token format', () => {
-      const validToken = 'eyJ1c2VySWQiOiIxMjMiLCJlbWFpbCI6InRlc3RAZXhhbXBsZS5jb20ifQ==';
+      // Valid hex token (32 bytes = 64 hex chars)
+      const validToken = crypto.randomBytes(32).toString('hex');
       const invalidToken = 'invalid-token';
       
       expect(AuthManager.isValidSessionToken(validToken)).toBe(true);
