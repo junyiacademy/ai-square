@@ -1,137 +1,96 @@
-import { NextRequest, NextResponse } from 'next/server'
-import bcrypt from 'bcryptjs'
-import { createAccessToken, createRefreshToken } from '@/lib/auth/jwt'
-import { createSessionToken } from '@/lib/auth/session-simple'
-import { getPool } from '@/lib/db/get-pool'
-import { PostgreSQLUserRepository } from '@/lib/repositories/postgresql'
-import { z } from 'zod'
-import { getUserWithPassword } from '@/lib/auth/password-utils'
-import { AuthManager } from '@/lib/auth/auth-manager'
+import { NextRequest, NextResponse } from 'next/server';
+import bcrypt from 'bcryptjs';
+import { z } from 'zod';
+import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
+import { AuthManager } from '@/lib/auth/auth-manager';
+import { SecureSession } from '@/lib/auth/secure-session';
+import type { UserWithPassword } from '@/lib/repositories/interfaces/user-with-password';
 
 // Input validation schema
 const loginSchema = z.object({
   email: z.string().email('Invalid email format'),
   password: z.string().min(1, 'Password is required'),
-  rememberMe: z.boolean().optional().default(false)
-})
+  rememberMe: z.boolean().optional()
+});
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json()
+    const body = await request.json();
     
     // Validate input
-    const validationResult = loginSchema.safeParse(body)
+    const validationResult = loginSchema.safeParse(body);
     if (!validationResult.success) {
-      const errors = validationResult.error.errors.map(e => e.message).join(', ')
       return NextResponse.json(
-        { success: false, error: errors },
+        { success: false, error: 'Invalid email or password format' },
         { status: 400 }
-      )
+      );
     }
 
-    const { email, password, rememberMe } = validationResult.data
+    const { email, password, rememberMe = false } = validationResult.data;
 
-    // Get database pool
-    const pool = getPool()
-
-    // Find user in database with password
-    const user = await getUserWithPassword(pool, email.toLowerCase())
+    // Get user repository
+    const userRepo = repositoryFactory.getUserRepository();
     
+    // Find user by email (with password hash)
+    const user = await userRepo.findByEmail(email) as UserWithPassword | null;
     if (!user) {
       return NextResponse.json(
         { success: false, error: 'Invalid email or password' },
         { status: 401 }
-      )
+      );
     }
 
     // Verify password
-    const isValidPassword = await bcrypt.compare(password, user.passwordHash || '')
-    
+    const isValidPassword = await bcrypt.compare(password, user.passwordHash || '');
     if (!isValidPassword) {
       return NextResponse.json(
         { success: false, error: 'Invalid email or password' },
         { status: 401 }
-      )
+      );
     }
 
-    // Get user role (default to 'student')
-    const userRole = user.role || 'student'
-
-    // Get user repository for updating last active
-    const userRepo = new PostgreSQLUserRepository(pool)
-
-    // Create JWT tokens
-    const accessToken = await createAccessToken({
-      userId: 1, // TODO: Fix TokenPayload to use string for UUID
+    // Create secure session
+    const sessionToken = SecureSession.createSession({
+      userId: user.id,
       email: user.email,
-      role: userRole,
-      name: user.name
-    })
-    
-    const refreshToken = await createRefreshToken(user.id.toString(), rememberMe)
-    
-    // Create session token
-    const sessionToken = createSessionToken(user.id, user.email, rememberMe)
+      role: user.role || 'student'
+    }, rememberMe);
 
-    // Update last active
-    try {
-      await userRepo.updateLastActive(user.id)
-    } catch {
-      // Ignore error if column doesn't exist
-      console.log('Warning: Could not update last active')
-    }
-
-    // Create response with tokens
+    // Create response
     const response = NextResponse.json({
       success: true,
       user: {
         id: user.id,
         email: user.email,
         name: user.name,
-        role: userRole,
+        role: user.role,
         preferredLanguage: user.preferredLanguage,
-        emailVerified: user.emailVerified,
-        onboardingCompleted: user.onboardingCompleted
-      },
-      accessToken,
-      refreshToken,
-      sessionToken
-    })
+        emailVerified: !!user.emailVerifiedAt
+      }
+    });
 
-    // Use centralized AuthManager for cookie management
-    // This sets ONLY ONE cookie: sessionToken
-    AuthManager.setAuthCookie(response, sessionToken, rememberMe)
+    // Set secure httpOnly cookie
+    AuthManager.setAuthCookie(response, sessionToken, rememberMe);
 
-    return response
+    return response;
 
   } catch (error) {
-    console.error('Login error:', error)
-    
-    // Provide more helpful error messages for common issues
-    let errorMessage = 'Login failed'
-    let statusCode = 500
-    
-    if (error instanceof Error) {
-      if (error.message.includes('relation "users" does not exist')) {
-        errorMessage = 'Database schema not initialized. Please contact administrator to run database migrations.'
-        statusCode = 503 // Service Unavailable
-      } else if (error.message.includes('password authentication failed')) {
-        errorMessage = 'Database connection failed. Please check database credentials.'
-        statusCode = 503
-      } else if (error.message.includes('connect ECONNREFUSED')) {
-        errorMessage = 'Cannot connect to database. Please check if database service is running.'
-        statusCode = 503
-      } else {
-        errorMessage = error.message
-      }
-    }
-    
+    console.error('Login error:', error);
     return NextResponse.json(
-      { 
-        success: false, 
-        error: errorMessage
-      },
-      { status: statusCode }
-    )
+      { success: false, error: 'An error occurred during login' },
+      { status: 500 }
+    );
   }
+}
+
+// Support OPTIONS for CORS
+export async function OPTIONS() {
+  return new NextResponse(null, {
+    status: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+    },
+  });
 }

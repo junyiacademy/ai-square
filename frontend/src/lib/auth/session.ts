@@ -1,5 +1,5 @@
 import { cookies, headers } from 'next/headers';
-import { verifySessionToken } from './session-simple';
+import { SecureSession } from './secure-session';
 
 export interface Session {
   user: {
@@ -12,7 +12,7 @@ export async function getServerSession(): Promise<Session | null> {
   const cookieStore = await cookies();
   const headersList = await headers();
   
-  // Check for session token (new JWT system)
+  // Check for session token
   let sessionToken = cookieStore.get('sessionToken')?.value;
   
   // If not in cookie, check header (for API calls from client)
@@ -21,7 +21,7 @@ export async function getServerSession(): Promise<Session | null> {
   }
   
   if (sessionToken) {
-    const sessionData = verifySessionToken(sessionToken);
+    const sessionData = SecureSession.getSession(sessionToken);
     if (sessionData) {
       return {
         user: {

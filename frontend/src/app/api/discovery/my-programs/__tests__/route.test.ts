@@ -64,7 +64,7 @@ describe('GET /api/discovery/my-programs', () => {
 
   it('returns cached data when available', async () => {
     mockedGetAuthFromRequest.mockResolvedValue({
-      userId: 123,
+      userId: '123',
       email: 'test@example.com',
       role: 'student',
       name: 'Test User',
@@ -87,7 +87,7 @@ describe('GET /api/discovery/my-programs', () => {
 
   it('returns empty array when user has no discovery programs', async () => {
     mockedGetAuthFromRequest.mockResolvedValue({
-      userId: 123,
+      userId: '123',
       email: 'test@example.com',
       role: 'student',
       name: 'Test User',
@@ -110,7 +110,7 @@ describe('GET /api/discovery/my-programs', () => {
 
   it('filters and returns only discovery programs with scenario details', async () => {
     mockedGetAuthFromRequest.mockResolvedValue({
-      userId: 123,
+      userId: '123',
       email: 'test@example.com',
       role: 'student',
       name: 'Test User',
@@ -205,7 +205,7 @@ describe('GET /api/discovery/my-programs', () => {
 
   it('handles scenario loading errors gracefully', async () => {
     mockedGetAuthFromRequest.mockResolvedValue({
-      userId: 123,
+      userId: '123',
       email: 'test@example.com',
       role: 'student',
       name: 'Test User',
@@ -233,7 +233,7 @@ describe('GET /api/discovery/my-programs', () => {
 
   it('calculates latest activity correctly', async () => {
     mockedGetAuthFromRequest.mockResolvedValue({
-      userId: 123,
+      userId: '123',
       email: 'test@example.com',
       role: 'student',
       name: 'Test User',
@@ -279,7 +279,7 @@ describe('GET /api/discovery/my-programs', () => {
 
   it('handles repository errors', async () => {
     mockedGetAuthFromRequest.mockResolvedValue({
-      userId: 123,
+      userId: '123',
       email: 'test@example.com',
       role: 'student',
       name: 'Test User',

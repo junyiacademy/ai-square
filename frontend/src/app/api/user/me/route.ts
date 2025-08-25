@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
-import { verifyAccessToken } from '@/lib/auth/jwt'
+import { SecureSession } from '@/lib/auth/secure-session'
 import { getPool } from '@/lib/db/get-pool'
 import { PostgreSQLUserRepository } from '@/lib/repositories/postgresql'
 
@@ -19,36 +19,29 @@ export async function GET(request: NextRequest) {
   try {
     const cookieStore = await cookies()
     
-    // Check Authorization header first (for API calls)
-    const authHeader = request.headers.get('Authorization')
-    const headerToken = authHeader?.replace('Bearer ', '')
+    // Check for session token in cookies
+    const sessionToken = cookieStore.get('sessionToken')?.value
     
-    // Then check for access token in cookies
-    const accessToken = cookieStore.get('accessToken')
-    
-    // Determine which token to use (header takes precedence)
-    const tokenToVerify = headerToken || accessToken?.value
-    
-    if (!tokenToVerify) {
+    if (!sessionToken) {
       return NextResponse.json(
         { success: false, error: 'Not authenticated' },
         { status: 401 }
       )
     }
     
-    // Verify the token
-    const payload = await verifyAccessToken(tokenToVerify)
+    // Verify the session
+    const sessionData = SecureSession.getSession(sessionToken)
     
-    if (!payload) {
+    if (!sessionData) {
       return NextResponse.json(
-        { success: false, error: 'Invalid or expired token' },
+        { success: false, error: 'Invalid or expired session' },
         { status: 401 }
       )
     }
     
     // Get user from database
-    const userRepo = getUserRepository()
-    const user = await userRepo.findByEmail(payload.email)
+    const repository = getUserRepository()
+    const user = await repository.findById(sessionData.userId)
     
     if (!user) {
       return NextResponse.json(
@@ -57,114 +50,42 @@ export async function GET(request: NextRequest) {
       )
     }
     
+    // Format response data
+    const userData = {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      preferredLanguage: user.preferredLanguage,
+      level: user.level,
+      totalXp: user.totalXp,
+      learningPreferences: user.learningPreferences,
+      onboardingCompleted: user.onboardingCompleted,
+      emailVerified: user.emailVerified,
+      role: user.role || 'student',
+      createdAt: user.createdAt.toISOString(),
+      lastActiveAt: user.lastActiveAt?.toISOString()
+    }
+    
     return NextResponse.json({
       success: true,
-      user: {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        role: user.role,
-        preferredLanguage: user.preferredLanguage,
-        emailVerified: user.emailVerified,
-        onboardingCompleted: user.onboardingCompleted,
-        createdAt: user.createdAt,
-        updatedAt: user.updatedAt
-      }
+      user: userData
     })
-    
   } catch (error) {
-    console.error('Error in /api/user/me:', error)
+    console.error('Error fetching user data:', error)
     return NextResponse.json(
-      { success: false, error: 'Internal server error' },
+      { success: false, error: 'Failed to fetch user data' },
       { status: 500 }
     )
   }
 }
 
-// Support PUT for updating user profile
-export async function PUT(request: NextRequest) {
-  try {
-    const cookieStore = await cookies()
-    
-    // Check Authorization header first
-    const authHeader = request.headers.get('Authorization')
-    const headerToken = authHeader?.replace('Bearer ', '')
-    
-    // Then check for access token in cookies
-    const accessToken = cookieStore.get('accessToken')
-    
-    // Determine which token to use
-    const tokenToVerify = headerToken || accessToken?.value
-    
-    if (!tokenToVerify) {
-      return NextResponse.json(
-        { success: false, error: 'Not authenticated' },
-        { status: 401 }
-      )
-    }
-    
-    const payload = await verifyAccessToken(tokenToVerify)
-    
-    if (!payload) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid or expired token' },
-        { status: 401 }
-      )
-    }
-    
-    const body = await request.json()
-    const { name, preferredLanguage } = body
-    
-    // Get user repository
-    const userRepo = getUserRepository()
-    
-    // Update user profile
-    const updates: Record<string, unknown> = {}
-    if (name !== undefined) updates.name = name
-    if (preferredLanguage !== undefined) updates.preferredLanguage = preferredLanguage
-    
-    // Find user first
-    const user = await userRepo.findByEmail(payload.email)
-    if (!user) {
-      return NextResponse.json(
-        { success: false, error: 'User not found' },
-        { status: 404 }
-      )
-    }
-    
-    // Update user
-    await userRepo.update(user.id, updates)
-    
-    // Get updated user
-    const updatedUser = await userRepo.findById(user.id)
-    
-    if (!updatedUser) {
-      return NextResponse.json(
-        { success: false, error: 'Failed to retrieve updated user' },
-        { status: 500 }
-      )
-    }
-    
-    return NextResponse.json({
-      success: true,
-      user: {
-        id: updatedUser.id,
-        email: updatedUser.email,
-        name: updatedUser.name,
-        role: updatedUser.role,
-        preferredLanguage: updatedUser.preferredLanguage,
-        emailVerified: updatedUser.emailVerified,
-        onboardingCompleted: updatedUser.onboardingCompleted,
-        createdAt: updatedUser.createdAt,
-        updatedAt: updatedUser.updatedAt
-      }
-    })
-    
-  } catch (error) {
-    console.error('Error updating user profile:', error)
-    return NextResponse.json(
-      { success: false, error: 'Internal server error' },
-      { status: 500 }
-    )
-  }
+export async function OPTIONS() {
+  return new NextResponse(null, {
+    status: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    },
+  })
 }

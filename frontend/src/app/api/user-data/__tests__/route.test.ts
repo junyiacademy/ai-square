@@ -19,7 +19,7 @@ describe('/api/user-data', () => {
   let consoleLogSpy: jest.SpyInstance;
 
   const mockAuth = {
-    userId: 123,
+    userId: '123',
     email: 'test@example.com',
     role: 'student',
     name: 'Test User',

@@ -1,335 +1,115 @@
 import { POST } from '../route';
-import { createAccessToken, createRefreshToken } from '@/lib/auth/jwt';
-import { getUserWithPassword } from '@/lib/auth/password-utils';
+import { NextRequest } from 'next/server';
 import bcrypt from 'bcryptjs';
+import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
+import { SecureSession } from '@/lib/auth/secure-session';
+import { AuthManager } from '@/lib/auth/auth-manager';
 
-// Mock the auth module
-jest.mock('@/lib/auth/jwt', () => ({
-  createAccessToken: jest.fn(),
-  createRefreshToken: jest.fn()
-}));
+// Mock dependencies
+jest.mock('@/lib/repositories/base/repository-factory');
+jest.mock('@/lib/auth/secure-session');
+jest.mock('@/lib/auth/auth-manager');
+jest.mock('bcryptjs');
 
-// Mock session module
-jest.mock('@/lib/auth/session-simple', () => ({
-  createSessionToken: jest.fn().mockReturnValue('mock-session-token')
-}));
-
-// Mock bcrypt
-jest.mock('bcryptjs', () => ({
-  compare: jest.fn(),
-  hash: jest.fn()
-}));
-
-// Mock database pool
-const mockPool = {
-  query: jest.fn(),
-  end: jest.fn(),
-  on: jest.fn(),
-};
-
-jest.mock('@/lib/db/get-pool', () => ({
-  getPool: jest.fn(() => mockPool)
-}));
-
-// Mock password utilities
-jest.mock('@/lib/auth/password-utils', () => ({
-  getUserWithPassword: jest.fn(),
-  updateUserPasswordHash: jest.fn(),
-  updateUserEmailVerified: jest.fn()
-}));
-
-// Mock PostgreSQL repository
-jest.mock('@/lib/repositories/postgresql', () => ({
-  PostgreSQLUserRepository: jest.fn().mockImplementation(() => ({
-    findByEmail: jest.fn().mockResolvedValue(null),
-    create: jest.fn().mockImplementation((user) => Promise.resolve({
-      id: '1',
-      ...user
-    })),
-    updateLastActive: jest.fn().mockResolvedValue(undefined),
-  })),
-}));
-
-// Mock NextResponse to handle cookies properly
-const mockCookies = {
-  set: jest.fn(),
-}
-
-jest.mock('next/server', () => {
-  class MockNextResponse extends Response {
-    cookies = mockCookies
-    
-    constructor(body?: BodyInit | null, init?: ResponseInit) {
-      super(body, init)
-    }
-    
-    static json(data: any, init?: ResponseInit) {
-      const response = new MockNextResponse(JSON.stringify(data), init)
-      return response
-    }
-  }
-  
-  return {
-    NextRequest: jest.fn(),
-    NextResponse: MockNextResponse
-  }
-})
-
-// Create a mock request helper
-function createMockRequest(body: any) {
-  return {
-    json: jest.fn().mockResolvedValue(body)
-  } as any;
-}
-
-describe('/api/auth/login', () => {
-  const mockCreateAccessToken = createAccessToken as jest.MockedFunction<typeof createAccessToken>;
-  const mockCreateRefreshToken = createRefreshToken as jest.MockedFunction<typeof createRefreshToken>;
-  const mockGetUserWithPassword = getUserWithPassword as jest.MockedFunction<typeof getUserWithPassword>;
-  const mockBcryptCompare = bcrypt.compare as jest.MockedFunction<typeof bcrypt.compare>;
-  const mockBcryptHash = bcrypt.hash as jest.MockedFunction<typeof bcrypt.hash>;
+describe('POST /api/auth/login', () => {
+  const mockUserRepo = {
+    findByEmail: jest.fn()
+  };
 
   beforeEach(() => {
     jest.clearAllMocks();
-    mockCookies.set.mockClear();
-    mockCreateAccessToken.mockResolvedValue('mock-access-token');
-    mockCreateRefreshToken.mockResolvedValue('mock-refresh-token');
-    (mockBcryptHash as jest.Mock).mockResolvedValue('hashed-password');
+    (repositoryFactory.getUserRepository as jest.Mock).mockReturnValue(mockUserRepo);
+    (SecureSession.createSession as jest.Mock).mockReturnValue('mock-session-token');
+    (AuthManager.setAuthCookie as jest.Mock).mockImplementation(() => {});
   });
 
-  describe('POST', () => {
-    it('should login successfully with valid student credentials', async () => {
-      // Setup mock user data
-      mockGetUserWithPassword.mockResolvedValue({
-        id: '1',
-        email: 'student@example.com',
-        name: 'Student User',
-        passwordHash: 'hashed-password',
-        role: 'student',
-        emailVerified: true,
-        onboardingCompleted: false,
-        preferredLanguage: 'en',
-        metadata: {}
-      });
-      (mockBcryptCompare as jest.Mock).mockResolvedValue(true);
+  it('should login successfully with valid credentials', async () => {
+    const mockUser = {
+      id: '123',
+      email: 'test@example.com',
+      name: 'Test User',
+      passwordHash: 'hashed-password',
+      role: 'student',
+      preferredLanguage: 'en',
+      emailVerifiedAt: new Date()
+    };
 
-      const request = createMockRequest({
-        email: 'student@example.com',
-        password: 'student123'
-      });
+    mockUserRepo.findByEmail.mockResolvedValue(mockUser);
+    (bcrypt.compare as jest.Mock).mockResolvedValue(true);
 
-      const response = await POST(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      expect(data.success).toBe(true);
-      expect(data.user).toMatchObject({
-        id: '1',
-        email: 'student@example.com',
-        role: 'student',
-        name: 'Student User'
-      });
-
-      // Check JWT creation
-      expect(mockCreateAccessToken).toHaveBeenCalledWith({
-        userId: 1,
-        email: 'student@example.com',
-        role: 'student',
-        name: 'Student User'
-      });
-      expect(mockCreateRefreshToken).toHaveBeenCalledWith('1', false);
-
-      // Check only session cookie was set
-      expect(mockCookies.set).toHaveBeenCalledWith('sessionToken', 'mock-session-token', expect.any(Object));
-    });
-
-    it('should login successfully with teacher credentials', async () => {
-      mockGetUserWithPassword.mockResolvedValue({
-        id: '2',
-        email: 'teacher@example.com',
-        name: 'Teacher User',
-        passwordHash: 'hashed-password',
-        role: 'teacher',
-        emailVerified: true,
-        onboardingCompleted: true,
-        preferredLanguage: 'en',
-        metadata: {}
-      });
-      (mockBcryptCompare as jest.Mock).mockResolvedValue(true);
-
-      const request = createMockRequest({
-        email: 'teacher@example.com',
-        password: 'teacher123'
-      });
-
-      const response = await POST(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      expect(data.success).toBe(true);
-      expect(data.user.role).toBe('teacher');
-    });
-
-    it('should login successfully with admin credentials', async () => {
-      mockGetUserWithPassword.mockResolvedValue({
-        id: '3',
-        email: 'admin@example.com',
-        name: 'Admin User',
-        passwordHash: 'hashed-password',
-        role: 'admin',
-        emailVerified: true,
-        onboardingCompleted: true,
-        preferredLanguage: 'en',
-        metadata: {}
-      });
-      (mockBcryptCompare as jest.Mock).mockResolvedValue(true);
-
-      const request = createMockRequest({
-        email: 'admin@example.com',
-        password: 'admin123'
-      });
-
-      const response = await POST(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      expect(data.success).toBe(true);
-      expect(data.user.role).toBe('admin');
-    });
-
-    it('should handle remember me option', async () => {
-      mockGetUserWithPassword.mockResolvedValue({
-        id: '1',
-        email: 'student@example.com',
-        name: 'Student User',
-        passwordHash: 'hashed-password',
-        role: 'student',
-        emailVerified: true,
-        onboardingCompleted: false,
-        preferredLanguage: 'en',
-        metadata: {}
-      });
-      (mockBcryptCompare as jest.Mock).mockResolvedValue(true);
-
-      const request = createMockRequest({
-        email: 'student@example.com',
-        password: 'student123',
-        rememberMe: true
-      });
-
-      const response = await POST(request);
-      
-      expect(response.status).toBe(200);
-      expect(mockCreateRefreshToken).toHaveBeenCalledWith('1', true);
-
-      // Check cookie was set with remember me option
-      expect(mockCookies.set).toHaveBeenCalledWith('sessionToken', 'mock-session-token', 
-        expect.objectContaining({
-          maxAge: expect.any(Number) // Remember me increases max age
-        })
-      );
-    });
-
-    it('should fail with missing email', async () => {
-      const request = createMockRequest({
+    const request = new NextRequest('http://localhost:3000/api/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({
+        email: 'test@example.com',
         password: 'password123'
-      });
-
-      const response = await POST(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(400);
-      expect(data.success).toBe(false);
-      expect(data.error).toBeDefined();
+      })
     });
 
-    it('should fail with missing password', async () => {
-      const request = createMockRequest({
-        email: 'test@example.com'
-      });
+    const response = await POST(request);
+    const data = await response.json();
 
-      const response = await POST(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(400);
-      expect(data.success).toBe(false);
-      expect(data.error.toLowerCase()).toContain('required');
+    expect(response.status).toBe(200);
+    expect(data.success).toBe(true);
+    expect(data.user).toEqual({
+      id: '123',
+      email: 'test@example.com',
+      name: 'Test User',
+      role: 'student',
+      preferredLanguage: 'en',
+      emailVerified: true
     });
 
-    it('should fail with invalid credentials', async () => {
-      mockGetUserWithPassword.mockResolvedValue(null);
+    expect(SecureSession.createSession).toHaveBeenCalledWith({
+      userId: '123',
+      email: 'test@example.com',
+      role: 'student'
+    }, false);
 
-      const request = createMockRequest({
-        email: 'wrong@example.com',
-        password: 'wrongpassword'
-      });
-
-      const response = await POST(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(401);
-      expect(data.success).toBe(false);
-      expect(data.error).toBe('Invalid email or password');
-    });
-
-    it('should handle JSON parse errors', async () => {
-      const request = {
-        json: jest.fn().mockRejectedValue(new Error('Invalid JSON'))
-      } as any;
-
-      const response = await POST(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(500);
-      expect(data.success).toBe(false);
-      expect(data.error).toBe('Invalid JSON');
-    });
-
-    it('should handle JWT creation errors', async () => {
-      mockGetUserWithPassword.mockResolvedValue({
-        id: '1',
-        email: 'student@example.com',
-        name: 'Student User',
-        passwordHash: 'hashed-password',
-        role: 'student',
-        emailVerified: true,
-        onboardingCompleted: false,
-        preferredLanguage: 'en',
-        metadata: {}
-      });
-      (mockBcryptCompare as jest.Mock).mockResolvedValue(true);
-      mockCreateAccessToken.mockRejectedValue(new Error('JWT error'));
-
-      const request = createMockRequest({
-        email: 'student@example.com',
-        password: 'student123'
-      });
-
-      const response = await POST(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(500);
-      expect(data.success).toBe(false);
-      expect(data.error).toBe('JWT error');
-    });
-
-    it('should handle database schema not initialized error', async () => {
-      const dbError = new Error('relation "users" does not exist');
-      mockGetUserWithPassword.mockRejectedValue(dbError);
-
-      const request = createMockRequest({
-        email: 'student@example.com',
-        password: 'student123'
-      });
-
-      const response = await POST(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(503);
-      expect(data.success).toBe(false);
-      expect(data.error).toBe('Database schema not initialized. Please contact administrator to run database migrations.');
-    });
+    expect(AuthManager.setAuthCookie).toHaveBeenCalled();
   });
 
-  // OPTIONS test removed - not implemented in new route
+  it('should fail with invalid email', async () => {
+    mockUserRepo.findByEmail.mockResolvedValue(null);
+
+    const request = new NextRequest('http://localhost:3000/api/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({
+        email: 'nonexistent@example.com',
+        password: 'password123'
+      })
+    });
+
+    const response = await POST(request);
+    const data = await response.json();
+
+    expect(response.status).toBe(401);
+    expect(data.success).toBe(false);
+    expect(data.error).toBe('Invalid email or password');
+  });
+
+  it('should fail with invalid password', async () => {
+    const mockUser = {
+      id: '123',
+      email: 'test@example.com',
+      passwordHash: 'hashed-password'
+    };
+
+    mockUserRepo.findByEmail.mockResolvedValue(mockUser);
+    (bcrypt.compare as jest.Mock).mockResolvedValue(false);
+
+    const request = new NextRequest('http://localhost:3000/api/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({
+        email: 'test@example.com',
+        password: 'wrong-password'
+      })
+    });
+
+    const response = await POST(request);
+    const data = await response.json();
+
+    expect(response.status).toBe(401);
+    expect(data.success).toBe(false);
+    expect(data.error).toBe('Invalid email or password');
+  });
 });

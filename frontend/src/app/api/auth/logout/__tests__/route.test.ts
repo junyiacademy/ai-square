@@ -1,5 +1,6 @@
 import { POST } from '../route';
 import { cookies } from 'next/headers';
+import { NextRequest } from 'next/server';
 
 // Mock cookies set
 const mockCookiesSet = jest.fn();
@@ -38,7 +39,8 @@ describe('/api/auth/logout', () => {
   });
   describe('POST', () => {
     it('should logout successfully and clear cookies', async () => {
-      const response = await POST();
+      const mockRequest = new NextRequest('http://localhost:3000/api/auth/logout');
+      const response = await POST(mockRequest);
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -50,7 +52,8 @@ describe('/api/auth/logout', () => {
     });
 
     it('should have proper cookie settings', async () => {
-      const response = await POST();
+      const mockRequest = new NextRequest('http://localhost:3000/api/auth/logout');
+      const response = await POST(mockRequest);
 
       // Check that all cookies have proper security settings
       expect(mockCookiesSet).toHaveBeenCalledWith(

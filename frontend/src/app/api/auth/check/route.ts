@@ -1,59 +1,44 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { AuthManager } from '@/lib/auth/auth-manager'
+import { NextRequest, NextResponse } from 'next/server';
+import { getAuthFromRequest } from '@/lib/auth/auth-utils';
 
 export async function GET(request: NextRequest) {
   try {
-    // Use centralized AuthManager to check authentication
-    const sessionToken = AuthManager.getSessionToken(request)
+    // Use simplified auth extraction
+    const user = await getAuthFromRequest(request);
     
-    if (!sessionToken) {
+    if (!user) {
       return NextResponse.json({
         authenticated: false,
         user: null
-      })
+      });
     }
 
-    // Decode session token to get user info
-    try {
-      // Handle URL-encoded tokens (cookies are often URL-encoded)
-      const decodedToken = decodeURIComponent(sessionToken)
-      const decoded = JSON.parse(atob(decodedToken))
-      
-      // For demo accounts, we can infer the role from email
-      let role = 'user'
-      let name = 'User'
-      
-      if (decoded.email === 'student@example.com') {
-        role = 'student'
-        name = 'Demo Student'
-      } else if (decoded.email === 'teacher@example.com') {
-        role = 'teacher'  
-        name = 'Demo Teacher'
-      } else if (decoded.email === 'admin@example.com') {
-        role = 'admin'
-        name = 'Demo Admin'
+    return NextResponse.json({
+      authenticated: true,
+      user: {
+        id: user.userId,
+        email: user.email,
+        role: user.role,
+        name: user.name
       }
-      
-      return NextResponse.json({
-        authenticated: true,
-        user: {
-          id: decoded.userId,
-          email: decoded.email,
-          role: role,
-          name: name
-        }
-      })
-    } catch {
-      return NextResponse.json({
-        authenticated: false,
-        user: null
-      })
-    }
+    });
   } catch (error) {
-    console.error('Auth check error:', error)
+    console.error('Auth check error:', error);
     return NextResponse.json({
       authenticated: false,
       user: null
-    })
+    });
   }
+}
+
+// Support OPTIONS for CORS
+export async function OPTIONS() {
+  return new NextResponse(null, {
+    status: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+    },
+  });
 }
