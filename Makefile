@@ -15,6 +15,7 @@ DESC ?= ""
         graphiti graphiti-stop graphiti-status claude-init \
         db-init db-reset db-seed db-up db-down db-backup db-restore \
         db-status db-migrate db-shell db-logs db-clean-backups \
+        db-start db-stop db-cost \
         build-cms-image cms-build-and-push gcp-deploy-cms deploy-cms-gcp \
         setup-secrets-cms logs-cms
 
@@ -870,6 +871,44 @@ db-clean-backups:
 	@echo "$(YELLOW)🧹 清理舊備份...$(NC)"
 	@cd frontend && make -f Makefile.db db-clean-backups
 	@echo "$(GREEN)✅ 清理完成$(NC)"
+
+#=============================================================================
+# Cloud SQL 成本優化指令（2025-08-27 新增）
+#=============================================================================
+
+## 啟動 Cloud SQL（開發時使用）
+db-start:
+	@echo "$(GREEN)🚀 啟動 Cloud SQL 資料庫...$(NC)"
+	@echo "啟動 Staging DB..."
+	@gcloud sql instances patch ai-square-db-staging-asia \
+		--activation-policy=ALWAYS \
+		--project=ai-square-463013
+	@echo "$(GREEN)✅ 資料庫已啟動！記得開發完畢後執行 make db-stop$(NC)"
+
+## 停止 Cloud SQL（節省成本）
+db-stop:
+	@echo "$(RED)🛑 停止所有 Cloud SQL 資料庫以節省成本...$(NC)"
+	@echo "停止 Staging DB..."
+	@gcloud sql instances patch ai-square-db-staging-asia \
+		--activation-policy=NEVER \
+		--project=ai-square-463013 || true
+	@echo "停止 Production DB..."
+	@gcloud sql instances patch ai-square-db-production \
+		--activation-policy=NEVER \
+		--project=ai-square-463013 || true
+	@echo "$(GREEN)✅ 資料庫已停止！月成本: $0$(NC)"
+
+## 檢查 Cloud SQL 狀態和成本
+db-cost:
+	@echo "$(CYAN)💰 Cloud SQL 狀態和成本估算：$(NC)"
+	@gcloud sql instances list --project=ai-square-463013 \
+		--format="table(name:label=資料庫,databaseVersion:label=版本,settings.tier:label=規格,state:label=狀態)"
+	@echo ""
+	@echo "成本估算："
+	@echo "• STOPPED 狀態: $0/月"
+	@echo "• RUNNABLE 狀態 (db-f1-micro): ~$15/月"
+	@echo ""
+	@echo "💡 提示：使用 'make db-stop' 停止資料庫以節省成本"
 
 #=============================================================================
 # AI 專用配置

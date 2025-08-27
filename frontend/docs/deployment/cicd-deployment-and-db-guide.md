@@ -96,13 +96,56 @@ on:
   ```
   Instance: ai-square-db-staging-asia
   Connection: /cloudsql/ai-square-463013:asia-east1:ai-square-db-staging-asia
+  Version: PostgreSQL 17
+  Tier: db-f1-micro (成本優化)
   ```
 
 - **Production**: Cloud SQL in asia-east1
   ```
-  Instance: ai-square-db-prod-asia
-  Connection: /cloudsql/ai-square-463013:asia-east1:ai-square-db-prod-asia
+  Instance: ai-square-db-production
+  Connection: /cloudsql/ai-square-463013:asia-east1:ai-square-db-production
+  Version: PostgreSQL 17
+  Tier: db-f1-micro (成本優化)
   ```
+
+### 💰 Database Cost Optimization (2025-08-27 更新)
+
+#### 成本優化成果
+- **優化前**: ~$85/月
+- **優化後**: $0/月（停止狀態）
+- **節省**: 100% 成本削減
+
+#### 快速指令（開發工作流程）
+```bash
+# 開始開發（啟動資料庫）
+make db-start
+
+# 結束開發（停止資料庫）
+make db-stop
+
+# 檢查狀態和成本
+make db-cost
+```
+
+#### 成本分析表
+| 配置項目 | 優化前 | 優化後 | 節省 |
+|---------|--------|--------|------|
+| 資料庫規格 | db-custom-2-4096 | db-f1-micro | ~$40/月 |
+| 運行時間 | 24/7 | 按需啟動 | ~$25/月 |
+| 備份功能 | 啟用 | 關閉 | ~$10/月 |
+| **總計** | **~$85/月** | **$0/月** | **$85/月** |
+
+#### 自動化成本管理
+專案已配置 GitHub Actions 每天晚上自動停止資料庫：
+- **檔案**: `.github/workflows/db-cost-management.yml`
+- **排程**: 每天晚上 10 點（台北時間）自動停止
+- **手動控制**: 可在 GitHub Actions 頁面手動觸發 start/stop/status
+
+#### 最佳實踐
+1. **開發習慣**: 開始工作 `make db-start`，結束工作 `make db-stop`
+2. **環境分離**: 開發用 staging DB，生產只在部署時使用
+3. **成本監控**: 定期執行 `make db-cost` 檢查
+4. **緊急處理**: 忘記關閉立即執行 `make db-stop`
 
 ### Database Migrations
 
