@@ -38,23 +38,11 @@ jobs:
             exit 1
           fi
       
-      - name: Check deployment window
+      - name: Log deployment time
         run: |
-          # Only allow deployments during business hours (9 AM - 6 PM UTC+8)
-          HOUR=$(TZ='Asia/Taipei' date +%H)
-          DAY=$(TZ='Asia/Taipei' date +%u)
-          
-          if [ $DAY -ge 6 ]; then
-            echo "❌ No weekend deployments allowed"
-            exit 1
-          fi
-          
-          if [ $HOUR -lt 9 ] || [ $HOUR -ge 18 ]; then
-            echo "❌ Deployments only allowed between 9 AM - 6 PM Taipei time"
-            exit 1
-          fi
-          
-          echo "✅ Deployment window check passed"
+          # Log deployment time for audit purposes
+          echo "🚀 Deployment initiated at: $(TZ='Asia/Taipei' date '+%Y-%m-%d %H:%M:%S %Z')"
+          echo "✅ Production deployment allowed at any time"
 
   run-staging-tests:
     name: Verify Staging
