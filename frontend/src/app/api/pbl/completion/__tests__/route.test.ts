@@ -1,7 +1,7 @@
 import { mockRepositoryFactory } from '@/test-utils/mocks/repositories';
 import { NextRequest } from 'next/server';
 import { GET } from '../route';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth } from '@/lib/auth/unified-auth';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { 
   createMockProgramRepository, 
@@ -14,9 +14,13 @@ import {
   createMockEvaluation
 } from '@/test-utils/mocks/repository-helpers';
 
-// Mock auth session
-jest.mock('@/lib/auth/session', () => ({
-  getServerSession: jest.fn()
+// Mock unified auth
+jest.mock('@/lib/auth/unified-auth', () => ({
+  getUnifiedAuth: jest.fn(),
+  createUnauthorizedResponse: jest.fn(() => {
+    const { NextResponse } = require('next/server');
+    return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
+  })
 }));
 
 // Mock repository factory
@@ -54,7 +58,7 @@ jest.mock('@/lib/api/optimization-utils', () => ({
 }));
 
 // Get mocked functions
-const mockGetServerSession = getServerSession as jest.MockedFunction<typeof getServerSession>;
+const mockGetUnifiedAuth = getUnifiedAuth as jest.MockedFunction<typeof getUnifiedAuth>;
 const mockGetProgramRepository = repositoryFactory.getProgramRepository as jest.MockedFunction<typeof repositoryFactory.getProgramRepository>;
 const mockGetTaskRepository = repositoryFactory.getTaskRepository as jest.MockedFunction<typeof repositoryFactory.getTaskRepository>;
 const mockGetEvaluationRepository = repositoryFactory.getEvaluationRepository as jest.MockedFunction<typeof repositoryFactory.getEvaluationRepository>;
@@ -91,7 +95,7 @@ describe('/api/pbl/completion', () => {
 
   describe('GET', () => {
     it('should return 401 for unauthenticated requests', async () => {
-      mockGetServerSession.mockResolvedValue(null);
+      mockGetUnifiedAuth.mockResolvedValue(null);
 
       const request = new NextRequest('http://localhost:3000/api/pbl/completion?scenarioId=scenario1');
 
@@ -103,8 +107,8 @@ describe('/api/pbl/completion', () => {
     });
 
     it('should retrieve completion data for authenticated users', async () => {
-      mockGetServerSession.mockResolvedValue({
-        user: { id: 'user123', email: 'test@example.com' }
+      mockGetUnifiedAuth.mockResolvedValue({
+        user: { id: 'user123', email: 'test@example.com', role: 'student' }
       });
 
       const mockUser = createMockUser({
@@ -159,8 +163,8 @@ describe('/api/pbl/completion', () => {
     });
 
     it('should return 404 for non-existent program', async () => {
-      mockGetServerSession.mockResolvedValue({
-        user: { id: 'user123', email: 'test@example.com' }
+      mockGetUnifiedAuth.mockResolvedValue({
+        user: { id: 'user123', email: 'test@example.com', role: 'student' }
       });
 
       mockUserRepo.findByEmail.mockResolvedValue(createMockUser({ id: 'user123', email: 'test@example.com' }));
@@ -180,8 +184,8 @@ describe('/api/pbl/completion', () => {
     });
 
     it('should handle missing programId parameter', async () => {
-      mockGetServerSession.mockResolvedValue({
-        user: { id: 'user123', email: 'test@example.com' }
+      mockGetUnifiedAuth.mockResolvedValue({
+        user: { id: 'user123', email: 'test@example.com', role: 'student' }
       });
 
       const request = new NextRequest('http://localhost:3000/api/pbl/completion?scenarioId=scenario1');
@@ -194,8 +198,8 @@ describe('/api/pbl/completion', () => {
     });
 
     it('should handle repository errors gracefully', async () => {
-      mockGetServerSession.mockResolvedValue({
-        user: { id: 'user123', email: 'test@example.com' }
+      mockGetUnifiedAuth.mockResolvedValue({
+        user: { id: 'user123', email: 'test@example.com', role: 'student' }
       });
 
       mockUserRepo.findByEmail.mockResolvedValue(createMockUser({ id: 'user123', email: 'test@example.com' }));

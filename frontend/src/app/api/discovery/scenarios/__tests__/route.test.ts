@@ -5,14 +5,14 @@
 
 import { NextRequest } from 'next/server';
 import { GET } from '../route';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth } from '@/lib/auth/unified-auth';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 
 // Mock dependencies
-jest.mock('@/lib/auth/session');
+jest.mock('@/lib/auth/unified-auth');
 jest.mock('@/lib/repositories/base/repository-factory');
 
-const mockGetServerSession = getServerSession as jest.MockedFunction<typeof getServerSession>;
+const mockGetUnifiedAuth = getUnifiedAuth as jest.MockedFunction<typeof getUnifiedAuth>;
 const mockRepositoryFactory = repositoryFactory as jest.Mocked<typeof repositoryFactory>;
 
 // typing for test-only global helper exposed by the module under test
@@ -48,7 +48,7 @@ describe('/api/discovery/scenarios', () => {
 
   describe('Basic Functionality', () => {
     it('should return scenarios list for anonymous users', async () => {
-      mockGetServerSession.mockResolvedValue(null);
+      mockGetUnifiedAuth.mockResolvedValue(null);
 
       const mockScenarios = [
         {
@@ -96,7 +96,7 @@ describe('/api/discovery/scenarios', () => {
     });
 
     it('should handle empty scenarios array', async () => {
-      mockGetServerSession.mockResolvedValue(null);
+      mockGetUnifiedAuth.mockResolvedValue(null);
       mockScenarioRepo.findByMode.mockResolvedValue([]);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios');
@@ -112,7 +112,7 @@ describe('/api/discovery/scenarios', () => {
     });
 
     it('should handle null scenarios response', async () => {
-      mockGetServerSession.mockResolvedValue(null);
+      mockGetUnifiedAuth.mockResolvedValue(null);
       mockScenarioRepo.findByMode.mockResolvedValue(null);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios');
@@ -140,7 +140,7 @@ describe('/api/discovery/scenarios', () => {
     ];
 
     beforeEach(() => {
-      mockGetServerSession.mockResolvedValue(null);
+      mockGetUnifiedAuth.mockResolvedValue(null);
       mockScenarioRepo.findByMode.mockResolvedValue(mockScenarios);
     });
 
@@ -239,8 +239,8 @@ describe('/api/discovery/scenarios', () => {
     });
 
     it('should include user progress for authenticated users', async () => {
-      mockGetServerSession.mockResolvedValue({
-        user: { id: 'user-123', email: 'test@example.com' }
+      mockGetUnifiedAuth.mockResolvedValue({
+        user: { id: 'user-123', email: 'test@example.com', role: 'student' }
       });
 
       const mockPrograms = [
@@ -290,8 +290,8 @@ describe('/api/discovery/scenarios', () => {
     });
 
     it('should handle user without programs', async () => {
-      mockGetServerSession.mockResolvedValue({
-        user: { id: 'user-456', email: 'newuser@example.com' }
+      mockGetUnifiedAuth.mockResolvedValue({
+        user: { id: 'user-456', email: 'newuser@example.com', role: 'student' }
       });
 
       mockProgramRepo.findByUser.mockResolvedValue([]);
@@ -312,8 +312,8 @@ describe('/api/discovery/scenarios', () => {
     });
 
     it('should handle multiple programs for same scenario', async () => {
-      mockGetServerSession.mockResolvedValue({
-        user: { id: 'user-789', email: 'poweruser@example.com' }
+      mockGetUnifiedAuth.mockResolvedValue({
+        user: { id: 'user-789', email: 'poweruser@example.com', role: 'student' }
       });
 
       const mockPrograms = [
@@ -358,8 +358,8 @@ describe('/api/discovery/scenarios', () => {
     });
 
     it('should filter only discovery mode programs', async () => {
-      mockGetServerSession.mockResolvedValue({
-        user: { id: 'user-mixed', email: 'mixed@example.com' }
+      mockGetUnifiedAuth.mockResolvedValue({
+        user: { id: 'user-mixed', email: 'mixed@example.com', role: 'student' }
       });
 
       const mockPrograms = [
@@ -413,7 +413,7 @@ describe('/api/discovery/scenarios', () => {
     ];
 
     beforeEach(() => {
-      mockGetServerSession.mockResolvedValue(null);
+      mockGetUnifiedAuth.mockResolvedValue(null);
       mockScenarioRepo.findByMode.mockResolvedValue(mockScenarios);
     });
 
@@ -453,8 +453,8 @@ describe('/api/discovery/scenarios', () => {
     });
 
     it('should not cache responses for authenticated users', async () => {
-      mockGetServerSession.mockResolvedValue({
-        user: { id: 'user-123', email: 'test@example.com' }
+      mockGetUnifiedAuth.mockResolvedValue({
+        user: { id: 'user-123', email: 'test@example.com', role: 'student' }
       });
       mockProgramRepo.findByUser.mockResolvedValue([]);
 
@@ -472,7 +472,7 @@ describe('/api/discovery/scenarios', () => {
 
   describe('Error Handling', () => {
     it('should handle scenario repository errors', async () => {
-      mockGetServerSession.mockResolvedValue(null);
+      mockGetUnifiedAuth.mockResolvedValue(null);
       mockScenarioRepo.findByMode.mockRejectedValue(new Error('Database connection failed'));
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios');
@@ -484,8 +484,8 @@ describe('/api/discovery/scenarios', () => {
     });
 
     it('should handle program repository errors for authenticated users', async () => {
-      mockGetServerSession.mockResolvedValue({
-        user: { id: 'user-123', email: 'test@example.com' }
+      mockGetUnifiedAuth.mockResolvedValue({
+        user: { id: 'user-123', email: 'test@example.com', role: 'student' }
       });
 
       mockScenarioRepo.findByMode.mockResolvedValue([
@@ -509,7 +509,7 @@ describe('/api/discovery/scenarios', () => {
     });
 
     it('should handle session service errors', async () => {
-      mockGetServerSession.mockRejectedValue(new Error('Session service error'));
+      mockGetUnifiedAuth.mockRejectedValue(new Error('Session service error'));
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios');
       const response = await GET(request);
@@ -520,7 +520,7 @@ describe('/api/discovery/scenarios', () => {
     });
 
     it('should handle missing repository methods gracefully', async () => {
-      mockGetServerSession.mockResolvedValue(null);
+      mockGetUnifiedAuth.mockResolvedValue(null);
       
       // Mock scenario repo without findByMode method
       const mockScenarioRepoWithoutMethod = {} as unknown as import('@/lib/repositories/interfaces').IScenarioRepository;
@@ -540,7 +540,7 @@ describe('/api/discovery/scenarios', () => {
 
   describe('Edge Cases', () => {
     it('should handle scenarios with malformed data', async () => {
-      mockGetServerSession.mockResolvedValue(null);
+      mockGetUnifiedAuth.mockResolvedValue(null);
 
       const malformedScenarios = [
         {
@@ -577,9 +577,9 @@ describe('/api/discovery/scenarios', () => {
     });
 
     it('should handle user session with email but no id', async () => {
-      mockGetServerSession.mockResolvedValue({
-        user: { email: 'test@example.com' }
-      } as unknown as { user: { id: string; email: string } });
+      mockGetUnifiedAuth.mockResolvedValue({
+        user: { email: 'test@example.com', id: '', role: 'student' }
+      });
 
       mockScenarioRepo.findByMode.mockResolvedValue([
         {
@@ -604,9 +604,9 @@ describe('/api/discovery/scenarios', () => {
     });
 
     it('should handle programs with missing task count data', async () => {
-      mockGetServerSession.mockResolvedValue({
-        user: { id: 'user-123' }
-      } as unknown as { user: { id: string; email: string } });
+      mockGetUnifiedAuth.mockResolvedValue({
+        user: { id: 'user-123', email: '', role: 'student' }
+      });
 
       mockScenarioRepo.findByMode.mockResolvedValue([
         {

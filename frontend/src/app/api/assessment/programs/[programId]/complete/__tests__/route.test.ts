@@ -1,7 +1,16 @@
 import { mockRepositoryFactory } from '@/test-utils/mocks/repositories';
 import { NextRequest } from 'next/server';
 import { POST } from '../route';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth } from '@/lib/auth/unified-auth';
+
+// Mock dependencies
+jest.mock('@/lib/auth/unified-auth', () => ({
+  getUnifiedAuth: jest.fn(),
+  createUnauthorizedResponse: jest.fn(() => ({
+    json: () => Promise.resolve({ success: false, error: 'Authentication required' }),
+    status: 401
+  }))
+}));;
 import type { IProgram, ITask, IEvaluation } from '@/types/unified-learning';
 import type { AssessmentQuestion, AssessmentInteraction } from '@/types/assessment-types';
 import { mockConsoleError, mockConsoleLog, mockConsoleWarn } from '@/test-utils/helpers/console';
@@ -13,11 +22,11 @@ const mockWarn = mockConsoleWarn();
 
 // Mock auth session
 jest.mock('@/lib/auth/session', () => ({
-  getServerSession: jest.fn()
+  getUnifiedAuth: jest.fn()
 }));
 
 // Get mocked function
-const mockGetServerSession = getServerSession as jest.MockedFunction<typeof getServerSession>;
+const mockGetUnifiedAuth = getUnifiedAuth as jest.MockedFunction<typeof getUnifiedAuth>;
 
 // Mock repositories with proper typing
 const mockFindById = jest.fn();
@@ -58,6 +67,7 @@ describe('POST /api/assessment/programs/[programId]/complete', () => {
   const mockUser = {
     id: 'user123',
     email: 'test@example.com',
+    role: 'student',
   };
 
   const mockProgram = {
@@ -121,7 +131,7 @@ describe('POST /api/assessment/programs/[programId]/complete', () => {
   ];
 
   it('returns 401 when not authenticated', async () => {
-    mockGetServerSession.mockResolvedValue(null);
+    mockGetUnifiedAuth.mockResolvedValue(null);
 
     const request = new NextRequest('http://localhost:3000/api/assessment/programs/program123/complete', {
       method: 'POST',
@@ -131,11 +141,11 @@ describe('POST /api/assessment/programs/[programId]/complete', () => {
     const data = await response.json();
 
     expect(response.status).toBe(401);
-    expect(data).toEqual({ error: 'Authentication required' });
+    expect(data).toEqual({ success: false, error: 'Authentication required' });
   });
 
   it('returns 404 when program not found', async () => {
-    mockGetServerSession.mockResolvedValue({ user: mockUser });
+    mockGetUnifiedAuth.mockResolvedValue({ user: mockUser });
     mockFindById.mockResolvedValue(null);
 
     const request = new NextRequest('http://localhost:3000/api/assessment/programs/program123/complete', {
@@ -150,7 +160,7 @@ describe('POST /api/assessment/programs/[programId]/complete', () => {
   });
 
   it('returns 403 when user does not own program', async () => {
-    mockGetServerSession.mockResolvedValue({ user: mockUser });
+    mockGetUnifiedAuth.mockResolvedValue({ user: mockUser });
     mockFindById.mockResolvedValue({ ...mockProgram, userId: 'other-user' });
     mockFindByEmail.mockResolvedValue({ id: 'user123', email: 'test@example.com' });
 
@@ -172,7 +182,7 @@ describe('POST /api/assessment/programs/[programId]/complete', () => {
       metadata: { evaluationId: 'eval123' },
     };
 
-    mockGetServerSession.mockResolvedValue({ user: mockUser });
+    mockGetUnifiedAuth.mockResolvedValue({ user: mockUser });
     mockFindById.mockResolvedValue(completedProgram);
     mockFindByEmail.mockResolvedValue(mockUser);
     mockFindByIdEval.mockResolvedValue({ id: 'eval123', score: 85 });
@@ -212,7 +222,7 @@ describe('POST /api/assessment/programs/[programId]/complete', () => {
       ],
     };
 
-    mockGetServerSession.mockResolvedValue({ user: mockUser });
+    mockGetUnifiedAuth.mockResolvedValue({ user: mockUser });
     mockFindById.mockResolvedValue(mockProgram);
     mockFindByEmail.mockResolvedValue(mockUser);
     mockFindByProgram.mockResolvedValue([incompleteTask]); // For tasks
@@ -238,7 +248,7 @@ describe('POST /api/assessment/programs/[programId]/complete', () => {
   });
 
   it('successfully completes assessment and creates evaluation', async () => {
-    mockGetServerSession.mockResolvedValue({ user: mockUser });
+    mockGetUnifiedAuth.mockResolvedValue({ user: mockUser });
     mockFindById.mockResolvedValue(mockProgram);
     mockFindByEmail.mockResolvedValue(mockUser);
     mockFindByProgram.mockResolvedValue(mockTasks); // For tasks
@@ -356,7 +366,7 @@ describe('POST /api/assessment/programs/[programId]/complete', () => {
       },
     ];
 
-    mockGetServerSession.mockResolvedValue({ user: mockUser });
+    mockGetUnifiedAuth.mockResolvedValue({ user: mockUser });
     mockFindById.mockResolvedValue(mockProgram);
     mockFindByEmail.mockResolvedValue(mockUser);
     mockFindByProgram.mockResolvedValue(multiDomainTasks);
@@ -382,7 +392,7 @@ describe('POST /api/assessment/programs/[programId]/complete', () => {
   });
 
   it('allows completion with userEmail in query params when not authenticated', async () => {
-    mockGetServerSession.mockResolvedValue(null);
+    mockGetUnifiedAuth.mockResolvedValue(null);
     mockFindByEmail.mockResolvedValue(mockUser);
     mockFindById.mockResolvedValue(mockProgram);
     mockFindByProgram
@@ -403,7 +413,7 @@ describe('POST /api/assessment/programs/[programId]/complete', () => {
   });
 
   it('handles database errors gracefully', async () => {
-    mockGetServerSession.mockResolvedValue({ user: mockUser });
+    mockGetUnifiedAuth.mockResolvedValue({ user: mockUser });
     mockFindById.mockRejectedValue(new Error('Database error'));
 
     const request = new NextRequest('http://localhost:3000/api/assessment/programs/program123/complete', {

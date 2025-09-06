@@ -49,7 +49,7 @@ describe('Profile API Route', () => {
   describe('GET /api/auth/profile', () => {
     it('should return user profile for authenticated user', async () => {
       (getSession as jest.Mock).mockResolvedValue({
-        user: { id: 'user-123', email: 'test@example.com' }
+        user: { id: 'user-123', email: 'test@example.com', role: 'student' }
       });
       mockUserRepo.findById.mockResolvedValue(mockUser);
 
@@ -82,7 +82,7 @@ describe('Profile API Route', () => {
 
     it('should return 404 if user not found', async () => {
       (getSession as jest.Mock).mockResolvedValue({
-        user: { id: 'user-123', email: 'test@example.com' }
+        user: { id: 'user-123', email: 'test@example.com', role: 'student' }
       });
       mockUserRepo.findById.mockResolvedValue(null);
 
@@ -96,7 +96,7 @@ describe('Profile API Route', () => {
 
     it('should handle errors gracefully', async () => {
       (getSession as jest.Mock).mockResolvedValue({
-        user: { id: 'user-123', email: 'test@example.com' }
+        user: { id: 'user-123', email: 'test@example.com', role: 'student' }
       });
       mockUserRepo.findById.mockRejectedValue(new Error('Database error'));
 
@@ -112,7 +112,7 @@ describe('Profile API Route', () => {
   describe('PATCH /api/auth/profile', () => {
     it('should update user profile successfully', async () => {
       (getSession as jest.Mock).mockResolvedValue({
-        user: { id: 'user-123', email: 'test@example.com' }
+        user: { id: 'user-123', email: 'test@example.com', role: 'student' }
       });
       
       const updatedUser = {
@@ -142,7 +142,7 @@ describe('Profile API Route', () => {
 
     it('should update password when valid current password provided', async () => {
       (getSession as jest.Mock).mockResolvedValue({
-        user: { id: 'user-123', email: 'test@example.com' }
+        user: { id: 'user-123', email: 'test@example.com', role: 'student' }
       });
       
       (getUserWithPassword as jest.Mock).mockResolvedValue({
@@ -183,7 +183,7 @@ describe('Profile API Route', () => {
 
     it('should reject password update with incorrect current password', async () => {
       (getSession as jest.Mock).mockResolvedValue({
-        user: { id: 'user-123', email: 'test@example.com' }
+        user: { id: 'user-123', email: 'test@example.com', role: 'student' }
       });
       
       (getUserWithPassword as jest.Mock).mockResolvedValue({
@@ -231,7 +231,7 @@ describe('Profile API Route', () => {
 
     it('should validate input data', async () => {
       (getSession as jest.Mock).mockResolvedValue({
-        user: { id: 'user-123', email: 'test@example.com' }
+        user: { id: 'user-123', email: 'test@example.com', role: 'student' }
       });
 
       const request = new NextRequest('http://localhost/api/auth/profile', {
@@ -251,7 +251,7 @@ describe('Profile API Route', () => {
 
     it('should handle database errors gracefully', async () => {
       (getSession as jest.Mock).mockResolvedValue({
-        user: { id: 'user-123', email: 'test@example.com' }
+        user: { id: 'user-123', email: 'test@example.com', role: 'student' }
       });
 
       mockUserRepo.update.mockRejectedValue(new Error('Database error'));
@@ -274,7 +274,7 @@ describe('Profile API Route', () => {
 
     it('should handle invalid language preference', async () => {
       (getSession as jest.Mock).mockResolvedValue({
-        user: { id: 'user-123', email: 'test@example.com' }
+        user: { id: 'user-123', email: 'test@example.com', role: 'student' }
       });
 
       const request = new NextRequest('http://localhost/api/auth/profile', {

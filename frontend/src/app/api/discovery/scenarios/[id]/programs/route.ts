@@ -87,7 +87,7 @@ export async function POST(
     console.log('🚀 Starting simplified Discovery Program creation...');
     
     const session = await getUnifiedAuth(request);
-    if (!session?.user.email) {
+    if (!session?.user?.email) {
       console.log('❌ No session found');
       return createUnauthorizedResponse();
     }

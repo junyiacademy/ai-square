@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
   try {
     // Check authentication
     const session = await getUnifiedAuth(request);
-    if (!session?.user.email) {
+    if (!session?.user?.email) {
       return createUnauthorizedResponse();
     }
 
@@ -146,7 +146,7 @@ export async function GET(request: NextRequest) {
   try {
     // Check authentication
     const session = await getUnifiedAuth(request);
-    if (!session?.user.email) {
+    if (!session?.user?.email) {
       return createUnauthorizedResponse();
     }
 

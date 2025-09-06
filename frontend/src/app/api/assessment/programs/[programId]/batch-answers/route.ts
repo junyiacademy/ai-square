@@ -12,7 +12,7 @@ export async function POST(
     const session = await getUnifiedAuth(request);
     
     // If no auth, check if user info is in query params
-    if (!session?.user.email) {
+    if (!session?.user?.email) {
       const { searchParams } = new URL(request.url);
       const emailParam = searchParams.get('userEmail');
       

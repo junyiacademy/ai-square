@@ -7,12 +7,18 @@ import { mockRepositoryFactory } from '@/test-utils/mocks/repositories';
 import { GET } from '../route';
 import { NextRequest } from 'next/server';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth } from '@/lib/auth/unified-auth';
 import { mockConsoleError as createMockConsoleError } from '@/test-utils/helpers/console';
 
 // Mock dependencies
 jest.mock('@/lib/repositories/base/repository-factory');
-jest.mock('@/lib/auth/session');
+jest.mock('@/lib/auth/unified-auth', () => ({
+  getUnifiedAuth: jest.fn(),
+  createUnauthorizedResponse: jest.fn(() => ({
+    json: () => Promise.resolve({ success: false, error: 'Authentication required' }),
+    status: 401
+  }))
+}));
 
 // Mock console
 const mockConsoleError = createMockConsoleError();
@@ -40,7 +46,7 @@ describe('/api/discovery/programs/[programId]', () => {
     (repositoryFactory.getProgramRepository as jest.Mock).mockReturnValue(mockProgramRepo);
     (repositoryFactory.getTaskRepository as jest.Mock).mockReturnValue(mockTaskRepo);
     (repositoryFactory.getScenarioRepository as jest.Mock).mockReturnValue(mockScenarioRepo);
-    (getServerSession as jest.Mock).mockResolvedValue(null);
+    (getUnifiedAuth as jest.Mock).mockResolvedValue(null);
   });
 
   afterAll(() => {
@@ -98,8 +104,8 @@ describe('/api/discovery/programs/[programId]', () => {
     };
 
     it('should return program details for authorized user', async () => {
-      (getServerSession as jest.Mock).mockResolvedValue({
-        user: { id: 'user-789', email: 'user@example.com' },
+      (getUnifiedAuth as jest.Mock).mockResolvedValue({
+        user: { id: 'user-789', email: 'user@example.com', role: 'student' },
       });
 
       mockProgramRepo.findById.mockResolvedValue(mockProgram);
@@ -127,8 +133,8 @@ describe('/api/discovery/programs/[programId]', () => {
     });
 
     it('should return 404 when program not found', async () => {
-      (getServerSession as jest.Mock).mockResolvedValue({
-        user: { id: 'user-789', email: 'user@example.com' },
+      (getUnifiedAuth as jest.Mock).mockResolvedValue({
+        user: { id: 'user-789', email: 'user@example.com', role: 'student' },
       });
 
       mockProgramRepo.findById.mockResolvedValue(null);
@@ -142,8 +148,8 @@ describe('/api/discovery/programs/[programId]', () => {
     });
 
     it('should return 403 when user is not program owner', async () => {
-      (getServerSession as jest.Mock).mockResolvedValue({
-        user: { id: 'other-user', email: 'other@example.com' },
+      (getUnifiedAuth as jest.Mock).mockResolvedValue({
+        user: { id: 'other-user', email: 'other@example.com', role: 'student' },
       });
 
       mockProgramRepo.findById.mockResolvedValue(mockProgram);
@@ -157,7 +163,7 @@ describe('/api/discovery/programs/[programId]', () => {
     });
 
     it('should return 401 when not authenticated', async () => {
-      (getServerSession as jest.Mock).mockResolvedValue(null);
+      (getUnifiedAuth as jest.Mock).mockResolvedValue(null);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/programs/prog-123');
       const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });

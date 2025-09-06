@@ -5,14 +5,20 @@
 
 import { POST } from '../route';
 import { NextRequest } from 'next/server';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth } from '@/lib/auth/unified-auth';
 import { postgresqlLearningService } from '@/lib/services/postgresql-learning-service';
 import { mockConsoleError as createMockConsoleError } from '@/test-utils/helpers/console';
 import { createMockProgram, createMockScenario } from '@/test-utils/mocks/repository-helpers';
 
 // Mock dependencies
 jest.mock('@/lib/services/postgresql-learning-service');
-jest.mock('@/lib/auth/session');
+jest.mock('@/lib/auth/unified-auth', () => ({
+  getUnifiedAuth: jest.fn(),
+  createUnauthorizedResponse: jest.fn(() => ({
+    json: () => Promise.resolve({ success: false, error: 'Authentication required' }),
+    status: 401
+  }))
+}));
 
 // Mock console
 const mockConsoleError = createMockConsoleError();
@@ -25,7 +31,7 @@ describe('/api/learning/programs', () => {
     jest.clearAllMocks();
     
     // Setup default mocks
-    (getServerSession as jest.Mock).mockResolvedValue(null);
+    (getUnifiedAuth as jest.Mock).mockResolvedValue(null);
   });
 
   afterAll(() => {
@@ -41,8 +47,8 @@ describe('/api/learning/programs', () => {
     };
 
     it('should create new program successfully', async () => {
-      (getServerSession as jest.Mock).mockResolvedValue({
-        user: { id: 'user-123', email: 'user@example.com' },
+      (getUnifiedAuth as jest.Mock).mockResolvedValue({
+        user: { id: 'user-123', email: 'user@example.com', role: 'student' },
       });
 
       mockLearningService.createLearningProgram.mockResolvedValue({
@@ -92,8 +98,8 @@ describe('/api/learning/programs', () => {
     });
 
     it('should return 400 when scenarioId is missing', async () => {
-      (getServerSession as jest.Mock).mockResolvedValue({
-        user: { id: 'user-123', email: 'user@example.com' },
+      (getUnifiedAuth as jest.Mock).mockResolvedValue({
+        user: { id: 'user-123', email: 'user@example.com', role: 'student' },
       });
 
       const request = new NextRequest('http://localhost:3000/api/learning/programs', {
@@ -109,8 +115,8 @@ describe('/api/learning/programs', () => {
     });
 
     it('should return 404 when scenario not found', async () => {
-      (getServerSession as jest.Mock).mockResolvedValue({
-        user: { id: 'user-123', email: 'user@example.com' },
+      (getUnifiedAuth as jest.Mock).mockResolvedValue({
+        user: { id: 'user-123', email: 'user@example.com', role: 'student' },
       });
 
       mockLearningService.createLearningProgram.mockRejectedValue(
@@ -132,7 +138,7 @@ describe('/api/learning/programs', () => {
     });
 
     it('should return 401 when not authenticated', async () => {
-      (getServerSession as jest.Mock).mockResolvedValue(null);
+      (getUnifiedAuth as jest.Mock).mockResolvedValue(null);
 
       const request = new NextRequest('http://localhost:3000/api/learning/programs', {
         method: 'POST',
@@ -145,12 +151,12 @@ describe('/api/learning/programs', () => {
       const data = await response.json();
 
       expect(response.status).toBe(401);
-      expect(data.error).toBe('Unauthorized');
+      expect(data.error).toBe('Authentication required');
     });
 
     it('should handle invalid JSON in request body', async () => {
-      (getServerSession as jest.Mock).mockResolvedValue({
-        user: { id: 'user-123', email: 'user@example.com' },
+      (getUnifiedAuth as jest.Mock).mockResolvedValue({
+        user: { id: 'user-123', email: 'user@example.com', role: 'student' },
       });
 
       const request = new NextRequest('http://localhost:3000/api/learning/programs', {
@@ -166,8 +172,8 @@ describe('/api/learning/programs', () => {
     });
 
     it('should handle database errors', async () => {
-      (getServerSession as jest.Mock).mockResolvedValue({
-        user: { id: 'user-123', email: 'user@example.com' },
+      (getUnifiedAuth as jest.Mock).mockResolvedValue({
+        user: { id: 'user-123', email: 'user@example.com', role: 'student' },
       });
 
       const error = new Error('Database error');
@@ -198,7 +204,7 @@ describe('/api/learning/programs', () => {
  * 
  * 1. Authentication:
  *    - All endpoints require valid user session
- *    - Uses getServerSession for authentication
+ *    - Uses getUnifiedAuth for authentication
  * 
  * 2. Program Creation:
  *    - Requires valid scenario ID

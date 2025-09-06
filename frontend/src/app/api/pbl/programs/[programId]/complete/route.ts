@@ -56,7 +56,7 @@ export async function POST(
     
     // Get user session
     const session = await getUnifiedAuth(request);
-    if (!session?.user.email) {
+    if (!session?.user?.email) {
       return createUnauthorizedResponse();
     }
     
@@ -442,7 +442,7 @@ export async function GET(
     
     // Get user session
     const session = await getUnifiedAuth(request);
-    if (!session?.user.email) {
+    if (!session?.user?.email) {
       return createUnauthorizedResponse();
     }
     

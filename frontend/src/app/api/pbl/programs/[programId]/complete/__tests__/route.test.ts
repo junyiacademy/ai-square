@@ -12,13 +12,19 @@ import type {
   TaskStatus,
   TaskType
 } from '@/types/database';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth } from '@/lib/auth/unified-auth';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 
-jest.mock('@/lib/auth/session');
+jest.mock('@/lib/auth/unified-auth', () => ({
+  getUnifiedAuth: jest.fn(),
+  createUnauthorizedResponse: jest.fn(() => ({
+    json: () => Promise.resolve({ success: false, error: 'Authentication required' }),
+    status: 401
+  }))
+}));
 jest.mock('@/lib/repositories/base/repository-factory');
 
-const mockGetServerSession = getServerSession as jest.MockedFunction<typeof getServerSession>;
+const mockGetUnifiedAuth = getUnifiedAuth as jest.MockedFunction<typeof getUnifiedAuth>;
 const mockRepositoryFactory = repositoryFactory as jest.Mocked<typeof repositoryFactory>;
 
 // Mock console
@@ -233,15 +239,15 @@ describe('/api/pbl/programs/[programId]/complete', () => {
     );
 
     // Setup default successful auth
-    mockGetServerSession.mockResolvedValue({
-      user: { id: 'user-123', email: 'test@example.com' }
+    mockGetUnifiedAuth.mockResolvedValue({
+      user: { id: 'user-123', email: 'test@example.com', role: 'student' }
     } as any);
   });
 
   describe('POST', () => {
     describe('Authentication and Authorization', () => {
       it('should return 401 for unauthenticated requests', async () => {
-        mockGetServerSession.mockResolvedValue(null);
+        mockGetUnifiedAuth.mockResolvedValue(null);
 
         const request = new NextRequest('http://localhost:3000/api/pbl/programs/prog-123/complete', {
           method: 'POST'
@@ -1064,7 +1070,7 @@ describe('/api/pbl/programs/[programId]/complete', () => {
 
     describe('Error Handling', () => {
       it('should return 500 for repository errors', async () => {
-        mockGetServerSession.mockResolvedValue({ user: { id: 'user-123', email: 'test@example.com' } } as any);
+        mockGetUnifiedAuth.mockResolvedValue({ user: { id: 'user-123', email: 'test@example.com', role: 'student' } } as any);
         mockUserRepo.findByEmail.mockRejectedValue(new Error('Database connection failed'));
 
         const request = new NextRequest('http://localhost:3000/api/pbl/programs/prog-123/complete', {
@@ -1116,7 +1122,7 @@ describe('/api/pbl/programs/[programId]/complete', () => {
 
     describe('Authentication and Authorization', () => {
       it('should return 401 for unauthenticated requests', async () => {
-        mockGetServerSession.mockResolvedValue(null);
+        mockGetUnifiedAuth.mockResolvedValue(null);
 
         const request = new NextRequest('http://localhost:3000/api/pbl/programs/prog-123/complete');
 

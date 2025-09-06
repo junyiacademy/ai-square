@@ -2,15 +2,21 @@ import { mockRepositoryFactory } from '@/test-utils/mocks/repositories';
 import { NextRequest } from 'next/server';
 import { POST } from '../route';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth } from '@/lib/auth/unified-auth';
 import { TranslationService } from '@/lib/services/translation-service';
 
 // Mock dependencies
 jest.mock('@/lib/repositories/base/repository-factory');
-jest.mock('@/lib/auth/session');
+jest.mock('@/lib/auth/unified-auth', () => ({
+  getUnifiedAuth: jest.fn(),
+  createUnauthorizedResponse: jest.fn(() => ({
+    json: () => Promise.resolve({ success: false, error: 'Authentication required' }),
+    status: 401
+  }))
+}));
 jest.mock('@/lib/services/translation-service');
 
-const mockGetServerSession = getServerSession as jest.Mock;
+const mockGetUnifiedAuth = getUnifiedAuth as jest.Mock;
 const mockGetProgramRepository = jest.fn();
 const mockGetEvaluationRepository = jest.fn();
 
@@ -39,10 +45,7 @@ describe('/api/discovery/programs/[programId]/translate-feedback', () => {
 
   describe('POST', () => {
     const mockSession = {
-      user: {
-        id: 'user123',
-        email: 'test@example.com'
-      }
+      user: { id: 'user123', email: 'test@example.com', role: 'student' }
     };
 
     const mockProgram = {
@@ -70,7 +73,7 @@ describe('/api/discovery/programs/[programId]/translate-feedback', () => {
     };
 
     it('successfully translates feedback to target language', async () => {
-      mockGetServerSession.mockResolvedValue(mockSession);
+      mockGetUnifiedAuth.mockResolvedValue(mockSession);
       mockProgramRepo.findById.mockResolvedValue(mockProgram);
       mockEvaluationRepo.findByProgram.mockResolvedValue([mockEvaluation]);
       
@@ -130,7 +133,7 @@ describe('/api/discovery/programs/[programId]/translate-feedback', () => {
         }
       };
 
-      mockGetServerSession.mockResolvedValue(mockSession);
+      mockGetUnifiedAuth.mockResolvedValue(mockSession);
       mockProgramRepo.findById.mockResolvedValue(mockProgram);
       mockEvaluationRepo.findByProgram.mockResolvedValue([evaluationWithCached]);
 
@@ -151,7 +154,7 @@ describe('/api/discovery/programs/[programId]/translate-feedback', () => {
     });
 
     it('returns 401 when not authenticated', async () => {
-      mockGetServerSession.mockResolvedValue(null);
+      mockGetUnifiedAuth.mockResolvedValue(null);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/programs/program123/translate-feedback', {
         method: 'POST',
@@ -162,11 +165,11 @@ describe('/api/discovery/programs/[programId]/translate-feedback', () => {
       const data = await response.json();
 
       expect(response.status).toBe(401);
-      expect(data).toEqual({ error: 'Unauthorized' });
+      expect(data).toEqual({ success: false, error: 'Authentication required' });
     });
 
     it('returns 400 when target language missing', async () => {
-      mockGetServerSession.mockResolvedValue(mockSession);
+      mockGetUnifiedAuth.mockResolvedValue(mockSession);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/programs/program123/translate-feedback', {
         method: 'POST',
@@ -181,7 +184,7 @@ describe('/api/discovery/programs/[programId]/translate-feedback', () => {
     });
 
     it('returns 404 when program not found', async () => {
-      mockGetServerSession.mockResolvedValue(mockSession);
+      mockGetUnifiedAuth.mockResolvedValue(mockSession);
       mockProgramRepo.findById.mockResolvedValue(null);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/programs/program123/translate-feedback', {
@@ -197,7 +200,7 @@ describe('/api/discovery/programs/[programId]/translate-feedback', () => {
     });
 
     it('returns 404 when user does not own program', async () => {
-      mockGetServerSession.mockResolvedValue(mockSession);
+      mockGetUnifiedAuth.mockResolvedValue(mockSession);
       mockProgramRepo.findById.mockResolvedValue({
         ...mockProgram,
         userId: 'other@example.com'
@@ -216,7 +219,7 @@ describe('/api/discovery/programs/[programId]/translate-feedback', () => {
     });
 
     it('returns 404 when no feedback to translate', async () => {
-      mockGetServerSession.mockResolvedValue(mockSession);
+      mockGetUnifiedAuth.mockResolvedValue(mockSession);
       mockProgramRepo.findById.mockResolvedValue(mockProgram);
       mockEvaluationRepo.findByProgram.mockResolvedValue([]);
 
@@ -233,7 +236,7 @@ describe('/api/discovery/programs/[programId]/translate-feedback', () => {
     });
 
     it('handles translation errors', async () => {
-      mockGetServerSession.mockResolvedValue(mockSession);
+      mockGetUnifiedAuth.mockResolvedValue(mockSession);
       mockProgramRepo.findById.mockResolvedValue(mockProgram);
       mockEvaluationRepo.findByProgram.mockResolvedValue([mockEvaluation]);
       mockTranslationService.translateFeedback.mockRejectedValue(new Error('Translation API failed'));
@@ -259,7 +262,7 @@ describe('/api/discovery/programs/[programId]/translate-feedback', () => {
         }
       };
 
-      mockGetServerSession.mockResolvedValue(mockSession);
+      mockGetUnifiedAuth.mockResolvedValue(mockSession);
       mockProgramRepo.findById.mockResolvedValue(mockProgram);
       mockEvaluationRepo.findByProgram.mockResolvedValue([evaluationWithoutCareer]);
       mockTranslationService.translateFeedback.mockResolvedValue('Translated text');

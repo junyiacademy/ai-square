@@ -38,7 +38,7 @@ describe('GET /api/pbl/history', () => {
     (repositoryFactory.getProgramRepository as jest.Mock).mockReturnValue(mockRepos.program);
     (repositoryFactory.getTaskRepository as jest.Mock).mockReturnValue(mockRepos.task);
     (repositoryFactory.getEvaluationRepository as jest.Mock).mockReturnValue(mockRepos.evaluation);
-    (repositoryFactory.getContentRepository as jest.Mock).mockReturnValue(mockRepos.content);
+    Object.assign(repositoryFactory, { getUserRepository: jest.fn().mockReturnValue(mockRepos.user), getProgramRepository: jest.fn().mockReturnValue(mockRepos.program), getTaskRepository: jest.fn().mockReturnValue(mockRepos.task), getEvaluationRepository: jest.fn().mockReturnValue(mockRepos.evaluation), getContentRepository: jest.fn().mockReturnValue(mockRepos.content) });
   });
 
   it('should return history for authenticated user', async () => {

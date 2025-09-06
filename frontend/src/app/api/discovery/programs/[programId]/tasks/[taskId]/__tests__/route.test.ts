@@ -5,17 +5,25 @@
 
 import { NextRequest } from 'next/server';
 import { PATCH } from '../route';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth } from '@/lib/auth/unified-auth';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import type { IProgram, ITask } from '@/types/unified-learning';
 import type { User } from '@/lib/repositories/interfaces';
 import { mockConsoleError as createMockConsoleError } from '@/test-utils/helpers/console';
 
 // Mock dependencies
-jest.mock('@/lib/auth/session');
+jest.mock('@/lib/auth/unified-auth', () => ({
+  getUnifiedAuth: jest.fn(),
+  createUnauthorizedResponse: jest.fn(() => 
+    new Response(JSON.stringify({ success: false, error: 'Authentication required' }), {
+      status: 401,
+      headers: { 'Content-Type': 'application/json' }
+    })
+  )
+}));
 jest.mock('@/lib/repositories/base/repository-factory');
 
-const mockGetServerSession = getServerSession as jest.MockedFunction<typeof getServerSession>;
+const mockGetUnifiedAuth = getUnifiedAuth as jest.MockedFunction<typeof getUnifiedAuth>;
 const mockRepositoryFactory = repositoryFactory as jest.Mocked<typeof repositoryFactory>;
 
 // Mock console
@@ -133,7 +141,7 @@ describe('PATCH /api/discovery/programs/[programId]/tasks/[taskId]', () => {
     mockRepositoryFactory.getTaskRepository.mockReturnValue(mockTaskRepo as any);
 
     // Default session
-    mockGetServerSession.mockResolvedValue({
+    mockGetUnifiedAuth.mockResolvedValue({
       user: { email: 'test@example.com' }
     } as any);
   });
@@ -143,7 +151,7 @@ describe('PATCH /api/discovery/programs/[programId]/tasks/[taskId]', () => {
   });
 
   it('should require authentication', async () => {
-    mockGetServerSession.mockResolvedValueOnce(null);
+    mockGetUnifiedAuth.mockResolvedValueOnce(null);
 
     const request = new NextRequest('http://localhost:3000/api/discovery/programs/program-123/tasks/task-123', {
       method: 'PATCH',

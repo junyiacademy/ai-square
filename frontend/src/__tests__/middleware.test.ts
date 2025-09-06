@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { middleware, config } from '../middleware';
 
+// Unmock AuthManager to test the actual middleware functionality
+jest.unmock('@/lib/auth/auth-manager');
+
 // Mock NextResponse methods
 jest.mock('next/server', () => ({
   NextRequest: jest.requireActual('next/server').NextRequest,
@@ -114,8 +117,8 @@ describe('middleware', () => {
     describe('with authentication', () => {
       it('should allow access with valid sessionToken', () => {
         const request = new NextRequest('http://localhost:3000/pbl');
-        // Create a valid base64 encoded session token
-        const validToken = btoa(JSON.stringify({ userId: '123', email: 'test@example.com' }));
+        // Create a valid hex session token (32 bytes = 64 hex chars)
+        const validToken = 'a'.repeat(64); // Simple valid hex token for testing
         request.cookies.set('sessionToken', validToken);
         
         const response = middleware(request);

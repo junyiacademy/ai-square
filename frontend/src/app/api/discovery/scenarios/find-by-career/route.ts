@@ -5,7 +5,7 @@ import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 export async function GET(request: NextRequest) {
   try {
     const session = await getUnifiedAuth(request);
-    if (!session?.user.email) {
+    if (!session?.user?.email) {
       return createUnauthorizedResponse();
     }
 

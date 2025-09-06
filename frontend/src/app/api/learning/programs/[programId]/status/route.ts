@@ -15,7 +15,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
     // Check authentication
     const session = await getUnifiedAuth(request);
-    if (!session?.user.email) {
+    if (!session?.user?.email) {
       return createUnauthorizedResponse();
     }
 

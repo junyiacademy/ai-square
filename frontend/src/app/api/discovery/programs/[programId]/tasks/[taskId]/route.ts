@@ -18,7 +18,7 @@ export async function PATCH(
   try {
     // Check authentication
     const session = await getUnifiedAuth(request);
-    if (!session?.user.email) {
+    if (!session?.user?.email) {
       return createUnauthorizedResponse();
     }
 

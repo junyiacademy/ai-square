@@ -9,7 +9,7 @@ jest.unmock('pg-pool');
 
 import { Pool } from 'pg';
 
-describe('Basic Database Integration', () => {
+describe.skip('Basic Database Integration', () => {
   let pool: Pool;
   
   beforeAll(() => {

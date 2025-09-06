@@ -5,11 +5,17 @@
 
 import { GET, POST } from '../route';
 import { NextRequest } from 'next/server';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth } from '@/lib/auth/unified-auth';
 import type { ITask, IInteraction } from '@/types/unified-learning';
 
 // Mock dependencies
-jest.mock('@/lib/auth/session');
+jest.mock('@/lib/auth/unified-auth', () => ({
+  getUnifiedAuth: jest.fn(),
+  createUnauthorizedResponse: jest.fn(() => ({
+    json: () => Promise.resolve({ success: false, error: 'Authentication required' }),
+    status: 401
+  }))
+}));
 jest.mock('@/lib/repositories/base/repository-factory', () => ({
   repositoryFactory: {
     getTaskRepository: jest.fn()
@@ -34,7 +40,7 @@ jest.mock('@/lib/monitoring/performance-monitor', () => ({
   withPerformanceTracking: jest.fn((handler) => handler())
 }));
 
-const mockGetServerSession = getServerSession as jest.MockedFunction<typeof getServerSession>;
+const mockGetUnifiedAuth = getUnifiedAuth as jest.MockedFunction<typeof getUnifiedAuth>;
 
 // Mock task repository
 const mockTaskRepo = {
@@ -88,7 +94,7 @@ describe('Task Interactions API', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    mockGetServerSession.mockResolvedValue(mockSession as any);
+    mockGetUnifiedAuth.mockResolvedValue(mockSession as any);
     mockTaskRepo.findById.mockResolvedValue(mockTask);
   });
 
@@ -99,7 +105,7 @@ describe('Task Interactions API', () => {
   describe('POST /api/pbl/tasks/[taskId]/interactions', () => {
     describe('Authentication', () => {
       it('should return 401 when no session exists', async () => {
-        mockGetServerSession.mockResolvedValueOnce(null);
+        mockGetUnifiedAuth.mockResolvedValueOnce(null);
 
         const request = createRequest(`http://localhost:3000/api/pbl/tasks/${mockTaskId}/interactions`, {
           method: 'POST',
@@ -118,7 +124,7 @@ describe('Task Interactions API', () => {
       });
 
       it('should return 401 when session has no email', async () => {
-        mockGetServerSession.mockResolvedValueOnce({ user: { name: 'Test' } } as any);
+        mockGetUnifiedAuth.mockResolvedValueOnce({ user: { name: 'Test' } } as any);
 
         const request = createRequest(`http://localhost:3000/api/pbl/tasks/${mockTaskId}/interactions`, {
           method: 'POST',
@@ -353,7 +359,7 @@ describe('Task Interactions API', () => {
   describe('GET /api/pbl/tasks/[taskId]/interactions', () => {
     describe('Authentication', () => {
       it('should return 401 when no session exists', async () => {
-        mockGetServerSession.mockResolvedValueOnce(null);
+        mockGetUnifiedAuth.mockResolvedValueOnce(null);
 
         const request = createRequest(`http://localhost:3000/api/pbl/tasks/${mockTaskId}/interactions`);
 

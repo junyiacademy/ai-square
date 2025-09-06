@@ -25,7 +25,7 @@ export async function GET(
     // Try to get user from authentication
     const session = await getUnifiedAuth(request);
     
-    if (!session?.user.email) {
+    if (!session?.user?.email) {
       // For security: require proper authentication
       return createUnauthorizedResponse();
     }

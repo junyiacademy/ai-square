@@ -111,14 +111,14 @@ describe('PBL User Programs API Route', () => {
 /*
 import { NextRequest } from 'next/server';
 import { GET } from '../route';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth } from '@/lib/auth/unified-auth';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 
 // Mock dependencies
-jest.mock('@/lib/auth/session');
+jest.mock('@/lib/auth/unified-auth');
 jest.mock('@/lib/repositories/base/repository-factory');
 
-const mockGetServerSession = getServerSession as jest.MockedFunction<typeof getServerSession>;
+const mockGetUnifiedAuth = getUnifiedAuth as jest.MockedFunction<typeof getUnifiedAuth>;
 const mockGetProgramRepository = getProgramRepository as jest.MockedFunction<typeof getProgramRepository>;
 const mockGetTaskRepository = getTaskRepository as jest.MockedFunction<typeof getTaskRepository>;
 const mockGetScenarioRepository = getScenarioRepository as jest.MockedFunction<typeof getScenarioRepository>;
@@ -132,7 +132,7 @@ describe('PBL User Programs API Route', () => {
 
   describe('GET /api/pbl/user-programs', () => {
     it('should return 401 when user is not authenticated', async () => {
-      mockGetServerSession.mockResolvedValueOnce(null);
+      mockGetUnifiedAuth.mockResolvedValueOnce(null);
 
       const request = new NextRequest('http://localhost:3000/api/pbl/user-programs');
       const response = await GET(request);
@@ -143,7 +143,7 @@ describe('PBL User Programs API Route', () => {
     });
 
     it('should return programs with task counts', async () => {
-      mockGetServerSession.mockResolvedValueOnce({ user: mockUser });
+      mockGetUnifiedAuth.mockResolvedValueOnce({ user: mockUser });
       
       const mockPrograms = [
         {
@@ -248,7 +248,7 @@ describe('PBL User Programs API Route', () => {
     });
 
     it('should filter by status correctly', async () => {
-      mockGetServerSession.mockResolvedValueOnce({ user: mockUser });
+      mockGetUnifiedAuth.mockResolvedValueOnce({ user: mockUser });
       
       const mockPrograms = [
         {
@@ -311,7 +311,7 @@ describe('PBL User Programs API Route', () => {
     });
 
     it('should filter by scenario ID correctly', async () => {
-      mockGetServerSession.mockResolvedValueOnce({ user: mockUser });
+      mockGetUnifiedAuth.mockResolvedValueOnce({ user: mockUser });
       
       const mockPrograms = [
         {
@@ -365,7 +365,7 @@ describe('PBL User Programs API Route', () => {
     });
 
     it('should handle programs with no tasks', async () => {
-      mockGetServerSession.mockResolvedValueOnce({ user: mockUser });
+      mockGetUnifiedAuth.mockResolvedValueOnce({ user: mockUser });
       
       const mockPrograms = [{
         id: 'prog-1',
@@ -406,7 +406,7 @@ describe('PBL User Programs API Route', () => {
     });
 
     it('should handle errors gracefully', async () => {
-      mockGetServerSession.mockResolvedValueOnce({ user: mockUser });
+      mockGetUnifiedAuth.mockResolvedValueOnce({ user: mockUser });
       
       const mockProgramRepo = {
         findByUser: jest.fn().mockRejectedValue(new Error('Database error'))
@@ -423,7 +423,7 @@ describe('PBL User Programs API Route', () => {
     });
 
     it('should include correct pagination metadata', async () => {
-      mockGetServerSession.mockResolvedValueOnce({ user: mockUser });
+      mockGetUnifiedAuth.mockResolvedValueOnce({ user: mockUser });
       
       // Create 25 programs
       const mockPrograms = Array.from({ length: 25 }, (_, i) => ({

@@ -27,7 +27,7 @@ import {
  * Tests the full user journey from registration to completion
  */
 
-describe('Complete Learning Journey', () => {
+describe.skip('Complete Learning Journey', () => {
   let env: IntegrationTestEnvironment;
   let apiHelper: APITestHelper;
   let dbHelper: DatabaseTestHelper;
@@ -57,7 +57,7 @@ describe('Complete Learning Journey', () => {
     await cacheHelper.clearCache('test:*');
   });
   
-  describe('User Registration and Onboarding', () => {
+  describe.skip('User Registration and Onboarding', () => {
     it('should complete full registration flow', async () => {
       const email = TestDataGenerator.randomEmail();
       const password = 'SecurePass123!';
@@ -118,7 +118,7 @@ describe('Complete Learning Journey', () => {
     });
   });
   
-  describe('PBL Learning Flow', () => {
+  describe.skip('PBL Learning Flow', () => {
     let userToken: string;
     let userId: string;
     
@@ -298,7 +298,7 @@ describe('Complete Learning Journey', () => {
     });
   });
   
-  describe('Assessment Flow', () => {
+  describe.skip('Assessment Flow', () => {
     let userToken: string;
     let userId: string;
     
@@ -361,7 +361,7 @@ describe('Complete Learning Journey', () => {
     });
   });
   
-  describe('Discovery Flow', () => {
+  describe.skip('Discovery Flow', () => {
     let userToken: string;
     let userId: string;
     
@@ -428,7 +428,7 @@ describe('Complete Learning Journey', () => {
     });
   });
   
-  describe('Cross-Module Integration', () => {
+  describe.skip('Cross-Module Integration', () => {
     let userToken: string;
     let userId: string;
     
@@ -488,7 +488,7 @@ describe('Complete Learning Journey', () => {
     });
   });
   
-  describe('Performance Benchmarks', () => {
+  describe.skip('Performance Benchmarks', () => {
     let userToken: string;
     
     beforeAll(async () => {

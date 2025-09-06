@@ -8,16 +8,37 @@ describe('KSA Codes Schema Validation', () => {
   describe('KSACodesSchema', () => {
     it('應該驗證有效的 KSA codes 檔案結構', () => {
       const validKSAFile: KSACodes = {
-        knowledge: [
-          { code: 'K1.1', description: 'Knowledge summary' },
-          { code: 'K1.2', description: 'Another knowledge summary' }
-        ],
-        skills: [
-          { code: 'S1.1', description: 'Skills summary' }
-        ],
-        attitudes: [
-          { code: 'A1.1', description: 'Attitudes summary' }
-        ]
+        knowledge_codes: {
+          description: 'Knowledge codes description',
+          themes: {
+            'theme1': {
+              codes: {
+                'K1.1': { summary: 'Knowledge summary' },
+                'K1.2': { summary: 'Another knowledge summary' }
+              }
+            }
+          }
+        },
+        skill_codes: {
+          description: 'Skills codes description',
+          themes: {
+            'theme1': {
+              codes: {
+                'S1.1': { summary: 'Skills summary' }
+              }
+            }
+          }
+        },
+        attitude_codes: {
+          description: 'Attitudes codes description',
+          themes: {
+            'theme1': {
+              codes: {
+                'A1.1': { summary: 'Attitudes summary' }
+              }
+            }
+          }
+        }
       };
       
       const result = KSACodesSchema.safeParse(validKSAFile);
@@ -215,19 +236,44 @@ describe('KSA Codes Schema Validation', () => {
 
     it('應該允許多個主題和多個代碼', () => {
       const fileWithMultipleThemes = {
-        knowledge: [
-          { code: 'K1.1', description: 'Knowledge 1.1' },
-          { code: 'K1.2', description: 'Knowledge 1.2' },
-          { code: 'K2.1', description: 'Knowledge 2.1' }
-        ],
-        skills: [
-          { code: 'S1.1', description: 'Skill 1.1' },
-          { code: 'S1.2', description: 'Skill 1.2' }
-        ],
-        attitudes: [
-          { code: 'A1.1', description: 'Attitude 1.1' },
-          { code: 'A1.2', description: 'Attitude 1.2' }
-        ]
+        knowledge_codes: {
+          description: 'Knowledge codes description',
+          themes: {
+            'theme1': {
+              codes: {
+                'K1.1': { summary: 'Knowledge 1.1' },
+                'K1.2': { summary: 'Knowledge 1.2' }
+              }
+            },
+            'theme2': {
+              codes: {
+                'K2.1': { summary: 'Knowledge 2.1' }
+              }
+            }
+          }
+        },
+        skill_codes: {
+          description: 'Skills codes description',
+          themes: {
+            'theme1': {
+              codes: {
+                'S1.1': { summary: 'Skill 1.1' },
+                'S1.2': { summary: 'Skill 1.2' }
+              }
+            }
+          }
+        },
+        attitude_codes: {
+          description: 'Attitudes codes description',
+          themes: {
+            'theme1': {
+              codes: {
+                'A1.1': { summary: 'Attitude 1.1' },
+                'A1.2': { summary: 'Attitude 1.2' }
+              }
+            }
+          }
+        }
       };
 
       const result = KSACodesSchema.safeParse(fileWithMultipleThemes);
@@ -504,9 +550,18 @@ describe('KSA Codes Schema Validation', () => {
 
     it('應該處理空的主題', () => {
       const ksaFile: KSACodes = {
-        knowledge: [],
-        skills: [],
-        attitudes: []
+        knowledge_codes: {
+          description: 'Knowledge codes description',
+          themes: {}
+        },
+        skill_codes: {
+          description: 'Skills codes description',
+          themes: {}
+        },
+        attitude_codes: {
+          description: 'Attitudes codes description',
+          themes: {}
+        }
       };
       
       expect(() => KSACodesSchema.parse(ksaFile)).not.toThrow();

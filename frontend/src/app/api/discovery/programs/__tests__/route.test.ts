@@ -4,16 +4,24 @@
  */
 
 import { NextRequest } from 'next/server';
-import { POST } from '../route';
+import { POST, GET } from '../route';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth } from '@/lib/auth/unified-auth';
 
 // Mock dependencies
 jest.mock('@/lib/repositories/base/repository-factory');
-jest.mock('@/lib/auth/session');
+jest.mock('@/lib/auth/unified-auth', () => ({
+  getUnifiedAuth: jest.fn(),
+  createUnauthorizedResponse: jest.fn(() => 
+    new Response(
+      JSON.stringify({ success: false, error: 'Authentication required' }),
+      { status: 401, headers: { 'Content-Type': 'application/json' } }
+    )
+  )
+}));
 
 const mockRepositoryFactory = repositoryFactory as jest.Mocked<typeof repositoryFactory>;
-const mockGetServerSession = getServerSession as jest.MockedFunction<typeof getServerSession>;
+const mockGetUnifiedAuth = getUnifiedAuth as jest.MockedFunction<typeof getUnifiedAuth>;
 
 describe('/api/discovery/programs', () => {
   let mockUserRepo: any;
@@ -47,7 +55,7 @@ describe('/api/discovery/programs', () => {
     };
 
     it('should return 401 when not authenticated', async () => {
-      mockGetServerSession.mockResolvedValue(null);
+      mockGetUnifiedAuth.mockResolvedValue(null);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/programs', {
         method: 'POST',
@@ -63,8 +71,8 @@ describe('/api/discovery/programs', () => {
     });
 
     it('should return 400 when scenarioId is missing', async () => {
-      mockGetServerSession.mockResolvedValue({
-        user: { email: 'test@example.com', id: 'user-123' }
+      mockGetUnifiedAuth.mockResolvedValue({
+        user: { email: 'test@example.com', id: 'user-123', role: 'student' }
       });
 
       const request = new NextRequest('http://localhost:3000/api/discovery/programs', {
@@ -81,8 +89,8 @@ describe('/api/discovery/programs', () => {
     });
 
     it('should return 404 when user not found', async () => {
-      mockGetServerSession.mockResolvedValue({
-        user: { email: 'test@example.com', id: 'user-123' }
+      mockGetUnifiedAuth.mockResolvedValue({
+        user: { email: 'test@example.com', id: 'user-123', role: 'student' }
       });
       mockUserRepo.findByEmail.mockResolvedValue(null);
 
@@ -101,8 +109,8 @@ describe('/api/discovery/programs', () => {
     });
 
     it('should return 404 when scenario not found', async () => {
-      mockGetServerSession.mockResolvedValue({
-        user: { email: 'test@example.com', id: 'user-123' }
+      mockGetUnifiedAuth.mockResolvedValue({
+        user: { email: 'test@example.com', id: 'user-123', role: 'student' }
       });
       mockUserRepo.findByEmail.mockResolvedValue({
         id: 'user-123',
@@ -125,8 +133,8 @@ describe('/api/discovery/programs', () => {
     });
 
     it('should return 400 when scenario mode is not discovery', async () => {
-      mockGetServerSession.mockResolvedValue({
-        user: { email: 'test@example.com', id: 'user-123' }
+      mockGetUnifiedAuth.mockResolvedValue({
+        user: { email: 'test@example.com', id: 'user-123', role: 'student' }
       });
       mockUserRepo.findByEmail.mockResolvedValue({
         id: 'user-123',
@@ -171,8 +179,8 @@ describe('/api/discovery/programs', () => {
         status: 'active'
       };
 
-      mockGetServerSession.mockResolvedValue({
-        user: { email: 'test@example.com', id: 'user-123' }
+      mockGetUnifiedAuth.mockResolvedValue({
+        user: { email: 'test@example.com', id: 'user-123', role: 'student' }
       });
       mockUserRepo.findByEmail.mockResolvedValue(mockUser);
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
@@ -231,8 +239,8 @@ describe('/api/discovery/programs', () => {
       };
       const mockProgram = { id: 'program-123', userId: 'user-123' };
 
-      mockGetServerSession.mockResolvedValue({
-        user: { email: 'test@example.com', id: 'user-123' }
+      mockGetUnifiedAuth.mockResolvedValue({
+        user: { email: 'test@example.com', id: 'user-123', role: 'student' }
       });
       mockUserRepo.findByEmail.mockResolvedValue(mockUser);
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
@@ -276,8 +284,8 @@ describe('/api/discovery/programs', () => {
       };
       const mockProgram = { id: 'program-123' };
 
-      mockGetServerSession.mockResolvedValue({
-        user: { email: 'test@example.com', id: 'user-123' }
+      mockGetUnifiedAuth.mockResolvedValue({
+        user: { email: 'test@example.com', id: 'user-123', role: 'student' }
       });
       mockUserRepo.findByEmail.mockResolvedValue(mockUser);
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
@@ -323,8 +331,8 @@ describe('/api/discovery/programs', () => {
     });
 
     it('should handle repository errors gracefully', async () => {
-      mockGetServerSession.mockResolvedValue({
-        user: { email: 'test@example.com', id: 'user-123' }
+      mockGetUnifiedAuth.mockResolvedValue({
+        user: { email: 'test@example.com', id: 'user-123', role: 'student' }
       });
       mockUserRepo.findByEmail.mockRejectedValue(new Error('Database connection failed'));
 
@@ -349,7 +357,7 @@ describe('/api/discovery/programs', () => {
         title: { en: 'Career Discovery Scenario' },
         discoveryData: { requiredSkills: ['x'] }
       };
-      mockGetServerSession.mockResolvedValue({ user: { email: 'test@example.com', id: 'user-123' } });
+      mockGetUnifiedAuth.mockResolvedValue({ user: { email: 'test@example.com', id: 'user-123', role: 'student' } });
       mockUserRepo.findByEmail.mockResolvedValue(mockUser);
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
       mockProgramRepo.create.mockRejectedValue(new Error('insert failed'));
@@ -375,7 +383,7 @@ describe('/api/discovery/programs', () => {
         discoveryData: { requiredSkills: [] },
       };
       const mockProgram = { id: 'program-999' };
-      mockGetServerSession.mockResolvedValue({ user: { email: 'test@example.com', id: 'user-123' } });
+      mockGetUnifiedAuth.mockResolvedValue({ user: { email: 'test@example.com', id: 'user-123', role: 'student' } });
       mockUserRepo.findByEmail.mockResolvedValue(mockUser);
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
       mockProgramRepo.create.mockResolvedValue(mockProgram);
@@ -416,9 +424,8 @@ describe('/api/discovery/programs', () => {
     });
 
     it('should return 401 when not authenticated', async () => {
-      (getServerSession as jest.Mock).mockResolvedValue(null);
+      mockGetUnifiedAuth.mockResolvedValue(null);
       const request = new NextRequest('http://localhost:3000/api/discovery/programs');
-      const { GET } = require('../route');
       const res = await GET(request);
       const data = await res.json();
       expect(res.status).toBe(401);
@@ -427,7 +434,7 @@ describe('/api/discovery/programs', () => {
     });
 
     it('should return 404 when user not found', async () => {
-      (getServerSession as jest.Mock).mockResolvedValue({ user: { email: 'u@e.com' } });
+      (getUnifiedAuth as jest.Mock).mockResolvedValue({ user: { email: 'u@e.com' } });
       mockUserRepo.findByEmail.mockResolvedValue(null);
       const request = new NextRequest('http://localhost:3000/api/discovery/programs');
       const { GET } = require('../route');
@@ -438,7 +445,7 @@ describe('/api/discovery/programs', () => {
     });
 
     it('should return user programs with progress and default sorting (desc by lastActivityAt)', async () => {
-      (getServerSession as jest.Mock).mockResolvedValue({ user: { email: 'u@e.com' } });
+      (getUnifiedAuth as jest.Mock).mockResolvedValue({ user: { email: 'u@e.com' } });
       mockUserRepo.findByEmail.mockResolvedValue({ id: 'u1', email: 'u@e.com' });
       const programs = [
         {
@@ -481,7 +488,7 @@ describe('/api/discovery/programs', () => {
     });
 
     it('should filter by status query param', async () => {
-      (getServerSession as jest.Mock).mockResolvedValue({ user: { email: 'u@e.com' } });
+      (getUnifiedAuth as jest.Mock).mockResolvedValue({ user: { email: 'u@e.com' } });
       mockUserRepo.findByEmail.mockResolvedValue({ id: 'u1', email: 'u@e.com' });
       mockProgramRepo.findByUser.mockResolvedValue([
         { id: 'a', userId: 'u1', mode: 'discovery', status: 'active', completedTaskCount: 0, totalTaskCount: 2, lastActivityAt: '2024-01-01T00:00:00Z', discoveryData: {} },
@@ -498,7 +505,7 @@ describe('/api/discovery/programs', () => {
     });
 
     it('should handle repository errors with 500', async () => {
-      (getServerSession as jest.Mock).mockResolvedValue({ user: { email: 'u@e.com' } });
+      (getUnifiedAuth as jest.Mock).mockResolvedValue({ user: { email: 'u@e.com' } });
       mockUserRepo.findByEmail.mockResolvedValue({ id: 'u1', email: 'u@e.com' });
       mockProgramRepo.findByUser.mockRejectedValue(new Error('db down'));
       const request = new NextRequest('http://localhost:3000/api/discovery/programs');
@@ -511,7 +518,7 @@ describe('/api/discovery/programs', () => {
     });
 
     it('should keep stable order when lastActivityAt ties (by input order)', async () => {
-      (getServerSession as jest.Mock).mockResolvedValue({ user: { email: 'u@e.com' } });
+      (getUnifiedAuth as jest.Mock).mockResolvedValue({ user: { email: 'u@e.com' } });
       mockUserRepo.findByEmail.mockResolvedValue({ id: 'u1', email: 'u@e.com' });
       const sameTime = '2024-01-05T00:00:00Z';
       mockProgramRepo.findByUser.mockResolvedValue([

@@ -1,9 +1,14 @@
 import { mockRepositoryFactory } from '@/test-utils/mocks/repositories';
 import { NextRequest } from 'next/server';
 
-// Mock auth utils
-jest.mock('@/lib/auth/auth-utils', () => ({
-  getAuthFromRequest: jest.fn(),
+// Mock unified auth
+jest.mock('@/lib/auth/unified-auth', () => ({
+  getUnifiedAuth: jest.fn(),
+  createUnauthorizedResponse: jest.fn(() => ({
+    status: 401,
+    json: jest.fn().mockResolvedValue({ error: 'Authentication required', success: false }),
+    text: jest.fn().mockResolvedValue('{"error":"Authentication required","success":false}')
+  }))
 }));
 
 // Mock cache service
@@ -37,12 +42,12 @@ jest.mock('@/lib/repositories/base/repository-factory', () => ({
 }));
 
 import { GET } from '../route';
-import { getAuthFromRequest } from '@/lib/auth/auth-utils';
+import { getUnifiedAuth } from '@/lib/auth/unified-auth';
 import { cacheService } from '@/lib/cache/cache-service';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 
 describe('GET /api/discovery/my-programs', () => {
-  const mockedGetAuthFromRequest = getAuthFromRequest as jest.MockedFunction<typeof getAuthFromRequest>;
+  const mockedGetUnifiedAuth = getUnifiedAuth as jest.MockedFunction<typeof getUnifiedAuth>;
   const mockedCacheService = cacheService as jest.Mocked<typeof cacheService>;
 
   beforeEach(() => {
@@ -50,7 +55,7 @@ describe('GET /api/discovery/my-programs', () => {
   });
 
   it('returns 401 when not authenticated', async () => {
-    mockedGetAuthFromRequest.mockResolvedValue(null);
+    mockedGetUnifiedAuth.mockResolvedValue(null);
 
     const request = new NextRequest('http://localhost:3000/api/discovery/my-programs');
     const response = await GET(request);
@@ -58,16 +63,18 @@ describe('GET /api/discovery/my-programs', () => {
 
     expect(response.status).toBe(401);
     expect(data).toEqual({
-      error: 'Unauthorized',
+      error: 'Authentication required',
+      success: false,
     });
   });
 
   it('returns cached data when available', async () => {
-    mockedGetAuthFromRequest.mockResolvedValue({
-      userId: '123',
-      email: 'test@example.com',
-      role: 'student',
-      name: 'Test User',
+    mockedGetUnifiedAuth.mockResolvedValue({
+      user: {
+        id: '123',
+        email: 'test@example.com',
+        role: 'student',
+      },
     });
 
     const cachedData = [
@@ -86,11 +93,12 @@ describe('GET /api/discovery/my-programs', () => {
   });
 
   it('returns empty array when user has no discovery programs', async () => {
-    mockedGetAuthFromRequest.mockResolvedValue({
-      userId: '123',
-      email: 'test@example.com',
-      role: 'student',
-      name: 'Test User',
+    mockedGetUnifiedAuth.mockResolvedValue({
+      user: {
+        id: '123',
+        email: 'test@example.com',
+        role: 'student',
+      },
     });
     mockedCacheService.get.mockResolvedValue(null);
     mockProgramRepository.findByUser.mockResolvedValue([]);
@@ -109,11 +117,12 @@ describe('GET /api/discovery/my-programs', () => {
   });
 
   it('filters and returns only discovery programs with scenario details', async () => {
-    mockedGetAuthFromRequest.mockResolvedValue({
-      userId: '123',
-      email: 'test@example.com',
-      role: 'student',
-      name: 'Test User',
+    mockedGetUnifiedAuth.mockResolvedValue({
+      user: {
+        id: '123',
+        email: 'test@example.com',
+        role: 'student',
+      },
     });
     mockedCacheService.get.mockResolvedValue(null);
 
@@ -204,11 +213,12 @@ describe('GET /api/discovery/my-programs', () => {
   });
 
   it('handles scenario loading errors gracefully', async () => {
-    mockedGetAuthFromRequest.mockResolvedValue({
-      userId: '123',
-      email: 'test@example.com',
-      role: 'student',
-      name: 'Test User',
+    mockedGetUnifiedAuth.mockResolvedValue({
+      user: {
+        id: '123',
+        email: 'test@example.com',
+        role: 'student',
+      },
     });
     mockedCacheService.get.mockResolvedValue(null);
 
@@ -232,11 +242,12 @@ describe('GET /api/discovery/my-programs', () => {
   });
 
   it('calculates latest activity correctly', async () => {
-    mockedGetAuthFromRequest.mockResolvedValue({
-      userId: '123',
-      email: 'test@example.com',
-      role: 'student',
-      name: 'Test User',
+    mockedGetUnifiedAuth.mockResolvedValue({
+      user: {
+        id: '123',
+        email: 'test@example.com',
+        role: 'student',
+      },
     });
     mockedCacheService.get.mockResolvedValue(null);
 
@@ -278,11 +289,12 @@ describe('GET /api/discovery/my-programs', () => {
   });
 
   it('handles repository errors', async () => {
-    mockedGetAuthFromRequest.mockResolvedValue({
-      userId: '123',
-      email: 'test@example.com',
-      role: 'student',
-      name: 'Test User',
+    mockedGetUnifiedAuth.mockResolvedValue({
+      user: {
+        id: '123',
+        email: 'test@example.com',
+        role: 'student',
+      },
     });
     mockedCacheService.get.mockResolvedValue(null);
     mockProgramRepository.findByUser.mockRejectedValue(new Error('Database error'));

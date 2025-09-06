@@ -15,7 +15,7 @@ export async function GET(
     headers.set('Pragma', 'no-cache');
     headers.set('Expires', '0');
     const session = await getUnifiedAuth(request);
-    if (!session?.user.email) {
+    if (!session?.user?.email) {
       return createUnauthorizedResponse();
     }
 

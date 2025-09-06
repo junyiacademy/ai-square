@@ -20,9 +20,20 @@ process.env.JWT_SECRET = 'test-jwt-secret';
 if (!process.env.DB_HOST) {
   process.env.DB_HOST = 'localhost';
   process.env.DB_PORT = '5432';
-  process.env.DB_NAME = 'test_db';
+  process.env.DB_NAME = `test_db_${Date.now()}_${process.pid}`;
   process.env.DB_USER = 'postgres';  // Use postgres for compatibility
   process.env.DB_PASSWORD = 'postgres';
+}
+
+// Disable Redis by default for unit tests
+if (!process.env.REDIS_ENABLED) {
+  process.env.REDIS_ENABLED = 'false';
+  process.env.TEST_REDIS_ENABLED = 'false';
+}
+
+// Disable real database for unit tests
+if (!process.env.USE_MOCK_DB) {
+  process.env.USE_MOCK_DB = 'true';
 }
 
 // Mock window.matchMedia (only in jsdom environment)
@@ -162,6 +173,83 @@ afterEach(() => {
   jest.clearAllMocks();
   localStorageMock.clear();
   sessionStorageMock.clear();
+  
+  // Clear any test-specific environment variables
+  if (process.env.NODE_ENV === 'test') {
+    // Reset fetch mock if it exists
+    if (global.fetch && typeof (global.fetch as any).mockClear === 'function') {
+      (global.fetch as jest.Mock).mockClear();
+    }
+  }
 });
+
+// Mock database and Redis modules completely for unit tests
+jest.mock('pg', () => ({
+  Pool: jest.fn().mockImplementation(() => ({
+    query: jest.fn().mockResolvedValue({ rows: [], rowCount: 0 }),
+    connect: jest.fn().mockResolvedValue({
+      query: jest.fn().mockResolvedValue({ rows: [], rowCount: 0 }),
+      release: jest.fn(),
+    }),
+    end: jest.fn().mockResolvedValue(undefined),
+  })),
+}));
+
+jest.mock('ioredis', () => {
+  return jest.fn().mockImplementation(() => ({
+    ping: jest.fn().mockResolvedValue('PONG'),
+    get: jest.fn().mockResolvedValue(null),
+    set: jest.fn().mockResolvedValue('OK'),
+    del: jest.fn().mockResolvedValue(1),
+    flushdb: jest.fn().mockResolvedValue('OK'),
+    quit: jest.fn().mockResolvedValue('OK'),
+  }));
+});
+
+// Mock the integration test environment to prevent real DB connections
+jest.mock('../../tests/integration/setup/test-environment', () => ({
+  IntegrationTestEnvironment: jest.fn().mockImplementation(() => ({
+    setup: jest.fn().mockResolvedValue(undefined),
+    teardown: jest.fn().mockResolvedValue(undefined),
+    getDbPool: jest.fn().mockReturnValue({
+      query: jest.fn().mockResolvedValue({ rows: [{ test: 1 }], rowCount: 1 }),
+      connect: jest.fn().mockResolvedValue({
+        query: jest.fn().mockResolvedValue({ rows: [{ test: 1 }], rowCount: 1 }),
+        release: jest.fn(),
+      }),
+      end: jest.fn().mockResolvedValue(undefined),
+    }),
+    getRedisClient: jest.fn().mockReturnValue({
+      ping: jest.fn().mockResolvedValue('PONG'),
+    }),
+    getTestDbName: jest.fn().mockReturnValue(process.env.DB_NAME || `test_db_${Date.now()}_${process.pid}`),
+  })),
+}));
+
+// Mock test helpers
+jest.mock('../../tests/integration/setup/test-helpers', () => ({
+  DatabaseTestHelper: jest.fn().mockImplementation(() => ({
+    createUser: jest.fn().mockImplementation((userData) => Promise.resolve({
+      id: userData.id || `user-${Date.now()}`,
+      email: userData.email,
+      name: userData.name,
+      role: userData.role,
+      emailVerified: userData.emailVerified,
+    })),
+    createSession: jest.fn().mockResolvedValue('mock-session-token'),
+  })),
+}));
+
+// Mock test fixtures
+jest.mock('../../tests/integration/setup/test-fixtures', () => ({
+  testUsers: {
+    demo: {
+      id: 'demo-user',
+      email: 'demo@example.com',
+      name: 'Demo User',
+    },
+  },
+  seedTestDatabase: jest.fn().mockResolvedValue(undefined),
+}));
 
 export {};

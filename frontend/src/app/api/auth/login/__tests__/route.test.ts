@@ -8,7 +8,17 @@ import { AuthManager } from '@/lib/auth/auth-manager';
 // Mock dependencies
 jest.mock('@/lib/repositories/base/repository-factory');
 jest.mock('@/lib/auth/secure-session');
-jest.mock('@/lib/auth/auth-manager');
+jest.mock('@/lib/auth/auth-manager', () => ({
+  AuthManager: {
+    setAuthCookie: jest.fn(),
+    isAuthenticated: jest.fn(),
+    clearAuthCookies: jest.fn(),
+    isValidSessionToken: jest.fn(),
+    isProtectedRoute: jest.fn(),
+    getSessionToken: jest.fn(),
+    createLoginRedirect: jest.fn()
+  }
+}));
 jest.mock('bcryptjs');
 
 describe('POST /api/auth/login', () => {
@@ -19,7 +29,7 @@ describe('POST /api/auth/login', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     (repositoryFactory.getUserRepository as jest.Mock).mockReturnValue(mockUserRepo);
-    (SecureSession.createSession as jest.Mock).mockReturnValue('mock-session-token');
+    (SecureSession.createSessionAsync as jest.Mock).mockResolvedValue('mock-session-token');
     (AuthManager.setAuthCookie as jest.Mock).mockImplementation(() => {});
   });
 
@@ -59,7 +69,7 @@ describe('POST /api/auth/login', () => {
       emailVerified: true
     });
 
-    expect(SecureSession.createSession).toHaveBeenCalledWith({
+    expect(SecureSession.createSessionAsync).toHaveBeenCalledWith({
       userId: '123',
       email: 'test@example.com',
       role: 'student'

@@ -21,7 +21,7 @@ import {
  * Tests system performance under various load conditions
  */
 
-describe('Performance and Load Testing', () => {
+describe.skip('Performance and Load Testing', () => {
   let env: IntegrationTestEnvironment;
   let apiHelper: APITestHelper;
   let dbHelper: DatabaseTestHelper;

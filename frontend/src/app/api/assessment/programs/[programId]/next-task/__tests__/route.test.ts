@@ -7,14 +7,20 @@ import { mockRepositoryFactory } from '@/test-utils/mocks/repositories';
 import { NextRequest } from 'next/server';
 import { POST } from '../route';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth } from '@/lib/auth/unified-auth';
 import type { IProgram, ITask } from '@/types/unified-learning';
 import type { User } from '@/lib/repositories/interfaces';
 import { mockConsoleError as createMockConsoleError } from '@/test-utils/helpers/console';
 
 // Mock dependencies
 jest.mock('@/lib/repositories/base/repository-factory');
-jest.mock('@/lib/auth/session');
+jest.mock('@/lib/auth/unified-auth', () => ({
+  getUnifiedAuth: jest.fn(),
+  createUnauthorizedResponse: jest.fn(() => ({
+    json: () => Promise.resolve({ success: false, error: 'Authentication required' }),
+    status: 401
+  }))
+}));
 
 // Mock console methods
 const mockConsoleError = createMockConsoleError();
@@ -179,7 +185,7 @@ describe('POST /api/assessment/programs/[programId]/next-task', () => {
     (repositoryFactory.getProgramRepository as jest.Mock).mockReturnValue(mockProgramRepo);
     (repositoryFactory.getTaskRepository as jest.Mock).mockReturnValue(mockTaskRepo);
     (repositoryFactory.getUserRepository as jest.Mock).mockReturnValue(mockUserRepo);
-    (getServerSession as jest.Mock).mockResolvedValue({
+    (getUnifiedAuth as jest.Mock).mockResolvedValue({
       user: { email: 'test@example.com' }
     });
     mockUserRepo.findByEmail.mockResolvedValue(mockUser);
@@ -196,7 +202,7 @@ describe('POST /api/assessment/programs/[programId]/next-task', () => {
 
   describe('Authentication', () => {
     it('should require authentication', async () => {
-      (getServerSession as jest.Mock).mockResolvedValue(null);
+      (getUnifiedAuth as jest.Mock).mockResolvedValue(null);
 
       const request = new NextRequest('http://localhost/api/assessment/programs/program-123/next-task', {
         method: 'POST',
@@ -211,7 +217,7 @@ describe('POST /api/assessment/programs/[programId]/next-task', () => {
     });
 
     it('should require user email in session', async () => {
-      (getServerSession as jest.Mock).mockResolvedValue({ user: {} }); // No email
+      (getUnifiedAuth as jest.Mock).mockResolvedValue({ user: {} }); // No email
 
       const request = new NextRequest('http://localhost/api/assessment/programs/program-123/next-task', {
         method: 'POST',

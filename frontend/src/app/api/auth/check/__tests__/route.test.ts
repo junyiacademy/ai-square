@@ -1,11 +1,10 @@
 import { GET } from '../route';
 import { NextRequest } from 'next/server';
+import { getUnifiedAuth } from '@/lib/auth/unified-auth';
 
-// Mock AuthManager
-jest.mock('@/lib/auth/auth-manager', () => ({
-  AuthManager: {
-    getSessionToken: jest.fn()
-  }
+// Mock unified auth
+jest.mock('@/lib/auth/unified-auth', () => ({
+  getUnifiedAuth: jest.fn()
 }));
 
 describe('/api/auth/check', () => {
@@ -15,17 +14,15 @@ describe('/api/auth/check', () => {
 
   describe('Session token authentication', () => {
     it('returns authenticated user when valid session token exists', async () => {
-      const { AuthManager } = require('@/lib/auth/auth-manager');
+      const mockGetUnifiedAuth = getUnifiedAuth as jest.Mock;
       
-      const sessionTokenData = {
-        userId: '123',  
-        email: 'test@example.com',
-        timestamp: Date.now(),
-        rememberMe: false
-      };
-      const sessionToken = Buffer.from(JSON.stringify(sessionTokenData)).toString('base64');
-
-      AuthManager.getSessionToken.mockReturnValue(sessionToken);
+      mockGetUnifiedAuth.mockResolvedValue({
+        user: {
+          id: '123',  
+          email: 'test@example.com',
+          role: 'user'
+        }
+      });
 
       const mockRequest = new NextRequest('http://localhost:3000/api/auth/check');
       const response = await GET(mockRequest);
@@ -38,15 +35,15 @@ describe('/api/auth/check', () => {
           id: '123',
           email: 'test@example.com',
           role: 'user',
-          name: 'User'
+          name: 'test@example.com' // Uses email as name
         }
       });
     });
 
     it('returns unauthenticated when no session token exists', async () => {
-      const { AuthManager } = require('@/lib/auth/auth-manager');
+      const mockGetUnifiedAuth = getUnifiedAuth as jest.Mock;
       
-      AuthManager.getSessionToken.mockReturnValue(undefined);
+      mockGetUnifiedAuth.mockResolvedValue(null);
 
       const mockRequest = new NextRequest('http://localhost:3000/api/auth/check');
       const response = await GET(mockRequest);
@@ -60,9 +57,9 @@ describe('/api/auth/check', () => {
     });
 
     it('returns unauthenticated when session token is invalid', async () => {
-      const { AuthManager } = require('@/lib/auth/auth-manager');
+      const mockGetUnifiedAuth = getUnifiedAuth as jest.Mock;
       
-      AuthManager.getSessionToken.mockReturnValue('invalid-token');
+      mockGetUnifiedAuth.mockResolvedValue(null);
 
       const mockRequest = new NextRequest('http://localhost:3000/api/auth/check');
       const response = await GET(mockRequest);
@@ -76,9 +73,9 @@ describe('/api/auth/check', () => {
     });
 
     it('handles malformed session token gracefully', async () => {
-      const { AuthManager } = require('@/lib/auth/auth-manager');
+      const mockGetUnifiedAuth = getUnifiedAuth as jest.Mock;
       
-      AuthManager.getSessionToken.mockReturnValue('not-base64-encoded');
+      mockGetUnifiedAuth.mockRejectedValue(new Error('Invalid token'));
 
       const mockRequest = new NextRequest('http://localhost:3000/api/auth/check');
       const response = await GET(mockRequest);
@@ -92,19 +89,15 @@ describe('/api/auth/check', () => {
     });
 
     it('handles URL-encoded session token from cookies', async () => {
-      const { AuthManager } = require('@/lib/auth/auth-manager');
+      const mockGetUnifiedAuth = getUnifiedAuth as jest.Mock;
       
-      const sessionTokenData = {
-        userId: '123',  
-        email: 'test@example.com',
-        timestamp: Date.now(),
-        rememberMe: false
-      };
-      const sessionToken = Buffer.from(JSON.stringify(sessionTokenData)).toString('base64');
-      // Simulate browser URL encoding (e.g., = becomes %3D)
-      const urlEncodedToken = encodeURIComponent(sessionToken);
-
-      AuthManager.getSessionToken.mockReturnValue(urlEncodedToken);
+      mockGetUnifiedAuth.mockResolvedValue({
+        user: {
+          id: '456',
+          email: 'encoded@example.com',
+          role: 'admin'
+        }
+      });
 
       const mockRequest = new NextRequest('http://localhost:3000/api/auth/check');
       const response = await GET(mockRequest);
@@ -114,10 +107,10 @@ describe('/api/auth/check', () => {
       expect(data).toEqual({
         authenticated: true,
         user: {
-          id: '123',
-          email: 'test@example.com',
-          role: 'user',
-          name: 'User'
+          id: '456',
+          email: 'encoded@example.com',
+          role: 'admin',
+          name: 'encoded@example.com'
         }
       });
     });
@@ -125,9 +118,9 @@ describe('/api/auth/check', () => {
 
   describe('response format validation', () => {
     it('always includes required fields in response', async () => {
-      const { AuthManager } = require('@/lib/auth/auth-manager');
+      const mockGetUnifiedAuth = getUnifiedAuth as jest.Mock;
       
-      AuthManager.getSessionToken.mockReturnValue(undefined);
+      mockGetUnifiedAuth.mockResolvedValue(null);
 
       const mockRequest = new NextRequest('http://localhost:3000/api/auth/check');
       const response = await GET(mockRequest);
@@ -141,45 +134,39 @@ describe('/api/auth/check', () => {
 
   describe('demo account roles', () => {
     it('returns student role for student@example.com', async () => {
-      const { AuthManager } = require('@/lib/auth/auth-manager');
+      const mockGetUnifiedAuth = getUnifiedAuth as jest.Mock;
       
-      const sessionTokenData = {
-        userId: '123',
-        email: 'student@example.com',
-        timestamp: Date.now(),
-        rememberMe: false
-      };
-      const sessionToken = Buffer.from(JSON.stringify(sessionTokenData)).toString('base64');
-
-      AuthManager.getSessionToken.mockReturnValue(sessionToken);
+      mockGetUnifiedAuth.mockResolvedValue({
+        user: {
+          id: 'demo-student',
+          email: 'student@example.com',
+          role: 'student'
+        }
+      });
 
       const mockRequest = new NextRequest('http://localhost:3000/api/auth/check');
       const response = await GET(mockRequest);
       const data = await response.json();
 
-      expect(data.user.role).toBe('student');
-      expect(data.user.name).toBe('Demo Student');
+      expect(data.user?.role).toBe('student');
     });
 
     it('returns teacher role for teacher@example.com', async () => {
-      const { AuthManager } = require('@/lib/auth/auth-manager');
+      const mockGetUnifiedAuth = getUnifiedAuth as jest.Mock;
       
-      const sessionTokenData = {
-        userId: '456',
-        email: 'teacher@example.com',
-        timestamp: Date.now(),
-        rememberMe: false
-      };
-      const sessionToken = Buffer.from(JSON.stringify(sessionTokenData)).toString('base64');
-
-      AuthManager.getSessionToken.mockReturnValue(sessionToken);
+      mockGetUnifiedAuth.mockResolvedValue({
+        user: {
+          id: 'demo-teacher',
+          email: 'teacher@example.com',
+          role: 'teacher'
+        }
+      });
 
       const mockRequest = new NextRequest('http://localhost:3000/api/auth/check');
       const response = await GET(mockRequest);
       const data = await response.json();
 
-      expect(data.user.role).toBe('teacher');
-      expect(data.user.name).toBe('Demo Teacher');
+      expect(data.user?.role).toBe('teacher');
     });
   });
 });

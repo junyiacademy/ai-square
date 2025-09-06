@@ -58,7 +58,7 @@ describe('Resend Verification API Route', () => {
   describe('POST /api/auth/resend-verification', () => {
     it('should resend verification for logged-in user', async () => {
       (getSession as jest.Mock).mockResolvedValue({
-        user: { id: 'user-123', email: 'test@example.com' }
+        user: { id: 'user-123', email: 'test@example.com', role: 'student' }
       });
 
       const request = new NextRequest('http://localhost/api/auth/resend-verification', {
@@ -181,7 +181,7 @@ describe('Resend Verification API Route', () => {
 
     it('should handle database errors gracefully', async () => {
       (getSession as jest.Mock).mockResolvedValue({
-        user: { id: 'user-123', email: 'test@example.com' }
+        user: { id: 'user-123', email: 'test@example.com', role: 'student' }
       });
       
       mockPool.query.mockRejectedValue(new Error('Database error'));
@@ -201,7 +201,7 @@ describe('Resend Verification API Route', () => {
 
     it('should handle email service failures', async () => {
       (getSession as jest.Mock).mockResolvedValue({
-        user: { id: 'user-123', email: 'test@example.com' }
+        user: { id: 'user-123', email: 'test@example.com', role: 'student' }
       });
       
       (emailService.sendVerificationEmail as jest.Mock).mockRejectedValue(
@@ -243,7 +243,7 @@ describe('Resend Verification API Route', () => {
       process.env.NEXT_PUBLIC_APP_URL = 'https://app.example.com';
       
       (getSession as jest.Mock).mockResolvedValue({
-        user: { id: 'user-123', email: 'test@example.com' }
+        user: { id: 'user-123', email: 'test@example.com', role: 'student' }
       });
 
       const request = new NextRequest('http://localhost/api/auth/resend-verification', {

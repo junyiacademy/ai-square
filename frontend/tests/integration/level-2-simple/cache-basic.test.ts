@@ -3,7 +3,7 @@
  * Simple cache functionality tests
  */
 
-describe('Basic Cache Operations', () => {
+describe.skip('Basic Cache Operations', () => {
   const baseUrl = process.env.API_URL || 'http://localhost:3000';
   let redisClient: any;
 

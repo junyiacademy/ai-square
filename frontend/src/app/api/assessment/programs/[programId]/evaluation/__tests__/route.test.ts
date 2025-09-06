@@ -7,14 +7,20 @@ import { mockRepositoryFactory } from '@/test-utils/mocks/repositories';
 import { NextRequest } from 'next/server';
 import { GET } from '../route';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth } from '@/lib/auth/unified-auth';
 import { mockConsoleError as createMockConsoleError } from '@/test-utils/helpers/console';
 import type { IProgram, IEvaluation } from '@/types/unified-learning';
 import type { User } from '@/lib/repositories/interfaces';
 
 // Mock dependencies
 jest.mock('@/lib/repositories/base/repository-factory');
-jest.mock('@/lib/auth/session');
+jest.mock('@/lib/auth/unified-auth', () => ({
+  getUnifiedAuth: jest.fn(),
+  createUnauthorizedResponse: jest.fn(() => ({
+    json: () => Promise.resolve({ success: false, error: 'Authentication required' }),
+    status: 401
+  }))
+}));
 
 // Mock console
 const mockConsoleError = createMockConsoleError();
@@ -160,7 +166,7 @@ describe('GET /api/assessment/programs/[programId]/evaluation', () => {
 
   describe('Authentication', () => {
     it('should accept authenticated session', async () => {
-      (getServerSession as jest.Mock).mockResolvedValue({
+      (getUnifiedAuth as jest.Mock).mockResolvedValue({
         user: { email: 'test@example.com' }
       });
       mockProgramRepo.findById.mockResolvedValue(mockProgram);
@@ -176,7 +182,7 @@ describe('GET /api/assessment/programs/[programId]/evaluation', () => {
     });
 
     it('should accept userEmail query parameter when no session', async () => {
-      (getServerSession as jest.Mock).mockResolvedValue(null);
+      (getUnifiedAuth as jest.Mock).mockResolvedValue(null);
       mockProgramRepo.findById.mockResolvedValue(mockProgram);
       mockEvaluationRepo.findByProgram.mockResolvedValue(mockEvaluations);
 
@@ -190,7 +196,7 @@ describe('GET /api/assessment/programs/[programId]/evaluation', () => {
     });
 
     it('should return 401 when no authentication', async () => {
-      (getServerSession as jest.Mock).mockResolvedValue(null);
+      (getUnifiedAuth as jest.Mock).mockResolvedValue(null);
 
       const request = new NextRequest('http://localhost/api/assessment/programs/program-123/evaluation');
       const response = await GET(request, { params: Promise.resolve({'programId':'program-123'}) });
@@ -201,7 +207,7 @@ describe('GET /api/assessment/programs/[programId]/evaluation', () => {
     });
 
     it('should handle session without email', async () => {
-      (getServerSession as jest.Mock).mockResolvedValue({ user: {} }); // No email
+      (getUnifiedAuth as jest.Mock).mockResolvedValue({ user: {} }); // No email
 
       const request = new NextRequest('http://localhost/api/assessment/programs/program-123/evaluation');
       const response = await GET(request, { params: Promise.resolve({'programId':'program-123'}) });
@@ -214,7 +220,7 @@ describe('GET /api/assessment/programs/[programId]/evaluation', () => {
 
   describe('Program Access', () => {
     beforeEach(() => {
-      (getServerSession as jest.Mock).mockResolvedValue({
+      (getUnifiedAuth as jest.Mock).mockResolvedValue({
         user: { email: 'test@example.com' }
       });
     });
@@ -259,7 +265,7 @@ describe('GET /api/assessment/programs/[programId]/evaluation', () => {
 
   describe('Evaluation Retrieval', () => {
     beforeEach(() => {
-      (getServerSession as jest.Mock).mockResolvedValue({
+      (getUnifiedAuth as jest.Mock).mockResolvedValue({
         user: { email: 'test@example.com' }
       });
       mockProgramRepo.findById.mockResolvedValue(mockProgram);
@@ -363,7 +369,7 @@ describe('GET /api/assessment/programs/[programId]/evaluation', () => {
 
   describe('Error Handling', () => {
     beforeEach(() => {
-      (getServerSession as jest.Mock).mockResolvedValue({
+      (getUnifiedAuth as jest.Mock).mockResolvedValue({
         user: { email: 'test@example.com' }
       });
     });

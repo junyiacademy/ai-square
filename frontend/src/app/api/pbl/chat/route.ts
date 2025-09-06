@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
 
     // Get user session
     const session = await getUnifiedAuth(request);
-    if (!session?.user.email) {
+    if (!session?.user?.email) {
       return NextResponse.json<ErrorResponse>(
         { error: 'Authentication required' },
         { status: 401 }

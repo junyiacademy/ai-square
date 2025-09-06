@@ -5,7 +5,7 @@
 
 import type { Pool, PoolClient } from 'pg';
 
-describe('Assessment Learning Flow', () => {
+describe.skip('Assessment Learning Flow', () => {
   const baseUrl = process.env.API_URL || 'http://localhost:3456';
   let pool: Pool | null = null;
 

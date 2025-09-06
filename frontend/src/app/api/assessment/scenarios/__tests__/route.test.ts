@@ -14,7 +14,7 @@ let fsPromises: { readdir: jest.Mock; readFile: jest.Mock };
 
 // Mock dependencies（基礎宣告）
 jest.mock('@/lib/repositories/base/repository-factory');
-jest.mock('@/lib/auth/session');
+jest.mock('@/lib/auth/unified-auth');
 
 // Mock console
 const mockConsoleError = createMockConsoleError();
@@ -47,7 +47,7 @@ describe('/api/assessment/scenarios', () => {
         getScenarioRepository: jest.fn(() => mockScenarioRepo),
       }
     }));
-    jest.doMock('@/lib/auth/session', () => ({ getServerSession: jest.fn().mockResolvedValue(null) }));
+    jest.doMock('@/lib/auth/session', () => ({ getUnifiedAuth: jest.fn().mockResolvedValue(null) }));
 
     jest.isolateModules(() => {
       // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -110,7 +110,7 @@ describe('/api/assessment/scenarios', () => {
 
     it('should include user progress when authenticated', async () => {
       (repositoryFactory.getScenarioRepository as jest.Mock).mockReturnValue(mockScenarioRepo);
-      jest.doMock('@/lib/auth/session', () => ({ getServerSession: jest.fn().mockResolvedValue({ user: { id: 'user-123', email: 'user@example.com' } }) }));
+      jest.doMock('@/lib/auth/session', () => ({ getUnifiedAuth: jest.fn().mockResolvedValue({ user: { id: 'user-123', email: 'user@example.com', role: 'student' } }) }));
       jest.isolateModules(() => {
         // eslint-disable-next-line @typescript-eslint/no-var-requires
         const mod = require('../route');

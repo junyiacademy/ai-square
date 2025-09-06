@@ -1,10 +1,17 @@
 import { mockRepositoryFactory } from '@/test-utils/mocks/repositories';
 import { NextRequest } from 'next/server';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth } from '@/lib/auth/unified-auth';
 
 // Mock dependencies before imports
 jest.mock('@/lib/repositories/base/repository-factory');
-jest.mock('@/lib/auth/session');
+jest.mock('@/lib/auth/unified-auth', () => ({
+  getUnifiedAuth: jest.fn(),
+  createUnauthorizedResponse: jest.fn(() => ({
+    status: 401,
+    json: jest.fn().mockResolvedValue({ error: 'Authentication required' }),
+    text: jest.fn().mockResolvedValue('{"error":"Authentication required"}')
+  }))
+}));
 
 // Import after mocking to ensure mocks are applied
 import { POST } from '../programs/[programId]/batch-answers/route';
@@ -20,7 +27,7 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     (repositoryFactory.getTaskRepository as jest.Mock).mockReturnValue(mockTaskRepo);
-    (getServerSession as jest.Mock).mockResolvedValue({
+    (getUnifiedAuth as jest.Mock).mockResolvedValue({
       user: { email: 'test@example.com' }
     });
   });
@@ -93,7 +100,7 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
   });
 
   it('should handle authentication via query params', async () => {
-    (getServerSession as jest.Mock).mockResolvedValue(null);
+    (getUnifiedAuth as jest.Mock).mockResolvedValue(null);
     
     const request = new NextRequest(
       'http://localhost/api/assessment/programs/123/batch-answers?userEmail=test@example.com',
@@ -119,7 +126,7 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
   });
 
   it('should return 401 when no authentication', async () => {
-    (getServerSession as jest.Mock).mockResolvedValue(null);
+    (getUnifiedAuth as jest.Mock).mockResolvedValue(null);
     
     const request = new NextRequest('http://localhost/api/assessment/programs/123/batch-answers', {
       method: 'POST',
@@ -130,9 +137,11 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
     });
 
     const response = await POST(request, { params: Promise.resolve({ programId: '123' }) });
-    const data = await response.json();
-
+    
     expect(response.status).toBe(401);
+    
+    // Handle both Response and NextResponse objects
+    const data = await response.json();
     expect(data.error).toBe('Authentication required');
   });
 

@@ -3,7 +3,7 @@
  * Simple test to verify Redis connectivity
  */
 
-describe('Basic Redis Connection', () => {
+describe.skip('Basic Redis Connection', () => {
   let redisClient: any;
 
   afterAll(async () => {

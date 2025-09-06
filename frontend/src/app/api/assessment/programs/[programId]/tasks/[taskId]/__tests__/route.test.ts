@@ -5,20 +5,26 @@
 
 import { NextRequest } from 'next/server';
 import { GET, PATCH } from '../route';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth } from '@/lib/auth/unified-auth';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import type { IProgram, ITask, IEvaluation } from '@/types/unified-learning';
 import type { User } from '@/lib/repositories/interfaces';
 import { mockConsoleError as createMockConsoleError } from '@/test-utils/helpers/console';
 
 // Mock dependencies
-jest.mock('@/lib/auth/session');
+jest.mock('@/lib/auth/unified-auth', () => ({
+  getUnifiedAuth: jest.fn(),
+  createUnauthorizedResponse: jest.fn(() => ({
+    json: () => Promise.resolve({ success: false, error: 'Authentication required' }),
+    status: 401
+  }))
+}));
 jest.mock('@/lib/repositories/base/repository-factory');
 jest.mock('@/lib/utils/language', () => ({
   getLanguageFromHeader: jest.fn().mockReturnValue('en')
 }));
 
-const mockGetServerSession = getServerSession as jest.MockedFunction<typeof getServerSession>;
+const mockGetUnifiedAuth = getUnifiedAuth as jest.MockedFunction<typeof getUnifiedAuth>;
 const mockRepositoryFactory = repositoryFactory as jest.Mocked<typeof repositoryFactory>;
 
 // Mock console
@@ -141,7 +147,7 @@ describe('GET /api/assessment/programs/[programId]/tasks/[taskId]', () => {
     mockRepositoryFactory.getProgramRepository.mockReturnValue(mockProgramRepo as any);
 
     // Default session with user ID
-    mockGetServerSession.mockResolvedValue({
+    mockGetUnifiedAuth.mockResolvedValue({
       user: { email: 'test@example.com', id: 'user-123' }
     } as any);
   });
@@ -188,7 +194,7 @@ describe('GET /api/assessment/programs/[programId]/tasks/[taskId]', () => {
 
   describe('Authentication', () => {
     it('should require authentication', async () => {
-      mockGetServerSession.mockResolvedValueOnce(null);
+      mockGetUnifiedAuth.mockResolvedValueOnce(null);
 
       const request = new NextRequest('http://localhost:3000/api/assessment/programs/' + VALID_UUID + '/tasks/' + VALID_UUID, {
         method: 'GET'
@@ -451,7 +457,7 @@ describe('PATCH /api/assessment/programs/[programId]/tasks/[taskId]', () => {
     mockRepositoryFactory.getEvaluationRepository.mockReturnValue(mockEvaluationRepo as any);
 
     // Default session with user ID
-    mockGetServerSession.mockResolvedValue({
+    mockGetUnifiedAuth.mockResolvedValue({
       user: { email: 'test@example.com', id: 'user-123' }
     } as any);
   });

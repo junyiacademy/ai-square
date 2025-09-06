@@ -7,7 +7,7 @@ import { ITask, IInteraction } from '@/types/unified-learning';
 export async function GET(request: NextRequest) {
   // Get user session
   const session = await getUnifiedAuth(request);
-  if (!session?.user.email) {
+  if (!session?.user?.email) {
     return createUnauthorizedResponse();
   }
   const userEmail = session.user.email;

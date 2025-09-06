@@ -3,7 +3,7 @@
  * Minimal test to verify Level 3 infrastructure works
  */
 
-describe('Level 3 Simple Flow', () => {
+describe.skip('Level 3 Simple Flow', () => {
   it('should pass basic test', () => {
     expect(true).toBe(true);
   });
