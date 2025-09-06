@@ -3,19 +3,16 @@
  * GET /api/learning/progress - Get user learning progress
  */
 
-import { NextResponse } from 'next/server';
-import { getServerSession } from '@/lib/auth/session';
+import { NextRequest, NextResponse } from 'next/server';
+import { getUnifiedAuth, createUnauthorizedResponse } from '@/lib/auth/unified-auth';
 import { postgresqlLearningService } from '@/lib/services/postgresql-learning-service';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     // Check authentication
-    const session = await getServerSession();
+    const session = await getUnifiedAuth(request);
     if (!session?.user?.email) {
-      return NextResponse.json(
-        { success: false, error: 'Unauthorized' },
-        { status: 401 }
-      );
+      return createUnauthorizedResponse();
     }
 
     // Get learning progress

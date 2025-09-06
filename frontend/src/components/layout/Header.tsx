@@ -14,7 +14,7 @@ export function Header() {
   const pathname = usePathname()
   const { t } = useTranslation(['navigation'])
   const { theme, toggleTheme } = useTheme()
-  const { user, isLoggedIn, logout } = useAuth()
+  const { user, isLoggedIn, logout, isLoading } = useAuth()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
 
@@ -169,7 +169,10 @@ export function Header() {
               </svg>
             </button>
             
-            {isLoggedIn && user ? (
+            {isLoading ? (
+              /* 載入中狀態 - 顯示骨架屏或空白 */
+              <div className="w-32 h-10 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
+            ) : isLoggedIn && user ? (
               /* 已登入狀態 */
               <div className="relative group">
                 {/* 用戶頭像按鈕 */}

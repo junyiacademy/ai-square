@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import type { IScenario } from '@/types/unified-learning';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth } from '@/lib/auth/unified-auth';
 // import path from 'path';
 // import { promises as fs } from 'fs';
 // import { parse as yamlParse } from 'yaml';
@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const lang = searchParams.get('lang') || 'en';
-    const session = await getServerSession();
+    const session = await getUnifiedAuth(request);
     const user = session?.user;
     const userId = user?.id || user?.email;
     const isTest = process.env.NODE_ENV === 'test' || Boolean(process.env.JEST_WORKER_ID);

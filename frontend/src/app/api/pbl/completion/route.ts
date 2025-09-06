@@ -1,17 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth, createUnauthorizedResponse } from '@/lib/auth/unified-auth';
 import { getLanguageFromHeader } from '@/lib/utils/language';
 import { cachedGET } from '@/lib/api/optimization-utils';
 import { ITask, IInteraction } from '@/types/unified-learning';
 
 export async function GET(request: NextRequest) {
   // Get user session
-  const session = await getServerSession();
-  if (!session?.user?.email) {
-    return NextResponse.json(
-      { success: false, error: 'Authentication required' },
-      { status: 401 }
-    );
+  const session = await getUnifiedAuth(request);
+  if (!session?.user.email) {
+    return createUnauthorizedResponse();
   }
   const userEmail = session.user.email;
 

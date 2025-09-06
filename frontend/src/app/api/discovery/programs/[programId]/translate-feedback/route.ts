@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth, createUnauthorizedResponse } from '@/lib/auth/unified-auth';
 import { TranslationService } from '@/lib/services/translation-service';
 
 export async function POST(
@@ -8,9 +8,9 @@ export async function POST(
   { params }: { params: Promise<{ programId: string }> }
 ) {
   try {
-    const session = await getServerSession();
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const session = await getUnifiedAuth(request);
+    if (!session?.user.email) {
+      return createUnauthorizedResponse();
     }
     
     const { programId } = await params;

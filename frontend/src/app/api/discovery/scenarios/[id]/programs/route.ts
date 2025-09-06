@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth, createUnauthorizedResponse } from '@/lib/auth/unified-auth';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import type { TaskType } from '@/types/database';
 
@@ -9,9 +9,9 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await getServerSession();
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const session = await getUnifiedAuth(request);
+    if (!session?.user.id) {
+      return createUnauthorizedResponse();
     }
 
     const { id: scenarioId } = await params;
@@ -86,10 +86,10 @@ export async function POST(
   try {
     console.log('🚀 Starting simplified Discovery Program creation...');
     
-    const session = await getServerSession();
-    if (!session?.user?.email) {
+    const session = await getUnifiedAuth(request);
+    if (!session?.user.email) {
       console.log('❌ No session found');
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return createUnauthorizedResponse();
     }
     console.log('✅ Session found for user:', session.user.email);
 

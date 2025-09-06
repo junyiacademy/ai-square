@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAuthFromRequest } from '@/lib/auth/auth-utils';
+import { getUnifiedAuth } from '@/lib/auth/unified-auth';
 
 export async function GET(request: NextRequest) {
   try {
-    // Use simplified auth extraction
-    const user = await getAuthFromRequest(request);
+    // Use unified authentication
+    const auth = await getUnifiedAuth(request);
     
-    if (!user) {
+    if (!auth) {
       return NextResponse.json({
         authenticated: false,
         user: null
@@ -16,10 +16,10 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       authenticated: true,
       user: {
-        id: user.userId,
-        email: user.email,
-        role: user.role,
-        name: user.name
+        id: auth.user.id,
+        email: auth.user.email,
+        role: auth.user.role,
+        name: auth.user.email // Use email as name if not available
       }
     });
   } catch (error) {

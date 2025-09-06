@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth, createUnauthorizedResponse } from '@/lib/auth/unified-auth';
 import { 
   AssessmentInteraction, 
   AssessmentQuestion, 
@@ -15,7 +15,7 @@ export async function POST(
 ) {
   try {
     // Try to get user from authentication
-    const session = await getServerSession();
+    const session = await getUnifiedAuth(request);
     
     // If no auth, check if user info is in query params
     let user: { email: string; id?: string } | null = null;
@@ -30,10 +30,7 @@ export async function POST(
       if (emailParam) {
         user = { email: emailParam, id: idParam || undefined };
       } else {
-        return NextResponse.json(
-          { error: 'Authentication required' },
-          { status: 401 }
-        );
+        return createUnauthorizedResponse();
       }
     }
     

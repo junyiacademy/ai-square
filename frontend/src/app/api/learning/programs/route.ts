@@ -4,18 +4,15 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth, createUnauthorizedResponse } from '@/lib/auth/unified-auth';
 import { postgresqlLearningService } from '@/lib/services/postgresql-learning-service';
 
 export async function POST(request: NextRequest) {
   try {
     // Check authentication
-    const session = await getServerSession();
-    if (!session?.user?.email) {
-      return NextResponse.json(
-        { success: false, error: 'Unauthorized' },
-        { status: 401 }
-      );
+    const session = await getUnifiedAuth(request);
+    if (!session?.user.email) {
+      return createUnauthorizedResponse();
     }
 
     // Parse request body

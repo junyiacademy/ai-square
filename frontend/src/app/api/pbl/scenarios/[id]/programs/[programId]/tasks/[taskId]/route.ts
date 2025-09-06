@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth, createUnauthorizedResponse } from '@/lib/auth/unified-auth';
 
 export async function GET(
   request: NextRequest,
@@ -31,12 +31,9 @@ export async function GET(
     }
     
     // Get user session
-    const session = await getServerSession();
-    if (!session?.user?.email) {
-      return NextResponse.json(
-        { success: false, error: 'Authentication required' },
-        { status: 401 }
-      );
+    const session = await getUnifiedAuth(request);
+    if (!session?.user.email) {
+      return createUnauthorizedResponse();
     }
     
     // Use unified architecture to get task

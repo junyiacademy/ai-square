@@ -4,7 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getAuthFromRequest } from '@/lib/auth/auth-utils';
+import { getUnifiedAuth, createUnauthorizedResponse } from '@/lib/auth/unified-auth';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { cacheService } from '@/lib/cache/cache-service';
 import type { Task } from '@/lib/repositories/interfaces';
@@ -12,13 +12,11 @@ import type { Task } from '@/lib/repositories/interfaces';
 export async function GET(request: NextRequest) {
   try {
     // Check authentication
-    const user = await getAuthFromRequest(request);
-    if (!user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
+    const auth = await getUnifiedAuth(request);
+    if (!auth) {
+      return createUnauthorizedResponse();
     }
+    const user = auth.user;
 
     // Check cache first
     const cacheKey = `discovery-my-scenarios-${user.email}`;
@@ -34,7 +32,7 @@ export async function GET(request: NextRequest) {
     const taskRepo = repositoryFactory.getTaskRepository();
 
     // Find all user's programs
-    const allPrograms = await programRepo.findByUser(user.email);
+    const allPrograms = await programRepo.findByUser(user.id);
     
     // Filter for Discovery programs
     const discoveryPrograms = allPrograms.filter(program => {

@@ -5,13 +5,17 @@
 
 import { GET } from '../route';
 import { NextRequest } from 'next/server';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth } from '@/lib/auth/unified-auth';
 import { postgresqlLearningService } from '@/lib/services/postgresql-learning-service';
 import { mockConsoleError as createMockConsoleError } from '@/test-utils/helpers/console';
 
 // Mock dependencies
-jest.mock('@/lib/auth/session', () => ({
-  getServerSession: jest.fn(),
+jest.mock('@/lib/auth/unified-auth', () => ({
+  getUnifiedAuth: jest.fn(),
+  createUnauthorizedResponse: jest.fn(() => new Response(
+    JSON.stringify({ success: false, error: 'Unauthorized' }),
+    { status: 401, headers: { 'Content-Type': 'application/json' } }
+  )),
 }));
 
 jest.mock('@/lib/services/postgresql-learning-service', () => ({
@@ -92,19 +96,19 @@ describe('/api/learning/progress', () => {
     };
 
     it('should return learning progress for authenticated user', async () => {
-      const mockSession = {
+      const mockAuth = {
         user: {
+          id: 'user-123',
           email: 'student@example.com',
-          name: 'Test Student',
           role: 'student',
         },
       };
 
-      (getServerSession as jest.Mock).mockResolvedValue(mockSession);
+      (getUnifiedAuth as jest.Mock).mockResolvedValue(mockAuth);
       (postgresqlLearningService.getLearningProgress as jest.Mock).mockResolvedValue(mockProgressData);
 
       const request = new NextRequest('http://localhost:3000/api/learning/progress');
-      const response = await GET();
+      const response = await GET(request);
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -116,9 +120,10 @@ describe('/api/learning/progress', () => {
     });
 
     it('should return 401 when user is not authenticated', async () => {
-      (getServerSession as jest.Mock).mockResolvedValue(null);
+      (getUnifiedAuth as jest.Mock).mockResolvedValue(null);
 
-      const response = await GET();
+      const request = new NextRequest('http://localhost:3000/api/learning/progress');
+      const response = await GET(request);
       const data = await response.json();
 
       expect(response.status).toBe(401);
@@ -130,16 +135,18 @@ describe('/api/learning/progress', () => {
     });
 
     it('should return 401 when session has no user email', async () => {
-      const mockSession = {
+      const mockAuth = {
         user: {
-          name: 'Test User',
+          id: 'user-123',
           // No email
-        },
+          role: 'student',
+        } as any,
       };
 
-      (getServerSession as jest.Mock).mockResolvedValue(mockSession);
+      (getUnifiedAuth as jest.Mock).mockResolvedValue(mockAuth);
 
-      const response = await GET();
+      const request = new NextRequest('http://localhost:3000/api/learning/progress');
+      const response = await GET(request);
       const data = await response.json();
 
       expect(response.status).toBe(401);
@@ -151,10 +158,10 @@ describe('/api/learning/progress', () => {
     });
 
     it('should handle empty progress data', async () => {
-      const mockSession = {
+      const mockAuth = {
         user: {
+          id: 'user-456',
           email: 'newuser@example.com',
-          name: 'New User',
           role: 'student',
         },
       };
@@ -193,10 +200,11 @@ describe('/api/learning/progress', () => {
         achievements: [],
       };
 
-      (getServerSession as jest.Mock).mockResolvedValue(mockSession);
+      (getUnifiedAuth as jest.Mock).mockResolvedValue(mockAuth);
       (postgresqlLearningService.getLearningProgress as jest.Mock).mockResolvedValue(emptyProgress);
 
-      const response = await GET();
+      const request = new NextRequest('http://localhost:3000/api/learning/progress');
+      const response = await GET(request);
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -207,19 +215,20 @@ describe('/api/learning/progress', () => {
     });
 
     it('should handle service errors gracefully', async () => {
-      const mockSession = {
+      const mockAuth = {
         user: {
+          id: 'user-789',
           email: 'error@example.com',
-          name: 'Error User',
           role: 'student',
         },
       };
 
       const error = new Error('Database connection failed');
-      (getServerSession as jest.Mock).mockResolvedValue(mockSession);
+      (getUnifiedAuth as jest.Mock).mockResolvedValue(mockAuth);
       (postgresqlLearningService.getLearningProgress as jest.Mock).mockRejectedValue(error);
 
-      const response = await GET();
+      const request = new NextRequest('http://localhost:3000/api/learning/progress');
+      const response = await GET(request);
       const data = await response.json();
 
       expect(response.status).toBe(500);
@@ -232,9 +241,10 @@ describe('/api/learning/progress', () => {
 
     it('should handle session check errors', async () => {
       const error = new Error('Session service unavailable');
-      (getServerSession as jest.Mock).mockRejectedValue(error);
+      (getUnifiedAuth as jest.Mock).mockRejectedValue(error);
 
-      const response = await GET();
+      const request = new NextRequest('http://localhost:3000/api/learning/progress');
+      const response = await GET(request);
       const data = await response.json();
 
       expect(response.status).toBe(500);

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth, createUnauthorizedResponse } from '@/lib/auth/unified-auth';
 
 export async function POST(
   request: NextRequest,
@@ -8,13 +8,10 @@ export async function POST(
 ) {
   try {
     // Get user from authentication
-    const session = await getServerSession();
+    const session = await getUnifiedAuth(request);
     
-    if (!session?.user?.email) {
-      return NextResponse.json(
-        { error: 'Authentication required' },
-        { status: 401 }
-      );
+    if (!session?.user.email) {
+      return createUnauthorizedResponse();
     }
     
     const body = await request.json();

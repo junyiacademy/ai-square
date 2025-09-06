@@ -49,8 +49,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create secure session
-    const sessionToken = SecureSession.createSession({
+    // Create secure session using Redis-backed storage
+    const sessionToken = await SecureSession.createSessionAsync({
       userId: user.id,
       email: user.email,
       role: user.role || 'student'

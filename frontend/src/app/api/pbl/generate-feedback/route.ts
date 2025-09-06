@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { VertexAI, SchemaType } from '@google-cloud/vertexai';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth, createUnauthorizedResponse } from '@/lib/auth/unified-auth';
 import { getLanguageFromHeader, LANGUAGE_NAMES } from '@/lib/utils/language';
 import { Task, Evaluation } from '@/lib/repositories/interfaces';
 
@@ -179,12 +179,9 @@ export async function POST(request: NextRequest) {
     }
     
     // Get user session
-    const session = await getServerSession();
-    if (!session?.user?.email) {
-      return NextResponse.json(
-        { success: false, error: 'Authentication required' },
-        { status: 401 }
-      );
+    const session = await getUnifiedAuth(request);
+    if (!session?.user.email) {
+      return createUnauthorizedResponse();
     }
     const userEmail = session.user.email;
     

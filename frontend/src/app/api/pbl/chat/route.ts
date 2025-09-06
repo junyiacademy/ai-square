@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { VertexAI } from '@google-cloud/vertexai';
 import { ErrorResponse } from '@/types/api';
 import { ChatMessage } from '@/types/pbl-api';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth, createUnauthorizedResponse } from '@/lib/auth/unified-auth';
 
 interface ChatRequestBody {
   message: string;
@@ -33,8 +33,8 @@ export async function POST(request: NextRequest) {
     const { scenarioId, taskId, taskTitle, taskDescription, instructions, expectedOutcome, conversationHistory } = context;
 
     // Get user session
-    const session = await getServerSession();
-    if (!session?.user?.email) {
+    const session = await getUnifiedAuth(request);
+    if (!session?.user.email) {
       return NextResponse.json<ErrorResponse>(
         { error: 'Authentication required' },
         { status: 401 }

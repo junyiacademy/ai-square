@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth, createUnauthorizedResponse } from '@/lib/auth/unified-auth';
 import { cachedGET } from '@/lib/api/optimization-utils';
 import { cacheService } from '@/lib/cache/cache-service';
 import { distributedCacheService } from '@/lib/cache/distributed-cache-service';
@@ -12,12 +12,9 @@ export async function POST(
 ) {
   try {
     // Get user session
-    const session = await getServerSession();
-    if (!session?.user?.email) {
-      return NextResponse.json(
-        { success: false, error: 'Authentication required' },
-        { status: 401 }
-      );
+    const session = await getUnifiedAuth(request);
+    if (!session?.user.email) {
+      return createUnauthorizedResponse();
     }
 
     const { taskId } = await params;
@@ -101,12 +98,9 @@ export async function GET(
   { params }: { params: Promise<{ taskId: string }> }
 ) {
   // Get user session
-  const session = await getServerSession();
-  if (!session?.user?.email) {
-    return NextResponse.json(
-      { success: false, error: 'Authentication required' },
-      { status: 401 }
-    );
+  const session = await getUnifiedAuth(request);
+  if (!session?.user.email) {
+    return createUnauthorizedResponse();
   }
 
   const { taskId } = await params;

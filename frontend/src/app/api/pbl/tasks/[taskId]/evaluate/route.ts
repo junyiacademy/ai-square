@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth, createUnauthorizedResponse } from '@/lib/auth/unified-auth';
 
 // POST - Create evaluation for task
 export async function POST(
@@ -8,12 +8,9 @@ export async function POST(
 ) {
   try {
     // Get user session
-    const session = await getServerSession();
-    if (!session?.user?.email) {
-      return NextResponse.json(
-        { success: false, error: 'Authentication required' },
-        { status: 401 }
-      );
+    const session = await getUnifiedAuth(request);
+    if (!session?.user.email) {
+      return createUnauthorizedResponse();
     }
 
     const { taskId } = await params;
@@ -177,12 +174,9 @@ export async function GET(
 ) {
   try {
     // Get user session
-    const session = await getServerSession();
-    if (!session?.user?.email) {
-      return NextResponse.json(
-        { success: false, error: 'Authentication required' },
-        { status: 401 }
-      );
+    const session = await getUnifiedAuth(request);
+    if (!session?.user.email) {
+      return createUnauthorizedResponse();
     }
 
     const { taskId } = await params;

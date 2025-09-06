@@ -29,9 +29,9 @@ export async function GET(request: NextRequest) {
     const language = searchParams.get('lang') || 'en';
     
     // Get user session to include learning progress
-    const { getServerSession } = await import('@/lib/auth/session');
-    const session = await getServerSession();
-    const userId = session?.user?.id || session?.user?.email;
+    const { getUnifiedAuth } = await import('@/lib/auth/unified-auth');
+    const session = await getUnifiedAuth(request);
+    const userId = session?.user.id || session?.user.email;
     const isTest = process.env.NODE_ENV === 'test' || Boolean(process.env.JEST_WORKER_ID);
     
     // 匿名請求才使用快取；測試環境使用本地測試快取以符合既有測試

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth, createUnauthorizedResponse } from '@/lib/auth/unified-auth';
 
 // Helper function to generate task evaluations
 async function generateTaskEvaluations(tasks: Array<{
@@ -67,11 +67,11 @@ export async function GET(
 ) {
   try {
     // Get authentication
-    const session = await getServerSession();
+    const session = await getUnifiedAuth(request);
     
     let userEmail: string | null = null;
     
-    if (session?.user?.email) {
+    if (session?.user.email) {
       userEmail = session.user.email;
     } else {
       // Check for user info from query params (for viewing history)
@@ -81,10 +81,7 @@ export async function GET(
       if (emailParam) {
         userEmail = emailParam;
       } else {
-        return NextResponse.json(
-          { error: 'Authentication required' },
-          { status: 401 }
-        );
+        return createUnauthorizedResponse();
       }
     }
     
@@ -98,7 +95,7 @@ export async function GET(
     
     // Get program
     const program = await programRepo.findById(programId);
-    const userId = session?.user?.id || userEmail; // Use ID if available
+    const userId = session?.user.id || userEmail; // Use ID if available
     if (!program || program.userId !== userId) {
       return NextResponse.json(
         { error: 'Program not found or access denied' },

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth, createUnauthorizedResponse } from '@/lib/auth/unified-auth';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { ITask } from '@/types/unified-learning';
 import { normalizeLanguageCode } from '@/lib/utils/language';
@@ -14,9 +14,9 @@ export async function GET(
     headers.set('Cache-Control', 'no-store, no-cache, must-revalidate');
     headers.set('Pragma', 'no-cache');
     headers.set('Expires', '0');
-    const session = await getServerSession();
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const session = await getUnifiedAuth(request);
+    if (!session?.user.email) {
+      return createUnauthorizedResponse();
     }
 
     const { id: scenarioId, programId } = await params;

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { learningServiceFactory } from '@/lib/services/learning-service-factory';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth, createUnauthorizedResponse } from '@/lib/auth/unified-auth';
 
 export async function POST(
   request: NextRequest,
@@ -22,20 +22,14 @@ export async function POST(
   try {
     const scenarioId = id;
     
-    // Get user info from session
-    const session = await getServerSession();
-    const userEmail = session?.user?.email;
+    // Get user info using unified auth
+    const auth = await getUnifiedAuth(request);
+    const userEmail = auth?.user.email;
     
     console.log('   User email:', userEmail);
     
-    if (!userEmail) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'User authentication required'
-        },
-        { status: 401 }
-      );
+    if (!auth || !userEmail) {
+      return createUnauthorizedResponse();
     }
     
     // Get request body

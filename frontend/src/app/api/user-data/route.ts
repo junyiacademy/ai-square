@@ -1,24 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getAuthFromRequest } from '@/lib/auth/auth-utils';
+import { getUnifiedAuth, createUnauthorizedResponse } from '@/lib/auth/unified-auth';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 
 export async function GET(request: NextRequest) {
   try {
-    const sessionToken = request.headers.get('x-session-token');
-    console.log('[API] GET /api/user-data - session token:', sessionToken ? 'present' : 'missing');
+    const auth = await getUnifiedAuth(request);
     
-    const user = await getAuthFromRequest(request);
-    
-    if (!user) {
+    if (!auth) {
       console.log('[API] GET /api/user-data - authentication failed');
-      return NextResponse.json(
-        { error: 'Authentication required' },
-        { status: 401 }
-      );
+      return createUnauthorizedResponse();
     }
 
     const userRepo = repositoryFactory.getUserRepository();
-    const userData = await userRepo.getUserData(user.email);
+    const userData = await userRepo.getUserData(auth.user.email);
     
     return NextResponse.json({
       success: true,
@@ -35,24 +29,18 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const sessionToken = request.headers.get('x-session-token');
-    console.log('[API] POST /api/user-data - session token:', sessionToken ? 'present' : 'missing');
+    const auth = await getUnifiedAuth(request);
     
-    const user = await getAuthFromRequest(request);
-    
-    if (!user) {
+    if (!auth) {
       console.log('[API] POST /api/user-data - authentication failed');
-      return NextResponse.json(
-        { error: 'Authentication required' },
-        { status: 401 }
-      );
+      return createUnauthorizedResponse();
     }
 
     const body = await request.json();
     const { data } = body;
 
     const userRepo = repositoryFactory.getUserRepository();
-    const savedData = await userRepo.saveUserData(user.email, data);
+    const savedData = await userRepo.saveUserData(auth.user.email, data);
     
     return NextResponse.json({
       success: true,
@@ -69,17 +57,14 @@ export async function POST(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
-    const user = await getAuthFromRequest(request);
+    const auth = await getUnifiedAuth(request);
     
-    if (!user) {
-      return NextResponse.json(
-        { error: 'Authentication required' },
-        { status: 401 }
-      );
+    if (!auth) {
+      return createUnauthorizedResponse();
     }
 
     const userRepo = repositoryFactory.getUserRepository();
-    const success = await userRepo.deleteUserData(user.email);
+    const success = await userRepo.deleteUserData(auth.user.email);
     
     return NextResponse.json({
       success
