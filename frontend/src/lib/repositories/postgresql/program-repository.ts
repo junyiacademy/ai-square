@@ -92,7 +92,7 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
   async create(program: Omit<IProgram, 'id'>): Promise<IProgram> {
     const query = `
       INSERT INTO programs (
-        user_id, scenario_id, mode, status,
+        id, user_id, scenario_id, mode, status,
         current_task_index, completed_task_count, total_task_count,
         total_score, domain_scores,
         xp_earned, badges_earned,
@@ -100,7 +100,7 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
         pbl_data, discovery_data, assessment_data,
         metadata
       ) VALUES (
-        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
+        gen_random_uuid()::text, $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
         $11, $12, $13, $14, $15, $16
       )
       RETURNING *

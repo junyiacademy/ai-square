@@ -94,7 +94,7 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
   async create(task: Omit<ITask, 'id'>): Promise<ITask> {
     const query = `
       INSERT INTO tasks (
-        program_id, mode, task_index, scenario_task_index,
+        id, program_id, mode, task_index, scenario_task_index,
         title, description, type, status,
         content, interactions,
         user_response, score, max_score,
@@ -104,7 +104,7 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
         pbl_data, discovery_data, assessment_data,
         metadata
       ) VALUES (
-        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
+        gen_random_uuid()::text, $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
         $11, $12, $13, $14, $15, $16, $17, $18, $19,
         $20, $21, $22
       )
@@ -149,7 +149,7 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
       for (const task of tasks) {
         const query = `
           INSERT INTO tasks (
-            program_id, mode, task_index, scenario_task_index,
+            id, program_id, mode, task_index, scenario_task_index,
             title, description, type, status,
             content, interactions,
             user_response, score, max_score,
@@ -159,7 +159,7 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
             pbl_data, discovery_data, assessment_data,
             metadata
           ) VALUES (
-            $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
+            gen_random_uuid()::text, $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
             $11, $12, $13, $14, $15, $16, $17, $18, $19,
             $20, $21, $22
           )
