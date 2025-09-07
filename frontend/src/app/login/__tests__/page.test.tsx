@@ -203,7 +203,8 @@ describe('LoginPage', () => {
     loginButton.click();
 
     await waitFor(() => {
-      expect(mockPush).toHaveBeenCalledWith('/onboarding/welcome');
+      // Should navigate to dashboard directly (onboarding is optional)
+      expect(mockPush).toHaveBeenCalledWith('/dashboard');
     });
   });
 
@@ -224,7 +225,8 @@ describe('LoginPage', () => {
     loginButton.click();
 
     await waitFor(() => {
-      expect(mockPush).toHaveBeenCalledWith('/onboarding/identity');
+      // Should navigate to dashboard directly (onboarding is optional)
+      expect(mockPush).toHaveBeenCalledWith('/dashboard');
     });
   });
 
@@ -246,11 +248,12 @@ describe('LoginPage', () => {
     loginButton.click();
 
     await waitFor(() => {
-      expect(mockPush).toHaveBeenCalledWith('/onboarding/goals');
+      // Should navigate to dashboard directly (onboarding is optional)
+      expect(mockPush).toHaveBeenCalledWith('/dashboard');
     });
   });
 
-  it('should navigate to assessment if onboarding completed but no assessment', async () => {
+  it('should navigate to dashboard regardless of onboarding or assessment status', async () => {
     mockLogin.mockResolvedValue({
       success: true,
       user: {
@@ -269,7 +272,8 @@ describe('LoginPage', () => {
     loginButton.click();
 
     await waitFor(() => {
-      expect(mockPush).toHaveBeenCalledWith('/assessment/scenarios');
+      // Should always navigate to dashboard (onboarding and assessment are optional)
+      expect(mockPush).toHaveBeenCalledWith('/dashboard');
     });
   });
 
@@ -369,8 +373,8 @@ describe('LoginPage', () => {
     loginButton.click();
 
     await waitFor(() => {
-      // Should navigate to welcome as default
-      expect(mockPush).toHaveBeenCalledWith('/onboarding/welcome');
+      // Should navigate to dashboard directly (onboarding is optional)
+      expect(mockPush).toHaveBeenCalledWith('/dashboard');
     });
   });
 
