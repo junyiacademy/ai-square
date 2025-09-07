@@ -91,49 +91,52 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
     return rows.map(row => this.toTask(row));
   }
 
+  private async getScenarioIdFromProgram(client: any, programId: string): Promise<string> {
+    const result = await client.query('SELECT scenario_id FROM programs WHERE id = $1', [programId]);
+    if (result.rows.length === 0) {
+      throw new Error(`Program ${programId} not found`);
+    }
+    return result.rows[0].scenario_id;
+  }
+
   async create(task: Omit<ITask, 'id'>): Promise<ITask> {
     const query = `
       INSERT INTO tasks (
-        id, program_id, mode, task_index, scenario_task_index,
-        title, description, type, status,
-        content, interactions,
-        user_response, score, max_score,
-        allowed_attempts, attempt_count,
-        time_limit_seconds, time_spent_seconds,
-        ai_config,
-        pbl_data, discovery_data, assessment_data,
-        metadata
+        id, program_id, scenario_id, mode, task_index, scenario_task_index,
+        title, description, instructions, type, status,
+        content, context, metadata, interactions,
+        ai_feedback, attempts, max_attempts, score,
+        time_spent_seconds, started_at
       ) VALUES (
         gen_random_uuid()::text, $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
-        $11, $12, $13, $14, $15, $16, $17, $18, $19,
-        $20, $21, $22
+        $11, $12, $13, $14, $15, $16, $17, $18, $19, $20
       )
       RETURNING *
     `;
 
+    const scenarioId = task.scenarioId || (await this.getScenarioIdFromProgram(this.pool, task.programId));
+
     const { rows } = await this.pool.query<DBTask>(query, [
       task.programId,
+      scenarioId,
       task.mode,
       task.taskIndex,
       task.scenarioTaskIndex || null,
       task.title || null,
       task.description || null,
+      task.instructions || null,
       task.type,
       task.status || 'pending',
       JSON.stringify(task.content || {}),
+      JSON.stringify(task.context || {}),
+      JSON.stringify(task.metadata || {}),
       JSON.stringify(task.interactions || []),
-      JSON.stringify(task.userResponse || {}),
-      task.score || 0,
-      task.maxScore || 100,
-      task.allowedAttempts || 3,
-      task.attemptCount || 0,
-      task.timeLimitSeconds || null,
+      task.aiFeedback ? JSON.stringify(task.aiFeedback) : null,
+      task.attempts || 0,
+      task.maxAttempts || null,
+      task.score || null,
       task.timeSpentSeconds || 0,
-      JSON.stringify(task.aiConfig || {}),
-      JSON.stringify(task.pblData || {}),
-      JSON.stringify(task.discoveryData || {}),
-      JSON.stringify(task.assessmentData || {}),
-      JSON.stringify(task.metadata || {})
+      task.startedAt || null
     ]);
 
     return this.toTask(rows[0]);
@@ -149,46 +152,39 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
       for (const task of tasks) {
         const query = `
           INSERT INTO tasks (
-            id, program_id, mode, task_index, scenario_task_index,
-            title, description, type, status,
-            content, interactions,
-            user_response, score, max_score,
-            allowed_attempts, attempt_count,
-            time_limit_seconds, time_spent_seconds,
-            ai_config,
-            pbl_data, discovery_data, assessment_data,
-            metadata
+            id, program_id, scenario_id, mode, task_index, scenario_task_index,
+            title, description, instructions, type, status,
+            content, context, metadata, interactions,
+            ai_feedback, attempts, max_attempts, score,
+            time_spent_seconds, started_at
           ) VALUES (
             gen_random_uuid()::text, $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
-            $11, $12, $13, $14, $15, $16, $17, $18, $19,
-            $20, $21, $22
+            $11, $12, $13, $14, $15, $16, $17, $18, $19, $20
           )
           RETURNING *
         `;
 
         const { rows } = await client.query<DBTask>(query, [
           task.programId,
+          task.scenarioId || (await this.getScenarioIdFromProgram(client, task.programId)),
           task.mode,
           task.taskIndex,
           task.scenarioTaskIndex || null,
           task.title || null,
           task.description || null,
+          task.instructions || null,
           task.type,
           task.status || 'pending',
           JSON.stringify(task.content || {}),
+          JSON.stringify(task.context || {}),
+          JSON.stringify(task.metadata || {}),
           JSON.stringify(task.interactions || []),
-          JSON.stringify(task.userResponse || {}),
-          task.score || 0,
-          task.maxScore || 100,
-          task.allowedAttempts || 3,
-          task.attemptCount || 0,
-          task.timeLimitSeconds || null,
+          task.aiFeedback ? JSON.stringify(task.aiFeedback) : null,
+          task.attempts || 0,
+          task.maxAttempts || null,
+          task.score || null,
           task.timeSpentSeconds || 0,
-          JSON.stringify(task.aiConfig || {}),
-          JSON.stringify(task.pblData || {}),
-          JSON.stringify(task.discoveryData || {}),
-          JSON.stringify(task.assessmentData || {}),
-          JSON.stringify(task.metadata || {})
+          task.startedAt || null
         ]);
 
         createdTasks.push(this.toTask(rows[0]));

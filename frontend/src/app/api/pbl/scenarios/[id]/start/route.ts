@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { learningServiceFactory } from '@/lib/services/learning-service-factory';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { getUnifiedAuth, createUnauthorizedResponse } from '@/lib/auth/unified-auth';
+import { validateProgramStart } from '@/lib/validators/program-validator';
 
 export async function POST(
   request: NextRequest,
@@ -84,6 +85,20 @@ export async function POST(
       });
     }
     
+    // Use our TDD validator to check if program can be started
+    const validation = validateProgramStart(scenario, user);
+    if (!validation.isValid) {
+      console.log('   ❌ Validation failed:', validation.error);
+      return NextResponse.json(
+        {
+          success: false,
+          error: validation.error
+        },
+        { status: 400 }
+      );
+    }
+    
+    console.log('   ✅ Validation passed');
     console.log('   User ID:', user.id);
     console.log('   Using PBL Learning Service to start learning...');
     

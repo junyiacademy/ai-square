@@ -33,8 +33,8 @@ COMMENT ON COLUMN users.email_verified_at IS 'Timestamp when email was verified'
 
 -- Create verification_tokens table for email verification
 CREATE TABLE IF NOT EXISTS verification_tokens (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
+    user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     token VARCHAR(255) UNIQUE NOT NULL,
     token_type VARCHAR(50) NOT NULL DEFAULT 'email_verification',
     expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
@@ -51,8 +51,8 @@ COMMENT ON TABLE verification_tokens IS 'Stores temporary tokens for email verif
 
 -- Create sessions table for better session management
 CREATE TABLE IF NOT EXISTS user_sessions (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
+    user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     session_token VARCHAR(255) UNIQUE NOT NULL,
     refresh_token VARCHAR(255) UNIQUE,
     ip_address INET,

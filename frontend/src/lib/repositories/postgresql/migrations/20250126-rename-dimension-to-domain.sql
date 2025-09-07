@@ -58,6 +58,22 @@ BEGIN
     END IF;
 END $$;
 
--- Step 5: Add comment for documentation
-COMMENT ON COLUMN evaluations.domain_scores IS 'Domain-specific scores (e.g., engaging_with_ai, creating_with_ai)';
-COMMENT ON COLUMN programs.domain_scores IS 'Aggregated domain scores across all tasks';
+-- Step 5: Add comment for documentation (only if columns exist)
+DO $$
+BEGIN
+    IF EXISTS (
+        SELECT 1 FROM information_schema.columns 
+        WHERE table_name = 'evaluations' 
+        AND column_name = 'domain_scores'
+    ) THEN
+        EXECUTE 'COMMENT ON COLUMN evaluations.domain_scores IS ''Domain-specific scores (e.g., engaging_with_ai, creating_with_ai)''';
+    END IF;
+    
+    IF EXISTS (
+        SELECT 1 FROM information_schema.columns 
+        WHERE table_name = 'programs' 
+        AND column_name = 'domain_scores'
+    ) THEN
+        EXECUTE 'COMMENT ON COLUMN programs.domain_scores IS ''Aggregated domain scores across all tasks''';
+    END IF;
+END $$;
