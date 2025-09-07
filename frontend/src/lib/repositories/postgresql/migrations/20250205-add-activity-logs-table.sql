@@ -1,7 +1,7 @@
 -- 活動日誌表（用於審計追蹤）
 CREATE TABLE IF NOT EXISTS activity_logs (
-    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    id TEXT DEFAULT gen_random_uuid()::text PRIMARY KEY,
+    user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     action VARCHAR(100) NOT NULL,
     details JSONB,
     ip_address INET,

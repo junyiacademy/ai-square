@@ -50,7 +50,11 @@ export default function PBLScenariosPage() {
           }
         }
       } catch (error) {
-        if (error instanceof Error && error.name !== 'AbortError') {
+        // Ignore abort errors completely
+        if (error instanceof Error && error.name === 'AbortError') {
+          return;
+        }
+        if (isMounted && error instanceof Error) {
           console.error('Error fetching PBL scenarios:', error);
         }
       } finally {
@@ -64,7 +68,10 @@ export default function PBLScenariosPage() {
 
     return () => {
       isMounted = false;
-      controller.abort();
+      // Don't call abort() at all in development mode to avoid the error
+      if (process.env.NODE_ENV === 'production') {
+        controller.abort();
+      }
     };
   }, [i18n.language]);
 

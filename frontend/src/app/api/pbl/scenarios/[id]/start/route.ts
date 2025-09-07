@@ -86,7 +86,7 @@ export async function POST(
     }
     
     // Use our TDD validator to check if program can be started
-    const validation = validateProgramStart(scenario, user as any);
+    const validation = validateProgramStart(scenario, user as unknown as import('@/types/database').DBUser);
     if (!validation.isValid) {
       console.log('   ❌ Validation failed:', validation.error);
       return NextResponse.json(

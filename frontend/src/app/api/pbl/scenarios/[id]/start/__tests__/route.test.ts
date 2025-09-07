@@ -92,6 +92,7 @@ describe('POST /api/pbl/scenarios/[id]/start', () => {
   const mockScenario = {
     id: mockScenarioId,
     mode: 'pbl',
+    status: 'active', // Required by TDD validator
     title: { en: 'Test PBL Scenario' },
     description: { en: 'Test description' },
     taskTemplates: [
@@ -362,6 +363,7 @@ describe('POST /api/pbl/scenarios/[id]/start', () => {
       // Arrange
       const scenarioWithStringTitles = {
         ...mockScenario,
+        status: 'active', // Required by TDD validator
         taskTemplates: [
           {
             id: 'task-1',
