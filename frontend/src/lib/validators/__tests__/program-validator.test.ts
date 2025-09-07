@@ -8,12 +8,56 @@
  */
 
 import { validateProgramStart } from '../program-validator';
-import type { IScenario, IUser } from '../../../types/unified-learning';
+import type { IScenario } from '../../../types/unified-learning';
+import type { DBUser } from '../../../types/database';
+
+// Helper function to create complete mock scenario
+const createMockScenario = (overrides: Partial<IScenario> = {}): IScenario => ({
+  id: 'scenario-123',
+  mode: 'pbl' as const,
+  status: 'active' as const,
+  version: '1.0.0',
+  sourceType: 'yaml' as const,
+  sourcePath: 'test/scenario.yaml',
+  sourceMetadata: {},
+  title: { en: 'Test Scenario' },
+  description: { en: 'Test Description' },
+  objectives: ['Learn something'],
+  difficulty: 'beginner' as const,
+  estimatedMinutes: 30,
+  prerequisites: [],
+  taskTemplates: [],
+  xpRewards: { completion: 100 },
+  unlockRequirements: {},
+  pblData: {},
+  discoveryData: {},
+  assessmentData: {},
+  aiModules: {},
+  resources: [],
+  createdAt: new Date().toISOString(),
+  updatedAt: new Date().toISOString(),
+  publishedAt: new Date().toISOString(),
+  metadata: {},
+  ...overrides
+});
 
 describe('validateProgramStart', () => {
   // Test 1: Write a failing test for a small behavior increment
   it('should return error when scenario is null', () => {
-    const result = validateProgramStart(null, { id: 'user-123' } as IUser);
+    const result = validateProgramStart(null, { 
+      id: 'user-123', 
+      email: 'user@example.com', 
+      name: 'Test User',
+      preferred_language: 'en',
+      level: 1,
+      total_xp: 0,
+      learning_preferences: {},
+      onboarding_completed: false,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      last_active_at: new Date().toISOString(),
+      metadata: {}
+    } as DBUser);
     
     expect(result.isValid).toBe(false);
     expect(result.error).toBe('Scenario not found');
@@ -21,17 +65,7 @@ describe('validateProgramStart', () => {
 
   // Test 2: Another small increment
   it('should return error when user is null', () => {
-    const mockScenario: IScenario = {
-      id: 'scenario-123',
-      mode: 'pbl',
-      title: { en: 'Test Scenario' },
-      description: { en: 'Test Description' },
-      status: 'active',
-      sourceType: 'yaml',
-      taskTemplates: [],
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
+    const mockScenario = createMockScenario();
 
     const result = validateProgramStart(mockScenario, null);
     
@@ -41,23 +75,23 @@ describe('validateProgramStart', () => {
 
   // Test 3: Test for inactive scenario
   it('should return error when scenario is not active', () => {
-    const mockScenario: IScenario = {
-      id: 'scenario-123',
-      mode: 'pbl',
-      title: { en: 'Test Scenario' },
-      description: { en: 'Test Description' },
-      status: 'archived', // Not active
-      sourceType: 'yaml',
-      taskTemplates: [],
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
+    const mockScenario = createMockScenario({
+      status: 'archived' // Not active
+    });
 
-    const mockUser: IUser = {
+    const mockUser: DBUser = {
       id: 'user-123',
       email: 'user@example.com',
       name: 'Test User',
-      role: 'student'
+      preferred_language: 'en',
+      level: 1,
+      total_xp: 0,
+      learning_preferences: {},
+      onboarding_completed: false,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      last_active_at: new Date().toISOString(),
+      metadata: {}
     };
 
     const result = validateProgramStart(mockScenario, mockUser);
@@ -68,13 +102,7 @@ describe('validateProgramStart', () => {
 
   // Test 4: Happy path - all validations pass
   it('should return valid when all requirements are met', () => {
-    const mockScenario: IScenario = {
-      id: 'scenario-123',
-      mode: 'pbl',
-      title: { en: 'Test Scenario' },
-      description: { en: 'Test Description' },
-      status: 'active',
-      sourceType: 'yaml',
+    const mockScenario = createMockScenario({
       taskTemplates: [
         {
           id: 'task-1',
@@ -82,16 +110,22 @@ describe('validateProgramStart', () => {
           type: 'chat',
           content: { instructions: 'Do this' }
         }
-      ],
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
+      ]
+    });
 
-    const mockUser: IUser = {
+    const mockUser: DBUser = {
       id: 'user-123',
       email: 'user@example.com',
       name: 'Test User',
-      role: 'student'
+      preferred_language: 'en',
+      level: 1,
+      total_xp: 0,
+      learning_preferences: {},
+      onboarding_completed: false,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      last_active_at: new Date().toISOString(),
+      metadata: {}
     };
 
     const result = validateProgramStart(mockScenario, mockUser);
@@ -102,23 +136,23 @@ describe('validateProgramStart', () => {
 
   // Test 5: Edge case - scenario with no tasks
   it('should return error when scenario has no tasks', () => {
-    const mockScenario: IScenario = {
-      id: 'scenario-123',
-      mode: 'pbl',
-      title: { en: 'Test Scenario' },
-      description: { en: 'Test Description' },
-      status: 'active',
-      sourceType: 'yaml',
-      taskTemplates: [], // Empty tasks
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
+    const mockScenario = createMockScenario({
+      taskTemplates: [] // Empty tasks
+    });
 
-    const mockUser: IUser = {
+    const mockUser: DBUser = {
       id: 'user-123',
       email: 'user@example.com',
       name: 'Test User',
-      role: 'student'
+      preferred_language: 'en',
+      level: 1,
+      total_xp: 0,
+      learning_preferences: {},
+      onboarding_completed: false,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      last_active_at: new Date().toISOString(),
+      metadata: {}
     };
 
     const result = validateProgramStart(mockScenario, mockUser);

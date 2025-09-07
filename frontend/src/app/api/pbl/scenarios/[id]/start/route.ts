@@ -86,7 +86,7 @@ export async function POST(
     }
     
     // Use our TDD validator to check if program can be started
-    const validation = validateProgramStart(scenario, user);
+    const validation = validateProgramStart(scenario, user as any);
     if (!validation.isValid) {
       console.log('   ❌ Validation failed:', validation.error);
       return NextResponse.json(

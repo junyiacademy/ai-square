@@ -91,49 +91,37 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
     return rows.map(row => this.toTask(row));
   }
 
-  private async getScenarioIdFromProgram(client: any, programId: string): Promise<string> {
-    const result = await client.query('SELECT scenario_id FROM programs WHERE id = $1', [programId]);
-    if (result.rows.length === 0) {
-      throw new Error(`Program ${programId} not found`);
-    }
-    return result.rows[0].scenario_id;
-  }
 
   async create(task: Omit<ITask, 'id'>): Promise<ITask> {
     const query = `
       INSERT INTO tasks (
-        id, program_id, scenario_id, mode, task_index, scenario_task_index,
-        title, description, instructions, type, status,
-        content, context, metadata, interactions,
-        ai_feedback, attempts, max_attempts, score,
+        id, program_id, mode, task_index, scenario_task_index,
+        title, description, type, status,
+        content, metadata, interactions,
+        ai_config, attempt_count, allowed_attempts, score,
         time_spent_seconds, started_at
       ) VALUES (
-        gen_random_uuid()::text, $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
-        $11, $12, $13, $14, $15, $16, $17, $18, $19, $20
+        gen_random_uuid()::text, $1, $2, $3, $4, $5, $6, $7, $8,
+        $9, $10, $11, $12, $13, $14, $15, $16, $17
       )
       RETURNING *
     `;
 
-    const scenarioId = task.scenarioId || (await this.getScenarioIdFromProgram(this.pool, task.programId));
-
     const { rows } = await this.pool.query<DBTask>(query, [
       task.programId,
-      scenarioId,
       task.mode,
       task.taskIndex,
       task.scenarioTaskIndex || null,
       task.title || null,
       task.description || null,
-      task.instructions || null,
       task.type,
       task.status || 'pending',
       JSON.stringify(task.content || {}),
-      JSON.stringify(task.context || {}),
       JSON.stringify(task.metadata || {}),
       JSON.stringify(task.interactions || []),
-      task.aiFeedback ? JSON.stringify(task.aiFeedback) : null,
-      task.attempts || 0,
-      task.maxAttempts || null,
+      JSON.stringify(task.aiConfig || {}),
+      task.attemptCount || 0,
+      task.allowedAttempts || 1,
       task.score || null,
       task.timeSpentSeconds || 0,
       task.startedAt || null
@@ -152,36 +140,33 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
       for (const task of tasks) {
         const query = `
           INSERT INTO tasks (
-            id, program_id, scenario_id, mode, task_index, scenario_task_index,
-            title, description, instructions, type, status,
-            content, context, metadata, interactions,
-            ai_feedback, attempts, max_attempts, score,
+            id, program_id, mode, task_index, scenario_task_index,
+            title, description, type, status,
+            content, metadata, interactions,
+            ai_config, attempt_count, allowed_attempts, score,
             time_spent_seconds, started_at
           ) VALUES (
-            gen_random_uuid()::text, $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
-            $11, $12, $13, $14, $15, $16, $17, $18, $19, $20
+            gen_random_uuid()::text, $1, $2, $3, $4, $5, $6, $7, $8,
+            $9, $10, $11, $12, $13, $14, $15, $16, $17
           )
           RETURNING *
         `;
 
         const { rows } = await client.query<DBTask>(query, [
           task.programId,
-          task.scenarioId || (await this.getScenarioIdFromProgram(client, task.programId)),
           task.mode,
           task.taskIndex,
           task.scenarioTaskIndex || null,
           task.title || null,
           task.description || null,
-          task.instructions || null,
           task.type,
           task.status || 'pending',
           JSON.stringify(task.content || {}),
-          JSON.stringify(task.context || {}),
           JSON.stringify(task.metadata || {}),
           JSON.stringify(task.interactions || []),
-          task.aiFeedback ? JSON.stringify(task.aiFeedback) : null,
-          task.attempts || 0,
-          task.maxAttempts || null,
+          JSON.stringify(task.aiConfig || {}),
+          task.attemptCount || 0,
+          task.allowedAttempts || 1,
           task.score || null,
           task.timeSpentSeconds || 0,
           task.startedAt || null

@@ -7,7 +7,8 @@
  * - Make dependencies explicit
  */
 
-import type { IScenario, IUser } from '../../types/unified-learning';
+import type { IScenario } from '../../types/unified-learning';
+import type { DBUser } from '../../types/database';
 
 export interface ValidationResult {
   isValid: boolean;
@@ -30,7 +31,7 @@ const ValidationErrors = {
  */
 export function validateProgramStart(
   scenario: IScenario | null,
-  user: IUser | null
+  user: DBUser | null
 ): ValidationResult {
   // Check user first (authentication is prerequisite)
   const userValidation = validateUser(user);
@@ -81,7 +82,7 @@ function validateScenario(scenario: IScenario | null): ValidationResult {
  * Validates user authentication
  * Single responsibility: user validation
  */
-function validateUser(user: IUser | null): ValidationResult {
+function validateUser(user: DBUser | null): ValidationResult {
   if (!user) {
     return {
       isValid: false,
