@@ -40,7 +40,7 @@ export class VertexAIService {
     
     // Initialize Google Auth with explicit key file path
     // B Solution: Use GitHub secrets for Cloud Run authentication
-    let authConfig: any = {
+    const authConfig: Record<string, unknown> = {
       projectId: this.projectId,
       scopes: ['https://www.googleapis.com/auth/cloud-platform']
     };
