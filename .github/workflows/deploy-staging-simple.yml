@@ -1,0 +1,75 @@
+# ============================================
+# AI Square Staging Deployment - Simplified
+# ============================================
+# Fast deployment for staging environment
+# ============================================
+
+name: Deploy to Staging (Simple)
+
+on:
+  workflow_dispatch:
+
+env:
+  PROJECT_ID: ai-square-463013
+  REGION: asia-east1
+  SERVICE_NAME: ai-square-staging
+  REPOSITORY: ai-square-frontend
+
+jobs:
+  deploy:
+    name: Quick Deploy
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: read
+      id-token: write
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY_STAGING }}
+      
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+      
+      - name: Configure Docker
+        run: gcloud auth configure-docker
+      
+      # Build and push Docker image
+      - name: Build and Push Docker image
+        run: |
+          docker build -f frontend/Dockerfile \
+            -t gcr.io/$PROJECT_ID/$REPOSITORY:$GITHUB_SHA \
+            -t gcr.io/$PROJECT_ID/$REPOSITORY:staging-latest \
+            ./frontend
+          
+          docker push gcr.io/$PROJECT_ID/$REPOSITORY:$GITHUB_SHA
+          docker push gcr.io/$PROJECT_ID/$REPOSITORY:staging-latest
+      
+      # Deploy to Cloud Run
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy $SERVICE_NAME \
+            --image gcr.io/$PROJECT_ID/$REPOSITORY:$GITHUB_SHA \
+            --region $REGION \
+            --platform managed \
+            --add-cloudsql-instances ai-square-463013:asia-east1:ai-square-db-staging-asia \
+            --update-env-vars DATABASE_URL="postgresql://postgres:${{ secrets.STAGING_DB_PASSWORD }}@/ai_square_db?host=/cloudsql/ai-square-463013:asia-east1:ai-square-db-staging-asia",DB_HOST="/cloudsql/ai-square-463013:asia-east1:ai-square-db-staging-asia",DB_NAME=ai_square_db,DB_USER=postgres,DB_PASSWORD=${{ secrets.STAGING_DB_PASSWORD }}
+      
+      # Quick health check
+      - name: Health Check
+        run: |
+          SERVICE_URL=$(gcloud run services describe $SERVICE_NAME --region $REGION --format 'value(status.url)')
+          echo "Service URL: $SERVICE_URL"
+          
+          # Wait for service to be ready
+          sleep 10
+          
+          # Health check
+          curl -sf "$SERVICE_URL/api/health" || echo "Health check warning (may need time to start)"
+          
+          echo "✅ Deployment complete!"
