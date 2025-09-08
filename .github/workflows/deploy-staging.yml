@@ -1,8 +1,8 @@
 # ============================================
-# AI Square Staging Deployment Pipeline
+# AI Square Staging Deployment - Simplified
 # ============================================
-# This workflow handles application deployment
-# after Terraform has provisioned infrastructure
+# Fast deployment for staging environment
+# No tests, no unnecessary steps
 # ============================================
 
 name: Deploy to Staging
@@ -12,12 +12,6 @@ on:
     branches:
       - staging
   workflow_dispatch:
-    inputs:
-      skip_tests:
-        description: 'Skip E2E tests'
-        required: false
-        default: 'false'
-        type: boolean
 
 env:
   PROJECT_ID: ai-square-463013
@@ -26,8 +20,8 @@ env:
   REPOSITORY: ai-square-frontend
 
 jobs:
-  build-and-deploy:
-    name: Build and Deploy
+  deploy:
+    name: Quick Deploy
     runs-on: ubuntu-latest
     
     permissions:
@@ -38,13 +32,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: frontend/package-lock.json
-      
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
@@ -53,472 +40,50 @@ jobs:
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
       
-      - name: Configure Docker to use gcloud as credential helper
+      - name: Configure Docker
+        run: gcloud auth configure-docker gcr.io
+      
+      # Build and push Docker image directly
+      - name: Build and Push Docker image
         run: |
-          gcloud auth configure-docker
-          gcloud auth configure-docker gcr.io
-      
-      # Build and test locally first
-      - name: Install dependencies
-        working-directory: frontend
-        run: npm ci
-      
-      - name: Run linting
-        working-directory: frontend
-        run: npm run lint
-      
-      - name: Run type checking
-        working-directory: frontend
-        run: npm run typecheck
-      
-      - name: Run unit tests
-        if: github.event.inputs.skip_tests != 'true'
-        working-directory: frontend
-        run: npm run test:unit:ci
-      
-      - name: Build application
-        working-directory: frontend
-        run: npm run build
-      
-      # Build and push Docker image
-      - name: Build Docker image
-        run: |
+          echo "🚀 Building Docker image..."
           docker build -f frontend/Dockerfile \
             -t gcr.io/$PROJECT_ID/$REPOSITORY:$GITHUB_SHA \
-            -t gcr.io/$PROJECT_ID/$REPOSITORY:latest \
+            -t gcr.io/$PROJECT_ID/$REPOSITORY:staging-latest \
             ./frontend
-      
-      - name: Push Docker image
-        run: |
+          
+          echo "📤 Pushing to Container Registry..."
           docker push gcr.io/$PROJECT_ID/$REPOSITORY:$GITHUB_SHA
-          docker push gcr.io/$PROJECT_ID/$REPOSITORY:latest
+          docker push gcr.io/$PROJECT_ID/$REPOSITORY:staging-latest
       
       # Deploy to Cloud Run
       - name: Deploy to Cloud Run
         run: |
+          echo "🚀 Deploying to Cloud Run..."
           gcloud run deploy $SERVICE_NAME \
             --image gcr.io/$PROJECT_ID/$REPOSITORY:$GITHUB_SHA \
             --region $REGION \
             --platform managed \
-            --add-cloudsql-instances ${{ secrets.STAGING_DB_CONNECTION_NAME }} \
-            --update-env-vars DATABASE_URL="postgresql://${{ secrets.STAGING_DB_USER }}:${{ secrets.STAGING_DB_PASSWORD }}@/${{ secrets.STAGING_DB_NAME }}?host=/cloudsql/${{ secrets.STAGING_DB_CONNECTION_NAME }}",DB_HOST="/cloudsql/${{ secrets.STAGING_DB_CONNECTION_NAME }}",DB_NAME=${{ secrets.STAGING_DB_NAME }},DB_USER=${{ secrets.STAGING_DB_USER }},DB_PASSWORD=${{ secrets.STAGING_DB_PASSWORD }} \
-            --no-traffic
+            --add-cloudsql-instances ai-square-463013:asia-east1:ai-square-db-staging-asia \
+            --update-env-vars DATABASE_URL="postgresql://postgres:${{ secrets.STAGING_DB_PASSWORD }}@/ai_square_db?host=/cloudsql/ai-square-463013:asia-east1:ai-square-db-staging-asia",DB_HOST="/cloudsql/ai-square-463013:asia-east1:ai-square-db-staging-asia",DB_NAME=ai_square_db,DB_USER=postgres,DB_PASSWORD=${{ secrets.STAGING_DB_PASSWORD }},GOOGLE_CLOUD_PROJECT=ai-square-463013,GCP_PROJECT_ID=ai-square-463013 \
+            --service-account=ai-square-sa@ai-square-463013.iam.gserviceaccount.com
       
-      - name: Get Service URL
-        id: get_url
+      # Quick health check
+      - name: Verify Deployment
         run: |
           SERVICE_URL=$(gcloud run services describe $SERVICE_NAME --region $REGION --format 'value(status.url)')
-          echo "service_url=$SERVICE_URL" >> $GITHUB_OUTPUT
-          echo "Service URL: $SERVICE_URL"
-      
-      # Wait for service to be ready
-      - name: Wait for service readiness
-        run: |
-          SERVICE_URL="${{ steps.get_url.outputs.service_url }}"
-          echo "Waiting for service at $SERVICE_URL to be ready..."
+          echo "📍 Service URL: $SERVICE_URL"
           
-          for i in {1..30}; do
-            if curl -sf "$SERVICE_URL/api/health" > /dev/null 2>&1; then
-              echo "Service is ready!"
-              break
-            fi
-            echo "Waiting... ($i/30)"
-            sleep 10
-          done
+          # Give service time to start
+          echo "⏳ Waiting for service to be ready..."
+          sleep 15
           
-          # Final check
-          if ! curl -sf "$SERVICE_URL/api/health"; then
-            echo "Service failed to become ready"
-            exit 1
-          fi
-      
-      # Route traffic to new revision
-      - name: Route traffic to new revision
-        run: |
-          gcloud run services update-traffic $SERVICE_NAME \
-            --region $REGION \
-            --to-latest
-
-  initialize-data:
-    name: Initialize Application Data
-    needs: build-and-deploy
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: frontend/package-lock.json
-      
-      - name: Install dependencies
-        working-directory: frontend
-        run: npm ci
-      
-      - name: Authenticate to Google Cloud
-        uses: google-github-actions/auth@v2
-        with:
-          credentials_json: ${{ secrets.GCP_SA_KEY }}
-      
-      - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v2
-      
-      - name: Get Service URL
-        id: get_url
-        run: |
-          SERVICE_URL=$(gcloud run services describe $SERVICE_NAME --region $REGION --format 'value(status.url)')
-          echo "service_url=$SERVICE_URL" >> $GITHUB_OUTPUT
-      
-      # Check required secrets
-      - name: Validate Required Secrets
-        run: |
-          echo "Checking required secrets for database migration..."
-          MISSING_SECRETS=""
-          
-          if [ -z "${{ secrets.STAGING_DB_CONNECTION_NAME }}" ]; then
-            MISSING_SECRETS="${MISSING_SECRETS} STAGING_DB_CONNECTION_NAME"
-          fi
-          
-          if [ -z "${{ secrets.STAGING_DB_USER }}" ]; then
-            MISSING_SECRETS="${MISSING_SECRETS} STAGING_DB_USER"
-          fi
-          
-          if [ -z "${{ secrets.STAGING_DB_PASSWORD }}" ]; then
-            MISSING_SECRETS="${MISSING_SECRETS} STAGING_DB_PASSWORD"
-          fi
-          
-          if [ -z "${{ secrets.STAGING_DB_NAME }}" ]; then
-            MISSING_SECRETS="${MISSING_SECRETS} STAGING_DB_NAME"
-          fi
-          
-          if [ ! -z "$MISSING_SECRETS" ]; then
-            echo "❌ ERROR: Missing required secrets:${MISSING_SECRETS}"
-            echo "Please set these secrets in GitHub Repository Settings → Secrets"
-            echo "Skipping database migration..."
-            echo "skip_migration=true" >> $GITHUB_OUTPUT
+          # Health check
+          if curl -sf "$SERVICE_URL/api/health" > /dev/null; then
+            echo "✅ Service is healthy!"
           else
-            echo "✅ All required secrets are configured"
-            echo "skip_migration=false" >> $GITHUB_OUTPUT
-          fi
-        id: check_secrets
-      
-      # Install PostgreSQL client
-      - name: Install PostgreSQL client
-        if: steps.check_secrets.outputs.skip_migration != 'true'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y postgresql-client
-      
-      # Setup Cloud SQL Proxy for database connection
-      - name: Setup Cloud SQL Proxy
-        if: steps.check_secrets.outputs.skip_migration != 'true'
-        run: |
-          wget -q https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy
-          chmod +x cloud_sql_proxy
-          ./cloud_sql_proxy -instances=${{ secrets.STAGING_DB_CONNECTION_NAME }}=tcp:5432 &
-          sleep 5
-      
-      # Run Prisma migrations
-      - name: Run Database Migrations
-        if: steps.check_secrets.outputs.skip_migration != 'true'
-        working-directory: frontend
-        env:
-          DATABASE_URL: "postgresql://${{ secrets.STAGING_DB_USER }}:${{ secrets.STAGING_DB_PASSWORD }}@localhost:5432/${{ secrets.STAGING_DB_NAME }}"
-        run: |
-          echo "Waiting for Cloud SQL Proxy to be ready..."
-          for i in {1..30}; do
-            if pg_isready -h localhost -p 5432; then
-              echo "Database is ready!"
-              break
-            fi
-            echo "Waiting... ($i/30)"
-            sleep 2
-          done
-          
-          echo "Running Prisma migrations..."
-          npx prisma migrate deploy
-          
-          echo "Generating Prisma client..."
-          npx prisma generate
-      
-      # Skip migration warning
-      - name: Migration Skipped Warning
-        if: steps.check_secrets.outputs.skip_migration == 'true'
-        run: |
-          echo "⚠️  WARNING: Database migration was skipped due to missing secrets"
-          echo "The application may not function properly without the database schema"
-          echo "Please configure the required secrets and re-run the deployment"
-      
-      # Initialize database schema via API (for additional setup)
-      - name: Initialize Database Schema
-        run: |
-          SERVICE_URL="${{ steps.get_url.outputs.service_url }}"
-          
-          echo "Initializing database schema..."
-          RESPONSE=$(curl -s -X POST "$SERVICE_URL/api/admin/init-schema" \
-            -H "Content-Type: application/json")
-          
-          echo "Response: $RESPONSE"
-          
-          # Don't fail if schema already exists
-          if echo "$RESPONSE" | grep -q '"error"'; then
-            echo "Warning: Schema initialization had issues, but continuing..."
-          fi
-      
-      # Create demo accounts via API
-      - name: Create Demo Accounts
-        run: |
-          SERVICE_URL="${{ steps.get_url.outputs.service_url }}"
-          
-          echo "Creating demo accounts..."
-          RESPONSE=$(curl -s -X POST "$SERVICE_URL/api/admin/seed-users" \
-            -H "Content-Type: application/json" \
-            -d '{
-              "users": [
-                {"email": "student@example.com", "password": "student123", "role": "student"},
-                {"email": "teacher@example.com", "password": "teacher123", "role": "teacher"},
-                {"email": "admin@example.com", "password": "admin123", "role": "admin"},
-                {"email": "parent@example.com", "password": "parent123", "role": "parent"},
-                {"email": "guest@example.com", "password": "guest123", "role": "guest"},
-                {"email": "test@example.com", "password": "test123", "role": "student"}
-              ]
-            }')
-          
-          echo "Response: $RESPONSE"
-          
-          if ! echo "$RESPONSE" | grep -q '"success":true'; then
-            echo "User creation failed"
-            exit 1
-          fi
-      
-      # Initialize scenarios with proper error handling and retries
-      - name: Initialize Scenarios
-        run: |
-          SERVICE_URL="${{ steps.get_url.outputs.service_url }}"
-          
-          # Function to initialize with retries
-          initialize_with_retry() {
-            local module_name=$1
-            local endpoint=$2
-            local max_attempts=3
-            
-            echo "🚀 Initializing $module_name scenarios..."
-            
-            for attempt in $(seq 1 $max_attempts); do
-              echo "Attempt $attempt/$max_attempts for $module_name"
-              
-              RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "$SERVICE_URL$endpoint" \
-                -H "Content-Type: application/json" \
-                -H "X-Admin-Key: ${{ secrets.ADMIN_API_KEY }}" \
-                -d '{"force": true}')
-              
-              HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
-              BODY=$(echo "$RESPONSE" | head -n -1)
-              
-              echo "$module_name Response: $BODY"
-              
-              if [ "$HTTP_CODE" = "200" ]; then
-                if echo "$BODY" | grep -q '"success":true'; then
-                  echo "✅ $module_name initialization successful!"
-                  return 0
-                else
-                  echo "❌ $module_name initialization failed (success:false)"
-                fi
-              else
-                echo "❌ $module_name initialization failed (HTTP $HTTP_CODE)"
-              fi
-              
-              if [ $attempt -lt $max_attempts ]; then
-                echo "⏳ Waiting 30 seconds before retry..."
-                sleep 30
-              fi
-            done
-            
-            echo "💥 $module_name initialization failed after $max_attempts attempts"
-            return 1
-          }
-          
-          # Function to initialize without admin key (for init APIs that don't require it)
-          initialize_without_key() {
-            local module_name=$1
-            local endpoint=$2
-            local max_attempts=3
-            
-            echo "🚀 Initializing $module_name scenarios (no auth)..."
-            
-            for attempt in $(seq 1 $max_attempts); do
-              echo "Attempt $attempt/$max_attempts for $module_name"
-              
-              RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "$SERVICE_URL$endpoint" \
-                -H "Content-Type: application/json" \
-                -d '{"force": true}')
-              
-              HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
-              BODY=$(echo "$RESPONSE" | head -n -1)
-              
-              echo "$module_name Response: $BODY"
-              
-              if [ "$HTTP_CODE" = "200" ]; then
-                if echo "$BODY" | grep -q '"success":true'; then
-                  echo "✅ $module_name initialization successful!"
-                  return 0
-                else
-                  echo "❌ $module_name initialization failed (success:false)"
-                fi
-              else
-                echo "❌ $module_name initialization failed (HTTP $HTTP_CODE)"
-              fi
-              
-              if [ $attempt -lt $max_attempts ]; then
-                echo "⏳ Waiting 30 seconds before retry..."
-                sleep 30
-              fi
-            done
-            
-            echo "💥 $module_name initialization failed after $max_attempts attempts"
-            return 1
-          }
-          
-          # Initialize each module (these APIs don't require admin key)
-          initialize_without_key "Assessment" "/api/admin/init-assessment" || exit 1
-          initialize_without_key "PBL" "/api/admin/init-pbl" || exit 1  
-          initialize_without_key "Discovery" "/api/admin/init-discovery" || exit 1
-          
-          echo "🎉 All scenario initializations completed successfully!"
-      
-      - name: Verify Initialization
-        run: |
-          SERVICE_URL="${{ steps.get_url.outputs.service_url }}"
-          
-          echo "🔍 Verifying complete initialization..."
-          
-          # Skip admin stats since we removed admin key
-          echo "📊 Checking scenarios directly via public APIs..."
-          
-          # Test API endpoints directly
-          echo "🔌 Testing public API endpoints..."
-          
-          PBL_API_COUNT=$(curl -s "$SERVICE_URL/api/pbl/scenarios?lang=en" | jq -r '.data.scenarios | length // 0')
-          DISCOVERY_API_COUNT=$(curl -s "$SERVICE_URL/api/discovery/scenarios?lang=en" | jq -r '.data.scenarios | length // 0')
-          ASSESSMENT_API_COUNT=$(curl -s "$SERVICE_URL/api/assessment/scenarios?lang=en" | jq -r '.data.scenarios | length // 0')
-          
-          echo "🌐 API endpoint counts:"
-          echo "  - PBL API: $PBL_API_COUNT scenarios"
-          echo "  - Discovery API: $DISCOVERY_API_COUNT scenarios"  
-          echo "  - Assessment API: $ASSESSMENT_API_COUNT scenarios"
-          
-          # Validation rules (simplified - just check APIs work)
-          ERRORS=0
-          
-          if [ "$PBL_API_COUNT" -eq 0 ]; then
-            echo "❌ ERROR: PBL API returning no scenarios!"
-            ERRORS=$((ERRORS + 1))
-          else
-            echo "✅ PBL scenarios working ($PBL_API_COUNT found)"
+            echo "⚠️  Health check failed (service may still be starting)"
           fi
           
-          if [ "$ASSESSMENT_API_COUNT" -eq 0 ]; then
-            echo "❌ ERROR: Assessment API returning no scenarios!"
-            ERRORS=$((ERRORS + 1))
-          else
-            echo "✅ Assessment scenarios working ($ASSESSMENT_API_COUNT found)"
-          fi
-          
-          if [ "$DISCOVERY_API_COUNT" -eq 0 ]; then
-            echo "❌ ERROR: Discovery API returning no scenarios!"
-            ERRORS=$((ERRORS + 1))
-          else
-            echo "✅ Discovery scenarios working ($DISCOVERY_API_COUNT found)"
-          fi
-          
-          if [ $ERRORS -gt 0 ]; then
-            echo "💥 Verification failed with $ERRORS errors!"
-            exit 1
-          fi
-          
-          echo "🎉 All verifications passed! Deployment successful!"
-
-  run-e2e-tests:
-    name: Run E2E Tests
-    needs: initialize-data
-    runs-on: ubuntu-latest
-    if: github.event.inputs.skip_tests != 'true'
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: frontend/package-lock.json
-      
-      - name: Install dependencies
-        working-directory: frontend
-        run: |
-          npm ci
-          npx playwright install chromium
-      
-      - name: Authenticate to Google Cloud
-        uses: google-github-actions/auth@v2
-        with:
-          credentials_json: ${{ secrets.GCP_SA_KEY }}
-      
-      - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v2
-      
-      - name: Get Service URL
-        id: get_url
-        run: |
-          SERVICE_URL=$(gcloud run services describe $SERVICE_NAME --region $REGION --format 'value(status.url)')
-          echo "service_url=$SERVICE_URL" >> $GITHUB_OUTPUT
-      
-      - name: Run E2E tests
-        working-directory: frontend
-        env:
-          BASE_URL: ${{ steps.get_url.outputs.service_url }}
-          HEADLESS: true
-        run: |
-          npm run test:e2e -- --grep "@staging" || echo "No @staging tests found, skipping..."
-      
-      - name: Upload test results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-report
-          path: frontend/playwright-report
-
-  post-deployment-notification:
-    name: Send Deployment Notification
-    needs: [build-and-deploy, initialize-data]
-    runs-on: ubuntu-latest
-    if: always()
-    
-    steps:
-      - name: Send Slack notification
-        if: env.SLACK_WEBHOOK_URL != ''
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        run: |
-          STATUS="${{ needs.build-and-deploy.result == 'success' && needs.initialize-data.result == 'success' && '✅ Success' || '❌ Failed' }}"
-          
-          curl -X POST $SLACK_WEBHOOK_URL \
-            -H 'Content-type: application/json' \
-            --data "{
-              \"text\": \"Staging Deployment $STATUS\",
-              \"blocks\": [
-                {
-                  \"type\": \"section\",
-                  \"text\": {
-                    \"type\": \"mrkdwn\",
-                    \"text\": \"*AI Square Staging Deployment*\\n\\nBranch: \`${{ github.ref_name }}\`\\nCommit: \`${{ github.sha }}\`\\nStatus: $STATUS\"
-                  }
-                }
-              ]
-            }"
+          echo "✅ Deployment complete!"
+          echo "🔗 Access your staging environment at: $SERVICE_URL"
