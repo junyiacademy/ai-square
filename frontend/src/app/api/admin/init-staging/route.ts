@@ -60,7 +60,16 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    if (action === 'init-full') {
+    if (action === 'reset-full') {
+      // Step 0: Clear all existing data
+      console.log('Clearing all existing data...');
+      await pool.query(`
+        TRUNCATE TABLE evaluations, tasks, programs, scenarios, users CASCADE;
+      `);
+      
+      // Then proceed with full initialization
+      console.log('Starting fresh initialization...');
+    } else if (action === 'init-full') {
       // Step 1: Skip schema creation (already done via Cloud SQL import)
       console.log('Skipping schema creation (already exists)...');
 
@@ -283,12 +292,32 @@ export async function POST(request: NextRequest) {
 
       return NextResponse.json({
         success: true,
-        message: 'Database initialized successfully',
+        message: action === 'reset-full' ? 'Database reset and reinitialized successfully' : 'Database initialized successfully',
         counts: finalCounts.rows[0],
         details: {
           pbl: `${pblCount} scenarios loaded from ${pblScenarioFiles.length} files`,
           assessment: `${assessmentCount} scenarios loaded`,
           discovery: `${discoveryCount} scenarios loaded`
+        }
+      });
+    }
+
+    if (action === 'clear-all') {
+      // Clear all data but don't reinitialize
+      console.log('Clearing all data only...');
+      await pool.query(`
+        TRUNCATE TABLE evaluations, tasks, programs, scenarios, users CASCADE;
+      `);
+      
+      return NextResponse.json({
+        success: true,
+        message: 'Database cleared successfully',
+        counts: {
+          pbl_count: 0,
+          assessment_count: 0,
+          discovery_count: 0,
+          user_count: 0,
+          total_scenarios: 0
         }
       });
     }
