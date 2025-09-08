@@ -1,11 +1,9 @@
 # ============================================
 # AI Square Staging Deployment with CI/CD
-# ============================================
-# Complete CI/CD pipeline: Quality checks → Deploy
-# With Vertex AI permissions auto-configuration
+# Enhanced with Vertex AI and Service Account Setup
 # ============================================
 
-name: Deploy to Staging
+name: Deploy to Staging (Enhanced)
 
 on:
   push:
@@ -21,7 +19,7 @@ env:
   SERVICE_ACCOUNT: ai-square-staging@ai-square-463013.iam.gserviceaccount.com
 
 jobs:
-  # Step 1: Quality Checks (只保留必要的檢查)
+  # Step 1: Quality Checks
   quality-checks:
     name: Code Quality & Tests
     runs-on: ubuntu-latest
@@ -57,7 +55,7 @@ jobs:
         working-directory: ./frontend
         run: npm run build
 
-  # Step 2: Deploy to Staging
+  # Step 2: Deploy to Staging with Enhanced Setup
   deploy:
     name: Deploy to Cloud Run
     runs-on: ubuntu-latest
@@ -82,10 +80,10 @@ jobs:
       - name: Configure Docker
         run: gcloud auth configure-docker gcr.io
       
-      # 🔧 Configure Service Account Permissions for Vertex AI
-      - name: Setup Service Account & Permissions
+      # 🔧 NEW: Ensure Service Account has proper permissions
+      - name: Configure Service Account Permissions
         run: |
-          echo "🔧 Configuring Service Account permissions for Vertex AI..."
+          echo "🔧 Configuring Service Account permissions..."
           
           # Check if service account exists, create if not
           if ! gcloud iam service-accounts describe $SERVICE_ACCOUNT > /dev/null 2>&1; then
@@ -94,34 +92,30 @@ jobs:
               --display-name="AI Square Staging Service Account"
           fi
           
+          # Grant necessary roles (idempotent - safe to run multiple times)
           echo "Granting IAM roles..."
           
-          # Vertex AI permissions (critical for AI features)
+          # Vertex AI permissions
           gcloud projects add-iam-policy-binding $PROJECT_ID \
             --member="serviceAccount:$SERVICE_ACCOUNT" \
             --role="roles/aiplatform.user" \
-            --condition=None 2>/dev/null || true
-          
-          gcloud projects add-iam-policy-binding $PROJECT_ID \
-            --member="serviceAccount:$SERVICE_ACCOUNT" \
-            --role="roles/aiplatform.serviceAgent" \
-            --condition=None 2>/dev/null || true
+            --condition=None || true
           
           # Cloud SQL permissions
           gcloud projects add-iam-policy-binding $PROJECT_ID \
             --member="serviceAccount:$SERVICE_ACCOUNT" \
             --role="roles/cloudsql.client" \
-            --condition=None 2>/dev/null || true
+            --condition=None || true
           
-          # Secret Manager permissions (if using secrets)
+          # Secret Manager permissions (if needed)
           gcloud projects add-iam-policy-binding $PROJECT_ID \
             --member="serviceAccount:$SERVICE_ACCOUNT" \
             --role="roles/secretmanager.secretAccessor" \
-            --condition=None 2>/dev/null || true
+            --condition=None || true
           
           echo "✅ Service Account permissions configured"
       
-      # Build and push Docker image directly
+      # Build and push Docker image
       - name: Build and Push Docker image
         run: |
           echo "🚀 Building Docker image..."
@@ -134,27 +128,35 @@ jobs:
           docker push gcr.io/$PROJECT_ID/$REPOSITORY:$GITHUB_SHA
           docker push gcr.io/$PROJECT_ID/$REPOSITORY:staging-latest
       
-      # Deploy to Cloud Run with Vertex AI configuration
+      # Deploy to Cloud Run with enhanced configuration
       - name: Deploy to Cloud Run
         run: |
-          echo "🚀 Deploying to Cloud Run with Vertex AI support..."
+          echo "🚀 Deploying to Cloud Run with enhanced configuration..."
           gcloud run deploy $SERVICE_NAME \
             --image gcr.io/$PROJECT_ID/$REPOSITORY:$GITHUB_SHA \
             --region $REGION \
             --platform managed \
             --service-account=$SERVICE_ACCOUNT \
             --add-cloudsql-instances ai-square-463013:asia-east1:ai-square-db-staging-asia \
-            --update-env-vars DATABASE_URL="postgresql://postgres:${{ secrets.STAGING_DB_PASSWORD }}@/ai_square_db?host=/cloudsql/ai-square-463013:asia-east1:ai-square-db-staging-asia",DB_HOST="/cloudsql/ai-square-463013:asia-east1:ai-square-db-staging-asia",DB_NAME=ai_square_db,DB_USER=postgres,DB_PASSWORD=${{ secrets.STAGING_DB_PASSWORD }},GOOGLE_CLOUD_PROJECT=ai-square-463013,GCP_PROJECT_ID=ai-square-463013,VERTEX_AI_LOCATION=$REGION,VERTEX_AI_PROJECT=$PROJECT_ID
+            --update-env-vars DATABASE_URL="postgresql://postgres:${{ secrets.STAGING_DB_PASSWORD }}@/ai_square_db?host=/cloudsql/ai-square-463013:asia-east1:ai-square-db-staging-asia",\
+DB_HOST="/cloudsql/ai-square-463013:asia-east1:ai-square-db-staging-asia",\
+DB_NAME=ai_square_db,\
+DB_USER=postgres,\
+DB_PASSWORD=${{ secrets.STAGING_DB_PASSWORD }},\
+GOOGLE_CLOUD_PROJECT=ai-square-463013,\
+GCP_PROJECT_ID=ai-square-463013,\
+VERTEX_AI_LOCATION=$REGION,\
+VERTEX_AI_PROJECT=$PROJECT_ID,\
+NODE_ENV=production
       
-      # Quick health check
+      # Verify deployment
       - name: Verify Deployment
         run: |
           SERVICE_URL=$(gcloud run services describe $SERVICE_NAME --region $REGION --format 'value(status.url)')
           echo "📍 Service URL: $SERVICE_URL"
           
-          # Give service time to start
           echo "⏳ Waiting for service to be ready..."
-          sleep 15
+          sleep 20
           
           # Health check
           if curl -sf "$SERVICE_URL/api/health" > /dev/null; then
@@ -163,12 +165,12 @@ jobs:
             echo "⚠️  Health check failed (service may still be starting)"
           fi
           
-          # Test Vertex AI connection (optional)
-          echo "🤖 Testing Vertex AI capabilities..."
+          # Test Vertex AI endpoint (optional)
+          echo "🔍 Testing AI capabilities..."
           if curl -sf "$SERVICE_URL/api/health/ai" > /dev/null 2>&1; then
-            echo "✅ Vertex AI services are accessible!"
+            echo "✅ AI services are accessible!"
           else
-            echo "ℹ️  Vertex AI health endpoint not available or still initializing"
+            echo "ℹ️  AI health endpoint not available or still initializing"
           fi
           
           echo "✅ Deployment complete!"
