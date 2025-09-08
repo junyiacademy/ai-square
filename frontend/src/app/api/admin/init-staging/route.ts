@@ -98,17 +98,13 @@ export async function POST(request: NextRequest) {
             await pool.query(`
               INSERT INTO scenarios (
                 mode, source_type, source_id, source_path,
-                title, description, status,
-                objectives, prerequisites, target_audience,
-                duration_minutes, difficulty_level,
-                pbl_data, task_templates,
+                title, description, status, difficulty,
+                objectives, pbl_data, task_templates,
                 created_at, updated_at
               ) VALUES (
                 'pbl', 'yaml', $1, $2,
-                $3, $4, 'active',
-                $5, $6, $7,
-                $8, $9,
-                $10, $11,
+                $3, $4, 'active', $5,
+                $6, $7, $8,
                 NOW(), NOW()
               )
             `, [
@@ -122,12 +118,14 @@ export async function POST(request: NextRequest) {
                 en: data.description || data.scenario_description || 'PBL Scenario',
                 zh: data.description_zh || data.description || 'PBL 場景'
               }),
-              JSON.stringify(data.learning_objectives || []),
-              JSON.stringify(data.prerequisites || []),
-              JSON.stringify(data.target_audience || []),
-              data.estimated_duration || 60,
               data.difficulty || 'intermediate',
-              JSON.stringify(data),
+              JSON.stringify(data.learning_objectives || []),
+              JSON.stringify({
+                ...data,
+                estimatedDuration: data.estimated_duration || 60,
+                prerequisites: data.prerequisites || [],
+                targetAudience: data.target_audience || []
+              }),
               JSON.stringify(data.stages || [])
             ]);
             pblCount++;
@@ -164,13 +162,11 @@ export async function POST(request: NextRequest) {
               await pool.query(`
                 INSERT INTO scenarios (
                   mode, source_type, source_id, source_path,
-                  title, description, status,
-                  duration_minutes, assessment_data,
+                  title, description, status, assessment_data,
                   created_at, updated_at
                 ) VALUES (
                   'assessment', 'yaml', $1, $2,
-                  $3, $4, 'active',
-                  $5, $6,
+                  $3, $4, 'active', $5,
                   NOW(), NOW()
                 )
               `, [
@@ -184,12 +180,12 @@ export async function POST(request: NextRequest) {
                   en: data.description || 'Assessment for AI literacy competencies',
                   zh: data.description_zh || 'AI 素養能力評估'
                 }),
-                data.time_limit_minutes || 15,
                 JSON.stringify({
                   totalQuestions: data.total_questions || 12,
                   passingScore: data.passing_score || 60,
                   domains: data.domains || [],
-                  questionBank: data.questions || []
+                  questionBank: data.questions || [],
+                  timeLimit: data.time_limit_minutes || 15
                 })
               ]);
               assessmentCount++;
@@ -229,13 +225,11 @@ export async function POST(request: NextRequest) {
               await pool.query(`
                 INSERT INTO scenarios (
                   mode, source_type, source_id, source_path,
-                  title, description, status,
-                  duration_minutes, discovery_data,
+                  title, description, status, discovery_data,
                   created_at, updated_at
                 ) VALUES (
                   'discovery', 'yaml', $1, $2,
-                  $3, $4, 'active',
-                  $5, $6,
+                  $3, $4, 'active', $5,
                   NOW(), NOW()
                 )
               `, [
@@ -249,12 +243,12 @@ export async function POST(request: NextRequest) {
                   en: data.description || 'Career exploration path',
                   zh: data.description_zh || data.description || '職業探索路徑'
                 }),
-                90,
                 JSON.stringify({
                   careerType: data.career_type || 'technology',
                   requiredSkills: data.required_skills || [],
                   learningPath: data.learning_path || [],
-                  industryInsights: data.industry_insights || {}
+                  industryInsights: data.industry_insights || {},
+                  estimatedDuration: 90
                 })
               ]);
               discoveryCount++;
