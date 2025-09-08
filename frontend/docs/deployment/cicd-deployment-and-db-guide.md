@@ -176,6 +176,90 @@ make db-cost
    DATABASE_URL="postgresql://..." npx prisma migrate deploy
    ```
 
+### 🔄 Staging Database Reset (2025-09-08 更新)
+
+#### 完整重設 Staging 資料庫
+
+Staging 環境提供完整的資料庫重設功能，可透過 API 快速清空並重新載入所有內容。
+
+**重要架構說明**：
+- `/api/admin/init-staging` - 管理資料庫和 demo 使用者
+- `/api/admin/init-pbl` - 載入 PBL scenarios (9 個)
+- `/api/admin/init-assessment` - 載入 Assessment scenarios (1 個)
+- `/api/admin/init-discovery` - 載入 Discovery scenarios (12 個)
+
+#### 快速重設指令
+
+1. **完整重設（清空並重新載入所有內容）**：
+   ```bash
+   # Step 1: 重設資料庫並建立 demo 使用者
+   curl -X POST "https://ai-square-staging-m7s4ucbgba-de.a.run.app/api/admin/init-staging" \
+     -H "Content-Type: application/json" \
+     -H "x-admin-key: staging-init-2025" \
+     -d '{"action": "reset-full"}'
+   
+   # Step 2: 載入所有 scenarios
+   curl -X POST "https://ai-square-staging-m7s4ucbgba-de.a.run.app/api/admin/init-pbl"
+   curl -X POST "https://ai-square-staging-m7s4ucbgba-de.a.run.app/api/admin/init-assessment"
+   curl -X POST "https://ai-square-staging-m7s4ucbgba-de.a.run.app/api/admin/init-discovery"
+   ```
+
+2. **檢查資料庫狀態**：
+   ```bash
+   curl -X POST "https://ai-square-staging-m7s4ucbgba-de.a.run.app/api/admin/init-staging" \
+     -H "Content-Type: application/json" \
+     -H "x-admin-key: staging-init-2025" \
+     -d '{"action": "check"}'
+   ```
+
+3. **僅清空資料（不重新載入）**：
+   ```bash
+   curl -X POST "https://ai-square-staging-m7s4ucbgba-de.a.run.app/api/admin/init-staging" \
+     -H "Content-Type: application/json" \
+     -H "x-admin-key: staging-init-2025" \
+     -d '{"action": "clear-all"}'
+   ```
+
+#### Demo 使用者帳號
+
+重設後會自動建立以下測試帳號：
+- **Student**: `student@example.com` / `student123`
+- **Teacher**: `teacher@example.com` / `teacher123`
+- **Admin**: `admin@example.com` / `admin123`
+
+#### 預期結果
+
+成功執行完整重設後應該看到：
+```json
+{
+  "counts": {
+    "pbl_count": "9",
+    "assessment_count": "1",
+    "discovery_count": "12",
+    "user_count": "3",
+    "total_scenarios": "22"
+  }
+}
+```
+
+#### 本地開發重設
+
+本地開發環境使用相同的 API：
+```bash
+# 本地重設（確保 dev server 在 port 3000）
+BASE_URL="http://localhost:3000"
+
+# 重設資料庫
+curl -X POST "$BASE_URL/api/admin/init-staging" \
+  -H "x-admin-key: staging-init-2025" \
+  -d '{"action": "reset-full"}'
+
+# 載入 scenarios
+curl -X POST "$BASE_URL/api/admin/init-pbl"
+curl -X POST "$BASE_URL/api/admin/init-assessment"
+curl -X POST "$BASE_URL/api/admin/init-discovery"
+```
+
 ### Adding New Fields (Example: email_verified_at)
 
 1. **Update Prisma Schema**:

@@ -141,7 +141,6 @@ export interface DBProgram {
   started_at: string | null;
   completed_at: string | null;
   updated_at: string;
-  last_activity_at: string;
   
   // Time tracking
   time_spent_seconds: number;

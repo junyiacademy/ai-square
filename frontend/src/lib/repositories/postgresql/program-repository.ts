@@ -43,7 +43,7 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
       startedAt: row.started_at || undefined,
       completedAt: row.completed_at || undefined,
       updatedAt: row.updated_at,
-      lastActivityAt: row.last_activity_at || row.updated_at, // Use last_activity_at if available, fallback to updated_at
+      lastActivityAt: row.updated_at, // Use updated_at for last activity tracking
       
       // Time tracking
       timeSpentSeconds: row.time_spent_seconds,
@@ -71,7 +71,7 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
     const query = `
       SELECT * FROM programs 
       WHERE user_id = $1
-      ORDER BY last_activity_at DESC
+      ORDER BY updated_at DESC
     `;
 
     const { rows } = await this.pool.query<DBProgram>(query, [userId]);
