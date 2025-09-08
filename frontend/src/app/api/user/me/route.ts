@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 import { SecureSession } from '@/lib/auth/secure-session'
 import { getPool } from '@/lib/db/get-pool'
@@ -15,7 +15,7 @@ function getUserRepository() {
   return userRepo
 }
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const cookieStore = await cookies()
     

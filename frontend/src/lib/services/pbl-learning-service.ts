@@ -108,6 +108,7 @@ export class PBLLearningService implements BaseLearningService {
       
       await this.taskRepo.create({
         programId: program.id,
+        scenarioId: scenarioId,  // Add missing scenarioId
         mode: 'pbl',
         taskIndex: i,
         title: title,

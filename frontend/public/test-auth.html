@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Auth Debug Test</title>
+</head>
+<body>
+    <h1>Authentication Debug Test</h1>
+    
+    <div id="status">Loading...</div>
+    
+    <button onclick="checkAuth()">Check Auth</button>
+    <button onclick="testLogin()">Test Login</button>
+    <button onclick="testPBL()">Test PBL API</button>
+    <button onclick="checkCookies()">Check Cookies</button>
+    
+    <pre id="output"></pre>
+    
+    <script>
+        const output = document.getElementById('output');
+        const status = document.getElementById('status');
+        
+        function log(message, data) {
+            output.textContent += `\n${message}\n`;
+            if (data) {
+                output.textContent += JSON.stringify(data, null, 2) + '\n';
+            }
+            console.log(message, data);
+        }
+        
+        async function checkAuth() {
+            log('=== Checking Auth ===');
+            try {
+                const response = await fetch('/api/auth/check', {
+                    credentials: 'include'
+                });
+                const data = await response.json();
+                log(`Status: ${response.status}`, data);
+                status.textContent = data.authenticated ? `Logged in as: ${data.user?.email}` : 'Not logged in';
+            } catch (error) {
+                log('Error:', error.message);
+            }
+        }
+        
+        async function testLogin() {
+            log('=== Testing Login ===');
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        email: 'student@example.com',
+                        password: 'student123',
+                        rememberMe: false
+                    })
+                });
+                const data = await response.json();
+                log(`Status: ${response.status}`, data);
+                
+                // Check cookies after login
+                setTimeout(() => {
+                    checkCookies();
+                    checkAuth();
+                }, 1000);
+            } catch (error) {
+                log('Error:', error.message);
+            }
+        }
+        
+        async function testPBL() {
+            log('=== Testing PBL API ===');
+            try {
+                const response = await fetch('/api/pbl/scenarios/d40d08e3-ceda-4ff2-8c68-de535331688b/programs', {
+                    credentials: 'include'
+                });
+                const data = await response.json();
+                log(`Status: ${response.status}`, data);
+            } catch (error) {
+                log('Error:', error.message);
+            }
+        }
+        
+        function checkCookies() {
+            log('=== Browser Cookies ===');
+            log('document.cookie:', document.cookie);
+            
+            // Check if sessionToken is accessible (it shouldn't be if httpOnly)
+            const cookies = document.cookie.split(';').map(c => c.trim());
+            const hasSessionToken = cookies.some(c => c.startsWith('sessionToken='));
+            log('sessionToken visible in JS:', hasSessionToken);
+            
+            // Check localStorage
+            log('localStorage isLoggedIn:', localStorage.getItem('isLoggedIn'));
+            log('localStorage user:', localStorage.getItem('user'));
+        }
+        
+        // Initial check
+        checkAuth();
+    </script>
+</body>
+</html>

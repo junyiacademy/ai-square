@@ -33,8 +33,16 @@ export async function POST(
       return createUnauthorizedResponse();
     }
     
-    // Get request body
-    const body = await request.json();
+    // Get request body (handle empty body)
+    let body: { language?: string } = {};
+    try {
+      const text = await request.text();
+      if (text) {
+        body = JSON.parse(text);
+      }
+    } catch {
+      console.log('No JSON body provided, using defaults');
+    }
     const language = body.language || 'en';
     
     // Validate UUID format

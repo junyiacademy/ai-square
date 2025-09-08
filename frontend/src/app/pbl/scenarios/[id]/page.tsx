@@ -16,6 +16,7 @@ export default function ScenarioDetailPage() {
   const [userPrograms, setUserPrograms] = useState<IProgram[]>([]);
   const [loading, setLoading] = useState(true);
   const [isStarting, setIsStarting] = useState(false);
+  const [isProgramsCollapsed, setIsProgramsCollapsed] = useState(false);
   const scenarioId = params.id as string;
 
   useEffect(() => {
@@ -59,7 +60,14 @@ export default function ScenarioDetailPage() {
         
         if (programsResponse.ok) {
           const programsData = await programsResponse.json();
-          setUserPrograms(programsData);
+          console.log('Programs API response:', programsData);
+          // Handle API response format: { success: true, data: { programs: [] } }
+          if (programsData.success && programsData.data?.programs) {
+            setUserPrograms(programsData.data.programs);
+          } else {
+            // Fallback for direct array format
+            setUserPrograms(Array.isArray(programsData) ? programsData : []);
+          }
         }
       } catch (error) {
         if (!ignore) {
@@ -248,10 +256,26 @@ export default function ScenarioDetailPage() {
               {/* Programs Section */}
               {userPrograms.length > 0 && (
                 <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                  <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">
-                    {t('details.yourPrograms', 'Your Programs')}
-                  </h3>
-                  <div className="space-y-2">
+                  <button
+                    onClick={() => setIsProgramsCollapsed(!isProgramsCollapsed)}
+                    className="flex items-center w-full mb-3 text-left hover:bg-gray-100 dark:hover:bg-gray-600 rounded-md p-2 -m-2 transition-colors"
+                  >
+                    {/* Triangle icon */}
+                    <svg
+                      className={`w-3 h-3 mr-2 text-gray-500 dark:text-gray-400 transition-transform duration-200 ${
+                        isProgramsCollapsed ? 'rotate-0' : 'rotate-90'
+                      }`}
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M8.59 16.59L13.17 12L8.59 7.41L10 6l6 6-6 6-1.41-1.41z" />
+                    </svg>
+                    <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                      {t('details.yourPrograms', 'Your Programs')} ({userPrograms.length})
+                    </h3>
+                  </button>
+                  {!isProgramsCollapsed && (
+                    <div className="space-y-2">
                     {userPrograms.map((program, index) => (
                       <div
                         key={program.id}
@@ -313,7 +337,8 @@ export default function ScenarioDetailPage() {
                         </div>
                       </div>
                     ))}
-                  </div>
+                    </div>
+                  )}
                 </div>
               )}
 

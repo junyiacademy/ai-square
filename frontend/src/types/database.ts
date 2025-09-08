@@ -158,6 +158,7 @@ export interface DBProgram {
 export interface DBTask {
   id: string;
   program_id: string;
+  scenario_id: string;  // Foreign key to scenarios table
   mode: LearningMode;  // NEW: Propagated from program
   task_index: number;
   scenario_task_index: number | null;

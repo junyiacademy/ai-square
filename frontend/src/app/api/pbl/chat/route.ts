@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { VertexAI } from '@google-cloud/vertexai';
 import { ErrorResponse } from '@/types/api';
 import { ChatMessage } from '@/types/pbl-api';
-import { getUnifiedAuth, createUnauthorizedResponse } from '@/lib/auth/unified-auth';
+import { getUnifiedAuth } from '@/lib/auth/unified-auth';
 
 interface ChatRequestBody {
   message: string;

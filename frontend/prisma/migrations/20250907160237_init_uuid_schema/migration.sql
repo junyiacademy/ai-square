@@ -1,17 +1,18 @@
 -- CreateTable
-CREATE TABLE IF NOT EXISTS "users" (
-    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
-    "email" VARCHAR(255) NOT NULL,
-    "password_hash" VARCHAR(255) NOT NULL,
-    "role" VARCHAR(50) NOT NULL DEFAULT 'student',
-    "name" VARCHAR(255),
-    "avatar_url" VARCHAR(255),
-    "preferred_language" VARCHAR(10) NOT NULL DEFAULT 'en',
+CREATE TABLE "public"."users" (
+    "id" UUID NOT NULL,
+    "email" TEXT NOT NULL,
+    "password_hash" TEXT NOT NULL,
+    "role" TEXT NOT NULL DEFAULT 'student',
+    "name" TEXT,
+    "avatar_url" TEXT,
+    "preferred_language" TEXT NOT NULL DEFAULT 'en',
     "learning_preferences" JSONB,
     "preferences" JSONB NOT NULL DEFAULT '{}',
     "email_verified" BOOLEAN NOT NULL DEFAULT false,
-    "email_verification_token" VARCHAR(255),
-    "reset_password_token" VARCHAR(255),
+    "email_verified_at" TIMESTAMP(3),
+    "email_verification_token" TEXT,
+    "reset_password_token" TEXT,
     "reset_password_expires" TIMESTAMP(3),
     "onboarding_completed" BOOLEAN NOT NULL DEFAULT false,
     "onboarding_step" INTEGER NOT NULL DEFAULT 0,
@@ -22,21 +23,21 @@ CREATE TABLE IF NOT EXISTS "users" (
     "last_login_at" TIMESTAMP(3),
     "last_active_date" DATE,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
     "metadata" JSONB NOT NULL DEFAULT '{}',
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE IF NOT EXISTS "scenarios" (
-    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
-    "mode" VARCHAR(50) NOT NULL,
-    "status" VARCHAR(50) NOT NULL DEFAULT 'active',
-    "version" VARCHAR(20) NOT NULL DEFAULT '1.0.0',
-    "source_type" VARCHAR(50),
+CREATE TABLE "public"."scenarios" (
+    "id" UUID NOT NULL,
+    "mode" TEXT NOT NULL,
+    "status" TEXT NOT NULL DEFAULT 'active',
+    "version" TEXT NOT NULL DEFAULT '1.0.0',
+    "source_type" TEXT,
     "source_path" TEXT,
-    "source_id" VARCHAR(255),
+    "source_id" TEXT,
     "source_metadata" JSONB,
     "title" JSONB NOT NULL,
     "description" JSONB,
@@ -46,7 +47,7 @@ CREATE TABLE IF NOT EXISTS "scenarios" (
     "pbl_data" JSONB,
     "discovery_data" JSONB,
     "assessment_data" JSONB,
-    "difficulty" VARCHAR(50),
+    "difficulty" TEXT,
     "estimated_time" INTEGER,
     "estimated_minutes" INTEGER,
     "prerequisites" TEXT[],
@@ -66,7 +67,7 @@ CREATE TABLE IF NOT EXISTS "scenarios" (
     "average_rating" DECIMAL(3,2) NOT NULL DEFAULT 0,
     "total_enrollments" INTEGER NOT NULL DEFAULT 0,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
     "created_by" UUID,
     "updated_by" UUID,
     "metadata" JSONB NOT NULL DEFAULT '{}',
@@ -75,12 +76,12 @@ CREATE TABLE IF NOT EXISTS "scenarios" (
 );
 
 -- CreateTable
-CREATE TABLE IF NOT EXISTS "programs" (
-    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
-    "mode" VARCHAR(50) NOT NULL,
+CREATE TABLE "public"."programs" (
+    "id" UUID NOT NULL,
+    "mode" TEXT NOT NULL,
     "scenario_id" UUID NOT NULL,
     "user_id" UUID NOT NULL,
-    "status" VARCHAR(50) NOT NULL DEFAULT 'pending',
+    "status" TEXT NOT NULL DEFAULT 'pending',
     "current_task_index" INTEGER NOT NULL DEFAULT 0,
     "context" JSONB,
     "state" JSONB,
@@ -95,20 +96,20 @@ CREATE TABLE IF NOT EXISTS "programs" (
     "completed_at" TIMESTAMP(3),
     "expires_at" TIMESTAMP(3),
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "programs_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE IF NOT EXISTS "tasks" (
-    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
-    "mode" VARCHAR(50) NOT NULL,
+CREATE TABLE "public"."tasks" (
+    "id" UUID NOT NULL,
+    "mode" TEXT NOT NULL,
     "program_id" UUID NOT NULL,
     "scenario_id" UUID NOT NULL,
     "task_index" INTEGER NOT NULL,
-    "type" VARCHAR(50) NOT NULL,
-    "status" VARCHAR(50) NOT NULL DEFAULT 'pending',
+    "type" TEXT NOT NULL,
+    "status" TEXT NOT NULL DEFAULT 'pending',
     "title" JSONB,
     "description" JSONB,
     "instructions" JSONB,
@@ -124,19 +125,19 @@ CREATE TABLE IF NOT EXISTS "tasks" (
     "started_at" TIMESTAMP(3),
     "completed_at" TIMESTAMP(3),
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "tasks_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE IF NOT EXISTS "evaluations" (
-    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
-    "mode" VARCHAR(50) NOT NULL,
+CREATE TABLE "public"."evaluations" (
+    "id" UUID NOT NULL,
+    "mode" TEXT NOT NULL,
     "task_id" UUID NOT NULL,
     "program_id" UUID NOT NULL,
     "user_id" UUID NOT NULL,
-    "evaluation_type" VARCHAR(50) NOT NULL,
+    "evaluation_type" TEXT NOT NULL,
     "score" DECIMAL(10,2),
     "max_score" DECIMAL(10,2),
     "feedback" JSONB,
@@ -145,7 +146,7 @@ CREATE TABLE IF NOT EXISTS "evaluations" (
     "criteria" JSONB,
     "rubric" JSONB,
     "metadata" JSONB,
-    "ai_model" VARCHAR(100),
+    "ai_model" TEXT,
     "ai_config" JSONB,
     "ai_response" JSONB,
     "evaluated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -155,55 +156,55 @@ CREATE TABLE IF NOT EXISTS "evaluations" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX IF NOT EXISTS "users_email_key" ON "users"("email");
+CREATE UNIQUE INDEX "users_email_key" ON "public"."users"("email");
 
 -- CreateIndex
-CREATE INDEX IF NOT EXISTS "scenarios_mode_idx" ON "scenarios"("mode");
+CREATE INDEX "scenarios_mode_idx" ON "public"."scenarios"("mode");
 
 -- CreateIndex
-CREATE INDEX IF NOT EXISTS "scenarios_status_idx" ON "scenarios"("status");
+CREATE INDEX "scenarios_status_idx" ON "public"."scenarios"("status");
 
 -- CreateIndex
-CREATE INDEX IF NOT EXISTS "programs_user_id_idx" ON "programs"("user_id");
+CREATE INDEX "programs_user_id_idx" ON "public"."programs"("user_id");
 
 -- CreateIndex
-CREATE INDEX IF NOT EXISTS "programs_scenario_id_idx" ON "programs"("scenario_id");
+CREATE INDEX "programs_scenario_id_idx" ON "public"."programs"("scenario_id");
 
 -- CreateIndex
-CREATE INDEX IF NOT EXISTS "programs_status_idx" ON "programs"("status");
+CREATE INDEX "programs_status_idx" ON "public"."programs"("status");
 
 -- CreateIndex
-CREATE INDEX IF NOT EXISTS "tasks_program_id_idx" ON "tasks"("program_id");
+CREATE INDEX "tasks_program_id_idx" ON "public"."tasks"("program_id");
 
 -- CreateIndex
-CREATE INDEX IF NOT EXISTS "evaluations_task_id_idx" ON "evaluations"("task_id");
+CREATE INDEX "evaluations_task_id_idx" ON "public"."evaluations"("task_id");
 
 -- CreateIndex
-CREATE INDEX IF NOT EXISTS "evaluations_user_id_idx" ON "evaluations"("user_id");
+CREATE INDEX "evaluations_user_id_idx" ON "public"."evaluations"("user_id");
 
 -- AddForeignKey
-ALTER TABLE "scenarios" ADD CONSTRAINT "scenarios_created_by_fkey" FOREIGN KEY ("created_by") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "public"."scenarios" ADD CONSTRAINT "scenarios_created_by_fkey" FOREIGN KEY ("created_by") REFERENCES "public"."users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "scenarios" ADD CONSTRAINT "scenarios_updated_by_fkey" FOREIGN KEY ("updated_by") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "public"."scenarios" ADD CONSTRAINT "scenarios_updated_by_fkey" FOREIGN KEY ("updated_by") REFERENCES "public"."users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "programs" ADD CONSTRAINT "programs_scenario_id_fkey" FOREIGN KEY ("scenario_id") REFERENCES "scenarios"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "public"."programs" ADD CONSTRAINT "programs_scenario_id_fkey" FOREIGN KEY ("scenario_id") REFERENCES "public"."scenarios"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "programs" ADD CONSTRAINT "programs_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "public"."programs" ADD CONSTRAINT "programs_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "tasks" ADD CONSTRAINT "tasks_program_id_fkey" FOREIGN KEY ("program_id") REFERENCES "programs"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "public"."tasks" ADD CONSTRAINT "tasks_program_id_fkey" FOREIGN KEY ("program_id") REFERENCES "public"."programs"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "tasks" ADD CONSTRAINT "tasks_scenario_id_fkey" FOREIGN KEY ("scenario_id") REFERENCES "scenarios"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "public"."tasks" ADD CONSTRAINT "tasks_scenario_id_fkey" FOREIGN KEY ("scenario_id") REFERENCES "public"."scenarios"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "evaluations" ADD CONSTRAINT "evaluations_task_id_fkey" FOREIGN KEY ("task_id") REFERENCES "tasks"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "public"."evaluations" ADD CONSTRAINT "evaluations_task_id_fkey" FOREIGN KEY ("task_id") REFERENCES "public"."tasks"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "evaluations" ADD CONSTRAINT "evaluations_program_id_fkey" FOREIGN KEY ("program_id") REFERENCES "programs"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "public"."evaluations" ADD CONSTRAINT "evaluations_program_id_fkey" FOREIGN KEY ("program_id") REFERENCES "public"."programs"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "evaluations" ADD CONSTRAINT "evaluations_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "public"."evaluations" ADD CONSTRAINT "evaluations_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE CASCADE ON UPDATE CASCADE;

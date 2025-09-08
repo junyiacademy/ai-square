@@ -144,6 +144,7 @@ export class AssessmentLearningService implements BaseLearningService {
     // 5. 創建 Assessment Task
     await this.taskRepo.create({
       programId: program.id,
+      scenarioId: scenario.id,
       mode: 'assessment',
       taskIndex: 0,
       title: scenario.taskTemplates?.[0]?.title || { en: 'Assessment' },

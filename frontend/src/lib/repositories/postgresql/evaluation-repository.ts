@@ -128,7 +128,7 @@ export class PostgreSQLEvaluationRepository extends BaseEvaluationRepository<IEv
   async create(evaluation: Omit<IEvaluation, 'id'>): Promise<IEvaluation> {
     const query = `
       INSERT INTO evaluations (
-        user_id, program_id, task_id,
+        id, mode, user_id, program_id, task_id,
         evaluation_type, evaluation_subtype,
         score, max_score,
         domain_scores,
@@ -138,13 +138,14 @@ export class PostgreSQLEvaluationRepository extends BaseEvaluationRepository<IEv
         pbl_data, discovery_data, assessment_data,
         metadata
       ) VALUES (
-        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
-        $11, $12, $13, $14, $15, $16, $17, $18
+        gen_random_uuid(), $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
+        $11, $12, $13, $14, $15, $16, $17, $18, $19
       )
       RETURNING *
     `;
 
     const { rows } = await this.pool.query<DBEvaluation>(query, [
+      evaluation.mode,
       evaluation.userId,
       evaluation.programId || null,
       evaluation.taskId || null,

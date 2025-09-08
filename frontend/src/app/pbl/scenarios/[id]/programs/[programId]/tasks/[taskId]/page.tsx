@@ -950,7 +950,16 @@ export default function ProgramLearningPage() {
         <div className="w-96 bg-white dark:bg-gray-800 border-l border-r border-gray-200 dark:border-gray-700 overflow-y-auto flex-shrink-0">
           <div className="p-6">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-              {t('pbl:learn.task')} {taskIndex + 1}: {getLocalizedField(currentTask as unknown as Record<string, unknown>, 'title', i18n.language)}
+              {t('pbl:learn.task')} {taskIndex + 1}: {(() => {
+                const title = currentTask.title;
+                if (typeof title === 'object' && title !== null && !Array.isArray(title)) {
+                  // Handle multilingual object format {en: "...", zh: "..."}
+                  const titleObj = title as Record<string, string>;
+                  return titleObj[i18n.language] || titleObj['en'] || Object.values(titleObj)[0] || '';
+                }
+                // Fallback to suffix-based format
+                return getLocalizedField(currentTask as unknown as Record<string, unknown>, 'title', i18n.language);
+              })()}
             </h2>
             
             <div className="space-y-4">
@@ -1398,9 +1407,16 @@ export default function ProgramLearningPage() {
             {mobileView === 'task' && (
               <div className="h-full bg-white dark:bg-gray-800 p-6 overflow-y-auto">
                 <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                  {t('pbl:learn.task')} {taskIndex + 1}: {i18n.language === 'zhTW' 
-                    ? (currentTask.title_zhTW || currentTask.title)
-                    : currentTask.title}
+                  {t('pbl:learn.task')} {taskIndex + 1}: {(() => {
+                    const title = currentTask.title;
+                    if (typeof title === 'object' && title !== null && !Array.isArray(title)) {
+                      // Handle multilingual object format {en: "...", zh: "..."}
+                      const titleObj = title as Record<string, string>;
+                      return titleObj[i18n.language] || titleObj['en'] || Object.values(titleObj)[0] || '';
+                    }
+                    // Fallback to suffix-based format
+                    return getLocalizedField(currentTask as unknown as Record<string, unknown>, 'title', i18n.language);
+                  })()}
                 </h2>
                 
                 <div className="space-y-4">
@@ -1409,9 +1425,18 @@ export default function ProgramLearningPage() {
                       {t('pbl:learn.description')}
                     </h3>
                     <p className="text-gray-600 dark:text-gray-400">
-                      {i18n.language === 'zhTW' 
-                        ? (currentTask.description_zhTW || currentTask.description)
-                        : currentTask.description}
+                      {(() => {
+                        const description = currentTask.description;
+                        if (typeof description === 'object' && description !== null && !Array.isArray(description)) {
+                          // Handle multilingual object format {en: "...", zh: "..."}
+                          const descObj = description as Record<string, string>;
+                          return descObj[i18n.language] || descObj['en'] || Object.values(descObj)[0] || '';
+                        }
+                        // Fallback to suffix-based format
+                        return i18n.language === 'zhTW' 
+                          ? (currentTask.description_zhTW || currentTask.description || '')
+                          : (currentTask.description || '');
+                      })()}
                     </p>
                   </div>
                   

@@ -327,29 +327,31 @@ export default function AssessmentQuiz({ questions, onComplete, timeLimit, initi
                   </div>
                   
                   {/* KSA Mapping */}
-                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                    <h4 className="font-semibold text-gray-900 mb-3">{t('quiz.ksaMapping')}</h4>
-                    <div className="space-y-2 text-sm">
-                      {currentQuestion.ksa_mapping.knowledge.length > 0 && (
+                  {currentQuestion.ksa_mapping && (
+                    <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                      <h4 className="font-semibold text-gray-900 mb-3">{t('quiz.ksaMapping')}</h4>
+                      <div className="space-y-2 text-sm">
+                        {currentQuestion.ksa_mapping?.knowledge?.length > 0 && (
                         <div className="flex items-start">
                           <span className="font-medium text-gray-700 mr-2">{t('quiz.knowledge')}:</span>
-                          <span className="text-gray-600">{currentQuestion.ksa_mapping.knowledge.join(', ')}</span>
+                          <span className="text-gray-600">{currentQuestion.ksa_mapping?.knowledge?.join(', ')}</span>
                         </div>
                       )}
-                      {currentQuestion.ksa_mapping.skills.length > 0 && (
+                      {currentQuestion.ksa_mapping?.skills?.length > 0 && (
                         <div className="flex items-start">
                           <span className="font-medium text-gray-700 mr-2">{t('quiz.skills')}:</span>
-                          <span className="text-gray-600">{currentQuestion.ksa_mapping.skills.join(', ')}</span>
+                          <span className="text-gray-600">{currentQuestion.ksa_mapping?.skills?.join(', ')}</span>
                         </div>
                       )}
-                      {currentQuestion.ksa_mapping.attitudes.length > 0 && (
+                      {currentQuestion.ksa_mapping?.attitudes?.length > 0 && (
                         <div className="flex items-start">
                           <span className="font-medium text-gray-700 mr-2">{t('quiz.attitudes')}:</span>
-                          <span className="text-gray-600">{currentQuestion.ksa_mapping.attitudes.join(', ')}</span>
+                          <span className="text-gray-600">{currentQuestion.ksa_mapping?.attitudes?.join(', ')}</span>
                         </div>
                       )}
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               ) : (
                 <div className="text-center text-gray-500 mb-6">

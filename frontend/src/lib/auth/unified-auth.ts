@@ -109,7 +109,7 @@ async function extractTokenFromCookies(): Promise<string | undefined> {
   try {
     const cookieStore = await cookies();
     return cookieStore.get('sessionToken')?.value;
-  } catch (error) {
+  } catch {
     // If cookies() is not available (e.g., in Route Handlers), return undefined
     return undefined;
   }

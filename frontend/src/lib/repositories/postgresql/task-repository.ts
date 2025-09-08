@@ -22,6 +22,7 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
     return {
       id: row.id,
       programId: row.program_id,
+      scenarioId: row.scenario_id,  // Map database scenario_id to interface scenarioId
       mode: row.mode,  // Include mode from database
       taskIndex: row.task_index,
       scenarioTaskIndex: row.scenario_task_index || undefined,
@@ -36,24 +37,26 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
       content: row.content,
       
       // Interaction tracking
-      interactions: row.interactions as unknown as IInteraction[],
-      interactionCount: row.interaction_count,
+      interactions: Array.isArray(row.interactions) 
+        ? (row.interactions as unknown as IInteraction[])
+        : [],
+      interactionCount: Array.isArray(row.interactions) ? row.interactions.length : 0,
       
-      // Response/solution
-      userResponse: row.user_response,
+      // Response/solution (stored in interactions)
+      userResponse: row.user_response || {},
       
       // Scoring
-      score: row.score,
-      maxScore: row.max_score,
+      score: row.score || 0,
+      maxScore: row.max_score || 100,
       
       // Attempts and timing
-      allowedAttempts: row.allowed_attempts,
-      attemptCount: row.attempt_count,
+      allowedAttempts: row.allowed_attempts || 1,
+      attemptCount: row.attempt_count || 0,
       timeLimitSeconds: row.time_limit_seconds || undefined,
-      timeSpentSeconds: row.time_spent_seconds,
+      timeSpentSeconds: row.time_spent_seconds || 0,
       
       // AI configuration
-      aiConfig: row.ai_config,
+      aiConfig: row.ai_config || {},
       
       // Timestamps
       createdAt: row.created_at,
@@ -62,12 +65,12 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
       updatedAt: row.updated_at,
       
       // Mode-specific data
-      pblData: row.pbl_data,
-      discoveryData: row.discovery_data,
-      assessmentData: row.assessment_data,
+      pblData: row.pbl_data || {},
+      discoveryData: row.discovery_data || {},
+      assessmentData: row.assessment_data || {},
       
       // Extensible metadata
-      metadata: row.metadata
+      metadata: row.metadata || {}
     };
   }
 
@@ -93,25 +96,30 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
 
 
   async create(task: Omit<ITask, 'id'>): Promise<ITask> {
+    // Ensure scenarioId is provided - database requires it
+    if (!task.scenarioId) {
+      throw new Error('scenarioId is required for task creation');
+    }
+
     const query = `
       INSERT INTO tasks (
-        id, program_id, mode, task_index, scenario_task_index,
+        id, program_id, scenario_id, mode, task_index,
         title, description, type, status,
         content, metadata, interactions,
         ai_config, attempt_count, allowed_attempts, score,
-        time_spent_seconds, started_at
+        time_spent_seconds, started_at, updated_at
       ) VALUES (
-        gen_random_uuid()::text, $1, $2, $3, $4, $5, $6, $7, $8,
-        $9, $10, $11, $12, $13, $14, $15, $16, $17
+        gen_random_uuid(), $1, $2, $3, $4, $5, $6, $7, $8,
+        $9, $10, $11, $12, $13, $14, $15, $16, $17, CURRENT_TIMESTAMP
       )
       RETURNING *
     `;
 
     const { rows } = await this.pool.query<DBTask>(query, [
       task.programId,
+      task.scenarioId,
       task.mode,
       task.taskIndex,
-      task.scenarioTaskIndex || null,
       task.title || null,
       task.description || null,
       task.type,
@@ -138,25 +146,29 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
       await client.query('BEGIN');
 
       for (const task of tasks) {
+        // Ensure scenarioId is provided - database requires it
+        if (!task.scenarioId) {
+          throw new Error('scenarioId is required for task creation');
+        }
         const query = `
           INSERT INTO tasks (
-            id, program_id, mode, task_index, scenario_task_index,
+            id, program_id, scenario_id, mode, task_index,
             title, description, type, status,
             content, metadata, interactions,
             ai_config, attempt_count, allowed_attempts, score,
-            time_spent_seconds, started_at
+            time_spent_seconds, started_at, updated_at
           ) VALUES (
-            gen_random_uuid()::text, $1, $2, $3, $4, $5, $6, $7, $8,
-            $9, $10, $11, $12, $13, $14, $15, $16, $17
+            gen_random_uuid(), $1, $2, $3, $4, $5, $6, $7, $8,
+            $9, $10, $11, $12, $13, $14, $15, $16, $17, CURRENT_TIMESTAMP
           )
           RETURNING *
         `;
 
         const { rows } = await client.query<DBTask>(query, [
           task.programId,
+          task.scenarioId,
           task.mode,
           task.taskIndex,
-          task.scenarioTaskIndex || null,
           task.title || null,
           task.description || null,
           task.type,
@@ -268,7 +280,7 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
       values.push(JSON.stringify(updates.interactions));
     }
 
-    // Response
+    // Response/solution
     if (updates.userResponse !== undefined) {
       updateFields.push(`user_response = $${paramCount++}`);
       values.push(JSON.stringify(updates.userResponse));

@@ -431,6 +431,81 @@ npx playwright test --headed
 
 **絕對不要讓用戶一直幫你抓錯！每個修復都要自己先測試過！**
 
+## 🚨🚨🚨 Playwright E2E 測試必須嚴格 - 不能用條件判斷掩蓋錯誤！🚨🚨🚨
+
+### ❌ 絕對禁止的錯誤測試方式（2025/01/08 血淚教訓）
+```typescript
+// ❌ 錯誤：用 if 條件讓測試永遠不會失敗
+if (await element.isVisible()) {
+  await element.click();
+}
+console.log('✅ Test completed');  // 即使什麼都沒做也會顯示成功！
+
+// ❌ 錯誤：不檢查錯誤
+await page.goto('/some-page');
+// 沒有檢查是否有 401 錯誤或 console 錯誤
+
+// ❌ 錯誤：不驗證功能
+await submitButton.click();
+// 沒有驗證提交是否成功，資料是否儲存
+```
+
+### ✅ 正確的嚴格測試方式
+```typescript
+// ✅ 正確：使用 expect 斷言，失敗就會報錯
+await expect(element).toBeVisible();
+await element.click();
+await expect(page).toHaveURL('/expected-url');
+
+// ✅ 正確：監聽並檢查錯誤
+const errors: string[] = [];
+const failed401s: string[] = [];
+
+page.on('console', msg => {
+  if (msg.type() === 'error') errors.push(msg.text());
+});
+
+page.on('response', response => {
+  if (response.status() === 401) failed401s.push(response.url());
+});
+
+// 測試結束時驗證
+expect(errors.length).toBe(0);
+expect(failed401s.length).toBe(0);
+
+// ✅ 正確：驗證功能真的有效
+await page.fill('textarea', 'Test content');
+await page.click('button[type="submit"]');
+
+// 驗證資料有被儲存
+const savedData = await page.locator('.saved-content');
+await expect(savedData).toContainText('Test content');
+```
+
+### 必須檢查的項目清單
+- [ ] **Console 錯誤** - 監聽所有 console.error
+- [ ] **網路錯誤** - 檢查 401, 403, 404, 500 錯誤
+- [ ] **頁面重定向** - 確認沒有意外的重定向（如被重定向到登入頁）
+- [ ] **元素存在** - 使用 expect().toBeVisible() 而非 if (isVisible())
+- [ ] **功能驗證** - 提交後檢查資料、狀態變化
+- [ ] **認證狀態** - 檢查 cookie/session 是否正確設置
+- [ ] **API 回應** - 驗證 API 回傳正確資料
+
+### 測試失敗的處理
+1. **不要隱藏失敗** - 讓測試失敗，找出真正問題
+2. **詳細錯誤訊息** - 記錄所有錯誤詳情
+3. **截圖證據** - 失敗時截圖保存
+4. **修復根本原因** - 不要調整測試來"通過"
+
+### 教訓來源
+2025/01/08 寫了看似"通過"的 Playwright 測試，實際上：
+- 使用 `if` 條件讓測試永遠不會失敗
+- 沒有檢查 401 認證錯誤
+- 沒有驗證功能是否真的有效
+- 結果用戶發現一堆錯誤，測試卻顯示"成功"
+
+**記住：測試的目的是找出問題，不是顯示綠燈！**
+
 ## 🚨🚨🚨 部署後強制測試規則 - 每次部署都要測試！！！ 🚨🚨🚨
 
 ### 部署完成 ≠ 工作完成
@@ -613,6 +688,25 @@ curl /api/pbl/scenarios        # ❌ 無法測試 cookie 和 session
 ### ✅ 唯一正確的 E2E 測試方式
 **必須使用瀏覽器工具（Browser MCP、Playwright、Puppeteer）進行測試！**
 
+### 🚨 Headless 測試要求 (2025-09-07 用戶指令)
+**所有 Playwright 測試必須使用 headless 模式，除非用戶明確要求 headed 模式。**
+
+```bash
+# ✅ 正確：默認使用 headless 模式
+npx playwright test e2e/debug-three-modes.spec.ts
+
+# ✅ 正確：明確指定 headless
+npx playwright test e2e/debug-three-modes.spec.ts --headless
+
+# ❌ 錯誤：不要默認使用 headed 模式
+npx playwright test e2e/debug-three-modes.spec.ts --headed  # 只有用戶要求時才用
+```
+
+**配置要求**：
+- 在 `playwright.config.ts` 中設定 `headless: true` 為默認值
+- 測試腳本應該假設在 headless 環境下運行
+- 避免使用需要視覺確認的測試步驟（除非絕對必要）
+
 ```typescript
 // 關鍵測試：登入後訪問受保護頁面
 1. 登入 → 2. 訪問 /discovery → 3. 確認沒有被重定向到 /login
@@ -628,6 +722,131 @@ curl /api/pbl/scenarios        # ❌ 無法測試 cookie 和 session
 2025-08-15 staging 部署時，API 測試全部通過，但用戶實際無法保持登入狀態。原因是只測試了 API 回應，沒有測試瀏覽器中的 session 維持。
 
 **記住：用戶用瀏覽器，測試也必須用瀏覽器！**
+
+## 🚨🚨🚨 E2E 測試血淚教訓 - 什麼叫做「真正通過」(2025-01-18)
+
+### 💀 最大的謊言：「測試通過了」但實際功能壞掉
+
+**真實案例血淚教訓**：
+```
+我說：「✅ 3 passed (23.0s) - 三大模式測試通過！」
+用戶實測：Error: Failed to start program 💥💥💥
+```
+
+### ❌ 假測試的特徵（絕對禁止）
+1. **只測點擊，不測結果**
+   ```typescript
+   await button.click(); // ❌ 點了按鈕
+   console.log('✅ 成功點擊'); // ❌ 但沒檢查是否真的成功
+   ```
+
+2. **忽略 Console 錯誤**
+   ```typescript
+   // ❌ 看到這些錯誤還說測試通過：
+   Error: Evaluation API error: {}
+   Error: Failed to start program
+   401 錯誤一大堆
+   ```
+
+3. **表面測試騙局**
+   ```typescript
+   expect(page.url()).toContain('/tasks/'); // ❌ URL 對了
+   // 但沒檢查頁面是否真的能用！
+   ```
+
+### ✅ 真正的 E2E 測試標準
+
+#### 1. **功能完整性驗證**
+```typescript
+// ✅ 不只點擊，還要驗證結果
+await submitButton.click();
+await page.waitForTimeout(5000);
+
+// 必須檢查：沒有錯誤 + 有正確回應
+const hasErrors = await page.locator('.error, [role="alert"]').count();
+expect(hasErrors).toBe(0); // 🚨 零容忍錯誤
+
+const hasSuccess = await page.locator('.success, .completed').count();
+expect(hasSuccess).toBeGreaterThan(0); // 🚨 必須有成功狀態
+```
+
+#### 2. **API 狀態實際驗證**
+```typescript
+// ✅ 驗證實際的 API 調用成功
+page.on('response', response => {
+  if (response.url().includes('/start')) {
+    expect(response.status()).toBe(200); // 🚨 API 必須真的成功
+  }
+});
+```
+
+#### 3. **用戶體驗完整測試**
+```typescript
+// ✅ 模擬真實用戶完整流程
+1. 登入 → 檢查 dashboard 真的載入
+2. 點擊場景 → 檢查詳情頁真的載入內容（不只是 URL）
+3. 開始程序 → 檢查任務真的可以互動
+4. 提交答案 → 檢查真的有評估結果
+5. 完成流程 → 檢查真的到達完成頁面
+```
+
+#### 4. **錯誤零容忍原則**
+```typescript
+// ✅ 任何錯誤都是測試失敗
+const consoleErrors = [];
+page.on('console', msg => {
+  if (msg.type() === 'error') {
+    consoleErrors.push(msg.text());
+  }
+});
+
+// 測試結束時
+if (consoleErrors.length > 0) {
+  throw new Error(`❌ Console 錯誤: ${consoleErrors.join(', ')}`);
+}
+```
+
+### 🎯 什麼叫做「測試真正通過」？
+
+#### ✅ 通過標準：
+1. **零 Console 錯誤** - 沒有任何紅色錯誤訊息
+2. **零 API 失敗** - 所有 API 調用都是 200/201 狀態
+3. **完整流程可用** - 用戶從頭到尾都能正常使用
+4. **真實數據驗證** - 能看到真實的內容和反饋
+5. **狀態持久性** - 重新載入頁面狀態還在
+
+#### ❌ 失敗指標（任何一個出現就是失敗）：
+- Console 有 "Error:" 訊息
+- API 返回 4xx/5xx 狀態碼
+- 點擊按鈕後沒有預期回應
+- 頁面顯示 "Failed to..." 訊息
+- 用戶無法完成預期操作
+
+### 📋 標準測試檢查清單
+
+**每個測試都必須驗證**：
+- [ ] 登入真的成功（不只是 URL 變化）
+- [ ] 頁面內容真的載入（不只是標題）
+- [ ] 按鈕點擊真的有作用（不只是能點）
+- [ ] API 調用真的成功（不只是有調用）
+- [ ] 錯誤真的為零（不只是沒有 500）
+- [ ] 流程真的完整（不只是到達頁面）
+
+### 🔥 最重要的原則
+
+**如果用戶實際使用時會遇到錯誤，那測試就是失敗的！**
+
+不管 Playwright 說什麼，不管有多少個 "✅"，只要：
+- 用戶點按鈕會看到錯誤
+- 用戶無法完成預期操作
+- Console 有任何錯誤訊息
+
+**測試就是失敗的！！！**
+
+### 💀 永遠記住
+> **「測試通過了但功能壞掉」= 最大的技術債和欺騙**
+> 
+> **真正的測試：用戶能用的才叫通過！**
 
 ## 🚨 部署初始化關鍵步驟 (2025/01/16 血淚教訓)
 

@@ -168,6 +168,7 @@ export async function POST(
         
         const task = await taskRepo.create({
           programId: program.id,
+          scenarioId: scenario.id,
           mode: 'discovery',
           taskIndex: i,
           scenarioTaskIndex: i,
@@ -216,6 +217,7 @@ export async function POST(
       console.log('  No templates found, creating simple task...');
       const task = await taskRepo.create({
         programId: program.id,
+        scenarioId: scenario.id,
         mode: 'discovery',
         taskIndex: 0,
         scenarioTaskIndex: 0,

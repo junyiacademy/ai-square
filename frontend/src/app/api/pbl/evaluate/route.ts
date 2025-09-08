@@ -5,28 +5,14 @@ import {
   Conversation 
 } from '@/types/pbl-evaluate';
 import { ErrorResponse } from '@/types/api';
-
-interface UserCookie {
-  email: string;
-  role?: string;
-  name?: string;
-}
+import { getUnifiedAuth } from '@/lib/auth/unified-auth';
 
 export async function POST(request: NextRequest) {
   try {
-    // Get user info from cookie (same as other APIs)
-    let userEmail: string | undefined;
-    try {
-      const userCookie = request.cookies.get('user')?.value;
-      if (userCookie) {
-        const user: UserCookie = JSON.parse(userCookie);
-        userEmail = user.email;
-      }
-    } catch {
-      console.log('No user cookie found');
-    }
+    // Use unified authentication
+    const session = await getUnifiedAuth(request);
     
-    if (!userEmail) {
+    if (!session?.user?.email) {
       return NextResponse.json<ErrorResponse>(
         { error: 'User authentication required' },
         { status: 401 }
