@@ -264,12 +264,14 @@ export async function POST(request: NextRequest) {
       console.log(`Loaded ${discoveryCount} Discovery scenarios`);
 
       // Step 5: Create demo users (using valid roles from schema)
+      // Note: These password hashes must match the frontend LoginForm demo accounts
+      // Generated with bcryptjs, salt rounds: 10
       await pool.query(`
         INSERT INTO users (id, email, password_hash, name, role, email_verified, created_at, updated_at)
         VALUES 
-          ('550e8400-e29b-41d4-a716-446655440001', 'student@example.com', '$2b$10$K7L1OJ0TfPALHfRplJNYPOefsVTPLiFve0ic1YYRdRbGhPcDDiliS', 'Demo Student', 'student', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-          ('550e8400-e29b-41d4-a716-446655440002', 'teacher@example.com', '$2b$10$K7L1OJ0TfPALHfRplJNYPOefsVTPLiFve0ic1YYRdRbGhPcDDiliS', 'Demo Teacher', 'teacher', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-          ('550e8400-e29b-41d4-a716-446655440003', 'admin@example.com', '$2b$10$K7L1OJ0TfPALHfRplJNYPOefsVTPLiFve0ic1YYRdRbGhPcDDiliS', 'Demo Admin', 'admin', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+          ('550e8400-e29b-41d4-a716-446655440001', 'student@example.com', '$2b$10$qtr1b19D5AAqHdHIwk7kwO3O1Bc8NuAbMQLWBNXsssitWcqz2t51.', 'Demo Student', 'student', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+          ('550e8400-e29b-41d4-a716-446655440002', 'teacher@example.com', '$2b$10$yO.DFREVnZMJfUMwDY7p/.8cEbZFdeQHVDISIWyjF0CKW71BFkt4S', 'Demo Teacher', 'teacher', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+          ('550e8400-e29b-41d4-a716-446655440003', 'admin@example.com', '$2b$10$/6sb.PWC9OaZwLxPmCpSI..tVI/v8x8LoK0GPie0UZUOkj.hoq46y', 'Demo Admin', 'admin', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
         ON CONFLICT (email) DO NOTHING
       `);
 

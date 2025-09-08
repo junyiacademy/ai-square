@@ -49,25 +49,37 @@ curl -X POST "https://ai-square-staging-m7s4ucbgba-de.a.run.app/api/admin/init-s
 
 ## 🗄️ 載入的內容類型
 
-重設後會載入以下內容：
+### 🔧 資料庫重設功能
+AI Square 提供完整的資料庫管理功能：
 
-### 📚 PBL Scenarios
-- 來源：`public/pbl_data/*_scenario.yaml`
-- 包含：學習情境、任務模板、AI 模組配置
+#### 透過 Staging Reset API (`/api/admin/init-staging`)
+- ✅ **清空資料庫** - 刪除所有 scenarios, users, programs, tasks, evaluations
+- ✅ **建立 Demo 用戶** - 自動建立測試帳號
+- ⚠️ **Scenario 載入** - 目前透過專門的初始化 API 處理
 
-### 📊 Assessment Scenarios  
-- 來源：`public/assessment_data/*/`
-- 包含：AI 素養評估問題庫、評分標準
+#### 👤 Demo 使用者（自動建立）
+- `student@example.com` / 密碼: `student123` / 角色: student
+- `teacher@example.com` / 密碼: `teacher123` / 角色: teacher
+- `admin@example.com` / 密碼: `admin123` / 角色: admin
 
-### 🎯 Discovery Scenarios
-- 來源：`public/discovery_data/*_career.yaml`
-- 包含：職業探索路徑、技能需求分析
+#### 📚 Scenario 內容載入
+Scenarios 需透過專門的 API 載入：
+- **PBL Scenarios**: `/api/admin/init-pbl`
+- **Assessment Scenarios**: `/api/admin/init-assessment`
+- **Discovery Scenarios**: `/api/admin/init-discovery`
 
-### 👤 Demo 使用者
-自動建立三個測試帳號：
-- `student@example.com` / 密碼: `demo123`
-- `teacher@example.com` / 密碼: `demo123`  
-- `admin@example.com` / 密碼: `demo123`
+**完整重設流程**：
+```bash
+# 1. 重設資料庫並建立用戶
+curl -X POST "$BASE_URL/api/admin/init-staging" \
+  -H "x-admin-key: staging-init-2025" \
+  -d '{"action": "reset-full"}'
+
+# 2. 載入 Scenarios (選擇需要的類型)
+curl -X POST "$BASE_URL/api/admin/init-pbl"
+curl -X POST "$BASE_URL/api/admin/init-assessment" 
+curl -X POST "$BASE_URL/api/admin/init-discovery"
+```
 
 ## 🔧 本地開發資料庫管理
 
