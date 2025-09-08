@@ -136,7 +136,7 @@ Important evaluation principles:
     // Initialize Vertex AI
     const vertexAI = new VertexAI({
       project: process.env.GOOGLE_CLOUD_PROJECT || 'ai-square-463013',
-      location: 'us-central1',
+      location: process.env.VERTEX_AI_LOCATION || 'asia-east1',
     });
     
     // Get the generative model
