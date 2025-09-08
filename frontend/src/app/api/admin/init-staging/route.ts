@@ -60,16 +60,15 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    if (action === 'reset-full') {
-      // Step 0: Clear all existing data
-      console.log('Clearing all existing data...');
-      await pool.query(`
-        TRUNCATE TABLE evaluations, tasks, programs, scenarios, users CASCADE;
-      `);
-      
-      // Then proceed with full initialization
-      console.log('Starting fresh initialization...');
-    } else if (action === 'init-full') {
+    if (action === 'reset-full' || action === 'init-full') {
+      if (action === 'reset-full') {
+        // Step 0: Clear all existing data
+        console.log('Clearing all existing data...');
+        await pool.query(`
+          TRUNCATE TABLE evaluations, tasks, programs, scenarios, users CASCADE;
+        `);
+        console.log('Starting fresh initialization...');
+      }
       // Step 1: Skip schema creation (already done via Cloud SQL import)
       console.log('Skipping schema creation (already exists)...');
 
@@ -272,11 +271,11 @@ export async function POST(request: NextRequest) {
 
       // Step 5: Create demo users (using valid roles from schema)
       await pool.query(`
-        INSERT INTO users (id, email, password_hash, name, role, email_verified)
+        INSERT INTO users (id, email, password_hash, name, role, email_verified, created_at, updated_at)
         VALUES 
-          ('550e8400-e29b-41d4-a716-446655440001', 'student@example.com', '$2b$10$K7L1OJ0TfPALHfRplJNYPOefsVTPLiFve0ic1YYRdRbGhPcDDiliS', 'Demo Student', 'student', true),
-          ('550e8400-e29b-41d4-a716-446655440002', 'teacher@example.com', '$2b$10$K7L1OJ0TfPALHfRplJNYPOefsVTPLiFve0ic1YYRdRbGhPcDDiliS', 'Demo Teacher', 'teacher', true),
-          ('550e8400-e29b-41d4-a716-446655440003', 'admin@example.com', '$2b$10$K7L1OJ0TfPALHfRplJNYPOefsVTPLiFve0ic1YYRdRbGhPcDDiliS', 'Demo Admin', 'admin', true)
+          ('550e8400-e29b-41d4-a716-446655440001', 'student@example.com', '$2b$10$K7L1OJ0TfPALHfRplJNYPOefsVTPLiFve0ic1YYRdRbGhPcDDiliS', 'Demo Student', 'student', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+          ('550e8400-e29b-41d4-a716-446655440002', 'teacher@example.com', '$2b$10$K7L1OJ0TfPALHfRplJNYPOefsVTPLiFve0ic1YYRdRbGhPcDDiliS', 'Demo Teacher', 'teacher', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+          ('550e8400-e29b-41d4-a716-446655440003', 'admin@example.com', '$2b$10$K7L1OJ0TfPALHfRplJNYPOefsVTPLiFve0ic1YYRdRbGhPcDDiliS', 'Demo Admin', 'admin', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
         ON CONFLICT (email) DO NOTHING
       `);
 
