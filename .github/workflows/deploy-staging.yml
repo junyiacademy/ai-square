@@ -1,8 +1,7 @@
 # ============================================
-# AI Square Staging Deployment - Simplified
+# AI Square Staging Deployment with CI/CD
 # ============================================
-# Fast deployment for staging environment
-# No tests, no unnecessary steps
+# Complete CI/CD pipeline: Quality checks → Deploy
 # ============================================
 
 name: Deploy to Staging
@@ -10,7 +9,7 @@ name: Deploy to Staging
 on:
   push:
     branches:
-      - staging
+      - main
   workflow_dispatch:
 
 env:
@@ -20,9 +19,47 @@ env:
   REPOSITORY: ai-square-frontend
 
 jobs:
-  deploy:
-    name: Quick Deploy
+  # Step 1: Quality Checks (只保留必要的檢查)
+  quality-checks:
+    name: Code Quality & Tests
     runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+      
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: npm ci
+      
+      - name: TypeScript Check
+        working-directory: ./frontend
+        run: npx tsc --noEmit
+      
+      - name: ESLint Check
+        working-directory: ./frontend
+        run: npm run lint
+      
+      - name: Run Tests
+        working-directory: ./frontend
+        run: npm run test:ci
+      
+      - name: Build Check
+        working-directory: ./frontend
+        run: npm run build
+
+  # Step 2: Deploy to Staging
+  deploy:
+    name: Deploy to Cloud Run
+    runs-on: ubuntu-latest
+    needs: quality-checks
     
     permissions:
       contents: read
