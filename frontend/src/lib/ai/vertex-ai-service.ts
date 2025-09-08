@@ -38,14 +38,19 @@ export class VertexAIService {
       throw new Error('GOOGLE_CLOUD_PROJECT environment variable is required');
     }
     
-    // Initialize Google Auth 
-    // In Cloud Run, it will use metadata service automatically
-    // In local dev, it will use GOOGLE_APPLICATION_CREDENTIALS env var
-    this.auth = new GoogleAuth({
+    // Initialize Google Auth with explicit key file path
+    // B Solution: Use GitHub secrets for Cloud Run authentication
+    let authConfig: any = {
       projectId: this.projectId,
       scopes: ['https://www.googleapis.com/auth/cloud-platform']
-      // Don't specify keyFile - let GoogleAuth detect the environment
-    });
+    };
+
+    // In Cloud Run, use the secret key file if available
+    if (process.env.GOOGLE_APPLICATION_CREDENTIALS && process.env.NODE_ENV !== 'test') {
+      authConfig.keyFile = process.env.GOOGLE_APPLICATION_CREDENTIALS;
+    }
+
+    this.auth = new GoogleAuth(authConfig);
 
     // Initialize chat with system prompt
     this.chatHistory = [

@@ -22,12 +22,12 @@ COPY --from=builder /app/src ./src
 # Copy prisma directory for migrations
 COPY --from=builder /app/prisma ./prisma
 
-# Copy service account key if it exists in the project root
-# Note: In production, this should be mounted as a secret or provided via environment variable
-COPY --from=builder /app/ai-square-key.json* ./
+# Copy service account key if it exists in the project root  
+# B Solution: Use GitHub secrets for Vertex AI authentication
+COPY --from=builder /app/vertex-ai-key.json* ./
 
 # Set the environment variable for Google Auth
-ENV GOOGLE_APPLICATION_CREDENTIALS=/app/ai-square-key.json
+ENV GOOGLE_APPLICATION_CREDENTIALS=/app/vertex-ai-key.json
 
 EXPOSE 3000
 CMD ["npm", "start"] 
