@@ -550,7 +550,7 @@ describe('vertexAIResponseToConversation', () => {
 describe('getVertexAI', () => {
   beforeEach(() => {
     process.env.GOOGLE_CLOUD_PROJECT = 'test-project';
-    process.env.GOOGLE_CLOUD_LOCATION = 'us-west1';
+    process.env.VERTEX_AI_LOCATION = 'us-west1';
   });
 
   it('should create VertexAI instance with environment configuration', () => {

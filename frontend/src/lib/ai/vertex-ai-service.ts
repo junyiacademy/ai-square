@@ -367,6 +367,6 @@ export function vertexAIResponseToConversation(
 export function getVertexAI(): VertexAI {
   return new VertexAI({
     project: process.env.GOOGLE_CLOUD_PROJECT,
-    location: process.env.GOOGLE_CLOUD_LOCATION || 'us-central1',
+    location: process.env.VERTEX_AI_LOCATION || 'asia-east1',
   });
 }
