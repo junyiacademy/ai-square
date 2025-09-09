@@ -84,15 +84,26 @@ export async function POST(
     
     const existingEvaluationId = task?.metadata?.evaluationId as string | undefined;
     if (existingEvaluationId) {
-      // Update existing evaluation
+      // Re-evaluation: Create new evaluation and update task to point to it
       const existingEval = await evalRepo.findById(existingEvaluationId);
-      if (existingEval) {
-        // Evaluation repository doesn't have update method, create new one
-        evaluationRecord = await evalRepo.create(createEvaluationData(evaluation, existingEval.metadata));
-      } else {
-        // Evaluation ID exists but evaluation not found, create new one
-        evaluationRecord = await evalRepo.create(createEvaluationData(evaluation));
-      }
+      evaluationRecord = await evalRepo.create(createEvaluationData(evaluation, existingEval?.metadata));
+      
+      console.log('Re-evaluated task, new evaluation record:');
+      console.log('  Old evaluation ID:', existingEvaluationId);
+      console.log('  New evaluation ID:', evaluationRecord.id);
+      console.log('  domainScores:', JSON.stringify(evaluationRecord.domainScores || {}, null, 2));
+      
+      // Update task to point to the new evaluation
+      await taskRepo.update?.(taskId, {
+        status: 'completed' as const,
+        completedAt: task?.completedAt || new Date().toISOString(),
+        metadata: {
+          ...task?.metadata,
+          evaluationId: evaluationRecord.id,
+          previousEvaluationId: existingEvaluationId,
+          reEvaluatedAt: new Date().toISOString()
+        }
+      });
     } else {
       // No existing evaluation, create new one
       evaluationRecord = await evalRepo.create(createEvaluationData(evaluation));
@@ -100,7 +111,7 @@ export async function POST(
       console.log('Created evaluation record:');
       console.log('  domainScores:', JSON.stringify(evaluationRecord.domainScores || {}, null, 2));
       
-      // Update task with evaluation ID only if it's a new evaluation
+      // Update task with evaluation ID for the first time
       await taskRepo.update?.(taskId, {
         status: 'completed' as const,
         completedAt: task?.completedAt || new Date().toISOString(),
