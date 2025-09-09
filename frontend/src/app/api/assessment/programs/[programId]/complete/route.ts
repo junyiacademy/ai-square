@@ -186,8 +186,21 @@ export async function POST(
         .filter((i): i is AssessmentInteraction => i !== null);
       
       // Questions can be in task.content.questions or task.metadata.questions
-      const taskQuestions = (task.content as { questions?: AssessmentQuestion[] })?.questions || 
-                           (task.metadata as { questions?: AssessmentQuestion[] })?.questions || [];
+      const rawQuestions = (task.content as { questions?: any[] })?.questions || 
+                           (task.metadata as { questions?: any[] })?.questions || [];
+      
+      // Map domainId to domain for compatibility with AssessmentQuestion interface
+      const taskQuestions: AssessmentQuestion[] = rawQuestions.map(q => {
+        console.log(`Mapping question ${q.id}:`, {
+          originalDomainId: q.domainId,
+          originalDomain: q.domain,
+          mappedDomain: q.domainId || q.domain
+        });
+        return {
+          ...q,
+          domain: q.domainId || q.domain // Use domainId if available, fallback to domain
+        };
+      });
       
       console.log(`Task ${task.title}:`, {
         taskId: task.id,
@@ -239,8 +252,19 @@ export async function POST(
       const questionId = answer.context.questionId;
       const question = allQuestions.find((q) => q.id === questionId);
       
+      console.log(`Processing answer for question ${questionId}:`, {
+        questionFound: !!question,
+        questionDomain: question?.domain,
+        isCorrect: answer.context.isCorrect
+      });
+      
       if (question && question.domain) {
         const domainScore = domainScores.get(question.domain);
+        console.log(`Domain "${question.domain}":`, {
+          domainScoreFound: !!domainScore,
+          currentTotal: domainScore?.totalQuestions || 0
+        });
+        
         if (domainScore) {
           domainScore.totalQuestions++;
           if (answer.context.isCorrect) {
