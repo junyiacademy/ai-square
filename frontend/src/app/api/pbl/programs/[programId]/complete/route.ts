@@ -308,6 +308,15 @@ export async function POST(
         });
       } else {
         programEvaluation = existing;
+        // Still need to clear the outdated flag even if scores haven't changed
+        if (program.metadata?.evaluationOutdated === true) {
+          await programRepo.update?.(programId, {
+            metadata: {
+              ...program.metadata,
+              evaluationOutdated: false
+            }
+          });
+        }
       }
     }
     
