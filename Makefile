@@ -860,6 +860,47 @@ db-migrate:
 	@cd frontend && make -f Makefile.db db-migrate
 	@echo "$(GREEN)✅ 遷移完成$(NC)"
 
+## Production 資料庫遷移（手動）
+production-db-migrate:
+	@echo "$(RED)⚠️  Production 資料庫遷移 - 請確認要繼續嗎？$(NC)"
+	@echo "$(YELLOW)這將會對 Production 資料庫執行 migration$(NC)"
+	@read -p "輸入 'yes' 繼續: " confirm && [ "$$confirm" = "yes" ] || exit 1
+	@echo "$(BLUE)🔄 連接 Production 資料庫...$(NC)"
+	@echo "$(CYAN)啟動 Cloud SQL Proxy...$(NC)"
+	@gcloud compute ssh bastion-instance \
+		--zone=asia-east1-a \
+		--project=ai-square-463013 \
+		--command="wget -q https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy && \
+		          chmod +x cloud_sql_proxy && \
+		          ./cloud_sql_proxy -instances=ai-square-463013:asia-east1:ai-square-db-production=tcp:5432 &"
+	@sleep 5
+	@echo "$(BLUE)📦 執行 Prisma Migrations...$(NC)"
+	@cd frontend && DATABASE_URL="postgresql://postgres:${PRODUCTION_DB_PASSWORD}@localhost:5432/ai_square_db" npx prisma migrate deploy
+	@echo "$(GREEN)✅ Production Migration 完成$(NC)"
+	@echo "$(YELLOW)⚠️  記得檢查服務是否正常運作$(NC)"
+
+## Production 資料庫遷移狀態檢查
+production-db-migrate-status:
+	@echo "$(BLUE)📊 檢查 Production 資料庫 Migration 狀態...$(NC)"
+	@echo "$(CYAN)連接 Production 資料庫...$(NC)"
+	@gcloud sql connect ai-square-db-production \
+		--user=postgres \
+		--database=ai_square_db \
+		--project=ai-square-463013 \
+		--region=asia-east1 \
+		--command="SELECT * FROM _prisma_migrations ORDER BY finished_at DESC LIMIT 5;"
+	@cd frontend && DATABASE_URL="postgresql://postgres:${PRODUCTION_DB_PASSWORD}@/ai_square_db?host=/cloudsql/ai-square-463013:asia-east1:ai-square-db-production" npx prisma migrate status
+
+## Production 資料庫遷移預覽（Dry Run）
+production-db-migrate-plan:
+	@echo "$(BLUE)🔍 預覽 Production 資料庫 Migration（不會執行）...$(NC)"
+	@cd frontend && npx prisma migrate diff \
+		--from-schema-datasource prisma/schema.prisma \
+		--to-migrations prisma/migrations \
+		--shadow-database-url "postgresql://postgres:postgres@localhost:5433/shadow_db" \
+		--script
+	@echo "$(CYAN)以上是將要執行的 SQL 指令$(NC)"
+
 ## 執行 psql（交互式資料庫 shell）
 db-shell:
 	@echo "$(CYAN)🖥️  進入資料庫 shell...$(NC)"
