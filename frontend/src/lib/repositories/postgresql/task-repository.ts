@@ -42,8 +42,8 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
         : [],
       interactionCount: Array.isArray(row.interactions) ? row.interactions.length : 0,
       
-      // Response/solution (stored in interactions)
-      userResponse: row.user_response || {},
+      // Response/solution (stored in metadata)
+      userResponse: (row.metadata as Record<string, unknown>)?.userResponse || {},
       
       // Scoring
       score: row.score || 0,
@@ -280,9 +280,9 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
       values.push(JSON.stringify(updates.interactions));
     }
 
-    // Response/solution
+    // Response/solution - store in metadata
     if (updates.userResponse !== undefined) {
-      updateFields.push(`user_response = $${paramCount++}`);
+      updateFields.push(`metadata = jsonb_set(COALESCE(metadata, '{}'::jsonb), '{userResponse}', $${paramCount++}::jsonb)`);
       values.push(JSON.stringify(updates.userResponse));
     }
 
@@ -405,7 +405,11 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
       UPDATE tasks
       SET attempt_count = attempt_count + 1,
           score = GREATEST(score, $1),
-          user_response = $2,
+          metadata = jsonb_set(
+            COALESCE(metadata, '{}'::jsonb),
+            '{userResponse}',
+            $2::jsonb
+          ),
           time_spent_seconds = time_spent_seconds + $3,
           updated_at = CURRENT_TIMESTAMP
       WHERE id = $4

@@ -299,7 +299,7 @@ export default function ProgramLearningPage() {
           const originalTaskData = taskData.content?.context?.originalTaskData || {};
           
           const loadedTask = {
-            id: taskData.id,
+            id: taskData.id || taskId,  // Use taskId from URL if no id in response
             title: taskData.title,
             type: taskData.type,
             content: taskData.content,
@@ -316,7 +316,8 @@ export default function ProgramLearningPage() {
           } as unknown as Task;
           
           setCurrentTask(loadedTask);
-          loadTaskHistory();
+          // Pass the loaded task directly to avoid React state async issue
+          await loadTaskHistory(loadedTask);
         }
       }
     } catch (error) {
@@ -324,13 +325,16 @@ export default function ProgramLearningPage() {
     }
   };
 
-  const loadTaskHistory = async () => {
+  const loadTaskHistory = async (taskToLoad?: Task) => {
     // Prevent duplicate loading
     if (isLoadingHistory) return;
     
+    // Use passed task or fall back to currentTask from state
+    const task = taskToLoad || currentTask;
+    
     try {
-      // Skip loading history for temp programs
-      if (programId.startsWith('temp_')) {
+      // Skip loading history for temp programs or invalid taskIds
+      if (programId.startsWith('temp_') || !taskId || taskId === 'undefined') {
         // Don't clear conversations if we already have some (e.g., during transition)
         if (conversations.length === 0) {
           setConversations([]);
@@ -338,11 +342,17 @@ export default function ProgramLearningPage() {
         return;
       }
       
+      // Only load history if we have a valid task
+      if (!task || !task.id) {
+        console.log('Skipping history load - no valid task');
+        return;
+      }
+      
       setIsLoadingHistory(true);
-      console.log('Loading task history for:', { programId, taskId, scenarioId });
+      console.log('Loading task history for:', { programId, taskId: task.id, scenarioId });
       
       // Load task conversation history and evaluation
-      const res = await authenticatedFetch(`/api/pbl/tasks/${taskId}/interactions`);
+      const res = await authenticatedFetch(`/api/pbl/tasks/${task.id}/interactions`);
       if (res.ok) {
         const data = await res.json();
         console.log('Task history response:', data);
@@ -397,7 +407,13 @@ export default function ProgramLearningPage() {
           }
         }
       } else {
-        console.error('Failed to load task history:', res.status);
+        if (res.status === 401) {
+          console.log('Authentication required for task history - user may need to log in');
+        } else if (res.status === 404) {
+          console.log('Task not found - may be a new task or incorrect ID');
+        } else {
+          console.error('Failed to load task history:', res.status);
+        }
       }
     } catch (error) {
       console.error('Error loading task history:', error);
@@ -407,7 +423,7 @@ export default function ProgramLearningPage() {
   };
 
   const handleSendMessage = async () => {
-    if (!userInput.trim() || isProcessing || !currentTask) return;
+    if (!userInput.trim() || isProcessing || !currentTask || !currentTask.id) return;
     
     const userMessage = userInput.trim();
     setUserInput('');
@@ -454,36 +470,16 @@ export default function ProgramLearningPage() {
         } else {
           throw new Error('Failed to create program');
         }
-      } else if (program?.status === 'draft') {
-        // Convert draft to active program on first message
-        const updateRes = await authenticatedFetch(`/api/pbl/programs/${programId}/activate`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            scenarioId,
-            taskId: currentTask.id,
-            taskTitle: getLocalizedField(currentTask as unknown as Record<string, unknown>, 'title', i18n.language)
-          })
-        });
-        
-        if (!updateRes.ok) {
-          console.error('Failed to activate draft program, continuing anyway');
-        }
-        
-        // Update program status in state
-        if (program) {
-          setProgram({
-            ...program,
-            status: 'in_progress',
-            updatedAt: new Date().toISOString()
-          });
-        }
       }
       
-      // Save user interaction
-      const saveUserRes = await authenticatedFetch(`/api/pbl/tasks/${currentTask.id}/interactions`, {
+      // Save user interaction - skip if no valid task ID yet
+      const taskIdToUse = currentTask?.id || taskId;
+      
+      // Only try to save interaction if we have a valid UUID task ID
+      let saveUserRes = { ok: true }; // Default to OK to not block flow
+      
+      if (taskIdToUse && taskIdToUse.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)) {
+        saveUserRes = await authenticatedFetch(`/api/pbl/tasks/${taskIdToUse}/interactions`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -497,13 +493,32 @@ export default function ProgramLearningPage() {
           }
         })
       });
-      
-      if (!saveUserRes.ok) {
-        console.error('Failed to save user interaction');
+      } else {
+        console.log('Skipping interaction save - no valid task ID yet');
       }
       
-      // Small delay to ensure GCS consistency
-      await new Promise(resolve => setTimeout(resolve, 200));
+      if (!saveUserRes.ok) {
+        const errorText = await saveUserRes.text().catch(() => 'Unknown error');
+        let errorData;
+        try {
+          errorData = JSON.parse(errorText);
+        } catch {
+          errorData = { error: errorText };
+        }
+        
+        // Only log as error if it's not a 404 (task not found is expected for new tasks)
+        if (saveUserRes.status === 404) {
+          console.log('Task not found yet - this is normal for new programs');
+        } else {
+          console.error('Failed to save user interaction:', {
+            status: saveUserRes.status,
+            error: errorData.error || errorText,
+            taskId: currentTask?.id || 'no-task-id',
+            programId: actualProgramId
+          });
+        }
+        // Don't stop the flow, interactions might still be saved in the database
+      }
       
       // Get AI response
       const aiRes = await authenticatedFetch(`/api/pbl/chat?lang=${i18n.language}`, {
@@ -655,7 +670,7 @@ export default function ProgramLearningPage() {
           [currentTask.id]: data.evaluation
         }));
         
-        // Save evaluation to GCS
+        // Save evaluation to database
         try {
           const saveResponse = await authenticatedFetch(`/api/pbl/tasks/${currentTask.id}/evaluate`, {
             method: 'POST',
@@ -670,7 +685,7 @@ export default function ProgramLearningPage() {
           });
           
           if (!saveResponse.ok) {
-            console.error('Failed to save evaluation to GCS');
+            console.error('Failed to save evaluation to database');
           } else {
             const saveData = await saveResponse.json();
             if (saveData.success && saveData.data?.evaluationId) {
