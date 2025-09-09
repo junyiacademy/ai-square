@@ -129,8 +129,8 @@ export async function POST(
         const programRepo = repositoryFactory.getProgramRepository();
         const program = await programRepo.findById(programId);
         
-        if (program?.metadata?.evaluationId) {
-          // Just update the program metadata instead
+        if (program) {
+          // Always mark as outdated when a task is evaluated, regardless of whether program has evaluation
           await programRepo.update?.(program.id, {
             metadata: {
               ...program.metadata,
