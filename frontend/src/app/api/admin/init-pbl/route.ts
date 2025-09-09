@@ -109,12 +109,6 @@ export async function POST(request: NextRequest) {
 
         const scenarioId = primaryData.scenario_info.id;
 
-        // Log task order before sorting
-        if (Array.isArray(primaryData.tasks)) {
-          console.log(`[Init PBL] ${scenarioId} - Task order before sorting:`, 
-            (primaryData.tasks as any[]).map((t: any) => `${t.id}: ${t.title}`));
-        }
-
         // Check if scenario already exists
         const existingScenarios = await scenarioRepo.findByMode?.('pbl') || [];
         const existing = existingScenarios.find(s => 
@@ -185,25 +179,9 @@ export async function POST(request: NextRequest) {
           prerequisites: Array.isArray(primaryData.scenario_info.prerequisites) 
             ? primaryData.scenario_info.prerequisites 
             : [],
-          taskTemplates: (() => {
-            if (!Array.isArray(primaryData.tasks)) return [];
-            
-            const sortedTasks = (primaryData.tasks as ITaskTemplate[]).sort((a, b) => {
-              // Sort tasks by their ID (task-1, task-2, etc.)
-              const aId = (a as any).id || '';
-              const bId = (b as any).id || '';
-              // Extract numeric part from task ID
-              const aNum = parseInt(aId.replace(/[^0-9]/g, '') || '0');
-              const bNum = parseInt(bId.replace(/[^0-9]/g, '') || '0');
-              return aNum - bNum;
-            });
-            
-            // Log task order after sorting
-            console.log(`[Init PBL] ${scenarioId} - Task order after sorting:`, 
-              sortedTasks.map((t: any) => `${t.id}: ${t.title}`));
-            
-            return sortedTasks;
-          })(),
+          taskTemplates: Array.isArray(primaryData.tasks) 
+            ? (primaryData.tasks as ITaskTemplate[]) 
+            : [],
           xpRewards: { completion: 100 },
           unlockRequirements: {},
           discoveryData: {},
