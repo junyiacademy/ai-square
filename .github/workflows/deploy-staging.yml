@@ -21,9 +21,45 @@ env:
   SERVICE_ACCOUNT: ai-square-staging@ai-square-463013.iam.gserviceaccount.com
 
 jobs:
-  # Step 1: Quality Checks & Schema Validation
+  # Job 1: Quality Checks (快速檢查)
   quality-checks:
     name: Code Quality & Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+      
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: npm ci
+      
+      - name: TypeScript Check
+        working-directory: ./frontend
+        run: npx tsc --noEmit
+      
+      - name: ESLint Check
+        working-directory: ./frontend
+        run: npm run lint
+      
+      - name: Run Tests
+        working-directory: ./frontend
+        run: npm run test:ci
+      
+      - name: Build Check
+        working-directory: ./frontend
+        run: npm run build
+
+  # Job 2: Schema Validation (平行執行，不阻擋部署)
+  schema-validation:
+    name: Schema Validation
     runs-on: ubuntu-latest
     
     services:
@@ -56,15 +92,6 @@ jobs:
         working-directory: ./frontend
         run: npm ci
       
-      - name: TypeScript Check
-        working-directory: ./frontend
-        run: npx tsc --noEmit
-      
-      - name: ESLint Check
-        working-directory: ./frontend
-        run: npm run lint
-      
-      # Schema validation (from schema-validation.yml)
       - name: Validate Schema Consistency
         working-directory: ./frontend
         env:
@@ -80,7 +107,6 @@ jobs:
           npx prisma generate
           npx tsx scripts/validate-schema-consistency.ts || echo "⚠️ Schema validation script not found"
       
-      # Prisma drift detection (from prisma-drift-detection.yml)
       - name: Check Prisma Migration Status
         working-directory: ./frontend
         env:
@@ -88,20 +114,12 @@ jobs:
         run: |
           echo "📊 Checking migration status..."
           npx prisma migrate status || true
-      
-      - name: Run Tests
-        working-directory: ./frontend
-        run: npm run test:ci
-      
-      - name: Build Check
-        working-directory: ./frontend
-        run: npm run build
 
-  # Step 2: Deploy to Staging
+  # Job 3: Deploy to Staging (只依賴 quality-checks，不等 schema-validation)
   deploy:
     name: Deploy to Cloud Run
     runs-on: ubuntu-latest
-    needs: quality-checks
+    needs: quality-checks  # 只需要等 quality-checks，不等 schema-validation
     
     permissions:
       contents: read
