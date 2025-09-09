@@ -374,7 +374,7 @@ export async function POST(
       userId: userRecord.id,
       programId: programId,
       mode: 'assessment',
-      evaluationType: 'summative',  // Use standard evaluation type instead of 'program'
+      evaluationType: 'assessment_complete',  // Use simple descriptive naming
       // evaluationSubtype: 'assessment_complete',  // Skip problematic field for staging compatibility
       score: overallScore,
       maxScore: 100,

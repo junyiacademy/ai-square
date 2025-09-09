@@ -183,8 +183,8 @@ export async function POST(
       userId: userId,
       programId: programId,
       mode: 'discovery',
-      evaluationType: 'program',
-      evaluationSubtype: 'discovery_complete',
+      evaluationType: 'discovery_complete',
+      // evaluationSubtype: 'discovery_complete',  // Skip subtype, use simple naming
       score: avgScore,
       maxScore: 100,
       timeTakenSeconds: timeSpentSeconds,

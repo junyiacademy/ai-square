@@ -61,7 +61,7 @@ export async function GET(
     });
     
     const evaluation = evaluations.find(e => 
-      e.evaluationType === 'program' && e.evaluationSubtype === 'assessment_complete'
+      e.evaluationType === 'assessment_complete'
     );
     
     if (!evaluation) {

@@ -2639,7 +2639,7 @@ Content Source → Scenario (UUID) → Program (UUID) → Task (UUID) → Evalua
 - **id**: UUID 主鍵
 - **mode**: ENUM - 從 task 繼承的模式
 - **task_id/user_id**: 關聯資訊
-- **evaluation_type**: ENUM ('formative', 'summative', 'diagnostic', 'ai-feedback')
+- **evaluation_type**: STRING - 使用描述性命名 ('assessment_complete', 'pbl_complete', 'discovery_complete')
 - **score/feedback**: 評估結果
 - **criteria/rubric**: JSONB - 評估標準
 - **ai_config/ai_response**: JSONB - AI 評估設定與回應
@@ -2649,7 +2649,11 @@ Content Source → Scenario (UUID) → Program (UUID) → Task (UUID) → Evalua
 2. **多語言支援**: 使用 JSONB 儲存 `{en: "English", zh: "中文", ...}` 格式
 3. **彈性擴充**: 每個模式有專屬的 data 欄位（pbl_data、discovery_data、assessment_data）
 4. **統一介面**: 所有模式使用相同的資料流程和 Repository Pattern
-5. **時間戳記標準化**: 
+5. **評估命名規範 (2025-09-09 更新)**: 
+   - 使用簡單描述性命名：`assessment_complete`, `pbl_complete`, `discovery_complete`
+   - 避免學術性術語（如 `summative`, `formative`）
+   - 一個 evaluation_type 欄位即可，不需要 subtype
+6. **時間戳記標準化**: 
    - `createdAt`: 記錄建立時間
    - `startedAt`: 實際開始時間（狀態從 pending → active）
    - `completedAt`: 完成時間
@@ -2663,7 +2667,7 @@ export type SourceType = 'yaml' | 'api' | 'ai-generated';
 export type ScenarioStatus = 'draft' | 'active' | 'archived';
 export type ProgramStatus = 'pending' | 'active' | 'completed' | 'expired';
 export type TaskType = 'question' | 'chat' | 'creation' | 'analysis';
-export type EvaluationType = 'formative' | 'summative' | 'diagnostic' | 'ai-feedback';
+export type EvaluationType = 'assessment_complete' | 'pbl_complete' | 'discovery_complete';
 
 // 統一介面
 export interface IScenario {
@@ -2727,10 +2731,6 @@ AI Square 正處於從 MVP 轉向 SaaS 平台的關鍵階段。Phase 1 已完成
 - **Solution**: Both services must be in same region
 
 ```bash
-# ❌ Wrong: Cross-region
-Cloud SQL: us-central1
-Cloud Run: asia-east1
-
 # ✅ Correct: Same region
 Cloud SQL: asia-east1
 Cloud Run: asia-east1
@@ -3128,6 +3128,32 @@ if (typeof titleObj === 'string') {
    - 使用 unknown 並進行型別檢查
    - 使用具體的型別斷言
    - 定義明確的介面
+
+## 🚨 評估命名規範統一 (2025-09-09)
+
+### 重大更新：Evaluation Type 命名規範統一
+
+**背景**：用戶要求簡化評估類型命名，避免複雜的學術術語。
+
+**變更內容**：
+- ❌ **舊命名**：`summative`, `formative`, `diagnostic`, `ai-feedback`
+- ✅ **新命名**：`assessment_complete`, `pbl_complete`, `discovery_complete`
+
+**更新範圍**：
+1. **Assessment API**: 
+   - Complete API: `evaluationType: 'assessment_complete'`
+   - Evaluation API: 查找 `'assessment_complete'` 類型
+2. **PBL API**: Complete API: `evaluationType: 'pbl_complete'`
+3. **Discovery API**: Complete API: `evaluationType: 'discovery_complete'`
+4. **資料庫**: 現有 `summative` 評估更新為 `assessment_complete`
+5. **文件**: CLAUDE.md 中的型別定義已更新
+
+**實作原則**：
+- 使用簡單描述性命名，避免學術術語
+- 一個 `evaluation_type` 欄位即可，不需要 `subtype`
+- 保持 API 簡潔，不使用向後相容的條件判斷
+
+**用戶反饋**：「不要那麼複雜啦 assessment_complete pbl_complete discovery_complete 這樣就好啦」
 
 ### 關鍵教訓
 

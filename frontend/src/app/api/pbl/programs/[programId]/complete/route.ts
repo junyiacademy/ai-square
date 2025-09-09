@@ -294,8 +294,8 @@ export async function POST(
         userId: user.id,
         programId: program.id,
         mode: 'pbl',
-        evaluationType: 'program',
-        evaluationSubtype: 'pbl_completion',
+        evaluationType: 'pbl_complete',
+        // evaluationSubtype: 'pbl_completion',  // Skip subtype, use simple naming
         score: finalScore,
         maxScore: 100,
         timeTakenSeconds: totalTimeSeconds,
