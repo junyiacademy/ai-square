@@ -141,13 +141,32 @@ jobs:
       - name: Deploy to Cloud Run
         run: |
           echo "🚀 Deploying to Cloud Run with Vertex AI support..."
+          
+          # Create env vars file with proper escaping
+          cat > /tmp/env-vars.yaml << 'EOF'
+          DATABASE_URL: "postgresql://postgres:${{ secrets.STAGING_DB_PASSWORD }}@/ai_square_db?host=/cloudsql/ai-square-463013:asia-east1:ai-square-db-staging-asia"
+          DB_HOST: "/cloudsql/ai-square-463013:asia-east1:ai-square-db-staging-asia"
+          DB_NAME: "ai_square_db"
+          DB_USER: "postgres"
+          DB_PASSWORD: "${{ secrets.STAGING_DB_PASSWORD }}"
+          GOOGLE_CLOUD_PROJECT: "ai-square-463013"
+          GCP_PROJECT_ID: "ai-square-463013"
+          VERTEX_AI_LOCATION: "us-central1"
+          VERTEX_AI_PROJECT: "ai-square-463013"
+          VERTEX_AI_SERVICE_ACCOUNT_JSON: '${{ secrets.VERTEX_AI_KEY }}'
+          EOF
+          
+          # Deploy using env vars file
           gcloud run deploy $SERVICE_NAME \
             --image gcr.io/$PROJECT_ID/$REPOSITORY:$GITHUB_SHA \
             --region $REGION \
             --platform managed \
             --service-account=$SERVICE_ACCOUNT \
             --add-cloudsql-instances ai-square-463013:asia-east1:ai-square-db-staging-asia \
-            --update-env-vars DATABASE_URL="postgresql://postgres:${{ secrets.STAGING_DB_PASSWORD }}@/ai_square_db?host=/cloudsql/ai-square-463013:asia-east1:ai-square-db-staging-asia",DB_HOST="/cloudsql/ai-square-463013:asia-east1:ai-square-db-staging-asia",DB_NAME=ai_square_db,DB_USER=postgres,DB_PASSWORD=${{ secrets.STAGING_DB_PASSWORD }},GOOGLE_CLOUD_PROJECT=ai-square-463013,GCP_PROJECT_ID=ai-square-463013,VERTEX_AI_LOCATION=us-central1,VERTEX_AI_PROJECT=ai-square-463013,VERTEX_AI_SERVICE_ACCOUNT_JSON='${{ secrets.VERTEX_AI_KEY }}'
+            --env-vars-file=/tmp/env-vars.yaml
+          
+          # Clean up
+          rm -f /tmp/env-vars.yaml
       
       # Quick health check
       - name: Verify Deployment
