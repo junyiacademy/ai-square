@@ -545,11 +545,19 @@ await expect(savedData).toContainText('Test content');
 
 ## 🚨🚨🚨 部署監控與驗證流程 - 每次推送後必須執行！！！ 🚨🚨🚨
 
+### 🔴🔴🔴 最重要的規則：PUSH 後必須監控 GitHub Actions！！！ 🔴🔴🔴
+
+**違反此規則的後果：**
+- ❌ 部署失敗卻不知道
+- ❌ 用戶遇到錯誤
+- ❌ 浪費時間 debug
+- ❌ 失去專業性
+
 ### 📋 標準部署監控 SOP
 
 **每次 `git push` 後的強制檢查流程：**
 
-#### 1. **即時監控 GitHub Actions 部署狀態**
+#### 1. **即時監控 GitHub Actions 部署狀態（絕對必要！）**
 ```bash
 # 檢查最新 workflow 執行狀態
 gh run list --limit 5
@@ -619,11 +627,18 @@ gcloud run services logs read ai-square-staging --region=asia-east1 --limit=20
 
 ### 🚨 強制執行規則
 
-1. **推送後立即監控** - 絕不能推送完就離開
+1. **🔴 推送後立即監控 GitHub Actions** - 這是最重要的！絕不能推送完就離開！
+   ```bash
+   # 每次 push 後立即執行
+   gh run list --limit 5
+   # 持續監控直到部署完成
+   ```
 2. **等待部署完成** - 確認狀態為 `completed`
 3. **執行功能測試** - 使用 deployment-qa agent 或手動測試
 4. **記錄問題** - 如有問題立即修復
 5. **確認可用性** - 確保用戶可正常使用
+
+**記住：不監控 = 不負責任 = 不專業！**
 
 ### 💡 部署成功判斷標準
 

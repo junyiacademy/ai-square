@@ -602,19 +602,41 @@ curl -s "https://<svc>/api/assessment/scenarios?lang=en" | jq '.'
 
 ### 九、常見問題（Troubleshooting）
 
-#### 🔥 最常見的三個錯誤（90% 的部署問題）
+#### 🔴🔴🔴 最重要的規則：Push 後必須監控 GitHub Actions！！！ 🔴🔴🔴
 
-1. **只跑 Terraform 忘記 push commits**
+**每次 `git push` 後必須立即執行：**
+```bash
+# 立即監控部署狀態（這是最重要的！）
+gh run list --limit 5
+
+# 持續監控直到完成
+gh run watch  # 會自動更新狀態
+```
+
+**不監控的後果：**
+- ❌ 部署失敗卻不知道
+- ❌ 用戶遇到錯誤才發現
+- ❌ 浪費大量時間 debug
+- ❌ 顯得不專業
+
+#### 🔥 最常見的四個錯誤（90% 的部署問題）
+
+1. **Push 後沒有監控 GitHub Actions（最嚴重！）**
+   - 症狀：以為部署成功，但實際失敗
+   - 原因：推送後就離開，沒有監控部署狀態
+   - 解決：`gh run list --limit 5` 並等待完成
+
+2. **只跑 Terraform 忘記 push commits**
    - 症狀：`relation "scenarios" does not exist`
    - 原因：Terraform 只建立空資料庫，GitHub Actions 才執行 schema migration
-   - 解決：`git push origin staging`
+   - 解決：`git push origin staging` 並監控 GitHub Actions
 
-2. **忘記設定 DB_PASSWORD**
+3. **忘記設定 DB_PASSWORD**
    - 症狀：Health check 顯示 `DATABASE_URL not configured`
    - 原因：Terraform 需要 db_password 變數但沒設定
    - 解決：`export TF_VAR_db_password="xxx"` 再跑 Terraform
 
-3. **Google Cloud 帳號錯誤**
+4. **Google Cloud 帳號錯誤**
    - 症狀：權限錯誤或部署到錯誤專案
    - 原因：多專案開發時帳號混亂
    - 解決：`gcloud config configurations activate ai-square`
