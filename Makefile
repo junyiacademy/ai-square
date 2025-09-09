@@ -741,6 +741,10 @@ dev-quality: dev-lint dev-typecheck validate-scenarios
 ## Pre-commit 檢查 - 確保遵守 CLAUDE.md 規則
 pre-commit-check:
 	@echo "$(BLUE)🔍 執行 pre-commit 檢查...$(NC)"
+	@echo "$(YELLOW)0️⃣ Schema 一致性檢查...$(NC)"
+	@cd frontend && npm run schema:check || (echo "$(RED)❌ Schema 檢查失敗 - Prisma/TypeScript/Database 不一致$(NC)" && exit 1)
+	@echo "$(GREEN)✅ Schema 檢查通過$(NC)"
+	@echo ""
 	@echo "$(YELLOW)1️⃣  TypeScript 類型檢查 (最優先)...$(NC)"
 	@cd frontend && npm run typecheck || (echo "$(RED)❌ TypeScript 檢查失敗$(NC)" && exit 1)
 	@echo "$(GREEN)✅ TypeScript 檢查通過$(NC)"
