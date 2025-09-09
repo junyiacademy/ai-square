@@ -374,8 +374,8 @@ export async function POST(
       userId: userRecord.id,
       programId: programId,
       mode: 'assessment',
-      evaluationType: 'program',
-      evaluationSubtype: 'assessment_complete',
+      evaluationType: 'summative',  // Use standard evaluation type instead of 'program'
+      // evaluationSubtype: 'assessment_complete',  // Skip problematic field for staging compatibility
       score: overallScore,
       maxScore: 100,
       timeTakenSeconds: completionTime,
@@ -425,7 +425,7 @@ export async function POST(
           }
         }
       },
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString()  // Use ISO string as required by interface
     });
     
     console.log('Evaluation created successfully:', {
