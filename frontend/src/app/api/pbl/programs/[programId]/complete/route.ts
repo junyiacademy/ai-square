@@ -178,12 +178,16 @@ export async function POST(
     
     let ksaCount = 0;
     evaluatedTasks.forEach(({ evaluation }) => {
-      if (evaluation?.metadata?.ksaScores) {
-        const scores = evaluation.metadata.ksaScores as Record<string, number>;
-        ksaScores.knowledge += scores.knowledge || 0;
-        ksaScores.skills += scores.skills || 0;
-        ksaScores.attitudes += scores.attitudes || 0;
-        ksaCount++;
+      // Check both pblData.ksaScores (where it's actually stored) and metadata.ksaScores (fallback)
+      const scores = evaluation?.pblData?.ksaScores || evaluation?.metadata?.ksaScores;
+      if (scores && typeof scores === 'object') {
+        const ksaData = scores as Record<string, number>;
+        if (ksaData.knowledge !== undefined || ksaData.skills !== undefined || ksaData.attitudes !== undefined) {
+          ksaScores.knowledge += ksaData.knowledge || 0;
+          ksaScores.skills += ksaData.skills || 0;
+          ksaScores.attitudes += ksaData.attitudes || 0;
+          ksaCount++;
+        }
       }
     });
     
