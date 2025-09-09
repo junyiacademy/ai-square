@@ -123,14 +123,9 @@ export async function GET(request: NextRequest) {
     // Get all tasks for detailed information
     const tasks = await taskRepo.findByProgram(programId);
     
-    // Sort tasks by their position in the program's taskIds array
-    const taskIds = (program.metadata?.taskIds || []) as string[];
-    const sortedTasks = taskIds.length > 0 ? 
-      tasks.sort((a: ITask, b: ITask) => {
-        const indexA = taskIds.indexOf(a.id);
-        const indexB = taskIds.indexOf(b.id);
-        return indexA - indexB;
-      }) : tasks;
+    // Tasks are already sorted by task_index from the repository
+    // No need to re-sort them based on taskIds
+    const sortedTasks = tasks;
     
     // Build tasks array with evaluations and progress
     const tasksWithDetails = await Promise.all(
