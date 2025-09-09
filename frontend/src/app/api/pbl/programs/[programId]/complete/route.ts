@@ -280,6 +280,14 @@ export async function POST(
             }
           }
         }) || existing;
+        
+        // Clear the outdated flag after updating evaluation
+        await programRepo.update?.(programId, {
+          metadata: {
+            ...program.metadata,
+            evaluationOutdated: false
+          }
+        });
       } else {
         programEvaluation = existing;
       }
@@ -331,13 +339,14 @@ export async function POST(
         }
       });
       
-      // Update program with evaluation ID
+      // Update program with evaluation ID and clear outdated flag
       await programRepo.update?.(programId, {
         status: 'completed' as const,
         completedAt: new Date().toISOString(),
         metadata: {
           ...program.metadata,
           evaluationId: programEvaluation.id,
+          evaluationOutdated: false,  // Clear the outdated flag
           completedAt: program.completedAt || new Date().toISOString()
         }
       });
@@ -363,15 +372,25 @@ export async function POST(
 
 // Helper function for verification
 async function verifyEvaluationStatus(
-  program: { id: string },
+  program: { id: string; metadata?: Record<string, unknown> },
   evaluation: { id: string; metadata?: Record<string, unknown> },
   taskRepo: { findByProgram: (id: string) => Promise<TaskWithEvaluation[]> }
 ): Promise<{ needsUpdate: boolean; reason: string; debug: Record<string, unknown> }> {
   const debug: Record<string, unknown> = {
     evaluationId: evaluation.id,
     isLatest: evaluation.metadata?.isLatest,
+    evaluationOutdated: program.metadata?.evaluationOutdated,
     lastSyncedAt: evaluation.metadata?.lastSyncedAt
   };
+  
+  // Layer 0: Check if marked as outdated
+  if (program.metadata?.evaluationOutdated === true) {
+    return { 
+      needsUpdate: true, 
+      reason: 'evaluation_outdated',
+      debug: { ...debug, evaluationOutdated: true }
+    };
+  }
   
   // Layer 1: Flag check
   if (!evaluation.metadata?.isLatest) {
