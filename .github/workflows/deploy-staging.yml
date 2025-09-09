@@ -160,9 +160,15 @@ jobs:
           export DATABASE_URL="postgresql://postgres:${{ secrets.STAGING_DB_PASSWORD }}@localhost:5433/ai_square_db"
           echo "📦 Running Prisma migrations..."
           
-          # Try to run migrations
+          # Check for failed migrations first
+          if npx prisma migrate status 2>&1 | grep -q "Following migration have failed"; then
+            echo "⚠️ Found failed migration, marking baseline as applied (tables already exist)..."
+            npx prisma migrate resolve --applied "20250109000000_initial_baseline"
+          fi
+          
+          # Now try to run migrations
           if ! npx prisma migrate deploy 2>&1 | tee /tmp/migrate.log; then
-            # Check if it failed because tables already exist
+            # Check if it failed because tables already exist (shouldn't happen now)
             if grep -q "relation.*already exists" /tmp/migrate.log; then
               echo "⚠️ Tables already exist, marking baseline migration as applied..."
               npx prisma migrate resolve --applied "20250109000000_initial_baseline"
