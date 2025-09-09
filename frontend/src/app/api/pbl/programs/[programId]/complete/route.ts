@@ -49,15 +49,39 @@ function clearFeedbackFlags(qualitativeFeedback: Record<string, unknown> | undef
 // POST - 計算或更新 Program Evaluation
 export async function POST(
   request: NextRequest,
-  { params }: { params: Promise<{ programId: string }> }
+  { params }: { params: Promise<{ programId: string }> },
+  internalCall?: { userEmail: string; userId: string }
 ) {
   try {
     const { programId } = await params;
     
-    // Get user session
-    const session = await getUnifiedAuth(request);
-    if (!session?.user?.email) {
-      return createUnauthorizedResponse();
+    // Get user session (skip if internal call)
+    let userEmail: string;
+    let userId: string;
+    
+    if (internalCall) {
+      // Internal call from GET, use provided user info
+      userEmail = internalCall.userEmail;
+      userId = internalCall.userId;
+    } else {
+      // External call, authenticate
+      const session = await getUnifiedAuth(request);
+      if (!session?.user?.email) {
+        return createUnauthorizedResponse();
+      }
+      userEmail = session.user.email;
+      
+      // Get user by email to get UUID
+      const { repositoryFactory } = await import('@/lib/repositories/base/repository-factory');
+      const userRepo = repositoryFactory.getUserRepository();
+      const user = await userRepo.findByEmail(userEmail);
+      if (!user) {
+        return NextResponse.json(
+          { success: false, error: 'User not found' },
+          { status: 404 }
+        );
+      }
+      userId = user.id;
     }
     
     // Use unified architecture
@@ -65,16 +89,6 @@ export async function POST(
     const programRepo = repositoryFactory.getProgramRepository();
     const taskRepo = repositoryFactory.getTaskRepository();
     const evalRepo = repositoryFactory.getEvaluationRepository();
-    const userRepo = repositoryFactory.getUserRepository();
-    
-    // Get user by email to get UUID
-    const user = await userRepo.findByEmail(session.user.email);
-    if (!user) {
-      return NextResponse.json(
-        { success: false, error: 'User not found' },
-        { status: 404 }
-      );
-    }
     
     // Get program
     const program = await programRepo.findById(programId);
@@ -86,7 +100,7 @@ export async function POST(
     }
     
     // Verify the program belongs to the user
-    if (program.userId !== user.id) {
+    if (program.userId !== userId) {
       return NextResponse.json(
         { success: false, error: 'Access denied' },
         { status: 403 }
@@ -303,7 +317,7 @@ export async function POST(
       
       // Create new evaluation
       programEvaluation = await evalRepo.create({
-        userId: user.id,
+        userId: userId,
         programId: program.id,
         mode: 'pbl',
         evaluationType: 'pbl_complete',
@@ -517,6 +531,7 @@ export async function GET(
             const tasks = await taskRepo.findByProgram(id);
             return tasks.map(t => ({
               id: t.id,
+              evaluationId: t.metadata?.evaluationId as string | undefined,
               score: t.score,
               completedAt: t.completedAt
             }));
@@ -524,21 +539,38 @@ export async function GET(
         };
         verificationResult = await verifyEvaluationStatus(program, evaluation, taskRepoAdapter);
         
+        console.log('GET /api/pbl/programs/[programId]/complete - Verification result:', {
+          programId,
+          evaluationId: evaluation.id,
+          needsUpdate: verificationResult.needsUpdate,
+          reason: verificationResult.reason,
+          evaluationOutdated: program.metadata?.evaluationOutdated,
+          debug: verificationResult.debug
+        });
+        
         if (verificationResult.needsUpdate) {
-          console.log('Evaluation verification failed:', verificationResult);
+          console.log('Triggering program evaluation recalculation due to:', verificationResult.reason);
           
-          // Trigger recalculation
-          const recalcResponse = await POST(request, { params });
+          // Trigger recalculation with user info
+          const recalcResponse = await POST(request, { params }, { userEmail: session.user.email, userId: user.id });
           const recalcData = await recalcResponse.json();
           
           if (recalcData.success) {
+            console.log('Program evaluation recalculated successfully:', {
+              evaluationId: recalcData.evaluation?.id,
+              score: recalcData.evaluation?.score,
+              domainScores: recalcData.evaluation?.domainScores,
+              ksaScores: recalcData.evaluation?.pblData?.ksaScores
+            });
             evaluation = recalcData.evaluation;
+          } else {
+            console.error('Failed to recalculate program evaluation:', recalcData);
           }
         }
       }
     } else {
-      // No evaluation yet, trigger calculation
-      const calcResponse = await POST(request, { params });
+      // No evaluation yet, trigger calculation with user info
+      const calcResponse = await POST(request, { params }, { userEmail: session.user.email, userId: user.id });
       const calcData = await calcResponse.json();
       
       if (calcData.success) {
