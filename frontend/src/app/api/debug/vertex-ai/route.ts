@@ -22,6 +22,7 @@ export async function GET(request: NextRequest) {
     GOOGLE_CLOUD_PROJECT: process.env.GOOGLE_CLOUD_PROJECT || 'NOT_SET',
     VERTEX_AI_LOCATION: process.env.VERTEX_AI_LOCATION || 'NOT_SET',
     GOOGLE_APPLICATION_CREDENTIALS: process.env.GOOGLE_APPLICATION_CREDENTIALS || 'NOT_SET',
+    VERTEX_AI_SERVICE_ACCOUNT_JSON: process.env.VERTEX_AI_SERVICE_ACCOUNT_JSON ? 'Present' : 'NOT_SET',
     NODE_ENV: process.env.NODE_ENV,
     K_SERVICE: process.env.K_SERVICE || 'NOT_CLOUD_RUN',
     K_REVISION: process.env.K_REVISION || 'NOT_CLOUD_RUN',

@@ -38,15 +38,22 @@ export class VertexAIService {
       throw new Error('GOOGLE_CLOUD_PROJECT environment variable is required');
     }
     
-    // Initialize Google Auth with explicit key file path
-    // B Solution: Use GitHub secrets for Cloud Run authentication
+    // Initialize Google Auth with explicit credentials
     const authConfig: Record<string, unknown> = {
       projectId: this.projectId,
       scopes: ['https://www.googleapis.com/auth/cloud-platform']
     };
 
-    // In Cloud Run, use the secret key file if available
-    if (process.env.GOOGLE_APPLICATION_CREDENTIALS && process.env.NODE_ENV !== 'test') {
+    // Use service account JSON from environment variable if available
+    if (process.env.VERTEX_AI_SERVICE_ACCOUNT_JSON && process.env.NODE_ENV !== 'test') {
+      try {
+        const credentials = JSON.parse(process.env.VERTEX_AI_SERVICE_ACCOUNT_JSON);
+        authConfig.credentials = credentials;
+      } catch (error) {
+        console.error('Failed to parse VERTEX_AI_SERVICE_ACCOUNT_JSON:', error);
+      }
+    } else if (process.env.GOOGLE_APPLICATION_CREDENTIALS && process.env.NODE_ENV !== 'test') {
+      // Fallback to key file for local development
       authConfig.keyFile = process.env.GOOGLE_APPLICATION_CREDENTIALS;
     }
 

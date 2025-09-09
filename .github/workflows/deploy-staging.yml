@@ -76,12 +76,7 @@ jobs:
         with:
           credentials_json: ${{ secrets.GCP_SA_KEY }}
       
-      # B Solution: Create key file for Cloud Run Vertex AI authentication
-      - name: Create Service Account Key File
-        run: |
-          echo "Creating service account key file for Vertex AI..."
-          echo '${{ secrets.VERTEX_AI_KEY }}' > /tmp/vertex-ai-key.json
-          echo "Key file created at /tmp/vertex-ai-key.json"
+      # No need to create key file anymore - will use environment variable directly
       
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
@@ -131,10 +126,7 @@ jobs:
       # Build and push Docker image directly
       - name: Build and Push Docker image
         run: |
-          echo "🚀 Building Docker image with Vertex AI key..."
-          
-          # Copy key file to frontend directory for Docker build
-          cp /tmp/vertex-ai-key.json ./frontend/vertex-ai-key.json
+          echo "🚀 Building Docker image..."
           
           docker build -f frontend/Dockerfile \
             -t gcr.io/$PROJECT_ID/$REPOSITORY:$GITHUB_SHA \
@@ -144,9 +136,6 @@ jobs:
           echo "📤 Pushing to Container Registry..."
           docker push gcr.io/$PROJECT_ID/$REPOSITORY:$GITHUB_SHA
           docker push gcr.io/$PROJECT_ID/$REPOSITORY:staging-latest
-          
-          # Clean up key file
-          rm -f ./frontend/vertex-ai-key.json
       
       # Deploy to Cloud Run with Vertex AI configuration
       - name: Deploy to Cloud Run
@@ -158,7 +147,7 @@ jobs:
             --platform managed \
             --service-account=$SERVICE_ACCOUNT \
             --add-cloudsql-instances ai-square-463013:asia-east1:ai-square-db-staging-asia \
-            --update-env-vars DATABASE_URL="postgresql://postgres:${{ secrets.STAGING_DB_PASSWORD }}@/ai_square_db?host=/cloudsql/ai-square-463013:asia-east1:ai-square-db-staging-asia",DB_HOST="/cloudsql/ai-square-463013:asia-east1:ai-square-db-staging-asia",DB_NAME=ai_square_db,DB_USER=postgres,DB_PASSWORD=${{ secrets.STAGING_DB_PASSWORD }},GOOGLE_CLOUD_PROJECT=ai-square-463013,GCP_PROJECT_ID=ai-square-463013,VERTEX_AI_LOCATION=us-central1,VERTEX_AI_PROJECT=ai-square-463013,GOOGLE_APPLICATION_CREDENTIALS=/app/vertex-ai-key.json
+            --update-env-vars DATABASE_URL="postgresql://postgres:${{ secrets.STAGING_DB_PASSWORD }}@/ai_square_db?host=/cloudsql/ai-square-463013:asia-east1:ai-square-db-staging-asia",DB_HOST="/cloudsql/ai-square-463013:asia-east1:ai-square-db-staging-asia",DB_NAME=ai_square_db,DB_USER=postgres,DB_PASSWORD=${{ secrets.STAGING_DB_PASSWORD }},GOOGLE_CLOUD_PROJECT=ai-square-463013,GCP_PROJECT_ID=ai-square-463013,VERTEX_AI_LOCATION=us-central1,VERTEX_AI_PROJECT=ai-square-463013,VERTEX_AI_SERVICE_ACCOUNT_JSON='${{ secrets.VERTEX_AI_KEY }}'
       
       # Quick health check
       - name: Verify Deployment
