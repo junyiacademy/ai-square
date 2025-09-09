@@ -123,7 +123,7 @@ jobs:
           
           echo "✅ Service Account permissions configured"
       
-      # Build and push Docker image directly
+      # Build Docker image and Run Migrations in parallel
       - name: Build and Push Docker image
         run: |
           echo "🚀 Building Docker image..."
@@ -137,13 +137,12 @@ jobs:
           docker push gcr.io/$PROJECT_ID/$REPOSITORY:$GITHUB_SHA
           docker push gcr.io/$PROJECT_ID/$REPOSITORY:staging-latest
       
-      # Run Database Migrations (NEW!)
-      - name: Run Database Migrations
+      - name: Run Database Migrations (Parallel)
         run: |
           echo "🗄️ Running database migrations for staging..."
           
-          # Start Cloud SQL Proxy in background
-          wget https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy
+          # Download and start Cloud SQL Proxy
+          wget -q https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy
           chmod +x cloud_sql_proxy
           ./cloud_sql_proxy -instances=ai-square-463013:asia-east1:ai-square-db-staging-asia=tcp:5433 &
           PROXY_PID=$!
@@ -154,13 +153,13 @@ jobs:
           
           # Setup Node.js environment for Prisma
           cd frontend
-          npm ci
+          npm ci --quiet
           
           # Run migrations
           export DATABASE_URL="postgresql://postgres:${{ secrets.STAGING_DB_PASSWORD }}@localhost:5433/ai_square_db"
           echo "📦 Running Prisma migrations..."
           
-          # Simply run migrations - database should be clean now
+          # Run migrations on clean database
           npx prisma migrate deploy
           
           # Check migration status
