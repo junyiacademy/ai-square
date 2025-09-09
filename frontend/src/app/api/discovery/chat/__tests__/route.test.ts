@@ -167,7 +167,7 @@ describe('/api/discovery/chat', () => {
 
         expect(mockVertexAI).toHaveBeenCalledWith({
           project: 'ai-square-463013',
-          location: 'us-central1'
+          location: 'asia-east1'
         });
       });
 

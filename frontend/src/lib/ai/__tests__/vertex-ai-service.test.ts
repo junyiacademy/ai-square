@@ -564,13 +564,13 @@ describe('getVertexAI', () => {
   });
 
   it('should use default location when not specified', () => {
-    delete process.env.GOOGLE_CLOUD_LOCATION;
+    delete process.env.VERTEX_AI_LOCATION;
     
     const vertexAI = getVertexAI();
     
     expect(VertexAI).toHaveBeenCalledWith({
       project: 'test-project',
-      location: 'us-central1'
+      location: 'asia-east1'
     });
   });
 });
