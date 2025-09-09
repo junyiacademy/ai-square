@@ -114,6 +114,16 @@ jobs:
         run: |
           echo "📊 Checking migration status..."
           npx prisma migrate status || true
+      
+      # 如果需要上傳 artifacts，使用 v4 版本
+      - name: Upload schema report on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: schema-validation-report-${{ github.run_id }}
+          path: |
+            frontend/prisma/schema.prisma
+            frontend/prisma/migrations/
 
   # Job 3: Deploy to Staging (只依賴 quality-checks，不等 schema-validation)
   deploy:
