@@ -570,7 +570,7 @@ describe('getVertexAI', () => {
     
     expect(VertexAI).toHaveBeenCalledWith({
       project: 'test-project',
-      location: 'asia-east1'
+      location: 'us-central1'
     });
   });
 });

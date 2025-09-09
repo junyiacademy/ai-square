@@ -32,7 +32,7 @@ export class VertexAIService {
     this.model = config.model || 'gemini-2.5-flash';
     // Read environment variables at construction time, not module load time
     this.projectId = process.env.GOOGLE_CLOUD_PROJECT || '';
-    this.location = process.env.VERTEX_AI_LOCATION || 'asia-east1';
+    this.location = process.env.VERTEX_AI_LOCATION || 'us-central1';
     
     if (!this.projectId && process.env.NODE_ENV !== 'test') {
       throw new Error('GOOGLE_CLOUD_PROJECT environment variable is required');
@@ -367,6 +367,6 @@ export function vertexAIResponseToConversation(
 export function getVertexAI(): VertexAI {
   return new VertexAI({
     project: process.env.GOOGLE_CLOUD_PROJECT,
-    location: process.env.VERTEX_AI_LOCATION || 'asia-east1',
+    location: process.env.VERTEX_AI_LOCATION || 'us-central1',
   });
 }

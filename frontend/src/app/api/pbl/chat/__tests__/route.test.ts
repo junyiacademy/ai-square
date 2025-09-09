@@ -591,7 +591,7 @@ describe('POST /api/pbl/chat', () => {
 
       expect(VertexAI).toHaveBeenCalledWith({
         project: 'test-project',
-        location: 'asia-east1'
+        location: 'us-central1'
       });
 
       expect(mockGetGenerativeModel).toHaveBeenCalledWith({
