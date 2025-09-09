@@ -72,7 +72,7 @@ export async function GET(request: NextRequest) {
       
       // 測試環境直接回傳，避免受快取影響
       if (isTest) {
-        return new NextResponse(JSON.stringify({ success: true, data: { scenarios: formattedScenarios, totalCount: formattedScenarios.length } }), {
+        return new NextResponse(JSON.stringify({ success: true, data: { scenarios: formattedScenarios, total: formattedScenarios.length } }), {
           headers: { 'Content-Type': 'application/json', 'X-Cache': 'MISS' }
         });
       }
@@ -83,14 +83,14 @@ export async function GET(request: NextRequest) {
         let cacheStatus: 'HIT' | 'MISS' | 'STALE' = 'MISS';
         const result = await distributedCacheService.getWithRevalidation(key, async () => ({
           success: true,
-          data: { scenarios: formattedScenarios, totalCount: formattedScenarios.length }
+          data: { scenarios: formattedScenarios, total: formattedScenarios.length }
         }), { ttl: TTL.SEMI_STATIC_1H, staleWhileRevalidate: TTL.SEMI_STATIC_1H, onStatus: (s) => { cacheStatus = s; } });
         return new NextResponse(JSON.stringify(result), {
           headers: { 'Content-Type': 'application/json', 'X-Cache': cacheStatus }
         });
       }
 
-      return NextResponse.json({ success: true, data: { scenarios: formattedScenarios, totalCount: formattedScenarios.length } });
+      return NextResponse.json({ success: true, data: { scenarios: formattedScenarios, total: formattedScenarios.length } });
     }
     
     // If no scenarios in database, that's an error - DON'T fall back to file system
@@ -101,7 +101,7 @@ export async function GET(request: NextRequest) {
       success: true,
       data: {
         scenarios: [],
-        totalCount: 0
+        total: 0
       }
     };
     
