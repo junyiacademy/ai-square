@@ -476,7 +476,7 @@ export default function ProgramLearningPage() {
       const taskIdToUse = currentTask?.id || taskId;
       
       // Only try to save interaction if we have a valid UUID task ID
-      let saveUserRes = { ok: true }; // Default to OK to not block flow
+      let saveUserRes: Response | { ok: true } = { ok: true }; // Default to OK to not block flow
       
       if (taskIdToUse && taskIdToUse.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)) {
         saveUserRes = await authenticatedFetch(`/api/pbl/tasks/${taskIdToUse}/interactions`, {
@@ -498,24 +498,27 @@ export default function ProgramLearningPage() {
       }
       
       if (!saveUserRes.ok) {
-        const errorText = await saveUserRes.text().catch(() => 'Unknown error');
-        let errorData;
-        try {
-          errorData = JSON.parse(errorText);
-        } catch {
-          errorData = { error: errorText };
-        }
-        
-        // Only log as error if it's not a 404 (task not found is expected for new tasks)
-        if (saveUserRes.status === 404) {
-          console.log('Task not found yet - this is normal for new programs');
-        } else {
-          console.error('Failed to save user interaction:', {
-            status: saveUserRes.status,
-            error: errorData.error || errorText,
-            taskId: currentTask?.id || 'no-task-id',
-            programId: actualProgramId
-          });
+        // Only process as Response if it's actually a Response object
+        if ('text' in saveUserRes) {
+          const errorText = await saveUserRes.text().catch(() => 'Unknown error');
+          let errorData;
+          try {
+            errorData = JSON.parse(errorText);
+          } catch {
+            errorData = { error: errorText };
+          }
+          
+          // Only log as error if it's not a 404 (task not found is expected for new tasks)
+          if ('status' in saveUserRes && saveUserRes.status === 404) {
+            console.log('Task not found yet - this is normal for new programs');
+          } else {
+            console.error('Failed to save user interaction:', {
+              status: 'status' in saveUserRes ? saveUserRes.status : 'unknown',
+              error: errorData.error || errorText,
+              taskId: currentTask?.id || 'no-task-id',
+              programId: actualProgramId
+            });
+          }
         }
         // Don't stop the flow, interactions might still be saved in the database
       }

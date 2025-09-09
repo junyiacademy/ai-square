@@ -43,7 +43,7 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
       interactionCount: Array.isArray(row.interactions) ? row.interactions.length : 0,
       
       // Response/solution (stored in metadata)
-      userResponse: (row.metadata as Record<string, unknown>)?.userResponse || {},
+      userResponse: (row.metadata as Record<string, unknown>)?.userResponse as Record<string, unknown> || {},
       
       // Scoring
       score: row.score || 0,

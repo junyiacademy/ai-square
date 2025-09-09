@@ -335,8 +335,8 @@ export default function AssessmentProgramPage({
             onComplete={handleQuizComplete}
             timeLimit={currentTask?.content?.context?.timeLimit || timeLimit}
             // Pass saved answers from interactions
-            initialAnswers={currentTask.interactions
-              .filter((i) => i.type === 'assessment_answer')
+            initialAnswers={currentTask?.interactions
+              ?.filter((i) => i.type === 'assessment_answer')
             .reduce((acc: UserAnswer[], i) => {
               const content = i.content as Record<string, unknown>;
               acc.push({
@@ -346,7 +346,7 @@ export default function AssessmentProgramPage({
                 isCorrect: (content.isCorrect as boolean) || false
               });
               return acc;
-            }, [])}
+            }, []) || []}
           />
         </div>
       )}
