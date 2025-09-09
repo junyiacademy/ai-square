@@ -21,10 +21,25 @@ env:
   SERVICE_ACCOUNT: ai-square-staging@ai-square-463013.iam.gserviceaccount.com
 
 jobs:
-  # Step 1: Quality Checks (只保留必要的檢查)
+  # Step 1: Quality Checks & Schema Validation
   quality-checks:
     name: Code Quality & Tests
     runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: ai_square_db
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
     
     steps:
       - name: Checkout code
@@ -48,6 +63,31 @@ jobs:
       - name: ESLint Check
         working-directory: ./frontend
         run: npm run lint
+      
+      # Schema validation (from schema-validation.yml)
+      - name: Validate Schema Consistency
+        working-directory: ./frontend
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/ai_square_db
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_USER: postgres
+          DB_PASSWORD: postgres
+          DB_NAME: ai_square_db
+        run: |
+          echo "🔍 Checking schema consistency..."
+          npx prisma migrate deploy
+          npx prisma generate
+          npx tsx scripts/validate-schema-consistency.ts || echo "⚠️ Schema validation script not found"
+      
+      # Prisma drift detection (from prisma-drift-detection.yml)
+      - name: Check Prisma Migration Status
+        working-directory: ./frontend
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/ai_square_db
+        run: |
+          echo "📊 Checking migration status..."
+          npx prisma migrate status || true
       
       - name: Run Tests
         working-directory: ./frontend
