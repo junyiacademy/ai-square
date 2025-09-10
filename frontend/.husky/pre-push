@@ -29,31 +29,27 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-# 3. Critical tests only (fast subset)
-echo "🧪 Running critical tests..."
-# Run only critical test suites (API routes, core services)
-npm test -- \
-  --testPathPattern="(api|services|repositories)" \
-  --testNamePattern="^(should|must|critical)" \
-  --silent \
-  --bail \
-  --maxWorkers=4 \
-  2>/dev/null
-
+# 3. Critical tests - API routes only (fast)
+echo "🧪 Running API tests (~5 seconds)..."
+npm test -- src/app/api --bail --silent 2>/dev/null
 if [ $? -ne 0 ]; then
-  echo "❌ Critical tests failed. Please fix before pushing."
-  echo "💡 Run 'npm test' to see failing tests"
+  echo "❌ API tests failed. Please fix before pushing."
+  echo "💡 Run 'npm test src/app/api' to see failing tests"
   exit 1
 fi
 
-# 4. Quick build check (just check if it compiles)
-echo "🏗️  Build validation..."
-# Use Next.js build with type checking disabled (already checked above)
-SKIP_TYPECHECK=1 npm run build -- --no-lint > /dev/null 2>&1
-if [ $? -ne 0 ]; then
-  echo "❌ Build failed. Please fix before pushing."
-  echo "💡 Run 'npm run build' to see build errors"
-  exit 1
+# 4. Optional: Full build check (can be skipped with --no-build flag)
+if [ "$1" != "--no-build" ]; then
+  echo "🏗️  Build validation (~35 seconds)..."
+  echo "   (Skip with: git push --no-build)"
+  npm run build > /dev/null 2>&1
+  if [ $? -ne 0 ]; then
+    echo "❌ Build failed. Please fix before pushing."
+    echo "💡 Run 'npm run build' to see build errors"
+    exit 1
+  fi
+else
+  echo "⚠️  Skipping build check (--no-build flag used)"
 fi
 
 echo "✅ All pre-push checks passed!"

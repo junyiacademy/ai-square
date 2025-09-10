@@ -21,17 +21,15 @@ fi
 echo "📝 Checking $(echo $STAGED_FILES | wc -w | tr -d ' ') staged files..."
 
 # 2. Run TypeScript check on staged files only
-echo "🔍 TypeScript check (staged files)..."
-for file in $STAGED_FILES; do
-  if [ -f "$file" ]; then
-    npx tsc --noEmit --skipLibCheck "$file" 2>/dev/null
-    if [ $? -ne 0 ]; then
-      echo "❌ TypeScript error in $file"
-      npx tsc --noEmit --skipLibCheck "$file"
-      exit 1
-    fi
-  fi
-done
+# Note: TypeScript can't check single files properly, so we check the whole project
+# but only if TypeScript files are staged
+echo "🔍 TypeScript check..."
+npm run typecheck > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+  echo "❌ TypeScript errors found in project"
+  echo "💡 Run 'npm run typecheck' to see all errors"
+  exit 1
+fi
 
 # 3. Run ESLint on staged files only
 echo "📋 ESLint check (staged files)..."
