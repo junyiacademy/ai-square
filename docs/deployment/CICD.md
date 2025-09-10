@@ -827,6 +827,221 @@ jobs:
           fi
 ```
 
+#### 🔒 Branch-Based Deployment Strategy（分支部署策略）
+
+##### 核心原則：分支自動對應環境
+
+| Branch | Environment | URL | Auto Deploy | Security Level |
+|--------|------------|-----|-------------|----------------|
+| `main` | Production | https://ai-square-production-*.run.app | ✅ Yes | 🔴 最高 |
+| `staging` | Staging | https://ai-square-staging-*.run.app | ✅ Yes | 🟡 中等 |
+| `develop` | Development | Local only | ❌ No | 🟢 低 |
+| Feature branches | None | Local only | ❌ No | 🟢 低 |
+
+##### 🚨 安全考量與最佳實踐
+
+###### 1. **Secret Management（密碼管理）**
+```yaml
+# ✅ 正確做法：使用 GitHub Secrets + Google Secret Manager
+環境變數分層：
+  GitHub Secrets:
+    - GCP_SA_KEY: Service Account JSON（GitHub → GCP 認證）
+    - DB_PASSWORD: 資料庫密碼（加密儲存）
+    - NEXTAUTH_SECRET: NextAuth 認證密鑰
+    
+  Google Secret Manager:
+    - ai-square-db-password: 資料庫密碼
+    - ai-square-nextauth-secret: NextAuth 密鑰
+    - ai-square-database-url: 完整資料庫連接字串
+
+# ❌ 錯誤做法：
+  - 在程式碼中硬編碼密碼
+  - 在 Dockerfile 中寫入密碼
+  - 在 cloudbuild.yaml 中明文密碼
+```
+
+###### 2. **Environment Variable Isolation（環境變數隔離）**
+```bash
+# Production 專屬變數（高安全性）
+NEXTAUTH_URL=https://ai-square-production-*.run.app
+DATABASE_URL=postgresql://...ai-square-db-production
+NODE_ENV=production
+
+# Staging 專屬變數（測試環境）
+NEXTAUTH_URL=https://ai-square-staging-*.run.app
+DATABASE_URL=postgresql://...ai-square-db-staging-asia
+NODE_ENV=staging
+```
+
+###### 3. **Branch Protection Rules（分支保護規則）**
+```yaml
+main branch:
+  - Require pull request reviews (2+ approvers)
+  - Require status checks to pass
+  - Require branches to be up to date
+  - Require conversation resolution
+  - Include administrators
+  
+staging branch:
+  - Require pull request reviews (1+ approver)
+  - Require status checks to pass
+  - Require branches to be up to date
+```
+
+##### 自動部署工作流程
+
+###### `.github/workflows/auto-deploy.yml`（簡化版）
+```yaml
+name: Auto Deploy
+
+on:
+  push:
+    branches:
+      - main        # 自動部署到 Production
+      - staging     # 自動部署到 Staging
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Determine environment
+        id: env
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            echo "environment=production" >> $GITHUB_OUTPUT
+            echo "service=ai-square-production" >> $GITHUB_OUTPUT
+          else
+            echo "environment=staging" >> $GITHUB_OUTPUT
+            echo "service=ai-square-staging" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy ${{ steps.env.outputs.service }} \
+            --region asia-east1 \
+            --set-env-vars NODE_ENV=${{ steps.env.outputs.environment }}
+```
+
+###### `.github/workflows/deploy-by-branch.yml`（進階版）
+```yaml
+name: Deploy by Branch
+
+on:
+  push:
+    branches: [main, staging, develop]
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: choice
+        options: [staging, production]
+
+jobs:
+  deploy:
+    environment: ${{ needs.setup.outputs.environment }}
+    steps:
+      - name: Set environment-specific variables
+        run: |
+          # 根據分支設定不同的環境變數
+          # 使用 GitHub Secrets 安全管理敏感資訊
+```
+
+##### 🔐 安全部署檢查清單
+
+部署前必須確認：
+- [ ] **密碼管理**：所有密碼都使用 Secret Manager
+- [ ] **環境隔離**：Production 與 Staging 資料庫完全分離
+- [ ] **權限最小化**：Service Account 只有必要權限
+- [ ] **分支保護**：main 分支已設定保護規則
+- [ ] **監控告警**：部署失敗會立即通知
+- [ ] **回滾機制**：可快速回滾到上一版本
+- [ ] **SSL/TLS**：所有連線都使用 HTTPS
+- [ ] **日誌審計**：所有部署操作都有日誌記錄
+
+##### 開發工作流程
+
+###### 1. Feature Development（功能開發）
+```bash
+# 從 staging 建立功能分支
+git checkout staging
+git pull origin staging
+git checkout -b feature/my-feature
+
+# 本地開發測試
+npm run dev
+npm run test
+
+# 推送到功能分支（不觸發自動部署）
+git push origin feature/my-feature
+```
+
+###### 2. Deploy to Staging（部署到測試環境）
+```bash
+# 合併到 staging 分支
+git checkout staging
+git merge feature/my-feature
+git push origin staging
+# → 自動觸發 Staging 部署
+```
+
+###### 3. Deploy to Production（部署到生產環境）
+```bash
+# 測試通過後，從 staging 合併到 main
+git checkout main
+git pull origin main
+git merge staging
+git push origin main
+# → 自動觸發 Production 部署
+```
+
+##### 緊急回滾流程
+
+###### 快速回滾（Cloud Run）
+```bash
+# 列出最近版本
+gcloud run revisions list \
+  --service ai-square-production \
+  --region asia-east1
+
+# 回滾到前一版本
+gcloud run services update-traffic \
+  ai-square-production \
+  --to-revisions <previous-revision>=100 \
+  --region asia-east1
+```
+
+###### Git 回滾
+```bash
+# 回滾 main 分支
+git checkout main
+git revert HEAD
+git push origin main
+# → 自動觸發部署回滾版本
+```
+
+##### 🚨 常見問題與解決方案
+
+###### 環境變數遺失
+**問題**：部署後某些功能失效（如 AI 服務）
+**原因**：手動部署容易遺漏環境變數
+**解決**：
+1. 使用 GitHub Actions 自動部署
+2. 環境變數定義在 workflow 檔案中
+3. 使用 Secret Manager 集中管理
+
+###### 分支混淆
+**問題**：錯誤地將測試代碼部署到生產環境
+**解決**：
+1. 嚴格的分支保護規則
+2. 自動化部署（避免手動操作）
+3. 清晰的分支命名規範
+
+###### 密碼洩漏風險
+**問題**：密碼出現在日誌或程式碼中
+**解決**：
+1. 永遠使用 Secret Manager
+2. 定期輪換密碼
+3. 審計日誌檢查
+
 #### 重要：不再使用臨時腳本
 根據「一步到位原則」，請使用 Terraform 和 GitHub Actions 進行部署，不要創建或使用臨時 shell scripts。DB Schema 已整合到 Terraform post-deploy 流程中。
 
