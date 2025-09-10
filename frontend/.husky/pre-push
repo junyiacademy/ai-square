@@ -3,38 +3,64 @@
 
 cd frontend
 
-echo "🔍 Running TypeScript checks..."
+# ===========================================
+# Pre-push Hook - CI/CD Protection
+# Goal: Prevent CI/CD failures (< 30 seconds)
+# ===========================================
+
+echo "🚀 Running pre-push validation..."
+echo "   (This prevents CI/CD failures)"
+
+# 1. Full TypeScript check
+echo "🔍 TypeScript check (full project)..."
 npm run typecheck
 if [ $? -ne 0 ]; then
   echo "❌ TypeScript errors found. Please fix before pushing."
+  echo "💡 Run 'npm run typecheck' to see all errors"
   exit 1
 fi
 
-echo "📋 Running ESLint..."
+# 2. Full ESLint check
+echo "📋 ESLint check (full project)..."
 npm run lint
 if [ $? -ne 0 ]; then
   echo "❌ ESLint errors found. Please fix before pushing."
+  echo "💡 Run 'npm run lint' to see all errors"
   exit 1
 fi
 
-# Optional: Run comprehensive checks with --full flag
-if [ "$1" = "--full" ]; then
-  echo "🧪 Running unit tests..."
-  npm run test:unit
-  if [ $? -ne 0 ]; then
-    echo "❌ Unit tests failed. Please fix before pushing."
-    exit 1
-  fi
-  
-  echo "🏗️ Running build check..."
-  npm run build
-  if [ $? -ne 0 ]; then
-    echo "❌ Build failed. Please fix before pushing."
-    exit 1
-  fi
-else
-  echo "💡 Tip: Use 'git push --no-verify' to skip checks (not recommended)"
-  echo "💡 Or run full checks with: git push --full"
+# 3. Critical tests only (fast subset)
+echo "🧪 Running critical tests..."
+# Run only critical test suites (API routes, core services)
+npm test -- \
+  --testPathPattern="(api|services|repositories)" \
+  --testNamePattern="^(should|must|critical)" \
+  --silent \
+  --bail \
+  --maxWorkers=4 \
+  2>/dev/null
+
+if [ $? -ne 0 ]; then
+  echo "❌ Critical tests failed. Please fix before pushing."
+  echo "💡 Run 'npm test' to see failing tests"
+  exit 1
 fi
 
-echo "✅ All checks passed! Pushing to remote..."
+# 4. Quick build check (just check if it compiles)
+echo "🏗️  Build validation..."
+# Use Next.js build with type checking disabled (already checked above)
+SKIP_TYPECHECK=1 npm run build -- --no-lint > /dev/null 2>&1
+if [ $? -ne 0 ]; then
+  echo "❌ Build failed. Please fix before pushing."
+  echo "💡 Run 'npm run build' to see build errors"
+  exit 1
+fi
+
+echo "✅ All pre-push checks passed!"
+echo "🎯 Pushing to remote... CI/CD should pass!"
+
+# Optional: Show what will be pushed
+echo ""
+echo "📦 Commits to be pushed:"
+git log --oneline @{u}..HEAD | head -5
+echo ""

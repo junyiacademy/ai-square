@@ -1,1 +1,61 @@
-npm test
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+cd frontend
+
+# ===========================================
+# Pre-commit Hook - Fast Local Validation
+# Goal: Quick quality checks (< 5 seconds)
+# ===========================================
+
+echo "🚀 Running pre-commit checks (fast)..."
+
+# 1. Get staged files
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(ts|tsx|js|jsx)$' | sed 's|^frontend/||' | tr '\n' ' ')
+
+if [ -z "$STAGED_FILES" ]; then
+  echo "📭 No TypeScript/JavaScript files to check"
+  exit 0
+fi
+
+echo "📝 Checking $(echo $STAGED_FILES | wc -w | tr -d ' ') staged files..."
+
+# 2. Run TypeScript check on staged files only
+echo "🔍 TypeScript check (staged files)..."
+for file in $STAGED_FILES; do
+  if [ -f "$file" ]; then
+    npx tsc --noEmit --skipLibCheck "$file" 2>/dev/null
+    if [ $? -ne 0 ]; then
+      echo "❌ TypeScript error in $file"
+      npx tsc --noEmit --skipLibCheck "$file"
+      exit 1
+    fi
+  fi
+done
+
+# 3. Run ESLint on staged files only
+echo "📋 ESLint check (staged files)..."
+npx eslint $STAGED_FILES --quiet
+if [ $? -ne 0 ]; then
+  echo "❌ ESLint errors found. Run 'npm run lint' to see details."
+  exit 1
+fi
+
+# 4. Check for secrets/tokens
+echo "🔐 Security check..."
+for file in $STAGED_FILES; do
+  if [ -f "$file" ]; then
+    # Check for common secret patterns
+    if grep -qE "(api[_-]?key|apikey|secret|token|password|pwd|auth|credential)['\"]?\s*[:=]\s*['\"][^'\"]{10,}['\"]" "$file"; then
+      echo "⚠️  Warning: Possible secret detected in $file"
+      echo "   Please review and use environment variables instead"
+      read -p "   Continue anyway? (y/N): " -n 1 -r
+      echo
+      if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        exit 1
+      fi
+    fi
+  fi
+done
+
+echo "✅ Pre-commit checks passed!"
