@@ -17,4 +17,24 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
+# Optional: Run comprehensive checks with --full flag
+if [ "$1" = "--full" ]; then
+  echo "🧪 Running unit tests..."
+  npm run test:unit
+  if [ $? -ne 0 ]; then
+    echo "❌ Unit tests failed. Please fix before pushing."
+    exit 1
+  fi
+  
+  echo "🏗️ Running build check..."
+  npm run build
+  if [ $? -ne 0 ]; then
+    echo "❌ Build failed. Please fix before pushing."
+    exit 1
+  fi
+else
+  echo "💡 Tip: Use 'git push --no-verify' to skip checks (not recommended)"
+  echo "💡 Or run full checks with: git push --full"
+fi
+
 echo "✅ All checks passed! Pushing to remote..."
