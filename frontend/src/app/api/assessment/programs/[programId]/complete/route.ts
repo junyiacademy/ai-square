@@ -186,20 +186,20 @@ export async function POST(
         .filter((i): i is AssessmentInteraction => i !== null);
       
       // Questions can be in task.content.questions or task.metadata.questions
-      const rawQuestions = (task.content as { questions?: any[] })?.questions || 
-                           (task.metadata as { questions?: any[] })?.questions || [];
+      const rawQuestions = (task.content as { questions?: Record<string, unknown>[] })?.questions || 
+                           (task.metadata as { questions?: Record<string, unknown>[] })?.questions || [];
       
       // Map domainId to domain for compatibility with AssessmentQuestion interface
-      const taskQuestions: AssessmentQuestion[] = rawQuestions.map(q => {
-        console.log(`Mapping question ${q.id}:`, {
-          originalDomainId: q.domainId,
-          originalDomain: q.domain,
-          mappedDomain: q.domainId || q.domain
+      const taskQuestions: AssessmentQuestion[] = rawQuestions.map((q: Record<string, unknown>) => {
+        console.log(`Mapping question ${q.id as string}:`, {
+          originalDomainId: q.domainId as string,
+          originalDomain: q.domain as string,
+          mappedDomain: (q.domainId || q.domain) as string
         });
         return {
           ...q,
-          domain: q.domainId || q.domain // Use domainId if available, fallback to domain
-        };
+          domain: (q.domainId || q.domain) as string // Use domainId if available, fallback to domain
+        } as AssessmentQuestion;
       });
       
       console.log(`Task ${task.title}:`, {

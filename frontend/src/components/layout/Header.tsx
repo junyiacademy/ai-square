@@ -135,7 +135,7 @@ export function Header() {
                 {/* Dropdown menu */}
                 <div className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                   <div className="py-1">
-                    {secondaryNavLinks.map((link, index) => 
+                    {secondaryNavLinks.map((link) => 
                       link.href ? (
                         <Link
                           key={link.href}

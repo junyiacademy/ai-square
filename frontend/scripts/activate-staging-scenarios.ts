@@ -23,9 +23,9 @@ async function activateScenarios() {
       RETURNING id, mode, title
     `);
     
-    console.log(`Updated ${result.rowCount} scenarios to active status`);
+    console.log(`Updated ${result.rowCount || 0} scenarios to active status`);
     
-    if (result.rowCount > 0) {
+    if (result.rowCount && result.rowCount > 0) {
       console.log('Updated scenarios:');
       result.rows.forEach(row => {
         const title = typeof row.title === 'object' ? 
