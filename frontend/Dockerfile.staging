@@ -9,6 +9,8 @@ WORKDIR /app
 # Install all dependencies (including devDependencies for build)
 COPY package.json package-lock.json* ./
 COPY prisma ./prisma/
+# Skip husky in production builds
+ENV HUSKY=0
 RUN npm ci
 
 # Rebuild the source code only when needed
