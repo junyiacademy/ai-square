@@ -74,14 +74,16 @@ AI Square 是一個「用 AI 學 AI 素養」的創新學習平台，基於國�
 ```
 
 ### 主要技術選型
-- **前端**: Next.js 15, TypeScript, Tailwind CSS v4, react-i18next
-- **後端**: FastAPI, Python 3.x
-- **AI**: Google Vertex AI (Gemini 2.5 Flash), Claude API (翻譯), OpenAI (規劃中)
-- **資料庫**: PostgreSQL (用戶資料、學習記錄)
-- **儲存**: GitHub (內容版本控制), GCS (靜態檔案), Redis (分散式快取)
-- **測試**: Jest (70.38% 覆蓋率), React Testing Library, Playwright (E2E)
-- **狀態管理**: SWR (規劃中), Context API
-- **UI 元件**: lucide-react (icons), framer-motion (動畫)
+- **前端**: Next.js 15, TypeScript, Tailwind CSS v4, react-i18next, Monaco Editor
+- **後端**: FastAPI, Python 3.x, Vertex AI SDK
+- **AI**: Google Vertex AI (Gemini 2.5 Flash), Claude API (翻譯), 規劃中: OpenAI
+- **資料庫**: PostgreSQL (用戶數據、學習記錄)
+- **儲存**: Google Cloud Storage (靜態檔案、圖片), GitHub (內容版本控制), Redis (分散式快取)
+- **快取**: 多層快取系統 (memory + localStorage + Redis with fallback)
+- **部署**: Google Cloud Run, Docker, GitHub Actions CI/CD
+- **測試**: Jest (80%+ 覆蓋率), React Testing Library, Playwright
+- **CMS**: GitHub API 整合, YAML 處理, AI Quick Actions
+- **翻譯**: 14 語言支援, LLM 自動化翻譯, 混合式架構
 
 ## 4. 核心功能模組
 
@@ -271,6 +273,15 @@ AI Square 是一個「用 AI 學 AI 素養」的創新學習平台，基於國�
 - ✅ 用戶引導流程
 
 ## 8. 近期優先任務 (2025 Q1-Q2)
+
+### 接下來的優先事項
+1. **OAuth2 社交登入** (Google, GitHub) - 降低註冊門檻
+2. **智能 Onboarding** - 解決「不知道從何開始」的痛點
+3. **AI 資源使用追蹤** - Token 計算與成本控制
+4. **PBL 修改歷程記錄** - 展示學習思考過程
+
+### Project Context
+AI Square 正處於從 MVP 轉向 SaaS 平台的關鍵階段。Phase 1 已完成基礎功能，現在專注於提升用戶體驗和平台智能化。
 
 ### 已完成 ✅
 - 認證系統修復（登出、session、Remember Me）

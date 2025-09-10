@@ -2382,36 +2382,18 @@ git pull --rebase origin main
 
 ## 項目資訊
 
-### Project Overview
-
-AI Square 是一個「用 AI 學 AI 素養」的創新學習平台，基於國際 AI Literacy 框架，透過 AI 技術本身來提升學習者的 AI 素養能力。
-
-**當前狀態 (2025/07)**:
-- ✅ **Phase 1**: MVP 基礎完成 (100%)
-- ✅ **Phase 1.5**: CMS 系統增強完成 (100%)
-- 🚀 **Phase 2**: SaaS 平台開發中
-- 📋 **Phase 3**: Agent 系統規劃中
-
-**核心功能**:
-- Problem-Based Learning (PBL) 系統：多任務情境學習、AI 導師輔導
-- 多語言支援：14 種語言 (en, zhTW, zhCN, pt, ar, id, th, es, ja, ko, fr, de, ru, it)
-- AI 素養能力視覺化：KSA (Knowledge, Skills, Attitudes) 映射
-- 即時 AI 反饋：個人化評估與質性回饋
-- CMS 內容管理：Git-based 版本控制、AI 輔助編輯、分支管理
-- 學習進度追蹤：PostgreSQL 資料庫儲存用戶數據
-- 統一抽象層架構：確保系統可擴展性
-
-### 技術棧
-- **Frontend**: Next.js 15, TypeScript, Tailwind CSS v4, react-i18next, Monaco Editor
-- **Backend**: FastAPI, Python 3.x, Vertex AI SDK
-- **AI Services**: Google Vertex AI (Gemini 2.5 Flash), Claude API (翻譯), 規劃中: OpenAI
-- **Database**: PostgreSQL (用戶數據、學習記錄)
-- **Storage**: Google Cloud Storage (靜態檔案、圖片), GitHub (內容版本控制), Redis (分散式快取)
-- **Caching**: 多層快取系統 (memory + localStorage + Redis with fallback)
-- **Deployment**: Google Cloud Run, Docker, GitHub Actions CI/CD
-- **Testing**: Jest (80%+ 覆蓋率), React Testing Library, Playwright
-- **CMS**: GitHub API 整合, YAML 處理, AI Quick Actions
-- **Translation**: 14 語言支援, LLM 自動化翻譯, 混合式架構
+> **📋 產品需求與技術規格已移至專門文件**
+> 
+> **產品需求文檔 (PRD)**: 請參考 [`docs/handbook/PRD.md`](docs/handbook/PRD.md)
+> - 產品願景與核心功能
+> - 技術棧選型與架構
+> - 發展路線圖與優先事項
+> - 成功指標與風險管理
+> 
+> **技術架構文檔**: 請參考 [`docs/technical/infrastructure/unified-learning-architecture.md`](docs/technical/infrastructure/unified-learning-architecture.md)
+> - 統一學習架構設計
+> - 資料庫架構與 Repository Pattern
+> - API 設計與服務層架構
 
 ### Development Commands
 
@@ -2702,24 +2684,6 @@ export interface IScenario {
 - `next-i18next.config.js` - Internationalization setup
 - `tsconfig.json` - TypeScript configuration
 
-### 最近成就 (2025/01)
-- ✅ **TypeScript 型別安全**: 消除所有生產代碼的 any 類型 (102 → 0)
-- ✅ **測試覆蓋率**: 核心模組達到 80%+ 覆蓋率
-- ✅ **多語言支援完整度**: 14 種語言達到 100% 翻譯覆蓋率
-- ✅ **混合式翻譯架構**: 實現 YAML + JSON 雙軌翻譯系統
-- ✅ **API 效能優化**: 實現 5-10x 效能提升，含 Redis 快取支援
-- ✅ **統一學習架構**: 完成 Assessment、PBL、Discovery 模組整合
-- ✅ **LLM 翻譯系統**: 整合 Claude API 自動化翻譯流程
-- ✅ **Tailwind CSS v4**: 升級並優化樣式系統
-
-### 接下來的優先事項
-1. **OAuth2 社交登入** (Google, GitHub) - 降低註冊門檻
-2. **智能 Onboarding** - 解決「不知道從何開始」的痛點
-3. **AI 資源使用追蹤** - Token 計算與成本控制
-4. **PBL 修改歷程記錄** - 展示學習思考過程
-
-### Project Context
-AI Square 正處於從 MVP 轉向 SaaS 平台的關鍵階段。Phase 1 已完成基礎功能，現在專注於提升用戶體驗和平台智能化。
 
 ### Important Technical Specifications
 
