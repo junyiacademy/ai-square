@@ -2840,7 +2840,36 @@ PGPASSWORD=postgres psql -h 127.0.0.1 -p 5434 -U postgres -d ai_square_db \
 
 ---
 
-## 十九、🛡️ 環境區分保護策略 - 開發快速、生產安全 (2025/08 新增)
+## 十九、🗄️ 資料庫配置標準
+
+### 🚨 絕對不能再出現的問題：DB_NAME 不一致
+
+**標準配置**：
+```bash
+DB_HOST=127.0.0.1
+DB_PORT=5433
+DB_NAME=ai_square_db  # 統一使用這個！
+DB_USER=postgres
+DB_PASSWORD=postgres
+```
+
+**檢查清單**：
+- [ ] `.env.local` 使用正確的 DB_NAME
+- [ ] `repository-factory.ts` 預設值正確
+- [ ] `docker-compose.postgres.yml` 配置正確
+- [ ] 所有測試腳本使用統一配置
+
+**如果遇到 "Scenario not found" 錯誤**：
+1. 立即檢查 `DB_NAME` 配置
+2. 重啟 Next.js 開發伺服器
+3. 確認資料庫連線
+
+**禁止使用的舊名稱**：
+- ❌ `ai_square_dev` 
+- ❌ `ai-square-development`
+- ❌ `aisquare2025local` (密碼)
+
+## 二十、🛡️ 環境區分保護策略 - 開發快速、生產安全 (2025/08 新增)
 
 ### 🏗️ 新架構：Terraform + GitHub Actions 分離
 
