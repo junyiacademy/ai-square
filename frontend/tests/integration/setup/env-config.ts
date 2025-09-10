@@ -55,7 +55,7 @@ export function getTestConfig(): TestEnvironment {
         services: {
           postgres: {
             host: process.env.DB_HOST || 'localhost',
-            port: parseInt(process.env.DB_PORT || '5434'),
+            port: parseInt(process.env.DB_PORT || '5433'),
             available: true, // CI services are guaranteed
           },
           redis: {
@@ -123,7 +123,7 @@ export function getTestConfig(): TestEnvironment {
         services: {
           postgres: {
             host: 'localhost',
-            port: parseInt(process.env.TEST_DB_PORT || '5434'),
+            port: parseInt(process.env.TEST_DB_PORT || '5433'),
             available: false, // Will check dynamically
           },
           redis: {

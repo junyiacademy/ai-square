@@ -16,7 +16,7 @@ describe.skip('Basic Database Integration', () => {
     // Create direct database connection
     pool = new Pool({
       host: process.env.DB_HOST || '127.0.0.1',
-    port: parseInt(process.env.DB_PORT || '5434'),
+    port: parseInt(process.env.DB_PORT || '5433'),
       database: process.env.DB_NAME || 'ai_square_db',
       user: process.env.DB_USER || 'postgres',
       password: process.env.DB_PASSWORD || 'postgres',
