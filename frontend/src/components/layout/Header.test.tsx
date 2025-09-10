@@ -316,7 +316,7 @@ describe('Header 組件測試', () => {
       await user.tab() // Dashboard link  
       await user.tab() // Assessment link
       await user.tab() // PBL link
-      await user.tab() // Discovery link
+      // Discovery link is disabled, so it's skipped in tab order
       await user.tab() // More dropdown button
       
       // Since the dropdown has opened, we need to tab through its items

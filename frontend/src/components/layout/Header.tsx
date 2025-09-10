@@ -52,7 +52,7 @@ export function Header() {
     { href: '/dashboard', label: t('dashboard') },
     { href: '/assessment/scenarios', label: t('assessment') },
     { href: '/pbl/scenarios', label: t('pbl') },
-    { label: t('discovery'), disabled: true, tooltip: '即將開放' }, // href: '/discovery/overview'
+    { href: '/discovery/overview', label: t('discovery'), disabled: true, tooltip: '即將開放' },
   ]
   
   // 次要導航連結（放在「更多」選單中）
@@ -94,14 +94,17 @@ export function Header() {
               {primaryNavLinks.map((link, index) => 
                 link.disabled ? (
                   <div
-                    key={index}
+                    key={link.href || index}
                     className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-400 dark:text-gray-500 cursor-not-allowed relative group"
                     title={link.tooltip}
+                    onClick={(e) => e.preventDefault()}
                   >
                     {link.label}
-                    <span className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-700 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                      {link.tooltip}
-                    </span>
+                    {link.tooltip && (
+                      <span className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-700 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                        {link.tooltip}
+                      </span>
+                    )}
                   </div>
                 ) : link.href ? (
                   <Link
@@ -297,9 +300,10 @@ export function Header() {
             {allNavLinks.map((link, index) => 
               link.disabled ? (
                 <div
-                  key={index}
+                  key={link.href || index}
                   className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 dark:text-gray-500 cursor-not-allowed"
                   title={link.tooltip}
+                  onClick={(e) => e.preventDefault()}
                 >
                   {link.label}
                   {link.tooltip && (
