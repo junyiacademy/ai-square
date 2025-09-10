@@ -4,10 +4,338 @@
 
 此文件聚焦「如何使用 Terraform 部署前後端」與「如何正確管理/遷移資料庫」。對應文件：
 
-- PM（產品視角）：`docs/handbook/product-requirements-document.md`
+- PM（產品視角）：`docs/handbook/PRD.md`
 - RD（技術架構）：`docs/technical/infrastructure/unified-learning-architecture.md`
 - **Terraform 配置**：`terraform/` 目錄
 
+## 🚨🚨🚨 部署監控與驗證流程 - 每次推送後必須執行！！！ 🚨🚨🚨
+
+### 🔴🔴🔴 最重要的規則：PUSH 後必須監控 GitHub Actions！！！ 🔴🔴🔴
+
+**違反此規則的後果：**
+- ❌ 部署失敗卻不知道
+- ❌ 用戶遇到錯誤
+- ❌ 浪費時間 debug
+- ❌ 失去專業性
+
+### 📋 標準部署監控 SOP
+
+**每次 `git push` 後的強制檢查流程：**
+
+#### 1. **即時監控 GitHub Actions 部署狀態（絕對必要！）**
+```bash
+# 檢查最新 workflow 執行狀態
+gh run list --limit 5
+
+# 監控特定 workflow (Staging)
+gh run list --workflow="Deploy to Staging" --limit 2
+
+# 檢查執行中的部署
+gh run view [RUN_ID]  # 取得詳細狀態
+
+# 如果失敗，檢查錯誤日誌
+gh run view [RUN_ID] --log-failed
+```
+
+#### 2. **部署完成後立即驗證**
+```bash
+# 檢查 staging 服務健康狀態
+curl -s https://ai-square-staging-463013.asia-east1.run.app/ | head -5
+
+# 驗證 API 可用性
+curl -s https://ai-square-staging-463013.asia-east1.run.app/api/health
+```
+
+#### 3. **認證功能完整測試**
+```bash
+# 使用 deployment-qa agent 進行自動化測試
+# 會執行完整的認證流程驗證：
+# - 登入功能
+# - Session 持久性
+# - 受保護路由存取
+# - Cookie 管理
+# - API 認證狀態
+```
+
+#### 4. **關鍵功能驗證清單**
+- [ ] **登入流程**: Demo 帳號可正常登入
+- [ ] **Session 維持**: 重新整理頁面不會登出
+- [ ] **Header 狀態**: 登入後顯示用戶資訊，非 "Sign in"
+- [ ] **PBL 場景**: 可正常啟動 `/api/pbl/scenarios/[id]/start`
+- [ ] **Discovery 功能**: 可存取職業探索功能
+- [ ] **Assessment 評估**: 可開始評估流程
+
+#### 5. **問題排除流程**
+
+**如果部署狀態顯示失敗但服務正常運作：**
+```bash
+# 檢查服務是否真的在運行
+curl -I https://ai-square-staging-463013.asia-east1.run.app/
+
+# 檢查特定功能
+curl -s https://ai-square-staging-463013.asia-east1.run.app/api/auth/check
+
+# 如果服務正常，CI/CD 失敗可能是測試問題，不是部署問題
+```
+
+**如果服務無法存取：**
+```bash
+# 檢查 Cloud Run 服務狀態
+gcloud run services describe ai-square-staging --region=asia-east1
+
+# 檢查最新修訂版本
+gcloud run revisions list --service=ai-square-staging --region=asia-east1
+
+# 檢查服務日誌
+gcloud run services logs read ai-square-staging --region=asia-east1 --limit=20
+```
+
+### 🚨 強制執行規則
+
+1. **🔴 推送後立即監控 GitHub Actions** - 這是最重要的！絕不能推送完就離開！
+   ```bash
+   # 每次 push 後立即執行
+   gh run list --limit 5
+   # 持續監控直到部署完成
+   ```
+2. **等待部署完成** - 確認狀態為 `completed`
+3. **執行功能測試** - 使用 deployment-qa agent 或手動測試
+4. **記錄問題** - 如有問題立即修復
+5. **確認可用性** - 確保用戶可正常使用
+
+**記住：不監控 = 不負責任 = 不專業！**
+
+### 💡 部署成功判斷標準
+
+**真正的部署成功 = 功能正常，不是 CI/CD 綠燈**
+
+- ✅ **服務可存取**: HTTP 200 回應
+- ✅ **核心功能正常**: 登入、導航、API 可用
+- ✅ **無 JavaScript 錯誤**: 瀏覽器 console 無嚴重錯誤
+- ✅ **認證正常運作**: 401 錯誤處理正確
+
+**CI/CD 狀態參考價值：**
+- `success` = 很可能沒問題
+- `failure` = 需要檢查，但可能是測試問題，不一定是部署問題
+
+### 🔄 自動化監控建議
+
+```bash
+# 建立部署監控 alias
+alias monitor-deploy='gh run list --limit 3 && sleep 30 && gh run list --limit 3'
+
+# 快速功能測試
+alias test-staging='curl -s https://ai-square-staging-463013.asia-east1.run.app/api/health && echo "✅ Staging OK"'
+```
+
+**記住：監控 → 驗證 → 測試 → 確認，缺一不可！**
+
+## 🚨🚨🚨 部署後強制測試規則 - 每次部署都要測試！！！ 🚨🚨🚨
+
+### 部署完成 ≠ 工作完成
+**部署只是第一步，測試通過才算完成！**
+
+### 每次部署後必須執行：
+1. **實際瀏覽器測試**
+   ```bash
+   npx playwright test --headed  # 必須看著瀏覽器實際操作
+   ```
+
+2. **核心功能驗證清單**
+   - [ ] 登入功能正常
+   - [ ] Discovery 分類篩選器顯示正確數量
+   - [ ] PBL 場景可以載入
+   - [ ] Assessment 可以開始
+   - [ ] 主要頁面無錯誤
+
+3. **API 端點測試**
+   ```bash
+   curl -X POST $URL/api/auth/login --data '...'
+   curl $URL/api/discovery/scenarios?lang=zh
+   curl $URL/api/pbl/scenarios?lang=zh
+   ```
+
+4. **錯誤日誌檢查**
+   ```bash
+   gcloud run services logs read $SERVICE --region=asia-east1 --limit=50 | grep -i error
+   ```
+
+### 🔴 違反規則的後果
+- 用戶會發現問題 → 信任度降低
+- 需要重新部署 → 浪費時間
+- 可能造成生產環境問題 → 嚴重事故
+
+**記住：沒測試就說部署完成 = 不負責任！**
+
+## 🚨 部署初始化關鍵步驟 (2025/01/16 血淚教訓)
+
+### ❌ 最常被遺忘的步驟：Scenario 初始化
+**問題**: 部署完成後，應用程式看起來是空的，沒有任何內容。
+
+**原因**: Database seed 只創建 demo 帳號，scenarios 需要透過 API 初始化。
+
+### ✅ 正確的部署流程
+```bash
+# 1. 部署 Cloud Run 和 Database
+make deploy-staging  # 或 make deploy-production
+
+# 2. 初始化 Scenarios（關鍵！經常被遺忘！）
+BASE_URL="https://your-service-url"
+curl -X POST "$BASE_URL/api/admin/init-pbl"
+curl -X POST "$BASE_URL/api/admin/init-discovery"
+curl -X POST "$BASE_URL/api/admin/init-assessment"
+
+# 3. 驗證部署
+./scripts/verify-deployment.sh staging
+```
+
+### 📝 記住：
+- **Database Seed ≠ Application Data**
+- Seed 創建帳號，API 創建內容
+- 沒有 API 初始化 = 空的應用程式
+
+## 🛠️ Terraform vs GitHub Actions 責任分工（2025/01 重要更新）
+
+**🧩 核心原則：把對的工具用在對的地方**
+
+### Terraform 只管基礎設施（Infrastructure Only）
+```yaml
+✅ Terraform 該管的：
+- Cloud SQL 實例、資料庫、使用者
+- Cloud Run 服務
+- Service Account、IAM 權限
+- Secret Manager
+- 網路設定（VPC、Domain Mapping）
+
+❌ Terraform 不該管的：
+- 資料庫 Schema 初始化
+- 建立 Demo 帳號
+- 載入初始資料
+- 執行測試
+- 任何應用程式邏輯
+```
+
+### GitHub Actions 管應用程式部署（Application Deployment）
+```yaml
+✅ GitHub Actions 負責：
+- 建構 Docker image
+- 推送到 Container Registry
+- 執行資料庫遷移（Prisma migrate）
+- 初始化場景資料（/api/admin/init）
+- 執行 E2E 測試
+- 健康檢查驗證
+
+工作流程：
+1. Push to branch → 觸發 GitHub Actions
+2. Build & Push Docker image
+3. Deploy to Cloud Run
+4. Run database migrations
+5. Initialize application data
+6. Run E2E tests
+```
+
+### 正確的部署流程
+```bash
+# Step 1: 基礎設施（只需執行一次）
+cd terraform
+export TF_VAR_db_password="YOUR_SECURE_PASSWORD"
+terraform apply -var-file="environments/staging.tfvars"
+
+# Step 2: 應用程式部署（每次更新都要）
+git add -A
+git commit -m "feat: new feature"
+git push origin staging  # 這會觸發 GitHub Actions
+```
+
+**記住：Terraform 建房子，GitHub Actions 搬家具！**
+
+### 實際案例：Prisma 整合
+```yaml
+錯誤做法：
+- 寫了 deploy-staging-prisma.sh
+- 寫了 auto-staging-deploy.sh
+- 寫了 deploy-with-prisma.sh
+- 每個都是「臨時解決方案」
+
+正確做法：
+- 使用 Terraform Makefile: make deploy-staging
+- 整合到現有 CI/CD pipeline
+- 使用 Prisma 標準工具鏈
+```
+
+### 關鍵原則：
+1. **先調查現有方案** - 不要假設沒有解決方案
+2. **整合而非創建** - 整合到現有系統，不要創建新系統
+3. **標準化工具** - 使用行業標準工具（Terraform, GitHub Actions, Prisma）
+4. **避免臨時腳本** - 每個「臨時」腳本都會變成技術債
+
+## 📚 Cloud Run + Cloud SQL Deployment Guide
+
+### 🚨 Key Principle: Regions Must Match
+**Critical lesson from painful staging deployment**
+
+#### Diagnostics
+
+1. **Check Cloud SQL instance**:
+   ```bash
+   gcloud sql instances describe INSTANCE_NAME --format="table(name,region,state)"
+   ```
+
+2. **Check Cloud Run config**:
+   ```bash
+   gcloud run services describe SERVICE_NAME --region=REGION --format="json" | jq '.spec.template.metadata.annotations'
+   ```
+
+#### Connection Methods
+
+**Method 1: Unix Socket (Recommended)**
+```bash
+gcloud run deploy SERVICE_NAME \
+  --add-cloudsql-instances=PROJECT:REGION:INSTANCE \
+  --set-env-vars DB_HOST="/cloudsql/PROJECT:REGION:INSTANCE"
+```
+
+**Method 2: Private IP + VPC (Most Secure)**
+```bash
+# Create VPC Connector
+gcloud compute networks vpc-access connectors create CONNECTOR \
+  --region=REGION --network=default --range=10.8.0.0/28
+
+# Deploy with connector
+gcloud run deploy SERVICE_NAME \
+  --vpc-connector=CONNECTOR \
+  --vpc-egress=all-traffic
+```
+
+#### Common Issues
+
+1. **Password auth failed**: Use Secret Manager for special chars
+2. **Connection timeout**: Check region matching
+3. **Permission denied**: Add `cloudsql.client` role
+
+#### Deployment Checklist
+
+- [ ] Cloud SQL and Cloud Run in same region
+- [ ] Environment variables set correctly
+- [ ] Cloud SQL instance mounted
+- [ ] Service account has permissions
+- [ ] Database initialized
+- [ ] Password managed properly
+
+#### Repository Pattern Connection
+
+```typescript
+const dbHost = process.env.DB_HOST || 'localhost';
+const isCloudSQL = dbHost.startsWith('/cloudsql/');
+
+if (isCloudSQL) {
+  poolConfig.host = dbHost;
+  // Don't set port for unix socket
+} else {
+  poolConfig.host = dbHost;
+  poolConfig.port = parseInt(process.env.DB_PORT || '5432');
+}
+```
 
 ### 目錄
 - 一、Google Cloud Account 配置
