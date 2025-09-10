@@ -39,8 +39,16 @@ export function Header() {
     setIsMobileMenuOpen(!isMobileMenuOpen)
   }
 
+  // Define navigation link type
+  type NavLink = {
+    label: string
+    href?: string
+    disabled?: boolean
+    tooltip?: string
+  }
+
   // 主要導航連結（顯示在導航欄）
-  const primaryNavLinks = [
+  const primaryNavLinks: NavLink[] = [
     { href: '/dashboard', label: t('dashboard') },
     { href: '/assessment/scenarios', label: t('assessment') },
     { href: '/pbl/scenarios', label: t('pbl') },
@@ -48,14 +56,14 @@ export function Header() {
   ]
   
   // 次要導航連結（放在「更多」選單中）
-  const secondaryNavLinks = [
+  const secondaryNavLinks: NavLink[] = [
     { href: '/relations', label: t('relations') },
     { href: '/ksa', label: t('ksa') },
     { href: '/history', label: t('history') },
   ]
   
   // 所有導航連結（用於手機選單）
-  const allNavLinks = [...primaryNavLinks, ...secondaryNavLinks]
+  const allNavLinks: NavLink[] = [...primaryNavLinks, ...secondaryNavLinks]
 
 
   return (
@@ -95,7 +103,7 @@ export function Header() {
                       {link.tooltip}
                     </span>
                   </div>
-                ) : (
+                ) : link.href ? (
                   <Link
                     key={link.href}
                     href={link.href}
@@ -107,7 +115,7 @@ export function Header() {
                   >
                     {link.label}
                   </Link>
-                )
+                ) : null
               )}
               
               {/* More dropdown menu */}
@@ -124,19 +132,21 @@ export function Header() {
                 {/* Dropdown menu */}
                 <div className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                   <div className="py-1">
-                    {secondaryNavLinks.map(link => (
-                      <Link
-                        key={link.href}
-                        href={link.href}
-                        className={`block px-4 py-2 text-sm ${
-                          pathname === link.href
-                            ? 'text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-700'
-                            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
-                        }`}
-                      >
-                        {link.label}
-                      </Link>
-                    ))}
+                    {secondaryNavLinks.map((link, index) => 
+                      link.href ? (
+                        <Link
+                          key={link.href}
+                          href={link.href}
+                          className={`block px-4 py-2 text-sm ${
+                            pathname === link.href
+                              ? 'text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-700'
+                              : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                          }`}
+                        >
+                          {link.label}
+                        </Link>
+                      ) : null
+                    )}
                   </div>
                 </div>
               </div>
@@ -284,20 +294,33 @@ export function Header() {
       {isMobileMenuOpen && (
         <nav className="lg:hidden bg-white dark:bg-slate-800 border-t border-gray-200 dark:border-slate-700" aria-label="Mobile navigation">
           <div className="px-2 pt-2 pb-3 space-y-1">
-            {allNavLinks.map(link => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
-                  pathname === link.href
-                    ? 'text-gray-900 dark:text-white bg-gray-100 dark:bg-slate-700'
-                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-slate-700'
-                }`}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                {link.label}
-              </Link>
-            ))}
+            {allNavLinks.map((link, index) => 
+              link.disabled ? (
+                <div
+                  key={index}
+                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 dark:text-gray-500 cursor-not-allowed"
+                  title={link.tooltip}
+                >
+                  {link.label}
+                  {link.tooltip && (
+                    <span className="ml-2 text-xs text-gray-400">({link.tooltip})</span>
+                  )}
+                </div>
+              ) : link.href ? (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
+                    pathname === link.href
+                      ? 'text-gray-900 dark:text-white bg-gray-100 dark:bg-slate-700'
+                      : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-slate-700'
+                  }`}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  {link.label}
+                </Link>
+              ) : null
+            )}
             
             {/* Language Selector for Mobile */}
             <div className="px-3 py-3 border-t border-gray-200 dark:border-gray-700">
