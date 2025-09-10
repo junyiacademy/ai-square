@@ -216,8 +216,7 @@ describe('POST /api/discovery/programs/[programId]/complete', () => {
         userId: 'user123',
         programId: 'program123',
         mode: 'discovery',
-        evaluationType: 'program',
-        evaluationSubtype: 'discovery_complete',
+        evaluationType: 'discovery_complete',
         score: 88,
         maxScore: 100,
         discoveryData: {

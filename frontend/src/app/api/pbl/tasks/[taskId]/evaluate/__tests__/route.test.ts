@@ -351,8 +351,14 @@ describe('POST /api/pbl/tasks/[taskId]/evaluate', () => {
       // Should create new evaluation (not update)
       expect(mockEvaluationRepo.create).toHaveBeenCalled();
       
-      // Should NOT update task (it already has evaluationId)
-      expect(mockTaskRepo.update).not.toHaveBeenCalled();
+      // Should update task with new evaluationId
+      expect(mockTaskRepo.update).toHaveBeenCalledWith('task-123', expect.objectContaining({
+        status: 'completed',
+        metadata: expect.objectContaining({
+          evaluationId: 'eval-123',
+          previousEvaluationId: 'old-eval-123'
+        })
+      }));
     });
 
     it('should handle case where evaluationId exists but evaluation not found', async () => {

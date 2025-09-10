@@ -361,8 +361,7 @@ describe('/api/pbl/programs/[programId]/complete', () => {
             userId: 'user-123',
             programId: 'prog-123',
             mode: 'pbl',
-            evaluationType: 'program',
-            evaluationSubtype: 'pbl_completion',
+            evaluationType: 'pbl_complete',
             score: 85,
             maxScore: 100,
             domainScores: {

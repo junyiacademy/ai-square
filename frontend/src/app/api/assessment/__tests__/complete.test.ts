@@ -102,7 +102,7 @@ describe('POST /api/assessment/programs/[programId]/complete', () => {
       userId: 'user-123',
       programId: 'program-123',
       mode: 'assessment',
-      evaluationType: 'summative',  // Updated to match fix
+      evaluationType: 'assessment_complete',  // Updated to match fix
       // evaluationSubtype not checked due to staging compatibility
       score: 100
     });
