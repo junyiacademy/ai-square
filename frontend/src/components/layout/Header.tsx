@@ -44,7 +44,7 @@ export function Header() {
     { href: '/dashboard', label: t('dashboard') },
     { href: '/assessment/scenarios', label: t('assessment') },
     { href: '/pbl/scenarios', label: t('pbl') },
-    { href: '/discovery/overview', label: t('discovery') },
+    // { href: '/discovery/overview', label: t('discovery') }, // 即將開放
   ]
   
   // 次要導航連結（放在「更多」選單中）
