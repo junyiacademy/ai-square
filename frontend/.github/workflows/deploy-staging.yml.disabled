@@ -1,6 +1,0 @@
-# This workflow has been disabled to avoid confusion
-# The actual staging deployment workflow is in the root directory:
-# /.github/workflows/deploy-staging.yml
-# 
-# That workflow correctly listens to the 'staging' branch
-# This file is kept for reference only
