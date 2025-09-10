@@ -149,7 +149,7 @@ jobs:
             --config ${CONFIG_FILE} \
             --project ${{ env.PROJECT_ID }} \
             --region ${{ env.REGION }} \
-            --substitutions="_DB_PASSWORD=${DB_PASSWORD},_NEXTAUTH_SECRET=${{ secrets.ADMIN_API_KEY }},_DATABASE_URL=${DATABASE_URL},_VERTEX_AI_KEY=${{ secrets.VERTEX_AI_KEY }}"
+            --substitutions _DB_PASSWORD="${DB_PASSWORD}",_NEXTAUTH_SECRET="${{ secrets.ADMIN_API_KEY }}",_DATABASE_URL="${DATABASE_URL}",_VERTEX_AI_KEY="${{ secrets.VERTEX_AI_KEY }}"
 
       - name: Verify Deployment
         run: |
