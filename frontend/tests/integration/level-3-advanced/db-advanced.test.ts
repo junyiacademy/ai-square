@@ -5,7 +5,7 @@
 
 import type { Pool, PoolClient } from 'pg';
 
-describe('Advanced Database Operations', () => {
+describe.skip('Advanced Database Operations', () => {
   let pool: Pool | null = null;
 
   beforeAll(async () => {

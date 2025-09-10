@@ -190,17 +190,33 @@ export async function GET(request: Request) {
       return new NextResponse(JSON.stringify(result), { headers: { 'Content-Type': 'application/json', 'X-Cache': 'MISS' } });
     }
 
+    // 先嘗試從快取取得
     let cacheStatus: 'HIT' | 'MISS' | 'STALE' = 'MISS';
-    const result = await distributedCacheService.getWithRevalidation(
-      key,
-      compute,
-      { ttl: TTL.SEMI_STATIC_1H, staleWhileRevalidate: TTL.SEMI_STATIC_1H, onStatus: (s) => { cacheStatus = s; } }
-    );
+    const cached = await distributedCacheService.get(key) as { data?: { scenarios?: unknown[] } } | null;
+    
+    if (cached && cached.data?.scenarios?.length && cached.data.scenarios.length > 0) {
+      // 如果快取有資料且不為空，直接返回
+      cacheStatus = 'HIT';
+      return new NextResponse(JSON.stringify(cached), {
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Cache': cacheStatus
+        }
+      });
+    }
+    
+    // 如果快取為空或沒有快取，重新計算
+    const result = await compute();
+    
+    // 只有當結果不為空時才快取
+    if (result.data?.scenarios?.length > 0) {
+      await distributedCacheService.set(key, result, { ttl: TTL.SEMI_STATIC_1H });
+    }
     
     return new NextResponse(JSON.stringify(result), {
       headers: {
         'Content-Type': 'application/json',
-        'X-Cache': cacheStatus
+        'X-Cache': 'MISS'
       }
     });
   } catch (error) {

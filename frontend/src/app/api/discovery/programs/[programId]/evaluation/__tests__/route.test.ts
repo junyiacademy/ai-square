@@ -4,13 +4,19 @@
 
 import { NextRequest } from 'next/server';
 import { GET } from '../route';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth } from '@/lib/auth/unified-auth';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 
-jest.mock('@/lib/auth/session');
+jest.mock('@/lib/auth/unified-auth', () => ({
+  getUnifiedAuth: jest.fn(),
+  createUnauthorizedResponse: jest.fn(() => ({
+    json: () => Promise.resolve({ success: false, error: 'Authentication required' }),
+    status: 401
+  }))
+}));
 jest.mock('@/lib/repositories/base/repository-factory');
 
-const mockGetServerSession = getServerSession as jest.MockedFunction<typeof getServerSession>;
+const mockGetUnifiedAuth = getUnifiedAuth as jest.MockedFunction<typeof getUnifiedAuth>;
 const mockRepositoryFactory = repositoryFactory as jest.Mocked<typeof repositoryFactory>;
 
 describe('/api/discovery/programs/[programId]/evaluation', () => {
@@ -31,14 +37,14 @@ describe('/api/discovery/programs/[programId]/evaluation', () => {
   });
 
   it('returns 401 when unauthenticated and no userEmail provided', async () => {
-    mockGetServerSession.mockResolvedValue(null);
+    mockGetUnifiedAuth.mockResolvedValue(null);
     const req = new NextRequest('http://localhost/api/discovery/programs/p1/evaluation');
     const res = await GET(req, { params: Promise.resolve({ programId: 'p1' }) });
     expect(res.status).toBe(401);
   });
 
   it('accepts userEmail query param when no session and returns 200 if program matches', async () => {
-    mockGetServerSession.mockResolvedValue(null);
+    mockGetUnifiedAuth.mockResolvedValue(null);
     programRepo.findById.mockResolvedValue({ id: 'p1', userId: 'guest@example.com' });
     taskRepo.findByProgram.mockResolvedValue([]);
     evaluationRepo.findByProgram.mockResolvedValue([]);
@@ -52,7 +58,7 @@ describe('/api/discovery/programs/[programId]/evaluation', () => {
   });
 
   it('returns 404 when program not found or access denied', async () => {
-    mockGetServerSession.mockResolvedValue({ user: { id: 'u1', email: 'u@test.com' } } as any);
+    mockGetUnifiedAuth.mockResolvedValue({ user: { id: 'u1', email: 'u@test.com', role: 'student' } } as any);
     programRepo.findById.mockResolvedValue(null);
 
     const req = new NextRequest('http://localhost/api/discovery/programs/p1/evaluation');
@@ -61,7 +67,7 @@ describe('/api/discovery/programs/[programId]/evaluation', () => {
   });
 
   it('returns synthetic evaluation when none exists', async () => {
-    mockGetServerSession.mockResolvedValue({ user: { id: 'u1', email: 'u@test.com' } } as any);
+    mockGetUnifiedAuth.mockResolvedValue({ user: { id: 'u1', email: 'u@test.com', role: 'student' } } as any);
     programRepo.findById.mockResolvedValue({ id: 'p1', userId: 'u1', createdAt: '2024-01-01T00:00:00Z' });
 
     const tasks = [
@@ -101,7 +107,7 @@ describe('/api/discovery/programs/[programId]/evaluation', () => {
   });
 
   it('returns existing evaluation when found and exposes metadata fields', async () => {
-    mockGetServerSession.mockResolvedValue({ user: { id: 'u1', email: 'u@test.com' } } as any);
+    mockGetUnifiedAuth.mockResolvedValue({ user: { id: 'u1', email: 'u@test.com', role: 'student' } } as any);
     programRepo.findById.mockResolvedValue({ id: 'p1', userId: 'u1', metadata: { totalXP: 200 } });
 
     const evaluation = {
@@ -134,7 +140,7 @@ describe('/api/discovery/programs/[programId]/evaluation', () => {
   });
 
   it('returns 500 on unexpected error', async () => {
-    mockGetServerSession.mockResolvedValue({ user: { id: 'u1', email: 'u@test.com' } } as any);
+    mockGetUnifiedAuth.mockResolvedValue({ user: { id: 'u1', email: 'u@test.com', role: 'student' } } as any);
     programRepo.findById.mockRejectedValue(new Error('db down'));
     const req = new NextRequest('http://localhost/api/discovery/programs/p1/evaluation');
     const res = await GET(req, { params: Promise.resolve({ programId: 'p1' }) });

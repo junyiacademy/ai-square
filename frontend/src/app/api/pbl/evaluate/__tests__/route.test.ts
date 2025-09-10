@@ -1,6 +1,12 @@
 import { NextRequest } from 'next/server';
 import { POST } from '../route';
 import { VertexAI } from '@google-cloud/vertexai';
+import { getUnifiedAuth } from '@/lib/auth/unified-auth';
+
+// Mock unified auth
+jest.mock('@/lib/auth/unified-auth', () => ({
+  getUnifiedAuth: jest.fn()
+}));
 
 // Mock VertexAI
 jest.mock('@google-cloud/vertexai', () => ({
@@ -82,37 +88,14 @@ describe('/api/pbl/evaluate', () => {
     ]
   };
 
-  const createRequest = (body: any, cookieData: Record<string, string> = {}) => {
-    const request = new NextRequest('http://localhost:3000/api/pbl/evaluate', {
+  const createRequest = (body: any) => {
+    return new NextRequest('http://localhost:3000/api/pbl/evaluate', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(body)
     });
-
-    // Mock cookies for this specific request instance
-    const mockCookies = {
-      get: jest.fn((name) => {
-        if (name === 'user' && !cookieData[name]) {
-          return { value: JSON.stringify({ email: 'test@example.com' }) };
-        }
-        return cookieData[name] ? { value: cookieData[name] } : undefined;
-      }),
-      set: jest.fn(),
-      delete: jest.fn(),
-      has: jest.fn((name) => !!cookieData[name] || name === 'user'),
-      getAll: jest.fn(() => Object.entries(cookieData).map(([name, value]) => ({ name, value })))
-    };
-
-    // Override the cookies property for this request instance
-    Object.defineProperty(request, 'cookies', {
-      value: mockCookies,
-      writable: true,
-      configurable: true
-    });
-
-    return request;
   };
 
   beforeEach(() => {
@@ -121,6 +104,11 @@ describe('/api/pbl/evaluate', () => {
 
   describe('successful evaluations', () => {
     it('evaluates a task with valid conversations', async () => {
+      // Mock authenticated user
+      (getUnifiedAuth as jest.Mock).mockResolvedValue({
+        user: { email: 'test@example.com', id: 'user-123', role: 'student' }
+      });
+
       const mockGenerateContent = jest.fn().mockResolvedValue({
         response: {
           candidates: [{
@@ -154,6 +142,11 @@ describe('/api/pbl/evaluate', () => {
     });
 
     it('filters only user messages for evaluation', async () => {
+      // Mock authenticated user
+      (getUnifiedAuth as jest.Mock).mockResolvedValue({
+        user: { email: 'test@example.com', id: 'user-123', role: 'student' }
+      });
+
       const mockGenerateContent = jest.fn().mockResolvedValue({
         response: {
           candidates: [{
@@ -186,6 +179,11 @@ describe('/api/pbl/evaluate', () => {
     });
 
     it('handles minimal engagement with low scores', async () => {
+      // Mock authenticated user
+      (getUnifiedAuth as jest.Mock).mockResolvedValue({
+        user: { email: 'test@example.com', id: 'user-123', role: 'student' }
+      });
+
       const minimalEngagementResponse = {
         ...mockEvaluationResponse,
         score: 20,
@@ -244,30 +242,10 @@ describe('/api/pbl/evaluate', () => {
 
   describe('error handling', () => {
     it('returns 401 when user is not authenticated', async () => {
-      // Create request without user cookie
-      const request = new NextRequest('http://localhost:3000/api/pbl/evaluate', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(validRequestBody)
-      });
+      // Mock no authentication
+      (getUnifiedAuth as jest.Mock).mockResolvedValue(null);
 
-      // Mock empty cookies
-      const mockCookies = {
-        get: jest.fn(() => undefined),
-        set: jest.fn(),
-        delete: jest.fn(),
-        has: jest.fn(() => false),
-        getAll: jest.fn(() => [])
-      };
-
-      Object.defineProperty(request, 'cookies', {
-        value: mockCookies,
-        writable: true,
-        configurable: true
-      });
-
+      const request = createRequest(validRequestBody);
       const response = await POST(request);
       const data = await response.json();
 
@@ -276,6 +254,11 @@ describe('/api/pbl/evaluate', () => {
     });
 
     it('returns 400 when conversations are missing', async () => {
+      // Mock authenticated user
+      (getUnifiedAuth as jest.Mock).mockResolvedValue({
+        user: { email: 'test@example.com', id: 'user-123', role: 'student' }
+      });
+
       const request = createRequest({
         ...validRequestBody,
         conversations: undefined
@@ -289,6 +272,11 @@ describe('/api/pbl/evaluate', () => {
     });
 
     it('returns 400 when task is missing', async () => {
+      // Mock authenticated user
+      (getUnifiedAuth as jest.Mock).mockResolvedValue({
+        user: { email: 'test@example.com', id: 'user-123', role: 'student' }
+      });
+
       const request = createRequest({
         ...validRequestBody,
         task: undefined
@@ -302,6 +290,11 @@ describe('/api/pbl/evaluate', () => {
     });
 
     it('handles AI service errors', async () => {
+      // Mock authenticated user
+      (getUnifiedAuth as jest.Mock).mockResolvedValue({
+        user: { email: 'test@example.com', id: 'user-123', role: 'student' }
+      });
+
       (VertexAI as jest.Mock).mockImplementation(() => ({
         getGenerativeModel: jest.fn().mockReturnValue({
           generateContent: jest.fn().mockRejectedValue(new Error('AI service unavailable'))
@@ -318,6 +311,11 @@ describe('/api/pbl/evaluate', () => {
     });
 
     it('provides fallback evaluation when JSON parsing fails', async () => {
+      // Mock authenticated user
+      (getUnifiedAuth as jest.Mock).mockResolvedValue({
+        user: { email: 'test@example.com', id: 'user-123', role: 'student' }
+      });
+
       const mockGenerateContent = jest.fn().mockResolvedValue({
         response: {
           candidates: [{
@@ -354,6 +352,11 @@ describe('/api/pbl/evaluate', () => {
 
   describe('edge cases', () => {
     it('handles empty conversation history', async () => {
+      // Mock authenticated user
+      (getUnifiedAuth as jest.Mock).mockResolvedValue({
+        user: { email: 'test@example.com', id: 'user-123', role: 'student' }
+      });
+
       const mockGenerateContent = jest.fn().mockResolvedValue({
         response: {
           candidates: [{
@@ -388,6 +391,11 @@ describe('/api/pbl/evaluate', () => {
     });
 
     it('handles conversations with only assistant messages', async () => {
+      // Mock authenticated user
+      (getUnifiedAuth as jest.Mock).mockResolvedValue({
+        user: { email: 'test@example.com', id: 'user-123', role: 'student' }
+      });
+
       const mockGenerateContent = jest.fn().mockResolvedValue({
         response: {
           candidates: [{
@@ -421,6 +429,11 @@ describe('/api/pbl/evaluate', () => {
     });
 
     it('limits user messages to last 10', async () => {
+      // Mock authenticated user
+      (getUnifiedAuth as jest.Mock).mockResolvedValue({
+        user: { email: 'test@example.com', id: 'user-123', role: 'student' }
+      });
+
       const mockGenerateContent = jest.fn().mockResolvedValue({
         response: {
           candidates: [{
@@ -459,6 +472,11 @@ describe('/api/pbl/evaluate', () => {
     });
 
     it('truncates long messages in the prompt', async () => {
+      // Mock authenticated user
+      (getUnifiedAuth as jest.Mock).mockResolvedValue({
+        user: { email: 'test@example.com', id: 'user-123', role: 'student' }
+      });
+
       const mockGenerateContent = jest.fn().mockResolvedValue({
         response: {
           candidates: [{
@@ -495,6 +513,11 @@ describe('/api/pbl/evaluate', () => {
     });
 
     it('includes development error details in dev mode', async () => {
+      // Mock authenticated user
+      (getUnifiedAuth as jest.Mock).mockResolvedValue({
+        user: { email: 'test@example.com', id: 'user-123', role: 'student' }
+      });
+
       const originalEnv = process.env.NODE_ENV;
       // Use Object.defineProperty to mock NODE_ENV
       Object.defineProperty(process.env, 'NODE_ENV', {

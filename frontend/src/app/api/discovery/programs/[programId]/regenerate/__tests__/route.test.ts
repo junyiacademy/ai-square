@@ -2,17 +2,23 @@ import { mockRepositoryFactory } from '@/test-utils/mocks/repositories';
 import { NextRequest } from 'next/server';
 import { POST } from '../route';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth } from '@/lib/auth/unified-auth';
 import { VertexAIService } from '@/lib/ai/vertex-ai-service';
 import { TranslationService } from '@/lib/services/translation-service';
 
 // Mock dependencies
 jest.mock('@/lib/repositories/base/repository-factory');
-jest.mock('@/lib/auth/session');
+jest.mock('@/lib/auth/unified-auth', () => ({
+  getUnifiedAuth: jest.fn(),
+  createUnauthorizedResponse: jest.fn(() => ({
+    json: () => Promise.resolve({ success: false, error: 'Authentication required' }),
+    status: 401
+  }))
+}));
 jest.mock('@/lib/ai/vertex-ai-service');
 jest.mock('@/lib/services/translation-service');
 
-const mockGetServerSession = getServerSession as jest.Mock;
+const mockGetUnifiedAuth = getUnifiedAuth as jest.Mock;
 const mockGetProgramRepository = jest.fn();
 const mockGetTaskRepository = jest.fn();
 const mockGetEvaluationRepository = jest.fn();
@@ -62,10 +68,7 @@ describe('/api/discovery/programs/[programId]/regenerate', () => {
 
   describe('POST', () => {
     const mockSession = {
-      user: {
-        id: 'user123',
-        email: 'test@example.com'
-      }
+      user: { id: 'user123', email: 'test@example.com', role: 'student' }
     };
 
     const mockProgram = {
@@ -128,7 +131,7 @@ describe('/api/discovery/programs/[programId]/regenerate', () => {
     };
 
     it('successfully regenerates evaluation for completed program', async () => {
-      mockGetServerSession.mockResolvedValue(mockSession);
+      mockGetUnifiedAuth.mockResolvedValue(mockSession);
       mockProgramRepo.findById.mockResolvedValue(mockProgram);
       mockTaskRepo.findByProgram.mockResolvedValue(mockCompletedTasks);
       (mockScenarioRepo.findById as jest.Mock).mockResolvedValue(mockScenario);
@@ -192,7 +195,7 @@ describe('/api/discovery/programs/[programId]/regenerate', () => {
         evaluationType: 'discovery_complete'
       };
 
-      mockGetServerSession.mockResolvedValue(mockSession);
+      mockGetUnifiedAuth.mockResolvedValue(mockSession);
       mockProgramRepo.findById.mockResolvedValue(mockProgram);
       mockTaskRepo.findByProgram.mockResolvedValue(mockCompletedTasks);
       (mockScenarioRepo.findById as jest.Mock).mockResolvedValue(mockScenario);
@@ -216,7 +219,7 @@ describe('/api/discovery/programs/[programId]/regenerate', () => {
     });
 
     it('handles non-English feedback generation', async () => {
-      mockGetServerSession.mockResolvedValue(mockSession);
+      mockGetUnifiedAuth.mockResolvedValue(mockSession);
       mockProgramRepo.findById.mockResolvedValue(mockProgram);
       mockTaskRepo.findByProgram.mockResolvedValue(mockCompletedTasks);
       (mockScenarioRepo.findById as jest.Mock).mockResolvedValue(mockScenario);
@@ -260,7 +263,7 @@ describe('/api/discovery/programs/[programId]/regenerate', () => {
     });
 
     it('returns 401 when not authenticated', async () => {
-      mockGetServerSession.mockResolvedValue(null);
+      mockGetUnifiedAuth.mockResolvedValue(null);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/programs/program123/regenerate', {
         method: 'POST'
@@ -270,11 +273,11 @@ describe('/api/discovery/programs/[programId]/regenerate', () => {
       const data = await response.json();
 
       expect(response.status).toBe(401);
-      expect(data).toEqual({ error: 'Unauthorized' });
+      expect(data).toEqual({ success: false, error: 'Authentication required' });
     });
 
     it('returns 404 when program not found', async () => {
-      mockGetServerSession.mockResolvedValue(mockSession);
+      mockGetUnifiedAuth.mockResolvedValue(mockSession);
       mockProgramRepo.findById.mockResolvedValue(null);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/programs/program123/regenerate', {
@@ -289,7 +292,7 @@ describe('/api/discovery/programs/[programId]/regenerate', () => {
     });
 
     it('returns 404 when user does not own program', async () => {
-      mockGetServerSession.mockResolvedValue(mockSession);
+      mockGetUnifiedAuth.mockResolvedValue(mockSession);
       mockProgramRepo.findById.mockResolvedValue({
         ...mockProgram,
         userId: 'other-user'
@@ -307,7 +310,7 @@ describe('/api/discovery/programs/[programId]/regenerate', () => {
     });
 
     it('handles programs with no completed tasks', async () => {
-      mockGetServerSession.mockResolvedValue(mockSession);
+      mockGetUnifiedAuth.mockResolvedValue(mockSession);
       mockProgramRepo.findById.mockResolvedValue(mockProgram);
       mockTaskRepo.findByProgram.mockResolvedValue([
         { id: 'task1', status: 'pending' },
@@ -334,7 +337,7 @@ describe('/api/discovery/programs/[programId]/regenerate', () => {
     });
 
     it('handles AI feedback generation errors gracefully', async () => {
-      mockGetServerSession.mockResolvedValue(mockSession);
+      mockGetUnifiedAuth.mockResolvedValue(mockSession);
       mockProgramRepo.findById.mockResolvedValue(mockProgram);
       mockTaskRepo.findByProgram.mockResolvedValue(mockCompletedTasks);
       (mockScenarioRepo.findById as jest.Mock).mockResolvedValue(mockScenario);
@@ -359,7 +362,7 @@ describe('/api/discovery/programs/[programId]/regenerate', () => {
     });
 
     it('handles general errors', async () => {
-      mockGetServerSession.mockResolvedValue(mockSession);
+      mockGetUnifiedAuth.mockResolvedValue(mockSession);
       mockProgramRepo.findById.mockRejectedValue(new Error('Database error'));
 
       const request = new NextRequest('http://localhost:3000/api/discovery/programs/program123/regenerate', {

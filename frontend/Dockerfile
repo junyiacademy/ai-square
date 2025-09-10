@@ -22,12 +22,8 @@ COPY --from=builder /app/src ./src
 # Copy prisma directory for migrations
 COPY --from=builder /app/prisma ./prisma
 
-# Copy service account key if it exists in the project root
-# Note: In production, this should be mounted as a secret or provided via environment variable
-COPY --from=builder /app/ai-square-key.json* ./
-
-# Set the environment variable for Google Auth
-ENV GOOGLE_APPLICATION_CREDENTIALS=/app/ai-square-key.json
+# Service account will be provided via environment variable VERTEX_AI_SERVICE_ACCOUNT_JSON
+# No need to copy key file anymore
 
 EXPOSE 3000
 CMD ["npm", "start"] 

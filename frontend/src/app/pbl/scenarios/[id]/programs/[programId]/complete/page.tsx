@@ -269,11 +269,22 @@ export default function ProgramCompletePage() {
     );
   }
   
-  const scenarioTitle = scenarioData ? (
-    i18n.language === 'zhTW' 
-      ? (scenarioData.title_zhTW || scenarioData.title)
-      : scenarioData.title
-  ) : 'Scenario';
+  const scenarioTitle = (() => {
+    if (!scenarioData) return 'Scenario';
+    
+    const title = scenarioData.title;
+    if (typeof title === 'object' && title !== null && !Array.isArray(title)) {
+      // Handle multilingual object format {en: "...", zh: "..."}
+      const titleObj = title as Record<string, string>;
+      return titleObj[i18n.language] || titleObj['en'] || Object.values(titleObj)[0] || 'Scenario';
+    }
+    
+    // Fallback to suffix-based format
+    if (i18n.language === 'zhTW') {
+      return scenarioData.title_zhTW || scenarioData.title || 'Scenario';
+    }
+    return scenarioData.title || 'Scenario';
+  })();
   
   return (
     <main className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12">
@@ -604,7 +615,15 @@ export default function ProgramCompletePage() {
           
           <div className="space-y-6">
             {completionData.tasks?.map((task, index) => {
-              const taskTitle = task.taskTitle || task.taskId;
+              const taskTitle = (() => {
+                const title = task.taskTitle;
+                if (typeof title === 'object' && title !== null && !Array.isArray(title)) {
+                  // Handle multilingual object format {en: "...", zh: "..."}
+                  const titleObj = title as Record<string, string>;
+                  return titleObj[i18n.language] || titleObj['en'] || Object.values(titleObj)[0] || task.taskId;
+                }
+                return title || task.taskId;
+              })();
               
               return (
                 <div key={task.taskId} className="border-l-4 border-purple-600 pl-6">
@@ -680,7 +699,7 @@ export default function ProgramCompletePage() {
                             )}
                             
                             {/* KSA Scores Column */}
-                            {task.evaluation.domainScores && Object.keys(task.evaluation.domainScores).length > 0 && (
+                            {task.evaluation.ksaScores && Object.keys(task.evaluation.ksaScores).length > 0 && (
                               <div>
                                 <div className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
                                   {t('pbl:complete.ksa')}:
@@ -691,14 +710,14 @@ export default function ProgramCompletePage() {
                                       <span className="text-sm text-gray-600 dark:text-gray-400">
                                         {t('pbl:complete.knowledge')}
                                       </span>
-                                      <span className={`text-sm font-bold ${getScoreColor(task.evaluation.domainScores?.['knowledge'] || 0)}`}>
-                                        {Math.round((task.evaluation.domainScores?.['knowledge'] || 0) / (100) * 100)}%
+                                      <span className={`text-sm font-bold ${getScoreColor(task.evaluation.ksaScores?.knowledge || 0)}`}>
+                                        {task.evaluation.ksaScores?.knowledge || 0}%
                                       </span>
                                     </div>
                                     <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
                                       <div 
                                         className="bg-blue-500 h-2 rounded-full"
-                                        style={{ width: `${Math.round((task.evaluation.domainScores?.['knowledge'] || 0) / (100) * 100)}%` }}
+                                        style={{ width: `${task.evaluation.ksaScores?.knowledge || 0}%` }}
                                       />
                                     </div>
                                   </div>
@@ -708,14 +727,14 @@ export default function ProgramCompletePage() {
                                       <span className="text-sm text-gray-600 dark:text-gray-400">
                                         {t('pbl:complete.skills')}
                                       </span>
-                                      <span className={`text-sm font-bold ${getScoreColor(task.evaluation.domainScores?.['skills'] || 0)}`}>
-                                        {Math.round((task.evaluation.domainScores?.['skills'] || 0) / (100) * 100)}%
+                                      <span className={`text-sm font-bold ${getScoreColor(task.evaluation.ksaScores?.skills || 0)}`}>
+                                        {task.evaluation.ksaScores?.skills || 0}%
                                       </span>
                                     </div>
                                     <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
                                       <div 
                                         className="bg-green-500 h-2 rounded-full"
-                                        style={{ width: `${Math.round((task.evaluation.domainScores?.['skills'] || 0) / (100) * 100)}%` }}
+                                        style={{ width: `${task.evaluation.ksaScores?.skills || 0}%` }}
                                       />
                                     </div>
                                   </div>
@@ -725,14 +744,14 @@ export default function ProgramCompletePage() {
                                       <span className="text-sm text-gray-600 dark:text-gray-400">
                                         {t('pbl:complete.attitudes')}
                                       </span>
-                                      <span className={`text-sm font-bold ${getScoreColor(task.evaluation.domainScores?.['attitudes'] || 0)}`}>
-                                        {Math.round((task.evaluation.domainScores?.['attitudes'] || 0) / (100) * 100)}%
+                                      <span className={`text-sm font-bold ${getScoreColor(task.evaluation.ksaScores?.attitudes || 0)}`}>
+                                        {task.evaluation.ksaScores?.attitudes || 0}%
                                       </span>
                                     </div>
                                     <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
                                       <div 
                                         className="bg-purple-500 h-2 rounded-full"
-                                        style={{ width: `${Math.round((task.evaluation.domainScores?.['attitudes'] || 0) / (100) * 100)}%` }}
+                                        style={{ width: `${task.evaluation.ksaScores?.attitudes || 0}%` }}
                                       />
                                     </div>
                                   </div>

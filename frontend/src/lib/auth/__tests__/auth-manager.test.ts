@@ -1,92 +1,85 @@
+// Unmock the global AuthManager mock for this test
+jest.unmock('../auth-manager');
+
 import { AuthManager } from '../auth-manager';
 import { NextRequest, NextResponse } from 'next/server';
+import crypto from 'crypto';
 
-// Mock NextResponse
-jest.mock('next/server', () => {
-  return {
-    NextRequest: jest.fn((url: string) => ({
-      url,
-      cookies: {
-        get: jest.fn()
-      }
-    })),
-    NextResponse: {
-      next: jest.fn(() => {
-        const headers = new Map();
-        const cookieStore: any[] = [];
-        return {
-          headers: {
-            get: (key: string) => headers.get(key),
-            set: (key: string, value: string) => headers.set(key, value)
-          },
-          cookies: {
-            set: jest.fn((name: string, value: string, options: any) => {
-              cookieStore.push({ name, value, options });
-              const cookieString = cookieStore.map(c => 
-                `${c.name}=${c.value}${c.options?.maxAge === 0 ? '; Max-Age=0' : ''}`
-              ).join(', ');
-              headers.set('set-cookie', cookieString);
-            }),
-            delete: jest.fn((name: string) => {
-              cookieStore.push({ name, value: '', options: { maxAge: 0 } });
-              const cookieString = cookieStore.map(c => 
-                `${c.name}=${c.value}${c.options?.maxAge === 0 ? '; Max-Age=0' : ''}`
-              ).join(', ');
-              headers.set('set-cookie', cookieString);
-            })
-          }
-        };
-      }),
-      json: jest.fn((data: any) => ({
-        json: async () => data
-      }))
-    }
+// Create mock response
+const createMockResponse = () => {
+  const headers = new Map();
+  const cookies = {
+    set: jest.fn((name: string, value: string, options?: any) => {
+      const cookieString = `${name}=${value}${options?.maxAge === 0 ? '; Max-Age=0' : ''}`;
+      headers.set('set-cookie', cookieString);
+    })
   };
-});
+  
+  return {
+    headers: {
+      get: (key: string) => headers.get(key),
+      set: (key: string, value: string) => headers.set(key, value)
+    },
+    cookies
+  } as unknown as NextResponse;
+};
+
+// Create mock request
+const createMockRequest = (cookieValue?: string) => {
+  return {
+    cookies: {
+      get: jest.fn((name: string) => 
+        name === 'sessionToken' && cookieValue 
+          ? { value: cookieValue } 
+          : undefined
+      )
+    }
+  } as unknown as NextRequest;
+};
 
 describe('AuthManager - Centralized Authentication', () => {
   describe('Cookie Management', () => {
     it('should use only one cookie for authentication', () => {
-      const response = NextResponse.next();
+      const response = createMockResponse();
       const token = 'test-session-token';
       
       AuthManager.setAuthCookie(response, token);
       
       // Should only set one cookie
-      const setCookieHeader = response.headers.get('set-cookie');
-      const cookieCount = setCookieHeader?.split(',').length || 0;
-      expect(cookieCount).toBe(1);
-      expect(setCookieHeader).toContain('sessionToken=');
+      expect(response.cookies.set).toHaveBeenCalledTimes(1);
+      expect(response.cookies.set).toHaveBeenCalledWith('sessionToken', token, expect.objectContaining({
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/'
+      }));
     });
 
     it('should check authentication with single cookie', () => {
-      // Create a valid base64 encoded token
-      const validToken = btoa(JSON.stringify({ userId: '123', email: 'test@example.com' }));
-      const mockCookies = {
-        get: jest.fn((name: string) => name === 'sessionToken' ? { value: validToken } : undefined)
-      };
-      const request = {
-        cookies: mockCookies
-      } as unknown as NextRequest;
+      // Create a valid hex token (32 bytes = 64 hex chars)
+      const validToken = crypto.randomBytes(32).toString('hex');
+      const request = createMockRequest(validToken);
       
       const isAuthenticated = AuthManager.isAuthenticated(request);
       expect(isAuthenticated).toBe(true);
     });
 
     it('should clear all auth cookies on logout', () => {
-      const response = NextResponse.next();
+      const response = createMockResponse();
       
       AuthManager.clearAuthCookies(response);
       
-      const setCookieHeader = response.headers.get('set-cookie');
-      expect(setCookieHeader).toContain('sessionToken=');
-      expect(setCookieHeader).toContain('Max-Age=0');
+      expect(response.cookies.set).toHaveBeenCalledWith('sessionToken', '', expect.objectContaining({
+        httpOnly: true,
+        maxAge: 0,
+        path: '/'
+      }));
     });
   });
 
   describe('Session Token Validation', () => {
     it('should validate session token format', () => {
-      const validToken = 'eyJ1c2VySWQiOiIxMjMiLCJlbWFpbCI6InRlc3RAZXhhbXBsZS5jb20ifQ==';
+      // Valid hex token (32 bytes = 64 hex chars)
+      const validToken = crypto.randomBytes(32).toString('hex');
       const invalidToken = 'invalid-token';
       
       expect(AuthManager.isValidSessionToken(validToken)).toBe(true);

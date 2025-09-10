@@ -7,14 +7,20 @@ import { mockRepositoryFactory } from '@/test-utils/mocks/repositories';
 import { NextRequest } from 'next/server';
 import { GET, POST } from '../route';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth } from '@/lib/auth/unified-auth';
 import type { IProgram, ITask, IInteraction } from '@/types/unified-learning';
 import type { User } from '@/lib/repositories/interfaces';
 import { mockConsoleError as createMockConsoleError } from '@/test-utils/helpers/console';
 
 // Mock dependencies
 jest.mock('@/lib/repositories/base/repository-factory');
-jest.mock('@/lib/auth/session');
+jest.mock('@/lib/auth/unified-auth', () => ({
+  getUnifiedAuth: jest.fn(),
+  createUnauthorizedResponse: jest.fn(() => ({
+    json: () => Promise.resolve({ success: false, error: 'Authentication required' }),
+    status: 401
+  }))
+}));
 
 // Mock console
 const mockConsoleError = createMockConsoleError();
@@ -111,7 +117,7 @@ describe('Assessment Task Interactions API', () => {
     jest.clearAllMocks();
     (repositoryFactory.getTaskRepository as jest.Mock).mockReturnValue(mockTaskRepo);
     (repositoryFactory.getProgramRepository as jest.Mock).mockReturnValue(mockProgramRepo);
-    (getServerSession as jest.Mock).mockResolvedValue({
+    (getUnifiedAuth as jest.Mock).mockResolvedValue({
       user: { id: validUserId, email: 'test@example.com' }
     });
   });
@@ -153,7 +159,7 @@ describe('Assessment Task Interactions API', () => {
       });
 
       it('should accept valid UUID formats', async () => {
-        (getServerSession as jest.Mock).mockResolvedValue({
+        (getUnifiedAuth as jest.Mock).mockResolvedValue({
           user: { id: validUserId, email: 'test@example.com' }
         });
         mockProgramRepo.findById.mockResolvedValue(mockProgram);
@@ -179,7 +185,7 @@ describe('Assessment Task Interactions API', () => {
       });
 
       it('should return 401 when not authenticated', async () => {
-        (getServerSession as jest.Mock).mockResolvedValue(null);
+        (getUnifiedAuth as jest.Mock).mockResolvedValue(null);
 
         const request = new NextRequest(`http://localhost/api/assessment/programs/${validProgramId}/tasks/${validTaskId}/interactions`);
         
@@ -194,7 +200,7 @@ describe('Assessment Task Interactions API', () => {
       });
 
       it('should return 401 when session has no email', async () => {
-        (getServerSession as jest.Mock).mockResolvedValue({ user: {} });
+        (getUnifiedAuth as jest.Mock).mockResolvedValue({ user: {} });
 
         const request = new NextRequest(`http://localhost/api/assessment/programs/${validProgramId}/tasks/${validTaskId}/interactions`);
         
@@ -504,7 +510,7 @@ describe('Assessment Task Interactions API', () => {
 
     describe('Authentication', () => {
       it('should return 401 when not authenticated', async () => {
-        (getServerSession as jest.Mock).mockResolvedValue(null);
+        (getUnifiedAuth as jest.Mock).mockResolvedValue(null);
 
         const request = new NextRequest(`http://localhost/api/assessment/programs/${validProgramId}/tasks/${validTaskId}/interactions`, {
           method: 'POST',
@@ -522,7 +528,7 @@ describe('Assessment Task Interactions API', () => {
       });
 
       it('should return 401 when session has no email', async () => {
-        (getServerSession as jest.Mock).mockResolvedValue({ user: {} });
+        (getUnifiedAuth as jest.Mock).mockResolvedValue({ user: {} });
 
         const request = new NextRequest(`http://localhost/api/assessment/programs/${validProgramId}/tasks/${validTaskId}/interactions`, {
           method: 'POST',

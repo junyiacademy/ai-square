@@ -1,14 +1,20 @@
 import { NextRequest } from 'next/server';
 import { POST } from '../route';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth } from '@/lib/auth/unified-auth';
 import { postgresqlLearningService } from '@/lib/services/postgresql-learning-service';
 import type { ITask, IEvaluation } from '@/types/unified-learning';
 
 // Mock dependencies
-jest.mock('@/lib/auth/session');
+jest.mock('@/lib/auth/unified-auth', () => ({
+  getUnifiedAuth: jest.fn(),
+  createUnauthorizedResponse: jest.fn(() => ({
+    json: () => Promise.resolve({ success: false, error: 'Authentication required' }),
+    status: 401
+  }))
+}));
 jest.mock('@/lib/services/postgresql-learning-service');
 
-const mockGetServerSession = getServerSession as jest.Mock;
+const mockGetUnifiedAuth = getUnifiedAuth as jest.Mock;
 const mockPostgresqlLearningService = postgresqlLearningService as jest.Mocked<typeof postgresqlLearningService>;
 
 describe('/api/learning/tasks/[taskId]/complete', () => {
@@ -18,11 +24,9 @@ describe('/api/learning/tasks/[taskId]/complete', () => {
 
   describe('POST', () => {
     const mockSession = {
-      user: {
-        id: 'user123',
-        email: 'test@example.com',
+      user: { id: 'user123', email: 'test@example.com',
         name: 'Test User'
-      }
+      , role: 'student' }
     };
 
     const mockTask: ITask = {
@@ -85,7 +89,7 @@ describe('/api/learning/tasks/[taskId]/complete', () => {
     };
 
     it('successfully completes a task with evaluation', async () => {
-      mockGetServerSession.mockResolvedValue(mockSession);
+      mockGetUnifiedAuth.mockResolvedValue(mockSession);
       mockPostgresqlLearningService.completeTask.mockResolvedValue(mockTaskResult);
 
       const requestBody = {
@@ -118,7 +122,7 @@ describe('/api/learning/tasks/[taskId]/complete', () => {
     });
 
     it('returns 401 when not authenticated', async () => {
-      mockGetServerSession.mockResolvedValue(null);
+      mockGetUnifiedAuth.mockResolvedValue(null);
 
       const request = new NextRequest('http://localhost:3000/api/learning/tasks/task123/complete', {
         method: 'POST',
@@ -131,13 +135,13 @@ describe('/api/learning/tasks/[taskId]/complete', () => {
       expect(response.status).toBe(401);
       expect(data).toEqual({
         success: false,
-        error: 'Unauthorized'
+        error: 'Authentication required'
       });
       expect(mockPostgresqlLearningService.completeTask).not.toHaveBeenCalled();
     });
 
     it('returns 401 when session missing email', async () => {
-      mockGetServerSession.mockResolvedValue({ user: { id: 'user123' } });
+      mockGetUnifiedAuth.mockResolvedValue({ user: { id: 'user123' } });
 
       const request = new NextRequest('http://localhost:3000/api/learning/tasks/task123/complete', {
         method: 'POST',
@@ -150,12 +154,12 @@ describe('/api/learning/tasks/[taskId]/complete', () => {
       expect(response.status).toBe(401);
       expect(data).toEqual({
         success: false,
-        error: 'Unauthorized'
+        error: 'Authentication required'
       });
     });
 
     it('returns 404 when task not found', async () => {
-      mockGetServerSession.mockResolvedValue(mockSession);
+      mockGetUnifiedAuth.mockResolvedValue(mockSession);
       mockPostgresqlLearningService.completeTask.mockRejectedValue(
         new Error('Task not found')
       );
@@ -176,7 +180,7 @@ describe('/api/learning/tasks/[taskId]/complete', () => {
     });
 
     it('handles missing request body', async () => {
-      mockGetServerSession.mockResolvedValue(mockSession);
+      mockGetUnifiedAuth.mockResolvedValue(mockSession);
       mockPostgresqlLearningService.completeTask.mockResolvedValue(mockTaskResult);
 
       const request = new NextRequest('http://localhost:3000/api/learning/tasks/task123/complete', {
@@ -197,7 +201,7 @@ describe('/api/learning/tasks/[taskId]/complete', () => {
     });
 
     it('handles general errors', async () => {
-      mockGetServerSession.mockResolvedValue(mockSession);
+      mockGetUnifiedAuth.mockResolvedValue(mockSession);
       mockPostgresqlLearningService.completeTask.mockRejectedValue(
         new Error('Database connection failed')
       );

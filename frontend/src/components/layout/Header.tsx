@@ -14,7 +14,7 @@ export function Header() {
   const pathname = usePathname()
   const { t } = useTranslation(['navigation'])
   const { theme, toggleTheme } = useTheme()
-  const { user, isLoggedIn, logout } = useAuth()
+  const { user, isLoggedIn, logout, isLoading } = useAuth()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
 
@@ -39,23 +39,31 @@ export function Header() {
     setIsMobileMenuOpen(!isMobileMenuOpen)
   }
 
+  // Define navigation link type
+  type NavLink = {
+    label: string
+    href?: string
+    disabled?: boolean
+    tooltip?: string
+  }
+
   // 主要導航連結（顯示在導航欄）
-  const primaryNavLinks = [
+  const primaryNavLinks: NavLink[] = [
     { href: '/dashboard', label: t('dashboard') },
     { href: '/assessment/scenarios', label: t('assessment') },
     { href: '/pbl/scenarios', label: t('pbl') },
-    { href: '/discovery/overview', label: t('discovery') },
+    { href: '/discovery/overview', label: t('discovery'), disabled: true, tooltip: '即將開放' },
   ]
   
   // 次要導航連結（放在「更多」選單中）
-  const secondaryNavLinks = [
+  const secondaryNavLinks: NavLink[] = [
     { href: '/relations', label: t('relations') },
     { href: '/ksa', label: t('ksa') },
     { href: '/history', label: t('history') },
   ]
   
   // 所有導航連結（用於手機選單）
-  const allNavLinks = [...primaryNavLinks, ...secondaryNavLinks]
+  const allNavLinks: NavLink[] = [...primaryNavLinks, ...secondaryNavLinks]
 
 
   return (
@@ -83,19 +91,35 @@ export function Header() {
 
             {/* Desktop Navigation Links */}
             <nav className="hidden lg:ml-10 lg:flex lg:space-x-6" aria-label="Main navigation">
-              {primaryNavLinks.map(link => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`inline-flex items-center px-1 pt-1 text-sm font-medium transition-colors ${
-                    pathname === link.href
-                      ? 'text-gray-900 dark:text-white border-b-2 border-blue-600 active'
-                      : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:border-b-2 hover:border-gray-300 dark:hover:border-gray-600'
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              ))}
+              {primaryNavLinks.map((link, index) => 
+                link.disabled ? (
+                  <div
+                    key={link.href || index}
+                    className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-400 dark:text-gray-500 cursor-not-allowed relative group"
+                    title={link.tooltip}
+                    onClick={(e) => e.preventDefault()}
+                  >
+                    {link.label}
+                    {link.tooltip && (
+                      <span className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-700 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                        {link.tooltip}
+                      </span>
+                    )}
+                  </div>
+                ) : link.href ? (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={`inline-flex items-center px-1 pt-1 text-sm font-medium transition-colors ${
+                      pathname === link.href
+                        ? 'text-gray-900 dark:text-white border-b-2 border-blue-600 active'
+                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:border-b-2 hover:border-gray-300 dark:hover:border-gray-600'
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                ) : null
+              )}
               
               {/* More dropdown menu */}
               <div className="relative group">
@@ -111,19 +135,21 @@ export function Header() {
                 {/* Dropdown menu */}
                 <div className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                   <div className="py-1">
-                    {secondaryNavLinks.map(link => (
-                      <Link
-                        key={link.href}
-                        href={link.href}
-                        className={`block px-4 py-2 text-sm ${
-                          pathname === link.href
-                            ? 'text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-700'
-                            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
-                        }`}
-                      >
-                        {link.label}
-                      </Link>
-                    ))}
+                    {secondaryNavLinks.map((link) => 
+                      link.href ? (
+                        <Link
+                          key={link.href}
+                          href={link.href}
+                          className={`block px-4 py-2 text-sm ${
+                            pathname === link.href
+                              ? 'text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-700'
+                              : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                          }`}
+                        >
+                          {link.label}
+                        </Link>
+                      ) : null
+                    )}
                   </div>
                 </div>
               </div>
@@ -169,7 +195,10 @@ export function Header() {
               </svg>
             </button>
             
-            {isLoggedIn && user ? (
+            {isLoading ? (
+              /* 載入中狀態 - 顯示骨架屏或空白 */
+              <div className="w-32 h-10 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
+            ) : isLoggedIn && user ? (
               /* 已登入狀態 */
               <div className="relative group">
                 {/* 用戶頭像按鈕 */}
@@ -268,20 +297,34 @@ export function Header() {
       {isMobileMenuOpen && (
         <nav className="lg:hidden bg-white dark:bg-slate-800 border-t border-gray-200 dark:border-slate-700" aria-label="Mobile navigation">
           <div className="px-2 pt-2 pb-3 space-y-1">
-            {allNavLinks.map(link => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
-                  pathname === link.href
-                    ? 'text-gray-900 dark:text-white bg-gray-100 dark:bg-slate-700'
-                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-slate-700'
-                }`}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                {link.label}
-              </Link>
-            ))}
+            {allNavLinks.map((link, index) => 
+              link.disabled ? (
+                <div
+                  key={link.href || index}
+                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-400 dark:text-gray-500 cursor-not-allowed"
+                  title={link.tooltip}
+                  onClick={(e) => e.preventDefault()}
+                >
+                  {link.label}
+                  {link.tooltip && (
+                    <span className="ml-2 text-xs text-gray-400">({link.tooltip})</span>
+                  )}
+                </div>
+              ) : link.href ? (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
+                    pathname === link.href
+                      ? 'text-gray-900 dark:text-white bg-gray-100 dark:bg-slate-700'
+                      : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-slate-700'
+                  }`}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  {link.label}
+                </Link>
+              ) : null
+            )}
             
             {/* Language Selector for Mobile */}
             <div className="px-3 py-3 border-t border-gray-200 dark:border-gray-700">

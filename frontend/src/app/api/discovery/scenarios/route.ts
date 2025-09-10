@@ -29,9 +29,9 @@ export async function GET(request: NextRequest) {
     const language = searchParams.get('lang') || 'en';
     
     // Get user session to include learning progress
-    const { getServerSession } = await import('@/lib/auth/session');
-    const session = await getServerSession();
-    const userId = session?.user?.id || session?.user?.email;
+    const { getUnifiedAuth } = await import('@/lib/auth/unified-auth');
+    const session = await getUnifiedAuth(request);
+    const userId = session?.user.id || session?.user.email;
     const isTest = process.env.NODE_ENV === 'test' || Boolean(process.env.JEST_WORKER_ID);
     
     // 匿名請求才使用快取；測試環境使用本地測試快取以符合既有測試
@@ -159,14 +159,28 @@ export async function GET(request: NextRequest) {
     };
     };
 
-    // 匿名請求用 SWR；個人化請求直接計算。測試環境改用本地測試快取以符合既有測試。
+    // 匿名請求用快取；個人化請求直接計算。測試環境改用本地測試快取以符合既有測試。
     if (key && !isTest) {
-      let cacheStatus: 'HIT' | 'MISS' | 'STALE' = 'MISS';
-      const result = await distributedCacheService.getWithRevalidation(key, compute, { ttl: TTL.DYNAMIC_5M, staleWhileRevalidate: TTL.DYNAMIC_5M, onStatus: (s) => { cacheStatus = s; } });
+      // 先嘗試從快取取得
+      const cached = await distributedCacheService.get(key) as { data?: { scenarios?: unknown[] } } | null;
+      if (cached && cached.data?.scenarios?.length && cached.data.scenarios.length > 0) {
+        return new NextResponse(JSON.stringify(cached), {
+          headers: { 'Content-Type': 'application/json', 'X-Cache': 'HIT' }
+        });
+      }
+      
+      // 沒有快取或快取為空，重新計算
+      const result = await compute();
+      
+      // 只有當結果不為空時才快取
+      if (result.data?.scenarios?.length > 0) {
+        await distributedCacheService.set(key, result, { ttl: TTL.DYNAMIC_5M });
+      }
+      
       return new NextResponse(JSON.stringify(result), {
         headers: {
           'Content-Type': 'application/json',
-          'X-Cache': cacheStatus
+          'X-Cache': 'MISS'
         }
       });
     }

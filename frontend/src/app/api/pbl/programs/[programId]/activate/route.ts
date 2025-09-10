@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getUnifiedAuth, createUnauthorizedResponse } from '@/lib/auth/unified-auth';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 
 export async function POST(
@@ -8,24 +9,12 @@ export async function POST(
   try {
     const { programId } = await params;
     
-    // Get user info from cookie
-    let userEmail: string | undefined;
-    try {
-      const userCookie = request.cookies.get('user')?.value;
-      if (userCookie) {
-        const user = JSON.parse(userCookie);
-        userEmail = user.email;
-      }
-    } catch {
-      console.log('No user cookie found');
+    // Get user session using unified auth
+    const session = await getUnifiedAuth(request);
+    if (!session?.user?.email) {
+      return createUnauthorizedResponse();
     }
-    
-    if (!userEmail) {
-      return NextResponse.json(
-        { success: false, error: 'User authentication required' },
-        { status: 401 }
-      );
-    }
+    const userEmail = session.user.email;
     
     // Get request body
     const body = await request.json();

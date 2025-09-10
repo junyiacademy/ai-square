@@ -141,7 +141,6 @@ export interface DBProgram {
   started_at: string | null;
   completed_at: string | null;
   updated_at: string;
-  last_activity_at: string;
   
   // Time tracking
   time_spent_seconds: number;
@@ -158,6 +157,7 @@ export interface DBProgram {
 export interface DBTask {
   id: string;
   program_id: string;
+  scenario_id: string;  // Foreign key to scenarios table
   mode: LearningMode;  // NEW: Propagated from program
   task_index: number;
   scenario_task_index: number | null;

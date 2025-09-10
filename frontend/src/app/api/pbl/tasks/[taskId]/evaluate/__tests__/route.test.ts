@@ -5,13 +5,21 @@
 
 import { NextRequest } from 'next/server';
 import { POST, GET } from '../route';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth } from '@/lib/auth/unified-auth';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import type { ITask, IEvaluation } from '@/types/unified-learning';
 import type { User } from '@/lib/repositories/interfaces';
 
 // Mock dependencies
-jest.mock('@/lib/auth/session');
+jest.mock('@/lib/auth/unified-auth', () => ({
+  getUnifiedAuth: jest.fn(),
+  createUnauthorizedResponse: jest.fn(() => 
+    new Response(
+      JSON.stringify({ success: false, error: 'Authentication required' }),
+      { status: 401, headers: { 'Content-Type': 'application/json' } }
+    )
+  )
+}));
 jest.mock('@/lib/repositories/base/repository-factory');
 
 // Mock dynamic import
@@ -24,7 +32,7 @@ jest.mock('@/lib/repositories/base/repository-factory', () => ({
   }
 }));
 
-const mockGetServerSession = getServerSession as jest.MockedFunction<typeof getServerSession>;
+const mockGetUnifiedAuth = getUnifiedAuth as jest.MockedFunction<typeof getUnifiedAuth>;
 const mockRepositoryFactory = repositoryFactory as jest.Mocked<typeof repositoryFactory>;
 
 // Mock console methods
@@ -172,7 +180,7 @@ describe('POST /api/pbl/tasks/[taskId]/evaluate', () => {
     mockRepositoryFactory.getProgramRepository.mockReturnValue(mockProgramRepo as any);
 
     // Default session
-    mockGetServerSession.mockResolvedValue({
+    mockGetUnifiedAuth.mockResolvedValue({
       user: { email: 'test@example.com' }
     } as any);
   });
@@ -185,7 +193,7 @@ describe('POST /api/pbl/tasks/[taskId]/evaluate', () => {
 
   describe('Authentication', () => {
     it('should require authentication', async () => {
-      mockGetServerSession.mockResolvedValueOnce(null);
+      mockGetUnifiedAuth.mockResolvedValueOnce(null);
 
       const request = new NextRequest('http://localhost:3000/api/pbl/tasks/task-123/evaluate', {
         method: 'POST',
@@ -343,8 +351,14 @@ describe('POST /api/pbl/tasks/[taskId]/evaluate', () => {
       // Should create new evaluation (not update)
       expect(mockEvaluationRepo.create).toHaveBeenCalled();
       
-      // Should NOT update task (it already has evaluationId)
-      expect(mockTaskRepo.update).not.toHaveBeenCalled();
+      // Should update task with new evaluationId
+      expect(mockTaskRepo.update).toHaveBeenCalledWith('task-123', expect.objectContaining({
+        status: 'completed',
+        metadata: expect.objectContaining({
+          evaluationId: 'eval-123',
+          previousEvaluationId: 'old-eval-123'
+        })
+      }));
     });
 
     it('should handle case where evaluationId exists but evaluation not found', async () => {
@@ -564,13 +578,13 @@ describe('GET /api/pbl/tasks/[taskId]/evaluate', () => {
     mockRepositoryFactory.getEvaluationRepository.mockReturnValue(mockEvaluationRepo as any);
 
     // Default session
-    mockGetServerSession.mockResolvedValue({
+    mockGetUnifiedAuth.mockResolvedValue({
       user: { email: 'test@example.com' }
     } as any);
   });
 
   it('should require authentication', async () => {
-    mockGetServerSession.mockResolvedValueOnce(null);
+    mockGetUnifiedAuth.mockResolvedValueOnce(null);
 
     const request = new NextRequest('http://localhost:3000/api/pbl/tasks/task-123/evaluate', {
       method: 'GET'

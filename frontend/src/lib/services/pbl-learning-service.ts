@@ -94,6 +94,8 @@ export class PBLLearningService implements BaseLearningService {
     });
 
     // 4. 創建 Tasks
+    const createdTaskIds: string[] = [];
+    
     for (let i = 0; i < taskTemplates.length; i++) {
       const template = taskTemplates[i];
       
@@ -106,8 +108,9 @@ export class PBLLearningService implements BaseLearningService {
         ? template.description
         : template.description?.[options?.language || 'en'] || template.description?.en || '';
       
-      await this.taskRepo.create({
+      const task = await this.taskRepo.create({
         programId: program.id,
+        scenarioId: scenarioId,  // Add missing scenarioId
         mode: 'pbl',
         taskIndex: i,
         title: title,
@@ -140,7 +143,17 @@ export class PBLLearningService implements BaseLearningService {
         assessmentData: {},
         metadata: {}
       });
+      
+      createdTaskIds.push(task.id);
     }
+    
+    // 5. Update program metadata with taskIds
+    await this.programRepo.update?.(program.id, {
+      metadata: {
+        ...program.metadata,
+        taskIds: createdTaskIds
+      }
+    });
 
     return program;
   }

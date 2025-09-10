@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { VertexAI, SchemaType } from '@google-cloud/vertexai';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth, createUnauthorizedResponse } from '@/lib/auth/unified-auth';
 import { getLanguageFromHeader, LANGUAGE_NAMES } from '@/lib/utils/language';
 import { Task, Evaluation } from '@/lib/repositories/interfaces';
 
@@ -145,7 +145,7 @@ const feedbackSchema = {
 // Initialize Vertex AI
 const vertexAI = new VertexAI({
   project: process.env.GOOGLE_CLOUD_PROJECT || 'ai-square-463013',
-  location: 'us-central1',
+  location: process.env.VERTEX_AI_LOCATION || 'us-central1',
 });
 
 const model = vertexAI.getGenerativeModel({
@@ -179,12 +179,9 @@ export async function POST(request: NextRequest) {
     }
     
     // Get user session
-    const session = await getServerSession();
+    const session = await getUnifiedAuth(request);
     if (!session?.user?.email) {
-      return NextResponse.json(
-        { success: false, error: 'Authentication required' },
-        { status: 401 }
-      );
+      return createUnauthorizedResponse();
     }
     const userEmail = session.user.email;
     

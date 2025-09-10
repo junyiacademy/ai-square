@@ -15,6 +15,7 @@ DESC ?= ""
         graphiti graphiti-stop graphiti-status claude-init \
         db-init db-reset db-seed db-up db-down db-backup db-restore \
         db-status db-migrate db-shell db-logs db-clean-backups \
+        db-start db-stop db-cost \
         build-cms-image cms-build-and-push gcp-deploy-cms deploy-cms-gcp \
         setup-secrets-cms logs-cms
 
@@ -740,6 +741,10 @@ dev-quality: dev-lint dev-typecheck validate-scenarios
 ## Pre-commit 檢查 - 確保遵守 CLAUDE.md 規則
 pre-commit-check:
 	@echo "$(BLUE)🔍 執行 pre-commit 檢查...$(NC)"
+	@echo "$(YELLOW)0️⃣ Schema 一致性檢查...$(NC)"
+	@cd frontend && npm run schema:check || (echo "$(RED)❌ Schema 檢查失敗 - Prisma/TypeScript/Database 不一致$(NC)" && exit 1)
+	@echo "$(GREEN)✅ Schema 檢查通過$(NC)"
+	@echo ""
 	@echo "$(YELLOW)1️⃣  TypeScript 類型檢查 (最優先)...$(NC)"
 	@cd frontend && npm run typecheck || (echo "$(RED)❌ TypeScript 檢查失敗$(NC)" && exit 1)
 	@echo "$(GREEN)✅ TypeScript 檢查通過$(NC)"
@@ -855,6 +860,47 @@ db-migrate:
 	@cd frontend && make -f Makefile.db db-migrate
 	@echo "$(GREEN)✅ 遷移完成$(NC)"
 
+## Production 資料庫遷移（手動）
+production-db-migrate:
+	@echo "$(RED)⚠️  Production 資料庫遷移 - 請確認要繼續嗎？$(NC)"
+	@echo "$(YELLOW)這將會對 Production 資料庫執行 migration$(NC)"
+	@read -p "輸入 'yes' 繼續: " confirm && [ "$$confirm" = "yes" ] || exit 1
+	@echo "$(BLUE)🔄 連接 Production 資料庫...$(NC)"
+	@echo "$(CYAN)啟動 Cloud SQL Proxy...$(NC)"
+	@gcloud compute ssh bastion-instance \
+		--zone=asia-east1-a \
+		--project=ai-square-463013 \
+		--command="wget -q https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy && \
+		          chmod +x cloud_sql_proxy && \
+		          ./cloud_sql_proxy -instances=ai-square-463013:asia-east1:ai-square-db-production=tcp:5432 &"
+	@sleep 5
+	@echo "$(BLUE)📦 執行 Prisma Migrations...$(NC)"
+	@cd frontend && DATABASE_URL="postgresql://postgres:${PRODUCTION_DB_PASSWORD}@localhost:5432/ai_square_db" npx prisma migrate deploy
+	@echo "$(GREEN)✅ Production Migration 完成$(NC)"
+	@echo "$(YELLOW)⚠️  記得檢查服務是否正常運作$(NC)"
+
+## Production 資料庫遷移狀態檢查
+production-db-migrate-status:
+	@echo "$(BLUE)📊 檢查 Production 資料庫 Migration 狀態...$(NC)"
+	@echo "$(CYAN)連接 Production 資料庫...$(NC)"
+	@gcloud sql connect ai-square-db-production \
+		--user=postgres \
+		--database=ai_square_db \
+		--project=ai-square-463013 \
+		--region=asia-east1 \
+		--command="SELECT * FROM _prisma_migrations ORDER BY finished_at DESC LIMIT 5;"
+	@cd frontend && DATABASE_URL="postgresql://postgres:${PRODUCTION_DB_PASSWORD}@/ai_square_db?host=/cloudsql/ai-square-463013:asia-east1:ai-square-db-production" npx prisma migrate status
+
+## Production 資料庫遷移預覽（Dry Run）
+production-db-migrate-plan:
+	@echo "$(BLUE)🔍 預覽 Production 資料庫 Migration（不會執行）...$(NC)"
+	@cd frontend && npx prisma migrate diff \
+		--from-schema-datasource prisma/schema.prisma \
+		--to-migrations prisma/migrations \
+		--shadow-database-url "postgresql://postgres:postgres@localhost:5433/shadow_db" \
+		--script
+	@echo "$(CYAN)以上是將要執行的 SQL 指令$(NC)"
+
 ## 執行 psql（交互式資料庫 shell）
 db-shell:
 	@echo "$(CYAN)🖥️  進入資料庫 shell...$(NC)"
@@ -870,6 +916,44 @@ db-clean-backups:
 	@echo "$(YELLOW)🧹 清理舊備份...$(NC)"
 	@cd frontend && make -f Makefile.db db-clean-backups
 	@echo "$(GREEN)✅ 清理完成$(NC)"
+
+#=============================================================================
+# Cloud SQL 成本優化指令（2025-08-27 新增）
+#=============================================================================
+
+## 啟動 Cloud SQL（開發時使用）
+db-start:
+	@echo "$(GREEN)🚀 啟動 Cloud SQL 資料庫...$(NC)"
+	@echo "啟動 Staging DB..."
+	@gcloud sql instances patch ai-square-db-staging-asia \
+		--activation-policy=ALWAYS \
+		--project=ai-square-463013
+	@echo "$(GREEN)✅ 資料庫已啟動！記得開發完畢後執行 make db-stop$(NC)"
+
+## 停止 Cloud SQL（節省成本）
+db-stop:
+	@echo "$(RED)🛑 停止所有 Cloud SQL 資料庫以節省成本...$(NC)"
+	@echo "停止 Staging DB..."
+	@gcloud sql instances patch ai-square-db-staging-asia \
+		--activation-policy=NEVER \
+		--project=ai-square-463013 || true
+	@echo "停止 Production DB..."
+	@gcloud sql instances patch ai-square-db-production \
+		--activation-policy=NEVER \
+		--project=ai-square-463013 || true
+	@echo "$(GREEN)✅ 資料庫已停止！月成本: $0$(NC)"
+
+## 檢查 Cloud SQL 狀態和成本
+db-cost:
+	@echo "$(CYAN)💰 Cloud SQL 狀態和成本估算：$(NC)"
+	@gcloud sql instances list --project=ai-square-463013 \
+		--format="table(name:label=資料庫,databaseVersion:label=版本,settings.tier:label=規格,state:label=狀態)"
+	@echo ""
+	@echo "成本估算："
+	@echo "• STOPPED 狀態: $0/月"
+	@echo "• RUNNABLE 狀態 (db-f1-micro): ~$15/月"
+	@echo ""
+	@echo "💡 提示：使用 'make db-stop' 停止資料庫以節省成本"
 
 #=============================================================================
 # AI 專用配置

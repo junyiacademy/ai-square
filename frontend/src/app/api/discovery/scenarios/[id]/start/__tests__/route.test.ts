@@ -5,16 +5,16 @@
 
 import { NextRequest } from 'next/server';
 import { POST } from '../route';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth } from '@/lib/auth/unified-auth';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { learningServiceFactory } from '@/lib/services/learning-service-factory';
 
 // Mock dependencies
-jest.mock('@/lib/auth/session');
+jest.mock('@/lib/auth/unified-auth');
 jest.mock('@/lib/repositories/base/repository-factory');
 jest.mock('@/lib/services/learning-service-factory');
 
-const mockGetServerSession = getServerSession as jest.MockedFunction<typeof getServerSession>;
+const mockGetUnifiedAuth = getUnifiedAuth as jest.MockedFunction<typeof getUnifiedAuth>;
 const mockRepositoryFactory = repositoryFactory as jest.Mocked<typeof repositoryFactory>;
 const mockLearningServiceFactory = learningServiceFactory as jest.Mocked<typeof learningServiceFactory>;
 
@@ -53,7 +53,7 @@ describe('/api/discovery/scenarios/[id]/start', () => {
 
   describe('Authentication', () => {
     it('should return 401 when user is not authenticated', async () => {
-      mockGetServerSession.mockResolvedValue(null);
+      mockGetUnifiedAuth.mockResolvedValue(null);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios/test-id/start', {
         method: 'POST',
@@ -69,9 +69,9 @@ describe('/api/discovery/scenarios/[id]/start', () => {
     });
 
     it('should return 401 when user has no email', async () => {
-      mockGetServerSession.mockResolvedValue({
-        user: { id: 'user-123' }
-      } as unknown as { user: { id: string; email: string } });
+      mockGetUnifiedAuth.mockResolvedValue({
+        user: { id: 'user-123', email: '', role: 'student' }
+      });
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios/test-id/start', {
         method: 'POST',
@@ -87,8 +87,8 @@ describe('/api/discovery/scenarios/[id]/start', () => {
     });
 
     it('should work with authenticated user', async () => {
-      mockGetServerSession.mockResolvedValue({
-        user: { id: 'user-123', email: 'test@example.com' }
+      mockGetUnifiedAuth.mockResolvedValue({
+        user: { id: 'user-123', email: 'test@example.com', role: 'student' }
       });
 
       // Setup valid scenario
@@ -127,8 +127,8 @@ describe('/api/discovery/scenarios/[id]/start', () => {
 
   describe('Parameter Validation', () => {
     beforeEach(() => {
-      mockGetServerSession.mockResolvedValue({
-        user: { id: 'user-123', email: 'test@example.com' }
+      mockGetUnifiedAuth.mockResolvedValue({
+        user: { id: 'user-123', email: 'test@example.com', role: 'student' }
       });
     });
 
@@ -257,8 +257,8 @@ describe('/api/discovery/scenarios/[id]/start', () => {
     const validUuid = '123e4567-e89b-12d3-a456-426614174000';
 
     beforeEach(() => {
-      mockGetServerSession.mockResolvedValue({
-        user: { id: 'user-123', email: 'test@example.com' }
+      mockGetUnifiedAuth.mockResolvedValue({
+        user: { id: 'user-123', email: 'test@example.com', role: 'student' }
       });
     });
 
@@ -334,8 +334,8 @@ describe('/api/discovery/scenarios/[id]/start', () => {
     const validUuid = '123e4567-e89b-12d3-a456-426614174000';
 
     beforeEach(() => {
-      mockGetServerSession.mockResolvedValue({
-        user: { id: 'user-123', email: 'test@example.com' }
+      mockGetUnifiedAuth.mockResolvedValue({
+        user: { id: 'user-123', email: 'test@example.com', role: 'student' }
       });
 
       mockScenarioRepo.findById.mockResolvedValue({
@@ -413,8 +413,8 @@ describe('/api/discovery/scenarios/[id]/start', () => {
     });
 
     it('should handle complex email for username generation', async () => {
-      mockGetServerSession.mockResolvedValue({
-        user: { id: 'user-123', email: 'complex.email+tag@company.com' }
+      mockGetUnifiedAuth.mockResolvedValue({
+        user: { id: 'user-123', email: 'complex.email+tag@company.com', role: 'student' }
       });
 
       mockUserRepo.findByEmail.mockResolvedValue(null);
@@ -448,8 +448,8 @@ describe('/api/discovery/scenarios/[id]/start', () => {
     const validUuid = '123e4567-e89b-12d3-a456-426614174000';
 
     beforeEach(() => {
-      mockGetServerSession.mockResolvedValue({
-        user: { id: 'user-123', email: 'test@example.com' }
+      mockGetUnifiedAuth.mockResolvedValue({
+        user: { id: 'user-123', email: 'test@example.com', role: 'student' }
       });
 
       mockScenarioRepo.findById.mockResolvedValue({
@@ -615,13 +615,13 @@ describe('/api/discovery/scenarios/[id]/start', () => {
     const validUuid = '123e4567-e89b-12d3-a456-426614174000';
 
     beforeEach(() => {
-      mockGetServerSession.mockResolvedValue({
-        user: { id: 'user-123', email: 'test@example.com' }
+      mockGetUnifiedAuth.mockResolvedValue({
+        user: { id: 'user-123', email: 'test@example.com', role: 'student' }
       });
     });
 
     it('should handle session service errors', async () => {
-      mockGetServerSession.mockRejectedValue(new Error('Session service error'));
+      mockGetUnifiedAuth.mockRejectedValue(new Error('Session service error'));
 
       const request = new NextRequest(`http://localhost:3000/api/discovery/scenarios/${validUuid}/start`, {
         method: 'POST',
@@ -772,7 +772,7 @@ describe('/api/discovery/scenarios/[id]/start', () => {
     });
 
     it('should handle non-Error exceptions', async () => {
-      mockGetServerSession.mockImplementation(() => {
+      mockGetUnifiedAuth.mockImplementation(() => {
         throw 'String exception';
       });
 

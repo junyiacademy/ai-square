@@ -22,6 +22,7 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
     return {
       id: row.id,
       programId: row.program_id,
+      scenarioId: row.scenario_id,  // Map database scenario_id to interface scenarioId
       mode: row.mode,  // Include mode from database
       taskIndex: row.task_index,
       scenarioTaskIndex: row.scenario_task_index || undefined,
@@ -36,24 +37,26 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
       content: row.content,
       
       // Interaction tracking
-      interactions: row.interactions as unknown as IInteraction[],
-      interactionCount: row.interaction_count,
+      interactions: Array.isArray(row.interactions) 
+        ? (row.interactions as unknown as IInteraction[])
+        : [],
+      interactionCount: Array.isArray(row.interactions) ? row.interactions.length : 0,
       
-      // Response/solution
-      userResponse: row.user_response,
+      // Response/solution (stored in metadata)
+      userResponse: row.user_response as Record<string, unknown> || (row.metadata as Record<string, unknown>)?.userResponse as Record<string, unknown> || {},
       
       // Scoring
-      score: row.score,
-      maxScore: row.max_score,
+      score: row.score || 0,
+      maxScore: row.max_score || 100,
       
       // Attempts and timing
-      allowedAttempts: row.allowed_attempts,
-      attemptCount: row.attempt_count,
+      allowedAttempts: row.allowed_attempts || 1,
+      attemptCount: row.attempt_count || 0,
       timeLimitSeconds: row.time_limit_seconds || undefined,
-      timeSpentSeconds: row.time_spent_seconds,
+      timeSpentSeconds: row.time_spent_seconds || 0,
       
       // AI configuration
-      aiConfig: row.ai_config,
+      aiConfig: row.ai_config || {},
       
       // Timestamps
       createdAt: row.created_at,
@@ -62,12 +65,12 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
       updatedAt: row.updated_at,
       
       // Mode-specific data
-      pblData: row.pbl_data,
-      discoveryData: row.discovery_data,
-      assessmentData: row.assessment_data,
+      pblData: row.pbl_data || {},
+      discoveryData: row.discovery_data || {},
+      assessmentData: row.assessment_data || {},
       
       // Extensible metadata
-      metadata: row.metadata
+      metadata: row.metadata || {}
     };
   }
 
@@ -91,49 +94,45 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
     return rows.map(row => this.toTask(row));
   }
 
+
   async create(task: Omit<ITask, 'id'>): Promise<ITask> {
+    // Ensure scenarioId is provided - database requires it
+    if (!task.scenarioId) {
+      throw new Error('scenarioId is required for task creation');
+    }
+
     const query = `
       INSERT INTO tasks (
-        program_id, mode, task_index, scenario_task_index,
+        id, program_id, scenario_id, mode, task_index,
         title, description, type, status,
-        content, interactions,
-        user_response, score, max_score,
-        allowed_attempts, attempt_count,
-        time_limit_seconds, time_spent_seconds,
-        ai_config,
-        pbl_data, discovery_data, assessment_data,
-        metadata
+        content, metadata, interactions,
+        ai_config, attempt_count, allowed_attempts, score,
+        time_spent_seconds, started_at, updated_at
       ) VALUES (
-        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
-        $11, $12, $13, $14, $15, $16, $17, $18, $19,
-        $20, $21, $22
+        gen_random_uuid(), $1, $2, $3, $4, $5, $6, $7, $8,
+        $9, $10, $11, $12, $13, $14, $15, $16, $17, CURRENT_TIMESTAMP
       )
       RETURNING *
     `;
 
     const { rows } = await this.pool.query<DBTask>(query, [
       task.programId,
+      task.scenarioId,
       task.mode,
       task.taskIndex,
-      task.scenarioTaskIndex || null,
       task.title || null,
       task.description || null,
       task.type,
       task.status || 'pending',
       JSON.stringify(task.content || {}),
+      JSON.stringify(task.metadata || {}),
       JSON.stringify(task.interactions || []),
-      JSON.stringify(task.userResponse || {}),
-      task.score || 0,
-      task.maxScore || 100,
-      task.allowedAttempts || 3,
-      task.attemptCount || 0,
-      task.timeLimitSeconds || null,
-      task.timeSpentSeconds || 0,
       JSON.stringify(task.aiConfig || {}),
-      JSON.stringify(task.pblData || {}),
-      JSON.stringify(task.discoveryData || {}),
-      JSON.stringify(task.assessmentData || {}),
-      JSON.stringify(task.metadata || {})
+      task.attemptCount || 0,
+      task.allowedAttempts || 1,
+      task.score || null,
+      task.timeSpentSeconds || 0,
+      task.startedAt || null
     ]);
 
     return this.toTask(rows[0]);
@@ -147,48 +146,42 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
       await client.query('BEGIN');
 
       for (const task of tasks) {
+        // Ensure scenarioId is provided - database requires it
+        if (!task.scenarioId) {
+          throw new Error('scenarioId is required for task creation');
+        }
         const query = `
           INSERT INTO tasks (
-            program_id, mode, task_index, scenario_task_index,
+            id, program_id, scenario_id, mode, task_index,
             title, description, type, status,
-            content, interactions,
-            user_response, score, max_score,
-            allowed_attempts, attempt_count,
-            time_limit_seconds, time_spent_seconds,
-            ai_config,
-            pbl_data, discovery_data, assessment_data,
-            metadata
+            content, metadata, interactions,
+            ai_config, attempt_count, allowed_attempts, score,
+            time_spent_seconds, started_at, updated_at
           ) VALUES (
-            $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
-            $11, $12, $13, $14, $15, $16, $17, $18, $19,
-            $20, $21, $22
+            gen_random_uuid(), $1, $2, $3, $4, $5, $6, $7, $8,
+            $9, $10, $11, $12, $13, $14, $15, $16, $17, CURRENT_TIMESTAMP
           )
           RETURNING *
         `;
 
         const { rows } = await client.query<DBTask>(query, [
           task.programId,
+          task.scenarioId,
           task.mode,
           task.taskIndex,
-          task.scenarioTaskIndex || null,
           task.title || null,
           task.description || null,
           task.type,
           task.status || 'pending',
           JSON.stringify(task.content || {}),
+          JSON.stringify(task.metadata || {}),
           JSON.stringify(task.interactions || []),
-          JSON.stringify(task.userResponse || {}),
-          task.score || 0,
-          task.maxScore || 100,
-          task.allowedAttempts || 3,
-          task.attemptCount || 0,
-          task.timeLimitSeconds || null,
-          task.timeSpentSeconds || 0,
           JSON.stringify(task.aiConfig || {}),
-          JSON.stringify(task.pblData || {}),
-          JSON.stringify(task.discoveryData || {}),
-          JSON.stringify(task.assessmentData || {}),
-          JSON.stringify(task.metadata || {})
+          task.attemptCount || 0,
+          task.allowedAttempts || 1,
+          task.score || null,
+          task.timeSpentSeconds || 0,
+          task.startedAt || null
         ]);
 
         createdTasks.push(this.toTask(rows[0]));
@@ -287,9 +280,9 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
       values.push(JSON.stringify(updates.interactions));
     }
 
-    // Response
+    // Response/solution - store in metadata
     if (updates.userResponse !== undefined) {
-      updateFields.push(`user_response = $${paramCount++}`);
+      updateFields.push(`metadata = jsonb_set(COALESCE(metadata, '{}'::jsonb), '{userResponse}', $${paramCount++}::jsonb)`);
       values.push(JSON.stringify(updates.userResponse));
     }
 
@@ -412,7 +405,11 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
       UPDATE tasks
       SET attempt_count = attempt_count + 1,
           score = GREATEST(score, $1),
-          user_response = $2,
+          metadata = jsonb_set(
+            COALESCE(metadata, '{}'::jsonb),
+            '{userResponse}',
+            $2::jsonb
+          ),
           time_spent_seconds = time_spent_seconds + $3,
           updated_at = CURRENT_TIMESTAMP
       WHERE id = $4

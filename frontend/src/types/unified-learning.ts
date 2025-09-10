@@ -136,6 +136,7 @@ export interface IProgram {
 export interface ITask {
   id: string;  // UUID
   programId: string;  // 關聯Program UUID
+  scenarioId?: string;  // 關聯Scenario UUID (database has it as required, but making optional for backward compatibility)
   mode: LearningMode;  // Mode propagated from program
   taskIndex: number;  // Order within program
   scenarioTaskIndex?: number;  // Reference to scenario template

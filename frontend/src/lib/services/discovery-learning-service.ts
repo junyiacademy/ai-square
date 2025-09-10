@@ -401,6 +401,7 @@ export class DiscoveryLearningService implements BaseLearningService {
     // 1. 歡迎任務
     const welcomeTask = await this.taskRepo.create({
       programId: program.id,
+      scenarioId: scenario.id,
       mode: 'discovery',
       taskIndex: 0,
       title: {
@@ -445,6 +446,7 @@ export class DiscoveryLearningService implements BaseLearningService {
       const skill = initialSkills[i];
       const task = await this.taskRepo.create({
         programId: program.id,
+        scenarioId: scenario.id,
         mode: 'discovery',
         taskIndex: i + 1,
         title: {
@@ -569,6 +571,7 @@ export class DiscoveryLearningService implements BaseLearningService {
       
       await this.taskRepo.create({
         programId: program.id,
+        scenarioId: scenario.id,
         mode: 'discovery',
         taskIndex: tasks.length,
         title: {

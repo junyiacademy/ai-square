@@ -324,7 +324,8 @@ describe('RegisterPage', () => {
     await waitFor(() => {
       expect(mockLocalStorage.setItem).toHaveBeenCalledWith('ai_square_session', 'test-token-123');
       expect(mockDispatchEvent).toHaveBeenCalledWith(new CustomEvent('auth-changed'));
-      expect(mockRouter.push).toHaveBeenCalledWith('/onboarding/welcome');
+      // Should navigate to dashboard directly (onboarding is optional)
+      expect(mockRouter.push).toHaveBeenCalledWith('/dashboard');
     });
   });
 
@@ -391,7 +392,8 @@ describe('RegisterPage', () => {
     fireEvent.click(submitButton);
     
     await waitFor(() => {
-      expect(mockRouter.push).toHaveBeenCalledWith('/onboarding/welcome');
+      // Should navigate to dashboard directly (onboarding is optional)
+      expect(mockRouter.push).toHaveBeenCalledWith('/dashboard');
       expect(mockRouter.push).not.toHaveBeenCalledWith('//malicious-site.com');
     });
   });
@@ -585,7 +587,8 @@ describe('RegisterPage', () => {
     await waitFor(() => {
       expect(mockLocalStorage.setItem).not.toHaveBeenCalled();
       expect(mockDispatchEvent).toHaveBeenCalledWith(new CustomEvent('auth-changed'));
-      expect(mockRouter.push).toHaveBeenCalledWith('/onboarding/welcome');
+      // Should navigate to dashboard directly (onboarding is optional)
+      expect(mockRouter.push).toHaveBeenCalledWith('/dashboard');
     });
   });
 

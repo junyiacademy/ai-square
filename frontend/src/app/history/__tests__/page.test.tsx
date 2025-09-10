@@ -300,7 +300,8 @@ describe('UnifiedHistoryPage', () => {
 
       await waitFor(() => {
         expect(mockFetch).toHaveBeenCalledWith(
-          expect.stringContaining(`/api/assessment/results?userId=${mockUserData.id}&userEmail=${encodeURIComponent(mockUserData.email)}`)
+          expect.stringContaining(`/api/assessment/results?userId=${mockUserData.id}&userEmail=${encodeURIComponent(mockUserData.email)}`),
+          { credentials: 'include' }
         );
       });
     });
@@ -365,7 +366,8 @@ describe('UnifiedHistoryPage', () => {
 
       await waitFor(() => {
         expect(mockFetch).toHaveBeenCalledWith(
-          expect.stringContaining('/api/pbl/history?lang=en&t=')
+          expect.stringContaining('/api/pbl/history?lang=en&t='),
+          { credentials: 'include' }
         );
       });
     });
@@ -436,7 +438,8 @@ describe('UnifiedHistoryPage', () => {
 
       await waitFor(() => {
         expect(mockFetch).toHaveBeenCalledWith(
-          expect.stringContaining('/api/discovery/my-programs?t=')
+          expect.stringContaining('/api/discovery/my-programs?t='),
+          { credentials: 'include' }
         );
       });
     });

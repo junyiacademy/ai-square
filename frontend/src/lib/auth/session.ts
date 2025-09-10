@@ -1,5 +1,14 @@
-import { cookies, headers } from 'next/headers';
-import { verifySessionToken } from './session-simple';
+/**
+ * Legacy Session Interface
+ * 
+ * This file provides backward compatibility for code using getServerSession.
+ * It now delegates to the unified authentication system.
+ * 
+ * @deprecated Use getUnifiedAuth from unified-auth.ts instead
+ */
+
+import { getUnifiedAuth } from './unified-auth';
+import type { NextRequest } from 'next/server';
 
 export interface Session {
   user: {
@@ -8,32 +17,29 @@ export interface Session {
   };
 }
 
-export async function getServerSession(): Promise<Session | null> {
-  const cookieStore = await cookies();
-  const headersList = await headers();
+/**
+ * Get server session - now delegates to unified auth
+ * 
+ * NOTE: This function now requires a NextRequest parameter in Route Handlers
+ * For backward compatibility, it tries to work without it but may fail.
+ * 
+ * @deprecated Use getUnifiedAuth directly
+ */
+export async function getServerSession(request?: NextRequest): Promise<Session | null> {
+  // Try to get auth using the unified system
+  const auth = await getUnifiedAuth(request);
   
-  // Check for session token (new JWT system)
-  let sessionToken = cookieStore.get('sessionToken')?.value;
-  
-  // If not in cookie, check header (for API calls from client)
-  if (!sessionToken) {
-    sessionToken = headersList.get('x-session-token') || undefined;
+  if (!auth) {
+    return null;
   }
   
-  if (sessionToken) {
-    const sessionData = verifySessionToken(sessionToken);
-    if (sessionData) {
-      return {
-        user: {
-          id: sessionData.userId,
-          email: sessionData.email
-        }
-      };
+  // Map to legacy Session interface
+  return {
+    user: {
+      id: auth.user.id,
+      email: auth.user.email
     }
-  }
-  
-  // NO FALLBACK to old cookies - users must use the new system
-  return null;
+  };
 }
 
 // Alias for getServerSession

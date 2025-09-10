@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { learningServiceFactory } from '@/lib/services/learning-service-factory';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth, createUnauthorizedResponse } from '@/lib/auth/unified-auth';
+import { validateProgramStart } from '@/lib/validators/program-validator';
 
 export async function POST(
   request: NextRequest,
@@ -22,24 +23,26 @@ export async function POST(
   try {
     const scenarioId = id;
     
-    // Get user info from session
-    const session = await getServerSession();
-    const userEmail = session?.user?.email;
+    // Get user info using unified auth
+    const auth = await getUnifiedAuth(request);
+    const userEmail = auth?.user.email;
     
     console.log('   User email:', userEmail);
     
-    if (!userEmail) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'User authentication required'
-        },
-        { status: 401 }
-      );
+    if (!auth || !userEmail) {
+      return createUnauthorizedResponse();
     }
     
-    // Get request body
-    const body = await request.json();
+    // Get request body (handle empty body)
+    let body: { language?: string } = {};
+    try {
+      const text = await request.text();
+      if (text) {
+        body = JSON.parse(text);
+      }
+    } catch {
+      console.log('No JSON body provided, using defaults');
+    }
     const language = body.language || 'en';
     
     // Validate UUID format
@@ -90,6 +93,20 @@ export async function POST(
       });
     }
     
+    // Use our TDD validator to check if program can be started
+    const validation = validateProgramStart(scenario, user as unknown as import('@/types/database').DBUser);
+    if (!validation.isValid) {
+      console.log('   ❌ Validation failed:', validation.error);
+      return NextResponse.json(
+        {
+          success: false,
+          error: validation.error
+        },
+        { status: 400 }
+      );
+    }
+    
+    console.log('   ✅ Validation passed');
     console.log('   User ID:', user.id);
     console.log('   Using PBL Learning Service to start learning...');
     

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { VertexAI } from '@google-cloud/vertexai';
 import { ErrorResponse } from '@/types/api';
 import { ChatMessage } from '@/types/pbl-api';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth } from '@/lib/auth/unified-auth';
 
 interface ChatRequestBody {
   message: string;
@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
     const { scenarioId, taskId, taskTitle, taskDescription, instructions, expectedOutcome, conversationHistory } = context;
 
     // Get user session
-    const session = await getServerSession();
+    const session = await getUnifiedAuth(request);
     if (!session?.user?.email) {
       return NextResponse.json<ErrorResponse>(
         { error: 'Authentication required' },
@@ -113,7 +113,7 @@ export async function POST(request: NextRequest) {
     
     const vertexAI = new VertexAI({
       project: projectId,
-      location: 'us-central1',
+      location: process.env.VERTEX_AI_LOCATION || 'us-central1',
     });
 
     const model = vertexAI.preview.getGenerativeModel({

@@ -68,32 +68,10 @@ function LoginContent() {
         const hasAssessment = Boolean(userData?.assessmentCompleted)
         console.log('User status:', { onboarding, isOnboardingCompleted, hasAssessment })
         
-        // Navigate based on onboarding completion status
-        if (!isOnboardingCompleted) {
-          console.log('Onboarding not completed, checking detailed progress...')
-          
-          // Check detailed onboarding progress (if available from GCS)
-          if (!onboarding.welcomeCompleted) {
-            console.log('Navigating to: /onboarding/welcome')
-            router.push('/onboarding/welcome');
-          } else if (!onboarding.identityCompleted) {
-            console.log('Navigating to: /onboarding/identity')
-            router.push('/onboarding/identity');
-          } else if (!onboarding.goalsCompleted) {
-            console.log('Navigating to: /onboarding/goals')
-            router.push('/onboarding/goals');
-          } else {
-            // Fallback - start from beginning if no detailed progress
-            console.log('No detailed progress found, starting from welcome')
-            router.push('/onboarding/welcome');
-          }
-        } else if (!hasAssessment) {
-          console.log('Onboarding completed, navigating to: /assessment/scenarios')
-          router.push('/assessment/scenarios');
-        } else {
-          console.log('Everything completed, navigating to: /dashboard')
-          router.push('/dashboard')
-        }
+        // Navigate to dashboard directly - onboarding is optional
+        // Users can choose to do onboarding from dashboard if they want
+        console.log('Login successful, navigating to: /dashboard')
+        router.push('/dashboard')
       } else {
         // 顯示錯誤訊息
         console.log('Login failed:', result.error)

@@ -8,6 +8,7 @@
 import { Pool } from 'pg';
 import bcrypt from 'bcryptjs';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const testUsers = [
   { email: 'test-local@example.com', password: 'test123', role: 'student' }
 ];
@@ -43,9 +44,10 @@ async function testSeedUsers() {
     // Test 1: Check if gen_random_uuid() is available
     console.log('\n🔍 Testing gen_random_uuid() function...');
     try {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const uuidResult = await pool.query('SELECT gen_random_uuid()');
       console.log('✅ gen_random_uuid() is available');
-    } catch (error) {
+    } catch {
       console.error('❌ gen_random_uuid() is NOT available');
       console.log('💡 Run: CREATE EXTENSION IF NOT EXISTS "uuid-ossp";');
     }
@@ -61,8 +63,8 @@ async function testSeedUsers() {
       
       // Clean up
       await pool.query('DELETE FROM users WHERE email = $1', ['test-minimal@example.com']);
-    } catch (error: any) {
-      console.error('❌ Minimal INSERT failed:', error.message);
+    } catch (error: unknown) {
+      console.error('❌ Minimal INSERT failed:', (error as Error).message);
       console.log('   This means Prisma defaults are not reflected in the database');
     }
 
@@ -79,8 +81,8 @@ async function testSeedUsers() {
       
       // Clean up
       await pool.query('DELETE FROM users WHERE email = $1', ['test-current@example.com']);
-    } catch (error: any) {
-      console.error('❌ Current seed-users INSERT failed:', error.message);
+    } catch (error: unknown) {
+      console.error('❌ Current seed-users INSERT failed:', (error as Error).message);
     }
 
     // Test 4: Find all required fields

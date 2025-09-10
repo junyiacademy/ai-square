@@ -173,7 +173,7 @@ describe('/api/discovery/chat', () => {
 
       it('should use environment variables for project and location', async () => {
         process.env.GOOGLE_CLOUD_PROJECT = 'custom-project';
-        process.env.GOOGLE_CLOUD_LOCATION = 'asia-east1';
+        process.env.VERTEX_AI_LOCATION = 'asia-northeast1';
 
         mockModel.generateContent.mockResolvedValue({
           response: {
@@ -194,7 +194,7 @@ describe('/api/discovery/chat', () => {
 
         expect(mockVertexAI).toHaveBeenCalledWith({
           project: 'custom-project',
-          location: 'asia-east1'
+          location: 'asia-northeast1'
         });
       });
 

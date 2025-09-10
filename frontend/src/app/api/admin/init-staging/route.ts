@@ -60,7 +60,15 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    if (action === 'init-full') {
+    if (action === 'reset-full' || action === 'init-full') {
+      if (action === 'reset-full') {
+        // Step 0: Clear all existing data
+        console.log('Clearing all existing data...');
+        await pool.query(`
+          TRUNCATE TABLE evaluations, tasks, programs, scenarios, users CASCADE;
+        `);
+        console.log('Starting fresh initialization...');
+      }
       // Step 1: Skip schema creation (already done via Cloud SQL import)
       console.log('Skipping schema creation (already exists)...');
 
@@ -90,17 +98,13 @@ export async function POST(request: NextRequest) {
             await pool.query(`
               INSERT INTO scenarios (
                 mode, source_type, source_id, source_path,
-                title, description, status,
-                objectives, prerequisites, target_audience,
-                duration_minutes, difficulty_level,
-                pbl_data, task_templates,
+                title, description, status, difficulty,
+                objectives, pbl_data, task_templates,
                 created_at, updated_at
               ) VALUES (
                 'pbl', 'yaml', $1, $2,
-                $3, $4, 'active',
-                $5, $6, $7,
-                $8, $9,
-                $10, $11,
+                $3, $4, 'active', $5,
+                $6, $7, $8,
                 NOW(), NOW()
               )
             `, [
@@ -114,12 +118,14 @@ export async function POST(request: NextRequest) {
                 en: data.description || data.scenario_description || 'PBL Scenario',
                 zh: data.description_zh || data.description || 'PBL 場景'
               }),
-              JSON.stringify(data.learning_objectives || []),
-              JSON.stringify(data.prerequisites || []),
-              JSON.stringify(data.target_audience || []),
-              data.estimated_duration || 60,
               data.difficulty || 'intermediate',
-              JSON.stringify(data),
+              JSON.stringify(data.learning_objectives || []),
+              JSON.stringify({
+                ...data,
+                estimatedDuration: data.estimated_duration || 60,
+                prerequisites: data.prerequisites || [],
+                targetAudience: data.target_audience || []
+              }),
               JSON.stringify(data.stages || [])
             ]);
             pblCount++;
@@ -156,13 +162,11 @@ export async function POST(request: NextRequest) {
               await pool.query(`
                 INSERT INTO scenarios (
                   mode, source_type, source_id, source_path,
-                  title, description, status,
-                  duration_minutes, assessment_data,
+                  title, description, status, assessment_data,
                   created_at, updated_at
                 ) VALUES (
                   'assessment', 'yaml', $1, $2,
-                  $3, $4, 'active',
-                  $5, $6,
+                  $3, $4, 'active', $5,
                   NOW(), NOW()
                 )
               `, [
@@ -176,12 +180,12 @@ export async function POST(request: NextRequest) {
                   en: data.description || 'Assessment for AI literacy competencies',
                   zh: data.description_zh || 'AI 素養能力評估'
                 }),
-                data.time_limit_minutes || 15,
                 JSON.stringify({
                   totalQuestions: data.total_questions || 12,
                   passingScore: data.passing_score || 60,
                   domains: data.domains || [],
-                  questionBank: data.questions || []
+                  questionBank: data.questions || [],
+                  timeLimit: data.time_limit_minutes || 15
                 })
               ]);
               assessmentCount++;
@@ -221,13 +225,11 @@ export async function POST(request: NextRequest) {
               await pool.query(`
                 INSERT INTO scenarios (
                   mode, source_type, source_id, source_path,
-                  title, description, status,
-                  duration_minutes, discovery_data,
+                  title, description, status, discovery_data,
                   created_at, updated_at
                 ) VALUES (
                   'discovery', 'yaml', $1, $2,
-                  $3, $4, 'active',
-                  $5, $6,
+                  $3, $4, 'active', $5,
                   NOW(), NOW()
                 )
               `, [
@@ -241,12 +243,12 @@ export async function POST(request: NextRequest) {
                   en: data.description || 'Career exploration path',
                   zh: data.description_zh || data.description || '職業探索路徑'
                 }),
-                90,
                 JSON.stringify({
                   careerType: data.career_type || 'technology',
                   requiredSkills: data.required_skills || [],
                   learningPath: data.learning_path || [],
-                  industryInsights: data.industry_insights || {}
+                  industryInsights: data.industry_insights || {},
+                  estimatedDuration: 90
                 })
               ]);
               discoveryCount++;
@@ -262,12 +264,14 @@ export async function POST(request: NextRequest) {
       console.log(`Loaded ${discoveryCount} Discovery scenarios`);
 
       // Step 5: Create demo users (using valid roles from schema)
+      // Note: These password hashes must match the frontend LoginForm demo accounts
+      // Generated with bcryptjs, salt rounds: 10
       await pool.query(`
-        INSERT INTO users (id, email, password_hash, name, role, email_verified)
+        INSERT INTO users (id, email, password_hash, name, role, email_verified, created_at, updated_at)
         VALUES 
-          ('550e8400-e29b-41d4-a716-446655440001', 'student@example.com', '$2b$10$K7L1OJ0TfPALHfRplJNYPOefsVTPLiFve0ic1YYRdRbGhPcDDiliS', 'Demo Student', 'student', true),
-          ('550e8400-e29b-41d4-a716-446655440002', 'teacher@example.com', '$2b$10$K7L1OJ0TfPALHfRplJNYPOefsVTPLiFve0ic1YYRdRbGhPcDDiliS', 'Demo Teacher', 'teacher', true),
-          ('550e8400-e29b-41d4-a716-446655440003', 'admin@example.com', '$2b$10$K7L1OJ0TfPALHfRplJNYPOefsVTPLiFve0ic1YYRdRbGhPcDDiliS', 'Demo Admin', 'admin', true)
+          ('550e8400-e29b-41d4-a716-446655440001', 'student@example.com', '$2b$10$qtr1b19D5AAqHdHIwk7kwO3O1Bc8NuAbMQLWBNXsssitWcqz2t51.', 'Demo Student', 'student', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+          ('550e8400-e29b-41d4-a716-446655440002', 'teacher@example.com', '$2b$10$yO.DFREVnZMJfUMwDY7p/.8cEbZFdeQHVDISIWyjF0CKW71BFkt4S', 'Demo Teacher', 'teacher', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+          ('550e8400-e29b-41d4-a716-446655440003', 'admin@example.com', '$2b$10$/6sb.PWC9OaZwLxPmCpSI..tVI/v8x8LoK0GPie0UZUOkj.hoq46y', 'Demo Admin', 'admin', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
         ON CONFLICT (email) DO NOTHING
       `);
 
@@ -283,12 +287,32 @@ export async function POST(request: NextRequest) {
 
       return NextResponse.json({
         success: true,
-        message: 'Database initialized successfully',
+        message: action === 'reset-full' ? 'Database reset and reinitialized successfully' : 'Database initialized successfully',
         counts: finalCounts.rows[0],
         details: {
           pbl: `${pblCount} scenarios loaded from ${pblScenarioFiles.length} files`,
           assessment: `${assessmentCount} scenarios loaded`,
           discovery: `${discoveryCount} scenarios loaded`
+        }
+      });
+    }
+
+    if (action === 'clear-all') {
+      // Clear all data but don't reinitialize
+      console.log('Clearing all data only...');
+      await pool.query(`
+        TRUNCATE TABLE evaluations, tasks, programs, scenarios, users CASCADE;
+      `);
+      
+      return NextResponse.json({
+        success: true,
+        message: 'Database cleared successfully',
+        counts: {
+          pbl_count: 0,
+          assessment_count: 0,
+          discovery_count: 0,
+          user_count: 0,
+          total_scenarios: 0
         }
       });
     }

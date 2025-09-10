@@ -1,103 +1,67 @@
-import { NextResponse } from 'next/server'
-import { cookies } from 'next/headers'
-import { verifyRefreshToken, createAccessToken } from '@/lib/auth/jwt'
+import { NextRequest, NextResponse } from 'next/server';
+import { AuthManager } from '@/lib/auth/auth-manager';
+import { SecureSession } from '@/lib/auth/secure-session';
 
-// Mock user data - in production, this would come from a database
-const MOCK_USERS = [
-  {
-    id: 1,
-    email: 'student@example.com',
-    role: 'student',
-    name: 'Student User'
-  },
-  {
-    id: 2,
-    email: 'teacher@example.com',
-    role: 'teacher',
-    name: 'Teacher User'
-  },
-  {
-    id: 3,
-    email: 'admin@example.com',
-    role: 'admin',
-    name: 'Admin User'
-  },
-  {
-    id: 4,
-    email: 'test@example.com',
-    role: 'student',
-    name: 'Test User'
-  }
-]
-
-export async function POST() {
+export async function POST(request: NextRequest) {
   try {
-    const cookieStore = await cookies()
-    const refreshToken = cookieStore.get('refreshToken')
+    // Get current session token
+    const currentToken = AuthManager.getSessionToken(request);
     
-    if (!refreshToken) {
+    if (!currentToken) {
       return NextResponse.json(
-        { success: false, error: 'No refresh token provided' },
+        { success: false, error: 'No session found' },
         { status: 401 }
-      )
+      );
     }
     
-    // Verify refresh token
-    const payload = await verifyRefreshToken(refreshToken.value)
+    // Get current session data
+    const sessionData = SecureSession.getSession(currentToken);
     
-    if (!payload) {
+    if (!sessionData) {
       return NextResponse.json(
-        { success: false, error: 'Invalid refresh token' },
+        { success: false, error: 'Session expired' },
         { status: 401 }
-      )
+      );
     }
     
-    // Find user by ID
-    const user = MOCK_USERS.find(u => u.id === payload.userId)
+    // Destroy old session
+    SecureSession.destroySession(currentToken);
     
-    if (!user) {
-      return NextResponse.json(
-        { success: false, error: 'User not found' },
-        { status: 404 }
-      )
-    }
-    
-    // Create new access token
-    const newAccessToken = await createAccessToken({
-      userId: user.id,
-      email: user.email,
-      role: user.role,
-      name: user.name
-    })
+    // Create new session with same user data
+    const newToken = SecureSession.createSession({
+      userId: sessionData.userId,
+      email: sessionData.email,
+      role: sessionData.role
+    }, false); // Don't extend to remember me on refresh
     
     // Create response
     const response = NextResponse.json({
       success: true,
       message: 'Token refreshed successfully'
-    })
+    });
     
-    // Set new access token
-    response.cookies.set('accessToken', newAccessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 60 * 15 // 15 minutes
-    })
+    // Set new token in cookie
+    AuthManager.setAuthCookie(response, newToken, false);
     
-    // Update user cookie for backward compatibility
-    response.cookies.set('user', JSON.stringify(user), {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 60 * 60 * 24 * 7 // 7 days
-    })
+    return response;
     
-    return response
   } catch (error) {
-    console.error('Token refresh error:', error)
+    console.error('Token refresh error:', error);
     return NextResponse.json(
-      { success: false, error: 'Internal server error' },
+      { success: false, error: 'Failed to refresh token' },
       { status: 500 }
-    )
+    );
   }
+}
+
+// Support OPTIONS for CORS
+export async function OPTIONS() {
+  return new NextResponse(null, {
+    status: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+    },
+  });
 }

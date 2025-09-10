@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth, createUnauthorizedResponse } from '@/lib/auth/unified-auth';
 import { cachedGET } from '@/lib/api/optimization-utils';
 import { cacheService } from '@/lib/cache/cache-service';
 import { distributedCacheService } from '@/lib/cache/distributed-cache-service';
@@ -12,12 +12,9 @@ export async function POST(
 ) {
   try {
     // Get user session
-    const session = await getServerSession();
+    const session = await getUnifiedAuth(request);
     if (!session?.user?.email) {
-      return NextResponse.json(
-        { success: false, error: 'Authentication required' },
-        { status: 401 }
-      );
+      return createUnauthorizedResponse();
     }
 
     const { taskId } = await params;
@@ -38,38 +35,44 @@ export async function POST(
 
     // Store interaction in task.interactions column
     const task = await taskRepo.findById(taskId);
-    if (task) {
-      const currentInteractions = task.interactions || [];
-      
-      // Add the new interaction with consistent format
-      const newInteraction: Interaction = {
-        timestamp: interaction.timestamp || new Date().toISOString(),
-        type: interaction.type === 'user' ? 'user_input' : 
-              interaction.type === 'ai' ? 'ai_response' : 
-              'system_event',
-        content: interaction.content,
-        metadata: interaction.metadata
-      };
-      
-      const updatedInteractions = [...currentInteractions, newInteraction];
-      
-      // Update task interactions using updateInteractions method
-      if (taskRepo.updateInteractions) {
-        await taskRepo.updateInteractions(taskId, updatedInteractions);
-      } else {
-        // Fallback to update method
-        await taskRepo.update?.(taskId, {
-          interactions: updatedInteractions
-        });
-      }
-      
-      // For user interactions, also record attempt for scoring
-      if (interaction.type === 'user') {
-        await taskRepo.recordAttempt?.(taskId, {
-          response: interaction.content,
-          timeSpent: interaction.metadata?.timeSpent || 0
-        });
-      }
+    if (!task) {
+      console.error(`Task not found: ${taskId}`);
+      return NextResponse.json(
+        { success: false, error: 'Task not found' },
+        { status: 404 }
+      );
+    }
+    
+    const currentInteractions = task.interactions || [];
+    
+    // Add the new interaction with consistent format
+    const newInteraction: Interaction = {
+      timestamp: interaction.timestamp || new Date().toISOString(),
+      type: interaction.type === 'user' ? 'user_input' : 
+            interaction.type === 'ai' ? 'ai_response' : 
+            'system_event',
+      content: interaction.content,
+      metadata: interaction.metadata
+    };
+    
+    const updatedInteractions = [...currentInteractions, newInteraction];
+    
+    // Update task interactions using updateInteractions method
+    if (taskRepo.updateInteractions) {
+      await taskRepo.updateInteractions(taskId, updatedInteractions);
+    } else {
+      // Fallback to update method
+      await taskRepo.update?.(taskId, {
+        interactions: updatedInteractions
+      });
+    }
+    
+    // For user interactions, also record attempt for scoring
+    if (interaction.type === 'user') {
+      await taskRepo.recordAttempt?.(taskId, {
+        response: interaction.content,
+        timeSpent: interaction.metadata?.timeSpent || 0
+      });
     }
 
     // Clear cache for this task's interactions
@@ -101,12 +104,9 @@ export async function GET(
   { params }: { params: Promise<{ taskId: string }> }
 ) {
   // Get user session
-  const session = await getServerSession();
+  const session = await getUnifiedAuth(request);
   if (!session?.user?.email) {
-    return NextResponse.json(
-      { success: false, error: 'Authentication required' },
-      { status: 401 }
-    );
+    return createUnauthorizedResponse();
   }
 
   const { taskId } = await params;

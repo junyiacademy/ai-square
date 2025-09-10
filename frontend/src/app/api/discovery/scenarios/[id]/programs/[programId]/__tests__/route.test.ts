@@ -4,13 +4,21 @@
 
 import { NextRequest } from 'next/server';
 import { GET } from '../route';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth } from '@/lib/auth/unified-auth';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 
-jest.mock('@/lib/auth/session');
+jest.mock('@/lib/auth/unified-auth', () => ({
+  getUnifiedAuth: jest.fn(),
+  createUnauthorizedResponse: jest.fn(() => 
+    new Response(
+      JSON.stringify({ success: false, error: 'Authentication required' }),
+      { status: 401, headers: { 'Content-Type': 'application/json' } }
+    )
+  )
+}));
 jest.mock('@/lib/repositories/base/repository-factory');
 
-const mockGetServerSession = getServerSession as jest.MockedFunction<typeof getServerSession>;
+const mockGetUnifiedAuth = getUnifiedAuth as jest.MockedFunction<typeof getUnifiedAuth>;
 const mockRepositoryFactory = repositoryFactory as jest.Mocked<typeof repositoryFactory>;
 
 describe('/api/discovery/scenarios/[id]/programs/[programId]', () => {
@@ -38,14 +46,14 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]', () => {
   });
 
   it('returns 401 when unauthenticated', async () => {
-    mockGetServerSession.mockResolvedValue(null);
+    mockGetUnifiedAuth.mockResolvedValue(null);
     const req = new NextRequest('http://localhost/api/discovery/scenarios/s1/programs/p1');
     const res = await GET(req, { params: Promise.resolve({ id: 's1', programId: 'p1' }) });
     expect(res.status).toBe(401);
   });
 
   it('returns 404 when program not found', async () => {
-    mockGetServerSession.mockResolvedValue({ user: { email: 'u@test.com', id: 'u1' } } as any);
+    mockGetUnifiedAuth.mockResolvedValue({ user: { email: 'u@test.com', id: 'u1' } } as any);
     programRepo.findById.mockResolvedValue(null);
     const req = new NextRequest('http://localhost/api/discovery/scenarios/s1/programs/p1');
     const res = await GET(req, { params: Promise.resolve({ id: 's1', programId: 'p1' }) });
@@ -53,7 +61,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]', () => {
   });
 
   it('returns 403 when program does not belong to user/scenario', async () => {
-    mockGetServerSession.mockResolvedValue({ user: { email: 'u@test.com', id: 'u1' } } as any);
+    mockGetUnifiedAuth.mockResolvedValue({ user: { email: 'u@test.com', id: 'u1' } } as any);
     programRepo.findById.mockResolvedValue({ id: 'p1', userId: 'other', scenarioId: 's1' });
     const req = new NextRequest('http://localhost/api/discovery/scenarios/s1/programs/p1');
     const res = await GET(req, { params: Promise.resolve({ id: 's1', programId: 'p1' }) });
@@ -61,7 +69,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]', () => {
   });
 
   it('returns program details with tasks summary (200)', async () => {
-    mockGetServerSession.mockResolvedValue({ user: { email: 'u@test.com', id: 'u1' } } as any);
+    mockGetUnifiedAuth.mockResolvedValue({ user: { email: 'u@test.com', id: 'u1' } } as any);
     const program = {
       id: 'p1',
       userId: 'u1',
@@ -110,7 +118,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]', () => {
   });
 
   it('returns 500 on unexpected error', async () => {
-    mockGetServerSession.mockResolvedValue({ user: { email: 'u@test.com', id: 'u1' } } as any);
+    mockGetUnifiedAuth.mockResolvedValue({ user: { email: 'u@test.com', id: 'u1' } } as any);
     programRepo.findById.mockRejectedValue(new Error('boom'));
     const req = new NextRequest('http://localhost/api/discovery/scenarios/s1/programs/p1');
     const res = await GET(req, { params: Promise.resolve({ id: 's1', programId: 'p1' }) });

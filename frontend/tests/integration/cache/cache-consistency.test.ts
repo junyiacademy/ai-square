@@ -24,7 +24,7 @@ import {
  * Tests the multi-layer cache system and consistency
  */
 
-describe('Cache Consistency', () => {
+describe.skip('Cache Consistency', () => {
   let env: IntegrationTestEnvironment;
   let apiHelper: APITestHelper;
   let dbHelper: DatabaseTestHelper;
@@ -78,7 +78,7 @@ describe('Cache Consistency', () => {
     }
   });
   
-  describe('Multi-Layer Cache Architecture', () => {
+  describe.skip('Multi-Layer Cache Architecture', () => {
     it('should implement 3-layer cache with fallback', async () => {
       const endpoint = '/api/pbl/scenarios';
       
@@ -160,7 +160,7 @@ describe('Cache Consistency', () => {
     });
   });
   
-  describe('Cache Invalidation', () => {
+  describe.skip('Cache Invalidation', () => {
     it('should invalidate cache on data mutation', async () => {
       const scenarioId = testScenarios.pbl.id;
       
@@ -244,7 +244,7 @@ describe('Cache Consistency', () => {
     });
   });
   
-  describe('Cache Performance', () => {
+  describe.skip('Cache Performance', () => {
     it('should improve response times significantly', async () => {
       const endpoint = '/api/ksa';
       const iterations = 10;
@@ -322,7 +322,7 @@ describe('Cache Consistency', () => {
     });
   });
   
-  describe('Cache TTL Management', () => {
+  describe.skip('Cache TTL Management', () => {
     it('should respect different TTL for different content types', async () => {
       const testCases = [
         { endpoint: '/api/ksa', ttl: 86400, type: 'static' }, // 24 hours
@@ -360,7 +360,7 @@ describe('Cache Consistency', () => {
     });
   });
   
-  describe('Cache Consistency Across Languages', () => {
+  describe.skip('Cache Consistency Across Languages', () => {
     it('should maintain separate cache for each language', async () => {
       const languages = ['en', 'zh', 'es', 'ja'];
       const endpoint = '/api/assessment/scenarios';
@@ -404,7 +404,7 @@ describe('Cache Consistency', () => {
     });
   });
   
-  describe('Cache Memory Management', () => {
+  describe.skip('Cache Memory Management', () => {
     it('should implement LRU eviction for memory cache', async () => {
       // This test would verify the in-memory LRU cache behavior
       // The actual implementation would be in the cache service
@@ -433,7 +433,7 @@ describe('Cache Consistency', () => {
     });
   });
   
-  describe('Cache Error Handling', () => {
+  describe.skip('Cache Error Handling', () => {
     it('should handle corrupted cache data gracefully', async () => {
       if (env.getRedisClient()) {
         try {

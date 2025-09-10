@@ -1,13 +1,19 @@
 import { NextRequest } from 'next/server';
 import { GET } from '../route';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth } from '@/lib/auth/unified-auth';
 import { createRepositoryFactory } from '@/lib/db/repositories/factory';
 
 // Mock dependencies
-jest.mock('@/lib/auth/session');
+jest.mock('@/lib/auth/unified-auth', () => ({
+  getUnifiedAuth: jest.fn(),
+  createUnauthorizedResponse: jest.fn(() => ({
+    json: () => Promise.resolve({ success: false, error: 'Authentication required' }),
+    status: 401
+  }))
+}));
 jest.mock('@/lib/db/repositories/factory');
 
-const mockGetServerSession = getServerSession as jest.MockedFunction<typeof getServerSession>;
+const mockGetUnifiedAuth = getUnifiedAuth as jest.MockedFunction<typeof getUnifiedAuth>;
 const mockCreateRepositoryFactory = createRepositoryFactory as jest.Mocked<typeof createRepositoryFactory>;
 
 describe('GET /api/pbl/programs/[programId]/tasks', () => {
@@ -72,9 +78,9 @@ describe('GET /api/pbl/programs/[programId]/tasks', () => {
       getUserRepository: jest.fn().mockReturnValue(mockUserRepo)
     };
 
-    mockCreateRepositoryFactory.getProgramRepository = jest.fn().mockReturnValue(mockProgramRepo);
-    mockCreateRepositoryFactory.getTaskRepository = jest.fn().mockReturnValue(mockTaskRepo);
-    mockCreateRepositoryFactory.getUserRepository = jest.fn().mockReturnValue(mockUserRepo);
+    (createRepositoryFactory as any).getProgramRepository = jest.fn().mockReturnValue(mockProgramRepo);
+    (createRepositoryFactory as any).getTaskRepository = jest.fn().mockReturnValue(mockTaskRepo);
+    (createRepositoryFactory as any).getUserRepository = jest.fn().mockReturnValue(mockUserRepo);
   });
 
   const createMockRequest = () => {
@@ -159,7 +165,7 @@ describe('GET /api/pbl/programs/[programId]/tasks', () => {
 
   // Test 6-10: Authentication tests
   it('should return 401 when no session exists', async () => {
-    mockGetServerSession.mockResolvedValue(null);
+    mockGetUnifiedAuth.mockResolvedValue(null);
     
     const request = createMockRequest();
     const params = createMockParams();
@@ -175,7 +181,7 @@ describe('GET /api/pbl/programs/[programId]/tasks', () => {
   });
 
   it('should return 401 when session has no user', async () => {
-    mockGetServerSession.mockResolvedValue({ user: null } as any);
+    mockGetUnifiedAuth.mockResolvedValue({ user: null } as any);
     
     const request = createMockRequest();
     const params = createMockParams();
@@ -191,7 +197,7 @@ describe('GET /api/pbl/programs/[programId]/tasks', () => {
   });
 
   it('should return 401 when session user has no email', async () => {
-    mockGetServerSession.mockResolvedValue({ 
+    mockGetUnifiedAuth.mockResolvedValue({ 
       user: { name: 'Test User' } as any 
     });
     
@@ -209,7 +215,7 @@ describe('GET /api/pbl/programs/[programId]/tasks', () => {
   });
 
   it('should return 401 when session user email is empty', async () => {
-    mockGetServerSession.mockResolvedValue({ 
+    mockGetUnifiedAuth.mockResolvedValue({ 
       user: { email: '', name: 'Test User' } as any 
     });
     
@@ -227,7 +233,7 @@ describe('GET /api/pbl/programs/[programId]/tasks', () => {
   });
 
   it('should return 401 when session user email is undefined', async () => {
-    mockGetServerSession.mockResolvedValue({ 
+    mockGetUnifiedAuth.mockResolvedValue({ 
       user: { email: undefined, name: 'Test User' } as any 
     });
     
@@ -246,7 +252,7 @@ describe('GET /api/pbl/programs/[programId]/tasks', () => {
 
   // Test 11-15: User lookup tests
   it('should return 404 when user is not found by email', async () => {
-    mockGetServerSession.mockResolvedValue({ 
+    mockGetUnifiedAuth.mockResolvedValue({ 
       user: { email: mockUserEmail } as any 
     });
     mockUserRepo.findByEmail.mockResolvedValue(null);
@@ -266,7 +272,7 @@ describe('GET /api/pbl/programs/[programId]/tasks', () => {
   });
 
   it('should return 404 when user lookup returns undefined', async () => {
-    mockGetServerSession.mockResolvedValue({ 
+    mockGetUnifiedAuth.mockResolvedValue({ 
       user: { email: mockUserEmail } as any 
     });
     mockUserRepo.findByEmail.mockResolvedValue(undefined);
@@ -285,7 +291,7 @@ describe('GET /api/pbl/programs/[programId]/tasks', () => {
   });
 
   it('should handle user lookup database error', async () => {
-    mockGetServerSession.mockResolvedValue({ 
+    mockGetUnifiedAuth.mockResolvedValue({ 
       user: { email: mockUserEmail } as any 
     });
     mockUserRepo.findByEmail.mockRejectedValue(new Error('Database connection failed'));
@@ -304,7 +310,7 @@ describe('GET /api/pbl/programs/[programId]/tasks', () => {
   });
 
   it('should handle user with missing id field', async () => {
-    mockGetServerSession.mockResolvedValue({ 
+    mockGetUnifiedAuth.mockResolvedValue({ 
       user: { email: mockUserEmail } as any 
     });
     const userWithoutId = { email: mockUserEmail, name: 'Test User' };
@@ -325,7 +331,7 @@ describe('GET /api/pbl/programs/[programId]/tasks', () => {
   });
 
   it('should handle user with null id field', async () => {
-    mockGetServerSession.mockResolvedValue({ 
+    mockGetUnifiedAuth.mockResolvedValue({ 
       user: { email: mockUserEmail } as any 
     });
     const userWithNullId = { id: null, email: mockUserEmail, name: 'Test User' };
@@ -347,7 +353,7 @@ describe('GET /api/pbl/programs/[programId]/tasks', () => {
 
   // Test 16-20: Program validation tests
   it('should return 404 when program does not exist', async () => {
-    mockGetServerSession.mockResolvedValue({ 
+    mockGetUnifiedAuth.mockResolvedValue({ 
       user: { email: mockUserEmail } as any 
     });
     mockUserRepo.findByEmail.mockResolvedValue(mockUser);
@@ -368,7 +374,7 @@ describe('GET /api/pbl/programs/[programId]/tasks', () => {
   });
 
   it('should return 404 when program lookup returns undefined', async () => {
-    mockGetServerSession.mockResolvedValue({ 
+    mockGetUnifiedAuth.mockResolvedValue({ 
       user: { email: mockUserEmail } as any 
     });
     mockUserRepo.findByEmail.mockResolvedValue(mockUser);
@@ -388,7 +394,7 @@ describe('GET /api/pbl/programs/[programId]/tasks', () => {
   });
 
   it('should return 403 when program belongs to different user', async () => {
-    mockGetServerSession.mockResolvedValue({ 
+    mockGetUnifiedAuth.mockResolvedValue({ 
       user: { email: mockUserEmail } as any 
     });
     mockUserRepo.findByEmail.mockResolvedValue(mockUser);
@@ -409,7 +415,7 @@ describe('GET /api/pbl/programs/[programId]/tasks', () => {
   });
 
   it('should return 403 when program has no userId', async () => {
-    mockGetServerSession.mockResolvedValue({ 
+    mockGetUnifiedAuth.mockResolvedValue({ 
       user: { email: mockUserEmail } as any 
     });
     mockUserRepo.findByEmail.mockResolvedValue(mockUser);
@@ -431,7 +437,7 @@ describe('GET /api/pbl/programs/[programId]/tasks', () => {
   });
 
   it('should return 403 when program userId is null', async () => {
-    mockGetServerSession.mockResolvedValue({ 
+    mockGetUnifiedAuth.mockResolvedValue({ 
       user: { email: mockUserEmail } as any 
     });
     mockUserRepo.findByEmail.mockResolvedValue(mockUser);
@@ -453,7 +459,7 @@ describe('GET /api/pbl/programs/[programId]/tasks', () => {
 
   // Test 21-25: Success cases
   it('should successfully return tasks for valid program', async () => {
-    mockGetServerSession.mockResolvedValue({ 
+    mockGetUnifiedAuth.mockResolvedValue({ 
       user: { email: mockUserEmail } as any 
     });
     mockUserRepo.findByEmail.mockResolvedValue(mockUser);
@@ -472,7 +478,7 @@ describe('GET /api/pbl/programs/[programId]/tasks', () => {
   });
 
   it('should return empty array when no tasks exist', async () => {
-    mockGetServerSession.mockResolvedValue({ 
+    mockGetUnifiedAuth.mockResolvedValue({ 
       user: { email: mockUserEmail } as any 
     });
     mockUserRepo.findByEmail.mockResolvedValue(mockUser);
@@ -498,7 +504,7 @@ describe('GET /api/pbl/programs/[programId]/tasks', () => {
       status: 'pending' as const
     }));
     
-    mockGetServerSession.mockResolvedValue({ 
+    mockGetUnifiedAuth.mockResolvedValue({ 
       user: { email: mockUserEmail } as any 
     });
     mockUserRepo.findByEmail.mockResolvedValue(mockUser);
@@ -537,7 +543,7 @@ describe('GET /api/pbl/programs/[programId]/tasks', () => {
       }
     ];
     
-    mockGetServerSession.mockResolvedValue({ 
+    mockGetUnifiedAuth.mockResolvedValue({ 
       user: { email: mockUserEmail } as any 
     });
     mockUserRepo.findByEmail.mockResolvedValue(mockUser);
@@ -556,7 +562,7 @@ describe('GET /api/pbl/programs/[programId]/tasks', () => {
 
   it('should handle case-insensitive UUID validation', async () => {
     const upperCaseUUID = validProgramId.toUpperCase();
-    mockGetServerSession.mockResolvedValue({ 
+    mockGetUnifiedAuth.mockResolvedValue({ 
       user: { email: mockUserEmail } as any 
     });
     mockUserRepo.findByEmail.mockResolvedValue(mockUser);
@@ -575,7 +581,7 @@ describe('GET /api/pbl/programs/[programId]/tasks', () => {
 
   // Test 26-30: Error handling and edge cases
   it('should handle program repository database error', async () => {
-    mockGetServerSession.mockResolvedValue({ 
+    mockGetUnifiedAuth.mockResolvedValue({ 
       user: { email: mockUserEmail } as any 
     });
     mockUserRepo.findByEmail.mockResolvedValue(mockUser);
@@ -595,7 +601,7 @@ describe('GET /api/pbl/programs/[programId]/tasks', () => {
   });
 
   it('should handle task repository database error', async () => {
-    mockGetServerSession.mockResolvedValue({ 
+    mockGetUnifiedAuth.mockResolvedValue({ 
       user: { email: mockUserEmail } as any 
     });
     mockUserRepo.findByEmail.mockResolvedValue(mockUser);
@@ -616,7 +622,7 @@ describe('GET /api/pbl/programs/[programId]/tasks', () => {
   });
 
   it('should handle session service error', async () => {
-    mockGetServerSession.mockRejectedValue(new Error('Session service error'));
+    mockGetUnifiedAuth.mockRejectedValue(new Error('Session service error'));
     
     const request = createMockRequest();
     const params = createMockParams();
@@ -632,7 +638,7 @@ describe('GET /api/pbl/programs/[programId]/tasks', () => {
   });
 
   it('should handle repository factory initialization error', async () => {
-    mockGetServerSession.mockResolvedValue({ 
+    mockGetUnifiedAuth.mockResolvedValue({ 
       user: { email: mockUserEmail } as any 
     });
     
@@ -655,7 +661,7 @@ describe('GET /api/pbl/programs/[programId]/tasks', () => {
   });
 
   it('should handle params promise rejection', async () => {
-    mockGetServerSession.mockResolvedValue({ 
+    mockGetUnifiedAuth.mockResolvedValue({ 
       user: { email: mockUserEmail } as any 
     });
     

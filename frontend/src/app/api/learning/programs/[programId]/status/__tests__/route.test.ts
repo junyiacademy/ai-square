@@ -1,12 +1,21 @@
 import { NextRequest } from 'next/server';
 import { GET } from '../route';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth } from '@/lib/auth/unified-auth';
+
+// Mock dependencies
+jest.mock('@/lib/auth/unified-auth', () => ({
+  getUnifiedAuth: jest.fn(),
+  createUnauthorizedResponse: jest.fn(() => ({
+    json: () => Promise.resolve({ success: false, error: 'Authentication required' }),
+    status: 401
+  }))
+}));;
 import { postgresqlLearningService } from '@/lib/services/postgresql-learning-service';
 import { createMockProgram, createMockScenario, createMockTask, createMockEvaluation } from '@/test-utils/mocks/repository-helpers';
 
 // Mock auth session
 jest.mock('@/lib/auth/session', () => ({
-  getServerSession: jest.fn()
+  getUnifiedAuth: jest.fn()
 }));
 
 // Mock learning service
@@ -17,7 +26,7 @@ jest.mock('@/lib/services/postgresql-learning-service', () => ({
 }));
 
 // Get mocked functions
-const mockGetServerSession = getServerSession as jest.MockedFunction<typeof getServerSession>;
+const mockGetUnifiedAuth = getUnifiedAuth as jest.MockedFunction<typeof getUnifiedAuth>;
 const mockGetProgramStatus = postgresqlLearningService.getProgramStatus as jest.MockedFunction<typeof postgresqlLearningService.getProgramStatus>;
 
 describe('GET /api/learning/programs/[programId]/status', () => {
@@ -26,7 +35,7 @@ describe('GET /api/learning/programs/[programId]/status', () => {
   });
 
   it('returns 401 when not authenticated', async () => {
-    mockGetServerSession.mockResolvedValue(null);
+    mockGetUnifiedAuth.mockResolvedValue(null);
 
     const request = new NextRequest('http://localhost:3000/api/learning/programs/prog123/status');
     const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
@@ -35,12 +44,12 @@ describe('GET /api/learning/programs/[programId]/status', () => {
     expect(response.status).toBe(401);
     expect(data).toEqual({
       success: false,
-      error: 'Unauthorized',
+      error: 'Authentication required',
     });
   });
 
   it('returns 401 when session has no email', async () => {
-    mockGetServerSession.mockResolvedValue({ user: { id: 'user123', email: undefined as any } });
+    mockGetUnifiedAuth.mockResolvedValue({ user: { id: 'user123', email: undefined as any , role: 'student' } });
 
     const request = new NextRequest('http://localhost:3000/api/learning/programs/prog123/status');
     const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
@@ -49,7 +58,7 @@ describe('GET /api/learning/programs/[programId]/status', () => {
     expect(response.status).toBe(401);
     expect(data).toEqual({
       success: false,
-      error: 'Unauthorized',
+      error: 'Authentication required',
     });
   });
 
@@ -84,7 +93,7 @@ describe('GET /api/learning/programs/[programId]/status', () => {
       completionRate: 65,
     };
 
-    mockGetServerSession.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com' } });
+    mockGetUnifiedAuth.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com', role: 'student' } });
     mockGetProgramStatus.mockResolvedValue(mockStatus);
 
     const request = new NextRequest('http://localhost:3000/api/learning/programs/prog123/status');
@@ -100,7 +109,7 @@ describe('GET /api/learning/programs/[programId]/status', () => {
   });
 
   it('returns 404 when program not found', async () => {
-    mockGetServerSession.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com' } });
+    mockGetUnifiedAuth.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com', role: 'student' } });
     mockGetProgramStatus.mockRejectedValue(new Error('Program not found'));
 
     const request = new NextRequest('http://localhost:3000/api/learning/programs/nonexistent/status');
@@ -115,7 +124,7 @@ describe('GET /api/learning/programs/[programId]/status', () => {
   });
 
   it('returns 500 for other errors', async () => {
-    mockGetServerSession.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com' } });
+    mockGetUnifiedAuth.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com', role: 'student' } });
     mockGetProgramStatus.mockRejectedValue(new Error('Database connection failed'));
 
     const request = new NextRequest('http://localhost:3000/api/learning/programs/prog123/status');
@@ -144,7 +153,7 @@ describe('GET /api/learning/programs/[programId]/status', () => {
       completionRate: 0,
     };
 
-    mockGetServerSession.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com' } });
+    mockGetUnifiedAuth.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com', role: 'student' } });
     mockGetProgramStatus.mockResolvedValue(emptyStatus);
 
     const request = new NextRequest('http://localhost:3000/api/learning/programs/prog123/status');
@@ -184,7 +193,7 @@ describe('GET /api/learning/programs/[programId]/status', () => {
       completionRate: 100,
     };
 
-    mockGetServerSession.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com' } });
+    mockGetUnifiedAuth.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com', role: 'student' } });
     mockGetProgramStatus.mockResolvedValue(completedStatus);
 
     const request = new NextRequest('http://localhost:3000/api/learning/programs/prog123/status');

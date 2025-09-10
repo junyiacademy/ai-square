@@ -111,8 +111,8 @@ function RegisterContent() {
             }
           }
           
-          // Default to onboarding
-          router.push('/onboarding/welcome');
+          // Default to dashboard - onboarding is optional
+          router.push('/dashboard');
         }
       } else {
         setErrors({ submit: data.error || t('auth:register.errors.registrationFailed') });

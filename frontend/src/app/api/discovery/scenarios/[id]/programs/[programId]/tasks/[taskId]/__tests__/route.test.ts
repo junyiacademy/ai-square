@@ -4,10 +4,16 @@
 
 import { NextRequest } from 'next/server';
 import { GET, PATCH } from '../route';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth } from '@/lib/auth/unified-auth';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 
-jest.mock('@/lib/auth/session');
+jest.mock('@/lib/auth/unified-auth', () => ({
+  getUnifiedAuth: jest.fn(),
+  createUnauthorizedResponse: jest.fn(() => ({
+    json: () => Promise.resolve({ success: false, error: 'Authentication required' }),
+    status: 401
+  }))
+}));
 jest.mock('@/lib/repositories/base/repository-factory');
 // Mock AI service to avoid real calls when needed
 jest.mock('@/lib/ai/vertex-ai-service', () => {
@@ -33,7 +39,7 @@ jest.mock('@/lib/services/translation-service', () => {
   return { TranslationService: MockTranslationService };
 });
 
-const mockGetServerSession = getServerSession as jest.MockedFunction<typeof getServerSession>;
+const mockGetUnifiedAuth = getUnifiedAuth as jest.MockedFunction<typeof getUnifiedAuth>;
 const mockRepositoryFactory = repositoryFactory as jest.Mocked<typeof repositoryFactory>;
 
 describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', () => {
@@ -65,14 +71,14 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
 
   describe('GET', () => {
     it('returns 401 when unauthenticated', async () => {
-      mockGetServerSession.mockResolvedValue(null);
+      mockGetUnifiedAuth.mockResolvedValue(null);
       const req = new NextRequest('http://localhost/api/discovery/scenarios/s1/programs/p1/tasks/t1');
       const res = await GET(req, { params: Promise.resolve({ id: 's1', programId: 'p1', taskId: 't1' }) });
       expect(res.status).toBe(401);
     });
 
     it('returns 403 when program not owned by user', async () => {
-      mockGetServerSession.mockResolvedValue({ user: { email: 'u@test.com', id: 'u1' } } as any);
+      mockGetUnifiedAuth.mockResolvedValue({ user: { email: 'u@test.com', id: 'u1' } } as any);
       programRepo.findById.mockResolvedValue({ id: 'p1', userId: 'other', scenarioId: 's1' });
       const req = new NextRequest('http://localhost/api/discovery/scenarios/s1/programs/p1/tasks/t1');
       const res = await GET(req, { params: Promise.resolve({ id: 's1', programId: 'p1', taskId: 't1' }) });
@@ -80,7 +86,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
     });
 
     it('returns 404 when task not found or not in program', async () => {
-      mockGetServerSession.mockResolvedValue({ user: { email: 'u@test.com', id: 'u1' } } as any);
+      mockGetUnifiedAuth.mockResolvedValue({ user: { email: 'u@test.com', id: 'u1' } } as any);
       programRepo.findById.mockResolvedValue({ id: 'p1', userId: 'u1', scenarioId: 's1' });
       taskRepo.getTaskWithInteractions.mockResolvedValue(null);
       const req = new NextRequest('http://localhost/api/discovery/scenarios/s1/programs/p1/tasks/t1');
@@ -89,7 +95,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
     });
 
     it('returns 200 with task data', async () => {
-      mockGetServerSession.mockResolvedValue({ user: { email: 'u@test.com', id: 'u1' } } as any);
+      mockGetUnifiedAuth.mockResolvedValue({ user: { email: 'u@test.com', id: 'u1' } } as any);
       programRepo.findById.mockResolvedValue({ id: 'p1', userId: 'u1', scenarioId: 's1', metadata: { language: 'en' } });
       taskRepo.getTaskWithInteractions.mockResolvedValue({
         id: 't1',
@@ -115,7 +121,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       const { TranslationService } = require('@/lib/services/translation-service');
       const translateSpy = jest.spyOn(TranslationService.prototype, 'translateFeedback');
 
-      mockGetServerSession.mockResolvedValue({ user: { email: 'u@test.com', id: 'u1' } } as any);
+      mockGetUnifiedAuth.mockResolvedValue({ user: { email: 'u@test.com', id: 'u1' } } as any);
       programRepo.findById.mockResolvedValue({ id: 'p1', userId: 'u1', scenarioId: 's1' });
       taskRepo.getTaskWithInteractions.mockResolvedValue({
         id: 't1', programId: 'p1', status: 'completed', title: { en: 'T' }, content: {}, metadata: { evaluationId: 'e1' }
@@ -139,7 +145,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       // Ensure static fallback picks english
       (TranslationService as unknown as { getFeedbackByLanguage: jest.Mock }).getFeedbackByLanguage.mockReturnValueOnce('Great job');
 
-      mockGetServerSession.mockResolvedValue({ user: { email: 'u@test.com', id: 'u1' } } as any);
+      mockGetUnifiedAuth.mockResolvedValue({ user: { email: 'u@test.com', id: 'u1' } } as any);
       programRepo.findById.mockResolvedValue({ id: 'p1', userId: 'u1', scenarioId: 's1' });
       taskRepo.getTaskWithInteractions.mockResolvedValue({
         id: 't1', programId: 'p1', status: 'completed', title: { en: 'T' }, content: {}, metadata: { evaluationId: 'e1' }
@@ -155,7 +161,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
     });
 
     it('returns 500 on unexpected error', async () => {
-      mockGetServerSession.mockResolvedValue({ user: { email: 'u@test.com', id: 'u1' } } as any);
+      mockGetUnifiedAuth.mockResolvedValue({ user: { email: 'u@test.com', id: 'u1' } } as any);
       programRepo.findById.mockRejectedValue(new Error('boom'));
       const req = new NextRequest('http://localhost/api/discovery/scenarios/s1/programs/p1/tasks/t1');
       const res = await GET(req, { params: Promise.resolve({ id: 's1', programId: 'p1', taskId: 't1' }) });
@@ -166,7 +172,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       const { TranslationService } = require('@/lib/services/translation-service');
       const translateSpy = jest.spyOn(TranslationService.prototype, 'translateFeedback');
 
-      mockGetServerSession.mockResolvedValue({ user: { email: 'u@test.com', id: 'u1' } } as any);
+      mockGetUnifiedAuth.mockResolvedValue({ user: { email: 'u@test.com', id: 'u1' } } as any);
       programRepo.findById.mockResolvedValue({ id: 'p1', userId: 'u1', scenarioId: 's1' });
       taskRepo.getTaskWithInteractions.mockResolvedValue({
         id: 't1', programId: 'p1', status: 'completed', title: { en: 'T' }, content: {}, metadata: { evaluationId: 'e1' }
@@ -186,14 +192,14 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
 
   describe('PATCH', () => {
     it('returns 401 when unauthenticated', async () => {
-      mockGetServerSession.mockResolvedValue(null);
+      mockGetUnifiedAuth.mockResolvedValue(null);
       const req = new NextRequest('http://localhost/api/discovery/scenarios/s1/programs/p1/tasks/t1', { method: 'PATCH', body: JSON.stringify({ action: 'start' }) });
       const res = await PATCH(req, { params: Promise.resolve({ id: 's1', programId: 'p1', taskId: 't1' }) });
       expect(res.status).toBe(401);
     });
 
     it('returns 403 when program not owned by user', async () => {
-      mockGetServerSession.mockResolvedValue({ user: { email: 'u@test.com', id: 'u1' } } as any);
+      mockGetUnifiedAuth.mockResolvedValue({ user: { email: 'u@test.com', id: 'u1' } } as any);
       programRepo.findById.mockResolvedValue({ id: 'p1', userId: 'other', scenarioId: 's1' });
       const req = new NextRequest('http://localhost/api/discovery/scenarios/s1/programs/p1/tasks/t1', { method: 'PATCH', body: JSON.stringify({ action: 'start' }) });
       const res = await PATCH(req, { params: Promise.resolve({ id: 's1', programId: 'p1', taskId: 't1' }) });
@@ -201,7 +207,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
     });
 
     it('returns 404 when task not found', async () => {
-      mockGetServerSession.mockResolvedValue({ user: { email: 'u@test.com', id: 'u1' } } as any);
+      mockGetUnifiedAuth.mockResolvedValue({ user: { email: 'u@test.com', id: 'u1' } } as any);
       programRepo.findById.mockResolvedValue({ id: 'p1', userId: 'u1', scenarioId: 's1' });
       taskRepo.getTaskWithInteractions.mockResolvedValue(null);
       const req = new NextRequest('http://localhost/api/discovery/scenarios/s1/programs/p1/tasks/t1', { method: 'PATCH', body: JSON.stringify({ action: 'start' }) });
@@ -210,7 +216,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
     });
 
     it('start action returns 200 and updates status', async () => {
-      mockGetServerSession.mockResolvedValue({ user: { email: 'u@test.com', id: 'u1' } } as any);
+      mockGetUnifiedAuth.mockResolvedValue({ user: { email: 'u@test.com', id: 'u1' } } as any);
       programRepo.findById.mockResolvedValue({ id: 'p1', userId: 'u1', scenarioId: 's1', metadata: {} });
       taskRepo.getTaskWithInteractions.mockResolvedValue({ id: 't1', programId: 'p1', status: 'pending', interactions: [], content: {}, title: { en: 'T' } });
       const req = new NextRequest('http://localhost/api/discovery/scenarios/s1/programs/p1/tasks/t1', { method: 'PATCH', body: JSON.stringify({ action: 'start' }) });
@@ -222,7 +228,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
     });
 
     it('invalid action returns 400', async () => {
-      mockGetServerSession.mockResolvedValue({ user: { email: 'u@test.com', id: 'u1' } } as any);
+      mockGetUnifiedAuth.mockResolvedValue({ user: { email: 'u@test.com', id: 'u1' } } as any);
       programRepo.findById.mockResolvedValue({ id: 'p1', userId: 'u1', scenarioId: 's1' });
       taskRepo.getTaskWithInteractions.mockResolvedValue({ id: 't1', programId: 'p1', status: 'pending', interactions: [], content: {}, title: { en: 'T' } });
       const req = new NextRequest('http://localhost/api/discovery/scenarios/s1/programs/p1/tasks/t1', { method: 'PATCH', body: JSON.stringify({ action: 'unknown' }) });
@@ -236,7 +242,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
         sendMessage: jest.fn(async () => { throw new Error('AI down'); })
       }));
 
-      mockGetServerSession.mockResolvedValue({ user: { email: 'u@test.com', id: 'u1' } } as any);
+      mockGetUnifiedAuth.mockResolvedValue({ user: { email: 'u@test.com', id: 'u1' } } as any);
       programRepo.findById.mockResolvedValue({ id: 'p1', userId: 'u1', scenarioId: 's1', metadata: { language: 'en' } });
       taskRepo.getTaskWithInteractions.mockResolvedValue({ id: 't1', programId: 'p1', status: 'pending', interactions: [], content: { xp: 100 }, title: { en: 'T' }, metadata: {} });
 
@@ -252,7 +258,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
     });
 
     it('confirm-complete returns 400 when no passed ai_response exists', async () => {
-      mockGetServerSession.mockResolvedValue({ user: { email: 'u@test.com', id: 'u1' } } as any);
+      mockGetUnifiedAuth.mockResolvedValue({ user: { email: 'u@test.com', id: 'u1' } } as any);
       programRepo.findById.mockResolvedValue({ id: 'p1', userId: 'u1', scenarioId: 's1' });
       taskRepo.getTaskWithInteractions.mockResolvedValue({
         id: 't1', programId: 'p1', status: 'pending', // not completed and no passed ai_response
@@ -274,7 +280,7 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
     it('regenerate-evaluation returns 403 when not in development', async () => {
       const originalEnv = process.env.NODE_ENV;
       Object.defineProperty(process, 'env', { value: { ...process.env, NODE_ENV: 'test' } });
-      mockGetServerSession.mockResolvedValue({ user: { email: 'u@test.com', id: 'u1' } } as any);
+      mockGetUnifiedAuth.mockResolvedValue({ user: { email: 'u@test.com', id: 'u1' } } as any);
       programRepo.findById.mockResolvedValue({ id: 'p1', userId: 'u1', scenarioId: 's1' });
       taskRepo.getTaskWithInteractions.mockResolvedValue({ id: 't1', programId: 'p1', status: 'completed', interactions: [], content: { xp: 100 }, title: { en: 'T' }, metadata: { evaluationId: 'e1' } });
       const req = new NextRequest('http://localhost/api/discovery/scenarios/s1/programs/p1/tasks/t1', { method: 'PATCH', body: JSON.stringify({ action: 'regenerate-evaluation' }) });

@@ -50,10 +50,19 @@ import { NextRequest } from 'next/server';
 import { POST } from '../route';
 import { learningServiceFactory } from '@/lib/services/learning-service-factory';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
+import { getUnifiedAuth } from '@/lib/auth/unified-auth';
 
 // Mock the dependencies
 jest.mock('@/lib/services/learning-service-factory');
 jest.mock('@/lib/repositories/base/repository-factory');
+jest.mock('@/lib/auth/unified-auth', () => ({
+  getUnifiedAuth: jest.fn(),
+  createUnauthorizedResponse: jest.fn(() => ({
+    status: 401,
+    json: jest.fn().mockResolvedValue({ error: 'Authentication required', success: false }),
+    text: jest.fn().mockResolvedValue('{"error":"Authentication required","success":false}')
+  }))
+}));
 
 describe('POST /api/pbl/scenarios/[id]/start', () => {
   const mockScenarioId = '123e4567-e89b-12d3-a456-426614174000';
@@ -83,6 +92,7 @@ describe('POST /api/pbl/scenarios/[id]/start', () => {
   const mockScenario = {
     id: mockScenarioId,
     mode: 'pbl',
+    status: 'active', // Required by TDD validator
     title: { en: 'Test PBL Scenario' },
     description: { en: 'Test description' },
     taskTemplates: [
@@ -165,12 +175,20 @@ describe('POST /api/pbl/scenarios/[id]/start', () => {
         findByProgram: jest.fn().mockResolvedValue(mockTasks)
       };
 
+      // Mock authentication
+      (getUnifiedAuth as jest.Mock).mockResolvedValue({
+        user: { id: mockUserId, email: 'test@example.com', role: 'student' }
+      });
+
       (learningServiceFactory.getService as jest.Mock).mockReturnValue(mockPBLService);
       (repositoryFactory.getUserRepository as jest.Mock).mockReturnValue(mockUserRepo);
       (repositoryFactory.getScenarioRepository as jest.Mock).mockReturnValue(mockScenarioRepo);
       (repositoryFactory.getTaskRepository as jest.Mock).mockReturnValue(mockTaskRepo);
 
-      const request = createRequestWithUser('test@example.com');
+      const request = new NextRequest('http://localhost/api/pbl/scenarios/123/start', {
+        method: 'POST',
+        body: JSON.stringify({ language: 'en' })
+      });
 
       // Act
       const response = await POST(request, { params: Promise.resolve({'id':'123e4567-e89b-12d3-a456-426614174000'}) });
@@ -239,6 +257,9 @@ describe('POST /api/pbl/scenarios/[id]/start', () => {
 
     it('should require user authentication', async () => {
       // Arrange
+      // Mock getUnifiedAuth to return null for unauthenticated user
+      (getUnifiedAuth as jest.Mock).mockResolvedValue(null);
+      
       const request = new NextRequest('http://localhost/api/pbl/scenarios/123/start', {
         method: 'POST',
         headers: {
@@ -255,7 +276,7 @@ describe('POST /api/pbl/scenarios/[id]/start', () => {
       // Assert
       expect(response.status).toBe(401);
       expect(data.success).toBe(false);
-      expect(data.error).toContain('User authentication required');
+      expect(data.error).toContain('Authentication required');
     });
 
     it('should create user if not exists', async () => {
@@ -272,10 +293,20 @@ describe('POST /api/pbl/scenarios/[id]/start', () => {
       const mockScenarioRepo = {
         findById: jest.fn().mockResolvedValue(mockScenario)
       };
+      
+      const mockTaskRepo = {
+        findByProgram: jest.fn().mockResolvedValue(mockTasks)
+      };
+
+      // Mock authentication to return new@example.com
+      (getUnifiedAuth as jest.Mock).mockResolvedValue({
+        user: { id: 'new-user-id', email: 'new@example.com', role: 'student' }
+      });
 
       (learningServiceFactory.getService as jest.Mock).mockReturnValue(mockPBLService);
       (repositoryFactory.getUserRepository as jest.Mock).mockReturnValue(mockUserRepo);
       (repositoryFactory.getScenarioRepository as jest.Mock).mockReturnValue(mockScenarioRepo);
+      (repositoryFactory.getTaskRepository as jest.Mock).mockReturnValue(mockTaskRepo);
 
       const request = createRequestWithUser('new@example.com');
 
@@ -332,6 +363,7 @@ describe('POST /api/pbl/scenarios/[id]/start', () => {
       // Arrange
       const scenarioWithStringTitles = {
         ...mockScenario,
+        status: 'active', // Required by TDD validator
         taskTemplates: [
           {
             id: 'task-1',

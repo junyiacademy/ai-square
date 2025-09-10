@@ -197,7 +197,8 @@ describe('DashboardPage', () => {
     });
     
     expect(global.fetch).toHaveBeenCalledWith(
-      expect.stringContaining('/api/assessment/results?userId=1&userEmail=test%40example.com')
+      expect.stringContaining('/api/assessment/results?userId=1&userEmail=test%40example.com'),
+      { credentials: 'include' }
     );
   });
 

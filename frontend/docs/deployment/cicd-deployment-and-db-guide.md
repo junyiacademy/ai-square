@@ -96,13 +96,56 @@ on:
   ```
   Instance: ai-square-db-staging-asia
   Connection: /cloudsql/ai-square-463013:asia-east1:ai-square-db-staging-asia
+  Version: PostgreSQL 17
+  Tier: db-f1-micro (成本優化)
   ```
 
 - **Production**: Cloud SQL in asia-east1
   ```
-  Instance: ai-square-db-prod-asia
-  Connection: /cloudsql/ai-square-463013:asia-east1:ai-square-db-prod-asia
+  Instance: ai-square-db-production
+  Connection: /cloudsql/ai-square-463013:asia-east1:ai-square-db-production
+  Version: PostgreSQL 17
+  Tier: db-f1-micro (成本優化)
   ```
+
+### 💰 Database Cost Optimization (2025-08-27 更新)
+
+#### 成本優化成果
+- **優化前**: ~$85/月
+- **優化後**: $0/月（停止狀態）
+- **節省**: 100% 成本削減
+
+#### 快速指令（開發工作流程）
+```bash
+# 開始開發（啟動資料庫）
+make db-start
+
+# 結束開發（停止資料庫）
+make db-stop
+
+# 檢查狀態和成本
+make db-cost
+```
+
+#### 成本分析表
+| 配置項目 | 優化前 | 優化後 | 節省 |
+|---------|--------|--------|------|
+| 資料庫規格 | db-custom-2-4096 | db-f1-micro | ~$40/月 |
+| 運行時間 | 24/7 | 按需啟動 | ~$25/月 |
+| 備份功能 | 啟用 | 關閉 | ~$10/月 |
+| **總計** | **~$85/月** | **$0/月** | **$85/月** |
+
+#### 自動化成本管理
+專案已配置 GitHub Actions 每天晚上自動停止資料庫：
+- **檔案**: `.github/workflows/db-cost-management.yml`
+- **排程**: 每天晚上 10 點（台北時間）自動停止
+- **手動控制**: 可在 GitHub Actions 頁面手動觸發 start/stop/status
+
+#### 最佳實踐
+1. **開發習慣**: 開始工作 `make db-start`，結束工作 `make db-stop`
+2. **環境分離**: 開發用 staging DB，生產只在部署時使用
+3. **成本監控**: 定期執行 `make db-cost` 檢查
+4. **緊急處理**: 忘記關閉立即執行 `make db-stop`
 
 ### Database Migrations
 
@@ -132,6 +175,90 @@ on:
    # Run migration
    DATABASE_URL="postgresql://..." npx prisma migrate deploy
    ```
+
+### 🔄 Staging Database Reset (2025-09-08 更新)
+
+#### 完整重設 Staging 資料庫
+
+Staging 環境提供完整的資料庫重設功能，可透過 API 快速清空並重新載入所有內容。
+
+**重要架構說明**：
+- `/api/admin/init-staging` - 管理資料庫和 demo 使用者
+- `/api/admin/init-pbl` - 載入 PBL scenarios (9 個)
+- `/api/admin/init-assessment` - 載入 Assessment scenarios (1 個)
+- `/api/admin/init-discovery` - 載入 Discovery scenarios (12 個)
+
+#### 快速重設指令
+
+1. **完整重設（清空並重新載入所有內容）**：
+   ```bash
+   # Step 1: 重設資料庫並建立 demo 使用者
+   curl -X POST "https://ai-square-staging-m7s4ucbgba-de.a.run.app/api/admin/init-staging" \
+     -H "Content-Type: application/json" \
+     -H "x-admin-key: staging-init-2025" \
+     -d '{"action": "reset-full"}'
+   
+   # Step 2: 載入所有 scenarios
+   curl -X POST "https://ai-square-staging-m7s4ucbgba-de.a.run.app/api/admin/init-pbl"
+   curl -X POST "https://ai-square-staging-m7s4ucbgba-de.a.run.app/api/admin/init-assessment"
+   curl -X POST "https://ai-square-staging-m7s4ucbgba-de.a.run.app/api/admin/init-discovery"
+   ```
+
+2. **檢查資料庫狀態**：
+   ```bash
+   curl -X POST "https://ai-square-staging-m7s4ucbgba-de.a.run.app/api/admin/init-staging" \
+     -H "Content-Type: application/json" \
+     -H "x-admin-key: staging-init-2025" \
+     -d '{"action": "check"}'
+   ```
+
+3. **僅清空資料（不重新載入）**：
+   ```bash
+   curl -X POST "https://ai-square-staging-m7s4ucbgba-de.a.run.app/api/admin/init-staging" \
+     -H "Content-Type: application/json" \
+     -H "x-admin-key: staging-init-2025" \
+     -d '{"action": "clear-all"}'
+   ```
+
+#### Demo 使用者帳號
+
+重設後會自動建立以下測試帳號：
+- **Student**: `student@example.com` / `student123`
+- **Teacher**: `teacher@example.com` / `teacher123`
+- **Admin**: `admin@example.com` / `admin123`
+
+#### 預期結果
+
+成功執行完整重設後應該看到：
+```json
+{
+  "counts": {
+    "pbl_count": "9",
+    "assessment_count": "1",
+    "discovery_count": "12",
+    "user_count": "3",
+    "total_scenarios": "22"
+  }
+}
+```
+
+#### 本地開發重設
+
+本地開發環境使用相同的 API：
+```bash
+# 本地重設（確保 dev server 在 port 3000）
+BASE_URL="http://localhost:3000"
+
+# 重設資料庫
+curl -X POST "$BASE_URL/api/admin/init-staging" \
+  -H "x-admin-key: staging-init-2025" \
+  -d '{"action": "reset-full"}'
+
+# 載入 scenarios
+curl -X POST "$BASE_URL/api/admin/init-pbl"
+curl -X POST "$BASE_URL/api/admin/init-assessment"
+curl -X POST "$BASE_URL/api/admin/init-discovery"
+```
 
 ### Adding New Fields (Example: email_verified_at)
 
@@ -169,6 +296,8 @@ on:
 - [ ] ESLint no warnings (`npm run lint`)
 - [ ] Build succeeds (`npm run build`)
 - [ ] Database migrations tested locally
+- [ ] Authentication tests pass (`npm test -- auth`)
+- [ ] E2E authentication tests pass (`npm run test:e2e -- auth`)
 
 ### Before Deploying to Production
 - [ ] Staging deployment successful
@@ -211,6 +340,10 @@ gcloud run services update-traffic SERVICE_NAME \
 2. **Always backup database** before production migrations
 3. **Monitor logs** after deployment for errors
 4. **Keep staging and production** in sync
+5. **Verify authentication** works after each deployment
+   - Check middleware is correctly validating tokens
+   - Test protected routes are accessible when logged in
+   - Ensure token format consistency (hex vs base64)
 
 ## 📊 Monitoring
 

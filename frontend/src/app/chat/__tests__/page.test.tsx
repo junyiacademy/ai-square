@@ -156,7 +156,7 @@ beforeEach(() => {
       });
 
       await waitFor(() => {
-        expect(mockFetch).toHaveBeenCalledWith('/api/auth/check');
+        expect(mockFetch).toHaveBeenCalledWith('/api/auth/check', { credentials: 'include' });
       });
     });
 
@@ -191,7 +191,8 @@ beforeEach(() => {
         expect(mockFetch).toHaveBeenCalledWith('/api/chat/sessions', {
           headers: {
             'x-user-info': JSON.stringify({ id: '1', email: 'test@example.com', role: 'user' })
-          }
+          },
+          credentials: 'include'
         });
       });
     });
@@ -362,7 +363,8 @@ beforeEach(() => {
         expect(mockFetch).toHaveBeenCalledWith('/api/chat/sessions/session123', {
           headers: {
             'x-user-info': JSON.stringify({ id: '1', email: 'test@example.com', role: 'user' })
-          }
+          },
+          credentials: 'include'
         });
       });
     });

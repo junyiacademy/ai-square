@@ -10,9 +10,14 @@ import type { ITask } from '@/types/unified-learning';
 import type { IDiscoveryTask } from '@/types/discovery-types';
 
 // Mock auth session
-const mockGetServerSession = jest.fn();
-jest.mock('@/lib/auth/session', () => ({
-  getServerSession: () => mockGetServerSession()
+const mockGetUnifiedAuth = jest.fn();
+jest.mock('@/lib/auth/unified-auth', () => ({
+  getUnifiedAuth: () => mockGetUnifiedAuth(),
+  createUnauthorizedResponse: jest.fn(() => ({
+    status: 401,
+    json: jest.fn().mockResolvedValue({ error: 'Authentication required', success: false }),
+    text: jest.fn().mockResolvedValue('{"error":"Authentication required","success":false}')
+  }))
 }));
 
 // Mock repository factory
@@ -165,7 +170,7 @@ describe('Discovery Tasks API', () => {
     mockRepositoryFactory.getUserRepository.mockReturnValue(mockUserRepo);
 
     // Default auth
-    mockGetServerSession.mockResolvedValue({ user: mockUser });
+    mockGetUnifiedAuth.mockResolvedValue({ user: mockUser });
   });
 
   describe('GET /api/discovery/programs/[programId]/tasks', () => {
@@ -234,7 +239,7 @@ describe('Discovery Tasks API', () => {
 
     it('should require authentication', async () => {
       // Arrange
-      mockGetServerSession.mockResolvedValue(null);
+      mockGetUnifiedAuth.mockResolvedValue(null);
 
       const request = createMockNextRequest('http://localhost:3000/api/discovery/programs/prog123/tasks');
 

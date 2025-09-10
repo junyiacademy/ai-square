@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth, createUnauthorizedResponse } from '@/lib/auth/unified-auth';
 import { 
   AssessmentInteraction, 
   AssessmentQuestion, 
@@ -15,7 +15,7 @@ export async function POST(
 ) {
   try {
     // Try to get user from authentication
-    const session = await getServerSession();
+    const session = await getUnifiedAuth(request);
     
     // If no auth, check if user info is in query params
     let user: { email: string; id?: string } | null = null;
@@ -30,10 +30,7 @@ export async function POST(
       if (emailParam) {
         user = { email: emailParam, id: idParam || undefined };
       } else {
-        return NextResponse.json(
-          { error: 'Authentication required' },
-          { status: 401 }
-        );
+        return createUnauthorizedResponse();
       }
     }
     
@@ -189,8 +186,21 @@ export async function POST(
         .filter((i): i is AssessmentInteraction => i !== null);
       
       // Questions can be in task.content.questions or task.metadata.questions
-      const taskQuestions = (task.content as { questions?: AssessmentQuestion[] })?.questions || 
-                           (task.metadata as { questions?: AssessmentQuestion[] })?.questions || [];
+      const rawQuestions = (task.content as { questions?: Record<string, unknown>[] })?.questions || 
+                           (task.metadata as { questions?: Record<string, unknown>[] })?.questions || [];
+      
+      // Map domainId to domain for compatibility with AssessmentQuestion interface
+      const taskQuestions: AssessmentQuestion[] = rawQuestions.map((q: Record<string, unknown>) => {
+        console.log(`Mapping question ${q.id as string}:`, {
+          originalDomainId: q.domainId as string,
+          originalDomain: q.domain as string,
+          mappedDomain: (q.domainId || q.domain) as string
+        });
+        return {
+          ...q,
+          domain: (q.domainId || q.domain) as string // Use domainId if available, fallback to domain
+        } as AssessmentQuestion;
+      });
       
       console.log(`Task ${task.title}:`, {
         taskId: task.id,
@@ -242,8 +252,19 @@ export async function POST(
       const questionId = answer.context.questionId;
       const question = allQuestions.find((q) => q.id === questionId);
       
+      console.log(`Processing answer for question ${questionId}:`, {
+        questionFound: !!question,
+        questionDomain: question?.domain,
+        isCorrect: answer.context.isCorrect
+      });
+      
       if (question && question.domain) {
         const domainScore = domainScores.get(question.domain);
+        console.log(`Domain "${question.domain}":`, {
+          domainScoreFound: !!domainScore,
+          currentTotal: domainScore?.totalQuestions || 0
+        });
+        
         if (domainScore) {
           domainScore.totalQuestions++;
           if (answer.context.isCorrect) {
@@ -377,8 +398,8 @@ export async function POST(
       userId: userRecord.id,
       programId: programId,
       mode: 'assessment',
-      evaluationType: 'program',
-      evaluationSubtype: 'assessment_complete',
+      evaluationType: 'assessment_complete',  // Use simple descriptive naming
+      // evaluationSubtype: 'assessment_complete',  // Skip problematic field for staging compatibility
       score: overallScore,
       maxScore: 100,
       timeTakenSeconds: completionTime,
@@ -428,7 +449,7 @@ export async function POST(
           }
         }
       },
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString()  // Use ISO string as required by interface
     });
     
     console.log('Evaluation created successfully:', {

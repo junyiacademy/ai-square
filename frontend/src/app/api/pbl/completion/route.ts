@@ -1,17 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth, createUnauthorizedResponse } from '@/lib/auth/unified-auth';
 import { getLanguageFromHeader } from '@/lib/utils/language';
 import { cachedGET } from '@/lib/api/optimization-utils';
 import { ITask, IInteraction } from '@/types/unified-learning';
 
 export async function GET(request: NextRequest) {
   // Get user session
-  const session = await getServerSession();
+  const session = await getUnifiedAuth(request);
   if (!session?.user?.email) {
-    return NextResponse.json(
-      { success: false, error: 'Authentication required' },
-      { status: 401 }
-    );
+    return createUnauthorizedResponse();
   }
   const userEmail = session.user.email;
 
@@ -126,14 +123,9 @@ export async function GET(request: NextRequest) {
     // Get all tasks for detailed information
     const tasks = await taskRepo.findByProgram(programId);
     
-    // Sort tasks by their position in the program's taskIds array
-    const taskIds = (program.metadata?.taskIds || []) as string[];
-    const sortedTasks = taskIds.length > 0 ? 
-      tasks.sort((a: ITask, b: ITask) => {
-        const indexA = taskIds.indexOf(a.id);
-        const indexB = taskIds.indexOf(b.id);
-        return indexA - indexB;
-      }) : tasks;
+    // Tasks are already sorted by task_index from the repository
+    // No need to re-sort them based on taskIds
+    const sortedTasks = tasks;
     
     // Build tasks array with evaluations and progress
     const tasksWithDetails = await Promise.all(

@@ -1,15 +1,24 @@
 import { mockRepositoryFactory } from '@/test-utils/mocks/repositories';
 import { NextRequest } from 'next/server';
 import { POST } from '../route';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth } from '@/lib/auth/unified-auth';
+
+// Mock dependencies
+jest.mock('@/lib/auth/unified-auth', () => ({
+  getUnifiedAuth: jest.fn(),
+  createUnauthorizedResponse: jest.fn(() => ({
+    json: () => Promise.resolve({ success: false, error: 'Authentication required' }),
+    status: 401
+  }))
+}));;
 
 // Mock auth session
 jest.mock('@/lib/auth/session', () => ({
-  getServerSession: jest.fn()
+  getUnifiedAuth: jest.fn()
 }));
 
 // Get mocked function
-const mockGetServerSession = getServerSession as jest.MockedFunction<typeof getServerSession>;
+const mockGetUnifiedAuth = getUnifiedAuth as jest.MockedFunction<typeof getUnifiedAuth>;
 
 // Mock repositories
 const mockFindById = jest.fn();
@@ -106,7 +115,7 @@ describe('POST /api/discovery/programs/[programId]/complete', () => {
   };
 
   it('returns 401 when not authenticated', async () => {
-    mockGetServerSession.mockResolvedValue(null);
+    mockGetUnifiedAuth.mockResolvedValue(null);
 
     const request = new NextRequest('http://localhost:3000/api/discovery/programs/program123/complete', {
       method: 'POST',
@@ -116,11 +125,11 @@ describe('POST /api/discovery/programs/[programId]/complete', () => {
     const data = await response.json();
 
     expect(response.status).toBe(401);
-    expect(data).toEqual({ error: 'Authentication required' });
+    expect(data).toEqual({ success: false, error: 'Authentication required' });
   });
 
   it('returns 404 when program not found', async () => {
-    mockGetServerSession.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com' } });
+    mockGetUnifiedAuth.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com', role: 'student' } });
     mockFindById.mockResolvedValue(null);
 
     const request = new NextRequest('http://localhost:3000/api/discovery/programs/program123/complete', {
@@ -135,7 +144,7 @@ describe('POST /api/discovery/programs/[programId]/complete', () => {
   });
 
   it('returns 404 when user does not own the program', async () => {
-    mockGetServerSession.mockResolvedValue({ user: { id: 'otheruser', email: 'other@example.com' } });
+    mockGetUnifiedAuth.mockResolvedValue({ user: { id: 'otheruser', email: 'other@example.com', role: 'student' } });
     mockFindById.mockResolvedValue(mockProgram);
 
     const request = new NextRequest('http://localhost:3000/api/discovery/programs/program123/complete', {
@@ -159,7 +168,7 @@ describe('POST /api/discovery/programs/[programId]/complete', () => {
       },
     };
 
-    mockGetServerSession.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com' } });
+    mockGetUnifiedAuth.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com', role: 'student' } });
     mockFindById.mockResolvedValue(completedProgram);
     mockFindByIdEval.mockResolvedValue({ id: 'eval123' });
 
@@ -179,7 +188,7 @@ describe('POST /api/discovery/programs/[programId]/complete', () => {
   });
 
   it('successfully completes program and creates evaluation', async () => {
-    mockGetServerSession.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com' } });
+    mockGetUnifiedAuth.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com', role: 'student' } });
     mockFindById.mockResolvedValue(mockProgram);
     mockFindByProgram.mockResolvedValue(mockTasks);
     mockFindByIdScenario.mockResolvedValue(mockScenario);
@@ -207,8 +216,7 @@ describe('POST /api/discovery/programs/[programId]/complete', () => {
         userId: 'user123',
         programId: 'program123',
         mode: 'discovery',
-        evaluationType: 'program',
-        evaluationSubtype: 'discovery_complete',
+        evaluationType: 'discovery_complete',
         score: 88,
         maxScore: 100,
         discoveryData: {
@@ -275,7 +283,7 @@ describe('POST /api/discovery/programs/[programId]/complete', () => {
       },
     ];
 
-    mockGetServerSession.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com' } });
+    mockGetUnifiedAuth.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com', role: 'student' } });
     mockFindById.mockResolvedValue(mockProgram);
     mockFindByProgram.mockResolvedValue(tasksWithoutSuccess);
     mockFindByIdScenario.mockResolvedValue(mockScenario);
@@ -298,7 +306,7 @@ describe('POST /api/discovery/programs/[programId]/complete', () => {
   });
 
   it('handles database errors gracefully', async () => {
-    mockGetServerSession.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com' } });
+    mockGetUnifiedAuth.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com', role: 'student' } });
     mockFindById.mockRejectedValue(new Error('Database error'));
 
     const request = new NextRequest('http://localhost:3000/api/discovery/programs/program123/complete', {

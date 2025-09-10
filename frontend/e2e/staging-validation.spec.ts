@@ -69,4 +69,3 @@ test.describe('Staging Validation E2E Tests', () => {
     expect(data.checks.database.status).toBe(true);
   });
 });
-EOF < /dev/null

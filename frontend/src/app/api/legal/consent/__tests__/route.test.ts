@@ -51,11 +51,9 @@ describe('/api/legal/consent', () => {
   };
 
   const mockSession = {
-    user: {
-      id: 'user-123',
-      email: 'test@example.com',
+    user: { id: 'user-123', email: 'test@example.com',
       name: 'Test User'
-    }
+    , role: 'student' }
   };
 
   describe('POST - Record Consent', () => {

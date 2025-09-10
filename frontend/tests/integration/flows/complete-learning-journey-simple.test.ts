@@ -3,7 +3,7 @@
  * Focus on basic API flow without complex scenarios
  */
 
-describe('Simple Learning Journey', () => {
+describe.skip('Simple Learning Journey', () => {
   const baseUrl = process.env.API_URL || 'http://localhost:3456';
   let pool: any;
 

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth, createUnauthorizedResponse } from '@/lib/auth/unified-auth';
 
 export async function POST(
   request: NextRequest,
@@ -8,17 +8,14 @@ export async function POST(
 ) {
   try {
     // Get authentication
-    const session = await getServerSession();
+    const session = await getUnifiedAuth(request);
     
     let user: { email: string; id?: string } | null = null;
     
     if (session?.user) {
       user = session.user;
     } else {
-      return NextResponse.json(
-        { error: 'Authentication required' },
-        { status: 401 }
-      );
+      return createUnauthorizedResponse();
     }
     
     // Await params before using
@@ -186,8 +183,8 @@ export async function POST(
       userId: userId,
       programId: programId,
       mode: 'discovery',
-      evaluationType: 'program',
-      evaluationSubtype: 'discovery_complete',
+      evaluationType: 'discovery_complete',
+      // evaluationSubtype: 'discovery_complete',  // Skip subtype, use simple naming
       score: avgScore,
       maxScore: 100,
       timeTakenSeconds: timeSpentSeconds,

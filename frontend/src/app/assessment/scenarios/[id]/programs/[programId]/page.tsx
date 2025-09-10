@@ -245,20 +245,21 @@ export default function AssessmentProgramPage({
   // Get questions from either location (new structure or legacy)
   const questions = currentTask?.content?.context?.questions || currentTask?.content?.questions || [];
   
-  // Enhanced debugging
-  console.log('=== ASSESSMENT PAGE DEBUG ===');
-  console.log('currentTask:', !!currentTask);
-  console.log('questions found:', questions.length);
-  if (currentTask) {
+  // Only show detailed debugging if not loading and there's an actual error
+  if (!loading && currentTask && questions.length === 0) {
+    console.log('=== ASSESSMENT PAGE DEBUG ===');
+    console.log('currentTask:', !!currentTask);
+    console.log('questions found:', questions.length);
     console.log('currentTask.content:', !!currentTask.content);
     console.log('currentTask.content.questions:', currentTask.content?.questions?.length || 0);
     console.log('currentTask.content.context:', !!currentTask.content?.context);
     console.log('currentTask.content.context.questions:', currentTask.content?.context?.questions?.length || 0);
     console.log('First question sample:', currentTask.content?.questions?.[0]);
+    console.log('===========================');
   }
-  console.log('===========================');
   
-  if (!currentTask || questions.length === 0) {
+  // Don't show error during loading - this prevents false error messages
+  if (!loading && (!currentTask || questions.length === 0)) {
     const debugInfo = {
       hasTask: !!currentTask,
       hasContent: !!currentTask?.content,
@@ -334,8 +335,8 @@ export default function AssessmentProgramPage({
             onComplete={handleQuizComplete}
             timeLimit={currentTask?.content?.context?.timeLimit || timeLimit}
             // Pass saved answers from interactions
-            initialAnswers={currentTask.interactions
-              .filter((i) => i.type === 'assessment_answer')
+            initialAnswers={currentTask?.interactions
+              ?.filter((i) => i.type === 'assessment_answer')
             .reduce((acc: UserAnswer[], i) => {
               const content = i.content as Record<string, unknown>;
               acc.push({
@@ -345,7 +346,7 @@ export default function AssessmentProgramPage({
                 isCorrect: (content.isCorrect as boolean) || false
               });
               return acc;
-            }, [])}
+            }, []) || []}
           />
         </div>
       )}

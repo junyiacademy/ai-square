@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { learningServiceFactory } from '@/lib/services/learning-service-factory';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth, createUnauthorizedResponse } from '@/lib/auth/unified-auth';
 import type { 
   IProgram, 
   IScenario, 
@@ -23,14 +23,11 @@ export async function GET(
 ) {
   try {
     // Try to get user from authentication
-    const session = await getServerSession();
+    const session = await getUnifiedAuth(request);
     
     if (!session?.user?.email) {
       // For security: require proper authentication
-      return NextResponse.json(
-        { success: false, error: 'Authentication required' },
-        { status: 401 }
-      );
+      return createUnauthorizedResponse();
     }
     
     const userEmail = session.user.email;
@@ -147,10 +144,10 @@ export async function POST(
     const { action, language = 'en' } = body;
     
     // Try multiple authentication methods
-    const session = await getServerSession();
+    const session = await getUnifiedAuth(request);
     let email: string | null = null;
     
-    if (session?.user?.email) {
+    if (session?.user.email) {
       email = session.user.email;
     } else {
       // Fallback: Check for user cookie directly
@@ -170,10 +167,7 @@ export async function POST(
     
     if (!email) {
       console.log('No authentication found in session or cookies');
-      return NextResponse.json(
-        { error: 'Authentication required' },
-        { status: 401 }
-      );
+      return createUnauthorizedResponse();
     }
     
     if (action !== 'start') {

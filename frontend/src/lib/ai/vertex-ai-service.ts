@@ -1,7 +1,6 @@
 import { GoogleAuth } from 'google-auth-library';
 import { VertexAI } from '@google-cloud/vertexai';
 import { AIModule, ConversationTurn, ProcessLog } from '@/types/pbl';
-import path from 'path';
 
 export interface VertexAIConfig {
   model?: string;
@@ -39,14 +38,26 @@ export class VertexAIService {
       throw new Error('GOOGLE_CLOUD_PROJECT environment variable is required');
     }
     
-    // Initialize Google Auth with service account
-    const keyFilePath = process.env.GOOGLE_APPLICATION_CREDENTIALS || 
-                       path.join(process.cwd(), 'ai-square-key.json');
-    
-    this.auth = new GoogleAuth({
-      keyFile: keyFilePath,
+    // Initialize Google Auth with explicit credentials
+    const authConfig: Record<string, unknown> = {
+      projectId: this.projectId,
       scopes: ['https://www.googleapis.com/auth/cloud-platform']
-    });
+    };
+
+    // Use service account JSON from environment variable if available
+    if (process.env.VERTEX_AI_SERVICE_ACCOUNT_JSON && process.env.NODE_ENV !== 'test') {
+      try {
+        const credentials = JSON.parse(process.env.VERTEX_AI_SERVICE_ACCOUNT_JSON);
+        authConfig.credentials = credentials;
+      } catch (error) {
+        console.error('Failed to parse VERTEX_AI_SERVICE_ACCOUNT_JSON:', error);
+      }
+    } else if (process.env.GOOGLE_APPLICATION_CREDENTIALS && process.env.NODE_ENV !== 'test') {
+      // Fallback to key file for local development
+      authConfig.keyFile = process.env.GOOGLE_APPLICATION_CREDENTIALS;
+    }
+
+    this.auth = new GoogleAuth(authConfig);
 
     // Initialize chat with system prompt
     this.chatHistory = [
@@ -363,6 +374,6 @@ export function vertexAIResponseToConversation(
 export function getVertexAI(): VertexAI {
   return new VertexAI({
     project: process.env.GOOGLE_CLOUD_PROJECT,
-    location: process.env.GOOGLE_CLOUD_LOCATION || 'us-central1',
+    location: process.env.VERTEX_AI_LOCATION || 'us-central1',
   });
 }

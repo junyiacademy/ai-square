@@ -37,7 +37,6 @@ describe('PostgreSQLProgramRepository', () => {
     time_spent_seconds: 3600,
     started_at: '2024-01-02T00:00:00.000Z',
     completed_at: null,
-    last_activity_at: '2024-01-03T00:00:00.000Z',
     pbl_data: { aiModules: ['tutor'] },
     discovery_data: {},
     assessment_data: {},
@@ -148,8 +147,8 @@ describe('PostgreSQLProgramRepository', () => {
     });
 
     it('should order by last activity descending', async () => {
-      const program1 = { ...mockDBProgram, id: 'prog-1', last_activity_at: '2024-01-01T00:00:00.000Z' };
-      const program2 = { ...mockDBProgram, id: 'prog-2', last_activity_at: '2024-01-02T00:00:00.000Z' };
+      const program1 = { ...mockDBProgram, id: 'prog-1', updated_at: '2024-01-01T00:00:00.000Z' };
+      const program2 = { ...mockDBProgram, id: 'prog-2', updated_at: '2024-01-02T00:00:00.000Z' };
 
       (mockPool.query as jest.Mock).mockResolvedValue({
         rows: [program1, program2],
@@ -162,7 +161,7 @@ describe('PostgreSQLProgramRepository', () => {
       const result = await repository.findByUser('user-456');
 
       expect(mockPool.query).toHaveBeenCalledWith(
-        expect.stringContaining('ORDER BY last_activity_at DESC'),
+        expect.stringContaining('ORDER BY updated_at DESC'),
         ['user-456']
       );
       expect(result).toHaveLength(2);
@@ -588,7 +587,7 @@ describe('PostgreSQLProgramRepository', () => {
         ...mockDBProgram,
         created_at: '2024-01-01T10:00:00.000Z',
         updated_at: '2024-01-02T15:30:00.000Z',
-        last_activity_at: '2024-01-03T09:45:00.000Z'
+        // removed last_activity_at - using updated_at instead
       };
 
       (mockPool.query as jest.Mock).mockResolvedValue({
@@ -603,7 +602,7 @@ describe('PostgreSQLProgramRepository', () => {
 
       expect(result!.createdAt).toBe('2024-01-01T10:00:00.000Z');
       expect(result!.updatedAt).toBe('2024-01-02T15:30:00.000Z');
-      expect(result!.lastActivityAt).toBe('2024-01-03T09:45:00.000Z');
+      expect(result!.lastActivityAt).toBe('2024-01-02T15:30:00.000Z'); // Now uses updated_at value
     });
   });
 

@@ -1,11 +1,38 @@
 import { POST } from '../route';
 import { cookies } from 'next/headers';
+import { NextRequest } from 'next/server';
 
 // Mock cookies set
 const mockCookiesSet = jest.fn();
 
-// Mock NextResponse
+// Mock AuthManager
+jest.mock('@/lib/auth/auth-manager', () => ({
+  AuthManager: {
+    clearAuthCookies: jest.fn((response) => {
+      // Mock the actual behavior of clearing auth cookies
+      if (response && response.cookies && response.cookies.set) {
+        response.cookies.set('sessionToken', '', {
+          httpOnly: true,
+          secure: false, // NODE_ENV is test
+          sameSite: 'lax',
+          maxAge: 0,
+          path: '/'
+        });
+      }
+    })
+  }
+}));
+
+// Mock SecureSession
+jest.mock('@/lib/auth/secure-session', () => ({
+  SecureSession: {
+    destroySession: jest.fn()
+  }
+}));
+
+// Mock NextResponse but keep NextRequest
 jest.mock('next/server', () => ({
+  NextRequest: jest.requireActual('next/server').NextRequest,
   NextResponse: {
     json: (data: any, init?: ResponseInit) => {
       const response = new Response(JSON.stringify(data), init);
@@ -38,7 +65,8 @@ describe('/api/auth/logout', () => {
   });
   describe('POST', () => {
     it('should logout successfully and clear cookies', async () => {
-      const response = await POST();
+      const mockRequest = new NextRequest('http://localhost:3000/api/auth/logout');
+      const response = await POST(mockRequest);
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -50,7 +78,8 @@ describe('/api/auth/logout', () => {
     });
 
     it('should have proper cookie settings', async () => {
-      const response = await POST();
+      const mockRequest = new NextRequest('http://localhost:3000/api/auth/logout');
+      const response = await POST(mockRequest);
 
       // Check that all cookies have proper security settings
       expect(mockCookiesSet).toHaveBeenCalledWith(

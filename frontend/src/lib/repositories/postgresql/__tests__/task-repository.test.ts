@@ -36,6 +36,7 @@ describe('PostgreSQLTaskRepository', () => {
   const mockDBTask: DBTask = {
     id: 'task-123',
     program_id: 'program-456',
+    scenario_id: 'scenario-789', // Add required scenario_id
     mode: 'pbl',
     task_index: 1,
     scenario_task_index: 2,
@@ -79,6 +80,7 @@ describe('PostgreSQLTaskRepository', () => {
   const expectedTask: ITask = {
     id: 'task-123',
     programId: 'program-456',
+    scenarioId: 'scenario-789', // Add required scenarioId to expected task
     mode: 'pbl',
     taskIndex: 1,
     scenarioTaskIndex: 2,
@@ -263,6 +265,7 @@ describe('PostgreSQLTaskRepository', () => {
     it('should create a new task', async () => {
       const newTask: Omit<ITask, 'id'> = {
         programId: 'program-789',
+        scenarioId: 'scenario-999',
         mode: 'assessment',
         taskIndex: 0,
         title: { en: 'New Assessment Task', zh: '新評估任務' },
@@ -325,6 +328,7 @@ describe('PostgreSQLTaskRepository', () => {
     it('should use default values for optional fields', async () => {
       const minimalTask: Omit<ITask, 'id'> = {
         programId: 'program-456',
+        scenarioId: 'scenario-789',
         mode: 'discovery',
         taskIndex: 0,
         type: 'exploration',
@@ -377,6 +381,7 @@ describe('PostgreSQLTaskRepository', () => {
 
       const task: Omit<ITask, 'id'> = {
         programId: 'program-456',
+        scenarioId: 'scenario-789',
         mode: 'pbl',
         taskIndex: 0,
         type: 'chat',
@@ -409,6 +414,7 @@ describe('PostgreSQLTaskRepository', () => {
       const tasks: Omit<ITask, 'id'>[] = [
         {
           programId: 'program-456',
+          scenarioId: 'scenario-789',
           mode: 'pbl',
           taskIndex: 0,
           type: 'chat',
@@ -432,6 +438,7 @@ describe('PostgreSQLTaskRepository', () => {
         },
         {
           programId: 'program-456',
+          scenarioId: 'scenario-789',
           mode: 'pbl',
           taskIndex: 1,
           type: 'analysis',
@@ -481,6 +488,7 @@ describe('PostgreSQLTaskRepository', () => {
       const tasks: Omit<ITask, 'id'>[] = [
         {
           programId: 'program-456',
+          scenarioId: 'scenario-789',
           mode: 'pbl',
           taskIndex: 0,
           type: 'chat',

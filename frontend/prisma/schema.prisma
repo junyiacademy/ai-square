@@ -12,7 +12,7 @@ datasource db {
 
 // ==================== USERS ====================
 model User {
-  id                     String    @id @default(uuid())
+  id                     String    @id @default(uuid()) @db.Uuid
   email                  String    @unique
   passwordHash           String    @map("password_hash")
   role                   String    @default("student")
@@ -59,7 +59,7 @@ model User {
 
 // ==================== SCENARIOS ====================
 model Scenario {
-  id                   String    @id @default(uuid())
+  id                   String    @id @default(uuid()) @db.Uuid
   mode                 String    // pbl, discovery, assessment
   status               String    @default("active")
   version              String    @default("1.0.0")
@@ -118,9 +118,9 @@ model Scenario {
   updatedAt            DateTime  @updatedAt @map("updated_at")
   
   // Relations
-  createdBy            String?   @map("created_by")
+  createdBy            String?   @map("created_by") @db.Uuid
   createdByUser        User?     @relation("CreatedScenarios", fields: [createdBy], references: [id])
-  updatedBy            String?   @map("updated_by")
+  updatedBy            String?   @map("updated_by") @db.Uuid
   updatedByUser        User?     @relation("UpdatedScenarios", fields: [updatedBy], references: [id])
   
   // Metadata
@@ -137,14 +137,16 @@ model Scenario {
 
 // ==================== PROGRAMS ====================
 model Program {
-  id                    String    @id @default(uuid())
+  id                    String    @id @default(uuid()) @db.Uuid
   mode                  String
-  scenarioId            String    @map("scenario_id")
-  userId                String    @map("user_id")
+  scenarioId            String    @map("scenario_id") @db.Uuid
+  userId                String    @map("user_id") @db.Uuid
   
   // Status
   status                String    @default("pending") // pending, active, completed, expired
   currentTaskIndex      Int       @default(0) @map("current_task_index")
+  completedTaskCount    Int       @default(0) @map("completed_task_count")
+  totalTaskCount        Int       @default(0) @map("total_task_count")
   
   // Data
   context               Json?
@@ -155,6 +157,9 @@ model Program {
   
   // Progress
   totalScore            Decimal?  @map("total_score") @db.Decimal(10, 2)
+  domainScores          Json?     @map("domain_scores")
+  xpEarned              Int       @default(0) @map("xp_earned")
+  badgesEarned          Json      @default("[]") @map("badges_earned")
   timeSpentSeconds      Int       @default(0) @map("time_spent_seconds")
   completionPercentage  Decimal   @default(0) @map("completion_percentage") @db.Decimal(5, 2)
   achievements          Json      @default("[]")
@@ -165,6 +170,9 @@ model Program {
   expiresAt             DateTime? @map("expires_at")
   createdAt             DateTime  @default(now()) @map("created_at")
   updatedAt             DateTime  @updatedAt @map("updated_at")
+  
+  // Metadata
+  metadata              Json?
   
   // Relations
   scenario              Scenario  @relation(fields: [scenarioId], references: [id], onDelete: Cascade)
@@ -180,13 +188,14 @@ model Program {
 
 // ==================== TASKS ====================
 model Task {
-  id                String    @id @default(uuid())
+  id                String    @id @default(uuid()) @db.Uuid
   mode              String
-  programId         String    @map("program_id")
-  scenarioId        String    @map("scenario_id")
+  programId         String    @map("program_id") @db.Uuid
+  scenarioId        String    @map("scenario_id") @db.Uuid
   
   // Identification
   taskIndex         Int       @map("task_index")
+  scenarioTaskIndex Int?      @map("scenario_task_index")
   type              String    // question, chat, creation, analysis
   status            String    @default("pending")
   
@@ -202,7 +211,10 @@ model Task {
   interactions      Json      @default("[]")
   aiFeedback        Json?     @map("ai_feedback")
   attempts          Int       @default(0)
+  attemptCount      Int       @default(0) @map("attempt_count")
   maxAttempts       Int?      @map("max_attempts")
+  allowedAttempts   Int?      @map("allowed_attempts")
+  aiConfig          Json?     @map("ai_config")
   
   // Scoring
   score             Decimal?  @db.Decimal(10, 2)
@@ -225,17 +237,21 @@ model Task {
 
 // ==================== EVALUATIONS ====================
 model Evaluation {
-  id               String    @id @default(uuid())
+  id               String    @id @default(uuid()) @db.Uuid
   mode             String
-  taskId           String    @map("task_id")
-  programId        String    @map("program_id")
-  userId           String    @map("user_id")
+  taskId           String?   @map("task_id") @db.Uuid
+  programId        String    @map("program_id") @db.Uuid
+  userId           String    @map("user_id") @db.Uuid
   
   // Evaluation
   evaluationType   String    @map("evaluation_type") // formative, summative, diagnostic, ai-feedback
+  evaluationSubtype String?  @map("evaluation_subtype") // Optional subtype for specific evaluation categories
   score            Decimal?  @db.Decimal(10, 2)
   maxScore         Decimal?  @map("max_score") @db.Decimal(10, 2)
+  domainScores     Json?     @map("domain_scores")
   feedback         Json?
+  feedbackText     String?   @map("feedback_text") @db.Text
+  feedbackData     Json?     @map("feedback_data") @default("{}")
   strengths        String[]
   improvements     String[]
   
@@ -246,15 +262,25 @@ model Evaluation {
   
   // AI
   aiModel          String?   @map("ai_model")
+  aiProvider       String?   @map("ai_provider")
   aiConfig         Json?     @map("ai_config")
   aiResponse       Json?     @map("ai_response")
+  aiAnalysis       Json?     @map("ai_analysis") @default("{}")
+  
+  // Mode-specific data
+  pblData          Json?     @map("pbl_data") @default("{}")
+  discoveryData    Json?     @map("discovery_data") @default("{}")
+  assessmentData   Json?     @map("assessment_data") @default("{}")
+  
+  // Performance
+  timeTakenSeconds Int?      @map("time_taken_seconds") @default(0)
   
   // Timestamps
   evaluatedAt      DateTime  @default(now()) @map("evaluated_at")
   createdAt        DateTime  @default(now()) @map("created_at")
   
   // Relations
-  task             Task      @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  task             Task?     @relation(fields: [taskId], references: [id], onDelete: Cascade)
   program          Program   @relation(fields: [programId], references: [id], onDelete: Cascade)
   user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   

@@ -6,7 +6,7 @@ import { mockRepositoryFactory } from '@/test-utils/mocks/repositories';
 
 import { NextRequest } from 'next/server';
 import { POST } from '../route';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth } from '@/lib/auth/unified-auth';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { VertexAI } from '@google-cloud/vertexai';
 import type { IScenario, ITask } from '@/types/unified-learning';
@@ -14,7 +14,7 @@ import type { ChatMessage } from '@/types/pbl-api';
 import { mockConsoleError, mockConsoleWarn, mockConsoleLog } from '@/test-utils/helpers/console';
 
 // Mock dependencies
-jest.mock('@/lib/auth/session');
+jest.mock('@/lib/auth/unified-auth');
 jest.mock('@/lib/repositories/base/repository-factory', () => ({
   repositoryFactory: {
     getScenarioRepository: jest.fn(),
@@ -122,7 +122,7 @@ describe('POST /api/pbl/chat', () => {
     (repositoryFactory.getScenarioRepository as jest.Mock).mockReturnValue(mockScenarioRepo);
     (repositoryFactory.getTaskRepository as jest.Mock).mockReturnValue(mockTaskRepo);
     (VertexAI as jest.Mock).mockImplementation(() => mockVertexAI);
-    (getServerSession as jest.Mock).mockResolvedValue({
+    (getUnifiedAuth as jest.Mock).mockResolvedValue({
       user: { email: 'test@example.com' }
     });
     (mockScenarioRepo.findById as jest.Mock).mockResolvedValue(mockScenario);
@@ -196,7 +196,7 @@ describe('POST /api/pbl/chat', () => {
 
   describe('Authentication', () => {
     it('should return 401 when not authenticated', async () => {
-      (getServerSession as jest.Mock).mockResolvedValue(null);
+      (getUnifiedAuth as jest.Mock).mockResolvedValue(null);
 
       const request = new NextRequest('http://localhost/api/pbl/chat', {
         method: 'POST',
@@ -222,7 +222,7 @@ describe('POST /api/pbl/chat', () => {
     });
 
     it('should return 401 when session has no user email', async () => {
-      (getServerSession as jest.Mock).mockResolvedValue({ user: {} });
+      (getUnifiedAuth as jest.Mock).mockResolvedValue({ user: {} });
 
       const request = new NextRequest('http://localhost/api/pbl/chat', {
         method: 'POST',

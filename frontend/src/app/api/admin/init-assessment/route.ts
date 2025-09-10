@@ -82,11 +82,20 @@ export async function POST(request: NextRequest) {
         domain: task.domain as string,
         questions: (task.questions as Array<Record<string, unknown>>).map((q: Record<string, unknown>) => ({
           id: q.id as string,
-          text: q.text as string,
-          options: q.options as string[],
+          domain: q.domain as string,
+          difficulty: q.difficulty as string,
+          type: q.type as string,
           correct_answer: q.correct_answer as string,
+          question: q.question as string,
+          options: q.options as Record<string, string>,
           explanation: q.explanation as string,
-          ksa_codes: q.ksa_codes as string[]
+          text: q.question as string,
+          ksa_codes: q.ksa_codes as string[],
+          ksa_mapping: q.ksa_mapping as {
+            knowledge?: string[];
+            skills?: string[];
+            attitudes?: string[];
+          }
         }))
       }))
     };

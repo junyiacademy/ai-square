@@ -1,0 +1,107 @@
+name: Database Cost Management
+
+on:
+  schedule:
+    # 每天晚上 10 點自動停止資料庫（UTC 14:00 = 台北 22:00）
+    - cron: '0 14 * * *'
+  
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Database action'
+        required: true
+        default: 'stop'
+        type: choice
+        options:
+        - start
+        - stop
+        - status
+        - cost-check
+
+jobs:
+  manage-database:
+    name: Manage Cloud SQL Databases
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: read
+      id-token: write
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Authenticate to Google Cloud
+      uses: google-github-actions/auth@v2
+      with:
+        credentials_json: ${{ secrets.GCP_SA_KEY }}
+    
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v2
+      with:
+        version: 'latest'
+    
+    - name: Start Databases
+      if: github.event.inputs.action == 'start'
+      run: |
+        echo "🚀 Starting databases..."
+        gcloud sql instances patch ai-square-db-staging-asia \
+          --activation-policy=ALWAYS \
+          --project=ai-square-463013
+        echo "✅ Staging DB started"
+        
+        # Production DB 通常不需要自動啟動
+        # gcloud sql instances patch ai-square-db-production \
+        #   --activation-policy=ALWAYS \
+        #   --project=ai-square-463013
+    
+    - name: Stop Databases (Scheduled or Manual)
+      if: github.event_name == 'schedule' || github.event.inputs.action == 'stop'
+      run: |
+        echo "🛑 Stopping all databases to save costs..."
+        
+        # Stop Staging DB
+        gcloud sql instances patch ai-square-db-staging-asia \
+          --activation-policy=NEVER \
+          --project=ai-square-463013 || true
+        echo "✅ Staging DB stopped"
+        
+        # Stop Production DB
+        gcloud sql instances patch ai-square-db-production \
+          --activation-policy=NEVER \
+          --project=ai-square-463013 || true
+        echo "✅ Production DB stopped"
+        
+        echo "💰 Monthly cost reduced to: $0"
+    
+    - name: Check Status
+      if: github.event.inputs.action == 'status'
+      run: |
+        echo "📊 Database Status:"
+        gcloud sql instances list --project=ai-square-463013 \
+          --format="table(name,databaseVersion,settings.tier,state)"
+    
+    - name: Cost Check
+      if: github.event.inputs.action == 'cost-check'
+      run: |
+        echo "💰 Cost Analysis:"
+        gcloud sql instances list --project=ai-square-463013 \
+          --format="table(name,settings.tier,state)"
+        
+        echo ""
+        echo "Estimated monthly cost:"
+        echo "• STOPPED: $0/month"
+        echo "• RUNNABLE (db-f1-micro): ~$15/month per instance"
+        echo ""
+        echo "💡 Use 'stop' action to reduce costs to $0"
+    
+    - name: Send Slack Notification (Optional)
+      if: always() && (github.event_name == 'schedule' || github.event.inputs.action == 'stop')
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      run: |
+        if [ -n "$SLACK_WEBHOOK_URL" ]; then
+          curl -X POST -H 'Content-type: application/json' \
+            --data '{"text":"🛑 AI Square databases have been stopped to save costs. Monthly savings: $85"}' \
+            $SLACK_WEBHOOK_URL
+        fi

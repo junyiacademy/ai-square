@@ -17,7 +17,7 @@ let dbPool: Pool;
 // Test-specific ports to avoid conflicts
 const TEST_PORTS = {
   NEXT: process.env.TEST_PORT || '3456',
-  DB: process.env.TEST_DB_PORT || '5434', 
+  DB: process.env.TEST_DB_PORT || '5433', 
   REDIS: process.env.TEST_REDIS_PORT || '6380'
 };
 
@@ -30,7 +30,7 @@ function killPort(port: string, serviceName: string): void {
   console.log(`🧹 Checking port ${port} (${serviceName})...`);
   
   // Special handling for PostgreSQL and Redis test ports - DON'T kill them!
-  if ((port === '5434' && serviceName === 'PostgreSQL') || 
+  if ((port === '5433' && serviceName === 'PostgreSQL') || 
       (port === '6380' && serviceName === 'Redis')) {
     console.log(`   ⏭️ Skipping ${serviceName} on port ${port} (test service)`);
     return;

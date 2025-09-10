@@ -6,7 +6,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { learningServiceFactory } from '@/lib/services/learning-service-factory';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth } from '@/lib/auth/unified-auth';
 
 export async function POST(
   request: NextRequest,
@@ -21,7 +21,7 @@ export async function POST(
     const scenarioId = id;
     
     // Get user from session
-    const session = await getServerSession();
+    const session = await getUnifiedAuth(request);
     if (!session?.user?.email) {
       return NextResponse.json(
         {

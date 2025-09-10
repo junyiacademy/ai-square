@@ -50,7 +50,7 @@ describe('Archive Account API Route', () => {
   describe('POST /api/auth/archive-account', () => {
     it('should archive account with valid password', async () => {
       (getSession as jest.Mock).mockResolvedValue({
-        user: { id: 'user-123', email: 'test@example.com' }
+        user: { id: 'user-123', email: 'test@example.com', role: 'student' }
       });
       
       const bcrypt = require('bcryptjs');
@@ -115,7 +115,7 @@ describe('Archive Account API Route', () => {
 
     it('should reject if confirmArchive is false', async () => {
       (getSession as jest.Mock).mockResolvedValue({
-        user: { id: 'user-123', email: 'test@example.com' }
+        user: { id: 'user-123', email: 'test@example.com', role: 'student' }
       });
 
       const request = new NextRequest('http://localhost/api/auth/archive-account', {
@@ -136,7 +136,7 @@ describe('Archive Account API Route', () => {
 
     it('should reject with invalid password', async () => {
       (getSession as jest.Mock).mockResolvedValue({
-        user: { id: 'user-123', email: 'test@example.com' }
+        user: { id: 'user-123', email: 'test@example.com', role: 'student' }
       });
       
       const bcrypt = require('bcryptjs');
@@ -160,7 +160,7 @@ describe('Archive Account API Route', () => {
 
     it('should validate required password field', async () => {
       (getSession as jest.Mock).mockResolvedValue({
-        user: { id: 'user-123', email: 'test@example.com' }
+        user: { id: 'user-123', email: 'test@example.com', role: 'student' }
       });
 
       const request = new NextRequest('http://localhost/api/auth/archive-account', {
@@ -180,7 +180,7 @@ describe('Archive Account API Route', () => {
 
     it('should handle user not found', async () => {
       (getSession as jest.Mock).mockResolvedValue({
-        user: { id: 'user-123', email: 'test@example.com' }
+        user: { id: 'user-123', email: 'test@example.com', role: 'student' }
       });
       
       (getUserWithPassword as jest.Mock).mockResolvedValue(null);
@@ -203,7 +203,7 @@ describe('Archive Account API Route', () => {
 
     it('should rollback transaction on error', async () => {
       (getSession as jest.Mock).mockResolvedValue({
-        user: { id: 'user-123', email: 'test@example.com' }
+        user: { id: 'user-123', email: 'test@example.com', role: 'student' }
       });
       
       const bcrypt = require('bcryptjs');
@@ -232,7 +232,7 @@ describe('Archive Account API Route', () => {
 
     it('should use default reason if not provided', async () => {
       (getSession as jest.Mock).mockResolvedValue({
-        user: { id: 'user-123', email: 'test@example.com' }
+        user: { id: 'user-123', email: 'test@example.com', role: 'student' }
       });
       
       const bcrypt = require('bcryptjs');
@@ -257,7 +257,7 @@ describe('Archive Account API Route', () => {
 
     it('should log activity with IP and user agent', async () => {
       (getSession as jest.Mock).mockResolvedValue({
-        user: { id: 'user-123', email: 'test@example.com' }
+        user: { id: 'user-123', email: 'test@example.com', role: 'student' }
       });
       
       const bcrypt = require('bcryptjs');
@@ -292,7 +292,7 @@ describe('Archive Account API Route', () => {
 
     it('should handle database connection errors', async () => {
       (getSession as jest.Mock).mockResolvedValue({
-        user: { id: 'user-123', email: 'test@example.com' }
+        user: { id: 'user-123', email: 'test@example.com', role: 'student' }
       });
       
       mockPool.connect.mockRejectedValue(new Error('Connection failed'));
@@ -327,7 +327,7 @@ describe('Archive Account API Route', () => {
 
     it('returns 404 when user not found', async () => {
       const { GET } = require('../route');
-      (getSession as jest.Mock).mockResolvedValue({ user: { id: 'user-123', email: 'test@example.com' } });
+      (getSession as jest.Mock).mockResolvedValue({ user: { id: 'user-123', email: 'test@example.com', role: 'student' } });
       // GET 使用 pool.query 直接查 rows
       (mockPool.query as jest.Mock).mockResolvedValue({ rows: [] });
       const res = await GET();
@@ -339,7 +339,7 @@ describe('Archive Account API Route', () => {
 
     it('returns 200 with account status when user exists', async () => {
       const { GET } = require('../route');
-      (getSession as jest.Mock).mockResolvedValue({ user: { id: 'user-123', email: 'test@example.com' } });
+      (getSession as jest.Mock).mockResolvedValue({ user: { id: 'user-123', email: 'test@example.com', role: 'student' } });
       (mockPool.query as jest.Mock).mockResolvedValue({ rows: [{ account_status: 'archived', archived_at: '2024-01-01', archive_reason: 'Test' }] });
       const res = await GET();
       const data = await res.json();
@@ -351,7 +351,7 @@ describe('Archive Account API Route', () => {
 
     it('returns 500 on query error', async () => {
       const { GET } = require('../route');
-      (getSession as jest.Mock).mockResolvedValue({ user: { id: 'user-123', email: 'test@example.com' } });
+      (getSession as jest.Mock).mockResolvedValue({ user: { id: 'user-123', email: 'test@example.com', role: 'student' } });
       (mockPool.query as jest.Mock).mockRejectedValue(new Error('db error'));
       const res = await GET();
       const data = await res.json();

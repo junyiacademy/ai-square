@@ -43,7 +43,7 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
       startedAt: row.started_at || undefined,
       completedAt: row.completed_at || undefined,
       updatedAt: row.updated_at,
-      lastActivityAt: row.last_activity_at,
+      lastActivityAt: row.updated_at, // Use updated_at for last activity tracking
       
       // Time tracking
       timeSpentSeconds: row.time_spent_seconds,
@@ -71,7 +71,7 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
     const query = `
       SELECT * FROM programs 
       WHERE user_id = $1
-      ORDER BY last_activity_at DESC
+      ORDER BY updated_at DESC
     `;
 
     const { rows } = await this.pool.query<DBProgram>(query, [userId]);
@@ -92,16 +92,16 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
   async create(program: Omit<IProgram, 'id'>): Promise<IProgram> {
     const query = `
       INSERT INTO programs (
-        user_id, scenario_id, mode, status,
+        id, user_id, scenario_id, mode, status,
         current_task_index, completed_task_count, total_task_count,
         total_score, domain_scores,
         xp_earned, badges_earned,
         time_spent_seconds,
         pbl_data, discovery_data, assessment_data,
-        metadata
+        metadata, updated_at
       ) VALUES (
-        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
-        $11, $12, $13, $14, $15, $16
+        gen_random_uuid(), $1, $2, $3, $4, $5, $6, $7, $8, $9, $10,
+        $11, $12, $13, $14, $15, $16, CURRENT_TIMESTAMP
       )
       RETURNING *
     `;
@@ -113,7 +113,7 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
       program.status || 'pending',
       program.currentTaskIndex || 0,
       program.completedTaskCount || 0,
-      program.totalTaskCount,
+      program.totalTaskCount || 0,
       program.totalScore || 0,
       JSON.stringify(program.domainScores || {}),
       program.xpEarned || 0,
@@ -132,7 +132,6 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
     const query = `
       UPDATE programs
       SET current_task_index = $1,
-          last_activity_at = CURRENT_TIMESTAMP,
           updated_at = CURRENT_TIMESTAMP
       WHERE id = $2
       RETURNING *
@@ -152,7 +151,6 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
       UPDATE programs
       SET status = 'completed',
           completed_at = CURRENT_TIMESTAMP,
-          last_activity_at = CURRENT_TIMESTAMP,
           updated_at = CURRENT_TIMESTAMP
       WHERE id = $1
       RETURNING *
@@ -252,8 +250,7 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
       throw new Error('No fields to update');
     }
 
-    // Always update these timestamps
-    updateFields.push(`last_activity_at = CURRENT_TIMESTAMP`);
+    // Always update this timestamp
     updateFields.push(`updated_at = CURRENT_TIMESTAMP`);
 
     values.push(id);
@@ -286,7 +283,6 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
     const query = `
       UPDATE programs
       SET status = $1${additionalUpdates},
-          last_activity_at = CURRENT_TIMESTAMP,
           updated_at = CURRENT_TIMESTAMP
       WHERE id = $2
     `;
@@ -298,7 +294,7 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
     const query = `
       SELECT * FROM programs 
       WHERE user_id = $1 AND status = 'active'
-      ORDER BY last_activity_at DESC
+      ORDER BY updated_at DESC
     `;
 
     const { rows } = await this.pool.query<DBProgram>(query, [userId]);
@@ -321,7 +317,6 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
     const query = `
       UPDATE programs
       SET time_spent_seconds = time_spent_seconds + $1,
-          last_activity_at = CURRENT_TIMESTAMP,
           updated_at = CURRENT_TIMESTAMP
       WHERE id = $2
     `;
@@ -334,7 +329,6 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
     const query = `
       UPDATE programs
       SET completed_task_count = completed_task_count + 1,
-          last_activity_at = CURRENT_TIMESTAMP,
           updated_at = CURRENT_TIMESTAMP
       WHERE id = $1
     `;
@@ -387,7 +381,7 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
       params.push(userId);
     }
 
-    query += ` ORDER BY last_activity_at DESC`;
+    query += ` ORDER BY updated_at DESC`;
 
     const { rows } = await this.pool.query<DBProgram>(query, params);
     return rows.map(row => this.toProgram(row));

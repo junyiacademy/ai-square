@@ -1,10 +1,19 @@
 import { NextRequest } from 'next/server';
 import { GET } from '../route';
-import { getServerSession } from '@/lib/auth/session';
+import { getUnifiedAuth } from '@/lib/auth/unified-auth';
+
+// Mock dependencies
+jest.mock('@/lib/auth/unified-auth', () => ({
+  getUnifiedAuth: jest.fn(),
+  createUnauthorizedResponse: jest.fn(() => ({
+    json: () => Promise.resolve({ success: false, error: 'Authentication required' }),
+    status: 401
+  }))
+}));;
 
 // Mock dependencies
 jest.mock('@/lib/auth/session', () => ({
-  getServerSession: jest.fn(),
+  getUnifiedAuth: jest.fn(),
 }));
 
 jest.mock('@/lib/repositories/base/repository-factory', () => ({
@@ -70,7 +79,7 @@ describe('API Route: /api/pbl/scenarios/[id]/programs', () => {
   describe('GET', () => {
     it('should return user programs for a scenario', async () => {
       // Setup mocks
-      (getServerSession as jest.Mock).mockResolvedValue(mockSession);
+      (getUnifiedAuth as jest.Mock).mockResolvedValue(mockSession);
       
       // Use a proper UUID for this test
       const scenarioUuid = '123e4567-e89b-12d3-a456-426614174000';
@@ -107,7 +116,7 @@ describe('API Route: /api/pbl/scenarios/[id]/programs', () => {
     });
 
     it('should handle non-UUID scenario IDs', async () => {
-      (getServerSession as jest.Mock).mockResolvedValue(mockSession);
+      (getUnifiedAuth as jest.Mock).mockResolvedValue(mockSession);
       
       const { scenarioIndexService } = require('@/lib/services/scenario-index-service');
       scenarioIndexService.getUuidByYamlId.mockResolvedValue('scenario-uuid-123');
@@ -139,7 +148,7 @@ describe('API Route: /api/pbl/scenarios/[id]/programs', () => {
     });
 
     it('should return 401 when not authenticated', async () => {
-      (getServerSession as jest.Mock).mockResolvedValue(null);
+      (getUnifiedAuth as jest.Mock).mockResolvedValue(null);
       
       const request = new NextRequest('http://localhost:3000/api/pbl/scenarios/scenario-123/programs', {
         method: 'GET',
@@ -154,7 +163,7 @@ describe('API Route: /api/pbl/scenarios/[id]/programs', () => {
     });
 
     it('should return 404 when scenario not found', async () => {
-      (getServerSession as jest.Mock).mockResolvedValue(mockSession);
+      (getUnifiedAuth as jest.Mock).mockResolvedValue(mockSession);
       
       const { scenarioIndexService } = require('@/lib/services/scenario-index-service');
       scenarioIndexService.getUuidByYamlId.mockResolvedValue(null);
@@ -172,7 +181,7 @@ describe('API Route: /api/pbl/scenarios/[id]/programs', () => {
     });
 
     it('should auto-fix tasks with completedAt but wrong status', async () => {
-      (getServerSession as jest.Mock).mockResolvedValue(mockSession);
+      (getUnifiedAuth as jest.Mock).mockResolvedValue(mockSession);
       
       // Use a proper UUID for this test
       const scenarioUuid = '123e4567-e89b-12d3-a456-426614174000';

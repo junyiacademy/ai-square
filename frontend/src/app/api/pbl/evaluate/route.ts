@@ -5,28 +5,14 @@ import {
   Conversation 
 } from '@/types/pbl-evaluate';
 import { ErrorResponse } from '@/types/api';
-
-interface UserCookie {
-  email: string;
-  role?: string;
-  name?: string;
-}
+import { getUnifiedAuth } from '@/lib/auth/unified-auth';
 
 export async function POST(request: NextRequest) {
   try {
-    // Get user info from cookie (same as other APIs)
-    let userEmail: string | undefined;
-    try {
-      const userCookie = request.cookies.get('user')?.value;
-      if (userCookie) {
-        const user: UserCookie = JSON.parse(userCookie);
-        userEmail = user.email;
-      }
-    } catch {
-      console.log('No user cookie found');
-    }
+    // Use unified authentication
+    const session = await getUnifiedAuth(request);
     
-    if (!userEmail) {
+    if (!session?.user?.email) {
       return NextResponse.json<ErrorResponse>(
         { error: 'User authentication required' },
         { status: 401 }
@@ -79,7 +65,7 @@ CRITICAL SCORING RULES:
 - The overall score should be the average of KSA scores and domain scores
 - For minimal engagement (just greetings), assign scores in the 10-25 range consistently
 - All scores must be logically consistent - if overall is 15, individual scores should be similar
-- Domain scores should reflect actual demonstration in that domain (0 if not demonstrated)
+- Domain scores should give partial credit for any attempt (minimum 5-10 for trying)
 
 Please evaluate and provide:
 1. Overall performance score (0-100): Based on actual effort and task completion
@@ -90,10 +76,10 @@ Please evaluate and provide:
    - Attitudes: Engagement, curiosity, and learning mindset (minimum 5 for attempting)
 
 3. Domain scores (0-100):
-   - engaging_with_ai: Quality of AI interaction and questioning (0 if just greeting)
-   - creating_with_ai: Creativity in using AI responses (0 if no creative work)
-   - managing_with_ai: Organization and planning in approach (0 if no management shown)
-   - designing_with_ai: Strategic thinking and problem-solving (0 if no design thinking)
+   - engaging_with_ai: Quality of AI interaction and questioning (minimum 10 if attempted interaction)
+   - creating_with_ai: Creativity in using AI responses (minimum 5 if any content created)
+   - managing_with_ai: Organization and planning in approach (minimum 5 if shows any structure)
+   - designing_with_ai: Strategic thinking and problem-solving (minimum 5 if shows any planning)
 
 4. Rubrics scores (1-4 levels):
    Level 1: Beginning (starting to explore)
@@ -122,14 +108,16 @@ Provide a comprehensive evaluation including:
 
 CRITICAL: You are ONLY evaluating the LEARNER'S messages listed above. Do NOT consider or evaluate the AI assistant's responses.
 
-SPECIAL CASE - GREETING ONLY:
-If the learner only sent a greeting (like "hi", "hello"):
-- Overall score: 15 points
-- Knowledge: 0 (no knowledge demonstrated)
-- Skills: 0 (no skills demonstrated)  
-- Attitudes: 15 (showed willingness to start)
-- All domain scores: 0 (no domain-specific work)
-- This ensures mathematical consistency
+SPECIAL CASE - MINIMAL ENGAGEMENT:
+If the learner only sent greetings or minimal responses:
+- Overall score: 15-25 points
+- Knowledge: 0-5 (minimal or no knowledge demonstrated)
+- Skills: 0-5 (minimal or no skills demonstrated)  
+- Attitudes: 15-25 (showed willingness to start)
+- Domain scores: 
+  - engaging_with_ai: 10-15 (initiated interaction)
+  - Other domains: 0-5 (minimal demonstration)
+- Give partial credit for any attempt at engagement
 
 Important evaluation principles:
 0. **Mathematical consistency** - Overall score should logically relate to component scores
@@ -150,7 +138,7 @@ Important evaluation principles:
     // Initialize Vertex AI
     const vertexAI = new VertexAI({
       project: process.env.GOOGLE_CLOUD_PROJECT || 'ai-square-463013',
-      location: 'us-central1',
+      location: process.env.VERTEX_AI_LOCATION || 'us-central1',
     });
     
     // Get the generative model

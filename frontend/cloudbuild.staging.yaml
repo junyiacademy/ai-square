@@ -7,7 +7,7 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', 'gcr.io/$PROJECT_ID/ai-square-staging:${_IMAGE_TAG}']
 
-# Step 3: Deploy to Cloud Run (CRITICAL - 避免人為疏失)
+# Step 3: Deploy to Cloud Run with ALL required environment variables
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: 'gcloud'
   args:
@@ -17,6 +17,28 @@ steps:
   - '--image=gcr.io/$PROJECT_ID/ai-square-staging:${_IMAGE_TAG}'
   - '--region=asia-east1'
   - '--platform=managed'
+  - '--allow-unauthenticated'
+  - '--timeout=60'
+  - '--memory=512Mi'
+  - '--cpu=1'
+  - '--port=3000'
+  - '--service-account=ai-square-staging@ai-square-463013.iam.gserviceaccount.com'
+  - '--add-cloudsql-instances=ai-square-463013:asia-east1:ai-square-db-staging-asia'
+  - '--set-env-vars=NODE_ENV=staging'
+  - '--set-env-vars=GOOGLE_CLOUD_PROJECT=ai-square-463013'
+  - '--set-env-vars=GCP_PROJECT_ID=ai-square-463013'
+  - '--set-env-vars=VERTEX_AI_PROJECT=ai-square-463013'
+  - '--set-env-vars=VERTEX_AI_LOCATION=us-central1'
+  - '--set-env-vars=VERTEX_AI_MODEL=gemini-2.5-flash'
+  - '--set-env-vars=VERTEX_AI_KEY=${_VERTEX_AI_KEY}'
+  - '--set-env-vars=NEXTAUTH_URL=https://ai-square-staging-731209836128.asia-east1.run.app'
+  - '--set-env-vars=DB_HOST=/cloudsql/ai-square-463013:asia-east1:ai-square-db-staging-asia'
+  - '--set-env-vars=DB_NAME=ai_square_db'
+  - '--set-env-vars=DB_USER=postgres'
+  - '--set-env-vars=REDIS_ENABLED=false'
+  - '--set-env-vars=DB_PASSWORD=${_DB_PASSWORD}'
+  - '--set-env-vars=NEXTAUTH_SECRET=${_NEXTAUTH_SECRET}'
+  - '--set-env-vars=DATABASE_URL=${_DATABASE_URL}'
   - '--no-traffic'  # Deploy without routing traffic immediately
 
 # Step 4: Run health check
@@ -55,6 +77,10 @@ images:
 
 substitutions:
   _IMAGE_TAG: 'latest'
+  _DB_PASSWORD: '${DB_PASSWORD}'
+  _NEXTAUTH_SECRET: '${NEXTAUTH_SECRET}'
+  _DATABASE_URL: '${DATABASE_URL}'
+  _VERTEX_AI_KEY: '${VERTEX_AI_KEY}'
 
 options:
   logging: CLOUD_LOGGING_ONLY

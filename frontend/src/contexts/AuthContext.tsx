@@ -54,7 +54,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const response = await authenticatedFetch('/api/auth/check');
       
       if (!response.ok) {
-        throw new Error('Auth check failed');
+        // API 失敗，清除所有狀態
+        clearAuthState();
+        return;
       }
       
       const data = await response.json();
@@ -67,22 +69,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     } catch (error) {
       console.error('Error checking auth:', error);
-      
-      // Fallback to localStorage only if API fails
-      const storedAuth = localStorage.getItem('isLoggedIn');
-      const storedUser = localStorage.getItem('user');
-      
-      if (storedAuth === 'true' && storedUser) {
-        try {
-          const parsedUser = JSON.parse(storedUser);
-          setUser(parsedUser);
-          setIsLoggedIn(true);
-        } catch {
-          clearAuthState();
-        }
-      } else {
-        clearAuthState();
-      }
+      // 網路錯誤或其他問題，清除狀態以確保安全
+      clearAuthState();
     } finally {
       setIsLoading(false);
     }
@@ -103,9 +91,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (data.success && data.user) {
         updateAuthState(data.user);
         
-        if (data.sessionToken) {
-          localStorage.setItem('ai_square_session', data.sessionToken);
-        }
+        // Note: sessionToken is stored in httpOnly cookie, not localStorage
+        // Remove the old session token from localStorage if it exists
+        localStorage.removeItem('ai_square_session');
         
         return { success: true, user: data.user };
       } else {
@@ -171,26 +159,36 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // 初始化時檢查登入狀態
   useEffect(() => {
     const initializeAuth = async () => {
-      // 先從 localStorage 快速設置狀態，避免 UI 閃動
-      const storedAuth = localStorage.getItem('isLoggedIn');
-      const storedUser = localStorage.getItem('user');
+      // 直接進行 API 驗證，這是唯一的真實來源
+      // 不依賴 localStorage 來設置初始狀態，避免不同步問題
+      setIsLoading(true);
       
-      if (storedAuth === 'true' && storedUser) {
-        try {
-          const parsedUser = JSON.parse(storedUser);
-          setUser(parsedUser);
-          setIsLoggedIn(true);
-        } catch (error) {
-          console.error('Error parsing stored user:', error);
+      try {
+        const response = await authenticatedFetch('/api/auth/check');
+        
+        if (!response.ok) {
+          clearAuthState();
+          return;
         }
+        
+        const data = await response.json();
+        
+        if (data.authenticated && data.user) {
+          updateAuthState(data.user);
+          setTokenExpiringSoon(data.tokenExpiringSoon || false);
+        } else {
+          clearAuthState();
+        }
+      } catch (error) {
+        console.error('Error checking auth:', error);
+        clearAuthState();
+      } finally {
+        setIsLoading(false);
       }
-      
-      // 然後進行 API 驗證
-      await checkAuth();
     };
     
     initializeAuth();
-  }, [checkAuth]); // Remove checkAuth dependency to prevent loops
+  }, [clearAuthState, updateAuthState]); // Dependencies that don't change
 
   // 監聽其他 tab 的登入狀態變化
   useEffect(() => {

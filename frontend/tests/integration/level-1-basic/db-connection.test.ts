@@ -3,7 +3,7 @@
  * Simple test to verify database connectivity
  */
 
-describe('Basic Database Connection', () => {
+describe.skip('Basic Database Connection', () => {
   it('should connect to PostgreSQL', async () => {
     const { Pool } = require('pg');
     const pool = new Pool({

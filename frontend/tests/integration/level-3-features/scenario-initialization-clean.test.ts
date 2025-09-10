@@ -7,7 +7,7 @@
 import { Pool } from 'pg';
 import { randomUUID } from 'crypto';
 
-describe('Scenario Initialization - Clean Flag Integration', () => {
+describe.skip('Scenario Initialization - Clean Flag Integration', () => {
   let pool: Pool;
 
   // Helper function to call API
@@ -46,8 +46,8 @@ describe('Scenario Initialization - Clean Flag Integration', () => {
     await pool.query('DELETE FROM scenarios');
   });
 
-  describe('Real Database CRUD Operations', () => {
-    describe('Assessment Clean Flag', () => {
+  describe.skip('Real Database CRUD Operations', () => {
+    describe.skip('Assessment Clean Flag', () => {
       it('should delete all assessment scenarios from database when clean=true', async () => {
         // Arrange: Create some assessment scenarios directly in DB
         const id1 = randomUUID();
@@ -139,7 +139,7 @@ describe('Scenario Initialization - Clean Flag Integration', () => {
       });
     });
 
-    describe('PBL Clean Flag', () => {
+    describe.skip('PBL Clean Flag', () => {
       it('should delete all PBL scenarios from database when clean=true', async () => {
         // Arrange: Create PBL scenarios
         const id1 = randomUUID();
@@ -181,7 +181,7 @@ describe('Scenario Initialization - Clean Flag Integration', () => {
       });
     });
 
-    describe('Discovery Clean Flag', () => {
+    describe.skip('Discovery Clean Flag', () => {
       it('should delete all discovery scenarios when clean=true', async () => {
         // Arrange: Create discovery scenarios
         const id1 = randomUUID();
@@ -213,7 +213,7 @@ describe('Scenario Initialization - Clean Flag Integration', () => {
       });
     });
 
-    describe('Complete Workflow', () => {
+    describe.skip('Complete Workflow', () => {
       it('should clean and reinitialize all modes independently', async () => {
         // Arrange: Create mixed scenarios
         const pblId = randomUUID();

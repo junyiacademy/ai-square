@@ -3,7 +3,7 @@
   "version": "2.0.1",
   "phase": "2",
   "status": "development",
-  "lastUpdated": "2025-08-21T04:35:00Z",
+  "lastUpdated": "2025-08-27T01:20:00Z",
   "completedFeatures": [
     "Infrastructure as Code (Terraform)",
     "Application Deployment (GitHub Actions)",
@@ -14,7 +14,10 @@
     "TypeScript 型別安全 (消除所有 any 類型)",
     "混合式翻譯架構 (YAML + JSON 雙軌系統)",
     "Redis 快取支援",
-    "多語言支援 (14 種語言，100% 翻譯覆蓋率)"
+    "多語言支援 (14 種語言，100% 翻譯覆蓋率)",
+    "資料庫成本優化 ($85/月 → $0/月，節省 100%)",
+    "PostgreSQL 17 升級完成 (Production + Staging)",
+    "自動化成本管理 (GitHub Actions 每晚停止資料庫)"
   ],
   "inProgressFeatures": [
     "一步到位部署驗證",
