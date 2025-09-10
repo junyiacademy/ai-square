@@ -44,7 +44,7 @@ export function Header() {
     { href: '/dashboard', label: t('dashboard') },
     { href: '/assessment/scenarios', label: t('assessment') },
     { href: '/pbl/scenarios', label: t('pbl') },
-    // { href: '/discovery/overview', label: t('discovery') }, // 即將開放
+    { label: t('discovery'), disabled: true, tooltip: '即將開放' }, // href: '/discovery/overview'
   ]
   
   // 次要導航連結（放在「更多」選單中）
@@ -83,19 +83,32 @@ export function Header() {
 
             {/* Desktop Navigation Links */}
             <nav className="hidden lg:ml-10 lg:flex lg:space-x-6" aria-label="Main navigation">
-              {primaryNavLinks.map(link => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`inline-flex items-center px-1 pt-1 text-sm font-medium transition-colors ${
-                    pathname === link.href
-                      ? 'text-gray-900 dark:text-white border-b-2 border-blue-600 active'
-                      : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:border-b-2 hover:border-gray-300 dark:hover:border-gray-600'
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              ))}
+              {primaryNavLinks.map((link, index) => 
+                link.disabled ? (
+                  <div
+                    key={index}
+                    className="inline-flex items-center px-1 pt-1 text-sm font-medium text-gray-400 dark:text-gray-500 cursor-not-allowed relative group"
+                    title={link.tooltip}
+                  >
+                    {link.label}
+                    <span className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-700 text-white text-xs rounded py-1 px-2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                      {link.tooltip}
+                    </span>
+                  </div>
+                ) : (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={`inline-flex items-center px-1 pt-1 text-sm font-medium transition-colors ${
+                      pathname === link.href
+                        ? 'text-gray-900 dark:text-white border-b-2 border-blue-600 active'
+                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:border-b-2 hover:border-gray-300 dark:hover:border-gray-600'
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                )
+              )}
               
               {/* More dropdown menu */}
               <div className="relative group">
