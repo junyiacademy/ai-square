@@ -367,7 +367,7 @@ npx playwright test --headed
 
 ## 🚨🚨🚨 Playwright E2E 測試必須嚴格 - 不能用條件判斷掩蓋錯誤！🚨🚨🚨
 
-### ❌ 絕對禁止的錯誤測試方式（2025/01/08 血淚教訓）
+### ❌ 絕對禁止的錯誤測試方式
 ```typescript
 // ❌ 錯誤：用 if 條件讓測試永遠不會失敗
 if (await element.isVisible()) {
@@ -441,7 +441,7 @@ await expect(savedData).toContainText('Test content');
 **記住：測試的目的是找出問題，不是顯示綠燈！**
 
 
-## 🚨 認證系統修復教訓 - Token 格式必須一致 (2025-08-25 血淚教訓)
+## 🚨 認證系統修復教訓 - Token 格式必須一致
 
 ### ❌ 絕對禁止的錯誤：Token 生成與驗證格式不一致
 ```typescript
@@ -463,11 +463,11 @@ static isValidSessionToken(token: string): boolean {
 ```
 
 ### 教訓來源
-2025-08-25 用戶無法訪問受保護頁面，一直被重定向到登入頁。原因是 token 生成使用 hex 格式，但驗證卻期望 base64 格式，導致所有 token 驗證失敗。
+用戶無法訪問受保護頁面，一直被重定向到登入頁。原因是 token 生成使用 hex 格式，但驗證卻期望 base64 格式，導致所有 token 驗證失敗。
 
 **記住：Token 格式必須從生成到驗證保持一致！**
 
-## 🚨 E2E 測試鐵律 - 必須使用真實瀏覽器 (2025-08-15 血淚教訓)
+## 🚨 E2E 測試鐵律 - 必須使用真實瀏覽器
 
 ### ❌ 絕對禁止的錯誤測試方式
 ```bash
@@ -479,7 +479,7 @@ curl /api/pbl/scenarios        # ❌ 無法測試 cookie 和 session
 ### ✅ 唯一正確的 E2E 測試方式
 **必須使用瀏覽器工具（Browser MCP、Playwright、Puppeteer）進行測試！**
 
-### 🚨 Headless 測試要求 (2025-09-07 用戶指令)
+### 🚨 Headless 測試要求
 **所有 Playwright 測試必須使用 headless 模式，除非用戶明確要求 headed 模式。**
 
 ```bash
@@ -510,11 +510,11 @@ npx playwright test e2e/debug-three-modes.spec.ts --headed  # 只有用戶要求
 4. **API 狀態**: `/api/auth/check` 返回 `authenticated: true`
 
 ### 教訓來源
-2025-08-15 staging 部署時，API 測試全部通過，但用戶實際無法保持登入狀態。原因是只測試了 API 回應，沒有測試瀏覽器中的 session 維持。
+Staging 部署時，API 測試全部通過，但用戶實際無法保持登入狀態。原因是只測試了 API 回應，沒有測試瀏覽器中的 session 維持。
 
 **記住：用戶用瀏覽器，測試也必須用瀏覽器！**
 
-## 🚨🚨🚨 E2E 測試血淚教訓 - 什麼叫做「真正通過」(2025-01-18)
+## 🚨🚨🚨 E2E 測試血淚教訓 - 什麼叫做「真正通過」
 
 ### 💀 最大的謊言：「測試通過了」但實際功能壞掉
 
@@ -640,7 +640,7 @@ if (consoleErrors.length > 0) {
 > **真正的測試：用戶能用的才叫通過！**
 
 
-## 🚨 測試實作的嚴重教訓 (2025/01/14 血淚經驗)
+## 🚨 測試實作的嚴重教訓
 
 ### ❌ 絕對禁止的錯誤行為：
 1. **寫了測試但不執行** - 寫了 77 個測試檔案，一個都沒跑就說「完成了」
@@ -752,77 +752,8 @@ claude -p "prompt"      # Single query mode
 
 Always follow the instructions in plan.md. When I say "go", find the next unmarked test in plan.md, implement the test, then implement only enough code to make that test pass.
 
-## 🤖 Sub-Agent Usage Rules
 
-### 使用 Sub-Agent 的時機與選擇
-
-**主動性原則**: 看到任務時，先思考「哪個 agent 最適合？」不要等待提醒。
-
-#### 1. TypeScript/ESLint 問題 → 使用 typescript-eslint-fixer agent
-- **觸發關鍵字**: tsc, typecheck, eslint, lint, TS errors, build error
-- **範例情境**: "tsc eslint commit" → 優先使用 typescript-eslint-fixer
-- **用途**: 專門修復 TypeScript 編譯錯誤和 ESLint 警告
-
-#### 2. 進度管理 → 使用 progress-memory-coach agent
-- **儲存進度**: 在工作里程碑時保存
-- **回憶之前工作**: "我們上次做了什麼？"
-- **儲存內容**: 重要決策、模式、專案洞察
-- **用途**: 維持跨工作階段的連續性
-
-#### 3. 複雜搜尋任務 → 使用 general-purpose agent
-- **多檔案搜尋**: 跨程式碼庫搜尋
-- **未知位置**: 在不確定的位置找檔案
-- **模式分析**: 跨多個檔案的模式分析
-- **用途**: 進階搜尋和探索能力
-
-#### 4. Slack 追蹤整合 → 使用 slack-tracker-integration agent
-- **觸發關鍵字**: Slack tracking, development tracker, CEO report, webhook
-- **範例情境**: "設定開發追蹤到 Slack" → 使用 slack-tracker-integration
-- **用途**: 實作開發進度追蹤和 CEO 報告系統
-
-#### 5. 部署驗證與 QA → 使用 deployment-qa agent
-- **觸發關鍵字**: verify deployment, check staging, test production, QA, deployment test, staging issue
-- **範例情境**: "staging API 問題檢查" → 使用 deployment-qa agent
-- **用途**: 自動化部署驗證、API 測試、資料庫檢查、E2E 測試、問題診斷
-- **環境支援**: local, staging, production
-- **核心檢查**: 健康檢查、API 初始化、認證測試、多語言支援、效能指標
-
-#### 6. Slash Commands → 使用 Task tool 執行
-- **指令**: /compact, /check-file 等
-- **直接執行**: 針對特定指令的工具執行
-- **用途**: 快速指令執行
-
-### 關鍵原則
-- 分析任務需求，立即選擇合適的 sub-agent
-- 不要等待提醒或建議
-- 每個 sub-agent 都有其專長領域，善用它們的能力
-
-### 📁 .claude/agents/ 目錄說明
-
-**.claude/agents/** 目錄包含了專門的 sub-agent 定義文件，每個文件都描述了特定 agent 的能力和使用場景：
-
-```
-.claude/
-└── agents/
-    ├── deployment-qa.md              # 部署驗證與 QA agent
-    ├── progress-memory-coach.md      # 進度與記憶管理 agent
-    ├── slack-tracker-integration.md  # Slack 追蹤整合 agent  
-    └── typescript-eslint-fixer.md    # TypeScript/ESLint 修復 agent
-```
-
-**使用方式**：
-1. 當遇到符合 agent 專長的任務時，Claude 會自動調用相應的 agent
-2. 每個 agent 都有特定的觸發條件和專業領域
-3. Agent 定義文件包含詳細的使用說明和範例
-
-**新增 Agent**：
-如需新增專門的 agent，在 `.claude/agents/` 目錄下創建新的 `.md` 文件，包含：
-- Agent 名稱和用途
-- 觸發條件
-- 使用範例
-- 專業能力描述
-
-## 📊 Slack 動態報告系統 (2025/08 新增)
+## 📊 Slack 動態報告系統
 
 ### 🚨 Slack 報告三大鐵則
 
@@ -862,17 +793,6 @@ npm run report:ceo              # 步驟 2: 只在用戶明確要求時執行
 - [ ] 等待用戶明確說「發送」
 - [ ] 確認 Slack webhook 已設定
 
-## 📊 Slack 動態報告系統
-
-### 🚨 重要原則：絕不修改 TypeScript 原始碼來生成報告
-
-**動態報告系統**從實際專案狀態讀取數據，包括：
-- Git commits 和 logs
-- 測試覆蓋率報告
-- TypeScript/ESLint 即時檢查
-- Build 狀態和時間
-- JSON 狀態檔案（被 gitignore）
-
 ### 可用的動態報告命令
 
 #### CEO 報告（專案整體進度）
@@ -896,41 +816,21 @@ npm run dev:session:start
 npm run dev:session:end
 ```
 
-### 數據來源
+### 數據來源與環境設定
 
-1. **Git 資訊**：
-   - 今日 commits 數量和內容
-   - 檔案變更統計
-   - 分支狀態
+**數據來源**：
+- Git commits 和 logs
+- 測試覆蓋率報告
+- TypeScript/ESLint 即時檢查
+- Build 狀態和時間
+- JSON 狀態檔案（被 gitignore）
 
-2. **測試與品質**：
-   - 測試覆蓋率（從 coverage-summary.json）
-   - TypeScript 錯誤（即時執行 tsc）
-   - ESLint 警告（即時執行 lint）
-
-3. **專案狀態**：
-   - `.project-status.json`：持久化的發布狀態
-   - `.dev-session.json`：開發 session 追蹤
-
-### 環境設定
-
+**環境設定**：
 在 `.env.local` 中設定 Slack webhook：
 ```bash
 SLACK_AISQUARE_WEBHOOK_URL=https://hooks.slack.com/services/...
 SLACK_AISQUARE_DEV_WEBHOOK_URL=https://hooks.slack.com/services/...
 ```
-
-### 與舊系統的差異
-
-**舊方式（已棄用）**：
-- 修改 TypeScript 檔案中的硬編碼數據
-- 需要提交變更到版本控制
-- 數據可能不反映實際狀態
-
-**新方式（動態系統）**：
-- 從實際來源即時讀取數據
-- 不修改任何原始碼
-- 永遠反映當前真實狀態
 
 ### 最佳實踐
 
@@ -1306,64 +1206,19 @@ test('displays error when form is invalid', async () => {
 });
 ```
 
-### 🏗️ Test Templates
+### 🏗️ 測試模板
 
-#### Component Test Template
-```typescript
-import { renderWithProviders, screen, waitFor } from '@/test-utils';
+**基本原則**：
+- 使用 `renderWithProviders` 包裝組件
+- 使用 `createMockRequest` 和 `mockSession` 測試 API
+- 驗證實際行為而非實現細節
+- 使用 `waitFor` 處理異步操作
 
-describe('ComponentName', () => {
-  it('should handle user interaction correctly', async () => {
-    const mockHandler = jest.fn();
-    renderWithProviders(<Component onSubmit={mockHandler} />);
-    
-    await waitFor(() => {
-      expect(screen.getByRole('button')).toBeEnabled();
-    });
-    
-    await userEvent.click(screen.getByRole('button'));
-    expect(mockHandler).toHaveBeenCalledWith(expect.any(Object));
-  });
-});
-```
-
-#### API Route Test Template
-```typescript
-import { createMockRequest, mockSession } from '@/test-utils';
-
-describe('GET /api/resource', () => {
-  it('should return data for authenticated user', async () => {
-    mockSession({ user: { email: 'test@example.com' } });
-    
-    const request = createMockRequest('/api/resource');
-    const response = await GET(request);
-    const data = await response.json();
-    
-    expect(response.status).toBe(200);
-    expect(data).toMatchObject({
-      success: true,
-      data: expect.any(Array)
-    });
-  });
-});
-```
-
-### 📈 Expected Outcomes
-- **Old way**: 100 tests → 50 fail → fix later → 20 hours total
-- **New way**: Infrastructure (2h) + Fix existing (4h) + Quality tests (8h) → 14 hours total
-
-### 🎯 Key Principles
-1. **One source of truth**: Centralize all mocks and helpers
-2. **Test behavior, not implementation**: Focus on user outcomes
-3. **Maintain green**: Fix immediately, don't accumulate debt
-4. **Document through tests**: Clear test names explain features
-
-### 🚨 Pre-Test Checklist
-- [ ] Does this test verify actual behavior?
-- [ ] Will it catch real bugs?
-- [ ] Is it maintainable?
-- [ ] Does it use shared utilities?
-- [ ] Will it stay green?
+### 🎯 關鍵原則
+1. **測試行為，非實現**：專注於用戶結果
+2. **保持綠色**：立即修復，不累積技術債
+3. **集中管理**：統一所有 mocks 和 helpers
+4. **文檔化測試**：清晰的測試名稱解釋功能
 
 ## 🔧 TypeScript Error Fix Guidelines
 
@@ -2223,219 +2078,29 @@ make gcloud-build-and-deploy-frontend
 
 ### Architecture
 
-#### Unified Learning Architecture
-AI Square 採用統一學習架構，所有模組（Assessment、PBL、Discovery）都遵循相同的資料流程：
+> **📋 詳細架構說明**: 請參考 [`docs/technical/infrastructure/unified-learning-architecture.md`](docs/technical/infrastructure/unified-learning-architecture.md)
 
-**統一資料流程**：
-```
-YAML/API → Content Source → Scenario (UUID) → Program (UUID) → Tasks (UUID) → Evaluations (UUID)
-```
+**核心架構**：
+- **統一學習架構**: 所有模組（Assessment、PBL、Discovery）遵循相同資料流程
+- **Repository Pattern**: PostgreSQL Repository 抽象層
+- **多語言支援**: 14 種語言，混合式翻譯架構
+- **快取策略**: 多層快取提升效能
 
-**共同 Pattern**：
-1. **Repository Pattern**: 所有模組都使用 PostgreSQL Repository 抽象層
-2. **UUID 識別**: 所有實體都有唯一 UUID
-3. **狀態管理**: pending → active → completed
-4. **多語言支援**: 統一的翻譯機制
-5. **快取策略**: 多層快取提升效能
+### Database Architecture
 
-詳細架構說明請參考：`frontend/docs/infrastructure/unified-learning-architecture.md`
+> **📋 詳細資料庫架構**: 請參考 [`docs/technical/infrastructure/unified-learning-architecture.md`](docs/technical/infrastructure/unified-learning-architecture.md)
 
-#### Frontend Structure
-- **Framework**: Next.js 15 with App Router, TypeScript, Tailwind CSS v4
-- **Internationalization**: react-i18next with 14 language support (en, zhTW, zhCN, pt, ar, id, th, es, ja, ko, fr, de, ru, it)
-- **Key Pages**:
-  - `/` - Home page
-  - `/relations` - AI literacy competency visualization interface
-  - `/pbl` - Problem-Based Learning scenario list
-  - `/pbl/scenarios/[id]` - Scenario details with KSA mapping
-  - `/pbl/scenarios/[id]/program/[programId]/tasks/[taskId]/learn` - Interactive learning with AI tutor
-  - `/pbl/scenarios/[id]/program/[programId]/complete` - Completion page with AI feedback
-  - `/assessment/scenarios` - Assessment scenarios list
-  - `/discovery` - Discovery career exploration
-  - `/admin` - Admin dashboard for content management
-- **API Routes**: 
-  - `/api/relations` - Competency data with translations
-  - `/api/pbl/scenarios` - PBL scenario management (hybrid translation support)
-  - `/api/pbl/chat` - AI tutor conversation
-  - `/api/pbl/evaluate` - Task performance evaluation
-  - `/api/pbl/generate-feedback` - Multi-language feedback generation
-  - `/api/assessment/scenarios` - Assessment scenarios with hybrid translation
-  - `/api/monitoring/performance` - Real-time performance metrics
-  - `/api/monitoring/cache` - Cache management and statistics
-
-#### Backend Structure  
-- **Framework**: FastAPI with Python 3.x
-- **Key Dependencies**: Google Cloud AI Platform, Generative AI, OpenAI, YAML processing
-- **Purpose**: Handles AI/LLM integrations and data processing
-
-#### Data Architecture
-- **Content Management**: 
-  - **Rubrics**: YAML files in `frontend/public/rubrics_data/`
-    - `ai_lit_domains.yaml` - Four core AI literacy domains with competencies
-    - `ksa_codes.yaml` - Knowledge, Skills, Attitudes reference codes
-  - **PBL Scenarios**: YAML files in `frontend/public/pbl_data/`
-    - `*_scenario.yaml` - Scenario definitions with tasks and AI modules
-    - Multi-language support through field suffixes
-- **User Data**: PostgreSQL Database
-  - Users, Programs, Tasks, Evaluations, Achievements tables
-  - Relational data model with foreign key constraints
-- **Static Files**: Google Cloud Storage
-  - Images, documents, and other media files
-  - Public bucket for static assets
-- **Translation System**: Suffix-based field naming (e.g., `description_zh`, `description_es`)
-- **Domain Structure**: Engaging_with_AI, Creating_with_AI, Managing_AI, Designing_AI
-
-#### Component Architecture
-- **Client-side rendering** with useState/useEffect patterns
-- **Accordion interfaces** for domain and competency exploration  
-- **Responsive design** with mobile-specific overlays
-- **Dynamic content loading** via API with language parameter
-
-#### Abstraction Layer Architecture (`frontend/src/lib/abstractions/`)
-- **BaseApiHandler**: Unified API route handling with caching, error handling, and i18n
-- **BaseStorageService**: Abstracted storage interface for file operations
-- **BaseAIService**: Unified AI service interface for multiple providers
-- **BaseYAMLLoader**: YAML content loading with validation and caching
-- **BaseLearningService**: Unified learning service interface for all modules
-- **Implementations**: Concrete implementations in `/implementations` directory
-
-#### Service Layer Architecture (`frontend/src/lib/services/`)
-- **UnifiedEvaluationSystem**: Centralized evaluation system with strategy pattern
-- **HybridTranslationService**: Dual-track YAML + JSON translation system
-- **ScenarioTranslationService**: Dynamic scenario content translation
-- **EvaluationStrategies**: Module-specific evaluation implementations
-- **Redis/DistributedCache**: Multi-level caching with automatic fallback
-
-### Key Implementation Details
-
-#### Translation System
-The app uses a hybrid translation architecture:
-1. **UI Labels**: react-i18next with JSON files in `public/locales/`
-2. **Content Data**: 
-   - YAML field suffixes for legacy content (e.g., `description_zh`)
-   - Separate YAML files per language for new content (e.g., `scenario_ko.yml`)
-3. **LLM Integration**: Claude API for automated translations
-4. **Coverage**: 14 languages with 100% translation coverage
-
-#### YAML Data Processing
-- Domains contain competencies with KSA code references
-- API route dynamically resolves translations and builds KSA maps
-- Competencies link to knowledge (K), skills (S), and attitudes (A) indicators
-
-#### Styling Approach
-- **Tailwind CSS** for utility-first styling
-- **Gradient backgrounds** and **responsive design** patterns
-- **Custom animations** with CSS-in-JS for mobile interactions
-
-### Database Architecture (Unified Schema V3)
-AI Square 使用 **PostgreSQL** 作為主要資料庫，採用統一學習架構設計：
-
-#### 統一學習架構資料流
-```
-Content Source → Scenario (UUID) → Program (UUID) → Task (UUID) → Evaluation (UUID)
-```
-
-#### 核心資料表結構
-
-##### Scenarios 表（學習情境）
-- **id**: UUID 主鍵
-- **mode**: ENUM ('pbl', 'discovery', 'assessment') - 學習模式
-- **status**: ENUM ('draft', 'active', 'archived') - 發布狀態
-- **source_type**: ENUM ('yaml', 'api', 'ai-generated') - 來源類型
-- **source_path/source_id**: 來源識別
-- **source_metadata**: JSONB - 額外來源資訊
-- **title/description**: JSONB - 多語言支援
-- **objectives**: JSONB - 學習目標
-- **task_templates**: JSONB - 任務模板定義
-- **pbl_data/discovery_data/assessment_data**: JSONB - 模式特定資料
-- **ai_modules/resources**: JSONB - AI 模組與資源配置
-
-##### Programs 表（學習實例）
-- **id**: UUID 主鍵
-- **mode**: ENUM - 從 scenario 繼承的模式（使用 trigger 自動填充）
-- **scenario_id**: 關聯的情境
-- **user_id**: 學習者識別
-- **status**: ENUM ('pending', 'active', 'completed', 'expired')
-- **total_score/time_spent_seconds**: 學習成效追蹤
-- **started_at/completed_at**: 時間戳記
-
-##### Tasks 表（任務）
-- **id**: UUID 主鍵
-- **mode**: ENUM - 從 program 繼承的模式
-- **program_id**: 關聯的學習實例
-- **type**: ENUM ('question', 'chat', 'creation', 'analysis')
-- **title/instructions**: JSONB - 多語言支援
-- **context/metadata**: JSONB - 任務資料
-- **interactions**: JSONB - 互動記錄
-- **started_at/completed_at**: 任務時間追蹤
-
-##### Evaluations 表（評估）
-- **id**: UUID 主鍵
-- **mode**: ENUM - 從 task 繼承的模式
-- **task_id/user_id**: 關聯資訊
-- **evaluation_type**: STRING - 使用描述性命名 ('assessment_complete', 'pbl_complete', 'discovery_complete')
-- **score/feedback**: 評估結果
-- **criteria/rubric**: JSONB - 評估標準
-- **ai_config/ai_response**: JSONB - AI 評估設定與回應
-
-#### 重要設計特點
-1. **Mode 欄位繼承**: programs、tasks、evaluations 都有 mode 欄位，透過 trigger 自動從上層繼承，避免過多 JOIN
-2. **多語言支援**: 使用 JSONB 儲存 `{en: "English", zh: "中文", ...}` 格式
-3. **彈性擴充**: 每個模式有專屬的 data 欄位（pbl_data、discovery_data、assessment_data）
-4. **統一介面**: 所有模式使用相同的資料流程和 Repository Pattern
-5. **評估命名規範 (2025-09-09 更新)**: 
-   - 使用簡單描述性命名：`assessment_complete`, `pbl_complete`, `discovery_complete`
-   - 避免學術性術語（如 `summative`, `formative`）
-   - 一個 evaluation_type 欄位即可，不需要 subtype
-6. **時間戳記標準化**: 
-   - `createdAt`: 記錄建立時間
-   - `startedAt`: 實際開始時間（狀態從 pending → active）
-   - `completedAt`: 完成時間
-   - `updatedAt`: 最後更新時間
-
-#### TypeScript 型別對應
-```typescript
-// 資料庫 ENUM 對應
-export type LearningMode = 'pbl' | 'discovery' | 'assessment';
-export type SourceType = 'yaml' | 'api' | 'ai-generated';
-export type ScenarioStatus = 'draft' | 'active' | 'archived';
-export type ProgramStatus = 'pending' | 'active' | 'completed' | 'expired';
-export type TaskType = 'question' | 'chat' | 'creation' | 'analysis';
-export type EvaluationType = 'assessment_complete' | 'pbl_complete' | 'discovery_complete';
-
-// 統一介面
-export interface IScenario {
-  id: string;
-  mode: LearningMode;
-  sourceType: SourceType;
-  sourcePath?: string;
-  sourceId?: string;
-  sourceMetadata?: Record<string, unknown>;
-  title: Record<string, string>;
-  description: Record<string, string>;
-  // ... 其他欄位
-}
-```
-
-#### 資料儲存策略
-- **PostgreSQL**: 所有動態用戶資料、學習記錄、進度追蹤
-- **YAML 檔案**: 靜態內容定義（情境模板、KSA 映射、rubrics）
-- **Google Cloud Storage**: 僅用於靜態檔案（圖片、文件、媒體）
-- **Redis**: 分散式快取層，提升查詢效能
-
-#### Repository Pattern 實作
-- 所有資料存取都透過 Repository 抽象層
-- 基礎介面定義在 `@/types/unified-learning.ts`
-- PostgreSQL 實作在 `@/lib/repositories/postgresql/`
-- 支援未來擴充其他資料庫（如 MongoDB）
+**核心設計**：
+- **PostgreSQL**: 主要資料庫，統一學習架構
+- **資料流程**: Content Source → Scenario → Program → Task → Evaluation
+- **多語言支援**: JSONB 格式儲存
+- **Repository Pattern**: 抽象層設計，支援未來擴充
 
 ### Configuration Files
 - `eslint.config.mjs` - Next.js + TypeScript ESLint setup
 - `tailwind.config.js` - Tailwind CSS configuration  
 - `next.config.ts` - Next.js configuration with i18n
-- `next-i18next.config.js` - Internationalization setup
 - `tsconfig.json` - TypeScript configuration
-
 
 ### Important Technical Specifications
 
@@ -2446,23 +2111,8 @@ export interface IScenario {
 - **Cause**: Cloud SQL in `us-central1`, Cloud Run in `asia-east1`
 - **Solution**: Both services must be in same region
 
-```bash
-# ✅ Correct: Same region
-Cloud SQL: asia-east1
-Cloud Run: asia-east1
-```
-
 #### Vertex AI Model Names
 - **Correct model**: `gemini-2.5-flash` (not gemini-pro)
-- **Usage**:
-  ```typescript
-  const model = vertexAI.preview.getGenerativeModel({
-    model: 'gemini-2.5-flash',
-  });
-  
-  const result = await model.generateContent(prompt);
-  const text = result.response.candidates?.[0]?.content?.parts?.[0]?.text || 'Default';
-  ```
 
 ## 🏗️ Architecture Best Practices - Lessons from GCS-v2 Migration
 
@@ -2779,7 +2429,7 @@ if (typeof titleObj === 'string') {
    - 使用具體的型別斷言
    - 定義明確的介面
 
-## 🚨 評估命名規範統一 (2025-09-09)
+## 🚨 評估命名規範統一
 
 ### 重大更新：Evaluation Type 命名規範統一
 
