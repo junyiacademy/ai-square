@@ -793,14 +793,6 @@ export default function ProgramLearningPage() {
             <h1 className="text-lg font-semibold text-gray-900 dark:text-white">
               {getLocalizedField(scenario as unknown as Record<string, unknown>, 'title', i18n.language)}
             </h1>
-            
-            {/* Action Buttons */}
-            <button
-              onClick={() => router.push(`/pbl/scenarios/${scenarioId}/program/${programId}/complete`)}
-              className="px-4 py-2 bg-purple-600 text-white text-sm rounded-lg hover:bg-purple-700 transition-colors font-medium"
-            >
-              {t('pbl:details.goToCompletion')}
-            </button>
           </div>
         </div>
       </header>
