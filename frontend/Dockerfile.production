@@ -9,9 +9,8 @@ WORKDIR /app
 # Copy dependency files
 COPY package.json package-lock.json* ./
 # Skip husky in production builds
-ENV HUSKY=0
-RUN npm ci --only=production && \
-    npm ci
+RUN npm ci --only=production --ignore-scripts && \
+    npm ci --ignore-scripts
 
 # Rebuild the source code only when needed
 FROM base AS builder
