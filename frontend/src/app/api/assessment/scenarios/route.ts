@@ -80,13 +80,27 @@ export async function GET(request: NextRequest) {
       // 匿名請求才走快取
       const key = !userId ? cacheKeys.assessmentScenarios(lang) : undefined;
       if (key) {
-        let cacheStatus: 'HIT' | 'MISS' | 'STALE' = 'MISS';
-        const result = await distributedCacheService.getWithRevalidation(key, async () => ({
+        // 先嘗試從快取取得
+        const cached = await distributedCacheService.get(key) as { data?: { scenarios?: unknown[] } } | null;
+        if (cached && cached.data?.scenarios?.length && cached.data.scenarios.length > 0) {
+          return new NextResponse(JSON.stringify(cached), {
+            headers: { 'Content-Type': 'application/json', 'X-Cache': 'HIT' }
+          });
+        }
+        
+        // 沒有快取或快取為空，使用新資料
+        const result = {
           success: true,
           data: { scenarios: formattedScenarios, total: formattedScenarios.length }
-        }), { ttl: TTL.SEMI_STATIC_1H, staleWhileRevalidate: TTL.SEMI_STATIC_1H, onStatus: (s) => { cacheStatus = s; } });
+        };
+        
+        // 只有當結果不為空時才快取
+        if (formattedScenarios.length > 0) {
+          await distributedCacheService.set(key, result, { ttl: TTL.SEMI_STATIC_1H });
+        }
+        
         return new NextResponse(JSON.stringify(result), {
-          headers: { 'Content-Type': 'application/json', 'X-Cache': cacheStatus }
+          headers: { 'Content-Type': 'application/json', 'X-Cache': 'MISS' }
         });
       }
 
@@ -105,24 +119,7 @@ export async function GET(request: NextRequest) {
       }
     };
     
-    // Cache the empty result for anonymous users
-    const key = !userId ? cacheKeys.assessmentScenarios(lang) : undefined;
-    if (key) {
-      let cacheStatus: 'HIT' | 'MISS' | 'STALE' = 'MISS';
-      const result = await distributedCacheService.getWithRevalidation(
-        key,
-        async () => emptyResult,
-        { 
-          ttl: TTL.SEMI_STATIC_1H, 
-          staleWhileRevalidate: TTL.SEMI_STATIC_1H, 
-          onStatus: (s) => { cacheStatus = s; } 
-        }
-      );
-      return new NextResponse(JSON.stringify(result), {
-        headers: { 'Content-Type': 'application/json', 'X-Cache': cacheStatus }
-      });
-    }
-
+    // Don't cache empty results - just return them
     return NextResponse.json(emptyResult);
   } catch (error) {
     console.error('Error in assessment scenarios API:', error);
