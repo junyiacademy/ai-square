@@ -24,7 +24,7 @@ repos:
         types: [file]
         files: ^frontend/.*\.(ts|tsx)$
         pass_filenames: false
-        stages: [push]
+        stages: [pre-push]
 
       - id: build-check
         name: Build Check (Pre-push only)
@@ -33,7 +33,7 @@ repos:
         types: [file]
         files: ^frontend/.*\.(ts|tsx|js|jsx)$
         pass_filenames: false
-        stages: [push]
+        stages: [pre-push]
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.4.0
