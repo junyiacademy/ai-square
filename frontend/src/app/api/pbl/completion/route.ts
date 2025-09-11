@@ -61,12 +61,19 @@ export async function GET(request: NextRequest) {
     }
 
     // Use the new complete API to ensure evaluation is calculated
-    const completeUrl = new URL(`/api/pbl/programs/${programId}/complete`, request.url);
+    // Fix for Cloud Run: replace 0.0.0.0 with localhost for internal API calls
+    const baseUrl = new URL(request.url);
+    if (baseUrl.hostname === '0.0.0.0') {
+      baseUrl.hostname = 'localhost';
+      baseUrl.protocol = 'http:';  // Use HTTP for internal calls
+    }
+    const completeUrl = new URL(`/api/pbl/programs/${programId}/complete`, baseUrl);
     completeUrl.searchParams.set('language', language);
 
     // DEBUG: Log URL construction
     console.log('[COMPLETION DEBUG] URL Construction:', {
       requestUrl: request.url,
+      fixedBaseUrl: baseUrl.toString(),
       completeUrl: completeUrl.toString(),
       host: request.headers.get('host'),
       origin: request.headers.get('origin'),
