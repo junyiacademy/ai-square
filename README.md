@@ -72,3 +72,4 @@ make commit-smart  # 推薦：自動檢查 + 生成訊息
 ---
 
 > **提示**: 如果你是 AI 助手，請先閱讀 `docs/CLAUDE.md` 了解專案全貌。# Test pre-commit config
+# Test comprehensive pre-commit
