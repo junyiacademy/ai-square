@@ -64,24 +64,56 @@ export async function GET(request: NextRequest) {
     const completeUrl = new URL(`/api/pbl/programs/${programId}/complete`, request.url);
     completeUrl.searchParams.set('language', language);
 
-    // First try GET to see if evaluation exists
-    let completeRes = await fetch(completeUrl.toString(), {
-      headers: {
-        cookie: request.headers.get('cookie') || '',
-      },
+    // DEBUG: Log URL construction
+    console.log('[COMPLETION DEBUG] URL Construction:', {
+      requestUrl: request.url,
+      completeUrl: completeUrl.toString(),
+      host: request.headers.get('host'),
+      origin: request.headers.get('origin'),
+      nodeEnv: process.env.NODE_ENV,
+      environment: process.env.ENVIRONMENT
     });
+
+    // First try GET to see if evaluation exists
+    let completeRes;
+    try {
+      console.log('[COMPLETION DEBUG] Attempting fetch to:', completeUrl.toString());
+      completeRes = await fetch(completeUrl.toString(), {
+        headers: {
+          cookie: request.headers.get('cookie') || '',
+        },
+      });
+      console.log('[COMPLETION DEBUG] Fetch response status:', completeRes.status);
+    } catch (fetchError) {
+      console.error('[COMPLETION DEBUG] Fetch failed with error:', {
+        error: fetchError instanceof Error ? fetchError.message : fetchError,
+        stack: fetchError instanceof Error ? fetchError.stack : undefined,
+        url: completeUrl.toString()
+      });
+      throw new Error(`fetch failed: ${fetchError instanceof Error ? fetchError.message : 'Unknown error'}`);
+    }
 
     // If not found or no evaluation, trigger POST to create it
     if (!completeRes.ok || completeRes.status === 404) {
-      console.log('Completion API - Evaluation not found, creating new one');
-      completeRes = await fetch(completeUrl.toString(), {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          cookie: request.headers.get('cookie') || '',
-        },
-        body: JSON.stringify({})
-      });
+      console.log('[COMPLETION DEBUG] Evaluation not found, creating new one via POST');
+      try {
+        completeRes = await fetch(completeUrl.toString(), {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            cookie: request.headers.get('cookie') || '',
+          },
+          body: JSON.stringify({})
+        });
+        console.log('[COMPLETION DEBUG] POST response status:', completeRes.status);
+      } catch (postError) {
+        console.error('[COMPLETION DEBUG] POST failed with error:', {
+          error: postError instanceof Error ? postError.message : postError,
+          stack: postError instanceof Error ? postError.stack : undefined,
+          url: completeUrl.toString()
+        });
+        throw new Error(`POST fetch failed: ${postError instanceof Error ? postError.message : 'Unknown error'}`);
+      }
     }
 
     if (!completeRes.ok) {
