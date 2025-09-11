@@ -25,7 +25,7 @@ export class SecureSession {
    * Generate a secure session token
    */
   static generateToken(): string {
-    return RedisSession.generateToken();
+    return PostgresSession.generateToken();
   }
 
   /**
@@ -42,7 +42,7 @@ export class SecureSession {
     const token = this.generateToken();
     
     // Fire and forget - create session asynchronously
-    RedisSession.createSession(userData, rememberMe).catch(error => {
+    PostgresSession.createSession(userData, rememberMe).catch(error => {
       console.error('[SecureSession] Failed to create session:', error);
     });
     
@@ -60,7 +60,7 @@ export class SecureSession {
   }, rememberMe = false): Promise<string> {
     try {
       if (useRedis) {
-        return await RedisSession.createSession(userData, rememberMe);
+        return await PostgresSession.createSession(userData, rememberMe);
       }
     } catch (error) {
       console.warn('[SecureSession] Redis unavailable, falling back to memory storage:', error);
@@ -94,7 +94,7 @@ export class SecureSession {
   static async getSessionAsync(token: string): Promise<SessionData | null> {
     try {
       if (useRedis) {
-        return await RedisSession.getSession(token);
+        return await PostgresSession.getSession(token);
       }
     } catch (error) {
       console.warn('[SecureSession] Redis unavailable for getSession, falling back to memory:', error);
@@ -110,7 +110,7 @@ export class SecureSession {
    */
   static destroySession(token: string): void {
     // Fire and forget
-    RedisSession.destroySession(token).catch(error => {
+    PostgresSession.destroySession(token).catch(error => {
       console.error('[SecureSession] Failed to destroy session:', error);
     });
   }
@@ -119,34 +119,37 @@ export class SecureSession {
    * Destroy a session (async version)
    */
   static async destroySessionAsync(token: string): Promise<void> {
-    return RedisSession.destroySession(token);
+    return PostgresSession.destroySession(token);
   }
 
   /**
    * Validate token format
    */
   static isValidTokenFormat(token: string): boolean {
-    return RedisSession.isValidTokenFormat(token);
+    // Simple hex token validation
+    return /^[a-f0-9]{64}$/i.test(token);
   }
 
   /**
    * Clean up expired sessions
    */
   static cleanupExpiredSessions(): void {
-    RedisSession.cleanupExpiredSessions();
+    PostgresSession.cleanupExpiredSessions();
   }
 
   /**
    * Get all active sessions for a user (async only)
    */
   static async getUserSessions(userId: string): Promise<string[]> {
-    return RedisSession.getUserSessions(userId);
+    // Not implemented yet, return empty array
+    return [];
   }
 
   /**
    * Revoke all sessions for a user (async only)
    */
   static async revokeUserSessions(userId: string): Promise<void> {
-    return RedisSession.revokeUserSessions(userId);
+    // Not implemented yet
+    return;
   }
 }
