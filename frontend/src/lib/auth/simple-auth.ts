@@ -1,6 +1,6 @@
 /**
  * Simple and Reliable Authentication System
- * 
+ *
  * ONE SOURCE OF TRUTH: PostgreSQL
  * - No Redis, no memory fallback, no complexity
  * - Sessions stored directly in PostgreSQL
@@ -73,19 +73,19 @@ export async function createSession(userData: {
   const expiresAt = new Date(now.getTime() + ttl * 1000);
 
   const db = getPool();
-  
+
   try {
     // Delete old sessions for this user
     await db.query('DELETE FROM sessions WHERE user_id = $1', [userData.userId]);
-    
+
     // Create new session
     await db.query(
       `INSERT INTO sessions (token, user_id, email, role, created_at, expires_at, metadata)
        VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-      [token, userData.userId, userData.email, userData.role, now, expiresAt, 
+      [token, userData.userId, userData.email, userData.role, now, expiresAt,
        JSON.stringify({ name: userData.name })]
     );
-    
+
     console.log('[Auth] Session created in PostgreSQL');
     return token;
   } catch (error) {
@@ -103,11 +103,11 @@ export async function getSession(token: string): Promise<SessionData | null> {
   }
 
   const db = getPool();
-  
+
   try {
     const result = await db.query(
       `SELECT user_id, email, role, created_at, expires_at, metadata
-       FROM sessions 
+       FROM sessions
        WHERE token = $1 AND expires_at > NOW()`,
       [token]
     );
@@ -118,7 +118,7 @@ export async function getSession(token: string): Promise<SessionData | null> {
 
     const row = result.rows[0];
     const metadata = row.metadata || {};
-    
+
     return {
       userId: row.user_id,
       email: row.email,
@@ -138,9 +138,9 @@ export async function getSession(token: string): Promise<SessionData | null> {
  */
 export async function destroySession(token: string): Promise<void> {
   if (!token) return;
-  
+
   const db = getPool();
-  
+
   try {
     await db.query('DELETE FROM sessions WHERE token = $1', [token]);
     console.log('[Auth] Session destroyed');
@@ -159,26 +159,26 @@ export async function loginUser(email: string, password: string): Promise<{
   error?: string;
 }> {
   const db = getPool();
-  
+
   try {
     // Get user
     const result = await db.query(
       'SELECT id, email, name, role, password_hash FROM users WHERE LOWER(email) = LOWER($1)',
       [email]
     );
-    
+
     if (result.rows.length === 0) {
       return { success: false, error: 'Invalid credentials' };
     }
-    
+
     const user = result.rows[0];
-    
+
     // Check password
     const validPassword = await bcrypt.compare(password, user.password_hash);
     if (!validPassword) {
       return { success: false, error: 'Invalid credentials' };
     }
-    
+
     // Create session
     const token = await createSession({
       userId: user.id,
@@ -186,7 +186,7 @@ export async function loginUser(email: string, password: string): Promise<{
       role: user.role,
       name: user.name
     }, true); // Always remember for better DX
-    
+
     return {
       success: true,
       user: {
@@ -214,25 +214,25 @@ export async function autoLoginDev(): Promise<{
   if (process.env.NODE_ENV !== 'development') {
     return { success: false };
   }
-  
+
   const db = getPool();
-  
+
   try {
     // Get first user (or specific dev user)
     const result = await db.query(
-      `SELECT id, email, name, role FROM users 
-       WHERE email = 'student@example.com' 
+      `SELECT id, email, name, role FROM users
+       WHERE email = 'student@example.com'
        OR email = 'test@example.com'
        LIMIT 1`
     );
-    
+
     if (result.rows.length === 0) {
       console.log('[Auth] No dev user found for auto-login');
       return { success: false };
     }
-    
+
     const user = result.rows[0];
-    
+
     // Create session
     const token = await createSession({
       userId: user.id,
@@ -240,9 +240,9 @@ export async function autoLoginDev(): Promise<{
       role: user.role,
       name: user.name
     }, true);
-    
+
     console.log('[Auth] Auto-login successful:', user.email);
-    
+
     return {
       success: true,
       user: {
@@ -264,7 +264,7 @@ export async function autoLoginDev(): Promise<{
  */
 export async function cleanupSessions(): Promise<void> {
   const db = getPool();
-  
+
   try {
     const result = await db.query('DELETE FROM sessions WHERE expires_at < NOW()');
     if (result.rowCount && result.rowCount > 0) {
