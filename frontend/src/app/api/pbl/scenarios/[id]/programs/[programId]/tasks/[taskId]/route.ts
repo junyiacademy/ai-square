@@ -86,6 +86,7 @@ export async function GET(
     let taskTemplate = null;
     if (scenario && scenario.taskTemplates && task.scenarioTaskIndex !== null && task.scenarioTaskIndex !== undefined) {
       taskTemplate = scenario.taskTemplates[task.scenarioTaskIndex];
+      console.log(`[Task API] Found taskTemplate for index ${task.scenarioTaskIndex}:`, taskTemplate ? 'yes' : 'no');
     }
 
     // Enhance task with template data
