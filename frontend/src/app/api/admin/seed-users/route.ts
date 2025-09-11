@@ -17,16 +17,23 @@ export async function POST(request: NextRequest) {
   let pool: Pool | null = null;
   
   try {
-    // Remove admin key check - keeping API simple
+    // Default demo users
+    const defaultUsers: UserSeed[] = [
+      { email: 'student@example.com', password: 'student123', role: 'student', name: 'Demo Student' },
+      { email: 'teacher@example.com', password: 'teacher123', role: 'teacher', name: 'Demo Teacher' },
+      { email: 'admin@example.com', password: 'admin123', role: 'admin', name: 'Demo Admin' }
+    ];
 
-    const body = await request.json();
-    const users: UserSeed[] = body.users || [];
-
-    if (users.length === 0) {
-      return NextResponse.json(
-        { success: false, error: 'No users provided' },
-        { status: 400 }
-      );
+    // Allow override from request body for testing, but use defaults if not provided
+    let users: UserSeed[] = defaultUsers;
+    
+    try {
+      const body = await request.json();
+      if (body.users && Array.isArray(body.users) && body.users.length > 0) {
+        users = body.users;
+      }
+    } catch {
+      // If no body or invalid JSON, use defaults
     }
 
     // Create database connection

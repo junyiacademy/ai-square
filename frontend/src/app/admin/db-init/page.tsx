@@ -58,16 +58,16 @@ export default function DatabaseInitPage() {
           details: usersData.users || []
         },
         assessment: {
-          count: assessmentData.scenarios?.length || 0,
-          details: assessmentData.scenarios || []
+          count: assessmentData.data?.scenarios?.length || 0,
+          details: assessmentData.data?.scenarios || []
         },
         pbl: {
-          count: pblData.scenarios?.length || 0,
-          details: pblData.scenarios || []
+          count: pblData.data?.scenarios?.length || 0,
+          details: pblData.data?.scenarios || []
         },
         discovery: {
-          count: discoveryData.scenarios?.length || 0,
-          details: discoveryData.scenarios || []
+          count: discoveryData.data?.scenarios?.length || 0,
+          details: discoveryData.data?.scenarios || []
         }
       });
     } catch (error) {
@@ -86,10 +86,9 @@ export default function DatabaseInitPage() {
       const body = module === 'users' 
         ? {
             users: [
-              { email: 'admin@test.com', password: 'Admin123456!', role: 'admin', name: 'Admin User' },
-              { email: 'teacher@test.com', password: 'Teacher123456!', role: 'teacher', name: 'Teacher User' },
-              { email: 'student@test.com', password: 'Student123456!', role: 'student', name: 'Student User' },
-              { email: 'demo@test.com', password: 'Demo123456!', role: 'user', name: 'Demo User' }
+              { email: 'student@example.com', password: 'student123', role: 'student', name: 'Demo Student' },
+              { email: 'teacher@example.com', password: 'teacher123', role: 'teacher', name: 'Demo Teacher' },
+              { email: 'admin@example.com', password: 'admin123', role: 'admin', name: 'Demo Admin' }
             ]
           }
         : {};

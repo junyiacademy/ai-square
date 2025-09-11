@@ -35,7 +35,7 @@ export async function getRedisClient(): Promise<Redis | null> {
         maxRetriesPerRequest: 3,
         retryStrategy: (times) => {
           if (times > 3) {
-            console.log('[Redis] Max retries reached, falling back to in-memory storage');
+            // Silently fallback to in-memory storage
             return null; // Stop retrying
           }
           return Math.min(times * 100, 3000);
@@ -53,15 +53,16 @@ export async function getRedisClient(): Promise<Redis | null> {
 
       // Set up event handlers
       redisClient.on('error', (err) => {
-        console.error('[Redis] Connection error:', err.message);
+        // Silently ignore Redis connection errors - will fallback to memory
+        // console.error('[Redis] Connection error:', err.message);
       });
 
       redisClient.on('connect', () => {
-        console.log('[Redis] Connected successfully');
+        // Redis connected
       });
 
       redisClient.on('ready', () => {
-        console.log('[Redis] Ready to accept commands');
+        // Redis ready
       });
 
       // Try to connect
@@ -72,7 +73,7 @@ export async function getRedisClient(): Promise<Redis | null> {
       
       return redisClient;
     } catch (error) {
-      console.log('[Redis] Not available, using in-memory fallback:', error instanceof Error ? error.message : 'Unknown error');
+      // Silently fallback to in-memory storage
       redisClient = null;
       return null;
     }

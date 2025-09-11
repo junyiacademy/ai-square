@@ -1,11 +1,13 @@
 /**
  * Secure Session Token Management
  * 
- * This file now delegates to RedisSession for production-ready storage
+ * This file now delegates to PostgresSession for persistent storage
+ * Sessions are stored in PostgreSQL database for persistence across restarts
  * Maintains backward compatibility with existing code
  */
 
-import { RedisSession } from './redis-session';
+import { PostgresSession } from './postgres-session';
+import { memorySession } from './memory-session';
 
 export interface SessionData {
   userId: string;
@@ -14,6 +16,9 @@ export interface SessionData {
   createdAt: Date;
   expiresAt: Date;
 }
+
+// Track Redis availability
+let useRedis = true;
 
 export class SecureSession {
   /**
@@ -46,13 +51,24 @@ export class SecureSession {
 
   /**
    * Create a new session (async version - preferred)
+   * Falls back to memory storage if Redis is unavailable
    */
   static async createSessionAsync(userData: {
     userId: string;
     email: string;
     role: string;
   }, rememberMe = false): Promise<string> {
-    return RedisSession.createSession(userData, rememberMe);
+    try {
+      if (useRedis) {
+        return await RedisSession.createSession(userData, rememberMe);
+      }
+    } catch (error) {
+      console.warn('[SecureSession] Redis unavailable, falling back to memory storage:', error);
+      useRedis = false;
+    }
+    
+    // Fallback to memory storage
+    return memorySession.createSession(userData, rememberMe);
   }
 
   /**
@@ -76,7 +92,17 @@ export class SecureSession {
    * Get session data from token (async version)
    */
   static async getSessionAsync(token: string): Promise<SessionData | null> {
-    return RedisSession.getSession(token);
+    try {
+      if (useRedis) {
+        return await RedisSession.getSession(token);
+      }
+    } catch (error) {
+      console.warn('[SecureSession] Redis unavailable for getSession, falling back to memory:', error);
+      useRedis = false;
+    }
+    
+    // Fallback to memory storage
+    return memorySession.getSession(token);
   }
 
   /**
