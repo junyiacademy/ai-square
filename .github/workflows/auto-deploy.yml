@@ -216,33 +216,56 @@ jobs:
 
           if [[ "${{ steps.env.outputs.environment }}" == "production" ]]; then
             CONFIG_FILE="cloudbuild.production.yaml"
+
+            # Set default values if secrets are not configured
             DB_PASSWORD="${{ secrets.PROD_DB_PASSWORD }}"
-            DB_USER="${{ secrets.PROD_DB_USER }}"
-            DB_NAME="${{ secrets.PROD_DB_NAME }}"
-            DB_HOST="${{ secrets.PROD_DB_HOST }}"
+            DB_USER="${{ secrets.PROD_DB_USER || 'postgres' }}"
+            DB_NAME="${{ secrets.PROD_DB_NAME || 'ai_square_db' }}"
+            DB_HOST="${{ secrets.PROD_DB_HOST || '/cloudsql/ai-square-463013:asia-east1:ai-square-db-production' }}"
+
+            # Validate critical secrets
+            if [[ -z "${DB_PASSWORD}" ]]; then
+              echo "❌ Error: PROD_DB_PASSWORD secret is not set!"
+              echo "Please configure the following secrets in GitHub:"
+              echo "  - PROD_DB_PASSWORD (required)"
+              echo "  - PROD_DB_USER (optional, defaults to 'postgres')"
+              echo "  - PROD_DB_NAME (optional, defaults to 'ai_square_db')"
+              echo "  - PROD_DB_HOST (optional, defaults to Cloud SQL instance)"
+              exit 1
+            fi
 
             # Build DATABASE_URL with proper escaping
             DATABASE_URL="postgresql://${DB_USER}:${DB_PASSWORD}@/${DB_NAME}?host=${DB_HOST}"
             NEXTAUTH_SECRET="${{ secrets.NEXTAUTH_SECRET }}"
             VERTEX_AI_KEY="${{ secrets.VERTEX_AI_KEY }}"
+
+            echo "🔍 Debug: Database configuration set (values masked)"
           else
             CONFIG_FILE="cloudbuild.staging.yaml"
-            DB_PASSWORD="${{ secrets.STAGING_DB_PASSWORD }}"
-            DB_USER="${{ secrets.STAGING_DB_USER }}"
-            DB_NAME="${{ secrets.STAGING_DB_NAME }}"
-            DB_HOST="${{ secrets.STAGING_DB_HOST }}"
 
-            # Debug output (masked for security)
-            echo "🔍 Debug: Checking if secrets are set..."
-            [[ -z "$DB_USER" ]] && echo "⚠️ Warning: DB_USER is empty"
-            [[ -z "$DB_PASSWORD" ]] && echo "⚠️ Warning: DB_PASSWORD is empty"
-            [[ -z "$DB_NAME" ]] && echo "⚠️ Warning: DB_NAME is empty"
-            [[ -z "$DB_HOST" ]] && echo "⚠️ Warning: DB_HOST is empty"
+            # Set default values if secrets are not configured
+            DB_PASSWORD="${{ secrets.STAGING_DB_PASSWORD }}"
+            DB_USER="${{ secrets.STAGING_DB_USER || 'postgres' }}"
+            DB_NAME="${{ secrets.STAGING_DB_NAME || 'ai_square_db' }}"
+            DB_HOST="${{ secrets.STAGING_DB_HOST || '/cloudsql/ai-square-463013:asia-east1:ai-square-db-staging-asia' }}"
+
+            # Validate critical secrets
+            if [[ -z "${DB_PASSWORD}" ]]; then
+              echo "❌ Error: STAGING_DB_PASSWORD secret is not set!"
+              echo "Please configure the following secrets in GitHub:"
+              echo "  - STAGING_DB_PASSWORD (required)"
+              echo "  - STAGING_DB_USER (optional, defaults to 'postgres')"
+              echo "  - STAGING_DB_NAME (optional, defaults to 'ai_square_db')"
+              echo "  - STAGING_DB_HOST (optional, defaults to Cloud SQL instance)"
+              exit 1
+            fi
 
             # Build DATABASE_URL with proper escaping
             DATABASE_URL="postgresql://${DB_USER}:${DB_PASSWORD}@/${DB_NAME}?host=${DB_HOST}"
             NEXTAUTH_SECRET="${{ secrets.NEXTAUTH_SECRET }}"
             VERTEX_AI_KEY="${{ secrets.VERTEX_AI_KEY }}"
+
+            echo "🔍 Debug: Database configuration set (values masked)"
           fi
 
           echo "📦 Using config: ${CONFIG_FILE}"
@@ -282,3 +305,44 @@ jobs:
           echo "✅ Deployment to ${{ steps.env.outputs.environment }} complete!"
           echo "🌐 Service: ${{ steps.env.outputs.service }}"
           echo "🔗 URL: $SERVICE_URL"
+
+      - name: Clean up old GCR images
+        if: success()
+        run: |
+          echo "🧹 Cleaning up old container images..."
+
+          # Function to keep only latest N images
+          cleanup_repository() {
+            local REPO=$1
+            local KEEP_COUNT=${2:-3}  # Keep latest 3 images by default
+
+            echo "📦 Cleaning $REPO (keeping latest $KEEP_COUNT images)..."
+
+            # Get all images except the latest KEEP_COUNT
+            IMAGES=$(gcloud container images list-tags "$REPO" \
+              --format="get(digest)" \
+              --sort-by="~timestamp" 2>/dev/null | tail -n +$((KEEP_COUNT + 1)))
+
+            if [ -n "$IMAGES" ]; then
+              echo "$IMAGES" | while read -r DIGEST; do
+                if [ -n "$DIGEST" ]; then
+                  echo "  🗑️ Deleting: ${DIGEST:0:12}..."
+                  gcloud container images delete "$REPO@$DIGEST" --quiet --force-delete-tags 2>/dev/null || true
+                fi
+              done
+            else
+              echo "  ✅ No old images to clean"
+            fi
+          }
+
+          # Clean up based on environment
+          if [[ "${{ steps.env.outputs.environment }}" == "production" ]]; then
+            cleanup_repository "gcr.io/${{ env.PROJECT_ID }}/ai-square-production" 3
+          else
+            cleanup_repository "gcr.io/${{ env.PROJECT_ID }}/ai-square-staging" 3
+          fi
+
+          # Also clean up ai-square-frontend (shared repository)
+          cleanup_repository "gcr.io/${{ env.PROJECT_ID }}/ai-square-frontend" 5
+
+          echo "✅ GCR cleanup complete"
