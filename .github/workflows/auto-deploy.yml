@@ -214,17 +214,22 @@ jobs:
             CONFIG_FILE="cloudbuild.production.yaml"
             DB_PASSWORD="${{ secrets.PROD_DB_PASSWORD }}"
             DATABASE_URL="postgresql://${{ secrets.PROD_DB_USER }}:${{ secrets.PROD_DB_PASSWORD }}@/${{ secrets.PROD_DB_NAME }}?host=${{ secrets.PROD_DB_HOST }}"
+            NEXTAUTH_SECRET="${{ secrets.NEXTAUTH_SECRET }}"
+            VERTEX_AI_KEY="${{ secrets.VERTEX_AI_KEY }}"
           else
             CONFIG_FILE="cloudbuild.staging.yaml"
             DB_PASSWORD="${{ secrets.STAGING_DB_PASSWORD }}"
             DATABASE_URL="postgresql://${{ secrets.STAGING_DB_USER }}:${{ secrets.STAGING_DB_PASSWORD }}@/${{ secrets.STAGING_DB_NAME }}?host=${{ secrets.STAGING_DB_HOST }}"
+            NEXTAUTH_SECRET="${{ secrets.NEXTAUTH_SECRET }}"
+            VERTEX_AI_KEY="${{ secrets.VERTEX_AI_KEY }}"
           fi
 
           cd frontend
           gcloud builds submit \
             --config ${CONFIG_FILE} \
             --project ${{ env.PROJECT_ID }} \
-            --region ${{ env.REGION }}
+            --region ${{ env.REGION }} \
+            --substitutions="_DB_PASSWORD=${DB_PASSWORD},_DATABASE_URL=${DATABASE_URL},_NEXTAUTH_SECRET=${NEXTAUTH_SECRET},_VERTEX_AI_KEY=${VERTEX_AI_KEY}"
 
       - name: Verify Deployment
         run: |
