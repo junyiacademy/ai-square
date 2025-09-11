@@ -348,3 +348,4 @@ jobs:
           cleanup_repository "gcr.io/${{ env.PROJECT_ID }}/ai-square-frontend" 5
 
           echo "✅ GCR cleanup complete"
+# Trigger rebuild 2025年 9月11日 週四 15時57分35秒 CST
