@@ -16,33 +16,33 @@ jobs:
   quality-checks:
     name: Code Quality & Tests
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20.x'
           cache: 'npm'
           cache-dependency-path: frontend/package-lock.json
-      
+
       - name: Install dependencies
         working-directory: ./frontend
         run: npm ci
-      
+
       - name: TypeScript Check
         working-directory: ./frontend
         run: npx tsc --noEmit
-      
+
       - name: ESLint Check
         working-directory: ./frontend
-        run: npm run lint
-      
-      - name: Run Tests
+        run: npx next lint
+
+      - name: Run Unit Tests
         working-directory: ./frontend
-        run: npm run test:ci
+        run: npx jest --ci --coverage --testPathIgnorePatterns='/tests/integration/|/e2e/|/frontend/e2e/|\.spec\.ts$' --watchAll=false
 
   # Deploy job
   deploy:
@@ -52,7 +52,7 @@ jobs:
     permissions:
       contents: read
       id-token: write
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -85,51 +85,51 @@ jobs:
       - name: Setup Service Account Permissions
         run: |
           echo "🔧 Configuring Service Account permissions..."
-          
+
           # Vertex AI permissions
           gcloud projects add-iam-policy-binding ${{ env.PROJECT_ID }} \
             --member="serviceAccount:${{ steps.env.outputs.service_account }}" \
             --role="roles/aiplatform.user" \
             --condition=None 2>/dev/null || true
-          
+
           # Cloud SQL permissions
           gcloud projects add-iam-policy-binding ${{ env.PROJECT_ID }} \
             --member="serviceAccount:${{ steps.env.outputs.service_account }}" \
             --role="roles/cloudsql.client" \
             --condition=None 2>/dev/null || true
-          
+
           echo "✅ Service Account permissions configured"
 
       - name: Run Database Migrations
         run: |
           echo "🗄️ Running database migrations..."
-          
+
           # Download Cloud SQL Proxy
           wget -q https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy
           chmod +x cloud_sql_proxy
           ./cloud_sql_proxy -instances=${{ env.PROJECT_ID }}:${{ env.REGION }}:${{ steps.env.outputs.db_instance }}=tcp:5433 &
           PROXY_PID=$!
-          
+
           # Wait for proxy
           sleep 5
-          
+
           # Setup Node.js for Prisma
           cd frontend
           npm ci --quiet
-          
+
           # Run migrations based on environment
           if [[ "${{ steps.env.outputs.environment }}" == "production" ]]; then
             export DATABASE_URL="postgresql://postgres:${{ secrets.PROD_DB_PASSWORD }}@localhost:5433/ai_square_db"
           else
             export DATABASE_URL="postgresql://postgres:${{ secrets.STAGING_DB_PASSWORD }}@localhost:5433/ai_square_db"
           fi
-          
+
           npx prisma migrate deploy
-          
+
           # Kill proxy
           kill $PROXY_PID || true
           cd ..
-          
+
           echo "✅ Migrations completed"
 
       - name: Submit Cloud Build
@@ -143,7 +143,7 @@ jobs:
             DB_PASSWORD="${{ secrets.STAGING_DB_PASSWORD }}"
             DATABASE_URL="postgresql://${{ secrets.STAGING_DB_USER }}:${{ secrets.STAGING_DB_PASSWORD }}@/${{ secrets.STAGING_DB_NAME }}?host=${{ secrets.STAGING_DB_HOST }}"
           fi
-          
+
           cd frontend
           gcloud builds submit \
             --config ${CONFIG_FILE} \
@@ -154,18 +154,18 @@ jobs:
         run: |
           SERVICE_URL=$(gcloud run services describe ${{ steps.env.outputs.service }} --region ${{ env.REGION }} --format 'value(status.url)')
           echo "📍 Service URL: $SERVICE_URL"
-          
+
           # Wait for service to be ready
           echo "⏳ Waiting for service to be ready..."
           sleep 15
-          
+
           # Health check
           if curl -sf "$SERVICE_URL/api/health" > /dev/null; then
             echo "✅ Service is healthy!"
           else
             echo "⚠️ Health check failed (service may still be starting)"
           fi
-          
+
           echo "✅ Deployment to ${{ steps.env.outputs.environment }} complete!"
           echo "🌐 Service: ${{ steps.env.outputs.service }}"
           echo "🔗 URL: $SERVICE_URL"

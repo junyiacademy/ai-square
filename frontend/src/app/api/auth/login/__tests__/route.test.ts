@@ -1,51 +1,32 @@
 import { POST } from '../route';
 import { NextRequest } from 'next/server';
-import bcrypt from 'bcryptjs';
-import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import { SecureSession } from '@/lib/auth/secure-session';
-import { AuthManager } from '@/lib/auth/auth-manager';
+import { loginUser, autoLoginDev } from '@/lib/auth/simple-auth';
 
 // Mock dependencies
-jest.mock('@/lib/repositories/base/repository-factory');
-jest.mock('@/lib/auth/secure-session');
-jest.mock('@/lib/auth/auth-manager', () => ({
-  AuthManager: {
-    setAuthCookie: jest.fn(),
-    isAuthenticated: jest.fn(),
-    clearAuthCookies: jest.fn(),
-    isValidSessionToken: jest.fn(),
-    isProtectedRoute: jest.fn(),
-    getSessionToken: jest.fn(),
-    createLoginRedirect: jest.fn()
-  }
-}));
-jest.mock('bcryptjs');
+jest.mock('@/lib/auth/simple-auth');
 
 describe('POST /api/auth/login', () => {
-  const mockUserRepo = {
-    findByEmail: jest.fn()
-  };
+  const mockLoginUser = loginUser as jest.MockedFunction<typeof loginUser>;
+  const mockAutoLoginDev = autoLoginDev as jest.MockedFunction<typeof autoLoginDev>;
 
   beforeEach(() => {
     jest.clearAllMocks();
-    (repositoryFactory.getUserRepository as jest.Mock).mockReturnValue(mockUserRepo);
-    (SecureSession.createSessionAsync as jest.Mock).mockResolvedValue('mock-session-token');
-    (AuthManager.setAuthCookie as jest.Mock).mockImplementation(() => {});
+    (process.env as any).NODE_ENV = 'test';
   });
 
   it('should login successfully with valid credentials', async () => {
-    const mockUser = {
-      id: '123',
-      email: 'test@example.com',
-      name: 'Test User',
-      passwordHash: 'hashed-password',
-      role: 'student',
-      preferredLanguage: 'en',
-      emailVerifiedAt: new Date()
+    const mockResult = {
+      success: true,
+      user: {
+        id: '123',
+        email: 'test@example.com',
+        name: 'Test User',
+        role: 'student'
+      },
+      token: 'mock-session-token'
     };
 
-    mockUserRepo.findByEmail.mockResolvedValue(mockUser);
-    (bcrypt.compare as jest.Mock).mockResolvedValue(true);
+    mockLoginUser.mockResolvedValue(mockResult);
 
     const request = new NextRequest('http://localhost:3000/api/auth/login', {
       method: 'POST',
@@ -64,27 +45,23 @@ describe('POST /api/auth/login', () => {
       id: '123',
       email: 'test@example.com',
       name: 'Test User',
-      role: 'student',
-      preferredLanguage: 'en',
-      emailVerified: true
-    });
-
-    expect(SecureSession.createSessionAsync).toHaveBeenCalledWith({
-      userId: '123',
-      email: 'test@example.com',
       role: 'student'
-    }, false);
-
-    expect(AuthManager.setAuthCookie).toHaveBeenCalled();
+    });
+    expect(mockLoginUser).toHaveBeenCalledWith('test@example.com', 'password123');
   });
 
   it('should fail with invalid email', async () => {
-    mockUserRepo.findByEmail.mockResolvedValue(null);
+    const mockResult = {
+      success: false,
+      error: 'Invalid credentials'
+    };
+
+    mockLoginUser.mockResolvedValue(mockResult);
 
     const request = new NextRequest('http://localhost:3000/api/auth/login', {
       method: 'POST',
       body: JSON.stringify({
-        email: 'nonexistent@example.com',
+        email: 'invalid@example.com',
         password: 'password123'
       })
     });
@@ -94,24 +71,22 @@ describe('POST /api/auth/login', () => {
 
     expect(response.status).toBe(401);
     expect(data.success).toBe(false);
-    expect(data.error).toBe('Invalid email or password');
+    expect(data.error).toBe('Invalid credentials');
   });
 
   it('should fail with invalid password', async () => {
-    const mockUser = {
-      id: '123',
-      email: 'test@example.com',
-      passwordHash: 'hashed-password'
+    const mockResult = {
+      success: false,
+      error: 'Invalid credentials'
     };
 
-    mockUserRepo.findByEmail.mockResolvedValue(mockUser);
-    (bcrypt.compare as jest.Mock).mockResolvedValue(false);
+    mockLoginUser.mockResolvedValue(mockResult);
 
     const request = new NextRequest('http://localhost:3000/api/auth/login', {
       method: 'POST',
       body: JSON.stringify({
         email: 'test@example.com',
-        password: 'wrong-password'
+        password: 'wrongpassword'
       })
     });
 
@@ -120,6 +95,77 @@ describe('POST /api/auth/login', () => {
 
     expect(response.status).toBe(401);
     expect(data.success).toBe(false);
-    expect(data.error).toBe('Invalid email or password');
+    expect(data.error).toBe('Invalid credentials');
+  });
+
+  it('should require both email and password', async () => {
+    const request = new NextRequest('http://localhost:3000/api/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({
+        email: 'test@example.com'
+        // missing password
+      })
+    });
+
+    const response = await POST(request);
+    const data = await response.json();
+
+    expect(response.status).toBe(400);
+    expect(data.success).toBe(false);
+    expect(data.error).toBe('Email and password are required');
+  });
+
+  it('should handle auto-login in development mode', async () => {
+    (process.env as any).NODE_ENV = 'development';
+
+    const mockAutoResult = {
+      success: true,
+      user: {
+        id: 'dev-user-123',
+        email: 'student@example.com',
+        name: 'Dev User',
+        role: 'student'
+      },
+      token: 'dev-session-token'
+    };
+
+    mockAutoLoginDev.mockResolvedValue(mockAutoResult);
+
+    const request = new NextRequest('http://localhost:3000/api/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({}) // empty body triggers auto-login
+    });
+
+    const response = await POST(request);
+    const data = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(data.success).toBe(true);
+    expect(data.user).toEqual({
+      id: 'dev-user-123',
+      email: 'student@example.com',
+      name: 'Dev User',
+      role: 'student'
+    });
+    expect(mockAutoLoginDev).toHaveBeenCalled();
+  });
+
+  it('should handle login errors gracefully', async () => {
+    mockLoginUser.mockRejectedValue(new Error('Database connection failed'));
+
+    const request = new NextRequest('http://localhost:3000/api/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({
+        email: 'test@example.com',
+        password: 'password123'
+      })
+    });
+
+    const response = await POST(request);
+    const data = await response.json();
+
+    expect(response.status).toBe(500);
+    expect(data.success).toBe(false);
+    expect(data.error).toBe('An error occurred during login');
   });
 });

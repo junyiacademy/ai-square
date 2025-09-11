@@ -11,7 +11,7 @@ repos:
 
       - id: eslint-check
         name: ESLint Check
-        entry: bash -c 'cd frontend && npm run lint'
+        entry: bash -c 'cd frontend && npx next lint'
         language: system
         types: [file]
         files: ^frontend/.*\.(ts|tsx|js|jsx)$
@@ -19,7 +19,7 @@ repos:
 
       - id: unit-tests
         name: Unit Tests (Pre-push only)
-        entry: bash -c 'cd frontend && npm run test:unit:ci'
+        entry: bash -c 'cd frontend && npx jest --ci --coverage --testPathIgnorePatterns="/tests/integration/|/e2e/|/frontend/e2e/|\.spec\.ts$" --watchAll=false'
         language: system
         types: [file]
         files: ^frontend/.*\.(ts|tsx)$
@@ -28,7 +28,7 @@ repos:
 
       - id: build-check
         name: Build Check (Pre-push only)
-        entry: bash -c 'cd frontend && npm run build'
+        entry: bash -c 'cd frontend && npx next build'
         language: system
         types: [file]
         files: ^frontend/.*\.(ts|tsx|js|jsx)$
