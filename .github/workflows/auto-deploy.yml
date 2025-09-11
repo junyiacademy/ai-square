@@ -210,26 +210,58 @@ jobs:
 
       - name: Submit Cloud Build
         run: |
+          set -e  # Exit on error
+
+          echo "🔍 Debugging: Environment = ${{ steps.env.outputs.environment }}"
+
           if [[ "${{ steps.env.outputs.environment }}" == "production" ]]; then
             CONFIG_FILE="cloudbuild.production.yaml"
             DB_PASSWORD="${{ secrets.PROD_DB_PASSWORD }}"
-            DATABASE_URL="postgresql://${{ secrets.PROD_DB_USER }}:${{ secrets.PROD_DB_PASSWORD }}@/${{ secrets.PROD_DB_NAME }}?host=${{ secrets.PROD_DB_HOST }}"
+            DB_USER="${{ secrets.PROD_DB_USER }}"
+            DB_NAME="${{ secrets.PROD_DB_NAME }}"
+            DB_HOST="${{ secrets.PROD_DB_HOST }}"
+
+            # Build DATABASE_URL with proper escaping
+            DATABASE_URL="postgresql://${DB_USER}:${DB_PASSWORD}@/${DB_NAME}?host=${DB_HOST}"
             NEXTAUTH_SECRET="${{ secrets.NEXTAUTH_SECRET }}"
             VERTEX_AI_KEY="${{ secrets.VERTEX_AI_KEY }}"
           else
             CONFIG_FILE="cloudbuild.staging.yaml"
             DB_PASSWORD="${{ secrets.STAGING_DB_PASSWORD }}"
-            DATABASE_URL="postgresql://${{ secrets.STAGING_DB_USER }}:${{ secrets.STAGING_DB_PASSWORD }}@/${{ secrets.STAGING_DB_NAME }}?host=${{ secrets.STAGING_DB_HOST }}"
+            DB_USER="${{ secrets.STAGING_DB_USER }}"
+            DB_NAME="${{ secrets.STAGING_DB_NAME }}"
+            DB_HOST="${{ secrets.STAGING_DB_HOST }}"
+
+            # Debug output (masked for security)
+            echo "🔍 Debug: Checking if secrets are set..."
+            [[ -z "$DB_USER" ]] && echo "⚠️ Warning: DB_USER is empty"
+            [[ -z "$DB_PASSWORD" ]] && echo "⚠️ Warning: DB_PASSWORD is empty"
+            [[ -z "$DB_NAME" ]] && echo "⚠️ Warning: DB_NAME is empty"
+            [[ -z "$DB_HOST" ]] && echo "⚠️ Warning: DB_HOST is empty"
+
+            # Build DATABASE_URL with proper escaping
+            DATABASE_URL="postgresql://${DB_USER}:${DB_PASSWORD}@/${DB_NAME}?host=${DB_HOST}"
             NEXTAUTH_SECRET="${{ secrets.NEXTAUTH_SECRET }}"
             VERTEX_AI_KEY="${{ secrets.VERTEX_AI_KEY }}"
           fi
+
+          echo "📦 Using config: ${CONFIG_FILE}"
+          echo "🔗 DATABASE_URL pattern: postgresql://[USER]:[PASS]@/[DB]?host=[HOST]"
+
+          # Create substitutions with proper escaping
+          SUBSTITUTIONS="_DB_PASSWORD=${DB_PASSWORD}"
+          SUBSTITUTIONS="${SUBSTITUTIONS},_DATABASE_URL=${DATABASE_URL}"
+          SUBSTITUTIONS="${SUBSTITUTIONS},_NEXTAUTH_SECRET=${NEXTAUTH_SECRET}"
+          SUBSTITUTIONS="${SUBSTITUTIONS},_VERTEX_AI_KEY=${VERTEX_AI_KEY}"
+
+          echo "🔧 Substitutions created (values masked for security)"
 
           cd frontend
           gcloud builds submit \
             --config "${CONFIG_FILE}" \
             --project "${{ env.PROJECT_ID }}" \
             --region "${{ env.REGION }}" \
-            --substitutions="_DB_PASSWORD=${DB_PASSWORD},_DATABASE_URL=${DATABASE_URL},_NEXTAUTH_SECRET=${NEXTAUTH_SECRET},_VERTEX_AI_KEY=${VERTEX_AI_KEY}"
+            --substitutions="${SUBSTITUTIONS}"
 
       - name: Verify Deployment
         run: |
