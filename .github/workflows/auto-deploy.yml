@@ -226,9 +226,9 @@ jobs:
 
           cd frontend
           gcloud builds submit \
-            --config ${CONFIG_FILE} \
-            --project ${{ env.PROJECT_ID }} \
-            --region ${{ env.REGION }} \
+            --config "${CONFIG_FILE}" \
+            --project "${{ env.PROJECT_ID }}" \
+            --region "${{ env.REGION }}" \
             --substitutions="_DB_PASSWORD=${DB_PASSWORD},_DATABASE_URL=${DATABASE_URL},_NEXTAUTH_SECRET=${NEXTAUTH_SECRET},_VERTEX_AI_KEY=${VERTEX_AI_KEY}"
 
       - name: Verify Deployment
