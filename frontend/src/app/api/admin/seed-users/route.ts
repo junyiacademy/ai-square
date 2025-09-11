@@ -31,10 +31,12 @@ export async function POST(request: NextRequest) {
 
     // Create database connection
     if (process.env.DATABASE_URL) {
+      const isCloudSQL = process.env.DATABASE_URL.includes('/cloudsql/');
       pool = new Pool({
         connectionString: process.env.DATABASE_URL,
-        max: 1,
-        connectionTimeoutMillis: 5000,
+        max: 20,
+        connectionTimeoutMillis: isCloudSQL ? 10000 : 2000,
+        idleTimeoutMillis: 30000,
       });
     } else {
       const dbHost = process.env.DB_HOST || '127.0.0.1';
@@ -44,8 +46,9 @@ export async function POST(request: NextRequest) {
         database: process.env.DB_NAME || 'ai_square_db',
         user: process.env.DB_USER || 'postgres',
         password: process.env.DB_PASSWORD || '',
-        max: 1,
-        connectionTimeoutMillis: 5000,
+        max: 20,
+        connectionTimeoutMillis: isCloudSQL ? 10000 : 2000,
+        idleTimeoutMillis: 30000,
       };
       
       if (isCloudSQL) {
