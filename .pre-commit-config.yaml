@@ -18,7 +18,7 @@ repos:
         pass_filenames: false
 
       - id: unit-tests
-        name: Unit Tests
+        name: Unit Tests (Pre-push only)
         entry: bash -c 'cd frontend && npm run test:unit:ci'
         language: system
         types: [file]
@@ -27,7 +27,7 @@ repos:
         stages: [push]
 
       - id: build-check
-        name: Build Check
+        name: Build Check (Pre-push only)
         entry: bash -c 'cd frontend && npm run build'
         language: system
         types: [file]
