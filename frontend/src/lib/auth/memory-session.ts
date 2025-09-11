@@ -15,11 +15,11 @@ interface SessionData {
 
 class MemorySessionStore {
   private sessions: Map<string, SessionData> = new Map();
-  
+
   generateToken(): string {
     return crypto.randomBytes(32).toString('hex');
   }
-  
+
   async createSession(userData: {
     userId: string;
     email: string;
@@ -30,35 +30,35 @@ class MemorySessionStore {
     const expiresAt = new Date(
       now.getTime() + (rememberMe ? 30 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000)
     );
-    
+
     this.sessions.set(token, {
       ...userData,
       createdAt: now,
       expiresAt
     });
-    
+
     // Clean up expired sessions
     this.cleanupExpiredSessions();
-    
+
     return token;
   }
-  
+
   async getSession(token: string): Promise<SessionData | null> {
     const session = this.sessions.get(token);
     if (!session) return null;
-    
+
     if (new Date() > session.expiresAt) {
       this.sessions.delete(token);
       return null;
     }
-    
+
     return session;
   }
-  
+
   async deleteSession(token: string): Promise<void> {
     this.sessions.delete(token);
   }
-  
+
   private cleanupExpiredSessions(): void {
     const now = new Date();
     for (const [token, session] of this.sessions.entries()) {

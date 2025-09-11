@@ -41,14 +41,14 @@ export default function DatabaseInitPage() {
       // Check users
       const usersRes = await fetch('/api/users');
       const usersData = await usersRes.json();
-      
+
       // Check scenarios
       const assessmentRes = await fetch('/api/assessment/scenarios');
       const assessmentData = await assessmentRes.json();
-      
+
       const pblRes = await fetch('/api/pbl/scenarios');
       const pblData = await pblRes.json();
-      
+
       const discoveryRes = await fetch('/api/discovery/scenarios');
       const discoveryData = await discoveryRes.json();
 
@@ -81,9 +81,9 @@ export default function DatabaseInitPage() {
   const initModule = async (module: string, endpoint: string) => {
     setLoading(module);
     setMessage(null);
-    
+
     try {
-      const body = module === 'users' 
+      const body = module === 'users'
         ? {
             users: [
               { email: 'student@example.com', password: 'student123', role: 'student', name: 'Demo Student' },
@@ -98,26 +98,26 @@ export default function DatabaseInitPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
       });
-      
+
       const data: InitResult = await res.json();
-      
+
       if (data.success) {
-        setMessage({ 
-          type: 'success', 
-          text: `${module} initialized successfully: ${data.message || 'Completed'}` 
+        setMessage({
+          type: 'success',
+          text: `${module} initialized successfully: ${data.message || 'Completed'}`
         });
         // Refresh status
         await checkAllStatus();
       } else {
-        setMessage({ 
-          type: 'error', 
-          text: `Failed to initialize ${module}: ${data.error || data.message || 'Unknown error'}` 
+        setMessage({
+          type: 'error',
+          text: `Failed to initialize ${module}: ${data.error || data.message || 'Unknown error'}`
         });
       }
     } catch (error) {
-      setMessage({ 
-        type: 'error', 
-        text: `Error initializing ${module}: ${error}` 
+      setMessage({
+        type: 'error',
+        text: `Error initializing ${module}: ${error}`
       });
     } finally {
       setLoading(null);
@@ -128,7 +128,7 @@ export default function DatabaseInitPage() {
     if (!confirm(`Are you sure you want to clear and reinitialize ${module}? This will delete all existing data.`)) {
       return;
     }
-    
+
     // For now, just reinitialize (since APIs handle existing data)
     await initModule(module, endpoint);
   };
@@ -183,8 +183,8 @@ export default function DatabaseInitPage() {
       {message && (
         <Alert className={`mb-6 ${message.type === 'success' ? 'border-green-500' : 'border-red-500'}`}>
           <AlertDescription className="flex items-center gap-2">
-            {message.type === 'success' ? 
-              <CheckCircle className="w-4 h-4 text-green-500" /> : 
+            {message.type === 'success' ?
+              <CheckCircle className="w-4 h-4 text-green-500" /> :
               <XCircle className="w-4 h-4 text-red-500" />
             }
             {message.text}
@@ -193,7 +193,7 @@ export default function DatabaseInitPage() {
       )}
 
       <div className="mb-6">
-        <Button 
+        <Button
           onClick={checkAllStatus}
           disabled={loading === 'checking'}
           variant="outline"
@@ -218,7 +218,7 @@ export default function DatabaseInitPage() {
           return (
             <Card key={module.key} className="relative overflow-hidden">
               <div className={`absolute top-0 right-0 w-32 h-32 ${module.bgColor} rounded-bl-full opacity-20`} />
-              
+
               <CardHeader>
                 <CardTitle className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
@@ -240,7 +240,7 @@ export default function DatabaseInitPage() {
                   </div>
                 </CardTitle>
               </CardHeader>
-              
+
               <CardContent>
                 {hasData && (
                   <div className="mb-4 p-3 bg-gray-50 rounded-lg max-h-32 overflow-y-auto">
@@ -284,7 +284,7 @@ export default function DatabaseInitPage() {
                       )}
                     </Button>
                   )}
-                  
+
                   {hasData && (
                     <Button
                       onClick={() => clearAndReinit(module.key, module.endpoint)}

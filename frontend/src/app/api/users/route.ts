@@ -3,7 +3,7 @@ import { Pool } from 'pg';
 
 export async function GET() {
   let pool: Pool | null = null;
-  
+
   try {
     // Create database connection (same as seed-users)
     if (process.env.DATABASE_URL) {
@@ -17,7 +17,7 @@ export async function GET() {
     } else {
       const dbHost = process.env.DB_HOST || '127.0.0.1';
       const isCloudSQL = dbHost.startsWith('/cloudsql/');
-      
+
       const dbConfig: Record<string, unknown> = {
         database: process.env.DB_NAME || 'ai_square_db',
         user: process.env.DB_USER || 'postgres',
@@ -26,14 +26,14 @@ export async function GET() {
         connectionTimeoutMillis: isCloudSQL ? 10000 : 2000,
         idleTimeoutMillis: 30000,
       };
-      
+
       if (isCloudSQL) {
         dbConfig.host = dbHost;
       } else {
         dbConfig.host = dbHost;
         dbConfig.port = parseInt(process.env.DB_PORT || '5433');
       }
-      
+
       pool = new Pool(dbConfig);
     }
 
@@ -41,7 +41,7 @@ export async function GET() {
     const result = await pool.query(
       'SELECT id, email, name, role, email_verified, created_at FROM users ORDER BY created_at DESC LIMIT 100'
     );
-    
+
     // Remove sensitive data
     const sanitizedUsers = result.rows.map(user => ({
       id: user.id,
@@ -51,7 +51,7 @@ export async function GET() {
       emailVerified: user.email_verified,
       createdAt: user.created_at
     }));
-    
+
     return NextResponse.json({
       success: true,
       users: sanitizedUsers,
@@ -60,10 +60,10 @@ export async function GET() {
   } catch (error) {
     console.error('Error fetching users:', error);
     return NextResponse.json(
-      { 
-        success: false, 
+      {
+        success: false,
         error: 'Failed to fetch users',
-        users: [] 
+        users: []
       },
       { status: 500 }
     );

@@ -10,20 +10,20 @@ export async function POST(request: NextRequest) {
     } catch {
       // Empty body is OK for dev auto-login
     }
-    
+
     const { email, password, rememberMe = false } = body;
 
     // Dev mode auto-login if no credentials provided
     if (process.env.NODE_ENV === 'development' && !email && !password) {
       console.log('[Login] Attempting dev auto-login...');
       const autoLogin = await autoLoginDev();
-      
+
       if (autoLogin.success && autoLogin.token) {
         const response = NextResponse.json({
           success: true,
           user: autoLogin.user
         });
-        
+
         // Set cookie for 30 days
         response.cookies.set('sessionToken', autoLogin.token, {
           httpOnly: true,
@@ -32,10 +32,10 @@ export async function POST(request: NextRequest) {
           maxAge: 30 * 24 * 60 * 60,
           path: '/'
         });
-        
+
         return response;
       }
-      
+
       // If auto-login fails, return error
       return NextResponse.json(
         { success: false, error: 'No dev user available for auto-login' },
@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
     }
 
     const result = await loginUser(email, password);
-    
+
     if (!result.success || !result.token) {
       return NextResponse.json(
         { success: false, error: result.error || 'Login failed' },

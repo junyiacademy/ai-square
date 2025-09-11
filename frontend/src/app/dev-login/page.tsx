@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 
 /**
  * Development Auto-Login Page
- * 
+ *
  * This page automatically logs you in during development
  * No more manual login every time you restart the server!
  */
@@ -32,10 +32,10 @@ export default function DevLoginPage() {
 
         if (data.success) {
           setStatus(`Logged in as ${data.user.email}! Redirecting...`);
-          
+
           // Store user in localStorage for client components
           localStorage.setItem('user', JSON.stringify(data.user));
-          
+
           setTimeout(() => {
             router.push('/dashboard');
           }, 1000);

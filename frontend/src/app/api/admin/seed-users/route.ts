@@ -15,7 +15,7 @@ interface UserSeed {
  */
 export async function POST(request: NextRequest) {
   let pool: Pool | null = null;
-  
+
   try {
     // Default demo users
     const defaultUsers: UserSeed[] = [
@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
 
     // Allow override from request body for testing, but use defaults if not provided
     let users: UserSeed[] = defaultUsers;
-    
+
     try {
       const body = await request.json();
       if (body.users && Array.isArray(body.users) && body.users.length > 0) {
@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
     } else {
       const dbHost = process.env.DB_HOST || '127.0.0.1';
       const isCloudSQL = dbHost.startsWith('/cloudsql/');
-      
+
       const dbConfig: Record<string, unknown> = {
         database: process.env.DB_NAME || 'ai_square_db',
         user: process.env.DB_USER || 'postgres',
@@ -57,14 +57,14 @@ export async function POST(request: NextRequest) {
         connectionTimeoutMillis: isCloudSQL ? 10000 : 2000,
         idleTimeoutMillis: 30000,
       };
-      
+
       if (isCloudSQL) {
         dbConfig.host = dbHost;
       } else {
         dbConfig.host = dbHost;
         dbConfig.port = parseInt(process.env.DB_PORT || '5433');
       }
-      
+
       pool = new Pool(dbConfig);
     }
 
@@ -76,17 +76,17 @@ export async function POST(request: NextRequest) {
             'SELECT id FROM users WHERE email = $1',
             [userData.email]
           );
-          
+
           if (existingUserResult.rows.length > 0) {
             // Update password if user exists
             const passwordHash = await bcrypt.hash(userData.password, 10);
             await pool!.query(
-              `UPDATE users 
+              `UPDATE users
                SET password_hash = $1, role = $2, updated_at = CURRENT_TIMESTAMP
                WHERE email = $3`,
               [passwordHash, userData.role, userData.email]
             );
-            
+
             return {
               email: userData.email,
               status: 'updated'
@@ -95,13 +95,13 @@ export async function POST(request: NextRequest) {
             // Create new user
             const passwordHash = await bcrypt.hash(userData.password, 10);
             const name = userData.name || `${userData.role.charAt(0).toUpperCase()}${userData.role.slice(1)} User`;
-            
+
             await pool!.query(
               `INSERT INTO users (id, email, password_hash, name, role, email_verified, metadata, created_at, updated_at)
                VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, $6, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
               [userData.email, passwordHash, name, userData.role, true, JSON.stringify({ seeded: true })]
             );
-            
+
             return {
               email: userData.email,
               status: 'created'
@@ -131,8 +131,8 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('User seeding error:', error);
     return NextResponse.json(
-      { 
-        success: false, 
+      {
+        success: false,
         error: error instanceof Error ? error.message : 'User seeding failed'
       },
       { status: 500 }

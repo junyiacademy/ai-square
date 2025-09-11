@@ -1,6 +1,6 @@
 /**
  * Unified Authentication System - SIMPLIFIED VERSION
- * 
+ *
  * This is the SINGLE source of truth for authentication.
  * Now uses PostgreSQL directly for session storage - no Redis, no memory fallback.
  * Sessions persist across server restarts.
@@ -21,7 +21,7 @@ export interface UnifiedAuth {
 
 /**
  * Get authentication from any context
- * 
+ *
  * @param request - NextRequest object (for Route Handlers) or undefined (for Server Components)
  * @returns Authentication data or null if not authenticated
  */
@@ -43,7 +43,7 @@ export async function getUnifiedAuth(request?: NextRequest): Promise<UnifiedAuth
 
     // Get session from PostgreSQL
     const sessionData = await getSession(sessionToken);
-    
+
     if (!sessionData) {
       return null;
     }

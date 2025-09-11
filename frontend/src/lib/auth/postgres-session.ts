@@ -1,6 +1,6 @@
 /**
  * PostgreSQL-based Session Storage
- * 
+ *
  * Persistent session storage using PostgreSQL
  * This replaces Redis/memory storage with database persistence
  */
@@ -72,7 +72,7 @@ export class PostgresSession {
 
     try {
       const pool = await this.getPool();
-      
+
       // Delete any existing sessions for this user (single session per user)
       await pool.query(
         'DELETE FROM sessions WHERE user_id = $1',
@@ -104,11 +104,11 @@ export class PostgresSession {
 
     try {
       const pool = await this.getPool();
-      
+
       // Get session and clean up expired ones
       const result = await pool.query(
-        `SELECT user_id, email, role, created_at, expires_at 
-         FROM sessions 
+        `SELECT user_id, email, role, created_at, expires_at
+         FROM sessions
          WHERE token = $1 AND expires_at > NOW()`,
         [token]
       );

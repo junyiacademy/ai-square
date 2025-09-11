@@ -1,6 +1,6 @@
 /**
  * Redis Client for Session Storage and Caching
- * 
+ *
  * Provides a singleton Redis client with automatic connection management
  * and fallback to null if Redis is not available
  */
@@ -27,10 +27,10 @@ export async function getRedisClient(): Promise<Redis | null> {
   // Try to create new client
   if (!connectionAttempted) {
     connectionAttempted = true;
-    
+
     try {
       const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379';
-      
+
       redisClient = new Redis(redisUrl, {
         maxRetriesPerRequest: 3,
         retryStrategy: (times) => {
@@ -67,10 +67,10 @@ export async function getRedisClient(): Promise<Redis | null> {
 
       // Try to connect
       await redisClient.connect();
-      
+
       // Test the connection
       await redisClient.ping();
-      
+
       return redisClient;
     } catch (error) {
       // Silently fallback to in-memory storage
