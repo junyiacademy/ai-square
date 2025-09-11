@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
     const evalRepo = repositoryFactory.getEvaluationRepository();
     const taskRepo = repositoryFactory.getTaskRepository();
     const userRepo = repositoryFactory.getUserRepository();
-    
+
     // Get user by email to get UUID
     const user = await userRepo.findByEmail(userEmail);
     if (!user) {
@@ -42,7 +42,7 @@ export async function GET(request: NextRequest) {
         { status: 404 }
       );
     }
-    
+
     // Get program
     const program = await programRepo.findById(programId);
     if (!program) {
@@ -51,7 +51,7 @@ export async function GET(request: NextRequest) {
         { status: 404 }
       );
     }
-    
+
     // Verify ownership
     if (program.userId !== user.id) {
       return NextResponse.json(
@@ -63,14 +63,14 @@ export async function GET(request: NextRequest) {
     // Use the new complete API to ensure evaluation is calculated
     const completeUrl = new URL(`/api/pbl/programs/${programId}/complete`, request.url);
     completeUrl.searchParams.set('language', language);
-    
+
     // First try GET to see if evaluation exists
     let completeRes = await fetch(completeUrl.toString(), {
       headers: {
         cookie: request.headers.get('cookie') || '',
       },
     });
-    
+
     // If not found or no evaluation, trigger POST to create it
     if (!completeRes.ok || completeRes.status === 404) {
       console.log('Completion API - Evaluation not found, creating new one');
@@ -83,7 +83,7 @@ export async function GET(request: NextRequest) {
         body: JSON.stringify({})
       });
     }
-    
+
     if (!completeRes.ok) {
       console.error('Failed to get program evaluation');
       return NextResponse.json(
@@ -91,10 +91,10 @@ export async function GET(request: NextRequest) {
         { status: 500 }
       );
     }
-    
+
     const completeData = await completeRes.json();
     const evaluation = completeData.evaluation;
-    
+
     // Debug logging
     console.log('Completion API - completeData:', {
       success: completeData.success,
@@ -105,7 +105,7 @@ export async function GET(request: NextRequest) {
       pblData: completeData.evaluation?.pblData,
       debug: completeData.debug
     });
-    
+
     // Debug program metadata
     const metadata = program.metadata as Record<string, unknown> | undefined;
     const evaluationMetadata = metadata?.evaluationMetadata as Record<string, unknown> | undefined;
@@ -114,31 +114,31 @@ export async function GET(request: NextRequest) {
       hasQualitativeFeedback: !!evaluationMetadata?.qualitativeFeedback,
       feedbackKeys: Object.keys((evaluationMetadata?.qualitativeFeedback as Record<string, unknown>) || {})
     });
-    
+
     // If no evaluation, log error and return empty data
     if (!evaluation) {
       console.error('Completion API - No evaluation found after complete API call');
     }
-    
+
     // Get all tasks for detailed information
     const tasks = await taskRepo.findByProgram(programId);
-    
+
     // Tasks are already sorted by task_index from the repository
     // No need to re-sort them based on taskIds
     const sortedTasks = tasks;
-    
+
     // Build tasks array with evaluations and progress
     const tasksWithDetails = await Promise.all(
       sortedTasks.map(async (task: ITask, index: number) => {
         // Get task with interactions
         const taskWithInteractions = await taskRepo.getTaskWithInteractions?.(task.id);
         const interactions = taskWithInteractions?.interactions || [];
-        
+
         // Get evaluation if exists
-        const taskEvaluation = task.metadata?.evaluationId 
+        const taskEvaluation = task.metadata?.evaluationId
           ? await evalRepo.findById(task.metadata.evaluationId as string)
           : null;
-        
+
         // Calculate time spent
         let timeSpentSeconds = 0;
         if (interactions.length > 0) {
@@ -148,7 +148,7 @@ export async function GET(request: NextRequest) {
             (new Date(lastInteraction.timestamp).getTime() - new Date(firstInteraction.timestamp).getTime()) / 1000
           );
         }
-        
+
         return {
           taskId: task.id,
           taskTitle: task.title,
@@ -178,7 +178,7 @@ export async function GET(request: NextRequest) {
         };
       })
     );
-    
+
     // Build completion data in old format
     const completionData = {
       programId,
@@ -212,7 +212,8 @@ export async function GET(request: NextRequest) {
     };
   }, {
     ttl: 60, // 1 minute cache (completion data)
-    staleWhileRevalidate: 300 // 5 minutes
+    staleWhileRevalidate: 300, // 5 minutes
+    useDistributedCache: false // Disable Redis to avoid SSL errors
   });
 }
 
@@ -239,14 +240,14 @@ export async function PUT(request: NextRequest) {
       },
       body: JSON.stringify({})
     });
-    
+
     if (!completeRes.ok) {
       return NextResponse.json(
         { success: false, error: 'Failed to trigger program completion' },
         { status: 500 }
       );
     }
-    
+
     const data = await completeRes.json();
     return NextResponse.json({
       success: true,

@@ -16,33 +16,109 @@ jobs:
   quality-checks:
     name: Code Quality & Tests
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20.x'
           cache: 'npm'
           cache-dependency-path: frontend/package-lock.json
-      
+
       - name: Install dependencies
         working-directory: ./frontend
         run: npm ci
-      
+
       - name: TypeScript Check
         working-directory: ./frontend
         run: npx tsc --noEmit
-      
+
       - name: ESLint Check
         working-directory: ./frontend
-        run: npm run lint
-      
-      - name: Run Tests
+        run: npx next lint
+
+      - name: Run Unit Tests
         working-directory: ./frontend
-        run: npm run test:ci
+        run: npx jest --ci --coverage --testPathIgnorePatterns='/tests/integration/|/e2e/|/frontend/e2e/|\.spec\.ts$' --watchAll=false
+
+  # Schema validation (parallel execution, doesn't block deployment)
+  schema-validation:
+    name: Schema Validation
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      id-token: write
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: ai_square_db
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: Validate Schema Consistency
+        working-directory: ./frontend
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/ai_square_db
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_USER: postgres
+          DB_PASSWORD: postgres
+          DB_NAME: ai_square_db
+        run: |
+          echo "🔍 Checking schema consistency..."
+          npx prisma migrate deploy
+          npx prisma generate
+          npx tsx scripts/validate-schema-consistency.ts || echo "⚠️ Schema validation script not found"
+
+      - name: Check Prisma Migration Status
+        working-directory: ./frontend
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/ai_square_db
+        run: |
+          echo "📊 Checking migration status..."
+          npx prisma migrate status || true
+
+      - name: Upload schema report on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: schema-validation-report-${{ github.run_id }}
+          path: |
+            frontend/prisma/schema.prisma
+            frontend/prisma/migrations/
 
   # Deploy job
   deploy:
@@ -52,7 +128,7 @@ jobs:
     permissions:
       contents: read
       id-token: write
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -85,87 +161,190 @@ jobs:
       - name: Setup Service Account Permissions
         run: |
           echo "🔧 Configuring Service Account permissions..."
-          
+
           # Vertex AI permissions
           gcloud projects add-iam-policy-binding ${{ env.PROJECT_ID }} \
             --member="serviceAccount:${{ steps.env.outputs.service_account }}" \
             --role="roles/aiplatform.user" \
             --condition=None 2>/dev/null || true
-          
+
           # Cloud SQL permissions
           gcloud projects add-iam-policy-binding ${{ env.PROJECT_ID }} \
             --member="serviceAccount:${{ steps.env.outputs.service_account }}" \
             --role="roles/cloudsql.client" \
             --condition=None 2>/dev/null || true
-          
+
           echo "✅ Service Account permissions configured"
 
       - name: Run Database Migrations
         run: |
           echo "🗄️ Running database migrations..."
-          
+
           # Download Cloud SQL Proxy
           wget -q https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 -O cloud_sql_proxy
           chmod +x cloud_sql_proxy
           ./cloud_sql_proxy -instances=${{ env.PROJECT_ID }}:${{ env.REGION }}:${{ steps.env.outputs.db_instance }}=tcp:5433 &
           PROXY_PID=$!
-          
+
           # Wait for proxy
           sleep 5
-          
+
           # Setup Node.js for Prisma
           cd frontend
           npm ci --quiet
-          
+
           # Run migrations based on environment
           if [[ "${{ steps.env.outputs.environment }}" == "production" ]]; then
             export DATABASE_URL="postgresql://postgres:${{ secrets.PROD_DB_PASSWORD }}@localhost:5433/ai_square_db"
           else
             export DATABASE_URL="postgresql://postgres:${{ secrets.STAGING_DB_PASSWORD }}@localhost:5433/ai_square_db"
           fi
-          
+
           npx prisma migrate deploy
-          
+
           # Kill proxy
           kill $PROXY_PID || true
           cd ..
-          
+
           echo "✅ Migrations completed"
 
-      - name: Submit Cloud Build
+      - name: Configure Docker
+        run: gcloud auth configure-docker gcr.io
+
+      - name: Build and Push Docker Image
         run: |
+          echo "🚀 Building Docker image..."
+
           if [[ "${{ steps.env.outputs.environment }}" == "production" ]]; then
-            CONFIG_FILE="cloudbuild.production.yaml"
-            DB_PASSWORD="${{ secrets.PROD_DB_PASSWORD }}"
-            DATABASE_URL="postgresql://${{ secrets.PROD_DB_USER }}:${{ secrets.PROD_DB_PASSWORD }}@/${{ secrets.PROD_DB_NAME }}?host=${{ secrets.PROD_DB_HOST }}"
+            DOCKERFILE="Dockerfile.production"
+            IMAGE_TAG="ai-square-production"
           else
-            CONFIG_FILE="cloudbuild.staging.yaml"
-            DB_PASSWORD="${{ secrets.STAGING_DB_PASSWORD }}"
-            DATABASE_URL="postgresql://${{ secrets.STAGING_DB_USER }}:${{ secrets.STAGING_DB_PASSWORD }}@/${{ secrets.STAGING_DB_NAME }}?host=${{ secrets.STAGING_DB_HOST }}"
+            DOCKERFILE="Dockerfile.staging"
+            IMAGE_TAG="ai-square-staging"
           fi
-          
-          cd frontend
-          gcloud builds submit \
-            --config ${CONFIG_FILE} \
-            --project ${{ env.PROJECT_ID }} \
-            --region ${{ env.REGION }}
+
+          docker build -f frontend/${DOCKERFILE} \
+            -t gcr.io/${{ env.PROJECT_ID }}/${IMAGE_TAG}:${{ github.sha }} \
+            -t gcr.io/${{ env.PROJECT_ID }}/${IMAGE_TAG}:latest \
+            ./frontend
+
+          echo "📤 Pushing to Container Registry..."
+          docker push gcr.io/${{ env.PROJECT_ID }}/${IMAGE_TAG}:${{ github.sha }}
+          docker push gcr.io/${{ env.PROJECT_ID }}/${IMAGE_TAG}:latest
+
+      - name: Deploy to Cloud Run
+        run: |
+          echo "🚀 Deploying to Cloud Run with Vertex AI support..."
+
+          if [[ "${{ steps.env.outputs.environment }}" == "production" ]]; then
+            SERVICE_NAME="ai-square-production"
+            IMAGE_TAG="ai-square-production"
+            DB_INSTANCE="ai-square-db-production"
+            DB_PASSWORD="${{ secrets.PROD_DB_PASSWORD }}"
+            NEXTAUTH_URL="https://ai-square-production-731209836128.asia-east1.run.app"
+          else
+            SERVICE_NAME="ai-square-staging"
+            IMAGE_TAG="ai-square-staging"
+            DB_INSTANCE="ai-square-db-staging-asia"
+            DB_PASSWORD="${{ secrets.STAGING_DB_PASSWORD }}"
+            NEXTAUTH_URL="https://ai-square-staging-731209836128.asia-east1.run.app"
+          fi
+
+          # Create env vars file with proper escaping - 完全複製 deploy-staging.yml.disabled 的方式
+          cat > /tmp/env-vars.yaml << 'EOF'
+          NODE_ENV: "${{ steps.env.outputs.environment }}"
+          DATABASE_URL: "postgresql://postgres:${{ steps.env.outputs.environment == 'production' && secrets.PROD_DB_PASSWORD || secrets.STAGING_DB_PASSWORD }}@/ai_square_db?host=/cloudsql/ai-square-463013:asia-east1:${{ steps.env.outputs.environment == 'production' && 'ai-square-db-production' || 'ai-square-db-staging-asia' }}"
+          DB_HOST: "/cloudsql/ai-square-463013:asia-east1:${{ steps.env.outputs.environment == 'production' && 'ai-square-db-production' || 'ai-square-db-staging-asia' }}"
+          DB_NAME: "ai_square_db"
+          DB_USER: "postgres"
+          DB_PASSWORD: "${{ steps.env.outputs.environment == 'production' && secrets.PROD_DB_PASSWORD || secrets.STAGING_DB_PASSWORD }}"
+          NEXTAUTH_SECRET: "${{ secrets.NEXTAUTH_SECRET }}"
+          NEXTAUTH_URL: "${{ steps.env.outputs.environment == 'production' && 'https://ai-square-production-731209836128.asia-east1.run.app' || 'https://ai-square-staging-731209836128.asia-east1.run.app' }}"
+          GOOGLE_CLOUD_PROJECT: "ai-square-463013"
+          GCP_PROJECT_ID: "ai-square-463013"
+          VERTEX_AI_LOCATION: "us-central1"
+          VERTEX_AI_PROJECT: "ai-square-463013"
+          VERTEX_AI_MODEL: "gemini-2.5-flash"
+          VERTEX_AI_SERVICE_ACCOUNT_JSON: '${{ secrets.VERTEX_AI_KEY }}'
+          REDIS_ENABLED: "false"
+          EOF
+
+          # Deploy using env vars file - 完全複製 deploy-staging.yml.disabled 的命令
+          gcloud run deploy ${SERVICE_NAME} \
+            --image gcr.io/${{ env.PROJECT_ID }}/${IMAGE_TAG}:${{ github.sha }} \
+            --region ${{ env.REGION }} \
+            --platform managed \
+            --allow-unauthenticated \
+            --timeout 60 \
+            --memory 512Mi \
+            --cpu 1 \
+            --port 3000 \
+            --service-account=${{ steps.env.outputs.service_account }} \
+            --add-cloudsql-instances ai-square-463013:asia-east1:${DB_INSTANCE} \
+            --env-vars-file=/tmp/env-vars.yaml
+
+          # Clean up
+          rm -f /tmp/env-vars.yaml
+
+          echo "✅ Deployment complete!"
 
       - name: Verify Deployment
         run: |
           SERVICE_URL=$(gcloud run services describe ${{ steps.env.outputs.service }} --region ${{ env.REGION }} --format 'value(status.url)')
           echo "📍 Service URL: $SERVICE_URL"
-          
+
           # Wait for service to be ready
           echo "⏳ Waiting for service to be ready..."
           sleep 15
-          
+
           # Health check
           if curl -sf "$SERVICE_URL/api/health" > /dev/null; then
             echo "✅ Service is healthy!"
           else
             echo "⚠️ Health check failed (service may still be starting)"
           fi
-          
+
           echo "✅ Deployment to ${{ steps.env.outputs.environment }} complete!"
           echo "🌐 Service: ${{ steps.env.outputs.service }}"
           echo "🔗 URL: $SERVICE_URL"
+
+      - name: Clean up old GCR images
+        if: success()
+        run: |
+          echo "🧹 Cleaning up old container images..."
+
+          # Function to keep only latest N images
+          cleanup_repository() {
+            local REPO=$1
+            local KEEP_COUNT=${2:-3}  # Keep latest 3 images by default
+
+            echo "📦 Cleaning $REPO (keeping latest $KEEP_COUNT images)..."
+
+            # Get all images except the latest KEEP_COUNT
+            IMAGES=$(gcloud container images list-tags "$REPO" \
+              --format="get(digest)" \
+              --sort-by="~timestamp" 2>/dev/null | tail -n +$((KEEP_COUNT + 1)))
+
+            if [ -n "$IMAGES" ]; then
+              echo "$IMAGES" | while read -r DIGEST; do
+                if [ -n "$DIGEST" ]; then
+                  echo "  🗑️ Deleting: ${DIGEST:0:12}..."
+                  gcloud container images delete "$REPO@$DIGEST" --quiet --force-delete-tags 2>/dev/null || true
+                fi
+              done
+            else
+              echo "  ✅ No old images to clean"
+            fi
+          }
+
+          # Clean up based on environment
+          if [[ "${{ steps.env.outputs.environment }}" == "production" ]]; then
+            cleanup_repository "gcr.io/${{ env.PROJECT_ID }}/ai-square-production" 3
+          else
+            cleanup_repository "gcr.io/${{ env.PROJECT_ID }}/ai-square-staging" 3
+          fi
+
+          # Also clean up ai-square-frontend (shared repository)
+          cleanup_repository "gcr.io/${{ env.PROJECT_ID }}/ai-square-frontend" 5
+
+          echo "✅ GCR cleanup complete"

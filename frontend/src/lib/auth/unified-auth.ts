@@ -1,42 +1,23 @@
 /**
- * Unified Authentication System
+ * Unified Authentication System - SIMPLIFIED VERSION
  * 
- * This is the SINGLE source of truth for authentication across the entire application.
- * Use this in ALL contexts: Route Handlers, Server Components, and Middleware.
- * 
- * @example
- * // In Route Handlers
- * export async function GET(request: NextRequest) {
- *   const auth = await getUnifiedAuth(request);
- *   if (!auth) {
- *     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
- *   }
- *   // Use auth.user.id, auth.user.email, etc.
- * }
- * 
- * // In Server Components (future implementation)
- * export default async function Page() {
- *   const auth = await getUnifiedAuth();
- *   // ...
- * }
+ * This is the SINGLE source of truth for authentication.
+ * Now uses PostgreSQL directly for session storage - no Redis, no memory fallback.
+ * Sessions persist across server restarts.
  */
 
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import { SecureSession } from './secure-session';
+import { getSession } from './simple-auth';
 
 export interface UnifiedAuth {
   user: {
     id: string;
     email: string;
     role: string;
+    name?: string;
   };
 }
-
-/**
- * Token validation regex - 64 character hex string
- */
-const TOKEN_REGEX = /^[a-f0-9]{64}$/i;
 
 /**
  * Get authentication from any context
@@ -56,13 +37,12 @@ export async function getUnifiedAuth(request?: NextRequest): Promise<UnifiedAuth
       sessionToken = await extractTokenFromCookies();
     }
 
-    // Validate token format
-    if (!sessionToken || !isValidTokenFormat(sessionToken)) {
+    if (!sessionToken) {
       return null;
     }
 
-    // Get session from secure store (using async for Redis support)
-    const sessionData = await SecureSession.getSessionAsync(sessionToken);
+    // Get session from PostgreSQL
+    const sessionData = await getSession(sessionToken);
     
     if (!sessionData) {
       return null;
@@ -73,7 +53,8 @@ export async function getUnifiedAuth(request?: NextRequest): Promise<UnifiedAuth
       user: {
         id: sessionData.userId,
         email: sessionData.email,
-        role: sessionData.role
+        role: sessionData.role,
+        name: sessionData.name
       }
     };
   } catch (error) {
@@ -103,63 +84,33 @@ function extractTokenFromRequest(request: NextRequest): string | undefined {
 
 /**
  * Extract token from cookies() API (Server Component context)
- * Note: This is for future implementation when we move to Server Components
  */
 async function extractTokenFromCookies(): Promise<string | undefined> {
   try {
     const cookieStore = await cookies();
     return cookieStore.get('sessionToken')?.value;
-  } catch {
-    // If cookies() is not available (e.g., in Route Handlers), return undefined
+  } catch (error) {
+    console.error('[UnifiedAuth] Error reading cookies:', error);
     return undefined;
   }
 }
 
 /**
- * Validate token format
+ * Create unauthorized response
  */
-function isValidTokenFormat(token: string): boolean {
-  return TOKEN_REGEX.test(token);
-}
-
-/**
- * Helper to create a standard unauthorized response
- */
-export function createUnauthorizedResponse(message = 'Authentication required'): Response {
-  return new Response(
-    JSON.stringify({
-      success: false,
-      error: message
-    }),
-    {
-      status: 401,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }
+export function createUnauthorizedResponse(): NextResponse {
+  return NextResponse.json(
+    { error: 'Authentication required' },
+    { status: 401 }
   );
 }
 
 /**
- * Helper to check if user has a specific role
+ * Create forbidden response
  */
-export function hasRole(auth: UnifiedAuth | null, role: string): boolean {
-  return auth?.user.role === role;
-}
-
-/**
- * Helper to check if user has any of the specified roles
- */
-export function hasAnyRole(auth: UnifiedAuth | null, roles: string[]): boolean {
-  if (!auth) return false;
-  return roles.includes(auth.user.role);
-}
-
-/**
- * Type guard to ensure authentication exists
- */
-export function requireAuth(auth: UnifiedAuth | null): asserts auth is UnifiedAuth {
-  if (!auth) {
-    throw new Error('Authentication required');
-  }
+export function createForbiddenResponse(): NextResponse {
+  return NextResponse.json(
+    { error: 'Access denied' },
+    { status: 403 }
+  );
 }

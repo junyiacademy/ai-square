@@ -175,6 +175,28 @@ CREATE TABLE "public"."evaluations" (
     CONSTRAINT "evaluations_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "public"."migrations" (
+    "id" SERIAL NOT NULL,
+    "filename" VARCHAR(255) NOT NULL,
+    "executed_at" TIMESTAMPTZ(6) DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "migrations_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "public"."sessions" (
+    "token" VARCHAR(64) NOT NULL,
+    "user_id" UUID NOT NULL,
+    "email" VARCHAR(255) NOT NULL,
+    "role" VARCHAR(50) NOT NULL,
+    "created_at" TIMESTAMPTZ(6) DEFAULT CURRENT_TIMESTAMP,
+    "expires_at" TIMESTAMPTZ(6) NOT NULL,
+    "metadata" JSONB DEFAULT '{}',
+
+    CONSTRAINT "sessions_pkey" PRIMARY KEY ("token")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "public"."users"("email");
 
@@ -202,6 +224,15 @@ CREATE INDEX "evaluations_task_id_idx" ON "public"."evaluations"("task_id");
 -- CreateIndex
 CREATE INDEX "evaluations_user_id_idx" ON "public"."evaluations"("user_id");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "migrations_filename_key" ON "public"."migrations"("filename");
+
+-- CreateIndex
+CREATE INDEX "idx_sessions_expires_at" ON "public"."sessions"("expires_at");
+
+-- CreateIndex
+CREATE INDEX "idx_sessions_user_id" ON "public"."sessions"("user_id");
+
 -- AddForeignKey
 ALTER TABLE "public"."scenarios" ADD CONSTRAINT "scenarios_created_by_fkey" FOREIGN KEY ("created_by") REFERENCES "public"."users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
@@ -221,10 +252,13 @@ ALTER TABLE "public"."tasks" ADD CONSTRAINT "tasks_program_id_fkey" FOREIGN KEY 
 ALTER TABLE "public"."tasks" ADD CONSTRAINT "tasks_scenario_id_fkey" FOREIGN KEY ("scenario_id") REFERENCES "public"."scenarios"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "public"."evaluations" ADD CONSTRAINT "evaluations_task_id_fkey" FOREIGN KEY ("task_id") REFERENCES "public"."tasks"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "public"."evaluations" ADD CONSTRAINT "evaluations_program_id_fkey" FOREIGN KEY ("program_id") REFERENCES "public"."programs"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "public"."evaluations" ADD CONSTRAINT "evaluations_task_id_fkey" FOREIGN KEY ("task_id") REFERENCES "public"."tasks"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "public"."evaluations" ADD CONSTRAINT "evaluations_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."sessions" ADD CONSTRAINT "sessions_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE CASCADE ON UPDATE NO ACTION;

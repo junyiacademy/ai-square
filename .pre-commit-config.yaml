@@ -1,0 +1,45 @@
+repos:
+  - repo: local
+    hooks:
+      - id: typescript-check
+        name: TypeScript Check
+        entry: bash -c 'cd frontend && npx tsc --noEmit'
+        language: system
+        types: [file]
+        files: ^frontend/.*\.(ts|tsx)$
+        pass_filenames: false
+
+      - id: eslint-check
+        name: ESLint Check
+        entry: bash -c 'cd frontend && npx next lint'
+        language: system
+        types: [file]
+        files: ^frontend/.*\.(ts|tsx|js|jsx)$
+        pass_filenames: false
+
+      - id: unit-tests
+        name: Unit Tests (Pre-push only)
+        entry: bash -c 'cd frontend && npx jest --ci --coverage --testPathIgnorePatterns="/tests/integration/|/e2e/|/frontend/e2e/|\.spec\.ts$" --watchAll=false'
+        language: system
+        types: [file]
+        files: ^frontend/.*\.(ts|tsx)$
+        pass_filenames: false
+        stages: [pre-push]
+
+      - id: build-check
+        name: Build Check (Pre-push only)
+        entry: bash -c 'cd frontend && npx next build'
+        language: system
+        types: [file]
+        files: ^frontend/.*\.(ts|tsx|js|jsx)$
+        pass_filenames: false
+        stages: [pre-push]
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-json
+      - id: check-merge-conflict

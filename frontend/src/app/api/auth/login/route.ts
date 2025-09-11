@@ -1,79 +1,81 @@
 import { NextRequest, NextResponse } from 'next/server';
-import bcrypt from 'bcryptjs';
-import { z } from 'zod';
-import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import { AuthManager } from '@/lib/auth/auth-manager';
-import { SecureSession } from '@/lib/auth/secure-session';
-import type { UserWithPassword } from '@/lib/repositories/interfaces/user-with-password';
-
-// Input validation schema
-const loginSchema = z.object({
-  email: z.string().email('Invalid email format'),
-  password: z.string().min(1, 'Password is required'),
-  rememberMe: z.boolean().optional()
-});
+import { loginUser, autoLoginDev } from '@/lib/auth/simple-auth';
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
+    // Try to parse body, but don't fail if empty (for auto-login)
+    let body: any = {};
+    try {
+      body = await request.json();
+    } catch {
+      // Empty body is OK for dev auto-login
+    }
     
-    // Validate input
-    const validationResult = loginSchema.safeParse(body);
-    if (!validationResult.success) {
+    const { email, password, rememberMe = false } = body;
+
+    // Dev mode auto-login if no credentials provided
+    if (process.env.NODE_ENV === 'development' && !email && !password) {
+      console.log('[Login] Attempting dev auto-login...');
+      const autoLogin = await autoLoginDev();
+      
+      if (autoLogin.success && autoLogin.token) {
+        const response = NextResponse.json({
+          success: true,
+          user: autoLogin.user
+        });
+        
+        // Set cookie for 30 days
+        response.cookies.set('sessionToken', autoLogin.token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV !== 'development',
+          sameSite: 'lax',
+          maxAge: 30 * 24 * 60 * 60,
+          path: '/'
+        });
+        
+        return response;
+      }
+      
+      // If auto-login fails, return error
       return NextResponse.json(
-        { success: false, error: 'Invalid email or password format' },
+        { success: false, error: 'No dev user available for auto-login' },
+        { status: 401 }
+      );
+    }
+
+    // Normal login
+    if (!email || !password) {
+      return NextResponse.json(
+        { success: false, error: 'Email and password are required' },
         { status: 400 }
       );
     }
 
-    const { email, password, rememberMe = false } = validationResult.data;
-
-    // Get user repository
-    const userRepo = repositoryFactory.getUserRepository();
+    const result = await loginUser(email, password);
     
-    // Find user by email (with password hash)
-    const user = await userRepo.findByEmail(email) as UserWithPassword | null;
-    if (!user) {
+    if (!result.success || !result.token) {
       return NextResponse.json(
-        { success: false, error: 'Invalid email or password' },
+        { success: false, error: result.error || 'Login failed' },
         { status: 401 }
       );
     }
 
-    // Verify password
-    const isValidPassword = await bcrypt.compare(password, user.passwordHash || '');
-    if (!isValidPassword) {
-      return NextResponse.json(
-        { success: false, error: 'Invalid email or password' },
-        { status: 401 }
-      );
-    }
-
-    // Create secure session using Redis-backed storage
-    const sessionToken = await SecureSession.createSessionAsync({
-      userId: user.id,
-      email: user.email,
-      role: user.role || 'student'
-    }, rememberMe);
-
-    // Create response
+    // Create response with user data
     const response = NextResponse.json({
       success: true,
-      user: {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        role: user.role,
-        preferredLanguage: user.preferredLanguage,
-        emailVerified: !!user.emailVerifiedAt
-      }
+      user: result.user
     });
 
-    // Set secure httpOnly cookie
-    AuthManager.setAuthCookie(response, sessionToken, rememberMe);
+    // Set session cookie (7 days default, 30 days for remember me)
+    response.cookies.set('sessionToken', result.token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV !== 'development',
+      sameSite: 'lax',
+      maxAge: rememberMe ? 30 * 24 * 60 * 60 : 7 * 24 * 60 * 60,
+      path: '/'
+    });
 
     return response;
-
   } catch (error) {
     console.error('Login error:', error);
     return NextResponse.json(

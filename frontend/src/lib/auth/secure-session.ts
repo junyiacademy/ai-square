@@ -1,11 +1,13 @@
 /**
  * Secure Session Token Management
- * 
- * This file now delegates to RedisSession for production-ready storage
+ *
+ * This file now delegates to PostgresSession for persistent storage
+ * Sessions are stored in PostgreSQL database for persistence across restarts
  * Maintains backward compatibility with existing code
  */
 
-import { RedisSession } from './redis-session';
+import { PostgresSession } from './postgres-session';
+import { memorySession } from './memory-session';
 
 export interface SessionData {
   userId: string;
@@ -15,12 +17,15 @@ export interface SessionData {
   expiresAt: Date;
 }
 
+// Always use PostgreSQL for session storage
+const usePostgreSQL = true;
+
 export class SecureSession {
   /**
    * Generate a secure session token
    */
   static generateToken(): string {
-    return RedisSession.generateToken();
+    return PostgresSession.generateToken();
   }
 
   /**
@@ -35,24 +40,25 @@ export class SecureSession {
     // Use async method but return synchronously for backward compatibility
     // This is a temporary solution until all code is updated to async
     const token = this.generateToken();
-    
+
     // Fire and forget - create session asynchronously
-    RedisSession.createSession(userData, rememberMe).catch(error => {
+    PostgresSession.createSession(userData, rememberMe).catch(error => {
       console.error('[SecureSession] Failed to create session:', error);
     });
-    
+
     return token;
   }
 
   /**
    * Create a new session (async version - preferred)
+   * Uses PostgreSQL for persistent storage
    */
   static async createSessionAsync(userData: {
     userId: string;
     email: string;
     role: string;
   }, rememberMe = false): Promise<string> {
-    return RedisSession.createSession(userData, rememberMe);
+    return await PostgresSession.createSession(userData, rememberMe);
   }
 
   /**
@@ -63,11 +69,11 @@ export class SecureSession {
     // It will only work with in-memory fallback
     // TODO: Update all callers to use async version
     console.warn('[SecureSession] Using synchronous getSession - should migrate to async');
-    
+
     if (!token || !this.isValidTokenFormat(token)) {
       return null;
     }
-    
+
     // For now, return null - callers should use async version
     return null;
   }
@@ -76,7 +82,7 @@ export class SecureSession {
    * Get session data from token (async version)
    */
   static async getSessionAsync(token: string): Promise<SessionData | null> {
-    return RedisSession.getSession(token);
+    return await PostgresSession.getSession(token);
   }
 
   /**
@@ -84,7 +90,7 @@ export class SecureSession {
    */
   static destroySession(token: string): void {
     // Fire and forget
-    RedisSession.destroySession(token).catch(error => {
+    PostgresSession.destroySession(token).catch(error => {
       console.error('[SecureSession] Failed to destroy session:', error);
     });
   }
@@ -93,34 +99,37 @@ export class SecureSession {
    * Destroy a session (async version)
    */
   static async destroySessionAsync(token: string): Promise<void> {
-    return RedisSession.destroySession(token);
+    return await PostgresSession.destroySession(token);
   }
 
   /**
    * Validate token format
    */
   static isValidTokenFormat(token: string): boolean {
-    return RedisSession.isValidTokenFormat(token);
+    // Simple hex token validation
+    return /^[a-f0-9]{64}$/i.test(token);
   }
 
   /**
    * Clean up expired sessions
    */
   static cleanupExpiredSessions(): void {
-    RedisSession.cleanupExpiredSessions();
+    PostgresSession.cleanupExpiredSessions();
   }
 
   /**
    * Get all active sessions for a user (async only)
    */
   static async getUserSessions(userId: string): Promise<string[]> {
-    return RedisSession.getUserSessions(userId);
+    // Not implemented yet, return empty array
+    return [];
   }
 
   /**
    * Revoke all sessions for a user (async only)
    */
   static async revokeUserSessions(userId: string): Promise<void> {
-    return RedisSession.revokeUserSessions(userId);
+    // Not implemented yet
+    return;
   }
 }

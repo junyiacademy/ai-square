@@ -17,24 +17,33 @@ export async function POST(request: NextRequest) {
   let pool: Pool | null = null;
   
   try {
-    // Remove admin key check - keeping API simple
+    // Default demo users
+    const defaultUsers: UserSeed[] = [
+      { email: 'student@example.com', password: 'student123', role: 'student', name: 'Demo Student' },
+      { email: 'teacher@example.com', password: 'teacher123', role: 'teacher', name: 'Demo Teacher' },
+      { email: 'admin@example.com', password: 'admin123', role: 'admin', name: 'Demo Admin' }
+    ];
 
-    const body = await request.json();
-    const users: UserSeed[] = body.users || [];
-
-    if (users.length === 0) {
-      return NextResponse.json(
-        { success: false, error: 'No users provided' },
-        { status: 400 }
-      );
+    // Allow override from request body for testing, but use defaults if not provided
+    let users: UserSeed[] = defaultUsers;
+    
+    try {
+      const body = await request.json();
+      if (body.users && Array.isArray(body.users) && body.users.length > 0) {
+        users = body.users;
+      }
+    } catch {
+      // If no body or invalid JSON, use defaults
     }
 
     // Create database connection
     if (process.env.DATABASE_URL) {
+      const isCloudSQL = process.env.DATABASE_URL.includes('/cloudsql/');
       pool = new Pool({
         connectionString: process.env.DATABASE_URL,
-        max: 1,
-        connectionTimeoutMillis: 5000,
+        max: 20,
+        connectionTimeoutMillis: isCloudSQL ? 10000 : 2000,
+        idleTimeoutMillis: 30000,
       });
     } else {
       const dbHost = process.env.DB_HOST || '127.0.0.1';
@@ -44,8 +53,9 @@ export async function POST(request: NextRequest) {
         database: process.env.DB_NAME || 'ai_square_db',
         user: process.env.DB_USER || 'postgres',
         password: process.env.DB_PASSWORD || '',
-        max: 1,
-        connectionTimeoutMillis: 5000,
+        max: 20,
+        connectionTimeoutMillis: isCloudSQL ? 10000 : 2000,
+        idleTimeoutMillis: 30000,
       };
       
       if (isCloudSQL) {

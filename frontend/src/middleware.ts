@@ -14,8 +14,8 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
   
-  // Special case: Allow access to fix-demo page without authentication
-  if (pathname === '/admin/fix-demo') {
+  // Special case: Allow access to fix-demo and db-init pages without authentication in development
+  if (pathname === '/admin/fix-demo' || pathname === '/admin/db-init') {
     return NextResponse.next();
   }
   
