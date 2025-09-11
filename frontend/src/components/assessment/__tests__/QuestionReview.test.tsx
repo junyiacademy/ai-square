@@ -16,7 +16,6 @@ jest.mock('react-i18next', () => ({
         'results.questionReview.correct': 'Correct',
         'results.questionReview.incorrect': 'Incorrect',
         'results.questionReview.practicePrompt': 'Want to practice more?',
-        'results.questionReview.practiceAgain': 'Practice Again',
         'results.questionReview.closeReview': 'Close Review',
         'difficulty.basic': 'Basic',
         'difficulty.intermediate': 'Intermediate',
@@ -276,7 +275,7 @@ describe('QuestionReview', () => {
 
     // The component shows the section if ksa_mapping exists, even if all arrays are empty
     expect(screen.getByText('Related Competencies')).toBeInTheDocument();
-    
+
     // But it shouldn't show any category labels when arrays are empty
     expect(screen.queryByText('Knowledge:')).not.toBeInTheDocument();
     expect(screen.queryByText('Skills:')).not.toBeInTheDocument();
@@ -293,15 +292,6 @@ describe('QuestionReview', () => {
     expect(onCloseMock).toHaveBeenCalledTimes(1);
   });
 
-  it('has practice again button that can be clicked', async () => {
-    renderWithProviders(<QuestionReview {...defaultProps} />);
-
-    const practiceButton = screen.getByText('Practice Again');
-    expect(practiceButton).toBeInTheDocument();
-    
-    // Should not throw when clicked
-    fireEvent.click(practiceButton);
-  });
 
   it('calls onClose when close review button is clicked', async () => {
     const onCloseMock = jest.fn();
@@ -351,7 +341,7 @@ describe('QuestionReview', () => {
 
     expect(screen.getByText('How does machine learning work?')).toBeInTheDocument();
     expect(screen.getByText('Question 1 of 1')).toBeInTheDocument();
-    
+
     // Next button should be disabled since there's only one question
     expect(screen.getByText('Next')).toBeDisabled();
   });
@@ -360,7 +350,6 @@ describe('QuestionReview', () => {
     renderWithProviders(<QuestionReview {...defaultProps} />);
 
     expect(screen.getByText('Want to practice more?')).toBeInTheDocument();
-    expect(screen.getByText('Practice Again')).toBeInTheDocument();
     expect(screen.getByText('Close Review')).toBeInTheDocument();
   });
 
