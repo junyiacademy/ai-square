@@ -5,11 +5,11 @@ import { useParams, useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 import { PBLLearningContentSkeleton } from '@/components/pbl/loading-skeletons';
-import { 
-  Program, 
-  Scenario, 
-  Task, 
- 
+import {
+  Program,
+  Scenario,
+  Task,
+
 } from '@/types/pbl';
 import { TaskEvaluation } from '@/types/pbl-completion';
 import { formatDateWithLocale } from '@/utils/locale';
@@ -25,12 +25,12 @@ interface ConversationEntry {
 // Helper function to get localized field
 function getLocalizedField<T extends Record<string, unknown>>(obj: T | null | undefined, fieldName: string, language: string): string {
   if (!obj) return '';
-  
+
   // Use language code directly as suffix
   const langSuffix = language;
-  
+
   const fieldWithLang = `${fieldName}_${langSuffix}`;
-  
+
   // Return localized field if exists, otherwise return default
   const value = obj[fieldWithLang] || obj[fieldName] || '';
   return String(value);
@@ -39,12 +39,12 @@ function getLocalizedField<T extends Record<string, unknown>>(obj: T | null | un
 // Helper function to get localized array field
 function getLocalizedArrayField<T extends Record<string, unknown>>(obj: T | null | undefined, fieldName: string, language: string): string[] {
   if (!obj) return [];
-  
+
   // Use language code directly as suffix
   const langSuffix = language;
-  
+
   const fieldWithLang = `${fieldName}_${langSuffix}`;
-  
+
   // Return localized field if exists, otherwise return default
   const value = obj[fieldWithLang] || obj[fieldName] || [];
   return Array.isArray(value) ? value.map(String) : [];
@@ -55,12 +55,12 @@ export default function ProgramLearningPage() {
   const router = useRouter();
   // Note: searchParams removed as it was unused
   const { t, i18n } = useTranslation(['pbl', 'common']);
-  
+
   const [programId, setProgramId] = useState(params.programId as string);
   const scenarioId = params.id as string;
   const taskId = params.taskId as string;
   // const isNewProgram = searchParams.get('isNew') === 'true';
-  
+
   // States
   const [loading, setLoading] = useState(true);
   const [program, setProgram] = useState<Program | null>(null);
@@ -78,7 +78,7 @@ export default function ProgramLearningPage() {
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
   const [taskEvaluations, setTaskEvaluations] = useState<Record<string, TaskEvaluation>>({});
   const [programTasks, setProgramTasks] = useState<Array<{ id: string; taskIndex: number }>>([]);
-  
+
   const conversationEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -105,7 +105,7 @@ export default function ProgramLearningPage() {
   const loadProgramData = async () => {
     try {
       setLoading(true);
-      
+
       // Load scenario data with language parameter using PBL API
       const scenarioRes = await authenticatedFetch(`/api/pbl/scenarios/${scenarioId}?lang=${i18n.language}`);
       if (!scenarioRes.ok) throw new Error('Failed to load scenario');
@@ -117,11 +117,11 @@ export default function ProgramLearningPage() {
         // Direct scenario object
         setScenario(scenarioData);
       }
-      
+
       // Load program and task data using unified architecture
       let loadedProgram: Program | null = null;
       let loadedTask: Task | null = null;
-      
+
       if (!programId.startsWith('temp_')) {
         try {
           // Use PBL unified architecture API to get program
@@ -146,7 +146,7 @@ export default function ProgramLearningPage() {
                 currentTaskId: taskId,
                 language: i18n.language
               } as Program;
-              
+
               // Load task data using PBL unified architecture
               if (taskId) {
                 try {
@@ -157,29 +157,15 @@ export default function ProgramLearningPage() {
                       // Extract task template data from unified architecture format
                       const taskTemplate = taskData.content?.context?.taskTemplate || {};
                       const originalTaskData = taskData.content?.context?.originalTaskData || {};
-                      
-                      loadedTask = {
-                        id: taskData.id,
-                        title: taskData.title,
-                        type: taskData.type,
-                        content: taskData.content,
-                        interactions: taskData.interactions || [],
-                        status: taskData.status,
-                        // Add fields from task template for rendering
-                        description: taskTemplate.description || originalTaskData.description || taskData.content?.instructions || '',
-                        instructions: originalTaskData.instructions || taskTemplate.instructions || [],
-                        expectedOutcome: originalTaskData.expectedOutcome || taskTemplate.expectedOutcome || '',
-                        // Store the scenario task index for matching
-                        scenarioTaskIndex: taskData.scenarioTaskIndex
-                      } as unknown as Task;
-                      setCurrentTask(loadedTask);
+
+                      // Removed this section - task loading is properly handled by loadTaskData() with multilingual support
                     }
                   }
                 } catch (error) {
                   console.error('Error loading task:', error);
                 }
               }
-              
+
               // If this is a draft program being accessed, update its timestamps
               if (loadedProgram && loadedProgram.status === 'draft') {
                 try {
@@ -192,7 +178,7 @@ export default function ProgramLearningPage() {
                       scenarioId
                     })
                   });
-                  
+
                   if (updateRes.ok) {
                     const updatedData = await updateRes.json();
                     if (updatedData.success && updatedData.program) {
@@ -203,7 +189,7 @@ export default function ProgramLearningPage() {
                   console.error('Error updating draft timestamps:', error);
                 }
               }
-              
+
               setProgram(loadedProgram);
             }
           }
@@ -211,7 +197,7 @@ export default function ProgramLearningPage() {
           console.error('Error loading program data:', error);
         }
       }
-      
+
       // Fallback: create mock program for temp IDs or if loading failed
       if (!loadedProgram) {
         const mockProgram: Program = {
@@ -229,7 +215,7 @@ export default function ProgramLearningPage() {
         };
         setProgram(mockProgram);
       }
-      
+
       // Load all task evaluations for this program (only for non-temp programs)
       if (!programId.startsWith('temp_')) {
         try {
@@ -239,10 +225,10 @@ export default function ProgramLearningPage() {
             const tasksData = await tasksRes.json();
             const sortedTasks = tasksData.sort((a: { taskIndex: number }, b: { taskIndex: number }) => a.taskIndex - b.taskIndex);
             setProgramTasks(sortedTasks.map((t: { id: string; taskIndex: number }) => ({ id: t.id, taskIndex: t.taskIndex })));
-            
+
             // Get evaluations for all tasks in this program
             const evaluations: Record<string, TaskEvaluation> = {};
-            
+
             // Load evaluations for all tasks in parallel
             const evalPromises = sortedTasks.map(async (task: { id: string }) => {
               try {
@@ -258,27 +244,27 @@ export default function ProgramLearningPage() {
               }
               return null;
             });
-            
+
             const evalResults = await Promise.all(evalPromises);
             evalResults.forEach(result => {
               if (result) {
                 evaluations[result.taskId] = result.evaluation;
               }
             });
-            
+
             setTaskEvaluations(evaluations);
           }
         } catch (error) {
           console.error('Error loading task evaluations:', error);
         }
       }
-      
+
       // If no taskId provided, use the first task
       if (!taskId && scenarioData.data.tasks.length > 0) {
         const firstTaskId = scenarioData.data.tasks[0].id;
         router.replace(`/pbl/scenarios/${scenarioId}/program/${programId}/tasks/${firstTaskId}`);
       }
-      
+
     } catch (error) {
       console.error('Error loading program data:', error);
     } finally {
@@ -288,7 +274,7 @@ export default function ProgramLearningPage() {
 
   const loadTaskData = async () => {
     if (!taskId || !scenarioId || !programId) return;
-    
+
     try {
       const taskRes = await authenticatedFetch(`/api/pbl/scenarios/${scenarioId}/programs/${programId}/tasks/${taskId}`);
       if (taskRes.ok) {
@@ -297,7 +283,7 @@ export default function ProgramLearningPage() {
           // Extract task template data from unified architecture format
           const taskTemplate = taskData.content?.context?.taskTemplate || {};
           const originalTaskData = taskData.content?.context?.originalTaskData || {};
-          
+
           const loadedTask = {
             id: taskData.id || taskId,  // Use taskId from URL if no id in response
             title: taskData.title,
@@ -306,15 +292,39 @@ export default function ProgramLearningPage() {
             interactions: taskData.interactions || [],
             status: taskData.status,
             // Add fields from task template for rendering
-            description: taskTemplate.description || originalTaskData.description || taskData.content?.instructions || '',
-            instructions: originalTaskData.instructions || taskTemplate.instructions || [],
-            expectedOutcome: originalTaskData.expectedOutcome || taskTemplate.expectedOutcome || '',
+            description: (() => {
+              const templateDescription = taskTemplate.description || originalTaskData.description;
+              if (typeof templateDescription === 'object' && !Array.isArray(templateDescription)) {
+                // If it's a multilingual object, get the text for current language
+                return templateDescription[i18n.language] || templateDescription.en || '';
+              }
+              return typeof templateDescription === 'string' ? templateDescription : '';
+            })(),
+            // Extract instructions based on current language
+            instructions: (() => {
+              const templateInstructions = taskTemplate.instructions || originalTaskData.instructions;
+              if (typeof templateInstructions === 'object' && !Array.isArray(templateInstructions)) {
+                // If it's a multilingual object, get the text for current language
+                const instructionText = templateInstructions[i18n.language] || templateInstructions.en || '';
+                // Split by newline to create array (instructions are usually multiline)
+                return instructionText ? instructionText.split('\n').filter((line: string) => line.trim()) : [];
+              }
+              // If it's already an array, return it
+              return Array.isArray(templateInstructions) ? templateInstructions : [];
+            })(),
+            expectedOutcome: (() => {
+              const templateOutcome = originalTaskData.expectedOutcome || taskTemplate.expectedOutcome;
+              if (typeof templateOutcome === 'object' && !Array.isArray(templateOutcome)) {
+                return templateOutcome[i18n.language] || templateOutcome.en || '';
+              }
+              return typeof templateOutcome === 'string' ? templateOutcome : '';
+            })(),
             // Store the scenario task index for matching
             scenarioTaskIndex: taskData.scenarioTaskIndex,
             category: taskTemplate.category || originalTaskData.category || 'task',
             assessmentFocus: taskTemplate.assessmentFocus || originalTaskData.assessmentFocus || null
           } as unknown as Task;
-          
+
           setCurrentTask(loadedTask);
           // Pass the loaded task directly to avoid React state async issue
           await loadTaskHistory(loadedTask);
@@ -328,10 +338,10 @@ export default function ProgramLearningPage() {
   const loadTaskHistory = async (taskToLoad?: Task) => {
     // Prevent duplicate loading
     if (isLoadingHistory) return;
-    
+
     // Use passed task or fall back to currentTask from state
     const task = taskToLoad || currentTask;
-    
+
     try {
       // Skip loading history for temp programs or invalid taskIds
       if (programId.startsWith('temp_') || !taskId || taskId === 'undefined') {
@@ -341,22 +351,22 @@ export default function ProgramLearningPage() {
         }
         return;
       }
-      
+
       // Only load history if we have a valid task
       if (!task || !task.id) {
         console.log('Skipping history load - no valid task');
         return;
       }
-      
+
       setIsLoadingHistory(true);
       console.log('Loading task history for:', { programId, taskId: task.id, scenarioId });
-      
+
       // Load task conversation history and evaluation
       const res = await authenticatedFetch(`/api/pbl/tasks/${task.id}/interactions`);
       if (res.ok) {
         const data = await res.json();
         console.log('Task history response:', data);
-        
+
         if (data.data?.interactions) {
           const loadedConversations = data.data.interactions.map((interaction: Record<string, unknown>): ConversationEntry => ({
             id: String(interaction.id || `${interaction.timestamp}_${interaction.type}`),
@@ -366,12 +376,12 @@ export default function ProgramLearningPage() {
           }));
           console.log('Loaded conversations:', loadedConversations);
           setConversations(loadedConversations);
-          
+
           // Show evaluate button if there are conversations
           if (loadedConversations.length > 0) {
             setShowEvaluateButton(true);
           }
-          
+
           // Check if task has an evaluation
           if (data.data?.evaluationId) {
             console.log('Task has evaluationId:', data.data.evaluationId);
@@ -382,12 +392,12 @@ export default function ProgramLearningPage() {
               if (evalData.data?.evaluation) {
                 console.log('Loaded existing evaluation:', evalData.data.evaluation);
                 setEvaluation(evalData.data.evaluation);
-                
+
                 const currentUserMessageCount = loadedConversations.filter((c: ConversationEntry) => c.type === 'user').length;
                 const evaluationUserMessageCount = evalData.data.evaluation.metadata?.conversationCount || 0;
-                
+
                 console.log('User message count:', currentUserMessageCount, 'Evaluation count:', evaluationUserMessageCount);
-                
+
                 // If evaluation is up to date (same or more conversations evaluated), disable button
                 if (evaluationUserMessageCount >= currentUserMessageCount) {
                   setIsEvaluateDisabled(true);
@@ -424,11 +434,11 @@ export default function ProgramLearningPage() {
 
   const handleSendMessage = async () => {
     if (!userInput.trim() || isProcessing || !currentTask || !currentTask.id) return;
-    
+
     const userMessage = userInput.trim();
     setUserInput('');
     setIsProcessing(true);
-    
+
     // Add user message to conversation
     const newUserEntry: ConversationEntry = {
       id: Date.now().toString(),
@@ -437,11 +447,11 @@ export default function ProgramLearningPage() {
       timestamp: new Date().toISOString()
     };
     setConversations(prev => [...prev, newUserEntry]);
-    
+
     try {
       // Handle program ID conversion: temp ID or draft → active program
       let actualProgramId = programId;
-      
+
       if (programId.startsWith('temp_')) {
         // Legacy temp ID - create new program (fallback)
         const createRes = await authenticatedFetch(`/api/pbl/scenarios/${scenarioId}/start`, {
@@ -453,31 +463,31 @@ export default function ProgramLearningPage() {
             language: i18n.language
           })
         });
-        
+
         if (!createRes.ok) throw new Error('Failed to create program');
-        
+
         const createData = await createRes.json();
         if (createData.success && createData.programId) {
           actualProgramId = createData.programId;
           setProgramId(actualProgramId);
-          
+
           // Update URL without navigation
           const newUrl = `/pbl/scenarios/${scenarioId}/program/${actualProgramId}/tasks/${taskId}`;
           window.history.replaceState({}, '', newUrl);
-          
+
           // Force update the params to ensure consistency
           // Note: params from useParams are readonly, so we update programId state instead
         } else {
           throw new Error('Failed to create program');
         }
       }
-      
+
       // Save user interaction - skip if no valid task ID yet
       const taskIdToUse = currentTask?.id || taskId;
-      
+
       // Only try to save interaction if we have a valid UUID task ID
       let saveUserRes: Response | { ok: true } = { ok: true }; // Default to OK to not block flow
-      
+
       if (taskIdToUse && taskIdToUse.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)) {
         saveUserRes = await authenticatedFetch(`/api/pbl/tasks/${taskIdToUse}/interactions`, {
         method: 'POST',
@@ -496,7 +506,7 @@ export default function ProgramLearningPage() {
       } else {
         console.log('Skipping interaction save - no valid task ID yet');
       }
-      
+
       if (!saveUserRes.ok) {
         // Only process as Response if it's actually a Response object
         if ('text' in saveUserRes) {
@@ -507,7 +517,7 @@ export default function ProgramLearningPage() {
           } catch {
             errorData = { error: errorText };
           }
-          
+
           // Only log as error if it's not a 404 (task not found is expected for new tasks)
           if ('status' in saveUserRes && saveUserRes.status === 404) {
             console.log('Task not found yet - this is normal for new programs');
@@ -522,11 +532,11 @@ export default function ProgramLearningPage() {
         }
         // Don't stop the flow, interactions might still be saved in the database
       }
-      
+
       // Get AI response
       const aiRes = await authenticatedFetch(`/api/pbl/chat?lang=${i18n.language}`, {
         method: 'POST',
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
           'Accept-Language': i18n.language
         },
@@ -538,7 +548,7 @@ export default function ProgramLearningPage() {
             taskId: currentTask.id,
             taskTitle: getLocalizedField(currentTask as unknown as Record<string, unknown>, 'title', i18n.language),
             taskDescription: getLocalizedField(currentTask as unknown as Record<string, unknown>, 'description', i18n.language),
-            instructions: getLocalizedArrayField(currentTask as unknown as Record<string, unknown>, 'instructions', i18n.language),
+            instructions: Array.isArray(currentTask.instructions) ? currentTask.instructions : [],
             expectedOutcome: getLocalizedField(currentTask as unknown as Record<string, unknown>, 'expectedOutcome', i18n.language),
             conversationHistory: conversations.slice(-10).map(conv => ({
               role: conv.type === 'user' ? 'user' : 'assistant',
@@ -547,7 +557,7 @@ export default function ProgramLearningPage() {
           }
         })
       });
-      
+
       if (!aiRes.ok) {
         const errorData = await aiRes.json().catch(() => ({}));
         console.error('Chat API error:', {
@@ -558,16 +568,16 @@ export default function ProgramLearningPage() {
         });
         throw new Error(`Failed to get AI response: ${aiRes.status} ${errorData.error || aiRes.statusText}`);
       }
-      
+
       const aiData = await aiRes.json();
       const aiMessage = aiData.response;
-      
+
       // Hide thinking indicator first
       setIsProcessing(false);
-      
+
       // Small delay to ensure thinking indicator is hidden before showing response
       await new Promise(resolve => setTimeout(resolve, 100));
-      
+
       // Add AI response to conversation
       const aiEntry: ConversationEntry = {
         id: (Date.now() + 1).toString(),
@@ -576,19 +586,19 @@ export default function ProgramLearningPage() {
         timestamp: new Date().toISOString()
       };
       setConversations(prev => [...prev, aiEntry]);
-      
+
       // Show evaluate button and check if it should be disabled
       setShowEvaluateButton(true);
-      
+
       // Check if we have more user messages than the last evaluation
       const updatedConversations = [...conversations, newUserEntry, aiEntry];
       const userMessageCount = updatedConversations.filter(c => c.type === 'user').length;
-      
+
       // Enable button if there are user messages and no evaluation yet, or if new messages were added
       if (userMessageCount > 0 && (!evaluation || userMessageCount > 1)) {
         setIsEvaluateDisabled(false);
       }
-      
+
       // Save AI interaction
       await authenticatedFetch(`/api/pbl/tasks/${currentTask.id}/interactions`, {
         method: 'POST',
@@ -604,16 +614,16 @@ export default function ProgramLearningPage() {
           }
         })
       });
-      
+
     } catch (error) {
       console.error('Error processing message:', error);
-      
+
       // Hide thinking indicator first
       setIsProcessing(false);
-      
+
       // Small delay before showing error
       await new Promise(resolve => setTimeout(resolve, 100));
-      
+
       const errorEntry: ConversationEntry = {
         id: (Date.now() + 2).toString(),
         type: 'system',
@@ -628,13 +638,13 @@ export default function ProgramLearningPage() {
 
   const handleEvaluate = async () => {
     if (!currentTask || conversations.length === 0) return;
-    
+
     setIsEvaluating(true);
-    
+
     try {
       // Get last 10 conversations
       const recentConversations = conversations.slice(-10);
-      
+
       // Call evaluate API
       const response = await authenticatedFetch('/api/pbl/evaluate', {
         method: 'POST',
@@ -652,27 +662,27 @@ export default function ProgramLearningPage() {
           language: i18n.language
         })
       });
-      
+
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         console.error('Evaluation API error:', errorData);
         throw new Error(errorData.error || `HTTP ${response.status}: Failed to evaluate`);
       }
-      
+
       const data = await response.json();
       console.log('Evaluation response:', data);
-      
+
       if (data.success) {
         setEvaluation(data.evaluation);
         // Disable the evaluate button after successful evaluation
         setIsEvaluateDisabled(true);
-        
+
         // Update task evaluations map
         setTaskEvaluations(prev => ({
           ...prev,
           [currentTask.id]: data.evaluation
         }));
-        
+
         // Save evaluation to database
         try {
           const saveResponse = await authenticatedFetch(`/api/pbl/tasks/${currentTask.id}/evaluate`, {
@@ -686,7 +696,7 @@ export default function ProgramLearningPage() {
               evaluation: data.evaluation
             })
           });
-          
+
           if (!saveResponse.ok) {
             console.error('Failed to save evaluation to database');
           } else {
@@ -719,7 +729,7 @@ export default function ProgramLearningPage() {
       console.log('handleCompleteTask: Missing currentTask or program', { currentTask, program });
       return;
     }
-    
+
     // Fetch all tasks for the program to find the current and next task
     try {
       const tasksRes = await authenticatedFetch(`/api/pbl/programs/${programId}/tasks`);
@@ -727,14 +737,14 @@ export default function ProgramLearningPage() {
         const tasks = await tasksRes.json();
         const sortedTasks = tasks.sort((a: { taskIndex: number }, b: { taskIndex: number }) => a.taskIndex - b.taskIndex);
         const currentIndex = sortedTasks.findIndex((t: { id: string }) => t.id === currentTask.id);
-        
+
         console.log('handleCompleteTask:', {
           currentTaskId: currentTask.id,
           totalTaskCount: sortedTasks.length,
           currentIndex,
           hasNextTask: currentIndex !== -1 && currentIndex < sortedTasks.length - 1
         });
-        
+
         if (currentIndex !== -1 && currentIndex < sortedTasks.length - 1) {
           // Navigate to next task
           const nextTaskId = sortedTasks[currentIndex + 1].id;
@@ -825,7 +835,7 @@ export default function ProgramLearningPage() {
                   </svg>
                 </button>
               </div>
-            
+
             {/* Vertical Progress */}
             <div className={`flex-1 relative ${isProgressCollapsed ? 'px-2' : 'px-4'}`}>
               {!isProgressCollapsed && (
@@ -839,7 +849,7 @@ export default function ProgramLearningPage() {
                       const isEvaluated = !!taskEvaluations[actualTaskId];
                       const isCurrent = currentTask && currentTask.id === actualTaskId;
                       const taskEval = taskEvaluations[actualTaskId];
-                      
+
                       return (
                         <button
                           key={task.id}
@@ -847,10 +857,10 @@ export default function ProgramLearningPage() {
                           className="flex items-center w-full text-left hover:bg-gray-50 dark:hover:bg-gray-700 p-2 rounded-lg transition-colors"
                         >
                           <div className={`relative z-10 flex h-8 w-8 items-center justify-center rounded-full border-2 bg-white dark:bg-gray-800 flex-shrink-0 ${
-                            isEvaluated 
-                              ? 'border-green-600 dark:border-green-500' 
-                              : isCurrent 
-                              ? 'border-purple-600 dark:border-purple-500 ring-2 ring-purple-600 ring-offset-2 dark:ring-offset-white dark:ring-offset-gray-800' 
+                            isEvaluated
+                              ? 'border-green-600 dark:border-green-500'
+                              : isCurrent
+                              ? 'border-purple-600 dark:border-purple-500 ring-2 ring-purple-600 ring-offset-2 dark:ring-offset-white dark:ring-offset-gray-800'
                               : 'border-gray-300 dark:border-gray-600'
                           }`}>
                             {isEvaluated ? (
@@ -859,8 +869,8 @@ export default function ProgramLearningPage() {
                               </svg>
                             ) : (
                               <span className={`text-sm font-medium ${
-                                isCurrent 
-                                  ? 'text-purple-600 dark:text-purple-400' 
+                                isCurrent
+                                  ? 'text-purple-600 dark:text-purple-400'
                                   : 'text-gray-500 dark:text-gray-400'
                               }`}>
                                 {index + 1}
@@ -894,7 +904,7 @@ export default function ProgramLearningPage() {
                   </div>
                 </>
               )}
-              
+
               {/* Collapsed State - Show only icons */}
               {isProgressCollapsed && (
                 <div className="space-y-4">
@@ -905,16 +915,16 @@ export default function ProgramLearningPage() {
                     const isEvaluated = !!taskEvaluations[actualTaskId];
                     const isCurrent = currentTask && currentTask.id === actualTaskId;
                     const taskEval = taskEvaluations[actualTaskId];
-                    
+
                     return (
                       <button
                         key={task.id}
                         onClick={() => switchTask(actualTaskId)}
                         className={`flex h-8 w-8 items-center justify-center rounded-full border-2 bg-white dark:bg-gray-800 mx-auto ${
-                          isEvaluated 
-                            ? 'border-green-600 dark:border-green-500' 
-                            : isCurrent 
-                            ? 'border-purple-600 dark:border-purple-500 ring-2 ring-purple-600 ring-offset-2' 
+                          isEvaluated
+                            ? 'border-green-600 dark:border-green-500'
+                            : isCurrent
+                            ? 'border-purple-600 dark:border-purple-500 ring-2 ring-purple-600 ring-offset-2'
                             : 'border-gray-300 dark:border-gray-600'
                         }`}
                         title={`${getLocalizedField(task as unknown as Record<string, unknown>, 'title', i18n.language)}${isEvaluated && taskEval?.score !== undefined ? ` - ${taskEval.score}%` : ''}`}
@@ -925,8 +935,8 @@ export default function ProgramLearningPage() {
                           </svg>
                         ) : (
                           <span className={`text-sm font-medium ${
-                            isCurrent 
-                              ? 'text-purple-600 dark:text-purple-400' 
+                            isCurrent
+                              ? 'text-purple-600 dark:text-purple-400'
                               : 'text-gray-500 dark:text-gray-400'
                           }`}>
                             {index + 1}
@@ -937,7 +947,7 @@ export default function ProgramLearningPage() {
                   })}
                 </div>
               )}
-              
+
               {/* View Report Link */}
               {!isProgressCollapsed && Object.keys(taskEvaluations).length > 0 && (
                 <div className="mt-6 px-4">
@@ -971,7 +981,7 @@ export default function ProgramLearningPage() {
                 return getLocalizedField(currentTask as unknown as Record<string, unknown>, 'title', i18n.language);
               })()}
             </h2>
-            
+
             <div className="space-y-4">
               <div>
                 <h3 className="font-medium text-gray-900 dark:text-white mb-2">
@@ -981,18 +991,20 @@ export default function ProgramLearningPage() {
                   {getLocalizedField(currentTask as unknown as Record<string, unknown>, 'description', i18n.language)}
                 </p>
               </div>
-              
+
               <div>
                 <h3 className="font-medium text-gray-900 dark:text-white mb-2">
                   {t('pbl:learn.instructions')}
                 </h3>
                 <ul className="list-disc list-inside space-y-1 text-gray-600 dark:text-gray-400">
-                  {getLocalizedArrayField(currentTask as unknown as Record<string, unknown>, 'instructions', i18n.language).map((instruction, index) => (
+                  {Array.isArray(currentTask.instructions) ? currentTask.instructions.map((instruction, index) => (
                     <li key={index}>{instruction}</li>
-                  ))}
+                  )) : (
+                    <li>No instructions available</li>
+                  )}
                 </ul>
               </div>
-              
+
               {currentTask.expectedOutcome && (
                 <div>
                   <h3 className="font-medium text-gray-900 dark:text-white mb-2">
@@ -1004,14 +1016,14 @@ export default function ProgramLearningPage() {
                 </div>
               )}
             </div>
-            
+
             {/* Evaluation Results */}
             {evaluation && (
               <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
                 <h3 className="font-medium text-gray-900 dark:text-white mb-4">
                   {t('pbl:learn.evaluationResults', 'Evaluation Results')}
                 </h3>
-                
+
                 {/* Section 1: Overall Score */}
                 <div className="mb-4 p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-800">
                   <div className="flex items-center justify-between">
@@ -1028,7 +1040,7 @@ export default function ProgramLearningPage() {
                     </span>
                   </div>
                 </div>
-                
+
                 {/* Section 2: Domain Scores */}
                 <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
                   <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">
@@ -1046,7 +1058,7 @@ export default function ProgramLearningPage() {
                         </span>
                         <div className="flex items-center">
                           <div className="w-24 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-2">
-                            <div 
+                            <div
                               className="bg-blue-600 h-2 rounded-full transition-all duration-300"
                               style={{ width: `${Number(score)}%` }}
                             />
@@ -1061,7 +1073,7 @@ export default function ProgramLearningPage() {
                     })()}
                   </div>
                 </div>
-                
+
                 {/* Section 3: KSA Scores */}
                 {evaluation.ksaScores && (
                 <div className="mb-4 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
@@ -1075,7 +1087,7 @@ export default function ProgramLearningPage() {
                       </span>
                       <div className="flex items-center">
                         <div className="w-24 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-2">
-                          <div 
+                          <div
                             className="bg-green-600 h-2 rounded-full transition-all duration-300"
                             style={{ width: `${evaluation.ksaScores.knowledge}%` }}
                           />
@@ -1091,7 +1103,7 @@ export default function ProgramLearningPage() {
                       </span>
                       <div className="flex items-center">
                         <div className="w-24 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-2">
-                          <div 
+                          <div
                             className="bg-green-600 h-2 rounded-full transition-all duration-300"
                             style={{ width: `${evaluation.ksaScores.skills}%` }}
                           />
@@ -1107,7 +1119,7 @@ export default function ProgramLearningPage() {
                       </span>
                       <div className="flex items-center">
                         <div className="w-24 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-2">
-                          <div 
+                          <div
                             className="bg-green-600 h-2 rounded-full transition-all duration-300"
                             style={{ width: `${evaluation.ksaScores.attitudes}%` }}
                           />
@@ -1120,21 +1132,21 @@ export default function ProgramLearningPage() {
                   </div>
                 </div>
                 )}
-                
+
                 {/* Conversation Insights - Only show if there are meaningful insights */}
-                {evaluation.conversationInsights && 
-                 ((evaluation.conversationInsights.effectiveExamples && 
+                {evaluation.conversationInsights &&
+                 ((evaluation.conversationInsights.effectiveExamples &&
                    Array.isArray(evaluation.conversationInsights.effectiveExamples) &&
-                   evaluation.conversationInsights.effectiveExamples.length > 0) || 
-                  (evaluation.conversationInsights.improvementAreas && 
+                   evaluation.conversationInsights.effectiveExamples.length > 0) ||
+                  (evaluation.conversationInsights.improvementAreas &&
                    Array.isArray(evaluation.conversationInsights.improvementAreas) &&
                    evaluation.conversationInsights.improvementAreas.length > 0)) && (
                   <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                     <h4 className="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-3">
                       {t('pbl:learn.conversationInsights', 'Conversation Insights')}
                     </h4>
-                    
-                    {evaluation.conversationInsights.effectiveExamples && 
+
+                    {evaluation.conversationInsights.effectiveExamples &&
                      Array.isArray(evaluation.conversationInsights.effectiveExamples) &&
                      evaluation.conversationInsights.effectiveExamples.length > 0 && (
                       <div className="mb-3">
@@ -1155,8 +1167,8 @@ export default function ProgramLearningPage() {
                         </div>
                       </div>
                     )}
-                    
-                    {evaluation.conversationInsights.improvementAreas && 
+
+                    {evaluation.conversationInsights.improvementAreas &&
                      Array.isArray(evaluation.conversationInsights.improvementAreas) &&
                      evaluation.conversationInsights.improvementAreas.length > 0 && (
                       <div>
@@ -1179,7 +1191,7 @@ export default function ProgramLearningPage() {
                     )}
                   </div>
                 )}
-                
+
                 {/* Strengths & Improvements */}
                 <div className="space-y-3">
                   <div>
@@ -1195,7 +1207,7 @@ export default function ProgramLearningPage() {
                       ))}
                     </ul>
                   </div>
-                  
+
                   <div>
                     <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                       {t('pbl:complete.improvements')}
@@ -1212,7 +1224,7 @@ export default function ProgramLearningPage() {
                 </div>
               </div>
             )}
-            
+
             <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
               <button
                 onClick={handleCompleteTask}
@@ -1252,7 +1264,7 @@ export default function ProgramLearningPage() {
                   </div>
                 </div>
               ))}
-              
+
               {/* AI thinking indicator */}
               {isProcessing && (
                 <div className="flex justify-start">
@@ -1270,7 +1282,7 @@ export default function ProgramLearningPage() {
                   </div>
                 </div>
               )}
-              
+
               <div ref={conversationEndRef} />
             </div>
           </div>
@@ -1282,18 +1294,18 @@ export default function ProgramLearningPage() {
                 onClick={handleEvaluate}
                 disabled={isEvaluateDisabled}
                 className={`w-full px-4 py-2 rounded-lg transition-colors font-medium ${
-                  isEvaluateDisabled 
-                    ? 'bg-gray-400 text-gray-200 cursor-not-allowed' 
+                  isEvaluateDisabled
+                    ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
                     : 'bg-blue-600 text-white hover:bg-blue-700'
                 }`}
               >
-                {isEvaluateDisabled 
-                  ? t('pbl:learn.evaluationUpToDate', 'Evaluation Up to Date') 
+                {isEvaluateDisabled
+                  ? t('pbl:learn.evaluationUpToDate', 'Evaluation Up to Date')
                   : t('pbl:learn.evaluate', 'Evaluate Performance')}
               </button>
             </div>
           )}
-          
+
           {/* Evaluating indicator */}
           {isEvaluating && (
             <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 flex-shrink-0">
@@ -1358,7 +1370,7 @@ export default function ProgramLearningPage() {
                       const isCurrent = currentTask && currentTask.id === actualTaskId;
                       const taskEvaluation = taskEvaluations[actualTaskId];
                       const hasEvaluation = !!taskEvaluation;
-                      
+
                       return (
                         <button
                           key={task.id}
@@ -1369,10 +1381,10 @@ export default function ProgramLearningPage() {
                           className="flex items-center w-full text-left hover:bg-gray-50 dark:hover:bg-gray-700 p-2 rounded-lg transition-colors"
                         >
                           <div className={`relative z-10 flex h-8 w-8 items-center justify-center rounded-full border-2 bg-white dark:bg-gray-800 flex-shrink-0 ${
-                            hasEvaluation 
-                              ? 'border-green-600 dark:border-green-500' 
-                              : isCurrent 
-                              ? 'border-purple-600 dark:border-purple-500 ring-2 ring-purple-600 ring-offset-2' 
+                            hasEvaluation
+                              ? 'border-green-600 dark:border-green-500'
+                              : isCurrent
+                              ? 'border-purple-600 dark:border-purple-500 ring-2 ring-purple-600 ring-offset-2'
                               : 'border-gray-300 dark:border-gray-600'
                           }`}>
                             {hasEvaluation ? (
@@ -1381,8 +1393,8 @@ export default function ProgramLearningPage() {
                               </svg>
                             ) : (
                               <span className={`text-sm font-medium ${
-                                isCurrent 
-                                  ? 'text-purple-600 dark:text-purple-400' 
+                                isCurrent
+                                  ? 'text-purple-600 dark:text-purple-400'
                                   : 'text-gray-500 dark:text-gray-400'
                               }`}>
                                 {index + 1}
@@ -1428,7 +1440,7 @@ export default function ProgramLearningPage() {
                     return getLocalizedField(currentTask as unknown as Record<string, unknown>, 'title', i18n.language);
                   })()}
                 </h2>
-                
+
                 <div className="space-y-4">
                   <div>
                     <h3 className="font-medium text-gray-900 dark:text-white mb-2">
@@ -1443,48 +1455,47 @@ export default function ProgramLearningPage() {
                           return descObj[i18n.language] || descObj['en'] || Object.values(descObj)[0] || '';
                         }
                         // Fallback to suffix-based format
-                        return i18n.language === 'zhTW' 
+                        return i18n.language === 'zhTW'
                           ? (currentTask.description_zhTW || currentTask.description || '')
                           : (currentTask.description || '');
                       })()}
                     </p>
                   </div>
-                  
+
                   <div>
                     <h3 className="font-medium text-gray-900 dark:text-white mb-2">
                       {t('pbl:learn.instructions')}
                     </h3>
                     <ul className="list-disc list-inside space-y-1 text-gray-600 dark:text-gray-400">
-                      {(i18n.language === 'zhTW' 
-                        ? (currentTask.instructions_zhTW || currentTask.instructions)
-                        : currentTask.instructions
-                      ).map((instruction, index) => (
+                      {Array.isArray(currentTask.instructions) ? currentTask.instructions.map((instruction, index) => (
                         <li key={index}>{instruction}</li>
-                      ))}
+                      )) : (
+                        <li>No instructions available</li>
+                      )}
                     </ul>
                   </div>
-                  
+
                   {currentTask.expectedOutcome && (
                     <div>
                       <h3 className="font-medium text-gray-900 dark:text-white mb-2">
                         {t('pbl:details.expectedOutcome')}
                       </h3>
                       <p className="text-gray-600 dark:text-gray-400">
-                        {i18n.language === 'zhTW' 
+                        {i18n.language === 'zhTW'
                           ? (currentTask.expectedOutcome_zhTW || currentTask.expectedOutcome)
                           : currentTask.expectedOutcome}
                       </p>
                     </div>
                   )}
                 </div>
-                
+
                 {/* Evaluation Results for Mobile */}
                 {evaluation && (
                   <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
                     <h3 className="font-medium text-gray-900 dark:text-white mb-4">
                       {t('pbl:learn.evaluationResults', 'Evaluation Results')}
                     </h3>
-                    
+
                     {/* Section 1: Overall Score */}
                     <div className="mb-4 p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-800">
                       <div className="flex items-center justify-between">
@@ -1501,7 +1512,7 @@ export default function ProgramLearningPage() {
                         </span>
                       </div>
                     </div>
-                    
+
                     {/* Section 2: Domain Scores */}
                     <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
                       <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">
@@ -1519,7 +1530,7 @@ export default function ProgramLearningPage() {
                             </span>
                             <div className="flex items-center">
                               <div className="w-24 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-2">
-                                <div 
+                                <div
                                   className="bg-blue-600 h-2 rounded-full transition-all duration-300"
                                   style={{ width: `${Number(score)}%` }}
                                 />
@@ -1534,7 +1545,7 @@ export default function ProgramLearningPage() {
                         })()}
                       </div>
                     </div>
-                    
+
                     {/* Section 3: KSA Scores */}
                     {evaluation.ksaScores && (
                     <div className="mb-4 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
@@ -1548,7 +1559,7 @@ export default function ProgramLearningPage() {
                           </span>
                           <div className="flex items-center">
                             <div className="w-24 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-2">
-                              <div 
+                              <div
                                 className="bg-green-600 h-2 rounded-full transition-all duration-300"
                                 style={{ width: `${evaluation.ksaScores.knowledge}%` }}
                               />
@@ -1564,7 +1575,7 @@ export default function ProgramLearningPage() {
                           </span>
                           <div className="flex items-center">
                             <div className="w-24 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-2">
-                              <div 
+                              <div
                                 className="bg-green-600 h-2 rounded-full transition-all duration-300"
                                 style={{ width: `${evaluation.ksaScores.skills}%` }}
                               />
@@ -1580,7 +1591,7 @@ export default function ProgramLearningPage() {
                           </span>
                           <div className="flex items-center">
                             <div className="w-24 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-2">
-                              <div 
+                              <div
                                 className="bg-green-600 h-2 rounded-full transition-all duration-300"
                                 style={{ width: `${evaluation.ksaScores.attitudes}%` }}
                               />
@@ -1595,13 +1606,13 @@ export default function ProgramLearningPage() {
                     )}
                   </div>
                 )}
-                
+
                 <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
                   <button
                     onClick={handleCompleteTask}
                     className="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
                   >
-                    {scenario && taskIndex < scenario.tasks.length - 1 
+                    {scenario && taskIndex < scenario.tasks.length - 1
                       ? t('pbl:learn.nextTask', 'Next Task')
                       : t('pbl:learn.completeProgram', 'Complete Program')}
                   </button>
@@ -1636,7 +1647,7 @@ export default function ProgramLearningPage() {
                         </div>
                       </div>
                     ))}
-                    
+
                     {/* AI thinking indicator */}
                     {isProcessing && (
                       <div className="flex justify-start">
@@ -1654,7 +1665,7 @@ export default function ProgramLearningPage() {
                         </div>
                       </div>
                     )}
-                    
+
                     <div ref={conversationEndRef} />
                   </div>
                 </div>
@@ -1708,7 +1719,7 @@ export default function ProgramLearningPage() {
                 </svg>
                 <span className="text-xs font-medium">{t('pbl:learn.progress')}</span>
               </button>
-              
+
               <button
                 onClick={() => setMobileView('task')}
                 className={`flex-1 py-4 flex flex-col items-center justify-center transition-colors ${
@@ -1722,7 +1733,7 @@ export default function ProgramLearningPage() {
                 </svg>
                 <span className="text-xs font-medium">{t('pbl:learn.taskInfo')}</span>
               </button>
-              
+
               <button
                 onClick={() => setMobileView('chat')}
                 className={`flex-1 py-4 flex flex-col items-center justify-center transition-colors ${

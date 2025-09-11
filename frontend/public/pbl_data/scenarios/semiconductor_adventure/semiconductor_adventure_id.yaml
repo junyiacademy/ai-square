@@ -1,0 +1,281 @@
+scenario_info:
+  id: semiconductor-adventure
+  difficulty: beginner
+  estimated_duration: 45
+  target_domains:
+    - engaging_with_ai
+    - creating_with_ai
+  title: Petualangan Semikonduktor Saya
+  description: Mulailah petualangan yang menarik untuk menemukan bagaimana butir pasir sederhana berubah menjadi chip powerful yang menggerakkan dunia modern kita!
+  prerequisites:
+    - Pemahaman dasar tentang unsur dan senyawa
+    - Keakraban dengan listrik dan perangkat listrik
+  learning_objectives:
+    - Memahami apa itu semikonduktor dan mengapa silikon itu penting
+    - Mempelajari proses dasar pembuatan chip
+    - Mengenali aplikasi semikonduktor dalam kehidupan sehari-hari
+    - Memahami rantai industri semikonduktor global
+
+ksa_mapping:
+  knowledge:
+    - K1.1  # AI systems process data through algorithms
+    - K1.4  # AI embedded in everyday technologies
+    - K4.2  # AI requires computing power and resources
+  skills:
+    - S1.1  # Evaluate content for accuracy
+    - S3.1  # Decompose problems for AI solutions
+    - S6.1  # Recognize AI influence in daily life
+  attitudes:
+    - A2.1  # Explore capabilities with openness
+    - A3.1  # Pursue novel applications
+    - A5.1  # Consider diverse impacts
+
+tasks:
+  - id: task-1
+    category: learning
+    time_limit: 10
+    KSA_focus:
+      primary:
+        - K1.4
+        - S6.1
+      secondary:
+        - A2.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: AI Crystal Panduan
+      initial_prompt: |
+        Anda adalah AI Crystal, panduan ramah yang membantu siswa memahami semikonduktor.
+        Mulai dengan menyambut penjelajah dan menjelaskan perjalanan yang menanti mereka.
+    title: "Stasiun 1: Awal - Bertemu Unsur Ajaib Silikon"
+    description: Pernahkah Anda bertanya-tanya apa yang menghubungkan pantai berpasir yang luas dengan smartphone di saku Anda?
+    instructions: |
+      Selamat datang penjelajah! Perjalanan ini akan membawa Anda melalui lima stasiun. 
+      Tonton video dan jawab pertanyaan dengan benar untuk maju.
+    content: |
+      ## Unsur Ajaib: Silikon
+      
+      ### Poin-Poin Utama
+      - Bahan baku utama untuk chip adalah **Silikon (Si)**
+      - Silikon adalah unsur terbanyak kedua di Bumi, setelah oksigen
+      - Silikon biasanya ada sebagai **Silikon Dioksida (SiO₂)**, umumnya ditemukan di pasir atau kuarsa
+      
+      ### Ulasan Sains: Unsur dan Senyawa
+      Ingat? **Unsur** adalah blok bangunan dasar materi, seperti Oksigen (O), Hidrogen (H), dan Silikon (Si). 
+      **Senyawa** adalah zat murni yang terbuat dari dua atau lebih unsur yang berbeda.
+    question:
+      text: "Bahan baku terpenting 'Silikon (Si)' untuk chip diekstrak dari apa?"
+      type: multiple_choice
+      options:
+        - text: "Minyak"
+          value: "oil"
+        - text: "Air laut"
+          value: "seawater"
+        - text: "Pasir"
+          value: "sand"
+      correct_answer: "sand"
+    ai_feedback:
+      correct: "Luar biasa! Silikon memang diekstrak dari pasir, khususnya dari silikon dioksida (SiO₂) yang ditemukan dalam pasir dan kuarsa."
+      incorrect: "Pikirkan tentang apa yang berlimpah di pantai dan mengandung silikon dioksida!"
+
+  - id: task-2
+    category: learning
+    time_limit: 10
+    KSA_focus:
+      primary:
+        - K1.1
+        - S3.1
+      secondary:
+        - A2.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: AI Crystal Panduan
+      initial_prompt: |
+        Lanjutkan membimbing siswa untuk memahami semikonduktor.
+        Jelaskan apa yang membuat silikon istimewa untuk elektronika.
+    title: "Stasiun 2: Rahasia Semikonduktor"
+    description: Kita tahu chip dibuat dari silikon, tapi mengapa silikon?
+    instructions: |
+      Silikon adalah material yang sangat istimewa yang disebut 'semikonduktor'. Mari kita temukan rahasianya!
+    content: |
+      ## Memahami Semikonduktor
+      
+      ### Poin-Poin Utama
+      - Material diklasifikasikan berdasarkan konduktivitas: konduktor, isolator, dan semikonduktor
+      - **Konduktor** (seperti logam) mudah menghantarkan listrik
+      - **Isolator** (seperti karet) tidak menghantarkan listrik
+      - **Semikonduktor** memiliki konduktivitas di antara keduanya, dan dapat dikontrol
+      
+      ### Ulasan Sains: Arus Listrik
+      Arus listrik seperti banyak "elektron" kecil yang bergerak ke arah yang sama melalui kawat.
+    question:
+      text: "Apa karakteristik paling istimewa dari semikonduktor?"
+      type: multiple_choice
+      options:
+        - text: "Sangat baik dalam menghantarkan listrik"
+          value: "high_conductivity"
+        - text: "Sama sekali tidak menghantarkan"
+          value: "non_conductive"
+        - text: "Konduktivitas dapat dikontrol"
+          value: "controllable"
+      correct_answer: "controllable"
+    ai_feedback:
+      correct: "Sempurna! Kemampuan mengontrol konduktivitas adalah yang membuat semikonduktor begitu powerful!"
+      incorrect: "Pikirkan apa yang membuatnya 'semi' - mereka berada di antara konduktor dan isolator!"
+
+  - id: task-3
+    category: learning
+    time_limit: 10
+    KSA_focus:
+      primary:
+        - K4.2
+        - S1.1
+      secondary:
+        - A3.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: AI Crystal Panduan
+      initial_prompt: |
+        Bimbing siswa melalui proses pembuatan chip.
+        Jelaskan transformasi dari pasir ke chip silikon.
+    title: "Stasiun 3: Dari Pasir ke Emas - Kelahiran Sebuah Chip"
+    description: Bagaimana butir pasir berubah menjadi chip yang powerful?
+    instructions: |
+      Ikuti perjalanan transformasi yang luar biasa dari pasir sederhana ke chip semikonduktor yang canggih.
+    content: |
+      ## Proses Pembuatan Chip
+      
+      ### Poin-Poin Utama
+      - Silikon kemurnian tinggi dilelehkan dan ditarik menjadi silinder besar yang disebut **ingot silikon**
+      - Ingot silikon dipotong menjadi cakram ultra-tipis yang disebut **wafer**
+      - Melalui proses kompleks seperti fotolitografi, miliaran komponen elektronik kecil dibuat
+      - Komponen terpenting adalah **transistor**
+      
+      ### Ulasan Sains: Perubahan Fisik
+      Peleburan (padat ke cair) dan pemadatan (cair ke padat) adalah perubahan fisik.
+    question:
+      text: "Apa nama cakram ultra-tipis yang dipotong dari ingot silikon?"
+      type: multiple_choice
+      options:
+        - text: "Batang kristal"
+          value: "rods"
+        - text: "Wafer"
+          value: "wafers"
+        - text: "Kristal"
+          value: "crystals"
+      correct_answer: "wafers"
+    ai_feedback:
+      correct: "Luar biasa! Wafer silikon adalah fondasi untuk pembuatan chip."
+      incorrect: "Pikirkan tentang cakram tipis dan bulat tempat chip dibangun."
+
+  - id: task-4
+    category: application
+    time_limit: 10
+    KSA_focus:
+      primary:
+        - K1.4
+        - S6.1
+      secondary:
+        - A5.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: AI Crystal Panduan
+      initial_prompt: |
+        Bantu siswa mengenali semikonduktor dalam kehidupan sehari-hari mereka.
+        Hubungkan teknologi dengan aplikasi dunia nyata.
+    title: "Stasiun 4: Chip di Mana-mana - Sehari dalam Kehidupan Cerdas"
+    description: Chip adalah pahlawan tak dikenal dalam kehidupan sehari-hari kita.
+    instructions: |
+      Mari kita periksa berapa kali Anda menemui chip dalam hari yang biasa!
+    content: |
+      ## Chip dalam Kehidupan Sehari-hari
+      
+      ### Poin-Poin Utama
+      - Chip (Sirkuit Terpadu, IC) adalah otak dari elektronika modern
+      - Dari telepon, komputer, smartwatch hingga mobil dan kereta, chip ada di mana-mana
+      - Chip menangani komputasi, memori, dan kontrol
+      
+      ### Ulasan Sains: Konversi Energi
+      Energi kimia dalam baterai dikonversi melalui kontrol chip menjadi energi cahaya dan suara.
+    question:
+      text: "Yang mana dari berikut ini yang TIDAK disebutkan sebagai aplikasi semikonduktor?"
+      type: multiple_choice
+      options:
+        - text: "Pembayaran mobile"
+          value: "payments"
+        - text: "Smartwatch"
+          value: "watches"
+        - text: "Pembangkit listrik tenaga surya"
+          value: "solar"
+      correct_answer: "solar"
+    ai_feedback:
+      correct: "Benar! Meskipun panel surya menggunakan semikonduktor, ini bukan fokus kita hari ini."
+      incorrect: "Tinjau aplikasi mana yang secara khusus dibahas dalam perjalanan kita."
+
+  - id: task-5
+    category: synthesis
+    time_limit: 10
+    KSA_focus:
+      primary:
+        - K1.1
+        - S3.1
+      secondary:
+        - A3.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: AI Crystal Panduan
+      initial_prompt: |
+        Akhiri perjalanan dengan menjelaskan industri semikonduktor global.
+        Bantu siswa memahami sifat kolaboratif produksi chip.
+    title: "Stasiun 5: Di Balik Layar - Rantai Industri Semikonduktor"
+    description: Membuat chip membutuhkan kerjasama global.
+    instructions: |
+      Temukan bagaimana industri semikonduktor bekerja melalui kolaborasi global.
+    content: |
+      ## Industri Semikonduktor Global
+      
+      ### Poin-Poin Utama
+      - Industri ini melibatkan: Desain IC, Manufaktur IC, Perakitan & Pengujian IC
+      - **Perusahaan Desain IC** membuat blueprint chip
+      - **Perusahaan Manufaktur IC** (foundries) memproduksi chip
+      - **Perusahaan Perakitan & Pengujian IC** melindungi dan menguji chip
+      
+      ### Ulasan Sains: Pembagian Kerja
+      Seperti jalur perakitan, setiap perusahaan fokus pada spesialisasi mereka untuk efisiensi.
+    question:
+      text: "Segmen mana yang bertanggung jawab untuk mendesain blueprint sirkuit chip?"
+      type: multiple_choice
+      options:
+        - text: "Manufaktur IC"
+          value: "manufacturing"
+        - text: "Perakitan IC"
+          value: "assembly"
+        - text: "Desain IC"
+          value: "design"
+      correct_answer: "design"
+    ai_feedback:
+      correct: "Sempurna! Perusahaan Desain IC adalah arsitek dunia semikonduktor!"
+      incorrect: "Pikirkan siapa yang membuat rencana asli sebelum manufaktur dimulai."
+
+evaluation_criteria:
+  completion_threshold: 80
+  assessment_method: quiz_and_interaction
+  success_metrics:
+    - Menyelesaikan semua 5 stasiun
+    - Menjawab pertanyaan dengan akurasi 80%
+    - Berinteraksi dengan AI Crystal Panduan
+
+resources:
+  videos:
+    - title: "Bagaimana Semikonduktor Bekerja"
+      url: "https://example.com/semiconductor-basics"
+  readings:
+    - title: "Sejarah Silicon Valley"
+      url: "https://example.com/silicon-valley-history"
+  tools:
+    - title: "Desainer Chip Virtual"
+      url: "https://example.com/chip-designer"

@@ -11,6 +11,7 @@ import { parse } from 'yaml';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import type { DifficultyLevel } from '@/types/database';
 import path from 'path';
+import { distributedCacheService } from '@/lib/cache/distributed-cache-service';
 
 export async function POST(request: NextRequest) {
   try {
@@ -163,6 +164,29 @@ export async function POST(request: NextRequest) {
         updatedAt: new Date().toISOString(),
         metadata: {}
       });
+      
+      // Clear assessment-related caches
+      console.log('[Init Assessment] Clearing assessment caches...');
+      try {
+        await distributedCacheService.delete('scenarios:by-mode:assessment');
+        await distributedCacheService.delete('assessment:scenarios:*');
+        
+        // Clear all assessment-related cache keys
+        const keys = await distributedCacheService.getAllKeys();
+        const assessmentKeys = keys.filter(key => 
+          key.includes('assessment') || 
+          key.includes('scenario') ||
+          key.startsWith('scenarios:')
+        );
+        
+        for (const key of assessmentKeys) {
+          await distributedCacheService.delete(key);
+        }
+        
+        console.log(`[Init Assessment] Cleared ${assessmentKeys.length} cache entries`);
+      } catch (error) {
+        console.error('[Init Assessment] Error clearing caches:', error);
+      }
       
       return NextResponse.json({
         success: true,

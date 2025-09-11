@@ -5,6 +5,7 @@ import yaml from 'js-yaml';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import type { IScenario } from '@/types/unified-learning';
 import type { DifficultyLevel } from '@/types/database';
+import { distributedCacheService } from '@/lib/cache/distributed-cache-service';
 
 interface DiscoveryScenarioYAML {
   path_id: string;
@@ -233,6 +234,31 @@ export async function POST(request: NextRequest) {
       } catch (error) {
         console.error(`Error processing career ${careerDir}:`, error);
         results.errors.push(`Failed to process ${careerDir}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      }
+    }
+
+    // Clear discovery-related caches after successful initialization
+    if (results.created > 0 || results.updated > 0) {
+      console.log('[Init Discovery] Clearing discovery caches...');
+      try {
+        await distributedCacheService.delete('scenarios:by-mode:discovery');
+        await distributedCacheService.delete('discovery:scenarios:*');
+        
+        // Clear all discovery-related cache keys
+        const keys = await distributedCacheService.getAllKeys();
+        const discoveryKeys = keys.filter(key => 
+          key.includes('discovery') || 
+          key.includes('scenario') ||
+          key.startsWith('scenarios:')
+        );
+        
+        for (const key of discoveryKeys) {
+          await distributedCacheService.delete(key);
+        }
+        
+        console.log(`[Init Discovery] Cleared ${discoveryKeys.length} cache entries`);
+      } catch (error) {
+        console.error('[Init Discovery] Error clearing caches:', error);
       }
     }
 
