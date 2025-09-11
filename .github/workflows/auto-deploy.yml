@@ -208,83 +208,85 @@ jobs:
 
           echo "✅ Migrations completed"
 
-      - name: Submit Cloud Build
-        run: |
-          set -e  # Exit on error
+      - name: Configure Docker
+        run: gcloud auth configure-docker gcr.io
 
-          echo "🔍 Debugging: Environment = ${{ steps.env.outputs.environment }}"
+      - name: Build and Push Docker Image
+        run: |
+          echo "🚀 Building Docker image..."
 
           if [[ "${{ steps.env.outputs.environment }}" == "production" ]]; then
-            CONFIG_FILE="cloudbuild.production.yaml"
-
-            # Set values - only password from secrets, rest are hardcoded
-            DB_PASSWORD="${{ secrets.PROD_DB_PASSWORD }}"
-            DB_USER="postgres"
-            DB_NAME="ai_square_db"
-            DB_HOST="/cloudsql/ai-square-463013:asia-east1:ai-square-db-production"
-
-            # Validate critical secrets
-            if [[ -z "${DB_PASSWORD}" ]]; then
-              echo "❌ Error: PROD_DB_PASSWORD secret is not set!"
-              echo "Please configure the following secrets in GitHub:"
-              echo "  - PROD_DB_PASSWORD (required)"
-              echo "  - PROD_DB_USER (optional, defaults to 'postgres')"
-              echo "  - PROD_DB_NAME (optional, defaults to 'ai_square_db')"
-              echo "  - PROD_DB_HOST (optional, defaults to Cloud SQL instance)"
-              exit 1
-            fi
-
-            # Build DATABASE_URL with proper escaping
-            DATABASE_URL="postgresql://${DB_USER}:${DB_PASSWORD}@/${DB_NAME}?host=${DB_HOST}"
-            NEXTAUTH_SECRET="${{ secrets.NEXTAUTH_SECRET }}"
-            VERTEX_AI_KEY="${{ secrets.VERTEX_AI_KEY }}"
-
-            echo "🔍 Debug: Database configuration set (values masked)"
+            DOCKERFILE="Dockerfile.production"
+            IMAGE_TAG="ai-square-production"
           else
-            CONFIG_FILE="cloudbuild.staging.yaml"
-
-            # Set values - only password from secrets, rest are hardcoded
-            DB_PASSWORD="${{ secrets.STAGING_DB_PASSWORD }}"
-            DB_USER="postgres"
-            DB_NAME="ai_square_db"
-            DB_HOST="/cloudsql/ai-square-463013:asia-east1:ai-square-db-staging-asia"
-
-            # Validate critical secrets
-            if [[ -z "${DB_PASSWORD}" ]]; then
-              echo "❌ Error: STAGING_DB_PASSWORD secret is not set!"
-              echo "Please configure the following secrets in GitHub:"
-              echo "  - STAGING_DB_PASSWORD (required)"
-              echo "  - STAGING_DB_USER (optional, defaults to 'postgres')"
-              echo "  - STAGING_DB_NAME (optional, defaults to 'ai_square_db')"
-              echo "  - STAGING_DB_HOST (optional, defaults to Cloud SQL instance)"
-              exit 1
-            fi
-
-            # Build DATABASE_URL with proper escaping
-            DATABASE_URL="postgresql://${DB_USER}:${DB_PASSWORD}@/${DB_NAME}?host=${DB_HOST}"
-            NEXTAUTH_SECRET="${{ secrets.NEXTAUTH_SECRET }}"
-            VERTEX_AI_KEY="${{ secrets.VERTEX_AI_KEY }}"
-
-            echo "🔍 Debug: Database configuration set (values masked)"
+            DOCKERFILE="Dockerfile.staging"
+            IMAGE_TAG="ai-square-staging"
           fi
 
-          echo "📦 Using config: ${CONFIG_FILE}"
-          echo "🔗 DATABASE_URL pattern: postgresql://[USER]:[PASS]@/[DB]?host=[HOST]"
+          docker build -f frontend/${DOCKERFILE} \
+            -t gcr.io/${{ env.PROJECT_ID }}/${IMAGE_TAG}:${{ github.sha }} \
+            -t gcr.io/${{ env.PROJECT_ID }}/${IMAGE_TAG}:latest \
+            ./frontend
 
-          # Create substitutions with proper escaping
-          SUBSTITUTIONS="_DB_PASSWORD=${DB_PASSWORD}"
-          SUBSTITUTIONS="${SUBSTITUTIONS},_DATABASE_URL=${DATABASE_URL}"
-          SUBSTITUTIONS="${SUBSTITUTIONS},_NEXTAUTH_SECRET=${NEXTAUTH_SECRET}"
-          SUBSTITUTIONS="${SUBSTITUTIONS},_VERTEX_AI_KEY=${VERTEX_AI_KEY}"
+          echo "📤 Pushing to Container Registry..."
+          docker push gcr.io/${{ env.PROJECT_ID }}/${IMAGE_TAG}:${{ github.sha }}
+          docker push gcr.io/${{ env.PROJECT_ID }}/${IMAGE_TAG}:latest
 
-          echo "🔧 Substitutions created (values masked for security)"
+      - name: Deploy to Cloud Run
+        run: |
+          echo "🚀 Deploying to Cloud Run with Vertex AI support..."
 
-          cd frontend
-          gcloud builds submit \
-            --config "${CONFIG_FILE}" \
-            --project "${{ env.PROJECT_ID }}" \
-            --region "${{ env.REGION }}" \
-            --substitutions="${SUBSTITUTIONS}"
+          if [[ "${{ steps.env.outputs.environment }}" == "production" ]]; then
+            SERVICE_NAME="ai-square-production"
+            IMAGE_TAG="ai-square-production"
+            DB_INSTANCE="ai-square-db-production"
+            DB_PASSWORD="${{ secrets.PROD_DB_PASSWORD }}"
+            NEXTAUTH_URL="https://ai-square-production-731209836128.asia-east1.run.app"
+          else
+            SERVICE_NAME="ai-square-staging"
+            IMAGE_TAG="ai-square-staging"
+            DB_INSTANCE="ai-square-db-staging-asia"
+            DB_PASSWORD="${{ secrets.STAGING_DB_PASSWORD }}"
+            NEXTAUTH_URL="https://ai-square-staging-731209836128.asia-east1.run.app"
+          fi
+
+          # Create env vars file with proper escaping - 完全複製 deploy-staging.yml.disabled 的方式
+          cat > /tmp/env-vars.yaml << 'EOF'
+          NODE_ENV: "${{ steps.env.outputs.environment }}"
+          DATABASE_URL: "postgresql://postgres:${{ steps.env.outputs.environment == 'production' && secrets.PROD_DB_PASSWORD || secrets.STAGING_DB_PASSWORD }}@/ai_square_db?host=/cloudsql/ai-square-463013:asia-east1:${{ steps.env.outputs.environment == 'production' && 'ai-square-db-production' || 'ai-square-db-staging-asia' }}"
+          DB_HOST: "/cloudsql/ai-square-463013:asia-east1:${{ steps.env.outputs.environment == 'production' && 'ai-square-db-production' || 'ai-square-db-staging-asia' }}"
+          DB_NAME: "ai_square_db"
+          DB_USER: "postgres"
+          DB_PASSWORD: "${{ steps.env.outputs.environment == 'production' && secrets.PROD_DB_PASSWORD || secrets.STAGING_DB_PASSWORD }}"
+          NEXTAUTH_SECRET: "${{ secrets.NEXTAUTH_SECRET }}"
+          NEXTAUTH_URL: "${{ steps.env.outputs.environment == 'production' && 'https://ai-square-production-731209836128.asia-east1.run.app' || 'https://ai-square-staging-731209836128.asia-east1.run.app' }}"
+          GOOGLE_CLOUD_PROJECT: "ai-square-463013"
+          GCP_PROJECT_ID: "ai-square-463013"
+          VERTEX_AI_LOCATION: "us-central1"
+          VERTEX_AI_PROJECT: "ai-square-463013"
+          VERTEX_AI_MODEL: "gemini-2.5-flash"
+          VERTEX_AI_SERVICE_ACCOUNT_JSON: '${{ secrets.VERTEX_AI_KEY }}'
+          REDIS_ENABLED: "false"
+          EOF
+
+          # Deploy using env vars file - 完全複製 deploy-staging.yml.disabled 的命令
+          gcloud run deploy ${SERVICE_NAME} \
+            --image gcr.io/${{ env.PROJECT_ID }}/${IMAGE_TAG}:${{ github.sha }} \
+            --region ${{ env.REGION }} \
+            --platform managed \
+            --allow-unauthenticated \
+            --timeout 60 \
+            --memory 512Mi \
+            --cpu 1 \
+            --port 3000 \
+            --service-account=${{ steps.env.outputs.service_account }} \
+            --add-cloudsql-instances ai-square-463013:asia-east1:${DB_INSTANCE} \
+            --env-vars-file=/tmp/env-vars.yaml
+
+          # Clean up
+          rm -f /tmp/env-vars.yaml
+
+          echo "✅ Deployment complete!"
 
       - name: Verify Deployment
         run: |
