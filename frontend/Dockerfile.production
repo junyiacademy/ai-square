@@ -8,6 +8,7 @@ WORKDIR /app
 
 # Copy dependency files
 COPY package.json package-lock.json* ./
+COPY prisma ./prisma/
 # Skip husky in production builds
 RUN npm ci --only=production --ignore-scripts && \
     npm ci --ignore-scripts
@@ -30,6 +31,7 @@ FROM base AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
+ENV ENVIRONMENT=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
 # Create non-root user
@@ -46,6 +48,11 @@ RUN mkdir .next && \
 # Copy standalone build
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+# Copy Prisma schema and generated client
+COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/@prisma ./node_modules/@prisma
 
 # Switch to non-root user
 USER nextjs
