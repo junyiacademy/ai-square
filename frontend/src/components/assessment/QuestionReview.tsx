@@ -11,18 +11,18 @@ interface QuestionReviewProps {
   onClose: () => void;
 }
 
-export default function QuestionReview({ 
-  questions = [], 
-  userAnswers = [], 
+export default function QuestionReview({
+  questions = [],
+  userAnswers = [],
   selectedQuestionIds = [],
-  onClose 
+  onClose
 }: QuestionReviewProps) {
   const { t } = useTranslation('assessment');
   const [currentIndex, setCurrentIndex] = useState(0);
 
   // Filter questions based on selected IDs (with safety check)
   const selectedQuestions = questions.filter(q => q && q.id && selectedQuestionIds.includes(q.id));
-  
+
   if (selectedQuestions.length === 0) {
     return (
       <div className="bg-white rounded-lg shadow-lg p-6">
@@ -77,7 +77,7 @@ export default function QuestionReview({
 
   const getOptionClass = (option: string) => {
     if (!userAnswer) return 'border-gray-300 hover:bg-gray-50';
-    
+
     if (option === currentQuestion.correct_answer) {
       return 'border-green-500 bg-green-50';
     }
@@ -89,7 +89,7 @@ export default function QuestionReview({
 
   const getOptionIcon = (option: string) => {
     if (!userAnswer) return null;
-    
+
     if (option === currentQuestion.correct_answer) {
       return <span className="text-green-600">✓</span>;
     }
@@ -119,9 +119,9 @@ export default function QuestionReview({
       {/* Question Navigation */}
       <div className="flex items-center justify-between mb-4">
         <span className="text-sm text-gray-600">
-          {t('results.questionReview.questionNumber', { 
-            current: currentIndex + 1, 
-            total: selectedQuestions.length 
+          {t('results.questionReview.questionNumber', {
+            current: currentIndex + 1,
+            total: selectedQuestions.length
           })}
         </span>
         <div className="flex gap-2">
@@ -182,8 +182,8 @@ export default function QuestionReview({
           <div className={`p-3 rounded-lg ${
             userAnswer.isCorrect ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'
           }`}>
-            {userAnswer.isCorrect ? 
-              t('results.questionReview.correct') : 
+            {userAnswer.isCorrect ?
+              t('results.questionReview.correct') :
               t('results.questionReview.incorrect')
             }
           </div>
@@ -228,17 +228,8 @@ export default function QuestionReview({
         <p className="text-sm text-gray-600 mb-3">
           {t('results.questionReview.practicePrompt')}
         </p>
-        <div className="space-y-2">
-          <button 
-            className="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition-colors"
-            onClick={() => {
-              // Navigate to assessment page for practice
-              window.location.href = '/assessment';
-            }}
-          >
-            {t('results.questionReview.practiceAgain')}
-          </button>
-          <button 
+        <div className="mt-4">
+          <button
             className="w-full bg-gray-200 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-300 transition-colors"
             onClick={onClose}
           >
