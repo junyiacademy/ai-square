@@ -5,6 +5,8 @@ import yaml from 'js-yaml';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import type { IScenario, ITaskTemplate } from '@/types/unified-learning';
 import type { DifficultyLevel } from '@/types/database';
+import { cacheInvalidationService } from '@/lib/cache/cache-invalidation-service';
+import { distributedCacheService } from '@/lib/cache/distributed-cache-service';
 
 interface PBLScenarioYAML {
   scenario_info?: {
@@ -48,10 +50,10 @@ export async function POST(request: NextRequest) {
 
     // Scan PBL YAML files recursively
     const pblDataPath = path.join(process.cwd(), 'public', 'pbl_data', 'scenarios');
-    
+
     // Find all scenario directories
     const scenarioDirs = await fs.readdir(pblDataPath);
-    
+
     const results = {
       scanned: 0,
       existing: 0,
@@ -65,30 +67,30 @@ export async function POST(request: NextRequest) {
 
     for (const dir of scenarioDirs) {
       if (dir.startsWith('_') || dir.includes('template')) continue;
-      
+
       const dirPath = path.join(pblDataPath, dir);
       const stat = await fs.stat(dirPath);
-      
+
       if (!stat.isDirectory()) continue;
-      
+
       // Read all YAML files in this directory
       const files = await fs.readdir(dirPath);
       const yamlFiles = files.filter(f => (f.endsWith('.yaml') || f.endsWith('.yml')) && !f.includes('template'));
-      
+
       if (yamlFiles.length === 0) continue;
-      
+
       results.scanned++;
-      
+
       // Group files by scenario ID
       const languageFiles = new Map<string, string>();
-      
+
       for (const file of yamlFiles) {
         // Extract language code from filename (e.g., ai_education_design_en.yaml -> en)
         const match = file.match(/_([a-zA-Z]{2,5})\.ya?ml$/);
         const lang = match ? match[1] : 'en';
         languageFiles.set(lang, path.join(dirPath, file));
       }
-      
+
       scenarioGroups.set(dir, languageFiles);
     }
 
@@ -98,10 +100,10 @@ export async function POST(request: NextRequest) {
         // Start with English or first available language
         const primaryLang = languageFiles.has('en') ? 'en' : Array.from(languageFiles.keys())[0];
         const primaryFile = languageFiles.get(primaryLang)!;
-        
+
         const primaryContent = await fs.readFile(primaryFile, 'utf-8');
         const primaryData = yaml.load(primaryContent) as PBLScenarioYAML;
-        
+
         if (!primaryData?.scenario_info?.id) {
           results.errors.push(`No scenario_info.id in ${scenarioDir}`);
           continue;
@@ -111,7 +113,7 @@ export async function POST(request: NextRequest) {
 
         // Check if scenario already exists
         const existingScenarios = await scenarioRepo.findByMode?.('pbl') || [];
-        const existing = existingScenarios.find(s => 
+        const existing = existingScenarios.find(s =>
           s.sourceId === scenarioId
         );
 
@@ -126,12 +128,15 @@ export async function POST(request: NextRequest) {
         const challengeStatement: Record<string, string> = {};
         const realWorldContext: Record<string, string> = {};
 
+        // Store tasks by ID with multilingual content
+        const tasksByIdAndLang: Map<string, Map<string, any>> = new Map();
+
         // Process each language file
         for (const [lang, filePath] of languageFiles) {
           try {
             const content = await fs.readFile(filePath, 'utf-8');
             const data = yaml.load(content) as PBLScenarioYAML;
-            
+
             if (data?.scenario_info?.title) {
               title[lang] = data.scenario_info.title;
             }
@@ -144,6 +149,19 @@ export async function POST(request: NextRequest) {
             if (data?.real_world_context) {
               realWorldContext[lang] = data.real_world_context as string;
             }
+
+            // Process tasks for this language
+            if (Array.isArray(data?.tasks)) {
+              for (const task of data.tasks as any[]) {
+                if (!task.id) continue;
+
+                if (!tasksByIdAndLang.has(task.id)) {
+                  tasksByIdAndLang.set(task.id, new Map());
+                }
+
+                tasksByIdAndLang.get(task.id)!.set(lang, task);
+              }
+            }
           } catch (error) {
             console.error(`Error reading ${lang} file for ${scenarioDir}:`, error);
           }
@@ -155,6 +173,70 @@ export async function POST(request: NextRequest) {
         }
         if (!description.en && Object.keys(description).length > 0) {
           description.en = Object.values(description)[0];
+        }
+
+        // Build multilingual task templates
+        const taskTemplates: ITaskTemplate[] = [];
+        for (const [taskId, langVersions] of tasksByIdAndLang) {
+          // Get English version as base, or first available
+          const baseTask = langVersions.get('en') || langVersions.get(primaryLang) || Array.from(langVersions.values())[0];
+
+          // Build multilingual fields
+          const multilingualTask: ITaskTemplate = {
+            id: baseTask.id,
+            type: baseTask.type || 'chat',
+            category: baseTask.category,
+            time_limit: baseTask.time_limit,
+            KSA_focus: baseTask.KSA_focus,
+            ai_module: baseTask.ai_module,
+            ai_feedback: baseTask.ai_feedback,
+            title: {},
+            description: {},
+            instructions: {},
+            content: {}
+          };
+
+          // Build question if exists (from base task, not as reference)
+          if (baseTask.question) {
+            multilingualTask.question = {
+              type: baseTask.question.type,
+              options: baseTask.question.options,
+              correct_answer: baseTask.question.correct_answer,
+              text: {} // Will be filled with multilingual content
+            };
+          }
+
+          // Merge all language versions
+          for (const [lang, task] of langVersions) {
+            if (task.title) {
+              multilingualTask.title[lang] = task.title;
+            }
+            if (task.description) {
+              multilingualTask.description![lang] = task.description;
+            }
+            if (task.instructions) {
+              (multilingualTask.instructions as Record<string, unknown>)[lang] = task.instructions;
+            }
+            if (task.content) {
+              (multilingualTask.content as Record<string, unknown>)[lang] = task.content;
+            }
+
+            // Handle question text if exists
+            if (task.question?.text && multilingualTask.question) {
+              (multilingualTask.question as any).text[lang] = task.question.text;
+            }
+          }
+
+          // Ensure at least English versions exist
+          if (!multilingualTask.title.en && Object.keys(multilingualTask.title).length > 0) {
+            multilingualTask.title.en = Object.values(multilingualTask.title)[0];
+          }
+          const instructionsObj = multilingualTask.instructions as Record<string, unknown>;
+          if (!instructionsObj.en && Object.keys(instructionsObj).length > 0) {
+            instructionsObj.en = Object.values(instructionsObj)[0];
+          }
+
+          taskTemplates.push(multilingualTask);
         }
 
         const scenarioData: Omit<IScenario, 'id'> = {
@@ -171,17 +253,15 @@ export async function POST(request: NextRequest) {
           },
           title,
           description,
-          objectives: Array.isArray(primaryData.scenario_info.learning_objectives) 
-            ? primaryData.scenario_info.learning_objectives 
+          objectives: Array.isArray(primaryData.scenario_info.learning_objectives)
+            ? primaryData.scenario_info.learning_objectives
             : [],
           difficulty: (primaryData.scenario_info.difficulty as DifficultyLevel) || 'beginner',
           estimatedMinutes: primaryData.scenario_info.estimated_duration || 60,
-          prerequisites: Array.isArray(primaryData.scenario_info.prerequisites) 
-            ? primaryData.scenario_info.prerequisites 
+          prerequisites: Array.isArray(primaryData.scenario_info.prerequisites)
+            ? primaryData.scenario_info.prerequisites
             : [],
-          taskTemplates: Array.isArray(primaryData.tasks) 
-            ? (primaryData.tasks as ITaskTemplate[]) 
-            : [],
+          taskTemplates,
           xpRewards: { completion: 100 },
           unlockRequirements: {},
           discoveryData: {},
@@ -193,12 +273,12 @@ export async function POST(request: NextRequest) {
           pblData: {
             challengeStatement,
             realWorldContext,
-            targetDomains: Array.isArray(primaryData.scenario_info.target_domains) 
-              ? primaryData.scenario_info.target_domains 
+            targetDomains: Array.isArray(primaryData.scenario_info.target_domains)
+              ? primaryData.scenario_info.target_domains
               : [],
             ksaMapping: primaryData.ksa_mapping || {},
-            aiModules: Array.isArray(primaryData.ai_modules) 
-              ? primaryData.ai_modules 
+            aiModules: Array.isArray(primaryData.ai_modules)
+              ? primaryData.ai_modules
               : []
           },
           metadata: {
@@ -225,6 +305,33 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Clear all PBL-related caches after successful initialization
+    if (results.created > 0 || results.updated > 0) {
+      console.log('[Init PBL] Clearing PBL caches...');
+      try {
+        // Clear PBL scenario caches
+        await distributedCacheService.delete('scenarios:by-mode:pbl');
+        await distributedCacheService.delete('pbl:scenarios:*');
+
+        // Clear all scenario-related caches using pattern
+        const keys = await distributedCacheService.getAllKeys();
+        const pblKeys = keys.filter(key =>
+          key.includes('pbl') ||
+          key.includes('scenario') ||
+          key.startsWith('scenarios:')
+        );
+
+        for (const key of pblKeys) {
+          await distributedCacheService.delete(key);
+        }
+
+        console.log(`[Init PBL] Cleared ${pblKeys.length} cache entries`);
+      } catch (error) {
+        console.error('[Init PBL] Error clearing caches:', error);
+        // Don't fail the request if cache clearing fails
+      }
+    }
+
     return NextResponse.json({
       success: true,
       message: `PBL initialization completed`,
@@ -245,9 +352,9 @@ export async function POST(request: NextRequest) {
 export async function GET() {
   try {
     const scenarioRepo = repositoryFactory.getScenarioRepository();
-    
+
     const scenarios = await scenarioRepo.findByMode?.('pbl') || [];
-    
+
     return NextResponse.json({
       success: true,
       count: scenarios.length,

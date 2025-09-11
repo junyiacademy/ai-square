@@ -5,6 +5,7 @@ import yaml from 'js-yaml';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import type { IScenario } from '@/types/unified-learning';
 import type { DifficultyLevel } from '@/types/database';
+import { distributedCacheService } from '@/lib/cache/distributed-cache-service';
 
 interface DiscoveryScenarioYAML {
   path_id: string;
@@ -54,7 +55,7 @@ export async function POST(request: NextRequest) {
     // Scan Discovery YAML files in subdirectories
     const discoveryDataPath = path.join(process.cwd(), 'public', 'discovery_data');
     let dirs: string[] = [];
-    
+
     try {
       dirs = await fs.readdir(discoveryDataPath);
     } catch {
@@ -78,30 +79,30 @@ export async function POST(request: NextRequest) {
 
     for (const dir of dirs) {
       if (dir.startsWith('.') || dir.includes('template')) continue;
-      
+
       const dirPath = path.join(discoveryDataPath, dir);
       const stat = await fs.stat(dirPath);
-      
+
       if (!stat.isDirectory()) continue;
-      
+
       // Read all YAML files in this directory
       const files = await fs.readdir(dirPath);
       const yamlFiles = files.filter(f => (f.endsWith('.yaml') || f.endsWith('.yml')) && !f.includes('template'));
-      
+
       if (yamlFiles.length === 0) continue;
-      
+
       results.scanned++;
-      
+
       // Group files by language
       const languageFiles = new Map<string, string>();
-      
+
       for (const file of yamlFiles) {
         // Extract language code from filename (e.g., app_developer_en.yml -> en)
         const match = file.match(/_([a-zA-Z]{2,5})\.ya?ml$/);
         const lang = match ? match[1] : 'en';
         languageFiles.set(lang, path.join(dirPath, file));
       }
-      
+
       careerGroups.set(dir, languageFiles);
     }
 
@@ -111,10 +112,10 @@ export async function POST(request: NextRequest) {
         // Start with English or first available language
         const primaryLang = languageFiles.has('en') ? 'en' : Array.from(languageFiles.keys())[0];
         const primaryFile = languageFiles.get(primaryLang)!;
-        
+
         const primaryContent = await fs.readFile(primaryFile, 'utf-8');
         const primaryData = yaml.load(primaryContent) as DiscoveryScenarioYAML;
-        
+
         if (!primaryData?.path_id) {
           results.errors.push(`No path_id in ${careerDir}`);
           continue;
@@ -124,7 +125,7 @@ export async function POST(request: NextRequest) {
 
         // Check if scenario already exists
         const existingScenarios = await scenarioRepo.findByMode?.('discovery') || [];
-        const existing = existingScenarios.find(s => 
+        const existing = existingScenarios.find(s =>
           s.sourceId === pathId
         );
 
@@ -142,7 +143,7 @@ export async function POST(request: NextRequest) {
           try {
             const content = await fs.readFile(filePath, 'utf-8');
             const data = yaml.load(content) as DiscoveryScenarioYAML;
-            
+
             if (data?.metadata?.title) {
               title[lang] = data.metadata.title;
             }
@@ -182,8 +183,8 @@ export async function POST(request: NextRequest) {
           },
           title,
           description,
-          objectives: Array.isArray((primaryData.metadata as Record<string, unknown>)?.skill_focus) 
-            ? (primaryData.metadata as Record<string, unknown>)?.skill_focus as string[] 
+          objectives: Array.isArray((primaryData.metadata as Record<string, unknown>)?.skill_focus)
+            ? (primaryData.metadata as Record<string, unknown>)?.skill_focus as string[]
             : [],
           difficulty: 'beginner' as DifficultyLevel,
           estimatedMinutes: ((primaryData.metadata as Record<string, unknown>)?.estimated_hours as number) * 60 || 120,
@@ -202,14 +203,14 @@ export async function POST(request: NextRequest) {
             category: primaryData.category,
             difficultyRange: primaryData.difficulty_range,
             estimatedHours: (primaryData.metadata as Record<string, unknown>)?.estimated_hours as number || 2,
-            skillFocus: Array.isArray((primaryData.metadata as Record<string, unknown>)?.skill_focus) 
-              ? (primaryData.metadata as Record<string, unknown>)?.skill_focus as string[] 
+            skillFocus: Array.isArray((primaryData.metadata as Record<string, unknown>)?.skill_focus)
+              ? (primaryData.metadata as Record<string, unknown>)?.skill_focus as string[]
               : [],
-            stages: Array.isArray((primaryData.career_path as Record<string, unknown>)?.stages) 
-              ? (primaryData.career_path as Record<string, unknown>)?.stages as unknown[] 
+            stages: Array.isArray((primaryData.career_path as Record<string, unknown>)?.stages)
+              ? (primaryData.career_path as Record<string, unknown>)?.stages as unknown[]
               : [],
-            milestones: Array.isArray((primaryData.career_path as Record<string, unknown>)?.milestones) 
-              ? (primaryData.career_path as Record<string, unknown>)?.milestones as unknown[] 
+            milestones: Array.isArray((primaryData.career_path as Record<string, unknown>)?.milestones)
+              ? (primaryData.career_path as Record<string, unknown>)?.milestones as unknown[]
               : []
           },
           metadata: {
@@ -236,6 +237,31 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Clear discovery-related caches after successful initialization
+    if (results.created > 0 || results.updated > 0) {
+      console.log('[Init Discovery] Clearing discovery caches...');
+      try {
+        await distributedCacheService.delete('scenarios:by-mode:discovery');
+        await distributedCacheService.delete('discovery:scenarios:*');
+
+        // Clear all discovery-related cache keys
+        const keys = await distributedCacheService.getAllKeys();
+        const discoveryKeys = keys.filter(key =>
+          key.includes('discovery') ||
+          key.includes('scenario') ||
+          key.startsWith('scenarios:')
+        );
+
+        for (const key of discoveryKeys) {
+          await distributedCacheService.delete(key);
+        }
+
+        console.log(`[Init Discovery] Cleared ${discoveryKeys.length} cache entries`);
+      } catch (error) {
+        console.error('[Init Discovery] Error clearing caches:', error);
+      }
+    }
+
     return NextResponse.json({
       success: true,
       message: `Discovery initialization completed`,
@@ -256,9 +282,9 @@ export async function POST(request: NextRequest) {
 export async function GET() {
   try {
     const scenarioRepo = repositoryFactory.getScenarioRepository();
-    
+
     const scenarios = await scenarioRepo.findByMode?.('discovery') || [];
-    
+
     return NextResponse.json({
       success: true,
       count: scenarios.length,

@@ -78,7 +78,7 @@ export default function DatabaseInitPage() {
     }
   };
 
-  const initModule = async (module: string, endpoint: string) => {
+  const initModule = async (module: string, endpoint: string, options: { force?: boolean; clean?: boolean } = {}) => {
     setLoading(module);
     setMessage(null);
 
@@ -91,7 +91,7 @@ export default function DatabaseInitPage() {
               { email: 'admin@example.com', password: 'admin123', role: 'admin', name: 'Demo Admin' }
             ]
           }
-        : {};
+        : { ...options }; // Pass force/clean options for PBL, Assessment, Discovery
 
       const res = await fetch(endpoint, {
         method: 'POST',
@@ -129,8 +129,21 @@ export default function DatabaseInitPage() {
       return;
     }
 
-    // For now, just reinitialize (since APIs handle existing data)
+    // Pass clean flag to delete all data first, then reinitialize
+    await initModule(module, endpoint, { clean: true });
+  };
+
+  const addNewOnly = async (module: string, endpoint: string) => {
+    // Just initialize - it will skip existing data by default
     await initModule(module, endpoint);
+  };
+
+  const updateExisting = async (module: string, endpoint: string) => {
+    if (!confirm(`This will update all existing ${module} data. Continue?`)) {
+      return;
+    }
+    // Pass force flag to update existing data
+    await initModule(module, endpoint, { force: true });
   };
 
   const modules = [
@@ -285,7 +298,51 @@ export default function DatabaseInitPage() {
                     </Button>
                   )}
 
-                  {hasData && (
+                  {hasData && module.key !== 'users' && (
+                    <>
+                      <Button
+                        onClick={() => addNewOnly(module.key, module.endpoint)}
+                        disabled={loading === module.key}
+                        className="flex-1"
+                        variant="default"
+                        title="Add new items only, skip existing ones"
+                      >
+                        {loading === module.key ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          'Add New Only'
+                        )}
+                      </Button>
+                      <Button
+                        onClick={() => updateExisting(module.key, module.endpoint)}
+                        disabled={loading === module.key}
+                        className="flex-1"
+                        variant="secondary"
+                        title="Update all existing items with latest data"
+                      >
+                        {loading === module.key ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          'Update All'
+                        )}
+                      </Button>
+                      <Button
+                        onClick={() => clearAndReinit(module.key, module.endpoint)}
+                        disabled={loading === module.key}
+                        className="flex-1"
+                        variant="destructive"
+                        title="Delete everything and start fresh"
+                      >
+                        {loading === module.key ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          'Clear All'
+                        )}
+                      </Button>
+                    </>
+                  )}
+
+                  {hasData && module.key === 'users' && (
                     <Button
                       onClick={() => clearAndReinit(module.key, module.endpoint)}
                       disabled={loading === module.key}
@@ -309,11 +366,17 @@ export default function DatabaseInitPage() {
       <div className="mt-8 p-4 bg-gray-100 rounded-lg">
         <h3 className="font-semibold mb-2">Instructions:</h3>
         <ul className="text-sm text-gray-600 space-y-1">
-          <li>• Click "Initialize" to add initial data to empty modules</li>
-          <li>• Click "Clear & Reinitialize" to delete existing data and start fresh</li>
+          <li>• <strong>Initialize</strong>: Add initial data to empty modules</li>
+          <li>• <strong>Add New Only</strong>: Add new scenarios/data, skip existing ones (smart sync)</li>
+          <li>• <strong>Update All</strong>: Update existing data with latest version from YAML files</li>
+          <li>• <strong>Clear All</strong>: Delete everything and start fresh (destructive)</li>
           <li>• Use "Refresh Status" to check current database state</li>
-          <li>• Green checkmark indicates data exists, gray X means empty</li>
         </ul>
+        <div className="mt-3 p-3 bg-blue-50 rounded">
+          <p className="text-sm text-blue-800">
+            <strong>💡 Tip:</strong> For PBL scenarios, "Add New Only" is the safest option - it will only add the new semiconductor_adventure scenario without affecting existing data.
+          </p>
+        </div>
       </div>
     </div>
   );

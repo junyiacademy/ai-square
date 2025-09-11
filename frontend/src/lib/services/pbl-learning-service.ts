@@ -1,19 +1,19 @@
 /**
  * PBL Learning Service
- * 
+ *
  * 實作統一學習架構中的 PBL (Problem-Based Learning) 模組
  * 負責處理問題導向學習的業務邏輯
  */
 
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import type { 
-  IProgram, 
-  ITask, 
+import type {
+  IProgram,
+  ITask,
   IEvaluation,
   IInteraction
 } from '@/types/unified-learning';
 import type { TaskType } from '@/types/database';
-import type { 
+import type {
   BaseLearningService,
   LearningOptions,
   LearningProgress,
@@ -46,8 +46,8 @@ export class PBLLearningService implements BaseLearningService {
   private evaluationRepo = repositoryFactory.getEvaluationRepository();
 
   async startLearning(
-    userId: string, 
-    scenarioId: string, 
+    userId: string,
+    scenarioId: string,
     options?: LearningOptions
   ): Promise<IProgram> {
     // 1. 載入 Scenario
@@ -95,24 +95,25 @@ export class PBLLearningService implements BaseLearningService {
 
     // 4. 創建 Tasks
     const createdTaskIds: string[] = [];
-    
+
     for (let i = 0; i < taskTemplates.length; i++) {
       const template = taskTemplates[i];
-      
+
       // Handle both string and multilingual title/description formats
-      const title = typeof template.title === 'string' 
-        ? { en: template.title } 
+      const title = typeof template.title === 'string'
+        ? { en: template.title }
         : template.title;
-      
+
       const description = typeof template.description === 'string'
         ? template.description
         : template.description?.[options?.language || 'en'] || template.description?.en || '';
-      
+
       const task = await this.taskRepo.create({
         programId: program.id,
         scenarioId: scenarioId,  // Add missing scenarioId
         mode: 'pbl',
         taskIndex: i,
+        scenarioTaskIndex: i,  // Add scenarioTaskIndex to map to task template
         title: title,
         type: template.type || 'chat',
         status: i === 0 ? 'active' : 'pending',
@@ -143,10 +144,10 @@ export class PBLLearningService implements BaseLearningService {
         assessmentData: {},
         metadata: {}
       });
-      
+
       createdTaskIds.push(task.id);
     }
-    
+
     // 5. Update program metadata with taskIds
     await this.programRepo.update?.(program.id, {
       metadata: {
@@ -167,10 +168,10 @@ export class PBLLearningService implements BaseLearningService {
     const tasks = await this.taskRepo.findByProgram(programId);
     const completedTasks = tasks.filter(t => t.status === 'completed').length;
     const currentTask = tasks.find(t => t.status === 'active');
-    
+
     // 計算總時間
     const totalTimeSpent = tasks.reduce((sum, task) => sum + task.timeSpentSeconds, 0);
-    
+
     // 估算剩餘時間（每個未完成任務約30分鐘）
     const remainingTasks = tasks.filter(t => t.status !== 'completed').length;
     const estimatedTimeRemaining = remainingTasks * 30 * 60; // 30 minutes per task
@@ -193,8 +194,8 @@ export class PBLLearningService implements BaseLearningService {
   }
 
   async submitResponse(
-    programId: string, 
-    taskId: string, 
+    programId: string,
+    taskId: string,
     response: Record<string, unknown>
   ): Promise<TaskResult> {
     const task = await this.taskRepo.findById(taskId);
@@ -228,12 +229,12 @@ export class PBLLearningService implements BaseLearningService {
     const isTaskComplete = await this.isTaskComplete(task, response);
     if (isTaskComplete) {
       await this.taskRepo.updateStatus?.(taskId, 'completed');
-      
+
       // 自動開啟下一個任務
       const program = await this.programRepo.findById(programId);
       if (program && program.currentTaskIndex < program.totalTaskCount - 1) {
         await this.programRepo.updateProgress(programId, program.currentTaskIndex + 1);
-        
+
         // 啟動下一個任務
         const tasks = await this.taskRepo.findByProgram(programId);
         const nextTask = tasks[program.currentTaskIndex + 1];
@@ -264,10 +265,10 @@ export class PBLLearningService implements BaseLearningService {
 
     // 獲取所有任務
     const tasks = await this.taskRepo.findByProgram(programId);
-    
+
     // 計算總分
     const totalScore = tasks.reduce((sum, task) => sum + task.score, 0) / tasks.length;
-    
+
     // 創建總結評估
     const evaluation = await this.evaluationRepo.create({
       userId: program.userId,
@@ -326,7 +327,7 @@ export class PBLLearningService implements BaseLearningService {
 
     // 評估任務表現
     const score = this.calculateTaskScore(task);
-    
+
     const evaluation = await this.evaluationRepo.create({
       userId: '', // Will be filled from program
       programId: task.programId,
@@ -378,14 +379,14 @@ export class PBLLearningService implements BaseLearningService {
   // Private helper methods
 
   private async generateAIResponse(
-    task: ITask, 
+    task: ITask,
     userResponse: Record<string, unknown>
   ): Promise<Record<string, unknown>> {
     // TODO: 整合 AI 服務
     void userResponse; // Mark as intentionally unused for now
     // 目前返回模擬回應
     const phase = (task.pblData as Record<string, unknown>)?.phase || 'understanding';
-    
+
     const responses = {
       understanding: {
         message: "That's a good observation! Let me help you explore this problem further. What aspects of this challenge do you find most interesting?",
@@ -411,12 +412,12 @@ export class PBLLearningService implements BaseLearningService {
   }
 
   private async isTaskComplete(
-    task: ITask, 
+    task: ITask,
     response: Record<string, unknown>
   ): Promise<boolean> {
     // 簡單的完成判斷邏輯
     // TODO: 實作更複雜的評估邏輯
-    
+
     // 檢查是否有明確的完成信號
     if (response.isComplete === true) {
       return true;
@@ -430,7 +431,7 @@ export class PBLLearningService implements BaseLearningService {
     // 檢查是否包含所需的關鍵元素
     const requiredElements = ['problem', 'solution', 'implementation'];
     const responseText = JSON.stringify(response).toLowerCase();
-    const hasAllElements = requiredElements.every(element => 
+    const hasAllElements = requiredElements.every(element =>
       responseText.includes(element)
     );
 
@@ -440,16 +441,16 @@ export class PBLLearningService implements BaseLearningService {
   private calculateTaskScore(task: ITask): number {
     // 基於互動品質計算分數
     const interactionScore = Math.min(task.interactions.length * 10, 40);
-    
+
     // 基於時間投入計算分數（適中最好）
     const timeMinutes = task.timeSpentSeconds / 60;
-    const timeScore = timeMinutes < 5 ? 10 : 
-                     timeMinutes > 60 ? 20 : 
+    const timeScore = timeMinutes < 5 ? 10 :
+                     timeMinutes > 60 ? 20 :
                      30;
-    
+
     // 基於任務完成度
     const completionScore = task.status === 'completed' ? 30 : 0;
-    
+
     return interactionScore + timeScore + completionScore;
   }
 
@@ -465,7 +466,7 @@ export class PBLLearningService implements BaseLearningService {
 
   private async calculateKSAProgress(tasks: ITask[]): Promise<Record<string, number>> {
     const ksaProgress: Record<string, number> = {};
-    
+
     for (const task of tasks) {
       const ksaCodes = (task.pblData as Record<string, unknown>)?.ksaCodes as string[] || [];
       for (const code of ksaCodes) {
@@ -474,7 +475,7 @@ export class PBLLearningService implements BaseLearningService {
         }
       }
     }
-    
+
     return ksaProgress;
   }
 
@@ -482,27 +483,27 @@ export class PBLLearningService implements BaseLearningService {
     // 簡化的領域分數計算
     const domains = ['Engaging_with_AI', 'Creating_with_AI', 'Managing_AI', 'Designing_AI'];
     const scores: Record<string, number> = {};
-    
+
     for (const domain of domains) {
       // 每個領域基於相關任務的平均分數
-      const relevantTasks = tasks.filter(t => 
+      const relevantTasks = tasks.filter(t =>
         JSON.stringify(t.content).includes(domain)
       );
-      
+
       if (relevantTasks.length > 0) {
         scores[domain] = relevantTasks.reduce((sum, t) => sum + t.score, 0) / relevantTasks.length;
       } else {
         scores[domain] = 0;
       }
     }
-    
+
     return scores;
   }
 
   private async generateCompletionFeedback(program: IProgram, tasks: ITask[]): Promise<string> {
     const completedTasks = tasks.filter(t => t.status === 'completed').length;
     const totalScore = tasks.reduce((sum, t) => sum + t.score, 0) / tasks.length;
-    
+
     return `Congratulations on completing the PBL scenario! You completed ${completedTasks} out of ${tasks.length} tasks with an average score of ${totalScore.toFixed(1)}%. Your problem-solving journey showed growth in understanding, exploration, and creative solutions.`;
   }
 }

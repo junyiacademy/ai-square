@@ -1,0 +1,281 @@
+scenario_info:
+  id: semiconductor-adventure
+  difficulty: beginner
+  estimated_duration: 45
+  target_domains:
+    - engaging_with_ai
+    - creating_with_ai
+  title: 私の半導体アドベンチャー
+  description: 単純な砂粒が現代世界を動かす強力なチップに変身する驚くべき冒険に乗り出そう！
+  prerequisites:
+    - 元素と化合物の基本的理解
+    - 電気と電気機器への親しみ
+  learning_objectives:
+    - 半導体とは何か、なぜシリコンが重要かを理解する
+    - チップ製造の基本プロセスを学ぶ
+    - 日常生活における半導体の応用を認識する
+    - グローバル半導体産業チェーンを理解する
+
+ksa_mapping:
+  knowledge:
+    - K1.1  # AI systems process data through algorithms
+    - K1.4  # AI embedded in everyday technologies
+    - K4.2  # AI requires computing power and resources
+  skills:
+    - S1.1  # Evaluate content for accuracy
+    - S3.1  # Decompose problems for AI solutions
+    - S6.1  # Recognize AI influence in daily life
+  attitudes:
+    - A2.1  # Explore capabilities with openness
+    - A3.1  # Pursue novel applications
+    - A5.1  # Consider diverse impacts
+
+tasks:
+  - id: task-1
+    category: learning
+    time_limit: 10
+    KSA_focus:
+      primary:
+        - K1.4
+        - S6.1
+      secondary:
+        - A2.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: AIクリスタルガイド
+      initial_prompt: |
+        あなたはAIクリスタルです。学生が半導体を理解するのを助ける親しみやすいガイドです。
+        探検者を歓迎し、これから始まる旅について説明することから始めてください。
+    title: "ステーション1：始まり - 魔法の元素シリコンに出会う"
+    description: 広大な砂浜とあなたのポケットのスマートフォンを結ぶものが何か考えたことはありますか？
+    instructions: |
+      ようこそ探検者！この旅では5つのステーションを通過します。
+      ビデオを見て、質問に正しく答えて進んでください。
+    content: |
+      ## 魔法の元素：シリコン
+
+      ### 重要なポイント
+      - チップの主要原料は**シリコン（Si）**です
+      - シリコンは酸素に次いで地球上で2番目に豊富な元素です
+      - シリコンは通常**二酸化シリコン（SiO₂）**として存在し、砂や石英によく見られます
+
+      ### 科学の復習：元素と化合物
+      覚えていますか？**元素**は物質の基本構成要素で、酸素（O）、水素（H）、シリコン（Si）などがあります。
+      **化合物**は2つ以上の異なる元素から作られた純粋な物質です。
+    question:
+      text: "チップの最も重要な原料「シリコン（Si）」は何から抽出されますか？"
+      type: multiple_choice
+      options:
+        - text: "石油"
+          value: "oil"
+        - text: "海水"
+          value: "seawater"
+        - text: "砂"
+          value: "sand"
+      correct_answer: "sand"
+    ai_feedback:
+      correct: "素晴らしい！シリコンは確かに砂から抽出されます。具体的には砂や石英に含まれる二酸化シリコン（SiO₂）からです。"
+      incorrect: "ビーチに豊富にあり、二酸化シリコンを含むものについて考えてみてください！"
+
+  - id: task-2
+    category: learning
+    time_limit: 10
+    KSA_focus:
+      primary:
+        - K1.1
+        - S3.1
+      secondary:
+        - A2.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: AIクリスタルガイド
+      initial_prompt: |
+        学生が半導体を理解できるように引き続きガイドしてください。
+        シリコンが電子機器にとって特別な理由を説明してください。
+    title: "ステーション2：半導体の秘密"
+    description: チップがシリコンで作られていることは分かりましたが、なぜシリコンなのでしょう？
+    instructions: |
+      シリコンは「半導体」と呼ばれる非常に特別な材料です。その秘密を発見しましょう！
+    content: |
+      ## 半導体を理解する
+
+      ### 重要なポイント
+      - 材料は導電性によって分類されます：導体、絶縁体、半導体
+      - **導体**（金属など）は電気を簡単に通します
+      - **絶縁体**（ゴムなど）は電気を通しません
+      - **半導体**はその中間の導電性を持ち、制御することができます
+
+      ### 科学の復習：電流
+      電流は、多くの小さな「電子」が同じ方向にワイヤを通って移動するようなものです。
+    question:
+      text: "半導体の最も特別な特性は何ですか？"
+      type: multiple_choice
+      options:
+        - text: "電気の導電性が非常に良い"
+          value: "high_conductivity"
+        - text: "完全に非導電性"
+          value: "non_conductive"
+        - text: "導電性を制御できる"
+          value: "controllable"
+      correct_answer: "controllable"
+    ai_feedback:
+      correct: "完璧です！導電性を制御できる能力こそが半導体を強力にしているのです！"
+      incorrect: "なぜ「半」なのかを考えてみてください。導体と絶縁体の間にあるからです！"
+
+  - id: task-3
+    category: learning
+    time_limit: 10
+    KSA_focus:
+      primary:
+        - K4.2
+        - S1.1
+      secondary:
+        - A3.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: AIクリスタルガイド
+      initial_prompt: |
+        学生をチップ製造プロセスを通じてガイドしてください。
+        砂からシリコンチップへの変換を説明してください。
+    title: "ステーション3：砂から黄金へ - チップの誕生"
+    description: 砂粒はどのようにして強力なチップに変身するのでしょう？
+    instructions: |
+      単純な砂から洗練された半導体チップへの驚くべき変換の旅をたどりましょう。
+    content: |
+      ## チップ製造プロセス
+
+      ### 重要なポイント
+      - 高純度シリコンは溶かされ、**シリコンインゴット**と呼ばれる巨大な円柱に引き上げられます
+      - シリコンインゴットは**ウェーハ**と呼ばれる超薄いディスクにスライスされます
+      - フォトリソグラフィなどの複雑なプロセスを通じて、何十億もの小さな電子部品が作られます
+      - 最も重要な部品は**トランジスタ**です
+
+      ### 科学の復習：物理的変化
+      溶融（固体から液体）と凝固（液体から固体）は物理的変化です。
+    question:
+      text: "シリコンインゴットから切り出された超薄いディスクは何と呼ばれますか？"
+      type: multiple_choice
+      options:
+        - text: "クリスタルロッド"
+          value: "rods"
+        - text: "ウェーハ"
+          value: "wafers"
+        - text: "クリスタル"
+          value: "crystals"
+      correct_answer: "wafers"
+    ai_feedback:
+      correct: "素晴らしい！シリコンウェーハはチップ製造の基盤です。"
+      incorrect: "チップが構築される薄い円形のディスクについて考えてみてください。"
+
+  - id: task-4
+    category: application
+    time_limit: 10
+    KSA_focus:
+      primary:
+        - K1.4
+        - S6.1
+      secondary:
+        - A5.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: AIクリスタルガイド
+      initial_prompt: |
+        学生が日常生活で半導体を認識できるよう支援してください。
+        技術を実世界の応用と結び付けてください。
+    title: "ステーション4：遍在するチップ - スマートライフでの一日"
+    description: チップは私たちの日常生活の縁の下の力持ちです。
+    instructions: |
+      典型的な一日でどれほど多くのチップに出会うかを調べてみましょう！
+    content: |
+      ## 日常生活でのチップ
+
+      ### 重要なポイント
+      - チップ（集積回路、IC）は現代電子機器の頭脳です
+      - 電話、コンピュータ、スマートウォッチから車や電車まで、チップはどこにでもあります
+      - チップは計算、メモリ、制御を処理します
+
+      ### 科学の復習：エネルギー変換
+      バッテリーの化学エネルギーはチップ制御を通じて光と音のエネルギーに変換されます。
+    question:
+      text: "以下のうち、半導体の応用として言及されなかったものはどれですか？"
+      type: multiple_choice
+      options:
+        - text: "モバイル決済"
+          value: "payments"
+        - text: "スマートウォッチ"
+          value: "watches"
+        - text: "太陽光発電"
+          value: "solar"
+      correct_answer: "solar"
+    ai_feedback:
+      correct: "正解！ソーラーパネルは半導体を使用しますが、今日の焦点ではありませんでした。"
+      incorrect: "私たちの旅で具体的に議論された応用を見直してください。"
+
+  - id: task-5
+    category: synthesis
+    time_limit: 10
+    KSA_focus:
+      primary:
+        - K1.1
+        - S3.1
+      secondary:
+        - A3.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: AIクリスタルガイド
+      initial_prompt: |
+        グローバル半導体産業を説明して旅を締めくくってください。
+        学生がチップ生産の協調的性質を理解できるよう支援してください。
+    title: "ステーション5：舞台裏 - 半導体産業チェーン"
+    description: チップの製造には世界的な協力が必要です。
+    instructions: |
+      世界的な協力を通じて半導体産業がどのように機能するかを発見しましょう。
+    content: |
+      ## グローバル半導体産業
+
+      ### 重要なポイント
+      - 産業には以下が含まれます：IC設計、IC製造、IC組立・テスト
+      - **IC設計会社**はチップの設計図を作成します
+      - **IC製造会社**（ファウンドリ）はチップを生産します
+      - **IC組立・テスト会社**はチップを保護し、テストします
+
+      ### 科学の復習：分業
+      組立ラインのように、各社は効率性のために専門分野に集中します。
+    question:
+      text: "チップ回路設計図の設計を担当するのはどのセグメントですか？"
+      type: multiple_choice
+      options:
+        - text: "IC製造"
+          value: "manufacturing"
+        - text: "IC組立"
+          value: "assembly"
+        - text: "IC設計"
+          value: "design"
+      correct_answer: "design"
+    ai_feedback:
+      correct: "完璧です！IC設計会社は半導体世界の建築家です！"
+      incorrect: "製造が始まる前に元の設計図を作成するのは誰かを考えてみてください。"
+
+evaluation_criteria:
+  completion_threshold: 80
+  assessment_method: quiz_and_interaction
+  success_metrics:
+    - 5つのステーションをすべて完了する
+    - 80%の精度で質問に答える
+    - AIクリスタルガイドと対話する
+
+resources:
+  videos:
+    - title: "半導体の仕組み"
+      url: "https://example.com/semiconductor-basics"
+  readings:
+    - title: "シリコンバレーの歴史"
+      url: "https://example.com/silicon-valley-history"
+  tools:
+    - title: "バーチャルチップデザイナー"
+      url: "https://example.com/chip-designer"

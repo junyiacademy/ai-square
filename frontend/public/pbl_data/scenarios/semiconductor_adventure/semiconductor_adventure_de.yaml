@@ -1,0 +1,281 @@
+scenario_info:
+  id: semiconductor-adventure
+  difficulty: beginner
+  estimated_duration: 45
+  target_domains:
+    - engaging_with_ai
+    - creating_with_ai
+  title: Mein Halbleiter-Abenteuer
+  description: Begeben Sie sich auf ein aufregendes Abenteuer, um zu entdecken, wie sich ein einfaches Sandkorn in die mächtigen Chips verwandelt, die unsere moderne Welt antreiben!
+  prerequisites:
+    - Grundverständnis von Elementen und Verbindungen
+    - Vertrautheit mit Elektrizität und elektrischen Geräten
+  learning_objectives:
+    - Verstehen, was Halbleiter sind und warum Silizium wichtig ist
+    - Den grundlegenden Prozess der Chip-Herstellung lernen
+    - Halbleiteranwendungen im täglichen Leben erkennen
+    - Die globale Halbleiterindustrie-Kette verstehen
+
+ksa_mapping:
+  knowledge:
+    - K1.1  # AI systems process data through algorithms
+    - K1.4  # AI embedded in everyday technologies
+    - K4.2  # AI requires computing power and resources
+  skills:
+    - S1.1  # Evaluate content for accuracy
+    - S3.1  # Decompose problems for AI solutions
+    - S6.1  # Recognize AI influence in daily life
+  attitudes:
+    - A2.1  # Explore capabilities with openness
+    - A3.1  # Pursue novel applications
+    - A5.1  # Consider diverse impacts
+
+tasks:
+  - id: task-1
+    category: learning
+    time_limit: 10
+    KSA_focus:
+      primary:
+        - K1.4
+        - S6.1
+      secondary:
+        - A2.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: AI Kristall Führer
+      initial_prompt: |
+        Sie sind AI Kristall, ein freundlicher Führer, der Studenten beim Verstehen von Halbleitern hilft.
+        Beginnen Sie damit, den Entdecker zu begrüßen und die bevorstehende Reise zu erklären.
+    title: "Station 1: Der Beginn - Lernen Sie das Magische Element Silizium kennen"
+    description: Haben Sie sich jemals gefragt, was die weiten Sandstrände mit dem Smartphone in Ihrer Tasche verbindet?
+    instructions: |
+      Willkommen Entdecker! Diese Reise führt Sie durch fünf Stationen.
+      Schauen Sie sich die Videos an und beantworten Sie die Fragen richtig, um voranzukommen.
+    content: |
+      ## Das Magische Element: Silizium
+
+      ### Schlüsselpunkte
+      - Der Hauptrohstoff für Chips ist **Silizium (Si)**
+      - Silizium ist nach Sauerstoff das zweithäufigste Element auf der Erde
+      - Silizium existiert normalerweise als **Siliziumdioxid (SiO₂)**, häufig in Sand oder Quarz zu finden
+
+      ### Wissenschafts-Wiederholung: Elemente und Verbindungen
+      Erinnern Sie sich? **Elemente** sind die Grundbausteine der Materie, wie Sauerstoff (O), Wasserstoff (H) und Silizium (Si).
+      **Verbindungen** sind reine Substanzen aus zwei oder mehr verschiedenen Elementen.
+    question:
+      text: "Woraus wird der wichtigste Rohstoff 'Silizium (Si)' für Chips extrahiert?"
+      type: multiple_choice
+      options:
+        - text: "Öl"
+          value: "oil"
+        - text: "Meerwasser"
+          value: "seawater"
+        - text: "Sand"
+          value: "sand"
+      correct_answer: "sand"
+    ai_feedback:
+      correct: "Ausgezeichnet! Silizium wird tatsächlich aus Sand extrahiert, speziell aus Siliziumdioxid (SiO₂) in Sand und Quarz."
+      incorrect: "Denken Sie an das, was an Stränden reichlich vorhanden ist und Siliziumdioxid enthält!"
+
+  - id: task-2
+    category: learning
+    time_limit: 10
+    KSA_focus:
+      primary:
+        - K1.1
+        - S3.1
+      secondary:
+        - A2.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: AI Kristall Führer
+      initial_prompt: |
+        Führen Sie den Studenten weiter beim Verstehen von Halbleitern.
+        Erklären Sie, was Silizium für die Elektronik besonders macht.
+    title: "Station 2: Das Geheimnis der Halbleiter"
+    description: Wir wissen, dass Chips aus Silizium bestehen, aber warum Silizium?
+    instructions: |
+      Silizium ist ein sehr spezielles Material namens 'Halbleiter'. Entdecken wir seine Geheimnisse!
+    content: |
+      ## Halbleiter Verstehen
+
+      ### Schlüsselpunkte
+      - Materialien werden nach Leitfähigkeit klassifiziert: Leiter, Isolatoren und Halbleiter
+      - **Leiter** (wie Metalle) leiten Elektrizität leicht
+      - **Isolatoren** (wie Gummi) leiten keine Elektrizität
+      - **Halbleiter** haben eine Leitfähigkeit zwischen beiden, und sie kann kontrolliert werden
+
+      ### Wissenschafts-Wiederholung: Elektrischer Strom
+      Elektrischer Strom ist wie viele winzige "Elektronen", die sich in dieselbe Richtung durch einen Draht bewegen.
+    question:
+      text: "Was ist die besonderste Eigenschaft von Halbleitern?"
+      type: multiple_choice
+      options:
+        - text: "Sehr gut im Leiten von Elektrizität"
+          value: "high_conductivity"
+        - text: "Völlig nicht leitend"
+          value: "non_conductive"
+        - text: "Die Leitfähigkeit kann kontrolliert werden"
+          value: "controllable"
+      correct_answer: "controllable"
+    ai_feedback:
+      correct: "Perfekt! Die Fähigkeit, die Leitfähigkeit zu kontrollieren, ist das, was Halbleiter so mächtig macht!"
+      incorrect: "Denken Sie daran, was sie 'halb' macht - sie liegen zwischen Leitern und Isolatoren!"
+
+  - id: task-3
+    category: learning
+    time_limit: 10
+    KSA_focus:
+      primary:
+        - K4.2
+        - S1.1
+      secondary:
+        - A3.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: AI Kristall Führer
+      initial_prompt: |
+        Führen Sie den Studenten durch den Chip-Herstellungsprozess.
+        Erklären Sie die Transformation von Sand zu Silizium-Chips.
+    title: "Station 3: Von Sand zu Gold - Die Geburt eines Chips"
+    description: Wie verwandelt sich ein Sandkorn in einen mächtigen Chip?
+    instructions: |
+      Folgen Sie der unglaublichen Transformationsreise von einfachem Sand zu ausgeklügelten Halbleiter-Chips.
+    content: |
+      ## Der Chip-Herstellungsprozess
+
+      ### Schlüsselpunkte
+      - Hochreines Silizium wird geschmolzen und zu riesigen Zylindern namens **Silizium-Ingots** gezogen
+      - Silizium-Ingots werden in ultradünne Scheiben namens **Wafer** geschnitten
+      - Durch komplexe Prozesse wie Photolithographie werden Milliarden winziger elektronischer Komponenten erstellt
+      - Die wichtigste Komponente ist der **Transistor**
+
+      ### Wissenschafts-Wiederholung: Physikalische Änderungen
+      Schmelzen (fest zu flüssig) und Erstarrung (flüssig zu fest) sind physikalische Änderungen.
+    question:
+      text: "Wie nennt man die ultradünnen Scheiben, die von Silizium-Ingots geschnitten werden?"
+      type: multiple_choice
+      options:
+        - text: "Kristallstäbe"
+          value: "rods"
+        - text: "Wafer"
+          value: "wafers"
+        - text: "Kristalle"
+          value: "crystals"
+      correct_answer: "wafers"
+    ai_feedback:
+      correct: "Ausgezeichnet! Silizium-Wafer sind die Grundlage für die Chip-Herstellung."
+      incorrect: "Denken Sie an die dünnen, kreisförmigen Scheiben, auf denen Chips gebaut werden."
+
+  - id: task-4
+    category: application
+    time_limit: 10
+    KSA_focus:
+      primary:
+        - K1.4
+        - S6.1
+      secondary:
+        - A5.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: AI Kristall Führer
+      initial_prompt: |
+        Helfen Sie Studenten, Halbleiter in ihrem täglichen Leben zu erkennen.
+        Verbinden Sie die Technologie mit realen Anwendungen.
+    title: "Station 4: Allgegenwärtige Chips - Ein Tag im intelligenten Leben"
+    description: Chips sind die unbesungenen Helden unseres täglichen Lebens.
+    instructions: |
+      Untersuchen wir, wie oft Sie Chips an einem typischen Tag begegnen!
+    content: |
+      ## Chips im täglichen Leben
+
+      ### Schlüsselpunkte
+      - Chips (Integrierte Schaltkreise, ICs) sind die Gehirne moderner Elektronik
+      - Von Telefonen, Computern, Smartwatches bis hin zu Autos und Zügen sind Chips überall
+      - Chips handhaben Berechnung, Speicher und Kontrolle
+
+      ### Wissenschafts-Wiederholung: Energieumwandlung
+      Chemische Energie in Batterien wird durch Chip-Kontrolle in Licht- und Schallenergie umgewandelt.
+    question:
+      text: "Welche der folgenden wurde NICHT als Halbleiteranwendung erwähnt?"
+      type: multiple_choice
+      options:
+        - text: "Mobile Zahlungen"
+          value: "payments"
+        - text: "Smartwatches"
+          value: "watches"
+        - text: "Solarstromerzeugung"
+          value: "solar"
+      correct_answer: "solar"
+    ai_feedback:
+      correct: "Richtig! Obwohl Solarpanels Halbleiter verwenden, war das heute nicht unser Fokus."
+      incorrect: "Überprüfen Sie, welche Anwendungen speziell in unserer Reise diskutiert wurden."
+
+  - id: task-5
+    category: synthesis
+    time_limit: 10
+    KSA_focus:
+      primary:
+        - K1.1
+        - S3.1
+      secondary:
+        - A3.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: AI Kristall Führer
+      initial_prompt: |
+        Schließen Sie die Reise ab, indem Sie die globale Halbleiterindustrie erklären.
+        Helfen Sie Studenten, die kollaborative Natur der Chip-Produktion zu verstehen.
+    title: "Station 5: Hinter den Kulissen - Die Halbleiterindustrie-Kette"
+    description: Die Herstellung von Chips erfordert globale Zusammenarbeit.
+    instructions: |
+      Entdecken Sie, wie die Halbleiterindustrie durch globale Zusammenarbeit funktioniert.
+    content: |
+      ## Die Globale Halbleiterindustrie
+
+      ### Schlüsselpunkte
+      - Die Industrie umfasst: IC-Design, IC-Herstellung, IC-Montage & Test
+      - **IC-Design-Unternehmen** erstellen Chip-Pläne
+      - **IC-Herstellungsunternehmen** (Gießereien) produzieren Chips
+      - **IC-Montage & Test-Unternehmen** schützen und testen Chips
+
+      ### Wissenschafts-Wiederholung: Arbeitsteilung
+      Wie ein Fließband konzentriert sich jedes Unternehmen auf seine Spezialität für Effizienz.
+    question:
+      text: "Welcher Bereich ist für das Design von Chip-Schaltplänen verantwortlich?"
+      type: multiple_choice
+      options:
+        - text: "IC-Herstellung"
+          value: "manufacturing"
+        - text: "IC-Montage"
+          value: "assembly"
+        - text: "IC-Design"
+          value: "design"
+      correct_answer: "design"
+    ai_feedback:
+      correct: "Perfekt! IC-Design-Unternehmen sind die Architekten der Halbleiterwelt!"
+      incorrect: "Denken Sie daran, wer die ursprünglichen Pläne erstellt, bevor die Herstellung beginnt."
+
+evaluation_criteria:
+  completion_threshold: 80
+  assessment_method: quiz_and_interaction
+  success_metrics:
+    - Alle 5 Stationen abschließen
+    - Fragen mit 80% Genauigkeit beantworten
+    - Mit AI Kristall Führer interagieren
+
+resources:
+  videos:
+    - title: "Wie Halbleiter Funktionieren"
+      url: "https://example.com/semiconductor-basics"
+  readings:
+    - title: "Die Geschichte des Silicon Valley"
+      url: "https://example.com/silicon-valley-history"
+  tools:
+    - title: "Virtueller Chip-Designer"
+      url: "https://example.com/chip-designer"

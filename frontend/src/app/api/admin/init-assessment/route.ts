@@ -1,7 +1,7 @@
 /**
  * Admin API to initialize assessment scenarios in database
  * This endpoint loads assessment questions from YAML files into the database
- * 
+ *
  * Usage: POST /api/admin/init-assessment
  */
 
@@ -11,6 +11,7 @@ import { parse } from 'yaml';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import type { DifficultyLevel } from '@/types/database';
 import path from 'path';
+import { distributedCacheService } from '@/lib/cache/distributed-cache-service';
 
 export async function POST(request: NextRequest) {
   try {
@@ -19,23 +20,23 @@ export async function POST(request: NextRequest) {
     // if (!session?.user?.role === 'admin') {
     //   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     // }
-    
+
     const body = await request.json().catch(() => ({})) as { force?: boolean; clean?: boolean };
 
     const scenarioRepo = repositoryFactory.getScenarioRepository();
-    
+
     // Check existing assessment scenarios
     // For clean operation, get ALL scenarios (including archived)
     // For normal operation, only get active scenarios
     let allAssessmentScenarios = await scenarioRepo.findByMode?.('assessment', body.clean) || [];
-    
+
     // If clean flag is set, delete ALL assessment scenarios first
     if (body.clean) {
       console.log(`[Init Assessment] Cleaning ${allAssessmentScenarios.length} scenarios`);
-      
+
       // Get program repository to handle foreign key constraints
       const programRepo = repositoryFactory.getProgramRepository();
-      
+
       for (const scenario of allAssessmentScenarios) {
         console.log(`[Init Assessment] Deleting scenario: ${scenario.id}`);
         try {
@@ -43,10 +44,10 @@ export async function POST(request: NextRequest) {
           const programs = await programRepo.findByScenario(scenario.id);
           if (programs.length > 0) {
             console.log(`[Init Assessment] Found ${programs.length} programs for scenario ${scenario.id}, deleting them first`);
-            // Note: We don't have a delete method on programRepo yet, 
+            // Note: We don't have a delete method on programRepo yet,
             // but database CASCADE DELETE should handle this
           }
-          
+
           const deleted = await scenarioRepo.delete(scenario.id);
           console.log(`[Init Assessment] Delete result: ${deleted}`);
         } catch (error) {
@@ -57,13 +58,13 @@ export async function POST(request: NextRequest) {
       // After cleaning, there are no existing scenarios
       allAssessmentScenarios = [];
     }
-    
+
     // Find existing scenarios that match our source (for update)
-    const existingScenarios = allAssessmentScenarios.filter(s => 
-      s.status === 'active' && 
+    const existingScenarios = allAssessmentScenarios.filter(s =>
+      s.status === 'active' &&
       (s.sourceId === 'ai_literacy' || s.sourcePath === 'assessment_data/ai_literacy')
     );
-    
+
     // Load the YAML file
     const yamlPath = path.join(process.cwd(), 'public/assessment_data/ai_literacy/ai_literacy_questions_en.yaml');
     const yamlContent = readFileSync(yamlPath, 'utf8');
@@ -101,7 +102,7 @@ export async function POST(request: NextRequest) {
     };
 
     let result;
-    
+
     if (existingScenarios.length > 0) {
       // Update existing scenario
       const scenario = existingScenarios[0];
@@ -109,7 +110,7 @@ export async function POST(request: NextRequest) {
         assessmentData,
         updatedAt: new Date().toISOString()
       });
-      
+
       return NextResponse.json({
         success: true,
         action: 'updated',
@@ -122,13 +123,13 @@ export async function POST(request: NextRequest) {
       // Create new scenario
       const title = { en: 'AI Literacy Assessment' };
       const description = { en: 'Test your understanding of AI concepts and applications' };
-      
+
       const taskTemplates = [{
         id: 'assessment-task',
         title: { en: 'Complete Assessment' },
         type: 'question' as const
       }];
-      
+
       result = await scenarioRepo.create({
         mode: 'assessment',
         status: 'active',
@@ -163,7 +164,30 @@ export async function POST(request: NextRequest) {
         updatedAt: new Date().toISOString(),
         metadata: {}
       });
-      
+
+      // Clear assessment-related caches
+      console.log('[Init Assessment] Clearing assessment caches...');
+      try {
+        await distributedCacheService.delete('scenarios:by-mode:assessment');
+        await distributedCacheService.delete('assessment:scenarios:*');
+
+        // Clear all assessment-related cache keys
+        const keys = await distributedCacheService.getAllKeys();
+        const assessmentKeys = keys.filter(key =>
+          key.includes('assessment') ||
+          key.includes('scenario') ||
+          key.startsWith('scenarios:')
+        );
+
+        for (const key of assessmentKeys) {
+          await distributedCacheService.delete(key);
+        }
+
+        console.log(`[Init Assessment] Cleared ${assessmentKeys.length} cache entries`);
+      } catch (error) {
+        console.error('[Init Assessment] Error clearing caches:', error);
+      }
+
       return NextResponse.json({
         success: true,
         action: 'created',
@@ -176,7 +200,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Error initializing assessment scenarios:', error);
     return NextResponse.json(
-      { 
+      {
         error: 'Failed to initialize assessment scenarios',
         details: error instanceof Error ? error.message : 'Unknown error'
       },

@@ -1,0 +1,281 @@
+scenario_info:
+  id: semiconductor-adventure
+  difficulty: beginner
+  estimated_duration: 45
+  target_domains:
+    - engaging_with_ai
+    - creating_with_ai
+  title: La Mia Avventura dei Semiconduttori
+  description: Imbarcati in un'avventura emozionante per scoprire come un semplice granello di sabbia si trasforma nei potenti chip che alimentano il nostro mondo moderno!
+  prerequisites:
+    - Comprensione di base di elementi e composti
+    - Familiarità con elettricità e dispositivi elettrici
+  learning_objectives:
+    - Capire cosa sono i semiconduttori e perché il silicio è importante
+    - Imparare il processo di base di produzione dei chip
+    - Riconoscere le applicazioni dei semiconduttori nella vita quotidiana
+    - Comprendere la catena globale dell'industria dei semiconduttori
+
+ksa_mapping:
+  knowledge:
+    - K1.1  # AI systems process data through algorithms
+    - K1.4  # AI embedded in everyday technologies
+    - K4.2  # AI requires computing power and resources
+  skills:
+    - S1.1  # Evaluate content for accuracy
+    - S3.1  # Decompose problems for AI solutions
+    - S6.1  # Recognize AI influence in daily life
+  attitudes:
+    - A2.1  # Explore capabilities with openness
+    - A3.1  # Pursue novel applications
+    - A5.1  # Consider diverse impacts
+
+tasks:
+  - id: task-1
+    category: learning
+    time_limit: 10
+    KSA_focus:
+      primary:
+        - K1.4
+        - S6.1
+      secondary:
+        - A2.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: AI Cristallo Guida
+      initial_prompt: |
+        Sei AI Cristallo, una guida amichevole che aiuta gli studenti a capire i semiconduttori.
+        Inizia dando il benvenuto all'esploratore e spiegando il viaggio che li aspetta.
+    title: "Stazione 1: L'Inizio - Incontra l'Elemento Magico Silicio"
+    description: Ti sei mai chiesto cosa collega le vaste spiagge sabbiose con lo smartphone nella tua tasca?
+    instructions: |
+      Benvenuto esploratore! Questo viaggio ti porterà attraverso cinque stazioni.
+      Guarda i video e rispondi correttamente alle domande per avanzare.
+    content: |
+      ## L'Elemento Magico: Silicio
+
+      ### Punti Chiave
+      - La materia prima principale per i chip è il **Silicio (Si)**
+      - Il silicio è il secondo elemento più abbondante sulla Terra, dopo l'ossigeno
+      - Il silicio esiste solitamente come **Biossido di Silicio (SiO₂)**, comunemente trovato nella sabbia o nel quarzo
+
+      ### Ripasso Scientifico: Elementi e Composti
+      Ricordi? Gli **elementi** sono i mattoni base della materia, come Ossigeno (O), Idrogeno (H) e Silicio (Si).
+      I **composti** sono sostanze pure fatte di due o più elementi diversi.
+    question:
+      text: "Da cosa viene estratta la materia prima più importante 'Silicio (Si)' per i chip?"
+      type: multiple_choice
+      options:
+        - text: "Petrolio"
+          value: "oil"
+        - text: "Acqua di mare"
+          value: "seawater"
+        - text: "Sabbia"
+          value: "sand"
+      correct_answer: "sand"
+    ai_feedback:
+      correct: "Eccellente! Il silicio è infatti estratto dalla sabbia, specificamente dal biossido di silicio (SiO₂) trovato nella sabbia e nel quarzo."
+      incorrect: "Pensa a cosa è abbondante sulle spiagge e contiene biossido di silicio!"
+
+  - id: task-2
+    category: learning
+    time_limit: 10
+    KSA_focus:
+      primary:
+        - K1.1
+        - S3.1
+      secondary:
+        - A2.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: AI Cristallo Guida
+      initial_prompt: |
+        Continua a guidare lo studente nel comprendere i semiconduttori.
+        Spiega cosa rende il silicio speciale per l'elettronica.
+    title: "Stazione 2: Il Segreto dei Semiconduttori"
+    description: Sappiamo che i chip sono fatti di silicio, ma perché silicio?
+    instructions: |
+      Il silicio è un materiale molto speciale chiamato 'semiconduttore'. Scopriamo i suoi segreti!
+    content: |
+      ## Comprendere i Semiconduttori
+
+      ### Punti Chiave
+      - I materiali sono classificati per conduttività: conduttori, isolanti e semiconduttori
+      - I **conduttori** (come i metalli) conducono facilmente l'elettricità
+      - Gli **isolanti** (come la gomma) non conducono elettricità
+      - I **semiconduttori** hanno conduttività tra i due, e può essere controllata
+
+      ### Ripasso Scientifico: Corrente Elettrica
+      La corrente elettrica è come molti "elettroni" minuscoli che si muovono nella stessa direzione attraverso un filo.
+    question:
+      text: "Qual è la caratteristica più speciale dei semiconduttori?"
+      type: multiple_choice
+      options:
+        - text: "Molto bravi a condurre elettricità"
+          value: "high_conductivity"
+        - text: "Completamente non conduttivi"
+          value: "non_conductive"
+        - text: "La conduttività può essere controllata"
+          value: "controllable"
+      correct_answer: "controllable"
+    ai_feedback:
+      correct: "Perfetto! La capacità di controllare la conduttività è ciò che rende i semiconduttori così potenti!"
+      incorrect: "Pensa a cosa li rende 'semi' - sono tra conduttori e isolanti!"
+
+  - id: task-3
+    category: learning
+    time_limit: 10
+    KSA_focus:
+      primary:
+        - K4.2
+        - S1.1
+      secondary:
+        - A3.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: AI Cristallo Guida
+      initial_prompt: |
+        Guida lo studente attraverso il processo di produzione dei chip.
+        Spiega la trasformazione dalla sabbia ai chip di silicio.
+    title: "Stazione 3: Dalla Sabbia all'Oro - La Nascita di un Chip"
+    description: Come si trasforma un granello di sabbia in un chip potente?
+    instructions: |
+      Segui l'incredibile viaggio di trasformazione dalla semplice sabbia ai sofisticati chip semiconduttori.
+    content: |
+      ## Il Processo di Produzione dei Chip
+
+      ### Punti Chiave
+      - Il silicio ad alta purezza viene fuso e tirato in enormi cilindri chiamati **lingotti di silicio**
+      - I lingotti di silicio vengono tagliati in dischi ultra-sottili chiamati **wafer**
+      - Attraverso processi complessi come la fotolitografia, vengono creati miliardi di componenti elettronici minuscoli
+      - Il componente più importante è il **transistor**
+
+      ### Ripasso Scientifico: Cambiamenti Fisici
+      La fusione (solido a liquido) e la solidificazione (liquido a solido) sono cambiamenti fisici.
+    question:
+      text: "Come si chiamano i dischi ultra-sottili tagliati dai lingotti di silicio?"
+      type: multiple_choice
+      options:
+        - text: "Barre di cristallo"
+          value: "rods"
+        - text: "Wafer"
+          value: "wafers"
+        - text: "Cristalli"
+          value: "crystals"
+      correct_answer: "wafers"
+    ai_feedback:
+      correct: "Eccellente! I wafer di silicio sono la base per la produzione dei chip."
+      incorrect: "Pensa ai dischi sottili e circolari su cui vengono costruiti i chip."
+
+  - id: task-4
+    category: application
+    time_limit: 10
+    KSA_focus:
+      primary:
+        - K1.4
+        - S6.1
+      secondary:
+        - A5.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: AI Cristallo Guida
+      initial_prompt: |
+        Aiuta gli studenti a riconoscere i semiconduttori nella loro vita quotidiana.
+        Collega la tecnologia alle applicazioni del mondo reale.
+    title: "Stazione 4: Chip Onnipresenti - Un Giorno nella Vita Intelligente"
+    description: I chip sono gli eroi non celebrati delle nostre vite quotidiane.
+    instructions: |
+      Esaminiamo quante volte incontri i chip in una giornata tipica!
+    content: |
+      ## Chip nella Vita Quotidiana
+
+      ### Punti Chiave
+      - I chip (Circuiti Integrati, IC) sono i cervelli dell'elettronica moderna
+      - Da telefoni, computer, smartwatch ad auto e treni, i chip sono ovunque
+      - I chip gestiscono calcolo, memoria e controllo
+
+      ### Ripasso Scientifico: Conversione di Energia
+      L'energia chimica nelle batterie viene convertita attraverso il controllo dei chip in energia luminosa e sonora.
+    question:
+      text: "Quale delle seguenti NON è stata menzionata come applicazione dei semiconduttori?"
+      type: multiple_choice
+      options:
+        - text: "Pagamenti mobili"
+          value: "payments"
+        - text: "Smartwatch"
+          value: "watches"
+        - text: "Generazione di energia solare"
+          value: "solar"
+      correct_answer: "solar"
+    ai_feedback:
+      correct: "Corretto! Anche se i pannelli solari usano semiconduttori, non era il nostro focus oggi."
+      incorrect: "Rivedi quali applicazioni sono state specificamente discusse nel nostro viaggio."
+
+  - id: task-5
+    category: synthesis
+    time_limit: 10
+    KSA_focus:
+      primary:
+        - K1.1
+        - S3.1
+      secondary:
+        - A3.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: AI Cristallo Guida
+      initial_prompt: |
+        Concludi il viaggio spiegando l'industria globale dei semiconduttori.
+        Aiuta gli studenti a capire la natura collaborativa della produzione di chip.
+    title: "Stazione 5: Dietro le Quinte - La Catena dell'Industria dei Semiconduttori"
+    description: Produrre chip richiede cooperazione globale.
+    instructions: |
+      Scopri come funziona l'industria dei semiconduttori attraverso la collaborazione globale.
+    content: |
+      ## L'Industria Globale dei Semiconduttori
+
+      ### Punti Chiave
+      - L'industria coinvolge: Design IC, Produzione IC, Assemblaggio e Test IC
+      - Le **aziende di Design IC** creano i progetti dei chip
+      - Le **aziende di Produzione IC** (fonderie) producono chip
+      - Le **aziende di Assemblaggio e Test IC** proteggono e testano i chip
+
+      ### Ripasso Scientifico: Divisione del Lavoro
+      Come una catena di montaggio, ogni azienda si concentra sulla sua specialità per efficienza.
+    question:
+      text: "Quale segmento è responsabile del design dei progetti dei circuiti dei chip?"
+      type: multiple_choice
+      options:
+        - text: "Produzione IC"
+          value: "manufacturing"
+        - text: "Assemblaggio IC"
+          value: "assembly"
+        - text: "Design IC"
+          value: "design"
+      correct_answer: "design"
+    ai_feedback:
+      correct: "Perfetto! Le aziende di Design IC sono gli architetti del mondo dei semiconduttori!"
+      incorrect: "Pensa a chi crea i piani originali prima che inizi la produzione."
+
+evaluation_criteria:
+  completion_threshold: 80
+  assessment_method: quiz_and_interaction
+  success_metrics:
+    - Completare tutte le 5 stazioni
+    - Rispondere alle domande con 80% di accuratezza
+    - Interagire con AI Cristallo Guida
+
+resources:
+  videos:
+    - title: "Come Funzionano i Semiconduttori"
+      url: "https://example.com/semiconductor-basics"
+  readings:
+    - title: "La Storia della Silicon Valley"
+      url: "https://example.com/silicon-valley-history"
+  tools:
+    - title: "Designer Virtuale di Chip"
+      url: "https://example.com/chip-designer"
