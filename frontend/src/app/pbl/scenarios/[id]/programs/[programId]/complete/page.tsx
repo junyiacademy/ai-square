@@ -5,9 +5,10 @@ import { useParams } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 import { PBLCompletionSkeleton } from '@/components/pbl/loading-skeletons';
-import type { 
-  CompletionData, 
-  ScenarioData, 
+import CompetencyGraph from '@/components/completion/CompetencyGraph';
+import type {
+  CompletionData,
+  ScenarioData,
   QualitativeFeedback,
   LocalizedFeedback
 } from '@/types/pbl-completion';
@@ -18,50 +19,50 @@ export default function ProgramCompletePage() {
   const params = useParams();
   // const router = useRouter();
   const { t, i18n } = useTranslation(['pbl', 'common', 'assessment']);
-  
+
   const programId = params.programId as string;
   const scenarioId = params.id as string;
-  
+
   const [loading, setLoading] = useState(true);
   const [completionData, setCompletionData] = useState<CompletionData | null>(null);
   const [scenarioData, setScenarioData] = useState<ScenarioData | null>(null);
   const [generatingFeedback, setGeneratingFeedback] = useState(false);
   // const [feedbackError, setFeedbackError] = useState<string | null>(null);
-  
+
   // Use ref to prevent duplicate API calls
   const loadingRef = useRef(false);
   const feedbackGeneratingRef = useRef(false);
   const isMountedRef = useRef(false);
-  
+
   useEffect(() => {
     // Check if already mounted (handles StrictMode double mount)
     if (isMountedRef.current) return;
     isMountedRef.current = true;
-    
+
     loadProgramData();
-    
+
     // Cleanup function for StrictMode
     return () => {
       isMountedRef.current = false;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  
+
   // Listen for language changes
   useEffect(() => {
     if (!completionData || generatingFeedback || feedbackGeneratingRef.current) return;
-    
+
     // Check if feedback exists for current language
     const currentLang = normalizeLanguageCode(i18n.language);
     let hasFeedbackForLang = false;
-    
+
     if (completionData.qualitativeFeedback && typeof completionData.qualitativeFeedback === 'object') {
       // Check if it's multi-language format (has language keys but no direct overallAssessment)
       const feedbackObj = completionData.qualitativeFeedback as Record<string, unknown>;
-      const hasLanguageKeys = Object.keys(feedbackObj).some(key => 
+      const hasLanguageKeys = Object.keys(feedbackObj).some(key =>
         ['en', 'zhTW', 'ja', 'ko', 'es', 'fr', 'de', 'ru', 'it'].includes(key)
       );
-      
+
       if (hasLanguageKeys) {
         // Multi-language format
         const langFeedback = feedbackObj[currentLang] as Record<string, unknown>;
@@ -72,32 +73,32 @@ export default function ProgramCompletePage() {
         hasFeedbackForLang = completionData.feedbackLanguage === currentLang;
       }
     }
-    
+
     // Generate feedback for new language if not exists
     if (!hasFeedbackForLang) {
       generateFeedback();
     }
   }, [i18n.language]); // eslint-disable-line react-hooks/exhaustive-deps
-  
+
   const loadProgramData = async () => {
     if (loadingRef.current) return;
     loadingRef.current = true;
-    
+
     try {
       setLoading(true);
-      
+
       // Load both scenario and completion data in parallel
       const [scenarioRes, completionRes] = await Promise.all([
         fetch(`/api/pbl/scenarios/${scenarioId}`),
         fetch(`/api/pbl/completion?programId=${programId}&scenarioId=${scenarioId}`)
       ]);
-      
+
       // Process scenario data
       if (scenarioRes.ok) {
         const scenarioResult = await scenarioRes.json();
         setScenarioData(scenarioResult.data);
       }
-      
+
       // Process completion data
       if (!completionRes.ok) {
         // If completion.json doesn't exist, try to create it
@@ -106,7 +107,7 @@ export default function ProgramCompletePage() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ programId, scenarioId })
         });
-        
+
         if (updateRes.ok) {
           // Try to get the newly created completion data
           const retryResponse = await authenticatedFetch(`/api/pbl/completion?programId=${programId}&scenarioId=${scenarioId}`);
@@ -114,7 +115,7 @@ export default function ProgramCompletePage() {
             const data = await retryResponse.json();
             if (data.success && data.data) {
               setCompletionData(data.data);
-              
+
               // Generate feedback for newly created completion
               if (!data.data.qualitativeFeedback && !feedbackGeneratingRef.current) {
                 await generateFeedback();
@@ -126,20 +127,20 @@ export default function ProgramCompletePage() {
         const data = await completionRes.json();
         if (data.success && data.data) {
           setCompletionData(data.data);
-          
+
           // Check if qualitative feedback exists for current language
           const currentLang = normalizeLanguageCode(i18n.language);
-          const hasFeedbackForLang = data.data.qualitativeFeedback && 
+          const hasFeedbackForLang = data.data.qualitativeFeedback &&
             (typeof data.data.qualitativeFeedback === 'object' &&
-             (data.data.qualitativeFeedback[currentLang] || 
+             (data.data.qualitativeFeedback[currentLang] ||
               data.data.qualitativeFeedback.overallAssessment)); // Support old format
-          
+
           if (!hasFeedbackForLang && !feedbackGeneratingRef.current) {
             await generateFeedback();
           }
         }
       }
-      
+
     } catch (error) {
       console.error('Error loading program data:', error);
     } finally {
@@ -147,14 +148,14 @@ export default function ProgramCompletePage() {
       loadingRef.current = false;
     }
   };
-  
+
   const generateFeedback = async (forceRegenerate = false) => {
     if (feedbackGeneratingRef.current) return;
     feedbackGeneratingRef.current = true;
-    
+
     try {
       setGeneratingFeedback(true);
-      
+
       const currentLang = normalizeLanguageCode(i18n.language);
       const response = await authenticatedFetch('/api/pbl/generate-feedback', {
         method: 'POST',
@@ -169,19 +170,19 @@ export default function ProgramCompletePage() {
           language: currentLang,
         }),
       });
-      
+
       const result = await response.json();
-      
+
       if (result.success && result.feedback) {
         // Update completion data with the new feedback
         const currentLang = normalizeLanguageCode(i18n.language);
         setCompletionData((prev) => {
           if (!prev) return null;
-          
+
           // Handle multi-language feedback format
-          const isMultiLang = typeof prev.qualitativeFeedback === 'object' && 
+          const isMultiLang = typeof prev.qualitativeFeedback === 'object' &&
                              !('overallAssessment' in (prev.qualitativeFeedback as QualitativeFeedback));
-          
+
           if (isMultiLang) {
             // New multi-language format
             return {
@@ -212,12 +213,12 @@ export default function ProgramCompletePage() {
       feedbackGeneratingRef.current = false;
     }
   };
-  
+
   const formatDuration = (seconds: number) => {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const remainingSeconds = seconds % 60;
-    
+
     if (hours > 0) {
       return t('pbl:complete.timeFormat.hours', { hours, minutes });
     } else if (minutes > 0) {
@@ -225,7 +226,7 @@ export default function ProgramCompletePage() {
     }
     return t('pbl:complete.timeFormat.seconds', { seconds: remainingSeconds });
   };
-  
+
   const getScoreColor = (score: number) => {
     if (score >= 90) return 'text-green-600';
     if (score >= 80) return 'text-blue-600';
@@ -233,7 +234,7 @@ export default function ProgramCompletePage() {
     if (score >= 50) return 'text-orange-600';
     return 'text-red-600';
   };
-  
+
   // Unused function - keeping for potential future use
   // const getScoreBgColor = (score: number) => {
   //   if (score >= 90) return 'bg-green-600';
@@ -242,7 +243,7 @@ export default function ProgramCompletePage() {
   //   if (score >= 50) return 'bg-orange-600';
   //   return 'bg-red-600';
   // };
-  
+
   if (loading) {
     return (
       <main className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
@@ -252,13 +253,13 @@ export default function ProgramCompletePage() {
       </main>
     );
   }
-  
+
   if (!completionData) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
           <p className="text-gray-600 dark:text-gray-400">{t('pbl:complete.noDataFound')}</p>
-          <Link 
+          <Link
             href={`/pbl/scenarios/${scenarioId}`}
             className="mt-4 inline-block px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
           >
@@ -268,24 +269,24 @@ export default function ProgramCompletePage() {
       </div>
     );
   }
-  
+
   const scenarioTitle = (() => {
     if (!scenarioData) return 'Scenario';
-    
+
     const title = scenarioData.title;
     if (typeof title === 'object' && title !== null && !Array.isArray(title)) {
       // Handle multilingual object format {en: "...", zh: "..."}
       const titleObj = title as Record<string, string>;
       return titleObj[i18n.language] || titleObj['en'] || Object.values(titleObj)[0] || 'Scenario';
     }
-    
+
     // Fallback to suffix-based format
     if (i18n.language === 'zhTW') {
       return scenarioData.title_zhTW || scenarioData.title || 'Scenario';
     }
     return scenarioData.title || 'Scenario';
   })();
-  
+
   return (
     <main className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -303,21 +304,21 @@ export default function ProgramCompletePage() {
             {t('pbl:complete.scenarioCompleted', { title: scenarioTitle })}
           </p>
         </div>
-        
+
         {/* Qualitative Feedback Section */}
         {(() => {
           // Get feedback for current language
           const currentLang = normalizeLanguageCode(i18n.language);
           let feedback: QualitativeFeedback | undefined;
-          
+
           if (completionData?.qualitativeFeedback && typeof completionData.qualitativeFeedback === 'object') {
             const feedbackObj = completionData.qualitativeFeedback as Record<string, unknown>;
-            
+
             // Check if it's multi-language format (has language keys)
-            const hasLanguageKeys = Object.keys(feedbackObj).some(key => 
+            const hasLanguageKeys = Object.keys(feedbackObj).some(key =>
               ['en', 'zhTW', 'ja', 'ko', 'es', 'fr', 'de', 'ru', 'it'].includes(key)
             );
-            
+
             if (hasLanguageKeys) {
               // Multi-language format - get feedback for current language
               const langFeedback = feedbackObj[currentLang];
@@ -335,9 +336,9 @@ export default function ProgramCompletePage() {
               feedback = feedbackObj as unknown as QualitativeFeedback;
             }
           }
-          
+
           const hasFeedback = feedback?.overallAssessment;
-          
+
           return (hasFeedback || generatingFeedback) && (
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 mb-8">
               {generatingFeedback ? (
@@ -368,14 +369,14 @@ export default function ProgramCompletePage() {
                       </button>
                     )}
                   </div>
-                  
+
                   {/* Overall Assessment */}
                   <div className="mb-6">
                     <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
                       {feedback.overallAssessment}
                     </p>
                   </div>
-                
+
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
                   {/* Strengths */}
                   <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-6">
@@ -403,7 +404,7 @@ export default function ProgramCompletePage() {
                       ))}
                     </div>
                   </div>
-                  
+
                   {/* Areas for Improvement */}
                   <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-6">
                     <h3 className="text-lg font-medium text-blue-900 dark:text-blue-100 mb-4 flex items-center">
@@ -434,7 +435,7 @@ export default function ProgramCompletePage() {
                     </div>
                   </div>
                 </div>
-                
+
                 {/* Next Steps */}
                 {feedback.nextSteps && feedback.nextSteps.length > 0 && (
                   <div className="bg-purple-50 dark:bg-purple-900/20 rounded-lg p-6 mb-6">
@@ -455,7 +456,7 @@ export default function ProgramCompletePage() {
                     </ul>
                   </div>
                 )}
-                
+
                 {/* Encouragement */}
                 {feedback.encouragement && (
                   <div className="text-center p-6 bg-gradient-to-r from-purple-100 to-blue-100 dark:from-purple-900/20 dark:to-blue-900/20 rounded-lg">
@@ -469,7 +470,7 @@ export default function ProgramCompletePage() {
           </div>
           );
         })()}
-        
+
         {/* Three Column Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
           {/* Left Column - Overall Score */}
@@ -491,7 +492,7 @@ export default function ProgramCompletePage() {
                   {t('pbl:complete.conversationCount')}
                 </span>
                 <span className="text-sm font-semibold text-gray-900 dark:text-white">
-                  {completionData.tasks?.reduce((sum, task) => 
+                  {completionData.tasks?.reduce((sum, task) =>
                     sum + (task.log?.interactions?.length || 0), 0) || 0} {t('pbl:history.times')}
                 </span>
               </div>
@@ -505,7 +506,7 @@ export default function ProgramCompletePage() {
               </div>
             </div>
           </div>
-          
+
           {/* Middle Column - Domain Scores */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
             <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
@@ -528,7 +529,7 @@ export default function ProgramCompletePage() {
                           </span>
                         </div>
                         <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-                          <div 
+                          <div
                             className={`h-2 rounded-full ${
                               domain === 'engaging_with_ai' ? 'bg-blue-600' :
                               domain === 'creating_with_ai' ? 'bg-green-600' :
@@ -544,7 +545,7 @@ export default function ProgramCompletePage() {
               </div>
             )}
           </div>
-          
+
           {/* Right Column - KSA Scores */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
             <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
@@ -562,13 +563,13 @@ export default function ProgramCompletePage() {
                     </span>
                   </div>
                   <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-                    <div 
+                    <div
                       className="bg-blue-600 h-2 rounded-full"
                       style={{ width: `${completionData.ksaScores.knowledge}%` }}
                     />
                   </div>
                 </div>
-                
+
                 <div>
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-sm text-gray-600 dark:text-gray-400">
@@ -579,13 +580,13 @@ export default function ProgramCompletePage() {
                     </span>
                   </div>
                   <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-                    <div 
+                    <div
                       className="bg-green-600 h-2 rounded-full"
                       style={{ width: `${completionData.ksaScores.skills}%` }}
                     />
                   </div>
                 </div>
-                
+
                 <div>
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-sm text-gray-600 dark:text-gray-400">
@@ -596,7 +597,7 @@ export default function ProgramCompletePage() {
                     </span>
                   </div>
                   <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-                    <div 
+                    <div
                       className="bg-purple-600 h-2 rounded-full"
                       style={{ width: `${completionData.ksaScores.attitudes}%` }}
                     />
@@ -606,13 +607,44 @@ export default function ProgramCompletePage() {
             )}
           </div>
         </div>
-        
+
+        {/* Competency Knowledge Graph and Question Review */}
+        {completionData && (
+          <CompetencyGraph
+            tasks={completionData.tasks?.map((task, index) => ({
+              taskId: task.taskId,
+              taskTitle: (() => {
+                const title = task.taskTitle;
+                if (typeof title === 'object' && title !== null && !Array.isArray(title)) {
+                  const titleObj = title as Record<string, string>;
+                  return titleObj[i18n.language] || titleObj['en'] || Object.values(titleObj)[0] || task.taskId;
+                }
+                return title || task.taskId;
+              })(),
+              taskIndex: task.taskIndex || index + 1,
+              status: (task.progress?.status || 'pending') as 'completed' | 'pending' | 'active',
+              score: task.evaluation?.score,
+              timeSpent: task.progress?.timeSpentSeconds,
+              interactions: task.log?.interactions?.map(i => ({
+                timestamp: new Date().toISOString(),
+                type: i.type === 'user' ? 'user_input' : 'ai_response',
+                content: typeof i.message === 'string' ? i.message : JSON.stringify(i.message)
+              })),
+              userAnswer: task.log?.interactions?.find(i => i.type === 'user')?.message as string | undefined,
+              correctAnswer: undefined
+            })) || []}
+            domainScores={completionData.domainScores || {}}
+            overallScore={completionData.overallScore || 0}
+            language={i18n.language === 'zhTW' ? 'zhTW' : 'en'}
+          />
+        )}
+
         {/* Task Details */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 mb-8">
           <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">
             {t('pbl:complete.taskSummary')}
           </h2>
-          
+
           <div className="space-y-6">
             {completionData.tasks?.map((task, index) => {
               const taskTitle = (() => {
@@ -624,7 +656,7 @@ export default function ProgramCompletePage() {
                 }
                 return title || task.taskId;
               })();
-              
+
               return (
                 <div key={task.taskId} className="border-l-4 border-purple-600 pl-6">
                   <div className="flex items-start justify-between">
@@ -632,7 +664,7 @@ export default function ProgramCompletePage() {
                       <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
                         {task.taskIndex || index + 1}. {taskTitle}
                       </h3>
-                      
+
                       {/* Task Metadata */}
                       <div className="flex flex-wrap gap-4 text-sm text-gray-600 dark:text-gray-400 mb-3">
                         <span className="flex items-center">
@@ -653,7 +685,7 @@ export default function ProgramCompletePage() {
                           </span>
                         )}
                       </div>
-                      
+
                       {/* Task Evaluation Details */}
                       {task.evaluation && (
                         <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 space-y-4">
@@ -681,7 +713,7 @@ export default function ProgramCompletePage() {
                                             </span>
                                           </div>
                                           <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-                                            <div 
+                                            <div
                                               className={`h-2 rounded-full ${
                                                 domain === 'engaging_with_ai' ? 'bg-blue-500' :
                                                 domain === 'creating_with_ai' ? 'bg-green-500' :
@@ -697,7 +729,7 @@ export default function ProgramCompletePage() {
                                 </div>
                               </div>
                             )}
-                            
+
                             {/* KSA Scores Column */}
                             {task.evaluation.ksaScores && Object.keys(task.evaluation.ksaScores).length > 0 && (
                               <div>
@@ -715,13 +747,13 @@ export default function ProgramCompletePage() {
                                       </span>
                                     </div>
                                     <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-                                      <div 
+                                      <div
                                         className="bg-blue-500 h-2 rounded-full"
                                         style={{ width: `${task.evaluation.ksaScores?.knowledge || 0}%` }}
                                       />
                                     </div>
                                   </div>
-                                  
+
                                   <div>
                                     <div className="flex items-center justify-between mb-1">
                                       <span className="text-sm text-gray-600 dark:text-gray-400">
@@ -732,13 +764,13 @@ export default function ProgramCompletePage() {
                                       </span>
                                     </div>
                                     <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-                                      <div 
+                                      <div
                                         className="bg-green-500 h-2 rounded-full"
                                         style={{ width: `${task.evaluation.ksaScores?.skills || 0}%` }}
                                       />
                                     </div>
                                   </div>
-                                  
+
                                   <div>
                                     <div className="flex items-center justify-between mb-1">
                                       <span className="text-sm text-gray-600 dark:text-gray-400">
@@ -749,7 +781,7 @@ export default function ProgramCompletePage() {
                                       </span>
                                     </div>
                                     <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-                                      <div 
+                                      <div
                                         className="bg-purple-500 h-2 rounded-full"
                                         style={{ width: `${task.evaluation.ksaScores?.attitudes || 0}%` }}
                                       />
@@ -759,7 +791,7 @@ export default function ProgramCompletePage() {
                               </div>
                             )}
                           </div>
-                          
+
                           {/* Conversation Insights */}
                           {task.evaluation.conversationInsights && (
                             <div className="mb-3">
@@ -768,7 +800,7 @@ export default function ProgramCompletePage() {
                               </h4>
                               <div className="text-sm text-gray-600 dark:text-gray-400 space-y-2">
                                 {/* Effective Examples */}
-                                {task.evaluation?.conversationInsights?.effectiveExamples && 
+                                {task.evaluation?.conversationInsights?.effectiveExamples &&
                                  Array.isArray(task.evaluation.conversationInsights.effectiveExamples) &&
                                  task.evaluation.conversationInsights.effectiveExamples.length > 0 && (
                                   <div>
@@ -785,9 +817,9 @@ export default function ProgramCompletePage() {
                                     ))}
                                   </div>
                                 )}
-                                
+
                                 {/* Improvement Areas */}
-                                {task.evaluation.conversationInsights.improvementAreas && 
+                                {task.evaluation.conversationInsights.improvementAreas &&
                                  Array.isArray(task.evaluation.conversationInsights.improvementAreas) &&
                                  task.evaluation.conversationInsights.improvementAreas.length > 0 && (
                                   <div>
@@ -807,9 +839,9 @@ export default function ProgramCompletePage() {
                               </div>
                             </div>
                           )}
-                          
+
                           {/* Strengths */}
-                          {task.evaluation.strengths && 
+                          {task.evaluation.strengths &&
                            Array.isArray(task.evaluation.strengths) &&
                            task.evaluation.strengths.length > 0 && (
                             <div>
@@ -826,9 +858,9 @@ export default function ProgramCompletePage() {
                               </ul>
                             </div>
                           )}
-                          
+
                           {/* Areas for Improvement */}
-                          {task.evaluation.improvements && 
+                          {task.evaluation.improvements &&
                            Array.isArray(task.evaluation.improvements) &&
                            task.evaluation.improvements.length > 0 && (
                             <div>
@@ -854,7 +886,7 @@ export default function ProgramCompletePage() {
             })}
           </div>
         </div>
-        
+
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
