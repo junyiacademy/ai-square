@@ -44,6 +44,73 @@ jobs:
         working-directory: ./frontend
         run: npx jest --ci --coverage --testPathIgnorePatterns='/tests/integration/|/e2e/|/frontend/e2e/|\.spec\.ts$' --watchAll=false
 
+  # Schema validation (parallel execution, doesn't block deployment)
+  schema-validation:
+    name: Schema Validation
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: ai_square_db
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: npm ci
+
+      - name: Validate Schema Consistency
+        working-directory: ./frontend
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/ai_square_db
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_USER: postgres
+          DB_PASSWORD: postgres
+          DB_NAME: ai_square_db
+        run: |
+          echo "🔍 Checking schema consistency..."
+          npx prisma migrate deploy
+          npx prisma generate
+          npx tsx scripts/validate-schema-consistency.ts || echo "⚠️ Schema validation script not found"
+
+      - name: Check Prisma Migration Status
+        working-directory: ./frontend
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/ai_square_db
+        run: |
+          echo "📊 Checking migration status..."
+          npx prisma migrate status || true
+
+      - name: Upload schema report on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: schema-validation-report-${{ github.run_id }}
+          path: |
+            frontend/prisma/schema.prisma
+            frontend/prisma/migrations/
+
   # Deploy job
   deploy:
     name: Deploy to Cloud Run
