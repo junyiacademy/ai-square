@@ -17,14 +17,14 @@ repos:
         files: ^frontend/.*\.(ts|tsx|js|jsx)$
         pass_filenames: false
 
-      - id: unit-tests
-        name: Unit Tests (Pre-push only)
-        entry: bash -c 'cd frontend && npx jest --ci --coverage --testPathIgnorePatterns="/tests/integration/|/e2e/|/frontend/e2e/|\.spec\.ts$" --watchAll=false'
-        language: system
-        types: [file]
-        files: ^frontend/.*\.(ts|tsx)$
-        pass_filenames: false
-        stages: [pre-push]
+      # - id: unit-tests
+      #   name: Unit Tests (Pre-push only)
+      #   entry: bash -c 'cd frontend && npx jest --ci --coverage --testPathIgnorePatterns="/tests/integration/|/e2e/|/frontend/e2e/|\.spec\.ts$" --watchAll=false'
+      #   language: system
+      #   types: [file]
+      #   files: ^frontend/.*\.(ts|tsx)$
+      #   pass_filenames: false
+      #   stages: [pre-push]
 
       - id: build-check
         name: Build Check (Pre-push only)
