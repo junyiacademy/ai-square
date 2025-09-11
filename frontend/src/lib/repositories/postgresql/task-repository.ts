@@ -103,14 +103,14 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
 
     const query = `
       INSERT INTO tasks (
-        id, program_id, scenario_id, mode, task_index,
+        id, program_id, scenario_id, mode, task_index, scenario_task_index,
         title, description, type, status,
         content, metadata, interactions,
         ai_config, attempt_count, allowed_attempts, score,
         time_spent_seconds, started_at, updated_at
       ) VALUES (
-        gen_random_uuid(), $1, $2, $3, $4, $5, $6, $7, $8,
-        $9, $10, $11, $12, $13, $14, $15, $16, $17, CURRENT_TIMESTAMP
+        gen_random_uuid(), $1, $2, $3, $4, $5, $6, $7, $8, $9,
+        $10, $11, $12, $13, $14, $15, $16, $17, $18, CURRENT_TIMESTAMP
       )
       RETURNING *
     `;
@@ -120,6 +120,7 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
       task.scenarioId,
       task.mode,
       task.taskIndex,
+      task.scenarioTaskIndex !== undefined ? task.scenarioTaskIndex : null,
       task.title || null,
       task.description || null,
       task.type,
@@ -152,14 +153,14 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
         }
         const query = `
           INSERT INTO tasks (
-            id, program_id, scenario_id, mode, task_index,
+            id, program_id, scenario_id, mode, task_index, scenario_task_index,
             title, description, type, status,
             content, metadata, interactions,
             ai_config, attempt_count, allowed_attempts, score,
             time_spent_seconds, started_at, updated_at
           ) VALUES (
-            gen_random_uuid(), $1, $2, $3, $4, $5, $6, $7, $8,
-            $9, $10, $11, $12, $13, $14, $15, $16, $17, CURRENT_TIMESTAMP
+            gen_random_uuid(), $1, $2, $3, $4, $5, $6, $7, $8, $9,
+            $10, $11, $12, $13, $14, $15, $16, $17, $18, CURRENT_TIMESTAMP
           )
           RETURNING *
         `;
@@ -169,6 +170,7 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
           task.scenarioId,
           task.mode,
           task.taskIndex,
+          task.scenarioTaskIndex !== undefined ? task.scenarioTaskIndex : null,
           task.title || null,
           task.description || null,
           task.type,
