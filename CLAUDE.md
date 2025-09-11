@@ -91,14 +91,7 @@ export CLOUDSDK_ACTIVE_CONFIG_NAME=other-config
 ❌ 重複造輪子
 ```
 
-> **🚀 CI/CD 與部署指南已移至專門文件**
-> 
-> **CI/CD 部署指南**: 請參考 [`docs/deployment/CICD.md`](docs/deployment/CICD.md)
-> - Terraform vs GitHub Actions 責任分工
-> - 部署監控與驗證流程
-> - Cloud Run + Cloud SQL 部署指南
-> - 部署後強制測試規則
-> - 部署初始化關鍵步驟
+> **🚀 CI/CD 與部署指南**: 請參考 [`docs/deployment/CICD.md`](docs/deployment/CICD.md)
 
 ### 📊 平台開發鐵則
 
@@ -217,7 +210,7 @@ export CLOUDSDK_ACTIVE_CONFIG_NAME=other-config
 ```yaml
 繞遠路的決策：
 1. GCS 當資料庫 → 應該直接用 PostgreSQL
-2. deploy.sh 腳本 → 應該直接用 Terraform  
+2. deploy.sh 腳本 → 應該直接用 Terraform
 3. Schema V1→V2→V3→V4 → 應該一開始就設計完整
 4. 漸進式測試覆蓋 → 應該 TDD from Day 1
 
@@ -236,29 +229,6 @@ export CLOUDSDK_ACTIVE_CONFIG_NAME=other-config
 - **不要技術債** → 沒有"暫時"的程式碼
 
 ---
-
-## 🚨 測試驅動開發 (TDD) 核心原則
-
-### 修復流程
-1. **寫測試** - 先寫測試確認問題存在
-2. **實際測試** - 使用 Playwright 或 Browser MCP 測試真實畫面
-3. **驗證結果** - 確認修復成功後才回報
-
-### 測試工具
-```bash
-# API 測試
-curl -s "http://localhost:3001/api/..." | jq
-
-# 資料庫檢查
-PGPASSWORD=postgres psql -h 127.0.0.1 -p 5433 -U postgres -d ai_square_db -c "SELECT ..."
-
-# 瀏覽器測試
-npx playwright test --headed
-```
-
-**強制要求：必須使用瀏覽器工具親自驗證結果，不能只依賴 API 測試！**
-
-
 
 ### 🚨 重要教訓
 
@@ -299,33 +269,31 @@ SLACK_AISQUARE_WEBHOOK_URL=https://hooks.slack.com/services/...
 SLACK_AISQUARE_DEV_WEBHOOK_URL=https://hooks.slack.com/services/...
 ```
 
-## 🧪 TDD + Tidy First 原則
-
-### 核心開發原則
-- **TDD 循環**: Red → Green → Refactor
-- **寫最簡單的失敗測試** → 實現最小代碼 → 重構
-- **分離結構性和行為性變更** (Tidy First)
-- **一次一個測試** → 讓它通過 → 改善結構 → 總是運行測試
-
-### 提交紀律
-只有當以下條件都滿足時才提交：
-- ✅ 所有測試通過
-- ✅ 所有 lint/編譯器警告已解決
-- ✅ 代表一個邏輯變更
-- ✅ 提交訊息標明 `structural` 或 `behavioral`
-- ✅ 小原子提交，不是大批量
-
-
-## 🔧 TypeScript 錯誤修復核心原則
-
-### 🚨 修復策略
-**零風險修復：永遠不破壞現有功能，每次修復都必須可驗證和可逆轉。**
+## 🧪 Testing / TDD 原則
 
 ### 核心原則
-1. **永遠不使用 `any` 類型** - 使用 `Record<string, unknown>` 或具體類型
-2. **使用 Optional Chaining** - `program?.completedAt ?? null`
-3. **一次修復一個檔案** - 修復後立即測試
-4. **永遠不使用 `@ts-ignore`** - 修復根本問題而非掩蓋
+- **TDD 循環**: Red → Green → Refactor
+- **寫最小失敗測試** → 實作最小代碼 → 重構
+- **一次一個測試**，持續運行測試
+- **分離結構性與行為性變更**（Tidy First）
+- **強制瀏覽器驗證**：使用 Playwright/瀏覽器親自驗證關鍵路徑
+
+### 常用工具
+```bash
+# API 測試
+curl -s "http://localhost:3001/api/..." | jq
+
+# 資料庫檢查
+PGPASSWORD=postgres psql -h 127.0.0.1 -p 5433 -U postgres -d ai_square_db -c "SELECT ..."
+
+# 瀏覽器測試
+npx playwright test --headed
+```
+
+
+## 🔧 TypeScript 修復原則（整合）
+
+**零風險修復**：不破壞現有功能，每次修復可驗證、可回滾。
 
 
 ## 🚀 Modern AI Development Workflow
@@ -351,7 +319,7 @@ make ai-done                          # Complete work (test+commit+merge)
 3. Write tests alongside features (TDD)
 4. Regular `make ai-save` to track progress
 5. Wait for user confirmation before `make ai-done`
-6. All commit messages in English
+6. Follow Git Commit Guidelines (English + conventional commits)
 7. Strict TypeScript types (no `any`)
 8. Follow all ESLint rules
 
@@ -442,13 +410,13 @@ npm run test:ci -- -u
 - **Purpose**: User-facing content and materials
 - **Includes**: instructions, question, options, description, hints, resources
 
-**`context`** - Task Context  
+**`context`** - Task Context
 - **Purpose**: Environment and background information
 - **Includes**: scenarioId, difficulty, ksaCodes, metadata, taskType, estimatedTime
 
 #### Mandatory Checklist
 - [ ] content contains only user content
-- [ ] context contains only system metadata  
+- [ ] context contains only system metadata
 - [ ] No nested content.context or context.content
 - [ ] All modules (PBL/Assessment/Discovery) use same structure
 
@@ -465,11 +433,14 @@ npm run lint
 
 #### 核心規則
 1. **永遠不使用 `any` 類型** - 使用 `Record<string, unknown>` 或具體類型
-2. **Next.js 15 路由參數** - 必須使用 `Promise<{ params }>` 並 `await`
-3. **多語言欄位** - 必須使用 `Record<string, string>` 格式
-4. **Repository 方法** - 可選方法必須使用 `?.` 操作符
-5. **測試檔案** - 必須嚴格遵守所有 TypeScript 規則，零例外
-6. **Pre-commit 檢查** - 必須通過所有檢查才能提交
+2. **使用 Optional Chaining** - `program?.completedAt ?? null`
+3. **一次修復一個檔案** - 修復後立即測試
+4. **永遠不使用 `@ts-ignore`** - 修復根本問題而非掩蓋
+5. **Next.js 15 路由參數** - 必須使用 `Promise<{ params }>` 並 `await`
+6. **多語言欄位** - 必須使用 `Record<string, string>` 格式
+7. **Repository 方法** - 可選方法必須使用 `?.` 操作符
+8. **測試檔案** - 必須嚴格遵守所有 TypeScript 規則，零例外
+9. **Pre-commit 檢查** - 必須通過所有檢查才能提交
 
 #### 常見錯誤模式
 - **多語言欄位不匹配**: `string` vs `Record<string, string>`
@@ -489,7 +460,7 @@ npm run lint
 - **多語言欄位不匹配**: 使用 `{ en: value }` 格式
 - **型別定義衝突**: 從單一來源導入，不重複定義
 - **不安全的型別轉換**: 使用 `as unknown as Type`
-- **Next.js 15 路由參數**: 使用 `Promise<{ params }>` 並 `await`
+
 
 #### 快速修復檢查清單
    ```bash
@@ -513,13 +484,13 @@ npm run typecheck && npm run lint && npm run test:ci
    cd frontend && npx tsc --noEmit
    ```
    **如果有任何 TypeScript 錯誤（包含測試檔案），必須先修復才能繼續！**
-   
+
    檢查測試檔案錯誤：
    ```bash
    npx tsc --noEmit 2>&1 | grep -E "test\.(ts|tsx)"
    ```
 
-2. **ESLint Check (TypeScript 通過後才檢查)**: 
+2. **ESLint Check (TypeScript 通過後才檢查)**:
    ```bash
    cd frontend && npx eslint $(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(ts|tsx|js|jsx)$')
    ```
@@ -552,9 +523,9 @@ npm run typecheck && npm run lint && npm run test:ci
 4. **AI-enhanced format**:
    ```
    <type>: <subject>
-   
+
    <body>
-   
+
    🤖 AI Assistant: Claude Opus 4
    📊 Session context: ~<tokens> tokens (estimated)
    🎯 Task complexity: <level>
@@ -579,13 +550,13 @@ git pull --rebase origin main
 ## 項目資訊
 
 > **📋 產品需求與技術規格已移至專門文件**
-> 
+>
 > **產品需求文檔 (PRD)**: 請參考 [`docs/handbook/PRD.md`](docs/handbook/PRD.md)
 > - 產品願景與核心功能
 > - 技術棧選型與架構
 > - 發展路線圖與優先事項
 > - 成功指標與風險管理
-> 
+>
 > **技術架構文檔**: 請參考 [`docs/technical/infrastructure/unified-learning-architecture.md`](docs/technical/infrastructure/unified-learning-architecture.md)
 > - 統一學習架構設計
 > - 資料庫架構與 Repository Pattern
@@ -671,55 +642,36 @@ make gcloud-build-and-deploy-frontend
 
 > **📋 詳細架構說明**: 請參考 [`docs/technical/infrastructure/unified-learning-architecture.md`](docs/technical/infrastructure/unified-learning-architecture.md)
 
-**核心架構**：
-- **統一學習架構**: 所有模組（Assessment、PBL、Discovery）遵循相同資料流程
-- **Repository Pattern**: PostgreSQL Repository 抽象層
-- **多語言支援**: 14 種語言，混合式翻譯架構
-- **快取策略**: 多層快取提升效能
+**摘要**：
+- 統一學習架構（Assessment / PBL / Discovery 共用資料流程）
+- Repository Pattern（PostgreSQL 抽象層）
+- 多語言支援（14 種語言，混合翻譯）
+- 多層快取策略
 
 ### Database Architecture
 
 > **📋 詳細資料庫架構**: 請參考 [`docs/technical/infrastructure/unified-learning-architecture.md`](docs/technical/infrastructure/unified-learning-architecture.md)
 
-**核心設計**：
-- **PostgreSQL**: 主要資料庫，統一學習架構
-- **資料流程**: Content Source → Scenario → Program → Task → Evaluation
-- **多語言支援**: JSONB 格式儲存
-- **Repository Pattern**: 抽象層設計，支援未來擴充
+**摘要**：
+- PostgreSQL 為主；資料流程：Content Source → Scenario → Program → Task → Evaluation
+- 多語言支援：JSONB 格式儲存
 
 ### Configuration Files
 - `eslint.config.mjs` - Next.js + TypeScript ESLint setup
-- `tailwind.config.js` - Tailwind CSS configuration  
+- `tailwind.config.js` - Tailwind CSS configuration
 - `next.config.ts` - Next.js configuration with i18n
 - `tsconfig.json` - TypeScript configuration
 
 ### Important Technical Specifications
 
-#### 🚨 Cloud SQL Deployment - Regions Must Match
-**Key lesson from painful staging deployment**
-
-- **Problem**: "relation does not exist" errors were actually timeout issues
-- **Cause**: Cloud SQL in `us-central1`, Cloud Run in `asia-east1`
-- **Solution**: Both services must be in same region
+#### Cloud Run + Cloud SQL
+- Regions must match；完整排查與指引請見 `docs/deployment/CICD.md` 的 Cloud Run + Cloud SQL 章節
 
 #### Vertex AI Model Names
 - **Correct model**: `gemini-2.5-flash` (not gemini-pro)
 
 ### 🏗️ 架構最佳實踐
-
-**Day 1 必須有**：
-- PostgreSQL（不用檔案系統當資料庫）
-- Redis（早期設計快取策略）
-- Repository Pattern（從開始就建立抽象層）
-- 正確的多語言支援（JSONB 格式）
-
-**絕對避免**：
-- 檔案系統當資料庫
-- 字串後綴做 i18n
-- "臨時"解決方案
-- 忽略資料關聯
-
-**記住：沒有什麼比臨時解決方案更永久**
+本段內容已於前文「平台開發鐵則」與技術文件覆蓋，此處省略重複清單。
 
 
 
@@ -745,5 +697,3 @@ make gcloud-build-and-deploy-frontend
 ---
 
 Note: This CLAUDE.md file must remain in the project root directory to be automatically read by Claude AI.
-
-
