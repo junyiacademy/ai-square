@@ -219,9 +219,14 @@ jobs:
 
             # Set default values if secrets are not configured
             DB_PASSWORD="${{ secrets.PROD_DB_PASSWORD }}"
-            DB_USER="${{ secrets.PROD_DB_USER || 'postgres' }}"
-            DB_NAME="${{ secrets.PROD_DB_NAME || 'ai_square_db' }}"
-            DB_HOST="${{ secrets.PROD_DB_HOST || '/cloudsql/ai-square-463013:asia-east1:ai-square-db-production' }}"
+            DB_USER="${{ secrets.PROD_DB_USER }}"
+            DB_NAME="${{ secrets.PROD_DB_NAME }}"
+            DB_HOST="${{ secrets.PROD_DB_HOST }}"
+
+            # Use defaults if not set
+            : "${DB_USER:=postgres}"
+            : "${DB_NAME:=ai_square_db}"
+            : "${DB_HOST:=/cloudsql/ai-square-463013:asia-east1:ai-square-db-production}"
 
             # Validate critical secrets
             if [[ -z "${DB_PASSWORD}" ]]; then
@@ -245,9 +250,14 @@ jobs:
 
             # Set default values if secrets are not configured
             DB_PASSWORD="${{ secrets.STAGING_DB_PASSWORD }}"
-            DB_USER="${{ secrets.STAGING_DB_USER || 'postgres' }}"
-            DB_NAME="${{ secrets.STAGING_DB_NAME || 'ai_square_db' }}"
-            DB_HOST="${{ secrets.STAGING_DB_HOST || '/cloudsql/ai-square-463013:asia-east1:ai-square-db-staging-asia' }}"
+            DB_USER="${{ secrets.STAGING_DB_USER }}"
+            DB_NAME="${{ secrets.STAGING_DB_NAME }}"
+            DB_HOST="${{ secrets.STAGING_DB_HOST }}"
+
+            # Use defaults if not set
+            : "${DB_USER:=postgres}"
+            : "${DB_NAME:=ai_square_db}"
+            : "${DB_HOST:=/cloudsql/ai-square-463013:asia-east1:ai-square-db-staging-asia}"
 
             # Validate critical secrets
             if [[ -z "${DB_PASSWORD}" ]]; then
