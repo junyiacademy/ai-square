@@ -341,84 +341,16 @@ Complexity levels: `simple`, `medium`, `complex`, `debug`
 
 ---
 
-## 🧪 Testing Best Practices
+## 🧪 Testing References
+- E2E/browser validation workflow: `docs/deployment/CICD.md` → 部署後強制測試規則
+- Local dev/test commands: `docs/deployment/local-deployment-guide.md`
+- Architecture-level testing notes: `docs/technical/infrastructure/unified-learning-architecture.md`
 
-### Testing Principles
-1. **TDD First**: Write tests before code
-2. **Coverage Target**: 70%+ coverage
-3. **Test Separation**: Unit and E2E tests separate
-4. **Mock Dependencies**: Isolate tests with mocks
-
-### Unit vs E2E Tests
-- **Unit Tests**: API routes, React components, utilities, state management
-- **E2E Tests**: User flows, cross-page interactions, browser behavior, critical paths
-
-### Test Naming
-- Unit: `ComponentName.test.tsx` or `functionName.test.ts`
-- E2E: `feature-name.spec.ts`
-
-### Handling Obsolete Snapshots
-When tests pass but CI fails due to obsolete snapshots:
-```bash
-# Check for obsolete snapshots
-npm run test:ci
-
-# If you see "X snapshots obsolete", remove them:
-npm run test:ci -- -u
-
-# This removes obsolete snapshots without affecting passing tests
-```
-
-**Note**: Obsolete snapshots are NOT test failures - they're just leftover snapshots from tests that no longer exist or no longer use snapshots.
-
-## 🎯 MVP Development Strategy
-
-### Priority Order
-1. Core user value - validate assumptions
-2. Basic functionality - ensure main flows work
-3. Quality assurance - adequate testing (70%+)
-4. Infrastructure - optimize when needed
-
-### Avoid Premature Optimization
-- ❌ Complex monitoring (use 3rd party)
-- ❌ Over-optimization (wait for bottlenecks)
-- ❌ 100% coverage (focus critical paths)
-- ❌ Perfect infrastructure (incremental improvement)
+## 🎯 Product & Priorities
+詳見 `docs/handbook/PRD.md`（產品願景、優先順序、路線圖與成功指標）。
 
 ### 🏗️ Data Model & Naming Standards
-
-#### Timestamp Field Naming
-1. **createdAt**: Record creation time
-   - PostgreSQL: `created_at TIMESTAMP WITH TIME ZONE`
-   - TypeScript: `createdAt: Date`
-
-2. **startedAt**: Actual start time (optional)
-   - PostgreSQL: `started_at TIMESTAMP WITH TIME ZONE`
-   - TypeScript: `startedAt?: Date`
-
-3. **completedAt**: Completion time (optional)
-   - PostgreSQL: `completed_at TIMESTAMP WITH TIME ZONE`
-   - TypeScript: `completedAt?: Date`
-
-4. **updatedAt**: Last update time
-   - PostgreSQL: `updated_at TIMESTAMP WITH TIME ZONE`
-   - TypeScript: `updatedAt: Date`
-
-#### DDD Terminology
-
-**`content`** - Task Content
-- **Purpose**: User-facing content and materials
-- **Includes**: instructions, question, options, description, hints, resources
-
-**`context`** - Task Context
-- **Purpose**: Environment and background information
-- **Includes**: scenarioId, difficulty, ksaCodes, metadata, taskType, estimatedTime
-
-#### Mandatory Checklist
-- [ ] content contains only user content
-- [ ] context contains only system metadata
-- [ ] No nested content.context or context.content
-- [ ] All modules (PBL/Assessment/Discovery) use same structure
+完整資料模型、命名與欄位規範請見：`docs/technical/infrastructure/unified-learning-architecture.md`
 
 ### 🚨 TypeScript & ESLint 核心規則
 
@@ -562,81 +494,9 @@ git pull --rebase origin main
 > - 資料庫架構與 Repository Pattern
 > - API 設計與服務層架構
 
-### Development Commands
-
-#### Frontend (Next.js)
-```bash
-# Development server
-cd frontend && npm run dev
-
-# Build production
-cd frontend && npm run build
-
-# Lint
-cd frontend && npm run lint
-
-# Type checking
-cd frontend && npm run typecheck
-```
-
-#### Testing Commands
-```bash
-# Unit Tests (Jest + React Testing Library)
-cd frontend && npm run test                    # Watch mode
-cd frontend && npm run test:ci                  # CI mode (no watch)
-cd frontend && npm run test -- --coverage       # With coverage report
-cd frontend && npm run test -- src/components   # Test specific folder
-
-# E2E Tests (Playwright)
-cd frontend && npx playwright install           # Install browsers (first time)
-cd frontend && npm run test:e2e                 # Run all E2E tests
-cd frontend && npm run test:e2e -- --project=chromium  # Chrome only
-cd frontend && npm run test:e2e -- --grep "Login"      # Specific test
-```
-
-#### Test File Structure
-```
-frontend/
-├── src/
-│   ├── components/
-│   │   └── auth/
-│   │       ├── LoginForm.tsx
-│   │       └── __tests__/
-│   │           └── LoginForm.test.tsx    # Unit test
-│   ├── app/
-│   │   └── api/
-│   │       └── auth/
-│   │           ├── login/
-│   │           │   └── route.ts
-│   │           └── __tests__/
-│   │               └── login.test.ts     # API test
-├── e2e/
-│   └── login.spec.ts                     # E2E test
-└── __mocks__/                            # Test mocks
-```
-
-#### Backend (Python FastAPI)
-```bash
-# Development server
-cd backend && source venv/bin/activate && uvicorn main:app --reload
-
-# Run tests (if pytest is installed)
-cd backend && python -m pytest
-
-# Linting (if ruff is installed)
-cd backend && python -m ruff check .
-```
-
-#### Docker & Cloud Deployment
-```bash
-# Build Docker image
-make build-frontend-image
-
-# Deploy to Google Cloud Run
-make gcloud-build-and-deploy-frontend
-```
-
-> **📋 詳細部署指南**: 請參考 [`docs/deployment/CICD.md`](docs/deployment/CICD.md)
+### Development & Testing Commands
+- 本地開發與測試命令：`docs/deployment/local-deployment-guide.md`
+- CI/CD 與部署流程：`docs/deployment/CICD.md`
 
 ### Architecture
 
