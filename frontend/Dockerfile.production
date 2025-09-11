@@ -21,7 +21,7 @@ COPY . .
 # Build the application
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
-ENV ENVIRONMENT=staging
+ENV ENVIRONMENT=production
 
 RUN npx prisma generate && npm run build
 
