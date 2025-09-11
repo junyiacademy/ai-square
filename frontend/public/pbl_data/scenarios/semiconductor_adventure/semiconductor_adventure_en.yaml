@@ -50,18 +50,18 @@ tasks:
     title: "Station 1: The Beginning - Meet the Magical Element Silicon"
     description: Have you ever wondered what connects the vast sandy beaches with the smartphone in your pocket?
     instructions: |
-      Welcome explorer! This journey will take you through five stations. 
+      Welcome explorer! This journey will take you through five stations.
       Watch the videos and answer the questions correctly to advance.
     content: |
       ## The Magical Element: Silicon
-      
+
       ### Key Points
       - The main raw material for chips is **Silicon (Si)**
       - Silicon is the second most abundant element on Earth, after oxygen
       - Silicon usually exists as **Silicon Dioxide (SiO₂)**, commonly found in sand or quartz
-      
+
       ### Science Review: Elements and Compounds
-      Remember? **Elements** are the basic building blocks of matter, like Oxygen (O), Hydrogen (H), and Silicon (Si). 
+      Remember? **Elements** are the basic building blocks of matter, like Oxygen (O), Hydrogen (H), and Silicon (Si).
       **Compounds** are pure substances made of two or more different elements.
     question:
       text: "What is the most important raw material 'Silicon (Si)' for chips extracted from?"
@@ -100,13 +100,13 @@ tasks:
       Silicon is a very special material called a 'semiconductor'. Let's discover its secrets!
     content: |
       ## Understanding Semiconductors
-      
+
       ### Key Points
       - Materials are classified by conductivity: conductors, insulators, and semiconductors
       - **Conductors** (like metals) easily conduct electricity
       - **Insulators** (like rubber) don't conduct electricity
       - **Semiconductors** have conductivity between the two, and can be controlled
-      
+
       ### Science Review: Electric Current
       Electric current is like many tiny "electrons" moving in the same direction through a wire.
     question:
@@ -146,13 +146,13 @@ tasks:
       Follow the incredible transformation journey from simple sand to sophisticated semiconductor chips.
     content: |
       ## The Chip Manufacturing Process
-      
+
       ### Key Points
       - High-purity silicon is melted and pulled into huge cylinders called **silicon ingots**
       - Silicon ingots are sliced into ultra-thin discs called **wafers**
       - Through complex processes like photolithography, billions of tiny electronic components are created
       - The most important component is the **transistor**
-      
+
       ### Science Review: Physical Changes
       Melting (solid to liquid) and solidification (liquid to solid) are physical changes.
     question:
@@ -192,12 +192,12 @@ tasks:
       Let's examine how many times you encounter chips in a typical day!
     content: |
       ## Chips in Daily Life
-      
+
       ### Key Points
       - Chips (Integrated Circuits, ICs) are the brains of modern electronics
       - From phones, computers, smartwatches to cars and trains, chips are everywhere
       - Chips handle computation, memory, and control
-      
+
       ### Science Review: Energy Conversion
       Chemical energy in batteries is converted through chip control into light and sound energy.
     question:
@@ -237,13 +237,13 @@ tasks:
       Discover how the semiconductor industry works through global collaboration.
     content: |
       ## The Global Semiconductor Industry
-      
+
       ### Key Points
       - The industry involves: IC Design, IC Manufacturing, IC Assembly & Testing
       - **IC Design companies** create chip blueprints
       - **IC Manufacturing companies** (foundries) produce chips
       - **IC Assembly & Testing companies** protect and test chips
-      
+
       ### Science Review: Division of Labor
       Like an assembly line, each company focuses on their specialty for efficiency.
     question:

@@ -50,18 +50,18 @@ tasks:
     title: "Station 1: Der Beginn - Lernen Sie das Magische Element Silizium kennen"
     description: Haben Sie sich jemals gefragt, was die weiten Sandstrände mit dem Smartphone in Ihrer Tasche verbindet?
     instructions: |
-      Willkommen Entdecker! Diese Reise führt Sie durch fünf Stationen. 
+      Willkommen Entdecker! Diese Reise führt Sie durch fünf Stationen.
       Schauen Sie sich die Videos an und beantworten Sie die Fragen richtig, um voranzukommen.
     content: |
       ## Das Magische Element: Silizium
-      
+
       ### Schlüsselpunkte
       - Der Hauptrohstoff für Chips ist **Silizium (Si)**
       - Silizium ist nach Sauerstoff das zweithäufigste Element auf der Erde
       - Silizium existiert normalerweise als **Siliziumdioxid (SiO₂)**, häufig in Sand oder Quarz zu finden
-      
+
       ### Wissenschafts-Wiederholung: Elemente und Verbindungen
-      Erinnern Sie sich? **Elemente** sind die Grundbausteine der Materie, wie Sauerstoff (O), Wasserstoff (H) und Silizium (Si). 
+      Erinnern Sie sich? **Elemente** sind die Grundbausteine der Materie, wie Sauerstoff (O), Wasserstoff (H) und Silizium (Si).
       **Verbindungen** sind reine Substanzen aus zwei oder mehr verschiedenen Elementen.
     question:
       text: "Woraus wird der wichtigste Rohstoff 'Silizium (Si)' für Chips extrahiert?"
@@ -100,13 +100,13 @@ tasks:
       Silizium ist ein sehr spezielles Material namens 'Halbleiter'. Entdecken wir seine Geheimnisse!
     content: |
       ## Halbleiter Verstehen
-      
+
       ### Schlüsselpunkte
       - Materialien werden nach Leitfähigkeit klassifiziert: Leiter, Isolatoren und Halbleiter
       - **Leiter** (wie Metalle) leiten Elektrizität leicht
       - **Isolatoren** (wie Gummi) leiten keine Elektrizität
       - **Halbleiter** haben eine Leitfähigkeit zwischen beiden, und sie kann kontrolliert werden
-      
+
       ### Wissenschafts-Wiederholung: Elektrischer Strom
       Elektrischer Strom ist wie viele winzige "Elektronen", die sich in dieselbe Richtung durch einen Draht bewegen.
     question:
@@ -146,13 +146,13 @@ tasks:
       Folgen Sie der unglaublichen Transformationsreise von einfachem Sand zu ausgeklügelten Halbleiter-Chips.
     content: |
       ## Der Chip-Herstellungsprozess
-      
+
       ### Schlüsselpunkte
       - Hochreines Silizium wird geschmolzen und zu riesigen Zylindern namens **Silizium-Ingots** gezogen
       - Silizium-Ingots werden in ultradünne Scheiben namens **Wafer** geschnitten
       - Durch komplexe Prozesse wie Photolithographie werden Milliarden winziger elektronischer Komponenten erstellt
       - Die wichtigste Komponente ist der **Transistor**
-      
+
       ### Wissenschafts-Wiederholung: Physikalische Änderungen
       Schmelzen (fest zu flüssig) und Erstarrung (flüssig zu fest) sind physikalische Änderungen.
     question:
@@ -192,12 +192,12 @@ tasks:
       Untersuchen wir, wie oft Sie Chips an einem typischen Tag begegnen!
     content: |
       ## Chips im täglichen Leben
-      
+
       ### Schlüsselpunkte
       - Chips (Integrierte Schaltkreise, ICs) sind die Gehirne moderner Elektronik
       - Von Telefonen, Computern, Smartwatches bis hin zu Autos und Zügen sind Chips überall
       - Chips handhaben Berechnung, Speicher und Kontrolle
-      
+
       ### Wissenschafts-Wiederholung: Energieumwandlung
       Chemische Energie in Batterien wird durch Chip-Kontrolle in Licht- und Schallenergie umgewandelt.
     question:
@@ -237,13 +237,13 @@ tasks:
       Entdecken Sie, wie die Halbleiterindustrie durch globale Zusammenarbeit funktioniert.
     content: |
       ## Die Globale Halbleiterindustrie
-      
+
       ### Schlüsselpunkte
       - Die Industrie umfasst: IC-Design, IC-Herstellung, IC-Montage & Test
       - **IC-Design-Unternehmen** erstellen Chip-Pläne
       - **IC-Herstellungsunternehmen** (Gießereien) produzieren Chips
       - **IC-Montage & Test-Unternehmen** schützen und testen Chips
-      
+
       ### Wissenschafts-Wiederholung: Arbeitsteilung
       Wie ein Fließband konzentriert sich jedes Unternehmen auf seine Spezialität für Effizienz.
     question:

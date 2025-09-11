@@ -50,18 +50,18 @@ tasks:
     title: "Estación 1: El Comienzo - Conoce el Elemento Mágico Silicio"
     description: ¿Te has preguntado alguna vez qué conecta las vastas playas arenosas con el smartphone de tu bolsillo?
     instructions: |
-      ¡Bienvenido explorador! Este viaje te llevará a través de cinco estaciones. 
+      ¡Bienvenido explorador! Este viaje te llevará a través de cinco estaciones.
       Mira los videos y responde las preguntas correctamente para avanzar.
     content: |
       ## El Elemento Mágico: Silicio
-      
+
       ### Puntos Clave
       - La materia prima principal para los chips es **Silicio (Si)**
       - El silicio es el segundo elemento más abundante en la Tierra, después del oxígeno
       - El silicio generalmente existe como **Dióxido de Silicio (SiO₂)**, comúnmente encontrado en arena o cuarzo
-      
+
       ### Repaso de Ciencia: Elementos y Compuestos
-      ¿Recuerdas? Los **elementos** son los bloques básicos de construcción de la materia, como Oxígeno (O), Hidrógeno (H) y Silicio (Si). 
+      ¿Recuerdas? Los **elementos** son los bloques básicos de construcción de la materia, como Oxígeno (O), Hidrógeno (H) y Silicio (Si).
       Los **compuestos** son sustancias puras hechas de dos o más elementos diferentes.
     question:
       text: "¿De qué se extrae la materia prima más importante 'Silicio (Si)' para los chips?"
@@ -100,13 +100,13 @@ tasks:
       El silicio es un material muy especial llamado 'semiconductor'. ¡Descubramos sus secretos!
     content: |
       ## Entendiendo los Semiconductores
-      
+
       ### Puntos Clave
       - Los materiales se clasifican por conductividad: conductores, aislantes y semiconductores
       - Los **conductores** (como metales) conducen electricidad fácilmente
       - Los **aislantes** (como caucho) no conducen electricidad
       - Los **semiconductores** tienen conductividad entre los dos, y puede ser controlada
-      
+
       ### Repaso de Ciencia: Corriente Eléctrica
       La corriente eléctrica es como muchos "electrones" diminutos moviéndose en la misma dirección a través de un cable.
     question:
@@ -146,13 +146,13 @@ tasks:
       Sigue el increíble viaje de transformación desde arena simple hasta sofisticados chips semiconductores.
     content: |
       ## El Proceso de Fabricación de Chips
-      
+
       ### Puntos Clave
       - El silicio de alta pureza se funde y se tira en cilindros enormes llamados **lingotes de silicio**
       - Los lingotes de silicio se cortan en discos ultra-delgados llamados **obleas**
       - A través de procesos complejos como fotolitografía, se crean miles de millones de componentes electrónicos diminutos
       - El componente más importante es el **transistor**
-      
+
       ### Repaso de Ciencia: Cambios Físicos
       La fusión (sólido a líquido) y solidificación (líquido a sólido) son cambios físicos.
     question:
@@ -192,12 +192,12 @@ tasks:
       ¡Examinemos cuántas veces encuentras chips en un día típico!
     content: |
       ## Chips en la Vida Diaria
-      
+
       ### Puntos Clave
       - Los chips (Circuitos Integrados, ICs) son los cerebros de la electrónica moderna
       - Desde teléfonos, computadoras, relojes inteligentes hasta carros y trenes, los chips están en todas partes
       - Los chips manejan computación, memoria y control
-      
+
       ### Repaso de Ciencia: Conversión de Energía
       La energía química en las baterías se convierte a través del control de chips en energía de luz y sonido.
     question:
@@ -237,13 +237,13 @@ tasks:
       Descubre cómo funciona la industria de semiconductores a través de la colaboración global.
     content: |
       ## La Industria Global de Semiconductores
-      
+
       ### Puntos Clave
       - La industria involucra: Diseño de IC, Fabricación de IC, Ensamblaje y Prueba de IC
       - Las **compañías de Diseño de IC** crean planos de chips
       - Las **compañías de Fabricación de IC** (fundiciones) producen chips
       - Las **compañías de Ensamblaje y Prueba de IC** protegen y prueban chips
-      
+
       ### Repaso de Ciencia: División del Trabajo
       Como una línea de ensamblaje, cada compañía se enfoca en su especialidad para eficiencia.
     question:

@@ -50,18 +50,18 @@ tasks:
     title: "Stazione 1: L'Inizio - Incontra l'Elemento Magico Silicio"
     description: Ti sei mai chiesto cosa collega le vaste spiagge sabbiose con lo smartphone nella tua tasca?
     instructions: |
-      Benvenuto esploratore! Questo viaggio ti porterà attraverso cinque stazioni. 
+      Benvenuto esploratore! Questo viaggio ti porterà attraverso cinque stazioni.
       Guarda i video e rispondi correttamente alle domande per avanzare.
     content: |
       ## L'Elemento Magico: Silicio
-      
+
       ### Punti Chiave
       - La materia prima principale per i chip è il **Silicio (Si)**
       - Il silicio è il secondo elemento più abbondante sulla Terra, dopo l'ossigeno
       - Il silicio esiste solitamente come **Biossido di Silicio (SiO₂)**, comunemente trovato nella sabbia o nel quarzo
-      
+
       ### Ripasso Scientifico: Elementi e Composti
-      Ricordi? Gli **elementi** sono i mattoni base della materia, come Ossigeno (O), Idrogeno (H) e Silicio (Si). 
+      Ricordi? Gli **elementi** sono i mattoni base della materia, come Ossigeno (O), Idrogeno (H) e Silicio (Si).
       I **composti** sono sostanze pure fatte di due o più elementi diversi.
     question:
       text: "Da cosa viene estratta la materia prima più importante 'Silicio (Si)' per i chip?"
@@ -100,13 +100,13 @@ tasks:
       Il silicio è un materiale molto speciale chiamato 'semiconduttore'. Scopriamo i suoi segreti!
     content: |
       ## Comprendere i Semiconduttori
-      
+
       ### Punti Chiave
       - I materiali sono classificati per conduttività: conduttori, isolanti e semiconduttori
       - I **conduttori** (come i metalli) conducono facilmente l'elettricità
       - Gli **isolanti** (come la gomma) non conducono elettricità
       - I **semiconduttori** hanno conduttività tra i due, e può essere controllata
-      
+
       ### Ripasso Scientifico: Corrente Elettrica
       La corrente elettrica è come molti "elettroni" minuscoli che si muovono nella stessa direzione attraverso un filo.
     question:
@@ -146,13 +146,13 @@ tasks:
       Segui l'incredibile viaggio di trasformazione dalla semplice sabbia ai sofisticati chip semiconduttori.
     content: |
       ## Il Processo di Produzione dei Chip
-      
+
       ### Punti Chiave
       - Il silicio ad alta purezza viene fuso e tirato in enormi cilindri chiamati **lingotti di silicio**
       - I lingotti di silicio vengono tagliati in dischi ultra-sottili chiamati **wafer**
       - Attraverso processi complessi come la fotolitografia, vengono creati miliardi di componenti elettronici minuscoli
       - Il componente più importante è il **transistor**
-      
+
       ### Ripasso Scientifico: Cambiamenti Fisici
       La fusione (solido a liquido) e la solidificazione (liquido a solido) sono cambiamenti fisici.
     question:
@@ -192,12 +192,12 @@ tasks:
       Esaminiamo quante volte incontri i chip in una giornata tipica!
     content: |
       ## Chip nella Vita Quotidiana
-      
+
       ### Punti Chiave
       - I chip (Circuiti Integrati, IC) sono i cervelli dell'elettronica moderna
       - Da telefoni, computer, smartwatch ad auto e treni, i chip sono ovunque
       - I chip gestiscono calcolo, memoria e controllo
-      
+
       ### Ripasso Scientifico: Conversione di Energia
       L'energia chimica nelle batterie viene convertita attraverso il controllo dei chip in energia luminosa e sonora.
     question:
@@ -237,13 +237,13 @@ tasks:
       Scopri come funziona l'industria dei semiconduttori attraverso la collaborazione globale.
     content: |
       ## L'Industria Globale dei Semiconduttori
-      
+
       ### Punti Chiave
       - L'industria coinvolge: Design IC, Produzione IC, Assemblaggio e Test IC
       - Le **aziende di Design IC** creano i progetti dei chip
       - Le **aziende di Produzione IC** (fonderie) producono chip
       - Le **aziende di Assemblaggio e Test IC** proteggono e testano i chip
-      
+
       ### Ripasso Scientifico: Divisione del Lavoro
       Come una catena di montaggio, ogni azienda si concentra sulla sua specialità per efficienza.
     question:

@@ -50,18 +50,18 @@ tasks:
     title: "Station 1: Le Commencement - Rencontrez l'Élément Magique Silicium"
     description: Vous êtes-vous déjà demandé ce qui relie les vastes plages de sable avec le smartphone dans votre poche?
     instructions: |
-      Bienvenue explorateur! Ce voyage vous mènera à travers cinq stations. 
+      Bienvenue explorateur! Ce voyage vous mènera à travers cinq stations.
       Regardez les vidéos et répondez correctement aux questions pour avancer.
     content: |
       ## L'Élément Magique: Silicium
-      
+
       ### Points Clés
       - La matière première principale pour les puces est le **Silicium (Si)**
       - Le silicium est le deuxième élément le plus abondant sur Terre, après l'oxygène
       - Le silicium existe généralement sous forme de **Dioxyde de Silicium (SiO₂)**, couramment trouvé dans le sable ou le quartz
-      
+
       ### Révision Scientifique: Éléments et Composés
-      Rappelez-vous? Les **éléments** sont les blocs de construction de base de la matière, comme l'Oxygène (O), l'Hydrogène (H) et le Silicium (Si). 
+      Rappelez-vous? Les **éléments** sont les blocs de construction de base de la matière, comme l'Oxygène (O), l'Hydrogène (H) et le Silicium (Si).
       Les **composés** sont des substances pures faites de deux ou plusieurs éléments différents.
     question:
       text: "D'où est extraite la matière première la plus importante 'Silicium (Si)' pour les puces?"
@@ -100,13 +100,13 @@ tasks:
       Le silicium est un matériau très spécial appelé 'semi-conducteur'. Découvrons ses secrets!
     content: |
       ## Comprendre les Semi-conducteurs
-      
+
       ### Points Clés
       - Les matériaux sont classés par conductivité: conducteurs, isolants et semi-conducteurs
       - Les **conducteurs** (comme les métaux) conduisent facilement l'électricité
       - Les **isolants** (comme le caoutchouc) ne conduisent pas l'électricité
       - Les **semi-conducteurs** ont une conductivité entre les deux, et elle peut être contrôlée
-      
+
       ### Révision Scientifique: Courant Électrique
       Le courant électrique est comme de nombreux "électrons" minuscules se déplaçant dans la même direction à travers un fil.
     question:
@@ -146,13 +146,13 @@ tasks:
       Suivez l'incroyable voyage de transformation du simple sable aux puces semi-conductrices sophistiquées.
     content: |
       ## Le Processus de Fabrication des Puces
-      
+
       ### Points Clés
       - Le silicium de haute pureté est fondu et tiré en énormes cylindres appelés **lingots de silicium**
       - Les lingots de silicium sont tranchés en disques ultra-fins appelés **plaquettes**
       - À travers des processus complexes comme la photolithographie, des milliards de composants électroniques minuscules sont créés
       - Le composant le plus important est le **transistor**
-      
+
       ### Révision Scientifique: Changements Physiques
       La fusion (solide à liquide) et la solidification (liquide à solide) sont des changements physiques.
     question:
@@ -192,12 +192,12 @@ tasks:
       Examinons combien de fois vous rencontrez des puces dans une journée typique!
     content: |
       ## Puces dans la Vie Quotidienne
-      
+
       ### Points Clés
       - Les puces (Circuits Intégrés, CI) sont les cerveaux de l'électronique moderne
       - Des téléphones, ordinateurs, montres intelligentes aux voitures et trains, les puces sont partout
       - Les puces gèrent le calcul, la mémoire et le contrôle
-      
+
       ### Révision Scientifique: Conversion d'Énergie
       L'énergie chimique dans les batteries est convertie par le contrôle des puces en énergie lumineuse et sonore.
     question:
@@ -237,13 +237,13 @@ tasks:
       Découvrez comment l'industrie des semi-conducteurs fonctionne grâce à la collaboration mondiale.
     content: |
       ## L'Industrie Mondiale des Semi-conducteurs
-      
+
       ### Points Clés
       - L'industrie implique: Conception de CI, Fabrication de CI, Assemblage et Test de CI
       - Les **entreprises de Conception de CI** créent les plans des puces
       - Les **entreprises de Fabrication de CI** (fonderies) produisent les puces
       - Les **entreprises d'Assemblage et Test de CI** protègent et testent les puces
-      
+
       ### Révision Scientifique: Division du Travail
       Comme une chaîne de montage, chaque entreprise se concentre sur sa spécialité pour l'efficacité.
     question:

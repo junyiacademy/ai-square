@@ -50,18 +50,18 @@ tasks:
     title: "Estação 1: O Começo - Conheça o Elemento Mágico Silício"
     description: Você já se perguntou o que conecta as vastas praias arenosas com o smartphone no seu bolso?
     instructions: |
-      Bem-vindo explorador! Esta jornada levará você através de cinco estações. 
+      Bem-vindo explorador! Esta jornada levará você através de cinco estações.
       Assista os vídeos e responda as perguntas corretamente para avançar.
     content: |
       ## O Elemento Mágico: Silício
-      
+
       ### Pontos-Chave
       - A matéria-prima principal para chips é **Silício (Si)**
       - O silício é o segundo elemento mais abundante na Terra, depois do oxigênio
       - O silício geralmente existe como **Dióxido de Silício (SiO₂)**, comumente encontrado na areia ou quartzo
-      
+
       ### Revisão Científica: Elementos e Compostos
-      Lembra? **Elementos** são os blocos básicos de construção da matéria, como Oxigênio (O), Hidrogênio (H) e Silício (Si). 
+      Lembra? **Elementos** são os blocos básicos de construção da matéria, como Oxigênio (O), Hidrogênio (H) e Silício (Si).
       **Compostos** são substâncias puras feitas de dois ou mais elementos diferentes.
     question:
       text: "De que é extraída a matéria-prima mais importante 'Silício (Si)' para chips?"
@@ -100,13 +100,13 @@ tasks:
       O silício é um material muito especial chamado 'semicondutor'. Vamos descobrir seus segredos!
     content: |
       ## Entendendo Semicondutores
-      
+
       ### Pontos-Chave
       - Materiais são classificados por condutividade: condutores, isolantes e semicondutores
       - **Condutores** (como metais) conduzem eletricidade facilmente
       - **Isolantes** (como borracha) não conduzem eletricidade
       - **Semicondutores** têm condutividade entre os dois, e pode ser controlada
-      
+
       ### Revisão Científica: Corrente Elétrica
       Corrente elétrica é como muitos "elétrons" minúsculos se movendo na mesma direção através de um fio.
     question:
@@ -146,13 +146,13 @@ tasks:
       Siga a incrível jornada de transformação da simples areia para sofisticados chips semicondutores.
     content: |
       ## O Processo de Fabricação de Chips
-      
+
       ### Pontos-Chave
       - Silício de alta pureza é derretido e puxado em cilindros enormes chamados **lingotes de silício**
       - Lingotes de silício são cortados em discos ultra-finos chamados **wafers**
       - Através de processos complexos como fotolitografia, bilhões de componentes eletrônicos minúsculos são criados
       - O componente mais importante é o **transistor**
-      
+
       ### Revisão Científica: Mudanças Físicas
       Derretimento (sólido para líquido) e solidificação (líquido para sólido) são mudanças físicas.
     question:
@@ -192,12 +192,12 @@ tasks:
       Vamos examinar quantas vezes você encontra chips num dia típico!
     content: |
       ## Chips na Vida Diária
-      
+
       ### Pontos-Chave
       - Chips (Circuitos Integrados, ICs) são os cérebros da eletrônica moderna
       - De telefones, computadores, smartwatches a carros e trens, chips estão em todos os lugares
       - Chips lidam com computação, memória e controle
-      
+
       ### Revisão Científica: Conversão de Energia
       Energia química em baterias é convertida através de controle de chips em energia de luz e som.
     question:
@@ -237,13 +237,13 @@ tasks:
       Descubra como a indústria de semicondutores funciona através da colaboração global.
     content: |
       ## A Indústria Global de Semicondutores
-      
+
       ### Pontos-Chave
       - A indústria envolve: Design de IC, Fabricação de IC, Montagem e Teste de IC
       - **Empresas de Design de IC** criam projetos de chips
       - **Empresas de Fabricação de IC** (fundições) produzem chips
       - **Empresas de Montagem e Teste de IC** protegem e testam chips
-      
+
       ### Revisão Científica: Divisão do Trabalho
       Como uma linha de montagem, cada empresa foca em sua especialidade para eficiência.
     question:

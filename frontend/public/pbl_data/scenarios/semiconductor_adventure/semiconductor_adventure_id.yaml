@@ -50,18 +50,18 @@ tasks:
     title: "Stasiun 1: Awal - Bertemu Unsur Ajaib Silikon"
     description: Pernahkah Anda bertanya-tanya apa yang menghubungkan pantai berpasir yang luas dengan smartphone di saku Anda?
     instructions: |
-      Selamat datang penjelajah! Perjalanan ini akan membawa Anda melalui lima stasiun. 
+      Selamat datang penjelajah! Perjalanan ini akan membawa Anda melalui lima stasiun.
       Tonton video dan jawab pertanyaan dengan benar untuk maju.
     content: |
       ## Unsur Ajaib: Silikon
-      
+
       ### Poin-Poin Utama
       - Bahan baku utama untuk chip adalah **Silikon (Si)**
       - Silikon adalah unsur terbanyak kedua di Bumi, setelah oksigen
       - Silikon biasanya ada sebagai **Silikon Dioksida (SiO₂)**, umumnya ditemukan di pasir atau kuarsa
-      
+
       ### Ulasan Sains: Unsur dan Senyawa
-      Ingat? **Unsur** adalah blok bangunan dasar materi, seperti Oksigen (O), Hidrogen (H), dan Silikon (Si). 
+      Ingat? **Unsur** adalah blok bangunan dasar materi, seperti Oksigen (O), Hidrogen (H), dan Silikon (Si).
       **Senyawa** adalah zat murni yang terbuat dari dua atau lebih unsur yang berbeda.
     question:
       text: "Bahan baku terpenting 'Silikon (Si)' untuk chip diekstrak dari apa?"
@@ -100,13 +100,13 @@ tasks:
       Silikon adalah material yang sangat istimewa yang disebut 'semikonduktor'. Mari kita temukan rahasianya!
     content: |
       ## Memahami Semikonduktor
-      
+
       ### Poin-Poin Utama
       - Material diklasifikasikan berdasarkan konduktivitas: konduktor, isolator, dan semikonduktor
       - **Konduktor** (seperti logam) mudah menghantarkan listrik
       - **Isolator** (seperti karet) tidak menghantarkan listrik
       - **Semikonduktor** memiliki konduktivitas di antara keduanya, dan dapat dikontrol
-      
+
       ### Ulasan Sains: Arus Listrik
       Arus listrik seperti banyak "elektron" kecil yang bergerak ke arah yang sama melalui kawat.
     question:
@@ -146,13 +146,13 @@ tasks:
       Ikuti perjalanan transformasi yang luar biasa dari pasir sederhana ke chip semikonduktor yang canggih.
     content: |
       ## Proses Pembuatan Chip
-      
+
       ### Poin-Poin Utama
       - Silikon kemurnian tinggi dilelehkan dan ditarik menjadi silinder besar yang disebut **ingot silikon**
       - Ingot silikon dipotong menjadi cakram ultra-tipis yang disebut **wafer**
       - Melalui proses kompleks seperti fotolitografi, miliaran komponen elektronik kecil dibuat
       - Komponen terpenting adalah **transistor**
-      
+
       ### Ulasan Sains: Perubahan Fisik
       Peleburan (padat ke cair) dan pemadatan (cair ke padat) adalah perubahan fisik.
     question:
@@ -192,12 +192,12 @@ tasks:
       Mari kita periksa berapa kali Anda menemui chip dalam hari yang biasa!
     content: |
       ## Chip dalam Kehidupan Sehari-hari
-      
+
       ### Poin-Poin Utama
       - Chip (Sirkuit Terpadu, IC) adalah otak dari elektronika modern
       - Dari telepon, komputer, smartwatch hingga mobil dan kereta, chip ada di mana-mana
       - Chip menangani komputasi, memori, dan kontrol
-      
+
       ### Ulasan Sains: Konversi Energi
       Energi kimia dalam baterai dikonversi melalui kontrol chip menjadi energi cahaya dan suara.
     question:
@@ -237,13 +237,13 @@ tasks:
       Temukan bagaimana industri semikonduktor bekerja melalui kolaborasi global.
     content: |
       ## Industri Semikonduktor Global
-      
+
       ### Poin-Poin Utama
       - Industri ini melibatkan: Desain IC, Manufaktur IC, Perakitan & Pengujian IC
       - **Perusahaan Desain IC** membuat blueprint chip
       - **Perusahaan Manufaktur IC** (foundries) memproduksi chip
       - **Perusahaan Perakitan & Pengujian IC** melindungi dan menguji chip
-      
+
       ### Ulasan Sains: Pembagian Kerja
       Seperti jalur perakitan, setiap perusahaan fokus pada spesialisasi mereka untuk efisiensi.
     question:
