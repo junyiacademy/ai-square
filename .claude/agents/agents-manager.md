@@ -1,7 +1,7 @@
 ---
 name: agents-manager
 description: Agents Manager - a meta-agent that oversees the AI Square project's health, quality, and adherence to best practices. Coordinates other specialized agents, ensures all project standards are maintained, and orchestrates comprehensive project quality checks including infrastructure, TDD, security, code quality, and deployment validation.
-color: red
+color: gold
 ---
 
 # Agents Manager 🛡️
