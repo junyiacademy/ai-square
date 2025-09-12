@@ -4,9 +4,24 @@ import path from 'path';
 import yaml from 'js-yaml';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import type { IScenario, ITaskTemplate } from '@/types/unified-learning';
-import type { DifficultyLevel } from '@/types/database';
+import type { DifficultyLevel, TaskType } from '@/types/database';
 import { cacheInvalidationService } from '@/lib/cache/cache-invalidation-service';
 import { distributedCacheService } from '@/lib/cache/distributed-cache-service';
+
+interface PBLTaskYAML {
+  id: string;
+  title?: string;
+  type?: string;
+  instructions?: string;
+  content?: unknown;
+  question?: {
+    text?: string;
+    type?: string;
+    options?: unknown[];
+    correct_answer?: unknown;
+  };
+  [key: string]: unknown;
+}
 
 interface PBLScenarioYAML {
   scenario_info?: {
@@ -22,7 +37,7 @@ interface PBLScenarioYAML {
   challenge_statement?: string;
   real_world_context?: string;
   ksa_mapping?: Record<string, unknown>;
-  tasks?: unknown[];
+  tasks?: PBLTaskYAML[];
   ai_modules?: unknown[];
   [key: string]: unknown;
 }
@@ -129,7 +144,7 @@ export async function POST(request: NextRequest) {
         const realWorldContext: Record<string, string> = {};
 
         // Store tasks by ID with multilingual content
-        const tasksByIdAndLang: Map<string, Map<string, any>> = new Map();
+        const tasksByIdAndLang: Map<string, Map<string, PBLTaskYAML>> = new Map();
 
         // Process each language file
         for (const [lang, filePath] of languageFiles) {
@@ -152,7 +167,7 @@ export async function POST(request: NextRequest) {
 
             // Process tasks for this language
             if (Array.isArray(data?.tasks)) {
-              for (const task of data.tasks as any[]) {
+              for (const task of data.tasks) {
                 if (!task.id) continue;
 
                 if (!tasksByIdAndLang.has(task.id)) {
@@ -184,7 +199,7 @@ export async function POST(request: NextRequest) {
           // Build multilingual fields
           const multilingualTask: ITaskTemplate = {
             id: baseTask.id,
-            type: baseTask.type || 'chat',
+            type: (baseTask.type as TaskType) || 'chat',
             category: baseTask.category,
             time_limit: baseTask.time_limit,
             KSA_focus: baseTask.KSA_focus,
@@ -209,21 +224,27 @@ export async function POST(request: NextRequest) {
           // Merge all language versions
           for (const [lang, task] of langVersions) {
             if (task.title) {
-              multilingualTask.title[lang] = task.title;
+              multilingualTask.title[lang] = task.title as string;
             }
             if (task.description) {
-              multilingualTask.description![lang] = task.description;
+              multilingualTask.description = multilingualTask.description || {};
+              multilingualTask.description[lang] = task.description as string;
             }
             if (task.instructions) {
-              (multilingualTask.instructions as Record<string, unknown>)[lang] = task.instructions;
+              (multilingualTask as Record<string, unknown>).instructions = (multilingualTask as Record<string, unknown>).instructions || {};
+              ((multilingualTask as Record<string, unknown>).instructions as Record<string, string>)[lang] = task.instructions as string;
             }
             if (task.content) {
               (multilingualTask.content as Record<string, unknown>)[lang] = task.content;
             }
 
             // Handle question text if exists
-            if (task.question?.text && multilingualTask.question) {
-              (multilingualTask.question as any).text[lang] = task.question.text;
+            if (task.question?.text && (multilingualTask as Record<string, unknown>).question) {
+              const question = (multilingualTask as Record<string, unknown>).question as Record<string, unknown>;
+              question.text = {
+                ...question.text as Record<string, string> || {},
+                [lang]: task.question.text
+              };
             }
           }
 
@@ -231,7 +252,7 @@ export async function POST(request: NextRequest) {
           if (!multilingualTask.title.en && Object.keys(multilingualTask.title).length > 0) {
             multilingualTask.title.en = Object.values(multilingualTask.title)[0];
           }
-          const instructionsObj = multilingualTask.instructions as Record<string, unknown>;
+          const instructionsObj = (multilingualTask as Record<string, unknown>).instructions as Record<string, string> || {};
           if (!instructionsObj.en && Object.keys(instructionsObj).length > 0) {
             instructionsObj.en = Object.values(instructionsObj)[0];
           }

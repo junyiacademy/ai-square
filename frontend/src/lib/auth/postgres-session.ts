@@ -28,7 +28,17 @@ export class PostgresSession {
    */
   private static async getPool(): Promise<Pool> {
     if (!this.pool) {
-      const dbConfig: any = {
+      const dbConfig: {
+        connectionString?: string;
+        max: number;
+        idleTimeoutMillis: number;
+        connectionTimeoutMillis: number;
+        host?: string;
+        port?: number;
+        database?: string;
+        user?: string;
+        password?: string;
+      } = {
         connectionString: process.env.DATABASE_URL,
         max: 20,
         idleTimeoutMillis: 30000,

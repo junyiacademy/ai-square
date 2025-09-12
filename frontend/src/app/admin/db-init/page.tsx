@@ -7,17 +7,17 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2, CheckCircle, XCircle, RefreshCw, Database, Users, BookOpen, Compass, Gamepad2 } from 'lucide-react';
 
 interface ModuleStatus {
-  users: { count: number; details: any[] };
-  assessment: { count: number; details: any };
-  pbl: { count: number; details: any };
-  discovery: { count: number; details: any };
+  users: { count: number; details: { email: string; role: string }[] };
+  assessment: { count: number; details: Record<string, unknown> | null };
+  pbl: { count: number; details: Record<string, unknown> | null };
+  discovery: { count: number; details: Record<string, unknown> | null };
 }
 
 interface InitResult {
   success: boolean;
   message?: string;
   error?: string;
-  results?: any;
+  results?: Record<string, unknown>;
 }
 
 export default function DatabaseInitPage() {
@@ -260,12 +260,12 @@ export default function DatabaseInitPage() {
                     <p className="text-sm font-medium mb-2">Current Data:</p>
                     {module.key === 'users' && moduleStatus.details && (
                       <ul className="text-xs space-y-1">
-                        {(moduleStatus.details as any[]).slice(0, 5).map((user: any, idx: number) => (
+                        {(moduleStatus.details as { email: string; role: string }[]).slice(0, 5).map((user: { email: string; role: string }, idx: number) => (
                           <li key={idx} className="text-gray-600">
                             • {user.email} ({user.role})
                           </li>
                         ))}
-                        {moduleStatus.details.length > 5 && (
+                        {Array.isArray(moduleStatus.details) && moduleStatus.details.length > 5 && (
                           <li className="text-gray-400">
                             ... and {moduleStatus.details.length - 5} more
                           </li>

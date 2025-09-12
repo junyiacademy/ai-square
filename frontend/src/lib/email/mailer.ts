@@ -35,13 +35,27 @@ export function createTransport() {
 export async function sendEmail(opts: SendEmailOptions) {
   const transporter = createTransport()
   const from = getFrom()
-  await transporter.sendMail({
+
+  console.log('📧 Sending email:', {
     from,
     to: opts.to,
     subject: opts.subject,
-    html: opts.html,
-    text: opts.text,
   })
+
+  try {
+    const result = await transporter.sendMail({
+      from,
+      to: opts.to,
+      subject: opts.subject,
+      html: opts.html,
+      text: opts.text,
+    })
+    console.log('✅ Email sent successfully:', result.messageId)
+    return result
+  } catch (error) {
+    console.error('❌ Email send failed:', error)
+    throw error
+  }
 }
 
 export function appBaseUrl(requestOrigin?: string): string {

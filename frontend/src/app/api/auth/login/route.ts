@@ -5,7 +5,7 @@ import { getPool } from '@/lib/auth/simple-auth';
 export async function POST(request: NextRequest) {
   try {
     // Try to parse body, but don't fail if empty (for auto-login)
-    let body: any = {};
+    let body: { email?: string; password?: string; rememberMe?: boolean } = {};
     try {
       body = await request.json();
     } catch {

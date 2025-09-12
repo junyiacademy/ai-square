@@ -28,7 +28,17 @@ let pool: Pool | null = null;
  */
 export function getPool(): Pool {
   if (!pool) {
-    const dbConfig: any = {
+    const dbConfig: {
+      connectionString?: string;
+      max: number;
+      idleTimeoutMillis: number;
+      connectionTimeoutMillis: number;
+      host?: string;
+      port?: number;
+      database?: string;
+      user?: string;
+      password?: string;
+    } = {
       connectionString: process.env.DATABASE_URL,
       max: 20,
       idleTimeoutMillis: 30000,
@@ -154,7 +164,12 @@ export async function destroySession(token: string): Promise<void> {
  */
 export async function loginUser(email: string, password: string): Promise<{
   success: boolean;
-  user?: any;
+  user?: {
+    id: string;
+    email: string;
+    name: string;
+    role: string;
+  };
   token?: string;
   error?: string;
 }> {
@@ -208,7 +223,12 @@ export async function loginUser(email: string, password: string): Promise<{
  */
 export async function autoLoginDev(): Promise<{
   success: boolean;
-  user?: any;
+  user?: {
+    id: string;
+    email: string;
+    name: string;
+    role: string;
+  };
   token?: string;
 }> {
   if (process.env.NODE_ENV !== 'development') {
