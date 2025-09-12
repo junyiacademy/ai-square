@@ -61,6 +61,14 @@ Project Guardian 是一個 Meta-Agent，負責：
 
 ### 📋 Specialized Sub-Agents
 - **project-guardian**: 🛡️ Meta-Agent，專案品質守護者
+- **infrastructure-first-agent**: 🏗️ 防止臨時解決方案，確保生產級基礎設施
+- **tdd-validator-agent**: 🧪 TDD 執行者，確保測試先行開發
+- **unified-architecture-guardian**: 🏛️ 統一架構守護者，維護模組一致性
+- **security-audit-agent**: 🔐 安全審計，掃描敏感檔案和憑證
+- **code-quality-enforcer**: 📏 程式碼品質執法者，零 any 類型政策
+- **deployment-pipeline-agent**: 🚀 部署流程管理，staging 到 production
+- **gcp-config-manager**: ☁️ GCP 配置管理，確保正確的專案和區域
+- **documentation-sync-agent**: 📚 文檔同步，自動更新所有文檔
 - **typescript-eslint-fixer**: TypeScript/ESLint 錯誤修復
 - **deployment-qa**: 部署驗證與 QA 檢查
 - **slack-tracker-integration**: Slack 報告與追蹤
@@ -72,12 +80,20 @@ Project Guardian 是一個 Meta-Agent，負責：
 ### 🔍 智能選擇邏輯
 ```yaml
 綜合檢查/新功能 → project-guardian (會自動調用其他 agents)
+基礎設施檢查 → infrastructure-first-agent
+測試需求 → tdd-validator-agent
+架構一致性 → unified-architecture-guardian
+安全掃描 → security-audit-agent
+程式碼品質 → code-quality-enforcer
 TypeScript 錯誤 → typescript-eslint-fixer
-部署任務 → deployment-qa
+部署流程 → deployment-pipeline-agent
+部署驗證 → deployment-qa
+GCP 配置 → gcp-config-manager
+文檔更新 → documentation-sync-agent
 Slack 報告 → slack-tracker-integration
 記憶管理 → progress-memory-coach
 Git 操作 → git-commit-push
-基礎設施 → terraform-deploy
+Terraform → terraform-deploy
 複雜搜尋 → general-purpose
 ```
 

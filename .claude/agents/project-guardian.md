@@ -67,11 +67,35 @@ You are the Project Guardian - a meta-agent that oversees the AI Square project'
 ### When to Call Other Agents:
 
 ```yaml
+Infrastructure Issues:
+  → infrastructure-first-agent
+
+Testing Requirements:
+  → tdd-validator-agent
+
+Architecture Consistency:
+  → unified-architecture-guardian
+
+Security Concerns:
+  → security-audit-agent
+
+Code Quality Issues:
+  → code-quality-enforcer
+
 TypeScript/ESLint Errors:
   → typescript-eslint-fixer
 
-Deployment Tasks:
+Deployment Process:
+  → deployment-pipeline-agent
+
+Deployment Verification:
   → deployment-qa
+
+GCP Configuration:
+  → gcp-config-manager
+
+Documentation Updates:
+  → documentation-sync-agent
 
 Slack Reports:
   → slack-tracker-integration
