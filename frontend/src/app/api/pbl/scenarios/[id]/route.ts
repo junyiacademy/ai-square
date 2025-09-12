@@ -171,33 +171,33 @@ function buildKSAIndex(ksaData: KSAData, lang: string): Map<string, KSAItem> {
 // Optimized KSA mapping builder
 function buildKSAMapping(yamlData: YAMLData, ksaData: KSAData | null, lang: string): KSAMapping | undefined {
   if (!yamlData.ksa_mapping || !ksaData) return undefined;
-  
+
   const index = buildKSAIndex(ksaData, lang);
   const mapping: KSAMapping = {
     knowledge: [],
     skills: [],
     attitudes: []
   };
-  
+
   // Process all codes at once
   if (yamlData.ksa_mapping.knowledge) {
     mapping.knowledge = yamlData.ksa_mapping.knowledge
       .map(code => index.get(code))
       .filter(Boolean) as KSAItem[];
   }
-  
+
   if (yamlData.ksa_mapping.skills) {
     mapping.skills = yamlData.ksa_mapping.skills
       .map(code => index.get(code))
       .filter(Boolean) as KSAItem[];
   }
-  
+
   if (yamlData.ksa_mapping.attitudes) {
     mapping.attitudes = yamlData.ksa_mapping.attitudes
       .map(code => index.get(code))
       .filter(Boolean) as KSAItem[];
   }
-  
+
   return mapping;
 }
 
@@ -206,23 +206,23 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id: scenarioId } = await params;
-  
+
   // Check if it's a UUID or a YAML ID
   const isUUID = scenarioId.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i);
-  
+
   // Use cached GET wrapper with 5 minute TTL
   return cachedGET(request, async () => {
     const { searchParams } = new URL(request.url);
     const lang = searchParams.get('lang') || 'en';
-    
+
     console.log('Loading scenario:', scenarioId, 'with lang:', lang, 'isUUID:', isUUID);
-    
+
     // Load scenario and KSA data in parallel
     const [scenarioResult, ksaData] = await parallel(
       (async () => {
         const { repositoryFactory } = await import('@/lib/repositories/base/repository-factory');
         const scenarioRepo = repositoryFactory.getScenarioRepository();
-        
+
         if (isUUID) {
           // Direct lookup by UUID
           return scenarioRepo.findById(scenarioId);
@@ -230,35 +230,35 @@ export async function GET(
           // Use index for fast lookup
           const { scenarioIndexService } = await import('@/lib/services/scenario-index-service');
           const { scenarioIndexBuilder } = await import('@/lib/services/scenario-index-builder');
-          
+
           // Ensure index exists
           await scenarioIndexBuilder.ensureIndex();
-          
+
           // Look up UUID by YAML ID
           const uuid = await scenarioIndexService.getUuidByYamlId(scenarioId);
           if (!uuid) {
             return null;
           }
-          
+
           // Fetch scenario by UUID
           return scenarioRepo.findById(uuid);
         }
       })(),
       loadKSACodes(lang)
     ) as [Scenario | null, KSAData | null];
-    
+
     if (!scenarioResult) {
       throw new Error('Scenario not found');
     }
-    
+
     // Get YAML data from metadata or pblData
     const yamlData = scenarioResult.metadata?.yamlData || scenarioResult.pblData;
-    
+
     console.log('Scenario loaded from unified architecture: success');
     console.log('Has yamlData:', !!yamlData);
     console.log('Has pblData:', !!scenarioResult.pblData);
     console.log('Has taskTemplates:', !!scenarioResult.taskTemplates);
-    
+
     // Transform to API response format
     const scenarioResponse: ScenarioResponse = {
       id: scenarioResult.id,
@@ -275,12 +275,37 @@ export async function GET(
         title: typeof task.title === 'object' ? ((task.title as Record<string, string>)?.[lang] || (task.title as Record<string, string>)?.en || '') : String(task.title || ''),
         description: typeof task.description === 'object' ? ((task.description as Record<string, string>)?.[lang] || (task.description as Record<string, string>)?.en || '') : String(task.description || task.instructions || ''),
         category: String(task.category || task.type || 'general'),
-        instructions: Array.isArray(task.instructions) ? task.instructions as string[] : [String(task.instructions || task.description || '')],
+        instructions: (() => {
+          const inst = task.instructions;
+          if (!inst) return [];
+          if (Array.isArray(inst)) {
+            return inst.map(item => {
+              if (typeof item === 'string') return item;
+              if (typeof item === 'object' && item !== null) {
+                // Check for multilingual object
+                const obj = item as Record<string, unknown>;
+                if (obj[lang] && typeof obj[lang] === 'string') return String(obj[lang]);
+                if (obj.en && typeof obj.en === 'string') return String(obj.en);
+                // Check for text or content property
+                if (obj.text && typeof obj.text === 'string') return String(obj.text);
+                if (obj.content && typeof obj.content === 'string') return String(obj.content);
+              }
+              return ''; // Return empty string instead of [object Object]
+            }).filter(s => s !== '');
+          }
+          if (typeof inst === 'string') return [inst];
+          if (typeof inst === 'object' && inst !== null) {
+            const obj = inst as Record<string, unknown>;
+            if (obj[lang] && typeof obj[lang] === 'string') return [String(obj[lang])];
+            if (obj.en && typeof obj.en === 'string') return [String(obj.en)];
+          }
+          return [];
+        })(),
         expectedOutcome: String(task.expectedOutcome || ''),
         timeLimit: Number(task.estimatedTime || task.timeLimit || 30)
       }))
     };
-    
+
     return {
       success: true,
       data: scenarioResponse

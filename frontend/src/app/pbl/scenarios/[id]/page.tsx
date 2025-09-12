@@ -13,26 +13,65 @@ import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
 // Fallback: try to stringify non-primitive safely, never render [object Object]
 function normalizeInstructions(input: unknown, lang: string): string[] {
   if (!input) return [];
+
+  // If it's already an array, process each item
   if (Array.isArray(input)) {
     return input
-      .map((v) => (typeof v === 'string' ? v : typeof v === 'object' && v !== null && 'text' in (v as Record<string, unknown>) ? String((v as Record<string, unknown>).text) : JSON.stringify(v)))
-      .filter((s) => typeof s === 'string' && s.trim().length > 0);
+      .map((v) => {
+        if (typeof v === 'string') return v;
+        if (typeof v === 'object' && v !== null) {
+          // Check for text property
+          if ('text' in v) return String((v as Record<string, unknown>).text);
+          // Check for multilingual object
+          if (lang in v) return String((v as Record<string, unknown>)[lang]);
+          if ('en' in v) return String((v as Record<string, unknown>).en);
+          // Check for content property
+          if ('content' in v) return String((v as Record<string, unknown>).content);
+        }
+        // Don't stringify objects - skip them
+        return null;
+      })
+      .filter((s): s is string => s !== null && s.trim().length > 0);
   }
+
+  // If it's a single string, return as array
   if (typeof input === 'string') return [input];
+
+  // If it's an object, check for language-specific or standard fields
   if (typeof input === 'object' && input !== null) {
     const obj = input as Record<string, unknown>;
-    // language-specific string[]
-    if (Array.isArray(obj[lang])) {
-      return (obj[lang] as unknown[]).map((v) => (typeof v === 'string' ? v : JSON.stringify(v)));
+
+    // Check for language-specific field
+    if (obj[lang]) {
+      if (Array.isArray(obj[lang])) {
+        return (obj[lang] as unknown[])
+          .map(v => typeof v === 'string' ? v : null)
+          .filter((s): s is string => s !== null);
+      }
+      if (typeof obj[lang] === 'string') return [String(obj[lang])];
     }
-    // language-specific string
-    if (typeof obj[lang] === 'string') return [String(obj[lang])];
-    // english fallback
-    if (Array.isArray(obj.en)) return (obj.en as unknown[]).map((v) => (typeof v === 'string' ? v : JSON.stringify(v)));
-    if (typeof obj.en === 'string') return [String(obj.en)];
+
+    // English fallback
+    if (obj.en) {
+      if (Array.isArray(obj.en)) {
+        return (obj.en as unknown[])
+          .map(v => typeof v === 'string' ? v : null)
+          .filter((s): s is string => s !== null);
+      }
+      if (typeof obj.en === 'string') return [String(obj.en)];
+    }
+
+    // Check for direct array properties that might contain instructions
+    const possibleArrayFields = ['items', 'list', 'steps', 'instructions'];
+    for (const field of possibleArrayFields) {
+      if (Array.isArray(obj[field])) {
+        return normalizeInstructions(obj[field], lang);
+      }
+    }
   }
-  // last resort
-  try { return [JSON.stringify(input)]; } catch { return []; }
+
+  // Return empty array instead of stringifying objects
+  return [];
 }
 
 export default function ScenarioDetailPage() {
@@ -560,6 +599,7 @@ export default function ScenarioDetailPage() {
 
                 {/* Instructions */}
                 {(() => {
+                  // Re-use the normalizeInstructions function from top of file
                   const instructions = normalizeInstructions((task as any).instructions, i18n.language)
                   return instructions.length > 0 ? (
                   <div className="mb-3">
