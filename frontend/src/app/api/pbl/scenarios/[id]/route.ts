@@ -86,10 +86,20 @@ const getLocalizedValue = memoize(((...args: unknown[]) => {
   return data[localizedField] || data[fieldName] || '';
 }) as (...args: unknown[]) => unknown);
 
+// TODO: CRITICAL PERFORMANCE ISSUE - Move KSA data to PostgreSQL
+// This file I/O operation is causing high Cloud Run costs:
+// - 280KB of YAML files loaded on every cold start
+// - CPU-intensive YAML parsing
+// - Memory cache expires every 30 minutes
+// Solution: Migrate to PostgreSQL with proper caching
+
 // Cache KSA data in memory (memoized for 30 minutes)
 const loadKSACodes = memoize((async (...args: unknown[]) => {
   const [lang = 'en'] = args as [string?];
   try {
+    // WARNING: This file I/O is expensive in Cloud Run
+    console.warn(`⚠️ Loading KSA from filesystem for lang: ${lang} - This should be in PostgreSQL`);
+
     // Normalize language code (e.g., zh -> zhCN)
     const normalizedLang = normalizeLanguageCode(lang);
     // Convert to file naming format (e.g., zh-TW -> zhTW)
