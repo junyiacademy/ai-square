@@ -26,7 +26,7 @@ let pool: Pool | null = null;
 /**
  * Get database pool (singleton)
  */
-function getPool(): Pool {
+export function getPool(): Pool {
   if (!pool) {
     const dbConfig: any = {
       connectionString: process.env.DATABASE_URL,

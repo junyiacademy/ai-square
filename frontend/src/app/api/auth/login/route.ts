@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { loginUser, autoLoginDev } from '@/lib/auth/simple-auth';
+import { getPool } from '@/lib/auth/simple-auth';
 
 export async function POST(request: NextRequest) {
   try {
@@ -50,6 +51,18 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
+
+    // Enforce email verified policy before password check
+    try {
+      const db = getPool();
+      const verifiedRes = await db.query('SELECT email_verified FROM users WHERE LOWER(email)=LOWER($1)', [email]);
+      if (verifiedRes.rows.length > 0 && !verifiedRes.rows[0].email_verified) {
+        return NextResponse.json(
+          { success: false, error: 'Email not verified' },
+          { status: 403 }
+        );
+      }
+    } catch {}
 
     const result = await loginUser(email, password);
 
