@@ -1,3 +1,9 @@
+---
+name: git-commit-push
+description: Intelligent git commit and push decision agent that determines whether validation tests are needed based on change impact. Automatically selects the most appropriate commit strategy - skipping tests for documentation/config changes, running full validation for code changes.
+color: orange
+---
+
 # Git Commit & Push Agent
 
 ## Purpose
@@ -134,7 +140,7 @@ git push  # 一次推送所有
 claude-commit() {
   local files=$(git diff --cached --name-only)
   local needs_verify=false
-  
+
   for file in $files; do
     if [[ $file =~ \.(ts|tsx|js|jsx)$ ]] && [[ $file =~ ^src/ ]]; then
       needs_verify=true
@@ -145,7 +151,7 @@ claude-commit() {
       break
     fi
   done
-  
+
   if [ "$needs_verify" = true ]; then
     echo "🔴 Code changes detected - running verification..."
     npm run pre-commit-check && git commit "$@"
@@ -179,7 +185,7 @@ claude-commit() {
    # No verify (快速)
    git commit -m "message" --no-verify
    git push --no-verify
-   
+
    # With verify (安全)
    npm run pre-commit-check
    git commit -m "message"

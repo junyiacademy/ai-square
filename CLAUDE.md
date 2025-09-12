@@ -40,17 +40,17 @@ export CLOUDSDK_ACTIVE_CONFIG_NAME=other-config
 
 ## 🤖 Sub-Agent 使用規則
 
-### 🛡️ Project Guardian - Meta Agent
+### 🛡️ Agents Manager - Meta Agent
 **專案守護者 - 統籌所有品質檢查與最佳實踐**
 
-Project Guardian 是一個 Meta-Agent，負責：
+Agents Manager 是一個 Meta-Agent，負責：
 - 🏗️ 確保 Infrastructure First 原則（不創建臨時解決方案）
 - 🧪 強制執行 TDD 與測試覆蓋率
 - 🔐 安全檢查（敏感檔案、權限、secrets）
 - 📏 程式碼品質（零 `any` 類型、ESLint 規則）
 - 🎯 智能調度其他 specialized agents
 
-**何時自動啟動 Guardian：**
+**何時自動啟動 Agents Manager：**
 - 開始新功能開發時
 - 執行部署前
 - 發現違反最佳實踐時
@@ -60,7 +60,7 @@ Project Guardian 是一個 Meta-Agent，負責：
 **主動分析需求，選擇正確的 Sub-Agent**
 
 ### 📋 Specialized Sub-Agents
-- **project-guardian**: 🛡️ Meta-Agent，專案品質守護者
+- **agents-manager**: 🛡️ Meta-Agent，專案品質守護者
 - **infrastructure-first-agent**: 🏗️ 防止臨時解決方案，確保生產級基礎設施
 - **tdd-validator-agent**: 🧪 TDD 執行者，確保測試先行開發
 - **unified-architecture-guardian**: 🏛️ 統一架構守護者，維護模組一致性
@@ -79,7 +79,7 @@ Project Guardian 是一個 Meta-Agent，負責：
 
 ### 🔍 智能選擇邏輯
 ```yaml
-綜合檢查/新功能 → project-guardian (會自動調用其他 agents)
+綜合檢查/新功能 → agents-manager (會自動調用其他 agents)
 基礎設施檢查 → infrastructure-first-agent
 測試需求 → tdd-validator-agent
 架構一致性 → unified-architecture-guardian
@@ -100,8 +100,8 @@ Terraform → terraform-deploy
 ### 📁 Agent 定義位置
 `.claude/agents/` 目錄包含各 agent 的詳細定義和使用說明
 
-### 🚨 Guardian 自動介入場景
-當檢測到以下情況時，Project Guardian 會主動介入：
+### 🚨 Agents Manager 自動介入場景
+當檢測到以下情況時，Agents Manager 會主動介入：
 - 使用 `any` 類型
 - 創建臨時檔案或腳本
 - 跳過測試

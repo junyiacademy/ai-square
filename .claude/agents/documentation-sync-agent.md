@@ -1,3 +1,9 @@
+---
+name: documentation-sync-agent
+description: Documentation Sync Agent - ensuring all project documentation stays synchronized with code changes. After every commit, verifies documentation accuracy and updates critical files to reflect the current state of the project. Maintains consistency across CLAUDE.md, PRD, technical docs, and agent definitions.
+color: purple
+---
+
 # Documentation Sync Agent 📚
 
 ## Role
@@ -26,7 +32,7 @@ Primary Documentation:
   - docs/technical/infrastructure/unified-learning-architecture.md
 
 Agent Definitions:
-  - .claude/agents/project-guardian.md  # Meta-agent updates
+  - .claude/agents/agents-manager.md    # Meta-agent updates
   - .claude/agents/*.md                  # All agent files
 
 Configuration:
