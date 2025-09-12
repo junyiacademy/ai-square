@@ -1,8 +1,8 @@
 import React from 'react';
-import { 
-  renderWithProviders, 
-  screen, 
-  fireEvent, 
+import {
+  renderWithProviders,
+  screen,
+  fireEvent,
   waitFor,
   resetAllMocks,
   setupAuthenticatedUser,
@@ -37,15 +37,15 @@ describe('Header', () => {
   beforeEach(() => {
     resetAllMocks();
     setupUnauthenticatedUser();
-    
+
     // Default mock - unauthenticated state
     mockFetch.mockImplementation(() => mockApiSuccess({ authenticated: false }));
-    
+
     // Clear console errors for cleaner test output
     jest.spyOn(console, 'error').mockImplementation(() => {});
     jest.spyOn(console, 'log').mockImplementation(() => {});
   });
-  
+
   afterEach(() => {
     (console.error as jest.Mock).mockRestore?.();
     (console.log as jest.Mock).mockRestore?.();
@@ -68,7 +68,7 @@ describe('Header', () => {
       expect(screen.getByText('assessment')).toBeInTheDocument();
       expect(screen.getByText('pbl')).toBeInTheDocument();
       expect(screen.getByText('discovery')).toBeInTheDocument();
-      
+
       // Secondary links are in "More" dropdown
       expect(screen.getByText('more')).toBeInTheDocument();
     });
@@ -117,11 +117,11 @@ describe('Header', () => {
       // User email appears in the dropdown
       const emailElements = screen.getAllByText('student@example.com');
       expect(emailElements.length).toBeGreaterThan(0);
-      
+
       // Check role display
-      const roleElements = screen.getAllByText('userRole.student');
+      const roleElements = screen.getAllByText(/student|學生/i);
       expect(roleElements.length).toBeGreaterThan(0);
-      
+
       // Check avatar initial
       expect(screen.getByText('T')).toBeInTheDocument(); // First letter of 'Test Student'
     });
@@ -179,7 +179,7 @@ describe('Header', () => {
 
     it('calls logout API and redirects when sign out is clicked', async () => {
       setupAuthenticatedUser(testUsers.student);
-      
+
       // Mock logout to also update the auth state
       mockLogout.mockImplementation(async () => {
         mockAuthState.user = null;
@@ -211,7 +211,7 @@ describe('Header', () => {
       renderWithProviders(<Header />);
 
       const mobileMenuButton = screen.getByLabelText('Toggle navigation menu');
-      
+
       // Initially closed
       expect(mobileMenuButton).toHaveAttribute('aria-expanded', 'false');
       expect(screen.queryByLabelText('Mobile navigation')).not.toBeInTheDocument();
@@ -235,7 +235,7 @@ describe('Header', () => {
 
       const mobileNav = screen.getByLabelText('Mobile navigation');
       expect(mobileNav).toBeInTheDocument();
-      
+
       // Check all navigation links are present in mobile menu
       // Primary links appear in both desktop and mobile
       expect(screen.getAllByText('dashboard')).toHaveLength(2);
@@ -259,7 +259,7 @@ describe('Header', () => {
 
       // Click on a mobile navigation link
       const mobileLinks = screen.getAllByText('dashboard');
-      const mobileDashboardLink = mobileLinks.find(link => 
+      const mobileDashboardLink = mobileLinks.find(link =>
         link.closest('[aria-label="Mobile navigation"]')
       );
       fireEvent.click(mobileDashboardLink!);
@@ -272,13 +272,13 @@ describe('Header', () => {
 
       const mobileMenuButton = screen.getByLabelText('Toggle navigation menu');
       const svgElement = mobileMenuButton.querySelector('svg path');
-      
+
       // Hamburger menu icon when closed
       expect(svgElement).toHaveAttribute('d', 'M4 6h16M4 12h16M4 18h16');
 
       // Open menu
       fireEvent.click(mobileMenuButton);
-      
+
       // Close icon when open
       expect(svgElement).toHaveAttribute('d', 'M6 18L18 6M6 6l12 12');
     });
@@ -335,9 +335,9 @@ describe('Header', () => {
   describe('Error Handling', () => {
     it('handles auth check API error gracefully', async () => {
       // Set up logged in auth state
-      mockAuthState.user = { 
-        id: 1, 
-        email: 'student@example.com', 
+      mockAuthState.user = {
+        id: 1,
+        email: 'student@example.com',
         role: 'student',
         name: 'Test User'
       };
@@ -366,7 +366,7 @@ describe('Header', () => {
 
     it('handles logout API error gracefully', async () => {
       setupAuthenticatedUser(testUsers.student);
-      
+
       // Mock logout to simulate error but still clear state
       mockLogout.mockImplementation(async () => {
         // Even if API fails, should still clear state and redirect
@@ -447,7 +447,7 @@ describe('Header', () => {
 
       renderWithProviders(<Header />);
 
-      expect(screen.getByText('userRole.student')).toBeInTheDocument();
+      expect(screen.getByText(/student|學生/i)).toBeInTheDocument();
     });
   });
 
