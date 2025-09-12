@@ -90,20 +90,33 @@ const getLocalizedValue = memoize(((...args: unknown[]) => {
 // This file I/O operation is causing high Cloud Run costs:
 // - 280KB of YAML files loaded on every cold start
 // - CPU-intensive YAML parsing
-// - Memory cache expires every 30 minutes
-// Solution: Migrate to PostgreSQL with proper caching
+// - KSA is STATIC content that never changes - why reload?
+// Solution: Either load once at startup OR migrate to PostgreSQL
 
-// Cache KSA data in memory (memoized for 30 minutes)
+// Cache KSA data in memory (never expires - static content)
 const loadKSACodes = memoize((async (...args: unknown[]) => {
   const [lang = 'en'] = args as [string?];
   try {
-    // WARNING: This file I/O is expensive in Cloud Run
-    console.warn(`⚠️ Loading KSA from filesystem for lang: ${lang} - This should be in PostgreSQL`);
+    // Use CDN if available, fallback to filesystem
+    const KSA_CDN_URL = process.env.KSA_CDN_URL || 'https://storage.googleapis.com/ai-square-static/ksa';
 
     // Normalize language code (e.g., zh -> zhCN)
     const normalizedLang = normalizeLanguageCode(lang);
     // Convert to file naming format (e.g., zh-TW -> zhTW)
     const fileLanguage = normalizedLang.replace(/[-_]/g, '');
+
+    // Try CDN first (in production)
+    if (KSA_CDN_URL && process.env.NODE_ENV === 'production') {
+      console.log(`📦 Loading KSA from CDN for lang: ${lang}`);
+      const response = await fetch(`${KSA_CDN_URL}/ksa_codes_${fileLanguage}.json`);
+      if (response.ok) {
+        return await response.json() as KSAData;
+      }
+      console.warn(`Failed to load from CDN, falling back to filesystem`);
+    }
+
+    // Fallback to filesystem (for local dev)
+    console.warn(`⚠️ Loading KSA from filesystem for lang: ${lang} - Using fallback`);
     const ksaPath = path.join(process.cwd(), 'public', 'rubrics_data', 'ksa_codes', `ksa_codes_${fileLanguage}.yaml`);
     const ksaContent = await fs.readFile(ksaPath, 'utf8');
     return yaml.load(ksaContent) as KSAData;
@@ -116,7 +129,7 @@ const loadKSACodes = memoize((async (...args: unknown[]) => {
     }
     return null;
   }
-}) as (...args: unknown[]) => unknown, 30 * 60 * 1000) as (lang?: string) => Promise<KSAData | null>; // 30 minutes cache
+}) as (...args: unknown[]) => unknown, Infinity) as (lang?: string) => Promise<KSAData | null>; // Never expire - KSA is static content!
 
 // Optimized KSA lookup with indexing
 const ksaIndexCache = new Map<string, Map<string, KSAItem>>();
