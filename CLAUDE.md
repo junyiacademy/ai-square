@@ -40,10 +40,35 @@ export CLOUDSDK_ACTIVE_CONFIG_NAME=other-config
 
 ## 🤖 Sub-Agent 使用規則
 
+### 🛡️ Agents Manager - Meta Agent
+**專案守護者 - 統籌所有品質檢查與最佳實踐**
+
+Agents Manager 是一個 Meta-Agent，負責：
+- 🏗️ 確保 Infrastructure First 原則（不創建臨時解決方案）
+- 🧪 強制執行 TDD 與測試覆蓋率
+- 🔐 安全檢查（敏感檔案、權限、secrets）
+- 📏 程式碼品質（零 `any` 類型、ESLint 規則）
+- 🎯 智能調度其他 specialized agents
+
+**何時自動啟動 Agents Manager：**
+- 開始新功能開發時
+- 執行部署前
+- 發現違反最佳實踐時
+- 需要綜合性健康檢查時
+
 ### 🎯 核心原則
 **主動分析需求，選擇正確的 Sub-Agent**
 
-### 📋 主要 Sub-Agents
+### 📋 Specialized Sub-Agents
+- **agents-manager**: 🛡️ Meta-Agent，專案品質守護者
+- **infrastructure-first-agent**: 🏗️ 防止臨時解決方案，確保生產級基礎設施
+- **tdd-validator-agent**: 🧪 TDD 執行者，確保測試先行開發
+- **unified-architecture-guardian**: 🏛️ 統一架構守護者，維護模組一致性
+- **security-audit-agent**: 🔐 安全審計，掃描敏感檔案和憑證
+- **code-quality-enforcer**: 📏 程式碼品質執法者，零 any 類型政策
+- **deployment-pipeline-agent**: 🚀 部署流程管理，staging 到 production
+- **gcp-config-manager**: ☁️ GCP 配置管理，確保正確的專案和區域
+- **documentation-sync-agent**: 📚 文檔同步，自動更新所有文檔
 - **typescript-eslint-fixer**: TypeScript/ESLint 錯誤修復
 - **deployment-qa**: 部署驗證與 QA 檢查
 - **slack-tracker-integration**: Slack 報告與追蹤
@@ -52,17 +77,37 @@ export CLOUDSDK_ACTIVE_CONFIG_NAME=other-config
 - **terraform-deploy**: Terraform 部署
 - **general-purpose**: 複雜搜尋與多步驟任務
 
-### 🔍 選擇邏輯
-1. **錯誤訊息** → typescript-eslint-fixer
-2. **部署/測試** → deployment-qa
-3. **Slack/報告** → slack-tracker-integration
-4. **記憶/進度** → progress-memory-coach
-5. **Git 操作** → git-commit-push
-6. **Terraform** → terraform-deploy
-7. **複雜任務** → general-purpose
+### 🔍 智能選擇邏輯
+```yaml
+綜合檢查/新功能 → agents-manager (會自動調用其他 agents)
+基礎設施檢查 → infrastructure-first-agent
+測試需求 → tdd-validator-agent
+架構一致性 → unified-architecture-guardian
+安全掃描 → security-audit-agent
+程式碼品質 → code-quality-enforcer
+TypeScript 錯誤 → typescript-eslint-fixer
+部署流程 → deployment-pipeline-agent
+部署驗證 → deployment-qa
+GCP 配置 → gcp-config-manager
+文檔更新 → documentation-sync-agent
+Slack 報告 → slack-tracker-integration
+記憶管理 → progress-memory-coach
+Git 操作 → git-commit-push
+Terraform → terraform-deploy
+複雜搜尋 → general-purpose
+```
 
 ### 📁 Agent 定義位置
 `.claude/agents/` 目錄包含各 agent 的詳細定義和使用說明
+
+### 🚨 Agents Manager 自動介入場景
+當檢測到以下情況時，Agents Manager 會主動介入：
+- 使用 `any` 類型
+- 創建臨時檔案或腳本
+- 跳過測試
+- 直接在 API route 中查詢資料庫
+- 硬編碼憑證或密碼
+- 違反 Repository Pattern
 
 ---
 

@@ -1,3 +1,9 @@
+---
+name: deployment-qa
+description: Specialized agent for deployment verification, quality assurance, and automated testing of AI Square platform deployments across all environments (local, staging, production). Performs comprehensive validation of deployment completeness, API testing, database integrity checks, E2E testing, and performance monitoring.
+color: blue
+---
+
 # Deployment QA Sub-Agent Specification
 
 ## Agent Name: deployment-qa
@@ -41,11 +47,11 @@ checks:
   - name: "Region Alignment"
     verify: "Cloud SQL and Cloud Run in same region"
     critical: true
-  
+
   - name: "Environment Variables"
     verify: "All required env vars configured"
     critical: true
-  
+
   - name: "Service Account Permissions"
     verify: "cloudsql.client role assigned"
     critical: true
@@ -58,23 +64,23 @@ sequence:
      - GET /api/health
      - Verify database connection
      - Check service status
-  
+
   2. API Initialization (CRITICAL):
      - POST /api/admin/init-pbl
      - POST /api/admin/init-discovery
      - POST /api/admin/init-assessment
      - Verify: scenarios > 0
-  
+
   3. Authentication Test:
      - Test demo accounts login
      - Verify JWT tokens
      - Check session management
-  
+
   4. Module APIs:
      - Test all language variants
      - Verify data completeness
      - Check response formats
-  
+
   5. E2E Browser Test:
      - User registration flow
      - Scenario selection
@@ -126,14 +132,14 @@ async function executeApiTest(test: ApiTest, retries = 3): Promise<TestResult> {
 tools:
   preferred: Playwright
   fallback: Puppeteer
-  
+
 coverage:
   - Login/Logout flows
   - Scenario navigation
   - Task interactions
   - Multi-language switching
   - Error handling
-  
+
 assertions:
   - Visual elements present
   - API calls successful
@@ -152,7 +158,7 @@ SELECT mode, COUNT(*) FROM scenarios GROUP BY mode;
 SELECT email, role FROM users WHERE email LIKE '%@example.com';
 
 -- 3. Check data integrity
-SELECT 
+SELECT
   s.mode,
   COUNT(DISTINCT s.id) as scenarios,
   COUNT(DISTINCT p.id) as programs,
@@ -171,15 +177,15 @@ failures:
   - pattern: "scenarios = 0"
     cause: "API initialization not executed"
     fix: "Run admin init APIs"
-    
+
   - pattern: "database connection timeout"
     cause: "Region mismatch between Cloud SQL and Cloud Run"
     fix: "Ensure both services in same region"
-    
+
   - pattern: "authentication failed"
     cause: "Demo accounts not seeded"
     fix: "Run database seed script"
-    
+
   - pattern: "static assets 404"
     cause: "Build artifacts missing"
     fix: "Rebuild and redeploy"
@@ -267,7 +273,7 @@ fi
       --env=${{ matrix.environment }} \
       --fail-on-critical \
       --output-format=json > qa-report.json
-    
+
 - name: Upload QA Report
   uses: actions/upload-artifact@v3
   with:

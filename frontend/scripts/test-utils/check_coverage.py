@@ -15,7 +15,7 @@ else:
         print(f"  Statements: {total.get('statements', {}).get('pct', 0):.2f}%")
         print(f"  Functions: {total.get('functions', {}).get('pct', 0):.2f}%")
         print(f"  Branches: {total.get('branches', {}).get('pct', 0):.2f}%")
-        
+
         target = 80.0
         current = lines.get('pct', 0)
         if current >= target:

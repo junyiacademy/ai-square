@@ -68,3 +68,7 @@ frontend/test-screenshots/*
 # Package files
 *.tgz
 *.tar.gz
+
+# Cloud SQL Proxy binary
+cloud_sql_proxy
+.project-status.json

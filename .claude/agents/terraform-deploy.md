@@ -1,3 +1,9 @@
+---
+name: terraform-deploy
+description: Terraform Deploy Agent - automates Terraform deployment operations with integrated security checks and validation for AI Square infrastructure. Handles initialization, planning, applying changes, importing resources, workspace management, security validation, rollback operations, and deployment monitoring.
+color: magenta
+---
+
 # Terraform Deploy Agent
 
 ## Purpose
@@ -190,13 +196,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: hashicorp/setup-terraform@v2
-      
+
       - name: Terraform Init
         run: terraform init
-        
+
       - name: Terraform Plan
         run: terraform plan -var-file="environments/production.tfvars"
-        
+
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
         run: terraform apply -var-file="environments/production.tfvars" -auto-approve
