@@ -40,10 +40,27 @@ export CLOUDSDK_ACTIVE_CONFIG_NAME=other-config
 
 ## 🤖 Sub-Agent 使用規則
 
+### 🛡️ Project Guardian - Meta Agent
+**專案守護者 - 統籌所有品質檢查與最佳實踐**
+
+Project Guardian 是一個 Meta-Agent，負責：
+- 🏗️ 確保 Infrastructure First 原則（不創建臨時解決方案）
+- 🧪 強制執行 TDD 與測試覆蓋率
+- 🔐 安全檢查（敏感檔案、權限、secrets）
+- 📏 程式碼品質（零 `any` 類型、ESLint 規則）
+- 🎯 智能調度其他 specialized agents
+
+**何時自動啟動 Guardian：**
+- 開始新功能開發時
+- 執行部署前
+- 發現違反最佳實踐時
+- 需要綜合性健康檢查時
+
 ### 🎯 核心原則
 **主動分析需求，選擇正確的 Sub-Agent**
 
-### 📋 主要 Sub-Agents
+### 📋 Specialized Sub-Agents
+- **project-guardian**: 🛡️ Meta-Agent，專案品質守護者
 - **typescript-eslint-fixer**: TypeScript/ESLint 錯誤修復
 - **deployment-qa**: 部署驗證與 QA 檢查
 - **slack-tracker-integration**: Slack 報告與追蹤
@@ -52,17 +69,29 @@ export CLOUDSDK_ACTIVE_CONFIG_NAME=other-config
 - **terraform-deploy**: Terraform 部署
 - **general-purpose**: 複雜搜尋與多步驟任務
 
-### 🔍 選擇邏輯
-1. **錯誤訊息** → typescript-eslint-fixer
-2. **部署/測試** → deployment-qa
-3. **Slack/報告** → slack-tracker-integration
-4. **記憶/進度** → progress-memory-coach
-5. **Git 操作** → git-commit-push
-6. **Terraform** → terraform-deploy
-7. **複雜任務** → general-purpose
+### 🔍 智能選擇邏輯
+```yaml
+綜合檢查/新功能 → project-guardian (會自動調用其他 agents)
+TypeScript 錯誤 → typescript-eslint-fixer
+部署任務 → deployment-qa
+Slack 報告 → slack-tracker-integration
+記憶管理 → progress-memory-coach
+Git 操作 → git-commit-push
+基礎設施 → terraform-deploy
+複雜搜尋 → general-purpose
+```
 
 ### 📁 Agent 定義位置
 `.claude/agents/` 目錄包含各 agent 的詳細定義和使用說明
+
+### 🚨 Guardian 自動介入場景
+當檢測到以下情況時，Project Guardian 會主動介入：
+- 使用 `any` 類型
+- 創建臨時檔案或腳本
+- 跳過測試
+- 直接在 API route 中查詢資料庫
+- 硬編碼憑證或密碼
+- 違反 Repository Pattern
 
 ---
 
