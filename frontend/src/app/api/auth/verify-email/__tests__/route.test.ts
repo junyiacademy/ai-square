@@ -21,7 +21,7 @@ describe('/api/auth/verify-email', () => {
     const req = new NextRequest(url)
     const res = await GET(req)
 
-    expect(res.status).toBe(302)
+    expect(res.status).toBe(307) // NextJS uses 307 for temporary redirect
     expect(res.headers.get('location')).toContain('/login?verified=1')
   })
 
@@ -30,7 +30,7 @@ describe('/api/auth/verify-email', () => {
     const url = 'http://localhost/api/auth/verify-email?email=test%40example.com&token=bad'
     const req = new NextRequest(url)
     const res = await GET(req)
-    expect(res.status).toBe(302)
+    expect(res.status).toBe(307) // NextJS uses 307 for temporary redirect
     expect(res.headers.get('location')).toContain('/login?verified=0')
   })
 })

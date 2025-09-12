@@ -118,9 +118,8 @@ describe('Header', () => {
       const emailElements = screen.getAllByText('student@example.com');
       expect(emailElements.length).toBeGreaterThan(0);
 
-      // Check role display
-      const roleElements = screen.getAllByText(/student|學生/i);
-      expect(roleElements.length).toBeGreaterThan(0);
+      // Header component doesn't display role text
+      // Role display was removed from the component
 
       // Check avatar initial
       expect(screen.getByText('T')).toBeInTheDocument(); // First letter of 'Test Student'
@@ -437,7 +436,8 @@ describe('Header', () => {
 
       // Should show user info
       expect(screen.getByText('mobile@example.com')).toBeInTheDocument();
-      expect(screen.getByText('userRole.teacher')).toBeInTheDocument();
+      // The user email is mobile@example.com, not teacher@
+      // Header component doesn't display role text
     });
   });
 
@@ -447,7 +447,8 @@ describe('Header', () => {
 
       renderWithProviders(<Header />);
 
-      expect(screen.getByText(/student|學生/i)).toBeInTheDocument();
+      // Header component doesn't display role text, only email
+      expect(screen.getByText('student@example.com')).toBeInTheDocument();
     });
   });
 

@@ -10,11 +10,17 @@ jest.mock('bcryptjs', () => ({
   hash: jest.fn()
 }))
 
-// Mock email service
+// Mock email service and mailer
 jest.mock('../../../../lib/email/email-service', () => ({
   emailService: {
     sendVerificationEmail: jest.fn()
   }
+}))
+
+// Mock mailer module
+jest.mock('../../../../lib/email/mailer', () => ({
+  sendEmail: jest.fn().mockResolvedValue(true),
+  appBaseUrl: jest.fn((origin) => origin || 'http://localhost:3000')
 }))
 
 // Mock verification tokens
@@ -94,23 +100,55 @@ jest.mock('next/server', () => ({
   }
 }))
 
-// Mock crypto for consistent token generation
+// Mock crypto for consistent token generation - CRITICAL FIX for createHash
 jest.mock('crypto', () => ({
   randomBytes: jest.fn(() => ({
     toString: jest.fn(() => 'mock-verification-token')
-  }))
+  })),
+  createHash: jest.fn(() => ({
+    update: jest.fn().mockReturnThis(),
+    digest: jest.fn(() => 'mock-hash-digest')
+  })),
+  randomUUID: jest.fn(() => 'mock-uuid'),
+  // Add default export for ES6 modules
+  default: {
+    randomBytes: jest.fn(() => ({
+      toString: jest.fn(() => 'mock-verification-token')
+    })),
+    createHash: jest.fn(() => ({
+      update: jest.fn().mockReturnThis(),
+      digest: jest.fn(() => 'mock-hash-digest')
+    })),
+    randomUUID: jest.fn(() => 'mock-uuid')
+  }
 }))
 
-// Create a mock NextRequest class
+// Create a mock NextRequest class with headers
 class MockNextRequest {
   url: string
   method: string
   private body: string
+  headers: Headers
 
   constructor(url: string, init?: RequestInit) {
     this.url = url
     this.method = init?.method || 'GET'
     this.body = init?.body as string || ''
+    // Create mock Headers with get method
+    this.headers = {
+      get: jest.fn((key: string) => {
+        if (key === 'origin') return 'http://localhost:3000'
+        if (key === 'content-type') return 'application/json'
+        return null
+      }),
+      has: jest.fn(),
+      set: jest.fn(),
+      delete: jest.fn(),
+      forEach: jest.fn(),
+      keys: jest.fn(),
+      values: jest.fn(),
+      entries: jest.fn()
+    } as any
   }
 
   async json() {
@@ -123,11 +161,11 @@ describe('/api/auth/register', () => {
   const mockSendVerificationEmail = emailService.sendVerificationEmail as jest.Mock
   const mockUpdateUserPasswordHash = updateUserPasswordHash as jest.Mock
   const { AuthManager } = require('../../../../lib/auth/auth-manager')
-  
+
   beforeEach(() => {
     jest.clearAllMocks()
     mockCookies.set.mockClear()
-    
+
     // Default mock implementations
     mockBcryptHash.mockResolvedValue('hashed-password')
     mockSendVerificationEmail.mockResolvedValue(true)

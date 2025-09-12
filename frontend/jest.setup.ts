@@ -520,9 +520,11 @@ jest.mock('./src/lib/db/get-pool', () => ({
   closePool: jest.fn().mockResolvedValue(undefined)
 }));
 
-// Mock crypto module with unique values
+// Mock crypto module with unique values - CRITICAL: Fix ES module import mocking
 let cryptoCounter = 0;
-jest.mock('crypto', () => ({
+
+// CRITICAL: Properly mock crypto for both CommonJS and ES module imports
+const mockCrypto = {
   randomBytes: jest.fn().mockImplementation((length: number) => ({
     toString: jest.fn().mockImplementation((encoding: string) => {
       if (encoding === 'hex') {
@@ -540,7 +542,19 @@ jest.mock('crypto', () => ({
     update: jest.fn().mockReturnThis(),
     digest: jest.fn().mockReturnValue('mock-hash-digest-1234567890abcdef')
   })
+};
+
+jest.mock('crypto', () => ({
+  __esModule: true,
+  default: mockCrypto,  // For ES module: import crypto from 'crypto'
+  ...mockCrypto         // For named imports: import { createHash } from 'crypto'
 }));
+
+// Also create a global crypto mock for Node.js compatibility
+Object.defineProperty(global, 'crypto', {
+  value: mockCrypto,
+  writable: true
+});
 
 // Mock file system operations
 jest.mock('fs', () => ({
