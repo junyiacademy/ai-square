@@ -3,7 +3,7 @@ import json
 
 with open('coverage/coverage-summary.json', 'r') as f:
     data = json.load(f)
-    
+
 # Find files with 50-75% coverage
 partial = []
 for k, v in data.items():

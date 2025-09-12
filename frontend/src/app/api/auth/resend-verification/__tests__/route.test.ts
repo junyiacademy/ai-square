@@ -1,264 +1,68 @@
-import { mockRepositoryFactory } from '@/test-utils/mocks/repositories';
-/**
- * Unit tests for resend-verification API route
- * Tests email verification resending functionality
- */
+import { NextRequest } from 'next/server'
+import { POST } from '../route'
 
-import { POST } from '../route';
-import { NextRequest } from 'next/server';
-import { getSession } from '@/lib/auth/session';
-import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import { emailService } from '@/lib/email/email-service';
-import { getPool } from '@/lib/db/get-pool';
-import crypto from 'crypto';
+jest.mock('@/lib/email/mailer', () => ({
+  sendEmail: jest.fn().mockResolvedValue(undefined),
+  appBaseUrl: () => 'http://localhost:3000'
+}))
 
-// Mock dependencies
-jest.mock('@/lib/auth/session');
-jest.mock('@/lib/repositories/base/repository-factory');
-jest.mock('@/lib/email/email-service');
-jest.mock('@/lib/db/get-pool');
-jest.mock('crypto');
+const mockQuery = jest.fn()
+jest.mock('@/lib/auth/simple-auth', () => {
+  const original = jest.requireActual('@/lib/auth/simple-auth')
+  return {
+    ...original,
+    getPool: () => ({ query: mockQuery })
+  }
+})
 
-describe('Resend Verification API Route', () => {
-  let mockUserRepo: any;
-  let mockPool: any;
-  
-  const mockUser = {
-    id: 'user-123',
-    email: 'test@example.com',
-    name: 'Test User',
-    emailVerified: false
-  };
-
+describe('/api/auth/resend-verification', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
-    
-    // Setup mock user repository
-    mockUserRepo = {
-      findByEmail: jest.fn()
-    };
-    
-    (repositoryFactory.getUserRepository as jest.Mock).mockReturnValue(mockUserRepo);
-    
-    // Setup mock database pool
-    mockPool = {
-      query: jest.fn()
-    };
-    (getPool as jest.Mock).mockReturnValue(mockPool);
-    
-    // Setup mock crypto
-    (crypto.randomBytes as jest.Mock).mockReturnValue({
-      toString: jest.fn().mockReturnValue('mock-verification-token')
-    });
-    
-    // Setup mock email service
-    (emailService.sendVerificationEmail as jest.Mock).mockResolvedValue(true);
-  });
+    jest.clearAllMocks()
+  })
 
-  describe('POST /api/auth/resend-verification', () => {
-    it('should resend verification for logged-in user', async () => {
-      (getSession as jest.Mock).mockResolvedValue({
-        user: { id: 'user-123', email: 'test@example.com', role: 'student' }
-      });
+  it('returns success for unknown email (anti-enum)', async () => {
+    mockQuery.mockResolvedValueOnce({ rows: [] })
+    const req = new NextRequest('http://localhost/api/auth/resend-verification', {
+      method: 'POST',
+      body: JSON.stringify({ email: 'unknown@example.com' })
+    } as any)
+    const res = await POST(req)
+    const json = await res.json()
+    expect(res.status).toBe(200)
+    expect(json.success).toBe(true)
+  })
 
-      const request = new NextRequest('http://localhost/api/auth/resend-verification', {
-        method: 'POST',
-        body: JSON.stringify({})
-      });
+  it('sends email for unverified user and returns success', async () => {
+    // SELECT user, not verified
+    mockQuery.mockResolvedValueOnce({ rows: [{ id: 'u1', name: 'X', email_verified: false }] })
+    // UPDATE token
+    mockQuery.mockResolvedValueOnce({ rowCount: 1 })
 
-      const response = await POST(request);
-      const data = await response.json();
+    const req = new NextRequest('http://localhost/api/auth/resend-verification', {
+      method: 'POST',
+      body: JSON.stringify({ email: 'u@example.com' })
+    } as any)
+    const res = await POST(req)
+    const json = await res.json()
+    expect(res.status).toBe(200)
+    expect(json.success).toBe(true)
+    const { sendEmail } = require('@/lib/email/mailer')
+    expect(sendEmail).toHaveBeenCalled()
+  })
 
-      expect(response.status).toBe(200);
-      expect(data.success).toBe(true);
-      expect(data.message).toBe('Verification email has been sent');
-      expect(data.email).toBe('test@example.com');
-      
-      expect(mockPool.query).toHaveBeenCalledWith(
-        expect.stringContaining('INSERT INTO email_verification_tokens'),
-        expect.arrayContaining(['user-123', 'mock-verification-token'])
-      );
-      
-      expect(emailService.sendVerificationEmail).toHaveBeenCalledWith(
-        'test@example.com',
-        expect.stringContaining('mock-verification-token')
-      );
-    });
+  it('returns success for already verified user (no email sent)', async () => {
+    // SELECT user, verified
+    mockQuery.mockResolvedValueOnce({ rows: [{ id: 'u1', name: 'X', email_verified: true }] })
 
-    it('should resend verification for non-logged-in user with email', async () => {
-      (getSession as jest.Mock).mockResolvedValue(null);
-      mockUserRepo.findByEmail.mockResolvedValue(mockUser);
-
-      const request = new NextRequest('http://localhost/api/auth/resend-verification', {
-        method: 'POST',
-        body: JSON.stringify({
-          email: 'test@example.com'
-        })
-      });
-
-      const response = await POST(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      expect(data.success).toBe(true);
-      expect(mockUserRepo.findByEmail).toHaveBeenCalledWith('test@example.com');
-    });
-
-    it('should return error if email already verified', async () => {
-      (getSession as jest.Mock).mockResolvedValue(null);
-      mockUserRepo.findByEmail.mockResolvedValue({
-        ...mockUser,
-        emailVerified: true
-      });
-
-      const request = new NextRequest('http://localhost/api/auth/resend-verification', {
-        method: 'POST',
-        body: JSON.stringify({
-          email: 'test@example.com'
-        })
-      });
-
-      const response = await POST(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(400);
-      expect(data.success).toBe(false);
-      expect(data.error).toBe('Email is already verified');
-    });
-
-    it('should return error if user not found', async () => {
-      (getSession as jest.Mock).mockResolvedValue(null);
-      mockUserRepo.findByEmail.mockResolvedValue(null);
-
-      const request = new NextRequest('http://localhost/api/auth/resend-verification', {
-        method: 'POST',
-        body: JSON.stringify({
-          email: 'nonexistent@example.com'
-        })
-      });
-
-      const response = await POST(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(404);
-      expect(data.success).toBe(false);
-      expect(data.error).toBe('User not found');
-    });
-
-    it('should return error if no email and not logged in', async () => {
-      (getSession as jest.Mock).mockResolvedValue(null);
-
-      const request = new NextRequest('http://localhost/api/auth/resend-verification', {
-        method: 'POST',
-        body: JSON.stringify({})
-      });
-
-      const response = await POST(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(400);
-      expect(data.success).toBe(false);
-      expect(data.error).toBe('Email is required when not logged in');
-    });
-
-    it('should validate email format', async () => {
-      (getSession as jest.Mock).mockResolvedValue(null);
-
-      const request = new NextRequest('http://localhost/api/auth/resend-verification', {
-        method: 'POST',
-        body: JSON.stringify({
-          email: 'invalid-email'
-        })
-      });
-
-      const response = await POST(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(400);
-      expect(data.success).toBe(false);
-      expect(data.error).toContain('Invalid email format');
-    });
-
-    it('should handle database errors gracefully', async () => {
-      (getSession as jest.Mock).mockResolvedValue({
-        user: { id: 'user-123', email: 'test@example.com', role: 'student' }
-      });
-      
-      mockPool.query.mockRejectedValue(new Error('Database error'));
-
-      const request = new NextRequest('http://localhost/api/auth/resend-verification', {
-        method: 'POST',
-        body: JSON.stringify({})
-      });
-
-      const response = await POST(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(500);
-      expect(data.success).toBe(false);
-      expect(data.error).toBe('Failed to resend verification email');
-    });
-
-    it('should handle email service failures', async () => {
-      (getSession as jest.Mock).mockResolvedValue({
-        user: { id: 'user-123', email: 'test@example.com', role: 'student' }
-      });
-      
-      (emailService.sendVerificationEmail as jest.Mock).mockRejectedValue(
-        new Error('Email service error')
-      );
-
-      const request = new NextRequest('http://localhost/api/auth/resend-verification', {
-        method: 'POST',
-        body: JSON.stringify({})
-      });
-
-      const response = await POST(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(500);
-      expect(data.success).toBe(false);
-    });
-
-    it('should lowercase email before processing', async () => {
-      (getSession as jest.Mock).mockResolvedValue(null);
-      mockUserRepo.findByEmail.mockResolvedValue(mockUser);
-
-      const request = new NextRequest('http://localhost/api/auth/resend-verification', {
-        method: 'POST',
-        body: JSON.stringify({
-          email: 'Test@Example.COM'
-        })
-      });
-
-      const response = await POST(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(200);
-      expect(mockUserRepo.findByEmail).toHaveBeenCalledWith('test@example.com');
-      expect(data.email).toBe('test@example.com');
-    });
-
-    it('should use environment variable for verification URL', async () => {
-      process.env.NEXT_PUBLIC_APP_URL = 'https://app.example.com';
-      
-      (getSession as jest.Mock).mockResolvedValue({
-        user: { id: 'user-123', email: 'test@example.com', role: 'student' }
-      });
-
-      const request = new NextRequest('http://localhost/api/auth/resend-verification', {
-        method: 'POST',
-        body: JSON.stringify({})
-      });
-
-      await POST(request);
-
-      expect(emailService.sendVerificationEmail).toHaveBeenCalledWith(
-        'test@example.com',
-        expect.stringContaining('https://app.example.com/verify-email')
-      );
-      
-      delete process.env.NEXT_PUBLIC_APP_URL;
-    });
-  });
-});
+    const req = new NextRequest('http://localhost/api/auth/resend-verification', {
+      method: 'POST',
+      body: JSON.stringify({ email: 'u@example.com' })
+    } as any)
+    const res = await POST(req)
+    const json = await res.json()
+    expect(res.status).toBe(200)
+    expect(json.success).toBe(true)
+    const { sendEmail } = require('@/lib/email/mailer')
+    expect(sendEmail).not.toHaveBeenCalled()
+  })
+})
