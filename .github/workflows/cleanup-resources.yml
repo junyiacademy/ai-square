@@ -1,0 +1,223 @@
+name: Cleanup Cloud Resources
+
+on:
+  schedule:
+    # Run every Sunday at 2:00 AM UTC (10:00 AM Taiwan time)
+    - cron: '0 2 * * 0'
+  workflow_dispatch:  # Allow manual trigger
+
+env:
+  PROJECT_ID: ai-square-463013
+  REGION: asia-east1
+
+jobs:
+  cleanup-cloud-resources:
+    name: Clean up GCR images and Cloud Run revisions
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          version: 'latest'
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up Cloud SDK project
+        run: |
+          gcloud config set project ${{ env.PROJECT_ID }}
+          echo "✅ Project configured: ${{ env.PROJECT_ID }}"
+
+      - name: Clean up Cloud Run revisions
+        run: |
+          echo "🧹 Starting Cloud Run revisions cleanup..."
+          echo "================================================"
+
+          # Function to clean up revisions for a service
+          cleanup_service_revisions() {
+            local SERVICE=$1
+            local KEEP_COUNT=${2:-3}  # Keep latest 3 revisions by default
+
+            echo ""
+            echo "📦 Cleaning service: $SERVICE"
+            echo "   Keeping latest $KEEP_COUNT revisions"
+
+            # Get all revision names sorted by creation time (newest first)
+            REVISIONS=$(gcloud run revisions list \
+              --service=${SERVICE} \
+              --region=${{ env.REGION }} \
+              --sort-by="~metadata.creationTimestamp" \
+              --format="value(metadata.name)" 2>/dev/null)
+
+            if [ -z "$REVISIONS" ]; then
+              echo "   ⚠️ Service not found or no revisions"
+              return
+            fi
+
+            # Count total revisions
+            TOTAL=$(echo "$REVISIONS" | wc -l)
+
+            if [ $TOTAL -gt $KEEP_COUNT ]; then
+              echo "   📊 Found $TOTAL revisions"
+
+              # Get revisions to delete (skip the first KEEP_COUNT)
+              TO_DELETE=$(echo "$REVISIONS" | tail -n +$((KEEP_COUNT + 1)))
+              DELETED_COUNT=0
+
+              echo "$TO_DELETE" | while read -r REVISION; do
+                if [ -n "$REVISION" ]; then
+                  echo "   🗑️ Deleting: $REVISION"
+                  if gcloud run revisions delete $REVISION \
+                    --region=${{ env.REGION }} \
+                    --quiet 2>/dev/null; then
+                    ((DELETED_COUNT++))
+                  else
+                    echo "      ⚠️ Could not delete $REVISION (might be in use)"
+                  fi
+                fi
+              done
+
+              echo "   ✅ Cleanup complete for $SERVICE"
+            else
+              echo "   ✅ Only $TOTAL revisions exist, no cleanup needed"
+            fi
+          }
+
+          # Clean up staging service
+          cleanup_service_revisions "ai-square-staging" 3
+
+          # Clean up production service (keep more revisions for safety)
+          cleanup_service_revisions "ai-square-production" 5
+
+          echo ""
+          echo "✅ Cloud Run revision cleanup complete!"
+
+      - name: Clean up GCR images
+        run: |
+          echo ""
+          echo "🧹 Starting GCR images cleanup..."
+          echo "================================================"
+
+          # Function to clean up container images
+          cleanup_repository() {
+            local REPO=$1
+            local KEEP_COUNT=${2:-5}  # Keep latest 5 images by default
+
+            echo ""
+            echo "📦 Cleaning repository: ${REPO##*/}"
+            echo "   Keeping latest $KEEP_COUNT images"
+
+            # Check if repository exists
+            if ! gcloud container images list --repository="$REPO" &>/dev/null; then
+              echo "   ⚠️ Repository not found: $REPO"
+              return
+            fi
+
+            # Get all images except the latest KEEP_COUNT
+            IMAGES=$(gcloud container images list-tags "$REPO" \
+              --format="get(digest)" \
+              --sort-by="~timestamp" 2>/dev/null | tail -n +$((KEEP_COUNT + 1)))
+
+            if [ -n "$IMAGES" ]; then
+              IMAGE_COUNT=$(echo "$IMAGES" | wc -l)
+              echo "   📊 Found $IMAGE_COUNT old images to delete"
+
+              DELETED_COUNT=0
+              echo "$IMAGES" | while read -r DIGEST; do
+                if [ -n "$DIGEST" ]; then
+                  echo "   🗑️ Deleting: ${DIGEST:0:12}..."
+                  if gcloud container images delete "$REPO@$DIGEST" --quiet --force-delete-tags 2>/dev/null; then
+                    ((DELETED_COUNT++))
+                  fi
+                fi
+              done
+
+              echo "   ✅ Deleted old images from ${REPO##*/}"
+            else
+              echo "   ✅ No old images to clean"
+            fi
+          }
+
+          # Clean up staging images
+          cleanup_repository "gcr.io/${{ env.PROJECT_ID }}/ai-square-staging" 5
+
+          # Clean up production images
+          cleanup_repository "gcr.io/${{ env.PROJECT_ID }}/ai-square-production" 5
+
+          # Clean up shared frontend repository
+          cleanup_repository "gcr.io/${{ env.PROJECT_ID }}/ai-square-frontend" 10
+
+          echo ""
+          echo "✅ GCR cleanup complete!"
+
+      - name: Generate cleanup report
+        if: always()
+        run: |
+          echo ""
+          echo "📋 Cleanup Summary Report"
+          echo "================================================"
+          echo "🕐 Execution time: $(date +'%Y-%m-%d %H:%M:%S UTC')"
+          echo "📦 Project: ${{ env.PROJECT_ID }}"
+          echo "🌍 Region: ${{ env.REGION }}"
+          echo ""
+
+          # Show current resource usage
+          echo "📊 Current Resource Status:"
+          echo "----------------------------"
+
+          # Count Cloud Run services and revisions
+          echo "Cloud Run Services:"
+          gcloud run services list --region=${{ env.REGION }} --format="table(SERVICE,LAST_DEPLOYED_AT)" 2>/dev/null || echo "  Error listing services"
+
+          echo ""
+          echo "Total Active Revisions:"
+          REVISION_COUNT=$(gcloud run revisions list --region=${{ env.REGION }} --format="value(metadata.name)" 2>/dev/null | wc -l)
+          echo "  $REVISION_COUNT revisions across all services"
+
+          echo ""
+          echo "GCR Repositories:"
+          for REPO in "ai-square-staging" "ai-square-production" "ai-square-frontend"; do
+            IMAGE_COUNT=$(gcloud container images list-tags "gcr.io/${{ env.PROJECT_ID }}/$REPO" --format="value(digest)" 2>/dev/null | wc -l)
+            echo "  $REPO: $IMAGE_COUNT images"
+          done
+
+          echo ""
+          echo "✅ Cleanup workflow completed successfully!"
+
+      - name: Send Slack notification (if configured)
+        if: always() && env.SLACK_WEBHOOK_URL != ''
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          # Only send notification if webhook is configured
+          if [ -n "$SLACK_WEBHOOK_URL" ]; then
+            REVISION_COUNT=$(gcloud run revisions list --region=${{ env.REGION }} --format="value(metadata.name)" 2>/dev/null | wc -l)
+
+            curl -X POST $SLACK_WEBHOOK_URL \
+              -H 'Content-Type: application/json' \
+              -d "{
+                \"text\": \"🧹 Cloud Resources Cleanup Complete\",
+                \"blocks\": [
+                  {
+                    \"type\": \"header\",
+                    \"text\": {
+                      \"type\": \"plain_text\",
+                      \"text\": \"🧹 AI Square Cloud Resources Cleanup\"
+                    }
+                  },
+                  {
+                    \"type\": \"section\",
+                    \"text\": {
+                      \"type\": \"mrkdwn\",
+                      \"text\": \"*Status:* ✅ Completed\\n*Time:* $(date +'%Y-%m-%d %H:%M UTC')\\n*Active Revisions:* $REVISION_COUNT\"
+                    }
+                  }
+                ]
+              }"
+          fi
