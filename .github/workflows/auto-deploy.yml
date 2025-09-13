@@ -374,6 +374,44 @@ jobs:
           echo "🌐 Service: ${{ steps.env.outputs.service }}"
           echo "🔗 URL: $SERVICE_URL"
 
+      - name: Clean up old Cloud Run revisions
+        if: success()
+        run: |
+          echo "🧹 Cleaning up old Cloud Run revisions..."
+
+          SERVICE_NAME=${{ steps.env.outputs.service }}
+          KEEP_COUNT=3  # Keep only the latest 3 revisions
+
+          # Get all revision names sorted by creation time (newest first)
+          REVISIONS=$(gcloud run revisions list \
+            --service=${SERVICE_NAME} \
+            --region=${{ env.REGION }} \
+            --sort-by="~metadata.creationTimestamp" \
+            --format="value(metadata.name)" 2>/dev/null)
+
+          # Count total revisions
+          TOTAL=$(echo "$REVISIONS" | wc -l)
+
+          if [ $TOTAL -gt $KEEP_COUNT ]; then
+            echo "📊 Found $TOTAL revisions, keeping latest $KEEP_COUNT"
+
+            # Get revisions to delete (skip the first KEEP_COUNT)
+            TO_DELETE=$(echo "$REVISIONS" | tail -n +$((KEEP_COUNT + 1)))
+
+            echo "$TO_DELETE" | while read -r REVISION; do
+              if [ -n "$REVISION" ]; then
+                echo "  🗑️ Deleting revision: $REVISION"
+                gcloud run revisions delete $REVISION \
+                  --region=${{ env.REGION }} \
+                  --quiet 2>/dev/null || echo "    ⚠️ Could not delete $REVISION (might be in use)"
+              fi
+            done
+
+            echo "✅ Cloud Run revision cleanup complete"
+          else
+            echo "✅ Only $TOTAL revisions exist, no cleanup needed"
+          fi
+
       - name: Clean up old GCR images
         if: success()
         run: |
