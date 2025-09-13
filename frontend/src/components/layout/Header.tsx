@@ -31,9 +31,6 @@ export function Header() {
     setMounted(true)
   }, [])
 
-  const getRoleDisplayName = (role: string) => {
-    return t(`userRole.${role}`)
-  }
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen)
@@ -54,21 +51,21 @@ export function Header() {
     { href: '/pbl/scenarios', label: t('pbl') },
     { href: '/discovery/overview', label: t('discovery'), disabled: true, tooltip: '即將開放' },
   ]
-  
+
   // 次要導航連結（放在「更多」選單中）
   const secondaryNavLinks: NavLink[] = [
     { href: '/relations', label: t('relations') },
     { href: '/ksa', label: t('ksa') },
     { href: '/history', label: t('history') },
   ]
-  
+
   // 所有導航連結（用於手機選單）
   const allNavLinks: NavLink[] = [...primaryNavLinks, ...secondaryNavLinks]
 
 
   return (
-    <header 
-      role="banner" 
+    <header
+      role="banner"
       className="bg-white dark:bg-slate-800 shadow-sm border-b border-gray-200 dark:border-slate-700 sticky top-0 z-50"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -77,11 +74,11 @@ export function Header() {
           <div className="flex items-center">
             <div className="flex-shrink-0">
               <Link href="/" className="flex items-center">
-                <Image 
-                  src="/images/logo.png" 
-                  alt="AI Square Logo" 
-                  width={32} 
-                  height={32} 
+                <Image
+                  src="/images/logo.png"
+                  alt="AI Square Logo"
+                  width={32}
+                  height={32}
                   className="mr-3"
                   priority
                 />
@@ -91,7 +88,7 @@ export function Header() {
 
             {/* Desktop Navigation Links */}
             <nav className="hidden lg:ml-10 lg:flex lg:space-x-6" aria-label="Main navigation">
-              {primaryNavLinks.map((link, index) => 
+              {primaryNavLinks.map((link, index) =>
                 link.disabled ? (
                   <div
                     key={link.href || index}
@@ -120,7 +117,7 @@ export function Header() {
                   </Link>
                 ) : null
               )}
-              
+
               {/* More dropdown menu */}
               <div className="relative group">
                 <button
@@ -131,11 +128,11 @@ export function Header() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </button>
-                
+
                 {/* Dropdown menu */}
                 <div className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                   <div className="py-1">
-                    {secondaryNavLinks.map((link) => 
+                    {secondaryNavLinks.map((link) =>
                       link.href ? (
                         <Link
                           key={link.href}
@@ -162,7 +159,7 @@ export function Header() {
             <div className="hidden sm:block">
               <LanguageSelector />
             </div>
-            
+
             {/* Mobile menu button */}
             <button
               type="button"
@@ -194,7 +191,7 @@ export function Header() {
                 )}
               </svg>
             </button>
-            
+
             {isLoading ? (
               /* 載入中狀態 - 顯示骨架屏或空白 */
               <div className="w-32 h-10 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"></div>
@@ -208,14 +205,14 @@ export function Header() {
                       {user.name ? user.name.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase()}
                     </span>
                   </div>
-                  <span className="hidden md:block text-sm text-gray-600 dark:text-gray-400">
-                    {getRoleDisplayName(user.role)}
+                  <span className="hidden md:block text-sm text-gray-700 dark:text-gray-300 font-medium">
+                    {user.name || user.email.split('@')[0]}
                   </span>
                   <svg className="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </button>
-                
+
                 {/* Dropdown menu */}
                 <div className="absolute right-0 mt-2 w-56 rounded-lg shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                   <div className="py-1">
@@ -230,7 +227,7 @@ export function Header() {
                         </p>
                       )}
                     </div>
-                    
+
                     {/* Profile link */}
                     <Link
                       href="/profile"
@@ -241,7 +238,7 @@ export function Header() {
                       </svg>
                       <span>{t('profile')}</span>
                     </Link>
-                    
+
                     {/* Theme toggle */}
                     <button
                       onClick={toggleTheme}
@@ -265,7 +262,7 @@ export function Header() {
                         )}
                       </div>
                     </button>
-                    
+
                     {/* Sign out */}
                     <button
                       onClick={handleLogout}
@@ -297,7 +294,7 @@ export function Header() {
       {isMobileMenuOpen && (
         <nav className="lg:hidden bg-white dark:bg-slate-800 border-t border-gray-200 dark:border-slate-700" aria-label="Mobile navigation">
           <div className="px-2 pt-2 pb-3 space-y-1">
-            {allNavLinks.map((link, index) => 
+            {allNavLinks.map((link, index) =>
               link.disabled ? (
                 <div
                   key={link.href || index}
@@ -325,7 +322,7 @@ export function Header() {
                 </Link>
               ) : null
             )}
-            
+
             {/* Language Selector for Mobile */}
             <div className="px-3 py-3 border-t border-gray-200 dark:border-gray-700">
               <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">{t('language')}</p>
@@ -344,7 +341,7 @@ export function Header() {
                 {user.name || user.email}
               </div>
               <div className="text-xs text-gray-500 dark:text-gray-400">
-                {getRoleDisplayName(user.role)}
+                {user.email}
               </div>
             </div>
             <button

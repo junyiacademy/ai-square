@@ -9,7 +9,7 @@ if (!global.Response) {
       this.statusText = init.statusText || ''
       this.headers = new Map(Object.entries(init.headers || {}))
     }
-    
+
     status: number
     statusText: string
     headers: Map<string, string>
@@ -17,15 +17,15 @@ if (!global.Response) {
     redirected = false
     type = 'basic' as ResponseType
     url = ''
-    
+
     async json() {
       return typeof this.body === 'string' ? JSON.parse(this.body) : this.body
     }
-    
+
     async text() {
       return typeof this.body === 'string' ? this.body : JSON.stringify(this.body)
     }
-    
+
     clone() {
       return new Response(this.body, this.init)
     }
@@ -36,7 +36,7 @@ if (!global.Request) {
   global.Request = class Request {
     private _url: string
     private _init: any
-    
+
     constructor(url: string, init: any = {}) {
       this._url = url
       this._init = init
@@ -44,23 +44,23 @@ if (!global.Request) {
       this.headers = new Map(Object.entries(init.headers || {}))
       this.body = init.body
     }
-    
+
     get url() {
       return this._url
     }
-    
+
     method: string
     headers: Map<string, string>
     body: any
-    
+
     async json() {
       return typeof this.body === 'string' ? JSON.parse(this.body) : this.body
     }
-    
+
     async text() {
       return typeof this.body === 'string' ? this.body : JSON.stringify(this.body)
     }
-    
+
     clone() {
       return new Request(this._url, this._init)
     }
@@ -443,11 +443,11 @@ jest.mock('@google-cloud/vertexai', () => {
       }]
     }
   });
-  
+
   const mockGetGenerativeModel = jest.fn().mockReturnValue({
     generateContent: mockGenerateContent
   });
-  
+
   return {
     VertexAI: jest.fn().mockImplementation(() => ({
       preview: {
@@ -476,9 +476,9 @@ jest.mock('./src/lib/auth/session', () => ({
     expires: '2030-01-01T00:00:00.000Z'
   }),
   generateSessionToken: jest.fn().mockReturnValue('mock-session-token'),
-  verifySessionToken: jest.fn().mockResolvedValue({ 
-    userId: 'test-user-id', 
-    valid: true 
+  verifySessionToken: jest.fn().mockResolvedValue({
+    userId: 'test-user-id',
+    valid: true
   })
 }));
 
@@ -520,9 +520,11 @@ jest.mock('./src/lib/db/get-pool', () => ({
   closePool: jest.fn().mockResolvedValue(undefined)
 }));
 
-// Mock crypto module with unique values
+// Mock crypto module with unique values - CRITICAL: Fix ES module import mocking
 let cryptoCounter = 0;
-jest.mock('crypto', () => ({
+
+// CRITICAL: Properly mock crypto for both CommonJS and ES module imports
+const mockCrypto = {
   randomBytes: jest.fn().mockImplementation((length: number) => ({
     toString: jest.fn().mockImplementation((encoding: string) => {
       if (encoding === 'hex') {
@@ -535,8 +537,24 @@ jest.mock('crypto', () => ({
       return 'mock-random-string';
     })
   })),
-  randomUUID: jest.fn().mockReturnValue('mock-uuid')
+  randomUUID: jest.fn().mockReturnValue('mock-uuid'),
+  createHash: jest.fn().mockReturnValue({
+    update: jest.fn().mockReturnThis(),
+    digest: jest.fn().mockReturnValue('mock-hash-digest-1234567890abcdef')
+  })
+};
+
+jest.mock('crypto', () => ({
+  __esModule: true,
+  default: mockCrypto,  // For ES module: import crypto from 'crypto'
+  ...mockCrypto         // For named imports: import { createHash } from 'crypto'
 }));
+
+// Also create a global crypto mock for Node.js compatibility
+Object.defineProperty(global, 'crypto', {
+  value: mockCrypto,
+  writable: true
+});
 
 // Mock file system operations
 jest.mock('fs', () => ({

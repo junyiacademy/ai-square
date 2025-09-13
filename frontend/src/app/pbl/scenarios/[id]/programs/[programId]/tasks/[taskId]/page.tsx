@@ -120,7 +120,7 @@ export default function ProgramLearningPage() {
 
       // Load program and task data using unified architecture
       let loadedProgram: Program | null = null;
-      let loadedTask: Task | null = null;
+      const loadedTask: Task | null = null;
 
       if (!programId.startsWith('temp_')) {
         try {

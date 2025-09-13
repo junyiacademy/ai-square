@@ -14,10 +14,33 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const email: string = String(body.email || '').trim().toLowerCase()
     const password: string = String(body.password || '')
-    const name: string = String(body.name || '')
+    const name: string = String(body.name || '').trim()
+    const acceptTerms: boolean = body.acceptTerms === true
 
+    // Validate required fields
     if (!email || !password) {
       return NextResponse.json({ success: false, error: 'Email and password are required' }, { status: 400 })
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(email)) {
+      return NextResponse.json({ success: false, error: 'Invalid email format' }, { status: 400 })
+    }
+
+    // Validate password requirements (min 8 characters)
+    if (password.length < 8) {
+      return NextResponse.json({ success: false, error: 'Password must be at least 8 characters' }, { status: 400 })
+    }
+
+    // Validate name length if provided
+    if (name && name.length < 2) {
+      return NextResponse.json({ success: false, error: 'Name must be at least 2 characters' }, { status: 400 })
+    }
+
+    // Validate terms acceptance
+    if (!acceptTerms) {
+      return NextResponse.json({ success: false, error: 'You must accept the terms and conditions' }, { status: 400 })
     }
 
     const db = getPool()
@@ -33,7 +56,7 @@ export async function POST(request: NextRequest) {
     if (existing.rows.length > 0) {
       const user = existing.rows[0]
       if (user.email_verified) {
-        return NextResponse.json({ success: false, error: 'Email already registered' }, { status: 409 })
+        return NextResponse.json({ success: false, error: 'Email already exists' }, { status: 409 })
       }
 
       // Update unverified user: reset password and token
@@ -55,16 +78,38 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Send verification email
-    const base = appBaseUrl(request.headers.get('origin') || undefined)
-    const verifyUrl = `${base}/api/auth/verify-email?token=${rawToken}&email=${encodeURIComponent(email)}`
-    const recipientName = existing.rows[0]?.name || name || email
-    const { html, text } = renderVerifyEmail(recipientName, verifyUrl)
-    await sendEmail({ to: email, subject: 'Verify your email', html, text })
+    // Send verification email (but don't fail registration if email fails)
+    try {
+      const base = appBaseUrl(request.headers.get('origin') || undefined)
+      const verifyUrl = `${base}/api/auth/verify-email?token=${rawToken}&email=${encodeURIComponent(email)}`
+      const recipientName = existing.rows[0]?.name || name || email
+      const { html, text } = renderVerifyEmail(recipientName, verifyUrl)
+      await sendEmail({ to: email, subject: 'Verify your email', html, text })
+    } catch (emailError) {
+      console.error('[register] email sending failed:', emailError)
+      // Continue registration even if email fails
+    }
 
-    return NextResponse.json({ success: true })
+    // Return success with user data
+    return NextResponse.json({
+      success: true,
+      message: 'Registration successful. Please check your email to verify your account.',
+      user: {
+        email,
+        emailVerified: false,
+        name: name || null
+      }
+    })
   } catch (err) {
     console.error('[register] error', err)
-    return NextResponse.json({ success: false, error: 'Registration failed' }, { status: 500 })
+
+    // Handle duplicate key error
+    const error = err as { code?: string; message?: string }
+    if (error.code === '23505' || error.message?.includes('duplicate key')) {
+      return NextResponse.json({ success: false, error: 'Email already registered' }, { status: 409 })
+    }
+
+    // Generic database error
+    return NextResponse.json({ success: false, error: 'Registration failed. Please try again later.' }, { status: 500 })
   }
 }

@@ -30,7 +30,7 @@ describe('/api/auth/register', () => {
 
     const req = new NextRequest('http://localhost/api/auth/register', {
       method: 'POST',
-      body: JSON.stringify({ email: 'newuser@example.com', password: 'Passw0rd!', name: 'New User' })
+      body: JSON.stringify({ email: 'newuser@example.com', password: 'Passw0rd!', name: 'New User', acceptTerms: true })
     } as any)
 
     const res = await POST(req)
@@ -50,7 +50,7 @@ describe('/api/auth/register', () => {
 
     const req = new NextRequest('http://localhost/api/auth/register', {
       method: 'POST',
-      body: JSON.stringify({ email: 'exists@example.com', password: 'Passw0rd!' })
+      body: JSON.stringify({ email: 'exists@example.com', password: 'Passw0rd!', acceptTerms: true })
     } as any)
 
     const res = await POST(req)

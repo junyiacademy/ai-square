@@ -66,7 +66,7 @@ jest.mock('react-i18next', () => ({
       }
       return translations[key] || key
     },
-    i18n: { 
+    i18n: {
       language: 'en',
       changeLanguage: jest.fn()
     }
@@ -100,7 +100,7 @@ describe('Header Navigation Tests', () => {
   describe('Navigation Links', () => {
     it('should display navigation links', async () => {
       mockLocalStorage.getItem.mockReturnValue(null)
-      
+
       renderWithProviders(<Header />)
 
       // Check for primary navigation links
@@ -112,7 +112,7 @@ describe('Header Navigation Tests', () => {
 
     it('should have correct href attributes', async () => {
       mockLocalStorage.getItem.mockReturnValue(null)
-      
+
       renderWithProviders(<Header />)
 
       const dashboardLink = screen.getByText('Dashboard').closest('a')
@@ -124,7 +124,7 @@ describe('Header Navigation Tests', () => {
 
     it('should highlight active page', async () => {
       mockUsePathname.mockReturnValue('/dashboard')
-      
+
       renderWithProviders(<Header />)
 
       const dashboardLink = screen.getByText('Dashboard').closest('a')
@@ -138,7 +138,7 @@ describe('Header Navigation Tests', () => {
   describe('Mobile Navigation', () => {
     it('should show hamburger menu on mobile', async () => {
       mockLocalStorage.getItem.mockReturnValue(null)
-      
+
       renderWithProviders(<Header />)
 
       // Check for hamburger menu button
@@ -149,11 +149,11 @@ describe('Header Navigation Tests', () => {
     it('should toggle mobile menu on hamburger click', async () => {
       mockLocalStorage.getItem.mockReturnValue(null)
       const user = userEvent.setup()
-      
+
       renderWithProviders(<Header />)
 
       const hamburgerButton = screen.getByLabelText('Toggle navigation menu')
-      
+
       // Initially menu should be closed
       expect(screen.queryByRole('navigation', { name: 'Mobile navigation' })).not.toBeInTheDocument()
 
@@ -170,7 +170,7 @@ describe('Header Navigation Tests', () => {
   describe('i18n Integration', () => {
     it('should use translated text for navigation', async () => {
       mockLocalStorage.getItem.mockReturnValue(null)
-      
+
       renderWithProviders(<Header />)
 
       // All text should come from translations - check actual translated values
@@ -186,7 +186,7 @@ describe('Header Navigation Tests', () => {
         role: 'teacher',
         name: 'Test User'
       }
-      
+
       // Mock useAuth to return logged in user
       mockUseAuth.mockReturnValue({
         user: mockUser,
@@ -196,15 +196,15 @@ describe('Header Navigation Tests', () => {
 
       renderWithProviders(<Header />)
 
-      // Should display translated teacher role
-      expect(screen.getByText('Teacher')).toBeInTheDocument()
+      // Header doesn't display role text, only shows user email
+      expect(screen.getByText('test@example.com')).toBeInTheDocument()
     })
   })
 
   describe('Navigation with Auth State', () => {
     it('should show all navigation links when logged out', async () => {
       mockLocalStorage.getItem.mockReturnValue(null)
-      
+
       renderWithProviders(<Header />)
 
       expect(screen.getByText('Relations')).toBeInTheDocument()
@@ -219,7 +219,7 @@ describe('Header Navigation Tests', () => {
         role: 'student',
         name: 'Test User'
       }
-      
+
       // Mock useAuth to return logged in user
       mockUseAuth.mockReturnValue({
         user: mockUser,

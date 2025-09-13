@@ -120,6 +120,65 @@ jobs:
             frontend/prisma/schema.prisma
             frontend/prisma/migrations/
 
+  # Deploy KSA to CDN (parallel with main deployment)
+  deploy-ksa-cdn:
+    name: Deploy KSA to CDN
+    runs-on: ubuntu-latest
+    needs: quality-checks  # Only wait for quality checks, not main deployment
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Setup Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Deploy KSA to CDN
+        run: |
+          echo "📦 Deploying KSA data to CDN (parallel with main deployment)..."
+
+          # Convert YAML to JSON
+          cd frontend
+          npm install js-yaml
+          cd public/rubrics_data/ksa_codes
+
+          for file in *.yaml; do
+            if [ "$file" != "_ksa_codes_template.yaml" ]; then
+              echo "Converting $file..."
+              node -e "
+                const yaml = require('../../../node_modules/js-yaml');
+                const fs = require('fs');
+                const content = yaml.load(fs.readFileSync('$file', 'utf8'));
+                fs.writeFileSync('$file'.replace('.yaml', '.json'), JSON.stringify(content));
+              "
+            fi
+          done
+
+          # Create bucket if not exists
+          gsutil ls -b gs://ai-square-static &>/dev/null || gsutil mb -l asia-east1 gs://ai-square-static
+
+          # Upload to Cloud Storage with parallel transfers
+          gsutil -m -h "Cache-Control:public, max-age=86400" \
+            cp *.json gs://ai-square-static/ksa/
+
+          # Set public access
+          gsutil iam ch allUsers:objectViewer gs://ai-square-static
+
+          echo "✅ KSA deployed to CDN: https://storage.googleapis.com/ai-square-static/ksa/"
+
   # Deploy job
   deploy:
     name: Deploy to Cloud Run

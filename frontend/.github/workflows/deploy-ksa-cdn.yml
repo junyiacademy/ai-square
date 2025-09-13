@@ -1,0 +1,136 @@
+name: Deploy KSA to CDN
+
+on:
+  push:
+    branches: [main, staging]
+    paths:
+      - 'frontend/public/rubrics_data/ksa_codes/**'
+      - '.github/workflows/deploy-ksa-cdn.yml'
+  workflow_dispatch: # Allow manual trigger
+
+env:
+  PROJECT_ID: ai-square-463013
+  BUCKET_NAME: ai-square-static
+  KSA_PATH: frontend/public/rubrics_data/ksa_codes
+
+jobs:
+  deploy-ksa:
+    name: Deploy KSA to Cloud Storage
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+
+      - name: Convert YAML to JSON
+        run: |
+          cd ${{ env.KSA_PATH }}
+
+          # Install yaml parser
+          npm install -g js-yaml
+
+          # Convert all YAML files to JSON
+          for file in *.yaml; do
+            if [ "$file" != "_ksa_codes_template.yaml" ]; then
+              echo "Converting $file to JSON..."
+              node -e "
+                const yaml = require('js-yaml');
+                const fs = require('fs');
+                const content = yaml.load(fs.readFileSync('$file', 'utf8'));
+                const jsonFile = '$file'.replace('.yaml', '.json');
+                fs.writeFileSync(jsonFile, JSON.stringify(content));
+                console.log('Created: ' + jsonFile);
+              "
+            fi
+          done
+
+          # List generated JSON files
+          ls -la *.json
+
+      - name: Create Cloud Storage bucket if not exists
+        run: |
+          # Check if bucket exists
+          if ! gsutil ls -b gs://${{ env.BUCKET_NAME }} &>/dev/null; then
+            echo "Creating bucket gs://${{ env.BUCKET_NAME }}..."
+            gsutil mb -l asia-east1 gs://${{ env.BUCKET_NAME }}
+          else
+            echo "Bucket gs://${{ env.BUCKET_NAME }} already exists"
+          fi
+
+      - name: Upload KSA files to Cloud Storage
+        run: |
+          cd ${{ env.KSA_PATH }}
+
+          # Upload JSON files with cache control headers
+          echo "Uploading KSA JSON files to Cloud Storage..."
+          gsutil -m \
+            -h "Cache-Control:public, max-age=86400" \
+            -h "Content-Type:application/json" \
+            cp *.json gs://${{ env.BUCKET_NAME }}/ksa/
+
+          echo "Files uploaded successfully!"
+
+      - name: Set bucket permissions
+        run: |
+          # Make bucket publicly readable
+          gsutil iam ch allUsers:objectViewer gs://${{ env.BUCKET_NAME }}
+
+          # Set CORS policy
+          cat > cors.json <<EOF
+          [{
+            "origin": ["*"],
+            "method": ["GET", "HEAD"],
+            "responseHeader": ["Content-Type", "Cache-Control"],
+            "maxAgeSeconds": 3600
+          }]
+          EOF
+
+          gsutil cors set cors.json gs://${{ env.BUCKET_NAME }}
+
+          echo "Bucket permissions configured!"
+
+      - name: Verify deployment
+        run: |
+          echo "KSA files deployed to CDN:"
+          echo "Base URL: https://storage.googleapis.com/${{ env.BUCKET_NAME }}/ksa/"
+          echo ""
+          echo "Available files:"
+          gsutil ls gs://${{ env.BUCKET_NAME }}/ksa/
+
+          # Test fetching one file
+          echo ""
+          echo "Testing fetch ksa_codes_en.json..."
+          curl -s "https://storage.googleapis.com/${{ env.BUCKET_NAME }}/ksa/ksa_codes_en.json" | head -c 200
+          echo "..."
+
+      - name: Invalidate CDN cache (if using Cloud CDN)
+        if: github.ref == 'refs/heads/main'
+        continue-on-error: true
+        run: |
+          # Only if you have Cloud CDN configured
+          # gcloud compute url-maps invalidate-cdn-cache ai-square-cdn-map \
+          #   --path "/ksa/*" \
+          #   --async
+          echo "Note: Add CDN cache invalidation if using Cloud CDN"
+
+      - name: Update deployment status
+        if: success()
+        run: |
+          echo "✅ KSA successfully deployed to CDN!"
+          echo "CDN URL: https://storage.googleapis.com/${{ env.BUCKET_NAME }}/ksa/"
+          echo "Deployment time: $(date)"

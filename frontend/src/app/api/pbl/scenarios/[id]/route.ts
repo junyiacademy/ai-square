@@ -86,14 +86,37 @@ const getLocalizedValue = memoize(((...args: unknown[]) => {
   return data[localizedField] || data[fieldName] || '';
 }) as (...args: unknown[]) => unknown);
 
-// Cache KSA data in memory (memoized for 30 minutes)
+// TODO: CRITICAL PERFORMANCE ISSUE - Move KSA data to PostgreSQL
+// This file I/O operation is causing high Cloud Run costs:
+// - 280KB of YAML files loaded on every cold start
+// - CPU-intensive YAML parsing
+// - KSA is STATIC content that never changes - why reload?
+// Solution: Either load once at startup OR migrate to PostgreSQL
+
+// Cache KSA data in memory (never expires - static content)
 const loadKSACodes = memoize((async (...args: unknown[]) => {
   const [lang = 'en'] = args as [string?];
   try {
+    // Use CDN if available, fallback to filesystem
+    const KSA_CDN_URL = process.env.KSA_CDN_URL || 'https://storage.googleapis.com/ai-square-static/ksa';
+
     // Normalize language code (e.g., zh -> zhCN)
     const normalizedLang = normalizeLanguageCode(lang);
     // Convert to file naming format (e.g., zh-TW -> zhTW)
     const fileLanguage = normalizedLang.replace(/[-_]/g, '');
+
+    // Try CDN first (in production)
+    if (KSA_CDN_URL && process.env.NODE_ENV === 'production') {
+      console.log(`📦 Loading KSA from CDN for lang: ${lang}`);
+      const response = await fetch(`${KSA_CDN_URL}/ksa_codes_${fileLanguage}.json`);
+      if (response.ok) {
+        return await response.json() as KSAData;
+      }
+      console.warn(`Failed to load from CDN, falling back to filesystem`);
+    }
+
+    // Fallback to filesystem (for local dev)
+    console.warn(`⚠️ Loading KSA from filesystem for lang: ${lang} - Using fallback`);
     const ksaPath = path.join(process.cwd(), 'public', 'rubrics_data', 'ksa_codes', `ksa_codes_${fileLanguage}.yaml`);
     const ksaContent = await fs.readFile(ksaPath, 'utf8');
     return yaml.load(ksaContent) as KSAData;
@@ -106,7 +129,7 @@ const loadKSACodes = memoize((async (...args: unknown[]) => {
     }
     return null;
   }
-}) as (...args: unknown[]) => unknown, 30 * 60 * 1000) as (lang?: string) => Promise<KSAData | null>; // 30 minutes cache
+}) as (...args: unknown[]) => unknown, Infinity) as (lang?: string) => Promise<KSAData | null>; // Never expire - KSA is static content!
 
 // Optimized KSA lookup with indexing
 const ksaIndexCache = new Map<string, Map<string, KSAItem>>();
@@ -171,33 +194,33 @@ function buildKSAIndex(ksaData: KSAData, lang: string): Map<string, KSAItem> {
 // Optimized KSA mapping builder
 function buildKSAMapping(yamlData: YAMLData, ksaData: KSAData | null, lang: string): KSAMapping | undefined {
   if (!yamlData.ksa_mapping || !ksaData) return undefined;
-  
+
   const index = buildKSAIndex(ksaData, lang);
   const mapping: KSAMapping = {
     knowledge: [],
     skills: [],
     attitudes: []
   };
-  
+
   // Process all codes at once
   if (yamlData.ksa_mapping.knowledge) {
     mapping.knowledge = yamlData.ksa_mapping.knowledge
       .map(code => index.get(code))
       .filter(Boolean) as KSAItem[];
   }
-  
+
   if (yamlData.ksa_mapping.skills) {
     mapping.skills = yamlData.ksa_mapping.skills
       .map(code => index.get(code))
       .filter(Boolean) as KSAItem[];
   }
-  
+
   if (yamlData.ksa_mapping.attitudes) {
     mapping.attitudes = yamlData.ksa_mapping.attitudes
       .map(code => index.get(code))
       .filter(Boolean) as KSAItem[];
   }
-  
+
   return mapping;
 }
 
@@ -206,23 +229,23 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id: scenarioId } = await params;
-  
+
   // Check if it's a UUID or a YAML ID
   const isUUID = scenarioId.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i);
-  
+
   // Use cached GET wrapper with 5 minute TTL
   return cachedGET(request, async () => {
     const { searchParams } = new URL(request.url);
     const lang = searchParams.get('lang') || 'en';
-    
+
     console.log('Loading scenario:', scenarioId, 'with lang:', lang, 'isUUID:', isUUID);
-    
+
     // Load scenario and KSA data in parallel
     const [scenarioResult, ksaData] = await parallel(
       (async () => {
         const { repositoryFactory } = await import('@/lib/repositories/base/repository-factory');
         const scenarioRepo = repositoryFactory.getScenarioRepository();
-        
+
         if (isUUID) {
           // Direct lookup by UUID
           return scenarioRepo.findById(scenarioId);
@@ -230,35 +253,35 @@ export async function GET(
           // Use index for fast lookup
           const { scenarioIndexService } = await import('@/lib/services/scenario-index-service');
           const { scenarioIndexBuilder } = await import('@/lib/services/scenario-index-builder');
-          
+
           // Ensure index exists
           await scenarioIndexBuilder.ensureIndex();
-          
+
           // Look up UUID by YAML ID
           const uuid = await scenarioIndexService.getUuidByYamlId(scenarioId);
           if (!uuid) {
             return null;
           }
-          
+
           // Fetch scenario by UUID
           return scenarioRepo.findById(uuid);
         }
       })(),
       loadKSACodes(lang)
     ) as [Scenario | null, KSAData | null];
-    
+
     if (!scenarioResult) {
       throw new Error('Scenario not found');
     }
-    
+
     // Get YAML data from metadata or pblData
     const yamlData = scenarioResult.metadata?.yamlData || scenarioResult.pblData;
-    
+
     console.log('Scenario loaded from unified architecture: success');
     console.log('Has yamlData:', !!yamlData);
     console.log('Has pblData:', !!scenarioResult.pblData);
     console.log('Has taskTemplates:', !!scenarioResult.taskTemplates);
-    
+
     // Transform to API response format
     const scenarioResponse: ScenarioResponse = {
       id: scenarioResult.id,
@@ -275,12 +298,37 @@ export async function GET(
         title: typeof task.title === 'object' ? ((task.title as Record<string, string>)?.[lang] || (task.title as Record<string, string>)?.en || '') : String(task.title || ''),
         description: typeof task.description === 'object' ? ((task.description as Record<string, string>)?.[lang] || (task.description as Record<string, string>)?.en || '') : String(task.description || task.instructions || ''),
         category: String(task.category || task.type || 'general'),
-        instructions: Array.isArray(task.instructions) ? task.instructions as string[] : [String(task.instructions || task.description || '')],
+        instructions: (() => {
+          const inst = task.instructions;
+          if (!inst) return [];
+          if (Array.isArray(inst)) {
+            return inst.map(item => {
+              if (typeof item === 'string') return item;
+              if (typeof item === 'object' && item !== null) {
+                // Check for multilingual object
+                const obj = item as Record<string, unknown>;
+                if (obj[lang] && typeof obj[lang] === 'string') return String(obj[lang]);
+                if (obj.en && typeof obj.en === 'string') return String(obj.en);
+                // Check for text or content property
+                if (obj.text && typeof obj.text === 'string') return String(obj.text);
+                if (obj.content && typeof obj.content === 'string') return String(obj.content);
+              }
+              return ''; // Return empty string instead of [object Object]
+            }).filter(s => s !== '');
+          }
+          if (typeof inst === 'string') return [inst];
+          if (typeof inst === 'object' && inst !== null) {
+            const obj = inst as Record<string, unknown>;
+            if (obj[lang] && typeof obj[lang] === 'string') return [String(obj[lang])];
+            if (obj.en && typeof obj.en === 'string') return [String(obj.en)];
+          }
+          return [];
+        })(),
         expectedOutcome: String(task.expectedOutcome || ''),
         timeLimit: Number(task.estimatedTime || task.timeLimit || 30)
       }))
     };
-    
+
     return {
       success: true,
       data: scenarioResponse

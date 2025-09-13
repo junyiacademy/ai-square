@@ -8,6 +8,72 @@ import { IScenario, IProgram } from '@/types/unified-learning';
 import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
 // Date formatting utility
 
+// Helper function to normalize various instruction shapes to string[]
+// Acceptable shapes: string | string[] | Record<string,string> | Record<string,string[]>
+// Fallback: try to stringify non-primitive safely, never render [object Object]
+function normalizeInstructions(input: unknown, lang: string): string[] {
+  if (!input) return [];
+
+  // If it's already an array, process each item
+  if (Array.isArray(input)) {
+    return input
+      .map((v) => {
+        if (typeof v === 'string') return v;
+        if (typeof v === 'object' && v !== null) {
+          // Check for text property
+          if ('text' in v) return String((v as Record<string, unknown>).text);
+          // Check for multilingual object
+          if (lang in v) return String((v as Record<string, unknown>)[lang]);
+          if ('en' in v) return String((v as Record<string, unknown>).en);
+          // Check for content property
+          if ('content' in v) return String((v as Record<string, unknown>).content);
+        }
+        // Don't stringify objects - skip them
+        return null;
+      })
+      .filter((s): s is string => s !== null && s.trim().length > 0);
+  }
+
+  // If it's a single string, return as array
+  if (typeof input === 'string') return [input];
+
+  // If it's an object, check for language-specific or standard fields
+  if (typeof input === 'object' && input !== null) {
+    const obj = input as Record<string, unknown>;
+
+    // Check for language-specific field
+    if (obj[lang]) {
+      if (Array.isArray(obj[lang])) {
+        return (obj[lang] as unknown[])
+          .map(v => typeof v === 'string' ? v : null)
+          .filter((s): s is string => s !== null);
+      }
+      if (typeof obj[lang] === 'string') return [String(obj[lang])];
+    }
+
+    // English fallback
+    if (obj.en) {
+      if (Array.isArray(obj.en)) {
+        return (obj.en as unknown[])
+          .map(v => typeof v === 'string' ? v : null)
+          .filter((s): s is string => s !== null);
+      }
+      if (typeof obj.en === 'string') return [String(obj.en)];
+    }
+
+    // Check for direct array properties that might contain instructions
+    const possibleArrayFields = ['items', 'list', 'steps', 'instructions'];
+    for (const field of possibleArrayFields) {
+      if (Array.isArray(obj[field])) {
+        return normalizeInstructions(obj[field], lang);
+      }
+    }
+  }
+
+  // Return empty array instead of stringifying objects
+  return [];
+}
+
 export default function ScenarioDetailPage() {
   const params = useParams();
   const router = useRouter();
@@ -21,19 +87,19 @@ export default function ScenarioDetailPage() {
 
   useEffect(() => {
     let ignore = false;
-    
+
     const fetchData = async () => {
       try {
         setLoading(true);
-        
+
         // Fetch scenario details
         const [scenarioResponse, programsResponse] = await Promise.all([
           authenticatedFetch(`/api/pbl/scenarios/${params.id}?lang=${i18n.language}`),
           authenticatedFetch(`/api/pbl/scenarios/${params.id}/programs`)
         ]);
-        
+
         if (ignore) return;
-        
+
         if (scenarioResponse.ok) {
           const response = await scenarioResponse.json();
           if (response.success && response.data) {
@@ -57,7 +123,7 @@ export default function ScenarioDetailPage() {
         } else {
           console.error('Failed to fetch scenario:', scenarioResponse.status, scenarioResponse.statusText);
         }
-        
+
         if (programsResponse.ok) {
           const programsData = await programsResponse.json();
           console.log('Programs API response:', programsData);
@@ -81,7 +147,7 @@ export default function ScenarioDetailPage() {
     };
 
     fetchData();
-    
+
     return () => {
       ignore = true;
     };
@@ -94,7 +160,7 @@ export default function ScenarioDetailPage() {
 
   const handleStartProgram = async (programId?: string) => {
     if (!scenario) return;
-    
+
     setIsStarting(true);
     try {
       if (programId) {
@@ -105,7 +171,7 @@ export default function ScenarioDetailPage() {
           const currentTaskIndex = program.currentTaskIndex || 0;
           const taskIds = (program.metadata?.taskIds as string[]) || [];
           const targetTaskId = taskIds[currentTaskIndex] || taskIds[0];
-          
+
           if (!targetTaskId) {
             console.error('No task ID found for navigation in program:', program);
             alert(t('details.errorStarting', 'Error starting program - no tasks found'));
@@ -125,11 +191,11 @@ export default function ScenarioDetailPage() {
             language: i18n.language
           })
         });
-        
+
         if (!response.ok) {
           throw new Error('Failed to create program');
         }
-        
+
         const data = await response.json();
         if (data.id) {
           // Navigate to the first task using the UUID from created tasks
@@ -237,7 +303,7 @@ export default function ScenarioDetailPage() {
               <p className="text-lg text-gray-600 dark:text-gray-300 mb-4">
                 {typeof scenario.description === 'string' ? scenario.description : (scenario.description[i18n.language] || scenario.description.en || '')}
               </p>
-              
+
               {/* Metadata */}
               <div className="flex flex-wrap gap-4 mb-6">
                 <div className="flex items-center">
@@ -287,7 +353,7 @@ export default function ScenarioDetailPage() {
                               {index === 0 ? t('details.latestProgram', 'Latest Program') : `${t('common:program', 'Program')} ${userPrograms.length - index}`}
                             </span>
                             <span className={`ml-3 text-xs px-2 py-1 rounded-full ${
-                              program.status === 'completed' 
+                              program.status === 'completed'
                                 ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'
                                 : program.status === 'active'
                                 ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
@@ -349,8 +415,8 @@ export default function ScenarioDetailPage() {
                   disabled={isStarting}
                   className="bg-green-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isStarting 
-                    ? t('common:loading', 'Loading...') 
+                  {isStarting
+                    ? t('common:loading', 'Loading...')
                     : t('startNewProgram', 'Start New Program')
                   }
                 </button>
@@ -446,7 +512,7 @@ export default function ScenarioDetailPage() {
                   <div>
                     <span className="font-medium text-green-700 dark:text-green-300">Knowledge: </span>
                     <span className="text-green-600 dark:text-green-400">
-                      {ksaMapping?.knowledge && Array.isArray(ksaMapping.knowledge) && ksaMapping.knowledge.map((item: unknown) => 
+                      {ksaMapping?.knowledge && Array.isArray(ksaMapping.knowledge) && ksaMapping.knowledge.map((item: unknown) =>
                         typeof item === 'string' ? item : (item && typeof item === 'object' && 'code' in item ? String(item.code) : '')
                       ).filter(Boolean).join(', ')}
                     </span>
@@ -456,7 +522,7 @@ export default function ScenarioDetailPage() {
                   <div>
                     <span className="font-medium text-blue-700 dark:text-blue-300">Skills: </span>
                     <span className="text-blue-600 dark:text-blue-400">
-                      {ksaMapping?.skills && Array.isArray(ksaMapping.skills) && ksaMapping.skills.map((item: unknown) => 
+                      {ksaMapping?.skills && Array.isArray(ksaMapping.skills) && ksaMapping.skills.map((item: unknown) =>
                         typeof item === 'string' ? item : (item && typeof item === 'object' && 'code' in item ? String(item.code) : '')
                       ).filter(Boolean).join(', ')}
                     </span>
@@ -466,7 +532,7 @@ export default function ScenarioDetailPage() {
                   <div>
                     <span className="font-medium text-purple-700 dark:text-purple-300">Attitudes: </span>
                     <span className="text-purple-600 dark:text-purple-400">
-                      {ksaMapping?.attitudes && Array.isArray(ksaMapping.attitudes) && ksaMapping.attitudes.map((item: unknown) => 
+                      {ksaMapping?.attitudes && Array.isArray(ksaMapping.attitudes) && ksaMapping.attitudes.map((item: unknown) =>
                         typeof item === 'string' ? item : (item && typeof item === 'object' && 'code' in item ? String(item.code) : '')
                       ).filter(Boolean).join(', ')}
                     </span>
@@ -479,6 +545,37 @@ export default function ScenarioDetailPage() {
 
           {/* Tasks List */}
           <div className="space-y-4">
+            {/** Normalize various instruction shapes to string[] */}
+            {/** helper inside render scope to access i18n.language */}
+            {/** acceptable shapes: string | string[] | Record<string,string> | Record<string,string[]> */}
+            {/** fallback: try to stringify non-primitive safely */}
+            {/** never render [object Object] */}
+            {(() => {
+              function normalizeInstructions(input: unknown, lang: string): string[] {
+              if (!input) return []
+              if (Array.isArray(input)) {
+                return input
+                  .map((v) => (typeof v === 'string' ? v : typeof v === 'object' && v !== null && 'text' in (v as any) ? String((v as any).text) : JSON.stringify(v)))
+                  .filter((s) => typeof s === 'string' && s.trim().length > 0)
+              }
+              if (typeof input === 'string') return [input]
+              if (typeof input === 'object' && input !== null) {
+                const obj = input as Record<string, unknown>
+                // language-specific string[]
+                if (Array.isArray(obj[lang])) {
+                  return (obj[lang] as unknown[]).map((v) => (typeof v === 'string' ? v : JSON.stringify(v)))
+                }
+                // language-specific string
+                if (typeof obj[lang] === 'string') return [String(obj[lang])]
+                // english fallback
+                if (Array.isArray(obj.en)) return (obj.en as unknown[]).map((v) => (typeof v === 'string' ? v : JSON.stringify(v)))
+                if (typeof obj.en === 'string') return [String(obj.en)]
+              }
+              // last resort
+              try { return [JSON.stringify(input)] } catch { return [] }
+            }
+            return null;
+            })()}
             {(getScenarioData('tasks', []) as Record<string, unknown>[]).map((task: Record<string, unknown>, taskIndex: number) => (
               <div key={(task.id as string) || taskIndex} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
                 <div className="flex items-start justify-between mb-2">
@@ -499,15 +596,18 @@ export default function ScenarioDetailPage() {
                 <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
                   {String(task.description)}
                 </p>
-                
+
                 {/* Instructions */}
-                {task.instructions && Array.isArray(task.instructions) && task.instructions.length > 0 ? (
+                {(() => {
+                  // Re-use the normalizeInstructions function from top of file
+                  const instructions = normalizeInstructions((task as any).instructions, i18n.language)
+                  return instructions.length > 0 ? (
                   <div className="mb-3">
                     <p className="text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
                       {t('instructions', 'Instructions')}
                     </p>
                     <ul className="text-sm text-gray-600 dark:text-gray-300 space-y-1">
-                      {(task.instructions as string[]).map((instruction: string, i: number) => (
+                      {instructions.map((instruction: string, i: number) => (
                         <li key={i} className="flex items-start">
                           <span className="text-gray-400 mr-2">•</span>
                           {instruction}
@@ -515,8 +615,9 @@ export default function ScenarioDetailPage() {
                       ))}
                     </ul>
                   </div>
-                ) : null}
-                
+                  ) : null
+                })()}
+
                 {/* KSA Focus */}
                 {(() => {
                   const ksaFocus = task.KSA_focus as Record<string, unknown> | undefined;
@@ -530,7 +631,7 @@ export default function ScenarioDetailPage() {
                         <div>
                           <span className="text-xs font-medium text-purple-600 dark:text-purple-400">Primary: </span>
                           <span className="text-xs text-purple-600 dark:text-purple-400">
-                            {(ksaFocus.primary as unknown[]).map((item: unknown) => 
+                            {(ksaFocus.primary as unknown[]).map((item: unknown) =>
                               String(typeof item === 'string' ? item : (item && typeof item === 'object' && 'code' in item ? item.code : item))
                             ).join(', ')}
                           </span>
@@ -540,7 +641,7 @@ export default function ScenarioDetailPage() {
                         <div>
                           <span className="text-xs font-medium text-purple-600 dark:text-purple-400">Secondary: </span>
                           <span className="text-xs text-purple-600 dark:text-purple-400">
-                            {(ksaFocus.secondary as unknown[]).map((item: unknown) => 
+                            {(ksaFocus.secondary as unknown[]).map((item: unknown) =>
                               String(typeof item === 'string' ? item : (item && typeof item === 'object' && 'code' in item ? item.code : item))
                             ).join(', ')}
                           </span>
@@ -550,7 +651,7 @@ export default function ScenarioDetailPage() {
                   </div>
                 ) : null;
                 })()}
-                
+
                 {/* Expected Outcome */}
                 {task.expectedOutcome ? (
                   <div className="bg-blue-50 dark:bg-blue-900/20 rounded p-3">
