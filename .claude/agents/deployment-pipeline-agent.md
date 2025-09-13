@@ -66,9 +66,15 @@ gcloud secrets list --filter="name:ai-square-*"
 ```
 
 📊 **CI/CD Monitoring Commands (ALWAYS USE THESE)**:
-🚨 **NEVER FORGET TO MONITOR** - Use these commands every time:
+🚨 **血淋淋的教訓：不要在本地測試浪費時間！直接查 GitHub Actions！**
+⚡ **用戶生氣說「你有沒有去 CICD 看啊！」= 立即 gh run view --log-failed**
+🔥 **記住：改測試以符合實作，不是改實作來通過測試！**
 
 ```bash
+# 🔴 第一優先：立即查看失敗（不要跑本地測試！）
+gh run view <run-id> --log-failed  # 這是第一步！！！
+gh api repos/junyiacademy/ai-square/actions/jobs/<job-id>/logs  # 取得詳細錯誤
+
 # 1. 監視最新的 CI/CD runs
 gh run list --workflow=auto-deploy.yml --limit 5
 
@@ -87,6 +93,13 @@ gh run view <run-id> --job <job-id> --log
 # 6. 檢查 parallel jobs 的狀態
 gh run view <run-id> --json jobs --jq '.jobs[] | {name: .name, status: .status, conclusion: .conclusion}'
 ```
+
+**🔴 慘痛教訓（真實案例）**:
+- **KSA CDN 部署失敗 = 每年損失 $5,400（10K用戶）** → 極度緊急！
+- **測試失敗阻擋部署時**：改測試符合實作，不要改實作符合測試
+- **用戶說「那你就應該改測試啊！！！」** = 你搞錯方向了
+- **用戶說「那你要去查 gh 啊」** = 立即執行 gh run view --log
+- **不要解釋，直接修復！** 少說廢話，多做實事！
 
 **AI Square 特定監視模式**:
 ```bash
