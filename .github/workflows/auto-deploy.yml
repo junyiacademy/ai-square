@@ -380,7 +380,12 @@ jobs:
           echo "🧹 Cleaning up old Cloud Run revisions..."
 
           SERVICE_NAME=${{ steps.env.outputs.service }}
-          KEEP_COUNT=3  # Keep only the latest 3 revisions
+          # Development phase - minimal retention
+          if [[ "${{ steps.env.outputs.environment }}" == "production" ]]; then
+            KEEP_COUNT=2  # Production: keep 2 for rollback
+          else
+            KEEP_COUNT=1  # Staging: keep only current
+          fi
 
           # Get all revision names sorted by creation time (newest first)
           REVISIONS=$(gcloud run revisions list \
@@ -441,11 +446,11 @@ jobs:
             fi
           }
 
-          # Clean up based on environment
+          # Clean up based on environment (development phase - minimal retention)
           if [[ "${{ steps.env.outputs.environment }}" == "production" ]]; then
-            cleanup_repository "gcr.io/${{ env.PROJECT_ID }}/ai-square-production" 3
+            cleanup_repository "gcr.io/${{ env.PROJECT_ID }}/ai-square-production" 2
           else
-            cleanup_repository "gcr.io/${{ env.PROJECT_ID }}/ai-square-staging" 3
+            cleanup_repository "gcr.io/${{ env.PROJECT_ID }}/ai-square-staging" 1
           fi
 
           echo "✅ GCR cleanup complete"

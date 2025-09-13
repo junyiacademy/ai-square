@@ -89,11 +89,11 @@ jobs:
             fi
           }
 
-          # Clean up staging service
-          cleanup_service_revisions "ai-square-staging" 3
+          # Clean up staging service (development phase - minimal retention)
+          cleanup_service_revisions "ai-square-staging" 1
 
-          # Clean up production service (keep more revisions for safety)
-          cleanup_service_revisions "ai-square-production" 5
+          # Clean up production service (keep 2 for rollback)
+          cleanup_service_revisions "ai-square-production" 2
 
           echo ""
           echo "✅ Cloud Run revision cleanup complete!"
@@ -144,11 +144,11 @@ jobs:
             fi
           }
 
-          # Clean up staging images
-          cleanup_repository "gcr.io/${{ env.PROJECT_ID }}/ai-square-staging" 5
+          # Clean up staging images (development phase - minimal retention)
+          cleanup_repository "gcr.io/${{ env.PROJECT_ID }}/ai-square-staging" 2
 
-          # Clean up production images
-          cleanup_repository "gcr.io/${{ env.PROJECT_ID }}/ai-square-production" 5
+          # Clean up production images (keep 3 for safety)
+          cleanup_repository "gcr.io/${{ env.PROJECT_ID }}/ai-square-production" 3
 
           echo ""
           echo "✅ GCR cleanup complete!"
