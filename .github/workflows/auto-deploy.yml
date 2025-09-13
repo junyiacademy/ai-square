@@ -12,10 +12,61 @@ env:
   REGION: asia-east1
 
 jobs:
+  # Check what files have changed
+  detect-changes:
+    name: Detect Changed Files
+    runs-on: ubuntu-latest
+    outputs:
+      docs-only: ${{ steps.changes.outputs.docs-only }}
+      has-code-changes: ${{ steps.changes.outputs.has-code-changes }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Detect file changes
+        id: changes
+        run: |
+          echo "🔍 Analyzing changed files..."
+
+          # Get list of changed files
+          if [ "${{ github.event_name }}" == "push" ]; then
+            CHANGED_FILES=$(git diff --name-only HEAD^ HEAD)
+          else
+            CHANGED_FILES=$(git diff --name-only origin/main..HEAD)
+          fi
+
+          echo "Changed files:"
+          echo "$CHANGED_FILES"
+
+          # Check if only docs/markdown files changed
+          DOCS_PATTERN="^(docs/|README|CHANGELOG|\.md$|\.txt$|LICENSE)"
+          CODE_CHANGED=false
+
+          while IFS= read -r file; do
+            if [ -n "$file" ] && ! echo "$file" | grep -qE "$DOCS_PATTERN"; then
+              CODE_CHANGED=true
+              break
+            fi
+          done <<< "$CHANGED_FILES"
+
+          if [ "$CODE_CHANGED" = false ] && [ -n "$CHANGED_FILES" ]; then
+            echo "docs-only=true" >> $GITHUB_OUTPUT
+            echo "has-code-changes=false" >> $GITHUB_OUTPUT
+            echo "✅ Only documentation changes detected - skipping full CI"
+          else
+            echo "docs-only=false" >> $GITHUB_OUTPUT
+            echo "has-code-changes=true" >> $GITHUB_OUTPUT
+            echo "🔄 Code changes detected - running full CI"
+          fi
+
   # Quality checks first
   quality-checks:
     name: Code Quality & Tests
     runs-on: ubuntu-latest
+    needs: detect-changes
+    if: needs.detect-changes.outputs.docs-only == 'false'
 
     steps:
       - name: Checkout code
@@ -32,13 +83,28 @@ jobs:
         working-directory: ./frontend
         run: npm ci
 
-      - name: TypeScript Check
+      - name: Parallel Type Check & Linting
         working-directory: ./frontend
-        run: npx tsc --noEmit
+        run: |
+          echo "🔄 Running TypeScript and ESLint in parallel..."
+          npx tsc --noEmit &
+          TSC_PID=$!
+          npx next lint &
+          ESLINT_PID=$!
 
-      - name: ESLint Check
-        working-directory: ./frontend
-        run: npx next lint
+          # Wait for both processes
+          wait $TSC_PID
+          TSC_EXIT=$?
+          wait $ESLINT_PID
+          ESLINT_EXIT=$?
+
+          # Check if both succeeded
+          if [ $TSC_EXIT -ne 0 ] || [ $ESLINT_EXIT -ne 0 ]; then
+            echo "❌ Type checking or linting failed"
+            exit 1
+          fi
+
+          echo "✅ Type checking and linting completed successfully"
 
       - name: Run Unit Tests
         working-directory: ./frontend
@@ -124,7 +190,8 @@ jobs:
   deploy-ksa-cdn:
     name: Deploy KSA to CDN
     runs-on: ubuntu-latest
-    needs: quality-checks  # Only wait for quality checks, not main deployment
+    needs: [detect-changes, quality-checks]
+    if: always() && (needs.detect-changes.outputs.docs-only == 'true' || needs.quality-checks.result == 'success')
     permissions:
       contents: read
       id-token: write
@@ -183,7 +250,8 @@ jobs:
   deploy:
     name: Deploy to Cloud Run
     runs-on: ubuntu-latest
-    needs: quality-checks
+    needs: [detect-changes, quality-checks]
+    if: always() && (needs.detect-changes.outputs.docs-only == 'true' || needs.quality-checks.result == 'success')
     permissions:
       contents: read
       id-token: write
@@ -267,29 +335,24 @@ jobs:
 
           echo "✅ Migrations completed"
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: Configure Docker
         run: gcloud auth configure-docker gcr.io
 
-      - name: Build and Push Docker Image
-        run: |
-          echo "🚀 Building Docker image..."
-
-          if [[ "${{ steps.env.outputs.environment }}" == "production" ]]; then
-            DOCKERFILE="Dockerfile.production"
-            IMAGE_TAG="ai-square-production"
-          else
-            DOCKERFILE="Dockerfile.staging"
-            IMAGE_TAG="ai-square-staging"
-          fi
-
-          docker build -f frontend/${DOCKERFILE} \
-            -t gcr.io/${{ env.PROJECT_ID }}/${IMAGE_TAG}:${{ github.sha }} \
-            -t gcr.io/${{ env.PROJECT_ID }}/${IMAGE_TAG}:latest \
-            ./frontend
-
-          echo "📤 Pushing to Container Registry..."
-          docker push gcr.io/${{ env.PROJECT_ID }}/${IMAGE_TAG}:${{ github.sha }}
-          docker push gcr.io/${{ env.PROJECT_ID }}/${IMAGE_TAG}:latest
+      - name: Build and Push Docker Image with Cache
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          file: ./frontend/${{ steps.env.outputs.environment == 'production' && 'Dockerfile.production' || 'Dockerfile.staging' }}
+          push: true
+          tags: |
+            gcr.io/${{ env.PROJECT_ID }}/${{ steps.env.outputs.environment == 'production' && 'ai-square-production' || 'ai-square-staging' }}:${{ github.sha }}
+            gcr.io/${{ env.PROJECT_ID }}/${{ steps.env.outputs.environment == 'production' && 'ai-square-production' || 'ai-square-staging' }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          platforms: linux/amd64
 
       - name: Deploy to Cloud Run
         run: |
