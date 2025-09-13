@@ -311,18 +311,15 @@ describe('Header 組件測試', () => {
       const languageSelector = screen.getByLabelText(/選擇語言|select language/i)
       const loginButton = screen.getByRole('button', { name: 'signIn' })
 
-      // Tab through elements - the More dropdown opens sub-menu when focused
+      // Tab through elements with the new navigation order:
+      // Relations, KSA, Assessment, PBL, Dashboard, More (History/Discovery disabled)
       await user.tab() // Logo link
-      await user.tab() // Dashboard link
+      await user.tab() // Relations link
+      await user.tab() // KSA link
       await user.tab() // Assessment link
       await user.tab() // PBL link
-      // Discovery link is disabled, so it's skipped in tab order
-      await user.tab() // More dropdown button
-
-      // Since the dropdown has opened, we need to tab through its items
-      await user.tab() // Relations link in dropdown
-      await user.tab() // KSA link in dropdown
-      await user.tab() // History link in dropdown
+      await user.tab() // Dashboard link
+      await user.tab() // More dropdown button (disabled items in dropdown are not focusable)
       await user.tab() // Language selector
       expect(languageSelector).toHaveFocus()
 
