@@ -46,17 +46,17 @@ export function Header() {
 
   // 主要導航連結（顯示在導航欄）
   const primaryNavLinks: NavLink[] = [
-    { href: '/dashboard', label: t('dashboard') },
+    { href: '/relations', label: t('relations') },
+    { href: '/ksa', label: t('ksa') },
     { href: '/assessment/scenarios', label: t('assessment') },
     { href: '/pbl/scenarios', label: t('pbl') },
-    { href: '/discovery/overview', label: t('discovery'), disabled: true, tooltip: '即將開放' },
+    { href: '/dashboard', label: t('dashboard') },
   ]
 
   // 次要導航連結（放在「更多」選單中）
   const secondaryNavLinks: NavLink[] = [
-    { href: '/relations', label: t('relations') },
-    { href: '/ksa', label: t('ksa') },
-    { href: '/history', label: t('history') },
+    { href: '/history', label: t('history'), disabled: true, tooltip: t('comingSoon') || '即將發行' },
+    { href: '/discovery/overview', label: t('discovery'), disabled: true, tooltip: t('comingSoon') || '即將發行' },
   ]
 
   // 所有導航連結（用於手機選單）
@@ -133,7 +133,18 @@ export function Header() {
                 <div className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                   <div className="py-1">
                     {secondaryNavLinks.map((link) =>
-                      link.href ? (
+                      link.disabled ? (
+                        <div
+                          key={link.href || link.label}
+                          className="block px-4 py-2 text-sm text-gray-400 dark:text-gray-500 cursor-not-allowed relative"
+                          title={link.tooltip}
+                        >
+                          {link.label}
+                          {link.tooltip && (
+                            <span className="ml-2 text-xs">({link.tooltip})</span>
+                          )}
+                        </div>
+                      ) : link.href ? (
                         <Link
                           key={link.href}
                           href={link.href}
