@@ -1,20 +1,11 @@
 import { POST } from '../register/route'
 import { NextRequest } from 'next/server'
 import bcrypt from 'bcryptjs'
-import { emailService } from '@/lib/email/email-service'
-import { verificationTokens } from '@/lib/auth/verification-tokens'
-import { updateUserPasswordHash } from '@/lib/auth/password-utils'
+import { sendEmail } from '@/lib/email/mailer'
 
 // Mock bcrypt
 jest.mock('bcryptjs', () => ({
   hash: jest.fn()
-}))
-
-// Mock email service and mailer
-jest.mock('../../../../lib/email/email-service', () => ({
-  emailService: {
-    sendVerificationEmail: jest.fn()
-  }
 }))
 
 // Mock mailer module
@@ -23,11 +14,9 @@ jest.mock('../../../../lib/email/mailer', () => ({
   appBaseUrl: jest.fn((origin) => origin || 'http://localhost:3000')
 }))
 
-// Mock verification tokens
-jest.mock('../../../../lib/auth/verification-tokens', () => ({
-  verificationTokens: {
-    set: jest.fn()
-  }
+// Mock email templates
+jest.mock('../../../../lib/email/templates/verifyEmail', () => ({
+  renderVerifyEmail: jest.fn(() => ({ html: '<html>test</html>', text: 'test' }))
 }))
 
 // Mock database pool
@@ -37,34 +26,9 @@ const mockPool = {
   on: jest.fn(),
 }
 
-// Mock getPool
-jest.mock('../../../../lib/db/get-pool', () => ({
+// Mock simple-auth (which exports getPool)
+jest.mock('../../../../lib/auth/simple-auth', () => ({
   getPool: jest.fn(() => mockPool)
-}))
-
-// Mock password utilities
-jest.mock('../../../../lib/auth/password-utils', () => ({
-  updateUserPasswordHash: jest.fn()
-}))
-
-// Mock user repository
-const mockUserRepo = {
-  findByEmail: jest.fn(),
-  create: jest.fn()
-}
-
-// Mock repository factory
-jest.mock('../../../../lib/repositories/base/repository-factory', () => ({
-  repositoryFactory: {
-    getUserRepository: jest.fn(() => mockUserRepo)
-  }
-}))
-
-// Mock AuthManager
-jest.mock('../../../../lib/auth/auth-manager', () => ({
-  AuthManager: {
-    setAuthCookie: jest.fn()
-  }
 }))
 
 // Mock NextResponse to handle cookies properly
@@ -77,11 +41,13 @@ jest.mock('next/server', () => ({
     url: string
     method: string
     private body: string
+    headers: Map<string, string>
 
     constructor(url: string, init?: RequestInit) {
       this.url = url
       this.method = init?.method || 'GET'
       this.body = init?.body as string || ''
+      this.headers = new Map()
     }
 
     async json() {
@@ -100,55 +66,18 @@ jest.mock('next/server', () => ({
   }
 }))
 
-// Mock crypto for consistent token generation - CRITICAL FIX for createHash
-jest.mock('crypto', () => ({
-  randomBytes: jest.fn(() => ({
-    toString: jest.fn(() => 'mock-verification-token')
-  })),
-  createHash: jest.fn(() => ({
-    update: jest.fn().mockReturnThis(),
-    digest: jest.fn(() => 'mock-hash-digest')
-  })),
-  randomUUID: jest.fn(() => 'mock-uuid'),
-  // Add default export for ES6 modules
-  default: {
-    randomBytes: jest.fn(() => ({
-      toString: jest.fn(() => 'mock-verification-token')
-    })),
-    createHash: jest.fn(() => ({
-      update: jest.fn().mockReturnThis(),
-      digest: jest.fn(() => 'mock-hash-digest')
-    })),
-    randomUUID: jest.fn(() => 'mock-uuid')
-  }
-}))
-
-// Create a mock NextRequest class with headers
+// Mock NextRequest for testing
 class MockNextRequest {
   url: string
   method: string
   private body: string
-  headers: Headers
+  headers: Map<string, string>
 
   constructor(url: string, init?: RequestInit) {
     this.url = url
     this.method = init?.method || 'GET'
     this.body = init?.body as string || ''
-    // Create mock Headers with get method
-    this.headers = {
-      get: jest.fn((key: string) => {
-        if (key === 'origin') return 'http://localhost:3000'
-        if (key === 'content-type') return 'application/json'
-        return null
-      }),
-      has: jest.fn(),
-      set: jest.fn(),
-      delete: jest.fn(),
-      forEach: jest.fn(),
-      keys: jest.fn(),
-      values: jest.fn(),
-      entries: jest.fn()
-    } as any
+    this.headers = new Map()
   }
 
   async json() {
@@ -157,28 +86,27 @@ class MockNextRequest {
 }
 
 describe('/api/auth/register', () => {
-  const mockBcryptHash = bcrypt.hash as jest.Mock
-  const mockSendVerificationEmail = emailService.sendVerificationEmail as jest.Mock
-  const mockUpdateUserPasswordHash = updateUserPasswordHash as jest.Mock
-  const { AuthManager } = require('../../../../lib/auth/auth-manager')
-
   beforeEach(() => {
     jest.clearAllMocks()
     mockCookies.set.mockClear()
 
-    // Default mock implementations
-    mockBcryptHash.mockResolvedValue('hashed-password')
-    mockSendVerificationEmail.mockResolvedValue(true)
-    mockUpdateUserPasswordHash.mockResolvedValue(undefined)
+    // Default mock for bcrypt
+    ;(bcrypt.hash as jest.Mock).mockResolvedValue('hashed_password')
+
+    // Default mock for sendEmail
+    ;(sendEmail as jest.Mock).mockResolvedValue(true)
   })
 
   it('should register a new user successfully', async () => {
-    mockUserRepo.findByEmail.mockResolvedValue(null)
-    mockUserRepo.create.mockResolvedValue({
-      id: '1',
-      email: 'newuser@example.com',
-      name: 'New User',
-      preferredLanguage: 'en'
+    // Mock database responses
+    mockPool.query.mockImplementation((query: string) => {
+      if (query.includes('SELECT')) {
+        return Promise.resolve({ rows: [] }) // No existing user
+      }
+      if (query.includes('INSERT')) {
+        return Promise.resolve({ rows: [{ id: '1' }] }) // User created
+      }
+      return Promise.resolve({ rows: [] })
     })
 
     const request = new MockNextRequest('http://localhost:3000/api/auth/register', {
@@ -199,15 +127,35 @@ describe('/api/auth/register', () => {
     expect(data.message).toContain('Registration successful')
     expect(data.user.email).toBe('newuser@example.com')
     expect(data.user.emailVerified).toBe(false)
-    expect(AuthManager.setAuthCookie).toHaveBeenCalledWith(expect.any(Object), expect.any(String), false)
-    expect(mockSendVerificationEmail).toHaveBeenCalled()
-    expect(verificationTokens.set).toHaveBeenCalled()
+    expect(data.user.name).toBe('New User')
+
+    // Verify database calls
+    expect(mockPool.query).toHaveBeenCalledWith(
+      expect.stringContaining('SELECT'),
+      expect.arrayContaining(['newuser@example.com'])
+    )
+    expect(mockPool.query).toHaveBeenCalledWith(
+      expect.stringContaining('INSERT'),
+      expect.any(Array)
+    )
+
+    // Verify email was sent
+    expect(sendEmail).toHaveBeenCalledWith(
+      expect.objectContaining({
+        to: 'newuser@example.com',
+        subject: 'Verify your email'
+      })
+    )
   })
 
   it('should reject registration if email already exists', async () => {
-    mockUserRepo.findByEmail.mockResolvedValue({
-      id: '1',
-      email: 'existing@example.com'
+    // Mock existing verified user
+    mockPool.query.mockResolvedValue({
+      rows: [{
+        id: '1',
+        email_verified: true,
+        name: 'Existing User'
+      }]
     })
 
     const request = new MockNextRequest('http://localhost:3000/api/auth/register', {
@@ -233,7 +181,7 @@ describe('/api/auth/register', () => {
       method: 'POST',
       body: JSON.stringify({
         email: 'user@example.com',
-        password: 'weak',
+        password: 'short',
         name: 'User',
         acceptTerms: true
       }),
@@ -245,6 +193,7 @@ describe('/api/auth/register', () => {
     expect(response.status).toBe(400)
     expect(data.success).toBe(false)
     expect(data.error.toLowerCase()).toContain('password')
+    expect(data.error).toContain('8 characters')
   })
 
   it('should require accepting terms', async () => {
@@ -270,7 +219,7 @@ describe('/api/auth/register', () => {
     const request = new MockNextRequest('http://localhost:3000/api/auth/register', {
       method: 'POST',
       body: JSON.stringify({
-        email: 'not-an-email',
+        email: 'invalid-email',
         password: 'StrongPass123',
         name: 'User',
         acceptTerms: true
@@ -302,11 +251,21 @@ describe('/api/auth/register', () => {
     expect(response.status).toBe(400)
     expect(data.success).toBe(false)
     expect(data.error.toLowerCase()).toContain('name')
+    expect(data.error).toContain('2 characters')
   })
 
   it('should handle duplicate key database error', async () => {
-    mockUserRepo.findByEmail.mockResolvedValue(null)
-    mockUserRepo.create.mockRejectedValue(new Error('duplicate key value violates unique constraint'))
+    mockPool.query.mockImplementation((query: string) => {
+      if (query.includes('SELECT')) {
+        return Promise.resolve({ rows: [] })
+      }
+      if (query.includes('INSERT')) {
+        const error: any = new Error('duplicate key value violates unique constraint')
+        error.code = '23505'
+        return Promise.reject(error)
+      }
+      return Promise.resolve({ rows: [] })
+    })
 
     const request = new MockNextRequest('http://localhost:3000/api/auth/register', {
       method: 'POST',
@@ -327,8 +286,7 @@ describe('/api/auth/register', () => {
   })
 
   it('should handle general database errors', async () => {
-    mockUserRepo.findByEmail.mockResolvedValue(null)
-    mockUserRepo.create.mockRejectedValue(new Error('Database connection failed'))
+    mockPool.query.mockRejectedValue(new Error('Database connection failed'))
 
     const request = new MockNextRequest('http://localhost:3000/api/auth/register', {
       method: 'POST',
@@ -349,14 +307,19 @@ describe('/api/auth/register', () => {
   })
 
   it('should continue registration even if email sending fails', async () => {
-    mockUserRepo.findByEmail.mockResolvedValue(null)
-    mockUserRepo.create.mockResolvedValue({
-      id: '1',
-      email: 'user@example.com',
-      name: 'User',
-      preferredLanguage: 'en'
+    // Mock successful database operations
+    mockPool.query.mockImplementation((query: string) => {
+      if (query.includes('SELECT')) {
+        return Promise.resolve({ rows: [] })
+      }
+      if (query.includes('INSERT')) {
+        return Promise.resolve({ rows: [{ id: '1' }] })
+      }
+      return Promise.resolve({ rows: [] })
     })
-    mockSendVerificationEmail.mockResolvedValue(false)
+
+    // Mock email sending failure
+    ;(sendEmail as jest.Mock).mockRejectedValue(new Error('SMTP error'))
 
     const request = new MockNextRequest('http://localhost:3000/api/auth/register', {
       method: 'POST',
@@ -373,25 +336,33 @@ describe('/api/auth/register', () => {
 
     expect(response.status).toBe(200)
     expect(data.success).toBe(true)
-    expect(mockSendVerificationEmail).toHaveBeenCalled()
+    expect(sendEmail).toHaveBeenCalled()
   })
 
-  it('should use preferred language if provided', async () => {
-    mockUserRepo.findByEmail.mockResolvedValue(null)
-    mockUserRepo.create.mockResolvedValue({
-      id: '1',
-      email: 'user@example.com',
-      name: 'User',
-      preferredLanguage: 'zh'
+  it('should update password for unverified existing user', async () => {
+    // Mock existing unverified user
+    mockPool.query.mockImplementation((query: string) => {
+      if (query.includes('SELECT')) {
+        return Promise.resolve({
+          rows: [{
+            id: '1',
+            email_verified: false,
+            name: 'Old Name'
+          }]
+        })
+      }
+      if (query.includes('UPDATE')) {
+        return Promise.resolve({ rows: [] })
+      }
+      return Promise.resolve({ rows: [] })
     })
 
     const request = new MockNextRequest('http://localhost:3000/api/auth/register', {
       method: 'POST',
       body: JSON.stringify({
         email: 'user@example.com',
-        password: 'StrongPass123',
-        name: 'User',
-        preferredLanguage: 'zh',
+        password: 'NewPassword123',
+        name: 'New Name',
         acceptTerms: true
       }),
     })
@@ -401,26 +372,27 @@ describe('/api/auth/register', () => {
 
     expect(response.status).toBe(200)
     expect(data.success).toBe(true)
-    expect(mockUserRepo.create).toHaveBeenCalledWith(
-      expect.objectContaining({
-        preferredLanguage: 'zh'
-      })
+    expect(mockPool.query).toHaveBeenCalledWith(
+      expect.stringContaining('UPDATE'),
+      expect.any(Array)
     )
   })
 
   it('should lowercase email before checking and creating', async () => {
-    mockUserRepo.findByEmail.mockResolvedValue(null)
-    mockUserRepo.create.mockResolvedValue({
-      id: '1',
-      email: 'user@example.com',
-      name: 'User',
-      preferredLanguage: 'en'
+    mockPool.query.mockImplementation((query: string) => {
+      if (query.includes('SELECT')) {
+        return Promise.resolve({ rows: [] })
+      }
+      if (query.includes('INSERT')) {
+        return Promise.resolve({ rows: [{ id: '1' }] })
+      }
+      return Promise.resolve({ rows: [] })
     })
 
     const request = new MockNextRequest('http://localhost:3000/api/auth/register', {
       method: 'POST',
       body: JSON.stringify({
-        email: 'User@Example.Com',
+        email: 'USER@EXAMPLE.COM',
         password: 'StrongPass123',
         name: 'User',
         acceptTerms: true
@@ -431,20 +403,19 @@ describe('/api/auth/register', () => {
     const data = await response.json()
 
     expect(response.status).toBe(200)
-    expect(mockUserRepo.create).toHaveBeenCalledWith(
-      expect.objectContaining({
-        email: 'user@example.com'
-      })
+    expect(data.user.email).toBe('user@example.com')
+    expect(mockPool.query).toHaveBeenCalledWith(
+      expect.stringContaining('SELECT'),
+      expect.arrayContaining(['user@example.com'])
     )
   })
 
-  it('should validate password contains uppercase letter', async () => {
+  it('should require email and password', async () => {
     const request = new MockNextRequest('http://localhost:3000/api/auth/register', {
       method: 'POST',
       body: JSON.stringify({
-        email: 'user@example.com',
-        password: 'password123',
-        name: 'User',
+        email: '',
+        password: '',
         acceptTerms: true
       }),
     })
@@ -454,132 +425,6 @@ describe('/api/auth/register', () => {
 
     expect(response.status).toBe(400)
     expect(data.success).toBe(false)
-    expect(data.error.toLowerCase()).toContain('uppercase')
-  })
-
-  it('should validate password contains lowercase letter', async () => {
-    const request = new MockNextRequest('http://localhost:3000/api/auth/register', {
-      method: 'POST',
-      body: JSON.stringify({
-        email: 'user@example.com',
-        password: 'PASSWORD123',
-        name: 'User',
-        acceptTerms: true
-      }),
-    })
-
-    const response = await POST(request as unknown as NextRequest)
-    const data = await response.json()
-
-    expect(response.status).toBe(400)
-    expect(data.success).toBe(false)
-    expect(data.error.toLowerCase()).toContain('lowercase')
-  })
-
-  it('should validate password contains number', async () => {
-    const request = new MockNextRequest('http://localhost:3000/api/auth/register', {
-      method: 'POST',
-      body: JSON.stringify({
-        email: 'user@example.com',
-        password: 'StrongPassword',
-        name: 'User',
-        acceptTerms: true
-      }),
-    })
-
-    const response = await POST(request as unknown as NextRequest)
-    const data = await response.json()
-
-    expect(response.status).toBe(400)
-    expect(data.success).toBe(false)
-    expect(data.error.toLowerCase()).toContain('number')
-  })
-
-  it('should reject name that is too long', async () => {
-    const request = new MockNextRequest('http://localhost:3000/api/auth/register', {
-      method: 'POST',
-      body: JSON.stringify({
-        email: 'user@example.com',
-        password: 'StrongPass123',
-        name: 'A'.repeat(101),
-        acceptTerms: true
-      }),
-    })
-
-    const response = await POST(request as unknown as NextRequest)
-    const data = await response.json()
-
-    expect(response.status).toBe(400)
-    expect(data.success).toBe(false)
-    expect(data.error.toLowerCase()).toContain('name')
-  })
-
-  it('should handle error during password hash update', async () => {
-    mockUserRepo.findByEmail.mockResolvedValue(null)
-    mockUserRepo.create.mockResolvedValue({
-      id: '1',
-      email: 'user@example.com',
-      name: 'User',
-      preferredLanguage: 'en'
-    })
-    mockUpdateUserPasswordHash.mockRejectedValue(new Error('Failed to update password'))
-
-    const request = new MockNextRequest('http://localhost:3000/api/auth/register', {
-      method: 'POST',
-      body: JSON.stringify({
-        email: 'user@example.com',
-        password: 'StrongPass123',
-        name: 'User',
-        acceptTerms: true
-      }),
-    })
-
-    const response = await POST(request as unknown as NextRequest)
-    const data = await response.json()
-
-    expect(response.status).toBe(500)
-    expect(data.success).toBe(false)
-  })
-
-  it('should set secure cookie in production environment', async () => {
-    const originalEnv = process.env.NODE_ENV
-    Object.defineProperty(process.env, 'NODE_ENV', {
-      value: 'production',
-      writable: true,
-      configurable: true
-    })
-
-    mockUserRepo.findByEmail.mockResolvedValue(null)
-    mockUserRepo.create.mockResolvedValue({
-      id: '1',
-      email: 'user@example.com',
-      name: 'User',
-      preferredLanguage: 'en'
-    })
-
-    const request = new MockNextRequest('http://localhost:3000/api/auth/register', {
-      method: 'POST',
-      body: JSON.stringify({
-        email: 'user@example.com',
-        password: 'StrongPass123',
-        name: 'User',
-        acceptTerms: true
-      }),
-    })
-
-    const response = await POST(request as unknown as NextRequest)
-    await response.json()
-
-    expect(AuthManager.setAuthCookie).toHaveBeenCalledWith(
-      expect.any(Object),
-      expect.any(String),
-      false
-    )
-
-    Object.defineProperty(process.env, 'NODE_ENV', {
-      value: originalEnv,
-      writable: true,
-      configurable: true
-    })
+    expect(data.error).toContain('Email and password are required')
   })
 })

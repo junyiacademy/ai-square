@@ -100,11 +100,12 @@ export async function POST(request: NextRequest) {
         name: name || null
       }
     })
-  } catch (err: any) {
+  } catch (err) {
     console.error('[register] error', err)
 
     // Handle duplicate key error
-    if (err.code === '23505' || err.message?.includes('duplicate key')) {
+    const error = err as { code?: string; message?: string }
+    if (error.code === '23505' || error.message?.includes('duplicate key')) {
       return NextResponse.json({ success: false, error: 'Email already registered' }, { status: 409 })
     }
 
