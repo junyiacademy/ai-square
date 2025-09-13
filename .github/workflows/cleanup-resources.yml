@@ -150,9 +150,6 @@ jobs:
           # Clean up production images
           cleanup_repository "gcr.io/${{ env.PROJECT_ID }}/ai-square-production" 5
 
-          # Clean up shared frontend repository
-          cleanup_repository "gcr.io/${{ env.PROJECT_ID }}/ai-square-frontend" 10
-
           echo ""
           echo "✅ GCR cleanup complete!"
 
@@ -182,7 +179,7 @@ jobs:
 
           echo ""
           echo "GCR Repositories:"
-          for REPO in "ai-square-staging" "ai-square-production" "ai-square-frontend"; do
+          for REPO in "ai-square-staging" "ai-square-production"; do
             IMAGE_COUNT=$(gcloud container images list-tags "gcr.io/${{ env.PROJECT_ID }}/$REPO" --format="value(digest)" 2>/dev/null | wc -l)
             echo "  $REPO: $IMAGE_COUNT images"
           done
