@@ -151,14 +151,15 @@ jobs:
           echo "📦 Deploying KSA data to CDN (parallel with main deployment)..."
 
           # Convert YAML to JSON
-          cd frontend/public/rubrics_data/ksa_codes
-          npm install -g js-yaml
+          cd frontend
+          npm install js-yaml
+          cd public/rubrics_data/ksa_codes
 
           for file in *.yaml; do
             if [ "$file" != "_ksa_codes_template.yaml" ]; then
               echo "Converting $file..."
               node -e "
-                const yaml = require('js-yaml');
+                const yaml = require('../../../node_modules/js-yaml');
                 const fs = require('fs');
                 const content = yaml.load(fs.readFileSync('$file', 'utf8'));
                 fs.writeFileSync('$file'.replace('.yaml', '.json'), JSON.stringify(content));
