@@ -94,6 +94,20 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
     return rows.map(row => this.toTask(row));
   }
 
+  async findByProgramIds(programIds: string[]): Promise<ITask[]> {
+    if (programIds.length === 0) return [];
+
+    const uniqueIds = [...new Set(programIds)];
+    const query = `
+      SELECT * FROM tasks
+      WHERE program_id = ANY($1::uuid[])
+      ORDER BY program_id ASC, task_index ASC
+    `;
+
+    const { rows } = await this.pool.query<DBTask>(query, [uniqueIds]);
+    return rows.map(row => this.toTask(row));
+  }
+
 
   async create(task: Omit<ITask, 'id'>): Promise<ITask> {
     // Ensure scenarioId is provided - database requires it

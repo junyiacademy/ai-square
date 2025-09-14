@@ -69,6 +69,7 @@ export interface IProgramRepository {
 export interface ITaskRepository {
   findById(id: string): Promise<ITask | null>;
   findByProgram(programId: string): Promise<ITask[]>;
+  findByProgramIds(programIds: string[]): Promise<ITask[]>;  // Batch loading for N+1 prevention
   create(data: Omit<ITask, 'id'>): Promise<ITask>;
   createBatch(tasks: Omit<ITask, 'id'>[]): Promise<ITask[]>;
   updateInteractions(id: string, interactions: IInteraction[]): Promise<ITask>;

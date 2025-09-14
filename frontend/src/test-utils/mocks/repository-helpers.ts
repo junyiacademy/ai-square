@@ -62,6 +62,7 @@ export function createMockTaskRepository(): jest.Mocked<ITaskRepository> {
   return {
     findById: jest.fn(),
     findByProgram: jest.fn(),
+    findByProgramIds: jest.fn(),  // Added for N+1 prevention
     create: jest.fn(),
     createBatch: jest.fn(),
     updateInteractions: jest.fn(),

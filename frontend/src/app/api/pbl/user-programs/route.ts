@@ -5,7 +5,7 @@ import { cachedGET, getPaginationParams, createPaginatedResponse } from '@/lib/a
 export async function GET(request: NextRequest) {
   // Get user info from cookie
   let userEmail: string | undefined;
-  
+
   try {
     const userCookie = request.cookies.get('user')?.value;
     if (userCookie) {
@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
   } catch {
     console.log('No user cookie found');
   }
-  
+
   if (!userEmail) {
     return NextResponse.json(
       { success: false, error: 'User authentication required' },
@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
     const taskRepo = repositoryFactory.getTaskRepository();
     const evaluationRepo = repositoryFactory.getEvaluationRepository();
     const contentRepo = repositoryFactory.getContentRepository();
-    
+
     // Get user by email
     const user = await userRepo.findByEmail(userEmail);
     if (!user) {
@@ -42,37 +42,78 @@ export async function GET(request: NextRequest) {
         error: 'User not found'
       };
     }
-    
+
     // Get programs for this user
     let programs = await programRepo.findByUser(user.id);
-    
+
     // Filter by scenarioId if provided
     if (scenarioId) {
       programs = programs.filter(p => p.scenarioId === scenarioId);
     }
-    
-    // Map programs to expected format with additional info
-    const programsWithInfo = await Promise.all(programs.map(async (program) => {
-      // Get tasks for the program
-      const tasks = await taskRepo.findByProgram(program.id);
+
+    // Batch load data to prevent N+1 queries
+    const programIds = programs.map(p => p.id);
+    const uniqueScenarioIds = [...new Set(programs.map(p => p.scenarioId))];
+
+    // Batch load all tasks for all programs in one query
+    const allTasks = programIds.length > 0
+      ? await taskRepo.findByProgramIds(programIds)
+      : [];
+
+    // Batch load all evaluations for all programs in one query
+    const allEvaluations = programIds.length > 0
+      ? await evaluationRepo.findByProgramIds(programIds)
+      : [];
+
+    // Batch load scenario content for unique scenarios
+    const scenarioContentMap = new Map<string, unknown>();
+    for (const scenarioId of uniqueScenarioIds) {
+      try {
+        const content = await contentRepo.getScenarioContent(scenarioId, user.preferredLanguage);
+        scenarioContentMap.set(scenarioId, content);
+      } catch {
+        console.warn(`Scenario content not found for ${scenarioId}`);
+      }
+    }
+
+    // Group tasks and evaluations by program ID for efficient lookup
+    const tasksByProgram = new Map<string, typeof allTasks>();
+    for (const task of allTasks) {
+      if (!tasksByProgram.has(task.programId)) {
+        tasksByProgram.set(task.programId, []);
+      }
+      tasksByProgram.get(task.programId)!.push(task);
+    }
+
+    const evaluationsByProgram = new Map<string, typeof allEvaluations>();
+    for (const evaluation of allEvaluations) {
+      if (!evaluation.programId) continue;
+      if (!evaluationsByProgram.has(evaluation.programId)) {
+        evaluationsByProgram.set(evaluation.programId, []);
+      }
+      evaluationsByProgram.get(evaluation.programId)!.push(evaluation);
+    }
+
+    // Map programs to expected format with batched data
+    const programsWithInfo = programs.map((program) => {
+      // Get tasks for this program
+      const tasks = tasksByProgram.get(program.id) || [];
       const completedTasks = tasks.filter(t => t.status === 'completed');
-      
-      // Get evaluations for calculating overall score
-      const evaluations = await evaluationRepo.findByProgram(program.id);
+
+      // Get evaluations for this program
+      const evaluations = evaluationsByProgram.get(program.id) || [];
       const overallScore = evaluations.length > 0
         ? evaluations.reduce((sum, e) => sum + e.score, 0) / evaluations.length
         : 0;
-      
-      // Try to get scenario title from content
+
+      // Get scenario title from batched content
       let scenarioTitle = program.scenarioId;
-      try {
-        const scenarioContent = await contentRepo.getScenarioContent(program.scenarioId, user.preferredLanguage);
-        scenarioTitle = scenarioContent.title[user.preferredLanguage] || scenarioContent.title['en'] || program.scenarioId;
-      } catch {
-        // Fallback to scenarioId if content not found
-        console.warn(`Scenario content not found for ${program.scenarioId}`);
+      const scenarioContent = scenarioContentMap.get(program.scenarioId);
+      if (scenarioContent) {
+        const titleObj = (scenarioContent as Record<string, unknown>)?.title as Record<string, string> | undefined;
+        scenarioTitle = titleObj?.[user.preferredLanguage] || titleObj?.['en'] || program.scenarioId;
       }
-      
+
       return {
         id: program.id,
         programId: program.id,
@@ -92,8 +133,8 @@ export async function GET(request: NextRequest) {
           totalTasks: program.totalTaskCount
         }
       };
-    }));
-    
+    });
+
     // Sort by startedAt descending (newest first)
     programsWithInfo.sort((a, b) => new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime());
 
@@ -103,7 +144,7 @@ export async function GET(request: NextRequest) {
       programsWithInfo.length,
       paginationParams
     );
-    
+
     return {
       success: true,
       ...paginatedResponse
