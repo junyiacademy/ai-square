@@ -46,9 +46,20 @@ jobs:
           CODE_CHANGED=false
 
           while IFS= read -r file; do
-            if [ -n "$file" ] && ! echo "$file" | grep -qE "$DOCS_PATTERN"; then
-              CODE_CHANGED=true
-              break
+            if [ -n "$file" ]; then
+              # Use multiple separate checks instead of complex regex
+              if ! echo "$file" | grep -qE "^docs/" && \
+                 ! echo "$file" | grep -qE "README" && \
+                 ! echo "$file" | grep -qE "CHANGELOG" && \
+                 ! echo "$file" | grep -qE "\.md$" && \
+                 ! echo "$file" | grep -qE "\.txt$" && \
+                 ! echo "$file" | grep -qE "LICENSE"; then
+                CODE_CHANGED=true
+                echo "🔄 Non-docs file detected: $file"
+                break
+              else
+                echo "📄 Documentation file: $file"
+              fi
             fi
           done <<< "$CHANGED_FILES"
 
