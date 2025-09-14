@@ -82,7 +82,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: ./frontend
-        run: npm ci --prefer-offline --no-audit
+        run: npm ci --prefer-offline
 
       - name: Parallel Type Check & Linting
         working-directory: ./frontend
@@ -153,7 +153,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: ./frontend
-        run: npm ci --prefer-offline --no-audit
+        run: npm ci --prefer-offline
 
       - name: Validate Schema Consistency
         working-directory: ./frontend
