@@ -3,10 +3,10 @@
  * 定義所有 Repository 的介面
  */
 
-import type { 
-  IProgram, 
-  ITask, 
-  IEvaluation, 
+import type {
+  IProgram,
+  ITask,
+  IEvaluation,
   IScenario,
   IInteraction
 } from '@/types/unified-learning';
@@ -37,16 +37,16 @@ export interface IUserRepository {
   findAll(options?: FindUsersOptions): Promise<User[]>;
   updateLastActive(id: string): Promise<void>;
   addAchievement(userId: string, achievementId: string): Promise<void>;
-  
+
   // Assessment-related methods
   saveAssessmentSession(userId: string, session: CreateAssessmentSessionDto): Promise<AssessmentSession>;
   getAssessmentSessions(userId: string): Promise<AssessmentSession[]>;
   getLatestAssessmentResults(userId: string): Promise<AssessmentResults | null>;
-  
+
   // Badge management
   addBadge(userId: string, badge: CreateBadgeDto): Promise<UserBadge>;
   getUserBadges(userId: string): Promise<UserBadge[]>;
-  
+
   // Complete user data operations
   getUserData(userEmail: string): Promise<UserDataResponse | null>;
   saveUserData(userEmail: string, data: UserDataInput): Promise<UserDataResponse>;
@@ -82,6 +82,7 @@ export interface ITaskRepository {
 export interface IEvaluationRepository {
   findById(id: string): Promise<IEvaluation | null>;
   findByProgram(programId: string): Promise<IEvaluation[]>;
+  findByProgramIds(programIds: string[]): Promise<IEvaluation[]>;  // Batch loading for N+1 prevention
   findByTask(taskId: string): Promise<IEvaluation[]>;
   findByUser(userId: string): Promise<IEvaluation[]>;
   findByType(evaluationType: string, evaluationSubtype?: string): Promise<IEvaluation[]>;
@@ -93,6 +94,7 @@ export interface IEvaluationRepository {
 
 export interface IScenarioRepository {
   findById(id: string): Promise<IScenario | null>;
+  findByIds(ids: string[]): Promise<IScenario[]>;  // Batch loading for N+1 prevention
   findBySource(sourceType: string, sourceId?: string): Promise<IScenario[]>;
   update(id: string, updates: Partial<IScenario>): Promise<IScenario>;
   create(data: Omit<IScenario, 'id'>): Promise<IScenario>;
@@ -107,10 +109,10 @@ export interface IDiscoveryRepository {
   findCareerPaths(): Promise<IDiscoveryScenario[]>;
   findCareerPathById(id: string): Promise<IDiscoveryScenario | null>;
   findCareerPathBySlug(slug: string): Promise<IDiscoveryScenario | null>;
-  
+
   // Career recommendations
   getCareerRecommendations(userId: string): Promise<ICareerRecommendation[]>;
-  
+
   // Progress tracking
   getUserDiscoveryProgress(userId: string): Promise<{
     exploredCareers: string[];
@@ -118,7 +120,7 @@ export interface IDiscoveryRepository {
     portfolioItems: IPortfolioItem[];
     overallProgress: number;
   }>;
-  
+
   // Portfolio management
   addPortfolioItem(userId: string, item: Omit<IPortfolioItem, 'id' | 'createdAt'>): Promise<IPortfolioItem>;
   updatePortfolioItem(userId: string, itemId: string, updates: Partial<IPortfolioItem>): Promise<IPortfolioItem>;
@@ -134,11 +136,11 @@ export interface IContentRepository {
   // YAML content management
   getYamlContent(path: string): Promise<Record<string, unknown>>;
   listYamlFiles(prefix: string): Promise<string[]>;
-  
+
   // Scenario content
   getScenarioContent(scenarioId: string, language?: string): Promise<ScenarioContent>;
   getAllScenarios(type?: ScenarioType): Promise<ScenarioContent[]>;
-  
+
   // KSA content
   getKSAMappings(): Promise<KSAMapping[]>;
   getAILiteracyDomains(): Promise<AILiteracyDomain[]>;

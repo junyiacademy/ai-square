@@ -34,7 +34,7 @@ interface AssessmentResult {
 
 export async function POST(request: NextRequest) {
   console.log('=== Assessment Save API Called ===');
-  
+
   try {
     const body = await request.json();
     console.log('Request body received:', {
@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
       hasAnswers: !!body.answers,
       hasResult: !!body.result
     });
-    
+
     // Simple validation
     if (!body.userId || !body.answers || !body.result) {
       return NextResponse.json(
@@ -66,8 +66,8 @@ export async function POST(request: NextRequest) {
 
     // Find or create assessment program
     const programs = await programRepo.findByUser(user.id);
-    let assessmentProgram = programs.find(p => 
-      p.scenarioId === body.scenarioId && 
+    let assessmentProgram = programs.find(p =>
+      p.scenarioId === body.scenarioId &&
       p.status === 'active'
     );
 
@@ -207,51 +207,68 @@ export async function GET(request: NextRequest) {
 
     // Get all completed assessment programs
     const programs = await programRepo.getCompletedPrograms?.(user.id) || [];
-    const assessmentPrograms = programs.filter(p => 
-      p.scenarioId?.includes('assessment') || 
+    const assessmentPrograms = programs.filter(p =>
+      p.scenarioId?.includes('assessment') ||
       p.metadata?.type === 'assessment'
     );
 
-    // Get evaluations for assessment programs
+    // Get evaluations for assessment programs using batch loading to avoid N+1
     const assessmentResults: AssessmentResult[] = [];
-    
-    for (const program of assessmentPrograms) {
-      const evaluations = await evaluationRepo.findByProgram(program.id);
-      const assessmentEvaluation = evaluations.find(e => 
-        e.evaluationType === 'assessment_complete'
-      );
 
-      if (assessmentEvaluation) {
-        const result: AssessmentResult = {
-          assessment_id: assessmentEvaluation.id,
-          user_id: user.id,
-          user_email: user.email,
-          timestamp: assessmentEvaluation.createdAt,
-          duration_seconds: assessmentEvaluation.timeTakenSeconds,
-          language: (assessmentEvaluation.metadata?.language as string) || 'en',
-          scores: {
-            overall: assessmentEvaluation.score,
-            domains: {
-              engaging_with_ai: assessmentEvaluation.domainScores?.['Engaging_with_AI'] || 0,
-              creating_with_ai: assessmentEvaluation.domainScores?.['Creating_with_AI'] || 0,
-              managing_with_ai: assessmentEvaluation.domainScores?.['Managing_with_AI'] || 0,
-              designing_with_ai: assessmentEvaluation.domainScores?.['Designing_with_AI'] || 0,
-            }
-          },
-          summary: {
-            total_questions: (assessmentEvaluation.metadata?.totalQuestions as number) || 0,
-            correct_answers: (assessmentEvaluation.metadata?.correctAnswers as number) || 0,
-            level: (assessmentEvaluation.metadata?.level as string) || 'beginner'
-          },
-          answers: (assessmentEvaluation.metadata?.answers as AssessmentResult['answers']) || []
-        };
+    if (assessmentPrograms.length > 0) {
+      // Batch load all evaluations for all programs in one query
+      const programIds = assessmentPrograms.map(p => p.id);
+      const allEvaluations = await evaluationRepo.findByProgramIds(programIds);
 
-        assessmentResults.push(result);
+      // Group evaluations by program ID for efficient lookup
+      const evaluationsByProgram = new Map<string, typeof allEvaluations>();
+      for (const evaluation of allEvaluations) {
+        if (!evaluation.programId) continue;
+        if (!evaluationsByProgram.has(evaluation.programId)) {
+          evaluationsByProgram.set(evaluation.programId, []);
+        }
+        evaluationsByProgram.get(evaluation.programId)!.push(evaluation);
+      }
+
+      // Process each program with its evaluations
+      for (const program of assessmentPrograms) {
+        const programEvaluations = evaluationsByProgram.get(program.id) || [];
+        const assessmentEvaluation = programEvaluations.find((e) =>
+          e.evaluationType === 'assessment_complete'
+        );
+
+        if (assessmentEvaluation) {
+          const result: AssessmentResult = {
+            assessment_id: assessmentEvaluation.id,
+            user_id: user.id,
+            user_email: user.email,
+            timestamp: assessmentEvaluation.createdAt,
+            duration_seconds: assessmentEvaluation.timeTakenSeconds,
+            language: (assessmentEvaluation.metadata?.language as string) || 'en',
+            scores: {
+              overall: assessmentEvaluation.score,
+              domains: {
+                engaging_with_ai: assessmentEvaluation.domainScores?.['Engaging_with_AI'] || 0,
+                creating_with_ai: assessmentEvaluation.domainScores?.['Creating_with_AI'] || 0,
+                managing_with_ai: assessmentEvaluation.domainScores?.['Managing_with_AI'] || 0,
+                designing_with_ai: assessmentEvaluation.domainScores?.['Designing_with_AI'] || 0,
+              }
+            },
+            summary: {
+              total_questions: (assessmentEvaluation.metadata?.totalQuestions as number) || 0,
+              correct_answers: (assessmentEvaluation.metadata?.correctAnswers as number) || 0,
+              level: (assessmentEvaluation.metadata?.level as string) || 'beginner'
+            },
+            answers: (assessmentEvaluation.metadata?.answers as AssessmentResult['answers']) || []
+          };
+
+          assessmentResults.push(result);
+        }
       }
     }
 
     // Sort by timestamp (newest first)
-    assessmentResults.sort((a, b) => 
+    assessmentResults.sort((a, b) =>
       new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
     );
 

@@ -26,40 +26,40 @@ export class PostgreSQLEvaluationRepository extends BaseEvaluationRepository<IEv
       programId: row.program_id || undefined,
       taskId: row.task_id || undefined,
       mode: row.mode,  // Include mode from database
-      
+
       // Evaluation scope
       evaluationType: row.evaluation_type,
       evaluationSubtype: row.evaluation_subtype || undefined,
-      
+
       // Scoring - PostgreSQL returns DECIMAL as string, convert to number
       score: typeof row.score === 'string' ? parseFloat(row.score) : row.score,
       maxScore: typeof row.max_score === 'string' ? parseFloat(row.max_score) : row.max_score,
-      
+
       // Multi-dimensional scoring
       domainScores: row.domain_scores,
-      
+
       // Feedback
       feedbackText: row.feedback_text || undefined,
       feedbackData: row.feedback_data,
-      
+
       // AI analysis
       aiProvider: row.ai_provider || undefined,
       aiModel: row.ai_model || undefined,
       aiAnalysis: row.ai_analysis,
-      
+
       // Time tracking - convert string to number if needed
-      timeTakenSeconds: row.time_taken_seconds 
+      timeTakenSeconds: row.time_taken_seconds
         ? (typeof row.time_taken_seconds === 'string' ? parseInt(row.time_taken_seconds) || 0 : row.time_taken_seconds)
         : 0,
-      
+
       // Timestamps
       createdAt: row.created_at,
-      
+
       // Mode-specific data
       pblData: row.pbl_data,
       discoveryData: row.discovery_data,
       assessmentData: row.assessment_data,
-      
+
       // Extensible metadata
       metadata: row.metadata
     };
@@ -76,7 +76,7 @@ export class PostgreSQLEvaluationRepository extends BaseEvaluationRepository<IEv
 
   async findByProgram(programId: string): Promise<IEvaluation[]> {
     const query = `
-      SELECT * FROM evaluations 
+      SELECT * FROM evaluations
       WHERE program_id = $1
       ORDER BY created_at DESC
     `;
@@ -85,9 +85,25 @@ export class PostgreSQLEvaluationRepository extends BaseEvaluationRepository<IEv
     return rows.map(row => this.toEvaluation(row));
   }
 
+  async findByProgramIds(programIds: string[]): Promise<IEvaluation[]> {
+    if (programIds.length === 0) return [];
+
+    // Remove duplicates
+    const uniqueProgramIds = [...new Set(programIds)];
+
+    const query = `
+      SELECT * FROM evaluations
+      WHERE program_id = ANY($1::uuid[])
+      ORDER BY created_at DESC
+    `;
+
+    const { rows } = await this.pool.query<DBEvaluation>(query, [uniqueProgramIds]);
+    return rows.map(row => this.toEvaluation(row));
+  }
+
   async findByTask(taskId: string): Promise<IEvaluation[]> {
     const query = `
-      SELECT * FROM evaluations 
+      SELECT * FROM evaluations
       WHERE task_id = $1
       ORDER BY created_at DESC
     `;
@@ -98,7 +114,7 @@ export class PostgreSQLEvaluationRepository extends BaseEvaluationRepository<IEv
 
   async findByUser(userId: string): Promise<IEvaluation[]> {
     const query = `
-      SELECT * FROM evaluations 
+      SELECT * FROM evaluations
       WHERE user_id = $1
       ORDER BY created_at DESC
     `;
@@ -109,7 +125,7 @@ export class PostgreSQLEvaluationRepository extends BaseEvaluationRepository<IEv
 
   async findByType(evaluationType: string, evaluationSubtype?: string): Promise<IEvaluation[]> {
     let query = `
-      SELECT * FROM evaluations 
+      SELECT * FROM evaluations
       WHERE evaluation_type = $1
     `;
     const params: unknown[] = [evaluationType];
@@ -173,7 +189,7 @@ export class PostgreSQLEvaluationRepository extends BaseEvaluationRepository<IEv
 
   async getLatestForTask(taskId: string): Promise<IEvaluation | null> {
     const query = `
-      SELECT * FROM evaluations 
+      SELECT * FROM evaluations
       WHERE task_id = $1
       ORDER BY created_at DESC
       LIMIT 1
@@ -185,7 +201,7 @@ export class PostgreSQLEvaluationRepository extends BaseEvaluationRepository<IEv
 
   async getLatestForProgram(programId: string): Promise<IEvaluation | null> {
     const query = `
-      SELECT * FROM evaluations 
+      SELECT * FROM evaluations
       WHERE program_id = $1 AND task_id IS NULL
       ORDER BY created_at DESC
       LIMIT 1
@@ -198,11 +214,11 @@ export class PostgreSQLEvaluationRepository extends BaseEvaluationRepository<IEv
   // Get user progress statistics
   async getUserProgress(userId: string): Promise<UserProgress> {
     const client = await this.pool.connect();
-    
+
     try {
       // Get program statistics
       const programStatsQuery = `
-        SELECT 
+        SELECT
           COUNT(*) as total,
           COUNT(CASE WHEN status = 'completed' THEN 1 END) as completed
         FROM programs
@@ -212,7 +228,7 @@ export class PostgreSQLEvaluationRepository extends BaseEvaluationRepository<IEv
 
       // Get task statistics
       const taskStatsQuery = `
-        SELECT 
+        SELECT
           COUNT(*) as total,
           COUNT(CASE WHEN t.status = 'completed' THEN 1 END) as completed,
           AVG(CASE WHEN t.status = 'completed' THEN t.score END) as avg_score,
@@ -231,7 +247,7 @@ export class PostgreSQLEvaluationRepository extends BaseEvaluationRepository<IEv
 
       // Get achievements
       const achievementsQuery = `
-        SELECT 
+        SELECT
           a.id, a.code, a.name, a.description,
           a.xp_reward as "xpReward", ua.earned_at as "earnedAt"
         FROM user_achievements ua
@@ -270,7 +286,7 @@ export class PostgreSQLEvaluationRepository extends BaseEvaluationRepository<IEv
     taskIndex?: number;
   }>> {
     const query = `
-      SELECT 
+      SELECT
         e.*,
         s.mode as scenario_mode,
         s.difficulty as scenario_difficulty,
@@ -301,11 +317,11 @@ export class PostgreSQLEvaluationRepository extends BaseEvaluationRepository<IEv
     scores: Record<string, number>;
   }>> {
     let query = `
-      SELECT 
+      SELECT
         created_at::date as date,
         domain_scores
       FROM evaluations
-      WHERE user_id = $1 
+      WHERE user_id = $1
         AND domain_scores IS NOT NULL
         AND domain_scores != '{}'::jsonb
     `;
@@ -318,7 +334,7 @@ export class PostgreSQLEvaluationRepository extends BaseEvaluationRepository<IEv
 
     const params = dimension ? [userId, dimension] : [userId];
     const { rows } = await this.pool.query(query, params);
-    
+
     return rows.map(row => ({
       date: row.date,
       scores: row.domain_scores
@@ -332,11 +348,11 @@ export class PostgreSQLEvaluationRepository extends BaseEvaluationRepository<IEv
   }> {
     const query = `
       WITH dimension_averages AS (
-        SELECT 
+        SELECT
           jsonb_object_keys(domain_scores) as dimension,
           AVG((domain_scores->>jsonb_object_keys(domain_scores))::float) as avg_score
         FROM evaluations
-        WHERE user_id = $1 
+        WHERE user_id = $1
           AND domain_scores IS NOT NULL
         GROUP BY jsonb_object_keys(domain_scores)
       )
@@ -346,7 +362,7 @@ export class PostgreSQLEvaluationRepository extends BaseEvaluationRepository<IEv
     `;
 
     const { rows } = await this.pool.query(query, [userId]);
-    
+
     return {
       strengths: rows.slice(0, 3).map(r => ({
         dimension: r.dimension,
@@ -375,7 +391,7 @@ export class PostgreSQLEvaluationRepository extends BaseEvaluationRepository<IEv
         prompt_tokens, completion_tokens, total_tokens,
         estimated_cost_usd, metadata
       )
-      SELECT 
+      SELECT
         e.user_id, e.program_id, e.task_id,
         'evaluation', $2, $3, $4, $5, $6, $7,
         jsonb_build_object('evaluation_id', $1)
@@ -397,7 +413,7 @@ export class PostgreSQLEvaluationRepository extends BaseEvaluationRepository<IEv
   // Get evaluations by date range
   async findByDateRange(userId: string, startDate: Date, endDate: Date): Promise<IEvaluation[]> {
     const query = `
-      SELECT * FROM evaluations 
+      SELECT * FROM evaluations
       WHERE user_id = $1
         AND created_at >= $2
         AND created_at <= $3
@@ -492,7 +508,7 @@ export class PostgreSQLEvaluationRepository extends BaseEvaluationRepository<IEv
     count: number;
   }>> {
     const query = `
-      SELECT 
+      SELECT
         evaluation_type,
         evaluation_subtype,
         AVG(score) as avg_score,
@@ -504,7 +520,7 @@ export class PostgreSQLEvaluationRepository extends BaseEvaluationRepository<IEv
     `;
 
     const { rows } = await this.pool.query(query, [userId]);
-    
+
     return rows.map(row => ({
       evaluationType: row.evaluation_type,
       evaluationSubtype: row.evaluation_subtype,

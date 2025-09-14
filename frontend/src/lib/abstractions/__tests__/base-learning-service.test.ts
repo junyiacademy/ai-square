@@ -4,10 +4,10 @@
  */
 
 import { BaseLearningService } from '../base-learning-service';
-import { 
-  IScenario, 
-  IProgram, 
-  ITask, 
+import {
+  IScenario,
+  IProgram,
+  ITask,
   IEvaluation,
   IInteraction,
   BaseScenarioRepository,
@@ -31,8 +31,12 @@ class MockScenarioRepository implements BaseScenarioRepository<IScenario> {
     return this.scenarios.get(id) || null;
   }
 
+  async findByIds(ids: string[]): Promise<IScenario[]> {
+    return ids.map(id => this.scenarios.get(id)).filter((s): s is IScenario => s !== undefined);
+  }
+
   async findBySource(sourceType: string, sourceId?: string): Promise<IScenario[]> {
-    return Array.from(this.scenarios.values()).filter(s => 
+    return Array.from(this.scenarios.values()).filter(s =>
       s.sourceType === sourceType && (!sourceId || s.sourceId === sourceId)
     );
   }
@@ -78,8 +82,8 @@ class MockProgramRepository implements BaseProgramRepository<IProgram> {
   async complete(id: string): Promise<IProgram> {
     const program = this.programs.get(id);
     if (!program) throw new Error('Program not found');
-    const updated = { 
-      ...program, 
+    const updated = {
+      ...program,
       status: 'completed' as const,
       completedAt: new Date().toISOString()
     };
@@ -147,6 +151,10 @@ class MockEvaluationRepository implements BaseEvaluationRepository<IEvaluation> 
     return Array.from(this.evaluations.values()).filter(e => e.programId === programId);
   }
 
+  async findByProgramIds(programIds: string[]): Promise<IEvaluation[]> {
+    return Array.from(this.evaluations.values()).filter(e => e.programId && programIds.includes(e.programId));
+  }
+
   async findByTask(taskId: string): Promise<IEvaluation[]> {
     return Array.from(this.evaluations.values()).filter(e => e.taskId === taskId);
   }
@@ -156,8 +164,8 @@ class MockEvaluationRepository implements BaseEvaluationRepository<IEvaluation> 
   }
 
   async findByType(evaluationType: string, evaluationSubtype?: string): Promise<IEvaluation[]> {
-    return Array.from(this.evaluations.values()).filter(e => 
-      e.evaluationType === evaluationType && 
+    return Array.from(this.evaluations.values()).filter(e =>
+      e.evaluationType === evaluationType &&
       (!evaluationSubtype || e.evaluationSubtype === evaluationSubtype)
     );
   }
@@ -378,7 +386,7 @@ describe('BaseLearningService', () => {
     it('should complete last task and complete program', async () => {
       // Complete first task
       await service.completeTask(task1.id, 'user-123');
-      
+
       // Act - Complete last task
       const result = await service.completeTask(task2.id, 'user-123');
 
@@ -386,7 +394,7 @@ describe('BaseLearningService', () => {
       expect(result.task.status).toBe('completed');
       expect(result.evaluation).toBeDefined();
       expect(result.nextTask).toBeUndefined();
-      
+
       // Check program is completed
       const completedProgram = await mockProgramRepo.findById(program.id);
       expect(completedProgram?.status).toBe('completed');
@@ -418,7 +426,7 @@ describe('BaseLearningService', () => {
         assessmentData: {},
         metadata: {}
       });
-      
+
       // Complete the program by updating its fields directly
       program1.status = 'completed';
       program1.completedAt = new Date().toISOString();
@@ -487,7 +495,7 @@ describe('BaseLearningService', () => {
 
       // Set up mock to return both programs
       mockProgramRepo.findByUser = jest.fn().mockResolvedValue([program1, program2]);
-      
+
       // Act
       const progress = await service.getLearningProgress('user-123');
 
@@ -609,8 +617,8 @@ describe('BaseLearningService', () => {
       });
 
       // Fix the mock repository to store the updated program
-      mockProgramRepo.programs.set(program.id, { 
-        ...program, 
+      mockProgramRepo.programs.set(program.id, {
+        ...program,
         currentTaskIndex: 1,
         metadata: {
           ...program.metadata,

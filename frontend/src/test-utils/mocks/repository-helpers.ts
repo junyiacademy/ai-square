@@ -3,7 +3,7 @@
  * Provides complete mock implementations for all repository interfaces
  */
 
-import type { 
+import type {
   IUserRepository,
   IProgramRepository,
   ITaskRepository,
@@ -80,6 +80,7 @@ export function createMockEvaluationRepository(): jest.Mocked<IEvaluationReposit
   return {
     findById: jest.fn(),
     findByProgram: jest.fn(),
+    findByProgramIds: jest.fn(),  // Added for N+1 prevention
     findByTask: jest.fn(),
     findByUser: jest.fn(),
     findByType: jest.fn(),
@@ -96,6 +97,7 @@ export function createMockEvaluationRepository(): jest.Mocked<IEvaluationReposit
 export function createMockScenarioRepository(): jest.Mocked<IScenarioRepository> {
   return {
     findById: jest.fn(),
+    findByIds: jest.fn(),  // Added for N+1 prevention
     findBySource: jest.fn(),
     update: jest.fn(),
     create: jest.fn(),
@@ -143,7 +145,7 @@ export function createAllRepositoryMocks() {
  */
 export function setupRepositoryFactoryMock() {
   const mocks = createAllRepositoryMocks();
-  
+
   jest.mock('@/lib/repositories/base/repository-factory', () => ({
     repositoryFactory: {
       getUserRepository: jest.fn(() => mocks.userRepo),
@@ -154,7 +156,7 @@ export function setupRepositoryFactoryMock() {
       getDiscoveryRepository: jest.fn(() => mocks.discoveryRepo),
     }
   }));
-  
+
   return mocks;
 }
 

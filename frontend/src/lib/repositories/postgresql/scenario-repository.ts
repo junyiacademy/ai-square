@@ -5,10 +5,10 @@
  */
 
 import { Pool } from 'pg';
-import type { 
-  DBScenario, 
-  LearningMode, 
-  ScenarioStatus, 
+import type {
+  DBScenario,
+  LearningMode,
+  ScenarioStatus,
   DifficultyLevel,
   TaskType
 } from '@/types/database';
@@ -27,11 +27,11 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
    */
   private ensureArray(value: unknown): string[] {
     // console.log('ensureArray input:', { value, type: typeof value, isArray: Array.isArray(value) });
-    
+
     if (Array.isArray(value)) {
       return value.map(item => String(item));
     }
-    
+
     if (typeof value === 'string') {
       // Check if it's a JSON string array
       if (value.startsWith('[') && value.endsWith(']')) {
@@ -47,11 +47,11 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
       // Single string value
       return value.length > 0 ? [value] : [];
     }
-    
+
     if (value === null || value === undefined) {
       return [];
     }
-    
+
     // Fallback: try to convert to string
     return [String(value)];
   }
@@ -65,23 +65,23 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
       mode: row.mode,
       status: row.status,
       version: row.version,
-      
+
       // Source tracking
       sourceType: row.source_type,
       sourcePath: row.source_path || undefined,
       sourceId: row.source_id || undefined,
       sourceMetadata: row.source_metadata,
-      
+
       // Basic info
       title: row.title,
       description: row.description,
       objectives: row.objectives,
-      
+
       // Common attributes
       difficulty: row.difficulty,
       estimatedMinutes: row.estimated_minutes,
       prerequisites: row.prerequisites,
-      
+
       // Task templates
       taskTemplates: (row.task_templates as Array<Record<string, unknown>> || []).map((t): ITaskTemplate => ({
         id: t.id as string,
@@ -91,25 +91,25 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
         ...t
       })),
       taskCount: (row.task_templates as Array<Record<string, unknown>> || []).length,
-      
+
       // Rewards and progression
       xpRewards: row.xp_rewards,
       unlockRequirements: row.unlock_requirements,
-      
+
       // Mode-specific data
       pblData: row.pbl_data,
       discoveryData: row.discovery_data,
       assessmentData: row.assessment_data,
-      
+
       // Resources and AI
       aiModules: row.ai_modules,
       resources: row.resources,
-      
+
       // Timestamps
       createdAt: row.created_at,
       updatedAt: row.updated_at,
       publishedAt: row.published_at || undefined,
-      
+
       // Extensible metadata
       metadata: row.metadata
     };
@@ -135,6 +135,22 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
     return result;
   }
 
+  async findByIds(ids: string[]): Promise<IScenario[]> {
+    if (ids.length === 0) return [];
+
+    // Remove duplicates
+    const uniqueIds = [...new Set(ids)];
+
+    const query = `
+      SELECT * FROM scenarios
+      WHERE id = ANY($1::uuid[])
+      ORDER BY created_at DESC
+    `;
+
+    const { rows } = await this.pool.query<DBScenario>(query, [uniqueIds]);
+    return rows.map(row => this.toScenario(row));
+  }
+
   async findBySource(sourceType: string, sourceId?: string): Promise<IScenario[]> {
     const isTest = process.env.NODE_ENV === 'test' || Boolean(process.env.JEST_WORKER_ID);
     const key = cacheKeys.scenariosBySource(sourceType, sourceId);
@@ -144,7 +160,7 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
     }
 
     let query = `
-      SELECT * FROM scenarios 
+      SELECT * FROM scenarios
       WHERE source_type = $1
     `;
     const params: unknown[] = [sourceType];
@@ -219,7 +235,7 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
     if (updates.status !== undefined) {
       updateFields.push(`status = $${paramCount++}`);
       values.push(updates.status);
-      
+
       // Set published_at when scenario becomes active
       if (updates.status === 'active') {
         updateFields.push(`published_at = COALESCE(published_at, CURRENT_TIMESTAMP)`);
@@ -349,7 +365,7 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
 
   async findByMode(mode: LearningMode, includeArchived = false): Promise<IScenario[]> {
     let query = `
-      SELECT * FROM scenarios 
+      SELECT * FROM scenarios
       WHERE mode = $1
     `;
     const params: unknown[] = [mode];
@@ -366,7 +382,7 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
 
   async findActive(): Promise<IScenario[]> {
     const query = `
-      SELECT * FROM scenarios 
+      SELECT * FROM scenarios
       WHERE status = 'active'
       ORDER BY mode, difficulty, created_at DESC
     `;
@@ -378,16 +394,16 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
   async delete(id: string): Promise<boolean> {
     const query = `DELETE FROM scenarios WHERE id = $1`;
     const result = await this.pool.query(query, [id]);
-    
+
     // Clear related caches
     await distributedCacheService.delete(cacheKeys.scenarioById(id));
-    
+
     return (result.rowCount ?? 0) > 0;
   }
 
   async findByDifficulty(difficulty: DifficultyLevel): Promise<IScenario[]> {
     const query = `
-      SELECT * FROM scenarios 
+      SELECT * FROM scenarios
       WHERE difficulty = $1 AND status = 'active'
       ORDER BY mode, created_at DESC
     `;
@@ -409,15 +425,15 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
   }
 
   // Get scenarios with usage statistics
-  async getScenariosWithStats(): Promise<Array<IScenario & { 
-    totalPrograms?: number; 
+  async getScenariosWithStats(): Promise<Array<IScenario & {
+    totalPrograms?: number;
     completedPrograms?: number;
     uniqueUsers?: number;
     averageScore?: number;
     averageTimeSpent?: number;
   }>> {
     const query = `
-      SELECT 
+      SELECT
         s.*,
         COUNT(DISTINCT p.id) as "totalPrograms",
         COUNT(DISTINCT CASE WHEN p.status = 'completed' THEN p.id END) as "completedPrograms",
@@ -444,8 +460,8 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
   // Get scenario completion rate
   async getCompletionRate(scenarioId: string): Promise<number> {
     const query = `
-      SELECT 
-        COUNT(CASE WHEN status = 'completed' THEN 1 END)::float / 
+      SELECT
+        COUNT(CASE WHEN status = 'completed' THEN 1 END)::float /
         NULLIF(COUNT(*), 0) as completion_rate
       FROM programs
       WHERE scenario_id = $1
@@ -469,8 +485,8 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
         JOIN scenarios s ON p.scenario_id = s.id
         WHERE p.user_id = $2 AND p.status = 'completed'
       )
-      SELECT 
-        CASE 
+      SELECT
+        CASE
           WHEN sp.prerequisites = '[]'::jsonb THEN true
           ELSE (
             SELECT bool_and(uc.id IS NOT NULL)
@@ -491,7 +507,7 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
     const query = `
       INSERT INTO scenario_domains (scenario_id, domain_id, is_primary)
       VALUES ($1, $2, $3)
-      ON CONFLICT (scenario_id, domain_id) 
+      ON CONFLICT (scenario_id, domain_id)
       DO UPDATE SET is_primary = EXCLUDED.is_primary
     `;
 
@@ -537,11 +553,11 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
   async findBySourcePath(sourcePath: string): Promise<IScenario | null> {
     const query = 'SELECT * FROM scenarios WHERE source_path = $1 LIMIT 1';
     const { rows } = await this.pool.query<DBScenario>(query, [sourcePath]);
-    
+
     if (rows.length === 0) {
       return null;
     }
-    
+
     return this.toScenario(rows[0]);
   }
 }
