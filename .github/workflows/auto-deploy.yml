@@ -203,7 +203,7 @@ jobs:
     name: Deploy KSA to CDN
     runs-on: ubuntu-latest
     needs: [detect-changes, quality-checks]
-    if: always() && (needs.detect-changes.outputs.docs-only == 'true' || needs.quality-checks.result == 'success')
+    if: needs.detect-changes.outputs.docs-only == 'false' && needs.quality-checks.result == 'success'
     permissions:
       contents: read
       id-token: write
@@ -265,7 +265,7 @@ jobs:
     name: Deploy to Cloud Run
     runs-on: ubuntu-latest
     needs: [detect-changes, quality-checks]
-    if: always() && (needs.detect-changes.outputs.docs-only == 'true' || needs.quality-checks.result == 'success')
+    if: needs.detect-changes.outputs.docs-only == 'false' && needs.quality-checks.result == 'success'
     permissions:
       contents: read
       id-token: write
