@@ -409,7 +409,7 @@ jobs:
           SMTP_USER: "${{ secrets.SMTP_USER }}"
           SMTP_PASS: "${{ secrets.SMTP_PASS }}"
           SMTP_FROM: "AI Square <ai-square@junyiacademy.org>"
-          APP_BASE_URL: "${{ steps.env.outputs.environment == 'production' && 'https://ai-square-production-731209836128.asia-east1.run.app' || 'https://ai-square-staging-731209836128.asia-east1.run.app' }}"
+          APP_BASE_URL: "${{ steps.env.outputs.environment == 'production' && 'https://www.ai-square.org' || 'https://ai-square-staging-731209836128.asia-east1.run.app' }}"
           EOF
 
           # Deploy using env vars file - 完全複製 deploy-staging.yml.disabled 的命令
