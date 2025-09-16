@@ -39,24 +39,38 @@ jobs:
           echo "🧹 Starting Cloud Run revisions cleanup..."
           echo "================================================"
 
+          # Global counters for tracking
+          GLOBAL_DELETED_COUNT=0
+          GLOBAL_FAILED_COUNT=0
+
           # Function to clean up revisions for a service
           cleanup_service_revisions() {
             local SERVICE=$1
             local KEEP_COUNT=${2:-3}  # Keep latest 3 revisions by default
+            local DELETED_COUNT=0
+            local FAILED_COUNT=0
 
             echo ""
             echo "📦 Cleaning service: $SERVICE"
             echo "   Keeping latest $KEEP_COUNT revisions"
 
             # Get all revision names sorted by creation time (newest first)
+            # Remove error suppression to see actual issues
             REVISIONS=$(gcloud run revisions list \
               --service=${SERVICE} \
               --region=${{ env.REGION }} \
               --sort-by="~metadata.creationTimestamp" \
-              --format="value(metadata.name)" 2>/dev/null)
+              --format="value(metadata.name)" 2>&1)
+
+            # Check for errors
+            if echo "$REVISIONS" | grep -q "ERROR"; then
+              echo "   ⚠️ Service not found or error listing revisions"
+              echo "   Error: $REVISIONS"
+              return
+            fi
 
             if [ -z "$REVISIONS" ]; then
-              echo "   ⚠️ Service not found or no revisions"
+              echo "   ⚠️ No revisions found"
               return
             fi
 
@@ -68,22 +82,38 @@ jobs:
 
               # Get revisions to delete (skip the first KEEP_COUNT)
               TO_DELETE=$(echo "$REVISIONS" | tail -n +$((KEEP_COUNT + 1)))
-              DELETED_COUNT=0
+              TO_DELETE_COUNT=$(echo "$TO_DELETE" | wc -l)
+              echo "   🎯 Will attempt to delete $TO_DELETE_COUNT revisions"
 
-              echo "$TO_DELETE" | while read -r REVISION; do
+              # Process each revision
+              while IFS= read -r REVISION; do
                 if [ -n "$REVISION" ]; then
                   echo "   🗑️ Deleting: $REVISION"
-                  if gcloud run revisions delete $REVISION \
+
+                  # Try to delete, capture output
+                  DELETE_OUTPUT=$(gcloud run revisions delete $REVISION \
                     --region=${{ env.REGION }} \
-                    --quiet 2>/dev/null; then
-                    ((DELETED_COUNT++))
+                    --quiet 2>&1)
+
+                  if [ $? -eq 0 ]; then
+                    DELETED_COUNT=$((DELETED_COUNT + 1))
+                    echo "      ✅ Successfully deleted"
                   else
-                    echo "      ⚠️ Could not delete $REVISION (might be in use)"
+                    FAILED_COUNT=$((FAILED_COUNT + 1))
+                    echo "      ❌ Failed to delete"
+                    echo "      Error: ${DELETE_OUTPUT}"
                   fi
                 fi
-              done
+              done <<< "$TO_DELETE"
 
-              echo "   ✅ Cleanup complete for $SERVICE"
+              # Update global counters
+              GLOBAL_DELETED_COUNT=$((GLOBAL_DELETED_COUNT + DELETED_COUNT))
+              GLOBAL_FAILED_COUNT=$((GLOBAL_FAILED_COUNT + FAILED_COUNT))
+
+              echo "   📊 Service cleanup results:"
+              echo "      ✅ Deleted: $DELETED_COUNT"
+              echo "      ❌ Failed: $FAILED_COUNT"
+              echo "      📁 Remaining: $KEEP_COUNT"
             else
               echo "   ✅ Only $TOTAL revisions exist, no cleanup needed"
             fi
@@ -96,7 +126,11 @@ jobs:
           cleanup_service_revisions "ai-square-production" 2
 
           echo ""
-          echo "✅ Cloud Run revision cleanup complete!"
+          echo "================================================"
+          echo "📊 Cloud Run Cleanup Summary:"
+          echo "   ✅ Total deleted: $GLOBAL_DELETED_COUNT revisions"
+          echo "   ❌ Total failed: $GLOBAL_FAILED_COUNT revisions"
+          echo "================================================"
 
       - name: Clean up GCR images
         run: |
@@ -104,43 +138,91 @@ jobs:
           echo "🧹 Starting GCR images cleanup..."
           echo "================================================"
 
+          # Global counters for tracking
+          GLOBAL_IMAGE_DELETED=0
+          GLOBAL_IMAGE_FAILED=0
+
           # Function to clean up container images
           cleanup_repository() {
             local REPO=$1
             local KEEP_COUNT=${2:-5}  # Keep latest 5 images by default
+            local DELETED_COUNT=0
+            local FAILED_COUNT=0
 
             echo ""
             echo "📦 Cleaning repository: ${REPO##*/}"
             echo "   Keeping latest $KEEP_COUNT images"
 
             # Check if repository exists
-            if ! gcloud container images list --repository="$REPO" &>/dev/null; then
-              echo "   ⚠️ Repository not found: $REPO"
+            REPO_CHECK=$(gcloud container images list --repository="$REPO" 2>&1)
+            if [ $? -ne 0 ]; then
+              echo "   ⚠️ Repository not found or error: $REPO"
+              echo "   Error: $REPO_CHECK"
               return
             fi
+
+            # Get total count first
+            TOTAL_IMAGES=$(gcloud container images list-tags "$REPO" \
+              --format="get(digest)" 2>&1 | wc -l)
+
+            echo "   📊 Total images in repository: $TOTAL_IMAGES"
 
             # Get all images except the latest KEEP_COUNT
             IMAGES=$(gcloud container images list-tags "$REPO" \
               --format="get(digest)" \
-              --sort-by="~timestamp" 2>/dev/null | tail -n +$((KEEP_COUNT + 1)))
+              --sort-by="~timestamp" 2>&1)
 
-            if [ -n "$IMAGES" ]; then
-              IMAGE_COUNT=$(echo "$IMAGES" | wc -l)
-              echo "   📊 Found $IMAGE_COUNT old images to delete"
+            # Check for errors
+            if echo "$IMAGES" | grep -q "ERROR"; then
+              echo "   ❌ Error listing images: $IMAGES"
+              return
+            fi
 
-              DELETED_COUNT=0
-              echo "$IMAGES" | while read -r DIGEST; do
+            # Get images to delete (skip the first KEEP_COUNT)
+            TO_DELETE=$(echo "$IMAGES" | tail -n +$((KEEP_COUNT + 1)))
+
+            if [ -n "$TO_DELETE" ]; then
+              IMAGE_COUNT=$(echo "$TO_DELETE" | wc -l)
+              echo "   🎯 Will attempt to delete $IMAGE_COUNT old images"
+
+              # Process each image
+              while IFS= read -r DIGEST; do
                 if [ -n "$DIGEST" ]; then
-                  echo "   🗑️ Deleting: ${DIGEST:0:12}..."
-                  if gcloud container images delete "$REPO@$DIGEST" --quiet --force-delete-tags 2>/dev/null; then
-                    ((DELETED_COUNT++))
+                  echo "   🗑️ Deleting: ${DIGEST:0:19}..."
+
+                  # Try to delete with better error handling
+                  DELETE_OUTPUT=$(gcloud container images delete "$REPO@$DIGEST" \
+                    --quiet --force-delete-tags 2>&1)
+
+                  if [ $? -eq 0 ]; then
+                    DELETED_COUNT=$((DELETED_COUNT + 1))
+                    echo "      ✅ Successfully deleted"
+                  else
+                    FAILED_COUNT=$((FAILED_COUNT + 1))
+                    echo "      ❌ Failed to delete"
+                    # Check for common error patterns
+                    if echo "$DELETE_OUTPUT" | grep -q "V2DiagnosticException"; then
+                      echo "      ⚠️ Registry error (possibly phantom image)"
+                    elif echo "$DELETE_OUTPUT" | grep -q "404"; then
+                      echo "      ⚠️ Image not found (already deleted?)"
+                    else
+                      echo "      Error: ${DELETE_OUTPUT:0:100}..."
+                    fi
                   fi
                 fi
-              done
+              done <<< "$TO_DELETE"
 
-              echo "   ✅ Deleted old images from ${REPO##*/}"
+              # Update global counters
+              GLOBAL_IMAGE_DELETED=$((GLOBAL_IMAGE_DELETED + DELETED_COUNT))
+              GLOBAL_IMAGE_FAILED=$((GLOBAL_IMAGE_FAILED + FAILED_COUNT))
+
+              echo "   📊 Repository cleanup results:"
+              echo "      ✅ Deleted: $DELETED_COUNT"
+              echo "      ❌ Failed: $FAILED_COUNT"
+              echo "      📁 Kept: $KEEP_COUNT (latest)"
+              echo "      📦 Total remaining: $((KEEP_COUNT + FAILED_COUNT))"
             else
-              echo "   ✅ No old images to clean"
+              echo "   ✅ Only $TOTAL_IMAGES images exist, no cleanup needed"
             fi
           }
 
@@ -151,41 +233,113 @@ jobs:
           cleanup_repository "gcr.io/${{ env.PROJECT_ID }}/ai-square-production" 3
 
           echo ""
-          echo "✅ GCR cleanup complete!"
+          echo "================================================"
+          echo "📊 GCR Cleanup Summary:"
+          echo "   ✅ Total deleted: $GLOBAL_IMAGE_DELETED images"
+          echo "   ❌ Total failed: $GLOBAL_IMAGE_FAILED images"
+          echo "================================================"
 
       - name: Generate cleanup report
         if: always()
         run: |
           echo ""
-          echo "📋 Cleanup Summary Report"
+          echo "📋 Final Cleanup Verification Report"
           echo "================================================"
           echo "🕐 Execution time: $(date +'%Y-%m-%d %H:%M:%S UTC')"
           echo "📦 Project: ${{ env.PROJECT_ID }}"
           echo "🌍 Region: ${{ env.REGION }}"
           echo ""
 
-          # Show current resource usage
-          echo "📊 Current Resource Status:"
+          # Verification: Show actual current resource usage
+          echo "🔍 VERIFICATION - Current Resource Status:"
           echo "----------------------------"
 
           # Count Cloud Run services and revisions
-          echo "Cloud Run Services:"
-          gcloud run services list --region=${{ env.REGION }} --format="table(SERVICE,LAST_DEPLOYED_AT)" 2>/dev/null || echo "  Error listing services"
-
           echo ""
-          echo "Total Active Revisions:"
-          REVISION_COUNT=$(gcloud run revisions list --region=${{ env.REGION }} --format="value(metadata.name)" 2>/dev/null | wc -l)
-          echo "  $REVISION_COUNT revisions across all services"
+          echo "🏎️ Cloud Run Status:"
+          echo "------------------"
 
-          echo ""
-          echo "GCR Repositories:"
-          for REPO in "ai-square-staging" "ai-square-production"; do
-            IMAGE_COUNT=$(gcloud container images list-tags "gcr.io/${{ env.PROJECT_ID }}/$REPO" --format="value(digest)" 2>/dev/null | wc -l)
-            echo "  $REPO: $IMAGE_COUNT images"
+          # List services with revision count
+          for SERVICE in "ai-square-staging" "ai-square-production"; do
+            REVISION_COUNT=$(gcloud run revisions list \
+              --service=$SERVICE \
+              --region=${{ env.REGION }} \
+              --format="value(metadata.name)" 2>/dev/null | wc -l)
+
+            if [ $REVISION_COUNT -gt 0 ]; then
+              echo "  $SERVICE: $REVISION_COUNT revision(s)"
+
+              # Show revision details
+              echo "    Latest revisions:"
+              gcloud run revisions list \
+                --service=$SERVICE \
+                --region=${{ env.REGION }} \
+                --limit=3 \
+                --format="table(metadata.name:label='REVISION',metadata.creationTimestamp:label='CREATED')" 2>/dev/null | \
+                sed 's/^/      /'
+            else
+              echo "  $SERVICE: Service not found or no revisions"
+            fi
           done
 
           echo ""
-          echo "✅ Cleanup workflow completed successfully!"
+          echo "🖼️ GCR Image Status:"
+          echo "------------------"
+
+          # Verify actual image counts
+          for REPO in "ai-square-staging" "ai-square-production"; do
+            IMAGE_COUNT=$(gcloud container images list-tags "gcr.io/${{ env.PROJECT_ID }}/$REPO" \
+              --format="value(digest)" 2>/dev/null | wc -l)
+
+            if [ $IMAGE_COUNT -gt 0 ]; then
+              echo "  $REPO: $IMAGE_COUNT image(s) remaining"
+
+              # Show latest images
+              echo "    Latest images:"
+              gcloud container images list-tags "gcr.io/${{ env.PROJECT_ID }}/$REPO" \
+                --limit=3 \
+                --sort-by="~timestamp" \
+                --format="table(timestamp.date('%Y-%m-%d %H:%M'):label='CREATED',digest.slice(7:19):label='DIGEST')" 2>/dev/null | \
+                sed 's/^/      /'
+            else
+              echo "  $REPO: No images found"
+            fi
+          done
+
+          echo ""
+          echo "🎯 Cleanup Effectiveness Check:"
+          echo "--------------------------------"
+
+          # Check if cleanup met targets
+          STAGING_IMAGES=$(gcloud container images list-tags "gcr.io/${{ env.PROJECT_ID }}/ai-square-staging" \
+            --format="value(digest)" 2>/dev/null | wc -l)
+          PROD_IMAGES=$(gcloud container images list-tags "gcr.io/${{ env.PROJECT_ID }}/ai-square-production" \
+            --format="value(digest)" 2>/dev/null | wc -l)
+
+          CLEANUP_SUCCESS=true
+
+          if [ $STAGING_IMAGES -le 2 ]; then
+            echo "  ✅ Staging images: $STAGING_IMAGES (target: ≤2)"
+          else
+            echo "  ⚠️ Staging images: $STAGING_IMAGES (target: ≤2) - NEEDS ATTENTION"
+            CLEANUP_SUCCESS=false
+          fi
+
+          if [ $PROD_IMAGES -le 3 ]; then
+            echo "  ✅ Production images: $PROD_IMAGES (target: ≤3)"
+          else
+            echo "  ⚠️ Production images: $PROD_IMAGES (target: ≤3) - NEEDS ATTENTION"
+            CLEANUP_SUCCESS=false
+          fi
+
+          echo ""
+          if [ "$CLEANUP_SUCCESS" = true ]; then
+            echo "🎆 Cleanup workflow completed successfully!"
+            echo "All targets met. Resources are within expected limits."
+          else
+            echo "⚠️ Cleanup workflow completed with warnings!"
+            echo "Some resources exceed target limits. Manual intervention may be required."
+          fi
 
       - name: Send Slack notification (if configured)
         if: always() && env.SLACK_WEBHOOK_URL != ''
