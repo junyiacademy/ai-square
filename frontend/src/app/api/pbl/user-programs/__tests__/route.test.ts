@@ -83,13 +83,13 @@ describe('PBL User Programs API Route', () => {
 
     mockUserRepo.findByEmail.mockResolvedValue(mockUser);
     mockProgramRepo.findByUser.mockResolvedValue(mockPrograms);
-    mockTaskRepo.findByProgram.mockResolvedValue([
-      { id: 'task-1', status: 'completed' },
-      { id: 'task-2', status: 'active' }
+    mockTaskRepo.findByProgramIds.mockResolvedValue([
+      { id: 'task-1', programId: 'prog-1', status: 'completed' },
+      { id: 'task-2', programId: 'prog-1', status: 'active' }
     ]);
-    mockEvaluationRepo.findByProgram.mockResolvedValue([
-      { score: 80 },
-      { score: 90 }
+    mockEvaluationRepo.findByProgramIds.mockResolvedValue([
+      { programId: 'prog-1', score: 80 },
+      { programId: 'prog-1', score: 90 }
     ]);
     mockContentRepo.getScenarioContent.mockResolvedValue({
       title: { en: 'Test Scenario' }
