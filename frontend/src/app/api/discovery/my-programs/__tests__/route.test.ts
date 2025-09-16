@@ -165,10 +165,10 @@ describe('GET /api/discovery/my-programs', () => {
     };
 
     const mockTasks = [
-      { id: 'task1', status: 'completed' },
-      { id: 'task2', status: 'completed' },
-      { id: 'task3', status: 'active' },
-      { id: 'task4', status: 'pending' },
+      { id: 'task1', programId: 'prog1', status: 'completed' },
+      { id: 'task2', programId: 'prog1', status: 'completed' },
+      { id: 'task3', programId: 'prog1', status: 'active' },
+      { id: 'task4', programId: 'prog1', status: 'pending' },
     ];
 
     mockProgramRepository.findByUser.mockResolvedValue(mockPrograms);
@@ -274,8 +274,8 @@ describe('GET /api/discovery/my-programs', () => {
     });
 
     mockTaskRepository.findByProgramIds.mockResolvedValue([
-      { id: 'task1', status: 'completed', completedAt: yesterday.toISOString() },
-      { id: 'task2', status: 'active', startedAt: now.toISOString() },
+      { id: 'task1', programId: 'prog1', status: 'completed', completedAt: yesterday.toISOString() },
+      { id: 'task2', programId: 'prog1', status: 'active', startedAt: now.toISOString() },
     ]);
 
     const request = new NextRequest('http://localhost:3000/api/discovery/my-programs');

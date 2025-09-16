@@ -13,6 +13,20 @@ jest.mock('@/lib/repositories/base/repository-factory', () => ({
   }
 }));
 
+// Mock optimization utils to handle cachedGET
+jest.mock('@/lib/api/optimization-utils', () => ({
+  cachedGET: jest.fn(async (req, handler) => {
+    const result = await handler();
+    // Return a proper NextResponse like the real cachedGET does
+    return new Response(JSON.stringify({ ...result, cacheHit: false }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }),
+  getPaginationParams: jest.fn(() => ({ page: 1, limit: 20 })),
+  createPaginatedResponse: jest.fn((data, total, params) => ({ data, total, ...params }))
+}));
+
 describe('PBL User Programs API Route', () => {
   const mockUserRepo = {
     findById: jest.fn(),
