@@ -32,40 +32,40 @@ export function LoginForm({ onSubmit, loading = false, error }: LoginFormProps) 
 
   const handleDemoLogin = (demoAccount: { email: string; password: string }) => {
     console.log('handleDemoLogin called with:', demoAccount)
-    
+
     // 立即設定值
     setEmail(demoAccount.email)
     setPassword(demoAccount.password)
-    
+
     // 使用 requestAnimationFrame 確保 React 狀態更新
     requestAnimationFrame(() => {
       console.log('requestAnimationFrame callback')
-      
+
       // 再次確保值已設定
       const emailInput = document.getElementById('email') as HTMLInputElement
       const passwordInput = document.getElementById('password') as HTMLInputElement
-      
-      console.log('DOM elements found:', { 
-        email: !!emailInput, 
-        password: !!passwordInput 
+
+      console.log('DOM elements found:', {
+        email: !!emailInput,
+        password: !!passwordInput
       })
-      
+
       if (emailInput && passwordInput) {
         emailInput.value = demoAccount.email
         passwordInput.value = demoAccount.password
-        
+
         // 觸發 onChange 事件
         const emailEvent = new Event('input', { bubbles: true })
         const passwordEvent = new Event('input', { bubbles: true })
         emailInput.dispatchEvent(emailEvent)
         passwordInput.dispatchEvent(passwordEvent)
-        
+
         console.log('Values set:', {
           email: emailInput.value,
           password: passwordInput.value
         })
       }
-      
+
       // 延遲提交以確保 UI 更新
       setTimeout(() => {
         console.log('About to submit with:', { ...demoAccount, rememberMe })
@@ -78,8 +78,8 @@ export function LoginForm({ onSubmit, loading = false, error }: LoginFormProps) 
     <div className="space-y-6">
       {/* 錯誤訊息 */}
       {error && (
-        <div 
-          role="alert" 
+        <div
+          role="alert"
           className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg"
         >
           {error}
@@ -89,8 +89,8 @@ export function LoginForm({ onSubmit, loading = false, error }: LoginFormProps) 
       {/* 登入表單 */}
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label 
-            htmlFor="email" 
+          <label
+            htmlFor="email"
             className="block text-sm font-medium text-gray-700 mb-2"
           >
             {t('email')}
@@ -109,8 +109,8 @@ export function LoginForm({ onSubmit, loading = false, error }: LoginFormProps) 
         </div>
 
         <div>
-          <label 
-            htmlFor="password" 
+          <label
+            htmlFor="password"
             className="block text-sm font-medium text-gray-700 mb-2"
           >
             {t('password')}
@@ -144,7 +144,7 @@ export function LoginForm({ onSubmit, loading = false, error }: LoginFormProps) 
             </span>
           </label>
           <Link href="/forgot-password" className="text-sm text-blue-600 hover:text-blue-500">
-            {t('forgotPassword', 'Forgot password?')}
+            {t('signIn.forgotPassword', 'Forgot password?')}
           </Link>
         </div>
 
