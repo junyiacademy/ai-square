@@ -327,7 +327,10 @@ function RegisterContent() {
                 </div>
                 <div className="ml-3 flex-1">
                   <p className="text-sm text-red-800 dark:text-red-200">{errors.submit}</p>
-                  {errors.submit.includes('Email already exists') && (
+                  {(errors.submit.includes('Email already exists') ||
+                    errors.submit.includes('already exists') ||
+                    errors.submit.includes('already registered') ||
+                    errors.submit.includes('Email already')) && (
                     <div className="mt-3">
                       <button
                         type="button"

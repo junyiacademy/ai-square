@@ -26,7 +26,7 @@ describe('LoginForm 組件測試', () => {
       // 檢查表單輸入欄位 (使用翻譯鍵值作為 label)
       expect(screen.getByLabelText('email')).toBeInTheDocument()
       expect(screen.getByLabelText('password')).toBeInTheDocument()
-      
+
       // 檢查登入按鈕 (使用翻譯鍵值)
       expect(screen.getByRole('button', { name: 'login' })).toBeInTheDocument()
 
@@ -78,7 +78,7 @@ describe('LoginForm 組件測試', () => {
       })
       expect(mockOnSubmit).toHaveBeenCalledTimes(1)
     })
-    
+
     it('應該正確處理 Remember Me 勾選框', async () => {
       const user = userEvent.setup()
       renderWithProviders(<LoginForm onSubmit={mockOnSubmit} />)
@@ -140,7 +140,7 @@ describe('LoginForm 組件測試', () => {
       renderWithProviders(<LoginForm onSubmit={mockOnSubmit} error={errorMessage} />)
 
       expect(screen.getByText(errorMessage)).toBeInTheDocument()
-      
+
       // 檢查錯誤訊息的樣式
       const errorElement = screen.getByText(errorMessage)
       expect(errorElement).toHaveClass('bg-red-100', 'border-red-400', 'text-red-700')
@@ -161,7 +161,7 @@ describe('LoginForm 組件測試', () => {
       const submitButton = screen.getByRole('button', { name: 'login' })
 
       await user.type(emailInput, 'test@example.com')
-      
+
       expect(submitButton).toBeDisabled()
     })
 
@@ -173,7 +173,7 @@ describe('LoginForm 組件測試', () => {
       const submitButton = screen.getByRole('button', { name: 'login' })
 
       await user.type(passwordInput, 'password123')
-      
+
       expect(submitButton).toBeDisabled()
     })
 
@@ -294,7 +294,7 @@ describe('LoginForm 組件測試', () => {
 
       // 從 Remember Me checkbox 再按一次 tab 會到忘記密碼連結
       await user.tab()
-      const forgotPasswordLink = screen.getByText('forgotPassword')
+      const forgotPasswordLink = screen.getByText('signIn.forgotPassword')
       expect(forgotPasswordLink).toHaveFocus()
 
       // 填寫表單後，submit 按鈕會啟用
@@ -302,7 +302,7 @@ describe('LoginForm 組件測試', () => {
       await user.type(emailInput, 'test@example.com')
       await user.click(passwordInput)
       await user.type(passwordInput, 'password123')
-      
+
       // 按鈕現在可用，可以 tab 到它
       await user.tab() // to remember me
       await user.tab() // to forgot password
@@ -331,7 +331,7 @@ describe('LoginForm 組件測試', () => {
       // 檢查輸入欄位樣式
       expect(emailInput).toHaveClass('w-full', 'px-4', 'py-3', 'border', 'rounded-lg')
       expect(passwordInput).toHaveClass('w-full', 'px-4', 'py-3', 'border', 'rounded-lg')
-      
+
       // 檢查按鈕樣式
       expect(submitButton).toHaveClass('w-full', 'bg-blue-600', 'text-white', 'rounded-lg')
     })
