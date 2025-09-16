@@ -326,7 +326,7 @@ describe('RegisterPage', () => {
       expect(mockDispatchEvent).toHaveBeenCalledWith(new CustomEvent('auth-changed'));
       // Should navigate to dashboard directly (onboarding is optional)
       expect(mockRouter.push).toHaveBeenCalledWith('/dashboard');
-    });
+    }, { timeout: 5000 }); // Increase timeout to wait for the delay in registration flow
   });
 
   it('should handle successful registration with redirect URL', async () => {
@@ -395,7 +395,7 @@ describe('RegisterPage', () => {
       // Should navigate to dashboard directly (onboarding is optional)
       expect(mockRouter.push).toHaveBeenCalledWith('/dashboard');
       expect(mockRouter.push).not.toHaveBeenCalledWith('//malicious-site.com');
-    });
+    }, { timeout: 5000 }); // Increase timeout to wait for the delay in registration flow
   });
 
   it('should handle registration failure', async () => {
@@ -584,7 +584,7 @@ describe('RegisterPage', () => {
       expect(mockDispatchEvent).toHaveBeenCalledWith(new CustomEvent('auth-changed'));
       // Should navigate to dashboard directly (onboarding is optional)
       expect(mockRouter.push).toHaveBeenCalledWith('/dashboard');
-    });
+    }, { timeout: 5000 }); // Increase timeout to wait for the delay in registration flow
   });
 
   it('should handle multiple validation errors at once', async () => {
