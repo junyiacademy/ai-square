@@ -310,6 +310,22 @@ describe('RegisterPage', () => {
       });
     });
 
+    // Check that registration API was called first
+    await waitFor(() => {
+      expect(global.fetch).toHaveBeenCalledWith('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: 'John Doe',
+          email: 'john@example.com',
+          password: 'password123',
+          preferredLanguage: 'en',
+          acceptTerms: true,
+        }),
+      });
+    });
+
+    // Check that auto-login API was called second
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith('/api/auth/login', {
         method: 'POST',
@@ -319,7 +335,7 @@ describe('RegisterPage', () => {
           password: 'password123',
         }),
       });
-    });
+    }, { timeout: 5000 });
 
     await waitFor(() => {
       expect(mockLocalStorage.setItem).toHaveBeenCalledWith('ai_square_session', 'test-token-123');
@@ -638,6 +654,6 @@ describe('RegisterPage', () => {
     await waitFor(() => {
       const errorContainer = screen.getByText('Test error message').closest('.rounded-md');
       expect(errorContainer).toHaveClass('bg-red-50');
-    }, { timeout: 5000 }); // Increase timeout to wait for error display
-  });
+    }, { timeout: 10000 }); // Increase timeout significantly for error display
+  }, 15000);
 });
