@@ -280,7 +280,7 @@ describe('N+1 Query Detection Tests', () => {
       const response = await getDiscoveryMyPrograms(request);
 
       // Assert: No task queries should be made for inactive programs
-      expect(taskRepo.findByProgramIds).toHaveBeenCalledWith([]); // Empty array
+      expect(taskRepo.findByProgramIds).not.toHaveBeenCalled(); // Not called at all when no active programs
       expect(taskRepo.findByProgram).not.toHaveBeenCalled();
     });
   });
