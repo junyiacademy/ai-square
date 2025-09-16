@@ -26,6 +26,7 @@ const mockProgramRepository = {
 
 const mockTaskRepository = {
   findByProgram: jest.fn(),
+  findByProgramIds: jest.fn(),
 };
 
 const mockScenarioRepository = {
@@ -171,10 +172,10 @@ describe('GET /api/discovery/my-programs', () => {
     ];
 
     mockProgramRepository.findByUser.mockResolvedValue(mockPrograms);
-    mockScenarioRepository.findById.mockImplementation((id: string) => 
+    mockScenarioRepository.findById.mockImplementation((id: string) =>
       Promise.resolve(mockScenarios[id as keyof typeof mockScenarios] || null)
     );
-    mockTaskRepository.findByProgram.mockResolvedValue(mockTasks);
+    mockTaskRepository.findByProgramIds.mockResolvedValue(mockTasks);
 
     const request = new NextRequest('http://localhost:3000/api/discovery/my-programs');
     const response = await GET(request);
@@ -182,7 +183,7 @@ describe('GET /api/discovery/my-programs', () => {
 
     expect(response.status).toBe(200);
     expect(data).toHaveLength(2); // Only discovery scenarios
-    
+
     // Check first scenario (should be most recent activity)
     expect(data[0].id).toBe('discovery-career-2');
     expect(data[0].userPrograms).toMatchObject({
@@ -272,7 +273,7 @@ describe('GET /api/discovery/my-programs', () => {
       title: { en: 'Career Path' },
     });
 
-    mockTaskRepository.findByProgram.mockResolvedValue([
+    mockTaskRepository.findByProgramIds.mockResolvedValue([
       { id: 'task1', status: 'completed', completedAt: yesterday.toISOString() },
       { id: 'task2', status: 'active', startedAt: now.toISOString() },
     ]);
