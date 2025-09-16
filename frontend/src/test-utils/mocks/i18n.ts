@@ -74,7 +74,7 @@ export const defaultTranslations: Record<string, Record<string, string>> = {
   },
   ksa: {
     'excellent': 'Excellent',
-    'good': 'Good', 
+    'good': 'Good',
     'needsWork': 'Needs Work',
     'graphInstructions': 'Click nodes to see details',
     'knowledgeComponent': 'Knowledge Component',
@@ -93,41 +93,71 @@ export const defaultTranslations: Record<string, Record<string, string>> = {
     'testAccounts.student': 'Student: student@example.com / student123',
     'testAccounts.teacher': 'Teacher: teacher@example.com / teacher123',
     'testAccounts.admin': 'Admin: admin@example.com / admin123',
+    // Register page translations
+    'register.title': 'Create Account',
+    'register.subtitle': 'Already have an account?',
+    'register.signIn': 'Sign in',
+    'register.name': 'Full Name',
+    'register.namePlaceholder': 'Enter your full name',
+    'register.email': 'Email Address',
+    'register.emailPlaceholder': 'Enter your email',
+    'register.password': 'Password',
+    'register.passwordPlaceholder': 'Create a password',
+    'register.confirmPassword': 'Confirm Password',
+    'register.confirmPasswordPlaceholder': 'Confirm your password',
+    'register.agreeToTerms': 'I agree to the',
+    'register.termsOfService': 'Terms of Service',
+    'register.and': 'and',
+    'register.privacyPolicy': 'Privacy Policy',
+    'register.createAccount': 'Create Account',
+    'register.orContinueWith': 'Or continue with',
+    'register.success.accountCreated': 'Account created successfully!',
+    'register.success.loggingIn': 'Logging you in...',
+    'register.success.redirecting': 'Redirecting...',
+    'register.errors.nameRequired': 'Full name is required',
+    'register.errors.emailRequired': 'Email is required',
+    'register.errors.emailInvalid': 'Please enter a valid email',
+    'register.errors.passwordRequired': 'Password is required',
+    'register.errors.passwordTooShort': 'Password must be at least 8 characters',
+    'register.errors.passwordMismatch': 'Passwords do not match',
+    'register.errors.termsRequired': 'You must accept the terms',
+    'register.errors.registrationFailed': 'Registration failed',
+    'register.errors.networkError': 'Network error occurred',
   },
 };
 
 // 翻譯函數 mock
 export const createTranslationMock = (customTranslations?: Record<string, Record<string, string>>, defaultNamespace = 'common') => {
   const translations = { ...defaultTranslations, ...customTranslations };
-  
+
   return (key: string, options?: any) => {
     // 支援 namespace:key 格式
     const [namespace, actualKey] = key.includes(':') ? key.split(':') : [defaultNamespace, key];
-    
+
     // 支援 namespace.key 格式（點號分隔）
     const dotParts = key.split('.');
     let translation;
-    
+
     if (dotParts.length > 1) {
       // 嘗試使用點號格式查找
       translation = translations[namespace]?.[key] ||
-                   translations[dotParts[0]]?.[dotParts.slice(1).join('.')] || 
+                   translations[dotParts[0]]?.[dotParts.slice(1).join('.')] ||
                    translations[dotParts[0]]?.[dotParts[1]] ||
                    translations[defaultNamespace]?.[key] ||
                    key;
     } else {
       // 使用冒號格式或直接查找
-      translation = translations[namespace]?.[actualKey] || 
+      translation = translations[namespace]?.[actualKey] ||
                    translations[defaultNamespace]?.[actualKey] ||
-                   translations.common?.[actualKey] || 
+                   translations.common?.[actualKey] ||
                    key;
     }
-    
+
     // 處理插值
     if (options && typeof translation === 'string') {
       return translation.replace(/\{\{(\w+)\}\}/g, (match, param) => options[param] || match);
     }
-    
+
     return translation;
   };
 };

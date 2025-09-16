@@ -361,7 +361,7 @@ describe('RegisterPage', () => {
 
     await waitFor(() => {
       expect(mockRouter.push).toHaveBeenCalledWith('/pbl');
-    });
+    }, { timeout: 5000 }); // Increase timeout to wait for the delay in registration flow
   });
 
   it('should prevent open redirect vulnerabilities', async () => {
@@ -638,6 +638,6 @@ describe('RegisterPage', () => {
     await waitFor(() => {
       const errorContainer = screen.getByText('Test error message').closest('.rounded-md');
       expect(errorContainer).toHaveClass('bg-red-50');
-    });
+    }, { timeout: 5000 }); // Increase timeout to wait for error display
   });
 });
