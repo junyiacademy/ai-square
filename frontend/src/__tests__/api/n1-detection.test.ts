@@ -33,7 +33,14 @@ mockAuth.createUnauthorizedResponse = jest.fn();
 
 // Mock optimization utils to disable caching for testing
 const mockOptimizationUtils = require('@/lib/api/optimization-utils');
-mockOptimizationUtils.cachedGET = jest.fn((req, handler) => handler());
+mockOptimizationUtils.cachedGET = jest.fn(async (req, handler) => {
+  const result = await handler();
+  // Return a proper NextResponse like the real cachedGET does
+  return new Response(JSON.stringify({ ...result, cacheHit: false }), {
+    status: 200,
+    headers: { 'Content-Type': 'application/json' }
+  });
+});
 mockOptimizationUtils.getPaginationParams = jest.fn(() => ({ page: 1, limit: 10 }));
 mockOptimizationUtils.createPaginatedResponse = jest.fn((data, total, params) => ({ data, total, ...params }));
 
@@ -56,6 +63,22 @@ describe('N+1 Query Detection Tests', () => {
   let taskRepo: any;
   let evaluationRepo: any;
   let contentRepo: any;
+
+  // Helper function to create a request with user cookie
+  const createAuthenticatedRequest = (url: string) => {
+    const request = new NextRequest(url);
+    Object.defineProperty(request, 'cookies', {
+      value: {
+        get: jest.fn((name) => {
+          if (name === 'user') {
+            return { value: JSON.stringify({ email: mockUser.email }) };
+          }
+          return undefined;
+        })
+      }
+    });
+    return request;
+  };
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -126,7 +149,7 @@ describe('N+1 Query Detection Tests', () => {
       });
 
       // Act
-      const request = new NextRequest('http://localhost:3000/api/pbl/user-programs');
+      const request = createAuthenticatedRequest('http://localhost:3000/api/pbl/user-programs');
       const response = await getPblUserPrograms(request);
 
       // Assert: Verify batch loading methods were called instead of individual queries
@@ -153,7 +176,7 @@ describe('N+1 Query Detection Tests', () => {
       programRepo.findByUser.mockResolvedValue([]);
 
       // Act
-      const request = new NextRequest('http://localhost:3000/api/pbl/user-programs');
+      const request = createAuthenticatedRequest('http://localhost:3000/api/pbl/user-programs');
       const response = await getPblUserPrograms(request);
 
       // Assert: Batch methods should not be called for empty data
@@ -210,7 +233,7 @@ describe('N+1 Query Detection Tests', () => {
       taskRepo.findByProgramIds.mockResolvedValue(mockTasks);
 
       // Act
-      const request = new NextRequest('http://localhost:3000/api/discovery/my-programs');
+      const request = createAuthenticatedRequest('http://localhost:3000/api/discovery/my-programs');
       const response = await getDiscoveryMyPrograms(request);
 
       // Assert: Verify batch loading was used for scenarios
@@ -253,7 +276,7 @@ describe('N+1 Query Detection Tests', () => {
       programRepo.findByUser.mockResolvedValue(mockDiscoveryPrograms);
 
       // Act
-      const request = new NextRequest('http://localhost:3000/api/discovery/my-programs');
+      const request = createAuthenticatedRequest('http://localhost:3000/api/discovery/my-programs');
       const response = await getDiscoveryMyPrograms(request);
 
       // Assert: No task queries should be made for inactive programs
@@ -300,7 +323,7 @@ describe('N+1 Query Detection Tests', () => {
       contentRepo.getScenarioContent.mockResolvedValue({ title: { en: 'Test' } });
 
       // Act
-      const request = new NextRequest('http://localhost:3000/api/pbl/user-programs');
+      const request = createAuthenticatedRequest('http://localhost:3000/api/pbl/user-programs');
       const response = await getPblUserPrograms(request);
 
       // Assert: With our batch loading optimization:
