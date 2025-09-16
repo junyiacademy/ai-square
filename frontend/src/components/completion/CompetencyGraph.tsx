@@ -89,7 +89,7 @@ export default function CompetencyGraph({
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {tasks.map((task, index) => (
+            {tasks.map((task, _index) => (
               <div
                 key={task.taskId}
                 className="border rounded-lg p-4 hover:shadow-lg transition-all duration-200"

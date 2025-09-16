@@ -5,7 +5,7 @@ import yaml from 'js-yaml';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import type { IScenario, ITaskTemplate } from '@/types/unified-learning';
 import type { DifficultyLevel, TaskType } from '@/types/database';
-import { cacheInvalidationService } from '@/lib/cache/cache-invalidation-service';
+// import { cacheInvalidationService } from '@/lib/cache/cache-invalidation-service';
 import { distributedCacheService } from '@/lib/cache/distributed-cache-service';
 
 interface PBLTaskYAML {
@@ -192,7 +192,7 @@ export async function POST(request: NextRequest) {
 
         // Build multilingual task templates
         const taskTemplates: ITaskTemplate[] = [];
-        for (const [taskId, langVersions] of tasksByIdAndLang) {
+        for (const [_taskId, langVersions] of tasksByIdAndLang) {
           // Get English version as base, or first available
           const baseTask = langVersions.get('en') || langVersions.get(primaryLang) || Array.from(langVersions.values())[0];
 

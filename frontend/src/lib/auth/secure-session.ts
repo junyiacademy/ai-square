@@ -7,7 +7,7 @@
  */
 
 import { PostgresSession } from './postgres-session';
-import { memorySession } from './memory-session';
+// import { memorySession } from './memory-session';
 
 export interface SessionData {
   userId: string;
@@ -18,7 +18,7 @@ export interface SessionData {
 }
 
 // Always use PostgreSQL for session storage
-const usePostgreSQL = true;
+// const usePostgreSQL = true;
 
 export class SecureSession {
   /**
@@ -120,7 +120,7 @@ export class SecureSession {
   /**
    * Get all active sessions for a user (async only)
    */
-  static async getUserSessions(userId: string): Promise<string[]> {
+  static async getUserSessions(_userId: string): Promise<string[]> {
     // Not implemented yet, return empty array
     return [];
   }
@@ -128,7 +128,7 @@ export class SecureSession {
   /**
    * Revoke all sessions for a user (async only)
    */
-  static async revokeUserSessions(userId: string): Promise<void> {
+  static async revokeUserSessions(_userId: string): Promise<void> {
     // Not implemented yet
     return;
   }

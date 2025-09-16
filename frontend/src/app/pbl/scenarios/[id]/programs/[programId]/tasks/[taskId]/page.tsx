@@ -36,19 +36,19 @@ function getLocalizedField<T extends Record<string, unknown>>(obj: T | null | un
   return String(value);
 }
 
-// Helper function to get localized array field
-function getLocalizedArrayField<T extends Record<string, unknown>>(obj: T | null | undefined, fieldName: string, language: string): string[] {
-  if (!obj) return [];
-
-  // Use language code directly as suffix
-  const langSuffix = language;
-
-  const fieldWithLang = `${fieldName}_${langSuffix}`;
-
-  // Return localized field if exists, otherwise return default
-  const value = obj[fieldWithLang] || obj[fieldName] || [];
-  return Array.isArray(value) ? value.map(String) : [];
-}
+// Helper function to get localized array field - currently unused
+// function getLocalizedArrayField<T extends Record<string, unknown>>(obj: T | null | undefined, fieldName: string, language: string): string[] {
+//   if (!obj) return [];
+//
+//   // Use language code directly as suffix
+//   const langSuffix = language;
+//
+//   const fieldWithLang = `${fieldName}_${langSuffix}`;
+//
+//   // Return localized field if exists, otherwise return default
+//   const value = obj[fieldWithLang] || obj[fieldName] || [];
+//   return Array.isArray(value) ? value.map(String) : [];
+// }
 
 export default function ProgramLearningPage() {
   const params = useParams();
@@ -120,7 +120,7 @@ export default function ProgramLearningPage() {
 
       // Load program and task data using unified architecture
       let loadedProgram: Program | null = null;
-      const loadedTask: Task | null = null;
+      const _loadedTask: Task | null = null;
 
       if (!programId.startsWith('temp_')) {
         try {
@@ -155,8 +155,8 @@ export default function ProgramLearningPage() {
                     const taskData = await taskRes.json();
                     if (taskData) {
                       // Extract task template data from unified architecture format
-                      const taskTemplate = taskData.content?.context?.taskTemplate || {};
-                      const originalTaskData = taskData.content?.context?.originalTaskData || {};
+                      const _taskTemplate = taskData.content?.context?.taskTemplate || {};
+                      const _originalTaskData = taskData.content?.context?.originalTaskData || {};
 
                       // Removed this section - task loading is properly handled by loadTaskData() with multilingual support
                     }

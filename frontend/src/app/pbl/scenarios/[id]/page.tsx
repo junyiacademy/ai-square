@@ -550,32 +550,7 @@ export default function ScenarioDetailPage() {
             {/** acceptable shapes: string | string[] | Record<string,string> | Record<string,string[]> */}
             {/** fallback: try to stringify non-primitive safely */}
             {/** never render [object Object] */}
-            {(() => {
-              function normalizeInstructions(input: unknown, lang: string): string[] {
-              if (!input) return []
-              if (Array.isArray(input)) {
-                return input
-                  .map((v) => (typeof v === 'string' ? v : typeof v === 'object' && v !== null && 'text' in (v as any) ? String((v as any).text) : JSON.stringify(v)))
-                  .filter((s) => typeof s === 'string' && s.trim().length > 0)
-              }
-              if (typeof input === 'string') return [input]
-              if (typeof input === 'object' && input !== null) {
-                const obj = input as Record<string, unknown>
-                // language-specific string[]
-                if (Array.isArray(obj[lang])) {
-                  return (obj[lang] as unknown[]).map((v) => (typeof v === 'string' ? v : JSON.stringify(v)))
-                }
-                // language-specific string
-                if (typeof obj[lang] === 'string') return [String(obj[lang])]
-                // english fallback
-                if (Array.isArray(obj.en)) return (obj.en as unknown[]).map((v) => (typeof v === 'string' ? v : JSON.stringify(v)))
-                if (typeof obj.en === 'string') return [String(obj.en)]
-              }
-              // last resort
-              try { return [JSON.stringify(input)] } catch { return [] }
-            }
-            return null;
-            })()}
+            {/* Instructions display removed - using existing normalizeInstructions function in individual task rendering below */}
             {(getScenarioData('tasks', []) as Record<string, unknown>[]).map((task: Record<string, unknown>, taskIndex: number) => (
               <div key={(task.id as string) || taskIndex} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
                 <div className="flex items-start justify-between mb-2">
@@ -600,7 +575,7 @@ export default function ScenarioDetailPage() {
                 {/* Instructions */}
                 {(() => {
                   // Re-use the normalizeInstructions function from top of file
-                  const instructions = normalizeInstructions((task as any).instructions, i18n.language)
+                  const instructions = normalizeInstructions((task as Record<string, unknown>).instructions, i18n.language)
                   return instructions.length > 0 ? (
                   <div className="mb-3">
                     <p className="text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">

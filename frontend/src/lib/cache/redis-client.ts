@@ -52,7 +52,7 @@ export async function getRedisClient(): Promise<Redis | null> {
       });
 
       // Set up event handlers
-      redisClient.on('error', (err) => {
+      redisClient.on('error', (_err) => {
         // Silently ignore Redis connection errors - will fallback to memory
         // console.error('[Redis] Connection error:', err.message);
       });
@@ -72,7 +72,7 @@ export async function getRedisClient(): Promise<Redis | null> {
       await redisClient.ping();
 
       return redisClient;
-    } catch (error) {
+    } catch (_error) {
       // Silently fallback to in-memory storage
       redisClient = null;
       return null;

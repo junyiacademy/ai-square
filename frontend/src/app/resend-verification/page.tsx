@@ -6,7 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 export default function ResendVerificationPage() {
-  const { t } = useTranslation(['auth', 'common']);
+  const { t: _t } = useTranslation(['auth', 'common']);
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);

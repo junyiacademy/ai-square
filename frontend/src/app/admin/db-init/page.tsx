@@ -370,11 +370,11 @@ export default function DatabaseInitPage() {
           <li>• <strong>Add New Only</strong>: Add new scenarios/data, skip existing ones (smart sync)</li>
           <li>• <strong>Update All</strong>: Update existing data with latest version from YAML files</li>
           <li>• <strong>Clear All</strong>: Delete everything and start fresh (destructive)</li>
-          <li>• Use "Refresh Status" to check current database state</li>
+          <li>• Use &quot;Refresh Status&quot; to check current database state</li>
         </ul>
         <div className="mt-3 p-3 bg-blue-50 rounded">
           <p className="text-sm text-blue-800">
-            <strong>💡 Tip:</strong> For PBL scenarios, "Add New Only" is the safest option - it will only add the new semiconductor_adventure scenario without affecting existing data.
+            <strong>💡 Tip:</strong> For PBL scenarios, &quot;Add New Only&quot; is the safest option - it will only add the new semiconductor_adventure scenario without affecting existing data.
           </p>
         </div>
       </div>
