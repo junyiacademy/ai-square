@@ -68,12 +68,33 @@ export default function ResendVerificationPage() {
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
               驗證郵件已發送
             </h2>
-            <p className="mt-2 text-gray-600 dark:text-gray-400">
-              請檢查您的電子郵件收件箱，點擊驗證連結完成帳戶驗證
-            </p>
+            <div className="mt-4 space-y-3">
+              <p className="text-gray-600 dark:text-gray-400">
+                請檢查您的電子郵件收件箱，點擊驗證連結完成帳戶驗證
+              </p>
+              <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                <h3 className="text-sm font-medium text-blue-800 dark:text-blue-200 mb-2">📧 收信提醒</h3>
+                <ul className="text-sm text-blue-700 dark:text-blue-300 space-y-1">
+                  <li>• 請檢查垃圾郵件資料夾</li>
+                  <li>• 郵件可能需要 1-2 分鐘送達</li>
+                  <li>• 如果 5 分鐘後仍未收到，請再次嘗試</li>
+                  <li>• 確認電子郵件地址是否正確：<span className="font-mono">{email}</span></li>
+                </ul>
+              </div>
+            </div>
           </div>
 
-          <div className="mt-8">
+          <div className="mt-8 space-y-3">
+            <button
+              onClick={() => {
+                setSuccess(false);
+                setAlreadyVerified(false);
+                setError('');
+              }}
+              className="w-full flex justify-center py-3 px-4 border border-blue-600 rounded-md shadow-sm text-sm font-medium text-blue-600 bg-white hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-blue-400 dark:border-blue-500 dark:hover:bg-gray-700"
+            >
+              重新發送驗證郵件
+            </button>
             <Link
               href="/login"
               className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
