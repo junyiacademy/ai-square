@@ -38,7 +38,7 @@ describe('/api/admin/seed-users', () => {
     it('should handle INSERT with all required fields including timestamps', async () => {
       // Mock existing user check
       mockPool.query.mockResolvedValueOnce({ rows: [] });
-      
+
       // Mock successful insert
       mockPool.query.mockResolvedValueOnce({ rowCount: 1 });
 
@@ -59,7 +59,7 @@ describe('/api/admin/seed-users', () => {
 
       expect(response.status).toBe(200);
       expect(data.success).toBe(true);
-      
+
       // Check that the INSERT query includes all required fields
       const insertCall = mockPool.query.mock.calls[1];
       expect(insertCall[0]).toContain('INSERT INTO users');
@@ -73,7 +73,7 @@ describe('/api/admin/seed-users', () => {
     it('should handle database error for missing required fields', async () => {
       // Mock existing user check
       mockPool.query.mockResolvedValueOnce({ rows: [] });
-      
+
       // Mock insert failure due to missing field
       mockPool.query.mockRejectedValueOnce(
         new Error('null value in column "updated_at" of relation "users" violates not-null constraint')
@@ -96,8 +96,10 @@ describe('/api/admin/seed-users', () => {
 
       expect(response.status).toBe(200);
       expect(data.success).toBe(false);
-      expect(data.results[0].status).toBe('failed');
-      expect(data.results[0].error).toContain('null value in column "updated_at"');
+      expect(data.results.details).toBeDefined();
+      expect(Array.isArray(data.results.details)).toBe(true);
+      expect(data.results.details[0].status).toBe('failed');
+      expect(data.results.details[0].error).toContain('null value in column "updated_at"');
     });
 
     it('should verify gen_random_uuid() is used for ID generation', async () => {
@@ -128,10 +130,10 @@ describe('/api/admin/seed-users', () => {
   describe('User Creation', () => {
     it('should update existing users', async () => {
       // Mock existing user
-      mockPool.query.mockResolvedValueOnce({ 
-        rows: [{ id: 'existing-user-id' }] 
+      mockPool.query.mockResolvedValueOnce({
+        rows: [{ id: 'existing-user-id' }]
       });
-      
+
       // Mock successful update
       mockPool.query.mockResolvedValueOnce({ rowCount: 1 });
 
@@ -152,8 +154,10 @@ describe('/api/admin/seed-users', () => {
 
       expect(response.status).toBe(200);
       expect(data.success).toBe(true);
-      expect(data.results[0].status).toBe('updated');
-      
+      expect(data.results.details).toBeDefined();
+      expect(Array.isArray(data.results.details)).toBe(true);
+      expect(data.results.details[0].status).toBe('updated');
+
       // Check UPDATE query
       const updateCall = mockPool.query.mock.calls[1];
       expect(updateCall[0]).toContain('UPDATE users');
@@ -164,11 +168,11 @@ describe('/api/admin/seed-users', () => {
       // First user - doesn't exist, create succeeds
       mockPool.query.mockResolvedValueOnce({ rows: [] });
       mockPool.query.mockResolvedValueOnce({ rowCount: 1 });
-      
+
       // Second user - exists, update succeeds
       mockPool.query.mockResolvedValueOnce({ rows: [{ id: 'user-2' }] });
       mockPool.query.mockResolvedValueOnce({ rowCount: 1 });
-      
+
       // Third user - doesn't exist, create fails
       mockPool.query.mockResolvedValueOnce({ rows: [] });
       mockPool.query.mockRejectedValueOnce(new Error('Database error'));
