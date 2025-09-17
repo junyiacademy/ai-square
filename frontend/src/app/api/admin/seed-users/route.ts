@@ -26,11 +26,15 @@ export async function POST(request: NextRequest) {
 
     // Allow override from request body for testing, but use defaults if not provided
     let users: UserSeed[] = defaultUsers;
+    let cleanMode = false;
 
     try {
       const body = await request.json();
       if (body.users && Array.isArray(body.users) && body.users.length > 0) {
         users = body.users;
+      }
+      if (body.clean === true) {
+        cleanMode = true;
       }
     } catch {
       // If no body or invalid JSON, use defaults
@@ -66,6 +70,15 @@ export async function POST(request: NextRequest) {
       }
 
       pool = new Pool(dbConfig);
+    }
+
+    // Clean mode: delete all existing users before seeding
+    let deletedCount = 0;
+    if (cleanMode) {
+      console.log('🧹 Clean mode: Deleting all existing users...');
+      const deleteResult = await pool.query('DELETE FROM users');
+      deletedCount = deleteResult.rowCount || 0;
+      console.log(`✅ Deleted ${deletedCount} existing users`);
     }
 
     const results = await Promise.all(
@@ -122,10 +135,20 @@ export async function POST(request: NextRequest) {
     const updated = results.filter(r => r.status === 'updated').length;
     const failed = results.filter(r => r.status === 'failed').length;
 
+    const message = cleanMode
+      ? `Clean mode: Deleted ${deletedCount} users, Created: ${created}, Failed: ${failed}`
+      : `Created: ${created}, Updated: ${updated}, Failed: ${failed}`;
+
     return NextResponse.json({
       success: failed === 0,
-      message: `Created: ${created}, Updated: ${updated}, Failed: ${failed}`,
-      results
+      message,
+      results: {
+        ...(!cleanMode && { updated }),
+        created,
+        failed,
+        ...(cleanMode && { deleted: deletedCount }),
+        details: results
+      }
     });
 
   } catch (error) {
