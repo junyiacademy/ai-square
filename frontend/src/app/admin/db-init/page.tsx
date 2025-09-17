@@ -89,7 +89,8 @@ export default function DatabaseInitPage() {
               { email: 'student@example.com', password: 'student123', role: 'student', name: 'Demo Student' },
               { email: 'teacher@example.com', password: 'teacher123', role: 'teacher', name: 'Demo Teacher' },
               { email: 'admin@example.com', password: 'admin123', role: 'admin', name: 'Demo Admin' }
-            ]
+            ],
+            ...options // Include clean/force options for users too!
           }
         : { ...options }; // Pass force/clean options for PBL, Assessment, Discovery
 
