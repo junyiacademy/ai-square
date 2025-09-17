@@ -79,59 +79,25 @@ function RegisterContent() {
       const data = await response.json();
 
       if (data.success) {
-        // Show success message
-        setSuccessMessage(t('auth:register.success.accountCreated'));
-        setErrors({});
+        // Keep email for reference in success display
+        const registeredEmail = formData.email;
 
-        // Wait 1 second to show the success message
-        await new Promise(resolve => setTimeout(resolve, 1000));
-
-        // Update success message for auto-login
-        setSuccessMessage(t('auth:register.success.loggingIn'));
-
-        // Auto-login after successful registration
-        const loginResponse = await fetch('/api/auth/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            email: formData.email,
-            password: formData.password,
-          }),
+        // Clear form
+        setFormData({
+          name: '',
+          email: registeredEmail, // Keep email for resend functionality
+          password: '',
+          confirmPassword: '',
+          acceptTerms: false,
+          preferredLanguage: 'en'
         });
 
-        const loginData = await loginResponse.json();
+        // Show success - email is kept in formData for display
+        setSuccessMessage('success');
+        setErrors({});
 
-        if (loginData.success) {
-          // Authentication is now handled by cookies set in the API response
-
-          // Store session token if provided
-          if (loginData.sessionToken) {
-            localStorage.setItem('ai_square_session', loginData.sessionToken);
-          }
-
-          // Show redirect message
-          setSuccessMessage(t('auth:register.success.redirecting'));
-
-          window.dispatchEvent(new CustomEvent('auth-changed'));
-
-          // Wait a bit more to show the redirect message
-          await new Promise(resolve => setTimeout(resolve, 1000));
-
-          // Check if there's a redirect URL
-          const redirectUrl = searchParams.get('redirect');
-
-          if (redirectUrl) {
-            // Validate redirect URL to prevent open redirect vulnerabilities
-            const isValidRedirect = redirectUrl.startsWith('/') && !redirectUrl.startsWith('//');
-            if (isValidRedirect) {
-              router.push(redirectUrl);
-              return;
-            }
-          }
-
-          // Default to dashboard - onboarding is optional
-          router.push('/dashboard');
-        }
+        // Don't try to auto-login since email is not verified yet
+        // The user will be redirected to login page after email verification
       } else {
         setErrors({ submit: data.error || t('auth:register.errors.registrationFailed') });
       }
@@ -159,7 +125,7 @@ function RegisterContent() {
       });
 
       if (response.ok) {
-        setSuccessMessage('Verification email sent! Please check your inbox.');
+        setSuccessMessage('success'); // Use same success state to show enhanced message
         setErrors({});
       } else {
         setErrors({ submit: 'Failed to send verification email. Please try again.' });
@@ -303,15 +269,77 @@ function RegisterContent() {
           </div>
 
           {successMessage && (
-            <div className="rounded-md bg-green-50 dark:bg-green-900/20 p-4">
-              <div className="flex">
+            <div className="rounded-lg bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 border-2 border-green-300 dark:border-green-700 p-6 shadow-lg">
+              <div className="flex items-start">
                 <div className="flex-shrink-0">
-                  <svg className="h-5 w-5 text-green-400 animate-pulse" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
+                  <div className="flex items-center justify-center h-12 w-12 rounded-full bg-green-100 dark:bg-green-800">
+                    <svg className="h-6 w-6 text-green-600 dark:text-green-400 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                    </svg>
+                  </div>
                 </div>
-                <div className="ml-3">
-                  <p className="text-sm text-green-800 dark:text-green-200 font-medium">{successMessage}</p>
+                <div className="ml-4 flex-1">
+                  <h3 className="text-lg font-semibold text-green-900 dark:text-green-100 mb-2">
+                    Registration Successful! 🎉
+                  </h3>
+                  <p className="text-green-800 dark:text-green-200 mb-3">
+                    We've sent a verification email to:
+                  </p>
+                  <p className="font-mono text-base bg-white dark:bg-gray-800 px-3 py-2 rounded-md text-gray-900 dark:text-gray-100 mb-4 inline-block">
+                    {formData.email}
+                  </p>
+
+                  <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-4 mb-4">
+                    <h4 className="text-sm font-semibold text-green-900 dark:text-green-100 mb-2">📧 Next Steps:</h4>
+                    <ul className="text-sm text-green-700 dark:text-green-300 space-y-1">
+                      <li className="flex items-start">
+                        <span className="text-green-500 mr-2">✓</span>
+                        Check your email inbox for our verification message
+                      </li>
+                      <li className="flex items-start">
+                        <span className="text-green-500 mr-2">✓</span>
+                        Click the verification link in the email
+                      </li>
+                      <li className="flex items-start">
+                        <span className="text-green-500 mr-2">✓</span>
+                        You'll be redirected to login once verified
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3 mb-4">
+                    <p className="text-sm text-yellow-800 dark:text-yellow-200">
+                      <strong>Can't find the email?</strong> Check your spam folder or wait 1-2 minutes for delivery.
+                    </p>
+                  </div>
+
+                  <div className="flex gap-3">
+                    <button
+                      type="button"
+                      onClick={handleResendVerification}
+                      disabled={resendingVerification}
+                      className="inline-flex items-center px-4 py-2 border border-green-600 text-sm font-medium rounded-md text-green-700 bg-white hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-800 dark:text-green-400 dark:border-green-500 dark:hover:bg-gray-700"
+                    >
+                      {resendingVerification ? (
+                        <>
+                          <svg className="animate-spin -ml-1 mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          </svg>
+                          Sending...
+                        </>
+                      ) : (
+                        'Resend Verification Email'
+                      )}
+                    </button>
+
+                    <Link
+                      href="/login"
+                      className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                    >
+                      Go to Login Page
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>
@@ -391,14 +419,16 @@ function RegisterContent() {
               disabled={loading || !!successMessage}
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
             >
-              {loading || successMessage ? (
+              {loading ? (
                 <div className="flex items-center">
                   <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  {successMessage || t('common:loading')}
+                  {t('common:loading')}
                 </div>
+              ) : successMessage ? (
+                <span className="opacity-75">Registration Complete</span>
               ) : (
                 t('auth:register.createAccount')
               )}
