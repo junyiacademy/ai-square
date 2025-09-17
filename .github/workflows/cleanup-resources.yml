@@ -132,6 +132,7 @@ jobs:
 
       - name: Clean up GCR images
         run: |
+          set +e  # Don't exit on error
           echo ""
           echo "🧹 Starting GCR images cleanup..."
           echo "================================================"
@@ -199,7 +200,9 @@ jobs:
                     FAILED_COUNT=$((FAILED_COUNT + 1))
                     echo "      ❌ Failed to delete"
                     # Check for common error patterns
-                    if echo "$DELETE_OUTPUT" | grep -q "V2DiagnosticException"; then
+                    if echo "$DELETE_OUTPUT" | grep -q "referenced by"; then
+                      echo "      ⚠️ Image is referenced by parent images (cannot delete)"
+                    elif echo "$DELETE_OUTPUT" | grep -q "V2DiagnosticException"; then
                       echo "      ⚠️ Registry error (possibly phantom image)"
                     elif echo "$DELETE_OUTPUT" | grep -q "404"; then
                       echo "      ⚠️ Image not found (already deleted?)"
