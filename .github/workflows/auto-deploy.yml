@@ -469,7 +469,7 @@ jobs:
             --service=${SERVICE_NAME} \
             --region=${{ env.REGION }} \
             --sort-by="~metadata.creationTimestamp" \
-            --format="value(metadata.name)" 2>/dev/null)
+            --format="value(metadata.name)")
 
           # Count total revisions
           TOTAL=$(echo "$REVISIONS" | wc -l)
@@ -485,7 +485,7 @@ jobs:
                 echo "  🗑️ Deleting revision: $REVISION"
                 gcloud run revisions delete $REVISION \
                   --region=${{ env.REGION }} \
-                  --quiet 2>/dev/null || echo "    ⚠️ Could not delete $REVISION (might be in use)"
+                  --quiet || echo "    ⚠️ Could not delete $REVISION (might be in use)"
               fi
             done
 
