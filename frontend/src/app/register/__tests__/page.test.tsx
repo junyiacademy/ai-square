@@ -268,21 +268,12 @@ describe('RegisterPage', () => {
     });
   });
 
-  it('should handle successful registration and auto-login', async () => {
+  it('should handle successful registration and show success message', async () => {
     // Mock successful registration
-    (global.fetch as jest.Mock)
-      .mockResolvedValueOnce({
-        ok: true,
-        json: () => Promise.resolve({ success: true }),
-      })
-      // Mock successful login
-      .mockResolvedValueOnce({
-        ok: true,
-        json: () => Promise.resolve({
-          success: true,
-          sessionToken: 'test-token-123',
-        }),
-      });
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve({ success: true }),
+    });
 
     renderWithProviders(<RegisterPage />);
 
@@ -296,6 +287,7 @@ describe('RegisterPage', () => {
     const submitButton = screen.getByRole('button', { name: 'Create Account' });
     fireEvent.click(submitButton);
 
+    // Check that registration API was called
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith('/api/auth/register', {
         method: 'POST',
@@ -310,60 +302,41 @@ describe('RegisterPage', () => {
       });
     });
 
-    // Check that registration API was called first
+    // Check that success message is displayed
     await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledWith('/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: 'John Doe',
-          email: 'john@example.com',
-          password: 'password123',
-          preferredLanguage: 'en',
-          acceptTerms: true,
-        }),
-      });
+      expect(screen.getByText('Registration Successful! 🎉')).toBeInTheDocument();
+      expect(screen.getByText('We\'ve sent a verification email to:')).toBeInTheDocument();
+      expect(screen.getByText('john@example.com')).toBeInTheDocument();
+      expect(screen.getByText('Resend Verification Email')).toBeInTheDocument();
+      expect(screen.getByText('Go to Login Page')).toBeInTheDocument();
     });
 
-    // Check that auto-login API was called second
+    // Check that button shows completion state
     await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledWith('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email: 'john@example.com',
-          password: 'password123',
-        }),
-      });
-    }, { timeout: 5000 });
+      expect(screen.getByText('Registration Complete')).toBeInTheDocument();
+    });
 
-    await waitFor(() => {
-      expect(mockLocalStorage.setItem).toHaveBeenCalledWith('ai_square_session', 'test-token-123');
-      expect(mockDispatchEvent).toHaveBeenCalledWith(new CustomEvent('auth-changed'));
-      // Should navigate to dashboard directly (onboarding is optional)
-      expect(mockRouter.push).toHaveBeenCalledWith('/dashboard');
-    }, { timeout: 5000 }); // Increase timeout to wait for the delay in registration flow
+    // Verify no auto-login occurred
+    expect(global.fetch).toHaveBeenCalledTimes(1); // Only registration call
+    expect(mockLocalStorage.setItem).not.toHaveBeenCalled();
+    expect(mockRouter.push).not.toHaveBeenCalled();
   });
 
-  it('should handle successful registration with redirect URL', async () => {
+  it('should handle successful registration with redirect URL and show success message', async () => {
     mockSearchParams.get.mockImplementation((key) =>
       key === 'redirect' ? '/pbl' : null
     );
 
-    (global.fetch as jest.Mock)
-      .mockResolvedValueOnce({
-        ok: true,
-        json: () => Promise.resolve({ success: true }),
-      })
-      .mockResolvedValueOnce({
-        ok: true,
-        json: () => Promise.resolve({
-          success: true,
-          sessionToken: 'test-token-123',
-        }),
-      });
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve({ success: true }),
+    });
 
     renderWithProviders(<RegisterPage />);
+
+    // Verify redirect URL is preserved in sign in link
+    const signInLink = screen.getByText('Sign in');
+    expect(signInLink).toHaveAttribute('href', '/login?redirect=%2Fpbl');
 
     // Fill out form
     fireEvent.change(screen.getByLabelText('Full Name'), { target: { value: 'John Doe' } });
@@ -375,44 +348,20 @@ describe('RegisterPage', () => {
     const submitButton = screen.getByRole('button', { name: 'Create Account' });
     fireEvent.click(submitButton);
 
+    // Check that success message is displayed instead of navigation
     await waitFor(() => {
-      expect(mockRouter.push).toHaveBeenCalledWith('/pbl');
-    }, { timeout: 5000 }); // Increase timeout to wait for the delay in registration flow
+      expect(screen.getByText('Registration Successful! 🎉')).toBeInTheDocument();
+      expect(screen.getByText('We\'ve sent a verification email to:')).toBeInTheDocument();
+    });
+
+    // Verify no automatic navigation occurred
+    expect(mockRouter.push).not.toHaveBeenCalled();
+
+    // Check that login link in success message preserves redirect
+    const loginButton = screen.getByText('Go to Login Page');
+    expect(loginButton).toHaveAttribute('href', '/login');
   });
 
-  it('should prevent open redirect vulnerabilities', async () => {
-    mockSearchParams.get.mockImplementation((key) =>
-      key === 'redirect' ? '//malicious-site.com' : null
-    );
-
-    (global.fetch as jest.Mock)
-      .mockResolvedValueOnce({
-        ok: true,
-        json: () => Promise.resolve({ success: true }),
-      })
-      .mockResolvedValueOnce({
-        ok: true,
-        json: () => Promise.resolve({ success: true }),
-      });
-
-    renderWithProviders(<RegisterPage />);
-
-    // Fill out form
-    fireEvent.change(screen.getByLabelText('Full Name'), { target: { value: 'John Doe' } });
-    fireEvent.change(screen.getByLabelText('Email Address'), { target: { value: 'john@example.com' } });
-    fireEvent.change(screen.getByLabelText('Password'), { target: { value: 'password123' } });
-    fireEvent.change(screen.getByLabelText('Confirm Password'), { target: { value: 'password123' } });
-    fireEvent.click(screen.getByLabelText(/I agree to the/));
-
-    const submitButton = screen.getByRole('button', { name: 'Create Account' });
-    fireEvent.click(submitButton);
-
-    await waitFor(() => {
-      // Should navigate to dashboard directly (onboarding is optional)
-      expect(mockRouter.push).toHaveBeenCalledWith('/dashboard');
-      expect(mockRouter.push).not.toHaveBeenCalledWith('//malicious-site.com');
-    }, { timeout: 5000 }); // Increase timeout to wait for the delay in registration flow
-  });
 
   it('should handle registration failure', async () => {
     (global.fetch as jest.Mock).mockResolvedValueOnce({
@@ -435,9 +384,20 @@ describe('RegisterPage', () => {
     const submitButton = screen.getByRole('button', { name: 'Create Account' });
     fireEvent.click(submitButton);
 
+    // Check that error message is displayed with proper styling
     await waitFor(() => {
       expect(screen.getByText('Email already exists')).toBeInTheDocument();
-      expect(mockRouter.push).not.toHaveBeenCalled();
+      const errorContainer = screen.getByText('Email already exists').closest('.rounded-md');
+      expect(errorContainer).toHaveClass('bg-red-50');
+    });
+
+    // Verify no navigation or success state occurred
+    expect(mockRouter.push).not.toHaveBeenCalled();
+    expect(screen.queryByText('Registration Successful! 🎉')).not.toBeInTheDocument();
+
+    // Check that resend verification button is shown for email conflict
+    await waitFor(() => {
+      expect(screen.getByText('Resend verification email')).toBeInTheDocument();
     });
   });
 
@@ -495,7 +455,7 @@ describe('RegisterPage', () => {
     }, { timeout: 500 });
   });
 
-  it('should handle auto-login failure after successful registration', async () => {
+  it('should show resend verification button functionality', async () => {
     (global.fetch as jest.Mock)
       .mockResolvedValueOnce({
         ok: true,
@@ -503,7 +463,7 @@ describe('RegisterPage', () => {
       })
       .mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve({ success: false, error: 'Login failed' }),
+        json: () => Promise.resolve({ success: true }),
       });
 
     renderWithProviders(<RegisterPage />);
@@ -518,10 +478,27 @@ describe('RegisterPage', () => {
     const submitButton = screen.getByRole('button', { name: 'Create Account' });
     fireEvent.click(submitButton);
 
+    // Wait for success message to appear
     await waitFor(() => {
-      expect(mockRouter.push).not.toHaveBeenCalled();
-      expect(mockLocalStorage.setItem).not.toHaveBeenCalled();
+      expect(screen.getByText('Registration Successful! 🎉')).toBeInTheDocument();
     });
+
+    // Test resend verification functionality
+    const resendButton = screen.getByText('Resend Verification Email');
+    fireEvent.click(resendButton);
+
+    // Should call resend endpoint
+    await waitFor(() => {
+      expect(global.fetch).toHaveBeenCalledWith('/api/auth/resend-verification', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: 'john@example.com' }),
+      });
+    });
+
+    // Verify no session management occurred
+    expect(mockRouter.push).not.toHaveBeenCalled();
+    expect(mockLocalStorage.setItem).not.toHaveBeenCalled();
   });
 
   // OAuth buttons removed per user request - only email registration now
@@ -572,16 +549,11 @@ describe('RegisterPage', () => {
     }
   });
 
-  it('should handle successful registration without session token', async () => {
-    (global.fetch as jest.Mock)
-      .mockResolvedValueOnce({
-        ok: true,
-        json: () => Promise.resolve({ success: true }),
-      })
-      .mockResolvedValueOnce({
-        ok: true,
-        json: () => Promise.resolve({ success: true }),
-      });
+  it('should handle successful registration and show email verification instructions', async () => {
+    (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve({ success: true }),
+    });
 
     renderWithProviders(<RegisterPage />);
 
@@ -595,12 +567,24 @@ describe('RegisterPage', () => {
     const submitButton = screen.getByRole('button', { name: 'Create Account' });
     fireEvent.click(submitButton);
 
+    // Check that success message with email verification instructions is displayed
     await waitFor(() => {
-      expect(mockLocalStorage.setItem).not.toHaveBeenCalled();
-      expect(mockDispatchEvent).toHaveBeenCalledWith(new CustomEvent('auth-changed'));
-      // Should navigate to dashboard directly (onboarding is optional)
-      expect(mockRouter.push).toHaveBeenCalledWith('/dashboard');
-    }, { timeout: 5000 }); // Increase timeout to wait for the delay in registration flow
+      expect(screen.getByText('Registration Successful! 🎉')).toBeInTheDocument();
+      expect(screen.getByText('We\'ve sent a verification email to:')).toBeInTheDocument();
+      expect(screen.getByText('john@example.com')).toBeInTheDocument();
+      expect(screen.getByText('Check your email inbox for our verification message')).toBeInTheDocument();
+      expect(screen.getByText('Click the verification link in the email')).toBeInTheDocument();
+      expect(screen.getByText('You\'ll be redirected to login once verified')).toBeInTheDocument();
+    });
+
+    // Verify no session management occurred since email verification is required
+    expect(mockLocalStorage.setItem).not.toHaveBeenCalled();
+    expect(mockDispatchEvent).not.toHaveBeenCalledWith(new CustomEvent('auth-changed'));
+    expect(mockRouter.push).not.toHaveBeenCalled();
+
+    // Check that action buttons are available
+    expect(screen.getByText('Resend Verification Email')).toBeInTheDocument();
+    expect(screen.getByText('Go to Login Page')).toBeInTheDocument();
   });
 
   it('should handle multiple validation errors at once', async () => {
@@ -651,9 +635,19 @@ describe('RegisterPage', () => {
     const submitButton = screen.getByRole('button', { name: 'Create Account' });
     fireEvent.click(submitButton);
 
+    // First check that error message appears
     await waitFor(() => {
-      const errorContainer = screen.getByText('Test error message').closest('.rounded-md');
+      expect(screen.getByText('Test error message')).toBeInTheDocument();
+    }, { timeout: 5000 });
+
+    // Then check styling once element is found
+    await waitFor(() => {
+      const errorMessage = screen.getByText('Test error message');
+      const errorContainer = errorMessage.closest('.rounded-md');
       expect(errorContainer).toHaveClass('bg-red-50');
-    }, { timeout: 10000 }); // Increase timeout significantly for error display
-  }, 15000);
+    }, { timeout: 2000 });
+
+    // Verify no success state is shown
+    expect(screen.queryByText('Registration Successful! 🎉')).not.toBeInTheDocument();
+  });
 });
