@@ -21,13 +21,13 @@ export async function POST(request: NextRequest) {
 
     // Always return success (anti-enumeration)
     if (userRes.rows.length === 0) {
-      return NextResponse.json({ success: true })
+      return NextResponse.json({ success: true, status: 'not_found' })
     }
 
     const user = userRes.rows[0]
-    // If already verified, also return success
+    // If already verified, return success with status
     if (user.email_verified) {
-      return NextResponse.json({ success: true })
+      return NextResponse.json({ success: true, status: 'already_verified' })
     }
 
     // Generate a new token and update
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
     const { html, text } = renderVerifyEmail(display, verifyUrl)
     await sendEmail({ to: email, subject: 'Verify your email', html, text })
 
-    return NextResponse.json({ success: true })
+    return NextResponse.json({ success: true, status: 'sent' })
   } catch (err) {
     console.error('[resend-verification] error', err)
     return NextResponse.json({ success: false, error: 'Request failed' }, { status: 500 })
