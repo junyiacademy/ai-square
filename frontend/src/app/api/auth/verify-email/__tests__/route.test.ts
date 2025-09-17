@@ -11,8 +11,16 @@ jest.mock('@/lib/auth/simple-auth', () => {
 })
 
 describe('/api/auth/verify-email', () => {
+  const originalEnv = process.env
+
   beforeEach(() => {
     jest.clearAllMocks()
+    // Set APP_BASE_URL for tests
+    process.env.APP_BASE_URL = 'http://localhost:3000'
+  })
+
+  afterEach(() => {
+    process.env = originalEnv
   })
 
   it('verifies with valid token and redirects success', async () => {
