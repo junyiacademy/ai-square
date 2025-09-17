@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getPool } from '@/lib/auth/simple-auth'
+import { appBaseUrl } from '@/lib/email/mailer'
 import crypto from 'crypto'
 
 function hashToken(raw: string) {
@@ -28,12 +29,14 @@ export async function GET(request: NextRequest) {
       [now, email, tokenHash]
     )
 
+    const baseUrl = appBaseUrl(request.headers.get('origin') || undefined)
+
     if (result.rowCount === 0) {
       // Invalid or already verified
-      return NextResponse.redirect(new URL('/login?verified=0', request.url))
+      return NextResponse.redirect(new URL('/login?verified=0', baseUrl))
     }
 
-    return NextResponse.redirect(new URL('/login?verified=1', request.url))
+    return NextResponse.redirect(new URL('/login?verified=1', baseUrl))
   } catch (err) {
     console.error('[verify-email] error', err)
     return NextResponse.json({ success: false, error: 'Verification failed' }, { status: 500 })
