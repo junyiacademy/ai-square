@@ -120,6 +120,7 @@ export default function ProgramLearningPage() {
 
       // Load program and task data using unified architecture
       let loadedProgram: Program | null = null;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const _loadedTask: Task | null = null;
 
       if (!programId.startsWith('temp_')) {
@@ -155,7 +156,9 @@ export default function ProgramLearningPage() {
                     const taskData = await taskRes.json();
                     if (taskData) {
                       // Extract task template data from unified architecture format
+                      // eslint-disable-next-line @typescript-eslint/no-unused-vars
                       const _taskTemplate = taskData.content?.context?.taskTemplate || {};
+                      // eslint-disable-next-line @typescript-eslint/no-unused-vars
                       const _originalTaskData = taskData.content?.context?.originalTaskData || {};
 
                       // Removed this section - task loading is properly handled by loadTaskData() with multilingual support

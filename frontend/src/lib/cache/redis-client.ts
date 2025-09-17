@@ -52,6 +52,7 @@ export async function getRedisClient(): Promise<Redis | null> {
       });
 
       // Set up event handlers
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       redisClient.on('error', (_err) => {
         // Silently ignore Redis connection errors - will fallback to memory
         // console.error('[Redis] Connection error:', err.message);
@@ -72,6 +73,7 @@ export async function getRedisClient(): Promise<Redis | null> {
       await redisClient.ping();
 
       return redisClient;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (_error) {
       // Silently fallback to in-memory storage
       redisClient = null;

@@ -192,6 +192,7 @@ export async function POST(request: NextRequest) {
 
         // Build multilingual task templates
         const taskTemplates: ITaskTemplate[] = [];
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         for (const [_taskId, langVersions] of tasksByIdAndLang) {
           // Get English version as base, or first available
           const baseTask = langVersions.get('en') || langVersions.get(primaryLang) || Array.from(langVersions.values())[0];

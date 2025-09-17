@@ -120,6 +120,7 @@ export class SecureSession {
   /**
    * Get all active sessions for a user (async only)
    */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   static async getUserSessions(_userId: string): Promise<string[]> {
     // Not implemented yet, return empty array
     return [];
@@ -128,6 +129,7 @@ export class SecureSession {
   /**
    * Revoke all sessions for a user (async only)
    */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   static async revokeUserSessions(_userId: string): Promise<void> {
     // Not implemented yet
     return;

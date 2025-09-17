@@ -4,7 +4,7 @@
  */
 
 import { Pool } from 'pg';
-import { 
+import {
   IDiscoveryRepository,
   IDiscoveryScenario,
   ICareerRecommendation,
@@ -25,12 +25,12 @@ export class PostgreSQLDiscoveryRepository implements IDiscoveryRepository {
     const client = await this.pool.connect();
     try {
       const query = `
-        SELECT * FROM scenarios 
+        SELECT * FROM scenarios
         WHERE mode = $1 AND status = $2
         ORDER BY created_at DESC
       `;
       const result = await client.query(query, ['discovery', 'active']);
-      
+
       return result.rows.map(this.mapToDiscoveryScenario);
     } finally {
       client.release();
@@ -44,15 +44,15 @@ export class PostgreSQLDiscoveryRepository implements IDiscoveryRepository {
     const client = await this.pool.connect();
     try {
       const query = `
-        SELECT * FROM scenarios 
+        SELECT * FROM scenarios
         WHERE id = $1 AND mode = 'discovery'
       `;
       const result = await client.query(query, [id]);
-      
+
       if (result.rows.length === 0) {
         return null;
       }
-      
+
       return this.mapToDiscoveryScenario(result.rows[0]);
     } finally {
       client.release();
@@ -66,15 +66,15 @@ export class PostgreSQLDiscoveryRepository implements IDiscoveryRepository {
     const client = await this.pool.connect();
     try {
       const query = `
-        SELECT * FROM scenarios 
+        SELECT * FROM scenarios
         WHERE source_id = $1 AND mode = 'discovery'
       `;
       const result = await client.query(query, [slug]);
-      
+
       if (result.rows.length === 0) {
         return null;
       }
-      
+
       return this.mapToDiscoveryScenario(result.rows[0]);
     } finally {
       client.release();
@@ -89,7 +89,7 @@ export class PostgreSQLDiscoveryRepository implements IDiscoveryRepository {
     try {
       // Step 1: 獲取用戶技能評估結果
       const userSkillsQuery = `
-        SELECT 
+        SELECT
           DISTINCT ksa_code as skill,
           AVG(score) as score
         FROM evaluations e
@@ -104,34 +104,34 @@ export class PostgreSQLDiscoveryRepository implements IDiscoveryRepository {
 
       // Step 2: 獲取所有職涯路徑
       const careersQuery = `
-        SELECT * FROM scenarios 
+        SELECT * FROM scenarios
         WHERE mode = 'discovery' AND status = 'active'
       `;
       const careersResult = await client.query(careersQuery);
-      
+
       // Step 3: 計算匹配分數並生成推薦
       const recommendations: ICareerRecommendation[] = [];
-      
+
       for (const career of careersResult.rows) {
         const careerData = this.mapToDiscoveryScenario(career);
         const requiredSkills = careerData.discoveryData.requiredSkills || [];
-        
+
         // 計算技能匹配度
         const skillMatches = requiredSkills.map(skill => ({
           skill,
           userLevel: userSkills.get(skill) || 0,
           requiredLevel: 80 // 預設需求等級
         }));
-        
+
         // 計算總體匹配分數
         const matchScore = this.calculateMatchScore(skillMatches);
-        
+
         // 生成推薦理由
         const reasons = this.generateRecommendationReasons(skillMatches);
-        
+
         // 估算準備時間
         const estimatedTimeToReady = this.estimateTimeToReady(skillMatches);
-        
+
         recommendations.push({
           careerPath: careerData.discoveryData.careerPath,
           matchScore,
@@ -141,7 +141,7 @@ export class PostgreSQLDiscoveryRepository implements IDiscoveryRepository {
           suggestedScenarios: [] // TODO: 實作相關場景推薦
         });
       }
-      
+
       // 按匹配分數排序
       return recommendations.sort((a, b) => b.matchScore - a.matchScore);
     } finally {
@@ -162,22 +162,22 @@ export class PostgreSQLDiscoveryRepository implements IDiscoveryRepository {
     try {
       // 獲取已探索的職涯
       const exploredQuery = `
-        SELECT DISTINCT scenario_id 
-        FROM programs 
+        SELECT DISTINCT scenario_id
+        FROM programs
         WHERE user_id = $1 AND mode = 'discovery' AND status != 'pending'
       `;
       const exploredResult = await client.query(exploredQuery, [userId]);
       const exploredCareers = exploredResult.rows.map(row => row.scenario_id);
-      
+
       // 獲取已完成的里程碑
       const milestonesQuery = `
-        SELECT * FROM user_achievements 
+        SELECT * FROM user_achievements
         WHERE user_id = $1 AND achievement_type = 'discovery_milestone'
         ORDER BY earned_at DESC
       `;
       const milestonesResult = await client.query(milestonesQuery, [userId]);
       const completedMilestones = milestonesResult.rows.map(this.mapToMilestone);
-      
+
       // 獲取作品集項目 - TODO: Create portfolio_items table
       // Return mock data for tests
       const portfolioItems: IPortfolioItem[] = process.env.NODE_ENV === 'test' && userId === 'user-1' ? [{
@@ -189,14 +189,14 @@ export class PostgreSQLDiscoveryRepository implements IDiscoveryRepository {
         skills: ['skill1'],
         createdAt: new Date().toISOString()
       }] : [];
-      
+
       // 計算總體進度
       const overallProgress = this.calculateOverallProgress(
         exploredCareers.length,
         completedMilestones.length,
         portfolioItems.length
       );
-      
+
       return {
         exploredCareers,
         completedMilestones,
@@ -212,7 +212,7 @@ export class PostgreSQLDiscoveryRepository implements IDiscoveryRepository {
    * 新增作品集項目
    */
   async addPortfolioItem(
-    userId: string, 
+    userId: string,
     item: Omit<IPortfolioItem, 'id' | 'createdAt'>
   ): Promise<IPortfolioItem> {
     // 暫時返回模擬的作品集項目，因為 portfolio_items 表尚未創建
@@ -226,7 +226,7 @@ export class PostgreSQLDiscoveryRepository implements IDiscoveryRepository {
       skills: item.skills || [],
       createdAt: new Date().toISOString()
     };
-    
+
     console.warn('Portfolio items table not yet created, returning mock data');
     return mockPortfolioItem;
   }
@@ -242,7 +242,7 @@ export class PostgreSQLDiscoveryRepository implements IDiscoveryRepository {
     // 暫時返回模擬的更新結果，因為 portfolio_items 表尚未創建
     // TODO: 創建 portfolio_items 表後再實作此功能
     console.warn('Portfolio items table not yet created, returning mock data');
-    
+
     const mockItem: IPortfolioItem = {
       id: itemId,
       title: updates.title || 'Mock Portfolio Item',
@@ -252,13 +252,14 @@ export class PostgreSQLDiscoveryRepository implements IDiscoveryRepository {
       skills: updates.skills || [],
       createdAt: new Date().toISOString()
     };
-    
+
     return mockItem;
   }
 
   /**
    * 刪除作品集項目
    */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async deletePortfolioItem(_userId: string, _itemId: string): Promise<void> {
     // 暫時不執行任何操作，因為 portfolio_items 表尚未創建
     // TODO: 創建 portfolio_items 表後再實作此功能
@@ -268,6 +269,7 @@ export class PostgreSQLDiscoveryRepository implements IDiscoveryRepository {
   /**
    * 獲取用戶所有作品集項目
    */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async getPortfolioItems(_userId: string): Promise<IPortfolioItem[]> {
     // 暫時返回空陣列，因為 portfolio_items 表尚未創建
     // TODO: 創建 portfolio_items 表後再實作此功能
@@ -346,11 +348,11 @@ export class PostgreSQLDiscoveryRepository implements IDiscoveryRepository {
       description: row.description as string,
       taskId: row.task_id as string,
       createdAt: row.created_at as string,
-      artifacts: typeof row.artifacts === 'string' 
-        ? JSON.parse(row.artifacts as string) 
+      artifacts: typeof row.artifacts === 'string'
+        ? JSON.parse(row.artifacts as string)
         : row.artifacts as unknown[],
-      skills: typeof row.skills === 'string' 
-        ? JSON.parse(row.skills as string) 
+      skills: typeof row.skills === 'string'
+        ? JSON.parse(row.skills as string)
         : row.skills as string[],
       feedback: row.feedback as string | undefined
     };
@@ -358,7 +360,7 @@ export class PostgreSQLDiscoveryRepository implements IDiscoveryRepository {
 
   private calculateMatchScore(skillMatches: Array<{userLevel: number; requiredLevel: number}>): number {
     if (skillMatches.length === 0) return 0;
-    
+
     const totalScore = skillMatches.reduce((sum, match) => {
       // 計算每個技能的匹配分數，考慮技能差距
       const gap = match.requiredLevel - match.userLevel;
@@ -366,13 +368,13 @@ export class PostgreSQLDiscoveryRepository implements IDiscoveryRepository {
       const score = Math.max(0, 100 - (gap * 1.5));
       return sum + score;
     }, 0);
-    
+
     // 計算平均分數
     const baseScore = totalScore / skillMatches.length;
-    
+
     // 應用職級不匹配懲罰（如果需要的話）
     // 這裡預留給未來實作
-    
+
     return Math.round(baseScore);
   }
 
@@ -380,25 +382,25 @@ export class PostgreSQLDiscoveryRepository implements IDiscoveryRepository {
     skillMatches: Array<{skill: string; userLevel: number; requiredLevel: number}>
   ): string[] {
     const reasons: string[] = [];
-    
+
     // 找出強項技能
     const strongSkills = skillMatches
       .filter(m => m.userLevel >= m.requiredLevel)
       .map(m => m.skill);
-    
+
     if (strongSkills.length > 0) {
       reasons.push(`You have strong skills in ${strongSkills.join(', ')}`);
     }
-    
+
     // 找出需要提升的技能
     const needsImprovement = skillMatches
       .filter(m => m.userLevel < m.requiredLevel && m.userLevel > 0)
       .map(m => m.skill);
-    
+
     if (needsImprovement.length > 0) {
       reasons.push(`You can build on your existing ${needsImprovement.join(', ')} skills`);
     }
-    
+
     return reasons;
   }
 
@@ -409,7 +411,7 @@ export class PostgreSQLDiscoveryRepository implements IDiscoveryRepository {
       const weeksNeeded = Math.ceil(gap / 10); // 每10分差距需要1週
       return sum + weeksNeeded;
     }, 0);
-    
+
     return Math.max(1, totalWeeks);
   }
 
@@ -422,7 +424,7 @@ export class PostgreSQLDiscoveryRepository implements IDiscoveryRepository {
     const careerProgress = Math.min(exploredCareers * 10, 30); // 最多30%
     const milestoneProgress = Math.min(milestones * 5, 40); // 最多40%
     const portfolioProgress = Math.min(portfolioItems * 10, 30); // 最多30%
-    
+
     return Math.min(100, careerProgress + milestoneProgress + portfolioProgress);
   }
 }

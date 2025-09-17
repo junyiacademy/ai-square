@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 export default function ResendVerificationPage() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { t: _t } = useTranslation(['auth', 'common']);
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
