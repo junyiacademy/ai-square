@@ -14,8 +14,6 @@ function getFrom(): string {
 }
 
 export function createTransport() {
-  const host = process.env.SMTP_HOST || 'smtp.gmail.com'
-  const port = parseInt(process.env.SMTP_PORT || '587', 10)
   const user = process.env.SMTP_USER || process.env.GMAIL_USER
   const passRaw = process.env.SMTP_PASS || process.env.GMAIL_APP_PASSWORD
 
@@ -24,10 +22,10 @@ export function createTransport() {
     throw new Error('SMTP_USER/SMTP_PASS not configured')
   }
 
+  // Use Gmail service for better compatibility
+  // This handles all the connection details automatically
   return nodemailer.createTransport({
-    host,
-    port,
-    secure: port === 465, // true for 465, false for 587
+    service: 'gmail',
     auth: { user, pass },
   })
 }
