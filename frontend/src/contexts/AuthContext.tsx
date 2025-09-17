@@ -52,15 +52,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const checkAuth = useCallback(async () => {
     try {
       const response = await authenticatedFetch('/api/auth/check');
-      
+
       if (!response.ok) {
         // API 失敗，清除所有狀態
         clearAuthState();
         return;
       }
-      
+
       const data = await response.json();
-      
+
       if (data.authenticated && data.user) {
         updateAuthState(data.user);
         setTokenExpiringSoon(data.tokenExpiringSoon || false);
@@ -90,11 +90,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (data.success && data.user) {
         updateAuthState(data.user);
-        
+
         // Note: sessionToken is stored in httpOnly cookie, not localStorage
         // Remove the old session token from localStorage if it exists
         localStorage.removeItem('ai_square_session');
-        
+
+        // Dispatch a custom event to notify all components about successful login
+        window.dispatchEvent(new CustomEvent('login-success', { detail: { user: data.user } }));
+
         return { success: true, user: data.user };
       } else {
         return { success: false, error: data.error || 'Login failed' };
@@ -113,30 +116,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch (error) {
       console.error('Logout error:', error);
     }
-    
+
     clearAuthState();
     router.push('/login');
   }, [clearAuthState, router]);
-  
+
   const refreshToken = useCallback(async (): Promise<boolean> => {
     try {
       const response = await authenticatedFetch('/api/auth/refresh', {
         method: 'POST'
       });
-      
+
       if (response.ok) {
         const data = await response.json();
         if (data.success) {
           // Inline auth check to avoid dependency issues
           try {
             const checkResponse = await authenticatedFetch('/api/auth/check');
-            
+
             if (!checkResponse.ok) {
               throw new Error('Auth check failed');
             }
-            
+
             const checkData = await checkResponse.json();
-            
+
             if (checkData.authenticated && checkData.user) {
               updateAuthState(checkData.user);
               setTokenExpiringSoon(checkData.tokenExpiringSoon || false);
@@ -152,7 +155,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch (error) {
       console.error('Token refresh error:', error);
     }
-    
+
     return false;
   }, [updateAuthState, clearAuthState]);
 
@@ -162,17 +165,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // 直接進行 API 驗證，這是唯一的真實來源
       // 不依賴 localStorage 來設置初始狀態，避免不同步問題
       setIsLoading(true);
-      
+
       try {
         const response = await authenticatedFetch('/api/auth/check');
-        
+
         if (!response.ok) {
           clearAuthState();
           return;
         }
-        
+
         const data = await response.json();
-        
+
         if (data.authenticated && data.user) {
           updateAuthState(data.user);
           setTokenExpiringSoon(data.tokenExpiringSoon || false);
@@ -186,7 +189,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setIsLoading(false);
       }
     };
-    
+
     initializeAuth();
   }, [clearAuthState, updateAuthState]); // Dependencies that don't change
 
@@ -196,7 +199,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (e.key === 'isLoggedIn' || e.key === 'user') {
         const newLoggedInStatus = localStorage.getItem('isLoggedIn');
         const newUserData = localStorage.getItem('user');
-        
+
         if (newLoggedInStatus === 'true' && newUserData) {
           try {
             const parsedUser = JSON.parse(newUserData);
@@ -227,7 +230,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // 當其他組件觸發 auth-changed 事件時，重新檢查狀態
       const storedAuth = localStorage.getItem('isLoggedIn');
       const storedUser = localStorage.getItem('user');
-      
+
       if (storedAuth === 'true' && storedUser) {
         try {
           const parsedUser = JSON.parse(storedUser);
@@ -255,7 +258,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     window.addEventListener('storage', handleStorageChange);
     window.addEventListener('auth-changed', handleAuthChange);
-    
+
     return () => {
       window.removeEventListener('storage', handleStorageChange);
       window.removeEventListener('auth-changed', handleAuthChange);

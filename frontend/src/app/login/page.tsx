@@ -35,21 +35,30 @@ function LoginContent() {
 
       if (result.success) {
         console.log('Login successful, preparing to navigate...')
-        
+
         // Check if there's a redirect URL
         const redirectUrl = searchParams.get('redirect')
         console.log('Redirect URL:', redirectUrl)
-        
+
         if (redirectUrl) {
           // Validate redirect URL to prevent open redirect vulnerabilities
           const isValidRedirect = redirectUrl.startsWith('/') && !redirectUrl.startsWith('//')
           if (isValidRedirect) {
             console.log('Redirecting to:', redirectUrl)
             router.push(redirectUrl)
+            router.refresh()
+
+            // Fallback: Force navigation if router.push doesn't work
+            setTimeout(() => {
+              if (window.location.pathname === '/login') {
+                console.log('Router navigation seems stuck, forcing redirect to:', redirectUrl)
+                window.location.href = redirectUrl
+              }
+            }, 500)
             return
           }
         }
-        
+
         // Default navigation based on onboarding status
         const userData = result.user as unknown as {
           onboarding?: Record<string, boolean>
@@ -67,11 +76,26 @@ function LoginContent() {
         )
         const hasAssessment = Boolean(userData?.assessmentCompleted)
         console.log('User status:', { onboarding, isOnboardingCompleted, hasAssessment })
-        
+
         // Navigate to dashboard directly - onboarding is optional
         // Users can choose to do onboarding from dashboard if they want
         console.log('Login successful, navigating to: /dashboard')
+
+        // Use a combination of router.push and window.location to ensure navigation
+        // This helps when Next.js router gets stuck
         router.push('/dashboard')
+
+        // Also refresh the router to ensure client-side state is updated
+        router.refresh()
+
+        // Fallback: If router.push doesn't work, force a page reload after a short delay
+        setTimeout(() => {
+          // Check if we're still on the login page
+          if (window.location.pathname === '/login') {
+            console.log('Router navigation seems stuck, forcing reload to dashboard')
+            window.location.href = '/dashboard'
+          }
+        }, 500)
       } else {
         // 顯示錯誤訊息
         console.log('Login failed:', result.error)
@@ -92,17 +116,17 @@ function LoginContent() {
         {/* 標題區域 */}
         <div className="text-center">
           <div className="mx-auto h-12 w-12 bg-blue-600 rounded-xl flex items-center justify-center mb-4">
-            <svg 
-              className="h-8 w-8 text-white" 
-              fill="none" 
-              viewBox="0 0 24 24" 
+            <svg
+              className="h-8 w-8 text-white"
+              fill="none"
+              viewBox="0 0 24 24"
               stroke="currentColor"
             >
-              <path 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-                strokeWidth={2} 
-                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" 
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
               />
             </svg>
           </div>
@@ -118,8 +142,8 @@ function LoginContent() {
         <div className="bg-blue-50 rounded-lg p-4 text-center">
           <p className="text-sm text-gray-700">
             {t('dontHaveAccount', "Don't have an account?")}{' '}
-            <a 
-              href={searchParams.get('redirect') ? `/register?redirect=${encodeURIComponent(searchParams.get('redirect')!)}` : '/register'} 
+            <a
+              href={searchParams.get('redirect') ? `/register?redirect=${encodeURIComponent(searchParams.get('redirect')!)}` : '/register'}
               className="font-semibold text-blue-600 hover:text-blue-700 underline"
             >
               {t('createAccount', 'Create one')}
@@ -134,7 +158,7 @@ function LoginContent() {
               {info}
             </div>
           )}
-          <LoginForm 
+          <LoginForm
             onSubmit={handleLogin}
             loading={loading}
             error={error}
