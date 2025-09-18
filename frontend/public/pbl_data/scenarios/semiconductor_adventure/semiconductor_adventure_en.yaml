@@ -1,20 +1,20 @@
 scenario_info:
   id: semiconductor-adventure
   difficulty: beginner
-  estimated_duration: 45
+  estimated_duration: 40
   target_domains:
     - engaging_with_ai
     - creating_with_ai
   title: My Semiconductor Adventure
-  description: Embark on an exciting adventure to discover how a simple grain of sand transforms into the powerful chips that power our modern world!
+  description: "Embark on an exciting adventure to discover how a simple grain of sand transforms into the powerful chips that power our modern world! (Suggested age: 13+, suitable for middle school students and above)"
   prerequisites:
     - Basic understanding of elements and compounds
     - Familiarity with electricity and electrical devices
+    - "Recommended: Watch this introductory video - https://youtu.be/cxf6eexA4f0"
   learning_objectives:
-    - Understand what semiconductors are and why silicon is important
-    - Learn the basic process of chip manufacturing
-    - Recognize semiconductor applications in daily life
-    - Understand the global semiconductor industry chain
+    - Experience the ubiquity of chips in daily life and connect their raw material "silicon" with natural "sand"
+    - Understand that the core of chips consists of "transistors" acting as "switches", with the key being semiconductors' controllable electrical conductivity
+    - Learn the basic concept of "Moore's Law" and explain why technology products continue to get faster and smaller
 
 ksa_mapping:
   knowledge:
@@ -33,7 +33,7 @@ ksa_mapping:
 tasks:
   - id: task-1
     category: learning
-    time_limit: 10
+    time_limit: 8
     KSA_focus:
       primary:
         - K1.4
@@ -47,11 +47,11 @@ tasks:
       initial_prompt: |
         You are AI Crystal, a friendly guide helping students understand semiconductors.
         Start by welcoming the explorer and explaining the journey ahead.
-    title: "Station 1: The Beginning - Meet the Magical Element Silicon"
-    description: Have you ever wondered what connects the vast sandy beaches with the smartphone in your pocket?
+    title: "Task 1: Ubiquitous Chips - A Smart Day in Your Life"
+    description: |
+      You might not have noticed, but from the moment you open your eyes, many mysterious little helpers are around you, making our lives more convenient. They are chips.
     instructions: |
-      Welcome explorer! This journey will take you through five stations.
-      Watch the videos and answer the questions correctly to advance.
+      The first challenge of your adventure is to find these hidden "little helpers". Try to tell the AI about any three products containing chips that you encounter from waking up to leaving home!
     content: |
       ## The Magical Element: Silicon
 
@@ -80,7 +80,7 @@ tasks:
 
   - id: task-2
     category: learning
-    time_limit: 10
+    time_limit: 8
     KSA_focus:
       primary:
         - K1.1
@@ -94,10 +94,10 @@ tasks:
       initial_prompt: |
         Continue guiding the student through understanding semiconductors.
         Explain what makes silicon special for electronics.
-    title: "Station 2: The Secret of Semiconductors"
-    description: We know chips are made of silicon, but why silicon?
+    title: "Task 2: Meet the Magical Element 'Silicon'"
+    description: Have you ever wondered what connects the sand on vast beaches with the smartphone in your pocket?
     instructions: |
-      Silicon is a very special material called a 'semiconductor'. Let's discover its secrets!
+      How does sand transform into the heart of a phone? Come ask the AI and solve this mystery!
     content: |
       ## Understanding Semiconductors
 
@@ -126,7 +126,7 @@ tasks:
 
   - id: task-3
     category: learning
-    time_limit: 10
+    time_limit: 8
     KSA_focus:
       primary:
         - K4.2
@@ -140,10 +140,10 @@ tasks:
       initial_prompt: |
         Guide the student through the chip manufacturing process.
         Explain the transformation from sand to silicon chips.
-    title: "Station 3: From Sand to Gold - The Birth of a Chip"
-    description: How does a grain of sand transform into a powerful chip?
+    title: "Task 3: The Secret of Semiconductors - A Unique Material"
+    description: We know chips are made of "silicon", but why was it chosen?
     instructions: |
-      Follow the incredible transformation journey from simple sand to sophisticated semiconductor chips.
+      Why silicon? It turns out it holds a secret identity about "conductivity" - that's what "semiconductor" means. This cool-sounding name, what exactly does it represent?
     content: |
       ## The Chip Manufacturing Process
 
@@ -172,7 +172,7 @@ tasks:
 
   - id: task-4
     category: application
-    time_limit: 10
+    time_limit: 8
     KSA_focus:
       primary:
         - K1.4
@@ -186,10 +186,10 @@ tasks:
       initial_prompt: |
         Help students recognize semiconductors in their daily life.
         Connect the technology to real-world applications.
-    title: "Station 4: Ubiquitous Chips - A Day in Smart Life"
-    description: Chips are the unsung heroes of our daily lives.
+    title: "Task 4: What Are Chips Made Of?"
+    description: What does it look like inside a chip? It's actually a miniature city, home to billions of "mini switches" responsible for thinking.
     instructions: |
-      Let's examine how many times you encounter chips in a typical day!
+      These mini switches are called "transistors". A chip's performance depends on how many transistors can be packed into a tiny area. Let's meet the smallest yet most important heroes inside a chip.
     content: |
       ## Chips in Daily Life
 
@@ -217,7 +217,7 @@ tasks:
 
   - id: task-5
     category: synthesis
-    time_limit: 10
+    time_limit: 8
     KSA_focus:
       primary:
         - K1.1
@@ -231,10 +231,10 @@ tasks:
       initial_prompt: |
         Conclude the journey by explaining the global semiconductor industry.
         Help students understand the collaborative nature of chip production.
-    title: "Station 5: Behind the Scenes - The Semiconductor Industry Chain"
-    description: Manufacturing chips requires global cooperation.
+    title: "Task 5: The Magical Law That Predicts the Future"
+    description: Why do phones and computers become more powerful every year or two? Behind this is actually a famous technological prophecy that has driven the semiconductor industry for over fifty years.
     instructions: |
-      Discover how the semiconductor industry works through global collaboration.
+      This prophecy that keeps technology advancing at lightning speed is the famous "Moore's Law". What exactly does it predict? In 5 years, what magical features would you like your phone to have?
     content: |
       ## The Global Semiconductor Industry
 
