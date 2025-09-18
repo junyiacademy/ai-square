@@ -312,13 +312,12 @@ describe('Header 組件測試', () => {
       const loginButton = screen.getByRole('button', { name: 'signIn' })
 
       // Tab through elements with the new navigation order:
-      // Relations, KSA, PBL, Dashboard, More (Assessment/History/Discovery in dropdown)
+      // Relations, KSA, PBL, More (Assessment/Dashboard/History/Discovery in dropdown)
       await user.tab() // Logo link
       await user.tab() // Relations link
       await user.tab() // KSA link
       await user.tab() // PBL link
-      await user.tab() // Dashboard link
-      await user.tab() // More dropdown button (Assessment/History/Discovery in dropdown)
+      await user.tab() // More dropdown button (Assessment/Dashboard/History/Discovery in dropdown)
       await user.tab() // Language selector
       expect(languageSelector).toHaveFocus()
 

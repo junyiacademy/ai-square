@@ -64,13 +64,15 @@ describe('Header', () => {
       renderWithProviders(<Header />);
 
       // Primary navigation links
-      expect(screen.getByText('dashboard')).toBeInTheDocument();
-      expect(screen.getByText('assessment')).toBeInTheDocument();
+      expect(screen.getByText('relations')).toBeInTheDocument();
+      expect(screen.getByText('ksa')).toBeInTheDocument();
       expect(screen.getByText('pbl')).toBeInTheDocument();
-      expect(screen.getByText('discovery')).toBeInTheDocument();
 
       // Secondary links are in "More" dropdown
       expect(screen.getByText('more')).toBeInTheDocument();
+      expect(screen.getByText('assessment')).toBeInTheDocument();
+      expect(screen.getByText('dashboard')).toBeInTheDocument();
+      expect(screen.getByText('discovery')).toBeInTheDocument();
     });
 
     it('renders language selector', () => {
@@ -154,15 +156,15 @@ describe('Header', () => {
   describe('Navigation', () => {
     it('highlights active navigation link', () => {
       // Use renderWithProviders route option to set pathname
-      renderWithProviders(<Header />, { route: '/dashboard' });
+      renderWithProviders(<Header />, { route: '/pbl/scenarios' });
 
-      const dashboardLink = screen.getByRole('link', { name: 'dashboard' });
+      const pblLink = screen.getByRole('link', { name: 'pbl' });
       // Check if link has the correct href
-      expect(dashboardLink).toHaveAttribute('href', '/dashboard');
+      expect(pblLink).toHaveAttribute('href', '/pbl/scenarios');
       // For active links, the component applies these classes conditionally
-      expect(dashboardLink.className).toContain('text-gray-900');
-      expect(dashboardLink.className).toContain('border-b-2');
-      expect(dashboardLink.className).toContain('border-blue-600');
+      expect(pblLink.className).toContain('text-gray-900');
+      expect(pblLink.className).toContain('border-b-2');
+      expect(pblLink.className).toContain('border-blue-600');
     });
 
     it('redirects to login when sign in button is clicked', async () => {
@@ -237,13 +239,13 @@ describe('Header', () => {
 
       // Check all navigation links are present in mobile menu
       // Primary links appear in both desktop and mobile
-      expect(screen.getAllByText('dashboard')).toHaveLength(2);
-      expect(screen.getAllByText('assessment')).toHaveLength(2);
-      expect(screen.getAllByText('pbl')).toHaveLength(2);
-      expect(screen.getAllByText('discovery')).toHaveLength(2);
-      // Secondary links appear in dropdown and mobile
-      expect(screen.getAllByText('relations')).toHaveLength(2); // Dropdown + Mobile
+      expect(screen.getAllByText('relations')).toHaveLength(2);
       expect(screen.getAllByText('ksa')).toHaveLength(2);
+      expect(screen.getAllByText('pbl')).toHaveLength(2);
+      // Secondary links appear in dropdown and mobile
+      expect(screen.getAllByText('assessment')).toHaveLength(2); // Dropdown + Mobile
+      expect(screen.getAllByText('dashboard')).toHaveLength(2);
+      expect(screen.getAllByText('discovery')).toHaveLength(2);
       expect(screen.getAllByText('history')).toHaveLength(2);
     });
 
@@ -257,11 +259,11 @@ describe('Header', () => {
       expect(mobileNav).toBeInTheDocument();
 
       // Click on a mobile navigation link
-      const mobileLinks = screen.getAllByText('dashboard');
-      const mobileDashboardLink = mobileLinks.find(link =>
+      const mobileLinks = screen.getAllByText('pbl');
+      const mobilePblLink = mobileLinks.find(link =>
         link.closest('[aria-label="Mobile navigation"]')
       );
-      fireEvent.click(mobileDashboardLink!);
+      fireEvent.click(mobilePblLink!);
 
       expect(screen.queryByLabelText('Mobile navigation')).not.toBeInTheDocument();
     });
