@@ -1,20 +1,20 @@
 scenario_info:
   id: semiconductor-adventure
   difficulty: beginner
-  estimated_duration: 45
+  estimated_duration: 40
   target_domains:
     - engaging_with_ai
     - creating_with_ai
-  title: Minha Aventura de Semicondutores
-  description: Embarque numa aventura emocionante para descobrir como um simples grão de areia se transforma nos poderosos chips que impulsionam nosso mundo moderno!
+  title: Minha Aventura dos Semicondutores
+  description: "Embarque numa aventura emocionante para descobrir como um simples grão de areia se transforma nos poderosos chips que movem nosso mundo moderno! (Idade sugerida: 13+, adequado para estudantes do ensino médio e superiores)"
   prerequisites:
     - Compreensão básica de elementos e compostos
     - Familiaridade com eletricidade e dispositivos elétricos
+    - "Recomendado: Assista a este vídeo introdutório - https://youtu.be/cxf6eexA4f0"
   learning_objectives:
-    - Entender o que são semicondutores e por que o silício é importante
-    - Aprender o processo básico de fabricação de chips
-    - Reconhecer aplicações de semicondutores na vida diária
-    - Compreender a cadeia global da indústria de semicondutores
+    - Experimentar a ubiquidade dos chips na vida diária e conectar sua matéria-prima "silício" com a "areia" natural
+    - Entender que o núcleo dos chips consiste em "transistores" que atuam como "interruptores", sendo a chave a condutividade elétrica controlável dos semicondutores
+    - Aprender o conceito básico da "Lei de Moore" e explicar por que os produtos tecnológicos continuam se tornando mais rápidos e menores
 
 ksa_mapping:
   knowledge:
@@ -33,7 +33,7 @@ ksa_mapping:
 tasks:
   - id: task-1
     category: learning
-    time_limit: 10
+    time_limit: 8
     KSA_focus:
       primary:
         - K1.4
@@ -43,44 +43,44 @@ tasks:
     ai_module:
       role: educator
       model: gemini-2.5-flash
-      persona: AI Cristal Guia
+      persona: AI Crystal Guide
       initial_prompt: |
-        Você é AI Cristal, um guia amigável que ajuda estudantes a entender semicondutores.
-        Comece dando boas-vindas ao explorador e explicando a jornada que os aguarda.
-    title: "Estação 1: O Começo - Conheça o Elemento Mágico Silício"
-    description: Você já se perguntou o que conecta as vastas praias arenosas com o smartphone no seu bolso?
+        You are AI Crystal, a friendly guide helping students understand semiconductors.
+        Start by welcoming the explorer and explaining the journey ahead.
+    title: "Tarefa 1: Chips Ubíquos - Um Dia Inteligente na Sua Vida"
+    description: |
+      Você pode não ter notado, mas desde o momento em que abre os olhos, muitos pequenos ajudantes misteriosos estão ao seu redor, tornando nossas vidas mais convenientes. Eles são os chips.
     instructions: |
-      Bem-vindo explorador! Esta jornada levará você através de cinco estações.
-      Assista os vídeos e responda as perguntas corretamente para avançar.
+      O primeiro desafio da sua aventura é encontrar esses "pequenos ajudantes" escondidos. Tente contar à IA sobre qualquer três produtos contendo chips que você encontra desde acordar até sair de casa!
     content: |
-      ## O Elemento Mágico: Silício
+      ## The Magical Element: Silicon
 
-      ### Pontos-Chave
-      - A matéria-prima principal para chips é **Silício (Si)**
-      - O silício é o segundo elemento mais abundante na Terra, depois do oxigênio
-      - O silício geralmente existe como **Dióxido de Silício (SiO₂)**, comumente encontrado na areia ou quartzo
+      ### Key Points
+      - The main raw material for chips is **Silicon (Si)**
+      - Silicon is the second most abundant element on Earth, after oxygen
+      - Silicon usually exists as **Silicon Dioxide (SiO₂)**, commonly found in sand or quartz
 
-      ### Revisão Científica: Elementos e Compostos
-      Lembra? **Elementos** são os blocos básicos de construção da matéria, como Oxigênio (O), Hidrogênio (H) e Silício (Si).
-      **Compostos** são substâncias puras feitas de dois ou mais elementos diferentes.
+      ### Science Review: Elements and Compounds
+      Remember? **Elements** are the basic building blocks of matter, like Oxygen (O), Hydrogen (H), and Silicon (Si).
+      **Compounds** are pure substances made of two or more different elements.
     question:
-      text: "De que é extraída a matéria-prima mais importante 'Silício (Si)' para chips?"
+      text: "What is the most important raw material 'Silicon (Si)' for chips extracted from?"
       type: multiple_choice
       options:
-        - text: "Petróleo"
+        - text: "Oil"
           value: "oil"
-        - text: "Água do mar"
+        - text: "Seawater"
           value: "seawater"
-        - text: "Areia"
+        - text: "Sand"
           value: "sand"
       correct_answer: "sand"
     ai_feedback:
-      correct: "Excelente! O silício é de fato extraído da areia, especificamente do dióxido de silício (SiO₂) encontrado na areia e quartzo."
-      incorrect: "Pense no que é abundante nas praias e contém dióxido de silício!"
+      correct: "Excellent! Silicon is indeed extracted from sand, specifically from silicon dioxide (SiO₂) found in sand and quartz."
+      incorrect: "Think about what's abundant on beaches and contains silicon dioxide!"
 
   - id: task-2
     category: learning
-    time_limit: 10
+    time_limit: 8
     KSA_focus:
       primary:
         - K1.1
@@ -90,43 +90,43 @@ tasks:
     ai_module:
       role: educator
       model: gemini-2.5-flash
-      persona: AI Cristal Guia
+      persona: AI Crystal Guide
       initial_prompt: |
-        Continue guiando o estudante para entender semicondutores.
-        Explique o que torna o silício especial para eletrônicos.
-    title: "Estação 2: O Segredo dos Semicondutores"
-    description: Sabemos que chips são feitos de silício, mas por que silício?
+        Continue guiding the student through understanding semiconductors.
+        Explain what makes silicon special for electronics.
+    title: "Tarefa 2: Conheça o Elemento Mágico 'Silício'"
+    description: Você já se perguntou o que conecta a areia de vastas praias com o smartphone no seu bolso?
     instructions: |
-      O silício é um material muito especial chamado 'semicondutor'. Vamos descobrir seus segredos!
+      Como a areia se transforma no coração de um telefone? Venha perguntar à IA e resolva este mistério!
     content: |
-      ## Entendendo Semicondutores
+      ## Understanding Semiconductors
 
-      ### Pontos-Chave
-      - Materiais são classificados por condutividade: condutores, isolantes e semicondutores
-      - **Condutores** (como metais) conduzem eletricidade facilmente
-      - **Isolantes** (como borracha) não conduzem eletricidade
-      - **Semicondutores** têm condutividade entre os dois, e pode ser controlada
+      ### Key Points
+      - Materials are classified by conductivity: conductors, insulators, and semiconductors
+      - **Conductors** (like metals) easily conduct electricity
+      - **Insulators** (like rubber) don't conduct electricity
+      - **Semiconductors** have conductivity between the two, and can be controlled
 
-      ### Revisão Científica: Corrente Elétrica
-      Corrente elétrica é como muitos "elétrons" minúsculos se movendo na mesma direção através de um fio.
+      ### Science Review: Electric Current
+      Electric current is like many tiny "electrons" moving in the same direction through a wire.
     question:
-      text: "Qual é a característica mais especial dos semicondutores?"
+      text: "What is the most special characteristic of semiconductors?"
       type: multiple_choice
       options:
-        - text: "Muito bons em conduzir eletricidade"
+        - text: "Very good at conducting electricity"
           value: "high_conductivity"
-        - text: "Completamente não condutivos"
+        - text: "Completely non-conductive"
           value: "non_conductive"
-        - text: "A condutividade pode ser controlada"
+        - text: "Conductivity can be controlled"
           value: "controllable"
       correct_answer: "controllable"
     ai_feedback:
-      correct: "Perfeito! A capacidade de controlar a condutividade é o que torna os semicondutores tão poderosos!"
-      incorrect: "Pense no que os torna 'semi' - eles estão entre condutores e isolantes!"
+      correct: "Perfect! The ability to control conductivity is what makes semiconductors so powerful!"
+      incorrect: "Think about what makes them 'semi' - they're in between conductors and insulators!"
 
   - id: task-3
     category: learning
-    time_limit: 10
+    time_limit: 8
     KSA_focus:
       primary:
         - K4.2
@@ -136,43 +136,43 @@ tasks:
     ai_module:
       role: educator
       model: gemini-2.5-flash
-      persona: AI Cristal Guia
+      persona: AI Crystal Guide
       initial_prompt: |
-        Guie o estudante através do processo de fabricação de chips.
-        Explique a transformação de areia para chips de silício.
-    title: "Estação 3: Da Areia ao Ouro - O Nascimento de um Chip"
-    description: Como um grão de areia se transforma num chip poderoso?
+        Guide the student through the chip manufacturing process.
+        Explain the transformation from sand to silicon chips.
+    title: "Tarefa 3: O Segredo dos Semicondutores - Um Material Único"
+    description: Sabemos que os chips são feitos de "silício", mas por que ele foi escolhido?
     instructions: |
-      Siga a incrível jornada de transformação da simples areia para sofisticados chips semicondutores.
+      Por que silício? Acontece que ele tem uma identidade secreta sobre "condutividade" - isso é o que "semicondutor" significa. Este nome que soa legal, o que ele representa exatamente?
     content: |
-      ## O Processo de Fabricação de Chips
+      ## The Chip Manufacturing Process
 
-      ### Pontos-Chave
-      - Silício de alta pureza é derretido e puxado em cilindros enormes chamados **lingotes de silício**
-      - Lingotes de silício são cortados em discos ultra-finos chamados **wafers**
-      - Através de processos complexos como fotolitografia, bilhões de componentes eletrônicos minúsculos são criados
-      - O componente mais importante é o **transistor**
+      ### Key Points
+      - High-purity silicon is melted and pulled into huge cylinders called **silicon ingots**
+      - Silicon ingots are sliced into ultra-thin discs called **wafers**
+      - Through complex processes like photolithography, billions of tiny electronic components are created
+      - The most important component is the **transistor**
 
-      ### Revisão Científica: Mudanças Físicas
-      Derretimento (sólido para líquido) e solidificação (líquido para sólido) são mudanças físicas.
+      ### Science Review: Physical Changes
+      Melting (solid to liquid) and solidification (liquid to solid) are physical changes.
     question:
-      text: "Como são chamados os discos ultra-finos cortados de lingotes de silício?"
+      text: "What are the ultra-thin discs cut from silicon ingots called?"
       type: multiple_choice
       options:
-        - text: "Barras de cristal"
+        - text: "Crystal rods"
           value: "rods"
         - text: "Wafers"
           value: "wafers"
-        - text: "Cristais"
+        - text: "Crystals"
           value: "crystals"
       correct_answer: "wafers"
     ai_feedback:
-      correct: "Excelente! Wafers de silício são a fundação para fabricação de chips."
-      incorrect: "Pense nos discos finos e circulares sobre os quais chips são construídos."
+      correct: "Excellent! Silicon wafers are the foundation for chip manufacturing."
+      incorrect: "Think about the thin, circular discs that chips are built on."
 
   - id: task-4
     category: application
-    time_limit: 10
+    time_limit: 8
     KSA_focus:
       primary:
         - K1.4
@@ -182,42 +182,42 @@ tasks:
     ai_module:
       role: educator
       model: gemini-2.5-flash
-      persona: AI Cristal Guia
+      persona: AI Crystal Guide
       initial_prompt: |
-        Ajude estudantes a reconhecer semicondutores em sua vida diária.
-        Conecte a tecnologia com aplicações do mundo real.
-    title: "Estação 4: Chips Onipresentes - Um Dia na Vida Inteligente"
-    description: Chips são os heróis não reconhecidos de nossas vidas diárias.
+        Help students recognize semiconductors in their daily life.
+        Connect the technology to real-world applications.
+    title: "Tarefa 4: Do Que São Feitos os Chips?"
+    description: Como é o interior de um chip? Na verdade é uma cidade em miniatura, lar de bilhões de "mini interruptores" responsáveis pelo pensamento.
     instructions: |
-      Vamos examinar quantas vezes você encontra chips num dia típico!
+      Esses mini interruptores são chamados de "transistores". O desempenho de um chip depende de quantos transistores podem ser empacotados numa área minúscula. Vamos conhecer os heróis menores, mas mais importantes dentro de um chip.
     content: |
-      ## Chips na Vida Diária
+      ## Chips in Daily Life
 
-      ### Pontos-Chave
-      - Chips (Circuitos Integrados, ICs) são os cérebros da eletrônica moderna
-      - De telefones, computadores, smartwatches a carros e trens, chips estão em todos os lugares
-      - Chips lidam com computação, memória e controle
+      ### Key Points
+      - Chips (Integrated Circuits, ICs) are the brains of modern electronics
+      - From phones, computers, smartwatches to cars and trains, chips are everywhere
+      - Chips handle computation, memory, and control
 
-      ### Revisão Científica: Conversão de Energia
-      Energia química em baterias é convertida através de controle de chips em energia de luz e som.
+      ### Science Review: Energy Conversion
+      Chemical energy in batteries is converted through chip control into light and sound energy.
     question:
-      text: "Qual das seguintes NÃO foi mencionada como aplicação de semicondutores?"
+      text: "Which of the following was NOT mentioned as a semiconductor application?"
       type: multiple_choice
       options:
-        - text: "Pagamentos móveis"
+        - text: "Mobile payments"
           value: "payments"
         - text: "Smartwatches"
           value: "watches"
-        - text: "Geração de energia solar"
+        - text: "Solar power generation"
           value: "solar"
       correct_answer: "solar"
     ai_feedback:
-      correct: "Correto! Embora painéis solares usem semicondutores, não era nosso foco hoje."
-      incorrect: "Revise quais aplicações foram especificamente discutidas em nossa jornada."
+      correct: "Correct! While solar panels use semiconductors, this wasn't our focus today."
+      incorrect: "Review which applications were specifically discussed in our journey."
 
   - id: task-5
     category: synthesis
-    time_limit: 10
+    time_limit: 8
     KSA_focus:
       primary:
         - K1.1
@@ -227,55 +227,55 @@ tasks:
     ai_module:
       role: educator
       model: gemini-2.5-flash
-      persona: AI Cristal Guia
+      persona: AI Crystal Guide
       initial_prompt: |
-        Conclua a jornada explicando a indústria global de semicondutores.
-        Ajude estudantes a entender a natureza colaborativa da produção de chips.
-    title: "Estação 5: Nos Bastidores - A Cadeia da Indústria de Semicondutores"
-    description: Fabricar chips requer cooperação global.
+        Conclude the journey by explaining the global semiconductor industry.
+        Help students understand the collaborative nature of chip production.
+    title: "Tarefa 5: A Lei Mágica que Prevê o Futuro"
+    description: Por que telefones e computadores se tornam mais poderosos a cada ano ou dois? Por trás disso há, na verdade, uma famosa profecia tecnológica que tem impulsionado a indústria de semicondutores por mais de cinquenta anos.
     instructions: |
-      Descubra como a indústria de semicondutores funciona através da colaboração global.
+      Esta profecia que mantém a tecnologia avançando na velocidade da luz é a famosa "Lei de Moore". O que ela prevê exatamente? Em 5 anos, que recursos mágicos você gostaria que seu telefone tivesse?
     content: |
-      ## A Indústria Global de Semicondutores
+      ## The Global Semiconductor Industry
 
-      ### Pontos-Chave
-      - A indústria envolve: Design de IC, Fabricação de IC, Montagem e Teste de IC
-      - **Empresas de Design de IC** criam projetos de chips
-      - **Empresas de Fabricação de IC** (fundições) produzem chips
-      - **Empresas de Montagem e Teste de IC** protegem e testam chips
+      ### Key Points
+      - The industry involves: IC Design, IC Manufacturing, IC Assembly & Testing
+      - **IC Design companies** create chip blueprints
+      - **IC Manufacturing companies** (foundries) produce chips
+      - **IC Assembly & Testing companies** protect and test chips
 
-      ### Revisão Científica: Divisão do Trabalho
-      Como uma linha de montagem, cada empresa foca em sua especialidade para eficiência.
+      ### Science Review: Division of Labor
+      Like an assembly line, each company focuses on their specialty for efficiency.
     question:
-      text: "Que segmento é responsável por projetar plantas de circuitos de chips?"
+      text: "What segment is responsible for designing chip circuit blueprints?"
       type: multiple_choice
       options:
-        - text: "Fabricação de IC"
+        - text: "IC Manufacturing"
           value: "manufacturing"
-        - text: "Montagem de IC"
+        - text: "IC Assembly"
           value: "assembly"
-        - text: "Design de IC"
+        - text: "IC Design"
           value: "design"
       correct_answer: "design"
     ai_feedback:
-      correct: "Perfeito! Empresas de Design de IC são os arquitetos do mundo dos semicondutores!"
-      incorrect: "Pense em quem cria os planos originais antes da fabricação começar."
+      correct: "Perfect! IC Design companies are the architects of the semiconductor world!"
+      incorrect: "Think about who creates the original plans before manufacturing begins."
 
 evaluation_criteria:
   completion_threshold: 80
   assessment_method: quiz_and_interaction
   success_metrics:
-    - Completar todas as 5 estações
-    - Responder perguntas com 80% de precisão
-    - Interagir com AI Cristal Guia
+    - Complete all 5 stations
+    - Answer questions with 80% accuracy
+    - Engage with AI Crystal Guide
 
 resources:
   videos:
-    - title: "Como Semicondutores Funcionam"
+    - title: "How Semiconductors Work"
       url: "https://example.com/semiconductor-basics"
   readings:
-    - title: "A História do Vale do Silício"
+    - title: "The History of Silicon Valley"
       url: "https://example.com/silicon-valley-history"
   tools:
-    - title: "Designer Virtual de Chips"
+    - title: "Virtual Chip Designer"
       url: "https://example.com/chip-designer"

@@ -1,20 +1,20 @@
 scenario_info:
   id: semiconductor-adventure
   difficulty: beginner
-  estimated_duration: 45
+  estimated_duration: 40
   target_domains:
     - engaging_with_ai
     - creating_with_ai
   title: Mein Halbleiter-Abenteuer
-  description: Begeben Sie sich auf ein aufregendes Abenteuer, um zu entdecken, wie sich ein einfaches Sandkorn in die mächtigen Chips verwandelt, die unsere moderne Welt antreiben!
+  description: "Begeben Sie sich auf ein spannendes Abenteuer, um zu entdecken, wie sich ein einfaches Sandkorn in die mächtigen Chips verwandelt, die unsere moderne Welt antreiben! (Empfohlenes Alter: 13+, geeignet für Mittelschüler und älter)"
   prerequisites:
     - Grundverständnis von Elementen und Verbindungen
     - Vertrautheit mit Elektrizität und elektrischen Geräten
+    - "Empfohlen: Schauen Sie sich dieses Einführungsvideo an - https://youtu.be/cxf6eexA4f0"
   learning_objectives:
-    - Verstehen, was Halbleiter sind und warum Silizium wichtig ist
-    - Den grundlegenden Prozess der Chip-Herstellung lernen
-    - Halbleiteranwendungen im täglichen Leben erkennen
-    - Die globale Halbleiterindustrie-Kette verstehen
+    - Die Allgegenwart von Chips im täglichen Leben erleben und ihr Rohmaterial "Silizium" mit natürlichem "Sand" verbinden
+    - Verstehen, dass der Kern von Chips aus "Transistoren" besteht, die als "Schalter" fungieren, wobei der Schlüssel die steuerbare elektrische Leitfähigkeit von Halbleitern ist
+    - Das Grundkonzept des "Mooreschen Gesetzes" lernen und erklären, warum technologische Produkte weiterhin schneller und kleiner werden
 
 ksa_mapping:
   knowledge:
@@ -33,7 +33,7 @@ ksa_mapping:
 tasks:
   - id: task-1
     category: learning
-    time_limit: 10
+    time_limit: 8
     KSA_focus:
       primary:
         - K1.4
@@ -43,44 +43,44 @@ tasks:
     ai_module:
       role: educator
       model: gemini-2.5-flash
-      persona: AI Kristall Führer
+      persona: AI Crystal Guide
       initial_prompt: |
-        Sie sind AI Kristall, ein freundlicher Führer, der Studenten beim Verstehen von Halbleitern hilft.
-        Beginnen Sie damit, den Entdecker zu begrüßen und die bevorstehende Reise zu erklären.
-    title: "Station 1: Der Beginn - Lernen Sie das Magische Element Silizium kennen"
-    description: Haben Sie sich jemals gefragt, was die weiten Sandstrände mit dem Smartphone in Ihrer Tasche verbindet?
+        You are AI Crystal, a friendly guide helping students understand semiconductors.
+        Start by welcoming the explorer and explaining the journey ahead.
+    title: "Aufgabe 1: Allgegenwärtige Chips - Ein Intelligenter Tag in Ihrem Leben"
+    description: |
+      Sie haben es vielleicht nicht bemerkt, aber vom Moment an, in dem Sie die Augen öffnen, sind viele mysteriöse kleine Helfer um Sie herum und machen unser Leben bequemer. Das sind die Chips.
     instructions: |
-      Willkommen Entdecker! Diese Reise führt Sie durch fünf Stationen.
-      Schauen Sie sich die Videos an und beantworten Sie die Fragen richtig, um voranzukommen.
+      Die erste Herausforderung Ihres Abenteuers ist es, diese versteckten "kleinen Helfer" zu finden. Versuchen Sie, der KI von drei beliebigen Produkten mit Chips zu erzählen, denen Sie vom Aufwachen bis zum Verlassen des Hauses begegnen!
     content: |
-      ## Das Magische Element: Silizium
+      ## The Magical Element: Silicon
 
-      ### Schlüsselpunkte
-      - Der Hauptrohstoff für Chips ist **Silizium (Si)**
-      - Silizium ist nach Sauerstoff das zweithäufigste Element auf der Erde
-      - Silizium existiert normalerweise als **Siliziumdioxid (SiO₂)**, häufig in Sand oder Quarz zu finden
+      ### Key Points
+      - The main raw material for chips is **Silicon (Si)**
+      - Silicon is the second most abundant element on Earth, after oxygen
+      - Silicon usually exists as **Silicon Dioxide (SiO₂)**, commonly found in sand or quartz
 
-      ### Wissenschafts-Wiederholung: Elemente und Verbindungen
-      Erinnern Sie sich? **Elemente** sind die Grundbausteine der Materie, wie Sauerstoff (O), Wasserstoff (H) und Silizium (Si).
-      **Verbindungen** sind reine Substanzen aus zwei oder mehr verschiedenen Elementen.
+      ### Science Review: Elements and Compounds
+      Remember? **Elements** are the basic building blocks of matter, like Oxygen (O), Hydrogen (H), and Silicon (Si).
+      **Compounds** are pure substances made of two or more different elements.
     question:
-      text: "Woraus wird der wichtigste Rohstoff 'Silizium (Si)' für Chips extrahiert?"
+      text: "What is the most important raw material 'Silicon (Si)' for chips extracted from?"
       type: multiple_choice
       options:
-        - text: "Öl"
+        - text: "Oil"
           value: "oil"
-        - text: "Meerwasser"
+        - text: "Seawater"
           value: "seawater"
         - text: "Sand"
           value: "sand"
       correct_answer: "sand"
     ai_feedback:
-      correct: "Ausgezeichnet! Silizium wird tatsächlich aus Sand extrahiert, speziell aus Siliziumdioxid (SiO₂) in Sand und Quarz."
-      incorrect: "Denken Sie an das, was an Stränden reichlich vorhanden ist und Siliziumdioxid enthält!"
+      correct: "Excellent! Silicon is indeed extracted from sand, specifically from silicon dioxide (SiO₂) found in sand and quartz."
+      incorrect: "Think about what's abundant on beaches and contains silicon dioxide!"
 
   - id: task-2
     category: learning
-    time_limit: 10
+    time_limit: 8
     KSA_focus:
       primary:
         - K1.1
@@ -90,43 +90,43 @@ tasks:
     ai_module:
       role: educator
       model: gemini-2.5-flash
-      persona: AI Kristall Führer
+      persona: AI Crystal Guide
       initial_prompt: |
-        Führen Sie den Studenten weiter beim Verstehen von Halbleitern.
-        Erklären Sie, was Silizium für die Elektronik besonders macht.
-    title: "Station 2: Das Geheimnis der Halbleiter"
-    description: Wir wissen, dass Chips aus Silizium bestehen, aber warum Silizium?
+        Continue guiding the student through understanding semiconductors.
+        Explain what makes silicon special for electronics.
+    title: "Aufgabe 2: Lernen Sie das Magische Element 'Silizium' Kennen"
+    description: Haben Sie sich jemals gefragt, was den Sand an weiten Stränden mit dem Smartphone in Ihrer Tasche verbindet?
     instructions: |
-      Silizium ist ein sehr spezielles Material namens 'Halbleiter'. Entdecken wir seine Geheimnisse!
+      Wie verwandelt sich Sand in das Herz eines Telefons? Kommen Sie und fragen Sie die KI und lösen Sie dieses Rätsel!
     content: |
-      ## Halbleiter Verstehen
+      ## Understanding Semiconductors
 
-      ### Schlüsselpunkte
-      - Materialien werden nach Leitfähigkeit klassifiziert: Leiter, Isolatoren und Halbleiter
-      - **Leiter** (wie Metalle) leiten Elektrizität leicht
-      - **Isolatoren** (wie Gummi) leiten keine Elektrizität
-      - **Halbleiter** haben eine Leitfähigkeit zwischen beiden, und sie kann kontrolliert werden
+      ### Key Points
+      - Materials are classified by conductivity: conductors, insulators, and semiconductors
+      - **Conductors** (like metals) easily conduct electricity
+      - **Insulators** (like rubber) don't conduct electricity
+      - **Semiconductors** have conductivity between the two, and can be controlled
 
-      ### Wissenschafts-Wiederholung: Elektrischer Strom
-      Elektrischer Strom ist wie viele winzige "Elektronen", die sich in dieselbe Richtung durch einen Draht bewegen.
+      ### Science Review: Electric Current
+      Electric current is like many tiny "electrons" moving in the same direction through a wire.
     question:
-      text: "Was ist die besonderste Eigenschaft von Halbleitern?"
+      text: "What is the most special characteristic of semiconductors?"
       type: multiple_choice
       options:
-        - text: "Sehr gut im Leiten von Elektrizität"
+        - text: "Very good at conducting electricity"
           value: "high_conductivity"
-        - text: "Völlig nicht leitend"
+        - text: "Completely non-conductive"
           value: "non_conductive"
-        - text: "Die Leitfähigkeit kann kontrolliert werden"
+        - text: "Conductivity can be controlled"
           value: "controllable"
       correct_answer: "controllable"
     ai_feedback:
-      correct: "Perfekt! Die Fähigkeit, die Leitfähigkeit zu kontrollieren, ist das, was Halbleiter so mächtig macht!"
-      incorrect: "Denken Sie daran, was sie 'halb' macht - sie liegen zwischen Leitern und Isolatoren!"
+      correct: "Perfect! The ability to control conductivity is what makes semiconductors so powerful!"
+      incorrect: "Think about what makes them 'semi' - they're in between conductors and insulators!"
 
   - id: task-3
     category: learning
-    time_limit: 10
+    time_limit: 8
     KSA_focus:
       primary:
         - K4.2
@@ -136,43 +136,43 @@ tasks:
     ai_module:
       role: educator
       model: gemini-2.5-flash
-      persona: AI Kristall Führer
+      persona: AI Crystal Guide
       initial_prompt: |
-        Führen Sie den Studenten durch den Chip-Herstellungsprozess.
-        Erklären Sie die Transformation von Sand zu Silizium-Chips.
-    title: "Station 3: Von Sand zu Gold - Die Geburt eines Chips"
-    description: Wie verwandelt sich ein Sandkorn in einen mächtigen Chip?
+        Guide the student through the chip manufacturing process.
+        Explain the transformation from sand to silicon chips.
+    title: "Aufgabe 3: Das Geheimnis der Halbleiter - Ein Einzigartiges Material"
+    description: Wir wissen, dass Chips aus "Silizium" hergestellt werden, aber warum wurde es gewählt?
     instructions: |
-      Folgen Sie der unglaublichen Transformationsreise von einfachem Sand zu ausgeklügelten Halbleiter-Chips.
+      Warum Silizium? Es stellt sich heraus, dass es eine geheime Identität bezüglich der "Leitfähigkeit" hat - das ist es, was "Halbleiter" bedeutet. Dieser cool klingende Name, was repräsentiert er genau?
     content: |
-      ## Der Chip-Herstellungsprozess
+      ## The Chip Manufacturing Process
 
-      ### Schlüsselpunkte
-      - Hochreines Silizium wird geschmolzen und zu riesigen Zylindern namens **Silizium-Ingots** gezogen
-      - Silizium-Ingots werden in ultradünne Scheiben namens **Wafer** geschnitten
-      - Durch komplexe Prozesse wie Photolithographie werden Milliarden winziger elektronischer Komponenten erstellt
-      - Die wichtigste Komponente ist der **Transistor**
+      ### Key Points
+      - High-purity silicon is melted and pulled into huge cylinders called **silicon ingots**
+      - Silicon ingots are sliced into ultra-thin discs called **wafers**
+      - Through complex processes like photolithography, billions of tiny electronic components are created
+      - The most important component is the **transistor**
 
-      ### Wissenschafts-Wiederholung: Physikalische Änderungen
-      Schmelzen (fest zu flüssig) und Erstarrung (flüssig zu fest) sind physikalische Änderungen.
+      ### Science Review: Physical Changes
+      Melting (solid to liquid) and solidification (liquid to solid) are physical changes.
     question:
-      text: "Wie nennt man die ultradünnen Scheiben, die von Silizium-Ingots geschnitten werden?"
+      text: "What are the ultra-thin discs cut from silicon ingots called?"
       type: multiple_choice
       options:
-        - text: "Kristallstäbe"
+        - text: "Crystal rods"
           value: "rods"
-        - text: "Wafer"
+        - text: "Wafers"
           value: "wafers"
-        - text: "Kristalle"
+        - text: "Crystals"
           value: "crystals"
       correct_answer: "wafers"
     ai_feedback:
-      correct: "Ausgezeichnet! Silizium-Wafer sind die Grundlage für die Chip-Herstellung."
-      incorrect: "Denken Sie an die dünnen, kreisförmigen Scheiben, auf denen Chips gebaut werden."
+      correct: "Excellent! Silicon wafers are the foundation for chip manufacturing."
+      incorrect: "Think about the thin, circular discs that chips are built on."
 
   - id: task-4
     category: application
-    time_limit: 10
+    time_limit: 8
     KSA_focus:
       primary:
         - K1.4
@@ -182,42 +182,42 @@ tasks:
     ai_module:
       role: educator
       model: gemini-2.5-flash
-      persona: AI Kristall Führer
+      persona: AI Crystal Guide
       initial_prompt: |
-        Helfen Sie Studenten, Halbleiter in ihrem täglichen Leben zu erkennen.
-        Verbinden Sie die Technologie mit realen Anwendungen.
-    title: "Station 4: Allgegenwärtige Chips - Ein Tag im intelligenten Leben"
-    description: Chips sind die unbesungenen Helden unseres täglichen Lebens.
+        Help students recognize semiconductors in their daily life.
+        Connect the technology to real-world applications.
+    title: "Aufgabe 4: Woraus Bestehen Chips?"
+    description: Wie sieht es im Inneren eines Chips aus? Es ist tatsächlich eine Miniaturstadt, die Milliarden von "Mini-Schaltern" beherbergt, die für das Denken verantwortlich sind.
     instructions: |
-      Untersuchen wir, wie oft Sie Chips an einem typischen Tag begegnen!
+      Diese Mini-Schalter werden "Transistoren" genannt. Die Leistung eines Chips hängt davon ab, wie viele Transistoren in einem winzigen Bereich untergebracht werden können. Lernen wir die kleinsten, aber wichtigsten Helden in einem Chip kennen.
     content: |
-      ## Chips im täglichen Leben
+      ## Chips in Daily Life
 
-      ### Schlüsselpunkte
-      - Chips (Integrierte Schaltkreise, ICs) sind die Gehirne moderner Elektronik
-      - Von Telefonen, Computern, Smartwatches bis hin zu Autos und Zügen sind Chips überall
-      - Chips handhaben Berechnung, Speicher und Kontrolle
+      ### Key Points
+      - Chips (Integrated Circuits, ICs) are the brains of modern electronics
+      - From phones, computers, smartwatches to cars and trains, chips are everywhere
+      - Chips handle computation, memory, and control
 
-      ### Wissenschafts-Wiederholung: Energieumwandlung
-      Chemische Energie in Batterien wird durch Chip-Kontrolle in Licht- und Schallenergie umgewandelt.
+      ### Science Review: Energy Conversion
+      Chemical energy in batteries is converted through chip control into light and sound energy.
     question:
-      text: "Welche der folgenden wurde NICHT als Halbleiteranwendung erwähnt?"
+      text: "Which of the following was NOT mentioned as a semiconductor application?"
       type: multiple_choice
       options:
-        - text: "Mobile Zahlungen"
+        - text: "Mobile payments"
           value: "payments"
         - text: "Smartwatches"
           value: "watches"
-        - text: "Solarstromerzeugung"
+        - text: "Solar power generation"
           value: "solar"
       correct_answer: "solar"
     ai_feedback:
-      correct: "Richtig! Obwohl Solarpanels Halbleiter verwenden, war das heute nicht unser Fokus."
-      incorrect: "Überprüfen Sie, welche Anwendungen speziell in unserer Reise diskutiert wurden."
+      correct: "Correct! While solar panels use semiconductors, this wasn't our focus today."
+      incorrect: "Review which applications were specifically discussed in our journey."
 
   - id: task-5
     category: synthesis
-    time_limit: 10
+    time_limit: 8
     KSA_focus:
       primary:
         - K1.1
@@ -227,55 +227,55 @@ tasks:
     ai_module:
       role: educator
       model: gemini-2.5-flash
-      persona: AI Kristall Führer
+      persona: AI Crystal Guide
       initial_prompt: |
-        Schließen Sie die Reise ab, indem Sie die globale Halbleiterindustrie erklären.
-        Helfen Sie Studenten, die kollaborative Natur der Chip-Produktion zu verstehen.
-    title: "Station 5: Hinter den Kulissen - Die Halbleiterindustrie-Kette"
-    description: Die Herstellung von Chips erfordert globale Zusammenarbeit.
+        Conclude the journey by explaining the global semiconductor industry.
+        Help students understand the collaborative nature of chip production.
+    title: "Aufgabe 5: Das Magische Gesetz, das die Zukunft Vorhersagt"
+    description: Warum werden Telefone und Computer jedes Jahr oder zwei leistungsfähiger? Dahinter steht tatsächlich eine berühmte technologische Prophezeiung, die die Halbleiterindustrie seit über fünfzig Jahren antreibt.
     instructions: |
-      Entdecken Sie, wie die Halbleiterindustrie durch globale Zusammenarbeit funktioniert.
+      Diese Prophezeiung, die die Technologie mit Lichtgeschwindigkeit vorantreibt, ist das berühmte "Mooresche Gesetz". Was sagt es genau voraus? In 5 Jahren, welche magischen Funktionen würden Sie gerne in Ihrem Telefon haben?
     content: |
-      ## Die Globale Halbleiterindustrie
+      ## The Global Semiconductor Industry
 
-      ### Schlüsselpunkte
-      - Die Industrie umfasst: IC-Design, IC-Herstellung, IC-Montage & Test
-      - **IC-Design-Unternehmen** erstellen Chip-Pläne
-      - **IC-Herstellungsunternehmen** (Gießereien) produzieren Chips
-      - **IC-Montage & Test-Unternehmen** schützen und testen Chips
+      ### Key Points
+      - The industry involves: IC Design, IC Manufacturing, IC Assembly & Testing
+      - **IC Design companies** create chip blueprints
+      - **IC Manufacturing companies** (foundries) produce chips
+      - **IC Assembly & Testing companies** protect and test chips
 
-      ### Wissenschafts-Wiederholung: Arbeitsteilung
-      Wie ein Fließband konzentriert sich jedes Unternehmen auf seine Spezialität für Effizienz.
+      ### Science Review: Division of Labor
+      Like an assembly line, each company focuses on their specialty for efficiency.
     question:
-      text: "Welcher Bereich ist für das Design von Chip-Schaltplänen verantwortlich?"
+      text: "What segment is responsible for designing chip circuit blueprints?"
       type: multiple_choice
       options:
-        - text: "IC-Herstellung"
+        - text: "IC Manufacturing"
           value: "manufacturing"
-        - text: "IC-Montage"
+        - text: "IC Assembly"
           value: "assembly"
-        - text: "IC-Design"
+        - text: "IC Design"
           value: "design"
       correct_answer: "design"
     ai_feedback:
-      correct: "Perfekt! IC-Design-Unternehmen sind die Architekten der Halbleiterwelt!"
-      incorrect: "Denken Sie daran, wer die ursprünglichen Pläne erstellt, bevor die Herstellung beginnt."
+      correct: "Perfect! IC Design companies are the architects of the semiconductor world!"
+      incorrect: "Think about who creates the original plans before manufacturing begins."
 
 evaluation_criteria:
   completion_threshold: 80
   assessment_method: quiz_and_interaction
   success_metrics:
-    - Alle 5 Stationen abschließen
-    - Fragen mit 80% Genauigkeit beantworten
-    - Mit AI Kristall Führer interagieren
+    - Complete all 5 stations
+    - Answer questions with 80% accuracy
+    - Engage with AI Crystal Guide
 
 resources:
   videos:
-    - title: "Wie Halbleiter Funktionieren"
+    - title: "How Semiconductors Work"
       url: "https://example.com/semiconductor-basics"
   readings:
-    - title: "Die Geschichte des Silicon Valley"
+    - title: "The History of Silicon Valley"
       url: "https://example.com/silicon-valley-history"
   tools:
-    - title: "Virtueller Chip-Designer"
+    - title: "Virtual Chip Designer"
       url: "https://example.com/chip-designer"

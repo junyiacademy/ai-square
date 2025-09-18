@@ -1,20 +1,20 @@
 scenario_info:
   id: semiconductor-adventure
   difficulty: beginner
-  estimated_duration: 45
+  estimated_duration: 40
   target_domains:
     - engaging_with_ai
     - creating_with_ai
   title: การผจญภัยเซมิคอนดักเตอร์ของฉัน
-  description: ออกเดินทางในการผจญภัยอันน่าตื่นเต้นเพื่อค้นพบว่าเม็ดทรายเล็กๆ กลายเป็นชิปที่ทรงพลังขับเคลื่อนโลกยุคใหม่ได้อย่างไร!
+  description: "เริ่มต้นการผจญภัยที่น่าตื่นเต้นเพื่อค้นพบว่าเม็ดทรายธรรมดาแปลงร่างเป็นชิปอันทรงพลังที่ขับเคลื่อนโลกสมัยใหม่ของเราได้อย่างไร! (อายุที่แนะนำ: 13+ เหมาะสำหรับนักเรียนมัธยมต้นขึ้นไป)"
   prerequisites:
     - ความเข้าใจพื้นฐานเกี่ยวกับธาตุและสารประกอบ
     - ความคุ้นเคยกับไฟฟ้าและอุปกรณ์ไฟฟ้า
+    - "แนะนำ: ดูวิดีโอแนะนำนี้ - https://youtu.be/cxf6eexA4f0"
   learning_objectives:
-    - เข้าใจว่าเซมิคอนดักเตอร์คืออะไร และทำไมซิลิคอนจึงสำคัญ
-    - เรียนรู้กระบวนการขั้นพื้นฐานของการผลิตชิป
-    - รับรู้การใช้งานเซมิคอนดักเตอร์ในชีวิตประจำวัน
-    - เข้าใจห่วงโซ่อุตสาหกรรมเซมิคอนดักเตอร์ระดับโลก
+    - สัมผัสกับการมีอยู่ทุกหนทุกแห่งของชิปในชีวิตประจำวันและเชื่อมโยงวัตถุดิบ "ซิลิกอน" กับ "ทราย" ธรรมชาติ
+    - เข้าใจว่าแกนกลางของชิปประกอบด้วย "ทรานซิสเตอร์" ที่ทำหน้าที่เป็น "สวิตช์" โดยกุญแจสำคัญคือการนำไฟฟ้าที่ควบคุมได้ของเซมิคอนดักเตอร์
+    - เรียนรู้แนวคิดพื้นฐานของ "กฎของมัวร์" และอธิบายว่าทำไมผลิตภัณฑ์เทคโนโลยีจึงเร็วขึ้นและเล็กลงอย่างต่อเนื่อง
 
 ksa_mapping:
   knowledge:
@@ -33,7 +33,7 @@ ksa_mapping:
 tasks:
   - id: task-1
     category: learning
-    time_limit: 10
+    time_limit: 8
     KSA_focus:
       primary:
         - K1.4
@@ -43,44 +43,44 @@ tasks:
     ai_module:
       role: educator
       model: gemini-2.5-flash
-      persona: AI คริสตัล ไกด์
+      persona: AI Crystal Guide
       initial_prompt: |
-        คุณคือ AI คริสตัล ไกด์ที่เป็นมิตรและช่วยให้นักเรียนเข้าใจเซมิคอนดักเตอร์
-        เริ่มต้นด้วยการต้อนรับนักสำรวจและอธิบายการเดินทางที่รอคอยอยู่
-    title: "สถานี 1: จุดเริ่มต้น - ทำความรู้จักกับธาตุมหัศจรรย์ซิลิคอน"
-    description: คุณเคยสงสัยไหมว่าอะไรเป็นตัวเชื่อมระหว่างชายหาดทรายอันกว้างใหญ่กับสมาร์ทโฟนในกระเป๋าคุณ?
+        You are AI Crystal, a friendly guide helping students understand semiconductors.
+        Start by welcoming the explorer and explaining the journey ahead.
+    title: "ภารกิจ 1: ชิปที่อยู่ทุกหนทุกแห่ง - วันอันชาญฉลาดในชีวิตของคุณ"
+    description: |
+      คุณอาจไม่ได้สังเกตุ แต่ตั้งแต่วินาทีที่คุณลืมตา ผู้ช่วยเล็กๆ ลึกลับมากมายอยู่รอบตัวคุณ ทำให้ชีวิตของเราสะดวกสบายยิ่งขึ้น พวกมันคือชิป
     instructions: |
-      ยินดีต้อนรับนักสำรวจ! การเดินทางนี้จะพาคุณผ่านห้าสถานี
-      ชมวิดีโอและตอบคำถามให้ถูกต้องเพื่อก้าวไปข้างหน้า
+      ความท้าทายแรกของการผจญภัยของคุณคือการหา "ผู้ช่วยตัวเล็ก" ที่ซ่อนอยู่เหล่านี้ ลองบอก AI เกี่ยวกับผลิตภัณฑ์สามอย่างที่มีชิปซึ่งคุณพบตั้งแต่ตื่นนอนจนออกจากบ้าน!
     content: |
-      ## ธาตุมหัศจรรย์: ซิลิคอน
+      ## The Magical Element: Silicon
 
-      ### จุดสำคัญ
-      - วัตถุดิบหลักสำหรับชิปคือ **ซิลิคอน (Si)**
-      - ซิลิคอนเป็นธาตุที่มีมากเป็นอันดับสองบนโลก รองจากออกซิเจน
-      - ซิลิคอนมักจะอยู่ในรูปของ **ซิลิคอนไดออกไซด์ (SiO₂)** พบได้ทั่วไปในทรายหรือควอตซ์
+      ### Key Points
+      - The main raw material for chips is **Silicon (Si)**
+      - Silicon is the second most abundant element on Earth, after oxygen
+      - Silicon usually exists as **Silicon Dioxide (SiO₂)**, commonly found in sand or quartz
 
-      ### ทบทวนวิทยาศาสตร์: ธาตุและสารประกอบ
-      จำได้ไหม? **ธาตุ** คือหน่วยพื้นฐานของสสาร เช่น ออกซิเจน (O) ไฮโดรเจน (H) และซิลิคอน (Si)
-      **สารประกอบ** คือสารบริสุทธิ์ที่ประกอบด้วยธาตุที่แตกต่างกันตั้งแต่สองชนิดขึ้นไป
+      ### Science Review: Elements and Compounds
+      Remember? **Elements** are the basic building blocks of matter, like Oxygen (O), Hydrogen (H), and Silicon (Si).
+      **Compounds** are pure substances made of two or more different elements.
     question:
-      text: "วัตถุดิบสำคัญที่สุด 'ซิลิคอน (Si)' สำหรับชิปนั้น สกัดมาจากอะไร?"
+      text: "What is the most important raw material 'Silicon (Si)' for chips extracted from?"
       type: multiple_choice
       options:
-        - text: "น้ำมัน"
+        - text: "Oil"
           value: "oil"
-        - text: "น้ำทะเล"
+        - text: "Seawater"
           value: "seawater"
-        - text: "ทราย"
+        - text: "Sand"
           value: "sand"
       correct_answer: "sand"
     ai_feedback:
-      correct: "ยอดเยี่ยม! ซิลิคอนแท้จริงแล้วสกัดมาจากทราย โดยเฉพาะจากซิลิคอนไดออกไซด์ (SiO₂) ที่พบในทรายและควอตซ์"
-      incorrect: "ลองคิดดูว่าอะไรมีมากมายบนชายหาดและมีซิลิคอนไดออกไซด์!"
+      correct: "Excellent! Silicon is indeed extracted from sand, specifically from silicon dioxide (SiO₂) found in sand and quartz."
+      incorrect: "Think about what's abundant on beaches and contains silicon dioxide!"
 
   - id: task-2
     category: learning
-    time_limit: 10
+    time_limit: 8
     KSA_focus:
       primary:
         - K1.1
@@ -90,43 +90,43 @@ tasks:
     ai_module:
       role: educator
       model: gemini-2.5-flash
-      persona: AI คริสตัล ไกด์
+      persona: AI Crystal Guide
       initial_prompt: |
-        คำแนะนำให้นักเรียนเข้าใจเซมิคอนดักเตอร์ต่อไป
-        อธิบายว่าอะไรทำให้ซิลิคอนพิเศษสำหรับอิเล็กทรอนิกส์
-    title: "สถานี 2: ความลับของเซมิคอนดักเตอร์"
-    description: เรารู้ว่าชิปทำมาจากซิลิคอน แต่ทำไมต้องเป็นซิลิคอน?
+        Continue guiding the student through understanding semiconductors.
+        Explain what makes silicon special for electronics.
+    title: "ภารกิจ 2: พบกับธาตุมหัศจรรย์ 'ซิลิกอน'"
+    description: คุณเคยสงสัยไหมว่าอะไรเชื่อมโยงทรายบนชายหาดกว้างใหญ่กับสมาร์ทโฟนในกระเป๋าของคุณ?
     instructions: |
-      ซิลิคอนเป็นวัสดุพิเศษมากที่เรียกว่า 'เซมิคอนดักเตอร์' มาค้นพบความลับของมันกันเถอะ!
+      ทรายแปลงร่างเป็นหัวใจของโทรศัพท์ได้อย่างไร? มาถาม AI และไขปริศนานี้กัน!
     content: |
-      ## ทำความเข้าใจเซมิคอนดักเตอร์
+      ## Understanding Semiconductors
 
-      ### จุดสำคัญ
-      - วัสดุจัดประเภทตามการนำไฟฟ้า: ตัวนำ ฉนวน และเซมิคอนดักเตอร์
-      - **ตัวนำ** (เช่น โลหะ) นำไฟฟ้าได้ง่าย
-      - **ฉนวน** (เช่น ยาง) ไม่นำไฟฟ้า
-      - **เซมิคอนดักเตอร์** มีการนำไฟฟ้าระหว่างสองแบบ และสามารถควบคุมได้
+      ### Key Points
+      - Materials are classified by conductivity: conductors, insulators, and semiconductors
+      - **Conductors** (like metals) easily conduct electricity
+      - **Insulators** (like rubber) don't conduct electricity
+      - **Semiconductors** have conductivity between the two, and can be controlled
 
-      ### ทบทวนวิทยาศาสตร์: กระแสไฟฟ้า
-      กระแสไฟฟ้าเหมือน "อิเล็กตรอน" เล็กๆ จำนวนมากเคลื่อนที่ในทิศทางเดียวกันผ่านสาย
+      ### Science Review: Electric Current
+      Electric current is like many tiny "electrons" moving in the same direction through a wire.
     question:
-      text: "คุณลักษณะที่พิเศษที่สุดของเซมิคอนดักเตอร์คืออะไร?"
+      text: "What is the most special characteristic of semiconductors?"
       type: multiple_choice
       options:
-        - text: "เก่งมากในการนำไฟฟ้า"
+        - text: "Very good at conducting electricity"
           value: "high_conductivity"
-        - text: "ไม่นำไฟฟ้าเลย"
+        - text: "Completely non-conductive"
           value: "non_conductive"
-        - text: "สามารถควบคุมการนำไฟฟ้าได้"
+        - text: "Conductivity can be controlled"
           value: "controllable"
       correct_answer: "controllable"
     ai_feedback:
-      correct: "สมบูรณ์แบบ! ความสามารถในการควบคุมการนำไฟฟ้าคือสิ่งที่ทำให้เซมิคอนดักเตอร์ทรงพลัง!"
-      incorrect: "ลองคิดว่าทำไมถึงเรียก 'เซมิ' - มันอยู่ระหว่างตัวนำกับฉนวน!"
+      correct: "Perfect! The ability to control conductivity is what makes semiconductors so powerful!"
+      incorrect: "Think about what makes them 'semi' - they're in between conductors and insulators!"
 
   - id: task-3
     category: learning
-    time_limit: 10
+    time_limit: 8
     KSA_focus:
       primary:
         - K4.2
@@ -136,43 +136,43 @@ tasks:
     ai_module:
       role: educator
       model: gemini-2.5-flash
-      persona: AI คริสตัล ไกด์
+      persona: AI Crystal Guide
       initial_prompt: |
-        แนะนำนักเรียนผ่านกระบวนการผลิตชิป
-        อธิบายการเปลี่ยนแปลงจากทรายเป็นชิปซิลิคอน
-    title: "สถานี 3: จากทรายสู่ทอง - การเกิดของชิป"
-    description: เม็ดทรายเปลี่ยนเป็นชิปที่ทรงพลังได้อย่างไร?
+        Guide the student through the chip manufacturing process.
+        Explain the transformation from sand to silicon chips.
+    title: "ภารกิจ 3: ความลับของเซมิคอนดักเตอร์ - วัสดุที่เป็นเอกลักษณ์"
+    description: เรารู้ว่าชิปทำมาจาก "ซิลิกอน" แต่ทำไมถึงเลือกซิลิกอน?
     instructions: |
-      ติดตามการเดินทางการเปลี่ยนแปลงอันน่าทึ่งจากทรายธรรมดาสู่ชิปเซมิคอนดักเตอร์ที่ซับซ้อน
+      ทำไมต้องเป็นซิลิกอน? ปรากฎว่ามันมีตัวตนลับเกี่ยวกับ "การนำไฟฟ้า" - นั่นคือความหมายของ "เซมิคอนดักเตอร์" ชื่อที่ฟังดูเท่นี้ แทนอะไรกันแน่?
     content: |
-      ## กระบวนการผลิตชิป
+      ## The Chip Manufacturing Process
 
-      ### จุดสำคัญ
-      - ซิลิคอนความบริสุทธิ์สูงถูกหลอมและดึงเป็นแท่งกระบอกขนาดใหญ่เรียกว่า **ซิลิคอน อิงกอท**
-      - ซิลิคอน อิงกอทถูกหั่นเป็นแผ่นบางพิเศษเรียกว่า **เวเฟอร์**
-      - ผ่านกระบวนการซับซ้อนเช่น โฟโตลิโธกราฟี สร้างอุปกรณ์อิเล็กทรอนิกส์เล็กๆ หลายพันล้านตัว
-      - อุปกรณ์สำคัญที่สุดคือ **ทรานซิสเตอร์**
+      ### Key Points
+      - High-purity silicon is melted and pulled into huge cylinders called **silicon ingots**
+      - Silicon ingots are sliced into ultra-thin discs called **wafers**
+      - Through complex processes like photolithography, billions of tiny electronic components are created
+      - The most important component is the **transistor**
 
-      ### ทบทวนวิทยาศาสตร์: การเปลี่ยนแปลงทางกายภาพ
-      การหลอม (ของแข็งเป็นของเหลว) และการแข็งตัว (ของเหลวเป็นของแข็ง) เป็นการเปลี่ยนแปลงทางกายภาพ
+      ### Science Review: Physical Changes
+      Melting (solid to liquid) and solidification (liquid to solid) are physical changes.
     question:
-      text: "แผ่นบางพิเศษที่หั่นจากซิลิคอน อิงกอทเรียกว่าอะไร?"
+      text: "What are the ultra-thin discs cut from silicon ingots called?"
       type: multiple_choice
       options:
-        - text: "แท่งคริสตัล"
+        - text: "Crystal rods"
           value: "rods"
-        - text: "เวเฟอร์"
+        - text: "Wafers"
           value: "wafers"
-        - text: "คริสตัล"
+        - text: "Crystals"
           value: "crystals"
       correct_answer: "wafers"
     ai_feedback:
-      correct: "ยอดเยี่ยม! ซิลิคอนเวเฟอร์เป็นรากฐานสำหรับการผลิตชิป"
-      incorrect: "ลองคิดถึงแผ่นบางๆ กลมๆ ที่ใช้สร้างชิป"
+      correct: "Excellent! Silicon wafers are the foundation for chip manufacturing."
+      incorrect: "Think about the thin, circular discs that chips are built on."
 
   - id: task-4
     category: application
-    time_limit: 10
+    time_limit: 8
     KSA_focus:
       primary:
         - K1.4
@@ -182,42 +182,42 @@ tasks:
     ai_module:
       role: educator
       model: gemini-2.5-flash
-      persona: AI คริสตัล ไกด์
+      persona: AI Crystal Guide
       initial_prompt: |
-        ช่วยให้นักเรียนรับรู้เซมิคอนดักเตอร์ในชีวิตประจำวัน
-        เชื่อมโยงเทคโนโลยีกับการใช้งานในโลกจริง
-    title: "สถานี 4: ชิปที่อยู่ทุกหนทุกแห่ง - วันหนึ่งในชีวิตอัจฉริยะ"
-    description: ชิปเป็นวีรบุรุษที่ไม่มีใครรู้จักในชีวิตประจำวันของเรา
+        Help students recognize semiconductors in their daily life.
+        Connect the technology to real-world applications.
+    title: "ภารกิจ 4: ชิปทำมาจากอะไร?"
+    description: ข้างในชิปดูเป็นอย่างไร? จริงๆ แล้วมันเป็นเมืองจิ๋ว บ้านของ "มินิสวิตช์" หลายพันล้านตัวที่รับผิดชอบการคิด
     instructions: |
-      มาดูกันว่าคุณพบชิปกี่ครั้งในวันธรรมดา!
+      มินิสวิตช์เหล่านี้เรียกว่า "ทรานซิสเตอร์" ประสิทธิภาพของชิปขึ้นอยู่กับว่าสามารถใส่ทรานซิสเตอร์กี่ตัวในพื้นที่เล็กๆ มาพบกับฮีโร่ที่เล็กที่สุดแต่สำคัญที่สุดในชิปกัน
     content: |
-      ## ชิปในชีวิตประจำวัน
+      ## Chips in Daily Life
 
-      ### จุดสำคัญ
-      - ชิป (วงจรรวม IC) คือสมองของอิเล็กทรอนิกส์สมัยใหม่
-      - จากโทรศัพท์ คอมพิวเตอร์ นาฬิกาอัจฉริยะ ไปจนถึงรถยนต์และรถไฟ ชิปอยู่ทุกที่
-      - ชิปจัดการกับการคำนวณ หน่วยความจำ และการควบคุม
+      ### Key Points
+      - Chips (Integrated Circuits, ICs) are the brains of modern electronics
+      - From phones, computers, smartwatches to cars and trains, chips are everywhere
+      - Chips handle computation, memory, and control
 
-      ### ทบทวนวิทยาศาสตร์: การแปลงพลังงาน
-      พลังงานเคมีในแบตเตอรี่แปลงผ่านการควบคุมของชิปเป็นพลังงานแสงและเสียง
+      ### Science Review: Energy Conversion
+      Chemical energy in batteries is converted through chip control into light and sound energy.
     question:
-      text: "ข้อใดต่อไปนี้ไม่ได้กล่าวถึงเป็นการใช้งานเซมิคอนดักเตอร์?"
+      text: "Which of the following was NOT mentioned as a semiconductor application?"
       type: multiple_choice
       options:
-        - text: "การชำระเงินมือถือ"
+        - text: "Mobile payments"
           value: "payments"
-        - text: "นาฬิกาอัจฉริยะ"
+        - text: "Smartwatches"
           value: "watches"
-        - text: "การผลิตพลังงานแสงอาทิตย์"
+        - text: "Solar power generation"
           value: "solar"
       correct_answer: "solar"
     ai_feedback:
-      correct: "ถูกต้อง! แม้ว่าแผงโซลาร์เซลล์จะใช้เซมิคอนดักเตอร์ แต่นั่นไม่ใช่จุดโฟกัสของเราวันนี้"
-      incorrect: "ทบทวนการใช้งานที่กล่าวถึงโดยเฉพาะในการเดินทางของเรา"
+      correct: "Correct! While solar panels use semiconductors, this wasn't our focus today."
+      incorrect: "Review which applications were specifically discussed in our journey."
 
   - id: task-5
     category: synthesis
-    time_limit: 10
+    time_limit: 8
     KSA_focus:
       primary:
         - K1.1
@@ -227,55 +227,55 @@ tasks:
     ai_module:
       role: educator
       model: gemini-2.5-flash
-      persona: AI คริสตัล ไกด์
+      persona: AI Crystal Guide
       initial_prompt: |
-        จบการเดินทางด้วยการอธิบายอุตสาหกรรมเซมิคอนดักเตอร์ระดับโลก
-        ช่วยให้นักเรียนเข้าใจลักษณะการทำงานร่วมกันของการผลิตชิป
-    title: "สถานี 5: เบื้องหลัง - ห่วงโซ่อุตสาหกรรมเซมิคอนดักเตอร์"
-    description: การผลิตชิปต้องอาศัยความร่วมมือระดับโลก
+        Conclude the journey by explaining the global semiconductor industry.
+        Help students understand the collaborative nature of chip production.
+    title: "ภารกิจ 5: กฎมหัศจรรย์ที่ทำนายอนาคต"
+    description: ทำไมโทรศัพท์และคอมพิวเตอร์ถึงทรงพลังขึ้นทุกปีหรือสองปี? เบื้องหลังนี้มีคำทำนายทางเทคโนโลยีที่มีชื่อเสียงซึ่งขับเคลื่อนอุตสาหกรรมเซมิคอนดักเตอร์มากว่าห้าสิบปี
     instructions: |
-      ค้นพบว่าอุตสาหกรรมเซมิคอนดักเตอร์ทำงานอย่างไรผ่านความร่วมมือระดับโลก
+      คำทำนายที่ทำให้เทคโนโลยีก้าวหน้าด้วยความเร็วแสงนี้คือ "กฎของมัวร์" ที่มีชื่อเสียง มันทำนายอะไรกันแน่? ในอีก 5 ปี คุณอยากให้โทรศัพท์ของคุณมีฟีเจอร์มหัศจรรย์อะไรบ้าง?
     content: |
-      ## อุตสาหกรรมเซมิคอนดักเตอร์ระดับโลก
+      ## The Global Semiconductor Industry
 
-      ### จุดสำคัญ
-      - อุตสาหกรรมรวมถึง: การออกแบบ IC การผลิต IC การประกอบและทดสอบ IC
-      - **บริษัทออกแบบ IC** สร้างแบบแปลนชิป
-      - **บริษัทผลิต IC** (ฟาวน์ดรี) ผลิตชิป
-      - **บริษัทประกอบและทดสอบ IC** ป้องกันและทดสอบชิป
+      ### Key Points
+      - The industry involves: IC Design, IC Manufacturing, IC Assembly & Testing
+      - **IC Design companies** create chip blueprints
+      - **IC Manufacturing companies** (foundries) produce chips
+      - **IC Assembly & Testing companies** protect and test chips
 
-      ### ทบทวนวิทยาศาสตร์: การแบ่งงาน
-      เหมือนสายการประกอบ แต่ละบริษัทเน้นความเชี่ยวชาญของตนเพื่อประสิทธิภาพ
+      ### Science Review: Division of Labor
+      Like an assembly line, each company focuses on their specialty for efficiency.
     question:
-      text: "ส่วนใดรับผิดชอบการออกแบบแบบแปลนวงจรชิป?"
+      text: "What segment is responsible for designing chip circuit blueprints?"
       type: multiple_choice
       options:
-        - text: "การผลิต IC"
+        - text: "IC Manufacturing"
           value: "manufacturing"
-        - text: "การประกอบ IC"
+        - text: "IC Assembly"
           value: "assembly"
-        - text: "การออกแบบ IC"
+        - text: "IC Design"
           value: "design"
       correct_answer: "design"
     ai_feedback:
-      correct: "สมบูรณ์แบบ! บริษัทออกแบบ IC คือสถาปนิกของโลกเซมิคอนดักเตอร์!"
-      incorrect: "ลองคิดว่าใครสร้างแปลนต้นฉบับก่อนที่การผลิตจะเริ่มต้น"
+      correct: "Perfect! IC Design companies are the architects of the semiconductor world!"
+      incorrect: "Think about who creates the original plans before manufacturing begins."
 
 evaluation_criteria:
   completion_threshold: 80
   assessment_method: quiz_and_interaction
   success_metrics:
-    - ผ่านสถานีทั้ง 5 สถานี
-    - ตอบคำถามด้วยความแม่นยำ 80%
-    - ปฏิสัมพันธ์กับ AI คริสตัล ไกด์
+    - Complete all 5 stations
+    - Answer questions with 80% accuracy
+    - Engage with AI Crystal Guide
 
 resources:
   videos:
-    - title: "เซมิคอนดักเตอร์ทำงานอย่างไร"
+    - title: "How Semiconductors Work"
       url: "https://example.com/semiconductor-basics"
   readings:
-    - title: "ประวัติศาสตร์ของซิลิคอน แวลเลย์"
+    - title: "The History of Silicon Valley"
       url: "https://example.com/silicon-valley-history"
   tools:
-    - title: "นักออกแบบชิปเสมือนจริง"
+    - title: "Virtual Chip Designer"
       url: "https://example.com/chip-designer"

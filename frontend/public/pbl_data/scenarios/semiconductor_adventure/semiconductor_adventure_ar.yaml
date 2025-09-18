@@ -1,20 +1,20 @@
 scenario_info:
   id: semiconductor-adventure
   difficulty: beginner
-  estimated_duration: 45
+  estimated_duration: 40
   target_domains:
     - engaging_with_ai
     - creating_with_ai
-  title: مغامرتي مع أشباه الموصلات
-  description: انطلق في مغامرة مثيرة لاكتشاف كيف تتحول حبة الرمل البسيطة إلى رقائق قوية تشغل عالمنا الحديث!
+  title: مغامرة أشباه الموصلات الخاصة بي
+  description: "انطلق في مغامرة مثيرة لاكتشاف كيف تتحول حبة رمل بسيطة إلى رقائق قوية تحرك عالمنا الحديث! (العمر المقترح: 13+ مناسب لطلاب المرحلة المتوسطة وما فوق)"
   prerequisites:
     - فهم أساسي للعناصر والمركبات
-    - إلمام بالكهرباء والأجهزة الكهربائية
+    - الألفة مع الكهرباء والأجهزة الكهربائية
+    - "موصى به: شاهد هذا الفيديو التعريفي - https://youtu.be/cxf6eexA4f0"
   learning_objectives:
-    - فهم ما هي أشباه الموصلات ولماذا السيليكون مهم
-    - تعلم العملية الأساسية لتصنيع الرقائق
-    - التعرف على تطبيقات أشباه الموصلات في الحياة اليومية
-    - فهم سلسلة صناعة أشباه الموصلات العالمية
+    - تجربة انتشار الرقائق في كل مكان في الحياة اليومية وربط مادتها الخام "السيليكون" مع "الرمل" الطبيعي
+    - فهم أن جوهر الرقائق يتكون من "ترانزيستورات" تعمل كـ "مفاتيح"، والمفتاح هو التوصيل الكهربائي القابل للتحكم لأشباه الموصلات
+    - تعلم المفهوم الأساسي لـ "قانون مور" وشرح لماذا تستمر المنتجات التقنية في أن تصبح أسرع وأصغر
 
 ksa_mapping:
   knowledge:
@@ -33,7 +33,7 @@ ksa_mapping:
 tasks:
   - id: task-1
     category: learning
-    time_limit: 10
+    time_limit: 8
     KSA_focus:
       primary:
         - K1.4
@@ -43,44 +43,44 @@ tasks:
     ai_module:
       role: educator
       model: gemini-2.5-flash
-      persona: الذكاء الاصطناعي كريستال المرشد
+      persona: AI Crystal Guide
       initial_prompt: |
-        أنت الذكاء الاصطناعي كريستال، مرشد ودود يساعد الطلاب على فهم أشباه الموصلات.
-        ابدأ بترحيب المستكشف وشرح الرحلة التي تنتظرهم.
-    title: "المحطة 1: البداية - تعرف على العنصر السحري السيليكون"
-    description: هل تساءلت يوماً ما الذي يربط بين الشواطئ الرملية الشاسعة والهاتف الذكي في جيبك؟
+        You are AI Crystal, a friendly guide helping students understand semiconductors.
+        Start by welcoming the explorer and explaining the journey ahead.
+    title: "المهمة 1: الرقائق المنتشرة في كل مكان - يوم ذكي في حياتك"
+    description: |
+      قد لا تكون لاحظت، ولكن منذ اللحظة التي تفتح فيها عينيك، هناك العديد من المساعدين الصغار الغامضين حولك، يجعلون حياتنا أكثر راحة. إنها الرقائق.
     instructions: |
-      أهلاً ومرحباً أيها المستكشف! ستأخذك هذه الرحلة عبر خمس محطات.
-      شاهد المقاطع المرئية وأجب على الأسئلة بشكل صحيح للتقدم.
+      التحدي الأول في مغامرتك هو العثور على هؤلاء "المساعدين الصغار" المخفيين. حاول أن تخبر الذكاء الاصطناعي عن أي ثلاثة منتجات تحتوي على رقائق تواجهها من الاستيقاظ حتى الخروج من المنزل!
     content: |
-      ## العنصر السحري: السيليكون
+      ## The Magical Element: Silicon
 
-      ### النقاط الأساسية
-      - المادة الخام الأساسية للرقائق هي **السيليكون (Si)**
-      - السيليكون هو ثاني أكثر العناصر وفرة على الأرض، بعد الأكسجين
-      - يوجد السيليكون عادة كـ **ثاني أكسيد السيليكون (SiO₂)**، الموجود بكثرة في الرمل أو الكوارتز
+      ### Key Points
+      - The main raw material for chips is **Silicon (Si)**
+      - Silicon is the second most abundant element on Earth, after oxygen
+      - Silicon usually exists as **Silicon Dioxide (SiO₂)**, commonly found in sand or quartz
 
-      ### مراجعة علمية: العناصر والمركبات
-      تذكر؟ **العناصر** هي الوحدات الأساسية لبناء المادة، مثل الأكسجين (O) والهيدروجين (H) والسيليكون (Si).
-      **المركبات** هي مواد نقية مصنوعة من عنصرين أو أكثر من العناصر المختلفة.
+      ### Science Review: Elements and Compounds
+      Remember? **Elements** are the basic building blocks of matter, like Oxygen (O), Hydrogen (H), and Silicon (Si).
+      **Compounds** are pure substances made of two or more different elements.
     question:
-      text: "من أين يتم استخراج المادة الخام الأهم 'السيليكون (Si)' للرقائق؟"
+      text: "What is the most important raw material 'Silicon (Si)' for chips extracted from?"
       type: multiple_choice
       options:
-        - text: "النفط"
+        - text: "Oil"
           value: "oil"
-        - text: "مياه البحر"
+        - text: "Seawater"
           value: "seawater"
-        - text: "الرمل"
+        - text: "Sand"
           value: "sand"
       correct_answer: "sand"
     ai_feedback:
-      correct: "ممتاز! يتم استخراج السيليكون فعلاً من الرمل، وتحديداً من ثاني أكسيد السيليكون (SiO₂) الموجود في الرمل والكوارتز."
-      incorrect: "فكر في ما هو وفير على الشواطئ ويحتوي على ثاني أكسيد السيليكون!"
+      correct: "Excellent! Silicon is indeed extracted from sand, specifically from silicon dioxide (SiO₂) found in sand and quartz."
+      incorrect: "Think about what's abundant on beaches and contains silicon dioxide!"
 
   - id: task-2
     category: learning
-    time_limit: 10
+    time_limit: 8
     KSA_focus:
       primary:
         - K1.1
@@ -90,43 +90,43 @@ tasks:
     ai_module:
       role: educator
       model: gemini-2.5-flash
-      persona: الذكاء الاصطناعي كريستال المرشد
+      persona: AI Crystal Guide
       initial_prompt: |
-        استمر في إرشاد الطالب لفهم أشباه الموصلات.
-        اشرح ما يجعل السيليكون مميزاً للإلكترونيات.
-    title: "المحطة 2: سر أشباه الموصلات"
-    description: نعلم أن الرقائق مصنوعة من السيليكون، لكن لماذا السيليكون؟
+        Continue guiding the student through understanding semiconductors.
+        Explain what makes silicon special for electronics.
+    title: "المهمة 2: تعرف على العنصر السحري 'السيليكون'"
+    description: هل تساءلت يوماً ما الذي يربط الرمل على الشواطئ الواسعة بالهاتف الذكي في جيبك؟
     instructions: |
-      السيليكون مادة مميزة جداً تُسمى 'شبه موصل'. دعونا نكتشف أسراره!
+      كيف يتحول الرمل إلى قلب الهاتف؟ تعال واسأل الذكاء الاصطناعي وحل هذا اللغز!
     content: |
-      ## فهم أشباه الموصلات
+      ## Understanding Semiconductors
 
-      ### النقاط الأساسية
-      - تصنف المواد حسب التوصيل: موصلات، عوازل، وأشباه موصلات
-      - **الموصلات** (مثل المعادن) توصل الكهرباء بسهولة
-      - **العوازل** (مثل المطاط) لا توصل الكهرباء
-      - **أشباه الموصلات** لها توصيل بين النوعين، ويمكن التحكم به
+      ### Key Points
+      - Materials are classified by conductivity: conductors, insulators, and semiconductors
+      - **Conductors** (like metals) easily conduct electricity
+      - **Insulators** (like rubber) don't conduct electricity
+      - **Semiconductors** have conductivity between the two, and can be controlled
 
-      ### مراجعة علمية: التيار الكهربائي
-      التيار الكهربائي مثل العديد من "الإلكترونات" الصغيرة التي تتحرك في نفس الاتجاه عبر السلك.
+      ### Science Review: Electric Current
+      Electric current is like many tiny "electrons" moving in the same direction through a wire.
     question:
-      text: "ما هي الخاصية الأكثر تميزاً لأشباه الموصلات؟"
+      text: "What is the most special characteristic of semiconductors?"
       type: multiple_choice
       options:
-        - text: "جيدة جداً في توصيل الكهرباء"
+        - text: "Very good at conducting electricity"
           value: "high_conductivity"
-        - text: "غير موصلة تماماً"
+        - text: "Completely non-conductive"
           value: "non_conductive"
-        - text: "يمكن التحكم في التوصيل"
+        - text: "Conductivity can be controlled"
           value: "controllable"
       correct_answer: "controllable"
     ai_feedback:
-      correct: "مثالي! القدرة على التحكم في التوصيل هي ما تجعل أشباه الموصلات قوية جداً!"
-      incorrect: "فكر في ما يجعلها 'شبه' - إنها بين الموصلات والعوازل!"
+      correct: "Perfect! The ability to control conductivity is what makes semiconductors so powerful!"
+      incorrect: "Think about what makes them 'semi' - they're in between conductors and insulators!"
 
   - id: task-3
     category: learning
-    time_limit: 10
+    time_limit: 8
     KSA_focus:
       primary:
         - K4.2
@@ -136,43 +136,43 @@ tasks:
     ai_module:
       role: educator
       model: gemini-2.5-flash
-      persona: الذكاء الاصطناعي كريستال المرشد
+      persona: AI Crystal Guide
       initial_prompt: |
-        اقد الطالب عبر عملية تصنيع الرقائق.
-        اشرح التحول من الرمل إلى رقائق السيليكون.
-    title: "المحطة 3: من الرمل إلى الذهب - ولادة الرقاقة"
-    description: كيف تتحول حبة الرمل إلى رقاقة قوية؟
+        Guide the student through the chip manufacturing process.
+        Explain the transformation from sand to silicon chips.
+    title: "المهمة 3: سر أشباه الموصلات - مادة فريدة"
+    description: نحن نعلم أن الرقائق مصنوعة من "السيليكون"، ولكن لماذا تم اختياره؟
     instructions: |
-      تتبع رحلة التحول المذهلة من الرمل البسيط إلى رقائق أشباه الموصلات المتطورة.
+      لماذا السيليكون؟ اتضح أنه يحمل هوية سرية حول "التوصيل" - هذا ما يعنيه "شبه موصل". هذا الاسم الذي يبدو رائعاً، ماذا يمثل بالضبط؟
     content: |
-      ## عملية تصنيع الرقائق
+      ## The Chip Manufacturing Process
 
-      ### النقاط الأساسية
-      - يذاب السيليكون عالي النقاء ويسحب إلى أسطوانات ضخمة تسمى **سبائك السيليكون**
-      - تقطع سبائك السيليكون إلى أقراص رقيقة جداً تسمى **الرقائق الأساسية**
-      - من خلال عمليات معقدة مثل الطباعة الضوئية، يتم إنشاء مليارات المكونات الإلكترونية الدقيقة
-      - أهم مكون هو **الترانزستور**
+      ### Key Points
+      - High-purity silicon is melted and pulled into huge cylinders called **silicon ingots**
+      - Silicon ingots are sliced into ultra-thin discs called **wafers**
+      - Through complex processes like photolithography, billions of tiny electronic components are created
+      - The most important component is the **transistor**
 
-      ### مراجعة علمية: التغيرات الفيزيائية
-      الذوبان (صلب إلى سائل) والتصلب (سائل إلى صلب) هما تغيرات فيزيائية.
+      ### Science Review: Physical Changes
+      Melting (solid to liquid) and solidification (liquid to solid) are physical changes.
     question:
-      text: "ماذا تسمى الأقراص الرقيقة جداً المقطوعة من سبائك السيليكون؟"
+      text: "What are the ultra-thin discs cut from silicon ingots called?"
       type: multiple_choice
       options:
-        - text: "قضبان بلورية"
+        - text: "Crystal rods"
           value: "rods"
-        - text: "الرقائق الأساسية"
+        - text: "Wafers"
           value: "wafers"
-        - text: "بلورات"
+        - text: "Crystals"
           value: "crystals"
       correct_answer: "wafers"
     ai_feedback:
-      correct: "ممتاز! رقائق السيليكون الأساسية هي أساس تصنيع الرقائق."
-      incorrect: "فكر في الأقراص الرقيقة والدائرية التي تُبنى عليها الرقائق."
+      correct: "Excellent! Silicon wafers are the foundation for chip manufacturing."
+      incorrect: "Think about the thin, circular discs that chips are built on."
 
   - id: task-4
     category: application
-    time_limit: 10
+    time_limit: 8
     KSA_focus:
       primary:
         - K1.4
@@ -182,42 +182,42 @@ tasks:
     ai_module:
       role: educator
       model: gemini-2.5-flash
-      persona: الذكاء الاصطناعي كريستال المرشد
+      persona: AI Crystal Guide
       initial_prompt: |
-        ساعد الطلاب على التعرف على أشباه الموصلات في حياتهم اليومية.
-        اربط التكنولوجيا بالتطبيقات الواقعية.
-    title: "المحطة 4: الرقائق في كل مكان - يوم في الحياة الذكية"
-    description: الرقائق هي الأبطال المجهولون في حياتنا اليومية.
+        Help students recognize semiconductors in their daily life.
+        Connect the technology to real-world applications.
+    title: "المهمة 4: مما تصنع الرقائق؟"
+    description: كيف يبدو داخل الرقاقة؟ إنها في الواقع مدينة مصغرة، موطن لمليارات "المفاتيح المصغرة" المسؤولة عن التفكير.
     instructions: |
-      دعونا نفحص كم مرة تواجه الرقائق في يوم عادي!
+      هذه المفاتيح المصغرة تسمى "ترانزيستورات". أداء الرقاقة يعتمد على عدد الترانزيستورات التي يمكن حشرها في منطقة صغيرة. دعونا نلتقي بالأبطال الأصغر والأهم داخل الرقاقة.
     content: |
-      ## الرقائق في الحياة اليومية
+      ## Chips in Daily Life
 
-      ### النقاط الأساسية
-      - الرقائق (الدوائر المتكاملة، IC) هي عقول الإلكترونيات الحديثة
-      - من الهواتف والحاسوب والساعات الذكية إلى السيارات والقطارات، الرقائق في كل مكان
-      - الرقائق تتعامل مع الحوسبة والذاكرة والتحكم
+      ### Key Points
+      - Chips (Integrated Circuits, ICs) are the brains of modern electronics
+      - From phones, computers, smartwatches to cars and trains, chips are everywhere
+      - Chips handle computation, memory, and control
 
-      ### مراجعة علمية: تحويل الطاقة
-      الطاقة الكيميائية في البطاريات تتحول من خلال تحكم الرقائق إلى طاقة ضوئية وصوتية.
+      ### Science Review: Energy Conversion
+      Chemical energy in batteries is converted through chip control into light and sound energy.
     question:
-      text: "أي مما يلي لم يذكر كتطبيق لأشباه الموصلات؟"
+      text: "Which of the following was NOT mentioned as a semiconductor application?"
       type: multiple_choice
       options:
-        - text: "المدفوعات المحمولة"
+        - text: "Mobile payments"
           value: "payments"
-        - text: "الساعات الذكية"
+        - text: "Smartwatches"
           value: "watches"
-        - text: "توليد الطاقة الشمسية"
+        - text: "Solar power generation"
           value: "solar"
       correct_answer: "solar"
     ai_feedback:
-      correct: "صحيح! رغم أن الألواح الشمسية تستخدم أشباه الموصلات، لم يكن هذا تركيزنا اليوم."
-      incorrect: "راجع التطبيقات التي تم مناقشتها تحديداً في رحلتنا."
+      correct: "Correct! While solar panels use semiconductors, this wasn't our focus today."
+      incorrect: "Review which applications were specifically discussed in our journey."
 
   - id: task-5
     category: synthesis
-    time_limit: 10
+    time_limit: 8
     KSA_focus:
       primary:
         - K1.1
@@ -227,55 +227,55 @@ tasks:
     ai_module:
       role: educator
       model: gemini-2.5-flash
-      persona: الذكاء الاصطناعي كريستال المرشد
+      persona: AI Crystal Guide
       initial_prompt: |
-        اختتم الرحلة بشرح صناعة أشباه الموصلات العالمية.
-        ساعد الطلاب على فهم الطبيعة التعاونية لإنتاج الرقائق.
-    title: "المحطة 5: خلف الكواليس - سلسلة صناعة أشباه الموصلات"
-    description: تصنيع الرقائق يتطلب تعاوناً عالمياً.
+        Conclude the journey by explaining the global semiconductor industry.
+        Help students understand the collaborative nature of chip production.
+    title: "المهمة 5: القانون السحري الذي يتنبأ بالمستقبل"
+    description: لماذا تصبح الهواتف وأجهزة الكمبيوتر أكثر قوة كل عام أو عامين؟ وراء هذا هناك في الواقع نبوءة تقنية مشهورة تقود صناعة أشباه الموصلات لأكثر من خمسين عاماً.
     instructions: |
-      اكتشف كيف تعمل صناعة أشباه الموصلات من خلال التعاون العالمي.
+      هذه النبوءة التي تحافظ على التقنية في التقدم بسرعة البرق هي "قانون مور" المشهور. ماذا يتنبأ بالضبط؟ خلال 5 سنوات، ما الميزات السحرية التي تريدها في هاتفك؟
     content: |
-      ## صناعة أشباه الموصلات العالمية
+      ## The Global Semiconductor Industry
 
-      ### النقاط الأساسية
-      - تشمل الصناعة: تصميم IC، تصنيع IC، تجميع واختبار IC
-      - **شركات تصميم IC** تنشئ مخططات الرقائق
-      - **شركات تصنيع IC** (المسابك) تنتج الرقائق
-      - **شركات التجميع والاختبار IC** تحمي وتختبر الرقائق
+      ### Key Points
+      - The industry involves: IC Design, IC Manufacturing, IC Assembly & Testing
+      - **IC Design companies** create chip blueprints
+      - **IC Manufacturing companies** (foundries) produce chips
+      - **IC Assembly & Testing companies** protect and test chips
 
-      ### مراجعة علمية: تقسيم العمل
-      مثل خط التجميع، تركز كل شركة على تخصصها لتحقيق الكفاءة.
+      ### Science Review: Division of Labor
+      Like an assembly line, each company focuses on their specialty for efficiency.
     question:
-      text: "أي قطاع مسؤول عن تصميم مخططات دوائر الرقائق؟"
+      text: "What segment is responsible for designing chip circuit blueprints?"
       type: multiple_choice
       options:
-        - text: "تصنيع IC"
+        - text: "IC Manufacturing"
           value: "manufacturing"
-        - text: "تجميع IC"
+        - text: "IC Assembly"
           value: "assembly"
-        - text: "تصميم IC"
+        - text: "IC Design"
           value: "design"
       correct_answer: "design"
     ai_feedback:
-      correct: "مثالي! شركات تصميم IC هي مهندسو عالم أشباه الموصلات!"
-      incorrect: "فكر في من ينشئ المخططات الأصلية قبل بدء التصنيع."
+      correct: "Perfect! IC Design companies are the architects of the semiconductor world!"
+      incorrect: "Think about who creates the original plans before manufacturing begins."
 
 evaluation_criteria:
   completion_threshold: 80
   assessment_method: quiz_and_interaction
   success_metrics:
-    - إكمال المحطات الخمس جميعها
-    - الإجابة على الأسئلة بدقة 80%
-    - التفاعل مع الذكاء الاصطناعي كريستال المرشد
+    - Complete all 5 stations
+    - Answer questions with 80% accuracy
+    - Engage with AI Crystal Guide
 
 resources:
   videos:
-    - title: "كيف تعمل أشباه الموصلات"
+    - title: "How Semiconductors Work"
       url: "https://example.com/semiconductor-basics"
   readings:
-    - title: "تاريخ وادي السيليكون"
+    - title: "The History of Silicon Valley"
       url: "https://example.com/silicon-valley-history"
   tools:
-    - title: "مصمم الرقائق الافتراضي"
+    - title: "Virtual Chip Designer"
       url: "https://example.com/chip-designer"

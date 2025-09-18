@@ -1,20 +1,20 @@
 scenario_info:
   id: semiconductor-adventure
   difficulty: beginner
-  estimated_duration: 45
+  estimated_duration: 40
   target_domains:
     - engaging_with_ai
     - creating_with_ai
-  title: Моё Приключение с Полупроводниками
-  description: Отправьтесь в захватывающее приключение, чтобы узнать, как простая песчинка превращается в мощные чипы, которые питают наш современный мир!
+  title: Мое Полупроводниковое Приключение
+  description: "Отправьтесь в захватывающее приключение, чтобы узнать, как простая песчинка превращается в мощные чипы, которые управляют нашим современным миром! (Рекомендуемый возраст: 13+, подходит для школьников средних классов и старше)"
   prerequisites:
     - Базовое понимание элементов и соединений
     - Знакомство с электричеством и электрическими устройствами
+    - "Рекомендуется: Посмотрите это вводное видео - https://youtu.be/cxf6eexA4f0"
   learning_objectives:
-    - Понять, что такое полупроводники и почему кремний важен
-    - Изучить основной процесс производства чипов
-    - Распознать применение полупроводников в повседневной жизни
-    - Понять глобальную цепочку полупроводниковой индустрии
+    - Испытать повсеместность чипов в повседневной жизни и связать их сырье "кремний" с природным "песком"
+    - Понять, что ядро чипов состоит из "транзисторов", действующих как "переключатели", ключом является контролируемая электрическая проводимость полупроводников
+    - Изучить основную концепцию "Закона Мура" и объяснить, почему технологические продукты продолжают становиться быстрее и меньше
 
 ksa_mapping:
   knowledge:
@@ -33,7 +33,7 @@ ksa_mapping:
 tasks:
   - id: task-1
     category: learning
-    time_limit: 10
+    time_limit: 8
     KSA_focus:
       primary:
         - K1.4
@@ -43,44 +43,44 @@ tasks:
     ai_module:
       role: educator
       model: gemini-2.5-flash
-      persona: ИИ Кристалл Гид
+      persona: AI Crystal Guide
       initial_prompt: |
-        Вы ИИ Кристалл, дружелюбный гид, помогающий студентам понимать полупроводники.
-        Начните с приветствия исследователя и объяснения предстоящего путешествия.
-    title: "Станция 1: Начало - Знакомство с Волшебным Элементом Кремний"
-    description: Вы когда-нибудь задумывались, что связывает обширные песчаные пляжи со смартфоном в вашем кармане?
+        You are AI Crystal, a friendly guide helping students understand semiconductors.
+        Start by welcoming the explorer and explaining the journey ahead.
+    title: "Задача 1: Повсеместные Чипы - Умный День в Вашей Жизни"
+    description: |
+      Возможно, вы не заметили, но с момента открытия глаз множество таинственных маленьких помощников находятся вокруг вас, делая нашу жизнь более удобной. Это чипы.
     instructions: |
-      Добро пожаловать, исследователь! Это путешествие проведёт вас через пять станций.
-      Смотрите видео и правильно отвечайте на вопросы, чтобы продвигаться вперёд.
+      Первый вызов вашего приключения - найти этих скрытых "маленьких помощников". Попробуйте рассказать ИИ о любых трех продуктах, содержащих чипы, которые вы встречаете от пробуждения до выхода из дома!
     content: |
-      ## Волшебный Элемент: Кремний
+      ## The Magical Element: Silicon
 
-      ### Ключевые Моменты
-      - Основное сырьё для чипов - это **Кремний (Si)**
-      - Кремний - второй по распространённости элемент на Земле после кислорода
-      - Кремний обычно существует как **Диоксид кремния (SiO₂)**, часто встречающийся в песке или кварце
+      ### Key Points
+      - The main raw material for chips is **Silicon (Si)**
+      - Silicon is the second most abundant element on Earth, after oxygen
+      - Silicon usually exists as **Silicon Dioxide (SiO₂)**, commonly found in sand or quartz
 
-      ### Научное Повторение: Элементы и Соединения
-      Помните? **Элементы** - это основные строительные блоки материи, такие как Кислород (O), Водород (H) и Кремний (Si).
-      **Соединения** - это чистые вещества, состоящие из двух или более разных элементов.
+      ### Science Review: Elements and Compounds
+      Remember? **Elements** are the basic building blocks of matter, like Oxygen (O), Hydrogen (H), and Silicon (Si).
+      **Compounds** are pure substances made of two or more different elements.
     question:
-      text: "Из чего извлекается самое важное сырьё 'Кремний (Si)' для чипов?"
+      text: "What is the most important raw material 'Silicon (Si)' for chips extracted from?"
       type: multiple_choice
       options:
-        - text: "Нефть"
+        - text: "Oil"
           value: "oil"
-        - text: "Морская вода"
+        - text: "Seawater"
           value: "seawater"
-        - text: "Песок"
+        - text: "Sand"
           value: "sand"
       correct_answer: "sand"
     ai_feedback:
-      correct: "Отлично! Кремний действительно извлекается из песка, конкретно из диоксида кремния (SiO₂), содержащегося в песке и кварце."
-      incorrect: "Подумайте о том, что много на пляжах и содержит диоксид кремния!"
+      correct: "Excellent! Silicon is indeed extracted from sand, specifically from silicon dioxide (SiO₂) found in sand and quartz."
+      incorrect: "Think about what's abundant on beaches and contains silicon dioxide!"
 
   - id: task-2
     category: learning
-    time_limit: 10
+    time_limit: 8
     KSA_focus:
       primary:
         - K1.1
@@ -90,43 +90,43 @@ tasks:
     ai_module:
       role: educator
       model: gemini-2.5-flash
-      persona: ИИ Кристалл Гид
+      persona: AI Crystal Guide
       initial_prompt: |
-        Продолжайте направлять студента к пониманию полупроводников.
-        Объясните, что делает кремний особенным для электроники.
-    title: "Станция 2: Секрет Полупроводников"
-    description: Мы знаем, что чипы сделаны из кремния, но почему именно кремний?
+        Continue guiding the student through understanding semiconductors.
+        Explain what makes silicon special for electronics.
+    title: "Задача 2: Знакомство с Магическим Элементом 'Кремний'"
+    description: Задавались ли вы вопросом, что связывает песок на обширных пляжах со смартфоном в вашем кармане?
     instructions: |
-      Кремний - это очень особенный материал, называемый 'полупроводник'. Давайте откроем его секреты!
+      Как песок превращается в сердце телефона? Приходите спросить у ИИ и разгадайте эту загадку!
     content: |
-      ## Понимание Полупроводников
+      ## Understanding Semiconductors
 
-      ### Ключевые Моменты
-      - Материалы классифицируются по проводимости: проводники, изоляторы и полупроводники
-      - **Проводники** (как металлы) легко проводят электричество
-      - **Изоляторы** (как резина) не проводят электричество
-      - **Полупроводники** имеют проводимость между двумя типами, и её можно контролировать
+      ### Key Points
+      - Materials are classified by conductivity: conductors, insulators, and semiconductors
+      - **Conductors** (like metals) easily conduct electricity
+      - **Insulators** (like rubber) don't conduct electricity
+      - **Semiconductors** have conductivity between the two, and can be controlled
 
-      ### Научное Повторение: Электрический Ток
-      Электрический ток похож на множество крошечных "электронов", движущихся в одном направлении через провод.
+      ### Science Review: Electric Current
+      Electric current is like many tiny "electrons" moving in the same direction through a wire.
     question:
-      text: "Какая самая особенная характеристика полупроводников?"
+      text: "What is the most special characteristic of semiconductors?"
       type: multiple_choice
       options:
-        - text: "Очень хорошо проводят электричество"
+        - text: "Very good at conducting electricity"
           value: "high_conductivity"
-        - text: "Полностью не проводят"
+        - text: "Completely non-conductive"
           value: "non_conductive"
-        - text: "Проводимость можно контролировать"
+        - text: "Conductivity can be controlled"
           value: "controllable"
       correct_answer: "controllable"
     ai_feedback:
-      correct: "Превосходно! Способность контролировать проводимость - это то, что делает полупроводники такими мощными!"
-      incorrect: "Подумайте, что делает их 'полу' - они находятся между проводниками и изоляторами!"
+      correct: "Perfect! The ability to control conductivity is what makes semiconductors so powerful!"
+      incorrect: "Think about what makes them 'semi' - they're in between conductors and insulators!"
 
   - id: task-3
     category: learning
-    time_limit: 10
+    time_limit: 8
     KSA_focus:
       primary:
         - K4.2
@@ -136,43 +136,43 @@ tasks:
     ai_module:
       role: educator
       model: gemini-2.5-flash
-      persona: ИИ Кристалл Гид
+      persona: AI Crystal Guide
       initial_prompt: |
-        Проведите студента через процесс производства чипов.
-        Объясните трансформацию от песка к кремниевым чипам.
-    title: "Станция 3: От Песка к Золоту - Рождение Чипа"
-    description: Как песчинка превращается в мощный чип?
+        Guide the student through the chip manufacturing process.
+        Explain the transformation from sand to silicon chips.
+    title: "Задача 3: Секрет Полупроводников - Уникальный Материал"
+    description: Мы знаем, что чипы сделаны из "кремния", но почему он был выбран?
     instructions: |
-      Проследите невероятное путешествие трансформации от простого песка до сложных полупроводниковых чипов.
+      Почему кремний? Оказывается, у него есть секретная личность относительно "проводимости" - это то, что означает "полупроводник". Это крутое название, что оно точно представляет?
     content: |
-      ## Процесс Производства Чипов
+      ## The Chip Manufacturing Process
 
-      ### Ключевые Моменты
-      - Кремний высокой чистоты плавится и вытягивается в огромные цилиндры, называемые **кремниевыми слитками**
-      - Кремниевые слитки нарезаются на ультратонкие диски, называемые **пластинами**
-      - Через сложные процессы, такие как фотолитография, создаются миллиарды крошечных электронных компонентов
-      - Самый важный компонент - это **транзистор**
+      ### Key Points
+      - High-purity silicon is melted and pulled into huge cylinders called **silicon ingots**
+      - Silicon ingots are sliced into ultra-thin discs called **wafers**
+      - Through complex processes like photolithography, billions of tiny electronic components are created
+      - The most important component is the **transistor**
 
-      ### Научное Повторение: Физические Изменения
-      Плавление (твёрдое в жидкое) и затвердевание (жидкое в твёрдое) - это физические изменения.
+      ### Science Review: Physical Changes
+      Melting (solid to liquid) and solidification (liquid to solid) are physical changes.
     question:
-      text: "Как называются ультратонкие диски, нарезанные из кремниевых слитков?"
+      text: "What are the ultra-thin discs cut from silicon ingots called?"
       type: multiple_choice
       options:
-        - text: "Кристаллические стержни"
+        - text: "Crystal rods"
           value: "rods"
-        - text: "Пластины"
+        - text: "Wafers"
           value: "wafers"
-        - text: "Кристаллы"
+        - text: "Crystals"
           value: "crystals"
       correct_answer: "wafers"
     ai_feedback:
-      correct: "Отлично! Кремниевые пластины - это основа для производства чипов."
-      incorrect: "Подумайте о тонких круглых дисках, на которых строятся чипы."
+      correct: "Excellent! Silicon wafers are the foundation for chip manufacturing."
+      incorrect: "Think about the thin, circular discs that chips are built on."
 
   - id: task-4
     category: application
-    time_limit: 10
+    time_limit: 8
     KSA_focus:
       primary:
         - K1.4
@@ -182,42 +182,42 @@ tasks:
     ai_module:
       role: educator
       model: gemini-2.5-flash
-      persona: ИИ Кристалл Гид
+      persona: AI Crystal Guide
       initial_prompt: |
-        Помогите студентам распознать полупроводники в их повседневной жизни.
-        Свяжите технологию с реальными применениями.
-    title: "Станция 4: Вездесущие Чипы - День в Умной Жизни"
-    description: Чипы - это невоспетые герои нашей повседневной жизни.
+        Help students recognize semiconductors in their daily life.
+        Connect the technology to real-world applications.
+    title: "Задача 4: Из Чего Состоят Чипы?"
+    description: Как выглядит внутренность чипа? На самом деле это миниатюрный город, дом для миллиардов "мини-переключателей", ответственных за мышление.
     instructions: |
-      Давайте рассмотрим, сколько раз вы встречаете чипы в типичный день!
+      Эти мини-переключатели называются "транзисторы". Производительность чипа зависит от того, сколько транзисторов можно упаковать в крошечную область. Давайте познакомимся с самыми маленькими, но самыми важными героями внутри чипа.
     content: |
-      ## Чипы в Повседневной Жизни
+      ## Chips in Daily Life
 
-      ### Ключевые Моменты
-      - Чипы (Интегральные Схемы, ИС) - это мозги современной электроники
-      - От телефонов, компьютеров, умных часов до автомобилей и поездов, чипы везде
-      - Чипы обрабатывают вычисления, память и управление
+      ### Key Points
+      - Chips (Integrated Circuits, ICs) are the brains of modern electronics
+      - From phones, computers, smartwatches to cars and trains, chips are everywhere
+      - Chips handle computation, memory, and control
 
-      ### Научное Повторение: Преобразование Энергии
-      Химическая энергия в батареях преобразуется через управление чипами в световую и звуковую энергию.
+      ### Science Review: Energy Conversion
+      Chemical energy in batteries is converted through chip control into light and sound energy.
     question:
-      text: "Что из перечисленного НЕ было упомянуто как применение полупроводников?"
+      text: "Which of the following was NOT mentioned as a semiconductor application?"
       type: multiple_choice
       options:
-        - text: "Мобильные платежи"
+        - text: "Mobile payments"
           value: "payments"
-        - text: "Умные часы"
+        - text: "Smartwatches"
           value: "watches"
-        - text: "Генерация солнечной энергии"
+        - text: "Solar power generation"
           value: "solar"
       correct_answer: "solar"
     ai_feedback:
-      correct: "Правильно! Хотя солнечные панели используют полупроводники, это не было нашим фокусом сегодня."
-      incorrect: "Просмотрите, какие применения были конкретно обсуждены в нашем путешествии."
+      correct: "Correct! While solar panels use semiconductors, this wasn't our focus today."
+      incorrect: "Review which applications were specifically discussed in our journey."
 
   - id: task-5
     category: synthesis
-    time_limit: 10
+    time_limit: 8
     KSA_focus:
       primary:
         - K1.1
@@ -227,55 +227,55 @@ tasks:
     ai_module:
       role: educator
       model: gemini-2.5-flash
-      persona: ИИ Кристалл Гид
+      persona: AI Crystal Guide
       initial_prompt: |
-        Завершите путешествие объяснением глобальной полупроводниковой индустрии.
-        Помогите студентам понять совместный характер производства чипов.
-    title: "Станция 5: За Кулисами - Цепочка Полупроводниковой Индустрии"
-    description: Производство чипов требует глобального сотрудничества.
+        Conclude the journey by explaining the global semiconductor industry.
+        Help students understand the collaborative nature of chip production.
+    title: "Задача 5: Магический Закон, Предсказывающий Будущее"
+    description: Почему телефоны и компьютеры становятся мощнее каждый год или два? За этим на самом деле стоит знаменитое технологическое пророчество, которое движет полупроводниковой индустрией уже более пятидесяти лет.
     instructions: |
-      Откройте, как работает полупроводниковая индустрия через глобальное сотрудничество.
+      Это пророчество, которое поддерживает технологию в продвижении со скоростью света, - знаменитый "Закон Мура". Что он точно предсказывает? Через 5 лет, какие магические функции вы хотели бы, чтобы имел ваш телефон?
     content: |
-      ## Глобальная Полупроводниковая Индустрия
+      ## The Global Semiconductor Industry
 
-      ### Ключевые Моменты
-      - Индустрия включает: Дизайн ИС, Производство ИС, Сборку и Тестирование ИС
-      - **Компании Дизайна ИС** создают чертежи чипов
-      - **Компании Производства ИС** (литейные заводы) производят чипы
-      - **Компании Сборки и Тестирования ИС** защищают и тестируют чипы
+      ### Key Points
+      - The industry involves: IC Design, IC Manufacturing, IC Assembly & Testing
+      - **IC Design companies** create chip blueprints
+      - **IC Manufacturing companies** (foundries) produce chips
+      - **IC Assembly & Testing companies** protect and test chips
 
-      ### Научное Повторение: Разделение Труда
-      Как на сборочной линии, каждая компания фокусируется на своей специальности для эффективности.
+      ### Science Review: Division of Labor
+      Like an assembly line, each company focuses on their specialty for efficiency.
     question:
-      text: "Какой сегмент ответственен за проектирование схем чипов?"
+      text: "What segment is responsible for designing chip circuit blueprints?"
       type: multiple_choice
       options:
-        - text: "Производство ИС"
+        - text: "IC Manufacturing"
           value: "manufacturing"
-        - text: "Сборка ИС"
+        - text: "IC Assembly"
           value: "assembly"
-        - text: "Дизайн ИС"
+        - text: "IC Design"
           value: "design"
       correct_answer: "design"
     ai_feedback:
-      correct: "Превосходно! Компании Дизайна ИС - это архитекторы полупроводникового мира!"
-      incorrect: "Подумайте о том, кто создаёт первоначальные планы до начала производства."
+      correct: "Perfect! IC Design companies are the architects of the semiconductor world!"
+      incorrect: "Think about who creates the original plans before manufacturing begins."
 
 evaluation_criteria:
   completion_threshold: 80
   assessment_method: quiz_and_interaction
   success_metrics:
-    - Завершить все 5 станций
-    - Отвечать на вопросы с точностью 80%
-    - Взаимодействовать с ИИ Кристалл Гидом
+    - Complete all 5 stations
+    - Answer questions with 80% accuracy
+    - Engage with AI Crystal Guide
 
 resources:
   videos:
-    - title: "Как Работают Полупроводники"
+    - title: "How Semiconductors Work"
       url: "https://example.com/semiconductor-basics"
   readings:
-    - title: "История Кремниевой Долины"
+    - title: "The History of Silicon Valley"
       url: "https://example.com/silicon-valley-history"
   tools:
-    - title: "Виртуальный Дизайнер Чипов"
+    - title: "Virtual Chip Designer"
       url: "https://example.com/chip-designer"

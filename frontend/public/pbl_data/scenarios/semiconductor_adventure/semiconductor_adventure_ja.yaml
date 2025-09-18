@@ -1,20 +1,20 @@
 scenario_info:
   id: semiconductor-adventure
   difficulty: beginner
-  estimated_duration: 45
+  estimated_duration: 40
   target_domains:
     - engaging_with_ai
     - creating_with_ai
-  title: 私の半導体アドベンチャー
-  description: 単純な砂粒が現代世界を動かす強力なチップに変身する驚くべき冒険に乗り出そう！
+  title: 私の半導体冒険
+  description: "単純な砂粒が現代世界を動かす強力なチップに変身する、ワクワクする冒険に出発しましょう！（推奨年齢：13歳以上、中学生以上に適しています）"
   prerequisites:
-    - 元素と化合物の基本的理解
-    - 電気と電気機器への親しみ
+    - 元素と化合物の基本的な理解
+    - 電気と電気機器に精通していること
+    - "推奨：この紹介ビデオをご覧ください - https://youtu.be/cxf6eexA4f0"
   learning_objectives:
-    - 半導体とは何か、なぜシリコンが重要かを理解する
-    - チップ製造の基本プロセスを学ぶ
-    - 日常生活における半導体の応用を認識する
-    - グローバル半導体産業チェーンを理解する
+    - 日常生活におけるチップの遍在性を体験し、その原材料「シリコン」と天然の「砂」を関連付ける
+    - チップの中核が「スイッチ」として機能する「トランジスタ」で構成され、半導体の制御可能な電気伝導性が鍵であることを理解する
+    - 「ムーアの法則」の基本概念を学び、なぜ技術製品がより高速で小型化し続けるのかを説明する
 
 ksa_mapping:
   knowledge:
@@ -33,7 +33,7 @@ ksa_mapping:
 tasks:
   - id: task-1
     category: learning
-    time_limit: 10
+    time_limit: 8
     KSA_focus:
       primary:
         - K1.4
@@ -43,44 +43,44 @@ tasks:
     ai_module:
       role: educator
       model: gemini-2.5-flash
-      persona: AIクリスタルガイド
+      persona: AI Crystal Guide
       initial_prompt: |
-        あなたはAIクリスタルです。学生が半導体を理解するのを助ける親しみやすいガイドです。
-        探検者を歓迎し、これから始まる旅について説明することから始めてください。
-    title: "ステーション1：始まり - 魔法の元素シリコンに出会う"
-    description: 広大な砂浜とあなたのポケットのスマートフォンを結ぶものが何か考えたことはありますか？
+        You are AI Crystal, a friendly guide helping students understand semiconductors.
+        Start by welcoming the explorer and explaining the journey ahead.
+    title: "タスク1：どこにでもあるチップ - あなたの生活のスマートな一日"
+    description: |
+      気づいていないかもしれませんが、目を開けた瞬間から、多くの神秘的な小さなヘルパーがあなたの周りにいて、私たちの生活をより便利にしています。それがチップです。
     instructions: |
-      ようこそ探検者！この旅では5つのステーションを通過します。
-      ビデオを見て、質問に正しく答えて進んでください。
+      冒険の最初のチャレンジは、これらの隠れた「小さなヘルパー」を見つけることです。起床から家を出るまでに遭遇するチップを含む任意の3つの製品についてAIに話してみてください！
     content: |
-      ## 魔法の元素：シリコン
+      ## The Magical Element: Silicon
 
-      ### 重要なポイント
-      - チップの主要原料は**シリコン（Si）**です
-      - シリコンは酸素に次いで地球上で2番目に豊富な元素です
-      - シリコンは通常**二酸化シリコン（SiO₂）**として存在し、砂や石英によく見られます
+      ### Key Points
+      - The main raw material for chips is **Silicon (Si)**
+      - Silicon is the second most abundant element on Earth, after oxygen
+      - Silicon usually exists as **Silicon Dioxide (SiO₂)**, commonly found in sand or quartz
 
-      ### 科学の復習：元素と化合物
-      覚えていますか？**元素**は物質の基本構成要素で、酸素（O）、水素（H）、シリコン（Si）などがあります。
-      **化合物**は2つ以上の異なる元素から作られた純粋な物質です。
+      ### Science Review: Elements and Compounds
+      Remember? **Elements** are the basic building blocks of matter, like Oxygen (O), Hydrogen (H), and Silicon (Si).
+      **Compounds** are pure substances made of two or more different elements.
     question:
-      text: "チップの最も重要な原料「シリコン（Si）」は何から抽出されますか？"
+      text: "What is the most important raw material 'Silicon (Si)' for chips extracted from?"
       type: multiple_choice
       options:
-        - text: "石油"
+        - text: "Oil"
           value: "oil"
-        - text: "海水"
+        - text: "Seawater"
           value: "seawater"
-        - text: "砂"
+        - text: "Sand"
           value: "sand"
       correct_answer: "sand"
     ai_feedback:
-      correct: "素晴らしい！シリコンは確かに砂から抽出されます。具体的には砂や石英に含まれる二酸化シリコン（SiO₂）からです。"
-      incorrect: "ビーチに豊富にあり、二酸化シリコンを含むものについて考えてみてください！"
+      correct: "Excellent! Silicon is indeed extracted from sand, specifically from silicon dioxide (SiO₂) found in sand and quartz."
+      incorrect: "Think about what's abundant on beaches and contains silicon dioxide!"
 
   - id: task-2
     category: learning
-    time_limit: 10
+    time_limit: 8
     KSA_focus:
       primary:
         - K1.1
@@ -90,43 +90,43 @@ tasks:
     ai_module:
       role: educator
       model: gemini-2.5-flash
-      persona: AIクリスタルガイド
+      persona: AI Crystal Guide
       initial_prompt: |
-        学生が半導体を理解できるように引き続きガイドしてください。
-        シリコンが電子機器にとって特別な理由を説明してください。
-    title: "ステーション2：半導体の秘密"
-    description: チップがシリコンで作られていることは分かりましたが、なぜシリコンなのでしょう？
+        Continue guiding the student through understanding semiconductors.
+        Explain what makes silicon special for electronics.
+    title: "タスク2：魔法の元素「シリコン」に出会う"
+    description: 広大なビーチの砂と、あなたのポケットの中のスマートフォンを結び付けるものが何なのか、考えたことはありますか？
     instructions: |
-      シリコンは「半導体」と呼ばれる非常に特別な材料です。その秘密を発見しましょう！
+      砂はどのようにして電話の心臓に変身するのでしょうか？AIに聞いて、この謎を解いてください！
     content: |
-      ## 半導体を理解する
+      ## Understanding Semiconductors
 
-      ### 重要なポイント
-      - 材料は導電性によって分類されます：導体、絶縁体、半導体
-      - **導体**（金属など）は電気を簡単に通します
-      - **絶縁体**（ゴムなど）は電気を通しません
-      - **半導体**はその中間の導電性を持ち、制御することができます
+      ### Key Points
+      - Materials are classified by conductivity: conductors, insulators, and semiconductors
+      - **Conductors** (like metals) easily conduct electricity
+      - **Insulators** (like rubber) don't conduct electricity
+      - **Semiconductors** have conductivity between the two, and can be controlled
 
-      ### 科学の復習：電流
-      電流は、多くの小さな「電子」が同じ方向にワイヤを通って移動するようなものです。
+      ### Science Review: Electric Current
+      Electric current is like many tiny "electrons" moving in the same direction through a wire.
     question:
-      text: "半導体の最も特別な特性は何ですか？"
+      text: "What is the most special characteristic of semiconductors?"
       type: multiple_choice
       options:
-        - text: "電気の導電性が非常に良い"
+        - text: "Very good at conducting electricity"
           value: "high_conductivity"
-        - text: "完全に非導電性"
+        - text: "Completely non-conductive"
           value: "non_conductive"
-        - text: "導電性を制御できる"
+        - text: "Conductivity can be controlled"
           value: "controllable"
       correct_answer: "controllable"
     ai_feedback:
-      correct: "完璧です！導電性を制御できる能力こそが半導体を強力にしているのです！"
-      incorrect: "なぜ「半」なのかを考えてみてください。導体と絶縁体の間にあるからです！"
+      correct: "Perfect! The ability to control conductivity is what makes semiconductors so powerful!"
+      incorrect: "Think about what makes them 'semi' - they're in between conductors and insulators!"
 
   - id: task-3
     category: learning
-    time_limit: 10
+    time_limit: 8
     KSA_focus:
       primary:
         - K4.2
@@ -136,43 +136,43 @@ tasks:
     ai_module:
       role: educator
       model: gemini-2.5-flash
-      persona: AIクリスタルガイド
+      persona: AI Crystal Guide
       initial_prompt: |
-        学生をチップ製造プロセスを通じてガイドしてください。
-        砂からシリコンチップへの変換を説明してください。
-    title: "ステーション3：砂から黄金へ - チップの誕生"
-    description: 砂粒はどのようにして強力なチップに変身するのでしょう？
+        Guide the student through the chip manufacturing process.
+        Explain the transformation from sand to silicon chips.
+    title: "タスク3：半導体の秘密 - ユニークな材料"
+    description: チップが「シリコン」で作られていることは知っていますが、なぜそれが選ばれたのでしょうか？
     instructions: |
-      単純な砂から洗練された半導体チップへの驚くべき変換の旅をたどりましょう。
+      なぜシリコンなのか？実は、「導電性」に関する秘密のアイデンティティを持っています - それが「半導体」の意味です。このクールに聞こえる名前は、正確に何を表しているのでしょうか？
     content: |
-      ## チップ製造プロセス
+      ## The Chip Manufacturing Process
 
-      ### 重要なポイント
-      - 高純度シリコンは溶かされ、**シリコンインゴット**と呼ばれる巨大な円柱に引き上げられます
-      - シリコンインゴットは**ウェーハ**と呼ばれる超薄いディスクにスライスされます
-      - フォトリソグラフィなどの複雑なプロセスを通じて、何十億もの小さな電子部品が作られます
-      - 最も重要な部品は**トランジスタ**です
+      ### Key Points
+      - High-purity silicon is melted and pulled into huge cylinders called **silicon ingots**
+      - Silicon ingots are sliced into ultra-thin discs called **wafers**
+      - Through complex processes like photolithography, billions of tiny electronic components are created
+      - The most important component is the **transistor**
 
-      ### 科学の復習：物理的変化
-      溶融（固体から液体）と凝固（液体から固体）は物理的変化です。
+      ### Science Review: Physical Changes
+      Melting (solid to liquid) and solidification (liquid to solid) are physical changes.
     question:
-      text: "シリコンインゴットから切り出された超薄いディスクは何と呼ばれますか？"
+      text: "What are the ultra-thin discs cut from silicon ingots called?"
       type: multiple_choice
       options:
-        - text: "クリスタルロッド"
+        - text: "Crystal rods"
           value: "rods"
-        - text: "ウェーハ"
+        - text: "Wafers"
           value: "wafers"
-        - text: "クリスタル"
+        - text: "Crystals"
           value: "crystals"
       correct_answer: "wafers"
     ai_feedback:
-      correct: "素晴らしい！シリコンウェーハはチップ製造の基盤です。"
-      incorrect: "チップが構築される薄い円形のディスクについて考えてみてください。"
+      correct: "Excellent! Silicon wafers are the foundation for chip manufacturing."
+      incorrect: "Think about the thin, circular discs that chips are built on."
 
   - id: task-4
     category: application
-    time_limit: 10
+    time_limit: 8
     KSA_focus:
       primary:
         - K1.4
@@ -182,42 +182,42 @@ tasks:
     ai_module:
       role: educator
       model: gemini-2.5-flash
-      persona: AIクリスタルガイド
+      persona: AI Crystal Guide
       initial_prompt: |
-        学生が日常生活で半導体を認識できるよう支援してください。
-        技術を実世界の応用と結び付けてください。
-    title: "ステーション4：遍在するチップ - スマートライフでの一日"
-    description: チップは私たちの日常生活の縁の下の力持ちです。
+        Help students recognize semiconductors in their daily life.
+        Connect the technology to real-world applications.
+    title: "タスク4：チップは何でできているのか？"
+    description: チップの内部はどのように見えるのでしょうか？実際は小さな都市で、数十億の思考を担当する「ミニスイッチ」の家です。
     instructions: |
-      典型的な一日でどれほど多くのチップに出会うかを調べてみましょう！
+      これらのミニスイッチは「トランジスタ」と呼ばれます。チップの性能は、小さな領域にどれだけ多くのトランジスタを詰め込めるかに依存します。チップ内で最も小さくて最も重要なヒーローに会いましょう。
     content: |
-      ## 日常生活でのチップ
+      ## Chips in Daily Life
 
-      ### 重要なポイント
-      - チップ（集積回路、IC）は現代電子機器の頭脳です
-      - 電話、コンピュータ、スマートウォッチから車や電車まで、チップはどこにでもあります
-      - チップは計算、メモリ、制御を処理します
+      ### Key Points
+      - Chips (Integrated Circuits, ICs) are the brains of modern electronics
+      - From phones, computers, smartwatches to cars and trains, chips are everywhere
+      - Chips handle computation, memory, and control
 
-      ### 科学の復習：エネルギー変換
-      バッテリーの化学エネルギーはチップ制御を通じて光と音のエネルギーに変換されます。
+      ### Science Review: Energy Conversion
+      Chemical energy in batteries is converted through chip control into light and sound energy.
     question:
-      text: "以下のうち、半導体の応用として言及されなかったものはどれですか？"
+      text: "Which of the following was NOT mentioned as a semiconductor application?"
       type: multiple_choice
       options:
-        - text: "モバイル決済"
+        - text: "Mobile payments"
           value: "payments"
-        - text: "スマートウォッチ"
+        - text: "Smartwatches"
           value: "watches"
-        - text: "太陽光発電"
+        - text: "Solar power generation"
           value: "solar"
       correct_answer: "solar"
     ai_feedback:
-      correct: "正解！ソーラーパネルは半導体を使用しますが、今日の焦点ではありませんでした。"
-      incorrect: "私たちの旅で具体的に議論された応用を見直してください。"
+      correct: "Correct! While solar panels use semiconductors, this wasn't our focus today."
+      incorrect: "Review which applications were specifically discussed in our journey."
 
   - id: task-5
     category: synthesis
-    time_limit: 10
+    time_limit: 8
     KSA_focus:
       primary:
         - K1.1
@@ -227,55 +227,55 @@ tasks:
     ai_module:
       role: educator
       model: gemini-2.5-flash
-      persona: AIクリスタルガイド
+      persona: AI Crystal Guide
       initial_prompt: |
-        グローバル半導体産業を説明して旅を締めくくってください。
-        学生がチップ生産の協調的性質を理解できるよう支援してください。
-    title: "ステーション5：舞台裏 - 半導体産業チェーン"
-    description: チップの製造には世界的な協力が必要です。
+        Conclude the journey by explaining the global semiconductor industry.
+        Help students understand the collaborative nature of chip production.
+    title: "タスク5：未来を予測する魔法の法則"
+    description: なぜ電話やコンピューターは毎年または2年ごとにより強力になるのでしょうか？この背後には、実際には50年以上にわたって半導体業界を推進してきた有名な技術的予言があります。
     instructions: |
-      世界的な協力を通じて半導体産業がどのように機能するかを発見しましょう。
+      技術を光速で進歩させ続けるこの予言は、有名な「ムーアの法則」です。それは正確に何を予測するのでしょうか？5年後、あなたの電話にどんな魔法の機能を持たせたいですか？
     content: |
-      ## グローバル半導体産業
+      ## The Global Semiconductor Industry
 
-      ### 重要なポイント
-      - 産業には以下が含まれます：IC設計、IC製造、IC組立・テスト
-      - **IC設計会社**はチップの設計図を作成します
-      - **IC製造会社**（ファウンドリ）はチップを生産します
-      - **IC組立・テスト会社**はチップを保護し、テストします
+      ### Key Points
+      - The industry involves: IC Design, IC Manufacturing, IC Assembly & Testing
+      - **IC Design companies** create chip blueprints
+      - **IC Manufacturing companies** (foundries) produce chips
+      - **IC Assembly & Testing companies** protect and test chips
 
-      ### 科学の復習：分業
-      組立ラインのように、各社は効率性のために専門分野に集中します。
+      ### Science Review: Division of Labor
+      Like an assembly line, each company focuses on their specialty for efficiency.
     question:
-      text: "チップ回路設計図の設計を担当するのはどのセグメントですか？"
+      text: "What segment is responsible for designing chip circuit blueprints?"
       type: multiple_choice
       options:
-        - text: "IC製造"
+        - text: "IC Manufacturing"
           value: "manufacturing"
-        - text: "IC組立"
+        - text: "IC Assembly"
           value: "assembly"
-        - text: "IC設計"
+        - text: "IC Design"
           value: "design"
       correct_answer: "design"
     ai_feedback:
-      correct: "完璧です！IC設計会社は半導体世界の建築家です！"
-      incorrect: "製造が始まる前に元の設計図を作成するのは誰かを考えてみてください。"
+      correct: "Perfect! IC Design companies are the architects of the semiconductor world!"
+      incorrect: "Think about who creates the original plans before manufacturing begins."
 
 evaluation_criteria:
   completion_threshold: 80
   assessment_method: quiz_and_interaction
   success_metrics:
-    - 5つのステーションをすべて完了する
-    - 80%の精度で質問に答える
-    - AIクリスタルガイドと対話する
+    - Complete all 5 stations
+    - Answer questions with 80% accuracy
+    - Engage with AI Crystal Guide
 
 resources:
   videos:
-    - title: "半導体の仕組み"
+    - title: "How Semiconductors Work"
       url: "https://example.com/semiconductor-basics"
   readings:
-    - title: "シリコンバレーの歴史"
+    - title: "The History of Silicon Valley"
       url: "https://example.com/silicon-valley-history"
   tools:
-    - title: "バーチャルチップデザイナー"
+    - title: "Virtual Chip Designer"
       url: "https://example.com/chip-designer"

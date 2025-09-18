@@ -1,39 +1,39 @@
 scenario_info:
   id: semiconductor-adventure
   difficulty: beginner
-  estimated_duration: 45
+  estimated_duration: 40
   target_domains:
     - engaging_with_ai
     - creating_with_ai
-  title: 我的半導體大冒險
-  description: 踏上一段精彩的冒險，探索一粒簡單的沙子如何變身為驅動現代世界的強大晶片！
+  title: 我的半導體冒險
+  description: "踏上一場令人興奮的冒險，探索一粒簡單的沙子如何變身成為驅動現代世界的強大晶片！（建議年齡：13歲以上，適合國中生以上學習）"
   prerequisites:
-    - 對元素和化合物的基本理解
+    - 對元素和化合物有基本認識
     - 熟悉電力和電子設備
+    - "建議：觀看此介紹影片 - https://youtu.be/cxf6eexA4f0"
   learning_objectives:
-    - 理解什麼是半導體以及矽為何重要
-    - 學習晶片製造的基本過程
-    - 認識半導體在日常生活中的應用
-    - 了解全球半導體產業鏈
+    - 體會晶片在生活中的無所不在，並連結其原料「矽」與自然的「沙子」
+    - 理解晶片的核心是作為「開關」的「電晶體」，其關鍵在於「半導體」可控制電流的特性
+    - 認識「摩爾定律」的基本概念，並解釋為何科技產品能持續地變快、變小
 
 ksa_mapping:
   knowledge:
-    - K1.1  # AI 系統透過演算法處理資料
-    - K1.4  # AI 嵌入在日常科技中
-    - K4.2  # AI 需要運算能力和資源
+    - K1.1  # AI systems process data through algorithms
+    - K1.4  # AI embedded in everyday technologies
+    - K4.2  # AI requires computing power and resources
   skills:
-    - S1.1  # 評估內容的準確性
-    - S3.1  # 分解問題以利 AI 解決
-    - S6.1  # 認識 AI 在日常生活中的影響
+    - S1.1  # Evaluate content for accuracy
+    - S3.1  # Decompose problems for AI solutions
+    - S6.1  # Recognize AI influence in daily life
   attitudes:
-    - A2.1  # 開放地探索能力
-    - A3.1  # 追求創新應用
-    - A5.1  # 考慮多元影響
+    - A2.1  # Explore capabilities with openness
+    - A3.1  # Pursue novel applications
+    - A5.1  # Consider diverse impacts
 
 tasks:
   - id: task-1
     category: learning
-    time_limit: 10
+    time_limit: 8
     KSA_focus:
       primary:
         - K1.4
@@ -43,44 +43,44 @@ tasks:
     ai_module:
       role: educator
       model: gemini-2.5-flash
-      persona: AI 小晶晶引導員
+      persona: AI Crystal Guide
       initial_prompt: |
-        你是 AI 小晶晶，一位友善的引導員，幫助學生了解半導體。
-        首先歡迎探險家並解釋即將展開的旅程。
-    title: "第一站：故事的開端，認識神奇的「矽」元素"
-    description: 你有沒有想過，廣闊沙灘上的沙子，跟我們口袋裡的手機有什麼關係呢？
+        You are AI Crystal, a friendly guide helping students understand semiconductors.
+        Start by welcoming the explorer and explaining the journey ahead.
+    title: "任務 1: 無所不在的晶片，智慧生活的一天"
+    description: |
+      你可能沒有注意到，從你睜開眼的那一刻，許多神秘的小幫手就在你的周遭，讓我們的生活變得更便利。它們，就是晶片。
     instructions: |
-      歡迎探險家！這趟旅程將帶你完成五個關卡，
-      看完影片並答對問題即可前進。
+      冒險的第一關，就是要找出這些隱身的「小幫手」。試著告訴 AI 你從起床到出門，接觸到的任何三樣含有晶片的產品！
     content: |
-      ## 神奇的元素：矽
+      ## The Magical Element: Silicon
 
-      ### 重點摘要
-      - 晶片的主要原料是「**矽 (Silicon, Si)**」
-      - 矽是地球上第二豐富的元素，僅次於氧
-      - 矽通常以「**二氧化矽 (SiO₂)**」，也就是沙子或石英的形式存在
+      ### Key Points
+      - The main raw material for chips is **Silicon (Si)**
+      - Silicon is the second most abundant element on Earth, after oxygen
+      - Silicon usually exists as **Silicon Dioxide (SiO₂)**, commonly found in sand or quartz
 
-      ### 溫故知新：元素與化合物
-      還記得嗎？「**元素**」是組成物質最基本的單位，像是氧(O)、氫(H)、矽(Si)。
-      而「**化合物**」則是由兩種或兩種以上不同元素組成的純物質。
+      ### Science Review: Elements and Compounds
+      Remember? **Elements** are the basic building blocks of matter, like Oxygen (O), Hydrogen (H), and Silicon (Si).
+      **Compounds** are pure substances made of two or more different elements.
     question:
-      text: "晶片最重要的原料「矽(Si)」是從什麼東西提煉出來的？"
+      text: "What is the most important raw material 'Silicon (Si)' for chips extracted from?"
       type: multiple_choice
       options:
-        - text: "石油"
+        - text: "Oil"
           value: "oil"
-        - text: "海水"
+        - text: "Seawater"
           value: "seawater"
-        - text: "沙子"
+        - text: "Sand"
           value: "sand"
       correct_answer: "sand"
     ai_feedback:
-      correct: "太棒了！矽確實是從沙子中提煉出來的，特別是從沙子和石英中的二氧化矽(SiO₂)。"
-      incorrect: "想想看海灘上有什麼豐富的東西含有二氧化矽！"
+      correct: "Excellent! Silicon is indeed extracted from sand, specifically from silicon dioxide (SiO₂) found in sand and quartz."
+      incorrect: "Think about what's abundant on beaches and contains silicon dioxide!"
 
   - id: task-2
     category: learning
-    time_limit: 10
+    time_limit: 8
     KSA_focus:
       primary:
         - K1.1
@@ -90,43 +90,43 @@ tasks:
     ai_module:
       role: educator
       model: gemini-2.5-flash
-      persona: AI 小晶晶引導員
+      persona: AI Crystal Guide
       initial_prompt: |
-        繼續引導學生了解半導體。
-        解釋是什麼讓矽特別適合電子產品。
-    title: "第二站：半導體的秘密，一種與眾不同的材料"
-    description: 我們知道晶片是由「矽」做成的，但為什麼要選它呢？
+        Continue guiding the student through understanding semiconductors.
+        Explain what makes silicon special for electronics.
+    title: "任務 2: 認識神奇的「矽」元素"
+    description: 你有沒有想過，廣闊沙灘上的沙子，跟我們口袋裡的手機有什麼關係呢？
     instructions: |
-      因為「矽」是一種非常特別的材料，它叫做「半導體」。來看看它有什麼秘密！
+      沙子如何變身成手機的心臟？快來問問 AI，解開這個謎題！
     content: |
-      ## 認識半導體
+      ## Understanding Semiconductors
 
-      ### 重點摘要
-      - 物質依導電性可分為導體、絕緣體和半導體
-      - **導體**（如金屬）容易導電
-      - **絕緣體**（如橡膠）不容易導電
-      - **半導體**的導電性介於兩者之間，可以透過設計和控制，決定要不要讓電流通過
+      ### Key Points
+      - Materials are classified by conductivity: conductors, insulators, and semiconductors
+      - **Conductors** (like metals) easily conduct electricity
+      - **Insulators** (like rubber) don't conduct electricity
+      - **Semiconductors** have conductivity between the two, and can be controlled
 
-      ### 溫故知新：電流是什麼？
-      電流就像是許多微小的「電子」在導線裡朝著同一個方向移動。
+      ### Science Review: Electric Current
+      Electric current is like many tiny "electrons" moving in the same direction through a wire.
     question:
-      text: "半導體最特別的特性是什麼？"
+      text: "What is the most special characteristic of semiconductors?"
       type: multiple_choice
       options:
-        - text: "很會導電"
+        - text: "Very good at conducting electricity"
           value: "high_conductivity"
-        - text: "完全不導電"
+        - text: "Completely non-conductive"
           value: "non_conductive"
-        - text: "導電性可以被控制"
+        - text: "Conductivity can be controlled"
           value: "controllable"
       correct_answer: "controllable"
     ai_feedback:
-      correct: "太棒了！「導電性可以被控制」正是讓半導體如此強大的關鍵特性！"
-      incorrect: "想想看是什麼讓它們叫做「半」導體？它們介於導體和絕緣體之間！"
+      correct: "Perfect! The ability to control conductivity is what makes semiconductors so powerful!"
+      incorrect: "Think about what makes them 'semi' - they're in between conductors and insulators!"
 
   - id: task-3
     category: learning
-    time_limit: 10
+    time_limit: 8
     KSA_focus:
       primary:
         - K4.2
@@ -136,43 +136,43 @@ tasks:
     ai_module:
       role: educator
       model: gemini-2.5-flash
-      persona: AI 小晶晶引導員
+      persona: AI Crystal Guide
       initial_prompt: |
-        引導學生了解晶片製造過程。
-        解釋從沙子到矽晶片的轉變。
-    title: "第三站：點沙成金，晶片的誕生過程"
-    description: 一粒沙子，要如何經歷重重考驗，變身成一顆強大的晶片呢？
+        Guide the student through the chip manufacturing process.
+        Explain the transformation from sand to silicon chips.
+    title: "任務 3: 半導體的秘密，一種與眾不同的材料"
+    description: 我們知道晶片是由「矽」做成的，但為什麼要選它呢？
     instructions: |
-      跟隨從簡單的沙子到精密半導體晶片的不可思議轉變之旅。
+      為什麼是「矽」？原來它藏著一個關於「導電」的秘密身份，也就是「半導體」。這聽起來很酷的名字，究竟代表什麼意思呢？
     content: |
-      ## 晶片製造過程
+      ## The Chip Manufacturing Process
 
-      ### 重點摘要
-      - 將高純度的矽熔化後，可以拉製成巨大的圓柱體，稱為「**單晶矽棒**」
-      - 將矽晶棒切成一片片的超薄圓盤，就成了「**晶圓 (Wafer)**」
-      - 在晶圓上，透過複雜的製程（如光刻），可以刻畫出數十億個微小的電子元件
-      - 最重要的就是「**電晶體**」
+      ### Key Points
+      - High-purity silicon is melted and pulled into huge cylinders called **silicon ingots**
+      - Silicon ingots are sliced into ultra-thin discs called **wafers**
+      - Through complex processes like photolithography, billions of tiny electronic components are created
+      - The most important component is the **transistor**
 
-      ### 溫故知新：熔化與凝固
-      熔化（固體變液體）和凝固（液體變固體）是物理變化。
+      ### Science Review: Physical Changes
+      Melting (solid to liquid) and solidification (liquid to solid) are physical changes.
     question:
-      text: "被切成超薄圓盤，用來製造晶片的材料叫做什麼？"
+      text: "What are the ultra-thin discs cut from silicon ingots called?"
       type: multiple_choice
       options:
-        - text: "晶棒"
+        - text: "Crystal rods"
           value: "rods"
-        - text: "晶圓"
+        - text: "Wafers"
           value: "wafers"
-        - text: "晶體"
+        - text: "Crystals"
           value: "crystals"
       correct_answer: "wafers"
     ai_feedback:
-      correct: "太棒了！晶圓是晶片製造的基礎。"
-      incorrect: "想想看晶片是建立在什麼薄薄的圓盤上。"
+      correct: "Excellent! Silicon wafers are the foundation for chip manufacturing."
+      incorrect: "Think about the thin, circular discs that chips are built on."
 
   - id: task-4
     category: application
-    time_limit: 10
+    time_limit: 8
     KSA_focus:
       primary:
         - K1.4
@@ -182,42 +182,42 @@ tasks:
     ai_module:
       role: educator
       model: gemini-2.5-flash
-      persona: AI 小晶晶引導員
+      persona: AI Crystal Guide
       initial_prompt: |
-        幫助學生認識日常生活中的半導體。
-        將科技與實際應用連結。
-    title: "第四站：無所不在的晶片，智慧生活的一天"
-    description: 晶片是我們生活中的無名英雄。
+        Help students recognize semiconductors in their daily life.
+        Connect the technology to real-world applications.
+    title: "任務 4: 晶片是由什麼構成的呢？"
+    description: 晶片內部又是什麼樣子？它其實是一座微型城市，裡面住著數十億個負責思考的「迷你開關」。
     instructions: |
-      讓我們來檢視一下你的一天和晶片相遇了幾次？
+      這些迷你開關，就是「電晶體」。晶片的效能，取決於能在極小的面積上，塞進多少個電晶體。讓我們來認識這個晶片裡最小、也最重要的英雄。
     content: |
-      ## 日常生活中的晶片
+      ## Chips in Daily Life
 
-      ### 重點摘要
-      - 晶片（又稱積體電路, IC）是現代電子產品的大腦
-      - 從手機、電腦、智慧手錶到汽車、捷運，生活中處處都充滿了晶片的應用
-      - 晶片負責運算、記憶和控制
+      ### Key Points
+      - Chips (Integrated Circuits, ICs) are the brains of modern electronics
+      - From phones, computers, smartwatches to cars and trains, chips are everywhere
+      - Chips handle computation, memory, and control
 
-      ### 溫故知新：能量的轉換
-      電池裡的化學能透過晶片的控制，轉換成光能和聲能。
+      ### Science Review: Energy Conversion
+      Chemical energy in batteries is converted through chip control into light and sound energy.
     question:
-      text: "下列哪一項「不是」影片中提到的半導體應用？"
+      text: "Which of the following was NOT mentioned as a semiconductor application?"
       type: multiple_choice
       options:
-        - text: "手機支付"
+        - text: "Mobile payments"
           value: "payments"
-        - text: "智慧手錶"
+        - text: "Smartwatches"
           value: "watches"
-        - text: "太陽能發電"
+        - text: "Solar power generation"
           value: "solar"
       correct_answer: "solar"
     ai_feedback:
-      correct: "正確！雖然太陽能板確實使用半導體技術，但這不是我們今天的重點。"
-      incorrect: "回顧一下我們旅程中具體討論了哪些應用。"
+      correct: "Correct! While solar panels use semiconductors, this wasn't our focus today."
+      incorrect: "Review which applications were specifically discussed in our journey."
 
   - id: task-5
     category: synthesis
-    time_limit: 10
+    time_limit: 8
     KSA_focus:
       primary:
         - K1.1
@@ -227,55 +227,55 @@ tasks:
     ai_module:
       role: educator
       model: gemini-2.5-flash
-      persona: AI 小晶晶引導員
+      persona: AI Crystal Guide
       initial_prompt: |
-        透過解釋全球半導體產業來結束旅程。
-        幫助學生了解晶片生產的協作本質。
-    title: "第五站：科技的幕後功臣，半導體產業鏈"
-    description: 製造晶片需要全球合作。
+        Conclude the journey by explaining the global semiconductor industry.
+        Help students understand the collaborative nature of chip production.
+    title: "任務 5: 預見未來的神奇定律"
+    description: 為什麼手機和電腦每隔一兩年就會變得更厲害？這背後其實有個著名的科技預言，驅動了半導體產業超過五十年。
     instructions: |
-      探索半導體產業如何透過全球協作運作。
+      這個讓科技不斷飛速前進的預言，就是著名的「摩爾定律」。它究竟預測了什麼？5年後，你希望你的手機可以增加什麼神奇的功能呢？
     content: |
-      ## 全球半導體產業
+      ## The Global Semiconductor Industry
 
-      ### 重點摘要
-      - 半導體產業是全球分工的，主要分為 IC 設計、IC 製造、IC 封裝與測試
-      - **IC 設計公司**負責畫出晶片的藍圖
-      - **IC 製造公司**（晶圓代工廠）負責依照藍圖將晶片生產出來
-      - **IC 封裝與測試公司**負責保護晶片並測試其功能是否正常
+      ### Key Points
+      - The industry involves: IC Design, IC Manufacturing, IC Assembly & Testing
+      - **IC Design companies** create chip blueprints
+      - **IC Manufacturing companies** (foundries) produce chips
+      - **IC Assembly & Testing companies** protect and test chips
 
-      ### 溫故知新：生產線與分工合作
-      就像生產線一樣，每家公司專注於自己的專長以提高效率。
+      ### Science Review: Division of Labor
+      Like an assembly line, each company focuses on their specialty for efficiency.
     question:
-      text: "負責設計晶片電路藍圖的環節稱為什麼？"
+      text: "What segment is responsible for designing chip circuit blueprints?"
       type: multiple_choice
       options:
-        - text: "IC 製造"
+        - text: "IC Manufacturing"
           value: "manufacturing"
-        - text: "IC 封裝"
+        - text: "IC Assembly"
           value: "assembly"
-        - text: "IC 設計"
+        - text: "IC Design"
           value: "design"
       correct_answer: "design"
     ai_feedback:
-      correct: "完美！IC 設計公司是半導體世界的建築師！"
-      incorrect: "想想看誰在製造開始前創造原始計畫。"
+      correct: "Perfect! IC Design companies are the architects of the semiconductor world!"
+      incorrect: "Think about who creates the original plans before manufacturing begins."
 
 evaluation_criteria:
   completion_threshold: 80
   assessment_method: quiz_and_interaction
   success_metrics:
-    - 完成所有 5 個站點
-    - 答題準確率達 80%
-    - 與 AI 小晶晶互動
+    - Complete all 5 stations
+    - Answer questions with 80% accuracy
+    - Engage with AI Crystal Guide
 
 resources:
   videos:
-    - title: "半導體如何運作"
+    - title: "How Semiconductors Work"
       url: "https://example.com/semiconductor-basics"
   readings:
-    - title: "矽谷的歷史"
+    - title: "The History of Silicon Valley"
       url: "https://example.com/silicon-valley-history"
   tools:
-    - title: "虛擬晶片設計師"
+    - title: "Virtual Chip Designer"
       url: "https://example.com/chip-designer"
