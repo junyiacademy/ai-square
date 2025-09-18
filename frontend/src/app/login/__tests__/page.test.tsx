@@ -140,7 +140,7 @@ describe('LoginPage', () => {
     });
   });
 
-  it('should handle successful login with redirect URL', async () => {
+  it('should handle successful login and ignore redirect URL for consistent UX', async () => {
     const redirectParams = new URLSearchParams({ redirect: '/pbl' });
     (useSearchParams as jest.Mock).mockReturnValue(redirectParams);
 
@@ -155,7 +155,8 @@ describe('LoginPage', () => {
     loginButton.click();
 
     await waitFor(() => {
-      expect(mockPush).toHaveBeenCalledWith('/pbl');
+      // Should always navigate to PBL scenarios, ignoring redirect params
+      expect(mockPush).toHaveBeenCalledWith('/pbl/scenarios');
     });
   });
 
