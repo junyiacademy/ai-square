@@ -1,0 +1,281 @@
+scenario_info:
+  id: semiconductor-adventure
+  difficulty: beginner
+  estimated_duration: 40
+  target_domains:
+    - engaging_with_ai
+    - creating_with_ai
+  title: 我的半导体冒险
+  description: "踏上一场令人兴奋的冒险，探索一粒简单的沙子如何变身成为驱动现代世界的强大芯片！（建议年龄：13岁以上，适合初中生以上学习）"
+  prerequisites:
+    - 对元素和化合物有基本认识
+    - 熟悉电力和电子设备
+    - "建议：观看此介绍影片 - https://youtu.be/cxf6eexA4f0"
+  learning_objectives:
+    - 体会芯片在生活中的无处不在，并连接其原料「硅」与自然的「沙子」
+    - 理解芯片的核心是作为「开关」的「晶体管」，其关键在于「半导体」可控制电流的特性
+    - 认识「摩尔定律」的基本概念，并解释为何科技产品能持续地变快、变小
+
+ksa_mapping:
+  knowledge:
+    - K1.1  # AI systems process data through algorithms
+    - K1.4  # AI embedded in everyday technologies
+    - K4.2  # AI requires computing power and resources
+  skills:
+    - S1.1  # Evaluate content for accuracy
+    - S3.1  # Decompose problems for AI solutions
+    - S6.1  # Recognize AI influence in daily life
+  attitudes:
+    - A2.1  # Explore capabilities with openness
+    - A3.1  # Pursue novel applications
+    - A5.1  # Consider diverse impacts
+
+tasks:
+  - id: task-1
+    category: learning
+    time_limit: 8
+    KSA_focus:
+      primary:
+        - K1.4
+        - S6.1
+      secondary:
+        - A2.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: AI Crystal Guide
+      initial_prompt: |
+        You are AI Crystal, a friendly guide helping students understand semiconductors.
+        Start by welcoming the explorer and explaining the journey ahead.
+    title: "任务 1: 无处不在的芯片，智慧生活的一天"
+    description: |
+      你可能没有注意到，从你睁开眼的那一刻，许多神秘的小帮手就在你的周围，让我们的生活变得更便利。它们，就是芯片。
+    instructions: |
+      冒险的第一关，就是要找出这些隐身的「小帮手」。试着告诉 AI 你从起床到出门，接触到的任何三样含有芯片的产品！
+    content: |
+      ## The Magical Element: Silicon
+
+      ### Key Points
+      - The main raw material for chips is **Silicon (Si)**
+      - Silicon is the second most abundant element on Earth, after oxygen
+      - Silicon usually exists as **Silicon Dioxide (SiO₂)**, commonly found in sand or quartz
+
+      ### Science Review: Elements and Compounds
+      Remember? **Elements** are the basic building blocks of matter, like Oxygen (O), Hydrogen (H), and Silicon (Si).
+      **Compounds** are pure substances made of two or more different elements.
+    question:
+      text: "What is the most important raw material 'Silicon (Si)' for chips extracted from?"
+      type: multiple_choice
+      options:
+        - text: "Oil"
+          value: "oil"
+        - text: "Seawater"
+          value: "seawater"
+        - text: "Sand"
+          value: "sand"
+      correct_answer: "sand"
+    ai_feedback:
+      correct: "Excellent! Silicon is indeed extracted from sand, specifically from silicon dioxide (SiO₂) found in sand and quartz."
+      incorrect: "Think about what's abundant on beaches and contains silicon dioxide!"
+
+  - id: task-2
+    category: learning
+    time_limit: 8
+    KSA_focus:
+      primary:
+        - K1.1
+        - S3.1
+      secondary:
+        - A2.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: AI Crystal Guide
+      initial_prompt: |
+        Continue guiding the student through understanding semiconductors.
+        Explain what makes silicon special for electronics.
+    title: "任务 2: 认识神奇的「硅」元素"
+    description: 你有没有想过，广阔沙滩上的沙子，跟我们口袋里的手机有什么关系呢？
+    instructions: |
+      沙子如何变身成手机的心脏？快来问问 AI，解开这个谜题！
+    content: |
+      ## Understanding Semiconductors
+
+      ### Key Points
+      - Materials are classified by conductivity: conductors, insulators, and semiconductors
+      - **Conductors** (like metals) easily conduct electricity
+      - **Insulators** (like rubber) don't conduct electricity
+      - **Semiconductors** have conductivity between the two, and can be controlled
+
+      ### Science Review: Electric Current
+      Electric current is like many tiny "electrons" moving in the same direction through a wire.
+    question:
+      text: "What is the most special characteristic of semiconductors?"
+      type: multiple_choice
+      options:
+        - text: "Very good at conducting electricity"
+          value: "high_conductivity"
+        - text: "Completely non-conductive"
+          value: "non_conductive"
+        - text: "Conductivity can be controlled"
+          value: "controllable"
+      correct_answer: "controllable"
+    ai_feedback:
+      correct: "Perfect! The ability to control conductivity is what makes semiconductors so powerful!"
+      incorrect: "Think about what makes them 'semi' - they're in between conductors and insulators!"
+
+  - id: task-3
+    category: learning
+    time_limit: 8
+    KSA_focus:
+      primary:
+        - K4.2
+        - S1.1
+      secondary:
+        - A3.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: AI Crystal Guide
+      initial_prompt: |
+        Guide the student through the chip manufacturing process.
+        Explain the transformation from sand to silicon chips.
+    title: "任务 3: 半导体的秘密，一种与众不同的材料"
+    description: 我们知道芯片是由「硅」做成的，但为什么要选它呢？
+    instructions: |
+      为什么是「硅」？原来它藏着一个关于「导电」的秘密身份，也就是「半导体」。这听起来很酷的名字，究竟代表什么意思呢？
+    content: |
+      ## The Chip Manufacturing Process
+
+      ### Key Points
+      - High-purity silicon is melted and pulled into huge cylinders called **silicon ingots**
+      - Silicon ingots are sliced into ultra-thin discs called **wafers**
+      - Through complex processes like photolithography, billions of tiny electronic components are created
+      - The most important component is the **transistor**
+
+      ### Science Review: Physical Changes
+      Melting (solid to liquid) and solidification (liquid to solid) are physical changes.
+    question:
+      text: "What are the ultra-thin discs cut from silicon ingots called?"
+      type: multiple_choice
+      options:
+        - text: "Crystal rods"
+          value: "rods"
+        - text: "Wafers"
+          value: "wafers"
+        - text: "Crystals"
+          value: "crystals"
+      correct_answer: "wafers"
+    ai_feedback:
+      correct: "Excellent! Silicon wafers are the foundation for chip manufacturing."
+      incorrect: "Think about the thin, circular discs that chips are built on."
+
+  - id: task-4
+    category: application
+    time_limit: 8
+    KSA_focus:
+      primary:
+        - K1.4
+        - S6.1
+      secondary:
+        - A5.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: AI Crystal Guide
+      initial_prompt: |
+        Help students recognize semiconductors in their daily life.
+        Connect the technology to real-world applications.
+    title: "任务 4: 芯片是由什么构成的呢？"
+    description: 芯片内部又是什么样子？它其实是一座微型城市，里面住着数十亿个负责思考的「迷你开关」。
+    instructions: |
+      这些迷你开关，就是「晶体管」。芯片的效能，取决于能在极小的面积上，塞进多少个晶体管。让我们来认识这个芯片里最小、也最重要的英雄。
+    content: |
+      ## Chips in Daily Life
+
+      ### Key Points
+      - Chips (Integrated Circuits, ICs) are the brains of modern electronics
+      - From phones, computers, smartwatches to cars and trains, chips are everywhere
+      - Chips handle computation, memory, and control
+
+      ### Science Review: Energy Conversion
+      Chemical energy in batteries is converted through chip control into light and sound energy.
+    question:
+      text: "Which of the following was NOT mentioned as a semiconductor application?"
+      type: multiple_choice
+      options:
+        - text: "Mobile payments"
+          value: "payments"
+        - text: "Smartwatches"
+          value: "watches"
+        - text: "Solar power generation"
+          value: "solar"
+      correct_answer: "solar"
+    ai_feedback:
+      correct: "Correct! While solar panels use semiconductors, this wasn't our focus today."
+      incorrect: "Review which applications were specifically discussed in our journey."
+
+  - id: task-5
+    category: synthesis
+    time_limit: 8
+    KSA_focus:
+      primary:
+        - K1.1
+        - S3.1
+      secondary:
+        - A3.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: AI Crystal Guide
+      initial_prompt: |
+        Conclude the journey by explaining the global semiconductor industry.
+        Help students understand the collaborative nature of chip production.
+    title: "任务 5: 预见未来的神奇定律"
+    description: 为什么手机和电脑每隔一两年就会变得更厉害？这背后其实有个著名的科技预言，驱动了半导体产业超过五十年。
+    instructions: |
+      这个让科技不断飞速前进的预言，就是著名的「摩尔定律」。它究竟预测了什么？5年后，你希望你的手机可以增加什么神奇的功能呢？
+    content: |
+      ## The Global Semiconductor Industry
+
+      ### Key Points
+      - The industry involves: IC Design, IC Manufacturing, IC Assembly & Testing
+      - **IC Design companies** create chip blueprints
+      - **IC Manufacturing companies** (foundries) produce chips
+      - **IC Assembly & Testing companies** protect and test chips
+
+      ### Science Review: Division of Labor
+      Like an assembly line, each company focuses on their specialty for efficiency.
+    question:
+      text: "What segment is responsible for designing chip circuit blueprints?"
+      type: multiple_choice
+      options:
+        - text: "IC Manufacturing"
+          value: "manufacturing"
+        - text: "IC Assembly"
+          value: "assembly"
+        - text: "IC Design"
+          value: "design"
+      correct_answer: "design"
+    ai_feedback:
+      correct: "Perfect! IC Design companies are the architects of the semiconductor world!"
+      incorrect: "Think about who creates the original plans before manufacturing begins."
+
+evaluation_criteria:
+  completion_threshold: 80
+  assessment_method: quiz_and_interaction
+  success_metrics:
+    - Complete all 5 stations
+    - Answer questions with 80% accuracy
+    - Engage with AI Crystal Guide
+
+resources:
+  videos:
+    - title: "How Semiconductors Work"
+      url: "https://example.com/semiconductor-basics"
+  readings:
+    - title: "The History of Silicon Valley"
+      url: "https://example.com/silicon-valley-history"
+  tools:
+    - title: "Virtual Chip Designer"
+      url: "https://example.com/chip-designer"

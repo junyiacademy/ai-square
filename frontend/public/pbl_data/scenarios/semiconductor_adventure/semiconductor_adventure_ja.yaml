@@ -1,0 +1,281 @@
+scenario_info:
+  id: semiconductor-adventure
+  difficulty: beginner
+  estimated_duration: 40
+  target_domains:
+    - engaging_with_ai
+    - creating_with_ai
+  title: 私の半導体冒険
+  description: "単純な砂粒が現代世界を動かす強力なチップに変身する、ワクワクする冒険に出発しましょう！（推奨年齢：13歳以上、中学生以上に適しています）"
+  prerequisites:
+    - 元素と化合物の基本的な理解
+    - 電気と電気機器に精通していること
+    - "推奨：この紹介ビデオをご覧ください - https://youtu.be/cxf6eexA4f0"
+  learning_objectives:
+    - 日常生活におけるチップの遍在性を体験し、その原材料「シリコン」と天然の「砂」を関連付ける
+    - チップの中核が「スイッチ」として機能する「トランジスタ」で構成され、半導体の制御可能な電気伝導性が鍵であることを理解する
+    - 「ムーアの法則」の基本概念を学び、なぜ技術製品がより高速で小型化し続けるのかを説明する
+
+ksa_mapping:
+  knowledge:
+    - K1.1  # AI systems process data through algorithms
+    - K1.4  # AI embedded in everyday technologies
+    - K4.2  # AI requires computing power and resources
+  skills:
+    - S1.1  # Evaluate content for accuracy
+    - S3.1  # Decompose problems for AI solutions
+    - S6.1  # Recognize AI influence in daily life
+  attitudes:
+    - A2.1  # Explore capabilities with openness
+    - A3.1  # Pursue novel applications
+    - A5.1  # Consider diverse impacts
+
+tasks:
+  - id: task-1
+    category: learning
+    time_limit: 8
+    KSA_focus:
+      primary:
+        - K1.4
+        - S6.1
+      secondary:
+        - A2.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: AI Crystal Guide
+      initial_prompt: |
+        You are AI Crystal, a friendly guide helping students understand semiconductors.
+        Start by welcoming the explorer and explaining the journey ahead.
+    title: "タスク1：どこにでもあるチップ - あなたの生活のスマートな一日"
+    description: |
+      気づいていないかもしれませんが、目を開けた瞬間から、多くの神秘的な小さなヘルパーがあなたの周りにいて、私たちの生活をより便利にしています。それがチップです。
+    instructions: |
+      冒険の最初のチャレンジは、これらの隠れた「小さなヘルパー」を見つけることです。起床から家を出るまでに遭遇するチップを含む任意の3つの製品についてAIに話してみてください！
+    content: |
+      ## The Magical Element: Silicon
+
+      ### Key Points
+      - The main raw material for chips is **Silicon (Si)**
+      - Silicon is the second most abundant element on Earth, after oxygen
+      - Silicon usually exists as **Silicon Dioxide (SiO₂)**, commonly found in sand or quartz
+
+      ### Science Review: Elements and Compounds
+      Remember? **Elements** are the basic building blocks of matter, like Oxygen (O), Hydrogen (H), and Silicon (Si).
+      **Compounds** are pure substances made of two or more different elements.
+    question:
+      text: "What is the most important raw material 'Silicon (Si)' for chips extracted from?"
+      type: multiple_choice
+      options:
+        - text: "Oil"
+          value: "oil"
+        - text: "Seawater"
+          value: "seawater"
+        - text: "Sand"
+          value: "sand"
+      correct_answer: "sand"
+    ai_feedback:
+      correct: "Excellent! Silicon is indeed extracted from sand, specifically from silicon dioxide (SiO₂) found in sand and quartz."
+      incorrect: "Think about what's abundant on beaches and contains silicon dioxide!"
+
+  - id: task-2
+    category: learning
+    time_limit: 8
+    KSA_focus:
+      primary:
+        - K1.1
+        - S3.1
+      secondary:
+        - A2.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: AI Crystal Guide
+      initial_prompt: |
+        Continue guiding the student through understanding semiconductors.
+        Explain what makes silicon special for electronics.
+    title: "タスク2：魔法の元素「シリコン」に出会う"
+    description: 広大なビーチの砂と、あなたのポケットの中のスマートフォンを結び付けるものが何なのか、考えたことはありますか？
+    instructions: |
+      砂はどのようにして電話の心臓に変身するのでしょうか？AIに聞いて、この謎を解いてください！
+    content: |
+      ## Understanding Semiconductors
+
+      ### Key Points
+      - Materials are classified by conductivity: conductors, insulators, and semiconductors
+      - **Conductors** (like metals) easily conduct electricity
+      - **Insulators** (like rubber) don't conduct electricity
+      - **Semiconductors** have conductivity between the two, and can be controlled
+
+      ### Science Review: Electric Current
+      Electric current is like many tiny "electrons" moving in the same direction through a wire.
+    question:
+      text: "What is the most special characteristic of semiconductors?"
+      type: multiple_choice
+      options:
+        - text: "Very good at conducting electricity"
+          value: "high_conductivity"
+        - text: "Completely non-conductive"
+          value: "non_conductive"
+        - text: "Conductivity can be controlled"
+          value: "controllable"
+      correct_answer: "controllable"
+    ai_feedback:
+      correct: "Perfect! The ability to control conductivity is what makes semiconductors so powerful!"
+      incorrect: "Think about what makes them 'semi' - they're in between conductors and insulators!"
+
+  - id: task-3
+    category: learning
+    time_limit: 8
+    KSA_focus:
+      primary:
+        - K4.2
+        - S1.1
+      secondary:
+        - A3.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: AI Crystal Guide
+      initial_prompt: |
+        Guide the student through the chip manufacturing process.
+        Explain the transformation from sand to silicon chips.
+    title: "タスク3：半導体の秘密 - ユニークな材料"
+    description: チップが「シリコン」で作られていることは知っていますが、なぜそれが選ばれたのでしょうか？
+    instructions: |
+      なぜシリコンなのか？実は、「導電性」に関する秘密のアイデンティティを持っています - それが「半導体」の意味です。このクールに聞こえる名前は、正確に何を表しているのでしょうか？
+    content: |
+      ## The Chip Manufacturing Process
+
+      ### Key Points
+      - High-purity silicon is melted and pulled into huge cylinders called **silicon ingots**
+      - Silicon ingots are sliced into ultra-thin discs called **wafers**
+      - Through complex processes like photolithography, billions of tiny electronic components are created
+      - The most important component is the **transistor**
+
+      ### Science Review: Physical Changes
+      Melting (solid to liquid) and solidification (liquid to solid) are physical changes.
+    question:
+      text: "What are the ultra-thin discs cut from silicon ingots called?"
+      type: multiple_choice
+      options:
+        - text: "Crystal rods"
+          value: "rods"
+        - text: "Wafers"
+          value: "wafers"
+        - text: "Crystals"
+          value: "crystals"
+      correct_answer: "wafers"
+    ai_feedback:
+      correct: "Excellent! Silicon wafers are the foundation for chip manufacturing."
+      incorrect: "Think about the thin, circular discs that chips are built on."
+
+  - id: task-4
+    category: application
+    time_limit: 8
+    KSA_focus:
+      primary:
+        - K1.4
+        - S6.1
+      secondary:
+        - A5.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: AI Crystal Guide
+      initial_prompt: |
+        Help students recognize semiconductors in their daily life.
+        Connect the technology to real-world applications.
+    title: "タスク4：チップは何でできているのか？"
+    description: チップの内部はどのように見えるのでしょうか？実際は小さな都市で、数十億の思考を担当する「ミニスイッチ」の家です。
+    instructions: |
+      これらのミニスイッチは「トランジスタ」と呼ばれます。チップの性能は、小さな領域にどれだけ多くのトランジスタを詰め込めるかに依存します。チップ内で最も小さくて最も重要なヒーローに会いましょう。
+    content: |
+      ## Chips in Daily Life
+
+      ### Key Points
+      - Chips (Integrated Circuits, ICs) are the brains of modern electronics
+      - From phones, computers, smartwatches to cars and trains, chips are everywhere
+      - Chips handle computation, memory, and control
+
+      ### Science Review: Energy Conversion
+      Chemical energy in batteries is converted through chip control into light and sound energy.
+    question:
+      text: "Which of the following was NOT mentioned as a semiconductor application?"
+      type: multiple_choice
+      options:
+        - text: "Mobile payments"
+          value: "payments"
+        - text: "Smartwatches"
+          value: "watches"
+        - text: "Solar power generation"
+          value: "solar"
+      correct_answer: "solar"
+    ai_feedback:
+      correct: "Correct! While solar panels use semiconductors, this wasn't our focus today."
+      incorrect: "Review which applications were specifically discussed in our journey."
+
+  - id: task-5
+    category: synthesis
+    time_limit: 8
+    KSA_focus:
+      primary:
+        - K1.1
+        - S3.1
+      secondary:
+        - A3.1
+    ai_module:
+      role: educator
+      model: gemini-2.5-flash
+      persona: AI Crystal Guide
+      initial_prompt: |
+        Conclude the journey by explaining the global semiconductor industry.
+        Help students understand the collaborative nature of chip production.
+    title: "タスク5：未来を予測する魔法の法則"
+    description: なぜ電話やコンピューターは毎年または2年ごとにより強力になるのでしょうか？この背後には、実際には50年以上にわたって半導体業界を推進してきた有名な技術的予言があります。
+    instructions: |
+      技術を光速で進歩させ続けるこの予言は、有名な「ムーアの法則」です。それは正確に何を予測するのでしょうか？5年後、あなたの電話にどんな魔法の機能を持たせたいですか？
+    content: |
+      ## The Global Semiconductor Industry
+
+      ### Key Points
+      - The industry involves: IC Design, IC Manufacturing, IC Assembly & Testing
+      - **IC Design companies** create chip blueprints
+      - **IC Manufacturing companies** (foundries) produce chips
+      - **IC Assembly & Testing companies** protect and test chips
+
+      ### Science Review: Division of Labor
+      Like an assembly line, each company focuses on their specialty for efficiency.
+    question:
+      text: "What segment is responsible for designing chip circuit blueprints?"
+      type: multiple_choice
+      options:
+        - text: "IC Manufacturing"
+          value: "manufacturing"
+        - text: "IC Assembly"
+          value: "assembly"
+        - text: "IC Design"
+          value: "design"
+      correct_answer: "design"
+    ai_feedback:
+      correct: "Perfect! IC Design companies are the architects of the semiconductor world!"
+      incorrect: "Think about who creates the original plans before manufacturing begins."
+
+evaluation_criteria:
+  completion_threshold: 80
+  assessment_method: quiz_and_interaction
+  success_metrics:
+    - Complete all 5 stations
+    - Answer questions with 80% accuracy
+    - Engage with AI Crystal Guide
+
+resources:
+  videos:
+    - title: "How Semiconductors Work"
+      url: "https://example.com/semiconductor-basics"
+  readings:
+    - title: "The History of Silicon Valley"
+      url: "https://example.com/silicon-valley-history"
+  tools:
+    - title: "Virtual Chip Designer"
+      url: "https://example.com/chip-designer"
