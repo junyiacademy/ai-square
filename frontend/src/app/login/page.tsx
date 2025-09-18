@@ -36,64 +36,19 @@ function LoginContent() {
       if (result.success) {
         console.log('Login successful, preparing to navigate...')
 
-        // Check if there's a redirect URL
-        const redirectUrl = searchParams.get('redirect')
-        console.log('Redirect URL:', redirectUrl)
+        // Always redirect to PBL scenarios after login for consistent UX
+        // Ignore any redirect parameters to avoid middleware interference
+        console.log('Login successful, ignoring redirect params and navigating to: /pbl/scenarios')
 
-        if (redirectUrl) {
-          // Validate redirect URL to prevent open redirect vulnerabilities
-          const isValidRedirect = redirectUrl.startsWith('/') && !redirectUrl.startsWith('//')
-          if (isValidRedirect) {
-            console.log('Redirecting to:', redirectUrl)
-            router.push(redirectUrl)
-            router.refresh()
-
-            // Fallback: Force navigation if router.push doesn't work
-            setTimeout(() => {
-              if (window.location.pathname === '/login') {
-                console.log('Router navigation seems stuck, forcing redirect to:', redirectUrl)
-                window.location.href = redirectUrl
-              }
-            }, 500)
-            return
-          }
-        }
-
-        // Default navigation based on onboarding status
-        const userData = result.user as unknown as {
-          onboarding?: Record<string, boolean>
-          onboardingCompleted?: boolean
-          assessmentCompleted?: boolean
-        }
-        const onboarding = userData?.onboarding || {}
-        const derivedOnboardingCompleted = Boolean(
-          onboarding.welcomeCompleted &&
-            onboarding.identityCompleted &&
-            onboarding.goalsCompleted
-        )
-        const isOnboardingCompleted = Boolean(
-          userData?.onboardingCompleted || derivedOnboardingCompleted
-        )
-        const hasAssessment = Boolean(userData?.assessmentCompleted)
-        console.log('User status:', { onboarding, isOnboardingCompleted, hasAssessment })
-
-        // Navigate to dashboard directly - onboarding is optional
-        // Users can choose to do onboarding from dashboard if they want
-        console.log('Login successful, navigating to: /dashboard')
-
-        // Use a combination of router.push and window.location to ensure navigation
-        // This helps when Next.js router gets stuck
-        router.push('/dashboard')
-
-        // Also refresh the router to ensure client-side state is updated
+        // Navigate to PBL scenarios directly - consistent UX
+        router.push('/pbl/scenarios')
         router.refresh()
 
-        // Fallback: If router.push doesn't work, force a page reload after a short delay
+        // Fallback: Force navigation if router.push doesn't work
         setTimeout(() => {
-          // Check if we're still on the login page
           if (window.location.pathname === '/login') {
-            console.log('Router navigation seems stuck, forcing reload to dashboard')
-            window.location.href = '/dashboard'
+            console.log('Router navigation fallback: forcing redirect to PBL scenarios')
+            window.location.href = '/pbl/scenarios'
           }
         }, 500)
       } else {

@@ -16,7 +16,7 @@ jest.mock('next/navigation', () => ({
 jest.mock('@/components/auth/LoginForm', () => ({
   LoginForm: ({ onSubmit, loading, error }: any) => (
     <div data-testid="login-form">
-      <button 
+      <button
         onClick={() => onSubmit({ email: 'test@example.com', password: 'password', rememberMe: false })}
         disabled={loading}
       >
@@ -67,7 +67,7 @@ describe('LoginPage', () => {
   const mockPush = jest.fn();
   const mockRouter = { push: mockPush };
   const mockSearchParams = new URLSearchParams();
-  
+
   beforeEach(() => {
     jest.clearAllMocks();
     (useRouter as jest.Mock).mockReturnValue(mockRouter);
@@ -112,7 +112,7 @@ describe('LoginPage', () => {
     expect(signUpLink).toHaveAttribute('href', '/register?redirect=%2Fdashboard');
   });
 
-  it('should handle successful login and navigate to dashboard', async () => {
+  it('should handle successful login and navigate to PBL scenarios', async () => {
     mockLogin.mockResolvedValue({
       success: true,
       user: {
@@ -136,7 +136,7 @@ describe('LoginPage', () => {
         password: 'password',
         rememberMe: false
       });
-      expect(mockPush).toHaveBeenCalledWith('/dashboard');
+      expect(mockPush).toHaveBeenCalledWith('/pbl/scenarios');
     });
   });
 
@@ -181,8 +181,8 @@ describe('LoginPage', () => {
     loginButton.click();
 
     await waitFor(() => {
-      // Should navigate to dashboard instead of the malicious URL
-      expect(mockPush).toHaveBeenCalledWith('/dashboard');
+      // Should navigate to PBL scenarios instead of the malicious URL
+      expect(mockPush).toHaveBeenCalledWith('/pbl/scenarios');
       expect(mockPush).not.toHaveBeenCalledWith('//evil.com');
     });
   });
@@ -203,8 +203,8 @@ describe('LoginPage', () => {
     loginButton.click();
 
     await waitFor(() => {
-      // Should navigate to dashboard directly (onboarding is optional)
-      expect(mockPush).toHaveBeenCalledWith('/dashboard');
+      // Should navigate to PBL scenarios directly (onboarding is optional)
+      expect(mockPush).toHaveBeenCalledWith('/pbl/scenarios');
     });
   });
 
@@ -225,8 +225,8 @@ describe('LoginPage', () => {
     loginButton.click();
 
     await waitFor(() => {
-      // Should navigate to dashboard directly (onboarding is optional)
-      expect(mockPush).toHaveBeenCalledWith('/dashboard');
+      // Should navigate to PBL scenarios directly (onboarding is optional)
+      expect(mockPush).toHaveBeenCalledWith('/pbl/scenarios');
     });
   });
 
@@ -248,12 +248,12 @@ describe('LoginPage', () => {
     loginButton.click();
 
     await waitFor(() => {
-      // Should navigate to dashboard directly (onboarding is optional)
-      expect(mockPush).toHaveBeenCalledWith('/dashboard');
+      // Should navigate to PBL scenarios directly (onboarding is optional)
+      expect(mockPush).toHaveBeenCalledWith('/pbl/scenarios');
     });
   });
 
-  it('should navigate to dashboard regardless of onboarding or assessment status', async () => {
+  it('should navigate to PBL scenarios regardless of onboarding or assessment status', async () => {
     mockLogin.mockResolvedValue({
       success: true,
       user: {
@@ -272,8 +272,8 @@ describe('LoginPage', () => {
     loginButton.click();
 
     await waitFor(() => {
-      // Should always navigate to dashboard (onboarding and assessment are optional)
-      expect(mockPush).toHaveBeenCalledWith('/dashboard');
+      // Should always navigate to PBL scenarios (onboarding and assessment are optional)
+      expect(mockPush).toHaveBeenCalledWith('/pbl/scenarios');
     });
   });
 
@@ -326,7 +326,7 @@ describe('LoginPage', () => {
 
   it('should show loading state during login', async () => {
     let resolveLogin: ((value: any) => void) | null = null;
-    mockLogin.mockImplementation(() => 
+    mockLogin.mockImplementation(() =>
       new Promise(resolve => {
         resolveLogin = resolve;
       })
@@ -355,7 +355,7 @@ describe('LoginPage', () => {
 
   it('should render SVG icon', async () => {
     const { container } = renderWithProviders(<LoginPage />);
-    
+
     const svg = container.querySelector('svg');
     expect(svg).toBeInTheDocument();
     expect(svg).toHaveClass('h-8 w-8 text-white');
@@ -373,8 +373,8 @@ describe('LoginPage', () => {
     loginButton.click();
 
     await waitFor(() => {
-      // Should navigate to dashboard directly (onboarding is optional)
-      expect(mockPush).toHaveBeenCalledWith('/dashboard');
+      // Should navigate to PBL scenarios directly (onboarding is optional)
+      expect(mockPush).toHaveBeenCalledWith('/pbl/scenarios');
     });
   });
 

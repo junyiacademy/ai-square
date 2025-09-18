@@ -48,13 +48,13 @@ export function Header() {
   const primaryNavLinks: NavLink[] = [
     { href: '/relations', label: t('relations') },
     { href: '/ksa', label: t('ksa') },
-    { href: '/assessment/scenarios', label: t('assessment') },
     { href: '/pbl/scenarios', label: t('pbl') },
     { href: '/dashboard', label: t('dashboard') },
   ]
 
   // 次要導航連結（放在「更多」選單中）
   const secondaryNavLinks: NavLink[] = [
+    { href: '/assessment/scenarios', label: t('assessment'), disabled: true, tooltip: t('comingSoon') || '即將發行' },
     { href: '/history', label: t('history'), disabled: true, tooltip: t('comingSoon') || '即將發行' },
     { href: '/discovery/overview', label: t('discovery'), disabled: true, tooltip: t('comingSoon') || '即將發行' },
   ]
