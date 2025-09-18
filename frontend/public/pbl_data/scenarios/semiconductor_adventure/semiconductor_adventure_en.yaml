@@ -47,7 +47,7 @@ tasks:
       initial_prompt: |
         You are AI Crystal, a friendly guide helping students understand semiconductors.
         Start by welcoming the explorer and explaining the journey ahead.
-    title: "Task 1: Ubiquitous Chips - A Smart Day in Your Life"
+    title: "Ubiquitous Chips - A Smart Day in Your Life"
     description: |
       You might not have noticed, but from the moment you open your eyes, many mysterious little helpers are around you, making our lives more convenient. They are chips.
     instructions: |
@@ -94,7 +94,7 @@ tasks:
       initial_prompt: |
         Continue guiding the student through understanding semiconductors.
         Explain what makes silicon special for electronics.
-    title: "Task 2: Meet the Magical Element 'Silicon'"
+    title: "Meet the Magical Element 'Silicon'"
     description: Have you ever wondered what connects the sand on vast beaches with the smartphone in your pocket?
     instructions: |
       How does sand transform into the heart of a phone? Come ask the AI and solve this mystery!
@@ -140,7 +140,7 @@ tasks:
       initial_prompt: |
         Guide the student through the chip manufacturing process.
         Explain the transformation from sand to silicon chips.
-    title: "Task 3: The Secret of Semiconductors - A Unique Material"
+    title: "The Secret of Semiconductors - A Unique Material"
     description: We know chips are made of "silicon", but why was it chosen?
     instructions: |
       Why silicon? It turns out it holds a secret identity about "conductivity" - that's what "semiconductor" means. This cool-sounding name, what exactly does it represent?
@@ -186,7 +186,7 @@ tasks:
       initial_prompt: |
         Help students recognize semiconductors in their daily life.
         Connect the technology to real-world applications.
-    title: "Task 4: What Are Chips Made Of?"
+    title: "What Are Chips Made Of?"
     description: What does it look like inside a chip? It's actually a miniature city, home to billions of "mini switches" responsible for thinking.
     instructions: |
       These mini switches are called "transistors". A chip's performance depends on how many transistors can be packed into a tiny area. Let's meet the smallest yet most important heroes inside a chip.
@@ -231,7 +231,7 @@ tasks:
       initial_prompt: |
         Conclude the journey by explaining the global semiconductor industry.
         Help students understand the collaborative nature of chip production.
-    title: "Task 5: The Magical Law That Predicts the Future"
+    title: "The Magical Law That Predicts the Future"
     description: Why do phones and computers become more powerful every year or two? Behind this is actually a famous technological prophecy that has driven the semiconductor industry for over fifty years.
     instructions: |
       This prophecy that keeps technology advancing at lightning speed is the famous "Moore's Law". What exactly does it predict? In 5 years, what magical features would you like your phone to have?

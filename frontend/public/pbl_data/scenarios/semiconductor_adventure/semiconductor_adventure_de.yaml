@@ -47,7 +47,7 @@ tasks:
       initial_prompt: |
         You are AI Crystal, a friendly guide helping students understand semiconductors.
         Start by welcoming the explorer and explaining the journey ahead.
-    title: "Aufgabe 1: Allgegenwärtige Chips - Ein Intelligenter Tag in Ihrem Leben"
+    title: "Allgegenwärtige Chips - Ein Intelligenter Tag in Ihrem Leben"
     description: |
       Sie haben es vielleicht nicht bemerkt, aber vom Moment an, in dem Sie die Augen öffnen, sind viele mysteriöse kleine Helfer um Sie herum und machen unser Leben bequemer. Das sind die Chips.
     instructions: |
@@ -94,7 +94,7 @@ tasks:
       initial_prompt: |
         Continue guiding the student through understanding semiconductors.
         Explain what makes silicon special for electronics.
-    title: "Aufgabe 2: Lernen Sie das Magische Element 'Silizium' Kennen"
+    title: "Lernen Sie das Magische Element 'Silizium' Kennen"
     description: Haben Sie sich jemals gefragt, was den Sand an weiten Stränden mit dem Smartphone in Ihrer Tasche verbindet?
     instructions: |
       Wie verwandelt sich Sand in das Herz eines Telefons? Kommen Sie und fragen Sie die KI und lösen Sie dieses Rätsel!
@@ -140,7 +140,7 @@ tasks:
       initial_prompt: |
         Guide the student through the chip manufacturing process.
         Explain the transformation from sand to silicon chips.
-    title: "Aufgabe 3: Das Geheimnis der Halbleiter - Ein Einzigartiges Material"
+    title: "Das Geheimnis der Halbleiter - Ein Einzigartiges Material"
     description: Wir wissen, dass Chips aus "Silizium" hergestellt werden, aber warum wurde es gewählt?
     instructions: |
       Warum Silizium? Es stellt sich heraus, dass es eine geheime Identität bezüglich der "Leitfähigkeit" hat - das ist es, was "Halbleiter" bedeutet. Dieser cool klingende Name, was repräsentiert er genau?
@@ -186,7 +186,7 @@ tasks:
       initial_prompt: |
         Help students recognize semiconductors in their daily life.
         Connect the technology to real-world applications.
-    title: "Aufgabe 4: Woraus Bestehen Chips?"
+    title: "Woraus Bestehen Chips?"
     description: Wie sieht es im Inneren eines Chips aus? Es ist tatsächlich eine Miniaturstadt, die Milliarden von "Mini-Schaltern" beherbergt, die für das Denken verantwortlich sind.
     instructions: |
       Diese Mini-Schalter werden "Transistoren" genannt. Die Leistung eines Chips hängt davon ab, wie viele Transistoren in einem winzigen Bereich untergebracht werden können. Lernen wir die kleinsten, aber wichtigsten Helden in einem Chip kennen.
@@ -231,7 +231,7 @@ tasks:
       initial_prompt: |
         Conclude the journey by explaining the global semiconductor industry.
         Help students understand the collaborative nature of chip production.
-    title: "Aufgabe 5: Das Magische Gesetz, das die Zukunft Vorhersagt"
+    title: "Das Magische Gesetz, das die Zukunft Vorhersagt"
     description: Warum werden Telefone und Computer jedes Jahr oder zwei leistungsfähiger? Dahinter steht tatsächlich eine berühmte technologische Prophezeiung, die die Halbleiterindustrie seit über fünfzig Jahren antreibt.
     instructions: |
       Diese Prophezeiung, die die Technologie mit Lichtgeschwindigkeit vorantreibt, ist das berühmte "Mooresche Gesetz". Was sagt es genau voraus? In 5 Jahren, welche magischen Funktionen würden Sie gerne in Ihrem Telefon haben?

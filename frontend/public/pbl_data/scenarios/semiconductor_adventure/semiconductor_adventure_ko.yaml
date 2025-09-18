@@ -231,7 +231,7 @@ tasks:
       initial_prompt: |
         Conclude the journey by explaining the global semiconductor industry.
         Help students understand the collaborative nature of chip production.
-    title: "과제 5: 미래를 예측하는 마법의 법칙"
+    title: "미래를 예측하는 마법의 법칙"
     description: 전화기와 컴퓨터가 매년 또는 2년마다 더 강력해지는 이유는 무엇일까요? 이 배후에는 실제로 50년 넘게 반도체 산업을 이끌어온 유명한 기술 예언이 있습니다.
     instructions: |
       기술을 빛의 속도로 발전시키는 이 예언이 바로 유명한 '무어의 법칙'입니다. 이것이 정확히 무엇을 예측하는 걸까요? 5년 후, 당신의 전화기가 어떤 마법 같은 기능을 가지기를 원하나요?

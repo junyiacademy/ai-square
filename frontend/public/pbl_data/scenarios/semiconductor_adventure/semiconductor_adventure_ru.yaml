@@ -47,7 +47,7 @@ tasks:
       initial_prompt: |
         You are AI Crystal, a friendly guide helping students understand semiconductors.
         Start by welcoming the explorer and explaining the journey ahead.
-    title: "Задача 1: Повсеместные Чипы - Умный День в Вашей Жизни"
+    title: "Повсеместные Чипы - Умный День в Вашей Жизни"
     description: |
       Возможно, вы не заметили, но с момента открытия глаз множество таинственных маленьких помощников находятся вокруг вас, делая нашу жизнь более удобной. Это чипы.
     instructions: |

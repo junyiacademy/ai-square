@@ -47,7 +47,7 @@ tasks:
       initial_prompt: |
         You are AI Crystal, a friendly guide helping students understand semiconductors.
         Start by welcoming the explorer and explaining the journey ahead.
-    title: "Tarefa 1: Chips Ubíquos - Um Dia Inteligente na Sua Vida"
+    title: "Chips Ubíquos - Um Dia Inteligente na Sua Vida"
     description: |
       Você pode não ter notado, mas desde o momento em que abre os olhos, muitos pequenos ajudantes misteriosos estão ao seu redor, tornando nossas vidas mais convenientes. Eles são os chips.
     instructions: |
@@ -94,7 +94,7 @@ tasks:
       initial_prompt: |
         Continue guiding the student through understanding semiconductors.
         Explain what makes silicon special for electronics.
-    title: "Tarefa 2: Conheça o Elemento Mágico 'Silício'"
+    title: "Conheça o Elemento Mágico 'Silício'"
     description: Você já se perguntou o que conecta a areia de vastas praias com o smartphone no seu bolso?
     instructions: |
       Como a areia se transforma no coração de um telefone? Venha perguntar à IA e resolva este mistério!
@@ -140,7 +140,7 @@ tasks:
       initial_prompt: |
         Guide the student through the chip manufacturing process.
         Explain the transformation from sand to silicon chips.
-    title: "Tarefa 3: O Segredo dos Semicondutores - Um Material Único"
+    title: "O Segredo dos Semicondutores - Um Material Único"
     description: Sabemos que os chips são feitos de "silício", mas por que ele foi escolhido?
     instructions: |
       Por que silício? Acontece que ele tem uma identidade secreta sobre "condutividade" - isso é o que "semicondutor" significa. Este nome que soa legal, o que ele representa exatamente?
@@ -186,7 +186,7 @@ tasks:
       initial_prompt: |
         Help students recognize semiconductors in their daily life.
         Connect the technology to real-world applications.
-    title: "Tarefa 4: Do Que São Feitos os Chips?"
+    title: "Do Que São Feitos os Chips?"
     description: Como é o interior de um chip? Na verdade é uma cidade em miniatura, lar de bilhões de "mini interruptores" responsáveis pelo pensamento.
     instructions: |
       Esses mini interruptores são chamados de "transistores". O desempenho de um chip depende de quantos transistores podem ser empacotados numa área minúscula. Vamos conhecer os heróis menores, mas mais importantes dentro de um chip.
@@ -231,7 +231,7 @@ tasks:
       initial_prompt: |
         Conclude the journey by explaining the global semiconductor industry.
         Help students understand the collaborative nature of chip production.
-    title: "Tarefa 5: A Lei Mágica que Prevê o Futuro"
+    title: "A Lei Mágica que Prevê o Futuro"
     description: Por que telefones e computadores se tornam mais poderosos a cada ano ou dois? Por trás disso há, na verdade, uma famosa profecia tecnológica que tem impulsionado a indústria de semicondutores por mais de cinquenta anos.
     instructions: |
       Esta profecia que mantém a tecnologia avançando na velocidade da luz é a famosa "Lei de Moore". O que ela prevê exatamente? Em 5 anos, que recursos mágicos você gostaria que seu telefone tivesse?

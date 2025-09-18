@@ -47,7 +47,7 @@ tasks:
       initial_prompt: |
         You are AI Crystal, a friendly guide helping students understand semiconductors.
         Start by welcoming the explorer and explaining the journey ahead.
-    title: "Tâche 1 : Puces Omniprésentes - Une Journée Intelligente dans Votre Vie"
+    title: "Puces Omniprésentes - Une Journée Intelligente dans Votre Vie"
     description: |
       Vous n'avez peut-être pas remarqué, mais dès l'instant où vous ouvrez les yeux, de nombreux petits assistants mystérieux sont autour de vous, rendant nos vies plus pratiques. Ce sont les puces.
     instructions: |
@@ -94,7 +94,7 @@ tasks:
       initial_prompt: |
         Continue guiding the student through understanding semiconductors.
         Explain what makes silicon special for electronics.
-    title: "Tâche 2 : Rencontrez l'Élément Magique 'Silicium'"
+    title: "Rencontrez l'Élément Magique 'Silicium'"
     description: Vous êtes-vous déjà demandé ce qui relie le sable des vastes plages au smartphone dans votre poche ?
     instructions: |
       Comment le sable se transforme-t-il en cœur d'un téléphone ? Venez demander à l'IA et résolvez ce mystère !
@@ -140,7 +140,7 @@ tasks:
       initial_prompt: |
         Guide the student through the chip manufacturing process.
         Explain the transformation from sand to silicon chips.
-    title: "Tâche 3 : Le Secret des Semi-conducteurs - Un Matériau Unique"
+    title: "Le Secret des Semi-conducteurs - Un Matériau Unique"
     description: Nous savons que les puces sont faites de "silicium", mais pourquoi a-t-il été choisi ?
     instructions: |
       Pourquoi le silicium ? Il s'avère qu'il cache une identité secrète concernant la "conductivité" - c'est ce que signifie "semi-conducteur". Ce nom qui sonne cool, que représente-t-il exactement ?
@@ -186,7 +186,7 @@ tasks:
       initial_prompt: |
         Help students recognize semiconductors in their daily life.
         Connect the technology to real-world applications.
-    title: "Tâche 4 : De Quoi Sont Faites les Puces ?"
+    title: "De Quoi Sont Faites les Puces ?"
     description: À quoi ressemble l'intérieur d'une puce ? C'est en fait une ville miniature, abritant des milliards de "mini interrupteurs" responsables de la réflexion.
     instructions: |
       Ces mini interrupteurs s'appellent des "transistors". Les performances d'une puce dépendent du nombre de transistors qui peuvent être empaquetés dans une zone minuscule. Rencontrons les héros les plus petits mais les plus importants à l'intérieur d'une puce.
@@ -231,7 +231,7 @@ tasks:
       initial_prompt: |
         Conclude the journey by explaining the global semiconductor industry.
         Help students understand the collaborative nature of chip production.
-    title: "Tâche 5 : La Loi Magique qui Prédit l'Avenir"
+    title: "La Loi Magique qui Prédit l'Avenir"
     description: Pourquoi les téléphones et ordinateurs deviennent-ils plus puissants chaque année ou deux ? Derrière cela se cache en fait une célèbre prophétie technologique qui a stimulé l'industrie des semi-conducteurs pendant plus de cinquante ans.
     instructions: |
       Cette prophétie qui maintient la technologie en avancement rapide est la célèbre "Loi de Moore". Que prédit-elle exactement ? Dans 5 ans, quelles fonctionnalités magiques aimeriez-vous que votre téléphone ait ?

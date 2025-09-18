@@ -47,7 +47,7 @@ tasks:
       initial_prompt: |
         You are AI Crystal, a friendly guide helping students understand semiconductors.
         Start by welcoming the explorer and explaining the journey ahead.
-    title: "ภารกิจ 1: ชิปที่อยู่ทุกหนทุกแห่ง - วันอันชาญฉลาดในชีวิตของคุณ"
+    title: "ชิปที่อยู่ทุกหนทุกแห่ง - วันอันชาญฉลาดในชีวิตของคุณ"
     description: |
       คุณอาจไม่ได้สังเกตุ แต่ตั้งแต่วินาทีที่คุณลืมตา ผู้ช่วยเล็กๆ ลึกลับมากมายอยู่รอบตัวคุณ ทำให้ชีวิตของเราสะดวกสบายยิ่งขึ้น พวกมันคือชิป
     instructions: |
@@ -94,7 +94,7 @@ tasks:
       initial_prompt: |
         Continue guiding the student through understanding semiconductors.
         Explain what makes silicon special for electronics.
-    title: "ภารกิจ 2: พบกับธาตุมหัศจรรย์ 'ซิลิกอน'"
+    title: "พบกับธาตุมหัศจรรย์ 'ซิลิกอน'"
     description: คุณเคยสงสัยไหมว่าอะไรเชื่อมโยงทรายบนชายหาดกว้างใหญ่กับสมาร์ทโฟนในกระเป๋าของคุณ?
     instructions: |
       ทรายแปลงร่างเป็นหัวใจของโทรศัพท์ได้อย่างไร? มาถาม AI และไขปริศนานี้กัน!
@@ -140,7 +140,7 @@ tasks:
       initial_prompt: |
         Guide the student through the chip manufacturing process.
         Explain the transformation from sand to silicon chips.
-    title: "ภารกิจ 3: ความลับของเซมิคอนดักเตอร์ - วัสดุที่เป็นเอกลักษณ์"
+    title: "ความลับของเซมิคอนดักเตอร์ - วัสดุที่เป็นเอกลักษณ์"
     description: เรารู้ว่าชิปทำมาจาก "ซิลิกอน" แต่ทำไมถึงเลือกซิลิกอน?
     instructions: |
       ทำไมต้องเป็นซิลิกอน? ปรากฎว่ามันมีตัวตนลับเกี่ยวกับ "การนำไฟฟ้า" - นั่นคือความหมายของ "เซมิคอนดักเตอร์" ชื่อที่ฟังดูเท่นี้ แทนอะไรกันแน่?
@@ -186,7 +186,7 @@ tasks:
       initial_prompt: |
         Help students recognize semiconductors in their daily life.
         Connect the technology to real-world applications.
-    title: "ภารกิจ 4: ชิปทำมาจากอะไร?"
+    title: "ชิปทำมาจากอะไร?"
     description: ข้างในชิปดูเป็นอย่างไร? จริงๆ แล้วมันเป็นเมืองจิ๋ว บ้านของ "มินิสวิตช์" หลายพันล้านตัวที่รับผิดชอบการคิด
     instructions: |
       มินิสวิตช์เหล่านี้เรียกว่า "ทรานซิสเตอร์" ประสิทธิภาพของชิปขึ้นอยู่กับว่าสามารถใส่ทรานซิสเตอร์กี่ตัวในพื้นที่เล็กๆ มาพบกับฮีโร่ที่เล็กที่สุดแต่สำคัญที่สุดในชิปกัน
@@ -231,7 +231,7 @@ tasks:
       initial_prompt: |
         Conclude the journey by explaining the global semiconductor industry.
         Help students understand the collaborative nature of chip production.
-    title: "ภารกิจ 5: กฎมหัศจรรย์ที่ทำนายอนาคต"
+    title: "กฎมหัศจรรย์ที่ทำนายอนาคต"
     description: ทำไมโทรศัพท์และคอมพิวเตอร์ถึงทรงพลังขึ้นทุกปีหรือสองปี? เบื้องหลังนี้มีคำทำนายทางเทคโนโลยีที่มีชื่อเสียงซึ่งขับเคลื่อนอุตสาหกรรมเซมิคอนดักเตอร์มากว่าห้าสิบปี
     instructions: |
       คำทำนายที่ทำให้เทคโนโลยีก้าวหน้าด้วยความเร็วแสงนี้คือ "กฎของมัวร์" ที่มีชื่อเสียง มันทำนายอะไรกันแน่? ในอีก 5 ปี คุณอยากให้โทรศัพท์ของคุณมีฟีเจอร์มหัศจรรย์อะไรบ้าง?

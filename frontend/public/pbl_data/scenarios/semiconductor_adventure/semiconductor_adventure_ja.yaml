@@ -47,7 +47,7 @@ tasks:
       initial_prompt: |
         You are AI Crystal, a friendly guide helping students understand semiconductors.
         Start by welcoming the explorer and explaining the journey ahead.
-    title: "タスク1：どこにでもあるチップ - あなたの生活のスマートな一日"
+    title: "どこにでもあるチップ - あなたの生活のスマートな一日"
     description: |
       気づいていないかもしれませんが、目を開けた瞬間から、多くの神秘的な小さなヘルパーがあなたの周りにいて、私たちの生活をより便利にしています。それがチップです。
     instructions: |
@@ -94,7 +94,7 @@ tasks:
       initial_prompt: |
         Continue guiding the student through understanding semiconductors.
         Explain what makes silicon special for electronics.
-    title: "タスク2：魔法の元素「シリコン」に出会う"
+    title: "魔法の元素「シリコン」に出会う"
     description: 広大なビーチの砂と、あなたのポケットの中のスマートフォンを結び付けるものが何なのか、考えたことはありますか？
     instructions: |
       砂はどのようにして電話の心臓に変身するのでしょうか？AIに聞いて、この謎を解いてください！
@@ -140,7 +140,7 @@ tasks:
       initial_prompt: |
         Guide the student through the chip manufacturing process.
         Explain the transformation from sand to silicon chips.
-    title: "タスク3：半導体の秘密 - ユニークな材料"
+    title: "半導体の秘密 - ユニークな材料"
     description: チップが「シリコン」で作られていることは知っていますが、なぜそれが選ばれたのでしょうか？
     instructions: |
       なぜシリコンなのか？実は、「導電性」に関する秘密のアイデンティティを持っています - それが「半導体」の意味です。このクールに聞こえる名前は、正確に何を表しているのでしょうか？
@@ -186,7 +186,7 @@ tasks:
       initial_prompt: |
         Help students recognize semiconductors in their daily life.
         Connect the technology to real-world applications.
-    title: "タスク4：チップは何でできているのか？"
+    title: "チップは何でできているのか？"
     description: チップの内部はどのように見えるのでしょうか？実際は小さな都市で、数十億の思考を担当する「ミニスイッチ」の家です。
     instructions: |
       これらのミニスイッチは「トランジスタ」と呼ばれます。チップの性能は、小さな領域にどれだけ多くのトランジスタを詰め込めるかに依存します。チップ内で最も小さくて最も重要なヒーローに会いましょう。
@@ -231,7 +231,7 @@ tasks:
       initial_prompt: |
         Conclude the journey by explaining the global semiconductor industry.
         Help students understand the collaborative nature of chip production.
-    title: "タスク5：未来を予測する魔法の法則"
+    title: "未来を予測する魔法の法則"
     description: なぜ電話やコンピューターは毎年または2年ごとにより強力になるのでしょうか？この背後には、実際には50年以上にわたって半導体業界を推進してきた有名な技術的予言があります。
     instructions: |
       技術を光速で進歩させ続けるこの予言は、有名な「ムーアの法則」です。それは正確に何を予測するのでしょうか？5年後、あなたの電話にどんな魔法の機能を持たせたいですか？

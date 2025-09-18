@@ -47,7 +47,7 @@ tasks:
       initial_prompt: |
         You are AI Crystal, a friendly guide helping students understand semiconductors.
         Start by welcoming the explorer and explaining the journey ahead.
-    title: "任务 1: 无处不在的芯片，智慧生活的一天"
+    title: "无处不在的芯片，智慧生活的一天"
     description: |
       你可能没有注意到，从你睁开眼的那一刻，许多神秘的小帮手就在你的周围，让我们的生活变得更便利。它们，就是芯片。
     instructions: |
@@ -94,7 +94,7 @@ tasks:
       initial_prompt: |
         Continue guiding the student through understanding semiconductors.
         Explain what makes silicon special for electronics.
-    title: "任务 2: 认识神奇的「硅」元素"
+    title: "认识神奇的「硅」元素"
     description: 你有没有想过，广阔沙滩上的沙子，跟我们口袋里的手机有什么关系呢？
     instructions: |
       沙子如何变身成手机的心脏？快来问问 AI，解开这个谜题！
@@ -140,7 +140,7 @@ tasks:
       initial_prompt: |
         Guide the student through the chip manufacturing process.
         Explain the transformation from sand to silicon chips.
-    title: "任务 3: 半导体的秘密，一种与众不同的材料"
+    title: "半导体的秘密，一种与众不同的材料"
     description: 我们知道芯片是由「硅」做成的，但为什么要选它呢？
     instructions: |
       为什么是「硅」？原来它藏着一个关于「导电」的秘密身份，也就是「半导体」。这听起来很酷的名字，究竟代表什么意思呢？
@@ -186,7 +186,7 @@ tasks:
       initial_prompt: |
         Help students recognize semiconductors in their daily life.
         Connect the technology to real-world applications.
-    title: "任务 4: 芯片是由什么构成的呢？"
+    title: "芯片是由什么构成的呢？"
     description: 芯片内部又是什么样子？它其实是一座微型城市，里面住着数十亿个负责思考的「迷你开关」。
     instructions: |
       这些迷你开关，就是「晶体管」。芯片的效能，取决于能在极小的面积上，塞进多少个晶体管。让我们来认识这个芯片里最小、也最重要的英雄。
@@ -231,7 +231,7 @@ tasks:
       initial_prompt: |
         Conclude the journey by explaining the global semiconductor industry.
         Help students understand the collaborative nature of chip production.
-    title: "任务 5: 预见未来的神奇定律"
+    title: "预见未来的神奇定律"
     description: 为什么手机和电脑每隔一两年就会变得更厉害？这背后其实有个著名的科技预言，驱动了半导体产业超过五十年。
     instructions: |
       这个让科技不断飞速前进的预言，就是著名的「摩尔定律」。它究竟预测了什么？5年后，你希望你的手机可以增加什么神奇的功能呢？

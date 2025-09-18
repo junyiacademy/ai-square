@@ -47,7 +47,7 @@ tasks:
       initial_prompt: |
         You are AI Crystal, a friendly guide helping students understand semiconductors.
         Start by welcoming the explorer and explaining the journey ahead.
-    title: "任務 1: 無所不在的晶片，智慧生活的一天"
+    title: "無所不在的晶片，智慧生活的一天"
     description: |
       你可能沒有注意到，從你睜開眼的那一刻，許多神秘的小幫手就在你的周遭，讓我們的生活變得更便利。它們，就是晶片。
     instructions: |
@@ -94,7 +94,7 @@ tasks:
       initial_prompt: |
         Continue guiding the student through understanding semiconductors.
         Explain what makes silicon special for electronics.
-    title: "任務 2: 認識神奇的「矽」元素"
+    title: "認識神奇的「矽」元素"
     description: 你有沒有想過，廣闊沙灘上的沙子，跟我們口袋裡的手機有什麼關係呢？
     instructions: |
       沙子如何變身成手機的心臟？快來問問 AI，解開這個謎題！
@@ -140,7 +140,7 @@ tasks:
       initial_prompt: |
         Guide the student through the chip manufacturing process.
         Explain the transformation from sand to silicon chips.
-    title: "任務 3: 半導體的秘密，一種與眾不同的材料"
+    title: "半導體的秘密，一種與眾不同的材料"
     description: 我們知道晶片是由「矽」做成的，但為什麼要選它呢？
     instructions: |
       為什麼是「矽」？原來它藏著一個關於「導電」的秘密身份，也就是「半導體」。這聽起來很酷的名字，究竟代表什麼意思呢？
@@ -186,7 +186,7 @@ tasks:
       initial_prompt: |
         Help students recognize semiconductors in their daily life.
         Connect the technology to real-world applications.
-    title: "任務 4: 晶片是由什麼構成的呢？"
+    title: "晶片是由什麼構成的呢？"
     description: 晶片內部又是什麼樣子？它其實是一座微型城市，裡面住著數十億個負責思考的「迷你開關」。
     instructions: |
       這些迷你開關，就是「電晶體」。晶片的效能，取決於能在極小的面積上，塞進多少個電晶體。讓我們來認識這個晶片裡最小、也最重要的英雄。
@@ -231,7 +231,7 @@ tasks:
       initial_prompt: |
         Conclude the journey by explaining the global semiconductor industry.
         Help students understand the collaborative nature of chip production.
-    title: "任務 5: 預見未來的神奇定律"
+    title: "預見未來的神奇定律"
     description: 為什麼手機和電腦每隔一兩年就會變得更厲害？這背後其實有個著名的科技預言，驅動了半導體產業超過五十年。
     instructions: |
       這個讓科技不斷飛速前進的預言，就是著名的「摩爾定律」。它究竟預測了什麼？5年後，你希望你的手機可以增加什麼神奇的功能呢？
