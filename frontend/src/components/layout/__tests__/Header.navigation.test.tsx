@@ -104,9 +104,16 @@ describe('Header Navigation Tests', () => {
       renderWithProviders(<Header />)
 
       // Check for primary navigation links
+      expect(screen.getByText('Relations')).toBeInTheDocument()
+      expect(screen.getByText('KSA Framework')).toBeInTheDocument()
+      expect(screen.getByText('Problem-Based Learning')).toBeInTheDocument()
+      // More dropdown button and items are present (they're in dropdowns, hard to test visibility)
+      // The button shows translated text based on i18n
+      const moreButton = screen.getByRole('button', { name: /more/i })
+      expect(moreButton).toBeInTheDocument()
+      // Dashboard, Assessment, Discovery are in the dropdown (visibility is controlled by CSS hover)
       expect(screen.getByText('Dashboard')).toBeInTheDocument()
       expect(screen.getByText('Assessment')).toBeInTheDocument()
-      expect(screen.getByText('Problem-Based Learning')).toBeInTheDocument()
       expect(screen.getByText('Discovery')).toBeInTheDocument()
     })
 
@@ -115,24 +122,27 @@ describe('Header Navigation Tests', () => {
 
       renderWithProviders(<Header />)
 
-      const dashboardLink = screen.getByText('Dashboard').closest('a')
+      // Test primary navigation links
+      const relationsLink = screen.getByText('Relations').closest('a')
+      expect(relationsLink).toHaveAttribute('href', '/relations')
 
-      expect(dashboardLink).toHaveAttribute('href', '/dashboard')
+      const pblLink = screen.getByText('Problem-Based Learning').closest('a')
+      expect(pblLink).toHaveAttribute('href', '/pbl/scenarios')
 
-      // Assessment is now in the More dropdown menu (only visible on desktop lg+ screens)
-      // Skip testing Assessment link as it's in a CSS hover dropdown that's hard to test
+      // Dashboard and Assessment are now in the More dropdown menu
+      // Skip testing dropdown links as they're in a CSS hover dropdown that's hard to test
     })
 
     it('should highlight active page', async () => {
-      mockUsePathname.mockReturnValue('/dashboard')
+      mockUsePathname.mockReturnValue('/pbl/scenarios')
 
       renderWithProviders(<Header />)
 
-      const dashboardLink = screen.getByText('Dashboard').closest('a')
+      const pblLink = screen.getByText('Problem-Based Learning').closest('a')
       // Active links have text-gray-900 and border-blue-600 classes based on the Header component
-      expect(dashboardLink).toHaveClass('text-gray-900')
-      expect(dashboardLink).toHaveClass('border-blue-600')
-      expect(dashboardLink).toHaveClass('border-b-2')
+      expect(pblLink).toHaveClass('text-gray-900')
+      expect(pblLink).toHaveClass('border-blue-600')
+      expect(pblLink).toHaveClass('border-b-2')
     })
   })
 
