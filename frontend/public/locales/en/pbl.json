@@ -70,6 +70,9 @@
     "continueDraft": "Continue Draft",
     "continuing": "Continuing...",
     "starting": "Starting...",
+    "errorStarting": "Error starting program",
+    "reloginPrompt": "Please try logging out and logging in again to refresh your session.",
+    "reloginHint": "If the problem persists, please logout and login again.",
     "modalities": {
       "reading": "Reading",
       "writing": "Writing",

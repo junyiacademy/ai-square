@@ -211,7 +211,13 @@ export default function ScenarioDetailPage() {
       }
     } catch (error) {
       console.error('Error starting program:', error);
-      alert(t('details.errorStarting', 'Error starting program'));
+      // Enhanced error message prompting user to re-login
+      const errorMessage = t('details.errorStarting', 'Error starting program') +
+        '\n\n' +
+        t('details.reloginPrompt', 'Please try logging out and logging in again to refresh your session.') +
+        '\n\n' +
+        t('details.reloginHint', '請先登出，再重新登入以刷新您的會話。');
+      alert(errorMessage);
     } finally {
       setIsStarting(false);
     }

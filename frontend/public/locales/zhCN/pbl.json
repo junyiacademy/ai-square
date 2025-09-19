@@ -70,6 +70,9 @@
     "continueDraft": "继续草稿",
     "continuing": "继续中...",
     "starting": "开始中...",
+    "errorStarting": "启动程序时发生错误",
+    "reloginPrompt": "请尝试登出并重新登录以刷新您的会话。",
+    "reloginHint": "如果问题持续存在，请先登出再重新登录。",
     "modalities": {
       "reading": "阅读",
       "writing": "写作",
