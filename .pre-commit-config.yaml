@@ -18,13 +18,13 @@ repos:
         pass_filenames: false
 
       - id: unit-tests
-        name: Unit Tests
+        name: Unit Tests (Pre-push only)
         entry: bash -c 'cd frontend && npm run test:unit:ci'
         language: system
         types: [file]
         files: ^frontend/.*\.(ts|tsx|test\.ts|test\.tsx)$
         pass_filenames: false
-        # Run on pre-commit to catch issues early
+        stages: [pre-push]
 
       - id: build-check
         name: Build Check (Pre-push only)
