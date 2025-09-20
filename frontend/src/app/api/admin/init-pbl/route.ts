@@ -140,6 +140,7 @@ export async function POST(request: NextRequest) {
         // Build multilingual content
         const title: Record<string, string> = {};
         const description: Record<string, string> = {};
+        const objectives: Record<string, string[]> = {};
         const challengeStatement: Record<string, string> = {};
         const realWorldContext: Record<string, string> = {};
 
@@ -157,6 +158,9 @@ export async function POST(request: NextRequest) {
             }
             if (data?.scenario_info?.description) {
               description[lang] = data.scenario_info.description;
+            }
+            if (data?.scenario_info?.learning_objectives && Array.isArray(data.scenario_info.learning_objectives)) {
+              objectives[lang] = data.scenario_info.learning_objectives;
             }
             if (data?.challenge_statement) {
               challengeStatement[lang] = data.challenge_statement as string;
@@ -188,6 +192,9 @@ export async function POST(request: NextRequest) {
         }
         if (!description.en && Object.keys(description).length > 0) {
           description.en = Object.values(description)[0];
+        }
+        if (!objectives.en && Object.keys(objectives).length > 0) {
+          objectives.en = Object.values(objectives)[0];
         }
 
         // Build multilingual task templates
@@ -275,9 +282,7 @@ export async function POST(request: NextRequest) {
           },
           title,
           description,
-          objectives: Array.isArray(primaryData.scenario_info.learning_objectives)
-            ? primaryData.scenario_info.learning_objectives
-            : [],
+          objectives,
           difficulty: (primaryData.scenario_info.difficulty as DifficultyLevel) || 'beginner',
           estimatedMinutes: primaryData.scenario_info.estimated_duration || 60,
           prerequisites: Array.isArray(primaryData.scenario_info.prerequisites)

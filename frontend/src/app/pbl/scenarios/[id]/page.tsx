@@ -446,7 +446,17 @@ export default function ScenarioDetailPage() {
               {t('details.learningObjectives', 'Learning Objectives')}
             </h2>
             <ul className="space-y-2">
-              {(scenario.objectives || []).map((objective, index) => (
+              {(() => {
+                const objectives = scenario.objectives || [];
+                // Handle both legacy string[] and new multilingual Record<string, string[]> formats
+                if (Array.isArray(objectives)) {
+                  return objectives;
+                } else {
+                  // It's a Record<string, string[]>, get the current language or fallback to English
+                  const lang = i18n.language;
+                  return (objectives as Record<string, string[]>)[lang] || (objectives as Record<string, string[]>).en || [];
+                }
+              })().map((objective: string, index: number) => (
                 <li key={index} className="flex items-start">
                   <svg className="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />

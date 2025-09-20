@@ -44,7 +44,7 @@ export interface IScenario {
   // Basic info (multi-language)
   title: Record<string, string>;  // {"en": "Title", "zh": "標題"}
   description: Record<string, string>;
-  objectives: string[];
+  objectives: string[] | Record<string, string[]>;  // Support both legacy string[] and multilingual Record<string, string[]>
 
   // Common attributes
   difficulty: DifficultyLevel;

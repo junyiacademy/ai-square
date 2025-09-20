@@ -290,8 +290,69 @@ export async function GET(
       difficulty: scenarioResult.difficulty || (scenarioResult.metadata as Record<string, unknown>)?.difficulty as string || 'intermediate',
       estimatedDuration: scenarioResult.estimatedMinutes || (scenarioResult.metadata as Record<string, unknown>)?.estimatedDuration as number || 60,
       targetDomain: (scenarioResult.pblData as Record<string, unknown>)?.targetDomains as string[] || (scenarioResult.metadata as Record<string, unknown>)?.targetDomains as string[] || [],
-      prerequisites: (scenarioResult.metadata as Record<string, unknown>)?.prerequisites as string[] || [],
-      learningObjectives: scenarioResult.objectives || (scenarioResult as { objectives?: string[] }).objectives || [],
+      prerequisites: (() => {
+        // First try database prerequisites
+        const dbPrerequisites = (scenarioResult.metadata as Record<string, unknown>)?.prerequisites as string[];
+        if (dbPrerequisites && dbPrerequisites.length > 0) {
+          return dbPrerequisites;
+        }
+
+        // Fallback to YAML data for multilingual prerequisites
+        if (yamlData && (yamlData as Record<string, unknown>).scenario_info) {
+          const scenarioInfo = (yamlData as Record<string, unknown>).scenario_info as Record<string, unknown>;
+          const yamlPrerequisites = scenarioInfo.prerequisites;
+          if (Array.isArray(yamlPrerequisites)) {
+            return yamlPrerequisites.map(obj => {
+              if (typeof obj === 'string') return obj;
+              if (typeof obj === 'object' && obj !== null) {
+                const multilangObj = obj as Record<string, unknown>;
+                return (multilangObj[lang] as string) || (multilangObj.en as string) || '';
+              }
+              return '';
+            }).filter(Boolean);
+          }
+        }
+
+        return [];
+      })(),
+      learningObjectives: (() => {
+        // First try database objectives with multilingual support
+        const dbObjectives = scenarioResult.objectives || (scenarioResult as { objectives?: string[] | Record<string, string[]> }).objectives;
+
+        // If database has multilingual objectives, use them
+        if (dbObjectives && typeof dbObjectives === 'object' && !Array.isArray(dbObjectives)) {
+          const multilangObjectives = dbObjectives as Record<string, string[]>;
+          return multilangObjectives[lang] || multilangObjectives.en || [];
+        }
+
+        // If database has simple array but user wants non-English, try YAML first
+        if (lang !== 'en' && yamlData && (yamlData as Record<string, unknown>).scenario_info) {
+          const scenarioInfo = (yamlData as Record<string, unknown>).scenario_info as Record<string, unknown>;
+          const yamlObjectives = scenarioInfo.learning_objectives;
+          if (Array.isArray(yamlObjectives)) {
+            const objectives = yamlObjectives.map(obj => {
+              if (typeof obj === 'string') return obj;
+              if (typeof obj === 'object' && obj !== null) {
+                const multilangObj = obj as Record<string, unknown>;
+                return (multilangObj[lang] as string) || (multilangObj.en as string) || '';
+              }
+              return '';
+            }).filter(Boolean);
+
+            // If we found non-empty objectives in YAML, use them
+            if (objectives.length > 0) {
+              return objectives;
+            }
+          }
+        }
+
+        // Finally, use database array if available (fallback to English)
+        if (dbObjectives && Array.isArray(dbObjectives) && dbObjectives.length > 0) {
+          return dbObjectives;
+        }
+
+        return [];
+      })(),
       ksaMapping: yamlData ? buildKSAMapping(yamlData as unknown as YAMLData, ksaData, lang) : undefined,
       tasks: (scenarioResult.taskTemplates || []).map((task: Record<string, unknown>) => ({
         id: String(task.id || ''),
