@@ -78,7 +78,16 @@
       "mixed": "مختلط"
     },
     "targetDomains": "المجالات المستهدفة",
+    "learningTasks": "مهام التعلم",
+    "noObjectives": "لم يتم تحديد أهداف",
+    "noPrerequisites": "لا توجد متطلبات أساسية",
+    "noTargetDomains": "لم يتم تحديد مجالات مستهدفة",
+    "noTasks": "لا توجد مهام محددة لهذا السيناريو",
+    "ksaCompetenciesCovered": "كفاءات KSA المغطاة في هذا السيناريو",
     "ksaCompetencies": "كفاءات KSA",
+    "primary": "أساسي",
+    "secondary": "ثانوي",
+    "min": "دق",
     "knowledge": "المعرفة",
     "skills": "المهارات",
     "attitudes": "المواقف",
@@ -87,10 +96,22 @@
       "creating_with_ai": "الإبداع مع الذكاء الاصطناعي",
       "managing_with_ai": "الإدارة مع الذكاء الاصطناعي",
       "designing_with_ai": "التصميم مع الذكاء الاصطناعي"
+    },
+    "yourPrograms": "برامجك",
+    "viewResults": "عرض النتائج",
+    "hasEvaluation": "يحتوي على تقييم",
+    "errorStarting": "خطأ في بدء البرنامج",
+    "reloginPrompt": "يرجى محاولة تسجيل الخروج وتسجيل الدخول مرة أخرى لتحديث جلستك.",
+    "reloginHint": "إذا استمرت المشكلة، يرجى تسجيل الخروج وتسجيل الدخول مرة أخرى.",
+    "status": {
+      "completed": "مكتمل",
+      "active": "نشط",
+      "draft": "مسودة"
     }
   },
   "learn": {
     "errorLoading": "خطأ في تحميل السيناريو",
+    "noInstructionsAvailable": "لا توجد تعليمات متاحة",
     "backToPBL": "العودة إلى PBL",
     "progress": "التقدم",
     "currentTask": "المهمة الحالية",
@@ -163,7 +184,9 @@
     "status": {
       "completed": "مكتمل",
       "in_progress": "قيد التقدم",
-      "paused": "متوقف مؤقتاً"
+      "paused": "متوقف مؤقتاً",
+      "active": "نشط",
+      "draft": "مسودة"
     },
     "started": "بدأ",
     "completed": "اكتمل",

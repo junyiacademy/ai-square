@@ -81,7 +81,16 @@
       "mixed": "混合"
     },
     "targetDomains": "目标领域",
+    "learningTasks": "学习任务",
+    "noObjectives": "未指定目标",
+    "noPrerequisites": "无先决条件",
+    "noTargetDomains": "无指定目标领域",
+    "noTasks": "此场景未定义任务",
+    "ksaCompetenciesCovered": "此场景涵盖的 KSA 能力指标",
     "ksaCompetencies": "KSA能力",
+    "primary": "主要",
+    "secondary": "次要",
+    "min": "分钟",
     "knowledge": "知识",
     "skills": "技能",
     "attitudes": "态度",
@@ -90,10 +99,19 @@
       "creating_with_ai": "与AI创作",
       "managing_with_ai": "与AI管理",
       "designing_with_ai": "与AI设计"
+    },
+    "yourPrograms": "您的项目",
+    "viewResults": "查看结果",
+    "hasEvaluation": "已评估",
+    "status": {
+      "completed": "已完成",
+      "active": "进行中",
+      "draft": "草稿"
     }
   },
   "learn": {
     "errorLoading": "加载场景时出错",
+    "noInstructionsAvailable": "无可用指示",
     "backToPBL": "返回PBL",
     "progress": "进度",
     "currentTask": "当前任务",
@@ -166,7 +184,9 @@
     "status": {
       "completed": "已完成",
       "in_progress": "进行中",
-      "paused": "已暂停"
+      "paused": "已暂停",
+      "active": "进行中",
+      "draft": "草稿"
     },
     "started": "开始时间",
     "completed": "完成时间",

@@ -78,7 +78,16 @@
       "mixed": "Смешанный"
     },
     "targetDomains": "Целевые области",
+    "learningTasks": "Учебные задачи",
+    "noObjectives": "Цели не указаны",
+    "noPrerequisites": "Нет предварительных требований",
+    "noTargetDomains": "Целевые области не указаны",
+    "noTasks": "Для данного сценария не определены задачи",
+    "ksaCompetenciesCovered": "Компетенции ЗНУ, рассматриваемые в данном сценарии",
     "ksaCompetencies": "Компетенции ЗНУ",
+    "primary": "Основной",
+    "secondary": "Второстепенный",
+    "min": "мин",
     "knowledge": "Знания",
     "skills": "Навыки",
     "attitudes": "Отношения",
@@ -87,10 +96,22 @@
       "creating_with_ai": "Создание с ИИ",
       "managing_with_ai": "Управление с ИИ",
       "designing_with_ai": "Проектирование с ИИ"
+    },
+    "yourPrograms": "Ваши Программы",
+    "viewResults": "Просмотр Результатов",
+    "hasEvaluation": "Есть Оценка",
+    "errorStarting": "Ошибка при запуске программы",
+    "reloginPrompt": "Пожалуйста, попробуйте выйти и войти снова, чтобы обновить сеанс.",
+    "reloginHint": "Если проблема не устранена, выйдите и войдите снова.",
+    "status": {
+      "completed": "Завершено",
+      "active": "Активный",
+      "draft": "Черновик"
     }
   },
   "learn": {
     "errorLoading": "Ошибка загрузки сценария",
+    "noInstructionsAvailable": "Инструкции недоступны",
     "backToPBL": "Вернуться к PBL",
     "progress": "Прогресс",
     "currentTask": "Текущая задача",
@@ -163,7 +184,9 @@
     "status": {
       "completed": "Завершено",
       "in_progress": "В процессе",
-      "paused": "Приостановлено"
+      "paused": "Приостановлено",
+      "active": "Активный",
+      "draft": "Черновик"
     },
     "started": "Начато",
     "completed": "Завершено",

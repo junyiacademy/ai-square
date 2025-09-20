@@ -1003,7 +1003,7 @@ export default function ProgramLearningPage() {
                   {Array.isArray(currentTask.instructions) ? currentTask.instructions.map((instruction, index) => (
                     <li key={index}>{instruction}</li>
                   )) : (
-                    <li>No instructions available</li>
+                    <li>{t('pbl:learn.noInstructionsAvailable')}</li>
                   )}
                 </ul>
               </div>
@@ -1473,7 +1473,7 @@ export default function ProgramLearningPage() {
                       {Array.isArray(currentTask.instructions) ? currentTask.instructions.map((instruction, index) => (
                         <li key={index}>{instruction}</li>
                       )) : (
-                        <li>No instructions available</li>
+                        <li>{t('pbl:learn.noInstructionsAvailable')}</li>
                       )}
                     </ul>
                   </div>

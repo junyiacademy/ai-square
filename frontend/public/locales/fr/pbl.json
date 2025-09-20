@@ -78,7 +78,16 @@
       "mixed": "Mixte"
     },
     "targetDomains": "Domaines Cibles",
+    "learningTasks": "Tâches d'Apprentissage",
+    "noObjectives": "Aucun objectif spécifié",
+    "noPrerequisites": "Aucun prérequis",
+    "noTargetDomains": "Aucun domaine cible spécifié",
+    "noTasks": "Aucune tâche définie pour ce scénario",
+    "ksaCompetenciesCovered": "Compétences CSA Couvertes dans Ce Scénario",
     "ksaCompetencies": "Compétences CSA",
+    "primary": "Primaire",
+    "secondary": "Secondaire",
+    "min": "min",
     "knowledge": "Connaissances",
     "skills": "Compétences",
     "attitudes": "Attitudes",
@@ -87,10 +96,22 @@
       "creating_with_ai": "Créer avec l'IA",
       "managing_with_ai": "Gérer avec l'IA",
       "designing_with_ai": "Concevoir avec l'IA"
+    },
+    "yourPrograms": "Vos Programmes",
+    "viewResults": "Voir les Résultats",
+    "hasEvaluation": "A une Évaluation",
+    "errorStarting": "Erreur lors du démarrage du programme",
+    "reloginPrompt": "Veuillez essayer de vous déconnecter et de vous reconnecter pour actualiser votre session.",
+    "reloginHint": "Si le problème persiste, veuillez vous déconnecter puis vous reconnecter.",
+    "status": {
+      "completed": "Terminé",
+      "active": "Actif",
+      "draft": "Brouillon"
     }
   },
   "learn": {
     "errorLoading": "Erreur lors du chargement du scénario",
+    "noInstructionsAvailable": "Aucune instruction disponible",
     "backToPBL": "Retour à PBL",
     "progress": "Progrès",
     "currentTask": "Tâche Actuelle",
@@ -163,7 +184,9 @@
     "status": {
       "completed": "Terminé",
       "in_progress": "En Cours",
-      "paused": "En Pause"
+      "paused": "En Pause",
+      "active": "Actif",
+      "draft": "Brouillon"
     },
     "started": "Commencé",
     "completed": "Terminé",

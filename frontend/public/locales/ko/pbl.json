@@ -78,7 +78,16 @@
       "mixed": "혼합"
     },
     "targetDomains": "대상 도메인",
+    "learningTasks": "학습 과제",
+    "noObjectives": "목표가 지정되지 않았습니다",
+    "noPrerequisites": "선수 조건 없음",
+    "noTargetDomains": "대상 도메인이 지정되지 않았습니다",
+    "noTasks": "이 시나리오에 정의된 과제가 없습니다",
+    "ksaCompetenciesCovered": "이 시나리오에서 다루는 KSA 역량",
     "ksaCompetencies": "KSA 역량",
+    "primary": "주요",
+    "secondary": "부차적",
+    "min": "분",
     "knowledge": "지식",
     "skills": "기술",
     "attitudes": "태도",
@@ -87,10 +96,22 @@
       "creating_with_ai": "AI와 창작",
       "managing_with_ai": "AI와 관리",
       "designing_with_ai": "AI와 설계"
+    },
+    "yourPrograms": "내 프로그램",
+    "viewResults": "결과 보기",
+    "hasEvaluation": "평가 있음",
+    "errorStarting": "프로그램 시작 오류",
+    "reloginPrompt": "세션을 새로 고치려면 로그아웃했다가 다시 로그인해 주세요.",
+    "reloginHint": "문제가 계속되면 로그아웃 후 다시 로그인해 주세요.",
+    "status": {
+      "completed": "완료",
+      "active": "활성",
+      "draft": "초안"
     }
   },
   "learn": {
     "errorLoading": "시나리오 로딩 오류",
+    "noInstructionsAvailable": "사용 가능한 지시사항이 없습니다",
     "backToPBL": "PBL로 돌아가기",
     "progress": "진도",
     "currentTask": "현재 과제",
@@ -163,7 +184,9 @@
     "status": {
       "completed": "완료",
       "in_progress": "진행 중",
-      "paused": "일시 중지"
+      "paused": "일시 중지",
+      "active": "활성",
+      "draft": "초안"
     },
     "started": "시작일",
     "completed": "완료일",

@@ -78,7 +78,16 @@
       "mixed": "Misto"
     },
     "targetDomains": "Domini Target",
+    "learningTasks": "Compiti di Apprendimento",
+    "noObjectives": "Nessun obiettivo specificato",
+    "noPrerequisites": "Nessun prerequisito",
+    "noTargetDomains": "Nessun dominio target specificato",
+    "noTasks": "Nessun compito definito per questo scenario",
+    "ksaCompetenciesCovered": "Competenze CSA Coperte in Questo Scenario",
     "ksaCompetencies": "Competenze CSA",
+    "primary": "Primario",
+    "secondary": "Secondario",
+    "min": "min",
     "knowledge": "Conoscenza",
     "skills": "Abilità",
     "attitudes": "Attitudini",
@@ -87,10 +96,22 @@
       "creating_with_ai": "Creare con l'IA",
       "managing_with_ai": "Gestire con l'IA",
       "designing_with_ai": "Progettare con l'IA"
+    },
+    "yourPrograms": "I Tuoi Programmi",
+    "viewResults": "Visualizza Risultati",
+    "hasEvaluation": "Ha Valutazione",
+    "errorStarting": "Errore nell'avvio del programma",
+    "reloginPrompt": "Si prega di provare a disconnettersi e riconnettersi per aggiornare la sessione.",
+    "reloginHint": "Se il problema persiste, disconnettersi e riconnettersi.",
+    "status": {
+      "completed": "Completato",
+      "active": "Attivo",
+      "draft": "Bozza"
     }
   },
   "learn": {
     "errorLoading": "Errore nel caricamento dello scenario",
+    "noInstructionsAvailable": "Nessuna istruzione disponibile",
     "backToPBL": "Torna a PBL",
     "progress": "Progresso",
     "currentTask": "Compito Attuale",
@@ -163,7 +184,9 @@
     "status": {
       "completed": "Completato",
       "in_progress": "In Corso",
-      "paused": "In Pausa"
+      "paused": "In Pausa",
+      "active": "Attivo",
+      "draft": "Bozza"
     },
     "started": "Iniziato",
     "completed": "Completato",

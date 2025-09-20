@@ -78,7 +78,16 @@
       "mixed": "Campuran"
     },
     "targetDomains": "Domain Target",
+    "learningTasks": "Tugas Pembelajaran",
+    "noObjectives": "Tidak ada tujuan yang ditentukan",
+    "noPrerequisites": "Tidak ada prasyarat",
+    "noTargetDomains": "Tidak ada domain target yang ditentukan",
+    "noTasks": "Tidak ada tugas yang didefinisikan untuk skenario ini",
+    "ksaCompetenciesCovered": "Kompetensi KSA yang Dicakup dalam Skenario Ini",
     "ksaCompetencies": "Kompetensi KSA",
+    "primary": "Primer",
+    "secondary": "Sekunder",
+    "min": "mnt",
     "knowledge": "Pengetahuan",
     "skills": "Keterampilan",
     "attitudes": "Sikap",
@@ -87,10 +96,22 @@
       "creating_with_ai": "Berkreasi dengan AI",
       "managing_with_ai": "Mengelola dengan AI",
       "designing_with_ai": "Merancang dengan AI"
+    },
+    "yourPrograms": "Program Anda",
+    "viewResults": "Lihat Hasil",
+    "hasEvaluation": "Memiliki Evaluasi",
+    "errorStarting": "Kesalahan saat memulai program",
+    "reloginPrompt": "Silakan coba keluar dan masuk kembali untuk menyegarkan sesi Anda.",
+    "reloginHint": "Jika masalah berlanjut, silakan keluar dan masuk kembali.",
+    "status": {
+      "completed": "Selesai",
+      "active": "Aktif",
+      "draft": "Draf"
     }
   },
   "learn": {
     "errorLoading": "Kesalahan memuat skenario",
+    "noInstructionsAvailable": "Tidak ada instruksi yang tersedia",
     "backToPBL": "Kembali ke PBL",
     "progress": "Kemajuan",
     "currentTask": "Tugas Saat Ini",
@@ -163,7 +184,9 @@
     "status": {
       "completed": "Selesai",
       "in_progress": "Sedang Berlangsung",
-      "paused": "Dijeda"
+      "paused": "Dijeda",
+      "active": "Aktif",
+      "draft": "Draf"
     },
     "started": "Dimulai",
     "completed": "Selesai",

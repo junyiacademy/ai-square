@@ -78,7 +78,16 @@
       "mixed": "Gemischt"
     },
     "targetDomains": "Zieldomänen",
+    "learningTasks": "Lernaufgaben",
+    "noObjectives": "Keine Ziele angegeben",
+    "noPrerequisites": "Keine Voraussetzungen",
+    "noTargetDomains": "Keine Zieldomänen angegeben",
+    "noTasks": "Keine Aufgaben für dieses Szenario definiert",
+    "ksaCompetenciesCovered": "In diesem Szenario abgedeckte KSA-Kompetenzen",
     "ksaCompetencies": "KSA-Kompetenzen",
+    "primary": "Primär",
+    "secondary": "Sekundär",
+    "min": "Min",
     "knowledge": "Wissen",
     "skills": "Fähigkeiten",
     "attitudes": "Einstellungen",
@@ -87,10 +96,22 @@
       "creating_with_ai": "Mit KI erstellen",
       "managing_with_ai": "Mit KI verwalten",
       "designing_with_ai": "Mit KI gestalten"
+    },
+    "yourPrograms": "Ihre Programme",
+    "viewResults": "Ergebnisse anzeigen",
+    "hasEvaluation": "Hat Bewertung",
+    "errorStarting": "Fehler beim Starten des Programms",
+    "reloginPrompt": "Bitte versuchen Sie, sich abzumelden und erneut anzumelden, um Ihre Sitzung zu aktualisieren.",
+    "reloginHint": "Wenn das Problem weiterhin besteht, melden Sie sich bitte ab und wieder an.",
+    "status": {
+      "completed": "Abgeschlossen",
+      "active": "Aktiv",
+      "draft": "Entwurf"
     }
   },
   "learn": {
     "errorLoading": "Fehler beim Laden des Szenarios",
+    "noInstructionsAvailable": "Keine Anweisungen verfügbar",
     "backToPBL": "Zurück zu PBL",
     "progress": "Fortschritt",
     "currentTask": "Aktuelle Aufgabe",
@@ -163,7 +184,9 @@
     "status": {
       "completed": "Abgeschlossen",
       "in_progress": "In Bearbeitung",
-      "paused": "Pausiert"
+      "paused": "Pausiert",
+      "active": "Aktiv",
+      "draft": "Entwurf"
     },
     "started": "Gestartet",
     "completed": "Abgeschlossen",

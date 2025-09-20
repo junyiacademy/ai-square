@@ -58,6 +58,7 @@
     "scenarioNotFound": "找不到情境",
     "backToPBL": "返回 PBL",
     "existingPrograms": "您的學習計畫",
+    "yourPrograms": "您的計畫",
     "latestProgram": "最新計畫",
     "program": "計畫",
     "progress": "進度",
@@ -65,6 +66,8 @@
     "started": "開始日期",
     "continue": "繼續",
     "goToCompletion": "查看報告",
+    "viewResults": "查看結果",
+    "hasEvaluation": "已評估",
     "continueProgram": "繼續計畫",
     "startNewProgram": "開始新計畫",
     "continueDraft": "繼續草稿",
@@ -81,7 +84,16 @@
       "mixed": "綜合"
     },
     "targetDomains": "目標領域",
+    "learningTasks": "學習任務",
+    "noObjectives": "無指定目標",
+    "noPrerequisites": "無先備知識要求",
+    "noTargetDomains": "無指定目標領域",
+    "noTasks": "此情境未定義任務",
+    "ksaCompetenciesCovered": "此情境涵蓋的 KSA 能力指標",
     "ksaCompetencies": "KSA 能力指標",
+    "primary": "主要",
+    "secondary": "次要",
+    "min": "分鐘",
     "knowledge": "知識",
     "skills": "技能",
     "attitudes": "態度",
@@ -90,10 +102,16 @@
       "creating_with_ai": "與 AI 共創",
       "managing_with_ai": "管理 AI",
       "designing_with_ai": "設計 AI"
+    },
+    "status": {
+      "completed": "已完成",
+      "active": "進行中",
+      "draft": "草稿"
     }
   },
   "learn": {
     "errorLoading": "載入情境時發生錯誤",
+    "noInstructionsAvailable": "無可用指示",
     "backToPBL": "返回 PBL",
     "progress": "進度",
     "currentTask": "當前任務",
@@ -135,12 +153,10 @@
     "reanalyzeAvailable": "可重新分析",
     "task": "任務",
     "description": "描述",
-    "progress": "進度",
     "switchTask": "切換任務",
     "allTasks": "所有任務",
     "current": "當前",
     "completeTask": "完成任務",
-    "nextTask": "下一個任務",
     "completeProgram": "完成課程",
     "errorProcessing": "處理訊息時發生錯誤，請重試。",
     "noTaskFound": "找不到任務",
@@ -168,7 +184,9 @@
     "status": {
       "completed": "已完成",
       "in_progress": "進行中",
-      "paused": "已暫停"
+      "paused": "已暫停",
+      "active": "進行中",
+      "draft": "草稿"
     },
     "started": "開始時間",
     "completed": "完成時間",
@@ -185,8 +203,7 @@
     "stageDetails": "階段詳情",
     "conversations": "對話",
     "continueStudy": "繼續學習",
-    "tasksEvaluated": "已評估任務",
-    "stages": "階段"
+    "tasksEvaluated": "已評估任務"
   },
   "complete": {
     "congratulations": "恭喜您！",
@@ -209,7 +226,7 @@
     "errorLoading": "載入完成資料時發生錯誤",
     "noDataFound": "找不到完成資料",
     "score": "分數",
-    "strengths": "優點",
+    "strengths": "您的優勢",
     "improvements": "待改進之處",
     "ksaSummary": "KSA 成就總覽",
     "knowledge": "知識",
@@ -223,7 +240,7 @@
     "ksaDiagnosticReport": "KSA 診斷報告",
     "diagnosticInsights": "診斷洞察",
     "strongestAreas": "最強項目",
-    "areasForImprovement": "待加強項目",
+    "areasForImprovement": "成長機會",
     "stageTasks": "階段任務",
     "stageObjectives": "學習目標",
     "targetedKSA": "目標 KSA",
@@ -248,8 +265,6 @@
     "viewReport": "查看報告",
     "generatingFeedback": "正在生成個人化回饋...",
     "qualitativeFeedback": "個人化回饋",
-    "strengths": "您的優勢",
-    "areasForImprovement": "成長機會",
     "nextSteps": "建議下一步",
     "ksa": "KSA",
     "print": "列印"

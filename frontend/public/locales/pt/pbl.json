@@ -78,7 +78,16 @@
       "mixed": "Misto"
     },
     "targetDomains": "Domínios Alvo",
+    "learningTasks": "Tarefas de Aprendizagem",
+    "noObjectives": "Nenhum objetivo especificado",
+    "noPrerequisites": "Nenhum pré-requisito",
+    "noTargetDomains": "Nenhum domínio alvo especificado",
+    "noTasks": "Nenhuma tarefa definida para este cenário",
+    "ksaCompetenciesCovered": "Competências KSA Cobertas neste Cenário",
     "ksaCompetencies": "Competências KSA",
+    "primary": "Primário",
+    "secondary": "Secundário",
+    "min": "min",
     "knowledge": "Conhecimento",
     "skills": "Habilidades",
     "attitudes": "Atitudes",
@@ -87,10 +96,22 @@
       "creating_with_ai": "Criação com IA",
       "managing_with_ai": "Gestão com IA",
       "designing_with_ai": "Design com IA"
+    },
+    "yourPrograms": "Seus Programas",
+    "viewResults": "Ver Resultados",
+    "hasEvaluation": "Tem Avaliação",
+    "errorStarting": "Erro ao iniciar o programa",
+    "reloginPrompt": "Por favor, tente sair e entrar novamente para atualizar sua sessão.",
+    "reloginHint": "Se o problema persistir, saia e entre novamente.",
+    "status": {
+      "completed": "Concluído",
+      "active": "Ativo",
+      "draft": "Rascunho"
     }
   },
   "learn": {
     "errorLoading": "Erro ao carregar cenário",
+    "noInstructionsAvailable": "Nenhuma instrução disponível",
     "backToPBL": "Voltar ao PBL",
     "progress": "Progresso",
     "currentTask": "Tarefa Atual",
@@ -163,7 +184,9 @@
     "status": {
       "completed": "Concluído",
       "in_progress": "Em Progresso",
-      "paused": "Pausado"
+      "paused": "Pausado",
+      "active": "Ativo",
+      "draft": "Rascunho"
     },
     "started": "Iniciado",
     "completed": "Concluído",

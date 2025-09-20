@@ -78,7 +78,16 @@
       "mixed": "ผสม"
     },
     "targetDomains": "โดเมนเป้าหมาย",
+    "learningTasks": "งานการเรียนรู้",
+    "noObjectives": "ไม่ได้ระบุวัตถุประสงค์",
+    "noPrerequisites": "ไม่มีข้อกำหนดเบื้องต้น",
+    "noTargetDomains": "ไม่ได้ระบุโดเมนเป้าหมาย",
+    "noTasks": "ไม่มีงานที่กำหนดไว้สำหรับสถานการณ์นี้",
+    "ksaCompetenciesCovered": "สมรรถนะ KSA ที่ครอบคลุมในสถานการณ์นี้",
     "ksaCompetencies": "สมรรถนะ KSA",
+    "primary": "หลัก",
+    "secondary": "รอง",
+    "min": "นาที",
     "knowledge": "ความรู้",
     "skills": "ทักษะ",
     "attitudes": "ทัศนคติ",
@@ -87,10 +96,22 @@
       "creating_with_ai": "การสร้างสรรค์กับ AI",
       "managing_with_ai": "การจัดการกับ AI",
       "designing_with_ai": "การออกแบบกับ AI"
+    },
+    "yourPrograms": "โปรแกรมของคุณ",
+    "viewResults": "ดูผลลัพธ์",
+    "hasEvaluation": "มีการประเมิน",
+    "errorStarting": "เกิดข้อผิดพลาดในการเริ่มโปรแกรม",
+    "reloginPrompt": "กรุณาลองออกจากระบบและเข้าสู่ระบบอีกครั้งเพื่อรีเฟรชเซสชันของคุณ",
+    "reloginHint": "หากปัญหายังคงอยู่ กรุณาออกจากระบบและเข้าสู่ระบบอีกครั้ง",
+    "status": {
+      "completed": "เสร็จสิ้น",
+      "active": "ใช้งาน",
+      "draft": "ร่าง"
     }
   },
   "learn": {
     "errorLoading": "ข้อผิดพลาดในการโหลดสถานการณ์",
+    "noInstructionsAvailable": "ไม่มีคำแนะนำที่ใช้ได้",
     "backToPBL": "กลับไปยัง PBL",
     "progress": "ความก้าวหน้า",
     "currentTask": "งานปัจจุบัน",
@@ -163,7 +184,9 @@
     "status": {
       "completed": "เสร็จสิ้น",
       "in_progress": "กำลังดำเนินการ",
-      "paused": "หยุดชั่วคราว"
+      "paused": "หยุดชั่วคราว",
+      "active": "ใช้งาน",
+      "draft": "ร่าง"
     },
     "started": "เริ่มเมื่อ",
     "completed": "เสร็จสิ้นเมื่อ",

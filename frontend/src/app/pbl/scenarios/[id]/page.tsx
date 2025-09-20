@@ -423,14 +423,14 @@ export default function ScenarioDetailPage() {
                 >
                   {isStarting
                     ? t('common:loading', 'Loading...')
-                    : t('startNewProgram', 'Start New Program')
+                    : t('details.startNewProgram', 'Start New Program')
                   }
                 </button>
                 <Link
                   href="/pbl/scenarios"
                   className="border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-6 py-3 rounded-lg font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                 >
-                  {t('backToScenarios', 'Back to Scenarios')}
+                  {t('details.backToScenarios', 'Back to Scenarios')}
                 </Link>
               </div>
             </div>
@@ -443,7 +443,7 @@ export default function ScenarioDetailPage() {
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
               <span className="text-2xl mr-2">🎯</span>
-              {t('learningObjectives', 'Learning Objectives')}
+              {t('details.learningObjectives', 'Learning Objectives')}
             </h2>
             <ul className="space-y-2">
               {(scenario.objectives || []).map((objective, index) => (
@@ -455,7 +455,7 @@ export default function ScenarioDetailPage() {
                 </li>
               ))}
               {(!scenario.objectives || scenario.objectives.length === 0) && (
-                <li className="text-gray-500 dark:text-gray-400">No objectives specified</li>
+                <li className="text-gray-500 dark:text-gray-400">{t('details.noObjectives', 'No objectives specified')}</li>
               )}
             </ul>
           </div>
@@ -464,7 +464,7 @@ export default function ScenarioDetailPage() {
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
               <span className="text-2xl mr-2">📋</span>
-              {t('prerequisites', 'Prerequisites')}
+              {t('details.prerequisites', 'Prerequisites')}
             </h2>
             <ul className="space-y-2">
               {(getScenarioData('prerequisites', []) as string[]).map((prereq: string, index: number) => (
@@ -474,7 +474,7 @@ export default function ScenarioDetailPage() {
                 </li>
               ))}
               {(getScenarioData('prerequisites', []) as string[]).length === 0 && (
-                <li className="text-gray-500 dark:text-gray-400">No prerequisites</li>
+                <li className="text-gray-500 dark:text-gray-400">{t('details.noPrerequisites', 'No prerequisites')}</li>
               )}
             </ul>
           </div>
@@ -484,7 +484,7 @@ export default function ScenarioDetailPage() {
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
             <span className="text-2xl mr-2">🌐</span>
-            {t('targetDomains', 'Target Domains')}
+            {t('details.targetDomains', 'Target Domains')}
           </h2>
           <div className="flex flex-wrap gap-2">
             {(getScenarioData('targetDomains', []) as string[]).map((domain: string, index: number) => (
@@ -493,7 +493,7 @@ export default function ScenarioDetailPage() {
               </span>
             ))}
             {(getScenarioData('targetDomains', []) as string[]).length === 0 && (
-              <span className="text-gray-500 dark:text-gray-400">No target domains specified</span>
+              <span className="text-gray-500 dark:text-gray-400">{t('details.noTargetDomains', 'No target domains specified')}</span>
             )}
           </div>
         </div>
@@ -502,7 +502,7 @@ export default function ScenarioDetailPage() {
         {/* Learning Tasks */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8">
           <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">
-            {t('learningTasks', 'Learning Tasks')}
+            {t('details.learningTasks', 'Learning Tasks')}
           </h2>
 
           {/* Scenario KSA Overview */}
@@ -511,12 +511,12 @@ export default function ScenarioDetailPage() {
             return ksaMapping ? (
             <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
               <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center">
-                🧠 KSA Competencies Covered in This Scenario
+                🧠 {t('details.ksaCompetenciesCovered', 'KSA Competencies Covered in This Scenario')}
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                 {ksaMapping?.knowledge && Array.isArray(ksaMapping.knowledge) && ksaMapping.knowledge.length > 0 ? (
                   <div>
-                    <span className="font-medium text-green-700 dark:text-green-300">Knowledge: </span>
+                    <span className="font-medium text-green-700 dark:text-green-300">{t('details.knowledge', 'Knowledge')}: </span>
                     <span className="text-green-600 dark:text-green-400">
                       {ksaMapping?.knowledge && Array.isArray(ksaMapping.knowledge) && ksaMapping.knowledge.map((item: unknown) =>
                         typeof item === 'string' ? item : (item && typeof item === 'object' && 'code' in item ? String(item.code) : '')
@@ -526,7 +526,7 @@ export default function ScenarioDetailPage() {
                 ) : null}
                 {ksaMapping?.skills && Array.isArray(ksaMapping.skills) && ksaMapping.skills.length > 0 ? (
                   <div>
-                    <span className="font-medium text-blue-700 dark:text-blue-300">Skills: </span>
+                    <span className="font-medium text-blue-700 dark:text-blue-300">{t('details.skills', 'Skills')}: </span>
                     <span className="text-blue-600 dark:text-blue-400">
                       {ksaMapping?.skills && Array.isArray(ksaMapping.skills) && ksaMapping.skills.map((item: unknown) =>
                         typeof item === 'string' ? item : (item && typeof item === 'object' && 'code' in item ? String(item.code) : '')
@@ -536,7 +536,7 @@ export default function ScenarioDetailPage() {
                 ) : null}
                 {ksaMapping?.attitudes && Array.isArray(ksaMapping.attitudes) && ksaMapping.attitudes.length > 0 ? (
                   <div>
-                    <span className="font-medium text-purple-700 dark:text-purple-300">Attitudes: </span>
+                    <span className="font-medium text-purple-700 dark:text-purple-300">{t('details.attitudes', 'Attitudes')}: </span>
                     <span className="text-purple-600 dark:text-purple-400">
                       {ksaMapping?.attitudes && Array.isArray(ksaMapping.attitudes) && ksaMapping.attitudes.map((item: unknown) =>
                         typeof item === 'string' ? item : (item && typeof item === 'object' && 'code' in item ? String(item.code) : '')
@@ -569,7 +569,7 @@ export default function ScenarioDetailPage() {
                     </span>
                     {task.timeLimit ? (
                       <span className="text-sm text-gray-500 dark:text-gray-400">
-                        {String(task.timeLimit)} min
+                        {String(task.timeLimit)} {t('details.min', 'min')}
                       </span>
                     ) : null}
                   </div>
@@ -585,7 +585,7 @@ export default function ScenarioDetailPage() {
                   return instructions.length > 0 ? (
                   <div className="mb-3">
                     <p className="text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
-                      {t('instructions', 'Instructions')}
+                      {t('details.instructions', 'Instructions')}
                     </p>
                     <ul className="text-sm text-gray-600 dark:text-gray-300 space-y-1">
                       {instructions.map((instruction: string, i: number) => (
@@ -610,7 +610,7 @@ export default function ScenarioDetailPage() {
                     <div className="space-y-1">
                       {ksaFocus.primary && Array.isArray(ksaFocus.primary) && ksaFocus.primary.length > 0 ? (
                         <div>
-                          <span className="text-xs font-medium text-purple-600 dark:text-purple-400">Primary: </span>
+                          <span className="text-xs font-medium text-purple-600 dark:text-purple-400">{t('details.primary', 'Primary')}: </span>
                           <span className="text-xs text-purple-600 dark:text-purple-400">
                             {(ksaFocus.primary as unknown[]).map((item: unknown) =>
                               String(typeof item === 'string' ? item : (item && typeof item === 'object' && 'code' in item ? item.code : item))
@@ -620,7 +620,7 @@ export default function ScenarioDetailPage() {
                       ) : null}
                       {ksaFocus.secondary && Array.isArray(ksaFocus.secondary) && ksaFocus.secondary.length > 0 ? (
                         <div>
-                          <span className="text-xs font-medium text-purple-600 dark:text-purple-400">Secondary: </span>
+                          <span className="text-xs font-medium text-purple-600 dark:text-purple-400">{t('details.secondary', 'Secondary')}: </span>
                           <span className="text-xs text-purple-600 dark:text-purple-400">
                             {(ksaFocus.secondary as unknown[]).map((item: unknown) =>
                               String(typeof item === 'string' ? item : (item && typeof item === 'object' && 'code' in item ? item.code : item))
@@ -637,7 +637,7 @@ export default function ScenarioDetailPage() {
                 {task.expectedOutcome ? (
                   <div className="bg-blue-50 dark:bg-blue-900/20 rounded p-3">
                     <p className="text-sm font-medium text-blue-700 dark:text-blue-300 mb-1">
-                      {t('expectedOutcome', 'Expected Outcome')}
+                      {t('details.expectedOutcome', 'Expected Outcome')}
                     </p>
                     <p className="text-sm text-blue-600 dark:text-blue-400">
                       {String(task.expectedOutcome)}
@@ -648,7 +648,7 @@ export default function ScenarioDetailPage() {
             ))}
             {(getScenarioData('tasks', []) as unknown[]).length === 0 && (
               <div className="text-center text-gray-500 dark:text-gray-400 py-8">
-                No tasks defined for this scenario
+                {t('details.noTasks', 'No tasks defined for this scenario')}
               </div>
             )}
           </div>

@@ -78,7 +78,16 @@
       "mixed": "混合"
     },
     "targetDomains": "対象ドメイン",
+    "learningTasks": "学習タスク",
+    "noObjectives": "目標が指定されていません",
+    "noPrerequisites": "前提条件なし",
+    "noTargetDomains": "対象ドメインが指定されていません",
+    "noTasks": "このシナリオにはタスクが定義されていません",
+    "ksaCompetenciesCovered": "このシナリオでカバーされるKSAコンピテンシー",
     "ksaCompetencies": "KSA コンピテンシー",
+    "primary": "主要",
+    "secondary": "副次",
+    "min": "分",
     "knowledge": "知識",
     "skills": "スキル",
     "attitudes": "態度",
@@ -87,10 +96,22 @@
       "creating_with_ai": "AIとの創造",
       "managing_with_ai": "AIとの管理",
       "designing_with_ai": "AIとの設計"
+    },
+    "yourPrograms": "あなたのプログラム",
+    "viewResults": "結果を表示",
+    "hasEvaluation": "評価あり",
+    "errorStarting": "プログラムの開始エラー",
+    "reloginPrompt": "セッションを更新するために、ログアウトしてから再度ログインしてください。",
+    "reloginHint": "問題が続く場合は、ログアウトしてから再度ログインしてください。",
+    "status": {
+      "completed": "完了",
+      "active": "アクティブ",
+      "draft": "下書き"
     }
   },
   "learn": {
     "errorLoading": "シナリオの読み込みエラー",
+    "noInstructionsAvailable": "利用可能な指示はありません",
     "backToPBL": "PBLに戻る",
     "progress": "進捗",
     "currentTask": "現在のタスク",
@@ -163,7 +184,9 @@
     "status": {
       "completed": "完了",
       "in_progress": "進行中",
-      "paused": "一時停止"
+      "paused": "一時停止",
+      "active": "アクティブ",
+      "draft": "下書き"
     },
     "started": "開始日",
     "completed": "完了日",
