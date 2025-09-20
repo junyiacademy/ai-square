@@ -88,14 +88,15 @@ export default function ProgramLearningPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [programId, scenarioId, i18n.language]);
 
-  // Load task data when taskId changes
+  // Load task data when taskId or language changes
   useEffect(() => {
-    if (scenario && taskId && currentTask?.id !== taskId) {
+    if (scenario && taskId) {
       // For unified architecture, we need to fetch the task data
+      // Reload when taskId changes OR when language changes
       loadTaskData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [taskId, scenario]);
+  }, [taskId, scenario, i18n.language]);
 
   // Scroll to bottom when conversations change
   useEffect(() => {

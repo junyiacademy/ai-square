@@ -355,43 +355,14 @@ export async function GET(
       })(),
       ksaMapping: yamlData ? buildKSAMapping(yamlData as unknown as YAMLData, ksaData, lang) : undefined,
       tasks: await (async () => {
-        // 🚀 NEW: Read tasks directly from Task DB instead of YAML taskTemplates
+        // Use taskTemplates from Scenario for display (not Task DB which only has tasks after program starts)
         try {
-          const { repositoryFactory: repoFactory } = await import('@/lib/repositories/base/repository-factory');
-          const taskRepo = repoFactory.getTaskRepository();
-          const tasks = await taskRepo.findByScenario?.(scenarioResult.id) || [];
+          // Skip Task DB lookup - Tasks only exist after program starts
+          // Use taskTemplates from scenario instead
+          console.log('📋 Loading task templates from scenario');
 
-          console.log(`📋 Found ${tasks.length} tasks in DB for scenario ${scenarioResult.id}`);
-
-          return tasks.map((task: Task) => ({
-            id: task.id,
-            title: typeof task.title === 'object' && task.title ?
-              ((task.title as Record<string, string>)?.[lang] || (task.title as Record<string, string>)?.en || '') :
-              String(task.title || ''),
-            description: typeof task.description === 'object' && task.description ?
-              ((task.description as Record<string, string>)?.[lang] || (task.description as Record<string, string>)?.en || '') :
-              String(task.description || ''),
-            category: String((task.metadata as Record<string, unknown>)?.category || task.type || 'general'),
-            instructions: (() => {
-              // Try to get instructions from content or metadata
-              const taskInstructions = (task.content as Record<string, unknown>)?.instructions ||
-                                      (task.metadata as Record<string, unknown>)?.instructions;
-
-              if (!taskInstructions) return [];
-              if (typeof taskInstructions === 'object' && taskInstructions) {
-                const inst = taskInstructions as Record<string, unknown>;
-                const langInst = inst[lang] as string | string[];
-                const enInst = inst.en as string | string[];
-
-                const selectedInst = langInst || enInst || '';
-                if (Array.isArray(selectedInst)) return selectedInst;
-                if (typeof selectedInst === 'string') return [selectedInst];
-              }
-              return [];
-            })(),
-            expectedOutcome: String((task.metadata as Record<string, unknown>)?.expectedOutcome || ''),
-            timeLimit: Number((task.metadata as Record<string, unknown>)?.timeLimit || 30)
-          }));
+          // Jump directly to fallback logic
+          throw new Error('Skip to taskTemplates');
         } catch (error) {
           console.error('❌ Error reading tasks from DB:', error);
 
