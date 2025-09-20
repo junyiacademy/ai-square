@@ -3,7 +3,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import yaml from 'js-yaml';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import type { IScenario, ITaskTemplate } from '@/types/unified-learning';
+import type { IScenario, ITaskTemplate, ITask } from '@/types/unified-learning';
 import type { DifficultyLevel, TaskType } from '@/types/database';
 // import { cacheInvalidationService } from '@/lib/cache/cache-invalidation-service';
 import { distributedCacheService } from '@/lib/cache/distributed-cache-service';
@@ -316,14 +316,95 @@ export async function POST(request: NextRequest) {
           }
         };
 
+        let scenario: IScenario;
         if (existing && force) {
           // Update existing
-          await scenarioRepo.update(existing.id, scenarioData);
+          scenario = await scenarioRepo.update(existing.id, scenarioData);
           results.updated++;
         } else {
           // Create new
-          await scenarioRepo.create(scenarioData);
+          scenario = await scenarioRepo.create(scenarioData);
           results.created++;
+        }
+
+        // 🚀 NEW: Create Task records from taskTemplates
+        if (taskTemplates.length > 0) {
+          console.log(`Creating ${taskTemplates.length} task records for scenario ${scenario.id}`);
+
+          // Get task repository
+          const taskRepo = repositoryFactory.getTaskRepository();
+
+          // Check if tasks already exist for this scenario
+          const existingTasks = await taskRepo.findByScenario?.(scenario.id) || [];
+
+          if (existingTasks.length === 0 || force) {
+            // Delete existing tasks if force update
+            if (force && existingTasks.length > 0) {
+              console.log(`Deleting ${existingTasks.length} existing tasks for scenario ${scenario.id}`);
+              for (const task of existingTasks) {
+                await taskRepo.delete?.(task.id);
+              }
+            }
+
+            // Create new task records with multilingual content
+            for (let i = 0; i < taskTemplates.length; i++) {
+              const template = taskTemplates[i];
+
+              const taskData: Omit<ITask, 'id'> = {
+                mode: 'pbl',
+                scenarioId: scenario.id,
+                programId: '', // Will be set when program is created
+                taskIndex: i,
+                scenarioTaskIndex: i,
+                type: template.type || 'chat',
+                status: 'pending',
+
+                // 🎯 Multilingual content from YAML
+                title: template.title,
+                description: template.description,
+                content: (template.content as Record<string, unknown>) || {},
+
+                // Other fields
+                metadata: {
+                  originalTemplateId: template.id,
+                  category: template.category,
+                  timeLimit: template.time_limit,
+                  ksaFocus: template.KSA_focus,
+                  aiModule: template.ai_module,
+                  aiFeedback: template.ai_feedback,
+                  question: template.question
+                },
+                interactions: [],
+                interactionCount: 0,
+                userResponse: {},
+                attemptCount: 0,
+                allowedAttempts: (template.max_attempts as number) || 3,
+                maxScore: 100,
+                aiConfig: (template.ai_module as Record<string, unknown>) || {},
+                score: 0,
+                timeSpentSeconds: 0,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+
+                // Mode-specific data
+                pblData: {
+                  templateId: template.id,
+                  category: template.category,
+                  timeLimit: template.time_limit,
+                  ksaFocus: template.KSA_focus,
+                  question: template.question
+                },
+                discoveryData: {},
+                assessmentData: {}
+              };
+
+              await taskRepo.create(taskData);
+            }
+
+            console.log(`✅ Created ${taskTemplates.length} task records for scenario ${scenario.id}`);
+          } else {
+            console.log(`ℹ️ Skipping task creation - ${existingTasks.length} tasks already exist for scenario ${scenario.id}`);
+          }
         }
 
       } catch (error) {

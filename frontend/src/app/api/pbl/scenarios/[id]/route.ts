@@ -5,7 +5,7 @@ import yaml from 'js-yaml';
 import { cachedGET, parallel, memoize } from '@/lib/api/optimization-utils';
 import { normalizeLanguageCode } from '@/lib/utils/language';
 // Removed unused import
-import type { Scenario } from '@/lib/repositories/interfaces';
+import type { Scenario, Task } from '@/lib/repositories/interfaces';
 
 // Type definitions for KSA mapping
 interface KSAItem {
@@ -354,40 +354,83 @@ export async function GET(
         return [];
       })(),
       ksaMapping: yamlData ? buildKSAMapping(yamlData as unknown as YAMLData, ksaData, lang) : undefined,
-      tasks: (scenarioResult.taskTemplates || []).map((task: Record<string, unknown>) => ({
-        id: String(task.id || ''),
-        title: typeof task.title === 'object' ? ((task.title as Record<string, string>)?.[lang] || (task.title as Record<string, string>)?.en || '') : String(task.title || ''),
-        description: typeof task.description === 'object' ? ((task.description as Record<string, string>)?.[lang] || (task.description as Record<string, string>)?.en || '') : String(task.description || task.instructions || ''),
-        category: String(task.category || task.type || 'general'),
-        instructions: (() => {
-          const inst = task.instructions;
-          if (!inst) return [];
-          if (Array.isArray(inst)) {
-            return inst.map(item => {
-              if (typeof item === 'string') return item;
-              if (typeof item === 'object' && item !== null) {
-                // Check for multilingual object
-                const obj = item as Record<string, unknown>;
-                if (obj[lang] && typeof obj[lang] === 'string') return String(obj[lang]);
-                if (obj.en && typeof obj.en === 'string') return String(obj.en);
-                // Check for text or content property
-                if (obj.text && typeof obj.text === 'string') return String(obj.text);
-                if (obj.content && typeof obj.content === 'string') return String(obj.content);
+      tasks: await (async () => {
+        // 🚀 NEW: Read tasks directly from Task DB instead of YAML taskTemplates
+        try {
+          const { repositoryFactory: repoFactory } = await import('@/lib/repositories/base/repository-factory');
+          const taskRepo = repoFactory.getTaskRepository();
+          const tasks = await taskRepo.findByScenario?.(scenarioResult.id) || [];
+
+          console.log(`📋 Found ${tasks.length} tasks in DB for scenario ${scenarioResult.id}`);
+
+          return tasks.map((task: Task) => ({
+            id: task.id,
+            title: typeof task.title === 'object' && task.title ?
+              ((task.title as Record<string, string>)?.[lang] || (task.title as Record<string, string>)?.en || '') :
+              String(task.title || ''),
+            description: typeof task.description === 'object' && task.description ?
+              ((task.description as Record<string, string>)?.[lang] || (task.description as Record<string, string>)?.en || '') :
+              String(task.description || ''),
+            category: String((task.metadata as Record<string, unknown>)?.category || task.type || 'general'),
+            instructions: (() => {
+              // Try to get instructions from content or metadata
+              const taskInstructions = (task.content as Record<string, unknown>)?.instructions ||
+                                      (task.metadata as Record<string, unknown>)?.instructions;
+
+              if (!taskInstructions) return [];
+              if (typeof taskInstructions === 'object' && taskInstructions) {
+                const inst = taskInstructions as Record<string, unknown>;
+                const langInst = inst[lang] as string | string[];
+                const enInst = inst.en as string | string[];
+
+                const selectedInst = langInst || enInst || '';
+                if (Array.isArray(selectedInst)) return selectedInst;
+                if (typeof selectedInst === 'string') return [selectedInst];
               }
-              return ''; // Return empty string instead of [object Object]
-            }).filter(s => s !== '');
-          }
-          if (typeof inst === 'string') return [inst];
-          if (typeof inst === 'object' && inst !== null) {
-            const obj = inst as Record<string, unknown>;
-            if (obj[lang] && typeof obj[lang] === 'string') return [String(obj[lang])];
-            if (obj.en && typeof obj.en === 'string') return [String(obj.en)];
-          }
-          return [];
-        })(),
-        expectedOutcome: String(task.expectedOutcome || ''),
-        timeLimit: Number(task.estimatedTime || task.timeLimit || 30)
-      }))
+              return [];
+            })(),
+            expectedOutcome: String((task.metadata as Record<string, unknown>)?.expectedOutcome || ''),
+            timeLimit: Number((task.metadata as Record<string, unknown>)?.timeLimit || 30)
+          }));
+        } catch (error) {
+          console.error('❌ Error reading tasks from DB:', error);
+
+          // 🔄 Fallback to taskTemplates if Task DB fails
+          console.log('🔄 Falling back to taskTemplates from scenario');
+          return (scenarioResult.taskTemplates || []).map((task: Record<string, unknown>) => ({
+            id: String(task.id || ''),
+            title: typeof task.title === 'object' ? ((task.title as Record<string, string>)?.[lang] || (task.title as Record<string, string>)?.en || '') : String(task.title || ''),
+            description: typeof task.description === 'object' ? ((task.description as Record<string, string>)?.[lang] || (task.description as Record<string, string>)?.en || '') : String(task.description || task.instructions || ''),
+            category: String(task.category || task.type || 'general'),
+            instructions: (() => {
+              const inst = task.instructions;
+              if (!inst) return [];
+              if (Array.isArray(inst)) {
+                return inst.map(item => {
+                  if (typeof item === 'string') return item;
+                  if (typeof item === 'object' && item !== null) {
+                    const obj = item as Record<string, unknown>;
+                    if (obj[lang] && typeof obj[lang] === 'string') return String(obj[lang]);
+                    if (obj.en && typeof obj.en === 'string') return String(obj.en);
+                    if (obj.text && typeof obj.text === 'string') return String(obj.text);
+                    if (obj.content && typeof obj.content === 'string') return String(obj.content);
+                  }
+                  return '';
+                }).filter(s => s !== '');
+              }
+              if (typeof inst === 'string') return [inst];
+              if (typeof inst === 'object' && inst !== null) {
+                const obj = inst as Record<string, unknown>;
+                if (obj[lang] && typeof obj[lang] === 'string') return [String(obj[lang])];
+                if (obj.en && typeof obj.en === 'string') return [String(obj.en)];
+              }
+              return [];
+            })(),
+            expectedOutcome: String(task.expectedOutcome || ''),
+            timeLimit: Number(task.estimatedTime || task.timeLimit || 30)
+          }));
+        }
+      })()
     };
 
     return {

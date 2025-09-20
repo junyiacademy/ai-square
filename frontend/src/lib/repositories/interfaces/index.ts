@@ -78,6 +78,8 @@ export interface ITaskRepository {
   updateStatus?(id: string, status: DBTaskStatus): Promise<void>;
   recordAttempt?(id: string, attempt: AttemptData): Promise<void>;
   getTaskWithInteractions?(id: string): Promise<TaskWithInteractions | null>;
+  findByScenario?(scenarioId: string): Promise<ITask[]>;
+  delete?(id: string): Promise<boolean>;
 }
 
 export interface IEvaluationRepository {
