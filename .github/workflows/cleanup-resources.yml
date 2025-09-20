@@ -140,6 +140,26 @@ jobs:
           # Global counters for tracking
           GLOBAL_IMAGE_DELETED=0
           GLOBAL_IMAGE_FAILED=0
+          GLOBAL_IMAGE_SKIPPED=0
+
+          # First, get images currently in use by Cloud Run
+          echo "🔍 Checking images currently in use by Cloud Run..."
+          IMAGES_IN_USE=""
+          for SERVICE in "ai-square-staging" "ai-square-production"; do
+            # Get all revisions for this service
+            REVISIONS=$(gcloud run revisions list \
+              --service=$SERVICE \
+              --region=${{ env.REGION }} \
+              --format="value(spec.containers[0].image)" 2>/dev/null)
+
+            if [ -n "$REVISIONS" ]; then
+              IMAGES_IN_USE="$IMAGES_IN_USE"$'\n'"$REVISIONS"
+            fi
+          done
+
+          # Extract unique digests from images in use
+          PROTECTED_DIGESTS=$(echo "$IMAGES_IN_USE" | grep -oE '@sha256:[a-f0-9]+' | sort -u)
+          echo "   📌 Found $(echo "$PROTECTED_DIGESTS" | wc -l) unique images in use"
 
           # Function to clean up container images
           cleanup_repository() {
@@ -147,6 +167,7 @@ jobs:
             local KEEP_COUNT=${2:-5}  # Keep latest 5 images by default
             local DELETED_COUNT=0
             local FAILED_COUNT=0
+            local SKIPPED_COUNT=0
 
             echo ""
             echo "📦 Cleaning repository: ${REPO##*/}"
@@ -182,11 +203,18 @@ jobs:
 
             if [ -n "$TO_DELETE" ]; then
               IMAGE_COUNT=$(echo "$TO_DELETE" | wc -l)
-              echo "   🎯 Will attempt to delete $IMAGE_COUNT old images"
+              echo "   🎯 Will attempt to process $IMAGE_COUNT old images"
 
               # Process each image
               while IFS= read -r DIGEST; do
                 if [ -n "$DIGEST" ]; then
+                  # Check if this digest is in use
+                  if echo "$PROTECTED_DIGESTS" | grep -q "$DIGEST"; then
+                    SKIPPED_COUNT=$((SKIPPED_COUNT + 1))
+                    echo "   ⏭️ Skipping ${DIGEST:0:19}... (in use by Cloud Run)"
+                    continue
+                  fi
+
                   echo "   🗑️ Deleting: ${DIGEST:0:19}..."
 
                   # Try to delete with better error handling
@@ -202,12 +230,14 @@ jobs:
                     # Check for common error patterns
                     if echo "$DELETE_OUTPUT" | grep -q "referenced by"; then
                       echo "      ⚠️ Image is referenced by parent images (cannot delete)"
+                    elif echo "$DELETE_OUTPUT" | grep -q "in use by"; then
+                      echo "      ⚠️ Image is in use (protected)"
                     elif echo "$DELETE_OUTPUT" | grep -q "V2DiagnosticException"; then
                       echo "      ⚠️ Registry error (possibly phantom image)"
                     elif echo "$DELETE_OUTPUT" | grep -q "404"; then
                       echo "      ⚠️ Image not found (already deleted?)"
                     else
-                      echo "      Error: ${DELETE_OUTPUT:0:100}..."
+                      echo "      ⚠️ Error: ${DELETE_OUTPUT:0:100}..."
                     fi
                   fi
                 fi
@@ -216,12 +246,14 @@ jobs:
               # Update global counters
               GLOBAL_IMAGE_DELETED=$((GLOBAL_IMAGE_DELETED + DELETED_COUNT))
               GLOBAL_IMAGE_FAILED=$((GLOBAL_IMAGE_FAILED + FAILED_COUNT))
+              GLOBAL_IMAGE_SKIPPED=$((GLOBAL_IMAGE_SKIPPED + SKIPPED_COUNT))
 
               echo "   📊 Repository cleanup results:"
               echo "      ✅ Deleted: $DELETED_COUNT"
+              echo "      ⏭️ Skipped: $SKIPPED_COUNT (in use)"
               echo "      ❌ Failed: $FAILED_COUNT"
               echo "      📁 Kept: $KEEP_COUNT (latest)"
-              echo "      📦 Total remaining: $((KEEP_COUNT + FAILED_COUNT))"
+              echo "      📦 Total remaining: $((KEEP_COUNT + SKIPPED_COUNT + FAILED_COUNT))"
             else
               echo "   ✅ Only $TOTAL_IMAGES images exist, no cleanup needed"
             fi
@@ -237,6 +269,7 @@ jobs:
           echo "================================================"
           echo "📊 GCR Cleanup Summary:"
           echo "   ✅ Total deleted: $GLOBAL_IMAGE_DELETED images"
+          echo "   ⏭️ Total skipped: $GLOBAL_IMAGE_SKIPPED images (in use by Cloud Run)"
           echo "   ❌ Total failed: $GLOBAL_IMAGE_FAILED images"
           echo "================================================"
 
