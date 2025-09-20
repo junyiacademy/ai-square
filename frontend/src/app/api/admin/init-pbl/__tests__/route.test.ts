@@ -5,6 +5,8 @@ import { POST, GET } from '../route';
 const mockFindByMode = jest.fn();
 const mockCreate = jest.fn();
 const mockUpdate = jest.fn();
+const mockTaskCreate = jest.fn();
+const mockTaskFindByScenario = jest.fn();
 
 jest.mock('@/lib/repositories/base/repository-factory', () => ({
   repositoryFactory: {
@@ -12,6 +14,10 @@ jest.mock('@/lib/repositories/base/repository-factory', () => ({
       findByMode: mockFindByMode,
       create: mockCreate,
       update: mockUpdate,
+    }),
+    getTaskRepository: () => ({
+      create: mockTaskCreate,
+      findByScenario: mockTaskFindByScenario,
     })
   }
 }));
@@ -34,6 +40,9 @@ import yaml from 'js-yaml';
 describe('/api/admin/init-pbl', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    // Setup default task repository behavior
+    mockTaskFindByScenario.mockResolvedValue([]);
+    mockTaskCreate.mockResolvedValue({ id: 'created-task-id' });
   });
 
   describe('POST', () => {
@@ -89,7 +98,7 @@ describe('/api/admin/init-pbl', () => {
       (fs.stat as jest.Mock).mockResolvedValue({ isDirectory: () => true });
 
       const mockYamlData = {
-        scenario_info: { 
+        scenario_info: {
           id: 'existing-scenario',
           title: 'Existing Scenario',
           description: 'Test Description',
