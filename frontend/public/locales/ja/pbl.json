@@ -171,7 +171,11 @@
     "unknownError": "不明なエラー",
     "taskInfo": "タスク情報",
     "chat": "チャット",
-    "completeProgram": "プログラムを完了"
+    "completeProgram": "プログラムを完了",
+    "evaluationNeedsTranslation": "この評価は異なる言語で生成されました。",
+    "translateToCurrentLanguage": "現在の言語に翻訳",
+    "translating": "翻訳中...",
+    "translationFailed": "評価の翻訳に失敗しました"
   },
   "history": {
     "title": "学習の旅",

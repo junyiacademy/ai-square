@@ -9,10 +9,8 @@ import CompetencyGraph from '@/components/completion/CompetencyGraph';
 import type {
   CompletionData,
   ScenarioData,
-  QualitativeFeedback,
-  LocalizedFeedback
+  QualitativeFeedback
 } from '@/types/pbl-completion';
-import { normalizeLanguageCode } from '@/lib/utils/language';
 import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
 
 export default function ProgramCompletePage() {
@@ -48,37 +46,7 @@ export default function ProgramCompletePage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Listen for language changes
-  useEffect(() => {
-    if (!completionData || generatingFeedback || feedbackGeneratingRef.current) return;
-
-    // Check if feedback exists for current language
-    const currentLang = normalizeLanguageCode(i18n.language);
-    let hasFeedbackForLang = false;
-
-    if (completionData.qualitativeFeedback && typeof completionData.qualitativeFeedback === 'object') {
-      // Check if it's multi-language format (has language keys but no direct overallAssessment)
-      const feedbackObj = completionData.qualitativeFeedback as Record<string, unknown>;
-      const hasLanguageKeys = Object.keys(feedbackObj).some(key =>
-        ['en', 'zhTW', 'ja', 'ko', 'es', 'fr', 'de', 'ru', 'it'].includes(key)
-      );
-
-      if (hasLanguageKeys) {
-        // Multi-language format
-        const langFeedback = feedbackObj[currentLang] as Record<string, unknown>;
-        const content = langFeedback?.content as Record<string, unknown> | undefined;
-        hasFeedbackForLang = !!(content?.overallAssessment || langFeedback?.overallAssessment);
-      } else if (feedbackObj.overallAssessment) {
-        // Old single-language format
-        hasFeedbackForLang = completionData.feedbackLanguage === currentLang;
-      }
-    }
-
-    // Generate feedback for new language if not exists
-    if (!hasFeedbackForLang) {
-      generateFeedback();
-    }
-  }, [i18n.language]); // eslint-disable-line react-hooks/exhaustive-deps
+  // Removed auto-translation on language change - user must manually trigger feedback generation
 
   const loadProgramData = async () => {
     if (loadingRef.current) return;
@@ -116,10 +84,7 @@ export default function ProgramCompletePage() {
             if (data.success && data.data) {
               setCompletionData(data.data);
 
-              // Generate feedback for newly created completion
-              if (!data.data.qualitativeFeedback && !feedbackGeneratingRef.current) {
-                await generateFeedback();
-              }
+              // Removed auto-generation of feedback - user must manually trigger it
             }
           }
         }
@@ -128,16 +93,7 @@ export default function ProgramCompletePage() {
         if (data.success && data.data) {
           setCompletionData(data.data);
 
-          // Check if qualitative feedback exists for current language
-          const currentLang = normalizeLanguageCode(i18n.language);
-          const hasFeedbackForLang = data.data.qualitativeFeedback &&
-            (typeof data.data.qualitativeFeedback === 'object' &&
-             (data.data.qualitativeFeedback[currentLang] ||
-              data.data.qualitativeFeedback.overallAssessment)); // Support old format
-
-          if (!hasFeedbackForLang && !feedbackGeneratingRef.current) {
-            await generateFeedback();
-          }
+          // Removed auto-generation of feedback - user must manually trigger it
         }
       }
 
@@ -307,36 +263,8 @@ export default function ProgramCompletePage() {
 
         {/* Qualitative Feedback Section */}
         {(() => {
-          // Get feedback for current language
-          const currentLang = normalizeLanguageCode(i18n.language);
-          let feedback: QualitativeFeedback | undefined;
-
-          if (completionData?.qualitativeFeedback && typeof completionData.qualitativeFeedback === 'object') {
-            const feedbackObj = completionData.qualitativeFeedback as Record<string, unknown>;
-
-            // Check if it's multi-language format (has language keys)
-            const hasLanguageKeys = Object.keys(feedbackObj).some(key =>
-              ['en', 'zhTW', 'ja', 'ko', 'es', 'fr', 'de', 'ru', 'it'].includes(key)
-            );
-
-            if (hasLanguageKeys) {
-              // Multi-language format - get feedback for current language
-              const langFeedback = feedbackObj[currentLang];
-              if (langFeedback) {
-                // Check if it's wrapped in content property or direct
-                const content = (langFeedback as Record<string, unknown>).content as QualitativeFeedback | undefined;
-                if (content?.overallAssessment) {
-                  feedback = content;
-                } else if ((langFeedback as QualitativeFeedback)?.overallAssessment) {
-                  feedback = langFeedback as QualitativeFeedback;
-                }
-              }
-            } else if (feedbackObj.overallAssessment) {
-              // Old format - single language feedback
-              feedback = feedbackObj as unknown as QualitativeFeedback;
-            }
-          }
-
+          // Simple single-language feedback handling
+          const feedback = completionData?.qualitativeFeedback as QualitativeFeedback | undefined;
           const hasFeedback = feedback?.overallAssessment;
 
           return (hasFeedback || generatingFeedback) && (

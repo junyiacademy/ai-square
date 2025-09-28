@@ -171,7 +171,11 @@
     "evaluationFailed": "Evaluation Failed",
     "unknownError": "Unknown Error",
     "taskInfo": "Task Info",
-    "chat": "Chat"
+    "chat": "Chat",
+    "evaluationNeedsTranslation": "This evaluation is in a different language.",
+    "translateToCurrentLanguage": "Translate to Current Language",
+    "translating": "Translating...",
+    "translationFailed": "Failed to translate evaluation"
   },
   "history": {
     "title": "Learning Journey",

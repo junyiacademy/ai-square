@@ -171,7 +171,11 @@
     "unknownError": "ข้อผิดพลาดที่ไม่ทราบสาเหตุ",
     "taskInfo": "ข้อมูลงาน",
     "chat": "แชท",
-    "completeProgram": "เสร็จสิ้นโปรแกรม"
+    "completeProgram": "เสร็จสิ้นโปรแกรม",
+    "evaluationNeedsTranslation": "การประเมินนี้สร้างด้วยภาษาอื่น",
+    "translateToCurrentLanguage": "แปลเป็นภาษาปัจจุบัน",
+    "translating": "กำลังแปล...",
+    "translationFailed": "แปลการประเมินล้มเหลว"
   },
   "history": {
     "title": "เส้นทางการเรียนรู้",

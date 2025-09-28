@@ -171,7 +171,11 @@
     "evaluationFailed": "評估失敗",
     "unknownError": "未知錯誤",
     "taskInfo": "任務資訊",
-    "chat": "對話"
+    "chat": "對話",
+    "evaluationNeedsTranslation": "此評估是以不同語言產生的。",
+    "translateToCurrentLanguage": "翻譯為當前語言",
+    "translating": "翻譯中...",
+    "translationFailed": "翻譯評估失敗"
   },
   "history": {
     "title": "學習歷程",

@@ -171,7 +171,11 @@
     "unknownError": "Kesalahan Tidak Dikenal",
     "taskInfo": "Info Tugas",
     "chat": "Obrolan",
-    "completeProgram": "Selesaikan Program"
+    "completeProgram": "Selesaikan Program",
+    "evaluationNeedsTranslation": "Evaluasi ini dibuat dalam bahasa yang berbeda.",
+    "translateToCurrentLanguage": "Terjemahkan ke Bahasa Saat Ini",
+    "translating": "Menerjemahkan...",
+    "translationFailed": "Gagal menerjemahkan evaluasi"
   },
   "history": {
     "title": "Perjalanan Pembelajaran",

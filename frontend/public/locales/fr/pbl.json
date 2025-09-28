@@ -171,7 +171,11 @@
     "unknownError": "Erreur Inconnue",
     "taskInfo": "Info Tâche",
     "chat": "Chat",
-    "completeProgram": "Terminer le programme"
+    "completeProgram": "Terminer le programme",
+    "evaluationNeedsTranslation": "Cette évaluation a été générée dans une langue différente.",
+    "translateToCurrentLanguage": "Traduire dans la langue actuelle",
+    "translating": "Traduction en cours...",
+    "translationFailed": "Échec de la traduction de l'évaluation"
   },
   "history": {
     "title": "Parcours d'Apprentissage",

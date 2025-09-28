@@ -171,7 +171,11 @@
     "unknownError": "Unbekannter Fehler",
     "taskInfo": "Aufgabeninfo",
     "chat": "Chat",
-    "completeProgram": "Programm abschließen"
+    "completeProgram": "Programm abschließen",
+    "evaluationNeedsTranslation": "Diese Bewertung wurde in einer anderen Sprache erstellt.",
+    "translateToCurrentLanguage": "In aktuelle Sprache übersetzen",
+    "translating": "Übersetze...",
+    "translationFailed": "Übersetzung der Bewertung fehlgeschlagen"
   },
   "history": {
     "title": "Lernreise",

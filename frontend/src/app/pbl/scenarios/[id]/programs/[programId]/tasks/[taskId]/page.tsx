@@ -70,6 +70,7 @@ export default function ProgramLearningPage() {
   const [userInput, setUserInput] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [isProgressCollapsed, setIsProgressCollapsed] = useState(false);
+  const [isTranslating, setIsTranslating] = useState(false);
   const [mobileView, setMobileView] = useState<'progress' | 'task' | 'chat'>('chat');
   const [showEvaluateButton, setShowEvaluateButton] = useState(false);
   const [isEvaluateDisabled, setIsEvaluateDisabled] = useState(false);
@@ -390,7 +391,11 @@ export default function ProgramLearningPage() {
           if (data.data?.evaluationId) {
             console.log('Task has evaluationId:', data.data.evaluationId);
             // Fetch the evaluation details
-            const evalRes = await authenticatedFetch(`/api/pbl/tasks/${taskId}/evaluate`);
+            const evalRes = await authenticatedFetch(`/api/pbl/tasks/${taskId}/evaluate`, {
+              headers: {
+                'Accept-Language': i18n.language
+              }
+            });
             if (evalRes.ok) {
               const evalData = await evalRes.json();
               if (evalData.data?.evaluation) {
@@ -725,6 +730,50 @@ export default function ProgramLearningPage() {
       alert(`${t('pbl:learn.evaluationFailed')}: ${error instanceof Error ? error.message : t('pbl:learn.unknownError')}`);
     } finally {
       setIsEvaluating(false);
+    }
+  };
+
+  const handleTranslateEvaluation = async () => {
+    if (!currentTask || !evaluation || isTranslating) return;
+    
+    setIsTranslating(true);
+    try {
+      const response = await authenticatedFetch(`/api/pbl/tasks/${currentTask.id}/translate-evaluation`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept-Language': i18n.language
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error('Translation failed');
+      }
+      
+      const data = await response.json();
+      if (data.success && data.data?.evaluation) {
+        // Update evaluation with translated content
+        setEvaluation({
+          ...evaluation,
+          ...data.data.evaluation,
+          needsTranslation: false
+        });
+        
+        // Update taskEvaluations map as well
+        setTaskEvaluations(prev => ({
+          ...prev,
+          [currentTask.id]: {
+            ...prev[currentTask.id],
+            ...data.data.evaluation,
+            needsTranslation: false
+          }
+        }));
+      }
+    } catch (error) {
+      console.error('Error translating evaluation:', error);
+      alert(t('pbl:learn.translationFailed', 'Failed to translate evaluation'));
+    } finally {
+      setIsTranslating(false);
     }
   };
 
@@ -1135,6 +1184,37 @@ export default function ProgramLearningPage() {
                     </div>
                   </div>
                 </div>
+                )}
+
+                {/* Translation Notice & Button */}
+                {evaluation?.needsTranslation && (
+                  <div className="mb-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
+                    <p className="text-sm text-yellow-800 dark:text-yellow-200 mb-2">
+                      {t('pbl:learn.evaluationNeedsTranslation', 'This evaluation is in a different language.')}
+                    </p>
+                    <button
+                      onClick={handleTranslateEvaluation}
+                      disabled={isTranslating}
+                      className="w-full px-3 py-1.5 bg-yellow-600 text-white text-sm rounded hover:bg-yellow-700 disabled:bg-yellow-400 transition-colors flex items-center justify-center"
+                    >
+                      {isTranslating ? (
+                        <>
+                          <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          </svg>
+                          {t('pbl:learn.translating', 'Translating...')}
+                        </>
+                      ) : (
+                        <>
+                          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+                          </svg>
+                          {t('pbl:learn.translateToCurrentLanguage', 'Translate to Current Language')}
+                        </>
+                      )}
+                    </button>
+                  </div>
                 )}
 
                 {/* Conversation Insights - Only show if there are meaningful insights */}

@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getUnifiedAuth, createUnauthorizedResponse } from '@/lib/auth/unified-auth';
+import { getLanguageFromHeader, LANGUAGE_NAMES } from '@/lib/utils/language';
+import { VertexAI } from '@google-cloud/vertexai';
 
 // POST - Create evaluation for task
 export async function POST(
@@ -16,6 +18,9 @@ export async function POST(
     const { taskId } = await params;
     const body = await request.json();
     const { evaluation, programId } = body;
+    
+    // Get language from request
+    const currentLang = getLanguageFromHeader(request);
     
     console.log('POST /api/pbl/tasks/[taskId]/evaluate - Received evaluation:');
     console.log('  domainScores:', JSON.stringify(evaluation?.domainScores || {}, null, 2));
@@ -78,6 +83,7 @@ export async function POST(
         programId: programId || '',
         evaluatedAt: evaluation.evaluatedAt || new Date().toISOString(),
         updatedAt: new Date().toISOString(),
+        language: currentLang, // Store current evaluation language
         updateCount: (existingMetadata?.updateCount as number || 0) + 1
       }
     });
@@ -192,6 +198,9 @@ export async function GET(
 
     const { taskId } = await params;
 
+    // Get current language from request
+    const currentLang = getLanguageFromHeader(request);
+
     // Use unified architecture
     const { repositoryFactory } = await import('@/lib/repositories/base/repository-factory');
     const taskRepo = repositoryFactory.getTaskRepository();
@@ -212,6 +221,10 @@ export async function GET(
       evaluation = evaluations[0] || null;
     }
     
+    // Check if evaluation language matches current language
+    const evaluationLang = evaluation?.metadata?.language as string || 'en';
+    const languageMatch = evaluationLang === currentLang;
+    
     // Transform evaluation to match frontend expectations
     const transformedEvaluation = evaluation ? {
       ...evaluation,
@@ -224,7 +237,11 @@ export async function GET(
       nextSteps: evaluation.feedbackData?.nextSteps || [],
       conversationInsights: evaluation.aiAnalysis || {},
       conversationCount: evaluation.pblData?.conversationCount || 0,
-      evaluatedAt: evaluation.metadata?.evaluatedAt || evaluation.createdAt
+      evaluatedAt: evaluation.metadata?.evaluatedAt || evaluation.createdAt,
+      // Language mismatch info for frontend
+      evaluationLanguage: evaluationLang,
+      currentLanguage: currentLang,
+      needsTranslation: !languageMatch
     } : null;
 
     return NextResponse.json({

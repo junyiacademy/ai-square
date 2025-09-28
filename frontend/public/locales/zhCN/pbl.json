@@ -171,7 +171,11 @@
     "unknownError": "未知错误",
     "taskInfo": "任务信息",
     "chat": "聊天",
-    "completeProgram": "完成项目"
+    "completeProgram": "完成项目",
+    "evaluationNeedsTranslation": "此评估是以不同语言生成的。",
+    "translateToCurrentLanguage": "翻译为当前语言",
+    "translating": "翻译中...",
+    "translationFailed": "翻译评估失败"
   },
   "history": {
     "title": "学习历程",
