@@ -6,17 +6,17 @@ scenario_info:
     - engaging_with_ai
     - creating_with_ai
     - managing_with_ai
-  title: AI-Powered Stablecoin Trading and Risk Management
-  description: Learn to use AI for analyzing stablecoin markets, managing DeFi portfolios, and making informed trading decisions in real crypto scenarios
+  title: การเทรด Stablecoin และการจัดการความเสี่ยงด้วย AI
+  description: เรียนรู้การใช้ AI ในการวิเคราะห์ตลาด stablecoin การจัดการพอร์ต DeFi และการตัดสินใจเทรดอย่างมีข้อมูลในสถานการณ์จริงของสกุลเงินดิจิทัล
   prerequisites:
-    - Basic understanding of cryptocurrency and blockchain
-    - Familiarity with trading concepts
-    - Access to crypto exchanges or DeFi platforms (testnet)
+    - ความเข้าใจพื้นฐานเกี่ยวกับสกุลเงินดิจิทัลและบล็อกเชน
+    - ความคุ้นเคยกับแนวคิดการเทรด
+    - การเข้าถึงตลาดแลกเปลี่ยนสกุลเงินดิจิทัลหรือแพลตฟอร์ม DeFi (เครือข่ายทดสอบ)
   learning_objectives:
-    - Master AI tools for real-time crypto market analysis and trend prediction
-    - Develop automated trading strategies using AI for stablecoin arbitrage
-    - Learn to assess and manage DeFi protocol risks using AI monitoring tools
-    - Create AI-powered portfolio optimization for multi-chain stablecoin exposure
+    - ควบคุมเครื่องมือ AI สำหรับการวิเคราะห์ตลาดสกุลเงินดิจิทัลแบบเรียลไทม์และการทำนายแนวโน้ม
+    - พัฒนากลยุทธ์การเทรดอัตโนมัติโดยใช้ AI สำหรับการเทรด stablecoin แบบ arbitrage
+    - เรียนรู้การประเมินและจัดการความเสี่ยงของโปรโตคอล DeFi โดยใช้เครื่องมือติดตาม AI
+    - สร้างการปรับพอร์ตโฟลิโอให้เหมาะสมด้วย AI สำหรับ stablecoin ข้ามเชน
 ksa_mapping:
   knowledge:
     - K2.1
@@ -54,14 +54,14 @@ tasks:
         Remember: AI tools are powerful for data gathering and initial analysis, but your critical thinking and domain knowledge are essential for making sound trading decisions.
 
         What specific aspect of the stablecoin market would you like to start analyzing? Are you looking at yield opportunities, depeg risks, or arbitrage possibilities?
-    title: AI-Powered Market Intelligence
-    description: You're a DeFi portfolio manager for a crypto hedge fund. Use AI to analyze current stablecoin market conditions and identify potential trading opportunities
+    title: การวิเคราะห์ตลาดด้วย AI
+    description: คุณเป็นผู้จัดการพอร์ต DeFi สำหรับกองทุนสกุลเงินดิจิทัล ใช้ AI เพื่อวิเคราะห์สภาวะตลาด stablecoin ปัจจุบันและระบุโอกาสการเทรดที่มีศักยภาพ
     instructions:
-      - Use AI tools (Claude, ChatGPT, or Perplexity) to research current USDC, USDT, DAI, and FRAX market conditions
-      - Analyze yield farming opportunities across different DeFi protocols (Aave, Compound, Curve)
-      - Identify potential depeg risks and arbitrage opportunities using AI market analysis
-      - Create an AI-generated executive summary with actionable trading recommendations
-    expected_outcome: A comprehensive market analysis report with specific trading opportunities, risk assessments, and AI-backed recommendations for stablecoin portfolio allocation
+      - ใช้เครื่องมือ AI (Claude, ChatGPT, หรือ Perplexity) เพื่อค้นคว้าสภาวะตลาดปัจจุบันของ USDC, USDT, DAI, และ FRAX
+      - วิเคราะห์โอกาส yield farming ในโปรโตคอล DeFi ต่างๆ (Aave, Compound, Curve)
+      - ระบุความเสี่ยงจากการ depeg และโอกาส arbitrage โดยใช้การวิเคราะห์ตลาดด้วย AI
+      - สร้างสรุปผู้บริหารที่สร้างโดย AI พร้อมคำแนะนำการเทรดที่สามารถนำไปปฏิบัติได้
+    expected_outcome: รายงานการวิเคราะห์ตลาดที่ครอบคลุมพร้อมโอกาสการเทรดที่ชัดเจน, การประเมินความเสี่ยง, และข้อเสนอแนะที่ได้รับการสนับสนุนจาก AI สำหรับการจัดสรรพอร์ต stablecoin
   - id: strategy-development
     category: creation
     time_limit: 40
@@ -91,7 +91,7 @@ tasks:
         - Always test on testnets first
 
         What's your coding experience level, and which AI coding assistant would you prefer to use? Let's start building your trading strategy step by step.
-    title: AI-Enhanced Trading Strategy Creation
+    title: การสร้างกลยุทธ์การเทรดที่พัฒนาด้วย AI
     description: Design and backtest an automated trading strategy using AI to optimize entry/exit points for stablecoin arbitrage across multiple DEXs
     instructions:
       - Use AI coding assistants to write Python scripts for monitoring price differences across Uniswap, SushiSwap, and Curve

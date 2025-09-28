@@ -6,16 +6,16 @@ scenario_info:
     - engaging_with_ai
     - creating_with_ai
     - managing_with_ai
-  title: AI-Powered Climate Action Plan
-  description: Use AI to analyze climate data and create actionable solutions for your school and community
+  title: แผนปฏิบัติการด้านสภาพภูมิอากาศโดยใช้ AI
+  description: ใช้ AI เพื่อวิเคราะห์ข้อมูลสภาพภูมิอากาศและสร้างแนวทางแก้ไขที่นำไปปฏิบัติได้สำหรับโรงเรียนและชุมชนของคุณ
   prerequisites:
-    - Basic understanding of climate change
-    - Interest in environmental issues
+    - ความเข้าใจพื้นฐานเกี่ยวกับการเปลี่ยนแปลงสภาพภูมิอากาศ
+    - ความสนใจในประเด็นสิ่งแวดล้อม
   learning_objectives:
-    - Analyze environmental data using AI tools
-    - Create data visualizations to communicate findings
-    - Develop practical climate action proposals
-    - Build confidence in using AI for environmental advocacy
+    - วิเคราะห์ข้อมูลสิ่งแวดล้อมโดยใช้เครื่องมือ AI
+    - สร้างการแสดงภาพข้อมูลเพื่อสื่อสารผลการค้นพบ
+    - พัฒนาข้อเสนอปฏิบัติการสภาพภูมิอากาศที่ใช้งานได้จริง
+    - สร้างความมั่นใจในการใช้ AI เพื่อการสนับสนุนด้านสิ่งแวดล้อม
 ksa_mapping:
   knowledge:
     - K1.1
@@ -56,14 +56,14 @@ tasks:
         - Encourage critical thinking about climate impacts
 
         Always redirect off-topic conversations back to the climate research task.
-    title: Climate Data Collection
-    description: Use AI to gather and organize climate data for your local area
+    title: การเก็บรวบรวมข้อมูลสภาพภูมิอากาศ
+    description: ใช้ AI เพื่อรวบรวมและจัดระเบียบข้อมูลสภาพภูมิอากาศในพื้นที่ของคุณ
     instructions:
-      - Use AI to find reliable climate data sources
-      - Gather data on temperature trends, precipitation, air quality, and energy consumption
-      - Organize data in spreadsheets
-      - Identify key patterns and trends
-    expected_outcome: A comprehensive climate data collection for your area
+      - ใช้ AI เพื่อค้นหาแหล่งข้อมูลสภาพภูมิอากาศที่เชื่อถือได้
+      - รวบรวมข้อมูลเกี่ยวกับแนวโน้มอุณหภูมิ, ปริมาณฝน, คุณภาพอากาศ, และการใช้พลังงาน
+      - จัดระเบียบข้อมูลในสเปรดชีต
+      - ระบุรูปแบบและแนวโน้มที่สำคัญ
+    expected_outcome: การรวบรวมข้อมูลสภาพภูมิอากาศที่ครอบคลุมสำหรับพื้นที่ของคุณ
   - id: task-2
     category: analysis
     time_limit: 25
@@ -86,14 +86,14 @@ tasks:
         - Drawing actionable conclusions
 
         Encourage critical thinking and help them understand the implications of their findings.
-    title: AI Data Analysis
-    description: Use AI tools to analyze climate data and identify actionable insights
+    title: การวิเคราะห์ข้อมูลด้วย AI
+    description: ใช้เครื่องมือ AI เพื่อวิเคราะห์ข้อมูลสภาพภูมิอากาศและระบุข้อมูลเชิงลึกที่สามารถนำไปปฏิบัติได้
     instructions:
-      - Use AI to identify patterns and correlations in climate data
-      - Create visualizations showing temperature changes, seasonal variations, and human impacts
-      - Generate predictions for future trends
-      - Identify areas requiring intervention
-    expected_outcome: Comprehensive analysis with clear insights and predictions
+      - ใช้ AI เพื่อระบุรูปแบบและความสัมพันธ์ในข้อมูลสภาพภูมิอากาศ
+      - สร้างการแสดงภาพที่แสดงการเปลี่ยนแปลงอุณหภูมิ, การเปลี่ยนแปลงตามฤดูกาล, และผลกระทบจากมนุษย์
+      - สร้างการทำนายสำหรับแนวโน้มในอนาคต
+      - ระบุพื้นที่ที่ต้องการการแทรกแซง
+    expected_outcome: การวิเคราะห์ที่ครอบคลุมพร้อมข้อมูลเชิงลึกและการทำนายที่ชัดเจน
   - id: task-3
     category: creation
     time_limit: 30
@@ -116,14 +116,14 @@ tasks:
         - Think about stakeholder engagement
 
         Focus on solutions that students can realistically implement in their school.
-    title: Solution Design
-    description: Create practical climate solutions for your school using AI assistance
+    title: การออกแบบแนวทางแก้ไข
+    description: สร้างแนวทางแก้ไขปัญหาสภาพภูมิอากาศที่ปฏิบัติได้จริงสำหรับโรงเรียนของคุณโดยใช้ความช่วยเหลือจาก AI
     instructions:
-      - Brainstorm solutions with AI for energy conservation, waste reduction, green spaces, and transportation
-      - Evaluate feasibility and impact of each solution
-      - Create detailed implementation plans
-      - Calculate potential carbon savings
-    expected_outcome: A portfolio of practical, implementable climate solutions
+      - ระดมสมองหาแนวทางแก้ไขกับ AI สำหรับการอนุรักษ์พลังงาน, การลดขยะ, พื้นที่สีเขียว, และการขนส่ง
+      - ประเมินความเป็นไปได้และผลกระทบของแต่ละแนวทางแก้ไข
+      - สร้างแผนการดำเนินงานที่มีรายละเอียด
+      - คำนวณการประหยัดคาร์บอนที่เป็นไปได้
+    expected_outcome: กลุมแนวทางแก้ไขปัญหาสภาพภูมิอากาศที่ปฏิบัติได้จริงและสามารถนำไปใช้ได้
   - id: task-4
     category: interaction
     time_limit: 25
@@ -147,14 +147,14 @@ tasks:
         - Building confidence in public speaking
 
         Help them create a presentation that will inspire action from school administrators and peers.
-    title: Action Plan Presentation
-    description: Create a compelling presentation using AI to propose your climate action plan
+    title: การนำเสนอแผนปฏิบัติการ
+    description: สร้างการนำเสนอที่น่าสนใจโดยใช้ AI เพื่อเสนอแผนปฏิบัติการด้านสภาพภูมิอากาศของคุณ
     instructions:
-      - Use AI to structure your presentation effectively
-      - Include problem statement with data, proposed solutions, implementation timeline, and expected outcomes
-      - Generate compelling visuals and infographics
-      - Prepare for Q&A with AI assistance
-    expected_outcome: A professional, persuasive presentation ready for stakeholders
+      - ใช้ AI เพื่อจัดโครงสร้างการนำเสนอของคุณอย่างมีประสิทธิภาพ
+      - รวมการระบุปัญหาพร้อมข้อมูล, แนวทางแก้ไขที่เสนอ, ไทม์ไลน์การดำเนินงาน, และผลลัพธ์ที่คาดหวัง
+      - สร้างภาพและอินโฟกราฟิกที่น่าสนใจ
+      - เตรียมพร้อมสำหรับการตอบคำถามด้วยความช่วยเหลือจาก AI
+    expected_outcome: การนำเสนอที่เป็นมืออาชีพและน่าเชื่อถือพร้อมสำหรับผู้มีส่วนได้ส่วนเสีย
 completion_criteria:
   min_tasks_completed: 3
   required_competencies:
@@ -164,10 +164,10 @@ completion_criteria:
 resources:
   - url: https://climatekids.nasa.gov/
     type: reference
-    name: '[Thai translation needed]'
+    name: 'เว็บไซต์การเรียนรู้ด้านสภาพภูมิอากาศสำหรับเด็ก - NASA'
   - url: https://www.climate.ai/
     type: tool
-    name: '[Thai translation needed]'
+    name: 'เครื่องมือ AI ด้านสภาพภูมิอากาศ - Climate.ai'
 metadata:
   language: th
   version: '1.0'

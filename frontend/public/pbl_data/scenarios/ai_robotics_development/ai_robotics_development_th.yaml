@@ -6,17 +6,17 @@ scenario_info:
     - engaging_with_ai
     - creating_with_ai
     - designing_with_ai
-  title: AI-Powered Robotics Development and Implementation
-  description: Learn to build intelligent robots using AI for real-world applications like warehouse automation, elderly care assistance, and smart manufacturing
+  title: การพัฒนาและนำไปใช้หุ่นยนต์ขับเคลื่อนโดย AI
+  description: เรียนรู้การสร้างหุ่นยนต์อัจฉริยะโดยใช้ AI สำหรับการใช้งานจริง เช่น ระบบอัตโนมัติในโกดัง, การดูแลผู้สูงอายุ, และการผลิตอัจฉริยะ
   prerequisites:
-    - Basic programming knowledge (Python preferred)
-    - Understanding of sensors and actuators
-    - Access to robotics simulation software or hardware
+    - ความรู้พื้นฐานการเขียนโปรแกรม (แนะนำ Python)
+    - ความเข้าใจเซนเซอร์และแอคชูเอเตอร์
+    - การเข้าถึงซอฟต์แวร์จำลองหุ่นยนต์หรือฮาร์ดแวร์
   learning_objectives:
-    - Master AI integration techniques for robot perception and decision-making
-    - Develop autonomous navigation systems using AI computer vision and SLAM
-    - Create intelligent human-robot interaction interfaces with natural language processing
-    - Build practical robotics solutions for real-world business and social challenges
+    - ควบคุมเทคนิคการรวม AI เข้ากับหุ่นยนต์สำหรับการรับรู้และการตัดสินใจ
+    - พัฒนาระบบนำทางอัตโนมัติโดยใช้ AI คอมพิวเตอร์วิชั่นและ SLAM
+    - สร้างอินเตอร์เฟซการโต้ตอบระหว่างมนุษย์และหุ่นยนต์อัจฉริยะด้วยการประมวลผลภาษาธรรมชาติ
+    - สร้างแนวทางแก้ไขทางหุ่นยนต์ที่ปฏิบัติได้จริงสำหรับความท้าทายทางธุรกิจและสังคม
 ksa_mapping:
   knowledge:
     - K2.1
@@ -62,14 +62,14 @@ tasks:
         - Safety-critical error handling
 
         What's your current experience with computer vision and robotics? Let's start by understanding your target hardware platform and performance requirements.
-    title: AI-Powered Robot Perception System
-    description: You're developing a warehouse automation robot that needs to identify, sort, and handle various packages. Use AI vision and sensor fusion to create a robust perception system
+    title: ระบบการรับรู้ของหุ่นยนต์ขับเคลื่อนโดย AI
+    description: คุณกำลังพัฒนาหุ่นยนต์อัตโนมัติในโกดังที่ต้องระบุ, จัดหมวดหมู่, และจัดการหีบห่อต่างๆ ใช้การมองเห็นด้วย AI และการรวมเซนเซอร์เพื่อสร้างระบบการรับรู้ที่แข็งแกร่ง
     instructions:
-      - Use AI tools to design computer vision pipelines for object detection and classification
-      - Implement AI-assisted sensor fusion combining cameras, LiDAR, and depth sensors
-      - Create machine learning models using AI platforms like Roboflow or Edge Impulse for package recognition
-      - Develop real-time AI inference systems optimized for embedded robotics hardware
-    expected_outcome: A working perception system that can reliably identify and classify packages in various lighting and environmental conditions, with documented performance metrics
+      - ใช้เครื่องมือ AI เพื่อออกแบบไปป์ไลน์คอมพิวเตอร์วิชั่นสำหรับการตรวจหาและจำแนกประเภทวัตถุ
+      - นำไปใช้การรวมเซนเซอร์ที่ช่วยเหลือโดย AI รวมกล้อง, LiDAR, และเซนเซอร์ความลึก
+      - สร้างโมเดลแมชชีนเลิร์นิงโดยใช้แพลตฟอร์ม AI เช่น Roboflow หรือ Edge Impulse สำหรับการจำแนกหีบห่อ
+      - พัฒนาระบบการอนุมาน AI แบบเรียลไทม์ที่ปรับให้เหมาะกับฮาร์ดแวร์หุ่นยนต์แบบฝังตัว
+    expected_outcome: ระบบการรับรู้ที่ทำงานได้จริงที่สามารถระบุและจำแนกประเภทหีบห่อได้อย่างเชื่อถือได้ในสภาวะแสงและสภาพแวดล้อมที่แตกต่างกัน พร้อมเมตริกประสิทธิภาพที่เป็นเอกสาร
   - id: navigation-intelligence
     category: creation
     time_limit: 50
@@ -99,14 +99,14 @@ tasks:
         - Emergency response protocols and fail-safes
 
         What's your experience with navigation algorithms? Let's start by understanding the specific layout and challenges of your target environment.
-    title: Autonomous Navigation with AI Planning
-    description: Your robot needs to navigate a complex elderly care facility, avoiding obstacles while delivering medication and responding to emergency calls efficiently
+    title: การนำทางอัตโนมัติด้วยการวางแผนของ AI
+    description: หุ่นยนต์ของคุณต้องนำทางในสถานดูแลผู้สูงอายุที่ซับซ้อน หลีกเลี่ยงอุปสรรคขณะส่งยาและตอบสนองการเรียกข้อช่วยเหตุฉุกเฉินอย่างมีประสิทธิภาพ
     instructions:
-      - Use AI path planning algorithms and reinforcement learning to optimize routes in dynamic environments
-      - Implement AI-powered SLAM (Simultaneous Localization and Mapping) for real-time environment understanding
-      - Create intelligent behavior trees using AI assistance for task prioritization and emergency response
-      - Develop predictive navigation using AI to anticipate human movement patterns and facility workflows
-    expected_outcome: A complete autonomous navigation system that can efficiently handle multiple concurrent tasks while maintaining safety and adapting to environmental changes
+      - ใช้อัลกอริทึมการวางแผนเส้นทาง AI และการเรียนรู้แบบเสริมแรงเพื่อปรับเส้นทางให้เหมาะสมในสภาพแวดล้อมที่เปลี่ยนแปลง
+      - นำไปใช้ SLAM (การกำหนดตำแหน่งและการทำแผนที่พร้อมกัน) ขับเคลื่อนโดย AI สำหรับความเข้าใจสภาพแวดล้อมแบบเรียลไทม์
+      - สร้างต้นไม้พฤติกรรมอัจฉริยะด้วยความช่วยเหลือจาก AI สำหรับการจัดลำดับความสำคัญของงานและการตอบสนองเหตุฉุกเฉิน
+      - พัฒนาการนำทางแบบทำนายโดยใช้ AI เพื่อคาดการณ์รูปแบบการเคลื่อนไหวของมนุษย์และขั้นตอนการทำงานของสถานที่
+    expected_outcome: ระบบการนำทางอัตโนมัติที่สมบูรณ์ที่สามารถจัดการงานหลายอย่างพร้อมกันได้อย่างมีประสิทธิภาพขณะรักษาความปลอดภัยและปรับตัวกับการเปลี่ยนแปลงของสภาพแวดล้อม
   - id: human-interaction
     category: interaction
     time_limit: 40
@@ -136,14 +136,14 @@ tasks:
         - Graceful error handling and recovery
 
         What's the primary language and communication style of your target users? Let's design an interaction system that feels natural and builds confidence in your manufacturing environment.
-    title: Natural Human-Robot Interaction Interface
-    description: Design a manufacturing quality control robot that can communicate with workers, understand verbal instructions, and provide intuitive feedback about production issues
+    title: อินเตอร์เฟซการโต้ตอบระหว่างมนุษย์และหุ่นยนต์แบบธรรมชาติ
+    description: ออกแบบหุ่นยนต์ควบคุมคุณภาพในการผลิตที่สามารถสื่อสารกับพนักงาน, เข้าใจคำสั่งด้วยเสียง, และให้ข้อมูลป้อนกลับที่เข้าใจง่ายเกี่ยวกับปัญหาการผลิต
     instructions:
-      - Use AI language models to create natural conversation capabilities for work instruction understanding
-      - Implement AI-powered gesture recognition and non-verbal communication systems
-      - Design multimodal interaction using AI combining voice, visual displays, and physical gestures
-      - Create adaptive communication styles using AI to match different worker preferences and expertise levels
-    expected_outcome: An intuitive interaction system that workers can easily communicate with, reducing training time and increasing adoption rates in manufacturing environments
+      - ใช้โมเดลภาษา AI เพื่อสร้างความสามารถในการสนทนาแบบธรรมชาติสำหรับความเข้าใจคำสั่งการทำงาน
+      - นำไปใช้ระบบการจำแนกท่าทางขับเคลื่อนโดย AI และระบบการสื่อสารแบบไม่ใช้คำพูด
+      - ออกแบบการโต้ตอบหลายรูปแบบโดยใช้ AI รวมเสียง, การแสดงภาพ, และท่าทางทางกาย
+      - สร้างรูปแบบการสื่อสารที่ปรับตัวได้โดยใช้ AI เพื่อให้เหมาะกับความชอบและระดับความเชี่ยวชาญของพนักงานที่แตกต่างกัน
+    expected_outcome: ระบบการโต้ตอบที่ใช้งานง่ายและเข้าใจง่ายที่พนักงานสามารถสื่อสารด้วยได้อย่างง่ายดาย ลดเวลาการฝึกอบรมและเพิ่มอัตราการยอมรับในสภาพแวดล้อมการผลิต
 completion_criteria:
   min_tasks_completed: 3
   required_competencies:

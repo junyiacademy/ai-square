@@ -6,17 +6,17 @@ scenario_info:
     - engaging_with_ai
     - creating_with_ai
     - managing_with_ai
-  title: AI-Powered Stablecoin Trading and Risk Management
-  description: Learn to use AI for analyzing stablecoin markets, managing DeFi portfolios, and making informed trading decisions in real crypto scenarios
+  title: التداول الذكي للعملات المستقرة وإدارة المخاطر بالذكاء الاصطناعي
+  description: تعلم استخدام الذكاء الاصطناعي لتحليل أسواق العملات المستقرة وإدارة محافظ التمويل اللامركزي واتخاذ قرارات التداول المدروسة في سيناريوهات العملات المشفرة الحقيقية
   prerequisites:
-    - Basic understanding of cryptocurrency and blockchain
-    - Familiarity with trading concepts
-    - Access to crypto exchanges or DeFi platforms (testnet)
+    - فهم أساسي للعملات المشفرة والبلوك تشين
+    - إلمام بمفاهيم التداول
+    - الوصول إلى بورصات العملات المشفرة أو منصات التمويل اللامركزي (الشبكة التجريبية)
   learning_objectives:
-    - Master AI tools for real-time crypto market analysis and trend prediction
-    - Develop automated trading strategies using AI for stablecoin arbitrage
-    - Learn to assess and manage DeFi protocol risks using AI monitoring tools
-    - Create AI-powered portfolio optimization for multi-chain stablecoin exposure
+    - إتقان أدوات الذكاء الاصطناعي لتحليل أسواق العملات المشفرة في الوقت الفعلي وتوقع الاتجاهات
+    - تطوير استراتيجيات التداول الآلي باستخدام الذكاء الاصطناعي للمراجحة في العملات المستقرة
+    - تعلم تقييم وإدارة مخاطر بروتوكولات التمويل اللامركزي باستخدام أدوات المراقبة الذكية
+    - إنشاء تحسين المحفظة المدعوم بالذكاء الاصطناعي للتعرض للعملات المستقرة عبر السلاسل المتعددة
 ksa_mapping:
   knowledge:
     - K2.1
@@ -54,14 +54,14 @@ tasks:
         Remember: AI tools are powerful for data gathering and initial analysis, but your critical thinking and domain knowledge are essential for making sound trading decisions.
 
         What specific aspect of the stablecoin market would you like to start analyzing? Are you looking at yield opportunities, depeg risks, or arbitrage possibilities?
-    title: AI-Powered Market Intelligence
-    description: You're a DeFi portfolio manager for a crypto hedge fund. Use AI to analyze current stablecoin market conditions and identify potential trading opportunities
+    title: الذكاء السوقي المدعوم بالذكاء الاصطناعي
+    description: أنت مدير محفظة التمويل اللامركزي لصندوق تحوط العملات المشفرة. استخدم الذكاء الاصطناعي لتحليل ظروف السوق الحالية للعملات المستقرة وتحديد فرص التداول المحتملة
     instructions:
-      - Use AI tools (Claude, ChatGPT, or Perplexity) to research current USDC, USDT, DAI, and FRAX market conditions
-      - Analyze yield farming opportunities across different DeFi protocols (Aave, Compound, Curve)
-      - Identify potential depeg risks and arbitrage opportunities using AI market analysis
-      - Create an AI-generated executive summary with actionable trading recommendations
-    expected_outcome: A comprehensive market analysis report with specific trading opportunities, risk assessments, and AI-backed recommendations for stablecoin portfolio allocation
+      - استخدم أدوات الذكاء الاصطناعي (Claude، ChatGPT، أو Perplexity) لبحث ظروف السوق الحالية لـ USDC وUSDT وDAI وFRAX
+      - حلل فرص زراعة العوائد عبر بروتوكولات التمويل اللامركزي المختلفة (Aave، Compound، Curve)
+      - حدد مخاطر إلغاء الربط المحتملة وفرص المراجحة باستخدام تحليل السوق بالذكاء الاصطناعي
+      - أنشئ ملخصًا تنفيذيًا مولدًا بالذكاء الاصطناعي مع توصيات التداول القابلة للتنفيذ
+    expected_outcome: تقرير تحليل سوق شامل مع فرص تداول محددة وتقييمات المخاطر وتوصيات مدعومة بالذكاء الاصطناعي لتوزيع محفظة العملات المستقرة
   - id: strategy-development
     category: creation
     time_limit: 40
@@ -91,14 +91,14 @@ tasks:
         - Always test on testnets first
 
         What's your coding experience level, and which AI coding assistant would you prefer to use? Let's start building your trading strategy step by step.
-    title: AI-Enhanced Trading Strategy Creation
-    description: Design and backtest an automated trading strategy using AI to optimize entry/exit points for stablecoin arbitrage across multiple DEXs
+    title: إنشاء استراتيجية التداول المحسنة بالذكاء الاصطناعي
+    description: صمم واختبر استراتيجية تداول آلية باستخدام الذكاء الاصطناعي لتحسين نقاط الدخول/الخروج لمراجحة العملات المستقرة عبر بورصات لامركزية متعددة
     instructions:
-      - Use AI coding assistants to write Python scripts for monitoring price differences across Uniswap, SushiSwap, and Curve
-      - Implement AI-based alert systems for arbitrage opportunities with specific profit thresholds
-      - Create risk management rules using AI to calculate optimal position sizes and stop-losses
-      - Develop backtesting framework with AI assistance to validate strategy performance
-    expected_outcome: A functional trading bot prototype with AI-optimized parameters, comprehensive backtesting results, and clear implementation guidelines
+      - استخدم مساعدي البرمجة بالذكاء الاصطناعي لكتابة نصوص Python لمراقبة فروق الأسعار عبر Uniswap وSushiSwap وCurve
+      - نفذ أنظمة تنبيه قائمة على الذكاء الاصطناعي لفرص المراجحة مع عتبات ربح محددة
+      - أنشئ قواعد إدارة المخاطر باستخدام الذكاء الاصطناعي لحساب أحجام المراكز المثلى ونقاط وقف الخسارة
+      - طور إطار عمل للاختبار الخلفي بمساعدة الذكاء الاصطناعي للتحقق من أداء الاستراتيجية
+    expected_outcome: نموذج أولي لروبوت تداول فعال مع معاملات محسنة بالذكاء الاصطناعي ونتائج اختبار خلفي شاملة وإرشادات تنفيذ واضحة
   - id: risk-management
     category: interaction
     time_limit: 35
@@ -128,14 +128,14 @@ tasks:
         - Document everything for later analysis
 
         What's your current portfolio composition? Let's start by identifying your potential exposure to this exploit and immediate risk mitigation actions.
-    title: AI-Powered Portfolio Risk Assessment
-    description: A major DeFi protocol exploit just happened. Use AI to assess your stablecoin portfolio's exposure and develop an emergency response plan
+    title: تقييم مخاطر المحفظة المدعوم بالذكاء الاصطناعي
+    description: للتو حدث استغلال كبير لبروتوكول التمويل اللامركزي. استخدم الذكاء الاصطناعي لتقييم تعرض محفظة العملات المستقرة الخاصة بك ووضع خطة استجابة طارئة
     instructions:
-      - Use AI to quickly analyze news and social media for exploit details and affected protocols
-      - Calculate portfolio exposure using AI-assisted risk analysis across all your DeFi positions
-      - Develop contingency scenarios using AI simulation for different market stress conditions
-      - Create automated monitoring and alert systems using AI for future risk detection
-    expected_outcome: A detailed risk assessment report with immediate action items, portfolio rebalancing recommendations, and an automated risk monitoring system setup
+      - استخدم الذكاء الاصطناعي لتحليل الأخبار ووسائل التواصل الاجتماعي بسرعة للحصول على تفاصيل الاستغلال والبروتوكولات المتأثرة
+      - احسب تعرض المحفظة باستخدام تحليل المخاطر المساعد بالذكاء الاصطناعي عبر جميع مراكز التمويل اللامركزي
+      - طور سيناريوهات طوارئ باستخدام محاكاة الذكاء الاصطناعي لظروف ضغط السوق المختلفة
+      - أنشئ أنظمة مراقبة وتنبيه آلية باستخدام الذكاء الاصطناعي لاكتشاف المخاطر المستقبلية
+    expected_outcome: تقرير تقييم مخاطر مفصل مع عناصر عمل فورية وتوصيات إعادة توازن المحفظة وإعداد نظام مراقبة المخاطر الآلي
 completion_criteria:
   min_tasks_completed: 3
   required_competencies:

@@ -6,16 +6,16 @@ scenario_info:
     - creating_with_ai
     - managing_with_ai
     - designing_with_ai
-  title: AI for Digital Wellness Campaign
-  description: Design an AI-powered campaign to promote healthy digital habits among your peers
+  title: حملة العافية الرقمية بالذكاء الاصطناعي
+  description: صمم حملة مدعومة بالذكاء الاصطناعي لتعزيز العادات الرقمية الصحية بين زملائك
   prerequisites:
-    - Awareness of social media impacts
-    - Basic digital literacy
+    - الوعي بتأثيرات وسائل التواصل الاجتماعي
+    - المعرفة الأساسية بالمحو الرقمي
   learning_objectives:
-    - Analyze digital wellness data and trends
-    - Create engaging content with AI tools
-    - Design interventions for behavior change
-    - Build a comprehensive digital wellness campaign
+    - تحليل بيانات واتجاهات العافية الرقمية
+    - إنشاء محتوى جذاب بأدوات الذكاء الاصطناعي
+    - تصميم تدخلات لتغيير السلوك
+    - بناء حملة شاملة للعافية الرقمية
 ksa_mapping:
   knowledge:
     - K1.1

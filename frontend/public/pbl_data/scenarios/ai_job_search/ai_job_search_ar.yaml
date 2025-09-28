@@ -5,16 +5,16 @@ scenario_info:
   target_domains:
     - engaging_with_ai
     - creating_with_ai
-  title: AI-Assisted Job Search Training
-  description: Master the art of using AI tools throughout your job search journey
+  title: تدريب البحث عن الوظائف بمساعدة الذكاء الاصطناعي
+  description: أتقن فن استخدام أدوات الذكاء الاصطناعي في رحلة البحث عن الوظائف
   prerequisites:
-    - Basic computer skills
-    - Existing resume
+    - مهارات الحاسوب الأساسية
+    - سيرة ذاتية موجودة
   learning_objectives:
-    - Master AI-powered job market research techniques
-    - Optimize resume and cover letters using AI tools
-    - Develop interview skills through AI practice
-    - Build confidence in using AI for career advancement
+    - إتقان تقنيات بحث سوق العمل المدعومة بالذكاء الاصطناعي
+    - تحسين السيرة الذاتية ورسائل التغطية باستخدام أدوات الذكاء الاصطناعي
+    - تطوير مهارات المقابلات من خلال الممارسة بالذكاء الاصطناعي
+    - بناء الثقة في استخدام الذكاء الاصطناعي للتطوير المهني
 ksa_mapping:
   knowledge:
     - K1.1

@@ -6,16 +6,16 @@ scenario_info:
     - designing_with_ai
     - creating_with_ai
     - managing_with_ai
-  title: AI-Powered Teen Health Assistant
-  description: Design an AI-powered health assistant specifically for teenagers to promote healthy lifestyle choices
+  title: مساعد الصحة للمراهقين بالذكاء الاصطناعي
+  description: صمم مساعد صحي مدعوم بالذكاء الاصطناعي مخصص للمراهقين لتعزيز خيارات نمط الحياة الصحي
   prerequisites:
-    - Basic understanding of health concepts
-    - Awareness of teenage health challenges
+    - الفهم الأساسي لمفاهيم الصحة
+    - الوعي بالتحديات الصحية للمراهقين
   learning_objectives:
-    - Identify key health challenges facing teenagers
-    - Design user-centered AI solutions for health promotion
-    - Create ethical guidelines for AI health applications
-    - Develop a functional prototype with user testing
+    - تحديد التحديات الصحية الرئيسية التي تواجه المراهقين
+    - تصميم حلول ذكاء اصطناعي محورها المستخدم لتعزيز الصحة
+    - إنشاء إرشادات أخلاقية لتطبيقات الذكاء الاصطناعي الصحية
+    - تطوير نموذج أولي وظيفي مع اختبار المستخدم
 ksa_mapping:
   knowledge:
     - K1.1

@@ -152,10 +152,10 @@ completion_criteria:
 resources:
   - url: https://www.midjourney.com/
     type: tool
-    name: '[Arabic translation needed]'
+    name: 'أداة إنشاء الفن بالذكاء الاصطناعي - ميدجورني'
   - url: https://www.artbreeder.com/
     type: platform
-    name: '[Arabic translation needed]'
+    name: 'منصة مزج الصور الفنية - آرت بريدر'
 metadata:
   language: ar
   version: '1.0'
