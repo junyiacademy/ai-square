@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   // 輸出配置 (for Docker deployment)
   output: 'standalone',
-  
+
   // 安全標頭配置
   async headers() {
     return [
@@ -35,6 +35,7 @@ const nextConfig: NextConfig = {
               "font-src 'self' https://fonts.gstatic.com",
               "img-src 'self' data: blob: https:",
               "connect-src 'self' https://storage.googleapis.com https://generativelanguage.googleapis.com https://aiplatform.googleapis.com",
+              "frame-src 'self' https://www.youtube.com https://youtube.com",
               "frame-ancestors 'none'",
               "base-uri 'self'",
               "form-action 'self'",
@@ -50,7 +51,7 @@ const nextConfig: NextConfig = {
     domains: [],
     formats: ['image/avif', 'image/webp'],
   },
-  
+
   // 實驗性功能
   experimental: {
     // 優化包大小
@@ -71,7 +72,7 @@ const nextConfig: NextConfig = {
         // 減少 moment.js 大小（如果有使用）
         'moment': 'moment/min/moment.min.js',
       };
-      
+
       // Bundle 分割優化
       config.optimization = {
         ...config.optimization,
@@ -117,7 +118,7 @@ const nextConfig: NextConfig = {
         },
       };
     }
-    
+
     // Suppress OpenTelemetry instrumentation warnings
     config.ignoreWarnings = [
       ...(config.ignoreWarnings || []),
@@ -126,14 +127,14 @@ const nextConfig: NextConfig = {
         message: /Critical dependency/,
       },
     ];
-    
+
     return config;
   },
 
 
   // 生產環境優化
   productionBrowserSourceMaps: false,
-  
+
   // 壓縮配置
   compress: true,
 

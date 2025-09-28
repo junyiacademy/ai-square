@@ -83,6 +83,7 @@ export default function ScenarioDetailPage() {
   const [loading, setLoading] = useState(true);
   const [isStarting, setIsStarting] = useState(false);
   const [isProgramsCollapsed, setIsProgramsCollapsed] = useState(false);
+  const [videoModalUrl, setVideoModalUrl] = useState<string | null>(null);
   const scenarioId = params.id as string;
 
   useEffect(() => {
@@ -107,10 +108,11 @@ export default function ScenarioDetailPage() {
             const scenarioData = {
               ...response.data,
               objectives: response.data.learningObjectives || [],
+              prerequisites: response.data.prerequisites || [],  // Move prerequisites to top level
               metadata: {
                 difficulty: response.data.difficulty,
                 estimatedDuration: response.data.estimatedDuration,
-                prerequisites: response.data.prerequisites || [],
+                prerequisites: response.data.prerequisites || [],  // Keep in metadata for compatibility
                 targetDomains: response.data.targetDomain || [],
                 tasks: response.data.tasks || [],
                 ksaMapping: response.data.ksaMapping
@@ -155,7 +157,36 @@ export default function ScenarioDetailPage() {
 
   // Helper function to get data from scenario metadata
   const getScenarioData = (key: string, fallback: unknown = null) => {
+    // First check top-level scenario properties
+    if (scenario && key in scenario) {
+      return (scenario as unknown as Record<string, unknown>)[key];
+    }
+    // Then check metadata
     return (scenario?.metadata as Record<string, unknown>)?.[key] || fallback;
+  };
+
+  // Convert YouTube URL to embed format (kept for future use)
+  // const getYouTubeEmbedUrl = (url: string): string | null => {
+  //   const regex = /(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/;
+  //   const match = url.match(regex);
+  //   if (match && match[1]) {
+  //     return `https://www.youtube.com/embed/${match[1]}`;
+  //   }
+  //   return null;
+  // };
+
+  // Handle video link click
+  const handleVideoClick = (url: string) => {
+    // For now, just open in new tab to avoid CSP issues
+    window.open(url, '_blank', 'noopener,noreferrer');
+
+    // Original modal code (commented out for now)
+    // const embedUrl = getYouTubeEmbedUrl(url);
+    // if (embedUrl) {
+    //   setVideoModalUrl(embedUrl);
+    // } else {
+    //   window.open(url, '_blank', 'noopener,noreferrer');
+    // }
   };
 
   const handleStartProgram = async (programId?: string) => {
@@ -477,12 +508,34 @@ export default function ScenarioDetailPage() {
               {t('details.prerequisites', 'Prerequisites')}
             </h2>
             <ul className="space-y-2">
-              {(getScenarioData('prerequisites', []) as string[]).map((prereq: string, index: number) => (
-                <li key={index} className="flex items-start">
-                  <span className="text-blue-500 mr-2">•</span>
-                  <span className="text-gray-600 dark:text-gray-300">{prereq}</span>
-                </li>
-              ))}
+              {(getScenarioData('prerequisites', []) as string[]).map((prereq: string, index: number) => {
+                // Check if the prerequisite contains a URL
+                const urlRegex = /(https?:\/\/[^\s]+)/g;
+                const parts = prereq.split(urlRegex);
+
+                return (
+                  <li key={index} className="flex items-start">
+                    <span className="text-blue-500 mr-2">•</span>
+                    <span className="text-gray-600 dark:text-gray-300">
+                      {parts.map((part, i) => {
+                        // If this part is a URL, make it a clickable link
+                        if (part.match(/^https?:\/\//)) {
+                          return (
+                            <button
+                              key={i}
+                              onClick={() => handleVideoClick(part)}
+                              className="text-blue-600 dark:text-blue-400 hover:underline cursor-pointer"
+                            >
+                              {part}
+                            </button>
+                          );
+                        }
+                        return <span key={i}>{part}</span>;
+                      })}
+                    </span>
+                  </li>
+                );
+              })}
               {(getScenarioData('prerequisites', []) as string[]).length === 0 && (
                 <li className="text-gray-500 dark:text-gray-400">{t('details.noPrerequisites', 'No prerequisites')}</li>
               )}
@@ -665,6 +718,37 @@ export default function ScenarioDetailPage() {
         </div>
 
       </div>
+
+      {/* Video Modal */}
+      {videoModalUrl && (
+        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-4xl">
+            <div className="flex justify-between items-center p-4 border-b dark:border-gray-700">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                {t('common:video', 'Video')}
+              </h3>
+              <button
+                onClick={() => setVideoModalUrl(null)}
+                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <div className="relative pb-[56.25%]">
+              <iframe
+                className="absolute top-0 left-0 w-full h-full"
+                src={videoModalUrl}
+                title="YouTube video"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }

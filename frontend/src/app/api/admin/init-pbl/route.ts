@@ -3,7 +3,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import yaml from 'js-yaml';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import type { IScenario, ITaskTemplate, ITask } from '@/types/unified-learning';
+import type { IScenario, ITaskTemplate } from '@/types/unified-learning';
 import type { DifficultyLevel, TaskType } from '@/types/database';
 // import { cacheInvalidationService } from '@/lib/cache/cache-invalidation-service';
 import { distributedCacheService } from '@/lib/cache/distributed-cache-service';

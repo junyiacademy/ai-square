@@ -291,8 +291,8 @@ export async function GET(
       estimatedDuration: scenarioResult.estimatedMinutes || (scenarioResult.metadata as Record<string, unknown>)?.estimatedDuration as number || 60,
       targetDomain: (scenarioResult.pblData as Record<string, unknown>)?.targetDomains as string[] || (scenarioResult.metadata as Record<string, unknown>)?.targetDomains as string[] || [],
       prerequisites: (() => {
-        // First try database prerequisites
-        const dbPrerequisites = (scenarioResult.metadata as Record<string, unknown>)?.prerequisites as string[];
+        // First try database prerequisites (directly on scenario, not in metadata)
+        const dbPrerequisites = scenarioResult.prerequisites;
         if (dbPrerequisites && dbPrerequisites.length > 0) {
           return dbPrerequisites;
         }
