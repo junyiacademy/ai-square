@@ -6,16 +6,16 @@ scenario_info:
     - engaging_with_ai
     - creating_with_ai
     - managing_with_ai
-  title: AI-Powered Climate Action Plan
-  description: Use AI to analyze climate data and create actionable solutions for your school and community
+  title: خطة العمل المناخي المدعومة بالذكاء الاصطناعي
+  description: استخدم الذكاء الاصطناعي لتحليل البيانات المناخية وإنشاء حلول قابلة للتطبيق لمدرستك ومجتمعك
   prerequisites:
-    - Basic understanding of climate change
-    - Interest in environmental issues
+    - فهم أساسي لتغير المناخ
+    - الاهتمام بالقضايا البيئية
   learning_objectives:
-    - Analyze environmental data using AI tools
-    - Create data visualizations to communicate findings
-    - Develop practical climate action proposals
-    - Build confidence in using AI for environmental advocacy
+    - تحليل البيانات البيئية باستخدام أدوات الذكاء الاصطناعي
+    - إنشاء تصورات مرئية للبيانات لتوصيل النتائج
+    - تطوير مقترحات عملية للعمل المناخي
+    - بناء الثقة في استخدام الذكاء الاصطناعي للدعوة البيئية
 ksa_mapping:
   knowledge:
     - K1.1
@@ -44,26 +44,26 @@ tasks:
     ai_module:
       role: assistant
       model: gemini-2.5-flash
-      persona: Climate Research Assistant
+      persona: مساعد أبحاث المناخ
       initial_prompt: |
-        You are a climate research assistant helping students explore climate data.
-        Your goal is to guide them through data collection and analysis tasks.
+        أنت مساعد أبحاث مناخية تساعد الطلاب في استكشاف البيانات المناخية.
+        هدفك هو إرشادهم خلال مهام جمع وتحليل البيانات.
 
-        Keep responses focused and educational:
-        - Help them find reliable climate data sources
-        - Guide them in organizing and analyzing data
-        - Explain climate concepts in age-appropriate language
-        - Encourage critical thinking about climate impacts
+        حافظ على الاستجابات مركزة وتعليمية:
+        - ساعدهم في العثور على مصادر موثوقة للبيانات المناخية
+        - وجههم في تنظيم وتحليل البيانات
+        - اشرح المفاهيم المناخية بلغة مناسبة للعمر
+        - شجع التفكير النقدي حول التأثيرات المناخية
 
-        Always redirect off-topic conversations back to the climate research task.
-    title: Climate Data Collection
-    description: Use AI to gather and organize climate data for your local area
+        وجه المحادثات الخارجة عن الموضوع دائماً إلى مهمة البحث المناخي.
+    title: جمع البيانات المناخية
+    description: استخدم الذكاء الاصطناعي لجمع وتنظيم البيانات المناخية لمنطقتك المحلية
     instructions:
-      - Use AI to find reliable climate data sources
-      - Gather data on temperature trends, precipitation, air quality, and energy consumption
-      - Organize data in spreadsheets
-      - Identify key patterns and trends
-    expected_outcome: A comprehensive climate data collection for your area
+      - استخدم الذكاء الاصطناعي للعثور على مصادر موثوقة للبيانات المناخية
+      - اجمع بيانات عن اتجاهات درجات الحرارة والهطول وجودة الهواء واستهلاك الطاقة
+      - نظم البيانات في جداول بيانات
+      - حدد الأنماط والاتجاهات الرئيسية
+    expected_outcome: مجموعة شاملة من البيانات المناخية لمنطقتك
   - id: task-2
     category: analysis
     time_limit: 25
@@ -76,24 +76,24 @@ tasks:
     ai_module:
       role: evaluator
       model: gemini-2.5-flash
-      persona: Data Analysis Expert
+      persona: خبير تحليل البيانات
       initial_prompt: |
-        You are a data analysis expert helping students analyze climate data.
-        Guide them through:
-        - Pattern recognition in climate data
-        - Creating meaningful visualizations
-        - Making evidence-based predictions
-        - Drawing actionable conclusions
+        أنت خبير تحليل بيانات تساعد الطلاب في تحليل البيانات المناخية.
+        وجههم خلال:
+        - التعرف على الأنماط في البيانات المناخية
+        - إنشاء تصورات مرئية ذات معنى
+        - وضع تنبؤات قائمة على الأدلة
+        - استخلاص استنتاجات قابلة للتطبيق
 
-        Encourage critical thinking and help them understand the implications of their findings.
-    title: AI Data Analysis
-    description: Use AI tools to analyze climate data and identify actionable insights
+        شجع التفكير النقدي وساعدهم على فهم آثار نتائجهم.
+    title: تحليل البيانات بالذكاء الاصطناعي
+    description: استخدم أدوات الذكاء الاصطناعي لتحليل البيانات المناخية وتحديد الرؤى القابلة للتطبيق
     instructions:
-      - Use AI to identify patterns and correlations in climate data
-      - Create visualizations showing temperature changes, seasonal variations, and human impacts
-      - Generate predictions for future trends
-      - Identify areas requiring intervention
-    expected_outcome: Comprehensive analysis with clear insights and predictions
+      - استخدم الذكاء الاصطناعي لتحديد الأنماط والترابطات في البيانات المناخية
+      - أنشئ تصورات مرئية تظهر التغيرات في درجات الحرارة والتغيرات الموسمية والتأثيرات البشرية
+      - ولّد توقعات للاتجاهات المستقبلية
+      - حدد المجالات التي تتطلب تدخلاً
+    expected_outcome: تحليل شامل مع رؤى وتنبؤات واضحة
   - id: task-3
     category: creation
     time_limit: 30
@@ -106,24 +106,24 @@ tasks:
     ai_module:
       role: assistant
       model: gemini-2.5-flash
-      persona: Sustainability Solutions Coach
+      persona: مدرب حلول الاستدامة
       initial_prompt: |
-        You are a sustainability solutions coach helping students design climate action plans.
-        Guide them to:
-        - Generate creative yet practical solutions
-        - Consider feasibility and resource requirements
-        - Calculate environmental impacts
-        - Think about stakeholder engagement
+        أنت مدرب حلول الاستدامة تساعد الطلاب في تصميم خطط العمل المناخي.
+        وجههم إلى:
+        - توليد حلول إبداعية لكن عملية
+        - اعتبار الجدوى ومتطلبات الموارد
+        - حساب التأثيرات البيئية
+        - التفكير في إشراك أصحاب المصلحة
 
-        Focus on solutions that students can realistically implement in their school.
-    title: Solution Design
-    description: Create practical climate solutions for your school using AI assistance
+        ركز على الحلول التي يمكن للطلاب تنفيذها بشكل واقعي في مدرستهم.
+    title: تصميم الحلول
+    description: أنشئ حلول مناخية عملية لمدرستك بمساعدة الذكاء الاصطناعي
     instructions:
-      - Brainstorm solutions with AI for energy conservation, waste reduction, green spaces, and transportation
-      - Evaluate feasibility and impact of each solution
-      - Create detailed implementation plans
-      - Calculate potential carbon savings
-    expected_outcome: A portfolio of practical, implementable climate solutions
+      - اعصف ذهنياً مع الذكاء الاصطناعي لحلول توفير الطاقة وتقليل النفايات والمساحات الخضراء والنقل
+      - قيّم جدوى وتأثير كل حل
+      - أنشئ خطط تنفيذ مفصلة
+      - احسب الوفورات المحتملة في انبعاثات الكربون
+    expected_outcome: محفظة من الحلول المناخية العملية القابلة للتنفيذ
   - id: task-4
     category: interaction
     time_limit: 25
@@ -137,24 +137,24 @@ tasks:
     ai_module:
       role: actor
       model: gemini-2.5-flash
-      persona: Presentation Coach
+      persona: مدرب العرض التقديمي
       initial_prompt: |
-        You are a presentation coach helping students prepare their climate action plan presentation.
-        Assist them with:
-        - Creating clear, compelling narratives
-        - Designing effective visual aids
-        - Anticipating and preparing for questions
-        - Building confidence in public speaking
+        أنت مدرب عروض تقديمية تساعد الطلاب في إعداد عرض خطة العمل المناخي.
+        ساعدهم في:
+        - إنشاء قصص واضحة ومقنعة
+        - تصميم وسائل بصرية فعالة
+        - توقع والاستعداد للأسئلة
+        - بناء الثقة في التحدث أمام الجمهور
 
-        Help them create a presentation that will inspire action from school administrators and peers.
-    title: Action Plan Presentation
-    description: Create a compelling presentation using AI to propose your climate action plan
+        ساعدهم في إنشاء عرض يلهم العمل من إدارتي المدرسة والزملاء.
+    title: عرض خطة العمل
+    description: أنشئ عرضاً مقنعاً باستخدام الذكاء الاصطناعي لاقتراح خطة العمل المناخي
     instructions:
-      - Use AI to structure your presentation effectively
-      - Include problem statement with data, proposed solutions, implementation timeline, and expected outcomes
-      - Generate compelling visuals and infographics
-      - Prepare for Q&A with AI assistance
-    expected_outcome: A professional, persuasive presentation ready for stakeholders
+      - استخدم الذكاء الاصطناعي لهيكلة عرضك بشكل فعال
+      - اشمل بيان المشكلة مع البيانات والحلول المقترحة والجدول الزمني للتنفيذ والنتائج المتوقعة
+      - ولّد مرئيات ورسوم بيانية مقنعة
+      - استعد لجلسة الأسئلة والأجوبة بمساعدة الذكاء الاصطناعي
+    expected_outcome: عرض مهني ومقنع جاهز لأصحاب المصلحة
 completion_criteria:
   min_tasks_completed: 3
   required_competencies:
@@ -164,10 +164,10 @@ completion_criteria:
 resources:
   - url: https://climatekids.nasa.gov/
     type: reference
-    name: '[Arabic translation needed]'
+    name: ناسا للأطفال - المناخ
   - url: https://www.climate.ai/
     type: tool
-    name: '[Arabic translation needed]'
+    name: دليل أدوات الذكاء الاصطناعي للمناخ
 metadata:
   language: ar
   version: '1.0'

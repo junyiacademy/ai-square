@@ -6,16 +6,16 @@ scenario_info:
     - creating_with_ai
     - engaging_with_ai
     - designing_with_ai
-  title: AI-Powered Creative Arts Exhibition
-  description: Create a digital art exhibition using AI tools to explore artistic expression and creativity
+  title: นิทรรศการศิลปะสร้างสรรค์ด้วย AI
+  description: สร้างนิทรรศการศิลปะดิจิทัลโดยใช้เครื่องมือ AI เพื่อสำรวจการแสดงออกทางศิลปะและความคิดสร้างสรรค์
   prerequisites:
-    - Basic art appreciation
-    - Interest in creative expression
+    - ความข้าใจศิลปะเบื้องต้น
+    - ความสนใจในการแสดงออกทางสร้างสรรค์
   learning_objectives:
-    - Explore AI-assisted creative processes
-    - Create original digital artworks
-    - Curate and present a cohesive exhibition
-    - Reflect on the relationship between AI and human creativity
+    - สำรวจกระบวนการสร้างสรรค์ที่ได้รับความช่วยเหลือจาก AI
+    - สร้างผลงานศิลปะดิจิทัลต้นฉบับ
+    - จัดการและนำเสนอนิทรรศการที่มีความต่อเนื่อง
+    - สะท้อนความสัมพันธ์ระหว่าง AI และความคิดสร้างสรรค์ของมนุษย์
 ksa_mapping:
   knowledge:
     - K1.1
@@ -59,14 +59,14 @@ tasks:
         - Supporting their creative vision selection
 
         Always stay focused on the art style exploration task.
-    title: AI Art Style Exploration
-    description: Explore different artistic styles and movements using AI generation tools
+    title: การสำรวจรูปแบบศิลปะด้วย AI
+    description: สำรวจรูปแบบและการเคลื่อนไหวทางศิลปะต่างๆ โดยใช้เครื่องมือสร้างภาพด้วย AI
     instructions:
-      - Research major art movements and their characteristics
-      - Use AI tools to generate images in different artistic styles
-      - Document and compare the results
-      - Select 3-4 styles that resonate with your creative vision
-    expected_outcome: A portfolio of AI-generated artworks showcasing different styles
+      - ค้นคว้าการเคลื่อนไหวศิลปะสำคัญและลักษณะเฉพาะ
+      - ใช้เครื่องมือ AI สร้างภาพในรูปแบบศิลปะที่แตกต่างกัน
+      - บันทึกและเปรียบเทียบผลลัพธ์
+      - เลือก 3-4 รูปแบบที่สอดคล้องกับวิสัยทัศน์สร้างสรรค์ของคุณ
+    expected_outcome: คอลเล็กชั่นผลงานศิลปะที่สร้างโดย AI ที่แสดงรูปแบบที่หลากหลาย
   - id: task-2
     category: creation
     time_limit: 35
@@ -97,14 +97,14 @@ tasks:
         - Supporting the selection of final pieces for exhibition
 
         Always stay focused on the personal art creation task.
-    title: Personal Art Creation
-    description: Create original artworks that express your personal themes and emotions
+    title: การสร้างศิลปะส่วนตัว
+    description: สร้างผลงานศิลปะต้นฉบับที่แสดงออกถึงหัวข้อและอารมณ์ส่วนบุคคลของคุณ
     instructions:
-      - Identify personal themes or emotions you want to express
-      - Develop prompts that blend your chosen styles with personal content
-      - Generate multiple iterations and refine your prompts
-      - Create 5-8 final pieces for your exhibition
-    expected_outcome: A collection of personal artworks ready for exhibition
+      - ระบุหัวข้อหรืออารมณ์ส่วนตัวที่คุณต้องการแสดงออก
+      - พัฒนา prompts ที่ผสมผสานรูปแบบที่เลือกไว้กับเนื้อหาส่วนตัว
+      - สร้างผลงานหลายรุ่นและปรับปรุง prompts ของคุณ
+      - สร้างผลงานสุดท้าย 5-8 ชิ้นสำหรับนิทรรศการของคุณ
+    expected_outcome: คอลเล็กชั่นผลงานศิลปะส่วนตัวที่พร้อมสำหรับการจัดนิทรรศการ
   - id: task-3
     category: creation
     time_limit: 30
@@ -135,14 +135,14 @@ tasks:
         - Using AI to refine curatorial text and presentation
 
         Always stay focused on the exhibition curation task.
-    title: Exhibition Curation
-    description: Design and organize your artworks into a cohesive digital exhibition
+    title: การคิวเรตนิทรรศการ
+    description: ออกแบบและจัดระเบียบผลงานศิลปะของคุณให้เป็นนิทรรศการดิจิทัลที่มีความต่อเนื่อง
     instructions:
-      - Write artist statements for each piece explaining your creative process
-      - Design the layout and flow of your digital exhibition
-      - Create exhibition materials (title, description, artist bio)
-      - Use AI to help refine your curatorial text and presentation
-    expected_outcome: A professionally curated digital art exhibition
+      - เขียนคำอธิบายศิลปินสำหรับแต่ละชิ้นงานอธิบายกระบวนการสร้างสรรค์ของคุณ
+      - ออกแบบโครงสร้างและการไหลเวียนของนิทรรศการดิจิทัลของคุณ
+      - สร้างสื่อของนิทรรศการ (ชื่อเรื่อง, คำอธิบาย, ประวัติศิลปิน)
+      - ใช้ AI ช่วยปรับปรุงข้อความคิวเรตและการนำเสนอของคุณ
+    expected_outcome: นิทรรศการศิลปะดิจิทัลที่ได้รับการคิวเรตอย่างเป็นมืออาชีพ
 completion_criteria:
   min_tasks_completed: 3
   required_competencies:
@@ -152,10 +152,10 @@ completion_criteria:
 resources:
   - url: https://www.midjourney.com/
     type: tool
-    name: '[Thai translation needed]'
+    name: 'เครื่องมือสร้างศิลปะด้วย AI - Midjourney'
   - url: https://www.artbreeder.com/
     type: platform
-    name: '[Thai translation needed]'
+    name: 'แพลตฟอร์มผสมผสานภาพศิลปะ - Artbreeder'
 metadata:
   language: th
   version: '1.0'

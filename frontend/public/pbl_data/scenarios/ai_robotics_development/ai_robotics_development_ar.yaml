@@ -6,17 +6,17 @@ scenario_info:
     - engaging_with_ai
     - creating_with_ai
     - designing_with_ai
-  title: AI-Powered Robotics Development and Implementation
-  description: Learn to build intelligent robots using AI for real-world applications like warehouse automation, elderly care assistance, and smart manufacturing
+  title: تطوير وتنفيذ الروبوتات المدعومة بالذكاء الاصطناعي
+  description: تعلم بناء روبوتات ذكية باستخدام الذكاء الاصطناعي للتطبيقات الواقعية مثل أتمتة المستودعات ومساعدة كبار السن والتصنيع الذكي
   prerequisites:
-    - Basic programming knowledge (Python preferred)
-    - Understanding of sensors and actuators
-    - Access to robotics simulation software or hardware
+    - معرفة أساسية بالبرمجة (يُفضل Python)
+    - فهم أجهزة الاستشعار والمحركات
+    - الوصول إلى برامج محاكاة الروبوتات أو الأجهزة
   learning_objectives:
-    - Master AI integration techniques for robot perception and decision-making
-    - Develop autonomous navigation systems using AI computer vision and SLAM
-    - Create intelligent human-robot interaction interfaces with natural language processing
-    - Build practical robotics solutions for real-world business and social challenges
+    - إتقان تقنيات دمج الذكاء الاصطناعي لإدراك الروبوت واتخاذ القرارات
+    - تطوير أنظمة الملاحة المستقلة باستخدام رؤية الحاسوب وSLAM
+    - إنشاء واجهات تفاعل ذكية بين الإنسان والروبوت مع معالجة اللغة الطبيعية
+    - بناء حلول روبوتية عملية للتحديات التجارية والاجتماعية الواقعية
 ksa_mapping:
   knowledge:
     - K2.1

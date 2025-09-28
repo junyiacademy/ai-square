@@ -168,11 +168,11 @@ evaluation_criteria:
   - Engage with AI Crystal Guide
 resources:
   videos:
-  - title: How Semiconductors Work
+  - title: 반도체의 작동 원리
     url: https://example.com/semiconductor-basics
   readings:
-  - title: The History of Silicon Valley
+  - title: 실리콘밸리의 역사
     url: https://example.com/silicon-valley-history
   tools:
-  - title: Virtual Chip Designer
+  - title: 가상 칩 디자이너
     url: https://example.com/chip-designer

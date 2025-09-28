@@ -161,11 +161,11 @@ evaluation_criteria:
   - Engage with AI Crystal Guide
 resources:
   videos:
-  - title: How Semiconductors Work
+  - title: 半导体的工作原理
     url: https://example.com/semiconductor-basics
   readings:
-  - title: The History of Silicon Valley
+  - title: 硅谷的历史
     url: https://example.com/silicon-valley-history
   tools:
-  - title: Virtual Chip Designer
+  - title: 虚拟芯片设计器
     url: https://example.com/chip-designer

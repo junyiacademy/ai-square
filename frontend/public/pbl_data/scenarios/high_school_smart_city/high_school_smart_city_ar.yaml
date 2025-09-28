@@ -6,16 +6,16 @@ scenario_info:
     - designing_with_ai
     - creating_with_ai
     - engaging_with_ai
-  title: AI-Powered Smart City Solutions
-  description: Design innovative AI solutions to improve urban life in your community
+  title: حلول المدينة الذكية المدعومة بالذكاء الاصطناعي
+  description: صمم حلول ذكية مبتكرة بالذكاء الاصطناعي لتحسين الحياة الحضرية في مجتمعك
   prerequisites:
-    - Basic understanding of urban systems
-    - Interest in technology and innovation
+    - فهم أساسي للأنظمة الحضرية
+    - الاهتمام بالتكنولوجيا والابتكار
   learning_objectives:
-    - Identify urban challenges using AI analysis
-    - Design AI-powered smart city features
-    - Create prototypes and visualizations
-    - Develop implementation strategies for urban solutions
+    - تحديد التحديات الحضرية باستخدام تحليل الذكاء الاصطناعي
+    - تصميم ميزات المدينة الذكية المدعومة بالذكاء الاصطناعي
+    - إنشاء نماذج أولية وتصورات مرئية
+    - تطوير استراتيجيات التنفيذ للحلول الحضرية
 ksa_mapping:
   knowledge:
     - K1.1
