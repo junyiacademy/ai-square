@@ -95,7 +95,9 @@
       "engaging_with_ai": "การมีส่วนร่วมกับ AI",
       "creating_with_ai": "การสร้างสรรค์กับ AI",
       "managing_with_ai": "การจัดการกับ AI",
-      "designing_with_ai": "การออกแบบกับ AI"
+      "designing_with_ai": "การออกแบบกับ AI",
+      "managing_ai": "การจัดการกับ AI",
+      "designing_ai": "การออกแบบกับ AI"
     },
     "yourPrograms": "โปรแกรมของคุณ",
     "viewResults": "ดูผลลัพธ์",

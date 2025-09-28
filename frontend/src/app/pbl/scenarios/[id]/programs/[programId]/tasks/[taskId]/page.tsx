@@ -308,14 +308,26 @@ export default function ProgramLearningPage() {
             // Extract instructions based on current language
             instructions: (() => {
               const templateInstructions = taskTemplate.instructions || originalTaskData.instructions;
-              if (typeof templateInstructions === 'object' && !Array.isArray(templateInstructions)) {
+              
+              // Handle different types of instructions
+              if (Array.isArray(templateInstructions)) {
+                // If it's already an array, return it
+                return templateInstructions;
+              } else if (typeof templateInstructions === 'string') {
+                // If it's a string, split by newlines
+                return templateInstructions.split('\n').filter((line: string) => line.trim());
+              } else if (typeof templateInstructions === 'object' && templateInstructions !== null) {
                 // If it's a multilingual object, get the text for current language
                 const instructionText = templateInstructions[i18n.language] || templateInstructions.en || '';
-                // Split by newline to create array (instructions are usually multiline)
-                return instructionText ? instructionText.split('\n').filter((line: string) => line.trim()) : [];
+                if (typeof instructionText === 'string') {
+                  // Split by newline to create array (instructions are usually multiline)
+                  return instructionText.split('\n').filter((line: string) => line.trim());
+                } else if (Array.isArray(instructionText)) {
+                  return instructionText;
+                }
               }
-              // If it's already an array, return it
-              return Array.isArray(templateInstructions) ? templateInstructions : [];
+              // Fallback to empty array
+              return [];
             })(),
             expectedOutcome: (() => {
               const templateOutcome = originalTaskData.expectedOutcome || taskTemplate.expectedOutcome;

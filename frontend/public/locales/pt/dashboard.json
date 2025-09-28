@@ -6,7 +6,9 @@
     "engaging_with_ai": "Interagindo com IA",
     "creating_with_ai": "Criando com IA",
     "managing_with_ai": "Gerenciando com IA",
-    "designing_with_ai": "Projetando com IA"
+    "designing_with_ai": "Projetando com IA",
+        "managing_ai": "Gerenciando com IA",
+        "designing_ai": "Projetando com IA"
   },
   "viewDetailedProgress": "Ver caminho de aprendizagem detalhado",
   "learningStatistics": "Estatísticas de Aprendizagem",

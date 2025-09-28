@@ -95,7 +95,9 @@
       "engaging_with_ai": "AI와 상호작용",
       "creating_with_ai": "AI와 창작",
       "managing_with_ai": "AI와 관리",
-      "designing_with_ai": "AI와 설계"
+      "designing_with_ai": "AI와 설계",
+      "managing_ai": "AI와 관리",
+      "designing_ai": "AI와 설계"
     },
     "yourPrograms": "내 프로그램",
     "viewResults": "결과 보기",
