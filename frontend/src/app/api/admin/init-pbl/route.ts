@@ -141,6 +141,7 @@ export async function POST(request: NextRequest) {
         const title: Record<string, string> = {};
         const description: Record<string, string> = {};
         const objectives: Record<string, string[]> = {};
+        const prerequisites: Record<string, string[]> = {};
         const challengeStatement: Record<string, string> = {};
         const realWorldContext: Record<string, string> = {};
 
@@ -161,6 +162,9 @@ export async function POST(request: NextRequest) {
             }
             if (data?.scenario_info?.learning_objectives && Array.isArray(data.scenario_info.learning_objectives)) {
               objectives[lang] = data.scenario_info.learning_objectives;
+            }
+            if (data?.scenario_info?.prerequisites && Array.isArray(data.scenario_info.prerequisites)) {
+              prerequisites[lang] = data.scenario_info.prerequisites;
             }
             if (data?.challenge_statement) {
               challengeStatement[lang] = data.challenge_statement as string;
@@ -195,6 +199,9 @@ export async function POST(request: NextRequest) {
         }
         if (!objectives.en && Object.keys(objectives).length > 0) {
           objectives.en = Object.values(objectives)[0];
+        }
+        if (!prerequisites.en && Object.keys(prerequisites).length > 0) {
+          prerequisites.en = Object.values(prerequisites)[0];
         }
 
         // Build multilingual task templates
@@ -312,7 +319,8 @@ export async function POST(request: NextRequest) {
             originalYamlId: scenarioId,
             importedAt: new Date().toISOString(),
             importedBy: 'init-api',
-            languagesAvailable: Array.from(languageFiles.keys())
+            languagesAvailable: Array.from(languageFiles.keys()),
+            multilingualPrerequisites: Object.keys(prerequisites).length > 0 ? prerequisites : undefined
           }
         };
 
