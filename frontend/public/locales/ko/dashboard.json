@@ -6,7 +6,9 @@
     "engaging_with_ai": "AI와 상호작용",
     "creating_with_ai": "AI로 창작",
     "managing_with_ai": "AI로 관리",
-    "designing_with_ai": "AI로 설계"
+    "designing_with_ai": "AI로 설계",
+        "managing_ai": "AI로 관리",
+        "designing_ai": "AI로 설계"
   },
   "viewDetailedProgress": "상세 학습 경로 보기",
   "learningStatistics": "학습 통계",

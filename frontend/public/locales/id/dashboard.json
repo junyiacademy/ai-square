@@ -6,7 +6,9 @@
     "engaging_with_ai": "Berinteraksi dengan AI",
     "creating_with_ai": "Berkreasi dengan AI",
     "managing_with_ai": "Mengelola dengan AI",
-    "designing_with_ai": "Mendesain dengan AI"
+    "designing_with_ai": "Mendesain dengan AI",
+        "managing_ai": "Mengelola dengan AI",
+        "designing_ai": "Mendesain dengan AI"
   },
   "viewDetailedProgress": "Lihat jalur pembelajaran terperinci",
   "learningStatistics": "Statistik Pembelajaran",

@@ -95,7 +95,9 @@
       "engaging_with_ai": "AIとの関わり",
       "creating_with_ai": "AIとの創造",
       "managing_with_ai": "AIとの管理",
-      "designing_with_ai": "AIとの設計"
+      "designing_with_ai": "AIとの設計",
+      "managing_ai": "AIとの管理",
+      "designing_ai": "AIとの設計"
     },
     "yourPrograms": "あなたのプログラム",
     "viewResults": "結果を表示",
