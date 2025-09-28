@@ -9,9 +9,9 @@
         "missing": 0
       },
       "zhCN": {
-        "complete": 1,
+        "complete": 9,
         "partial": 0,
-        "minimal": 8,
+        "minimal": 0,
         "missing": 0
       },
       "ja": {
@@ -205,122 +205,122 @@
           "completion_rate": 100.0
         },
         "zhCN": {
-          "status": "minimal",
+          "status": "complete",
           "critical_fields": {
             "scenario_info.title": {
-              "translated": false,
+              "translated": true,
               "en_value": "AI-Powered Climate Action Plan",
-              "lang_value": "AI-Powered Climate Action Plan"
+              "lang_value": "AI 驱动的气候行动计划"
             },
             "scenario_info.description": {
-              "translated": false,
+              "translated": true,
               "en_value": "Use AI to analyze climate data and create actionable solutions for your school and community",
-              "lang_value": "Use AI to analyze climate data and create actionable solutions for your school and community"
+              "lang_value": "使用 AI 分析气候数据，为学校和社区创建可行的解决方案"
             },
             "scenario_info.prerequisites": {
-              "translated": false,
+              "translated": true,
               "en_value": "['Basic understanding of climate change', 'Interest in environmental issues']",
-              "lang_value": "['Basic understanding of climate change', 'Interest in environmental issues']"
+              "lang_value": "['对气候变化的基本理解', '对环境议题的兴趣']"
             },
             "scenario_info.learning_objectives": {
-              "translated": false,
+              "translated": true,
               "en_value": "['Analyze environmental data using AI tools', 'Create data visualizations to communicate findings', ",
-              "lang_value": "['Analyze environmental data using AI tools', 'Create data visualizations to communicate findings', "
+              "lang_value": "['使用 AI 工具分析环境数据', '创建数据可视化来传达发现', '制定实用的气候行动提案', '建立使用 AI 进行环境倡议的信心']"
             }
           },
           "tasks": {
             "task_1": {
               "title": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Climate Data Collection",
-                "lang_value": "Climate Data Collection"
+                "lang_value": "气候数据收集"
               },
               "description": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Use AI to gather and organize climate data for you",
-                "lang_value": "Use AI to gather and organize climate data for you"
+                "lang_value": "使用 AI 收集和整理你所在地区的气候数据"
               },
               "instructions": {
-                "translated": false,
+                "translated": true,
                 "en_value": "['Use AI to find reliable climate data sources', '",
-                "lang_value": "['Use AI to find reliable climate data sources', '"
+                "lang_value": "['使用 AI 寻找可靠的气候数据来源', '收集温度趋势、降水、空气质量和能源消耗的数据', '在"
               },
               "expected_outcome": {
-                "translated": false,
+                "translated": true,
                 "en_value": "A comprehensive climate data collection for your a",
-                "lang_value": "A comprehensive climate data collection for your a"
+                "lang_value": "你所在地区的全面气候数据收集"
               }
             },
             "task_2": {
               "title": {
-                "translated": false,
+                "translated": true,
                 "en_value": "AI Data Analysis",
-                "lang_value": "AI Data Analysis"
+                "lang_value": "AI 数据分析"
               },
               "description": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Use AI tools to analyze climate data and identify ",
-                "lang_value": "Use AI tools to analyze climate data and identify "
+                "lang_value": "使用 AI 工具分析气候数据并识别可行的见解"
               },
               "instructions": {
-                "translated": false,
+                "translated": true,
                 "en_value": "['Use AI to identify patterns and correlations in ",
-                "lang_value": "['Use AI to identify patterns and correlations in "
+                "lang_value": "['使用 AI 识别气候数据中的模式和相关性', '创建显示温度变化、季节变化和人类影响的可视化',"
               },
               "expected_outcome": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Comprehensive analysis with clear insights and pre",
-                "lang_value": "Comprehensive analysis with clear insights and pre"
+                "lang_value": "具有清晰见解和预测的全面分析"
               }
             },
             "task_3": {
               "title": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Solution Design",
-                "lang_value": "Solution Design"
+                "lang_value": "解决方案设计"
               },
               "description": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Create practical climate solutions for your school",
-                "lang_value": "Create practical climate solutions for your school"
+                "lang_value": "在 AI 协助下为学校创建实用的气候解决方案"
               },
               "instructions": {
-                "translated": false,
+                "translated": true,
                 "en_value": "['Brainstorm solutions with AI for energy conserva",
-                "lang_value": "['Brainstorm solutions with AI for energy conserva"
+                "lang_value": "['与 AI 一起为节能、减废、绿色空间和交通运输头脑风暴解决方案', '评估每个解决方案的可行性和"
               },
               "expected_outcome": {
-                "translated": false,
+                "translated": true,
                 "en_value": "A portfolio of practical, implementable climate so",
-                "lang_value": "A portfolio of practical, implementable climate so"
+                "lang_value": "一套实用、可实施的气候解决方案组合"
               }
             },
             "task_4": {
               "title": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Action Plan Presentation",
-                "lang_value": "Action Plan Presentation"
+                "lang_value": "行动计划展示"
               },
               "description": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Create a compelling presentation using AI to propo",
-                "lang_value": "Create a compelling presentation using AI to propo"
+                "lang_value": "使用 AI 创建引人注目的演示文稿来提出你的气候行动计划"
               },
               "instructions": {
-                "translated": false,
+                "translated": true,
                 "en_value": "['Use AI to structure your presentation effectivel",
-                "lang_value": "['Use AI to structure your presentation effectivel"
+                "lang_value": "['使用 AI 有效地构建演示文稿', '包括带数据的问题陈述、提议的解决方案、实施时间表和预期成果"
               },
               "expected_outcome": {
-                "translated": false,
+                "translated": true,
                 "en_value": "A professional, persuasive presentation ready for ",
-                "lang_value": "A professional, persuasive presentation ready for "
+                "lang_value": "一份准备向利益相关者展示的专业、有说服力的演示文稿"
               }
             }
           },
-          "translated_count": 0,
+          "translated_count": 20,
           "total_count": 20,
-          "completion_rate": 0.0
+          "completion_rate": 100.0
         },
         "ja": {
           "status": "complete",
@@ -1723,100 +1723,100 @@
           "completion_rate": 100.0
         },
         "zhCN": {
-          "status": "minimal",
+          "status": "complete",
           "critical_fields": {
             "scenario_info.title": {
-              "translated": false,
+              "translated": true,
               "en_value": "AI-Powered Robotics Development and Implementation",
-              "lang_value": "AI-Powered Robotics Development and Implementation"
+              "lang_value": "AI 驱动的机器人开发与实作"
             },
             "scenario_info.description": {
-              "translated": false,
+              "translated": true,
               "en_value": "Learn to build intelligent robots using AI for real-world applications like warehouse automation, el",
-              "lang_value": "Learn to build intelligent robots using AI for real-world applications like warehouse automation, el"
+              "lang_value": "学习使用 AI 构建智能机器人，应用于仓库自动化、老年护理协助和智能制造等真实世界场景"
             },
             "scenario_info.prerequisites": {
-              "translated": false,
+              "translated": true,
               "en_value": "['Basic programming knowledge (Python preferred)', 'Understanding of sensors and actuators', 'Access",
-              "lang_value": "['Basic programming knowledge (Python preferred)', 'Understanding of sensors and actuators', 'Access"
+              "lang_value": "['基本程序设计知识（推荐 Python）', '了解传感器和执行器', '可使用机器人模拟软件或硬件']"
             },
             "scenario_info.learning_objectives": {
-              "translated": false,
+              "translated": true,
               "en_value": "['Master AI integration techniques for robot perception and decision-making', 'Develop autonomous na",
-              "lang_value": "['Master AI integration techniques for robot perception and decision-making', 'Develop autonomous na"
+              "lang_value": "['掌握机器人感知和决策的 AI 整合技术', '使用 AI 计算机视觉和 SLAM 开发自主导航系统', '使用自然语言处理创建智能人机交互界面', '为真实世界的商业和社会挑战构建实用的机器人解决"
             }
           },
           "tasks": {
             "task_1": {
               "title": {
-                "translated": false,
+                "translated": true,
                 "en_value": "AI-Powered Robot Perception System",
-                "lang_value": "AI-Powered Robot Perception System"
+                "lang_value": "AI 驱动的机器人感知系统"
               },
               "description": {
-                "translated": false,
+                "translated": true,
                 "en_value": "You're developing a warehouse automation robot tha",
-                "lang_value": "You're developing a warehouse automation robot tha"
+                "lang_value": "你正在开发一个需要识别、分类和处理各种包裹的仓库自动化机器人。使用 AI 视觉和传感器融合创建一个强"
               },
               "instructions": {
-                "translated": false,
+                "translated": true,
                 "en_value": "['Use AI tools to design computer vision pipelines",
-                "lang_value": "['Use AI tools to design computer vision pipelines"
+                "lang_value": "['使用 AI 工具设计用于物体检测和分类的计算机视觉管道', '实施结合摄影机、LiDAR 和深度"
               },
               "expected_outcome": {
-                "translated": false,
+                "translated": true,
                 "en_value": "A working perception system that can reliably iden",
-                "lang_value": "A working perception system that can reliably iden"
+                "lang_value": "一个能够在各种照明和环境条件下可靠识别和分类包裹的感知系统，并有记录的性能指标"
               }
             },
             "task_2": {
               "title": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Autonomous Navigation with AI Planning",
-                "lang_value": "Autonomous Navigation with AI Planning"
+                "lang_value": "基于 AI 规划的自主导航"
               },
               "description": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Your robot needs to navigate a complex elderly car",
-                "lang_value": "Your robot needs to navigate a complex elderly car"
+                "lang_value": "你的机器人需要在复杂的老年护理设施中导航，避开障碍物同时高效地递送药物和响应紧急呼叫"
               },
               "instructions": {
-                "translated": false,
+                "translated": true,
                 "en_value": "['Use AI path planning algorithms and reinforcemen",
-                "lang_value": "['Use AI path planning algorithms and reinforcemen"
+                "lang_value": "['使用 AI 路径规划算法和强化学习在动态环境中优化路线', '实施 AI 驱动的 SLAM（同时"
               },
               "expected_outcome": {
-                "translated": false,
+                "translated": true,
                 "en_value": "A complete autonomous navigation system that can e",
-                "lang_value": "A complete autonomous navigation system that can e"
+                "lang_value": "一个能够高效处理多个同时任务同时保持安全并适应环境变化的完整自主导航系统"
               }
             },
             "task_3": {
               "title": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Natural Human-Robot Interaction Interface",
-                "lang_value": "Natural Human-Robot Interaction Interface"
+                "lang_value": "自然人机交互界面"
               },
               "description": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Design a manufacturing quality control robot that ",
-                "lang_value": "Design a manufacturing quality control robot that "
+                "lang_value": "设计一个能与工人沟通、理解口头指令并提供生产问题直观反馈的制造品质控制机器人"
               },
               "instructions": {
-                "translated": false,
+                "translated": true,
                 "en_value": "['Use AI language models to create natural convers",
-                "lang_value": "['Use AI language models to create natural convers"
+                "lang_value": "['使用 AI 语言模型创建自然对话功能以理解工作指令', '实施 AI 驱动的手势识别和非语言沟通"
               },
               "expected_outcome": {
-                "translated": false,
+                "translated": true,
                 "en_value": "An intuitive interaction system that workers can e",
-                "lang_value": "An intuitive interaction system that workers can e"
+                "lang_value": "一个工人可以轻松沟通的直观交互系统，减少制造环境中的培训时间并提高采用率"
               }
             }
           },
-          "translated_count": 0,
+          "translated_count": 16,
           "total_count": 16,
-          "completion_rate": 0.0
+          "completion_rate": 100.0
         },
         "ja": {
           "status": "complete",
@@ -3021,144 +3021,144 @@
           "completion_rate": 100.0
         },
         "zhCN": {
-          "status": "minimal",
+          "status": "complete",
           "critical_fields": {
             "scenario_info.title": {
               "translated": true,
               "en_value": "AI-Powered Smart City Solutions",
-              "lang_value": "AI驱动的智慧城市解决方案"
+              "lang_value": "AI 驅動的智能城市解决方案"
             },
             "scenario_info.description": {
               "translated": true,
               "en_value": "Design innovative AI solutions to improve urban life in your community",
-              "lang_value": "设计创新的AI解决方案，改善您社区的城市生活"
+              "lang_value": "设计創新的 AI 解决方案來改善社區的城市生活"
             },
             "scenario_info.prerequisites": {
               "translated": true,
               "en_value": "['Basic understanding of urban systems', 'Interest in technology and innovation']",
-              "lang_value": "['基本了解城市系统', '对技术和创新感兴趣']"
+              "lang_value": "['對城市系统的基本理解', '對科技和創新的興趣']"
             },
             "scenario_info.learning_objectives": {
               "translated": true,
               "en_value": "['Identify urban challenges using AI analysis', 'Design AI-powered smart city features', 'Create pro",
-              "lang_value": "['使用AI分析识别城市挑战', '设计AI驱动的智慧城市功能', '创建原型和可视化', '制定城市解决方案的实施策略']"
+              "lang_value": "['使用 AI 分析識別城市挑戰', '设计 AI 驅動的智能城市功能', '创建原型和視覺化', '制定城市解决方案的实施策略']"
             }
           },
           "tasks": {
             "task_1": {
               "title": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Urban Challenge Mapping",
-                "lang_value": "Urban Challenge Mapping"
+                "lang_value": "城市挑戰映射"
               },
               "description": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Use AI to identify and map urban challenges in you",
-                "lang_value": "Use AI to identify and map urban challenges in you"
+                "lang_value": "使用 AI 識別和映射你所在地區的城市挑戰"
               },
               "instructions": {
-                "translated": false,
+                "translated": true,
                 "en_value": "['Use AI to research traffic congestion, public sa",
-                "lang_value": "['Use AI to research traffic congestion, public sa"
+                "lang_value": "['使用 AI 研究交通擁堵、公共安全、环境问题和公共服務缺口', '创建顯示问题區域的互動地圖',"
               },
               "expected_outcome": {
-                "translated": false,
+                "translated": true,
                 "en_value": "A comprehensive urban challenge map with prioritiz",
-                "lang_value": "A comprehensive urban challenge map with prioritiz"
+                "lang_value": "一份包含優先问题的全面城市挑戰地圖"
               }
             },
             "task_2": {
               "title": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Smart Traffic Solution",
-                "lang_value": "Smart Traffic Solution"
+                "lang_value": "智能交通解决方案"
               },
               "description": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Design an AI system to improve traffic flow and sa",
-                "lang_value": "Design an AI system to improve traffic flow and sa"
+                "lang_value": "设计一個 AI 系统來改善交通流量和安全"
               },
               "instructions": {
-                "translated": false,
+                "translated": true,
                 "en_value": "['Design AI features for traffic light optimizatio",
-                "lang_value": "['Design AI features for traffic light optimizatio"
+                "lang_value": "['设计交通燈优化、行人安全、公共交通路線和停車的 AI 功能', '创建顯示組件如何互動的系统圖'"
               },
               "expected_outcome": {
-                "translated": false,
+                "translated": true,
                 "en_value": "A comprehensive AI-powered traffic management syst",
-                "lang_value": "A comprehensive AI-powered traffic management syst"
+                "lang_value": "一個全面的 AI 驅動交通管理系统设计"
               }
             },
             "task_3": {
               "title": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Community Safety App",
-                "lang_value": "Community Safety App"
+                "lang_value": "社區安全应用"
               },
               "description": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Build an AI-powered app prototype for community sa",
-                "lang_value": "Build an AI-powered app prototype for community sa"
+                "lang_value": "建立一個 AI 驅動的社區安全应用原型"
               },
               "instructions": {
-                "translated": false,
+                "translated": true,
                 "en_value": "['Include AI features for emergency alerts, safe r",
-                "lang_value": "['Include AI features for emergency alerts, safe r"
+                "lang_value": "['包含緊急警報、安全路線建議、社區报告和即時更新的 AI 功能', '為不同年齡組设计用戶友好的界"
               },
               "expected_outcome": {
-                "translated": false,
+                "translated": true,
                 "en_value": "A functional community safety app prototype with A",
-                "lang_value": "A functional community safety app prototype with A"
+                "lang_value": "一個具有 AI 功能的功能性社區安全应用原型"
               }
             },
             "task_4": {
               "title": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Green Spaces Optimizer",
-                "lang_value": "Green Spaces Optimizer"
+                "lang_value": "綠色空間优化器"
               },
               "description": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Use AI to optimize urban green spaces for communit",
-                "lang_value": "Use AI to optimize urban green spaces for communit"
+                "lang_value": "使用 AI 优化城市綠色空間以促進社區福祉"
               },
               "instructions": {
-                "translated": false,
+                "translated": true,
                 "en_value": "['Analyze current green space usage, community nee",
-                "lang_value": "['Analyze current green space usage, community nee"
+                "lang_value": "['分析当前綠色空間使用、社區需求、环境效益和可及性', '為現有空間提出改進建議', '為服務不足"
               },
               "expected_outcome": {
-                "translated": false,
+                "translated": true,
                 "en_value": "An optimized green space plan with visualizations",
-                "lang_value": "An optimized green space plan with visualizations"
+                "lang_value": "一個帶有視覺化的优化綠色空間计划"
               }
             },
             "task_5": {
               "title": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Smart City Presentation",
-                "lang_value": "Smart City Presentation"
+                "lang_value": "智能城市展示"
               },
               "description": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Present your smart city solutions to local governm",
-                "lang_value": "Present your smart city solutions to local governm"
+                "lang_value": "向地方政府展示你的智能城市解决方案"
               },
               "instructions": {
-                "translated": false,
+                "translated": true,
                 "en_value": "['Use AI to prepare executive summary, solution de",
-                "lang_value": "['Use AI to prepare executive summary, solution de"
+                "lang_value": "['使用 AI 準備執行摘要、解决方案演示、成本效益分析和实施路線圖', '创建引人注目的視覺效果和"
               },
               "expected_outcome": {
-                "translated": false,
+                "translated": true,
                 "en_value": "A professional presentation ready for government s",
-                "lang_value": "A professional presentation ready for government s"
+                "lang_value": "一份準備向政府利益相關者展示的专业演示文稿"
               }
             }
           },
-          "translated_count": 4,
+          "translated_count": 24,
           "total_count": 24,
-          "completion_rate": 16.7
+          "completion_rate": 100.0
         },
         "ja": {
           "status": "complete",
@@ -4847,144 +4847,144 @@
           "completion_rate": 100.0
         },
         "zhCN": {
-          "status": "minimal",
+          "status": "complete",
           "critical_fields": {
             "scenario_info.title": {
-              "translated": false,
+              "translated": true,
               "en_value": "AI for Digital Wellness Campaign",
-              "lang_value": "AI for Digital Wellness Campaign"
+              "lang_value": "AI 数字健康运动"
             },
             "scenario_info.description": {
-              "translated": false,
+              "translated": true,
               "en_value": "Design an AI-powered campaign to promote healthy digital habits among your peers",
-              "lang_value": "Design an AI-powered campaign to promote healthy digital habits among your peers"
+              "lang_value": "设计一个 AI 驱动的活动，在同伴中推广健康的数字习惯"
             },
             "scenario_info.prerequisites": {
-              "translated": false,
+              "translated": true,
               "en_value": "['Awareness of social media impacts', 'Basic digital literacy']",
-              "lang_value": "['Awareness of social media impacts', 'Basic digital literacy']"
+              "lang_value": "['对社交媒体影响的认识', '基本数字素养']"
             },
             "scenario_info.learning_objectives": {
-              "translated": false,
+              "translated": true,
               "en_value": "['Analyze digital wellness data and trends', 'Create engaging content with AI tools', 'Design interv",
-              "lang_value": "['Analyze digital wellness data and trends', 'Create engaging content with AI tools', 'Design interv"
+              "lang_value": "['分析数字健康数据和趋势', '使用 AI 工具创建引人入胜的内容', '设计行为改变的干预措施', '建立全面的数字健康活动']"
             }
           },
           "tasks": {
             "task_1": {
               "title": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Digital Habits Survey",
-                "lang_value": "Digital Habits Survey"
+                "lang_value": "数字习惯调查"
               },
               "description": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Use AI to create and analyze a survey about digita",
-                "lang_value": "Use AI to create and analyze a survey about digita"
+                "lang_value": "使用 AI 创建和分析关于数字习惯的调查"
               },
               "instructions": {
-                "translated": false,
+                "translated": true,
                 "en_value": "['Use AI to design survey questions about screen t",
-                "lang_value": "['Use AI to design survey questions about screen t"
+                "lang_value": "['使用 AI 设计关于屏幕时间、社交媒体使用、睡眠习惯和数字压力的调查问题', '确保隐私和匿名地"
               },
               "expected_outcome": {
-                "translated": false,
+                "translated": true,
                 "en_value": "A comprehensive survey report with data-driven ins",
-                "lang_value": "A comprehensive survey report with data-driven ins"
+                "lang_value": "一份包含数据驱动见解的全面调查报告"
               }
             },
             "task_2": {
               "title": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Wellness Content Creation",
-                "lang_value": "Wellness Content Creation"
+                "lang_value": "健康内容创作"
               },
               "description": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Create engaging digital wellness content using AI ",
-                "lang_value": "Create engaging digital wellness content using AI "
+                "lang_value": "使用 AI 工具创建引人入胜的数字健康内容"
               },
               "instructions": {
-                "translated": false,
+                "translated": true,
                 "en_value": "['Create infographics on healthy digital habits us",
-                "lang_value": "['Create infographics on healthy digital habits us"
+                "lang_value": "['使用 AI 设计工具创建健康数字习惯的信息图表', '开发具有正面信息的社交媒体帖子', '设计"
               },
               "expected_outcome": {
-                "translated": false,
+                "translated": true,
                 "en_value": "A portfolio of engaging digital wellness content",
-                "lang_value": "A portfolio of engaging digital wellness content"
+                "lang_value": "一套引人入胜的数字健康内容组合"
               }
             },
             "task_3": {
               "title": {
-                "translated": false,
+                "translated": true,
                 "en_value": "AI Wellness Assistant",
-                "lang_value": "AI Wellness Assistant"
+                "lang_value": "AI 健康助手"
               },
               "description": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Design an AI chatbot to help peers manage digital ",
-                "lang_value": "Design an AI chatbot to help peers manage digital "
+                "lang_value": "设计一个 AI 聊天机器人来帮助同伴管理数字健康"
               },
               "instructions": {
-                "translated": false,
+                "translated": true,
                 "en_value": "['Design chatbot features for screen time reminder",
-                "lang_value": "['Design chatbot features for screen time reminder"
+                "lang_value": "['设计聊天机器人功能：屏幕时间提醒、正念提示、学习休息和情绪检查', '编写支持性和非批判性的对话"
               },
               "expected_outcome": {
-                "translated": false,
+                "translated": true,
                 "en_value": "A functional wellness chatbot prototype",
-                "lang_value": "A functional wellness chatbot prototype"
+                "lang_value": "一个功能性的健康聊天机器人原型"
               }
             },
             "task_4": {
               "title": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Campaign Launch Plan",
-                "lang_value": "Campaign Launch Plan"
+                "lang_value": "活动启动计划"
               },
               "description": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Develop a comprehensive launch plan for your digit",
-                "lang_value": "Develop a comprehensive launch plan for your digit"
+                "lang_value": "为你的数字健康活动制定全面的启动计划"
               },
               "instructions": {
-                "translated": false,
+                "translated": true,
                 "en_value": "['Use AI to create campaign timeline and promotion",
-                "lang_value": "['Use AI to create campaign timeline and promotion"
+                "lang_value": "['使用 AI 创建活动时间表和宣传材料', '规划启动活动和活动', '识别合作伙伴如社团和老师'"
               },
               "expected_outcome": {
-                "translated": false,
+                "translated": true,
                 "en_value": "A detailed, actionable campaign launch plan",
-                "lang_value": "A detailed, actionable campaign launch plan"
+                "lang_value": "一个详细、可执行的活动启动计划"
               }
             },
             "task_5": {
               "title": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Impact Measurement",
-                "lang_value": "Impact Measurement"
+                "lang_value": "影响力测量"
               },
               "description": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Use AI to measure and report on campaign effective",
-                "lang_value": "Use AI to measure and report on campaign effective"
+                "lang_value": "使用 AI 测量和报告活动效果"
               },
               "instructions": {
-                "translated": false,
+                "translated": true,
                 "en_value": "['Collect data on engagement rates, behavior chang",
-                "lang_value": "['Collect data on engagement rates, behavior chang"
+                "lang_value": "['收集参与率、行为改变、反馈和健康改善的数据', '使用 AI 分析结果并识别趋势', '创建带有"
               },
               "expected_outcome": {
-                "translated": false,
+                "translated": true,
                 "en_value": "A comprehensive impact report with actionable insi",
-                "lang_value": "A comprehensive impact report with actionable insi"
+                "lang_value": "一份包含可行见解的全面影响报告"
               }
             }
           },
-          "translated_count": 0,
+          "translated_count": 24,
           "total_count": 24,
-          "completion_rate": 0.0
+          "completion_rate": 100.0
         },
         "ja": {
           "status": "complete",
@@ -6651,122 +6651,122 @@
           "completion_rate": 100.0
         },
         "zhCN": {
-          "status": "minimal",
+          "status": "complete",
           "critical_fields": {
             "scenario_info.title": {
-              "translated": false,
+              "translated": true,
               "en_value": "AI-Powered Teen Health Assistant",
-              "lang_value": "AI-Powered Teen Health Assistant"
+              "lang_value": "AI 驱动的青少年健康助手"
             },
             "scenario_info.description": {
-              "translated": false,
+              "translated": true,
               "en_value": "Design an AI-powered health assistant specifically for teenagers to promote healthy lifestyle choice",
-              "lang_value": "Design an AI-powered health assistant specifically for teenagers to promote healthy lifestyle choice"
+              "lang_value": "為青少年设计一個 AI 驱动的健康助手，促進健康的生活方式选择"
             },
             "scenario_info.prerequisites": {
-              "translated": false,
+              "translated": true,
               "en_value": "['Basic understanding of health concepts', 'Awareness of teenage health challenges']",
-              "lang_value": "['Basic understanding of health concepts', 'Awareness of teenage health challenges']"
+              "lang_value": "['對健康概念的基本理解', '對青少年健康挑戰的认识']"
             },
             "scenario_info.learning_objectives": {
-              "translated": false,
+              "translated": true,
               "en_value": "['Identify key health challenges facing teenagers', 'Design user-centered AI solutions for health pr",
-              "lang_value": "['Identify key health challenges facing teenagers', 'Design user-centered AI solutions for health pr"
+              "lang_value": "['識別青少年面臨的主要健康挑戰', '為健康促進设计以用戶為中心的 AI 解决方案', '為 AI 健康应用创建道德準則', '开发具有用戶测试的功能原型']"
             }
           },
           "tasks": {
             "task_1": {
               "title": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Health Challenge Research",
-                "lang_value": "Health Challenge Research"
+                "lang_value": "健康挑戰研究"
               },
               "description": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Research and analyze the most pressing health chal",
-                "lang_value": "Research and analyze the most pressing health chal"
+                "lang_value": "研究和分析當今青少年面臨的最緊迫的健康挑戰"
               },
               "instructions": {
-                "translated": false,
+                "translated": true,
                 "en_value": "['Use AI to research teenage health statistics and",
-                "lang_value": "['Use AI to research teenage health statistics and"
+                "lang_value": "['使用 AI 研究青少年健康統計和趨勢', '識別前 5 大健康挑戰（心理健康、营养、运动、睡眠、"
               },
               "expected_outcome": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Comprehensive report on teenage health challenges ",
-                "lang_value": "Comprehensive report on teenage health challenges "
+                "lang_value": "包含调查数据的青少年健康挑戰綜合报告"
               }
             },
             "task_2": {
               "title": {
-                "translated": false,
+                "translated": true,
                 "en_value": "AI Assistant Design",
-                "lang_value": "AI Assistant Design"
+                "lang_value": "AI 助手设计"
               },
               "description": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Design the features and personality of your teen h",
-                "lang_value": "Design the features and personality of your teen h"
+                "lang_value": "设计你的青少年健康 AI 助手的功能和个性"
               },
               "instructions": {
-                "translated": false,
+                "translated": true,
                 "en_value": "['Define core features addressing identified healt",
-                "lang_value": "['Define core features addressing identified healt"
+                "lang_value": "['定義解决已識別健康挑戰的核心功能', '设计对话流程和用戶互動', '為青少年用戶创建合適的个性"
               },
               "expected_outcome": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Complete design specification for the AI health as",
-                "lang_value": "Complete design specification for the AI health as"
+                "lang_value": "AI 健康助手的完整设计規格"
               }
             },
             "task_3": {
               "title": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Prototype Development",
-                "lang_value": "Prototype Development"
+                "lang_value": "原型开发"
               },
               "description": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Create a working prototype of your AI health assis",
-                "lang_value": "Create a working prototype of your AI health assis"
+                "lang_value": "使用可用工具创建你的 AI 健康助手的工作原型"
               },
               "instructions": {
-                "translated": false,
+                "translated": true,
                 "en_value": "['Build a conversational interface using AI tools'",
-                "lang_value": "['Build a conversational interface using AI tools'"
+                "lang_value": "['使用 AI 工具建立对话界面', '实现设计中的关键功能', '為不同健康情境创建示例对话', "
               },
               "expected_outcome": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Working prototype demonstrating core health assist",
-                "lang_value": "Working prototype demonstrating core health assist"
+                "lang_value": "展示核心健康助手功能的工作原型"
               }
             },
             "task_4": {
               "title": {
-                "translated": false,
+                "translated": true,
                 "en_value": "User Testing & Refinement",
-                "lang_value": "User Testing & Refinement"
+                "lang_value": "用戶测试與改進"
               },
               "description": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Test your prototype with real users and refine bas",
-                "lang_value": "Test your prototype with real users and refine bas"
+                "lang_value": "與真实用戶测试你的原型並根據反饋进行改進"
               },
               "instructions": {
-                "translated": false,
+                "translated": true,
                 "en_value": "['Recruit 5-8 teenage testers for user feedback se",
-                "lang_value": "['Recruit 5-8 teenage testers for user feedback se"
+                "lang_value": "['招募 5-8 名青少年测试者进行用戶反饋会议', '设计涵蓋不同健康主題的测试情境', '系統性"
               },
               "expected_outcome": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Refined prototype with documented user feedback an",
-                "lang_value": "Refined prototype with documented user feedback an"
+                "lang_value": "有记录用戶反饋和改進的精緻原型"
               }
             }
           },
-          "translated_count": 0,
+          "translated_count": 20,
           "total_count": 20,
-          "completion_rate": 0.0
+          "completion_rate": 100.0
         },
         "ja": {
           "status": "complete",
@@ -11579,144 +11579,144 @@
           "completion_rate": 100.0
         },
         "zhCN": {
-          "status": "minimal",
+          "status": "complete",
           "critical_fields": {
             "scenario_info.title": {
-              "translated": false,
+              "translated": true,
               "en_value": "AI-Assisted Job Search Training",
-              "lang_value": "AI-Assisted Job Search Training"
+              "lang_value": "AI 辅助求職訓練"
             },
             "scenario_info.description": {
-              "translated": false,
+              "translated": true,
               "en_value": "Master the art of using AI tools throughout your job search journey",
-              "lang_value": "Master the art of using AI tools throughout your job search journey"
+              "lang_value": "掌握在求職过程中使用 AI 工具的技巧"
             },
             "scenario_info.prerequisites": {
-              "translated": false,
+              "translated": true,
               "en_value": "['Basic computer skills', 'Existing resume']",
-              "lang_value": "['Basic computer skills', 'Existing resume']"
+              "lang_value": "['基本电脑技能', '現有履歷']"
             },
             "scenario_info.learning_objectives": {
-              "translated": false,
+              "translated": true,
               "en_value": "['Master AI-powered job market research techniques', 'Optimize resume and cover letters using AI too",
-              "lang_value": "['Master AI-powered job market research techniques', 'Optimize resume and cover letters using AI too"
+              "lang_value": "['掌握 AI 驱动的就業市場研究技巧', '使用 AI 工具优化履歷和求職信', '通过 AI 練習提升面試技能', '建立使用 AI 促進職業发展的信心']"
             }
           },
           "tasks": {
             "task_1": {
               "title": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Industry Analysis",
-                "lang_value": "Industry Analysis"
+                "lang_value": "產業分析"
               },
               "description": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Research current trends in your target industry",
-                "lang_value": "Research current trends in your target industry"
+                "lang_value": "研究目标產業的当前趨勢"
               },
               "instructions": {
-                "translated": false,
+                "translated": true,
                 "en_value": "['Use AI to identify top 5 trends in your industry",
-                "lang_value": "['Use AI to identify top 5 trends in your industry"
+                "lang_value": "['使用 AI 識別您產業的前 5 大趨勢', '分析目标職位的技能要求', '总结机会與挑戰']"
               },
               "expected_outcome": {
-                "translated": false,
+                "translated": true,
                 "en_value": "A comprehensive industry analysis report",
-                "lang_value": "A comprehensive industry analysis report"
+                "lang_value": "一份全面的產業分析报告"
               }
             },
             "task_2": {
               "title": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Resume Analysis",
-                "lang_value": "Resume Analysis"
+                "lang_value": "履歷分析"
               },
               "description": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Get AI feedback on your current resume",
-                "lang_value": "Get AI feedback on your current resume"
+                "lang_value": "獲取 AI 對您当前履歷的回饋"
               },
               "instructions": {
-                "translated": false,
+                "translated": true,
                 "en_value": "['Upload or paste your current resume', 'Receive A",
-                "lang_value": "['Upload or paste your current resume', 'Receive A"
+                "lang_value": "['上傳或貼上您当前的履歷', '接收 AI 對優缺點的分析', '識別需要改進的领域']"
               },
               "expected_outcome": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Detailed resume analysis report",
-                "lang_value": "Detailed resume analysis report"
+                "lang_value": "詳細的履歷分析报告"
               }
             },
             "task_3": {
               "title": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Resume Enhancement",
-                "lang_value": "Resume Enhancement"
+                "lang_value": "履歷增強"
               },
               "description": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Improve your resume based on AI suggestions",
-                "lang_value": "Improve your resume based on AI suggestions"
+                "lang_value": "根據 AI 建議改進您的履歷"
               },
               "instructions": {
-                "translated": false,
+                "translated": true,
                 "en_value": "['Apply AI suggestions to enhance your resume', 'O",
-                "lang_value": "['Apply AI suggestions to enhance your resume', 'O"
+                "lang_value": "['应用 AI 建議來增強您的履歷', '為申請人追蹤系統(ATS) 优化关键字', '确保描述清晰"
               },
               "expected_outcome": {
-                "translated": false,
+                "translated": true,
                 "en_value": "An optimized, professional resume",
-                "lang_value": "An optimized, professional resume"
+                "lang_value": "一份优化的专业履歷"
               }
             },
             "task_4": {
               "title": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Cover Letter Creation",
-                "lang_value": "Cover Letter Creation"
+                "lang_value": "求職信撰寫"
               },
               "description": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Create a tailored cover letter with AI assistance",
-                "lang_value": "Create a tailored cover letter with AI assistance"
+                "lang_value": "在 AI 协助下创建量身定制的求職信"
               },
               "instructions": {
-                "translated": false,
+                "translated": true,
                 "en_value": "['Analyze job description requirements', 'Draft a ",
-                "lang_value": "['Analyze job description requirements', 'Draft a "
+                "lang_value": "['分析職位描述要求', '起草个人化的求職信', '根據 AI 建議进行优化']"
               },
               "expected_outcome": {
-                "translated": false,
+                "translated": true,
                 "en_value": "A compelling, tailored cover letter",
-                "lang_value": "A compelling, tailored cover letter"
+                "lang_value": "一份引人注目的定制求職信"
               }
             },
             "task_5": {
               "title": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Interview Practice",
-                "lang_value": "Interview Practice"
+                "lang_value": "面試練習"
               },
               "description": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Practice common interview questions with AI",
-                "lang_value": "Practice common interview questions with AI"
+                "lang_value": "與 AI 練習常見面試问题"
               },
               "instructions": {
-                "translated": false,
+                "translated": true,
                 "en_value": "['Practice answering behavioral questions', 'Recei",
-                "lang_value": "['Practice answering behavioral questions', 'Recei"
+                "lang_value": "['練習回答行为面試问题', '接收對您回答的反饋', '改進您的面試技巧']"
               },
               "expected_outcome": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Improved interview skills and confidence",
-                "lang_value": "Improved interview skills and confidence"
+                "lang_value": "提升的面試技能和信心"
               }
             }
           },
-          "translated_count": 0,
+          "translated_count": 24,
           "total_count": 24,
-          "completion_rate": 0.0
+          "completion_rate": 100.0
         },
         "ja": {
           "status": "complete",
@@ -13361,100 +13361,100 @@
           "completion_rate": 100.0
         },
         "zhCN": {
-          "status": "minimal",
+          "status": "complete",
           "critical_fields": {
             "scenario_info.title": {
-              "translated": false,
+              "translated": true,
               "en_value": "AI-Powered Stablecoin Trading and Risk Management",
-              "lang_value": "AI-Powered Stablecoin Trading and Risk Management"
+              "lang_value": "AI 驱动的穩定幣交易與風險管理"
             },
             "scenario_info.description": {
-              "translated": false,
+              "translated": true,
               "en_value": "Learn to use AI for analyzing stablecoin markets, managing DeFi portfolios, and making informed trad",
-              "lang_value": "Learn to use AI for analyzing stablecoin markets, managing DeFi portfolios, and making informed trad"
+              "lang_value": "学习使用 AI 分析穩定幣市場、管理 DeFi 投資组合，並在真實加密貨幣場景中做出明智的交易決策"
             },
             "scenario_info.prerequisites": {
-              "translated": false,
+              "translated": true,
               "en_value": "['Basic understanding of cryptocurrency and blockchain', 'Familiarity with trading concepts', 'Acces",
-              "lang_value": "['Basic understanding of cryptocurrency and blockchain', 'Familiarity with trading concepts', 'Acces"
+              "lang_value": "['對加密貨幣和區塊鏈的基本理解', '熟悉交易概念', '可使用加密貨幣交易所或 DeFi 平台（测试網）']"
             },
             "scenario_info.learning_objectives": {
-              "translated": false,
+              "translated": true,
               "en_value": "['Master AI tools for real-time crypto market analysis and trend prediction', 'Develop automated tra",
-              "lang_value": "['Master AI tools for real-time crypto market analysis and trend prediction', 'Develop automated tra"
+              "lang_value": "['掌握用於即時加密貨幣市場分析和趨勢預測的 AI 工具', '使用 AI 开发穩定幣套利的自動化交易策略', '学习使用 AI 監控工具评估和管理 DeFi 协议風險', '為多鏈穩定幣敞口创建 A"
             }
           },
           "tasks": {
             "task_1": {
               "title": {
-                "translated": false,
+                "translated": true,
                 "en_value": "AI-Powered Market Intelligence",
-                "lang_value": "AI-Powered Market Intelligence"
+                "lang_value": "AI 驱动的市場情报"
               },
               "description": {
-                "translated": false,
+                "translated": true,
                 "en_value": "You're a DeFi portfolio manager for a crypto hedge",
-                "lang_value": "You're a DeFi portfolio manager for a crypto hedge"
+                "lang_value": "你是一家加密對沖基金的 DeFi 投資组合经理。使用 AI 分析当前穩定幣市場狀況並識別潛在交易机会"
               },
               "instructions": {
-                "translated": false,
+                "translated": true,
                 "en_value": "['Use AI tools (Claude, ChatGPT, or Perplexity) to",
-                "lang_value": "['Use AI tools (Claude, ChatGPT, or Perplexity) to"
+                "lang_value": "['使用 AI 工具（Claude、ChatGPT 或 Perplexity）研究当前 USDC、U"
               },
               "expected_outcome": {
-                "translated": false,
+                "translated": true,
                 "en_value": "A comprehensive market analysis report with specif",
-                "lang_value": "A comprehensive market analysis report with specif"
+                "lang_value": "一份包含具體交易机会、風險评估和 AI 支持的穩定幣投資组合配置建議的綜合市場分析报告"
               }
             },
             "task_2": {
               "title": {
-                "translated": false,
+                "translated": true,
                 "en_value": "AI-Enhanced Trading Strategy Creation",
-                "lang_value": "AI-Enhanced Trading Strategy Creation"
+                "lang_value": "AI 增強的交易策略创建"
               },
               "description": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Design and backtest an automated trading strategy ",
-                "lang_value": "Design and backtest an automated trading strategy "
+                "lang_value": "使用 AI 设计並回測自動化交易策略，优化多個 DEX 間穩定幣套利的進出場點"
               },
               "instructions": {
-                "translated": false,
+                "translated": true,
                 "en_value": "['Use AI coding assistants to write Python scripts",
-                "lang_value": "['Use AI coding assistants to write Python scripts"
+                "lang_value": "['使用 AI 編程助手編寫 Python 腳本來監控 Uniswap、SushiSwap 和 Cu"
               },
               "expected_outcome": {
-                "translated": false,
+                "translated": true,
                 "en_value": "A functional trading bot prototype with AI-optimiz",
-                "lang_value": "A functional trading bot prototype with AI-optimiz"
+                "lang_value": "一個具有 AI 优化参数、全面回測結果和清晰实施指導的功能性交易机器人原型"
               }
             },
             "task_3": {
               "title": {
-                "translated": false,
+                "translated": true,
                 "en_value": "AI-Powered Portfolio Risk Assessment",
-                "lang_value": "AI-Powered Portfolio Risk Assessment"
+                "lang_value": "AI 驱动的投資组合風險评估"
               },
               "description": {
-                "translated": false,
+                "translated": true,
                 "en_value": "A major DeFi protocol exploit just happened. Use A",
-                "lang_value": "A major DeFi protocol exploit just happened. Use A"
+                "lang_value": "一個主要的 DeFi 协议剛剛发生漏洞利用。使用 AI 评估你的穩定幣投資组合敞口並制定緊急應對计划"
               },
               "instructions": {
-                "translated": false,
+                "translated": true,
                 "en_value": "['Use AI to quickly analyze news and social media ",
-                "lang_value": "['Use AI to quickly analyze news and social media "
+                "lang_value": "['使用 AI 快速分析新闻和社交媒體以了解漏洞詳情和受影响的协议', '使用 AI 辅助風險分析计"
               },
               "expected_outcome": {
-                "translated": false,
+                "translated": true,
                 "en_value": "A detailed risk assessment report with immediate a",
-                "lang_value": "A detailed risk assessment report with immediate a"
+                "lang_value": "一份詳細的風險评估报告，包含即時行动項目、投資组合再平衡建議和自動化風險監控系統设置"
               }
             }
           },
-          "translated_count": 0,
+          "translated_count": 16,
           "total_count": 16,
-          "completion_rate": 0.0
+          "completion_rate": 100.0
         },
         "ja": {
           "status": "complete",
@@ -14615,100 +14615,100 @@
           "completion_rate": 100.0
         },
         "zhCN": {
-          "status": "minimal",
+          "status": "complete",
           "critical_fields": {
             "scenario_info.title": {
-              "translated": false,
+              "translated": true,
               "en_value": "AI-Powered Creative Arts Exhibition",
-              "lang_value": "AI-Powered Creative Arts Exhibition"
+              "lang_value": "AI 驱动的創意藝術展覽"
             },
             "scenario_info.description": {
-              "translated": false,
+              "translated": true,
               "en_value": "Create a digital art exhibition using AI tools to explore artistic expression and creativity",
-              "lang_value": "Create a digital art exhibition using AI tools to explore artistic expression and creativity"
+              "lang_value": "使用 AI 工具创建數位藝術展覽，探索藝術表達和創造力"
             },
             "scenario_info.prerequisites": {
-              "translated": false,
+              "translated": true,
               "en_value": "['Basic art appreciation', 'Interest in creative expression']",
-              "lang_value": "['Basic art appreciation', 'Interest in creative expression']"
+              "lang_value": "['基本藝術欣賞能力', '對創意表達的興趣']"
             },
             "scenario_info.learning_objectives": {
-              "translated": false,
+              "translated": true,
               "en_value": "['Explore AI-assisted creative processes', 'Create original digital artworks', 'Curate and present a",
-              "lang_value": "['Explore AI-assisted creative processes', 'Create original digital artworks', 'Curate and present a"
+              "lang_value": "['探索 AI 辅助的創作过程', '创建原創數位藝術作品', '策劃和展示連貫的展覽', '反思 AI 與人類創造力的关系']"
             }
           },
           "tasks": {
             "task_1": {
               "title": {
-                "translated": false,
+                "translated": true,
                 "en_value": "AI Art Style Exploration",
-                "lang_value": "AI Art Style Exploration"
+                "lang_value": "AI 藝術風格探索"
               },
               "description": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Explore different artistic styles and movements us",
-                "lang_value": "Explore different artistic styles and movements us"
+                "lang_value": "使用 AI 生成工具探索不同的藝術風格和流派"
               },
               "instructions": {
-                "translated": false,
+                "translated": true,
                 "en_value": "['Research major art movements and their character",
-                "lang_value": "['Research major art movements and their character"
+                "lang_value": "['研究主要藝術运动及其特徵', '使用 AI 工具以不同藝術風格生成图像', '记录並比較結果',"
               },
               "expected_outcome": {
-                "translated": false,
+                "translated": true,
                 "en_value": "A portfolio of AI-generated artworks showcasing di",
-                "lang_value": "A portfolio of AI-generated artworks showcasing di"
+                "lang_value": "展示不同風格的 AI 生成藝術作品集"
               }
             },
             "task_2": {
               "title": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Personal Art Creation",
-                "lang_value": "Personal Art Creation"
+                "lang_value": "个人藝術創作"
               },
               "description": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Create original artworks that express your persona",
-                "lang_value": "Create original artworks that express your persona"
+                "lang_value": "創作表達个人主題和情感的原創藝術作品"
               },
               "instructions": {
-                "translated": false,
+                "translated": true,
                 "en_value": "['Identify personal themes or emotions you want to",
-                "lang_value": "['Identify personal themes or emotions you want to"
+                "lang_value": "['識別你想表達的个人主題或情感', '开发將你选择的風格與个人内容結合的提示詞', '生成多次迭代"
               },
               "expected_outcome": {
-                "translated": false,
+                "translated": true,
                 "en_value": "A collection of personal artworks ready for exhibi",
-                "lang_value": "A collection of personal artworks ready for exhibi"
+                "lang_value": "準備好展覽的个人藝術作品集"
               }
             },
             "task_3": {
               "title": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Exhibition Curation",
-                "lang_value": "Exhibition Curation"
+                "lang_value": "展覽策劃"
               },
               "description": {
-                "translated": false,
+                "translated": true,
                 "en_value": "Design and organize your artworks into a cohesive ",
-                "lang_value": "Design and organize your artworks into a cohesive "
+                "lang_value": "设计並组织你的藝術作品成为連貫的數位展覽"
               },
               "instructions": {
-                "translated": false,
+                "translated": true,
                 "en_value": "['Write artist statements for each piece explainin",
-                "lang_value": "['Write artist statements for each piece explainin"
+                "lang_value": "['為每件作品撰寫解释創作过程的藝術家陳述', '设计數位展覽的佈局和流程', '创建展覽材料（标题"
               },
               "expected_outcome": {
-                "translated": false,
+                "translated": true,
                 "en_value": "A professionally curated digital art exhibition",
-                "lang_value": "A professionally curated digital art exhibition"
+                "lang_value": "专业策劃的數位藝術展覽"
               }
             }
           },
-          "translated_count": 0,
+          "translated_count": 16,
           "total_count": 16,
-          "completion_rate": 0.0
+          "completion_rate": 100.0
         },
         "ja": {
           "status": "complete",

@@ -3,279 +3,192 @@ scenario_info:
   difficulty: beginner
   estimated_duration: 40
   target_domains:
-    - engaging_with_ai
-    - creating_with_ai
+  - engaging_with_ai
+  - creating_with_ai
   title: My Semiconductor Adventure
-  description: "Embark on an exciting adventure to discover how a simple grain of sand transforms into the powerful chips that power our modern world! (Suggested age: 13+, suitable for middle school students and above)"
+  description: 'Embark on an exciting adventure to discover how a simple grain of
+    sand transforms into the powerful chips that power our modern world! (Suggested
+    age: 13+, suitable for middle school students and above)'
   prerequisites:
-    - Basic understanding of elements and compounds
-    - Familiarity with electricity and electrical devices
-    - "Recommended: Watch this introductory video - https://youtu.be/cxf6eexA4f0"
+  - Basic understanding of elements and compounds
+  - Familiarity with electricity and electrical devices
+  - 'Recommended: Watch this introductory video - https://youtu.be/cxf6eexA4f0'
   learning_objectives:
-    - Experience the ubiquity of chips in daily life and connect their raw material "silicon" with natural "sand"
-    - Understand that the core of chips consists of "transistors" acting as "switches", with the key being semiconductors' controllable electrical conductivity
-    - Learn the basic concept of "Moore's Law" and explain why technology products continue to get faster and smaller
-
+  - Experience the ubiquity of chips in daily life and connect their raw material
+    "silicon" with natural "sand"
+  - Understand that the core of chips consists of "transistors" acting as "switches",
+    with the key being semiconductors' controllable electrical conductivity
+  - Learn the basic concept of "Moore's Law" and explain why technology products continue
+    to get faster and smaller
 ksa_mapping:
   knowledge:
-    - K1.1  # AI systems process data through algorithms
-    - K1.4  # AI embedded in everyday technologies
-    - K4.2  # AI requires computing power and resources
+  - K1.1
+  - K1.4
+  - K4.2
   skills:
-    - S1.1  # Evaluate content for accuracy
-    - S3.1  # Decompose problems for AI solutions
-    - S6.1  # Recognize AI influence in daily life
+  - S1.1
+  - S3.1
+  - S6.1
   attitudes:
-    - A2.1  # Explore capabilities with openness
-    - A3.1  # Pursue novel applications
-    - A5.1  # Consider diverse impacts
-
+  - A2.1
+  - A3.1
+  - A5.1
 tasks:
-  - id: task-1
-    category: learning
-    time_limit: 8
-    KSA_focus:
-      primary:
-        - K1.4
-        - S6.1
-      secondary:
-        - A2.1
-    ai_module:
-      role: educator
-      model: gemini-2.5-flash
-      persona: AI Crystal Guide
-      initial_prompt: |
-        You are AI Crystal, a friendly guide helping students understand semiconductors.
-        Start by welcoming the explorer and explaining the journey ahead.
-    title: "Ubiquitous Chips - A Smart Day in Your Life"
-    description: |
-      You might not have noticed, but from the moment you open your eyes, many mysterious little helpers are around you, making our lives more convenient. They are chips.
-    instructions: |
-      The first challenge of your adventure is to find these hidden "little helpers". Try to tell the AI about any three products containing chips that you encounter from waking up to leaving home!
-    content: |
-      ## The Magical Element: Silicon
+- id: task-1
+  category: learning
+  time_limit: 8
+  KSA_focus:
+    primary:
+    - K1.4
+    - S6.1
+    secondary:
+    - A2.1
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: AI Crystal Guide
+    initial_prompt: 'You are AI Crystal, a friendly guide helping students understand
+      semiconductors.
 
-      ### Key Points
-      - The main raw material for chips is **Silicon (Si)**
-      - Silicon is the second most abundant element on Earth, after oxygen
-      - Silicon usually exists as **Silicon Dioxide (SiO₂)**, commonly found in sand or quartz
+      Start by welcoming the explorer and explaining the journey ahead.
 
-      ### Science Review: Elements and Compounds
-      Remember? **Elements** are the basic building blocks of matter, like Oxygen (O), Hydrogen (H), and Silicon (Si).
-      **Compounds** are pure substances made of two or more different elements.
-    question:
-      text: "What is the most important raw material 'Silicon (Si)' for chips extracted from?"
-      type: multiple_choice
-      options:
-        - text: "Oil"
-          value: "oil"
-        - text: "Seawater"
-          value: "seawater"
-        - text: "Sand"
-          value: "sand"
-      correct_answer: "sand"
-    ai_feedback:
-      correct: "Excellent! Silicon is indeed extracted from sand, specifically from silicon dioxide (SiO₂) found in sand and quartz."
-      incorrect: "Think about what's abundant on beaches and contains silicon dioxide!"
+      '
+  title: Ubiquitous Chips - A Smart Day in Your Life
+  description: 'You might not have noticed, but from the moment you open your eyes,
+    many mysterious little helpers are around you, making our lives more convenient.
+    They are chips.
 
-  - id: task-2
-    category: learning
-    time_limit: 8
-    KSA_focus:
-      primary:
-        - K1.1
-        - S3.1
-      secondary:
-        - A2.1
-    ai_module:
-      role: educator
-      model: gemini-2.5-flash
-      persona: AI Crystal Guide
-      initial_prompt: |
-        Continue guiding the student through understanding semiconductors.
-        Explain what makes silicon special for electronics.
-    title: "Meet the Magical Element 'Silicon'"
-    description: Have you ever wondered what connects the sand on vast beaches with the smartphone in your pocket?
-    instructions: |
-      How does sand transform into the heart of a phone? Come ask the AI and solve this mystery!
-    content: |
-      ## Understanding Semiconductors
+    '
+  instructions: 'The first challenge of your adventure is to find these hidden "little
+    helpers". Try to tell the AI about any three products containing chips that you
+    encounter from waking up to leaving home!
 
-      ### Key Points
-      - Materials are classified by conductivity: conductors, insulators, and semiconductors
-      - **Conductors** (like metals) easily conduct electricity
-      - **Insulators** (like rubber) don't conduct electricity
-      - **Semiconductors** have conductivity between the two, and can be controlled
+    '
+  expected_outcome: A list of three chip-containing products from daily life with
+    explanations
+- id: task-2
+  category: learning
+  time_limit: 8
+  KSA_focus:
+    primary:
+    - K1.1
+    - S3.1
+    secondary:
+    - A2.1
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: AI Crystal Guide
+    initial_prompt: 'Continue guiding the student through understanding semiconductors.
 
-      ### Science Review: Electric Current
-      Electric current is like many tiny "electrons" moving in the same direction through a wire.
-    question:
-      text: "What is the most special characteristic of semiconductors?"
-      type: multiple_choice
-      options:
-        - text: "Very good at conducting electricity"
-          value: "high_conductivity"
-        - text: "Completely non-conductive"
-          value: "non_conductive"
-        - text: "Conductivity can be controlled"
-          value: "controllable"
-      correct_answer: "controllable"
-    ai_feedback:
-      correct: "Perfect! The ability to control conductivity is what makes semiconductors so powerful!"
-      incorrect: "Think about what makes them 'semi' - they're in between conductors and insulators!"
+      Explain what makes silicon special for electronics.
 
-  - id: task-3
-    category: learning
-    time_limit: 8
-    KSA_focus:
-      primary:
-        - K4.2
-        - S1.1
-      secondary:
-        - A3.1
-    ai_module:
-      role: educator
-      model: gemini-2.5-flash
-      persona: AI Crystal Guide
-      initial_prompt: |
-        Guide the student through the chip manufacturing process.
-        Explain the transformation from sand to silicon chips.
-    title: "The Secret of Semiconductors - A Unique Material"
-    description: We know chips are made of "silicon", but why was it chosen?
-    instructions: |
-      Why silicon? It turns out it holds a secret identity about "conductivity" - that's what "semiconductor" means. This cool-sounding name, what exactly does it represent?
-    content: |
-      ## The Chip Manufacturing Process
+      '
+  title: Meet the Magical Element 'Silicon'
+  description: Have you ever wondered what connects the sand on vast beaches with
+    the smartphone in your pocket?
+  instructions: 'How does sand transform into the heart of a phone? Come ask the AI
+    and solve this mystery!
 
-      ### Key Points
-      - High-purity silicon is melted and pulled into huge cylinders called **silicon ingots**
-      - Silicon ingots are sliced into ultra-thin discs called **wafers**
-      - Through complex processes like photolithography, billions of tiny electronic components are created
-      - The most important component is the **transistor**
+    '
+  expected_outcome: Understanding of silicon's transformation from sand to semiconductor
+    material
+- id: task-3
+  category: learning
+  time_limit: 8
+  KSA_focus:
+    primary:
+    - K4.2
+    - S1.1
+    secondary:
+    - A3.1
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: AI Crystal Guide
+    initial_prompt: 'Guide the student through the chip manufacturing process.
 
-      ### Science Review: Physical Changes
-      Melting (solid to liquid) and solidification (liquid to solid) are physical changes.
-    question:
-      text: "What are the ultra-thin discs cut from silicon ingots called?"
-      type: multiple_choice
-      options:
-        - text: "Crystal rods"
-          value: "rods"
-        - text: "Wafers"
-          value: "wafers"
-        - text: "Crystals"
-          value: "crystals"
-      correct_answer: "wafers"
-    ai_feedback:
-      correct: "Excellent! Silicon wafers are the foundation for chip manufacturing."
-      incorrect: "Think about the thin, circular discs that chips are built on."
+      Explain the transformation from sand to silicon chips.
 
-  - id: task-4
-    category: application
-    time_limit: 8
-    KSA_focus:
-      primary:
-        - K1.4
-        - S6.1
-      secondary:
-        - A5.1
-    ai_module:
-      role: educator
-      model: gemini-2.5-flash
-      persona: AI Crystal Guide
-      initial_prompt: |
-        Help students recognize semiconductors in their daily life.
-        Connect the technology to real-world applications.
-    title: "What Are Chips Made Of?"
-    description: What does it look like inside a chip? It's actually a miniature city, home to billions of "mini switches" responsible for thinking.
-    instructions: |
-      These mini switches are called "transistors". A chip's performance depends on how many transistors can be packed into a tiny area. Let's meet the smallest yet most important heroes inside a chip.
-    content: |
-      ## Chips in Daily Life
+      '
+  title: The Secret of Semiconductors - A Unique Material
+  description: We know chips are made of "silicon", but why was it chosen?
+  instructions: 'Why silicon? It turns out it holds a secret identity about "conductivity"
+    - that''s what "semiconductor" means. This cool-sounding name, what exactly does
+    it represent?
 
-      ### Key Points
-      - Chips (Integrated Circuits, ICs) are the brains of modern electronics
-      - From phones, computers, smartwatches to cars and trains, chips are everywhere
-      - Chips handle computation, memory, and control
+    '
+  expected_outcome: Comprehension of semiconductor properties and their importance
+    in electronics
+- id: task-4
+  category: application
+  time_limit: 8
+  KSA_focus:
+    primary:
+    - K1.4
+    - S6.1
+    secondary:
+    - A5.1
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: AI Crystal Guide
+    initial_prompt: 'Help students recognize semiconductors in their daily life.
 
-      ### Science Review: Energy Conversion
-      Chemical energy in batteries is converted through chip control into light and sound energy.
-    question:
-      text: "Which of the following was NOT mentioned as a semiconductor application?"
-      type: multiple_choice
-      options:
-        - text: "Mobile payments"
-          value: "payments"
-        - text: "Smartwatches"
-          value: "watches"
-        - text: "Solar power generation"
-          value: "solar"
-      correct_answer: "solar"
-    ai_feedback:
-      correct: "Correct! While solar panels use semiconductors, this wasn't our focus today."
-      incorrect: "Review which applications were specifically discussed in our journey."
+      Connect the technology to real-world applications.
 
-  - id: task-5
-    category: synthesis
-    time_limit: 8
-    KSA_focus:
-      primary:
-        - K1.1
-        - S3.1
-      secondary:
-        - A3.1
-    ai_module:
-      role: educator
-      model: gemini-2.5-flash
-      persona: AI Crystal Guide
-      initial_prompt: |
-        Conclude the journey by explaining the global semiconductor industry.
-        Help students understand the collaborative nature of chip production.
-    title: "The Magical Law That Predicts the Future"
-    description: Why do phones and computers become more powerful every year or two? Behind this is actually a famous technological prophecy that has driven the semiconductor industry for over fifty years.
-    instructions: |
-      This prophecy that keeps technology advancing at lightning speed is the famous "Moore's Law". What exactly does it predict? In 5 years, what magical features would you like your phone to have?
-    content: |
-      ## The Global Semiconductor Industry
+      '
+  title: What Are Chips Made Of?
+  description: What does it look like inside a chip? It's actually a miniature city,
+    home to billions of "mini switches" responsible for thinking.
+  instructions: 'These mini switches are called "transistors". A chip''s performance
+    depends on how many transistors can be packed into a tiny area. Let''s meet the
+    smallest yet most important heroes inside a chip.
 
-      ### Key Points
-      - The industry involves: IC Design, IC Manufacturing, IC Assembly & Testing
-      - **IC Design companies** create chip blueprints
-      - **IC Manufacturing companies** (foundries) produce chips
-      - **IC Assembly & Testing companies** protect and test chips
+    '
+  expected_outcome: Recognition of transistors as the building blocks of modern chips
+- id: task-5
+  category: synthesis
+  time_limit: 8
+  KSA_focus:
+    primary:
+    - K1.1
+    - S3.1
+    secondary:
+    - A3.1
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: AI Crystal Guide
+    initial_prompt: 'Conclude the journey by explaining the global semiconductor industry.
 
-      ### Science Review: Division of Labor
-      Like an assembly line, each company focuses on their specialty for efficiency.
-    question:
-      text: "What segment is responsible for designing chip circuit blueprints?"
-      type: multiple_choice
-      options:
-        - text: "IC Manufacturing"
-          value: "manufacturing"
-        - text: "IC Assembly"
-          value: "assembly"
-        - text: "IC Design"
-          value: "design"
-      correct_answer: "design"
-    ai_feedback:
-      correct: "Perfect! IC Design companies are the architects of the semiconductor world!"
-      incorrect: "Think about who creates the original plans before manufacturing begins."
+      Help students understand the collaborative nature of chip production.
 
+      '
+  title: The Magical Law That Predicts the Future
+  description: Why do phones and computers become more powerful every year or two?
+    Behind this is actually a famous technological prophecy that has driven the semiconductor
+    industry for over fifty years.
+  instructions: 'This prophecy that keeps technology advancing at lightning speed
+    is the famous "Moore''s Law". What exactly does it predict? In 5 years, what magical
+    features would you like your phone to have?
+
+    '
+  expected_outcome: Awareness of Moore's Law and its impact on technology advancement
 evaluation_criteria:
   completion_threshold: 80
   assessment_method: quiz_and_interaction
   success_metrics:
-    - Complete all 5 stations
-    - Answer questions with 80% accuracy
-    - Engage with AI Crystal Guide
-
+  - Complete all 5 stations
+  - Answer questions with 80% accuracy
+  - Engage with AI Crystal Guide
 resources:
   videos:
-    - title: "How Semiconductors Work"
-      url: "https://example.com/semiconductor-basics"
+  - title: How Semiconductors Work
+    url: https://example.com/semiconductor-basics
   readings:
-    - title: "The History of Silicon Valley"
-      url: "https://example.com/silicon-valley-history"
+  - title: The History of Silicon Valley
+    url: https://example.com/silicon-valley-history
   tools:
-    - title: "Virtual Chip Designer"
-      url: "https://example.com/chip-designer"
+  - title: Virtual Chip Designer
+    url: https://example.com/chip-designer

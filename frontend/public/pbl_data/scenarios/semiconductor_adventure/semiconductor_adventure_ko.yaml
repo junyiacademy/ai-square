@@ -3,279 +3,176 @@ scenario_info:
   difficulty: beginner
   estimated_duration: 40
   target_domains:
-    - engaging_with_ai
-    - creating_with_ai
+  - engaging_with_ai
+  - creating_with_ai
   title: 나의 반도체 모험
-  description: "단순한 모래 알갱이가 현대 세계를 움직이는 강력한 칩으로 변모하는 흥미진진한 모험을 떠나보세요! (권장 연령: 13세 이상, 중학생 이상에게 적합)"
+  description: '단순한 모래 알갱이가 현대 세계를 움직이는 강력한 칩으로 변모하는 흥미진진한 모험을 떠나보세요! (권장 연령: 13세
+    이상, 중학생 이상에게 적합)'
   prerequisites:
-    - 원소와 화합물에 대한 기본적인 이해
-    - 전기 및 전자기기에 대한 친숙함
-    - "권장: 이 소개 영상을 시청하세요 - https://youtu.be/cxf6eexA4f0"
+  - 원소와 화합물에 대한 기본적인 이해
+  - 전기 및 전자기기에 대한 친숙함
+  - '권장: 이 소개 영상을 시청하세요 - https://youtu.be/cxf6eexA4f0'
   learning_objectives:
-    - "일상생활에서 칩의 편재성을 경험하고 그 원료인 '실리콘'을 자연의 '모래'와 연결하기"
-    - "칩의 핵심이 '스위치' 역할을 하는 '트랜지스터'로 구성되어 있으며, 핵심은 반도체의 제어 가능한 전기 전도성임을 이해하기"
-    - "'무어의 법칙'의 기본 개념을 배우고 기술 제품이 계속해서 더 빠르고 작아지는 이유를 설명하기"
-
+  - 일상생활에서 칩의 편재성을 경험하고 그 원료인 '실리콘'을 자연의 '모래'와 연결하기
+  - 칩의 핵심이 '스위치' 역할을 하는 '트랜지스터'로 구성되어 있으며, 핵심은 반도체의 제어 가능한 전기 전도성임을 이해하기
+  - '''무어의 법칙''의 기본 개념을 배우고 기술 제품이 계속해서 더 빠르고 작아지는 이유를 설명하기'
 ksa_mapping:
   knowledge:
-    - K1.1  # AI systems process data through algorithms
-    - K1.4  # AI embedded in everyday technologies
-    - K4.2  # AI requires computing power and resources
+  - K1.1
+  - K1.4
+  - K4.2
   skills:
-    - S1.1  # Evaluate content for accuracy
-    - S3.1  # Decompose problems for AI solutions
-    - S6.1  # Recognize AI influence in daily life
+  - S1.1
+  - S3.1
+  - S6.1
   attitudes:
-    - A2.1  # Explore capabilities with openness
-    - A3.1  # Pursue novel applications
-    - A5.1  # Consider diverse impacts
-
+  - A2.1
+  - A3.1
+  - A5.1
 tasks:
-  - id: task-1
-    category: learning
-    time_limit: 8
-    KSA_focus:
-      primary:
-        - K1.4
-        - S6.1
-      secondary:
-        - A2.1
-    ai_module:
-      role: educator
-      model: gemini-2.5-flash
-      persona: AI Crystal Guide
-      initial_prompt: |
-        You are AI Crystal, a friendly guide helping students understand semiconductors.
-        Start by welcoming the explorer and explaining the journey ahead.
-    title: "과제 1: 어디에나 있는 칩 - 당신 삶의 스마트한 하루"
-    description: |
-      눈치채지 못했을 수도 있지만, 눈을 뜨는 순간부터 많은 신비로운 작은 도우미들이 당신 주위에 있어서 우리의 삶을 더 편리하게 만들어 줍니다. 그것이 바로 칩입니다.
-    instructions: |
-      당신 모험의 첫 번째 도전은 이 숨겨진 "작은 도우미들"을 찾는 것입니다. 기상부터 집을 나서기까지 마주치는 칩이 포함된 어떤 세 가지 제품에 대해 AI에게 말해보세요!
-    content: |
-      ## The Magical Element: Silicon
+- id: task-1
+  category: learning
+  time_limit: 8
+  KSA_focus:
+    primary:
+    - K1.4
+    - S6.1
+    secondary:
+    - A2.1
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: AI Crystal Guide
+    initial_prompt: 'You are AI Crystal, a friendly guide helping students understand
+      semiconductors.
 
-      ### Key Points
-      - The main raw material for chips is **Silicon (Si)**
-      - Silicon is the second most abundant element on Earth, after oxygen
-      - Silicon usually exists as **Silicon Dioxide (SiO₂)**, commonly found in sand or quartz
+      Start by welcoming the explorer and explaining the journey ahead.
 
-      ### Science Review: Elements and Compounds
-      Remember? **Elements** are the basic building blocks of matter, like Oxygen (O), Hydrogen (H), and Silicon (Si).
-      **Compounds** are pure substances made of two or more different elements.
-    question:
-      text: "What is the most important raw material 'Silicon (Si)' for chips extracted from?"
-      type: multiple_choice
-      options:
-        - text: "Oil"
-          value: "oil"
-        - text: "Seawater"
-          value: "seawater"
-        - text: "Sand"
-          value: "sand"
-      correct_answer: "sand"
-    ai_feedback:
-      correct: "Excellent! Silicon is indeed extracted from sand, specifically from silicon dioxide (SiO₂) found in sand and quartz."
-      incorrect: "Think about what's abundant on beaches and contains silicon dioxide!"
+      '
+  title: '과제 1: 어디에나 있는 칩 - 당신 삶의 스마트한 하루'
+  description: '눈치채지 못했을 수도 있지만, 눈을 뜨는 순간부터 많은 신비로운 작은 도우미들이 당신 주위에 있어서 우리의 삶을 더 편리하게
+    만들어 줍니다. 그것이 바로 칩입니다.
 
-  - id: task-2
-    category: learning
-    time_limit: 8
-    KSA_focus:
-      primary:
-        - K1.1
-        - S3.1
-      secondary:
-        - A2.1
-    ai_module:
-      role: educator
-      model: gemini-2.5-flash
-      persona: AI Crystal Guide
-      initial_prompt: |
-        Continue guiding the student through understanding semiconductors.
-        Explain what makes silicon special for electronics.
-    title: "과제 2: 마법의 원소 '실리콘'을 만나보세요"
-    description: 광활한 해변의 모래와 당신 주머니 속 스마트폰을 연결하는 것이 무엇인지 궁금해한 적이 있나요?
-    instructions: |
-      모래가 어떻게 전화기의 심장으로 변신하는 걸까요? AI에게 물어보고 이 미스터리를 해결해보세요!
-    content: |
-      ## Understanding Semiconductors
+    '
+  instructions: '당신 모험의 첫 번째 도전은 이 숨겨진 "작은 도우미들"을 찾는 것입니다. 기상부터 집을 나서기까지 마주치는 칩이 포함된
+    어떤 세 가지 제품에 대해 AI에게 말해보세요!
 
-      ### Key Points
-      - Materials are classified by conductivity: conductors, insulators, and semiconductors
-      - **Conductors** (like metals) easily conduct electricity
-      - **Insulators** (like rubber) don't conduct electricity
-      - **Semiconductors** have conductivity between the two, and can be controlled
+    '
+  expected_outcome: 일상생활에서 칩이 포함된 3가지 제품을 나열하고 설명하기
+- id: task-2
+  category: learning
+  time_limit: 8
+  KSA_focus:
+    primary:
+    - K1.1
+    - S3.1
+    secondary:
+    - A2.1
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: AI Crystal Guide
+    initial_prompt: 'Continue guiding the student through understanding semiconductors.
 
-      ### Science Review: Electric Current
-      Electric current is like many tiny "electrons" moving in the same direction through a wire.
-    question:
-      text: "What is the most special characteristic of semiconductors?"
-      type: multiple_choice
-      options:
-        - text: "Very good at conducting electricity"
-          value: "high_conductivity"
-        - text: "Completely non-conductive"
-          value: "non_conductive"
-        - text: "Conductivity can be controlled"
-          value: "controllable"
-      correct_answer: "controllable"
-    ai_feedback:
-      correct: "Perfect! The ability to control conductivity is what makes semiconductors so powerful!"
-      incorrect: "Think about what makes them 'semi' - they're in between conductors and insulators!"
+      Explain what makes silicon special for electronics.
 
-  - id: task-3
-    category: learning
-    time_limit: 8
-    KSA_focus:
-      primary:
-        - K4.2
-        - S1.1
-      secondary:
-        - A3.1
-    ai_module:
-      role: educator
-      model: gemini-2.5-flash
-      persona: AI Crystal Guide
-      initial_prompt: |
-        Guide the student through the chip manufacturing process.
-        Explain the transformation from sand to silicon chips.
-    title: "과제 3: 반도체의 비밀 - 독특한 물질"
-    description: 칩이 '실리콘'으로 만들어진다는 것은 알지만, 왜 실리콘이 선택되었을까요?
-    instructions: |
-      왜 실리콘일까요? 실리콘이 '전도성'에 관한 비밀 정체성을 가지고 있다는 것이 밝혀졌습니다 - 그것이 바로 '반도체'의 의미입니다. 이 멋지게 들리는 이름이 정확히 무엇을 나타내는 걸까요?
-    content: |
-      ## The Chip Manufacturing Process
+      '
+  title: '과제 2: 마법의 원소 ''실리콘''을 만나보세요'
+  description: 광활한 해변의 모래와 당신 주머니 속 스마트폰을 연결하는 것이 무엇인지 궁금해한 적이 있나요?
+  instructions: '모래가 어떻게 전화기의 심장으로 변신하는 걸까요? AI에게 물어보고 이 미스터리를 해결해보세요!
 
-      ### Key Points
-      - High-purity silicon is melted and pulled into huge cylinders called **silicon ingots**
-      - Silicon ingots are sliced into ultra-thin discs called **wafers**
-      - Through complex processes like photolithography, billions of tiny electronic components are created
-      - The most important component is the **transistor**
+    '
+  expected_outcome: 모래에서 실리콘 반도체 재료로의 변환 과정 이해하기
+- id: task-3
+  category: learning
+  time_limit: 8
+  KSA_focus:
+    primary:
+    - K4.2
+    - S1.1
+    secondary:
+    - A3.1
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: AI Crystal Guide
+    initial_prompt: 'Guide the student through the chip manufacturing process.
 
-      ### Science Review: Physical Changes
-      Melting (solid to liquid) and solidification (liquid to solid) are physical changes.
-    question:
-      text: "What are the ultra-thin discs cut from silicon ingots called?"
-      type: multiple_choice
-      options:
-        - text: "Crystal rods"
-          value: "rods"
-        - text: "Wafers"
-          value: "wafers"
-        - text: "Crystals"
-          value: "crystals"
-      correct_answer: "wafers"
-    ai_feedback:
-      correct: "Excellent! Silicon wafers are the foundation for chip manufacturing."
-      incorrect: "Think about the thin, circular discs that chips are built on."
+      Explain the transformation from sand to silicon chips.
 
-  - id: task-4
-    category: application
-    time_limit: 8
-    KSA_focus:
-      primary:
-        - K1.4
-        - S6.1
-      secondary:
-        - A5.1
-    ai_module:
-      role: educator
-      model: gemini-2.5-flash
-      persona: AI Crystal Guide
-      initial_prompt: |
-        Help students recognize semiconductors in their daily life.
-        Connect the technology to real-world applications.
-    title: "과제 4: 칩은 무엇으로 구성되어 있을까요?"
-    description: 칩 내부는 어떻게 생겼을까요? 실제로는 소형 도시로, 수십억 개의 사고를 담당하는 '미니 스위치'들의 집입니다.
-    instructions: |
-      이러한 미니 스위치들을 '트랜지스터'라고 합니다. 칩의 성능은 작은 영역에 얼마나 많은 트랜지스터를 넣을 수 있는지에 달려 있습니다. 칩 내에서 가장 작지만 가장 중요한 영웅들을 만나봅시다.
-    content: |
-      ## Chips in Daily Life
+      '
+  title: '과제 3: 반도체의 비밀 - 독특한 물질'
+  description: 칩이 '실리콘'으로 만들어진다는 것은 알지만, 왜 실리콘이 선택되었을까요?
+  instructions: '왜 실리콘일까요? 실리콘이 ''전도성''에 관한 비밀 정체성을 가지고 있다는 것이 밝혀졌습니다 - 그것이 바로 ''반도체''의
+    의미입니다. 이 멋지게 들리는 이름이 정확히 무엇을 나타내는 걸까요?
 
-      ### Key Points
-      - Chips (Integrated Circuits, ICs) are the brains of modern electronics
-      - From phones, computers, smartwatches to cars and trains, chips are everywhere
-      - Chips handle computation, memory, and control
+    '
+  expected_outcome: 반도체의 특성과 전자 제품에서의 중요성 이해하기
+- id: task-4
+  category: application
+  time_limit: 8
+  KSA_focus:
+    primary:
+    - K1.4
+    - S6.1
+    secondary:
+    - A5.1
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: AI Crystal Guide
+    initial_prompt: 'Help students recognize semiconductors in their daily life.
 
-      ### Science Review: Energy Conversion
-      Chemical energy in batteries is converted through chip control into light and sound energy.
-    question:
-      text: "Which of the following was NOT mentioned as a semiconductor application?"
-      type: multiple_choice
-      options:
-        - text: "Mobile payments"
-          value: "payments"
-        - text: "Smartwatches"
-          value: "watches"
-        - text: "Solar power generation"
-          value: "solar"
-      correct_answer: "solar"
-    ai_feedback:
-      correct: "Correct! While solar panels use semiconductors, this wasn't our focus today."
-      incorrect: "Review which applications were specifically discussed in our journey."
+      Connect the technology to real-world applications.
 
-  - id: task-5
-    category: synthesis
-    time_limit: 8
-    KSA_focus:
-      primary:
-        - K1.1
-        - S3.1
-      secondary:
-        - A3.1
-    ai_module:
-      role: educator
-      model: gemini-2.5-flash
-      persona: AI Crystal Guide
-      initial_prompt: |
-        Conclude the journey by explaining the global semiconductor industry.
-        Help students understand the collaborative nature of chip production.
-    title: "미래를 예측하는 마법의 법칙"
-    description: 전화기와 컴퓨터가 매년 또는 2년마다 더 강력해지는 이유는 무엇일까요? 이 배후에는 실제로 50년 넘게 반도체 산업을 이끌어온 유명한 기술 예언이 있습니다.
-    instructions: |
-      기술을 빛의 속도로 발전시키는 이 예언이 바로 유명한 '무어의 법칙'입니다. 이것이 정확히 무엇을 예측하는 걸까요? 5년 후, 당신의 전화기가 어떤 마법 같은 기능을 가지기를 원하나요?
-    content: |
-      ## The Global Semiconductor Industry
+      '
+  title: '과제 4: 칩은 무엇으로 구성되어 있을까요?'
+  description: 칩 내부는 어떻게 생겼을까요? 실제로는 소형 도시로, 수십억 개의 사고를 담당하는 '미니 스위치'들의 집입니다.
+  instructions: '이러한 미니 스위치들을 ''트랜지스터''라고 합니다. 칩의 성능은 작은 영역에 얼마나 많은 트랜지스터를 넣을 수 있는지에
+    달려 있습니다. 칩 내에서 가장 작지만 가장 중요한 영웅들을 만나봅시다.
 
-      ### Key Points
-      - The industry involves: IC Design, IC Manufacturing, IC Assembly & Testing
-      - **IC Design companies** create chip blueprints
-      - **IC Manufacturing companies** (foundries) produce chips
-      - **IC Assembly & Testing companies** protect and test chips
+    '
+  expected_outcome: 현대 칩의 기본 구성 요소로서 트랜지스터 인식하기
+- id: task-5
+  category: synthesis
+  time_limit: 8
+  KSA_focus:
+    primary:
+    - K1.1
+    - S3.1
+    secondary:
+    - A3.1
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: AI Crystal Guide
+    initial_prompt: 'Conclude the journey by explaining the global semiconductor industry.
 
-      ### Science Review: Division of Labor
-      Like an assembly line, each company focuses on their specialty for efficiency.
-    question:
-      text: "What segment is responsible for designing chip circuit blueprints?"
-      type: multiple_choice
-      options:
-        - text: "IC Manufacturing"
-          value: "manufacturing"
-        - text: "IC Assembly"
-          value: "assembly"
-        - text: "IC Design"
-          value: "design"
-      correct_answer: "design"
-    ai_feedback:
-      correct: "Perfect! IC Design companies are the architects of the semiconductor world!"
-      incorrect: "Think about who creates the original plans before manufacturing begins."
+      Help students understand the collaborative nature of chip production.
 
+      '
+  title: 미래를 예측하는 마법의 법칙
+  description: 전화기와 컴퓨터가 매년 또는 2년마다 더 강력해지는 이유는 무엇일까요? 이 배후에는 실제로 50년 넘게 반도체 산업을 이끌어온
+    유명한 기술 예언이 있습니다.
+  instructions: '기술을 빛의 속도로 발전시키는 이 예언이 바로 유명한 ''무어의 법칙''입니다. 이것이 정확히 무엇을 예측하는 걸까요?
+    5년 후, 당신의 전화기가 어떤 마법 같은 기능을 가지기를 원하나요?
+
+    '
+  expected_outcome: 무어의 법칙과 기술 발전에 미치는 영향 이해하기
 evaluation_criteria:
   completion_threshold: 80
   assessment_method: quiz_and_interaction
   success_metrics:
-    - Complete all 5 stations
-    - Answer questions with 80% accuracy
-    - Engage with AI Crystal Guide
-
+  - Complete all 5 stations
+  - Answer questions with 80% accuracy
+  - Engage with AI Crystal Guide
 resources:
   videos:
-    - title: "How Semiconductors Work"
-      url: "https://example.com/semiconductor-basics"
+  - title: How Semiconductors Work
+    url: https://example.com/semiconductor-basics
   readings:
-    - title: "The History of Silicon Valley"
-      url: "https://example.com/silicon-valley-history"
+  - title: The History of Silicon Valley
+    url: https://example.com/silicon-valley-history
   tools:
-    - title: "Virtual Chip Designer"
-      url: "https://example.com/chip-designer"
+  - title: Virtual Chip Designer
+    url: https://example.com/chip-designer

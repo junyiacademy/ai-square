@@ -3,279 +3,195 @@ scenario_info:
   difficulty: beginner
   estimated_duration: 40
   target_domains:
-    - engaging_with_ai
-    - creating_with_ai
+  - engaging_with_ai
+  - creating_with_ai
   title: Mon Aventure des Semi-conducteurs
-  description: "Embarquez dans une aventure passionnante pour découvrir comment un simple grain de sable se transforme en puces puissantes qui alimentent notre monde moderne ! (Âge suggéré : 13+, adapté aux collégiens et plus)"
+  description: 'Embarquez dans une aventure passionnante pour découvrir comment un
+    simple grain de sable se transforme en puces puissantes qui alimentent notre monde
+    moderne ! (Âge suggéré : 13+, adapté aux collégiens et plus)'
   prerequisites:
-    - Compréhension de base des éléments et composés
-    - Familiarité avec l'électricité et les appareils électriques
-    - "Recommandé : Regarder cette vidéo d'introduction - https://youtu.be/cxf6eexA4f0"
+  - Compréhension de base des éléments et composés
+  - Familiarité avec l'électricité et les appareils électriques
+  - 'Recommandé : Regarder cette vidéo d''introduction - https://youtu.be/cxf6eexA4f0'
   learning_objectives:
-    - Expérimenter l'omniprésence des puces dans la vie quotidienne et connecter leur matière première "silicium" avec le "sable" naturel
-    - Comprendre que le cœur des puces consiste en "transistors" agissant comme des "interrupteurs", la clé étant la conductivité électrique contrôlable des semi-conducteurs
-    - Apprendre le concept de base de la "Loi de Moore" et expliquer pourquoi les produits technologiques continuent de devenir plus rapides et plus petits
-
+  - Expérimenter l'omniprésence des puces dans la vie quotidienne et connecter leur
+    matière première "silicium" avec le "sable" naturel
+  - Comprendre que le cœur des puces consiste en "transistors" agissant comme des
+    "interrupteurs", la clé étant la conductivité électrique contrôlable des semi-conducteurs
+  - Apprendre le concept de base de la "Loi de Moore" et expliquer pourquoi les produits
+    technologiques continuent de devenir plus rapides et plus petits
 ksa_mapping:
   knowledge:
-    - K1.1  # AI systems process data through algorithms
-    - K1.4  # AI embedded in everyday technologies
-    - K4.2  # AI requires computing power and resources
+  - K1.1
+  - K1.4
+  - K4.2
   skills:
-    - S1.1  # Evaluate content for accuracy
-    - S3.1  # Decompose problems for AI solutions
-    - S6.1  # Recognize AI influence in daily life
+  - S1.1
+  - S3.1
+  - S6.1
   attitudes:
-    - A2.1  # Explore capabilities with openness
-    - A3.1  # Pursue novel applications
-    - A5.1  # Consider diverse impacts
-
+  - A2.1
+  - A3.1
+  - A5.1
 tasks:
-  - id: task-1
-    category: learning
-    time_limit: 8
-    KSA_focus:
-      primary:
-        - K1.4
-        - S6.1
-      secondary:
-        - A2.1
-    ai_module:
-      role: educator
-      model: gemini-2.5-flash
-      persona: AI Crystal Guide
-      initial_prompt: |
-        You are AI Crystal, a friendly guide helping students understand semiconductors.
-        Start by welcoming the explorer and explaining the journey ahead.
-    title: "Puces Omniprésentes - Une Journée Intelligente dans Votre Vie"
-    description: |
-      Vous n'avez peut-être pas remarqué, mais dès l'instant où vous ouvrez les yeux, de nombreux petits assistants mystérieux sont autour de vous, rendant nos vies plus pratiques. Ce sont les puces.
-    instructions: |
-      Le premier défi de votre aventure est de trouver ces "petits assistants" cachés. Essayez de parler à l'IA de trois produits contenant des puces que vous rencontrez du réveil jusqu'à sortir de chez vous !
-    content: |
-      ## The Magical Element: Silicon
+- id: task-1
+  category: learning
+  time_limit: 8
+  KSA_focus:
+    primary:
+    - K1.4
+    - S6.1
+    secondary:
+    - A2.1
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: AI Crystal Guide
+    initial_prompt: 'You are AI Crystal, a friendly guide helping students understand
+      semiconductors.
 
-      ### Key Points
-      - The main raw material for chips is **Silicon (Si)**
-      - Silicon is the second most abundant element on Earth, after oxygen
-      - Silicon usually exists as **Silicon Dioxide (SiO₂)**, commonly found in sand or quartz
+      Start by welcoming the explorer and explaining the journey ahead.
 
-      ### Science Review: Elements and Compounds
-      Remember? **Elements** are the basic building blocks of matter, like Oxygen (O), Hydrogen (H), and Silicon (Si).
-      **Compounds** are pure substances made of two or more different elements.
-    question:
-      text: "What is the most important raw material 'Silicon (Si)' for chips extracted from?"
-      type: multiple_choice
-      options:
-        - text: "Oil"
-          value: "oil"
-        - text: "Seawater"
-          value: "seawater"
-        - text: "Sand"
-          value: "sand"
-      correct_answer: "sand"
-    ai_feedback:
-      correct: "Excellent! Silicon is indeed extracted from sand, specifically from silicon dioxide (SiO₂) found in sand and quartz."
-      incorrect: "Think about what's abundant on beaches and contains silicon dioxide!"
+      '
+  title: Puces Omniprésentes - Une Journée Intelligente dans Votre Vie
+  description: 'Vous n''avez peut-être pas remarqué, mais dès l''instant où vous ouvrez
+    les yeux, de nombreux petits assistants mystérieux sont autour de vous, rendant
+    nos vies plus pratiques. Ce sont les puces.
 
-  - id: task-2
-    category: learning
-    time_limit: 8
-    KSA_focus:
-      primary:
-        - K1.1
-        - S3.1
-      secondary:
-        - A2.1
-    ai_module:
-      role: educator
-      model: gemini-2.5-flash
-      persona: AI Crystal Guide
-      initial_prompt: |
-        Continue guiding the student through understanding semiconductors.
-        Explain what makes silicon special for electronics.
-    title: "Rencontrez l'Élément Magique 'Silicium'"
-    description: Vous êtes-vous déjà demandé ce qui relie le sable des vastes plages au smartphone dans votre poche ?
-    instructions: |
-      Comment le sable se transforme-t-il en cœur d'un téléphone ? Venez demander à l'IA et résolvez ce mystère !
-    content: |
-      ## Understanding Semiconductors
+    '
+  instructions: 'Le premier défi de votre aventure est de trouver ces "petits assistants"
+    cachés. Essayez de parler à l''IA de trois produits contenant des puces que vous
+    rencontrez du réveil jusqu''à sortir de chez vous !
 
-      ### Key Points
-      - Materials are classified by conductivity: conductors, insulators, and semiconductors
-      - **Conductors** (like metals) easily conduct electricity
-      - **Insulators** (like rubber) don't conduct electricity
-      - **Semiconductors** have conductivity between the two, and can be controlled
+    '
+  expected_outcome: Liste de trois produits contenant des puces dans la vie quotidienne
+    avec explications
+- id: task-2
+  category: learning
+  time_limit: 8
+  KSA_focus:
+    primary:
+    - K1.1
+    - S3.1
+    secondary:
+    - A2.1
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: AI Crystal Guide
+    initial_prompt: 'Continue guiding the student through understanding semiconductors.
 
-      ### Science Review: Electric Current
-      Electric current is like many tiny "electrons" moving in the same direction through a wire.
-    question:
-      text: "What is the most special characteristic of semiconductors?"
-      type: multiple_choice
-      options:
-        - text: "Very good at conducting electricity"
-          value: "high_conductivity"
-        - text: "Completely non-conductive"
-          value: "non_conductive"
-        - text: "Conductivity can be controlled"
-          value: "controllable"
-      correct_answer: "controllable"
-    ai_feedback:
-      correct: "Perfect! The ability to control conductivity is what makes semiconductors so powerful!"
-      incorrect: "Think about what makes them 'semi' - they're in between conductors and insulators!"
+      Explain what makes silicon special for electronics.
 
-  - id: task-3
-    category: learning
-    time_limit: 8
-    KSA_focus:
-      primary:
-        - K4.2
-        - S1.1
-      secondary:
-        - A3.1
-    ai_module:
-      role: educator
-      model: gemini-2.5-flash
-      persona: AI Crystal Guide
-      initial_prompt: |
-        Guide the student through the chip manufacturing process.
-        Explain the transformation from sand to silicon chips.
-    title: "Le Secret des Semi-conducteurs - Un Matériau Unique"
-    description: Nous savons que les puces sont faites de "silicium", mais pourquoi a-t-il été choisi ?
-    instructions: |
-      Pourquoi le silicium ? Il s'avère qu'il cache une identité secrète concernant la "conductivité" - c'est ce que signifie "semi-conducteur". Ce nom qui sonne cool, que représente-t-il exactement ?
-    content: |
-      ## The Chip Manufacturing Process
+      '
+  title: Rencontrez l'Élément Magique 'Silicium'
+  description: Vous êtes-vous déjà demandé ce qui relie le sable des vastes plages
+    au smartphone dans votre poche ?
+  instructions: 'Comment le sable se transforme-t-il en cœur d''un téléphone ? Venez
+    demander à l''IA et résolvez ce mystère !
 
-      ### Key Points
-      - High-purity silicon is melted and pulled into huge cylinders called **silicon ingots**
-      - Silicon ingots are sliced into ultra-thin discs called **wafers**
-      - Through complex processes like photolithography, billions of tiny electronic components are created
-      - The most important component is the **transistor**
+    '
+  expected_outcome: Compréhension de la transformation du silicium du sable au matériau
+    semi-conducteur
+- id: task-3
+  category: learning
+  time_limit: 8
+  KSA_focus:
+    primary:
+    - K4.2
+    - S1.1
+    secondary:
+    - A3.1
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: AI Crystal Guide
+    initial_prompt: 'Guide the student through the chip manufacturing process.
 
-      ### Science Review: Physical Changes
-      Melting (solid to liquid) and solidification (liquid to solid) are physical changes.
-    question:
-      text: "What are the ultra-thin discs cut from silicon ingots called?"
-      type: multiple_choice
-      options:
-        - text: "Crystal rods"
-          value: "rods"
-        - text: "Wafers"
-          value: "wafers"
-        - text: "Crystals"
-          value: "crystals"
-      correct_answer: "wafers"
-    ai_feedback:
-      correct: "Excellent! Silicon wafers are the foundation for chip manufacturing."
-      incorrect: "Think about the thin, circular discs that chips are built on."
+      Explain the transformation from sand to silicon chips.
 
-  - id: task-4
-    category: application
-    time_limit: 8
-    KSA_focus:
-      primary:
-        - K1.4
-        - S6.1
-      secondary:
-        - A5.1
-    ai_module:
-      role: educator
-      model: gemini-2.5-flash
-      persona: AI Crystal Guide
-      initial_prompt: |
-        Help students recognize semiconductors in their daily life.
-        Connect the technology to real-world applications.
-    title: "De Quoi Sont Faites les Puces ?"
-    description: À quoi ressemble l'intérieur d'une puce ? C'est en fait une ville miniature, abritant des milliards de "mini interrupteurs" responsables de la réflexion.
-    instructions: |
-      Ces mini interrupteurs s'appellent des "transistors". Les performances d'une puce dépendent du nombre de transistors qui peuvent être empaquetés dans une zone minuscule. Rencontrons les héros les plus petits mais les plus importants à l'intérieur d'une puce.
-    content: |
-      ## Chips in Daily Life
+      '
+  title: Le Secret des Semi-conducteurs - Un Matériau Unique
+  description: Nous savons que les puces sont faites de "silicium", mais pourquoi
+    a-t-il été choisi ?
+  instructions: 'Pourquoi le silicium ? Il s''avère qu''il cache une identité secrète
+    concernant la "conductivité" - c''est ce que signifie "semi-conducteur". Ce nom
+    qui sonne cool, que représente-t-il exactement ?
 
-      ### Key Points
-      - Chips (Integrated Circuits, ICs) are the brains of modern electronics
-      - From phones, computers, smartwatches to cars and trains, chips are everywhere
-      - Chips handle computation, memory, and control
+    '
+  expected_outcome: Compréhension des propriétés des semi-conducteurs et leur importance
+    en électronique
+- id: task-4
+  category: application
+  time_limit: 8
+  KSA_focus:
+    primary:
+    - K1.4
+    - S6.1
+    secondary:
+    - A5.1
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: AI Crystal Guide
+    initial_prompt: 'Help students recognize semiconductors in their daily life.
 
-      ### Science Review: Energy Conversion
-      Chemical energy in batteries is converted through chip control into light and sound energy.
-    question:
-      text: "Which of the following was NOT mentioned as a semiconductor application?"
-      type: multiple_choice
-      options:
-        - text: "Mobile payments"
-          value: "payments"
-        - text: "Smartwatches"
-          value: "watches"
-        - text: "Solar power generation"
-          value: "solar"
-      correct_answer: "solar"
-    ai_feedback:
-      correct: "Correct! While solar panels use semiconductors, this wasn't our focus today."
-      incorrect: "Review which applications were specifically discussed in our journey."
+      Connect the technology to real-world applications.
 
-  - id: task-5
-    category: synthesis
-    time_limit: 8
-    KSA_focus:
-      primary:
-        - K1.1
-        - S3.1
-      secondary:
-        - A3.1
-    ai_module:
-      role: educator
-      model: gemini-2.5-flash
-      persona: AI Crystal Guide
-      initial_prompt: |
-        Conclude the journey by explaining the global semiconductor industry.
-        Help students understand the collaborative nature of chip production.
-    title: "La Loi Magique qui Prédit l'Avenir"
-    description: Pourquoi les téléphones et ordinateurs deviennent-ils plus puissants chaque année ou deux ? Derrière cela se cache en fait une célèbre prophétie technologique qui a stimulé l'industrie des semi-conducteurs pendant plus de cinquante ans.
-    instructions: |
-      Cette prophétie qui maintient la technologie en avancement rapide est la célèbre "Loi de Moore". Que prédit-elle exactement ? Dans 5 ans, quelles fonctionnalités magiques aimeriez-vous que votre téléphone ait ?
-    content: |
-      ## The Global Semiconductor Industry
+      '
+  title: De Quoi Sont Faites les Puces ?
+  description: À quoi ressemble l'intérieur d'une puce ? C'est en fait une ville miniature,
+    abritant des milliards de "mini interrupteurs" responsables de la réflexion.
+  instructions: 'Ces mini interrupteurs s''appellent des "transistors". Les performances
+    d''une puce dépendent du nombre de transistors qui peuvent être empaquetés dans
+    une zone minuscule. Rencontrons les héros les plus petits mais les plus importants
+    à l''intérieur d''une puce.
 
-      ### Key Points
-      - The industry involves: IC Design, IC Manufacturing, IC Assembly & Testing
-      - **IC Design companies** create chip blueprints
-      - **IC Manufacturing companies** (foundries) produce chips
-      - **IC Assembly & Testing companies** protect and test chips
+    '
+  expected_outcome: Reconnaissance des transistors comme éléments de base des puces
+    modernes
+- id: task-5
+  category: synthesis
+  time_limit: 8
+  KSA_focus:
+    primary:
+    - K1.1
+    - S3.1
+    secondary:
+    - A3.1
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: AI Crystal Guide
+    initial_prompt: 'Conclude the journey by explaining the global semiconductor industry.
 
-      ### Science Review: Division of Labor
-      Like an assembly line, each company focuses on their specialty for efficiency.
-    question:
-      text: "What segment is responsible for designing chip circuit blueprints?"
-      type: multiple_choice
-      options:
-        - text: "IC Manufacturing"
-          value: "manufacturing"
-        - text: "IC Assembly"
-          value: "assembly"
-        - text: "IC Design"
-          value: "design"
-      correct_answer: "design"
-    ai_feedback:
-      correct: "Perfect! IC Design companies are the architects of the semiconductor world!"
-      incorrect: "Think about who creates the original plans before manufacturing begins."
+      Help students understand the collaborative nature of chip production.
 
+      '
+  title: La Loi Magique qui Prédit l'Avenir
+  description: Pourquoi les téléphones et ordinateurs deviennent-ils plus puissants
+    chaque année ou deux ? Derrière cela se cache en fait une célèbre prophétie technologique
+    qui a stimulé l'industrie des semi-conducteurs pendant plus de cinquante ans.
+  instructions: 'Cette prophétie qui maintient la technologie en avancement rapide
+    est la célèbre "Loi de Moore". Que prédit-elle exactement ? Dans 5 ans, quelles
+    fonctionnalités magiques aimeriez-vous que votre téléphone ait ?
+
+    '
+  expected_outcome: Conscience de la loi de Moore et son impact sur l'avancement technologique
 evaluation_criteria:
   completion_threshold: 80
   assessment_method: quiz_and_interaction
   success_metrics:
-    - Complete all 5 stations
-    - Answer questions with 80% accuracy
-    - Engage with AI Crystal Guide
-
+  - Complete all 5 stations
+  - Answer questions with 80% accuracy
+  - Engage with AI Crystal Guide
 resources:
   videos:
-    - title: "How Semiconductors Work"
-      url: "https://example.com/semiconductor-basics"
+  - title: How Semiconductors Work
+    url: https://example.com/semiconductor-basics
   readings:
-    - title: "The History of Silicon Valley"
-      url: "https://example.com/silicon-valley-history"
+  - title: The History of Silicon Valley
+    url: https://example.com/silicon-valley-history
   tools:
-    - title: "Virtual Chip Designer"
-      url: "https://example.com/chip-designer"
+  - title: Virtual Chip Designer
+    url: https://example.com/chip-designer

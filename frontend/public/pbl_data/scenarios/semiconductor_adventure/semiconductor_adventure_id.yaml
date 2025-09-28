@@ -3,279 +3,191 @@ scenario_info:
   difficulty: beginner
   estimated_duration: 40
   target_domains:
-    - engaging_with_ai
-    - creating_with_ai
+  - engaging_with_ai
+  - creating_with_ai
   title: Petualangan Semikonduktor Saya
-  description: "Mulailah petualangan menarik untuk menemukan bagaimana butiran pasir sederhana berubah menjadi chip canggih yang menggerakkan dunia modern kita! (Usia yang disarankan: 13+, cocok untuk siswa SMP ke atas)"
+  description: 'Mulailah petualangan menarik untuk menemukan bagaimana butiran pasir
+    sederhana berubah menjadi chip canggih yang menggerakkan dunia modern kita! (Usia
+    yang disarankan: 13+, cocok untuk siswa SMP ke atas)'
   prerequisites:
-    - Pemahaman dasar tentang unsur dan senyawa
-    - Keakraban dengan listrik dan perangkat elektrik
-    - "Disarankan: Tonton video pengantar ini - https://youtu.be/cxf6eexA4f0"
+  - Pemahaman dasar tentang unsur dan senyawa
+  - Keakraban dengan listrik dan perangkat elektrik
+  - 'Disarankan: Tonton video pengantar ini - https://youtu.be/cxf6eexA4f0'
   learning_objectives:
-    - Mengalami keberadaan chip di mana-mana dalam kehidupan sehari-hari dan menghubungkan bahan baku "silikon" dengan "pasir" alami
-    - Memahami bahwa inti chip terdiri dari "transistor" yang bertindak sebagai "saklar", dengan kunci konduktivitas listrik yang dapat dikontrol dari semikonduktor
-    - Mempelajari konsep dasar "Hukum Moore" dan menjelaskan mengapa produk teknologi terus menjadi lebih cepat dan kecil
-
+  - Mengalami keberadaan chip di mana-mana dalam kehidupan sehari-hari dan menghubungkan
+    bahan baku "silikon" dengan "pasir" alami
+  - Memahami bahwa inti chip terdiri dari "transistor" yang bertindak sebagai "saklar",
+    dengan kunci konduktivitas listrik yang dapat dikontrol dari semikonduktor
+  - Mempelajari konsep dasar "Hukum Moore" dan menjelaskan mengapa produk teknologi
+    terus menjadi lebih cepat dan kecil
 ksa_mapping:
   knowledge:
-    - K1.1  # AI systems process data through algorithms
-    - K1.4  # AI embedded in everyday technologies
-    - K4.2  # AI requires computing power and resources
+  - K1.1
+  - K1.4
+  - K4.2
   skills:
-    - S1.1  # Evaluate content for accuracy
-    - S3.1  # Decompose problems for AI solutions
-    - S6.1  # Recognize AI influence in daily life
+  - S1.1
+  - S3.1
+  - S6.1
   attitudes:
-    - A2.1  # Explore capabilities with openness
-    - A3.1  # Pursue novel applications
-    - A5.1  # Consider diverse impacts
-
+  - A2.1
+  - A3.1
+  - A5.1
 tasks:
-  - id: task-1
-    category: learning
-    time_limit: 8
-    KSA_focus:
-      primary:
-        - K1.4
-        - S6.1
-      secondary:
-        - A2.1
-    ai_module:
-      role: educator
-      model: gemini-2.5-flash
-      persona: AI Crystal Guide
-      initial_prompt: |
-        You are AI Crystal, a friendly guide helping students understand semiconductors.
-        Start by welcoming the explorer and explaining the journey ahead.
-    title: "Tugas 1: Chip Di Mana-mana - Hari Cerdas dalam Hidup Anda"
-    description: |
-      Anda mungkin tidak menyadarinya, tetapi sejak saat membuka mata, banyak pembantu kecil misterius berada di sekitar Anda, membuat hidup kita lebih nyaman. Mereka adalah chip.
-    instructions: |
-      Tantangan pertama petualangan Anda adalah menemukan "pembantu kecil" tersembunyi ini. Coba ceritakan kepada AI tentang tiga produk yang mengandung chip yang Anda temui dari bangun tidur hingga keluar rumah!
-    content: |
-      ## The Magical Element: Silicon
+- id: task-1
+  category: learning
+  time_limit: 8
+  KSA_focus:
+    primary:
+    - K1.4
+    - S6.1
+    secondary:
+    - A2.1
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: AI Crystal Guide
+    initial_prompt: 'You are AI Crystal, a friendly guide helping students understand
+      semiconductors.
 
-      ### Key Points
-      - The main raw material for chips is **Silicon (Si)**
-      - Silicon is the second most abundant element on Earth, after oxygen
-      - Silicon usually exists as **Silicon Dioxide (SiO₂)**, commonly found in sand or quartz
+      Start by welcoming the explorer and explaining the journey ahead.
 
-      ### Science Review: Elements and Compounds
-      Remember? **Elements** are the basic building blocks of matter, like Oxygen (O), Hydrogen (H), and Silicon (Si).
-      **Compounds** are pure substances made of two or more different elements.
-    question:
-      text: "What is the most important raw material 'Silicon (Si)' for chips extracted from?"
-      type: multiple_choice
-      options:
-        - text: "Oil"
-          value: "oil"
-        - text: "Seawater"
-          value: "seawater"
-        - text: "Sand"
-          value: "sand"
-      correct_answer: "sand"
-    ai_feedback:
-      correct: "Excellent! Silicon is indeed extracted from sand, specifically from silicon dioxide (SiO₂) found in sand and quartz."
-      incorrect: "Think about what's abundant on beaches and contains silicon dioxide!"
+      '
+  title: 'Tugas 1: Chip Di Mana-mana - Hari Cerdas dalam Hidup Anda'
+  description: 'Anda mungkin tidak menyadarinya, tetapi sejak saat membuka mata, banyak
+    pembantu kecil misterius berada di sekitar Anda, membuat hidup kita lebih nyaman.
+    Mereka adalah chip.
 
-  - id: task-2
-    category: learning
-    time_limit: 8
-    KSA_focus:
-      primary:
-        - K1.1
-        - S3.1
-      secondary:
-        - A2.1
-    ai_module:
-      role: educator
-      model: gemini-2.5-flash
-      persona: AI Crystal Guide
-      initial_prompt: |
-        Continue guiding the student through understanding semiconductors.
-        Explain what makes silicon special for electronics.
-    title: "Tugas 2: Mengenal Unsur Ajaib 'Silikon'"
-    description: Pernahkah Anda bertanya-tanya apa yang menghubungkan pasir di pantai luas dengan smartphone di saku Anda?
-    instructions: |
-      Bagaimana pasir berubah menjadi jantung ponsel? Ayo tanya AI dan pecahkan misteri ini!
-    content: |
-      ## Understanding Semiconductors
+    '
+  instructions: 'Tantangan pertama petualangan Anda adalah menemukan "pembantu kecil"
+    tersembunyi ini. Coba ceritakan kepada AI tentang tiga produk yang mengandung
+    chip yang Anda temui dari bangun tidur hingga keluar rumah!
 
-      ### Key Points
-      - Materials are classified by conductivity: conductors, insulators, and semiconductors
-      - **Conductors** (like metals) easily conduct electricity
-      - **Insulators** (like rubber) don't conduct electricity
-      - **Semiconductors** have conductivity between the two, and can be controlled
+    '
+  expected_outcome: Daftar tiga produk yang mengandung chip dalam kehidupan sehari-hari
+    dengan penjelasan
+- id: task-2
+  category: learning
+  time_limit: 8
+  KSA_focus:
+    primary:
+    - K1.1
+    - S3.1
+    secondary:
+    - A2.1
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: AI Crystal Guide
+    initial_prompt: 'Continue guiding the student through understanding semiconductors.
 
-      ### Science Review: Electric Current
-      Electric current is like many tiny "electrons" moving in the same direction through a wire.
-    question:
-      text: "What is the most special characteristic of semiconductors?"
-      type: multiple_choice
-      options:
-        - text: "Very good at conducting electricity"
-          value: "high_conductivity"
-        - text: "Completely non-conductive"
-          value: "non_conductive"
-        - text: "Conductivity can be controlled"
-          value: "controllable"
-      correct_answer: "controllable"
-    ai_feedback:
-      correct: "Perfect! The ability to control conductivity is what makes semiconductors so powerful!"
-      incorrect: "Think about what makes them 'semi' - they're in between conductors and insulators!"
+      Explain what makes silicon special for electronics.
 
-  - id: task-3
-    category: learning
-    time_limit: 8
-    KSA_focus:
-      primary:
-        - K4.2
-        - S1.1
-      secondary:
-        - A3.1
-    ai_module:
-      role: educator
-      model: gemini-2.5-flash
-      persona: AI Crystal Guide
-      initial_prompt: |
-        Guide the student through the chip manufacturing process.
-        Explain the transformation from sand to silicon chips.
-    title: "Tugas 3: Rahasia Semikonduktor - Material yang Unik"
-    description: Kita tahu bahwa chip terbuat dari "silikon", tetapi mengapa silikon yang dipilih?
-    instructions: |
-      Mengapa silikon? Ternyata ia memiliki identitas rahasia tentang "konduktivitas" - itulah yang dimaksud dengan "semikonduktor". Nama yang terdengar keren ini, apa sebenarnya yang diwakilinya?
-    content: |
-      ## The Chip Manufacturing Process
+      '
+  title: 'Tugas 2: Mengenal Unsur Ajaib ''Silikon'''
+  description: Pernahkah Anda bertanya-tanya apa yang menghubungkan pasir di pantai
+    luas dengan smartphone di saku Anda?
+  instructions: 'Bagaimana pasir berubah menjadi jantung ponsel? Ayo tanya AI dan
+    pecahkan misteri ini!
 
-      ### Key Points
-      - High-purity silicon is melted and pulled into huge cylinders called **silicon ingots**
-      - Silicon ingots are sliced into ultra-thin discs called **wafers**
-      - Through complex processes like photolithography, billions of tiny electronic components are created
-      - The most important component is the **transistor**
+    '
+  expected_outcome: Pemahaman transformasi silikon dari pasir menjadi bahan semikonduktor
+- id: task-3
+  category: learning
+  time_limit: 8
+  KSA_focus:
+    primary:
+    - K4.2
+    - S1.1
+    secondary:
+    - A3.1
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: AI Crystal Guide
+    initial_prompt: 'Guide the student through the chip manufacturing process.
 
-      ### Science Review: Physical Changes
-      Melting (solid to liquid) and solidification (liquid to solid) are physical changes.
-    question:
-      text: "What are the ultra-thin discs cut from silicon ingots called?"
-      type: multiple_choice
-      options:
-        - text: "Crystal rods"
-          value: "rods"
-        - text: "Wafers"
-          value: "wafers"
-        - text: "Crystals"
-          value: "crystals"
-      correct_answer: "wafers"
-    ai_feedback:
-      correct: "Excellent! Silicon wafers are the foundation for chip manufacturing."
-      incorrect: "Think about the thin, circular discs that chips are built on."
+      Explain the transformation from sand to silicon chips.
 
-  - id: task-4
-    category: application
-    time_limit: 8
-    KSA_focus:
-      primary:
-        - K1.4
-        - S6.1
-      secondary:
-        - A5.1
-    ai_module:
-      role: educator
-      model: gemini-2.5-flash
-      persona: AI Crystal Guide
-      initial_prompt: |
-        Help students recognize semiconductors in their daily life.
-        Connect the technology to real-world applications.
-    title: "Tugas 4: Terbuat dari Apa Chip Itu?"
-    description: Seperti apa bagian dalam chip? Sebenarnya itu adalah kota miniatur, rumah bagi miliaran "mini saklar" yang bertanggung jawab untuk berpikir.
-    instructions: |
-      Mini saklar ini disebut "transistor". Performa chip bergantung pada berapa banyak transistor yang dapat dikemas dalam area kecil. Mari kita bertemu dengan pahlawan terkecil namun terpenting di dalam chip.
-    content: |
-      ## Chips in Daily Life
+      '
+  title: 'Tugas 3: Rahasia Semikonduktor - Material yang Unik'
+  description: Kita tahu bahwa chip terbuat dari "silikon", tetapi mengapa silikon
+    yang dipilih?
+  instructions: 'Mengapa silikon? Ternyata ia memiliki identitas rahasia tentang "konduktivitas"
+    - itulah yang dimaksud dengan "semikonduktor". Nama yang terdengar keren ini,
+    apa sebenarnya yang diwakilinya?
 
-      ### Key Points
-      - Chips (Integrated Circuits, ICs) are the brains of modern electronics
-      - From phones, computers, smartwatches to cars and trains, chips are everywhere
-      - Chips handle computation, memory, and control
+    '
+  expected_outcome: Pemahaman sifat semikonduktor dan pentingnya dalam elektronik
+- id: task-4
+  category: application
+  time_limit: 8
+  KSA_focus:
+    primary:
+    - K1.4
+    - S6.1
+    secondary:
+    - A5.1
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: AI Crystal Guide
+    initial_prompt: 'Help students recognize semiconductors in their daily life.
 
-      ### Science Review: Energy Conversion
-      Chemical energy in batteries is converted through chip control into light and sound energy.
-    question:
-      text: "Which of the following was NOT mentioned as a semiconductor application?"
-      type: multiple_choice
-      options:
-        - text: "Mobile payments"
-          value: "payments"
-        - text: "Smartwatches"
-          value: "watches"
-        - text: "Solar power generation"
-          value: "solar"
-      correct_answer: "solar"
-    ai_feedback:
-      correct: "Correct! While solar panels use semiconductors, this wasn't our focus today."
-      incorrect: "Review which applications were specifically discussed in our journey."
+      Connect the technology to real-world applications.
 
-  - id: task-5
-    category: synthesis
-    time_limit: 8
-    KSA_focus:
-      primary:
-        - K1.1
-        - S3.1
-      secondary:
-        - A3.1
-    ai_module:
-      role: educator
-      model: gemini-2.5-flash
-      persona: AI Crystal Guide
-      initial_prompt: |
-        Conclude the journey by explaining the global semiconductor industry.
-        Help students understand the collaborative nature of chip production.
-    title: "Tugas 5: Hukum Ajaib yang Memprediksi Masa Depan"
-    description: Mengapa ponsel dan komputer menjadi lebih canggih setiap tahun atau dua? Di balik ini sebenarnya ada ramalan teknologi terkenal yang telah mendorong industri semikonduktor selama lebih dari lima puluh tahun.
-    instructions: |
-      Ramalan yang membuat teknologi terus maju dengan kecepatan cahaya ini adalah "Hukum Moore" yang terkenal. Apa yang diprediksinya? Dalam 5 tahun, fitur ajaib apa yang Anda inginkan pada ponsel Anda?
-    content: |
-      ## The Global Semiconductor Industry
+      '
+  title: 'Tugas 4: Terbuat dari Apa Chip Itu?'
+  description: Seperti apa bagian dalam chip? Sebenarnya itu adalah kota miniatur,
+    rumah bagi miliaran "mini saklar" yang bertanggung jawab untuk berpikir.
+  instructions: 'Mini saklar ini disebut "transistor". Performa chip bergantung pada
+    berapa banyak transistor yang dapat dikemas dalam area kecil. Mari kita bertemu
+    dengan pahlawan terkecil namun terpenting di dalam chip.
 
-      ### Key Points
-      - The industry involves: IC Design, IC Manufacturing, IC Assembly & Testing
-      - **IC Design companies** create chip blueprints
-      - **IC Manufacturing companies** (foundries) produce chips
-      - **IC Assembly & Testing companies** protect and test chips
+    '
+  expected_outcome: Pengakuan transistor sebagai blok bangunan chip modern
+- id: task-5
+  category: synthesis
+  time_limit: 8
+  KSA_focus:
+    primary:
+    - K1.1
+    - S3.1
+    secondary:
+    - A3.1
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: AI Crystal Guide
+    initial_prompt: 'Conclude the journey by explaining the global semiconductor industry.
 
-      ### Science Review: Division of Labor
-      Like an assembly line, each company focuses on their specialty for efficiency.
-    question:
-      text: "What segment is responsible for designing chip circuit blueprints?"
-      type: multiple_choice
-      options:
-        - text: "IC Manufacturing"
-          value: "manufacturing"
-        - text: "IC Assembly"
-          value: "assembly"
-        - text: "IC Design"
-          value: "design"
-      correct_answer: "design"
-    ai_feedback:
-      correct: "Perfect! IC Design companies are the architects of the semiconductor world!"
-      incorrect: "Think about who creates the original plans before manufacturing begins."
+      Help students understand the collaborative nature of chip production.
 
+      '
+  title: 'Tugas 5: Hukum Ajaib yang Memprediksi Masa Depan'
+  description: Mengapa ponsel dan komputer menjadi lebih canggih setiap tahun atau
+    dua? Di balik ini sebenarnya ada ramalan teknologi terkenal yang telah mendorong
+    industri semikonduktor selama lebih dari lima puluh tahun.
+  instructions: 'Ramalan yang membuat teknologi terus maju dengan kecepatan cahaya
+    ini adalah "Hukum Moore" yang terkenal. Apa yang diprediksinya? Dalam 5 tahun,
+    fitur ajaib apa yang Anda inginkan pada ponsel Anda?
+
+    '
+  expected_outcome: Kesadaran akan Hukum Moore dan dampaknya pada kemajuan teknologi
 evaluation_criteria:
   completion_threshold: 80
   assessment_method: quiz_and_interaction
   success_metrics:
-    - Complete all 5 stations
-    - Answer questions with 80% accuracy
-    - Engage with AI Crystal Guide
-
+  - Complete all 5 stations
+  - Answer questions with 80% accuracy
+  - Engage with AI Crystal Guide
 resources:
   videos:
-    - title: "How Semiconductors Work"
-      url: "https://example.com/semiconductor-basics"
+  - title: How Semiconductors Work
+    url: https://example.com/semiconductor-basics
   readings:
-    - title: "The History of Silicon Valley"
-      url: "https://example.com/silicon-valley-history"
+  - title: The History of Silicon Valley
+    url: https://example.com/silicon-valley-history
   tools:
-    - title: "Virtual Chip Designer"
-      url: "https://example.com/chip-designer"
+  - title: Virtual Chip Designer
+    url: https://example.com/chip-designer
