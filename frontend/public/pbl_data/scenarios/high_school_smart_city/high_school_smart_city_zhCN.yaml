@@ -6,16 +6,16 @@ scenario_info:
     - designing_with_ai
     - creating_with_ai
     - engaging_with_ai
-  title: AI-Powered Smart City Solutions
-  description: Design innovative AI solutions to improve urban life in your community
+  title: AI驱动的智慧城市解决方案
+  description: 设计创新的AI解决方案，改善您社区的城市生活
   prerequisites:
-    - Basic understanding of urban systems
-    - Interest in technology and innovation
+    - 基本了解城市系统
+    - 对技术和创新感兴趣
   learning_objectives:
-    - Identify urban challenges using AI analysis
-    - Design AI-powered smart city features
-    - Create prototypes and visualizations
-    - Develop implementation strategies for urban solutions
+    - 使用AI分析识别城市挑战
+    - 设计AI驱动的智慧城市功能
+    - 创建原型和可视化
+    - 制定城市解决方案的实施策略
 ksa_mapping:
   knowledge:
     - K1.1

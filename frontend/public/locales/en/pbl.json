@@ -275,5 +275,13 @@
     "nextSteps": "Recommended Next Steps",
     "ksa": "KSA",
     "print": "Print"
+  },
+  "domains": {
+    "engaging_with_ai": "Engaging with AI",
+    "creating_with_ai": "Creating with AI",
+    "managing_with_ai": "Managing AI",
+    "designing_with_ai": "Designing AI",
+    "managing_ai": "Managing AI",
+    "designing_ai": "Designing AI"
   }
 }

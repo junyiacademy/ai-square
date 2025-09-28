@@ -275,5 +275,13 @@
     "nextSteps": "Рекомендуемые следующие шаги",
     "ksa": "KSA",
     "print": "Печать"
+  },
+  "domains": {
+    "engaging_with_ai": "Взаимодействие с ИИ",
+    "creating_with_ai": "Создание с ИИ",
+    "managing_with_ai": "Управление ИИ",
+    "designing_with_ai": "Проектирование ИИ",
+    "managing_ai": "Управление ИИ",
+    "designing_ai": "Проектирование ИИ"
   }
 }

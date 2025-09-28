@@ -113,7 +113,7 @@ export default function ScenarioDetailPage() {
                 difficulty: response.data.difficulty,
                 estimatedDuration: response.data.estimatedDuration,
                 prerequisites: response.data.prerequisites || [],  // Keep in metadata for compatibility
-                targetDomains: response.data.targetDomain || [],
+                targetDomains: response.data.targetDomains || [],
                 tasks: response.data.tasks || [],
                 ksaMapping: response.data.ksaMapping
               }
@@ -269,7 +269,7 @@ export default function ScenarioDetailPage() {
   };
 
   const getDomainTranslation = (domain: string) => {
-    return t(`domains.${domain}`, domain);
+    return t(`domains.${domain}`, { ns: 'pbl', defaultValue: domain });
   };
 
   const getCategoryIcon = (category: string) => {

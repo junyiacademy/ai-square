@@ -275,5 +275,13 @@
     "nextSteps": "권장 다음 단계",
     "ksa": "KSA",
     "print": "인쇄"
+  },
+  "domains": {
+    "engaging_with_ai": "AI와 소통",
+    "creating_with_ai": "AI와 창작",
+    "managing_with_ai": "AI 관리",
+    "designing_with_ai": "AI 설계",
+    "managing_ai": "AI 관리",
+    "designing_ai": "AI 설계"
   }
 }

@@ -5,7 +5,7 @@ import yaml from 'js-yaml';
 import { cachedGET, parallel, memoize } from '@/lib/api/optimization-utils';
 import { normalizeLanguageCode } from '@/lib/utils/language';
 // Removed unused import
-import type { Scenario, Task } from '@/lib/repositories/interfaces';
+import type { Scenario } from '@/lib/repositories/interfaces';
 
 // Type definitions for KSA mapping
 interface KSAItem {

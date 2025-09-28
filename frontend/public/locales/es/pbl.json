@@ -275,5 +275,13 @@
     "nextSteps": "Próximos Pasos Recomendados",
     "ksa": "KSA",
     "print": "Imprimir"
+  },
+  "domains": {
+    "engaging_with_ai": "Interactuar con IA",
+    "creating_with_ai": "Crear con IA",
+    "managing_with_ai": "Gestionar IA",
+    "designing_with_ai": "Diseñar IA",
+    "managing_ai": "Gestionar IA",
+    "designing_ai": "Diseñar IA"
   }
 }
