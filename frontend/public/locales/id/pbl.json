@@ -275,5 +275,13 @@
     "nextSteps": "Langkah Selanjutnya yang Direkomendasikan",
     "ksa": "KSA",
     "print": "Cetak"
+  },
+  "domains": {
+    "engaging_with_ai": "Berinteraksi dengan AI",
+    "creating_with_ai": "Berkreasi dengan AI",
+    "managing_with_ai": "Mengelola AI",
+    "designing_with_ai": "Merancang AI",
+    "managing_ai": "Mengelola AI",
+    "designing_ai": "Merancang AI"
   }
 }

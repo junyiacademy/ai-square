@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getUnifiedAuth, createUnauthorizedResponse } from '@/lib/auth/unified-auth';
-import { getLanguageFromHeader, LANGUAGE_NAMES } from '@/lib/utils/language';
-import { VertexAI } from '@google-cloud/vertexai';
+import { getLanguageFromHeader } from '@/lib/utils/language';
 
 // POST - Create evaluation for task
 export async function POST(

@@ -275,5 +275,13 @@
     "nextSteps": "推奨される次のステップ",
     "ksa": "KSA",
     "print": "印刷"
+  },
+  "domains": {
+    "engaging_with_ai": "AIとの互動",
+    "creating_with_ai": "AIとの共創",
+    "managing_with_ai": "AI管理",
+    "designing_with_ai": "AI設計",
+    "managing_ai": "AI管理",
+    "designing_ai": "AI設計"
   }
 }

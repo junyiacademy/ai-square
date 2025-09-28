@@ -275,13 +275,5 @@
     "nextSteps": "建議下一步",
     "ksa": "KSA",
     "print": "列印"
-  },
-  "domains": {
-    "engaging_with_ai": "與 AI 互動",
-    "creating_with_ai": "與 AI 共創",
-    "managing_with_ai": "管理 AI",
-    "designing_with_ai": "設計 AI",
-    "managing_ai": "管理 AI",
-    "designing_ai": "設計 AI"
   }
 }

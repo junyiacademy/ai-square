@@ -6,17 +6,17 @@ scenario_info:
     - engaging_with_ai
     - creating_with_ai
     - designing_with_ai
-  title: AI-Powered Robotics Development and Implementation
-  description: Learn to build intelligent robots using AI for real-world applications like warehouse automation, elderly care assistance, and smart manufacturing
+  title: AI 驱动的机器人开发与实作
+  description: 学习使用 AI 构建智能机器人，应用于仓库自动化、老年护理协助和智能制造等真实世界场景
   prerequisites:
-    - Basic programming knowledge (Python preferred)
-    - Understanding of sensors and actuators
-    - Access to robotics simulation software or hardware
+    - 基本程序设计知识（推荐 Python）
+    - 了解传感器和执行器
+    - 可使用机器人模拟软件或硬件
   learning_objectives:
-    - Master AI integration techniques for robot perception and decision-making
-    - Develop autonomous navigation systems using AI computer vision and SLAM
-    - Create intelligent human-robot interaction interfaces with natural language processing
-    - Build practical robotics solutions for real-world business and social challenges
+    - 掌握机器人感知和决策的 AI 整合技术
+    - 使用 AI 计算机视觉和 SLAM 开发自主导航系统
+    - 使用自然语言处理创建智能人机交互界面
+    - 为真实世界的商业和社会挑战构建实用的机器人解决方案
 ksa_mapping:
   knowledge:
     - K2.1
@@ -62,14 +62,14 @@ tasks:
         - Safety-critical error handling
 
         What's your current experience with computer vision and robotics? Let's start by understanding your target hardware platform and performance requirements.
-    title: AI-Powered Robot Perception System
-    description: You're developing a warehouse automation robot that needs to identify, sort, and handle various packages. Use AI vision and sensor fusion to create a robust perception system
+    title: AI 驱动的机器人感知系统
+    description: 你正在开发一个需要识别、分类和处理各种包裹的仓库自动化机器人。使用 AI 视觉和传感器融合创建一个强健的感知系统
     instructions:
-      - Use AI tools to design computer vision pipelines for object detection and classification
-      - Implement AI-assisted sensor fusion combining cameras, LiDAR, and depth sensors
-      - Create machine learning models using AI platforms like Roboflow or Edge Impulse for package recognition
-      - Develop real-time AI inference systems optimized for embedded robotics hardware
-    expected_outcome: A working perception system that can reliably identify and classify packages in various lighting and environmental conditions, with documented performance metrics
+      - 使用 AI 工具设计用于物体检测和分类的计算机视觉管道
+      - 实施结合摄影机、LiDAR 和深度传感器的 AI 辅助传感器融合
+      - 使用 Roboflow 或 Edge Impulse 等 AI 平台创建用于包裹识别的机器学习模型
+      - 开发针对嵌入式机器人硬件优化的实时 AI 推理系统
+    expected_outcome: 一个能够在各种照明和环境条件下可靠识别和分类包裹的感知系统，并有记录的性能指标
   - id: navigation-intelligence
     category: creation
     time_limit: 50
@@ -99,14 +99,14 @@ tasks:
         - Emergency response protocols and fail-safes
 
         What's your experience with navigation algorithms? Let's start by understanding the specific layout and challenges of your target environment.
-    title: Autonomous Navigation with AI Planning
-    description: Your robot needs to navigate a complex elderly care facility, avoiding obstacles while delivering medication and responding to emergency calls efficiently
+    title: 基于 AI 规划的自主导航
+    description: 你的机器人需要在复杂的老年护理设施中导航，避开障碍物同时高效地递送药物和响应紧急呼叫
     instructions:
-      - Use AI path planning algorithms and reinforcement learning to optimize routes in dynamic environments
-      - Implement AI-powered SLAM (Simultaneous Localization and Mapping) for real-time environment understanding
-      - Create intelligent behavior trees using AI assistance for task prioritization and emergency response
-      - Develop predictive navigation using AI to anticipate human movement patterns and facility workflows
-    expected_outcome: A complete autonomous navigation system that can efficiently handle multiple concurrent tasks while maintaining safety and adapting to environmental changes
+      - 使用 AI 路径规划算法和强化学习在动态环境中优化路线
+      - 实施 AI 驱动的 SLAM（同时定位与地图构建）进行实时环境理解
+      - 使用 AI 协助创建智能行为树进行任务优先排序和紧急响应
+      - 使用 AI 开发预测性导航以预测人类移动模式和设施工作流程
+    expected_outcome: 一个能够高效处理多个同时任务同时保持安全并适应环境变化的完整自主导航系统
   - id: human-interaction
     category: interaction
     time_limit: 40
@@ -136,14 +136,14 @@ tasks:
         - Graceful error handling and recovery
 
         What's the primary language and communication style of your target users? Let's design an interaction system that feels natural and builds confidence in your manufacturing environment.
-    title: Natural Human-Robot Interaction Interface
-    description: Design a manufacturing quality control robot that can communicate with workers, understand verbal instructions, and provide intuitive feedback about production issues
+    title: 自然人机交互界面
+    description: 设计一个能与工人沟通、理解口头指令并提供生产问题直观反馈的制造品质控制机器人
     instructions:
-      - Use AI language models to create natural conversation capabilities for work instruction understanding
-      - Implement AI-powered gesture recognition and non-verbal communication systems
-      - Design multimodal interaction using AI combining voice, visual displays, and physical gestures
-      - Create adaptive communication styles using AI to match different worker preferences and expertise levels
-    expected_outcome: An intuitive interaction system that workers can easily communicate with, reducing training time and increasing adoption rates in manufacturing environments
+      - 使用 AI 语言模型创建自然对话功能以理解工作指令
+      - 实施 AI 驱动的手势识别和非语言沟通系统
+      - 使用 AI 结合语音、视觉显示和身体手势设计多模态交互
+      - 使用 AI 创建适应性沟通风格以匹配不同工人的偏好和专业水平
+    expected_outcome: 一个工人可以轻松沟通的直观交互系统，减少制造环境中的培训时间并提高采用率
 completion_criteria:
   min_tasks_completed: 3
   required_competencies:

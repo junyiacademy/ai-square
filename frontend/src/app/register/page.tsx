@@ -1,13 +1,12 @@
 'use client';
 
 import { useState, Suspense } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 import Image from 'next/image';
 
 function RegisterContent() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const { t } = useTranslation(['auth', 'common']);
   const [formData, setFormData] = useState({
@@ -283,7 +282,7 @@ function RegisterContent() {
                     Registration Successful! 🎉
                   </h3>
                   <p className="text-green-800 dark:text-green-200 mb-3">
-                    We've sent a verification email to:
+                    We&apos;ve sent a verification email to:
                   </p>
                   <p className="font-mono text-base bg-white dark:bg-gray-800 px-3 py-2 rounded-md text-gray-900 dark:text-gray-100 mb-4 inline-block">
                     {formData.email}
@@ -302,14 +301,14 @@ function RegisterContent() {
                       </li>
                       <li className="flex items-start">
                         <span className="text-green-500 mr-2">✓</span>
-                        You'll be redirected to login once verified
+                        You&apos;ll be redirected to login once verified
                       </li>
                     </ul>
                   </div>
 
                   <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3 mb-4">
                     <p className="text-sm text-yellow-800 dark:text-yellow-200">
-                      <strong>Can't find the email?</strong> Check your spam folder or wait 1-2 minutes for delivery.
+                      <strong>Can&apos;t find the email?</strong> Check your spam folder or wait 1-2 minutes for delivery.
                     </p>
                   </div>
 

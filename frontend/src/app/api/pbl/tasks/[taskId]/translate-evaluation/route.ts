@@ -120,7 +120,7 @@ Return the same JSON structure with all text translated.`;
       const translatedContent = JSON.parse(translatedText);
       
       // Update evaluation with translated content (OVERWRITE)
-      const updatedEvaluation = await evalRepo.update?.(evaluation.id, {
+      await evalRepo.update?.(evaluation.id, {
         feedbackData: {
           strengths: translatedContent.strengths || [],
           improvements: translatedContent.improvements || [],

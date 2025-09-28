@@ -316,14 +316,13 @@ export async function POST(request: NextRequest) {
           }
         };
 
-        let scenario: IScenario;
         if (existing && force) {
           // Update existing
-          scenario = await scenarioRepo.update(existing.id, scenarioData);
+          await scenarioRepo.update(existing.id, scenarioData);
           results.updated++;
         } else {
           // Create new
-          scenario = await scenarioRepo.create(scenarioData);
+          await scenarioRepo.create(scenarioData);
           results.created++;
         }
 

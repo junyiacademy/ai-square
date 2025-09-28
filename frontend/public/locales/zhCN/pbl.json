@@ -275,5 +275,13 @@
     "nextSteps": "推荐的下一步",
     "ksa": "KSA",
     "print": "打印"
+  },
+  "domains": {
+    "engaging_with_ai": "与AI互动",
+    "creating_with_ai": "与AI共创",
+    "managing_with_ai": "管理AI",
+    "designing_with_ai": "设计AI",
+    "managing_ai": "管理AI",
+    "designing_ai": "设计AI"
   }
 }

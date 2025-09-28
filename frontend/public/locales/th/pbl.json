@@ -275,5 +275,13 @@
     "nextSteps": "ขั้นตอนถัดไปที่แนะนำ",
     "ksa": "KSA",
     "print": "พิมพ์"
+  },
+  "domains": {
+    "engaging_with_ai": "การมีส่วนร่วมกับ AI",
+    "creating_with_ai": "การสร้างสรรค์กับ AI",
+    "managing_with_ai": "การจัดการ AI",
+    "designing_with_ai": "การออกแบบ AI",
+    "managing_ai": "การจัดการ AI",
+    "designing_ai": "การออกแบบ AI"
   }
 }
