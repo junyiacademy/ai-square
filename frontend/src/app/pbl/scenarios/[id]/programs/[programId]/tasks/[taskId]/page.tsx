@@ -13,6 +13,7 @@ import {
 } from '@/types/pbl';
 import { TaskEvaluation } from '@/types/pbl-completion';
 import { formatDateWithLocale } from '@/utils/locale';
+import { processInstructions } from '@/utils/pbl-instructions';
 import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
 
 interface ConversationEntry {
@@ -306,29 +307,10 @@ export default function ProgramLearningPage() {
               return typeof templateDescription === 'string' ? templateDescription : '';
             })(),
             // Extract instructions based on current language
-            instructions: (() => {
-              const templateInstructions = taskTemplate.instructions || originalTaskData.instructions;
-              
-              // Handle different types of instructions
-              if (Array.isArray(templateInstructions)) {
-                // If it's already an array, return it
-                return templateInstructions;
-              } else if (typeof templateInstructions === 'string') {
-                // If it's a string, split by newlines
-                return templateInstructions.split('\n').filter((line: string) => line.trim());
-              } else if (typeof templateInstructions === 'object' && templateInstructions !== null) {
-                // If it's a multilingual object, get the text for current language
-                const instructionText = templateInstructions[i18n.language] || templateInstructions.en || '';
-                if (typeof instructionText === 'string') {
-                  // Split by newline to create array (instructions are usually multiline)
-                  return instructionText.split('\n').filter((line: string) => line.trim());
-                } else if (Array.isArray(instructionText)) {
-                  return instructionText;
-                }
-              }
-              // Fallback to empty array
-              return [];
-            })(),
+            instructions: processInstructions(
+              taskTemplate.instructions || originalTaskData.instructions,
+              i18n.language
+            ),
             expectedOutcome: (() => {
               const templateOutcome = originalTaskData.expectedOutcome || taskTemplate.expectedOutcome;
               if (typeof templateOutcome === 'object' && !Array.isArray(templateOutcome)) {
