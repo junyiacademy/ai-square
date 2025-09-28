@@ -1103,22 +1103,31 @@ export default function ProgramLearningPage() {
                     {evaluation.domainScores && (() => {
                       const domainOrder = ['engaging_with_ai', 'creating_with_ai', 'managing_with_ai', 'designing_with_ai'];
                       return domainOrder.map(domain => {
-                        const score = evaluation.domainScores![domain] || 0;
+                        const score = evaluation.domainScores![domain];
+                        const isNA = score === undefined || score === null;
                         return (
                       <div key={domain} className="flex items-center justify-between">
                         <span className="text-sm text-gray-600 dark:text-gray-400">
                           {t(`assessment:domains.${domain}`)}
                         </span>
                         <div className="flex items-center">
-                          <div className="w-24 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-2">
-                            <div
-                              className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                              style={{ width: `${Number(score)}%` }}
-                            />
-                          </div>
-                          <span className="text-sm font-medium text-gray-700 dark:text-gray-300 w-12 text-right">
-                            {Number(score)}%
-                          </span>
+                          {isNA ? (
+                            <span className="text-sm text-gray-400 dark:text-gray-500 w-36 text-right">
+                              NA
+                            </span>
+                          ) : (
+                            <>
+                              <div className="w-24 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-2">
+                                <div
+                                  className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                                  style={{ width: `${Number(score)}%` }}
+                                />
+                              </div>
+                              <span className="text-sm font-medium text-gray-700 dark:text-gray-300 w-12 text-right">
+                                {Number(score)}%
+                              </span>
+                            </>
+                          )}
                         </div>
                       </div>
                         );
@@ -1606,22 +1615,31 @@ export default function ProgramLearningPage() {
                         {evaluation.domainScores && (() => {
                           const domainOrder = ['engaging_with_ai', 'creating_with_ai', 'managing_with_ai', 'designing_with_ai'];
                           return domainOrder.map(domain => {
-                            const score = evaluation.domainScores![domain] || 0;
+                            const score = evaluation.domainScores![domain];
+                            const isNA = score === undefined || score === null;
                             return (
                           <div key={domain} className="flex items-center justify-between">
                             <span className="text-sm text-gray-600 dark:text-gray-400">
                               {t(`assessment:domains.${domain}`)}
                             </span>
                             <div className="flex items-center">
-                              <div className="w-24 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-2">
-                                <div
-                                  className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                                  style={{ width: `${Number(score)}%` }}
-                                />
-                              </div>
-                              <span className="text-sm font-medium text-gray-700 dark:text-gray-300 w-12 text-right">
-                                {Number(score)}%
-                              </span>
+                              {isNA ? (
+                                <span className="text-sm text-gray-400 dark:text-gray-500 w-36 text-right">
+                                  NA
+                                </span>
+                              ) : (
+                                <>
+                                  <div className="w-24 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-2">
+                                    <div
+                                      className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                                      style={{ width: `${Number(score)}%` }}
+                                    />
+                                  </div>
+                                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300 w-12 text-right">
+                                    {Number(score)}%
+                                  </span>
+                                </>
+                              )}
                             </div>
                           </div>
                             );

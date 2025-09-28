@@ -52,6 +52,7 @@ export interface TaskEvaluation {
   conversationInsights?: ConversationInsights;
   strengths?: string[];
   improvements?: string[];
+  needsTranslation?: boolean;
 }
 
 // Task interaction
@@ -103,7 +104,7 @@ export interface CompletionData {
   };
   tasks?: CompletionTask[];
   completedTasks?: number;
-  qualitativeFeedback?: QualitativeFeedback | LocalizedFeedback;
+  qualitativeFeedback?: QualitativeFeedback;
   feedbackLanguage?: string;
   feedbackLanguages?: string[];
   feedbackGeneratedAt?: string;

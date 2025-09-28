@@ -61,6 +61,18 @@ Task Information:
 User Messages (learner's input only):
 ${conversations.filter((conv: Conversation) => conv.type === 'user').slice(-10).map((conv: Conversation, index: number) => `${index + 1}. ${conv.content.substring(0, 200)}`).join('\n')}
 
+CRITICAL DOMAIN SCORING RULE:
+${targetDomains && targetDomains.length > 0 ? `
+- ONLY evaluate the following domains: ${targetDomains.join(', ')}
+- For domains IN the target list: Score them normally (0-100)
+- For domains NOT in the target list: You MUST return -1 (which will be converted to "NA")
+- Example: If targetDomains = ['engaging_with_ai', 'creating_with_ai'], then:
+  - engaging_with_ai: normal score (0-100)
+  - creating_with_ai: normal score (0-100)
+  - managing_with_ai: -1 (not in target domains)
+  - designing_with_ai: -1 (not in target domains)
+` : 'Evaluate all four domains normally (0-100)'}
+
 Evaluation Guidelines:
 - No meaningful engagement (only greetings like "hi", "hello"): 10-25 points
 - Minimal engagement (basic questions, simple statements): 25-40 points
@@ -85,11 +97,13 @@ Please evaluate and provide:
    - Skills: Practical application and problem-solving (0 if no demonstration)
    - Attitudes: Engagement, curiosity, and learning mindset (minimum 5 for attempting)
 
-3. Domain scores (0-100):
-   - engaging_with_ai: Quality of AI interaction and questioning (minimum 10 if attempted interaction)
-   - creating_with_ai: Creativity in using AI responses (minimum 5 if any content created)
-   - managing_with_ai: Organization and planning in approach (minimum 5 if shows any structure)
-   - designing_with_ai: Strategic thinking and problem-solving (minimum 5 if shows any planning)
+3. Domain scores:
+   - For domains IN targetDomains: Score 0-100 based on performance
+   - For domains NOT in targetDomains: Return -1 (will be shown as "NA")
+   - engaging_with_ai: Quality of AI interaction (if in targetDomains, else -1)
+   - creating_with_ai: Creativity in using AI (if in targetDomains, else -1)
+   - managing_with_ai: Organization and planning (if in targetDomains, else -1)
+   - designing_with_ai: Strategic thinking (if in targetDomains, else -1)
 
 4. Rubrics scores (1-4 levels):
    Level 1: Beginning (starting to explore)
@@ -310,12 +324,23 @@ For Simplified Chinese (简体中文), use Simplified Chinese ONLY.`,
       };
     }
 
+    // Process domain scores: Convert -1 to undefined for "NA" display
+    if (evaluation.domainScores) {
+      const processedDomainScores: Record<string, number | undefined> = {};
+      for (const [domain, score] of Object.entries(evaluation.domainScores)) {
+        // If score is -1, it means the domain is not in targetDomains
+        processedDomainScores[domain] = score === -1 ? undefined : score as number;
+      }
+      evaluation.domainScores = processedDomainScores;
+    }
+
     // Add timestamp and metadata
     const evaluationResult = {
       ...evaluation,
       evaluatedAt: new Date().toISOString(),
       taskId: task.id,
-      conversationCount: conversations.filter((c: Conversation) => c.type === 'user').length
+      conversationCount: conversations.filter((c: Conversation) => c.type === 'user').length,
+      targetDomains: targetDomains || []
     };
 
     return NextResponse.json({
