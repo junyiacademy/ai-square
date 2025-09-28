@@ -291,25 +291,18 @@ export async function GET(
       estimatedDuration: scenarioResult.estimatedMinutes || (scenarioResult.metadata as Record<string, unknown>)?.estimatedDuration as number || 60,
       targetDomains: (scenarioResult.pblData as Record<string, unknown>)?.targetDomains as string[] || (scenarioResult.metadata as Record<string, unknown>)?.targetDomains as string[] || [],
       prerequisites: (() => {
-        // First try database prerequisites (directly on scenario, not in metadata)
-        const dbPrerequisites = scenarioResult.prerequisites;
-        if (dbPrerequisites && dbPrerequisites.length > 0) {
-          return dbPrerequisites;
+        // Check for multilingual prerequisites in metadata
+        const metadata = scenarioResult.metadata as Record<string, unknown>;
+        if (metadata?.multilingualPrerequisites) {
+          const multilingualPrereqs = metadata.multilingualPrerequisites as Record<string, string[]>;
+          return multilingualPrereqs[lang] || multilingualPrereqs.en || [];
         }
-
-        // Fallback to YAML data for multilingual prerequisites
-        if (yamlData && (yamlData as Record<string, unknown>).scenario_info) {
-          const scenarioInfo = (yamlData as Record<string, unknown>).scenario_info as Record<string, unknown>;
-          const yamlPrerequisites = scenarioInfo.prerequisites;
-          if (Array.isArray(yamlPrerequisites)) {
-            return yamlPrerequisites.map(obj => {
-              if (typeof obj === 'string') return obj;
-              if (typeof obj === 'object' && obj !== null) {
-                const multilangObj = obj as Record<string, unknown>;
-                return (multilangObj[lang] as string) || (multilangObj.en as string) || '';
-              }
-              return '';
-            }).filter(Boolean);
+        
+        // Fallback to database prerequisites (English only for legacy data)
+        const dbPrerequisites = scenarioResult.prerequisites;
+        if (Array.isArray(dbPrerequisites) && dbPrerequisites.length > 0) {
+          if (lang === 'en') {
+            return dbPrerequisites;
           }
         }
 
