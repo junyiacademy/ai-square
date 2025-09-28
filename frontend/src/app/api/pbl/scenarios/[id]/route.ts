@@ -63,7 +63,7 @@ interface ScenarioResponse {
   description: string;
   difficulty: string;
   estimatedDuration: number;
-  targetDomain: string[];
+  targetDomains: string[];
   prerequisites: string[];
   learningObjectives: string[];
   ksaMapping?: KSAMapping;
@@ -289,7 +289,7 @@ export async function GET(
       description: typeof scenarioResult.description === 'string' ? scenarioResult.description : (scenarioResult.description as Record<string, string>)?.[lang] || (scenarioResult.description as Record<string, string>)?.en || '',
       difficulty: scenarioResult.difficulty || (scenarioResult.metadata as Record<string, unknown>)?.difficulty as string || 'intermediate',
       estimatedDuration: scenarioResult.estimatedMinutes || (scenarioResult.metadata as Record<string, unknown>)?.estimatedDuration as number || 60,
-      targetDomain: (scenarioResult.pblData as Record<string, unknown>)?.targetDomains as string[] || (scenarioResult.metadata as Record<string, unknown>)?.targetDomains as string[] || [],
+      targetDomains: (scenarioResult.pblData as Record<string, unknown>)?.targetDomains as string[] || (scenarioResult.metadata as Record<string, unknown>)?.targetDomains as string[] || [],
       prerequisites: (() => {
         // First try database prerequisites (directly on scenario, not in metadata)
         const dbPrerequisites = scenarioResult.prerequisites;
