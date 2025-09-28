@@ -90,6 +90,78 @@ describe('/api/admin/init-pbl', () => {
       expect(result.results.errors).toEqual([]);
     });
 
+    it('should handle multilingual prerequisites correctly', async () => {
+      (fs.readdir as jest.Mock)
+        .mockResolvedValueOnce(['semiconductor_adventure'])
+        .mockResolvedValueOnce(['semiconductor_adventure_en.yaml', 'semiconductor_adventure_zhTW.yaml']);
+
+      (fs.stat as jest.Mock).mockResolvedValue({ isDirectory: () => true });
+
+      // Mock English YAML
+      const mockEnYamlData = {
+        scenario_info: {
+          id: 'semiconductor-adventure',
+          title: 'My Semiconductor Adventure',
+          description: 'Explore semiconductors',
+          prerequisites: [
+            'Basic understanding of elements and compounds',
+            'Familiarity with electricity and electrical devices',
+            'Recommended: Watch this introductory video - https://youtu.be/cxf6eexA4f0'
+          ],
+        },
+        tasks: [],
+      };
+
+      // Mock Traditional Chinese YAML  
+      const mockZhTwYamlData = {
+        scenario_info: {
+          id: 'semiconductor-adventure',
+          title: '我的半導體冒險',
+          description: '探索半導體',
+          prerequisites: [
+            '對元素和化合物有基本認識',
+            '熟悉電力和電子設備',
+            '建議：觀看此介紹影片 - https://youtu.be/cxf6eexA4f0'
+          ],
+        },
+        tasks: [],
+      };
+
+      (fs.readFile as jest.Mock)
+        .mockResolvedValueOnce('en yaml content')
+        .mockResolvedValueOnce('zhTW yaml content');
+      
+      (yaml.load as jest.Mock)
+        .mockReturnValueOnce(mockEnYamlData)
+        .mockReturnValueOnce(mockZhTwYamlData);
+
+      mockFindByMode.mockResolvedValue([]);
+      mockCreate.mockResolvedValue({ id: 'created-scenario-id' });
+
+      const request = new NextRequest('http://localhost:3001/api/admin/init-pbl', {
+        method: 'POST',
+        body: JSON.stringify({ force: false })
+      });
+
+      const response = await POST(request);
+      const result = await response.json();
+
+      expect(response.status).toBe(200);
+      expect(result.success).toBe(true);
+      
+      // Verify that create was called with multilingual prerequisites in metadata
+      expect(mockCreate).toHaveBeenCalledWith(
+        expect.objectContaining({
+          metadata: expect.objectContaining({
+            multilingualPrerequisites: {
+              en: mockEnYamlData.scenario_info.prerequisites,
+              zhTW: mockZhTwYamlData.scenario_info.prerequisites
+            }
+          })
+        })
+      );
+    });
+
     it('should handle existing scenarios when force is false', async () => {
       (fs.readdir as jest.Mock)
         .mockResolvedValueOnce(['ai_job_search'])

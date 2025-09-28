@@ -86,18 +86,36 @@ describe('API Route: src/app/api/pbl/scenarios/[id]', () => {
     id: 'test-id',
     mode: 'pbl',
     status: 'active',
-    title: { en: 'Test Scenario', zh: '測試場景' },
-    description: { en: 'Test description', zh: '測試描述' },
-    objectives: { en: 'Test objectives', zh: '測試目標' },
+    title: { en: 'Test Scenario', zh: '測試場景', zhTW: '測試場景' },
+    description: { en: 'Test description', zh: '測試描述', zhTW: '測試描述' },
+    objectives: { en: 'Test objectives', zh: '測試目標', zhTW: '測試目標' },
     estimatedMinutes: 60,
     difficulty: 'intermediate',
+    prerequisites: ['Basic knowledge of AI'], // Legacy English array
     taskTemplates: [
       { id: 'task1', title: { en: 'Task 1' } },
       { id: 'task2', title: { en: 'Task 2' } }
     ],
     metadata: {
       targetDomains: ['creating_with_ai', 'designing_with_ai'],
-      yamlId: 'test-scenario'
+      yamlId: 'test-scenario',
+      multilingualPrerequisites: {
+        en: [
+          'Basic understanding of elements and compounds',
+          'Familiarity with electricity and electrical devices',
+          'Recommended: Watch this introductory video - https://youtu.be/cxf6eexA4f0'
+        ],
+        zhTW: [
+          '對元素和化合物有基本認識',
+          '熟悉電力和電子設備',
+          '建議：觀看此介紹影片 - https://youtu.be/cxf6eexA4f0'
+        ],
+        zh: [
+          '對元素和化合物有基本認識',
+          '熟悉電力和電子設備',
+          '建議：觀看此介紹影片 - https://youtu.be/cxf6eexA4f0'
+        ]
+      }
     },
     pblData: {
       aiModules: ['tutor', 'evaluator']
@@ -160,6 +178,75 @@ describe('API Route: src/app/api/pbl/scenarios/[id]', () => {
       expect(result.success).toBe(true);
       expect(result.data.title).toBe('測試場景');
       expect(result.data.description).toBe('測試描述');
+    });
+
+    it('should return multilingual prerequisites for Traditional Chinese', async () => {
+      const request = new NextRequest('http://localhost:3000/api/pbl/scenarios/test-id?lang=zhTW', {
+        method: 'GET',
+      });
+      
+      const response = await GET(request, { params: Promise.resolve({ id: 'test-id' }) });
+      const result = await response.json();
+      
+      expect(response.status).toBe(200);
+      expect(result.success).toBe(true);
+      expect(result.data.prerequisites).toEqual([
+        '對元素和化合物有基本認識',
+        '熟悉電力和電子設備',
+        '建議：觀看此介紹影片 - https://youtu.be/cxf6eexA4f0'
+      ]);
+    });
+
+    it('should return multilingual prerequisites for English', async () => {
+      const request = new NextRequest('http://localhost:3000/api/pbl/scenarios/test-id?lang=en', {
+        method: 'GET',
+      });
+      
+      const response = await GET(request, { params: Promise.resolve({ id: 'test-id' }) });
+      const result = await response.json();
+      
+      expect(response.status).toBe(200);
+      expect(result.success).toBe(true);
+      expect(result.data.prerequisites).toEqual([
+        'Basic understanding of elements and compounds',
+        'Familiarity with electricity and electrical devices',
+        'Recommended: Watch this introductory video - https://youtu.be/cxf6eexA4f0'
+      ]);
+    });
+
+    it('should fallback to legacy prerequisites when no multilingual data exists', async () => {
+      // Create a scenario without multilingual prerequisites
+      const legacyScenario = {
+        ...mockScenario,
+        metadata: {
+          ...mockScenario.metadata,
+          multilingualPrerequisites: undefined
+        }
+      };
+      
+      mockScenarioRepo.findById.mockResolvedValue(legacyScenario);
+      
+      // Test English (should use legacy array)
+      const requestEn = new NextRequest('http://localhost:3000/api/pbl/scenarios/test-id?lang=en', {
+        method: 'GET',
+      });
+      
+      const responseEn = await GET(requestEn, { params: Promise.resolve({ id: 'test-id' }) });
+      const resultEn = await responseEn.json();
+      
+      expect(responseEn.status).toBe(200);
+      expect(resultEn.data.prerequisites).toEqual(['Basic knowledge of AI']);
+      
+      // Test Chinese (should be empty as no multilingual data)
+      const requestZh = new NextRequest('http://localhost:3000/api/pbl/scenarios/test-id?lang=zhTW', {
+        method: 'GET',
+      });
+      
+      const responseZh = await GET(requestZh, { params: Promise.resolve({ id: 'test-id' }) });
+      const resultZh = await responseZh.json();
+      
+      expect(responseZh.status).toBe(200);
+      expect(resultZh.data.prerequisites).toEqual([]);
     });
     
     it.skip('should handle scenario not found', async () => {
