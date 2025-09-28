@@ -1102,18 +1102,22 @@ export default function ProgramLearningPage() {
                   <div className="space-y-2">
                     {evaluation.domainScores && (() => {
                       const domainOrder = ['engaging_with_ai', 'creating_with_ai', 'managing_with_ai', 'designing_with_ai'];
+                      const targetDomainsList = scenario?.targetDomains || [];
+                      
+                      // Show all domains, but mark non-target ones as NA
                       return domainOrder.map(domain => {
-                        const score = evaluation.domainScores![domain];
-                        const isNA = score === undefined || score === null;
+                        const isTargetDomain = targetDomainsList.length === 0 || targetDomainsList.includes(domain);
+                        const score = isTargetDomain ? evaluation.domainScores![domain] : undefined;
+                        const isNA = !isTargetDomain || score === undefined || score === null;
                         return (
-                      <div key={domain} className="flex items-center justify-between">
-                        <span className="text-sm text-gray-600 dark:text-gray-400">
+                      <div key={domain} className={`flex items-center justify-between ${!isTargetDomain ? 'opacity-50' : ''}`}>
+                        <span className={`text-sm ${!isTargetDomain ? 'text-gray-400 dark:text-gray-500 line-through' : 'text-gray-600 dark:text-gray-400'}`}>
                           {t(`assessment:domains.${domain}`)}
                         </span>
                         <div className="flex items-center">
                           {isNA ? (
-                            <span className="text-sm text-gray-400 dark:text-gray-500 w-36 text-right">
-                              NA
+                            <span className="text-sm text-gray-400 dark:text-gray-500 w-36 text-right italic">
+                              N/A
                             </span>
                           ) : (
                             <>
@@ -1614,18 +1618,22 @@ export default function ProgramLearningPage() {
                       <div className="space-y-2">
                         {evaluation.domainScores && (() => {
                           const domainOrder = ['engaging_with_ai', 'creating_with_ai', 'managing_with_ai', 'designing_with_ai'];
+                          const targetDomainsList = scenario?.targetDomains || [];
+                          
+                          // Show all domains, but mark non-target ones as NA
                           return domainOrder.map(domain => {
-                            const score = evaluation.domainScores![domain];
-                            const isNA = score === undefined || score === null;
+                            const isTargetDomain = targetDomainsList.length === 0 || targetDomainsList.includes(domain);
+                            const score = isTargetDomain ? evaluation.domainScores![domain] : undefined;
+                            const isNA = !isTargetDomain || score === undefined || score === null;
                             return (
-                          <div key={domain} className="flex items-center justify-between">
-                            <span className="text-sm text-gray-600 dark:text-gray-400">
+                          <div key={domain} className={`flex items-center justify-between ${!isTargetDomain ? 'opacity-50' : ''}`}>
+                            <span className={`text-sm ${!isTargetDomain ? 'text-gray-400 dark:text-gray-500 line-through' : 'text-gray-600 dark:text-gray-400'}`}>
                               {t(`assessment:domains.${domain}`)}
                             </span>
                             <div className="flex items-center">
                               {isNA ? (
-                                <span className="text-sm text-gray-400 dark:text-gray-500 w-36 text-right">
-                                  NA
+                                <span className="text-sm text-gray-400 dark:text-gray-500 w-36 text-right italic">
+                                  N/A
                                 </span>
                               ) : (
                                 <>
