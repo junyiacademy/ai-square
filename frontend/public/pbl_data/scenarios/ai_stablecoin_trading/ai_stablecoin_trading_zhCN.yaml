@@ -3,144 +3,194 @@ scenario_info:
   difficulty: intermediate
   estimated_duration: 120
   target_domains:
-    - engaging_with_ai
-    - creating_with_ai
-    - managing_with_ai
-  title: AI-Powered Stablecoin Trading and Risk Management
-  description: Learn to use AI for analyzing stablecoin markets, managing DeFi portfolios, and making informed trading decisions in real crypto scenarios
+  - engaging_with_ai
+  - creating_with_ai
+  - managing_with_ai
+  title: AI 驱动的穩定幣交易與風險管理
+  description: 学习使用 AI 分析穩定幣市場、管理 DeFi 投資组合，並在真實加密貨幣場景中做出明智的交易決策
   prerequisites:
-    - Basic understanding of cryptocurrency and blockchain
-    - Familiarity with trading concepts
-    - Access to crypto exchanges or DeFi platforms (testnet)
+  - 對加密貨幣和區塊鏈的基本理解
+  - 熟悉交易概念
+  - 可使用加密貨幣交易所或 DeFi 平台（测试網）
   learning_objectives:
-    - Master AI tools for real-time crypto market analysis and trend prediction
-    - Develop automated trading strategies using AI for stablecoin arbitrage
-    - Learn to assess and manage DeFi protocol risks using AI monitoring tools
-    - Create AI-powered portfolio optimization for multi-chain stablecoin exposure
+  - 掌握用於即時加密貨幣市場分析和趨勢預測的 AI 工具
+  - 使用 AI 开发穩定幣套利的自動化交易策略
+  - 学习使用 AI 監控工具评估和管理 DeFi 协议風險
+  - 為多鏈穩定幣敞口创建 AI 驱动的投資组合优化
 ksa_mapping:
   knowledge:
-    - K2.1
-    - K2.3
-    - K3.2
+  - K2.1
+  - K2.3
+  - K3.2
   skills:
-    - S2.1
+  - S2.1
   attitudes:
-    - A1.2
-    - A2.1
-    - A3.1
+  - A1.2
+  - A2.1
+  - A3.1
 tasks:
-  - id: market-analysis
-    category: analysis
-    time_limit: 45
-    KSA_focus:
-      primary:
-        - engaging_with_ai
-        - creating_with_ai
-      secondary:
-        - managing_with_ai
-    ai_module:
-      role: assistant
-      model: gemini-2.5-flash
-      persona: You are an experienced DeFi analyst and trading mentor. Help users understand market dynamics, evaluate AI-generated insights critically, and develop practical trading strategies. Focus on real-world applicability and risk management.
-      initial_prompt: |
-        Welcome to the stablecoin trading analysis task! I'm here to help you navigate this complex market using AI tools effectively.
+- id: market-analysis
+  category: analysis
+  time_limit: 45
+  KSA_focus:
+    primary:
+    - engaging_with_ai
+    - creating_with_ai
+    secondary:
+    - managing_with_ai
+  ai_module:
+    role: assistant
+    model: gemini-2.5-flash
+    persona: You are an experienced DeFi analyst and trading mentor. Help users understand
+      market dynamics, evaluate AI-generated insights critically, and develop practical
+      trading strategies. Focus on real-world applicability and risk management.
+    initial_prompt: 'Welcome to the stablecoin trading analysis task! I''m here to
+      help you navigate this complex market using AI tools effectively.
 
-        As your DeFi trading mentor, I'll guide you through:
-        1. Properly formulating market research questions for AI tools
-        2. Critically evaluating AI-generated market insights
-        3. Identifying actionable trading opportunities while managing risk
-        4. Creating comprehensive reports that combine AI analysis with your own judgment
 
-        Remember: AI tools are powerful for data gathering and initial analysis, but your critical thinking and domain knowledge are essential for making sound trading decisions.
+      As your DeFi trading mentor, I''ll guide you through:
 
-        What specific aspect of the stablecoin market would you like to start analyzing? Are you looking at yield opportunities, depeg risks, or arbitrage possibilities?
-    title: AI-Powered Market Intelligence
-    description: You're a DeFi portfolio manager for a crypto hedge fund. Use AI to analyze current stablecoin market conditions and identify potential trading opportunities
-    instructions:
-      - Use AI tools (Claude, ChatGPT, or Perplexity) to research current USDC, USDT, DAI, and FRAX market conditions
-      - Analyze yield farming opportunities across different DeFi protocols (Aave, Compound, Curve)
-      - Identify potential depeg risks and arbitrage opportunities using AI market analysis
-      - Create an AI-generated executive summary with actionable trading recommendations
-    expected_outcome: A comprehensive market analysis report with specific trading opportunities, risk assessments, and AI-backed recommendations for stablecoin portfolio allocation
-  - id: strategy-development
-    category: creation
-    time_limit: 40
-    KSA_focus:
-      primary:
-        - creating_with_ai
-        - managing_with_ai
-      secondary:
-        - engaging_with_ai
-    ai_module:
-      role: assistant
-      model: gemini-2.5-flash
-      persona: You are a quantitative trading expert and AI coding mentor. Help users develop robust trading strategies, write clean code, and understand the technical aspects of DeFi arbitrage. Emphasize proper testing, risk management, and ethical trading practices.
-      initial_prompt: |
-        Excellent! Now we're moving into the technical implementation phase. As your trading strategy development mentor, I'll help you build a practical, AI-enhanced trading system.
+      1. Properly formulating market research questions for AI tools
 
-        Key areas I'll guide you through:
-        1. Architecting a robust trading bot with proper error handling
-        2. Using AI coding assistants effectively for complex DeFi integrations
-        3. Implementing comprehensive risk management and position sizing
-        4. Backtesting methodologies that account for real-world constraints
+      2. Critically evaluating AI-generated market insights
 
-        Important considerations:
-        - Start with paper trading and small amounts
-        - Account for gas fees, slippage, and MEV in your calculations
-        - Implement circuit breakers and emergency stops
-        - Always test on testnets first
+      3. Identifying actionable trading opportunities while managing risk
 
-        What's your coding experience level, and which AI coding assistant would you prefer to use? Let's start building your trading strategy step by step.
-    title: AI-Enhanced Trading Strategy Creation
-    description: Design and backtest an automated trading strategy using AI to optimize entry/exit points for stablecoin arbitrage across multiple DEXs
-    instructions:
-      - Use AI coding assistants to write Python scripts for monitoring price differences across Uniswap, SushiSwap, and Curve
-      - Implement AI-based alert systems for arbitrage opportunities with specific profit thresholds
-      - Create risk management rules using AI to calculate optimal position sizes and stop-losses
-      - Develop backtesting framework with AI assistance to validate strategy performance
-    expected_outcome: A functional trading bot prototype with AI-optimized parameters, comprehensive backtesting results, and clear implementation guidelines
-  - id: risk-management
-    category: interaction
-    time_limit: 35
-    KSA_focus:
-      primary:
-        - managing_with_ai
-        - engaging_with_ai
-      secondary:
-        - creating_with_ai
-    ai_module:
-      role: assistant
-      model: gemini-2.5-flash
-      persona: You are a DeFi risk management expert and crisis response specialist. Help users understand the severity of protocol exploits, assess portfolio impacts, and implement emergency procedures. Focus on speed, accuracy, and preserving capital during volatile situations.
-      initial_prompt: |
-        ALERT: This is a crisis management simulation. Time is critical when DeFi protocols are exploited, and proper risk assessment can save your portfolio.
+      4. Creating comprehensive reports that combine AI analysis with your own judgment
 
-        As your risk management specialist, I'll help you:
-        1. Rapidly assess the scope and impact of the exploit
-        2. Calculate your direct and indirect exposure across all protocols
-        3. Prioritize immediate actions to protect your assets
-        4. Set up monitoring systems to prevent future exposure
 
-        Crisis management principles:
-        - Act quickly but don't panic
-        - Verify information from multiple sources
-        - Protect principal before chasing yields
-        - Document everything for later analysis
+      Remember: AI tools are powerful for data gathering and initial analysis, but
+      your critical thinking and domain knowledge are essential for making sound trading
+      decisions.
 
-        What's your current portfolio composition? Let's start by identifying your potential exposure to this exploit and immediate risk mitigation actions.
-    title: AI-Powered Portfolio Risk Assessment
-    description: A major DeFi protocol exploit just happened. Use AI to assess your stablecoin portfolio's exposure and develop an emergency response plan
-    instructions:
-      - Use AI to quickly analyze news and social media for exploit details and affected protocols
-      - Calculate portfolio exposure using AI-assisted risk analysis across all your DeFi positions
-      - Develop contingency scenarios using AI simulation for different market stress conditions
-      - Create automated monitoring and alert systems using AI for future risk detection
-    expected_outcome: A detailed risk assessment report with immediate action items, portfolio rebalancing recommendations, and an automated risk monitoring system setup
+
+      What specific aspect of the stablecoin market would you like to start analyzing?
+      Are you looking at yield opportunities, depeg risks, or arbitrage possibilities?
+
+      '
+  title: AI 驱动的市場情报
+  description: 你是一家加密對沖基金的 DeFi 投資组合经理。使用 AI 分析当前穩定幣市場狀況並識別潛在交易机会
+  instructions:
+  - 使用 AI 工具（Claude、ChatGPT 或 Perplexity）研究当前 USDC、USDT、DAI 和 FRAX 市場狀況
+  - 分析不同 DeFi 协议（Aave、Compound、Curve）中的流動性挖礦机会
+  - 使用 AI 市場分析識別潛在的脫鉤風險和套利机会
+  - 创建一份包含可行交易建議的 AI 生成執行摘要
+  expected_outcome: 一份包含具體交易机会、風險评估和 AI 支持的穩定幣投資组合配置建議的綜合市場分析报告
+- id: strategy-development
+  category: creation
+  time_limit: 40
+  KSA_focus:
+    primary:
+    - creating_with_ai
+    - managing_with_ai
+    secondary:
+    - engaging_with_ai
+  ai_module:
+    role: assistant
+    model: gemini-2.5-flash
+    persona: You are a quantitative trading expert and AI coding mentor. Help users
+      develop robust trading strategies, write clean code, and understand the technical
+      aspects of DeFi arbitrage. Emphasize proper testing, risk management, and ethical
+      trading practices.
+    initial_prompt: 'Excellent! Now we''re moving into the technical implementation
+      phase. As your trading strategy development mentor, I''ll help you build a practical,
+      AI-enhanced trading system.
+
+
+      Key areas I''ll guide you through:
+
+      1. Architecting a robust trading bot with proper error handling
+
+      2. Using AI coding assistants effectively for complex DeFi integrations
+
+      3. Implementing comprehensive risk management and position sizing
+
+      4. Backtesting methodologies that account for real-world constraints
+
+
+      Important considerations:
+
+      - Start with paper trading and small amounts
+
+      - Account for gas fees, slippage, and MEV in your calculations
+
+      - Implement circuit breakers and emergency stops
+
+      - Always test on testnets first
+
+
+      What''s your coding experience level, and which AI coding assistant would you
+      prefer to use? Let''s start building your trading strategy step by step.
+
+      '
+  title: AI 增強的交易策略创建
+  description: 使用 AI 设计並回測自動化交易策略，优化多個 DEX 間穩定幣套利的進出場點
+  instructions:
+  - 使用 AI 編程助手編寫 Python 腳本來監控 Uniswap、SushiSwap 和 Curve 間的價格差異
+  - 实施基於 AI 的警報系統，用於具有特定利潤閾值的套利机会
+  - 使用 AI 创建風險管理規則來计算最佳倉位大小和止損
+  - 在 AI 协助下开发回測框架來验证策略績效
+  expected_outcome: 一個具有 AI 优化参数、全面回測結果和清晰实施指導的功能性交易机器人原型
+- id: risk-management
+  category: interaction
+  time_limit: 35
+  KSA_focus:
+    primary:
+    - managing_with_ai
+    - engaging_with_ai
+    secondary:
+    - creating_with_ai
+  ai_module:
+    role: assistant
+    model: gemini-2.5-flash
+    persona: You are a DeFi risk management expert and crisis response specialist.
+      Help users understand the severity of protocol exploits, assess portfolio impacts,
+      and implement emergency procedures. Focus on speed, accuracy, and preserving
+      capital during volatile situations.
+    initial_prompt: 'ALERT: This is a crisis management simulation. Time is critical
+      when DeFi protocols are exploited, and proper risk assessment can save your
+      portfolio.
+
+
+      As your risk management specialist, I''ll help you:
+
+      1. Rapidly assess the scope and impact of the exploit
+
+      2. Calculate your direct and indirect exposure across all protocols
+
+      3. Prioritize immediate actions to protect your assets
+
+      4. Set up monitoring systems to prevent future exposure
+
+
+      Crisis management principles:
+
+      - Act quickly but don''t panic
+
+      - Verify information from multiple sources
+
+      - Protect principal before chasing yields
+
+      - Document everything for later analysis
+
+
+      What''s your current portfolio composition? Let''s start by identifying your
+      potential exposure to this exploit and immediate risk mitigation actions.
+
+      '
+  title: AI 驱动的投資组合風險评估
+  description: 一個主要的 DeFi 协议剛剛发生漏洞利用。使用 AI 评估你的穩定幣投資组合敞口並制定緊急應對计划
+  instructions:
+  - 使用 AI 快速分析新闻和社交媒體以了解漏洞詳情和受影响的协议
+  - 使用 AI 辅助風險分析计算所有 DeFi 持倉的投資组合敞口
+  - 使用 AI 模擬為不同市場壓力条件开发應急場景
+  - 使用 AI 创建自動化監控和警報系統以进行未來風險检测
+  expected_outcome: 一份詳細的風險评估报告，包含即時行动項目、投資组合再平衡建議和自動化風險監控系統设置
 completion_criteria:
   min_tasks_completed: 3
   required_competencies:
-    - K2.1
-    - S2.1
+  - K2.1
+  - S2.1
   min_overall_score: 75
 metadata:
   language: zhCN

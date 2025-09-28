@@ -3,159 +3,207 @@ scenario_info:
   difficulty: beginner
   estimated_duration: 90
   target_domains:
-    - creating_with_ai
-    - engaging_with_ai
-    - designing_with_ai
-  title: AI-Powered Creative Arts Exhibition
-  description: Create a digital art exhibition using AI tools to explore artistic expression and creativity
+  - creating_with_ai
+  - engaging_with_ai
+  - designing_with_ai
+  title: AI 驱动的創意藝術展覽
+  description: 使用 AI 工具创建數位藝術展覽，探索藝術表達和創造力
   prerequisites:
-    - Basic art appreciation
-    - Interest in creative expression
+  - 基本藝術欣賞能力
+  - 對創意表達的興趣
   learning_objectives:
-    - Explore AI-assisted creative processes
-    - Create original digital artworks
-    - Curate and present a cohesive exhibition
-    - Reflect on the relationship between AI and human creativity
+  - 探索 AI 辅助的創作过程
+  - 创建原創數位藝術作品
+  - 策劃和展示連貫的展覽
+  - 反思 AI 與人類創造力的关系
 ksa_mapping:
   knowledge:
-    - K1.1
-    - K2.1
-    - K2.3
+  - K1.1
+  - K2.1
+  - K2.3
   skills:
-    - S1.1
-    - S2.1
+  - S1.1
+  - S2.1
   attitudes:
-    - A1.1
-    - A2.1
-    - A3.1
+  - A1.1
+  - A2.1
+  - A3.1
 tasks:
-  - id: task-1
-    category: research
-    time_limit: 25
-    KSA_focus:
-      primary:
-        - K1.1
-        - S2.1
-      secondary:
-        - A1.1
-    ai_module:
-      role: assistant
-      model: gemini-2.5-flash
-      persona: Art History Guide
-      initial_prompt: |
-        You are an art history guide helping students explore different artistic styles.
-        Your goal is to guide them through art style exploration and AI generation tasks.
+- id: task-1
+  category: research
+  time_limit: 25
+  KSA_focus:
+    primary:
+    - K1.1
+    - S2.1
+    secondary:
+    - A1.1
+  ai_module:
+    role: assistant
+    model: gemini-2.5-flash
+    persona: Art History Guide
+    initial_prompt: 'You are an art history guide helping students explore different
+      artistic styles.
 
-        Keep responses focused and educational:
-        - If the user only greets you, ask them about which art movement they'd like to explore
-        - If they send irrelevant content, redirect them to focus on art style exploration
-        - Help them understand the characteristics of different art movements
-        - Guide them in using AI tools to generate art in various styles
+      Your goal is to guide them through art style exploration and AI generation tasks.
 
-        Focus on:
-        - Explaining key features of art movements (Impressionism, Surrealism, Abstract, etc.)
-        - Helping them craft effective prompts for AI art generation
-        - Encouraging comparison and analysis of results
-        - Supporting their creative vision selection
 
-        Always stay focused on the art style exploration task.
-    title: AI Art Style Exploration
-    description: Explore different artistic styles and movements using AI generation tools
-    instructions:
-      - Research major art movements and their characteristics
-      - Use AI tools to generate images in different artistic styles
-      - Document and compare the results
-      - Select 3-4 styles that resonate with your creative vision
-    expected_outcome: A portfolio of AI-generated artworks showcasing different styles
-  - id: task-2
-    category: creation
-    time_limit: 35
-    KSA_focus:
-      primary:
-        - S2.1
-        - K2.1
-      secondary:
-        - A2.1
-    ai_module:
-      role: assistant
-      model: gemini-2.5-flash
-      persona: Creative Art Mentor
-      initial_prompt: |
-        You are a creative art mentor helping students express their personal themes through AI-generated art.
-        Your job is to guide them through the creative process of making meaningful artworks.
+      Keep responses focused and educational:
 
-        Response guidelines:
-        - If the user only greets you, ask them about what personal themes or emotions they want to express
-        - If they send irrelevant content, redirect them to focus on personal art creation
-        - Guide them through developing effective prompts that blend style with personal content
-        - Help them iterate and refine their artistic vision
+      - If the user only greets you, ask them about which art movement they''d like
+      to explore
 
-        Focus on:
-        - Helping students identify and articulate personal themes
-        - Teaching prompt engineering for emotional and thematic expression
-        - Encouraging experimentation with different prompt variations
-        - Supporting the selection of final pieces for exhibition
+      - If they send irrelevant content, redirect them to focus on art style exploration
 
-        Always stay focused on the personal art creation task.
-    title: Personal Art Creation
-    description: Create original artworks that express your personal themes and emotions
-    instructions:
-      - Identify personal themes or emotions you want to express
-      - Develop prompts that blend your chosen styles with personal content
-      - Generate multiple iterations and refine your prompts
-      - Create 5-8 final pieces for your exhibition
-    expected_outcome: A collection of personal artworks ready for exhibition
-  - id: task-3
-    category: creation
-    time_limit: 30
-    KSA_focus:
-      primary:
-        - K2.3
-        - S2.1
-      secondary:
-        - A3.1
-    ai_module:
-      role: evaluator
-      model: gemini-2.5-flash
-      persona: Exhibition Curator
-      initial_prompt: |
-        You are an experienced exhibition curator helping students organize their digital art exhibition.
-        Your role is to guide them through professional curation practices.
+      - Help them understand the characteristics of different art movements
 
-        Response guidelines:
-        - If the user only greets you, ask them about their artworks and exhibition concept
-        - If they send irrelevant content, redirect them to focus on exhibition curation
-        - Guide them through writing effective artist statements
-        - Help them design cohesive exhibition layouts
+      - Guide them in using AI tools to generate art in various styles
 
-        Focus on:
-        - Teaching how to write compelling artist statements
-        - Helping organize artworks for visual flow and thematic coherence
-        - Assisting with exhibition materials (titles, descriptions, artist bio)
-        - Using AI to refine curatorial text and presentation
 
-        Always stay focused on the exhibition curation task.
-    title: Exhibition Curation
-    description: Design and organize your artworks into a cohesive digital exhibition
-    instructions:
-      - Write artist statements for each piece explaining your creative process
-      - Design the layout and flow of your digital exhibition
-      - Create exhibition materials (title, description, artist bio)
-      - Use AI to help refine your curatorial text and presentation
-    expected_outcome: A professionally curated digital art exhibition
+      Focus on:
+
+      - Explaining key features of art movements (Impressionism, Surrealism, Abstract,
+      etc.)
+
+      - Helping them craft effective prompts for AI art generation
+
+      - Encouraging comparison and analysis of results
+
+      - Supporting their creative vision selection
+
+
+      Always stay focused on the art style exploration task.
+
+      '
+  title: AI 藝術風格探索
+  description: 使用 AI 生成工具探索不同的藝術風格和流派
+  instructions:
+  - 研究主要藝術运动及其特徵
+  - 使用 AI 工具以不同藝術風格生成图像
+  - 记录並比較結果
+  - 选择 3-4 種與你創意願景共鳴的風格
+  expected_outcome: 展示不同風格的 AI 生成藝術作品集
+- id: task-2
+  category: creation
+  time_limit: 35
+  KSA_focus:
+    primary:
+    - S2.1
+    - K2.1
+    secondary:
+    - A2.1
+  ai_module:
+    role: assistant
+    model: gemini-2.5-flash
+    persona: Creative Art Mentor
+    initial_prompt: 'You are a creative art mentor helping students express their
+      personal themes through AI-generated art.
+
+      Your job is to guide them through the creative process of making meaningful
+      artworks.
+
+
+      Response guidelines:
+
+      - If the user only greets you, ask them about what personal themes or emotions
+      they want to express
+
+      - If they send irrelevant content, redirect them to focus on personal art creation
+
+      - Guide them through developing effective prompts that blend style with personal
+      content
+
+      - Help them iterate and refine their artistic vision
+
+
+      Focus on:
+
+      - Helping students identify and articulate personal themes
+
+      - Teaching prompt engineering for emotional and thematic expression
+
+      - Encouraging experimentation with different prompt variations
+
+      - Supporting the selection of final pieces for exhibition
+
+
+      Always stay focused on the personal art creation task.
+
+      '
+  title: 个人藝術創作
+  description: 創作表達个人主題和情感的原創藝術作品
+  instructions:
+  - 識別你想表達的个人主題或情感
+  - 开发將你选择的風格與个人内容結合的提示詞
+  - 生成多次迭代並完善你的提示詞
+  - 為你的展覽創作 5-8 件最終作品
+  expected_outcome: 準備好展覽的个人藝術作品集
+- id: task-3
+  category: creation
+  time_limit: 30
+  KSA_focus:
+    primary:
+    - K2.3
+    - S2.1
+    secondary:
+    - A3.1
+  ai_module:
+    role: evaluator
+    model: gemini-2.5-flash
+    persona: Exhibition Curator
+    initial_prompt: 'You are an experienced exhibition curator helping students organize
+      their digital art exhibition.
+
+      Your role is to guide them through professional curation practices.
+
+
+      Response guidelines:
+
+      - If the user only greets you, ask them about their artworks and exhibition
+      concept
+
+      - If they send irrelevant content, redirect them to focus on exhibition curation
+
+      - Guide them through writing effective artist statements
+
+      - Help them design cohesive exhibition layouts
+
+
+      Focus on:
+
+      - Teaching how to write compelling artist statements
+
+      - Helping organize artworks for visual flow and thematic coherence
+
+      - Assisting with exhibition materials (titles, descriptions, artist bio)
+
+      - Using AI to refine curatorial text and presentation
+
+
+      Always stay focused on the exhibition curation task.
+
+      '
+  title: 展覽策劃
+  description: 设计並组织你的藝術作品成为連貫的數位展覽
+  instructions:
+  - 為每件作品撰寫解释創作过程的藝術家陳述
+  - 设计數位展覽的佈局和流程
+  - 创建展覽材料（标题、描述、藝術家簡介）
+  - 使用 AI 幫助完善策展文字和展示
+  expected_outcome: 专业策劃的數位藝術展覽
 completion_criteria:
   min_tasks_completed: 3
   required_competencies:
-    - S2.1
-    - K2.1
+  - S2.1
+  - K2.1
   min_overall_score: 75
 resources:
-  - url: https://www.midjourney.com/
-    type: tool
-    name: '[Simplified Chinese translation needed]'
-  - url: https://www.artbreeder.com/
-    type: platform
-    name: '[Simplified Chinese translation needed]'
+- url: https://www.midjourney.com/
+  type: tool
+  name: AI 藝術生成工具
+- url: https://www.artbreeder.com/
+  type: platform
+  name: 數位藝術畫廊
 metadata:
   language: zhCN
   version: '1.0'
