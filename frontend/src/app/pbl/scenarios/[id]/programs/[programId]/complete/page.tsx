@@ -112,7 +112,7 @@ export default function ProgramCompletePage() {
     try {
       setGeneratingFeedback(true);
 
-      const currentLang = normalizeLanguageCode(i18n.language);
+      const currentLang = i18n.language;
       const response = await authenticatedFetch('/api/pbl/generate-feedback', {
         method: 'POST',
         headers: {
@@ -131,7 +131,7 @@ export default function ProgramCompletePage() {
 
       if (result.success && result.feedback) {
         // Update completion data with the new feedback
-        const currentLang = normalizeLanguageCode(i18n.language);
+        const currentLang = i18n.language;
         setCompletionData((prev) => {
           if (!prev) return null;
 
@@ -144,9 +144,9 @@ export default function ProgramCompletePage() {
             return {
               ...prev,
               qualitativeFeedback: {
-                ...(prev.qualitativeFeedback as LocalizedFeedback),
+                ...(prev.qualitativeFeedback as QualitativeFeedback),
                 [currentLang]: result.feedback
-              } as LocalizedFeedback
+              } as QualitativeFeedback
             };
           } else {
             // Migrate from old format to new format
@@ -154,7 +154,7 @@ export default function ProgramCompletePage() {
               ...prev,
               qualitativeFeedback: {
                 [currentLang]: result.feedback
-              } as LocalizedFeedback
+              } as QualitativeFeedback
             };
           }
         });
