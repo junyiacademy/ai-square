@@ -6,6 +6,7 @@ import {
 } from '@/types/pbl-evaluate';
 import { ErrorResponse } from '@/types/api';
 import { getUnifiedAuth } from '@/lib/auth/unified-auth';
+import { LANGUAGE_NAMES } from '@/lib/utils/language';
 
 export async function POST(request: NextRequest) {
   try {
@@ -24,7 +25,7 @@ export async function POST(request: NextRequest) {
       task,
       targetDomains,
       focusKSA,
-      language = 'en' // eslint-disable-line @typescript-eslint/no-unused-vars
+      language = 'en'
     }: EvaluateRequestBody = await request.json();
 
     if (!conversations || !task) {
@@ -36,9 +37,18 @@ export async function POST(request: NextRequest) {
     
     console.log('Evaluating task:', task.id, 'with', conversations.length, 'conversations');
 
+    // Get target language
+    const targetLanguage = LANGUAGE_NAMES[language as keyof typeof LANGUAGE_NAMES] || LANGUAGE_NAMES['en'];
+    const languageCode = language || 'en';
+
     // Prepare the evaluation prompt
     const evaluationPrompt = `
 You are an AI literacy education expert evaluating a learner's performance on a PBL (Problem-Based Learning) task.
+
+CRITICAL LANGUAGE REQUIREMENT:
+You MUST provide ALL evaluation feedback in ${targetLanguage} language (code: ${languageCode}).
+This includes ALL text fields: strengths, improvements, nextSteps, conversation insights quotes and reasons.
+DO NOT use English unless the target language is English.
 
 Task Information:
 - Title: ${task.title}
@@ -133,6 +143,10 @@ Important evaluation principles:
    - Progress toward learning objectives
    - Quality of interaction with AI (asking good questions, iterating on responses)
    - Understanding demonstrated through their responses
+
+REMEMBER: ALL text in your response MUST be in ${targetLanguage}. 
+This includes strengths, improvements, nextSteps, and conversation insights (both quotes and reasons).
+${languageCode !== 'en' ? `Do NOT use any English text.` : ''}
 `;
 
     // Initialize Vertex AI
@@ -144,6 +158,11 @@ Important evaluation principles:
     // Get the generative model
     const model = vertexAI.getGenerativeModel({
       model: 'gemini-2.5-flash',
+      systemInstruction: `You are a multilingual AI literacy education expert. 
+CRITICAL: You must ALWAYS respond in the EXACT language specified in the prompt. 
+Never mix languages. ALL text fields must be in the target language.
+For Traditional Chinese (繁體中文), use Traditional Chinese ONLY.
+For Simplified Chinese (简体中文), use Simplified Chinese ONLY.`,
     });
     
     // Call AI for evaluation

@@ -171,7 +171,11 @@
     "unknownError": "Неизвестная ошибка",
     "taskInfo": "Информация о задаче",
     "chat": "Чат",
-    "completeProgram": "Завершить программу"
+    "completeProgram": "Завершить программу",
+    "evaluationNeedsTranslation": "Эта оценка была создана на другом языке.",
+    "translateToCurrentLanguage": "Перевести на текущий язык",
+    "translating": "Перевод...",
+    "translationFailed": "Не удалось перевести оценку"
   },
   "history": {
     "title": "Учебное путешествие",

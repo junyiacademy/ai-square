@@ -171,7 +171,11 @@
     "unknownError": "خطأ غير معروف",
     "taskInfo": "معلومات المهمة",
     "chat": "محادثة",
-    "completeProgram": "إكمال البرنامج"
+    "completeProgram": "إكمال البرنامج",
+    "evaluationNeedsTranslation": "تم إنشاء هذا التقييم بلغة مختلفة.",
+    "translateToCurrentLanguage": "ترجمة إلى اللغة الحالية",
+    "translating": "جاري الترجمة...",
+    "translationFailed": "فشلت ترجمة التقييم"
   },
   "history": {
     "title": "رحلة التعلم",

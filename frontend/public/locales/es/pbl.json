@@ -171,7 +171,11 @@
     "unknownError": "Error Desconocido",
     "taskInfo": "Información de Tarea",
     "chat": "Chat",
-    "completeProgram": "Completar programa"
+    "completeProgram": "Completar programa",
+    "evaluationNeedsTranslation": "Esta evaluación fue generada en un idioma diferente.",
+    "translateToCurrentLanguage": "Traducir al idioma actual",
+    "translating": "Traduciendo...",
+    "translationFailed": "Error al traducir la evaluación"
   },
   "history": {
     "title": "Viaje de Aprendizaje",

@@ -171,7 +171,11 @@
     "unknownError": "Erro Desconhecido",
     "taskInfo": "Info da Tarefa",
     "chat": "Chat",
-    "completeProgram": "Concluir Programa"
+    "completeProgram": "Concluir Programa",
+    "evaluationNeedsTranslation": "Esta avaliação foi gerada em um idioma diferente.",
+    "translateToCurrentLanguage": "Traduzir para o idioma atual",
+    "translating": "Traduzindo...",
+    "translationFailed": "Falha ao traduzir a avaliação"
   },
   "history": {
     "title": "Jornada de Aprendizagem",

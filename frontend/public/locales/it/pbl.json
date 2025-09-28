@@ -171,7 +171,11 @@
     "unknownError": "Errore Sconosciuto",
     "taskInfo": "Info Compito",
     "chat": "Chat",
-    "completeProgram": "Completa il programma"
+    "completeProgram": "Completa il programma",
+    "evaluationNeedsTranslation": "Questa valutazione è stata generata in una lingua diversa.",
+    "translateToCurrentLanguage": "Traduci nella lingua corrente",
+    "translating": "Traduzione in corso...",
+    "translationFailed": "Traduzione della valutazione non riuscita"
   },
   "history": {
     "title": "Percorso di Apprendimento",
