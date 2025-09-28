@@ -9,6 +9,7 @@ import {
   Program,
   Scenario,
   Task,
+  DomainType,
 
 } from '@/types/pbl';
 import { TaskEvaluation } from '@/types/pbl-completion';
@@ -1095,7 +1096,7 @@ export default function ProgramLearningPage() {
                   </h4>
                   <div className="space-y-2">
                     {evaluation.domainScores && (() => {
-                      const domainOrder = ['engaging_with_ai', 'creating_with_ai', 'managing_with_ai', 'designing_with_ai'];
+                      const domainOrder: DomainType[] = ['engaging_with_ai', 'creating_with_ai', 'managing_with_ai', 'designing_with_ai'];
                       const targetDomainsList = scenario?.targetDomains || [];
                       
                       // Show all domains, but mark non-target ones as NA
@@ -1611,7 +1612,7 @@ export default function ProgramLearningPage() {
                       </h4>
                       <div className="space-y-2">
                         {evaluation.domainScores && (() => {
-                          const domainOrder = ['engaging_with_ai', 'creating_with_ai', 'managing_with_ai', 'designing_with_ai'];
+                          const domainOrder: DomainType[] = ['engaging_with_ai', 'creating_with_ai', 'managing_with_ai', 'designing_with_ai'];
                           const targetDomainsList = scenario?.targetDomains || [];
                           
                           // Show all domains, but mark non-target ones as NA
