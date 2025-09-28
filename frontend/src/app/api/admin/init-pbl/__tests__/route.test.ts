@@ -128,12 +128,14 @@ describe('/api/admin/init-pbl', () => {
       };
 
       (fs.readFile as jest.Mock)
-        .mockResolvedValueOnce('en yaml content')
-        .mockResolvedValueOnce('zhTW yaml content');
+        .mockResolvedValueOnce('en yaml content')     // Primary file (en)
+        .mockResolvedValueOnce('en yaml content')     // Loop iteration 1 (en)
+        .mockResolvedValueOnce('zhTW yaml content');  // Loop iteration 2 (zhTW)
       
       (yaml.load as jest.Mock)
-        .mockReturnValueOnce(mockEnYamlData)
-        .mockReturnValueOnce(mockZhTwYamlData);
+        .mockReturnValueOnce(mockEnYamlData)    // Primary file load
+        .mockReturnValueOnce(mockEnYamlData)    // Loop iteration 1 load
+        .mockReturnValueOnce(mockZhTwYamlData); // Loop iteration 2 load
 
       mockFindByMode.mockResolvedValue([]);
       mockCreate.mockResolvedValue({ id: 'created-scenario-id' });
