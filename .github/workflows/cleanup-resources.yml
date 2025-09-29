@@ -2,8 +2,8 @@ name: Cleanup Cloud Resources
 
 on:
   schedule:
-    # Run every Sunday at 2:00 AM UTC (10:00 AM Taiwan time)
-    - cron: '0 2 * * 0'
+    # Run every day at 2:00 AM UTC (10:00 AM Taiwan time)
+    - cron: '0 2 * * *'
   workflow_dispatch:  # Allow manual trigger
 
 env:
@@ -274,10 +274,10 @@ jobs:
           }
 
           # Clean up staging images (development phase - minimal retention)
-          cleanup_repository "gcr.io/${{ env.PROJECT_ID }}/ai-square-staging" 2
+          cleanup_repository "gcr.io/${{ env.PROJECT_ID }}/ai-square-staging" 1
 
-          # Clean up production images (keep 3 for safety)
-          cleanup_repository "gcr.io/${{ env.PROJECT_ID }}/ai-square-production" 3
+          # Clean up production images (keep 2 for rollback)
+          cleanup_repository "gcr.io/${{ env.PROJECT_ID }}/ai-square-production" 2
 
           echo ""
           echo "================================================"
