@@ -74,7 +74,6 @@ Agents Manager 是一個 Meta-Agent，負責：
 - **slack-tracker-integration**: Slack 報告與追蹤
 - **progress-memory-coach**: 進度與記憶管理
 - **git-commit-push**: Git 智能提交決策
-- **terraform-deploy**: Terraform 部署
 - **general-purpose**: 複雜搜尋與多步驟任務
 
 ### 🔍 智能選擇邏輯
@@ -93,7 +92,6 @@ GCP 配置 → gcp-config-manager
 Slack 報告 → slack-tracker-integration
 記憶管理 → progress-memory-coach
 Git 操作 → git-commit-push
-Terraform → terraform-deploy
 複雜搜尋 → general-purpose
 ```
 
@@ -126,9 +124,8 @@ Terraform → terraform-deploy
 ```yaml
 部署方式優先順序：
 1. GitHub Actions (CI/CD) - 最自動化
-2. Terraform + Makefile - 基礎設施即代碼
-3. 現有部署腳本 - 如 deploy-staging.sh
-4. gcloud 命令 - 直接使用 GCP CLI
+2. 現有部署腳本 - 如 deploy-staging.sh
+3. gcloud 命令 - 直接使用 GCP CLI
 
 絕對不要：
 ❌ 寫新的 shell script 來「解決」部署問題
@@ -144,7 +141,7 @@ Terraform → terraform-deploy
 ```yaml
 正確做法 (Day 1)：
 ✅ Cloud SQL + Cloud Run 從第一天開始
-✅ Terraform 管理所有基礎設施
+✅ GitHub Actions 管理所有部署流程
 ✅ CI/CD pipeline 第一週建立
 ✅ Secret Manager 管理所有密碼
 ✅ 監控告警從第一天開始
@@ -175,7 +172,7 @@ Terraform → terraform-deploy
 #### 3. **DevOps 文化 (Everything as Code)**
 ```yaml
 正確做法：
-✅ Infrastructure as Code (Terraform)
+✅ Infrastructure as Code (GitHub Actions + gcloud)
 ✅ Configuration as Code (環境變數)
 ✅ Deployment as Code (CI/CD)
 ✅ Immutable Infrastructure
@@ -220,7 +217,7 @@ Terraform → terraform-deploy
 
 ```bash
 # Day 1 必須完成（8小時內）：
-□ Terraform 專案初始化
+□ GitHub Actions 設定
 □ PostgreSQL + Redis 設定
 □ GitHub Actions CI/CD Pipeline
 □ 環境分離 (dev/staging/prod)
@@ -237,17 +234,14 @@ Terraform → terraform-deploy
 ✗ 沒有測試就上線
 ```
 
-### 💡 Terraform 優先策略
+### 💡 部署優先策略
 
 ```yaml
 遇到部署問題的 SOP：
-1. 檢查是否已有 Terraform 配置
-2. 沒有？立即建立！
-3. terraform import 現有資源
-4. terraform plan 檢查
-5. terraform apply 執行
-
-不要再 debug 神秘的 shell script！
+1. 檢查 GitHub Actions workflow
+2. 使用 gcloud 命令直接管理資源
+3. 更新 auto-deploy.yml 如需調整
+4. 避免創建新的部署腳本
 ```
 
 ### 📝 實際案例：AI Square 的教訓
@@ -255,7 +249,7 @@ Terraform → terraform-deploy
 ```yaml
 繞遠路的決策：
 1. GCS 當資料庫 → 應該直接用 PostgreSQL
-2. deploy.sh 腳本 → 應該直接用 Terraform
+2. deploy.sh 腳本 → 應該用 GitHub Actions
 3. Schema V1→V2→V3→V4 → 應該一開始就設計完整
 4. 漸進式測試覆蓋 → 應該 TDD from Day 1
 

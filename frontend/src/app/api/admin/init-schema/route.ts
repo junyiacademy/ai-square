@@ -46,8 +46,8 @@ export async function POST() {
       throw new Error('Database connection failed');
     }
 
-    // Initialize schema - the tables should already exist from Terraform
-    // This is just for verification and any app-level initialization
+    // Initialize schema - verify that database tables exist
+    // This is for verification and any app-level initialization
     const tables = [
       'users',
       'scenarios', 
