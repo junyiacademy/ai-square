@@ -157,9 +157,18 @@ jobs:
             fi
           done
 
-          # Extract unique digests from images in use
-          PROTECTED_DIGESTS=$(echo "$IMAGES_IN_USE" | grep -oE '@sha256:[a-f0-9]+' | sort -u)
-          echo "   📌 Found $(echo "$PROTECTED_DIGESTS" | wc -l) unique images in use"
+          # Extract unique digests from images in use (normalize to sha256: format)
+          PROTECTED_DIGESTS=$(echo "$IMAGES_IN_USE" | grep -oE '@sha256:[a-f0-9]{64}' | sed 's/@//' | sort -u)
+          PROTECTED_COUNT=$(echo "$PROTECTED_DIGESTS" | wc -l)
+          echo "   📌 Found $PROTECTED_COUNT unique images in use"
+          
+          # Debug: show protected digests
+          if [ -n "$PROTECTED_DIGESTS" ]; then
+            echo "   🔒 Protected digests:"
+            echo "$PROTECTED_DIGESTS" | sed 's/^/      /'
+          else
+            echo "   ⚠️ No protected digests found - will only keep latest $KEEP_COUNT by age"
+          fi
 
           # Function to clean up container images
           cleanup_repository() {
@@ -181,16 +190,18 @@ jobs:
               return
             fi
 
-            # Get total count first
-            TOTAL_IMAGES=$(gcloud container images list-tags "$REPO" \
-              --format="get(digest)" 2>&1 | wc -l)
+            # Get all images sorted by timestamp (newest first) - get full sha256 digests via JSON
+            RAW_IMAGES=$(gcloud container images list-tags "$REPO" \
+              --format="json" \
+              --sort-by="~timestamp" 2>&1)
+            
+            # Extract just the digests (with sha256: prefix)
+            IMAGES=$(echo "$RAW_IMAGES" | jq -r '.[].digest' 2>/dev/null || echo "")
+            
+            # Get total count
+            TOTAL_IMAGES=$(echo "$IMAGES" | grep -c '^sha256:' || echo "0")
 
             echo "   📊 Total images in repository: $TOTAL_IMAGES"
-
-            # Get all images except the latest KEEP_COUNT
-            IMAGES=$(gcloud container images list-tags "$REPO" \
-              --format="get(digest)" \
-              --sort-by="~timestamp" 2>&1)
 
             # Check for errors
             if echo "$IMAGES" | grep -q "ERROR"; then
@@ -198,8 +209,9 @@ jobs:
               return
             fi
 
-            # Get images to delete (skip the first KEEP_COUNT)
-            TO_DELETE=$(echo "$IMAGES" | tail -n +$((KEEP_COUNT + 1)))
+            # Filter out empty lines and get images to delete (skip the first KEEP_COUNT)
+            ALL_IMAGES=$(echo "$IMAGES" | grep -v '^$')
+            TO_DELETE=$(echo "$ALL_IMAGES" | tail -n +$((KEEP_COUNT + 1)))
 
             if [ -n "$TO_DELETE" ]; then
               IMAGE_COUNT=$(echo "$TO_DELETE" | wc -l)
@@ -208,8 +220,8 @@ jobs:
               # Process each image
               while IFS= read -r DIGEST; do
                 if [ -n "$DIGEST" ]; then
-                  # Check if this digest is in use
-                  if echo "$PROTECTED_DIGESTS" | grep -q "$DIGEST"; then
+                  # Check if this digest is in use (only if we have protected digests)
+                  if [ -n "$PROTECTED_DIGESTS" ] && echo "$PROTECTED_DIGESTS" | grep -q "$DIGEST"; then
                     SKIPPED_COUNT=$((SKIPPED_COUNT + 1))
                     echo "   ⏭️ Skipping ${DIGEST:0:19}... (in use by Cloud Run)"
                     continue
@@ -227,7 +239,7 @@ jobs:
                   else
                     FAILED_COUNT=$((FAILED_COUNT + 1))
                     echo "      ❌ Failed to delete"
-                    # Check for common error patterns
+                    # Check for common error patterns with better diagnostics
                     if echo "$DELETE_OUTPUT" | grep -q "referenced by"; then
                       echo "      ⚠️ Image is referenced by parent images (cannot delete)"
                     elif echo "$DELETE_OUTPUT" | grep -q "in use by"; then
@@ -236,8 +248,10 @@ jobs:
                       echo "      ⚠️ Registry error (possibly phantom image)"
                     elif echo "$DELETE_OUTPUT" | grep -q "404"; then
                       echo "      ⚠️ Image not found (already deleted?)"
+                    elif echo "$DELETE_OUTPUT" | grep -q "Invalid value"; then
+                      echo "      ⚠️ Invalid digest format: $DIGEST"
                     else
-                      echo "      ⚠️ Error: ${DELETE_OUTPUT:0:100}..."
+                      echo "      ⚠️ Error: ${DELETE_OUTPUT:0:150}..."
                     fi
                   fi
                 fi
