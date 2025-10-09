@@ -1,6 +1,7 @@
 import { render, screen, waitFor, within } from '@testing-library/react';
 import { useTranslation } from 'react-i18next';
 import PBLScenariosPage from '../page';
+import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
 
 // Mock dependencies
 jest.mock('react-i18next', () => ({
@@ -15,6 +16,11 @@ jest.mock('next/link', () => {
 
 jest.mock('@/components/pbl/loading-skeletons', () => ({
   PBLScenariosListSkeleton: () => <div data-testid="loading-skeleton">Loading...</div>
+}));
+
+// Mock authenticatedFetch
+jest.mock('@/lib/utils/authenticated-fetch', () => ({
+  authenticatedFetch: jest.fn()
 }));
 
 // Mock fetch
@@ -37,7 +43,7 @@ describe('PBLScenariosPage', () => {
   });
 
   it('should render loading skeleton initially', () => {
-    (fetch as jest.Mock).mockImplementation(() => new Promise(() => {})); // Never resolves
+    (authenticatedFetch as jest.Mock).mockImplementation(() => new Promise(() => {})); // Never resolves
     
     render(<PBLScenariosPage />);
     
@@ -48,8 +54,8 @@ describe('PBLScenariosPage', () => {
     const mockScenarios = [
       {
         id: 'scenario-1',
-        title: 'Semiconductor Adventure',
-        description: 'Learn about semiconductors',
+        title: { en: 'Semiconductor Adventure' },
+        description: { en: 'Learn about semiconductors' },
         difficulty: 'intermediate',
         taskTemplates: [{ estimatedTime: 20 }, { estimatedTime: 30 }],
         thumbnailEmoji: '💡',
@@ -57,8 +63,8 @@ describe('PBLScenariosPage', () => {
       },
       {
         id: 'scenario-2',
-        title: 'AI in Education',
-        description: 'Explore AI applications in learning',
+        title: { en: 'AI in Education' },
+        description: { en: 'Explore AI applications in learning' },
         difficulty: 'beginner',
         taskCount: 3,
         domains: ['engaging_with_ai'],
@@ -66,7 +72,7 @@ describe('PBLScenariosPage', () => {
       }
     ];
 
-    (fetch as jest.Mock).mockResolvedValueOnce({
+    (authenticatedFetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
       json: async () => ({
         success: true,
@@ -87,7 +93,7 @@ describe('PBLScenariosPage', () => {
   it('should handle API error gracefully', async () => {
     const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
     
-    (fetch as jest.Mock).mockRejectedValueOnce(new Error('Network error'));
+    (authenticatedFetch as jest.Mock).mockRejectedValueOnce(new Error('Network error'));
 
     render(<PBLScenariosPage />);
 
@@ -104,7 +110,7 @@ describe('PBLScenariosPage', () => {
   });
 
   it('should show empty state when no scenarios', async () => {
-    (fetch as jest.Mock).mockResolvedValueOnce({
+    (authenticatedFetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
       json: async () => ({
         success: true,
@@ -125,28 +131,28 @@ describe('PBLScenariosPage', () => {
     const mockScenarios = [
       {
         id: 's1',
-        title: 'Semiconductor Beginner Scenario',
-        description: 'Easy',
+        title: { en: 'Semiconductor Beginner Scenario' },
+        description: { en: 'Easy' },
         difficulty: 'beginner',
         taskTemplates: []
       },
       {
         id: 's2',
-        title: 'Semiconductor Intermediate Scenario',
-        description: 'Medium',
+        title: { en: 'Semiconductor Intermediate Scenario' },
+        description: { en: 'Medium' },
         difficulty: 'intermediate',
         taskTemplates: []
       },
       {
         id: 's3',
-        title: 'Semiconductor Advanced Scenario',
-        description: 'Hard',
+        title: { en: 'Semiconductor Advanced Scenario' },
+        description: { en: 'Hard' },
         difficulty: 'advanced',
         taskTemplates: []
       }
     ];
 
-    (fetch as jest.Mock).mockResolvedValueOnce({
+    (authenticatedFetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
       json: async () => ({
         success: true,
@@ -174,14 +180,14 @@ describe('PBLScenariosPage', () => {
     const mockScenarios = [
       {
         id: 'scenario-1',
-        title: 'Semiconductor Test Scenario',
-        description: 'Test',
+        title: { en: 'Semiconductor Test Scenario' },
+        description: { en: 'Test' },
         domains: ['engaging_with_ai', 'creating_with_ai'],
         taskTemplates: []
       }
     ];
 
-    (fetch as jest.Mock).mockResolvedValueOnce({
+    (authenticatedFetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
       json: async () => ({
         success: true,
@@ -203,8 +209,8 @@ describe('PBLScenariosPage', () => {
     const mockScenarios = [
       {
         id: 'scenario-1',
-        title: 'Test Scenario',
-        description: 'Test',
+        title: { en: 'Semiconductor Duration Scenario' },
+        description: { en: 'Test' },
         taskTemplates: [
           { estimatedTime: 15 },
           { estimatedTime: 20 },
@@ -213,7 +219,7 @@ describe('PBLScenariosPage', () => {
       }
     ];
 
-    (fetch as jest.Mock).mockResolvedValueOnce({
+    (authenticatedFetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
       json: async () => ({
         success: true,
@@ -224,7 +230,7 @@ describe('PBLScenariosPage', () => {
     render(<PBLScenariosPage />);
 
     await waitFor(() => {
-      expect(screen.getByText('Test Scenario')).toBeInTheDocument();
+      expect(screen.getByText('Semiconductor Duration Scenario')).toBeInTheDocument();
     });
 
     // Total duration should be 15 + 20 + 25 = 60
@@ -235,14 +241,14 @@ describe('PBLScenariosPage', () => {
     const mockScenarios = [
       {
         id: 'scenario-1',
-        title: 'Unavailable Scenario',
-        description: 'Not yet available',
+        title: { en: 'Unavailable Semiconductor Scenario' },
+        description: { en: 'Not yet available' },
         isAvailable: false,
         taskTemplates: []
       }
     ];
 
-    (fetch as jest.Mock).mockResolvedValueOnce({
+    (authenticatedFetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
       json: async () => ({
         success: true,
@@ -253,7 +259,7 @@ describe('PBLScenariosPage', () => {
     render(<PBLScenariosPage />);
 
     await waitFor(() => {
-      expect(screen.getByText('Unavailable Scenario')).toBeInTheDocument();
+      expect(screen.getByText('Unavailable Semiconductor Scenario')).toBeInTheDocument();
     });
 
     expect(screen.getByText('comingSoon')).toBeInTheDocument();
@@ -264,14 +270,14 @@ describe('PBLScenariosPage', () => {
     const mockScenarios = [
       {
         id: 'scenario-1',
-        title: 'Available Scenario',
-        description: 'Ready to use',
+        title: { en: 'Available Semiconductor Scenario' },
+        description: { en: 'Ready to use' },
         isAvailable: true,
         taskTemplates: []
       }
     ];
 
-    (fetch as jest.Mock).mockResolvedValueOnce({
+    (authenticatedFetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
       json: async () => ({
         success: true,
@@ -282,7 +288,7 @@ describe('PBLScenariosPage', () => {
     render(<PBLScenariosPage />);
 
     await waitFor(() => {
-      expect(screen.getByText('Available Scenario')).toBeInTheDocument();
+      expect(screen.getByText('Available Semiconductor Scenario')).toBeInTheDocument();
     });
 
     const link = screen.getByRole('link', { name: 'viewDetails' });
@@ -290,7 +296,7 @@ describe('PBLScenariosPage', () => {
   });
 
   it('should render features section', async () => {
-    (fetch as jest.Mock).mockResolvedValueOnce({
+    (authenticatedFetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
       json: async () => ({
         success: true,
@@ -312,7 +318,7 @@ describe('PBLScenariosPage', () => {
   });
 
   it('should render refresh button when no scenarios', async () => {
-    (fetch as jest.Mock).mockResolvedValueOnce({
+    (authenticatedFetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
       json: async () => ({
         success: true,
@@ -342,7 +348,7 @@ describe('PBLScenariosPage', () => {
       signal: {} as AbortSignal
     })) as any;
 
-    (fetch as jest.Mock).mockImplementation(() => new Promise(() => {}));
+    (authenticatedFetch as jest.Mock).mockImplementation(() => new Promise(() => {}));
 
     const { unmount } = render(<PBLScenariosPage />);
     
@@ -359,7 +365,7 @@ describe('PBLScenariosPage', () => {
   it('should handle non-ok response', async () => {
     const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
 
-    (fetch as jest.Mock).mockResolvedValueOnce({
+    (authenticatedFetch as jest.Mock).mockResolvedValueOnce({
       ok: false,
       status: 500,
       json: async () => ({ error: 'Server error' })
@@ -385,8 +391,8 @@ describe('PBLScenariosPage', () => {
     const mockScenarios = [
       {
         id: 'scenario-1',
-        title: 'Unified Format Scenario',
-        description: 'Test scenario with unified format',
+        title: { en: 'Semiconductor Unified Format Scenario' },
+        description: { en: 'Test scenario with unified format' },
         sourceMetadata: {
           domain: 'designing_with_ai',
           difficulty: 'advanced'
@@ -395,7 +401,7 @@ describe('PBLScenariosPage', () => {
       }
     ];
 
-    (fetch as jest.Mock).mockResolvedValueOnce({
+    (authenticatedFetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
       json: async () => ({
         success: true,
@@ -406,7 +412,7 @@ describe('PBLScenariosPage', () => {
     render(<PBLScenariosPage />);
 
     await waitFor(() => {
-      expect(screen.getByText('Unified Format Scenario')).toBeInTheDocument();
+      expect(screen.getByText('Semiconductor Unified Format Scenario')).toBeInTheDocument();
     });
 
     // Should extract domain from sourceMetadata
@@ -418,7 +424,7 @@ describe('PBLScenariosPage', () => {
   it('should use language from i18n for API call', async () => {
     mockI18n.language = 'zh';
 
-    (fetch as jest.Mock).mockResolvedValueOnce({
+    (authenticatedFetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
       json: async () => ({
         success: true,
@@ -429,7 +435,7 @@ describe('PBLScenariosPage', () => {
     render(<PBLScenariosPage />);
 
     await waitFor(() => {
-      expect(fetch).toHaveBeenCalledWith(
+      expect(authenticatedFetch).toHaveBeenCalledWith(
         '/api/pbl/scenarios?lang=zh',
         expect.objectContaining({
           signal: expect.any(Object)
@@ -442,14 +448,14 @@ describe('PBLScenariosPage', () => {
     const mockScenarios = [
       {
         id: 'scenario-1',
-        title: 'Semiconductor Scenario With Target Domain',
-        description: 'Test Description',
+        title: { en: 'Semiconductor Scenario With Target Domain' },
+        description: { en: 'Test Description' },
         targetDomain: ['managing_with_ai', 'creating_with_ai'],
         taskTemplates: []
       }
     ];
 
-    (fetch as jest.Mock).mockResolvedValueOnce({
+    (authenticatedFetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
       json: async () => ({
         success: true,

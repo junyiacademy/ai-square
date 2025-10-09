@@ -77,6 +77,15 @@ export default function PBLScenariosPage() {
     }
   };
 
+  const getLocalizedText = (text: string | Record<string, string> | undefined): string => {
+    if (!text) return '';
+    if (typeof text === 'string') return text;
+    if (typeof text === 'object') {
+      return text[i18n.language] || text.en || Object.values(text)[0] || '';
+    }
+    return '';
+  };
+
   useEffect(() => {
     let isMounted = true;
     const controller = new AbortController();
@@ -226,7 +235,7 @@ export default function PBLScenariosPage() {
                         <span className="text-2xl">{('thumbnailEmoji' in scenario ? String(scenario.thumbnailEmoji) : null) || '📚'}</span>
                       </div>
                       <h2 className="ml-4 text-xl font-semibold text-gray-900 dark:text-white pr-16">
-                        {String(scenario.title)}
+                        {getLocalizedText(scenario.title as string | Record<string, string>)}
                       </h2>
                     </div>
                     
@@ -260,7 +269,7 @@ export default function PBLScenariosPage() {
                         </span>
                       </div>
                       <p className="text-gray-600 dark:text-gray-300">
-                        {String(scenario.description)}
+                        {getLocalizedText(scenario.description as string | Record<string, string>)}
                       </p>
                     </div>
 
