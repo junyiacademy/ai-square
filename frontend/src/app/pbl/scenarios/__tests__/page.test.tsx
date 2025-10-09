@@ -48,11 +48,11 @@ describe('PBLScenariosPage', () => {
     const mockScenarios = [
       {
         id: 'scenario-1',
-        title: 'AI Ethics in Healthcare',
-        description: 'Learn about ethical AI use in medical settings',
+        title: 'Semiconductor Adventure',
+        description: 'Learn about semiconductors',
         difficulty: 'intermediate',
         taskTemplates: [{ estimatedTime: 20 }, { estimatedTime: 30 }],
-        thumbnailEmoji: '🏥',
+        thumbnailEmoji: '💡',
         isAvailable: true
       },
       {
@@ -77,12 +77,11 @@ describe('PBLScenariosPage', () => {
     render(<PBLScenariosPage />);
 
     await waitFor(() => {
-      expect(screen.getByText('AI Ethics in Healthcare')).toBeInTheDocument();
+      expect(screen.getByText('Semiconductor Adventure')).toBeInTheDocument();
     });
 
-    expect(screen.getByText('AI in Education')).toBeInTheDocument();
-    expect(screen.getByText('Learn about ethical AI use in medical settings')).toBeInTheDocument();
-    expect(screen.getByText('Explore AI applications in learning')).toBeInTheDocument();
+    expect(screen.queryByText('AI in Education')).not.toBeInTheDocument();
+    expect(screen.getByText('Learn about semiconductors')).toBeInTheDocument();
   });
 
   it('should handle API error gracefully', async () => {
@@ -126,21 +125,21 @@ describe('PBLScenariosPage', () => {
     const mockScenarios = [
       {
         id: 's1',
-        title: 'Beginner Scenario',
+        title: 'Semiconductor Beginner Scenario',
         description: 'Easy',
         difficulty: 'beginner',
         taskTemplates: []
       },
       {
         id: 's2',
-        title: 'Intermediate Scenario',
+        title: 'Semiconductor Intermediate Scenario',
         description: 'Medium',
         difficulty: 'intermediate',
         taskTemplates: []
       },
       {
         id: 's3',
-        title: 'Advanced Scenario',
+        title: 'Semiconductor Advanced Scenario',
         description: 'Hard',
         difficulty: 'advanced',
         taskTemplates: []
@@ -158,7 +157,7 @@ describe('PBLScenariosPage', () => {
     render(<PBLScenariosPage />);
 
     await waitFor(() => {
-      expect(screen.getByText('Beginner Scenario')).toBeInTheDocument();
+      expect(screen.getByText('Semiconductor Beginner Scenario')).toBeInTheDocument();
     });
 
     // Check that all difficulty levels are displayed
@@ -166,16 +165,16 @@ describe('PBLScenariosPage', () => {
     expect(allText.length).toBeGreaterThan(0);
     
     // Verify each scenario has its difficulty displayed
-    expect(screen.getByText('Beginner Scenario')).toBeInTheDocument();
-    expect(screen.getByText('Intermediate Scenario')).toBeInTheDocument();
-    expect(screen.getByText('Advanced Scenario')).toBeInTheDocument();
+    expect(screen.getByText('Semiconductor Beginner Scenario')).toBeInTheDocument();
+    expect(screen.getByText('Semiconductor Intermediate Scenario')).toBeInTheDocument();
+    expect(screen.getByText('Semiconductor Advanced Scenario')).toBeInTheDocument();
   });
 
   it('should display domain labels', async () => {
     const mockScenarios = [
       {
         id: 'scenario-1',
-        title: 'Test Scenario',
+        title: 'Semiconductor Test Scenario',
         description: 'Test',
         domains: ['engaging_with_ai', 'creating_with_ai'],
         taskTemplates: []
@@ -193,7 +192,7 @@ describe('PBLScenariosPage', () => {
     render(<PBLScenariosPage />);
 
     await waitFor(() => {
-      expect(screen.getByText('Test Scenario')).toBeInTheDocument();
+    expect(screen.getByText('Semiconductor Test Scenario')).toBeInTheDocument();
     });
 
     expect(mockT).toHaveBeenCalledWith('assessment:domains.engaging_with_ai');

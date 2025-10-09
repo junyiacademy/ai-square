@@ -15,6 +15,59 @@ export default function PBLScenariosPage() {
   const [scenarios, setScenarios] = useState<FlexibleScenario[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const isSemiconductorScenario = (scenario: FlexibleScenario): boolean => {
+    if (!scenario || typeof scenario !== 'object') {
+      return false;
+    }
+
+    const record = scenario as Record<string, unknown>;
+    const candidates: string[] = [];
+
+    const pushIfString = (value: unknown) => {
+      if (typeof value === 'string' && value.trim().length > 0) {
+        candidates.push(value);
+      }
+    };
+
+    pushIfString(record.id);
+    pushIfString(record.yamlId);
+    pushIfString(record.sourceId);
+
+    const sourceMetadata = record.sourceMetadata as Record<string, unknown> | undefined;
+    if (sourceMetadata) {
+      pushIfString(sourceMetadata.yamlId);
+      pushIfString(sourceMetadata.id);
+    }
+
+    const metadata = record.metadata as Record<string, unknown> | undefined;
+    if (metadata) {
+      pushIfString(metadata.yamlId);
+      pushIfString(metadata.sourceId);
+    }
+
+    const title = record.title;
+    if (typeof title === 'string') {
+      pushIfString(title);
+    } else if (title && typeof title === 'object') {
+      const titleRecord = title as Record<string, unknown>;
+      pushIfString(titleRecord[i18n.language]);
+      pushIfString(titleRecord.en);
+      Object.values(titleRecord).forEach(pushIfString);
+    }
+
+    const normalizedCandidates = candidates
+      .map((value) => value.toLowerCase());
+
+    return normalizedCandidates.some((value, index) => {
+      const original = candidates[index];
+      return (
+        value.includes('semiconductor') ||
+        original.includes('半導體') ||
+        original.includes('半导体')
+      );
+    });
+  };
+
   const getDifficultyStars = (difficulty: string) => {
     switch (difficulty) {
       case 'beginner': return '⭐';
@@ -44,7 +97,8 @@ export default function PBLScenariosPage() {
         if (isMounted) {
           // Handle PBL API response structure
           if (result.success && result.data?.scenarios) {
-            setScenarios(result.data.scenarios);
+            const filteredScenarios = (result.data.scenarios as FlexibleScenario[]).filter(isSemiconductorScenario);
+            setScenarios(filteredScenarios);
           } else {
             setScenarios([]);
           }
