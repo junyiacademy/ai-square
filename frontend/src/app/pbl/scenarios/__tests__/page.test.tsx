@@ -442,7 +442,7 @@ describe('PBLScenariosPage', () => {
     const mockScenarios = [
       {
         id: 'scenario-1',
-        title: 'Test Scenario With Target Domain',
+        title: 'Semiconductor Scenario With Target Domain',
         description: 'Test Description',
         targetDomain: ['managing_with_ai', 'creating_with_ai'],
         taskTemplates: []
@@ -460,7 +460,7 @@ describe('PBLScenariosPage', () => {
     render(<PBLScenariosPage />);
 
     await waitFor(() => {
-      expect(screen.getByText('Test Scenario With Target Domain')).toBeInTheDocument();
+      expect(screen.getByText('Semiconductor Scenario With Target Domain')).toBeInTheDocument();
     });
 
     expect(mockT).toHaveBeenCalledWith('assessment:domains.managing_with_ai');
