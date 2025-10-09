@@ -39,21 +39,17 @@ describe('LanguageSelector', () => {
     expect(select).toBeInTheDocument()
   })
 
-  it('displays all language options with flags', () => {
+  it('displays supported language options with flags', () => {
     render(<LanguageSelector />)
     
     const select = screen.getByLabelText('選擇語言')
     
-    // Check if all language options are present with flags
+    // Check if supported language options are present with flags
     expect(select).toHaveTextContent('🇺🇸 English')
     expect(select).toHaveTextContent('🇹🇼 繁體中文')
-    expect(select).toHaveTextContent('🇪🇸 Español')
-    expect(select).toHaveTextContent('🇯🇵 日本語')
-    expect(select).toHaveTextContent('🇰🇷 한국어')
-    expect(select).toHaveTextContent('🇫🇷 Français')
-    expect(select).toHaveTextContent('🇩🇪 Deutsch')
-    expect(select).toHaveTextContent('🇷🇺 Русский')
-    expect(select).toHaveTextContent('🇮🇹 Italiano')
+    expect(select).toHaveTextContent('🇨🇳 简体中文')
+    expect(select).not.toHaveTextContent('🇪🇸 Español')
+    expect(select).not.toHaveTextContent('🇯🇵 日本語')
   })
 
   it('changes language when option is selected', () => {
@@ -78,9 +74,9 @@ describe('LanguageSelector', () => {
     render(<LanguageSelector />)
     
     const select = screen.getByLabelText('選擇語言')
-    fireEvent.change(select, { target: { value: 'ja' } })
+    fireEvent.change(select, { target: { value: 'zhCN' } })
     
-    expect(localStorage.getItem('ai-square-language')).toBe('ja')
+    expect(localStorage.getItem('ai-square-language')).toBe('zhCN')
   })
 
 
@@ -90,12 +86,12 @@ describe('LanguageSelector', () => {
     render(<LanguageSelector />)
     
     const select = screen.getByLabelText('選擇語言')
-    fireEvent.change(select, { target: { value: 'fr' } })
+    fireEvent.change(select, { target: { value: 'zhTW' } })
     
     expect(mockDispatchEvent).toHaveBeenCalledWith(
       expect.objectContaining({
         type: 'language-changed',
-        detail: { language: 'fr' },
+        detail: { language: 'zhTW' },
       })
     )
     

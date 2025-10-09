@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import '@/i18n'
 
@@ -12,17 +12,18 @@ const languages: Language[] = [
   { code: 'en', name: 'English', flag: '🇺🇸' },
   { code: 'zhTW', name: '繁體中文', flag: '🇹🇼' },
   { code: 'zhCN', name: '简体中文', flag: '🇨🇳' },
-  { code: 'pt', name: 'Português', flag: '🇧🇷' },
-  { code: 'ar', name: 'العربية', flag: '🇸🇦' },
-  { code: 'id', name: 'Bahasa Indonesia', flag: '🇮🇩' },
-  { code: 'th', name: 'ภาษาไทย', flag: '🇹🇭' },
-  { code: 'es', name: 'Español', flag: '🇪🇸' },
-  { code: 'ja', name: '日本語', flag: '🇯🇵' },
-  { code: 'ko', name: '한국어', flag: '🇰🇷' },
-  { code: 'fr', name: 'Français', flag: '🇫🇷' },
-  { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
-  { code: 'ru', name: 'Русский', flag: '🇷🇺' },
-  { code: 'it', name: 'Italiano', flag: '🇮🇹' },
+  // Temporarily disabled languages:
+  // { code: 'pt', name: 'Português', flag: '🇧🇷' },
+  // { code: 'ar', name: 'العربية', flag: '🇸🇦' },
+  // { code: 'id', name: 'Bahasa Indonesia', flag: '🇮🇩' },
+  // { code: 'th', name: 'ภาษาไทย', flag: '🇹🇭' },
+  // { code: 'es', name: 'Español', flag: '🇪🇸' },
+  // { code: 'ja', name: '日本語', flag: '🇯🇵' },
+  // { code: 'ko', name: '한국어', flag: '🇰🇷' },
+  // { code: 'fr', name: 'Français', flag: '🇫🇷' },
+  // { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
+  // { code: 'ru', name: 'Русский', flag: '🇷🇺' },
+  // { code: 'it', name: 'Italiano', flag: '🇮🇹' },
 ]
 
 interface LanguageSelectorProps {
@@ -31,20 +32,29 @@ interface LanguageSelectorProps {
 
 export function LanguageSelector({ className = '' }: LanguageSelectorProps) {
   const { i18n } = useTranslation()
-  const [currentLang, setCurrentLang] = useState(i18n.language)
+  const supportedCodes = useMemo(() => languages.map((language) => language.code), [])
+  const fallbackLang = languages[0].code
+  const [currentLang, setCurrentLang] = useState(
+    supportedCodes.includes(i18n.language) ? i18n.language : fallbackLang
+  )
 
   // 初始化時同步語言狀態
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const savedLang = localStorage.getItem('ai-square-language')
-      if (savedLang && savedLang !== i18n.language) {
+      if (savedLang && supportedCodes.includes(savedLang) && savedLang !== i18n.language) {
         i18n.changeLanguage(savedLang)
         setCurrentLang(savedLang)
+      } else if (!supportedCodes.includes(i18n.language)) {
+        i18n.changeLanguage(fallbackLang)
+        setCurrentLang(fallbackLang)
       }
     }
-  }, [i18n])
+  }, [fallbackLang, i18n, supportedCodes])
 
   const handleLanguageChange = (lng: string) => {
+    if (!supportedCodes.includes(lng)) return
+
     i18n.changeLanguage(lng)
     setCurrentLang(lng)
     // 儲存用戶語言偏好
@@ -52,7 +62,9 @@ export function LanguageSelector({ className = '' }: LanguageSelectorProps) {
       localStorage.setItem('ai-square-language', lng)
     }
     // 觸發自定義事件通知其他組件語言已改變
-    window.dispatchEvent(new CustomEvent('language-changed', { detail: { language: lng } }))
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('language-changed', { detail: { language: lng } }))
+    }
   }
 
   return (

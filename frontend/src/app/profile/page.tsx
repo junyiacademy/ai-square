@@ -21,6 +21,31 @@ export default function ProfilePage() {
   const { t, i18n } = useTranslation(['common', 'auth']);
   const { user, isLoading: authLoading } = useAuth();
   
+  // 支援的語言列表
+  const supportedLanguages = [
+    { code: 'en', name: 'English' },
+    { code: 'zhTW', name: '繁體中文' },
+    { code: 'zhCN', name: '简体中文' },
+    // Temporarily disabled languages:
+    // { code: 'es', name: 'Español' },
+    // { code: 'fr', name: 'Français' },
+    // { code: 'de', name: 'Deutsch' },
+    // { code: 'ja', name: '日本語' },
+    // { code: 'ko', name: '한국어' },
+    // { code: 'pt', name: 'Português' },
+    // { code: 'ru', name: 'Русский' },
+    // { code: 'ar', name: 'العربية' },
+    // { code: 'hi', name: 'हिन्दी' },
+    // { code: 'id', name: 'Bahasa Indonesia' },
+    // { code: 'it', name: 'Italiano' },
+  ];
+  const supportedLanguageCodes = supportedLanguages.map((language) => language.code);
+  const fallbackLanguage = supportedLanguages[0].code;
+  const normalizeLanguage = (languageCode?: string | null) =>
+    languageCode && supportedLanguageCodes.includes(languageCode)
+      ? languageCode
+      : fallbackLanguage;
+  
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -30,29 +55,11 @@ export default function ProfilePage() {
   
   // Form fields
   const [name, setName] = useState('');
-  const [preferredLanguage, setPreferredLanguage] = useState('en');
+  const [preferredLanguage, setPreferredLanguage] = useState(fallbackLanguage);
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPasswordSection, setShowPasswordSection] = useState(false);
-
-  // 支援的語言列表
-  const supportedLanguages = [
-    { code: 'en', name: 'English' },
-    { code: 'zhTW', name: '繁體中文' },
-    { code: 'zhCN', name: '简体中文' },
-    { code: 'es', name: 'Español' },
-    { code: 'fr', name: 'Français' },
-    { code: 'de', name: 'Deutsch' },
-    { code: 'ja', name: '日本語' },
-    { code: 'ko', name: '한국어' },
-    { code: 'pt', name: 'Português' },
-    { code: 'ru', name: 'Русский' },
-    { code: 'ar', name: 'العربية' },
-    { code: 'hi', name: 'हिन्दी' },
-    { code: 'id', name: 'Bahasa Indonesia' },
-    { code: 'it', name: 'Italiano' },
-  ];
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -73,7 +80,11 @@ export default function ProfilePage() {
       if (data.success) {
         setProfile(data.user);
         setName(data.user.name || '');
-        setPreferredLanguage(data.user.preferredLanguage || 'en');
+        const updatedLanguage = normalizeLanguage(data.user.preferredLanguage);
+        setPreferredLanguage(updatedLanguage);
+        if (updatedLanguage !== i18n.language) {
+          await i18n.changeLanguage(updatedLanguage);
+        }
       } else {
         setError(data.error || 'Failed to load profile');
       }
