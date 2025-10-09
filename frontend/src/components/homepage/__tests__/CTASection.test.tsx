@@ -71,13 +71,13 @@ describe('CTASection', () => {
     renderWithProviders(<CTASection />);
     
     // Check statistics numbers
-    expect(screen.getByText('9')).toBeInTheDocument();
+    expect(screen.getByText('3')).toBeInTheDocument();
     expect(screen.getByText('4')).toBeInTheDocument();
     expect(screen.getByText('20+')).toBeInTheDocument();
     expect(screen.getByText('24/7')).toBeInTheDocument();
     
     // Check statistics labels
-    expect(screen.getByText('Languages')).toBeInTheDocument();
+    expect(screen.getByText('Languages (EN / 繁體 / 简体)')).toBeInTheDocument();
     expect(screen.getByText('AI Domains')).toBeInTheDocument();
     expect(screen.getByText('Competencies')).toBeInTheDocument();
     expect(screen.getByText('AI Support')).toBeInTheDocument();

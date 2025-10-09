@@ -41,7 +41,7 @@ describe('Footer', () => {
     expect(screen.getByText(/AI Square is a Git-Based learning platform/)).toBeInTheDocument()
     
     // Check stats - text is combined in single elements
-    expect(screen.getByText('10+ Languages')).toBeInTheDocument()
+    expect(screen.getByText('Languages: English / 繁體中文 / 简体中文')).toBeInTheDocument()
     expect(screen.getByText('4 AI Domains')).toBeInTheDocument()
     expect(screen.getByText('20+ Competencies')).toBeInTheDocument()
   })

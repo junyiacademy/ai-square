@@ -52,8 +52,8 @@ export default function CTASection() {
         {/* Decorative elements */}
         <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
           <div className="text-white">
-            <div className="text-4xl font-bold mb-2">9</div>
-            <div className="text-blue-200">Languages</div>
+            <div className="text-4xl font-bold mb-2">3</div>
+            <div className="text-blue-200">Languages (EN / 繁體 / 简体)</div>
           </div>
           <div className="text-white">
             <div className="text-4xl font-bold mb-2">4</div>
