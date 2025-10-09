@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
@@ -85,6 +85,23 @@ export default function ScenarioDetailPage() {
   const [isProgramsCollapsed, setIsProgramsCollapsed] = useState(false);
   const [videoModalUrl, setVideoModalUrl] = useState<string | null>(null);
   const scenarioId = params.id as string;
+
+  const isScenarioInteractive = useMemo(() => {
+    if (!scenario) return false;
+
+    const title =
+      typeof scenario.title === 'string'
+        ? scenario.title
+        : scenario.title?.[i18n.language] || scenario.title?.en || '';
+
+    const normalizedTitle = title?.toLowerCase?.() || '';
+
+    if (normalizedTitle.includes('semiconductor')) return true;
+    if (title?.includes('半導體')) return true;
+    if (title?.includes('半导体')) return true;
+
+    return false;
+  }, [scenario, i18n.language]);
 
   useEffect(() => {
     let ignore = false;
@@ -189,7 +206,11 @@ export default function ScenarioDetailPage() {
     // }
   };
 
-  const handleStartProgram = async (programId?: string) => {
+const handleStartProgram = async (programId?: string) => {
+    if (!isScenarioInteractive) {
+      return;
+    }
+
     if (!scenario) return;
 
     setIsStarting(true);
@@ -424,8 +445,13 @@ export default function ScenarioDetailPage() {
                         </div>
                         <div className="flex gap-2 justify-end">
                           <button
-                            onClick={() => handleStartProgram(program.id)}
-                            className="text-sm px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors font-medium"
+                            onClick={() => isScenarioInteractive && handleStartProgram(program.id)}
+                            disabled={!isScenarioInteractive}
+                            className={`text-sm px-4 py-2 rounded-md transition-colors font-medium ${
+                              isScenarioInteractive
+                                ? 'bg-blue-600 text-white hover:bg-blue-700'
+                                : 'bg-gray-200 text-gray-600 cursor-not-allowed dark:bg-gray-700 dark:text-gray-400'
+                            }`}
                           >
                             {t('common:continue', 'Continue')}
                           </button>
@@ -446,17 +472,30 @@ export default function ScenarioDetailPage() {
               )}
 
               {/* Action Buttons */}
-              <div className="flex gap-4">
-                <button
-                  onClick={() => handleStartProgram()}
-                  disabled={isStarting}
-                  className="bg-green-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isStarting
-                    ? t('common:loading', 'Loading...')
-                    : t('details.startNewProgram', 'Start New Program')
-                  }
-                </button>
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+                <div className="flex flex-col gap-2">
+                  <button
+                    onClick={() => handleStartProgram()}
+                    disabled={isStarting || !isScenarioInteractive}
+                    className={`px-6 py-3 rounded-lg font-medium transition-colors disabled:cursor-not-allowed ${
+                      isScenarioInteractive
+                        ? 'bg-green-600 text-white hover:bg-green-700'
+                        : 'bg-gray-300 text-gray-600'
+                    }`}
+                  >
+                    {isStarting
+                      ? t('common:loading', 'Loading...')
+                      : isScenarioInteractive
+                        ? t('details.startNewProgram', 'Start New Program')
+                        : t('details.startUnavailable', '尚未開放')
+                    }
+                  </button>
+                  {!isScenarioInteractive && (
+                    <span className="text-sm text-gray-500 dark:text-gray-400">
+                      {t('details.startUnavailableHint', '此活動目前僅供瀏覽內容。')}
+                    </span>
+                  )}
+                </div>
                 <Link
                   href="/pbl/scenarios"
                   className="border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-6 py-3 rounded-lg font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"

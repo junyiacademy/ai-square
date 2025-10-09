@@ -70,6 +70,8 @@
     "hasEvaluation": "Has Evaluation",
     "continueProgram": "Continue Program",
     "startNewProgram": "Start New Program",
+    "startUnavailable": "Not yet available",
+    "startUnavailableHint": "This activity is currently read-only.",
     "continueDraft": "Continue Draft",
     "continuing": "Continuing...",
     "starting": "Starting...",

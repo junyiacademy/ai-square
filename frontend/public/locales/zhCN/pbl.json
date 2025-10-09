@@ -67,6 +67,8 @@
     "goToCompletion": "查看报告",
     "continueProgram": "继续项目",
     "startNewProgram": "开始新项目",
+    "startUnavailable": "尚未开放",
+    "startUnavailableHint": "此活动目前仅供浏览内容。",
     "continueDraft": "继续草稿",
     "continuing": "继续中...",
     "starting": "开始中...",

@@ -70,6 +70,8 @@
     "hasEvaluation": "已評估",
     "continueProgram": "繼續計畫",
     "startNewProgram": "開始新計畫",
+    "startUnavailable": "尚未開放",
+    "startUnavailableHint": "此活動目前僅供瀏覽內容。",
     "continueDraft": "繼續草稿",
     "continuing": "繼續中...",
     "starting": "開始中...",
