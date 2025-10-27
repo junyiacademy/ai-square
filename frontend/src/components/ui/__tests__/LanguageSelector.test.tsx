@@ -31,25 +31,30 @@ describe('LanguageSelector', () => {
     })
   })
 
-  it('renders language selector with flags', () => {
+  it('renders language selector without flags', () => {
     render(<LanguageSelector />)
-    
+
     // Check if the select element is rendered
     const select = screen.getByLabelText('選擇語言')
     expect(select).toBeInTheDocument()
   })
 
-  it('displays supported language options with flags', () => {
+  it('displays supported language options without flags', () => {
     render(<LanguageSelector />)
-    
+
     const select = screen.getByLabelText('選擇語言')
-    
-    // Check if supported language options are present with flags
-    expect(select).toHaveTextContent('🇺🇸 English')
-    expect(select).toHaveTextContent('🇹🇼 繁體中文')
-    expect(select).toHaveTextContent('🇨🇳 简体中文')
-    expect(select).not.toHaveTextContent('🇪🇸 Español')
-    expect(select).not.toHaveTextContent('🇯🇵 日本語')
+
+    // Check if supported language options are present without flags
+    expect(select).toHaveTextContent('English')
+    expect(select).toHaveTextContent('繁體中文')
+    expect(select).toHaveTextContent('简体中文')
+    // Check that flags are not present
+    expect(select).not.toHaveTextContent('🇺🇸')
+    expect(select).not.toHaveTextContent('🇹🇼')
+    expect(select).not.toHaveTextContent('🇨🇳')
+    // Check that disabled languages are not present
+    expect(select).not.toHaveTextContent('Español')
+    expect(select).not.toHaveTextContent('日本語')
   })
 
   it('changes language when option is selected', () => {

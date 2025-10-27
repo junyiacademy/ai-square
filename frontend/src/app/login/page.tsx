@@ -94,7 +94,7 @@ function LoginContent() {
         </div>
 
         {/* 註冊連結 - 移到最上方 */}
-        <div className="bg-blue-50 rounded-lg p-4 text-center">
+        <div className="bg-blue-50 rounded-lg p-4 text-center space-y-2">
           <p className="text-sm text-gray-700">
             {t('dontHaveAccount', "Don't have an account?")}{' '}
             <a
@@ -103,6 +103,9 @@ function LoginContent() {
             >
               {t('createAccount', 'Create one')}
             </a>
+          </p>
+          <p className="text-xs text-gray-600">
+            {t('emailRegistrationHint', 'Please register with your email to start exploring the world of AI Square')}
           </p>
         </div>
 

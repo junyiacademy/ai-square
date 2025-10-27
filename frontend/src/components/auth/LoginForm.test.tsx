@@ -11,9 +11,17 @@ import { LoginForm } from './LoginForm'
 
 describe('LoginForm 組件測試', () => {
   const mockOnSubmit = jest.fn()
+  const originalEnv = process.env
 
   beforeEach(() => {
     jest.clearAllMocks()
+    // Set to localhost by default to show demo accounts
+    process.env = { ...originalEnv }
+    process.env.NEXT_PUBLIC_APP_URL = 'http://localhost:3001'
+  })
+
+  afterEach(() => {
+    process.env = originalEnv
   })
 
   describe('🔴 紅燈測試 - 基本渲染', () => {
@@ -352,7 +360,37 @@ describe('LoginForm 組件測試', () => {
       expect(screen.getByText('email')).toBeInTheDocument()
       expect(screen.getByText('password')).toBeInTheDocument()
       expect(screen.getByText('login')).toBeInTheDocument()
+      // 只在 localhost/staging 顯示示範帳戶
       expect(screen.getByText('testAccounts.title')).toBeInTheDocument()
+    })
+  })
+
+  describe('🔐 環境控制測試', () => {
+    it('應該在 localhost 環境顯示示範帳戶', () => {
+      process.env.NEXT_PUBLIC_APP_URL = 'http://localhost:3001'
+      renderWithProviders(<LoginForm onSubmit={mockOnSubmit} />)
+
+      expect(screen.getByRole('button', { name: 'Student' })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'Teacher' })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'Admin' })).toBeInTheDocument()
+    })
+
+    it('應該在 staging 環境顯示示範帳戶', () => {
+      process.env.NEXT_PUBLIC_APP_URL = 'https://aisquare-staging.web.app'
+      renderWithProviders(<LoginForm onSubmit={mockOnSubmit} />)
+
+      expect(screen.getByRole('button', { name: 'Student' })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'Teacher' })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'Admin' })).toBeInTheDocument()
+    })
+
+    it('應該在 production 環境隱藏示範帳戶', () => {
+      process.env.NEXT_PUBLIC_APP_URL = 'https://aisquare-production.web.app'
+      renderWithProviders(<LoginForm onSubmit={mockOnSubmit} />)
+
+      expect(screen.queryByRole('button', { name: 'Student' })).not.toBeInTheDocument()
+      expect(screen.queryByRole('button', { name: 'Teacher' })).not.toBeInTheDocument()
+      expect(screen.queryByRole('button', { name: 'Admin' })).not.toBeInTheDocument()
     })
   })
 })

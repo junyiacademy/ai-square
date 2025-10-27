@@ -9,21 +9,21 @@ interface Language {
 }
 
 const languages: Language[] = [
-  { code: 'en', name: 'English', flag: '🇺🇸' },
-  { code: 'zhTW', name: '繁體中文', flag: '🇹🇼' },
-  { code: 'zhCN', name: '简体中文', flag: '🇨🇳' },
+  { code: 'zhTW', name: '繁體中文', flag: '' },
+  { code: 'en', name: 'English', flag: '' },
+  { code: 'zhCN', name: '简体中文', flag: '' },
   // Temporarily disabled languages:
-  // { code: 'pt', name: 'Português', flag: '🇧🇷' },
-  // { code: 'ar', name: 'العربية', flag: '🇸🇦' },
-  // { code: 'id', name: 'Bahasa Indonesia', flag: '🇮🇩' },
-  // { code: 'th', name: 'ภาษาไทย', flag: '🇹🇭' },
-  // { code: 'es', name: 'Español', flag: '🇪🇸' },
-  // { code: 'ja', name: '日本語', flag: '🇯🇵' },
-  // { code: 'ko', name: '한국어', flag: '🇰🇷' },
-  // { code: 'fr', name: 'Français', flag: '🇫🇷' },
-  // { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
-  // { code: 'ru', name: 'Русский', flag: '🇷🇺' },
-  // { code: 'it', name: 'Italiano', flag: '🇮🇹' },
+  // { code: 'pt', name: 'Português', flag: '' },
+  // { code: 'ar', name: 'العربية', flag: '' },
+  // { code: 'id', name: 'Bahasa Indonesia', flag: '' },
+  // { code: 'th', name: 'ภาษาไทย', flag: '' },
+  // { code: 'es', name: 'Español', flag: '' },
+  // { code: 'ja', name: '日本語', flag: '' },
+  // { code: 'ko', name: '한국어', flag: '' },
+  // { code: 'fr', name: 'Français', flag: '' },
+  // { code: 'de', name: 'Deutsch', flag: '' },
+  // { code: 'ru', name: 'Русский', flag: '' },
+  // { code: 'it', name: 'Italiano', flag: '' },
 ]
 
 interface LanguageSelectorProps {
@@ -33,7 +33,7 @@ interface LanguageSelectorProps {
 export function LanguageSelector({ className = '' }: LanguageSelectorProps) {
   const { i18n } = useTranslation()
   const supportedCodes = useMemo(() => languages.map((language) => language.code), [])
-  const fallbackLang = languages[0].code
+  const fallbackLang = 'zhTW' // 預設使用繁體中文
   const [currentLang, setCurrentLang] = useState(
     supportedCodes.includes(i18n.language) ? i18n.language : fallbackLang
   )
@@ -77,7 +77,7 @@ export function LanguageSelector({ className = '' }: LanguageSelectorProps) {
       >
         {languages.map((language) => (
           <option key={language.code} value={language.code}>
-            {language.flag} {language.name}
+            {language.name}
           </option>
         ))}
       </select>

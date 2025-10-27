@@ -263,9 +263,9 @@ import itSkills from '../public/locales/it/skills.json';
 
 // 在伺服器端和客戶端都使用相同的預設語言避免 hydration mismatch
 const getDefaultLng = () => {
-  // 伺服器端總是返回英文作為預設語言
+  // 預設語言改為繁體中文
   // 客戶端的語言偵測會在 I18nProvider 中處理
-  return 'en';
+  return 'zhTW';
 };
 
 i18n
@@ -528,7 +528,7 @@ i18n
       },
     },
     lng: getDefaultLng(),
-    fallbackLng: 'en',
+    fallbackLng: 'zhTW',
     interpolation: { escapeValue: false },
     defaultNS: 'relations', // 預設命名空間
   });

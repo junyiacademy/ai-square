@@ -20,11 +20,22 @@ global.requestAnimationFrame = jest.fn((cb) => {
   return 0;
 });
 
+// Store original env
+const originalEnv = process.env;
+
 describe('LoginForm', () => {
   const mockOnSubmit = jest.fn();
 
   beforeEach(() => {
     mockOnSubmit.mockClear();
+    // Reset env to original
+    process.env = { ...originalEnv };
+    // Set to development by default to show demo accounts
+    process.env.NEXT_PUBLIC_APP_URL = 'http://localhost:3001';
+  });
+
+  afterEach(() => {
+    process.env = originalEnv;
   });
 
   it('should render login form with all fields', () => {
@@ -196,5 +207,32 @@ describe('LoginForm', () => {
       password: 'password123',
       rememberMe: false
     });
+  });
+
+  it('should show demo accounts in staging environment', () => {
+    process.env.NEXT_PUBLIC_APP_URL = 'https://aisquare-staging.web.app';
+    render(<LoginForm onSubmit={mockOnSubmit} />);
+
+    expect(screen.getByRole('button', { name: /Student/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Teacher/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Admin/i })).toBeInTheDocument();
+  });
+
+  it('should hide demo accounts in production environment', () => {
+    process.env.NEXT_PUBLIC_APP_URL = 'https://aisquare-production.web.app';
+    render(<LoginForm onSubmit={mockOnSubmit} />);
+
+    expect(screen.queryByRole('button', { name: /Student/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /Teacher/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /Admin/i })).not.toBeInTheDocument();
+  });
+
+  it('should show demo accounts in localhost environment', () => {
+    process.env.NEXT_PUBLIC_APP_URL = 'http://localhost:3001';
+    render(<LoginForm onSubmit={mockOnSubmit} />);
+
+    expect(screen.getByRole('button', { name: /Student/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Teacher/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Admin/i })).toBeInTheDocument();
   });
 });
