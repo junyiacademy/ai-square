@@ -17,8 +17,12 @@ function LoginContent() {
 
   useEffect(() => {
     // 檢查是否因為 token 過期而被重定向
-    if (searchParams.get('expired') === 'true') {
-      setInfo(t('info.sessionExpired', 'Your session has expired. Please login again.'))
+    try {
+      if (searchParams.get('expired') === 'true') {
+        setInfo(t('info.sessionExpired', 'Your session has expired. Please login again.'))
+      }
+    } catch (e) {
+      console.error('Error checking search params:', e)
     }
   }, [searchParams, t])
 
@@ -132,9 +136,25 @@ function LoginContent() {
   )
 }
 
+function LoginFallback() {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+      <div className="max-w-md w-full space-y-8">
+        <div className="bg-white rounded-2xl shadow-xl p-8">
+          <div className="animate-pulse space-y-4">
+            <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+            <div className="h-4 bg-gray-200 rounded"></div>
+            <div className="h-4 bg-gray-200 rounded w-5/6"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function LoginPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100" />}>
+    <Suspense fallback={<LoginFallback />}>
       <LoginContent />
     </Suspense>
   )
