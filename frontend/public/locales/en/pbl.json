@@ -276,7 +276,26 @@
     "qualitativeFeedback": "Personalized Feedback",
     "nextSteps": "Recommended Next Steps",
     "ksa": "KSA",
-    "print": "Print"
+    "print": "Print",
+    "results": "Learning Results",
+    "certificate": {
+      "title": "Certificate of Completion",
+      "certifies": "This is to certify that",
+      "hasCompleted": "has successfully completed",
+      "courseType": "AI Literacy Project-Based Learning Course",
+      "completionDate": "Date of Completion",
+      "junyiAcademy": "Junyi Academy",
+      "aiSquare": "AI Square",
+      "provider": "Course Provider",
+      "platform": "Learning Platform",
+      "downloadPDF": "Download PDF",
+      "print": "Print",
+      "generating": "Generating...",
+      "enterYourName": "Enter your name",
+      "clickToEnterName": "Click to enter your name",
+      "editName": "Edit name",
+      "pleaseEnterName": "Please enter your name first"
+    }
   },
   "domains": {
     "engaging_with_ai": "Engaging with AI",

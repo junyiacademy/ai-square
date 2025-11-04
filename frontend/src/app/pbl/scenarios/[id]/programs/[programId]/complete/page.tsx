@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useParams } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
+import Image from 'next/image';
 import { PBLCompletionSkeleton } from '@/components/pbl/loading-skeletons';
 import type {
   CompletionData,
@@ -11,6 +12,60 @@ import type {
   QualitativeFeedback
 } from '@/types/pbl-completion';
 import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
+
+// Add print styles
+if (typeof window !== 'undefined') {
+  const style = document.createElement('style');
+  style.textContent = `
+    @media print {
+      @page {
+        margin: 0;
+        size: A4;
+      }
+
+      body {
+        margin: 0 !important;
+        padding: 0 !important;
+        background: white !important;
+      }
+
+      /* Hide navigation, headers, footers */
+      header, nav, footer, .print\\:hidden {
+        display: none !important;
+      }
+
+      /* Hide all sections with no-print class */
+      .no-print {
+        display: none !important;
+      }
+
+      /* Show certificate container */
+      .certificate-container {
+        display: block !important;
+        width: 100% !important;
+        min-height: 100vh !important;
+        page-break-after: avoid !important;
+        margin: 0 !important;
+        padding: 1cm !important;
+        background: white !important;
+        box-shadow: none !important;
+      }
+
+      /* Ensure certificate content is visible */
+      .certificate-container * {
+        visibility: visible !important;
+      }
+
+      /* Hide main container backgrounds */
+      main {
+        background: white !important;
+        padding: 0 !important;
+        min-height: auto !important;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+}
 
 export default function ProgramCompletePage() {
   const params = useParams();
@@ -26,12 +81,15 @@ export default function ProgramCompletePage() {
   const [generatingFeedback, setGeneratingFeedback] = useState(false);
   const [activeTab, setActiveTab] = useState<'results' | 'certificate'>('results');
   const [userName, setUserName] = useState<string>('');
+  const [isEditingName, setIsEditingName] = useState<boolean>(false);
+  const [editableName, setEditableName] = useState<string>('');
   // const [feedbackError, setFeedbackError] = useState<string | null>(null);
 
   // Use ref to prevent duplicate API calls
   const loadingRef = useRef(false);
   const feedbackGeneratingRef = useRef(false);
   const isMountedRef = useRef(false);
+  const certificateRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Check if already mounted (handles StrictMode double mount)
@@ -54,31 +112,49 @@ export default function ProgramCompletePage() {
       const userData = localStorage.getItem('user');
       if (userData) {
         const user = JSON.parse(userData);
-        setUserName(user.name || user.email || '');
+        // Only store email for placeholder, don't set as default name
+        setUserName(user.email || '');
+        // Leave editableName empty by default
+        setEditableName('');
       }
     } catch (error) {
       console.error('Error loading user data:', error);
     }
   };
 
-  // Watch for language changes and generate feedback if needed
+  // Watch for language changes and reload scenario data + generate feedback if needed
   useEffect(() => {
     if (!completionData) return;
 
     const currentLang = i18n.language;
+
+    // Reload scenario data for new language (to get translated title)
+    const reloadScenarioForLanguage = async () => {
+      try {
+        const scenarioRes = await fetch(`/api/pbl/scenarios/${scenarioId}?lang=${currentLang}`);
+        if (scenarioRes.ok) {
+          const scenarioResult = await scenarioRes.json();
+          setScenarioData(scenarioResult.data);
+        }
+      } catch (error) {
+        console.error('Error reloading scenario for language:', error);
+      }
+    };
+
+    reloadScenarioForLanguage();
+
+    // Check if feedback exists for current language
     const feedback = completionData.qualitativeFeedback as Record<string, {
       content?: QualitativeFeedback;
       isValid?: boolean;
     }> | QualitativeFeedback | undefined;
 
-    // Check if feedback exists for current language
     const hasFeedbackForCurrentLang =
       (feedback && 'overallAssessment' in feedback) || // Old format
       (feedback && currentLang in feedback && (feedback as Record<string, { content?: QualitativeFeedback }>)[currentLang]?.content?.overallAssessment); // New format
 
     // If no feedback for current language and not currently generating, trigger generation
     if (!hasFeedbackForCurrentLang && !feedbackGeneratingRef.current && !generatingFeedback) {
-      console.log('[DEBUG] Language changed to', currentLang, '- generating feedback');
       generateFeedback();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -92,8 +168,9 @@ export default function ProgramCompletePage() {
       setLoading(true);
 
       // Load both scenario and completion data in parallel
+      const currentLang = i18n.language;
       const [scenarioRes, completionRes] = await Promise.all([
-        fetch(`/api/pbl/scenarios/${scenarioId}`),
+        fetch(`/api/pbl/scenarios/${scenarioId}?lang=${currentLang}`),
         fetch(`/api/pbl/completion?programId=${programId}&scenarioId=${scenarioId}`)
       ]);
 
@@ -271,6 +348,33 @@ export default function ProgramCompletePage() {
     );
   }
 
+  // Calculate scenario title from data
+  const scenarioTitle = (() => {
+    if (!scenarioData) return 'Scenario';
+
+    const title = scenarioData.title;
+
+    if (typeof title === 'object' && title !== null && !Array.isArray(title)) {
+      // Handle multilingual object format {en: "...", zhTW: "...", zh-TW: "..."}
+      const titleObj = title as Record<string, string>;
+
+      // Try multiple language key formats
+      return titleObj[i18n.language] ||
+             titleObj['zhTW'] ||
+             titleObj['zh-TW'] ||
+             titleObj['zh_TW'] ||
+             titleObj['en'] ||
+             Object.values(titleObj)[0] ||
+             'Scenario';
+    }
+
+    // Fallback to suffix-based format or direct string
+    if (i18n.language === 'zhTW' || i18n.language === 'zh-TW') {
+      return scenarioData.title_zhTW || scenarioData.title || 'Scenario';
+    }
+    return scenarioData.title || 'Scenario';
+  })();
+
   if (!completionData) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
@@ -287,26 +391,11 @@ export default function ProgramCompletePage() {
     );
   }
 
-  const scenarioTitle = (() => {
-    if (!scenarioData) return 'Scenario';
-
-    const title = scenarioData.title;
-    if (typeof title === 'object' && title !== null && !Array.isArray(title)) {
-      // Handle multilingual object format {en: "...", zh: "..."}
-      const titleObj = title as Record<string, string>;
-      return titleObj[i18n.language] || titleObj['en'] || Object.values(titleObj)[0] || 'Scenario';
-    }
-
-    // Fallback to suffix-based format
-    if (i18n.language === 'zhTW') {
-      return scenarioData.title_zhTW || scenarioData.title || 'Scenario';
-    }
-    return scenarioData.title || 'Scenario';
-  })();
-
   return (
     <main className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Congratulations Header - hide when printing */}
+        <div className="no-print">
         {/* Celebration Header */}
         <div className="text-center mb-8">
           <div className="mb-4">
@@ -321,9 +410,10 @@ export default function ProgramCompletePage() {
             {t('pbl:complete.scenarioCompleted', { title: scenarioTitle })}
           </p>
         </div>
+        </div>
 
-        {/* Tab Navigation */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm mb-8">
+        {/* Tab Navigation - hide when printing */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm mb-8 no-print">
           <div className="border-b border-gray-200 dark:border-gray-700">
             <nav className="flex space-x-8 px-6 overflow-x-auto">
               <button
@@ -334,7 +424,7 @@ export default function ProgramCompletePage() {
                     : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 hover:border-gray-300'
                 }`}
               >
-                {t('pbl:complete.results', '學習成果')}
+                {t('pbl:complete.results')}
               </button>
               <button
                 onClick={() => setActiveTab('certificate')}
@@ -344,15 +434,15 @@ export default function ProgramCompletePage() {
                     : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 hover:border-gray-300'
                 }`}
               >
-                完課證書
+                {t('pbl:complete.certificate.title')}
               </button>
             </nav>
           </div>
         </div>
 
-        {/* Results Tab Content */}
+        {/* Results Tab Content - hide when printing */}
         {activeTab === 'results' && (
-          <>
+          <div className="no-print">
             {/* Qualitative Feedback Section */}
             {(() => {
               // Extract feedback for current language from multi-language structure
@@ -362,28 +452,18 @@ export default function ProgramCompletePage() {
                 isValid?: boolean;
               }> | QualitativeFeedback | undefined;
 
-              console.log('[DEBUG] Feedback extraction:', {
-                currentLang,
-                hasFeedbackData: !!feedbackData,
-                feedbackDataKeys: feedbackData ? Object.keys(feedbackData) : [],
-                feedbackDataType: typeof feedbackData
-              });
-
               // Handle both old single-language format and new multi-language format
               let feedback: QualitativeFeedback | undefined;
               if (feedbackData && 'overallAssessment' in feedbackData) {
                 // Old format - direct QualitativeFeedback
                 feedback = feedbackData as QualitativeFeedback;
-                console.log('[DEBUG] Using old format feedback');
               } else if (feedbackData && currentLang in feedbackData) {
                 // New format - multi-language with wrapper
                 const langData = (feedbackData as Record<string, { content?: QualitativeFeedback }>)[currentLang];
                 feedback = langData?.content;
-                console.log('[DEBUG] Using new format feedback:', { hasContent: !!feedback });
               }
 
               const hasFeedback = feedback?.overallAssessment;
-              console.log('[DEBUG] Final state:', { hasFeedback, generatingFeedback });
 
               return (hasFeedback || generatingFeedback) && (
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 mb-8">
@@ -912,52 +992,188 @@ export default function ProgramCompletePage() {
                 {t('pbl:complete.retryScenario')}
               </Link>
             </div>
-          </>
+          </div>
         )}
 
         {/* Certificate Tab Content */}
         {activeTab === 'certificate' && (
-          <div className="bg-white rounded-lg shadow-lg p-8">
-            <div className="max-w-4xl mx-auto">
-              <div className="border-4 border-purple-500 p-12 rounded-lg bg-white">
-                <h2 className="text-5xl font-bold text-purple-600 mb-8 text-center">完課證書</h2>
-                <div className="bg-green-100 border-2 border-green-500 p-6 mb-8 inline-block min-w-64 mx-auto block text-center">
-                  <p className="text-3xl font-bold text-gray-900">
-                    {userName || completionData?.userEmail || '學習者'}
+          <div className="bg-white rounded-lg shadow-lg p-8 certificate-container">
+            <div className="max-w-5xl mx-auto">
+              {/* Certificate Container with formal border */}
+              <div ref={certificateRef} className="relative border-8 border-double border-purple-600 p-16 rounded-lg bg-gradient-to-br from-white via-purple-50 to-white print:border-purple-600 print:shadow-none">
+                {/* Decorative corner elements */}
+                <div className="absolute top-4 left-4 w-16 h-16 border-t-4 border-l-4 border-purple-400"></div>
+                <div className="absolute top-4 right-4 w-16 h-16 border-t-4 border-r-4 border-purple-400"></div>
+                <div className="absolute bottom-4 left-4 w-16 h-16 border-b-4 border-l-4 border-purple-400"></div>
+                <div className="absolute bottom-4 right-4 w-16 h-16 border-b-4 border-r-4 border-purple-400"></div>
+
+                {/* Title */}
+                <div className="text-center mb-12">
+                  <h2 className="text-5xl font-serif font-bold text-purple-700 mb-4">
+                    {t('pbl:complete.certificate.title')}
+                  </h2>
+                  <div className="w-32 h-1 bg-purple-600 mx-auto"></div>
+                </div>
+
+                {/* Certificate of Completion text */}
+                <div className="text-center mb-8">
+                  <p className="text-lg text-gray-700 mb-6">
+                    {t('pbl:complete.certificate.certifies')}
                   </p>
                 </div>
-                <p className="text-2xl mb-4 text-center text-gray-900">成功完成了</p>
-                <div className="bg-green-100 border-2 border-green-500 p-6 mb-8 inline-block min-w-96 mx-auto block text-center">
-                  <p className="text-xl font-medium text-gray-900">&quot;{scenarioTitle}&quot;</p>
+
+                {/* Student name - red border box with edit capability (border changes when name is filled) */}
+                <div className="text-center mb-8">
+                  <div
+                    onClick={() => !isEditingName && setIsEditingName(true)}
+                    className={`inline-block border-2 px-12 py-4 min-w-96 relative group bg-white cursor-pointer transition-all hover:shadow-md ${
+                      editableName ? 'border-purple-400' : 'border-red-500'
+                    }`}
+                  >
+                    {isEditingName ? (
+                      <input
+                        type="text"
+                        value={editableName}
+                        onChange={(e) => setEditableName(e.target.value)}
+                        onBlur={() => setIsEditingName(false)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            setIsEditingName(false);
+                          }
+                        }}
+                        autoFocus
+                        placeholder={userName || t('pbl:complete.certificate.enterYourName', 'Enter your name')}
+                        className="text-4xl font-serif font-bold text-gray-900 bg-transparent border-none outline-none text-center w-full placeholder:text-gray-300"
+                      />
+                    ) : (
+                      <>
+                        {editableName ? (
+                          <p className="text-4xl font-serif font-bold text-gray-900">
+                            {editableName}
+                          </p>
+                        ) : (
+                          <p className="text-4xl font-serif text-gray-300 italic">
+                            {userName || t('pbl:complete.certificate.clickToEnterName', 'Click to enter your name')}
+                          </p>
+                        )}
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setIsEditingName(true);
+                          }}
+                          className="absolute -right-8 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity print:hidden"
+                          title={t('pbl:complete.certificate.editName', 'Edit name')}
+                        >
+                          <svg className="w-5 h-5 text-gray-400 hover:text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                          </svg>
+                        </button>
+                      </>
+                    )}
+                  </div>
                 </div>
-                <p className="text-xl mb-4 text-center text-gray-900">完成日期</p>
-                <p className="text-4xl font-bold mb-12 text-center text-gray-900">
-                  {new Date().toLocaleDateString(i18n.language === 'zhTW' ? 'zh-TW' : 'en-US', {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit'
-                  })}
-                </p>
-                <div className="flex justify-around items-center mt-8 pt-8 border-t-2 border-gray-200">
-                  <div className="text-left">
-                    <div className="bg-gray-100 p-4 rounded">
-                      <p className="font-bold text-gray-900">均一教育平台</p>
+
+                {/* Completion statement */}
+                <div className="text-center mb-6">
+                  <p className="text-lg text-gray-700">
+                    {t('pbl:complete.certificate.hasCompleted')}
+                  </p>
+                </div>
+
+                {/* Scenario title - elegant box */}
+                <div className="text-center mb-8">
+                  <div className="inline-block bg-purple-50 border-2 border-purple-300 px-8 py-4 rounded min-w-96">
+                    <p className="text-2xl font-semibold text-purple-900">{scenarioTitle}</p>
+                  </div>
+                </div>
+
+                {/* Course description */}
+                <div className="text-center mb-12">
+                  <p className="text-base text-gray-600">
+                    {t('pbl:complete.certificate.courseType')}
+                  </p>
+                </div>
+
+                {/* Date section */}
+                <div className="text-center mb-12">
+                  <p className="text-sm text-gray-600 mb-2">
+                    {t('pbl:complete.certificate.completionDate')}
+                  </p>
+                  <p className="text-2xl font-semibold text-gray-900">
+                    {new Date().toLocaleDateString(i18n.language === 'zhTW' ? 'zh-TW' : 'en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })}
+                  </p>
+                </div>
+
+                {/* Footer with logos and signatures */}
+                <div className="grid grid-cols-2 gap-16 mt-16 pt-8 border-t border-gray-300">
+                  <div className="text-center">
+                    <div className="border-t-2 border-gray-400 pt-4 mb-3">
+                      <div className="flex items-center justify-center gap-3 mb-2">
+                        <Image
+                          src="/images/junyi_logo.jpg"
+                          alt="Junyi Academy Logo"
+                          width={80}
+                          height={40}
+                          className="object-contain"
+                        />
+                        <p className="text-base font-semibold text-gray-700">
+                          {t('pbl:complete.certificate.junyiAcademy')}
+                        </p>
+                      </div>
                     </div>
+                    <p className="text-xs text-gray-500">
+                      {t('pbl:complete.certificate.provider')}
+                    </p>
                   </div>
                   <div className="text-center">
-                    <div className="bg-purple-100 border-2 border-purple-500 px-8 py-4 rounded-lg">
-                      <p className="text-2xl font-bold text-gray-900">AI Square</p>
+                    <div className="border-t-2 border-gray-400 pt-4 mb-3">
+                      <div className="flex items-center justify-center gap-3 mb-2">
+                        <Image
+                          src="/images/logo.png"
+                          alt="AI Square Logo"
+                          width={80}
+                          height={40}
+                          className="object-contain"
+                        />
+                        <p className="text-base font-semibold text-gray-700">
+                          {t('pbl:complete.certificate.aiSquare')}
+                        </p>
+                      </div>
                     </div>
+                    <p className="text-xs text-gray-500">
+                      {t('pbl:complete.certificate.platform')}
+                    </p>
                   </div>
                 </div>
               </div>
-              <div className="mt-8 text-center print:hidden">
-                <button
-                  onClick={() => window.print()}
-                  className="bg-purple-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-purple-700 transition-colors"
-                >
-                  下載證書 PDF
-                </button>
+
+              {/* Print button */}
+              <div className="mt-8 flex justify-center print:hidden">
+                <div className="relative inline-block group">
+                  <button
+                    onClick={() => window.print()}
+                    disabled={!editableName}
+                    className={`px-8 py-3 rounded-lg font-medium transition-colors shadow-lg flex items-center gap-2 ${
+                      editableName
+                        ? 'bg-purple-600 text-white hover:bg-purple-700 cursor-pointer'
+                        : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                    }`}
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                    </svg>
+                    {t('pbl:complete.certificate.print', 'Print')}
+                  </button>
+                  {!editableName && (
+                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
+                      {t('pbl:complete.certificate.pleaseEnterName', 'Please enter your name first')}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
