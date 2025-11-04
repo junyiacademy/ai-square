@@ -818,14 +818,6 @@ export default function ProgramCompletePage() {
                         )}
                       </div>
 
-                      {/* Debug: Show evaluation data structure */}
-                      {task.evaluation && process.env.NODE_ENV === 'development' && (
-                        <details className="text-xs text-gray-500 mb-2">
-                          <summary>Debug: Evaluation Data</summary>
-                          <pre className="overflow-auto">{JSON.stringify(task.evaluation, null, 2)}</pre>
-                        </details>
-                      )}
-
                       {/* Task Evaluation Details */}
                       {task.evaluation && (
                         <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 space-y-4">
