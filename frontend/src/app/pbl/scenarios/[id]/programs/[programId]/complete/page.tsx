@@ -453,6 +453,7 @@ export default function ProgramCompletePage() {
               <button
                 onClick={() => allTasksEvaluated && setActiveTab('certificate')}
                 disabled={!allTasksEvaluated}
+                title={!allTasksEvaluated ? t('pbl:complete.certificate.completeAllTasks', 'Complete all tasks to unlock certificate') : ''}
                 className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap relative group ${
                   !allTasksEvaluated
                     ? 'border-transparent text-gray-400 dark:text-gray-600 cursor-not-allowed'
@@ -465,10 +466,12 @@ export default function ProgramCompletePage() {
                 {!allTasksEvaluated && (
                   <span className="ml-1 text-xs">🔒</span>
                 )}
-                {/* Tooltip */}
+                {/* Tooltip - Custom styled for better visibility */}
                 {!allTasksEvaluated && (
-                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-4 py-2 bg-gray-900 dark:bg-gray-800 text-white text-sm rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
                     {t('pbl:complete.certificate.completeAllTasks', 'Complete all tasks to unlock certificate')}
+                    {/* Tooltip arrow */}
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-gray-900 dark:border-t-gray-800"></div>
                   </div>
                 )}
               </button>
