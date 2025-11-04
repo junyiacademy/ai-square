@@ -299,6 +299,7 @@
       "enterYourName": "請輸入您的姓名",
       "clickToEnterName": "點擊輸入您的姓名",
       "completeAllTasks": "請完成並評估所有任務才能查看及列印證書",
+      "requireAllTasks": "需完成所有任務",
       "editName": "編輯姓名",
       "pleaseEnterName": "請先輸入您的姓名",
       "printHint": "點擊後選擇「另存為 PDF」並勾選「背景圖形」"

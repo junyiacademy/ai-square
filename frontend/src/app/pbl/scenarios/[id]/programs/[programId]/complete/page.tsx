@@ -450,32 +450,27 @@ export default function ProgramCompletePage() {
               >
                 {t('pbl:complete.results')}
               </button>
-              <div className="relative group">
-                <button
-                  onClick={() => allTasksEvaluated && setActiveTab('certificate')}
-                  disabled={!allTasksEvaluated}
-                  className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap ${
-                    !allTasksEvaluated
-                      ? 'border-transparent text-gray-400 dark:text-gray-600 cursor-not-allowed'
-                      : activeTab === 'certificate'
-                      ? 'border-purple-500 text-purple-600 dark:text-purple-400'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 hover:border-gray-300'
-                  }`}
-                >
-                  {t('pbl:complete.certificate.title')}
-                  {!allTasksEvaluated && (
-                    <span className="ml-1 text-xs">🔒</span>
-                  )}
-                </button>
-                {/* Tooltip - Shows immediately on hover */}
+              <button
+                onClick={() => allTasksEvaluated && setActiveTab('certificate')}
+                disabled={!allTasksEvaluated}
+                className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap flex items-center gap-2 ${
+                  !allTasksEvaluated
+                    ? 'border-transparent text-gray-400 dark:text-gray-600 cursor-not-allowed'
+                    : activeTab === 'certificate'
+                    ? 'border-purple-500 text-purple-600 dark:text-purple-400'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 hover:border-gray-300'
+                }`}
+              >
+                <span>{t('pbl:complete.certificate.title')}</span>
                 {!allTasksEvaluated && (
-                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-4 py-2 bg-gray-900 dark:bg-gray-800 text-white text-sm rounded-lg shadow-xl opacity-0 group-hover:opacity-100 transition-opacity duration-100 pointer-events-none whitespace-nowrap z-[100]">
-                    {t('pbl:complete.certificate.completeAllTasks', 'Complete all tasks to unlock certificate')}
-                    {/* Tooltip arrow */}
-                    <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-gray-900 dark:border-t-gray-800"></div>
-                  </div>
+                  <>
+                    <span className="text-xs">🔒</span>
+                    <span className="text-xs text-gray-500 dark:text-gray-500">
+                      ({t('pbl:complete.certificate.requireAllTasks', '需完成所有任務')})
+                    </span>
+                  </>
                 )}
-              </div>
+              </button>
             </nav>
           </div>
         </div>
