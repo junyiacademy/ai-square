@@ -61,7 +61,28 @@ export default function ProgramCompletePage() {
     }
   };
 
-  // Removed auto-translation on language change - user must manually trigger feedback generation
+  // Watch for language changes and generate feedback if needed
+  useEffect(() => {
+    if (!completionData) return;
+
+    const currentLang = i18n.language;
+    const feedback = completionData.qualitativeFeedback as Record<string, {
+      content?: QualitativeFeedback;
+      isValid?: boolean;
+    }> | QualitativeFeedback | undefined;
+
+    // Check if feedback exists for current language
+    const hasFeedbackForCurrentLang =
+      (feedback && 'overallAssessment' in feedback) || // Old format
+      (feedback && currentLang in feedback && (feedback as Record<string, { content?: QualitativeFeedback }>)[currentLang]?.content?.overallAssessment); // New format
+
+    // If no feedback for current language and not currently generating, trigger generation
+    if (!hasFeedbackForCurrentLang && !feedbackGeneratingRef.current && !generatingFeedback) {
+      console.log('[DEBUG] Language changed to', currentLang, '- generating feedback');
+      generateFeedback();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [i18n.language]); // Only re-run when language changes
 
   const loadProgramData = async () => {
     if (loadingRef.current) return;
@@ -100,7 +121,13 @@ export default function ProgramCompletePage() {
               setCompletionData(data.data);
 
               // Generate feedback if not exists
-              if (!data.data.qualitativeFeedback?.overallAssessment && !feedbackGeneratingRef.current) {
+              // Check for both old format (direct overallAssessment) and new format (language-wrapped)
+              const feedback = data.data.qualitativeFeedback;
+              const currentLang = i18n.language;
+              const hasFeedback = feedback?.overallAssessment ||
+                                  (feedback?.[currentLang]?.content?.overallAssessment);
+
+              if (!hasFeedback && !feedbackGeneratingRef.current) {
                 generateFeedback();
               }
             }
@@ -112,7 +139,13 @@ export default function ProgramCompletePage() {
           setCompletionData(data.data);
 
           // Generate feedback if not exists
-          if (!data.data.qualitativeFeedback?.overallAssessment && !feedbackGeneratingRef.current) {
+          // Check for both old format (direct overallAssessment) and new format (language-wrapped)
+          const feedback = data.data.qualitativeFeedback;
+          const currentLang = i18n.language;
+          const hasFeedback = feedback?.overallAssessment ||
+                              (feedback?.[currentLang]?.content?.overallAssessment);
+
+          if (!hasFeedback && !feedbackGeneratingRef.current) {
             generateFeedback();
           }
         }
@@ -156,26 +189,33 @@ export default function ProgramCompletePage() {
         setCompletionData((prev) => {
           if (!prev) return null;
 
+          // Store feedback with wrapper structure to match DB format
+          const feedbackWrapper = {
+            content: result.feedback,
+            isValid: true,
+            generatedAt: new Date().toISOString()
+          };
+
           // Handle multi-language feedback format
           const isMultiLang = typeof prev.qualitativeFeedback === 'object' &&
                              !('overallAssessment' in (prev.qualitativeFeedback as QualitativeFeedback));
 
           if (isMultiLang) {
-            // New multi-language format
+            // New multi-language format - update the specific language
             return {
               ...prev,
               qualitativeFeedback: {
-                ...(prev.qualitativeFeedback as QualitativeFeedback),
-                [currentLang]: result.feedback
-              } as QualitativeFeedback
+                ...(prev.qualitativeFeedback as Record<string, unknown>),
+                [currentLang]: feedbackWrapper
+              }
             };
           } else {
             // Migrate from old format to new format
             return {
               ...prev,
               qualitativeFeedback: {
-                [currentLang]: result.feedback
-              } as QualitativeFeedback
+                [currentLang]: feedbackWrapper
+              }
             };
           }
         });
@@ -315,9 +355,35 @@ export default function ProgramCompletePage() {
           <>
             {/* Qualitative Feedback Section */}
             {(() => {
-              // Simple single-language feedback handling
-              const feedback = completionData?.qualitativeFeedback as QualitativeFeedback | undefined;
+              // Extract feedback for current language from multi-language structure
+              const currentLang = i18n.language;
+              const feedbackData = completionData?.qualitativeFeedback as Record<string, {
+                content?: QualitativeFeedback;
+                isValid?: boolean;
+              }> | QualitativeFeedback | undefined;
+
+              console.log('[DEBUG] Feedback extraction:', {
+                currentLang,
+                hasFeedbackData: !!feedbackData,
+                feedbackDataKeys: feedbackData ? Object.keys(feedbackData) : [],
+                feedbackDataType: typeof feedbackData
+              });
+
+              // Handle both old single-language format and new multi-language format
+              let feedback: QualitativeFeedback | undefined;
+              if (feedbackData && 'overallAssessment' in feedbackData) {
+                // Old format - direct QualitativeFeedback
+                feedback = feedbackData as QualitativeFeedback;
+                console.log('[DEBUG] Using old format feedback');
+              } else if (feedbackData && currentLang in feedbackData) {
+                // New format - multi-language with wrapper
+                const langData = (feedbackData as Record<string, { content?: QualitativeFeedback }>)[currentLang];
+                feedback = langData?.content;
+                console.log('[DEBUG] Using new format feedback:', { hasContent: !!feedback });
+              }
+
               const hasFeedback = feedback?.overallAssessment;
+              console.log('[DEBUG] Final state:', { hasFeedback, generatingFeedback });
 
               return (hasFeedback || generatingFeedback) && (
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 mb-8">
