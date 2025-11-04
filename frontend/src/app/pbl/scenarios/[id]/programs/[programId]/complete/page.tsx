@@ -5,7 +5,6 @@ import { useParams } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
 import { PBLCompletionSkeleton } from '@/components/pbl/loading-skeletons';
-import CompetencyGraph from '@/components/completion/CompetencyGraph';
 import type {
   CompletionData,
   ScenarioData,
@@ -25,6 +24,8 @@ export default function ProgramCompletePage() {
   const [completionData, setCompletionData] = useState<CompletionData | null>(null);
   const [scenarioData, setScenarioData] = useState<ScenarioData | null>(null);
   const [generatingFeedback, setGeneratingFeedback] = useState(false);
+  const [activeTab, setActiveTab] = useState<'results' | 'certificate'>('results');
+  const [userName, setUserName] = useState<string>('');
   // const [feedbackError, setFeedbackError] = useState<string | null>(null);
 
   // Use ref to prevent duplicate API calls
@@ -38,6 +39,7 @@ export default function ProgramCompletePage() {
     isMountedRef.current = true;
 
     loadProgramData();
+    loadUserData();
 
     // Cleanup function for StrictMode
     return () => {
@@ -45,6 +47,19 @@ export default function ProgramCompletePage() {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const loadUserData = () => {
+    try {
+      // Try to get user data from localStorage
+      const userData = localStorage.getItem('user');
+      if (userData) {
+        const user = JSON.parse(userData);
+        setUserName(user.name || user.email || '');
+      }
+    } catch (error) {
+      console.error('Error loading user data:', error);
+    }
+  };
 
   // Removed auto-translation on language change - user must manually trigger feedback generation
 
@@ -84,7 +99,10 @@ export default function ProgramCompletePage() {
             if (data.success && data.data) {
               setCompletionData(data.data);
 
-              // Removed auto-generation of feedback - user must manually trigger it
+              // Generate feedback if not exists
+              if (!data.data.qualitativeFeedback?.overallAssessment && !feedbackGeneratingRef.current) {
+                generateFeedback();
+              }
             }
           }
         }
@@ -93,7 +111,10 @@ export default function ProgramCompletePage() {
         if (data.success && data.data) {
           setCompletionData(data.data);
 
-          // Removed auto-generation of feedback - user must manually trigger it
+          // Generate feedback if not exists
+          if (!data.data.qualitativeFeedback?.overallAssessment && !feedbackGeneratingRef.current) {
+            generateFeedback();
+          }
         }
       }
 
@@ -261,13 +282,44 @@ export default function ProgramCompletePage() {
           </p>
         </div>
 
-        {/* Qualitative Feedback Section */}
-        {(() => {
-          // Simple single-language feedback handling
-          const feedback = completionData?.qualitativeFeedback as QualitativeFeedback | undefined;
-          const hasFeedback = feedback?.overallAssessment;
+        {/* Tab Navigation */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm mb-8">
+          <div className="border-b border-gray-200 dark:border-gray-700">
+            <nav className="flex space-x-8 px-6 overflow-x-auto">
+              <button
+                onClick={() => setActiveTab('results')}
+                className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap ${
+                  activeTab === 'results'
+                    ? 'border-purple-500 text-purple-600 dark:text-purple-400'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 hover:border-gray-300'
+                }`}
+              >
+                {t('pbl:complete.results', '學習成果')}
+              </button>
+              <button
+                onClick={() => setActiveTab('certificate')}
+                className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap ${
+                  activeTab === 'certificate'
+                    ? 'border-purple-500 text-purple-600 dark:text-purple-400'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 hover:border-gray-300'
+                }`}
+              >
+                完課證書
+              </button>
+            </nav>
+          </div>
+        </div>
 
-          return (hasFeedback || generatingFeedback) && (
+        {/* Results Tab Content */}
+        {activeTab === 'results' && (
+          <>
+            {/* Qualitative Feedback Section */}
+            {(() => {
+              // Simple single-language feedback handling
+              const feedback = completionData?.qualitativeFeedback as QualitativeFeedback | undefined;
+              const hasFeedback = feedback?.overallAssessment;
+
+              return (hasFeedback || generatingFeedback) && (
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 mb-8">
               {generatingFeedback ? (
                 <div className="text-center">
@@ -536,36 +588,6 @@ export default function ProgramCompletePage() {
           </div>
         </div>
 
-        {/* Competency Knowledge Graph and Question Review */}
-        {completionData && (
-          <CompetencyGraph
-            tasks={completionData.tasks?.map((task, index) => ({
-              taskId: task.taskId,
-              taskTitle: (() => {
-                const title = task.taskTitle;
-                if (typeof title === 'object' && title !== null && !Array.isArray(title)) {
-                  const titleObj = title as Record<string, string>;
-                  return titleObj[i18n.language] || titleObj['en'] || Object.values(titleObj)[0] || task.taskId;
-                }
-                return title || task.taskId;
-              })(),
-              taskIndex: task.taskIndex || index + 1,
-              status: (task.progress?.status || 'pending') as 'completed' | 'pending' | 'active',
-              score: task.evaluation?.score,
-              timeSpent: task.progress?.timeSpentSeconds,
-              interactions: task.log?.interactions?.map(i => ({
-                timestamp: new Date().toISOString(),
-                type: i.type === 'user' ? 'user_input' : 'ai_response',
-                content: typeof i.message === 'string' ? i.message : JSON.stringify(i.message)
-              })),
-              userAnswer: task.log?.interactions?.find(i => i.type === 'user')?.message as string | undefined,
-              correctAnswer: undefined
-            })) || []}
-            domainScores={completionData.domainScores || {}}
-            overallScore={completionData.overallScore || 0}
-            language={i18n.language === 'zhTW' ? 'zhTW' : 'en'}
-          />
-        )}
 
         {/* Task Details */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 mb-8">
@@ -815,27 +837,65 @@ export default function ProgramCompletePage() {
           </div>
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link
-            href={`/pbl/scenarios/${scenarioId}`}
-            className="px-8 py-3 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition-colors text-center"
-          >
-            {t('pbl:complete.retryScenario')}
-          </Link>
-          <Link
-            href="/pbl/history"
-            className="px-8 py-3 bg-gray-600 text-white rounded-lg font-medium hover:bg-gray-700 transition-colors text-center"
-          >
-            {t('pbl:complete.viewHistory')}
-          </Link>
-          <button
-            onClick={() => window.print()}
-            className="px-8 py-3 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-          >
-            {t('pbl:complete.print')}
-          </button>
-        </div>
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link
+                href={`/pbl/scenarios/${scenarioId}`}
+                className="px-8 py-3 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition-colors text-center"
+              >
+                {t('pbl:complete.retryScenario')}
+              </Link>
+            </div>
+          </>
+        )}
+
+        {/* Certificate Tab Content */}
+        {activeTab === 'certificate' && (
+          <div className="bg-white rounded-lg shadow-lg p-8">
+            <div className="max-w-4xl mx-auto">
+              <div className="border-4 border-purple-500 p-12 rounded-lg bg-white">
+                <h2 className="text-5xl font-bold text-purple-600 mb-8 text-center">完課證書</h2>
+                <div className="bg-green-100 border-2 border-green-500 p-6 mb-8 inline-block min-w-64 mx-auto block text-center">
+                  <p className="text-3xl font-bold text-gray-900">
+                    {userName || completionData?.userEmail || '學習者'}
+                  </p>
+                </div>
+                <p className="text-2xl mb-4 text-center text-gray-900">成功完成了</p>
+                <div className="bg-green-100 border-2 border-green-500 p-6 mb-8 inline-block min-w-96 mx-auto block text-center">
+                  <p className="text-xl font-medium text-gray-900">&quot;{scenarioTitle}&quot;</p>
+                </div>
+                <p className="text-xl mb-4 text-center text-gray-900">完成日期</p>
+                <p className="text-4xl font-bold mb-12 text-center text-gray-900">
+                  {new Date().toLocaleDateString(i18n.language === 'zhTW' ? 'zh-TW' : 'en-US', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit'
+                  })}
+                </p>
+                <div className="flex justify-around items-center mt-8 pt-8 border-t-2 border-gray-200">
+                  <div className="text-left">
+                    <div className="bg-gray-100 p-4 rounded">
+                      <p className="font-bold text-gray-900">均一教育平台</p>
+                    </div>
+                  </div>
+                  <div className="text-center">
+                    <div className="bg-purple-100 border-2 border-purple-500 px-8 py-4 rounded-lg">
+                      <p className="text-2xl font-bold text-gray-900">AI Square</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-8 text-center print:hidden">
+                <button
+                  onClick={() => window.print()}
+                  className="bg-purple-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-purple-700 transition-colors"
+                >
+                  下載證書 PDF
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </main>
   );
