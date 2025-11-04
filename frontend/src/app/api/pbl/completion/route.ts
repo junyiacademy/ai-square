@@ -194,11 +194,11 @@ export async function GET(request: NextRequest) {
           taskIndex: index + 1,
           evaluation: taskEvaluation ? {
             score: taskEvaluation.score || 0,
-            domainScores: taskEvaluation.metadata?.domainScores,
-            ksaScores: taskEvaluation.metadata?.ksaScores,
-            conversationInsights: taskEvaluation.metadata?.conversationInsights,
-            strengths: taskEvaluation.metadata?.strengths,
-            improvements: taskEvaluation.metadata?.improvements,
+            domainScores: taskEvaluation.domainScores || {},
+            ksaScores: taskEvaluation.pblData?.ksaScores || {},
+            conversationInsights: taskEvaluation.aiAnalysis || {},
+            strengths: taskEvaluation.feedbackData?.strengths || [],
+            improvements: taskEvaluation.feedbackData?.improvements || [],
             evaluatedAt: taskEvaluation.createdAt
           } : undefined,
           log: {
