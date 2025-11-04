@@ -301,9 +301,9 @@ export default function ProgramCompletePage() {
             return {
               ...prev,
               qualitativeFeedback: {
-                ...(prev.qualitativeFeedback as Record<string, unknown>),
+                ...(prev.qualitativeFeedback as unknown as Record<string, unknown>),
                 [currentLang]: feedbackWrapper
-              }
+              } as unknown as CompletionData['qualitativeFeedback']
             };
           } else {
             // Migrate from old format to new format
@@ -311,7 +311,7 @@ export default function ProgramCompletePage() {
               ...prev,
               qualitativeFeedback: {
                 [currentLang]: feedbackWrapper
-              }
+              } as unknown as CompletionData['qualitativeFeedback']
             };
           }
         });
