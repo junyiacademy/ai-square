@@ -994,6 +994,49 @@ export default function ProgramCompletePage() {
                           )}
                         </div>
                       )}
+
+                      {/* Practice Records - 做題紀錄 */}
+                      {task.log?.interactions && task.log.interactions.length > 0 && (
+                        <details className="mt-4">
+                          <summary className="cursor-pointer text-sm font-medium text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 flex items-center gap-2">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                            </svg>
+                            {t('pbl:complete.viewPracticeRecords', '查看做題紀錄')}
+                            <span className="text-xs text-gray-500">
+                              ({task.log.interactions.length} {t('pbl:complete.interactions', '次互動')})
+                            </span>
+                          </summary>
+                          <div className="mt-3 space-y-2 max-h-96 overflow-y-auto border-l-2 border-purple-200 dark:border-purple-800 pl-4">
+                            {task.log.interactions.map((interaction, idx) => (
+                              <div
+                                key={idx}
+                                className={`p-3 rounded-lg text-sm ${
+                                  interaction.type === 'user'
+                                    ? 'bg-blue-50 dark:bg-blue-900/20 ml-4'
+                                    : 'bg-gray-50 dark:bg-gray-800 mr-4'
+                                }`}
+                              >
+                                <div className="flex justify-between items-start mb-2">
+                                  <span className="font-medium text-xs text-gray-500 dark:text-gray-400">
+                                    {interaction.type === 'user'
+                                      ? '👤 ' + t('pbl:complete.yourAnswer', '你的回答')
+                                      : '🤖 ' + t('pbl:complete.aiFeedback', 'AI 回饋')}
+                                  </span>
+                                  <span className="text-xs text-gray-400">
+                                    #{idx + 1}
+                                  </span>
+                                </div>
+                                <div className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
+                                  {typeof interaction.message === 'string'
+                                    ? interaction.message
+                                    : JSON.stringify(interaction.message)}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </details>
+                      )}
                     </div>
                   </div>
                 </div>

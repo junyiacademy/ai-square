@@ -278,6 +278,10 @@
     "ksa": "KSA",
     "print": "列印",
     "results": "學習成果",
+    "viewPracticeRecords": "查看做題紀錄",
+    "interactions": "次互動",
+    "yourAnswer": "你的回答",
+    "aiFeedback": "AI 回饋",
     "certificate": {
       "title": "完課證書",
       "certifies": "茲證明",
