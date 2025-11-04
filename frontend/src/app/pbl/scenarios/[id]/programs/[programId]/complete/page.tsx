@@ -13,7 +13,7 @@ import type {
 } from '@/types/pbl-completion';
 import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
 
-// Add print styles
+// Add print styles - optimized for color printing with background graphics
 if (typeof window !== 'undefined') {
   const style = document.createElement('style');
   style.textContent = `
@@ -21,12 +21,20 @@ if (typeof window !== 'undefined') {
       @page {
         margin: 0;
         size: A4;
+        /* Force color printing */
+        color: color;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
       }
 
-      body {
+      html, body {
         margin: 0 !important;
         padding: 0 !important;
-        background: white !important;
+        /* Force color mode */
+        color-scheme: light;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
       }
 
       /* Hide navigation, headers, footers */
@@ -39,7 +47,7 @@ if (typeof window !== 'undefined') {
         display: none !important;
       }
 
-      /* Show certificate container */
+      /* Show certificate container with all backgrounds and borders */
       .certificate-container {
         display: block !important;
         width: 100% !important;
@@ -47,18 +55,29 @@ if (typeof window !== 'undefined') {
         page-break-after: avoid !important;
         margin: 0 !important;
         padding: 1cm !important;
-        background: white !important;
         box-shadow: none !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
       }
 
-      /* Ensure certificate content is visible */
+      /* Ensure certificate content is visible with all colors and backgrounds */
       .certificate-container * {
         visibility: visible !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
       }
 
-      /* Hide main container backgrounds */
+      /* Preserve all colors, gradients, borders */
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+      }
+
+      /* Hide main container backgrounds except certificate */
       main {
-        background: white !important;
         padding: 0 !important;
         min-height: auto !important;
       }
