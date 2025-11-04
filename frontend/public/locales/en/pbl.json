@@ -297,6 +297,7 @@
       "generating": "Generating...",
       "enterYourName": "Enter your name",
       "clickToEnterName": "Click to enter your name",
+      "completeAllTasks": "Complete all tasks to unlock certificate",
       "editName": "Edit name",
       "pleaseEnterName": "Please enter your name first",
       "printHint": "Click to open print dialog, then select 'Save as PDF' with 'Background graphics' enabled"

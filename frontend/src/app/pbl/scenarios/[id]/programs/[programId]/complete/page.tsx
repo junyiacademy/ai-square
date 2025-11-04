@@ -104,6 +104,11 @@ export default function ProgramCompletePage() {
   const [editableName, setEditableName] = useState<string>('');
   // const [feedbackError, setFeedbackError] = useState<string | null>(null);
 
+  // Check if all tasks are evaluated
+  const allTasksEvaluated = completionData ?
+    (completionData.evaluatedTasks === completionData.totalTasks && completionData.totalTasks > 0) :
+    false;
+
   // Use ref to prevent duplicate API calls
   const loadingRef = useRef(false);
   const feedbackGeneratingRef = useRef(false);
@@ -446,14 +451,26 @@ export default function ProgramCompletePage() {
                 {t('pbl:complete.results')}
               </button>
               <button
-                onClick={() => setActiveTab('certificate')}
-                className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap ${
-                  activeTab === 'certificate'
+                onClick={() => allTasksEvaluated && setActiveTab('certificate')}
+                disabled={!allTasksEvaluated}
+                className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap relative group ${
+                  !allTasksEvaluated
+                    ? 'border-transparent text-gray-400 dark:text-gray-600 cursor-not-allowed'
+                    : activeTab === 'certificate'
                     ? 'border-purple-500 text-purple-600 dark:text-purple-400'
                     : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 hover:border-gray-300'
                 }`}
               >
                 {t('pbl:complete.certificate.title')}
+                {!allTasksEvaluated && (
+                  <span className="ml-1 text-xs">🔒</span>
+                )}
+                {/* Tooltip */}
+                {!allTasksEvaluated && (
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
+                    {t('pbl:complete.certificate.completeAllTasks', 'Complete all tasks to unlock certificate')}
+                  </div>
+                )}
               </button>
             </nav>
           </div>
