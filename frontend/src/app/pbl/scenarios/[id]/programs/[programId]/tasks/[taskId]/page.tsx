@@ -1775,6 +1775,37 @@ export default function ProgramLearningPage() {
                   </div>
                 </div>
 
+                {/* Evaluate Button for Mobile */}
+                {showEvaluateButton && !isEvaluating && (
+                  <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 flex-shrink-0">
+                    <button
+                      onClick={handleEvaluate}
+                      disabled={isEvaluateDisabled}
+                      className={`w-full px-4 py-2 rounded-lg transition-colors font-medium ${
+                        isEvaluateDisabled
+                          ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
+                          : 'bg-blue-600 text-white hover:bg-blue-700'
+                      }`}
+                    >
+                      {isEvaluateDisabled
+                        ? t('pbl:learn.evaluationUpToDate', 'Evaluation Up to Date')
+                        : t('pbl:learn.evaluate', 'Evaluate Performance')}
+                    </button>
+                  </div>
+                )}
+
+                {/* Evaluating indicator for Mobile */}
+                {isEvaluating && (
+                  <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 flex-shrink-0">
+                    <div className="flex items-center justify-center space-x-2">
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
+                      <span className="text-gray-600 dark:text-gray-400">
+                        {t('pbl:learn.evaluating', 'Evaluating...')}
+                      </span>
+                    </div>
+                  </div>
+                )}
+
                 {/* Input Area */}
                 <div className="p-6 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 flex-shrink-0">
                   <div className="flex gap-2">
