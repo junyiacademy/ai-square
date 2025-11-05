@@ -1245,7 +1245,7 @@ export default function ProgramCompletePage() {
                   <div className="certificate-corner certificate-corner-br"></div>
 
                   <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-                    <div style={{ width: '90%', textAlign: 'center' }}>
+                    <div style={{ width: '100%', textAlign: 'center' }}>
                       {/* Title */}
                       <div style={{ marginBottom: '12px' }}>
                         <h2 style={{ fontSize: '32px', fontFamily: 'serif', fontWeight: 'bold', color: 'rgb(147, 51, 234)', marginBottom: '8px' }}>
