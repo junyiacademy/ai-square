@@ -302,7 +302,9 @@
       "requireAllTasks": "Requires all tasks",
       "editName": "Edit name",
       "pleaseEnterName": "Please enter your name first",
-      "printHint": "Click to open print dialog, then select 'Save as PDF' with 'Background graphics' enabled"
+      "printHint": "Click to open print dialog, then select 'Save as PDF' with 'Background graphics' enabled",
+      "downloadPDF": "Download PDF",
+      "downloadFailed": "Failed to download PDF. Please try again."
     }
   },
   "domains": {

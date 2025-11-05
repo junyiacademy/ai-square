@@ -102,6 +102,7 @@ export default function ProgramCompletePage() {
   const [userName, setUserName] = useState<string>('');
   const [isEditingName, setIsEditingName] = useState<boolean>(false);
   const [editableName, setEditableName] = useState<string>('');
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState<boolean>(false);
   // const [feedbackError, setFeedbackError] = useState<string | null>(null);
 
   // Check if all tasks are evaluated
@@ -358,6 +359,54 @@ export default function ProgramCompletePage() {
       return t('pbl:complete.timeFormat.minutes', { minutes, seconds: remainingSeconds });
     }
     return t('pbl:complete.timeFormat.seconds', { seconds: remainingSeconds });
+  };
+
+  const handleDownloadPDF = async () => {
+    if (!editableName) {
+      alert(t('pbl:complete.certificate.pleaseEnterName', 'Please enter your name first'));
+      return;
+    }
+
+    setIsGeneratingPDF(true);
+
+    try {
+      const response = await fetch('/api/pbl/certificate/download', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          studentName: editableName,
+          scenarioTitle: scenarioTitle,
+          completionDate: new Date().toLocaleDateString(i18n.language === 'zhTW' ? 'zh-TW' : 'en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          }),
+          language: i18n.language === 'zhTW' ? 'zhTW' : 'en',
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate PDF');
+      }
+
+      // Download PDF
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `certificate-${editableName}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error('PDF download error:', error);
+      alert(t('pbl:complete.certificate.downloadFailed', 'Failed to download PDF. Please try again.'));
+    } finally {
+      setIsGeneratingPDF(false);
+    }
   };
 
   const getScoreColor = (score: number) => {
@@ -1369,16 +1418,52 @@ export default function ProgramCompletePage() {
                 </div>
               </div>
 
-              {/* Print button */}
-              <div className="mt-8 flex justify-center print:hidden">
+              {/* Action buttons */}
+              <div className="mt-8 flex flex-col sm:flex-row justify-center gap-4 print:hidden">
+                {/* Download PDF button (recommended) */}
                 <div className="relative inline-block group">
+                  <button
+                    onClick={handleDownloadPDF}
+                    disabled={!editableName || isGeneratingPDF}
+                    className={`px-8 py-3 rounded-lg font-medium transition-colors shadow-lg flex items-center gap-2 ${
+                      editableName && !isGeneratingPDF
+                        ? 'bg-purple-600 text-white hover:bg-purple-700 cursor-pointer'
+                        : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                    }`}
+                  >
+                    {isGeneratingPDF ? (
+                      <>
+                        <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <span>{t('pbl:complete.certificate.generating', 'Generating...')}</span>
+                      </>
+                    ) : (
+                      <>
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        {t('pbl:complete.certificate.downloadPDF', 'Download PDF')}
+                      </>
+                    )}
+                  </button>
+                  {!editableName && (
+                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
+                      {t('pbl:complete.certificate.pleaseEnterName', 'Please enter your name first')}
+                    </div>
+                  )}
+                </div>
+
+                {/* Print button (alternative) - Hidden on mobile and tablet */}
+                <div className="relative inline-block group hidden md:block">
                   <button
                     onClick={() => window.print()}
                     disabled={!editableName}
                     className={`px-8 py-3 rounded-lg font-medium transition-colors shadow-lg flex items-center gap-2 ${
                       editableName
-                        ? 'bg-purple-600 text-white hover:bg-purple-700 cursor-pointer'
-                        : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                        ? 'bg-white text-purple-600 border-2 border-purple-600 hover:bg-purple-50 cursor-pointer'
+                        : 'bg-gray-100 text-gray-400 border-2 border-gray-300 cursor-not-allowed'
                     }`}
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1386,11 +1471,6 @@ export default function ProgramCompletePage() {
                     </svg>
                     {t('pbl:complete.certificate.print', 'Print')}
                   </button>
-                  {!editableName && (
-                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
-                      {t('pbl:complete.certificate.pleaseEnterName', 'Please enter your name first')}
-                    </div>
-                  )}
                 </div>
               </div>
             </div>

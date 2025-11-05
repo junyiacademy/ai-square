@@ -302,7 +302,9 @@
       "requireAllTasks": "需完成所有任務",
       "editName": "編輯姓名",
       "pleaseEnterName": "請先輸入您的姓名",
-      "printHint": "點擊後選擇「另存為 PDF」並勾選「背景圖形」"
+      "printHint": "點擊後選擇「另存為 PDF」並勾選「背景圖形」",
+      "downloadPDF": "下載 PDF",
+      "downloadFailed": "下載 PDF 失敗，請稍後再試"
     }
   },
   "domains": {
