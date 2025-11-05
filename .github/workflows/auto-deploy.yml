@@ -424,7 +424,13 @@ jobs:
             --port 3000 \
             --service-account=${{ steps.env.outputs.service_account }} \
             --add-cloudsql-instances ai-square-463013:asia-east1:${DB_INSTANCE} \
-            --env-vars-file=/tmp/env-vars.yaml
+            --env-vars-file=/tmp/env-vars.yaml \
+            --no-traffic \
+            --tag=candidate
+
+          # Update traffic to new revision
+          REVISION=$(gcloud run revisions list --service=${SERVICE_NAME} --region=${{ env.REGION }} --format="value(metadata.name)" --limit=1)
+          gcloud run services update-traffic ${SERVICE_NAME} --region=${{ env.REGION }} --to-revisions=${REVISION}=100
 
           # Clean up
           rm -f /tmp/env-vars.yaml
