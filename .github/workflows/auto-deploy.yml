@@ -419,7 +419,7 @@ jobs:
             --platform managed \
             --allow-unauthenticated \
             --timeout 60 \
-            --memory 512Mi \
+            --memory 1Gi \
             --cpu 1 \
             --port 3000 \
             --service-account=${{ steps.env.outputs.service_account }} \
