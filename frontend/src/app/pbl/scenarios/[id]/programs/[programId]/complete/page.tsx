@@ -132,13 +132,10 @@ export default function ProgramCompletePage() {
 
   const loadUserData = () => {
     try {
-      // Try to get user data from localStorage
       const userData = localStorage.getItem('user');
       if (userData) {
         const user = JSON.parse(userData);
-        // Only store email for placeholder, don't set as default name
-        setUserName(user.email || '');
-        // Leave editableName empty by default
+        setUserName('');
         setEditableName('');
       }
     } catch (error) {
@@ -1083,36 +1080,36 @@ export default function ProgramCompletePage() {
 
         {/* Certificate Tab Content */}
         {activeTab === 'certificate' && (
-          <div className="bg-white rounded-lg shadow-lg p-8 certificate-container">
+          <div className="bg-white rounded-lg shadow-lg p-8">
             <div className="max-w-5xl mx-auto">
-              {/* Certificate Container with formal border */}
-              <div ref={certificateRef} className="relative border-8 border-double border-purple-600 p-16 rounded-lg bg-gradient-to-br from-white via-purple-50 to-white print:border-purple-600 print:shadow-none">
+              {/* Display Version - Only visible on screen */}
+              <div ref={certificateRef} className="relative border-4 sm:border-6 lg:border-8 border-double border-purple-600 p-8 sm:p-12 lg:p-16 rounded-lg bg-gradient-to-br from-white via-purple-50 to-white certificate-display">
                 {/* Decorative corner elements */}
-                <div className="absolute top-4 left-4 w-16 h-16 border-t-4 border-l-4 border-purple-400"></div>
-                <div className="absolute top-4 right-4 w-16 h-16 border-t-4 border-r-4 border-purple-400"></div>
-                <div className="absolute bottom-4 left-4 w-16 h-16 border-b-4 border-l-4 border-purple-400"></div>
-                <div className="absolute bottom-4 right-4 w-16 h-16 border-b-4 border-r-4 border-purple-400"></div>
+                <div className="absolute top-4 left-4 w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 border-t-2 border-l-2 sm:border-t-3 sm:border-l-3 lg:border-t-4 lg:border-l-4 border-purple-400"></div>
+                <div className="absolute top-4 right-4 w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 border-t-2 border-r-2 sm:border-t-3 sm:border-r-3 lg:border-t-4 lg:border-r-4 border-purple-400"></div>
+                <div className="absolute bottom-4 left-4 w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 border-b-2 border-l-2 sm:border-b-3 sm:border-l-3 lg:border-b-4 lg:border-l-4 border-purple-400"></div>
+                <div className="absolute bottom-4 right-4 w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 border-b-2 border-r-2 sm:border-b-3 sm:border-r-3 lg:border-b-4 lg:border-r-4 border-purple-400"></div>
 
                 {/* Title */}
-                <div className="text-center mb-12">
-                  <h2 className="text-5xl font-serif font-bold text-purple-700 mb-4">
+                <div className="text-center mb-6 sm:mb-8 lg:mb-12">
+                  <h2 className="text-4xl sm:text-4xl lg:text-5xl font-serif font-bold text-purple-700 mb-3 sm:mb-3 lg:mb-4">
                     {t('pbl:complete.certificate.title')}
                   </h2>
-                  <div className="w-32 h-1 bg-purple-600 mx-auto"></div>
+                  <div className="w-24 sm:w-24 lg:w-32 h-0.5 sm:h-0.5 lg:h-1 bg-purple-600 mx-auto"></div>
                 </div>
 
                 {/* Certificate of Completion text */}
-                <div className="text-center mb-8">
-                  <p className="text-lg text-gray-700 mb-6">
+                <div className="text-center mb-6 sm:mb-8">
+                  <p className="text-base sm:text-lg text-gray-700">
                     {t('pbl:complete.certificate.certifies')}
                   </p>
                 </div>
 
                 {/* Student name - red border box with edit capability (border changes when name is filled) */}
-                <div className="text-center mb-8">
+                <div className="text-center mb-6 sm:mb-8">
                   <div
                     onClick={() => !isEditingName && setIsEditingName(true)}
-                    className={`inline-block border-2 px-12 py-4 min-w-96 relative group bg-white cursor-pointer transition-all hover:shadow-md ${
+                    className={`inline-block border-2 px-6 py-3 w-[90%] max-w-sm sm:px-10 sm:py-4 sm:w-auto sm:min-w-80 lg:px-12 lg:min-w-96 relative group bg-white cursor-pointer transition-all hover:shadow-md ${
                       editableName ? 'border-purple-400' : 'border-red-500'
                     }`}
                   >
@@ -1128,18 +1125,18 @@ export default function ProgramCompletePage() {
                           }
                         }}
                         autoFocus
-                        placeholder={userName || t('pbl:complete.certificate.enterYourName', 'Enter your name')}
-                        className="text-4xl font-serif font-bold text-gray-900 bg-transparent border-none outline-none text-center w-full placeholder:text-gray-300"
+                        placeholder={t('pbl:complete.certificate.enterYourName', 'Enter your name')}
+                        className="text-2xl sm:text-2xl lg:text-4xl font-serif font-bold text-gray-900 bg-transparent border-none outline-none text-center w-full placeholder:text-gray-300"
                       />
                     ) : (
                       <>
                         {editableName ? (
-                          <p className="text-4xl font-serif font-bold text-gray-900">
+                          <p className="text-2xl sm:text-2xl lg:text-4xl font-serif font-bold text-gray-900">
                             {editableName}
                           </p>
                         ) : (
-                          <p className="text-4xl font-serif text-gray-300 italic">
-                            {userName || t('pbl:complete.certificate.clickToEnterName', 'Click to enter your name')}
+                          <p className="text-2xl sm:text-2xl lg:text-4xl font-serif text-gray-300 italic">
+                            {t('pbl:complete.certificate.clickToEnterName', 'Click to enter your name')}
                           </p>
                         )}
                         <button
@@ -1147,7 +1144,7 @@ export default function ProgramCompletePage() {
                             e.stopPropagation();
                             setIsEditingName(true);
                           }}
-                          className="absolute -right-8 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity print:hidden"
+                          className="absolute -right-8 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity"
                           title={t('pbl:complete.certificate.editName', 'Edit name')}
                         >
                           <svg className="w-5 h-5 text-gray-400 hover:text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1160,32 +1157,32 @@ export default function ProgramCompletePage() {
                 </div>
 
                 {/* Completion statement */}
-                <div className="text-center mb-6">
-                  <p className="text-lg text-gray-700">
+                <div className="text-center mb-6 sm:mb-6">
+                  <p className="text-base sm:text-lg text-gray-700">
                     {t('pbl:complete.certificate.hasCompleted')}
                   </p>
                 </div>
 
                 {/* Scenario title - elegant box */}
-                <div className="text-center mb-8">
-                  <div className="inline-block bg-purple-50 border-2 border-purple-300 px-8 py-4 rounded min-w-96">
-                    <p className="text-2xl font-semibold text-purple-900">{scenarioTitle}</p>
+                <div className="text-center mb-6 sm:mb-8 px-4 sm:px-0">
+                  <div className="inline-block bg-purple-50 border-2 border-purple-300 px-6 py-3 sm:px-6 sm:py-3 lg:px-8 lg:py-4 rounded w-[90%] max-w-sm sm:w-auto sm:min-w-72 lg:min-w-96">
+                    <p className="text-lg sm:text-xl lg:text-2xl font-semibold text-purple-900 break-words">{scenarioTitle}</p>
                   </div>
                 </div>
 
                 {/* Course description */}
-                <div className="text-center mb-12">
-                  <p className="text-base text-gray-600">
+                <div className="text-center mb-6 sm:mb-8 lg:mb-12">
+                  <p className="text-sm sm:text-base text-gray-600">
                     {t('pbl:complete.certificate.courseType')}
                   </p>
                 </div>
 
                 {/* Date section */}
-                <div className="text-center mb-12">
-                  <p className="text-sm text-gray-600 mb-2">
+                <div className="text-center mb-8 sm:mb-10 lg:mb-12">
+                  <p className="text-sm sm:text-sm text-gray-600 mb-2 sm:mb-2">
                     {t('pbl:complete.certificate.completionDate')}
                   </p>
-                  <p className="text-2xl font-semibold text-gray-900">
+                  <p className="text-xl sm:text-xl lg:text-2xl font-semibold text-gray-900">
                     {new Date().toLocaleDateString(i18n.language === 'zhTW' ? 'zh-TW' : 'en-US', {
                       year: 'numeric',
                       month: 'long',
@@ -1195,44 +1192,161 @@ export default function ProgramCompletePage() {
                 </div>
 
                 {/* Footer with logos and signatures */}
-                <div className="grid grid-cols-2 gap-16 mt-16 pt-8 border-t border-gray-300">
+                <div className="grid grid-cols-2 gap-8 sm:gap-12 lg:gap-16 mt-8 sm:mt-12 lg:mt-16 pt-6 sm:pt-6 lg:pt-8 border-t border-gray-300">
                   <div className="text-center">
-                    <div className="border-t-2 border-gray-400 pt-4 mb-3">
-                      <div className="flex items-center justify-center gap-3 mb-2">
+                    <div className="border-t-2 border-gray-400 pt-3 sm:pt-3 lg:pt-4 mb-2 sm:mb-2 lg:mb-3">
+                      <div className="flex items-center justify-center gap-2 sm:gap-2 lg:gap-3 mb-2 sm:mb-1 lg:mb-2">
                         <Image
                           src="/images/junyi_logo.jpg"
                           alt="Junyi Academy Logo"
                           width={80}
                           height={40}
-                          className="object-contain"
+                          className="object-contain w-14 h-7 sm:w-16 sm:h-8 lg:w-20 lg:h-10"
                         />
-                        <p className="text-base font-semibold text-gray-700">
+                        <p className="text-sm sm:text-sm lg:text-base font-semibold text-gray-700">
                           {t('pbl:complete.certificate.junyiAcademy')}
                         </p>
                       </div>
                     </div>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs sm:text-xs text-gray-500">
                       {t('pbl:complete.certificate.provider')}
                     </p>
                   </div>
                   <div className="text-center">
-                    <div className="border-t-2 border-gray-400 pt-4 mb-3">
-                      <div className="flex items-center justify-center gap-3 mb-2">
+                    <div className="border-t-2 border-gray-400 pt-3 sm:pt-3 lg:pt-4 mb-2 sm:mb-2 lg:mb-3">
+                      <div className="flex items-center justify-center gap-2 sm:gap-2 lg:gap-3 mb-2 sm:mb-1 lg:mb-2">
                         <Image
                           src="/images/logo.png"
                           alt="AI Square Logo"
                           width={80}
                           height={40}
-                          className="object-contain"
+                          className="object-contain w-14 h-7 sm:w-16 sm:h-8 lg:w-20 lg:h-10"
                         />
-                        <p className="text-base font-semibold text-gray-700">
+                        <p className="text-sm sm:text-sm lg:text-base font-semibold text-gray-700">
                           {t('pbl:complete.certificate.aiSquare')}
                         </p>
                       </div>
                     </div>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs sm:text-xs text-gray-500">
                       {t('pbl:complete.certificate.platform')}
                     </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Print-Only Version - Hidden on screen, only visible when printing */}
+              <div className="certificate-print hidden">
+                {/* Same certificate structure but with fixed print sizing */}
+                <div className="certificate-print-content">
+                  {/* Decorative corner elements */}
+                  <div className="certificate-corner certificate-corner-tl"></div>
+                  <div className="certificate-corner certificate-corner-tr"></div>
+                  <div className="certificate-corner certificate-corner-bl"></div>
+                  <div className="certificate-corner certificate-corner-br"></div>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+                    <div style={{ width: '90%', textAlign: 'center' }}>
+                      {/* Title */}
+                      <div style={{ marginBottom: '20px' }}>
+                        <h2 style={{ fontSize: '36px', fontFamily: 'serif', fontWeight: 'bold', color: 'rgb(147, 51, 234)', marginBottom: '10px' }}>
+                          {t('pbl:complete.certificate.title')}
+                        </h2>
+                        <div style={{ width: '96px', height: '2px', background: 'rgb(147, 51, 234)', margin: '0 auto' }}></div>
+                      </div>
+
+                      {/* Certificate of Completion text */}
+                      <div style={{ marginBottom: '15px' }}>
+                        <p style={{ fontSize: '16px', color: 'rgb(55, 65, 81)' }}>
+                          {t('pbl:complete.certificate.certifies')}
+                        </p>
+                      </div>
+
+                      {/* Student name */}
+                      <div style={{ marginBottom: '15px' }}>
+                        <div style={{ display: 'inline-block', border: '2px solid rgb(167, 139, 250)', padding: '8px 32px', background: 'white' }}>
+                          <p style={{ fontSize: '24px', fontFamily: 'serif', fontWeight: 'bold', color: 'rgb(17, 24, 39)' }}>
+                            {editableName || t('pbl:complete.certificate.enterYourName', 'Name')}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Completion statement */}
+                      <div style={{ marginBottom: '15px' }}>
+                        <p style={{ fontSize: '16px', color: 'rgb(55, 65, 81)' }}>
+                          {t('pbl:complete.certificate.hasCompleted')}
+                        </p>
+                      </div>
+
+                      {/* Scenario title */}
+                      <div style={{ marginBottom: '20px' }}>
+                        <div style={{ display: 'inline-block', background: 'rgb(243, 232, 255)', border: '2px solid rgb(216, 180, 254)', padding: '12px 24px', borderRadius: '4px' }}>
+                          <p style={{ fontSize: '20px', fontWeight: '600', color: 'rgb(88, 28, 135)' }}>{scenarioTitle}</p>
+                        </div>
+                      </div>
+
+                      {/* Course description */}
+                      <div style={{ marginBottom: '20px' }}>
+                        <p style={{ fontSize: '14px', color: 'rgb(75, 85, 99)' }}>
+                          {t('pbl:complete.certificate.courseType')}
+                        </p>
+                      </div>
+
+                      {/* Date section */}
+                      <div style={{ marginBottom: '30px' }}>
+                        <p style={{ fontSize: '14px', color: 'rgb(75, 85, 99)', marginBottom: '8px' }}>
+                          {t('pbl:complete.certificate.completionDate')}
+                        </p>
+                        <p style={{ fontSize: '18px', fontWeight: '600', color: 'rgb(17, 24, 39)' }}>
+                          {new Date().toLocaleDateString(i18n.language === 'zhTW' ? 'zh-TW' : 'en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                          })}
+                        </p>
+                      </div>
+
+                      {/* Footer with logos */}
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '48px', paddingTop: '16px', borderTop: '1px solid rgb(209, 213, 219)', marginTop: '20px' }}>
+                        <div style={{ textAlign: 'center' }}>
+                          <div style={{ borderTop: '2px solid rgb(156, 163, 175)', paddingTop: '8px', marginBottom: '4px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '4px' }}>
+                              <img
+                                src="/images/junyi_logo.jpg"
+                                alt="Junyi Academy Logo"
+                                width="48"
+                                height="24"
+                                style={{ objectFit: 'contain', display: 'block' }}
+                              />
+                              <p style={{ fontSize: '12px', fontWeight: '600', color: 'rgb(55, 65, 81)' }}>
+                                {t('pbl:complete.certificate.junyiAcademy')}
+                              </p>
+                            </div>
+                          </div>
+                          <p style={{ fontSize: '10px', color: 'rgb(107, 114, 128)' }}>
+                            {t('pbl:complete.certificate.provider')}
+                          </p>
+                        </div>
+                        <div style={{ textAlign: 'center' }}>
+                          <div style={{ borderTop: '2px solid rgb(156, 163, 175)', paddingTop: '8px', marginBottom: '4px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '4px' }}>
+                              <img
+                                src="/images/logo.png"
+                                alt="AI Square Logo"
+                                width="48"
+                                height="24"
+                                style={{ objectFit: 'contain', display: 'block' }}
+                              />
+                              <p style={{ fontSize: '12px', fontWeight: '600', color: 'rgb(55, 65, 81)' }}>
+                                {t('pbl:complete.certificate.aiSquare')}
+                              </p>
+                            </div>
+                          </div>
+                          <p style={{ fontSize: '10px', color: 'rgb(107, 114, 128)' }}>
+                            {t('pbl:complete.certificate.platform')}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
