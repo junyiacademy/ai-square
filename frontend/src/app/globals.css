@@ -194,16 +194,16 @@ html {
     color-adjust: exact !important;
   }
 
-  /* Center print content with decorative border - Safari-compatible sizing */
+  /* Center print content with decorative border - Full A4 size */
   .certificate-print-content {
     display: flex !important;
     flex-direction: column !important;
     justify-content: center !important;
     align-items: stretch !important;
-    width: calc(210mm - 40mm) !important;
-    height: calc(297mm - 40mm) !important;
-    max-height: calc(297mm - 40mm) !important;
-    padding: 15mm 25mm !important;
+    width: 210mm !important;
+    height: 297mm !important;
+    max-height: 297mm !important;
+    padding: 12mm 20mm !important;
     box-sizing: border-box !important;
     border: 4px double rgb(147, 51, 234) !important;
     background: linear-gradient(to bottom right, white, rgb(243, 232, 255), white) !important;
@@ -225,29 +225,29 @@ html {
   }
 
   .certificate-corner-tl {
-    top: 25px !important;
-    left: 35px !important;
+    top: 10px !important;
+    left: 10px !important;
     border-right: none !important;
     border-bottom: none !important;
   }
 
   .certificate-corner-tr {
-    top: 25px !important;
-    right: 35px !important;
+    top: 10px !important;
+    right: 10px !important;
     border-left: none !important;
     border-bottom: none !important;
   }
 
   .certificate-corner-bl {
-    bottom: 25px !important;
-    left: 35px !important;
+    bottom: 10px !important;
+    left: 10px !important;
     border-right: none !important;
     border-top: none !important;
   }
 
   .certificate-corner-br {
-    bottom: 25px !important;
-    right: 35px !important;
+    bottom: 10px !important;
+    right: 10px !important;
     border-left: none !important;
     border-top: none !important;
   }
@@ -258,57 +258,5 @@ html {
   header,
   footer {
     display: none !important;
-  }
-
-  /* Tablet/Mobile specific print styles */
-  @media print and (max-width: 1024px) {
-    .certificate-print-content {
-      width: 210mm !important;
-      height: 297mm !important;
-      max-height: 297mm !important;
-      padding: 0 !important;
-      transform: scale(0.7) !important;
-      transform-origin: center center !important;
-    }
-
-    /* Inner content wrapper needs adjustment */
-    .certificate-print-content > div {
-      padding: 25mm 35mm !important;
-    }
-
-    .certificate-corner {
-      width: 25px !important;
-      height: 25px !important;
-    }
-
-    .certificate-corner-tl {
-      top: 25mm !important;
-      left: 35mm !important;
-    }
-
-    .certificate-corner-tr {
-      top: 25mm !important;
-      right: 35mm !important;
-    }
-
-    .certificate-corner-bl {
-      bottom: 25mm !important;
-      left: 35mm !important;
-    }
-
-    .certificate-corner-br {
-      bottom: 25mm !important;
-      right: 35mm !important;
-    }
-  }
-
-  /* Desktop specific print styles */
-  @media print and (min-width: 1025px) {
-    .certificate-print-content {
-      width: calc(210mm - 30mm) !important;
-      height: calc(297mm - 30mm) !important;
-      max-height: calc(297mm - 30mm) !important;
-      padding: 18mm 28mm !important;
-    }
   }
 }
