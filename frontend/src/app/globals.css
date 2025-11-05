@@ -263,30 +263,42 @@ html {
   /* Tablet/Mobile specific print styles */
   @media print and (max-width: 1024px) {
     .certificate-print-content {
-      width: calc(210mm - 50mm) !important;
-      height: calc(297mm - 50mm) !important;
-      max-height: calc(297mm - 50mm) !important;
-      padding: 12mm 20mm !important;
+      width: 210mm !important;
+      height: 297mm !important;
+      max-height: 297mm !important;
+      padding: 0 !important;
+      transform: scale(0.7) !important;
+      transform-origin: center center !important;
+    }
+
+    /* Inner content wrapper needs adjustment */
+    .certificate-print-content > div {
+      padding: 25mm 35mm !important;
+    }
+
+    .certificate-corner {
+      width: 25px !important;
+      height: 25px !important;
     }
 
     .certificate-corner-tl {
-      top: 20px !important;
-      left: 30px !important;
+      top: 25mm !important;
+      left: 35mm !important;
     }
 
     .certificate-corner-tr {
-      top: 20px !important;
-      right: 30px !important;
+      top: 25mm !important;
+      right: 35mm !important;
     }
 
     .certificate-corner-bl {
-      bottom: 20px !important;
-      left: 30px !important;
+      bottom: 25mm !important;
+      left: 35mm !important;
     }
 
     .certificate-corner-br {
-      bottom: 20px !important;
-      right: 30px !important;
+      bottom: 25mm !important;
+      right: 35mm !important;
     }
   }
 
