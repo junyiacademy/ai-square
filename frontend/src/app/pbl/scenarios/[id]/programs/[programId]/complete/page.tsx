@@ -123,6 +123,24 @@ export default function ProgramCompletePage() {
     loadProgramData();
     loadUserData();
 
+    // Detect iPad/tablet for print layout
+    const detectTablet = () => {
+      const userAgent = navigator.userAgent.toLowerCase();
+      const isIOS = /ipad|iphone|ipod/.test(userAgent);
+      const isAndroidTablet = /android/.test(userAgent) && !/mobile/.test(userAgent);
+      const hasTouchPoints = navigator.maxTouchPoints && navigator.maxTouchPoints > 2;
+
+      return isIOS || isAndroidTablet || (hasTouchPoints && window.innerWidth >= 768);
+    };
+
+    if (detectTablet()) {
+      // Add .is-tablet class to certificate print element
+      const certificatePrint = document.querySelector('.certificate-print');
+      if (certificatePrint) {
+        certificatePrint.classList.add('is-tablet');
+      }
+    }
+
     // Cleanup function for StrictMode
     return () => {
       isMountedRef.current = false;

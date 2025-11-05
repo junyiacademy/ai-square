@@ -259,4 +259,37 @@ html {
   footer {
     display: none !important;
   }
+
+  /* iPad/Tablet specific styles - applied via JavaScript detection */
+  .certificate-print.is-tablet .certificate-print-content {
+    width: 170mm !important;
+    height: 257mm !important;
+    max-height: 257mm !important;
+    padding: 10mm 18mm !important;
+  }
+
+  .certificate-print.is-tablet .certificate-corner {
+    width: 20px !important;
+    height: 20px !important;
+  }
+
+  .certificate-print.is-tablet .certificate-corner-tl {
+    top: 8px !important;
+    left: 8px !important;
+  }
+
+  .certificate-print.is-tablet .certificate-corner-tr {
+    top: 8px !important;
+    right: 8px !important;
+  }
+
+  .certificate-print.is-tablet .certificate-corner-bl {
+    bottom: 8px !important;
+    left: 8px !important;
+  }
+
+  .certificate-print.is-tablet .certificate-corner-br {
+    bottom: 8px !important;
+    right: 8px !important;
+  }
 }
