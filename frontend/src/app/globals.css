@@ -194,16 +194,16 @@ html {
     color-adjust: exact !important;
   }
 
-  /* Center print content with decorative border - Inset from edges */
+  /* Center print content with decorative border - Safari-compatible sizing */
   .certificate-print-content {
     display: flex !important;
     flex-direction: column !important;
     justify-content: center !important;
     align-items: stretch !important;
-    width: calc(210mm - 20mm) !important;
-    height: calc(297mm - 20mm) !important;
-    max-height: calc(297mm - 20mm) !important;
-    padding: 20mm 30mm !important;
+    width: calc(210mm - 40mm) !important;
+    height: calc(297mm - 40mm) !important;
+    max-height: calc(297mm - 40mm) !important;
+    padding: 15mm 25mm !important;
     box-sizing: border-box !important;
     border: 4px double rgb(147, 51, 234) !important;
     background: linear-gradient(to bottom right, white, rgb(243, 232, 255), white) !important;
