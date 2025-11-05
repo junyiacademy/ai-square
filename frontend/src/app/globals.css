@@ -261,35 +261,36 @@ html {
   }
 
   /* iPad/Tablet specific styles - applied via JavaScript detection */
+  /* Scale down to 60% of original desktop size */
   .certificate-print.is-tablet .certificate-print-content {
-    width: 170mm !important;
-    height: 257mm !important;
-    max-height: 257mm !important;
-    padding: 10mm 18mm !important;
+    width: 126mm !important;      /* 210mm × 60% */
+    height: 178mm !important;     /* 297mm × 60% */
+    max-height: 178mm !important;
+    padding: 7mm 12mm !important; /* 12mm × 60%, 20mm × 60% */
   }
 
   .certificate-print.is-tablet .certificate-corner {
-    width: 20px !important;
-    height: 20px !important;
+    width: 18px !important;  /* 30px × 60% */
+    height: 18px !important;
   }
 
   .certificate-print.is-tablet .certificate-corner-tl {
-    top: 8px !important;
-    left: 8px !important;
+    top: 6px !important;  /* 10px × 60% */
+    left: 6px !important;
   }
 
   .certificate-print.is-tablet .certificate-corner-tr {
-    top: 8px !important;
-    right: 8px !important;
+    top: 6px !important;
+    right: 6px !important;
   }
 
   .certificate-print.is-tablet .certificate-corner-bl {
-    bottom: 8px !important;
-    left: 8px !important;
+    bottom: 6px !important;
+    left: 6px !important;
   }
 
   .certificate-print.is-tablet .certificate-corner-br {
-    bottom: 8px !important;
-    right: 8px !important;
+    bottom: 6px !important;
+    right: 6px !important;
   }
 }
