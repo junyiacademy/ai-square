@@ -174,12 +174,14 @@ html {
     left: 0 !important;
     width: 210mm !important;
     height: 297mm !important;
-    margin: 0 auto !important;
+    margin: 0 !important;
     padding: 0 !important;
     page-break-inside: avoid !important;
     page-break-after: avoid !important;
+    page-break-before: avoid !important;
     justify-content: center !important;
     align-items: center !important;
+    overflow: hidden !important;
   }
 
   /* Make print content visible */
@@ -200,11 +202,13 @@ html {
     align-items: stretch !important;
     width: 210mm !important;
     height: 297mm !important;
-    padding: 15mm 20mm !important;
+    max-height: 297mm !important;
+    padding: 12mm 20mm !important;
     box-sizing: border-box !important;
     border: 4px double rgb(147, 51, 234) !important;
     background: linear-gradient(to bottom right, white, rgb(243, 232, 255), white) !important;
     position: relative !important;
+    overflow: hidden !important;
   }
 
   /* Ensure all children are visible and centered */

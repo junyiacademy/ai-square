@@ -1247,56 +1247,56 @@ export default function ProgramCompletePage() {
                   <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
                     <div style={{ width: '90%', textAlign: 'center' }}>
                       {/* Title */}
-                      <div style={{ marginBottom: '20px' }}>
-                        <h2 style={{ fontSize: '36px', fontFamily: 'serif', fontWeight: 'bold', color: 'rgb(147, 51, 234)', marginBottom: '10px' }}>
+                      <div style={{ marginBottom: '12px' }}>
+                        <h2 style={{ fontSize: '32px', fontFamily: 'serif', fontWeight: 'bold', color: 'rgb(147, 51, 234)', marginBottom: '8px' }}>
                           {t('pbl:complete.certificate.title')}
                         </h2>
-                        <div style={{ width: '96px', height: '2px', background: 'rgb(147, 51, 234)', margin: '0 auto' }}></div>
+                        <div style={{ width: '80px', height: '2px', background: 'rgb(147, 51, 234)', margin: '0 auto' }}></div>
                       </div>
 
                       {/* Certificate of Completion text */}
-                      <div style={{ marginBottom: '15px' }}>
-                        <p style={{ fontSize: '16px', color: 'rgb(55, 65, 81)' }}>
+                      <div style={{ marginBottom: '10px' }}>
+                        <p style={{ fontSize: '14px', color: 'rgb(55, 65, 81)' }}>
                           {t('pbl:complete.certificate.certifies')}
                         </p>
                       </div>
 
                       {/* Student name */}
-                      <div style={{ marginBottom: '15px' }}>
-                        <div style={{ display: 'inline-block', border: '2px solid rgb(167, 139, 250)', padding: '8px 32px', background: 'white' }}>
-                          <p style={{ fontSize: '24px', fontFamily: 'serif', fontWeight: 'bold', color: 'rgb(17, 24, 39)' }}>
+                      <div style={{ marginBottom: '10px' }}>
+                        <div style={{ display: 'inline-block', border: '2px solid rgb(167, 139, 250)', padding: '6px 28px', background: 'white' }}>
+                          <p style={{ fontSize: '22px', fontFamily: 'serif', fontWeight: 'bold', color: 'rgb(17, 24, 39)' }}>
                             {editableName || t('pbl:complete.certificate.enterYourName', 'Name')}
                           </p>
                         </div>
                       </div>
 
                       {/* Completion statement */}
-                      <div style={{ marginBottom: '15px' }}>
-                        <p style={{ fontSize: '16px', color: 'rgb(55, 65, 81)' }}>
+                      <div style={{ marginBottom: '10px' }}>
+                        <p style={{ fontSize: '14px', color: 'rgb(55, 65, 81)' }}>
                           {t('pbl:complete.certificate.hasCompleted')}
                         </p>
                       </div>
 
                       {/* Scenario title */}
-                      <div style={{ marginBottom: '20px' }}>
-                        <div style={{ display: 'inline-block', background: 'rgb(243, 232, 255)', border: '2px solid rgb(216, 180, 254)', padding: '12px 24px', borderRadius: '4px' }}>
-                          <p style={{ fontSize: '20px', fontWeight: '600', color: 'rgb(88, 28, 135)' }}>{scenarioTitle}</p>
+                      <div style={{ marginBottom: '12px' }}>
+                        <div style={{ display: 'inline-block', background: 'rgb(243, 232, 255)', border: '2px solid rgb(216, 180, 254)', padding: '10px 20px', borderRadius: '4px' }}>
+                          <p style={{ fontSize: '18px', fontWeight: '600', color: 'rgb(88, 28, 135)' }}>{scenarioTitle}</p>
                         </div>
                       </div>
 
                       {/* Course description */}
-                      <div style={{ marginBottom: '20px' }}>
-                        <p style={{ fontSize: '14px', color: 'rgb(75, 85, 99)' }}>
+                      <div style={{ marginBottom: '12px' }}>
+                        <p style={{ fontSize: '13px', color: 'rgb(75, 85, 99)' }}>
                           {t('pbl:complete.certificate.courseType')}
                         </p>
                       </div>
 
                       {/* Date section */}
-                      <div style={{ marginBottom: '30px' }}>
-                        <p style={{ fontSize: '14px', color: 'rgb(75, 85, 99)', marginBottom: '8px' }}>
+                      <div style={{ marginBottom: '18px' }}>
+                        <p style={{ fontSize: '13px', color: 'rgb(75, 85, 99)', marginBottom: '6px' }}>
                           {t('pbl:complete.certificate.completionDate')}
                         </p>
-                        <p style={{ fontSize: '18px', fontWeight: '600', color: 'rgb(17, 24, 39)' }}>
+                        <p style={{ fontSize: '16px', fontWeight: '600', color: 'rgb(17, 24, 39)' }}>
                           {new Date().toLocaleDateString(i18n.language === 'zhTW' ? 'zh-TW' : 'en-US', {
                             year: 'numeric',
                             month: 'long',
@@ -1306,7 +1306,7 @@ export default function ProgramCompletePage() {
                       </div>
 
                       {/* Footer with logos */}
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '48px', paddingTop: '16px', borderTop: '1px solid rgb(209, 213, 219)', marginTop: '20px' }}>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '40px', paddingTop: '12px', borderTop: '1px solid rgb(209, 213, 219)', marginTop: '12px' }}>
                         <div style={{ textAlign: 'center' }}>
                           <div style={{ borderTop: '2px solid rgb(156, 163, 175)', paddingTop: '8px', marginBottom: '4px' }}>
                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '4px' }}>
