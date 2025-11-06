@@ -1455,23 +1455,6 @@ export default function ProgramCompletePage() {
                   )}
                 </div>
 
-                {/* Print button (alternative) - Hidden on mobile and tablet */}
-                <div className="relative inline-block group hidden md:block">
-                  <button
-                    onClick={() => window.print()}
-                    disabled={!editableName}
-                    className={`px-8 py-3 rounded-lg font-medium transition-colors shadow-lg flex items-center gap-2 ${
-                      editableName
-                        ? 'bg-white text-purple-600 border-2 border-purple-600 hover:bg-purple-50 cursor-pointer'
-                        : 'bg-gray-100 text-gray-400 border-2 border-gray-300 cursor-not-allowed'
-                    }`}
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-                    </svg>
-                    {t('pbl:complete.certificate.print', 'Print')}
-                  </button>
-                </div>
               </div>
             </div>
           </div>
