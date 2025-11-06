@@ -367,43 +367,22 @@ export default function ProgramCompletePage() {
       return;
     }
 
+    if (!certificateRef.current) {
+      alert(t('pbl:complete.certificate.downloadFailed', 'Failed to generate PDF. Please try again.'));
+      return;
+    }
+
     setIsGeneratingPDF(true);
 
     try {
-      const response = await fetch('/api/pbl/certificate/download', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          studentName: editableName,
-          scenarioTitle: scenarioTitle,
-          completionDate: new Date().toLocaleDateString(i18n.language === 'zhTW' ? 'zh-TW' : 'en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-          }),
-          language: i18n.language === 'zhTW' ? 'zhTW' : 'en',
-        }),
-      });
+      // Use client-side PDF generation from HTML element
+      const { generatePDFFromElement } = await import('@/lib/client-pdf-generator');
 
-      if (!response.ok) {
-        throw new Error('Failed to generate PDF');
-      }
-
-      // Download PDF
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `certificate-${editableName}.pdf`;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
+      const fileName = `certificate-${editableName.replace(/\s+/g, '-')}.pdf`;
+      await generatePDFFromElement(certificateRef.current, fileName);
     } catch (error) {
-      console.error('PDF download error:', error);
-      alert(t('pbl:complete.certificate.downloadFailed', 'Failed to download PDF. Please try again.'));
+      console.error('PDF generation error:', error);
+      alert(t('pbl:complete.certificate.downloadFailed', 'Failed to generate PDF. Please try again.'));
     } finally {
       setIsGeneratingPDF(false);
     }
@@ -1150,13 +1129,15 @@ export default function ProgramCompletePage() {
           <div className="bg-white rounded-lg shadow-lg p-8">
             <div className="max-w-5xl mx-auto">
               {/* Display Version - Only visible on screen */}
-              <div ref={certificateRef} className="relative border-4 sm:border-6 lg:border-8 border-double border-purple-600 p-8 sm:p-12 lg:p-16 rounded-lg bg-gradient-to-br from-white via-purple-50 to-white certificate-display">
+              <div ref={certificateRef} className="relative border-4 sm:border-6 lg:border-8 border-double border-purple-600 p-8 sm:p-12 lg:p-16 rounded-lg bg-gradient-to-br from-white via-purple-50 to-white certificate-display flex items-center justify-center min-h-[600px]">
                 {/* Decorative corner elements */}
                 <div className="absolute top-4 left-4 w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 border-t-2 border-l-2 sm:border-t-3 sm:border-l-3 lg:border-t-4 lg:border-l-4 border-purple-400"></div>
                 <div className="absolute top-4 right-4 w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 border-t-2 border-r-2 sm:border-t-3 sm:border-r-3 lg:border-t-4 lg:border-r-4 border-purple-400"></div>
                 <div className="absolute bottom-4 left-4 w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 border-b-2 border-l-2 sm:border-b-3 sm:border-l-3 lg:border-b-4 lg:border-l-4 border-purple-400"></div>
                 <div className="absolute bottom-4 right-4 w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 border-b-2 border-r-2 sm:border-b-3 sm:border-r-3 lg:border-b-4 lg:border-r-4 border-purple-400"></div>
 
+                {/* Certificate content - centered wrapper */}
+                <div className="w-full">
                 {/* Title */}
                 <div className="text-center mb-6 sm:mb-8 lg:mb-12">
                   <h2 className="text-4xl sm:text-4xl lg:text-5xl font-serif font-bold text-purple-700 mb-3 sm:mb-3 lg:mb-4">
@@ -1298,6 +1279,7 @@ export default function ProgramCompletePage() {
                       {t('pbl:complete.certificate.platform')}
                     </p>
                   </div>
+                </div>
                 </div>
               </div>
 
