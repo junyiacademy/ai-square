@@ -412,7 +412,7 @@ jobs:
           APP_BASE_URL: "${{ steps.env.outputs.environment == 'production' && 'https://www.ai-square.org' || 'https://ai-square-staging-731209836128.asia-east1.run.app' }}"
           EOF
 
-          # Deploy using env vars file - 完全複製 deploy-staging.yml.disabled 的命令
+          # Deploy using env vars file - directly with full traffic
           gcloud run deploy ${SERVICE_NAME} \
             --image gcr.io/${{ env.PROJECT_ID }}/${IMAGE_TAG}:${{ github.sha }} \
             --region ${{ env.REGION }} \
@@ -424,13 +424,7 @@ jobs:
             --port 3000 \
             --service-account=${{ steps.env.outputs.service_account }} \
             --add-cloudsql-instances ai-square-463013:asia-east1:${DB_INSTANCE} \
-            --env-vars-file=/tmp/env-vars.yaml \
-            --no-traffic \
-            --tag=candidate
-
-          # Update traffic to new revision
-          REVISION=$(gcloud run revisions list --service=${SERVICE_NAME} --region=${{ env.REGION }} --format="value(metadata.name)" --limit=1)
-          gcloud run services update-traffic ${SERVICE_NAME} --region=${{ env.REGION }} --to-revisions=${REVISION}=100
+            --env-vars-file=/tmp/env-vars.yaml
 
           # Clean up
           rm -f /tmp/env-vars.yaml
