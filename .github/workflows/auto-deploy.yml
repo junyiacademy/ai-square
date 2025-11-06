@@ -426,6 +426,14 @@ jobs:
             --add-cloudsql-instances ai-square-463013:asia-east1:${DB_INSTANCE} \
             --env-vars-file=/tmp/env-vars.yaml
 
+          # Ensure traffic is routed to the latest revision
+          echo "🔀 Routing 100% traffic to latest revision..."
+          gcloud run services update-traffic ${SERVICE_NAME} \
+            --region ${{ env.REGION }} \
+            --to-latest
+
+          echo "✅ Traffic routing complete!"
+
           # Clean up
           rm -f /tmp/env-vars.yaml
 
