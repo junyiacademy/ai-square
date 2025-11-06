@@ -99,7 +99,6 @@ export default function ProgramCompletePage() {
   const [scenarioData, setScenarioData] = useState<ScenarioData | null>(null);
   const [generatingFeedback, setGeneratingFeedback] = useState(false);
   const [activeTab, setActiveTab] = useState<'results' | 'certificate'>('results');
-  const [userName, setUserName] = useState<string>('');
   const [isEditingName, setIsEditingName] = useState<boolean>(false);
   const [editableName, setEditableName] = useState<string>('');
   const [isGeneratingPDF, setIsGeneratingPDF] = useState<boolean>(false);
@@ -153,8 +152,7 @@ export default function ProgramCompletePage() {
     try {
       const userData = localStorage.getItem('user');
       if (userData) {
-        const user = JSON.parse(userData);
-        setUserName('');
+        // User data exists but we don't auto-fill name for certificates
         setEditableName('');
       }
     } catch (error) {
@@ -1359,6 +1357,7 @@ export default function ProgramCompletePage() {
                         <div style={{ textAlign: 'center' }}>
                           <div style={{ borderTop: '2px solid rgb(156, 163, 175)', paddingTop: '8px', marginBottom: '4px' }}>
                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '4px' }}>
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
                               <img
                                 src="/images/junyi_logo.jpg"
                                 alt="Junyi Academy Logo"
@@ -1378,6 +1377,7 @@ export default function ProgramCompletePage() {
                         <div style={{ textAlign: 'center' }}>
                           <div style={{ borderTop: '2px solid rgb(156, 163, 175)', paddingTop: '8px', marginBottom: '4px' }}>
                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '4px' }}>
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
                               <img
                                 src="/images/logo.png"
                                 alt="AI Square Logo"
