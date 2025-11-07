@@ -17,6 +17,71 @@ import { formatDateWithLocale } from '@/utils/locale';
 import { processInstructions } from '@/utils/pbl-instructions';
 import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
 
+// Helper function: Convert score to qualitative rating
+function getQualitativeRating(score: number): {
+  label: 'Good' | 'Great' | 'Perfect';
+  color: string;
+  i18nKey: string;
+} {
+  if (score >= 91) return {
+    label: 'Perfect',
+    color: 'text-purple-600 dark:text-purple-400',
+    i18nKey: 'pbl:complete.rating.perfect'
+  };
+  if (score >= 71) return {
+    label: 'Great',
+    color: 'text-blue-600 dark:text-blue-400',
+    i18nKey: 'pbl:complete.rating.great'
+  };
+  return {
+    label: 'Good',
+    color: 'text-green-600 dark:text-green-400',
+    i18nKey: 'pbl:complete.rating.good'
+  };
+}
+
+// Helper function: Convert score to star rating
+function getStarRating(score: number): { filled: number; empty: number } {
+  if (score >= 91) return { filled: 3, empty: 0 };
+  if (score >= 71) return { filled: 2, empty: 1 };
+  return { filled: 1, empty: 2 };
+}
+
+// Star Rating Component
+interface StarRatingProps {
+  score: number;
+  size?: 'sm' | 'md' | 'lg';
+}
+
+function StarRating({ score, size = 'md' }: StarRatingProps) {
+  const { filled, empty } = getStarRating(score);
+
+  const sizeClasses = {
+    sm: 'w-4 h-4',
+    md: 'w-6 h-6',
+    lg: 'w-8 h-8'
+  };
+
+  const starClass = sizeClasses[size];
+
+  return (
+    <div className="flex items-center gap-0.5">
+      {/* Filled stars */}
+      {[...Array(filled)].map((_, i) => (
+        <svg key={`filled-${i}`} className={`${starClass} text-yellow-400 fill-current`} viewBox="0 0 24 24">
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+        </svg>
+      ))}
+      {/* Empty stars */}
+      {[...Array(empty)].map((_, i) => (
+        <svg key={`empty-${i}`} className={`${starClass} text-gray-300 dark:text-gray-600 fill-current`} viewBox="0 0 24 24">
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+        </svg>
+      ))}
+    </div>
+  );
+}
+
 interface ConversationEntry {
   id: string;
   type: 'user' | 'ai' | 'system';
@@ -1078,14 +1143,14 @@ export default function ProgramLearningPage() {
                     <h4 className="text-lg font-semibold text-gray-900 dark:text-white">
                       {t('pbl:learn.overallScore')}
                     </h4>
-                    <span className={`text-3xl font-bold ${
-                      evaluation.score >= 75 ? 'text-green-600' :
-                      evaluation.score >= 60 ? 'text-blue-600' :
-                      evaluation.score >= 40 ? 'text-yellow-600' :
-                      'text-red-600'
-                    }`}>
-                      {evaluation.score}%
-                    </span>
+                    {(() => {
+                      const rating = getQualitativeRating(evaluation.score);
+                      return (
+                        <span className={`text-3xl font-bold ${rating.color}`}>
+                          {t(rating.i18nKey)}
+                        </span>
+                      );
+                    })()}
                   </div>
                 </div>
 
@@ -1115,17 +1180,7 @@ export default function ProgramLearningPage() {
                               N/A
                             </span>
                           ) : (
-                            <>
-                              <div className="w-24 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-2">
-                                <div
-                                  className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                                  style={{ width: `${Number(score)}%` }}
-                                />
-                              </div>
-                              <span className="text-sm font-medium text-gray-700 dark:text-gray-300 w-12 text-right">
-                                {Number(score)}%
-                              </span>
-                            </>
+                            <StarRating score={Number(score)} size="sm" />
                           )}
                         </div>
                       </div>
@@ -1146,49 +1201,19 @@ export default function ProgramLearningPage() {
                       <span className="text-sm text-gray-600 dark:text-gray-400">
                         {t('pbl:complete.knowledge')}
                       </span>
-                      <div className="flex items-center">
-                        <div className="w-24 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-2">
-                          <div
-                            className="bg-green-600 h-2 rounded-full transition-all duration-300"
-                            style={{ width: `${evaluation.ksaScores.knowledge}%` }}
-                          />
-                        </div>
-                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300 w-12 text-right">
-                          {Math.round(evaluation.ksaScores.knowledge)}%
-                        </span>
-                      </div>
+                      <StarRating score={evaluation.ksaScores.knowledge} size="sm" />
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-gray-600 dark:text-gray-400">
                         {t('pbl:complete.skills')}
                       </span>
-                      <div className="flex items-center">
-                        <div className="w-24 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-2">
-                          <div
-                            className="bg-green-600 h-2 rounded-full transition-all duration-300"
-                            style={{ width: `${evaluation.ksaScores.skills}%` }}
-                          />
-                        </div>
-                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300 w-12 text-right">
-                          {Math.round(evaluation.ksaScores.skills)}%
-                        </span>
-                      </div>
+                      <StarRating score={evaluation.ksaScores.skills} size="sm" />
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-gray-600 dark:text-gray-400">
                         {t('pbl:complete.attitudes')}
                       </span>
-                      <div className="flex items-center">
-                        <div className="w-24 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-2">
-                          <div
-                            className="bg-green-600 h-2 rounded-full transition-all duration-300"
-                            style={{ width: `${evaluation.ksaScores.attitudes}%` }}
-                          />
-                        </div>
-                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300 w-12 text-right">
-                          {Math.round(evaluation.ksaScores.attitudes)}%
-                        </span>
-                      </div>
+                      <StarRating score={evaluation.ksaScores.attitudes} size="sm" />
                     </div>
                   </div>
                 </div>
@@ -1609,14 +1634,14 @@ export default function ProgramLearningPage() {
                         <h4 className="text-lg font-semibold text-gray-900 dark:text-white">
                           {t('pbl:learn.overallScore')}
                         </h4>
-                        <span className={`text-3xl font-bold ${
-                          evaluation.score >= 75 ? 'text-green-600' :
-                          evaluation.score >= 60 ? 'text-blue-600' :
-                          evaluation.score >= 40 ? 'text-yellow-600' :
-                          'text-red-600'
-                        }`}>
-                          {evaluation.score}%
-                        </span>
+                        {(() => {
+                          const rating = getQualitativeRating(evaluation.score);
+                          return (
+                            <span className={`text-3xl font-bold ${rating.color}`}>
+                              {t(rating.i18nKey)}
+                            </span>
+                          );
+                        })()}
                       </div>
                     </div>
 
@@ -1646,17 +1671,7 @@ export default function ProgramLearningPage() {
                                   N/A
                                 </span>
                               ) : (
-                                <>
-                                  <div className="w-24 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-2">
-                                    <div
-                                      className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                                      style={{ width: `${Number(score)}%` }}
-                                    />
-                                  </div>
-                                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300 w-12 text-right">
-                                    {Number(score)}%
-                                  </span>
-                                </>
+                                <StarRating score={Number(score)} size="sm" />
                               )}
                             </div>
                           </div>
@@ -1677,49 +1692,19 @@ export default function ProgramLearningPage() {
                           <span className="text-sm text-gray-600 dark:text-gray-400">
                             {t('pbl:complete.knowledge')}
                           </span>
-                          <div className="flex items-center">
-                            <div className="w-24 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-2">
-                              <div
-                                className="bg-green-600 h-2 rounded-full transition-all duration-300"
-                                style={{ width: `${evaluation.ksaScores.knowledge}%` }}
-                              />
-                            </div>
-                            <span className="text-sm font-medium text-gray-700 dark:text-gray-300 w-12 text-right">
-                              {Math.round(evaluation.ksaScores.knowledge)}%
-                            </span>
-                          </div>
+                          <StarRating score={evaluation.ksaScores.knowledge} size="sm" />
                         </div>
                         <div className="flex items-center justify-between">
                           <span className="text-sm text-gray-600 dark:text-gray-400">
                             {t('pbl:complete.skills')}
                           </span>
-                          <div className="flex items-center">
-                            <div className="w-24 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-2">
-                              <div
-                                className="bg-green-600 h-2 rounded-full transition-all duration-300"
-                                style={{ width: `${evaluation.ksaScores.skills}%` }}
-                              />
-                            </div>
-                            <span className="text-sm font-medium text-gray-700 dark:text-gray-300 w-12 text-right">
-                              {Math.round(evaluation.ksaScores.skills)}%
-                            </span>
-                          </div>
+                          <StarRating score={evaluation.ksaScores.skills} size="sm" />
                         </div>
                         <div className="flex items-center justify-between">
                           <span className="text-sm text-gray-600 dark:text-gray-400">
                             {t('pbl:complete.attitudes')}
                           </span>
-                          <div className="flex items-center">
-                            <div className="w-24 bg-gray-200 dark:bg-gray-600 rounded-full h-2 mr-2">
-                              <div
-                                className="bg-green-600 h-2 rounded-full transition-all duration-300"
-                                style={{ width: `${evaluation.ksaScores.attitudes}%` }}
-                              />
-                            </div>
-                            <span className="text-sm font-medium text-gray-700 dark:text-gray-300 w-12 text-right">
-                              {Math.round(evaluation.ksaScores.attitudes)}%
-                            </span>
-                          </div>
+                          <StarRating score={evaluation.ksaScores.attitudes} size="sm" />
                         </div>
                       </div>
                     </div>
