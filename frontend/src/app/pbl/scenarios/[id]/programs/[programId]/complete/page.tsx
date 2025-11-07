@@ -13,6 +13,71 @@ import type {
 } from '@/types/pbl-completion';
 import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
 
+// Helper function: Convert score to qualitative rating
+function getQualitativeRating(score: number): {
+  label: 'Good' | 'Great' | 'Perfect';
+  color: string;
+  i18nKey: string;
+} {
+  if (score >= 91) return {
+    label: 'Perfect',
+    color: 'text-purple-600 dark:text-purple-400',
+    i18nKey: 'pbl:complete.rating.perfect'
+  };
+  if (score >= 71) return {
+    label: 'Great',
+    color: 'text-blue-600 dark:text-blue-400',
+    i18nKey: 'pbl:complete.rating.great'
+  };
+  return {
+    label: 'Good',
+    color: 'text-green-600 dark:text-green-400',
+    i18nKey: 'pbl:complete.rating.good'
+  };
+}
+
+// Helper function: Convert score to star rating
+function getStarRating(score: number): { filled: number; empty: number } {
+  if (score >= 91) return { filled: 3, empty: 0 };
+  if (score >= 71) return { filled: 2, empty: 1 };
+  return { filled: 1, empty: 2 };
+}
+
+// Star Rating Component
+interface StarRatingProps {
+  score: number;
+  size?: 'sm' | 'md' | 'lg';
+}
+
+function StarRating({ score, size = 'md' }: StarRatingProps) {
+  const { filled, empty } = getStarRating(score);
+
+  const sizeClasses = {
+    sm: 'w-4 h-4',
+    md: 'w-6 h-6',
+    lg: 'w-8 h-8'
+  };
+
+  const starClass = sizeClasses[size];
+
+  return (
+    <div className="flex items-center gap-0.5">
+      {/* Filled stars */}
+      {[...Array(filled)].map((_, i) => (
+        <svg key={`filled-${i}`} className={`${starClass} text-yellow-400 fill-current`} viewBox="0 0 24 24">
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+        </svg>
+      ))}
+      {/* Empty stars */}
+      {[...Array(empty)].map((_, i) => (
+        <svg key={`empty-${i}`} className={`${starClass} text-gray-300 dark:text-gray-600 fill-current`} viewBox="0 0 24 24">
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+        </svg>
+      ))}
+    </div>
+  );
+}
+
 // Add print styles - optimized for color printing with background graphics
 if (typeof window !== 'undefined') {
   const style = document.createElement('style');
@@ -681,9 +746,14 @@ export default function ProgramCompletePage() {
               {t('pbl:complete.overallScore')}
             </h3>
             <div className="text-center mb-4">
-              <p className={`text-5xl font-bold ${getScoreColor(completionData.overallScore || 0)}`}>
-                {completionData.overallScore || 0}%
-              </p>
+              {(() => {
+                const rating = getQualitativeRating(completionData.overallScore || 0);
+                return (
+                  <p className={`text-5xl font-bold ${rating.color}`}>
+                    {t(rating.i18nKey)}
+                  </p>
+                );
+              })()}
               <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
                 {completionData.evaluatedTasks}/{completionData.totalTasks} {t('pbl:history.tasksEvaluated')}
               </p>
@@ -722,24 +792,11 @@ export default function ProgramCompletePage() {
                     const score = completionData.domainScores?.[domain] || 0;
                     return (
                       <div key={domain}>
-                        <div className="flex items-center justify-between mb-1">
+                        <div className="flex items-center justify-between">
                           <span className="text-sm text-gray-600 dark:text-gray-400">
                             {t(`assessment:domains.${domain}`)}
                           </span>
-                          <span className={`text-sm font-medium ${getScoreColor(score)}`}>
-                            {score}%
-                          </span>
-                        </div>
-                        <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-                          <div
-                            className={`h-2 rounded-full ${
-                              domain === 'engaging_with_ai' ? 'bg-blue-600' :
-                              domain === 'creating_with_ai' ? 'bg-green-600' :
-                              domain === 'managing_with_ai' ? 'bg-yellow-600' :
-                              'bg-purple-600'
-                            }`}
-                            style={{ width: `${score}%` }}
-                          />
+                          <StarRating score={score} size="sm" />
                         </div>
                       </div>
                     );
@@ -756,53 +813,29 @@ export default function ProgramCompletePage() {
             {completionData.ksaScores && (
               <div className="space-y-4">
                 <div>
-                  <div className="flex items-center justify-between mb-1">
+                  <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-600 dark:text-gray-400">
                       {t('pbl:complete.knowledge')}
                     </span>
-                    <span className={`text-sm font-medium ${getScoreColor(completionData.ksaScores.knowledge)}`}>
-                      {completionData.ksaScores.knowledge}%
-                    </span>
-                  </div>
-                  <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-                    <div
-                      className="bg-blue-600 h-2 rounded-full"
-                      style={{ width: `${completionData.ksaScores.knowledge}%` }}
-                    />
+                    <StarRating score={completionData.ksaScores.knowledge} size="sm" />
                   </div>
                 </div>
 
                 <div>
-                  <div className="flex items-center justify-between mb-1">
+                  <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-600 dark:text-gray-400">
                       {t('pbl:complete.skills')}
                     </span>
-                    <span className={`text-sm font-medium ${getScoreColor(completionData.ksaScores.skills)}`}>
-                      {completionData.ksaScores.skills}%
-                    </span>
-                  </div>
-                  <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-                    <div
-                      className="bg-green-600 h-2 rounded-full"
-                      style={{ width: `${completionData.ksaScores.skills}%` }}
-                    />
+                    <StarRating score={completionData.ksaScores.skills} size="sm" />
                   </div>
                 </div>
 
                 <div>
-                  <div className="flex items-center justify-between mb-1">
+                  <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-600 dark:text-gray-400">
                       {t('pbl:complete.attitudes')}
                     </span>
-                    <span className={`text-sm font-medium ${getScoreColor(completionData.ksaScores.attitudes)}`}>
-                      {completionData.ksaScores.attitudes}%
-                    </span>
-                  </div>
-                  <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-                    <div
-                      className="bg-purple-600 h-2 rounded-full"
-                      style={{ width: `${completionData.ksaScores.attitudes}%` }}
-                    />
+                    <StarRating score={completionData.ksaScores.attitudes} size="sm" />
                   </div>
                 </div>
               </div>
@@ -851,11 +884,14 @@ export default function ProgramCompletePage() {
                           </svg>
                           {task.log?.interactions?.filter((i) => i.type === 'user').length || 0} {t('pbl:complete.conversations')}
                         </span>
-                        {task.evaluation && (
-                          <span className={`font-medium ${getScoreColor(task.evaluation.score)}`}>
-                            {t('pbl:learn.overallScore')}: {task.evaluation.score}%
-                          </span>
-                        )}
+                        {task.evaluation && (() => {
+                          const rating = getQualitativeRating(task.evaluation.score);
+                          return (
+                            <span className={`font-medium ${rating.color}`}>
+                              {t('pbl:learn.overallScore')}: {t(rating.i18nKey)}
+                            </span>
+                          );
+                        })()}
                       </div>
 
                       {/* Task Evaluation Details - Collapsible */}
@@ -883,24 +919,11 @@ export default function ProgramCompletePage() {
                                       const score = task.evaluation?.domainScores?.[domain] || 0;
                                       return (
                                         <div key={domain}>
-                                          <div className="flex items-center justify-between mb-1">
+                                          <div className="flex items-center justify-between">
                                             <span className="text-sm text-gray-600 dark:text-gray-400">
                                               {t(`assessment:domains.${domain}`)}
                                             </span>
-                                            <span className={`text-sm font-bold ${getScoreColor(score)}`}>
-                                              {score}%
-                                            </span>
-                                          </div>
-                                          <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-                                            <div
-                                              className={`h-2 rounded-full ${
-                                                domain === 'engaging_with_ai' ? 'bg-blue-500' :
-                                                domain === 'creating_with_ai' ? 'bg-green-500' :
-                                                domain === 'managing_with_ai' ? 'bg-orange-500' :
-                                                'bg-purple-500'
-                                              }`}
-                                              style={{ width: `${score}%` }}
-                                            />
+                                            <StarRating score={score} size="sm" />
                                           </div>
                                         </div>
                                       );
@@ -917,53 +940,29 @@ export default function ProgramCompletePage() {
                                 </div>
                                 <div className="space-y-3">
                                   <div>
-                                    <div className="flex items-center justify-between mb-1">
+                                    <div className="flex items-center justify-between">
                                       <span className="text-sm text-gray-600 dark:text-gray-400">
                                         {t('pbl:complete.knowledge')}
                                       </span>
-                                      <span className={`text-sm font-bold ${getScoreColor(task.evaluation.ksaScores?.knowledge || 0)}`}>
-                                        {task.evaluation.ksaScores?.knowledge || 0}%
-                                      </span>
-                                    </div>
-                                    <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-                                      <div
-                                        className="bg-blue-500 h-2 rounded-full"
-                                        style={{ width: `${task.evaluation.ksaScores?.knowledge || 0}%` }}
-                                      />
+                                      <StarRating score={task.evaluation.ksaScores?.knowledge || 0} size="sm" />
                                     </div>
                                   </div>
 
                                   <div>
-                                    <div className="flex items-center justify-between mb-1">
+                                    <div className="flex items-center justify-between">
                                       <span className="text-sm text-gray-600 dark:text-gray-400">
                                         {t('pbl:complete.skills')}
                                       </span>
-                                      <span className={`text-sm font-bold ${getScoreColor(task.evaluation.ksaScores?.skills || 0)}`}>
-                                        {task.evaluation.ksaScores?.skills || 0}%
-                                      </span>
-                                    </div>
-                                    <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-                                      <div
-                                        className="bg-green-500 h-2 rounded-full"
-                                        style={{ width: `${task.evaluation.ksaScores?.skills || 0}%` }}
-                                      />
+                                      <StarRating score={task.evaluation.ksaScores?.skills || 0} size="sm" />
                                     </div>
                                   </div>
 
                                   <div>
-                                    <div className="flex items-center justify-between mb-1">
+                                    <div className="flex items-center justify-between">
                                       <span className="text-sm text-gray-600 dark:text-gray-400">
                                         {t('pbl:complete.attitudes')}
                                       </span>
-                                      <span className={`text-sm font-bold ${getScoreColor(task.evaluation.ksaScores?.attitudes || 0)}`}>
-                                        {task.evaluation.ksaScores?.attitudes || 0}%
-                                      </span>
-                                    </div>
-                                    <div className="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-                                      <div
-                                        className="bg-purple-500 h-2 rounded-full"
-                                        style={{ width: `${task.evaluation.ksaScores?.attitudes || 0}%` }}
-                                      />
+                                      <StarRating score={task.evaluation.ksaScores?.attitudes || 0} size="sm" />
                                     </div>
                                   </div>
                                 </div>
