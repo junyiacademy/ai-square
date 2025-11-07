@@ -1709,6 +1709,96 @@ export default function ProgramLearningPage() {
                       </div>
                     </div>
                     )}
+
+                    {/* Conversation Insights - Only show if there are meaningful insights */}
+                    {evaluation.conversationInsights &&
+                     ((evaluation.conversationInsights.effectiveExamples &&
+                       Array.isArray(evaluation.conversationInsights.effectiveExamples) &&
+                       evaluation.conversationInsights.effectiveExamples.length > 0) ||
+                      (evaluation.conversationInsights.improvementAreas &&
+                       Array.isArray(evaluation.conversationInsights.improvementAreas) &&
+                       evaluation.conversationInsights.improvementAreas.length > 0)) && (
+                      <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                        <h4 className="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-3">
+                          {t('pbl:learn.conversationInsights', 'Conversation Insights')}
+                        </h4>
+
+                        {evaluation.conversationInsights.effectiveExamples &&
+                         Array.isArray(evaluation.conversationInsights.effectiveExamples) &&
+                         evaluation.conversationInsights.effectiveExamples.length > 0 && (
+                          <div className="mb-3">
+                            <h5 className="text-xs font-medium text-blue-800 dark:text-blue-200 mb-2">
+                              {t('pbl:learn.effectiveExamples', 'What worked well:')}
+                            </h5>
+                            <div className="space-y-2">
+                              {evaluation.conversationInsights.effectiveExamples.map((example, idx) => (
+                                <div key={idx} className="bg-white dark:bg-gray-800 p-2 rounded">
+                                  <p className="text-sm text-gray-700 dark:text-gray-300 italic">
+                                    &ldquo;{example.quote}&rdquo;
+                                  </p>
+                                  <p className="text-xs text-green-600 dark:text-green-400 mt-1">
+                                    ✓ {example.suggestion}
+                                  </p>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {evaluation.conversationInsights.improvementAreas &&
+                         Array.isArray(evaluation.conversationInsights.improvementAreas) &&
+                         evaluation.conversationInsights.improvementAreas.length > 0 && (
+                          <div>
+                            <h5 className="text-xs font-medium text-blue-800 dark:text-blue-200 mb-2">
+                              {t('pbl:learn.improvementExamples', 'Areas for improvement:')}
+                            </h5>
+                            <div className="space-y-2">
+                              {evaluation.conversationInsights.improvementAreas.map((area, idx) => (
+                                <div key={idx} className="bg-white dark:bg-gray-800 p-2 rounded">
+                                  <p className="text-sm text-gray-700 dark:text-gray-300 italic">
+                                    &ldquo;{area.quote}&rdquo;
+                                  </p>
+                                  <p className="text-xs text-amber-600 dark:text-amber-400 mt-1">
+                                    → {area.suggestion}
+                                  </p>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Strengths & Improvements */}
+                    <div className="space-y-3">
+                      <div>
+                        <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                          {t('pbl:complete.strengths')}
+                        </h4>
+                        <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                          {evaluation.strengths && evaluation.strengths.map((strength, idx) => (
+                            <li key={idx} className="flex items-start">
+                              <span className="text-green-500 mr-2">✓</span>
+                              {strength}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      <div>
+                        <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                          {t('pbl:complete.improvements')}
+                        </h4>
+                        <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                          {evaluation.improvements && evaluation.improvements.map((improvement, idx) => (
+                            <li key={idx} className="flex items-start">
+                              <span className="text-yellow-500 mr-2">•</span>
+                              {improvement}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
                   </div>
                 )}
 
