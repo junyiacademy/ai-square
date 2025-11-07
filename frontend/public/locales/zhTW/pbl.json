@@ -283,6 +283,11 @@
     "interactions": "次互動",
     "yourAnswer": "你的回答",
     "aiFeedback": "AI 回饋",
+    "rating": {
+      "good": "良好",
+      "great": "優秀",
+      "perfect": "完美"
+    },
     "certificate": {
       "title": "完課證書",
       "certifies": "茲證明",

@@ -283,6 +283,11 @@
     "interactions": "interactions",
     "yourAnswer": "Your Answer",
     "aiFeedback": "AI Feedback",
+    "rating": {
+      "good": "Good",
+      "great": "Great",
+      "perfect": "Perfect"
+    },
     "certificate": {
       "title": "Certificate of Completion",
       "certifies": "This is to certify that",
