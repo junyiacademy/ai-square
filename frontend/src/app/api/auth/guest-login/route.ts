@@ -74,11 +74,11 @@ async function createGuestSession(userId: string, email: string, name: string): 
 
   await db.query(
     `INSERT INTO sessions (
-      id, user_id, session_token, email, role, name, expires_at, created_at
+      token, user_id, email, role, expires_at, created_at, metadata
     ) VALUES (
-      gen_random_uuid(), $1, $2, $3, 'student', $4, $5, NOW()
+      $1, $2, $3, 'student', $4, NOW(), $5
     )`,
-    [userId, sessionToken, email, name, expiresAt]
+    [sessionToken, userId, email, expiresAt, JSON.stringify({ name })]
   );
 
   return sessionToken;
