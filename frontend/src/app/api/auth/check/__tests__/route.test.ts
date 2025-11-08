@@ -35,7 +35,8 @@ describe('/api/auth/check', () => {
           id: '123',
           email: 'test@example.com',
           role: 'user',
-          name: 'test@example.com' // Uses email as name
+          name: 'test',
+          isGuest: false
         }
       });
     });
@@ -110,7 +111,8 @@ describe('/api/auth/check', () => {
           id: '456',
           email: 'encoded@example.com',
           role: 'admin',
-          name: 'encoded@example.com'
+          name: 'encoded',
+          isGuest: false
         }
       });
     });
