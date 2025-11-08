@@ -30,7 +30,7 @@ describe('POST /api/auth/guest-login', () => {
       const req = new NextRequest('http://localhost/api/auth/guest-login', {
         method: 'POST',
         body: JSON.stringify({}),
-      } as RequestInit);
+      });
 
       mockQuery.mockResolvedValueOnce({ rows: [] }); // No existing user
       mockCreateUser.mockResolvedValueOnce({
@@ -67,7 +67,7 @@ describe('POST /api/auth/guest-login', () => {
         const req = new NextRequest('http://localhost/api/auth/guest-login', {
           method: 'POST',
           body: JSON.stringify({}),
-        } as RequestInit);
+        });
 
         const response = await POST(req);
         const data = await response.json();
@@ -96,7 +96,7 @@ describe('POST /api/auth/guest-login', () => {
       const req = new NextRequest('http://localhost/api/auth/guest-login', {
         method: 'POST',
         body: JSON.stringify({ nickname: '小明' }),
-      } as RequestInit);
+      });
 
       const response = await POST(req);
       const data = await response.json();
@@ -123,7 +123,7 @@ describe('POST /api/auth/guest-login', () => {
       const req = new NextRequest('http://localhost/api/auth/guest-login', {
         method: 'POST',
         body: JSON.stringify({}),
-      } as RequestInit);
+      });
 
       const response = await POST(req);
       const data = await response.json();
@@ -148,7 +148,7 @@ describe('POST /api/auth/guest-login', () => {
       const req = new NextRequest('http://localhost/api/auth/guest-login', {
         method: 'POST',
         body: JSON.stringify({ nickname: 'Test' }),
-      } as RequestInit);
+      });
 
       const response = await POST(req);
       const data = await response.json();
@@ -172,7 +172,7 @@ describe('POST /api/auth/guest-login', () => {
       const req = new NextRequest('http://localhost/api/auth/guest-login', {
         method: 'POST',
         body: JSON.stringify({}),
-      } as RequestInit);
+      });
 
       await POST(req);
 
@@ -195,7 +195,7 @@ describe('POST /api/auth/guest-login', () => {
       const req = new NextRequest('http://localhost/api/auth/guest-login', {
         method: 'POST',
         body: JSON.stringify({}),
-      } as RequestInit);
+      });
 
       const response = await POST(req);
       const cookies = response.cookies.getAll();
@@ -220,7 +220,7 @@ describe('POST /api/auth/guest-login', () => {
       const req = new NextRequest('http://localhost/api/auth/guest-login', {
         method: 'POST',
         body: JSON.stringify({}),
-      } as RequestInit);
+      });
 
       const response = await POST(req);
       const cookies = response.cookies.getAll();
@@ -239,7 +239,7 @@ describe('POST /api/auth/guest-login', () => {
       const req = new NextRequest('http://localhost/api/auth/guest-login', {
         method: 'POST',
         body: JSON.stringify({}),
-      } as RequestInit);
+      });
 
       const response = await POST(req);
       const data = await response.json();
@@ -256,7 +256,7 @@ describe('POST /api/auth/guest-login', () => {
       const req = new NextRequest('http://localhost/api/auth/guest-login', {
         method: 'POST',
         body: JSON.stringify({}),
-      } as RequestInit);
+      });
 
       const response = await POST(req);
       const data = await response.json();
@@ -279,7 +279,7 @@ describe('POST /api/auth/guest-login', () => {
       const req = new NextRequest('http://localhost/api/auth/guest-login', {
         method: 'POST',
         body: JSON.stringify({ nickname: '  小明  ' }), // Whitespace
-      } as RequestInit);
+      });
 
       const response = await POST(req);
       const data = await response.json();
@@ -303,7 +303,7 @@ describe('POST /api/auth/guest-login', () => {
       const req = new NextRequest('http://localhost/api/auth/guest-login', {
         method: 'POST',
         body: JSON.stringify({ nickname: 'TestUser' }),
-      } as RequestInit);
+      });
 
       const response = await POST(req);
       const data = await response.json();
