@@ -113,6 +113,11 @@ export async function POST(request: NextRequest) {
     const sessionToken = await createGuestSession(user.id, user.email, user.name);
 
     // Create response
+    // Note: PostgreSQL returns JSONB as object, but parse for safety
+    const metadata = typeof user.metadata === 'string'
+      ? JSON.parse(user.metadata)
+      : user.metadata;
+
     const response = NextResponse.json({
       success: true,
       user: {
@@ -120,7 +125,7 @@ export async function POST(request: NextRequest) {
         email: user.email,
         name: user.name,
         role: user.role,
-        isGuest: user.metadata?.isGuest || false,
+        isGuest: metadata?.isGuest || false,
       },
     });
 
