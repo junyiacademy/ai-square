@@ -19,7 +19,8 @@ export async function GET(request: NextRequest) {
         id: auth.user.id,
         email: auth.user.email,
         role: auth.user.role,
-        name: auth.user.email // Use email as name if not available
+        name: auth.user.name || auth.user.email.split('@')[0],
+        isGuest: auth.user.isGuest || false
       }
     });
   } catch (error) {

@@ -16,6 +16,7 @@ export interface UnifiedAuth {
     email: string;
     role: string;
     name?: string;
+    isGuest?: boolean;
   };
 }
 
@@ -54,7 +55,8 @@ export async function getUnifiedAuth(request?: NextRequest): Promise<UnifiedAuth
         id: sessionData.userId,
         email: sessionData.email,
         role: sessionData.role,
-        name: sessionData.name
+        name: sessionData.name,
+        isGuest: sessionData.isGuest
       }
     };
   } catch (error) {

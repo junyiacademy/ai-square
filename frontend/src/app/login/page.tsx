@@ -10,7 +10,7 @@ function LoginContent() {
   const { t } = useTranslation('auth')
   const router = useRouter()
   const searchParams = useSearchParams()
-  const { login } = useAuth()
+  const { login, checkAuth } = useAuth()
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [info, setInfo] = useState('')
@@ -88,7 +88,9 @@ function LoginContent() {
 
       if (data.success) {
         console.log('Guest login successful:', data.user)
-        // Refresh auth context and redirect
+        // Refresh auth context to update user state
+        await checkAuth()
+        // Redirect to PBL scenarios
         router.push('/pbl/scenarios')
         router.refresh()
       } else {
