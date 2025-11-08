@@ -78,7 +78,7 @@ async function createGuestSession(userId: string, email: string, name: string): 
     ) VALUES (
       $1, $2, $3, 'student', $4, NOW(), $5
     )`,
-    [sessionToken, userId, email, expiresAt, JSON.stringify({ name })]
+    [sessionToken, userId, email, expiresAt, JSON.stringify({ name, isGuest: true })]
   );
 
   return sessionToken;

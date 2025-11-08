@@ -18,6 +18,8 @@ export interface SessionData {
   name: string;
   createdAt: Date;
   expiresAt: Date;
+  metadata?: Record<string, unknown>;
+  isGuest?: boolean;
 }
 
 // Singleton pool
@@ -135,7 +137,9 @@ export async function getSession(token: string): Promise<SessionData | null> {
       role: row.role,
       name: metadata.name || row.email.split('@')[0],
       createdAt: row.created_at,
-      expiresAt: row.expires_at
+      expiresAt: row.expires_at,
+      metadata,
+      isGuest: metadata.isGuest || false
     };
   } catch (error) {
     console.error('[Auth] Failed to get session:', error);
