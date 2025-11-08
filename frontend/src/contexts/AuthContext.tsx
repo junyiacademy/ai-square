@@ -9,6 +9,7 @@ interface User {
   email: string;
   role: string;
   name: string;
+  isGuest?: boolean;
 }
 
 interface AuthContextType {

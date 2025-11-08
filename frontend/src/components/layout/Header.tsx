@@ -211,13 +211,13 @@ export function Header() {
               <div className="relative group">
                 {/* 用戶頭像按鈕 */}
                 <button className="flex items-center space-x-2 p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                  <div className="h-8 w-8 bg-blue-100 rounded-full flex items-center justify-center">
-                    <span className="text-blue-600 text-sm font-medium">
+                  <div className={`h-8 w-8 ${user.isGuest ? 'bg-green-100' : 'bg-blue-100'} rounded-full flex items-center justify-center`}>
+                    <span className={`${user.isGuest ? 'text-green-600' : 'text-blue-600'} text-sm font-medium`}>
                       {user.name ? user.name.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase()}
                     </span>
                   </div>
                   <span className="hidden md:block text-sm text-gray-700 dark:text-gray-300 font-medium">
-                    {user.name || user.email.split('@')[0]}
+                    {user.isGuest ? `👤 ${user.name}` : (user.name || user.email.split('@')[0])}
                   </span>
                   <svg className="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -229,10 +229,12 @@ export function Header() {
                   <div className="py-1">
                     {/* User info */}
                     <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-                      <p className="text-sm text-gray-900 dark:text-white font-medium">
+                      <p className="text-sm text-gray-900 dark:text-white font-medium flex items-center gap-1">
+                        {user.isGuest && <span className="text-green-600">👤</span>}
                         {user.name || user.email}
+                        {user.isGuest && <span className="text-xs text-green-600 ml-1">({t('guestMode', '訪客模式')})</span>}
                       </p>
-                      {user.name && (
+                      {user.name && !user.isGuest && (
                         <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                           {user.email}
                         </p>
@@ -348,12 +350,16 @@ export function Header() {
         <div className="sm:hidden bg-gray-50 dark:bg-slate-900 border-t border-gray-200 dark:border-slate-700 px-4 py-3">
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-sm font-medium text-gray-900 dark:text-white">
+              <div className="text-sm font-medium text-gray-900 dark:text-white flex items-center gap-1">
+                {user.isGuest && <span className="text-green-600">👤</span>}
                 {user.name || user.email}
+                {user.isGuest && <span className="text-xs text-green-600 ml-1">({t('guestMode', '訪客模式')})</span>}
               </div>
-              <div className="text-xs text-gray-500 dark:text-gray-400">
-                {user.email}
-              </div>
+              {!user.isGuest && (
+                <div className="text-xs text-gray-500 dark:text-gray-400">
+                  {user.email}
+                </div>
+              )}
             </div>
             <button
               onClick={handleLogout}
