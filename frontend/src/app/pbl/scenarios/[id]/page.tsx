@@ -103,6 +103,16 @@ export default function ScenarioDetailPage() {
     return false;
   }, [scenario, i18n.language]);
 
+  // Load Hour of Code tracking image for semiconductor scenario
+  useEffect(() => {
+    if (scenarioId === '7fc0aa9b-6294-46a3-a954-45331ab026b3') {
+      const trackingImg = new Image();
+      trackingImg.src = 'https://studio.code.org/api/hour/begin_aisquare.png';
+      trackingImg.onload = () => console.log('[Hour of Code] Tracking image loaded');
+      trackingImg.onerror = () => console.warn('[Hour of Code] Tracking image failed to load');
+    }
+  }, [scenarioId]);
+
   useEffect(() => {
     let ignore = false;
 

@@ -10,7 +10,7 @@ function LoginContent() {
   const { t } = useTranslation('auth')
   const router = useRouter()
   const searchParams = useSearchParams()
-  const { login, checkAuth } = useAuth()
+  const { login } = useAuth()
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [info, setInfo] = useState('')
@@ -88,11 +88,9 @@ function LoginContent() {
 
       if (data.success) {
         console.log('Guest login successful:', data.user)
-        // Refresh auth context to update user state
-        await checkAuth()
-        // Redirect to PBL scenarios
-        router.push('/pbl/scenarios')
-        router.refresh()
+        // Use window.location.href to force full page reload
+        // This ensures AuthContext reinitializes with the new session
+        window.location.href = '/pbl/scenarios'
       } else {
         setError(data.error || t('error.guestLoginFailed', 'Failed to create guest account'))
       }
