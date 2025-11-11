@@ -1234,13 +1234,15 @@ export default function ProgramCompletePage() {
                   <div className="text-center">
                     <div className="border-t-2 border-gray-400 pt-3 sm:pt-3 lg:pt-4 mb-2 sm:mb-2 lg:mb-3">
                       <div className="flex flex-col items-center justify-center gap-2 mb-2 sm:mb-1 lg:mb-2">
-                        <Image
-                          src="/images/HourAI_Logo_Stacked_Black.png"
-                          alt="Hour of Code Logo"
-                          width={80}
-                          height={60}
-                          className="object-contain w-12 h-9 sm:w-14 sm:h-11 lg:w-16 lg:h-12"
-                        />
+                        <div className="h-6 sm:h-7 lg:h-8 flex items-center">
+                          <Image
+                            src="/images/HourAI_Logo_Stacked_Black.png"
+                            alt="Hour of Code Logo"
+                            width={80}
+                            height={60}
+                            className="object-contain h-full w-auto"
+                          />
+                        </div>
                         <p className="text-xs sm:text-sm lg:text-base font-semibold text-gray-700">
                           Hour of Code
                         </p>
@@ -1254,13 +1256,15 @@ export default function ProgramCompletePage() {
                   <div className="text-center">
                     <div className="border-t-2 border-gray-400 pt-3 sm:pt-3 lg:pt-4 mb-2 sm:mb-2 lg:mb-3">
                       <div className="flex flex-col items-center justify-center gap-2 mb-2 sm:mb-1 lg:mb-2">
-                        <Image
-                          src="/images/junyi_logo.jpg"
-                          alt="Junyi Academy Logo"
-                          width={80}
-                          height={40}
-                          className="object-contain w-12 h-6 sm:w-14 sm:h-7 lg:w-16 lg:h-8"
-                        />
+                        <div className="h-6 sm:h-7 lg:h-8 flex items-center">
+                          <Image
+                            src="/images/junyi_logo.jpg"
+                            alt="Junyi Academy Logo"
+                            width={80}
+                            height={40}
+                            className="object-contain h-full w-auto"
+                          />
+                        </div>
                         <p className="text-xs sm:text-sm lg:text-base font-semibold text-gray-700">
                           {t('pbl:complete.certificate.junyiAcademy')}
                         </p>
@@ -1274,13 +1278,15 @@ export default function ProgramCompletePage() {
                   <div className="text-center">
                     <div className="border-t-2 border-gray-400 pt-3 sm:pt-3 lg:pt-4 mb-2 sm:mb-2 lg:mb-3">
                       <div className="flex flex-col items-center justify-center gap-2 mb-2 sm:mb-1 lg:mb-2">
-                        <Image
-                          src="/images/logo.png"
-                          alt="AI Square Logo"
-                          width={80}
-                          height={40}
-                          className="object-contain w-12 h-6 sm:w-14 sm:h-7 lg:w-16 lg:h-8"
-                        />
+                        <div className="h-6 sm:h-7 lg:h-8 flex items-center">
+                          <Image
+                            src="/images/logo.png"
+                            alt="AI Square Logo"
+                            width={80}
+                            height={40}
+                            className="object-contain h-full w-auto"
+                          />
+                        </div>
                         <p className="text-xs sm:text-sm lg:text-base font-semibold text-gray-700">
                           {t('pbl:complete.certificate.aiSquare')}
                         </p>
@@ -1371,14 +1377,14 @@ export default function ProgramCompletePage() {
                         <div style={{ textAlign: 'center' }}>
                           <div style={{ borderTop: '2px solid rgb(156, 163, 175)', paddingTop: '8px', marginBottom: '4px' }}>
                             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '4px', marginBottom: '4px' }}>
-                              {/* eslint-disable-next-line @next/next/no-img-element */}
-                              <img
-                                src="/images/HourAI_Logo_Stacked_Black.png"
-                                alt="Hour of Code Logo"
-                                width="48"
-                                height="36"
-                                style={{ objectFit: 'contain', display: 'block' }}
-                              />
+                              <div style={{ height: '24px', display: 'flex', alignItems: 'center' }}>
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img
+                                  src="/images/HourAI_Logo_Stacked_Black.png"
+                                  alt="Hour of Code Logo"
+                                  style={{ objectFit: 'contain', display: 'block', height: '100%', width: 'auto' }}
+                                />
+                              </div>
                               <p style={{ fontSize: '11px', fontWeight: '600', color: 'rgb(55, 65, 81)' }}>
                                 Hour of Code
                               </p>
@@ -1392,14 +1398,14 @@ export default function ProgramCompletePage() {
                         <div style={{ textAlign: 'center' }}>
                           <div style={{ borderTop: '2px solid rgb(156, 163, 175)', paddingTop: '8px', marginBottom: '4px' }}>
                             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '4px', marginBottom: '4px' }}>
-                              {/* eslint-disable-next-line @next/next/no-img-element */}
-                              <img
-                                src="/images/junyi_logo.jpg"
-                                alt="Junyi Academy Logo"
-                                width="48"
-                                height="24"
-                                style={{ objectFit: 'contain', display: 'block' }}
-                              />
+                              <div style={{ height: '24px', display: 'flex', alignItems: 'center' }}>
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img
+                                  src="/images/junyi_logo.jpg"
+                                  alt="Junyi Academy Logo"
+                                  style={{ objectFit: 'contain', display: 'block', height: '100%', width: 'auto' }}
+                                />
+                              </div>
                               <p style={{ fontSize: '11px', fontWeight: '600', color: 'rgb(55, 65, 81)' }}>
                                 {t('pbl:complete.certificate.junyiAcademy')}
                               </p>
@@ -1413,14 +1419,14 @@ export default function ProgramCompletePage() {
                         <div style={{ textAlign: 'center' }}>
                           <div style={{ borderTop: '2px solid rgb(156, 163, 175)', paddingTop: '8px', marginBottom: '4px' }}>
                             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '4px', marginBottom: '4px' }}>
-                              {/* eslint-disable-next-line @next/next/no-img-element */}
-                              <img
-                                src="/images/logo.png"
-                                alt="AI Square Logo"
-                                width="48"
-                                height="24"
-                                style={{ objectFit: 'contain', display: 'block' }}
-                              />
+                              <div style={{ height: '24px', display: 'flex', alignItems: 'center' }}>
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img
+                                  src="/images/logo.png"
+                                  alt="AI Square Logo"
+                                  style={{ objectFit: 'contain', display: 'block', height: '100%', width: 'auto' }}
+                                />
+                              </div>
                               <p style={{ fontSize: '11px', fontWeight: '600', color: 'rgb(55, 65, 81)' }}>
                                 {t('pbl:complete.certificate.aiSquare')}
                               </p>
