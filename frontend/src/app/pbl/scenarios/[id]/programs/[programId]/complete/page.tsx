@@ -1230,26 +1230,26 @@ export default function ProgramCompletePage() {
 
                 {/* Footer with logos and signatures */}
                 <div className="grid grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mt-8 sm:mt-12 lg:mt-16 pt-6 sm:pt-6 lg:pt-8 border-t border-gray-300">
-                  {/* Hour of Code - 主辦單位 */}
+                  {/* code.org - 國際指導單位 */}
                   <div className="text-center">
                     <div className="border-t-2 border-gray-400 pt-3 sm:pt-3 lg:pt-4 mb-2 sm:mb-2 lg:mb-3">
                       <div className="flex flex-col items-center justify-center gap-2 mb-2 sm:mb-1 lg:mb-2">
                         <div className="h-6 sm:h-7 lg:h-8 flex items-center">
                           <Image
                             src="/images/HourAI_Logo_Stacked_Black.png"
-                            alt="Hour of Code Logo"
+                            alt="code.org Logo"
                             width={80}
                             height={60}
                             className="object-contain h-full w-auto"
                           />
                         </div>
                         <p className="text-xs sm:text-sm lg:text-base font-semibold text-gray-700">
-                          Hour of Code
+                          code.org
                         </p>
                       </div>
                     </div>
                     <p className="text-xs sm:text-xs text-gray-500">
-                      {t('pbl:complete.certificate.organizer', '主辦單位')}
+                      {t('pbl:complete.certificate.internationalAdvisor', '國際指導單位')}
                     </p>
                   </div>
                   {/* Junyi Academy */}
@@ -1373,7 +1373,7 @@ export default function ProgramCompletePage() {
 
                       {/* Footer with logos */}
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '20px', paddingTop: '12px', borderTop: '1px solid rgb(209, 213, 219)', marginTop: '12px' }}>
-                        {/* Hour of Code - 主辦單位 */}
+                        {/* code.org - 國際指導單位 */}
                         <div style={{ textAlign: 'center' }}>
                           <div style={{ borderTop: '2px solid rgb(156, 163, 175)', paddingTop: '8px', marginBottom: '4px' }}>
                             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '4px', marginBottom: '4px' }}>
@@ -1381,17 +1381,17 @@ export default function ProgramCompletePage() {
                                 {/* eslint-disable-next-line @next/next/no-img-element */}
                                 <img
                                   src="/images/HourAI_Logo_Stacked_Black.png"
-                                  alt="Hour of Code Logo"
+                                  alt="code.org Logo"
                                   style={{ objectFit: 'contain', display: 'block', height: '100%', width: 'auto' }}
                                 />
                               </div>
                               <p style={{ fontSize: '11px', fontWeight: '600', color: 'rgb(55, 65, 81)' }}>
-                                Hour of Code
+                                code.org
                               </p>
                             </div>
                           </div>
                           <p style={{ fontSize: '9px', color: 'rgb(107, 114, 128)' }}>
-                            {t('pbl:complete.certificate.organizer', '主辦單位')}
+                            {t('pbl:complete.certificate.internationalAdvisor', '國際指導單位')}
                           </p>
                         </div>
                         {/* Junyi Academy */}
