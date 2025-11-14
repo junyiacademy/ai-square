@@ -367,7 +367,7 @@ describe('UnifiedHistoryPage', () => {
       await waitFor(() => {
         expect(mockFetch).toHaveBeenCalledWith(
           expect.stringContaining('/api/pbl/history?lang=en&t='),
-          { credentials: 'include' }
+          { credentials: 'include', cache: 'no-store' }
         );
       });
     });
@@ -439,7 +439,7 @@ describe('UnifiedHistoryPage', () => {
       await waitFor(() => {
         expect(mockFetch).toHaveBeenCalledWith(
           expect.stringContaining('/api/discovery/my-programs?t='),
-          { credentials: 'include' }
+          { credentials: 'include', cache: 'no-store' }
         );
       });
     });
