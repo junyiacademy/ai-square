@@ -118,8 +118,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.error('Logout error:', error);
     }
 
+    // Clear all authentication state
     clearAuthState();
+
+    // Clear all browser caches to prevent showing old user's data
+    // This is critical when switching between accounts
+    if ('caches' in window) {
+      try {
+        const cacheNames = await caches.keys();
+        await Promise.all(
+          cacheNames.map(cacheName => caches.delete(cacheName))
+        );
+        console.log('[Auth] All browser caches cleared on logout');
+      } catch (error) {
+        console.error('[Auth] Failed to clear browser caches:', error);
+      }
+    }
+
+    // Force reload to clear any in-memory state and fetch fresh data
+    // This ensures the next login will not see cached data from previous user
     router.push('/login');
+    setTimeout(() => {
+      window.location.reload();
+    }, 100);
   }, [clearAuthState, router]);
 
   const refreshToken = useCallback(async (): Promise<boolean> => {
