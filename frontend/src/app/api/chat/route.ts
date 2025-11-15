@@ -16,7 +16,7 @@ function initializeServices() {
     });
     bucket = storage.bucket('ai-square-db');
   }
-  
+
   if (!vertexAI && process.env.GOOGLE_CLOUD_PROJECT) {
     vertexAI = new VertexAI({
       project: process.env.GOOGLE_CLOUD_PROJECT,
@@ -44,17 +44,17 @@ interface UserMemory {
 async function getUserMemory(userEmail: string): Promise<UserMemory | null> {
   initializeServices();
   if (!bucket) return null;
-  
+
   try {
     const sanitizedEmail = userEmail.replace('@', '_at_').replace(/\./g, '_');
-    
+
     // Load short-term memory
     const shortTermFile = bucket.file(`user/${sanitizedEmail}/memory/short_term.json`);
     const longTermFile = bucket.file(`user/${sanitizedEmail}/memory/long_term.json`);
-    
+
     const [shortTermExists] = await shortTermFile.exists();
     const [longTermExists] = await longTermFile.exists();
-    
+
     const memory: UserMemory = {
       shortTerm: {
         recentActivities: [],
@@ -70,17 +70,17 @@ async function getUserMemory(userEmail: string): Promise<UserMemory | null> {
         lastUpdated: new Date().toISOString()
       }
     };
-    
+
     if (shortTermExists) {
       const [shortTermData] = await shortTermFile.download();
       memory.shortTerm = JSON.parse(shortTermData.toString());
     }
-    
+
     if (longTermExists) {
       const [longTermData] = await longTermFile.download();
       memory.longTerm = JSON.parse(longTermData.toString());
     }
-    
+
     return memory;
   } catch (error) {
     console.error('Error loading user memory:', error);
@@ -91,24 +91,24 @@ async function getUserMemory(userEmail: string): Promise<UserMemory | null> {
 async function getUserContext(userEmail: string) {
   initializeServices();
   if (!bucket) return null;
-  
+
   const sanitizedEmail = userEmail.replace('@', '_at_').replace(/\./g, '_');
-  
+
   try {
     // Load user data
     const userFile = bucket.file(`user/${sanitizedEmail}/user_data.json`);
     const [exists] = await userFile.exists();
-    
+
     if (!exists) {
       return null;
     }
-    
+
     const [data] = await userFile.download();
     const userData = JSON.parse(data.toString());
-    
+
     // Load memory
     const memory = await getUserMemory(userEmail);
-    
+
     // Build context
     const context = {
       identity: userData.identity || 'learner',
@@ -124,7 +124,7 @@ async function getUserContext(userEmail: string) {
       completedPBLs: userData.completedPBLs || [],
       currentProgress: memory?.shortTerm.currentProgress || {}
     };
-    
+
     return context;
   } catch (error) {
     console.error('Error loading user context:', error);
@@ -137,15 +137,15 @@ async function saveMessage(userEmail: string, sessionId: string, message: { role
   if (!bucket) {
     throw new Error('Storage service not initialized');
   }
-  
+
   const sanitizedEmail = userEmail.replace('@', '_at_').replace(/\./g, '_');
   const sessionFile = bucket.file(`user/${sanitizedEmail}/chat/sessions/${sessionId}.json`);
-  
+
   try {
     // Load existing session or create new
     const [exists] = await sessionFile.exists();
     let session;
-    
+
     if (exists) {
       const [data] = await sessionFile.download();
       session = JSON.parse(data.toString());
@@ -165,12 +165,12 @@ async function saveMessage(userEmail: string, sessionId: string, message: { role
         tags: []
       };
     }
-    
+
     await sessionFile.save(JSON.stringify(session, null, 2));
-    
+
     // Update index
     await updateChatIndex(userEmail, sessionId, session);
-    
+
     return session;
   } catch (error) {
     console.error('Error saving message:', error);
@@ -183,19 +183,19 @@ async function updateChatIndex(userEmail: string, sessionId: string, session: { 
   if (!bucket) {
     throw new Error('Storage service not initialized');
   }
-  
+
   const sanitizedEmail = userEmail.replace('@', '_at_').replace(/\./g, '_');
   const indexFile = bucket.file(`user/${sanitizedEmail}/chat/index.json`);
-  
+
   try {
     const [exists] = await indexFile.exists();
     let index: { sessions: Array<{ id: string; title: string; created_at: string; updated_at: string; last_message?: string; message_count?: number }> } = { sessions: [] };
-    
+
     if (exists) {
       const [data] = await indexFile.download();
       index = JSON.parse(data.toString());
     }
-    
+
     // Update or add session info
     const sessionIndex = index.sessions.findIndex((s: { id: string }) => s.id === sessionId);
     const sessionInfo = {
@@ -206,18 +206,18 @@ async function updateChatIndex(userEmail: string, sessionId: string, session: { 
       last_message: session.last_message,
       message_count: session.message_count
     };
-    
+
     if (sessionIndex >= 0) {
       index.sessions[sessionIndex] = sessionInfo;
     } else {
       index.sessions.unshift(sessionInfo); // Add to beginning
     }
-    
+
     // Sort by updated_at
-    index.sessions.sort((a: { updated_at: string }, b: { updated_at: string }) => 
+    index.sessions.sort((a: { updated_at: string }, b: { updated_at: string }) =>
       new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
     );
-    
+
     await indexFile.save(JSON.stringify(index, null, 2));
   } catch (error) {
     console.error('Error updating chat index:', error);
@@ -226,12 +226,12 @@ async function updateChatIndex(userEmail: string, sessionId: string, session: { 
 
 async function generateChatTitle(messages: { role: string; content: string }[]) {
   if (messages.length < 2) return 'New Chat';
-  
+
   initializeServices();
   if (!vertexAI) {
     return 'New Chat';
   }
-  
+
   const model = vertexAI.preview.getGenerativeModel({
     model: 'gemini-2.5-flash',
     generationConfig: {
@@ -239,7 +239,7 @@ async function generateChatTitle(messages: { role: string; content: string }[]) 
       temperature: 0.7,
     },
   });
-  
+
   // Use up to 3 messages (first 3 exchanges) for better context
   const conversationContext = messages.slice(0, 6) // user, assistant, user (if exists)
     .map((msg) => {
@@ -247,7 +247,7 @@ async function generateChatTitle(messages: { role: string; content: string }[]) 
       return `${role}: ${msg.content.substring(0, 150)}`;
     })
     .join('\n');
-  
+
   const prompt = `Based on this conversation, generate a short, descriptive title in Traditional Chinese (max 6 words, 繁體中文):
 
 ${conversationContext}
@@ -259,7 +259,7 @@ Generate a title that captures the main topic or question. Examples:
 - "職涯發展建議"
 
 Title:`;
-  
+
   try {
     const result = await model.generateContent(prompt);
     const response = result.response;
@@ -275,30 +275,30 @@ export async function POST(req: NextRequest) {
   try {
     // Initialize services on first request
     initializeServices();
-    
+
     if (!vertexAI || !bucket) {
       return NextResponse.json({ error: 'AI services not configured' }, { status: 503 });
     }
-    
+
     const { message, sessionId } = await req.json();
-    
+
     // Get user info from request (passed from client)
     const userStr = req.headers.get('x-user-info');
-    
+
     if (!userStr) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-    
+
     const userInfo = JSON.parse(userStr);
     const userEmail = userInfo.email;
-    
+
     // Get user context
     const userContext = await getUserContext(userEmail);
-    
+
     if (!userContext) {
       return NextResponse.json({ error: 'User context not found' }, { status: 404 });
     }
-    
+
     // Build system prompt with user context
     const systemPrompt = `You are an AI learning advisor for AI Square platform. You help users with their AI literacy learning journey.
 
@@ -332,7 +332,7 @@ Guidelines:
         temperature: 0.8,
       },
     });
-    
+
     const chat = model.startChat({
       history: [
         {
@@ -345,14 +345,14 @@ Guidelines:
         },
       ],
     });
-    
+
     const result = await chat.sendMessage(message);
     const response = result.response;
     const aiResponse = response.candidates?.[0]?.content?.parts?.[0]?.text || 'I apologize, but I was unable to generate a response.';
-    
+
     // Create or use session ID
     const currentSessionId = sessionId || uuidv4();
-    
+
     // Save messages
     const userMessage = {
       id: `${Date.now()}-user`,
@@ -360,7 +360,7 @@ Guidelines:
       content: message,
       timestamp: new Date().toISOString()
     };
-    
+
     const assistantMessage = {
       id: `${Date.now() + 1}-assistant`,
       role: 'assistant',
@@ -368,32 +368,32 @@ Guidelines:
       timestamp: new Date().toISOString(),
       context_used: ['assessment_score', 'user_identity', 'weak_domains']
     };
-    
+
     await saveMessage(userEmail, currentSessionId, userMessage);
     const session = await saveMessage(userEmail, currentSessionId, assistantMessage);
-    
+
     // Auto-generate title for new sessions or update title if still generic
     const shouldGenerateTitle = (
       (!sessionId && session.messages.length === 2) || // New session with first exchange
       (session.title === 'New Chat' && session.messages.length >= 4) // Update generic title after 2 exchanges
     );
-    
+
     if (shouldGenerateTitle) {
       const title = await generateChatTitle(session.messages);
       session.title = title;
-      
+
       // Save updated session with title
       const sanitizedEmail = userEmail.replace('@', '_at_').replace(/\./g, '_');
       const sessionFile = bucket.file(`user/${sanitizedEmail}/chat/sessions/${currentSessionId}.json`);
       await sessionFile.save(JSON.stringify(session, null, 2));
-      
+
       // Update index with new title
       await updateChatIndex(userEmail, currentSessionId, session);
     }
-    
+
     // Update short-term memory with recent topic
     await updateShortTermMemory(userEmail, message);
-    
+
     return NextResponse.json({
       response: aiResponse,
       sessionId: currentSessionId,
@@ -425,15 +425,15 @@ async function updateShortTermMemory(userEmail: string, message: string) {
         lastUpdated: new Date().toISOString()
       }
     };
-    
+
     // Add to recent topics (keep last 10)
     memory.shortTerm.recentTopics = [
       message.substring(0, 100),
       ...memory.shortTerm.recentTopics
     ].slice(0, 10);
-    
+
     memory.shortTerm.lastUpdated = new Date().toISOString();
-    
+
     // Save updated memory
     if (!bucket) {
       throw new Error('Storage service not initialized');

@@ -6,10 +6,10 @@ metadata:
   title: "Viajero de Negocios Dimensional - Emprendedor Tecnológico"
   short_description: "Construye imperios empresariales tecnológicos a través de multiversos"
   long_description: |
-    Eres un viajero recién iniciado en la Alianza de Negocios Transdimensional, 
-    con la capacidad de establecer empresas tecnológicas a través de diferentes 
-    espaciotiempos. Cada universo paralelo tiene niveles únicos de desarrollo 
-    tecnológico, y debes adaptarte a diversos entornos para construir imperios 
+    Eres un viajero recién iniciado en la Alianza de Negocios Transdimensional,
+    con la capacidad de establecer empresas tecnológicas a través de diferentes
+    espaciotiempos. Cada universo paralelo tiene niveles únicos de desarrollo
+    tecnológico, y debes adaptarte a diversos entornos para construir imperios
     empresariales exitosos.
   estimated_hours: 65
   skill_focus:
@@ -20,18 +20,18 @@ metadata:
 world_setting:
   name: "Red de Negocios del Multiverso"
   description: |
-    La Red de Negocios del Multiverso consta de innumerables espaciotiempos paralelos 
-    que forman una vasta red comercial. Los emprendedores tecnológicos viajan entre 
-    dimensiones, trayendo innovaciones de un universo para resolver problemas en otro, 
+    La Red de Negocios del Multiverso consta de innumerables espaciotiempos paralelos
+    que forman una vasta red comercial. Los emprendedores tecnológicos viajan entre
+    dimensiones, trayendo innovaciones de un universo para resolver problemas en otro,
     mientras compiten contra fuerzas monopolísticas que buscan controlar todas las realidades.
   atmosphere: futuristic_dynamic
   visual_theme: interdimensional_tech
 starting_scenario:
   title: "Activación del Portal Dimensional"
   description: |
-    El Mentor de Negocios Atlas te saluda en el centro dimensional, explicando tu 
-    nueva capacidad para viajar entre universos. Pero el CEO Codicia de Monopoly Corp 
-    está usando tácticas desleales para aplastar startups en todas las dimensiones. 
+    El Mentor de Negocios Atlas te saluda en el centro dimensional, explicando tu
+    nueva capacidad para viajar entre universos. Pero el CEO Codicia de Monopoly Corp
+    está usando tácticas desleales para aplastar startups en todas las dimensiones.
     Debes usar la innovación y la colaboración para luchar contra sus planes monopolísticos.
   initial_tasks:
     - understand_multiverse

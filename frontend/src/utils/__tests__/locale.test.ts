@@ -41,7 +41,7 @@ describe('locale utilities', () => {
 
     it('formats date with default options', () => {
       const result = formatDateWithLocale(testDate, 'en');
-      
+
       expect(Date.prototype.toLocaleDateString).toHaveBeenCalledWith(
         'en-US',
         {
@@ -57,7 +57,7 @@ describe('locale utilities', () => {
 
     it('formats date string with default options', () => {
       const result = formatDateWithLocale(testDateString, 'en');
-      
+
       expect(Date.prototype.toLocaleDateString).toHaveBeenCalledWith(
         'en-US',
         expect.any(Object)
@@ -71,9 +71,9 @@ describe('locale utilities', () => {
         month: 'short',
         day: 'numeric'
       };
-      
+
       formatDateWithLocale(testDate, 'en', customOptions);
-      
+
       expect(Date.prototype.toLocaleDateString).toHaveBeenCalledWith(
         'en-US',
         customOptions
@@ -83,10 +83,10 @@ describe('locale utilities', () => {
     it('uses correct locale for different languages', () => {
       formatDateWithLocale(testDate, 'zhTW');
       expect(Date.prototype.toLocaleDateString).toHaveBeenCalledWith('zh-TW', expect.any(Object));
-      
+
       formatDateWithLocale(testDate, 'ja');
       expect(Date.prototype.toLocaleDateString).toHaveBeenCalledWith('ja-JP', expect.any(Object));
-      
+
       formatDateWithLocale(testDate, 'ko');
       expect(Date.prototype.toLocaleDateString).toHaveBeenCalledWith('ko-KR', expect.any(Object));
     });
@@ -107,7 +107,7 @@ describe('locale utilities', () => {
 
     it('formats time with default options', () => {
       const result = formatTimeWithLocale(testDate, 'en');
-      
+
       expect(Date.prototype.toLocaleTimeString).toHaveBeenCalledWith(
         'en-US',
         {
@@ -120,7 +120,7 @@ describe('locale utilities', () => {
 
     it('formats time string with default options', () => {
       const result = formatTimeWithLocale(testDateString, 'en');
-      
+
       expect(Date.prototype.toLocaleTimeString).toHaveBeenCalledWith(
         'en-US',
         expect.any(Object)
@@ -134,9 +134,9 @@ describe('locale utilities', () => {
         minute: '2-digit',
         second: '2-digit'
       };
-      
+
       formatTimeWithLocale(testDate, 'en', customOptions);
-      
+
       expect(Date.prototype.toLocaleTimeString).toHaveBeenCalledWith(
         'en-US',
         customOptions
@@ -146,10 +146,10 @@ describe('locale utilities', () => {
     it('uses correct locale for different languages', () => {
       formatTimeWithLocale(testDate, 'de');
       expect(Date.prototype.toLocaleTimeString).toHaveBeenCalledWith('de-DE', expect.any(Object));
-      
+
       formatTimeWithLocale(testDate, 'fr');
       expect(Date.prototype.toLocaleTimeString).toHaveBeenCalledWith('fr-FR', expect.any(Object));
-      
+
       formatTimeWithLocale(testDate, 'pt');
       expect(Date.prototype.toLocaleTimeString).toHaveBeenCalledWith('pt-BR', expect.any(Object));
     });

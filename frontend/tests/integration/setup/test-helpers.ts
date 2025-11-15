@@ -18,18 +18,18 @@ import * as pblCompleteRoute from '@/app/api/pbl/programs/[programId]/complete/r
 
 /**
  * Test Helper Functions for Integration Testing
- * 
+ *
  * Provides utility functions for common test operations
  */
 
 // API Test Helpers
 export class APITestHelper {
   private baseUrl: string;
-  
+
   constructor(baseUrl: string = (process.env.API_URL || 'http://localhost:3456')) {
     this.baseUrl = baseUrl;
   }
-  
+
   /**
    * Create NextRequest for testing
    */
@@ -51,10 +51,10 @@ export class APITestHelper {
       },
       body: body ? JSON.stringify(body) : undefined,
     };
-    
+
     return new NextRequest(url, init);
   }
-  
+
   /**
    * Make authenticated API request directly to route handler
    */
@@ -67,10 +67,10 @@ export class APITestHelper {
     const request = this.createRequest(method.toUpperCase(), path, body, {
       'Authorization': `Bearer ${token}`,
     });
-    
+
     // Route to the appropriate handler based on path
     let response: Response;
-    
+
     if (path === '/api/pbl/scenarios' && method === 'get') {
       response = await pblScenariosRoute.GET(request);
     } else if (path.startsWith('/api/pbl/scenarios/') && path.includes('/start')) {
@@ -82,8 +82,8 @@ export class APITestHelper {
     } else if (path.includes('/tasks/') && path.includes('/evaluate')) {
       const taskId = path.match(/tasks\/([^/]+)\/evaluate/)?.[1];
       if (taskId) {
-        response = await pblEvaluateRoute.POST(request, { 
-          params: Promise.resolve({ taskId }) 
+        response = await pblEvaluateRoute.POST(request, {
+          params: Promise.resolve({ taskId })
         });
       } else {
         throw new Error(`Invalid evaluate path: ${path}`);
@@ -107,32 +107,32 @@ export class APITestHelper {
         headers: Object.fromEntries(res.headers.entries()) as Record<string, string>,
       };
     }
-    
+
     const responseBody = await response.json();
-    
+
     return {
       status: response.status,
       body: responseBody,
       headers: Object.fromEntries(response.headers.entries()) as Record<string, string>,
     };
   }
-  
+
   /**
    * Login and get token
    */
   async login(email: string, password: string): Promise<string> {
     const request = this.createRequest('POST', '/api/auth/login', { email, password });
     const response = await authLoginRoute.POST(request);
-    
+
     if (response.status !== 200) {
       const body = await response.json();
       throw new Error(`Login failed: ${body.error}`);
     }
-    
+
     const body = await response.json();
     return body.token;
   }
-  
+
   /**
    * Register new user
    */
@@ -159,7 +159,7 @@ export class APITestHelper {
       headers: Object.fromEntries(res.headers.entries()) as Record<string, string>,
     };
   }
-  
+
   /**
    * Create and start a PBL program
    */
@@ -169,10 +169,10 @@ export class APITestHelper {
       `/api/pbl/scenarios/${scenarioId}/start`,
       token
     );
-    
+
     return response.body;
   }
-  
+
   /**
    * Submit task response via evaluate endpoint
    */
@@ -189,7 +189,7 @@ export class APITestHelper {
       { response, programId }
     );
   }
-  
+
   /**
    * Get evaluation result
    */
@@ -205,18 +205,18 @@ export class APITestHelper {
 // Database Test Helpers
 export class DatabaseTestHelper {
   public pool: Pool;
-  
+
   constructor(pool: Pool) {
     this.pool = pool;
   }
-  
+
   /**
    * Create test user directly in database
    */
   async createUser(userData: typeof testUsers.student) {
     const hashedPassword = await bcrypt.hash(userData.password, 10);
     const userId = crypto.randomUUID();
-    
+
     try {
       const result = await this.pool.query(
         `INSERT INTO users (id, email, password_hash, name, role, email_verified, created_at, updated_at)
@@ -233,7 +233,7 @@ export class DatabaseTestHelper {
           new Date()
         ]
       );
-      
+
       return result.rows[0];
     } catch (error) {
       console.error('Error creating user:', error);
@@ -256,7 +256,7 @@ export class DatabaseTestHelper {
       };
     }
   }
-  
+
   /**
    * Create session for user
    */
@@ -266,7 +266,7 @@ export class DatabaseTestHelper {
       process.env.NEXTAUTH_SECRET || 'test-secret',
       { expiresIn: '24h' }
     );
-    
+
     try {
       await this.pool.query(
         `INSERT INTO sessions (user_id, token, expires_at, created_at)
@@ -283,10 +283,10 @@ export class DatabaseTestHelper {
       // Just return the token for testing
       console.log('Sessions table not available, returning mock token');
     }
-    
+
     return token;
   }
-  
+
   /**
    * Clean up test data for specific user
    */
@@ -299,7 +299,7 @@ export class DatabaseTestHelper {
     await this.pool.query('DELETE FROM verification_tokens WHERE user_id = $1', [userId]);
     await this.pool.query('DELETE FROM users WHERE id = $1', [userId]);
   }
-  
+
   /**
    * Verify data integrity
    */
@@ -310,7 +310,7 @@ export class DatabaseTestHelper {
       orphanedEvaluations: 0,
       modeMismatches: 0,
     };
-    
+
     // Check for orphaned programs
     const orphanedPrograms = await this.pool.query(`
       SELECT COUNT(*) as count
@@ -319,7 +319,7 @@ export class DatabaseTestHelper {
       WHERE s.id IS NULL
     `);
     checks.orphanedPrograms = parseInt(orphanedPrograms.rows[0].count);
-    
+
     // Check for orphaned tasks
     const orphanedTasks = await this.pool.query(`
       SELECT COUNT(*) as count
@@ -328,7 +328,7 @@ export class DatabaseTestHelper {
       WHERE p.id IS NULL
     `);
     checks.orphanedTasks = parseInt(orphanedTasks.rows[0].count);
-    
+
     // Check for orphaned evaluations
     const orphanedEvaluations = await this.pool.query(`
       SELECT COUNT(*) as count
@@ -337,7 +337,7 @@ export class DatabaseTestHelper {
       WHERE t.id IS NULL
     `);
     checks.orphanedEvaluations = parseInt(orphanedEvaluations.rows[0].count);
-    
+
     // Check for mode mismatches
     const modeMismatches = await this.pool.query(`
       SELECT COUNT(*) as count
@@ -346,10 +346,10 @@ export class DatabaseTestHelper {
       WHERE p.mode != s.mode
     `);
     checks.modeMismatches = parseInt(modeMismatches.rows[0].count);
-    
+
     return checks;
   }
-  
+
   /**
    * Get statistics for a user's learning progress
    */
@@ -362,43 +362,43 @@ export class DatabaseTestHelper {
       averageScore: 0,
       totalTimeSpent: 0,
     };
-    
+
     // Get program stats
     const programStats = await this.pool.query(`
-      SELECT 
+      SELECT
         COUNT(*) as total,
         COUNT(CASE WHEN status = 'completed' THEN 1 END) as completed,
         SUM(time_spent_seconds) as total_time
       FROM programs
       WHERE user_id = $1
     `, [userId]);
-    
+
     stats.totalPrograms = parseInt(programStats.rows[0].total);
     stats.completedPrograms = parseInt(programStats.rows[0].completed);
     stats.totalTimeSpent = parseInt(programStats.rows[0].total_time || 0);
-    
+
     // Get task stats
     const taskStats = await this.pool.query(`
-      SELECT 
+      SELECT
         COUNT(*) as total,
         COUNT(CASE WHEN t.status = 'completed' THEN 1 END) as completed
       FROM tasks t
       JOIN programs p ON t.program_id = p.id
       WHERE p.user_id = $1
     `, [userId]);
-    
+
     stats.totalTasks = parseInt(taskStats.rows[0].total);
     stats.completedTasks = parseInt(taskStats.rows[0].completed);
-    
+
     // Get average score
     const scoreStats = await this.pool.query(`
       SELECT AVG(e.score) as avg_score
       FROM evaluations e
       WHERE e.user_id = $1
     `, [userId]);
-    
+
     stats.averageScore = parseFloat(scoreStats.rows[0].avg_score || 0);
-    
+
     return stats;
   }
 }
@@ -406,11 +406,11 @@ export class DatabaseTestHelper {
 // Cache Test Helpers
 export class CacheTestHelper {
   private redisClient: Redis | null;
-  
+
   constructor(redisClient: Redis | null) {
     this.redisClient = redisClient;
   }
-  
+
   /**
    * Warm up cache with test data
    */
@@ -419,7 +419,7 @@ export class CacheTestHelper {
       console.log('Redis not available, skipping cache warmup');
       return;
     }
-    
+
     for (const [key, value] of Object.entries(data)) {
       await this.redisClient.set(
         key,
@@ -429,19 +429,19 @@ export class CacheTestHelper {
       );
     }
   }
-  
+
   /**
    * Clear specific cache keys
    */
   async clearCache(pattern: string = '*') {
     if (!this.redisClient) return;
-    
+
     const keys = await this.redisClient.keys(pattern);
     if (keys.length > 0) {
       await this.redisClient.del(...keys);
     }
   }
-  
+
   /**
    * Get cache statistics
    */
@@ -449,18 +449,18 @@ export class CacheTestHelper {
     if (!this.redisClient) {
       return { available: false };
     }
-    
+
     const info = await this.redisClient.info('stats');
     const keyCount = await this.redisClient.dbsize();
-    
+
     // Parse hit/miss stats from info
     const hitMatch = info.match(/keyspace_hits:(\d+)/);
     const missMatch = info.match(/keyspace_misses:(\d+)/);
-    
+
     const hits = hitMatch ? parseInt(hitMatch[1]) : 0;
     const misses = missMatch ? parseInt(missMatch[1]) : 0;
     const hitRate = hits + misses > 0 ? (hits / (hits + misses)) * 100 : 0;
-    
+
     return {
       available: true,
       keyCount,
@@ -469,23 +469,23 @@ export class CacheTestHelper {
       hitRate: hitRate.toFixed(2) + '%',
     };
   }
-  
+
   /**
    * Test cache invalidation
    */
   async testCacheInvalidation(key: string, newValue: any) {
     if (!this.redisClient) return false;
-    
+
     // Set initial value
     await this.redisClient.set(key, JSON.stringify(newValue), 'EX', 60);
-    
+
     // Get value
     const cached = await this.redisClient.get(key);
-    
+
     // Delete and verify
     await this.redisClient.del(key);
     const deleted = await this.redisClient.get(key);
-    
+
     return cached !== null && deleted === null;
   }
 }
@@ -501,10 +501,10 @@ export class PerformanceTestHelper {
     const start = Date.now();
     const result = await fn();
     const duration = Date.now() - start;
-    
+
     return { result, duration };
   }
-  
+
   /**
    * Run concurrent requests
    */
@@ -515,10 +515,10 @@ export class PerformanceTestHelper {
     const results = await Promise.allSettled(
       Array.from({ length: concurrency }, () => requestFn())
     );
-    
+
     const successful = results.filter(r => r.status === 'fulfilled').length;
     const failed = results.filter(r => r.status === 'rejected').length;
-    
+
     return {
       total: concurrency,
       successful,
@@ -526,7 +526,7 @@ export class PerformanceTestHelper {
       successRate: (successful / concurrency) * 100,
     };
   }
-  
+
   /**
    * Memory usage snapshot
    */
@@ -539,14 +539,14 @@ export class PerformanceTestHelper {
       external: Math.round(usage.external / 1024 / 1024) + ' MB',
     };
   }
-  
+
   /**
    * Calculate percentiles from array of numbers
    */
   static calculatePercentiles(values: number[]) {
     const sorted = values.sort((a, b) => a - b);
     const len = sorted.length;
-    
+
     return {
       p50: sorted[Math.floor(len * 0.5)],
       p95: sorted[Math.floor(len * 0.95)],
@@ -566,25 +566,25 @@ export class AssertionHelper {
   static assertAPIResponse(response: any, expectedStatus: number, requiredFields: string[]) {
     expect(response.status).toBe(expectedStatus);
     expect(response.body).toBeDefined();
-    
+
     for (const field of requiredFields) {
       expect(response.body).toHaveProperty(field);
     }
   }
-  
+
   /**
    * Assert multilingual field structure
    */
   static assertMultilingualField(field: any, requiredLanguages: string[] = ['en']) {
     expect(field).toBeDefined();
     expect(typeof field).toBe('object');
-    
+
     for (const lang of requiredLanguages) {
       expect(field).toHaveProperty(lang);
       expect(typeof field[lang]).toBe('string');
     }
   }
-  
+
   /**
    * Assert timestamp fields
    */
@@ -594,7 +594,7 @@ export class AssertionHelper {
       expect(new Date(object[field]).getTime()).not.toBeNaN();
     }
   }
-  
+
   /**
    * Assert UUID format
    */
@@ -612,7 +612,7 @@ export class TestDataGenerator {
   static randomEmail(): string {
     return `test_${Date.now()}_${Math.random().toString(36).substring(7)}@test.com`;
   }
-  
+
   /**
    * Generate random multilingual text
    */
@@ -625,7 +625,7 @@ export class TestDataGenerator {
       ja: `テスト ${suffix}`,
     };
   }
-  
+
   /**
    * Generate test interaction
    */

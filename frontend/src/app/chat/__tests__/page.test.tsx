@@ -51,7 +51,7 @@ beforeEach(() => {
     jest.clearAllMocks();
     mockUseSearchParams.mockReturnValue(mockSearchParams as any);
     mockSearchParams.get.mockReturnValue(null);
-    
+
     // Default successful auth response
     mockFetch.mockImplementation((url) => {
       if (url === '/api/auth/check') {
@@ -263,7 +263,7 @@ beforeEach(() => {
     it('should show session metadata', async () => {
       renderWithProviders(<ChatPage />);
 
-      // Check that Chat button is rendered  
+      // Check that Chat button is rendered
       expect(screen.getByText('Chat')).toBeInTheDocument();
     });
 
@@ -306,7 +306,7 @@ beforeEach(() => {
   describe('Chat Session Loading', () => {
     it('should load specific session from URL params', async () => {
       mockSearchParams.get.mockReturnValue('session123');
-      
+
       mockFetch.mockImplementation((url) => {
         if (url === '/api/auth/check') {
           return Promise.resolve({
@@ -371,7 +371,7 @@ beforeEach(() => {
 
     it('should handle session loading failure', async () => {
       mockSearchParams.get.mockReturnValue('invalid-session');
-      
+
       mockFetch.mockImplementation((url) => {
         if (url === '/api/auth/check') {
           return Promise.resolve({
@@ -535,11 +535,11 @@ beforeEach(() => {
       await waitFor(() => {
         const hello = screen.queryByText('Hello');
         const hiThere = screen.queryByText('Hi there!');
-        
+
         if (hello && hiThere) {
           const userMessage = hello.closest('[class*="blue"]') || hello.parentElement;
           const assistantMessage = hiThere.closest('[class*="white"]') || hiThere.parentElement;
-          
+
           expect(userMessage).toBeInTheDocument();
           expect(assistantMessage).toBeInTheDocument();
         } else {
@@ -552,7 +552,7 @@ beforeEach(() => {
       // Skip this test for now as typing indicator is complex
       expect(true).toBe(true);
       return;
-      
+
       let resolvePromise: ((value: any) => void) | undefined;
       const responsePromise = new Promise(resolve => {
         resolvePromise = resolve;
@@ -830,7 +830,7 @@ beforeEach(() => {
   describe('Mobile Interface', () => {
     it('should switch between mobile tabs', async () => {
       renderWithProviders(<ChatPage />);
-      
+
       // Check tabs exist
       expect(screen.getByText('Chat')).toBeInTheDocument();
       expect(screen.getByText('History')).toBeInTheDocument();
@@ -839,7 +839,7 @@ beforeEach(() => {
 
     it('should show appropriate content for each mobile tab', async () => {
       renderWithProviders(<ChatPage />);
-      
+
       // Check tabs exist
       expect(screen.getByText('Chat')).toBeInTheDocument();
       expect(screen.getByText('History')).toBeInTheDocument();
@@ -927,7 +927,7 @@ beforeEach(() => {
       await waitFor(() => {
         expect(console.error).toHaveBeenCalled();
         const calls = (console.error as jest.Mock).mock.calls;
-        const hasExpectedCall = calls.some(call => 
+        const hasExpectedCall = calls.some(call =>
           call[0]?.includes('Failed to load') && call[1] instanceof Error
         );
         expect(hasExpectedCall).toBe(true);

@@ -10,12 +10,12 @@ import {
   AssessmentEvaluationStrategy,
   DiscoveryEvaluationStrategy
 } from '../evaluation-strategies';
-import { 
-  ITask, 
-  IProgram, 
-  IEvaluation, 
+import {
+  ITask,
+  IProgram,
+  IEvaluation,
   IEvaluationContext,
-  IInteraction 
+  IInteraction
 } from '@/types/unified-learning';
 import {
   IPBLTask,
@@ -228,19 +228,19 @@ describe('Evaluation Strategy Pattern', () => {
 
     it('should calculate quality metrics', () => {
       const interactions: IInteraction[] = [
-        { 
+        {
           timestamp: new Date().toISOString(),
-          type: 'user_input', 
+          type: 'user_input',
           content: 'Short answer'
         },
-        { 
+        {
           timestamp: new Date().toISOString(),
-          type: 'ai_response', 
+          type: 'ai_response',
           content: 'Can you explain more?'
         },
-        { 
+        {
           timestamp: new Date().toISOString(),
-          type: 'user_input', 
+          type: 'user_input',
           content: 'This is a much longer and more detailed explanation about the problem...'
         }
       ];
@@ -281,23 +281,23 @@ describe('Evaluation Strategy Pattern', () => {
         startedAt: new Date().toISOString(),
         completedAt: new Date().toISOString(),
         interactions: [
-          { 
+          {
             timestamp: new Date().toISOString(),
-            type: 'user_input', 
-            content: 'A', 
-            metadata: { questionId: 'q1', isCorrect: true } 
+            type: 'user_input',
+            content: 'A',
+            metadata: { questionId: 'q1', isCorrect: true }
           },
-          { 
+          {
             timestamp: new Date().toISOString(),
-            type: 'user_input', 
-            content: 'B', 
-            metadata: { questionId: 'q2', isCorrect: false } 
+            type: 'user_input',
+            content: 'B',
+            metadata: { questionId: 'q2', isCorrect: false }
           },
-          { 
+          {
             timestamp: new Date().toISOString(),
-            type: 'user_input', 
-            content: 'C', 
-            metadata: { questionId: 'q3', isCorrect: true } 
+            type: 'user_input',
+            content: 'C',
+            metadata: { questionId: 'q3', isCorrect: true }
           }
         ],
         content: {
@@ -379,27 +379,27 @@ describe('Evaluation Strategy Pattern', () => {
         startedAt: new Date().toISOString(),
         completedAt: new Date().toISOString(),
         interactions: [
-          { 
+          {
             timestamp: new Date().toISOString(),
-            type: 'user_input', 
+            type: 'user_input',
             content: 'Trying prompt 1'
           },
-          { 
+          {
             timestamp: new Date().toISOString(),
-            type: 'system_event', 
-            content: 'Tool response', 
-            metadata: { toolUsed: 'chatgpt' } 
+            type: 'system_event',
+            content: 'Tool response',
+            metadata: { toolUsed: 'chatgpt' }
           },
-          { 
+          {
             timestamp: new Date().toISOString(),
-            type: 'user_input', 
+            type: 'user_input',
             content: 'Trying prompt 2'
           },
-          { 
+          {
             timestamp: new Date().toISOString(),
-            type: 'system_event', 
-            content: 'Challenge completed', 
-            metadata: { challengeId: 'c1' } 
+            type: 'system_event',
+            content: 'Challenge completed',
+            metadata: { challengeId: 'c1' }
           }
         ],
         content: {
@@ -437,19 +437,19 @@ describe('Evaluation Strategy Pattern', () => {
 
     it('should calculate exploration score', () => {
       const interactions: IInteraction[] = [
-        { 
+        {
           timestamp: new Date().toISOString(),
-          type: 'user_input', 
+          type: 'user_input',
           content: 'Test 1'
         },
-        { 
+        {
           timestamp: new Date().toISOString(),
-          type: 'user_input', 
+          type: 'user_input',
           content: 'Test 2'
         },
-        { 
+        {
           timestamp: new Date().toISOString(),
-          type: 'system_event', 
+          type: 'system_event',
           content: 'Achievement unlocked'
         }
       ];

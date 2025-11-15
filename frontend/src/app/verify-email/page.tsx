@@ -12,7 +12,7 @@ function VerifyEmailContent() {
   const { t } = useTranslation(['auth', 'common']);
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
   const [message, setMessage] = useState('');
-  
+
   const token = searchParams.get('token');
 
   useEffect(() => {
@@ -31,7 +31,7 @@ function VerifyEmailContent() {
         if (response.ok && data.success) {
           setStatus('success');
           setMessage(data.message || t('auth:verifyEmail.success'));
-          
+
           // Redirect to login after 3 seconds
           setTimeout(() => {
             router.push('/login');
@@ -54,11 +54,11 @@ function VerifyEmailContent() {
       <div className="max-w-md w-full space-y-8 text-center">
         <div>
           <div className="mx-auto h-12 w-12 flex items-center justify-center mb-4">
-            <Image 
-              src="/images/logo.png" 
-              alt="AI Square Logo" 
-              width={48} 
-              height={48} 
+            <Image
+              src="/images/logo.png"
+              alt="AI Square Logo"
+              width={48}
+              height={48}
               className="rounded-xl"
               priority
             />
@@ -112,15 +112,15 @@ function VerifyEmailContent() {
                 </p>
               </div>
               <div className="mt-6 space-y-2">
-                <Link 
-                  href="/register" 
+                <Link
+                  href="/register"
                   className="inline-block text-sm font-medium text-blue-600 hover:text-blue-500"
                 >
                   {t('auth:verifyEmail.tryAgain')}
                 </Link>
                 <span className="mx-2 text-gray-400">|</span>
-                <Link 
-                  href="/contact" 
+                <Link
+                  href="/contact"
                   className="inline-block text-sm font-medium text-blue-600 hover:text-blue-500"
                 >
                   {t('auth:verifyEmail.contactSupport')}

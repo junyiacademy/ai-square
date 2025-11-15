@@ -55,7 +55,7 @@ if [ "$2" = "--comprehensive" ]; then
     echo "🔍 Running comprehensive QA..."
     node deployment-qa-script.js --environment "$ENVIRONMENT" --baseUrl "$BASE_URL"
     QA_EXIT_CODE=$?
-    
+
     if [ "$FAIL_ON_CRITICAL" = "true" ] && [ $QA_EXIT_CODE -ne 0 ]; then
         echo ""
         echo "❌ Critical failures detected. Exiting with error code."
@@ -75,7 +75,7 @@ TOTAL_ENDPOINTS=4
 
 for endpoint in $CRITICAL_ENDPOINTS; do
     STATUS=$(curl -s -w "%{http_code}" -o /dev/null "$BASE_URL$endpoint" || echo "000")
-    
+
     if [ "$STATUS" = "200" ]; then
         echo "✅ $endpoint"
     else

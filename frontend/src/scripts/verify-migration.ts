@@ -27,18 +27,18 @@ const pool = new Pool({
 
 async function verify() {
   const client = await pool.connect();
-  
+
   try {
     console.log('🔍 Verifying Migration Results\n');
-    
+
     // Check users
     const userQuery = `
-      SELECT id, email, name, level, total_xp, created_at 
-      FROM users 
+      SELECT id, email, name, level, total_xp, created_at
+      FROM users
       WHERE email = 'teacher@example.com'
     `;
     const userResult = await client.query(userQuery);
-    
+
     if (userResult.rows.length > 0) {
       console.log('✅ User Found:');
       console.log('   ID:', userResult.rows[0].id);
@@ -47,9 +47,9 @@ async function verify() {
       console.log('   Level:', userResult.rows[0].level);
       console.log('   Total XP:', userResult.rows[0].total_xp);
       console.log('   Created:', userResult.rows[0].created_at);
-      
+
       const userId = userResult.rows[0].id;
-      
+
       // Check assessment evaluations (unified architecture)
       const sessionQuery = `
         SELECT e.id, e.score, e.feedback, e.created_at
@@ -59,7 +59,7 @@ async function verify() {
         ORDER BY e.created_at DESC
       `;
       const sessionResult = await client.query(sessionQuery, [userId]);
-      
+
       console.log(`\n📊 Assessment Evaluations: ${sessionResult.rowCount}`);
       sessionResult.rows.forEach((session, index) => {
         const feedback = typeof session.feedback === 'string' ? JSON.parse(session.feedback) : session.feedback;
@@ -73,16 +73,16 @@ async function verify() {
         }
         console.log(`   - Created: ${session.created_at}`);
       });
-      
+
       // Check badges
       const badgeQuery = `
         SELECT badge_id, name, category, xp_reward, unlocked_at
-        FROM user_badges 
+        FROM user_badges
         WHERE user_id = $1
         ORDER BY unlocked_at DESC
       `;
       const badgeResult = await client.query(badgeQuery, [userId]);
-      
+
       console.log(`\n🏆 Badges: ${badgeResult.rowCount}`);
       badgeResult.rows.forEach((badge, index) => {
         console.log(`\n   Badge ${index + 1}:`);
@@ -92,14 +92,14 @@ async function verify() {
         console.log(`   - XP: ${badge.xp_reward}`);
         console.log(`   - Unlocked: ${badge.unlocked_at}`);
       });
-      
+
       // Check if user can be retrieved via repository
       const { repositoryFactory } = await import('../lib/repositories/base/repository-factory');
       const userRepo = repositoryFactory.getUserRepository();
-      
+
       console.log('\n🔄 Testing Repository Access...');
       const userData = await userRepo.getUserData('teacher@example.com');
-      
+
       if (userData) {
         console.log('✅ Repository access successful');
         console.log(`   Assessment Sessions: ${userData.assessmentSessions?.length || 0}`);
@@ -107,11 +107,11 @@ async function verify() {
       } else {
         console.log('❌ Repository access failed');
       }
-      
+
     } else {
       console.log('❌ User not found in database');
     }
-    
+
   } catch (_error) {
     console.error('❌ Verification error:', error);
   } finally {

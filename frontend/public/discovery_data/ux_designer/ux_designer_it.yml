@@ -6,9 +6,9 @@ metadata:
   title: "Architetto d'Esperienza - UX Designer"
   short_description: "Costruisci mondi d'esperienza perfetti negli spazi digitali"
   long_description: |
-    Sei un architetto apprendista presso l'"Accademia di Design dell'Esperienza", 
-    abile nella costruzione di spazi d'esperienza indimenticabili nel mondo digitale. 
-    Ogni clic e scorrimento è un viaggio attentamente progettato, e la tua missione 
+    Sei un architetto apprendista presso l'"Accademia di Design dell'Esperienza",
+    abile nella costruzione di spazi d'esperienza indimenticabili nel mondo digitale.
+    Ogni clic e scorrimento è un viaggio attentamente progettato, e la tua missione
     è far sentire agli utenti gioia e soddisfazione in questi spazi.
   estimated_hours: 55
   skill_focus:
@@ -19,18 +19,18 @@ metadata:
 world_setting:
   name: "Accademia di Design dell'Esperienza"
   description: |
-    L'Accademia di Design dell'Esperienza è un'istituzione misteriosa dedicata allo 
-    studio delle esperienze umane. I designer qui imparano a bilanciare l'estetica 
-    con la funzionalità, l'emozione con l'efficienza, creando spazi digitali che 
+    L'Accademia di Design dell'Esperienza è un'istituzione misteriosa dedicata allo
+    studio delle esperienze umane. I designer qui imparano a bilanciare l'estetica
+    con la funzionalità, l'emozione con l'efficienza, creando spazi digitali che
     guariscono e ispirano.
   atmosphere: harmonious_innovative
   visual_theme: minimalist_magic
 starting_scenario:
   title: "La Crisi dell'Indifferenza"
   description: |
-    La Saggia del Design Maya ti accoglie con una missione urgente: Indifferenza, 
-    il gigante corporativo freddo, sta standardizzando tutti i design, eliminando 
-    le esperienze personalizzate. Devi usare un design pieno d'anima per combattere 
+    La Saggia del Design Maya ti accoglie con una missione urgente: Indifferenza,
+    il gigante corporativo freddo, sta standardizzando tutti i design, eliminando
+    le esperienze personalizzate. Devi usare un design pieno d'anima per combattere
     la meccanizzazione e ripristinare l'umanità nelle interazioni digitali.
   initial_tasks:
     - understand_users

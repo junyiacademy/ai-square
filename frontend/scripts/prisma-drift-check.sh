@@ -48,13 +48,13 @@ else
     echo -e "${RED}❌ Schema drift detected!${NC}"
     echo -e "${YELLOW}Differences found:${NC}"
     echo "$DIFF_OUTPUT"
-    
+
     # 特別檢查 evaluation_subtype 問題
     if echo "$DIFF_OUTPUT" | grep -q "evaluation_subtype"; then
         echo -e "\n${RED}🚨 CRITICAL: evaluation_subtype field mismatch detected!${NC}"
         echo "This is the known issue from commit 24197721"
     fi
-    
+
     echo -e "\n${YELLOW}How to fix:${NC}"
     echo "1. For development: Run 'npx prisma migrate dev' to create a new migration"
     echo "2. For production: Use 'npx prisma migrate resolve' to mark as applied"

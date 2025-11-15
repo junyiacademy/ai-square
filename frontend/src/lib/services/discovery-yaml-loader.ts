@@ -114,10 +114,10 @@ export class DiscoveryYAMLLoader extends BaseYAMLLoader<DiscoveryPath> {
       const filePath = this.getFilePath(fileName);
       const { promises: fs } = await import('fs');
       const yaml = await import('js-yaml');
-      
+
       const content = await fs.readFile(filePath, 'utf8');
       const data = yaml.load(content) as DiscoveryPath;
-      
+
       return { data };
     } catch (error) {
       return { data: null, error: error as Error };
@@ -151,7 +151,7 @@ export class DiscoveryYAMLLoader extends BaseYAMLLoader<DiscoveryPath> {
     if (language !== 'en') {
       const fallbackFileName = `${careerType}/${careerType}_en`;
       const fallbackResult = await this.load(fallbackFileName);
-      
+
       if (fallbackResult.data) {
         return fallbackResult.data;
       }
@@ -166,7 +166,7 @@ export class DiscoveryYAMLLoader extends BaseYAMLLoader<DiscoveryPath> {
   async scanPaths(): Promise<string[]> {
     const fs = await import('fs/promises');
     const pathsDir = this.options.basePath!;
-    
+
     try {
       const items = await fs.readdir(pathsDir, { withFileTypes: true });
       // Return directories that are career types
@@ -226,12 +226,12 @@ export class DiscoveryYAMLLoader extends BaseYAMLLoader<DiscoveryPath> {
    */
   extractAllSkills(data: DiscoveryPath): SkillTreeSkill[] {
     const skills: SkillTreeSkill[] = [];
-    
+
     if (data.skill_tree) {
       skills.push(...(data.skill_tree.core_skills || []));
       skills.push(...(data.skill_tree.advanced_skills || []));
     }
-    
+
     return skills;
   }
 
@@ -241,13 +241,13 @@ export class DiscoveryYAMLLoader extends BaseYAMLLoader<DiscoveryPath> {
   getSkillDependencies(data: DiscoveryPath): Map<string, string[]> {
     const dependencies = new Map<string, string[]>();
     const allSkills = this.extractAllSkills(data);
-    
+
     allSkills.forEach(skill => {
       if (skill.requires && skill.requires.length > 0) {
         dependencies.set(skill.id, skill.requires);
       }
     });
-    
+
     return dependencies;
   }
 }

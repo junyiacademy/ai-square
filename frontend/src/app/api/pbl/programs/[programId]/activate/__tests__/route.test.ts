@@ -19,38 +19,38 @@ describe('API Route: src/app/api/pbl/programs/[programId]/activate', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
-  
+
   describe('POST', () => {
     it('should handle successful request', async () => {
       const request = new NextRequest('http://localhost:3000/api/test', {
         method: 'POST',
         body: JSON.stringify({ test: 'data' }),
       });
-      
+
       const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
-      
+
       expect(response).toBeDefined();
       expect(response.status).toBeLessThanOrEqual(500);
     });
-    
+
     it('should handle missing parameters', async () => {
       const request = new NextRequest('http://localhost:3000/api/test', {
         method: 'POST',
       });
-      
+
       const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
-      
+
       expect(response).toBeDefined();
     });
-    
+
     it('should handle errors gracefully', async () => {
       const request = new NextRequest('http://localhost:3000/api/test', {
         method: 'POST',
         body: 'invalid json',
       });
-      
+
       const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
-      
+
       expect(response).toBeDefined();
       expect(response.status).toBeLessThanOrEqual(500);
     });

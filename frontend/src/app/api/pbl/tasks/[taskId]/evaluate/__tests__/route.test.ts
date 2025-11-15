@@ -13,7 +13,7 @@ import type { User } from '@/lib/repositories/interfaces';
 // Mock dependencies
 jest.mock('@/lib/auth/unified-auth', () => ({
   getUnifiedAuth: jest.fn(),
-  createUnauthorizedResponse: jest.fn(() => 
+  createUnauthorizedResponse: jest.fn(() =>
     new Response(
       JSON.stringify({ success: false, error: 'Authentication required' }),
       { status: 401, headers: { 'Content-Type': 'application/json' } }
@@ -146,7 +146,7 @@ describe('POST /api/pbl/tasks/[taskId]/evaluate', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     // Reset timer
     jest.useFakeTimers();
 
@@ -309,7 +309,7 @@ describe('POST /api/pbl/tasks/[taskId]/evaluate', () => {
 
       expect(response.status).toBe(200);
       expect(data.success).toBe(true);
-      
+
       expect(mockEvaluationRepo.create).toHaveBeenCalledWith(expect.objectContaining({
         score: 50,
         domainScores: {},
@@ -347,10 +347,10 @@ describe('POST /api/pbl/tasks/[taskId]/evaluate', () => {
 
       // Should try to find existing evaluation
       expect(mockEvaluationRepo.findById).toHaveBeenCalledWith('old-eval-123');
-      
+
       // Should create new evaluation (not update)
       expect(mockEvaluationRepo.create).toHaveBeenCalled();
-      
+
       // Should update task with new evaluationId
       expect(mockTaskRepo.update).toHaveBeenCalledWith('task-123', expect.objectContaining({
         status: 'completed',
@@ -382,7 +382,7 @@ describe('POST /api/pbl/tasks/[taskId]/evaluate', () => {
       expect(response.status).toBe(200);
       expect(data.success).toBe(true);
       expect(data.message).toBe('Evaluation updated successfully');
-      
+
       // Should create new evaluation
       expect(mockEvaluationRepo.create).toHaveBeenCalled();
     });
@@ -404,7 +404,7 @@ describe('POST /api/pbl/tasks/[taskId]/evaluate', () => {
       expect(response.status).toBe(200);
       expect(data.success).toBe(true);
       expect(data.data.evaluationId).toBe('eval-123');
-      
+
       // The async program update happens in the background
       // We can't easily test it due to dynamic import in setImmediate
     });
@@ -426,7 +426,7 @@ describe('POST /api/pbl/tasks/[taskId]/evaluate', () => {
       expect(response.status).toBe(200);
       expect(data.success).toBe(true);
       expect(data.data.evaluationId).toBe('eval-123');
-      
+
       // The error in async update should not affect the main response
     });
   });
@@ -476,7 +476,7 @@ describe('POST /api/pbl/tasks/[taskId]/evaluate', () => {
       expect(response.status).toBe(500);
       expect(data.success).toBe(false);
       expect(data.error).toBe('Failed to create evaluation');
-      
+
       // The async marking of program evaluation as outdated might not have completed
       // So we only check if the error was logged if it actually happened
       if (consoleSpy.error.mock.calls.length > 0) {
@@ -679,7 +679,7 @@ describe('GET /api/pbl/tasks/[taskId]/evaluate', () => {
     expect(response.status).toBe(500);
     expect(data.success).toBe(false);
     expect(data.error).toBe('Failed to fetch evaluation');
-    
+
     // Check if error was logged
     if (consoleSpy.error.mock.calls.length > 0) {
       expect(consoleSpy.error).toHaveBeenCalledWith(

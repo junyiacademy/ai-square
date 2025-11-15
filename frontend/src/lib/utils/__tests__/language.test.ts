@@ -171,12 +171,12 @@ describe('Language Utils', () => {
       expect(getFallbackLanguage('zh-tw')).toBe('zhTW');
       expect(getFallbackLanguage('zh-Hant')).toBe('zhTW');
       expect(getFallbackLanguage('zh-hant')).toBe('zhTW');
-      
+
       expect(getFallbackLanguage('zh-CN')).toBe('zhCN');
       expect(getFallbackLanguage('zh-cn')).toBe('zhCN');
       expect(getFallbackLanguage('zh-Hans')).toBe('zhCN');
       expect(getFallbackLanguage('zh-hans')).toBe('zhCN');
-      
+
       expect(getFallbackLanguage('zh')).toBe('zhCN');
     });
 

@@ -5,10 +5,10 @@ type ChainableMock = jest.Mock & {
 
 const createChainableMock = (): ChainableMock => {
   const mock = jest.fn() as ChainableMock;
-  
+
   // All methods that should create new chainable mocks
   const chainingMethods = ['select', 'selectAll', 'append', 'data', 'enter', 'exit', 'merge', 'transition', 'remove', 'join'];
-  
+
   // Methods that return this for continued chaining
   const thisMethods = [
     'attr', 'style', 'text', 'on', 'call', 'classed',
@@ -16,26 +16,26 @@ const createChainableMock = (): ChainableMock => {
     'property', 'html', 'raise', 'lower', 'sort', 'order',
     'each', 'filter'
   ];
-  
+
   // Utility methods that return values
   // const utilityMethods = ['node', 'nodes', 'size', 'empty']; // Not used, methods added directly
-  
+
   // Add chaining methods that return new mocks
   chainingMethods.forEach(method => {
     mock[method] = jest.fn(() => createChainableMock());
   });
-  
+
   // Add methods that return this
   thisMethods.forEach(method => {
     mock[method] = jest.fn(() => mock);
   });
-  
+
   // Add utility methods with specific return values
   mock.node = jest.fn(() => ({ tagName: 'g' }));
   mock.nodes = jest.fn(() => []);
   mock.size = jest.fn(() => 0);
   mock.empty = jest.fn(() => true);
-  
+
   return mock;
 };
 
@@ -96,7 +96,7 @@ const createZoomMock = (): ZoomMock => {
 const d3Mock = {
   select: jest.fn(() => createChainableMock()),
   selectAll: jest.fn(() => createChainableMock()),
-  
+
   // Force simulation
   forceSimulation: jest.fn(() => createSimulationMock()),
   forceLink: jest.fn(() => createForceMock()),
@@ -106,7 +106,7 @@ const d3Mock = {
   forceRadial: jest.fn(() => createForceMock()),
   forceX: jest.fn(() => createForceMock()),
   forceY: jest.fn(() => createForceMock()),
-  
+
   // Zoom
   zoom: jest.fn(() => createZoomMock()),
   zoomIdentity: {
@@ -117,7 +117,7 @@ const d3Mock = {
     x: 0,
     y: 0
   },
-  
+
   // Drag
   drag: jest.fn(() => ({
     on: jest.fn().mockReturnThis(),
@@ -126,27 +126,27 @@ const d3Mock = {
     subject: jest.fn().mockReturnThis(),
     clickDistance: jest.fn().mockReturnThis()
   })),
-  
+
   // Scales
   scaleLinear: jest.fn(() => ({
     domain: jest.fn().mockReturnThis(),
     range: jest.fn().mockReturnThis(),
     clamp: jest.fn().mockReturnThis()
   })),
-  
+
   scaleOrdinal: jest.fn(() => ({
     domain: jest.fn().mockReturnThis(),
     range: jest.fn().mockReturnThis()
   })),
-  
+
   // Other utilities
   event: null,
   mouse: jest.fn(() => [0, 0]),
   pointer: jest.fn(() => [0, 0]),
-  
+
   // Colors
   schemeCategory10: ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd'],
-  
+
   // Shapes
   arc: jest.fn(() => ({
     innerRadius: jest.fn().mockReturnThis(),
@@ -154,7 +154,7 @@ const d3Mock = {
     startAngle: jest.fn().mockReturnThis(),
     endAngle: jest.fn().mockReturnThis()
   })),
-  
+
   pie: jest.fn(() => ({
     value: jest.fn().mockReturnThis(),
     sort: jest.fn().mockReturnThis()

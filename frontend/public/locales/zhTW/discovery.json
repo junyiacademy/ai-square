@@ -3,7 +3,7 @@
   "subtitle": "透過沉浸式體驗，探索 AI 驅動的路徑",
   "getStarted": "開始探索",
   "backToHome": "返回首頁",
-  
+
   "welcomeScreen": {
     "title": "歡迎來到探索世界",
     "subtitle": "透過 AI 驅動的體驗，發現你的未來之路",
@@ -24,7 +24,7 @@
       }
     }
   },
-  
+
   "interestAssessment": {
     "title": "興趣評估",
     "subtitle": "讓我們發現你的興趣",
@@ -76,7 +76,7 @@
       }
     ]
   },
-  
+
   "results": {
     "title": "你的路徑推薦",
     "subtitle": "根據你的興趣，以下是最適合探索的路徑：",
@@ -85,7 +85,7 @@
     "personalityType": "你的性格類型",
     "matchPercentage": "{{percentage}}% 符合度"
   },
-  
+
   "paths": {
     "youtuber": {
       "title": "YouTuber / 內容創作者",
@@ -172,7 +172,7 @@
       ]
     }
   },
-  
+
   "workspace": {
     "title": "{{path}} 課程",
     "aiAssistant": "AI 助手",
@@ -188,7 +188,7 @@
     "skillsGained": "獲得技能：",
     "experiencePoints": "+{{points}} 經驗值"
   },
-  
+
   "aiAssistant": {
     "greeting": "嗨！我是你的 AI {{role}}。我在這裡幫助你在 {{path}} 旅程中取得成功。",
     "taskIntro": "讓我們一起完成這個任務。我會引導你完成每個步驟。",
@@ -202,7 +202,7 @@
     "typeMessage": "輸入你的訊息...",
     "send": "傳送"
   },
-  
+
   "achievements": {
     "title": "你的成就",
     "totalXp": "總經驗值：{{xp}} XP",
@@ -230,7 +230,7 @@
       }
     }
   },
-  
+
   "navigation": {
     "overview": "總覽",
     "evaluation": "評估",
@@ -239,7 +239,7 @@
     "program": "課程",
     "achievements": "成就"
   },
-  
+
   "complete": {
     "congratulations": "恭喜你！🎉",
     "completedProgram": "你已完成 {{title}}",
@@ -272,14 +272,14 @@
     "errorLoading": "載入結果時發生錯誤",
     "noData": "找不到完成資料"
   },
-  
+
   "taskTypes": {
     "question": "問答",
     "chat": "AI 對話",
     "creation": "創作",
     "analysis": "分析"
   },
-  
+
   "programCard": {
     "title": "學習歷程",
     "statusActive": "進行中",
@@ -290,7 +290,7 @@
     "continue": "繼續",
     "viewResults": "查看結果"
   },
-  
+
   "scenarioDetail": {
     "backToList": "返回職業列表",
     "myPrograms": "我的學習歷程",

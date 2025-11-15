@@ -113,7 +113,7 @@ class LLMConfig:
     max_tokens: int = 2000
     top_p: float = 1.0
     stream: bool = False
-    
+
 @dataclass
 class Message:
     role: str  # 'system', 'user', 'assistant'
@@ -122,25 +122,25 @@ class Message:
 
 class LLMProvider(ABC):
     """Abstract base class for LLM providers"""
-    
+
     @abstractmethod
     async def generate(
-        self, 
-        messages: List[Message], 
+        self,
+        messages: List[Message],
         config: LLMConfig
     ) -> str:
         """Generate a response from the LLM"""
         pass
-        
+
     @abstractmethod
     async def stream_generate(
-        self, 
-        messages: List[Message], 
+        self,
+        messages: List[Message],
         config: LLMConfig
     ) -> AsyncIterator[str]:
         """Stream response tokens from the LLM"""
         pass
-        
+
     @abstractmethod
     async def embed(self, text: str) -> List[float]:
         """Generate embeddings for text"""
@@ -157,16 +157,16 @@ from typing import AsyncIterator, List
 class OpenAIProvider(LLMProvider):
     def __init__(self, api_key: str):
         self.client = openai.AsyncOpenAI(api_key=api_key)
-        
+
     async def generate(
-        self, 
-        messages: List[Message], 
+        self,
+        messages: List[Message],
         config: LLMConfig
     ) -> str:
         response = await self.client.chat.completions.create(
             model=config.model,
             messages=[
-                {"role": m.role, "content": m.content} 
+                {"role": m.role, "content": m.content}
                 for m in messages
             ],
             temperature=config.temperature,
@@ -174,27 +174,27 @@ class OpenAIProvider(LLMProvider):
             top_p=config.top_p
         )
         return response.choices[0].message.content
-        
+
     async def stream_generate(
-        self, 
-        messages: List[Message], 
+        self,
+        messages: List[Message],
         config: LLMConfig
     ) -> AsyncIterator[str]:
         stream = await self.client.chat.completions.create(
             model=config.model,
             messages=[
-                {"role": m.role, "content": m.content} 
+                {"role": m.role, "content": m.content}
                 for m in messages
             ],
             temperature=config.temperature,
             max_tokens=config.max_tokens,
             stream=True
         )
-        
+
         async for chunk in stream:
             if chunk.choices[0].delta.content:
                 yield chunk.choices[0].delta.content
-                
+
     async def embed(self, text: str) -> List[float]:
         response = await self.client.embeddings.create(
             model="text-embedding-ada-002",
@@ -209,14 +209,14 @@ from typing import AsyncIterator, List
 class GeminiProvider(LLMProvider):
     def __init__(self, api_key: str):
         genai.configure(api_key=api_key)
-        
+
     async def generate(
-        self, 
-        messages: List[Message], 
+        self,
+        messages: List[Message],
         config: LLMConfig
     ) -> str:
         model = genai.GenerativeModel(config.model)
-        
+
         # Convert messages to Gemini format
         chat = model.start_chat(history=[])
         for message in messages:
@@ -229,22 +229,22 @@ class GeminiProvider(LLMProvider):
                         "top_p": config.top_p
                     }
                 )
-        
+
         return response.text
-        
+
     async def stream_generate(
-        self, 
-        messages: List[Message], 
+        self,
+        messages: List[Message],
         config: LLMConfig
     ) -> AsyncIterator[str]:
         model = genai.GenerativeModel(config.model)
         chat = model.start_chat(history=[])
-        
+
         # Send last user message with streaming
         last_message = next(
             m for m in reversed(messages) if m.role == "user"
         )
-        
+
         response = await chat.send_message_async(
             last_message.content,
             stream=True,
@@ -253,10 +253,10 @@ class GeminiProvider(LLMProvider):
                 "max_output_tokens": config.max_tokens
             }
         )
-        
+
         async for chunk in response:
             yield chunk.text
-            
+
     async def embed(self, text: str) -> List[float]:
         model = genai.GenerativeModel("models/embedding-001")
         result = await model.embed_content_async(text)
@@ -286,20 +286,20 @@ class LLMService:
     def __init__(self):
         self.models = {
             'vertex': VertexAIClient(),
-            'openai': OpenAIClient(), 
+            'openai': OpenAIClient(),
             'gemini': GeminiClient()
         }
         self.prompt_templates = self._load_templates()
         self.usage_tracker = UsageTracker()
-    
-    async def generate(self, 
+
+    async def generate(self,
                       task_type: str,
                       context: dict,
                       model: str = 'vertex') -> str:
         """統一介面，但還不是 Agent"""
         # 根據任務類型選擇 prompt 模板
         prompt = self.get_prompt(task_type, context)
-        
+
         # 執行並追蹤使用情況
         try:
             response = await self.models[model].generate(prompt)
@@ -309,7 +309,7 @@ class LLMService:
             # 自動 fallback 到其他模型
             fallback_model = self._get_fallback(model)
             return await self.models[fallback_model].generate(prompt)
-    
+
     def get_prompt(self, task_type: str, context: dict) -> str:
         """統一的 prompt 管理"""
         template = self.prompt_templates.get(task_type)
@@ -353,16 +353,16 @@ class BaseAgent(ABC):
         self.capabilities = capabilities
         self.context = {}
         self.llm_service = LLMService()
-    
+
     @abstractmethod
     async def execute(self, task: Dict[str, Any]) -> Dict[str, Any]:
         """Execute agent task"""
         pass
-    
+
     def can_handle(self, task_type: str) -> bool:
         """Check if agent can handle task"""
         return task_type in self.capabilities
-    
+
     def update_context(self, context: Dict[str, Any]):
         """Update agent context"""
         self.context.update(context)
@@ -372,19 +372,19 @@ class TutorAgent(BaseAgent):
     """Migrated from PBL system"""
     def __init__(self):
         super().__init__('tutor', [
-            'teach', 'explain', 'guide', 
+            'teach', 'explain', 'guide',
             'provide_hints', 'assess_understanding'
         ])
-    
+
     async def execute(self, task: Dict[str, Any]) -> Dict[str, Any]:
         task_type = task.get('type')
-        
+
         if task_type == 'teach':
             return await self.teach(task)
         elif task_type == 'provide_hints':
             return await self.provide_hints(task)
         # ... other capabilities
-    
+
     async def teach(self, task: Dict[str, Any]) -> Dict[str, Any]:
         # Migrate existing PBL teaching logic
         context = {
@@ -393,18 +393,18 @@ class TutorAgent(BaseAgent):
             'topic': task.get('topic'),
             'history': self.context.get('conversation_history', [])
         }
-        
+
         response = await self.llm_service.generate(
             task_type='tutoring',
             context=context
         )
-        
+
         # Update conversation history
         self.context.setdefault('conversation_history', []).append({
             'user': task.get('user_input'),
             'assistant': response
         })
-        
+
         return {
             'response': response,
             'suggestions': await self.generate_suggestions(context)
@@ -442,19 +442,19 @@ class MCPAgent(Protocol):
     """MCP-compliant agent interface"""
     id: str
     capabilities: List[AgentCapability]
-    
+
     async def initialize(self, context: Dict[str, Any]) -> None:
         """Initialize agent with context"""
         ...
-    
+
     async def handle_message(self, message: MCPMessage) -> Optional[MCPMessage]:
         """Handle incoming MCP message"""
         ...
-    
+
     async def get_context_requirements(self) -> Dict[str, Any]:
         """Return required context schema"""
         ...
-    
+
 @dataclass
 class Context:
     """Represents the context window for an AI agent"""
@@ -463,21 +463,21 @@ class Context:
     memory: Dict[str, Any] = field(default_factory=dict)
     max_tokens: int = 8000
     current_tokens: int = 0
-    
+
     def add_message(self, message: Message):
         """Add message to context with token management"""
         # Estimate tokens (rough approximation)
         message_tokens = len(message.content.split()) * 1.3
-        
+
         # Remove old messages if exceeding limit
         while self.current_tokens + message_tokens > self.max_tokens:
             if self.messages:
                 removed = self.messages.pop(0)
                 self.current_tokens -= len(removed.content.split()) * 1.3
-                
+
         self.messages.append(message)
         self.current_tokens += message_tokens
-        
+
     def get_tools_schema(self) -> List[Dict]:
         """Get OpenAI-compatible tools schema"""
         return [
@@ -494,9 +494,9 @@ class Context:
 
 class MCPAgent:
     """Agent that implements the Model Context Protocol"""
-    
+
     def __init__(
-        self, 
+        self,
         provider: LLMProvider,
         context: Context,
         system_prompt: str
@@ -504,18 +504,18 @@ class MCPAgent:
         self.provider = provider
         self.context = context
         self.system_prompt = system_prompt
-        
+
     async def process(self, user_input: str) -> str:
         """Process user input and generate response"""
         # Add user message to context
         self.context.add_message(Message("user", user_input))
-        
+
         # Prepare messages with system prompt
         messages = [
             Message("system", self.system_prompt),
             *self.context.messages
         ]
-        
+
         # Check if we need to use tools
         if self.context.tools:
             # First, let the model decide if it needs to use tools
@@ -524,10 +524,10 @@ class MCPAgent:
                 temperature=0.3,
                 max_tokens=1000
             )
-            
+
             # Add tools to the request
             response = await self._call_with_tools(
-                messages, 
+                messages,
                 tool_check_config
             )
         else:
@@ -538,15 +538,15 @@ class MCPAgent:
                 max_tokens=2000
             )
             response = await self.provider.generate(messages, config)
-            
+
         # Add assistant response to context
         self.context.add_message(Message("assistant", response))
-        
+
         return response
-        
+
     async def _call_with_tools(
-        self, 
-        messages: List[Message], 
+        self,
+        messages: List[Message],
         config: LLMConfig
     ) -> str:
         """Handle tool calls from the model"""
@@ -556,12 +556,12 @@ class MCPAgent:
         enhanced_messages = messages + [
             Message("system", tools_prompt)
         ]
-        
+
         response = await self.provider.generate(
-            enhanced_messages, 
+            enhanced_messages,
             config
         )
-        
+
         # Parse and execute any tool calls
         tool_calls = self._parse_tool_calls(response)
         if tool_calls:
@@ -573,9 +573,9 @@ class MCPAgent:
                 )
             # Recursive call to process with tool results
             return await self.process("")
-            
+
         return response
-        
+
     def _generate_tools_prompt(self) -> str:
         """Generate prompt describing available tools"""
         tools_desc = "\n".join([
@@ -583,7 +583,7 @@ class MCPAgent:
             for t in self.context.tools
         ])
         return f"Available tools:\n{tools_desc}\n\nUse tools by responding with: TOOL: <tool_name> ARGS: <json_args>"
-        
+
     def _parse_tool_calls(self, response: str) -> List[Dict]:
         """Parse tool calls from model response"""
         # Simple parser - in production use more robust parsing
@@ -592,16 +592,16 @@ class MCPAgent:
             # Extract tool calls
             pass
         return tool_calls
-        
+
     async def _execute_tools(
-        self, 
+        self,
         tool_calls: List[Dict]
     ) -> List[Any]:
         """Execute requested tools"""
         results = []
         for call in tool_calls:
             tool = next(
-                (t for t in self.context.tools if t.name == call["name"]), 
+                (t for t in self.context.tools if t.name == call["name"]),
                 None
             )
             if tool:
@@ -627,8 +627,8 @@ class AgentOrchestrator:
             'content': ContentAgent()
         }
         self.context_store = {}
-    
-    async def execute_task(self, 
+
+    async def execute_task(self,
                           task_type: str,
                           payload: Dict[str, Any],
                           user_id: str) -> Dict[str, Any]:
@@ -636,22 +636,22 @@ class AgentOrchestrator:
         agent = self.select_agent(task_type)
         if not agent:
             raise ValueError(f"No agent available for task: {task_type}")
-        
+
         # Load user context
         user_context = self.context_store.get(user_id, {})
         agent.update_context(user_context)
-        
+
         # Execute task
         result = await agent.execute({
             'type': task_type,
             **payload
         })
-        
+
         # Update context store
         self.context_store[user_id] = agent.context
-        
+
         return result
-    
+
     def select_agent(self, task_type: str) -> Optional[BaseAgent]:
         """Select agent based on capabilities"""
         for agent in self.agents.values():
@@ -665,7 +665,7 @@ class AgentOrchestrator:
 # backend/ai/mcp/orchestrator.py
 class MCPOrchestrator:
     """Phase 4: Full MCP orchestration"""
-    
+
     def __init__(self):
         self.providers = {
             "openai": OpenAIProvider(settings.OPENAI_API_KEY),
@@ -679,7 +679,7 @@ class MCPOrchestrator:
             TaskType.CODE_ASSISTANCE: ("openai", "gpt-4-turbo-preview"),
             TaskType.GENERAL: ("gemini", "gemini-pro")
         }
-        
+
     async def process_request(
         self,
         task_type: TaskType,
@@ -687,43 +687,43 @@ class MCPOrchestrator:
         user_preferences: Optional[Dict] = None
     ) -> str:
         """Process an AI request with appropriate model selection"""
-        
+
         # Select provider and model based on task
         provider_name, model = self.model_selection[task_type]
         provider = self.providers[provider_name]
-        
+
         # Apply user preferences (e.g., preferred model)
         if user_preferences and "preferred_model" in user_preferences:
             provider_name = user_preferences["preferred_model"]
             provider = self.providers.get(provider_name, provider)
-            
+
         # Configure based on task type
         config = self._get_task_config(task_type, model)
-        
+
         try:
             # Primary attempt
             response = await provider.generate(messages, config)
-            
+
             # Log usage for billing
             await self._log_usage(
-                provider_name, 
-                model, 
-                messages, 
+                provider_name,
+                model,
+                messages,
                 response
             )
-            
+
             return response
-            
+
         except Exception as e:
             # Fallback to alternative provider
             fallback_provider = self._get_fallback_provider(provider_name)
             if fallback_provider:
                 return await fallback_provider.generate(messages, config)
             raise e
-            
+
     def _get_task_config(
-        self, 
-        task_type: TaskType, 
+        self,
+        task_type: TaskType,
         model: str
     ) -> LLMConfig:
         """Get configuration based on task type"""
@@ -760,7 +760,7 @@ class MCPOrchestrator:
             )
         }
         return configs.get(task_type, configs[TaskType.GENERAL])
-        
+
     def _get_fallback_provider(self, primary: str) -> Optional[LLMProvider]:
         """Get fallback provider for resilience"""
         fallback_map = {
@@ -769,12 +769,12 @@ class MCPOrchestrator:
             "gemini": self.providers.get("openai")
         }
         return fallback_map.get(primary)
-        
+
     async def _log_usage(
-        self, 
-        provider: str, 
-        model: str, 
-        messages: List[Message], 
+        self,
+        provider: str,
+        model: str,
+        messages: List[Message],
         response: str
     ):
         """Log API usage for billing and analytics"""
@@ -796,30 +796,30 @@ class ContextManager:
         self.storage = self._init_storage(storage_backend)
         self.cache = {}  # In-memory cache
         self.ttl = 3600  # 1 hour cache
-    
-    async def get_context(self, 
+
+    async def get_context(self,
                          user_id: str,
                          scope: str = 'global') -> Dict[str, Any]:
         """Get user context with caching"""
         cache_key = f"{user_id}:{scope}"
-        
+
         # Check cache
         if cache_key in self.cache:
             cached = self.cache[cache_key]
             if cached['timestamp'] > datetime.now().timestamp() - self.ttl:
                 return cached['data']
-        
+
         # Load from storage
         context = await self.storage.load(f"contexts/{user_id}/{scope}.json")
-        
+
         # Update cache
         self.cache[cache_key] = {
             'data': context,
             'timestamp': datetime.now().timestamp()
         }
-        
+
         return context
-    
+
     async def update_context(self,
                            user_id: str,
                            updates: Dict[str, Any],
@@ -827,13 +827,13 @@ class ContextManager:
         """Update user context"""
         context = await self.get_context(user_id, scope)
         context.update(updates)
-        
+
         # Save to storage
         await self.storage.save(
             f"contexts/{user_id}/{scope}.json",
             context
         )
-        
+
         # Update cache
         cache_key = f"{user_id}:{scope}"
         self.cache[cache_key] = {
@@ -903,10 +903,10 @@ async def evaluate_answer(question, answer, user_id):
         user_id=user_id
     )
 ```
-        
+
     async def generate_lesson(
-        self, 
-        topic: str, 
+        self,
+        topic: str,
         context: LearningContext
     ) -> Dict:
         """Generate a personalized lesson"""
@@ -916,36 +916,36 @@ async def evaluate_answer(question, answer, user_id):
             level=context.knowledge_level,
             style=context.learning_style
         )
-        
+
         messages = [
             Message("system", system_prompt),
             Message("user", f"Create a lesson on {topic}")
         ]
-        
+
         # Add context from past interactions
         if context.past_interactions:
             recent_context = self._summarize_interactions(
                 context.past_interactions[-5:]
             )
             messages.insert(1, Message("system", recent_context))
-            
+
         # Generate lesson content
         lesson_content = await self.orchestrator.process_request(
             TaskType.TUTORING,
             messages
         )
-        
+
         # Generate practice problems
         practice_problems = await self._generate_practice_problems(
-            topic, 
+            topic,
             context
         )
-        
+
         # Generate visual aids if needed
         visual_aids = None
         if context.learning_style == "visual":
             visual_aids = await self._generate_visual_aids(topic)
-            
+
         return {
             "topic": topic,
             "content": lesson_content,
@@ -954,10 +954,10 @@ async def evaluate_answer(question, answer, user_id):
             "estimated_duration": self._estimate_duration(lesson_content),
             "difficulty_level": context.knowledge_level
         }
-        
+
     async def provide_feedback(
-        self, 
-        student_answer: str, 
+        self,
+        student_answer: str,
         correct_answer: str,
         context: LearningContext
     ) -> Dict:
@@ -967,39 +967,39 @@ async def evaluate_answer(question, answer, user_id):
             correct_answer=correct_answer,
             level=context.knowledge_level
         )
-        
+
         messages = [
             Message("system", prompt),
             Message("user", "Provide constructive feedback")
         ]
-        
+
         feedback = await self.orchestrator.process_request(
             TaskType.TUTORING,
             messages
         )
-        
+
         # Analyze common mistakes
         mistake_analysis = await self._analyze_mistakes(
-            student_answer, 
+            student_answer,
             correct_answer
         )
-        
+
         return {
             "feedback": feedback,
             "is_correct": self._check_correctness(
-                student_answer, 
+                student_answer,
                 correct_answer
             ),
             "mistake_analysis": mistake_analysis,
             "improvement_suggestions": await self._suggest_improvements(
-                mistake_analysis, 
+                mistake_analysis,
                 context
             )
         }
-        
+
     async def adaptive_questioning(
-        self, 
-        topic: str, 
+        self,
+        topic: str,
         context: LearningContext
     ) -> Dict:
         """Generate adaptive questions based on student performance"""
@@ -1007,32 +1007,32 @@ async def evaluate_answer(question, answer, user_id):
         performance_analysis = self._analyze_performance(
             context.assessment_scores
         )
-        
+
         # Determine appropriate difficulty
         difficulty = self._determine_difficulty(performance_analysis)
-        
+
         prompt = self.prompt_templates["adaptive_questions"].format(
             topic=topic,
             difficulty=difficulty,
             weak_areas=performance_analysis.get("weak_areas", [])
         )
-        
+
         messages = [
             Message("system", prompt),
             Message("user", f"Generate 5 questions on {topic}")
         ]
-        
+
         questions = await self.orchestrator.process_request(
             TaskType.ASSESSMENT,
             messages
         )
-        
+
         return {
             "questions": questions,
             "difficulty": difficulty,
             "focus_areas": performance_analysis.get("weak_areas", [])
         }
-        
+
     def _load_prompt_templates(self) -> Dict[str, str]:
         """Load tutoring prompt templates"""
         return {
@@ -1197,16 +1197,16 @@ CREATE TABLE ai_content (
 cache_keys = {
     # LLM response cache (TTL: 1 hour)
     "llm_response": "ai:response:{hash(messages)}",
-    
+
     # Embedding cache (TTL: 30 days)
     "embedding": "ai:embedding:{hash(text)}",
-    
+
     # Generated content cache (TTL: 7 days)
     "content": "ai:content:{content_type}:{topic}:{hash(params)}",
-    
+
     # User context cache (TTL: 1 day)
     "user_context": "ai:context:{user_id}",
-    
+
     # Model availability (TTL: 5 minutes)
     "model_status": "ai:status:{provider}:{model}"
 }
@@ -1258,8 +1258,8 @@ cache_keys = {
 ```python
 class AIErrorHandler:
     async def handle_provider_error(
-        self, 
-        error: Exception, 
+        self,
+        error: Exception,
         provider: str
     ) -> Dict:
         if isinstance(error, RateLimitError):
@@ -1322,7 +1322,7 @@ logger.info("AI_INTERACTION", {
 
 2. **遷移現有功能**
    - PBL 系統改用 LLM Service
-   - 評估系統改用 LLM Service  
+   - 評估系統改用 LLM Service
    - 加入使用情況追蹤（基於複雜度估算）
 
 3. **優化與快取**
@@ -1354,7 +1354,7 @@ logger.info("AI_INTERACTION", {
 
 **觸發條件**: 功能數量 > 10 個，需要更好的模組化
 
-### Phase 4: MCP Implementation (2026/01 - 2026/03) 
+### Phase 4: MCP Implementation (2026/01 - 2026/03)
 **目標**: 完整 MCP 協議支援
 
 **關鍵任務**:
@@ -1382,7 +1382,7 @@ logger.info("AI_INTERACTION", {
 
 **關鍵功能**:
 - Agent Marketplace
-- 自訂 Agent 開發框架  
+- 自訂 Agent 開發框架
 - 企業級 Agent 管理
 - 分散式 Agent 部署
 
@@ -1419,16 +1419,16 @@ class TestLLMService:
         # Test automatic fallback on provider failure
         service = LLMService()
         service.providers['vertex'] = AsyncMock(side_effect=Exception())
-        
+
         response = await service.generate('test', {})
         assert response is not None
-    
+
     async def test_usage_tracking(self):
         # Verify usage is properly tracked
         service = LLMService()
         tracker = AsyncMock()
         service.usage_tracker = tracker
-        
+
         await service.generate('test', {})
         tracker.log.assert_called_once()
 ```
@@ -1441,21 +1441,21 @@ class TestAgentSystem:
         orchestrator = AgentOrchestrator()
         agent = orchestrator.select_agent('teach')
         assert isinstance(agent, TutorAgent)
-    
+
     async def test_context_persistence(self):
         # Verify context persists across calls
         orchestrator = AgentOrchestrator()
-        
+
         # First call
         await orchestrator.execute_task(
             'teach', {'topic': 'Python'}, 'user123'
         )
-        
+
         # Second call should have context
         result = await orchestrator.execute_task(
             'teach', {'topic': 'Lists'}, 'user123'
         )
-        
+
         assert 'Python' in str(result)  # Previous context
 ```
 

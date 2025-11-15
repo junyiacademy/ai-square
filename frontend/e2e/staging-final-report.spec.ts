@@ -27,7 +27,7 @@ test.describe('Staging Environment Final Test Report', () => {
 
     // 3. Scenario API Tests
     console.log('\n3. Scenario APIs:');
-    
+
     // PBL
     const pblResponse = await request.get(`${STAGING_URL}/api/pbl/scenarios?lang=en`);
     const pblData = await pblResponse.json();
@@ -60,15 +60,15 @@ test.describe('Staging Environment Final Test Report', () => {
     await page.goto(`${STAGING_URL}/login`);
     await page.fill('input[name="email"]', 'student@example.com');
     await page.fill('input[name="password"]', 'student123');
-    
+
     // Intercept the login API call
-    const loginPromise = page.waitForResponse(response => 
+    const loginPromise = page.waitForResponse(response =>
       response.url().includes('/api/auth/login') && response.status() === 200
     ).catch(() => null);
-    
+
     await page.click('button:has-text("Sign in")');
     const loginResponse = await loginPromise;
-    
+
     if (loginResponse) {
       const loginData = await loginResponse.json();
       console.log(`   ❌ Login: Failed - ${loginData.error || loginData.message || 'Unknown error'}`);
@@ -87,12 +87,12 @@ test.describe('Staging Environment Final Test Report', () => {
     ];
 
     for (const pageTest of pages) {
-      const response = await page.goto(`${STAGING_URL}${pageTest.url}`, { 
+      const response = await page.goto(`${STAGING_URL}${pageTest.url}`, {
         waitUntil: 'domcontentloaded',
-        timeout: 30000 
+        timeout: 30000
       });
       const hasError = await page.locator('text=/error|Error|404/i').count() > 0;
-      
+
       if (response?.status() === 200 && !hasError) {
         console.log(`   ✅ ${pageTest.name}: Accessible`);
       } else {

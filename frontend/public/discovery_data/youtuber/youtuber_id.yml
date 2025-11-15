@@ -6,10 +6,10 @@ metadata:
   title: "Penyair Video - YouTuber"
   short_description: "Tampilkan cerita video yang memikat di panggung digital"
   long_description: |
-    Anda adalah anggota baru "Persekutuan Penyair Video," berbakat dalam menceritakan 
-    kisah melalui lensa dan menghibur penonton. Di kerajaan digital kreativitas dan 
-    teknologi ini, setiap video adalah pertunjukan, setiap subscriber adalah penonton 
-    Anda, dan misi Anda adalah menciptakan konten video yang menyentuh hati dan 
+    Anda adalah anggota baru "Persekutuan Penyair Video," berbakat dalam menceritakan
+    kisah melalui lensa dan menghibur penonton. Di kerajaan digital kreativitas dan
+    teknologi ini, setiap video adalah pertunjukan, setiap subscriber adalah penonton
+    Anda, dan misi Anda adalah menciptakan konten video yang menyentuh hati dan
     memicu resonansi.
   estimated_hours: 55
   skill_focus:
@@ -20,18 +20,18 @@ metadata:
 world_setting:
   name: "Persekutuan Penyair Video"
   description: |
-    Persekutuan Penyair Video adalah persekutuan artistik yang membudidayakan kreator 
-    konten terbaik. Di sini, kreator belajar menyeimbangkan kreativitas dengan tuntutan 
-    algoritma, keaslian dengan ekspektasi penonton, membangun saluran yang menginspirasi 
+    Persekutuan Penyair Video adalah persekutuan artistik yang membudidayakan kreator
+    konten terbaik. Di sini, kreator belajar menyeimbangkan kreativitas dengan tuntutan
+    algoritma, keaslian dengan ekspektasi penonton, membangun saluran yang menginspirasi
     dan menghibur jutaan orang.
   atmosphere: creative_dynamic
   visual_theme: digital_stage
 starting_scenario:
   title: "Pergeseran Algoritma"
   description: |
-    Direktur Kreatif menyambut Anda dengan berita mengkhawatirkan: Algoritma, sang raja 
-    yang berubah-ubah, tiba-tiba mengubah preferensinya, mengubur karya banyak kreator. 
-    Anda harus menemukan keseimbangan antara mempertahankan integritas kreatif dan 
+    Direktur Kreatif menyambut Anda dengan berita mengkhawatirkan: Algoritma, sang raja
+    yang berubah-ubah, tiba-tiba mengubah preferensinya, mengubur karya banyak kreator.
+    Anda harus menemukan keseimbangan antara mempertahankan integritas kreatif dan
     beradaptasi dengan tuntutan algoritma.
   initial_tasks:
     - understand_youtube

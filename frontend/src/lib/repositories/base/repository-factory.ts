@@ -21,7 +21,7 @@ import { GCSContentRepository } from '../gcs/content-repository';
 import { GCSMediaRepository } from '../gcs/media-repository';
 
 // Interfaces
-import type { 
+import type {
   IUserRepository,
   IProgramRepository,
   ITaskRepository,
@@ -41,13 +41,13 @@ export class RepositoryFactory {
   private constructor() {
     // Initialize PostgreSQL connection pool
     let poolConfig: Record<string, unknown>;
-    
+
     // If DATABASE_URL is provided, parse it (for compatibility with Prisma)
     if (process.env.DATABASE_URL) {
       try {
         const url = new URL(process.env.DATABASE_URL);
         const isCloudSQL = url.searchParams.has('host') && url.searchParams.get('host')?.startsWith('/cloudsql/');
-        
+
         poolConfig = {
           database: url.pathname.slice(1), // Remove leading /
           user: url.username,
@@ -56,7 +56,7 @@ export class RepositoryFactory {
           idleTimeoutMillis: 30000,
           connectionTimeoutMillis: isCloudSQL ? 10000 : 2000,
         };
-        
+
         if (isCloudSQL) {
           poolConfig.host = url.searchParams.get('host') as string;
         } else {
@@ -68,7 +68,7 @@ export class RepositoryFactory {
         // Fall back to individual env vars
         const dbHost = process.env.DB_HOST || 'localhost';
         const isCloudSQL = dbHost.startsWith('/cloudsql/');
-        
+
         poolConfig = {
           database: process.env.DB_NAME || 'ai_square_db',
           user: process.env.DB_USER || 'postgres',
@@ -77,7 +77,7 @@ export class RepositoryFactory {
           idleTimeoutMillis: 30000,
           connectionTimeoutMillis: isCloudSQL ? 10000 : 2000,
         };
-        
+
         if (isCloudSQL) {
           poolConfig.host = dbHost;
         } else {
@@ -89,7 +89,7 @@ export class RepositoryFactory {
       // Use individual env vars
       const dbHost = process.env.DB_HOST || 'localhost';
       const isCloudSQL = dbHost.startsWith('/cloudsql/');
-      
+
       poolConfig = {
         database: process.env.DB_NAME || 'ai_square_db',
         user: process.env.DB_USER || 'postgres',
@@ -98,7 +98,7 @@ export class RepositoryFactory {
         idleTimeoutMillis: 30000,
         connectionTimeoutMillis: isCloudSQL ? 10000 : 2000,
       };
-      
+
       if (isCloudSQL) {
         poolConfig.host = dbHost;
       } else {
@@ -106,14 +106,14 @@ export class RepositoryFactory {
         poolConfig.port = parseInt(process.env.DB_PORT || '5433');
       }
     }
-    
+
     console.log('Initializing database connection:', {
       host: poolConfig.host,
       database: poolConfig.database,
       isCloudSQL: poolConfig.host && (poolConfig.host as string).startsWith('/cloudsql/'),
       port: poolConfig.port
     });
-    
+
     this.pool = new Pool(poolConfig);
 
     // Initialize GCS client

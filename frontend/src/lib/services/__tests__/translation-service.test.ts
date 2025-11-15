@@ -19,7 +19,7 @@ describe('TranslationService', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     // Setup mock
     mockSendMessage = jest.fn();
     (VertexAIService as jest.MockedClass<typeof VertexAIService>).mockImplementation(() => ({
@@ -28,7 +28,7 @@ describe('TranslationService', () => {
       temperature: 0.3,
       systemPrompt: 'You are a professional translator specializing in educational feedback translation.',
     }) as any);
-    
+
     service = new TranslationService();
   });
 
@@ -53,7 +53,7 @@ describe('TranslationService', () => {
 
     it('translates feedback to Traditional Chinese (zhTW)', async () => {
       const result = await service.translateFeedback(originalFeedback, 'zhTW');
-      
+
       expect(mockSendMessage).toHaveBeenCalledWith(
         expect.stringContaining('Traditional Chinese (繁體中文)')
       );
@@ -65,7 +65,7 @@ describe('TranslationService', () => {
 
     it('handles zh-TW format correctly', async () => {
       await service.translateFeedback(originalFeedback, 'zh-TW');
-      
+
       expect(mockSendMessage).toHaveBeenCalledWith(
         expect.stringContaining('Traditional Chinese (繁體中文)')
       );
@@ -73,7 +73,7 @@ describe('TranslationService', () => {
 
     it('translates feedback to Simplified Chinese (zhCN)', async () => {
       await service.translateFeedback(originalFeedback, 'zhCN');
-      
+
       expect(mockSendMessage).toHaveBeenCalledWith(
         expect.stringContaining('Simplified Chinese (简体中文)')
       );
@@ -81,7 +81,7 @@ describe('TranslationService', () => {
 
     it('handles zh-CN format correctly', async () => {
       await service.translateFeedback(originalFeedback, 'zh-CN');
-      
+
       expect(mockSendMessage).toHaveBeenCalledWith(
         expect.stringContaining('Simplified Chinese (简体中文)')
       );
@@ -90,21 +90,21 @@ describe('TranslationService', () => {
     it('includes career field context when provided', async () => {
       const careerField = 'Software Engineering';
       await service.translateFeedback(originalFeedback, 'zhTW', careerField);
-      
+
       const callArg = mockSendMessage.mock.calls[0][0];
       expect(callArg).toContain(`Use appropriate terminology for the ${careerField} field`);
     });
 
     it('excludes career field instruction when not provided', async () => {
       await service.translateFeedback(originalFeedback, 'zhTW');
-      
+
       const callArg = mockSendMessage.mock.calls[0][0];
       expect(callArg).not.toContain('Use appropriate terminology');
     });
 
     it('handles unsupported language codes', async () => {
       await service.translateFeedback(originalFeedback, 'unknown-lang');
-      
+
       expect(mockSendMessage).toHaveBeenCalledWith(
         expect.stringContaining('unknown-lang')
       );
@@ -174,7 +174,7 @@ describe('TranslationService', () => {
 
       await expect(service.translateFeedback(originalFeedback, 'zhTW'))
         .rejects.toThrow('Failed to translate feedback to zhTW');
-      
+
       expect(mockError).toHaveBeenCalledWith('Translation failed:', error);
     });
 
@@ -369,8 +369,8 @@ describe('TranslationService', () => {
 
     it('handles markdown formatting', async () => {
       const markdownFeedback = '**Excellent!** You showed:\n- Good understanding\n- *Creative* solutions';
-      mockSendMessage.mockResolvedValue({ 
-        content: '**¡Excelente!** Mostraste:\n- Buena comprensión\n- Soluciones *creativas*' 
+      mockSendMessage.mockResolvedValue({
+        content: '**¡Excelente!** Mostraste:\n- Buena comprensión\n- Soluciones *creativas*'
       });
 
       const result = await service.translateFeedback(markdownFeedback, 'es');

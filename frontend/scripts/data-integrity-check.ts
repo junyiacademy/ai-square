@@ -2,7 +2,7 @@
 /**
  * Data Integrity Check Script
  * Validates database consistency and data quality for AI Square
- * 
+ *
  * Usage:
  *   npx tsx scripts/data-integrity-check.ts
  *   npx tsx scripts/data-integrity-check.ts --fix
@@ -157,7 +157,7 @@ class DataIntegrityChecker {
     const invalidScenarios = await this.pool.query(`
       SELECT COUNT(*) as count
       FROM scenarios
-      WHERE 
+      WHERE
         (title IS NOT NULL AND jsonb_typeof(title) != 'object') OR
         (description IS NOT NULL AND jsonb_typeof(description) != 'object') OR
         (title->>'en' IS NULL) OR
@@ -175,13 +175,13 @@ class DataIntegrityChecker {
 
     // Check for missing English translations
     const missingTranslations = await this.pool.query(`
-      SELECT 
+      SELECT
         'scenarios' as table_name,
         COUNT(*) FILTER (WHERE title->>'en' IS NULL) as missing_title,
         COUNT(*) FILTER (WHERE description->>'en' IS NULL) as missing_description
       FROM scenarios
       UNION ALL
-      SELECT 
+      SELECT
         'domains',
         COUNT(*) FILTER (WHERE name->>'en' IS NULL),
         COUNT(*) FILTER (WHERE description->>'en' IS NULL)
@@ -262,14 +262,14 @@ class DataIntegrityChecker {
     // Check for gaps in task indices
     const gapsInIndices = await this.pool.query(`
       WITH task_sequences AS (
-        SELECT 
+        SELECT
           program_id,
           array_agg(task_index ORDER BY task_index) as indices
         FROM tasks
         WHERE task_index IS NOT NULL
         GROUP BY program_id
       )
-      SELECT 
+      SELECT
         program_id,
         indices
       FROM task_sequences
@@ -296,8 +296,8 @@ class DataIntegrityChecker {
     const invalidProgramTimes = await this.pool.query(`
       SELECT COUNT(*) as count
       FROM programs
-      WHERE completed_at IS NOT NULL 
-        AND started_at IS NOT NULL 
+      WHERE completed_at IS NOT NULL
+        AND started_at IS NOT NULL
         AND completed_at < started_at
     `);
 
@@ -314,8 +314,8 @@ class DataIntegrityChecker {
     const invalidTaskTimes = await this.pool.query(`
       SELECT COUNT(*) as count
       FROM tasks
-      WHERE completed_at IS NOT NULL 
-        AND started_at IS NOT NULL 
+      WHERE completed_at IS NOT NULL
+        AND started_at IS NOT NULL
         AND completed_at < started_at
     `);
 
@@ -330,13 +330,13 @@ class DataIntegrityChecker {
 
     // Check for future timestamps
     const futureTimes = await this.pool.query(`
-      SELECT 
+      SELECT
         'programs' as table_name,
         COUNT(*) as count
       FROM programs
       WHERE started_at > NOW() OR completed_at > NOW()
       UNION ALL
-      SELECT 
+      SELECT
         'tasks',
         COUNT(*)
       FROM tasks
@@ -444,9 +444,9 @@ class DataIntegrityChecker {
    */
   async applyFixes() {
     console.log('\n🔧 Applying fixes...');
-    
+
     const fixableIssues = this.issues.filter(issue => issue.fixable && issue.fixQuery);
-    
+
     for (const issue of fixableIssues) {
       try {
         console.log(`  Fixing: ${issue.description}`);
@@ -465,7 +465,7 @@ class DataIntegrityChecker {
     console.log('\n' + '='.repeat(60));
     console.log('📊 DATA INTEGRITY CHECK REPORT');
     console.log('='.repeat(60));
-    
+
     const summary = {
       critical: this.issues.filter(i => i.severity === 'critical').length,
       warning: this.issues.filter(i => i.severity === 'warning').length,
@@ -485,19 +485,19 @@ class DataIntegrityChecker {
     }
 
     console.log('\n📋 Issues by Category:\n');
-    
+
     const categories = [...new Set(this.issues.map(i => i.category))];
-    
+
     for (const category of categories) {
       const categoryIssues = this.issues.filter(i => i.category === category);
       console.log(`${category}:`);
-      
+
       for (const issue of categoryIssues) {
-        const icon = issue.severity === 'critical' ? '❌' : 
+        const icon = issue.severity === 'critical' ? '❌' :
                     issue.severity === 'warning' ? '⚠️' : 'ℹ️';
         const fixable = issue.fixable ? ' [FIXABLE]' : '';
         console.log(`  ${icon} ${issue.description}${fixable}`);
-        
+
         if (issue.details && process.env.DEBUG === 'true') {
           console.log(`     Details: ${JSON.stringify(issue.details, null, 2)}`);
         }
@@ -508,7 +508,7 @@ class DataIntegrityChecker {
     // Decision matrix
     console.log('='.repeat(60));
     console.log('🎯 DEPLOYMENT DECISION:');
-    
+
     if (summary.critical > 0) {
       console.log('❌ DO NOT DEPLOY - Critical issues found');
     } else if (summary.warning > 5) {
@@ -516,7 +516,7 @@ class DataIntegrityChecker {
     } else {
       console.log('✅ SAFE TO DEPLOY - No critical issues');
     }
-    
+
     console.log('='.repeat(60));
   }
 
@@ -525,7 +525,7 @@ class DataIntegrityChecker {
    */
   async runAllChecks() {
     console.log('🚀 Starting data integrity checks...\n');
-    
+
     try {
       await this.checkOrphanedRecords();
       await this.checkModePropagation();
@@ -535,17 +535,17 @@ class DataIntegrityChecker {
       await this.checkTimestamps();
       await this.checkScores();
       await this.checkDuplicates();
-      
+
       if (this.shouldFix) {
         await this.applyFixes();
       }
-      
+
       this.generateReport();
-      
+
       // Return exit code based on critical issues
       const criticalCount = this.issues.filter(i => i.severity === 'critical').length;
       return criticalCount > 0 ? 1 : 0;
-      
+
     } catch (error) {
       console.error('❌ Error during integrity check:', error);
       return 1;
@@ -558,16 +558,16 @@ class DataIntegrityChecker {
 // Main execution
 async function main() {
   const shouldFix = process.argv.includes('--fix');
-  
+
   if (shouldFix) {
     console.log('⚠️  Running in FIX mode - will attempt to fix issues\n');
   } else {
     console.log('ℹ️  Running in CHECK mode - use --fix to apply fixes\n');
   }
-  
+
   const checker = new DataIntegrityChecker(shouldFix);
   const exitCode = await checker.runAllChecks();
-  
+
   process.exit(exitCode);
 }
 

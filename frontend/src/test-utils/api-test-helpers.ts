@@ -16,7 +16,7 @@ interface MockRequest {
 
 export function createMockRequest(url: string, options: MockRequestOptions = {}): MockRequest {
   const { method = 'GET', headers = {}, body } = options;
-  
+
   return {
     url,
     method,
@@ -52,7 +52,7 @@ interface MockResponse {
 export function createMockResponse(): MockResponse {
   let status = 200;
   let jsonData: unknown = null;
-  
+
   return {
     json: (data: unknown) => {
       jsonData = data;

@@ -44,14 +44,14 @@ interface PBLYAMLData {
 }
 
 export class PBLScenarioService {
-  
+
   /**
    * 從 YAML 載入並創建 Scenario UUID 檔案
    */
   async createScenarioFromYAML(yamlId: string, language: string = 'en'): Promise<IScenario> {
     // 載入 YAML Content Source
     const yamlData = await this.loadYAMLContent(yamlId, language);
-    
+
     // 轉換成 IScenario 格式
     const scenario: Omit<IScenario, 'id'> = {
       mode: 'pbl' as const,
@@ -94,64 +94,64 @@ export class PBLScenarioService {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
-    
+
     // 使用 Scenario Repository 創建 UUID 檔案
     const { repositoryFactory } = await import('@/lib/repositories/base/repository-factory');
     const scenarioRepo = repositoryFactory.getScenarioRepository();
-    
+
     return scenarioRepo.create(scenario);
   }
-  
+
   /**
    * 根據 YAML ID 尋找或創建 Scenario UUID
    */
   async findOrCreateScenarioByYAMLId(yamlId: string, language: string = 'en'): Promise<IScenario> {
     const { repositoryFactory } = await import('@/lib/repositories/base/repository-factory');
     const scenarioRepo = repositoryFactory.getScenarioRepository();
-    
+
     // 先嘗試找到現有的 Scenario (by sourceMetadata.yamlId)
     const existingScenarios = await scenarioRepo.findBySource('pbl');
-    const existingScenario = existingScenarios.find((s: IScenario) => 
+    const existingScenario = existingScenarios.find((s: IScenario) =>
       s.sourceMetadata?.yamlId === yamlId
     );
-    
+
     if (existingScenario) {
       return existingScenario;
     }
-    
+
     // 如果不存在，則創建新的
     return this.createScenarioFromYAML(yamlId, language);
   }
-  
+
   private async loadYAMLContent(yamlId: string, language: string): Promise<PBLYAMLData> {
     const scenarioFolder = yamlId.replace(/-/g, '_');
     const fileName = `${scenarioFolder}_${language}.yaml`;
     let yamlPath = path.join(process.cwd(), 'public', 'pbl_data', 'scenarios', scenarioFolder, fileName);
-    
+
     // 檢查語言特定檔案是否存在，否則回退到英文
     try {
       await fs.access(yamlPath);
     } catch {
       yamlPath = path.join(process.cwd(), 'public', 'pbl_data', 'scenarios', scenarioFolder, `${scenarioFolder}_en.yaml`);
     }
-    
+
     const yamlContent = await fs.readFile(yamlPath, 'utf8');
     return yaml.load(yamlContent) as PBLYAMLData;
   }
-  
+
   private getLocalizedField(obj: Record<string, unknown>, fieldName: string, language: string): string {
     const langSuffix = language;
     const localizedField = `${fieldName}_${langSuffix}`;
     return (obj[localizedField] as string) || (obj[fieldName] as string) || '';
   }
-  
+
   private getLocalizedArrayField(obj: Record<string, unknown>, fieldName: string, language: string): string[] {
     const langSuffix = language;
     const localizedField = `${fieldName}_${langSuffix}`;
     const value = obj[localizedField] || obj[fieldName] || [];
     return Array.isArray(value) ? value : [];
   }
-  
+
   private convertTasksToTemplates(tasks: Array<Record<string, unknown>>, language: string): ITaskTemplate[] {
     return tasks.map(task => ({
       id: task.id as string,
@@ -167,14 +167,14 @@ export class PBLScenarioService {
       }
     }));
   }
-  
+
   /**
    * 列出所有可用的 YAML IDs
    */
   async listAvailableYAMLIds(): Promise<string[]> {
     const scenariosPath = path.join(process.cwd(), 'public', 'pbl_data', 'scenarios');
     const folders = await fs.readdir(scenariosPath, { withFileTypes: true });
-    
+
     return folders
       .filter(dirent => dirent.isDirectory() && !dirent.name.startsWith('_'))
       .map(dirent => dirent.name.replace(/_/g, '-')); // 轉換回 dash-style 供前端使用

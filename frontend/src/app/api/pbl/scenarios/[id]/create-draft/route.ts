@@ -19,7 +19,7 @@ async function loadScenario(scenarioId: string): Promise<Scenario | null> {
       scenarioFolder,
       fileName
     );
-    
+
     const yamlContent = await fs.readFile(yamlPath, 'utf8');
     interface ScenarioYAML {
       scenario_info: {
@@ -44,7 +44,7 @@ async function loadScenario(scenarioId: string): Promise<Scenario | null> {
       ksa_mapping?: Record<string, unknown>;
     }
     const data = yaml.load(yamlContent) as ScenarioYAML;
-    
+
     // Transform YAML data to match our Scenario interface
     const scenario: Scenario = {
       id: data.scenario_info.id,
@@ -61,7 +61,7 @@ async function loadScenario(scenarioId: string): Promise<Scenario | null> {
       ksaMapping: (data.ksa_mapping as unknown as KSAMapping) || { knowledge: [], skills: [], attitudes: [] },
       tasks: []
     };
-    
+
     // Load tasks directly from root level
     if (data.tasks && Array.isArray(data.tasks)) {
       for (const task of data.tasks as Record<string, unknown>[]) {
@@ -83,7 +83,7 @@ async function loadScenario(scenarioId: string): Promise<Scenario | null> {
         });
       }
     }
-    
+
     return scenario;
   } catch (error) {
     console.error(`Error loading scenario ${scenarioId}:`, error);
@@ -97,7 +97,7 @@ export async function POST(
 ) {
   try {
     const { id: scenarioId } = await params;
-    
+
     // Get user info from cookie
     let userEmail: string | undefined;
     try {
@@ -109,17 +109,17 @@ export async function POST(
     } catch {
       console.log('No user cookie found');
     }
-    
+
     if (!userEmail) {
       return NextResponse.json(
         { success: false, error: 'User authentication required' },
         { status: 401 }
       );
     }
-    
+
     // Get request body (not used in current implementation)
     // const body = await request.json();
-    
+
     // Load scenario
     const scenario = await loadScenario(scenarioId);
     if (!scenario) {
@@ -128,7 +128,7 @@ export async function POST(
         { status: 404 }
       );
     }
-    
+
     // Create new draft program
     const programRepo = repositoryFactory.getProgramRepository();
     const program = await programRepo.create({
@@ -155,13 +155,13 @@ export async function POST(
         language: 'en'
       }
     });
-    
+
     return NextResponse.json({
       success: true,
       programId: program.id,
       program
     });
-    
+
   } catch (error) {
     console.error('Create draft program error:', error);
     return NextResponse.json(

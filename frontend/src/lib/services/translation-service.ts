@@ -46,9 +46,9 @@ export class TranslationService {
       'id': 'Indonesian',
       'th': 'Thai'
     };
-    
+
     const targetLanguageName = languageMap[targetLanguage] || targetLanguage;
-    
+
     const prompt = `
 Translate the following educational feedback to ${targetLanguageName}.
 
@@ -66,24 +66,24 @@ Translate now:`;
 
     try {
       const response = await this.aiService.sendMessage(prompt);
-      
+
       // Clean up the response - remove any translation labels
       let content = response.content;
-      
+
       // Remove common translation labels/headers
       content = content.replace(/^Translation.*?:\s*/gim, '');
       content = content.replace(/^Translated.*?:\s*/gim, '');
       content = content.replace(/^.*?Translation:\s*/gim, '');
       content = content.replace(/^.*?Snippet \d+:\s*/gim, '');
-      
+
       // Remove bullet points that might be added
       if (content.startsWith('• ')) {
         content = content.substring(2);
       }
-      
+
       // Trim any extra whitespace
       content = content.trim();
-      
+
       return content;
     } catch (error) {
       console.error('Translation failed:', error);
@@ -104,7 +104,7 @@ Translate now:`;
     careerField?: string
   ): Promise<Record<string, string>> {
     const results: Record<string, string> = {};
-    
+
     // 並行翻譯所有目標語言
     const translations = await Promise.allSettled(
       targetLanguages.map(async (lang) => {
@@ -155,17 +155,17 @@ Translate now:`;
     fallbackLanguage: string = 'en'
   ): string | null {
     if (!versions) return null;
-    
+
     // 優先返回指定語言
     if (versions[language]) {
       return versions[language];
     }
-    
+
     // 備用語言
     if (versions[fallbackLanguage]) {
       return versions[fallbackLanguage];
     }
-    
+
     // 返回任何可用的版本
     const availableVersions = Object.values(versions);
     return availableVersions.length > 0 ? availableVersions[0] : null;

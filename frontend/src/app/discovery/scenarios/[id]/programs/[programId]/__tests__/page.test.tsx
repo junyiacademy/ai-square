@@ -93,13 +93,13 @@ describe('ProgramDetailPage', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     mockUseRouter.mockReturnValue(mockRouter);
     mockUseParams.mockReturnValue({
       id: 'scenario-1',
       programId: 'program-1'
     });
-    
+
     mockUseAuth.mockReturnValue({
       user: { email: 'test@example.com' },
       isLoggedIn: true,

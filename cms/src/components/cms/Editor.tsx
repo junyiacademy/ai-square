@@ -6,8 +6,8 @@ import { Code, Eye, FileText } from 'lucide-react';
 import dynamic from 'next/dynamic';
 
 const MonacoEditor = dynamic(
-  () => import('@monaco-editor/react'), 
-  { 
+  () => import('@monaco-editor/react'),
+  {
     ssr: false,
     loading: () => (
       <div className="flex items-center justify-center h-full">
@@ -47,7 +47,7 @@ export function Editor({ file, content, onChange, isLoading }: EditorProps) {
       const data = await response.json();
       setLocalContent(data.content);
       onChange(data.content);
-      
+
       // Store original content for comparison
       const windowWithSetOriginalContent = window as Window & { setOriginalContent?: (content: string) => void };
       if (windowWithSetOriginalContent.setOriginalContent) {

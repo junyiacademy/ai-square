@@ -40,21 +40,21 @@ export abstract class BaseEntity {
   readonly createdAt: Date;
   updatedAt: Date;
   version: number;
-  
+
   constructor(id?: string) {
     this.id = id || this.generateId();
     this.createdAt = new Date();
     this.updatedAt = new Date();
     this.version = 1;
   }
-  
+
   protected abstract generateId(): string;
-  
+
   updateVersion(): void {
     this.version++;
     this.updatedAt = new Date();
   }
-  
+
   equals(other: BaseEntity): boolean {
     return this.id === other.id;
   }
@@ -85,7 +85,7 @@ export class SessionEntity extends BaseEntity {
   lastActiveAt: Date;
   completedAt?: Date;
   metadata: SessionMetadata;
-  
+
   constructor(data: CreateSessionData) {
     super(data.id);
     this.userId = data.userId;
@@ -96,11 +96,11 @@ export class SessionEntity extends BaseEntity {
     this.lastActiveAt = new Date();
     this.metadata = data.metadata || {};
   }
-  
+
   protected generateId(): string {
     return `session_${generateUUID()}`;
   }
-  
+
   // 領域邏輯
   start(): void {
     if (!this.status.canTransitionTo('active')) {
@@ -109,7 +109,7 @@ export class SessionEntity extends BaseEntity {
     this.status = new SessionStatus('active');
     this.updateActivity();
   }
-  
+
   pause(): void {
     if (!this.status.canTransitionTo('paused')) {
       throw new Error(`Cannot pause session in ${this.status.value} status`);
@@ -117,7 +117,7 @@ export class SessionEntity extends BaseEntity {
     this.status = new SessionStatus('paused');
     this.updateActivity();
   }
-  
+
   resume(): void {
     if (!this.status.canTransitionTo('active')) {
       throw new Error(`Cannot resume session in ${this.status.value} status`);
@@ -125,7 +125,7 @@ export class SessionEntity extends BaseEntity {
     this.status = new SessionStatus('active');
     this.updateActivity();
   }
-  
+
   complete(): void {
     if (!this.status.canTransitionTo('completed')) {
       throw new Error(`Cannot complete session in ${this.status.value} status`);
@@ -134,12 +134,12 @@ export class SessionEntity extends BaseEntity {
     this.completedAt = new Date();
     this.updateActivity();
   }
-  
+
   updateActivity(): void {
     this.lastActiveAt = new Date();
     this.updateVersion();
   }
-  
+
   // 序列化
   toJSON(): SessionData {
     return {
@@ -157,7 +157,7 @@ export class SessionEntity extends BaseEntity {
       version: this.version
     };
   }
-  
+
   // 反序列化
   static fromJSON(data: SessionData): SessionEntity {
     const session = new SessionEntity({
@@ -167,7 +167,7 @@ export class SessionEntity extends BaseEntity {
       type: data.type,
       metadata: data.metadata
     });
-    
+
     session.status = new SessionStatus(data.status);
     session.startedAt = new Date(data.startedAt);
     session.lastActiveAt = new Date(data.lastActiveAt);
@@ -175,7 +175,7 @@ export class SessionEntity extends BaseEntity {
     session.createdAt = new Date(data.createdAt);
     session.updatedAt = new Date(data.updatedAt);
     session.version = data.version;
-    
+
     return session;
   }
 }
@@ -218,7 +218,7 @@ export class SessionStatus {
   private static readonly VALID_STATUSES = [
     'created', 'active', 'paused', 'completed', 'abandoned'
   ] as const;
-  
+
   private static readonly TRANSITIONS: Record<string, string[]> = {
     created: ['active', 'abandoned'],
     active: ['paused', 'completed', 'abandoned'],
@@ -226,22 +226,22 @@ export class SessionStatus {
     completed: [],
     abandoned: []
   };
-  
+
   constructor(public readonly value: SessionStatusValue) {
     if (!SessionStatus.VALID_STATUSES.includes(value)) {
       throw new Error(`Invalid session status: ${value}`);
     }
   }
-  
+
   canTransitionTo(newStatus: SessionStatusValue): boolean {
     const allowedTransitions = SessionStatus.TRANSITIONS[this.value];
     return allowedTransitions.includes(newStatus);
   }
-  
+
   equals(other: SessionStatus): boolean {
     return this.value === other.value;
   }
-  
+
   toString(): string {
     return this.value;
   }
@@ -261,11 +261,11 @@ export interface IRepository<T extends BaseEntity> {
   findOne(filter: QueryFilter): Promise<T | null>;
   exists(id: string): Promise<boolean>;
   count(filter?: QueryFilter): Promise<number>;
-  
+
   create(entity: T): Promise<T>;
   update(entity: T): Promise<T>;
   delete(id: string): Promise<void>;
-  
+
   createMany(entities: T[]): Promise<T[]>;
   updateMany(entities: T[]): Promise<T[]>;
   deleteMany(ids: string[]): Promise<void>;
@@ -316,12 +316,12 @@ export interface IUnitOfWork {
   evaluations: IEvaluationRepository;
   projects: IProjectRepository;
   users: IUserRepository;
-  
+
   // Transaction management
   beginTransaction(): Promise<void>;
   commit(): Promise<void>;
   rollback(): Promise<void>;
-  
+
   // Utility
   clear(): void;
   dispose(): Promise<void>;
@@ -350,94 +350,94 @@ import { IStorageProvider } from '../../storage/interfaces';
 
 export abstract class BaseRepository<T extends BaseEntity> implements IRepository<T> {
   protected abstract collectionName: string;
-  
+
   constructor(protected storage: IStorageProvider) {}
-  
+
   protected getKey(id: string): string {
     return `${this.collectionName}/${id}`;
   }
-  
+
   protected getCollectionPrefix(): string {
     return `${this.collectionName}/`;
   }
-  
+
   async findById(id: string): Promise<T | null> {
     const key = this.getKey(id);
     const data = await this.storage.get<any>(key);
-    
+
     if (!data) {
       return null;
     }
-    
+
     return this.deserialize(data);
   }
-  
+
   async findAll(options?: FindOptions): Promise<T[]> {
     const items = await this.storage.list<any>(this.getCollectionPrefix());
     const entities = items.map(item => this.deserialize(item));
-    
+
     // Apply filters
     let filtered = entities;
     if (options?.filter) {
       filtered = this.applyFilter(entities, options.filter);
     }
-    
+
     // Apply sorting
     if (options?.sort) {
       filtered = this.applySort(filtered, options.sort);
     }
-    
+
     // Apply pagination
     if (options?.pagination) {
       filtered = this.applyPagination(filtered, options.pagination);
     }
-    
+
     return filtered;
   }
-  
+
   async findOne(filter: QueryFilter): Promise<T | null> {
     const all = await this.findAll({ filter });
     return all[0] || null;
   }
-  
+
   async exists(id: string): Promise<boolean> {
     return this.storage.exists(this.getKey(id));
   }
-  
+
   async count(filter?: QueryFilter): Promise<number> {
     const all = await this.findAll({ filter });
     return all.length;
   }
-  
+
   async create(entity: T): Promise<T> {
     entity.updateVersion();
     const key = this.getKey(entity.id);
     await this.storage.set(key, this.serialize(entity));
     return entity;
   }
-  
+
   async update(entity: T): Promise<T> {
     const existing = await this.findById(entity.id);
     if (!existing) {
       throw new Error(`Entity with id ${entity.id} not found`);
     }
-    
+
     // Optimistic locking
     if (existing.version !== entity.version) {
       throw new Error('Entity has been modified by another process');
     }
-    
+
     entity.updateVersion();
     const key = this.getKey(entity.id);
     await this.storage.set(key, this.serialize(entity));
     return entity;
   }
-  
+
   async delete(id: string): Promise<void> {
     const key = this.getKey(id);
     await this.storage.delete(key);
   }
-  
+
   async createMany(entities: T[]): Promise<T[]> {
     const operations = entities.map(entity => {
       entity.updateVersion();
@@ -447,11 +447,11 @@ export abstract class BaseRepository<T extends BaseEntity> implements IRepositor
         value: this.serialize(entity)
       };
     });
-    
+
     await this.storage.batch(operations);
     return entities;
   }
-  
+
   async updateMany(entities: T[]): Promise<T[]> {
     // Check all exist first
     for (const entity of entities) {
@@ -463,7 +463,7 @@ export abstract class BaseRepository<T extends BaseEntity> implements IRepositor
         throw new Error(`Entity ${entity.id} has been modified`);
       }
     }
-    
+
     const operations = entities.map(entity => {
       entity.updateVersion();
       return {
@@ -472,37 +472,37 @@ export abstract class BaseRepository<T extends BaseEntity> implements IRepositor
         value: this.serialize(entity)
       };
     });
-    
+
     await this.storage.batch(operations);
     return entities;
   }
-  
+
   async deleteMany(ids: string[]): Promise<void> {
     const operations = ids.map(id => ({
       type: 'delete' as const,
       key: this.getKey(id)
     }));
-    
+
     await this.storage.batch(operations);
   }
-  
+
   // Filter implementation
   protected applyFilter(entities: T[], filter: QueryFilter): T[] {
     return entities.filter(entity => {
       const data = this.serialize(entity);
-      
+
       for (const [field, condition] of Object.entries(filter)) {
         const value = this.getFieldValue(data, field);
-        
+
         if (!this.matchesCondition(value, condition)) {
           return false;
         }
       }
-      
+
       return true;
     });
   }
-  
+
   protected matchesCondition(value: any, condition: any): boolean {
     if (typeof condition === 'object' && condition !== null && !Array.isArray(condition)) {
       // Handle operators
@@ -528,35 +528,35 @@ export abstract class BaseRepository<T extends BaseEntity> implements IRepositor
       return value === condition;
     }
   }
-  
+
   protected getFieldValue(data: any, field: string): any {
     const parts = field.split('.');
     let value = data;
-    
+
     for (const part of parts) {
       value = value?.[part];
     }
-    
+
     return value;
   }
-  
+
   protected applySort(entities: T[], sort: SortOptions): T[] {
     return [...entities].sort((a, b) => {
       const aValue = this.getFieldValue(this.serialize(a), sort.field);
       const bValue = this.getFieldValue(this.serialize(b), sort.field);
-      
+
       if (aValue < bValue) return sort.direction === 'asc' ? -1 : 1;
       if (aValue > bValue) return sort.direction === 'asc' ? 1 : -1;
       return 0;
     });
   }
-  
+
   protected applyPagination(entities: T[], pagination: PaginationOptions): T[] {
     const start = (pagination.page - 1) * pagination.limit;
     const end = start + pagination.limit;
     return entities.slice(start, end);
   }
-  
+
   // Abstract methods for serialization
   protected abstract serialize(entity: T): any;
   protected abstract deserialize(data: any): T;
@@ -575,11 +575,11 @@ export abstract class CachedRepository<T extends BaseEntity> extends BaseReposit
   private cache: Map<string, T> = new Map();
   private cacheExpiry: Map<string, number> = new Map();
   private readonly cacheTTL: number = 300000; // 5 minutes
-  
+
   constructor(storage: IStorageProvider) {
     super(storage);
   }
-  
+
   @Cacheable({ ttl: 300 })
   async findById(id: string): Promise<T | null> {
     // Check memory cache first
@@ -587,62 +587,62 @@ export abstract class CachedRepository<T extends BaseEntity> extends BaseReposit
     if (cached) {
       return cached;
     }
-    
+
     const entity = await super.findById(id);
     if (entity) {
       this.addToCache(entity);
     }
-    
+
     return entity;
   }
-  
+
   async create(entity: T): Promise<T> {
     const created = await super.create(entity);
     this.addToCache(created);
     this.invalidateListCache();
     return created;
   }
-  
+
   async update(entity: T): Promise<T> {
     const updated = await super.update(entity);
     this.addToCache(updated);
     this.invalidateListCache();
     return updated;
   }
-  
+
   async delete(id: string): Promise<void> {
     await super.delete(id);
     this.removeFromCache(id);
     this.invalidateListCache();
   }
-  
+
   private getFromCache(id: string): T | null {
     const entity = this.cache.get(id);
     if (!entity) return null;
-    
+
     const expiry = this.cacheExpiry.get(id);
     if (!expiry || Date.now() > expiry) {
       this.removeFromCache(id);
       return null;
     }
-    
+
     return entity;
   }
-  
+
   private addToCache(entity: T): void {
     this.cache.set(entity.id, entity);
     this.cacheExpiry.set(entity.id, Date.now() + this.cacheTTL);
   }
-  
+
   private removeFromCache(id: string): void {
     this.cache.delete(id);
     this.cacheExpiry.delete(id);
   }
-  
+
   private invalidateListCache(): void {
     clearCache(this.collectionName);
   }
-  
+
   clearCache(): void {
     this.cache.clear();
     this.cacheExpiry.clear();
@@ -662,36 +662,36 @@ import { SessionEntity, SessionData } from '@/lib/core/domain/entities';
 
 export class SessionRepository extends CachedRepository<SessionEntity> implements ISessionRepository {
   protected collectionName = 'sessions';
-  
+
   protected serialize(entity: SessionEntity): SessionData {
     return entity.toJSON();
   }
-  
+
   protected deserialize(data: SessionData): SessionEntity {
     return SessionEntity.fromJSON(data);
   }
-  
+
   async findByUserId(userId: string): Promise<SessionEntity[]> {
     return this.findAll({
       filter: { userId }
     });
   }
-  
+
   async findActiveByUserId(userId: string): Promise<SessionEntity[]> {
     return this.findAll({
-      filter: { 
+      filter: {
         userId,
         status: { $in: ['active', 'paused'] }
       }
     });
   }
-  
+
   async findByProjectId(projectId: string): Promise<SessionEntity[]> {
     return this.findAll({
       filter: { projectId }
     });
   }
-  
+
   async findRecentSessions(userId: string, limit: number = 10): Promise<SessionEntity[]> {
     return this.findAll({
       filter: { userId },
@@ -715,40 +715,40 @@ export class UnitOfWork implements IUnitOfWork {
   private _evaluations: IEvaluationRepository;
   private _isInTransaction: boolean = false;
   private _transactionOperations: any[] = [];
-  
+
   constructor(private storage: IStorageProvider) {
     this._sessions = new SessionRepository(storage);
     this._evaluations = new EvaluationRepository(storage);
   }
-  
+
   get sessions(): ISessionRepository {
     return this._sessions;
   }
-  
+
   get evaluations(): IEvaluationRepository {
     return this._evaluations;
   }
-  
+
   async beginTransaction(): Promise<void> {
     if (this._isInTransaction) {
       throw new Error('Transaction already in progress');
     }
-    
+
     this._isInTransaction = true;
     this._transactionOperations = [];
   }
-  
+
   async commit(): Promise<void> {
     if (!this._isInTransaction) {
       throw new Error('No transaction in progress');
     }
-    
+
     try {
       // Execute all operations
       if (this._transactionOperations.length > 0) {
         await this.storage.batch(this._transactionOperations);
       }
-      
+
       this._isInTransaction = false;
       this._transactionOperations = [];
     } catch (error) {
@@ -756,13 +756,13 @@ export class UnitOfWork implements IUnitOfWork {
       throw error;
     }
   }
-  
+
   async rollback(): Promise<void> {
     this._isInTransaction = false;
     this._transactionOperations = [];
     this.clear();
   }
-  
+
   clear(): void {
     if (this._sessions instanceof CachedRepository) {
       this._sessions.clearCache();
@@ -771,7 +771,7 @@ export class UnitOfWork implements IUnitOfWork {
       this._evaluations.clearCache();
     }
   }
-  
+
   async dispose(): Promise<void> {
     if (this._isInTransaction) {
       await this.rollback();
@@ -791,21 +791,21 @@ import { SessionEntity } from '@/lib/core/domain/entities';
 
 export class LearningService {
   private uow: UnitOfWork;
-  
+
   constructor(storageProvider: IStorageProvider) {
     this.uow = new UnitOfWork(storageProvider);
   }
-  
+
   async startLearningSession(userId: string, projectId: string): Promise<SessionEntity> {
     await this.uow.beginTransaction();
-    
+
     try {
       // Check if user already has active session
       const activeSessions = await this.uow.sessions.findActiveByUserId(userId);
       if (activeSessions.length > 0) {
         throw new Error('User already has an active session');
       }
-      
+
       // Create new session
       const session = new SessionEntity({
         userId,
@@ -813,11 +813,11 @@ export class LearningService {
         type: 'pbl',
         metadata: { source: 'web' }
       });
-      
+
       session.start();
-      
+
       const created = await this.uow.sessions.create(session);
-      
+
       await this.uow.commit();
       return created;
     } catch (error) {
@@ -825,24 +825,24 @@ export class LearningService {
       throw error;
     }
   }
-  
+
   async pauseSession(sessionId: string): Promise<SessionEntity> {
     const session = await this.uow.sessions.findById(sessionId);
     if (!session) {
       throw new Error('Session not found');
     }
-    
+
     session.pause();
     return this.uow.sessions.update(session);
   }
-  
+
   async getUserProgress(userId: string): Promise<UserProgress> {
     const sessions = await this.uow.sessions.findByUserId(userId);
     const completedCount = sessions.filter(s => s.status.value === 'completed').length;
-    const activeCount = sessions.filter(s => 
+    const activeCount = sessions.filter(s =>
       s.status.value === 'active' || s.status.value === 'paused'
     ).length;
-    
+
     return {
       totalSessions: sessions.length,
       completedSessions: completedCount,
@@ -866,16 +866,16 @@ const learningService = new LearningService(storage);
 export async function POST(req: NextRequest) {
   try {
     const { userId, projectId } = await req.json();
-    
+
     if (!userId || !projectId) {
       return NextResponse.json(
         { error: 'Missing required fields' },
         { status: 400 }
       );
     }
-    
+
     const session = await learningService.startLearningSession(userId, projectId);
-    
+
     return NextResponse.json(session.toJSON(), { status: 201 });
   } catch (error) {
     console.error('Error creating session:', error);
@@ -889,16 +889,16 @@ export async function POST(req: NextRequest) {
 export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
   const userId = searchParams.get('userId');
-  
+
   if (!userId) {
     return NextResponse.json(
       { error: 'userId is required' },
       { status: 400 }
     );
   }
-  
+
   const progress = await learningService.getUserProgress(userId);
-  
+
   return NextResponse.json(progress);
 }
 ```
@@ -914,12 +914,12 @@ import { SessionEntity } from '@/lib/core/domain/entities';
 describe('SessionRepository', () => {
   let repository: SessionRepository;
   let mockStorage: MockStorageProvider;
-  
+
   beforeEach(() => {
     mockStorage = new MockStorageProvider();
     repository = new SessionRepository(mockStorage);
   });
-  
+
   describe('findByUserId', () => {
     it('should return all sessions for a user', async () => {
       // Arrange
@@ -929,42 +929,42 @@ describe('SessionRepository', () => {
         new SessionEntity({ userId, projectId: 'p2', type: 'assessment' }),
         new SessionEntity({ userId: 'other', projectId: 'p3', type: 'pbl' })
       ];
-      
+
       for (const session of sessions) {
         await mockStorage.set(`sessions/${session.id}`, session.toJSON());
       }
-      
+
       // Act
       const userSessions = await repository.findByUserId(userId);
-      
+
       // Assert
       expect(userSessions).toHaveLength(2);
       expect(userSessions.every(s => s.userId === userId)).toBe(true);
     });
   });
-  
+
   describe('findActiveByUserId', () => {
     it('should return only active and paused sessions', async () => {
       // Arrange
       const userId = 'user123';
       const activeSession = new SessionEntity({ userId, projectId: 'p1', type: 'pbl' });
       activeSession.start();
-      
+
       const pausedSession = new SessionEntity({ userId, projectId: 'p2', type: 'pbl' });
       pausedSession.start();
       pausedSession.pause();
-      
+
       const completedSession = new SessionEntity({ userId, projectId: 'p3', type: 'pbl' });
       completedSession.start();
       completedSession.complete();
-      
+
       await repository.create(activeSession);
       await repository.create(pausedSession);
       await repository.create(completedSession);
-      
+
       // Act
       const activeSessions = await repository.findActiveByUserId(userId);
-      
+
       // Assert
       expect(activeSessions).toHaveLength(2);
       expect(activeSessions.map(s => s.status.value)).toEqual(['active', 'paused']);

@@ -7,11 +7,11 @@ metadata:
   title: "Daten-Orakel - Datenanalyst"
   short_description: "Entdecke verborgene Wahrheiten im Ozean der Daten"
   long_description: |
-    Du bist ein Lehrlings-Orakel im "Daten-Orakel-Tempel" und besitzt die mystische 
-    Fähigkeit, zukünftige Trends in chaotischen Daten zu sehen. In diesem Tempel 
-    voller Zahlen und Diagramme enthält jeder Datenpunkt wichtige Botschaften, 
+    Du bist ein Lehrlings-Orakel im "Daten-Orakel-Tempel" und besitzt die mystische
+    Fähigkeit, zukünftige Trends in chaotischen Daten zu sehen. In diesem Tempel
+    voller Zahlen und Diagramme enthält jeder Datenpunkt wichtige Botschaften,
     und deine Mission ist es, die Geheimnisse hinter diesen Zahlen zu entschlüsseln.
-  
+
   estimated_hours: 50
   skill_focus:
     - data_alchemy
@@ -22,23 +22,23 @@ metadata:
 world_setting:
   name: "Daten-Orakel-Tempel"
   description: |
-    Der Daten-Orakel-Tempel ist ein mysteriöses Heiligtum, das Daten aus der 
-    ganzen Welt sammelt. Hier werden Datenanalysten als Orakel ausgebildet, 
-    die die Sprache der Zahlen interpretieren und Wahrheiten offenbaren können, 
+    Der Daten-Orakel-Tempel ist ein mysteriöses Heiligtum, das Daten aus der
+    ganzen Welt sammelt. Hier werden Datenanalysten als Orakel ausgebildet,
+    die die Sprache der Zahlen interpretieren und Wahrheiten offenbaren können,
     die Entscheidungen in allen Bereichen prägen.
-  
+
   atmosphere: "mystical_analytical"
   visual_theme: "digital_temple"
 
 starting_scenario:
   title: "Initiation im Tempel"
   description: |
-    Das weise Mentor-Orakel begrüßt dich im Tempel und spricht in Rätseln über 
-    die Geheimnisse der Daten. Aber eine Bedrohung schwebt in der Luft: Chaos, 
-    der Datenvernichter, vergiftet Datenquellen und verbreitet irreführende 
-    Analysen. Du musst reine statistische Methoden verwenden, um die Wahrheit 
+    Das weise Mentor-Orakel begrüßt dich im Tempel und spricht in Rätseln über
+    die Geheimnisse der Daten. Aber eine Bedrohung schwebt in der Luft: Chaos,
+    der Datenvernichter, vergiftet Datenquellen und verbreitet irreführende
+    Analysen. Du musst reine statistische Methoden verwenden, um die Wahrheit
     inmitten der Verwirrung zu finden.
-  
+
   initial_tasks:
     - learn_data_basics
     - master_tools
@@ -53,7 +53,7 @@ skill_tree:
       unlocks:
         - web_scraping
         - api_mastery
-    
+
     - id: statistical_analysis
       name: "Statistische Zauberei"
       description: "Verwende statistische Methoden zur Mustererkennung"
@@ -61,7 +61,7 @@ skill_tree:
       unlocks:
         - hypothesis_testing
         - regression_magic
-    
+
     - id: data_visualization
       name: "Visuelle Prophezeiung"
       description: "Verwandle Daten in überzeugende visuelle Geschichten"
@@ -69,7 +69,7 @@ skill_tree:
       unlocks:
         - dashboard_creation
         - interactive_charts
-    
+
     - id: business_intelligence
       name: "Strategische Einsichten"
       description: "Verwandle Daten in umsetzbare Business-Weisheit"
@@ -84,13 +84,13 @@ skill_tree:
       description: "Nutze ML zur Vorhersage zukünftiger Ergebnisse"
       max_level: 15
       requires: [statistical_analysis, data_collection]
-    
+
     - id: big_data_mastery
       name: "Massive Datenmanipulation"
       description: "Verwalte und analysiere riesige Datensätze"
       max_level: 15
       requires: [data_collection, business_intelligence]
-    
+
     - id: real_time_analytics
       name: "Sofort-Orakel"
       description: "Führe Echtzeitdatenanalyse durch"
@@ -107,7 +107,7 @@ milestone_quests:
     unlocks:
       - insight_badge
       - temple_recognition
-  
+
   - id: chaos_detection
     name: "Chaos-Jäger"
     description: "Erkenne und korrigiere irreführende Datenmanipulationen"
@@ -117,7 +117,7 @@ milestone_quests:
     unlocks:
       - truth_seeker_title
       - advanced_access
-  
+
   - id: oracle_ascension
     name: "Meister-Orakel"
     description: "Sage einen großen Trend vorher, bevor er eintritt"
@@ -134,19 +134,19 @@ achievements:
     description: "Erstelle dein erstes Daten-Dashboard"
     xp_reward: 100
     badge_type: bronze
-  
+
   - id: data_detective
     name: "Daten-Detektiv"
     description: "Finde 10 Datenqualitätsprobleme"
     xp_reward: 250
     badge_type: silver
-  
+
   - id: prediction_master
     name: "Vorhersage-Meister"
     description: "Mache 5 genaue Vorhersagen"
     xp_reward: 500
     badge_type: gold
-  
+
   - id: oracle_legend
     name: "Orakel der Legende"
     description: "Beende alle Daten-Herausforderungen"
@@ -161,14 +161,14 @@ example_tasks:
       description: "Sammle und bereinige einen chaotischen Datensatz"
       skills_improved: [data_collection, data_alchemy]
       xp_reward: 60
-    
+
     - id: basic_stats
       type: analysis
       title: "Statistische Grundlagen"
       description: "Führe grundlegende statistische Analysen durch"
       skills_improved: [statistical_analysis]
       xp_reward: 50
-  
+
   intermediate:
     - id: trend_analysis
       type: analysis
@@ -176,14 +176,14 @@ example_tasks:
       description: "Führe tiefgreifende Trendanalysen durch"
       skills_improved: [statistical_analysis, business_intelligence]
       xp_reward: 180
-    
+
     - id: dashboard_design
       type: creation
       title: "Visions-Dashboard"
       description: "Erstelle ein interaktives Business-Dashboard"
       skills_improved: [data_visualization, visualization_magic]
       xp_reward: 200
-  
+
   advanced:
     - id: predictive_model
       type: creation
@@ -191,7 +191,7 @@ example_tasks:
       description: "Baue ein Vorhersagemodell"
       skills_improved: [machine_learning, predictive_statistics]
       xp_reward: 350
-    
+
     - id: real_time_system
       type: creation
       title: "Sofort-Orakel-System"

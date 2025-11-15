@@ -18,7 +18,7 @@ REDIS_RUNNING=$(docker ps | grep "ai-square-test-redis" | wc -l)
 if [ "$POSTGRES_RUNNING" -eq 0 ] || [ "$REDIS_RUNNING" -eq 0 ]; then
     echo "📦 Starting test services..."
     docker-compose -f docker-compose.test.yml up -d
-    
+
     echo "⏳ Waiting for services..."
     sleep 10
 else
@@ -44,4 +44,4 @@ if [ -n "$TEST_PATTERN" ]; then
 else
     echo "🧪 Running all integration tests"
     npm run test:integration
-fi 
+fi

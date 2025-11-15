@@ -35,7 +35,7 @@
    - 用戶驗證、數據驗證、程序創建、評估記錄、XP 獎勵、錯誤處理
    - 新增：Postgres 評估歸屬檢查（非本人 → throw）、userId 非 email 路徑、memoized 本地讀取只讀一次
 
-2. **Discovery Programs API** ✅ - **15 個全面測試**  
+2. **Discovery Programs API** ✅ - **15 個全面測試**
    - 認證、業務邏輯、技能差距分析、數據結構、時間戳、Repository patterns
    - 新增：`programRepo.create` 拋錯 500、`userRepo.findByEmail` 拋錯 500、`progress` 欄位 fallback（`careerReadiness`/`skillGapAnalysis`）
 
@@ -429,7 +429,7 @@ PBL 是主要學習模式之一，但檔案龐大：
    - `assessment/results/[id]/route.ts`: 29.34% → 80%
    - `discovery/programs/route.ts`: 60.16% → 90%
    - `chat/route.ts`: 72.93% → 85%
-   
+
 2. **Discovery API 完善** (~500行)
    - `scenarios/[id]/programs/route.ts`: 82.21% → 95%
    - `scenarios/[id]/programs/[programId]/route.ts`: 88.57% → 98%
@@ -443,7 +443,7 @@ PBL 是主要學習模式之一，但檔案龐大：
 1. **Discovery 任務執行 API** (最重要但複雜)
    - `tasks/[taskId]/route.ts`: 23.47% → 60% (438行)
    - 每個用戶的核心互動點
-   
+
 2. **Authentication 強化** (~300行)
    - `auth/login/route.ts`: 70.94% → 90%
    - `auth/archive-account/route.ts`: 73.52% → 90%
@@ -481,15 +481,15 @@ PBL 是主要學習模式之一，但檔案龐大：
 1. **優先測試高使用率功能**
    - 用戶必經的 API 路徑
    - 核心業務邏輯
-   
+
 2. **善用現有測試模板**
    - 複製類似測試檔案修改
    - 不要從零開始
-   
+
 3. **批次處理相似檔案**
    - API 路由測試模式相似
    - 一次處理同類型
-   
+
 4. **維持測試品質**
    - 不為覆蓋率寫無用測試
    - 專注實際業務場景

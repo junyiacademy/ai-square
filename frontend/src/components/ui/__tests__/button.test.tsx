@@ -12,10 +12,10 @@ describe('Button', () => {
   it('should handle click events', async () => {
     const handleClick = jest.fn();
     const user = userEvent.setup();
-    
+
     render(<Button onClick={handleClick}>Click me</Button>);
     await user.click(screen.getByRole('button'));
-    
+
     expect(handleClick).toHaveBeenCalledTimes(1);
   });
 
@@ -28,23 +28,23 @@ describe('Button', () => {
     const { rerender } = render(<Button variant="default">Default</Button>);
     let button = screen.getByRole('button');
     expect(button.className).toContain('bg-blue-600');
-    
+
     rerender(<Button variant="destructive">Destructive</Button>);
     button = screen.getByRole('button');
     expect(button.className).toContain('bg-red-600');
-    
+
     rerender(<Button variant="outline">Outline</Button>);
     button = screen.getByRole('button');
     expect(button.className).toContain('border');
-    
+
     rerender(<Button variant="secondary">Secondary</Button>);
     button = screen.getByRole('button');
     expect(button.className).toContain('bg-gray-200');
-    
+
     rerender(<Button variant="ghost">Ghost</Button>);
     button = screen.getByRole('button');
     expect(button.className).toContain('hover:bg-gray-100');
-    
+
     rerender(<Button variant="link">Link</Button>);
     button = screen.getByRole('button');
     expect(button.className).toContain('text-blue-600');
@@ -54,15 +54,15 @@ describe('Button', () => {
     const { rerender } = render(<Button size="default">Default</Button>);
     let button = screen.getByRole('button');
     expect(button.className).toContain('h-10');
-    
+
     rerender(<Button size="sm">Small</Button>);
     button = screen.getByRole('button');
     expect(button.className).toContain('h-9');
-    
+
     rerender(<Button size="lg">Large</Button>);
     button = screen.getByRole('button');
     expect(button.className).toContain('h-11');
-    
+
     rerender(<Button size="icon">Icon</Button>);
     button = screen.getByRole('button');
     expect(button.className).toContain('h-10');
@@ -83,15 +83,15 @@ describe('Button', () => {
 
   it('should pass through other props', () => {
     render(
-      <Button 
-        type="submit" 
+      <Button
+        type="submit"
         form="test-form"
         aria-label="Submit form"
       >
         Submit
       </Button>
     );
-    
+
     const button = screen.getByRole('button');
     expect(button).toHaveAttribute('type', 'submit');
     expect(button).toHaveAttribute('form', 'test-form');

@@ -37,7 +37,7 @@ export function processInstructions(
       return instructionText;
     }
   }
-  
+
   // Fallback to empty array
   return [];
 }
@@ -56,7 +56,7 @@ export function processDescription(
   if (typeof templateDescription === 'object' && templateDescription !== null) {
     return templateDescription[language] || templateDescription.en || '';
   }
-  
+
   return typeof templateDescription === 'string' ? templateDescription : '';
 }
 
@@ -74,6 +74,6 @@ export function processExpectedOutcome(
   if (typeof templateOutcome === 'object' && !Array.isArray(templateOutcome) && templateOutcome !== null) {
     return templateOutcome[language] || templateOutcome.en || '';
   }
-  
+
   return typeof templateOutcome === 'string' ? templateOutcome : '';
 }

@@ -24,11 +24,11 @@ export default function DomainRadarMini({ domainScores }: DomainRadarMiniProps) 
   const size = 120;
   const center = size / 2;
   const radius = size * 0.4;
-  
+
   // Four corners for square layout
   const angleStep = (2 * Math.PI) / 4;
   const startAngle = -Math.PI / 2; // Start from top
-  
+
   // Calculate points for the radar polygon
   const points = data.map((item, index) => {
     const angle = startAngle + index * angleStep;
@@ -37,7 +37,7 @@ export default function DomainRadarMini({ domainScores }: DomainRadarMiniProps) 
     const y = center + Math.sin(angle) * distance;
     return `${x},${y}`;
   }).join(' ');
-  
+
   // Background grid points (at 100% scale)
   const gridPoints = Array(4).fill(0).map((_, index) => {
     const angle = startAngle + index * angleStep;
@@ -53,7 +53,7 @@ export default function DomainRadarMini({ domainScores }: DomainRadarMiniProps) 
         <circle cx={center} cy={center} r={radius} fill="none" stroke="currentColor" strokeWidth="1" className="text-gray-200 dark:text-gray-700" />
         <circle cx={center} cy={center} r={radius * 0.66} fill="none" stroke="currentColor" strokeWidth="1" className="text-gray-200 dark:text-gray-700" strokeDasharray="2,2" />
         <circle cx={center} cy={center} r={radius * 0.33} fill="none" stroke="currentColor" strokeWidth="1" className="text-gray-200 dark:text-gray-700" strokeDasharray="2,2" />
-        
+
         {/* Grid lines from center */}
         {gridPoints.map((point, index) => (
           <line
@@ -67,7 +67,7 @@ export default function DomainRadarMini({ domainScores }: DomainRadarMiniProps) 
             className="text-gray-200 dark:text-gray-700"
           />
         ))}
-        
+
         {/* Data polygon */}
         <polygon
           points={points}
@@ -77,14 +77,14 @@ export default function DomainRadarMini({ domainScores }: DomainRadarMiniProps) 
           strokeWidth="2"
           className="text-blue-500 dark:text-blue-400"
         />
-        
+
         {/* Data points */}
         {data.map((item, index) => {
           const angle = startAngle + index * angleStep;
           const distance = (item.score / 100) * radius;
           const x = center + Math.cos(angle) * distance;
           const y = center + Math.sin(angle) * distance;
-          
+
           return (
             <circle
               key={index}
@@ -96,19 +96,19 @@ export default function DomainRadarMini({ domainScores }: DomainRadarMiniProps) 
             />
           );
         })}
-        
+
         {/* Labels */}
         {data.map((item, index) => {
           const angle = startAngle + index * angleStep;
           const labelDistance = radius + 15;
           const x = center + Math.cos(angle) * labelDistance;
           const y = center + Math.sin(angle) * labelDistance;
-          
+
           // Adjust text anchor based on position
           let textAnchor = 'middle';
           if (index === 1) textAnchor = 'start';
           else if (index === 3) textAnchor = 'end';
-          
+
           return (
             <text
               key={index}

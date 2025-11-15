@@ -461,9 +461,9 @@ describe('PostgreSQLUserRepository', () => {
 
       mockClient.query
         .mockResolvedValueOnce({ rows: [], command: 'BEGIN' }) // Transaction start
-        .mockResolvedValueOnce({ 
-          rows: [{ id: 'achievement-123', xp_reward: 50 }], 
-          command: 'SELECT' 
+        .mockResolvedValueOnce({
+          rows: [{ id: 'achievement-123', xp_reward: 50 }],
+          command: 'SELECT'
         }) // Achievement lookup
         .mockResolvedValueOnce({ rows: [], command: 'INSERT' }) // User achievement insert
         .mockResolvedValueOnce({ rows: [], command: 'UPDATE' }) // User XP update
@@ -499,9 +499,9 @@ describe('PostgreSQLUserRepository', () => {
 
       mockClient.query
         .mockResolvedValueOnce({ rows: [], command: 'BEGIN' })
-        .mockResolvedValueOnce({ 
-          rows: [{ id: 'achievement-123', xp_reward: 30 }], 
-          command: 'SELECT' 
+        .mockResolvedValueOnce({
+          rows: [{ id: 'achievement-123', xp_reward: 30 }],
+          command: 'SELECT'
         })
         .mockResolvedValueOnce({ rows: [], command: 'INSERT' }) // ON CONFLICT DO NOTHING
         .mockResolvedValueOnce({ rows: [], command: 'UPDATE' })
@@ -545,9 +545,9 @@ describe('PostgreSQLUserRepository', () => {
 
       mockClient.query
         .mockResolvedValueOnce({ rows: [], command: 'BEGIN' })
-        .mockResolvedValueOnce({ 
-          rows: [{ id: 'achievement-123', xp_reward: 25 }], 
-          command: 'SELECT' 
+        .mockResolvedValueOnce({
+          rows: [{ id: 'achievement-123', xp_reward: 25 }],
+          command: 'SELECT'
         })
         .mockRejectedValueOnce(new Error('Database constraint error'))
         .mockResolvedValueOnce({ rows: [], command: 'ROLLBACK' });
@@ -940,14 +940,14 @@ describe('PostgreSQLUserRepository', () => {
       });
 
       const result = await repository.findById('user-123');
-      
+
       expect(result).toBeDefined();
       // The actual behavior depends on how PostgreSQL handles invalid JSON
     });
 
     it('should handle very long email addresses', async () => {
       const longEmail = 'a'.repeat(250) + '@example.com';
-      
+
       (mockPool.query as jest.Mock).mockResolvedValue({
         rows: [],
         command: 'SELECT',
@@ -990,7 +990,7 @@ describe('PostgreSQLUserRepository', () => {
     });
 
     it('should handle concurrent updates gracefully', async () => {
-      // Simulate concurrent update scenario  
+      // Simulate concurrent update scenario
       (mockPool.query as jest.Mock)
         .mockRejectedValueOnce(new Error('Concurrent modification detected'));
 

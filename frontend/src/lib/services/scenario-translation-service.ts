@@ -43,7 +43,7 @@ export class ScenarioTranslationService {
     // Check cache first
     const cacheKey = `${scenario.sourceId}-${language}`;
     const cached = this.cache.get(cacheKey);
-    
+
     if (cached && this.timeProvider() - cached.timestamp < this.CACHE_TTL) {
       return cached.content;
     }
@@ -55,10 +55,10 @@ export class ScenarioTranslationService {
         return null;
       }
 
-      const baseDir = process.cwd().endsWith('/frontend') 
-        ? process.cwd() 
+      const baseDir = process.cwd().endsWith('/frontend')
+        ? process.cwd()
         : path.join(process.cwd(), 'frontend');
-      
+
       const filePath = path.join(
         baseDir,
         'public',
@@ -73,7 +73,7 @@ export class ScenarioTranslationService {
 
       // Extract translation content based on scenario type
       let translationContent: TranslationContent;
-      
+
       if (scenario.mode === 'assessment') {
         const config = (yamlData.assessment_config || yamlData.config || {}) as Record<string, unknown>;
         translationContent = {
@@ -116,7 +116,7 @@ export class ScenarioTranslationService {
     }
 
     const translation = await this.loadTranslation(scenario, language);
-    
+
     if (!translation) {
       // Return original with translation failed flag
       return {
@@ -131,11 +131,11 @@ export class ScenarioTranslationService {
     // Merge translation with original scenario
     return {
       ...scenario,
-      title: typeof translation.title === 'string' 
-        ? { [language]: translation.title } 
+      title: typeof translation.title === 'string'
+        ? { [language]: translation.title }
         : scenario.title,
-      description: typeof translation.description === 'string' 
-        ? { [language]: translation.description } 
+      description: typeof translation.description === 'string'
+        ? { [language]: translation.description }
         : scenario.description,
       metadata: {
         ...scenario.metadata,

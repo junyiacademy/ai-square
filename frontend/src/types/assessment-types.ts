@@ -84,8 +84,8 @@ export function toIInteraction(assessment: AssessmentInteraction): IInteraction 
  * Convert IInteraction to AssessmentInteraction for type safety
  */
 export function fromIInteraction(interaction: IInteraction): AssessmentInteraction | null {
-  if (interaction.type === 'system_event' && 
-      typeof interaction.content === 'object' && 
+  if (interaction.type === 'system_event' &&
+      typeof interaction.content === 'object' &&
       interaction.content !== null &&
       'eventType' in interaction.content &&
       interaction.content.eventType === 'assessment_answer') {

@@ -4,7 +4,7 @@
  */
 
 import { DiscoveryService } from '../discovery-service';
-import { 
+import {
   IDiscoveryRepository,
   IDiscoveryScenario,
   ICareerRecommendation,
@@ -142,7 +142,7 @@ describe('DiscoveryService', () => {
       // Arrange
       mockUserRepo.findById.mockResolvedValue(testUser);
       mockDiscoveryRepo.findCareerPathById.mockResolvedValue(testCareerScenario);
-      
+
       // Mock skill gap analysis
       jest.spyOn(service, 'analyzeSkillGaps').mockResolvedValue([
         {
@@ -227,7 +227,7 @@ describe('DiscoveryService', () => {
     it('should identify skill gaps accurately', async () => {
       // Arrange
       mockDiscoveryRepo.findCareerPathById.mockResolvedValue(testCareerScenario);
-      
+
       // Mock user skills
       const getUserSkillLevelsSpy = jest.spyOn(service as any, 'getUserSkillLevels');
       getUserSkillLevelsSpy.mockResolvedValue(new Map([
@@ -242,14 +242,14 @@ describe('DiscoveryService', () => {
 
       // Assert
       expect(skillGaps).toHaveLength(4);
-      
+
       // Check JavaScript gap
       const jsGap = skillGaps.find(gap => gap.skill === 'JavaScript');
       expect(jsGap).toBeDefined();
       expect(jsGap!.currentLevel).toBe(60);
       expect(jsGap!.requiredLevel).toBe(75); // intermediate level
       expect(jsGap!.importance).toBe('nice-to-have'); // Based on mock logic
-      
+
       // Check critical skills are sorted first
       const criticalSkills = skillGaps.filter(gap => gap.importance === 'critical');
       expect(criticalSkills[0]).toEqual(skillGaps[0]); // First item should be critical
@@ -258,7 +258,7 @@ describe('DiscoveryService', () => {
     it('should handle missing user skills', async () => {
       // Arrange
       mockDiscoveryRepo.findCareerPathById.mockResolvedValue(testCareerScenario);
-      
+
       // Mock empty user skills
       jest.spyOn(service as any, 'getUserSkillLevels')
         .mockResolvedValue(new Map());
@@ -335,7 +335,7 @@ describe('DiscoveryService', () => {
       const artifacts = [
         { type: 'code' as const, url: 'https://github.com/user/project' }
       ];
-      
+
       const mockPortfolioItem: IPortfolioItem = {
         id: uuidv4(),
         title: 'Task Portfolio Item',

@@ -34,7 +34,7 @@ export class MyApiHandler extends BaseApiHandler<RequestType, ResponseType> {
 // 使用範例
 export class MyStorageService extends BaseStorageService<DataType> {
   protected readonly serviceName = 'MyService';
-  
+
   protected async saveToStorage(key: string, data: DataType) {
     // 實作儲存邏輯
   }
@@ -121,7 +121,7 @@ export class UserApiHandler extends BaseApiHandler<UserRequest, UserResponse> {
     // 實作邏輯
     return userData;
   }
-  
+
   protected async validateGetRequest(request: NextRequest) {
     // 驗證邏輯
     return { valid: true };
@@ -140,7 +140,7 @@ import { BaseStorageService } from '@/lib/abstractions';
 
 export class UserStorageService extends BaseStorageService<User> {
   protected readonly serviceName = 'UserStorage';
-  
+
   protected async saveToStorage(key: string, data: User) {
     // 實作儲存邏輯
   }

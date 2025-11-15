@@ -22,8 +22,8 @@ describe('Assessment Page', () => {
     jest.clearAllMocks();
     (global.fetch as jest.Mock).mockResolvedValue({
       ok: true,
-      json: async () => ({ 
-        success: true, 
+      json: async () => ({
+        success: true,
         scenarios: [],
         questions: [],
         program: { id: 'test', status: 'active' },

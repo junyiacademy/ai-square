@@ -43,10 +43,10 @@ interface Program {
   };
 }
 
-export default function AssessmentProgramPage({ 
-  params 
-}: { 
-  params: Promise<{ id: string; programId: string }> 
+export default function AssessmentProgramPage({
+  params
+}: {
+  params: Promise<{ id: string; programId: string }>
 }) {
   const [program, setProgram] = useState<Program | null>(null);
   const [currentTask, setCurrentTask] = useState<Task | null>(null);
@@ -78,25 +78,25 @@ export default function AssessmentProgramPage({
     try {
       // Check if user is logged in via localStorage
       const sessionToken = localStorage.getItem('ai_square_session');
-      
+
       const headers: HeadersInit = {
         'Content-Type': 'application/json',
       };
-      
+
       if (sessionToken) {
         headers['x-session-token'] = sessionToken;
       }
-      
+
       const res = await authenticatedFetch(`/api/assessment/programs/${progId}`, {
         credentials: 'include', // Include cookies for authentication
         headers
       });
-      
+
       if (!res.ok) {
         console.error('Failed to load program:', res.status);
         return;
       }
-      
+
       const data = await res.json();
       console.log('Loaded program data:', data);
       console.log('Current task structure:', {
@@ -106,17 +106,17 @@ export default function AssessmentProgramPage({
         questionsLocation: data.currentTask?.content?.context?.questions ? 'context' : 'direct',
         questionsCount: data.currentTask?.content?.context?.questions?.length || data.currentTask?.content?.questions?.length || 0
       });
-      
+
       if (data.program) {
         setProgram(data.program);
         setCurrentTask(data.currentTask);
-        
+
         // Set tasks if available
         if (data.tasks) {
           setTasks(data.tasks);
           setCurrentTaskIndex(data.currentTaskIndex || 0);
         }
-        
+
         // Update language if program has language metadata
         if (data.program.metadata?.language && data.program.metadata.language !== i18n.language) {
           await i18n.changeLanguage(data.program.metadata.language);
@@ -155,9 +155,9 @@ export default function AssessmentProgramPage({
       const existingAnswerIds = currentTask?.interactions
         .filter((i) => i.type === 'assessment_answer')
         .map((i) => (i.content as Record<string, unknown>).questionId as string) || [];
-      
+
       const newAnswers = answers.filter(a => !existingAnswerIds.includes(a.questionId));
-      
+
       // Batch submit new answers
       if (newAnswers.length > 0) {
         await authenticatedFetch(`/api/assessment/programs/${programId}/batch-answers`, {
@@ -176,7 +176,7 @@ export default function AssessmentProgramPage({
           })
         });
       }
-      
+
       // Check if there are more tasks
       const nextTaskRes = await authenticatedFetch(`/api/assessment/programs/${programId}/next-task`, {
         method: 'POST',
@@ -188,9 +188,9 @@ export default function AssessmentProgramPage({
           currentTaskId: currentTask?.id
         })
       });
-      
+
       const nextTaskData = await nextTaskRes.json();
-      
+
       if (nextTaskData.complete) {
         // All tasks complete, finish the assessment
         await authenticatedFetch(`/api/assessment/programs/${programId}/complete`, {
@@ -201,7 +201,7 @@ export default function AssessmentProgramPage({
           credentials: 'include',
           body: JSON.stringify({})
         });
-        
+
         // Navigate to complete page
         router.push(`/assessment/scenarios/${scenarioId}/programs/${programId}/complete`);
       } else {
@@ -213,14 +213,14 @@ export default function AssessmentProgramPage({
           questionsInContext: nextTaskData.nextTask?.content?.context?.questions?.length || 0,
           questionsDirectly: nextTaskData.nextTask?.content?.questions?.length || 0
         });
-        
+
         // Prevent loading the same task
         if (nextTaskData.nextTask?.id === currentTask?.id) {
           console.error('Same task returned, preventing infinite loop');
           setSubmitting(false);
           return;
         }
-        
+
         setCurrentTask(nextTaskData.nextTask);
         setCurrentTaskIndex(nextTaskData.currentTaskIndex);
         setSubmitting(false);
@@ -244,7 +244,7 @@ export default function AssessmentProgramPage({
 
   // Get questions from either location (new structure or legacy)
   const questions = currentTask?.content?.context?.questions || currentTask?.content?.questions || [];
-  
+
   // Only show detailed debugging if not loading and there's an actual error
   if (!loading && currentTask && questions.length === 0) {
     console.log('=== ASSESSMENT PAGE DEBUG ===');
@@ -257,7 +257,7 @@ export default function AssessmentProgramPage({
     console.log('First question sample:', currentTask.content?.questions?.[0]);
     console.log('===========================');
   }
-  
+
   // Don't show error during loading - this prevents false error messages
   if (!loading && (!currentTask || questions.length === 0)) {
     const debugInfo = {
@@ -269,13 +269,13 @@ export default function AssessmentProgramPage({
       taskStructure: currentTask
     };
     console.error('Task validation failed:', JSON.stringify(debugInfo, null, 2));
-    
+
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <p className="text-red-600">{t('errorLoading')}</p>
           <p className="mt-2 text-gray-600 text-sm">
-            {!currentTask ? 'No task found' : 
+            {!currentTask ? 'No task found' :
              questions.length === 0 ? 'No questions available' :
              'Unknown error'}
           </p>
@@ -328,7 +328,7 @@ export default function AssessmentProgramPage({
               </div>
             </div>
           )}
-          
+
           <AssessmentQuiz
             questions={questions}
             domains={domains}

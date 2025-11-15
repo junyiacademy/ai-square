@@ -3,7 +3,7 @@
   "dashboard": {
     "title": "CMS Dashboard",
     "domains": "Domains",
-    "questions": "Questions", 
+    "questions": "Questions",
     "overrides": "Overrides",
     "drafts": "Drafts",
     "quickActions": "Quick Actions",
@@ -23,7 +23,7 @@
     "selectType": "Select content type to manage",
     "domains": "AI Literacy Domains",
     "domainsDesc": "Manage AI literacy framework domains and competencies",
-    "ksa": "KSA Codes", 
+    "ksa": "KSA Codes",
     "ksaDesc": "Manage Knowledge, Skills, and Attitudes codes",
     "scenarios": "PBL Scenarios",
     "scenariosDesc": "Manage Problem-Based Learning scenarios",

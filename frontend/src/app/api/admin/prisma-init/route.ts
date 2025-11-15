@@ -4,12 +4,12 @@ import bcrypt from 'bcryptjs';
 
 export async function POST() {
   console.log('🚀 Prisma initialization started...');
-  
+
   try {
     // Create Prisma client with explicit connection string
     const databaseUrl = process.env.DATABASE_URL;
     console.log('Database URL configured:', databaseUrl ? 'Yes' : 'No');
-    
+
     const prisma = new PrismaClient({
       datasources: {
         db: {
@@ -18,22 +18,22 @@ export async function POST() {
       },
       log: ['query', 'error', 'warn'],
     });
-    
+
     // Test connection
     console.log('Testing database connection...');
     const testResult = await prisma.$queryRaw`SELECT 1 as test`;
     console.log('Database connection test:', testResult);
-    
+
     // Check if tables exist
     const tables = await prisma.$queryRaw`
-      SELECT table_name 
-      FROM information_schema.tables 
-      WHERE table_schema = 'public' 
+      SELECT table_name
+      FROM information_schema.tables
+      WHERE table_schema = 'public'
       ORDER BY table_name;
     ` as Array<{ table_name: string }>;
-    
+
     console.log('Existing tables:', tables.map(t => t.table_name));
-    
+
     // If no tables, we need to run migrations manually
     if (tables.length === 0) {
       console.log('No tables found. Please run migrations first.');
@@ -43,7 +43,7 @@ export async function POST() {
         tables: []
       }, { status: 500 });
     }
-    
+
     // Check if users table exists
     const hasUsersTable = tables.some(t => t.table_name === 'users');
     if (!hasUsersTable) {
@@ -54,34 +54,34 @@ export async function POST() {
         tables: tables.map(t => t.table_name)
       }, { status: 500 });
     }
-    
+
     // Initialize demo users
     const demoUsers = [
-      { 
-        email: 'student@example.com', 
-        password: 'student123', 
-        role: 'student', 
+      {
+        email: 'student@example.com',
+        password: 'student123',
+        role: 'student',
         name: 'Student User'
       },
-      { 
-        email: 'teacher@example.com', 
-        password: 'teacher123', 
-        role: 'teacher', 
+      {
+        email: 'teacher@example.com',
+        password: 'teacher123',
+        role: 'teacher',
         name: 'Teacher User'
       },
-      { 
-        email: 'admin@example.com', 
-        password: 'admin123', 
-        role: 'admin', 
+      {
+        email: 'admin@example.com',
+        password: 'admin123',
+        role: 'admin',
         name: 'Admin User'
       }
     ];
-    
+
     const createdUsers = [];
-    
+
     for (const userData of demoUsers) {
       const passwordHash = await bcrypt.hash(userData.password, 10);
-      
+
       try {
         const user = await prisma.user.upsert({
           where: { email: userData.email },
@@ -107,7 +107,7 @@ export async function POST() {
             metadata: {}
           },
         });
-        
+
         createdUsers.push({
           email: user.email,
           role: user.role
@@ -117,12 +117,12 @@ export async function POST() {
         console.error(`Error with user ${userData.email}:`, userError);
       }
     }
-    
+
     // Get user count
     const userCount = await prisma.user.count();
-    
+
     await prisma.$disconnect();
-    
+
     return NextResponse.json({
       success: true,
       message: 'Prisma initialization completed',
@@ -133,7 +133,7 @@ export async function POST() {
         usersCreated: createdUsers
       }
     });
-    
+
   } catch (error) {
     console.error('Prisma initialization error:', error);
     return NextResponse.json({

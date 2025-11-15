@@ -7,12 +7,12 @@ metadata:
   title: "Alchimiste Produit - Product Manager"
   short_description: "Forgez des produits parfaits dans le creuset du marché"
   long_description: |
-    Vous êtes un alchimiste fraîchement diplômé de l'"Atelier d'Alchimie Produit", 
-    expert dans la fusion des besoins utilisateurs, des capacités techniques et 
-    des objectifs commerciaux en produits puissants. Dans cet atelier rempli 
-    d'étincelles d'innovation, chaque itération est une expérience alchimique, 
+    Vous êtes un alchimiste fraîchement diplômé de l'"Atelier d'Alchimie Produit",
+    expert dans la fusion des besoins utilisateurs, des capacités techniques et
+    des objectifs commerciaux en produits puissants. Dans cet atelier rempli
+    d'étincelles d'innovation, chaque itération est une expérience alchimique,
     et votre objectif est de créer des produits parfaits qui peuvent changer le monde.
-  
+
   estimated_hours: 55
   skill_focus:
     - requirement_alchemy
@@ -22,22 +22,22 @@ metadata:
 world_setting:
   name: "Atelier d'Alchimie Produit"
   description: |
-    L'Atelier d'Alchimie Produit est une forge magique où les idées sont transformées 
-    en produits réels. Ici, les product managers apprennent l'art ancien d'équilibrer 
-    les désirs des utilisateurs, les contraintes techniques et les objectifs 
+    L'Atelier d'Alchimie Produit est une forge magique où les idées sont transformées
+    en produits réels. Ici, les product managers apprennent l'art ancien d'équilibrer
+    les désirs des utilisateurs, les contraintes techniques et les objectifs
     commerciaux pour créer des produits qui résonnent avec des millions de personnes.
-  
+
   atmosphere: "dynamic_creative"
   visual_theme: "innovation_forge"
 starting_scenario:
   title: "Le Défi de l'Alchimiste"
   description: |
-    Maître Stratégie vous accueille dans l'atelier avec un avertissement : Délai, 
-    le Tyran du Temps, force les équipes à sacrifier la qualité du produit pour 
-    la vitesse. Pendant ce temps, la Voix des Utilisateurs devient plus forte 
-    avec des demandes contradictoires. Vous devez trouver la pierre philosophale 
+    Maître Stratégie vous accueille dans l'atelier avec un avertissement : Délai,
+    le Tyran du Temps, force les équipes à sacrifier la qualité du produit pour
+    la vitesse. Pendant ce temps, la Voix des Utilisateurs devient plus forte
+    avec des demandes contradictoires. Vous devez trouver la pierre philosophale
     du product management - équilibrer qualité, vitesse et satisfaction utilisateur.
-  
+
   initial_tasks:
     - understand_users
     - analyze_market

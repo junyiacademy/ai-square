@@ -59,47 +59,47 @@ describe('LanguageSelector', () => {
 
   it('changes language when option is selected', () => {
     const mockChangeLanguage = jest.fn()
-    
+
     jest.spyOn(require('react-i18next'), 'useTranslation').mockReturnValue({
       i18n: {
         language: 'en',
         changeLanguage: mockChangeLanguage,
       },
     })
-    
+
     render(<LanguageSelector />)
-    
+
     const select = screen.getByLabelText('選擇語言')
     fireEvent.change(select, { target: { value: 'zhTW' } })
-    
+
     expect(mockChangeLanguage).toHaveBeenCalledWith('zhTW')
   })
 
   it('saves language preference to localStorage', () => {
     render(<LanguageSelector />)
-    
+
     const select = screen.getByLabelText('選擇語言')
     fireEvent.change(select, { target: { value: 'zhCN' } })
-    
+
     expect(localStorage.getItem('ai-square-language')).toBe('zhCN')
   })
 
 
   it('dispatches custom event when language changes', () => {
     const mockDispatchEvent = jest.spyOn(window, 'dispatchEvent')
-    
+
     render(<LanguageSelector />)
-    
+
     const select = screen.getByLabelText('選擇語言')
     fireEvent.change(select, { target: { value: 'zhTW' } })
-    
+
     expect(mockDispatchEvent).toHaveBeenCalledWith(
       expect.objectContaining({
         type: 'language-changed',
         detail: { language: 'zhTW' },
       })
     )
-    
+
     mockDispatchEvent.mockRestore()
   })
 })

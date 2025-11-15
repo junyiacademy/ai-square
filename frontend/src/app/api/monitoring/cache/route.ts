@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
 
     // Default: return cache status
     const stats = await distributedCacheService.getStats();
-    
+
     return NextResponse.json({
       success: true,
       stats,

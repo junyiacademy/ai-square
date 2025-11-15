@@ -83,13 +83,13 @@ export default function DashboardPage() {
 
       // Then fetch from database (authoritative source)
       const response = await authenticatedFetch(`/api/assessment/results?userId=${encodeURIComponent(userData.id)}&userEmail=${encodeURIComponent(userData.email)}`);
-      
+
       if (response.ok) {
         const data = await response.json();
         if (data.results && data.results.length > 0) {
           // Use the most recent result
           const latestResult = data.results[0];
-          
+
           // Convert GCS format to local AssessmentResult format
           const assessmentResult: AssessmentResult = {
             overallScore: latestResult.scores.overall,
@@ -101,12 +101,12 @@ export default function DashboardPage() {
             completedAt: new Date(latestResult.timestamp),
             recommendations: latestResult.recommendations || []
           };
-          
+
           setAssessmentResult(assessmentResult);
-          
+
           // Update localStorage to keep it in sync
           localStorage.setItem('assessmentResult', JSON.stringify(assessmentResult));
-          
+
           // Load user data with database assessment status
           loadUserData(userData, true);
         } else {
@@ -145,7 +145,7 @@ export default function DashboardPage() {
 
     // Generate recent activities
     const activities: RecentActivity[] = [];
-    
+
     if (hasCompletedAssessment) {
       activities.push({
         id: 'assessment-1',

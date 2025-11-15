@@ -6,7 +6,7 @@ export function getPool(): Pool {
   if (!pool) {
     const dbHost = process.env.DB_HOST || '127.0.0.1';
     const isCloudSQL = dbHost.startsWith('/cloudsql/');
-    
+
     // Build config based on connection type
     const config: Record<string, unknown> = {
       database: process.env.DB_NAME || 'ai_square_db',
@@ -16,7 +16,7 @@ export function getPool(): Pool {
       idleTimeoutMillis: 30000,
       connectionTimeoutMillis: isCloudSQL ? 10000 : 5000,
     };
-    
+
     if (isCloudSQL) {
       // For Cloud SQL Unix socket connections
       config.host = dbHost;

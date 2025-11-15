@@ -1,6 +1,6 @@
 /**
  * useUserData Hook
- * 
+ *
  * This hook provides access to user data stored in GCS
  * Automatically handles authentication and migration from localStorage
  */
@@ -8,9 +8,9 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { UserDataServiceClient, createUserDataServiceClient } from '@/lib/services/user-data-service-client';
-import type { 
-  UserData, 
-  AssessmentResults, 
+import type {
+  UserData,
+  AssessmentResults,
   UserAchievements,
   AssessmentSession
 } from '@/lib/types/user-data';
@@ -20,25 +20,25 @@ interface UseUserDataReturn {
   userData: UserData | null;
   isLoading: boolean;
   error: string | null;
-  
+
   // Core operations
   loadUserData: () => Promise<void>;
   saveUserData: (data: UserData) => Promise<void>;
-  
+
   // Specific operations
   saveAssessmentResults: (results: AssessmentResults) => Promise<void>;
   saveAchievements: (achievements: UserAchievements) => Promise<void>;
-  
+
   // Assessment operations
   addAssessmentSession: (session: AssessmentSession) => Promise<void>;
   updateAchievements: (updates: Partial<UserAchievements>) => Promise<void>;
-  
+
   // Evaluation operations
   saveEvaluation: (type: string, id: string, data: Record<string, unknown>) => Promise<void>;
   loadEvaluation: (type: string, id: string) => Promise<Record<string, unknown> | null>;
   loadEvaluationsByType: (type: string) => Promise<Record<string, unknown>[]>;
   deleteEvaluation: (type: string, id: string) => Promise<void>;
-  
+
   // Utility operations
   clearAllData: () => Promise<void>;
   migrateFromLocalStorage: () => Promise<boolean>;
@@ -49,24 +49,24 @@ export function useUserData(): UseUserDataReturn {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+
   // Keep reference to current service
   const serviceRef = useRef<UserDataServiceClient | null>(null);
-  
+
   // Get or create service
   const getService = useCallback(() => {
     if (!user || !isLoggedIn) {
       return null;
     }
-    
+
     // Create new service if doesn't exist (client service doesn't need userId)
     if (!serviceRef.current) {
       serviceRef.current = createUserDataServiceClient();
     }
-    
+
     return serviceRef.current;
   }, [user, isLoggedIn]);
-  
+
   // Load user data
   const loadUserData = useCallback(async () => {
     const service = getService();
@@ -75,14 +75,14 @@ export function useUserData(): UseUserDataReturn {
       setIsLoading(false);
       return;
     }
-    
+
     setIsLoading(true);
     setError(null);
-    
+
     try {
       const data = await service.loadUserData();
       setUserData(data);
-      
+
       // If no data exists, try to migrate from localStorage
       if (!data && isLoggedIn) {
         console.log('No GCS data found, attempting migration...');
@@ -104,7 +104,7 @@ export function useUserData(): UseUserDataReturn {
       setIsLoading(false);
     }
   }, [getService, isLoggedIn]);
-  
+
   // Auto-load when user changes
   useEffect(() => {
     if (isLoggedIn && user?.email) {
@@ -116,14 +116,14 @@ export function useUserData(): UseUserDataReturn {
           setIsLoading(false);
           return;
         }
-        
+
         setIsLoading(true);
         setError(null);
-        
+
         try {
           const data = await service.loadUserData();
           setUserData(data);
-          
+
           // If no data exists, try to migrate from localStorage
           if (!data) {
             try {
@@ -143,7 +143,7 @@ export function useUserData(): UseUserDataReturn {
           setIsLoading(false);
         }
       };
-      
+
       loadData();
     } else {
       setUserData(null);
@@ -151,7 +151,7 @@ export function useUserData(): UseUserDataReturn {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggedIn, user?.email]); // Remove getService to break circular dependency
-  
+
   // Wrap all service methods to handle errors and update local state
   const wrapServiceMethod = useCallback(<T extends unknown[], R>(
     method: (service: UserDataServiceClient, ...args: T) => Promise<R>
@@ -162,13 +162,13 @@ export function useUserData(): UseUserDataReturn {
         console.warn('User not authenticated - skipping user data operation');
         throw new Error('User not authenticated');
       }
-      
+
       try {
         const result = await method(service, ...args);
-        
+
         // Don't reload data after operations - let components handle this
         // to avoid cascading API calls
-        
+
         return result;
       } catch (err) {
         console.error('Service method error:', err);
@@ -177,7 +177,7 @@ export function useUserData(): UseUserDataReturn {
       }
     };
   }, [getService]);
-  
+
   // Service methods
   const saveUserData = useCallback(async (data: UserData): Promise<void> => {
     const service = getService();
@@ -185,7 +185,7 @@ export function useUserData(): UseUserDataReturn {
       console.warn('User not authenticated - skipping user data operation');
       throw new Error('User not authenticated');
     }
-    
+
     try {
       await service.saveUserData(data);
       // Update local state to avoid reload
@@ -196,28 +196,28 @@ export function useUserData(): UseUserDataReturn {
       throw err;
     }
   }, [getService]);
-  
-  const saveAssessmentResults = wrapServiceMethod((service, results: AssessmentResults) => 
+
+  const saveAssessmentResults = wrapServiceMethod((service, results: AssessmentResults) =>
     service.saveAssessmentResults(results)
   );
-  
-  const saveAchievements = wrapServiceMethod((service, achievements: UserAchievements) => 
+
+  const saveAchievements = wrapServiceMethod((service, achievements: UserAchievements) =>
     service.saveAchievements(achievements)
   );
-  
-  const addAssessmentSession = wrapServiceMethod((service, session: AssessmentSession) => 
+
+  const addAssessmentSession = wrapServiceMethod((service, session: AssessmentSession) =>
     service.addAssessmentSession(session)
   );
-  
-  const updateAchievements = wrapServiceMethod((service, updates: Partial<UserAchievements>) => 
+
+  const updateAchievements = wrapServiceMethod((service, updates: Partial<UserAchievements>) =>
     service.updateAchievements(updates)
   );
-  
+
   // Evaluation methods
   const saveEvaluation = useCallback(async (type: string, id: string, data: Record<string, unknown>): Promise<void> => {
     const service = getService();
     if (!service) throw new Error('User not authenticated');
-    
+
     try {
       await service.saveEvaluation(type, id, data);
     } catch (err) {
@@ -225,11 +225,11 @@ export function useUserData(): UseUserDataReturn {
       throw err;
     }
   }, [getService]);
-  
+
   const loadEvaluation = useCallback(async (type: string, id: string): Promise<Record<string, unknown> | null> => {
     const service = getService();
     if (!service) return null;
-    
+
     try {
       return await service.loadEvaluation(type, id);
     } catch (err) {
@@ -237,11 +237,11 @@ export function useUserData(): UseUserDataReturn {
       return null;
     }
   }, [getService]);
-  
+
   const loadEvaluationsByType = useCallback(async (type: string): Promise<Record<string, unknown>[]> => {
     const service = getService();
     if (!service) return [];
-    
+
     try {
       return await service.loadEvaluationsByType(type);
     } catch (err) {
@@ -249,11 +249,11 @@ export function useUserData(): UseUserDataReturn {
       return [];
     }
   }, [getService]);
-  
+
   const deleteEvaluation = useCallback(async (type: string, id: string): Promise<void> => {
     const service = getService();
     if (!service) throw new Error('User not authenticated');
-    
+
     try {
       await service.deleteEvaluation(type, id);
     } catch (err) {
@@ -261,15 +261,15 @@ export function useUserData(): UseUserDataReturn {
       throw err;
     }
   }, [getService]);
-  
-  const clearAllData = wrapServiceMethod((service) => 
+
+  const clearAllData = wrapServiceMethod((service) =>
     service.clearAllData()
   );
-  
+
   const migrateFromLocalStorage = useCallback(async (): Promise<boolean> => {
     const service = getService();
     if (!service) return false;
-    
+
     try {
       return await service.migrateFromLocalStorage();
     } catch (err) {
@@ -277,31 +277,31 @@ export function useUserData(): UseUserDataReturn {
       return false;
     }
   }, [getService]);
-  
+
   return {
     // Data
     userData,
     isLoading,
     error,
-    
+
     // Core operations
     loadUserData,
     saveUserData,
-    
+
     // Specific operations
     saveAssessmentResults,
     saveAchievements,
-    
+
     // Assessment operations
     addAssessmentSession,
     updateAchievements,
-    
+
     // Evaluation operations
     saveEvaluation,
     loadEvaluation,
     loadEvaluationsByType,
     deleteEvaluation,
-    
+
     // Utility operations
     clearAllData,
     migrateFromLocalStorage,
@@ -312,9 +312,9 @@ export function useUserData(): UseUserDataReturn {
 export { useUserData as useUserDataV2 };
 
 // Re-export types for convenience
-export type { 
-  UserData, 
-  AssessmentResults, 
+export type {
+  UserData,
+  AssessmentResults,
   UserAchievements,
   AssessmentSession
 } from '@/lib/types/user-data';

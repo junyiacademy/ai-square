@@ -10,7 +10,7 @@ metadata:
     你是「網路防禦學院」的新兵，這是培訓數位戰士的精英訓練場。在這個數據
     是新黃金、駭客潛伏在網路每個陰影的世界中，你將學習保護關鍵基礎設施、
     追捕網路罪犯，並建立堅不可摧的數位堡壘。
-  
+
   estimated_hours: 65
   skill_focus:
     - threat_detection
@@ -24,7 +24,7 @@ world_setting:
   description: |
     網路防禦學院同時存在於實體和虛擬領域。學生在模擬網路攻擊中穿梭，向
     傳奇白帽駭客學習，為可能在幾秒內癱瘓國家或企業的真實威脅做準備。
-  
+
   atmosphere: "high_stakes_tactical"
   visual_theme: "matrix_fortress"
 
@@ -34,7 +34,7 @@ starting_scenario:
     防火牆指揮官向你簡報緊急情況：由神秘的 Zero Day 領導的惡名昭彰駭客
     集團「Shadow Byte」正計劃對全球基礎設施發動大規模攻擊。你必須快速
     掌握資安技能，加入防禦部隊，防止數位末日。
-  
+
   initial_tasks:
     - understand_threats
     - setup_defenses
@@ -49,7 +49,7 @@ skill_tree:
       unlocks:
         - firewall_configuration
         - intrusion_detection
-    
+
     - id: cryptography
       name: "密碼術"
       description: "精通加密和解密"
@@ -57,7 +57,7 @@ skill_tree:
       unlocks:
         - advanced_encryption
         - blockchain_security
-    
+
     - id: ethical_hacking
       name: "白帽軍械庫"
       description: "像攻擊者思考以防禦"
@@ -65,7 +65,7 @@ skill_tree:
       unlocks:
         - penetration_testing
         - vulnerability_assessment
-    
+
     - id: security_analysis
       name: "威脅情報"
       description: "分析並預測網路威脅"
@@ -80,13 +80,13 @@ skill_tree:
       description: "發現未知漏洞"
       max_level: 15
       requires: [ethical_hacking, security_analysis]
-    
+
     - id: ai_security
       name: "AI 防禦矩陣"
       description: "使用 AI 增強安全"
       max_level: 15
       requires: [network_security, cryptography]
-    
+
     - id: cyber_warfare
       name: "數位戰場"
       description: "防禦國家級攻擊"
@@ -103,7 +103,7 @@ milestone_quests:
     unlocks:
       - defender_badge
       - security_clearance_1
-  
+
   - id: shadow_byte_hack
     name: "潛入陰影"
     description: "滲透 Shadow Byte 並阻止攻擊"
@@ -113,7 +113,7 @@ milestone_quests:
     unlocks:
       - ghost_hacker_title
       - dark_web_access
-  
+
   - id: zero_day_showdown
     name: "終極防火牆"
     description: "在網路戰鬥中擊敗 Zero Day"
@@ -130,19 +130,19 @@ achievements:
     description: "修復你的第一個漏洞"
     xp_reward: 120
     badge_type: bronze
-  
+
   - id: threat_hunter
     name: "惡意軟體獵人"
     description: "偵測並消除 20 個威脅"
     xp_reward: 380
     badge_type: silver
-  
+
   - id: fortress_builder
     name: "堅不可摧"
     description: "建立無法被駭的安全系統"
     xp_reward: 720
     badge_type: gold
-  
+
   - id: cyber_guardian
     name: "數位救世主"
     description: "完成所有安全挑戰"
@@ -157,14 +157,14 @@ example_tasks:
       description: "審核並改善密碼安全"
       skills_improved: [cryptography, security_analysis]
       xp_reward: 70
-    
+
     - id: phishing_detection
       type: analysis
       title: "釣魚偵測器"
       description: "識別釣魚攻擊"
       skills_improved: [threat_detection, security_analysis]
       xp_reward: 80
-  
+
   intermediate:
     - id: penetration_test
       type: creation
@@ -172,14 +172,14 @@ example_tasks:
       description: "進行滲透測試"
       skills_improved: [ethical_hacking, network_defense]
       xp_reward: 210
-    
+
     - id: incident_response
       type: chat
       title: "危機指揮"
       description: "領導事件應變團隊"
       skills_improved: [incident_response, network_security]
       xp_reward: 240
-  
+
   advanced:
     - id: zero_day_discovery
       type: analysis
@@ -187,7 +187,7 @@ example_tasks:
       description: "發現零時差漏洞"
       skills_improved: [zero_day_hunting, ethical_hacking]
       xp_reward: 460
-    
+
     - id: ai_defense_system
       type: creation
       title: "智慧護盾"

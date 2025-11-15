@@ -19,28 +19,28 @@ export class IntegrationTestEnvironment {
 
   async setup() {
     if (this.isSetup) return;
-    
+
     console.log(`🚀 Setting up test environment: ${this.testDbName}`);
-    
+
     try {
       // 1. Create or connect database
       await this.createTestDatabase();
-      
+
       // 2. Wait for database to be ready
       await this.waitForDatabase();
-      
+
       // 3. Run migrations
       await this.runMigrations();
-      
+
       // 4. Setup Redis test instance
       await this.setupRedis();
-      
+
       // 5. Wait for Redis to be ready
       await this.waitForRedis();
-      
+
       // 6. Setup environment variables
       this.setupEnvironmentVariables();
-      
+
       this.isSetup = true;
       console.log('✅ Test environment ready');
     } catch (error) {
@@ -52,23 +52,23 @@ export class IntegrationTestEnvironment {
 
   async teardown() {
     console.log('🧹 Cleaning up test environment');
-    
+
     try {
       // Close connections
       if (this.dbPool) {
         await this.dbPool.end();
         this.dbPool = null;
       }
-      
+
       if (this.redisClient) {
         await this.redisClient.flushdb();
         await this.redisClient.quit();
         this.redisClient = null;
       }
-      
+
       // Drop test database
       await this.dropTestDatabase();
-      
+
       console.log('✅ Cleanup complete');
     } catch (error) {
       console.error('⚠️ Cleanup error:', error);
@@ -110,12 +110,12 @@ export class IntegrationTestEnvironment {
       await adminPool.query(
         `DROP DATABASE IF EXISTS "${this.testDbName}"`
       );
-      
+
       // Create new test database
       await adminPool.query(
         `CREATE DATABASE "${this.testDbName}"`
       );
-      
+
       console.log(`📦 Created test database: ${this.testDbName}`);
     } finally {
       await adminPool.end();
@@ -132,7 +132,7 @@ export class IntegrationTestEnvironment {
       idleTimeoutMillis: 30000,
       connectionTimeoutMillis: 2000,
     });
-    
+
     // Test the connection
     try {
       const client = await this.dbPool.connect();
@@ -151,25 +151,25 @@ export class IntegrationTestEnvironment {
 
     // Check if schema file exists
     const schemaPath = path.join(
-      process.cwd(), 
+      process.cwd(),
       'src/lib/repositories/postgresql/schema-v4.sql'
     );
-    
+
     if (!fs.existsSync(schemaPath)) {
       console.warn('⚠️ Schema file not found, using basic schema');
       await this.createBasicSchema();
       return;
     }
-    
+
     const sql = fs.readFileSync(schemaPath, 'utf8');
-    
+
     // Execute the full schema file in one go to preserve PL/pgSQL blocks
     try {
       await this.dbPool.query(sql);
     } catch (error: any) {
       console.error(`Error executing schema-v4.sql: ${error.message}`);
     }
-    
+
     // After base schema, also apply auth migration to add password/session related structures
     const authMigrationPath = path.join(
       process.cwd(),
@@ -201,7 +201,7 @@ export class IntegrationTestEnvironment {
     } catch (error: any) {
       console.error('Error ensuring compatibility sessions table:', error.message);
     }
-    
+
     console.log('📋 Migrations completed');
   }
 
@@ -213,38 +213,38 @@ export class IntegrationTestEnvironment {
       // Extensions
       `CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`,
       `CREATE EXTENSION IF NOT EXISTS "pgcrypto"`,
-      
+
       // Custom types
       `DO $$ BEGIN
         CREATE TYPE learning_mode AS ENUM ('pbl', 'discovery', 'assessment');
       EXCEPTION
         WHEN duplicate_object THEN null;
       END $$`,
-      
+
       `DO $$ BEGIN
         CREATE TYPE scenario_status AS ENUM ('draft', 'active', 'archived');
       EXCEPTION
         WHEN duplicate_object THEN null;
       END $$`,
-      
+
       `DO $$ BEGIN
         CREATE TYPE program_status AS ENUM ('pending', 'active', 'completed', 'expired');
       EXCEPTION
         WHEN duplicate_object THEN null;
       END $$`,
-      
+
       `DO $$ BEGIN
         CREATE TYPE task_type AS ENUM ('question', 'chat', 'creation', 'analysis');
       EXCEPTION
         WHEN duplicate_object THEN null;
       END $$`,
-      
+
       `DO $$ BEGIN
         CREATE TYPE task_status AS ENUM ('pending', 'active', 'completed');
       EXCEPTION
         WHEN duplicate_object THEN null;
       END $$`,
-      
+
       // Users table
       `CREATE TABLE IF NOT EXISTS users (
         id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -256,7 +256,7 @@ export class IntegrationTestEnvironment {
         created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
       )`,
-      
+
       // Scenarios table
       `CREATE TABLE IF NOT EXISTS scenarios (
         id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -278,7 +278,7 @@ export class IntegrationTestEnvironment {
         created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
       )`,
-      
+
       // Programs table
       `CREATE TABLE IF NOT EXISTS programs (
         id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -296,7 +296,7 @@ export class IntegrationTestEnvironment {
         created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
       )`,
-      
+
       // Tasks table
       `CREATE TABLE IF NOT EXISTS tasks (
         id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -319,7 +319,7 @@ export class IntegrationTestEnvironment {
         created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
       )`,
-      
+
       // Evaluations table
       `CREATE TABLE IF NOT EXISTS evaluations (
         id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -339,7 +339,7 @@ export class IntegrationTestEnvironment {
         created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
       )`,
-      
+
       // Verification tokens table
       `CREATE TABLE IF NOT EXISTS verification_tokens (
         id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -348,7 +348,7 @@ export class IntegrationTestEnvironment {
         expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
         created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
       )`,
-      
+
       // Sessions table
       `CREATE TABLE IF NOT EXISTS sessions (
         id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -357,7 +357,7 @@ export class IntegrationTestEnvironment {
         expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
         created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
       )`,
-      
+
       // Create indexes
       `CREATE INDEX IF NOT EXISTS idx_scenarios_mode ON scenarios(mode)`,
       `CREATE INDEX IF NOT EXISTS idx_programs_user_id ON programs(user_id)`,
@@ -383,7 +383,7 @@ export class IntegrationTestEnvironment {
   public async setupRedis() {
     // Check if Redis should be enabled for tests
     const redisEnabled = process.env.TEST_REDIS_ENABLED !== 'false';
-    
+
     if (!redisEnabled) {
       console.log('⏭️ Skipping Redis setup (TEST_REDIS_ENABLED=false)');
       return;
@@ -396,11 +396,11 @@ export class IntegrationTestEnvironment {
         db: 1, // Use different db index to avoid conflicts
         retryStrategy: () => null, // Don't retry if Redis is down
       });
-      
+
       // Test connection
       await this.redisClient.ping();
       await this.redisClient.flushdb();
-      
+
       console.log('🔴 Redis connected and cleared');
     } catch (error) {
       console.warn('⚠️ Redis connection failed, tests will run without cache');
@@ -491,12 +491,12 @@ export class IntegrationTestEnvironment {
         WHERE datname = '${this.testDbName}'
           AND pid <> pg_backend_pid()
       `);
-      
+
       // Drop database
       await adminPool.query(
         `DROP DATABASE IF EXISTS "${this.testDbName}"`
       );
-      
+
       console.log(`🗑️ Dropped test database: ${this.testDbName}`);
     } catch (error) {
       console.error('Error dropping database:', error);
@@ -506,18 +506,18 @@ export class IntegrationTestEnvironment {
   }
 
   // Getters for test access
-  getDbPool() { 
+  getDbPool() {
     if (!this.dbPool) {
       console.warn('Warning: Database pool is null');
     }
-    return this.dbPool; 
+    return this.dbPool;
   }
-  
-  getRedisClient() { 
-    return this.redisClient; 
+
+  getRedisClient() {
+    return this.redisClient;
   }
-  
-  getTestDbName() { 
-    return this.testDbName; 
+
+  getTestDbName() {
+    return this.testDbName;
   }
 }

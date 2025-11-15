@@ -7,11 +7,11 @@ metadata:
   title: "Digital Craftsman - App Developer"
   short_description: "Craft life-changing applications in the world of code"
   long_description: |
-    You are a new member of the "Digital Craftsmen Alliance," skilled at weaving 
-    practical and beautiful applications with code. In this workshop filled with logic 
-    and creativity, every line of code is a spell, and your goal is to create digital 
+    You are a new member of the "Digital Craftsmen Alliance," skilled at weaving
+    practical and beautiful applications with code. In this workshop filled with logic
+    and creativity, every line of code is a spell, and your goal is to create digital
     tools that make people's lives more convenient and better.
-  
+
   estimated_hours: 60
   skill_focus:
     - code_weaving
@@ -22,21 +22,21 @@ metadata:
 world_setting:
   name: "Digital Craftsmen Alliance"
   description: |
-    The Digital Craftsmen Alliance is a mysterious organization gathering top app 
-    developers. Here, code is treated as an art form, and developers learn to create 
+    The Digital Craftsmen Alliance is a mysterious organization gathering top app
+    developers. Here, code is treated as an art form, and developers learn to create
     applications that not only function flawlessly but also bring joy to users' daily lives.
-  
+
   atmosphere: "innovative_collaborative"
   visual_theme: "tech_workshop"
 
 starting_scenario:
   title: "Joining the Alliance"
   description: |
-    Master Code welcomes you to the alliance, but warns of a constant threat: Bug, 
-    the chaos demon, spreads errors and vulnerabilities in code. Meanwhile, Design 
-    and Code often conflict over priorities. You must use wisdom to balance technology 
+    Master Code welcomes you to the alliance, but warns of a constant threat: Bug,
+    the chaos demon, spreads errors and vulnerabilities in code. Meanwhile, Design
+    and Code often conflict over priorities. You must use wisdom to balance technology
     with aesthetics while keeping applications stable.
-  
+
   initial_tasks:
     - learn_fundamentals
     - choose_platform
@@ -51,7 +51,7 @@ skill_tree:
       unlocks:
         - advanced_patterns
         - clean_code
-    
+
     - id: ui_development
       name: "Interface Crafting"
       description: "Build beautiful user interfaces"
@@ -59,7 +59,7 @@ skill_tree:
       unlocks:
         - responsive_design
         - animation_magic
-    
+
     - id: backend_architecture
       name: "Logic Engineering"
       description: "Design robust backend systems"
@@ -67,7 +67,7 @@ skill_tree:
       unlocks:
         - api_design
         - database_mastery
-    
+
     - id: mobile_development
       name: "Mobile Sorcery"
       description: "Create native mobile experiences"
@@ -82,13 +82,13 @@ skill_tree:
       description: "Optimize apps for peak performance"
       max_level: 15
       requires: [programming_fundamentals, backend_architecture]
-    
+
     - id: security_mastery
       name: "Protection Spells"
       description: "Secure applications against threats"
       max_level: 15
       requires: [backend_architecture, mobile_development]
-    
+
     - id: ai_integration
       name: "Intelligence Infusion"
       description: "Integrate AI capabilities into apps"
@@ -105,7 +105,7 @@ milestone_quests:
     unlocks:
       - publisher_badge
       - user_feedback_access
-  
+
   - id: bug_hunter
     name: "Bug Slayer"
     description: "Create a bug-free app with perfect stability"
@@ -115,7 +115,7 @@ milestone_quests:
     unlocks:
       - stability_master_title
       - advanced_debugging_tools
-  
+
   - id: million_users
     name: "Million User App"
     description: "Create an app used by millions"
@@ -132,19 +132,19 @@ achievements:
     description: "Write your first working app"
     xp_reward: 100
     badge_type: bronze
-  
+
   - id: five_star_app
     name: "User Favorite"
     description: "Achieve 5-star rating on app store"
     xp_reward: 300
     badge_type: silver
-  
+
   - id: polyglot_developer
     name: "Code Polyglot"
     description: "Master 5 programming languages"
     xp_reward: 600
     badge_type: gold
-  
+
   - id: app_legend
     name: "Legendary Craftsman"
     description: "Complete all development challenges"
@@ -159,14 +159,14 @@ example_tasks:
       description: "Build a simple todo list app"
       skills_improved: [programming_fundamentals, ui_development]
       xp_reward: 70
-    
+
     - id: calculator_app
       type: creation
       title: "Digital Calculator"
       description: "Create a functional calculator"
       skills_improved: [programming_fundamentals, logic_architecture]
       xp_reward: 60
-  
+
   intermediate:
     - id: social_app
       type: creation
@@ -174,14 +174,14 @@ example_tasks:
       description: "Build a social networking app"
       skills_improved: [backend_architecture, mobile_development]
       xp_reward: 200
-    
+
     - id: game_app
       type: creation
       title: "Entertainment Spell"
       description: "Create an engaging mobile game"
       skills_improved: [ui_development, performance_optimization]
       xp_reward: 220
-  
+
   advanced:
     - id: ai_assistant
       type: creation
@@ -189,7 +189,7 @@ example_tasks:
       description: "Build an AI-powered assistant app"
       skills_improved: [ai_integration, backend_architecture]
       xp_reward: 400
-    
+
     - id: ar_experience
       type: creation
       title: "Reality Enhancer"

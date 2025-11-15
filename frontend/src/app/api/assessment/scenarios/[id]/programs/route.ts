@@ -2,9 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { learningServiceFactory } from '@/lib/services/learning-service-factory';
 import { getUnifiedAuth, createUnauthorizedResponse } from '@/lib/auth/unified-auth';
-import type { 
-  IProgram, 
-  IScenario, 
+import type {
+  IProgram,
+  IScenario,
   IEvaluation
 } from '@/types/unified-learning';
 // Removed unused imports
@@ -24,33 +24,33 @@ export async function GET(
   try {
     // Try to get user from authentication
     const session = await getUnifiedAuth(request);
-    
+
     if (!session?.user?.email) {
       // For security: require proper authentication
       return createUnauthorizedResponse();
     }
-    
+
     const userEmail = session.user.email;
-    
+
     // Await params before using
     const { id } = await params;
-    
+
     const programRepo = repositoryFactory.getProgramRepository();
     const userRepo = repositoryFactory.getUserRepository();
-    
+
     // Get user ID from email
     const user = await userRepo.findByEmail(userEmail);
     if (!user) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
-    
+
     // Get user programs efficiently
     const allUserPrograms = await programRepo.findByUser(user.id);
-    
+
     // Check if this is an assessment scenario
     const now = Date.now();
     const cached = scenarioCache.get(id);
-    
+
     let scenario: IScenario | null;
     if (cached && (now - cached.timestamp) < SCENARIO_CACHE_TTL) {
       scenario = cached.scenario;
@@ -58,29 +58,29 @@ export async function GET(
       // Quick check if this scenario is assessment type
       const scenarioRepo = repositoryFactory.getScenarioRepository();
       scenario = await scenarioRepo.findById(id);
-      
+
       // Cache the result
       if (scenario) {
         scenarioCache.set(id, { scenario, timestamp: now });
       }
     }
-    
+
     // Always filter by scenario ID to show only programs for this specific scenario
     const userPrograms = allUserPrograms.filter(p => p.scenarioId === id);
-    
+
     // Sort by startedAt (newest first)
-    userPrograms.sort((a, b) => 
+    userPrograms.sort((a, b) =>
       new Date(b.startedAt || b.createdAt).getTime() - new Date(a.startedAt || a.createdAt).getTime()
     );
-    
+
     // Optimize by batching evaluations for completed programs
     const evaluationRepo = repositoryFactory.getEvaluationRepository();
-    
+
     // Get all evaluation IDs from completed programs
     const evaluationIds = userPrograms
       .filter(p => p.status === 'completed' && p.metadata?.evaluationId)
       .map(p => p.metadata!.evaluationId!);
-    
+
     // Batch fetch evaluations
     const evaluationsMap = new Map<string, IEvaluation>();
     if (evaluationIds.length > 0) {
@@ -94,15 +94,15 @@ export async function GET(
         }
       });
     }
-    
+
     // Enrich programs with minimal async operations
     const enrichedPrograms = userPrograms.map((program) => {
       // Get cached evaluation if available
       const evaluationId = program.metadata?.evaluationId;
       const evaluation = (typeof evaluationId === 'string' && evaluationId)
-        ? evaluationsMap.get(evaluationId) 
+        ? evaluationsMap.get(evaluationId)
         : null;
-      
+
       // For active programs, we might need task count, but skip for now to improve performance
       const enrichedProgram = {
         ...program,
@@ -118,13 +118,13 @@ export async function GET(
           completedAt: program.completedAt || evaluation?.createdAt
         }
       };
-      
+
       return enrichedProgram;
     });
-    
-    return NextResponse.json({ 
+
+    return NextResponse.json({
       programs: enrichedPrograms,
-      totalCount: enrichedPrograms.length 
+      totalCount: enrichedPrograms.length
     });
   } catch (error) {
     console.error('Error getting programs:', error);
@@ -142,18 +142,18 @@ export async function POST(
   try {
     const body = await request.json();
     const { action, language = 'en' } = body;
-    
+
     // Try multiple authentication methods
     const session = await getUnifiedAuth(request);
     let email: string | null = null;
-    
+
     if (session?.user.email) {
       email = session.user.email;
     } else {
       // Fallback: Check for user cookie directly
       const cookies = request.cookies;
       const userCookie = cookies.get('user')?.value;
-      
+
       if (userCookie) {
         try {
           const userData = JSON.parse(userCookie);
@@ -164,28 +164,28 @@ export async function POST(
         }
       }
     }
-    
+
     if (!email) {
       console.log('No authentication found in session or cookies');
       return createUnauthorizedResponse();
     }
-    
+
     if (action !== 'start') {
       return NextResponse.json(
         { error: 'Invalid action' },
         { status: 400 }
       );
     }
-    
+
     // Await params before using
     const { id } = await params;
-    
+
     // Get repositories
     const scenarioRepo = repositoryFactory.getScenarioRepository();
     const programRepo = repositoryFactory.getProgramRepository();
     const taskRepo = repositoryFactory.getTaskRepository();
     const userRepo = repositoryFactory.getUserRepository();
-    
+
     // Get user by email
     let user = await userRepo.findByEmail(email);
     if (!user) {
@@ -196,7 +196,7 @@ export async function POST(
         preferredLanguage: language
       });
     }
-    
+
     // Get scenario
     const scenario = await scenarioRepo.findById(id);
     if (!scenario) {
@@ -205,7 +205,7 @@ export async function POST(
         { status: 404 }
       );
     }
-    
+
     // Check if scenario is assessment type
     if (scenario.mode !== 'assessment') {
       return NextResponse.json(
@@ -213,20 +213,20 @@ export async function POST(
         { status: 400 }
       );
     }
-    
+
     // Check if user already has an active program for this scenario
     const existingPrograms = await programRepo.findByUser(user.id);
-    const activeProgram = existingPrograms.find((p: IProgram) => 
+    const activeProgram = existingPrograms.find((p: IProgram) =>
       p.scenarioId === id && p.status === 'active'
     );
-    
+
     if (activeProgram) {
       console.log(`User ${email} already has an active program for scenario ${id}, returning existing`);
-      
+
       // Get tasks for the existing program
       const tasks = await taskRepo.findByProgram(activeProgram.id);
-      
-      return NextResponse.json({ 
+
+      return NextResponse.json({
         program: activeProgram,
         tasks,
         existing: true,
@@ -236,28 +236,28 @@ export async function POST(
         }, 0)
       });
     }
-    
+
     console.log('   Using Assessment Learning Service to start learning...');
     console.log('   User ID:', user.id);
     console.log('   Scenario ID:', id);
     console.log('   Language:', language);
-    
+
     // Use the new service layer
     const assessmentService = learningServiceFactory.getService('assessment');
-    
+
     try {
       const program = await assessmentService.startLearning(
         user.id,
         id,
         { language }
       );
-      
+
       console.log('   ✅ Program created with UUID:', program.id);
-      
+
       // Get created tasks
       const tasks = await taskRepo.findByProgram(program.id);
-      
-      return NextResponse.json({ 
+
+      return NextResponse.json({
         program,
         tasks,
         questionsCount: tasks.reduce((sum, t) => {

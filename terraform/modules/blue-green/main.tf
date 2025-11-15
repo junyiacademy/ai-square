@@ -8,7 +8,7 @@
 locals {
   blue_service_name  = "${var.service_name}-blue"
   green_service_name = "${var.service_name}-green"
-  
+
   # Determine which service is currently active
   active_service = var.active_color == "blue" ? local.blue_service_name : local.green_service_name
   inactive_service = var.active_color == "blue" ? local.green_service_name : local.blue_service_name
@@ -25,7 +25,7 @@ resource "google_cloud_run_service" "blue" {
     spec {
       containers {
         image = var.blue_image
-        
+
         dynamic "env" {
           for_each = var.env_vars
           content {
@@ -33,12 +33,12 @@ resource "google_cloud_run_service" "blue" {
             value = env.value
           }
         }
-        
+
         env {
           name  = "DEPLOYMENT_COLOR"
           value = "blue"
         }
-        
+
         resources {
           limits = {
             cpu    = var.cpu_limit
@@ -46,10 +46,10 @@ resource "google_cloud_run_service" "blue" {
           }
         }
       }
-      
+
       service_account_name = var.service_account_email
     }
-    
+
     metadata {
       annotations = merge(
         var.annotations,
@@ -58,7 +58,7 @@ resource "google_cloud_run_service" "blue" {
           "run.googleapis.com/startup-cpu-boost"   = "true"
         }
       )
-      
+
       labels = merge(
         var.labels,
         {
@@ -88,7 +88,7 @@ resource "google_cloud_run_service" "green" {
     spec {
       containers {
         image = var.green_image
-        
+
         dynamic "env" {
           for_each = var.env_vars
           content {
@@ -96,12 +96,12 @@ resource "google_cloud_run_service" "green" {
             value = env.value
           }
         }
-        
+
         env {
           name  = "DEPLOYMENT_COLOR"
           value = "green"
         }
-        
+
         resources {
           limits = {
             cpu    = var.cpu_limit
@@ -109,10 +109,10 @@ resource "google_cloud_run_service" "green" {
           }
         }
       }
-      
+
       service_account_name = var.service_account_email
     }
-    
+
     metadata {
       annotations = merge(
         var.annotations,
@@ -121,7 +121,7 @@ resource "google_cloud_run_service" "green" {
           "run.googleapis.com/startup-cpu-boost"   = "true"
         }
       )
-      
+
       labels = merge(
         var.labels,
         {
@@ -209,9 +209,9 @@ resource "null_resource" "health_check" {
   provisioner "local-exec" {
     command = <<-EOT
       echo "Checking health of ${var.active_color} deployment..."
-      
+
       ACTIVE_URL="${var.active_color == "blue" ? google_cloud_run_service.blue.status[0].url : google_cloud_run_service.green.status[0].url}"
-      
+
       for i in {1..30}; do
         if curl -sf "$${ACTIVE_URL}/api/health" > /dev/null 2>&1; then
           echo "✅ ${var.active_color} deployment is healthy!"
@@ -220,7 +220,7 @@ resource "null_resource" "health_check" {
         echo "Waiting for ${var.active_color} deployment... ($i/30)"
         sleep 10
       done
-      
+
       echo "❌ ${var.active_color} deployment health check failed!"
       exit 1
     EOT
@@ -232,22 +232,22 @@ resource "null_resource" "health_check" {
 # ============================================
 resource "null_resource" "canary_deployment" {
   count = var.enable_canary ? 1 : 0
-  
+
   depends_on = [null_resource.health_check]
 
   provisioner "local-exec" {
     command = <<-EOT
       echo "Starting canary deployment..."
-      
+
       # Get the inactive service URL
       INACTIVE_URL="${var.active_color == "blue" ? google_cloud_run_service.green.status[0].url : google_cloud_run_service.blue.status[0].url}"
-      
+
       # Test the inactive service
       if ! curl -sf "$${INACTIVE_URL}/api/health" > /dev/null 2>&1; then
         echo "❌ Inactive service health check failed!"
         exit 1
       fi
-      
+
       echo "✅ Inactive service is healthy, ready for traffic shift"
     EOT
   }

@@ -83,13 +83,13 @@ describe('Format Utilities', () => {
     it('should format byte sizes', () => {
       const formatBytes = (bytes: number, decimals = 2): string => {
         if (bytes === 0) return '0 Bytes';
-        
+
         const k = 1024;
         const dm = decimals < 0 ? 0 : decimals;
         const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-        
+
         const i = Math.floor(Math.log(bytes) / Math.log(k));
-        
+
         return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
       };
 
@@ -107,12 +107,12 @@ describe('Format Utilities', () => {
         const hours = Math.floor(seconds / 3600);
         const minutes = Math.floor((seconds % 3600) / 60);
         const secs = seconds % 60;
-        
+
         const parts = [];
         if (hours > 0) parts.push(`${hours}h`);
         if (minutes > 0) parts.push(`${minutes}m`);
         if (secs > 0 || parts.length === 0) parts.push(`${secs}s`);
-        
+
         return parts.join(' ');
       };
 
@@ -130,15 +130,15 @@ describe('Format Utilities', () => {
     it('should format US phone numbers', () => {
       const formatPhoneNumber = (phone: string): string => {
         const cleaned = phone.replace(/\D/g, '');
-        
+
         if (cleaned.length === 10) {
           return `(${cleaned.slice(0, 3)}) ${cleaned.slice(3, 6)}-${cleaned.slice(6)}`;
         }
-        
+
         if (cleaned.length === 11 && cleaned[0] === '1') {
           return `+1 (${cleaned.slice(1, 4)}) ${cleaned.slice(4, 7)}-${cleaned.slice(7)}`;
         }
-        
+
         return phone;
       };
 
@@ -202,7 +202,7 @@ describe('Format Utilities', () => {
     it('should format scores with appropriate precision', () => {
       const formatScore = (score: number, maxScore = 100): string => {
         const percentage = (score / maxScore) * 100;
-        
+
         if (percentage === 100) return '100%';
         if (percentage === 0) return '0%';
         if (percentage >= 10) return `${percentage.toFixed(0)}%`;

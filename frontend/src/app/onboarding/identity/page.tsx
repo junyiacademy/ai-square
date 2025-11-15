@@ -45,13 +45,13 @@ export default function IdentityPage() {
     if (!selectedIdentity) return
 
     setLoading(true)
-    
+
     try {
       // Get current user data
       const userData = localStorage.getItem('user')
       if (userData) {
         const user = JSON.parse(userData)
-        
+
         // Update user role based on selection
         const roleMap: { [key: string]: string } = {
           'student': 'student',
@@ -59,13 +59,13 @@ export default function IdentityPage() {
           'professional': 'professional',
           'learner': 'student' // Default learners to student role
         }
-        
+
         user.role = roleMap[selectedIdentity] || 'student'
         user.identity = selectedIdentity
-        
+
         // Save updated user data
         localStorage.setItem('user', JSON.stringify(user))
-        
+
         // Update progress in GCS
         await fetch('/api/users/update-progress', {
           method: 'POST',
@@ -79,7 +79,7 @@ export default function IdentityPage() {
           })
         })
       }
-      
+
       // Navigate to goals page
       router.push('/onboarding/goals')
     } catch (error) {
@@ -160,7 +160,7 @@ export default function IdentityPage() {
             {identityOptions.map((option) => {
               const isSelected = selectedIdentity === option.id
               const colors = getColorClasses(option.color, isSelected)
-              
+
               return (
                 <button
                   key={option.id}

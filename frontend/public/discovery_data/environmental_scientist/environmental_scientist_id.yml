@@ -7,10 +7,10 @@ metadata:
   title: "Penjaga Planet - Ilmuwan Lingkungan"
   short_description: "Lindungi Bumi melalui solusi lingkungan berbasis data"
   long_description: |
-    Anda adalah ilmuwan junior di "Pusat Respons Iklim Global," di mana sistem 
-    pemantauan bertenaga AI melacak kesehatan planet secara real-time. Dilengkapi 
-    dengan teknologi mutakhir dan pengetahuan ilmu lingkungan, Anda akan bekerja 
-    untuk memahami dan membalikkan kerusakan iklim sambil mengembangkan solusi 
+    Anda adalah ilmuwan junior di "Pusat Respons Iklim Global," di mana sistem
+    pemantauan bertenaga AI melacak kesehatan planet secara real-time. Dilengkapi
+    dengan teknologi mutakhir dan pengetahuan ilmu lingkungan, Anda akan bekerja
+    untuk memahami dan membalikkan kerusakan iklim sambil mengembangkan solusi
     berkelanjutan untuk masa depan.
   estimated_hours: 60
   skill_focus:
@@ -26,19 +26,19 @@ metadata:
 world_setting:
   name: "Pusat Respons Iklim Global"
   description: |
-    Pusat Respons Iklim Global adalah fasilitas berteknologi tinggi di mana ilmuwan 
-    lingkungan menggunakan AI, data satelit, dan penelitian lapangan untuk memantau 
-    dan melindungi ekosistem Bumi. Ilmuwan di sini berlomba dengan waktu untuk 
+    Pusat Respons Iklim Global adalah fasilitas berteknologi tinggi di mana ilmuwan
+    lingkungan menggunakan AI, data satelit, dan penelitian lapangan untuk memantau
+    dan melindungi ekosistem Bumi. Ilmuwan di sini berlomba dengan waktu untuk
     mengembangkan solusi sebelum titik kritis tercapai.
   atmosphere: urgent_hopeful
   visual_theme: eco_tech_fusion
 starting_scenario:
   title: "Kode Merah: Krisis Iklim"
   description: |
-    Dr. Gaia Bumi menyambut Anda dengan berita mengkhawatirkan: beberapa sistem 
-    lingkungan mendekati ambang kritis. Sementara itu, CEO Polluto dari MegaCorp 
-    terus melakukan praktik destruktif demi keuntungan. Anda harus menggunakan 
-    sains dan inovasi untuk menyelamatkan ekosistem sambil mengungkap kejahatan 
+    Dr. Gaia Bumi menyambut Anda dengan berita mengkhawatirkan: beberapa sistem
+    lingkungan mendekati ambang kritis. Sementara itu, CEO Polluto dari MegaCorp
+    terus melakukan praktik destruktif demi keuntungan. Anda harus menggunakan
+    sains dan inovasi untuk menyelamatkan ekosistem sambil mengungkap kejahatan
     lingkungan korporat.
   initial_tasks:
     - analyze_climate_data

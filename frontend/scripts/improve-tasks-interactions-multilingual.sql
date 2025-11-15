@@ -50,7 +50,7 @@ $$ LANGUAGE plpgsql;
 
 -- 3. 創建視圖來方便查詢特定語言的互動內容
 CREATE OR REPLACE VIEW task_interactions_view AS
-SELECT 
+SELECT
     t.id as task_id,
     t.program_id,
     i.value->>'id' as interaction_id,
@@ -75,7 +75,7 @@ CREATE OR REPLACE FUNCTION get_task_interactions_by_language(
 ) AS $$
 BEGIN
     RETURN QUERY
-    SELECT 
+    SELECT
         (i.value->>'id')::UUID,
         i.value->>'type',
         COALESCE(

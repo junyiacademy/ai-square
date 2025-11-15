@@ -60,14 +60,14 @@ export async function GET(
   } catch (error) {
     console.error('Get branch diff error:', error);
     const octokitError = error as OctokitError;
-    
+
     if (octokitError.status === 404) {
       return NextResponse.json(
         { error: 'Branch not found' },
         { status: 404 }
       );
     }
-    
+
     return NextResponse.json(
       { error: 'Failed to get branch diff' },
       { status: 500 }

@@ -10,7 +10,7 @@ metadata:
     你是「創意帝國」的新晉魔法師，擁有將想法轉化為病毒式內容的神秘力量。
     在這個數位王國中，每個讚數和分享都是魔力的證明，而你的導師 Luna 將
     教你掌握演算法的奧秘。
-  
+
   estimated_hours: 50
   skill_focus:
     - content_magic
@@ -23,7 +23,7 @@ world_setting:
   description: |
     創意帝國是一個由創意能量驅動的數位王國。內容創作者在此學習掌控演算法、
     互動和病毒式傳播的神秘力量，建立自己的影響力並觸動數百萬人的生活。
-  
+
   atmosphere: "vibrant_magical"
   visual_theme: "digital_fantasy"
 
@@ -33,7 +33,7 @@ starting_scenario:
     創意導師 Luna 帶著緊急消息歡迎你：墮落魔法師 Shadow 正在使用禁忌魔法
     散布虛假內容，威脅創意帝國的和諧。你必須用真實的創意力量對抗他的黑暗
     影響力。
-  
+
   initial_tasks:
     - understand_algorithms
     - learn_content_basics
@@ -48,7 +48,7 @@ skill_tree:
       unlocks:
         - trend_analysis
         - audience_targeting
-    
+
     - id: visual_creation
       name: "視覺魔法"
       description: "創造引人注目的視覺內容"
@@ -56,7 +56,7 @@ skill_tree:
       unlocks:
         - photo_magic
         - video_enchantment
-    
+
     - id: storytelling
       name: "敘事編織"
       description: "打造引人入勝的故事"
@@ -64,7 +64,7 @@ skill_tree:
       unlocks:
         - emotional_resonance
         - viral_mechanics
-    
+
     - id: community_building
       name: "部落召喚"
       description: "建立並經營社群"
@@ -79,13 +79,13 @@ skill_tree:
       description: "理解並駕馭平台演算法"
       max_level: 15
       requires: [content_strategy, community_building]
-    
+
     - id: monetization_magic
       name: "收益煉金術"
       description: "將內容轉化為收入"
       max_level: 15
       requires: [community_building, visual_creation]
-    
+
     - id: brand_building
       name: "帝國建設"
       description: "建立強大的個人品牌"
@@ -102,7 +102,7 @@ milestone_quests:
     unlocks:
       - viral_creator_badge
       - algorithm_insights
-  
+
   - id: shadow_confrontation
     name: "真相對抗欺騙"
     description: "擊敗 Shadow 的假訊息活動"
@@ -112,7 +112,7 @@ milestone_quests:
     unlocks:
       - truth_guardian_title
       - authentic_voice
-  
+
   - id: empire_builder
     name: "創意帝國"
     description: "建立擁有百萬追蹤者的內容帝國"
@@ -129,19 +129,19 @@ achievements:
     description: "創造你的第一個內容"
     xp_reward: 50
     badge_type: bronze
-  
+
   - id: engagement_master
     name: "社群冠軍"
     description: "達到 1 萬次總互動"
     xp_reward: 200
     badge_type: silver
-  
+
   - id: consistency_king
     name: "每日魔法師"
     description: "連續 30 天發布內容"
     xp_reward: 400
     badge_type: gold
-  
+
   - id: content_legend
     name: "傳奇創作者"
     description: "完成所有內容挑戰"
@@ -156,14 +156,14 @@ example_tasks:
       description: "研發能夠觸動人心的內容魔法配方"
       skills_improved: [content_strategy, storytelling]
       xp_reward: 50
-    
+
     - id: visual_basics
       type: creation
       title: "視覺咒語練習"
       description: "創造你的第一個視覺內容"
       skills_improved: [visual_creation, content_magic]
       xp_reward: 60
-  
+
   intermediate:
     - id: engagement_analysis
       type: analysis
@@ -171,14 +171,14 @@ example_tasks:
       description: "分析內容表現和觀眾行為"
       skills_improved: [algorithm_mastery, community_building]
       xp_reward: 150
-    
+
     - id: series_creation
       type: creation
       title: "傳奇編織"
       description: "創造內容系列"
       skills_improved: [storytelling, brand_building]
       xp_reward: 180
-  
+
   advanced:
     - id: viral_campaign
       type: creation
@@ -186,7 +186,7 @@ example_tasks:
       description: "發起病毒式內容活動"
       skills_improved: [algorithm_mastery, viral_mechanics]
       xp_reward: 350
-    
+
     - id: monetization_setup
       type: creation
       title: "黃金轉化"

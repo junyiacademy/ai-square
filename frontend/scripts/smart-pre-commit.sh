@@ -33,19 +33,19 @@ for file in $STAGED_FILES; do
     if [[ "$file" =~ \.(ts|tsx|js|jsx)$ ]]; then
         HAS_TS_FILES=true
         HAS_DOCS_ONLY=false
-        
+
         # Check if it's a test file
         if [[ "$file" =~ \.(test|spec)\.(ts|tsx|js|jsx)$ ]]; then
             HAS_TEST_FILES=true
         fi
     fi
-    
+
     # Check if it's a config file
     if [[ "$file" =~ (package\.json|tsconfig|eslint|jest\.config) ]]; then
         HAS_CONFIG_FILES=true
         HAS_DOCS_ONLY=false
     fi
-    
+
     # Check if non-documentation file
     if [[ ! "$file" =~ \.(md|txt|yml|yaml|sh)$ ]]; then
         HAS_DOCS_ONLY=false
@@ -84,7 +84,7 @@ if [ "$HAS_TS_FILES" = true ] || [ "$HAS_CONFIG_FILES" = true ]; then
     echo ""
     echo -e "${BLUE}📝 Checking TypeScript...${NC}"
     npm run typecheck
-    
+
     echo ""
     echo -e "${BLUE}🔧 Running ESLint...${NC}"
     npm run lint
@@ -94,14 +94,14 @@ fi
 if [ "$HAS_TEST_FILES" = true ] || [ "$HAS_TS_FILES" = true ]; then
     # Check if it's a minor change
     CHANGED_LINES=$(git diff --cached --stat | tail -1 | awk '{print $4}')
-    
+
     if [ -z "$CHANGED_LINES" ]; then
         CHANGED_LINES=0
     fi
-    
+
     echo ""
     echo "  Changed lines: $CHANGED_LINES"
-    
+
     # Skip tests for very minor changes (< 20 lines)
     if [ "$CHANGED_LINES" -lt 20 ] && [ "$SKIP_MINOR_TESTS" != "false" ]; then
         echo -e "${YELLOW}⚠️  Minor change (<20 lines) - skipping tests${NC}"

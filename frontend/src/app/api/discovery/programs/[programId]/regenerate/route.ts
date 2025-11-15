@@ -13,14 +13,14 @@ export async function POST(
     if (!session?.user?.email) {
       return createUnauthorizedResponse();
     }
-    
+
     const { programId } = await params;
-    
+
     const programRepo = repositoryFactory.getProgramRepository();
     const taskRepo = repositoryFactory.getTaskRepository();
     const evaluationRepo = repositoryFactory.getEvaluationRepository();
     const scenarioRepo = repositoryFactory.getScenarioRepository();
-    
+
     // Get program
     const program = await programRepo.findById(programId);
     if (!program || program.userId !== session.user.id) {
@@ -29,19 +29,19 @@ export async function POST(
         { status: 404 }
       );
     }
-    
+
     // Get all tasks
     const tasks = await taskRepo.findByProgram(programId);
     const completedTasks = tasks.filter(t => t.status === 'completed');
-    
+
     console.log('Regenerating evaluation for program:', programId);
     console.log('Tasks found:', tasks.length, 'Completed:', completedTasks.length);
-    
+
     // Calculate metrics from task evaluations
     let totalXP = 0;
     let totalScore = 0;
     let validScoreCount = 0;
-    
+
     // Create task evaluations array
     const taskEvaluations = completedTasks.map(task => {
       const taskWithExtras = task as { evaluation?: { score?: number; metadata?: { skillsImproved?: string[] } }; interactions?: { type: string }[] };
@@ -49,13 +49,13 @@ export async function POST(
       const xp = taskWithExtras.evaluation?.score || 0; // Using score as XP
       const attempts = taskWithExtras.interactions?.filter(i => i.type === 'user_input').length || 1;
       const skills = taskWithExtras.evaluation?.metadata?.skillsImproved || [];
-      
+
       if (score > 0) {
         totalXP += xp;
         totalScore += score;
         validScoreCount++;
       }
-      
+
       return {
         taskId: task.id,
         taskTitle: task.title || 'Task',
@@ -66,9 +66,9 @@ export async function POST(
         skillsImproved: skills
       };
     });
-    
+
     const avgScore = validScoreCount > 0 ? Math.round(totalScore / validScoreCount) : 0;
-    
+
     // Calculate time spent from interactions
     const timeSpentSeconds = completedTasks.reduce((sum, task) => {
       const taskWithInteractions = task as { interactions?: { context?: { timeSpent?: number } }[] };
@@ -79,7 +79,7 @@ export async function POST(
       }, 0);
       return sum + time;
     }, 0);
-    
+
     // Calculate days used
     let daysUsed = 0;
     if ((program.createdAt || program.startedAt) && completedTasks.length > 0) {
@@ -91,37 +91,37 @@ export async function POST(
         }
         return latest;
       }, startDate);
-      
+
       const timeDiff = lastCompletionDate.getTime() - startDate.getTime();
       daysUsed = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
     }
-    
+
     console.log('Calculated metrics:', {
       totalXP,
       avgScore,
       timeSpentSeconds,
       daysUsed
     });
-    
+
     // Get scenario info
     const scenario = await scenarioRepo.findById(program.scenarioId);
     const careerType = (program.metadata?.careerType as string) || (scenario?.metadata?.careerType as string) || 'general';
-    
+
     // Get user's preferred language from request or program
     const acceptLanguage = request.headers.get('accept-language')?.split(',')[0];
     const userLanguage: string = acceptLanguage || (program.metadata?.language as string) || 'en';
-    
+
     // Generate qualitative feedback based on all task completions
     let qualitativeFeedback: Record<string, unknown> | null = null;
     const qualitativeFeedbackVersions: Record<string, Record<string, unknown> | string> = {};
-    
+
     try {
       const aiService = new VertexAIService({
         systemPrompt: 'You are an educational psychologist specializing in career development and AI-powered learning.',
         temperature: 0.8,
         model: 'gemini-2.5-flash'
       });
-      
+
       // Prepare learning journey summary
       const learningJourney = completedTasks.map(task => {
         const taskWithExtras = task as { evaluation?: { score?: number; feedback?: string; metadata?: { skillsImproved?: string[] } }; interactions?: { type: string }[] };
@@ -134,7 +134,7 @@ export async function POST(
           skills: taskWithExtras.evaluation?.metadata?.skillsImproved || []
         };
       });
-      
+
       const feedbackPrompt = `
 Based on the following Discovery learning journey in the ${careerType} career path, provide a comprehensive qualitative assessment:
 
@@ -167,18 +167,18 @@ Return your response in JSON format:
 }`;
 
       const aiResponse = await aiService.sendMessage(feedbackPrompt);
-      
+
       try {
         const jsonMatch = aiResponse.content.match(/\{[\s\S]*\}/);
         if (jsonMatch) {
           qualitativeFeedback = JSON.parse(jsonMatch[0]) as Record<string, unknown>;
-          
+
           // Store the generated feedback in the user's language
           if (qualitativeFeedback) {
             const feedback = qualitativeFeedback as Record<string, unknown>;
             qualitativeFeedbackVersions[userLanguage] = feedback;
           }
-          
+
           // If not English, also generate English version for storage
           if (userLanguage !== 'en') {
             try {
@@ -191,17 +191,17 @@ Return your response in JSON format:
                   qualitativeFeedback.careerAlignment as string, 'en', careerType
                 ),
                 strengths: await Promise.all(
-                  (qualitativeFeedback.strengths as string[]).map((s: string) => 
+                  (qualitativeFeedback.strengths as string[]).map((s: string) =>
                     translationService.translateFeedback(s, 'en', careerType)
                   )
                 ),
                 growthAreas: await Promise.all(
-                  (qualitativeFeedback.growthAreas as string[]).map((g: string) => 
+                  (qualitativeFeedback.growthAreas as string[]).map((g: string) =>
                     translationService.translateFeedback(g, 'en', careerType)
                   )
                 ),
                 nextSteps: await Promise.all(
-                  (qualitativeFeedback.nextSteps as string[]).map((n: string) => 
+                  (qualitativeFeedback.nextSteps as string[]).map((n: string) =>
                     translationService.translateFeedback(n, 'en', careerType)
                   )
                 )
@@ -222,18 +222,18 @@ Return your response in JSON format:
     } catch (error) {
       console.error('Error generating qualitative feedback:', error);
     }
-    
+
     // Find existing evaluations
     const evaluations = await evaluationRepo.findByProgram(programId);
     const existingEvaluation = evaluations.find(e => e.evaluationType === 'discovery_complete');
-    
+
     if (existingEvaluation) {
       // Note: Evaluation repository doesn't have an update method
       // In a real implementation, you might want to create a new evaluation
       // or implement an update method in the repository
       console.log('Existing evaluation found:', existingEvaluation.id);
       console.log('Note: Update method not available in evaluation repository');
-      
+
       // Update program metadata
       await programRepo.update?.(programId, {
         metadata: {
@@ -242,7 +242,7 @@ Return your response in JSON format:
           finalScore: avgScore
         }
       });
-      
+
       return NextResponse.json({
         success: true,
         message: 'Evaluation regenerated successfully',
@@ -257,7 +257,7 @@ Return your response in JSON format:
     } else {
       // Create new evaluation if none exists
       console.log('Creating new evaluation (none exists)');
-      
+
       const evaluation = await evaluationRepo.create({
         userId: session.user.id,
         programId: programId,
@@ -268,8 +268,8 @@ Return your response in JSON format:
         maxScore: 100,
         timeTakenSeconds: timeSpentSeconds,
         domainScores: {},
-        feedbackText: typeof qualitativeFeedbackVersions['en'] === 'string' 
-          ? qualitativeFeedbackVersions['en'] 
+        feedbackText: typeof qualitativeFeedbackVersions['en'] === 'string'
+          ? qualitativeFeedbackVersions['en']
           : JSON.stringify(qualitativeFeedbackVersions['en'] || qualitativeFeedback || {}),
         feedbackData: qualitativeFeedbackVersions,
         aiAnalysis: {},
@@ -291,7 +291,7 @@ Return your response in JSON format:
           completedAt: new Date().toISOString()
         }
       });
-      
+
       // Update program to reference the new evaluation
       await programRepo.update?.(programId, {
         metadata: {
@@ -301,7 +301,7 @@ Return your response in JSON format:
           finalScore: avgScore
         }
       });
-      
+
       return NextResponse.json({
         success: true,
         message: 'Evaluation created successfully',

@@ -1,6 +1,6 @@
 /**
  * Learning Service Factory
- * 
+ *
  * 統一管理所有學習服務的創建
  * 實現策略模式，根據學習模式返回對應的服務
  */
@@ -31,7 +31,7 @@ export class LearningServiceFactory implements ILearningServiceFactory {
     // Note: AssessmentLearningService 需要適配 BaseLearningService 介面
     // 這裡暫時使用 adapter pattern
     this.services.set('assessment', this.createAssessmentAdapter());
-    
+
     // 實作其他服務
     this.services.set('pbl', new PBLLearningService());
     this.services.set('discovery', new DiscoveryLearningService());
@@ -51,12 +51,12 @@ export class LearningServiceFactory implements ILearningServiceFactory {
    */
   private createAssessmentAdapter(): BaseLearningService {
     const assessmentService = new AssessmentLearningService();
-    
+
     return {
       async startLearning(userId, scenarioId, options) {
         return assessmentService.startAssessment(
-          userId, 
-          scenarioId, 
+          userId,
+          scenarioId,
           options?.language || 'en'
         );
       },
@@ -85,7 +85,7 @@ export class LearningServiceFactory implements ILearningServiceFactory {
           response.questionId as string,
           response.answer as string
         );
-        
+
         return {
           taskId,
           success: true,

@@ -37,7 +37,7 @@ domains:
 
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     // Setup default mocks
     mockPath.join.mockImplementation((...args) => args.join('/'));
     process.cwd = jest.fn().mockReturnValue('/test/project');
@@ -107,7 +107,7 @@ domains:
       mockYaml.load.mockReturnValue(mockParsedData);
 
       const result = yamlLoader.load<TestData>('test.yaml');
-      
+
       expect(result).toEqual(mockParsedData);
       expect(result?.domains.test_domain.name).toBe('Test Domain');
     });
@@ -175,7 +175,7 @@ domains:
       mockYaml.load.mockReturnValue(mockParsedData);
 
       const result = await yamlLoader.loadAsync<TestData>('test.yaml');
-      
+
       expect(result).toEqual(mockParsedData);
       expect(result?.domains.test_domain.name).toBe('Test Domain');
     });

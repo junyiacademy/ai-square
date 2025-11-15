@@ -7,10 +7,10 @@ metadata:
   title: "생명코드 설계자 - 바이오테크놀로지 연구원"
   short_description: "AI와 바이오테크놀로지로 생명의 비밀을 풀어내세요"
   long_description: |
-    당신은 생물학과 인공지능의 경계가 흐려지는 곳, "바이오신세시스 연구소"의 
-    주니어 연구원입니다. AI 도구와 유전공학 기술로 무장하여 생명의 기본 코드를 
+    당신은 생물학과 인공지능의 경계가 흐려지는 곳, "바이오신세시스 연구소"의
+    주니어 연구원입니다. AI 도구와 유전공학 기술로 무장하여 생명의 기본 코드를
     탐구하고, 의학, 농업, 인간 향상을 혁신적으로 변화시킬 솔루션을 창조합니다.
-  
+
   estimated_hours: 70
   skill_focus:
     - genetic_engineering
@@ -23,22 +23,22 @@ world_setting:
   name: "바이오신세시스 연구소"
   description: |
     바이오신세시스 연구소는 생물학과 인공지능이 만나는 최첨단 연구 시설입니다.
-    이곳의 연구원들은 AI를 사용하여 유전자의 미스터리를 해독하고, 새로운 생물체를 
-    설계하며, 심오한 윤리적 질문과 씨름하면서 바이오테크놀로지의 가능성의 한계를 
+    이곳의 연구원들은 AI를 사용하여 유전자의 미스터리를 해독하고, 새로운 생물체를
+    설계하며, 심오한 윤리적 질문과 씨름하면서 바이오테크놀로지의 가능성의 한계를
     넓혀나갑니다.
-  
+
   atmosphere: "scientific_innovative"
   visual_theme: "biotech_laboratory"
 
 starting_scenario:
   title: "살아있는 알고리즘"
   description: |
-    엘레나 헬릭스 박사가 당신을 연구소에 환영하며 긴급한 미션을 제시합니다: 
-    AI 알고리즘에 반응하는 것처럼 보이는 신비한 유전자 서열이 발견되었습니다. 
-    하지만 라이벌 바이오코프의 스플라이스 박사가 유전자 변형을 무기화하려고 
-    경쟁하고 있습니다. 당신은 파괴적인 오용을 막으면서 책임감 있게 생명의 
+    엘레나 헬릭스 박사가 당신을 연구소에 환영하며 긴급한 미션을 제시합니다:
+    AI 알고리즘에 반응하는 것처럼 보이는 신비한 유전자 서열이 발견되었습니다.
+    하지만 라이벌 바이오코프의 스플라이스 박사가 유전자 변형을 무기화하려고
+    경쟁하고 있습니다. 당신은 파괴적인 오용을 막으면서 책임감 있게 생명의
     비밀을 풀어야 합니다.
-  
+
   initial_tasks:
     - understand_crispr
     - learn_ai_modeling
@@ -53,7 +53,7 @@ skill_tree:
       unlocks:
         - gene_editing
         - protein_design
-    
+
     - id: bioinformatics
       name: "바이오데이터 융합"
       description: "AI로 생물학적 데이터를 분석합니다"
@@ -61,7 +61,7 @@ skill_tree:
       unlocks:
         - sequence_analysis
         - structure_prediction
-    
+
     - id: synthetic_biology
       name: "생명 설계"
       description: "새로운 생물학적 시스템을 설계합니다"
@@ -69,7 +69,7 @@ skill_tree:
       unlocks:
         - organism_engineering
         - metabolic_pathways
-    
+
     - id: ai_integration
       name: "AI-바이오 인터페이스"
       description: "AI를 생물학 연구에 통합합니다"
@@ -84,13 +84,13 @@ skill_tree:
       description: "유전자 수준에서 치료법을 설계합니다"
       max_level: 15
       requires: [molecular_biology, synthetic_biology]
-    
+
     - id: biocomputing
       name: "생체 컴퓨터"
       description: "생물학적 컴퓨팅 시스템을 만듭니다"
       max_level: 15
       requires: [bioinformatics, ai_integration]
-    
+
     - id: enhancement_tech
       name: "인간 증강 기술"
       description: "윤리적인 증강 기술을 개발합니다"
@@ -107,7 +107,7 @@ milestone_quests:
     unlocks:
       - medical_breakthrough_badge
       - patient_testimonials
-  
+
   - id: splice_confrontation
     name: "윤리 대 이익"
     description: "스플라이스 박사의 위험한 실험을 저지하세요"
@@ -117,7 +117,7 @@ milestone_quests:
     unlocks:
       - ethical_guardian_title
       - regulatory_influence
-  
+
   - id: life_creation
     name: "창세기 프로젝트"
     description: "유익한 합성 생물체를 창조하세요"
@@ -134,19 +134,19 @@ achievements:
     description: "첫 번째 게놈 서열 분석에 성공하세요"
     xp_reward: 100
     badge_type: bronze
-  
+
   - id: publication_success
     name: "출간 연구자"
     description: "동료 심사 논문 5편을 게재하세요"
     xp_reward: 400
     badge_type: silver
-  
+
   - id: patent_holder
     name: "혁신 개척자"
     description: "획기적인 바이오테크 특허를 출원하세요"
     xp_reward: 700
     badge_type: gold
-  
+
   - id: biotech_legend
     name: "생명코드 마스터"
     description: "모든 바이오테크 챌린지를 완료하세요"
@@ -161,14 +161,14 @@ example_tasks:
       description: "DNA 샘플을 추출하고 분석하세요"
       skills_improved: [molecular_biology, lab_techniques]
       xp_reward: 70
-    
+
     - id: ai_sequence_analysis
       type: analysis
       title: "패턴 인식"
       description: "AI를 사용하여 유전자 데이터의 패턴을 찾으세요"
       skills_improved: [bioinformatics, ai_bio_modeling]
       xp_reward: 80
-  
+
   intermediate:
     - id: crispr_edit
       type: creation
@@ -176,14 +176,14 @@ example_tasks:
       description: "표적 유전자 편집을 수행하세요"
       skills_improved: [gene_editing, synthetic_biology]
       xp_reward: 200
-    
+
     - id: drug_design
       type: creation
       title: "분자 의학"
       description: "AI를 사용하여 새로운 약물을 설계하세요"
       skills_improved: [ml_drug_discovery, bioinformatics]
       xp_reward: 250
-  
+
   advanced:
     - id: synthetic_life
       type: creation
@@ -191,7 +191,7 @@ example_tasks:
       description: "합성 생물체를 설계하세요"
       skills_improved: [organism_engineering, biocomputing]
       xp_reward: 450
-    
+
     - id: enhancement_protocol
       type: creation
       title: "진화 가속기"

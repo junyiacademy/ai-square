@@ -67,15 +67,15 @@ jest.mock('recharts', () => ({
   PolarRadiusAxis: ({ angle, domain }: { angle: number; domain: [number, number] }) => (
     <div data-testid="polar-radius-axis" data-angle={angle} data-domain={JSON.stringify(domain)} />
   ),
-  Radar: ({ name, dataKey, stroke, fill, fillOpacity }: { 
-    name: string; 
-    dataKey: string; 
-    stroke: string; 
-    fill: string; 
-    fillOpacity: number; 
+  Radar: ({ name, dataKey, stroke, fill, fillOpacity }: {
+    name: string;
+    dataKey: string;
+    stroke: string;
+    fill: string;
+    fillOpacity: number;
   }) => (
-    <div 
-      data-testid="radar" 
+    <div
+      data-testid="radar"
       data-name={name}
       data-key={dataKey}
       data-stroke={stroke}
@@ -124,28 +124,28 @@ describe('DomainRadarChart', () => {
     render(<DomainRadarChart data={mockData} />);
     const radarChart = screen.getByTestId('radar-chart');
     expect(radarChart).toBeInTheDocument();
-    
+
     const chartData = JSON.parse(radarChart.getAttribute('data-chart-data') || '[]');
     expect(chartData).toEqual(mockData);
   });
 
   it('renders all chart components', async () => {
     render(<DomainRadarChart data={mockData} />);
-    
+
     // Check PolarGrid
     expect(screen.getByTestId('polar-grid')).toBeInTheDocument();
-    
+
     // Check PolarAngleAxis
     const angleAxis = screen.getByTestId('polar-angle-axis');
     expect(angleAxis).toBeInTheDocument();
     expect(angleAxis).toHaveAttribute('data-key', 'domain');
-    
+
     // Check PolarRadiusAxis
     const radiusAxis = screen.getByTestId('polar-radius-axis');
     expect(radiusAxis).toBeInTheDocument();
     expect(radiusAxis).toHaveAttribute('data-angle', '90');
     expect(radiusAxis).toHaveAttribute('data-domain', '[0,100]');
-    
+
     // Check Radar
     const radar = screen.getByTestId('radar');
     expect(radar).toBeInTheDocument();
@@ -166,7 +166,7 @@ describe('DomainRadarChart', () => {
     const singleData: RadarChartData[] = [
       { domain: 'Only Domain', score: 50, fullMark: 100 }
     ];
-    
+
     render(<DomainRadarChart data={singleData} />);
     const radarChart = screen.getByTestId('radar-chart');
     const chartData = JSON.parse(radarChart.getAttribute('data-chart-data') || '[]');
@@ -178,7 +178,7 @@ describe('DomainRadarChart', () => {
       { domain: 'Perfect Score', score: 100, fullMark: 100 },
       { domain: 'Also Perfect', score: 100, fullMark: 100 }
     ];
-    
+
     render(<DomainRadarChart data={maxScoreData} />);
     const radarChart = screen.getByTestId('radar-chart');
     const chartData = JSON.parse(radarChart.getAttribute('data-chart-data') || '[]');
@@ -190,7 +190,7 @@ describe('DomainRadarChart', () => {
       { domain: 'No Score', score: 0, fullMark: 100 },
       { domain: 'Also No Score', score: 0, fullMark: 100 }
     ];
-    
+
     render(<DomainRadarChart data={zeroScoreData} />);
     const radarChart = screen.getByTestId('radar-chart');
     const chartData = JSON.parse(radarChart.getAttribute('data-chart-data') || '[]');
@@ -210,7 +210,7 @@ describe('DomainRadarChart', () => {
       { domain: 'High', score: 75, fullMark: 100 },
       { domain: 'Perfect', score: 100, fullMark: 100 }
     ];
-    
+
     render(<DomainRadarChart data={mixedData} />);
     const radarChart = screen.getByTestId('radar-chart');
     const chartData = JSON.parse(radarChart.getAttribute('data-chart-data') || '[]');
@@ -222,7 +222,7 @@ describe('DomainRadarChart', () => {
       { domain: 'This is a very long domain name that might wrap', score: 80, fullMark: 100 },
       { domain: 'Another extremely long domain name for testing purposes', score: 60, fullMark: 100 }
     ];
-    
+
     render(<DomainRadarChart data={longNameData} />);
     const radarChart = screen.getByTestId('radar-chart');
     const chartData = JSON.parse(radarChart.getAttribute('data-chart-data') || '[]');
@@ -232,7 +232,7 @@ describe('DomainRadarChart', () => {
   it('applies correct styling classes', async () => {
     const { container } = render(<DomainRadarChart data={mockData} />);
     const angleAxis = screen.getByTestId('polar-angle-axis');
-    
+
     // The component applies className="text-sm" to PolarAngleAxis
     // In a real test, this would be checked through the actual DOM,
     // but with our mock we can at least verify the component structure
@@ -245,7 +245,7 @@ describe('DomainRadarChart', () => {
       { domain: 'Domain B', score: 72.3, fullMark: 100 },
       { domain: 'Domain C', score: 91.7, fullMark: 100 }
     ];
-    
+
     render(<DomainRadarChart data={decimalData} />);
     const radarChart = screen.getByTestId('radar-chart');
     const chartData = JSON.parse(radarChart.getAttribute('data-chart-data') || '[]');
@@ -254,7 +254,7 @@ describe('DomainRadarChart', () => {
 
   it('maintains chart configuration', async () => {
     render(<DomainRadarChart data={mockData} />);
-    
+
     // Verify the radar configuration matches the component
     const radar = screen.getByTestId('radar');
     expect(radar).toHaveAttribute('data-stroke', '#6366f1'); // indigo-500

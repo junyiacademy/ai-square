@@ -259,25 +259,25 @@ describe('/api/learning/progress', () => {
 
 /**
  * Learning Progress API Considerations:
- * 
+ *
  * 1. Authentication:
  *    - Must check user session
  *    - Email is required for progress lookup
- * 
+ *
  * 2. Progress Data Structure:
  *    - Overall statistics
  *    - Breakdown by learning mode
  *    - Recent activities
  *    - Achievements
- * 
+ *
  * 3. Performance:
  *    - May aggregate large amounts of data
  *    - Consider caching for frequent requests
- * 
+ *
  * 4. Privacy:
  *    - Users can only see their own progress
  *    - No cross-user data exposure
- * 
+ *
  * 5. Empty State:
  *    - New users have zero progress
  *    - Should return valid empty structure

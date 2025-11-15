@@ -24,35 +24,35 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
       scenarioId: row.scenario_id,
       mode: row.mode,  // Include mode from database
       status: row.status,
-      
+
       // Progress tracking
       currentTaskIndex: row.current_task_index,
       completedTaskCount: row.completed_task_count,
       totalTaskCount: row.total_task_count,
-      
+
       // Scoring
       totalScore: row.total_score,
       domainScores: row.domain_scores,
-      
+
       // XP and rewards
       xpEarned: row.xp_earned,
       badgesEarned: row.badges_earned,
-      
+
       // Timestamps (unified naming)
       createdAt: row.created_at,
       startedAt: row.started_at || undefined,
       completedAt: row.completed_at || undefined,
       updatedAt: row.updated_at,
       lastActivityAt: row.updated_at, // Use updated_at for last activity tracking
-      
+
       // Time tracking
       timeSpentSeconds: row.time_spent_seconds,
-      
+
       // Mode-specific data
       pblData: row.pbl_data,
       discoveryData: row.discovery_data,
       assessmentData: row.assessment_data,
-      
+
       // Extensible metadata
       metadata: row.metadata
     };
@@ -69,7 +69,7 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
 
   async findByUser(userId: string): Promise<IProgram[]> {
     const query = `
-      SELECT * FROM programs 
+      SELECT * FROM programs
       WHERE user_id = $1
       ORDER BY updated_at DESC
     `;
@@ -80,7 +80,7 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
 
   async findByScenario(scenarioId: string): Promise<IProgram[]> {
     const query = `
-      SELECT * FROM programs 
+      SELECT * FROM programs
       WHERE scenario_id = $1
       ORDER BY created_at DESC
     `;
@@ -138,7 +138,7 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
     `;
 
     const { rows } = await this.pool.query<DBProgram>(query, [taskIndex, id]);
-    
+
     if (!rows[0]) {
       throw new Error('Program not found');
     }
@@ -157,7 +157,7 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
     `;
 
     const { rows } = await this.pool.query<DBProgram>(query, [id]);
-    
+
     if (!rows[0]) {
       throw new Error('Program not found');
     }
@@ -176,7 +176,7 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
     if (updates.status !== undefined) {
       updateFields.push(`status = $${paramCount++}`);
       values.push(updates.status);
-      
+
       // Update timestamps based on status
       if (updates.status === 'active' && !updates.startedAt) {
         updateFields.push(`started_at = COALESCE(started_at, CURRENT_TIMESTAMP)`);
@@ -263,7 +263,7 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
     `;
 
     const { rows } = await this.pool.query<DBProgram>(query, values);
-    
+
     if (!rows[0]) {
       throw new Error('Program not found');
     }
@@ -273,7 +273,7 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
 
   async updateStatus(id: string, status: ProgramStatus): Promise<void> {
     let additionalUpdates = '';
-    
+
     if (status === 'active') {
       additionalUpdates = ', started_at = COALESCE(started_at, CURRENT_TIMESTAMP)';
     } else if (status === 'completed') {
@@ -292,7 +292,7 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
 
   async getActivePrograms(userId: string): Promise<IProgram[]> {
     const query = `
-      SELECT * FROM programs 
+      SELECT * FROM programs
       WHERE user_id = $1 AND status = 'active'
       ORDER BY updated_at DESC
     `;
@@ -303,7 +303,7 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
 
   async getCompletedPrograms(userId: string): Promise<IProgram[]> {
     const query = `
-      SELECT * FROM programs 
+      SELECT * FROM programs
       WHERE user_id = $1 AND status = 'completed'
       ORDER BY completed_at DESC
     `;
@@ -337,13 +337,13 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
   }
 
   // Get program with scenario info (join query)
-  async getProgramWithScenario(id: string): Promise<IProgram & { 
+  async getProgramWithScenario(id: string): Promise<IProgram & {
     scenarioMode?: string;
     scenarioTitle?: Record<string, string>;
     scenarioDifficulty?: string;
   }> {
     const query = `
-      SELECT 
+      SELECT
         p.*,
         s.mode as scenario_mode,
         s.title as scenario_title,
@@ -355,7 +355,7 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
     `;
 
     const { rows } = await this.pool.query(query, [id]);
-    
+
     if (!rows[0]) {
       return null as unknown as IProgram;
     }
@@ -371,7 +371,7 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
   // Get programs by status
   async findByStatus(status: ProgramStatus, userId?: string): Promise<IProgram[]> {
     let query = `
-      SELECT * FROM programs 
+      SELECT * FROM programs
       WHERE status = $1
     `;
     const params: unknown[] = [status];

@@ -165,7 +165,7 @@ describe('/api/pbl/recommendations', () => {
 
       expect(response.status).toBe(200);
       expect(data.totalAvailable).toBe(1); // Only 1 remaining
-      expect(data.recommendations.every((r: any) => 
+      expect(data.recommendations.every((r: any) =>
         !requestData.completedScenarios.includes(r.scenarioId)
       )).toBe(true);
     });
@@ -200,7 +200,7 @@ describe('/api/pbl/recommendations', () => {
       expect(response.status).toBe(200);
       // Jobsearch should be recommended first due to weak domains
       expect(data.recommendations[0].scenarioId).toBe('jobsearch');
-      expect(data.recommendations[0].reasons.some((r: string) => 
+      expect(data.recommendations[0].reasons.some((r: string) =>
         r.includes('Targets weak domain')
       )).toBe(true);
     });
@@ -238,7 +238,7 @@ describe('/api/pbl/recommendations', () => {
       const intermediateRec = data.recommendations.find(
         (r: any) => r.difficulty === 'intermediate'
       );
-      expect(intermediateRec.reasons.some((r: string) => 
+      expect(intermediateRec.reasons.some((r: string) =>
         r.includes('Appropriate intermediate challenge')
       )).toBe(true);
     });
@@ -275,7 +275,7 @@ describe('/api/pbl/recommendations', () => {
       const resumeRec = data.recommendations.find(
         (r: any) => r.scenarioId === 'resume_builder'
       );
-      expect(resumeRec.reasons.some((r: string) => 
+      expect(resumeRec.reasons.some((r: string) =>
         r.includes('Aligns with learning goal: resume')
       )).toBe(true);
     });
@@ -398,31 +398,31 @@ describe('/api/pbl/recommendations', () => {
 
 /**
  * PBL Recommendations API Considerations:
- * 
+ *
  * 1. Recommendation Algorithm:
  *    - Prioritizes weak domains (<60%)
  *    - Matches difficulty to user level
  *    - Aligns with learning goals
  *    - Considers KSA coverage
- * 
+ *
  * 2. Scoring System:
  *    - Domain weakness: +30 points
  *    - Domain average: +20 points
  *    - Advanced challenge: +25 points
  *    - Goal alignment: +10 points
  *    - Difficulty match: +15 points
- * 
+ *
  * 3. Improvement Estimation:
  *    - Beginner: 5-15% gain
  *    - Intermediate: 6-12% gain
  *    - Advanced: 5-10% gain
  *    - Capped at 100% total
- * 
+ *
  * 4. Language Support:
  *    - Tries language-specific files first
  *    - Falls back to English
  *    - Respects request headers
- * 
+ *
  * 5. Performance:
  *    - Loads all scenarios on each request
  *    - Consider caching scenario data

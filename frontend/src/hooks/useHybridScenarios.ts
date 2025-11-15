@@ -26,11 +26,11 @@ export function useHybridScenarios() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { i18n } = useTranslation();
-  
+
   // 本地快取
   const cache = useRef<Map<string, CacheEntry>>(new Map());
   const CACHE_TTL = 5 * 60 * 1000; // 5 分鐘
-  
+
   // 預載下一個可能的語言
   const preloadLanguages = useRef<Set<string>>(new Set());
 
@@ -47,27 +47,27 @@ export function useHybridScenarios() {
 
     try {
       if (!isPreload) setLoading(true);
-      
+
       const response = await authenticatedFetch(`/api/assessment/scenarios?lang=${language}`);
       const data = await response.json();
-      
+
       if (data.success) {
         const scenarioData = data.data.scenarios;
-        
+
         // 更新快取
         cache.current.set(language, {
           data: scenarioData,
           timestamp: Date.now(),
           language
         });
-        
+
         if (!isPreload) {
           setScenarios(scenarioData);
-          
+
           // 預載其他常用語言
           preloadNextLanguages(language);
         }
-        
+
         return scenarioData;
       } else {
         throw new Error(data.error || 'Failed to load scenarios');
@@ -93,9 +93,9 @@ export function useHybridScenarios() {
       'ja': ['en'],
       'ko': ['en']
     };
-    
+
     const toPreload = preloadMap[currentLang] || ['en'];
-    
+
     toPreload.forEach(lang => {
       if (!preloadLanguages.current.has(lang)) {
         preloadLanguages.current.add(lang);

@@ -85,7 +85,7 @@ skill_codes:
           questions:
             - Come posso strutturare il mio problema in modo che l'IA possa aiutare a risolverlo?
       explanation: |
-        Le competenze del pensiero computazionale aiutano ad affrontare e inquadrare i problemi in modi che sfruttano le capacità dell'IA e tengono conto delle sue limitazioni. Questo implica scomporre, o dividere problemi complessi in componenti strutturati, e comunicare obiettivi e vincoli in un modo che i sistemi di IA possano elaborare efficacemente (ad esempio, prompt engineering). Fornendo casi d'uso, controesempi e risultati attesi ai sistemi di IA, gli studenti affinano le proprie competenze comunicative, si impegnano con strategie metacognitive e fanno progressi verso i loro obiettivi. 
+        Le competenze del pensiero computazionale aiutano ad affrontare e inquadrare i problemi in modi che sfruttano le capacità dell'IA e tengono conto delle sue limitazioni. Questo implica scomporre, o dividere problemi complessi in componenti strutturati, e comunicare obiettivi e vincoli in un modo che i sistemi di IA possano elaborare efficacemente (ad esempio, prompt engineering). Fornendo casi d'uso, controesempi e risultati attesi ai sistemi di IA, gli studenti affinano le proprie competenze comunicative, si impegnano con strategie metacognitive e fanno progressi verso i loro obiettivi.
     Collaboration:
       codes:
         S4.1:

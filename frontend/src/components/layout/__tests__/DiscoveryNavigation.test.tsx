@@ -102,7 +102,7 @@ describe('DiscoveryNavigation', () => {
     jest.clearAllMocks();
     (useRouter as jest.Mock).mockReturnValue(mockRouter);
     (usePathname as jest.Mock).mockReturnValue('/discovery/overview');
-    
+
     // Mock successful user data loading
     mockUserDataService.loadUserData.mockResolvedValue({
       achievements: {
@@ -124,12 +124,12 @@ describe('DiscoveryNavigation', () => {
       writable: true,
       value: 0,
     });
-    
+
     Object.defineProperty(document.documentElement, 'scrollHeight', {
       writable: true,
       value: 2000,
     });
-    
+
     Object.defineProperty(window, 'innerHeight', {
       writable: true,
       value: 800,
@@ -172,7 +172,7 @@ describe('DiscoveryNavigation', () => {
 
     // Simulate scroll
     Object.defineProperty(window, 'scrollY', { value: 150 });
-    
+
     act(() => {
       window.dispatchEvent(new Event('scroll'));
     });
@@ -186,7 +186,7 @@ describe('DiscoveryNavigation', () => {
 
     // Simulate scroll to 50% of page
     Object.defineProperty(window, 'scrollY', { value: 600 }); // 600 / (2000 - 800) = 50%
-    
+
     act(() => {
       window.dispatchEvent(new Event('scroll'));
     });
@@ -292,7 +292,7 @@ describe('DiscoveryNavigation', () => {
 
   it('should clean up scroll event listener on unmount', async () => {
     const removeEventListenerSpy = jest.spyOn(window, 'removeEventListener');
-    
+
     const { unmount } = renderWithProviders(<DiscoveryNavigation />);
     unmount();
 
@@ -313,7 +313,7 @@ describe('DiscoveryNavigation', () => {
   it('should display badges when provided', async () => {
     // Mock navigation items with badges by testing the component structure
     renderWithProviders(<DiscoveryNavigation />);
-    
+
     // The component structure should support badges, even if not currently used
     // This tests the badge rendering logic exists
     expect(screen.getByRole('button', { name: /0%/ })).toBeInTheDocument();
@@ -324,7 +324,7 @@ describe('DiscoveryNavigation', () => {
 
     // Simulate scroll beyond page height
     Object.defineProperty(window, 'scrollY', { value: 5000 });
-    
+
     act(() => {
       window.dispatchEvent(new Event('scroll'));
     });
@@ -343,7 +343,7 @@ describe('DiscoveryNavigation', () => {
     renderWithProviders(<DiscoveryNavigation />);
 
     Object.defineProperty(window, 'scrollY', { value: 100 });
-    
+
     act(() => {
       window.dispatchEvent(new Event('scroll'));
     });
@@ -359,7 +359,7 @@ describe('DiscoveryNavigation', () => {
 
     // Should have 3 navigation items
     expect(screen.getByTestId('graduation-cap-icon')).toBeInTheDocument(); // Overview
-    expect(screen.getByTestId('bar-chart-icon')).toBeInTheDocument(); // Evaluation  
+    expect(screen.getByTestId('bar-chart-icon')).toBeInTheDocument(); // Evaluation
     expect(screen.getByTestId('globe-icon')).toBeInTheDocument(); // Scenarios
   });
 
@@ -398,7 +398,7 @@ describe('DiscoveryNavigation', () => {
 
     // Simulate scroll to update progress
     Object.defineProperty(window, 'scrollY', { value: 300 });
-    
+
     act(() => {
       window.dispatchEvent(new Event('scroll'));
     });

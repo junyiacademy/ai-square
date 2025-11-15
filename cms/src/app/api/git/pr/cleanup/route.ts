@@ -14,18 +14,18 @@ export async function POST(request: NextRequest) {
     }
 
     const storage = getGitHubStorage();
-    
+
     try {
       await storage.deleteBranch(branch);
-      
-      return NextResponse.json({ 
+
+      return NextResponse.json({
         success: true,
         message: `Branch ${branch} deleted successfully`
       });
     } catch (error) {
       const octokitError = error as OctokitError;
       if (octokitError.status === 403) {
-        return NextResponse.json({ 
+        return NextResponse.json({
           success: false,
           message: 'Branch is protected or you lack permissions'
         });
@@ -46,13 +46,13 @@ export async function GET() {
   try {
     const storage = getGitHubStorage();
     const branches = await storage.listBranches();
-    
+
     // Filter CMS branches (starting with 'cms-')
     const cmsBranches = branches
       .filter(branch => branch.startsWith('cms-') && branch !== 'main')
       .sort((a, b) => b.localeCompare(a)); // Newest first
-    
-    return NextResponse.json({ 
+
+    return NextResponse.json({
       branches: cmsBranches,
       total: cmsBranches.length
     });

@@ -155,10 +155,10 @@ make db-cost
    ```bash
    # Edit schema
    vi prisma/schema.prisma
-   
+
    # Generate migration
    npx prisma migrate dev --name describe_your_change
-   
+
    # Apply to local DB
    npx prisma migrate deploy
    ```
@@ -171,7 +171,7 @@ make db-cost
    ```bash
    # Connect to Cloud SQL proxy
    cloud_sql_proxy -instances=CONNECTION_NAME=tcp:5432
-   
+
    # Run migration
    DATABASE_URL="postgresql://..." npx prisma migrate deploy
    ```
@@ -197,7 +197,7 @@ Staging 環境提供完整的資料庫重設功能，可透過 API 快速清空�
      -H "Content-Type: application/json" \
      -H "x-admin-key: staging-init-2025" \
      -d '{"action": "reset-full"}'
-   
+
    # Step 2: 載入所有 scenarios
    curl -X POST "https://ai-square-staging-m7s4ucbgba-de.a.run.app/api/admin/init-pbl"
    curl -X POST "https://ai-square-staging-m7s4ucbgba-de.a.run.app/api/admin/init-assessment"
@@ -281,7 +281,7 @@ curl -X POST "$BASE_URL/api/admin/init-discovery"
    git add -A
    git commit -m "feat: add email_verified_at field"
    git push origin staging
-   
+
    # After testing, merge to main
    git checkout main
    git merge staging

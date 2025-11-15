@@ -27,7 +27,7 @@ export default function TermsOfServicePage() {
             {/* Introduction */}
             <section className="mb-8">
               <p className="text-gray-700 dark:text-gray-300">
-                {t('terms.intro', 
+                {t('terms.intro',
                   'Welcome to AI Square! These Terms of Service ("Terms") govern your use of our AI literacy education platform. By accessing or using AI Square, you agree to be bound by these Terms.'
                 )}
               </p>
@@ -37,12 +37,12 @@ export default function TermsOfServicePage() {
             <section className="mb-8">
               <h2 className="text-2xl font-semibold mb-4">{t('terms.acceptance.title', '1. Acceptance of Terms')}</h2>
               <p className="mb-4">
-                {t('terms.acceptance.content', 
+                {t('terms.acceptance.content',
                   'By creating an account or using our services, you acknowledge that you have read, understood, and agree to these Terms. If you do not agree, please do not use our platform.'
                 )}
               </p>
               <p>
-                {t('terms.acceptance.capacity', 
+                {t('terms.acceptance.capacity',
                   'You must be at least 13 years old to use our services. If you are under 18, you must have parental consent.'
                 )}
               </p>
@@ -64,7 +64,7 @@ export default function TermsOfServicePage() {
             {/* User Accounts */}
             <section className="mb-8">
               <h2 className="text-2xl font-semibold mb-4">{t('terms.accounts.title', '3. User Accounts')}</h2>
-              
+
               <h3 className="text-xl font-medium mb-3">{t('terms.accounts.registration', 'Registration')}</h3>
               <ul className="list-disc pl-6 mb-4 space-y-2">
                 <li>{t('terms.accounts.accurate', 'Provide accurate and complete information')}</li>
@@ -84,7 +84,7 @@ export default function TermsOfServicePage() {
             {/* Acceptable Use */}
             <section className="mb-8">
               <h2 className="text-2xl font-semibold mb-4">{t('terms.use.title', '4. Acceptable Use Policy')}</h2>
-              
+
               <h3 className="text-xl font-medium mb-3">{t('terms.use.permitted', 'You may:')}</h3>
               <ul className="list-disc pl-6 mb-4 space-y-2">
                 <li>{t('terms.use.educational', 'Use the platform for educational purposes')}</li>
@@ -106,24 +106,24 @@ export default function TermsOfServicePage() {
             {/* Intellectual Property */}
             <section className="mb-8">
               <h2 className="text-2xl font-semibold mb-4">{t('terms.ip.title', '5. Intellectual Property')}</h2>
-              
+
               <h3 className="text-xl font-medium mb-3">{t('terms.ip.platform', 'Platform Content')}</h3>
               <p className="mb-4">
-                {t('terms.ip.ownership', 
+                {t('terms.ip.ownership',
                   'All content on AI Square, including text, graphics, logos, and software, is owned by AI Square or its licensors and protected by intellectual property laws.'
                 )}
               </p>
 
               <h3 className="text-xl font-medium mb-3">{t('terms.ip.user', 'User Content')}</h3>
               <p className="mb-4">
-                {t('terms.ip.retain', 
+                {t('terms.ip.retain',
                   'You retain ownership of content you create. By submitting content, you grant us a license to use it for providing and improving our services.'
                 )}
               </p>
 
               <h3 className="text-xl font-medium mb-3">{t('terms.ip.open', 'Open Source')}</h3>
               <p>
-                {t('terms.ip.git', 
+                {t('terms.ip.git',
                   'Educational content is managed through Git and may be subject to open-source licenses. Please check individual repositories for specific license terms.'
                 )}
               </p>
@@ -133,7 +133,7 @@ export default function TermsOfServicePage() {
             <section className="mb-8">
               <h2 className="text-2xl font-semibold mb-4">{t('terms.privacy.title', '6. Privacy and Data Protection')}</h2>
               <p>
-                {t('terms.privacy.content', 
+                {t('terms.privacy.content',
                   'Your use of AI Square is also governed by our Privacy Policy. We are committed to protecting your personal information and using it only as described in our Privacy Policy.'
                 )}
               </p>
@@ -143,7 +143,7 @@ export default function TermsOfServicePage() {
             <section className="mb-8">
               <h2 className="text-2xl font-semibold mb-4">{t('terms.ai.title', '7. AI Services and Limitations')}</h2>
               <p className="mb-4">
-                {t('terms.ai.disclaimer', 
+                {t('terms.ai.disclaimer',
                   'Our AI-powered features are designed to assist learning but are not perfect. We do not guarantee the accuracy of AI-generated content or feedback.'
                 )}
               </p>
@@ -158,12 +158,12 @@ export default function TermsOfServicePage() {
             <section className="mb-8">
               <h2 className="text-2xl font-semibold mb-4">{t('terms.disclaimers.title', '8. Disclaimers and Limitations')}</h2>
               <p className="mb-4 uppercase font-semibold">
-                {t('terms.disclaimers.asis', 
+                {t('terms.disclaimers.asis',
                   'THE SERVICE IS PROVIDED "AS IS" WITHOUT WARRANTIES OF ANY KIND.'
                 )}
               </p>
               <p className="mb-4">
-                {t('terms.disclaimers.liability', 
+                {t('terms.disclaimers.liability',
                   'To the fullest extent permitted by law, AI Square shall not be liable for any indirect, incidental, special, consequential, or punitive damages.'
                 )}
               </p>
@@ -173,7 +173,7 @@ export default function TermsOfServicePage() {
             <section className="mb-8">
               <h2 className="text-2xl font-semibold mb-4">{t('terms.modifications.title', '9. Modifications to Terms')}</h2>
               <p>
-                {t('terms.modifications.content', 
+                {t('terms.modifications.content',
                   'We may modify these Terms at any time. We will notify users of material changes. Continued use after changes constitutes acceptance of the new Terms.'
                 )}
               </p>
@@ -183,7 +183,7 @@ export default function TermsOfServicePage() {
             <section className="mb-8">
               <h2 className="text-2xl font-semibold mb-4">{t('terms.termination.title', '10. Termination')}</h2>
               <p className="mb-4">
-                {t('terms.termination.rights', 
+                {t('terms.termination.rights',
                   'We reserve the right to suspend or terminate accounts that violate these Terms. You may delete your account at any time.'
                 )}
               </p>
@@ -193,7 +193,7 @@ export default function TermsOfServicePage() {
             <section className="mb-8">
               <h2 className="text-2xl font-semibold mb-4">{t('terms.law.title', '11. Governing Law')}</h2>
               <p>
-                {t('terms.law.content', 
+                {t('terms.law.content',
                   'These Terms are governed by the laws of the jurisdiction where AI Square operates, without regard to conflict of law principles.'
                 )}
               </p>
@@ -221,7 +221,7 @@ export default function TermsOfServicePage() {
 
           {/* Back to Home */}
           <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
-            <Link 
+            <Link
               href="/"
               className="inline-flex items-center text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
             >

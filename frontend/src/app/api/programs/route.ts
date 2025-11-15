@@ -15,9 +15,9 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get('status');
 
     const programRepo = repositoryFactory.getProgramRepository();
-    
+
     let programs;
-    
+
     if (userId && status === 'active') {
       programs = await programRepo.getActivePrograms?.(userId);
     } else if (userId && status === 'completed') {
@@ -109,7 +109,7 @@ export async function POST(request: NextRequest) {
 
     // Create tasks for the program
     if (scenarioContent.tasks && scenarioContent.tasks.length > 0) {
-      await Promise.all(scenarioContent.tasks.map((task: Record<string, unknown>, index: number) => 
+      await Promise.all(scenarioContent.tasks.map((task: Record<string, unknown>, index: number) =>
         taskRepo.create({
           programId: program.id,
           mode: program.mode,

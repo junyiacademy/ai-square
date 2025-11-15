@@ -164,11 +164,11 @@ export const mockRepositoryFactory = {
 export function setupDatabaseMocks() {
   // Mock pg module
   jest.mock('pg', () => mockPg);
-  
+
   // Default successful query responses
   mockPool.query.mockResolvedValue({ rows: [], rowCount: 0 });
   mockPool.connect.mockResolvedValue(mockClient);
   mockClient.query.mockResolvedValue({ rows: [], rowCount: 0 });
-  
+
   return { mockPool, mockClient };
 }

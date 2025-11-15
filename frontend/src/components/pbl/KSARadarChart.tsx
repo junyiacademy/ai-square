@@ -45,14 +45,14 @@ export default function KSARadarChart({ ksaScores, title }: KSARadarChartProps) 
   };
 
   const ksaLabels = Object.keys(ksaScores).sort();
-  
+
   ksaLabels.forEach(ksa => {
     const { score, category } = ksaScores[ksa];
     scoresByCategory[category].push(score);
   });
 
   // Calculate average for each category
-  const avgScore = (scores: number[]) => 
+  const avgScore = (scores: number[]) =>
     scores.length > 0 ? scores.reduce((a, b) => a + b, 0) / scores.length : 0;
 
   const data: ChartData<'radar'> = {
@@ -60,7 +60,7 @@ export default function KSARadarChart({ ksaScores, title }: KSARadarChartProps) 
     datasets: [
       {
         label: t('complete.knowledge'),
-        data: ksaLabels.map(ksa => 
+        data: ksaLabels.map(ksa =>
           ksa.startsWith('K') ? ksaScores[ksa].score : 0
         ),
         backgroundColor: 'rgba(59, 130, 246, 0.2)',
@@ -73,7 +73,7 @@ export default function KSARadarChart({ ksaScores, title }: KSARadarChartProps) 
       },
       {
         label: t('complete.skills'),
-        data: ksaLabels.map(ksa => 
+        data: ksaLabels.map(ksa =>
           ksa.startsWith('S') ? ksaScores[ksa].score : 0
         ),
         backgroundColor: 'rgba(34, 197, 94, 0.2)',
@@ -86,7 +86,7 @@ export default function KSARadarChart({ ksaScores, title }: KSARadarChartProps) 
       },
       {
         label: t('complete.attitudes'),
-        data: ksaLabels.map(ksa => 
+        data: ksaLabels.map(ksa =>
           ksa.startsWith('A') ? ksaScores[ksa].score : 0
         ),
         backgroundColor: 'rgba(168, 85, 247, 0.2)',
@@ -182,7 +182,7 @@ export default function KSARadarChart({ ksaScores, title }: KSARadarChartProps) 
       <div className="h-64 flex items-center justify-center">
         <Radar data={data} options={options} />
       </div>
-      
+
       {/* Summary Stats */}
       <div className="grid grid-cols-3 gap-4 mt-6">
         <div className="relative overflow-hidden group">

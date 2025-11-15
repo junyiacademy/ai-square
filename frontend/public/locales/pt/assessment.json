@@ -38,7 +38,7 @@
   },
   "difficulty": {
     "basic": "Básico",
-    "intermediate": "Intermediário", 
+    "intermediate": "Intermediário",
     "advanced": "Avançado"
   },
   "results": {
@@ -76,7 +76,7 @@
     "autoSaved": "Resultados salvos automaticamente",
     "tabs": {
       "overview": "Visão Geral",
-      "domains": "Domínios", 
+      "domains": "Domínios",
       "recommendations": "Recomendações",
       "ksa": "Análise KSA",
       "knowledge-graph": "Grafo de Conhecimento"

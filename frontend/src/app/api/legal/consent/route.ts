@@ -14,7 +14,7 @@ const consentSchema = z.object({
 export async function POST(request: NextRequest) {
   try {
     const session = await getSession();
-    
+
     if (!session || !session.user) {
       return NextResponse.json(
         { success: false, error: 'Not authenticated' },
@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    
+
     // 驗證輸入
     const validationResult = consentSchema.safeParse(body);
     if (!validationResult.success) {
@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
 
     // 記錄同意
     await pool.query(
-      `INSERT INTO user_consents 
+      `INSERT INTO user_consents
        (user_id, document_id, document_type, document_version, ip_address, user_agent, consent_method)
        VALUES ($1, $2, $3, $4, $5, $6, $7)`,
       [
@@ -91,7 +91,7 @@ export async function POST(request: NextRequest) {
 export async function GET() {
   try {
     const session = await getSession();
-    
+
     if (!session || !session.user) {
       return NextResponse.json(
         { success: false, error: 'Not authenticated' },
@@ -100,10 +100,10 @@ export async function GET() {
     }
 
     const pool = getPool();
-    
+
     // 獲取最新的同意記錄
     const { rows } = await pool.query(
-      `SELECT DISTINCT ON (uc.document_type) 
+      `SELECT DISTINCT ON (uc.document_type)
         uc.document_type,
         uc.document_version,
         uc.consented_at,
@@ -118,7 +118,7 @@ export async function GET() {
 
     // 檢查是否有新版本需要同意
     const { rows: latestDocs } = await pool.query(
-      `SELECT DISTINCT ON (type) 
+      `SELECT DISTINCT ON (type)
         type, version, title, effective_date
        FROM legal_documents
        ORDER BY type, created_at DESC`

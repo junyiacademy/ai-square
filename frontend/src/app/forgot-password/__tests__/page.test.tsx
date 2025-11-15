@@ -50,20 +50,20 @@ describe('page', () => {
 
   it('should have proper structure', () => {
     render(<Page />);
-    
+
     // Check for the title and form elements
     expect(screen.getByText('forgotPassword.title')).toBeInTheDocument();
     expect(screen.getByText('forgotPassword.subtitle')).toBeInTheDocument();
-    
+
     // Check for email input
     const emailInput = screen.getByRole('textbox');
     expect(emailInput).toBeInTheDocument();
     expect(emailInput).toHaveAttribute('type', 'email');
-    
+
     // Check for submit button
     const submitButton = screen.getByRole('button');
     expect(submitButton).toBeInTheDocument();
-    
+
     // Check for back to login link
     const backLink = screen.getByRole('link');
     expect(backLink).toBeInTheDocument();
@@ -76,24 +76,24 @@ describe('page', () => {
         json: () => Promise.resolve({ success: true }),
       } as Response)
     );
-    
+
     render(<Page />);
-    
+
     const emailInput = screen.getByRole('textbox');
     const submitButton = screen.getByRole('button');
-    
+
     // Enter email
     fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
     expect(emailInput).toHaveValue('test@example.com');
-    
+
     // Submit form
     fireEvent.click(submitButton);
-    
+
     // Wait for success message
     await waitFor(() => {
       expect(screen.getByText('forgotPassword.successMessage')).toBeInTheDocument();
     });
-    
+
     // Check that fetch was called
     expect(global.fetch).toHaveBeenCalledWith('/api/auth/forgot-password', {
       method: 'POST',
@@ -108,16 +108,16 @@ describe('page', () => {
         json: () => Promise.resolve({ success: false, error: 'User not found' }),
       } as Response)
     );
-    
+
     render(<Page />);
-    
+
     const emailInput = screen.getByRole('textbox');
     const submitButton = screen.getByRole('button');
-    
+
     // Enter email and submit
     fireEvent.change(emailInput, { target: { value: 'notfound@example.com' } });
     fireEvent.click(submitButton);
-    
+
     // Wait for error message
     await waitFor(() => {
       expect(screen.getByText('User not found')).toBeInTheDocument();

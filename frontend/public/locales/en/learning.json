@@ -4,7 +4,7 @@
     "subtitle": "Based on your assessment results, here's your recommended learning journey",
     "yourProgress": "Your Progress Overview",
     "currentScore": "Current",
-    "target": "Target", 
+    "target": "Target",
     "completed": "completed",
     "filteringBy": "Showing recommendations for: {{domain}}",
     "clearFilter": "Show all recommendations",

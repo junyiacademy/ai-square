@@ -252,7 +252,7 @@ describe('Scenario Initialization APIs', () => {
         { id: 'scenario-3', mode: 'pbl', status: 'active' }
       ];
       mockFindByMode.mockResolvedValue(scenarios);
-      
+
       // Setup program mocks
       mockFindByScenario.mockResolvedValue([]); // No programs to delete
       // Make second delete fail
@@ -288,7 +288,7 @@ describe('Scenario Initialization APIs', () => {
 
       // Setup program mocks
       mockFindByScenario.mockResolvedValue([]); // No programs
-      
+
       // Act - Clean all three modes
       const pblRequest = new NextRequest('http://localhost:3001/api/admin/init-pbl', {
         method: 'POST',
@@ -305,10 +305,10 @@ describe('Scenario Initialization APIs', () => {
 
       const pblRes = await initPBL(pblRequest);
       const pblResult = await pblRes.json();
-      
+
       const assessRes = await initAssessment(assessRequest);
       const assessResult = await assessRes.json();
-      
+
       const discRes = await initDiscovery(discRequest);
       const discResult = await discRes.json();
 

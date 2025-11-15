@@ -3,10 +3,10 @@
  * Extends base unified learning types with module-specific properties
  */
 
-import { 
-  IScenario, 
-  IProgram, 
-  ITask, 
+import {
+  IScenario,
+  IProgram,
+  ITask,
   IEvaluation
 } from './unified-learning';
 
@@ -231,20 +231,20 @@ export function isDiscoveryScenario(scenario: IScenario): scenario is IDiscovery
 }
 
 export function isPBLTask(task: ITask): task is IPBLTask {
-  return Object.keys(task.pblData || {}).length > 0 && 
-         Object.keys(task.discoveryData || {}).length === 0 && 
+  return Object.keys(task.pblData || {}).length > 0 &&
+         Object.keys(task.discoveryData || {}).length === 0 &&
          Object.keys(task.assessmentData || {}).length === 0;
 }
 
 export function isAssessmentTask(task: ITask): task is IAssessmentTask {
-  return Object.keys(task.assessmentData || {}).length > 0 && 
-         Object.keys(task.pblData || {}).length === 0 && 
+  return Object.keys(task.assessmentData || {}).length > 0 &&
+         Object.keys(task.pblData || {}).length === 0 &&
          Object.keys(task.discoveryData || {}).length === 0;
 }
 
 export function isDiscoveryTask(task: ITask): task is IDiscoveryTask {
-  return Object.keys(task.discoveryData || {}).length > 0 && 
-         Object.keys(task.pblData || {}).length === 0 && 
+  return Object.keys(task.discoveryData || {}).length > 0 &&
+         Object.keys(task.pblData || {}).length === 0 &&
          Object.keys(task.assessmentData || {}).length === 0;
 }
 

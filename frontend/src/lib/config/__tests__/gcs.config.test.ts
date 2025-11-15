@@ -16,28 +16,28 @@ describe('gcs.config', () => {
     it('uses default bucket name when GCS_BUCKET_NAME not set', () => {
       delete process.env.GCS_BUCKET_NAME;
       const { GCS_CONFIG: config } = require('../gcs.config');
-      
+
       expect(config.bucketName).toBe('ai-square-db-v2');
     });
 
     it('uses GCS_BUCKET_NAME from environment when set', () => {
       process.env.GCS_BUCKET_NAME = 'custom-bucket';
       const { GCS_CONFIG: config } = require('../gcs.config');
-      
+
       expect(config.bucketName).toBe('custom-bucket');
     });
 
     it('includes projectId from GOOGLE_CLOUD_PROJECT', () => {
       process.env.GOOGLE_CLOUD_PROJECT = 'my-project';
       const { GCS_CONFIG: config } = require('../gcs.config');
-      
+
       expect(config.projectId).toBe('my-project');
     });
 
     it('includes keyFilename from GOOGLE_APPLICATION_CREDENTIALS', () => {
       process.env.GOOGLE_APPLICATION_CREDENTIALS = '/path/to/key.json';
       const { GCS_CONFIG: config } = require('../gcs.config');
-      
+
       expect(config.keyFilename).toBe('/path/to/key.json');
     });
 
@@ -63,19 +63,19 @@ describe('gcs.config', () => {
       // Save original env vars
       const originalProject = process.env.GOOGLE_CLOUD_PROJECT;
       const originalKeyFile = process.env.GOOGLE_APPLICATION_CREDENTIALS;
-      
+
       // Set test environment
       process.env.GOOGLE_CLOUD_PROJECT = 'test-project';
       delete process.env.GOOGLE_APPLICATION_CREDENTIALS;
-      
+
       const { getStorageConfig: getConfig } = require('../gcs.config');
-      
+
       const config = getConfig();
-      
+
       expect(config).toEqual({
         projectId: 'test-project'
       });
-      
+
       // Restore original env vars
       if (originalProject) process.env.GOOGLE_CLOUD_PROJECT = originalProject;
       if (originalKeyFile) process.env.GOOGLE_APPLICATION_CREDENTIALS = originalKeyFile;
@@ -85,9 +85,9 @@ describe('gcs.config', () => {
       process.env.GOOGLE_CLOUD_PROJECT = 'test-project';
       process.env.GOOGLE_APPLICATION_CREDENTIALS = '/credentials.json';
       const { getStorageConfig: getConfig } = require('../gcs.config');
-      
+
       const config = getConfig();
-      
+
       expect(config).toEqual({
         projectId: 'test-project',
         keyFilename: '/credentials.json'
@@ -98,9 +98,9 @@ describe('gcs.config', () => {
       process.env.GOOGLE_CLOUD_PROJECT = 'test-project';
       delete process.env.GOOGLE_APPLICATION_CREDENTIALS;
       const { getStorageConfig: getConfig } = require('../gcs.config');
-      
+
       const config = getConfig();
-      
+
       expect(config).toEqual({
         projectId: 'test-project'
       });
@@ -111,9 +111,9 @@ describe('gcs.config', () => {
       delete process.env.GOOGLE_CLOUD_PROJECT;
       delete process.env.GOOGLE_APPLICATION_CREDENTIALS;
       const { getStorageConfig: getConfig } = require('../gcs.config');
-      
+
       const config = getConfig();
-      
+
       expect(config).toEqual({
         projectId: undefined
       });
@@ -125,7 +125,7 @@ describe('gcs.config', () => {
       process.env.NEXT_PUBLIC_GCS_BUCKET = 'public-bucket';
       process.env.GCS_BUCKET_NAME = 'private-bucket';
       const { PUBLIC_GCS_BUCKET: publicBucket } = require('../gcs.config');
-      
+
       expect(publicBucket).toBe('public-bucket');
     });
 
@@ -133,7 +133,7 @@ describe('gcs.config', () => {
       delete process.env.NEXT_PUBLIC_GCS_BUCKET;
       process.env.GCS_BUCKET_NAME = 'private-bucket';
       const { PUBLIC_GCS_BUCKET: publicBucket } = require('../gcs.config');
-      
+
       expect(publicBucket).toBe('private-bucket');
     });
 
@@ -141,7 +141,7 @@ describe('gcs.config', () => {
       delete process.env.NEXT_PUBLIC_GCS_BUCKET;
       delete process.env.GCS_BUCKET_NAME;
       const { PUBLIC_GCS_BUCKET: publicBucket } = require('../gcs.config');
-      
+
       expect(publicBucket).toBe('ai-square-db-v2');
     });
   });

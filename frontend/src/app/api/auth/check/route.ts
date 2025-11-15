@@ -5,7 +5,7 @@ export async function GET(request: NextRequest) {
   try {
     // Use unified authentication
     const auth = await getUnifiedAuth(request);
-    
+
     if (!auth) {
       return NextResponse.json({
         authenticated: false,

@@ -10,7 +10,7 @@ describe('/api/test/env', () => {
 
   it('should return 404 when not in staging environment', async () => {
     process.env.ENVIRONMENT = 'production'
-    
+
     const request = new NextRequest('http://localhost:3000/api/test/env')
     const response = await GET()
     const data = await response.json()
@@ -28,7 +28,7 @@ describe('/api/test/env', () => {
     })
     process.env.NEXT_PUBLIC_APP_URL = 'http://test.com'
     process.env.NEXTAUTH_URL = 'http://test.com/api/auth'
-    
+
     const request = new NextRequest('http://localhost:3000/api/test/env')
     const response = await GET()
     const data = await response.json()
@@ -44,7 +44,7 @@ describe('/api/test/env', () => {
     process.env.ENVIRONMENT = 'staging'
     delete process.env.NEXT_PUBLIC_APP_URL
     delete process.env.NEXTAUTH_URL
-    
+
     const response = await GET()
     const data = await response.json()
 

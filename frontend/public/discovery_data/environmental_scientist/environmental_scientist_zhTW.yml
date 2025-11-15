@@ -10,7 +10,7 @@ metadata:
     你是「全球氣候應對中心」的初級科學家，這裡的 AI 監測系統即時追蹤地球
     健康狀況。配備尖端科技和環境科學知識，你將努力理解並逆轉氣候損害，
     同時為未來開發永續解決方案。
-  
+
   estimated_hours: 60
   skill_focus:
     - climate_modeling
@@ -25,7 +25,7 @@ world_setting:
     全球氣候應對中心是一個高科技設施，環境科學家在此使用 AI、衛星數據和
     實地研究來監測和保護地球生態系統。科學家們與時間賽跑，在達到關鍵臨界
     點之前開發解決方案。
-  
+
   atmosphere: "urgent_hopeful"
   visual_theme: "eco_tech_fusion"
 
@@ -35,7 +35,7 @@ starting_scenario:
     蓋亞博士帶來令人震驚的消息：多個環境系統正接近關鍵臨界值。同時，
     MegaCorp 的 CEO Polluto 繼續為了利潤進行破壞性行為。你必須運用科學
     和創新拯救生態系統，同時揭露企業環境犯罪。
-  
+
   initial_tasks:
     - analyze_climate_data
     - identify_hotspots
@@ -50,7 +50,7 @@ skill_tree:
       unlocks:
         - weather_prediction
         - carbon_cycle_analysis
-    
+
     - id: ecosystem_monitoring
       name: "生命系統"
       description: "追蹤和分析生態系統"
@@ -58,7 +58,7 @@ skill_tree:
       unlocks:
         - biodiversity_assessment
         - habitat_mapping
-    
+
     - id: pollution_detection
       name: "污染追蹤"
       description: "識別和追溯污染物"
@@ -66,7 +66,7 @@ skill_tree:
       unlocks:
         - water_quality_analysis
         - air_monitoring
-    
+
     - id: sustainable_tech
       name: "綠色創新"
       description: "開發環保科技"
@@ -81,13 +81,13 @@ skill_tree:
       description: "用 AI 預測氣候情境"
       max_level: 15
       requires: [climate_science, ecosystem_monitoring]
-    
+
     - id: restoration_ecology
       name: "生態系修復"
       description: "恢復受損環境"
       max_level: 15
       requires: [ecosystem_monitoring, sustainable_tech]
-    
+
     - id: policy_influence
       name: "環境倡議"
       description: "影響環境政策"
@@ -104,7 +104,7 @@ milestone_quests:
     unlocks:
       - whistleblower_badge
       - media_attention
-  
+
   - id: ecosystem_save
     name: "棲地英雄"
     description: "拯救瀕危生態系統"
@@ -114,7 +114,7 @@ milestone_quests:
     unlocks:
       - conservation_champion_title
       - wildlife_alliance
-  
+
   - id: climate_solution
     name: "全球改變者"
     description: "開發突破性氣候解決方案"
@@ -131,19 +131,19 @@ achievements:
     description: "收集並分析第一個環境樣本"
     xp_reward: 100
     badge_type: bronze
-  
+
   - id: data_detective
     name: "模式發現者"
     description: "識別 10 個環境異常"
     xp_reward: 350
     badge_type: silver
-  
+
   - id: solution_provider
     name: "創新冠軍"
     description: "實施 5 個永續解決方案"
     xp_reward: 650
     badge_type: gold
-  
+
   - id: planet_protector
     name: "地球守護者"
     description: "完成所有環境挑戰"
@@ -158,14 +158,14 @@ example_tasks:
       description: "測試當地河流水質"
       skills_improved: [pollution_detection, data_visualization]
       xp_reward: 65
-    
+
     - id: carbon_footprint
       type: analysis
       title: "碳足跡計算器"
       description: "測量碳排放"
       skills_improved: [climate_science, sustainable_solutions]
       xp_reward: 75
-  
+
   intermediate:
     - id: habitat_restoration
       type: creation
@@ -173,14 +173,14 @@ example_tasks:
       description: "設計棲地修復計畫"
       skills_improved: [restoration_ecology, ecosystem_analysis]
       xp_reward: 190
-    
+
     - id: pollution_tracking
       type: analysis
       title: "污染追蹤"
       description: "追蹤污染至源頭"
       skills_improved: [pollution_detection, data_visualization]
       xp_reward: 220
-  
+
   advanced:
     - id: climate_model
       type: creation
@@ -188,7 +188,7 @@ example_tasks:
       description: "建立 AI 氣候預測模型"
       skills_improved: [climate_modeling, data_visualization]
       xp_reward: 420
-    
+
     - id: policy_proposal
       type: creation
       title: "大地之法"

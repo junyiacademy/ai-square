@@ -25,16 +25,16 @@ export const LANGUAGE_NAMES: Record<string, string> = {
 export function getLanguageFromHeader(request: Request): string {
   const acceptLanguage = request.headers.get('accept-language');
   if (!acceptLanguage) return 'en';
-  
+
   // Extract primary language code
   const lang = acceptLanguage.split(',')[0].split('-')[0];
-  
+
   // Map to supported languages
   const supportedLangs = ['en', 'zhTW', 'zhCN', 'pt', 'ar', 'id', 'th', 'es', 'ja', 'ko', 'fr', 'de', 'ru', 'it'];
   if (supportedLangs.includes(lang)) {
     return lang;
   }
-  
+
   // Handle zh variants
   if (lang === 'zh') {
     const variant = acceptLanguage.toLowerCase();
@@ -43,7 +43,7 @@ export function getLanguageFromHeader(request: Request): string {
     }
     return 'zhCN';
   }
-  
+
   return 'en';
 }
 
@@ -75,9 +75,9 @@ export function getFallbackLanguage(languageCode: string): string {
   if (isSupportedLanguage(languageCode)) {
     return languageCode;
   }
-  
+
   const normalized = languageCode.toLowerCase();
-  
+
   // Handle Chinese variants
   if (normalized.startsWith('zh')) {
     if (normalized.includes('tw') || normalized.includes('hant')) {
@@ -88,13 +88,13 @@ export function getFallbackLanguage(languageCode: string): string {
     }
     return 'zhCN'; // Default Chinese to simplified
   }
-  
+
   // Handle language-region codes (e.g., en-US -> en)
   const baseLang = normalized.split('-')[0];
   if (isSupportedLanguage(baseLang)) {
     return baseLang;
   }
-  
+
   return 'en';
 }
 

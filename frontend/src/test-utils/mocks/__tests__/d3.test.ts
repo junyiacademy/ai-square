@@ -17,7 +17,7 @@ describe('d3 mocks', () => {
   it('should provide chainable API', () => {
     const d3 = require('d3');
     const selection = d3.select('body');
-    
+
     expect(selection.append).toBeDefined();
     expect(selection.attr).toBeDefined();
     expect(selection.style).toBeDefined();

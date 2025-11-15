@@ -187,7 +187,7 @@ describe('Task Interactions API', () => {
 
         // Verify interaction was added with correct transformation
         expect(mockTaskRepo.updateInteractions).toHaveBeenCalledWith(
-          mockTaskId, 
+          mockTaskId,
           expect.arrayContaining([
             expect.objectContaining({
               timestamp: userInteraction.timestamp,
@@ -196,7 +196,7 @@ describe('Task Interactions API', () => {
             })
           ])
         );
-        
+
         // Verify recordAttempt was called for user interaction
         expect(mockTaskRepo.recordAttempt).toHaveBeenCalledWith(mockTaskId, {
           response: userInteraction.content,
@@ -295,7 +295,7 @@ describe('Task Interactions API', () => {
             })
           ])
         );
-        
+
         // Also verify recordAttempt was called since this is a user interaction
         expect(mockTaskRepo.recordAttempt).toHaveBeenCalled();
       });

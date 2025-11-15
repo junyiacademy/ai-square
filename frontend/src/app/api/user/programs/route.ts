@@ -12,4 +12,4 @@ export async function GET(request: NextRequest) {
     // Fallback: just proxy status without body parsing on error
     return NextResponse.json({ success: false }, { status: response.status });
   }
-} 
+}

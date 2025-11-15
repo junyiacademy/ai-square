@@ -30,7 +30,7 @@ class MockAIService extends BaseAIService {
 
   async generateContent(request: IAIRequest): Promise<IAIResponse> {
     this.callHistory.push({ method: 'generateContent', args: [request] });
-    
+
     const error = this.mockErrors.get('generateContent');
     if (error) {
       throw error;
@@ -55,7 +55,7 @@ class MockAIService extends BaseAIService {
 
   async generateChat(messages: Array<{ role: string; content: string }>): Promise<IAIResponse> {
     this.callHistory.push({ method: 'generateChat', args: [messages] });
-    
+
     const error = this.mockErrors.get('generateChat');
     if (error) {
       throw error;
@@ -80,17 +80,17 @@ class MockAIService extends BaseAIService {
 
   async evaluateResponse(prompt: string, response: string, criteria: string[]): Promise<number> {
     this.callHistory.push({ method: 'evaluateResponse', args: [prompt, response, criteria] });
-    
+
     const error = this.mockErrors.get('evaluateResponse');
     if (error) {
       throw error;
     }
 
     // Mock evaluation logic
-    const score = Math.min(100, Math.max(0, 
+    const score = Math.min(100, Math.max(0,
       (response.length * 0.1) + (criteria.length * 10) + Math.random() * 20
     ));
-    
+
     return Math.round(score);
   }
 }
@@ -116,7 +116,7 @@ class HighPerformanceAIService extends BaseAIService {
 
   async generateContent(request: IAIRequest): Promise<IAIResponse> {
     const cacheKey = JSON.stringify(request);
-    
+
     if (HighPerformanceAIService.responseCache.has(cacheKey)) {
       return HighPerformanceAIService.responseCache.get(cacheKey)!;
     }
@@ -505,7 +505,7 @@ describe('BaseAIService', () => {
   describe('Interface Compliance', () => {
     it('should implement all required methods', () => {
       const methods = ['generateContent', 'generateChat', 'evaluateResponse'];
-      
+
       methods.forEach(method => {
         expect(typeof mockAIService[method as keyof MockAIService]).toBe('function');
       });
@@ -527,7 +527,7 @@ describe('BaseAIService', () => {
         { prompt: 'With context', context: { key: 'value' } },
         { prompt: 'With system', systemPrompt: 'System instruction' },
         { prompt: 'With params', temperature: 0.8, maxTokens: 500 },
-        { 
+        {
           prompt: 'Full request',
           context: { data: 'test' },
           systemPrompt: 'Be helpful',
@@ -555,7 +555,7 @@ describe('BaseAIService', () => {
 
   describe('Performance and Reliability', () => {
     it('should handle concurrent requests', async () => {
-      const requests = Array(10).fill(null).map((_, i) => 
+      const requests = Array(10).fill(null).map((_, i) =>
         mockAIService.generateContent({ prompt: `Request ${i}` })
       );
 
@@ -569,7 +569,7 @@ describe('BaseAIService', () => {
 
     it('should handle rapid sequential requests', async () => {
       const responses = [];
-      
+
       for (let i = 0; i < 20; i++) {
         const response = await mockAIService.generateContent({ prompt: `Sequential ${i}` });
         responses.push(response);
@@ -596,8 +596,8 @@ describe('BaseAIService', () => {
 
     it('should maintain call history integrity under concurrent access', async () => {
       mockAIService.clearCallHistory();
-      
-      const promises = Array(50).fill(null).map((_, i) => 
+
+      const promises = Array(50).fill(null).map((_, i) =>
         mockAIService.generateContent({ prompt: `Concurrent ${i}` })
       );
 
@@ -605,7 +605,7 @@ describe('BaseAIService', () => {
 
       const history = mockAIService.getCallHistory();
       expect(history).toHaveLength(50);
-      
+
       // Check that all calls are recorded
       const prompts = history.map(h => h.args[0].prompt);
       for (let i = 0; i < 50; i++) {
@@ -615,22 +615,22 @@ describe('BaseAIService', () => {
 
     it('should handle high-performance implementation efficiently', async () => {
       const startTime = Date.now();
-      
+
       // Make many requests to high-performance service
-      const requests = Array(100).fill(null).map((_, i) => 
+      const requests = Array(100).fill(null).map((_, i) =>
         highPerfAIService.generateContent({ prompt: `Performance test ${i}` })
       );
 
       const responses = await Promise.all(requests);
       const endTime = Date.now();
-      
+
       expect(responses).toHaveLength(100);
       expect(endTime - startTime).toBeLessThan(1000); // Should complete quickly
-      
+
       // Test caching behavior
       const firstResponse = await highPerfAIService.generateContent({ prompt: 'Cache test' });
       const secondResponse = await highPerfAIService.generateContent({ prompt: 'Cache test' });
-      
+
       expect(firstResponse.content).toBe(secondResponse.content);
     });
   });
@@ -721,15 +721,15 @@ describe('BaseAIService', () => {
     it('should handle partial service failures gracefully', async () => {
       // Configure partial failure
       mockAIService.setMockError('generateContent', new Error('Content generation failed'));
-      
+
       // Content generation should fail
       await expect(mockAIService.generateContent({ prompt: 'test' }))
         .rejects.toThrow('Content generation failed');
-      
+
       // But other methods should still work
       const chatResponse = await mockAIService.generateChat([{ role: 'user', content: 'test' }]);
       expect(chatResponse).toBeDefined();
-      
+
       const evalScore = await mockAIService.evaluateResponse('test', 'test', ['test']);
       expect(typeof evalScore).toBe('number');
     });
@@ -754,10 +754,10 @@ describe('BaseAIService', () => {
 
       await expect(timeoutService.generateContent({ prompt: 'test' }))
         .rejects.toThrow('Request timeout');
-      
+
       await expect(timeoutService.generateChat([]))
         .rejects.toThrow('Chat timeout');
-        
+
       await expect(timeoutService.evaluateResponse('', '', []))
         .rejects.toThrow('Evaluation timeout');
     });
@@ -771,7 +771,7 @@ describe('BaseAIService', () => {
       };
 
       mockAIService.setMockResponse('generateContent', customResponse);
-      
+
       // Clear and set different response
       mockAIService.setMockResponse('generateContent', {
         content: 'Different response',
@@ -784,21 +784,21 @@ describe('BaseAIService', () => {
 
     it('should allow setting and clearing mock errors', () => {
       const testError = new Error('Test error');
-      
+
       mockAIService.setMockError('generateContent', testError);
-      
+
       expect(mockAIService['mockErrors'].get('generateContent')).toBe(testError);
     });
 
     it('should track call history accurately', async () => {
       mockAIService.clearCallHistory();
-      
+
       await mockAIService.generateContent({ prompt: 'test1' });
       await mockAIService.generateChat([{ role: 'user', content: 'test2' }]);
       await mockAIService.evaluateResponse('test3', 'test4', ['test5']);
-      
+
       const history = mockAIService.getCallHistory();
-      
+
       expect(history).toHaveLength(3);
       expect(history[0].method).toBe('generateContent');
       expect(history[1].method).toBe('generateChat');
@@ -808,7 +808,7 @@ describe('BaseAIService', () => {
     it('should clear call history properly', async () => {
       await mockAIService.generateContent({ prompt: 'test' });
       expect(mockAIService.getCallHistory()).toHaveLength(1);
-      
+
       mockAIService.clearCallHistory();
       expect(mockAIService.getCallHistory()).toHaveLength(0);
     });

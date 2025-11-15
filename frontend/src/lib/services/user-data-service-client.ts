@@ -1,13 +1,13 @@
 /**
  * User Data Service Client - API-based implementation
- * 
+ *
  * This service communicates with the API routes instead of directly accessing GCS
  * to avoid browser compatibility issues
  */
 
-import type { 
-  UserData, 
-  AssessmentResults, 
+import type {
+  UserData,
+  AssessmentResults,
   UserAchievements,
   AssessmentSession
 } from '@/lib/types/user-data';
@@ -30,14 +30,14 @@ export class UserDataServiceClient {
       // Get session token from localStorage
       const sessionToken = localStorage.getItem('ai_square_session');
       console.log('[UserDataService] Loading user data, session token:', sessionToken ? 'present' : 'missing');
-      
+
       const headers: HeadersInit = {};
-      
+
       // Add session token to headers if available
       if (sessionToken) {
         headers['x-session-token'] = sessionToken;
       }
-      
+
       const response = await fetch('/api/user-data', {
         headers,
         credentials: 'include'
@@ -53,7 +53,7 @@ export class UserDataServiceClient {
       }
 
       const result = await response.json();
-      
+
       if (result.success && result.data) {
         // Update cache
         this.cache = result.data;
@@ -64,14 +64,14 @@ export class UserDataServiceClient {
       return null;
     } catch (error) {
       console.error('Failed to load user data:', error);
-      
+
       // Try localStorage migration if API fails
       const localData = this.loadFromLocalStorage();
       if (localData) {
         console.log('Loaded from localStorage fallback');
         return localData;
       }
-      
+
       return null;
     }
   }
@@ -84,16 +84,16 @@ export class UserDataServiceClient {
       // Get session token from localStorage
       const sessionToken = localStorage.getItem('ai_square_session');
       console.log('[UserDataService] Saving user data, session token:', sessionToken ? 'present' : 'missing');
-      
+
       const headers: HeadersInit = {
         'Content-Type': 'application/json'
       };
-      
+
       // Add session token to headers if available
       if (sessionToken) {
         headers['x-session-token'] = sessionToken;
       }
-      
+
       const response = await fetch('/api/user-data', {
         method: 'POST',
         headers,
@@ -131,7 +131,7 @@ export class UserDataServiceClient {
   }
 
   // Convenience methods for specific data types
-  
+
   async saveAssessmentResults(results: AssessmentResults): Promise<void> {
     const userData = await this.loadUserData() || this.getDefaultUserData();
     userData.assessmentResults = results;
@@ -152,10 +152,10 @@ export class UserDataServiceClient {
 
   async addAssessmentSession(session: AssessmentSession): Promise<void> {
     const userData = await this.loadUserData() || this.getDefaultUserData();
-    
+
     userData.assessmentSessions.push(session);
     userData.assessmentResults = session.results;
-    
+
     await this.saveUserData(userData);
   }
 
@@ -169,7 +169,7 @@ export class UserDataServiceClient {
 
 
   // Evaluation system methods (delegated to API)
-  
+
   async saveEvaluation({}: string, {}: string, {}: Record<string, unknown>): Promise<void> {
     // This would call a separate API endpoint for evaluations
     console.warn('Evaluation save not implemented in client service');
@@ -193,7 +193,7 @@ export class UserDataServiceClient {
   }
 
   // Utility methods
-  
+
   async exportData(): Promise<UserData | null> {
     return await this.loadUserData();
   }
@@ -227,10 +227,10 @@ export class UserDataServiceClient {
 
       // Save to API/GCS
       await this.saveUserData(localData);
-      
+
       // Clear localStorage after successful migration
       localStorage.removeItem('discoveryData');
-      
+
       console.log('Successfully migrated data from localStorage');
       return true;
     } catch (error) {

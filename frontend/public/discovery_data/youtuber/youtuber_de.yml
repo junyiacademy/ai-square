@@ -6,10 +6,10 @@ metadata:
   title: "Video-Barde - YouTuber"
   short_description: "Führe fesselnde Videogeschichten auf digitalen Bühnen auf"
   long_description: |
-    Du bist ein neues Mitglied der "Video-Barden-Gilde", begabt darin, Geschichten 
-    durch Linsen zu erzählen und Publikum zu unterhalten. In diesem digitalen Königreich 
-    der Kreativität und Technologie ist jedes Video eine Aufführung, jeder Abonnent 
-    dein Publikum, und deine Mission ist es, Videoinhalte zu erschaffen, die Herzen 
+    Du bist ein neues Mitglied der "Video-Barden-Gilde", begabt darin, Geschichten
+    durch Linsen zu erzählen und Publikum zu unterhalten. In diesem digitalen Königreich
+    der Kreativität und Technologie ist jedes Video eine Aufführung, jeder Abonnent
+    dein Publikum, und deine Mission ist es, Videoinhalte zu erschaffen, die Herzen
     berühren und Resonanz auslösen.
   estimated_hours: 55
   skill_focus:
@@ -20,18 +20,18 @@ metadata:
 world_setting:
   name: "Video-Barden-Gilde"
   description: |
-    Die Video-Barden-Gilde ist eine künstlerische Gilde, die Top-Content-Creator 
-    heranbildet. Hier lernen Schöpfer, Kreativität mit Algorithmus-Anforderungen, 
-    Authentizität mit Publikumserwartungen in Einklang zu bringen und Kanäle 
+    Die Video-Barden-Gilde ist eine künstlerische Gilde, die Top-Content-Creator
+    heranbildet. Hier lernen Schöpfer, Kreativität mit Algorithmus-Anforderungen,
+    Authentizität mit Publikumserwartungen in Einklang zu bringen und Kanäle
     aufzubauen, die Millionen inspirieren und unterhalten.
   atmosphere: creative_dynamic
   visual_theme: digital_stage
 starting_scenario:
   title: "Der Algorithmus-Wandel"
   description: |
-    Der Kreativdirektor begrüßt dich mit besorgniserregenden Nachrichten: Algorithmus, 
-    der launische König, hat plötzlich seine Vorlieben geändert und vergräbt die Arbeit 
-    vieler Creator. Du musst ein Gleichgewicht finden zwischen der Wahrung deiner 
+    Der Kreativdirektor begrüßt dich mit besorgniserregenden Nachrichten: Algorithmus,
+    der launische König, hat plötzlich seine Vorlieben geändert und vergräbt die Arbeit
+    vieler Creator. Du musst ein Gleichgewicht finden zwischen der Wahrung deiner
     kreativen Integrität und der Anpassung an algorithmische Anforderungen.
   initial_tasks:
     - understand_youtube

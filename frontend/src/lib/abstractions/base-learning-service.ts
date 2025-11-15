@@ -211,7 +211,7 @@ export abstract class BaseLearningService {
     if (response !== undefined && task) {
       task.userResponse = response as Record<string, unknown>;
     }
-    
+
     // Complete the task
     const completedTask = await this.taskRepo.complete(taskId);
 
@@ -238,12 +238,12 @@ export abstract class BaseLearningService {
 
     // Get all tasks for the program to check if there are more
     const allTasks = await this.taskRepo.findByProgram(task.programId);
-    
+
     if (nextTaskIndex < allTasks.length) {
       // Move to next task
       await this.programRepo.updateProgress(task.programId, nextTaskIndex);
       nextTask = allTasks[nextTaskIndex];
-      
+
       if (nextTask) {
         // Mark next task as active by storing in metadata
         nextTask.status = 'active';
@@ -320,17 +320,17 @@ export abstract class BaseLearningService {
   }> {
     // Get all user programs
     const allPrograms = await this.programRepo.findByUser(userId);
-    
+
     const activePrograms = allPrograms.filter(p => p.status === 'active');
     const completedPrograms = allPrograms.filter(p => p.status === 'completed');
 
     // Get all user evaluations
     const evaluations = await this.evaluationRepo.findByUser(userId);
-    
+
     // Calculate average score if available
     let averageScore: number | undefined;
     const evaluationsWithScores = evaluations.filter(e => e.score !== undefined);
-    
+
     if (evaluationsWithScores.length > 0) {
       const totalScore = evaluationsWithScores.reduce((sum, e) => sum + (e.score || 0), 0);
       averageScore = totalScore / evaluationsWithScores.length;
@@ -369,7 +369,7 @@ export abstract class BaseLearningService {
 
     // Get tasks
     const tasks = await this.taskRepo.findByProgram(programId);
-    
+
     // Get evaluations
     const evaluations = await this.evaluationRepo.findByProgram(programId);
 

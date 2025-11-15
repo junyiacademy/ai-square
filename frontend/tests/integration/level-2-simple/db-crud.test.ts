@@ -30,8 +30,8 @@ describe.skip('Basic Database CRUD', () => {
 
     // Insert test user
     const insertResult = await pool.query(
-      `INSERT INTO users (id, email, name, role, email_verified, created_at) 
-       VALUES ($1, $2, $3, $4, $5, NOW()) 
+      `INSERT INTO users (id, email, name, role, email_verified, created_at)
+       VALUES ($1, $2, $3, $4, $5, NOW())
        RETURNING id, email`,
       [testId, testEmail, 'Test User', 'user', true]
     );
@@ -62,7 +62,7 @@ describe.skip('Basic Database CRUD', () => {
 
       // Insert in transaction
       await client.query(
-        `INSERT INTO users (id, email, name, role, email_verified) 
+        `INSERT INTO users (id, email, name, role, email_verified)
          VALUES ($1, $2, $3, $4, $5)`,
         [testId, `test-tx-${Date.now()}@example.com`, 'TX Test', 'user', true]
       );
@@ -90,15 +90,15 @@ describe.skip('Basic Database CRUD', () => {
 
   it('should query scenarios', async () => {
     const result = await pool.query(
-      `SELECT id, mode, status 
-       FROM scenarios 
-       WHERE status = 'active' 
+      `SELECT id, mode, status
+       FROM scenarios
+       WHERE status = 'active'
        LIMIT 5`
     );
 
     // Should have some scenarios (or none if empty DB)
     expect(Array.isArray(result.rows)).toBe(true);
-    
+
     if (result.rows.length > 0) {
       // Check structure
       expect(result.rows[0]).toHaveProperty('id');
@@ -124,7 +124,7 @@ describe.skip('Basic Database CRUD', () => {
 
     // Insert with JSONB - include required fields for PBL mode
     await pool.query(
-      `INSERT INTO scenarios (id, mode, status, source_type, title, description, pbl_data) 
+      `INSERT INTO scenarios (id, mode, status, source_type, title, description, pbl_data)
        VALUES ($1, $2, $3, $4, $5, $6, $7)`,
       [testId, 'pbl', 'draft', 'yaml', testData.title, testData.description, testData.pbl_data]
     );

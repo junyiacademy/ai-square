@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
       sort: 'updated',
       direction: 'desc'
     });
-    
+
     // Filter only truly open PRs (not merged)
     const prs = allPRs.filter(pr => pr.state === 'open' && !pr.merged_at);
 
@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
       const hasValidBranch = pr.head && pr.head.ref;
       return isUnique && hasValidBranch;
     });
-    
+
     console.log(`Found ${allPRs.length} total PRs, ${prs.length} open PRs, ${uniquePRs.length} unique open PRs`);
     uniquePRs.forEach(pr => {
       console.log(`PR #${pr.number}: ${pr.title} (state: ${pr.state}, merged: ${pr.merged_at ? 'YES' : 'NO'}, branch: ${pr.head?.ref || 'unknown'})`);
@@ -52,7 +52,7 @@ export async function GET(request: NextRequest) {
       uniquePRs.map(async (pr) => {
         try {
           const branchName = pr.head.ref;
-          
+
           // Get commits ahead of main
           const { data: comparison } = await octokit.repos.compareCommits({
             owner,

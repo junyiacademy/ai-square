@@ -208,7 +208,7 @@ describe('POST /api/assessment/programs/[programId]/next-task', () => {
         method: 'POST',
         body: JSON.stringify({ currentTaskId: 'task-1' })
       });
-      
+
       const response = await POST(request, { params: Promise.resolve({'programId':'program-123'}) });
       const data = await response.json();
 
@@ -223,7 +223,7 @@ describe('POST /api/assessment/programs/[programId]/next-task', () => {
         method: 'POST',
         body: JSON.stringify({ currentTaskId: 'task-1' })
       });
-      
+
       const response = await POST(request, { params: Promise.resolve({'programId':'program-123'}) });
       const data = await response.json();
 
@@ -240,7 +240,7 @@ describe('POST /api/assessment/programs/[programId]/next-task', () => {
         method: 'POST',
         body: JSON.stringify({ currentTaskId: 'task-1' })
       });
-      
+
       const response = await POST(request, { params: Promise.resolve({'programId':'program-123'}) });
       const data = await response.json();
 
@@ -258,7 +258,7 @@ describe('POST /api/assessment/programs/[programId]/next-task', () => {
         method: 'POST',
         body: JSON.stringify({ currentTaskId: 'task-1' })
       });
-      
+
       const response = await POST(request, { params: Promise.resolve({'programId':'program-123'}) });
       const data = await response.json();
 
@@ -274,7 +274,7 @@ describe('POST /api/assessment/programs/[programId]/next-task', () => {
         method: 'POST',
         body: JSON.stringify({ currentTaskId: 'task-1' })
       });
-      
+
       const response = await POST(request, { params: Promise.resolve({'programId':'program-123'}) });
       const data = await response.json();
 
@@ -294,7 +294,7 @@ describe('POST /api/assessment/programs/[programId]/next-task', () => {
         method: 'POST',
         body: JSON.stringify({ currentTaskId: 'task-1' })
       });
-      
+
       const response = await POST(request, { params: Promise.resolve({'programId':'program-123'}) });
       const data = await response.json();
 
@@ -314,7 +314,7 @@ describe('POST /api/assessment/programs/[programId]/next-task', () => {
         method: 'POST',
         body: JSON.stringify({}) // No currentTaskId
       });
-      
+
       const response = await POST(request, { params: Promise.resolve({'programId':'program-123'}) });
       const data = await response.json();
 
@@ -334,7 +334,7 @@ describe('POST /api/assessment/programs/[programId]/next-task', () => {
         method: 'POST',
         body: JSON.stringify({ currentTaskId: 'task-1' })
       });
-      
+
       const response = await POST(request, { params: Promise.resolve({'programId':'program-123'}) });
       const data = await response.json();
 
@@ -359,7 +359,7 @@ describe('POST /api/assessment/programs/[programId]/next-task', () => {
         method: 'POST',
         body: JSON.stringify({ currentTaskId: 'task-1' })
       });
-      
+
       const response = await POST(request, { params: Promise.resolve({'programId':'program-123'}) });
       const data = await response.json();
 
@@ -378,7 +378,7 @@ describe('POST /api/assessment/programs/[programId]/next-task', () => {
         method: 'POST',
         body: JSON.stringify({ currentTaskId: 'task-3' })
       });
-      
+
       const response = await POST(request, { params: Promise.resolve({'programId':'program-123'}) });
       const data = await response.json();
 
@@ -397,7 +397,7 @@ describe('POST /api/assessment/programs/[programId]/next-task', () => {
         method: 'POST',
         body: JSON.stringify({})
       });
-      
+
       const response = await POST(request, { params: Promise.resolve({'programId':'program-123'}) });
       const data = await response.json();
 
@@ -411,7 +411,7 @@ describe('POST /api/assessment/programs/[programId]/next-task', () => {
         method: 'POST',
         body: JSON.stringify({ currentTaskId: 'task-1' })
       });
-      
+
       await POST(request, { params: Promise.resolve({'programId':'program-123'}) });
 
       expect(consoleSpy.log).toHaveBeenCalledWith('Tasks loaded:', 3);
@@ -444,7 +444,7 @@ describe('POST /api/assessment/programs/[programId]/next-task', () => {
         method: 'POST',
         body: JSON.stringify({})
       });
-      
+
       const response = await POST(request, { params: Promise.resolve({'programId':'program-123'}) });
       const data = await response.json();
 
@@ -467,7 +467,7 @@ describe('POST /api/assessment/programs/[programId]/next-task', () => {
         method: 'POST',
         body: JSON.stringify({ currentTaskId: 'task-1' })
       });
-      
+
       const response = await POST(request, { params: Promise.resolve({'programId':'program-123'}) });
       const data = await response.json();
 
@@ -484,7 +484,7 @@ describe('POST /api/assessment/programs/[programId]/next-task', () => {
         method: 'POST',
         body: 'invalid json'
       });
-      
+
       const response = await POST(request, { params: Promise.resolve({'programId':'program-123'}) });
       const data = await response.json();
 

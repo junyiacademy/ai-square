@@ -20,18 +20,18 @@ export const jsonYamlLoader = {
     options: LoaderOptions = { preferJson: true, fallbackToYaml: true }
   ): Promise<T | null> {
     const basePath = filePath.replace(/\.(json|yaml|yml)$/, '');
-    
+
     if (options.preferJson) {
       // Try JSON first
       const jsonPath = `${basePath}.json`;
       const jsonData = await this.loadJson<T>(jsonPath);
       if (jsonData !== null) return jsonData;
-      
+
       // Fallback to YAML if enabled
       if (options.fallbackToYaml) {
         const yamlData = await this.loadYaml<T>(`${basePath}.yaml`);
         if (yamlData !== null) return yamlData;
-        
+
         // Try .yml extension
         return await this.loadYaml<T>(`${basePath}.yml`);
       }
@@ -39,18 +39,18 @@ export const jsonYamlLoader = {
       // Try YAML first
       let yamlData = await this.loadYaml<T>(`${basePath}.yaml`);
       if (yamlData !== null) return yamlData;
-      
+
       // Try .yml extension
       yamlData = await this.loadYaml<T>(`${basePath}.yml`);
       if (yamlData !== null) return yamlData;
-      
+
       // Fallback to JSON
       return await this.loadJson<T>(`${basePath}.json`);
     }
-    
+
     return null;
   },
-  
+
   /**
    * Load JSON file
    */
@@ -64,7 +64,7 @@ export const jsonYamlLoader = {
       return null;
     }
   },
-  
+
   /**
    * Load YAML file
    */
@@ -78,7 +78,7 @@ export const jsonYamlLoader = {
       return null;
     }
   },
-  
+
   /**
    * Check if file exists
    */

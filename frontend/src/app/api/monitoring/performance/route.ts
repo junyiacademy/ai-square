@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
     const endpoint = searchParams.get('endpoint');
     const method = searchParams.get('method') || 'GET';
     const format = searchParams.get('format') || 'json';
-    
+
     if (endpoint) {
       // Get metrics for specific endpoint
       const metrics = performanceMonitor.getMetrics(endpoint, method);
@@ -17,20 +17,20 @@ export async function GET(request: NextRequest) {
           { status: 404 }
         );
       }
-      
+
       return NextResponse.json({ metrics });
     }
-    
+
     // Get full performance report
     const report = getPerformanceReport();
-    
+
     if (format === 'summary') {
-      return NextResponse.json({ 
+      return NextResponse.json({
         summary: report.summary,
-        alertCount: report.alerts.length 
+        alertCount: report.alerts.length
       });
     }
-    
+
     return NextResponse.json(report);
   } catch (error) {
     console.error('Error getting performance metrics:', error);
@@ -44,9 +44,9 @@ export async function GET(request: NextRequest) {
 export async function DELETE() {
   try {
     performanceMonitor.clearMetrics();
-    return NextResponse.json({ 
-      success: true, 
-      message: 'Performance metrics cleared' 
+    return NextResponse.json({
+      success: true,
+      message: 'Performance metrics cleared'
     });
   } catch (error) {
     console.error('Error clearing performance metrics:', error);

@@ -6,10 +6,10 @@ metadata:
   title: "Penjelajah Bisnis Dimensi - Pengusaha Teknologi"
   short_description: "Bangun kerajaan bisnis teknologi di seluruh multiverse"
   long_description: |
-    Anda adalah penjelajah baru yang dilantik dalam Aliansi Bisnis Lintas Dimensi, 
-    memiliki kemampuan untuk mendirikan perusahaan teknologi di berbagai ruang waktu. 
-    Setiap alam semesta paralel memiliki tingkat perkembangan teknologi yang unik, 
-    dan Anda harus beradaptasi dengan berbagai lingkungan untuk membangun kerajaan 
+    Anda adalah penjelajah baru yang dilantik dalam Aliansi Bisnis Lintas Dimensi,
+    memiliki kemampuan untuk mendirikan perusahaan teknologi di berbagai ruang waktu.
+    Setiap alam semesta paralel memiliki tingkat perkembangan teknologi yang unik,
+    dan Anda harus beradaptasi dengan berbagai lingkungan untuk membangun kerajaan
     bisnis yang sukses.
   estimated_hours: 65
   skill_focus:
@@ -20,18 +20,18 @@ metadata:
 world_setting:
   name: "Jaringan Bisnis Multiverse"
   description: |
-    Jaringan Bisnis Multiverse terdiri dari ruang waktu paralel yang tak terhitung 
-    membentuk jaring komersial yang luas. Pengusaha teknologi bepergian antar dimensi, 
-    membawa inovasi dari satu alam semesta untuk memecahkan masalah di alam lainnya, 
+    Jaringan Bisnis Multiverse terdiri dari ruang waktu paralel yang tak terhitung
+    membentuk jaring komersial yang luas. Pengusaha teknologi bepergian antar dimensi,
+    membawa inovasi dari satu alam semesta untuk memecahkan masalah di alam lainnya,
     sambil bersaing melawan kekuatan monopoli yang berusaha mengendalikan semua realitas.
   atmosphere: futuristic_dynamic
   visual_theme: interdimensional_tech
 starting_scenario:
   title: "Aktivasi Gerbang Dimensi"
   description: |
-    Mentor Bisnis Atlas menyambut Anda di pusat dimensi, menjelaskan kemampuan baru 
-    Anda untuk bepergian antar alam semesta. Namun CEO Keserakahan dari Monopoly Corp 
-    menggunakan taktik tidak adil untuk menghancurkan startup di semua dimensi. 
+    Mentor Bisnis Atlas menyambut Anda di pusat dimensi, menjelaskan kemampuan baru
+    Anda untuk bepergian antar alam semesta. Namun CEO Keserakahan dari Monopoly Corp
+    menggunakan taktik tidak adil untuk menghancurkan startup di semua dimensi.
     Anda harus menggunakan inovasi dan kolaborasi untuk melawan rencana monopolinya.
   initial_tasks:
     - understand_multiverse

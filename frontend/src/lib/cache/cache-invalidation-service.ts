@@ -96,7 +96,7 @@ export class CacheInvalidationService {
 
     // Build specific cache key
     const baseKey = entityId ? `${entityType}:${entityId}` : entityType;
-    
+
     // Add to invalidation queue
     this.invalidationQueue.add(baseKey);
 
@@ -167,12 +167,12 @@ export class CacheInvalidationService {
   private async deleteByPattern(pattern: string): Promise<void> {
     // Convert simple wildcard to regex
     const regex = new RegExp('^' + pattern.replace(/\*/g, '.*') + '$');
-    
+
     // Note: This is a simplified implementation
     // In production, you'd use Redis SCAN command
     const keys = await distributedCacheService.getAllKeys();
     const keysToDelete = keys.filter(key => regex.test(key));
-    
+
     for (const key of keysToDelete) {
       await distributedCacheService.delete(key);
     }
@@ -183,7 +183,7 @@ export class CacheInvalidationService {
    */
   async invalidateScenario(scenarioId: string, mode?: string): Promise<void> {
     await this.invalidate('scenario', scenarioId);
-    
+
     // Also invalidate mode-specific caches
     if (mode) {
       await distributedCacheService.delete(cacheKeys.scenariosByMode(mode));
@@ -196,11 +196,11 @@ export class CacheInvalidationService {
    */
   async invalidateProgram(programId: string, userId?: string, scenarioId?: string): Promise<void> {
     await this.invalidate('program', programId);
-    
+
     if (userId) {
       await distributedCacheService.delete(cacheKeys.userPrograms(userId));
     }
-    
+
     if (scenarioId) {
       await distributedCacheService.delete(`programs:scenario:${scenarioId}`);
     }
@@ -211,7 +211,7 @@ export class CacheInvalidationService {
    */
   async invalidateTask(taskId: string, programId?: string): Promise<void> {
     await this.invalidate('task', taskId);
-    
+
     if (programId) {
       await distributedCacheService.delete(`tasks:program:${programId}`);
     }
@@ -222,7 +222,7 @@ export class CacheInvalidationService {
    */
   async warmCache(entityType: string, popularIds: string[]): Promise<void> {
     console.log(`[Cache] Warming cache for ${entityType} with ${popularIds.length} items`);
-    
+
     // This would be implemented based on actual repository methods
     // Example implementation would pre-load frequently accessed data
   }

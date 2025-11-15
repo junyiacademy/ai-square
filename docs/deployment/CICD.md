@@ -382,7 +382,7 @@ gcloud config list  # 應顯示 project = ai-square-463013
 # Terminal for AI Square
 export CLOUDSDK_ACTIVE_CONFIG_NAME=ai-square
 
-# Terminal for other projects  
+# Terminal for other projects
 export CLOUDSDK_ACTIVE_CONFIG_NAME=other-config
 ```
 
@@ -618,7 +618,7 @@ frontend/
    # 使用環境變數檔案
    # 在 .env.local（已加入 .gitignore）中設定：
    DB_PASSWORD=你的密碼（需符合要求）
-   
+
    # 然後在執行時讀取：
    source .env.local
    export TF_VAR_db_password="${DB_PASSWORD}"
@@ -638,16 +638,16 @@ resource "google_sql_database_instance" "main" {
   name             = "ai-square-db-${var.environment}-asia"
   database_version = "POSTGRES_15"
   region          = var.region
-  
+
   settings {
     tier = var.environment == "production" ? "db-custom-2-4096" : "db-f1-micro"
-    
+
     # 安全設定
     database_flags {
       name  = "log_connections"
       value = "on"
     }
-    
+
     # 備份設定
     backup_configuration {
       enabled = var.environment == "production"
@@ -668,7 +668,7 @@ resource "google_sql_database_instance" "main" {
    ```bash
    # 本地開發
    npx prisma migrate dev
-   
+
    # Staging/Production - 透過 API
    curl -X POST "$URL/api/admin/migrate"
    ```
@@ -686,7 +686,7 @@ resource "google_sql_database_instance" "main" {
    ```bash
    # 自動執行（配置在 package.json）
    npx prisma db seed
-   
+
    # 手動執行
    npx tsx prisma/seed.ts
    ```
@@ -808,15 +808,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
-        
+
       - name: Terraform Init
         run: |
           cd terraform
           terraform init
-          
+
       - name: Terraform Apply
         run: |
           cd terraform
@@ -848,7 +848,7 @@ jobs:
     - GCP_SA_KEY: Service Account JSON（GitHub → GCP 認證）
     - DB_PASSWORD: 資料庫密碼（加密儲存）
     - NEXTAUTH_SECRET: NextAuth 認證密鑰
-    
+
   Google Secret Manager:
     - ai-square-db-password: 資料庫密碼
     - ai-square-nextauth-secret: NextAuth 密鑰
@@ -881,7 +881,7 @@ main branch:
   - Require branches to be up to date
   - Require conversation resolution
   - Include administrators
-  
+
 staging branch:
   - Require pull request reviews (1+ approver)
   - Require status checks to pass
@@ -1328,12 +1328,12 @@ gcloud auth application-default set-quota-project ai-square-463013
 
 **問題 4: 為什麼「一步部署」一直失敗？**
 - **錯誤認知**: 以為 Terraform 會處理所有事情
-- **實際情況**: 
+- **實際情況**:
   - Terraform = 基礎設施（Cloud SQL 實例、Cloud Run 服務）
   - GitHub Actions = 應用程式（Docker build、DB migration、初始化資料）
 - **正確理解**: 這是分工合作，不是單一工具能完成的
 
-**最重要的提醒**: 
+**最重要的提醒**:
 ```bash
 # 完整部署 = Terraform + GitHub Actions
 # 如果只跑 Terraform，你只會得到空的基礎設施！
@@ -1762,21 +1762,21 @@ graph TB
 graph LR
     subgraph "Terraform Resources"
         ServiceAccount[google_service_account<br/>ai-square-service]
-        
+
         SQL[google_sql_database_instance<br/>ai-square-db-{env}]
         DB[google_sql_database<br/>ai_square_db]
-        
+
         CloudRun[google_cloud_run_service<br/>ai-square-{env}]
-        
+
         Secret[google_secret_manager_secret<br/>db-password-{env}]
-        
+
         IAM1[google_project_iam_member<br/>cloudsql.client]
         IAM2[google_project_iam_member<br/>secretmanager.secretAccessor]
-        
+
         Monitor[google_monitoring_uptime_check_config]
         Alert[google_monitoring_alert_policy]
     end
-    
+
     ServiceAccount --> IAM1
     ServiceAccount --> IAM2
     CloudRun --> ServiceAccount
@@ -1796,19 +1796,19 @@ graph TB
             PlanTest[tests_plan.tftest.hcl<br/>配置驗證]
             ValidateTest[tests_validate.tftest.hcl<br/>部署驗證]
         end
-        
+
         subgraph "Application Tests"
             E2ETest[E2E Tests<br/>Playwright]
             HealthTest[Health Check<br/>API 可用性]
             LoginTest[Login Flow<br/>認證測試]
         end
-        
+
         subgraph "Integration Tests"
             DBTest[Database Tests<br/>資料完整性]
             APITest[API Tests<br/>端點測試]
         end
     end
-    
+
     PlanTest --> ValidateTest
     ValidateTest --> E2ETest
     E2ETest --> HealthTest
@@ -1825,16 +1825,16 @@ graph TB
         EnvVar[TF_VAR_db_password<br/>環境變數]
         SecretMgr[Google Secret Manager]
         CloudRun[Cloud Run Service]
-        
+
         EnvVar --> Terraform
         Terraform --> SecretMgr
         SecretMgr --> CloudRun
     end
-    
+
     subgraph "Access Control"
         ServiceAcc[Service Account]
         IAMRoles[IAM Roles]
-        
+
         ServiceAcc --> IAMRoles
         IAMRoles --> SQLClient[Cloud SQL Client]
         IAMRoles --> SecretAccess[Secret Accessor]
@@ -1887,7 +1887,7 @@ make clean              # 清理檔案
 
 1. **基礎 CI Pipeline** (`/.github/workflows/ci.yml`)
    - ✅ TypeScript 編譯檢查
-   - ✅ ESLint 程式碼品質檢查  
+   - ✅ ESLint 程式碼品質檢查
    - ✅ Jest 單元測試執行
    - ✅ 測試覆蓋率報告 (Codecov)
    - ✅ npm audit 安全掃描
@@ -1952,7 +1952,7 @@ graph LR
     C -->|失敗| E[阻止部署]
     E --> F[生成安全報告]
     F --> G[通知開發者]
-    
+
     B --> B1[掃描硬編碼密碼]
     B --> B2[檢查環境變數]
     B --> B3[驗證 Secret Manager]
@@ -2056,21 +2056,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Run Security Check
         run: |
           chmod +x ./scripts/security-check.sh
           ./scripts/security-check.sh
-      
+
       - name: Scan for Secrets
         uses: trufflesecurity/trufflehog@main
         with:
           path: ./
-          
+
       - name: Check Dependencies
         run: |
           npm audit --audit-level=moderate
-          
+
       - name: SAST Scan
         uses: aquasecurity/trivy-action@master
         with:
@@ -2119,7 +2119,7 @@ alertPolicy:
   conditions:
     - displayName: "High rate of 401 errors"
       conditionThreshold:
-        filter: 'resource.type="cloud_run_revision" 
+        filter: 'resource.type="cloud_run_revision"
                  AND metric.type="run.googleapis.com/request_count"
                  AND metric.label.response_code="401"'
         comparison: COMPARISON_GT
@@ -2250,7 +2250,7 @@ module "deployment" {
       RETRY_COUNT=$((RETRY_COUNT+1))
       sleep 30
     done
-    
+
     if [ $RETRY_COUNT -eq $MAX_RETRIES ]; then
       echo "Health check failed, rolling back"
       gcloud run services update-traffic $SERVICE_NAME \
@@ -2281,7 +2281,7 @@ on:
   workflow_run:
     workflows: ["Deploy to Staging"]
     types: [completed]
-    
+
 jobs:
   promote:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
@@ -2289,7 +2289,7 @@ jobs:
     steps:
       - name: Wait for stability period
         run: sleep 3600  # 1 小時穩定期
-        
+
       - name: Check staging metrics
         run: |
           # 檢查錯誤率、延遲等指標
@@ -2298,7 +2298,7 @@ jobs:
             echo "Error rate too high, cancelling promotion"
             exit 1
           fi
-          
+
       - name: Promote to production
         run: |
           gh workflow run deploy.yml -f environment=production
@@ -2336,8 +2336,8 @@ jobs:
 
 **實際錯誤訊息**：
 ```
-ERROR: (gcloud.run.deploy) Revision 'ai-square-frontend-00044-vlk' is not ready and cannot serve traffic. 
-Cloud Run does not support image 'gcr.io/ai-square-463013/ai-square-frontend:latest': 
+ERROR: (gcloud.run.deploy) Revision 'ai-square-frontend-00044-vlk' is not ready and cannot serve traffic.
+Cloud Run does not support image 'gcr.io/ai-square-463013/ai-square-frontend:latest':
 Container manifest type 'application/vnd.oci.image.index.v1+json' must support amd64/linux.
 ```
 
@@ -2433,7 +2433,7 @@ gcloud iam service-accounts add-iam-policy-binding \
 **實際錯誤訊息**：
 ```bash
 # 建立 Cloud SQL 時的錯誤
-ERROR: (gcloud.sql.instances.create) [SERVICE_NETWORKING_NOT_ENABLED] 
+ERROR: (gcloud.sql.instances.create) [SERVICE_NETWORKING_NOT_ENABLED]
 Private service networking is not enabled on the project.
 ```
 
@@ -2578,7 +2578,7 @@ docker build -t ${IMAGE_NAME}:${IMAGE_TAG} -f ${DOCKERFILE} .
    # 確保 deploy-production.sh 包含 --platform linux/amd64
    ./deploy-production.sh
    ```
-   
+
 2. **或使用 Cloud Build（推薦）**
    ```bash
    # Cloud Build 自動處理平台問題
@@ -2591,10 +2591,10 @@ docker build -t ${IMAGE_NAME}:${IMAGE_TAG} -f ${DOCKERFILE} .
    gcloud run deploy SERVICE_NAME-green \
      --image NEW_IMAGE \
      --no-traffic
-   
+
    # 測試新版本
    curl https://green-url.run.app/api/health
-   
+
    # 切換流量
    gcloud run services update-traffic SERVICE_NAME \
      --to-revisions=SERVICE_NAME-green=100
@@ -2604,13 +2604,13 @@ docker build -t ${IMAGE_NAME}:${IMAGE_TAG} -f ${DOCKERFILE} .
    ```bash
    #!/bin/bash
    # pre-deploy-checks.sh
-   
+
    # 檢查 image 平台
    docker manifest inspect IMAGE_URL | jq '.manifests[].platform'
-   
+
    # 檢查 API routes
    docker run --rm IMAGE_URL ls -la /app/.next/standalone/
-   
+
    # 驗證環境變數
    gcloud run services describe SERVICE_NAME --format=yaml | grep -E "DB_|NEXT"
    ```
@@ -2619,7 +2619,7 @@ docker build -t ${IMAGE_NAME}:${IMAGE_TAG} -f ${DOCKERFILE} .
    ```bash
    # 即時查看日誌
    gcloud run logs tail --service SERVICE_NAME --region REGION
-   
+
    # 設定告警
    gcloud monitoring policies create --config-from-file=alerts.yaml
    ```
@@ -2786,7 +2786,7 @@ make production-monitoring
 # Local 環境
 npm run db:reset              # 完全重建本地資料庫
 
-# Staging 環境  
+# Staging 環境
 make deploy-staging-full      # 完整重建 Staging（含 DB）
 
 # Production 環境
@@ -2956,12 +2956,12 @@ PGPASSWORD=postgres psql -h 127.0.0.1 -p 5434 -U postgres -d ai_square_db
 ```sql
 -- 創建標準 demo 帳號
 INSERT INTO users (id, email, password_hash, name, role, email_verified, created_at, updated_at)
-VALUES 
-(gen_random_uuid(), 'student@example.com', 
+VALUES
+(gen_random_uuid(), 'student@example.com',
  '$2b$10$.xkZ3DfAj2WDXSknfBBLsO/bNlHbeSWlzS6GZYVlPd/11XaAe7f4m', -- student123
  'Student User', 'student', true, NOW(), NOW()),
 (gen_random_uuid(), 'teacher@example.com',
- '$2b$10$BrsePjeOuXf039pkk2VDEOReodDH2H.zQlj6cRMPg0fYhXFmzZ/vy', -- teacher123  
+ '$2b$10$BrsePjeOuXf039pkk2VDEOReodDH2H.zQlj6cRMPg0fYhXFmzZ/vy', -- teacher123
  'Teacher User', 'teacher', true, NOW(), NOW()),
 (gen_random_uuid(), 'admin@example.com',
  '$2b$10$7QwCi8yF0MFsvpjxJuNNMO3L0BpIuHgwsbfVFJQbUMKc0E91WPjfW', -- admin123
@@ -3080,7 +3080,7 @@ DB_PASSWORD=postgres
 3. 確認資料庫連線
 
 **禁止使用的舊名稱**：
-- ❌ `ai_square_dev` 
+- ❌ `ai_square_dev`
 - ❌ `ai-square-development`
 - ❌ `aisquare2025local` (密碼)
 
@@ -3105,7 +3105,7 @@ DB_PASSWORD=postgres
    ```bash
    # 1. 基礎設施（手動觸發）
    make terraform-deploy-staging
-   
+
    # 2. 應用程式（自動觸發）
    git push origin staging  # 觸發 GitHub Actions
    ```
@@ -3160,18 +3160,18 @@ terraform/
 resource "null_resource" "init_database_schema" {
   # Staging: 每次部署都執行
   count = var.environment == "staging" ? 1 : 0
-  
+
   triggers = {
     always_run = "${timestamp()}"
   }
-  
+
   # ... 現有初始化邏輯
 }
 
 # Production 保護層
 resource "null_resource" "production_init_protection" {
   count = var.environment == "production" ? 1 : 0
-  
+
   provisioner "local-exec" {
     command = <<-EOT
       echo "========================================="
@@ -3184,7 +3184,7 @@ resource "null_resource" "production_init_protection" {
       echo "2. Use Prisma migrations for schema changes"
       echo "3. Use API endpoints for data updates"
       echo "========================================="
-      
+
       # 檢查是否強制初始化
       if [ "${var.force_production_init}" = "true" ]; then
         echo "🚨 FORCE INITIALIZATION REQUESTED"
@@ -3205,15 +3205,15 @@ resource "null_resource" "production_init_protection" {
 # Demo 帳號 Seeding
 resource "null_resource" "seed_demo_accounts" {
   depends_on = [null_resource.init_database_schema]
-  
+
   triggers = {
     # Staging: 每次都更新密碼
     # Production: 只在 demo_passwords 變更時更新
-    run_trigger = var.environment == "staging" ? 
-      "${timestamp()}" : 
+    run_trigger = var.environment == "staging" ?
+      "${timestamp()}" :
       "${md5(jsonencode(var.demo_passwords))}"
   }
-  
+
   provisioner "local-exec" {
     command = <<-EOT
       if [ "${var.environment}" = "production" ]; then
@@ -3223,7 +3223,7 @@ resource "null_resource" "seed_demo_accounts" {
         echo "✅ Staging: Will update passwords on conflict"
         CONFLICT_ACTION="DO UPDATE SET password_hash = EXCLUDED.password_hash"
       fi
-      
+
       # 執行 SQL with appropriate conflict action
       # ...
     EOT
@@ -3237,19 +3237,19 @@ resource "null_resource" "seed_demo_accounts" {
 # Scenario 初始化
 resource "null_resource" "init_scenarios" {
   depends_on = [null_resource.init_database_schema]
-  
+
   triggers = {
     # Staging: 總是執行
     # Production: 只在檔案變更時執行
-    run_trigger = var.environment == "staging" ? 
-      "${timestamp()}" : 
+    run_trigger = var.environment == "staging" ?
+      "${timestamp()}" :
       "${filemd5("${path.module}/scenarios-checksum.txt")}"
   }
-  
+
   provisioner "local-exec" {
     command = <<-EOT
       SERVICE_URL="${google_cloud_run_service.ai_square.status[0].url}"
-      
+
       # 設定 force 參數
       if [ "${var.environment}" = "production" ]; then
         FORCE_UPDATE="false"
@@ -3258,7 +3258,7 @@ resource "null_resource" "init_scenarios" {
         FORCE_UPDATE="true"
         echo "🚀 Staging: Scenarios will be force updated"
       fi
-      
+
       # 初始化 scenarios
       for endpoint in init-assessment init-pbl init-discovery; do
         curl -s -X POST "$${SERVICE_URL}/api/admin/$${endpoint}" \
@@ -3295,9 +3295,9 @@ variable "allow_production_destroy" {
 # Cloud SQL 實例保護
 resource "google_sql_database_instance" "main" {
   # ... 其他配置
-  
+
   deletion_protection = var.environment == "production"
-  
+
   lifecycle {
     prevent_destroy = var.environment == "production"
   }

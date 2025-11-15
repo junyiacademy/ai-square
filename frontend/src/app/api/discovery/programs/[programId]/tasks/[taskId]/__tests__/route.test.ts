@@ -14,7 +14,7 @@ import { mockConsoleError as createMockConsoleError } from '@/test-utils/helpers
 // Mock dependencies
 jest.mock('@/lib/auth/unified-auth', () => ({
   getUnifiedAuth: jest.fn(),
-  createUnauthorizedResponse: jest.fn(() => 
+  createUnauthorizedResponse: jest.fn(() =>
     new Response(JSON.stringify({ success: false, error: 'Authentication required' }), {
       status: 401,
       headers: { 'Content-Type': 'application/json' }

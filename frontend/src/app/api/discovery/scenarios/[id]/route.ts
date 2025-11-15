@@ -14,18 +14,18 @@ export async function GET(
     // Get language from query params
     const { searchParams } = new URL(request.url);
     const language = searchParams.get('lang') || 'en';
-    
+
     const { id: scenarioId } = await params;
-    
+
     // Get repository
     const scenarioRepo = repositoryFactory.getScenarioRepository();
-    
+
     // Check if scenario exists
     const scenario = await scenarioRepo.findById(scenarioId);
-    
+
     if (!scenario || scenario.mode !== 'discovery') {
       return NextResponse.json(
-        { 
+        {
           success: false,
           error: 'Scenario not found',
           meta: {
@@ -35,11 +35,11 @@ export async function GET(
         { status: 404 }
       );
     }
-    
+
     // Process multilingual fields
     const titleObj = scenario.title as Record<string, string>;
     const descObj = scenario.description as Record<string, string>;
-    
+
     const processedScenario = {
       ...scenario,
       title: titleObj?.[language] || titleObj?.en || 'Untitled',
@@ -64,7 +64,7 @@ export async function GET(
         })()
       } : {}
     };
-    
+
     // Return scenario data
     return NextResponse.json({
       success: true,
@@ -80,7 +80,7 @@ export async function GET(
   } catch (error) {
     console.error('Error in GET /api/discovery/scenarios/[id]:', error);
     return NextResponse.json(
-      { 
+      {
         success: false,
         error: 'Internal server error',
         meta: {

@@ -10,7 +10,7 @@ metadata:
     你是「產品煉金工坊」的新晉煉金術師，擅長將用戶需求、技術能力和商業
     目標融合成強大的產品。在這個充滿創新火花的工坊中，每一次迭代都是一
     次煉金實驗，你的目標是創造能改變世界的完美產品。
-  
+
   estimated_hours: 55
   skill_focus:
     - requirement_alchemy
@@ -24,7 +24,7 @@ world_setting:
     產品煉金工坊是一個神奇的熔爐，將想法轉化為實際產品。在這裡，產品經
     理學習平衡用戶渴望、技術限制和商業目標的古老藝術，創造能與數百萬人
     產生共鳴的產品。
-  
+
   atmosphere: "dynamic_creative"
   visual_theme: "innovation_forge"
 
@@ -34,7 +34,7 @@ starting_scenario:
     策略大師歡迎你來到工坊，並發出警告：時間暴君 Deadline 正在迫使團隊
     為了速度犧牲產品品質。同時，用戶之聲帶著互相衝突的需求越來越響亮。
     你必須找到產品管理的賢者之石 - 平衡品質、速度和用戶滿意度。
-  
+
   initial_tasks:
     - understand_users
     - analyze_market
@@ -49,7 +49,7 @@ skill_tree:
       unlocks:
         - persona_creation
         - journey_mapping
-    
+
     - id: product_strategy
       name: "戰略視野"
       description: "制定致勝的產品策略"
@@ -57,7 +57,7 @@ skill_tree:
       unlocks:
         - competitive_analysis
         - positioning_mastery
-    
+
     - id: feature_prioritization
       name: "優先順序煉金術"
       description: "掌握功能優先排序的藝術"
@@ -65,7 +65,7 @@ skill_tree:
       unlocks:
         - roadmap_planning
         - mvp_design
-    
+
     - id: stakeholder_management
       name: "和諧指揮"
       description: "協調不同利害關係人的利益"
@@ -80,13 +80,13 @@ skill_tree:
       description: "推動產品指數級成長"
       max_level: 15
       requires: [product_strategy, user_research]
-    
+
     - id: data_driven_decisions
       name: "指標精通"
       description: "基於數據洞察做決策"
       max_level: 15
       requires: [feature_prioritization, user_research]
-    
+
     - id: platform_thinking
       name: "生態系架構"
       description: "建立產品平台和生態系統"
@@ -103,7 +103,7 @@ milestone_quests:
     unlocks:
       - launch_specialist_badge
       - user_testimonials
-  
+
   - id: deadline_balance
     name: "時間與品質"
     description: "在時間壓力下交付高品質產品"
@@ -113,7 +113,7 @@ milestone_quests:
     unlocks:
       - balance_master_title
       - deadline_immunity
-  
+
   - id: unicorn_product
     name: "億級用戶產品"
     description: "創造被數百萬人使用的產品"
@@ -130,19 +130,19 @@ achievements:
     description: "撰寫你的第一份產品規格"
     xp_reward: 100
     badge_type: bronze
-  
+
   - id: user_champion
     name: "用戶代言人"
     description: "實現 20 個用戶要求的功能"
     xp_reward: 300
     badge_type: silver
-  
+
   - id: revenue_generator
     name: "營收煉金師"
     description: "推動產品創造 100 萬美元營收"
     xp_reward: 600
     badge_type: gold
-  
+
   - id: pm_legend
     name: "產品賢者"
     description: "完成所有產品挑戰"
@@ -157,14 +157,14 @@ example_tasks:
       description: "進行用戶訪談收集洞察"
       skills_improved: [user_research, user_resonance]
       xp_reward: 60
-    
+
     - id: competitive_analysis
       type: analysis
       title: "市場掃描"
       description: "分析競爭對手產品"
       skills_improved: [product_strategy, requirement_alchemy]
       xp_reward: 70
-  
+
   intermediate:
     - id: roadmap_creation
       type: creation
@@ -172,14 +172,14 @@ example_tasks:
       description: "創建產品路線圖"
       skills_improved: [roadmap_planning, roadmap_prophecy]
       xp_reward: 180
-    
+
     - id: feature_launch
       type: creation
       title: "功能煉金"
       description: "推出主要產品功能"
       skills_improved: [feature_prioritization, stakeholder_management]
       xp_reward: 200
-  
+
   advanced:
     - id: platform_design
       type: creation
@@ -187,7 +187,7 @@ example_tasks:
       description: "設計產品平台"
       skills_improved: [platform_thinking, product_strategy]
       xp_reward: 400
-    
+
     - id: growth_experiment
       type: analysis
       title: "成長公式"

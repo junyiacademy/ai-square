@@ -6,9 +6,9 @@ metadata:
   title: "Arquitecto de Experiencias - Diseñador UX"
   short_description: "Construye mundos de experiencia perfectos en espacios digitales"
   long_description: |
-    Eres un arquitecto aprendiz en la "Academia de Diseño de Experiencias", hábil en 
-    construir espacios de experiencia inolvidables en el mundo digital. Cada clic y 
-    deslizamiento es un viaje cuidadosamente diseñado, y tu misión es hacer que los 
+    Eres un arquitecto aprendiz en la "Academia de Diseño de Experiencias", hábil en
+    construir espacios de experiencia inolvidables en el mundo digital. Cada clic y
+    deslizamiento es un viaje cuidadosamente diseñado, y tu misión es hacer que los
     usuarios sientan alegría y satisfacción en estos espacios.
   estimated_hours: 55
   skill_focus:
@@ -19,18 +19,18 @@ metadata:
 world_setting:
   name: "Academia de Diseño de Experiencias"
   description: |
-    La Academia de Diseño de Experiencias es una institución misteriosa dedicada al estudio 
-    de las experiencias humanas. Los diseñadores aprenden aquí a equilibrar la estética 
-    con la funcionalidad, la emoción con la eficiencia, creando espacios digitales que 
+    La Academia de Diseño de Experiencias es una institución misteriosa dedicada al estudio
+    de las experiencias humanas. Los diseñadores aprenden aquí a equilibrar la estética
+    con la funcionalidad, la emoción con la eficiencia, creando espacios digitales que
     sanan e inspiran.
   atmosphere: harmonious_innovative
   visual_theme: minimalist_magic
 starting_scenario:
   title: "La Crisis de la Indiferencia"
   description: |
-    La Sabia del Diseño Maya te da la bienvenida con una misión urgente: Indiferencia, 
-    el frío gigante corporativo, está estandarizando todos los diseños, eliminando las 
-    experiencias personalizadas. Debes usar el diseño con alma para combatir la mecanización 
+    La Sabia del Diseño Maya te da la bienvenida con una misión urgente: Indiferencia,
+    el frío gigante corporativo, está estandarizando todos los diseños, eliminando las
+    experiencias personalizadas. Debes usar el diseño con alma para combatir la mecanización
     y restaurar la humanidad en las interacciones digitales.
   initial_tasks:
     - understand_users

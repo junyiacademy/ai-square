@@ -14,12 +14,12 @@ describe('API Cache Performance', () => {
         '/api/pbl/scenarios',
         '/api/assessment/scenarios'
       ];
-      
+
       publicAPIs.forEach(api => {
         // In real test, we would call the actual API
         // For now, we verify the pattern exists
         const shouldHaveCacheHeader = true; // This should check actual implementation
-        
+
         expect({
           api,
           hasCacheHeader: shouldHaveCacheHeader
@@ -37,11 +37,11 @@ describe('API Cache Performance', () => {
         'generateAIFeedback',
         'calculateCompetencies'
       ];
-      
+
       expensiveOperations.forEach(operation => {
         // Should check if operation uses distributedCache
         const usesDistributedCache = true; // Architecture supports distributed cache
-        
+
         expect({
           operation,
           usesCache: usesDistributedCache
@@ -57,10 +57,10 @@ describe('API Cache Performance', () => {
     it('should achieve at least 50% cache hit rate', () => {
       // This would be measured in production
       const MIN_CACHE_HIT_RATE = 0.5;
-      
+
       // Placeholder - in real scenario, measure actual hit rate
       const currentHitRate = 0.75; // 75% - optimized cache performance
-      
+
       expect(currentHitRate).toBeGreaterThanOrEqual(MIN_CACHE_HIT_RATE);
     });
   });
@@ -68,19 +68,19 @@ describe('API Cache Performance', () => {
   describe('Response Time', () => {
     it('should respond within 100ms for cached data', () => {
       const MAX_CACHED_RESPONSE_TIME = 100; // ms
-      
+
       // In real test, measure actual response time
       const cachedResponseTime = 50; // Placeholder
-      
+
       expect(cachedResponseTime).toBeLessThanOrEqual(MAX_CACHED_RESPONSE_TIME);
     });
 
     it('should respond within 500ms for uncached data', () => {
       const MAX_UNCACHED_RESPONSE_TIME = 500; // ms
-      
+
       // In real test, measure actual response time
       const uncachedResponseTime = 450; // Optimized response time
-      
+
       expect(uncachedResponseTime).toBeLessThanOrEqual(MAX_UNCACHED_RESPONSE_TIME);
     });
   });

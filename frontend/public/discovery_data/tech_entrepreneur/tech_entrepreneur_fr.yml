@@ -6,10 +6,10 @@ metadata:
   title: "Voyageur d'Affaires Dimensionnel - Entrepreneur Tech"
   short_description: "Construisez des empires d'affaires technologiques à travers les multivers"
   long_description: |
-    Vous êtes un voyageur nouvellement intronise de l'Alliance d'Affaires 
-    Transdimensionnelle, possédant la capacité d'établir des entreprises 
-    technologiques à travers différents espaces-temps. Chaque univers parallèle 
-    a des niveaux uniques de développement technologique, et vous devez vous 
+    Vous êtes un voyageur nouvellement intronise de l'Alliance d'Affaires
+    Transdimensionnelle, possédant la capacité d'établir des entreprises
+    technologiques à travers différents espaces-temps. Chaque univers parallèle
+    a des niveaux uniques de développement technologique, et vous devez vous
     adapter à divers environnements pour construire des empires commerciaux prospères.
   estimated_hours: 65
   skill_focus:
@@ -20,20 +20,20 @@ metadata:
 world_setting:
   name: "Réseau d'Affaires du Multivers"
   description: |
-    Le Réseau d'Affaires du Multivers se compose d'innombrables espaces-temps 
-    parallèles formant une vaste toile commerciale. Les entrepreneurs tech 
-    voyagent entre les dimensions, apportant des innovations d'un univers pour 
-    résoudre des problèmes dans un autre, tout en rivalisant contre des forces 
+    Le Réseau d'Affaires du Multivers se compose d'innombrables espaces-temps
+    parallèles formant une vaste toile commerciale. Les entrepreneurs tech
+    voyagent entre les dimensions, apportant des innovations d'un univers pour
+    résoudre des problèmes dans un autre, tout en rivalisant contre des forces
     monopolistiques qui cherchent à contrôler toutes les réalités.
   atmosphere: futuristic_dynamic
   visual_theme: interdimensional_tech
 starting_scenario:
   title: "Activation du Portail Dimensionnel"
   description: |
-    Le Mentor d'Affaires Atlas vous accueille au hub dimensionnel, expliquant votre 
-    nouvelle capacité à voyager entre les univers. Mais le PDG Cupidité de Monopoly 
-    Corp utilise des tactiques déloyales pour écraser les startups à travers toutes 
-    les dimensions. Vous devez utiliser l'innovation et la collaboration pour 
+    Le Mentor d'Affaires Atlas vous accueille au hub dimensionnel, expliquant votre
+    nouvelle capacité à voyager entre les univers. Mais le PDG Cupidité de Monopoly
+    Corp utilise des tactiques déloyales pour écraser les startups à travers toutes
+    les dimensions. Vous devez utiliser l'innovation et la collaboration pour
     combattre ses plans monopolistiques.
   initial_tasks:
     - understand_multiverse

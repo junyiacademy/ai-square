@@ -6,10 +6,10 @@ metadata:
   title: "Dimensions-Geschäftsreisender - Tech-Unternehmer"
   short_description: "Errichte Technologie-Imperien über Multiversen hinweg"
   long_description: |
-    Du bist ein neu eingeweihter Reisender der Dimensionsübergreifenden Geschäftsallianz, 
-    mit der Fähigkeit, Technologieunternehmen über verschiedene Raumzeiten hinweg zu 
-    gründen. Jedes Paralleluniversum hat einzigartige technologische Entwicklungsstufen, 
-    und du musst dich an verschiedene Umgebungen anpassen, um erfolgreiche 
+    Du bist ein neu eingeweihter Reisender der Dimensionsübergreifenden Geschäftsallianz,
+    mit der Fähigkeit, Technologieunternehmen über verschiedene Raumzeiten hinweg zu
+    gründen. Jedes Paralleluniversum hat einzigartige technologische Entwicklungsstufen,
+    und du musst dich an verschiedene Umgebungen anpassen, um erfolgreiche
     Geschäftsimperien aufzubauen.
   estimated_hours: 65
   skill_focus:
@@ -20,20 +20,20 @@ metadata:
 world_setting:
   name: "Multiversum-Geschäftsnetzwerk"
   description: |
-    Das Multiversum-Geschäftsnetzwerk besteht aus unzähligen parallelen Raumzeiten, 
-    die ein riesiges kommerzielles Netz bilden. Tech-Unternehmer reisen zwischen den 
-    Dimensionen, bringen Innovationen aus einem Universum mit, um Probleme in einem 
-    anderen zu lösen, während sie gegen monopolistische Kräfte kämpfen, die alle 
+    Das Multiversum-Geschäftsnetzwerk besteht aus unzähligen parallelen Raumzeiten,
+    die ein riesiges kommerzielles Netz bilden. Tech-Unternehmer reisen zwischen den
+    Dimensionen, bringen Innovationen aus einem Universum mit, um Probleme in einem
+    anderen zu lösen, während sie gegen monopolistische Kräfte kämpfen, die alle
     Realitäten kontrollieren wollen.
   atmosphere: futuristic_dynamic
   visual_theme: interdimensional_tech
 starting_scenario:
   title: "Aktivierung des Dimensionstors"
   description: |
-    Geschäftsmentor Atlas begrüßt dich am Dimensionszentrum und erklärt deine 
-    neu entdeckte Fähigkeit, zwischen Universen zu reisen. Aber CEO Gier von der 
-    Monopol Corp nutzt unfaire Taktiken, um Startups in allen Dimensionen zu zerstören. 
-    Du musst Innovation und Zusammenarbeit nutzen, um seine monopolistischen Pläne 
+    Geschäftsmentor Atlas begrüßt dich am Dimensionszentrum und erklärt deine
+    neu entdeckte Fähigkeit, zwischen Universen zu reisen. Aber CEO Gier von der
+    Monopol Corp nutzt unfaire Taktiken, um Startups in allen Dimensionen zu zerstören.
+    Du musst Innovation und Zusammenarbeit nutzen, um seine monopolistischen Pläne
     zu bekämpfen.
   initial_tasks:
     - understand_multiverse

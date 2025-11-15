@@ -171,12 +171,12 @@ export default function RelationsClient() {
     setLoading(true);
     try {
       const data = await contentService.getRelationsTree(lng);
-      
+
       // Always create the maps for compatibility
       const kMap: Record<string, KSAItem> = {};
       const sMap: Record<string, KSAItem> = {};
       const aMap: Record<string, KSAItem> = {};
-      
+
       // If new API structure, convert it
       if (data.ksa) {
         // Process knowledge items
@@ -193,7 +193,7 @@ export default function RelationsClient() {
             }
           });
         }
-        
+
         // Process skills items
         if (data.ksa.skills && data.ksa.skills.themes) {
           Object.values(data.ksa.skills.themes).forEach((theme: Record<string, unknown>) => {
@@ -208,7 +208,7 @@ export default function RelationsClient() {
             }
           });
         }
-        
+
         // Process attitudes items
         if (data.ksa.attitudes && data.ksa.attitudes.themes) {
           Object.values(data.ksa.attitudes.themes).forEach((theme: Record<string, unknown>) => {
@@ -229,7 +229,7 @@ export default function RelationsClient() {
         Object.assign(sMap, data.sMap);
         Object.assign(aMap, data.aMap);
       }
-      
+
       const treeData: TreeData = {
         domains: (data.domains as unknown as Domain[]) || [],
         kMap,
@@ -237,7 +237,7 @@ export default function RelationsClient() {
         aMap,
         ksa: data.ksa as TreeData['ksa']
       };
-      
+
       setTree(treeData);
     } catch (error) {
       console.error('Failed to load relations tree:', error);
@@ -268,9 +268,9 @@ export default function RelationsClient() {
       <h1 className="mb-2 text-xl sm:text-2xl md:text-3xl font-bold text-center px-4 break-words">{t('pageTitle')}</h1>
       <p className="text-center text-gray-500 mb-4 px-4">{t('pageSubtitle')}</p>
       <div className="text-center mb-8">
-        <a 
-          href="https://ailiteracyframework.org/wp-content/uploads/2025/05/AILitFramework_ReviewDraft.pdf" 
-          target="_blank" 
+        <a
+          href="https://ailiteracyframework.org/wp-content/uploads/2025/05/AILitFramework_ReviewDraft.pdf"
+          target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
         >
@@ -282,14 +282,14 @@ export default function RelationsClient() {
       </div>
       <div className="max-w-3xl mx-auto">
         {tree.domains.map((domain) => (
-          <DomainAccordion 
-            key={domain.id || domain.key} 
-            domain={domain} 
-            kMap={tree.kMap || {}} 
-            sMap={tree.sMap || {}} 
-            aMap={tree.aMap || {}} 
-            lang={lang} 
-            emoji={domain.emoji || '🤖'} 
+          <DomainAccordion
+            key={domain.id || domain.key}
+            domain={domain}
+            kMap={tree.kMap || {}}
+            sMap={tree.sMap || {}}
+            aMap={tree.aMap || {}}
+            lang={lang}
+            emoji={domain.emoji || '🤖'}
           />
         ))}
       </div>

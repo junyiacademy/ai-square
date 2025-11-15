@@ -7,11 +7,11 @@ metadata:
   title: "Dimension Business Traveler - Tech Entrepreneur"
   short_description: "Build technology business empires across multiverses"
   long_description: |
-    You are a newly inducted traveler of the Cross-Dimensional Business Alliance, 
-    possessing the ability to establish technology enterprises across different 
-    spacetimes. Each parallel universe has unique technological development levels, 
+    You are a newly inducted traveler of the Cross-Dimensional Business Alliance,
+    possessing the ability to establish technology enterprises across different
+    spacetimes. Each parallel universe has unique technological development levels,
     and you must adapt to various environments to build successful business empires.
-  
+
   estimated_hours: 65
   skill_focus:
     - dimensional_business_insight
@@ -22,22 +22,22 @@ metadata:
 world_setting:
   name: "Multiverse Business Network"
   description: |
-    The Multiverse Business Network consists of countless parallel spacetimes forming 
-    a vast commercial web. Tech entrepreneurs travel between dimensions, bringing 
-    innovations from one universe to solve problems in another, while competing against 
+    The Multiverse Business Network consists of countless parallel spacetimes forming
+    a vast commercial web. Tech entrepreneurs travel between dimensions, bringing
+    innovations from one universe to solve problems in another, while competing against
     monopolistic forces that seek to control all realities.
-  
+
   atmosphere: "futuristic_dynamic"
   visual_theme: "interdimensional_tech"
 
 starting_scenario:
   title: "Dimensional Gateway Activation"
   description: |
-    Business Mentor Atlas greets you at the dimensional hub, explaining your newfound 
-    ability to travel between universes. But CEO Greed of Monopoly Corp is using unfair 
-    tactics to crush startups across all dimensions. You must use innovation and 
+    Business Mentor Atlas greets you at the dimensional hub, explaining your newfound
+    ability to travel between universes. But CEO Greed of Monopoly Corp is using unfair
+    tactics to crush startups across all dimensions. You must use innovation and
     collaboration to fight his monopolistic plans.
-  
+
   initial_tasks:
     - understand_multiverse
     - identify_opportunity
@@ -52,7 +52,7 @@ skill_tree:
       unlocks:
         - market_gaps
         - trend_prediction
-    
+
     - id: tech_fusion
       name: "Technology Fusion"
       description: "Combine technologies from different realities"
@@ -60,7 +60,7 @@ skill_tree:
       unlocks:
         - innovation_synthesis
         - cross_platform_tech
-    
+
     - id: venture_building
       name: "Venture Architecture"
       description: "Build scalable tech businesses"
@@ -68,7 +68,7 @@ skill_tree:
       unlocks:
         - business_models
         - growth_hacking
-    
+
     - id: dimensional_networking
       name: "Multiverse Connections"
       description: "Build networks across dimensions"
@@ -83,13 +83,13 @@ skill_tree:
       description: "Create industry-changing innovations"
       max_level: 15
       requires: [opportunity_sensing, tech_fusion]
-    
+
     - id: unicorn_creation
       name: "Unicorn Summoning"
       description: "Build billion-dollar tech companies"
       max_level: 15
       requires: [venture_building, dimensional_networking]
-    
+
     - id: ecosystem_architecture
       name: "Ecosystem Building"
       description: "Create thriving tech ecosystems"
@@ -106,7 +106,7 @@ milestone_quests:
     unlocks:
       - dimension_traveler_badge
       - investor_interest
-  
+
   - id: monopoly_breaker
     name: "Monopoly Breaker"
     description: "Disrupt Greed's monopoly in one dimension"
@@ -116,7 +116,7 @@ milestone_quests:
     unlocks:
       - freedom_fighter_title
       - resistance_network
-  
+
   - id: multiverse_empire
     name: "Multiverse Empire"
     description: "Build successful ventures in 5 dimensions"
@@ -133,19 +133,19 @@ achievements:
     description: "Raise your first investment"
     xp_reward: 150
     badge_type: bronze
-  
+
   - id: tech_innovator
     name: "Innovation Catalyst"
     description: "Create 5 breakthrough technologies"
     xp_reward: 400
     badge_type: silver
-  
+
   - id: exit_success
     name: "Dimensional Exit"
     description: "Successfully exit a startup"
     xp_reward: 800
     badge_type: gold
-  
+
   - id: serial_legend
     name: "Serial Dimension Hopper"
     description: "Complete all entrepreneurial challenges"
@@ -160,14 +160,14 @@ example_tasks:
       description: "Validate a business idea across dimensions"
       skills_improved: [opportunity_sensing, dimensional_business_insight]
       xp_reward: 80
-    
+
     - id: mvp_launch
       type: creation
       title: "Prototype Portal"
       description: "Build and launch an MVP"
       skills_improved: [venture_building, tech_fusion]
       xp_reward: 90
-  
+
   intermediate:
     - id: team_assembly
       type: chat
@@ -175,14 +175,14 @@ example_tasks:
       description: "Recruit talent from different dimensions"
       skills_improved: [dimensional_networking, team_summoning]
       xp_reward: 200
-    
+
     - id: product_scaling
       type: creation
       title: "Dimensional Scaling"
       description: "Scale product across multiple universes"
       skills_improved: [growth_hacking, venture_building]
       xp_reward: 250
-  
+
   advanced:
     - id: industry_disruption
       type: creation
@@ -190,7 +190,7 @@ example_tasks:
       description: "Create technology that changes an industry"
       skills_improved: [disruption_mastery, innovation_prophecy]
       xp_reward: 450
-    
+
     - id: ecosystem_creation
       type: creation
       title: "Dimensional Ecosystem"

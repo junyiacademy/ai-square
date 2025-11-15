@@ -56,7 +56,7 @@ export default function DiscoveryHeader({}: DiscoveryHeaderProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         {/* Breadcrumb */}
         <nav className="flex items-center space-x-2 text-sm text-gray-500 mb-4">
-          <button 
+          <button
             onClick={() => router.push('/')}
             className="hover:text-gray-700 transition-colors"
           >
@@ -65,7 +65,7 @@ export default function DiscoveryHeader({}: DiscoveryHeaderProps) {
           <span>/</span>
           <span className="text-gray-900 font-medium">{t('title')}</span>
         </nav>
-        
+
         {/* Title and Quick Navigation */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center space-x-3">
@@ -75,13 +75,13 @@ export default function DiscoveryHeader({}: DiscoveryHeaderProps) {
               <p className="text-sm text-gray-600 mt-1">{t('subtitle')}</p>
             </div>
           </div>
-          
+
           {/* Desktop: Inline navigation buttons */}
           <div className="hidden sm:flex items-center space-x-3">
             {navigationItems.map((item) => {
               const Icon = item.icon;
               const active = isActive(item);
-              
+
               return (
                 <button
                   key={item.id}
@@ -93,8 +93,8 @@ export default function DiscoveryHeader({}: DiscoveryHeaderProps) {
                   disabled={item.disabled}
                   className={`
                     inline-flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-200 group
-                    ${active 
-                      ? 'bg-purple-600 text-white shadow-lg' 
+                    ${active
+                      ? 'bg-purple-600 text-white shadow-lg'
                       : item.disabled
                       ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                       : 'bg-white text-gray-700 hover:bg-purple-50 hover:text-purple-700 border border-gray-200'
@@ -114,7 +114,7 @@ export default function DiscoveryHeader({}: DiscoveryHeaderProps) {
               );
             })}
           </div>
-          
+
           {/* Mobile: Show current page only */}
           <div className="sm:hidden">
             {navigationItems.map((item) => {

@@ -113,7 +113,7 @@ export default function UnifiedHistoryPage() {
   useEffect(() => {
     const isLoggedIn = localStorage.getItem('isLoggedIn');
     const userData = localStorage.getItem('user');
-    
+
     if (isLoggedIn === 'true' && userData) {
       try {
         const user = JSON.parse(userData);
@@ -135,9 +135,9 @@ export default function UnifiedHistoryPage() {
         setLoading(false);
         return;
       }
-      
+
       setLoading(true);
-      
+
       try {
         // Fetch assessment history
         const assessmentResponse = await authenticatedFetch(`/api/assessment/results?userId=${currentUser.id}&userEmail=${encodeURIComponent(currentUser.email || currentUser.id)}`);
@@ -167,10 +167,10 @@ export default function UnifiedHistoryPage() {
                 totalTimeSeconds?: number;
                 evaluatedTasks: number;
                 totalTaskCount: number;
-                tasks?: Array<{ 
+                tasks?: Array<{
                   id?: string;
                   title?: string;
-                  log?: { interactions?: unknown[] } 
+                  log?: { interactions?: unknown[] }
                 }>;
                 overallScore?: number;
                 domainScores?: {
@@ -187,11 +187,11 @@ export default function UnifiedHistoryPage() {
                 program?: { startedAt: string };
                 currentTaskIndex?: number;
               }
-              
+
               pblItems = (pblData.programs || []).map((program: ProgramData) => {
                 // Find current task info
                 const currentTask = program.tasks?.[program.currentTaskIndex || 0];
-                
+
                 return {
                   type: 'pbl' as const,
                   timestamp: program.completedAt || program.startedAt || program.program?.startedAt,
@@ -211,7 +211,7 @@ export default function UnifiedHistoryPage() {
                       completedTasks: program.evaluatedTasks,
                       totalTaskCount: program.totalTaskCount
                     },
-                    totalInteractions: program.tasks?.reduce((sum, task) => 
+                    totalInteractions: program.tasks?.reduce((sum, task) =>
                       sum + (task.log?.interactions?.length || 0), 0) || 0,
                     averageScore: program.overallScore,
                     domainScores: program.domainScores,
@@ -231,7 +231,7 @@ export default function UnifiedHistoryPage() {
           const discoveryResponse = await authenticatedFetch(`/api/discovery/my-programs?t=${Date.now()}`);
           if (discoveryResponse.ok) {
             const discoveryScenarios = await discoveryResponse.json();
-            
+
             // Check if we have scenarios
             if (!Array.isArray(discoveryScenarios)) {
               console.log('No discovery scenarios found');
@@ -243,29 +243,29 @@ export default function UnifiedHistoryPage() {
                 const programsResponse = await authenticatedFetch(`/api/discovery/scenarios/${scenario.id}/programs?t=${Date.now()}`);
                 if (programsResponse.ok) {
                   const programs = await programsResponse.json();
-                  
+
                   // Check if we have programs array
                   if (!Array.isArray(programs)) {
                     console.error('Unexpected programs data format:', programs);
                     continue;
                   }
-                  
+
                   console.log('Discovery programs for scenario', scenario.id, ':', programs);
-                  
+
                   if (programs.length === 0) {
                     console.log('No programs found for scenario', scenario.id);
                     continue;
                   }
-                  
+
                   // Create history items for each program
                   const scenarioItems = programs.map((program: Record<string, unknown>) => {
                     const isCompleted = program.status === 'completed';
-                    
+
                     // Get task info from taskLogs if available, otherwise use taskIds
                     const taskLogs = program.taskLogs || [];
                     const completedTasks = (taskLogs as Record<string, unknown>[])?.filter((log: Record<string, unknown>) => log.isCompleted).length || 0;
                     const totalTasks = (program.totalTaskCount as number) || (taskLogs as unknown[])?.length || 0;
-                    
+
                     // For current task, we need to use currentTaskIndex with taskIds
                     const currentTaskIndex = (program.currentTaskIndex as number) || 0;
                     const currentTaskId = (program.metadata as Record<string, unknown>)?.currentTaskId || '';
@@ -273,14 +273,14 @@ export default function UnifiedHistoryPage() {
                       id: currentTaskId,
                       title: `Task ${currentTaskIndex + 1}` // We'll need to load task details separately if needed
                     };
-                    
+
                     // Calculate duration
                     let duration = 0;
                     if (program.startedAt) {
                       const endTime = program.completedAt ? new Date(program.completedAt as string) : new Date();
                       duration = Math.round((endTime.getTime() - new Date(program.startedAt as string).getTime()) / 1000);
                     }
-                    
+
                     // Get scores from completion data if available
                     let scores = {};
                     if (isCompleted && program.completionData) {
@@ -290,7 +290,7 @@ export default function UnifiedHistoryPage() {
                         ksaScores: (program.completionData as Record<string, unknown>)?.ksaScores
                       };
                     }
-                    
+
                     // Log program structure to debug
                     console.log('Discovery program structure:', {
                       id: program.id,
@@ -299,7 +299,7 @@ export default function UnifiedHistoryPage() {
                       totalTaskCount: program.totalTaskCount,
                       currentTaskIndex: program.currentTaskIndex
                     });
-                    
+
                     return {
                       type: 'discovery' as const,
                       timestamp: (program.completedAt as string) || (program.startedAt as string) || (program.createdAt as string) || new Date().toISOString(),
@@ -325,7 +325,7 @@ export default function UnifiedHistoryPage() {
                       } as DiscoverySession
                     };
                   });
-                  
+
                   discoveryItems.push(...scenarioItems);
                 }
               }
@@ -339,10 +339,10 @@ export default function UnifiedHistoryPage() {
       }
 
         // Combine and sort by timestamp
-        const allItems = [...assessmentItems, ...pblItems, ...discoveryItems].sort((a, b) => 
+        const allItems = [...assessmentItems, ...pblItems, ...discoveryItems].sort((a, b) =>
           new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
         );
-        
+
         setHistoryItems(allItems);
       } catch (error) {
         console.error('Error fetching history:', error);
@@ -350,7 +350,7 @@ export default function UnifiedHistoryPage() {
         setLoading(false);
       }
     };
-    
+
     if (currentUser || currentUser === null) {
       fetchAllHistory();
     }
@@ -364,7 +364,7 @@ export default function UnifiedHistoryPage() {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const remainingSeconds = seconds % 60;
-    
+
     if (hours > 0) {
       return `${hours}h ${minutes}m`;
     } else if (minutes > 0) {
@@ -543,7 +543,7 @@ export default function UnifiedHistoryPage() {
                           <p className="text-sm text-gray-500 dark:text-gray-400">
                             ID: {assessment.assessment_id}
                           </p>
-                          
+
                           {/* Date and Time Info */}
                           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm text-gray-600 dark:text-gray-400 mt-3">
                             <div>
@@ -560,7 +560,7 @@ export default function UnifiedHistoryPage() {
                           {t(`assessment:level.${assessment.summary.level}`)}
                         </div>
                       </div>
-                      
+
                       {/* Main Stats Grid */}
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                         {/* Left Column - Overall Score */}
@@ -575,7 +575,7 @@ export default function UnifiedHistoryPage() {
                             </p>
                           </div>
                         </div>
-                        
+
                         {/* Right Column - Domain Scores */}
                         <div>
                           <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">{t('assessment:history.domainScores')}</p>
@@ -587,7 +587,7 @@ export default function UnifiedHistoryPage() {
                                 </span>
                                 <div className="flex-1 flex items-center gap-2">
                                   <div className="flex-1 bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-                                    <div 
+                                    <div
                                       className={`h-2 rounded-full ${
                                         domain === 'engaging_with_ai' ? 'bg-blue-600' :
                                         domain === 'creating_with_ai' ? 'bg-green-600' :
@@ -606,7 +606,7 @@ export default function UnifiedHistoryPage() {
                           </div>
                         </div>
                       </div>
-                      
+
                       <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between">
                         <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
                           <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -653,7 +653,7 @@ export default function UnifiedHistoryPage() {
                               {t('pbl:currentTask', { ns: 'pbl' })}: {session.currentTaskTitle.split(' - ').slice(-1)[0]}
                             </p>
                           )}
-                          
+
                           {/* Date and Time Info - Similar to Assessment */}
                           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm text-gray-600 dark:text-gray-400 mt-3">
                             <div>
@@ -697,7 +697,7 @@ export default function UnifiedHistoryPage() {
                                     </div>
                                   </div>
                                 </div>
-                                
+
                                 {/* Middle Column - Domain Scores */}
                                 <div>
                                   <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
@@ -750,7 +750,7 @@ export default function UnifiedHistoryPage() {
                                     </div>
                                   </div>
                                 </div>
-                                
+
                                 {/* Right Column - KSA Scores */}
                                 <div>
                                   <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
@@ -811,7 +811,7 @@ export default function UnifiedHistoryPage() {
                               </div>
                             </div>
                           )}
-                      
+
                       <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between">
                         <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
                           <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -869,7 +869,7 @@ export default function UnifiedHistoryPage() {
                               {t('pbl:currentTask', { ns: 'pbl' })}: {session.currentTaskTitle}
                             </p>
                           )}
-                          
+
                           {/* Date and Time Info */}
                           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm text-gray-600 dark:text-gray-400 mt-3">
                             <div>
@@ -919,7 +919,7 @@ export default function UnifiedHistoryPage() {
                                 </div>
                               )}
                             </div>
-                            
+
                             {/* Middle Column - Domain Scores */}
                             <div>
                               <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
@@ -972,7 +972,7 @@ export default function UnifiedHistoryPage() {
                                 </div>
                               </div>
                             </div>
-                            
+
                             {/* Right Column - KSA Scores */}
                             <div>
                               <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
@@ -1033,7 +1033,7 @@ export default function UnifiedHistoryPage() {
                           </div>
                         </div>
                       )}
-                      
+
                       <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between">
                         <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
                           <svg className="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { 
-  KSACodesSchema, 
-  type KSACodes 
+import {
+  KSACodesSchema,
+  type KSACodes
 } from '../schemas/ksa-codes.schema';
 
 describe('KSA Codes Schema Validation', () => {
@@ -40,11 +40,11 @@ describe('KSA Codes Schema Validation', () => {
           }
         }
       };
-      
+
       const result = KSACodesSchema.safeParse(validKSAFile);
       expect(result.success).toBe(true);
     });
-    
+
     it.skip('應該驗證有效的 KSA codes 檔案結構 - old format', () => {
       const validKSAFile = {
         knowledge_codes: {
@@ -542,7 +542,7 @@ describe('KSA Codes Schema Validation', () => {
     it.skip('應該正確提取所有 KSA IDs', () => {
       const ksaFile = createValidKSAFile();
       // const result = extractKSAIds(ksaFile);
-      
+
       // expect(result.knowledgeIds).toEqual(['K1.1', 'K1.2', 'K2.1']);
       // expect(result.skillIds).toEqual(['S1.1', 'S1.2']);
       // expect(result.attitudeIds).toEqual(['A1.1', 'A2.1']);
@@ -563,7 +563,7 @@ describe('KSA Codes Schema Validation', () => {
           themes: {}
         }
       };
-      
+
       expect(() => KSACodesSchema.parse(ksaFile)).not.toThrow();
     });
   });
@@ -608,10 +608,10 @@ describe('KSA Codes Schema Validation', () => {
           themes: {}
         }
       };
-      
+
       // const result = extractKSAIds(ksaFile);
       const result = { knowledgeIds: [], skillIds: [], attitudeIds: [] };
-      
+
       expect(result.knowledgeIds).toEqual([]);
       expect(result.skillIds).toEqual([]);
       expect(result.attitudeIds).toEqual([]);
@@ -635,10 +635,10 @@ describe('KSA Codes Schema Validation', () => {
           }
         }
       };
-      
+
       // const result = extractKSAIds(ksaFile);
       const result = { knowledgeIds: [], skillIds: [], attitudeIds: [] };
-      
+
       // K1.1 應該只出現一次
       const k11Count = result.knowledgeIds.filter((id: string) => id === 'K1.1').length;
       expect(k11Count).toBe(1);

@@ -59,10 +59,10 @@ describe('CacheService', () => {
 
       // First call
       await cacheService.fetchWithCache('http://test.com/api');
-      
+
       // Reset mock to verify it's not called again
       (global.fetch as jest.Mock).mockReset();
-      
+
       // Second call should use cache
       const result = await cacheService.fetchWithCache('http://test.com/api');
       expect(result).toEqual({ data: 'test' });
@@ -72,7 +72,7 @@ describe('CacheService', () => {
     it('should throw on fetch error', async () => {
       // Clear any existing cache for this URL first
       await cacheService.clear();
-      
+
       (global.fetch as jest.Mock).mockResolvedValue({
         ok: false,
         status: 500,

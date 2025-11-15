@@ -7,11 +7,11 @@ metadata:
   title: "Penyihir Digital - Pembuat Konten"
   short_description: "Rajut cerita menawan di kerajaan virtual"
   long_description: |
-    Anda adalah penyihir yang baru ditahbiskan dari "Kerajaan Kreatif", memiliki 
-    kekuatan misterius untuk mengubah ide menjadi konten viral. Di kerajaan digital 
-    ini, setiap like dan share adalah bukti sihir Anda, dan mentor Luna akan 
+    Anda adalah penyihir yang baru ditahbiskan dari "Kerajaan Kreatif", memiliki
+    kekuatan misterius untuk mengubah ide menjadi konten viral. Di kerajaan digital
+    ini, setiap like dan share adalah bukti sihir Anda, dan mentor Luna akan
     mengajarkan Anda menguasai rahasia algoritma.
-  
+
   estimated_hours: 50
   skill_focus:
     - content_magic
@@ -22,22 +22,22 @@ metadata:
 world_setting:
   name: "Kerajaan Kreatif"
   description: |
-    Kerajaan Kreatif adalah kerajaan digital yang digerakkan oleh energi kreatif. 
-    Para pembuat konten di sini belajar memanfaatkan kekuatan misterius algoritma, 
-    engagement, dan mekanik viral untuk membangun pengaruh mereka dan berdampak 
+    Kerajaan Kreatif adalah kerajaan digital yang digerakkan oleh energi kreatif.
+    Para pembuat konten di sini belajar memanfaatkan kekuatan misterius algoritma,
+    engagement, dan mekanik viral untuk membangun pengaruh mereka dan berdampak
     pada jutaan kehidupan.
-  
+
   atmosphere: "vibrant_magical"
   visual_theme: "digital_fantasy"
 
 starting_scenario:
   title: "Tantangan Bayangan"
   description: |
-    Mentor Kreatif Luna menyambut Anda di kerajaan dengan berita mendesak: Bayangan, 
-    seorang penyihir yang jatuh, menyebarkan konten palsu menggunakan sihir terlarang, 
-    mengancam keharmonisan Kerajaan Kreatif. Anda harus menggunakan kekuatan 
+    Mentor Kreatif Luna menyambut Anda di kerajaan dengan berita mendesak: Bayangan,
+    seorang penyihir yang jatuh, menyebarkan konten palsu menggunakan sihir terlarang,
+    mengancam keharmonisan Kerajaan Kreatif. Anda harus menggunakan kekuatan
     kreativitas autentik untuk melawan pengaruh gelapnya.
-  
+
   initial_tasks:
     - understand_algorithms
     - learn_content_basics
@@ -52,7 +52,7 @@ skill_tree:
       unlocks:
         - trend_analysis
         - audience_targeting
-    
+
     - id: visual_creation
       name: "Sihir Visual"
       description: "Ciptakan konten visual yang menarik"
@@ -60,7 +60,7 @@ skill_tree:
       unlocks:
         - photo_magic
         - video_enchantment
-    
+
     - id: storytelling
       name: "Penenun Narasi"
       description: "Ciptakan cerita yang menawan"
@@ -68,7 +68,7 @@ skill_tree:
       unlocks:
         - emotional_resonance
         - viral_mechanics
-    
+
     - id: community_building
       name: "Pemanggil Suku"
       description: "Bangun dan libatkan komunitas"
@@ -83,13 +83,13 @@ skill_tree:
       description: "Pahami dan bekerja dengan algoritma platform"
       max_level: 15
       requires: [content_strategy, community_building]
-    
+
     - id: monetization_magic
       name: "Alkimia Pendapatan"
       description: "Ubah konten menjadi pendapatan"
       max_level: 15
       requires: [community_building, visual_creation]
-    
+
     - id: brand_building
       name: "Konstruksi Kerajaan"
       description: "Bangun merek personal yang kuat"
@@ -106,7 +106,7 @@ milestone_quests:
     unlocks:
       - viral_creator_badge
       - algorithm_insights
-  
+
   - id: shadow_confrontation
     name: "Kebenaran vs Penipuan"
     description: "Kalahkan kampanye misinformasi Bayangan"
@@ -116,7 +116,7 @@ milestone_quests:
     unlocks:
       - truth_guardian_title
       - authentic_voice
-  
+
   - id: empire_builder
     name: "Kerajaan Kreatif"
     description: "Bangun kerajaan konten dengan 1 juta pengikut"
@@ -133,19 +133,19 @@ achievements:
     description: "Ciptakan konten pertama Anda"
     xp_reward: 50
     badge_type: bronze
-  
+
   - id: engagement_master
     name: "Juara Komunitas"
     description: "Capai 10 ribu total engagement"
     xp_reward: 200
     badge_type: silver
-  
+
   - id: consistency_king
     name: "Penyihir Harian"
     description: "Posting secara konsisten selama 30 hari"
     xp_reward: 400
     badge_type: gold
-  
+
   - id: content_legend
     name: "Pembuat Konten Legendaris"
     description: "Selesaikan semua tantangan konten"
@@ -160,14 +160,14 @@ example_tasks:
       description: "Kembangkan formula konten yang menyentuh hati"
       skills_improved: [content_strategy, storytelling]
       xp_reward: 50
-    
+
     - id: visual_basics
       type: creation
       title: "Latihan Mantra Visual"
       description: "Ciptakan konten visual pertama Anda"
       skills_improved: [visual_creation, content_magic]
       xp_reward: 60
-  
+
   intermediate:
     - id: engagement_analysis
       type: analysis
@@ -175,14 +175,14 @@ example_tasks:
       description: "Analisis performa konten dan perilaku audiens"
       skills_improved: [algorithm_mastery, community_building]
       xp_reward: 150
-    
+
     - id: series_creation
       type: creation
       title: "Penenun Saga"
       description: "Ciptakan serial konten"
       skills_improved: [storytelling, brand_building]
       xp_reward: 180
-  
+
   advanced:
     - id: viral_campaign
       type: creation
@@ -190,7 +190,7 @@ example_tasks:
       description: "Luncurkan kampanye konten viral"
       skills_improved: [algorithm_mastery, viral_mechanics]
       xp_reward: 350
-    
+
     - id: monetization_setup
       type: creation
       title: "Transmutasi Emas"

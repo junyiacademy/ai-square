@@ -171,7 +171,7 @@ describe('/api/pbl/evaluate', () => {
       // Check that the prompt includes only user messages
       const callArgs = mockGenerateContent.mock.calls[0][0];
       const promptText = callArgs.contents[0].parts[0].text;
-      
+
       expect(promptText).toContain('How do I analyze industry trends?');
       expect(promptText).toContain('What metrics should I focus on?');
       expect(promptText).not.toContain('To analyze industry trends...');
@@ -465,7 +465,7 @@ describe('/api/pbl/evaluate', () => {
 
       const callArgs = mockGenerateContent.mock.calls[0][0];
       const promptText = callArgs.contents[0].parts[0].text;
-      
+
       // Should contain last 10 user messages (indices 0, 2, 4, 6, 8, 10, 12, 14, 16, 18)
       expect(promptText).toContain('Message 18');
       expect(promptText).toContain('Message 0'); // The oldest of the last 10 user messages
@@ -506,7 +506,7 @@ describe('/api/pbl/evaluate', () => {
 
       const callArgs = mockGenerateContent.mock.calls[0][0];
       const promptText = callArgs.contents[0].parts[0].text;
-      
+
       // Message should be truncated to 200 characters
       expect(promptText).toContain('A'.repeat(200));
       expect(promptText).not.toContain('A'.repeat(201));

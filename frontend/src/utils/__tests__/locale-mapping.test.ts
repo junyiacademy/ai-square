@@ -60,7 +60,7 @@ describe('locale-mapping', () => {
   describe('round-trip conversion', () => {
     it('converts correctly in both directions', () => {
       const internalCodes = ['zhTW', 'zhCN', 'pt', 'ar', 'id', 'th', 'en', 'es', 'ja', 'ko', 'fr', 'de', 'ru', 'it'];
-      
+
       internalCodes.forEach(code => {
         const browserLocale = toBrowserLocale(code);
         const backToInternal = fromBrowserLocale(browserLocale);
@@ -70,7 +70,7 @@ describe('locale-mapping', () => {
 
     it('handles browser locales round-trip', () => {
       const browserLocales = ['zh-TW', 'zh-CN', 'pt-BR', 'ar-SA', 'id-ID', 'th-TH', 'en', 'es', 'ja', 'ko', 'fr', 'de', 'ru', 'it'];
-      
+
       browserLocales.forEach(locale => {
         const internalCode = fromBrowserLocale(locale);
         const backToBrowser = toBrowserLocale(internalCode);

@@ -89,14 +89,14 @@ export default function TaskDetailPage() {
             'x-session-token': localStorage.getItem('ai_square_session') || ''
           }
         });
-        
+
         if (!res.ok) {
           throw new Error('Failed to fetch task data');
         }
-        
+
         const data = await res.json();
         setTaskData(data);
-        
+
         // If task is pending, start it
         if (data.status === 'pending') {
           await authenticatedFetch(`/api/discovery/scenarios/${scenarioId}/programs/${programId}/tasks/${taskId}`, {
@@ -110,7 +110,7 @@ export default function TaskDetailPage() {
               action: 'start'
             })
           });
-          
+
           // Update local state
           setTaskData(prev => prev ? { ...prev, status: 'active' } : null);
         }
@@ -129,7 +129,7 @@ export default function TaskDetailPage() {
 
     setSubmitting(true);
     const startTime = Date.now();
-    
+
     try {
       const res = await authenticatedFetch(`/api/discovery/scenarios/${scenarioId}/programs/${programId}/tasks/${taskId}`, {
         method: 'PATCH',
@@ -146,16 +146,16 @@ export default function TaskDetailPage() {
           }
         })
       });
-      
+
       if (!res.ok) {
         throw new Error('Failed to submit task');
       }
-      
+
       const result = await res.json();
-      
+
       // Clear previous feedback before setting new one
       setFeedback(null);
-      
+
       // Store feedback in state to show in UI with a small delay for better UX
       setTimeout(() => {
         setFeedback({
@@ -166,10 +166,10 @@ export default function TaskDetailPage() {
           improvements: result.improvements || []
         });
       }, 100);
-      
+
       // Clear the input for next attempt
       setUserResponse('');
-      
+
       // Reload task data to get updated interactions
       const updatedTaskRes = await authenticatedFetch(`/api/discovery/scenarios/${scenarioId}/programs/${programId}/tasks/${taskId}`, {
         credentials: 'include',
@@ -177,12 +177,12 @@ export default function TaskDetailPage() {
           'x-session-token': localStorage.getItem('ai_square_session') || ''
         }
       });
-      
+
       if (updatedTaskRes.ok) {
         const updatedTaskData = await updatedTaskRes.json();
         setTaskData(updatedTaskData);
       }
-      
+
       // Don't auto-navigate when task is completed
       // Let user decide when to complete the task
     } catch (error) {
@@ -192,7 +192,7 @@ export default function TaskDetailPage() {
       setSubmitting(false);
     }
   };
-  
+
   const handleCompleteTask = async () => {
     setCompletingTask(true);
     try {
@@ -206,13 +206,13 @@ export default function TaskDetailPage() {
           action: 'confirm-complete'
         })
       });
-      
+
       if (!res.ok) {
         throw new Error('Failed to complete task');
       }
-      
+
       const result = await res.json();
-      
+
       // Successfully completed - show comprehensive evaluation
       if (result.success && result.evaluation) {
         // Update task data with comprehensive evaluation
@@ -221,7 +221,7 @@ export default function TaskDetailPage() {
           status: 'completed',
           evaluation: result.evaluation
         });
-        
+
         // Scroll to evaluation section after a short delay
         setTimeout(() => {
           const evaluationElement = document.getElementById('comprehensive-evaluation');
@@ -259,13 +259,13 @@ export default function TaskDetailPage() {
           action: 'regenerate-evaluation'
         })
       });
-      
+
       if (!res.ok) {
         throw new Error('Failed to regenerate evaluation');
       }
-      
+
       const result = await res.json();
-      
+
       // Update task data with new evaluation
       if (result.evaluation && taskData) {
         setTaskData({
@@ -313,7 +313,7 @@ export default function TaskDetailPage() {
       </DiscoveryPageLayout>
     );
   }
-  
+
   // Check if task has any passed interactions and calculate pass statistics
   const passedInteractions = taskData.interactions.filter(
     i => i.type === 'ai_response' && (i.content as Record<string, unknown>)?.completed === true
@@ -394,28 +394,28 @@ export default function TaskDetailPage() {
         {taskData.status !== 'completed' && (
           <div className="bg-white rounded-2xl shadow-lg p-8 mb-6">
             <h3 className="text-xl font-semibold text-gray-900 mb-4">
-              {taskData.interactions && taskData.interactions.length > 0 
-                ? hasPassedBefore 
+              {taskData.interactions && taskData.interactions.length > 0
+                ? hasPassedBefore
                   ? `繼續挑戰 ${passCount > 1 ? `(已通過 ${passCount} 次)` : '(已通過)'}`
-                  : '繼續作答' 
+                  : '繼續作答'
                 : '你的回答'}
             </h3>
-            
+
             <textarea
               value={userResponse}
               onChange={(e) => setUserResponse(e.target.value)}
               placeholder={
-                taskData.interactions && taskData.interactions.length > 0 
+                taskData.interactions && taskData.interactions.length > 0
                   ? hasPassedBefore
                     ? passCount > 1
                       ? `您已經通過 ${passCount} 次了！想要挑戰更高分嗎？`
                       : "您已經通過了！可以嘗試其他解決方案或繼續優化..."
-                    : "根據 AI 的回饋，改進你的回答..." 
+                    : "根據 AI 的回饋，改進你的回答..."
                   : "在這裡寫下你的回答..."
               }
               className="w-full h-48 p-4 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent resize-none"
             />
-            
+
             <div className="mt-4 flex items-center justify-between">
               <button
                 onClick={() => setShowHints(!showHints)}
@@ -424,7 +424,7 @@ export default function TaskDetailPage() {
                 <Lightbulb className="w-5 h-5" />
                 <span>{showHints ? '隱藏提示' : '需要提示？'}</span>
               </button>
-              
+
               <button
                 onClick={handleSubmit}
                 disabled={!userResponse.trim() || submitting}
@@ -451,7 +451,7 @@ export default function TaskDetailPage() {
             </div>
           </div>
         )}
-        
+
         {/* Completed Task Summary */}
         {taskData.status === 'completed' && (
           <div className="space-y-6 mb-6">
@@ -470,7 +470,7 @@ export default function TaskDetailPage() {
                   </p>
                 </div>
               </div>
-              
+
               {/* Learning Stats */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="bg-white/70 rounded-lg p-4 text-center">
@@ -491,7 +491,7 @@ export default function TaskDetailPage() {
                 </div>
               </div>
             </div>
-            
+
             {/* Skills Gained */}
             <div className="bg-white rounded-2xl shadow-lg p-6">
               <h4 className="text-lg font-semibold text-gray-900 mb-4 flex items-center space-x-2">
@@ -508,16 +508,16 @@ export default function TaskDetailPage() {
                       const skills = (i.content as Record<string, unknown>)?.skillsImproved as string[];
                       skills?.forEach((skill: string) => allSkills.add(skill));
                     });
-                  
+
                   const skillsArray = Array.from(allSkills);
-                  
+
                   // If no skills found, show default message
                   if (skillsArray.length === 0) {
                     return (
                       <p className="text-gray-500 text-sm">完成任務時將顯示獲得的技能</p>
                     );
                   }
-                  
+
                   return skillsArray.map((skill, index) => (
                     <span key={index} className="px-3 py-1 bg-purple-100 text-purple-700 text-sm rounded-full">
                       {skill}
@@ -526,7 +526,7 @@ export default function TaskDetailPage() {
                 })()}
               </div>
             </div>
-            
+
             {/* Final Evaluation */}
             <div id="comprehensive-evaluation" className="bg-white rounded-2xl shadow-lg p-6 transition-all duration-500">
               <div className="flex items-center justify-between mb-4">
@@ -555,7 +555,7 @@ export default function TaskDetailPage() {
                 </div>
               </div>
             </div>
-            
+
             <div className="text-center">
               <button
                 onClick={() => router.push(`/discovery/scenarios/${scenarioId}/programs/${programId}`)}
@@ -579,10 +579,10 @@ export default function TaskDetailPage() {
                   (共 {taskData.interactions.filter(i => i.type === 'user_input').length} 次嘗試
                   {passCount > 0 && (
                     <>
-                      , 
+                      ,
                       <span className="inline-flex items-center space-x-1">
                         {Array.from({ length: passCount }, (_, i) => (
-                          <button 
+                          <button
                             key={i}
                             onClick={() => {
                               const passedElement = document.getElementById(`passed-interaction-${i}`);
@@ -611,24 +611,24 @@ export default function TaskDetailPage() {
                 )}
               </button>
             </div>
-            
+
             {showHistory && (
               <div className="space-y-4 max-h-96 overflow-y-auto">
               {taskData.interactions.map((interaction, index) => {
                 // Calculate passed interaction index for ID
-                const passedInteractionIndex = interaction.type === 'ai_response' && interaction.content.completed 
+                const passedInteractionIndex = interaction.type === 'ai_response' && interaction.content.completed
                   ? taskData.interactions.slice(0, index + 1)
                       .filter(i => i.type === 'ai_response' && i.content.completed).length - 1
                   : -1;
-                
+
                 return (
-                  <div 
-                    key={index} 
+                  <div
+                    key={index}
                     id={passedInteractionIndex >= 0 ? `passed-interaction-${passedInteractionIndex}` : undefined}
                     className={`
-                      rounded-lg p-4 
-                      ${interaction.type === 'user_input' 
-                        ? 'bg-white border border-gray-200 ml-0 mr-8' 
+                      rounded-lg p-4
+                      ${interaction.type === 'user_input'
+                        ? 'bg-white border border-gray-200 ml-0 mr-8'
                         : interaction.content.completed
                           ? 'bg-green-50/50 border border-green-200 ml-8 mr-0'
                           : 'bg-orange-50/50 border border-orange-200 ml-8 mr-0'}
@@ -645,24 +645,24 @@ export default function TaskDetailPage() {
                       ) : (
                         <>
                           <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                            interaction.content.completed 
-                              ? 'bg-green-600' 
+                            interaction.content.completed
+                              ? 'bg-green-600'
                               : 'bg-orange-600'
                           }`}>
                             <Sparkles className="w-4 h-4 text-white" />
                           </div>
                           <span className={`text-sm font-medium ${
-                            (interaction.content as Record<string, unknown>)?.completed 
-                              ? 'text-green-700' 
+                            (interaction.content as Record<string, unknown>)?.completed
+                              ? 'text-green-700'
                               : 'text-orange-700'
                           }`}>
                             AI 回饋
-                            {typeof interaction.content === 'object' && 
+                            {typeof interaction.content === 'object' &&
                              interaction.content !== null &&
                              'completed' in interaction.content &&
                              (interaction.content as Record<string, unknown>).completed ? (
                               <span className="ml-2 text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
-                                {typeof interaction.content === 'object' && 
+                                {typeof interaction.content === 'object' &&
                                   interaction.content !== null &&
                                   'xpEarned' in interaction.content
                                     ? `${(interaction.content as Record<string, unknown>).xpEarned}`
@@ -677,12 +677,12 @@ export default function TaskDetailPage() {
                       {new Date(interaction.timestamp).toLocaleString('zh-TW')}
                     </span>
                   </div>
-                  
+
                   <div className="text-sm text-gray-700">
                     {interaction.type === 'user_input' ? (
                       <p className="whitespace-pre-wrap">{
-                        typeof interaction.content === 'string' 
-                          ? interaction.content 
+                        typeof interaction.content === 'string'
+                          ? interaction.content
                           : (interaction.content as Record<string, unknown>)?.response as string || JSON.stringify(interaction.content)
                       }</p>
                     ) : (
@@ -698,7 +698,7 @@ export default function TaskDetailPage() {
                               return <p className="text-gray-700">{String(interaction.content)}</p>;
                             }
                           }
-                          
+
                           return (
                             <>
                               {/* Pass/Fail Status */}
@@ -721,10 +721,10 @@ export default function TaskDetailPage() {
                             </>
                           )}
                         </div>
-                        
+
                         {/* Feedback */}
                         <p className="text-gray-700">{(content as Record<string, unknown>)?.feedback as string}</p>
-                        
+
                         {/* Strengths */}
                         {(content as Record<string, unknown>)?.strengths && ((content as Record<string, unknown>)?.strengths as string[])?.length > 0 && (
                           <div className="bg-green-50 rounded-md p-3">
@@ -739,7 +739,7 @@ export default function TaskDetailPage() {
                             </ul>
                           </div>
                         )}
-                        
+
                         {/* Improvements */}
                         {(content as Record<string, unknown>)?.improvements && ((content as Record<string, unknown>)?.improvements as string[])?.length > 0 && (
                           <div className="bg-orange-50 rounded-md p-3">
@@ -754,7 +754,7 @@ export default function TaskDetailPage() {
                             </ul>
                           </div>
                         )}
-                        
+
                         {/* Skills Improved */}
                         {(content as Record<string, unknown>)?.skillsImproved && ((content as Record<string, unknown>)?.skillsImproved as string[])?.length > 0 && (
                           <div className="flex flex-wrap gap-2 mt-2">
@@ -792,12 +792,12 @@ export default function TaskDetailPage() {
                 <div className="flex-1">
                   <h3 className="text-lg font-semibold text-green-900 mb-1">
                     {
-                      passCount > 1 
-                        ? `任務已通過 ${passCount} 次！` 
+                      passCount > 1
+                        ? `任務已通過 ${passCount} 次！`
                         : '恭喜達到通過標準！'
                     }
                   </h3>
-                  
+
                   {/* Pass Statistics */}
                   {passCount > 1 && (
                     <div className="flex items-center space-x-4 mb-2">
@@ -811,7 +811,7 @@ export default function TaskDetailPage() {
                       </div>
                     </div>
                   )}
-                  
+
                   <p className="text-green-700 mb-3">
                     {
                       passCount > 1
@@ -950,7 +950,7 @@ export default function TaskDetailPage() {
           </button>
         </div>
       </div>
-      
+
       {/* CSS Animation */}
       <style jsx>{`
         @keyframes progress {

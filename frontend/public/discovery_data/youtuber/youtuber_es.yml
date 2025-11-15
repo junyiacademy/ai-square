@@ -6,9 +6,9 @@ metadata:
   title: "Bardo de Videos - YouTuber"
   short_description: "Presenta historias de video cautivadoras en escenarios digitales"
   long_description: |
-    Eres un nuevo miembro del "Gremio de Bardos de Video", dotado para contar historias 
-    a través de lentes y entretener audiencias. En este reino digital de creatividad y 
-    tecnología, cada video es una actuación, cada suscriptor es tu audiencia, y tu misión 
+    Eres un nuevo miembro del "Gremio de Bardos de Video", dotado para contar historias
+    a través de lentes y entretener audiencias. En este reino digital de creatividad y
+    tecnología, cada video es una actuación, cada suscriptor es tu audiencia, y tu misión
     es crear contenido de video que toque corazones y genere resonancia.
   estimated_hours: 55
   skill_focus:
@@ -19,18 +19,18 @@ metadata:
 world_setting:
   name: "Gremio de Bardos de Video"
   description: |
-    El Gremio de Bardos de Video es un gremio artístico que cultiva a los mejores 
-    creadores de contenido. Aquí, los creadores aprenden a equilibrar la creatividad 
-    con las demandas del algoritmo, la autenticidad con las expectativas de la audiencia, 
+    El Gremio de Bardos de Video es un gremio artístico que cultiva a los mejores
+    creadores de contenido. Aquí, los creadores aprenden a equilibrar la creatividad
+    con las demandas del algoritmo, la autenticidad con las expectativas de la audiencia,
     construyendo canales que inspiran y entretienen a millones.
   atmosphere: creative_dynamic
   visual_theme: digital_stage
 starting_scenario:
   title: "El Cambio del Algoritmo"
   description: |
-    El Director Creativo te recibe con noticias preocupantes: Algoritmo, el rey caprichoso, 
-    ha cambiado repentinamente sus preferencias, enterrando el trabajo de muchos creadores. 
-    Debes encontrar el equilibrio entre mantener la integridad creativa y adaptarte a las 
+    El Director Creativo te recibe con noticias preocupantes: Algoritmo, el rey caprichoso,
+    ha cambiado repentinamente sus preferencias, enterrando el trabajo de muchos creadores.
+    Debes encontrar el equilibrio entre mantener la integridad creativa y adaptarte a las
     demandas algorítmicas.
   initial_tasks:
     - understand_youtube

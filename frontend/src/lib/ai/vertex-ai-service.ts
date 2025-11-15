@@ -33,11 +33,11 @@ export class VertexAIService {
     // Read environment variables at construction time, not module load time
     this.projectId = process.env.GOOGLE_CLOUD_PROJECT || '';
     this.location = process.env.VERTEX_AI_LOCATION || 'us-central1';
-    
+
     if (!this.projectId && process.env.NODE_ENV !== 'test') {
       throw new Error('GOOGLE_CLOUD_PROJECT environment variable is required');
     }
-    
+
     // Initialize Google Auth with explicit credentials
     const authConfig: Record<string, unknown> = {
       projectId: this.projectId,
@@ -77,14 +77,14 @@ export class VertexAIService {
     if (process.env.NODE_ENV === 'test') {
       return 'mock-token';
     }
-    
+
     const client = await this.auth.getClient();
     const accessToken = await client.getAccessToken();
-    
+
     if (!accessToken.token) {
       throw new Error('Failed to get access token');
     }
-    
+
     return accessToken.token;
   }
 
@@ -101,19 +101,19 @@ export class VertexAIService {
         }],
       };
     }
-    
+
     // 確保在服務器端執行
     if (typeof window !== 'undefined') {
       throw new Error('Vertex AI service must only run on server side');
     }
-    
+
     const token = await this.getAccessToken();
     const url = `https://${this.location}-aiplatform.googleapis.com/v1/projects/${this.projectId}/locations/${this.location}/publishers/google/models/${this.model}:generateContent`;
-    
+
     // Add timeout support with AbortController
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 25000); // 25 second timeout
-    
+
     try {
       const response = await fetch(url, {
         method: 'POST',
@@ -179,7 +179,7 @@ export class VertexAIService {
         content?: { parts?: Array<{ text?: string }> }
       }> | undefined;
       const aiResponse = candidates?.[0]?.content?.parts?.[0]?.text || '';
-      
+
       if (!aiResponse) {
         console.error('Vertex AI response structure:', JSON.stringify(response, null, 2));
         console.error('Candidates:', response.candidates);
@@ -198,7 +198,7 @@ export class VertexAIService {
         content: aiResponse,
         processingTime,
         // Token usage from API response if available
-        tokensUsed: (response.usageMetadata as { totalTokenCount?: number } | undefined)?.totalTokenCount || 
+        tokensUsed: (response.usageMetadata as { totalTokenCount?: number } | undefined)?.totalTokenCount ||
                    Math.ceil((message.length + aiResponse.length) / 4)
       };
     } catch (error) {
@@ -233,7 +233,7 @@ Format your response as JSON with keys: score, feedback, suggestions (array)
 
     try {
       const response = await this.sendMessage(evaluationPrompt);
-      
+
       // Parse JSON response
       const jsonMatch = response.content.match(/\{[\s\S]*\}/);
       if (jsonMatch) {
@@ -296,7 +296,7 @@ export function createPBLVertexAIService(
   },
   language: string = 'en'
 ): VertexAIService {
-  const languageInstruction = language === 'zhTW' 
+  const languageInstruction = language === 'zhTW'
     ? 'IMPORTANT: Always respond in Traditional Chinese (繁體中文). Do not mix languages.'
     : 'IMPORTANT: Always respond in English only. Do not mix languages.';
 
@@ -337,7 +337,7 @@ export function vertexAIResponseToConversation(
   taskId?: string
 ): ConversationTurn & { processLog: ProcessLog } {
   const timestamp = new Date();
-  
+
   const conversation: ConversationTurn = {
     id: `ai-${timestamp.getTime()}`,
     timestamp,

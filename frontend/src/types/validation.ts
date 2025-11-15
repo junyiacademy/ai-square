@@ -123,7 +123,7 @@ export interface AssessmentQuestion {
   correct_answer?: string | number;
 }
 
-// PBL Data Structure  
+// PBL Data Structure
 export interface PBLData {
   scenario_info?: {
     id: string;

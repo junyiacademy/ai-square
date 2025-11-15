@@ -18,7 +18,7 @@ describe('FileList', () => {
     )
 
     render(<FileList onFileSelect={mockOnFileSelect} />)
-    
+
     expect(screen.getByText('Loading files...')).toBeInTheDocument()
   })
 
@@ -60,7 +60,7 @@ describe('FileList', () => {
     })
 
     fireEvent.click(screen.getByText('scenario1.yaml'))
-    
+
     expect(mockOnFileSelect).toHaveBeenCalledWith('scenario1.yaml')
   })
 

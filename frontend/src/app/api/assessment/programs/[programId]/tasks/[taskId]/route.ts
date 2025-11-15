@@ -9,7 +9,7 @@ export async function GET(
 ) {
   try {
     const { programId, taskId } = await params;
-    
+
     // Only accept UUID format for all IDs
     if (!programId.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)) {
       return NextResponse.json(
@@ -17,25 +17,25 @@ export async function GET(
         { status: 400 }
       );
     }
-    
+
     if (!taskId.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)) {
       return NextResponse.json(
         { success: false, error: 'Invalid task ID format. UUID required.' },
         { status: 400 }
       );
     }
-    
+
     // Get user session
     const session = await getUnifiedAuth(request);
     if (!session?.user?.email) {
       return createUnauthorizedResponse();
     }
-    
+
     // Use unified architecture to get task
     const { repositoryFactory } = await import('@/lib/repositories/base/repository-factory');
     const taskRepo = repositoryFactory.getTaskRepository();
     const programRepo = repositoryFactory.getProgramRepository();
-    
+
     // First verify the program exists and belongs to the user
     const program = await programRepo.findById(programId);
     if (!program || program.userId !== session.user.id) {
@@ -44,7 +44,7 @@ export async function GET(
         { status: 404 }
       );
     }
-    
+
     // Get the task
     const task = await taskRepo.findById(taskId);
     if (!task) {
@@ -53,7 +53,7 @@ export async function GET(
         { status: 404 }
       );
     }
-    
+
     // Verify the task belongs to the program
     if (task.programId !== programId) {
       return NextResponse.json(
@@ -61,7 +61,7 @@ export async function GET(
         { status: 403 }
       );
     }
-    
+
     return NextResponse.json({
       success: true,
       task: {
@@ -77,7 +77,7 @@ export async function GET(
         evaluationId: undefined // Evaluation ID is stored separately
       }
     });
-    
+
   } catch (error) {
     console.error('Error fetching assessment task:', error);
     return NextResponse.json(
@@ -94,7 +94,7 @@ export async function PATCH(
   try {
     const { programId, taskId } = await params;
     const { action, answers } = await request.json();
-    
+
     // Only accept UUID format for all IDs
     if (!programId.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)) {
       return NextResponse.json(
@@ -102,29 +102,29 @@ export async function PATCH(
         { status: 400 }
       );
     }
-    
+
     if (!taskId.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)) {
       return NextResponse.json(
         { success: false, error: 'Invalid task ID format. UUID required.' },
         { status: 400 }
       );
     }
-    
+
     // Get user session
     const session = await getUnifiedAuth(request);
     if (!session?.user?.email) {
       return createUnauthorizedResponse();
     }
-    
+
     // Get language from request
     const language = getLanguageFromHeader(request);
-    
+
     // Use unified architecture
     const { repositoryFactory } = await import('@/lib/repositories/base/repository-factory');
     const taskRepo = repositoryFactory.getTaskRepository();
     const programRepo = repositoryFactory.getProgramRepository();
     const evalRepo = repositoryFactory.getEvaluationRepository();
-    
+
     // First verify the program exists and belongs to the user
     const program = await programRepo.findById(programId);
     if (!program || program.userId !== session.user.id) {
@@ -133,7 +133,7 @@ export async function PATCH(
         { status: 404 }
       );
     }
-    
+
     // Get the task
     const task = await taskRepo.findById(taskId);
     if (!task) {
@@ -142,7 +142,7 @@ export async function PATCH(
         { status: 404 }
       );
     }
-    
+
     // Verify the task belongs to the program
     if (task.programId !== programId) {
       return NextResponse.json(
@@ -150,7 +150,7 @@ export async function PATCH(
         { status: 403 }
       );
     }
-    
+
     switch (action) {
       case 'start':
         // Mark task as active
@@ -162,7 +162,7 @@ export async function PATCH(
           }
         });
         break;
-        
+
       case 'submit':
         if (!answers || !Array.isArray(answers)) {
           return NextResponse.json(
@@ -170,22 +170,22 @@ export async function PATCH(
             { status: 400 }
           );
         }
-        
+
         // Process answers and create interactions
         interface QuestionType {
           id: string;
           correct_answer?: string;
           ksa_mapping?: Record<string, unknown>;
         }
-        const questionsArray = Array.isArray((task.content as Record<string, unknown>)?.questions) 
-          ? (task.content as Record<string, unknown>)?.questions as QuestionType[] 
+        const questionsArray = Array.isArray((task.content as Record<string, unknown>)?.questions)
+          ? (task.content as Record<string, unknown>)?.questions as QuestionType[]
           : [];
         const assessmentInteractions: AssessmentInteraction[] = answers.map((answer: { questionId: string; answer: string; timeSpent?: number }) => {
           const question = questionsArray.find((q) => q.id === answer.questionId);
           const isCorrect = question && question.correct_answer !== undefined
             ? String(answer.answer) === String(question.correct_answer)
             : false;
-          
+
           return {
             timestamp: new Date().toISOString(),
             type: 'assessment_answer' as const,
@@ -198,10 +198,10 @@ export async function PATCH(
             }
           };
         });
-        
+
         // Convert to IInteraction for storage
         const interactions = assessmentInteractions.map(toIInteraction);
-        
+
         // Store interactions in task
         const updatedInteractions = [...(task.interactions || []), ...interactions];
         await taskRepo.update?.(taskId, {
@@ -212,12 +212,12 @@ export async function PATCH(
             lastAnsweredAt: new Date().toISOString()
           }
         });
-        
+
         // Calculate score
         const correctCount = assessmentInteractions.filter(i => i.context.isCorrect).length;
         const totalQuestions = questionsArray.length;
         const score = totalQuestions > 0 ? Math.round((correctCount / totalQuestions) * 100) : 0;
-        
+
         // Create task evaluation
         const evaluation = await evalRepo.create({
           userId: session.user.id,
@@ -246,7 +246,7 @@ export async function PATCH(
           },
           createdAt: new Date().toISOString()
         });
-        
+
         // Update task status and link evaluation
         await taskRepo.update?.(taskId, {
           status: 'completed',
@@ -256,7 +256,7 @@ export async function PATCH(
             evaluationId: evaluation.id
           }
         });
-        
+
         return NextResponse.json({
           success: true,
           evaluation: {
@@ -267,7 +267,7 @@ export async function PATCH(
             feedback: evaluation.feedbackText
           }
         });
-        
+
       case 'complete':
         // Mark task as completed
         await taskRepo.update?.(taskId, {
@@ -278,21 +278,21 @@ export async function PATCH(
           }
         });
         break;
-        
+
       default:
         return NextResponse.json(
           { success: false, error: 'Invalid action' },
           { status: 400 }
         );
     }
-    
+
     // Return updated task
     const updatedTask = await taskRepo.findById(taskId);
     return NextResponse.json({
       success: true,
       task: updatedTask
     });
-    
+
   } catch (error) {
     console.error('Error updating assessment task:', error);
     return NextResponse.json(

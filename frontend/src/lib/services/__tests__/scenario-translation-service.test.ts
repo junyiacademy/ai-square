@@ -58,7 +58,7 @@ describe('ScenarioTranslationService', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockTime = Date.now();
-    
+
     service = new ScenarioTranslationService();
     service.setTimeProvider(() => mockTime);
 
@@ -181,7 +181,7 @@ describe('ScenarioTranslationService', () => {
 
     it('should handle process.cwd() variations', async () => {
       const originalCwd = process.cwd;
-      
+
       // Test when cwd ends with /frontend
       process.cwd = jest.fn().mockReturnValue('/path/to/frontend');
       const service1 = new ScenarioTranslationService();
@@ -315,13 +315,13 @@ describe('ScenarioTranslationService', () => {
       // Load some translations
       await service.loadTranslation(mockScenario, 'zh');
       await service.loadTranslation(mockScenario, 'es');
-      
+
       let stats = service.getCacheStats();
       expect(stats.size).toBe(2);
 
       // Advance time to expire first entry
       mockTime += 11 * 60 * 1000;
-      
+
       // Load another translation
       await service.loadTranslation(mockScenario, 'fr');
 
@@ -391,11 +391,11 @@ describe('ScenarioTranslationService', () => {
       // Reset mock to track calls properly
       jest.clearAllMocks();
       (fs.readFile as jest.Mock).mockResolvedValue('yaml content');
-      
+
       // Create a new service instance for this test
       const concurrentService = new ScenarioTranslationService();
       concurrentService.setTimeProvider(() => mockTime);
-      
+
       const promises = [
         concurrentService.loadTranslation(mockScenario, 'zh'),
         concurrentService.loadTranslation(mockScenario, 'zh'),
@@ -403,15 +403,15 @@ describe('ScenarioTranslationService', () => {
       ];
 
       const results = await Promise.all(promises);
-      
+
       // All should return same result
       expect(results[0]).toEqual(results[1]);
       expect(results[1]).toEqual(results[2]);
-      
+
       // Since these are truly concurrent, they might all hit the file system
       // before any of them can populate the cache
       expect(fs.readFile).toHaveBeenCalled();
-      
+
       // But subsequent calls should use cache
       jest.clearAllMocks();
       const cachedResult = await concurrentService.loadTranslation(mockScenario, 'zh');

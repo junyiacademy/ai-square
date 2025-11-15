@@ -89,10 +89,10 @@ export class PBLYAMLLoader extends BaseYAMLLoader<PBLYAMLData> {
       const filePath = this.getFilePath(fileName);
       const { promises: fs } = await import('fs');
       const yaml = await import('js-yaml');
-      
+
       const content = await fs.readFile(filePath, 'utf8');
       const data = yaml.load(content) as PBLYAMLData;
-      
+
       return { data };
     } catch (error) {
       return { data: null, error: error as Error };
@@ -131,7 +131,7 @@ export class PBLYAMLLoader extends BaseYAMLLoader<PBLYAMLData> {
   async scanScenarios(): Promise<string[]> {
     const fs = await import('fs/promises');
     const scenariosDir = this.basePath;
-    
+
     try {
       const items = await fs.readdir(scenariosDir, { withFileTypes: true });
       const scenarioFolders = items
@@ -204,7 +204,7 @@ export class PBLYAMLLoader extends BaseYAMLLoader<PBLYAMLData> {
   getTranslatedField(data: Record<string, unknown>, fieldName: string, language: string): string {
     const suffix = language === 'en' ? '' : `_${language}`;
     const fieldWithSuffix = `${fieldName}${suffix}`;
-    
+
     return (data[fieldWithSuffix] as string) || (data[fieldName] as string) || '';
   }
 

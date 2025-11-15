@@ -6,9 +6,9 @@ metadata:
   title: Architetto del Codice della Vita - Ricercatore Biotecnologico
   short_description: Scopri i segreti della vita attraverso l'IA e la biotecnologia
   long_description: |
-    Sei un ricercatore junior all'"Istituto di BioSintesi", dove i confini tra biologia 
-    e intelligenza artificiale si confondono. Armato di strumenti IA e tecniche di 
-    ingegneria genetica, esplorerai i codici fondamentali della vita e creerai soluzioni 
+    Sei un ricercatore junior all'"Istituto di BioSintesi", dove i confini tra biologia
+    e intelligenza artificiale si confondono. Armato di strumenti IA e tecniche di
+    ingegneria genetica, esplorerai i codici fondamentali della vita e creerai soluzioni
     che potrebbero rivoluzionare la medicina, l'agricoltura e il potenziamento umano.
   estimated_hours: 70
   skill_focus:
@@ -20,19 +20,19 @@ metadata:
 world_setting:
   name: Istituto di BioSintesi
   description: |
-    L'Istituto di BioSintesi è una struttura di ricerca all'avanguardia dove la biologia 
-    incontra l'intelligenza artificiale. I ricercatori qui usano l'IA per decodificare 
-    i misteri genetici, progettare nuovi organismi e spingere i limiti del possibile 
+    L'Istituto di BioSintesi è una struttura di ricerca all'avanguardia dove la biologia
+    incontra l'intelligenza artificiale. I ricercatori qui usano l'IA per decodificare
+    i misteri genetici, progettare nuovi organismi e spingere i limiti del possibile
     nella biotecnologia mentre affrontano profondi quesiti etici.
   atmosphere: scientific_innovative
   visual_theme: biotech_laboratory
 starting_scenario:
   title: L'Algoritmo Vivente
   description: |
-    La Dott.ssa Elena Helix ti dà il benvenuto all'istituto con una missione urgente: 
-    è stata scoperta una misteriosa sequenza genetica che sembra rispondere agli algoritmi 
-    IA. Ma il Dott. Splice della rivale BioCorp sta correndo per trasformare le modifiche 
-    genetiche in armi. Devi sbloccare i segreti della vita responsabilmente mentre 
+    La Dott.ssa Elena Helix ti dà il benvenuto all'istituto con una missione urgente:
+    è stata scoperta una misteriosa sequenza genetica che sembra rispondere agli algoritmi
+    IA. Ma il Dott. Splice della rivale BioCorp sta correndo per trasformare le modifiche
+    genetiche in armi. Devi sbloccare i segreti della vita responsabilmente mentre
     previeni un uso catastrofico.
   initial_tasks:
     - understand_crispr

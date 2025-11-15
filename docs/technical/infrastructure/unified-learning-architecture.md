@@ -1,6 +1,6 @@
 # 統一學習架構設計 - Content Source → Scenario → Program → Task → Evaluation
 
-> **更新日期**: 2025-08-12  
+> **更新日期**: 2025-08-12
 > **狀態**: Phase 1 完成，Phase 2 進行中
 
 > See also: [產品需求文檔（PRD）](../../handbook/product-requirements-document.md)
@@ -50,7 +50,7 @@ Content Source → Scenario → Program → Task → Evaluation
 ### 1.3 三大模組對應
 ```
 PBL:       YAML → Scenario → Program → Task → Evaluations
-Discovery: Path → Scenario → Program → Task → Evaluations  
+Discovery: Path → Scenario → Program → Task → Evaluations
 Assessment: YAML → Scenario(Config) → Program → Task(All Questions) → Evaluations
 ```
 
@@ -144,10 +144,10 @@ interface IEvaluation {
 interface IEvaluationSystem {
   // Task級別評估
   evaluateTask(task: ITask, context: IEvaluationContext): Promise<IEvaluation>;
-  
+
   // Program級別總結評估
   evaluateProgram(program: IProgram, taskEvaluations: IEvaluation[]): Promise<IEvaluation>;
-  
+
   // 產生回饋
   generateFeedback(evaluation: IEvaluation, language: string): Promise<string>;
 }
@@ -230,7 +230,7 @@ interface PBLEvaluation extends IEvaluation {
 
 #### Discovery 模組
 ```typescript
-// Discovery Content Source  
+// Discovery Content Source
 interface DiscoveryContentSource extends IContentSource {
   type: 'ai-generated';
   sourceId: string;  // Path ID
@@ -278,7 +278,7 @@ interface DiscoveryTask extends ITask {
   interactions: DiscoveryInteraction[];  // 整個工作階段的互動
 }
 
-// Discovery Evaluation  
+// Discovery Evaluation
 interface DiscoveryEvaluation extends IEvaluation {
   targetType: 'task' | 'program';
   evaluationType: 'discovery_task' | 'discovery_milestone';
@@ -368,7 +368,7 @@ abstract class BaseScenarioRepository<T extends IScenario> {
   abstract update(id: string, updates: Partial<T>): Promise<T>;
 }
 
-// Program Repository  
+// Program Repository
 abstract class BaseProgramRepository<T extends IProgram> {
   abstract create(program: Omit<T, 'id'>): Promise<T>;
   abstract findById(id: string): Promise<T | null>;
@@ -414,26 +414,26 @@ abstract class BaseLearningService<
     protected evaluationSystem: IEvaluationSystem,
     protected aiService: BaseAIService
   ) {}
-  
+
   // 開始學習（建立Program和Tasks）
   async startLearning(userId: string, scenarioId: string): Promise<TProgram> {
     const scenario = await this.scenarioRepo.findById(scenarioId);
     if (!scenario) throw new Error('Scenario not found');
-    
+
     // 建立Program
     const program = await this.createProgram(userId, scenario);
-    
+
     // 根據Scenario建立Tasks
     const tasks = await this.createTasksFromScenario(program, scenario);
-    
+
     // 更新Program的taskIds
     await this.programRepo.update(program.id, {
       taskIds: tasks.map(t => t.id)
     });
-    
+
     return program;
   }
-  
+
   // 處理Task互動
   async handleTaskInteraction(
     taskId: string,
@@ -441,27 +441,27 @@ abstract class BaseLearningService<
   ): Promise<TTask> {
     const task = await this.taskRepo.findById(taskId);
     if (!task) throw new Error('Task not found');
-    
+
     // 更新互動記錄
     const updatedInteractions = [...task.interactions, interaction];
     await this.taskRepo.updateInteractions(taskId, updatedInteractions);
-    
+
     // 檢查是否需要評估
     if (this.shouldEvaluate(task, interaction)) {
       await this.evaluateTask(task);
     }
-    
+
     return this.taskRepo.findById(taskId)!;
   }
-  
+
   // 完成Program
   async completeProgram(programId: string): Promise<TEvaluation> {
     const program = await this.programRepo.findById(programId);
     if (!program) throw new Error('Program not found');
-    
+
     // 獲取所有Task評估
     const taskEvaluations = await this.evaluationRepo.findByTarget('task', program.taskIds);
-    
+
     // 產生Program總結評估
     const scenario = await this.scenarioRepo.findById(program.scenarioId);
     const context: IEvaluationContext = {
@@ -469,21 +469,21 @@ abstract class BaseLearningService<
       program,
       previousEvaluations: taskEvaluations
     };
-    
+
     const programEvaluation = await this.evaluationSystem.evaluateProgram(
       program,
       taskEvaluations
     );
-    
+
     // 儲存評估結果
     await this.evaluationRepo.create(programEvaluation);
-    
+
     // 更新Program狀態
     await this.programRepo.complete(programId);
-    
+
     return programEvaluation;
   }
-  
+
   // 子類別必須實作的方法
   protected abstract createProgram(userId: string, scenario: TScenario): Promise<TProgram>;
   protected abstract createTasksFromScenario(program: TProgram, scenario: TScenario): Promise<TTask[]>;
@@ -501,7 +501,7 @@ abstract class BaseLearningService<
 - **批次答案**: 將所有答案轉換為 interactions
 - **領域評分**: 統計各領域正確率並計算分數
 
-#### PBL Service Pattern  
+#### PBL Service Pattern
 - **任務結構**: 多任務對應學習目標
 - **AI 整合**: 導師對話與即時回饋
 - **KSA 映射**: 能力追蹤與評估
@@ -656,7 +656,7 @@ interface IScenario {
 #### 3. 智能同步策略
 - 定期檢查 YAML 變更
 - 使用 checksum 比對
-- 支援增量更新  
+- 支援增量更新
 - 保留變更歷史
 
 ### 7.5 最佳實踐

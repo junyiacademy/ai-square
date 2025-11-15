@@ -26,4 +26,4 @@ COPY --from=builder /app/prisma ./prisma
 # No need to copy key file anymore
 
 EXPOSE 3000
-CMD ["npm", "start"] 
+CMD ["npm", "start"]

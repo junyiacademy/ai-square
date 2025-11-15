@@ -278,7 +278,7 @@ describe('Discovery Tasks API', () => {
       mockUserRepo.findByEmail.mockResolvedValue(mockUser);
       mockProgramRepo.findById.mockResolvedValue(mockProgram);
       mockTaskRepo.findByProgram.mockResolvedValue(mockTasks);
-      
+
       const newTask = {
         ...mockTasks[0],
         id: 'task4',

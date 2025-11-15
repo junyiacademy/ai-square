@@ -21,7 +21,7 @@ export const TEST_USERS: Record<string, TestUser> = {
     role: 'student'
   },
   teacher: {
-    email: 'teacher@example.com', 
+    email: 'teacher@example.com',
     password: 'teacher123',
     name: 'Demo Teacher',
     role: 'teacher'
@@ -42,7 +42,7 @@ export class AuthHelper {
    */
   async login(userType: 'student' | 'teacher' | 'admin' = 'student') {
     const user = TEST_USERS[userType];
-    
+
     // Call login API directly
     const response = await this.page.request.post('/api/auth/login', {
       data: {
@@ -64,14 +64,14 @@ export class AuthHelper {
     // The cookies should be set automatically by the response
     // Navigate to dashboard to verify login worked
     await this.page.goto('/dashboard');
-    
+
     // Check if redirected to login (means auth failed) or stayed on dashboard
     const currentUrl = this.page.url();
     if (currentUrl.includes('/login')) {
       // If redirected to login, try navigating to homepage
       await this.page.goto('/');
     }
-    
+
     return user;
   }
 
@@ -81,14 +81,14 @@ export class AuthHelper {
   async manualLogin(email: string, password: string) {
     // Navigate to login page
     await this.page.goto('/login');
-    
+
     // Wait for login form
     await this.page.waitForSelector('input#email', { timeout: 10000 });
-    
+
     // Fill in credentials
     await this.page.fill('input#email', email);
     await this.page.fill('input#password', password);
-    
+
     // Force click the submit button even if disabled
     await this.page.evaluate(() => {
       const button = document.querySelector('button[type="submit"]') as HTMLButtonElement;
@@ -97,7 +97,7 @@ export class AuthHelper {
         button.click();
       }
     });
-    
+
     // Wait for navigation
     await this.page.waitForTimeout(2000);
   }
@@ -108,10 +108,10 @@ export class AuthHelper {
   async logout() {
     // Call logout API
     await this.page.request.post('/api/auth/logout');
-    
+
     // Clear cookies
     await this.page.context().clearCookies();
-    
+
     // Navigate to home
     await this.page.goto('/');
   }

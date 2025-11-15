@@ -49,7 +49,7 @@ export default function AssessmentResults({ result, domains, onRetake, questions
           sMapKeys: Object.keys(data.sMap || {}).length,
           aMapKeys: Object.keys(data.aMap || {}).length
         });
-        
+
         setDomainsData(data.domains);
         setKsaMaps({
           kMap: data.kMap as Record<string, { summary: string; theme: string; explanation?: string }>,
@@ -58,7 +58,7 @@ export default function AssessmentResults({ result, domains, onRetake, questions
         });
       } catch (error) {
         console.error('❌ Failed to fetch domains data:', error);
-        
+
         // Provide fallback empty data so the graph doesn't break completely
         console.log('🔄 Setting fallback empty data for KSA graph');
         setDomainsData([]);
@@ -77,7 +77,7 @@ export default function AssessmentResults({ result, domains, onRetake, questions
     // Check if user is logged in
     const isLoggedIn = localStorage.getItem('isLoggedIn');
     const userData = localStorage.getItem('user');
-    
+
     if (isLoggedIn === 'true' && userData) {
       const user = JSON.parse(userData);
       // Use user ID instead of email
@@ -127,12 +127,12 @@ export default function AssessmentResults({ result, domains, onRetake, questions
     console.log('=== Save button clicked ===');
     console.log('Current user:', currentUser);
     console.log('Is saved:', isSaved);
-    
+
     if (!currentUser || isSaved) return;
-    
+
     setIsSaving(true);
     setSaveMessage(null);
-    
+
     const requestBody = {
       userId: currentUser.id,
       userEmail: currentUser.email,
@@ -144,9 +144,9 @@ export default function AssessmentResults({ result, domains, onRetake, questions
         timeSpentSeconds: result.timeSpentSeconds,
       },
     };
-    
+
     console.log('Sending request to API with body:', requestBody);
-    
+
     try {
       const response = await authenticatedFetch('/api/assessment/results', {
         method: 'POST',
@@ -155,16 +155,16 @@ export default function AssessmentResults({ result, domains, onRetake, questions
         },
         body: JSON.stringify(requestBody),
       });
-      
+
       const data = await response.json();
-      
+
       if (response.ok) {
         setIsSaved(true);
         setSaveMessage({
           type: 'success',
           text: t('results.saveSuccess', { assessmentId: data.assessmentId }),
         });
-        
+
         // Also update progress in GCS
         if (currentUser.email) {
           try {
@@ -234,7 +234,7 @@ export default function AssessmentResults({ result, domains, onRetake, questions
                 {t(`level.${result.level}`)}
               </div>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
               <div className="bg-gray-50 p-4 rounded-lg">
                 <div className="text-2xl font-bold text-gray-900">
@@ -303,7 +303,7 @@ export default function AssessmentResults({ result, domains, onRetake, questions
                   </h3>
                   <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                     <p className="text-blue-800">
-                      {t('results.summaryText', { 
+                      {t('results.summaryText', {
                         level: t(`level.${result.level}`),
                         score: result.overallScore,
                         correct: result.correctAnswers,
@@ -404,7 +404,7 @@ export default function AssessmentResults({ result, domains, onRetake, questions
         {/* Save Message */}
         {saveMessage && (
           <div className={`mb-6 p-4 rounded-lg ${
-            saveMessage.type === 'success' 
+            saveMessage.type === 'success'
               ? 'bg-green-50 border border-green-200 text-green-800'
               : 'bg-red-50 border border-red-200 text-red-800'
           }`}>

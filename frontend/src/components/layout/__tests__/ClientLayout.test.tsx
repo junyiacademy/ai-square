@@ -128,7 +128,7 @@ describe('ClientLayout', () => {
 
     const container = screen.getByTestId('content').closest('.flex');
     const children = container?.children;
-    
+
     if (children) {
       // Should have header, main, and footer in that order
       expect(children.length).toBe(3);
@@ -139,12 +139,12 @@ describe('ClientLayout', () => {
   });
 
   it('preserves children props and attributes', async () => {
-    const CustomComponent = ({ 
-      className, 
-      'data-value': dataValue 
-    }: { 
-      className: string; 
-      'data-value': string; 
+    const CustomComponent = ({
+      className,
+      'data-value': dataValue
+    }: {
+      className: string;
+      'data-value': string;
     }) => (
       <div className={className} data-value={dataValue} data-testid="custom">
         Custom Component

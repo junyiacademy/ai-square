@@ -13,7 +13,7 @@ jest.mock('../../../components/assessment/AssessmentQuiz', () => {
   return function MockAssessmentQuiz({ onComplete, questions }: any) {
     return (
       <div data-testid="assessment-quiz">
-        <button 
+        <button
           onClick={() => onComplete([
             { questionId: 'E001', selectedAnswer: 'b', timeSpent: 30, isCorrect: true }
           ])}
@@ -141,7 +141,7 @@ describe('AssessmentPage', () => {
 
   it('renders intro screen after loading', async () => {
     renderWithProviders(<AssessmentPage />);
-    
+
     await waitFor(() => {
       expect(screen.getByText('AI Literacy Assessment')).toBeInTheDocument();
       expect(screen.getByText('Evaluate your AI literacy across four key domains')).toBeInTheDocument();
@@ -151,7 +151,7 @@ describe('AssessmentPage', () => {
 
   it('starts assessment when start button is clicked', async () => {
     renderWithProviders(<AssessmentPage />);
-    
+
     // Wait for loading to complete and button to appear
     await waitFor(() => {
       expect(screen.queryByText(mockT('loading'))).not.toBeInTheDocument();
@@ -164,7 +164,7 @@ describe('AssessmentPage', () => {
 
     const startButton = screen.getByRole('button');
     fireEvent.click(startButton);
-    
+
     await waitFor(() => {
       expect(screen.getByTestId('assessment-quiz')).toBeInTheDocument();
     });
@@ -172,12 +172,12 @@ describe('AssessmentPage', () => {
 
   it('completes assessment and shows results', async () => {
     renderWithProviders(<AssessmentPage />);
-    
+
     // Wait for loading to complete
     await waitFor(() => {
       expect(screen.queryByText(mockT('loading'))).not.toBeInTheDocument();
     });
-    
+
     await waitFor(() => {
         const element = screen.queryByRole('button');
         if (element) expect(element).toBeInTheDocument();
@@ -185,13 +185,13 @@ describe('AssessmentPage', () => {
 
     const startButton = screen.getByRole('button');
     fireEvent.click(startButton);
-    
+
     await waitFor(() => {
       expect(screen.getByTestId('assessment-quiz')).toBeInTheDocument();
     });
 
     fireEvent.click(screen.getByText('Complete Quiz'));
-    
+
     await waitFor(() => {
       expect(screen.getByTestId('assessment-results')).toBeInTheDocument();
       expect(screen.getByText('Score: 100%')).toBeInTheDocument();
@@ -200,12 +200,12 @@ describe('AssessmentPage', () => {
 
   it('allows retaking assessment', async () => {
     renderWithProviders(<AssessmentPage />);
-    
+
     // Wait for loading to complete
     await waitFor(() => {
       expect(screen.queryByText(mockT('loading'))).not.toBeInTheDocument();
     });
-    
+
     // Complete the assessment
     await waitFor(() => {
         const element = screen.queryByRole('button');
@@ -214,13 +214,13 @@ describe('AssessmentPage', () => {
 
     const startButton = screen.getByRole('button');
     fireEvent.click(startButton);
-    
+
     await waitFor(() => {
       expect(screen.getByTestId('assessment-quiz')).toBeInTheDocument();
     });
 
     fireEvent.click(screen.getByText('Complete Quiz'));
-    
+
     await waitFor(() => {
       expect(screen.getByTestId('assessment-results')).toBeInTheDocument();
     });
@@ -228,7 +228,7 @@ describe('AssessmentPage', () => {
     // Retake assessment
     const retakeButton = screen.getByText(/retake/i) || screen.getAllByRole('button')[0];
     fireEvent.click(retakeButton);
-    
+
     await waitFor(() => {
       // Check if we're back at the intro screen
       expect(screen.getByRole('button')).toBeInTheDocument();
@@ -237,9 +237,9 @@ describe('AssessmentPage', () => {
 
   it('handles API error gracefully', async () => {
     (global.fetch as jest.Mock).mockRejectedValue(new Error('API Error'));
-    
+
     renderWithProviders(<AssessmentPage />);
-    
+
     await waitFor(() => {
         const element = screen.queryByText('errorLoading');
         if (element) expect(element).toBeInTheDocument();
@@ -248,20 +248,20 @@ describe('AssessmentPage', () => {
 
   it('calculates assessment results correctly', async () => {
     renderWithProviders(<AssessmentPage />);
-    
+
     await waitFor(() => {
         const element = screen.queryByText('Start Assessment');
         if (element) expect(element).toBeInTheDocument();
       }, { timeout: 1000 });
 
     fireEvent.click(screen.getByText('Start Assessment'));
-    
+
     await waitFor(() => {
       expect(screen.getByTestId('assessment-quiz')).toBeInTheDocument();
     });
 
     fireEvent.click(screen.getByText('Complete Quiz'));
-    
+
     await waitFor(() => {
       expect(screen.getByTestId('assessment-results')).toBeInTheDocument();
       // Should show 100% since the mock answer is correct

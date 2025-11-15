@@ -3,7 +3,7 @@
  * Following TDD Red → Green → Refactor
  */
 
-import { 
+import {
   IPBLScenario,
   IPBLProgram,
   IPBLTask,
@@ -477,7 +477,7 @@ describe('Module-specific Types', () => {
         updatedAt: new Date().toISOString(),
         metadata: {}
       };
-      
+
       const pbl = { ...baseScenario, mode: 'pbl' as const };
       const assessment = { ...baseScenario, mode: 'assessment' as const };
       const discovery = { ...baseScenario, mode: 'discovery' as const };
@@ -513,7 +513,7 @@ describe('Module-specific Types', () => {
         updatedAt: new Date().toISOString(),
         metadata: {}
       };
-      
+
       const pbl = { ...baseScenario, mode: 'pbl' as const };
       const assessment = { ...baseScenario, mode: 'assessment' as const };
       const discovery = { ...baseScenario, mode: 'discovery' as const };
@@ -549,7 +549,7 @@ describe('Module-specific Types', () => {
         updatedAt: new Date().toISOString(),
         metadata: {}
       };
-      
+
       const pbl = { ...baseScenario, mode: 'pbl' as const };
       const assessment = { ...baseScenario, mode: 'assessment' as const };
       const discovery = { ...baseScenario, mode: 'discovery' as const };

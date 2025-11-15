@@ -40,4 +40,4 @@ describe('distributed-cache-service local cache management', () => {
     expect(typeof stats2.hitRate).toBe('number');
     expect(stats2.counters).toBeDefined();
   });
-}); 
+});

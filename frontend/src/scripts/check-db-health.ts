@@ -42,15 +42,15 @@ async function checkHealth() {
     // Quick database stats
     if (health.postgresql) {
       console.log(chalk.yellow('\n📈 Database Statistics:'));
-      
+
       const userRepo = repositoryFactory.getUserRepository();
       const programRepo = repositoryFactory.getProgramRepository();
       const scenarioRepo = repositoryFactory.getScenarioRepository();
-      
+
       await userRepo.findAll({ limit: 1 });
       await programRepo.findByUser('dummy'); // Just to test connection
       const scenarios = await scenarioRepo.findActive?.() || [];
-      
+
       console.log(chalk.gray(`  Active Scenarios: ${scenarios.length}`));
       console.log(chalk.gray(`  Database: Connected and operational`));
     }

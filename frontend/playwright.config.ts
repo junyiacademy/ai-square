@@ -22,14 +22,14 @@ export default defineConfig({
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
-    
+
     /* Maximum time each action can take */
     actionTimeout: 10000,
-    
+
     /* Test timeout */
     navigationTimeout: 30000,
   },
-  
+
   /* Global timeout for each test */
   timeout: 60000,
 

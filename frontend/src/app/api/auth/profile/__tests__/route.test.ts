@@ -35,13 +35,13 @@ describe('Profile API Route', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     // Setup mock user repository
     mockUserRepo = {
       findById: jest.fn(),
       update: jest.fn()
     };
-    
+
     (repositoryFactory.getUserRepository as jest.Mock).mockReturnValue(mockUserRepo);
     (getPool as jest.Mock).mockReturnValue({});
   });
@@ -114,7 +114,7 @@ describe('Profile API Route', () => {
       (getSession as jest.Mock).mockResolvedValue({
         user: { id: 'user-123', email: 'test@example.com', role: 'student' }
       });
-      
+
       const updatedUser = {
         ...mockUser,
         name: 'Updated Name',
@@ -144,7 +144,7 @@ describe('Profile API Route', () => {
       (getSession as jest.Mock).mockResolvedValue({
         user: { id: 'user-123', email: 'test@example.com', role: 'student' }
       });
-      
+
       (getUserWithPassword as jest.Mock).mockResolvedValue({
         id: 'user-123',
         email: 'test@example.com',
@@ -185,7 +185,7 @@ describe('Profile API Route', () => {
       (getSession as jest.Mock).mockResolvedValue({
         user: { id: 'user-123', email: 'test@example.com', role: 'student' }
       });
-      
+
       (getUserWithPassword as jest.Mock).mockResolvedValue({
         id: 'user-123',
         email: 'test@example.com',

@@ -15,7 +15,7 @@ interface ClientLayoutProps {
 export function ClientLayout({ children }: ClientLayoutProps) {
   const pathname = usePathname()
   const isChat = pathname === '/chat'
-  
+
   return (
     <I18nProvider>
       <RTLProvider>

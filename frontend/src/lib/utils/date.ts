@@ -7,11 +7,11 @@
  */
 export function formatDate(date: Date | string, locale: string = 'en'): string {
   const dateObj = typeof date === 'string' ? new Date(date) : date;
-  
+
   if (isNaN(dateObj.getTime())) {
     return 'Invalid Date';
   }
-  
+
   return dateObj.toLocaleDateString(locale, {
     year: 'numeric',
     month: 'long',
@@ -24,11 +24,11 @@ export function formatDate(date: Date | string, locale: string = 'en'): string {
  */
 export function formatDateTime(date: Date | string, locale: string = 'en'): string {
   const dateObj = typeof date === 'string' ? new Date(date) : date;
-  
+
   if (isNaN(dateObj.getTime())) {
     return 'Invalid Date';
   }
-  
+
   return dateObj.toLocaleString(locale, {
     year: 'numeric',
     month: 'long',
@@ -46,7 +46,7 @@ export function getRelativeTime(date: Date | string, locale: string = 'en'): str
   const now = new Date();
   const diffMs = now.getTime() - dateObj.getTime();
   const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-  
+
   if (diffDays === 0) {
     return 'Today';
   } else if (diffDays === 1) {
@@ -67,7 +67,7 @@ export function getRelativeTime(date: Date | string, locale: string = 'en'): str
 export function isToday(date: Date | string): boolean {
   const dateObj = typeof date === 'string' ? new Date(date) : date;
   const today = new Date();
-  
+
   return dateObj.toDateString() === today.toDateString();
 }
 
@@ -79,6 +79,6 @@ export function isWithinLastDays(date: Date | string, days: number): boolean {
   const now = new Date();
   const cutoff = new Date();
   cutoff.setDate(cutoff.getDate() - days);
-  
+
   return dateObj >= cutoff && dateObj <= now;
 }

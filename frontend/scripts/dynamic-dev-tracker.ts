@@ -58,12 +58,12 @@ class DynamicDevTracker {
     // 測試結果
     try {
       // 執行測試並捕獲輸出（不使用 JSON，因為失敗時無法生成）
-      const testOutput = execSync('npm run test:ci 2>&1 || true', { 
+      const testOutput = execSync('npm run test:ci 2>&1 || true', {
         encoding: 'utf-8',
         stdio: 'pipe',
         maxBuffer: 10 * 1024 * 1024 // 10MB buffer
       });
-      
+
       // 解析測試輸出
       const testsMatch = testOutput.match(/Tests:\s+(\d+) failed(?:, (\d+) skipped)?, (\d+) passed, (\d+) total/);
       if (testsMatch) {
@@ -130,7 +130,7 @@ class DynamicDevTracker {
       const fileMatch = stats.match(/(\d+) files? changed/);
       const insertMatch = stats.match(/(\d+) insertions?\(\+\)/);
       const deleteMatch = stats.match(/(\d+) deletions?\(-\)/);
-      
+
       metrics.filesChanged = fileMatch ? parseInt(fileMatch[1]) : 0;
       metrics.linesAdded = insertMatch ? parseInt(insertMatch[1]) : 0;
       metrics.linesDeleted = deleteMatch ? parseInt(deleteMatch[1]) : 0;
@@ -158,12 +158,12 @@ class DynamicDevTracker {
 
       // 當前分支
       const branch = execSync('git branch --show-current', { encoding: 'utf-8' }).trim();
-      
+
       // 未提交的變更
       const status = execSync('git status --porcelain', { encoding: 'utf-8' });
       const modifiedFiles = status.split('\n').filter(l => l.startsWith(' M')).length;
 
-      const currentWork = modifiedFiles > 0 
+      const currentWork = modifiedFiles > 0
         ? `在 ${branch} 分支上修改 ${modifiedFiles} 個檔案`
         : `在 ${branch} 分支上工作`;
 
@@ -316,7 +316,7 @@ ${features.length > 0 ? features.map(f => `• ${f}`).join('\n') : '• 暫無�
 
     // 計算 session 時長
     const duration = (session.endTime.getTime() - new Date(session.startTime).getTime()) / 1000 / 60;
-    
+
     // 生成 session 摘要
     const summary = `📝 *開發 Session 摘要*
 時長: ${Math.round(duration)} 分鐘

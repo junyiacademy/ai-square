@@ -3,7 +3,7 @@
   "subtitle": "Explore AI-powered paths through immersive experiences",
   "getStarted": "Get Started",
   "backToHome": "Back to Home",
-  
+
   "welcomeScreen": {
     "title": "Discovery World",
     "subtitle": "🎮 Adventure Your Future Like Playing a Game • AI-Powered Immersive Experience",
@@ -33,7 +33,7 @@
       }
     }
   },
-  
+
   "interestAssessment": {
     "title": "Interest Assessment",
     "subtitle": "Let's discover your interests",
@@ -85,7 +85,7 @@
       }
     ]
   },
-  
+
   "results": {
     "title": "Your Path Recommendations",
     "subtitle": "Based on your interests, here are the best paths to explore:",
@@ -94,7 +94,7 @@
     "personalityType": "Your Personality Type",
     "matchPercentage": "{{percentage}}% Match"
   },
-  
+
   "paths": {
     "youtuber": {
       "title": "YouTuber / Content Creator",
@@ -181,7 +181,7 @@
       ]
     }
   },
-  
+
   "navigation": {
     "back": "Back",
     "next": "Next",
@@ -192,20 +192,20 @@
     "evaluation": "Assessment",
     "scenarios": "Career Adventures"
   },
-  
+
   "status": {
     "loading": "Loading...",
     "saving": "Saving...",
     "error": "Something went wrong",
     "success": "Success!"
   },
-  
+
   "errors": {
     "loadingFailed": "Failed to load content",
     "savingFailed": "Failed to save progress",
     "networkError": "Network error, please try again"
   },
-  
+
   "complete": {
     "congratulations": "Congratulations! 🎉",
     "completedProgram": "You've completed {{title}}",
@@ -239,14 +239,14 @@
     "errorLoading": "Error Loading Results",
     "noData": "No completion data found"
   },
-  
+
   "taskTypes": {
     "question": "Question",
     "chat": "AI Chat",
     "creation": "Creation",
     "analysis": "Analysis"
   },
-  
+
   "programCard": {
     "title": "Learning Journey",
     "statusActive": "In Progress",
@@ -257,7 +257,7 @@
     "continue": "Continue",
     "viewResults": "View Results"
   },
-  
+
   "scenarioDetail": {
     "loading": "Loading...",
     "notFound": "Scenario not found",

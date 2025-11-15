@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
 
     // Extract AI module configuration from task metadata
     const taskTemplate = task.metadata?.taskTemplate as Record<string, unknown> || {};
-    let aiModule = taskTemplate.aiModule || taskTemplate.ai_module || 
+    let aiModule = taskTemplate.aiModule || taskTemplate.ai_module ||
                     (task.metadata?.originalTaskData as Record<string, unknown>)?.aiModule ||
                     (task.metadata?.originalTaskData as Record<string, unknown>)?.ai_module;
 
@@ -94,11 +94,11 @@ export async function POST(request: NextRequest) {
       count: conversationHistory?.length || 0,
       history: conversationHistory
     });
-    
-    const conversationContext = conversationHistory?.map((entry: ChatMessage) => 
+
+    const conversationContext = conversationHistory?.map((entry: ChatMessage) =>
       `${entry.role === 'user' ? 'User' : 'Assistant'}: ${entry.content}`
     ).join('\n');
-    
+
     console.log('Formatted conversation context:', conversationContext);
 
     // Initialize Vertex AI
@@ -110,7 +110,7 @@ export async function POST(request: NextRequest) {
         { status: 500 }
       );
     }
-    
+
     const vertexAI = new VertexAI({
       project: projectId,
       location: process.env.VERTEX_AI_LOCATION || 'us-central1',
@@ -135,7 +135,7 @@ export async function POST(request: NextRequest) {
       language
     );
 
-    const fullPrompt = conversationContext 
+    const fullPrompt = conversationContext
       ? `${systemPrompt}\n\nPrevious conversation:\n${conversationContext}\n\nUser: ${message}`
       : `${systemPrompt}\n\nUser: ${message}`;
 
@@ -144,7 +144,7 @@ export async function POST(request: NextRequest) {
       const result = await model.generateContent(fullPrompt);
       const response = result.response;
       const text = response.candidates?.[0]?.content?.parts?.[0]?.text || 'I apologize, but I was unable to generate a response.';
-      
+
       return NextResponse.json({
         response: text,
         sessionId,

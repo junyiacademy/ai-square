@@ -6,9 +6,9 @@ metadata:
   title: Arsitek Kode Kehidupan - Peneliti Bioteknologi
   short_description: Buka rahasia kehidupan melalui AI dan bioteknologi
   long_description: |
-    Anda adalah peneliti junior di "Institut BioSintesis", tempat batas-batas antara 
-    biologi dan kecerdasan buatan menjadi kabur. Dilengkapi dengan alat AI dan teknik 
-    rekayasa genetik, Anda akan menjelajahi kode-kode fundamental kehidupan dan 
+    Anda adalah peneliti junior di "Institut BioSintesis", tempat batas-batas antara
+    biologi dan kecerdasan buatan menjadi kabur. Dilengkapi dengan alat AI dan teknik
+    rekayasa genetik, Anda akan menjelajahi kode-kode fundamental kehidupan dan
     menciptakan solusi yang dapat merevolusi pengobatan, pertanian, dan peningkatan manusia.
   estimated_hours: 70
   skill_focus:
@@ -20,19 +20,19 @@ metadata:
 world_setting:
   name: Institut BioSintesis
   description: |
-    Institut BioSintesis adalah fasilitas penelitian mutakhir di mana biologi bertemu 
-    dengan kecerdasan buatan. Para peneliti di sini menggunakan AI untuk memecahkan 
-    misteri genetik, merancang organisme baru, dan mendorong batas-batas kemungkinan 
+    Institut BioSintesis adalah fasilitas penelitian mutakhir di mana biologi bertemu
+    dengan kecerdasan buatan. Para peneliti di sini menggunakan AI untuk memecahkan
+    misteri genetik, merancang organisme baru, dan mendorong batas-batas kemungkinan
     dalam bioteknologi sambil bergulat dengan pertanyaan etis yang mendalam.
   atmosphere: scientific_innovative
   visual_theme: biotech_laboratory
 starting_scenario:
   title: Algoritma Hidup
   description: |
-    Dr. Elena Helix menyambut Anda di institut dengan misi mendesak: urutan genetik 
-    misterius telah ditemukan yang tampaknya merespons algoritma AI. Tetapi Dr. Splice 
-    dari BioCorp pesaing sedang berlomba untuk menjadikan modifikasi genetik sebagai 
-    senjata. Anda harus membuka rahasia kehidupan secara bertanggung jawab sambil 
+    Dr. Elena Helix menyambut Anda di institut dengan misi mendesak: urutan genetik
+    misterius telah ditemukan yang tampaknya merespons algoritma AI. Tetapi Dr. Splice
+    dari BioCorp pesaing sedang berlomba untuk menjadikan modifikasi genetik sebagai
+    senjata. Anda harus membuka rahasia kehidupan secara bertanggung jawab sambil
     mencegah penyalahgunaan yang katastrofik.
   initial_tasks:
     - understand_crispr

@@ -239,13 +239,13 @@ tasks:
       initial_prompt: |
         You are a climate research assistant helping students explore climate data.
         Your goal is to guide them through data collection and analysis tasks.
-        
+
         Keep responses focused and educational:
         - Help them find reliable climate data sources
         - Guide them in organizing and analyzing data
         - Explain climate concepts in age-appropriate language
         - Encourage critical thinking about climate impacts
-        
+
         Always redirect off-topic conversations back to the climate research task.
 
   - id: task-2
@@ -337,7 +337,7 @@ tasks:
         - Creating meaningful visualizations
         - Making evidence-based predictions
         - Drawing actionable conclusions
-        
+
         Encourage critical thinking and help them understand the implications of their findings.
 
   - id: task-3
@@ -429,7 +429,7 @@ tasks:
         - Consider feasibility and resource requirements
         - Calculate environmental impacts
         - Think about stakeholder engagement
-        
+
         Focus on solutions that students can realistically implement in their school.
 
   - id: task-4
@@ -521,7 +521,7 @@ tasks:
         - Designing effective visual aids
         - Anticipating and preparing for questions
         - Building confidence in public speaking
-        
+
         Help them create a presentation that will inspire action from school administrators and peers.
 
 completion_criteria:
@@ -536,7 +536,7 @@ resources:
     name_zh: "NASA 氣候兒童"
     url: "https://climatekids.nasa.gov/"
     type: reference
-    
+
   - name: "AI Climate Tools Guide"
     name_zh: "AI 氣候工具指南"
     url: "https://www.climate.ai/"

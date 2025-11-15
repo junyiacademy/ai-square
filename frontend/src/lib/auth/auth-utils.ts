@@ -16,14 +16,14 @@ export async function getAuthFromRequest(request: NextRequest): Promise<AuthUser
   try {
     // Only check sessionToken cookie (single source of truth)
     const sessionToken = request.cookies.get('sessionToken')?.value;
-    
+
     if (!sessionToken) {
       return null;
     }
 
     // Get session data from secure session store
     const sessionData = SecureSession.getSession(sessionToken);
-    
+
     if (!sessionData) {
       return null;
     }

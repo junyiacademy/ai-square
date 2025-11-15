@@ -12,7 +12,7 @@ const mockFile = jest.fn();
 
 jest.mock('@google-cloud/storage', () => ({
   Storage: jest.fn().mockImplementation(() => ({
-    bucket: jest.fn().mockImplementation(() => ({ 
+    bucket: jest.fn().mockImplementation(() => ({
       file: jest.fn().mockImplementation((path: string) => {
         mockFile(path);
         return {
@@ -370,25 +370,25 @@ describe('/api/chat/sessions/[sessionId]', () => {
 
 /**
  * Chat Session API Considerations:
- * 
+ *
  * 1. Authentication:
  *    - Uses x-user-info header
  *    - Email sanitization for paths
- * 
+ *
  * 2. Data Structure:
  *    - Individual session files
  *    - Separate sessions list
  *    - Messages array with timestamps
- * 
+ *
  * 3. Operations:
  *    - GET: Retrieve session details
  *    - DELETE: Remove session and update list
- * 
+ *
  * 4. Error Handling:
  *    - 404 for missing sessions
  *    - 401 for unauthorized
  *    - 500 for GCS errors
- * 
+ *
  * 5. Consistency:
  *    - Update sessions list on delete
  *    - Handle missing list gracefully

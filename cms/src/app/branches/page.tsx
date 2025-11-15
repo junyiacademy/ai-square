@@ -1,11 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { 
-  GitBranch, 
-  GitPullRequest, 
-  Clock, 
-  User, 
+import {
+  GitBranch,
+  GitPullRequest,
+  Clock,
+  User,
   GitCommit,
   FileText,
   Eye,
@@ -114,7 +114,7 @@ export default function BranchesPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({})
       });
-      
+
       const data = await response.json();
       if (data.success || data.pr) {
         window.open(data.pr.url, '_blank');
@@ -132,7 +132,7 @@ export default function BranchesPage() {
 
   const mergePR = async (branch: BranchDetails) => {
     if (!branch.prNumber) return;
-    
+
     if (!confirm(`Are you sure you want to merge PR #${branch.prNumber}?`)) return;
 
     setProcessingBranch(branch.name);
@@ -142,7 +142,7 @@ export default function BranchesPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prNumber: branch.prNumber })
       });
-      
+
       const data = await response.json();
       if (data.success) {
         // Show success message
@@ -155,18 +155,18 @@ export default function BranchesPage() {
           PR #${branch.prNumber} merged successfully!
         `;
         document.body.appendChild(toast);
-        
+
         // Remove the merged branch from the list immediately
         setBranches(prev => prev.filter(b => b.name !== branch.name));
         setExpandedBranch(null);
-        
+
         // Remove toast after 3 seconds
         setTimeout(() => {
           if (document.body.contains(toast)) {
             document.body.removeChild(toast);
           }
         }, 3000);
-        
+
         // Reload branches from GitHub to ensure we have the latest data
         await loadBranches();
       } else {
@@ -187,7 +187,7 @@ export default function BranchesPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ branch: branchName })
       });
-      
+
       if (response.ok) {
         window.location.href = '/';
       }
@@ -249,7 +249,7 @@ export default function BranchesPage() {
             } else if (line.startsWith('@@')) {
               className = 'text-blue-400';
             }
-            
+
             return (
               <div key={idx} className={className}>
                 {line}
@@ -268,7 +268,7 @@ export default function BranchesPage() {
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <Link 
+              <Link
                 href="/"
                 className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
               >
@@ -331,7 +331,7 @@ export default function BranchesPage() {
                         <h3 className="text-lg font-semibold text-gray-900">{branch.name}</h3>
                         {getStatusBadge(branch)}
                       </div>
-                      
+
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-600">
                         <div className="flex items-center gap-2">
                           <User className="w-4 h-4" />
@@ -378,7 +378,7 @@ export default function BranchesPage() {
                           Create PR
                         </button>
                       ) : null}
-                      
+
                       <button
                         onClick={() => switchToBranch(branch.name)}
                         className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors flex items-center gap-2"
@@ -386,7 +386,7 @@ export default function BranchesPage() {
                         <GitBranch className="w-4 h-4" />
                         Switch
                       </button>
-                      
+
                       <button
                         onClick={() => toggleBranch(branch.name)}
                         className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
@@ -459,7 +459,7 @@ export default function BranchesPage() {
                               </div>
                             ))}
                           </div>
-                          
+
                           {/* Merge Button - Placed after file changes */}
                           {branch.prStatus === 'open' && (
                             <div className="mt-6 pt-6 border-t border-gray-200">

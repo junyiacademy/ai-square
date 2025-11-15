@@ -96,7 +96,7 @@ export function createAuthenticatedRequestWithParams(
   authMethod: AuthMethod = 'header'
 ): { request: NextRequest; params: Promise<Record<string, string>> } {
   return {
-    request: authMethod === 'cookie' 
+    request: authMethod === 'cookie'
       ? createAuthenticatedRequestWithCookie(url, method, body, user)
       : createAuthenticatedRequest(url, method, body, user),
     params: Promise.resolve(params)

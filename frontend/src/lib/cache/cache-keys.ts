@@ -21,7 +21,7 @@ export const cacheKeys = {
   ksaFramework: (lang: string) => `ksa:framework:${lang}`,
   discoveryCareer: (careerType: string) => `discovery:career:${careerType}`,
   publicStats: () => 'stats:public',
-  
+
   // User-related keys
   userPrograms: (userId: string) => `user:${userId}:programs`,
-}; 
+};

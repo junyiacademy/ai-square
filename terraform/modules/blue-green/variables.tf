@@ -16,7 +16,7 @@ variable "active_color" {
   description = "Currently active deployment color (blue or green)"
   type        = string
   default     = "blue"
-  
+
   validation {
     condition     = contains(["blue", "green"], var.active_color)
     error_message = "active_color must be either 'blue' or 'green'"
@@ -29,7 +29,7 @@ variable "blue_image" {
 }
 
 variable "green_image" {
-  description = "Docker image for green deployment"  
+  description = "Docker image for green deployment"
   type        = string
 }
 

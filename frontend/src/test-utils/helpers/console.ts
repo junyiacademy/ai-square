@@ -17,18 +17,18 @@ const originalConsole = {
  */
 export function mockConsoleError() {
   const mockError = jest.fn();
-  
+
   beforeEach(() => {
     // Replace console.error with our mock
     console.error = mockError;
   });
-  
+
   afterEach(() => {
     // Restore original console.error
     console.error = originalConsole.error;
     mockError.mockClear();
   });
-  
+
   return mockError;
 }
 
@@ -38,16 +38,16 @@ export function mockConsoleError() {
  */
 export function mockConsoleWarn() {
   const mockWarn = jest.fn();
-  
+
   beforeEach(() => {
     console.warn = mockWarn;
   });
-  
+
   afterEach(() => {
     console.warn = originalConsole.warn;
     mockWarn.mockClear();
   });
-  
+
   return mockWarn;
 }
 
@@ -57,16 +57,16 @@ export function mockConsoleWarn() {
  */
 export function mockConsoleLog() {
   const mockLog = jest.fn();
-  
+
   beforeEach(() => {
     console.log = mockLog;
   });
-  
+
   afterEach(() => {
     console.log = originalConsole.log;
     mockLog.mockClear();
   });
-  
+
   return mockLog;
 }
 
@@ -80,7 +80,7 @@ export function suppressConsole() {
     jest.spyOn(console, 'warn').mockImplementation(() => {});
     jest.spyOn(console, 'log').mockImplementation(() => {});
   });
-  
+
   afterEach(() => {
     jest.restoreAllMocks();
   });

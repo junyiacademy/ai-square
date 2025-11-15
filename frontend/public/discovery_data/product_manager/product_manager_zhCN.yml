@@ -9,7 +9,7 @@ metadata:
     你是「产品炼金工坊」的新晋炼金师，擅长将用户需求、技术能力和商业目标
     融合成强大的产品。在这个充满创新火花的工坊里，每次迭代都是炼金实验，
     你的目标是创造能够改变世界的完美产品。
-  
+
   estimated_hours: 55
   skill_focus:
     - requirement_alchemy
@@ -22,7 +22,7 @@ world_setting:
     产品炼金工坊是一个神奇的熔炉，想法在这里转化为实际产品。在这里，产品
     经理学习平衡用户需求、技术约束和商业目标的古老艺术，创造出能够与数百万
     人产生共鸣的产品。
-  
+
   atmosphere: "dynamic_creative"
   visual_theme: "innovation_forge"
 starting_scenario:
@@ -31,7 +31,7 @@ starting_scenario:
     策略大师在工坊里欢迎你，并发出警告：截止日期这个时间暴君正在迫使团队
     为了速度而牺牲产品质量。与此同时，用户之声越来越响亮，带着相互冲突的
     需求。你必须找到产品管理的哲人石——平衡质量、速度和用户满意度。
-  
+
   initial_tasks:
     - understand_users
     - analyze_market

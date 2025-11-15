@@ -22,7 +22,7 @@ export default function CmsPage() {
   const [rightPanelCollapsed, setRightPanelCollapsed] = useState(false);
   const leftPanelRef = useRef<ImperativePanelHandle>(null);
   const rightPanelRef = useRef<ImperativePanelHandle>(null);
-  
+
   // Processing modal state
   const [processingModal, setProcessingModal] = useState<ProcessingModalState>({
     isOpen: false,
@@ -37,10 +37,10 @@ export default function CmsPage() {
   useEffect(() => {
     loadBranchStatus();
     setupLabel();
-    
+
     // Set global function for Editor to call
     (window as Window & { setOriginalContent?: typeof setOriginalContent }).setOriginalContent = setOriginalContent;
-    
+
     return () => {
       delete (window as Window & { setOriginalContent?: typeof setOriginalContent }).setOriginalContent;
     };
@@ -82,9 +82,9 @@ export default function CmsPage() {
 
   const handleSave = async () => {
     if (!selectedFile || !content) return;
-    
+
     const wasOnMain = isOnMain;
-    
+
     // Initialize processing steps
     const steps: ProcessingStep[] = wasOnMain
       ? [
@@ -95,7 +95,7 @@ export default function CmsPage() {
       : [
           { id: 'save-changes', label: 'Saving changes', status: 'pending' }
         ];
-    
+
     // Open modal
     setProcessingModal({
       isOpen: true,
@@ -105,43 +105,43 @@ export default function CmsPage() {
       prDescription: '',
       branchName: ''
     });
-    
+
     setIsLoading(true);
     let branchData: BranchCreateResponse | null = null;
     let targetBranch = currentBranch;
     let currentStepIndex = 0;
-    
+
     const updateStep = (stepId: string, status: ProcessingStep['status'], error?: string) => {
       setProcessingModal(prev => ({
         ...prev,
-        steps: prev.steps.map(s => 
+        steps: prev.steps.map(s =>
           s.id === stepId ? { ...s, status, error } : s
         )
       }));
     };
-    
+
     const nextStep = () => {
       currentStepIndex++;
       setProcessingModal(prev => ({ ...prev, currentStep: currentStepIndex }));
     };
-    
+
     try {
       // Step 1: Create branch if on main
       if (wasOnMain) {
         updateStep('create-branch', 'processing');
-        
+
         const branchResponse = await fetch('/api/git/branch', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ fileName: selectedFile }),
         });
         branchData = await branchResponse.json() as BranchCreateResponse;
-        
+
         if (branchData.success) {
           targetBranch = branchData.branch;
           setCurrentBranch(branchData.branch);
           setIsOnMain(false);
-          
+
           setProcessingModal(prev => ({ ...prev, branchName: branchData.branch }));
           updateStep('create-branch', 'completed');
           nextStep();
@@ -149,22 +149,22 @@ export default function CmsPage() {
           throw new Error('Failed to create feature branch');
         }
       }
-      
+
       // Step 2: Generate commit message and save
       updateStep('save-changes', 'processing');
-      
+
       let commitMessage = `更新 ${selectedFile}`;
       try {
         const messageResponse = await fetch('/api/git/generate-commit-message', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
+          body: JSON.stringify({
             filePath: selectedFile,
             oldContent: originalContent,
             newContent: content
           }),
         });
-        
+
         const messageData = await messageResponse.json() as CommitMessageResponse;
         if (messageData.success) {
           commitMessage = messageData.message;
@@ -173,38 +173,38 @@ export default function CmsPage() {
       } catch (error) {
         console.warn('Failed to generate AI commit message, using default');
       }
-      
+
       // Save the file with commit message
       const saveResponse = await fetch('/api/content', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          path: selectedFile, 
+        body: JSON.stringify({
+          path: selectedFile,
           content,
           branch: targetBranch,
           message: commitMessage
         }),
       });
-      
+
       if (!saveResponse.ok) {
         throw new Error('Failed to save file');
       }
-      
+
       const saveData = await saveResponse.json();
-      
+
       if (!saveData.success) {
         throw new Error('Failed to save content');
       }
-      
+
       // Update original content after successful save
       setOriginalContent(content);
       updateStep('save-changes', 'completed');
-      
+
       // Step 3: Create PR if we were on main
       if (wasOnMain) {
         nextStep();
         updateStep('create-pr', 'processing');
-        
+
         // Generate PR description
         const prResponse = await fetch('/api/git/pr', {
           method: 'POST',
@@ -214,42 +214,42 @@ export default function CmsPage() {
             body: `Content updates made via AI Square CMS in branch ${targetBranch}`
           }),
         });
-        
+
         const prData = await prResponse.json() as PullRequestCreateResponse;
-        
+
         if (prData.success) {
           // Extract PR description from the response
           if (prData.description) {
             setProcessingModal(prev => ({ ...prev, prDescription: prData.description }));
           }
-          
+
           updateStep('create-pr', 'completed');
-          
+
           // Open PR in new tab after a short delay
           setTimeout(() => {
             window.open(prData.prUrl, '_blank');
           }, 2000);
-          
+
           // Reset to main branch
           setCurrentBranch('main');
           setIsOnMain(true);
-          
+
           // Show success notification
           setTimeout(() => {
             const toast = document.createElement('div');
             toast.className = 'fixed top-6 right-6 toast-success z-[60] animate-in slide-in-from-right flex items-center gap-3';
-            
+
             const icon = document.createElement('div');
             icon.className = 'text-2xl';
             icon.textContent = '🎉';
-            
+
             const text = document.createElement('div');
             text.innerHTML = `<div class="font-semibold">Pull Request Created!</div><div class="text-sm opacity-90">Opening in new tab...</div>`;
-            
+
             toast.appendChild(icon);
             toast.appendChild(text);
             document.body.appendChild(toast);
-            
+
             setTimeout(() => {
               if (document.body.contains(toast)) {
                 document.body.removeChild(toast);
@@ -262,7 +262,7 @@ export default function CmsPage() {
       }
     } catch (error) {
       console.error('Save error:', error);
-      
+
       // Update the current step with error
       const currentStepId = steps[currentStepIndex]?.id;
       if (currentStepId) {
@@ -275,7 +275,7 @@ export default function CmsPage() {
 
   const handleSwitchToMain = async () => {
     if (isOnMain) return;
-    
+
     setIsLoading(true);
     try {
       // Switch to main branch
@@ -284,12 +284,12 @@ export default function CmsPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ branch: 'main' }),
       });
-      
+
       const data = await response.json();
       if (data.success) {
         setCurrentBranch('main');
         setIsOnMain(true);
-        
+
         // Clear content if a file is selected
         if (selectedFile) {
           setContent('');
@@ -299,22 +299,22 @@ export default function CmsPage() {
           setSelectedFile(null);
           setTimeout(() => setSelectedFile(tempFile), 100);
         }
-        
+
         // Success toast
         const toast = document.createElement('div');
         toast.className = 'fixed top-6 right-6 toast-success z-50 animate-in slide-in-from-right flex items-center gap-3';
-        
+
         const icon = document.createElement('div');
         icon.className = 'text-2xl';
         icon.textContent = '✅';
-        
+
         const text = document.createElement('div');
         text.innerHTML = `<div class="font-semibold">Switched to Main</div><div class="text-sm opacity-90">You are now on the main branch</div>`;
-        
+
         toast.appendChild(icon);
         toast.appendChild(text);
         document.body.appendChild(toast);
-        
+
         setTimeout(() => {
           if (document.body.contains(toast)) {
             document.body.removeChild(toast);
@@ -332,8 +332,8 @@ export default function CmsPage() {
 
   return (
     <div className="flex flex-col h-screen">
-      <Header 
-        selectedFile={selectedFile} 
+      <Header
+        selectedFile={selectedFile}
         currentBranch={currentBranch}
         isOnMain={isOnMain}
         isLoading={isLoading}
@@ -341,7 +341,7 @@ export default function CmsPage() {
         onPreview={() => {}}
         onSwitchToMain={handleSwitchToMain}
       />
-      
+
       <div className="flex flex-1 overflow-hidden bg-gradient-to-br from-gray-50 via-white to-gray-50">
         <PanelGroup direction="horizontal" className="flex-1">
           {/* File Browser Panel */}
@@ -356,7 +356,7 @@ export default function CmsPage() {
             className="relative"
           >
             <div className="h-full bg-white/95 backdrop-blur-sm border-r border-gray-100 overflow-y-auto shadow-sm relative">
-              <FileTree 
+              <FileTree
                 onFileSelect={handleFileSelect}
                 selectedFile={selectedFile}
               />
@@ -470,7 +470,7 @@ export default function CmsPage() {
           </Panel>
         </PanelGroup>
       </div>
-      
+
       {/* Processing Modal */}
       <ProcessingModal
         isOpen={processingModal.isOpen}

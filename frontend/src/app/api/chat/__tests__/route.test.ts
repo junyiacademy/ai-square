@@ -167,7 +167,7 @@ describe('POST /api/chat', () => {
 
   it('should handle missing Google Cloud configuration', async () => {
     delete process.env.GOOGLE_CLOUD_PROJECT;
-    
+
     const request = createAuthRequest({
       message: 'Test message'
     });

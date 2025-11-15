@@ -53,10 +53,10 @@ describe.skip('Scenario Initialization - Clean Flag Integration', () => {
         const id1 = randomUUID();
         const id2 = randomUUID();
         const id3 = randomUUID();
-        
+
         await pool.query(`
           INSERT INTO scenarios (id, mode, status, source_type, source_path, title, description)
-          VALUES 
+          VALUES
             ($1, 'assessment', 'active', 'yaml', 'test/path1', '{"en": "Test 1"}', '{"en": "Desc 1"}'),
             ($2, 'assessment', 'active', 'yaml', 'test/path2', '{"en": "Test 2"}', '{"en": "Desc 2"}'),
             ($3, 'assessment', 'archived', 'yaml', 'test/path3', '{"en": "Test 3"}', '{"en": "Desc 3"}')
@@ -71,17 +71,17 @@ describe.skip('Scenario Initialization - Clean Flag Integration', () => {
 
         // Act: Call init-assessment with clean=true
         const response = await callAPI('/api/admin/init-assessment', { clean: true });
-        
+
         // Assert: Check database is cleaned and new scenario created
         const afterResult = await pool.query(
           'SELECT id, status FROM scenarios WHERE mode = $1',
           ['assessment']
         );
-        
+
         expect(response.status).toBe(200);
         expect(response.body.success).toBe(true);
         expect(response.body.action).toBe('created');
-        
+
         // Should have exactly 1 new assessment scenario
         expect(afterResult.rows.length).toBe(1);
         expect(afterResult.rows[0].status).toBe('active');
@@ -98,18 +98,18 @@ describe.skip('Scenario Initialization - Clean Flag Integration', () => {
         const scenarioId = randomUUID();
         const programId = randomUUID();
         const userId = randomUUID();
-        
+
         // Create a test user first
         await pool.query(`
           INSERT INTO users (id, email, name, role, email_verified, created_at, updated_at)
           VALUES ($1, $2, $3, 'user', true, NOW(), NOW())
         `, [userId, `test-${userId}@example.com`, 'Test User']);
-        
+
         await pool.query(`
           INSERT INTO scenarios (id, mode, status, source_type, title, description)
           VALUES ($1, 'assessment', 'active', 'yaml', '{"en": "Test"}', '{"en": "Test"}')
         `, [scenarioId]);
-        
+
         await pool.query(`
           INSERT INTO programs (id, scenario_id, user_id, status, mode, total_task_count, time_spent_seconds)
           VALUES ($1, $2, $3, 'active', 'assessment', 1, 0)
@@ -144,10 +144,10 @@ describe.skip('Scenario Initialization - Clean Flag Integration', () => {
         // Arrange: Create PBL scenarios
         const id1 = randomUUID();
         const id2 = randomUUID();
-        
+
         await pool.query(`
           INSERT INTO scenarios (id, mode, status, source_type, source_path, title, description, pbl_data)
-          VALUES 
+          VALUES
             ($1, 'pbl', 'active', 'yaml', 'pbl/test1', '{"en": "PBL 1"}', '{"en": "Desc 1"}', '{"ksaMapping": {}}'),
             ($2, 'pbl', 'active', 'yaml', 'pbl/test2', '{"en": "PBL 2"}', '{"en": "Desc 2"}', '{"ksaMapping": {}}')
         `, [id1, id2]);
@@ -186,10 +186,10 @@ describe.skip('Scenario Initialization - Clean Flag Integration', () => {
         // Arrange: Create discovery scenarios
         const id1 = randomUUID();
         const id2 = randomUUID();
-        
+
         await pool.query(`
           INSERT INTO scenarios (id, mode, status, source_type, source_path, title, description)
-          VALUES 
+          VALUES
             ($1, 'discovery', 'active', 'yaml', 'disc/test1', '{"en": "Disc 1"}', '{"en": "Desc 1"}'),
             ($2, 'discovery', 'archived', 'yaml', 'disc/test2', '{"en": "Disc 2"}', '{"en": "Desc 2"}')
         `, [id1, id2]);
@@ -219,10 +219,10 @@ describe.skip('Scenario Initialization - Clean Flag Integration', () => {
         const pblId = randomUUID();
         const assessId = randomUUID();
         const discId = randomUUID();
-        
+
         await pool.query(`
           INSERT INTO scenarios (id, mode, status, source_type, title, description, pbl_data, assessment_data, discovery_data)
-          VALUES 
+          VALUES
             ($1, 'pbl', 'active', 'yaml', '{"en": "Old PBL"}', '{"en": "Old"}', '{"ksaMapping": {}}', null, null),
             ($2, 'assessment', 'active', 'yaml', '{"en": "Old Assessment"}', '{"en": "Old"}', null, '{}', null),
             ($3, 'discovery', 'active', 'yaml', '{"en": "Old Discovery"}', '{"en": "Old"}', null, null, '{}')
@@ -248,8 +248,8 @@ describe.skip('Scenario Initialization - Clean Flag Integration', () => {
 
         // Verify new scenarios exist
         const newCounts = await pool.query(`
-          SELECT mode, COUNT(*) as count 
-          FROM scenarios 
+          SELECT mode, COUNT(*) as count
+          FROM scenarios
           WHERE status = 'active'
           GROUP BY mode
           ORDER BY mode
@@ -273,7 +273,7 @@ describe.skip('Scenario Initialization - Clean Flag Integration', () => {
         // Assert: Both should succeed
         expect(response1.status).toBe(200);
         expect(response2.status).toBe(200);
-        
+
         // Should still have exactly one assessment scenario
         const result = await pool.query(
           'SELECT COUNT(*) FROM scenarios WHERE mode = $1',

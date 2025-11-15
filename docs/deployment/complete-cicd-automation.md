@@ -216,7 +216,7 @@ curl https://ai-square-staging.run.app/api/health
 
 The CI/CD system is now complete with:
 - ✅ Automated testing
-- ✅ Security scanning  
+- ✅ Security scanning
 - ✅ Blue-green deployment
 - ✅ Auto-rollback
 - ✅ Monitoring & alerts

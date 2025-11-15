@@ -30,13 +30,13 @@ if [[ "$1" == "--check" ]]; then
     # Step 3: Check if errors increased
     echo -e "${YELLOW}🔍 Checking for new TypeScript errors...${NC}"
     current_errors=$(count_ts_errors)
-    
+
     if [ $current_errors -gt $baseline_errors ]; then
         echo -e "${RED}❌ ERROR: TypeScript errors increased!${NC}"
         echo -e "Baseline: $baseline_errors, Current: $current_errors"
         echo -e "Increase: +$((current_errors - baseline_errors)) errors"
         echo -e "${YELLOW}🔧 Please fix TypeScript errors before committing${NC}"
-        
+
         # Show the errors
         echo -e "${YELLOW}📝 Showing TypeScript errors:${NC}"
         npm run typecheck
@@ -47,10 +47,10 @@ if [[ "$1" == "--check" ]]; then
     else
         echo -e "${GREEN}✅ No new TypeScript errors introduced${NC}"
     fi
-    
+
     # Step 4: Run full checks
     echo -e "${YELLOW}🧪 Running full quality checks...${NC}"
     npm run pre-commit-check
-    
+
     echo -e "${GREEN}🎉 All checks passed! Safe to commit.${NC}"
 fi

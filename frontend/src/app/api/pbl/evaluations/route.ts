@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
     } catch {
       console.log('No user cookie found');
     }
-    
+
     if (!userEmail) {
       return NextResponse.json(
         { success: false, error: 'User authentication required' },
@@ -29,9 +29,9 @@ export async function GET(request: NextRequest) {
     const targetType = searchParams.get('targetType');
 
     const evaluationRepo = repositoryFactory.getEvaluationRepository();
-    
+
     let evaluations;
-    
+
     if (taskId && targetType === 'task') {
       // Get evaluations for a specific task
       evaluations = await evaluationRepo.findByTask(taskId);

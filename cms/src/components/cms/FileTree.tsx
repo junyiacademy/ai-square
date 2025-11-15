@@ -52,7 +52,7 @@ export function FileTree({ onFileSelect, selectedFile }: FileTreeProps) {
   const renderNode = (node: FileNode, depth: number = 0) => {
     const isExpanded = expandedDirs.has(node.path);
     const isSelected = selectedFile === node.path;
-    const matchesSearch = !searchQuery || 
+    const matchesSearch = !searchQuery ||
       node.name.toLowerCase().includes(searchQuery.toLowerCase());
 
     if (!matchesSearch && node.type === 'file') {
@@ -64,8 +64,8 @@ export function FileTree({ onFileSelect, selectedFile }: FileTreeProps) {
         <div
           className={cn(
             "flex items-center px-3 py-2 rounded-lg mx-2 my-0.5 cursor-pointer transition-all duration-200",
-            isSelected 
-              ? "bg-gradient-to-r from-indigo-50 to-purple-50 text-indigo-700 font-medium shadow-sm" 
+            isSelected
+              ? "bg-gradient-to-r from-indigo-50 to-purple-50 text-indigo-700 font-medium shadow-sm"
               : "hover:bg-gray-50 text-gray-700 hover:text-gray-900"
           )}
           style={{ paddingLeft: `${depth * 20 + 12}px` }}
@@ -105,7 +105,7 @@ export function FileTree({ onFileSelect, selectedFile }: FileTreeProps) {
           )}
           <span className="text-sm truncate">{node.name}</span>
         </div>
-        
+
         {node.type === 'directory' && isExpanded && node.children && (
           <div>
             {node.children.map(child => renderNode(child, depth + 1))}
@@ -129,7 +129,7 @@ export function FileTree({ onFileSelect, selectedFile }: FileTreeProps) {
           />
         </div>
       </div>
-      
+
       <div className="flex-1 overflow-y-auto px-2 py-3">
         {loading ? (
           <div className="flex items-center justify-center h-32">
@@ -146,10 +146,10 @@ export function FileTree({ onFileSelect, selectedFile }: FileTreeProps) {
           </div>
         )}
       </div>
-      
+
       <div className="p-3 border-t border-gray-100">
         <p className="text-xs text-gray-500 text-center">
-          {files.reduce((count, node) => 
+          {files.reduce((count, node) =>
             count + (node.type === 'directory' && node.children ? node.children.length : 1), 0
           )} files
         </p>

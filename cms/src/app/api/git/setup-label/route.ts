@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
     const owner = process.env.GITHUB_OWNER || 'junyiacademy';
     const repo = process.env.GITHUB_REPO || 'ai-square';
     const labelName = 'cms-content-change';
-    
+
     // Check if label exists
     try {
       await octokit.issues.getLabel({
@@ -16,11 +16,11 @@ export async function POST(request: NextRequest) {
         repo,
         name: labelName
       });
-      
-      return NextResponse.json({ 
-        success: true, 
+
+      return NextResponse.json({
+        success: true,
         message: 'Label already exists',
-        exists: true 
+        exists: true
       });
     } catch (error) {
       const octokitError = error as OctokitError;
@@ -33,12 +33,12 @@ export async function POST(request: NextRequest) {
           color: '7057ff', // Purple color
           description: 'Content changes made via AI Square CMS'
         });
-        
-        return NextResponse.json({ 
-          success: true, 
+
+        return NextResponse.json({
+          success: true,
           message: 'Label created successfully',
           label: data,
-          exists: false 
+          exists: false
         });
       }
       throw error;

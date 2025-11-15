@@ -23,7 +23,7 @@ resource "null_resource" "smoke_test" {
   provisioner "local-exec" {
     command = <<-EOT
       echo "🔥 Running basic smoke tests..."
-      
+
       # Test 1: Health check endpoint
       if curl -sf "${google_cloud_run_service.ai_square.status[0].url}/api/health" > /dev/null; then
         echo "✅ Health check passed"
@@ -31,7 +31,7 @@ resource "null_resource" "smoke_test" {
         echo "❌ Health check failed"
         exit 1
       fi
-      
+
       # Test 2: API responsiveness
       RESPONSE=$(curl -s -w "%%{http_code}" -o /dev/null "${google_cloud_run_service.ai_square.status[0].url}/api/pbl/scenarios?lang=en")
       if [ "$RESPONSE" = "200" ] || [ "$RESPONSE" = "401" ]; then
@@ -40,7 +40,7 @@ resource "null_resource" "smoke_test" {
         echo "❌ API not responding properly (HTTP $RESPONSE)"
         exit 1
       fi
-      
+
       # Test 3: Database connectivity (via health endpoint)
       HEALTH=$(curl -s "${google_cloud_run_service.ai_square.status[0].url}/api/health" | grep -o '"database":"healthy"' || true)
       if [ -n "$HEALTH" ]; then
@@ -48,7 +48,7 @@ resource "null_resource" "smoke_test" {
       else
         echo "⚠️  Database health not verified (may be expected)"
       fi
-      
+
       echo "✅ All smoke tests passed!"
     EOT
 

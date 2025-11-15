@@ -468,19 +468,19 @@ setup-secrets-frontend:
 ## 創建必要的 Service Accounts
 setup-service-accounts:
 	@echo "$(BLUE)👤 創建 Service Accounts$(NC)"
-	
+
 	@# Frontend Service Account
 	@gcloud iam service-accounts create ai-square-frontend \
 		--description="AI Square Frontend Service Account" \
 		--display-name="AI Square Frontend" \
 		--project=$(PROJECT_ID) || echo "Frontend SA 已存在"
-	
+
 	@echo "$(YELLOW)🔑 授予必要權限...$(NC)"
 	@# Frontend permissions
 	@gcloud projects add-iam-policy-binding $(PROJECT_ID) \
 		--member="serviceAccount:ai-square-frontend@$(PROJECT_ID).iam.gserviceaccount.com" \
 		--role="roles/storage.objectViewer"
-	
+
 	@echo "$(GREEN)✅ Service Accounts 創建完成！$(NC)"
 
 ## 完整設定所有 secrets
@@ -965,4 +965,3 @@ export MAKEFLAGS += --no-print-directory
 # 自動記錄執行時間
 SHELL = /bin/bash
 .SHELLFLAGS = -ec
-

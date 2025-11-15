@@ -36,21 +36,21 @@ let fixedCount = 0;
 
 files.forEach(file => {
   const filePath = path.join(process.cwd(), file);
-  
+
   if (!fs.existsSync(filePath)) {
     console.log(`⚠️  File not found: ${file}`);
     return;
   }
-  
+
   let content = fs.readFileSync(filePath, 'utf-8');
   const originalContent = content;
-  
+
   // Check if already using the new helper
   if (content.includes('import { mockConsoleError') && content.includes('@/test-utils/helpers/console')) {
     console.log(`✅ Already fixed: ${file}`);
     return;
   }
-  
+
   // Replace the old pattern with new import
   if (content.includes("const mockConsoleError = jest.spyOn(console, 'error').mockImplementation()")) {
     // Add import if not present
@@ -60,18 +60,18 @@ files.forEach(file => {
       if (importMatch) {
         const lastImport = importMatch[importMatch.length - 1];
         const lastImportIndex = content.lastIndexOf(lastImport);
-        content = content.slice(0, lastImportIndex + lastImport.length) + 
+        content = content.slice(0, lastImportIndex + lastImport.length) +
           "\nimport { mockConsoleError as createMockConsoleError } from '@/test-utils/helpers/console';" +
           content.slice(lastImportIndex + lastImport.length);
       }
     }
-    
+
     // Replace the mock creation
     content = content.replace(
       /const mockConsoleError = jest\.spyOn\(console, 'error'\)\.mockImplementation\(\);?/g,
       'const mockConsoleError = createMockConsoleError();'
     );
-    
+
     // Write the updated content
     fs.writeFileSync(filePath, content);
     fixedCount++;

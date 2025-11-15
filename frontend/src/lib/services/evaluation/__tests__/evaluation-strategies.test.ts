@@ -9,10 +9,10 @@ import {
   DiscoveryEvaluationStrategy,
   EvaluationStrategyFactory
 } from '../evaluation-strategies';
-import { 
-  ITask, 
-  IProgram, 
-  IEvaluation, 
+import {
+  ITask,
+  IProgram,
+  IEvaluation,
   IInteraction,
   IEvaluationContext
 } from '@/types/unified-learning';
@@ -249,7 +249,7 @@ describe('EvaluationStrategies', () => {
       expect(result.domainScores).toBeDefined();
       expect(typeof result.domainScores).toBe('object');
       expect(Object.keys(result.domainScores)).toContain('knowledge');
-      expect(Object.keys(result.domainScores)).toContain('skills'); 
+      expect(Object.keys(result.domainScores)).toContain('skills');
       expect(Object.keys(result.domainScores)).toContain('attitudes');
     });
   });
@@ -687,7 +687,7 @@ describe('EvaluationStrategies', () => {
       const taskWithNoExploration = {
         ...mockDiscoveryTask,
         interactions: [],
-        content: { 
+        content: {
           context: { explorationGoals: [] }
         }
       };
@@ -757,7 +757,7 @@ describe('EvaluationStrategies', () => {
 
     it('should handle missing program context', async () => {
       const contextWithoutProgram = {} as IEvaluationContext;
-      
+
       await expect(pblStrategy.evaluateTask(mockTask, contextWithoutProgram))
         .rejects.toThrow();
     });

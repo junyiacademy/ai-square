@@ -14,7 +14,7 @@ export async function GET(
   try {
     const userRepo = repositoryFactory.getUserRepository();
     const user = await userRepo.findById(resolvedParams.id);
-    
+
     if (!user) {
       return NextResponse.json(
         { error: 'User not found' },
@@ -43,11 +43,11 @@ export async function PATCH(
   try {
     const userRepo = repositoryFactory.getUserRepository();
     const body = await request.json();
-    
+
     // Validate input
     const allowedFields = ['name', 'preferredLanguage', 'learningPreferences', 'onboardingCompleted'];
     const updateData: Record<string, unknown> = {};
-    
+
     for (const field of allowedFields) {
       if (body[field] !== undefined) {
         updateData[field] = body[field];
@@ -55,18 +55,18 @@ export async function PATCH(
     }
 
     const updatedUser = await userRepo.update(resolvedParams.id, updateData);
-    
+
     return NextResponse.json(updatedUser);
   } catch (error) {
     console.error('Error updating user:', error);
-    
+
     if (error instanceof Error && error.message === 'User not found') {
       return NextResponse.json(
         { error: 'User not found' },
         { status: 404 }
       );
     }
-    
+
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -82,7 +82,7 @@ export async function DELETE(
   try {
     const userRepo = repositoryFactory.getUserRepository();
     const deleted = await userRepo.delete(resolvedParams.id);
-    
+
     if (!deleted) {
       return NextResponse.json(
         { error: 'User not found' },

@@ -13,24 +13,24 @@ function getVertexAI() {
     try {
       const projectId = process.env.GOOGLE_CLOUD_PROJECT_ID;
       const location = process.env.GOOGLE_CLOUD_LOCATION || 'us-central1';
-      
+
       if (!projectId) {
         throw new Error('GOOGLE_CLOUD_PROJECT_ID environment variable is required');
       }
-      
+
       // Check if we have service account JSON from Secret Manager
       const credentialsJson = process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON;
-      
+
       if (credentialsJson) {
         // Parse the JSON credentials from Secret Manager
         const credentials = JSON.parse(credentialsJson);
-        
+
         // Create GoogleAuth with the parsed credentials
         const auth = new GoogleAuth({
           credentials,
           scopes: ['https://www.googleapis.com/auth/cloud-platform'],
         });
-        
+
         vertexAI = new VertexAI({
           project: projectId,
           location: location,
@@ -46,7 +46,7 @@ function getVertexAI() {
           location: location,
         });
       }
-      
+
       console.log('Vertex AI initialized successfully');
     } catch (error) {
       console.error('Failed to initialize Vertex AI:', error);
@@ -68,7 +68,7 @@ export async function generateContent(prompt: string, systemPrompt?: string) {
       },
     });
 
-    const fullPrompt = systemPrompt 
+    const fullPrompt = systemPrompt
       ? `${systemPrompt}\n\nUser: ${prompt}`
       : prompt;
 
@@ -162,7 +162,7 @@ export async function completeYAMLContent(yamlContent: string, context?: string)
     });
 
     const prompt = `You are an expert educational content creator for AI literacy platforms.
-    
+
 Complete this PBL scenario with appropriate educational content. The existing content is:
 ${yamlContent}
 
@@ -184,20 +184,20 @@ Return a complete JSON object following the PBL scenario schema.`;
 
     const result = await model.generateContent(prompt);
     const jsonResponse = result.response.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
-    
+
     // Parse JSON and convert back to YAML
     const jsonData = JSON.parse(jsonResponse);
-    
+
     // Sort the data according to schema order
     const sortedData = sortPBLScenario(jsonData as PBLScenario);
-    
+
     const yamlOutput = yaml.dump(sortedData, {
       indent: 2,
       lineWidth: -1,
       noRefs: true,
       sortKeys: false, // We handle sorting ourselves
     });
-    
+
     return yamlOutput;
   } catch (error) {
     console.error('Error in completeYAMLContent:', error);
@@ -213,7 +213,7 @@ export async function translateYAMLContent(yamlContent: string) {
   try {
     // Parse existing YAML
     const existingData = yaml.load(yamlContent) as PBLScenarioSchema;
-    
+
     const vertex = getVertexAI();
     const model = vertex.getGenerativeModel({
       model: 'gemini-2.5-flash',
@@ -234,7 +234,7 @@ export async function translateYAMLContent(yamlContent: string) {
     });
 
     const prompt = `You are a professional translator for educational content.
-    
+
 Translate all text fields in this PBL scenario to these languages: Chinese Traditional (zh-TW), Spanish (es), Japanese (ja), Korean (ko), French (fr), German (de), Russian (ru), Italian (it), Chinese Simplified (zh-CN), Portuguese (pt), Arabic (ar), Indonesian (id), Thai (th).
 
 Current content:
@@ -252,20 +252,20 @@ Return a complete JSON object with all translations added.`;
 
     const result = await model.generateContent(prompt);
     const jsonResponse = result.response.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
-    
+
     // Parse JSON and convert back to YAML
     const jsonData = JSON.parse(jsonResponse);
-    
+
     // Sort the data according to schema order
     const sortedData = sortPBLScenario(jsonData as PBLScenario);
-    
+
     const yamlOutput = yaml.dump(sortedData, {
       indent: 2,
       lineWidth: -1,
       noRefs: true,
       sortKeys: false, // We handle sorting ourselves
     });
-    
+
     return yamlOutput;
   } catch (error) {
     console.error('Error in translateYAMLContent:', error);
@@ -282,7 +282,7 @@ export async function improveYAMLContent(yamlContent: string) {
   try {
     // Parse existing YAML
     const existingData = yaml.load(yamlContent) as PBLScenarioSchema;
-    
+
     const vertex = getVertexAI();
     const model = vertex.getGenerativeModel({
       model: 'gemini-2.5-flash',
@@ -303,7 +303,7 @@ export async function improveYAMLContent(yamlContent: string) {
     });
 
     const prompt = `You are an expert educational designer for AI literacy platforms.
-    
+
 Improve this PBL scenario for better educational effectiveness:
 ${JSON.stringify(existingData, null, 2)}
 
@@ -325,20 +325,20 @@ Return a complete JSON object with all improvements applied while preserving all
 
     const result = await model.generateContent(prompt);
     const jsonResponse = result.response.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
-    
+
     // Parse JSON and convert back to YAML
     const jsonData = JSON.parse(jsonResponse);
-    
+
     // Sort the data according to schema order
     const sortedData = sortPBLScenario(jsonData as PBLScenario);
-    
+
     const yamlOutput = yaml.dump(sortedData, {
       indent: 2,
       lineWidth: -1,
       noRefs: true,
       sortKeys: false, // We handle sorting ourselves
     });
-    
+
     return yamlOutput;
   } catch (error) {
     console.error('Error in improveYAMLContent:', error);
@@ -354,15 +354,15 @@ export async function mapKSAContent(yamlContent: string) {
   try {
     // Parse existing YAML
     const existingData = yaml.load(yamlContent) as PBLScenarioSchema;
-    
+
     // Keep only KSA mapping, return original content with updated KSA
     const updatedData: PBLScenarioSchema = {
       ...existingData,
       ksa_mapping: { knowledge: [], skills: [], attitudes: [] } // Will be replaced
     };
-    
+
     const vertex = getVertexAI();
-    
+
     // Define a simple schema for KSA mapping
     const ksaSchema = {
       type: SchemaType.OBJECT,
@@ -370,17 +370,17 @@ export async function mapKSAContent(yamlContent: string) {
         ksa_mapping: {
           type: SchemaType.OBJECT,
           properties: {
-            knowledge: { 
-              type: SchemaType.ARRAY, 
-              items: { type: SchemaType.STRING } 
+            knowledge: {
+              type: SchemaType.ARRAY,
+              items: { type: SchemaType.STRING }
             },
-            skills: { 
-              type: SchemaType.ARRAY, 
-              items: { type: SchemaType.STRING } 
+            skills: {
+              type: SchemaType.ARRAY,
+              items: { type: SchemaType.STRING }
             },
-            attitudes: { 
-              type: SchemaType.ARRAY, 
-              items: { type: SchemaType.STRING } 
+            attitudes: {
+              type: SchemaType.ARRAY,
+              items: { type: SchemaType.STRING }
             }
           },
           required: ["knowledge", "skills", "attitudes"]
@@ -388,7 +388,7 @@ export async function mapKSAContent(yamlContent: string) {
       },
       required: ["ksa_mapping"]
     };
-    
+
     const model = vertex.getGenerativeModel({
       model: 'gemini-2.5-flash',
       generationConfig: {
@@ -401,7 +401,7 @@ export async function mapKSAContent(yamlContent: string) {
     });
 
     const prompt = `You are an expert in AI literacy education and competency mapping.
-    
+
 Analyze this PBL scenario and map it to appropriate KSA (Knowledge, Skills, Attitudes) competency codes.
 
 Current scenario:
@@ -430,46 +430,46 @@ IMPORTANT: Return ONLY the JSON object above. No explanations, no markdown, no a
 
     const result = await model.generateContent(prompt);
     const response = result.response.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
-    
+
     // Parse the KSA mapping
     let ksaMapping: KSAMapping;
     try {
       // Clean the response - remove any markdown or extra text
       let cleanResponse = response.trim();
-      
+
       // Extract JSON if wrapped in markdown code blocks
       const jsonMatch = cleanResponse.match(/```(?:json)?\s*(\{[\s\S]*\})\s*```/);
       if (jsonMatch) {
         cleanResponse = jsonMatch[1];
       }
-      
+
       // Find the JSON object in the response
       const jsonStart = cleanResponse.indexOf('{');
       const jsonEnd = cleanResponse.lastIndexOf('}');
       if (jsonStart !== -1 && jsonEnd !== -1) {
         cleanResponse = cleanResponse.substring(jsonStart, jsonEnd + 1);
       }
-      
+
       const jsonResponse = JSON.parse(cleanResponse) as { ksa_mapping: KSAMapping };
       ksaMapping = jsonResponse.ksa_mapping || { knowledge: [], skills: [], attitudes: [] };
-      
+
       // Validate the structure
-      if (!Array.isArray(ksaMapping.knowledge) || 
-          !Array.isArray(ksaMapping.skills) || 
+      if (!Array.isArray(ksaMapping.knowledge) ||
+          !Array.isArray(ksaMapping.skills) ||
           !Array.isArray(ksaMapping.attitudes)) {
         throw new Error('Invalid KSA mapping structure');
       }
-      
+
       console.log('Successfully parsed KSA mapping:', ksaMapping);
     } catch (e) {
       console.error('Failed to parse KSA response:', e);
       console.log('Raw response:', response);
       ksaMapping = { knowledge: [], skills: [], attitudes: [] };
     }
-    
+
     // Update only the KSA mapping
     updatedData.ksa_mapping = ksaMapping;
-    
+
     // Sort and convert back to YAML
     const sortedData = sortPBLScenario(updatedData);
     const yamlOutput = yaml.dump(sortedData, {
@@ -478,7 +478,7 @@ IMPORTANT: Return ONLY the JSON object above. No explanations, no markdown, no a
       noRefs: true,
       sortKeys: false,
     });
-    
+
     return yamlOutput;
   } catch (error) {
     console.error('Error in mapKSAContent:', error);

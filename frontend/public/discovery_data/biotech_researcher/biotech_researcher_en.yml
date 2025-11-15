@@ -7,11 +7,11 @@ metadata:
   title: "Life Code Architect - Biotech Researcher"
   short_description: "Unlock the secrets of life through AI and biotechnology"
   long_description: |
-    You are a junior researcher at the "BioSynthesis Institute," where the boundaries 
-    between biology and artificial intelligence blur. Armed with AI tools and genetic 
-    engineering techniques, you'll explore the fundamental codes of life and create 
+    You are a junior researcher at the "BioSynthesis Institute," where the boundaries
+    between biology and artificial intelligence blur. Armed with AI tools and genetic
+    engineering techniques, you'll explore the fundamental codes of life and create
     solutions that could revolutionize medicine, agriculture, and human enhancement.
-  
+
   estimated_hours: 70
   skill_focus:
     - genetic_engineering
@@ -23,22 +23,22 @@ metadata:
 world_setting:
   name: "BioSynthesis Institute"
   description: |
-    The BioSynthesis Institute is a cutting-edge research facility where biology meets 
-    artificial intelligence. Researchers here use AI to decode genetic mysteries, design 
-    new organisms, and push the boundaries of what's possible in biotechnology while 
+    The BioSynthesis Institute is a cutting-edge research facility where biology meets
+    artificial intelligence. Researchers here use AI to decode genetic mysteries, design
+    new organisms, and push the boundaries of what's possible in biotechnology while
     grappling with profound ethical questions.
-  
+
   atmosphere: "scientific_innovative"
   visual_theme: "biotech_laboratory"
 
 starting_scenario:
   title: "The Living Algorithm"
   description: |
-    Dr. Elena Helix welcomes you to the institute with an urgent mission: a mysterious 
-    genetic sequence has been discovered that seems to respond to AI algorithms. But 
-    Dr. Splice from the rival BioCorp is racing to weaponize genetic modifications. 
+    Dr. Elena Helix welcomes you to the institute with an urgent mission: a mysterious
+    genetic sequence has been discovered that seems to respond to AI algorithms. But
+    Dr. Splice from the rival BioCorp is racing to weaponize genetic modifications.
     You must unlock life's secrets responsibly while preventing catastrophic misuse.
-  
+
   initial_tasks:
     - understand_crispr
     - learn_ai_modeling
@@ -53,7 +53,7 @@ skill_tree:
       unlocks:
         - gene_editing
         - protein_design
-    
+
     - id: bioinformatics
       name: "Bio-Data Fusion"
       description: "Analyze biological data with AI"
@@ -61,7 +61,7 @@ skill_tree:
       unlocks:
         - sequence_analysis
         - structure_prediction
-    
+
     - id: synthetic_biology
       name: "Life Design"
       description: "Engineer new biological systems"
@@ -69,7 +69,7 @@ skill_tree:
       unlocks:
         - organism_engineering
         - metabolic_pathways
-    
+
     - id: ai_integration
       name: "AI-Bio Interface"
       description: "Integrate AI with biological research"
@@ -84,13 +84,13 @@ skill_tree:
       description: "Design treatments at the genetic level"
       max_level: 15
       requires: [molecular_biology, synthetic_biology]
-    
+
     - id: biocomputing
       name: "Living Computers"
       description: "Create biological computing systems"
       max_level: 15
       requires: [bioinformatics, ai_integration]
-    
+
     - id: enhancement_tech
       name: "Human Augmentation"
       description: "Develop ethical enhancement technologies"
@@ -107,7 +107,7 @@ milestone_quests:
     unlocks:
       - medical_breakthrough_badge
       - patient_testimonials
-  
+
   - id: splice_confrontation
     name: "Ethics vs Profit"
     description: "Stop Dr. Splice's dangerous experiments"
@@ -117,7 +117,7 @@ milestone_quests:
     unlocks:
       - ethical_guardian_title
       - regulatory_influence
-  
+
   - id: life_creation
     name: "Genesis Project"
     description: "Create a beneficial synthetic organism"
@@ -134,19 +134,19 @@ achievements:
     description: "Successfully sequence your first genome"
     xp_reward: 100
     badge_type: bronze
-  
+
   - id: publication_success
     name: "Published Researcher"
     description: "Publish 5 peer-reviewed papers"
     xp_reward: 400
     badge_type: silver
-  
+
   - id: patent_holder
     name: "Innovation Pioneer"
     description: "File a breakthrough biotech patent"
     xp_reward: 700
     badge_type: gold
-  
+
   - id: biotech_legend
     name: "Life Code Master"
     description: "Complete all biotech challenges"
@@ -161,14 +161,14 @@ example_tasks:
       description: "Extract and analyze DNA samples"
       skills_improved: [molecular_biology, lab_techniques]
       xp_reward: 70
-    
+
     - id: ai_sequence_analysis
       type: analysis
       title: "Pattern Recognition"
       description: "Use AI to find patterns in genetic data"
       skills_improved: [bioinformatics, ai_bio_modeling]
       xp_reward: 80
-  
+
   intermediate:
     - id: crispr_edit
       type: creation
@@ -176,14 +176,14 @@ example_tasks:
       description: "Perform targeted gene editing"
       skills_improved: [gene_editing, synthetic_biology]
       xp_reward: 200
-    
+
     - id: drug_design
       type: creation
       title: "Molecular Medicine"
       description: "Design a new drug using AI"
       skills_improved: [ml_drug_discovery, bioinformatics]
       xp_reward: 250
-  
+
   advanced:
     - id: synthetic_life
       type: creation
@@ -191,7 +191,7 @@ example_tasks:
       description: "Design a synthetic organism"
       skills_improved: [organism_engineering, biocomputing]
       xp_reward: 450
-    
+
     - id: enhancement_protocol
       type: creation
       title: "Evolution Accelerator"

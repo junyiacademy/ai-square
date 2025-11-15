@@ -33,19 +33,19 @@ Current file content:
 ${content || 'No content available'}`;
 
     const response = await generateContent(prompt, systemPrompt);
-    
+
     // Only auto-update content if user explicitly asks for changes
     let updatedContent = null;
     const updateKeywords = [
-      'update', 'change', 'modify', 'replace', 'fix', 'correct', 
+      'update', 'change', 'modify', 'replace', 'fix', 'correct',
       '更新', '修改', '替換', '修正', '改成', '改為',
       'set it to', 'make it', 'fill in', 'complete this'
     ];
-    
-    const isUpdateRequest = updateKeywords.some(keyword => 
+
+    const isUpdateRequest = updateKeywords.some(keyword =>
       prompt.toLowerCase().includes(keyword.toLowerCase())
     );
-    
+
     if (isUpdateRequest && (response.includes('```yaml') || response.includes('```yml'))) {
       // Extract YAML from response
       const yamlMatch = response.match(/```ya?ml\n([\s\S]*?)\n```/);
@@ -60,7 +60,7 @@ ${content || 'No content available'}`;
       }
     }
 
-    return NextResponse.json({ 
+    return NextResponse.json({
       response,
       updatedContent
     });

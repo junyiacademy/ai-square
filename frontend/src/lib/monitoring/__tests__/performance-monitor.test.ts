@@ -74,7 +74,7 @@ describe('performance-monitor', () => {
           timestamp: new Date().toISOString()
         });
       }
-      
+
       const recent = performanceMonitor.getRecentMetrics(20000);
       expect(recent.length).toBeLessThanOrEqual(10000);
     });
@@ -87,7 +87,7 @@ describe('performance-monitor', () => {
     it('aggregates metrics periodically', () => {
       const now = Date.now();
       jest.setSystemTime(now);
-      
+
       // Add some metrics
       for (let i = 0; i < 10; i++) {
         performanceMonitor.recordMetric({
@@ -118,7 +118,7 @@ describe('performance-monitor', () => {
     it('handles empty metrics in aggregation', () => {
       // Trigger aggregation with no metrics
       (performanceMonitor as any).forceAggregation();
-      
+
       const allMetrics = performanceMonitor.getAllMetrics();
       expect(allMetrics).toEqual([]);
     });
@@ -126,7 +126,7 @@ describe('performance-monitor', () => {
     it('calculates p95 response time correctly', () => {
       const now = Date.now();
       jest.setSystemTime(now);
-      
+
       // Add 100 metrics with varying response times
       for (let i = 0; i < 100; i++) {
         performanceMonitor.recordMetric({
@@ -186,7 +186,7 @@ describe('performance-monitor', () => {
     it('generates alerts for slow endpoints', () => {
       const now = Date.now();
       jest.setSystemTime(now);
-      
+
       // Add a slow endpoint
       performanceMonitor.recordMetric({
         endpoint: '/api/slow',
@@ -209,7 +209,7 @@ describe('performance-monitor', () => {
     it('generates alerts for high error rates', () => {
       const now = Date.now();
       jest.setSystemTime(now);
-      
+
       // Add metrics with errors
       for (let i = 0; i < 10; i++) {
         performanceMonitor.recordMetric({
@@ -234,7 +234,7 @@ describe('performance-monitor', () => {
     it('generates alerts for low cache hit rate on GET endpoints', () => {
       const now = Date.now();
       jest.setSystemTime(now);
-      
+
       // Add metrics with low cache hits
       for (let i = 0; i < 10; i++) {
         performanceMonitor.recordMetric({
@@ -259,7 +259,7 @@ describe('performance-monitor', () => {
     it('does not alert on low cache for non-GET methods', () => {
       const now = Date.now();
       jest.setSystemTime(now);
-      
+
       // Add POST metrics with no cache (expected)
       for (let i = 0; i < 10; i++) {
         performanceMonitor.recordMetric({
@@ -283,7 +283,7 @@ describe('performance-monitor', () => {
     it('sorts endpoints by response time', () => {
       const now = Date.now();
       jest.setSystemTime(now);
-      
+
       // Add metrics for different endpoints
       performanceMonitor.recordMetric({
         endpoint: '/api/fast',
@@ -324,7 +324,7 @@ describe('performance-monitor', () => {
     it('calculates summary statistics correctly', () => {
       const now = Date.now();
       jest.setSystemTime(now);
-      
+
       // Add metrics for multiple endpoints
       for (const endpoint of ['/api/a', '/api/b']) {
         for (let i = 0; i < 5; i++) {

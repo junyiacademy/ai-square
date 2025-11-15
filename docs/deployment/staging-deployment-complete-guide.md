@@ -59,13 +59,13 @@ Due to Cloud SQL IPv6 connection limitations, we implemented an HTTP API endpoin
    ```bash
    # Set project
    gcloud config set project ai-square-463013
-   
+
    # Create Cloud SQL instance if not exists
    gcloud sql instances create ai-square-db-staging-asia \
      --database-version=POSTGRES_15 \
      --tier=db-f1-micro \
      --region=asia-east1
-   
+
    # Create database
    gcloud sql databases create ai_square_db \
      --instance=ai-square-db-staging-asia

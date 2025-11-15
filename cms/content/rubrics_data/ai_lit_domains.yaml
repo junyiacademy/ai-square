@@ -870,7 +870,7 @@ domains:
         scenarios_it:
           - "Creare un poster in aula che descriva modi equi per utilizzare uno strumento di IA, come accreditare le fonti e cercare l'approvazione di un insegnante prima di utilizzarlo per i compiti."
           - "Condurre un workshop per i coetanei sugli strumenti di IA comuni, condividendo linee guida per l'uso dell'IA che promuovono l'onestà, il rispetto della proprietà intellettuale e il pensiero critico."
-  
+
   Designing_with_AI:
     emoji: "💡"
     overview: "empowers learners to understand how AI works and connect it to its social and ethical impacts by shaping how AI systems function. Through hands-on exploration in an education context, students examine how data, design choices, and model behavior influence the fairness, usefulness, and impact of AI systems. The goal is not to develop commercial products or put them into service, but to build the confidence and capacity to shape AI for human good by understanding the principles underpinning the design of AI from an early age."

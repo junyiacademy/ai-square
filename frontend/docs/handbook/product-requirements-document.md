@@ -4,8 +4,8 @@
 
 AI Square 是一個「用 AI 學 AI 素養」的創新學習平台，基於國際 AI Literacy 框架，透過 AI 技術本身來提升學習者的 AI 素養能力。
 
-**願景**: 成為培養 21 世紀數位公民的教育基礎設施  
-**使命**: 讓每個人都能理解、應用並批判性思考 AI 技術  
+**願景**: 成為培養 21 世紀數位公民的教育基礎設施
+**使命**: 讓每個人都能理解、應用並批判性思考 AI 技術
 **當前階段**: Phase 2 Enhancement (2025 Q1)
 
 ## 🎯 Product Goals
@@ -136,7 +136,7 @@ ContentAPIService
 #### Stage 1: Dual Mode (Current)
 ```typescript
 // 環境變數控制
-const content = process.env.USE_CMS_API 
+const content = process.env.USE_CMS_API
   ? await contentAPI.getContent(path)
   : await readLocalFile(path);
 ```
@@ -279,7 +279,7 @@ const content = await contentAPI.getContent(path);
 
 ## 📈 Success Criteria
 
-### 短期目標 (Q1 2025) 
+### 短期目標 (Q1 2025)
 - [x] 測試覆蓋率達 70%+ ✅ (76.59%)
 - [x] TypeScript 零錯誤 ✅
 - [x] Redis 快取整合 ✅

@@ -27,7 +27,7 @@ describe('/api/assessment/programs/[programId]/answer', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     // Setup repository factory mocks
     (repositoryFactory.getTaskRepository as jest.Mock).mockReturnValue(mockTaskRepo);
     (getUnifiedAuth as jest.Mock).mockResolvedValue(null);
@@ -53,7 +53,7 @@ describe('/api/assessment/programs/[programId]/answer', () => {
             ksa_mapping: ['K1', 'S2'],
           },
           {
-            id: 'q2', 
+            id: 'q2',
             question: 'What is ML?',
             options: ['X', 'Y', 'Z'],
             correct_answer: 'Y',
@@ -302,27 +302,27 @@ describe('/api/assessment/programs/[programId]/answer', () => {
 
 /**
  * Assessment Answer API Considerations:
- * 
+ *
  * 1. Question-level Answer Submission:
  *    - Submit individual question answers
  *    - Immediate correct/incorrect feedback
  *    - Support for KSA mapping recording
- * 
+ *
  * 2. Answer Recording:
  *    - Record attempts with score (1 for correct, 0 for incorrect)
  *    - Track time spent per question
  *    - Store detailed answer metadata
- * 
+ *
  * 3. Task Status Management:
  *    - Update task to 'active' on first answer
  *    - Preserve existing interactions
  *    - No automatic completion logic
- * 
+ *
  * 4. Security:
  *    - Require authentication (session-based)
  *    - Validate required fields (taskId, questionId, answer)
  *    - Return 404 for non-existent tasks
- * 
+ *
  * 5. Answer Content Structure:
  *    - eventType: 'assessment_answer'
  *    - questionId, questionIndex, selectedAnswer

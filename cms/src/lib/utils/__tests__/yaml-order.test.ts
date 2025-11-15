@@ -144,7 +144,7 @@ describe('yaml-order utils', () => {
       expect(result.scenario_info.difficulty).toBe('intermediate')
       expect(result.scenario_info.estimated_duration).toBe(120)
       expect(result.scenario_info.target_domains).toEqual(['creating_with_ai', 'managing_with_ai'])
-      
+
       expect(result.ksa_mapping?.knowledge).toEqual(['K1.1', 'K2.2'])
       expect(result.ksa_mapping?.skills).toEqual(['S1.3', 'S2.1'])
       expect(result.ksa_mapping?.attitudes).toEqual(['A1.2'])

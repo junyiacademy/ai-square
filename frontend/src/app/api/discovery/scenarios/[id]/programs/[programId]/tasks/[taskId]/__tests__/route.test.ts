@@ -289,4 +289,4 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]', ()
       Object.defineProperty(process, 'env', { value: { ...process.env, NODE_ENV: originalEnv } });
     });
   });
-}); 
+});

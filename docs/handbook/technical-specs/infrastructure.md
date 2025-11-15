@@ -124,7 +124,7 @@ resource "google_project_service" "required_apis" {
     "cloudbuild.googleapis.com",
     "aiplatform.googleapis.com"
   ])
-  
+
   project = google_project.ai_square_mvp.project_id
   service = each.key
 }
@@ -199,12 +199,12 @@ resource "google_compute_subnetwork" "us_east1" {
   network       = google_compute_network.vpc.id
   region        = "us-east1"
   ip_cidr_range = "10.0.1.0/24"
-  
+
   secondary_ip_range {
     range_name    = "pods"
     ip_cidr_range = "10.1.0.0/16"
   }
-  
+
   secondary_ip_range {
     range_name    = "services"
     ip_cidr_range = "10.2.0.0/16"
@@ -217,12 +217,12 @@ resource "google_compute_subnetwork" "europe_west1" {
   network       = google_compute_network.vpc.id
   region        = "europe-west1"
   ip_cidr_range = "10.0.2.0/24"
-  
+
   secondary_ip_range {
     range_name    = "pods"
     ip_cidr_range = "10.3.0.0/16"
   }
-  
+
   secondary_ip_range {
     range_name    = "services"
     ip_cidr_range = "10.4.0.0/16"
@@ -242,7 +242,7 @@ resource "google_compute_backend_service" "default" {
   port_name             = "http"
   timeout_sec           = 30
   enable_cdn            = true
-  
+
   cdn_policy {
     cache_mode                   = "CACHE_ALL_STATIC"
     default_ttl                  = 3600
@@ -251,9 +251,9 @@ resource "google_compute_backend_service" "default" {
     negative_caching            = true
     serve_while_stale           = 86400
   }
-  
+
   health_checks = [google_compute_health_check.default.id]
-  
+
   backend {
     group = google_compute_instance_group_manager.frontend.instance_group
   }
@@ -281,7 +281,7 @@ spec:
     metadata:
       disable-legacy-endpoints: "true"
     serviceAccount: ai-square-gke-sa@ai-square-prod.iam.gserviceaccount.com
-    
+
   # Cluster autoscaling
   autoscaling:
     enabled: true
@@ -296,25 +296,25 @@ spec:
         - resourceType: memory
           minimum: 40
           maximum: 4000
-          
+
   # Network configuration
   network: ai-square-vpc
   subnetwork: subnet-us-east1
   ipAllocationPolicy:
     clusterSecondaryRangeName: pods
     servicesSecondaryRangeName: services
-    
+
   # Security
   privateClusterConfig:
     enablePrivateNodes: true
     enablePrivateEndpoint: false
     masterIpv4CidrBlock: 172.16.0.0/28
-    
+
   masterAuthorizedNetworksConfig:
     cidrBlocks:
       - displayName: office
         cidrBlock: 203.0.113.0/24
-        
+
   # Addons
   addonsConfig:
     httpLoadBalancing:
@@ -335,7 +335,7 @@ metadata:
   labels:
     env: production
     istio-injection: enabled
-    
+
 ---
 # k8s/deployments/frontend.yaml
 apiVersion: apps/v1
@@ -384,7 +384,7 @@ spec:
             port: 3000
           initialDelaySeconds: 5
           periodSeconds: 5
-          
+
 ---
 # k8s/deployments/backend.yaml
 apiVersion: apps/v1
@@ -514,7 +514,7 @@ import asyncio
 
 class DatabaseConfiguration:
     """PostgreSQL configuration for Cloud SQL"""
-    
+
     def __init__(self):
         self.primary_config = {
             "instance_name": "ai-square-prod:us-east1:primary",
@@ -533,7 +533,7 @@ class DatabaseConfiguration:
                 "type": "REGIONAL"
             }
         }
-        
+
         self.read_replica_configs = [
             {
                 "name": "replica-us-west1",
@@ -554,15 +554,15 @@ class DatabaseConfiguration:
 
 class DatabaseConnectionPool:
     """Manages database connection pooling"""
-    
+
     def __init__(self, config: Dict):
         self.config = config
         self.write_pool: Optional[asyncpg.Pool] = None
         self.read_pools: Dict[str, asyncpg.Pool] = {}
-        
+
     async def initialize(self):
         """Initialize connection pools"""
-        
+
         # Create write pool (primary)
         self.write_pool = await asyncpg.create_pool(
             dsn=self.config["primary_dsn"],
@@ -572,7 +572,7 @@ class DatabaseConnectionPool:
             max_inactive_connection_lifetime=300,
             command_timeout=60
         )
-        
+
         # Create read pools (replicas)
         for replica in self.config["replicas"]:
             pool = await asyncpg.create_pool(
@@ -584,21 +584,21 @@ class DatabaseConnectionPool:
                 command_timeout=60
             )
             self.read_pools[replica["region"]] = pool
-            
+
     async def get_read_connection(
-        self, 
+        self,
         region: Optional[str] = None
     ) -> asyncpg.Connection:
         """Get connection from nearest read replica"""
-        
+
         if region and region in self.read_pools:
             pool = self.read_pools[region]
         else:
             # Select pool with lowest latency
             pool = await self._select_optimal_read_pool()
-            
+
         return await pool.acquire()
-        
+
     async def get_write_connection(self) -> asyncpg.Connection:
         """Get connection to primary for writes"""
         return await self.write_pool.acquire()
@@ -606,21 +606,21 @@ class DatabaseConnectionPool:
 # Database schema management
 class SchemaManager:
     """Manages database schema and migrations"""
-    
+
     async def create_schema(self):
         """Create initial database schema"""
-        
+
         schema_sql = """
         -- Enable extensions
         CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
         CREATE EXTENSION IF NOT EXISTS "pgcrypto";
         CREATE EXTENSION IF NOT EXISTS "pg_stat_statements";
-        
+
         -- Create schemas
         CREATE SCHEMA IF NOT EXISTS app;
         CREATE SCHEMA IF NOT EXISTS analytics;
         CREATE SCHEMA IF NOT EXISTS audit;
-        
+
         -- Partitioned tables for time-series data
         CREATE TABLE analytics.events (
             id UUID DEFAULT uuid_generate_v4(),
@@ -631,34 +631,34 @@ class SchemaManager:
             created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
             PRIMARY KEY (id, created_at)
         ) PARTITION BY RANGE (created_at);
-        
+
         -- Create monthly partitions
-        CREATE TABLE analytics.events_2024_01 
+        CREATE TABLE analytics.events_2024_01
         PARTITION OF analytics.events
         FOR VALUES FROM ('2024-01-01') TO ('2024-02-01');
-        
+
         -- Indexes for performance
-        CREATE INDEX CONCURRENTLY idx_events_user_created 
+        CREATE INDEX CONCURRENTLY idx_events_user_created
         ON analytics.events (user_id, created_at);
-        
-        CREATE INDEX CONCURRENTLY idx_events_type_created 
+
+        CREATE INDEX CONCURRENTLY idx_events_type_created
         ON analytics.events (event_type, created_at);
-        
-        CREATE INDEX CONCURRENTLY idx_events_data_gin 
+
+        CREATE INDEX CONCURRENTLY idx_events_data_gin
         ON analytics.events USING gin(data);
-        
+
         -- Materialized views for analytics
         CREATE MATERIALIZED VIEW analytics.daily_active_users AS
-        SELECT 
+        SELECT
             DATE(created_at) as date,
             COUNT(DISTINCT user_id) as dau,
             COUNT(*) as total_events
         FROM analytics.events
         WHERE created_at >= CURRENT_DATE - INTERVAL '90 days'
         GROUP BY DATE(created_at);
-        
+
         CREATE UNIQUE INDEX ON analytics.daily_active_users (date);
-        
+
         -- Table for sharding user data
         CREATE TABLE app.users (
             id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -668,7 +668,7 @@ class SchemaManager:
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             CHECK (shard_id >= 0 AND shard_id < 100)
         );
-        
+
         -- Create function for automatic sharding
         CREATE OR REPLACE FUNCTION app.get_shard_id(user_id UUID)
         RETURNS INTEGER AS $$
@@ -677,7 +677,7 @@ class SchemaManager:
         END;
         $$ LANGUAGE plpgsql IMMUTABLE;
         """
-        
+
         # Execute schema creation
         async with self.pool.get_write_connection() as conn:
             await conn.execute(schema_sql)
@@ -685,15 +685,15 @@ class SchemaManager:
 # Query optimization
 class QueryOptimizer:
     """Optimizes database queries"""
-    
+
     def __init__(self, connection_pool: DatabaseConnectionPool):
         self.pool = connection_pool
-        
+
     async def analyze_slow_queries(self) -> List[Dict]:
         """Analyze slow queries using pg_stat_statements"""
-        
+
         query = """
-        SELECT 
+        SELECT
             query,
             calls,
             total_exec_time,
@@ -705,18 +705,18 @@ class QueryOptimizer:
         ORDER BY mean_exec_time DESC
         LIMIT 20
         """
-        
+
         async with self.pool.get_read_connection() as conn:
             results = await conn.fetch(query)
-            
+
         return [dict(r) for r in results]
-        
+
     async def create_missing_indexes(self):
         """Identify and create missing indexes"""
-        
+
         # Find missing indexes
         missing_indexes_query = """
-        SELECT 
+        SELECT
             schemaname,
             tablename,
             attname,
@@ -726,16 +726,16 @@ class QueryOptimizer:
         WHERE schemaname NOT IN ('pg_catalog', 'information_schema')
         AND n_distinct > 100
         AND tablename || '.' || attname NOT IN (
-            SELECT 
+            SELECT
                 tablename || '.' || column_name
             FROM information_schema.constraint_column_usage
         )
         ORDER BY n_distinct DESC
         """
-        
+
         async with self.pool.get_read_connection() as conn:
             candidates = await conn.fetch(missing_indexes_query)
-            
+
         # Create indexes for high-cardinality columns
         for candidate in candidates:
             if candidate['n_distinct'] > 1000:
@@ -743,7 +743,7 @@ class QueryOptimizer:
                 CREATE INDEX CONCURRENTLY idx_{candidate['tablename']}_{candidate['attname']}
                 ON {candidate['schemaname']}.{candidate['tablename']} ({candidate['attname']})
                 """
-                
+
                 async with self.pool.get_write_connection() as conn:
                     await conn.execute(index_sql)
 ```
@@ -759,7 +759,7 @@ import json
 
 class CacheConfiguration:
     """Redis cache configuration"""
-    
+
     def __init__(self):
         self.redis_configs = {
             "primary": {
@@ -791,15 +791,15 @@ class CacheConfiguration:
 
 class CacheManager:
     """Manages distributed caching"""
-    
+
     def __init__(self, config: Dict):
         self.config = config
         self.clients: Dict[str, redis.Redis] = {}
         self.serializer = msgpack
-        
+
     async def initialize(self):
         """Initialize Redis connections"""
-        
+
         for name, cfg in self.config.items():
             client = redis.Redis(
                 host=cfg["host"],
@@ -809,25 +809,25 @@ class CacheManager:
                 health_check_interval=30
             )
             self.clients[name] = client
-            
+
             # Test connection
             await client.ping()
-            
+
     async def get(
-        self, 
-        key: str, 
+        self,
+        key: str,
         cache_name: str = "cache"
     ) -> Optional[Any]:
         """Get value from cache"""
-        
+
         client = self.clients[cache_name]
         value = await client.get(key)
-        
+
         if value:
             return self.serializer.unpackb(value)
-            
+
         return None
-        
+
     async def set(
         self,
         key: str,
@@ -836,57 +836,57 @@ class CacheManager:
         cache_name: str = "cache"
     ):
         """Set value in cache"""
-        
+
         client = self.clients[cache_name]
         packed_value = self.serializer.packb(value)
-        
+
         await client.setex(key, ttl, packed_value)
-        
+
     async def delete_pattern(
         self,
         pattern: str,
         cache_name: str = "cache"
     ):
         """Delete keys matching pattern"""
-        
+
         client = self.clients[cache_name]
-        
+
         # Use SCAN to avoid blocking
         cursor = 0
         while True:
             cursor, keys = await client.scan(
-                cursor, 
-                match=pattern, 
+                cursor,
+                match=pattern,
                 count=100
             )
-            
+
             if keys:
                 await client.delete(*keys)
-                
+
             if cursor == 0:
                 break
 
 class CacheWarmer:
     """Preloads cache with frequently accessed data"""
-    
+
     def __init__(self, cache_manager: CacheManager, db_pool):
         self.cache = cache_manager
         self.db = db_pool
-        
+
     async def warm_cache(self):
         """Warm cache with critical data"""
-        
+
         tasks = [
             self._warm_user_cache(),
             self._warm_content_cache(),
             self._warm_config_cache()
         ]
-        
+
         await asyncio.gather(*tasks)
-        
+
     async def _warm_user_cache(self):
         """Warm user-related cache"""
-        
+
         # Get recently active users
         query = """
         SELECT id, email, name, preferences
@@ -894,10 +894,10 @@ class CacheWarmer:
         WHERE last_login > NOW() - INTERVAL '7 days'
         LIMIT 10000
         """
-        
+
         async with self.db.get_read_connection() as conn:
             users = await conn.fetch(query)
-            
+
         # Cache user data
         for user in users:
             cache_key = f"user:{user['id']}"
@@ -906,10 +906,10 @@ class CacheWarmer:
                 dict(user),
                 ttl=3600
             )
-            
+
     async def _warm_content_cache(self):
         """Warm content cache"""
-        
+
         # Get popular content
         query = """
         SELECT c.*, COUNT(v.id) as view_count
@@ -920,10 +920,10 @@ class CacheWarmer:
         ORDER BY view_count DESC
         LIMIT 1000
         """
-        
+
         async with self.db.get_read_connection() as conn:
             content_items = await conn.fetch(query)
-            
+
         # Cache content
         for content in content_items:
             cache_key = f"content:{content['id']}"
@@ -936,38 +936,38 @@ class CacheWarmer:
 # Multi-level caching strategy
 class MultiLevelCache:
     """Implements L1/L2 caching strategy"""
-    
+
     def __init__(self, local_cache_size: int = 1000):
         self.l1_cache = LRUCache(maxsize=local_cache_size)  # In-memory
         self.l2_cache = CacheManager(config)  # Redis
-        
+
     async def get(self, key: str) -> Optional[Any]:
         """Get from L1, fallback to L2"""
-        
+
         # Check L1 (local memory)
         value = self.l1_cache.get(key)
         if value is not None:
             return value
-            
+
         # Check L2 (Redis)
         value = await self.l2_cache.get(key)
         if value is not None:
             # Promote to L1
             self.l1_cache.set(key, value)
-            
+
         return value
-        
+
     async def set(
-        self, 
-        key: str, 
-        value: Any, 
+        self,
+        key: str,
+        value: Any,
         ttl: int = 3600
     ):
         """Set in both L1 and L2"""
-        
+
         # Set in L1
         self.l1_cache.set(key, value, ttl)
-        
+
         # Set in L2
         await self.l2_cache.set(key, value, ttl)
 ```
@@ -1098,7 +1098,7 @@ metadata:
 data:
   kong.yml: |
     _format_version: "2.1"
-    
+
     services:
       - name: backend-api
         url: http://backend.production.svc.cluster.local
@@ -1140,7 +1140,7 @@ data:
                 - X-Auth-Token
               credentials: true
               max_age: 3600
-              
+
       - name: websocket-api
         url: http://websocket.production.svc.cluster.local
         routes:
@@ -1160,7 +1160,7 @@ data:
 # infrastructure/disaster-recovery/backup.py
 class DisasterRecoveryManager:
     """Manages disaster recovery procedures"""
-    
+
     def __init__(self):
         self.backup_config = {
             "database": {
@@ -1178,7 +1178,7 @@ class DisasterRecoveryManager:
                         "age_days": 30
                     },
                     {
-                        "action": "SetStorageClass", 
+                        "action": "SetStorageClass",
                         "storage_class": "COLDLINE",
                         "age_days": 90
                     }
@@ -1189,31 +1189,31 @@ class DisasterRecoveryManager:
                 "snapshot_retention": 7
             }
         }
-        
+
     async def perform_backup(self):
         """Perform full system backup"""
-        
+
         tasks = [
             self._backup_database(),
             self._backup_storage(),
             self._backup_configurations(),
             self._backup_secrets()
         ]
-        
+
         results = await asyncio.gather(*tasks)
-        
+
         # Verify backups
         verification = await self._verify_backups(results)
-        
+
         return {
             "timestamp": datetime.utcnow(),
             "backups": results,
             "verification": verification
         }
-        
+
     async def test_disaster_recovery(self):
         """Test DR procedures"""
-        
+
         test_results = {
             "database_restore": await self._test_database_restore(),
             "failover": await self._test_failover(),
@@ -1221,11 +1221,11 @@ class DisasterRecoveryManager:
             "rto_achieved": False,  # Recovery Time Objective
             "rpo_achieved": False   # Recovery Point Objective
         }
-        
+
         # Calculate RTO/RPO
         test_results["rto_achieved"] = test_results["failover"]["time"] < 3600  # 1 hour
         test_results["rpo_achieved"] = test_results["data_integrity"]["data_loss"] < 3600  # 1 hour
-        
+
         return test_results
 ```
 
@@ -1239,19 +1239,19 @@ performance_optimizations:
     - Implement cluster autoscaling
     - Use node pools with different machine types
     - Enable vertical pod autoscaling
-    
+
   network:
     - Use regional load balancers
     - Enable Cloud CDN for static assets
     - Implement connection pooling
     - Use HTTP/2 and gRPC where applicable
-    
+
   storage:
     - Use SSD persistent disks
     - Enable parallel processing
     - Implement data partitioning
     - Use appropriate storage classes
-    
+
   database:
     - Connection pooling
     - Read replicas for read-heavy workloads
@@ -1306,16 +1306,16 @@ spec:
 # infrastructure/cost-optimization/analyzer.py
 class CostOptimizer:
     """Analyzes and optimizes infrastructure costs"""
-    
+
     async def analyze_costs(self) -> Dict:
         """Analyze current infrastructure costs"""
-        
+
         # Get cost data from billing API
         costs = await self._get_billing_data()
-        
+
         # Analyze by service
         service_costs = self._analyze_by_service(costs)
-        
+
         # Find optimization opportunities
         optimizations = {
             "unused_resources": await self._find_unused_resources(),
@@ -1323,13 +1323,13 @@ class CostOptimizer:
             "commitment_opportunities": await self._analyze_commitment_opportunities(),
             "storage_optimization": await self._analyze_storage_costs()
         }
-        
+
         # Calculate potential savings
         potential_savings = sum(
-            opt["monthly_savings"] 
+            opt["monthly_savings"]
             for opt in optimizations.values()
         )
-        
+
         return {
             "current_monthly_cost": costs["total_monthly"],
             "potential_monthly_savings": potential_savings,
@@ -1345,13 +1345,13 @@ class CostOptimizer:
 # terraform/modules/gke-cluster/main.tf
 module "gke" {
   source = "./modules/gke-cluster"
-  
+
   project_id     = var.project_id
   region         = var.region
   cluster_name   = var.cluster_name
   network        = var.network
   subnetwork     = var.subnetwork
-  
+
   node_pools = [
     {
       name               = "default-pool"
@@ -1391,16 +1391,16 @@ scaling_strategy:
       - memory_utilization: 80%
       - request_rate: 1000/s
       - queue_depth: 100
-    
+
   vertical_scaling:
     enable_vpa: true
     update_mode: "Auto"
-    
+
   cluster_autoscaling:
     min_nodes: 3
     max_nodes: 100
     scale_down_delay: 10m
-    
+
   database_scaling:
     read_replica_autoscaling: true
     connection_pool_sizing: dynamic

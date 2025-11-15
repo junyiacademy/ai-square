@@ -95,7 +95,7 @@ describe('useRTL', () => {
 
   it('handles multiple language switches correctly', () => {
     const languages = ['en', 'ar', 'fr', 'ar', 'de', 'ar', 'en'];
-    
+
     languages.forEach(language => {
       mockUseTranslation.mockReturnValue({
         i18n: { language },

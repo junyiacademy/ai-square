@@ -52,7 +52,7 @@ const roadmapData: RoadmapData = {
     title: "產品願景",
     content: "AI Square 是一個「用 AI 學 AI 素養」的創新學習平台，基於國際 AI Literacy 框架，透過 AI 技術本身來提升學習者的 AI 素養能力。"
   },
-  
+
   architecture: {
     layers: [
       { name: "MCP/Agent Layer", status: "planned" as Status, description: "統一的 AI Agent 管理與協調" },
@@ -193,7 +193,7 @@ export default function RoadmapPage() {
                   產品願景、開發進度與技術架構
                 </p>
               </div>
-              <Link 
+              <Link
                 href="/"
                 className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
               >
@@ -308,7 +308,7 @@ export default function RoadmapPage() {
         {activeTab === 'roadmap' && (
           <div className="space-y-6">
             {roadmapData.phases.map((phase) => (
-              <div 
+              <div
                 key={phase.id}
                 className={`bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 cursor-pointer transition-all ${
                   activePhase === phase.id ? 'ring-2 ring-purple-500' : ''
@@ -324,10 +324,10 @@ export default function RoadmapPage() {
                     {statusLabels[phase.status]}
                   </span>
                 </div>
-                
+
                 {/* Progress Bar */}
                 <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
-                  <div 
+                  <div
                     className="bg-purple-600 h-2 rounded-full transition-all duration-300"
                     style={{ width: `${phase.progress}%` }}
                   />

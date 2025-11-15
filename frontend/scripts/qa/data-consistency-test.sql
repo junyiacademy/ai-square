@@ -22,7 +22,7 @@
 \echo '1.1 Verifying program task counts...'
 
 WITH consistency_check AS (
-    SELECT 
+    SELECT
         p.id as program_id,
         p.total_task_count as declared_count,
         COUNT(t.id) as actual_count,
@@ -32,10 +32,10 @@ WITH consistency_check AS (
     GROUP BY p.id, p.total_task_count
     HAVING p.total_task_count != COUNT(t.id)
 )
-SELECT 
+SELECT
     COUNT(*) as inconsistent_programs,
     SUM(ABS(difference)) as total_task_mismatch,
-    CASE 
+    CASE
         WHEN COUNT(*) = 0 THEN '✓ All program task counts are consistent'
         ELSE '✗ CRITICAL: Program task count mismatches found!'
     END as status
@@ -46,7 +46,7 @@ FROM consistency_check;
 \echo '1.2 Verifying completed task counts...'
 
 WITH completion_check AS (
-    SELECT 
+    SELECT
         p.id,
         p.completed_task_count as declared_completed,
         COUNT(t.id) FILTER (WHERE t.status = 'completed') as actual_completed
@@ -55,9 +55,9 @@ WITH completion_check AS (
     GROUP BY p.id, p.completed_task_count
     HAVING p.completed_task_count != COUNT(t.id) FILTER (WHERE t.status = 'completed')
 )
-SELECT 
+SELECT
     COUNT(*) as inconsistent_programs,
-    CASE 
+    CASE
         WHEN COUNT(*) = 0 THEN '✓ Completed task counts are consistent'
         ELSE '✗ Completed task count mismatches found!'
     END as status
@@ -68,7 +68,7 @@ FROM completion_check;
 \echo '1.3 Checking task index sequences...'
 
 WITH index_gaps AS (
-    SELECT 
+    SELECT
         program_id,
         array_agg(task_index ORDER BY task_index) as indices,
         COUNT(*) as task_count,
@@ -78,9 +78,9 @@ WITH index_gaps AS (
     HAVING MAX(task_index) >= COUNT(*) -- Should be 0-indexed
         OR COUNT(DISTINCT task_index) != COUNT(*)
 )
-SELECT 
+SELECT
     COUNT(*) as programs_with_gaps,
-    CASE 
+    CASE
         WHEN COUNT(*) = 0 THEN '✓ All task indices are sequential'
         ELSE '✗ Task index gaps or duplicates found!'
     END as status
@@ -98,7 +98,7 @@ FROM index_gaps;
 \echo '2.1 Validating mode propagation chain...'
 
 WITH mode_chain AS (
-    SELECT 
+    SELECT
         s.id as scenario_id,
         s.mode as scenario_mode,
         p.id as program_id,
@@ -113,16 +113,16 @@ WITH mode_chain AS (
     LEFT JOIN evaluations e ON t.id = e.task_id
     WHERE p.id IS NOT NULL
 )
-SELECT 
+SELECT
     COUNT(*) FILTER (WHERE scenario_mode != program_mode) as scenario_program_mismatches,
     COUNT(*) FILTER (WHERE program_mode != task_mode AND task_id IS NOT NULL) as program_task_mismatches,
     COUNT(*) FILTER (WHERE task_mode != evaluation_mode AND evaluation_id IS NOT NULL) as task_evaluation_mismatches,
-    CASE 
-        WHEN COUNT(*) FILTER (WHERE 
-            scenario_mode != program_mode OR 
+    CASE
+        WHEN COUNT(*) FILTER (WHERE
+            scenario_mode != program_mode OR
             (program_mode != task_mode AND task_id IS NOT NULL) OR
             (task_mode != evaluation_mode AND evaluation_id IS NOT NULL)
-        ) = 0 
+        ) = 0
         THEN '✓ Mode propagation is consistent'
         ELSE '✗ CRITICAL: Mode propagation failures detected!'
     END as status
@@ -132,20 +132,20 @@ FROM mode_chain;
 \echo ''
 \echo '2.2 Checking mode-specific data requirements...'
 
-SELECT 
+SELECT
     mode,
     COUNT(*) as total_scenarios,
-    COUNT(*) FILTER (WHERE 
+    COUNT(*) FILTER (WHERE
         (mode = 'pbl' AND (pbl_data IS NULL OR pbl_data = '{}'::jsonb)) OR
         (mode = 'discovery' AND (discovery_data IS NULL OR discovery_data = '{}'::jsonb)) OR
         (mode = 'assessment' AND (assessment_data IS NULL OR assessment_data = '{}'::jsonb))
     ) as missing_mode_data,
-    CASE 
-        WHEN COUNT(*) FILTER (WHERE 
+    CASE
+        WHEN COUNT(*) FILTER (WHERE
             (mode = 'pbl' AND (pbl_data IS NULL OR pbl_data = '{}'::jsonb)) OR
             (mode = 'discovery' AND (discovery_data IS NULL OR discovery_data = '{}'::jsonb)) OR
             (mode = 'assessment' AND (assessment_data IS NULL OR assessment_data = '{}'::jsonb))
-        ) = 0 
+        ) = 0
         THEN '✓ All mode-specific data present'
         ELSE '✗ Missing required mode-specific data!'
     END as status
@@ -165,24 +165,24 @@ ORDER BY mode;
 \echo '3.1 Checking language coverage consistency...'
 
 WITH language_stats AS (
-    SELECT 
+    SELECT
         'scenarios' as table_name,
         COUNT(DISTINCT key) as unique_languages
     FROM scenarios, jsonb_object_keys(title) as key
     WHERE title IS NOT NULL AND title != '{}'::jsonb
-    
+
     UNION ALL
-    
-    SELECT 
+
+    SELECT
         'tasks',
         COUNT(DISTINCT key)
     FROM tasks, jsonb_object_keys(title) as key
     WHERE title IS NOT NULL AND title != '{}'::jsonb
 )
-SELECT 
+SELECT
     table_name,
     unique_languages,
-    CASE 
+    CASE
         WHEN unique_languages >= 2 THEN '✓ Multiple languages supported'
         WHEN unique_languages = 1 THEN '⚠ Only one language found'
         ELSE '✗ No languages found!'
@@ -193,19 +193,19 @@ FROM language_stats;
 \echo ''
 \echo '3.2 Checking required language (en) presence...'
 
-SELECT 
+SELECT
     'Scenarios missing English' as check_item,
     COUNT(*) as count
 FROM scenarios
-WHERE title IS NOT NULL 
+WHERE title IS NOT NULL
   AND title != '{}'::jsonb
   AND NOT (title ? 'en')
 UNION ALL
-SELECT 
+SELECT
     'Tasks missing English',
     COUNT(*)
 FROM tasks
-WHERE title IS NOT NULL 
+WHERE title IS NOT NULL
   AND title != '{}'::jsonb
   AND NOT (title ? 'en');
 
@@ -220,25 +220,25 @@ WHERE title IS NOT NULL
 -- Check 4.1: Timestamp logic
 \echo '4.1 Checking timestamp logical consistency...'
 
-SELECT 
+SELECT
     'Programs started before created' as anomaly,
     COUNT(*) as count
 FROM programs
 WHERE started_at < created_at
 UNION ALL
-SELECT 
+SELECT
     'Programs completed before started',
     COUNT(*)
 FROM programs
 WHERE completed_at < started_at
 UNION ALL
-SELECT 
+SELECT
     'Tasks completed before started',
     COUNT(*)
 FROM tasks
 WHERE completed_at < started_at
 UNION ALL
-SELECT 
+SELECT
     'Updated_at before created_at',
     COUNT(*)
 FROM scenarios
@@ -248,7 +248,7 @@ WHERE updated_at < created_at;
 \echo ''
 \echo '4.2 Checking for future timestamps...'
 
-SELECT 
+SELECT
     'Future created_at' as check_type,
     COUNT(*) as count
 FROM (
@@ -259,7 +259,7 @@ FROM (
     SELECT id FROM programs WHERE created_at > CURRENT_TIMESTAMP
 ) future_records
 UNION ALL
-SELECT 
+SELECT
     'Future completed_at',
     COUNT(*)
 FROM (
@@ -279,7 +279,7 @@ FROM (
 -- Check 5.1: Score boundaries
 \echo '5.1 Checking score boundaries...'
 
-SELECT 
+SELECT
     'Programs with invalid scores' as check_item,
     COUNT(*) as count,
     MIN(total_score) as min_score,
@@ -287,7 +287,7 @@ SELECT
 FROM programs
 WHERE total_score < 0 OR total_score > 100
 UNION ALL
-SELECT 
+SELECT
     'Tasks with invalid scores',
     COUNT(*),
     MIN(score),
@@ -295,7 +295,7 @@ SELECT
 FROM tasks
 WHERE score < 0 OR score > 100
 UNION ALL
-SELECT 
+SELECT
     'Evaluations with invalid scores',
     COUNT(*),
     MIN(score),
@@ -309,25 +309,25 @@ WHERE score < 0 OR score > 100;
 
 WITH state_checks AS (
     -- Completed programs should have all tasks done
-    SELECT 
+    SELECT
         'Completed programs with pending tasks' as issue,
         COUNT(DISTINCT p.id) as count
     FROM programs p
     JOIN tasks t ON p.id = t.program_id
     WHERE p.status = 'completed'
       AND t.status != 'completed'
-    
+
     UNION ALL
-    
+
     -- Active programs should have at least one active or completed task
-    SELECT 
+    SELECT
         'Active programs with no progress',
         COUNT(DISTINCT p.id)
     FROM programs p
     WHERE p.status = 'active'
       AND NOT EXISTS (
-          SELECT 1 FROM tasks t 
-          WHERE t.program_id = p.id 
+          SELECT 1 FROM tasks t
+          WHERE t.program_id = p.id
             AND t.status IN ('active', 'completed')
       )
 )
@@ -345,17 +345,17 @@ SELECT * FROM state_checks;
 \echo '6.1 Analyzing cascade delete implications...'
 
 WITH cascade_analysis AS (
-    SELECT 
+    SELECT
         'Users' as entity,
         COUNT(DISTINCT u.id) as total,
         COUNT(DISTINCT p.user_id) as referenced,
         COUNT(DISTINCT u.id) - COUNT(DISTINCT p.user_id) as unreferenced
     FROM users u
     LEFT JOIN programs p ON u.id = p.user_id
-    
+
     UNION ALL
-    
-    SELECT 
+
+    SELECT
         'Scenarios',
         COUNT(DISTINCT s.id),
         COUNT(DISTINCT p.scenario_id),
@@ -363,7 +363,7 @@ WITH cascade_analysis AS (
     FROM scenarios s
     LEFT JOIN programs p ON s.id = p.scenario_id
 )
-SELECT 
+SELECT
     entity,
     total,
     referenced,
@@ -383,7 +383,7 @@ FROM cascade_analysis;
 \echo '7.1 Checking XP and level consistency...'
 
 WITH xp_checks AS (
-    SELECT 
+    SELECT
         id,
         email,
         level,
@@ -394,12 +394,12 @@ WITH xp_checks AS (
     FROM users
     WHERE total_xp > 0
 )
-SELECT 
+SELECT
     COUNT(*) FILTER (WHERE ABS(level_difference) > 1) as inconsistent_users,
     MIN(level_difference) as min_diff,
     MAX(level_difference) as max_diff,
-    CASE 
-        WHEN COUNT(*) FILTER (WHERE ABS(level_difference) > 1) = 0 
+    CASE
+        WHEN COUNT(*) FILTER (WHERE ABS(level_difference) > 1) = 0
         THEN '✓ XP and levels are consistent'
         ELSE '⚠ Some users have inconsistent XP/level ratios'
     END as status
@@ -416,7 +416,7 @@ FROM xp_checks;
 -- Check 8.1: Required fields completeness
 \echo '8.1 Checking required fields completeness...'
 
-SELECT 
+SELECT
     'Scenarios' as entity,
     COUNT(*) as total_records,
     COUNT(*) FILTER (WHERE title IS NULL OR title = '{}'::jsonb) as missing_title,
@@ -424,7 +424,7 @@ SELECT
     COUNT(*) FILTER (WHERE task_templates IS NULL OR jsonb_array_length(task_templates) = 0) as missing_tasks
 FROM scenarios
 UNION ALL
-SELECT 
+SELECT
     'Programs',
     COUNT(*),
     COUNT(*) FILTER (WHERE user_id IS NULL),

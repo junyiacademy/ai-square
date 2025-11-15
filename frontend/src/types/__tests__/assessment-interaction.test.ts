@@ -64,7 +64,7 @@ describe('AssessmentInteraction', () => {
 
     // This should work with proper type casting
     const interactions: IInteraction[] = [assessmentInteraction as unknown as IInteraction];
-    
+
     expect(interactions).toHaveLength(1);
     expect(interactions[0].timestamp).toBe(assessmentInteraction.timestamp);
   });

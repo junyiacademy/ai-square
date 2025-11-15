@@ -24,31 +24,31 @@ export default function KnowledgeGraph() {
   const animationRef = useRef<number>(0);
 
   const domains: Domain[] = useMemo(() => [
-    { 
-      id: 'engaging_with_ai', 
-      name: t('domains.items.engaging.name'), 
-      emoji: '🎯', 
+    {
+      id: 'engaging_with_ai',
+      name: t('domains.items.engaging.name'),
+      emoji: '🎯',
       color: '#3B82F6',
       competencies: 5
     },
-    { 
-      id: 'creating_with_ai', 
-      name: t('domains.items.creating.name'), 
-      emoji: '🎨', 
+    {
+      id: 'creating_with_ai',
+      name: t('domains.items.creating.name'),
+      emoji: '🎨',
       color: '#10B981',
       competencies: 6
     },
-    { 
-      id: 'managing_with_ai', 
-      name: t('domains.items.managing.name'), 
-      emoji: '🎮', 
+    {
+      id: 'managing_with_ai',
+      name: t('domains.items.managing.name'),
+      emoji: '🎮',
       color: '#F59E0B',
       competencies: 4
     },
-    { 
-      id: 'designing_with_ai', 
-      name: t('domains.items.designing.name'), 
-      emoji: '🏗️', 
+    {
+      id: 'designing_with_ai',
+      name: t('domains.items.designing.name'),
+      emoji: '🏗️',
       color: '#EF4444',
       competencies: 5
     }
@@ -107,7 +107,7 @@ export default function KnowledgeGraph() {
       // Draw domains
       domains.forEach((domain) => {
         const isHovered = hoveredDomain === domain.id;
-        
+
         // Domain circle
         ctx.fillStyle = domain.color;
         ctx.globalAlpha = isHovered ? 1 : 0.8;
@@ -142,14 +142,14 @@ export default function KnowledgeGraph() {
       const rect = canvas.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
-      
+
       setMousePos({ x, y });
-      
+
       // Check if hovering over a domain
-      const hovered = domains.find(domain => 
+      const hovered = domains.find(domain =>
         Math.sqrt(Math.pow(x - domain.x!, 2) + Math.pow(y - domain.y!, 2)) < 50
       );
-      
+
       setHoveredDomain(hovered ? hovered.id : null);
       canvas.style.cursor = hovered ? 'pointer' : 'default';
     };
@@ -159,7 +159,7 @@ export default function KnowledgeGraph() {
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
 
-      const clicked = domains.find(domain => 
+      const clicked = domains.find(domain =>
         Math.sqrt(Math.pow(x - domain.x!, 2) + Math.pow(y - domain.y!, 2)) < 50
       );
 
@@ -186,13 +186,13 @@ export default function KnowledgeGraph() {
     <div className="relative w-full">
       <h2 className="text-3xl font-bold text-center mb-4">{t('domains.title')}</h2>
       <p className="text-lg text-gray-600 text-center mb-8">{t('domains.subtitle')}</p>
-      
+
       <div className="relative">
-        <canvas 
+        <canvas
           ref={canvasRef}
           className="w-full h-[400px] cursor-pointer"
         />
-        
+
         {selectedDomain && (
           <div className="absolute bottom-0 left-0 right-0 bg-white p-6 border-t shadow-lg">
             <div className="max-w-2xl mx-auto">
@@ -209,7 +209,7 @@ export default function KnowledgeGraph() {
                   ✕
                 </button>
               </div>
-              <a 
+              <a
                 href="/relations"
                 className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700"
               >

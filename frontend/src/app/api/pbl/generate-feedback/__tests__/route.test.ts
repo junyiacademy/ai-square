@@ -2,7 +2,7 @@ import { mockRepositoryFactory } from '@/test-utils/mocks/repositories';
 /**
  * PBL Generate Feedback Route Tests
  * 提升覆蓋率從 0% 到 80%+
- * 
+ *
  * This API handles AI-powered feedback generation for PBL programs with:
  * - Multi-language support
  * - Feedback caching and versioning
@@ -304,7 +304,7 @@ describe('POST /api/pbl/generate-feedback', () => {
   // Get the mock function from the mocked module
   const mockVertexAI = require('@google-cloud/vertexai');
   const mockGenerateContent = mockVertexAI.__mockGenerateContent;
-  
+
   // Get the language mock
   const { getLanguageFromHeader } = require('@/lib/utils/language');
 
@@ -384,7 +384,7 @@ describe('POST /api/pbl/generate-feedback', () => {
           scenarioId: 'scenario-123'
         })
       });
-      
+
       const response = await POST(request);
       const data = await response.json();
 
@@ -400,7 +400,7 @@ describe('POST /api/pbl/generate-feedback', () => {
           programId: 'program-123'
         })
       });
-      
+
       const response = await POST(request);
       const data = await response.json();
 
@@ -414,7 +414,7 @@ describe('POST /api/pbl/generate-feedback', () => {
         method: 'POST',
         body: JSON.stringify({})
       });
-      
+
       const response = await POST(request);
       const data = await response.json();
 
@@ -437,9 +437,9 @@ describe('POST /api/pbl/generate-feedback', () => {
           scenarioId: 'scenario-123'
         })
       });
-      
+
       const response = await POST(request);
-      
+
       expect(response.status).toBe(401);
       const data = await response.json();
       expect(data.error).toBe('Authentication required');
@@ -456,9 +456,9 @@ describe('POST /api/pbl/generate-feedback', () => {
           scenarioId: 'scenario-123'
         })
       });
-      
+
       const response = await POST(request);
-      
+
       expect(response.status).toBe(401);
       const data = await response.json();
       expect(data.error).toBe('Authentication required');
@@ -475,7 +475,7 @@ describe('POST /api/pbl/generate-feedback', () => {
           scenarioId: 'scenario-123'
         })
       });
-      
+
       const response = await POST(request);
       const data = await response.json();
 
@@ -496,7 +496,7 @@ describe('POST /api/pbl/generate-feedback', () => {
           scenarioId: 'scenario-123'
         })
       });
-      
+
       const response = await POST(request);
       const data = await response.json();
 
@@ -516,7 +516,7 @@ describe('POST /api/pbl/generate-feedback', () => {
           scenarioId: 'scenario-123'
         })
       });
-      
+
       const response = await POST(request);
       const data = await response.json();
 
@@ -535,7 +535,7 @@ describe('POST /api/pbl/generate-feedback', () => {
           scenarioId: 'scenario-123'
         })
       });
-      
+
       const response = await POST(request);
       const data = await response.json();
 
@@ -574,13 +574,13 @@ describe('POST /api/pbl/generate-feedback', () => {
           scenarioId: 'scenario-123'
         })
       });
-      
+
       const response = await POST(request);
       const data = await response.json();
 
       expect(response.status).toBe(200);
       expect(data.language).toBe('en');
-      
+
       const generatedPrompt = mockGenerateContent.mock.calls[0][0].contents[0].parts[0].text;
       expect(generatedPrompt).toContain('English language');
     });
@@ -588,7 +588,7 @@ describe('POST /api/pbl/generate-feedback', () => {
     it('should support Traditional Chinese', async () => {
       // Mock the language function to return zhTW
       (getLanguageFromHeader as jest.Mock).mockReturnValue('zhTW');
-      
+
       const request = new NextRequest('http://localhost/api/pbl/generate-feedback', {
         method: 'POST',
         body: JSON.stringify({
@@ -596,16 +596,16 @@ describe('POST /api/pbl/generate-feedback', () => {
           scenarioId: 'scenario-123'
         })
       });
-      
+
       const response = await POST(request);
       const data = await response.json();
 
       expect(response.status).toBe(200);
       expect(data.language).toBe('zhTW');
-      
+
       const generatedPrompt = mockGenerateContent.mock.calls[0][0].contents[0].parts[0].text;
       expect(generatedPrompt).toContain('繁體中文');
-      
+
       // Reset the mock
       (getLanguageFromHeader as jest.Mock).mockReturnValue('en');
     });
@@ -645,7 +645,7 @@ describe('POST /api/pbl/generate-feedback', () => {
           scenarioId: 'scenario-123'
         })
       });
-      
+
       const response = await POST(request);
       const data = await response.json();
 
@@ -669,7 +669,7 @@ describe('POST /api/pbl/generate-feedback', () => {
           }
         }
       };
-      
+
       // First call returns cached evaluation, update call changes it
       let callCount = 0;
       mockEvalRepo.findById.mockImplementation((id: string) => {
@@ -704,7 +704,7 @@ describe('POST /api/pbl/generate-feedback', () => {
           forceRegenerate: true
         })
       });
-      
+
       const response = await POST(request);
       const data = await response.json();
 
@@ -726,7 +726,7 @@ describe('POST /api/pbl/generate-feedback', () => {
           scenarioId: 'scenario-123'
         })
       });
-      
+
       const response = await POST(request);
       const data = await response.json();
 
@@ -741,7 +741,7 @@ describe('POST /api/pbl/generate-feedback', () => {
         method: 'POST',
         body: 'invalid json'
       });
-      
+
       const response = await POST(request);
       const data = await response.json();
 
@@ -765,14 +765,14 @@ describe('POST /api/pbl/generate-feedback', () => {
           scenarioId: 'scenario-123'
         })
       });
-      
+
       const response = await POST(request);
       const data = await response.json();
 
       expect(response.status).toBe(200);
       expect(data.success).toBe(true);
       expect(data.feedback).toBeDefined();
-      
+
       // Empty candidates result in '{}' which parses to empty object
       // The route handles this by checking if feedback is falsy and using fallback
       // But {} is truthy, so we should expect the empty object behavior
@@ -801,7 +801,7 @@ describe('POST /api/pbl/generate-feedback', () => {
           scenarioId: 'scenario-123'
         })
       });
-      
+
       const response = await POST(request);
       const data = await response.json();
 
@@ -833,7 +833,7 @@ describe('POST /api/pbl/generate-feedback', () => {
           scenarioId: 'scenario-123'
         })
       });
-      
+
       const response = await POST(request);
       const data = await response.json();
 
@@ -854,7 +854,7 @@ describe('POST /api/pbl/generate-feedback', () => {
           scenarioId: 'scenario-123'
         })
       });
-      
+
       await POST(request);
 
       // Since VertexAI is instantiated at module level, just verify the AI call was made correctly
@@ -890,7 +890,7 @@ describe('POST /api/pbl/generate-feedback', () => {
           scenarioId: 'scenario-123'
         })
       });
-      
+
       const response = await POST(request);
       const data = await response.json();
 
@@ -905,7 +905,7 @@ describe('POST /api/pbl/generate-feedback', () => {
     it('should create evaluation when not found', async () => {
       const programWithoutEval = { ...mockProgram, metadata: {} };
       mockProgramRepo.findById.mockResolvedValue(programWithoutEval);
-      
+
       // Mock evaluation not found initially
       let findCallCount = 0;
       mockEvalRepo.findById.mockImplementation((id: string) => {
@@ -932,7 +932,7 @@ describe('POST /api/pbl/generate-feedback', () => {
           scenarioId: 'scenario-123'
         })
       });
-      
+
       const response = await POST(request);
       const data = await response.json();
 
@@ -964,7 +964,7 @@ describe('POST /api/pbl/generate-feedback', () => {
           scenarioId: 'scenario-123'
         })
       });
-      
+
       const response = await POST(request);
       const data = await response.json();
 

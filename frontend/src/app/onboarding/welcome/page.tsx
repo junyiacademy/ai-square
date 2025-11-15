@@ -148,7 +148,7 @@ export default function OnboardingWelcomePage() {
       const userStr = localStorage.getItem('user');
       if (userStr) {
         const user = JSON.parse(userStr);
-        
+
         try {
           await authenticatedFetch('/api/users/update-progress', {
             method: 'POST',
@@ -163,7 +163,7 @@ export default function OnboardingWelcomePage() {
           console.error('Failed to update progress:', error);
         }
       }
-      
+
       // Complete welcome steps and go to identity selection
       router.push('/onboarding/identity');
     }
@@ -176,7 +176,7 @@ export default function OnboardingWelcomePage() {
       const user = JSON.parse(userStr);
       user.hasCompletedOnboarding = true;
       localStorage.setItem('user', JSON.stringify(user));
-      
+
       // Update onboarding status in database
       try {
         const updateResponse = await authenticatedFetch(`/api/users/${user.id}`, {
@@ -189,7 +189,7 @@ export default function OnboardingWelcomePage() {
           }),
           credentials: 'include'
         });
-        
+
         if (!updateResponse.ok) {
           console.error('Failed to update onboarding status in database');
         }

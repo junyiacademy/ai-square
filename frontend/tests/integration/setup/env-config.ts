@@ -27,17 +27,17 @@ export function detectEnvironment(): TestEnvironment['type'] {
   if (process.env.CI === 'true' || process.env.GITHUB_ACTIONS) {
     return 'ci';
   }
-  
+
   // Cloud Run or GCP
   if (process.env.K_SERVICE || process.env.GOOGLE_CLOUD_PROJECT) {
     return 'cloud';
   }
-  
+
   // Docker Compose
   if (process.env.DOCKER_COMPOSE === 'true') {
     return 'docker';
   }
-  
+
   // Default to local
   return 'local';
 }
@@ -47,7 +47,7 @@ export function detectEnvironment(): TestEnvironment['type'] {
  */
 export function getTestConfig(): TestEnvironment {
   const envType = detectEnvironment();
-  
+
   switch (envType) {
     case 'ci':
       return {
@@ -70,7 +70,7 @@ export function getTestConfig(): TestEnvironment {
           }
         }
       };
-      
+
     case 'cloud':
       return {
         type: 'cloud',
@@ -93,7 +93,7 @@ export function getTestConfig(): TestEnvironment {
           }
         }
       };
-      
+
     case 'docker':
       return {
         type: 'docker',
@@ -115,7 +115,7 @@ export function getTestConfig(): TestEnvironment {
           }
         }
       };
-      
+
     case 'local':
     default:
       return {
@@ -163,7 +163,7 @@ export async function checkService(service: ServiceConfig, type: 'postgres' | 'r
       } catch {
         return false;
       }
-      
+
     case 'redis':
       try {
         const Redis = require('ioredis');
@@ -179,7 +179,7 @@ export async function checkService(service: ServiceConfig, type: 'postgres' | 'r
       } catch {
         return false;
       }
-      
+
     case 'http':
       try {
         const response = await fetch(`http://${service.host}:${service.port}/api/monitoring/health`, {
@@ -196,7 +196,7 @@ export async function checkService(service: ServiceConfig, type: 'postgres' | 'r
  * Wait for a service to be ready
  */
 export async function waitForService(
-  service: ServiceConfig, 
+  service: ServiceConfig,
   type: 'postgres' | 'redis' | 'http',
   maxAttempts = 10,
   delayMs = 2000
@@ -217,9 +217,9 @@ export async function waitForService(
  */
 export function getConnectionStrings() {
   const config = getTestConfig();
-  
+
   return {
-    postgres: config.services.postgres.connectionString || 
+    postgres: config.services.postgres.connectionString ||
       `postgresql://postgres:postgres@${config.services.postgres.host}:${config.services.postgres.port}/ai_square_db`,
     redis: `redis://${config.services.redis.host}:${config.services.redis.port}`,
     nextjs: `http://${config.services.nextjs.host}:${config.services.nextjs.port}`,

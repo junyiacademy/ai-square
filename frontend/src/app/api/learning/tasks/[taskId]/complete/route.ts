@@ -21,7 +21,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
 
     // Get task ID from params
     const { taskId } = await params;
-    
+
     // Parse request body
     const body = await request.json();
     const { response, evaluationData } = body;
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest, { params }: RouteParams) {
 
   } catch (error) {
     console.error('Error completing task:', error);
-    
+
     if (error instanceof Error && error.message.includes('not found')) {
       return NextResponse.json(
         { success: false, error: error.message },

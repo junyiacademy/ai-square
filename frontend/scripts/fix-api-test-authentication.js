@@ -14,7 +14,7 @@ const AUTH_PATTERNS = {
   // Routes that use cookie-based auth (most PBL/Assessment/Discovery routes)
   cookie: [
     'pbl/**/__tests__/route.test.ts',
-    'assessment/**/__tests__/route.test.ts', 
+    'assessment/**/__tests__/route.test.ts',
     'discovery/**/__tests__/route.test.ts',
     'learning/**/__tests__/route.test.ts'
   ],
@@ -24,7 +24,7 @@ const AUTH_PATTERNS = {
   ]
 };
 
-const REQUIRED_IMPORTS = `import { 
+const REQUIRED_IMPORTS = `import {
   createAuthenticatedRequestWithCookie,
   createAuthenticatedRequest,
   createUnauthenticatedRequest,
@@ -40,7 +40,7 @@ function fixTestFile(filePath, authMethod = 'cookie') {
   console.log(`Fixing ${filePath} with ${authMethod} authentication...`);
 
   let content = fs.readFileSync(filePath, 'utf8');
-  
+
   // Skip if already using test helpers
   if (content.includes('api-test-helpers')) {
     console.log(`  → Skipping ${filePath} - already using test helpers`);
@@ -123,7 +123,7 @@ function fixTestFile(filePath, authMethod = 'cookie') {
  */
 async function main() {
   const srcPath = path.join(__dirname, '..', 'src', 'app', 'api');
-  
+
   console.log('🔧 Fixing API test authentication patterns...\n');
 
   // Fix cookie-based auth tests
@@ -134,7 +134,7 @@ async function main() {
     }
   }
 
-  // Fix header-based auth tests  
+  // Fix header-based auth tests
   for (const pattern of AUTH_PATTERNS.header) {
     const files = await glob(path.join(srcPath, pattern));
     for (const file of files) {

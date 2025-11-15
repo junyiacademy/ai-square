@@ -38,7 +38,7 @@
   },
   "difficulty": {
     "basic": "基础",
-    "intermediate": "中级", 
+    "intermediate": "中级",
     "advanced": "高级"
   },
   "results": {
@@ -76,7 +76,7 @@
     "autoSaved": "结果已自动保存",
     "tabs": {
       "overview": "概览",
-      "domains": "领域", 
+      "domains": "领域",
       "recommendations": "建议",
       "ksa": "KSA分析",
       "knowledge-graph": "知识图谱"

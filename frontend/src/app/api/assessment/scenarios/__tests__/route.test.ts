@@ -148,7 +148,7 @@ describe('/api/assessment/scenarios', () => {
       const request = new NextRequest('http://localhost:3000/api/assessment/scenarios?lang=zh');
       const response = await LocalGET(request);
       const data = await response.json();
-      
+
       expect(response.status).toBe(200);
       expect(data.data.scenarios).toHaveLength(0);
       expect(fsPromises.readFile).not.toHaveBeenCalled();
@@ -169,7 +169,7 @@ describe('/api/assessment/scenarios', () => {
       expect(response.status).toBe(200);
       expect(data.data.scenarios).toHaveLength(0);
       expect(fsPromises.readdir).not.toHaveBeenCalled();
-      
+
       // Filter out Redis-related warnings which are expected in test environment
       const nonRedisWarnings = mockConsoleWarn.mock.calls.filter(
         call => !call[0]?.includes('Redis disabled') && !call[0]?.includes('using in-memory fallback')
@@ -179,7 +179,7 @@ describe('/api/assessment/scenarios', () => {
 
     it('should return existing scenarios from database without filesystem access', async () => {
       (repositoryFactory.getScenarioRepository as jest.Mock).mockReturnValue(mockScenarioRepo);
-      
+
       const existingScenario = createMockScenario({
         id: 'existing-1',
         sourceMetadata: { configPath: 'assessment_data/ai_literacy/ai_literacy_questions_en.yaml' },
@@ -216,7 +216,7 @@ describe('/api/assessment/scenarios', () => {
 
     it('should handle database errors gracefully', async () => {
       (repositoryFactory.getScenarioRepository as jest.Mock).mockReturnValue(mockScenarioRepo);
-      
+
       // Simulate a database error
       const dbError = new Error('Database connection failed');
       (mockScenarioRepo.findByMode as jest.Mock).mockRejectedValue(dbError);

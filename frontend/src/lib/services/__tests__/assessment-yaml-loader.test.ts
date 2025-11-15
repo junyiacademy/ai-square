@@ -13,7 +13,7 @@ const mockCacheService = cacheService as jest.Mocked<typeof cacheService>;
 
 describe('AssessmentYAMLLoader', () => {
   let loader: AssessmentYAMLLoader;
-  
+
   const mockAssessmentData: AssessmentYAMLData = {
     config: {
       title: 'AI Literacy Assessment',
@@ -50,7 +50,7 @@ describe('AssessmentYAMLLoader', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     loader = new AssessmentYAMLLoader();
-    
+
     // Default mock behaviors
     mockCacheService.get.mockResolvedValue(null);
     mockCacheService.set.mockResolvedValue(undefined);
@@ -70,9 +70,9 @@ describe('AssessmentYAMLLoader', () => {
           readFile: jest.fn().mockRejectedValue(new Error('File not found'))
         }
       }));
-      
+
       await loader.loadAssessment('ai_literacy', 'zhTW').catch(() => {});
-      
+
       // Since AssessmentYAMLLoader doesn't use cache, we can't test cache behavior
       // Instead, just verify the method completes without error
       expect(true).toBe(true);
@@ -85,10 +85,10 @@ describe('AssessmentYAMLLoader', () => {
           readFile: jest.fn().mockRejectedValue(new Error('File not found'))
         }
       }));
-      
+
       // First call fails, second call for English fallback
       const result = await loader.loadAssessment('ai_literacy', 'ja');
-      
+
       // The loader returns null when file is not found
       expect(result).toBeNull();
     });
@@ -100,13 +100,13 @@ describe('AssessmentYAMLLoader', () => {
           readFile: jest.fn().mockResolvedValue(JSON.stringify(mockAssessmentData))
         }
       }));
-      
+
       jest.doMock('js-yaml', () => ({
         load: jest.fn().mockReturnValue(mockAssessmentData)
       }));
-      
+
       const result = await loader.loadAssessment('ai_literacy', 'en');
-      
+
       // Since fs module is mocked in the test environment, we expect null
       // because the actual implementation can't be properly tested without integration
       expect(result).toBeNull();
@@ -119,9 +119,9 @@ describe('AssessmentYAMLLoader', () => {
         title: 'English Title',
         title_zhTW: '中文標題'
       };
-      
+
       const result = loader.getTranslatedField(data, 'title', 'zhTW');
-      
+
       expect(result).toBe('中文標題');
     });
 
@@ -129,17 +129,17 @@ describe('AssessmentYAMLLoader', () => {
       const data = {
         title: 'English Title'
       };
-      
+
       const result = loader.getTranslatedField(data, 'title', 'zhTW');
-      
+
       expect(result).toBe('English Title');
     });
 
     it('should return empty string when field not found', () => {
       const data = {};
-      
+
       const result = loader.getTranslatedField(data, 'title', 'en');
-      
+
       expect(result).toBe('');
     });
 
@@ -148,9 +148,9 @@ describe('AssessmentYAMLLoader', () => {
         title: 'English Title',
         title_zhTW: '中文標題'
       };
-      
+
       const result = loader.getTranslatedField(data, 'title', 'en');
-      
+
       expect(result).toBe('English Title');
     });
   });
@@ -161,7 +161,7 @@ describe('AssessmentYAMLLoader', () => {
         'ai_literacy_questions_en',
         'en'
       );
-      
+
       expect(filePath).toContain('assessment_data/ai_literacy/ai_literacy_questions_en.yaml');
     });
 
@@ -170,7 +170,7 @@ describe('AssessmentYAMLLoader', () => {
         'basic_ai_knowledge_questions_zhTW',
         'zhTW'
       );
-      
+
       expect(filePath).toContain('assessment_data/basic_ai_knowledge/basic_ai_knowledge_questions_zhTW.yaml');
     });
   });
@@ -181,16 +181,16 @@ describe('AssessmentYAMLLoader', () => {
         assessment_config: mockAssessmentData.config,
         questions: mockAssessmentData.questions
       };
-      
+
       const result = await loader['postProcess'](dataWithAltConfig);
-      
+
       expect(result.config).toEqual(mockAssessmentData.config);
       expect(result.assessment_config).toEqual(mockAssessmentData.config);
     });
 
     it('should preserve existing config field', async () => {
       const result = await loader['postProcess'](mockAssessmentData);
-      
+
       expect(result.config).toEqual(mockAssessmentData.config);
     });
 
@@ -198,14 +198,14 @@ describe('AssessmentYAMLLoader', () => {
       const dataWithoutIds: AssessmentYAMLData = {
         config: mockAssessmentData.config,
         questions: [
-          { 
+          {
             domain: 'test',
             competency: 'test',
             question: 'Question 1',
             options: ['A', 'B'],
             correct_answer: 0
           } as any,
-          { 
+          {
             domain: 'test',
             competency: 'test',
             question: 'Question 2',
@@ -214,16 +214,16 @@ describe('AssessmentYAMLLoader', () => {
           } as any
         ]
       };
-      
+
       const result = await loader['postProcess'](dataWithoutIds);
-      
+
       expect(result.questions[0].id).toBe('question_1');
       expect(result.questions[1].id).toBe('question_2');
     });
 
     it('should preserve existing question IDs', async () => {
       const result = await loader['postProcess'](mockAssessmentData);
-      
+
       expect(result.questions[0].id).toBe('q1');
     });
 
@@ -232,9 +232,9 @@ describe('AssessmentYAMLLoader', () => {
         config: mockAssessmentData.config,
         questions: []
       };
-      
+
       const result = await loader['postProcess'](dataWithoutQuestions);
-      
+
       expect(result.questions).toEqual([]);
     });
 
@@ -242,9 +242,9 @@ describe('AssessmentYAMLLoader', () => {
       const dataWithoutQuestions: any = {
         config: mockAssessmentData.config
       };
-      
+
       const result = await loader['postProcess'](dataWithoutQuestions);
-      
+
       expect(result.questions).toBeUndefined();
     });
   });
@@ -252,7 +252,7 @@ describe('AssessmentYAMLLoader', () => {
   describe('validateData', () => {
     it('should always return valid for now', async () => {
       const result = await loader['validateData']();
-      
+
       expect(result.valid).toBe(true);
       expect(result.error).toBeUndefined();
     });
@@ -261,7 +261,7 @@ describe('AssessmentYAMLLoader', () => {
   describe('question structure', () => {
     it('should handle questions with KSA mappings', () => {
       const question = mockAssessmentData.questions[0];
-      
+
       expect(question.ksa_mapping).toBeDefined();
       expect(question.ksa_mapping?.knowledge).toContain('K1');
       expect(question.ksa_mapping?.knowledge).toContain('K2');
@@ -278,14 +278,14 @@ describe('AssessmentYAMLLoader', () => {
         options: ['A', 'B', 'C', 'D'],
         correct_answer: 2
       };
-      
+
       expect(questionWithoutKSA.ksa_mapping).toBeUndefined();
       expect(questionWithoutKSA.explanation).toBeUndefined();
     });
 
     it('should handle questions with multiple language translations', () => {
       const question = mockAssessmentData.questions[0];
-      
+
       expect(question.question).toBe('What is machine learning?');
       expect(question.question_zhTW).toBe('什麼是機器學習？');
     });
@@ -294,7 +294,7 @@ describe('AssessmentYAMLLoader', () => {
   describe('config structure', () => {
     it('should handle all config fields', () => {
       const config = mockAssessmentData.config!;
-      
+
       expect(config.total_questions).toBe(10);
       expect(config.time_limit_minutes).toBe(30);
       expect(config.passing_score).toBe(70);
@@ -306,7 +306,7 @@ describe('AssessmentYAMLLoader', () => {
       const minimalConfig: AssessmentConfig = {
         title: 'Test Assessment'
       };
-      
+
       expect(minimalConfig.total_questions).toBeUndefined();
       expect(minimalConfig.time_limit_minutes).toBeUndefined();
       expect(minimalConfig.passing_score).toBeUndefined();
@@ -318,7 +318,7 @@ describe('AssessmentYAMLLoader', () => {
     it('should handle file system errors gracefully', async () => {
       // The loader handles errors internally and returns null
       const result = await loader.loadAssessment('non_existent', 'en');
-      
+
       expect(result).toBeNull();
     });
   });
@@ -329,9 +329,9 @@ describe('AssessmentYAMLLoader', () => {
       jest.doMock('fs/promises', () => ({
         readdir: jest.fn().mockRejectedValue(new Error('Directory not found'))
       }));
-      
+
       const result = await loader.scanAssessments();
-      
+
       expect(result).toEqual([]);
     });
   });
@@ -342,9 +342,9 @@ describe('AssessmentYAMLLoader', () => {
       jest.doMock('fs/promises', () => ({
         readdir: jest.fn().mockRejectedValue(new Error('Directory not found'))
       }));
-      
+
       const result = await loader.getAvailableLanguages('ai_literacy');
-      
+
       expect(result).toEqual([]);
     });
   });

@@ -76,7 +76,7 @@ describe('/api/discovery/programs/[programId]/translate-feedback', () => {
       mockGetUnifiedAuth.mockResolvedValue(mockSession);
       mockProgramRepo.findById.mockResolvedValue(mockProgram);
       mockEvaluationRepo.findByProgram.mockResolvedValue([mockEvaluation]);
-      
+
       // Mock translations
       mockTranslationService.translateFeedback
         .mockResolvedValueOnce('Vous avez montré un grand potentiel')

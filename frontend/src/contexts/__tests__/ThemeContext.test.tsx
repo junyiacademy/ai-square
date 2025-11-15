@@ -71,7 +71,7 @@ describe('ThemeContext', () => {
 
   it('should toggle theme from light to dark', async () => {
     const user = userEvent.setup();
-    
+
     render(
       <ThemeProvider>
         <TestComponent />
@@ -79,7 +79,7 @@ describe('ThemeContext', () => {
     );
 
     expect(screen.getByTestId('theme')).toHaveTextContent('light');
-    
+
     await act(async () => {
       await user.click(screen.getByText('Toggle Theme'));
     });
@@ -89,7 +89,7 @@ describe('ThemeContext', () => {
 
   it('should toggle theme from dark to light', async () => {
     const user = userEvent.setup();
-    
+
     render(
       <ThemeProvider>
         <TestComponent />
@@ -100,7 +100,7 @@ describe('ThemeContext', () => {
     await act(async () => {
       await user.click(screen.getByText('Toggle Theme'));
     });
-    
+
     expect(screen.getByTestId('theme')).toHaveTextContent('dark');
 
     // Then toggle back to light
@@ -113,7 +113,7 @@ describe('ThemeContext', () => {
 
   it('should add dark class to document element when theme is dark', async () => {
     const user = userEvent.setup();
-    
+
     render(
       <ThemeProvider>
         <TestComponent />
@@ -132,7 +132,7 @@ describe('ThemeContext', () => {
   it('should remove dark class from document element when theme is light', async () => {
     const user = userEvent.setup();
     document.documentElement.classList.add('dark');
-    
+
     render(
       <ThemeProvider>
         <TestComponent />
@@ -147,7 +147,7 @@ describe('ThemeContext', () => {
 
   it('should save theme to localStorage', async () => {
     const user = userEvent.setup();
-    
+
     render(
       <ThemeProvider>
         <TestComponent />
@@ -165,7 +165,7 @@ describe('ThemeContext', () => {
 
   it('should load saved theme from localStorage', async () => {
     localStorageMock.getItem.mockReturnValue('dark');
-    
+
     render(
       <ThemeProvider>
         <TestComponent />
@@ -203,7 +203,7 @@ describe('ThemeContext', () => {
   it('should throw error when useTheme is used outside ThemeProvider', () => {
     // Suppress console.error for this test
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-    
+
     const TestError = () => {
       useTheme();
       return null;

@@ -7,7 +7,7 @@ import { Pool } from 'pg';
  */
 export async function GET() {
   let pool: Pool | null = null;
-  
+
   try {
     // Remove admin key check - keeping API simple
 
@@ -21,7 +21,7 @@ export async function GET() {
     } else {
       const dbHost = process.env.DB_HOST || '127.0.0.1';
       const isCloudSQL = dbHost.startsWith('/cloudsql/');
-      
+
       const dbConfig: Record<string, unknown> = {
         database: process.env.DB_NAME || 'ai_square_db',
         user: process.env.DB_USER || 'postgres',
@@ -29,20 +29,20 @@ export async function GET() {
         max: 1,
         connectionTimeoutMillis: 5000,
       };
-      
+
       if (isCloudSQL) {
         dbConfig.host = dbHost;
       } else {
         dbConfig.host = dbHost;
         dbConfig.port = parseInt(process.env.DB_PORT || '5433');
       }
-      
+
       pool = new Pool(dbConfig);
     }
 
     // Get scenario counts by mode
     const scenarioStats = await pool.query(`
-      SELECT 
+      SELECT
         mode,
         COUNT(*) as count
       FROM scenarios
@@ -56,7 +56,7 @@ export async function GET() {
 
     // Get user counts by role
     const userStats = await pool.query(`
-      SELECT 
+      SELECT
         role,
         COUNT(*) as count
       FROM users
@@ -96,8 +96,8 @@ export async function GET() {
   } catch (error) {
     console.error('Stats error:', error);
     return NextResponse.json(
-      { 
-        success: false, 
+      {
+        success: false,
         error: error instanceof Error ? error.message : 'Failed to get stats'
       },
       { status: 500 }

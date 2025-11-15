@@ -22,16 +22,16 @@ NC='\033[0m' # No Color
 init_module() {
   local module=$1
   local module_display=$2
-  
+
   echo -e "\n${YELLOW}Initializing ${module_display}...${NC}"
-  
+
   for i in {1..3}; do
     echo "Attempt ${i}/3..."
-    
+
     RESPONSE=$(curl -s -X POST "${SERVICE_URL}/api/admin/init-${module}" \
       -H "Content-Type: application/json" \
       -d '{"force": true}')
-    
+
     # Check if response contains success:true
     if echo "${RESPONSE}" | grep -q '"success":true'; then
       # Extract summary information
@@ -39,11 +39,11 @@ init_module() {
       UPDATED=$(echo "${RESPONSE}" | jq -r '.results.updated // 0' 2>/dev/null || echo "0")
       ERRORS=$(echo "${RESPONSE}" | jq -r '.results.errors | length // 0' 2>/dev/null || echo "0")
       SUMMARY=$(echo "${RESPONSE}" | jq -r '.summary // "No summary"' 2>/dev/null || echo "No summary")
-      
+
       echo -e "${GREEN}✅ ${module_display} initialized successfully${NC}"
       echo "   Created: ${CREATED}, Updated: ${UPDATED}, Errors: ${ERRORS}"
       echo "   Summary: ${SUMMARY}"
-      
+
       # If there are errors, show first few
       if [ "${ERRORS}" -gt 0 ]; then
         echo -e "${YELLOW}   ⚠️  Some errors occurred:${NC}"
@@ -52,20 +52,20 @@ init_module() {
           echo "      ... and $((ERRORS - 3)) more errors"
         fi
       fi
-      
+
       return 0
     else
       echo -e "${RED}❌ Attempt ${i} failed${NC}"
       ERROR_MSG=$(echo "${RESPONSE}" | jq -r '.error // .message // "Unknown error"' 2>/dev/null || echo "Unknown error")
       echo "   Error: ${ERROR_MSG}"
-      
+
       if [ ${i} -lt 3 ]; then
         echo "   Retrying in 5 seconds..."
         sleep 5
       fi
     fi
   done
-  
+
   echo -e "${RED}❌ Failed to initialize ${module_display} after 3 attempts${NC}"
   return 1
 }
@@ -105,14 +105,14 @@ echo -e "  ${RED}Failed: ${FAILED_COUNT}${NC}"
 if command -v psql > /dev/null 2>&1 && [ -n "${DB_HOST}" ] && [ -n "${DB_PASSWORD}" ]; then
   echo -e "\nChecking database content..."
   DB_RESULT=$(PGPASSWORD="${DB_PASSWORD}" psql -h "${DB_HOST}" -U postgres -d ai_square_db -t -c "
-    SELECT 
-      'Total: ' || COUNT(*) || 
-      ' (PBL: ' || COUNT(*) FILTER (WHERE mode = 'pbl') || 
-      ', Discovery: ' || COUNT(*) FILTER (WHERE mode = 'discovery') || 
+    SELECT
+      'Total: ' || COUNT(*) ||
+      ' (PBL: ' || COUNT(*) FILTER (WHERE mode = 'pbl') ||
+      ', Discovery: ' || COUNT(*) FILTER (WHERE mode = 'discovery') ||
       ', Assessment: ' || COUNT(*) FILTER (WHERE mode = 'assessment') || ')'
     FROM scenarios;
   " 2>/dev/null || echo "Unable to query database")
-  
+
   echo "  Database scenarios: ${DB_RESULT}"
 fi
 

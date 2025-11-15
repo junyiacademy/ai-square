@@ -61,13 +61,13 @@ describe('CTASection', () => {
 
   it('displays the decorative statistics', async () => {
     renderWithProviders(<CTASection />);
-    
+
     // Check statistics numbers
     expect(screen.getByText('3')).toBeInTheDocument();
     expect(screen.getByText('4')).toBeInTheDocument();
     expect(screen.getByText('20+')).toBeInTheDocument();
     expect(screen.getByText('24/7')).toBeInTheDocument();
-    
+
     // Check statistics labels
     expect(screen.getByText('Languages (EN / 繁體 / 简体)')).toBeInTheDocument();
     expect(screen.getByText('AI Domains')).toBeInTheDocument();
@@ -106,7 +106,7 @@ describe('CTASection', () => {
     const { container } = renderWithProviders(<CTASection />);
     const section = container.querySelector('section');
     expect(section).toHaveClass('py-20');
-    
+
     const innerContainer = container.querySelector('.max-w-7xl');
     expect(innerContainer).toHaveClass('mx-auto', 'px-4', 'sm:px-6', 'lg:px-8');
   });
@@ -115,7 +115,7 @@ describe('CTASection', () => {
     const { container } = renderWithProviders(<CTASection />);
     const textCenter = container.querySelector('.text-center');
     expect(textCenter).toBeInTheDocument();
-    
+
     const flexCenter = container.querySelector('.justify-center');
     expect(flexCenter).toBeInTheDocument();
   });

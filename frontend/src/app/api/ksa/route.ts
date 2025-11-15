@@ -30,11 +30,11 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const lang = searchParams.get('lang') || 'en';
-    
+
     // Cache key for KSA data
     const cacheKey = `ksa:${lang}`;
     let cacheStatus: 'HIT' | 'MISS' | 'STALE' = 'MISS';
-    
+
     // Fetcher function for cache
     const fetcher = async () => {
       // Normalize language code (e.g., zh -> zhCN)
@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
       const fileLanguage = normalizedLang.replace(/[-_]/g, '');
       // Load language-specific KSA codes file from rubrics_data/ksa_codes/
       const fileName = `ksa_codes_${fileLanguage}`;
-      const data = await jsonYamlLoader.load(`rubrics_data/ksa_codes/${fileName}`, { 
+      const data = await jsonYamlLoader.load(`rubrics_data/ksa_codes/${fileName}`, {
         preferJson: false  // Use YAML files
       }) as YAMLData;
 
@@ -56,10 +56,10 @@ export async function GET(request: NextRequest) {
       const processSection = (sectionData: YAMLSection) => {
       const processedSection = {
         description: sectionData.description,
-        themes: {} as Record<string, { 
+        themes: {} as Record<string, {
           name?: string;
-          explanation: string; 
-          codes: Record<string, { summary: string; questions?: string[] }> 
+          explanation: string;
+          codes: Record<string, { summary: string; questions?: string[] }>
         }>
       };
 
@@ -89,12 +89,12 @@ export async function GET(request: NextRequest) {
 
       return response;
     };
-    
+
     // Use distributed cache with SWR (24 hour TTL for semi-static KSA data)
     const response = await distributedCacheService.getWithRevalidation(
       cacheKey,
       fetcher,
-      { 
+      {
         ttl: TTL.SEMI_STATIC_1H * 24, // 24 hours
         staleWhileRevalidate: TTL.SEMI_STATIC_1H * 24,
         onStatus: (s) => { cacheStatus = s; }

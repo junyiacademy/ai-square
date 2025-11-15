@@ -1,8 +1,8 @@
 # 🔺 測試金字塔實作指南 - Integration Tests 層
 
-> 📅 Last Updated: 2025-08-11  
-> 📊 Current Coverage: 76.59% → Target: 82%+  
-> 👷 Implementation Time: ~10 hours  
+> 📅 Last Updated: 2025-08-11
+> 📊 Current Coverage: 76.59% → Target: 82%+
+> 👷 Implementation Time: ~10 hours
 > 🎯 Priority: HIGH - Critical for quality assurance
 
 ## 📋 Executive Summary
@@ -65,25 +65,25 @@ export class IntegrationTestEnvironment {
 
   async setup() {
     if (this.isSetup) return;
-    
+
     console.log(`🚀 Setting up test environment: ${this.testDbName}`);
-    
+
     try {
       // 1. 創建測試資料庫
       await this.createTestDatabase();
-      
+
       // 2. 執行 migrations
       await this.runMigrations();
-      
+
       // 3. 設置 Redis 測試實例
       await this.setupRedis();
-      
+
       // 4. 初始化 repositories
       await this.initializeRepositories();
-      
+
       // 5. 設置環境變數
       this.setupEnvironmentVariables();
-      
+
       this.isSetup = true;
       console.log('✅ Test environment ready');
     } catch (error) {
@@ -95,7 +95,7 @@ export class IntegrationTestEnvironment {
 
   async teardown() {
     console.log('🧹 Cleaning up test environment');
-    
+
     try {
       // 關閉連線
       if (this.dbPool) await this.dbPool.end();
@@ -103,10 +103,10 @@ export class IntegrationTestEnvironment {
         await this.redisClient.flushdb();
         await this.redisClient.quit();
       }
-      
+
       // 刪除測試資料庫
       await this.dropTestDatabase();
-      
+
       console.log('✅ Cleanup complete');
     } catch (error) {
       console.error('⚠️ Cleanup error:', error);
@@ -126,11 +126,11 @@ export class IntegrationTestEnvironment {
     await adminPool.query(
       `DROP DATABASE IF EXISTS ${this.testDbName}`
     );
-    
+
     await adminPool.query(
       `CREATE DATABASE ${this.testDbName}`
     );
-    
+
     await adminPool.end();
 
     // 連接到新資料庫
@@ -145,17 +145,17 @@ export class IntegrationTestEnvironment {
 
   private async runMigrations() {
     const schemaPath = path.join(
-      process.cwd(), 
+      process.cwd(),
       'scripts/schema-v4.sql'
     );
-    
+
     const sql = fs.readFileSync(schemaPath, 'utf8');
-    
+
     // 分割 SQL 語句並執行
     const statements = sql
       .split(';')
       .filter(stmt => stmt.trim().length > 0);
-    
+
     for (const statement of statements) {
       await this.dbPool.query(statement);
     }
@@ -167,7 +167,7 @@ export class IntegrationTestEnvironment {
       port: parseInt(process.env.TEST_REDIS_PORT || '6379'),
       db: 1, // 使用不同的 db index 避免衝突
     });
-    
+
     await this.redisClient.flushdb();
   }
 
@@ -178,7 +178,7 @@ export class IntegrationTestEnvironment {
     process.env.DB_NAME = this.testDbName;
     process.env.DB_USER = 'postgres';
     process.env.DB_PASSWORD = 'postgres';
-    
+
     // 重新初始化 repository factory
     await repositoryFactory.initialize();
   }
@@ -207,11 +207,11 @@ export class IntegrationTestEnvironment {
       WHERE datname = '${this.testDbName}'
         AND pid <> pg_backend_pid()
     `);
-    
+
     await adminPool.query(
       `DROP DATABASE IF EXISTS ${this.testDbName}`
     );
-    
+
     await adminPool.end();
   }
 
@@ -261,7 +261,7 @@ export const testFixtures = {
       emailVerified: false
     }
   },
-  
+
   // PBL 測試情境
   scenarios: {
     pbl: {
@@ -270,11 +270,11 @@ export const testFixtures = {
       status: 'active',
       sourceType: 'test',
       sourcePath: 'test/pbl-scenario',
-      title: { 
+      title: {
         en: 'Test PBL Scenario',
         zh: '測試 PBL 情境'
       },
-      description: { 
+      description: {
         en: 'Integration test PBL scenario',
         zh: '整合測試 PBL 情境'
       },
@@ -318,18 +318,18 @@ export const testFixtures = {
         }
       }
     },
-    
+
     assessment: {
       id: uuidv4(),
       mode: 'assessment',
       status: 'active',
       sourceType: 'test',
       sourcePath: 'test/assessment',
-      title: { 
+      title: {
         en: 'AI Literacy Assessment',
         zh: 'AI 素養評估'
       },
-      description: { 
+      description: {
         en: 'Test your AI knowledge',
         zh: '測試您的 AI 知識'
       },
@@ -353,18 +353,18 @@ export const testFixtures = {
         ]
       }
     },
-    
+
     discovery: {
       id: uuidv4(),
       mode: 'discovery',
       status: 'active',
       sourceType: 'test',
       sourcePath: 'test/discovery',
-      title: { 
+      title: {
         en: 'AI Career Explorer',
         zh: 'AI 職涯探索'
       },
-      description: { 
+      description: {
         en: 'Explore AI career paths',
         zh: '探索 AI 職涯路徑'
       },
@@ -383,7 +383,7 @@ export const testFixtures = {
       }
     }
   },
-  
+
   // 測試 API responses
   responses: {
     aiEvaluation: {
@@ -443,8 +443,8 @@ export class TestHelpers {
   // 創建測試 scenario
   async createScenario(scenarioData = testFixtures.scenarios.pbl) {
     const result = await this.dbPool.query(
-      `INSERT INTO scenarios 
-       (id, mode, status, source_type, source_path, title, description, 
+      `INSERT INTO scenarios
+       (id, mode, status, source_type, source_path, title, description,
         objectives, task_templates, pbl_data, discovery_data, assessment_data)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
        RETURNING *`,
@@ -470,7 +470,7 @@ export class TestHelpers {
   async createProgram(userId: string, scenarioId: string) {
     const result = await this.dbPool.query(
       `INSERT INTO programs (user_id, scenario_id, status, mode)
-       VALUES ($1, $2, 'active', 
+       VALUES ($1, $2, 'active',
          (SELECT mode FROM scenarios WHERE id = $2))
        RETURNING *`,
       [userId, scenarioId]
@@ -494,14 +494,14 @@ export class TestHelpers {
     interval = 100
   ): Promise<void> {
     const startTime = Date.now();
-    
+
     while (Date.now() - startTime < timeout) {
       if (await condition()) {
         return;
       }
       await new Promise(resolve => setTimeout(resolve, interval));
     }
-    
+
     throw new Error('Timeout waiting for condition');
   }
 
@@ -548,23 +548,23 @@ describe('Complete Learning Journey Integration', () => {
     // 初始化測試環境
     env = new IntegrationTestEnvironment();
     await env.setup();
-    
+
     helpers = new TestHelpers(env.getDbPool());
-    
+
     // 啟動 Next.js 測試 server
     const nextApp = next({ dev: false, dir: process.cwd() });
     const handle = nextApp.getRequestHandler();
     await nextApp.prepare();
-    
+
     server = createServer((req, res) => {
       const parsedUrl = parse(req.url!, true);
       handle(req, res, parsedUrl);
     });
-    
+
     await new Promise(resolve => {
       server.listen(0, resolve);
     });
-    
+
     app = `http://localhost:${server.address().port}`;
   }, 30000);
 
@@ -604,7 +604,7 @@ describe('Complete Learning Journey Integration', () => {
 
       expect(verifyRes.status).toBe(200);
       expect(verifyRes.body.verified).toBe(true);
-      
+
       // 確認資料庫已更新
       const userResult = await env.getDbPool().query(
         `SELECT email_verified FROM users WHERE id = $1`,
@@ -624,12 +624,12 @@ describe('Complete Learning Journey Integration', () => {
       expect(loginRes.status).toBe(200);
       expect(loginRes.body.token).toBeDefined();
       authToken = loginRes.body.token;
-      
+
       // 驗證 session 存在
       const sessionRes = await request(app)
         .get('/api/auth/session')
         .set('Authorization', `Bearer ${authToken}`);
-        
+
       expect(sessionRes.status).toBe(200);
       expect(sessionRes.body.user.id).toBe(userId);
       expect(sessionRes.body.user.email).toBe('newuser@test.com');
@@ -641,7 +641,7 @@ describe('Complete Learning Journey Integration', () => {
         testFixtures.scenarios.pbl
       );
       scenarioId = scenario.id;
-      
+
       // 開始 program
       const startRes = await request(app)
         .post(`/api/pbl/scenarios/${scenarioId}/start`)
@@ -651,12 +651,12 @@ describe('Complete Learning Journey Integration', () => {
       expect(startRes.status).toBe(201);
       expect(startRes.body.program).toBeDefined();
       programId = startRes.body.program.id;
-      
+
       // 驗證 program 狀態
       expect(startRes.body.program.status).toBe('active');
       expect(startRes.body.program.userId).toBe(userId);
       expect(startRes.body.program.scenarioId).toBe(scenarioId);
-      
+
       // 驗證資料庫
       const programResult = await env.getDbPool().query(
         `SELECT * FROM programs WHERE id = $1`,
@@ -689,7 +689,7 @@ describe('Complete Learning Journey Integration', () => {
       expect(completeTaskRes.status).toBe(200);
       expect(completeTaskRes.body.evaluation).toBeDefined();
       expect(completeTaskRes.body.evaluation.score).toBeGreaterThan(0);
-      
+
       // 驗證任務狀態已更新
       const taskResult = await env.getDbPool().query(
         `SELECT status, completed_at FROM tasks WHERE id = $1`,
@@ -704,11 +704,11 @@ describe('Complete Learning Journey Integration', () => {
       const tasksRes = await request(app)
         .get(`/api/pbl/programs/${programId}/tasks`)
         .set('Authorization', `Bearer ${authToken}`);
-      
+
       const incompleteTasks = tasksRes.body.tasks.filter(
         (t: any) => t.status !== 'completed'
       );
-      
+
       // 完成剩餘任務
       for (const task of incompleteTasks) {
         await request(app)
@@ -729,10 +729,10 @@ describe('Complete Learning Journey Integration', () => {
       expect(completeRes.body.certificate).toBeDefined();
       expect(completeRes.body.totalScore).toBeGreaterThan(0);
       expect(completeRes.body.achievements).toBeInstanceOf(Array);
-      
+
       // 驗證資料庫狀態
       const programResult = await env.getDbPool().query(
-        `SELECT status, completed_at, total_score 
+        `SELECT status, completed_at, total_score
          FROM programs WHERE id = $1`,
         [programId]
       );
@@ -748,7 +748,7 @@ describe('Complete Learning Journey Integration', () => {
       const assessmentScenario = await helpers.createScenario(
         testFixtures.scenarios.assessment
       );
-      
+
       const assessmentRes = await request(app)
         .post(`/api/assessment/scenarios/${assessmentScenario.id}/complete`)
         .set('Authorization', `Bearer ${authToken}`)
@@ -756,17 +756,17 @@ describe('Complete Learning Journey Integration', () => {
           answers: [0, 1, 2, 0, 1], // 測試答案
           timeSpent: 600
         });
-      
+
       expect(assessmentRes.status).toBe(200);
       const score = assessmentRes.body.score;
-      
+
       // 取得推薦的 PBL scenarios
       const recommendRes = await request(app)
         .get('/api/pbl/recommendations')
         .set('Authorization', `Bearer ${authToken}`);
-      
+
       expect(recommendRes.status).toBe(200);
-      
+
       // 低分應該推薦基礎課程
       if (score < 50) {
         expect(recommendRes.body.scenarios[0].difficulty).toBe('beginner');
@@ -780,9 +780,9 @@ describe('Complete Learning Journey Integration', () => {
       const discoveryRes = await request(app)
         .get('/api/discovery/paths')
         .set('Authorization', `Bearer ${authToken}`);
-      
+
       expect(discoveryRes.status).toBe(200);
-      
+
       // 驗證因完成 PBL 而解鎖的路徑
       const unlockedPaths = discoveryRes.body.paths.filter(
         (p: any) => p.unlocked
@@ -810,14 +810,14 @@ describe('Cache and Database Consistency', () => {
   let helpers: TestHelpers;
   let redis: Redis;
   let app: string;
-  
+
   beforeAll(async () => {
     env = new IntegrationTestEnvironment();
     await env.setup();
-    
+
     helpers = new TestHelpers(env.getDbPool());
     redis = env.getRedisClient();
-    
+
     // Setup test server
     app = 'http://localhost:3001'; // 假設測試 server 在此 port
   });
@@ -831,26 +831,26 @@ describe('Cache and Database Consistency', () => {
     // 1. 創建測試資料
     const scenario = await helpers.createScenario();
     const scenarioId = scenario.id;
-    
+
     // 2. 第一次讀取 (cache miss)
     const res1 = await request(app)
       .get(`/api/pbl/scenarios/${scenarioId}`)
       .query({ lang: 'en' });
-    
+
     expect(res1.headers['x-cache']).toBe('MISS');
     expect(res1.body.title.en).toBe('Test PBL Scenario');
-    
+
     // 3. 第二次讀取 (cache hit)
     const res2 = await request(app)
       .get(`/api/pbl/scenarios/${scenarioId}`)
       .query({ lang: 'en' });
-    
+
     expect(res2.headers['x-cache']).toBe('HIT');
     expect(res2.body.title.en).toBe('Test PBL Scenario');
-    
+
     // 4. 直接更新資料庫
     await env.getDbPool().query(
-      `UPDATE scenarios 
+      `UPDATE scenarios
        SET title = $1
        WHERE id = $2`,
       [
@@ -858,24 +858,24 @@ describe('Cache and Database Consistency', () => {
         scenarioId
       ]
     );
-    
+
     // 5. 清除快取
     const cacheKey = `scenario:${scenarioId}:en`;
     await redis.del(cacheKey);
-    
+
     // 6. 讀取新資料 (cache miss)
     const res3 = await request(app)
       .get(`/api/pbl/scenarios/${scenarioId}`)
       .query({ lang: 'en' });
-    
+
     expect(res3.headers['x-cache']).toBe('MISS');
     expect(res3.body.title.en).toBe('Updated Title');
-    
+
     // 7. 確認快取已更新
     const res4 = await request(app)
       .get(`/api/pbl/scenarios/${scenarioId}`)
       .query({ lang: 'en' });
-    
+
     expect(res4.headers['x-cache']).toBe('HIT');
     expect(res4.body.title.en).toBe('Updated Title');
   });
@@ -885,7 +885,7 @@ describe('Cache and Database Consistency', () => {
     const token = helpers.generateAuthToken(user.id);
     const scenario = await helpers.createScenario();
     const program = await helpers.createProgram(user.id, scenario.id);
-    
+
     // 10 個並發更新
     const updates = [];
     for (let i = 0; i < 10; i++) {
@@ -896,24 +896,24 @@ describe('Cache and Database Consistency', () => {
           .send({ score: 70 + i })
       );
     }
-    
+
     const results = await Promise.all(updates);
-    
+
     // 驗證所有更新都成功
     results.forEach(res => {
       expect(res.status).toBe(200);
     });
-    
+
     // 驗證最終狀態一致
     const dbResult = await env.getDbPool().query(
       `SELECT total_score FROM programs WHERE id = $1`,
       [program.id]
     );
-    
+
     const cacheKey = `program:${program.id}`;
     const cacheValue = await redis.get(cacheKey);
     const cacheData = cacheValue ? JSON.parse(cacheValue) : null;
-    
+
     // 資料庫和快取應該一致
     expect(cacheData?.totalScore).toBe(dbResult.rows[0].total_score);
   });
@@ -921,7 +921,7 @@ describe('Cache and Database Consistency', () => {
   test('Stale-While-Revalidate pattern works correctly', async () => {
     const scenario = await helpers.createScenario();
     const cacheKey = `scenario:${scenario.id}:en`;
-    
+
     // 設定快取為 stale
     await redis.setex(
       cacheKey,
@@ -931,45 +931,45 @@ describe('Cache and Database Consistency', () => {
         _stale: false
       })
     );
-    
+
     // 等待快取過期
     await new Promise(resolve => setTimeout(resolve, 1500));
-    
+
     // 請求應返回 stale 資料並背景更新
     const res = await request(app)
       .get(`/api/pbl/scenarios/${scenario.id}`)
       .query({ lang: 'en' });
-    
+
     expect(res.headers['x-cache']).toBe('STALE');
-    
+
     // 等待背景更新完成
     await helpers.waitFor(async () => {
       const value = await redis.get(cacheKey);
       return value !== null && !JSON.parse(value)._stale;
     });
-    
+
     // 下次請求應該是 HIT
     const res2 = await request(app)
       .get(`/api/pbl/scenarios/${scenario.id}`)
       .query({ lang: 'en' });
-    
+
     expect(res2.headers['x-cache']).toBe('HIT');
   });
 
   test('Cache fallback when Redis is down', async () => {
     // 暫時關閉 Redis 連線
     await redis.quit();
-    
+
     // API 應該仍然能工作（從資料庫讀取）
     const scenario = await helpers.createScenario();
-    
+
     const res = await request(app)
       .get(`/api/pbl/scenarios/${scenario.id}`)
       .query({ lang: 'en' });
-    
+
     expect(res.status).toBe(200);
     expect(res.body.title.en).toBe('Test PBL Scenario');
-    
+
     // 重新連接 Redis
     redis = new Redis({
       host: 'localhost',
@@ -998,14 +998,14 @@ describe('Performance and Load Testing', () => {
   let helpers: TestHelpers;
   let app: string;
   let tokens: string[] = [];
-  
+
   beforeAll(async () => {
     env = new IntegrationTestEnvironment();
     await env.setup();
-    
+
     helpers = new TestHelpers(env.getDbPool());
     app = 'http://localhost:3001';
-    
+
     // 創建測試用戶
     for (let i = 0; i < 50; i++) {
       const user = await helpers.createUser({
@@ -1015,7 +1015,7 @@ describe('Performance and Load Testing', () => {
       });
       tokens.push(helpers.generateAuthToken(user.id));
     }
-    
+
     // 創建測試資料
     await helpers.createScenario();
   });
@@ -1028,9 +1028,9 @@ describe('Performance and Load Testing', () => {
   test('API response time under load', async () => {
     const concurrentUsers = 50;
     const requests = [];
-    
+
     const startTime = performance.now();
-    
+
     // 模擬 50 個並發用戶
     for (let i = 0; i < concurrentUsers; i++) {
       requests.push(
@@ -1039,10 +1039,10 @@ describe('Performance and Load Testing', () => {
           .set('Authorization', `Bearer ${tokens[i]}`)
       );
     }
-    
+
     const responses = await Promise.all(requests);
     const endTime = performance.now();
-    
+
     // 收集響應時間
     const responseTimes = responses.map((res, index) => {
       return {
@@ -1050,22 +1050,22 @@ describe('Performance and Load Testing', () => {
         duration: res.get('X-Response-Time') || 0
       };
     });
-    
+
     // 驗證所有請求成功
     const successCount = responses.filter(r => r.status === 200).length;
     expect(successCount).toBe(concurrentUsers);
-    
+
     // 計算統計
     const totalTime = endTime - startTime;
     const avgResponseTime = totalTime / concurrentUsers;
-    
+
     // 計算 P95
     const sortedTimes = responseTimes
       .map(r => parseFloat(r.duration))
       .sort((a, b) => a - b);
     const p95Index = Math.floor(sortedTimes.length * 0.95);
     const p95 = sortedTimes[p95Index];
-    
+
     console.log(`
       Performance Results:
       - Total time: ${totalTime.toFixed(2)}ms
@@ -1073,7 +1073,7 @@ describe('Performance and Load Testing', () => {
       - P95 response time: ${p95}ms
       - Success rate: ${(successCount/concurrentUsers*100).toFixed(2)}%
     `);
-    
+
     // 驗證效能指標
     expect(avgResponseTime).toBeLessThan(500); // 平均 < 500ms
     expect(p95).toBeLessThan(1000); // P95 < 1s
@@ -1088,7 +1088,7 @@ describe('Performance and Load Testing', () => {
       );
     }
     await Promise.all(warmupRequests);
-    
+
     // 執行 100 個請求
     const testRequests = [];
     for (let i = 0; i < 100; i++) {
@@ -1096,25 +1096,25 @@ describe('Performance and Load Testing', () => {
         request(app).get('/api/ksa?lang=en')
       );
     }
-    
+
     const responses = await Promise.all(testRequests);
-    
+
     // 計算快取命中率
     const cacheStats = {
       hits: 0,
       misses: 0,
       stale: 0
     };
-    
+
     responses.forEach(res => {
       const cacheHeader = res.headers['x-cache'];
       if (cacheHeader === 'HIT') cacheStats.hits++;
       else if (cacheHeader === 'MISS') cacheStats.misses++;
       else if (cacheHeader === 'STALE') cacheStats.stale++;
     });
-    
+
     const hitRatio = cacheStats.hits / responses.length;
-    
+
     console.log(`
       Cache Performance:
       - Hits: ${cacheStats.hits}
@@ -1122,7 +1122,7 @@ describe('Performance and Load Testing', () => {
       - Stale: ${cacheStats.stale}
       - Hit ratio: ${(hitRatio * 100).toFixed(2)}%
     `);
-    
+
     // 預期 90%+ 快取命中
     expect(hitRatio).toBeGreaterThan(0.9);
   });
@@ -1130,35 +1130,35 @@ describe('Performance and Load Testing', () => {
   test('Database connection pool under stress', async () => {
     const iterations = 100;
     const queries = [];
-    
+
     // 快速執行大量資料庫查詢
     for (let i = 0; i < iterations; i++) {
       queries.push(
         env.getDbPool().query('SELECT 1')
       );
     }
-    
+
     const startTime = performance.now();
     await Promise.all(queries);
     const endTime = performance.now();
-    
+
     const totalTime = endTime - startTime;
     const avgQueryTime = totalTime / iterations;
-    
+
     console.log(`
       Database Performance:
       - Total queries: ${iterations}
       - Total time: ${totalTime.toFixed(2)}ms
       - Average query time: ${avgQueryTime.toFixed(2)}ms
     `);
-    
+
     // 平均查詢時間應該很短
     expect(avgQueryTime).toBeLessThan(10);
   });
 
   test('Memory usage remains stable', async () => {
     const initialMemory = process.memoryUsage();
-    
+
     // 執行大量操作
     const operations = [];
     for (let i = 0; i < 100; i++) {
@@ -1168,29 +1168,29 @@ describe('Performance and Load Testing', () => {
           .set('Authorization', `Bearer ${tokens[0]}`)
       );
     }
-    
+
     await Promise.all(operations);
-    
+
     // 強制 garbage collection（如果可用）
     if (global.gc) {
       global.gc();
     }
-    
+
     const finalMemory = process.memoryUsage();
-    
+
     // 計算記憶體增長
     const memoryGrowth = {
       heapUsed: finalMemory.heapUsed - initialMemory.heapUsed,
       external: finalMemory.external - initialMemory.external
     };
-    
+
     console.log(`
       Memory Usage:
       - Initial heap: ${(initialMemory.heapUsed / 1024 / 1024).toFixed(2)}MB
       - Final heap: ${(finalMemory.heapUsed / 1024 / 1024).toFixed(2)}MB
       - Growth: ${(memoryGrowth.heapUsed / 1024 / 1024).toFixed(2)}MB
     `);
-    
+
     // 記憶體增長不應超過 100MB
     expect(memoryGrowth.heapUsed).toBeLessThan(100 * 1024 * 1024);
   });
@@ -1336,7 +1336,7 @@ on:
 jobs:
   integration-tests:
     runs-on: ubuntu-latest
-    
+
     services:
       postgres:
         image: postgres:15
@@ -1350,7 +1350,7 @@ jobs:
           --health-retries 5
         ports:
           - 5433:5432
-          
+
       redis:
         image: redis:7
         options: >-
@@ -1363,15 +1363,15 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      
+
       - uses: actions/setup-node@v3
         with:
           node-version: '18'
           cache: 'npm'
-      
+
       - name: Install dependencies
         run: npm ci
-      
+
       - name: Run integration tests
         env:
           TEST_DB_HOST: localhost
@@ -1379,7 +1379,7 @@ jobs:
           TEST_REDIS_HOST: localhost
           TEST_REDIS_PORT: 6379
         run: npm run test:integration:coverage
-      
+
       - name: Upload coverage
         uses: codecov/codecov-action@v3
         with:

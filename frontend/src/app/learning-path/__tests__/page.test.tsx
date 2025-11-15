@@ -48,7 +48,7 @@ describe('LearningPathPage', () => {
   };
 
   const mockUser = { id: '1', email: 'test@example.com', name: 'Test User' };
-  
+
   const mockAssessmentResult = {
     overallScore: 75,
     domainScores: {
@@ -112,7 +112,7 @@ describe('LearningPathPage', () => {
       refresh: jest.fn(),
       prefetch: jest.fn(),
     } as any);
-    
+
     mockUseSearchParams.mockReturnValue(mockSearchParams as any);
     mockSearchParams.get.mockReturnValue(null);
 
@@ -488,7 +488,7 @@ describe('LearningPathPage', () => {
 
         await act(async () => {
           const { unmount } = renderWithProviders(<LearningPathPage />);
-          
+
           await waitFor(() => {
             const element = screen.queryByText('Your Personalized Learning Path');
             if (element) expect(element).toBeInTheDocument();
@@ -710,7 +710,7 @@ describe('LearningPathPage', () => {
 
     it('should not make unnecessary re-renders', async () => {
       const renderSpy = jest.fn();
-      
+
       const TestWrapper = () => {
         renderSpy();
         return <LearningPathPage />;

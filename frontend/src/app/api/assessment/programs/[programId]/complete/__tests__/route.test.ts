@@ -254,7 +254,7 @@ describe('POST /api/assessment/programs/[programId]/complete', () => {
     mockFindByProgram.mockResolvedValue(mockTasks); // For tasks
     mockFindByProgramEval.mockResolvedValue([]); // For existing evaluations
     mockCreate.mockResolvedValue({ id: 'eval-new' });
-    
+
 
     const request = new NextRequest('http://localhost:3000/api/assessment/programs/program123/complete', {
       method: 'POST',
@@ -267,7 +267,7 @@ describe('POST /api/assessment/programs/[programId]/complete', () => {
     expect(data).toEqual({
       success: true,
       evaluationId: 'eval-new',
-      score: 50, // 1 correct out of 2 questions  
+      score: 50, // 1 correct out of 2 questions
     });
 
     // Verify evaluation creation
@@ -424,7 +424,7 @@ describe('POST /api/assessment/programs/[programId]/complete', () => {
     const data = await response.json();
 
     expect(response.status).toBe(500);
-    expect(data).toEqual({ 
+    expect(data).toEqual({
       error: 'Failed to complete assessment',
       details: 'Database error'
     });

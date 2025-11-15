@@ -11,7 +11,7 @@ metadata:
     境界線が曖昧になる場所で働いています。AIツールと遺伝子工学技術を武器に、
     生命の基本コードを探求し、医学、農業、人間の能力向上を革命的に変える
     ソリューションを創造します。
-  
+
   estimated_hours: 70
   skill_focus:
     - genetic_engineering
@@ -26,7 +26,7 @@ world_setting:
     バイオシンセシス研究所は、生物学と人工知能が融合する最先端の研究施設です。
     ここの研究者たちは、AIを使って遺伝子の謎を解読し、新しい生物を設計し、
     深い倫理的問題と格闘しながらバイオテクノロジーの可能性の限界を押し広げています。
-  
+
   atmosphere: "scientific_innovative"
   visual_theme: "biotech_laboratory"
 
@@ -37,7 +37,7 @@ starting_scenario:
     反応するように見える謎の遺伝子配列が発見されました。しかし、ライバルのバイオコープの
     スプライス博士が遺伝子改変を兵器化しようと競っています。あなたは破滅的な悪用を防ぎながら、
     責任を持って生命の秘密を解き明かさなければなりません。
-  
+
   initial_tasks:
     - understand_crispr
     - learn_ai_modeling
@@ -52,7 +52,7 @@ skill_tree:
       unlocks:
         - gene_editing
         - protein_design
-    
+
     - id: bioinformatics
       name: "バイオデータ融合"
       description: "AIで生体データを解析する"
@@ -60,7 +60,7 @@ skill_tree:
       unlocks:
         - sequence_analysis
         - structure_prediction
-    
+
     - id: synthetic_biology
       name: "生命設計"
       description: "新しい生物システムを設計する"
@@ -68,7 +68,7 @@ skill_tree:
       unlocks:
         - organism_engineering
         - metabolic_pathways
-    
+
     - id: ai_integration
       name: "AI-バイオインターフェース"
       description: "AIを生物学研究に統合する"
@@ -83,13 +83,13 @@ skill_tree:
       description: "遺伝子レベルで治療法を設計する"
       max_level: 15
       requires: [molecular_biology, synthetic_biology]
-    
+
     - id: biocomputing
       name: "生体コンピューター"
       description: "生物学的コンピューティングシステムを作成する"
       max_level: 15
       requires: [bioinformatics, ai_integration]
-    
+
     - id: enhancement_tech
       name: "人間拡張技術"
       description: "倫理的な拡張技術を開発する"
@@ -106,7 +106,7 @@ milestone_quests:
     unlocks:
       - medical_breakthrough_badge
       - patient_testimonials
-  
+
   - id: splice_confrontation
     name: "倫理対利益"
     description: "スプライス博士の危険な実験を阻止する"
@@ -116,7 +116,7 @@ milestone_quests:
     unlocks:
       - ethical_guardian_title
       - regulatory_influence
-  
+
   - id: life_creation
     name: "創世記プロジェクト"
     description: "有益な合成生物を創造する"
@@ -133,19 +133,19 @@ achievements:
     description: "初めてのゲノム配列決定に成功する"
     xp_reward: 100
     badge_type: bronze
-  
+
   - id: publication_success
     name: "発表研究者"
     description: "査読付き論文を5本発表する"
     xp_reward: 400
     badge_type: silver
-  
+
   - id: patent_holder
     name: "イノベーションパイオニア"
     description: "画期的なバイオテク特許を出願する"
     xp_reward: 700
     badge_type: gold
-  
+
   - id: biotech_legend
     name: "生命コードマスター"
     description: "すべてのバイオテクチャレンジを完了する"
@@ -160,14 +160,14 @@ example_tasks:
       description: "DNAサンプルを抽出し解析する"
       skills_improved: [molecular_biology, lab_techniques]
       xp_reward: 70
-    
+
     - id: ai_sequence_analysis
       type: analysis
       title: "パターン認識"
       description: "AIを使用して遺伝子データのパターンを発見する"
       skills_improved: [bioinformatics, ai_bio_modeling]
       xp_reward: 80
-  
+
   intermediate:
     - id: crispr_edit
       type: creation
@@ -175,14 +175,14 @@ example_tasks:
       description: "標的遺伝子編集を実行する"
       skills_improved: [gene_editing, synthetic_biology]
       xp_reward: 200
-    
+
     - id: drug_design
       type: creation
       title: "分子医学"
       description: "AIを使用して新薬を設計する"
       skills_improved: [ml_drug_discovery, bioinformatics]
       xp_reward: 250
-  
+
   advanced:
     - id: synthetic_life
       type: creation
@@ -190,7 +190,7 @@ example_tasks:
       description: "合成生物を設計する"
       skills_improved: [organism_engineering, biocomputing]
       xp_reward: 450
-    
+
     - id: enhancement_protocol
       type: creation
       title: "進化加速器"

@@ -3,7 +3,7 @@ describe('pg', () => {
     try {
       const module = require('../pg');
       expect(module).toBeDefined();
-      
+
       // Test exports
       Object.keys(module).forEach(key => {
         expect(module[key]).toBeDefined();

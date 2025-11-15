@@ -34,7 +34,7 @@ export class MigrationRunner {
       // Get all migration files
       const migrationsDir = path.join(process.cwd(), 'src/lib/repositories/postgresql/migrations');
       let migrationFiles: string[] = [];
-      
+
       try {
         migrationFiles = await fs.readdir(migrationsDir);
       } catch {
@@ -58,7 +58,7 @@ export class MigrationRunner {
       // Run each pending migration
       for (const filename of pendingMigrations) {
         console.log(`Running migration: ${filename}`);
-        
+
         const filePath = path.join(migrationsDir, filename);
         const sql = await fs.readFile(filePath, 'utf-8');
 
@@ -66,16 +66,16 @@ export class MigrationRunner {
         const client = await this.pool.connect();
         try {
           await client.query('BEGIN');
-          
+
           // Execute migration
           await client.query(sql);
-          
+
           // Record migration as executed
           await client.query(
             'INSERT INTO migrations (filename) VALUES ($1)',
             [filename]
           );
-          
+
           await client.query('COMMIT');
           console.log(`✓ Migration ${filename} completed successfully`);
         } catch (error) {
@@ -104,7 +104,7 @@ export class MigrationRunner {
 
     const migrationsDir = path.join(process.cwd(), 'src/lib/repositories/postgresql/migrations');
     let allMigrations: string[] = [];
-    
+
     try {
       const files = await fs.readdir(migrationsDir);
       allMigrations = files.filter(file => file.endsWith('.sql')).sort();

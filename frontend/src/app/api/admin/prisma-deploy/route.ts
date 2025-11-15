@@ -5,7 +5,7 @@ import bcrypt from 'bcryptjs';
 
 export async function POST() {
   console.log('🚀 Starting Prisma deployment...');
-  
+
   try {
     // 1. Run Prisma migrations
     console.log('📦 Running Prisma migrations...');
@@ -23,47 +23,47 @@ export async function POST() {
       console.error('Migration error:', migrateError);
       // Continue anyway - migrations might already be applied
     }
-    
+
     // 2. Initialize Prisma Client
     const prisma = new PrismaClient({
       log: ['query', 'info', 'warn', 'error'],
     });
-    
+
     // 3. Test connection
     await prisma.$connect();
     console.log('✅ Connected to database');
-    
+
     // 4. Check if users exist
     const userCount = await prisma.user.count();
     console.log(`📊 Current user count: ${userCount}`);
-    
+
     // 5. Create demo users if needed
     const demoUsers = [
-      { 
-        email: 'student@example.com', 
-        password: 'student123', 
-        role: 'student', 
+      {
+        email: 'student@example.com',
+        password: 'student123',
+        role: 'student',
         name: 'Student User'
       },
-      { 
-        email: 'teacher@example.com', 
-        password: 'teacher123', 
-        role: 'teacher', 
+      {
+        email: 'teacher@example.com',
+        password: 'teacher123',
+        role: 'teacher',
         name: 'Teacher User'
       },
-      { 
-        email: 'admin@example.com', 
-        password: 'admin123', 
-        role: 'admin', 
+      {
+        email: 'admin@example.com',
+        password: 'admin123',
+        role: 'admin',
         name: 'Admin User'
       }
     ];
-    
+
     const createdUsers = [];
-    
+
     for (const userData of demoUsers) {
       const passwordHash = await bcrypt.hash(userData.password, 10);
-      
+
       try {
         const user = await prisma.user.upsert({
           where: { email: userData.email },
@@ -89,7 +89,7 @@ export async function POST() {
             metadata: {}
           },
         });
-        
+
         createdUsers.push({
           email: user.email,
           role: user.role,
@@ -100,17 +100,17 @@ export async function POST() {
         console.error(`Error with user ${userData.email}:`, userError);
       }
     }
-    
+
     // 6. Verify database schema
     const tables = await prisma.$queryRaw`
-      SELECT table_name 
-      FROM information_schema.tables 
-      WHERE table_schema = 'public' 
+      SELECT table_name
+      FROM information_schema.tables
+      WHERE table_schema = 'public'
       ORDER BY table_name;
     ` as Array<{ table_name: string }>;
-    
+
     await prisma.$disconnect();
-    
+
     return NextResponse.json({
       success: true,
       message: 'Prisma deployment completed successfully',
@@ -121,7 +121,7 @@ export async function POST() {
         databaseUrl: process.env.DATABASE_URL ? 'Configured' : 'Not configured'
       }
     });
-    
+
   } catch (error) {
     console.error('Prisma deployment error:', error);
     return NextResponse.json({

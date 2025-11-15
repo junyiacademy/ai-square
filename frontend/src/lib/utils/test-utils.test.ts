@@ -46,15 +46,15 @@ describe('Test Utils', () => {
   describe('mockConsole', () => {
     it('should mock console methods', () => {
       const { restore } = mockConsole();
-      
+
       console.log('test');
       console.error('error');
       console.warn('warn');
-      
+
       expect(console.log).toHaveBeenCalledWith('test');
       expect(console.error).toHaveBeenCalledWith('error');
       expect(console.warn).toHaveBeenCalledWith('warn');
-      
+
       restore();
     });
   });
@@ -62,7 +62,7 @@ describe('Test Utils', () => {
   describe('createMockFile', () => {
     it('should create a mock file', () => {
       const file = createMockFile('test.txt', 100, 'text/plain');
-      
+
       expect(file.name).toBe('test.txt');
       expect(file.size).toBe(100);
       expect(file.type).toBe('text/plain');
@@ -73,7 +73,7 @@ describe('Test Utils', () => {
     it('should generate unique ids', () => {
       const id1 = generateId();
       const id2 = generateId();
-      
+
       expect(id1).not.toBe(id2);
       expect(id1.length).toBeGreaterThan(0);
     });

@@ -12,15 +12,15 @@ domains:
   engaging_with_ai:
     description: "Understanding and effectively communicating with AI systems"
     questions: 3
-    
+
   creating_with_ai:
     description: "Using AI tools to enhance creativity and productivity"
     questions: 3
-    
+
   managing_with_ai:
     description: "Understanding AI limitations, privacy, and ethical considerations"
     questions: 3
-    
+
   designing_with_ai:
     description: "Strategic thinking about AI implementation and innovation"
     questions: 3

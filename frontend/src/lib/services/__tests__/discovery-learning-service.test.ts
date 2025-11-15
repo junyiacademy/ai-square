@@ -152,20 +152,20 @@ describe('DiscoveryLearningService', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     // Setup mocks
     mockScenarioRepo = {
       findById: jest.fn(),
       findBySource: jest.fn()
     };
-    
+
     mockProgramRepo = {
       findById: jest.fn(),
       create: jest.fn(),
       update: jest.fn(),
       complete: jest.fn()
     };
-    
+
     mockTaskRepo = {
       findById: jest.fn(),
       findByProgram: jest.fn(),
@@ -173,7 +173,7 @@ describe('DiscoveryLearningService', () => {
       updateInteractions: jest.fn(),
       updateStatus: jest.fn()
     };
-    
+
     mockEvaluationRepo = {
       findById: jest.fn(),
       create: jest.fn()
@@ -193,7 +193,7 @@ describe('DiscoveryLearningService', () => {
     it('should start a discovery learning journey', async () => {
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
       mockProgramRepo.create.mockResolvedValue(mockProgram);
-      mockTaskRepo.create.mockImplementation((task: any) => 
+      mockTaskRepo.create.mockImplementation((task: any) =>
         Promise.resolve({ ...task, id: `task-${Date.now()}` })
       );
 
@@ -229,7 +229,7 @@ describe('DiscoveryLearningService', () => {
     it('should use specified language', async () => {
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
       mockProgramRepo.create.mockResolvedValue(mockProgram);
-      mockTaskRepo.create.mockImplementation((task: any) => 
+      mockTaskRepo.create.mockImplementation((task: any) =>
         Promise.resolve({ ...task, id: `task-${Date.now()}` })
       );
 
@@ -258,7 +258,7 @@ describe('DiscoveryLearningService', () => {
           completedChallenges: ['task-1', 'task-2']
         }
       };
-      
+
       const tasks = [
         { ...mockTask, status: 'completed', timeSpentSeconds: 300 },
         { ...mockTask, id: 'task-2', status: 'completed', timeSpentSeconds: 400 },
@@ -310,7 +310,7 @@ describe('DiscoveryLearningService', () => {
     it('should submit response and complete task', async () => {
       mockTaskRepo.findById.mockResolvedValue(mockTask);
       mockProgramRepo.findById.mockResolvedValue(mockProgram);
-      mockTaskRepo.create.mockImplementation((task: any) => 
+      mockTaskRepo.create.mockImplementation((task: any) =>
         Promise.resolve({ ...task, id: `task-new-${Date.now()}` })
       );
 
@@ -319,7 +319,7 @@ describe('DiscoveryLearningService', () => {
 
       expect(mockTaskRepo.updateInteractions).toHaveBeenCalled();
       expect(mockTaskRepo.updateStatus).toHaveBeenCalledWith('task-123', 'completed');
-      expect(mockProgramRepo.update).toHaveBeenCalledWith('program-123', 
+      expect(mockProgramRepo.update).toHaveBeenCalledWith('program-123',
         expect.objectContaining({
           xpEarned: 50
         })
@@ -390,7 +390,7 @@ describe('DiscoveryLearningService', () => {
           completedChallenges: ['task-1', 'task-2', 'task-3']
         }
       };
-      
+
       const tasks = [
         { ...mockTask, status: 'completed', timeSpentSeconds: 300 },
         { ...mockTask, id: 'task-2', status: 'completed', timeSpentSeconds: 400 },
@@ -567,7 +567,7 @@ describe('DiscoveryLearningService', () => {
       const advancedTask = {
         ...mockTask,
         type: 'creation',
-        discoveryData: { 
+        discoveryData: {
           xpReward: 100,
           difficulty: 'advanced'
         }
@@ -659,7 +659,7 @@ describe('DiscoveryLearningService', () => {
           totalXP: 300 // Will become 500 after task
         }
       };
-      
+
       mockTaskRepo.findById.mockResolvedValue(highXPTask);
       mockProgramRepo.findById.mockResolvedValue(highXPProgram);
 
@@ -688,7 +688,7 @@ describe('DiscoveryLearningService', () => {
           worldSetting: 'Digital Studio'
         }
       };
-      
+
       const task = { ...mockTask, discoveryData: { xpReward: 50 } }; // 50 XP will bring total to 100 = level 2
       mockTaskRepo.findById.mockResolvedValue(task);
       mockProgramRepo.findById.mockResolvedValue(freshProgram);
@@ -733,7 +733,7 @@ describe('DiscoveryLearningService', () => {
           completedChallenges: ['writing', 'design']
         }
       };
-      
+
       mockTaskRepo.findById.mockResolvedValue({ ...mockTask, taskIndex: 2 });
       mockProgramRepo.findById.mockResolvedValue(advancedProgram);
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);

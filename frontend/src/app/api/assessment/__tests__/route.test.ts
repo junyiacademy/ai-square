@@ -27,10 +27,10 @@ describe('/api/assessment', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     // Setup repository factory mock
     (repositoryFactory.getScenarioRepository as jest.Mock).mockReturnValue(mockScenarioRepo);
-    
+
     // Setup cache service mock
     (cacheService.get as jest.Mock).mockResolvedValue(null);
     (cacheService.set as jest.Mock).mockResolvedValue(undefined);
@@ -123,7 +123,7 @@ describe('/api/assessment', () => {
   it('should prefer active scenarios', async () => {
     const inactiveScenario = { ...mockAssessmentScenario, id: 'inactive-1', status: 'draft' };
     const activeScenario = { ...mockAssessmentScenario, id: 'active-1', status: 'active' };
-    
+
     (mockScenarioRepo.findByMode as jest.Mock).mockResolvedValue([inactiveScenario, activeScenario]);
 
     const request = new NextRequest('http://localhost:3000/api/assessment');
@@ -164,7 +164,7 @@ describe('/api/assessment', () => {
       'public, max-age=3600, stale-while-revalidate=86400'
     );
     expect(response.headers.get('X-Cache')).toBe('MISS');
-    
+
     // Verify data was cached
     expect(cacheService.set).toHaveBeenCalledWith(
       'assessment:en',
@@ -263,19 +263,19 @@ describe('/api/assessment', () => {
 
 /**
  * Assessment API Considerations:
- * 
+ *
  * 1. Data Source:
  *    - Loads from database via repository
  *    - Falls back to default values if data missing
- * 
+ *
  * 2. Caching:
  *    - Caches assessment data for 1 hour
  *    - Language-specific cache keys
- * 
+ *
  * 3. Multi-language Support:
  *    - Transforms questions based on language parameter
  *    - Falls back to English if translation missing
- * 
+ *
  * 4. Scenario Selection:
  *    - Prefers active scenarios
  *    - Uses first available if no active found

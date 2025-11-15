@@ -27,10 +27,10 @@
 -- Create test users
 \echo 'Creating test users...'
 INSERT INTO users (email, name, preferred_language)
-SELECT 
+SELECT
     'loadtest_' || i || '@example.com',
     'Load Test User ' || i,
-    CASE 
+    CASE
         WHEN i % 14 = 0 THEN 'en'
         WHEN i % 14 = 1 THEN 'zhTW'
         WHEN i % 14 = 2 THEN 'zhCN'
@@ -84,7 +84,7 @@ BEGIN
                     'zh', v_mode || ' 模式的負載測試場景',
                     'es', 'Escenario de prueba de carga para modo ' || v_mode
                 ),
-                CASE 
+                CASE
                     WHEN i % 4 = 0 THEN 'beginner'
                     WHEN i % 4 = 1 THEN 'intermediate'
                     WHEN i % 4 = 2 THEN 'advanced'
@@ -103,13 +103,13 @@ BEGIN
                         'title', jsonb_build_object('en', 'Task 2')
                     )
                 ),
-                CASE WHEN v_mode = 'pbl' THEN 
+                CASE WHEN v_mode = 'pbl' THEN
                     jsonb_build_object('ksaMapping', jsonb_build_object('K1', ARRAY['AI Understanding']))
                 ELSE '{}'::jsonb END,
-                CASE WHEN v_mode = 'discovery' THEN 
+                CASE WHEN v_mode = 'discovery' THEN
                     jsonb_build_object('careerType', 'tech_career_' || i)
                 ELSE '{}'::jsonb END,
-                CASE WHEN v_mode = 'assessment' THEN 
+                CASE WHEN v_mode = 'assessment' THEN
                     jsonb_build_object('questionCount', 10 + i)
                 ELSE '{}'::jsonb END
             );
@@ -128,26 +128,26 @@ END $$;
 \echo 'Creating programs (this may take a while)...'
 
 INSERT INTO programs (user_id, scenario_id, total_task_count, status)
-SELECT 
+SELECT
     u.id,
     s.id,
     :num_tasks_per_program,
-    CASE 
+    CASE
         WHEN random() < 0.3 THEN 'completed'::program_status
         WHEN random() < 0.6 THEN 'active'::program_status
         ELSE 'pending'::program_status
     END
 FROM (
-    SELECT id, row_number() OVER (ORDER BY random()) as rn 
-    FROM users 
+    SELECT id, row_number() OVER (ORDER BY random()) as rn
+    FROM users
     WHERE email LIKE 'loadtest_%'
     LIMIT 100  -- Test with 100 users first
 ) u
 CROSS JOIN LATERAL (
-    SELECT id 
-    FROM scenarios 
+    SELECT id
+    FROM scenarios
     WHERE status = 'active'
-    ORDER BY random() 
+    ORDER BY random()
     LIMIT :num_programs_per_user
 ) s;
 
@@ -155,7 +155,7 @@ CROSS JOIN LATERAL (
 \echo 'Creating tasks for programs...'
 
 INSERT INTO tasks (program_id, task_index, type, title, status)
-SELECT 
+SELECT
     p.id,
     task_num - 1,
     CASE p.mode
@@ -167,7 +167,7 @@ SELECT
         'en', 'Task ' || task_num,
         'zh', '任務 ' || task_num
     ),
-    CASE 
+    CASE
         WHEN task_num <= p.completed_task_count THEN 'completed'::task_status
         WHEN task_num = p.completed_task_count + 1 THEN 'active'::task_status
         ELSE 'pending'::task_status
@@ -189,16 +189,16 @@ WHERE p.user_id IN (
 \echo 'Benchmark 1: Mode-based query performance'
 
 EXPLAIN (ANALYZE, BUFFERS, TIMING)
-SELECT COUNT(*) 
-FROM programs 
-WHERE mode = 'pbl' 
+SELECT COUNT(*)
+FROM programs
+WHERE mode = 'pbl'
   AND status = 'active';
 
 -- Benchmark 2: User progress queries
 \echo 'Benchmark 2: User progress query performance'
 
 EXPLAIN (ANALYZE, BUFFERS, TIMING)
-SELECT 
+SELECT
     u.id,
     u.name,
     COUNT(DISTINCT p.id) as total_programs,
@@ -214,7 +214,7 @@ LIMIT 10;
 \echo 'Benchmark 3: Multilingual query performance'
 
 EXPLAIN (ANALYZE, BUFFERS, TIMING)
-SELECT 
+SELECT
     s.id,
     s.title->>'en' as title_en,
     s.title->>'zh' as title_zh,
@@ -231,7 +231,7 @@ LIMIT 20;
 \echo 'Benchmark 4: Complex join query performance'
 
 EXPLAIN (ANALYZE, BUFFERS, TIMING)
-SELECT 
+SELECT
     s.mode,
     COUNT(DISTINCT p.id) as programs,
     COUNT(DISTINCT t.id) as tasks,
@@ -262,20 +262,20 @@ DECLARE
 BEGIN
     SELECT id INTO v_user_id FROM users WHERE email LIKE 'loadtest_%' LIMIT 1;
     SELECT id INTO v_scenario_id FROM scenarios WHERE mode = 'pbl' LIMIT 1;
-    
+
     v_start_time := clock_timestamp();
-    
+
     -- Simulate 1000 rapid program creations
     FOR i IN 1..1000 LOOP
         INSERT INTO programs (user_id, scenario_id, total_task_count)
         VALUES (v_user_id, v_scenario_id, 5);
     END LOOP;
-    
+
     v_end_time := clock_timestamp();
     v_duration := v_end_time - v_start_time;
-    
+
     RAISE NOTICE 'Created 1000 programs in %', v_duration;
-    
+
     IF v_duration > interval '5 seconds' THEN
         RAISE WARNING 'Insert performance is slow: %', v_duration;
     END IF;
@@ -291,19 +291,19 @@ DECLARE
     v_updated INTEGER;
 BEGIN
     v_start_time := clock_timestamp();
-    
-    UPDATE programs 
+
+    UPDATE programs
     SET status = 'active',
         last_activity_at = CURRENT_TIMESTAMP
     WHERE user_id IN (
         SELECT id FROM users WHERE email LIKE 'loadtest_%' LIMIT 100
     )
     AND status = 'pending';
-    
+
     GET DIAGNOSTICS v_updated = ROW_COUNT;
-    
+
     v_end_time := clock_timestamp();
-    
+
     RAISE NOTICE 'Updated % programs in %', v_updated, v_end_time - v_start_time;
 END $$;
 
@@ -316,7 +316,7 @@ END $$;
 
 -- Table sizes
 \echo 'Table sizes:'
-SELECT 
+SELECT
     schemaname,
     tablename,
     pg_size_pretty(pg_total_relation_size(schemaname||'.'||tablename)) as total_size,
@@ -329,7 +329,7 @@ ORDER BY pg_total_relation_size(schemaname||'.'||tablename) DESC;
 
 -- Index usage
 \echo 'Index usage statistics:'
-SELECT 
+SELECT
     schemaname,
     tablename,
     indexname,
@@ -365,23 +365,23 @@ VACUUM ANALYZE;
 \echo '=============================='
 
 WITH stats AS (
-    SELECT 
+    SELECT
         'Total Users' as metric,
         COUNT(*) as count
     FROM users
     WHERE email LIKE 'loadtest_%'
-    
+
     UNION ALL
     SELECT 'Total Scenarios', COUNT(*)
     FROM scenarios
     WHERE title->>'en' LIKE 'Load Test%'
-    
+
     UNION ALL
     SELECT 'Total Programs', COUNT(*)
     FROM programs p
     JOIN users u ON p.user_id = u.id
     WHERE u.email LIKE 'loadtest_%'
-    
+
     UNION ALL
     SELECT 'Total Tasks', COUNT(*)
     FROM tasks t

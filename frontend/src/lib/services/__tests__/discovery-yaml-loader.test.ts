@@ -33,7 +33,7 @@ const mockError = mockConsoleError();
 
 describe('DiscoveryYAMLLoader', () => {
   let loader: DiscoveryYAMLLoader;
-  
+
   const mockDiscoveryData: DiscoveryPath = {
     path_id: 'software_engineer',
     category: 'technology',
@@ -90,14 +90,14 @@ describe('DiscoveryYAMLLoader', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     // Get mocked fs module
     const fs = require('fs');
     const fsMock = fs.promises.readFile as jest.Mock;
     fsMock.mockResolvedValue(Buffer.from('yaml content'));
-    
+
     loader = new DiscoveryYAMLLoader();
-    
+
     // Default mock behaviors
     mockCacheService.get.mockResolvedValue(null);
     mockCacheService.set.mockResolvedValue(undefined);
@@ -125,7 +125,7 @@ describe('DiscoveryYAMLLoader', () => {
   describe('load', () => {
     it('should load YAML file successfully', async () => {
       const result = await loader.load('software_engineer/software_engineer_en');
-      
+
       expect(result.data).toEqual(mockDiscoveryData);
       expect(result.error).toBeUndefined();
     });
@@ -135,9 +135,9 @@ describe('DiscoveryYAMLLoader', () => {
       const fs = require('fs');
       const fsMock = fs.promises.readFile as jest.Mock;
       fsMock.mockRejectedValueOnce(error);
-      
+
       const result = await loader.load('nonexistent');
-      
+
       expect(result.data).toBeNull();
       expect(result.error).toBe(error);
     });
@@ -145,9 +145,9 @@ describe('DiscoveryYAMLLoader', () => {
     it('should handle YAML parse errors', async () => {
       const error = new Error('Invalid YAML');
       mockYaml.load.mockImplementation(() => { throw error; });
-      
+
       const result = await loader.load('invalid');
-      
+
       expect(result.data).toBeNull();
       expect(result.error).toBe(error);
     });
@@ -156,7 +156,7 @@ describe('DiscoveryYAMLLoader', () => {
   describe('getFilePath', () => {
     it('should construct correct file path', () => {
       const filePath = loader['getFilePath']('software_engineer/software_engineer_en');
-      
+
       expect(filePath).toContain('public/discovery_data');
       expect(filePath).toContain('software_engineer/software_engineer_en.yml');
     });
@@ -165,26 +165,26 @@ describe('DiscoveryYAMLLoader', () => {
   describe('loadPath', () => {
     it('should handle zh-TW to zhTW conversion', async () => {
       const result = await loader.loadPath('software_engineer', 'zh-TW');
-      
+
       expect(result).toEqual(mockDiscoveryData);
     });
 
     it('should load correct file for different languages', async () => {
       const result = await loader.loadPath('software_engineer', 'es');
-      
+
       expect(result).toEqual(mockDiscoveryData);
     });
 
     it('should fall back to English when language not found', async () => {
       const fs = require('fs');
       const fsMock = fs.promises.readFile as jest.Mock;
-      
+
       // Mock to fail first, then succeed
       fsMock.mockRejectedValueOnce(new Error('File not found'))
             .mockResolvedValueOnce(Buffer.from('yaml content'));
-      
+
       const result = await loader.loadPath('software_engineer', 'fr');
-      
+
       expect(result).toEqual(mockDiscoveryData);
     });
 
@@ -192,9 +192,9 @@ describe('DiscoveryYAMLLoader', () => {
       const fs = require('fs');
       const fsMock = fs.promises.readFile as jest.Mock;
       fsMock.mockRejectedValue(new Error('File not found'));
-      
+
       const result = await loader.loadPath('nonexistent', 'es');
-      
+
       expect(result).toBeNull();
     });
 
@@ -202,9 +202,9 @@ describe('DiscoveryYAMLLoader', () => {
       const fs = require('fs');
       const fsMock = fs.promises.readFile as jest.Mock;
       fsMock.mockRejectedValueOnce(new Error('File not found'));
-      
+
       const result = await loader.loadPath('software_engineer', 'en');
-      
+
       expect(result).toBeNull();
     });
   });
@@ -217,19 +217,19 @@ describe('DiscoveryYAMLLoader', () => {
         { name: 'README.md', isDirectory: () => false },
         { name: '.gitignore', isDirectory: () => false }
       ];
-      
+
       // Reset modules to ensure fresh mock
       jest.resetModules();
       jest.doMock('fs/promises', () => ({
         readdir: jest.fn().mockResolvedValue(mockDirents)
       }));
-      
+
       // Re-import after mocking
       const { DiscoveryYAMLLoader } = await import('../discovery-yaml-loader');
       const testLoader = new DiscoveryYAMLLoader();
-      
+
       const paths = await testLoader.scanPaths();
-      
+
       expect(paths).toEqual(['software_engineer', 'data_scientist']);
     });
 
@@ -239,13 +239,13 @@ describe('DiscoveryYAMLLoader', () => {
       jest.doMock('fs/promises', () => ({
         readdir: jest.fn().mockRejectedValue(new Error('Permission denied'))
       }));
-      
+
       // Re-import after mocking
       const { DiscoveryYAMLLoader } = await import('../discovery-yaml-loader');
       const testLoader = new DiscoveryYAMLLoader();
-      
+
       const paths = await testLoader.scanPaths();
-      
+
       expect(paths).toEqual([]);
       expect(mockError).toHaveBeenCalledWith(
         'Error scanning Discovery paths:',
@@ -259,13 +259,13 @@ describe('DiscoveryYAMLLoader', () => {
       jest.doMock('fs/promises', () => ({
         readdir: jest.fn().mockResolvedValue([])
       }));
-      
+
       // Re-import after mocking
       const { DiscoveryYAMLLoader } = await import('../discovery-yaml-loader');
       const testLoader = new DiscoveryYAMLLoader();
-      
+
       const paths = await testLoader.scanPaths();
-      
+
       expect(paths).toEqual([]);
     });
   });
@@ -275,7 +275,7 @@ describe('DiscoveryYAMLLoader', () => {
       // This test passes in isolation but fails when run with all tests
       // due to mock interference. Skipping for now.
       const metadata = await loader.getPathMetadata('software_engineer');
-      
+
       // Mock interference causes metadata to be null sometimes
       expect(metadata).toEqual(mockDiscoveryData.metadata);
     });
@@ -284,18 +284,18 @@ describe('DiscoveryYAMLLoader', () => {
       const fs = require('fs');
       const fsMock = fs.promises.readFile as jest.Mock;
       fsMock.mockRejectedValue(new Error('File not found'));
-      
+
       const metadata = await loader.getPathMetadata('nonexistent');
-      
+
       expect(metadata).toBeNull();
     });
 
     it('should return null when data has no metadata', async () => {
       const dataWithoutMetadata = { ...mockDiscoveryData, metadata: undefined };
       mockYaml.load.mockReturnValue(dataWithoutMetadata);
-      
+
       const metadata = await loader.getPathMetadata('software_engineer');
-      
+
       expect(metadata).toBeNull();
     });
   });
@@ -303,7 +303,7 @@ describe('DiscoveryYAMLLoader', () => {
   describe('extractAllSkills', () => {
     it('should extract all skills from skill tree', () => {
       const skills = loader.extractAllSkills(mockDiscoveryData);
-      
+
       expect(skills).toHaveLength(2);
       expect(skills[0].id).toBe('programming_basics');
       expect(skills[1].id).toBe('system_design');
@@ -314,9 +314,9 @@ describe('DiscoveryYAMLLoader', () => {
         ...mockDiscoveryData,
         skill_tree: undefined as any
       };
-      
+
       const skills = loader.extractAllSkills(dataWithoutSkills);
-      
+
       expect(skills).toEqual([]);
     });
 
@@ -328,9 +328,9 @@ describe('DiscoveryYAMLLoader', () => {
           advanced_skills: []
         }
       };
-      
+
       const skills = loader.extractAllSkills(dataWithEmptySkills);
-      
+
       expect(skills).toEqual([]);
     });
 
@@ -342,9 +342,9 @@ describe('DiscoveryYAMLLoader', () => {
           advanced_skills: undefined as any
         }
       };
-      
+
       const skills = loader.extractAllSkills(dataWithUndefinedSkills);
-      
+
       expect(skills).toEqual([]);
     });
   });
@@ -352,7 +352,7 @@ describe('DiscoveryYAMLLoader', () => {
   describe('getSkillDependencies', () => {
     it('should extract skill dependencies correctly', () => {
       const dependencies = loader.getSkillDependencies(mockDiscoveryData);
-      
+
       expect(dependencies.size).toBe(1);
       expect(dependencies.get('system_design')).toEqual(['programming_basics', 'data_structures']);
       expect(dependencies.has('programming_basics')).toBe(false); // No requirements
@@ -371,9 +371,9 @@ describe('DiscoveryYAMLLoader', () => {
           advanced_skills: []
         }
       };
-      
+
       const dependencies = loader.getSkillDependencies(dataWithNoRequirements);
-      
+
       expect(dependencies.size).toBe(0);
     });
 
@@ -385,9 +385,9 @@ describe('DiscoveryYAMLLoader', () => {
           advanced_skills: []
         }
       };
-      
+
       const dependencies = loader.getSkillDependencies(dataWithoutSkills);
-      
+
       expect(dependencies.size).toBe(0);
     });
 
@@ -405,9 +405,9 @@ describe('DiscoveryYAMLLoader', () => {
           advanced_skills: []
         }
       };
-      
+
       const dependencies = loader.getSkillDependencies(dataWithEmptyRequires);
-      
+
       expect(dependencies.size).toBe(0);
     });
   });
@@ -415,7 +415,7 @@ describe('DiscoveryYAMLLoader', () => {
   describe('postProcess', () => {
     it('should preserve existing path_id', async () => {
       const result = await loader['postProcess'](mockDiscoveryData);
-      
+
       expect(result.path_id).toBe('software_engineer');
     });
 
@@ -424,9 +424,9 @@ describe('DiscoveryYAMLLoader', () => {
         ...mockDiscoveryData,
         path_id: undefined as any
       };
-      
+
       const result = await loader['postProcess'](dataWithoutId);
-      
+
       expect(result.path_id).toBe('discovery_path');
     });
 
@@ -435,9 +435,9 @@ describe('DiscoveryYAMLLoader', () => {
         category: 'tech',
         skill_tree: mockDiscoveryData.skill_tree
       };
-      
+
       const result = await loader['postProcess'](dataWithoutIdOrMetadata);
-      
+
       expect(result.path_id).toBeUndefined();
     });
 
@@ -454,9 +454,9 @@ describe('DiscoveryYAMLLoader', () => {
           ]
         }
       };
-      
+
       const result = await loader['postProcess'](dataWithoutSkillIds);
-      
+
       expect(result.skill_tree.core_skills[0].id).toBe('skill_1');
       expect(result.skill_tree.core_skills[1].id).toBe('skill_2');
       expect(result.skill_tree.advanced_skills[0].id).toBe('skill_1');
@@ -467,15 +467,15 @@ describe('DiscoveryYAMLLoader', () => {
         path_id: 'test',
         metadata: mockDiscoveryData.metadata
       };
-      
+
       const result = await loader['postProcess'](dataWithoutSkillTree);
-      
+
       expect(result.skill_tree).toBeUndefined();
     });
 
     it('should preserve existing skill IDs', async () => {
       const result = await loader['postProcess'](mockDiscoveryData);
-      
+
       expect(result.skill_tree.core_skills[0].id).toBe('programming_basics');
       expect(result.skill_tree.advanced_skills[0].id).toBe('system_design');
     });
@@ -484,7 +484,7 @@ describe('DiscoveryYAMLLoader', () => {
   describe('validateData', () => {
     it('should always return valid for now', async () => {
       const result = await loader['validateData']();
-      
+
       expect(result.valid).toBe(true);
       expect(result.error).toBeUndefined();
     });
@@ -520,7 +520,7 @@ describe('DiscoveryYAMLLoader', () => {
           }]
         }
       };
-      
+
       expect(dataWithAchievements.achievements?.exploration).toHaveLength(1);
       expect(dataWithAchievements.achievements?.mastery[0].skills_required).toContain('programming_basics');
       expect(dataWithAchievements.achievements?.special[0].hidden).toBe(true);
@@ -528,7 +528,7 @@ describe('DiscoveryYAMLLoader', () => {
 
     it('should handle milestone quests with rewards', () => {
       const quest = mockDiscoveryData.milestone_quests[0];
-      
+
       expect(quest.rewards?.skills).toContain('debugging');
       expect(quest.rewards?.achievements).toContain('first_milestone');
       expect(quest.xp_reward).toBe(1000);
@@ -549,7 +549,7 @@ describe('DiscoveryYAMLLoader', () => {
           }]
         }
       };
-      
+
       expect(dataWithChallenges.daily_challenges?.categories).toHaveLength(1);
       expect(dataWithChallenges.daily_challenges?.categories[0].type).toBe('coding');
     });
@@ -565,7 +565,7 @@ describe('DiscoveryYAMLLoader', () => {
           'Understand system design'
         ]
       };
-      
+
       expect(dataWithObjectives.learning_objectives).toHaveLength(3);
     });
 
@@ -578,7 +578,7 @@ describe('DiscoveryYAMLLoader', () => {
           'System Architect'
         ]
       };
-      
+
       expect(dataWithOutcomes.career_outcomes).toHaveLength(3);
     });
   });

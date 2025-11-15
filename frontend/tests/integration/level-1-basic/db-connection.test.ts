@@ -18,7 +18,7 @@ describe.skip('Basic Database Connection', () => {
       const client = await pool.connect();
       const result = await client.query('SELECT 1 as connected');
       client.release();
-      
+
       expect(result.rows[0].connected).toBe(1);
     } finally {
       await pool.end();
@@ -55,14 +55,14 @@ describe.skip('Basic Database Connection', () => {
 
     try {
       const result = await pool.query(`
-        SELECT table_name 
-        FROM information_schema.tables 
+        SELECT table_name
+        FROM information_schema.tables
         WHERE table_schema = 'public'
         ORDER BY table_name
       `);
-      
+
       const tables = result.rows.map((row: any) => row.table_name);
-      
+
       // Check core tables exist
       expect(tables).toContain('users');
       expect(tables).toContain('scenarios');

@@ -3,7 +3,7 @@ describe('next-auth', () => {
     try {
       const module = require('../next-auth');
       expect(module).toBeDefined();
-      
+
       // Test exports
       Object.keys(module).forEach(key => {
         expect(module[key]).toBeDefined();

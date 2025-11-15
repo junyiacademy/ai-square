@@ -69,7 +69,7 @@ interface DiscoveryCompletionData {
 export default function DiscoveryCompletePage() {
   const params = useParams();
   const { t, i18n } = useTranslation(['common', 'discovery', 'assessment']);
-  
+
   const [completionData, setCompletionData] = useState<DiscoveryCompletionData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -81,10 +81,10 @@ export default function DiscoveryCompletePage() {
   const generateTranslation = useCallback(async (targetLang: string) => {
     // Prevent multiple concurrent translations
     if (translatingFeedback) return;
-    
+
     try {
       setTranslatingFeedback(true);
-      
+
       // Call API to translate feedback
       const response = await authenticatedFetch(`/api/discovery/programs/${params.programId}/translate-feedback`, {
         method: 'POST',
@@ -93,7 +93,7 @@ export default function DiscoveryCompletePage() {
         },
         body: JSON.stringify({ targetLanguage: targetLang })
       });
-      
+
       if (response.ok) {
         const data = await response.json();
         if (data.translatedFeedback) {
@@ -117,11 +117,11 @@ export default function DiscoveryCompletePage() {
   // Handle language change for qualitative feedback
   useEffect(() => {
     if (!completionData || !completionData.qualitativeFeedback) return;
-    
+
     const handleLanguageChange = async () => {
       const versions = completionData.qualitativeFeedbackVersions || {};
       const currentLang = i18n.language === 'zh-TW' ? 'zhTW' : i18n.language;
-      
+
       // Check if we have this language version
       if (versions[currentLang]) {
         // Use existing version
@@ -134,7 +134,7 @@ export default function DiscoveryCompletePage() {
         await generateTranslation(currentLang);
       }
     };
-    
+
     handleLanguageChange();
   }, [i18n.language, completionData, generateTranslation]); // Only depend on language change
 
@@ -142,7 +142,7 @@ export default function DiscoveryCompletePage() {
     try {
       setLoading(true);
       setError(null);
-      
+
       // First, trigger completion if not already done
       const completeResponse = await authenticatedFetch(`/api/discovery/programs/${params.programId}/complete`, {
         method: 'POST',
@@ -151,11 +151,11 @@ export default function DiscoveryCompletePage() {
           'Accept-Language': i18n.language
         }
       });
-      
+
       if (!completeResponse.ok) {
         console.error('Failed to complete program:', await completeResponse.text());
       }
-      
+
       // Get the program data
       const programResponse = await authenticatedFetch(`/api/discovery/programs/${params.programId}`);
       if (!programResponse.ok) {
@@ -227,14 +227,14 @@ export default function DiscoveryCompletePage() {
           'Content-Type': 'application/json'
         }
       });
-      
+
       if (!regenerateResponse.ok) {
         throw new Error('Failed to regenerate evaluation');
       }
-      
+
       const result = await regenerateResponse.json();
       console.log('Regeneration result:', result);
-      
+
       // Reload the data
       await loadCompletionData(false);
     } catch (error) {
@@ -318,26 +318,26 @@ export default function DiscoveryCompletePage() {
           </div>
           <div className="text-sm text-gray-600">{t('discovery:complete.totalXP')}</div>
         </div>
-        
+
         <div className="bg-white rounded-lg shadow p-6 text-center">
           <div className={`text-3xl font-bold mb-2 ${getScoreColor(completionData.overallScore)}`}>
             {completionData.overallScore}
           </div>
           <div className="text-sm text-gray-600">{t('discovery:complete.overallScore')}</div>
         </div>
-        
+
         <div className="bg-white rounded-lg shadow p-6 text-center">
           <div className="text-3xl font-bold text-blue-600 mb-2">
             {completionData.completedTasks}/{completionData.totalTasks}
           </div>
           <div className="text-sm text-gray-600">{t('discovery:complete.tasksCompleted')}</div>
         </div>
-        
+
         <div className="bg-white rounded-lg shadow p-6 text-center">
           <div className="flex justify-center items-center text-gray-700 mb-2">
             <Clock className="h-6 w-6 mr-2" />
             <span className="text-xl font-semibold">
-              {completionData.daysUsed !== undefined && completionData.daysUsed !== null 
+              {completionData.daysUsed !== undefined && completionData.daysUsed !== null
                 ? completionData.daysUsed === 0 ? 1 : completionData.daysUsed
                 : 'N/A'}
             </span>
@@ -479,7 +479,7 @@ export default function DiscoveryCompletePage() {
               </span>
             )}
           </h2>
-          
+
           <div className={`space-y-4 ${translatingFeedback ? 'opacity-50' : ''}`}>
             <div>
               <h3 className="font-semibold text-gray-900 mb-2">
@@ -562,7 +562,7 @@ export default function DiscoveryCompletePage() {
           <CheckCircle className="h-5 w-5 mr-2" />
           {t('discovery:complete.backToScenario')}
         </Link>
-        
+
 
         <button
           onClick={() => window.print()}

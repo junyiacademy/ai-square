@@ -85,16 +85,16 @@ PGPASSWORD=$DB_PASSWORD psql -h $DB_HOST -p $DB_PORT -U $DB_USER -d $DB_NAME -f 
 ### 問題 1: Mode propagation 失敗
 ```sql
 -- 檢查 trigger 是否正確安裝
-SELECT trigger_name, action_statement 
-FROM information_schema.triggers 
+SELECT trigger_name, action_statement
+FROM information_schema.triggers
 WHERE trigger_name LIKE '%mode%';
 ```
 
 ### 問題 2: 多語言欄位查詢錯誤
 ```sql
 -- 測試 JSONB 查詢
-SELECT title->>'en' as title_en, title->>'zh' as title_zh 
-FROM scenarios 
+SELECT title->>'en' as title_en, title->>'zh' as title_zh
+FROM scenarios
 WHERE mode = 'discovery';
 ```
 

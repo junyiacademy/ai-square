@@ -95,12 +95,12 @@ if [ "$AUTO_CONFIRM" != "true" ]; then
     echo -e "${YELLOW}   Target: $CLOUD_SQL_INSTANCE${NC}"
     echo -e "${GREEN}   This script is SAFE - it won't destroy existing data${NC}"
     echo ""
-    
+
     if [ ! -t 0 ]; then
         echo -e "${YELLOW}📌 Use FORCE_INIT=true to skip confirmation${NC}"
         exit 1
     fi
-    
+
     echo -n "Continue? (y/N): "
     read -r CONFIRM
     if [ "$CONFIRM" != "y" ] && [ "$CONFIRM" != "Y" ]; then
@@ -158,13 +158,13 @@ fi
 # Initialize schema if needed
 if [ "$NEEDS_SCHEMA_INIT" = true ]; then
     echo -e "${YELLOW}🔨 Initializing Schema...${NC}"
-    
+
     SCHEMA_FILE="../src/lib/repositories/postgresql/schema-v4.sql"
     if [ ! -f "$SCHEMA_FILE" ]; then
         echo -e "${RED}✗ Schema file not found: $SCHEMA_FILE${NC}"
         exit 1
     fi
-    
+
     # Backup if exists
     echo -e "${YELLOW}📦 Creating safety backup...${NC}"
     BACKUP_FILE="${ENVIRONMENT}_backup_$(date +%Y%m%d_%H%M%S).sql"
@@ -172,7 +172,7 @@ if [ "$NEEDS_SCHEMA_INIT" = true ]; then
     if [ -f "/tmp/$BACKUP_FILE" ]; then
         echo -e "${GREEN}✓ Backup saved to /tmp/$BACKUP_FILE${NC}"
     fi
-    
+
     # Apply schema
     echo -e "${YELLOW}Applying schema...${NC}"
     (
@@ -180,7 +180,7 @@ if [ "$NEEDS_SCHEMA_INIT" = true ]; then
         cat "$SCHEMA_FILE"
         echo "COMMIT;"
     ) | PGPASSWORD=$DB_PASSWORD psql -h $CLOUD_SQL_IP -p 5432 -U $DB_USER -d $DB_NAME -v ON_ERROR_STOP=1
-    
+
     if [ $? -eq 0 ]; then
         echo -e "${GREEN}✓ Schema initialized successfully${NC}"
     else
@@ -201,12 +201,12 @@ ADMIN_HASH='$2b$10$9nEfXi5LULvFjV/LKp8WFuglp9Y5jttH9O4Ix0AwpVg4OZdvtTbiS'   # ad
 PGPASSWORD=$DB_PASSWORD psql -h $CLOUD_SQL_IP -p 5432 -U $DB_USER -d $DB_NAME <<EOF
 -- Insert demo users (safe to run multiple times)
 INSERT INTO users (id, email, password_hash, name, role, created_at, updated_at)
-VALUES 
+VALUES
   (gen_random_uuid(), 'student@example.com', '$STUDENT_HASH', 'Student User', 'student', NOW(), NOW()),
   (gen_random_uuid(), 'teacher@example.com', '$TEACHER_HASH', 'Teacher User', 'teacher', NOW(), NOW()),
   (gen_random_uuid(), 'admin@example.com', '$ADMIN_HASH', 'Admin User', 'admin', NOW(), NOW())
-ON CONFLICT (email) DO UPDATE 
-  SET 
+ON CONFLICT (email) DO UPDATE
+  SET
     password_hash = EXCLUDED.password_hash,
     name = EXCLUDED.name,
     role = EXCLUDED.role,
@@ -214,7 +214,7 @@ ON CONFLICT (email) DO UPDATE
   WHERE users.email IN ('student@example.com', 'teacher@example.com', 'admin@example.com');
 
 -- Show result
-SELECT email, name, role FROM users 
+SELECT email, name, role FROM users
 WHERE email IN ('student@example.com', 'teacher@example.com', 'admin@example.com')
 ORDER BY email;
 EOF

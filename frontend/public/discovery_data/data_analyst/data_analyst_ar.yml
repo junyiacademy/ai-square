@@ -7,11 +7,11 @@ metadata:
   title: "عراف البيانات - محلل البيانات"
   short_description: "اكتشف الحقائق المخفية في محيط البيانات"
   long_description: |
-    أنت متدرب عراف في "معبد عراف البيانات"، تمتلك القدرة الغامضة على 
-    رؤية الاتجاهات المستقبلية في البيانات الفوضوية. في هذا المعبد المليء 
-    بالأرقام والمخططات، تحتوي كل نقطة بيانات على رسائل مهمة، ومهمتك 
+    أنت متدرب عراف في "معبد عراف البيانات"، تمتلك القدرة الغامضة على
+    رؤية الاتجاهات المستقبلية في البيانات الفوضوية. في هذا المعبد المليء
+    بالأرقام والمخططات، تحتوي كل نقطة بيانات على رسائل مهمة، ومهمتك
     هي فك رموز الأسرار وراء هذه الأرقام.
-  
+
   estimated_hours: 50
   skill_focus:
     - data_alchemy
@@ -22,21 +22,21 @@ metadata:
 world_setting:
   name: "معبد عراف البيانات"
   description: |
-    معبد عراف البيانات هو مقدس غامض يجمع البيانات من جميع أنحاء العالم. 
-    هنا، يتم تدريب محللي البيانات كعرافين يمكنهم تفسير لغة الأرقام 
+    معبد عراف البيانات هو مقدس غامض يجمع البيانات من جميع أنحاء العالم.
+    هنا، يتم تدريب محللي البيانات كعرافين يمكنهم تفسير لغة الأرقام
     وكشف الحقائق التي تشكل القرارات عبر الممالك.
-  
+
   atmosphere: "mystical_analytical"
   visual_theme: "digital_temple"
 
 starting_scenario:
   title: "الطقوس في المعبد"
   description: |
-    العراف المرشد الحكيم يرحب بك في المعبد، يتحدث بالألغاز عن أسرار 
-    البيانات. لكن تهديداً يلوح في الأفق: الفوضى، مدمر البيانات، يلوث 
-    مصادر البيانات وينشر تحليلات مضللة. يجب عليك استخدام الطرق الإحصائية 
+    العراف المرشد الحكيم يرحب بك في المعبد، يتحدث بالألغاز عن أسرار
+    البيانات. لكن تهديداً يلوح في الأفق: الفوضى، مدمر البيانات، يلوث
+    مصادر البيانات وينشر تحليلات مضللة. يجب عليك استخدام الطرق الإحصائية
     النقية للعثور على الحقيقة وسط الالتباس.
-  
+
   initial_tasks:
     - learn_data_basics
     - master_tools
@@ -51,7 +51,7 @@ skill_tree:
       unlocks:
         - web_scraping
         - api_mastery
-    
+
     - id: statistical_analysis
       name: "السحر الإحصائي"
       description: "استخدم الطرق الإحصائية لكشف الأنماط"
@@ -59,7 +59,7 @@ skill_tree:
       unlocks:
         - hypothesis_testing
         - regression_magic
-    
+
     - id: data_visualization
       name: "النبوءة البصرية"
       description: "حوّل البيانات إلى قصص بصرية مقنعة"
@@ -67,7 +67,7 @@ skill_tree:
       unlocks:
         - dashboard_creation
         - interactive_charts
-    
+
     - id: business_intelligence
       name: "الرؤى الاستراتيجية"
       description: "حوّل البيانات إلى حكمة تجارية قابلة للتطبيق"
@@ -82,13 +82,13 @@ skill_tree:
       description: "استخدم التعلم الآلي للتنبؤ بالنتائج المستقبلية"
       max_level: 15
       requires: [statistical_analysis, data_collection]
-    
+
     - id: big_data_mastery
       name: "التحكم في البيانات الضخمة"
       description: "تعامل مع وحلل مجموعات البيانات الهائلة"
       max_level: 15
       requires: [data_collection, business_intelligence]
-    
+
     - id: real_time_analytics
       name: "العراف الفوري"
       description: "أجرِ تحليل البيانات في الوقت الفعلي"
@@ -105,7 +105,7 @@ milestone_quests:
     unlocks:
       - insight_badge
       - temple_recognition
-  
+
   - id: chaos_detection
     name: "صائد الفوضى"
     description: "اكتشف وصحح التلاعبات المضللة في البيانات"
@@ -115,7 +115,7 @@ milestone_quests:
     unlocks:
       - truth_seeker_title
       - advanced_access
-  
+
   - id: oracle_ascension
     name: "العراف الماهر"
     description: "تنبأ بترند رئيسي قبل حدوثه"
@@ -132,19 +132,19 @@ achievements:
     description: "أنشئ لوحة البيانات الأولى"
     xp_reward: 100
     badge_type: bronze
-  
+
   - id: data_detective
     name: "محقق البيانات"
     description: "اعثر على 10 مشاكل جودة البيانات"
     xp_reward: 250
     badge_type: silver
-  
+
   - id: prediction_master
     name: "سيد التنبؤ"
     description: "قم بـ 5 تنبؤات دقيقة"
     xp_reward: 500
     badge_type: gold
-  
+
   - id: oracle_legend
     name: "عراف الأسطورة"
     description: "أكمل جميع تحديات البيانات"
@@ -159,14 +159,14 @@ example_tasks:
       description: "اجمع ونظف مجموعة بيانات فوضوية"
       skills_improved: [data_collection, data_alchemy]
       xp_reward: 60
-    
+
     - id: basic_stats
       type: analysis
       title: "الأسس الإحصائية"
       description: "أجرِ تحليل إحصائي أساسي"
       skills_improved: [statistical_analysis]
       xp_reward: 50
-  
+
   intermediate:
     - id: trend_analysis
       type: analysis
@@ -174,14 +174,14 @@ example_tasks:
       description: "أجرِ تحليل ترند عميق"
       skills_improved: [statistical_analysis, business_intelligence]
       xp_reward: 180
-    
+
     - id: dashboard_design
       type: creation
       title: "لوحة الرؤية"
       description: "أنشئ لوحة أعمال تفاعلية"
       skills_improved: [data_visualization, visualization_magic]
       xp_reward: 200
-  
+
   advanced:
     - id: predictive_model
       type: creation
@@ -189,7 +189,7 @@ example_tasks:
       description: "ابنِ نموذج تنبؤي"
       skills_improved: [machine_learning, predictive_statistics]
       xp_reward: 350
-    
+
     - id: real_time_system
       type: creation
       title: "نظام العراف الفوري"

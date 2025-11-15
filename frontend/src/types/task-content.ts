@@ -67,7 +67,7 @@ export interface UserInputContent {
   [key: string]: unknown;
 }
 
-export type InteractionContent = 
+export type InteractionContent =
   | AssessmentAnswerContent
   | AIResponseContent
   | UserInputContent

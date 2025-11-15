@@ -13,7 +13,7 @@ const archiveAccountSchema = z.object({
 export async function POST(request: NextRequest) {
   try {
     const session = await getSession();
-    
+
     if (!session || !session.user) {
       return NextResponse.json(
         { success: false, error: 'Not authenticated' },
@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    
+
     // 驗證輸入
     const validationResult = archiveAccountSchema.safeParse(body);
     if (!validationResult.success) {
@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
     // 驗證密碼
     const { getUserWithPassword } = await import('@/lib/auth/password-utils');
     const userWithPassword = await getUserWithPassword(pool, session.user.email);
-    
+
     if (!userWithPassword || !userWithPassword.passwordHash) {
       return NextResponse.json(
         { success: false, error: 'User not found' },
@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
 
       // 封存帳號
       await client.query(
-        `UPDATE users 
+        `UPDATE users
          SET account_status = 'archived',
              archived_at = CURRENT_TIMESTAMP,
              archive_reason = $1,
@@ -132,7 +132,7 @@ export async function POST(request: NextRequest) {
 export async function GET() {
   try {
     const session = await getSession();
-    
+
     if (!session || !session.user) {
       return NextResponse.json(
         { success: false, error: 'Not authenticated' },

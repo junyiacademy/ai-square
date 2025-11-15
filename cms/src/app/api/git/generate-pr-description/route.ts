@@ -15,7 +15,7 @@ interface PRDescriptionResponse {
 
 export async function POST(request: NextRequest) {
   let requestData: PRDescriptionRequest = { commits: [], branch: '' };
-  
+
   try {
     requestData = await request.json() as PRDescriptionRequest;
     const { commits, branch } = requestData;
@@ -83,8 +83,8 @@ ${commit.message}
 
     console.log('Generating PR description for', commits.length, 'commits');
     const prDescription = await generateContent(prompt, systemPrompt);
-    
-    const response: PRDescriptionResponse = { 
+
+    const response: PRDescriptionResponse = {
       success: true,
       description: prDescription.trim(),
       isGenerated: true
@@ -92,18 +92,18 @@ ${commit.message}
     return NextResponse.json(response);
   } catch (error) {
     console.error('Generate PR description error:', error);
-    
+
     // Get commits count from requestData
     const commitsCount = requestData.commits?.length || 0;
-    
+
     // Fallback to simple description
     const fallbackDescription = `## 📋 內容更新
 
 本次 PR 包含 ${commitsCount} 個提交的內容更新。
 
 請查看個別 commit 訊息了解詳細變更。`;
-    
-    const response: PRDescriptionResponse = { 
+
+    const response: PRDescriptionResponse = {
       success: true,
       description: fallbackDescription,
       isGenerated: false

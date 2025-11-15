@@ -33,7 +33,7 @@ const translations = {
       "intermediate": "Fortgeschritten",
       "advanced": "Experte"
     },
-    
+
     // chat.json
     "aiAdvisor": "KI-Lernberater",
     "newChat": "Neuer Chat",
@@ -46,7 +46,7 @@ const translations = {
     "suggestedTopic3": "Was sind meine Schwächen und wie kann ich mich verbessern?",
     "suggestedTopic4": "Erklären Sie KI-Konzepte in einfachen Worten"
   },
-  
+
   // Spanish translations
   es: {
     // common.json
@@ -75,7 +75,7 @@ const translations = {
       "intermediate": "Intermedio",
       "advanced": "Avanzado"
     },
-    
+
     // chat.json
     "aiAdvisor": "Asesor de Aprendizaje IA",
     "newChat": "Nuevo Chat",
@@ -88,8 +88,8 @@ const translations = {
     "suggestedTopic3": "¿Cuáles son mis áreas débiles y cómo puedo mejorar?",
     "suggestedTopic4": "Explica conceptos de IA en términos simples"
   },
-  
-  // French translations  
+
+  // French translations
   fr: {
     // common.json
     "skip": "Passer",
@@ -117,7 +117,7 @@ const translations = {
       "intermediate": "Intermédiaire",
       "advanced": "Avancé"
     },
-    
+
     // chat.json
     "aiAdvisor": "Conseiller d'Apprentissage IA",
     "newChat": "Nouveau Chat",
@@ -130,7 +130,7 @@ const translations = {
     "suggestedTopic3": "Quels sont mes points faibles et comment puis-je m'améliorer?",
     "suggestedTopic4": "Expliquez les concepts d'IA en termes simples"
   },
-  
+
   // Add more languages as needed...
 };
 
@@ -140,13 +140,13 @@ function translateFile(filePath, langCode) {
     const content = JSON.parse(fs.readFileSync(filePath, 'utf8'));
     const langTranslations = translations[langCode] || {};
     let hasChanges = false;
-    
+
     // Recursive function to translate nested objects
     function translateObject(obj) {
       for (const key in obj) {
         if (typeof obj[key] === 'string') {
           // Check if it has a placeholder pattern
-          if (obj[key].includes(`[${langCode.toUpperCase()}]`) || 
+          if (obj[key].includes(`[${langCode.toUpperCase()}]`) ||
               obj[key].includes('[German]') ||
               obj[key].includes('[Spanish]') ||
               obj[key].includes('[French]') ||
@@ -159,7 +159,7 @@ function translateFile(filePath, langCode) {
               obj[key].includes('[Arabic]') ||
               obj[key].includes('[Indonesian]') ||
               obj[key].includes('[Chinese')) {
-            
+
             // Check if we have a translation
             if (langTranslations[key]) {
               obj[key] = langTranslations[key];
@@ -171,15 +171,15 @@ function translateFile(filePath, langCode) {
         }
       }
     }
-    
+
     translateObject(content);
-    
+
     if (hasChanges) {
       fs.writeFileSync(filePath, JSON.stringify(content, null, 2));
       console.log(`✓ Translated: ${filePath}`);
       return true;
     }
-    
+
     return false;
   } catch (error) {
     console.error(`✗ Error processing ${filePath}:`, error.message);
@@ -191,21 +191,21 @@ function translateFile(filePath, langCode) {
 function main() {
   const localesDir = path.join(__dirname, '..', 'public', 'locales');
   let totalTranslated = 0;
-  
+
   // Get all language directories
   const langDirs = fs.readdirSync(localesDir)
     .filter(dir => fs.statSync(path.join(localesDir, dir)).isDirectory())
     .filter(dir => dir !== 'en'); // Skip English
-  
+
   console.log('🌐 Starting translation process...\n');
-  
+
   for (const langCode of langDirs) {
     const langDir = path.join(localesDir, langCode);
     const jsonFiles = fs.readdirSync(langDir)
       .filter(file => file.endsWith('.json'));
-    
+
     console.log(`\nProcessing ${langCode}:`);
-    
+
     for (const file of jsonFiles) {
       const filePath = path.join(langDir, file);
       if (translateFile(filePath, langCode)) {
@@ -213,7 +213,7 @@ function main() {
       }
     }
   }
-  
+
   console.log(`\n✅ Translation complete! Translated ${totalTranslated} files.`);
 }
 

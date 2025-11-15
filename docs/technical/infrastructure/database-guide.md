@@ -101,12 +101,12 @@ CREATE INDEX idx_scenarios_mode ON scenarios(mode);
 
 ### 取得用戶的所有進行中學習
 ```sql
-SELECT 
+SELECT
   p.*,
   s.title->>'zh' as scenario_title
 FROM programs p
 JOIN scenarios s ON p.scenario_id = s.id
-WHERE p.user_id = $1 
+WHERE p.user_id = $1
   AND p.status = 'active'
 ORDER BY p.updated_at DESC;
 ```
@@ -114,7 +114,7 @@ ORDER BY p.updated_at DESC;
 ### 統計用戶學習成效
 ```sql
 WITH user_stats AS (
-  SELECT 
+  SELECT
     mode,
     COUNT(*) as total_programs,
     COUNT(CASE WHEN status = 'completed' THEN 1 END) as completed,
@@ -128,7 +128,7 @@ SELECT * FROM user_stats;
 
 ### 查詢特定 KSA 的掌握度
 ```sql
-SELECT 
+SELECT
   t.id,
   t.context->>'ksa_codes' as ksa_codes,
   COUNT(CASE WHEN (t.interactions->-1->>'isCorrect')::boolean THEN 1 END) as correct,

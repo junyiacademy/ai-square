@@ -16,10 +16,10 @@ export async function POST(
   console.log('🚀 Discovery START API CALLED');
   console.log('   Timestamp:', new Date().toISOString());
   console.log('   Scenario ID:', id);
-  
+
   try {
     const scenarioId = id;
-    
+
     // Get user from session
     const session = await getUnifiedAuth(request);
     if (!session?.user?.email) {
@@ -31,13 +31,13 @@ export async function POST(
         { status: 401 }
       );
     }
-    
+
     console.log('   User email:', session.user.email);
-    
+
     // Get language from request body
     const body = await request.json();
     const language = body.language || 'en';
-    
+
     // Validate UUID format
     if (!scenarioId.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)) {
       return NextResponse.json(
@@ -48,11 +48,11 @@ export async function POST(
         { status: 400 }
       );
     }
-    
+
     // Get repositories
     const userRepo = repositoryFactory.getUserRepository();
     const scenarioRepo = repositoryFactory.getScenarioRepository();
-    
+
     // Verify scenario exists and is Discovery type
     const scenario = await scenarioRepo.findById(scenarioId);
     if (!scenario) {
@@ -64,7 +64,7 @@ export async function POST(
         { status: 404 }
       );
     }
-    
+
     if (scenario.mode !== 'discovery') {
       return NextResponse.json(
         {
@@ -74,7 +74,7 @@ export async function POST(
         { status: 400 }
       );
     }
-    
+
     // Get or create user
     let user = await userRepo.findByEmail(session.user.email);
     if (!user) {
@@ -85,10 +85,10 @@ export async function POST(
         preferredLanguage: language
       });
     }
-    
+
     console.log('   User ID:', user.id);
     console.log('   Using Discovery Learning Service to start learning...');
-    
+
     // Use the new service layer
     const discoveryService = learningServiceFactory.getService('discovery');
     const program = await discoveryService.startLearning(
@@ -96,13 +96,13 @@ export async function POST(
       scenarioId,
       { language }
     );
-    
+
     console.log('   ✅ Program created with UUID:', program.id);
-    
+
     // Get created tasks
     const taskRepo = repositoryFactory.getTaskRepository();
     const tasks = await taskRepo.findByProgram(program.id);
-    
+
     // Return response in the expected format
     return NextResponse.json({
       success: true,
@@ -123,7 +123,7 @@ export async function POST(
       totalXP: 0,
       language
     });
-    
+
   } catch (error) {
     console.error('Error starting Discovery program:', error);
     return NextResponse.json(

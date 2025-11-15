@@ -347,7 +347,7 @@ describe('GET /api/assessment/results', () => {
 
   it('should handle missing getCompletedPrograms method gracefully', async () => {
     const mockUser = { id: 'user-123', email: 'test@example.com' };
-    
+
     mockUserRepo.findByEmail.mockResolvedValue(mockUser);
     mockProgramRepo.getCompletedPrograms = undefined; // Method doesn't exist
 

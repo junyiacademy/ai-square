@@ -147,19 +147,19 @@ describe('PBLLearningService', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     // Setup mocks
     mockScenarioRepo = {
       findById: jest.fn()
     };
-    
+
     mockProgramRepo = {
       findById: jest.fn(),
       create: jest.fn(),
       updateProgress: jest.fn(),
       complete: jest.fn()
     };
-    
+
     mockTaskRepo = {
       findById: jest.fn(),
       findByProgram: jest.fn(),
@@ -167,7 +167,7 @@ describe('PBLLearningService', () => {
       updateInteractions: jest.fn(),
       updateStatus: jest.fn()
     };
-    
+
     mockEvaluationRepo = {
       findById: jest.fn(),
       create: jest.fn()
@@ -187,7 +187,7 @@ describe('PBLLearningService', () => {
     it('should start a PBL learning journey', async () => {
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
       mockProgramRepo.create.mockResolvedValue(mockProgram);
-      mockTaskRepo.create.mockImplementation((task: any) => 
+      mockTaskRepo.create.mockImplementation((task: any) =>
         Promise.resolve({ ...task, id: `task-${Date.now()}` })
       );
 
@@ -224,7 +224,7 @@ describe('PBLLearningService', () => {
     it('should use specified language', async () => {
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
       mockProgramRepo.create.mockResolvedValue(mockProgram);
-      mockTaskRepo.create.mockImplementation((task: any) => 
+      mockTaskRepo.create.mockImplementation((task: any) =>
         Promise.resolve({ ...task, id: `task-${Date.now()}` })
       );
 
@@ -238,7 +238,7 @@ describe('PBLLearningService', () => {
           metadata: { language: 'zh' }
         })
       );
-      
+
       // Check first task uses Chinese description
       const firstTaskCall = mockTaskRepo.create.mock.calls[0][0];
       expect(firstTaskCall.content.instructions).toBe('分析問題');
@@ -266,7 +266,7 @@ describe('PBLLearningService', () => {
     it('should set correct phases for tasks', async () => {
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
       mockProgramRepo.create.mockResolvedValue(mockProgram);
-      mockTaskRepo.create.mockImplementation((task: any) => 
+      mockTaskRepo.create.mockImplementation((task: any) =>
         Promise.resolve({ ...task, id: `task-${Date.now()}` })
       );
 
@@ -305,15 +305,15 @@ describe('PBLLearningService', () => {
           metadata: {}
         }
       ];
-      
+
       const scenarioWithStringTasks = {
         ...mockScenario,
         taskTemplates: templateWithStringFields
       };
-      
+
       mockScenarioRepo.findById.mockResolvedValue(scenarioWithStringTasks);
       mockProgramRepo.create.mockResolvedValue(mockProgram);
-      mockTaskRepo.create.mockImplementation((task: any) => 
+      mockTaskRepo.create.mockImplementation((task: any) =>
         Promise.resolve({ ...task, id: `task-${Date.now()}` })
       );
 
@@ -328,7 +328,7 @@ describe('PBLLearningService', () => {
           })
         })
       );
-      
+
       expect(mockTaskRepo.create).toHaveBeenNthCalledWith(2,
         expect.objectContaining({
           title: { en: 'Interview Preparation' },  // Converted to multilingual
@@ -634,16 +634,16 @@ describe('PBLLearningService', () => {
 
     it('should calculate domain scores correctly', async () => {
       const tasksWithDomains = [
-        { 
-          ...mockTask, 
-          status: 'completed', 
+        {
+          ...mockTask,
+          status: 'completed',
           score: 80,
           content: { domain: 'Engaging_with_AI' }
         },
-        { 
-          ...mockTask, 
+        {
+          ...mockTask,
           id: 'task-2',
-          status: 'completed', 
+          status: 'completed',
           score: 90,
           content: { domain: 'Creating_with_AI' }
         }

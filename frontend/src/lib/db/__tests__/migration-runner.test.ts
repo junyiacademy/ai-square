@@ -25,21 +25,21 @@ describe('MigrationRunner', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     // Mock client
     mockClient = {
       query: jest.fn(),
       release: jest.fn(),
     };
-    
+
     // Mock pool
     mockPool = {
       query: jest.fn(),
       connect: jest.fn().mockResolvedValue(mockClient),
     };
-    
+
     runner = new MigrationRunner(mockPool as any);
-    
+
     // Mock process.cwd
     process.cwd = jest.fn(() => '/test/project');
   });
@@ -119,7 +119,7 @@ describe('MigrationRunner', () => {
         ['002_add_users.sql']
       );
       expect(mockClient.query).toHaveBeenCalledWith('COMMIT');
-      
+
       // Should release client
       expect(mockClient.release).toHaveBeenCalled();
     });
@@ -144,10 +144,10 @@ describe('MigrationRunner', () => {
       mockPool.query
         .mockResolvedValueOnce({ rows: [], rowCount: 0 } as any) // initialize
         .mockResolvedValueOnce({ rows: [], rowCount: 0 } as any); // get executed migrations
-        
+
       mockFs.readdir.mockResolvedValue(['001_failing.sql'] as any);
       mockFs.readFile.mockResolvedValue('INVALID SQL SYNTAX' as any);
-      
+
       // Create a new client mock for this test that will fail
       const failingClient = {
         query: jest.fn()
@@ -155,7 +155,7 @@ describe('MigrationRunner', () => {
           .mockRejectedValueOnce(new Error('Syntax error')), // execute migration fails
         release: jest.fn()
       };
-      
+
       // Update the pool.connect to return the failing client
       mockPool.connect = jest.fn().mockResolvedValue(failingClient);
 
@@ -182,7 +182,7 @@ describe('MigrationRunner', () => {
         rows: [{ filename: '001_initial.sql' }],
         rowCount: 1
       } as any);
-      
+
       mockFs.readdir.mockResolvedValue(['001_initial.sql'] as any);
 
       const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation();
@@ -217,7 +217,7 @@ describe('MigrationRunner', () => {
     it('returns executed and pending migrations', async () => {
       // Mock initialization
       mockPool.query.mockResolvedValueOnce({ rows: [], rowCount: 0 } as any);
-      
+
       // Mock executed migrations
       mockPool.query.mockResolvedValueOnce({
         rows: [
@@ -251,7 +251,7 @@ describe('MigrationRunner', () => {
     it('handles missing migrations directory', async () => {
       // Mock initialization
       mockPool.query.mockResolvedValueOnce({ rows: [], rowCount: 0 } as any);
-      
+
       // Mock executed migrations
       mockPool.query.mockResolvedValueOnce({
         rows: [{ filename: '001_initial.sql' }],
@@ -270,7 +270,7 @@ describe('MigrationRunner', () => {
     it('returns empty arrays when no migrations exist', async () => {
       // Mock initialization
       mockPool.query.mockResolvedValueOnce({ rows: [], rowCount: 0 } as any);
-      
+
       // Mock no executed migrations
       mockPool.query.mockResolvedValueOnce({
         rows: [],
@@ -289,7 +289,7 @@ describe('MigrationRunner', () => {
     it('filters out non-SQL files', async () => {
       // Mock initialization
       mockPool.query.mockResolvedValueOnce({ rows: [], rowCount: 0 } as any);
-      
+
       // Mock no executed migrations
       mockPool.query.mockResolvedValueOnce({
         rows: [],
@@ -329,7 +329,7 @@ describe('runMigrations function', () => {
 
     // Mock no pending migrations
     mockFs.readdir.mockResolvedValue(['001_initial.sql'] as any);
-    
+
     const consoleLogSpy = jest.spyOn(console, 'log').mockImplementation();
 
     await runMigrations(mockPool as any);

@@ -39,11 +39,11 @@ async function migrateAuthInFile(filePath: string): Promise<boolean> {
     // Find the route handler function to get the request parameter
     const routeHandlerRegex = /export\s+async\s+function\s+(GET|POST|PUT|DELETE|PATCH)\s*\(\s*([^)]+)\)/g;
     let match;
-    
+
     while ((match = routeHandlerRegex.exec(content)) !== null) {
       const method = match[1];
       const params = match[2];
-      
+
       // Extract request parameter name (usually 'request' or 'req')
       const requestParamMatch = params.match(/(\w+)\s*:\s*NextRequest/);
       const requestParam = requestParamMatch ? requestParamMatch[1] : 'request';
@@ -58,7 +58,7 @@ async function migrateAuthInFile(filePath: string): Promise<boolean> {
       // Also handle const session = await getServerSession()
       const sessionVarRegex = new RegExp(`const\\s+(\\w+)\\s*=\\s*await\\s+getServerSession\\(\\)`, 'g');
       content = content.replace(sessionVarRegex, `const $1 = await getUnifiedAuth(${requestParam})`);
-      
+
       // Update session?.user?.email to auth?.user.email
       content = content.replace(/(\w+)\?\.user\?\.email/g, '$1?.user.email');
       content = content.replace(/(\w+)\?\.user\?\.id/g, '$1?.user.id');

@@ -79,7 +79,7 @@ export async function performLogout(page: Page) {
  * 檢查是否已登入
  */
 export async function isLoggedIn(page: Page): Promise<boolean> {
-  const isLoggedInStorage = await page.evaluate(() => 
+  const isLoggedInStorage = await page.evaluate(() =>
     localStorage.getItem('isLoggedIn')
   )
   return isLoggedInStorage === 'true'
@@ -89,7 +89,7 @@ export async function isLoggedIn(page: Page): Promise<boolean> {
  * 取得當前用戶資訊
  */
 export async function getCurrentUser(page: Page): Promise<any | null> {
-  const userData = await page.evaluate(() => 
+  const userData = await page.evaluate(() =>
     localStorage.getItem('user')
   )
   return userData ? JSON.parse(userData) : null
@@ -156,7 +156,7 @@ export async function setMockAuthState(
       httpOnly: true,
       secure: false,
       sameSite: 'Lax',
-      expires: rememberMe 
+      expires: rememberMe
         ? Date.now() / 1000 + 30 * 24 * 60 * 60 // 30 天
         : Date.now() / 1000 + 7 * 24 * 60 * 60  // 7 天
     },

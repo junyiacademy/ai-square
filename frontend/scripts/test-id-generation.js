@@ -24,7 +24,7 @@ async function testIdGeneration() {
       "SELECT id FROM users WHERE email = 'test-tdd@example.com'"
     );
     const userId = userResult.rows[0]?.id;
-    
+
     const scenarioResult = await pool.query(
       "SELECT id FROM scenarios WHERE mode = 'pbl' LIMIT 1"
     );
@@ -83,8 +83,8 @@ async function testIdGeneration() {
         id, program_id, scenario_id, mode, task_index, type, status,
         title, instructions, context, metadata, interactions,
         created_at, updated_at
-      ) 
-      SELECT 
+      )
+      SELECT
         gen_random_uuid()::text, $1, $2, $3, task_index, $4, $5,
         $6, $7, $8, $9, $10,
         CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
@@ -101,7 +101,7 @@ async function testIdGeneration() {
     // Verify all IDs are unique
     const allTaskIds = [taskId, ...batchResult.rows.map(r => r.id)];
     const uniqueIds = new Set(allTaskIds);
-    
+
     if (uniqueIds.size === allTaskIds.length) {
       console.log('✅ All task IDs are unique!\n');
     } else {
@@ -112,7 +112,7 @@ async function testIdGeneration() {
     console.log('🧹 Cleaning up test data...');
     await pool.query('DELETE FROM tasks WHERE program_id = $1', [programId]);
     await pool.query('DELETE FROM programs WHERE id = $1', [programId]);
-    
+
     console.log('✅ Test data cleaned up\n');
     console.log('🎉 All ID generation tests passed!');
     console.log('📌 The fix using gen_random_uuid()::text is working correctly.');

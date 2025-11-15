@@ -96,14 +96,14 @@ Object.defineProperty(window, 'localStorage', { value: localStorageMock });
 describe('DashboardPage', () => {
   const mockPush = jest.fn();
   const mockRouter = { push: mockPush };
-  
+
   // Suppress act() warnings for this test suite
   suppressActWarnings();
 
   beforeEach(() => {
     jest.clearAllMocks();
     (useRouter as jest.Mock).mockReturnValue(mockRouter);
-    
+
     // Mock localStorage.getItem to return different values based on key
     localStorageMock.getItem.mockImplementation((key: string) => {
       if (key === 'user') {
@@ -119,7 +119,7 @@ describe('DashboardPage', () => {
       }
       return null;
     });
-    
+
     // Default mock for fetch to prevent hanging tests
     (global.fetch as jest.Mock).mockResolvedValue({
       ok: true,
@@ -136,7 +136,7 @@ describe('DashboardPage', () => {
   });
 
   it('should show loading state initially', async () => {
-    (global.fetch as jest.Mock).mockImplementation(() => 
+    (global.fetch as jest.Mock).mockImplementation(() =>
       new Promise(() => {}) // Never resolves to keep loading state
     );
 
@@ -184,18 +184,18 @@ describe('DashboardPage', () => {
 
     // Check if assessment results are displayed
     await waitFor(() => {
-      const progressText = screen.queryByText('AI Literacy Progress') || 
+      const progressText = screen.queryByText('AI Literacy Progress') ||
                           screen.queryByText(/literacy/i) ||
                           screen.queryByText(/progress/i);
       if (progressText) expect(progressText).toBeInTheDocument();
-      
+
       // Check scores
       const score80 = screen.queryByText('80%');
       const score90 = screen.queryByText('90%');
       if (score80) expect(score80).toBeInTheDocument();
       if (score90) expect(score90).toBeInTheDocument();
     });
-    
+
     expect(global.fetch).toHaveBeenCalledWith(
       expect.stringContaining('/api/assessment/results?userId=1&userEmail=test%40example.com'),
       { credentials: 'include' }
@@ -428,7 +428,7 @@ describe('DashboardPage', () => {
   it('should handle assessment API failure and fallback to localStorage', async () => {
     const mockLocalAssessment = {
       overallScore: 75,
-      domainScores: { 
+      domainScores: {
         engaging_with_ai: 70,
         creating_with_ai: 75,
         managing_ai: 80,
@@ -595,7 +595,7 @@ describe('DashboardPage', () => {
       expect(screen.getByText('Creating with AI')).toBeInTheDocument();
       expect(screen.getByText('Managing AI')).toBeInTheDocument();
       expect(screen.getByText('Designing AI')).toBeInTheDocument();
-      
+
       // Check that scores are displayed
       const scoreElements = screen.getAllByText(/\d+%/);
       expect(scoreElements.length).toBeGreaterThanOrEqual(4); // 4 domain scores
@@ -700,7 +700,7 @@ describe('DashboardPage', () => {
       // Check for progress bars
       const progressBars = container.querySelectorAll('.bg-blue-600');
       expect(progressBars.length).toBeGreaterThan(0);
-      
+
       // Check if progress bars have correct width styles
       const progressBar80 = Array.from(progressBars).find(
         bar => (bar as HTMLElement).style.width === '80%'

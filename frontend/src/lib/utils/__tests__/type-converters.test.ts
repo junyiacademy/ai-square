@@ -214,7 +214,7 @@ describe('Type Converters', () => {
     it('should convert to Record<string, string>', () => {
       const toRecord = (value: unknown): Record<string, string> => {
         if (!value || typeof value !== 'object') return {};
-        
+
         const result: Record<string, string> = {};
         for (const [key, val] of Object.entries(value)) {
           if (typeof val === 'string') {
@@ -238,7 +238,7 @@ describe('Type Converters', () => {
     it('should convert to multilingual object', () => {
       const toMultilingual = (value: unknown): Record<string, string> => {
         if (!value) return { en: '' };
-        
+
         if (typeof value === 'string') {
           // Check if it's JSON
           if (value.startsWith('{')) {
@@ -251,11 +251,11 @@ describe('Type Converters', () => {
           }
           return { en: value };
         }
-        
+
         if (typeof value === 'object' && !Array.isArray(value)) {
           return value as Record<string, string>;
         }
-        
+
         return { en: String(value) };
       };
 

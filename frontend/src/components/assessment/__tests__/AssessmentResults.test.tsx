@@ -127,11 +127,11 @@ const mockT = jest.fn((key: unknown, options?: { level?: string; score?: number;
     'domains.managing_with_ai': 'Managing AI',
     'domains.designing_with_ai': 'Designing AI',
   };
-  
+
   if (key === 'results.summaryText') {
     return `You achieved ${options?.level} level with ${options?.score}% overall score, answering ${options?.correct} out of ${options?.total} questions correctly.`;
   }
-  
+
   return translations[key as string] || String(key);
 });
 
@@ -188,7 +188,7 @@ describe('AssessmentResults', () => {
       i18n: { language: 'en' },
     } as any);
     jest.clearAllMocks();
-    
+
     // Mock localStorage
     const localStorageMock = {
       getItem: jest.fn(),
@@ -200,7 +200,7 @@ describe('AssessmentResults', () => {
       value: localStorageMock,
       writable: true,
     });
-    
+
     // Mock fetch
     global.fetch = jest.fn();
   });

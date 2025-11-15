@@ -224,7 +224,7 @@ describe('/api/discovery/programs/[programId]/regenerate', () => {
       mockTaskRepo.findByProgram.mockResolvedValue(mockCompletedTasks);
       (mockScenarioRepo.findById as jest.Mock).mockResolvedValue(mockScenario);
       mockEvaluationRepo.findByProgram.mockResolvedValue([]);
-      
+
       const chineseFeedback = {
         overallAssessment: '學習者展現了優秀的問題解決能力',
         careerAlignment: '非常適合軟體工程師職涯',
@@ -232,11 +232,11 @@ describe('/api/discovery/programs/[programId]/regenerate', () => {
         growthAreas: ['技術深度', '系統設計'],
         nextSteps: ['學習演算法', '建立專案']
       };
-      
+
       mockVertexAIService.sendMessage.mockResolvedValue({
         content: JSON.stringify(chineseFeedback)
       });
-      
+
       mockTranslationService.translateFeedback
         .mockResolvedValueOnce('The learner demonstrated excellent problem-solving skills')
         .mockResolvedValueOnce('Very suitable for software engineering career')

@@ -19,9 +19,9 @@ jest.mock('@/hooks/useAuth', () => ({
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string, defaultValue?: string) => defaultValue || key,
-    i18n: { 
-      changeLanguage: jest.fn(), 
-      language: 'en' 
+    i18n: {
+      changeLanguage: jest.fn(),
+      language: 'en'
     }
   })
 }));
@@ -38,7 +38,7 @@ describe('AccountSettingsPage', () => {
     (useRouter as jest.Mock).mockReturnValue(mockRouter);
     (global.fetch as jest.Mock).mockResolvedValue({
       ok: true,
-      json: async () => ({ 
+      json: async () => ({
         consents: [],
         requiredConsents: []
       })
@@ -65,7 +65,7 @@ describe('AccountSettingsPage', () => {
     });
 
     const { container } = render(<AccountSettingsPage />);
-    
+
     await waitFor(() => {
       expect(container).toBeTruthy();
       expect(mockPush).not.toHaveBeenCalled();
@@ -79,7 +79,7 @@ describe('AccountSettingsPage', () => {
     });
 
     render(<AccountSettingsPage />);
-    
+
     // Component should handle loading state
     expect(screen.queryByText(/Account Settings/)).toBeDefined();
   });

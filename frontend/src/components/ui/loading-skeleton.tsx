@@ -5,9 +5,9 @@ interface LoadingSkeletonProps {
   animate?: boolean
 }
 
-export function LoadingSkeleton({ 
-  className = '', 
-  animate = true 
+export function LoadingSkeleton({
+  className = '',
+  animate = true
 }: LoadingSkeletonProps) {
   return (
     <div
@@ -33,9 +33,9 @@ export function LoadingCard({ showImage = true, lines = 3 }: LoadingCardProps) {
       )}
       <LoadingSkeleton className="h-6 w-3/4 mb-2" />
       {Array.from({ length: lines }).map((_, i) => (
-        <LoadingSkeleton 
-          key={i} 
-          className={`h-4 ${i === lines - 1 ? 'w-1/2' : 'w-full'} mb-2`} 
+        <LoadingSkeleton
+          key={i}
+          className={`h-4 ${i === lines - 1 ? 'w-1/2' : 'w-full'} mb-2`}
         />
       ))}
     </div>
@@ -46,7 +46,7 @@ export function LoadingAccordion() {
   return (
     <div className="space-y-4">
       {Array.from({ length: 4 }).map((_, i) => (
-        <div 
+        <div
           key={i}
           className="bg-gradient-to-r from-blue-100 to-purple-100 px-6 py-4 rounded-lg shadow"
         >

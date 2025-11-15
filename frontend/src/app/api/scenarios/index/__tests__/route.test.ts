@@ -215,27 +215,27 @@ describe('/api/scenarios/index', () => {
 
 /**
  * Scenario Index API Considerations:
- * 
+ *
  * 1. Index Management:
  *    - Maps YAML paths to UUIDs bidirectionally
  *    - Supports rebuild with query parameter
  *    - Tracks build status and progress
- * 
+ *
  * 2. Cache Operations:
  *    - GET ensures index exists before reading
  *    - DELETE invalidates cache for refresh
  *    - Handles concurrent build operations
- * 
+ *
  * 3. Data Structure:
  *    - Converts Maps to objects for JSON
  *    - Includes metadata (mode, createdAt)
  *    - Tracks last update time
- * 
+ *
  * 4. Error Handling:
  *    - 503 when index unavailable
  *    - 500 for service errors
  *    - Detailed error messages
- * 
+ *
  * 5. Performance:
  *    - Index may contain hundreds of mappings
  *    - Rebuild can be resource intensive

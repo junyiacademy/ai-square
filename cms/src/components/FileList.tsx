@@ -22,14 +22,14 @@ export default function FileList({ onFileSelect, currentDirectory }: FileListPro
     try {
       setLoading(true)
       setError(null)
-      
+
       const url = directory ? `/api/files?directory=${directory}` : '/api/files'
       const response = await fetch(url)
-      
+
       if (!response.ok) {
         throw new Error('Failed to load files')
       }
-      
+
       const data = await response.json()
       setFiles(data.files || [])
     } catch (error) {
@@ -74,9 +74,9 @@ export default function FileList({ onFileSelect, currentDirectory }: FileListPro
       {currentDirectory && (
         <button onClick={handleBackClick}>← Back</button>
       )}
-      
+
       <button onClick={() => loadFiles(currentDirectory)}>Refresh</button>
-      
+
       <ul>
         {files.map((file) => (
           <li key={file.path}>

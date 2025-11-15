@@ -80,14 +80,14 @@ export async function POST(request: NextRequest) {
     try {
       // Clean the generated text to remove markdown code blocks
       let cleanedText = translatedText.trim();
-      
+
       // Remove markdown code block markers if present
       if (cleanedText.startsWith('```json')) {
         cleanedText = cleanedText.replace(/^```json\s*/, '').replace(/\s*```$/, '');
       } else if (cleanedText.startsWith('```')) {
         cleanedText = cleanedText.replace(/^```\s*/, '').replace(/\s*```$/, '');
       }
-      
+
       translatedContent = JSON.parse(cleanedText);
     } catch (parseError) {
       console.error('Failed to parse translation response:', translatedText);
@@ -114,9 +114,9 @@ function buildTranslationPrompt(
 ): string {
   const sourceLanguage = SUPPORTED_LOCALES[sourceLocale];
   const targetLanguage = SUPPORTED_LOCALES[targetLocale];
-  
+
   // Filter content to only specified fields if provided
-  const contentToTranslate = fields 
+  const contentToTranslate = fields
     ? Object.fromEntries(
         Object.entries(context).filter(([key]) => fields.includes(key))
       )

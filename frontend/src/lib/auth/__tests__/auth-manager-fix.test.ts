@@ -6,7 +6,7 @@ describe('AuthManager Fixed Implementation', () => {
     it('should validate 64-character hex tokens', () => {
       // Standard token generation used in login/register
       const validToken = crypto.randomBytes(32).toString('hex');
-      
+
       expect(AuthManager.isValidSessionToken(validToken)).toBe(true);
     });
 

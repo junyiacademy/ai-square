@@ -9,7 +9,7 @@ describe('Basic API Health', () => {
   it('should respond to health check', async () => {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 5000);
-    
+
     try {
       // Use the correct health endpoint
       const response = await fetch(`${baseUrl}/api/monitoring/health`, {
@@ -17,7 +17,7 @@ describe('Basic API Health', () => {
       });
       clearTimeout(timeout);
       expect(response.ok).toBe(true);
-      
+
       const data = await response.json().catch(() => ({}));
       // Best-effort: only assert structure when present
       if (data && typeof data === 'object' && 'status' in data) {
@@ -37,14 +37,14 @@ describe('Basic API Health', () => {
   it('should respond to KSA endpoint', async () => {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 5000);
-    
+
     try {
       const response = await fetch(`${baseUrl}/api/ksa?lang=en`, {
         signal: controller.signal
       });
       clearTimeout(timeout);
       expect(response.ok).toBe(true);
-      
+
       const data = await response.json().catch(() => ({}));
       // Best-effort: only assert when present
       if (data && typeof data === 'object') {
@@ -67,14 +67,14 @@ describe('Basic API Health', () => {
   it('should respond to relations endpoint', async () => {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 5000);
-    
+
     try {
       const response = await fetch(`${baseUrl}/api/relations?lang=en`, {
         signal: controller.signal
       });
       clearTimeout(timeout);
       expect(response.ok).toBe(true);
-      
+
       const data = await response.json().catch(() => ({}));
       if (data && typeof data === 'object' && 'domains' in data) {
         expect(Array.isArray(data.domains)).toBe(true);
@@ -93,7 +93,7 @@ describe('Basic API Health', () => {
   it('should handle 404 properly (accept 200 in serverless/static env)', async () => {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 5000);
-    
+
     try {
       const response = await fetch(`${baseUrl}/api/non-existent-endpoint`, {
         signal: controller.signal

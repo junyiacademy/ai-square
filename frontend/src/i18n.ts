@@ -209,7 +209,7 @@ import deJourney from '../public/locales/de/journey.json';
 import ruJourney from '../public/locales/ru/journey.json';
 import itJourney from '../public/locales/it/journey.json';
 
-// Learning 翻譯  
+// Learning 翻譯
 import zhTWLearning from '../public/locales/zhTW/learning.json';
 import zhCNLearning from '../public/locales/zhCN/learning.json';
 import ptLearning from '../public/locales/pt/learning.json';
@@ -272,7 +272,7 @@ i18n
   .use(initReactI18next)
   .init({
     resources: {
-      'zhTW': { 
+      'zhTW': {
         relations: zhTWRelations,
         auth: zhTWAuth,
         navigation: zhTWNavigation,
@@ -291,7 +291,7 @@ i18n
         discovery: zhTWDiscovery,
         skills: zhTWSkills
       },
-      'zhCN': { 
+      'zhCN': {
         relations: zhCNRelations,
         auth: zhCNAuth,
         navigation: zhCNNavigation,
@@ -309,7 +309,7 @@ i18n
         legal: zhCNLegal,
         skills: zhCNSkills
       },
-      'pt': { 
+      'pt': {
         relations: ptRelations,
         auth: ptAuth,
         navigation: ptNavigation,
@@ -327,7 +327,7 @@ i18n
         legal: ptLegal,
         skills: ptSkills
       },
-      'ar': { 
+      'ar': {
         relations: arRelations,
         auth: arAuth,
         navigation: arNavigation,
@@ -345,7 +345,7 @@ i18n
         legal: arLegal,
         skills: arSkills
       },
-      'id': { 
+      'id': {
         relations: idRelations,
         auth: idAuth,
         navigation: idNavigation,
@@ -363,7 +363,7 @@ i18n
         legal: idLegal,
         skills: idSkills
       },
-      'th': { 
+      'th': {
         relations: thRelations,
         auth: thAuth,
         navigation: thNavigation,
@@ -381,7 +381,7 @@ i18n
         legal: thLegal,
         skills: thSkills
       },
-      en: { 
+      en: {
         relations: enRelations,
         auth: enAuth,
         navigation: enNavigation,
@@ -400,7 +400,7 @@ i18n
         discovery: enDiscovery,
         skills: enSkills
       },
-      es: { 
+      es: {
         relations: esRelations,
         auth: esAuth,
         navigation: esNavigation,
@@ -418,7 +418,7 @@ i18n
         legal: esLegal,
         skills: esSkills
       },
-      ja: { 
+      ja: {
         relations: jaRelations,
         auth: jaAuth,
         navigation: jaNavigation,
@@ -436,7 +436,7 @@ i18n
         legal: jaLegal,
         skills: jaSkills
       },
-      ko: { 
+      ko: {
         relations: koRelations,
         auth: koAuth,
         navigation: koNavigation,
@@ -454,7 +454,7 @@ i18n
         legal: koLegal,
         skills: koSkills
       },
-      fr: { 
+      fr: {
         relations: frRelations,
         auth: frAuth,
         navigation: frNavigation,
@@ -472,7 +472,7 @@ i18n
         legal: frLegal,
         skills: frSkills
       },
-      de: { 
+      de: {
         relations: deRelations,
         auth: deAuth,
         navigation: deNavigation,
@@ -490,7 +490,7 @@ i18n
         legal: deLegal,
         skills: deSkills
       },
-      ru: { 
+      ru: {
         relations: ruRelations,
         auth: ruAuth,
         navigation: ruNavigation,
@@ -508,7 +508,7 @@ i18n
         legal: ruLegal,
         skills: ruSkills
       },
-      it: { 
+      it: {
         relations: itRelations,
         auth: itAuth,
         navigation: itNavigation,
@@ -533,4 +533,4 @@ i18n
     defaultNS: 'relations', // 預設命名空間
   });
 
-export default i18n; 
+export default i18n;

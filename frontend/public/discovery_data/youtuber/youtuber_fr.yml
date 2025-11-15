@@ -6,10 +6,10 @@ metadata:
   title: "Barde Vidéo - YouTuber"
   short_description: "Présentez des histoires vidéo captivantes sur des scènes numériques"
   long_description: |
-    Vous êtes un nouveau membre de la "Guilde des Bardes Vidéo", doué pour raconter 
-    des histoires à travers les objectifs et divertir les audiences. Dans ce royaume 
-    numérique de créativité et de technologie, chaque vidéo est une performance, 
-    chaque abonné est votre audience, et votre mission est de créer du contenu 
+    Vous êtes un nouveau membre de la "Guilde des Bardes Vidéo", doué pour raconter
+    des histoires à travers les objectifs et divertir les audiences. Dans ce royaume
+    numérique de créativité et de technologie, chaque vidéo est une performance,
+    chaque abonné est votre audience, et votre mission est de créer du contenu
     vidéo qui touche les cœurs et suscite la résonance.
   estimated_hours: 55
   skill_focus:
@@ -20,18 +20,18 @@ metadata:
 world_setting:
   name: "Guilde des Bardes Vidéo"
   description: |
-    La Guilde des Bardes Vidéo est une guilde artistique qui cultive les meilleurs 
-    créateurs de contenu. Ici, les créateurs apprennent à équilibrer la créativité 
-    avec les demandes de l'algorithme, l'authenticité avec les attentes de l'audience, 
+    La Guilde des Bardes Vidéo est une guilde artistique qui cultive les meilleurs
+    créateurs de contenu. Ici, les créateurs apprennent à équilibrer la créativité
+    avec les demandes de l'algorithme, l'authenticité avec les attentes de l'audience,
     construisant des chaînes qui inspirent et divertissent des millions de personnes.
   atmosphere: creative_dynamic
   visual_theme: digital_stage
 starting_scenario:
   title: "Le Changement d'Algorithme"
   description: |
-    Le Directeur Créatif vous accueille avec des nouvelles préoccupantes : Algorithme, 
-    le roi capricieux, a soudainement changé ses préférences, enterrant le travail 
-    de nombreux créateurs. Vous devez trouver l'équilibre entre maintenir l'intégrité 
+    Le Directeur Créatif vous accueille avec des nouvelles préoccupantes : Algorithme,
+    le roi capricieux, a soudainement changé ses préférences, enterrant le travail
+    de nombreux créateurs. Vous devez trouver l'équilibre entre maintenir l'intégrité
     créative et s'adapter aux demandes algorithmiques.
   initial_tasks:
     - understand_youtube

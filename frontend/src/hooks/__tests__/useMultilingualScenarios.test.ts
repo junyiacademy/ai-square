@@ -35,7 +35,7 @@ describe('useMultilingualScenarios', () => {
 
   it('should return initial state correctly', () => {
     const { result } = renderHook(() => useMultilingualScenarios());
-    
+
     expect(result.current.scenarios).toEqual([]);
     expect(result.current.loading).toBe(true);
     expect(result.current.error).toBe(null);
@@ -43,9 +43,9 @@ describe('useMultilingualScenarios', () => {
 
   it('should handle loading state', async () => {
     const { result } = renderHook(() => useMultilingualScenarios());
-    
+
     expect(result.current.loading).toBe(true);
-    
+
     await waitFor(() => {
       expect(result.current.loading).toBe(false);
     });
@@ -55,9 +55,9 @@ describe('useMultilingualScenarios', () => {
     (global.fetch as jest.MockedFunction<typeof fetch>).mockRejectedValue(
       new Error('Network error')
     );
-    
+
     const { result } = renderHook(() => useMultilingualScenarios());
-    
+
     await waitFor(() => {
       expect(result.current.loading).toBe(false);
       expect(result.current.error).toBeTruthy();

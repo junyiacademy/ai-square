@@ -348,7 +348,7 @@ describe('Assessment Scenarios Programs API', () => {
       const data = await response.json();
 
       expect(response.status).toBe(500);
-      expect(data).toEqual({ 
+      expect(data).toEqual({
         error: 'Failed to create program',
         details: 'Database error'
       });

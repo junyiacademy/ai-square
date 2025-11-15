@@ -9,16 +9,16 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const lang = searchParams.get('lang') || 'en';
-    
+
     // Get discovery scenarios from database
     const scenarioRepo = repositoryFactory.getScenarioRepository();
     const scenarios = await scenarioRepo.findByMode?.('discovery') || [];
-    
+
     // Transform scenarios to paths format
     const paths = scenarios.map((scenario: IScenario) => ({
       id: scenario.id,
-      title: typeof scenario.title === 'string' 
-        ? scenario.title 
+      title: typeof scenario.title === 'string'
+        ? scenario.title
         : scenario.title?.[lang] || scenario.title?.en || '',
       description: typeof scenario.description === 'string'
         ? scenario.description
@@ -29,7 +29,7 @@ export async function GET(request: Request) {
       prerequisites: scenario.prerequisites || [],
       status: scenario.status || 'active'
     }));
-    
+
     return NextResponse.json({
       success: true,
       data: {

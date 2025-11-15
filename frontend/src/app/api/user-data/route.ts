@@ -5,7 +5,7 @@ import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 export async function GET(request: NextRequest) {
   try {
     const auth = await getUnifiedAuth(request);
-    
+
     if (!auth) {
       console.log('[API] GET /api/user-data - authentication failed');
       return createUnauthorizedResponse();
@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
 
     const userRepo = repositoryFactory.getUserRepository();
     const userData = await userRepo.getUserData(auth.user.email);
-    
+
     return NextResponse.json({
       success: true,
       data: userData
@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const auth = await getUnifiedAuth(request);
-    
+
     if (!auth) {
       console.log('[API] POST /api/user-data - authentication failed');
       return createUnauthorizedResponse();
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
 
     const userRepo = repositoryFactory.getUserRepository();
     const savedData = await userRepo.saveUserData(auth.user.email, data);
-    
+
     return NextResponse.json({
       success: true,
       data: savedData
@@ -58,14 +58,14 @@ export async function POST(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   try {
     const auth = await getUnifiedAuth(request);
-    
+
     if (!auth) {
       return createUnauthorizedResponse();
     }
 
     const userRepo = repositoryFactory.getUserRepository();
     const success = await userRepo.deleteUserData(auth.user.email);
-    
+
     return NextResponse.json({
       success
     });

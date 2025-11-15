@@ -26,11 +26,11 @@ describe('/api/legal/consent', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     mockPool = {
       query: jest.fn()
     };
-    
+
     mockGetPool.mockReturnValue(mockPool as any);
   });
 
@@ -407,7 +407,7 @@ describe('/api/legal/consent', () => {
           version: '1.0',
           title: 'Privacy Policy'
         });
-        
+
         expect(data.requiresConsent).toHaveLength(2);
         expect(data.requiresConsent).toContainEqual({
           type: 'privacy_policy',

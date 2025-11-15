@@ -28,11 +28,11 @@ jest.mock('react-i18next', () => ({
         'journey.pbl.title': 'Problem-Based Learning',
         'journey.discovery.title': 'Discovery',
       };
-      
+
       if (options?.defaultValue) {
         return options.defaultValue;
       }
-      
+
       return translations[key] || key;
     },
     i18n: {
@@ -50,9 +50,9 @@ describe('JourneyPage', () => {
 
   it('should render journey page title', async () => {
     renderWithProviders(<JourneyPage />);
-    
+
     await waitFor(() => {
-      const titleElement = screen.queryByText('Learning Journey') || 
+      const titleElement = screen.queryByText('Learning Journey') ||
                           screen.queryByText('AI Square 用戶旅程') ||
                           screen.queryByText(/journey/i) ||
                           screen.queryByText(/旅程/);
@@ -62,10 +62,10 @@ describe('JourneyPage', () => {
 
   it('should render learning phases', async () => {
     renderWithProviders(<JourneyPage />);
-    
+
     await waitFor(() => {
       // Check for phase indicators - look for numbers or phase-related content
-      const phase1 = screen.queryByText('Phase 1: Foundation') || 
+      const phase1 = screen.queryByText('Phase 1: Foundation') ||
                     screen.queryByText(/phase.*1/i) ||
                     document.querySelector('[class*="phase"]');
       if (phase1) expect(phase1).toBeInTheDocument();
@@ -74,12 +74,12 @@ describe('JourneyPage', () => {
 
   it('should render learning modules', async () => {
     renderWithProviders(<JourneyPage />);
-    
+
     await waitFor(() => {
       // Check for learning modules - all content is in Chinese
       const assessmentModules = screen.queryAllByText('評估');
       const dashboardModules = screen.queryAllByText('儀表板');
-      
+
       // Should have at least one of each module type
       expect(assessmentModules.length).toBeGreaterThan(0);
       expect(dashboardModules.length).toBeGreaterThan(0);
@@ -88,9 +88,9 @@ describe('JourneyPage', () => {
 
   it('should render back navigation', async () => {
     renderWithProviders(<JourneyPage />);
-    
+
     await waitFor(() => {
-      const backButton = screen.queryByText('Back') || 
+      const backButton = screen.queryByText('Back') ||
                         screen.queryByText('返回') ||
                         screen.queryByRole('link', { name: /back/i }) ||
                         document.querySelector('a[href="/"]');
@@ -100,14 +100,14 @@ describe('JourneyPage', () => {
 
   it('should render page content without errors', async () => {
     const { container } = renderWithProviders(<JourneyPage />);
-    
+
     expect(container).toBeInTheDocument();
     expect(container.firstChild).toBeInTheDocument();
   });
 
   it('should have proper accessibility structure', async () => {
     renderWithProviders(<JourneyPage />);
-    
+
     // Should have headings
     const headings = screen.getAllByRole('heading');
     expect(headings.length).toBeGreaterThan(0);
@@ -115,21 +115,21 @@ describe('JourneyPage', () => {
 
   it('should render with content', async () => {
     renderWithProviders(<JourneyPage />);
-    
+
     // Page renders with Chinese content by default
     expect(screen.getByText('AI Square 用戶旅程')).toBeInTheDocument();
   });
 
   it('should handle content rendering gracefully', async () => {
     renderWithProviders(<JourneyPage />);
-    
+
     // Component should render the main heading
     expect(screen.getByText('AI Square 用戶旅程')).toBeInTheDocument();
   });
 
   it('should render interactive elements', async () => {
     renderWithProviders(<JourneyPage />);
-    
+
     // Should have clickable elements or links
     const buttons = screen.getAllByRole('button');
     expect(buttons.length).toBeGreaterThanOrEqual(1);

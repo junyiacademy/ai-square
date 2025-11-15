@@ -22,7 +22,7 @@ describe('Discovery Complete Page', () => {
     jest.clearAllMocks();
     (global.fetch as jest.Mock).mockResolvedValue({
       ok: true,
-      json: async () => ({ 
+      json: async () => ({
         success: true,
         program: {
           id: 'test-program-id',

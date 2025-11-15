@@ -76,7 +76,7 @@ describe('/api/programs/[id] Route', () => {
       expect(mockProgramRepo.findById).toHaveBeenCalledWith('test-program-id');
       expect(mockTaskRepo.findByProgram).toHaveBeenCalledWith('test-program-id');
       expect(mockEvaluationRepo.findByProgram).toHaveBeenCalledWith('test-program-id');
-      
+
       expect(data).toEqual({
         ...mockProgram,
         tasks: mockTasks,
@@ -92,7 +92,7 @@ describe('/api/programs/[id] Route', () => {
 
       const response = await GET(request, { params });
       expect(response.status).toBe(404);
-      
+
       const data = await response.json();
       expect(data).toEqual({ error: 'Program not found' });
     });
@@ -103,7 +103,7 @@ describe('/api/programs/[id] Route', () => {
       const updateData = { status: 'completed' };
       const endTime = new Date();
       const updatedProgram = { ...mockProgram, ...updateData, endTime: endTime.toISOString() };
-      
+
       mockProgramRepo.update.mockResolvedValue(updatedProgram);
       (mockScenarioRepo.findById as jest.Mock).mockResolvedValue({ xpRewards: { completion: 100 } });
 
@@ -120,14 +120,14 @@ describe('/api/programs/[id] Route', () => {
         status: 'completed',
         endTime: expect.any(Date)
       }));
-      
+
       expect(data).toEqual(updatedProgram);
     });
 
     it('should update user XP when program is completed', async () => {
       const updateData = { status: 'completed' };
       const updatedProgram = { ...mockProgram, ...updateData };
-      
+
       mockProgramRepo.update.mockResolvedValue(updatedProgram);
       (mockScenarioRepo.findById as jest.Mock).mockResolvedValue({ xpRewards: { completion: 150 } });
 

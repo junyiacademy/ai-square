@@ -112,7 +112,7 @@ describe('/api/admin/init-pbl', () => {
         tasks: [],
       };
 
-      // Mock Traditional Chinese YAML  
+      // Mock Traditional Chinese YAML
       const mockZhTwYamlData = {
         scenario_info: {
           id: 'semiconductor-adventure',
@@ -131,7 +131,7 @@ describe('/api/admin/init-pbl', () => {
         .mockResolvedValueOnce('en yaml content')     // Primary file (en)
         .mockResolvedValueOnce('en yaml content')     // Loop iteration 1 (en)
         .mockResolvedValueOnce('zhTW yaml content');  // Loop iteration 2 (zhTW)
-      
+
       (yaml.load as jest.Mock)
         .mockReturnValueOnce(mockEnYamlData)    // Primary file load
         .mockReturnValueOnce(mockEnYamlData)    // Loop iteration 1 load
@@ -150,7 +150,7 @@ describe('/api/admin/init-pbl', () => {
 
       expect(response.status).toBe(200);
       expect(result.success).toBe(true);
-      
+
       // Verify that create was called with multilingual prerequisites in metadata
       expect(mockCreate).toHaveBeenCalledWith(
         expect.objectContaining({

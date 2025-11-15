@@ -27,7 +27,7 @@ export function HistoryListSkeleton() {
             </div>
             <div className="h-6 w-20 bg-gray-300 dark:bg-gray-600 rounded-full" />
           </div>
-          
+
           {/* Stats Section */}
           <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 mt-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -37,7 +37,7 @@ export function HistoryListSkeleton() {
                 <div className="h-8 w-16 bg-gray-300 dark:bg-gray-600 rounded mb-1" />
                 <div className="h-4 w-32 bg-gray-200 dark:bg-gray-600 rounded" />
               </div>
-              
+
               {/* Right Column */}
               <div>
                 <div className="h-3 w-24 bg-gray-200 dark:bg-gray-600 rounded mb-2" />
@@ -53,7 +53,7 @@ export function HistoryListSkeleton() {
               </div>
             </div>
           </div>
-          
+
           {/* Footer */}
           <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 flex items-center justify-between">
             <div className="flex items-center">

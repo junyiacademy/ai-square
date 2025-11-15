@@ -24,13 +24,13 @@ describe('FileEditor', () => {
 
   it('should render editor with no file selected', () => {
     render(<FileEditor selectedFile={null} />)
-    
+
     expect(screen.getByText('Select a file to edit')).toBeInTheDocument()
   })
 
   it('should load and display file content', async () => {
     const mockContent = 'scenario_info:\\n  title: Test Scenario'
-    
+
     ;(fetch as jest.MockedFunction<typeof fetch>).mockResolvedValueOnce({
       ok: true,
       json: async () => ({ content: mockContent }),
@@ -59,7 +59,7 @@ describe('FileEditor', () => {
 
   it('should save file content', async () => {
     const mockContent = 'scenario_info:\\n  title: Test Scenario'
-    
+
     ;(fetch as jest.MockedFunction<typeof fetch>)
       .mockResolvedValueOnce({
         ok: true,
@@ -100,7 +100,7 @@ describe('FileEditor', () => {
 
   it('should handle save errors', async () => {
     const mockContent = 'scenario_info:\\n  title: Test Scenario'
-    
+
     ;(fetch as jest.MockedFunction<typeof fetch>)
       .mockResolvedValueOnce({
         ok: true,
@@ -124,7 +124,7 @@ describe('FileEditor', () => {
   it('should use AI assistance', async () => {
     const mockContent = 'scenario_info:\\n  title: Basic Scenario'
     const mockImprovedContent = 'scenario_info:\\n  title: Enhanced Scenario'
-    
+
     ;(fetch as jest.MockedFunction<typeof fetch>)
       .mockResolvedValueOnce({
         ok: true,
@@ -162,7 +162,7 @@ describe('FileEditor', () => {
 
   it('should handle AI assistance errors', async () => {
     const mockContent = 'scenario_info:\\n  title: Basic Scenario'
-    
+
     ;(fetch as jest.MockedFunction<typeof fetch>)
       .mockResolvedValueOnce({
         ok: true,
@@ -185,7 +185,7 @@ describe('FileEditor', () => {
 
   it('should show unsaved changes indicator', async () => {
     const mockContent = 'scenario_info:\\n  title: Test Scenario'
-    
+
     ;(fetch as jest.MockedFunction<typeof fetch>).mockResolvedValueOnce({
       ok: true,
       json: async () => ({ content: mockContent }),
@@ -206,7 +206,7 @@ describe('FileEditor', () => {
 
   it('should handle different AI actions', async () => {
     const mockContent = 'scenario_info:\\n  title: Basic Scenario'
-    
+
     ;(fetch as jest.MockedFunction<typeof fetch>)
       .mockResolvedValueOnce({
         ok: true,
@@ -240,7 +240,7 @@ describe('FileEditor', () => {
   it('should reload file content when selectedFile changes', async () => {
     const mockContent1 = 'file1 content'
     const mockContent2 = 'file2 content'
-    
+
     ;(fetch as jest.MockedFunction<typeof fetch>)
       .mockResolvedValueOnce({
         ok: true,

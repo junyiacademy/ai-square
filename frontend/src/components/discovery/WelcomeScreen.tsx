@@ -72,7 +72,7 @@ export default function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
       glow: 'shadow-purple-500/25'
     },
     {
-      key: 'ai_powered', 
+      key: 'ai_powered',
       icon: Cpu,
       color: 'from-blue-500 to-cyan-500',
       glow: 'shadow-blue-500/25'
@@ -148,11 +148,11 @@ export default function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
         >
           {/* 3D 旋轉圖標 */}
           <motion.div
-            animate={{ 
+            animate={{
               rotateY: 360,
               scale: isHovering ? 1.1 : 1
             }}
-            transition={{ 
+            transition={{
               rotateY: { duration: 8, repeat: Infinity, ease: "linear" },
               scale: { duration: 0.2 }
             }}
@@ -168,18 +168,18 @@ export default function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
               <Sparkles className="w-12 h-12 text-white" />
             </motion.div>
           </motion.div>
-          
-          <motion.h1 
+
+          <motion.h1
             className="text-4xl md:text-5xl font-black mb-4 bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent"
-            animate={{ 
-              backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'] 
+            animate={{
+              backgroundPosition: ['0% 50%', '100% 50%', '0% 50%']
             }}
             transition={{ duration: 3, repeat: Infinity }}
           >
             {t('welcomeScreen.title')}
           </motion.h1>
-          
-          <motion.p 
+
+          <motion.p
             className="text-lg md:text-xl text-gray-300 mb-4 max-w-3xl mx-auto font-light"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -187,11 +187,11 @@ export default function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
           >
             {t('welcomeScreen.subtitle')}
           </motion.p>
-          
+
           {/* 發光啟動按鈕 */}
           <motion.button
             onClick={onStartJourney}
-            whileHover={{ 
+            whileHover={{
               scale: 1.05,
               boxShadow: "0 0 30px rgba(168, 85, 247, 0.6)"
             }}
@@ -205,7 +205,7 @@ export default function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
               <Rocket className="w-6 h-6" />
             </motion.div>
             <span className="relative z-10">{t('welcomeScreen.startJourney')}</span>
-            
+
             {/* 按鈕光效 */}
             <motion.div
               className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-400 to-cyan-400 opacity-0 group-hover:opacity-20 transition-opacity duration-300"
@@ -219,7 +219,7 @@ export default function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
               transition={{ duration: 2, repeat: Infinity }}
             />
           </motion.button>
-          
+
           {/* 互動提示 */}
           <motion.div
             initial={{ opacity: 0 }}
@@ -252,15 +252,15 @@ export default function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
         >
           {features.map((feature, index) => {
             const Icon = feature.icon;
-            
+
             return (
               <motion.div
                 key={feature.key}
                 initial={{ opacity: 0, y: 20, rotateY: -30 }}
                 animate={{ opacity: 1, y: 0, rotateY: 0 }}
                 transition={{ duration: 0.6, delay: 0.7 + index * 0.1 }}
-                whileHover={{ 
-                  y: -10, 
+                whileHover={{
+                  y: -10,
                   rotateY: 5,
                   transition: { duration: 0.2 }
                 }}
@@ -269,7 +269,7 @@ export default function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
               >
                 {/* 發光邊框 */}
                 <div className={`absolute inset-0 rounded-3xl bg-gradient-to-r ${feature.color} opacity-0 group-hover:opacity-20 transition-opacity duration-300`} />
-                
+
                 {/* 圖標 */}
                 <motion.div
                   whileHover={{ scale: 1.1, rotateZ: 5 }}
@@ -277,22 +277,22 @@ export default function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
                 >
                   <Icon className="w-6 h-6 text-white" />
                 </motion.div>
-                
+
                 <h3 className="text-xl font-bold text-white mb-3 group-hover:text-purple-200 transition-colors">
                   {t(`welcomeScreen.features.${feature.key}.title`)}
                 </h3>
-                
+
                 <p className="text-sm text-gray-300 group-hover:text-gray-200 transition-colors leading-relaxed">
                   {t(`welcomeScreen.features.${feature.key}.description`)}
                 </p>
-                
+
                 {/* 裝飾元素 */}
                 <motion.div
-                  animate={{ 
+                  animate={{
                     rotate: 360,
                     scale: [1, 1.1, 1]
                   }}
-                  transition={{ 
+                  transition={{
                     rotate: { duration: 10, repeat: Infinity, ease: "linear" },
                     scale: { duration: 2, repeat: Infinity }
                   }}
@@ -302,7 +302,7 @@ export default function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
             );
           })}
         </motion.div>
-        
+
         {/* 底部 CTA */}
         <motion.div
           initial={{ opacity: 0 }}

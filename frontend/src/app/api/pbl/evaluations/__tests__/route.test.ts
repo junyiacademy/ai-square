@@ -156,7 +156,7 @@ describe('GET /api/pbl/evaluations', () => {
         value: mockCookies,
         writable: true
       });
-      
+
       const response = await GET(request);
       const data = await response.json();
 
@@ -170,7 +170,7 @@ describe('GET /api/pbl/evaluations', () => {
         { programId: 'program-123' },
         'test@example.com'
       );
-      
+
       const response = await GET(request);
       const data = await response.json();
 
@@ -182,7 +182,7 @@ describe('GET /api/pbl/evaluations', () => {
   describe('Parameter validation', () => {
     it('should return 400 if no parameters provided', async () => {
       const request = createRequest({}, 'test@example.com');
-      
+
       const response = await GET(request);
       const data = await response.json();
 
@@ -198,7 +198,7 @@ describe('GET /api/pbl/evaluations', () => {
         { taskId: 'task-123', targetType: 'task' },
         'test@example.com'
       );
-      
+
       const response = await GET(request);
       const data = await response.json();
 
@@ -216,7 +216,7 @@ describe('GET /api/pbl/evaluations', () => {
         { programId: 'program-123', targetType: 'program' },
         'test@example.com'
       );
-      
+
       const response = await GET(request);
       const data = await response.json();
 
@@ -231,7 +231,7 @@ describe('GET /api/pbl/evaluations', () => {
         { programId: 'program-123', targetType: 'task' },
         'test@example.com'
       );
-      
+
       const response = await GET(request);
       const data = await response.json();
 
@@ -239,7 +239,7 @@ describe('GET /api/pbl/evaluations', () => {
       expect(data.success).toBe(true);
       expect(mockEvaluationRepo.findByProgram).toHaveBeenCalledWith('program-123');
       expect(data.data).toHaveLength(2); // Only task evaluations
-      expect(data.data.every((e: IEvaluation) => 
+      expect(data.data.every((e: IEvaluation) =>
         (e.metadata as Record<string, unknown>)?.targetType === 'task'
       )).toBe(true);
     });
@@ -249,7 +249,7 @@ describe('GET /api/pbl/evaluations', () => {
         { programId: 'program-123' },
         'test@example.com'
       );
-      
+
       const response = await GET(request);
       const data = await response.json();
 
@@ -263,12 +263,12 @@ describe('GET /api/pbl/evaluations', () => {
   describe('Edge cases', () => {
     it('should handle empty evaluation results', async () => {
       mockEvaluationRepo.findByProgram.mockResolvedValueOnce([]);
-      
+
       const request = createRequest(
         { programId: 'program-123' },
         'test@example.com'
       );
-      
+
       const response = await GET(request);
       const data = await response.json();
 
@@ -284,12 +284,12 @@ describe('GET /api/pbl/evaluations', () => {
         { ...mockEvaluations[2], metadata: {} }
       ];
       mockEvaluationRepo.findByProgram.mockResolvedValueOnce(evaluationsWithoutMetadata);
-      
+
       const request = createRequest(
         { programId: 'program-123', targetType: 'task' },
         'test@example.com'
       );
-      
+
       const response = await GET(request);
       const data = await response.json();
 
@@ -305,12 +305,12 @@ describe('GET /api/pbl/evaluations', () => {
         { ...mockEvaluations[2], metadata: { targetType: 'task' } }
       ];
       mockEvaluationRepo.findByProgram.mockResolvedValueOnce(evaluationsWithBadMetadata);
-      
+
       const request = createRequest(
         { programId: 'program-123', targetType: 'task' },
         'test@example.com'
       );
-      
+
       const response = await GET(request);
       const data = await response.json();
 
@@ -323,12 +323,12 @@ describe('GET /api/pbl/evaluations', () => {
   describe('Error handling', () => {
     it('should handle repository errors gracefully', async () => {
       mockEvaluationRepo.findByProgram.mockRejectedValueOnce(new Error('Database error'));
-      
+
       const request = createRequest(
         { programId: 'program-123' },
         'test@example.com'
       );
-      
+
       const response = await GET(request);
       const data = await response.json();
 
@@ -345,14 +345,14 @@ describe('GET /api/pbl/evaluations', () => {
   describe('Query combinations', () => {
     it('should prioritize taskId over programId when both provided', async () => {
       const request = createRequest(
-        { 
+        {
           taskId: 'task-123',
           programId: 'program-123',
           targetType: 'task'
         },
         'test@example.com'
       );
-      
+
       const response = await GET(request);
       const data = await response.json();
 
@@ -368,7 +368,7 @@ describe('GET /api/pbl/evaluations', () => {
         { programId: specialProgramId },
         'test@example.com'
       );
-      
+
       const response = await GET(request);
       const data = await response.json();
 

@@ -10,7 +10,7 @@ metadata:
     你是「新商業大陸」的探險家，肩負著在未知商業領域建立新據點的使命。
     在這片充滿機會與危險的荒野中，每個決策都可能改變你的命運，而忠實的
     夥伴們將與你共同面對挑戰。
-  
+
   estimated_hours: 60
   skill_focus:
     - business_intuition
@@ -24,7 +24,7 @@ world_setting:
     新商業大陸是一片廣闊未開發的商業荒野，勇敢的創業者在此冒險建立新的
     貿易路線和商業帝國。成功需要智慧、勇氣，以及將稀缺資源轉化為黃金的
     能力。
-  
+
   atmosphere: "adventurous_challenging"
   visual_theme: "frontier_exploration"
 
@@ -34,7 +34,7 @@ starting_scenario:
     探險夥伴 Scout 帶來嚴峻消息：Baron Greed 控制了大部分資源，正在打壓
     新商人。同時，供應商 Lily 在關鍵時刻反悔。你必須找到創新的方法突破
     封鎖，建立你的貿易站。
-  
+
   initial_tasks:
     - survey_market
     - find_resources
@@ -49,7 +49,7 @@ skill_tree:
       unlocks:
         - trend_spotting
         - competitor_analysis
-    
+
     - id: resource_management
       name: "資源煉金術"
       description: "將有限資源轉化為價值"
@@ -57,7 +57,7 @@ skill_tree:
       unlocks:
         - bootstrap_mastery
         - efficiency_optimization
-    
+
     - id: team_building
       name: "盟友召喚"
       description: "建立強大的創始團隊"
@@ -65,7 +65,7 @@ skill_tree:
       unlocks:
         - talent_attraction
         - culture_creation
-    
+
     - id: product_development
       name: "創新鍛造"
       description: "創造市場致勝產品"
@@ -80,13 +80,13 @@ skill_tree:
       description: "精通募資藝術"
       max_level: 15
       requires: [market_analysis, resource_management]
-    
+
     - id: scaling_operations
       name: "帝國建設"
       description: "有效擴展業務規模"
       max_level: 15
       requires: [team_building, product_development]
-    
+
     - id: strategic_pivoting
       name: "適應藝術"
       description: "需要時策略性轉型"
@@ -103,7 +103,7 @@ milestone_quests:
     unlocks:
       - merchant_badge
       - market_credibility
-  
+
   - id: baron_challenge
     name: "打破壟斷"
     description: "克服 Baron Greed 的市場控制"
@@ -113,7 +113,7 @@ milestone_quests:
     unlocks:
       - freedom_trader_title
       - supplier_network
-  
+
   - id: empire_established
     name: "貿易帝國"
     description: "建立永續的商業帝國"
@@ -130,19 +130,19 @@ achievements:
     description: "完成你的第一筆成功銷售"
     xp_reward: 75
     badge_type: bronze
-  
+
   - id: team_assembled
     name: "團隊成立"
     description: "建立 5 人以上的團隊"
     xp_reward: 300
     badge_type: silver
-  
+
   - id: profitable_quarter
     name: "黃金流動"
     description: "達成首個獲利季度"
     xp_reward: 550
     badge_type: gold
-  
+
   - id: startup_legend
     name: "傳奇創業家"
     description: "完成所有創業家挑戰"
@@ -157,14 +157,14 @@ example_tasks:
       description: "深入了解目標市場需求"
       skills_improved: [market_analysis, business_intuition]
       xp_reward: 65
-    
+
     - id: prototype_creation
       type: creation
       title: "首個貿易站"
       description: "建立最小可行產品"
       skills_improved: [product_development, resource_alchemy]
       xp_reward: 75
-  
+
   intermediate:
     - id: customer_interviews
       type: chat
@@ -172,14 +172,14 @@ example_tasks:
       description: "驗證產品市場契合度"
       skills_improved: [market_exploration, business_intuition]
       xp_reward: 175
-    
+
     - id: growth_planning
       type: creation
       title: "帝國擴張計畫"
       description: "制定成長策略"
       skills_improved: [scaling_operations, risk_navigation]
       xp_reward: 195
-  
+
   advanced:
     - id: series_a_prep
       type: creation
@@ -187,7 +187,7 @@ example_tasks:
       description: "準備大型募資"
       skills_improved: [fundraising, resource_alchemy]
       xp_reward: 370
-    
+
     - id: market_expansion
       type: creation
       title: "大陸征服"

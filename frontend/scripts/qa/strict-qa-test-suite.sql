@@ -27,7 +27,7 @@ WHERE NOT EXISTS (SELECT 1 FROM programs p WHERE p.id = t.program_id)
 UNION ALL
 SELECT 'Orphaned Evaluations', COUNT(*)
 FROM evaluations e
-WHERE e.task_id IS NOT NULL 
+WHERE e.task_id IS NOT NULL
   AND NOT EXISTS (SELECT 1 FROM tasks t WHERE t.id = e.task_id);
 
 -- Test 1.2: Check referential integrity
@@ -42,9 +42,9 @@ BEGIN
     FROM information_schema.table_constraints
     WHERE constraint_type = 'FOREIGN KEY'
       AND constraint_schema = 'public';
-    
+
     RAISE NOTICE 'Foreign key constraints found: %', v_count;
-    
+
     IF v_count < 10 THEN
         RAISE EXCEPTION 'Too few foreign key constraints (expected >= 10, found %)', v_count;
     END IF;
@@ -101,36 +101,36 @@ BEGIN
             CASE WHEN v_mode = 'discovery' THEN '{"careerType": "test_career"}'::jsonb ELSE '{}'::jsonb END,
             CASE WHEN v_mode = 'assessment' THEN '{"assessmentType": "diagnostic"}'::jsonb ELSE '{}'::jsonb END
         ) RETURNING id INTO v_scenario_id;
-        
+
         -- Create multiple programs concurrently
         FOR i IN 1..10 LOOP
             INSERT INTO programs (user_id, scenario_id, total_task_count)
             VALUES (v_test_user_id, v_scenario_id, 1)
             RETURNING id INTO v_program_id;
-            
+
             -- Verify mode propagation
-            PERFORM 1 FROM programs 
+            PERFORM 1 FROM programs
             WHERE id = v_program_id AND mode = v_mode;
-            
+
             IF NOT FOUND THEN
                 RAISE EXCEPTION 'Mode propagation failed for program %', v_program_id;
             END IF;
-            
+
             -- Create task
             INSERT INTO tasks (program_id, task_index, type, title)
             VALUES (v_program_id, 0, 'question', jsonb_build_object('en', 'Test'))
             RETURNING id INTO v_task_id;
-            
+
             -- Verify task mode propagation
-            PERFORM 1 FROM tasks 
+            PERFORM 1 FROM tasks
             WHERE id = v_task_id AND mode = v_mode;
-            
+
             IF NOT FOUND THEN
                 RAISE EXCEPTION 'Mode propagation failed for task %', v_task_id;
             END IF;
         END LOOP;
     END LOOP;
-    
+
     RAISE NOTICE 'Concurrent mode propagation test passed!';
 END $$;
 
@@ -138,7 +138,7 @@ END $$;
 \echo '2.2 Checking mode consistency across tables...'
 
 WITH mode_mismatches AS (
-    SELECT 
+    SELECT
         'Program-Scenario' as mismatch_type,
         p.id,
         s.mode as expected_mode,
@@ -146,10 +146,10 @@ WITH mode_mismatches AS (
     FROM programs p
     JOIN scenarios s ON p.scenario_id = s.id
     WHERE p.mode != s.mode
-    
+
     UNION ALL
-    
-    SELECT 
+
+    SELECT
         'Task-Program' as mismatch_type,
         t.id,
         p.mode as expected_mode,
@@ -158,7 +158,7 @@ WITH mode_mismatches AS (
     JOIN programs p ON t.program_id = p.id
     WHERE t.mode != p.mode
 )
-SELECT 
+SELECT
     mismatch_type,
     COUNT(*) as mismatch_count
 FROM mode_mismatches
@@ -185,16 +185,16 @@ BEGIN
     FROM scenarios
     WHERE jsonb_typeof(title) != 'object'
        OR NOT (title ? 'en');
-    
+
     IF v_invalid_count > 0 THEN
         RAISE WARNING 'Found % scenarios with invalid title structure', v_invalid_count;
     END IF;
-    
+
     -- Check if multilingual fields contain at least one language
     SELECT COUNT(*) INTO v_invalid_count
     FROM scenarios
     WHERE title = '{}'::jsonb OR title IS NULL;
-    
+
     IF v_invalid_count > 0 THEN
         RAISE WARNING 'Found % scenarios with empty title', v_invalid_count;
     END IF;
@@ -204,7 +204,7 @@ END $$;
 \echo '3.2 Testing language consistency...'
 
 WITH language_coverage AS (
-    SELECT 
+    SELECT
         'scenarios' as table_name,
         COUNT(DISTINCT lang) as unique_languages,
         COUNT(DISTINCT s.id) as total_records
@@ -232,15 +232,15 @@ BEGIN
         '[]'::jsonb,
         '{"ksaMapping": {"K1": ["Test"]}}'::jsonb
     );
-    
+
     -- Verify retrieval
-    PERFORM 1 FROM scenarios 
+    PERFORM 1 FROM scenarios
     WHERE title->>'emoji' = '🎯 Test 🔥 Emoji 🚀';
-    
+
     IF NOT FOUND THEN
         RAISE EXCEPTION 'Special character handling failed';
     END IF;
-    
+
     RAISE NOTICE 'Special character test passed!';
 END $$;
 
@@ -256,7 +256,7 @@ END $$;
 -- Test 4.1: Index effectiveness
 \echo '4.1 Testing index effectiveness...'
 
-EXPLAIN (ANALYZE, BUFFERS) 
+EXPLAIN (ANALYZE, BUFFERS)
 SELECT * FROM scenarios WHERE mode = 'discovery' LIMIT 10;
 
 EXPLAIN (ANALYZE, BUFFERS)
@@ -272,7 +272,7 @@ DECLARE
     v_duration INTERVAL;
 BEGIN
     v_start_time := clock_timestamp();
-    
+
     -- Simulate large dataset query
     PERFORM COUNT(*)
     FROM programs p
@@ -280,12 +280,12 @@ BEGIN
     JOIN tasks t ON t.program_id = p.id
     WHERE p.mode = 'pbl'
       AND p.status = 'active';
-    
+
     v_end_time := clock_timestamp();
     v_duration := v_end_time - v_start_time;
-    
+
     RAISE NOTICE 'Query execution time: %', v_duration;
-    
+
     IF v_duration > interval '1 second' THEN
         RAISE WARNING 'Query performance may be slow: %', v_duration;
     END IF;
@@ -301,13 +301,13 @@ DECLARE
 BEGIN
     -- Get a scenario
     SELECT id INTO v_scenario_id FROM scenarios WHERE mode = 'pbl' LIMIT 1;
-    
+
     IF v_scenario_id IS NULL THEN
         INSERT INTO scenarios (mode, title, description, task_templates)
         VALUES ('pbl', '{"en":"Test"}'::jsonb, '{"en":"Test"}'::jsonb, '[]'::jsonb)
         RETURNING id INTO v_scenario_id;
     END IF;
-    
+
     -- Simulate concurrent program creation
     FOR i IN 1..50 LOOP
         BEGIN
@@ -339,12 +339,12 @@ BEGIN
     -- Create very long text
     v_long_text := repeat('A', 10000);
     v_large_json := jsonb_build_object('en', v_long_text);
-    
+
     -- Try to insert
     BEGIN
         INSERT INTO scenarios (mode, title, description, task_templates)
         VALUES ('pbl', v_large_json, v_large_json, '[]'::jsonb);
-        
+
         RAISE NOTICE 'Large text insertion successful';
     EXCEPTION WHEN OTHERS THEN
         RAISE WARNING 'Large text insertion failed: %', SQLERRM;
@@ -354,23 +354,23 @@ END $$;
 -- Test 5.2: Null and empty value handling
 \echo '5.2 Testing null and empty value handling...'
 
-SELECT 
+SELECT
     'Empty JSONB' as test_case,
     COUNT(*) as count
-FROM scenarios 
+FROM scenarios
 WHERE title = '{}'::jsonb
    OR description = '{}'::jsonb
 UNION ALL
-SELECT 
+SELECT
     'Null task_templates',
     COUNT(*)
-FROM scenarios 
+FROM scenarios
 WHERE task_templates IS NULL
 UNION ALL
-SELECT 
+SELECT
     'Empty task_templates array',
     COUNT(*)
-FROM scenarios 
+FROM scenarios
 WHERE jsonb_array_length(task_templates) = 0;
 
 -- Test 5.3: Invalid mode handling
@@ -382,7 +382,7 @@ BEGIN
     BEGIN
         INSERT INTO scenarios (mode, title, description, task_templates)
         VALUES ('invalid_mode'::learning_mode, '{"en":"Test"}'::jsonb, '{"en":"Test"}'::jsonb, '[]'::jsonb);
-        
+
         RAISE EXCEPTION 'Invalid mode was accepted - this is a security issue!';
     EXCEPTION WHEN invalid_text_representation THEN
         RAISE NOTICE 'Invalid mode correctly rejected';
@@ -411,20 +411,20 @@ BEGIN
         'en', 'Normal title',
         'hack', '''; DROP TABLE users; --'
     );
-    
+
     INSERT INTO scenarios (mode, title, description, task_templates)
     VALUES ('pbl', v_malicious_json, '{"en":"Test"}'::jsonb, '[]'::jsonb);
-    
+
     -- Try to query it
     SELECT title->>'hack' INTO v_result
-    FROM scenarios 
+    FROM scenarios
     WHERE title->>'hack' IS NOT NULL
     LIMIT 1;
-    
+
     IF v_result = '''; DROP TABLE users; --' THEN
         RAISE NOTICE 'SQL injection properly contained in JSONB';
     END IF;
-    
+
     -- Verify users table still exists
     PERFORM 1 FROM users LIMIT 1;
     RAISE NOTICE 'Security test passed - tables intact';
@@ -433,7 +433,7 @@ END $$;
 -- Test 6.2: Permission checks
 \echo '6.2 Testing permission boundaries...'
 
-SELECT 
+SELECT
     schemaname,
     tablename,
     tableowner,
@@ -458,7 +458,7 @@ ORDER BY tablename;
 
 -- Simulate legacy data structure
 WITH legacy_check AS (
-    SELECT 
+    SELECT
         COUNT(*) FILTER (WHERE title IS NULL) as null_titles,
         COUNT(*) FILTER (WHERE jsonb_typeof(title) != 'object') as non_object_titles,
         COUNT(*) FILTER (WHERE pbl_data IS NULL AND mode = 'pbl') as missing_pbl_data,
@@ -478,33 +478,33 @@ SELECT * FROM legacy_check;
 \echo '=================='
 
 WITH test_summary AS (
-    SELECT 
-        'Total Tables' as metric, 
+    SELECT
+        'Total Tables' as metric,
         COUNT(*) as value
-    FROM information_schema.tables 
+    FROM information_schema.tables
     WHERE table_schema = 'public' AND table_type = 'BASE TABLE'
-    
+
     UNION ALL
     SELECT 'Total Indexes', COUNT(*)
     FROM pg_indexes WHERE schemaname = 'public'
-    
+
     UNION ALL
     SELECT 'Total Triggers', COUNT(*)
     FROM information_schema.triggers WHERE trigger_schema = 'public'
-    
+
     UNION ALL
     SELECT 'Total Foreign Keys', COUNT(*)
     FROM information_schema.table_constraints
     WHERE constraint_type = 'FOREIGN KEY' AND constraint_schema = 'public'
-    
+
     UNION ALL
     SELECT 'Scenarios by Mode: PBL', COUNT(*)
     FROM scenarios WHERE mode = 'pbl'
-    
+
     UNION ALL
     SELECT 'Scenarios by Mode: Discovery', COUNT(*)
     FROM scenarios WHERE mode = 'discovery'
-    
+
     UNION ALL
     SELECT 'Scenarios by Mode: Assessment', COUNT(*)
     FROM scenarios WHERE mode = 'assessment'

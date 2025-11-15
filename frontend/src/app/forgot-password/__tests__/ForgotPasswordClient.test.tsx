@@ -55,7 +55,7 @@ describe('ForgotPasswordClient', () => {
 
   it('should render forgot password form', async () => {
     renderWithProviders(<ForgotPasswordClient />);
-    
+
     expect(screen.getByText('Reset Password')).toBeInTheDocument();
     expect(screen.getByText('Enter your email to receive a reset link')).toBeInTheDocument();
     expect(screen.getByLabelText('Email Address')).toBeInTheDocument();
@@ -66,7 +66,7 @@ describe('ForgotPasswordClient', () => {
   it('should not render when not mounted initially', async () => {
     // Mock mounted state to false initially
     const { container } = renderWithProviders(<ForgotPasswordClient />);
-    
+
     // Component may render immediately in test environment, so check if mounted state works
     // This test is more about ensuring the mounting logic exists
     expect(container.firstChild).toBeTruthy(); // Component will be mounted in test env
@@ -74,7 +74,7 @@ describe('ForgotPasswordClient', () => {
 
   it('should render after mounting', async () => {
     renderWithProviders(<ForgotPasswordClient />);
-    
+
     // Wait for useEffect to set mounted state
     await waitFor(() => {
         const element = screen.queryByText('Reset Password');
@@ -84,9 +84,9 @@ describe('ForgotPasswordClient', () => {
 
   it('should load auth namespace if not available', async () => {
     (i18n.hasResourceBundle as jest.Mock).mockReturnValue(false);
-    
+
     renderWithProviders(<ForgotPasswordClient />);
-    
+
     await waitFor(() => {
       expect(i18n.loadNamespaces).toHaveBeenCalledWith(['auth']);
     });
@@ -94,11 +94,11 @@ describe('ForgotPasswordClient', () => {
 
   it('should update email input value', async () => {
     renderWithProviders(<ForgotPasswordClient />);
-    
+
     await waitFor(() => {
       const emailInput = screen.getByLabelText('Email Address') as HTMLInputElement;
       fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
-      
+
       expect(emailInput.value).toBe('test@example.com');
     });
   });
@@ -108,27 +108,27 @@ describe('ForgotPasswordClient', () => {
       ok: true,
       json: () => Promise.resolve({ success: true }),
     });
-    
+
     renderWithProviders(<ForgotPasswordClient />);
-    
+
     await act(async () => {
       const emailInput = screen.getByLabelText('Email Address');
       const submitButton = screen.getByRole('button', { name: 'Send Reset Link' });
-      
+
       fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
       fireEvent.click(submitButton);
     });
-    
+
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith('/api/auth/forgot-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: 'test@example.com' }),
       });
-      
+
       expect(screen.getByText('Password reset link sent to your email')).toBeInTheDocument();
     });
-    
+
     // Email input should be cleared on success
     await waitFor(() => {
       const emailInput = screen.getByLabelText('Email Address') as HTMLInputElement;
@@ -144,17 +144,17 @@ describe('ForgotPasswordClient', () => {
         error: 'Email not found'
       }),
     });
-    
+
     renderWithProviders(<ForgotPasswordClient />);
-    
+
     await act(async () => {
       const emailInput = screen.getByLabelText('Email Address');
       const submitButton = screen.getByRole('button', { name: 'Send Reset Link' });
-      
+
       fireEvent.change(emailInput, { target: { value: 'nonexistent@example.com' } });
       fireEvent.click(submitButton);
     });
-    
+
     await waitFor(() => {
         const element = screen.queryByText('Email not found');
         if (element) expect(element).toBeInTheDocument();
@@ -168,17 +168,17 @@ describe('ForgotPasswordClient', () => {
         success: false
       }),
     });
-    
+
     renderWithProviders(<ForgotPasswordClient />);
-    
+
     await waitFor(() => {
       const emailInput = screen.getByLabelText('Email Address');
       const submitButton = screen.getByRole('button', { name: 'Send Reset Link' });
-      
+
       fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
       fireEvent.click(submitButton);
     });
-    
+
     await waitFor(() => {
         const element = screen.queryByText('Failed to send reset email');
         if (element) expect(element).toBeInTheDocument();
@@ -187,17 +187,17 @@ describe('ForgotPasswordClient', () => {
 
   it('should handle network error', async () => {
     (global.fetch as jest.Mock).mockRejectedValue(new Error('Network error'));
-    
+
     renderWithProviders(<ForgotPasswordClient />);
-    
+
     await waitFor(() => {
       const emailInput = screen.getByLabelText('Email Address');
       const submitButton = screen.getByRole('button', { name: 'Send Reset Link' });
-      
+
       fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
       fireEvent.click(submitButton);
     });
-    
+
     await waitFor(() => {
         const element = screen.queryByText('Failed to send reset email');
         if (element) expect(element).toBeInTheDocument();
@@ -206,34 +206,34 @@ describe('ForgotPasswordClient', () => {
 
   it('should show loading state during submission', async () => {
     let resolveRequest: (value: any) => void;
-    (global.fetch as jest.Mock).mockImplementation(() => 
+    (global.fetch as jest.Mock).mockImplementation(() =>
       new Promise(resolve => {
         resolveRequest = resolve;
       })
     );
-    
+
     renderWithProviders(<ForgotPasswordClient />);
-    
+
     await waitFor(() => {
       const emailInput = screen.getByLabelText('Email Address');
       const submitButton = screen.getByRole('button', { name: 'Send Reset Link' });
-      
+
       fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
       fireEvent.click(submitButton);
     });
-    
+
     // Should show loading state
     await waitFor(() => {
       expect(screen.getByText('Sending...')).toBeInTheDocument();
       expect(screen.getByRole('button', { name: 'Sending...' })).toBeDisabled();
     });
-    
+
     // Resolve the request
     resolveRequest!({
       ok: true,
       json: () => Promise.resolve({ success: true }),
     });
-    
+
     // Loading state should be cleared
     await waitFor(() => {
       expect(screen.queryByText('Sending...')).not.toBeInTheDocument();
@@ -243,26 +243,26 @@ describe('ForgotPasswordClient', () => {
 
   it('should clear previous messages when submitting new request', async () => {
     renderWithProviders(<ForgotPasswordClient />);
-    
+
     // First request - success
     (global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
       json: () => Promise.resolve({ success: true }),
     });
-    
+
     await waitFor(() => {
       const emailInput = screen.getByLabelText('Email Address');
       const submitButton = screen.getByRole('button', { name: 'Send Reset Link' });
-      
+
       fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
       fireEvent.click(submitButton);
     });
-    
+
     await waitFor(() => {
         const element = screen.queryByText('Password reset link sent to your email');
         if (element) expect(element).toBeInTheDocument();
       }, { timeout: 1000 });
-    
+
     // Second request - error
     (global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
@@ -271,15 +271,15 @@ describe('ForgotPasswordClient', () => {
         error: 'Email not found'
       }),
     });
-    
+
     await waitFor(() => {
       const emailInput = screen.getByLabelText('Email Address');
       const submitButton = screen.getByRole('button', { name: 'Send Reset Link' });
-      
+
       fireEvent.change(emailInput, { target: { value: 'wrong@example.com' } });
       fireEvent.click(submitButton);
     });
-    
+
     await waitFor(() => {
       // Previous success message should be cleared
       expect(screen.queryByText('Password reset link sent to your email')).not.toBeInTheDocument();
@@ -290,34 +290,34 @@ describe('ForgotPasswordClient', () => {
 
   it('should prevent form submission when loading', async () => {
     let resolveRequest: (value: any) => void;
-    (global.fetch as jest.Mock).mockImplementation(() => 
+    (global.fetch as jest.Mock).mockImplementation(() =>
       new Promise(resolve => {
         resolveRequest = resolve;
       })
     );
-    
+
     renderWithProviders(<ForgotPasswordClient />);
-    
+
     await waitFor(() => {
       const emailInput = screen.getByLabelText('Email Address');
       const submitButton = screen.getByRole('button', { name: 'Send Reset Link' });
-      
+
       fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
       fireEvent.click(submitButton);
     });
-    
+
     // Try to submit again while loading
     await waitFor(() => {
       const submitButton = screen.getByRole('button', { name: 'Sending...' });
       expect(submitButton).toBeDisabled();
-      
+
       // Try clicking disabled button
       fireEvent.click(submitButton);
     });
-    
+
     // Should only have one fetch call
     expect(global.fetch).toHaveBeenCalledTimes(1);
-    
+
     resolveRequest!({
       ok: true,
       json: () => Promise.resolve({ success: true }),
@@ -326,7 +326,7 @@ describe('ForgotPasswordClient', () => {
 
   it('should render back to login link with correct href', async () => {
     renderWithProviders(<ForgotPasswordClient />);
-    
+
     await waitFor(() => {
       const backLink = screen.getByText('Back to Login');
       expect(backLink).toHaveAttribute('href', '/login');
@@ -338,15 +338,15 @@ describe('ForgotPasswordClient', () => {
       ok: true,
       json: () => Promise.resolve({ success: false, error: 'Email is required' }),
     });
-    
+
     renderWithProviders(<ForgotPasswordClient />);
-    
+
     await act(async () => {
       const form = document.querySelector('form');
       expect(form).toBeInTheDocument();
       fireEvent.submit(form!);
     });
-    
+
     // In test environment, the form submission will still occur
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith('/api/auth/forgot-password', {
@@ -362,23 +362,23 @@ describe('ForgotPasswordClient', () => {
       ok: true,
       json: () => Promise.resolve({ success: true }),
     });
-    
+
     renderWithProviders(<ForgotPasswordClient />);
-    
+
     const mockPreventDefault = jest.fn();
-    
+
     await waitFor(() => {
       const emailInput = screen.getByLabelText('Email Address');
       fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
-      
+
       const form = document.querySelector('form');
       expect(form).toBeInTheDocument();
       const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
       submitEvent.preventDefault = mockPreventDefault;
-      
+
       fireEvent(form!, submitEvent);
     });
-    
+
     expect(mockPreventDefault).toHaveBeenCalled();
   });
 
@@ -387,21 +387,21 @@ describe('ForgotPasswordClient', () => {
       ok: true,
       json: () => Promise.resolve({ success: true }),
     });
-    
+
     renderWithProviders(<ForgotPasswordClient />);
-    
+
     await waitFor(() => {
       const emailInput = screen.getByLabelText('Email Address');
       const submitButton = screen.getByRole('button', { name: 'Send Reset Link' });
-      
+
       fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
       fireEvent.click(submitButton);
     });
-    
+
     await waitFor(() => {
       const successMessage = screen.getByText('Password reset link sent to your email');
       const messageContainer = successMessage.closest('div');
-      
+
       expect(messageContainer).toHaveClass('bg-green-50');
       expect(successMessage).toHaveClass('text-green-800');
     });
@@ -415,21 +415,21 @@ describe('ForgotPasswordClient', () => {
         error: 'Test error message'
       }),
     });
-    
+
     renderWithProviders(<ForgotPasswordClient />);
-    
+
     await waitFor(() => {
       const emailInput = screen.getByLabelText('Email Address');
       const submitButton = screen.getByRole('button', { name: 'Send Reset Link' });
-      
+
       fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
       fireEvent.click(submitButton);
     });
-    
+
     await waitFor(() => {
       const errorMessage = screen.getByText('Test error message');
       const messageContainer = errorMessage.closest('div');
-      
+
       expect(messageContainer).toHaveClass('bg-red-50');
       expect(errorMessage).toHaveClass('text-red-800');
     });
@@ -437,7 +437,7 @@ describe('ForgotPasswordClient', () => {
 
   it('should have proper accessibility attributes', async () => {
     renderWithProviders(<ForgotPasswordClient />);
-    
+
     await waitFor(() => {
       const emailInput = screen.getByLabelText('Email Address');
       expect(emailInput).toHaveAttribute('type', 'email');
@@ -445,7 +445,7 @@ describe('ForgotPasswordClient', () => {
       expect(emailInput).toHaveAttribute('required');
       expect(emailInput).toHaveAttribute('id', 'email');
       expect(emailInput).toHaveAttribute('name', 'email');
-      
+
       const submitButton = screen.getByRole('button', { name: 'Send Reset Link' });
       expect(submitButton).toHaveAttribute('type', 'submit');
     });
@@ -462,25 +462,25 @@ describe('ForgotPasswordClient', () => {
         }), 100);
       });
     });
-    
+
     renderWithProviders(<ForgotPasswordClient />);
-    
+
     await waitFor(() => {
       const emailInput = screen.getByLabelText('Email Address');
       const submitButton = screen.getByRole('button', { name: 'Send Reset Link' });
-      
+
       fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
-      
+
       // Rapid clicks
       fireEvent.click(submitButton);
       fireEvent.click(submitButton);
       fireEvent.click(submitButton);
     });
-    
+
     await waitFor(() => {
       expect(screen.getByRole('button')).toBeDisabled();
     }, { timeout: 1000 });
-    
+
     // Should only have one request due to loading state
     expect(requestCount).toBe(1);
   });

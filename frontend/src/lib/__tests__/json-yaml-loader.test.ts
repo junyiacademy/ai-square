@@ -13,7 +13,7 @@ const mockYaml = yaml as jest.Mocked<typeof yaml>;
 describe('jsonYamlLoader', () => {
   const mockJsonData = { type: 'json', value: 'test' };
   const mockYamlData = { type: 'yaml', value: 'test' };
-  
+
   beforeEach(() => {
     jest.clearAllMocks();
     jest.spyOn(console, 'error').mockImplementation();

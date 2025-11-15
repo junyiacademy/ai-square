@@ -26,13 +26,13 @@ test_endpoint() {
     local endpoint=$1
     local expected_status=${2:-200}
     local description=$3
-    
+
     echo -n "Testing $description... "
-    
+
     RESPONSE=$(curl -s -w "\n%{http_code}" "$BASE_URL$endpoint")
     HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
     BODY=$(echo "$RESPONSE" | head -n-1)
-    
+
     if [ "$HTTP_CODE" = "$expected_status" ]; then
         echo "✅ OK (HTTP $HTTP_CODE)"
         return 0
@@ -49,12 +49,12 @@ test_json_endpoint() {
     local jq_filter=$2
     local expected=$3
     local description=$4
-    
+
     echo -n "Testing $description... "
-    
+
     RESPONSE=$(curl -s "$BASE_URL$endpoint")
     ACTUAL=$(echo "$RESPONSE" | jq -r "$jq_filter" 2>/dev/null || echo "PARSE_ERROR")
-    
+
     if [ "$ACTUAL" = "$expected" ]; then
         echo "✅ OK"
         return 0

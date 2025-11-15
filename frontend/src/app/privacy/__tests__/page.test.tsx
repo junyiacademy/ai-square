@@ -13,9 +13,9 @@ jest.mock('next/link', () => {
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string, defaultValue?: string) => defaultValue || key,
-    i18n: { 
-      changeLanguage: jest.fn(), 
-      language: 'en' 
+    i18n: {
+      changeLanguage: jest.fn(),
+      language: 'en'
     }
   })
 }));

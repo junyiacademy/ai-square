@@ -178,7 +178,7 @@ export function renderWithProviders(
  */
 export function resetAllMocks() {
   jest.clearAllMocks();
-  
+
   // Reset navigation mocks
   mockPush.mockClear();
   mockReplace.mockClear();
@@ -186,16 +186,16 @@ export function resetAllMocks() {
   mockPrefetch.mockClear();
   mockBack.mockClear();
   mockForward.mockClear();
-  
+
   // Reset localStorage
   mockLocalStorage.getItem.mockClear();
   mockLocalStorage.setItem.mockClear();
   mockLocalStorage.removeItem.mockClear();
   mockLocalStorage.clear.mockClear();
-  
+
   // Reset fetch
   mockFetch.mockClear();
-  
+
   // Reset auth state
   Object.assign(defaultAuthState, {
     user: null,
@@ -203,7 +203,7 @@ export function resetAllMocks() {
     isLoading: false,
     tokenExpiringSoon: false,
   });
-  
+
   // Reset theme
   mockToggleTheme.mockClear();
 }
@@ -249,7 +249,7 @@ export function setupAuthenticatedUser(user = testUsers.student) {
     isLoggedIn: true,
     isLoading: false,
   });
-  
+
   mockLocalStorage.getItem.mockImplementation((key: string) => {
     if (key === 'isLoggedIn') return 'true';
     if (key === 'user') return JSON.stringify(user);
@@ -266,7 +266,7 @@ export function setupUnauthenticatedUser() {
     isLoggedIn: false,
     isLoading: false,
   });
-  
+
   mockLocalStorage.getItem.mockReturnValue(null);
 }
 

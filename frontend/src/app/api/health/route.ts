@@ -37,9 +37,9 @@ export async function GET(): Promise<NextResponse> {
   // Add timeout to prevent hanging
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 second total timeout
-  
+
   try {
-    
+
     const health: HealthStatus = {
       status: 'healthy',
       timestamp: new Date().toISOString(),
@@ -73,13 +73,13 @@ export async function GET(): Promise<NextResponse> {
           await pool.end();
           return result;
         });
-        
-        const timeoutPromise = new Promise((_, reject) => 
+
+        const timeoutPromise = new Promise((_, reject) =>
           setTimeout(() => reject(new Error('Database timeout')), 2000)
         );
-        
+
         await Promise.race([queryPromise, timeoutPromise]);
-        
+
         health.checks.database = {
           status: true,
           responseTime: Date.now() - dbStart
@@ -102,7 +102,7 @@ export async function GET(): Promise<NextResponse> {
     // 2. Check Redis Cache (with timeout)
     try {
       const redisStart = Date.now();
-      
+
       // Wrap Redis check in timeout
       const redisCheckPromise = getRedisClient().then(async (redis: unknown) => {
         if (redis && typeof redis === 'object' && 'ping' in redis) {
@@ -112,11 +112,11 @@ export async function GET(): Promise<NextResponse> {
           return { status: false, error: 'Redis client not available' };
         }
       });
-      
-      const redisTimeoutPromise = new Promise<{ status: boolean; error: string }>((resolve) => 
+
+      const redisTimeoutPromise = new Promise<{ status: boolean; error: string }>((resolve) =>
         setTimeout(() => resolve({ status: false, error: 'Redis timeout' }), 1000)
       );
-      
+
       const redisResult = await Promise.race([redisCheckPromise, redisTimeoutPromise]);
       health.checks.redis = redisResult as typeof health.checks.redis;
     } catch (error) {
@@ -131,7 +131,7 @@ export async function GET(): Promise<NextResponse> {
     const memUsage = process.memoryUsage();
     const memLimit = 512 * 1024 * 1024; // 512MB default limit
     const memPercentage = (memUsage.heapUsed / memLimit) * 100;
-    
+
     health.checks.memory = {
       status: memPercentage < 90,
       used: memUsage.heapUsed,
@@ -152,14 +152,14 @@ export async function GET(): Promise<NextResponse> {
     clearTimeout(timeoutId);
 
     // Return appropriate status code
-    const statusCode = health.status === 'healthy' ? 200 : 
+    const statusCode = health.status === 'healthy' ? 200 :
                        health.status === 'degraded' ? 200 : 503;
 
     return NextResponse.json(health, { status: statusCode });
   } catch (error) {
     // Clear timeout on error
     clearTimeout(timeoutId);
-    
+
     // Return basic health status on error
     return NextResponse.json({
       status: 'unhealthy',

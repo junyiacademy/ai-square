@@ -29,7 +29,7 @@ global.fetch = jest.fn();
 describe('PBLScenariosPage', () => {
   const mockT = jest.fn((key: string) => key);
   const mockI18n = { language: 'en' };
-  
+
   beforeEach(() => {
     jest.clearAllMocks();
     (useTranslation as jest.Mock).mockReturnValue({
@@ -44,9 +44,9 @@ describe('PBLScenariosPage', () => {
 
   it('should render loading skeleton initially', () => {
     (authenticatedFetch as jest.Mock).mockImplementation(() => new Promise(() => {})); // Never resolves
-    
+
     render(<PBLScenariosPage />);
-    
+
     expect(screen.getByTestId('loading-skeleton')).toBeInTheDocument();
   });
 
@@ -92,7 +92,7 @@ describe('PBLScenariosPage', () => {
 
   it('should handle API error gracefully', async () => {
     const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
-    
+
     (authenticatedFetch as jest.Mock).mockRejectedValueOnce(new Error('Network error'));
 
     render(<PBLScenariosPage />);
@@ -169,7 +169,7 @@ describe('PBLScenariosPage', () => {
     // Check that all difficulty levels are displayed
     const allText = screen.getAllByText(/⭐/);
     expect(allText.length).toBeGreaterThan(0);
-    
+
     // Verify each scenario has its difficulty displayed
     expect(screen.getByText('Semiconductor Beginner Scenario')).toBeInTheDocument();
     expect(screen.getByText('Semiconductor Intermediate Scenario')).toBeInTheDocument();
@@ -334,7 +334,7 @@ describe('PBLScenariosPage', () => {
 
     const refreshButton = screen.getByText('Refresh');
     expect(refreshButton).toHaveClass('px-4', 'py-2', 'bg-blue-600', 'text-white');
-    
+
     // Test that the button has an onClick handler
     expect(refreshButton).toHaveProperty('onclick');
   });
@@ -342,7 +342,7 @@ describe('PBLScenariosPage', () => {
   it('should handle abort controller in component lifecycle', async () => {
     const abortSpy = jest.fn();
     const originalAbortController = global.AbortController;
-    
+
     global.AbortController = jest.fn(() => ({
       abort: abortSpy,
       signal: {} as AbortSignal
@@ -351,7 +351,7 @@ describe('PBLScenariosPage', () => {
     (authenticatedFetch as jest.Mock).mockImplementation(() => new Promise(() => {}));
 
     const { unmount } = render(<PBLScenariosPage />);
-    
+
     unmount();
 
     // In development mode (test environment), abort is not called to avoid StrictMode issues

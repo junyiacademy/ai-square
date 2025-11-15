@@ -47,8 +47,8 @@ import KSARadarChart from '../KSARadarChart'
 // Mock Chart.js and react-chartjs-2
 jest.mock('react-chartjs-2', () => ({
   Radar: ({ data, options }: any) => (
-    <div 
-      data-testid="radar-chart" 
+    <div
+      data-testid="radar-chart"
       data-chart-data={JSON.stringify(data)}
       data-chart-options={JSON.stringify(options)}
     >
@@ -75,7 +75,7 @@ jest.mock('react-i18next', () => ({
     t: (key: string) => {
       const translations: Record<string, string> = {
         'complete.knowledge': 'Knowledge',
-        'complete.skills': 'Skills', 
+        'complete.skills': 'Skills',
         'complete.attitudes': 'Attitudes',
       }
       return translations[key] || key
@@ -116,7 +116,7 @@ describe('KSARadarChart', () => {
 
     // Check datasets
     expect(chartData.datasets).toHaveLength(3) // Knowledge, Skills, Attitudes
-    
+
     // Check knowledge dataset
     const knowledgeDataset = chartData.datasets.find((d: any) => d.label === 'Knowledge')
     expect(knowledgeDataset).toBeDefined()
@@ -162,7 +162,7 @@ describe('KSARadarChart', () => {
 
     // Find skills dataset
     const skillsDataset = chartData.datasets.find((d: any) => d.label === 'Skills')
-    
+
     // Skills should have scores for S1, S2, S3 and 0 for knowledge/attitude indices
     const nonZeroScores = skillsDataset.data.filter((score: number) => score > 0)
     expect(nonZeroScores).toHaveLength(3) // Only 3 skills scores

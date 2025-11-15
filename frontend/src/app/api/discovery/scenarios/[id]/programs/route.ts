@@ -16,21 +16,21 @@ export async function GET(
 
     const { id: scenarioId } = await params;
     const userId = session.user.id;
-    
+
     // Get repositories
     const programRepo = repositoryFactory.getProgramRepository();
     const scenarioRepo = repositoryFactory.getScenarioRepository();
-    
+
     // Verify scenario exists
     const scenario = await scenarioRepo.findById(scenarioId);
     if (!scenario) {
       return NextResponse.json({ error: 'Scenario not found' }, { status: 404 });
     }
-    
+
     // Get all programs for this user and scenario
     const allPrograms = await programRepo.findByUser(userId);
     const scenarioPrograms = allPrograms.filter(p => p.scenarioId === scenarioId);
-    
+
     // Get tasks for each program to calculate progress
     const taskRepo = repositoryFactory.getTaskRepository();
     const programsWithProgress = await Promise.all(
@@ -41,7 +41,7 @@ export async function GET(
           const xp = (task.metadata?.xpEarned as number) || 0;
           return sum + xp;
         }, 0);
-        
+
         return {
           ...program,
           metadata: {
@@ -53,14 +53,14 @@ export async function GET(
         };
       })
     );
-    
+
     // Sort by creation date, newest first
     programsWithProgress.sort((a, b) => {
       const dateA = new Date(a.createdAt || 0).getTime();
       const dateB = new Date(b.createdAt || 0).getTime();
       return dateB - dateA;
     });
-    
+
     return NextResponse.json({
       programs: programsWithProgress,
       scenario: {
@@ -85,7 +85,7 @@ export async function POST(
 ) {
   try {
     console.log('🚀 Starting simplified Discovery Program creation...');
-    
+
     const session = await getUnifiedAuth(request);
     if (!session?.user?.email) {
       console.log('❌ No session found');
@@ -96,16 +96,16 @@ export async function POST(
     const { id: scenarioId } = await params;
     const userEmail = session.user.email;
     const userId = session.user.id.toString(); // Ensure it's a string
-    
+
     console.log('🎯 Target scenario ID:', scenarioId);
     console.log('👤 User ID:', userId, 'Email:', userEmail);
-    
+
     // Get repositories
     console.log('📦 Getting repositories...');
     const programRepo = repositoryFactory.getProgramRepository();
     const taskRepo = repositoryFactory.getTaskRepository();
     const scenarioRepo = repositoryFactory.getScenarioRepository();
-    
+
     // Verify scenario exists
     console.log('🔍 Finding scenario...');
     const scenario = await scenarioRepo.findById(scenarioId);
@@ -114,15 +114,15 @@ export async function POST(
       return NextResponse.json({ error: 'Scenario not found' }, { status: 404 });
     }
     console.log('✅ Scenario found:', scenario.id, scenario.title);
-    
+
     // Get task templates from scenario
     const taskTemplates = scenario.taskTemplates || [];
     console.log(`📋 Found ${taskTemplates.length} task templates in scenario`);
-    
+
     // Get language from request
     const { searchParams } = new URL(request.url);
     const lang = searchParams.get('lang') || 'en';
-    
+
     // Create minimal program
     console.log('🏆 Creating minimal program...');
     const program = await programRepo.create({
@@ -152,20 +152,20 @@ export async function POST(
         careerType: scenario.sourceMetadata?.careerType || scenario.sourceId || 'unknown'
       }
     });
-    
+
     console.log('✅ Program created:', program.id);
-    
+
     // Create tasks from templates or create a simple task if no templates
     console.log('📝 Creating tasks...');
     const createdTasks = [];
     const taskIds = [];
-    
+
     if (taskTemplates.length > 0) {
       // Create tasks from templates
       for (let i = 0; i < taskTemplates.length; i++) {
         const template = taskTemplates[i] as Record<string, unknown>;
         console.log(`  Creating task ${i + 1}/${taskTemplates.length}: ${template.id}`);
-        
+
         const task = await taskRepo.create({
           programId: program.id,
           scenarioId: scenario.id,
@@ -197,17 +197,17 @@ export async function POST(
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
           pblData: {},
-          discoveryData: { 
+          discoveryData: {
             xp: (template.context as Record<string, unknown>)?.xpReward as number || 100,
             skillsImproved: (template.context as Record<string, unknown>)?.skillsImproved as string[] || []
           },
           assessmentData: {},
-          metadata: { 
+          metadata: {
             language: lang,
             templateId: template.id as string
           }
         });
-        
+
         createdTasks.push(task);
         taskIds.push(task.id);
         console.log(`  ✅ Created task: ${task.id}`);
@@ -246,12 +246,12 @@ export async function POST(
         assessmentData: {},
         metadata: { language: lang }
       });
-      
+
       createdTasks.push(task);
       taskIds.push(task.id);
       console.log('  ✅ Created simple task:', task.id);
     }
-    
+
     // Update program with task IDs
     try {
       if (programRepo.update && taskIds.length > 0) {
@@ -267,7 +267,7 @@ export async function POST(
       console.warn('⚠️ Could not update program metadata:', updateError);
       // Continue anyway - program and tasks are created
     }
-    
+
     // Return simplified response
     const response = {
       id: program.id,
@@ -286,10 +286,10 @@ export async function POST(
       completedTasks: 0,
       totalXP: 0
     };
-    
+
     console.log('🎉 Success! Returning program data');
     return NextResponse.json(response);
-    
+
   } catch (error) {
     console.error('💥 Error in simplified POST handler:', error);
     return NextResponse.json(

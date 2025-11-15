@@ -153,7 +153,7 @@ describe('POST /api/pbl/chat', () => {
         method: 'POST',
         body: JSON.stringify({})
       });
-      
+
       const response = await POST(request);
       const data = await response.json();
 
@@ -169,7 +169,7 @@ describe('POST /api/pbl/chat', () => {
           context: {}
         })
       });
-      
+
       const response = await POST(request);
       const data = await response.json();
 
@@ -185,7 +185,7 @@ describe('POST /api/pbl/chat', () => {
           sessionId: 'session-123'
         })
       });
-      
+
       const response = await POST(request);
       const data = await response.json();
 
@@ -213,7 +213,7 @@ describe('POST /api/pbl/chat', () => {
           }
         })
       });
-      
+
       const response = await POST(request);
       const data = await response.json();
 
@@ -239,7 +239,7 @@ describe('POST /api/pbl/chat', () => {
           }
         })
       });
-      
+
       const response = await POST(request);
       const data = await response.json();
 
@@ -267,7 +267,7 @@ describe('POST /api/pbl/chat', () => {
           }
         })
       });
-      
+
       const response = await POST(request);
       const data = await response.json();
 
@@ -293,7 +293,7 @@ describe('POST /api/pbl/chat', () => {
           }
         })
       });
-      
+
       const response = await POST(request);
       const data = await response.json();
 
@@ -319,14 +319,14 @@ describe('POST /api/pbl/chat', () => {
           }
         })
       });
-      
+
       const response = await POST(request);
       const data = await response.json();
 
       expect(response.status).toBe(200);
       expect(data.response).toBe('AI tutor response');
       expect(data.sessionId).toBe('session-123');
-      
+
       // Verify AI module was used in prompt
       const generatedPrompt = mockGenerateContent.mock.calls[0][0];
       expect(generatedPrompt).toContain('friendly and helpful tutor');
@@ -356,7 +356,7 @@ describe('POST /api/pbl/chat', () => {
           }
         })
       });
-      
+
       const response = await POST(request);
       const data = await response.json();
 
@@ -366,7 +366,7 @@ describe('POST /api/pbl/chat', () => {
         expect.any(Object)
       );
       expect(mockLog).toHaveBeenCalledWith('Using default AI module configuration');
-      
+
       // Verify default AI module was used
       const generatedPrompt = mockGenerateContent.mock.calls[0][0];
       expect(generatedPrompt).toContain('helpful AI tutor');
@@ -403,9 +403,9 @@ describe('POST /api/pbl/chat', () => {
           }
         })
       });
-      
+
       const response = await POST(request);
-      
+
       expect(response.status).toBe(200);
       const generatedPrompt = mockGenerateContent.mock.calls[0][0];
       expect(generatedPrompt).toContain('experienced guide');
@@ -431,9 +431,9 @@ describe('POST /api/pbl/chat', () => {
           }
         })
       });
-      
+
       await POST(request);
-      
+
       const generatedPrompt = mockGenerateContent.mock.calls[0][0];
       expect(generatedPrompt).toContain('Please respond in English');
     });
@@ -448,7 +448,7 @@ describe('POST /api/pbl/chat', () => {
 
       for (const { code, instruction } of languages) {
         jest.clearAllMocks();
-        
+
         const request = new NextRequest(`http://localhost/api/pbl/chat?lang=${code}`, {
           method: 'POST',
           body: JSON.stringify({
@@ -464,9 +464,9 @@ describe('POST /api/pbl/chat', () => {
             }
           })
         });
-        
+
         await POST(request);
-        
+
         const generatedPrompt = mockGenerateContent.mock.calls[0][0];
         expect(generatedPrompt).toContain(instruction);
       }
@@ -496,9 +496,9 @@ describe('POST /api/pbl/chat', () => {
           }
         })
       });
-      
+
       await POST(request);
-      
+
       expect(mockLog).toHaveBeenCalledWith(
         'Conversation history received:',
         expect.objectContaining({
@@ -506,7 +506,7 @@ describe('POST /api/pbl/chat', () => {
           history: conversationHistory
         })
       );
-      
+
       const generatedPrompt = mockGenerateContent.mock.calls[0][0];
       expect(generatedPrompt).toContain('Previous conversation:');
       expect(generatedPrompt).toContain('User: What is AI?');
@@ -531,9 +531,9 @@ describe('POST /api/pbl/chat', () => {
           }
         })
       });
-      
+
       await POST(request);
-      
+
       const generatedPrompt = mockGenerateContent.mock.calls[0][0];
       expect(generatedPrompt).not.toContain('Previous conversation:');
       expect(generatedPrompt).toContain('User: Hello');
@@ -559,7 +559,7 @@ describe('POST /api/pbl/chat', () => {
           }
         })
       });
-      
+
       const response = await POST(request);
       const data = await response.json();
 
@@ -586,7 +586,7 @@ describe('POST /api/pbl/chat', () => {
           }
         })
       });
-      
+
       await POST(request);
 
       expect(VertexAI).toHaveBeenCalledWith({
@@ -622,7 +622,7 @@ describe('POST /api/pbl/chat', () => {
           }
         })
       });
-      
+
       const response = await POST(request);
       const data = await response.json();
 
@@ -660,7 +660,7 @@ describe('POST /api/pbl/chat', () => {
           }
         })
       });
-      
+
       const response = await POST(request);
       const data = await response.json();
 
@@ -688,7 +688,7 @@ describe('POST /api/pbl/chat', () => {
           }
         })
       });
-      
+
       const response = await POST(request);
       const data = await response.json();
 
@@ -705,7 +705,7 @@ describe('POST /api/pbl/chat', () => {
         method: 'POST',
         body: 'invalid json'
       });
-      
+
       const response = await POST(request);
       const data = await response.json();
 

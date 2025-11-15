@@ -109,15 +109,15 @@ export default function ScenariosPage() {
           // Transform the scenarios to match the expected format
           const transformedScenarios = scenarios.map((scenario: Record<string, unknown>) => {
             const careerType = (scenario.discovery_data as Record<string, unknown>)?.careerType as string || 'general';
-            
+
             return {
               id: careerType,
               scenarioId: scenario.id, // Store the actual scenario UUID
               title: scenario.title as string, // API now returns localized string
               subtitle: scenario.description as string, // API now returns localized string
-              category: (scenario.discovery_data as Record<string, unknown>)?.category as string || 
-                       (scenario.discoveryData as Record<string, unknown>)?.category as string || 
-                       (scenario.metadata as Record<string, unknown>)?.category as string || 
+              category: (scenario.discovery_data as Record<string, unknown>)?.category as string ||
+                       (scenario.discoveryData as Record<string, unknown>)?.category as string ||
+                       (scenario.metadata as Record<string, unknown>)?.category as string ||
                        'general',
               icon: careerIcons[careerType] || Sparkles,
               color: careerColors[careerType] || 'from-gray-500 to-gray-600',
@@ -156,22 +156,22 @@ export default function ScenariosPage() {
   useEffect(() => {
     const loadMyScenarios = async () => {
       if (!isLoggedIn || activeTab !== 'my') return;
-      
+
       setIsLoadingMyScenarios(true);
       try {
         const lang = normalizeLanguageCode(i18n.language);
         const response = await authenticatedFetch(`/api/discovery/scenarios/my?lang=${lang}`);
         if (response.ok) {
           const data = await response.json();
-          
+
           // Transform the data to match the expected format
           const transformedScenarios = (data.scenarios || []).map((scenario: Record<string, unknown>) => {
             // Get career type from multiple possible locations
-            const careerType = scenario.careerType as string || 
+            const careerType = scenario.careerType as string ||
                              (scenario.discoveryData as Record<string, unknown>)?.careerType as string ||
                              (scenario.metadata as Record<string, unknown>)?.careerType as string ||
                              'general';
-            
+
             // Map icon string to actual icon component
             const iconName = scenario.icon as string || 'Sparkles';
             const iconMap: Record<string, React.ComponentType<React.SVGProps<SVGSVGElement>>> = {
@@ -184,7 +184,7 @@ export default function ScenariosPage() {
               'Sparkles': Sparkles,
               'VideoCameraIcon': Video
             };
-            
+
             return {
               id: careerType,
               scenarioId: scenario.scenarioId as string,
@@ -211,7 +211,7 @@ export default function ScenariosPage() {
               lastActivity: scenario.lastActivity as string
             };
           });
-          
+
           setMyScenarios(transformedScenarios);
         } else {
           console.error('Failed to fetch my scenarios');
@@ -227,11 +227,11 @@ export default function ScenariosPage() {
 
     loadMyScenarios();
   }, [isLoggedIn, activeTab, i18n.language]);
-  
-  const filteredScenarios = activeTab === 'my' 
+
+  const filteredScenarios = activeTab === 'my'
     ? myScenarios
-    : selectedCategory === 'all' 
-      ? scenarios 
+    : selectedCategory === 'all'
+      ? scenarios
       : scenarios.filter(s => s.category === selectedCategory);
 
   const handleScenarioSelect = async (scenarioOrCareer: Scenario | string) => {
@@ -249,7 +249,7 @@ export default function ScenariosPage() {
       // Fallback: try to find the scenario by career type
       const careerType = typeof scenarioOrCareer === 'string' ? scenarioOrCareer : scenarioOrCareer.id;
       const scenario = scenarios.find(s => s.id === careerType);
-      
+
       if (scenario && scenario.scenarioId) {
         router.push(`/discovery/scenarios/${scenario.scenarioId}`);
       } else {

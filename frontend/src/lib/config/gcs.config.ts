@@ -7,24 +7,24 @@
 export const GCS_CONFIG = {
   // 主要 bucket 名稱
   bucketName: process.env.GCS_BUCKET_NAME || 'ai-square-db-v2',
-  
+
   // Google Cloud Project ID
   projectId: process.env.GOOGLE_CLOUD_PROJECT,
-  
+
   // 本地開發時的認證檔案路徑
   keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS,
-  
+
   // 資料路徑前綴
   paths: {
     // 評估結果
     assessments: 'assessments',
-    
+
     // 統一架構的資料路徑
     scenarios: 'v2/scenarios',
     programs: 'v2/programs',
     tasks: 'v2/tasks',
     evaluations: 'v2/evaluations',
-    
+
     // CMS 資料
     cms: {
       overrides: 'cms/overrides',

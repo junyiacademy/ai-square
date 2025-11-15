@@ -239,4 +239,4 @@ jobs:
         npm run test:integration:docker
 ```
 
-這個設置讓所有 integration tests 能夠在乾淨、一致的環境中執行，大幅提升測試可靠性！ 
+這個設置讓所有 integration tests 能夠在乾淨、一致的環境中執行，大幅提升測試可靠性！

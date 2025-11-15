@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('Error creating learning program:', error);
-    
+
     if (error instanceof Error && error.message.includes('not found')) {
       return NextResponse.json(
         { success: false, error: error.message },

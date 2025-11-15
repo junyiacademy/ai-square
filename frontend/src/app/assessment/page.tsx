@@ -64,12 +64,12 @@ export default function AssessmentPage() {
 
   const handleQuizComplete = (answers: UserAnswer[]) => {
     setUserAnswers(answers);
-    
+
     if (assessmentData) {
       const result = calculateAssessmentResult(answers, assessmentData);
       setAssessmentResult(result);
       setCurrentStep('results');
-      
+
       // Note: User's assessment completion is now tracked in GCS via assessment results
       // The assessment results are saved when the user views the results page
     }
@@ -104,8 +104,8 @@ export default function AssessmentPage() {
     // Convert to percentages
     const domainPercentages = Object.keys(domainScores).reduce((acc, domain) => {
       const domainKey = domain as keyof typeof domainScores;
-      acc[domainKey] = domainTotals[domainKey] > 0 
-        ? (domainScores[domainKey] / domainTotals[domainKey]) * 100 
+      acc[domainKey] = domainTotals[domainKey] > 0
+        ? (domainScores[domainKey] / domainTotals[domainKey]) * 100
         : 0;
       return acc;
     }, {} as typeof domainScores);
@@ -150,33 +150,33 @@ export default function AssessmentPage() {
       const domainInfo = data.domains?.[domain as keyof typeof data.domains];
       const domainName = getTranslatedField(i18n.language, domainInfo, 'name') as string;
       const domainDescription = getTranslatedField(i18n.language, domainInfo, 'description') as string;
-      
+
       const recommendationKey = `results.recommendations.${domain}`;
-      const recommendation = t(recommendationKey, { 
+      const recommendation = t(recommendationKey, {
         defaultValue: `${t('results.recommendations.focusOn')} ${domainName}: ${domainDescription}`
       });
-      
+
       recommendations.push(recommendation);
     });
 
     return recommendations;
   };
-  
+
   // Helper function to get translated fields
   const getTranslatedField = (lang: string, item: unknown, fieldName: string): string => {
     if (!item) return '';
-    
+
     const obj = item as Record<string, unknown>;
-    
+
     if (lang === 'zhTW') {
       return (obj[`${fieldName}_zhTW`] || obj[fieldName] || '') as string;
     }
-    
+
     const langCode = lang.split('-')[0];
     if (langCode !== 'en') {
       return (obj[`${fieldName}_${langCode}`] || obj[fieldName] || '') as string;
     }
-    
+
     return (obj[fieldName] || '') as string;
   };
 
@@ -234,7 +234,7 @@ export default function AssessmentPage() {
               <p className="text-lg text-gray-600 mb-8">
                 {t('description')}
               </p>
-              
+
               <div className="grid md:grid-cols-2 gap-6 mb-8">
                 <div className="bg-blue-50 p-6 rounded-lg">
                   <h3 className="text-lg font-semibold text-blue-900 mb-2">
@@ -247,7 +247,7 @@ export default function AssessmentPage() {
                     <li>• {t('assessmentInfo.immediate')}</li>
                   </ul>
                 </div>
-                
+
                 <div className="bg-green-50 p-6 rounded-lg">
                   <h3 className="text-lg font-semibold text-green-900 mb-2">
                     {t('benefits.title')}
@@ -260,7 +260,7 @@ export default function AssessmentPage() {
                   </ul>
                 </div>
               </div>
-              
+
               <button
                 onClick={handleStartAssessment}
                 className="bg-indigo-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-indigo-700 transition-colors"

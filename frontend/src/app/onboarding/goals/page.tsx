@@ -104,7 +104,7 @@ export default function OnboardingGoalsPage() {
         user.learningGoals = selectedGoals;
         user.hasCompletedOnboarding = true;
         localStorage.setItem('user', JSON.stringify(user));
-        
+
         // Update onboarding status in database
         try {
           const updateResponse = await authenticatedFetch(`/api/users/${user.id}`, {
@@ -122,7 +122,7 @@ export default function OnboardingGoalsPage() {
             }),
             credentials: 'include'
           });
-          
+
           if (!updateResponse.ok) {
             console.error('Failed to update onboarding status in database');
           } else {
@@ -131,7 +131,7 @@ export default function OnboardingGoalsPage() {
         } catch (error) {
           console.error('Error updating onboarding status:', error);
         }
-        
+
         // Save profile including interests to localStorage for personalization
         const userProfile = {
           identity: user.identity || 'learner',
@@ -139,7 +139,7 @@ export default function OnboardingGoalsPage() {
           goals: selectedGoals
         };
         localStorage.setItem('userProfile', JSON.stringify(userProfile));
-        
+
         // Update progress in GCS
         await authenticatedFetch('/api/users/update-progress', {
           method: 'POST',
@@ -149,9 +149,9 @@ export default function OnboardingGoalsPage() {
           body: JSON.stringify({
             email: user.email,
             stage: 'goals',
-            data: { 
+            data: {
               goals: selectedGoals,
-              interests: selectedGoals 
+              interests: selectedGoals
             }
           })
         });
@@ -159,17 +159,17 @@ export default function OnboardingGoalsPage() {
 
       // Check both frontend and backend authentication status
       console.log('Checking user authentication...');
-      
+
       // First check frontend state
       const authUserStr = localStorage.getItem('user');
       const frontendUser = authUserStr ? JSON.parse(authUserStr) : null;
       console.log('Frontend user state:', frontendUser ? 'logged in' : 'not logged in');
-      
+
       // Then check backend API
       const authCheckResponse = await authenticatedFetch('/api/auth/check');
       const authData = await authCheckResponse.json();
       console.log('Backend auth response:', authData);
-      
+
       // If backend auth fails but frontend shows user is logged in, try to proceed anyway
       if (!authData.authenticated && !frontendUser) {
         console.log('Neither frontend nor backend shows user as authenticated');
@@ -177,18 +177,18 @@ export default function OnboardingGoalsPage() {
         router.push('/assessment/scenarios');
         return;
       }
-      
+
       if (!authData.authenticated && frontendUser) {
         console.log('Frontend shows user logged in but backend auth failed - proceeding with frontend user info');
         console.log('This might be a session sync issue, but we\'ll try to create the program');
       }
-      
+
       console.log('User authenticated, proceeding with automatic program creation');
 
       // Get first assessment scenario and auto-create program
       console.log('Fetching assessment scenarios...');
       const scenariosResponse = await authenticatedFetch('/api/assessment/scenarios?lang=en');
-      
+
       if (!scenariosResponse.ok) {
         console.error('Failed to fetch scenarios:', scenariosResponse.status, scenariosResponse.statusText);
         const errorText = await scenariosResponse.text();
@@ -199,7 +199,7 @@ export default function OnboardingGoalsPage() {
 
       const scenariosData = await scenariosResponse.json();
       console.log('Scenarios API response:', scenariosData);
-      
+
       // 確保正確提取 scenarios 陣列
       let scenarios = [];
       if (Array.isArray(scenariosData)) {
@@ -212,9 +212,9 @@ export default function OnboardingGoalsPage() {
       } else if (scenariosData.data && Array.isArray(scenariosData.data)) {
         scenarios = scenariosData.data;
       }
-      
+
       console.log('Extracted scenarios:', scenarios.length, 'scenarios found');
-      
+
       if (!scenarios || scenarios.length === 0) {
         console.error('No assessment scenarios found');
         router.push('/assessment/scenarios');
@@ -228,7 +228,7 @@ export default function OnboardingGoalsPage() {
         router.push('/assessment/scenarios');
         return;
       }
-      
+
       console.log('Creating program for first scenario:', firstScenario.id);
 
       // Create program for the first scenario
@@ -249,7 +249,7 @@ export default function OnboardingGoalsPage() {
         console.error('Failed to create program:', programResponse.status, programResponse.statusText);
         const errorText = await programResponse.text();
         console.error('Program creation error details:', errorText);
-        
+
         // If program creation fails due to auth, redirect to scenarios page
         if (programResponse.status === 401 || programResponse.status === 403) {
           console.log('Program creation failed due to authentication - redirecting to scenarios page');
@@ -268,7 +268,7 @@ export default function OnboardingGoalsPage() {
       // Navigate to the assessment program using correct route structure
       const scenarioId = firstScenario.id;
       const programId = programData.program.id;
-      
+
       if (programData.existing) {
         // Use existing program
         router.push(`/assessment/scenarios/${scenarioId}/programs/${programId}`);

@@ -23,7 +23,7 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 check_service() {
     local port=$1
     local name=$2
-    
+
     if lsof -Pi :$port -sTCP:LISTEN -t >/dev/null 2>&1; then
         echo -e "${GREEN}✓${NC} $name is running on port $port"
         return 0
@@ -46,10 +46,10 @@ check_docker() {
 start_docker_services() {
     echo ""
     echo "🐳 Starting services with Docker Compose..."
-    
+
     if [ -f "docker-compose.test.yml" ]; then
         docker-compose -f docker-compose.test.yml up -d
-        
+
         # Wait for services to be healthy
         echo "⏳ Waiting for services to be healthy..."
         local attempts=0
@@ -61,7 +61,7 @@ start_docker_services() {
             sleep 2
             attempts=$((attempts + 1))
         done
-        
+
         echo -e "${YELLOW}⚠${NC} Services may not be fully ready"
     else
         echo -e "${RED}✗${NC} docker-compose.test.yml not found"
@@ -73,28 +73,28 @@ start_docker_services() {
 start_local_postgres() {
     echo ""
     echo "🐘 Starting local PostgreSQL on port $TEST_DB_PORT..."
-    
+
     # Check if PostgreSQL is installed
     if ! command -v postgres &> /dev/null; then
         echo -e "${RED}✗${NC} PostgreSQL is not installed"
         echo "  Install with: brew install postgresql@15"
         return 1
     fi
-    
+
     # Create test data directory
     TEST_DATA_DIR="/tmp/postgres-test-data"
     if [ ! -d "$TEST_DATA_DIR" ]; then
         echo "Creating test database cluster..."
         initdb -D "$TEST_DATA_DIR" -U postgres >/dev/null 2>&1
     fi
-    
+
     # Start PostgreSQL
     pg_ctl -D "$TEST_DATA_DIR" -o "-p $TEST_DB_PORT" start >/dev/null 2>&1
-    
+
     # Create database
     sleep 2
     createdb -h localhost -p $TEST_DB_PORT -U postgres ai_square_db 2>/dev/null || true
-    
+
     echo -e "${GREEN}✓${NC} Local PostgreSQL started on port $TEST_DB_PORT"
     return 0
 }
@@ -103,17 +103,17 @@ start_local_postgres() {
 start_local_redis() {
     echo ""
     echo "🔴 Starting local Redis on port $TEST_REDIS_PORT..."
-    
+
     # Check if Redis is installed
     if ! command -v redis-server &> /dev/null; then
         echo -e "${YELLOW}⚠${NC} Redis is not installed"
         echo "  Install with: brew install redis"
         return 1
     fi
-    
+
     # Start Redis
     redis-server --port $TEST_REDIS_PORT --daemonize yes >/dev/null 2>&1
-    
+
     echo -e "${GREEN}✓${NC} Local Redis started on port $TEST_REDIS_PORT"
     return 0
 }
@@ -151,7 +151,7 @@ echo ""
 echo "🐳 Checking Docker availability..."
 if check_docker; then
     echo -e "${GREEN}✓${NC} Docker is available"
-    
+
     # Check if we should use Docker
     if [ "$USE_DOCKER" != "false" ]; then
         if start_docker_services; then
@@ -159,14 +159,14 @@ if check_docker; then
             echo "🚀 Running integration tests with Docker services..."
             npm run test:integration
             exit_code=$?
-            
+
             # Optionally stop services
             if [ "$KEEP_SERVICES" != "true" ]; then
                 echo ""
                 echo "🧹 Stopping Docker services..."
                 docker-compose -f docker-compose.test.yml down
             fi
-            
+
             exit $exit_code
         fi
     fi

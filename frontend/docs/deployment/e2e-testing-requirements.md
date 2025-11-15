@@ -22,10 +22,10 @@ test('登入後能訪問受保護頁面', async ({ page }) => {
   await page.fill('[name="email"]', 'student@example.com');
   await page.fill('[name="password"]', 'student123');
   await page.click('button[type="submit"]');
-  
+
   // 2. 關鍵測試：訪問受保護頁面
   await page.goto('/discovery/overview');
-  
+
   // 3. 驗證沒有被重定向
   expect(page.url()).toContain('/discovery/overview');
   expect(page.url()).not.toContain('/login');

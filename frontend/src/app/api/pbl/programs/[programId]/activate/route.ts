@@ -8,30 +8,30 @@ export async function POST(
 ) {
   try {
     const { programId } = await params;
-    
+
     // Get user session using unified auth
     const session = await getUnifiedAuth(request);
     if (!session?.user?.email) {
       return createUnauthorizedResponse();
     }
     const userEmail = session.user.email;
-    
+
     // Get request body
     const body = await request.json();
     const { scenarioId, taskId, taskTitle } = body;
-    
+
     if (!scenarioId || !taskId || !taskTitle) {
       return NextResponse.json(
         { success: false, error: 'Missing required parameters' },
         { status: 400 }
       );
     }
-    
+
     // Get repositories
     const userRepo = repositoryFactory.getUserRepository();
     const programRepo = repositoryFactory.getProgramRepository();
     const taskRepo = repositoryFactory.getTaskRepository();
-    
+
     // Get user by email
     const user = await userRepo.findByEmail(userEmail);
     if (!user) {
@@ -40,7 +40,7 @@ export async function POST(
         { status: 404 }
       );
     }
-    
+
     // Get program
     const program = await programRepo.findById(programId);
     if (!program || program.userId !== user.id) {
@@ -49,14 +49,14 @@ export async function POST(
         { status: 404 }
       );
     }
-    
+
     // Update program status from pending to active
     await programRepo.update?.(programId, { status: "active" });
-    
+
     // Initialize the first task if not already initialized
     const existingTasks = await taskRepo.findByProgram(programId);
     const taskExists = existingTasks.some(t => t.taskIndex === 0);
-    
+
     if (!taskExists) {
       // Create the first task
       await taskRepo.create({
@@ -91,10 +91,10 @@ export async function POST(
         }
       });
     }
-    
+
     // Get updated program
     const updatedProgram = await programRepo.findById(programId);
-    
+
     return NextResponse.json({
       success: true,
       program: {
@@ -108,7 +108,7 @@ export async function POST(
         updatedAt: updatedProgram!.lastActivityAt
       }
     });
-    
+
   } catch (error) {
     console.error('Error activating program:', error);
     return NextResponse.json(

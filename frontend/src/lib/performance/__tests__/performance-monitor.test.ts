@@ -40,14 +40,14 @@ describe('PerformanceMonitor', () => {
     // Reset the metrics array by calling clear
     performanceMonitor.clear();
     console.log = originalLog;
-    
+
     // Make NODE_ENV writable for tests
     Object.defineProperty(process.env, 'NODE_ENV', {
       writable: true,
       value: process.env.NODE_ENV
     });
   });
-  
+
   afterEach(() => {
     // Restore original NODE_ENV value and make it read-only again
     Object.defineProperty(process.env, 'NODE_ENV', {
@@ -59,7 +59,7 @@ describe('PerformanceMonitor', () => {
   describe('recordMetric', () => {
     it('records a metric with default unit', () => {
       performanceMonitor.recordMetric('test-metric', 100);
-      
+
       // Use getSummary to check metrics were recorded
       const summary = performanceMonitor.getSummary();
       expect(summary.totalMetrics).toBe(1);
@@ -74,7 +74,7 @@ describe('PerformanceMonitor', () => {
 
     it('records a metric with custom unit', () => {
       performanceMonitor.recordMetric('memory-usage', 50, 'MB');
-      
+
       const summary = performanceMonitor.getSummary();
       expect(summary.totalMetrics).toBe(1);
       expect(summary.recentMetrics[0]).toEqual({
@@ -96,7 +96,7 @@ describe('PerformanceMonitor', () => {
       performanceMonitor.recordMetric('dev-metric', 200);
 
       expect(mockConsoleLog).toHaveBeenCalledWith('[Performance] dev-metric: 200ms');
-      
+
       Object.defineProperty(process.env, 'NODE_ENV', {
         value: originalEnv,
         configurable: true
@@ -114,7 +114,7 @@ describe('PerformanceMonitor', () => {
       performanceMonitor.recordMetric('prod-metric', 300);
 
       expect(mockConsoleLog).not.toHaveBeenCalled();
-      
+
       Object.defineProperty(process.env, 'NODE_ENV', {
         value: originalEnv,
         configurable: true
@@ -148,7 +148,7 @@ describe('PerformanceMonitor', () => {
 
       expect(result).toBe('result');
       expect(asyncFn).toHaveBeenCalledTimes(1);
-      
+
       const summary = performanceMonitor.getSummary();
       expect(summary.totalMetrics).toBe(1);
       expect(summary.recentMetrics[0]).toEqual({
@@ -195,7 +195,7 @@ describe('PerformanceMonitor', () => {
 
       expect(result).toBe('sync-result');
       expect(syncFn).toHaveBeenCalledTimes(1);
-      
+
       const summary = performanceMonitor.getSummary();
       expect(summary.totalMetrics).toBe(1);
       expect(summary.recentMetrics[0]).toEqual({
@@ -215,7 +215,7 @@ describe('PerformanceMonitor', () => {
         throw new Error('Sync error');
       });
 
-      expect(() => 
+      expect(() =>
         performanceMonitor.measure('failing-sync', syncFn)
       ).toThrow('Sync error');
 
@@ -235,7 +235,7 @@ describe('PerformanceMonitor', () => {
       // Mock the window check by spying on the actual implementation behavior
       // Since Jest runs in jsdom environment, we'll test the expected behavior instead
       const vitals = performanceMonitor.getCoreWebVitals();
-      
+
       // In Jest environment with jsdom, we should get an object with default values
       // The actual server-side null return is tested in the real server environment
       expect(vitals).toBeDefined();
@@ -277,7 +277,7 @@ describe('PerformanceMonitor', () => {
       });
 
       const vitals = performanceMonitor.getCoreWebVitals();
-      
+
       expect(vitals).toEqual({
         FCP: 150,
         LCP: 300,
@@ -290,7 +290,7 @@ describe('PerformanceMonitor', () => {
       mockGetEntriesByType.mockReturnValue([]);
 
       const vitals = performanceMonitor.getCoreWebVitals();
-      
+
       expect(vitals).toEqual({
         FCP: 0,
         LCP: 0,
@@ -330,7 +330,7 @@ describe('PerformanceMonitor', () => {
       mockGetEntriesByType.mockReturnValue(mockResources);
 
       const timings = performanceMonitor.getResourceTimings();
-      
+
       expect(timings).toEqual([
         {
           name: 'https://example.com/script.js',
@@ -351,7 +351,7 @@ describe('PerformanceMonitor', () => {
   describe('getCacheHitRate', () => {
     it('returns 0 when no resources', () => {
       mockGetEntriesByType.mockReturnValue([]);
-      
+
       const rate = performanceMonitor.getCacheHitRate();
       expect(rate).toBe(0);
     });
@@ -365,7 +365,7 @@ describe('PerformanceMonitor', () => {
       ];
 
       mockGetEntriesByType.mockReturnValue(mockResources);
-      
+
       const rate = performanceMonitor.getCacheHitRate();
       expect(rate).toBe(50); // 2 out of 4 are cached
     });
@@ -415,7 +415,7 @@ describe('PerformanceMonitor', () => {
       performanceMonitor.recordMetric('api_call', 150);
 
       const summary = performanceMonitor.getSummary();
-      
+
       expect(summary).toMatchObject({
         coreWebVitals: expect.objectContaining({
           FCP: 150,
@@ -433,12 +433,12 @@ describe('PerformanceMonitor', () => {
     it('clears all recorded metrics', () => {
       performanceMonitor.recordMetric('metric1', 100);
       performanceMonitor.recordMetric('metric2', 200);
-      
+
       let summary = performanceMonitor.getSummary();
       expect(summary.totalMetrics).toBe(2);
-      
+
       performanceMonitor.clear();
-      
+
       summary = performanceMonitor.getSummary();
       expect(summary.totalMetrics).toBe(0);
       expect(summary.recentMetrics).toHaveLength(0);

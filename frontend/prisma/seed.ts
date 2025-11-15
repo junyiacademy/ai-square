@@ -8,24 +8,24 @@ async function main() {
 
   // Create demo users
   const users = [
-    { 
-      email: 'student@example.com', 
-      password: 'student123', 
-      role: 'student', 
+    {
+      email: 'student@example.com',
+      password: 'student123',
+      role: 'student',
       name: 'Student User',
       preferredLanguage: 'en'
     },
-    { 
-      email: 'teacher@example.com', 
-      password: 'teacher123', 
-      role: 'teacher', 
+    {
+      email: 'teacher@example.com',
+      password: 'teacher123',
+      role: 'teacher',
       name: 'Teacher User',
       preferredLanguage: 'en'
     },
-    { 
-      email: 'admin@example.com', 
-      password: 'admin123', 
-      role: 'admin', 
+    {
+      email: 'admin@example.com',
+      password: 'admin123',
+      role: 'admin',
       name: 'Admin User',
       preferredLanguage: 'en'
     }
@@ -33,7 +33,7 @@ async function main() {
 
   for (const userData of users) {
     const passwordHash = await bcrypt.hash(userData.password, 10);
-    
+
     const user = await prisma.user.upsert({
       where: { email: userData.email },
       update: {

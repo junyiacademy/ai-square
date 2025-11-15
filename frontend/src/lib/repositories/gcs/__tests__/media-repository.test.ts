@@ -96,7 +96,7 @@ describe('GCSMediaRepository', () => {
       });
 
       const fileBuffer = Buffer.from('test file content');
-      
+
       await expect(repository.uploadFile('images/test.jpg', fileBuffer, 'image/jpeg'))
         .rejects.toThrow('Upload failed');
     });
@@ -107,7 +107,7 @@ describe('GCSMediaRepository', () => {
       });
 
       const fileBuffer = Buffer.from('test file content');
-      
+
       await expect(repository.uploadFile('images/test.jpg', fileBuffer, 'image/jpeg'))
         .rejects.toThrow('Stream creation failed');
     });
@@ -281,7 +281,7 @@ describe('GCSMediaRepository', () => {
 
       const callArgs = mockFile.getSignedUrl.mock.calls[0][0];
       const expectedExpires = Date.now() + 60 * 60 * 1000;
-      
+
       expect(callArgs.expires).toBeGreaterThanOrEqual(expectedExpires - 1000);
       expect(callArgs.expires).toBeLessThanOrEqual(expectedExpires + 1000);
     });
@@ -413,7 +413,7 @@ describe('GCSMediaRepository', () => {
     it('should detect public files correctly', async () => {
       // Test through getFileUrl which uses isPublic
       const result = await repository.getFileUrl('images/public.jpg');
-      
+
       expect(result).toBe('https://storage.googleapis.com/test-bucket/images/public.jpg');
     });
 
@@ -423,7 +423,7 @@ describe('GCSMediaRepository', () => {
       }]);
 
       const result = await repository.getFileUrl('images/private.jpg');
-      
+
       expect(result).toBe('https://signed-url.com');
     });
 
@@ -433,7 +433,7 @@ describe('GCSMediaRepository', () => {
       }]);
 
       const result = await repository.getFileUrl('images/noAcl.jpg');
-      
+
       expect(result).toBe('https://signed-url.com');
     });
   });
@@ -443,7 +443,7 @@ describe('GCSMediaRepository', () => {
       mockBucket.getFiles.mockResolvedValueOnce([[]]);
 
       const result = await repository.listFiles('empty/');
-      
+
       expect(result).toEqual([]);
     });
 
@@ -460,7 +460,7 @@ describe('GCSMediaRepository', () => {
       mockBucket.getFiles.mockResolvedValueOnce([[malformedFile]]);
 
       const result = await repository.listFiles('malformed/');
-      
+
       expect(result[0]).toEqual({
         name: 'test-file.jpg',
         url: 'https://storage.googleapis.com/test-bucket/test-file.jpg',
@@ -481,17 +481,17 @@ describe('GCSMediaRepository', () => {
 
     it('should handle large file operations', async () => {
       const largeFile = Buffer.alloc(10 * 1024 * 1024); // 10MB
-      
+
       const result = await repository.uploadFile('large/file.bin', largeFile, 'application/octet-stream');
-      
+
       expect(result).toBe('https://storage.googleapis.com/test-bucket/large/file.bin');
     });
 
     it('should handle special characters in file paths', async () => {
       const specialPath = 'images/测试文件 (1).jpg';
-      
+
       const result = await repository.uploadFile(specialPath, Buffer.from('test'), 'image/jpeg');
-      
+
       expect(mockBucket.file).toHaveBeenCalledWith(specialPath);
       expect(result).toBe(`https://storage.googleapis.com/test-bucket/${specialPath}`);
     });

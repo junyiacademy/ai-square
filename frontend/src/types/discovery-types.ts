@@ -158,10 +158,10 @@ export interface IDiscoveryRepository {
   findCareerPaths(): Promise<IDiscoveryScenario[]>;
   findCareerPathById(id: string): Promise<IDiscoveryScenario | null>;
   findCareerPathBySlug(slug: string): Promise<IDiscoveryScenario | null>;
-  
+
   // Recommendations
   getCareerRecommendations(userId: string): Promise<ICareerRecommendation[]>;
-  
+
   // Progress tracking
   getUserDiscoveryProgress(userId: string): Promise<{
     exploredCareers: string[];
@@ -169,7 +169,7 @@ export interface IDiscoveryRepository {
     portfolioItems: IPortfolioItem[];
     overallProgress: number;
   }>;
-  
+
   // Portfolio management
   addPortfolioItem(userId: string, item: Omit<IPortfolioItem, 'id' | 'createdAt'>): Promise<IPortfolioItem>;
   updatePortfolioItem(userId: string, itemId: string, updates: Partial<IPortfolioItem>): Promise<IPortfolioItem>;

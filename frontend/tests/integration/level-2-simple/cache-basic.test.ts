@@ -40,31 +40,31 @@ describe.skip('Basic Cache Operations', () => {
 
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 5000);
-    
+
     try {
       // First request - should be cache MISS
       const response1 = await fetch(`${baseUrl}/api/ksa?lang=en`, {
         signal: controller.signal
       });
-      
+
       if (!response1.ok) {
         clearTimeout(timeout);
         console.log('API server not available, skipping cache test');
         expect(true).toBe(true);
         return;
       }
-      
+
       const cacheHeader1 = response1.headers.get('x-cache');
-      
+
       // Second request - should be cache HIT (if caching is enabled)
       const response2 = await fetch(`${baseUrl}/api/ksa?lang=en`, {
         signal: controller.signal
       });
       clearTimeout(timeout);
-      
+
       expect(response2.ok).toBe(true);
       const cacheHeader2 = response2.headers.get('x-cache');
-      
+
       // At least one should indicate cache behavior
       console.log('Cache headers:', { first: cacheHeader1, second: cacheHeader2 });
     } catch (error: any) {
@@ -104,7 +104,7 @@ describe.skip('Basic Cache Operations', () => {
   it('should handle cache expiration', async () => {
     // Set with short TTL
     await redisClient.set('test:ttl', 'value', 'EX', 1);
-    
+
     // Check TTL
     const ttl = await redisClient.ttl('test:ttl');
     expect(ttl).toBeGreaterThan(0);
@@ -124,7 +124,7 @@ describe.skip('Basic Cache Operations', () => {
 
   it('should handle multiple language caches', async () => {
     const languages = ['en', 'zh', 'es'];
-    
+
     // Set cache for each language
     for (const lang of languages) {
       await redisClient.set(

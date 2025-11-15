@@ -1,20 +1,20 @@
 /**
  * Discovery Learning Service
- * 
+ *
  * 實作統一學習架構中的 Discovery 模組
  * 負責處理職涯探索學習的業務邏輯
  */
 
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import type { 
-  IScenario, 
-  IProgram, 
-  ITask, 
+import type {
+  IScenario,
+  IProgram,
+  ITask,
   IEvaluation,
   IInteraction
 } from '@/types/unified-learning';
 // TaskType imported but not used - keeping for consistency
-import type { 
+import type {
   BaseLearningService,
   LearningOptions,
   LearningProgress,
@@ -93,8 +93,8 @@ export class DiscoveryLearningService implements BaseLearningService {
   private evaluationRepo = repositoryFactory.getEvaluationRepository();
 
   async startLearning(
-    userId: string, 
-    scenarioId: string, 
+    userId: string,
+    scenarioId: string,
     options?: LearningOptions
   ): Promise<IProgram> {
     // 1. 載入 Scenario
@@ -146,7 +146,7 @@ export class DiscoveryLearningService implements BaseLearningService {
 
     // 4. 生成初始任務（探索階段）
     const initialTasks = await this.generateInitialTasks(program, scenario, options?.language || 'en');
-    
+
     // 更新總任務數
     await this.programRepo.update?.(program.id, {
       totalTaskCount: initialTasks.length
@@ -164,7 +164,7 @@ export class DiscoveryLearningService implements BaseLearningService {
     const tasks = await this.taskRepo.findByProgram(programId);
     const completedTasks = tasks.filter(t => t.status === 'completed').length;
     const currentTask = tasks.find(t => t.status === 'active');
-    
+
     const discoveryProgress = program.discoveryData as unknown as DiscoveryProgress;
     const totalTimeSpent = tasks.reduce((sum, task) => sum + task.timeSpentSeconds, 0);
 
@@ -189,8 +189,8 @@ export class DiscoveryLearningService implements BaseLearningService {
   }
 
   async submitResponse(
-    programId: string, 
-    taskId: string, 
+    programId: string,
+    taskId: string,
     response: Record<string, unknown>
   ): Promise<TaskResult> {
     const task = await this.taskRepo.findById(taskId);
@@ -216,29 +216,29 @@ export class DiscoveryLearningService implements BaseLearningService {
 
     // 評估任務完成情況
     const taskResult = await this.evaluateTaskCompletion(task, response);
-    
+
     if (taskResult.completed) {
       // 更新任務狀態
       if (this.taskRepo.updateStatus) {
         await this.taskRepo.updateStatus(taskId, 'completed');
       }
-      
+
       // 更新程序進度
       const discoveryData = program.discoveryData as unknown as DiscoveryProgress;
       discoveryData.totalXP += taskResult.xpEarned;
       discoveryData.completedChallenges.push(task.id);
-      
+
       // 檢查升級
       const newLevel = this.calculateLevel(discoveryData.totalXP);
       if (newLevel > discoveryData.level) {
         discoveryData.level = newLevel;
         discoveryData.achievements.push(`Reached Level ${newLevel}`);
-        
+
         // 解鎖新技能
         const newSkills = await this.unlockSkillsForLevel(newLevel);
         discoveryData.unlockedSkills.push(...newSkills);
       }
-      
+
       if (this.programRepo.update) {
         await this.programRepo.update(programId, {
           discoveryData: discoveryData as unknown as Record<string, unknown>,
@@ -275,7 +275,7 @@ export class DiscoveryLearningService implements BaseLearningService {
 
     const tasks = await this.taskRepo.findByProgram(programId);
     const discoveryData = program.discoveryData as unknown as DiscoveryProgress;
-    
+
     // 創建總結評估
     const evaluation = await this.evaluationRepo.create({
       userId: program.userId,
@@ -327,8 +327,8 @@ export class DiscoveryLearningService implements BaseLearningService {
 
   async getNextTask(programId: string): Promise<ITask | null> {
     const tasks = await this.taskRepo.findByProgram(programId);
-    return tasks.find(t => t.status === 'active') || 
-           tasks.find(t => t.status === 'pending') || 
+    return tasks.find(t => t.status === 'active') ||
+           tasks.find(t => t.status === 'pending') ||
            null;
   }
 
@@ -339,7 +339,7 @@ export class DiscoveryLearningService implements BaseLearningService {
     }
 
     const xpEarned = (task.discoveryData as Record<string, unknown>)?.xpReward as number || 50;
-    
+
     const evaluation = await this.evaluationRepo.create({
       userId: '',
       programId: task.programId,
@@ -391,7 +391,7 @@ export class DiscoveryLearningService implements BaseLearningService {
   // Private helper methods
 
   private async generateInitialTasks(
-    program: IProgram, 
+    program: IProgram,
     scenario: IScenario,
     language: string
   ): Promise<ITask[]> {
@@ -493,7 +493,7 @@ export class DiscoveryLearningService implements BaseLearningService {
   }
 
   private async evaluateTaskCompletion(
-    task: ITask, 
+    task: ITask,
     response: Record<string, unknown>
   ): Promise<{
     completed: boolean;
@@ -505,9 +505,9 @@ export class DiscoveryLearningService implements BaseLearningService {
   }> {
     const discoveryTaskData = task.discoveryData as Record<string, unknown>;
     const xpReward = discoveryTaskData.xpReward as number || 50;
-    
+
     // 簡單的完成判斷
-    const completed = response.completed === true || 
+    const completed = response.completed === true ||
                      response.solution !== undefined ||
                      task.interactions.length >= 3;
 
@@ -519,7 +519,7 @@ export class DiscoveryLearningService implements BaseLearningService {
       if (task.type === 'creation' && (discoveryTaskData.difficulty === 'advanced')) {
         achievements.push('Advanced Challenge Master');
       }
-      
+
       // 檢查是否應該解鎖新技能
       const taskSkills = discoveryTaskData.skills as string[] || [];
       if (taskSkills.length > 0) {
@@ -530,7 +530,7 @@ export class DiscoveryLearningService implements BaseLearningService {
     return {
       completed,
       xpEarned: completed ? xpReward : 0,
-      feedback: completed ? 
+      feedback: completed ?
         'Excellent work! You\'ve successfully completed this challenge.' :
         'Keep working on it! You\'re making progress.',
       achievements,
@@ -544,22 +544,22 @@ export class DiscoveryLearningService implements BaseLearningService {
     if (!scenario) return;
 
     const discoveryData = scenario.discoveryData as unknown as DiscoveryScenarioData;
-    
+
     // Use completedTask to determine next difficulty
     void completedTask; // Mark as intentionally unused for now
     const programDiscoveryData = program.discoveryData as unknown as DiscoveryProgress;
-    
+
     // 根據等級選擇適當的技能挑戰
     const coreSkills = discoveryData.skillTree?.core_skills || [];
     const advancedSkills = discoveryData.skillTree?.advanced_skills || [];
-    
+
     // 基於等級選擇技能
-    const availableSkills = programDiscoveryData.level < 3 ? coreSkills : 
+    const availableSkills = programDiscoveryData.level < 3 ? coreSkills :
                            programDiscoveryData.level < 6 ? [...coreSkills, ...advancedSkills.slice(0, 2)] :
                            [...coreSkills, ...advancedSkills];
 
     // 找到還未完成的技能
-    const uncompletedSkills = availableSkills.filter(skill => 
+    const uncompletedSkills = availableSkills.filter(skill =>
       !programDiscoveryData.completedChallenges.includes(skill.id)
     );
 
@@ -568,7 +568,7 @@ export class DiscoveryLearningService implements BaseLearningService {
       const tasks = await this.taskRepo.findByProgram(program.id);
       const isAdvancedSkill = advancedSkills.some(skill => skill.id === nextSkill.id);
       const difficulty = isAdvancedSkill ? 'advanced' : 'intermediate';
-      
+
       await this.taskRepo.create({
         programId: program.id,
         scenarioId: scenario.id,
@@ -637,14 +637,14 @@ export class DiscoveryLearningService implements BaseLearningService {
   private estimateRemainingTime(tasks: ITask[]): number {
     const pendingTasks = tasks.filter(t => t.status === 'pending').length;
     const activeTasks = tasks.filter(t => t.status === 'active').length;
-    
+
     // 估計每個任務需要 20 分鐘
     return (pendingTasks + activeTasks) * 20 * 60;
   }
 
   private async calculateSkillProgress(tasks: ITask[]): Promise<Record<string, number>> {
     const skillProgress: Record<string, number> = {};
-    
+
     for (const task of tasks) {
       if (task.status === 'completed') {
         const skills = (task.discoveryData as Record<string, unknown>)?.skills as string[] || [];
@@ -653,24 +653,24 @@ export class DiscoveryLearningService implements BaseLearningService {
         }
       }
     }
-    
+
     // 正規化為百分比
     const maxCount = Math.max(...Object.values(skillProgress), 1);
     for (const skill in skillProgress) {
       skillProgress[skill] = (skillProgress[skill] / maxCount) * 100;
     }
-    
+
     return skillProgress;
   }
 
   private async generateJourneyFeedback(program: IProgram, tasks: ITask[]): Promise<string> {
     const discoveryData = program.discoveryData as unknown as DiscoveryProgress;
     const completedTasks = tasks.filter(t => t.status === 'completed').length;
-    
-    return `Congratulations on completing your career exploration journey! 
-    You've reached Level ${discoveryData.level} with ${discoveryData.totalXP} XP earned. 
-    Through ${completedTasks} challenges, you've unlocked ${discoveryData.unlockedSkills.length} skills 
-    and earned ${discoveryData.achievements.length} achievements. 
+
+    return `Congratulations on completing your career exploration journey!
+    You've reached Level ${discoveryData.level} with ${discoveryData.totalXP} XP earned.
+    Through ${completedTasks} challenges, you've unlocked ${discoveryData.unlockedSkills.length} skills
+    and earned ${discoveryData.achievements.length} achievements.
     Your journey shows strong potential in your chosen career path!`;
   }
 
@@ -679,7 +679,7 @@ export class DiscoveryLearningService implements BaseLearningService {
     const levelScore = Math.min(discoveryData.level * 10, 50);
     const xpScore = Math.min(discoveryData.totalXP / 20, 30);
     const skillScore = Math.min(discoveryData.unlockedSkills.length * 2, 20);
-    
+
     return levelScore + xpScore + skillScore;
   }
 }

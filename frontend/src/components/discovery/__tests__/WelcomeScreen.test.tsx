@@ -315,7 +315,7 @@ describe('WelcomeScreen', () => {
     renderWithProviders(<WelcomeScreen onStartJourney={mockOnStartJourney} />);
 
     const startButton = screen.getByRole('button', { name: /start your journey/i });
-    
+
     // Simulate hover
     fireEvent.mouseOver(startButton);
     expect(startButton).toBeInTheDocument();

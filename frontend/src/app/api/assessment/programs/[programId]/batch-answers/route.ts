@@ -10,29 +10,29 @@ export async function POST(
   try {
     // Try to get user from authentication
     const session = await getUnifiedAuth(request);
-    
+
     // If no auth, check if user info is in query params
     if (!session?.user?.email) {
       const { searchParams } = new URL(request.url);
       const emailParam = searchParams.get('userEmail');
-      
+
       if (!emailParam) {
         return createUnauthorizedResponse();
       }
     }
-    
+
     const body = await request.json();
     const { taskId, answers } = body;
-    
+
     if (!taskId || !answers || !Array.isArray(answers)) {
       return NextResponse.json(
         { error: 'Missing required fields' },
         { status: 400 }
       );
     }
-    
+
     const taskRepo = repositoryFactory.getTaskRepository();
-    
+
     // Get task
     const task = await taskRepo.findById(taskId);
     if (!task) {
@@ -41,7 +41,7 @@ export async function POST(
         { status: 404 }
       );
     }
-    
+
     // Get questions from task to check correct answers
     interface QuestionType {
       id: string;
@@ -49,7 +49,7 @@ export async function POST(
       ksa_mapping?: Record<string, unknown>;
     }
     const questions = (task.content as { questions?: QuestionType[] })?.questions || [];
-    
+
     // Prepare all interactions
     const assessmentInteractions: AssessmentInteraction[] = answers.map((answer: { questionId: string; answer: string; timeSpent?: number }) => {
       // Find the question to check the correct answer
@@ -57,7 +57,7 @@ export async function POST(
       const isCorrect = question && question.correct_answer !== undefined
         ? String(answer.answer) === String(question.correct_answer)
         : false;
-      
+
       return {
         timestamp: new Date().toISOString(),
         type: 'assessment_answer' as const,
@@ -70,12 +70,12 @@ export async function POST(
         }
       };
     });
-    
+
     // Convert to IInteraction for storage and merge with existing
     const existingInteractions = task.interactions || [];
     const newInteractions = assessmentInteractions.map(toIInteraction);
     const updatedInteractions = [...existingInteractions, ...newInteractions];
-    
+
     await taskRepo.update?.(taskId, {
       interactions: updatedInteractions,
       interactionCount: updatedInteractions.length,
@@ -84,13 +84,13 @@ export async function POST(
         lastAnsweredAt: new Date().toISOString()
       }
     });
-    
+
     // Update task status if needed
     if (task.status === 'pending') {
       await taskRepo.updateStatus?.(taskId, 'active');
     }
-    
-    return NextResponse.json({ 
+
+    return NextResponse.json({
       success: true,
       submitted: assessmentInteractions.length
     });

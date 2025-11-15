@@ -27,7 +27,7 @@ export class GCSContentRepository implements IContentRepository {
     try {
       const file = this.bucket.file(path);
       const [exists] = await file.exists();
-      
+
       if (!exists) {
         throw new Error(`File not found: ${path}`);
       }
@@ -79,7 +79,7 @@ export class GCSContentRepository implements IContentRepository {
   }
 
   async getAllScenarios(type?: ScenarioType): Promise<ScenarioContent[]> {
-    const prefixes = type 
+    const prefixes = type
       ? [`${type}_data/`]
       : ['pbl_data/', 'assessment_data/', 'discovery_data/'];
 
@@ -87,7 +87,7 @@ export class GCSContentRepository implements IContentRepository {
 
     for (const prefix of prefixes) {
       const files = await this.listYamlFiles(prefix);
-      
+
       for (const file of files) {
         if (file.includes('_scenario.yaml')) {
           try {

@@ -20,7 +20,7 @@ describe('UnifiedLearningError', () => {
   describe('ResourceNotFoundError', () => {
     it('should create error with correct properties', () => {
       const error = new ResourceNotFoundError('Scenario', 'scenario-123');
-      
+
       expect(error.message).toBe('Scenario not found: scenario-123');
       expect(error.code).toBe('RESOURCE_NOT_FOUND');
       expect(error.statusCode).toBe(404);
@@ -33,7 +33,7 @@ describe('UnifiedLearningError', () => {
     it('should serialize to JSON correctly', () => {
       const error = new ResourceNotFoundError('Task', 'task-456');
       const json = error.toJSON();
-      
+
       expect(json).toEqual({
         name: 'ResourceNotFoundError',
         message: 'Task not found: task-456',
@@ -50,7 +50,7 @@ describe('UnifiedLearningError', () => {
   describe('ValidationError', () => {
     it('should create error with field and value', () => {
       const error = new ValidationError('Invalid email format', 'email', 'not-an-email');
-      
+
       expect(error.message).toBe('Invalid email format');
       expect(error.code).toBe('VALIDATION_ERROR');
       expect(error.statusCode).toBe(400);
@@ -62,7 +62,7 @@ describe('UnifiedLearningError', () => {
 
     it('should create error without field and value', () => {
       const error = new ValidationError('Invalid input');
-      
+
       expect(error.message).toBe('Invalid input');
       expect(error.details).toEqual({
         field: undefined,
@@ -78,7 +78,7 @@ describe('UnifiedLearningError', () => {
         'pending',
         'active'
       );
-      
+
       expect(error.message).toBe('Cannot complete task in pending state');
       expect(error.code).toBe('INVALID_STATE');
       expect(error.statusCode).toBe(409);
@@ -92,7 +92,7 @@ describe('UnifiedLearningError', () => {
   describe('QuotaExceededError', () => {
     it('should create error with quota details', () => {
       const error = new QuotaExceededError('API calls', 1000, 1001);
-      
+
       expect(error.message).toBe('Quota exceeded for API calls. Limit: 1000, Current: 1001');
       expect(error.code).toBe('QUOTA_EXCEEDED');
       expect(error.statusCode).toBe(429);
@@ -110,7 +110,7 @@ describe('ErrorHandler', () => {
     it('should handle UnifiedLearningError', () => {
       const error = new ResourceNotFoundError('Program', 'prog-123');
       const result = ErrorHandler.handle(error);
-      
+
       expect(result).toEqual({
         error: {
           name: 'ResourceNotFoundError',
@@ -128,7 +128,7 @@ describe('ErrorHandler', () => {
     it('should handle native Error', () => {
       const error = new Error('Something went wrong');
       const result = ErrorHandler.handle(error);
-      
+
       expect(result.error.message).toBe('Something went wrong');
       expect(result.error.code).toBe('INTERNAL_ERROR');
       expect(result.error.statusCode).toBe(500);
@@ -138,7 +138,7 @@ describe('ErrorHandler', () => {
     it('should handle unknown error', () => {
       const error = 'string error';
       const result = ErrorHandler.handle(error);
-      
+
       expect(result.error.message).toBe('An unknown error occurred');
       expect(result.error.code).toBe('UNKNOWN_ERROR');
       expect(result.error.statusCode).toBe(500);
@@ -150,7 +150,7 @@ describe('ErrorHandler', () => {
     it('should correctly identify error types', () => {
       const notFoundError = new ResourceNotFoundError('Evaluation', 'eval-123');
       const validationError = new ValidationError('Invalid');
-      
+
       expect(ErrorHandler.isErrorType(notFoundError, ResourceNotFoundError as any)).toBe(true);
       expect(ErrorHandler.isErrorType(notFoundError, ValidationError as any)).toBe(false);
       expect(ErrorHandler.isErrorType(validationError, ValidationError as any)).toBe(true);
@@ -233,10 +233,10 @@ describe('ErrorHandler', () => {
     it('should return proper error response', async () => {
       const error = new ResourceNotFoundError('User', 'user-123');
       const request = new Request('http://localhost/api/test');
-      
+
       const response = await ErrorHandler.apiErrorHandler(error, request);
       const json = await response.json();
-      
+
       expect(response.status).toBe(404);
       expect(json).toEqual({
         error: {

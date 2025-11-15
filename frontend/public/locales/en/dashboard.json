@@ -4,7 +4,7 @@
   "aiLiteracyProgress": "AI Literacy Progress",
   "domains": {
     "engaging_with_ai": "Engaging with AI",
-    "creating_with_ai": "Creating with AI", 
+    "creating_with_ai": "Creating with AI",
     "managing_with_ai": "Managing AI",
     "designing_with_ai": "Designing AI",
         "managing_ai": "Managing AI",
@@ -33,7 +33,7 @@
   },
   "priority": {
     "high": "High",
-    "medium": "Medium", 
+    "medium": "Medium",
     "low": "Low"
   },
   "quickLinks": "Quick Links",

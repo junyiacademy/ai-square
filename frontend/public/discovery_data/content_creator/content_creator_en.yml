@@ -7,11 +7,11 @@ metadata:
   title: "Digital Wizard - Content Creator"
   short_description: "Weave captivating stories in the virtual kingdom"
   long_description: |
-    You are a newly ordained wizard of the "Creative Empire," possessing the mysterious 
-    power to transform ideas into viral content. In this digital kingdom, every like 
-    and share is proof of your magic, and your mentor Luna will teach you to master 
+    You are a newly ordained wizard of the "Creative Empire," possessing the mysterious
+    power to transform ideas into viral content. In this digital kingdom, every like
+    and share is proof of your magic, and your mentor Luna will teach you to master
     the secrets of algorithms.
-  
+
   estimated_hours: 50
   skill_focus:
     - content_magic
@@ -22,21 +22,21 @@ metadata:
 world_setting:
   name: "Creative Empire"
   description: |
-    The Creative Empire is a digital kingdom powered by creative energy. Content creators 
-    here learn to harness the mysterious forces of algorithms, engagement, and viral 
+    The Creative Empire is a digital kingdom powered by creative energy. Content creators
+    here learn to harness the mysterious forces of algorithms, engagement, and viral
     mechanics to build their influence and impact millions of lives.
-  
+
   atmosphere: "vibrant_magical"
   visual_theme: "digital_fantasy"
 
 starting_scenario:
   title: "The Shadow's Challenge"
   description: |
-    Creative Mentor Luna welcomes you to the empire with urgent news: Shadow, a fallen 
-    wizard, is spreading false content using forbidden magic, threatening the harmony 
-    of the Creative Empire. You must use the power of authentic creativity to combat 
+    Creative Mentor Luna welcomes you to the empire with urgent news: Shadow, a fallen
+    wizard, is spreading false content using forbidden magic, threatening the harmony
+    of the Creative Empire. You must use the power of authentic creativity to combat
     his dark influence.
-  
+
   initial_tasks:
     - understand_algorithms
     - learn_content_basics
@@ -51,7 +51,7 @@ skill_tree:
       unlocks:
         - trend_analysis
         - audience_targeting
-    
+
     - id: visual_creation
       name: "Visual Sorcery"
       description: "Create compelling visual content"
@@ -59,7 +59,7 @@ skill_tree:
       unlocks:
         - photo_magic
         - video_enchantment
-    
+
     - id: storytelling
       name: "Narrative Weaving"
       description: "Craft engaging stories"
@@ -67,7 +67,7 @@ skill_tree:
       unlocks:
         - emotional_resonance
         - viral_mechanics
-    
+
     - id: community_building
       name: "Tribe Summoning"
       description: "Build and engage communities"
@@ -82,13 +82,13 @@ skill_tree:
       description: "Understand and work with platform algorithms"
       max_level: 15
       requires: [content_strategy, community_building]
-    
+
     - id: monetization_magic
       name: "Revenue Alchemy"
       description: "Transform content into income"
       max_level: 15
       requires: [community_building, visual_creation]
-    
+
     - id: brand_building
       name: "Empire Construction"
       description: "Build a powerful personal brand"
@@ -105,7 +105,7 @@ milestone_quests:
     unlocks:
       - viral_creator_badge
       - algorithm_insights
-  
+
   - id: shadow_confrontation
     name: "Truth vs Deception"
     description: "Defeat Shadow's misinformation campaign"
@@ -115,7 +115,7 @@ milestone_quests:
     unlocks:
       - truth_guardian_title
       - authentic_voice
-  
+
   - id: empire_builder
     name: "Creative Empire"
     description: "Build a content empire with 1M followers"
@@ -132,19 +132,19 @@ achievements:
     description: "Create your first piece of content"
     xp_reward: 50
     badge_type: bronze
-  
+
   - id: engagement_master
     name: "Community Champion"
     description: "Achieve 10K total engagements"
     xp_reward: 200
     badge_type: silver
-  
+
   - id: consistency_king
     name: "Daily Wizard"
     description: "Post consistently for 30 days"
     xp_reward: 400
     badge_type: gold
-  
+
   - id: content_legend
     name: "Legendary Creator"
     description: "Complete all content challenges"
@@ -159,14 +159,14 @@ example_tasks:
       description: "Develop content formulas that touch hearts"
       skills_improved: [content_strategy, storytelling]
       xp_reward: 50
-    
+
     - id: visual_basics
       type: creation
       title: "Visual Spell Practice"
       description: "Create your first visual content"
       skills_improved: [visual_creation, content_magic]
       xp_reward: 60
-  
+
   intermediate:
     - id: engagement_analysis
       type: analysis
@@ -174,14 +174,14 @@ example_tasks:
       description: "Analyze content performance and audience behavior"
       skills_improved: [algorithm_mastery, community_building]
       xp_reward: 150
-    
+
     - id: series_creation
       type: creation
       title: "Saga Weaving"
       description: "Create a content series"
       skills_improved: [storytelling, brand_building]
       xp_reward: 180
-  
+
   advanced:
     - id: viral_campaign
       type: creation
@@ -189,7 +189,7 @@ example_tasks:
       description: "Launch a viral content campaign"
       skills_improved: [algorithm_mastery, viral_mechanics]
       xp_reward: 350
-    
+
     - id: monetization_setup
       type: creation
       title: "Gold Transmutation"

@@ -7,11 +7,11 @@ metadata:
   title: "Video Bard - YouTuber"
   short_description: "Perform captivating video stories on digital stages"
   long_description: |
-    You are a new member of the "Video Bard Guild," gifted with telling stories through 
-    lenses and entertaining audiences. In this digital kingdom of creativity and technology, 
-    every video is a performance, every subscriber is your audience, and your mission 
+    You are a new member of the "Video Bard Guild," gifted with telling stories through
+    lenses and entertaining audiences. In this digital kingdom of creativity and technology,
+    every video is a performance, every subscriber is your audience, and your mission
     is to create video content that touches hearts and sparks resonance.
-  
+
   estimated_hours: 55
   skill_focus:
     - storytelling_arts
@@ -22,21 +22,21 @@ metadata:
 world_setting:
   name: "Video Bard Guild"
   description: |
-    The Video Bard Guild is an artistic guild that cultivates top content creators. 
-    Here, creators learn to balance creativity with algorithm demands, authenticity 
+    The Video Bard Guild is an artistic guild that cultivates top content creators.
+    Here, creators learn to balance creativity with algorithm demands, authenticity
     with audience expectations, building channels that inspire and entertain millions.
-  
+
   atmosphere: "creative_dynamic"
   visual_theme: "digital_stage"
 
 starting_scenario:
   title: "The Algorithm Shift"
   description: |
-    Creative Director welcomes you with concerning news: Algorithm, the capricious 
-    king, has suddenly changed preferences, burying many creators' work. You must 
-    find balance between maintaining creative integrity and adapting to algorithmic 
+    Creative Director welcomes you with concerning news: Algorithm, the capricious
+    king, has suddenly changed preferences, burying many creators' work. You must
+    find balance between maintaining creative integrity and adapting to algorithmic
     demands.
-  
+
   initial_tasks:
     - understand_youtube
     - learn_video_basics
@@ -51,7 +51,7 @@ skill_tree:
       unlocks:
         - series_planning
         - content_calendar
-    
+
     - id: video_production
       name: "Visual Craft"
       description: "Master video filming techniques"
@@ -59,7 +59,7 @@ skill_tree:
       unlocks:
         - camera_mastery
         - lighting_magic
-    
+
     - id: video_editing
       name: "Time Sculpting"
       description: "Edit compelling videos"
@@ -67,7 +67,7 @@ skill_tree:
       unlocks:
         - pacing_rhythm
         - effects_wizardry
-    
+
     - id: audience_growth
       name: "Community Building"
       description: "Grow and engage audience"
@@ -82,13 +82,13 @@ skill_tree:
       description: "Master YouTube's algorithm"
       max_level: 15
       requires: [content_planning, audience_growth]
-    
+
     - id: monetization_mastery
       name: "Revenue Streams"
       description: "Diversify income sources"
       max_level: 15
       requires: [audience_growth, video_production]
-    
+
     - id: brand_partnerships
       name: "Alliance Forging"
       description: "Build strategic partnerships"
@@ -105,7 +105,7 @@ milestone_quests:
     unlocks:
       - viral_creator_badge
       - algorithm_favor
-  
+
   - id: algorithm_mastery
     name: "Taming the Algorithm"
     description: "Achieve consistent growth despite algorithm changes"
@@ -115,7 +115,7 @@ milestone_quests:
     unlocks:
       - algorithm_tamer_title
       - stable_growth
-  
+
   - id: channel_empire
     name: "Digital Empire"
     description: "Build channel with 1M subscribers"
@@ -132,19 +132,19 @@ achievements:
     description: "Upload your first video"
     xp_reward: 60
     badge_type: bronze
-  
+
   - id: engagement_king
     name: "Audience Favorite"
     description: "Achieve 90% like ratio on 10 videos"
     xp_reward: 280
     badge_type: silver
-  
+
   - id: consistency_master
     name: "Reliable Bard"
     description: "Upload weekly for 6 months"
     xp_reward: 480
     badge_type: gold
-  
+
   - id: youtube_sage
     name: "Content Sage"
     description: "Complete all creator challenges"
@@ -159,14 +159,14 @@ example_tasks:
       description: "Plan video content and script"
       skills_improved: [content_planning, storytelling_arts]
       xp_reward: 65
-    
+
     - id: basic_filming
       type: creation
       title: "First Recording"
       description: "Film your first video"
       skills_improved: [video_production, video_magic]
       xp_reward: 75
-  
+
   intermediate:
     - id: video_production
       type: creation
@@ -174,14 +174,14 @@ example_tasks:
       description: "Film and edit video"
       skills_improved: [video_editing, audience_resonance]
       xp_reward: 185
-    
+
     - id: thumbnail_design
       type: creation
       title: "Click Magic"
       description: "Design compelling thumbnails"
       skills_improved: [visual_craft, algorithm_studies]
       xp_reward: 160
-  
+
   advanced:
     - id: series_creation
       type: creation
@@ -189,7 +189,7 @@ example_tasks:
       description: "Create successful video series"
       skills_improved: [series_planning, audience_growth]
       xp_reward: 360
-    
+
     - id: live_streaming
       type: chat
       title: "Real-time Performance"

@@ -81,11 +81,11 @@ fi
 echo ""
 echo "✅ 驗證資料載入..."
 PGPASSWORD=$DB_PASSWORD psql -h $DB_HOST -p $DB_PORT -U $DB_USER -d $DB_NAME <<EOF
-SELECT 
-  mode, 
+SELECT
+  mode,
   COUNT(*) as count,
   STRING_AGG(title->>'en', ', ' ORDER BY created_at LIMIT 3) as sample_titles
-FROM scenarios 
+FROM scenarios
 GROUP BY mode
 ORDER BY mode;
 EOF

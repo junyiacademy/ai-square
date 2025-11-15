@@ -7,7 +7,7 @@ import { Pool } from 'pg';
  */
 export async function POST() {
   let pool: Pool | null = null;
-  
+
   try {
     // Remove admin key check - keeping API simple
 
@@ -21,7 +21,7 @@ export async function POST() {
     } else {
       const dbHost = process.env.DB_HOST || '127.0.0.1';
       const isCloudSQL = dbHost.startsWith('/cloudsql/');
-      
+
       const dbConfig: Record<string, unknown> = {
         database: process.env.DB_NAME || 'ai_square_db',
         user: process.env.DB_USER || 'postgres',
@@ -29,17 +29,17 @@ export async function POST() {
         max: 1,
         connectionTimeoutMillis: 5000,
       };
-      
+
       if (isCloudSQL) {
         dbConfig.host = dbHost;
       } else {
         dbConfig.host = dbHost;
         dbConfig.port = parseInt(process.env.DB_PORT || '5433');
       }
-      
+
       pool = new Pool(dbConfig);
     }
-    
+
     // Test database connection
     const testResult = await pool.query('SELECT 1');
     if (!testResult) {
@@ -50,7 +50,7 @@ export async function POST() {
     // This is for verification and any app-level initialization
     const tables = [
       'users',
-      'scenarios', 
+      'scenarios',
       'programs',
       'tasks',
       'evaluations',
@@ -91,8 +91,8 @@ export async function POST() {
   } catch (error) {
     console.error('Schema initialization error:', error);
     return NextResponse.json(
-      { 
-        success: false, 
+      {
+        success: false,
         error: error instanceof Error ? error.message : 'Schema initialization failed'
       },
       { status: 500 }

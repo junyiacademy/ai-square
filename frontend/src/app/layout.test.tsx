@@ -27,7 +27,7 @@ describe('RootLayout', () => {
         <div>Test Content</div>
       </RootLayout>
     );
-    
+
     expect(getByText('Test Content')).toBeInTheDocument();
     expect(getByTestId('client-layout')).toBeInTheDocument();
   });
@@ -40,7 +40,7 @@ describe('RootLayout', () => {
         <div>Content</div>
       </RootLayout>
     );
-    
+
     // Verify content is rendered
     expect(getByText('Content')).toBeInTheDocument();
   });
@@ -51,7 +51,7 @@ describe('RootLayout', () => {
         <div id="test-child">Child</div>
       </RootLayout>
     );
-    
+
     const clientLayout = getByTestId('client-layout');
     const child = container.querySelector('#test-child');
     expect(clientLayout).toBeInTheDocument();
@@ -66,7 +66,7 @@ describe('RootLayout', () => {
         <div>Content</div>
       </RootLayout>
     );
-    
+
     // Verify ClientLayout wrapper is present (which means body would have classes)
     expect(getByTestId('client-layout')).toBeInTheDocument();
   });
@@ -77,7 +77,7 @@ describe('RootLayout Metadata', () => {
   it('should export metadata', async () => {
     const layoutModule = await import('./layout');
     const metadata = layoutModule.metadata as Metadata;
-    
+
     expect(metadata).toBeDefined();
     expect(metadata.title).toBeDefined();
     expect(metadata.description).toBeDefined();

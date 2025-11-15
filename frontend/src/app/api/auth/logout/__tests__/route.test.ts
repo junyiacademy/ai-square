@@ -52,11 +52,11 @@ jest.mock('next/headers', () => ({
 
 describe('/api/auth/logout', () => {
   const mockCookies = cookies as jest.MockedFunction<typeof cookies>;
-  
+
   beforeEach(() => {
     jest.clearAllMocks();
     mockCookiesSet.mockClear();
-    
+
     // Mock the cookies function
     const mockCookieStore = {
       delete: jest.fn()
@@ -83,8 +83,8 @@ describe('/api/auth/logout', () => {
 
       // Check that all cookies have proper security settings
       expect(mockCookiesSet).toHaveBeenCalledWith(
-        expect.any(String), 
-        '', 
+        expect.any(String),
+        '',
         expect.objectContaining({
           httpOnly: true,
           sameSite: 'lax',

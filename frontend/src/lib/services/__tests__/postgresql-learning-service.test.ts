@@ -316,7 +316,7 @@ describe('PostgreSQLLearningService', () => {
       ]);
 
       const result = await service.completeProgram('program-123', 'user-123', {});
-      
+
       expect(result.program).toBeDefined();
       expect(result.evaluation).toBeDefined();
       expect(mockProgramRepo.complete).toHaveBeenCalledWith('program-123');
@@ -412,7 +412,7 @@ describe('PostgreSQLLearningService', () => {
       });
 
       const result = await service.completeProgram('program-123', 'user-123', {});
-      
+
       expect(result.program).toBeDefined();
       expect(result.evaluation).toBeDefined();
       expect(mockProgramRepo.complete).toHaveBeenCalledWith('program-123');

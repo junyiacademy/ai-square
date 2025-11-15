@@ -11,7 +11,7 @@ metadata:
     ビジネス目標を強力な製品へと融合させるスキルを持っています。イノベーションの火花が
     飛び交うこの工房では、すべての反復が錬金術的実験であり、あなたの目標は世界を
     変えることができる完璧な製品を創造することです。
-  
+
   estimated_hours: 55
   skill_focus:
     - requirement_alchemy
@@ -24,7 +24,7 @@ world_setting:
     プロダクト錬金術工房は、アイデアが実際の製品に変換される魔法の鍛冶場です。
     ここでプロダクトマネージャーは、ユーザーの欲求、技術的制約、ビジネス目標の
     バランスを取り、何百万人もの人々に響く製品を創造する古代の技術を学びます。
-  
+
   atmosphere: "dynamic_creative"
   visual_theme: "innovation_forge"
 starting_scenario:
@@ -34,7 +34,7 @@ starting_scenario:
     チームに速度のために製品品質を犠牲にするよう強要しています。一方、ユーザーの声は
     相反する要求でますます大きくなっています。あなたはプロダクトマネジメントの
     賢者の石を見つけなければなりません - 品質、速度、ユーザー満足のバランスです。
-  
+
   initial_tasks:
     - understand_users
     - analyze_market

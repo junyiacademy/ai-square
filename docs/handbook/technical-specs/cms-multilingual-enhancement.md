@@ -113,7 +113,7 @@ description_it: ""
 - Queue 系統處理批量翻譯
 - 翻譯記憶庫（Translation Memory）
 
-**成本影響**: 
+**成本影響**:
 - Translation API: ~$20/百萬字元
 - 額外運算資源: ~$100/月
 

@@ -13,18 +13,18 @@ describe('POST /api/assessment/programs/[programId]/complete', () => {
     findById: jest.fn(),
     update: jest.fn()
   };
-  
+
   const mockTaskRepo = {
     findByProgram: jest.fn(),
     updateStatus: jest.fn()
   };
-  
+
   const mockEvaluationRepo = {
     findById: jest.fn(),
     findByProgram: jest.fn(),
     create: jest.fn()
   };
-  
+
   const mockUserRepo = {
     findByEmail: jest.fn()
   };
@@ -48,7 +48,7 @@ describe('POST /api/assessment/programs/[programId]/complete', () => {
       status: 'active',
       metadata: {}
     };
-    
+
     const mockTasks = [{
       id: 'task-1',
       content: {
@@ -125,7 +125,7 @@ describe('POST /api/assessment/programs/[programId]/complete', () => {
       status: 'completed',
       metadata: { evaluationId: 'eval-existing' }
     };
-    
+
     const mockExistingEvaluation = {
       id: 'eval-existing',
       score: 85
@@ -157,7 +157,7 @@ describe('POST /api/assessment/programs/[programId]/complete', () => {
       status: 'active',
       metadata: {}
     };
-    
+
     const mockTasks = [{
       id: 'task-1',
       content: {
@@ -207,7 +207,7 @@ describe('POST /api/assessment/programs/[programId]/complete', () => {
       metadata: {},
       createdAt: new Date().toISOString()
     };
-    
+
     const mockTasks = [{
       id: 'task-1',
       content: {

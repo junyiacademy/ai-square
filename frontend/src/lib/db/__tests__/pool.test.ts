@@ -35,7 +35,7 @@ describe('Pool Module', () => {
         connect: jest.fn(),
         end: jest.fn()
       };
-      
+
       (getPoolModule.getPool as jest.Mock).mockReturnValue(mockPool);
 
       const result = await query('SELECT * FROM users WHERE id = $1', [1]);
@@ -52,7 +52,7 @@ describe('Pool Module', () => {
         connect: jest.fn(),
         end: jest.fn()
       };
-      
+
       (getPoolModule.getPool as jest.Mock).mockReturnValue(mockPool);
 
       const result = await query('SELECT * FROM users');
@@ -69,7 +69,7 @@ describe('Pool Module', () => {
         connect: jest.fn(),
         end: jest.fn()
       };
-      
+
       (getPoolModule.getPool as jest.Mock).mockReturnValue(mockPool);
 
       await expect(query('SELECT * FROM users')).rejects.toThrow('Database connection failed');
@@ -84,7 +84,7 @@ describe('Pool Module', () => {
         connect: jest.fn(),
         end: jest.fn()
       };
-      
+
       (getPoolModule.getPool as jest.Mock).mockReturnValue(mockPool);
 
       const pool = getPool();

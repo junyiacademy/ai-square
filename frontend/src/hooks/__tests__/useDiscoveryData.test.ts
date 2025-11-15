@@ -6,10 +6,10 @@ describe('useDiscoveryData', () => {
     const { result } = renderHook(() => useDiscoveryData());
     expect(result.current).toBeDefined();
   });
-  
+
   it('should handle state changes', async () => {
     const { result } = renderHook(() => useDiscoveryData());
-    
+
     await act(async () => {
       // Trigger state change if applicable
       await waitFor(() => {
@@ -17,10 +17,10 @@ describe('useDiscoveryData', () => {
       });
     });
   });
-  
+
   it('should cleanup on unmount', () => {
     const { unmount } = renderHook(() => useDiscoveryData());
-    
+
     expect(() => {
       unmount();
     }).not.toThrow();

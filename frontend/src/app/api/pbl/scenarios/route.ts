@@ -19,7 +19,7 @@ function getScenarioEmoji(scenarioId: string): string {
     'high-school-creative-arts': '🎨',
     'high-school-health-assistant': '💗'
   };
-  
+
   return emojiMap[scenarioId] || '🤖';
 }
 
@@ -27,14 +27,14 @@ function getScenarioEmoji(scenarioId: string): string {
 // Load scenarios from database only
 async function loadScenariosFromUnifiedArchitecture(lang: string): Promise<Record<string, unknown>[]> {
   const scenarios: Record<string, unknown>[] = [];
-  
+
   try {
     // Get all PBL scenarios from database
     const { repositoryFactory } = await import('@/lib/repositories/base/repository-factory');
     const scenarioRepo = repositoryFactory.getScenarioRepository();
     const rawScenarios = await scenarioRepo.findByMode?.('pbl') || [];
     const existingScenarios = rawScenarios as IScenario[];
-    
+
     console.log(`[PBL API] Repository returned ${rawScenarios.length} raw scenarios`);
     console.log(`[PBL API] Found ${existingScenarios.length} PBL scenarios in database`);
     if (existingScenarios.length > 0) {
@@ -48,25 +48,25 @@ async function loadScenariosFromUnifiedArchitecture(lang: string): Promise<Recor
       console.log('[PBL API] No scenarios found, checking repository...');
       console.log('[PBL API] Repository findByMode exists?', !!scenarioRepo.findByMode);
     }
-    
+
     // Build/update the index with PBL scenarios
     const { scenarioIndexService } = await import('@/lib/services/scenario-index-service');
     await scenarioIndexService.buildIndex(existingScenarios);
-    
+
     // Process each scenario from database
     for (const scenario of existingScenarios) {
       try {
         // Extract title and description with proper language support
-        const title = typeof scenario.title === 'string' 
-          ? scenario.title 
+        const title = typeof scenario.title === 'string'
+          ? scenario.title
           : scenario.title?.[lang] || scenario.title?.en || '';
         const description = typeof scenario.description === 'string'
           ? scenario.description
           : scenario.description?.[lang] || scenario.description?.en || '';
-        
+
         // Get yamlId from metadata or sourceId
         const yamlId = scenario.metadata?.yamlId as string || scenario.sourceId || scenario.id;
-        
+
         scenarios.push({
           id: scenario.id, // UUID
           yamlId: yamlId, // for compatibility
@@ -77,7 +77,7 @@ async function loadScenariosFromUnifiedArchitecture(lang: string): Promise<Recor
           estimatedDuration: scenario.estimatedMinutes || scenario.metadata?.estimatedDuration as number | undefined,
           targetDomains: scenario.metadata?.targetDomains as string[] | undefined || (scenario.pblData as Record<string, unknown>)?.targetDomains as string[] | undefined,
           targetDomain: scenario.metadata?.targetDomains as string[] | undefined || (scenario.pblData as Record<string, unknown>)?.targetDomains as string[] | undefined, // for compatibility
-          domains: scenario.metadata?.targetDomains as string[] | undefined || (scenario.pblData as Record<string, unknown>)?.targetDomains as string[] | undefined, // for compatibility 
+          domains: scenario.metadata?.targetDomains as string[] | undefined || (scenario.pblData as Record<string, unknown>)?.targetDomains as string[] | undefined, // for compatibility
           taskCount: scenario.taskTemplates?.length || scenario.taskCount || 0,
           isAvailable: true,
           thumbnailEmoji: getScenarioEmoji(yamlId)
@@ -89,8 +89,8 @@ async function loadScenariosFromUnifiedArchitecture(lang: string): Promise<Recor
   } catch (error) {
     console.error('Error loading scenarios from database:', error);
   }
-  
-  
+
+
   return scenarios;
 }
 
@@ -104,21 +104,21 @@ export async function GET(request: Request) {
     const lang = searchParams.get('lang') || 'en';
     const source = searchParams.get('source') || 'unified'; // 'unified', 'hybrid', 'yaml'
     const isTest = process.env.NODE_ENV === 'test' || Boolean(process.env.JEST_WORKER_ID);
-    
+
     // 匿名使用者才使用快取（此路由未讀取 session，屬於公開列表）
     const key = cacheKeys.pblScenarios(lang, source);
- 
+
     // Load scenarios based on source parameter
     let scenarios: Record<string, unknown>[];
     let metaSource = source;
-    
+
     const compute = async () => {
       if (source === 'hybrid') {
         try {
           // Use hybrid translation service
           const hybridService = new HybridTranslationService();
           const hybridScenarios = await hybridService.listScenarios(lang);
-          
+
           // Transform to match expected format
           scenarios = hybridScenarios.map(scenario => ({
             ...scenario,
@@ -131,7 +131,7 @@ export async function GET(request: Request) {
             isAvailable: true,
             thumbnailEmoji: getScenarioEmoji(scenario.id)
           }));
-          
+
           metaSource = 'hybrid';
         } catch (error) {
           console.error('Hybrid service failed, falling back to unified:', error);
@@ -149,7 +149,7 @@ export async function GET(request: Request) {
           metaSource = 'unified-empty';
         }
       }
-      
+
       return {
         success: true,
         data: {
@@ -165,7 +165,7 @@ export async function GET(request: Request) {
         }
       };
     };
- 
+
     // 測試環境：兼容舊測試，計算後執行 cacheService.set 並處理 set 失敗回傳 500
     if (isTest) {
       const keyTest = `pbl:scenarios:${lang}`;
@@ -193,7 +193,7 @@ export async function GET(request: Request) {
     // 先嘗試從快取取得
     let cacheStatus: 'HIT' | 'MISS' | 'STALE' = 'MISS';
     const cached = await distributedCacheService.get(key) as { data?: { scenarios?: unknown[] } } | null;
-    
+
     if (cached && cached.data?.scenarios?.length && cached.data.scenarios.length > 0) {
       // 如果快取有資料且不為空，直接返回
       cacheStatus = 'HIT';
@@ -204,15 +204,15 @@ export async function GET(request: Request) {
         }
       });
     }
-    
+
     // 如果快取為空或沒有快取，重新計算
     const result = await compute();
-    
+
     // 只有當結果不為空時才快取
     if (result.data?.scenarios?.length > 0) {
       await distributedCacheService.set(key, result, { ttl: TTL.SEMI_STATIC_1H });
     }
-    
+
     return new NextResponse(JSON.stringify(result), {
       headers: {
         'Content-Type': 'application/json',

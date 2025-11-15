@@ -6,9 +6,9 @@ metadata:
   title: "Planetenwächter - Umweltwissenschaftler"
   short_description: "Schütze die Erde durch datengestützte Umweltlösungen"
   long_description: |
-    Du bist ein Junior-Wissenschaftler im "Globalen Klimaschutzzentrum", wo KI-gestützte 
-    Überwachungssysteme die Gesundheit des Planeten in Echtzeit verfolgen. Ausgerüstet mit 
-    modernster Technologie und umweltwissenschaftlichem Wissen arbeitest du daran, Klimaschäden 
+    Du bist ein Junior-Wissenschaftler im "Globalen Klimaschutzzentrum", wo KI-gestützte
+    Überwachungssysteme die Gesundheit des Planeten in Echtzeit verfolgen. Ausgerüstet mit
+    modernster Technologie und umweltwissenschaftlichem Wissen arbeitest du daran, Klimaschäden
     zu verstehen und rückgängig zu machen, während du nachhaltige Lösungen für die Zukunft entwickelst.
   estimated_hours: 60
   skill_focus:
@@ -20,18 +20,18 @@ metadata:
 world_setting:
   name: "Globales Klimaschutzzentrum"
   description: |
-    Das Globale Klimaschutzzentrum ist eine Hightech-Einrichtung, in der Umweltwissenschaftler 
-    KI, Satellitendaten und Feldforschung nutzen, um die Ökosysteme der Erde zu überwachen 
-    und zu schützen. Wissenschaftler hier kämpfen gegen die Zeit, um Lösungen zu entwickeln, 
+    Das Globale Klimaschutzzentrum ist eine Hightech-Einrichtung, in der Umweltwissenschaftler
+    KI, Satellitendaten und Feldforschung nutzen, um die Ökosysteme der Erde zu überwachen
+    und zu schützen. Wissenschaftler hier kämpfen gegen die Zeit, um Lösungen zu entwickeln,
     bevor kritische Kipppunkte erreicht werden.
   atmosphere: urgent_hopeful
   visual_theme: eco_tech_fusion
 starting_scenario:
   title: "Code Rot: Klimakrise"
   description: |
-    Dr. Gaia Erde begrüßt dich mit alarmierenden Nachrichten: Mehrere Umweltsysteme 
-    nähern sich kritischen Schwellenwerten. Während CEO Polluto von MegaCorp weiterhin 
-    zerstörerische Praktiken für Profit betreibt. Du musst Wissenschaft und Innovation 
+    Dr. Gaia Erde begrüßt dich mit alarmierenden Nachrichten: Mehrere Umweltsysteme
+    nähern sich kritischen Schwellenwerten. Während CEO Polluto von MegaCorp weiterhin
+    zerstörerische Praktiken für Profit betreibt. Du musst Wissenschaft und Innovation
     nutzen, um Ökosysteme zu retten und gleichzeitig Umweltverbrechen von Unternehmen aufzudecken.
   initial_tasks:
     - analyze_climate_data

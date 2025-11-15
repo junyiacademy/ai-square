@@ -90,8 +90,8 @@ const technicalGlossary = {
 function createTranslationPrompt(content, targetLang, fileName) {
   const langInfo = languages[targetLang];
   const context = fileName.replace('.json', '');
-  
-  return `You are a professional translator specializing in educational technology and AI literacy content. 
+
+  return `You are a professional translator specializing in educational technology and AI literacy content.
 Please translate the following JSON content from English to ${langInfo.name} (${langInfo.region} variant).
 
 Important guidelines:
@@ -117,10 +117,10 @@ Please respond with ONLY the translated JSON, no explanations or comments.`;
  */
 async function translateWithClaude(content, targetLang, fileName) {
   console.log(`Translating ${fileName} to ${targetLang} using Claude...`);
-  
+
   // In production, this would be an API call to Claude
   // For demonstration, we'll provide some actual translations for key files
-  
+
   if (fileName === 'admin.json' && targetLang === 'zhTW') {
     return {
       "title": "管理員內容管理系統",
@@ -186,7 +186,7 @@ async function translateWithClaude(content, targetLang, fileName) {
       }
     };
   }
-  
+
   if (fileName === 'common.json' && targetLang === 'zhTW') {
     return {
       "appName": "AI Square",
@@ -332,7 +332,7 @@ async function translateWithClaude(content, targetLang, fileName) {
       "neutral": "中立"
     };
   }
-  
+
   // For other combinations, return a message indicating it needs translation
   // In production, this would make an actual API call to Claude
   return {
@@ -349,16 +349,16 @@ async function isAlreadyTranslated(filePath, sourceData) {
   try {
     const content = await fs.readFile(filePath, 'utf8');
     const data = JSON.parse(content);
-    
+
     // Check if the file has a translation note or if content differs from source
     if (data._note || data._instruction) {
       return false;
     }
-    
+
     // Extract first few string values to compare
     const sourceStrings = [];
     const targetStrings = [];
-    
+
     function extractStrings(obj, arr, maxCount = 5) {
       if (arr.length >= maxCount) return;
       if (typeof obj === 'string' && obj.trim()) {
@@ -370,17 +370,17 @@ async function isAlreadyTranslated(filePath, sourceData) {
         }
       }
     }
-    
+
     extractStrings(sourceData, sourceStrings);
     extractStrings(data, targetStrings);
-    
+
     // If more than 40% of strings are different, consider it translated
     let differences = 0;
     const compareCount = Math.min(sourceStrings.length, targetStrings.length);
     for (let i = 0; i < compareCount; i++) {
       if (sourceStrings[i] !== targetStrings[i]) differences++;
     }
-    
+
     return compareCount > 0 && (differences / compareCount) > 0.4;
   } catch (error) {
     return false;
@@ -393,31 +393,31 @@ async function isAlreadyTranslated(filePath, sourceData) {
 async function translateFile(fileName, targetLang) {
   const sourcePath = path.join(__dirname, '..', 'public', 'locales', 'en', fileName);
   const targetPath = path.join(__dirname, '..', 'public', 'locales', targetLang, fileName);
-  
+
   try {
     // Read source file
     const sourceContent = await fs.readFile(sourcePath, 'utf8');
     const sourceData = JSON.parse(sourceContent);
-    
+
     // Check if already translated
     if (await isAlreadyTranslated(targetPath, sourceData)) {
       console.log(`✓ ${targetLang}/${fileName} already translated`);
       return { status: 'skipped' };
     }
-    
+
     // Translate using Claude
     const translatedData = await translateWithClaude(sourceData, targetLang, fileName);
-    
+
     // Write translated file
     await fs.writeFile(
       targetPath,
       JSON.stringify(translatedData, null, 2) + '\n',
       'utf8'
     );
-    
+
     console.log(`✓ Completed ${targetLang}/${fileName}`);
     return { status: 'translated' };
-    
+
   } catch (error) {
     console.error(`✗ Error with ${targetLang}/${fileName}:`, error.message);
     return { status: 'error', error: error.message };
@@ -432,36 +432,36 @@ async function main() {
   console.log('=========================================\n');
   console.log('This script demonstrates using Claude for high-quality translations.');
   console.log('In production, it would make API calls to Claude.\n');
-  
+
   const stats = {
     translated: 0,
     skipped: 0,
     errors: 0
   };
-  
+
   // For demonstration, translate admin.json and common.json to zhTW
   const demoFiles = ['admin.json', 'common.json'];
   const demoLang = 'zhTW';
-  
+
   console.log(`=== Translating to ${languages[demoLang].name} ===\n`);
-  
+
   for (const fileName of demoFiles) {
     const result = await translateFile(fileName, demoLang);
-    stats[result.status === 'translated' ? 'translated' : 
+    stats[result.status === 'translated' ? 'translated' :
           result.status === 'skipped' ? 'skipped' : 'errors']++;
   }
-  
+
   // Summary
   console.log('\n=== Translation Summary ===');
   console.log(`✓ Translated: ${stats.translated} files`);
   console.log(`➜ Skipped: ${stats.skipped} files`);
   console.log(`✗ Errors: ${stats.errors} files`);
-  
+
   console.log('\n📝 Next Steps:');
   console.log('1. Review the translated files in public/locales/zhTW/');
   console.log('2. To translate all files to all languages, integrate with Claude API');
   console.log('3. Use the translation prompt template provided in createTranslationPrompt()');
-  
+
   console.log('\n💡 Pro Tips:');
   console.log('- Claude provides context-aware translations');
   console.log('- Technical terms are preserved appropriately');

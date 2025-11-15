@@ -6,7 +6,7 @@ BEGIN;
 
 -- First Steps
 UPDATE achievements
-SET 
+SET
     name = jsonb_build_object(
         'en', 'First Steps',
         'zhTW', '第一步',
@@ -43,7 +43,7 @@ WHERE name->>'en' = 'First Steps';
 
 -- Quick Learner
 UPDATE achievements
-SET 
+SET
     name = jsonb_build_object(
         'en', 'Quick Learner',
         'zhTW', '快速學習者',
@@ -80,7 +80,7 @@ WHERE name->>'en' = 'Quick Learner';
 
 -- Perfect Score
 UPDATE achievements
-SET 
+SET
     name = jsonb_build_object(
         'en', 'Perfect Score',
         'zhTW', '完美分數',

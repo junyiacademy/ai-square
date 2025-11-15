@@ -36,7 +36,7 @@ export class GCSMediaRepository implements IMediaRepository {
         stream.on('finish', async () => {
           // Make file public
           await blob.makePublic();
-          
+
           // Return public URL
           const publicUrl = `https://storage.googleapis.com/${this.bucketName}/${path}`;
           resolve(publicUrl);
@@ -54,14 +54,14 @@ export class GCSMediaRepository implements IMediaRepository {
     try {
       const file = this.bucket.file(path);
       const [exists] = await file.exists();
-      
+
       if (!exists) {
         throw new Error(`File not found: ${path}`);
       }
 
       // Check if file is public
       const [metadata] = await file.getMetadata();
-      
+
       if (this.isPublic(metadata)) {
         // Return public URL
         return `https://storage.googleapis.com/${this.bucketName}/${path}`;
@@ -72,7 +72,7 @@ export class GCSMediaRepository implements IMediaRepository {
           action: 'read',
           expires: Date.now() + 3600 * 1000, // 1 hour
         });
-        
+
         return signedUrl;
       }
     } catch (error) {
@@ -103,7 +103,7 @@ export class GCSMediaRepository implements IMediaRepository {
 
       for (const file of files) {
         const [metadata] = await file.getMetadata();
-        
+
         mediaFiles.push({
           name: file.name,
           url: await this.getFileUrl(file.name),
@@ -126,8 +126,8 @@ export class GCSMediaRepository implements IMediaRepository {
    * Upload image with automatic resizing options
    */
   async uploadImage(
-    path: string, 
-    file: Buffer, 
+    path: string,
+    file: Buffer,
     options?: {
       generateThumbnail?: boolean;
       maxWidth?: number;
@@ -136,7 +136,7 @@ export class GCSMediaRepository implements IMediaRepository {
   ): Promise<{ url: string; thumbnailUrl?: string }> {
     // Upload original
     const url = await this.uploadFile(path, file, 'image/jpeg');
-    
+
     const result: { url: string; thumbnailUrl?: string } = { url };
 
     // Generate thumbnail if requested
@@ -154,12 +154,12 @@ export class GCSMediaRepository implements IMediaRepository {
    * Get pre-signed upload URL for client-side uploads
    */
   async getUploadUrl(
-    path: string, 
+    path: string,
     contentType: string,
     expiresInMinutes: number = 30
   ): Promise<{ uploadUrl: string; publicUrl: string }> {
     const file = this.bucket.file(path);
-    
+
     const [uploadUrl] = await file.getSignedUrl({
       version: 'v4',
       action: 'write',
@@ -179,9 +179,9 @@ export class GCSMediaRepository implements IMediaRepository {
     try {
       const sourceFile = this.bucket.file(sourcePath);
       const destinationFile = this.bucket.file(destinationPath);
-      
+
       await sourceFile.copy(destinationFile);
-      
+
       return this.getFileUrl(destinationPath);
     } catch (error) {
       console.error('Error copying file:', error);
@@ -256,7 +256,7 @@ export class GCSMediaRepository implements IMediaRepository {
   private isPublic(metadata: Record<string, unknown>): boolean {
     // Check if file has public ACL
     const acl = metadata.acl as Array<{ entity: string; role: string }> | undefined;
-    return acl?.some((item) => 
+    return acl?.some((item) =>
       item.entity === 'allUsers' && item.role === 'READER'
     ) || false;
   }

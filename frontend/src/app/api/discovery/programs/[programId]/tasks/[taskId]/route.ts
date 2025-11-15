@@ -79,7 +79,7 @@ export async function PATCH(
     // Handle status change
     if (body.status && body.status !== task.status) {
       updateData.status = body.status;
-      
+
       // Set timestamps based on status
       if (body.status === 'active' && task.status === 'pending') {
         updateData.startedAt = new Date().toISOString();
@@ -115,11 +115,11 @@ export async function PATCH(
     // Update program progress if task was completed
     if (body.status === 'completed' && task.status !== 'completed') {
       const allTasks = await taskRepo.findByProgram(programId);
-      const completedCount = allTasks.filter(t => 
+      const completedCount = allTasks.filter(t =>
         t.id === taskId ? body.status === 'completed' : t.status === 'completed'
       ).length;
 
-      const nextPendingIndex = allTasks.findIndex(t => 
+      const nextPendingIndex = allTasks.findIndex(t =>
         t.id !== taskId && t.status === 'pending'
       );
 
@@ -143,7 +143,7 @@ export async function PATCH(
   } catch (error) {
     console.error('Error in PATCH /api/discovery/programs/[programId]/tasks/[taskId]:', error);
     return NextResponse.json(
-      { 
+      {
         success: false,
         error: 'Internal server error',
         meta: {

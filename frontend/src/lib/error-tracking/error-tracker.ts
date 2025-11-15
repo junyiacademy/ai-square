@@ -96,7 +96,7 @@ class ErrorTracker {
 
     const errorObj = typeof error === 'string' ? new Error(error) : error;
     const timestamp = new Date().toISOString();
-    
+
     const errorReport: ErrorReport = {
       id: this.generateErrorId(),
       message: errorObj.message,
@@ -160,7 +160,7 @@ class ErrorTracker {
    */
   private storeError(errorReport: ErrorReport): void {
     this.errors.unshift(errorReport);
-    
+
     // Keep only recent errors
     if (this.errors.length > this.maxStoredErrors) {
       this.errors = this.errors.slice(0, this.maxStoredErrors);
@@ -171,7 +171,7 @@ class ErrorTracker {
       const storedErrors = this.getStoredErrors();
       storedErrors.unshift(errorReport);
       const trimmedErrors = storedErrors.slice(0, 50); // Keep fewer in storage
-      
+
       localStorage.setItem('error_tracker_reports', JSON.stringify(trimmedErrors));
     } catch (e) {
       console.warn('Failed to store error in localStorage:', e);
@@ -269,13 +269,13 @@ class ErrorTracker {
   getAllErrors(): ErrorReport[] {
     const storedErrors = this.getStoredErrors();
     const allErrors = [...this.errors, ...storedErrors];
-    
+
     // Remove duplicates by ID
-    const uniqueErrors = allErrors.filter((error, index, self) => 
+    const uniqueErrors = allErrors.filter((error, index, self) =>
       index === self.findIndex(e => e.id === error.id)
     );
 
-    return uniqueErrors.sort((a, b) => 
+    return uniqueErrors.sort((a, b) =>
       new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
     );
   }

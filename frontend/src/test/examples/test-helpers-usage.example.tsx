@@ -28,7 +28,7 @@ function ExampleComponent() {
   const { user, isLoggedIn } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const router = useRouter();
-  
+
   return (
     <div>
       <h1>Example Component</h1>
@@ -60,7 +60,7 @@ describe('Test Helpers Usage Examples', () => {
     it('renders component with default unauthenticated state', () => {
       // Default state is already unauthenticated
       renderWithProviders(<ExampleComponent />);
-      
+
       expect(screen.getByText('Example Component')).toBeInTheDocument();
       expect(screen.getByText('Login')).toBeInTheDocument();
       expect(screen.queryByText(/Welcome/)).not.toBeInTheDocument();
@@ -69,22 +69,22 @@ describe('Test Helpers Usage Examples', () => {
     it('renders with authenticated user', () => {
       // Setup authenticated state before rendering
       setupAuthenticatedUser(testUsers.student);
-      
+
       renderWithProviders(<ExampleComponent />);
-      
+
       expect(screen.getByText('Welcome, Test Student!')).toBeInTheDocument();
       expect(screen.getByText('Go to Dashboard')).toBeInTheDocument();
     });
 
     it('renders with custom theme', () => {
       renderWithProviders(<ExampleComponent />, { theme: 'dark' });
-      
+
       expect(screen.getByText('Toggle Theme (dark)')).toBeInTheDocument();
     });
 
     it('renders with custom route', () => {
       renderWithProviders(<ExampleComponent />, { route: '/dashboard' });
-      
+
       // Component can access the current route via usePathname
     });
   });
@@ -92,18 +92,18 @@ describe('Test Helpers Usage Examples', () => {
   describe('User Interactions', () => {
     it('handles navigation on button click', async () => {
       const { user } = renderWithProviders(<ExampleComponent />);
-      
+
       // Using userEvent from the render result
       await user.click(screen.getByText('Login'));
-      
+
       expect(navigationMocks.mockPush).toHaveBeenCalledWith('/login');
     });
 
     it('handles theme toggle', async () => {
       const { user } = renderWithProviders(<ExampleComponent />);
-      
+
       await user.click(screen.getByText('Toggle Theme (light)'));
-      
+
       expect(themeMocks.mockToggleTheme).toHaveBeenCalled();
     });
   });
@@ -112,15 +112,15 @@ describe('Test Helpers Usage Examples', () => {
     it('handles successful API response', async () => {
       // Mock a successful API response
       mockFetch.mockResolvedValueOnce(
-        mockApiSuccess({ 
-          data: { message: 'Success!' } 
+        mockApiSuccess({
+          data: { message: 'Success!' }
         })
       );
-      
+
       // Component that makes API call
       const response = await fetch('/api/test');
       const data = await response.json();
-      
+
       expect(data.data.message).toBe('Success!');
       expect(mockFetch).toHaveBeenCalledWith('/api/test');
     });
@@ -130,10 +130,10 @@ describe('Test Helpers Usage Examples', () => {
       mockFetch.mockResolvedValueOnce(
         mockApiError('Something went wrong', 500)
       );
-      
+
       const response = await fetch('/api/test');
       const data = await response.json();
-      
+
       expect(response.ok).toBe(false);
       expect(response.status).toBe(500);
       expect(data.error).toBe('Something went wrong');
@@ -143,16 +143,16 @@ describe('Test Helpers Usage Examples', () => {
   describe('LocalStorage Mocking', () => {
     it('reads from localStorage', () => {
       mockLocalStorage.getItem.mockReturnValue('stored-value');
-      
+
       const value = localStorage.getItem('test-key');
-      
+
       expect(value).toBe('stored-value');
       expect(mockLocalStorage.getItem).toHaveBeenCalledWith('test-key');
     });
 
     it('writes to localStorage', () => {
       localStorage.setItem('test-key', 'new-value');
-      
+
       expect(mockLocalStorage.setItem).toHaveBeenCalledWith('test-key', 'new-value');
     });
   });
@@ -163,7 +163,7 @@ describe('Test Helpers Usage Examples', () => {
         title: { en: 'Custom Scenario', zh: '自定義情境' },
         difficulty: 'advanced',
       });
-      
+
       expect(scenario.id).toBe('test-scenario-123');
       expect(scenario.title.en).toBe('Custom Scenario');
       expect(scenario.difficulty).toBe('advanced');
@@ -175,7 +175,7 @@ describe('Test Helpers Usage Examples', () => {
         totalTaskCount: 10,
         completedTaskCount: 5,
       });
-      
+
       expect(program.totalTaskCount).toBe(10);
       expect(program.completedTaskCount).toBe(5);
       expect(program.status).toBe('active');
@@ -186,7 +186,7 @@ describe('Test Helpers Usage Examples', () => {
         type: 'chat',
         score: 85,
       });
-      
+
       expect(task.type).toBe('chat');
       expect(task.score).toBe(85);
       expect(task.title.en).toBe('Test Task');
@@ -196,28 +196,28 @@ describe('Test Helpers Usage Examples', () => {
   describe('Auth State Changes', () => {
     it('switches from unauthenticated to authenticated', () => {
       const { rerender } = renderWithProviders(<ExampleComponent />);
-      
+
       // Initially unauthenticated
       expect(screen.getByText('Login')).toBeInTheDocument();
-      
+
       // Switch to authenticated
       setupAuthenticatedUser(testUsers.teacher);
       rerender(<ExampleComponent />);
-      
+
       expect(screen.getByText('Welcome, Test Teacher!')).toBeInTheDocument();
     });
 
     it('switches from authenticated to unauthenticated', () => {
       setupAuthenticatedUser(testUsers.admin);
       const { rerender } = renderWithProviders(<ExampleComponent />);
-      
+
       // Initially authenticated
       expect(screen.getByText('Welcome, Test Admin!')).toBeInTheDocument();
-      
+
       // Switch to unauthenticated
       setupUnauthenticatedUser();
       rerender(<ExampleComponent />);
-      
+
       expect(screen.getByText('Login')).toBeInTheDocument();
     });
   });
@@ -226,21 +226,21 @@ describe('Test Helpers Usage Examples', () => {
     it('tests with student user', () => {
       setupAuthenticatedUser(testUsers.student);
       renderWithProviders(<ExampleComponent />);
-      
+
       expect(screen.getByText('Welcome, Test Student!')).toBeInTheDocument();
     });
 
     it('tests with teacher user', () => {
       setupAuthenticatedUser(testUsers.teacher);
       renderWithProviders(<ExampleComponent />);
-      
+
       expect(screen.getByText('Welcome, Test Teacher!')).toBeInTheDocument();
     });
 
     it('tests with admin user', () => {
       setupAuthenticatedUser(testUsers.admin);
       renderWithProviders(<ExampleComponent />);
-      
+
       expect(screen.getByText('Welcome, Test Admin!')).toBeInTheDocument();
     });
 
@@ -251,10 +251,10 @@ describe('Test Helpers Usage Examples', () => {
         role: 'custom',
         name: 'Custom User',
       };
-      
+
       setupAuthenticatedUser(customUser);
       renderWithProviders(<ExampleComponent />);
-      
+
       expect(screen.getByText('Welcome, Custom User!')).toBeInTheDocument();
     });
   });
@@ -262,15 +262,15 @@ describe('Test Helpers Usage Examples', () => {
   describe('Advanced Testing Patterns', () => {
     it('tests async operations with waitFor', async () => {
       const { user } = renderWithProviders(<ExampleComponent />);
-      
+
       // Simulate async operation
       mockFetch.mockResolvedValueOnce(
         mockApiSuccess({ loaded: true })
       );
-      
+
       // Trigger action that causes async operation
       await user.click(screen.getByText('Login'));
-      
+
       // Wait for async result
       await waitFor(() => {
         expect(mockFetch).toHaveBeenCalled();
@@ -280,17 +280,17 @@ describe('Test Helpers Usage Examples', () => {
     it('tests error boundaries', () => {
       // Mock console.error to avoid noise in test output
       const consoleError = jest.spyOn(console, 'error').mockImplementation();
-      
+
       // Component that throws error
       const ErrorComponent = () => {
         throw new Error('Test error');
       };
-      
+
       // Wrap in error boundary if your app has one
       expect(() => {
         renderWithProviders(<ErrorComponent />);
       }).toThrow('Test error');
-      
+
       consoleError.mockRestore();
     });
 
@@ -300,7 +300,7 @@ describe('Test Helpers Usage Examples', () => {
         isLoggedIn: true,
         isLoading: true, // Custom loading state
       };
-      
+
       renderWithProviders(
         <ExampleComponent />,
         {
@@ -309,7 +309,7 @@ describe('Test Helpers Usage Examples', () => {
           route: '/dashboard',
         }
       );
-      
+
       // Component renders with all custom states
     });
   });
@@ -317,7 +317,7 @@ describe('Test Helpers Usage Examples', () => {
 
 /**
  * Best Practices:
- * 
+ *
  * 1. Always call resetAllMocks() in beforeEach
  * 2. Use setupAuthenticatedUser/setupUnauthenticatedUser for auth state
  * 3. Use renderWithProviders instead of render for components using context

@@ -9,4 +9,4 @@ async function main() {
   console.log('Cache cleared (local + redis + fallback).');
 }
 
-main().catch(e => { console.error(e); process.exit(1); }); 
+main().catch(e => { console.error(e); process.exit(1); });

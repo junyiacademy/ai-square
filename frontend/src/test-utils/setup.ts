@@ -65,7 +65,7 @@ beforeAll(() => {
     if (message.includes('Failed to load navigation data')) return;
     originalError.call(console, ...args);
   };
-  
+
   console.warn = (...args: any[]) => {
     // 過濾掉已知的警告
     const message = args[0]?.toString?.() || '';

@@ -6,9 +6,9 @@ metadata:
   title: Artesão Digital - Desenvolvedor de Apps
   short_description: Crie aplicações que mudam vidas no mundo do código
   long_description: |
-    Você é um novo membro da "Aliança dos Artesãos Digitais", hábil em tecer 
-    aplicações práticas e bonitas com código. Nesta oficina cheia de lógica 
-    e criatividade, cada linha de código é um feitiço, e seu objetivo é criar ferramentas 
+    Você é um novo membro da "Aliança dos Artesãos Digitais", hábil em tecer
+    aplicações práticas e bonitas com código. Nesta oficina cheia de lógica
+    e criatividade, cada linha de código é um feitiço, e seu objetivo é criar ferramentas
     digitais que tornem a vida das pessoas mais conveniente e melhor.
   estimated_hours: 60
   skill_focus:
@@ -19,18 +19,18 @@ metadata:
 world_setting:
   name: Aliança dos Artesãos Digitais
   description: |
-    A Aliança dos Artesãos Digitais é uma organização misteriosa que reúne os melhores 
-    desenvolvedores de aplicativos. Aqui, o código é tratado como uma forma de arte, e os 
-    desenvolvedores aprendem a criar aplicações que não apenas funcionam perfeitamente, 
+    A Aliança dos Artesãos Digitais é uma organização misteriosa que reúne os melhores
+    desenvolvedores de aplicativos. Aqui, o código é tratado como uma forma de arte, e os
+    desenvolvedores aprendem a criar aplicações que não apenas funcionam perfeitamente,
     mas também trazem alegria para a vida diária dos usuários.
   atmosphere: innovative_collaborative
   visual_theme: tech_workshop
 starting_scenario:
   title: Ingressando na Aliança
   description: |
-    Mestre Código dá as boas-vindas à aliança, mas avisa sobre uma ameaça constante: Bug, 
-    o demônio do caos, espalha erros e vulnerabilidades no código. Enquanto isso, Design 
-    e Código frequentemente entram em conflito sobre prioridades. Você deve usar sabedoria 
+    Mestre Código dá as boas-vindas à aliança, mas avisa sobre uma ameaça constante: Bug,
+    o demônio do caos, espalha erros e vulnerabilidades no código. Enquanto isso, Design
+    e Código frequentemente entram em conflito sobre prioridades. Você deve usar sabedoria
     para equilibrar tecnologia com estética enquanto mantém as aplicações estáveis.
   initial_tasks:
     - learn_fundamentals

@@ -32,7 +32,7 @@ if [ -f "$LOG_FILE" ]; then
     TODAY=$(date +%Y-%m-%d)
     API_CALLS=$(grep "$TODAY" "$LOG_FILE" | grep -c "API" || echo "0")
     echo "  API 調用: $API_CALLS 次"
-    
+
     echo ""
     echo -e "${YELLOW}🔍 最近 5 次 API 調用：$(NC)"
     tail -20 "$LOG_FILE" | grep "API" | tail -5 || echo "  沒有找到 API 調用記錄"

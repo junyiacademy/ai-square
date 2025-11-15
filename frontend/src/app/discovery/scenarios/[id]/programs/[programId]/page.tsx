@@ -84,7 +84,7 @@ export default function ProgramDetailPage() {
       setLoading(false);
     }
   };
-    
+
     if (scenarioId && programId) {
       loadProgramData();
     }
@@ -124,7 +124,7 @@ export default function ProgramDetailPage() {
     );
   }
 
-  const progress = programData.totalTasks > 0 
+  const progress = programData.totalTasks > 0
     ? Math.round((programData.completedTasks / programData.totalTasks) * 100)
     : 0;
 
@@ -251,7 +251,7 @@ export default function ProgramDetailPage() {
                 </div>
               </div>
             </div>
-            
+
             {programData.status === 'active' && (
               <span className="px-3 py-1 bg-green-100 text-green-700 text-sm rounded-full">
                 進行中
@@ -287,7 +287,7 @@ export default function ProgramDetailPage() {
           <h2 className="text-2xl font-bold text-gray-900 mb-6">
             學習任務
           </h2>
-          
+
           <div className="space-y-4">
             {programData.tasks.map((task, index) => (
               <motion.div
@@ -298,7 +298,7 @@ export default function ProgramDetailPage() {
                 className={`
                   bg-white rounded-xl shadow-md border transition-all
                   ${(task.status === 'available' || task.status === 'active')
-                    ? 'border-purple-200 hover:shadow-lg cursor-pointer' 
+                    ? 'border-purple-200 hover:shadow-lg cursor-pointer'
                     : task.status === 'completed'
                     ? 'border-green-100 hover:shadow-lg cursor-pointer'
                     : 'border-gray-100'
@@ -313,8 +313,8 @@ export default function ProgramDetailPage() {
                       {/* Task Icon */}
                       <div className={`
                         p-3 rounded-full
-                        ${task.status === 'completed' 
-                          ? 'bg-green-100' 
+                        ${task.status === 'completed'
+                          ? 'bg-green-100'
                           : ((task as Task).status === 'available' || (task as Task).status === 'active')
                           ? 'bg-purple-100'
                           : 'bg-gray-100'
@@ -330,40 +330,40 @@ export default function ProgramDetailPage() {
                           <Lock className="w-6 h-6 text-gray-400" />
                         )}
                       </div>
-                      
+
                       {/* Task Content */}
                       <div className="flex-1">
                         <h3 className={`
                           text-lg font-semibold mb-1
                           ${task.status === 'completed' ? 'text-gray-600' : 'text-gray-900'}
                         `}>
-                          任務 {index + 1}: {typeof task.title === 'object' && task.title !== null ? 
-                            (task.title as Record<string, string>)[normalizeLanguageCode(i18n.language)] || 
-                            (task.title as Record<string, string>)['en'] || 
-                            'Untitled Task' : 
+                          任務 {index + 1}: {typeof task.title === 'object' && task.title !== null ?
+                            (task.title as Record<string, string>)[normalizeLanguageCode(i18n.language)] ||
+                            (task.title as Record<string, string>)['en'] ||
+                            'Untitled Task' :
                             task.title as string}
                         </h3>
                         <p className={`
                           text-sm mb-2
                           ${task.status === 'completed' ? 'text-gray-500' : 'text-gray-600'}
                         `}>
-                          {typeof task.description === 'object' && task.description !== null ? 
-                            (task.description as Record<string, string>)[normalizeLanguageCode(i18n.language)] || 
-                            (task.description as Record<string, string>)['en'] || 
-                            '' : 
+                          {typeof task.description === 'object' && task.description !== null ?
+                            (task.description as Record<string, string>)[normalizeLanguageCode(i18n.language)] ||
+                            (task.description as Record<string, string>)['en'] ||
+                            '' :
                             task.description as string}
                         </p>
-                        
+
                         <div className="flex items-center space-x-4 text-sm">
                           <div className="flex items-center space-x-1">
                             <Trophy className="w-4 h-4 text-yellow-500" />
                             <span className="text-gray-600">
-                              {task.status === 'completed' && task.actualXP 
-                                ? `${task.actualXP} XP (獲得)` 
+                              {task.status === 'completed' && task.actualXP
+                                ? `${task.actualXP} XP (獲得)`
                                 : `${task.xp} XP`}
                             </span>
                           </div>
-                          
+
                           {task.status === 'completed' && task.attempts && (
                             <>
                               <div className="flex items-center space-x-1">
@@ -378,7 +378,7 @@ export default function ProgramDetailPage() {
                               )}
                             </>
                           )}
-                          
+
                           {task.completedAt && (
                             <span className="text-green-600">
                               完成於 {new Date(task.completedAt).toLocaleDateString('zh-TW')}
@@ -387,7 +387,7 @@ export default function ProgramDetailPage() {
                         </div>
                       </div>
                     </div>
-                    
+
                     {/* Action Button */}
                     {((task as Task).status === 'available' || (task as Task).status === 'active') && (
                       <button className="flex items-center space-x-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">

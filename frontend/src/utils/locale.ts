@@ -20,7 +20,7 @@ export function getStandardLocale(language: string): string {
     'th': 'th-TH',
     'id': 'id-ID'
   };
-  
+
   return localeMap[language] || language;
 }
 
@@ -32,13 +32,13 @@ export function getStandardLocale(language: string): string {
  * @returns Formatted date string
  */
 export function formatDateWithLocale(
-  date: string | Date, 
-  language: string, 
+  date: string | Date,
+  language: string,
   options?: Intl.DateTimeFormatOptions
 ): string {
   const locale = getStandardLocale(language);
   const dateObj = typeof date === 'string' ? new Date(date) : date;
-  
+
   return dateObj.toLocaleDateString(locale, options || {
     year: 'numeric',
     month: 'long',
@@ -56,13 +56,13 @@ export function formatDateWithLocale(
  * @returns Formatted time string
  */
 export function formatTimeWithLocale(
-  date: string | Date, 
-  language: string, 
+  date: string | Date,
+  language: string,
   options?: Intl.DateTimeFormatOptions
 ): string {
   const locale = getStandardLocale(language);
   const dateObj = typeof date === 'string' ? new Date(date) : date;
-  
+
   return dateObj.toLocaleTimeString(locale, options || {
     hour: '2-digit',
     minute: '2-digit'

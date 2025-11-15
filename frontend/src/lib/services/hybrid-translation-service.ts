@@ -1,6 +1,6 @@
 /**
  * Hybrid Translation Service
- * 
+ *
  * Implements a hybrid architecture where:
  * - English content is stored in GCS (Google Cloud Storage)
  * - Other language translations are loaded from YAML files on demand
@@ -49,7 +49,7 @@ export class HybridTranslationService {
    */
   async getScenario(scenarioId: string, language: string): Promise<IScenario> {
     const cacheKey = `scenario:${scenarioId}:${language}`;
-    
+
     // Check cache first
     if (this.cache.has(cacheKey)) {
       return this.cache.get(cacheKey) as IScenario;
@@ -77,12 +77,12 @@ export class HybridTranslationService {
     } catch (error) {
       // Clear cache on error
       this.cache.delete(cacheKey);
-      
+
       // For non-English, try YAML fallback
       if (language !== 'en' && error instanceof Error && error.message.includes('GCS')) {
         return this.loadFromYaml(scenarioId, language);
       }
-      
+
       throw error;
     }
   }
@@ -92,7 +92,7 @@ export class HybridTranslationService {
    */
   async listScenarios(language: string): Promise<IScenario[]> {
     const cacheKey = `list:scenarios:${language}`;
-    
+
     if (this.cache.has(cacheKey)) {
       return this.cache.get(cacheKey) as IScenario[];
     }

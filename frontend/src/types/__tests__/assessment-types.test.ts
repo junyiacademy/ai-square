@@ -1,9 +1,9 @@
 import type { IInteraction } from '../unified-learning';
-import { 
-  AssessmentInteraction, 
-  isAssessmentInteraction, 
-  toIInteraction, 
-  fromIInteraction 
+import {
+  AssessmentInteraction,
+  isAssessmentInteraction,
+  toIInteraction,
+  fromIInteraction
 } from '../assessment-types';
 
 describe('Assessment Types', () => {

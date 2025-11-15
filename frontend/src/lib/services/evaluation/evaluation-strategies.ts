@@ -3,12 +3,12 @@
  * Provides module-specific evaluation strategies
  */
 
-import { 
-  ITask, 
-  IProgram, 
-  IEvaluation, 
+import {
+  ITask,
+  IProgram,
+  IEvaluation,
   IEvaluationContext,
-  IInteraction 
+  IInteraction
 } from '@/types/unified-learning';
 import {
   IPBLTask,
@@ -94,13 +94,13 @@ export class PBLEvaluationStrategy implements IEvaluationStrategy {
   async evaluateTask(task: ITask, context: IEvaluationContext): Promise<IEvaluation> {
     const pblTask = task as IPBLTask;
     const interactions = task.interactions || [];
-    
+
     // Calculate quality metrics
     const qualityMetrics = this.calculateQualityMetrics(interactions);
-    
+
     // Calculate KSA dimensions
     const domainScores = this.calculateKSADimensions(qualityMetrics, pblTask);
-    
+
     // Overall score is average of KSA dimensions
     const overallScore = domainScores.reduce((sum, d) => sum + d.score, 0) / domainScores.length;
 
@@ -138,7 +138,7 @@ export class PBLEvaluationStrategy implements IEvaluationStrategy {
   async evaluateProgram(program: IProgram, taskEvaluations: IEvaluation[]): Promise<IEvaluation> {
     // Aggregate scores
     const scores = taskEvaluations.filter(e => e.score !== undefined).map(e => e.score!);
-    const averageScore = scores.length > 0 ? 
+    const averageScore = scores.length > 0 ?
       scores.reduce((a, b) => a + b, 0) / scores.length : 0;
 
     // Aggregate KSA dimensions
@@ -179,11 +179,11 @@ export class PBLEvaluationStrategy implements IEvaluationStrategy {
   protected calculateQualityMetrics(interactions: IInteraction[]): QualityMetrics {
     const userInputs = interactions.filter(i => i.type === 'user_input');
     const aiResponses = interactions.filter(i => i.type === 'ai_response');
-    
+
     // Calculate interaction depth
     const avgInputLength = userInputs.length > 0 ?
       userInputs.reduce((sum, i) => sum + (typeof i.content === 'string' ? i.content.length : 0), 0) / userInputs.length : 0;
-    
+
     // Calculate response quality based on length and variety
     const interactionDepth = Math.min(avgInputLength / 100, 1) * 100; // Normalize to 0-100
     const responseQuality = Math.min(userInputs.length / 5, 1) * 100; // Expect at least 5 interactions
@@ -198,7 +198,7 @@ export class PBLEvaluationStrategy implements IEvaluationStrategy {
 
   private calculateKSADimensions(metrics: QualityMetrics, {}: IPBLTask): { dimension: string; score: number; feedback: string; maxScore?: number }[] {
     const baseScore = (metrics.interactionDepth + metrics.responseQuality + metrics.engagementLevel) / 3;
-    
+
     return [
       {
         dimension: 'knowledge',
@@ -223,7 +223,7 @@ export class PBLEvaluationStrategy implements IEvaluationStrategy {
 
   private aggregateKSADimensions(evaluations: IEvaluation[]): { dimension: string; score: number; feedback: string; maxScore?: number }[] {
     const dimensionMap = new Map<string, { total: number; count: number }>();
-    
+
     evaluations.forEach(evaluation => {
       if (evaluation.domainScores) {
         Object.entries(evaluation.domainScores).forEach(([dim, score]: [string, number]) => {
@@ -301,18 +301,18 @@ export class AssessmentEvaluationStrategy implements IEvaluationStrategy {
     const interactions = task.interactions || [];
     const taskContext = assessmentTask.content?.context as Record<string, unknown>;
     const questions = (taskContext?.questions as AssessmentQuestion[]) || [];
-    
+
     // Calculate scores
-    const { correctCount, totalCount, domainScores, questionResults } = 
+    const { correctCount, totalCount, domainScores, questionResults } =
       this.calculateAssessmentScores(interactions, questions);
-    
+
     const baseScore = totalCount > 0 ? (correctCount / totalCount) * 100 : 0;
-    
+
     // Apply time bonus if applicable
     const timeSpent = this.calculateTimeSpent(task);
     const timeLimit = taskContext?.timeLimit as number | undefined;
     const timeBonus = timeLimit ? this.calculateTimeBonus(timeSpent, timeLimit) : 0;
-    
+
     const finalScore = Math.min(baseScore + timeBonus, 100);
 
     return {
@@ -355,7 +355,7 @@ export class AssessmentEvaluationStrategy implements IEvaluationStrategy {
   async evaluateProgram(program: IProgram, taskEvaluations: IEvaluation[]): Promise<IEvaluation> {
     // Aggregate scores
     const scores = taskEvaluations.filter(e => e.score !== undefined).map(e => e.score!);
-    const averageScore = scores.length > 0 ? 
+    const averageScore = scores.length > 0 ?
       scores.reduce((a, b) => a + b, 0) / scores.length : 0;
 
     // Aggregate domain scores
@@ -400,9 +400,9 @@ export class AssessmentEvaluationStrategy implements IEvaluationStrategy {
       if (interaction.type === 'user_input' && interaction.metadata?.questionId) {
         const isCorrect = Boolean(interaction.metadata?.isCorrect);
         const question = questions.find((q: { id: string; correct_answer?: string }) => q.id === interaction.metadata?.questionId);
-        
+
         if (isCorrect) correctCount++;
-        
+
         if (question?.domain) {
           if (!domainScores[question.domain]) {
             domainScores[question.domain] = { correct: 0, total: 0 };
@@ -430,7 +430,7 @@ export class AssessmentEvaluationStrategy implements IEvaluationStrategy {
 
   protected calculateTimeBonus(timeSpent: number, timeLimit: number): number {
     if (timeSpent >= timeLimit) return 0;
-    
+
     const timeRatio = timeSpent / timeLimit;
     if (timeRatio < 0.5) return 10; // Finished in less than half time
     if (timeRatio < 0.75) return 5; // Finished in less than 3/4 time
@@ -455,7 +455,7 @@ export class AssessmentEvaluationStrategy implements IEvaluationStrategy {
 
   private aggregateDomainScores(evaluations: IEvaluation[]): { dimension: string; score: number; feedback: string; maxScore?: number }[] {
     const domainMap = new Map<string, { totalScore: number; count: number }>();
-    
+
     evaluations.forEach(evaluation => {
       if (evaluation.domainScores && Array.isArray(evaluation.domainScores)) {
         evaluation.domainScores.forEach((dimScore: { dimension: string; score: number; feedback: string; maxScore?: number }) => {
@@ -476,7 +476,7 @@ export class AssessmentEvaluationStrategy implements IEvaluationStrategy {
   }
 
   private generateAssessmentProgramFeedback(score: number, {}: IEvaluation[]): string {
-    const level = score >= 90 ? 'mastery' : score >= 80 ? 'proficient' : 
+    const level = score >= 90 ? 'mastery' : score >= 80 ? 'proficient' :
                   score >= 70 ? 'developing' : 'foundational';
     return `Assessment complete! Your AI literacy level is ${level} with an average score of ${Math.round(score)}%.`;
   }
@@ -486,7 +486,7 @@ export class AssessmentEvaluationStrategy implements IEvaluationStrategy {
   }
 
   private identifyCompetencyGaps(domainScores: Record<string, number> | { dimension: string; score: number; feedback: string; maxScore?: number }[]): string[] {
-    const scores = Array.isArray(domainScores) 
+    const scores = Array.isArray(domainScores)
       ? this.convertDimensionScoresToRecord(domainScores)
       : domainScores;
     return Object.entries(scores)
@@ -511,12 +511,12 @@ export class DiscoveryEvaluationStrategy implements IEvaluationStrategy {
     const interactions = task.interactions || [];
     const taskContext = discoveryTask.content?.context as Record<string, unknown>;
     const goals = (taskContext?.explorationGoals as string[]) || [];
-    
+
     // Calculate exploration metrics
     const explorationScore = this.calculateExplorationScore(interactions, goals);
     const toolsExplored = this.extractToolsExplored(interactions);
     const challengesCompleted = this.extractChallengesCompleted(interactions, discoveryTask);
-    
+
     // Calculate XP
     const baseXP = Math.round(explorationScore);
     const challengeXP = challengesCompleted.reduce((sum, c) => sum + (c.xpReward || 0), 0);
@@ -562,7 +562,7 @@ export class DiscoveryEvaluationStrategy implements IEvaluationStrategy {
     const currentXP = (program.metadata?.totalXP as number) || 0;
     const earnedXP = taskEvaluations.reduce((sum, e) => sum + ((e.metadata?.xpEarned as number) || 0), 0);
     const totalXP = currentXP + earnedXP;
-    
+
     // Check for milestones
     const milestones = this.checkMilestones(currentXP, totalXP);
     const bonusXP = milestones.reduce((sum, m) => sum + m.bonus, 0);
@@ -603,14 +603,14 @@ export class DiscoveryEvaluationStrategy implements IEvaluationStrategy {
   protected calculateExplorationScore(interactions: IInteraction[], goals: string[]): number {
     const interactionCount = interactions.filter(i => i.type === 'user_input').length;
     const systemEventCount = interactions.filter(i => i.type === 'system_event').length;
-    
+
     // Base score on interaction variety and depth
     const interactionScore = Math.min(interactionCount * 10, 50);
     const eventScore = Math.min(systemEventCount * 15, 50);
-    
+
     // Bonus for completing goals
     const goalBonus = goals.length > 0 ? 20 : 0;
-    
+
     return Math.min(interactionScore + eventScore + goalBonus, 100);
   }
 
@@ -628,7 +628,7 @@ export class DiscoveryEvaluationStrategy implements IEvaluationStrategy {
     const completedChallenges: Challenge[] = [];
     const context = task.content?.context as Record<string, unknown>;
     const challenges = (context?.challenges || []) as Challenge[];
-    
+
     interactions.forEach(i => {
       if (i.metadata?.challengeId) {
         const challenge = challenges.find((c: { id: string; points?: number }) => c.id === i.metadata?.challengeId);
@@ -637,16 +637,16 @@ export class DiscoveryEvaluationStrategy implements IEvaluationStrategy {
         }
       }
     });
-    
+
     return completedChallenges;
   }
 
   private calculateExplorationDepth(interactions: IInteraction[]): number {
     // Measure variety and depth of exploration
     const uniqueTypes = new Set(interactions.map(i => i.type)).size;
-    const avgContentLength = interactions.reduce((sum, i) => 
+    const avgContentLength = interactions.reduce((sum, i) =>
       sum + (typeof i.content === 'string' ? i.content.length : 0), 0) / Math.max(interactions.length, 1);
-    
+
     return Math.min((uniqueTypes * 20) + (avgContentLength / 10), 100);
   }
 
@@ -658,7 +658,7 @@ export class DiscoveryEvaluationStrategy implements IEvaluationStrategy {
       { threshold: 5000, id: '5000_xp', bonus: 500 }
     ];
 
-    return milestones.filter(m => 
+    return milestones.filter(m =>
       currentXP < m.threshold && newXP >= m.threshold
     );
   }
@@ -692,11 +692,11 @@ export class DiscoveryEvaluationStrategy implements IEvaluationStrategy {
   private generateDiscoveryProgramFeedback(totalXP: number, milestones: Milestone[]): string {
     const level = this.calculateDiscoveryLevel(totalXP);
     let feedback = `Discovery journey complete! You've reached ${level} level with ${totalXP} XP.`;
-    
+
     if (milestones.length > 0) {
       feedback += ` Milestones achieved: ${milestones.map(m => m.id).join(', ')}!`;
     }
-    
+
     return feedback;
   }
 }

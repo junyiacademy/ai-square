@@ -166,8 +166,8 @@ npx prisma migrate dev --name sync_with_database
 SELECT * FROM _prisma_migrations ORDER BY finished_at DESC;
 
 -- Mark migration as rolled back (replace with actual migration name)
-UPDATE _prisma_migrations 
-SET rolled_back_at = NOW() 
+UPDATE _prisma_migrations
+SET rolled_back_at = NOW()
 WHERE migration_name = 'migration_to_rollback';
 
 -- Manually reverse schema changes if needed

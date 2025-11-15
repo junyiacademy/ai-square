@@ -1,6 +1,6 @@
 /**
  * Redis-based Session Storage
- * 
+ *
  * Production-ready session storage using Redis
  * Falls back to in-memory storage if Redis is unavailable
  */
@@ -82,7 +82,7 @@ export class RedisSession {
     // Fallback to memory
     memoryStore.set(token, sessionData);
     console.log('[RedisSession] Session stored in memory (fallback)');
-    
+
     // Schedule cleanup for memory store
     setTimeout(() => {
       memoryStore.delete(token);
@@ -105,19 +105,19 @@ export class RedisSession {
       try {
         const key = `${this.PREFIX}${token}`;
         const data = await redis.get(key);
-        
+
         if (data) {
           const session = JSON.parse(data) as SessionData;
           // Convert string dates back to Date objects
           session.createdAt = new Date(session.createdAt);
           session.expiresAt = new Date(session.expiresAt);
-          
+
           // Check if expired
           if (new Date() > session.expiresAt) {
             await this.destroySession(token);
             return null;
           }
-          
+
           return session;
         }
       } catch (error) {

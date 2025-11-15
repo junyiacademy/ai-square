@@ -40,4 +40,4 @@ describe('redis-cache-service fallback cleanup and stats', () => {
     },
     15000
   );
-}); 
+});

@@ -15,12 +15,12 @@ export interface IBulkOperations<T> {
    * Create multiple entities in a single transaction
    */
   createBulk(items: Omit<T, 'id'>[]): Promise<T[]>;
-  
+
   /**
    * Update multiple entities in a single transaction
    */
   updateBulk(updates: Array<{ id: string; data: Partial<T> }>): Promise<T[]>;
-  
+
   /**
    * Delete multiple entities in a single transaction
    */
@@ -32,17 +32,17 @@ export interface ITransactionalOperations {
    * Execute operations within a database transaction
    */
   withTransaction<T>(callback: () => Promise<T>): Promise<T>;
-  
+
   /**
    * Begin a new transaction
    */
   beginTransaction(): Promise<void>;
-  
+
   /**
    * Commit the current transaction
    */
   commitTransaction(): Promise<void>;
-  
+
   /**
    * Rollback the current transaction
    */
@@ -66,17 +66,17 @@ export interface IQueryOperations<T> {
     limit: number;
     totalPages: number;
   }>;
-  
+
   /**
    * Count entities matching criteria
    */
   count(filters?: Record<string, unknown>): Promise<number>;
-  
+
   /**
    * Check if entity exists
    */
   exists(id: string): Promise<boolean>;
-  
+
   /**
    * Find entities by multiple IDs
    */
@@ -99,12 +99,12 @@ export interface ICascadeOperations {
       evaluations?: number;
     };
   }>;
-  
+
   /**
    * Archive instead of delete
    */
   archive(id: string): Promise<boolean>;
-  
+
   /**
    * Restore archived entity
    */
@@ -116,12 +116,12 @@ export interface IStatusOperations {
    * Bulk update status
    */
   updateStatusBulk(ids: string[], status: string): Promise<number>;
-  
+
   /**
    * Find by status
    */
   findByStatus(status: string): Promise<unknown[]>;
-  
+
   /**
    * Transition status with validation
    */
@@ -132,12 +132,12 @@ export interface IStatusOperations {
 // Extended Repository Interfaces
 // ========================================
 
-export interface IExtendedScenarioRepository extends 
+export interface IExtendedScenarioRepository extends
   IBulkOperations<IScenario>,
   IQueryOperations<IScenario>,
   ICascadeOperations,
   IStatusOperations {
-  
+
   /**
    * Find scenarios with related counts
    */
@@ -146,7 +146,7 @@ export interface IExtendedScenarioRepository extends
     activePrograms: number;
     completedPrograms: number;
   }>>;
-  
+
   /**
    * Clone a scenario
    */
@@ -154,12 +154,12 @@ export interface IExtendedScenarioRepository extends
     title?: Record<string, string>;
     status?: string;
   }): Promise<IScenario>;
-  
+
   /**
    * Find orphaned scenarios (no programs)
    */
   findOrphaned(): Promise<IScenario[]>;
-  
+
   /**
    * Clean up duplicate scenarios
    */
@@ -173,17 +173,17 @@ export interface IExtendedProgramRepository extends
   IBulkOperations<IProgram>,
   IQueryOperations<IProgram>,
   IStatusOperations {
-  
+
   /**
    * Find expired programs
    */
   findExpired(daysOld?: number): Promise<IProgram[]>;
-  
+
   /**
    * Clean up expired programs
    */
   cleanupExpired(daysOld?: number): Promise<number>;
-  
+
   /**
    * Get user statistics
    */
@@ -194,7 +194,7 @@ export interface IExtendedProgramRepository extends
     totalXp: number;
     averageScore: number;
   }>;
-  
+
   /**
    * Reset program progress
    */
@@ -204,12 +204,12 @@ export interface IExtendedProgramRepository extends
 export interface IExtendedTaskRepository extends
   IBulkOperations<ITask>,
   IQueryOperations<ITask> {
-  
+
   /**
    * Find incomplete tasks
    */
   findIncomplete(programId?: string): Promise<ITask[]>;
-  
+
   /**
    * Batch update scores
    */
@@ -217,7 +217,7 @@ export interface IExtendedTaskRepository extends
     taskId: string;
     score: number;
   }>): Promise<number>;
-  
+
   /**
    * Get task statistics
    */
@@ -232,7 +232,7 @@ export interface IExtendedTaskRepository extends
 export interface IExtendedEvaluationRepository extends
   IBulkOperations<IEvaluation>,
   IQueryOperations<IEvaluation> {
-  
+
   /**
    * Get evaluation trends
    */
@@ -241,12 +241,12 @@ export interface IExtendedEvaluationRepository extends
     scores: number[];
     completions: number[];
   }>;
-  
+
   /**
    * Calculate percentile rank
    */
   getPercentileRank(score: number, scenarioId: string): Promise<number>;
-  
+
   /**
    * Get domain analysis
    */
@@ -266,12 +266,12 @@ export interface ICacheAwareOperations {
    * Invalidate all caches for an entity
    */
   invalidateCache(id: string): Promise<void>;
-  
+
   /**
    * Warm up cache with frequently accessed data
    */
   warmupCache(): Promise<void>;
-  
+
   /**
    * Get cache statistics
    */
@@ -281,7 +281,7 @@ export interface ICacheAwareOperations {
     size: number;
     keys: string[];
   }>;
-  
+
   /**
    * Clear all caches
    */

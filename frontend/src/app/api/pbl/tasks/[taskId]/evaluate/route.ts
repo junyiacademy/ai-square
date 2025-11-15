@@ -17,10 +17,10 @@ export async function POST(
     const { taskId } = await params;
     const body = await request.json();
     const { evaluation, programId } = body;
-    
+
     // Get language from request
     const currentLang = getLanguageFromHeader(request);
-    
+
     console.log('POST /api/pbl/tasks/[taskId]/evaluate - Received evaluation:');
     console.log('  domainScores:', JSON.stringify(evaluation?.domainScores || {}, null, 2));
 
@@ -36,7 +36,7 @@ export async function POST(
     const evalRepo = repositoryFactory.getEvaluationRepository();
     const taskRepo = repositoryFactory.getTaskRepository();
     const userRepo = repositoryFactory.getUserRepository();
-    
+
     // Get user by email to get UUID
     const user = await userRepo.findByEmail(session.user.email);
     if (!user) {
@@ -49,7 +49,7 @@ export async function POST(
     // Check if task already has an evaluation
     const task = await taskRepo.findById(taskId);
     let evaluationRecord;
-    
+
     // Helper to create evaluation with proper structure
     const createEvaluationData = (evaluation: Record<string, unknown>, existingMetadata?: Record<string, unknown>) => ({
       userId: user.id,
@@ -86,18 +86,18 @@ export async function POST(
         updateCount: (existingMetadata?.updateCount as number || 0) + 1
       }
     });
-    
+
     const existingEvaluationId = task?.metadata?.evaluationId as string | undefined;
     if (existingEvaluationId) {
       // Re-evaluation: Create new evaluation and update task to point to it
       const existingEval = await evalRepo.findById(existingEvaluationId);
       evaluationRecord = await evalRepo.create(createEvaluationData(evaluation, existingEval?.metadata));
-      
+
       console.log('Re-evaluated task, new evaluation record:');
       console.log('  Old evaluation ID:', existingEvaluationId);
       console.log('  New evaluation ID:', evaluationRecord.id);
       console.log('  domainScores:', JSON.stringify(evaluationRecord.domainScores || {}, null, 2));
-      
+
       // Update task to point to the new evaluation
       await taskRepo.update?.(taskId, {
         status: 'completed' as const,
@@ -112,10 +112,10 @@ export async function POST(
     } else {
       // No existing evaluation, create new one
       evaluationRecord = await evalRepo.create(createEvaluationData(evaluation));
-      
+
       console.log('Created evaluation record:');
       console.log('  domainScores:', JSON.stringify(evaluationRecord.domainScores || {}, null, 2));
-      
+
       // Update task with evaluation ID for the first time
       await taskRepo.update?.(taskId, {
         status: 'completed' as const,
@@ -126,14 +126,14 @@ export async function POST(
         }
       });
     }
-    
+
     // Mark program evaluation as outdated (async)
     setImmediate(async () => {
       try {
         const { repositoryFactory } = await import('@/lib/repositories/base/repository-factory');
         const programRepo = repositoryFactory.getProgramRepository();
         const program = await programRepo.findById(programId);
-        
+
         if (program) {
           // Always mark as outdated when a task is evaluated, regardless of whether program has evaluation
           await programRepo.update?.(program.id, {
@@ -163,7 +163,7 @@ export async function POST(
       conversationCount: evaluationRecord.pblData?.conversationCount || 0,
       evaluatedAt: evaluationRecord.metadata?.evaluatedAt || evaluationRecord.createdAt
     };
-    
+
     return NextResponse.json({
       success: true,
       message: existingEvaluationId ? 'Evaluation updated successfully' : 'Evaluation created successfully',
@@ -207,9 +207,9 @@ export async function GET(
 
     // Get task to check if it has evaluationId
     const task = await taskRepo.findById(taskId);
-    
+
     let evaluation = null;
-    
+
     const evaluationId = task?.metadata?.evaluationId as string | undefined;
     if (evaluationId) {
       // Direct lookup by evaluation ID
@@ -219,11 +219,11 @@ export async function GET(
       const evaluations = await evalRepo.findByTask(taskId);
       evaluation = evaluations[0] || null;
     }
-    
+
     // Check if evaluation language matches current language
     const evaluationLang = evaluation?.metadata?.language as string || 'en';
     const languageMatch = evaluationLang === currentLang;
-    
+
     // Transform evaluation to match frontend expectations
     const transformedEvaluation = evaluation ? {
       ...evaluation,

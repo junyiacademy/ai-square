@@ -26,7 +26,7 @@ export default function PrivacyPolicyPage() {
             {/* Introduction */}
             <section className="mb-8">
               <p className="text-gray-700 dark:text-gray-300">
-                {t('privacy.intro', 
+                {t('privacy.intro',
                   'AI Square ("we", "our", or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our AI literacy education platform.'
                 )}
               </p>
@@ -35,7 +35,7 @@ export default function PrivacyPolicyPage() {
             {/* Information We Collect */}
             <section className="mb-8">
               <h2 className="text-2xl font-semibold mb-4">{t('privacy.infoCollect.title', '1. Information We Collect')}</h2>
-              
+
               <h3 className="text-xl font-medium mb-3">{t('privacy.infoCollect.personal', 'Personal Information')}</h3>
               <ul className="list-disc pl-6 mb-4 space-y-2">
                 <li>{t('privacy.infoCollect.email', 'Email address')}</li>
@@ -78,7 +78,7 @@ export default function PrivacyPolicyPage() {
             <section className="mb-8">
               <h2 className="text-2xl font-semibold mb-4">{t('privacy.storage.title', '3. Data Storage and Security')}</h2>
               <p className="mb-4">
-                {t('privacy.storage.location', 
+                {t('privacy.storage.location',
                   'Your data is stored securely on Google Cloud Platform servers. We implement appropriate technical and organizational measures to protect your personal information.'
                 )}
               </p>
@@ -122,7 +122,7 @@ export default function PrivacyPolicyPage() {
             <section className="mb-8">
               <h2 className="text-2xl font-semibold mb-4">{t('privacy.cookies.title', '6. Cookies and Tracking')}</h2>
               <p className="mb-4">
-                {t('privacy.cookies.intro', 
+                {t('privacy.cookies.intro',
                   'We use cookies and similar tracking technologies to enhance your experience. Essential cookies are required for platform functionality, while optional cookies help us improve our service.'
                 )}
               </p>
@@ -132,7 +132,7 @@ export default function PrivacyPolicyPage() {
             <section className="mb-8">
               <h2 className="text-2xl font-semibold mb-4">{t('privacy.children.title', '7. Children\'s Privacy')}</h2>
               <p>
-                {t('privacy.children.content', 
+                {t('privacy.children.content',
                   'Our platform is designed for educational use by students of all ages. For users under 13, we require parental consent and limit data collection to essential information only.'
                 )}
               </p>
@@ -142,7 +142,7 @@ export default function PrivacyPolicyPage() {
             <section className="mb-8">
               <h2 className="text-2xl font-semibold mb-4">{t('privacy.international.title', '8. International Data Transfers')}</h2>
               <p>
-                {t('privacy.international.content', 
+                {t('privacy.international.content',
                   'Your information may be transferred to and processed in countries other than your own. We ensure appropriate safeguards are in place for such transfers.'
                 )}
               </p>
@@ -152,7 +152,7 @@ export default function PrivacyPolicyPage() {
             <section className="mb-8">
               <h2 className="text-2xl font-semibold mb-4">{t('privacy.changes.title', '9. Changes to This Policy')}</h2>
               <p>
-                {t('privacy.changes.content', 
+                {t('privacy.changes.content',
                   'We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new policy on this page and updating the "Last Updated" date.'
                 )}
               </p>
@@ -173,7 +173,7 @@ export default function PrivacyPolicyPage() {
 
           {/* Back to Home */}
           <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
-            <Link 
+            <Link
               href="/"
               className="inline-flex items-center text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
             >

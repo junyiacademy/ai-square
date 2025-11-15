@@ -67,4 +67,4 @@ async function runDemo() {
 runDemo().catch((e) => {
   console.error(e);
   process.exit(1);
-}); 
+});

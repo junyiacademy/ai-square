@@ -96,13 +96,13 @@ export default function PBLScenariosPage() {
         const response = await authenticatedFetch(`/api/pbl/scenarios?lang=${i18n.language}`, {
           signal: controller.signal
         });
-        
+
         if (!response.ok) {
           throw new Error(`PBL Scenarios API failed: ${response.status}`);
         }
-        
+
         const result = await response.json();
-        
+
         if (isMounted) {
           // Handle PBL API response structure
           if (result.success && result.data?.scenarios) {
@@ -217,11 +217,11 @@ export default function PBLScenariosPage() {
               const domains = getScenarioDomains(scenario);
               const difficulty = getScenarioDifficulty(scenario);
               const duration = getEstimatedDuration(scenario);
-              
+
               const isAvailable = !('isAvailable' in scenario) || scenario.isAvailable !== false;
-              
+
               return (
-                <div 
+                <div
                   key={String(scenario.id)}
                   className={`bg-white dark:bg-gray-800 rounded-lg shadow-md ${
                     isAvailable ? 'hover:shadow-lg transition-shadow' : 'opacity-60'
@@ -238,12 +238,12 @@ export default function PBLScenariosPage() {
                         {getLocalizedText(scenario.title as string | Record<string, string>)}
                       </h2>
                     </div>
-                    
+
                     {/* Domain Labels */}
                     {domains.length > 0 && (
                       <div className="flex flex-wrap gap-2 mb-3">
                         {domains.map((domain) => (
-                          <span 
+                          <span
                             key={domain}
                             className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                               domain === 'engaging_with_ai' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' :
@@ -258,7 +258,7 @@ export default function PBLScenariosPage() {
                         ))}
                       </div>
                     )}
-                    
+
                     <div className="mb-4">
                       <div className="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-2">
                         <span className="mr-4">

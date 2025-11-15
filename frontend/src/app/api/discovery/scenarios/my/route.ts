@@ -6,21 +6,21 @@ export async function GET(request: NextRequest) {
   try {
     // Get authentication
     const session = await getUnifiedAuth(request);
-    
+
     if (!session?.user?.email) {
       return createUnauthorizedResponse();
     }
-    
+
     const userId = session.user.id || session.user.email;
-    
+
     // Get repositories
     const programRepo = repositoryFactory.getProgramRepository();
     const scenarioRepo = repositoryFactory.getScenarioRepository();
-    
+
     // Get all Discovery programs for this user
     const programs = await programRepo.findByUser(userId);
     const discoveryPrograms = programs.filter(p => p.mode === 'discovery');
-    
+
     // Group programs by scenario
     const scenarioMap = new Map<string, {
       scenario: unknown;
@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
       completedCount: number;
       lastActivity: string | null;
     }>();
-    
+
     // Load unique scenarios
     for (const program of discoveryPrograms) {
       if (!scenarioMap.has(program.scenarioId)) {
@@ -44,21 +44,21 @@ export async function GET(request: NextRequest) {
           });
         }
       }
-      
+
       const entry = scenarioMap.get(program.scenarioId);
       if (entry) {
         entry.programs.push(program);
-        
+
         // Track active program
         if (program.status === 'active' && !entry.activeProgram) {
           entry.activeProgram = program;
         }
-        
+
         // Count completed programs
         if (program.status === 'completed') {
           entry.completedCount++;
         }
-        
+
         // Track last activity
         const programActivity = program.lastActivityAt || program.updatedAt || program.createdAt;
         if (!entry.lastActivity || programActivity > entry.lastActivity) {
@@ -66,7 +66,7 @@ export async function GET(request: NextRequest) {
         }
       }
     }
-    
+
     // Convert to array and sort by last activity
     const myScenarios = Array.from(scenarioMap.values())
       .sort((a, b) => {
@@ -77,13 +77,13 @@ export async function GET(request: NextRequest) {
       .map(entry => {
         const scenario = entry.scenario as Record<string, unknown>;
         const activeProgram = entry.activeProgram as Record<string, unknown> | null;
-        
+
         // Calculate display status and statistics
         let primaryStatus: 'mastered' | 'in-progress' | 'new' = 'new';
         let currentProgress = 0;
         let bestScore = 0;
         let activeCount = 0;
-        
+
         // Count active programs and find best score
         entry.programs.forEach((prog: unknown) => {
           const program = prog as Record<string, unknown>;
@@ -95,7 +95,7 @@ export async function GET(request: NextRequest) {
             if (score > bestScore) bestScore = score;
           }
         });
-        
+
         // Determine primary status
         if (entry.completedCount > 0) {
           primaryStatus = 'mastered';
@@ -107,16 +107,16 @@ export async function GET(request: NextRequest) {
           const total = activeProgram.totalTaskCount as number || 1;
           currentProgress = Math.round((completed / total) * 100);
         }
-        
+
         // DEPRECATED: keeping for backward compatibility
         const progress = currentProgress;
         const displayStatus = primaryStatus === 'mastered' ? 'completed' : primaryStatus === 'in-progress' ? 'active' : 'pending';
-        
+
         // Map career type to display format
-        const careerType = (scenario.metadata as Record<string, unknown>)?.careerType as string || 
-                          (scenario.discoveryData as Record<string, unknown>)?.careerType as string || 
+        const careerType = (scenario.metadata as Record<string, unknown>)?.careerType as string ||
+                          (scenario.discoveryData as Record<string, unknown>)?.careerType as string ||
                           'unknown';
-        
+
         return {
           scenarioId: scenario.id,
           id: careerType,
@@ -158,7 +158,7 @@ export async function GET(request: NextRequest) {
           lastActivity: entry.lastActivity
         };
       });
-    
+
     return NextResponse.json({ scenarios: myScenarios });
   } catch (error) {
     console.error('Error fetching user Discovery scenarios:', error);
@@ -174,18 +174,17 @@ function getLocalizedField(field: unknown, request: NextRequest): string {
   if (typeof field === 'string') return field;
   if (typeof field === 'object' && field !== null) {
     const fieldObj = field as Record<string, string>;
-    
+
     // Get language from query params first, then accept-language header
     const url = new URL(request.url);
     const lang = url.searchParams.get('lang') || request.headers.get('accept-language') || 'en';
-    
+
     // Handle zh-TW -> zhTW mapping
     let lookupLang = lang;
     if (lang === 'zh-TW' || lang === 'zhTW') lookupLang = 'zhTW';
     if (lang === 'zh-CN' || lang === 'zhCN') lookupLang = 'zhCN';
-    
+
     return fieldObj[lookupLang] || fieldObj.en || fieldObj.zhTW || Object.values(fieldObj)[0] || '';
   }
   return '';
 }
-

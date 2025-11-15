@@ -6,9 +6,9 @@ metadata:
   title: "Viaggiatore d'Affari Dimensionale - Imprenditore Tech"
   short_description: "Costruisci imperi d'affari tecnologici attraverso i multiversi"
   long_description: |
-    Sei un viaggiatore appena introdotto nell'Alleanza d'Affari Interdimensionale, 
-    dotato della capacità di stabilire imprese tecnologiche attraverso diversi 
-    spazi-tempi. Ogni universo parallelo ha livelli di sviluppo tecnologico unici, 
+    Sei un viaggiatore appena introdotto nell'Alleanza d'Affari Interdimensionale,
+    dotato della capacità di stabilire imprese tecnologiche attraverso diversi
+    spazi-tempi. Ogni universo parallelo ha livelli di sviluppo tecnologico unici,
     e devi adattarti a vari ambienti per costruire imperi d'affari di successo.
   estimated_hours: 65
   skill_focus:
@@ -19,18 +19,18 @@ metadata:
 world_setting:
   name: "Rete d'Affari Multiverso"
   description: |
-    La Rete d'Affari Multiverso consiste di innumerevoli spazi-tempi paralleli che 
-    formano una vasta rete commerciale. Gli imprenditori tech viaggiano tra le dimensioni, 
-    portando innovazioni da un universo per risolvere problemi in un altro, mentre 
+    La Rete d'Affari Multiverso consiste di innumerevoli spazi-tempi paralleli che
+    formano una vasta rete commerciale. Gli imprenditori tech viaggiano tra le dimensioni,
+    portando innovazioni da un universo per risolvere problemi in un altro, mentre
     competono contro forze monopolistiche che cercano di controllare tutte le realtà.
   atmosphere: futuristic_dynamic
   visual_theme: interdimensional_tech
 starting_scenario:
   title: "Attivazione del Gateway Dimensionale"
   description: |
-    Il Mentore d'Affari Atlas ti accoglie all'hub dimensionale, spiegando la tua 
-    nuova capacità di viaggiare tra gli universi. Ma il CEO Avidità della Monopoly 
-    Corp sta usando tattiche sleali per schiacciare le startup in tutte le dimensioni. 
+    Il Mentore d'Affari Atlas ti accoglie all'hub dimensionale, spiegando la tua
+    nuova capacità di viaggiare tra gli universi. Ma il CEO Avidità della Monopoly
+    Corp sta usando tattiche sleali per schiacciare le startup in tutte le dimensioni.
     Devi usare innovazione e collaborazione per combattere i suoi piani monopolistici.
   initial_tasks:
     - understand_multiverse

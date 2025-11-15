@@ -17,7 +17,7 @@ const updateProfileSchema = z.object({
 export async function GET() {
   try {
     const session = await getSession();
-    
+
     if (!session || !session.user) {
       return NextResponse.json(
         { success: false, error: 'Not authenticated' },
@@ -61,7 +61,7 @@ export async function GET() {
 export async function PATCH(request: NextRequest) {
   try {
     const session = await getSession();
-    
+
     if (!session || !session.user) {
       return NextResponse.json(
         { success: false, error: 'Not authenticated' },
@@ -70,7 +70,7 @@ export async function PATCH(request: NextRequest) {
     }
 
     const body = await request.json();
-    
+
     // 驗證輸入
     const validationResult = updateProfileSchema.safeParse(body);
     if (!validationResult.success) {
@@ -87,7 +87,7 @@ export async function PATCH(request: NextRequest) {
     if (newPassword && currentPassword) {
       const pool = getPool();
       const userWithPassword = await getUserWithPassword(pool, session.user.email);
-      
+
       if (!userWithPassword || !userWithPassword.passwordHash) {
         return NextResponse.json(
           { success: false, error: 'User not found' },
@@ -112,7 +112,7 @@ export async function PATCH(request: NextRequest) {
 
     // 更新用戶資料
     const updatedUser = await userRepo.update(session.user.id, updates);
-    
+
     // 如果需要更新密碼，單獨處理
     if (newPassword) {
       const bcrypt = await import('bcryptjs');

@@ -25,7 +25,7 @@ resource "null_resource" "service_health_check" {
       echo ""
       echo "Next steps (handled by GitHub Actions):"
       echo "1. Initialize database schema"
-      echo "2. Create demo accounts"  
+      echo "2. Create demo accounts"
       echo "3. Load scenario data"
       echo "4. Run E2E tests"
       echo ""
@@ -46,7 +46,7 @@ output "deployment_info" {
     region          = var.region
     deployed_at     = timestamp()
   }
-  
+
   description = "Infrastructure deployment information"
 }
 

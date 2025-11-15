@@ -40,10 +40,10 @@ describe('Discovery Scenario Detail Page', () => {
       value: localStorageMock,
       writable: true
     });
-    
+
     (global.fetch as jest.Mock).mockResolvedValue({
       ok: true,
-      json: async () => ({ 
+      json: async () => ({
         success: true,
         scenario: {
           id: 'test-scenario-id',

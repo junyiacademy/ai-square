@@ -18,7 +18,7 @@ knowledge_codes:
         K1.4:
           summary: "[TRANSLATE: Code summary in target language]"
       explanation: "[TRANSLATE: Theme explanation in target language]"
-    
+
     AI_Reflects_Human_Choices_and_Perspectives:
       codes:
         K2.1:
@@ -32,7 +32,7 @@ knowledge_codes:
         K2.5:
           summary: "[TRANSLATE: Code summary in target language]"
       explanation: "[TRANSLATE: Theme explanation in target language]"
-    
+
     AI_Reshapes_Work_and_Human_Roles:
       codes:
         K3.1:
@@ -42,7 +42,7 @@ knowledge_codes:
         K3.3:
           summary: "[TRANSLATE: Code summary in target language]"
       explanation: "[TRANSLATE: Theme explanation in target language]"
-    
+
     AIs_Capabilities_and_Limitations:
       codes:
         K4.1:
@@ -52,7 +52,7 @@ knowledge_codes:
         K4.3:
           summary: "[TRANSLATE: Code summary in target language]"
       explanation: "[TRANSLATE: Theme explanation in target language]"
-    
+
     AIs_Role_in_Society:
       codes:
         K5.1:
@@ -77,7 +77,7 @@ skills_codes:
             - "[TRANSLATE: Guiding question 1 in target language]"
             - "[TRANSLATE: Guiding question 2 in target language]"
       explanation: "[TRANSLATE: Theme explanation in target language]"
-    
+
     Creativity:
       codes:
         S2.1:
@@ -85,7 +85,7 @@ skills_codes:
           questions:
             - "[TRANSLATE: Guiding question in target language]"
       explanation: "[TRANSLATE: Theme explanation in target language]"
-    
+
     Computational_Thinking:
       codes:
         S3.1:
@@ -93,7 +93,7 @@ skills_codes:
           questions:
             - "[TRANSLATE: Guiding question in target language]"
       explanation: "[TRANSLATE: Theme explanation in target language]"
-    
+
     Collaboration:
       codes:
         S4.1:
@@ -101,7 +101,7 @@ skills_codes:
           questions:
             - "[TRANSLATE: Guiding question in target language]"
       explanation: "[TRANSLATE: Theme explanation in target language]"
-    
+
     Problem_Solving:
       codes:
         S5.1:
@@ -109,7 +109,7 @@ skills_codes:
           questions:
             - "[TRANSLATE: Guiding question in target language]"
       explanation: "[TRANSLATE: Theme explanation in target language]"
-    
+
     Self_and_Social_Awareness:
       codes:
         S6.1:
@@ -117,7 +117,7 @@ skills_codes:
           questions:
             - "[TRANSLATE: Guiding question in target language]"
       explanation: "[TRANSLATE: Theme explanation in target language]"
-    
+
     Communication:
       codes:
         S7.1:
@@ -136,28 +136,28 @@ attitudes_codes:
           summary: "[TRANSLATE: Code summary in target language]"
           questions: []  # Keep empty if no questions
       explanation: "[TRANSLATE: Theme explanation in target language]"
-    
+
     Curious:
       codes:
         A2.1:
           summary: "[TRANSLATE: Code summary in target language]"
           questions: []
       explanation: "[TRANSLATE: Theme explanation in target language]"
-    
+
     Innovative:
       codes:
         A3.1:
           summary: "[TRANSLATE: Code summary in target language]"
           questions: []
       explanation: "[TRANSLATE: Theme explanation in target language]"
-    
+
     Adaptable:
       codes:
         A4.1:
           summary: "[TRANSLATE: Code summary in target language]"
           questions: []
       explanation: "[TRANSLATE: Theme explanation in target language]"
-    
+
     Empathetic:
       codes:
         A5.1:

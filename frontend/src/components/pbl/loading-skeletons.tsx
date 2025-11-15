@@ -104,7 +104,7 @@ export const PBLLearningContentSkeleton: React.FC = () => (
     <div className="w-1/3">
       <PBLTaskProgressSkeleton />
     </div>
-    
+
     {/* Main Content */}
     <div className="flex-1 space-y-6">
       {/* Task Header */}

@@ -1,6 +1,6 @@
 /**
  * Unified Authentication System Test Suite
- * 
+ *
  * These tests define the expected behavior of our authentication system
  * across all scenarios: Route Handlers, Server Components, and Middleware
  */
@@ -191,7 +191,7 @@ describe.skip('Unified Authentication System', () => {
       });
 
       (SecureSession.getSession as jest.Mock).mockReturnValue(mockSessionData);
-      
+
       const auth = await getUnifiedAuth(request);
       expect(auth).not.toBeNull();
 
@@ -218,7 +218,7 @@ describe.skip('Unified Authentication System', () => {
       const pblAuth = await getUnifiedAuth(request);
       expect(pblAuth).not.toBeNull();
 
-      // Assessment Module  
+      // Assessment Module
       const assessmentAuth = await getUnifiedAuth(request);
       expect(assessmentAuth).not.toBeNull();
 

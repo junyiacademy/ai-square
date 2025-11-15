@@ -10,7 +10,7 @@ metadata:
     未来のトレンドを見る神秘的な能力を持っています。数字とグラフで満たされたこの
     神殿では、すべてのデータポイントに重要なメッセージが含まれており、あなたの
     使命はこれらの数字に秘められた秘密を解き明かすことです。
-  
+
   estimated_hours: 50
   skill_focus:
     - data_alchemy
@@ -23,7 +23,7 @@ world_setting:
     データオラクル神殿は、世界中からデータを収集する神秘的な聖域です。ここで
     データアナリストたちは、数字の言葉を解読し、領域全体の意思決定を形成する
     真実を明らかにできるオラクルとして訓練されます。
-  
+
   atmosphere: "mystical_analytical"
   visual_theme: "digital_temple"
 starting_scenario:
@@ -33,7 +33,7 @@ starting_scenario:
     語りかけます。しかし脅威が迫っています：データ破壊者のカオスがデータソースを
     汚染し、誤解を招く分析を広めています。あなたは純粋な統計手法を使って、
     混乱の中から真実を見つけ出さなければなりません。
-  
+
   initial_tasks:
     - learn_data_basics
     - master_tools

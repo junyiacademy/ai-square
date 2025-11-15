@@ -10,7 +10,7 @@ metadata:
     你是「數據神諭殿」的見習預言家，擁有從混亂數據中看出未來趨勢的神秘
     能力。在這個充滿數字與圖表的聖殿中，每一個數據點都蘊含著重要的訊息，
     而你的使命就是破譯這些數字背後的秘密。
-  
+
   estimated_hours: 50
   skill_focus:
     - data_alchemy
@@ -23,7 +23,7 @@ world_setting:
   description: |
     數據神諭殿是一個收集全世界數據的神秘聖殿。在這裡，數據分析師被訓練
     成能夠解讀數字語言、揭示影響各領域決策真相的預言家。
-  
+
   atmosphere: "mystical_analytical"
   visual_theme: "digital_temple"
 
@@ -33,7 +33,7 @@ starting_scenario:
     智慧導師 Oracle 歡迎你來到聖殿，用謎語講述數據的秘密。但威脅迫在眉睫：
     數據破壞者 Chaos 正在污染數據源頭，散布誤導性分析。你必須使用純淨的
     統計方法在混亂中找出真相。
-  
+
   initial_tasks:
     - learn_data_basics
     - master_tools
@@ -48,7 +48,7 @@ skill_tree:
       unlocks:
         - web_scraping
         - api_mastery
-    
+
     - id: statistical_analysis
       name: "統計巫術"
       description: "運用統計方法揭示模式"
@@ -56,7 +56,7 @@ skill_tree:
       unlocks:
         - hypothesis_testing
         - regression_magic
-    
+
     - id: data_visualization
       name: "視覺預言"
       description: "將數據轉化為引人入勝的視覺故事"
@@ -64,7 +64,7 @@ skill_tree:
       unlocks:
         - dashboard_creation
         - interactive_charts
-    
+
     - id: business_intelligence
       name: "策略洞察"
       description: "將數據轉化為可行的商業智慧"
@@ -79,13 +79,13 @@ skill_tree:
       description: "使用機器學習預測未來結果"
       max_level: 15
       requires: [statistical_analysis, data_collection]
-    
+
     - id: big_data_mastery
       name: "巨量數據操控"
       description: "處理和分析龐大的數據集"
       max_level: 15
       requires: [data_collection, business_intelligence]
-    
+
     - id: real_time_analytics
       name: "即時預言"
       description: "執行即時數據分析"
@@ -102,7 +102,7 @@ milestone_quests:
     unlocks:
       - insight_badge
       - temple_recognition
-  
+
   - id: chaos_detection
     name: "混沌獵人"
     description: "偵測並修正誤導性的數據操縱"
@@ -112,7 +112,7 @@ milestone_quests:
     unlocks:
       - truth_seeker_title
       - advanced_access
-  
+
   - id: oracle_ascension
     name: "預言大師"
     description: "在趨勢發生前預測重大趨勢"
@@ -129,19 +129,19 @@ achievements:
     description: "創建你的第一個數據儀表板"
     xp_reward: 100
     badge_type: bronze
-  
+
   - id: data_detective
     name: "數據偵探"
     description: "發現 10 個數據品質問題"
     xp_reward: 250
     badge_type: silver
-  
+
   - id: prediction_master
     name: "預測大師"
     description: "做出 5 個準確預測"
     xp_reward: 500
     badge_type: gold
-  
+
   - id: oracle_legend
     name: "傳奇預言家"
     description: "完成所有數據挑戰"
@@ -156,14 +156,14 @@ example_tasks:
       description: "收集並清理混亂的數據集"
       skills_improved: [data_collection, data_alchemy]
       xp_reward: 60
-    
+
     - id: basic_stats
       type: analysis
       title: "統計基礎"
       description: "執行基本統計分析"
       skills_improved: [statistical_analysis]
       xp_reward: 50
-  
+
   intermediate:
     - id: trend_analysis
       type: analysis
@@ -171,14 +171,14 @@ example_tasks:
       description: "進行深度趨勢分析"
       skills_improved: [statistical_analysis, business_intelligence]
       xp_reward: 180
-    
+
     - id: dashboard_design
       type: creation
       title: "視覺儀表板"
       description: "創建互動式商業儀表板"
       skills_improved: [data_visualization, visualization_magic]
       xp_reward: 200
-  
+
   advanced:
     - id: predictive_model
       type: creation
@@ -186,7 +186,7 @@ example_tasks:
       description: "建立預測模型"
       skills_improved: [machine_learning, predictive_statistics]
       xp_reward: 350
-    
+
     - id: real_time_system
       type: creation
       title: "即時預言系統"

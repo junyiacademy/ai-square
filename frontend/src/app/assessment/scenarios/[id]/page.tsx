@@ -41,10 +41,10 @@ interface Program {
   };
 }
 
-export default function AssessmentScenarioDetailPage({ 
-  params 
-}: { 
-  params: Promise<{ id: string }> 
+export default function AssessmentScenarioDetailPage({
+  params
+}: {
+  params: Promise<{ id: string }>
 }) {
   const [scenario, setScenario] = useState<AssessmentScenario | null>(null);
   const [programs, setPrograms] = useState<Program[]>([]);
@@ -77,7 +77,7 @@ export default function AssessmentScenarioDetailPage({
             'Content-Type': 'application/json',
           }
         });
-        
+
         if (programsRes.ok) {
           const programsData = await programsRes.json();
           setPrograms(programsData.programs || []);
@@ -103,7 +103,7 @@ export default function AssessmentScenarioDetailPage({
       console.log('Already starting a program, ignoring click');
       return;
     }
-    
+
     setStartingProgram(true);
     try {
       if (!isLoggedIn || !user) {
@@ -112,7 +112,7 @@ export default function AssessmentScenarioDetailPage({
         setStartingProgram(false);
         return;
       }
-      
+
       const res = await authenticatedFetch(`/api/assessment/scenarios/${scenarioId}/programs`, {
         method: 'POST',
         headers: {
@@ -123,17 +123,17 @@ export default function AssessmentScenarioDetailPage({
           language: i18n.language
         })
       });
-      
+
       if (res.status === 401) {
         // Redirect to login if still not authenticated
         router.push('/login?redirect=' + encodeURIComponent(window.location.pathname));
         return;
       }
-      
+
       if (!res.ok) {
         throw new Error('Failed to start program');
       }
-      
+
       const { program } = await res.json();
       router.push(`/assessment/scenarios/${scenarioId}/programs/${program.id}`);
     } catch (error) {
@@ -180,17 +180,17 @@ export default function AssessmentScenarioDetailPage({
     <div className="container mx-auto py-8 max-w-4xl">
       {/* Navigation */}
       <div className="mb-8">
-        <Link 
-          href="/assessment/scenarios" 
+        <Link
+          href="/assessment/scenarios"
           className="text-blue-600 hover:text-blue-800 inline-flex items-center gap-1 mb-4"
         >
           <ChevronLeft className="h-4 w-4" />
           Back to Assessments
         </Link>
-        
+
         <h1 className="text-3xl font-bold mb-4">
-          {typeof scenario.title === 'string' 
-            ? scenario.title 
+          {typeof scenario.title === 'string'
+            ? scenario.title
             : (scenario.title as Record<string, string>)?.[i18n.language] || (scenario.title as Record<string, string>)?.en || 'Assessment'}
         </h1>
         <p className="text-gray-600 mb-6">
@@ -198,7 +198,7 @@ export default function AssessmentScenarioDetailPage({
             ? scenario.description
             : (scenario.description as Record<string, string>)?.[i18n.language] || (scenario.description as Record<string, string>)?.en || ''}
         </p>
-        
+
         {/* Assessment Details */}
         <div className="bg-gray-50 rounded-lg p-6 mb-6">
           <h3 className="font-semibold mb-4">Assessment Details</h3>
@@ -229,8 +229,8 @@ export default function AssessmentScenarioDetailPage({
       <div>
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-semibold">Your Attempts</h2>
-          <Button 
-            onClick={startNewProgram} 
+          <Button
+            onClick={startNewProgram}
             size="lg"
             disabled={startingProgram}
           >
@@ -273,7 +273,7 @@ export default function AssessmentScenarioDetailPage({
                         <Badge variant="secondary">Abandoned</Badge>
                       )}
                     </div>
-                    
+
                     {program.score !== undefined && (
                       <div className="space-y-2">
                         <div className="flex items-baseline gap-2">
@@ -301,17 +301,17 @@ export default function AssessmentScenarioDetailPage({
                         )}
                       </div>
                     )}
-                    
+
                     {program.status === 'active' && program.metadata?.questionsAnswered && (
                       <p className="text-sm text-gray-600 mt-1">
                         Progress: {program.metadata.questionsAnswered} of {scenario.config.totalQuestions} questions
                       </p>
                     )}
                   </div>
-                  
+
                   <div>
                     {program.status === 'completed' ? (
-                      <Button 
+                      <Button
                         variant="outline"
                         onClick={() => viewResults(program.id)}
                       >

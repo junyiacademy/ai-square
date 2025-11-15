@@ -1,19 +1,19 @@
 /**
  * Assessment Learning Service
- * 
+ *
  * 實作統一學習架構中的 Assessment 模組
  * 負責處理評估相關的業務邏輯
  */
 
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import type { 
-  IScenario, 
-  IProgram, 
-  ITask, 
+import type {
+  IScenario,
+  IProgram,
+  ITask,
   IEvaluation,
-  IInteraction 
+  IInteraction
 } from '@/types/unified-learning';
-import type { 
+import type {
   BaseLearningService,
   LearningOptions,
   LearningProgress,
@@ -65,7 +65,7 @@ export class AssessmentLearningService implements BaseLearningService {
     const questionId = response.questionId as string;
     const answer = response.answer as string;
     const result = await this.submitAnswer(programId, questionId, answer);
-    
+
     return {
       taskId,
       success: true,
@@ -93,8 +93,8 @@ export class AssessmentLearningService implements BaseLearningService {
    * 開始新的評估
    */
   async startAssessment(
-    userId: string, 
-    scenarioId: string, 
+    userId: string,
+    scenarioId: string,
     language: string = 'en'
   ): Promise<StartAssessmentResult> {
     // 1. 載入 Scenario
@@ -199,7 +199,7 @@ export class AssessmentLearningService implements BaseLearningService {
     const task = tasks[0]; // Assessment 只有一個 task
     const content = task.content as Record<string, unknown>;
     const questions = (content.questions as Array<Record<string, unknown>>) || [];
-    
+
     // 2. 找到題目並檢查答案
     const question = questions.find((q: Record<string, unknown>) => q.id === questionId);
     if (!question) {
@@ -250,7 +250,7 @@ export class AssessmentLearningService implements BaseLearningService {
 
     // 2. 計算分數
     const scoreData = this.calculateScore(task);
-    
+
     // 3. 更新 Program
     const completedProgram = await this.programRepo.complete(programId);
 
@@ -374,7 +374,7 @@ export class AssessmentLearningService implements BaseLearningService {
 
     const tasks = await this.taskRepo.findByProgram(programId);
     const task = tasks?.[0];
-    
+
     if (!task) {
       throw new Error('No task found');
     }
@@ -415,15 +415,15 @@ export class AssessmentLearningService implements BaseLearningService {
 
   private selectQuestions(scenario: IScenario, language: string): Array<Record<string, unknown>> {
     const assessmentData = scenario.assessmentData as Record<string, unknown> || {};
-    
+
     console.log('selectQuestions - assessmentData keys:', Object.keys(assessmentData));
     console.log('selectQuestions - assessmentData.questionBank type:', typeof assessmentData.questionBank);
-    
+
     let allQuestions: Array<Record<string, unknown>> = [];
-    
+
     // Check for questionBankByLanguage first (multi-language format)
     const questionBankByLanguage = assessmentData.questionBankByLanguage as Record<string, Array<Record<string, unknown>>>;
-    
+
     if (questionBankByLanguage && (questionBankByLanguage[language] || questionBankByLanguage['en'])) {
       // Format 1: questionBankByLanguage
       console.log('Using questionBankByLanguage format');
@@ -432,10 +432,10 @@ export class AssessmentLearningService implements BaseLearningService {
       // Format 2: questionBank (domain-grouped structure)
       console.log('Using questionBank format');
       const questionBank = assessmentData.questionBank;
-      
+
       // PostgreSQL JSONB might return as object or array
       let bankArray: Array<Record<string, unknown>> = [];
-      
+
       if (Array.isArray(questionBank)) {
         bankArray = questionBank;
       } else if (typeof questionBank === 'object' && questionBank !== null) {
@@ -450,9 +450,9 @@ export class AssessmentLearningService implements BaseLearningService {
           bankArray = [questionBank as Record<string, unknown>];
         }
       }
-      
+
       console.log(`questionBank converted to array with ${bankArray.length} domains`);
-      
+
       // Extract questions from all domains
       allQuestions = bankArray.flatMap((domain: Record<string, unknown>) => {
         const domainQuestions = domain.questions as Array<Record<string, unknown>> || [];
@@ -463,21 +463,21 @@ export class AssessmentLearningService implements BaseLearningService {
         }));
       });
     }
-    
+
     console.log(`Found ${allQuestions.length} questions total`);
-    
+
     if (allQuestions.length === 0) {
       console.error('No questions found. AssessmentData:', JSON.stringify(assessmentData, null, 2));
       throw new Error('No questions found in assessment data');
     }
-    
+
     const totalQuestions = (assessmentData.totalQuestions as number) || 12;
-    
+
     // Simple random selection for now
     // TODO: Implement domain-based selection
     const shuffled = [...allQuestions].sort(() => Math.random() - 0.5);
     const selected = shuffled.slice(0, Math.min(totalQuestions, shuffled.length));
-    
+
     console.log(`Selected ${selected.length} questions`);
     return selected;
   }
@@ -485,7 +485,7 @@ export class AssessmentLearningService implements BaseLearningService {
   private calculateTimeSpent(task: ITask): number {
     const lastInteraction = task.interactions[task.interactions.length - 1];
     if (!lastInteraction) return 0;
-    
+
     const startTime = new Date(task.startedAt || task.createdAt).getTime();
     const currentTime = new Date(lastInteraction.timestamp).getTime();
     return Math.floor((currentTime - startTime) / 1000);
@@ -524,7 +524,7 @@ export class AssessmentLearningService implements BaseLearningService {
 
   private generateSimpleFeedback(scoreData: Record<string, unknown>): string {
     const percentage = scoreData.totalScore as number;
-    
+
     if (percentage >= 90) {
       return 'Excellent! You have demonstrated strong AI literacy.';
     } else if (percentage >= 70) {

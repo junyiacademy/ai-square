@@ -11,7 +11,7 @@ export type LearningMode = 'pbl' | 'discovery' | 'assessment';
 export type ScenarioStatus = 'draft' | 'active' | 'archived';
 export type ProgramStatus = 'pending' | 'active' | 'completed' | 'abandoned';
 export type TaskStatus = 'pending' | 'active' | 'completed' | 'skipped';
-export type TaskType = 
+export type TaskType =
   | 'interactive'   // Common types
   | 'reflection'
   | 'chat'         // PBL specific
@@ -50,23 +50,23 @@ export interface DBScenario {
   mode: LearningMode;
   status: ScenarioStatus;
   version: string;
-  
+
   // Source tracking
   source_type: SourceType;
   source_path: string | null;
   source_id: string | null;
   source_metadata: Record<string, unknown>;
-  
+
   // Basic info (multi-language)
   title: Record<string, string>;       // {"en": "Title", "zh": "標題"}
   description: Record<string, string>;  // {"en": "Desc", "zh": "描述"}
   objectives: string[];
-  
+
   // Common attributes
   difficulty: DifficultyLevel;
   estimated_minutes: number;
   prerequisites: string[];
-  
+
   // Task templates
   task_templates: Array<{
     id: string;
@@ -75,11 +75,11 @@ export interface DBScenario {
     description?: string;
     [key: string]: unknown;
   }>;
-  
+
   // Rewards and progression
   xp_rewards: Record<string, number>;
   unlock_requirements: Record<string, unknown>;
-  
+
   // Mode-specific data
   pbl_data: {
     ksaMapping?: {
@@ -102,16 +102,16 @@ export interface DBScenario {
     timeLimits?: Record<string, number>;
     [key: string]: unknown;
   };
-  
+
   // Resources and AI
   ai_modules: Record<string, unknown>;
   resources: Array<Record<string, unknown>>;
-  
+
   // Timestamps
   created_at: string;
   updated_at: string;
   published_at: string | null;
-  
+
   // Extensible metadata
   metadata: Record<string, unknown>;
 }
@@ -122,34 +122,34 @@ export interface DBProgram {
   scenario_id: string;
   mode: LearningMode;  // NEW: Propagated from scenario
   status: ProgramStatus;
-  
+
   // Progress tracking
   current_task_index: number;
   completed_task_count: number;
   total_task_count: number;
-  
+
   // Scoring (unified)
   total_score: number;
   domain_scores: Record<string, number>; // {"engaging_with_ai": 85, "creating_with_ai": 70}
-  
+
   // XP and rewards (mainly for Discovery)
   xp_earned: number;
   badges_earned: Array<Record<string, unknown>>;
-  
+
   // Timestamps (unified naming)
   created_at: string;
   started_at: string | null;
   completed_at: string | null;
   updated_at: string;
-  
+
   // Time tracking
   time_spent_seconds: number;
-  
+
   // Mode-specific data
   pbl_data: Record<string, unknown>;
   discovery_data: Record<string, unknown>;
   assessment_data: Record<string, unknown>;
-  
+
   // Extensible metadata
   metadata: Record<string, unknown>;
 }
@@ -161,47 +161,47 @@ export interface DBTask {
   mode: LearningMode;  // NEW: Propagated from program
   task_index: number;
   scenario_task_index: number | null;
-  
+
   // Basic info
   title: string | null;
   description: string | null;
   type: TaskType;
   status: TaskStatus;
-  
+
   // Content
   content: Record<string, unknown>;
-  
+
   // Interaction tracking
   interactions: Array<Record<string, unknown>>;
   interaction_count: number; // Computed field
-  
+
   // Response/solution
   user_response: Record<string, unknown>;
-  
+
   // Scoring
   score: number;
   max_score: number;
-  
+
   // Attempts and timing
   allowed_attempts: number;
   attempt_count: number;
   time_limit_seconds: number | null;
   time_spent_seconds: number;
-  
+
   // AI configuration
   ai_config: Record<string, unknown>;
-  
+
   // Timestamps
   created_at: string;
   started_at: string | null;
   completed_at: string | null;
   updated_at: string;
-  
+
   // Mode-specific data
   pbl_data: Record<string, unknown>;
   discovery_data: Record<string, unknown>;
   assessment_data: Record<string, unknown>;
-  
+
   // Extensible metadata
   metadata: Record<string, unknown>;
 }
@@ -219,38 +219,38 @@ export interface DBEvaluation {
   program_id: string | null;
   task_id: string | null;
   mode: LearningMode;  // NEW: Mode for easy filtering
-  
+
   // Evaluation scope
   evaluation_type: string;
   evaluation_subtype: string | null;
-  
+
   // Scoring (unified 0-100 scale)
   score: number;
   max_score: number;
-  
+
   // Multi-dimensional scoring
   domain_scores: Record<string, number>;
-  
+
   // Feedback
   feedback_text: string | null;
   feedback_data: Record<string, unknown>;
-  
+
   // AI analysis
   ai_provider: string | null;
   ai_model: string | null;
   ai_analysis: Record<string, unknown>;
-  
+
   // Time tracking
   time_taken_seconds: number;
-  
+
   // Timestamps
   created_at: string;
-  
+
   // Mode-specific data
   pbl_data: Record<string, unknown>;
   discovery_data: Record<string, unknown>;
   assessment_data: Record<string, unknown>;
-  
+
   // Extensible metadata
   metadata: Record<string, unknown>;
 }

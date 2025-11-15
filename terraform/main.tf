@@ -7,14 +7,14 @@
 
 terraform {
   required_version = ">= 1.0"
-  
+
   required_providers {
     google = {
       source  = "hashicorp/google"
       version = "~> 5.0"
     }
   }
-  
+
   backend "gcs" {
     bucket = "ai-square-terraform-state"
     prefix = "terraform/state"
@@ -63,18 +63,18 @@ resource "google_sql_database_instance" "main" {
   name             = "ai-square-db-${var.environment}-asia"
   database_version = "POSTGRES_15"
   region          = var.region
-  
+
   settings {
     tier = var.environment == "production" ? "db-n1-standard-1" : "db-f1-micro"
-    
+
     database_flags {
       name  = "log_connections"
       value = "on"
     }
-    
+
     ip_configuration {
       ipv4_enabled = true
-      
+
       dynamic "authorized_networks" {
         for_each = var.environment == "production" ? [] : ["0.0.0.0/0"]
         content {
@@ -83,7 +83,7 @@ resource "google_sql_database_instance" "main" {
         }
       }
     }
-    
+
     backup_configuration {
       enabled            = var.environment == "production"
       start_time        = "03:00"
@@ -91,7 +91,7 @@ resource "google_sql_database_instance" "main" {
       point_in_time_recovery_enabled = var.environment == "production"
     }
   }
-  
+
   deletion_protection = var.environment == "production"
 }
 
@@ -133,44 +133,44 @@ resource "google_project_iam_member" "cloud_sql_client" {
 resource "google_cloud_run_service" "ai_square" {
   name     = "ai-square-${var.environment}"
   location = var.region
-  
+
   template {
     spec {
       service_account_name = google_service_account.cloud_run.email
-      
+
       containers {
         image = "gcr.io/${var.project_id}/ai-square-${var.environment}:latest"
-        
+
         resources {
           limits = {
             cpu    = var.environment == "production" ? "2" : "1"
             memory = var.environment == "production" ? "2Gi" : "512Mi"
           }
         }
-        
+
         # Basic environment variables only
         env {
           name  = "NODE_ENV"
           value = var.environment
         }
-        
+
         env {
           name  = "DB_HOST"
           value = "/cloudsql/${var.project_id}:${var.region}:${google_sql_database_instance.main.name}"
         }
-        
+
         env {
           name  = "DB_NAME"
           value = google_sql_database.ai_square_db.name
         }
-        
+
         env {
           name  = "DB_USER"
           value = google_sql_user.postgres.name
         }
       }
     }
-    
+
     metadata {
       annotations = {
         "autoscaling.knative.dev/minScale"      = var.environment == "production" ? "1" : "0"
@@ -179,12 +179,12 @@ resource "google_cloud_run_service" "ai_square" {
       }
     }
   }
-  
+
   traffic {
     percent         = 100
     latest_revision = true
   }
-  
+
   depends_on = [
     google_project_iam_member.cloud_sql_client
   ]

@@ -44,9 +44,9 @@ const createMockScenario = (overrides: Partial<IScenario> = {}): IScenario => ({
 describe('validateProgramStart', () => {
   // Test 1: Write a failing test for a small behavior increment
   it('should return error when scenario is null', () => {
-    const result = validateProgramStart(null, { 
-      id: 'user-123', 
-      email: 'user@example.com', 
+    const result = validateProgramStart(null, {
+      id: 'user-123',
+      email: 'user@example.com',
       name: 'Test User',
       preferred_language: 'en',
       level: 1,
@@ -58,7 +58,7 @@ describe('validateProgramStart', () => {
       last_active_at: new Date().toISOString(),
       metadata: {}
     } as DBUser);
-    
+
     expect(result.isValid).toBe(false);
     expect(result.error).toBe('Scenario not found');
   });
@@ -68,7 +68,7 @@ describe('validateProgramStart', () => {
     const mockScenario = createMockScenario();
 
     const result = validateProgramStart(mockScenario, null);
-    
+
     expect(result.isValid).toBe(false);
     expect(result.error).toBe('User not authenticated');
   });
@@ -95,7 +95,7 @@ describe('validateProgramStart', () => {
     };
 
     const result = validateProgramStart(mockScenario, mockUser);
-    
+
     expect(result.isValid).toBe(false);
     expect(result.error).toBe('Scenario is not available');
   });
@@ -129,7 +129,7 @@ describe('validateProgramStart', () => {
     };
 
     const result = validateProgramStart(mockScenario, mockUser);
-    
+
     expect(result.isValid).toBe(true);
     expect(result.error).toBeUndefined();
   });
@@ -156,7 +156,7 @@ describe('validateProgramStart', () => {
     };
 
     const result = validateProgramStart(mockScenario, mockUser);
-    
+
     expect(result.isValid).toBe(false);
     expect(result.error).toBe('Scenario has no tasks defined');
   });

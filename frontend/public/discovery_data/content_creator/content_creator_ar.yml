@@ -7,10 +7,10 @@ metadata:
   title: "الساحر الرقمي - منشئ المحتوى"
   short_description: "انسج قصصاً جذابة في المملكة الافتراضية"
   long_description: |
-    أنت ساحر حديث التعيين في "الإمبراطورية الإبداعية"، تمتلك القوة الغامضة 
-    لتحويل الأفكار إلى محتوى فيروسي. في هذه المملكة الرقمية، كل إعجاب 
+    أنت ساحر حديث التعيين في "الإمبراطورية الإبداعية"، تمتلك القوة الغامضة
+    لتحويل الأفكار إلى محتوى فيروسي. في هذه المملكة الرقمية، كل إعجاب
     ومشاركة هي دليل على سحرك، ومرشدتك لونا ستعلمك إتقان أسرار الخوارزميات.
-  
+
   estimated_hours: 50
   skill_focus:
     - content_magic
@@ -22,20 +22,20 @@ world_setting:
   name: "الإمبراطورية الإبداعية"
   description: |
     الإمبراطورية الإبداعية هي مملكة رقمية تعمل بالطاقة الإبداعية. منشئو المحتوى
-    هنا يتعلمون تسخير القوى الغامضة للخوارزميات والتفاعل وآليات الانتشار 
+    هنا يتعلمون تسخير القوى الغامضة للخوارزميات والتفاعل وآليات الانتشار
     الفيروسي لبناء تأثيرهم والتأثير على ملايين الأرواح.
-  
+
   atmosphere: "vibrant_magical"
   visual_theme: "digital_fantasy"
 
 starting_scenario:
   title: "تحدي الظل"
   description: |
-    المرشدة الإبداعية لونا ترحب بك في الإمبراطورية مع أخبار عاجلة: الظل، 
-    ساحر ساقط، ينشر محتوى كاذب باستخدام السحر المحرم، مهدداً انسجام 
-    الإمبراطورية الإبداعية. يجب عليك استخدام قوة الإبداع الأصيل لمحاربة 
+    المرشدة الإبداعية لونا ترحب بك في الإمبراطورية مع أخبار عاجلة: الظل،
+    ساحر ساقط، ينشر محتوى كاذب باستخدام السحر المحرم، مهدداً انسجام
+    الإمبراطورية الإبداعية. يجب عليك استخدام قوة الإبداع الأصيل لمحاربة
     تأثيره المظلم.
-  
+
   initial_tasks:
     - understand_algorithms
     - learn_content_basics
@@ -50,7 +50,7 @@ skill_tree:
       unlocks:
         - trend_analysis
         - audience_targeting
-    
+
     - id: visual_creation
       name: "السحر البصري"
       description: "إنشاء محتوى بصري مقنع"
@@ -58,7 +58,7 @@ skill_tree:
       unlocks:
         - photo_magic
         - video_enchantment
-    
+
     - id: storytelling
       name: "نسج السرد"
       description: "صياغة قصص جذابة"
@@ -66,7 +66,7 @@ skill_tree:
       unlocks:
         - emotional_resonance
         - viral_mechanics
-    
+
     - id: community_building
       name: "استدعاء القبيلة"
       description: "بناء المجتمعات وإشراكها"
@@ -81,13 +81,13 @@ skill_tree:
       description: "فهم والعمل مع خوارزميات المنصات"
       max_level: 15
       requires: [content_strategy, community_building]
-    
+
     - id: monetization_magic
       name: "كيمياء الإيرادات"
       description: "تحويل المحتوى إلى دخل"
       max_level: 15
       requires: [community_building, visual_creation]
-    
+
     - id: brand_building
       name: "بناء الإمبراطورية"
       description: "بناء علامة تجارية شخصية قوية"
@@ -104,7 +104,7 @@ milestone_quests:
     unlocks:
       - viral_creator_badge
       - algorithm_insights
-  
+
   - id: shadow_confrontation
     name: "الحقيقة ضد الخداع"
     description: "هزيمة حملة الظل للمعلومات المضللة"
@@ -114,7 +114,7 @@ milestone_quests:
     unlocks:
       - truth_guardian_title
       - authentic_voice
-  
+
   - id: empire_builder
     name: "الإمبراطورية الإبداعية"
     description: "بناء إمبراطورية محتوى بمليون متابع"
@@ -131,19 +131,19 @@ achievements:
     description: "إنشاء أول قطعة محتوى لك"
     xp_reward: 50
     badge_type: bronze
-  
+
   - id: engagement_master
     name: "بطل المجتمع"
     description: "تحقيق 10 آلاف تفاعل إجمالي"
     xp_reward: 200
     badge_type: silver
-  
+
   - id: consistency_king
     name: "الساحر اليومي"
     description: "النشر باستمرار لمدة 30 يوماً"
     xp_reward: 400
     badge_type: gold
-  
+
   - id: content_legend
     name: "المنشئ الأسطوري"
     description: "إكمال جميع تحديات المحتوى"
@@ -158,14 +158,14 @@ example_tasks:
       description: "تطوير صيغ محتوى تلمس القلوب"
       skills_improved: [content_strategy, storytelling]
       xp_reward: 50
-    
+
     - id: visual_basics
       type: creation
       title: "ممارسة التعويذة البصرية"
       description: "إنشاء أول محتوى بصري لك"
       skills_improved: [visual_creation, content_magic]
       xp_reward: 60
-  
+
   intermediate:
     - id: engagement_analysis
       type: analysis
@@ -173,14 +173,14 @@ example_tasks:
       description: "تحليل أداء المحتوى وسلوك الجمهور"
       skills_improved: [algorithm_mastery, community_building]
       xp_reward: 150
-    
+
     - id: series_creation
       type: creation
       title: "نسج الملحمة"
       description: "إنشاء سلسلة محتوى"
       skills_improved: [storytelling, brand_building]
       xp_reward: 180
-  
+
   advanced:
     - id: viral_campaign
       type: creation
@@ -188,7 +188,7 @@ example_tasks:
       description: "إطلاق حملة محتوى فيروسية"
       skills_improved: [algorithm_mastery, viral_mechanics]
       xp_reward: 350
-    
+
     - id: monetization_setup
       type: creation
       title: "تحويل الذهب"

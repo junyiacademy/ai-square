@@ -9,7 +9,7 @@ import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 
 jest.mock('@/lib/auth/unified-auth', () => ({
   getUnifiedAuth: jest.fn(),
-  createUnauthorizedResponse: jest.fn(() => 
+  createUnauthorizedResponse: jest.fn(() =>
     new Response(
       JSON.stringify({ success: false, error: 'Authentication required' }),
       { status: 401, headers: { 'Content-Type': 'application/json' } }
@@ -124,4 +124,4 @@ describe('/api/discovery/scenarios/[id]/programs/[programId]', () => {
     const res = await GET(req, { params: Promise.resolve({ id: 's1', programId: 'p1' }) });
     expect(res.status).toBe(500);
   });
-}); 
+});

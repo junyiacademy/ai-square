@@ -42,7 +42,7 @@ export function useAuth(): UseAuthReturn {
         credentials: 'include' // Include cookies for authentication
       })
       const data = await response.json()
-      
+
       if (data.authenticated && data.user) {
         setUser(data.user)
         setIsLoggedIn(true)
@@ -64,7 +64,7 @@ export function useAuth(): UseAuthReturn {
       // Fallback to localStorage
       const storedAuth = localStorage.getItem('isLoggedIn')
       const storedUser = localStorage.getItem('user')
-      
+
       if (storedAuth === 'true' && storedUser) {
         try {
           const parsedUser = JSON.parse(storedUser)
@@ -111,12 +111,12 @@ export function useAuth(): UseAuthReturn {
         setIsLoggedIn(true)
         localStorage.setItem('user', JSON.stringify(data.user))
         localStorage.setItem('isLoggedIn', 'true')
-        
+
         // Store session token if provided
         if (data.sessionToken) {
           localStorage.setItem('ai_square_session', data.sessionToken)
         }
-        
+
         window.dispatchEvent(new CustomEvent('auth-changed'))
         return { success: true }
       } else {
@@ -137,18 +137,18 @@ export function useAuth(): UseAuthReturn {
     } catch (error) {
       console.error('Logout error:', error)
     }
-    
+
     clearAuthState()
     router.push('/login')
   }, [clearAuthState, router])
-  
+
   const refreshToken = useCallback(async (): Promise<boolean> => {
     try {
       const response = await fetch('/api/auth/refresh', {
         method: 'POST',
         credentials: 'include' // Include cookies for authentication
       })
-      
+
       if (response.ok) {
         const data = await response.json()
         if (data.success) {
@@ -158,7 +158,7 @@ export function useAuth(): UseAuthReturn {
               credentials: 'include'
             })
             const checkData = await checkResponse.json()
-            
+
             if (checkData.authenticated && checkData.user) {
               setUser(checkData.user)
               setIsLoggedIn(true)
@@ -182,7 +182,7 @@ export function useAuth(): UseAuthReturn {
     } catch (error) {
       console.error('Token refresh error:', error)
     }
-    
+
     return false
   }, []) // Remove checkAuth dependency to break circular dependency
 
@@ -222,18 +222,18 @@ export function useAuth(): UseAuthReturn {
       window.removeEventListener('storage', handleAuthChange)
     }
   }, []) // No dependencies to prevent circular loops
-  
+
   // Auto-refresh token when expiring soon
   useEffect(() => {
     if (tokenExpiringSoon && isLoggedIn) {
       refreshToken()
     }
   }, [tokenExpiringSoon, isLoggedIn, refreshToken])
-  
+
   // Set up periodic auth check (every 5 minutes) - only when logged in
   useEffect(() => {
     if (!isLoggedIn) return
-    
+
     const interval = setInterval(() => {
       // Inline auth check to avoid circular dependency
       fetch('/api/auth/check', { credentials: 'include' })
@@ -251,7 +251,7 @@ export function useAuth(): UseAuthReturn {
         })
         .catch(error => console.error('Periodic auth check failed:', error));
     }, 5 * 60 * 1000) // 5 minutes
-    
+
     return () => clearInterval(interval)
   }, [isLoggedIn]) // Only depend on login status
 

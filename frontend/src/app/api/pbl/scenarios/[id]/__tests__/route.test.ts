@@ -27,7 +27,7 @@ jest.mock('@/lib/cache/distributed-cache-service', () => {
     set: jest.fn(),
     get: jest.fn(),
   };
-  
+
   return {
     DistributedCacheService: jest.fn().mockImplementation(() => mockInstance),
     distributedCacheService: mockInstance
@@ -140,23 +140,23 @@ describe('API Route: src/app/api/pbl/scenarios/[id]', () => {
     // Default mock implementations
     mockScenarioRepo.findById.mockResolvedValue(mockScenario);
     mockScenarioRepo.findByYamlId.mockResolvedValue(mockScenario);
-    
+
     // Mock the cache to call the handler function (second argument) to process the scenario
     mockDistributedCache.getWithRevalidation.mockImplementation(async (key: string, handler: () => Promise<any>) => {
       // Call the handler to get the processed result
       return await handler();
     });
   });
-  
+
   describe('GET', () => {
     it('should handle successful request', async () => {
       const request = new NextRequest('http://localhost:3000/api/pbl/scenarios/test-id?lang=en', {
         method: 'GET',
       });
-      
+
       const response = await GET(request, { params: Promise.resolve({ id: 'test-id' }) });
       const result = await response.json();
-      
+
       expect(response).toBeDefined();
       expect(response.status).toBe(200);
       expect(result.success).toBe(true);
@@ -164,15 +164,15 @@ describe('API Route: src/app/api/pbl/scenarios/[id]', () => {
       expect(result.data.title).toBe('Test Scenario');
       expect(result.data.description).toBe('Test description');
     });
-    
+
     it('should handle Chinese language parameter', async () => {
       const request = new NextRequest('http://localhost:3000/api/pbl/scenarios/test-id?lang=zh', {
         method: 'GET',
       });
-      
+
       const response = await GET(request, { params: Promise.resolve({ id: 'test-id' }) });
       const result = await response.json();
-      
+
       expect(response).toBeDefined();
       expect(response.status).toBe(200);
       expect(result.success).toBe(true);
@@ -184,10 +184,10 @@ describe('API Route: src/app/api/pbl/scenarios/[id]', () => {
       const request = new NextRequest('http://localhost:3000/api/pbl/scenarios/test-id?lang=zhTW', {
         method: 'GET',
       });
-      
+
       const response = await GET(request, { params: Promise.resolve({ id: 'test-id' }) });
       const result = await response.json();
-      
+
       expect(response.status).toBe(200);
       expect(result.success).toBe(true);
       expect(result.data.prerequisites).toEqual([
@@ -201,10 +201,10 @@ describe('API Route: src/app/api/pbl/scenarios/[id]', () => {
       const request = new NextRequest('http://localhost:3000/api/pbl/scenarios/test-id?lang=en', {
         method: 'GET',
       });
-      
+
       const response = await GET(request, { params: Promise.resolve({ id: 'test-id' }) });
       const result = await response.json();
-      
+
       expect(response.status).toBe(200);
       expect(result.success).toBe(true);
       expect(result.data.prerequisites).toEqual([
@@ -223,62 +223,62 @@ describe('API Route: src/app/api/pbl/scenarios/[id]', () => {
           multilingualPrerequisites: undefined
         }
       };
-      
+
       mockScenarioRepo.findById.mockResolvedValue(legacyScenario);
-      
+
       // Test English (should use legacy array)
       const requestEn = new NextRequest('http://localhost:3000/api/pbl/scenarios/test-id?lang=en', {
         method: 'GET',
       });
-      
+
       const responseEn = await GET(requestEn, { params: Promise.resolve({ id: 'test-id' }) });
       const resultEn = await responseEn.json();
-      
+
       expect(responseEn.status).toBe(200);
       expect(resultEn.data.prerequisites).toEqual(['Basic knowledge of AI']);
-      
+
       // Test Chinese (should be empty as no multilingual data)
       const requestZh = new NextRequest('http://localhost:3000/api/pbl/scenarios/test-id?lang=zhTW', {
         method: 'GET',
       });
-      
+
       const responseZh = await GET(requestZh, { params: Promise.resolve({ id: 'test-id' }) });
       const resultZh = await responseZh.json();
-      
+
       expect(responseZh.status).toBe(200);
       expect(resultZh.data.prerequisites).toEqual([]);
     });
-    
+
     it.skip('should handle scenario not found', async () => {
       // When scenario is not found, the handler should return null which causes an error
       mockScenarioRepo.findById.mockResolvedValue(null);
       mockScenarioRepo.findByYamlId.mockResolvedValue(null);
-      
+
       // Disable SWR to force traditional caching which has proper error handling
       const originalGetWithRevalidation = mockDistributedCache.getWithRevalidation;
-      
+
       // Mock to simulate that useDistributedCache is false, which bypasses SWR
       mockDistributedCache.getWithRevalidation.mockRejectedValue(new Error('SWR disabled for test'));
-      
+
       // Mock the regular cache get to return null (cache miss)
       const mockCacheService = require('@/lib/cache/cache-service');
       mockCacheService.get = jest.fn().mockResolvedValue(null);
-      
+
       const request = new NextRequest('http://localhost:3000/api/pbl/scenarios/nonexistent', {
         method: 'GET',
       });
-      
+
       // The GET should handle the error gracefully with the try-catch in cachedGET
       const response = await GET(request, { params: Promise.resolve({ id: 'nonexistent' }) });
       const data = await response.json();
-      
+
       expect(response).toBeDefined();
       // The cachedGET wrapper returns 500 for errors
       expect(response.status).toBe(500);
       // Should have an error property
       expect(data.error).toBeDefined();
       expect(typeof data.error).toBe('string');
-      
+
       // Restore the original mock
       mockDistributedCache.getWithRevalidation = originalGetWithRevalidation;
     });

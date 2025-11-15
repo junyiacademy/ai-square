@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import { 
-  cachedGET, 
-  getPaginationParams, 
+import {
+  cachedGET,
+  getPaginationParams,
   createPaginatedResponse,
   parallel
 } from '@/lib/api/optimization-utils';
@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
   } catch {
     console.log('No user cookie found');
   }
-  
+
   if (!userEmail) {
     return NextResponse.json(
       {
@@ -64,13 +64,13 @@ export async function GET(request: NextRequest) {
   // Use cached response
   return cachedGET(request, async () => {
     console.log(`Fetching PBL history for user: ${userEmail}, scenario: ${scenarioId || 'all'}, language: ${language}`);
-    
+
     const userRepo = repositoryFactory.getUserRepository();
     const programRepo = repositoryFactory.getProgramRepository();
     const taskRepo = repositoryFactory.getTaskRepository();
     const evaluationRepo = repositoryFactory.getEvaluationRepository();
     const contentRepo = repositoryFactory.getContentRepository();
-    
+
     // Get user
     const user = await userRepo.findByEmail(userEmail!);
     if (!user) {
@@ -79,15 +79,15 @@ export async function GET(request: NextRequest) {
         error: 'User not found'
       };
     }
-    
+
     // Get all programs for user
     let programs = await programRepo.findByUser(user.id);
-    
+
     // Filter by scenario if specified
     if (scenarioId) {
       programs = programs.filter(p => p.scenarioId === scenarioId);
     }
-    
+
     // Convert to completion data format
     const completionDataPromises = programs.map(async (program) => {
       // Get tasks and evaluations in parallel
@@ -95,18 +95,18 @@ export async function GET(request: NextRequest) {
         taskRepo.findByProgram(program.id),
         evaluationRepo.findByProgram(program.id)
       );
-      
+
       const completedTasks = tasks.filter(t => t.status === 'completed');
-      
+
       // Calculate scores
       const overallScore = evaluations.length > 0
         ? evaluations.reduce((sum, e) => sum + e.score, 0) / evaluations.length
         : 0;
-      
+
       // Aggregate domain scores from evaluations
       const domainScores: Record<string, number> = {};
       const ksaScores: Record<string, number> = {};
-      
+
       evaluations.forEach(evaluation => {
         if (evaluation.domainScores) {
           Object.entries(evaluation.domainScores).forEach(([dimension, score]: [string, number]) => {
@@ -118,7 +118,7 @@ export async function GET(request: NextRequest) {
           });
         }
       });
-      
+
       // Average the scores
       Object.keys(domainScores).forEach(key => {
         domainScores[key] = domainScores[key] / evaluations.length;
@@ -126,7 +126,7 @@ export async function GET(request: NextRequest) {
       Object.keys(ksaScores).forEach(key => {
         ksaScores[key] = ksaScores[key] / evaluations.length;
       });
-      
+
       // Create task summaries
       const taskSummaries: TaskSummary[] = completedTasks.map(task => ({
         taskId: task.id,
@@ -134,7 +134,7 @@ export async function GET(request: NextRequest) {
         score: task.score,
         completedAt: task.completedAt
       }));
-      
+
       // Get scenario title
       let scenarioTitle = program.scenarioId;
       try {
@@ -143,7 +143,7 @@ export async function GET(request: NextRequest) {
       } catch {
         console.warn(`Failed to load scenario title for ${program.scenarioId}`);
       }
-      
+
       const completionData: ProgramCompletionData = {
         programId: program.id,
         scenarioId: program.scenarioId,
@@ -161,26 +161,26 @@ export async function GET(request: NextRequest) {
         taskSummaries,
         scenarioTitle
       };
-      
+
       return completionData;
     });
-    
+
     const allPrograms = await Promise.all(completionDataPromises);
-    
+
     console.log(`Found ${allPrograms.length} programs for user ${userEmail}`);
-    
+
     // Sort by most recent first
-    allPrograms.sort((a, b) => 
+    allPrograms.sort((a, b) =>
       new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime()
     );
-    
+
     // Apply pagination
     const paginatedResponse = createPaginatedResponse(
       allPrograms,
       allPrograms.length,
       paginationParams
     );
-    
+
     return {
       success: true,
       ...paginatedResponse,

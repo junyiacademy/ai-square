@@ -3,7 +3,7 @@
   "subtitle": "Explore AI-powered paths through immersive experiences",
   "getStarted": "Get Started",
   "backToHome": "Back to Home",
-  
+
   "welcomeScreen": {
     "title": "Welcome to Discovery World",
     "subtitle": "Discover your future path through AI-powered experiences",
@@ -24,7 +24,7 @@
       }
     }
   },
-  
+
   "interestAssessment": {
     "title": "Interest Assessment",
     "subtitle": "Let's discover your interests",
@@ -76,7 +76,7 @@
       }
     ]
   },
-  
+
   "results": {
     "title": "Your Path Recommendations",
     "subtitle": "Based on your interests, here are the best paths to explore:",
@@ -85,7 +85,7 @@
     "personalityType": "Your Personality Type",
     "matchPercentage": "{{percentage}}% Match"
   },
-  
+
   "paths": {
     "youtuber": {
       "title": "YouTuber / Content Creator",
@@ -147,7 +147,7 @@
       "title": "App Developer",
       "subtitle": "Build mobile applications that solve real problems",
       "description": "Learn to design, develop, and launch mobile applications using AI-powered development tools.",
-      "category": "Technology", 
+      "category": "Technology",
       "skills": ["Programming", "Problem Solving", "User Interface Design", "Project Management"],
       "aiAssistants": ["Code Mentor", "UI Designer", "Testing Specialist"],
       "tasks": [
@@ -172,7 +172,7 @@
       ]
     }
   },
-  
+
   "workspace": {
     "title": "{{path}} Program",
     "aiAssistant": "AI Assistant",
@@ -188,7 +188,7 @@
     "skillsGained": "Skills Gained:",
     "experiencePoints": "+{{points}} XP"
   },
-  
+
   "aiAssistant": {
     "greeting": "Hi! I'm your AI {{role}}. I'm here to help you succeed in your {{path}} journey.",
     "taskIntro": "Let's work on this task together. I'll guide you through each step.",
@@ -202,14 +202,14 @@
     "typeMessage": "Type your message...",
     "send": "Send"
   },
-  
+
   "achievements": {
     "title": "Your Achievements",
     "totalXp": "Total Experience: {{xp}} XP",
     "level": "Level {{level}}",
     "badges": {
       "first_task": {
-        "title": "First Steps", 
+        "title": "First Steps",
         "description": "Completed your first exploration task"
       },
       "creative_thinker": {
@@ -217,7 +217,7 @@
         "description": "Showed excellent creativity in tasks"
       },
       "ai_collaborator": {
-        "title": "AI Collaborator", 
+        "title": "AI Collaborator",
         "description": "Successfully worked with AI assistants"
       },
       "problem_solver": {
@@ -230,16 +230,16 @@
       }
     }
   },
-  
+
   "navigation": {
     "overview": "Overview",
-    "assessment": "Assessment", 
+    "assessment": "Assessment",
     "paths": "Paths",
     "program": "Program",
     "achievements": "Achievements",
     "scenarios": "Career Adventures"
   },
-  
+
   "complete": {
     "congratulations": "Congratulations! 🎉",
     "completedProgram": "You've completed {{title}}",
@@ -272,14 +272,14 @@
     "errorLoading": "Error Loading Results",
     "noData": "No completion data found"
   },
-  
+
   "taskTypes": {
     "question": "Question",
     "chat": "AI Chat",
     "creation": "Creation",
     "analysis": "Analysis"
   },
-  
+
   "programCard": {
     "title": "Learning Journey",
     "statusActive": "In Progress",
@@ -290,7 +290,7 @@
     "continue": "Continue",
     "viewResults": "View Results"
   },
-  
+
   "scenarioDetail": {
     "loading": "Loading...",
     "notFound": "Scenario not found",
@@ -312,14 +312,14 @@
     "daysUsed": "Days Used",
     "translating": "Translating"
   },
-  
+
   "status": {
     "loading": "Loading...",
     "saving": "Saving...",
     "error": "Something went wrong",
     "success": "Success!"
   },
-  
+
   "errors": {
     "loadingFailed": "Failed to load content",
     "savingFailed": "Failed to save progress",

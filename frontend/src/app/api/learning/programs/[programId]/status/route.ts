@@ -32,7 +32,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 
   } catch (error) {
     console.error('Error getting program status:', error);
-    
+
     if (error instanceof Error && error.message.includes('not found')) {
       return NextResponse.json(
         { success: false, error: error.message },

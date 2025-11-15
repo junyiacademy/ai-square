@@ -23,8 +23,8 @@ admin.json       homepage.json      learningPath.json    pbl.json
 assessment.json  journey.json       legal.json           relations.json
 auth.json        ksa.json          navigation.json      skills.json
 chat.json        learning.json      onboarding.json
-common.json      
-dashboard.json   
+common.json
+dashboard.json
 discovery.json
 ```
 
@@ -322,7 +322,7 @@ const REQUIRED_JSON_FILES = ['common', 'auth', 'dashboard', 'assessment', 'disco
 
 function validateTranslations() {
   const issues = [];
-  
+
   // Check JSON files
   LANGUAGES.forEach(lang => {
     REQUIRED_JSON_FILES.forEach(file => {
@@ -331,12 +331,12 @@ function validateTranslations() {
         issues.push(`Missing: ${filePath}`);
       } else {
         const content = fs.readFileSync(filePath, 'utf8');
-        
+
         // Check for English content in non-English files
         if (lang !== 'en' && content.includes('"Welcome"') || content.includes('"Submit"')) {
           issues.push(`English content found in: ${filePath}`);
         }
-        
+
         // Check for placeholders
         if (content.includes('TODO') || content.includes('TRANSLATE')) {
           issues.push(`Placeholder found in: ${filePath}`);
@@ -344,7 +344,7 @@ function validateTranslations() {
       }
     });
   });
-  
+
   // Check YAML files for placeholders
   const yamlDirs = [
     'frontend/public/assessment_data',
@@ -352,7 +352,7 @@ function validateTranslations() {
     'frontend/public/pbl_data',
     'frontend/public/rubrics_data'
   ];
-  
+
   yamlDirs.forEach(dir => {
     const files = walkDir(dir, ['.yaml', '.yml']);
     files.forEach(file => {
@@ -362,7 +362,7 @@ function validateTranslations() {
       }
     });
   });
-  
+
   return issues;
 }
 

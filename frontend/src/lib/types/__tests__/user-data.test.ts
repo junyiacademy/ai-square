@@ -1,6 +1,6 @@
 /**
  * User Data Type Definitions Test Suite
- * 
+ *
  * Comprehensive tests for all user data related types and interfaces
  * to achieve 100% coverage of type validation and structure integrity
  */
@@ -18,7 +18,7 @@ import type {
 } from '../user-data';
 
 describe('User Data Types', () => {
-  
+
   describe('AssessmentResults', () => {
     it('should define valid AssessmentResults interface', () => {
       const validResults: AssessmentResults = {
@@ -188,7 +188,7 @@ describe('User Data Types', () => {
 
     it('should handle all badge categories', () => {
       const categories = ['exploration', 'learning', 'mastery', 'community', 'special'] as const;
-      
+
       categories.forEach((category, index) => {
         const badge: Badge = {
           id: `badge-${category}`,
@@ -246,7 +246,7 @@ describe('User Data Types', () => {
 
     it('should handle long descriptions', () => {
       const longDescription = 'This is a very long badge description that explains in great detail exactly what the user accomplished to earn this particular badge. '.repeat(5);
-      
+
       const detailedBadge: Badge = {
         id: 'detailed-badge',
         name: 'Detailed Achievement',
@@ -578,7 +578,7 @@ describe('User Data Types', () => {
 
     it('should handle version strings', () => {
       const versionVariations = ['1.0', '2.1.3', 'v3.0.0-beta', 'latest', 'experimental-2024'];
-      
+
       versionVariations.forEach(version => {
         const versionData: UserData = {
           achievements: {
@@ -930,7 +930,7 @@ describe('User Data Types', () => {
 
     it('should handle very long arrays', () => {
       const longTaskArray = Array.from({ length: 10000 }, (_, i) => `task-${i}`);
-      
+
       const massiveAchievements: UserAchievements = {
         badges: [],
         totalXp: 1000000,
@@ -945,7 +945,7 @@ describe('User Data Types', () => {
     it('should handle deeply nested evaluation data', () => {
       const deepNesting: Record<string, unknown> = {};
       let current = deepNesting;
-      
+
       // Create 100 levels of nesting
       for (let i = 0; i < 100; i++) {
         current[`level${i}`] = {};

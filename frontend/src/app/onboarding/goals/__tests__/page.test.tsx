@@ -44,7 +44,7 @@ describe('OnboardingGoalsPage', () => {
 
   it('should display all learning goals', () => {
     render(<OnboardingGoalsPage />);
-    
+
     expect(screen.getByText('onboarding:goals.understand.title')).toBeInTheDocument();
     expect(screen.getByText('onboarding:goals.create.title')).toBeInTheDocument();
     expect(screen.getByText('onboarding:goals.analyze.title')).toBeInTheDocument();
@@ -53,7 +53,7 @@ describe('OnboardingGoalsPage', () => {
 
   it('should display goal descriptions', () => {
     render(<OnboardingGoalsPage />);
-    
+
     expect(screen.getByText('onboarding:goals.understand.description')).toBeInTheDocument();
     expect(screen.getByText('onboarding:goals.create.description')).toBeInTheDocument();
     expect(screen.getByText('onboarding:goals.analyze.description')).toBeInTheDocument();
@@ -62,7 +62,7 @@ describe('OnboardingGoalsPage', () => {
 
   it('should display goal icons', () => {
     render(<OnboardingGoalsPage />);
-    
+
     expect(screen.getByText('🧠')).toBeInTheDocument();
     expect(screen.getByText('🎨')).toBeInTheDocument();
     expect(screen.getByText('📊')).toBeInTheDocument();
@@ -71,13 +71,13 @@ describe('OnboardingGoalsPage', () => {
 
   it('should toggle goal selection on click', () => {
     render(<OnboardingGoalsPage />);
-    
+
     const understandGoal = screen.getByText('onboarding:goals.understand.title').closest('button');
-    
+
     if (understandGoal) {
       fireEvent.click(understandGoal);
       expect(understandGoal).toHaveAttribute('aria-pressed', 'true');
-      
+
       fireEvent.click(understandGoal);
       expect(understandGoal).toHaveAttribute('aria-pressed', 'false');
     }
@@ -85,14 +85,14 @@ describe('OnboardingGoalsPage', () => {
 
   it('should allow multiple goal selection', () => {
     render(<OnboardingGoalsPage />);
-    
+
     const understandGoal = screen.getByText('onboarding:goals.understand.title').closest('button');
     const createGoal = screen.getByText('onboarding:goals.create.title').closest('button');
-    
+
     if (understandGoal && createGoal) {
       fireEvent.click(understandGoal);
       fireEvent.click(createGoal);
-      
+
       expect(understandGoal).toHaveAttribute('aria-pressed', 'true');
       expect(createGoal).toHaveAttribute('aria-pressed', 'true');
     }
@@ -100,10 +100,10 @@ describe('OnboardingGoalsPage', () => {
 
   it('should enable continue button when goals are selected', () => {
     render(<OnboardingGoalsPage />);
-    
+
     const continueButton = screen.getByRole('button', { name: /Continue to Assessment/i });
     expect(continueButton).toBeDisabled();
-    
+
     const understandGoal = screen.getByText('onboarding:goals.understand.title').closest('div');
     if (understandGoal) {
       fireEvent.click(understandGoal);
@@ -120,25 +120,25 @@ describe('OnboardingGoalsPage', () => {
   });
 
   it('should show loading state during submission', async () => {
-    (global.fetch as jest.Mock).mockImplementation(() => 
+    (global.fetch as jest.Mock).mockImplementation(() =>
       new Promise(resolve => setTimeout(() => resolve({
         ok: true,
         json: async () => ({ success: true })
       }), 100))
     );
-    
+
     render(<OnboardingGoalsPage />);
-    
+
     const understandGoal = screen.getByText('onboarding:goals.understand.title').closest('div');
     if (understandGoal) {
       fireEvent.click(understandGoal);
     }
-    
+
     const continueButton = screen.getByRole('button', { name: /Continue to Assessment/i });
     fireEvent.click(continueButton);
-    
+
     expect(continueButton).toBeDisabled();
-    
+
     await waitFor(() => {
       expect(mockPush).toHaveBeenCalled();
     });
@@ -150,7 +150,7 @@ describe('OnboardingGoalsPage', () => {
 
   it('should display progress indicator', () => {
     render(<OnboardingGoalsPage />);
-    
+
     // Progress indicator shows step 3
     expect(screen.getByText('3')).toBeInTheDocument();
   });

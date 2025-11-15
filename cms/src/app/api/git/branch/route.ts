@@ -6,44 +6,44 @@ export async function POST(request: NextRequest) {
   try {
     const { fileName } = await request.json();
     const cookieStore = await cookies();
-    
+
     // Get current branch from cookie
     const currentBranch = cookieStore.get('cms-branch')?.value || 'main';
-    
+
     // If already on a feature branch, return current branch
     if (currentBranch !== 'main') {
-      return NextResponse.json({ 
+      return NextResponse.json({
         success: true,
         branch: currentBranch,
         isNew: false,
         message: `Already on feature branch: ${currentBranch}`
       });
     }
-    
+
     // Create new feature branch with file name
-    const sanitizedFileName = fileName 
+    const sanitizedFileName = fileName
       ? fileName.replace(/[^a-zA-Z0-9_-]/g, '-').replace(/\.ya?ml$/, '')
       : 'edit';
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
     const newBranch = `cms-${sanitizedFileName}-${timestamp}`;
-    
+
     const storage = getGitHubStorage();
     await storage.createBranch(newBranch);
-    
+
     // Set branch in cookie
-    const response = NextResponse.json({ 
+    const response = NextResponse.json({
       success: true,
       branch: newBranch,
       isNew: true,
       message: `Created new branch: ${newBranch}`
     });
-    
+
     response.cookies.set('cms-branch', newBranch, {
       httpOnly: true,
       sameSite: 'strict',
       maxAge: 60 * 60 * 24 // 24 hours
     });
-    
+
     return response;
   } catch (error) {
     console.error('Branch creation error:', error);
@@ -58,8 +58,8 @@ export async function GET() {
   try {
     const cookieStore = await cookies();
     const currentBranch = cookieStore.get('cms-branch')?.value || 'main';
-    
-    return NextResponse.json({ 
+
+    return NextResponse.json({
       currentBranch,
       isOnMain: currentBranch === 'main',
       hasUncommittedChanges: false // Not applicable with GitHub API
@@ -77,12 +77,12 @@ export async function GET() {
 export async function PUT(request: NextRequest) {
   try {
     const { branch } = await request.json();
-    
-    const response = NextResponse.json({ 
+
+    const response = NextResponse.json({
       success: true,
       branch
     });
-    
+
     if (branch === 'main') {
       // Clear the branch cookie to go back to main
       response.cookies.delete('cms-branch');
@@ -93,7 +93,7 @@ export async function PUT(request: NextRequest) {
         maxAge: 60 * 60 * 24 // 24 hours
       });
     }
-    
+
     return response;
   } catch (error) {
     console.error('Branch switch error:', error);

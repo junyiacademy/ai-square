@@ -222,7 +222,7 @@ class DistributedCacheService {
   }> {
     try {
       const redisStats = await redisCacheService.getStats();
-      
+
       const summary = {
         localCacheSize: this.localCache.size,
         redisStats,
@@ -277,7 +277,7 @@ class DistributedCacheService {
       // Try Redis first for batch operation
       const prefixed = keys.map(k => this.applyPrefix(k));
       const redisValues = await redisCacheService.mget<T>(prefixed);
-      
+
       // Fill in missing values from local cache
       const results: (T | null)[] = [];
       for (let i = 0; i < prefixed.length; i++) {
@@ -403,7 +403,7 @@ class DistributedCacheService {
   private cleanupLocalCache(): void {
     const now = Date.now();
     const expired: string[] = [];
-    
+
     for (const [key, item] of this.localCache.entries()) {
       if (item.staleAt <= now) {
         expired.push(key);
@@ -417,7 +417,7 @@ class DistributedCacheService {
     if (this.localCache.size > this.MAX_LOCAL_SIZE) {
       const entries = Array.from(this.localCache.entries());
       entries.sort((a, b) => a[1].createdAt - b[1].createdAt);
-      
+
       const toRemove = entries.slice(0, this.localCache.size - this.MAX_LOCAL_SIZE);
       toRemove.forEach(([key]) => this.localCache.delete(key));
     }

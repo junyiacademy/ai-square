@@ -3,7 +3,7 @@
  * 處理 Discovery 模組的業務邏輯
  */
 
-import { 
+import {
   IDiscoveryRepository,
   IDiscoveryProgram,
   ICareerRecommendation,
@@ -19,17 +19,17 @@ export interface IDiscoveryService {
   // Career exploration
   exploreCareer(userId: string, careerId: string): Promise<IDiscoveryProgram>;
   getPersonalizedRecommendations(userId: string): Promise<ICareerRecommendation[]>;
-  
+
   // Skill analysis
   analyzeSkillGaps(userId: string, careerId: string): Promise<ISkillGap[]>;
   calculateCareerReadiness(userId: string, careerId: string): Promise<number>;
-  
+
   // Progress tracking
   calculateOverallProgress(userId: string): Promise<number>;
-  
+
   // Portfolio management
   createPortfolioFromTask(userId: string, taskId: string, artifacts: unknown[]): Promise<IPortfolioItem>;
-  
+
   // AI-powered features
   generateCareerInsights(userId: string, careerId: string): Promise<string>;
 }
@@ -60,7 +60,7 @@ export class DiscoveryService implements IDiscoveryService {
 
     // 分析技能差距
     const skillGaps = await this.analyzeSkillGaps(userId, careerId);
-    
+
     // 創建探索程式
     const program: IDiscoveryProgram = {
       id: uuidv4(),
@@ -104,7 +104,7 @@ export class DiscoveryService implements IDiscoveryService {
   async getPersonalizedRecommendations(userId: string): Promise<ICareerRecommendation[]> {
     // 使用 Repository 的推薦功能
     const recommendations = await this.discoveryRepo.getCareerRecommendations(userId);
-    
+
     // 增強推薦結果
     const enhancedRecommendations = await Promise.all(
       recommendations.map(async (rec) => {
@@ -114,13 +114,13 @@ export class DiscoveryService implements IDiscoveryService {
         //   temperature: 0.7,
         //   maxTokens: 200
         // });
-        
+
         // For now, use placeholder insights
         const aiInsights = [
           'Your analytical mindset is perfect for this role',
           'This career offers excellent growth opportunities'
         ];
-        
+
         return {
           ...rec,
           reasons: [...rec.reasons, ...aiInsights],
@@ -145,12 +145,12 @@ export class DiscoveryService implements IDiscoveryService {
 
     // 獲取用戶當前技能水平
     const userSkills = await this.getUserSkillLevels();
-    
+
     // 分析差距
     const skillGaps: ISkillGap[] = career.discoveryData.requiredSkills.map(skill => {
       const currentLevel = userSkills.get(skill) || 0;
       const requiredLevel = this.getRequiredSkillLevel(career.discoveryData.careerLevel);
-      
+
       return {
         skill,
         currentLevel,
@@ -172,18 +172,18 @@ export class DiscoveryService implements IDiscoveryService {
    */
   async calculateCareerReadiness(userId: string, careerId: string): Promise<number> {
     const skillGaps = await this.analyzeSkillGaps(userId, careerId);
-    
+
     // 如果沒有技能要求，返回 0
     if (skillGaps.length === 0) {
       return 0;
     }
-    
+
     // 計算各技能的準備度權重
     const readinessScores = skillGaps.map(gap => {
       const readiness = (gap.currentLevel / gap.requiredLevel) * 100;
-      const weight = gap.importance === 'critical' ? 3 : 
+      const weight = gap.importance === 'critical' ? 3 :
                     gap.importance === 'important' ? 2 : 1;
-      
+
       return {
         score: Math.min(100, readiness),
         weight
@@ -193,7 +193,7 @@ export class DiscoveryService implements IDiscoveryService {
     // 加權平均
     const totalWeight = readinessScores.reduce((sum, item) => sum + item.weight, 0);
     const weightedSum = readinessScores.reduce((sum, item) => sum + (item.score * item.weight), 0);
-    
+
     return Math.round(weightedSum / totalWeight);
   }
 
@@ -210,13 +210,13 @@ export class DiscoveryService implements IDiscoveryService {
    * 從任務創建作品集項目
    */
   async createPortfolioFromTask(
-    userId: string, 
-    taskId: string, 
+    userId: string,
+    taskId: string,
     artifacts: unknown[]
   ): Promise<IPortfolioItem> {
     // TODO: 驗證任務完成狀態
     // TODO: 處理檔案上傳
-    
+
     const portfolioItem = await this.discoveryRepo.addPortfolioItem(userId, {
       title: 'Task Portfolio Item', // TODO: 從任務獲取標題
       description: 'Created from task completion',
@@ -243,7 +243,7 @@ export class DiscoveryService implements IDiscoveryService {
       - Explored careers: ${userProgress.exploredCareers.length}
       - Portfolio items: ${userProgress.portfolioItems.length}
       - Key skill gaps: ${skillGaps.slice(0, 3).map(g => `${g.skill} (${g.currentLevel}/${g.requiredLevel})`).join(', ')}
-      
+
       Provide personalized insights about:
       1. Their fit for this career
       2. Key strengths they can leverage
@@ -286,7 +286,7 @@ export class DiscoveryService implements IDiscoveryService {
     // TODO: 實作更複雜的重要性判斷邏輯
     const criticalSkills = ['Communication', 'Problem Solving'];
     const importantSkills = ['Leadership', 'Teamwork'];
-    
+
     if (criticalSkills.includes(skill)) return 'critical';
     if (importantSkills.includes(skill)) return 'important';
     return 'nice-to-have';

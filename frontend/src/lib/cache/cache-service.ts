@@ -61,7 +61,7 @@ class CacheService {
    */
   async set<T>(key: string, data: T, options: CacheOptions = {}): Promise<void> {
     const { ttl = this.DEFAULT_TTL, storage = 'both' } = options
-    
+
     const entry: CacheEntry<T> = {
       data,
       timestamp: Date.now(),
@@ -100,7 +100,7 @@ class CacheService {
    */
   async clear(): Promise<void> {
     this.memoryCache.clear()
-    
+
     // 清除所有 cache 開頭的 localStorage 項目 (只在瀏覽器環境)
     if (typeof window !== 'undefined') {
       const keys = Object.keys(localStorage)
@@ -121,7 +121,7 @@ class CacheService {
   ): Promise<T> {
     const { ttl, storage, ...fetchOptions } = options
     const cacheKey = this.generateCacheKey(url, fetchOptions)
-    
+
     // 嘗試從快取取得
     const cached = await this.get<T>(cacheKey, storage)
     if (cached !== null) {
@@ -133,12 +133,12 @@ class CacheService {
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`)
     }
-    
+
     const data = await response.json()
-    
+
     // 儲存到快取
     await this.set(cacheKey, data, { ttl, storage })
-    
+
     return data
   }
 
@@ -186,9 +186,9 @@ class CacheService {
     if (typeof window === 'undefined') {
       return
     }
-    
+
     const cacheItems: Array<{ key: string; entry: CacheEntry<unknown> }> = []
-    
+
     Object.keys(localStorage).forEach(key => {
       if (key.startsWith('cache:')) {
         try {

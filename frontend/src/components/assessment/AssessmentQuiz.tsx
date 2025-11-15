@@ -32,11 +32,11 @@ export default function AssessmentQuiz({ questions, onComplete, timeLimit, initi
 
   // Track previous questions to detect task changes
   const [prevQuestionIds, setPrevQuestionIds] = useState<string>('');
-  
+
   // Reset state when questions change (new task)
   useEffect(() => {
     const currentQuestionIds = questions.map(q => q.id).join(',');
-    
+
     if (prevQuestionIds && prevQuestionIds !== currentQuestionIds) {
       console.log('New task detected, resetting quiz state');
       setCurrentQuestionIndex(0);
@@ -47,14 +47,14 @@ export default function AssessmentQuiz({ questions, onComplete, timeLimit, initi
       setQuestionStartTime(new Date());
       setTimeLeft(timeLimit * 60);
     }
-    
+
     setPrevQuestionIds(currentQuestionIds);
   }, [questions, prevQuestionIds, timeLimit]);
 
   // Check if current question is already answered
   useEffect(() => {
     if (!currentQuestion) return;
-    
+
     const existingAnswer = answers.find(a => a.questionId === currentQuestion.id);
     if (existingAnswer) {
       setSelectedAnswer(existingAnswer.selectedAnswer);
@@ -204,10 +204,10 @@ export default function AssessmentQuiz({ questions, onComplete, timeLimit, initi
               </div>
             </div>
           </div>
-          
+
           {/* Progress Bar */}
           <div className="w-full bg-gray-200 rounded-full h-2">
-            <div 
+            <div
               className="bg-indigo-600 h-2 rounded-full transition-all duration-300"
               style={{ width: `${progressPercentage}%` }}
             ></div>
@@ -241,7 +241,7 @@ export default function AssessmentQuiz({ questions, onComplete, timeLimit, initi
                 const isCorrect = key === currentQuestion.correct_answer;
                 const isSelected = selectedAnswer === key;
                 const showResult = hasAnswered;
-                
+
                 return (
                   <button
                     key={key}
@@ -314,8 +314,8 @@ export default function AssessmentQuiz({ questions, onComplete, timeLimit, initi
                       {selectedAnswer === currentQuestion.correct_answer ? '✓' : '✗'}
                     </div>
                     <div className="font-semibold">
-                      {selectedAnswer === currentQuestion.correct_answer 
-                        ? t('quiz.correct') 
+                      {selectedAnswer === currentQuestion.correct_answer
+                        ? t('quiz.correct')
                         : t('quiz.incorrect')}
                     </div>
                   </div>
@@ -325,7 +325,7 @@ export default function AssessmentQuiz({ questions, onComplete, timeLimit, initi
                     <h4 className="font-semibold text-blue-900 mb-2">{t('quiz.explanation')}</h4>
                     <p className="text-blue-800 text-sm">{currentQuestion.explanation}</p>
                   </div>
-                  
+
                   {/* KSA Mapping */}
                   {currentQuestion.ksa_mapping && (
                     <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">

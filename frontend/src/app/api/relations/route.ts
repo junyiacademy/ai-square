@@ -268,7 +268,7 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error('Error loading relations data:', error);
-    
+
     return NextResponse.json(
       { error: 'Failed to load relations data' },
       { status: 500 }

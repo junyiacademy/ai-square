@@ -29,7 +29,7 @@ export async function GET(
     }
 
     const pr = prs[0] as GitHubPullRequest; // Most recent PR
-    
+
     return NextResponse.json({
       success: true,
       pr: {
@@ -64,7 +64,7 @@ export async function POST(
   try {
     const { branch } = await params;
     const { title, body } = await request.json();
-    
+
     const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
     const owner = process.env.GITHUB_OWNER || 'junyiacademy';
     const repo = process.env.GITHUB_REPO || 'ai-square';
@@ -133,14 +133,14 @@ export async function POST(
   } catch (error) {
     console.error('Create PR error:', error);
     const octokitError = error as OctokitError;
-    
+
     if (octokitError.status === 422) {
       return NextResponse.json(
         { error: 'Cannot create PR - no changes or branch issues' },
         { status: 422 }
       );
     }
-    
+
     return NextResponse.json(
       { error: 'Failed to create PR' },
       { status: 500 }

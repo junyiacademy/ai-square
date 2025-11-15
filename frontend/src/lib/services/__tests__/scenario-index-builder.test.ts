@@ -121,12 +121,12 @@ describe('ScenarioIndexBuilder', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     // Reset the singleton's cache by accessing private properties
     // This is needed to test cache behavior
     (scenarioIndexBuilder as unknown as Record<string, unknown>)['lastBuildTime'] = null;
     (scenarioIndexBuilder as unknown as Record<string, unknown>)['isBuilding'] = false;
-    
+
     // Setup mocks
     mockScenarioRepo = {
       findBySource: jest.fn((source: string) => {
@@ -150,13 +150,13 @@ describe('ScenarioIndexBuilder', () => {
     // Mock the dynamic import
     const { repositoryFactory } = require('@/lib/repositories/base/repository-factory');
     repositoryFactory.getScenarioRepository.mockReturnValue(mockScenarioRepo);
-    
+
     mockScenarioIndexService.buildIndex = jest.fn().mockResolvedValue({
       yamlToUuid: new Map(),
       uuidToYaml: new Map(),
       lastUpdated: new Date().toISOString()
     });
-    
+
     // Mock additional methods used by buildSourceIndex and ensureIndex
     mockScenarioIndexService.getIndex = jest.fn().mockResolvedValue(null);
     mockScenarioIndexService.exists = jest.fn().mockResolvedValue(false);
@@ -209,7 +209,7 @@ describe('ScenarioIndexBuilder', () => {
     it('prevents concurrent builds', async () => {
       // Start first build
       const firstBuild = builder.buildFullIndex();
-      
+
       // Try to start second build immediately
       const secondBuild = builder.buildFullIndex();
 
@@ -223,10 +223,10 @@ describe('ScenarioIndexBuilder', () => {
     it('prevents too frequent builds', async () => {
       // First build
       await builder.buildFullIndex();
-      
+
       // Reset mocks
       jest.clearAllMocks();
-      
+
       // Try to build again immediately
       await builder.buildFullIndex();
 

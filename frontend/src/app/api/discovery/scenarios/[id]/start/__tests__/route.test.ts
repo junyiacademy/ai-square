@@ -149,7 +149,7 @@ describe('/api/discovery/scenarios/[id]/start', () => {
 
     it('should accept valid UUID format', async () => {
       const validUuid = '123e4567-e89b-12d3-a456-426614174000';
-      
+
       mockScenarioRepo.findById.mockResolvedValue({
         id: validUuid,
         mode: 'discovery',
@@ -181,7 +181,7 @@ describe('/api/discovery/scenarios/[id]/start', () => {
 
     it('should handle missing request body gracefully', async () => {
       const validUuid = '123e4567-e89b-12d3-a456-426614174000';
-      
+
       mockScenarioRepo.findById.mockResolvedValue({
         id: validUuid,
         mode: 'discovery',
@@ -217,7 +217,7 @@ describe('/api/discovery/scenarios/[id]/start', () => {
 
     it('should use language from request body', async () => {
       const validUuid = '123e4567-e89b-12d3-a456-426614174000';
-      
+
       mockScenarioRepo.findById.mockResolvedValue({
         id: validUuid,
         mode: 'discovery',
@@ -503,7 +503,7 @@ describe('/api/discovery/scenarios/[id]/start', () => {
 
       expect(response.status).toBe(200);
       const data = await response.json();
-      
+
       expect(data.success).toBe(true);
       expect(data.id).toBe('program-456');
       expect(data.scenarioId).toBe(validUuid);
@@ -513,7 +513,7 @@ describe('/api/discovery/scenarios/[id]/start', () => {
       expect(data.completedTasks).toBe(0);
       expect(data.totalXP).toBe(0);
       expect(data.language).toBe('en');
-      
+
       expect(data.tasks).toHaveLength(2);
       expect(data.tasks[0]).toEqual({
         id: 'task-1',
@@ -560,7 +560,7 @@ describe('/api/discovery/scenarios/[id]/start', () => {
 
       expect(response.status).toBe(200);
       const data = await response.json();
-      
+
       expect(data.success).toBe(true);
       expect(data.currentTaskId).toBeUndefined();
       expect(data.tasks).toHaveLength(0);
@@ -605,7 +605,7 @@ describe('/api/discovery/scenarios/[id]/start', () => {
 
       expect(response.status).toBe(200);
       const data = await response.json();
-      
+
       expect(data.tasks[0].xp).toBe(50); // Default value
       expect(data.tasks[1].xp).toBe(50); // Default value
     });
@@ -789,4 +789,4 @@ describe('/api/discovery/scenarios/[id]/start', () => {
       expect(data.error).toBe('Failed to start program');
     });
   });
-}); 
+});

@@ -10,7 +10,7 @@ describe('yamlLoader', () => {
   const mockFs = fs as jest.Mocked<typeof fs>;
   const mockYaml = yaml as jest.Mocked<typeof yaml>;
   const originalCwd = process.cwd();
-  
+
   beforeEach(() => {
     jest.clearAllMocks();
     jest.spyOn(process, 'cwd').mockReturnValue('/test');
@@ -26,12 +26,12 @@ describe('yamlLoader', () => {
     it('should load and parse YAML file synchronously', () => {
       const mockContent = 'key: value\narray:\n  - item1\n  - item2';
       const mockParsed = { key: 'value', array: ['item1', 'item2'] };
-      
+
       (mockFs.readFileSync as jest.Mock).mockReturnValue(mockContent);
       (mockYaml.load as jest.Mock).mockReturnValue(mockParsed);
 
       const result = yamlLoader.load('test.yaml');
-      
+
       expect(mockFs.readFileSync).toHaveBeenCalledWith('/test/public/test.yaml', 'utf8');
       expect(mockYaml.load).toHaveBeenCalledWith(mockContent);
       expect(result).toEqual(mockParsed);
@@ -43,7 +43,7 @@ describe('yamlLoader', () => {
       });
 
       const result = yamlLoader.load('nonexistent.yaml');
-      
+
       expect(result).toBeNull();
       expect(console.error).toHaveBeenCalledWith(
         'Error loading YAML file nonexistent.yaml:',
@@ -58,7 +58,7 @@ describe('yamlLoader', () => {
       });
 
       const result = yamlLoader.load('invalid.yaml');
-      
+
       expect(result).toBeNull();
       expect(console.error).toHaveBeenCalled();
     });
@@ -68,13 +68,13 @@ describe('yamlLoader', () => {
         name: string;
         version: number;
       }
-      
+
       const mockParsed: TestType = { name: 'Test', version: 1 };
       (mockFs.readFileSync as jest.Mock).mockReturnValue('name: Test\nversion: 1');
       (mockYaml.load as jest.Mock).mockReturnValue(mockParsed);
 
       const result = yamlLoader.load<TestType>('typed.yaml');
-      
+
       expect(result).toEqual(mockParsed);
       expect(result?.name).toBe('Test');
       expect(result?.version).toBe(1);
@@ -85,7 +85,7 @@ describe('yamlLoader', () => {
     it('should load and parse YAML file asynchronously', async () => {
       const mockContent = 'test: data';
       const mockParsed = { test: 'data' };
-      
+
       if (!mockFs.promises) {
         mockFs.promises = {} as any;
       }
@@ -93,7 +93,7 @@ describe('yamlLoader', () => {
       (mockYaml.load as jest.Mock).mockReturnValue(mockParsed);
 
       const result = await yamlLoader.loadAsync('async.yaml');
-      
+
       expect(mockFs.promises.readFile).toHaveBeenCalledWith('/test/public/async.yaml', 'utf8');
       expect(result).toEqual(mockParsed);
     });
@@ -105,7 +105,7 @@ describe('yamlLoader', () => {
       mockFs.promises.readFile = jest.fn().mockRejectedValue(new Error('Async error'));
 
       const result = await yamlLoader.loadAsync('error.yaml');
-      
+
       expect(result).toBeNull();
       expect(console.error).toHaveBeenCalled();
     });
@@ -118,7 +118,7 @@ describe('yamlLoader', () => {
       (mockYaml.load as jest.Mock).mockReturnValue(null);
 
       const result = await yamlLoader.loadAsync('empty.yaml');
-      
+
       expect(result).toBeNull();
     });
 
@@ -136,7 +136,7 @@ describe('yamlLoader', () => {
           { name: 'Bob', age: 25 }
         ]
       };
-      
+
       if (!mockFs.promises) {
         mockFs.promises = {} as any;
       }
@@ -144,7 +144,7 @@ describe('yamlLoader', () => {
       (mockYaml.load as jest.Mock).mockReturnValue(expected);
 
       const result = await yamlLoader.loadAsync('complex.yaml');
-      
+
       expect(result).toEqual(expected);
     });
 
@@ -156,7 +156,7 @@ describe('yamlLoader', () => {
       (mockYaml.load as jest.Mock).mockReturnValue({ test: 123 });
 
       await yamlLoader.loadAsync('nested/path/file.yaml');
-      
+
       expect(mockFs.promises.readFile).toHaveBeenCalledWith(
         '/test/public/nested/path/file.yaml',
         'utf8'

@@ -519,7 +519,7 @@ describe('PostgreSQLScenarioRepository', () => {
   describe('findByMode', () => {
     it('should find active scenarios by mode', async () => {
       const pblScenario = { ...mockDBScenario, mode: 'pbl' };
-      
+
       (mockPool.query as jest.Mock).mockResolvedValue({
         rows: [pblScenario],
         command: 'SELECT',
@@ -577,7 +577,7 @@ describe('PostgreSQLScenarioRepository', () => {
         { ...mockDBScenario, id: 'scenario-456', mode: 'assessment' },
         { ...mockDBScenario, id: 'scenario-789', mode: 'discovery' }
       ];
-      
+
       (mockPool.query as jest.Mock).mockResolvedValue({
         rows: scenarios,
         command: 'SELECT',
@@ -614,7 +614,7 @@ describe('PostgreSQLScenarioRepository', () => {
   describe('findByDifficulty', () => {
     it('should find active scenarios by difficulty', async () => {
       const intermediateScenario = { ...mockDBScenario, difficulty: 'intermediate' };
-      
+
       (mockPool.query as jest.Mock).mockResolvedValue({
         rows: [intermediateScenario],
         command: 'SELECT',
@@ -899,7 +899,7 @@ describe('PostgreSQLScenarioRepository', () => {
   describe('findAll', () => {
     it('should find all scenarios without pagination', async () => {
       const scenarios = [mockDBScenario, { ...mockDBScenario, id: 'scenario-456' }];
-      
+
       (mockPool.query as jest.Mock).mockResolvedValue({
         rows: scenarios,
         command: 'SELECT',
@@ -1071,19 +1071,19 @@ describe('PostgreSQLScenarioRepository', () => {
 
   describe('Complex queries and edge cases', () => {
     it('should handle scenarios with different modes and data', async () => {
-      const pblScenario = { 
-        ...mockDBScenario, 
+      const pblScenario = {
+        ...mockDBScenario,
         mode: 'pbl',
         pbl_data: { ksaMapping: { knowledge: ['K1'] } }
       };
-      const assessmentScenario = { 
-        ...mockDBScenario, 
+      const assessmentScenario = {
+        ...mockDBScenario,
         id: 'scenario-456',
         mode: 'assessment',
         assessment_data: { assessmentType: 'diagnostic' }
       };
-      const discoveryScenario = { 
-        ...mockDBScenario, 
+      const discoveryScenario = {
+        ...mockDBScenario,
         id: 'scenario-789',
         mode: 'discovery',
         discovery_data: { careerType: 'engineer' }

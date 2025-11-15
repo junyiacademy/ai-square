@@ -19,38 +19,38 @@ describe('API Route: src/app/api/pbl/scenarios/[id]/programs/[programId]/tasks/[
   beforeEach(() => {
     jest.clearAllMocks();
   });
-  
+
   describe('GET', () => {
     it('should handle successful request', async () => {
       const request = new NextRequest('http://localhost:3000/api/test', {
         method: 'GET',
-        
+
       });
-      
+
       const response = await GET(request, { params: Promise.resolve({'id':'test-id','programId':'test-id','taskId':'test-id'}) });
-      
+
       expect(response).toBeDefined();
       expect(response.status).toBeLessThanOrEqual(500);
     });
-    
+
     it('should handle missing parameters', async () => {
       const request = new NextRequest('http://localhost:3000/api/test', {
         method: 'GET',
       });
-      
+
       const response = await GET(request, { params: Promise.resolve({'id':'test-id','programId':'test-id','taskId':'test-id'}) });
-      
+
       expect(response).toBeDefined();
     });
-    
+
     it('should handle errors gracefully', async () => {
       const request = new NextRequest('http://localhost:3000/api/test', {
         method: 'GET',
-        
+
       });
-      
+
       const response = await GET(request, { params: Promise.resolve({'id':'test-id','programId':'test-id','taskId':'test-id'}) });
-      
+
       expect(response).toBeDefined();
       expect(response.status).toBeLessThanOrEqual(500);
     });

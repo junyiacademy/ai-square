@@ -10,12 +10,12 @@ jest.mock('../../../../lib/cache/cache-service');
 class MockNextRequest {
   url: string;
   private _nextUrl: URL;
-  
+
   constructor(url: string) {
     this.url = url;
     this._nextUrl = new URL(url);
   }
-  
+
   get nextUrl() {
     return {
       searchParams: this._nextUrl.searchParams,
@@ -191,7 +191,7 @@ describe('/api/relations', () => {
           }
         }
       };
-      
+
       const mockChineseKsaData = {
         knowledge_codes: {
           themes: {
@@ -209,13 +209,13 @@ describe('/api/relations', () => {
         skill_codes: { themes: {} },
         attitude_codes: { themes: {} }
       };
-      
+
       mockJsonYamlLoader.load.mockImplementation((filename: string) => {
         if (filename.includes('ai_lit_domains_zhTW')) return Promise.resolve(mockChineseDomainsData);
         if (filename.includes('ksa_codes_zhTW')) return Promise.resolve(mockChineseKsaData);
         return Promise.resolve({});
       });
-      
+
       const request = new MockNextRequest('http://localhost/api/relations?lang=zhTW') as any;
       const response = await GET(request);
       const data = await response.json();
@@ -245,13 +245,13 @@ describe('/api/relations', () => {
           }
         }
       };
-      
+
       mockJsonYamlLoader.load.mockImplementation((filename: string) => {
         if (filename.includes('ai_lit_domains_es')) return Promise.resolve(mockSpanishDomainsData);
         if (filename.includes('ksa_codes_es')) return Promise.resolve(mockKsaData);
         return Promise.resolve({});
       });
-      
+
       const request = new MockNextRequest('http://localhost/api/relations?lang=es') as any;
       const response = await GET(request);
       const data = await response.json();

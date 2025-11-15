@@ -38,7 +38,7 @@ describe('Date Utils', () => {
       const date = new Date('2024-01-15');
       const resultZh = formatDate(date, 'zh-CN');
       expect(resultZh).toContain('2024');
-      
+
       const resultFr = formatDate(date, 'fr-FR');
       expect(resultFr).toContain('2024');
     });

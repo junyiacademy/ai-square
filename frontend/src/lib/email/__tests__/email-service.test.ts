@@ -33,7 +33,7 @@ describe.skip('EmailService', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockSendMail.mockResolvedValue({ messageId: 'test-message-id' });
-    
+
     // Mock console methods for clean test output
     console.log = jest.fn();
     console.warn = jest.fn();
@@ -62,7 +62,7 @@ describe.skip('EmailService', () => {
         subject: 'Test Subject',
         html: '<p>Test HTML</p>'
       });
-      
+
       expect(result).toBe(true);
       expect(mockSendMail).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -79,7 +79,7 @@ describe.skip('EmailService', () => {
         'user@example.com',
         'https://example.com/verify/token123'
       );
-      
+
       expect(result).toBe(true);
       expect(mockSendMail).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -94,7 +94,7 @@ describe.skip('EmailService', () => {
         'user@example.com',
         'https://example.com/reset/token123'
       );
-      
+
       expect(result).toBe(true);
       expect(mockSendMail).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -106,12 +106,12 @@ describe.skip('EmailService', () => {
 
     it('should send welcome email successfully', async () => {
       process.env.NEXT_PUBLIC_APP_URL = 'https://app.example.com';
-      
+
       const result = await emailService.sendWelcomeEmail(
         'user@example.com',
         'John Doe'
       );
-      
+
       expect(result).toBe(true);
       expect(mockSendMail).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -123,13 +123,13 @@ describe.skip('EmailService', () => {
 
     it('should handle send failures gracefully', async () => {
       mockSendMail.mockRejectedValue(new Error('Send failed'));
-      
+
       const result = await emailService.sendEmail({
         to: 'recipient@example.com',
         subject: 'Test Subject',
         html: '<p>Test HTML</p>'
       });
-      
+
       expect(result).toBe(false);
       expect(console.error).toHaveBeenCalledWith(
         '❌ Failed to send email:',
@@ -143,7 +143,7 @@ describe.skip('EmailService', () => {
         subject: 'Test Subject',
         html: '<p>Test HTML</p>'
       });
-      
+
       expect(mockSendMail).toHaveBeenCalledWith(
         expect.objectContaining({
           text: 'Test HTML',
@@ -159,7 +159,7 @@ describe.skip('EmailService', () => {
         html: '<p>Test HTML</p>',
         text: 'Custom text version'
       });
-      
+
       expect(mockSendMail).toHaveBeenCalledWith(
         expect.objectContaining({
           text: 'Custom text version',
@@ -176,7 +176,7 @@ describe.skip('EmailService', () => {
         subject: 'Test',
         html: '<h1>Title</h1><p>Content with <strong>bold</strong> text</p>'
       });
-      
+
       expect(mockSendMail).toHaveBeenCalledWith(
         expect.objectContaining({
           text: 'Title Content with bold text'
@@ -190,7 +190,7 @@ describe.skip('EmailService', () => {
         subject: 'Test',
         html: '<style>body{color:red}</style><p>Content</p><script>alert("test")</script>'
       });
-      
+
       expect(mockSendMail).toHaveBeenCalledWith(
         expect.objectContaining({
           text: 'Content'
@@ -215,7 +215,7 @@ describe.skip('EmailService', () => {
           </div>
         `
       });
-      
+
       expect(mockSendMail).toHaveBeenCalledWith(
         expect.objectContaining({
           text: expect.stringContaining('Welcome Hello world! Item 1 Item 2')
@@ -227,12 +227,12 @@ describe.skip('EmailService', () => {
   describe('email templates', () => {
     it('should include verification URL in verification email', async () => {
       const verificationUrl = 'https://example.com/verify/abc123';
-      
+
       await emailService.sendVerificationEmail(
         'user@example.com',
         verificationUrl
       );
-      
+
       const callArgs = mockSendMail.mock.calls[0][0];
       expect(callArgs.html).toContain(verificationUrl);
       expect(callArgs.html).toContain('驗證電子郵件');
@@ -240,12 +240,12 @@ describe.skip('EmailService', () => {
 
     it('should include reset URL in password reset email', async () => {
       const resetUrl = 'https://example.com/reset/xyz789';
-      
+
       await emailService.sendPasswordResetEmail(
         'user@example.com',
         resetUrl
       );
-      
+
       const callArgs = mockSendMail.mock.calls[0][0];
       expect(callArgs.html).toContain(resetUrl);
       expect(callArgs.html).toContain('重設密碼');
@@ -253,12 +253,12 @@ describe.skip('EmailService', () => {
 
     it('should include user name in welcome email', async () => {
       const userName = 'Alice Wang';
-      
+
       await emailService.sendWelcomeEmail(
         'alice@example.com',
         userName
       );
-      
+
       const callArgs = mockSendMail.mock.calls[0][0];
       expect(callArgs.html).toContain(userName);
       expect(callArgs.html).toContain('歡迎');

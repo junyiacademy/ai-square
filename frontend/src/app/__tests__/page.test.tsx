@@ -42,7 +42,7 @@ jest.mock('@/components/homepage/CTASection', () => {
 describe('Home Page', () => {
   it('renders all homepage sections', () => {
     render(<Home />);
-    
+
     // Check that all sections are rendered
     expect(screen.getByTestId('hero-section')).toBeInTheDocument();
     expect(screen.getByTestId('features-section')).toBeInTheDocument();
@@ -54,15 +54,15 @@ describe('Home Page', () => {
 
   it('renders with correct layout structure', () => {
     const { container } = render(<Home />);
-    
+
     // Check main element
     const main = container.querySelector('main');
     expect(main).toHaveClass('min-h-screen');
-    
+
     // Check knowledge graph section has proper styling
     const knowledgeGraphSection = container.querySelector('section.bg-gray-50');
     expect(knowledgeGraphSection).toHaveClass('py-20', 'bg-gray-50');
-    
+
     // Check container div
     const containerDiv = knowledgeGraphSection?.querySelector('div');
     expect(containerDiv).toHaveClass('max-w-7xl', 'mx-auto', 'px-4', 'sm:px-6', 'lg:px-8');
@@ -70,10 +70,10 @@ describe('Home Page', () => {
 
   it('renders sections in the correct order', () => {
     render(<Home />);
-    
+
     const sections = screen.getAllByTestId(/section$/);
     const sectionIds = sections.map(section => section.getAttribute('data-testid'));
-    
+
     expect(sectionIds).toEqual([
       'hero-section',
       'features-section',

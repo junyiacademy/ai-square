@@ -54,25 +54,25 @@ export async function POST(request: NextRequest) {
     // Load all scenario data
     const scenariosDir = path.join(process.cwd(), 'public', 'pbl_data', 'scenarios');
     const folders = await fs.readdir(scenariosDir);
-    
+
     // Get language from request headers or default to 'en'
     const lang = getLanguageFromHeader(request);
 
     const scenarios: ScenarioData[] = [];
     for (const folder of folders) {
       if (folder.startsWith('_')) continue; // Skip template folders
-      
+
       try {
         // Try language-specific file first
         let filePath = path.join(scenariosDir, folder, `${folder}_${lang}.yaml`);
-        
+
         // Check if language-specific file exists, fallback to English
         try {
           await fs.access(filePath);
         } catch {
           filePath = path.join(scenariosDir, folder, `${folder}_en.yaml`);
         }
-        
+
         const content = await fs.readFile(filePath, 'utf8');
         const data = yaml.load(content) as ScenarioData;
         scenarios.push(data);
@@ -118,9 +118,9 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Error generating recommendations:', error);
     return NextResponse.json(
-      { 
-        success: false, 
-        error: 'Failed to generate recommendations' 
+      {
+        success: false,
+        error: 'Failed to generate recommendations'
       },
       { status: 500 }
     );
@@ -179,7 +179,7 @@ function calculateRelevance(
   if (learningGoals.length > 0) {
     const goalKeywords = learningGoals.map(g => g.toLowerCase());
     const scenarioText = `${scenario.title} ${scenario.description}`.toLowerCase();
-    
+
     goalKeywords.forEach(keyword => {
       if (scenarioText.includes(keyword)) {
         score += 10;
@@ -189,11 +189,11 @@ function calculateRelevance(
   }
 
   // KSA diversity bonus
-  const ksaCount = 
+  const ksaCount =
     (scenario.ksa_mapping?.knowledge?.length || 0) +
     (scenario.ksa_mapping?.skills?.length || 0) +
     (scenario.ksa_mapping?.attitudes?.length || 0);
-  
+
   if (ksaCount > 10) {
     score += 5;
     reasons.push('Comprehensive KSA coverage');
@@ -213,7 +213,7 @@ function estimateImprovement(
 
   // Estimate gain based on difficulty and current level
   let expectedGain = 0;
-  
+
   if (scenario.difficulty === 'beginner') {
     if (currentScore < 40) expectedGain = 15;
     else if (currentScore < 60) expectedGain = 10;

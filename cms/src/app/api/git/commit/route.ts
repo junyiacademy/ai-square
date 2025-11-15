@@ -16,13 +16,13 @@ export async function POST(request: NextRequest) {
 
     // With GitHub API, commits happen automatically when updating files
     // So we just return success here
-    return NextResponse.json({ 
+    return NextResponse.json({
       success: true,
       message: 'Changes are automatically committed with GitHub API'
     });
   } catch (error) {
     console.error('Commit API error:', error);
-    
+
     return NextResponse.json(
       { error: 'Failed to process commit request' },
       { status: 500 }

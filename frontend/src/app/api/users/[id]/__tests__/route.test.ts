@@ -53,7 +53,7 @@ describe('/api/users/[id] Route', () => {
 
       const response = await GET(request, { params });
       expect(response.status).toBe(404);
-      
+
       const data = await response.json();
       expect(data).toEqual({ error: 'User not found' });
     });
@@ -66,13 +66,13 @@ describe('/api/users/[id] Route', () => {
         preferredLanguage: 'zh-TW',
         notAllowedField: 'should be ignored'
       };
-      
-      const updatedUser = { 
-        ...mockUser, 
+
+      const updatedUser = {
+        ...mockUser,
         name: 'Updated Name',
         preferredLanguage: 'zh-TW'
       };
-      
+
       mockUserRepo.update.mockResolvedValue(updatedUser);
 
       const request = new NextRequest('http://localhost:3000/api/users/test-user-id', {
@@ -88,7 +88,7 @@ describe('/api/users/[id] Route', () => {
         name: 'Updated Name',
         preferredLanguage: 'zh-TW'
       });
-      
+
       expect(data).toEqual(updatedUser);
     });
 
@@ -103,7 +103,7 @@ describe('/api/users/[id] Route', () => {
 
       const response = await PATCH(request, { params });
       expect(response.status).toBe(404);
-      
+
       const data = await response.json();
       expect(data).toEqual({ error: 'User not found' });
     });
@@ -135,7 +135,7 @@ describe('/api/users/[id] Route', () => {
 
       const response = await DELETE(request, { params });
       expect(response.status).toBe(404);
-      
+
       const data = await response.json();
       expect(data).toEqual({ error: 'User not found' });
     });

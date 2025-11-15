@@ -9,7 +9,7 @@ jest.mock('next/navigation', () => ({
 
 describe('PBLPage', () => {
   const mockReplace = jest.fn();
-  
+
   beforeEach(() => {
     jest.clearAllMocks();
     (useRouter as jest.Mock).mockReturnValue({
@@ -19,20 +19,20 @@ describe('PBLPage', () => {
 
   it('should redirect to /pbl/scenarios', () => {
     render(<PBLPage />);
-    
+
     expect(mockReplace).toHaveBeenCalledWith('/pbl/scenarios');
     expect(mockReplace).toHaveBeenCalledTimes(1);
   });
 
   it('should return null (no content)', () => {
     const { container } = render(<PBLPage />);
-    
+
     expect(container.firstChild).toBeNull();
   });
 
   it('should use router from useRouter hook', () => {
     render(<PBLPage />);
-    
+
     expect(useRouter).toHaveBeenCalled();
   });
 });

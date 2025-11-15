@@ -3,7 +3,7 @@ const { Client } = require('pg');
 
 describe.skip('Raw PG Test', () => {
   let client;
-  
+
   beforeAll(async () => {
     client = new Client({
       host: 'localhost',
@@ -12,15 +12,15 @@ describe.skip('Raw PG Test', () => {
       user: 'postgres',
       password: 'postgres',
     });
-    
+
     await client.connect();
     console.log('Connected to database');
   });
-  
+
   afterAll(async () => {
     await client.end();
   });
-  
+
   test('basic query', async () => {
     const res = await client.query('SELECT $1::text as message', ['Hello world!']);
     console.log('Result:', res.rows);
@@ -29,7 +29,7 @@ describe.skip('Raw PG Test', () => {
       expect(res.rows[0].message).toBe('Hello world!');
     }
   });
-  
+
   test('math query', async () => {
     const res = await client.query('SELECT 2 + 2 as sum');
     console.log('Math result:', res.rows);

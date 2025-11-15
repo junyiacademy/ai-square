@@ -11,7 +11,7 @@ const mockFile = jest.fn();
 
 jest.mock('@google-cloud/storage', () => ({
   Storage: jest.fn().mockImplementation(() => ({
-    bucket: jest.fn().mockImplementation(() => ({ 
+    bucket: jest.fn().mockImplementation(() => ({
       file: jest.fn().mockImplementation((path: string) => {
         mockFile(path);
         return {
@@ -287,7 +287,7 @@ describe('/api/users/update-progress', () => {
       // Ensure clean state
       mockExists.mockResolvedValue([false]);
       mockSave.mockResolvedValue(undefined);
-      
+
       const request = new NextRequest('http://localhost:3000/api/users/update-progress', {
         method: 'POST',
         body: JSON.stringify({
@@ -314,24 +314,24 @@ describe('/api/users/update-progress', () => {
 
 /**
  * Update Progress API Considerations:
- * 
+ *
  * 1. Stage Validation:
  *    - Only accept valid stages: welcome, identity, goals, assessment
  *    - Each stage has specific data requirements
- * 
+ *
  * 2. Data Persistence:
  *    - Uses Google Cloud Storage
  *    - Email sanitization for file paths
  *    - Preserves existing data when updating
- * 
+ *
  * 3. Onboarding Flow:
  *    - Welcome -> Identity -> Goals
  *    - Goals completion marks onboarding complete
- * 
+ *
  * 4. Error Handling:
  *    - Continue with empty data if load fails
  *    - Return 500 if save fails
- * 
+ *
  * 5. Timestamps:
  *    - Track completion time for each stage
  *    - Update lastModified on every change

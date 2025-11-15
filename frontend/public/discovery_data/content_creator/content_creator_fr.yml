@@ -7,11 +7,11 @@ metadata:
   title: "Magicien Numérique - Créateur de Contenu"
   short_description: "Tissez des histoires captivantes dans le royaume virtuel"
   long_description: |
-    Vous êtes un magicien nouvellement ordonné de "l'Empire Créatif", possédant 
-    le pouvoir mystérieux de transformer les idées en contenu viral. Dans ce royaume 
-    numérique, chaque like et partage est la preuve de votre magie, et votre mentor 
+    Vous êtes un magicien nouvellement ordonné de "l'Empire Créatif", possédant
+    le pouvoir mystérieux de transformer les idées en contenu viral. Dans ce royaume
+    numérique, chaque like et partage est la preuve de votre magie, et votre mentor
     Luna vous enseignera à maîtriser les secrets des algorithmes.
-  
+
   estimated_hours: 50
   skill_focus:
     - content_magic
@@ -22,22 +22,22 @@ metadata:
 world_setting:
   name: "Empire Créatif"
   description: |
-    L'Empire Créatif est un royaume numérique alimenté par l'énergie créative. 
-    Les créateurs de contenu apprennent ici à exploiter les forces mystérieuses 
-    des algorithmes, de l'engagement et des mécaniques virales pour construire 
+    L'Empire Créatif est un royaume numérique alimenté par l'énergie créative.
+    Les créateurs de contenu apprennent ici à exploiter les forces mystérieuses
+    des algorithmes, de l'engagement et des mécaniques virales pour construire
     leur influence et impacter des millions de vies.
-  
+
   atmosphere: "vibrant_magical"
   visual_theme: "digital_fantasy"
 
 starting_scenario:
   title: "Le Défi de l'Ombre"
   description: |
-    La Mentor Créative Luna vous accueille dans l'empire avec des nouvelles urgentes : 
-    Ombre, un magicien déchu, répand du faux contenu en utilisant une magie interdite, 
-    menaçant l'harmonie de l'Empire Créatif. Vous devez utiliser le pouvoir de la 
+    La Mentor Créative Luna vous accueille dans l'empire avec des nouvelles urgentes :
+    Ombre, un magicien déchu, répand du faux contenu en utilisant une magie interdite,
+    menaçant l'harmonie de l'Empire Créatif. Vous devez utiliser le pouvoir de la
     créativité authentique pour combattre son influence sombre.
-  
+
   initial_tasks:
     - understand_algorithms
     - learn_content_basics
@@ -52,7 +52,7 @@ skill_tree:
       unlocks:
         - trend_analysis
         - audience_targeting
-    
+
     - id: visual_creation
       name: "Sorcellerie Visuelle"
       description: "Créez du contenu visuel convaincant"
@@ -60,7 +60,7 @@ skill_tree:
       unlocks:
         - photo_magic
         - video_enchantment
-    
+
     - id: storytelling
       name: "Tissage Narratif"
       description: "Créez des histoires captivantes"
@@ -68,7 +68,7 @@ skill_tree:
       unlocks:
         - emotional_resonance
         - viral_mechanics
-    
+
     - id: community_building
       name: "Invocation de Tribu"
       description: "Construisez et engagez des communautés"
@@ -83,13 +83,13 @@ skill_tree:
       description: "Comprenez et travaillez avec les algorithmes de plateformes"
       max_level: 15
       requires: [content_strategy, community_building]
-    
+
     - id: monetization_magic
       name: "Alchimie des Revenus"
       description: "Transformez le contenu en revenus"
       max_level: 15
       requires: [community_building, visual_creation]
-    
+
     - id: brand_building
       name: "Construction d'Empire"
       description: "Construisez une marque personnelle puissante"
@@ -106,7 +106,7 @@ milestone_quests:
     unlocks:
       - viral_creator_badge
       - algorithm_insights
-  
+
   - id: shadow_confrontation
     name: "Vérité contre Tromperie"
     description: "Battez la campagne de désinformation d'Ombre"
@@ -116,7 +116,7 @@ milestone_quests:
     unlocks:
       - truth_guardian_title
       - authentic_voice
-  
+
   - id: empire_builder
     name: "Empire Créatif"
     description: "Construisez un empire de contenu avec 1M d'abonnés"
@@ -133,19 +133,19 @@ achievements:
     description: "Créez votre premier contenu"
     xp_reward: 50
     badge_type: bronze
-  
+
   - id: engagement_master
     name: "Champion de la Communauté"
     description: "Atteignez 10K engagements totaux"
     xp_reward: 200
     badge_type: silver
-  
+
   - id: consistency_king
     name: "Magicien Quotidien"
     description: "Publiez régulièrement pendant 30 jours"
     xp_reward: 400
     badge_type: gold
-  
+
   - id: content_legend
     name: "Créateur Légendaire"
     description: "Complétez tous les défis de contenu"
@@ -160,14 +160,14 @@ example_tasks:
       description: "Développez des formules de contenu qui touchent les cœurs"
       skills_improved: [content_strategy, storytelling]
       xp_reward: 50
-    
+
     - id: visual_basics
       type: creation
       title: "Pratique de Sort Visuel"
       description: "Créez votre premier contenu visuel"
       skills_improved: [visual_creation, content_magic]
       xp_reward: 60
-  
+
   intermediate:
     - id: engagement_analysis
       type: analysis
@@ -175,14 +175,14 @@ example_tasks:
       description: "Analysez la performance du contenu et le comportement de l'audience"
       skills_improved: [algorithm_mastery, community_building]
       xp_reward: 150
-    
+
     - id: series_creation
       type: creation
       title: "Tissage de Saga"
       description: "Créez une série de contenu"
       skills_improved: [storytelling, brand_building]
       xp_reward: 180
-  
+
   advanced:
     - id: viral_campaign
       type: creation
@@ -190,7 +190,7 @@ example_tasks:
       description: "Lancez une campagne de contenu viral"
       skills_improved: [algorithm_mastery, viral_mechanics]
       xp_reward: 350
-    
+
     - id: monetization_setup
       type: creation
       title: "Transmutation d'Or"

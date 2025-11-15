@@ -475,7 +475,7 @@ describe('PBL API Types', () => {
     it('should export all expected types', () => {
       // Verify that all types are properly exported
       expect(typeof PBLApiTypes).toBe('object');
-      
+
       // Test type constructor functions work (validates type existence)
       const chatMessage = {} as ChatMessage;
       const chatRequest = {} as ChatRequest;

@@ -25,13 +25,13 @@ export default function FileEditor({ selectedFile }: FileEditorProps) {
     try {
       setLoading(true)
       setError(null)
-      
+
       const response = await fetch(`/api/content?path=${filePath}`)
-      
+
       if (!response.ok) {
         throw new Error('Failed to load file')
       }
-      
+
       const data = await response.json()
       setContent(data.content)
       setHasUnsavedChanges(false)
@@ -53,7 +53,7 @@ export default function FileEditor({ selectedFile }: FileEditorProps) {
     try {
       setSaving(true)
       setMessage(null)
-      
+
       const response = await fetch('/api/content', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -63,11 +63,11 @@ export default function FileEditor({ selectedFile }: FileEditorProps) {
           message: `Update ${selectedFile} via CMS`,
         }),
       })
-      
+
       if (!response.ok) {
         throw new Error('Failed to save file')
       }
-      
+
       setHasUnsavedChanges(false)
       setMessage('File saved successfully!')
     } catch (error) {
@@ -80,7 +80,7 @@ export default function FileEditor({ selectedFile }: FileEditorProps) {
   const handleAIAssist = async (action: string) => {
     try {
       setMessage(null)
-      
+
       const response = await fetch('/api/ai/assist', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -89,11 +89,11 @@ export default function FileEditor({ selectedFile }: FileEditorProps) {
           content,
         }),
       })
-      
+
       if (!response.ok) {
         throw new Error('AI assistance failed')
       }
-      
+
       const data = await response.json()
       setContent(data.content)
       setHasUnsavedChanges(true)
@@ -118,35 +118,35 @@ export default function FileEditor({ selectedFile }: FileEditorProps) {
     <div>
       <div>
         <h3>
-          {selectedFile} 
+          {selectedFile}
           {hasUnsavedChanges && <span>*</span>}
         </h3>
-        
+
         <div>
           <button onClick={handleSave} disabled={saving || !hasUnsavedChanges}>
             {saving ? 'Saving...' : 'Save'}
           </button>
-          
+
           <button onClick={() => handleAIAssist('complete')}>
             AI Complete
           </button>
-          
+
           <button onClick={() => handleAIAssist('translate')}>
             AI Translate
           </button>
-          
+
           <button onClick={() => handleAIAssist('improve')}>
             AI Improve
           </button>
-          
+
           <button onClick={() => handleAIAssist('map-ksa')}>
             AI Map KSA
           </button>
         </div>
-        
+
         {message && <div>{message}</div>}
       </div>
-      
+
       <Editor
         height="400px"
         defaultLanguage="yaml"

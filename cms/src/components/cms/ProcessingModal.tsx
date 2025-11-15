@@ -70,7 +70,7 @@ export function ProcessingModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Backdrop */}
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
-      
+
       {/* Modal */}
       <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-2xl mx-4 overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-300">
         {/* Header */}
@@ -99,19 +99,19 @@ export function ProcessingModal({
                 <div className="flex-1">
                   <div className="flex items-center gap-3">
                     <div className={`p-1.5 rounded-lg ${
-                      step.status === 'processing' ? 'bg-blue-100' : 
-                      step.status === 'completed' ? 'bg-green-100' : 
+                      step.status === 'processing' ? 'bg-blue-100' :
+                      step.status === 'completed' ? 'bg-green-100' :
                       'bg-gray-100'
                     }`}>
                       {getStepIcon(step)}
                     </div>
                     <h3 className="font-semibold text-gray-900">{step.label}</h3>
                   </div>
-                  
+
                   {step.error && (
                     <p className="text-red-600 text-sm mt-2">{step.error}</p>
                   )}
-                  
+
                   {/* Show additional info for specific steps */}
                   {step.id === 'create-branch' && step.status === 'completed' && branchName && (
                     <div className="mt-2 p-3 bg-blue-50 rounded-lg">
@@ -120,7 +120,7 @@ export function ProcessingModal({
                       </p>
                     </div>
                   )}
-                  
+
                   {step.id === 'save-changes' && step.status === 'completed' && commitMessage && (
                     <div className="mt-2 p-3 bg-gray-50 rounded-lg">
                       <p className="text-sm font-medium text-gray-700 mb-1">Commit message:</p>
@@ -152,8 +152,8 @@ export function ProcessingModal({
         <div className="border-t px-6 py-4 bg-gray-50">
           <div className="flex justify-between items-center">
             <p className="text-sm text-gray-500">
-              {steps.every(s => s.status === 'completed') 
-                ? '✨ All tasks completed successfully!' 
+              {steps.every(s => s.status === 'completed')
+                ? '✨ All tasks completed successfully!'
                 : '🤖 AI is processing your request...'}
             </p>
             {steps.every(s => s.status === 'completed' || s.status === 'error') && (

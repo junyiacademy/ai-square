@@ -43,11 +43,11 @@ describe('LearningServiceFactory', () => {
   describe('assessment adapter behavior', () => {
     it('startLearning delegates to startAssessment with language', async () => {
       const startAssessmentMock = jest.fn().mockImplementation(async () => ({ id: 'program-1' }))
-      
+
       jest.isolateModules(async () => {
         jest.doMock('../assessment-learning-service', () => ({
-          AssessmentLearningService: jest.fn().mockImplementation(() => ({ 
-            startAssessment: startAssessmentMock 
+          AssessmentLearningService: jest.fn().mockImplementation(() => ({
+            startAssessment: startAssessmentMock
           }))
         }))
         jest.doMock('../pbl-learning-service', () => ({ PBLLearningService: jest.fn().mockImplementation(() => ({})) }))
@@ -76,11 +76,11 @@ describe('LearningServiceFactory', () => {
         }
       }
       const getProgressMock = jest.fn().mockImplementation(async () => mockProgress)
-      
+
       jest.isolateModules(async () => {
         jest.doMock('../assessment-learning-service', () => ({
-          AssessmentLearningService: jest.fn().mockImplementation(() => ({ 
-            getProgress: getProgressMock 
+          AssessmentLearningService: jest.fn().mockImplementation(() => ({
+            getProgress: getProgressMock
           }))
         }))
         jest.doMock('../pbl-learning-service', () => ({ PBLLearningService: jest.fn().mockImplementation(() => ({})) }))
@@ -107,11 +107,11 @@ describe('LearningServiceFactory', () => {
 
     it('submitResponse returns success/score/feedback/nextTaskAvailable from isCorrect', async () => {
       const submitAnswerMock = jest.fn().mockImplementation(async () => ({ isCorrect: false, correctAnswer: 'B' }))
-      
+
       jest.isolateModules(async () => {
         jest.doMock('../assessment-learning-service', () => ({
-          AssessmentLearningService: jest.fn().mockImplementation(() => ({ 
-            submitAnswer: submitAnswerMock 
+          AssessmentLearningService: jest.fn().mockImplementation(() => ({
+            submitAnswer: submitAnswerMock
           }))
         }))
         jest.doMock('../pbl-learning-service', () => ({ PBLLearningService: jest.fn().mockImplementation(() => ({})) }))
@@ -140,11 +140,11 @@ describe('LearningServiceFactory', () => {
         score: 92,
         domainScores: { domainA: 80 }
       }))
-      
+
       jest.isolateModules(async () => {
         jest.doMock('../assessment-learning-service', () => ({
-          AssessmentLearningService: jest.fn().mockImplementation(() => ({ 
-            completeAssessment: completeAssessmentMock 
+          AssessmentLearningService: jest.fn().mockImplementation(() => ({
+            completeAssessment: completeAssessmentMock
           }))
         }))
         jest.doMock('../pbl-learning-service', () => ({ PBLLearningService: jest.fn().mockImplementation(() => ({})) }))

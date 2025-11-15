@@ -18,38 +18,38 @@ function getUserRepository() {
 export async function GET() {
   try {
     const cookieStore = await cookies()
-    
+
     // Check for session token in cookies
     const sessionToken = cookieStore.get('sessionToken')?.value
-    
+
     if (!sessionToken) {
       return NextResponse.json(
         { success: false, error: 'Not authenticated' },
         { status: 401 }
       )
     }
-    
+
     // Verify the session
     const sessionData = SecureSession.getSession(sessionToken)
-    
+
     if (!sessionData) {
       return NextResponse.json(
         { success: false, error: 'Invalid or expired session' },
         { status: 401 }
       )
     }
-    
+
     // Get user from database
     const repository = getUserRepository()
     const user = await repository.findById(sessionData.userId)
-    
+
     if (!user) {
       return NextResponse.json(
         { success: false, error: 'User not found' },
         { status: 404 }
       )
     }
-    
+
     // Format response data
     const userData = {
       id: user.id,
@@ -65,7 +65,7 @@ export async function GET() {
       createdAt: user.createdAt.toISOString(),
       lastActiveAt: user.lastActiveAt?.toISOString()
     }
-    
+
     return NextResponse.json({
       success: true,
       user: userData

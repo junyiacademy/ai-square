@@ -68,7 +68,7 @@ describe('POST /api/pbl/scenarios/[id]/start', () => {
   const mockScenarioId = '123e4567-e89b-12d3-a456-426614174000';
   const mockUserId = 'user-123';
   const mockProgramId = 'prog-123';
-  
+
   // Helper function to create request with cookie
   const createRequestWithUser = (email: string, body: Record<string, unknown> = { language: 'en' }) => {
     const request = new NextRequest('http://localhost/api/pbl/scenarios/123/start', {
@@ -78,17 +78,17 @@ describe('POST /api/pbl/scenarios/[id]/start', () => {
       },
       body: JSON.stringify(body)
     });
-    
+
     // Mock the cookie getter
     Object.defineProperty(request, 'cookies', {
       value: {
         get: jest.fn().mockReturnValue({ value: JSON.stringify({ email }) })
       }
     });
-    
+
     return request;
   };
-  
+
   const mockScenario = {
     id: mockScenarioId,
     mode: 'pbl',
@@ -162,15 +162,15 @@ describe('POST /api/pbl/scenarios/[id]/start', () => {
       const mockPBLService = {
         startLearning: jest.fn().mockResolvedValue(mockProgram)
       };
-      
+
       const mockUserRepo = {
         findByEmail: jest.fn().mockResolvedValue({ id: mockUserId, email: 'test@example.com' })
       };
-      
+
       const mockScenarioRepo = {
         findById: jest.fn().mockResolvedValue(mockScenario)
       };
-      
+
       const mockTaskRepo = {
         findByProgram: jest.fn().mockResolvedValue(mockTasks)
       };
@@ -216,11 +216,11 @@ describe('POST /api/pbl/scenarios/[id]/start', () => {
       const mockPBLService = {
         startLearning: jest.fn().mockRejectedValue(new Error('Service error'))
       };
-      
+
       const mockUserRepo = {
         findByEmail: jest.fn().mockResolvedValue({ id: mockUserId, email: 'test@example.com' })
       };
-      
+
       const mockScenarioRepo = {
         findById: jest.fn().mockResolvedValue(mockScenario)
       };
@@ -259,7 +259,7 @@ describe('POST /api/pbl/scenarios/[id]/start', () => {
       // Arrange
       // Mock getUnifiedAuth to return null for unauthenticated user
       (getUnifiedAuth as jest.Mock).mockResolvedValue(null);
-      
+
       const request = new NextRequest('http://localhost/api/pbl/scenarios/123/start', {
         method: 'POST',
         headers: {
@@ -284,16 +284,16 @@ describe('POST /api/pbl/scenarios/[id]/start', () => {
       const mockPBLService = {
         startLearning: jest.fn().mockResolvedValue(mockProgram)
       };
-      
+
       const mockUserRepo = {
         findByEmail: jest.fn().mockResolvedValue(null),
         create: jest.fn().mockResolvedValue({ id: mockUserId, email: 'new@example.com' })
       };
-      
+
       const mockScenarioRepo = {
         findById: jest.fn().mockResolvedValue(mockScenario)
       };
-      
+
       const mockTaskRepo = {
         findByProgram: jest.fn().mockResolvedValue(mockTasks)
       };
@@ -328,15 +328,15 @@ describe('POST /api/pbl/scenarios/[id]/start', () => {
       const mockPBLService = {
         startLearning: jest.fn().mockResolvedValue(mockProgram)
       };
-      
+
       const mockUserRepo = {
         findByEmail: jest.fn().mockResolvedValue({ id: mockUserId, email: 'test@example.com' })
       };
-      
+
       const mockScenarioRepo = {
         findById: jest.fn().mockResolvedValue(mockScenario)
       };
-      
+
       const mockTaskRepo = {
         findByProgram: jest.fn().mockResolvedValue(mockTasks)
       };
@@ -383,15 +383,15 @@ describe('POST /api/pbl/scenarios/[id]/start', () => {
       const mockPBLService = {
         startLearning: jest.fn().mockResolvedValue(mockProgram)
       };
-      
+
       const mockUserRepo = {
         findByEmail: jest.fn().mockResolvedValue({ id: mockUserId, email: 'test@example.com' })
       };
-      
+
       const mockScenarioRepo = {
         findById: jest.fn().mockResolvedValue(scenarioWithStringTitles)
       };
-      
+
       const mockTaskRepo = {
         findByProgram: jest.fn().mockResolvedValue([
           {
@@ -433,11 +433,11 @@ describe('POST /api/pbl/scenarios/[id]/start', () => {
         ...mockScenario,
         mode: 'discovery' // Not a PBL scenario
       };
-      
+
       const mockUserRepo = {
         findByEmail: jest.fn().mockResolvedValue({ id: mockUserId, email: 'test@example.com' })
       };
-      
+
       const mockScenarioRepo = {
         findById: jest.fn().mockResolvedValue(nonPBLScenario)
       };
@@ -462,7 +462,7 @@ describe('POST /api/pbl/scenarios/[id]/start', () => {
       const mockUserRepo = {
         findByEmail: jest.fn().mockResolvedValue({ id: mockUserId, email: 'test@example.com' })
       };
-      
+
       const mockScenarioRepo = {
         findById: jest.fn().mockResolvedValue(null)
       };

@@ -22,7 +22,7 @@ INSERT INTO programs (id, ...) VALUES (gen_random_uuid()::text, ...)
 
 ### Integration Tests ✅
 1. **Single Program Creation**: Successfully creates program with auto-generated UUID
-2. **Single Task Creation**: Successfully creates task with auto-generated UUID  
+2. **Single Task Creation**: Successfully creates task with auto-generated UUID
 3. **Batch Task Creation**: Successfully creates multiple tasks with unique UUIDs
 4. **Uniqueness Verification**: All generated IDs are confirmed unique
 

@@ -42,9 +42,9 @@ async function loadPBLScenarios() {
 
     for (const scenarioFolder of scenarioFolders) {
       console.log(`📁 Loading ${scenarioFolder}...`);
-      
+
       const scenarioPath = join(scenariosDir, scenarioFolder);
-      
+
       // 讀取英文版本作為基準
       const enFile = join(scenarioPath, `${scenarioFolder}_en.yaml`);
       const enContent = readFileSync(enFile, 'utf8');
@@ -52,7 +52,7 @@ async function loadPBLScenarios() {
 
       // 讀取所有語言版本
       const multilingualData: Record<string, any> = {};
-      
+
       for (const lang of LANGUAGES) {
         const langFile = join(scenarioPath, `${scenarioFolder}_${lang}.yaml`);
         try {

@@ -374,7 +374,7 @@ skill_codes:
         Практика критического мышления в контексте ИИ включает проверку того, является ли информация, предоставляемая ИИ-системой, точной, релевантной и справедливой. Поскольку ИИ-системы могут генерировать убедительный, но неточный или предвзятый контент, учащиеся должны активно работать над выявлением потенциальной дезинформации и сопоставлять результаты с другими источниками информации. Эти действия приводят к большему осознанию влияния ИИ на более широкую информационную систему. Этот процесс выявляет скрытые предрассудки или пробелы и обеспечивает поддержку этичного принятия решений результатами ИИ. Развивая эти навыки, учащиеся применяют медиаграмотность, цифровую грамотность и цифровое гражданство, становясь более проницательными пользователями ИИ.
       explanation_it: |
         Praticare il pensiero critico in un contesto di IA implica verificare se le informazioni fornite da un sistema di IA sono accurate, rilevanti e giuste. Poiché i sistemi di IA possono generare contenuti convincenti ma scorretti o distorti, gli studenti devono lavorare attivamente per identificare la disinformazione potenziale e valutare gli output con altre fonti di informazione. Queste azioni risultano in una maggiore consapevolezza dell'impatto dell'IA sul sistema informativo più ampio. Questo processo scopre pregiudizi nascosti o lacune e assicura che gli output dell'IA supportino il processo decisionale etico. Sviluppando queste competenze, gli studenti esercitano l'alfabetizzazione mediatica, l'alfabetizzazione digitale e la cittadinanza digitale, diventando utenti più perspicaci dell'IA.
-        
+
     Creativity:
       codes:
         S2.1:
@@ -423,7 +423,7 @@ skill_codes:
         Проявление креативности при использовании ИИ включает взаимодействие с ИИ-системами для мозгового штурма, генерации и совершенствования оригинальных идей. Поскольку учащиеся используют ИИ-системы для исследования возможностей за пределами того, что они первоначально представляли, они должны учитывать влияние ИИ на оригинальность, собственность, атрибуцию и авторские права. Творчески и ответственно взаимодействуя с ИИ-системами, учащиеся остаются подотчетными за идеи, которые они формируют и делятся.
       explanation_it: |
         Esercitare la creatività quando si usa l'IA implica interagire con i sistemi di IA per fare brainstorming, generare e raffinare idee originali. Mentre gli studenti usano i sistemi di IA per esplorare possibilità oltre quello che avevano originariamente immaginato, devono considerare gli impatti dell'IA su originalità, proprietà, attribuzione e copyright. Impegnandosi creativamente e responsabilmente con i sistemi di IA, gli studenti rimangono responsabili delle idee che plasmano e condividono.
-    
+
     Computational_Thinking:
       codes:
         S3.1:
@@ -471,8 +471,8 @@ skill_codes:
       explanation_ru: |
         Навыки вычислительного мышления помогают подходить к проблемам и формулировать их таким образом, чтобы использовать возможности ИИ и учитывать его ограничения. Это включает декомпозицию, или разбиение сложных проблем на структурированные компоненты, и передачу целей и ограничений способом, который ИИ-системы могут эффективно обрабатывать (например, промпт-инжиниринг). Предоставляя ИИ-системам случаи использования, контрпримеры и ожидаемые результаты, учащиеся совершенствуют свои коммуникативные навыки, применяют метакогнитивные стратегии и продвигаются к своим целям.
       explanation_it: |
-        Le competenze del pensiero computazionale aiutano ad affrontare e inquadrare i problemi in modi che sfruttano le capacità dell'IA e tengono conto delle sue limitazioni. Questo implica scomporre, o dividere problemi complessi in componenti strutturati, e comunicare obiettivi e vincoli in un modo che i sistemi di IA possano elaborare efficacemente (ad esempio, prompt engineering). Fornendo casi d'uso, controesempi e risultati attesi ai sistemi di IA, gli studenti affinano le proprie competenze comunicative, si impegnano con strategie metacognitive e fanno progressi verso i loro obiettivi. 
-        
+        Le competenze del pensiero computazionale aiutano ad affrontare e inquadrare i problemi in modi che sfruttano le capacità dell'IA e tengono conto delle sue limitazioni. Questo implica scomporre, o dividere problemi complessi in componenti strutturati, e comunicare obiettivi e vincoli in un modo che i sistemi di IA possano elaborare efficacemente (ad esempio, prompt engineering). Fornendo casi d'uso, controesempi e risultati attesi ai sistemi di IA, gli studenti affinano le proprie competenze comunicative, si impegnano con strategie metacognitive e fanno progressi verso i loro obiettivi.
+
     Collaboration:
       codes:
         S4.1:
@@ -521,7 +521,7 @@ skill_codes:
         Сотрудничество с ИИ основывается на позитивных и продуктивных взаимодействиях между людьми и ИИ-системами. Это требует способности давать обратную связь и просить помощи как в цифровом мире, так и за его пределами. Когда учащиеся сотрудничают с ИИ-системами, они демонстрируют самостоятельность наряду с метапознанием. Тактично сотрудничая, оценивая сильные стороны в контексте и совершенствуя навыки построения отношений, учащиеся развивают способность справляться с новыми и сложными ситуациями.
       explanation_it: |
         La collaborazione con l'IA si basa su interazioni positive e produttive tra esseri umani e sistemi di IA. Questo richiede la capacità di dare feedback e chiedere aiuto sia nel mondo digitale che al di fuori di esso. Mentre gli studenti collaborano con i sistemi di IA, dimostrano agency insieme alla metacognizione. Collaborando con tatto, valutando i punti di forza nel contesto e affinando le competenze di costruzione di relazioni, gli studenti sviluppano la capacità di navigare situazioni nuove e complesse.
-    
+
     Problem_Solving:
       codes:
         S5.1:
@@ -570,7 +570,7 @@ skill_codes:
         Использование ИИ для решения проблемы начинается с вдумчивого размышления о поставленной задаче и включает тщательное рассмотрение того, соответствуют ли возможности ИИ техническим и этическим требованиям задачи. Для этого учащиеся могут тестировать конкретные ИИ-системы на надежность и потенциал воспроизведения вредных предрассудков. Учащиеся решают проблемы с ИИ, когда они спрашивают себя, как ИИ-системы могут добавить ценность, где должно вмешаться человеческое суждение, и когда следует полностью избегать использования ИИ.
       explanation_it: |
         Usare l'IA per affrontare un problema inizia con una riflessione attenta sul compito da svolgere e include una considerazione approfondita di se le capacità dell'IA soddisfano i requisiti tecnici ed etici del compito. Per fare questo, gli studenti potrebbero testare sistemi di IA specifici per l'affidabilità e il potenziale di replicare pregiudizi dannosi. Gli studenti risolvono problemi con l'IA quando si chiedono come i sistemi di IA potrebbero aggiungere valore, dove dovrebbe entrare in gioco il giudizio umano, e quando evitare completamente l'uso dell'IA.
-    
+
     Self_and_Social_Awareness:
       codes:
         S6.1:
@@ -619,7 +619,7 @@ skill_codes:
         Самосознание и социальная осведомленность жизненно важны при взаимодействии с ИИ. Этот навык начинается с признания присутствия ИИ в повседневной жизни и понимания того, как он влияет на решения как в цифровом, так и в физическом мире. Это выходит за рамки простой идентификации и применяется к вдумчивому рассмотрению более широких эффектов ИИ на отдельных людей, сообщества и окружающую среду. Учащиеся также могут метакогнитивно взаимодействовать с эффектами ИИ на их собственное поведение, мысли и процессы обучения. Признавая влияние ИИ, учащиеся лучше подготовлены к оценке контента, созданного ИИ, и мониторингу того, как эти технологии влияют на их мысли и поведение со временем.
       explanation_it: |
         L'autoconsapevolezza e la consapevolezza sociale sono vitali quando si interagisce con l'IA. Questa competenza inizia con il riconoscere la presenza dell'IA nella vita quotidiana e comprendere come influenza le decisioni sia nel mondo digitale che fisico. Questo si estende oltre la mera identificazione e si applica alla considerazione riflessiva degli effetti più ampi dell'IA su individui, comunità e ambiente. Gli studenti potrebbero anche impegnarsi metacognitivamente con gli effetti dell'IA sui propri comportamenti, pensieri e processi di apprendimento. Riconoscendo l'influenza dell'IA, gli studenti sono meglio equipaggiati per valutare i contenuti generati dall'IA e monitorare come queste tecnologie influenzano i loro pensieri e comportamenti nel tempo.
-    
+
     Communication:
       codes:
         S7.1:
@@ -859,7 +859,7 @@ attitude_codes:
           questions_ru: []
           questions_it: []
       explanation: |
-        Learners thoughtfully examine how AI impacts individuals, communities, and the environment. They weigh both the benefits and potential risks of using AI, understanding that its impact can vary for different groups of people. 
+        Learners thoughtfully examine how AI impacts individuals, communities, and the environment. They weigh both the benefits and potential risks of using AI, understanding that its impact can vary for different groups of people.
       explanation_zh: |
         學習者深思熟慮地檢視AI如何影響個人、社群與環境。他們權衡使用AI的益處與潛在風險，理解其影響可能因不同人群而異。
       explanation_es: |

@@ -38,7 +38,7 @@
   },
   "difficulty": {
     "basic": "พื้นฐาน",
-    "intermediate": "ระดับกลาง", 
+    "intermediate": "ระดับกลาง",
     "advanced": "ขั้นสูง"
   },
   "results": {
@@ -76,7 +76,7 @@
     "autoSaved": "บันทึกผลลัพธ์โดยอัตโนมัติ",
     "tabs": {
       "overview": "ภาพรวม",
-      "domains": "โดเมน", 
+      "domains": "โดเมน",
       "recommendations": "คำแนะนำ",
       "ksa": "การวิเคราะห์ KSA",
       "knowledge-graph": "กราฟความรู้"

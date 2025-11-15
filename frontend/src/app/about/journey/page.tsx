@@ -237,7 +237,7 @@ export default function JourneyPage() {
               {/* Screenshot */}
               <div className="relative">
                 <div className="rounded-xl overflow-hidden shadow-2xl">
-                  <Image 
+                  <Image
                     src={path.screenshot}
                     alt={`${path.title} 截圖`}
                     width={800}

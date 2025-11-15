@@ -47,7 +47,7 @@ export default function InterestAssessment({ onComplete }: InterestAssessmentPro
   const isLastQuestion = currentQuestionIndex === totalQuestions - 1;
   const canGoNext = answers[currentQuestion.id] && answers[currentQuestion.id].length > 0;
   const canGoPrevious = currentQuestionIndex > 0;
-  
+
   // Load selected options for current question
   React.useEffect(() => {
     setSelectedOptions(answers[currentQuestion.id] || []);
@@ -63,7 +63,7 @@ export default function InterestAssessment({ onComplete }: InterestAssessmentPro
         return [...prev, optionId];
       }
     });
-    
+
     setAnswers(prev => {
       const currentAnswers = prev[currentQuestion.id] || [];
       if (currentAnswers.includes(optionId)) {
@@ -85,9 +85,9 @@ export default function InterestAssessment({ onComplete }: InterestAssessmentPro
 
   const handleNext = async () => {
     if (!canGoNext || isAnimating) return;
-    
+
     setIsAnimating(true);
-    
+
     if (isLastQuestion) {
       // Calculate results
       const results = calculateResults();
@@ -104,7 +104,7 @@ export default function InterestAssessment({ onComplete }: InterestAssessmentPro
 
   const handlePrevious = () => {
     if (!canGoPrevious || isAnimating) return;
-    
+
     setIsAnimating(true);
     setTimeout(() => {
       setCurrentQuestionIndex(prev => prev - 1);
@@ -114,7 +114,7 @@ export default function InterestAssessment({ onComplete }: InterestAssessmentPro
 
   const calculateResults = (): AssessmentResults => {
     const scores = { tech: 0, creative: 0, business: 0 };
-    
+
     questionsData.forEach(question => {
       const selectedOptionIds = answers[question.id] || [];
       selectedOptionIds.forEach(selectedOptionId => {
@@ -129,18 +129,18 @@ export default function InterestAssessment({ onComplete }: InterestAssessmentPro
 
     // Calculate total score
     const totalScore = scores.tech + scores.creative + scores.business;
-    
+
     // Convert to percentages
     if (totalScore > 0) {
       scores.tech = Math.round((scores.tech / totalScore) * 100);
       scores.creative = Math.round((scores.creative / totalScore) * 100);
       scores.business = Math.round((scores.business / totalScore) * 100);
-      
+
       // Ensure percentages add up to 100
       const sum = scores.tech + scores.creative + scores.business;
       if (sum !== 100) {
         // Adjust the highest score to make it exactly 100
-        const maxKey = Object.keys(scores).reduce((a, b) => 
+        const maxKey = Object.keys(scores).reduce((a, b) =>
           scores[a as keyof typeof scores] > scores[b as keyof typeof scores] ? a : b
         ) as keyof typeof scores;
         scores[maxKey] += (100 - sum);
@@ -208,14 +208,14 @@ export default function InterestAssessment({ onComplete }: InterestAssessmentPro
               </motion.div>
               <span className="text-sm font-bold text-gray-800">AI 興趣分析中</span>
             </div>
-            
+
             <div className="text-right">
               <div className="text-lg font-bold text-purple-600">
                 {Math.round(((currentQuestionIndex + 1) / totalQuestions) * 100)}%
               </div>
             </div>
           </div>
-          
+
           {/* 3D 進度條 */}
           <div className="relative w-full h-3 bg-gray-200 rounded-full shadow-inner border border-gray-300 overflow-hidden">
             <motion.div
@@ -230,7 +230,7 @@ export default function InterestAssessment({ onComplete }: InterestAssessmentPro
                 transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
               />
             </motion.div>
-            
+
             {/* 里程碑指示器 */}
             <div className="absolute top-0 left-0 w-full h-full flex items-center justify-between px-1">
               {Array.from({ length: totalQuestions }, (_, i) => (
@@ -256,7 +256,7 @@ export default function InterestAssessment({ onComplete }: InterestAssessmentPro
               ))}
             </div>
           </div>
-          
+
         </motion.div>
 
         {/* Question Card - Scrollable content */}
@@ -291,7 +291,7 @@ export default function InterestAssessment({ onComplete }: InterestAssessmentPro
                   興趣傾向分析
                 </div>
               </motion.div>
-              
+
                 <motion.h3
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
@@ -300,7 +300,7 @@ export default function InterestAssessment({ onComplete }: InterestAssessmentPro
                 >
                   {currentQuestion.text}
                 </motion.h3>
-              
+
                 {/* 題目提示 */}
                 <motion.p
                   initial={{ opacity: 0 }}
@@ -321,18 +321,18 @@ export default function InterestAssessment({ onComplete }: InterestAssessmentPro
               >
               {currentQuestion.options.map((option, index) => {
                 const isSelected = selectedOptions.includes(option.id);
-                
+
                 const handleAnswer = () => {
                   handleOptionSelect(option.id);
                 };
-                
+
                 return (
                   <motion.div
                     key={option.id}
                     initial={{ opacity: 0, x: -50, scale: 0.9 }}
                     animate={{ opacity: 1, x: 0, scale: 1 }}
-                    transition={{ 
-                      duration: 0.5, 
+                    transition={{
+                      duration: 0.5,
                       delay: index * 0.15,
                       type: "spring",
                       stiffness: 100
@@ -340,7 +340,7 @@ export default function InterestAssessment({ onComplete }: InterestAssessmentPro
                   >
                     <motion.button
                       onClick={handleAnswer}
-                      whileHover={{ 
+                      whileHover={{
                         scale: 1.02,
                         boxShadow: "0 8px 25px rgba(168, 85, 247, 0.15)"
                       }}
@@ -359,7 +359,7 @@ export default function InterestAssessment({ onComplete }: InterestAssessmentPro
                         animate={isSelected ? { opacity: [0, 0.1, 0] } : {}}
                         transition={{ duration: 2, repeat: Infinity }}
                       />
-                      
+
                       {/* 選中指示器 */}
                       {isSelected && (
                         <motion.div
@@ -405,7 +405,7 @@ export default function InterestAssessment({ onComplete }: InterestAssessmentPro
                               </motion.svg>
                             )}
                           </motion.div>
-                          
+
                           <div className="flex-1">
                             <span className={`font-semibold text-base transition-colors ${
                               isSelected ? 'text-purple-800' : 'text-gray-800 group-hover:text-purple-700'
@@ -447,7 +447,7 @@ export default function InterestAssessment({ onComplete }: InterestAssessmentPro
             className={`
               flex items-center space-x-2 px-6 py-3 rounded-xl font-medium transition-all duration-200
               ${canGoPrevious && !isAnimating
-                ? 'bg-gray-100 text-gray-700 hover:bg-gray-200' 
+                ? 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 : 'bg-gray-50 text-gray-400 cursor-not-allowed'
               }
             `}
@@ -464,7 +464,7 @@ export default function InterestAssessment({ onComplete }: InterestAssessmentPro
             className={`
               flex items-center space-x-2 px-6 py-3 rounded-xl font-medium transition-all duration-200
               ${canGoNext && !isAnimating
-                ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg hover:shadow-xl' 
+                ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg hover:shadow-xl'
                 : 'bg-gray-100 text-gray-400 cursor-not-allowed'
               }
             `}
@@ -483,8 +483,8 @@ export default function InterestAssessment({ onComplete }: InterestAssessmentPro
               key={index}
               className={`
                 w-3 h-3 rounded-full transition-all duration-200
-                ${index <= currentQuestionIndex 
-                  ? 'bg-purple-500' 
+                ${index <= currentQuestionIndex
+                  ? 'bg-purple-500'
                   : 'bg-gray-200'
                 }
               `}

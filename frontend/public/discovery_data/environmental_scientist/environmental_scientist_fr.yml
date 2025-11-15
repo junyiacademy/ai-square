@@ -7,10 +7,10 @@ metadata:
   title: "Gardien de la Planète - Scientifique Environnemental"
   short_description: "Protégez la Terre grâce à des solutions environnementales basées sur les données"
   long_description: |
-    Vous êtes un scientifique junior au "Centre Mondial de Réponse Climatique", où des 
-    systèmes de surveillance alimentés par l'IA suivent la santé planétaire en temps réel. 
-    Armé de technologies de pointe et de connaissances en sciences environnementales, 
-    vous travaillerez à comprendre et inverser les dommages climatiques tout en développant 
+    Vous êtes un scientifique junior au "Centre Mondial de Réponse Climatique", où des
+    systèmes de surveillance alimentés par l'IA suivent la santé planétaire en temps réel.
+    Armé de technologies de pointe et de connaissances en sciences environnementales,
+    vous travaillerez à comprendre et inverser les dommages climatiques tout en développant
     des solutions durables pour l'avenir.
   estimated_hours: 60
   skill_focus:
@@ -26,20 +26,20 @@ metadata:
 world_setting:
   name: "Centre Mondial de Réponse Climatique"
   description: |
-    Le Centre Mondial de Réponse Climatique est une installation de haute technologie 
-    où les scientifiques environnementaux utilisent l'IA, les données satellites et 
-    la recherche de terrain pour surveiller et protéger les écosystèmes de la Terre. 
-    Les scientifiques ici font la course contre la montre pour développer des solutions 
+    Le Centre Mondial de Réponse Climatique est une installation de haute technologie
+    où les scientifiques environnementaux utilisent l'IA, les données satellites et
+    la recherche de terrain pour surveiller et protéger les écosystèmes de la Terre.
+    Les scientifiques ici font la course contre la montre pour développer des solutions
     avant que des points de basculement critiques ne soient atteints.
   atmosphere: urgent_hopeful
   visual_theme: eco_tech_fusion
 starting_scenario:
   title: "Code Rouge : Crise Climatique"
   description: |
-    Dr. Gaïa Terre vous accueille avec des nouvelles alarmantes : plusieurs systèmes 
-    environnementaux approchent des seuils critiques. Pendant ce temps, le PDG Polluto 
-    de MegaCorp continue ses pratiques destructrices pour le profit. Vous devez utiliser 
-    la science et l'innovation pour sauver les écosystèmes tout en exposant les crimes 
+    Dr. Gaïa Terre vous accueille avec des nouvelles alarmantes : plusieurs systèmes
+    environnementaux approchent des seuils critiques. Pendant ce temps, le PDG Polluto
+    de MegaCorp continue ses pratiques destructrices pour le profit. Vous devez utiliser
+    la science et l'innovation pour sauver les écosystèmes tout en exposant les crimes
     environnementaux des entreprises.
   initial_tasks:
     - analyze_climate_data

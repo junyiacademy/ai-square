@@ -23,7 +23,7 @@ class ProductionMonitor {
   constructor() {
     this.config = this.loadConfig();
     this.isEnabled = process.env.NODE_ENV === 'production';
-    
+
     if (this.isEnabled) {
       this.startPeriodicReporting();
     }
@@ -59,14 +59,14 @@ class ProductionMonitor {
 
       // Calculate summary
       const summary = {
-        averageResponseTime: metrics.length > 0 
-          ? metrics.reduce((sum, m) => sum + m.averageResponseTime, 0) / metrics.length 
+        averageResponseTime: metrics.length > 0
+          ? metrics.reduce((sum, m) => sum + m.averageResponseTime, 0) / metrics.length
           : 0,
-        averageCacheHitRate: metrics.length > 0 
-          ? metrics.reduce((sum, m) => sum + m.cacheHitRate, 0) / metrics.length 
+        averageCacheHitRate: metrics.length > 0
+          ? metrics.reduce((sum, m) => sum + m.cacheHitRate, 0) / metrics.length
           : 0,
-        averageErrorRate: metrics.length > 0 
-          ? metrics.reduce((sum, m) => sum + m.errorRate, 0) / metrics.length 
+        averageErrorRate: metrics.length > 0
+          ? metrics.reduce((sum, m) => sum + m.errorRate, 0) / metrics.length
           : 0
       };
 
@@ -91,11 +91,11 @@ class ProductionMonitor {
 
     // Calculate summary
     const summary = {
-      averageResponseTime: metrics.length > 0 
-        ? metrics.reduce((sum, m) => sum + m.averageResponseTime, 0) / metrics.length 
+      averageResponseTime: metrics.length > 0
+        ? metrics.reduce((sum, m) => sum + m.averageResponseTime, 0) / metrics.length
         : 0,
-      averageErrorRate: metrics.length > 0 
-        ? metrics.reduce((sum, m) => sum + m.errorRate, 0) / metrics.length 
+      averageErrorRate: metrics.length > 0
+        ? metrics.reduce((sum, m) => sum + m.errorRate, 0) / metrics.length
         : 0,
       averageCacheHitRate: (cacheStats as { hitRate?: number }).hitRate || 0
     };
@@ -135,7 +135,7 @@ class ProductionMonitor {
   private sendAlert(type: string, data: Record<string, unknown>): void {
     const now = Date.now();
     const lastAlert = this.alertCooldown.get(type);
-    
+
     // Skip if in cooldown period
     if (lastAlert && now - lastAlert < this.COOLDOWN_DURATION) {
       return;

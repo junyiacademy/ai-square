@@ -168,22 +168,22 @@ describe('Login Flow', () => {
 
   it('should redirect to dashboard after login', async () => {
     const { user } = renderWithProviders(<LoginForm />);
-    
+
     // 填寫表單
     await user.type(screen.getByLabelText('Email'), 'test@example.com');
     await user.type(screen.getByLabelText('Password'), 'password123');
-    
+
     // Mock 成功登入
     mockFetch.mockResolvedValueOnce(
-      mockApiSuccess({ 
+      mockApiSuccess({
         user: testUsers.student,
-        token: 'jwt-token' 
+        token: 'jwt-token'
       })
     );
-    
+
     // 提交表單
     await user.click(screen.getByRole('button', { name: 'Login' }));
-    
+
     // 驗證 API 呼叫
     await waitFor(() => {
       expect(mockFetch).toHaveBeenCalledWith('/api/auth/login', {
@@ -194,7 +194,7 @@ describe('Login Flow', () => {
         }),
       });
     });
-    
+
     // 驗證導航
     expect(navigationMocks.mockPush).toHaveBeenCalledWith('/dashboard');
   });
@@ -208,14 +208,14 @@ describe('Protected Page', () => {
   it('should show content for authenticated users', () => {
     setupAuthenticatedUser(testUsers.teacher);
     renderWithProviders(<ProtectedPage />);
-    
+
     expect(screen.getByText('Welcome, Test Teacher!')).toBeInTheDocument();
   });
 
   it('should redirect unauthenticated users', () => {
     setupUnauthenticatedUser();
     renderWithProviders(<ProtectedPage />);
-    
+
     expect(navigationMocks.mockPush).toHaveBeenCalledWith('/login');
   });
 });
@@ -227,13 +227,13 @@ describe('Protected Page', () => {
 describe('Async Operations', () => {
   it('should load data on mount', async () => {
     mockFetch.mockResolvedValueOnce(
-      mockApiSuccess({ 
-        items: ['Item 1', 'Item 2'] 
+      mockApiSuccess({
+        items: ['Item 1', 'Item 2']
       })
     );
-    
+
     renderWithProviders(<DataList />);
-    
+
     // 等待資料載入
     await waitFor(() => {
       expect(screen.getByText('Item 1')).toBeInTheDocument();

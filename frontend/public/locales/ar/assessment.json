@@ -38,7 +38,7 @@
   },
   "difficulty": {
     "basic": "أساسي",
-    "intermediate": "متوسط", 
+    "intermediate": "متوسط",
     "advanced": "متقدم"
   },
   "results": {
@@ -76,7 +76,7 @@
     "autoSaved": "تم حفظ النتائج تلقائياً",
     "tabs": {
       "overview": "نظرة عامة",
-      "domains": "المجالات", 
+      "domains": "المجالات",
       "recommendations": "التوصيات",
       "ksa": "تحليل KSA",
       "knowledge-graph": "مخطط المعرفة"

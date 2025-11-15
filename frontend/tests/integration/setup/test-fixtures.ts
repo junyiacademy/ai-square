@@ -1,16 +1,16 @@
 import { v4 as uuidv4 } from 'uuid';
 import { Pool } from 'pg';
-import type { 
-  IScenario, 
-  IProgram, 
-  ITask, 
+import type {
+  IScenario,
+  IProgram,
+  ITask,
   IEvaluation
 } from '@/types/unified-learning';
 import type { LearningMode } from '@/types/database';
 
 /**
  * Test Data Fixtures for Integration Testing
- * 
+ *
  * Provides consistent test data across all integration tests
  */
 
@@ -342,7 +342,7 @@ export const performanceTestData = {
       },
     } as unknown as IScenario));
   },
-  
+
   // Generate multiple users for concurrent testing
   generateUsers: (count: number) => {
     return Array.from({ length: count }, (_, i) => ({
@@ -355,7 +355,7 @@ export const performanceTestData = {
       emailVerified: true,
     }));
   },
-  
+
   // Generate bulk operations
   generateBulkOperations: (count: number) => {
     const operations = [];
@@ -376,7 +376,7 @@ export function resetTestDataIds() {
   Object.keys(testUsers).forEach(key => {
     testUsers[key as keyof typeof testUsers].id = uuidv4();
   });
-  
+
   Object.keys(testScenarios).forEach(key => {
     testScenarios[key as keyof typeof testScenarios].id = uuidv4();
   });
@@ -385,10 +385,10 @@ export function resetTestDataIds() {
 // Export a function to seed database with test data
 export async function seedTestDatabase(pool: Pool) {
   const client = await pool.connect();
-  
+
   try {
     await client.query('BEGIN');
-    
+
     // Insert test users
     for (const user of Object.values(testUsers)) {
       await client.query(
@@ -398,7 +398,7 @@ export async function seedTestDatabase(pool: Pool) {
         [user.id, user.email, user.passwordHash, user.name, user.role, user.emailVerified, new Date(), new Date()]
       );
     }
-    
+
     // Insert test scenarios
     for (const scenario of Object.values(testScenarios)) {
       await client.query(
@@ -423,7 +423,7 @@ export async function seedTestDatabase(pool: Pool) {
         ]
       );
     }
-    
+
     await client.query('COMMIT');
     console.log('✅ Test database seeded successfully');
   } catch (error) {

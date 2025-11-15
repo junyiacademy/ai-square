@@ -14,7 +14,7 @@ const createMockResponse = () => {
       headers.set('set-cookie', cookieString);
     })
   };
-  
+
   return {
     headers: {
       get: (key: string) => headers.get(key),
@@ -28,9 +28,9 @@ const createMockResponse = () => {
 const createMockRequest = (cookieValue?: string) => {
   return {
     cookies: {
-      get: jest.fn((name: string) => 
-        name === 'sessionToken' && cookieValue 
-          ? { value: cookieValue } 
+      get: jest.fn((name: string) =>
+        name === 'sessionToken' && cookieValue
+          ? { value: cookieValue }
           : undefined
       )
     }
@@ -42,9 +42,9 @@ describe('AuthManager - Centralized Authentication', () => {
     it('should use only one cookie for authentication', () => {
       const response = createMockResponse();
       const token = 'test-session-token';
-      
+
       AuthManager.setAuthCookie(response, token);
-      
+
       // Should only set one cookie
       expect(response.cookies.set).toHaveBeenCalledTimes(1);
       expect(response.cookies.set).toHaveBeenCalledWith('sessionToken', token, expect.objectContaining({
@@ -58,16 +58,16 @@ describe('AuthManager - Centralized Authentication', () => {
       // Create a valid hex token (32 bytes = 64 hex chars)
       const validToken = crypto.randomBytes(32).toString('hex');
       const request = createMockRequest(validToken);
-      
+
       const isAuthenticated = AuthManager.isAuthenticated(request);
       expect(isAuthenticated).toBe(true);
     });
 
     it('should clear all auth cookies on logout', () => {
       const response = createMockResponse();
-      
+
       AuthManager.clearAuthCookies(response);
-      
+
       expect(response.cookies.set).toHaveBeenCalledWith('sessionToken', '', expect.objectContaining({
         httpOnly: true,
         maxAge: 0,
@@ -81,7 +81,7 @@ describe('AuthManager - Centralized Authentication', () => {
       // Valid hex token (32 bytes = 64 hex chars)
       const validToken = crypto.randomBytes(32).toString('hex');
       const invalidToken = 'invalid-token';
-      
+
       expect(AuthManager.isValidSessionToken(validToken)).toBe(true);
       expect(AuthManager.isValidSessionToken(invalidToken)).toBe(false);
     });

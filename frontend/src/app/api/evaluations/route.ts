@@ -15,14 +15,14 @@ export async function GET(request: NextRequest) {
     const taskId = searchParams.get('taskId');
 
     const evaluationRepo = repositoryFactory.getEvaluationRepository();
-    
+
     if (userId) {
       // Get user's evaluation history
       // TODO: IEvaluationRepository doesn't have findByUser method
       // const evaluations = await evaluationRepo.findByUser(userId);
       const progress = await evaluationRepo.getUserProgress?.(userId);
       const ksaProgress = await evaluationRepo.getUserProgress?.(userId); // KSA progress is part of getUserProgress
-      
+
       return NextResponse.json({
         evaluations: [], // Return empty array for now
         progress,
@@ -92,17 +92,17 @@ export async function POST(request: NextRequest) {
 
     const evaluationPrompt = `
     You are evaluating a student's response for an AI literacy learning task.
-    
+
     Task Context: ${JSON.stringify(context)}
     Student Response: ${JSON.stringify(userResponse)}
     Evaluation Rubric: ${JSON.stringify(rubric)}
-    
+
     Please provide:
     1. A score from 0-100
     2. Detailed feedback in a supportive tone
     3. KSA (Knowledge, Skills, Attitudes) breakdown scores
     4. Specific strengths and areas for improvement
-    
+
     Response in JSON format:
     {
       "score": number,
@@ -119,7 +119,7 @@ export async function POST(request: NextRequest) {
 
     const result = await model.generateContent(evaluationPrompt);
     const response = result.response;
-    
+
     // Parse AI response with error handling
     let aiEvaluation;
     try {
@@ -171,7 +171,7 @@ export async function POST(request: NextRequest) {
       if (task.programId) {
         const programRepo = repositoryFactory.getProgramRepository();
         const program = await programRepo.findById(task.programId);
-        
+
         if (program) {
           const tasks = await taskRepo.findByProgram(task.programId);
           const completedTasks = tasks.filter(t => t.status === 'completed').length;

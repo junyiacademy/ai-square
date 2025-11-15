@@ -7,9 +7,9 @@ metadata:
   title: Business Adventurer - Startup Founder
   short_description: Pioneer new trade routes in the business wilderness
   long_description: |
-    You are an explorer of the "New Business Continent," tasked with establishing 
-    new outposts in unknown business territories. In this wilderness full of opportunities 
-    and dangers, every decision could change your destiny, and loyal companions will 
+    You are an explorer of the "New Business Continent," tasked with establishing
+    new outposts in unknown business territories. In this wilderness full of opportunities
+    and dangers, every decision could change your destiny, and loyal companions will
     face challenges alongside you.
   estimated_hours: 60
   skill_focus:
@@ -24,17 +24,17 @@ metadata:
 world_setting:
   name: New Business Continent
   description: |
-    The New Business Continent is a vast unexplored business wilderness where brave 
-    entrepreneurs venture to establish new trade routes and build empires. Success 
+    The New Business Continent is a vast unexplored business wilderness where brave
+    entrepreneurs venture to establish new trade routes and build empires. Success
     requires cunning, courage, and the ability to turn scarce resources into gold.
   atmosphere: adventurous_challenging
   visual_theme: frontier_exploration
 starting_scenario:
   title: The Baron's Blockade
   description: |
-    Scout, your expedition partner, brings dire news: Baron Greed controls most 
-    resources and is crushing new merchants. Meanwhile, supplier Lily has backed 
-    out at a crucial moment. You must find creative ways to break through and 
+    Scout, your expedition partner, brings dire news: Baron Greed controls most
+    resources and is crushing new merchants. Meanwhile, supplier Lily has backed
+    out at a crucial moment. You must find creative ways to break through and
     establish your trading post.
   initial_tasks:
     - survey_market

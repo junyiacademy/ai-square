@@ -54,13 +54,13 @@ echo ""
 # Check if service exists
 if gcloud run services describe $SERVICE_NAME --region=$REGION --project=$PROJECT_ID &> /dev/null; then
     print_status "success" "Cloud Run service found"
-    
+
     # Get current service account
     CURRENT_SA=$(gcloud run services describe $SERVICE_NAME \
         --region=$REGION \
         --project=$PROJECT_ID \
         --format="value(spec.template.spec.serviceAccountName)")
-    
+
     echo "Current service account: $CURRENT_SA"
 else
     print_status "error" "Cloud Run service not found"
@@ -105,7 +105,7 @@ grant_role() {
     local role=$1
     local description=$2
     echo -n "  $description... "
-    
+
     if gcloud projects add-iam-policy-binding $PROJECT_ID \
         --member="serviceAccount:$SERVICE_ACCOUNT" \
         --role="$role" \
@@ -183,22 +183,22 @@ export async function GET(request) {
   try {
     const projectId = process.env.GOOGLE_CLOUD_PROJECT || process.env.GCP_PROJECT_ID;
     const location = process.env.VERTEX_AI_LOCATION || 'asia-east1';
-    
+
     // Initialize Vertex AI
     const vertexAI = new VertexAI({
       project: projectId,
       location: location,
     });
-    
+
     // Get model
     const model = vertexAI.preview.getGenerativeModel({
       model: 'gemini-2.5-flash',
     });
-    
+
     // Simple test
     const result = await model.generateContent('Hello, respond with "AI is working"');
     const response = result.response?.candidates?.[0]?.content?.parts?.[0]?.text;
-    
+
     return new Response(JSON.stringify({
       success: true,
       message: 'Vertex AI is connected',

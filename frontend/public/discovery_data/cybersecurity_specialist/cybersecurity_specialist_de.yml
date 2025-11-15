@@ -6,9 +6,9 @@ metadata:
   title: "Wächter der Digitalen Festung - Cybersicherheitsspezialist"
   short_description: "Verteidige das digitale Reich vor Cyberbedrohungen"
   long_description: |
-    Du bist ein Rekrut an der "Cyber-Verteidigungsakademie", einem Elite-Trainingsgelände 
-    für digitale Krieger. In einer Welt, in der Daten das neue Gold sind und Hacker in 
-    jedem Schatten des Internets lauern, wirst du lernen, kritische Infrastrukturen zu 
+    Du bist ein Rekrut an der "Cyber-Verteidigungsakademie", einem Elite-Trainingsgelände
+    für digitale Krieger. In einer Welt, in der Daten das neue Gold sind und Hacker in
+    jedem Schatten des Internets lauern, wirst du lernen, kritische Infrastrukturen zu
     schützen, Cyberkriminelle zu jagen und undurchdringliche digitale Festungen zu errichten.
   estimated_hours: 65
   skill_focus:
@@ -20,19 +20,19 @@ metadata:
 world_setting:
   name: "Cyber-Verteidigungsakademie"
   description: |
-    Die Cyber-Verteidigungsakademie existiert sowohl in physischen als auch virtuellen 
-    Welten. Schüler navigieren durch simulierte Cyberangriffe, lernen von legendären 
-    White-Hat-Hackern und bereiten sich auf reale Bedrohungen vor, die Nationen oder 
+    Die Cyber-Verteidigungsakademie existiert sowohl in physischen als auch virtuellen
+    Welten. Schüler navigieren durch simulierte Cyberangriffe, lernen von legendären
+    White-Hat-Hackern und bereiten sich auf reale Bedrohungen vor, die Nationen oder
     Konzerne in Sekunden lahmlegen könnten.
   atmosphere: high_stakes_tactical
   visual_theme: matrix_fortress
 starting_scenario:
   title: "Der Aufstieg des Dark Web"
   description: |
-    Commander Firewall informiert dich über eine dringende Situation: Das berüchtigte 
-    Hacker-Kollektiv "Shadow Byte", angeführt vom mysteriösen Zero Day, plant einen 
+    Commander Firewall informiert dich über eine dringende Situation: Das berüchtigte
+    Hacker-Kollektiv "Shadow Byte", angeführt vom mysteriösen Zero Day, plant einen
     massiven Angriff auf die globale Infrastruktur. Du musst schnell Cybersicherheits-
-    fähigkeiten meistern, um der Verteidigungseinheit beizutreten und die digitale 
+    fähigkeiten meistern, um der Verteidigungseinheit beizutreten und die digitale
     Apokalypse zu verhindern.
   initial_tasks:
     - understand_threats

@@ -238,7 +238,7 @@ describe('AssessmentQuiz', () => {
     );
 
     fireEvent.click(screen.getByText('Ask very general questions'));
-    
+
     const nextButton = screen.getByText('Submit');
     expect(nextButton).not.toBeDisabled();
   });
@@ -258,7 +258,7 @@ describe('AssessmentQuiz', () => {
 
   it('auto-completes when timer reaches zero', async () => {
     jest.useFakeTimers();
-    
+
     renderWithProviders(
       <AssessmentQuiz
         questions={mockQuestions}

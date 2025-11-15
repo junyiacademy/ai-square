@@ -4,7 +4,7 @@
 BEGIN;
 
 -- 1. 新增 feedback JSONB 欄位來支援多語言
-ALTER TABLE evaluations 
+ALTER TABLE evaluations
 ADD COLUMN IF NOT EXISTS feedback JSONB DEFAULT '{}'::jsonb;
 
 -- 2. 如果有現有的 feedback_text 資料，遷移到新欄位
@@ -14,7 +14,7 @@ SET feedback = jsonb_build_object(
     'zhTW', feedback_text,  -- 暫時複製，之後可以翻譯
     'zhCN', feedback_text   -- 暫時複製，之後可以翻譯
 )
-WHERE feedback_text IS NOT NULL 
+WHERE feedback_text IS NOT NULL
   AND feedback_text != ''
   AND (feedback IS NULL OR feedback = '{}'::jsonb);
 

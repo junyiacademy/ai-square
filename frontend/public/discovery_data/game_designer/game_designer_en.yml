@@ -7,11 +7,11 @@ metadata:
   title: "Dream Architect - Game Designer"
   short_description: "Create infinite possibilities in virtual worlds"
   long_description: |
-    You are a talented designer at the "Dream Architecture Academy," possessing the 
-    magic to transform imagination into interactive experiences. In this academy filled 
-    with creativity and fun, every game mechanic is a door to new worlds, and your 
+    You are a talented designer at the "Dream Architecture Academy," possessing the
+    magic to transform imagination into interactive experiences. In this academy filled
+    with creativity and fun, every game mechanic is a door to new worlds, and your
     mission is to create immersive digital dreams that captivate players.
-  
+
   estimated_hours: 60
   skill_focus:
     - world_building
@@ -22,20 +22,20 @@ metadata:
 world_setting:
   name: "Dream Architecture Academy"
   description: |
-    The Dream Architecture Academy is a magical institution dedicated to training game 
-    designers. Here, students learn to balance creativity with technical constraints, 
+    The Dream Architecture Academy is a magical institution dedicated to training game
+    designers. Here, students learn to balance creativity with technical constraints,
     fun with challenge, and create experiences that resonate with players worldwide.
-  
+
   atmosphere: "playful_creative"
   visual_theme: "fantasy_academy"
 
 starting_scenario:
   title: "The Grind Invasion"
   description: |
-    Creative God Dream welcomes you with troubling news: Grind, the King of Boredom, 
-    is turning all games into mindless number farms, pursuing efficiency over fun. 
+    Creative God Dream welcomes you with troubling news: Grind, the King of Boredom,
+    is turning all games into mindless number farms, pursuing efficiency over fun.
     You must use creativity and joy to combat the mechanization of gaming experiences.
-  
+
   initial_tasks:
     - understand_game_design
     - learn_player_psychology
@@ -50,7 +50,7 @@ skill_tree:
       unlocks:
         - combat_systems
         - puzzle_design
-    
+
     - id: level_design
       name: "World Crafting"
       description: "Create immersive game levels"
@@ -58,7 +58,7 @@ skill_tree:
       unlocks:
         - environment_storytelling
         - difficulty_curves
-    
+
     - id: narrative_design
       name: "Story Architecture"
       description: "Weave compelling game narratives"
@@ -66,7 +66,7 @@ skill_tree:
       unlocks:
         - character_development
         - branching_stories
-    
+
     - id: player_experience
       name: "Experience Engineering"
       description: "Optimize player enjoyment"
@@ -81,13 +81,13 @@ skill_tree:
       description: "Create complex interconnected systems"
       max_level: 15
       requires: [game_mechanics, level_design]
-    
+
     - id: monetization_design
       name: "Ethical Economics"
       description: "Design fair monetization systems"
       max_level: 15
       requires: [player_experience, game_mechanics]
-    
+
     - id: multiplayer_design
       name: "Social Architecture"
       description: "Design engaging multiplayer experiences"
@@ -104,7 +104,7 @@ milestone_quests:
     unlocks:
       - game_creator_badge
       - player_feedback
-  
+
   - id: grind_battle
     name: "Fun vs Formula"
     description: "Create a game that defeats Grind's boring mechanics"
@@ -114,7 +114,7 @@ milestone_quests:
     unlocks:
       - fun_guardian_title
       - creative_freedom
-  
+
   - id: dream_masterpiece
     name: "Digital Dream"
     description: "Create a game played by millions"
@@ -131,19 +131,19 @@ achievements:
     description: "Design your first game mechanic"
     xp_reward: 80
     badge_type: bronze
-  
+
   - id: playtester_favorite
     name: "Player's Choice"
     description: "Receive positive feedback from 100 playtesters"
     xp_reward: 300
     badge_type: silver
-  
+
   - id: innovation_award
     name: "Innovation Master"
     description: "Create a truly original game concept"
     xp_reward: 500
     badge_type: gold
-  
+
   - id: design_legend
     name: "Legendary Designer"
     description: "Complete all design challenges"
@@ -158,14 +158,14 @@ example_tasks:
       description: "Design game world and backstory"
       skills_improved: [world_building, narrative_design]
       xp_reward: 70
-    
+
     - id: core_loop
       type: creation
       title: "Fun Formula"
       description: "Design the core game loop"
       skills_improved: [game_mechanics, fun_summoning]
       xp_reward: 80
-  
+
   intermediate:
     - id: mechanics_design
       type: creation
@@ -173,14 +173,14 @@ example_tasks:
       description: "Design core game mechanics"
       skills_improved: [mechanics_design, player_experience]
       xp_reward: 180
-    
+
     - id: level_creation
       type: creation
       title: "Experience Sculpting"
       description: "Create engaging game levels"
       skills_improved: [level_design, emotional_manipulation]
       xp_reward: 200
-  
+
   advanced:
     - id: systems_integration
       type: creation
@@ -188,7 +188,7 @@ example_tasks:
       description: "Design interconnected game systems"
       skills_improved: [systems_design, game_mechanics]
       xp_reward: 380
-    
+
     - id: multiplayer_experience
       type: creation
       title: "Social Playground"

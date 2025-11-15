@@ -23,17 +23,17 @@ async function runMigration() {
 
   try {
     console.log('🔄 Running authentication migration...');
-    
+
     // Read migration file
     const migrationPath = path.join(
       __dirname,
       '../src/lib/repositories/postgresql/migrations/20250204-add-password-column.sql'
     );
     const migrationSQL = fs.readFileSync(migrationPath, 'utf-8');
-    
+
     // Execute migration
     await pool.query(migrationSQL);
-    
+
     console.log('✅ Migration completed successfully!');
     console.log('📋 Added columns:');
     console.log('  - password_hash: For storing bcrypt hashed passwords');
@@ -43,14 +43,14 @@ async function runMigration() {
     console.log('📋 Created tables:');
     console.log('  - verification_tokens: For email verification and password reset');
     console.log('  - user_sessions: For session management');
-    
+
     // Check current users
     const { rows: users } = await pool.query('SELECT id, email, role FROM users LIMIT 5');
     console.log('\n📊 Sample users in database:');
     users.forEach(user => {
       console.log(`  - ${user.email} (${user.role || 'student'})`);
     });
-    
+
   } catch (error) {
     console.error('❌ Migration failed:', error);
     process.exit(1);

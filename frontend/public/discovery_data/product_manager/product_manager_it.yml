@@ -7,12 +7,12 @@ metadata:
   title: "Alchimista del Prodotto - Product Manager"
   short_description: "Forgia prodotti perfetti nel crogiolo del mercato"
   long_description: |
-    Sei un alchimista appena diplomato presso il "Laboratorio di Alchimia del Prodotto", 
-    esperto nel fondere bisogni degli utenti, capacità tecniche e obiettivi aziendali 
-    in prodotti potenti. In questo laboratorio pieno di scintille innovative, ogni 
-    iterazione è un esperimento alchemico, e il tuo obiettivo è creare prodotti 
+    Sei un alchimista appena diplomato presso il "Laboratorio di Alchimia del Prodotto",
+    esperto nel fondere bisogni degli utenti, capacità tecniche e obiettivi aziendali
+    in prodotti potenti. In questo laboratorio pieno di scintille innovative, ogni
+    iterazione è un esperimento alchemico, e il tuo obiettivo è creare prodotti
     perfetti che possano cambiare il mondo.
-  
+
   estimated_hours: 55
   skill_focus:
     - requirement_alchemy
@@ -22,22 +22,22 @@ metadata:
 world_setting:
   name: "Laboratorio di Alchimia del Prodotto"
   description: |
-    Il Laboratorio di Alchimia del Prodotto è una fucina magica dove le idee vengono 
-    trasformate in prodotti reali. Qui, i product manager apprendono l'antica arte 
-    di bilanciare i desideri degli utenti, i vincoli tecnici e gli obiettivi aziendali 
+    Il Laboratorio di Alchimia del Prodotto è una fucina magica dove le idee vengono
+    trasformate in prodotti reali. Qui, i product manager apprendono l'antica arte
+    di bilanciare i desideri degli utenti, i vincoli tecnici e gli obiettivi aziendali
     per creare prodotti che risuonano con milioni di persone.
-  
+
   atmosphere: "dynamic_creative"
   visual_theme: "innovation_forge"
 starting_scenario:
   title: "La Sfida dell'Alchimista"
   description: |
-    Il Maestro di Strategia ti accoglie nel laboratorio con un avvertimento: Deadline, 
-    il Tiranno del Tempo, sta costringendo i team a sacrificare la qualità del prodotto 
-    per la velocità. Nel frattempo, la Voce degli Utenti diventa sempre più forte 
-    con richieste contrastanti. Devi trovare la pietra filosofale del product management - 
+    Il Maestro di Strategia ti accoglie nel laboratorio con un avvertimento: Deadline,
+    il Tiranno del Tempo, sta costringendo i team a sacrificare la qualità del prodotto
+    per la velocità. Nel frattempo, la Voce degli Utenti diventa sempre più forte
+    con richieste contrastanti. Devi trovare la pietra filosofale del product management -
     bilanciare qualità, velocità e soddisfazione dell'utente.
-  
+
   initial_tasks:
     - understand_users
     - analyze_market

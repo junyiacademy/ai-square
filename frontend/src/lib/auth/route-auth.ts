@@ -1,6 +1,6 @@
 /**
  * Authentication utilities for Route Handlers
- * 
+ *
  * Use this instead of getServerSession in API routes
  * to properly extract authentication from NextRequest
  */
@@ -24,19 +24,19 @@ export async function getRouteSession(request: NextRequest): Promise<RouteSessio
   try {
     // Get session token from cookie
     const sessionToken = request.cookies.get('sessionToken')?.value;
-    
+
     if (!sessionToken) {
       // Try header as fallback (for API calls)
       const headerToken = request.headers.get('x-session-token');
       if (!headerToken) {
         return null;
       }
-      
+
       const sessionData = SecureSession.getSession(headerToken);
       if (!sessionData) {
         return null;
       }
-      
+
       return {
         user: {
           id: sessionData.userId,
@@ -45,14 +45,14 @@ export async function getRouteSession(request: NextRequest): Promise<RouteSessio
         }
       };
     }
-    
+
     // Get session data from secure session store
     const sessionData = SecureSession.getSession(sessionToken);
-    
+
     if (!sessionData) {
       return null;
     }
-    
+
     // Return user data from session
     return {
       user: {

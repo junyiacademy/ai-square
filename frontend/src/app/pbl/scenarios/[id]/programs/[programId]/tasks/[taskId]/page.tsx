@@ -795,7 +795,7 @@ export default function ProgramLearningPage() {
 
   const handleTranslateEvaluation = async () => {
     if (!currentTask || !evaluation || isTranslating) return;
-    
+
     setIsTranslating(true);
     try {
       const response = await authenticatedFetch(`/api/pbl/tasks/${currentTask.id}/translate-evaluation`, {
@@ -805,11 +805,11 @@ export default function ProgramLearningPage() {
           'Accept-Language': i18n.language
         }
       });
-      
+
       if (!response.ok) {
         throw new Error('Translation failed');
       }
-      
+
       const data = await response.json();
       if (data.success && data.data?.evaluation) {
         // Update evaluation with translated content
@@ -818,7 +818,7 @@ export default function ProgramLearningPage() {
           ...data.data.evaluation,
           needsTranslation: false
         });
-        
+
         // Update taskEvaluations map as well
         setTaskEvaluations(prev => ({
           ...prev,
@@ -1161,7 +1161,7 @@ export default function ProgramLearningPage() {
                     {evaluation.domainScores && (() => {
                       const domainOrder: DomainType[] = ['engaging_with_ai', 'creating_with_ai', 'managing_with_ai', 'designing_with_ai'];
                       const targetDomainsList = scenario?.targetDomains || [];
-                      
+
                       // Show all domains, but mark non-target ones as NA
                       return domainOrder.map(domain => {
                         const isTargetDomain = targetDomainsList.length === 0 || targetDomainsList.includes(domain);
@@ -1655,7 +1655,7 @@ export default function ProgramLearningPage() {
                         {evaluation.domainScores && (() => {
                           const domainOrder: DomainType[] = ['engaging_with_ai', 'creating_with_ai', 'managing_with_ai', 'designing_with_ai'];
                           const targetDomainsList = scenario?.targetDomains || [];
-                          
+
                           // Show all domains, but mark non-target ones as NA
                           return domainOrder.map(domain => {
                             const isTargetDomain = targetDomainsList.length === 0 || targetDomainsList.includes(domain);

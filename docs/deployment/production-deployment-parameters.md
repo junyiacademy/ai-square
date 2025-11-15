@@ -27,7 +27,7 @@
      --maintenance-window-hour=03 \
      --maintenance-release-channel=production \
      --project=ai-square-463013
-   
+
    # Create database
    gcloud sql databases create ai_square_db \
      --instance=ai-square-db-production \

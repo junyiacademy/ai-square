@@ -11,7 +11,7 @@ import DiscoveryNavigation from '@/components/layout/DiscoveryNavigation';
 // Dynamic import to avoid SSR issues
 const InterestAssessment = dynamic(
   () => import('@/components/discovery/InterestAssessment'),
-  { 
+  {
     ssr: false,
     loading: () => <div className="text-center py-8">載入中...</div>
   }
@@ -41,7 +41,7 @@ export default function EvaluationPage() {
         setAchievementCount(userData?.achievements?.badges?.length || 0);
         // Programs are stored in GCS in v2 architecture, not in userData
         // TODO: Query program count from database if needed
-        
+
         // Load the latest assessment session's answers
         if (userData?.assessmentSessions && userData.assessmentSessions.length > 0) {
           // const latestSession = userData.assessmentSessions[userData.assessmentSessions.length - 1];
@@ -61,26 +61,26 @@ export default function EvaluationPage() {
     if (answers) {
       // Assessment answers saved
     }
-    
+
     // Save assessment session
     try {
       const { userDataService } = await import('@/lib/services/user-data-service');
-      
+
       const assessmentSession = {
         id: `assessment_${Date.now()}`,
         createdAt: new Date().toISOString(),
         results: results,
         answers: answers || {}
       };
-      
+
       await userDataService.addAssessmentSession(assessmentSession);
     } catch (error) {
       console.error('Failed to save assessment results:', error);
     }
   };
-  
-  
-  
+
+
+
 
   const handleRetakeAssessment = () => {
     setAssessmentResults(null);
@@ -99,7 +99,7 @@ export default function EvaluationPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50">
-      <DiscoveryHeader 
+      <DiscoveryHeader
         hasAssessmentResults={!!assessmentResults}
         achievementCount={achievementCount}
       />
@@ -129,7 +129,7 @@ export default function EvaluationPage() {
                   </span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-3">
-                  <div 
+                  <div
                     className="bg-blue-500 h-3 rounded-full transition-all duration-500"
                     style={{ width: `${assessmentResults.tech}%` }}
                   />
@@ -147,7 +147,7 @@ export default function EvaluationPage() {
                   </span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-3">
-                  <div 
+                  <div
                     className="bg-purple-500 h-3 rounded-full transition-all duration-500"
                     style={{ width: `${assessmentResults.creative}%` }}
                   />
@@ -165,7 +165,7 @@ export default function EvaluationPage() {
                   </span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-3">
-                  <div 
+                  <div
                     className="bg-green-500 h-3 rounded-full transition-all duration-500"
                     style={{ width: `${assessmentResults.business}%` }}
                   />
@@ -180,7 +180,7 @@ export default function EvaluationPage() {
               >
                 {t('discovery:evaluation.viewScenarios')}
               </button>
-              
+
               <button
                 onClick={handleRetakeAssessment}
                 className="w-full bg-gray-100 text-gray-700 py-3 px-6 rounded-lg font-medium hover:bg-gray-200 transition-colors"

@@ -28,4 +28,4 @@ describe('distributed-cache-service key prefix and onStatus', () => {
     expect(v2).toEqual({ x: 1 });
     expect(statuses[1]).toBe('HIT');
   });
-}); 
+});

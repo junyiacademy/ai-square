@@ -310,7 +310,7 @@ describe('GET /api/assessment/programs/[programId]/evaluation', () => {
     });
 
     it('should return 404 when no assessment_complete evaluation found', async () => {
-      const evaluationsWithoutComplete = mockEvaluations.filter(e => 
+      const evaluationsWithoutComplete = mockEvaluations.filter(e =>
         e.evaluationType !== 'assessment_complete'
       );
       mockEvaluationRepo.findByProgram.mockResolvedValue(evaluationsWithoutComplete);

@@ -26,7 +26,7 @@ describe('ThemeContext', () => {
       value: localStorageMock,
       writable: true
     });
-    
+
     // Mock matchMedia
     Object.defineProperty(window, 'matchMedia', {
       writable: true,
@@ -80,7 +80,7 @@ describe('ThemeContext', () => {
 
     const initialTheme = screen.getByTestId('theme').textContent;
     fireEvent.click(screen.getByText('Toggle'));
-    
+
     await waitFor(() => {
       const newTheme = screen.getByTestId('theme').textContent;
       expect(newTheme).not.toBe(initialTheme);
@@ -95,7 +95,7 @@ describe('ThemeContext', () => {
     );
 
     fireEvent.click(screen.getByText('Toggle'));
-    
+
     await waitFor(() => {
       expect(localStorage.setItem).toHaveBeenCalledWith('ai-square-theme', expect.any(String));
     });
@@ -103,7 +103,7 @@ describe('ThemeContext', () => {
 
   it('should load theme from localStorage on mount', async () => {
     (localStorage.getItem as jest.Mock).mockReturnValue('dark');
-    
+
     render(
       <ThemeProvider>
         <TestComponent />
@@ -128,7 +128,7 @@ describe('ThemeContext', () => {
       removeEventListener: jest.fn(),
       dispatchEvent: jest.fn(),
     }));
-    
+
     render(
       <ThemeProvider>
         <TestComponent />
@@ -152,7 +152,7 @@ describe('ThemeContext', () => {
 
     // Toggle to dark
     fireEvent.click(screen.getByText('Toggle'));
-    
+
     await waitFor(() => {
       expect(document.documentElement.classList.add).toHaveBeenCalledWith('dark');
     });
@@ -160,7 +160,7 @@ describe('ThemeContext', () => {
 
   it('should remove dark class when switching to light', async () => {
     (localStorage.getItem as jest.Mock).mockReturnValue('dark');
-    
+
     render(
       <ThemeProvider>
         <TestComponent />
@@ -172,7 +172,7 @@ describe('ThemeContext', () => {
     });
 
     fireEvent.click(screen.getByText('Toggle'));
-    
+
     await waitFor(() => {
       expect(document.documentElement.classList.remove).toHaveBeenCalledWith('dark');
       expect(screen.getByTestId('theme')).toHaveTextContent('light');
@@ -181,7 +181,7 @@ describe('ThemeContext', () => {
 
   it('should throw error when used outside provider', () => {
     const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
-    
+
     expect(() => {
       render(<TestComponent />);
     }).toThrow('useTheme must be used within a ThemeProvider');

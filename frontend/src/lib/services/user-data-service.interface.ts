@@ -1,6 +1,6 @@
 /**
  * User Data Service Interface
- * 
+ *
  * Defines the contract that all user data service implementations must follow
  */
 

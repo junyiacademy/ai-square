@@ -129,14 +129,14 @@ export default function AchievementsView({ achievements }: AchievementsViewProps
             </div>
             <div className="text-purple-100">目前等級</div>
           </div>
-          
+
           <div className="text-center">
             <div className="text-3xl font-bold mb-2">
               {achievements.totalXp}
             </div>
             <div className="text-purple-100">總經驗值</div>
           </div>
-          
+
           <div className="text-center">
             <div className="text-3xl font-bold mb-2">
               {earnedBadges.length}
@@ -144,7 +144,7 @@ export default function AchievementsView({ achievements }: AchievementsViewProps
             <div className="text-purple-100">已獲得徽章</div>
           </div>
         </div>
-        
+
         {/* Level Progress */}
         <div className="mt-6">
           <div className="flex justify-between text-sm text-purple-100 mb-2">
@@ -176,12 +176,12 @@ export default function AchievementsView({ achievements }: AchievementsViewProps
             <Star className="w-5 h-5 text-yellow-500" />
             <span>已獲得徽章</span>
           </h3>
-          
+
           {earnedBadges.length > 0 ? (
             <div className="space-y-4">
               {earnedBadges.map((badge, index) => {
                 const IconSolid = badge.iconSolid;
-                
+
                 return (
                   <motion.div
                     key={badge.id}
@@ -225,11 +225,11 @@ export default function AchievementsView({ achievements }: AchievementsViewProps
             <Trophy className="w-5 h-5 text-gray-400" />
             <span>可獲得徽章</span>
           </h3>
-          
+
           <div className="space-y-4">
             {availableBadges.map((badge, index) => {
               const Icon = badge.icon;
-              
+
               return (
                 <motion.div
                   key={badge.id}

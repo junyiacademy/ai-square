@@ -181,7 +181,7 @@ import { githubProvider } from './providers/github'
 
 export const authConfig: NextAuthConfig = {
   providers: [googleProvider, githubProvider],
-  
+
   callbacks: {
     async jwt({ token, account, user }) {
       if (account && user) {
@@ -193,25 +193,25 @@ export const authConfig: NextAuthConfig = {
           provider: account.provider,
           provider_id: account.providerAccountId
         })
-        
+
         token.userId = backendUser.id
         token.accessToken = account.access_token
       }
       return token
     },
-    
+
     async session({ session, token }) {
       session.userId = token.userId
       session.accessToken = token.accessToken
       return session
     }
   },
-  
+
   pages: {
     signIn: '/auth/signin',
     error: '/auth/error'
   },
-  
+
   session: {
     strategy: 'jwt',
     maxAge: 30 * 24 * 60 * 60 // 30 days
@@ -234,14 +234,14 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 class AuthService:
     def __init__(self, db_session):
         self.db = db_session
-        
+
     async def create_or_update_user(self, user_data: dict):
         """Create or update user from OAuth provider data"""
         user = await self.db.users.find_one({
             "provider": user_data["provider"],
             "provider_id": user_data["provider_id"]
         })
-        
+
         if user:
             # Update existing user
             user.update({
@@ -261,16 +261,16 @@ class AuthService:
                 "last_login_at": datetime.utcnow(),
                 "is_active": True
             }
-            
+
         await self.db.users.save(user)
         return user
-        
+
     async def verify_token(self, token: str):
         """Verify JWT token from frontend"""
         try:
             payload = jwt.decode(
-                token, 
-                settings.JWT_SECRET, 
+                token,
+                settings.JWT_SECRET,
                 algorithms=[settings.JWT_ALGORITHM]
             )
             user_id: str = payload.get("sub")

@@ -39,8 +39,8 @@ describe('/api/discovery/scenarios/[id]', () => {
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios/scenario-123');
-      const response = await GET(request, { 
-        params: Promise.resolve({ id: 'scenario-123' }) 
+      const response = await GET(request, {
+        params: Promise.resolve({ id: 'scenario-123' })
       });
 
       expect(response.status).toBe(200);
@@ -62,8 +62,8 @@ describe('/api/discovery/scenarios/[id]', () => {
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios/scenario-123?lang=zh');
-      const response = await GET(request, { 
-        params: Promise.resolve({ id: 'scenario-123' }) 
+      const response = await GET(request, {
+        params: Promise.resolve({ id: 'scenario-123' })
       });
 
       expect(response.status).toBe(200);
@@ -85,8 +85,8 @@ describe('/api/discovery/scenarios/[id]', () => {
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios/scenario-123');
-      const response = await GET(request, { 
-        params: Promise.resolve({ id: 'scenario-123' }) 
+      const response = await GET(request, {
+        params: Promise.resolve({ id: 'scenario-123' })
       });
 
       expect(response.status).toBe(200);
@@ -102,8 +102,8 @@ describe('/api/discovery/scenarios/[id]', () => {
       mockScenarioRepo.findById.mockResolvedValue(null);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios/nonexistent');
-      const response = await GET(request, { 
-        params: Promise.resolve({ id: 'nonexistent' }) 
+      const response = await GET(request, {
+        params: Promise.resolve({ id: 'nonexistent' })
       });
 
       expect(response.status).toBe(404);
@@ -124,8 +124,8 @@ describe('/api/discovery/scenarios/[id]', () => {
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios/scenario-123');
-      const response = await GET(request, { 
-        params: Promise.resolve({ id: 'scenario-123' }) 
+      const response = await GET(request, {
+        params: Promise.resolve({ id: 'scenario-123' })
       });
 
       expect(response.status).toBe(404);
@@ -146,8 +146,8 @@ describe('/api/discovery/scenarios/[id]', () => {
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios/scenario-123');
-      const response = await GET(request, { 
-        params: Promise.resolve({ id: 'scenario-123' }) 
+      const response = await GET(request, {
+        params: Promise.resolve({ id: 'scenario-123' })
       });
 
       expect(response.status).toBe(200);
@@ -171,8 +171,8 @@ describe('/api/discovery/scenarios/[id]', () => {
 
       // Request in Spanish (not available), should fallback to English
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios/scenario-123?lang=es');
-      const response = await GET(request, { 
-        params: Promise.resolve({ id: 'scenario-123' }) 
+      const response = await GET(request, {
+        params: Promise.resolve({ id: 'scenario-123' })
       });
 
       expect(response.status).toBe(200);
@@ -195,8 +195,8 @@ describe('/api/discovery/scenarios/[id]', () => {
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios/scenario-123');
-      const response = await GET(request, { 
-        params: Promise.resolve({ id: 'scenario-123' }) 
+      const response = await GET(request, {
+        params: Promise.resolve({ id: 'scenario-123' })
       });
 
       expect(response.status).toBe(200);
@@ -212,7 +212,7 @@ describe('/api/discovery/scenarios/[id]', () => {
         title: { en: 'Test Scenario' },
         description: { en: 'Test Description' },
         discoveryData: {
-          dayInLife: { 
+          dayInLife: {
             en: 'A day in the life of an English speaker',
             zh: '一個中文使用者的一天'
           },
@@ -230,8 +230,8 @@ describe('/api/discovery/scenarios/[id]', () => {
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios/scenario-123?lang=zh');
-      const response = await GET(request, { 
-        params: Promise.resolve({ id: 'scenario-123' }) 
+      const response = await GET(request, {
+        params: Promise.resolve({ id: 'scenario-123' })
       });
 
       expect(response.status).toBe(200);
@@ -257,8 +257,8 @@ describe('/api/discovery/scenarios/[id]', () => {
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios/scenario-123?lang=fr');
-      const response = await GET(request, { 
-        params: Promise.resolve({ id: 'scenario-123' }) 
+      const response = await GET(request, {
+        params: Promise.resolve({ id: 'scenario-123' })
       });
 
       expect(response.status).toBe(200);
@@ -280,8 +280,8 @@ describe('/api/discovery/scenarios/[id]', () => {
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios/scenario-123');
-      const response = await GET(request, { 
-        params: Promise.resolve({ id: 'scenario-123' }) 
+      const response = await GET(request, {
+        params: Promise.resolve({ id: 'scenario-123' })
       });
 
       expect(response.status).toBe(200);
@@ -304,8 +304,8 @@ describe('/api/discovery/scenarios/[id]', () => {
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios/scenario-123');
-      const response = await GET(request, { 
-        params: Promise.resolve({ id: 'scenario-123' }) 
+      const response = await GET(request, {
+        params: Promise.resolve({ id: 'scenario-123' })
       });
 
       expect(response.status).toBe(200);
@@ -329,13 +329,13 @@ describe('/api/discovery/scenarios/[id]', () => {
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios/scenario-123?lang=en');
-      const response = await GET(request, { 
-        params: Promise.resolve({ id: 'scenario-123' }) 
+      const response = await GET(request, {
+        params: Promise.resolve({ id: 'scenario-123' })
       });
 
       expect(response.status).toBe(200);
       const data = await response.json();
-      
+
       expect(data).toHaveProperty('success', true);
       expect(data).toHaveProperty('data');
       expect(data.data).toHaveProperty('scenario');
@@ -359,17 +359,17 @@ describe('/api/discovery/scenarios/[id]', () => {
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios/scenario-123');
-      const response = await GET(request, { 
-        params: Promise.resolve({ id: 'scenario-123' }) 
+      const response = await GET(request, {
+        params: Promise.resolve({ id: 'scenario-123' })
       });
 
       expect(response.status).toBe(200);
       const data = await response.json();
-      
+
       // Check processed fields
       expect(data.data.scenario.title).toBe('Test Scenario');
       expect(data.data.scenario.titleObj).toEqual({ en: 'Test Scenario' });
-      
+
       // Check preserved fields
       expect(data.data.scenario.id).toBe('scenario-123');
       expect(data.data.scenario.mode).toBe('discovery');
@@ -383,8 +383,8 @@ describe('/api/discovery/scenarios/[id]', () => {
       mockScenarioRepo.findById.mockRejectedValue(new Error('Database connection failed'));
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios/scenario-123');
-      const response = await GET(request, { 
-        params: Promise.resolve({ id: 'scenario-123' }) 
+      const response = await GET(request, {
+        params: Promise.resolve({ id: 'scenario-123' })
       });
 
       expect(response.status).toBe(500);
@@ -400,8 +400,8 @@ describe('/api/discovery/scenarios/[id]', () => {
       mockScenarioRepo.findById.mockResolvedValue(null);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios/');
-      const response = await GET(request, { 
-        params: Promise.resolve({ id: '' }) 
+      const response = await GET(request, {
+        params: Promise.resolve({ id: '' })
       });
 
       expect(response.status).toBe(404);
@@ -426,8 +426,8 @@ describe('/api/discovery/scenarios/[id]', () => {
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios/scenario-123');
-      const response = await GET(request, { 
-        params: Promise.resolve({ id: 'scenario-123' }) 
+      const response = await GET(request, {
+        params: Promise.resolve({ id: 'scenario-123' })
       });
 
       expect(response.status).toBe(200);
@@ -453,8 +453,8 @@ describe('/api/discovery/scenarios/[id]', () => {
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios/scenario-123');
-      const response = await GET(request, { 
-        params: Promise.resolve({ id: 'scenario-123' }) 
+      const response = await GET(request, {
+        params: Promise.resolve({ id: 'scenario-123' })
       });
 
       expect(response.status).toBe(200);
@@ -479,8 +479,8 @@ describe('/api/discovery/scenarios/[id]', () => {
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios/scenario-123');
-      const response = await GET(request, { 
-        params: Promise.resolve({ id: 'scenario-123' }) 
+      const response = await GET(request, {
+        params: Promise.resolve({ id: 'scenario-123' })
       });
 
       expect(response.status).toBe(200);
@@ -502,8 +502,8 @@ describe('/api/discovery/scenarios/[id]', () => {
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
 
       const request = new NextRequest('http://localhost:3000/api/discovery/scenarios/scenario-with-special-chars-123');
-      const response = await GET(request, { 
-        params: Promise.resolve({ id: 'scenario-with-special-chars-123' }) 
+      const response = await GET(request, {
+        params: Promise.resolve({ id: 'scenario-with-special-chars-123' })
       });
 
       expect(response.status).toBe(200);
@@ -512,4 +512,4 @@ describe('/api/discovery/scenarios/[id]', () => {
       expect(mockScenarioRepo.findById).toHaveBeenCalledWith('scenario-with-special-chars-123');
     });
   });
-}); 
+});

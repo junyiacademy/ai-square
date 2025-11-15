@@ -20,7 +20,7 @@ export default function ProfilePage() {
   const router = useRouter();
   const { t, i18n } = useTranslation(['common', 'auth']);
   const { user, isLoading: authLoading } = useAuth();
-  
+
   // 支援的語言列表
   const supportedLanguages = [
     { code: 'en', name: 'English' },
@@ -45,14 +45,14 @@ export default function ProfilePage() {
     languageCode && supportedLanguageCodes.includes(languageCode)
       ? languageCode
       : fallbackLanguage;
-  
+
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [isResending, setIsResending] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  
+
   // Form fields
   const [name, setName] = useState('');
   const [preferredLanguage, setPreferredLanguage] = useState(fallbackLanguage);
@@ -116,7 +116,7 @@ export default function ProfilePage() {
 
     try {
       const updates: Record<string, unknown> = {};
-      
+
       // 只發送有變更的欄位
       if (name !== profile?.name) updates.name = name;
       if (preferredLanguage !== profile?.preferredLanguage) {
@@ -138,12 +138,12 @@ export default function ProfilePage() {
       if (data.success) {
         setSuccess(t('profile.updateSuccess'));
         setProfile(data.user);
-        
+
         // 如果更改了語言，立即切換
         if (preferredLanguage !== profile?.preferredLanguage) {
           i18n.changeLanguage(preferredLanguage);
         }
-        
+
         // 清空密碼欄位
         setCurrentPassword('');
         setNewPassword('');

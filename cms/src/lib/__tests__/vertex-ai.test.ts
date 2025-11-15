@@ -100,7 +100,7 @@ describe('Vertex AI Service', () => {
       }))
 
       const { generateContent } = require('../vertex-ai')
-      
+
       await expect(generateContent('Test prompt')).rejects.toThrow('Failed to generate content')
     })
 
@@ -129,7 +129,7 @@ describe('Vertex AI Service', () => {
     it('should complete YAML content successfully', async () => {
       const yaml = require('js-yaml')
       const { VertexAI } = require('@google-cloud/vertexai')
-      
+
       yaml.load.mockReturnValue({
         scenario_info: { id: 'test', title: 'Test Scenario' }
       })
@@ -169,7 +169,7 @@ describe('Vertex AI Service', () => {
     it('should handle invalid YAML input', async () => {
       const yaml = require('js-yaml')
       const { VertexAI } = require('@google-cloud/vertexai')
-      
+
       yaml.load.mockImplementation(() => {
         throw new Error('Invalid YAML')
       })
@@ -202,7 +202,7 @@ describe('Vertex AI Service', () => {
 
     it('should fallback to non-JSON mode on error', async () => {
       const { VertexAI } = require('@google-cloud/vertexai')
-      
+
       const mockGenerateContent = jest.fn()
         .mockRejectedValueOnce(new Error('JSON mode failed'))
         .mockResolvedValueOnce({
@@ -233,9 +233,9 @@ describe('Vertex AI Service', () => {
     it('should translate YAML content', async () => {
       const yaml = require('js-yaml')
       const { VertexAI } = require('@google-cloud/vertexai')
-      
+
       yaml.load.mockReturnValue({
-        scenario_info: { 
+        scenario_info: {
           title: 'Test Scenario',
           description: 'Test description'
         }
@@ -276,9 +276,9 @@ describe('Vertex AI Service', () => {
     it('should improve YAML content', async () => {
       const yaml = require('js-yaml')
       const { VertexAI } = require('@google-cloud/vertexai')
-      
+
       yaml.load.mockReturnValue({
-        scenario_info: { 
+        scenario_info: {
           title: 'Basic Scenario'
         }
       })
@@ -315,15 +315,15 @@ describe('Vertex AI Service', () => {
     it('should map KSA codes successfully', async () => {
       const yaml = require('js-yaml')
       const { VertexAI } = require('@google-cloud/vertexai')
-      
+
       const testScenario = {
-        scenario_info: { 
+        scenario_info: {
           title: 'AI Ethics Scenario',
           learning_objectives: ['Understand AI bias', 'Learn fairness principles']
         },
         tasks: []
       }
-      
+
       yaml.load.mockReturnValue(testScenario)
       yaml.dump.mockReturnValue('mapped: yaml\\nksa_mapping:\\n  knowledge: [K1.1]')
 
@@ -358,7 +358,7 @@ describe('Vertex AI Service', () => {
     it('should handle malformed JSON response', async () => {
       const yaml = require('js-yaml')
       const { VertexAI } = require('@google-cloud/vertexai')
-      
+
       yaml.load.mockReturnValue({ scenario_info: { title: 'Test' } })
       yaml.dump.mockReturnValue('fallback: yaml')
 
@@ -387,7 +387,7 @@ describe('Vertex AI Service', () => {
     it('should extract JSON from markdown code blocks', async () => {
       const yaml = require('js-yaml')
       const { VertexAI } = require('@google-cloud/vertexai')
-      
+
       yaml.load.mockReturnValue({ scenario_info: { title: 'Test' } })
       yaml.dump.mockReturnValue('extracted: yaml')
 

@@ -39,12 +39,12 @@ describe.skip('Advanced Database Operations', () => {
       return;
     }
 
-    const result = await pool.query<{ 
-      mode: string; 
-      count: string; 
-      active_count: string 
+    const result = await pool.query<{
+      mode: string;
+      count: string;
+      active_count: string
     }>(`
-      SELECT 
+      SELECT
         mode,
         COUNT(*) as count,
         COUNT(CASE WHEN status = 'active' THEN 1 END) as active_count
@@ -74,7 +74,7 @@ describe.skip('Advanced Database Operations', () => {
 
       // Insert user
       await client.query(
-        `INSERT INTO users (id, email, name, role, email_verified) 
+        `INSERT INTO users (id, email, name, role, email_verified)
          VALUES ($1, $2, $3, $4, $5)`,
         [userId, `test-${Date.now()}@example.com`, 'Test User', 'user', true]
       );
@@ -87,7 +87,7 @@ describe.skip('Advanced Database Operations', () => {
       if (scenarios.rows.length > 0) {
         // Create program
         await client.query(
-          `INSERT INTO programs (id, scenario_id, user_id, status, total_task_count, time_spent_seconds) 
+          `INSERT INTO programs (id, scenario_id, user_id, status, total_task_count, time_spent_seconds)
            VALUES ($1, $2, $3, $4, $5, $6)`,
           [programId, scenarios.rows[0].id, userId, 'pending', 0, 0]
         );
@@ -130,7 +130,7 @@ describe.skip('Advanced Database Operations', () => {
       foreign_table_name: string;
       foreign_column_name: string;
     }>(`
-      SELECT 
+      SELECT
         tc.table_name,
         kcu.column_name,
         ccu.table_name AS foreign_table_name,

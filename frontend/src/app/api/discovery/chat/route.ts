@@ -79,11 +79,11 @@ Please respond as the AI ${context.aiRole} in Traditional Chinese, being helpful
     return NextResponse.json({ response: text });
   } catch (error) {
     console.error('AI chat error:', error);
-    
+
     // Return a generic error response
     return NextResponse.json(
-      { 
-        response: '抱歉，我暫時無法處理你的訊息。請稍後再試，或者繼續探索當前的任務！💪' 
+      {
+        response: '抱歉，我暫時無法處理你的訊息。請稍後再試，或者繼續探索當前的任務！💪'
       },
       { status: 200 } // Return 200 to avoid breaking the UI
     );

@@ -11,18 +11,18 @@ describe('BaseLearningService interface', () => {
     // Verify the interface has required methods
     const interfaceKeys = [
       'startLearning',
-      'getProgress', 
+      'getProgress',
       'submitResponse',
       'completeLearning',
       'getNextTask',
       'evaluateTask',
       'generateFeedback'
     ];
-    
+
     // This test ensures the interface is properly exported and typed
     // BaseLearningService is an interface, so we just verify it's importable
     expect(interfaceKeys.length).toBeGreaterThan(0);
-    
+
     // Note: Actual implementation testing is done in:
     // src/lib/abstractions/__tests__/base-learning-service.test.ts
     expect(true).toBe(true);

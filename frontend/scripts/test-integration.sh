@@ -34,16 +34,16 @@ ELAPSED=0
 while [ $ELAPSED -lt $TIMEOUT ]; do
     POSTGRES_HEALTHY=$($DC -f docker-compose.test.yml ps postgres-test | grep "healthy" | wc -l)
     REDIS_HEALTHY=$($DC -f docker-compose.test.yml ps redis-test | grep "healthy" | wc -l)
-    
+
     if [ "$POSTGRES_HEALTHY" -eq 1 ] && [ "$REDIS_HEALTHY" -eq 1 ]; then
         echo -e "${GREEN}✅ All services are ready!${NC}"
         break
     fi
-    
+
     if [ $((ELAPSED % 10)) -eq 0 ]; then
         echo "⏳ Still waiting... (${ELAPSED}s/${TIMEOUT}s)"
     fi
-    
+
     sleep 2
     ELAPSED=$((ELAPSED + 2))
 done
@@ -86,4 +86,4 @@ echo -e "${YELLOW}🧹 Cleaning up...${NC}"
 $DC -f docker-compose.test.yml down
 
 # Exit with test status
-exit $TEST_EXIT_CODE 
+exit $TEST_EXIT_CODE

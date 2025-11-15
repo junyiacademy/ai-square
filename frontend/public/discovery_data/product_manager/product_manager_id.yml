@@ -7,12 +7,12 @@ metadata:
   title: "Alkemis Produk - Product Manager"
   short_description: "Ciptakan produk sempurna di dalam tungku pasar"
   long_description: |
-    Anda adalah alkemis yang baru lulus dari "Bengkel Alkimia Produk", terampil dalam 
-    menggabungkan kebutuhan pengguna, kemampuan teknis, dan tujuan bisnis menjadi produk 
-    yang kuat. Di bengkel yang penuh dengan percikan inovasi ini, setiap iterasi adalah 
-    eksperimen alkimia, dan tujuan Anda adalah menciptakan produk sempurna yang dapat 
+    Anda adalah alkemis yang baru lulus dari "Bengkel Alkimia Produk", terampil dalam
+    menggabungkan kebutuhan pengguna, kemampuan teknis, dan tujuan bisnis menjadi produk
+    yang kuat. Di bengkel yang penuh dengan percikan inovasi ini, setiap iterasi adalah
+    eksperimen alkimia, dan tujuan Anda adalah menciptakan produk sempurna yang dapat
     mengubah dunia.
-  
+
   estimated_hours: 55
   skill_focus:
     - requirement_alchemy
@@ -22,22 +22,22 @@ metadata:
 world_setting:
   name: "Bengkel Alkimia Produk"
   description: |
-    Bengkel Alkimia Produk adalah bengkel magis tempat ide-ide diubah menjadi produk 
-    nyata. Di sini, product manager mempelajari seni kuno menyeimbangkan keinginan 
-    pengguna, kendala teknis, dan tujuan bisnis untuk menciptakan produk yang resonan 
+    Bengkel Alkimia Produk adalah bengkel magis tempat ide-ide diubah menjadi produk
+    nyata. Di sini, product manager mempelajari seni kuno menyeimbangkan keinginan
+    pengguna, kendala teknis, dan tujuan bisnis untuk menciptakan produk yang resonan
     dengan jutaan orang.
-  
+
   atmosphere: "dynamic_creative"
   visual_theme: "innovation_forge"
 starting_scenario:
   title: "Tantangan Alkemis"
   description: |
-    Master Strategi menyambut Anda di bengkel dengan peringatan: Deadline, Tiran Waktu, 
-    memaksa tim untuk mengorbankan kualitas produk demi kecepatan. Sementara itu, 
-    Suara Pengguna menjadi semakin keras dengan tuntutan yang bertentangan. Anda harus 
-    menemukan batu filosofis manajemen produk - menyeimbangkan kualitas, kecepatan, 
+    Master Strategi menyambut Anda di bengkel dengan peringatan: Deadline, Tiran Waktu,
+    memaksa tim untuk mengorbankan kualitas produk demi kecepatan. Sementara itu,
+    Suara Pengguna menjadi semakin keras dengan tuntutan yang bertentangan. Anda harus
+    menemukan batu filosofis manajemen produk - menyeimbangkan kualitas, kecepatan,
     dan kepuasan pengguna.
-  
+
   initial_tasks:
     - understand_users
     - analyze_market

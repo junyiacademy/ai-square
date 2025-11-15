@@ -139,9 +139,9 @@ describe('/api/assessment/results', () => {
 
     it('should use existing assessment program when available', async () => {
       const mockUser = { id: 'user-123', email: 'test@example.com', totalXp: 100 };
-      const existingProgram = { 
-        id: 'program-123', 
-        userId: 'user-123', 
+      const existingProgram = {
+        id: 'program-123',
+        userId: 'user-123',
         scenarioId: 'test-scenario',
         status: 'active',
         metadata: {}
@@ -302,4 +302,4 @@ describe('/api/assessment/results', () => {
       );
     });
   });
-}); 
+});

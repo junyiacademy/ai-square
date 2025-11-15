@@ -47,7 +47,7 @@ describe('Discovery Scenarios Page', () => {
     jest.clearAllMocks();
     (global.fetch as jest.Mock).mockResolvedValue({
       ok: true,
-      json: async () => ({ 
+      json: async () => ({
         success: true,
         scenarios: [
           { id: '1', title: { en: 'Scenario 1' }, description: { en: 'Description 1' } },

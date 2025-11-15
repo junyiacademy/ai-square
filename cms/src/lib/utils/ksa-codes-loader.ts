@@ -42,7 +42,7 @@ export function loadKSACodes(): KSACodesData {
         }>
       };
     }
-    
+
     const data = yaml.load(fileContent) as KSAYamlData;
 
     const ksaCodes: KSACodesData = {
@@ -151,24 +151,24 @@ function getFallbackKSACodes(): KSACodesData {
 // Format KSA codes for prompt
 export function formatKSACodesForPrompt(): string {
   const ksaCodes = loadKSACodes();
-  
+
   let prompt = 'Available KSA codes from the AI Literacy Framework:\n\n';
-  
+
   // Format Knowledge codes
   prompt += 'Knowledge (K) - Understanding AI concepts:\n';
   for (const k of ksaCodes.knowledge) {
     prompt += `- ${k.code}: ${k.summary}\n`;
   }
-  
+
   prompt += '\nSkills (S) - Practical AI abilities:\n';
   for (const s of ksaCodes.skills) {
     prompt += `- ${s.code}: ${s.summary}\n`;
   }
-  
+
   prompt += '\nAttitudes (A) - AI mindsets and values:\n';
   for (const a of ksaCodes.attitudes) {
     prompt += `- ${a.code}: ${a.summary}\n`;
   }
-  
+
   return prompt;
 }

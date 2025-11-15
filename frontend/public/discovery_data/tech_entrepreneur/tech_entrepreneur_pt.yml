@@ -6,10 +6,10 @@ metadata:
   title: "Viajante de Negócios Dimensional - Empreendedor Tech"
   short_description: "Construa impérios de negócios tecnológicos através de multiversos"
   long_description: |
-    Você é um viajante recém-induzido da Aliança de Negócios Interdimensional, 
-    possuindo a habilidade de estabelecer empresas tecnológicas através de diferentes 
-    espaços-tempos. Cada universo paralelo tem níveis únicos de desenvolvimento 
-    tecnológico, e você deve se adaptar a vários ambientes para construir impérios 
+    Você é um viajante recém-induzido da Aliança de Negócios Interdimensional,
+    possuindo a habilidade de estabelecer empresas tecnológicas através de diferentes
+    espaços-tempos. Cada universo paralelo tem níveis únicos de desenvolvimento
+    tecnológico, e você deve se adaptar a vários ambientes para construir impérios
     de negócios bem-sucedidos.
   estimated_hours: 65
   skill_focus:
@@ -20,18 +20,18 @@ metadata:
 world_setting:
   name: "Rede de Negócios Multiverso"
   description: |
-    A Rede de Negócios Multiverso consiste em inúmeros espaços-tempos paralelos 
-    formando uma vasta teia comercial. Empreendedores tech viajam entre dimensões, 
-    trazendo inovações de um universo para resolver problemas em outro, enquanto 
+    A Rede de Negócios Multiverso consiste em inúmeros espaços-tempos paralelos
+    formando uma vasta teia comercial. Empreendedores tech viajam entre dimensões,
+    trazendo inovações de um universo para resolver problemas em outro, enquanto
     competem contra forças monopolistas que buscam controlar todas as realidades.
   atmosphere: futuristic_dynamic
   visual_theme: interdimensional_tech
 starting_scenario:
   title: "Ativação do Portal Dimensional"
   description: |
-    O Mentor de Negócios Atlas o saúda no hub dimensional, explicando sua nova 
-    habilidade de viajar entre universos. Mas o CEO Ganância da Monopoly Corp está 
-    usando táticas desleais para esmagar startups em todas as dimensões. Você deve 
+    O Mentor de Negócios Atlas o saúda no hub dimensional, explicando sua nova
+    habilidade de viajar entre universos. Mas o CEO Ganância da Monopoly Corp está
+    usando táticas desleais para esmagar startups em todas as dimensões. Você deve
     usar inovação e colaboração para lutar contra seus planos monopolistas.
   initial_tasks:
     - understand_multiverse

@@ -42,7 +42,7 @@ SKIP_DB_INIT=1 ./deploy-staging.sh
 
 #### 問題 1: 無法直接連接 Cloud SQL
 - **錯誤**: IPv6 連接不支援
-- **嘗試解決**: 
+- **嘗試解決**:
   - 使用 gcloud sql connect - 失敗（IPv6 限制）
   - 使用 Cloud SQL Proxy - 未安裝
   - 使用 gcloud beta sql connect - 需要互動式輸入密碼
@@ -117,7 +117,7 @@ curl -X POST "http://localhost:3004/api/admin/init-discovery" -d '{"force": fals
 - `badge_icon TEXT`
 
 ### 2. 部署腳本更新
-- `deploy-staging.sh`: 
+- `deploy-staging.sh`:
   - 統一 DB_NAME=ai_square_db
   - 統一 DB_PASSWORD=postgres
   - 添加 DATABASE_URL 環境變數

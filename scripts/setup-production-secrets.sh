@@ -15,9 +15,9 @@ create_secret() {
     local SECRET_NAME=$1
     local SECRET_VALUE=$2
     local DESCRIPTION=$3
-    
+
     echo "Creating secret: ${SECRET_NAME}"
-    
+
     # Check if secret exists
     if gcloud secrets describe ${SECRET_NAME} --project=${PROJECT_ID} &>/dev/null; then
         echo "  Secret exists, creating new version..."
@@ -31,7 +31,7 @@ create_secret() {
             --replication-policy="automatic" \
             --data-file=-
     fi
-    
+
     echo "  ✅ ${SECRET_NAME} configured"
 }
 
@@ -40,14 +40,14 @@ create_secret_from_file() {
     local SECRET_NAME=$1
     local FILE_PATH=$2
     local DESCRIPTION=$3
-    
+
     echo "Creating secret from file: ${SECRET_NAME}"
-    
+
     if [ ! -f "${FILE_PATH}" ]; then
         echo "  ❌ File not found: ${FILE_PATH}"
         return 1
     fi
-    
+
     # Check if secret exists
     if gcloud secrets describe ${SECRET_NAME} --project=${PROJECT_ID} &>/dev/null; then
         echo "  Secret exists, creating new version..."
@@ -61,7 +61,7 @@ create_secret_from_file() {
             --replication-policy="automatic" \
             --data-file="${FILE_PATH}"
     fi
-    
+
     echo "  ✅ ${SECRET_NAME} configured"
 }
 

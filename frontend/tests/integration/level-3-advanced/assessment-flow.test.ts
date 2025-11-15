@@ -40,30 +40,30 @@ describe.skip('Assessment Learning Flow', () => {
   it('should fetch Assessment scenarios from API', async () => {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 2000);
-    
+
     try {
       const response = await fetch(`${baseUrl}/api/assessment/scenarios?lang=en`, {
         signal: controller.signal
       }).catch(() => null);
       clearTimeout(timeoutId);
-      
+
       if (!response) {
         console.log('Assessment API not reachable, skipping');
         expect(true).toBe(true);
         return;
       }
-      
+
       if (!response.ok) {
         console.log('Assessment API not available, skipping');
         expect(true).toBe(true);
         return;
       }
-      
+
       const data = await response.json();
       const scenarios = data.scenarios ?? data.data?.scenarios ?? [];
       expect(Array.isArray(scenarios)).toBe(true);
       console.log(`Found ${scenarios.length} Assessment scenarios from API`);
-      
+
       // Use normalized scenarios array for logging to avoid undefined access
       console.log(`Found ${scenarios.length} Assessment scenarios from API`);
     } catch (error) {
@@ -90,28 +90,28 @@ describe.skip('Assessment Learning Flow', () => {
       title_en: string;
       question_count: string;
     }>(`
-      SELECT 
-        id, 
+      SELECT
+        id,
         status,
         title->>'en' as title_en,
         jsonb_array_length(
           COALESCE(assessment_data->'questionBank', '[]'::jsonb)
         ) as question_count
-      FROM scenarios 
-      WHERE mode = 'assessment' 
+      FROM scenarios
+      WHERE mode = 'assessment'
         AND status = 'active'
       LIMIT 5
     `);
 
     console.log(`Found ${result.rows.length} active Assessment scenarios in DB`);
-    
+
     if (result.rows.length > 0) {
       expect(result.rows[0]).toHaveProperty('id');
       expect(result.rows[0]).toHaveProperty('status');
       expect(result.rows[0].status).toBe('active');
       console.log(`First assessment has ${result.rows[0].question_count} questions`);
     }
-    
+
     expect(true).toBe(true);
   });
 
@@ -124,30 +124,30 @@ describe.skip('Assessment Learning Flow', () => {
 
     const client: PoolClient = await pool.connect();
     const { v4: uuidv4 } = require('uuid');
-    
+
     try {
       await client.query('BEGIN');
-      
+
       // Check if we have Assessment scenarios
       const scenarios = await client.query<{ id: string }>(
         `SELECT id FROM scenarios WHERE mode = 'assessment' AND status = 'active' LIMIT 1`
       );
-      
+
       if (scenarios.rows.length === 0) {
         console.log('No active Assessment scenarios to test with');
         await client.query('ROLLBACK');
         expect(true).toBe(true);
         return;
       }
-      
+
       // Create test user
       const userId = uuidv4();
       await client.query(
-        `INSERT INTO users (id, email, name, role, email_verified) 
+        `INSERT INTO users (id, email, name, role, email_verified)
          VALUES ($1, $2, $3, $4, $5)`,
         [userId, `assessment-test-${Date.now()}@example.com`, 'Assessment Test User', 'user', true]
       );
-      
+
       // Create Assessment program
       const programId = uuidv4();
       await client.query(
@@ -155,16 +155,16 @@ describe.skip('Assessment Learning Flow', () => {
          VALUES ($1, $2, $3, $4, $5, NOW())`,
         [programId, scenarios.rows[0].id, userId, 'active', 1]
       );
-      
+
       // Verify program has correct mode (should be inherited via trigger)
       const program = await client.query<{ id: string; mode: string; status: string }>(
         `SELECT id, mode, status FROM programs WHERE id = $1`,
         [programId]
       );
-      
+
       expect(program.rows[0].mode).toBe('assessment');
       expect(program.rows[0].status).toBe('active');
-      
+
       // Create a task for assessment
       const taskId = uuidv4();
       await client.query(
@@ -172,18 +172,18 @@ describe.skip('Assessment Learning Flow', () => {
          VALUES ($1, $2, $3, $4, $5, $6, NOW())`,
         [taskId, programId, 'question', 'pending', '{"en": "Assessment Question"}', 0]
       );
-      
+
       // Check task mode inheritance
       const task = await client.query<{ mode: string }>(
         `SELECT mode FROM tasks WHERE id = $1`,
         [taskId]
       );
-      
+
       expect(task.rows[0].mode).toBe('assessment');
-      
+
       // Rollback to clean up
       await client.query('ROLLBACK');
-      
+
       console.log('Assessment program and task creation test successful');
     } catch (error) {
       await client.query('ROLLBACK');

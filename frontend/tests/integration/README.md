@@ -167,7 +167,7 @@ The workflow file `.github/workflows/integration-test.yml` automatically:
 steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['compose', '-f', 'docker-compose.test.yml', 'up', '-d']
-  
+
   - name: 'node:20'
     entrypoint: 'npm'
     args: ['run', 'test:integration']
@@ -191,7 +191,7 @@ steps:
 // tests/integration/my-feature/feature.test.ts
 describe('My Feature', () => {
   const baseUrl = process.env.API_URL || 'http://localhost:3456';
-  
+
   it('should do something', async () => {
     const response = await fetch(`${baseUrl}/api/my-endpoint`);
     expect(response.ok).toBe(true);

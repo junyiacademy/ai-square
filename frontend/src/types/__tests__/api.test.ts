@@ -1,6 +1,6 @@
-import type { 
-  ApiResponse, 
-  ErrorResponse, 
+import type {
+  ApiResponse,
+  ErrorResponse,
   PaginationParams,
   TimestampedEntity,
   TypedRequest

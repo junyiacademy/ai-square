@@ -7,7 +7,7 @@ This migration removes all shell script dependencies from the Terraform configur
 
 ### 1. Shell Scripts Removed
 - ❌ `deploy-complete.sh` - Complex deployment orchestration script
-- ❌ `security-check.sh` - Security validation script  
+- ❌ `security-check.sh` - Security validation script
 - ❌ `test-deployment-pipeline.sh` - End-to-end testing script
 
 ### 2. Makefile Enhanced
@@ -19,7 +19,7 @@ This migration removes all shell script dependencies from the Terraform configur
 ### 3. New Make Targets Added
 ```bash
 wait-for-health      # Wait for service to be healthy
-deployment-summary   # Generate deployment summary  
+deployment-summary   # Generate deployment summary
 security-check       # Run security audit using native commands
 ```
 
@@ -42,7 +42,7 @@ security-check       # Run security audit using native commands
 - ✅ Cleaner Git history without shell script changes
 - ✅ Standard Terraform tooling and workflows
 
-### Security Benefits  
+### Security Benefits
 - ✅ No executable scripts in repository
 - ✅ Built-in validation with Make commands
 - ✅ Consistent security checking across environments

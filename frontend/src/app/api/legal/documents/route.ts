@@ -10,9 +10,9 @@ export async function GET(request: NextRequest) {
     const language = searchParams.get('language') || 'en';
 
     const pool = getPool();
-    
+
     let query = `
-      SELECT 
+      SELECT
         id,
         type,
         version,
@@ -61,8 +61,8 @@ export async function GET(request: NextRequest) {
       version: doc.version,
       title: doc.title[language] || doc.title.en || Object.values(doc.title)[0],
       content: doc.content[language] || doc.content.en || Object.values(doc.content)[0],
-      summaryOfChanges: doc.summary_of_changes ? 
-        (doc.summary_of_changes[language] || doc.summary_of_changes.en || Object.values(doc.summary_of_changes)[0]) : 
+      summaryOfChanges: doc.summary_of_changes ?
+        (doc.summary_of_changes[language] || doc.summary_of_changes.en || Object.values(doc.summary_of_changes)[0]) :
         null,
       effectiveDate: doc.effective_date,
       createdAt: doc.created_at

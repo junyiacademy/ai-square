@@ -9,7 +9,7 @@ metadata:
     你是「数据神谕圣殿」的学徒神谕，拥有在混乱数据中预见未来趋势的神秘能力。
     在这个充满数字和图表的圣殿中，每个数据点都包含着重要的信息，你的使命
     是破译这些数字背后的秘密。
-  
+
   estimated_hours: 50
   skill_focus:
     - data_alchemy
@@ -21,7 +21,7 @@ world_setting:
   description: |
     数据神谕圣殿是一个收集世界各地数据的神秘圣地。在这里，数据分析师被训练成
     能够解读数字语言、揭示塑造各领域决策真相的神谕。
-  
+
   atmosphere: "mystical_analytical"
   visual_theme: "digital_temple"
 starting_scenario:
@@ -30,7 +30,7 @@ starting_scenario:
     智慧导师神谕在圣殿欢迎你，用谜语讲述数据的秘密。但危机逼近：
     数据毁灭者「混沌」正在污染数据源，传播误导性的分析。你必须使用
     纯正的统计方法，在混乱中找到真相。
-  
+
   initial_tasks:
     - learn_data_basics
     - master_tools

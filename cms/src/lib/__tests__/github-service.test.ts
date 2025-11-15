@@ -24,7 +24,7 @@ jest.mock('@octokit/rest', () => ({
 
 describe('GitHubService', () => {
   let githubService: GitHubService
-  
+
   beforeEach(() => {
     githubService = new GitHubService()
   })
@@ -41,11 +41,11 @@ describe('GitHubService', () => {
           { name: 'dir1', type: 'dir', path: 'dir1' },
         ]
       }
-      
+
       ;(githubService as any).octokit.rest.repos.getContent.mockResolvedValueOnce(mockFiles)
 
       const result = await githubService.listFiles()
-      
+
       expect(result).toHaveLength(2)
       expect(result[0]).toEqual({
         name: 'file1.yaml',
@@ -60,11 +60,11 @@ describe('GitHubService', () => {
           { name: 'subfile.yaml', type: 'file', path: 'subdir/subfile.yaml' },
         ]
       }
-      
+
       ;(githubService as any).octokit.rest.repos.getContent.mockResolvedValueOnce(mockFiles)
 
       const result = await githubService.listFiles('subdir')
-      
+
       expect(result).toHaveLength(1)
       expect(result[0].path).toBe('subdir/subfile.yaml')
     })
@@ -86,11 +86,11 @@ describe('GitHubService', () => {
           encoding: 'base64'
         }
       }
-      
+
       ;(githubService as any).octokit.rest.repos.getContent.mockResolvedValueOnce(mockContent)
 
       const result = await githubService.readFile('test.yaml')
-      
+
       expect(result).toBe('test content')
     })
 
@@ -110,7 +110,7 @@ describe('GitHubService', () => {
       })
 
       await githubService.saveFile('test.yaml', 'new content', 'Update test file')
-      
+
       expect((githubService as any).octokit.rest.repos.createOrUpdateFileContents).toHaveBeenCalledWith({
         owner: 'test-owner',
         repo: 'test-repo',
@@ -127,7 +127,7 @@ describe('GitHubService', () => {
       })
 
       await githubService.saveFile('test.yaml', 'new content', 'Update test file', 'feature-branch')
-      
+
       expect((githubService as any).octokit.rest.repos.createOrUpdateFileContents).toHaveBeenCalledWith(
         expect.objectContaining({
           branch: 'feature-branch'
@@ -141,12 +141,12 @@ describe('GitHubService', () => {
       const mockMainBranch = {
         data: { commit: { sha: 'main-sha' } }
       }
-      
+
       ;(githubService as any).octokit.rest.repos.getBranch.mockResolvedValueOnce(mockMainBranch)
       ;(githubService as any).octokit.rest.git.createRef.mockResolvedValueOnce({})
 
       await githubService.createBranch('new-feature')
-      
+
       expect((githubService as any).octokit.rest.git.createRef).toHaveBeenCalledWith({
         owner: 'test-owner',
         repo: 'test-repo',
@@ -173,7 +173,7 @@ describe('GitHubService', () => {
           title: 'Test PR'
         }
       }
-      
+
       ;(githubService as any).octokit.rest.pulls.create.mockResolvedValueOnce(mockPR)
 
       const result = await githubService.createPullRequest(
@@ -181,7 +181,7 @@ describe('GitHubService', () => {
         'Test PR',
         'Test description'
       )
-      
+
       expect(result).toEqual({
         number: 1,
         url: 'https://github.com/test-owner/test-repo/pull/1',
@@ -224,11 +224,11 @@ describe('GitHubService', () => {
           }
         ]
       }
-      
+
       ;(githubService as any).octokit.rest.pulls.list.mockResolvedValueOnce(mockPRs)
 
       const result = await githubService.listPullRequests()
-      
+
       expect(result).toHaveLength(2)
       expect(result[0]).toEqual({
         number: 1,
@@ -248,7 +248,7 @@ describe('GitHubService', () => {
       })
 
       const result = await githubService.mergePullRequest(1, 'Merge PR')
-      
+
       expect(result).toBe(true)
       expect((githubService as any).octokit.rest.pulls.merge).toHaveBeenCalledWith({
         owner: 'test-owner',
@@ -264,7 +264,7 @@ describe('GitHubService', () => {
       })
 
       const result = await githubService.mergePullRequest(1, 'Merge PR')
-      
+
       expect(result).toBe(false)
     })
   })

@@ -9,7 +9,7 @@ describe('browser mocks', () => {
 
   it('should mock localStorage', () => {
     const store: Record<string, string> = {};
-    
+
     const localStorageMock = {
       getItem: (key: string) => store[key] || null,
       setItem: (key: string, value: string) => { store[key] = value; },

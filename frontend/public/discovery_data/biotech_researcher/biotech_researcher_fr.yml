@@ -6,10 +6,10 @@ metadata:
   title: Architecte du Code de la Vie - Chercheur en Biotechnologie
   short_description: Découvrez les secrets de la vie grâce à l'IA et à la biotechnologie
   long_description: |
-    Vous êtes un chercheur junior à l'"Institut de BioSynthèse", où les frontières 
-    entre la biologie et l'intelligence artificielle s'estompent. Armé d'outils d'IA 
-    et de techniques de génie génétique, vous explorerez les codes fondamentaux de 
-    la vie et créerez des solutions qui pourraient révolutionner la médecine, 
+    Vous êtes un chercheur junior à l'"Institut de BioSynthèse", où les frontières
+    entre la biologie et l'intelligence artificielle s'estompent. Armé d'outils d'IA
+    et de techniques de génie génétique, vous explorerez les codes fondamentaux de
+    la vie et créerez des solutions qui pourraient révolutionner la médecine,
     l'agriculture et l'amélioration humaine.
   estimated_hours: 70
   skill_focus:
@@ -21,19 +21,19 @@ metadata:
 world_setting:
   name: Institut de BioSynthèse
   description: |
-    L'Institut de BioSynthèse est une installation de recherche de pointe où la biologie 
-    rencontre l'intelligence artificielle. Les chercheurs utilisent ici l'IA pour décoder 
-    les mystères génétiques, concevoir de nouveaux organismes et repousser les limites 
+    L'Institut de BioSynthèse est une installation de recherche de pointe où la biologie
+    rencontre l'intelligence artificielle. Les chercheurs utilisent ici l'IA pour décoder
+    les mystères génétiques, concevoir de nouveaux organismes et repousser les limites
     du possible en biotechnologie tout en se confrontant à des questions éthiques profondes.
   atmosphere: scientific_innovative
   visual_theme: biotech_laboratory
 starting_scenario:
   title: L'Algorithme Vivant
   description: |
-    Le Dr Elena Helix vous accueille à l'institut avec une mission urgente : une séquence 
-    génétique mystérieuse a été découverte qui semble répondre aux algorithmes d'IA. 
-    Mais le Dr Splice de la BioCorp rivale s'empresse d'armer les modifications génétiques. 
-    Vous devez déverrouiller les secrets de la vie de manière responsable tout en 
+    Le Dr Elena Helix vous accueille à l'institut avec une mission urgente : une séquence
+    génétique mystérieuse a été découverte qui semble répondre aux algorithmes d'IA.
+    Mais le Dr Splice de la BioCorp rivale s'empresse d'armer les modifications génétiques.
+    Vous devez déverrouiller les secrets de la vie de manière responsable tout en
     empêchant une utilisation catastrophique.
   initial_tasks:
     - understand_crispr

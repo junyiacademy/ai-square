@@ -57,7 +57,7 @@ class RedisCacheService {
       const urlFromHostPort = host
         ? `redis://${password ? `:${password}@` : ''}${host}${port ? `:${port}` : ''}${db ? `/${db}` : ''}`
         : undefined;
-       
+
       const connectionString = redisUrl || urlFromHostPort;
 
       if (!connectionString) {
@@ -147,7 +147,7 @@ class RedisCacheService {
   async set<T>(key: string, value: T, options: CacheOptions = {}): Promise<void> {
     const { ttl = 300000, serialize = true } = options; // Default 5 minutes
     const realKey = this.applyPrefix(key);
-    
+
     const serializedValue = serialize ? JSON.stringify(value) : value;
     try {
       // Try Redis first
@@ -220,7 +220,7 @@ class RedisCacheService {
       if (this.isConnected && this.redis) {
         await this.redis.flushall();
       }
-      
+
       // Clear fallback cache
       this.fallbackCache.clear();
     } catch (error) {
@@ -306,7 +306,7 @@ class RedisCacheService {
       const item = this.fallbackCache.get(realKey);
       const currentValue = typeof item?.value === 'number' ? item.value : 0;
       const newValue = currentValue + amount;
-      
+
       this.fallbackCache.set(realKey, {
         value: newValue,
         expiresAt: Date.now() + 300000, // 5 minutes default
@@ -355,7 +355,7 @@ class RedisCacheService {
   private cleanupFallbackCache(): void {
     const now = Date.now();
     const expired: string[] = [];
-    
+
     for (const [key, item] of this.fallbackCache.entries()) {
       if (item.expiresAt <= now) {
         expired.push(key);
@@ -369,7 +369,7 @@ class RedisCacheService {
     if (this.fallbackCache.size > this.MAX_FALLBACK_SIZE) {
       const entries = Array.from(this.fallbackCache.entries());
       entries.sort((a, b) => a[1].createdAt - b[1].createdAt);
-      
+
       const toRemove = entries.slice(0, this.fallbackCache.size - this.MAX_FALLBACK_SIZE);
       toRemove.forEach(([key]) => this.fallbackCache.delete(key));
     }

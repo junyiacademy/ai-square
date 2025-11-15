@@ -41,13 +41,13 @@ describe('Database Schema Integration Tests', () => {
 
       try {
         const result = await pool.query(`
-          SELECT 
-            column_name, 
-            data_type, 
-            is_nullable, 
+          SELECT
+            column_name,
+            data_type,
+            is_nullable,
             column_default
-          FROM information_schema.columns 
-          WHERE table_schema = 'public' 
+          FROM information_schema.columns
+          WHERE table_schema = 'public'
             AND table_name = 'users'
           ORDER BY ordinal_position
         `);
@@ -71,7 +71,7 @@ describe('Database Schema Integration Tests', () => {
         // Verify defaults for timestamp columns
         expect(columns.id.default).toBeTruthy(); // Should have UUID default
         expect(columns.created_at.default).toBeTruthy(); // Should have CURRENT_TIMESTAMP
-        
+
         // For updated_at, Prisma uses triggers, not column defaults
         // So it might not have a default in the column definition
       } catch (error) {
@@ -136,20 +136,20 @@ describe('Database Schema Integration Tests', () => {
         // Test the exact INSERT that seed-users API uses
         const insertResult = await pool.query(`
           INSERT INTO users (
-            id, email, password_hash, name, role, 
+            id, email, password_hash, name, role,
             email_verified, metadata, created_at, updated_at
           )
           VALUES (
-            gen_random_uuid(), $1, $2, $3, $4, 
+            gen_random_uuid(), $1, $2, $3, $4,
             $5, $6, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
           )
           RETURNING id
         `, [
-          testEmail, 
-          'test_hash', 
-          'Test User', 
-          'student', 
-          true, 
+          testEmail,
+          'test_hash',
+          'Test User',
+          'student',
+          true,
           JSON.stringify({ test: true })
         ]);
 

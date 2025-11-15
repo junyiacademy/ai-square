@@ -44,13 +44,13 @@ describe('PostgreSQLTaskRepository', () => {
     description: 'Analyze the given problem',
     type: 'analysis',
     status: 'active',
-    content: { 
+    content: {
       instructions: 'Read the case study and identify key issues',
       materials: ['case-study.pdf']
     },
     interactions: [mockInteraction as unknown as Record<string, unknown>],
     interaction_count: 1,
-    user_response: { 
+    user_response: {
       analysis: 'The main issue is ethical conflict',
       reasoning: 'Based on the evidence provided'
     },
@@ -60,7 +60,7 @@ describe('PostgreSQLTaskRepository', () => {
     attempt_count: 1,
     time_limit_seconds: 3600,
     time_spent_seconds: 1800,
-    ai_config: { 
+    ai_config: {
       mentor: { enabled: true, personality: 'supportive' },
       evaluator: { enabled: true, criteria: ['accuracy', 'reasoning'] }
     },
@@ -68,7 +68,7 @@ describe('PostgreSQLTaskRepository', () => {
     started_at: '2024-01-01T10:00:00.000Z',
     completed_at: null,
     updated_at: '2024-01-01T12:00:00.000Z',
-    pbl_data: { 
+    pbl_data: {
       ksaCodes: ['K1', 'S2', 'A1'],
       mentorGuidance: 'Guide the student through analytical thinking'
     },
@@ -88,13 +88,13 @@ describe('PostgreSQLTaskRepository', () => {
     description: { en: 'Analyze the given problem' },
     type: 'analysis',
     status: 'active',
-    content: { 
+    content: {
       instructions: 'Read the case study and identify key issues',
       materials: ['case-study.pdf']
     },
     interactions: [mockInteraction],
     interactionCount: 1,
-    userResponse: { 
+    userResponse: {
       analysis: 'The main issue is ethical conflict',
       reasoning: 'Based on the evidence provided'
     },
@@ -104,7 +104,7 @@ describe('PostgreSQLTaskRepository', () => {
     attemptCount: 1,
     timeLimitSeconds: 3600,
     timeSpentSeconds: 1800,
-    aiConfig: { 
+    aiConfig: {
       mentor: { enabled: true, personality: 'supportive' },
       evaluator: { enabled: true, criteria: ['accuracy', 'reasoning'] }
     },
@@ -112,7 +112,7 @@ describe('PostgreSQLTaskRepository', () => {
     startedAt: '2024-01-01T10:00:00.000Z',
     completedAt: undefined,
     updatedAt: '2024-01-01T12:00:00.000Z',
-    pblData: { 
+    pblData: {
       ksaCodes: ['K1', 'S2', 'A1'],
       mentorGuidance: 'Guide the student through analytical thinking'
     },

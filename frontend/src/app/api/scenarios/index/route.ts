@@ -24,8 +24,8 @@ export async function GET(request: NextRequest) {
     const index = await scenarioIndexService.getIndex();
     if (!index) {
       return NextResponse.json(
-        { 
-          success: false, 
+        {
+          success: false,
           error: 'Index not available',
           status: scenarioIndexBuilder.getStatus()
         },
@@ -58,8 +58,8 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('Error getting scenario index:', error);
     return NextResponse.json(
-      { 
-        success: false, 
+      {
+        success: false,
         error: 'Failed to get scenario index',
         details: error instanceof Error ? error.message : 'Unknown error'
       },
@@ -75,7 +75,7 @@ export async function GET(request: NextRequest) {
 export async function DELETE() {
   try {
     await scenarioIndexService.invalidate();
-    
+
     return NextResponse.json({
       success: true,
       message: 'Scenario index cache invalidated'
@@ -83,8 +83,8 @@ export async function DELETE() {
   } catch (error) {
     console.error('Error invalidating scenario index:', error);
     return NextResponse.json(
-      { 
-        success: false, 
+      {
+        success: false,
         error: 'Failed to invalidate scenario index',
         details: error instanceof Error ? error.message : 'Unknown error'
       },

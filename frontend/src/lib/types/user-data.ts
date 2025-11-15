@@ -1,6 +1,6 @@
 /**
  * User Data Type Definitions
- * 
+ *
  * Central location for all user data related types
  */
 
@@ -55,10 +55,10 @@ export interface UserData {
   assessmentResults?: AssessmentResults | null;
   achievements: UserAchievements;
   assessmentSessions: AssessmentSession[];
-  
+
   // UI state
   currentView?: string;
-  
+
   // Metadata
   lastUpdated: string;
   version: string; // For future migration compatibility
@@ -70,13 +70,13 @@ export interface UserDataOperations {
   loadUserData: () => Promise<UserData | null>;
   saveUserData: (data: UserData) => Promise<void>;
   userDataExists: () => Promise<boolean>;
-  
+
   // Specific operations
   saveAssessmentResults: (results: AssessmentResults) => Promise<void>;
   saveAchievements: (achievements: UserAchievements) => Promise<void>;
   addAssessmentSession: (session: AssessmentSession) => Promise<void>;
   updateAchievements: (updates: Partial<UserAchievements>) => Promise<void>;
-  
+
   // Utility operations
   clearAllData: () => Promise<void>;
   exportData: () => Promise<UserData | null>;

@@ -1,18 +1,18 @@
 import { mockRepositoryFactory } from '@/test-utils/mocks/repositories';
 /**
  * AssessmentLearningService Tests
- * 
+ *
  * TDD: Red → Green → Refactor
  * 測試 Assessment 學習服務的所有功能
  */
 
 import { AssessmentLearningService } from '../assessment-learning-service';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import type { 
-  IScenario, 
-  IProgram, 
-  ITask, 
-  IEvaluation 
+import type {
+  IScenario,
+  IProgram,
+  ITask,
+  IEvaluation
 } from '@/types/unified-learning';
 
 // Mock repositories
@@ -31,7 +31,7 @@ describe('AssessmentLearningService', () => {
       findById: jest.fn(),
       findByMode: jest.fn(),
     };
-    
+
     mockProgramRepo = {
       create: jest.fn(),
       findById: jest.fn(),
@@ -39,7 +39,7 @@ describe('AssessmentLearningService', () => {
       updateProgress: jest.fn(),
       complete: jest.fn(),
     };
-    
+
     mockTaskRepo = {
       create: jest.fn(),
       findById: jest.fn(),
@@ -47,7 +47,7 @@ describe('AssessmentLearningService', () => {
       updateInteractions: jest.fn(),
       complete: jest.fn(),
     };
-    
+
     mockEvaluationRepo = {
       create: jest.fn(),
       findById: jest.fn(),
@@ -70,7 +70,7 @@ describe('AssessmentLearningService', () => {
       const userId = 'user-123';
       const scenarioId = 'scenario-456';
       const language = 'en';
-      
+
       const mockScenario: IScenario = {
         id: scenarioId,
         mode: 'assessment',
@@ -110,7 +110,7 @@ describe('AssessmentLearningService', () => {
       };
 
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
-      
+
       const createdProgram: IProgram = {
         id: 'program-789',
         userId,
@@ -138,7 +138,7 @@ describe('AssessmentLearningService', () => {
         },
         metadata: {}
       };
-      
+
       mockProgramRepo.create.mockResolvedValue(createdProgram);
 
       // Act
@@ -190,7 +190,7 @@ describe('AssessmentLearningService', () => {
       const programId = 'program-789';
       const questionId = 'q1';
       const answer = 'A';
-      
+
       const mockTask: ITask = {
         id: 'task-123',
         programId,
@@ -251,7 +251,7 @@ describe('AssessmentLearningService', () => {
     it('should calculate scores and complete the program', async () => {
       // Arrange
       const programId = 'program-789';
-      
+
       const mockProgram: IProgram = {
         id: programId,
         userId: 'user-123',
@@ -360,7 +360,7 @@ describe('AssessmentLearningService', () => {
     it('should return current assessment progress', async () => {
       // Arrange
       const programId = 'program-789';
-      
+
       const mockProgram: IProgram = {
         id: programId,
         userId: 'user-123',

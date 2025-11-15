@@ -32,7 +32,7 @@ test.describe('Assessment Completion Debug', () => {
     // Verify login successful
     const currentUrl = page.url();
     console.log('📍 Current URL after login:', currentUrl);
-    
+
     // Check for authentication
     const cookies = await page.context().cookies();
     const accessToken = cookies.find(c => c.name === 'accessToken');
@@ -57,13 +57,13 @@ test.describe('Assessment Completion Debug', () => {
     if (startButtonExists) {
       await startButton.click();
       await page.waitForTimeout(3000);
-      
+
       console.log('📍 URL after starting assessment:', page.url());
     }
 
     // Step 4: Try to access completion page directly to test the API
     console.log('🎯 Step 4: Test completion API directly');
-    
+
     // Get scenario ID (assume first scenario)
     const apiResponse = await page.request.get(`${BASE_URL}/api/assessment/scenarios?lang=en`);
     const scenarios = await apiResponse.json().catch(() => []);
@@ -78,9 +78,9 @@ test.describe('Assessment Completion Debug', () => {
       const programResponse = await page.request.post(`${BASE_URL}/api/assessment/scenarios/${scenarioId}/start`, {
         data: { userId: 'test-user' }
       });
-      
+
       console.log('📝 Program creation status:', programResponse.status());
-      
+
       if (programResponse.ok()) {
         const programData = await programResponse.json();
         const programId = programData.program?.id;
@@ -90,9 +90,9 @@ test.describe('Assessment Completion Debug', () => {
           // Test completion endpoint
           console.log('🏁 Step 6: Test completion endpoint');
           const completionResponse = await page.request.post(`${BASE_URL}/api/assessment/programs/${programId}/complete`);
-          
+
           console.log('🎉 Completion API status:', completionResponse.status());
-          
+
           if (completionResponse.ok()) {
             const completionData = await completionResponse.json();
             console.log('✅ Completion successful:', !!completionData.evaluation);
@@ -106,9 +106,9 @@ test.describe('Assessment Completion Debug', () => {
           console.log('🌐 Step 7: Test completion page');
           await page.goto(`${BASE_URL}/assessment/scenarios/${scenarioId}/programs/${programId}/complete`);
           await page.waitForTimeout(5000);
-          
+
           console.log('📍 Final URL:', page.url());
-          
+
           // Check for completion content
           const pageContent = await page.textContent('body');
           const hasResults = pageContent?.includes('results') || pageContent?.includes('評估結果') || pageContent?.includes('completed');

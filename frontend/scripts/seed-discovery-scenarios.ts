@@ -126,17 +126,17 @@ interface DiscoveryScenarioYAML {
 
 async function removeTestScenarios() {
   console.log('Removing test scenarios...');
-  
+
   try {
     const result = await pool.query(`
-      DELETE FROM scenarios 
-      WHERE mode = 'discovery' 
-      AND (title::jsonb->>'en' LIKE '%Test%' 
+      DELETE FROM scenarios
+      WHERE mode = 'discovery'
+      AND (title::jsonb->>'en' LIKE '%Test%'
            OR title::jsonb->>'en' LIKE '%test%'
            OR source_path IS NULL
            OR source_path = '')
     `);
-    
+
     console.log(`✅ Removed ${result.rowCount} test scenarios\n`);
   } catch (error) {
     console.error('Error removing test scenarios:', error);
@@ -145,13 +145,13 @@ async function removeTestScenarios() {
 
 async function loadCareerPath(careerPath: string) {
   const careerData: Record<string, any> = {};
-  
+
   // 讀取各語言檔案
   for (const lang of LANGUAGES) {
     const langCode = lang === 'zhTW' ? 'zhTW' : lang === 'zhCN' ? 'zhCN' : lang;
     const filename = `${careerPath}_${langCode}.yml`;
     const filePath = join(process.cwd(), 'public', 'discovery_data', careerPath, filename);
-    
+
     try {
       const yamlContent = readFileSync(filePath, 'utf8');
       const data = parse(yamlContent) as DiscoveryScenarioYAML;
@@ -160,14 +160,14 @@ async function loadCareerPath(careerPath: string) {
       console.warn(`  ⚠️  No ${lang} translation found for ${careerPath}`);
     }
   }
-  
+
   return careerData;
 }
 
 async function loadDiscoveryScenarios() {
   try {
     console.log('Loading Discovery scenarios from YAML...\n');
-    
+
     // 先移除測試資料
     await removeTestScenarios();
 
@@ -176,29 +176,29 @@ async function loadDiscoveryScenarios() {
     const careerPaths = readdirSync(discoveryDataPath, { withFileTypes: true })
       .filter(dirent => dirent.isDirectory())
       .map(dirent => dirent.name);
-    
+
     console.log(`Found ${careerPaths.length} career paths:`);
     careerPaths.forEach(path => console.log(`  - ${path}`));
 
     console.log('\nProcessing career paths...\n');
-    
+
     for (const careerPath of careerPaths) {
       try {
         console.log(`\n📁 Loading ${careerPath}...`);
         const careerData = await loadCareerPath(careerPath);
-        
+
         // 必須至少有英文版本
         if (!careerData.en) {
           console.error(`  ❌ No English version found for ${careerPath}, skipping...`);
           continue;
         }
-        
+
         const enData = careerData.en as DiscoveryScenarioYAML;
         const scenarioId = uuidv4();
-        
+
         // 建立多語言資料結構
         const multiLangData: Record<string, any> = {};
-        
+
         // 初始化多語言欄位
         const title: Record<string, string> = {};
         const description: Record<string, string> = {};
@@ -208,13 +208,13 @@ async function loadDiscoveryScenarios() {
         const startingScenarioTitle: Record<string, string> = {};
         const startingScenarioDesc: Record<string, string> = {};
         const typicalDay: Record<string, string> = {};
-        
+
         // 處理每個語言版本
         for (const [lang, data] of Object.entries(careerData)) {
           if (!data) continue;
-          
+
           const langData = data as DiscoveryScenarioYAML;
-          
+
           title[lang] = langData.metadata.title;
           description[lang] = langData.metadata.long_description;
           worldSettingName[lang] = langData.world_setting.name;
@@ -222,7 +222,7 @@ async function loadDiscoveryScenarios() {
           startingScenarioTitle[lang] = langData.starting_scenario.title;
           startingScenarioDesc[lang] = langData.starting_scenario.description;
           typicalDay[lang] = langData.career_insights?.typical_day || '';
-          
+
           // 動態生成學習目標
           objectives[lang] = [
             `Explore ${langData.metadata.title} career path`,
@@ -271,25 +271,25 @@ async function loadDiscoveryScenarios() {
             // 整合所有難度等級的任務
             const allTasks: any[] = [];
             let order = 0;
-            
+
             // 處理 example_tasks 的三個難度等級
             const difficulties = ['beginner', 'intermediate', 'advanced'] as const;
-            
+
             for (const difficulty of difficulties) {
               const tasksAtLevel = enData.example_tasks?.[difficulty] || [];
-              
+
               for (const task of tasksAtLevel) {
                 // 建立任務的多語言資料
                 const taskTitle: Record<string, string> = {};
                 const taskDesc: Record<string, string> = {};
-                
+
                 // 收集各語言版本的任務資料
                 for (const [lang, data] of Object.entries(careerData)) {
                   if (!data) continue;
                   const langData = data as DiscoveryScenarioYAML;
                   const langTasksAtLevel = langData.example_tasks?.[difficulty];
                   const langTask = langTasksAtLevel?.find(t => t.id === task.id);
-                  
+
                   if (langTask) {
                     taskTitle[lang] = langTask.title;
                     taskDesc[lang] = langTask.description;
@@ -299,7 +299,7 @@ async function loadDiscoveryScenarios() {
                     taskDesc[lang] = task.description;
                   }
                 }
-                
+
                 allTasks.push({
                   order: order++,
                   type: task.type,
@@ -318,7 +318,7 @@ async function loadDiscoveryScenarios() {
                 });
               }
             }
-            
+
             return allTasks;
           })(),
           metadata: {
@@ -366,8 +366,8 @@ async function loadDiscoveryScenarios() {
 
         console.log(`  ✅ Loaded: ${enData.metadata.title}`);
         console.log(`  📝 Languages: ${Object.keys(careerData).join(', ')}`);
-        const totalTasks = (enData.example_tasks?.beginner?.length || 0) + 
-                          (enData.example_tasks?.intermediate?.length || 0) + 
+        const totalTasks = (enData.example_tasks?.beginner?.length || 0) +
+                          (enData.example_tasks?.intermediate?.length || 0) +
                           (enData.example_tasks?.advanced?.length || 0);
         console.log(`  📚 Tasks: ${totalTasks} (across all difficulty levels)`);
         console.log(`  🎯 Skills: ${enData.skill_tree.core_skills.length} core skills`);
@@ -377,7 +377,7 @@ async function loadDiscoveryScenarios() {
     }
 
     console.log('\n✅ Discovery scenarios loaded successfully!');
-    
+
     // 顯示統計
     const countResult = await pool.query(
       "SELECT COUNT(*) FROM scenarios WHERE mode = 'discovery'"

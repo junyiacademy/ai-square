@@ -101,7 +101,7 @@ describe('/api/pbl/scenarios route', () => {
     mockScenarioIndexService = require('@/lib/services/scenario-index-service').scenarioIndexService;
 
     require('@/lib/repositories/base/repository-factory').repositoryFactory.getScenarioRepository.mockReturnValue(mockScenarioRepo);
-    
+
     // Default mock implementations
     mockScenarioRepo.findByMode.mockResolvedValue(mockScenarios);
     mockCacheService.get.mockResolvedValue(null);
@@ -115,7 +115,7 @@ describe('/api/pbl/scenarios route', () => {
   describe('GET /api/pbl/scenarios', () => {
     it('should return scenarios from database successfully', async () => {
       const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
-      
+
       const response = await GET(request);
       const data = await response.json();
 
@@ -135,7 +135,7 @@ describe('/api/pbl/scenarios route', () => {
 
     it('should handle Chinese language parameter', async () => {
       const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=zh');
-      
+
       const response = await GET(request);
       const data = await response.json();
 
@@ -146,7 +146,7 @@ describe('/api/pbl/scenarios route', () => {
 
     it('should fallback to English when language not available', async () => {
       const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=fr');
-      
+
       const response = await GET(request);
       const data = await response.json();
 
@@ -157,7 +157,7 @@ describe('/api/pbl/scenarios route', () => {
 
     it('should handle string-type titles and descriptions', async () => {
       const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
-      
+
       const response = await GET(request);
       const data = await response.json();
 
@@ -178,7 +178,7 @@ describe('/api/pbl/scenarios route', () => {
       mockCacheService.get.mockResolvedValue(cachedData);
 
       const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
-      
+
       const response = await GET(request);
       const data = await response.json();
 
@@ -193,7 +193,7 @@ describe('/api/pbl/scenarios route', () => {
 
     it('should build scenario index', async () => {
       const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
-      
+
       await GET(request);
 
       expect(mockScenarioIndexService.buildIndex).toHaveBeenCalledWith(mockScenarios);
@@ -201,7 +201,7 @@ describe('/api/pbl/scenarios route', () => {
 
     it('should extract yamlId from different sources', async () => {
       const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
-      
+
       const response = await GET(request);
       const data = await response.json();
 
@@ -212,7 +212,7 @@ describe('/api/pbl/scenarios route', () => {
 
     it('should handle targetDomains from different sources', async () => {
       const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
-      
+
       const response = await GET(request);
       const data = await response.json();
 
@@ -223,7 +223,7 @@ describe('/api/pbl/scenarios route', () => {
 
     it('should calculate task count correctly', async () => {
       const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
-      
+
       const response = await GET(request);
       const data = await response.json();
 
@@ -234,7 +234,7 @@ describe('/api/pbl/scenarios route', () => {
 
     it('should assign correct emoji based on scenario ID', async () => {
       const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
-      
+
       const response = await GET(request);
       const data = await response.json();
 
@@ -247,7 +247,7 @@ describe('/api/pbl/scenarios route', () => {
       mockScenarioRepo.findByMode.mockResolvedValue([]);
 
       const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
-      
+
       const response = await GET(request);
       const data = await response.json();
 
@@ -260,7 +260,7 @@ describe('/api/pbl/scenarios route', () => {
       mockScenarioRepo.findByMode.mockRejectedValue(new Error('Database error'));
 
       const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
-      
+
       const response = await GET(request);
       const data = await response.json();
 
@@ -281,7 +281,7 @@ describe('/api/pbl/scenarios route', () => {
       mockScenarioRepo.findByMode.mockResolvedValue([...mockScenarios, invalidScenario]);
 
       const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
-      
+
       const response = await GET(request);
       const data = await response.json();
 
@@ -299,7 +299,7 @@ describe('/api/pbl/scenarios route', () => {
       mockScenarioRepo.findByMode = undefined;
 
       const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
-      
+
       const response = await GET(request);
       const data = await response.json();
 
@@ -314,10 +314,10 @@ describe('/api/pbl/scenarios route', () => {
       mockCacheService.set.mockRejectedValue(new Error('Cache error'));
 
       const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
-      
+
       const response = await GET(request);
       const data = await response.json();
-      
+
       // The route should catch the error and return 500
       expect(response.status).toBe(500);
       expect(data.success).toBe(false);
@@ -328,16 +328,16 @@ describe('/api/pbl/scenarios route', () => {
       mockScenarioIndexService.buildIndex.mockRejectedValue(new Error('Index error'));
 
       const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
-      
+
       const response = await GET(request);
-      
+
       expect(response.status).toBe(200);
       // Should still work despite index failure
     });
 
     it('should log scenario details when scenarios exist', async () => {
       const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
-      
+
       await GET(request);
 
       expect(console.log).toHaveBeenCalledWith(`[PBL API] Repository returned ${mockScenarios.length} raw scenarios`);
@@ -354,7 +354,7 @@ describe('/api/pbl/scenarios route', () => {
       mockScenarioRepo.findByMode.mockResolvedValue([]);
 
       const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
-      
+
       await GET(request);
 
       expect(console.log).toHaveBeenCalledWith('[PBL API] No scenarios found, checking repository...');
@@ -373,7 +373,7 @@ describe('/api/pbl/scenarios route', () => {
       mockScenarioRepo.findByMode.mockResolvedValue([scenarioWithUndefinedFields]);
 
       const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
-      
+
       const response = await GET(request);
       const data = await response.json();
 
@@ -394,7 +394,7 @@ describe('/api/pbl/scenarios route', () => {
       mockScenarioRepo.findByMode.mockResolvedValue([scenarioWithoutMetadata]);
 
       const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
-      
+
       const response = await GET(request);
       const data = await response.json();
 
@@ -420,7 +420,7 @@ describe('/api/pbl/scenarios route', () => {
       mockScenarioRepo.findByMode.mockResolvedValue([scenarioWithBothDurations]);
 
       const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
-      
+
       const response = await GET(request);
       const data = await response.json();
 
@@ -430,9 +430,9 @@ describe('/api/pbl/scenarios route', () => {
 
     it('should handle malformed URL gracefully', async () => {
       const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en&invalid=param');
-      
+
       const response = await GET(request);
-      
+
       expect(response.status).toBe(200);
       // Should still work with extra parameters
     });
@@ -441,7 +441,7 @@ describe('/api/pbl/scenarios route', () => {
       // Clear cache to test non-cached response
       mockCacheService.get.mockResolvedValue(null);
       const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
-      
+
       const response = await GET(request);
 
       expect(response.status).toBe(200);
@@ -465,7 +465,7 @@ describe('/api/pbl/scenarios route', () => {
       mockScenarioRepo.findByMode.mockResolvedValue(specialScenarios);
 
       const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
-      
+
       const response = await GET(request);
       const data = await response.json();
 
@@ -489,7 +489,7 @@ describe('/api/pbl/scenarios route', () => {
       mockScenarioRepo.findByMode.mockResolvedValue(taskCountScenarios);
 
       const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
-      
+
       const response = await GET(request);
       const data = await response.json();
 
@@ -505,7 +505,7 @@ describe('/api/pbl/scenarios route', () => {
       // Note: Cache GET is disabled but SET is still called
       const enRequest = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
       const zhRequest = new NextRequest('http://localhost/api/pbl/scenarios?lang=zh');
-      
+
       await GET(enRequest);
       await GET(zhRequest);
 
@@ -528,7 +528,7 @@ describe('/api/pbl/scenarios route', () => {
     it('should set cache with appropriate TTL', async () => {
       // Note: Cache GET is disabled but SET is still called
       const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
-      
+
       await GET(request);
 
       // Cache SET is called with TTL
@@ -545,9 +545,9 @@ describe('/api/pbl/scenarios route', () => {
       mockCacheService.set.mockRejectedValue(new Error('Cache set failed'));
 
       const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
-      
+
       const response = await GET(request);
-      
+
       expect(response.status).toBe(500);
       // Error response when cache set fails in test mode
     });
@@ -567,11 +567,11 @@ describe('/api/pbl/scenarios route', () => {
       mockScenarioRepo.findByMode.mockResolvedValue(largeScenarioSet);
 
       const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
-      
+
       const startTime = performance.now();
       const response = await GET(request);
       const endTime = performance.now();
-      
+
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -588,17 +588,17 @@ describe('/api/pbl/scenarios route', () => {
       mockCacheService.set.mockReturnValue(cacheSetPromise);
 
       const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
-      
+
       const responsePromise = GET(request);
-      
+
       // The response should complete even if cache set is pending
       // However, since await is used for cache.set in the route, it will wait
       // So we need to resolve it to let the response complete
       cacheSetResolve!();
-      
+
       const response = await responsePromise;
       expect(response.status).toBe(200);
-      
+
       // Cache GET is called in test mode
       expect(mockCacheService.get).toHaveBeenCalledWith('pbl:scenarios:en');
       // Cache SET is called
@@ -615,7 +615,7 @@ describe('/api/pbl/scenarios route', () => {
       });
 
       const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
-      
+
       const response = await GET(request);
       const data = await response.json();
 
@@ -631,9 +631,9 @@ describe('/api/pbl/scenarios route', () => {
       });
 
       const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
-      
+
       const response = await GET(request);
-      
+
       expect(response.status).toBe(200);
       // Should still return scenarios even if index service fails
     });
@@ -644,7 +644,7 @@ describe('/api/pbl/scenarios route', () => {
       mockScenarioRepo.findByMode.mockResolvedValue(null);
 
       const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
-      
+
       const response = await GET(request);
       const data = await response.json();
 
@@ -662,7 +662,7 @@ describe('/api/pbl/scenarios route', () => {
       mockScenarioRepo.findByMode.mockResolvedValue(incompleteScenarios);
 
       const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
-      
+
       const response = await GET(request);
       const data = await response.json();
 
@@ -696,7 +696,7 @@ describe('/api/pbl/scenarios route', () => {
       mockScenarioRepo.findByMode.mockResolvedValue([complexScenario]);
 
       const request = new NextRequest('http://localhost/api/pbl/scenarios?lang=en');
-      
+
       const response = await GET(request);
       const data = await response.json();
 

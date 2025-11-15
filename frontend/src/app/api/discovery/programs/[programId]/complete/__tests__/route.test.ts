@@ -251,7 +251,7 @@ describe('POST /api/discovery/programs/[programId]/complete', () => {
     );
 
     // Verify program was updated
-    expect(mockUpdate).toHaveBeenCalledWith('program123', 
+    expect(mockUpdate).toHaveBeenCalledWith('program123',
       expect.objectContaining({
         status: 'completed',
         metadata: expect.objectContaining({

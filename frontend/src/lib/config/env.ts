@@ -51,17 +51,17 @@ export const config = {
   dbPort: parseInt(getEnvVar('DB_PORT', '5432') || '5432'),
   dbName: getEnvVar('DB_NAME', 'ai_square_db'),
   dbUser: getEnvVar('DB_USER', 'postgres'),
-  
+
   // API
   apiUrl: getEnvVar('NEXT_PUBLIC_API_URL', '/api'),
-  
+
   // Google Cloud
   gcpProject: getEnvVar('GOOGLE_CLOUD_PROJECT'),
   gcsBucket: getEnvVar('GCS_BUCKET_NAME', 'ai-square-db-v2'),
-  
+
   // Feature flags
   usePostgres: getEnvVar('USE_POSTGRES', 'true') === 'true',
-  
+
   // Environment
   nodeEnv: getEnvVar('NODE_ENV', 'development'),
   isProduction: isProduction(),

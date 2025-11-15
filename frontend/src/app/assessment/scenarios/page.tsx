@@ -45,7 +45,7 @@ export default function AssessmentScenariosPage() {
   const loadAssessmentScenarios = useCallback(async () => {
     const cacheKey = i18n.language;
     const now = Date.now();
-    
+
     // Check client-side cache
     if (scenariosCache[cacheKey] && (now - scenariosCache[cacheKey].timestamp) < CACHE_TTL) {
       console.log('Using cached scenarios');
@@ -53,25 +53,25 @@ export default function AssessmentScenariosPage() {
       setLoading(false);
       return;
     }
-    
+
     // Prevent concurrent requests
     if (loadingRef.current) {
       console.log('Already loading scenarios, skipping...');
       return;
     }
-    
+
     loadingRef.current = true;
     try {
       const res = await authenticatedFetch(`/api/assessment/scenarios?lang=${i18n.language}`);
       const data = await res.json();
       const loadedScenarios = data.data?.scenarios || [];
-      
+
       // Update cache
       scenariosCache[cacheKey] = {
         data: loadedScenarios,
         timestamp: now
       };
-      
+
       setScenarios(loadedScenarios);
     } catch (error) {
       console.error('Failed to load scenarios:', error);
@@ -129,7 +129,7 @@ export default function AssessmentScenariosPage() {
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {scenarios.map((scenario) => (
-            <Card 
+            <Card
               key={scenario.id}
               className="hover:shadow-lg transition-shadow"
             >
@@ -162,7 +162,7 @@ export default function AssessmentScenariosPage() {
                     <span>{t('assessment:pass', 'Pass')}: {scenario.config.passingScore}%</span>
                   </div>
                 </div>
-                
+
                 {scenario.userProgress && scenario.userProgress.completedPrograms > 0 && (
                   <div className="mt-4 pt-4 border-t text-sm text-gray-600">
                     <div className="flex items-center justify-between">
@@ -175,9 +175,9 @@ export default function AssessmentScenariosPage() {
                     </div>
                   </div>
                 )}
-                
+
                 <div className="mt-4 pt-4 border-t">
-                  <Button 
+                  <Button
                     className="w-full"
                     onClick={() => router.push(`/assessment/scenarios/${scenario.id}`)}
                   >

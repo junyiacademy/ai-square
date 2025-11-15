@@ -11,10 +11,10 @@ import { productionMonitor } from '@/lib/monitoring/production-monitor';
 import { distributedCacheService } from '@/lib/cache/distributed-cache-service';
 import { performanceMonitor } from '@/lib/monitoring/performance-monitor';
 import { mockConsoleError as createMockConsoleError } from '@/test-utils/helpers/console';
-import { 
+import {
   createMockUserRepository,
   createMockProgramRepository,
-  createMockScenarioRepository 
+  createMockScenarioRepository
 } from '@/test-utils/mocks/repository-helpers';
 
 // Mock dependencies
@@ -33,7 +33,7 @@ describe('/api/monitoring/status', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     // Setup monitoring mocks
     (productionMonitor.getStatus as jest.Mock).mockReturnValue({
       enabled: true,
@@ -43,13 +43,13 @@ describe('/api/monitoring/status', () => {
         cacheHitRate: 0.5
       }
     });
-    
+
     (distributedCacheService.getStats as jest.Mock).mockResolvedValue({
       redisConnected: true,
       localCacheSize: 1024,
       activeRevalidations: 2
     });
-    
+
     (performanceMonitor.getAllMetrics as jest.Mock).mockReturnValue([
       {
         endpoint: '/api/test',
@@ -58,7 +58,7 @@ describe('/api/monitoring/status', () => {
         errorRate: 0.01
       }
     ]);
-    
+
     (performanceMonitor.getRecentMetrics as jest.Mock).mockReturnValue([]);
   });
 
@@ -81,12 +81,12 @@ describe('/api/monitoring/status', () => {
     expect(data).toHaveProperty('health', 'healthy');
     expect(data).toHaveProperty('timestamp');
     expect(data).toHaveProperty('monitoring');
-    
+
     // Check cache status
     expect(data.cache).toBeDefined();
     expect(data.cache).toHaveProperty('redis');
     expect(data.cache).toHaveProperty('local');
-    
+
     // Check performance metrics
     expect(data.performance).toBeDefined();
     expect(data.performance).toHaveProperty('totalEndpoints');
@@ -113,7 +113,7 @@ describe('/api/monitoring/status', () => {
   it('should handle cache service failure', async () => {
     // Mock distributedCacheService.getStats to throw error
     (distributedCacheService.getStats as jest.Mock).mockRejectedValue(new Error('Redis unavailable'));
-    
+
     mockUserRepo.findAll?.mockResolvedValue(new Array(100));
     mockProgramRepo.findByUser?.mockResolvedValue(new Array(250));
     (mockScenarioRepo.findActive as jest.Mock)?.mockResolvedValue(new Array(15));
@@ -164,7 +164,7 @@ describe('/api/monitoring/status', () => {
     (productionMonitor.getStatus as jest.Mock).mockImplementation(() => {
       throw new Error('Monitor error');
     });
-    
+
     (distributedCacheService.getStats as jest.Mock).mockRejectedValue(new Error('Cache error'));
     (performanceMonitor.getAllMetrics as jest.Mock).mockImplementation(() => {
       throw new Error('Performance monitor error');
@@ -183,22 +183,22 @@ describe('/api/monitoring/status', () => {
 
 /**
  * Monitoring Status API Considerations:
- * 
+ *
  * 1. Health Checks:
  *    - Database connectivity
  *    - Cache availability
  *    - API responsiveness
- * 
+ *
  * 2. Status Levels:
  *    - healthy: All services operational
  *    - degraded: Some services failing
  *    - unhealthy: Critical services down
- * 
+ *
  * 3. Metadata:
  *    - System information
  *    - Resource usage
  *    - Version details
- * 
+ *
  * 4. Error Handling:
  *    - Graceful degradation
  *    - Always return 200 status

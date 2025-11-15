@@ -29,20 +29,20 @@ describe('Error Logger', () => {
           timestamp: new Date().toISOString(),
           ...context
         };
-        
+
         if (process.env.NODE_ENV === 'development') {
           console.error('[ERROR]', errorInfo);
         }
-        
+
         // In production, would send to error tracking service
         return errorInfo;
       };
 
       const error = new Error('Test error');
       const context = { userId: '123', action: 'fetchData' };
-      
+
       const result = logError(error, context);
-      
+
       expect(result.message).toBe('Test error');
       expect('userId' in result && result.userId).toBe('123');
       expect('action' in result && result.action).toBe('fetchData');
@@ -53,7 +53,7 @@ describe('Error Logger', () => {
       const logError = (error: unknown, context?: Record<string, unknown>) => {
         let errorMessage = 'Unknown error';
         let errorStack: string | undefined;
-        
+
         if (error instanceof Error) {
           errorMessage = error.message;
           errorStack = error.stack;
@@ -62,7 +62,7 @@ describe('Error Logger', () => {
         } else if (error && typeof error === 'object') {
           errorMessage = JSON.stringify(error);
         }
-        
+
         return {
           message: errorMessage,
           stack: errorStack,
@@ -88,16 +88,16 @@ describe('Error Logger', () => {
           data,
           timestamp: new Date().toISOString()
         };
-        
+
         if (process.env.NODE_ENV === 'development') {
           console.warn('[WARNING]', warningInfo);
         }
-        
+
         return warningInfo;
       };
 
       const result = logWarning('Deprecation warning', { feature: 'oldAPI' });
-      
+
       expect(result.level).toBe('warning');
       expect(result.message).toBe('Deprecation warning');
       expect(result.data).toEqual({ feature: 'oldAPI' });
@@ -121,9 +121,9 @@ describe('Error Logger', () => {
 
       const error = new Error('Component render error');
       const errorInfo = { componentStack: 'in Component\n    in App' };
-      
+
       const result = logErrorBoundary(error, errorInfo);
-      
+
       expect(result.type).toBe('error-boundary');
       expect(result.error.message).toBe('Component render error');
       expect(result.errorInfo.componentStack).toContain('in Component');
@@ -139,7 +139,7 @@ describe('Error Logger', () => {
         statusCode?: number
       ) => {
         const errorMessage = error instanceof Error ? error.message : String(error);
-        
+
         return {
           type: 'api-error',
           endpoint,
@@ -156,7 +156,7 @@ describe('Error Logger', () => {
         'GET',
         500
       );
-      
+
       expect(result.type).toBe('api-error');
       expect(result.endpoint).toBe('/api/users');
       expect(result.method).toBe('GET');
@@ -186,12 +186,12 @@ describe('Error Logger', () => {
       };
 
       const result = logPerformanceIssue('pageLoadTime', 5000, 3000);
-      
+
       expect(result).not.toBeNull();
       expect(result?.type).toBe('performance-warning');
       expect(result?.metric).toBe('pageLoadTime');
       expect(result?.exceeded).toBe(2000);
-      
+
       const noIssue = logPerformanceIssue('renderTime', 100, 200);
       expect(noIssue).toBeNull();
     });
@@ -201,7 +201,7 @@ describe('Error Logger', () => {
     it('should categorize errors', () => {
       const categorizeError = (error: Error): string => {
         const message = error.message.toLowerCase();
-        
+
         if (message.includes('network') || message.includes('fetch')) {
           return 'network';
         }
@@ -214,7 +214,7 @@ describe('Error Logger', () => {
         if (message.includes('timeout')) {
           return 'timeout';
         }
-        
+
         return 'unknown';
       };
 
@@ -236,7 +236,7 @@ describe('Error Logger', () => {
           timeout: 'The operation took too long. Please try again.',
           unknown: 'An unexpected error occurred. Please refresh and try again.'
         };
-        
+
         return suggestions[errorType] || suggestions.unknown;
       };
 
@@ -253,7 +253,7 @@ describe('Error Logger', () => {
       const sanitizeError = (error: Record<string, unknown>): Record<string, unknown> => {
         const sensitiveKeys = ['password', 'token', 'apikey', 'secret', 'authorization'];
         const sanitized = { ...error };
-        
+
         for (const key of Object.keys(sanitized)) {
           if (sensitiveKeys.some(sensitive => key.toLowerCase().includes(sensitive.toLowerCase()))) {
             sanitized[key] = '[REDACTED]';
@@ -261,7 +261,7 @@ describe('Error Logger', () => {
             sanitized[key] = sanitizeError(sanitized[key] as Record<string, unknown>);
           }
         }
-        
+
         return sanitized;
       };
 
@@ -276,7 +276,7 @@ describe('Error Logger', () => {
       };
 
       const sanitized = sanitizeError(errorWithSensitiveData);
-      
+
       expect(sanitized.password).toBe('[REDACTED]');
       expect(sanitized.apiKey).toBe('[REDACTED]');
       const userData = sanitized.userData as Record<string, unknown>;

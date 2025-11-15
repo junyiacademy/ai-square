@@ -9,7 +9,7 @@ export async function GET(
     const { searchParams } = new URL(request.url);
     const { programId } = await params;
     const scenarioId = searchParams.get('scenarioId');
-    
+
     if (!scenarioId) {
       return NextResponse.json(
         {
@@ -19,7 +19,7 @@ export async function GET(
         { status: 400 }
       );
     }
-    
+
     // Get user info from cookie
     let userEmail: string | undefined;
     try {
@@ -31,7 +31,7 @@ export async function GET(
     } catch {
       console.log('No user cookie found');
     }
-    
+
     if (!userEmail) {
       return NextResponse.json(
         {
@@ -41,13 +41,13 @@ export async function GET(
         { status: 401 }
       );
     }
-    
+
     // Get repositories
     const userRepo = repositoryFactory.getUserRepository();
     const programRepo = repositoryFactory.getProgramRepository();
     const taskRepo = repositoryFactory.getTaskRepository();
     const evaluationRepo = repositoryFactory.getEvaluationRepository();
-    
+
     // Get user by email
     const user = await userRepo.findByEmail(userEmail);
     if (!user) {
@@ -56,7 +56,7 @@ export async function GET(
         { status: 404 }
       );
     }
-    
+
     // Get program
     const program = await programRepo.findById(programId);
     if (!program || program.userId !== user.id) {
@@ -68,26 +68,26 @@ export async function GET(
         { status: 404 }
       );
     }
-    
+
     // Get tasks and evaluations
     const [tasks, evaluations] = await Promise.all([
       taskRepo.findByProgram(programId),
       evaluationRepo.findByProgram(programId)
     ]);
-    
+
     // Sort tasks by index
     tasks.sort((a, b) => a.taskIndex - b.taskIndex);
-    
+
     // Calculate overall completion stats
     const completedTasks = tasks.filter(t => t.status === 'completed');
     const totalScore = evaluations.reduce((sum, e) => sum + e.score, 0);
     const averageScore = evaluations.length > 0 ? totalScore / evaluations.length : 0;
-    
+
     // Aggregate domain and KSA scores from evaluations
     const domainScores: Record<string, number> = {};
     const ksaScores: Record<string, number> = {};
     const ksaCounts: Record<string, number> = {};
-    
+
     evaluations.forEach(evaluation => {
       if (evaluation.domainScores) {
         Object.entries(evaluation.domainScores).forEach(([dimension, score]: [string, number]) => {
@@ -102,7 +102,7 @@ export async function GET(
         });
       }
     });
-    
+
     // Calculate averages
     Object.keys(domainScores).forEach(key => {
       domainScores[key] = domainScores[key] / evaluations.length;
@@ -110,7 +110,7 @@ export async function GET(
     Object.keys(ksaScores).forEach(key => {
       ksaScores[key] = ksaScores[key] / ksaCounts[key];
     });
-    
+
     // Build task summaries
     const taskSummaries = tasks.map(task => {
       const taskEvaluation = evaluations.find(e => e.taskId === task.id);
@@ -123,7 +123,7 @@ export async function GET(
         timeSpentSeconds: task.timeSpentSeconds
       };
     });
-    
+
     const summary = {
       programId: program.id,
       scenarioId: program.scenarioId,
@@ -141,15 +141,15 @@ export async function GET(
       tasks: taskSummaries,
       metadata: program.metadata
     };
-    
+
     return NextResponse.json({
       success: true,
       summary
     });
-    
+
   } catch (error) {
     console.error('Get program summary error:', error);
-    
+
     return NextResponse.json(
       {
         success: false,

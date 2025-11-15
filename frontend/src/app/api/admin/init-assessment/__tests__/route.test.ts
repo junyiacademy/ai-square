@@ -98,7 +98,7 @@ describe('/api/admin/init-assessment', () => {
         tasks: []
       };
 
-      const existingScenario = { 
+      const existingScenario = {
         id: 'existing-scenario-id',
         status: 'active',
         sourceId: 'ai_literacy'

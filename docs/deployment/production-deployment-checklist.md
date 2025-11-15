@@ -7,16 +7,16 @@
   ```bash
   # Database password
   echo -n "YOUR_SECURE_PASSWORD" | gcloud secrets create db-password-production --data-file=-
-  
+
   # NextAuth secret
   echo -n "$(openssl rand -base64 32)" | gcloud secrets create nextauth-secret-production --data-file=-
-  
+
   # JWT secret
   echo -n "$(openssl rand -base64 32)" | gcloud secrets create jwt-secret-production --data-file=-
-  
+
   # Claude API key
   echo -n "YOUR_CLAUDE_API_KEY" | gcloud secrets create claude-api-key-production --data-file=-
-  
+
   # Google credentials (service account JSON)
   gcloud secrets create google-credentials-production --data-file=path/to/service-account.json
   ```

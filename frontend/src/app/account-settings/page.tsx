@@ -23,7 +23,7 @@ export default function AccountSettingsPage() {
   const router = useRouter();
   const { t } = useTranslation(['common', 'auth']);
   const { user, isLoading: authLoading } = useAuth();
-  
+
   const [isLoading, setIsLoading] = useState(true);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deletePassword, setDeletePassword] = useState('');
@@ -31,7 +31,7 @@ export default function AccountSettingsPage() {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [error, setError] = useState('');
-  
+
   // 合規性相關
   const [consents, setConsents] = useState<LegalConsent[]>([]);
   const [requiredConsents, setRequiredConsents] = useState<RequiredConsent[]>([]);
@@ -155,7 +155,7 @@ export default function AccountSettingsPage() {
                     <div>
                       <p className="font-medium text-gray-900 dark:text-white">{consent.title}</p>
                       <p className="text-sm text-gray-600 dark:text-gray-400">
-                        {t('accountSettings.version')}: {consent.version} | 
+                        {t('accountSettings.version')}: {consent.version} |
                         {t('accountSettings.consentedOn')}: {new Date(consent.consentedAt).toLocaleDateString()}
                       </p>
                     </div>
@@ -215,7 +215,7 @@ export default function AccountSettingsPage() {
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                 {t('accountSettings.confirmDelete')}
               </h3>
-              
+
               {error && (
                 <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 rounded">
                   {error}

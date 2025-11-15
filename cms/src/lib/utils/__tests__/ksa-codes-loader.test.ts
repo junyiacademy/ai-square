@@ -30,20 +30,20 @@ describe('ksa-codes-loader utils', () => {
 
       // Check that the result contains the expected structure
       expect(result).toContain('KSA (Knowledge, Skills, Attitudes) Competency Codes Reference:')
-      
+
       // Check Knowledge section
       expect(result).toContain('Knowledge (K):')
       expect(result).toContain('K1.1: Understanding AI fundamentals')
       expect(result).toContain('K1.2: Recognizing AI applications')
       expect(result).toContain('K2.1: Data processing concepts')
       expect(result).toContain('K2.2: Algorithm basics')
-      
+
       // Check Skills section
       expect(result).toContain('Skills (S):')
       expect(result).toContain('S1.1: Using AI tools effectively')
       expect(result).toContain('S1.2: Evaluating AI outputs')
       expect(result).toContain('S2.1: Data preparation skills')
-      
+
       // Check Attitudes section
       expect(result).toContain('Attitudes (A):')
       expect(result).toContain('A1.1: Ethical AI usage')
@@ -100,7 +100,7 @@ describe('ksa-codes-loader utils', () => {
 
       // Re-import the function
       const { formatKSACodesForPrompt: emptyFormatter } = require('../ksa-codes-loader')
-      
+
       const result = emptyFormatter()
 
       expect(result).toContain('KSA (Knowledge, Skills, Attitudes) Competency Codes Reference:')
@@ -116,16 +116,16 @@ describe('ksa-codes-loader utils', () => {
       const result = formatKSACodesForPrompt()
 
       expect(result).toContain('KSA (Knowledge, Skills, Attitudes) Competency Codes Reference:')
-      
+
       // The function should provide clear structure for AI models to understand
       expect(result.split('\\n').length).toBeGreaterThan(10) // Should have multiple lines
-      
+
       // Each section should be clearly marked
       const lines = result.split('\\n')
       const knowledgeLine = lines.find(line => line.includes('Knowledge (K):'))
       const skillsLine = lines.find(line => line.includes('Skills (S):'))
       const attitudesLine = lines.find(line => line.includes('Attitudes (A):'))
-      
+
       expect(knowledgeLine).toBeDefined()
       expect(skillsLine).toBeDefined()
       expect(attitudesLine).toBeDefined()
@@ -136,10 +136,10 @@ describe('ksa-codes-loader utils', () => {
 
       // Check Knowledge codes format
       expect(result).toMatch(/K\\d+\\.\\d+:/g)
-      
+
       // Check Skills codes format
       expect(result).toMatch(/S\\d+\\.\\d+:/g)
-      
+
       // Check Attitudes codes format
       expect(result).toMatch(/A\\d+\\.\\d+:/g)
     })

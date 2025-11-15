@@ -101,7 +101,7 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
 
   it('should handle authentication via query params', async () => {
     (getUnifiedAuth as jest.Mock).mockResolvedValue(null);
-    
+
     const request = new NextRequest(
       'http://localhost/api/assessment/programs/123/batch-answers?userEmail=test@example.com',
       {
@@ -121,13 +121,13 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
     });
 
     const response = await POST(request, { params: Promise.resolve({ programId: '123' }) });
-    
+
     expect(response.status).toBe(200);
   });
 
   it('should return 401 when no authentication', async () => {
     (getUnifiedAuth as jest.Mock).mockResolvedValue(null);
-    
+
     const request = new NextRequest('http://localhost/api/assessment/programs/123/batch-answers', {
       method: 'POST',
       body: JSON.stringify({
@@ -137,9 +137,9 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
     });
 
     const response = await POST(request, { params: Promise.resolve({ programId: '123' }) });
-    
+
     expect(response.status).toBe(401);
-    
+
     // Handle both Response and NextResponse objects
     const data = await response.json();
     expect(data.error).toBe('Authentication required');

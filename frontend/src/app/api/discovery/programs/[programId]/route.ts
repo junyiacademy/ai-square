@@ -9,18 +9,18 @@ export async function GET(
   try {
     // Get authentication
     const session = await getUnifiedAuth(request);
-    
+
     if (!session?.user.id) {
       return createUnauthorizedResponse();
     }
-    
+
     // Await params before using
     const { programId } = await params;
-    
+
     const programRepo = repositoryFactory.getProgramRepository();
     const taskRepo = repositoryFactory.getTaskRepository();
     const scenarioRepo = repositoryFactory.getScenarioRepository();
-    
+
     // Get program
     const program = await programRepo.findById(programId);
     if (!program) {
@@ -29,7 +29,7 @@ export async function GET(
         { status: 404 }
       );
     }
-    
+
     // Verify ownership
     const userId = session.user.id;
     if (program.userId !== userId) {
@@ -38,13 +38,13 @@ export async function GET(
         { status: 403 }
       );
     }
-    
+
     // Get scenario info
     const scenario = await scenarioRepo.findById(program.scenarioId);
-    
+
     // Get all tasks for the program
     const tasks = await taskRepo.findByProgram(programId);
-    
+
     console.log('Debug: Discovery program loaded', {
       programId,
       scenarioId: program.scenarioId,
@@ -53,16 +53,16 @@ export async function GET(
       programStatus: program.status,
       metadata: program.metadata
     });
-    
+
     // Calculate some basic stats
     const completedTasks = tasks.filter(t => t.status === 'completed');
     const totalXP = completedTasks.reduce((sum, task) => {
       return sum + ((task.metadata?.xpEarned as number) || 0);
     }, 0);
-    
+
     const currentTaskIndex = program.currentTaskIndex || 0;
     const currentTask = tasks[currentTaskIndex] || tasks[0];
-    
+
     return NextResponse.json({
       program,
       scenario: scenario ? {

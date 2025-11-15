@@ -41,7 +41,7 @@ FAILED_TESTS=0
 check_status() {
     local status=$1
     local test_name=$2
-    
+
     if [ "$status" == "200" ]; then
         echo -e "${GREEN}✅ $test_name passed${NC}"
     else
@@ -97,7 +97,7 @@ fi
 if [ -n "$ADMIN_KEY" ]; then
     echo -e "\n4. Database Statistics:"
     DB_STATS=$(curl -s -H "X-Admin-Key: $ADMIN_KEY" "$BASE_URL/api/admin/stats")
-    
+
     if echo "$DB_STATS" | jq -e '.success' >/dev/null 2>&1; then
         echo "Users: $(echo "$DB_STATS" | jq -r '.users.total')"
         echo "Programs: $(echo "$DB_STATS" | jq -r '.programs')"

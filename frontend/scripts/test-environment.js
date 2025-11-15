@@ -51,11 +51,11 @@ function makeRequest(options, data = null) {
   return new Promise((resolve, reject) => {
     const req = https.request(options, (res) => {
       let responseData = '';
-      
+
       res.on('data', (chunk) => {
         responseData += chunk;
       });
-      
+
       res.on('end', () => {
         resolve({
           statusCode: res.statusCode,
@@ -64,13 +64,13 @@ function makeRequest(options, data = null) {
         });
       });
     });
-    
+
     req.on('error', reject);
-    
+
     if (data) {
       req.write(data);
     }
-    
+
     req.end();
   });
 }
@@ -88,12 +88,12 @@ async function testEnvironment(envKey) {
       failed: 0
     }
   };
-  
+
   console.log(`\n${colors.cyan}${'='.repeat(60)}${colors.reset}`);
   console.log(`${colors.bright}Testing ${env.name} Environment${colors.reset}`);
   console.log(`Host: ${env.host}`);
   console.log(`${colors.cyan}${'='.repeat(60)}${colors.reset}\n`);
-  
+
   // Test 1: Health Check
   console.log(`${colors.blue}[1/6] Testing Health Check...${colors.reset}`);
   try {
@@ -102,14 +102,14 @@ async function testEnvironment(envKey) {
       path: '/api/health',
       method: 'GET'
     });
-    
+
     const isHealthy = healthResponse.statusCode === 200;
     results.tests.healthCheck = {
       passed: isHealthy,
       statusCode: healthResponse.statusCode,
       response: healthResponse.data
     };
-    
+
     if (isHealthy) {
       console.log(`${colors.green}✅ Health check passed${colors.reset}`);
     } else {
@@ -119,11 +119,11 @@ async function testEnvironment(envKey) {
     results.tests.healthCheck = { passed: false, error: error.message };
     console.log(`${colors.red}❌ Health check error: ${error.message}${colors.reset}`);
   }
-  
+
   // Test 2: Database Connection (via login attempt)
   console.log(`\n${colors.blue}[2/6] Testing Database Connection...${colors.reset}`);
   let authToken = null;
-  
+
   try {
     const loginData = JSON.stringify(env.testAccount);
     const loginResponse = await makeRequest({
@@ -135,16 +135,16 @@ async function testEnvironment(envKey) {
         'Content-Length': loginData.length
       }
     }, loginData);
-    
+
     const loginResult = JSON.parse(loginResponse.data);
     const loginSuccess = loginResponse.statusCode === 200 && loginResult.success;
-    
+
     results.tests.databaseConnection = {
       passed: loginSuccess,
       statusCode: loginResponse.statusCode,
       message: loginSuccess ? 'Login successful' : loginResult.error || 'Login failed'
     };
-    
+
     if (loginSuccess) {
       authToken = loginResult.accessToken;
       console.log(`${colors.green}✅ Database connection verified (login successful)${colors.reset}`);
@@ -155,7 +155,7 @@ async function testEnvironment(envKey) {
     results.tests.databaseConnection = { passed: false, error: error.message };
     console.log(`${colors.red}❌ Database connection error: ${error.message}${colors.reset}`);
   }
-  
+
   // Test 3: PBL Scenarios API
   console.log(`\n${colors.blue}[3/6] Testing PBL Scenarios API...${colors.reset}`);
   try {
@@ -166,16 +166,16 @@ async function testEnvironment(envKey) {
       method: 'GET',
       headers
     });
-    
+
     const pblData = JSON.parse(pblResponse.data);
     const pblSuccess = pblResponse.statusCode === 200 && pblData.success;
-    
+
     results.tests.pblScenarios = {
       passed: pblSuccess,
       statusCode: pblResponse.statusCode,
       scenarioCount: pblSuccess ? (pblData.data?.scenarios?.length || 0) : 0
     };
-    
+
     if (pblSuccess) {
       console.log(`${colors.green}✅ PBL API working (${pblData.data?.scenarios?.length || 0} scenarios)${colors.reset}`);
     } else {
@@ -185,7 +185,7 @@ async function testEnvironment(envKey) {
     results.tests.pblScenarios = { passed: false, error: error.message };
     console.log(`${colors.red}❌ PBL API error: ${error.message}${colors.reset}`);
   }
-  
+
   // Test 4: Discovery Scenarios API with Category Filtering
   console.log(`\n${colors.blue}[4/6] Testing Discovery Scenarios API...${colors.reset}`);
   try {
@@ -196,40 +196,40 @@ async function testEnvironment(envKey) {
       method: 'GET',
       headers
     });
-    
+
     const discoveryData = JSON.parse(discoveryResponse.data);
     const discoverySuccess = discoveryResponse.statusCode === 200 && discoveryData.success;
-    
+
     if (discoverySuccess) {
       const scenarios = discoveryData.data?.scenarios || [];
       const categories = {};
-      
+
       scenarios.forEach(s => {
         const cat = s.discoveryData?.category || s.discovery_data?.category || 'unknown';
         categories[cat] = (categories[cat] || 0) + 1;
       });
-      
+
       results.tests.discoveryScenarios = {
         passed: discoverySuccess,
         statusCode: discoveryResponse.statusCode,
         scenarioCount: scenarios.length,
         categories: categories
       };
-      
+
       console.log(`${colors.green}✅ Discovery API working (${scenarios.length} scenarios)${colors.reset}`);
       console.log(`   Categories: ${JSON.stringify(categories)}`);
-      
+
       // Verify expected category distribution
       const expectedCategories = { arts: 4, technology: 4, business: 2, science: 2 };
       let categoryMatch = true;
-      
+
       for (const [cat, count] of Object.entries(expectedCategories)) {
         if (categories[cat] !== count) {
           categoryMatch = false;
           console.log(`   ${colors.yellow}⚠ ${cat}: expected ${count}, got ${categories[cat] || 0}${colors.reset}`);
         }
       }
-      
+
       if (categoryMatch) {
         console.log(`   ${colors.green}✅ All category counts match expected values${colors.reset}`);
       }
@@ -241,7 +241,7 @@ async function testEnvironment(envKey) {
     results.tests.discoveryScenarios = { passed: false, error: error.message };
     console.log(`${colors.red}❌ Discovery API error: ${error.message}${colors.reset}`);
   }
-  
+
   // Test 5: Assessment Scenarios API
   console.log(`\n${colors.blue}[5/6] Testing Assessment Scenarios API...${colors.reset}`);
   try {
@@ -252,16 +252,16 @@ async function testEnvironment(envKey) {
       method: 'GET',
       headers
     });
-    
+
     const assessmentData = JSON.parse(assessmentResponse.data);
     const assessmentSuccess = assessmentResponse.statusCode === 200 && assessmentData.success;
-    
+
     results.tests.assessmentScenarios = {
       passed: assessmentSuccess,
       statusCode: assessmentResponse.statusCode,
       scenarioCount: assessmentSuccess ? (assessmentData.data?.scenarios?.length || 0) : 0
     };
-    
+
     if (assessmentSuccess) {
       console.log(`${colors.green}✅ Assessment API working (${assessmentData.data?.scenarios?.length || 0} scenarios)${colors.reset}`);
     } else {
@@ -271,7 +271,7 @@ async function testEnvironment(envKey) {
     results.tests.assessmentScenarios = { passed: false, error: error.message };
     console.log(`${colors.red}❌ Assessment API error: ${error.message}${colors.reset}`);
   }
-  
+
   // Test 6: Static Assets (Images)
   console.log(`\n${colors.blue}[6/6] Testing Static Assets...${colors.reset}`);
   try {
@@ -280,13 +280,13 @@ async function testEnvironment(envKey) {
       path: '/images/career-paths/app_developer.jpg',
       method: 'HEAD'
     });
-    
+
     const imageSuccess = imageResponse.statusCode === 200;
     results.tests.staticAssets = {
       passed: imageSuccess,
       statusCode: imageResponse.statusCode
     };
-    
+
     if (imageSuccess) {
       console.log(`${colors.green}✅ Static assets serving correctly${colors.reset}`);
     } else {
@@ -296,7 +296,7 @@ async function testEnvironment(envKey) {
     results.tests.staticAssets = { passed: false, error: error.message };
     console.log(`${colors.red}❌ Static assets error: ${error.message}${colors.reset}`);
   }
-  
+
   // Calculate summary
   for (const test of Object.values(results.tests)) {
     results.summary.total++;
@@ -306,20 +306,20 @@ async function testEnvironment(envKey) {
       results.summary.failed++;
     }
   }
-  
+
   // Display summary
   console.log(`\n${colors.cyan}${'='.repeat(60)}${colors.reset}`);
   console.log(`${colors.bright}${env.name} Test Summary${colors.reset}`);
   console.log(`Total Tests: ${results.summary.total}`);
   console.log(`${colors.green}Passed: ${results.summary.passed}${colors.reset}`);
   console.log(`${colors.red}Failed: ${results.summary.failed}${colors.reset}`);
-  
+
   if (results.summary.failed === 0) {
     console.log(`\n${colors.green}${colors.bright}🎉 All tests passed for ${env.name}!${colors.reset}`);
   } else {
     console.log(`\n${colors.yellow}⚠ Some tests failed for ${env.name}${colors.reset}`);
   }
-  
+
   return results;
 }
 
@@ -327,10 +327,10 @@ async function testEnvironment(envKey) {
 async function main() {
   console.log(`${colors.bright}AI Square Environment Testing${colors.reset}`);
   console.log(`Started at: ${new Date().toLocaleString()}`);
-  
+
   // Test specified environment or both
   const envToTest = process.argv[2];
-  
+
   if (envToTest && environments[envToTest]) {
     // Test single environment
     testResults.environments[envToTest] = await testEnvironment(envToTest);
@@ -338,7 +338,7 @@ async function main() {
     // Test all environments
     for (const envKey of Object.keys(environments)) {
       testResults.environments[envKey] = await testEnvironment(envKey);
-      
+
       // Add delay between environments
       if (envKey !== 'production') {
         console.log(`\n${colors.yellow}Waiting 2 seconds before next environment...${colors.reset}`);
@@ -350,20 +350,20 @@ async function main() {
     console.log('Usage: node test-environment.js [staging|production|all]');
     process.exit(1);
   }
-  
+
   // Final summary
   console.log(`\n${colors.cyan}${'='.repeat(60)}${colors.reset}`);
   console.log(`${colors.bright}Overall Test Results${colors.reset}`);
   console.log(`${colors.cyan}${'='.repeat(60)}${colors.reset}\n`);
-  
+
   let allPassed = true;
   for (const [envKey, results] of Object.entries(testResults.environments)) {
-    const status = results.summary.failed === 0 ? 
-      `${colors.green}✅ PASS${colors.reset}` : 
+    const status = results.summary.failed === 0 ?
+      `${colors.green}✅ PASS${colors.reset}` :
       `${colors.red}❌ FAIL${colors.reset}`;
-    
+
     console.log(`${results.name}: ${status} (${results.summary.passed}/${results.summary.total} tests passed)`);
-    
+
     if (results.summary.failed > 0) {
       allPassed = false;
       console.log(`  Failed tests:`);
@@ -374,12 +374,12 @@ async function main() {
       }
     }
   }
-  
+
   // Save results to file
   const resultsFile = `test-results-${new Date().toISOString().split('T')[0]}.json`;
   fs.writeFileSync(resultsFile, JSON.stringify(testResults, null, 2));
   console.log(`\n${colors.blue}Results saved to: ${resultsFile}${colors.reset}`);
-  
+
   // Exit with appropriate code
   if (allPassed) {
     console.log(`\n${colors.green}${colors.bright}🎉 All environments passed all tests!${colors.reset}`);

@@ -8,20 +8,20 @@ export async function GET(
   try {
     const { searchParams } = new URL(request.url);
     const lang = searchParams.get('lang') || 'en';
-    
+
     // Await params before using
     const { id } = await params;
 
     const scenarioRepo = repositoryFactory.getScenarioRepository();
     const scenario = await scenarioRepo.findById(id);
-    
+
     if (!scenario) {
       return new Response(JSON.stringify({ error: 'Scenario not found' }), {
         status: 404,
         headers: { 'Content-Type': 'application/json' }
       });
     }
-    
+
     // Get config from taskTemplates if available
     let config;
     if (scenario.taskTemplates && Array.isArray(scenario.taskTemplates)) {
@@ -31,14 +31,14 @@ export async function GET(
         const content = taskData.content as { questions?: unknown[] } | undefined;
         return sum + (content?.questions?.length || 0);
       }, 0);
-      
+
       // Calculate total time limit from all tasks
       const totalTimeLimit = scenario.taskTemplates.reduce((sum, task) => {
         const taskData = task as Record<string, unknown>;
         const context = taskData.context as { timeLimit?: number } | undefined;
         return sum + Math.floor((context?.timeLimit || 240) / 60);
       }, 0);
-      
+
       config = {
         totalQuestions: totalQuestions || 12,
         timeLimit: totalTimeLimit || 15,
@@ -54,23 +54,23 @@ export async function GET(
         domains: ['engaging_with_ai', 'creating_with_ai', 'managing_with_ai', 'designing_with_ai']
       };
     }
-    
+
     // Get title and description from scenario
-    const title = typeof scenario.title === 'string' 
-      ? scenario.title 
+    const title = typeof scenario.title === 'string'
+      ? scenario.title
       : scenario.title?.[lang] || scenario.title?.en || 'Assessment';
-    
+
     const description = typeof scenario.description === 'string'
       ? scenario.description
       : scenario.description?.[lang] || scenario.description?.en || '';
-    
+
     const responseData = {
       ...scenario,
       title,
       description,
       config
     };
-    
+
     return new Response(JSON.stringify(responseData), {
       status: 200,
       headers: { 'Content-Type': 'application/json' }

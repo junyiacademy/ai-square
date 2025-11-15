@@ -40,17 +40,17 @@ export async function GET(request: NextRequest) {
     const user = session?.user;
     const userId = user?.id || user?.email;
     const isTest = process.env.NODE_ENV === 'test' || Boolean(process.env.JEST_WORKER_ID);
-    
+
     // Get scenario repository
     const scenarioRepo = repositoryFactory.getScenarioRepository();
-    
+
     // First, try to get scenarios from database
     console.log('Loading assessment scenarios from database');
     const dbScenarios = await scenarioRepo.findByMode?.('assessment') || [];
-    
+
     if (dbScenarios.length > 0) {
       console.log(`Found ${dbScenarios.length} assessment scenarios in database`);
-      
+
       // Format scenarios from database
       const formattedScenarios = dbScenarios.map((scenario: IScenario) => ({
         id: scenario.id,
@@ -69,14 +69,14 @@ export async function GET(request: NextRequest) {
           bestScore: undefined
         } : undefined
       }));
-      
+
       // 測試環境直接回傳，避免受快取影響
       if (isTest) {
         return new NextResponse(JSON.stringify({ success: true, data: { scenarios: formattedScenarios, total: formattedScenarios.length } }), {
           headers: { 'Content-Type': 'application/json', 'X-Cache': 'MISS' }
         });
       }
-      
+
       // 匿名請求才走快取
       const key = !userId ? cacheKeys.assessmentScenarios(lang) : undefined;
       if (key) {
@@ -87,18 +87,18 @@ export async function GET(request: NextRequest) {
             headers: { 'Content-Type': 'application/json', 'X-Cache': 'HIT' }
           });
         }
-        
+
         // 沒有快取或快取為空，使用新資料
         const result = {
           success: true,
           data: { scenarios: formattedScenarios, total: formattedScenarios.length }
         };
-        
+
         // 只有當結果不為空時才快取
         if (formattedScenarios.length > 0) {
           await distributedCacheService.set(key, result, { ttl: TTL.SEMI_STATIC_1H });
         }
-        
+
         return new NextResponse(JSON.stringify(result), {
           headers: { 'Content-Type': 'application/json', 'X-Cache': 'MISS' }
         });
@@ -106,10 +106,10 @@ export async function GET(request: NextRequest) {
 
       return NextResponse.json({ success: true, data: { scenarios: formattedScenarios, total: formattedScenarios.length } });
     }
-    
+
     // If no scenarios in database, that's an error - DON'T fall back to file system
     console.error('[Assessment API] ERROR: No scenarios in database. Database initialization required!');
-    
+
     // Return empty array instead of falling back to YAML
     const emptyResult = {
       success: true,
@@ -118,7 +118,7 @@ export async function GET(request: NextRequest) {
         total: 0
       }
     };
-    
+
     // Don't cache empty results - just return them
     return NextResponse.json(emptyResult);
   } catch (error) {

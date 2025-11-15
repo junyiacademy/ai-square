@@ -25,7 +25,7 @@ export class PostgreSQLUserRepository implements IUserRepository {
 
   async findById(id: string): Promise<User | null> {
     const query = `
-      SELECT 
+      SELECT
         id, email, name, preferred_language as "preferredLanguage",
         level, total_xp as "totalXp", learning_preferences as "learningPreferences",
         onboarding_completed as "onboardingCompleted",
@@ -43,7 +43,7 @@ export class PostgreSQLUserRepository implements IUserRepository {
 
   async findByEmail(email: string): Promise<User | null> {
     const query = `
-      SELECT 
+      SELECT
         id, email, name, preferred_language as "preferredLanguage",
         level, total_xp as "totalXp", learning_preferences as "learningPreferences",
         onboarding_completed as "onboardingCompleted",
@@ -64,7 +64,7 @@ export class PostgreSQLUserRepository implements IUserRepository {
       INSERT INTO users (
         email, name, preferred_language, learning_preferences
       ) VALUES ($1, $2, $3, $4)
-      RETURNING 
+      RETURNING
         id, email, name, preferred_language as "preferredLanguage",
         level, total_xp as "totalXp", learning_preferences as "learningPreferences",
         onboarding_completed as "onboardingCompleted",
@@ -125,7 +125,7 @@ export class PostgreSQLUserRepository implements IUserRepository {
       UPDATE users
       SET ${updates.join(', ')}
       WHERE id = $${paramCount}
-      RETURNING 
+      RETURNING
         id, email, name, preferred_language as "preferredLanguage",
         level, total_xp as "totalXp", learning_preferences as "learningPreferences",
         onboarding_completed as "onboardingCompleted",
@@ -134,7 +134,7 @@ export class PostgreSQLUserRepository implements IUserRepository {
     `;
 
     const { rows } = await this.pool.query(query, values);
-    
+
     if (!rows[0]) {
       throw new Error('User not found');
     }
@@ -157,7 +157,7 @@ export class PostgreSQLUserRepository implements IUserRepository {
     } = options;
 
     const query = `
-      SELECT 
+      SELECT
         id, email, name, preferred_language as "preferredLanguage",
         level, total_xp as "totalXp", learning_preferences as "learningPreferences",
         onboarding_completed as "onboardingCompleted",
@@ -184,14 +184,14 @@ export class PostgreSQLUserRepository implements IUserRepository {
 
   async addAchievement(userId: string, achievementId: string): Promise<void> {
     const client = await this.pool.connect();
-    
+
     try {
       await client.query('BEGIN');
 
       // Check if achievement exists
       const achQuery = 'SELECT id, xp_reward FROM achievements WHERE id = $1';
       const { rows: achRows } = await client.query(achQuery, [achievementId]);
-      
+
       if (!achRows[0]) {
         throw new Error('Achievement not found');
       }
@@ -231,30 +231,30 @@ export class PostgreSQLUserRepository implements IUserRepository {
   async saveAssessmentSession(userId: string, session: CreateAssessmentSessionDto): Promise<AssessmentSession> {
     // In the unified architecture, assessment results are stored in evaluations table
     // This method is kept for backward compatibility but redirects to evaluations
-    
+
     // First, find the assessment task for this user
     const taskQuery = `
-      SELECT t.id 
+      SELECT t.id
       FROM tasks t
       JOIN programs p ON t.program_id = p.id
       WHERE p.user_id = $1 AND t.mode = 'assessment'
       ORDER BY t.created_at DESC
       LIMIT 1
     `;
-    
+
     const { rows: taskRows } = await this.pool.query(taskQuery, [userId]);
     const taskId = taskRows[0]?.id || null;
-    
+
     // Create evaluation record
     const evalQuery = `
       INSERT INTO evaluations (
         task_id, user_id, evaluation_type, score, feedback, criteria, metadata
       ) VALUES ($1, $2, 'summative', $3, $4, $5, $6)
-      RETURNING 
+      RETURNING
         id, user_id as "userId", created_at as "createdAt",
         score as "overallScore", feedback, metadata
     `;
-    
+
     const overallScore = (session.techScore + session.creativeScore + session.businessScore) / 3;
     const feedback = {
       techScore: session.techScore,
@@ -263,7 +263,7 @@ export class PostgreSQLUserRepository implements IUserRepository {
       answers: session.answers,
       generatedPaths: session.generatedPaths
     };
-    
+
     const { rows } = await this.pool.query(evalQuery, [
       taskId,
       userId,
@@ -272,7 +272,7 @@ export class PostgreSQLUserRepository implements IUserRepository {
       JSON.stringify({ domains: ['tech', 'creative', 'business'] }),
       JSON.stringify({ sessionKey: session.sessionKey })
     ]);
-    
+
     // Transform to match legacy AssessmentSession interface
     return {
       id: rows[0].id,
@@ -315,7 +315,7 @@ export class PostgreSQLUserRepository implements IUserRepository {
         image_url = EXCLUDED.image_url,
         category = EXCLUDED.category,
         xp_reward = EXCLUDED.xp_reward
-      RETURNING 
+      RETURNING
         id, user_id as "userId", badge_id as "badgeId", name, description,
         image_url as "imageUrl", category, xp_reward as "xpReward",
         unlocked_at as "unlockedAt", metadata
@@ -357,13 +357,13 @@ export class PostgreSQLUserRepository implements IUserRepository {
 
     // Get assessment sessions
     const assessmentSessions = await this.getAssessmentSessions();
-    
+
     // Get latest assessment results
     const latestResults = await this.getLatestAssessmentResults();
-    
+
     // Get user badges
     const badges = await this.getUserBadges();
-    
+
     // TODO: Achievement 系統需要建立相關資料表
     // 暫時返回空陣列避免阻擋 Discovery 開發
     const achievements: Achievement[] = [];
@@ -393,7 +393,7 @@ export class PostgreSQLUserRepository implements IUserRepository {
 
   async saveUserData(userEmail: string, data: UserDataInput): Promise<UserDataResponse> {
     const client = await this.pool.connect();
-    
+
     try {
       await client.query('BEGIN');
 
@@ -443,10 +443,10 @@ export class PostgreSQLUserRepository implements IUserRepository {
       }
 
       await client.query('COMMIT');
-      
+
       // Return updated user data
       return await this.getUserData(userEmail) as UserDataResponse;
-      
+
     } catch (error) {
       await client.query('ROLLBACK');
       throw error;

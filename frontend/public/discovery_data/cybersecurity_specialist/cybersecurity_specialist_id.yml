@@ -6,9 +6,9 @@ metadata:
   title: "Penjaga Benteng Digital - Spesialis Keamanan Siber"
   short_description: "Pertahankan dunia digital dari ancaman siber"
   long_description: |
-    Kamu adalah rekrut di "Akademi Pertahanan Siber", tempat pelatihan elit untuk 
-    prajurit digital. Di dunia di mana data adalah emas baru dan peretas bersembunyi 
-    di setiap bayangan internet, kamu akan belajar melindungi infrastruktur kritis, 
+    Kamu adalah rekrut di "Akademi Pertahanan Siber", tempat pelatihan elit untuk
+    prajurit digital. Di dunia di mana data adalah emas baru dan peretas bersembunyi
+    di setiap bayangan internet, kamu akan belajar melindungi infrastruktur kritis,
     memburu penjahat siber, dan membangun benteng digital yang tak tertembus.
   estimated_hours: 65
   skill_focus:
@@ -20,19 +20,19 @@ metadata:
 world_setting:
   name: "Akademi Pertahanan Siber"
   description: |
-    Akademi Pertahanan Siber ada di dunia fisik dan virtual. Siswa menavigasi melalui 
-    serangan siber simulasi, belajar dari peretas topi putih legendaris, dan 
-    mempersiapkan diri menghadapi ancaman dunia nyata yang dapat melumpuhkan negara 
+    Akademi Pertahanan Siber ada di dunia fisik dan virtual. Siswa menavigasi melalui
+    serangan siber simulasi, belajar dari peretas topi putih legendaris, dan
+    mempersiapkan diri menghadapi ancaman dunia nyata yang dapat melumpuhkan negara
     atau korporasi dalam hitungan detik.
   atmosphere: high_stakes_tactical
   visual_theme: matrix_fortress
 starting_scenario:
   title: "Kebangkitan Dark Web"
   description: |
-    Komandan Firewall memberi pengarahan tentang situasi mendesak: kelompok peretas 
-    terkenal "Shadow Byte" yang dipimpin oleh Zero Day misterius merencanakan 
-    serangan besar-besaran terhadap infrastruktur global. Kamu harus menguasai 
-    keterampilan keamanan siber dengan cepat untuk bergabung dengan pasukan 
+    Komandan Firewall memberi pengarahan tentang situasi mendesak: kelompok peretas
+    terkenal "Shadow Byte" yang dipimpin oleh Zero Day misterius merencanakan
+    serangan besar-besaran terhadap infrastruktur global. Kamu harus menguasai
+    keterampilan keamanan siber dengan cepat untuk bergabung dengan pasukan
     pertahanan dan mencegah kiamat digital.
   initial_tasks:
     - understand_threats

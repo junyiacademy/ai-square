@@ -98,18 +98,18 @@ export default function DiscoveryNavigation() {
         {/* Vertical Progress Bar */}
         <div className="relative">
           <div className="absolute left-0 top-0 w-1 h-40 bg-gray-200 rounded-full" />
-          <div 
+          <div
             className="absolute left-0 top-0 w-1 bg-gradient-to-b from-purple-500 to-blue-500 rounded-full transition-all duration-300"
             style={{ height: `${Math.min(scrollProgress * 1.6, 160)}px` }}
           />
-          
+
           {/* Navigation Points */}
           <div className="relative -ml-3 h-40">
             {navigationItems.map((item, index) => {
               const Icon = item.icon;
               const active = isActive(item);
               const position = (index / (navigationItems.length - 1)) * 100;
-              
+
               return (
                 <button
                   key={item.id}
@@ -130,8 +130,8 @@ export default function DiscoveryNavigation() {
                   <div className={`
                     w-8 h-8 rounded-full flex items-center justify-center
                     transition-all duration-300 shadow-lg
-                    ${active 
-                      ? 'bg-purple-600 text-white' 
+                    ${active
+                      ? 'bg-purple-600 text-white'
                       : item.disabled
                       ? 'bg-gray-200 text-gray-400'
                       : 'bg-white text-gray-600 hover:bg-purple-50 hover:text-purple-600'
@@ -144,7 +144,7 @@ export default function DiscoveryNavigation() {
                       </span>
                     )}
                   </div>
-                  
+
                   {/* Label Tooltip */}
                   <div className={`
                     absolute left-12 top-1/2 -translate-y-1/2 whitespace-nowrap
@@ -193,7 +193,7 @@ export default function DiscoveryNavigation() {
               </linearGradient>
             </defs>
           </svg>
-          
+
           {/* Center Content */}
           <div className="absolute inset-0 flex items-center justify-center">
             <button
@@ -206,7 +206,7 @@ export default function DiscoveryNavigation() {
             </button>
           </div>
         </div>
-        
+
         {/* Expanded Quick Navigation */}
         <AnimatePresence>
           {showMobileNav && (
@@ -219,7 +219,7 @@ export default function DiscoveryNavigation() {
               {navigationItems.map((item) => {
                 const Icon = item.icon;
                 const active = isActive(item);
-                
+
                 return (
                   <button
                     key={item.id}
@@ -232,8 +232,8 @@ export default function DiscoveryNavigation() {
                     disabled={item.disabled}
                     className={`
                       w-full flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors
-                      ${active 
-                        ? 'bg-purple-100 text-purple-700' 
+                      ${active
+                        ? 'bg-purple-100 text-purple-700'
                         : item.disabled
                         ? 'bg-gray-50 text-gray-400 cursor-not-allowed'
                         : 'hover:bg-gray-50 text-gray-700'
@@ -250,7 +250,7 @@ export default function DiscoveryNavigation() {
                   </button>
                 );
               })}
-              
+
               {/* Mobile Progress Info */}
               <div className="border-t border-gray-100 mt-2 pt-2 px-3">
                 <div className="flex items-center justify-between text-xs">

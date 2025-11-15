@@ -45,12 +45,12 @@ describe('/api/evaluations', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     // Setup repository factory mocks
     (repositoryFactory.getEvaluationRepository as jest.Mock).mockReturnValue(mockEvaluationRepo);
     (repositoryFactory.getTaskRepository as jest.Mock).mockReturnValue(mockTaskRepo);
     (repositoryFactory.getProgramRepository as jest.Mock).mockReturnValue(mockProgramRepo);
-    
+
     // Setup AI service mock
     (getVertexAI as jest.Mock).mockReturnValue({
       preview: {
@@ -234,12 +234,12 @@ describe('/api/evaluations', () => {
 
       expect(response.status).toBe(201);
       expect(data).toEqual(mockCreatedEvaluation);
-      
+
       // Verify AI was called
       expect(mockGenerateContent).toHaveBeenCalledWith(
         expect.stringContaining('AI literacy learning task')
       );
-      
+
       // Verify evaluation was created with AI results
       expect(mockEvaluationRepo.create).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -252,7 +252,7 @@ describe('/api/evaluations', () => {
           }),
         })
       );
-      
+
       // Verify task was updated
       expect(mockTaskRepo.update).toHaveBeenCalledWith('task-123', {
         status: 'completed',
@@ -334,7 +334,7 @@ describe('/api/evaluations', () => {
       await POST(request);
 
       // Verify program was marked as completed
-      expect(mockProgramRepo.update).toHaveBeenCalledWith('prog-456', 
+      expect(mockProgramRepo.update).toHaveBeenCalledWith('prog-456',
         expect.objectContaining({ status: 'completed' })
       );
     });
@@ -441,27 +441,27 @@ describe('/api/evaluations', () => {
 
 /**
  * Evaluations API Considerations:
- * 
+ *
  * 1. AI Integration:
  *    - Uses Vertex AI for evaluation
  *    - Handles AI service failures gracefully
  *    - Parses AI responses safely
- * 
+ *
  * 2. Progress Tracking:
  *    - Updates task completion status
  *    - Calculates program progress
  *    - Marks programs as completed
- * 
+ *
  * 3. Data Structure:
  *    - Supports multiple evaluation types
  *    - Tracks KSA (Knowledge, Skills, Attitudes)
  *    - Stores AI analysis details
- * 
+ *
  * 4. Query Options:
  *    - By user ID
  *    - By program ID
  *    - By task ID
- * 
+ *
  * 5. Future Enhancements:
  *    - AI usage tracking
  *    - Cost estimation

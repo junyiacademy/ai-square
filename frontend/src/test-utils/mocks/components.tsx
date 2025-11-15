@@ -112,34 +112,34 @@ export const reactMarkdownMock = ({ children }: { children: string }) => (
 );
 
 // Next.js mocks
-export const nextImageMock = ({ 
-  src, 
-  alt, 
-  width, 
-  height, 
-  className, 
-  ...props 
+export const nextImageMock = ({
+  src,
+  alt,
+  width,
+  height,
+  className,
+  ...props
 }: any) => (
   // eslint-disable-next-line @next/next/no-img-element
-  <img 
-    src={src} 
-    alt={alt} 
-    width={width} 
-    height={height} 
+  <img
+    src={src}
+    alt={alt}
+    width={width}
+    height={height}
     className={className}
     data-testid="next-image"
-    {...props} 
+    {...props}
   />
 );
 
-export const nextLinkMock = ({ 
-  href, 
-  children, 
-  className, 
-  ...props 
+export const nextLinkMock = ({
+  href,
+  children,
+  className,
+  ...props
 }: any) => (
-  <a 
-    href={href} 
+  <a
+    href={href}
     className={className}
     data-testid="next-link"
     {...props}
@@ -201,7 +201,7 @@ export const setupLucideIconsMocks = () => {
 export const setupNextMocks = () => {
   jest.mock('next/image', () => nextImageMock);
   jest.mock('next/link', () => nextLinkMock);
-  
+
   // Mock Next.js router
   jest.mock('next/router', () => ({
     useRouter: () => ({
@@ -220,7 +220,7 @@ export const setupNextMocks = () => {
       }
     })
   }));
-  
+
   // Mock Next.js navigation
   jest.mock('next/navigation', () => ({
     useRouter: () => ({

@@ -107,18 +107,18 @@ class CacheService:
     def __init__(self):
         self.redis = None  # Phase 2 才實作
         self.memory_cache = {}  # Phase 1 使用
-    
+
     async def get_or_fetch(self, key: str, fetch_func):
         # Phase 1: 記憶體快取
         if key in self.memory_cache:
             return self.memory_cache[key]
-        
+
         # Phase 2: Redis 快取
         if self.redis:
             cached = await self.redis.get(key)
             if cached:
                 return json.loads(cached)
-        
+
         # 取得資料並快取
         data = await fetch_func()
         await self.cache(key, data)
@@ -129,20 +129,20 @@ class CacheService:
 ```python
 class GitContentManager:
     """管理 Git-based 內容操作"""
-    
+
     async def save_content(self, content_type: str, content_id: str, data: dict):
         """儲存內容到 Git"""
         # 1. 格式化內容
         formatted = self.format_content(content_type, data)
-        
+
         # 2. 寫入檔案
         file_path = self.get_file_path(content_type, content_id)
         await self.write_file(file_path, formatted)
-        
+
         # 3. 創建 commit
         commit_msg = f"Update {content_type}: {content_id}"
         await self.git_commit(file_path, commit_msg)
-        
+
         # 4. 可選：自動創建 PR
         if self.auto_pr_enabled:
             await self.create_pull_request(content_type, content_id)

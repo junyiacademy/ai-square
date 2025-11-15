@@ -7,11 +7,11 @@ metadata:
   title: "Mago Digitale - Creatore di Contenuti"
   short_description: "Tessi storie accattivanti nel regno virtuale"
   long_description: |
-    Sei un mago appena ordinato dell'"Impero Creativo", che possiede il potere 
-    misterioso di trasformare le idee in contenuti virali. In questo regno digitale, 
-    ogni like e condivisione è prova della tua magia, e la tua mentore Luna ti 
+    Sei un mago appena ordinato dell'"Impero Creativo", che possiede il potere
+    misterioso di trasformare le idee in contenuti virali. In questo regno digitale,
+    ogni like e condivisione è prova della tua magia, e la tua mentore Luna ti
     insegnerà a padroneggiare i segreti degli algoritmi.
-  
+
   estimated_hours: 50
   skill_focus:
     - content_magic
@@ -22,22 +22,22 @@ metadata:
 world_setting:
   name: "Impero Creativo"
   description: |
-    L'Impero Creativo è un regno digitale alimentato da energia creativa. I creatori 
-    di contenuti qui imparano a sfruttare le forze misteriose degli algoritmi, 
-    dell'engagement e delle meccaniche virali per costruire la loro influenza e 
+    L'Impero Creativo è un regno digitale alimentato da energia creativa. I creatori
+    di contenuti qui imparano a sfruttare le forze misteriose degli algoritmi,
+    dell'engagement e delle meccaniche virali per costruire la loro influenza e
     impattare milioni di vite.
-  
+
   atmosphere: "vibrant_magical"
   visual_theme: "digital_fantasy"
 
 starting_scenario:
   title: "La Sfida dell'Ombra"
   description: |
-    La Mentore Creativa Luna ti accoglie nell'impero con notizie urgenti: Ombra, 
-    un mago caduto, sta diffondendo contenuti falsi usando magia proibita, minacciando 
-    l'armonia dell'Impero Creativo. Devi usare il potere della creatività autentica 
+    La Mentore Creativa Luna ti accoglie nell'impero con notizie urgenti: Ombra,
+    un mago caduto, sta diffondendo contenuti falsi usando magia proibita, minacciando
+    l'armonia dell'Impero Creativo. Devi usare il potere della creatività autentica
     per combattere la sua influenza oscura.
-  
+
   initial_tasks:
     - understand_algorithms
     - learn_content_basics
@@ -52,7 +52,7 @@ skill_tree:
       unlocks:
         - trend_analysis
         - audience_targeting
-    
+
     - id: visual_creation
       name: "Stregoneria Visiva"
       description: "Crea contenuti visivi convincenti"
@@ -60,7 +60,7 @@ skill_tree:
       unlocks:
         - photo_magic
         - video_enchantment
-    
+
     - id: storytelling
       name: "Tessitura Narrativa"
       description: "Crea storie coinvolgenti"
@@ -68,7 +68,7 @@ skill_tree:
       unlocks:
         - emotional_resonance
         - viral_mechanics
-    
+
     - id: community_building
       name: "Evocazione di Tribù"
       description: "Costruisci e coinvolgi le comunità"
@@ -83,13 +83,13 @@ skill_tree:
       description: "Comprendi e lavora con gli algoritmi delle piattaforme"
       max_level: 15
       requires: [content_strategy, community_building]
-    
+
     - id: monetization_magic
       name: "Alchimia dei Ricavi"
       description: "Trasforma i contenuti in reddito"
       max_level: 15
       requires: [community_building, visual_creation]
-    
+
     - id: brand_building
       name: "Costruzione dell'Impero"
       description: "Costruisci un brand personale potente"
@@ -106,7 +106,7 @@ milestone_quests:
     unlocks:
       - viral_creator_badge
       - algorithm_insights
-  
+
   - id: shadow_confrontation
     name: "Verità vs Inganno"
     description: "Sconfiggi la campagna di disinformazione di Ombra"
@@ -116,7 +116,7 @@ milestone_quests:
     unlocks:
       - truth_guardian_title
       - authentic_voice
-  
+
   - id: empire_builder
     name: "Impero Creativo"
     description: "Costruisci un impero di contenuti con 1M di follower"
@@ -133,19 +133,19 @@ achievements:
     description: "Crea il tuo primo contenuto"
     xp_reward: 50
     badge_type: bronze
-  
+
   - id: engagement_master
     name: "Campione della Comunità"
     description: "Raggiungi 10K engagement totali"
     xp_reward: 200
     badge_type: silver
-  
+
   - id: consistency_king
     name: "Mago Quotidiano"
     description: "Pubblica costantemente per 30 giorni"
     xp_reward: 400
     badge_type: gold
-  
+
   - id: content_legend
     name: "Creatore Leggendario"
     description: "Completa tutte le sfide di contenuto"
@@ -160,14 +160,14 @@ example_tasks:
       description: "Sviluppa formule di contenuto che toccano i cuori"
       skills_improved: [content_strategy, storytelling]
       xp_reward: 50
-    
+
     - id: visual_basics
       type: creation
       title: "Pratica di Incantesimo Visivo"
       description: "Crea il tuo primo contenuto visivo"
       skills_improved: [visual_creation, content_magic]
       xp_reward: 60
-  
+
   intermediate:
     - id: engagement_analysis
       type: analysis
@@ -175,14 +175,14 @@ example_tasks:
       description: "Analizza le performance dei contenuti e il comportamento del pubblico"
       skills_improved: [algorithm_mastery, community_building]
       xp_reward: 150
-    
+
     - id: series_creation
       type: creation
       title: "Tessitura di Saga"
       description: "Crea una serie di contenuti"
       skills_improved: [storytelling, brand_building]
       xp_reward: 180
-  
+
   advanced:
     - id: viral_campaign
       type: creation
@@ -190,7 +190,7 @@ example_tasks:
       description: "Lancia una campagna di contenuti virali"
       skills_improved: [algorithm_mastery, viral_mechanics]
       xp_reward: 350
-    
+
     - id: monetization_setup
       type: creation
       title: "Trasmutazione dell'Oro"

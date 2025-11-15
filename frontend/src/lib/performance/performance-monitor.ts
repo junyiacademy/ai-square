@@ -33,7 +33,7 @@ class PerformanceMonitor {
     }
 
     this.metrics.push(metric)
-    
+
     // 防止記憶體洩漏
     if (this.metrics.length > this.MAX_METRICS) {
       this.metrics = this.metrics.slice(-this.MAX_METRICS)
@@ -113,7 +113,7 @@ class PerformanceMonitor {
     if (typeof window === 'undefined') return []
 
     const entries = performance.getEntriesByType('resource') as PerformanceResourceTiming[]
-    
+
     return entries.map(entry => ({
       name: entry.name,
       duration: entry.duration,
@@ -150,7 +150,7 @@ class PerformanceMonitor {
   getSummary() {
     const vitals = this.getCoreWebVitals()
     const cacheHitRate = this.getCacheHitRate()
-    
+
     return {
       coreWebVitals: vitals,
       cacheHitRate: `${cacheHitRate.toFixed(1)}%`,

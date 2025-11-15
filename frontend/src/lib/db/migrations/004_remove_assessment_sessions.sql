@@ -9,7 +9,7 @@
 -- The actual fix is in the code (user-repository.ts) to use evaluations table
 
 -- To check assessment results in the new structure:
--- SELECT * FROM evaluations 
--- WHERE user_id = ? 
+-- SELECT * FROM evaluations
+-- WHERE user_id = ?
 -- AND task_id IN (SELECT id FROM tasks WHERE mode = 'assessment')
 -- ORDER BY created_at DESC;

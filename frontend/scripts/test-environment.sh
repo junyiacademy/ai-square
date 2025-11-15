@@ -22,14 +22,14 @@ kill_port() {
     local port=$1
     local name=$2
     echo -e "${YELLOW}Checking port $port ($name)...${NC}"
-    
+
     # Find and kill any process using the port
     if lsof -ti :$port > /dev/null 2>&1; then
         echo -e "${YELLOW}Killing process on port $port...${NC}"
         lsof -ti :$port | xargs kill -9 2>/dev/null || true
         sleep 1
     fi
-    
+
     # Verify port is free
     if lsof -ti :$port > /dev/null 2>&1; then
         echo -e "${RED}❌ Failed to free port $port${NC}"

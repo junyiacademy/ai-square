@@ -24,15 +24,15 @@ describe('/api/discovery/chat', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     // Reset environment variables
     process.env.GOOGLE_CLOUD_PROJECT = 'ai-square-463013';
     process.env.GOOGLE_CLOUD_LOCATION = 'us-central1';
-    
+
     mockModel = {
       generateContent: jest.fn()
     };
-    
+
     mockVertexAI.mockImplementation(() => ({
       preview: {
         getGenerativeModel: jest.fn().mockReturnValue(mockModel)

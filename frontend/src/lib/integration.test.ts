@@ -82,10 +82,10 @@ describe('Integration Tests', () => {
 
       const manager = new StateManager();
       expect(manager.getState()).toBe('initial');
-      
+
       manager.transition('loading');
       expect(manager.getState()).toBe('loading');
-      
+
       manager.transition('complete');
       expect(manager.getState()).toBe('complete');
     });
@@ -247,10 +247,10 @@ describe('Integration Tests', () => {
         isAllowed(key: string): boolean {
           const now = Date.now();
           const attempts = this.attempts.get(key) || [];
-          
+
           // Remove old attempts
           const validAttempts = attempts.filter(time => now - time < this.window);
-          
+
           if (validAttempts.length >= this.limit) {
             return false;
           }

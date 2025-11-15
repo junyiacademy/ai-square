@@ -117,14 +117,14 @@ function LearningPathContent() {
 
   // Generate personalized recommendation reason
   const generatePersonalizedReason = (
-    scenario: ScenarioListItem | ScenarioWithDomains, 
-    domain: string, 
+    scenario: ScenarioListItem | ScenarioWithDomains,
+    domain: string,
     domainScore: number,
     matchedKeywords: string[]
   ): string => {
     const domainName = domain.replace(/_/g, ' ');
     const reasons: string[] = [];
-    
+
     // 1. Assessment-based reason
     if (domainScore < 60) {
       reasons.push(`Strengthen your ${domainName} skills (current: ${domainScore}%)`);
@@ -133,7 +133,7 @@ function LearningPathContent() {
     } else {
       reasons.push(`Improve your ${domainName} competency (current: ${domainScore}%)`);
     }
-    
+
     // 2. Role-based reason
     if (userProfile.identity && matchedKeywords.length > 0) {
       const roleReasons: { [key: string]: string } = {
@@ -142,28 +142,28 @@ function LearningPathContent() {
         professional: `Relevant for professionals - includes ${matchedKeywords.slice(0, 2).join(' & ')}`,
         learner: `Great for continuous learners - explores ${matchedKeywords.slice(0, 2).join(' & ')}`
       };
-      
+
       if (roleReasons[userProfile.identity]) {
         reasons.push(roleReasons[userProfile.identity]);
       }
     }
-    
+
     // 3. Interest-based reason (if we have interests)
     if (userProfile.interests && userProfile.interests.length > 0) {
       const scenarioText = `${scenario.title} ${scenario.description}`.toLowerCase();
-      const matchedInterests = userProfile.interests.filter((interest: string) => 
+      const matchedInterests = userProfile.interests.filter((interest: string) =>
         scenarioText.includes(interest.toLowerCase())
       );
-      
+
       if (matchedInterests.length > 0) {
         reasons.push(`Aligns with your interests in ${matchedInterests.join(' & ')}`);
       }
     }
-    
+
     // 4. Scenario-specific value proposition
-    const scenarioTitle = typeof scenario.title === 'string' 
-      ? scenario.title 
-      : typeof scenario.title === 'object' && scenario.title 
+    const scenarioTitle = typeof scenario.title === 'string'
+      ? scenario.title
+      : typeof scenario.title === 'object' && scenario.title
         ? ((scenario.title as Record<string, string>).en || (scenario.title as Record<string, string>).zh || '')
         : '';
     if (scenarioTitle.toLowerCase().includes('job') && userProfile.identity === 'professional') {
@@ -171,24 +171,24 @@ function LearningPathContent() {
     } else if (scenarioTitle.toLowerCase().includes('educat') && userProfile.identity === 'teacher') {
       reasons.push('Enhance your teaching with AI tools');
     }
-    
+
     return reasons.join(' • ');
   };
 
   // Calculate relevance score based on user identity
   const calculateRelevanceScore = (scenario: ScenarioListItem & { matchedKeywords?: string[] }): { score: number; matchedKeywords: string[] } => {
     if (!userProfile.identity) return { score: 0, matchedKeywords: [] };
-    
+
     const pattern = roleKeywordPatterns[userProfile.identity];
     if (!pattern) return { score: 0, matchedKeywords: [] };
-    
+
     const text = `${scenario.title || ''} ${scenario.description || ''}`;
     const matches = text.match(pattern);
-    
+
     // Each match adds 10 points, title matches worth double
     let score = 0;
     const matchedKeywords: string[] = [];
-    
+
     if (matches) {
       score = matches.length * 10;
       // Get unique matched keywords
@@ -199,14 +199,14 @@ function LearningPathContent() {
         }
       });
     }
-    
+
     // Title matches are worth more
     const titleMatches = (scenario.title || '').match(pattern);
     if (titleMatches) {
       score += titleMatches.length * 10;
     }
-    
-    return { 
+
+    return {
       score: Math.min(score, 50), // Cap at 50 to not overwhelm assessment score
       matchedKeywords
     };
@@ -217,10 +217,10 @@ function LearningPathContent() {
       // Fetch PBL scenarios
       const response = await authenticatedFetch('/api/pbl/scenarios');
       const scenariosData = await response.json();
-      
+
       // Handle the nested data structure
       const scenarios = scenariosData.data?.scenarios || scenariosData.scenarios || [];
-      
+
       // Ensure scenarios is an array
       if (!Array.isArray(scenarios)) {
         console.error('Scenarios is not an array:', scenarios);
@@ -239,7 +239,7 @@ function LearningPathContent() {
         const isStrong = score >= 80;
 
         // Filter scenarios for this domain
-        const domainScenarios = (scenarios as ScenarioWithDomains[]).filter((s) => 
+        const domainScenarios = (scenarios as ScenarioWithDomains[]).filter((s) =>
           s.domains?.includes(domain) || s.domains?.includes(domainKey) ||
           s.targetDomain?.includes(domain) || s.targetDomain?.includes(domainKey)
         );
@@ -249,7 +249,7 @@ function LearningPathContent() {
 
         if (isWeak) {
           // For weak domains, recommend beginner scenarios
-          let beginnerScenarios = domainScenarios.filter((s) => 
+          let beginnerScenarios = domainScenarios.filter((s) =>
             s.difficulty === 'beginner' || s.difficulty === 'intermediate'
           );
 
@@ -271,8 +271,8 @@ function LearningPathContent() {
               type: 'pbl_scenario',
               priority: 'high',
               domain,
-              title: typeof scenario.title === 'string' 
-                ? scenario.title 
+              title: typeof scenario.title === 'string'
+                ? scenario.title
                 : typeof scenario.title === 'object' && scenario.title
                   ? ((scenario.title as Record<string, string>).en || (scenario.title as Record<string, string>).zh || '')
                   : '',
@@ -293,7 +293,7 @@ function LearningPathContent() {
           });
         } else if (isStrong) {
           // For strong domains, recommend advanced scenarios
-          let advancedScenarios = domainScenarios.filter((s) => 
+          let advancedScenarios = domainScenarios.filter((s) =>
             s.difficulty === 'advanced' || s.difficulty === 'intermediate'
           );
 
@@ -315,8 +315,8 @@ function LearningPathContent() {
               type: 'pbl_scenario',
               priority: 'medium',
               domain,
-              title: typeof scenario.title === 'string' 
-                ? scenario.title 
+              title: typeof scenario.title === 'string'
+                ? scenario.title
                 : typeof scenario.title === 'object' && scenario.title
                   ? ((scenario.title as Record<string, string>).en || (scenario.title as Record<string, string>).zh || '')
                   : '',
@@ -337,7 +337,7 @@ function LearningPathContent() {
           });
         } else {
           // For average domains, recommend intermediate scenarios
-          let intermediateScenarios = domainScenarios.filter((s) => 
+          let intermediateScenarios = domainScenarios.filter((s) =>
             s.difficulty === 'intermediate'
           );
 
@@ -359,8 +359,8 @@ function LearningPathContent() {
               type: 'pbl_scenario',
               priority: 'medium',
               domain,
-              title: typeof scenario.title === 'string' 
-                ? scenario.title 
+              title: typeof scenario.title === 'string'
+                ? scenario.title
                 : typeof scenario.title === 'object' && scenario.title
                   ? ((scenario.title as Record<string, string>).en || (scenario.title as Record<string, string>).zh || '')
                   : '',
@@ -437,16 +437,16 @@ function LearningPathContent() {
 
   // Apply filters
   let filteredPath = learningPath;
-  
+
   // Filter by weak areas if mode is set
   if (filterMode === 'weak' && assessmentResult) {
     const weakDomains = Object.entries(assessmentResult.domainScores)
       .filter(([, score]) => score < 60)
       .map(([domain]) => domain);
-    
+
     filteredPath = filteredPath.filter(item => weakDomains.includes(item.domain));
   }
-  
+
   // Filter by selected domain
   if (selectedDomain) {
     filteredPath = filteredPath.filter(item => item.domain === selectedDomain);
@@ -485,7 +485,7 @@ function LearningPathContent() {
                   Complete your profile for better recommendations!
                 </p>
                 <p className="text-yellow-700 dark:text-yellow-300 text-sm mt-1">
-                  We can provide more personalized learning paths if you tell us about your identity and interests. 
+                  We can provide more personalized learning paths if you tell us about your identity and interests.
                   Update your profile in the settings to get recommendations tailored to your role.
                 </p>
               </div>
@@ -517,7 +517,7 @@ function LearningPathContent() {
               🎯 {t('learningPath:focusOnWeakAreas')}
             </button>
           </div>
-          
+
           <Link
             href="/dashboard"
             className="inline-flex items-center px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
@@ -537,8 +537,8 @@ function LearningPathContent() {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {domainProgress.map((progress) => (
-                <div 
-                  key={progress.domain} 
+                <div
+                  key={progress.domain}
                   className="cursor-pointer"
                   onClick={() => setSelectedDomain(
                     selectedDomain === progress.domain ? null : progress.domain
@@ -550,7 +550,7 @@ function LearningPathContent() {
                     <h3 className="text-white font-semibold text-lg mb-4">
                       {getDomainName(progress.domain)}
                     </h3>
-                    
+
                     {/* Score Display */}
                     <div className="space-y-3 mb-4">
                       <div className="flex justify-between items-center">
@@ -562,11 +562,11 @@ function LearningPathContent() {
                         <span className="text-white/90 font-semibold">{progress.targetScore}%</span>
                       </div>
                     </div>
-                    
+
                     {/* Progress Bar */}
                     <div className="space-y-2">
                       <div className="bg-white/20 rounded-full h-3 overflow-hidden">
-                        <div 
+                        <div
                           className="bg-white rounded-full h-3 transition-all duration-500 ease-out"
                           style={{ width: `${(progress.completedItems / progress.totalItems) * 100 || 0}%` }}
                         />
@@ -604,7 +604,7 @@ function LearningPathContent() {
               {t('learningPath:learningPath.recommendedPath')}
             </h2>
             <p className="text-gray-600 dark:text-gray-400">
-              {t('learningPath:learningPath.estimatedTime', { 
+              {t('learningPath:learningPath.estimatedTime', {
                 hours: Math.floor(totalEstimatedTime / 60),
                 minutes: totalEstimatedTime % 60
               })}
@@ -612,7 +612,7 @@ function LearningPathContent() {
           </div>
 
           {filteredPath.map((item) => (
-            <div 
+            <div
               key={item.id}
               className="bg-white dark:bg-slate-800 rounded-lg shadow-md hover:shadow-lg transition-shadow"
             >
@@ -628,8 +628,8 @@ function LearningPathContent() {
                         {t(`common:difficulty.${item.difficulty}`)}
                       </span>
                       {/* Show badge if personalized for user's role */}
-                      {userProfile.identity && (item.reason.includes('Perfect for') || 
-                        item.reason.includes('Ideal for') || 
+                      {userProfile.identity && (item.reason.includes('Perfect for') ||
+                        item.reason.includes('Ideal for') ||
                         item.reason.includes('Relevant for') ||
                         item.reason.includes('Great for')) && (
                         <span className="ml-2 px-2 py-1 text-xs rounded-full bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300">
@@ -656,7 +656,7 @@ function LearningPathContent() {
                       </p>
                     </div>
                   </div>
-                  
+
                   <div className="ml-4">
                     {item.type === 'pbl_scenario' && item.scenarioId && (
                       <Link
@@ -680,7 +680,7 @@ function LearningPathContent() {
                       <span>{item.progress}%</span>
                     </div>
                     <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                      <div 
+                      <div
                         className="bg-blue-600 h-2 rounded-full transition-all duration-300"
                         style={{ width: `${item.progress}%` }}
                       />
@@ -694,7 +694,7 @@ function LearningPathContent() {
 
         {/* Action Buttons */}
         <div className="mt-12 text-center space-y-4">
-          <Link 
+          <Link
             href="/dashboard"
             className="inline-flex items-center px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
           >

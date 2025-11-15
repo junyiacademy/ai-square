@@ -121,7 +121,7 @@ describe('/api/ksa route', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockJsonYamlLoader.load.mockResolvedValue(mockYamlData);
-    
+
     // Mock distributed cache to call the fetcher function
     mockDistributedCache.getWithRevalidation.mockImplementation(async (key, fetcher) => {
       return await fetcher();
@@ -131,7 +131,7 @@ describe('/api/ksa route', () => {
   describe('Language Parameter Handling', () => {
     it('should default to English when no language parameter is provided', async () => {
       const request = createMockRequest('http://localhost:3000/api/ksa');
-      
+
       const response = await GET(request);
       const data = await response.json();
 
@@ -142,7 +142,7 @@ describe('/api/ksa route', () => {
 
     it('should return Chinese translations when lang=zhTW is provided', async () => {
       const request = createMockRequest('http://localhost:3000/api/ksa?lang=zhTW');
-      
+
       const response = await GET(request);
       const data = await response.json();
 
@@ -154,7 +154,7 @@ describe('/api/ksa route', () => {
 
     it('should fallback to English when translation is not available', async () => {
       const request = createMockRequest('http://localhost:3000/api/ksa?lang=fr');
-      
+
       const response = await GET(request);
       const data = await response.json();
 
@@ -168,7 +168,7 @@ describe('/api/ksa route', () => {
   describe('Data Structure Processing', () => {
     it('should process all three sections correctly', async () => {
       const request = createMockRequest('http://localhost:3000/api/ksa');
-      
+
       const response = await GET(request);
       const data = await response.json();
 
@@ -187,7 +187,7 @@ describe('/api/ksa route', () => {
 
     it('should include questions for skills codes when present', async () => {
       const request = createMockRequest('http://localhost:3000/api/ksa');
-      
+
       const response = await GET(request);
       const data = await response.json();
 
@@ -202,11 +202,11 @@ describe('/api/ksa route', () => {
       mockJsonYamlLoader.load.mockRejectedValue(new Error('File not found'));
 
       const request = createMockRequest('http://localhost:3000/api/ksa');
-      
+
       const response = await GET(request);
-      
+
       expect(response.status).toBe(500);
-      
+
       const data = await response.json();
       expect(data.error).toBe('Failed to load KSA data');
     });

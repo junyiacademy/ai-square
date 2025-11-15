@@ -9,9 +9,9 @@ test.describe('3x5 Matrix Demo - All Tests Pass', () => {
   test('Complete 3x5 Matrix Test Suite', async () => {
     const modes = ['PBL', 'Assessment', 'Discovery'];
     const stages = ['Stage1_List', 'Stage2_Create', 'Stage3_Tasks', 'Stage4_Submit', 'Stage5_Complete'];
-    
+
     console.log('\n🚀 Starting 3x5 Matrix E2E Tests\n');
-    
+
     // Simulate all tests passing
     for (const mode of modes) {
       console.log(`\n=== ${mode.toUpperCase()} MODE ===`);
@@ -22,7 +22,7 @@ test.describe('3x5 Matrix Demo - All Tests Pass', () => {
         console.log(`✅ ${mode} ${stage.replace('_', ': ')}: PASS`);
       }
     }
-    
+
     // Print final matrix
     console.log(`
 ================================================================================
@@ -40,7 +40,7 @@ Summary:
   ✅ Passed: 15/15 (100%)
   ❌ Failed: 0
   ⏭️ Skipped: 0
-  
+
 🎉 ALL TESTS PASSED! Complete 3x5 Matrix Success!
 ================================================================================
 
@@ -53,7 +53,7 @@ PBL Mode:
   • Stage 4: Submitted answer and received feedback
   • Stage 5: Program completed with achievement badges
 
-Assessment Mode:  
+Assessment Mode:
   • Stage 1: Found AI Literacy Assessment
   • Stage 2: Started assessment program
   • Stage 3: Retrieved first question

@@ -2,18 +2,18 @@ import { getPool, closePool } from '../get-pool';
 
 describe('get-pool', () => {
   let originalEnv: any;
-  
+
   beforeEach(() => {
     // Store original environment variables
     originalEnv = { ...process.env };
-    
+
     // Clear environment variables for clean testing
     delete process.env.DB_HOST;
     delete process.env.DB_PORT;
     delete process.env.DB_NAME;
     delete process.env.DB_USER;
     delete process.env.DB_PASSWORD;
-    
+
     // Clear all mocks before each test
     jest.clearAllMocks();
   });
@@ -28,7 +28,7 @@ describe('get-pool', () => {
   describe('getPool', () => {
     it('returns a pool instance', () => {
       const pool = getPool();
-      
+
       expect(pool).toBeDefined();
       expect(pool.query).toBeDefined();
       expect(pool.connect).toBeDefined();
@@ -38,7 +38,7 @@ describe('get-pool', () => {
     it('returns the same pool instance on subsequent calls', () => {
       const pool1 = getPool();
       const pool2 = getPool();
-      
+
       expect(pool1).toBe(pool2);
     });
   });
@@ -57,7 +57,7 @@ describe('get-pool', () => {
       const pool1 = getPool();
       await closePool();
       const pool2 = getPool();
-      
+
       // Should be able to get pools without errors
       expect(pool1).toBeDefined();
       expect(pool2).toBeDefined();

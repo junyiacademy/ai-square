@@ -130,7 +130,7 @@ describe('PBLScenarioService', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     service = new PBLScenarioService();
-    
+
     // Setup default mocks
     mockScenarioRepo.create.mockResolvedValue(mockCreatedScenario);
     mockScenarioRepo.findBySource.mockResolvedValue([]);
@@ -162,7 +162,7 @@ describe('PBLScenarioService', () => {
 
     it('should create scenario with Traditional Chinese content', async () => {
       mockFs.access.mockResolvedValue();
-      
+
       const scenario = await service.createScenarioFromYAML('ai-education-design', 'zhTW');
 
       expect(mockFs.readFile).toHaveBeenCalledWith(

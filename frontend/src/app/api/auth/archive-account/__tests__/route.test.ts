@@ -20,7 +20,7 @@ jest.mock('bcryptjs', () => ({
 describe('Archive Account API Route', () => {
   let mockPool: any;
   let mockClient: any;
-  
+
   const mockUser = {
     id: 'user-123',
     email: 'test@example.com',
@@ -29,20 +29,20 @@ describe('Archive Account API Route', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     // Setup mock database client
     mockClient = {
       query: jest.fn(),
       release: jest.fn()
     };
-    
+
     // Setup mock database pool
     mockPool = {
       connect: jest.fn().mockResolvedValue(mockClient),
       query: jest.fn()
     };
     (getPool as jest.Mock).mockReturnValue(mockPool);
-    
+
     // Setup mock password utils
     (getUserWithPassword as jest.Mock).mockResolvedValue(mockUser);
   });
@@ -52,7 +52,7 @@ describe('Archive Account API Route', () => {
       (getSession as jest.Mock).mockResolvedValue({
         user: { id: 'user-123', email: 'test@example.com', role: 'student' }
       });
-      
+
       const bcrypt = require('bcryptjs');
       bcrypt.compare.mockResolvedValue(true);
 
@@ -75,7 +75,7 @@ describe('Archive Account API Route', () => {
       expect(response.status).toBe(200);
       expect(data.success).toBe(true);
       expect(data.message).toContain('successfully deleted');
-      
+
       // Check database operations
       expect(mockClient.query).toHaveBeenCalledWith('BEGIN');
       expect(mockClient.query).toHaveBeenCalledWith(
@@ -87,7 +87,7 @@ describe('Archive Account API Route', () => {
         expect.any(Array)
       );
       expect(mockClient.query).toHaveBeenCalledWith('COMMIT');
-      
+
       // Check session was cleared (skip in test environment where cookies aren't available)
       if (response.cookies && typeof response.cookies.get === 'function') {
         expect(response.cookies.get('isLoggedIn')).toBeUndefined();
@@ -138,7 +138,7 @@ describe('Archive Account API Route', () => {
       (getSession as jest.Mock).mockResolvedValue({
         user: { id: 'user-123', email: 'test@example.com', role: 'student' }
       });
-      
+
       const bcrypt = require('bcryptjs');
       bcrypt.compare.mockResolvedValue(false);
 
@@ -182,7 +182,7 @@ describe('Archive Account API Route', () => {
       (getSession as jest.Mock).mockResolvedValue({
         user: { id: 'user-123', email: 'test@example.com', role: 'student' }
       });
-      
+
       (getUserWithPassword as jest.Mock).mockResolvedValue(null);
 
       const request = new NextRequest('http://localhost/api/auth/archive-account', {
@@ -205,10 +205,10 @@ describe('Archive Account API Route', () => {
       (getSession as jest.Mock).mockResolvedValue({
         user: { id: 'user-123', email: 'test@example.com', role: 'student' }
       });
-      
+
       const bcrypt = require('bcryptjs');
       bcrypt.compare.mockResolvedValue(true);
-      
+
       // Simulate database error
       mockClient.query
         .mockResolvedValueOnce(undefined) // BEGIN
@@ -234,7 +234,7 @@ describe('Archive Account API Route', () => {
       (getSession as jest.Mock).mockResolvedValue({
         user: { id: 'user-123', email: 'test@example.com', role: 'student' }
       });
-      
+
       const bcrypt = require('bcryptjs');
       bcrypt.compare.mockResolvedValue(true);
 
@@ -259,7 +259,7 @@ describe('Archive Account API Route', () => {
       (getSession as jest.Mock).mockResolvedValue({
         user: { id: 'user-123', email: 'test@example.com', role: 'student' }
       });
-      
+
       const bcrypt = require('bcryptjs');
       bcrypt.compare.mockResolvedValue(true);
 
@@ -294,7 +294,7 @@ describe('Archive Account API Route', () => {
       (getSession as jest.Mock).mockResolvedValue({
         user: { id: 'user-123', email: 'test@example.com', role: 'student' }
       });
-      
+
       mockPool.connect.mockRejectedValue(new Error('Connection failed'));
 
       const request = new NextRequest('http://localhost/api/auth/archive-account', {

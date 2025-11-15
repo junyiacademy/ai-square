@@ -95,95 +95,95 @@ class LearnerProfile:
 
 class AdaptiveLearningPath:
     """Generates and manages personalized learning paths"""
-    
+
     def __init__(self, db_session, ai_service):
         self.db = db_session
         self.ai = ai_service
         self.knowledge_graph = self._build_knowledge_graph()
-        
+
     def generate_path(
-        self, 
-        profile: LearnerProfile, 
+        self,
+        profile: LearnerProfile,
         target_skills: List[str],
         duration_weeks: int = 12
     ) -> List[LearningNode]:
         """Generate personalized learning path"""
-        
+
         # Analyze current proficiency
         skill_gaps = self._analyze_skill_gaps(
-            profile.current_level, 
+            profile.current_level,
             target_skills
         )
-        
+
         # Build directed graph of learning nodes
         path_graph = nx.DiGraph()
-        
+
         # Add nodes based on skill gaps
         for skill, gap in skill_gaps.items():
             relevant_nodes = self._find_relevant_nodes(
-                skill, 
-                gap, 
+                skill,
+                gap,
                 profile.learning_style
             )
-            
+
             for node in relevant_nodes:
                 path_graph.add_node(
-                    node.id, 
+                    node.id,
                     data=node
                 )
-                
+
                 # Add prerequisite edges
                 for prereq in node.prerequisites:
                     if prereq in path_graph:
                         path_graph.add_edge(prereq, node.id)
-                        
+
         # Optimize path based on constraints
         optimal_path = self._optimize_path(
             path_graph,
             profile,
             duration_weeks
         )
-        
+
         # Add adaptive checkpoints
         path_with_checkpoints = self._add_checkpoints(
-            optimal_path, 
+            optimal_path,
             profile
         )
-        
+
         return path_with_checkpoints
-        
+
     def adapt_path(
-        self, 
-        profile: LearnerProfile, 
+        self,
+        profile: LearnerProfile,
         current_path: List[LearningNode],
         performance_data: Dict
     ) -> List[LearningNode]:
         """Adapt learning path based on performance"""
-        
+
         # Analyze recent performance
         performance_analysis = self._analyze_performance(
             performance_data
         )
-        
+
         # Identify struggling areas
         struggling_skills = [
             skill for skill, score in performance_analysis.items()
             if score < 0.7
         ]
-        
+
         # Generate remedial content
         if struggling_skills:
             remedial_nodes = self._generate_remedial_content(
                 struggling_skills,
                 profile
             )
-            
+
             # Insert remedial content into path
             current_position = self._find_current_position(
-                profile, 
+                profile,
                 current_path
             )
-            
+
             updated_path = (
                 current_path[:current_position + 1] +
                 remedial_nodes +
@@ -191,75 +191,75 @@ class AdaptiveLearningPath:
             )
         else:
             updated_path = current_path
-            
+
         # Check if learner is ahead of schedule
         if performance_analysis.get("average_score", 0) > 0.9:
             # Accelerate path by removing redundant content
             updated_path = self._accelerate_path(
-                updated_path, 
+                updated_path,
                 profile
             )
-            
+
         return updated_path
-        
+
     def _analyze_skill_gaps(
-        self, 
-        current_level: Dict[str, float], 
+        self,
+        current_level: Dict[str, float],
         target_skills: List[str]
     ) -> Dict[str, float]:
         """Analyze gaps between current and target skills"""
         gaps = {}
-        
+
         for skill in target_skills:
             current = current_level.get(skill, 0.0)
             target = 1.0  # Assume mastery as target
             gaps[skill] = target - current
-            
+
         return gaps
-        
+
     def _optimize_path(
-        self, 
-        graph: nx.DiGraph, 
+        self,
+        graph: nx.DiGraph,
         profile: LearnerProfile,
         duration_weeks: int
     ) -> List[LearningNode]:
         """Optimize learning path using graph algorithms"""
-        
+
         # Calculate available learning time
         total_hours = profile.availability_hours_per_week * duration_weeks
         total_minutes = total_hours * 60
-        
+
         # Use topological sort to respect prerequisites
         topo_order = list(nx.topological_sort(graph))
-        
+
         # Dynamic programming to optimize path
         selected_nodes = []
         current_time = 0
         current_skills = profile.current_level.copy()
-        
+
         for node_id in topo_order:
             node = graph.nodes[node_id]["data"]
-            
+
             # Check if node fits in remaining time
             if current_time + node.duration_minutes <= total_minutes:
                 # Calculate value of adding this node
                 value = self._calculate_node_value(
-                    node, 
-                    current_skills, 
+                    node,
+                    current_skills,
                     profile.goals
                 )
-                
+
                 if value > 0.5:  # Threshold for inclusion
                     selected_nodes.append(node)
                     current_time += node.duration_minutes
-                    
+
                     # Update current skills
                     for skill in node.skills:
                         current_skills[skill] = min(
-                            1.0, 
+                            1.0,
                             current_skills.get(skill, 0) + 0.1
                         )
-                        
+
         return selected_nodes
 ```
 
@@ -310,38 +310,38 @@ class AssessmentConfig:
 
 class AssessmentEngine:
     """Comprehensive assessment system with adaptive capabilities"""
-    
+
     def __init__(self, db_session, ai_service):
         self.db = db_session
         self.ai = ai_service
         self.question_bank = QuestionBank(db_session)
         self.grading_service = GradingService(ai_service)
-        
+
     async def create_assessment(
-        self, 
-        skills: List[str], 
+        self,
+        skills: List[str],
         config: AssessmentConfig,
         learner_profile: Optional[LearnerProfile] = None
     ) -> Dict:
         """Create a personalized assessment"""
-        
+
         # Select questions based on skills and config
         if config.adaptive and learner_profile:
             questions = await self._select_adaptive_questions(
-                skills, 
-                learner_profile, 
+                skills,
+                learner_profile,
                 config
             )
         else:
             questions = await self._select_standard_questions(
-                skills, 
+                skills,
                 config
             )
-            
+
         # Randomize if requested
         if config.randomize:
             random.shuffle(questions)
-            
+
         # Create assessment structure
         assessment = {
             "id": self._generate_assessment_id(),
@@ -352,33 +352,33 @@ class AssessmentEngine:
             "estimated_duration": self._estimate_duration(questions),
             "total_points": sum(q.points for q in questions)
         }
-        
+
         # Store assessment
         await self.db.assessments.insert_one(assessment)
-        
+
         return assessment
-        
+
     async def submit_answer(
-        self, 
-        assessment_id: str, 
+        self,
+        assessment_id: str,
         question_id: str,
         answer: Union[str, List[str], Dict],
         user_id: str
     ) -> Dict:
         """Submit and grade an answer"""
-        
+
         # Retrieve question
         assessment = await self.db.assessments.find_one(
             {"id": assessment_id}
         )
         question = next(
-            q for q in assessment["questions"] 
+            q for q in assessment["questions"]
             if q.id == question_id
         )
-        
+
         # Grade answer based on question type
         if question.type in [
-            QuestionType.MULTIPLE_CHOICE, 
+            QuestionType.MULTIPLE_CHOICE,
             QuestionType.TRUE_FALSE
         ]:
             result = self._grade_objective_question(question, answer)
@@ -388,7 +388,7 @@ class AssessmentEngine:
             result = await self._grade_text_question(question, answer)
         else:
             result = self._grade_interactive_question(question, answer)
-            
+
         # Store result
         submission = {
             "assessment_id": assessment_id,
@@ -398,62 +398,62 @@ class AssessmentEngine:
             "result": result,
             "submitted_at": datetime.utcnow()
         }
-        
+
         await self.db.submissions.insert_one(submission)
-        
+
         # Update adaptive difficulty if enabled
         if assessment["config"].adaptive:
             await self._update_adaptive_difficulty(
-                assessment_id, 
-                question_id, 
+                assessment_id,
+                question_id,
                 result["score"]
             )
-            
+
         return result
-        
+
     def _grade_objective_question(
-        self, 
-        question: Question, 
+        self,
+        question: Question,
         answer: Union[str, List[str]]
     ) -> Dict:
         """Grade multiple choice or true/false questions"""
-        
+
         is_correct = answer == question.correct_answer
-        
+
         return {
             "score": question.points if is_correct else 0,
             "max_score": question.points,
             "is_correct": is_correct,
             "feedback": question.explanation if not is_correct else None
         }
-        
+
     async def _grade_coding_question(
-        self, 
-        question: Question, 
+        self,
+        question: Question,
         code: str
     ) -> Dict:
         """Grade coding questions with test cases"""
-        
+
         # Run test cases
         test_results = await self._run_code_tests(
-            code, 
+            code,
             question.correct_answer["test_cases"]
         )
-        
+
         # Calculate score based on passing tests
         passed_tests = sum(1 for r in test_results if r["passed"])
         total_tests = len(test_results)
         score_percentage = passed_tests / total_tests
-        
+
         # Check code quality
         quality_score = await self._analyze_code_quality(code)
-        
+
         # Combined score (70% correctness, 30% quality)
         final_score = (
-            score_percentage * 0.7 + 
+            score_percentage * 0.7 +
             quality_score * 0.3
         ) * question.points
-        
+
         return {
             "score": final_score,
             "max_score": question.points,
@@ -461,35 +461,35 @@ class AssessmentEngine:
             "test_results": test_results,
             "quality_analysis": quality_score,
             "feedback": self._generate_coding_feedback(
-                test_results, 
+                test_results,
                 quality_score
             )
         }
-        
+
     async def _grade_text_question(
-        self, 
-        question: Question, 
+        self,
+        question: Question,
         answer: str
     ) -> Dict:
         """Grade text-based questions using AI"""
-        
+
         # Use AI to evaluate answer
         grading_prompt = f"""
         Question: {question.content}
         Student Answer: {answer}
         Correct Answer Guidelines: {question.correct_answer}
-        
+
         Grade this answer on:
         1. Accuracy (40%)
-        2. Completeness (30%) 
+        2. Completeness (30%)
         3. Clarity (20%)
         4. Understanding (10%)
-        
+
         Provide a score from 0 to {question.points} and detailed feedback.
         """
-        
+
         ai_evaluation = await self.ai.evaluate_answer(grading_prompt)
-        
+
         return {
             "score": ai_evaluation["score"],
             "max_score": question.points,
@@ -497,18 +497,18 @@ class AssessmentEngine:
             "feedback": ai_evaluation["feedback"],
             "rubric_scores": ai_evaluation["rubric_scores"]
         }
-        
+
     async def _select_adaptive_questions(
-        self, 
+        self,
         skills: List[str],
         profile: LearnerProfile,
         config: AssessmentConfig
     ) -> List[Question]:
         """Select questions adaptively based on learner profile"""
-        
+
         selected_questions = []
         current_difficulty = self._estimate_starting_difficulty(profile)
-        
+
         for i in range(config.question_count):
             # Get candidate questions
             candidates = await self.question_bank.get_questions(
@@ -519,26 +519,26 @@ class AssessmentEngine:
                 ),
                 exclude_ids=[q.id for q in selected_questions]
             )
-            
+
             if not candidates:
                 break
-                
+
             # Select best question based on information gain
             best_question = self._select_best_question(
-                candidates, 
-                profile, 
+                candidates,
+                profile,
                 selected_questions
             )
-            
+
             selected_questions.append(best_question)
-            
+
             # Simulate difficulty adjustment
             # (In real assessment, this happens after each answer)
             current_difficulty = self._adjust_difficulty(
                 current_difficulty,
                 profile.performance_history
             )
-            
+
         return selected_questions
 ```
 
@@ -576,7 +576,7 @@ class Rubric:
     metadata: Dict = field(default_factory=dict)
     created_by: str = None
     created_at: datetime = None
-    
+
     def calculate_max_score(self) -> float:
         """Calculate maximum possible score"""
         if self.type == RubricType.ANALYTIC:
@@ -588,23 +588,23 @@ class Rubric:
 
 class RubricsSystem:
     """Comprehensive rubrics management system"""
-    
+
     def __init__(self, db_session):
         self.db = db_session
         self.validators = RubricValidators()
-        
+
     async def create_rubric(
-        self, 
-        rubric_data: Dict, 
+        self,
+        rubric_data: Dict,
         user_id: str
     ) -> Rubric:
         """Create a new rubric"""
-        
+
         # Validate rubric structure
         validation_result = self.validators.validate_rubric(rubric_data)
         if not validation_result.is_valid:
             raise ValueError(f"Invalid rubric: {validation_result.errors}")
-            
+
         # Create rubric object
         rubric = Rubric(
             id=self._generate_rubric_id(),
@@ -612,37 +612,37 @@ class RubricsSystem:
             type=RubricType(rubric_data["type"]),
             description=rubric_data["description"],
             criteria=[
-                self._create_criterion(c) 
+                self._create_criterion(c)
                 for c in rubric_data["criteria"]
             ],
             total_points=rubric_data.get(
-                "total_points", 
+                "total_points",
                 self._calculate_total_points(rubric_data)
             ),
             metadata=rubric_data.get("metadata", {}),
             created_by=user_id,
             created_at=datetime.utcnow()
         )
-        
+
         # Store rubric
         await self.db.rubrics.insert_one(rubric.dict())
-        
+
         # Index for search
         await self._index_rubric(rubric)
-        
+
         return rubric
-        
+
     async def apply_rubric(
-        self, 
-        rubric_id: str, 
+        self,
+        rubric_id: str,
         submission: Dict,
         evaluator_id: str
     ) -> Dict:
         """Apply rubric to evaluate a submission"""
-        
+
         # Retrieve rubric
         rubric = await self.get_rubric(rubric_id)
-        
+
         # Initialize evaluation
         evaluation = {
             "rubric_id": rubric_id,
@@ -653,81 +653,81 @@ class RubricsSystem:
             "total_score": 0,
             "evaluated_at": datetime.utcnow()
         }
-        
+
         # Evaluate based on rubric type
         if rubric.type == RubricType.ANALYTIC:
             evaluation = await self._evaluate_analytic(
-                rubric, 
-                submission, 
+                rubric,
+                submission,
                 evaluation
             )
         elif rubric.type == RubricType.HOLISTIC:
             evaluation = await self._evaluate_holistic(
-                rubric, 
-                submission, 
+                rubric,
+                submission,
                 evaluation
             )
         elif rubric.type == RubricType.CHECKLIST:
             evaluation = await self._evaluate_checklist(
-                rubric, 
-                submission, 
+                rubric,
+                submission,
                 evaluation
             )
-            
+
         # Store evaluation
         await self.db.evaluations.insert_one(evaluation)
-        
+
         return evaluation
-        
+
     async def _evaluate_analytic(
-        self, 
-        rubric: Rubric, 
+        self,
+        rubric: Rubric,
         submission: Dict,
         evaluation: Dict
     ) -> Dict:
         """Evaluate using analytic rubric"""
-        
+
         total_score = 0
-        
+
         for criterion in rubric.criteria:
             # Evaluate against each criterion
             criterion_score = await self._evaluate_criterion(
-                criterion, 
+                criterion,
                 submission
             )
-            
+
             evaluation["scores"][criterion.id] = {
                 "score": criterion_score["score"],
                 "level": criterion_score["level"],
                 "feedback": criterion_score["feedback"]
             }
-            
+
             # Add to total with weight
             total_score += criterion_score["score"] * criterion.weight
-            
+
         evaluation["total_score"] = total_score
         evaluation["percentage"] = (
             total_score / rubric.calculate_max_score() * 100
         )
-        
+
         return evaluation
-        
+
     async def _evaluate_criterion(
-        self, 
-        criterion: Criterion, 
+        self,
+        criterion: Criterion,
         submission: Dict
     ) -> Dict:
         """Evaluate submission against a single criterion"""
-        
+
         # For AI-assisted evaluation
         if submission.get("type") == "text":
             return await self._ai_evaluate_text_criterion(
-                criterion, 
+                criterion,
                 submission["content"]
             )
         elif submission.get("type") == "code":
             return await self._evaluate_code_criterion(
-                criterion, 
+                criterion,
                 submission["content"]
             )
         else:
@@ -737,57 +737,57 @@ class RubricsSystem:
                 "level": "Not Evaluated",
                 "feedback": "Manual evaluation required"
             }
-            
+
     async def _ai_evaluate_text_criterion(
-        self, 
-        criterion: Criterion, 
+        self,
+        criterion: Criterion,
         text: str
     ) -> Dict:
         """Use AI to evaluate text against criterion"""
-        
+
         # Build evaluation prompt
         levels_description = "\n".join([
             f"Level {level['score']}: {level['description']}"
             for level in criterion.levels
         ])
-        
+
         prompt = f"""
         Evaluate the following text against this criterion:
-        
+
         Criterion: {criterion.name}
         Description: {criterion.description}
-        
+
         Scoring Levels:
         {levels_description}
-        
+
         Text to evaluate:
         {text}
-        
+
         Provide the score level and specific feedback.
         """
-        
+
         # Get AI evaluation
         ai_response = await self.ai.evaluate(prompt)
-        
+
         return {
             "score": ai_response["score"],
             "level": ai_response["level_description"],
             "feedback": ai_response["feedback"]
         }
-        
+
     def build_visual_rubric(self, rubric: Rubric) -> Dict:
         """Build visual representation of rubric"""
-        
+
         visual_data = {
             "type": "rubric_grid",
             "title": rubric.name,
             "headers": ["Criteria"] + [
-                f"Level {i+1}" 
+                f"Level {i+1}"
                 for i in range(len(rubric.criteria[0].levels))
             ],
             "rows": []
         }
-        
+
         for criterion in rubric.criteria:
             row = {
                 "criterion": {
@@ -797,16 +797,16 @@ class RubricsSystem:
                 },
                 "levels": []
             }
-            
+
             for level in criterion.levels:
                 row["levels"].append({
                     "score": level["score"],
                     "description": level["description"],
                     "indicators": level.get("indicators", [])
                 })
-                
+
             visual_data["rows"].append(row)
-            
+
         return visual_data
 ```
 
@@ -828,7 +828,7 @@ class ProgressMetrics:
     streak_days: int
     achievements: List[str]
     last_activity: datetime
-    
+
 @dataclass
 class LearningActivity:
     user_id: str
@@ -839,60 +839,60 @@ class LearningActivity:
     score: Optional[float] = None
     time_spent_minutes: int = 0
     skills_practiced: List[str] = field(default_factory=list)
-    
+
 class ProgressTracker:
     """Comprehensive progress tracking system"""
-    
+
     def __init__(self, db_session, analytics_engine):
         self.db = db_session
         self.analytics = analytics_engine
-        
+
     async def track_activity(
-        self, 
+        self,
         activity: LearningActivity
     ) -> None:
         """Track a learning activity"""
-        
+
         # Store activity
         await self.db.activities.insert_one(activity.dict())
-        
+
         # Update real-time metrics
         await self._update_metrics(activity)
-        
+
         # Check for achievements
         new_achievements = await self._check_achievements(
             activity.user_id
         )
-        
+
         # Send notifications for achievements
         if new_achievements:
             await self._notify_achievements(
-                activity.user_id, 
+                activity.user_id,
                 new_achievements
             )
-            
+
     async def get_progress(
-        self, 
+        self,
         user_id: str,
         time_range: Optional[timedelta] = None
     ) -> ProgressMetrics:
         """Get comprehensive progress metrics"""
-        
+
         # Retrieve activities
         query = {"user_id": user_id}
         if time_range:
             start_date = datetime.utcnow() - time_range
             query["started_at"] = {"$gte": start_date}
-            
+
         activities = await self.db.activities.find(query).to_list()
-        
+
         # Calculate metrics
         metrics = ProgressMetrics(
             user_id=user_id,
             overall_progress=self._calculate_overall_progress(activities),
             skill_levels=self._calculate_skill_levels(activities),
             completed_items=[
-                a["activity_id"] for a in activities 
+                a["activity_id"] for a in activities
                 if a.get("completed_at")
             ],
             time_spent_minutes=sum(
@@ -901,20 +901,20 @@ class ProgressTracker:
             streak_days=await self._calculate_streak(user_id),
             achievements=await self._get_achievements(user_id),
             last_activity=max(
-                (a["started_at"] for a in activities), 
+                (a["started_at"] for a in activities),
                 default=None
             )
         )
-        
+
         return metrics
-        
+
     async def generate_progress_report(
-        self, 
+        self,
         user_id: str,
         period: str = "weekly"
     ) -> Dict:
         """Generate detailed progress report"""
-        
+
         # Determine time range
         time_ranges = {
             "daily": timedelta(days=1),
@@ -923,27 +923,27 @@ class ProgressTracker:
             "quarterly": timedelta(days=90)
         }
         time_range = time_ranges.get(period, timedelta(weeks=1))
-        
+
         # Get current and previous period metrics
         current_metrics = await self.get_progress(user_id, time_range)
         previous_metrics = await self.get_progress(
-            user_id, 
+            user_id,
             time_range * 2
         )
-        
+
         # Calculate improvements
         improvements = self._calculate_improvements(
-            current_metrics, 
+            current_metrics,
             previous_metrics
         )
-        
+
         # Generate insights
         insights = await self._generate_insights(
-            user_id, 
-            current_metrics, 
+            user_id,
+            current_metrics,
             improvements
         )
-        
+
         # Create report
         report = {
             "user_id": user_id,
@@ -964,11 +964,11 @@ class ProgressTracker:
                 improvements.get("skill_improvements", {})
             ),
             "learning_patterns": await self._analyze_learning_patterns(
-                user_id, 
+                user_id,
                 time_range
             ),
             "recommendations": await self._generate_recommendations(
-                user_id, 
+                user_id,
                 current_metrics
             ),
             "insights": insights,
@@ -976,84 +976,84 @@ class ProgressTracker:
                 current_metrics
             )
         }
-        
+
         return report
-        
+
     def _calculate_skill_levels(
-        self, 
+        self,
         activities: List[Dict]
     ) -> Dict[str, float]:
         """Calculate proficiency levels for each skill"""
-        
+
         skill_scores = {}
         skill_attempts = {}
-        
+
         for activity in activities:
             if not activity.get("completed_at") or not activity.get("score"):
                 continue
-                
+
             for skill in activity.get("skills_practiced", []):
                 if skill not in skill_scores:
                     skill_scores[skill] = []
-                    
+
                 # Weight recent activities more heavily
                 days_ago = (
                     datetime.utcnow() - activity["completed_at"]
                 ).days
                 weight = 1.0 / (1.0 + days_ago * 0.1)
-                
+
                 skill_scores[skill].append(
                     activity["score"] * weight
                 )
-                
+
         # Calculate weighted average for each skill
         skill_levels = {}
         for skill, scores in skill_scores.items():
             if scores:
                 skill_levels[skill] = np.average(scores)
-                
+
         return skill_levels
-        
+
     async def _analyze_learning_patterns(
-        self, 
+        self,
         user_id: str,
         time_range: timedelta
     ) -> Dict:
         """Analyze learning patterns and habits"""
-        
+
         activities = await self.db.activities.find({
             "user_id": user_id,
             "started_at": {"$gte": datetime.utcnow() - time_range}
         }).to_list()
-        
+
         # Time of day analysis
         hour_distribution = {}
         for activity in activities:
             hour = activity["started_at"].hour
             hour_distribution[hour] = hour_distribution.get(hour, 0) + 1
-            
+
         # Day of week analysis
         day_distribution = {}
         for activity in activities:
             day = activity["started_at"].strftime("%A")
             day_distribution[day] = day_distribution.get(day, 0) + 1
-            
+
         # Session duration analysis
         durations = [
-            a.get("time_spent_minutes", 0) 
-            for a in activities 
+            a.get("time_spent_minutes", 0)
+            for a in activities
             if a.get("time_spent_minutes")
         ]
-        
+
         patterns = {
             "most_active_hours": sorted(
-                hour_distribution.items(), 
-                key=lambda x: x[1], 
+                hour_distribution.items(),
+                key=lambda x: x[1],
                 reverse=True
             )[:3],
             "most_active_days": sorted(
-                day_distribution.items(), 
-                key=lambda x: x[1], 
+                day_distribution.items(),
+                key=lambda x: x[1],
                 reverse=True
             )[:3],
             "average_session_duration": (
@@ -1063,15 +1063,15 @@ class ProgressTracker:
                 activities
             )
         }
-        
+
         return patterns
-        
+
     def _generate_visualizations(
-        self, 
+        self,
         metrics: ProgressMetrics
     ) -> Dict:
         """Generate data for progress visualizations"""
-        
+
         return {
             "skill_radar": {
                 "type": "radar",
@@ -1087,7 +1087,7 @@ class ProgressTracker:
             "achievement_badges": {
                 "type": "badges",
                 "data": [
-                    self._get_achievement_details(a) 
+                    self._get_achievement_details(a)
                     for a in metrics.achievements
                 ]
             },
@@ -1281,13 +1281,13 @@ CREATE TABLE progress_metrics (
 cache_keys = {
     # Learning path cache (TTL: 1 hour)
     "learning_path": "learning:path:{user_id}:{path_id}",
-    
+
     # Progress metrics cache (TTL: 15 minutes)
     "progress": "learning:progress:{user_id}",
-    
+
     # Question bank cache (TTL: 1 day)
     "questions": "learning:questions:{skill}:{difficulty}",
-    
+
     # Rubric cache (TTL: 7 days)
     "rubric": "learning:rubric:{rubric_id}"
 }

@@ -13,22 +13,22 @@ import { mockSession, mockGetServerSession } from '../mocks/next-auth';
  */
 export const createMockRequest = (
   url: string,
-  options: RequestInit & { 
+  options: RequestInit & {
     json?: Record<string, unknown>;
     searchParams?: Record<string, string>;
   } = {}
 ): NextRequest => {
   const { json, searchParams, ...init } = options;
-  
+
   // 構建完整 URL
   let fullUrl = url.startsWith('http') ? url : `http://localhost:3000${url}`;
-  
+
   // 添加查詢參數
   if (searchParams) {
     const params = new URLSearchParams(searchParams);
     fullUrl += `?${params.toString()}`;
   }
-  
+
   // 處理 JSON body
   if (json) {
     init.body = JSON.stringify(json);
@@ -37,11 +37,11 @@ export const createMockRequest = (
       ...init.headers,
     };
   }
-  
+
   // Create RequestInit without signal issues
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { signal, ...cleanInit } = init;
-  
+
   return new NextRequest(fullUrl, cleanInit);
 };
 
@@ -58,7 +58,7 @@ export const createAuthenticatedRequest = (
 ): NextRequest => {
   // 設定 mock session
   mockGetServerSession.mockResolvedValueOnce(session as any);
-  
+
   return createMockRequest(url, options);
 };
 
@@ -73,7 +73,7 @@ export const createUnauthenticatedRequest = (
 ): NextRequest => {
   // 設定 null session
   mockGetServerSession.mockResolvedValueOnce(null as any);
-  
+
   return createMockRequest(url, options);
 };
 
@@ -100,7 +100,7 @@ export const executeRoute = async (
 ) => {
   const response = await handler(request, context);
   const data = await response.json();
-  
+
   return {
     response,
     data,
@@ -120,7 +120,7 @@ export const apiAssertions = {
     expect(response.status).toBe(200);
     expect(data).toHaveProperty('success', true);
   },
-  
+
   /**
    * 驗證錯誤回應
    */
@@ -129,7 +129,7 @@ export const apiAssertions = {
     expect(data).toHaveProperty('success', false);
     expect(data).toHaveProperty('error');
   },
-  
+
   /**
    * 驗證需要認證
    */
@@ -138,7 +138,7 @@ export const apiAssertions = {
     expect(data).toHaveProperty('success', false);
     expect(data.error).toMatch(/auth|unauthorized/i);
   },
-  
+
   /**
    * 驗證禁止訪問
    */
@@ -147,7 +147,7 @@ export const apiAssertions = {
     expect(data).toHaveProperty('success', false);
     expect(data.error).toMatch(/forbidden|denied|access/i);
   },
-  
+
   /**
    * 驗證找不到資源
    */
@@ -156,7 +156,7 @@ export const apiAssertions = {
     expect(data).toHaveProperty('success', false);
     expect(data.error).toMatch(/not found/i);
   },
-  
+
   /**
    * 驗證資料結構
    */

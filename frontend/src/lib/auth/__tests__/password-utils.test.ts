@@ -1,6 +1,6 @@
 /**
  * Password Utilities Test Suite
- * 
+ *
  * Comprehensive tests for password management utilities including database operations,
  * user authentication, and email verification functionality
  */
@@ -27,12 +27,12 @@ describe('Password Utils', () => {
   describe('updateUserPasswordHash', () => {
     it('should update user password hash with default role', async () => {
       mockPool.query = jest.fn().mockResolvedValue({ rows: [], rowCount: 1 });
-      
+
       const userId = 'user-123';
       const passwordHash = '$2b$12$hashedPasswordExample';
-      
+
       await updateUserPasswordHash(mockPool, userId, passwordHash);
-      
+
       expect(mockPool.query).toHaveBeenCalledWith(
         expect.stringMatching(/UPDATE users[\s\S]*SET password_hash = \$1, role = \$2, updated_at = CURRENT_TIMESTAMP[\s\S]*WHERE id = \$3/),
         [passwordHash, 'student', userId]
@@ -41,13 +41,13 @@ describe('Password Utils', () => {
 
     it('should update user password hash with custom role', async () => {
       mockPool.query = jest.fn().mockResolvedValue({ rows: [], rowCount: 1 });
-      
+
       const userId = 'admin-456';
       const passwordHash = '$2b$12$anotherHashedPassword';
       const role = 'admin';
-      
+
       await updateUserPasswordHash(mockPool, userId, passwordHash, role);
-      
+
       expect(mockPool.query).toHaveBeenCalledWith(
         expect.stringMatching(/UPDATE users[\s\S]*SET password_hash = \$1, role = \$2, updated_at = CURRENT_TIMESTAMP[\s\S]*WHERE id = \$3/),
         [passwordHash, role, userId]
@@ -57,7 +57,7 @@ describe('Password Utils', () => {
     it('should handle database connection errors', async () => {
       const dbError = new Error('Database connection failed');
       mockPool.query = jest.fn().mockRejectedValue(dbError);
-      
+
       await expect(
         updateUserPasswordHash(mockPool, 'user-123', 'hash')
       ).rejects.toThrow('Database connection failed');
@@ -65,9 +65,9 @@ describe('Password Utils', () => {
 
     it('should handle empty userId', async () => {
       mockPool.query = jest.fn().mockResolvedValue({ rows: [], rowCount: 0 });
-      
+
       await updateUserPasswordHash(mockPool, '', 'hash');
-      
+
       expect(mockPool.query).toHaveBeenCalledWith(
         expect.any(String),
         ['hash', 'student', '']
@@ -76,9 +76,9 @@ describe('Password Utils', () => {
 
     it('should handle empty password hash', async () => {
       mockPool.query = jest.fn().mockResolvedValue({ rows: [], rowCount: 1 });
-      
+
       await updateUserPasswordHash(mockPool, 'user-123', '');
-      
+
       expect(mockPool.query).toHaveBeenCalledWith(
         expect.any(String),
         ['', 'student', 'user-123']
@@ -87,11 +87,11 @@ describe('Password Utils', () => {
 
     it('should handle various role types', async () => {
       mockPool.query = jest.fn().mockResolvedValue({ rows: [], rowCount: 1 });
-      
+
       const roles = ['student', 'teacher', 'admin', 'moderator', 'guest'];
       const userId = 'user-123';
       const passwordHash = 'hash123';
-      
+
       for (const role of roles) {
         await updateUserPasswordHash(mockPool, userId, passwordHash, role);
         expect(mockPool.query).toHaveBeenLastCalledWith(
@@ -103,13 +103,13 @@ describe('Password Utils', () => {
 
     it('should handle special characters in inputs', async () => {
       mockPool.query = jest.fn().mockResolvedValue({ rows: [], rowCount: 1 });
-      
+
       const userId = 'user-with-special@#$%';
       const passwordHash = '$2b$12$hash.with/special+chars';
       const role = 'admin-role';
-      
+
       await updateUserPasswordHash(mockPool, userId, passwordHash, role);
-      
+
       expect(mockPool.query).toHaveBeenCalledWith(
         expect.any(String),
         [passwordHash, role, userId]
@@ -118,12 +118,12 @@ describe('Password Utils', () => {
 
     it('should use SQL parameterized queries to prevent injection', async () => {
       mockPool.query = jest.fn().mockResolvedValue({ rows: [], rowCount: 1 });
-      
+
       const maliciousUserId = "'; DROP TABLE users; --";
       const passwordHash = 'hash123';
-      
+
       await updateUserPasswordHash(mockPool, maliciousUserId, passwordHash);
-      
+
       // Verify parameterized query is used (parameters passed separately)
       expect(mockPool.query).toHaveBeenCalledWith(
         expect.any(String),
@@ -133,10 +133,10 @@ describe('Password Utils', () => {
 
     it('should handle null values gracefully', async () => {
       mockPool.query = jest.fn().mockResolvedValue({ rows: [], rowCount: 1 });
-      
+
       await updateUserPasswordHash(mockPool, 'user-123', null as any);
       await updateUserPasswordHash(mockPool, null as any, 'hash');
-      
+
       expect(mockPool.query).toHaveBeenCalledTimes(2);
     });
   });
@@ -144,11 +144,11 @@ describe('Password Utils', () => {
   describe('updateUserEmailVerified', () => {
     it('should update user email verification status', async () => {
       mockPool.query = jest.fn().mockResolvedValue({ rows: [], rowCount: 1 });
-      
+
       const userId = 'user-789';
-      
+
       await updateUserEmailVerified(mockPool, userId);
-      
+
       expect(mockPool.query).toHaveBeenCalledWith(
         expect.stringMatching(/UPDATE users[\s\S]*SET email_verified = true, email_verified_at = CURRENT_TIMESTAMP[\s\S]*WHERE id = \$1/),
         [userId]
@@ -158,7 +158,7 @@ describe('Password Utils', () => {
     it('should handle database errors during email verification', async () => {
       const dbError = new Error('Database update failed');
       mockPool.query = jest.fn().mockRejectedValue(dbError);
-      
+
       await expect(
         updateUserEmailVerified(mockPool, 'user-789')
       ).rejects.toThrow('Database update failed');
@@ -166,9 +166,9 @@ describe('Password Utils', () => {
 
     it('should handle empty userId for email verification', async () => {
       mockPool.query = jest.fn().mockResolvedValue({ rows: [], rowCount: 0 });
-      
+
       await updateUserEmailVerified(mockPool, '');
-      
+
       expect(mockPool.query).toHaveBeenCalledWith(
         expect.any(String),
         ['']
@@ -177,9 +177,9 @@ describe('Password Utils', () => {
 
     it('should handle null userId for email verification', async () => {
       mockPool.query = jest.fn().mockResolvedValue({ rows: [], rowCount: 0 });
-      
+
       await updateUserEmailVerified(mockPool, null as any);
-      
+
       expect(mockPool.query).toHaveBeenCalledWith(
         expect.any(String),
         [null]
@@ -188,11 +188,11 @@ describe('Password Utils', () => {
 
     it('should handle special characters in userId for email verification', async () => {
       mockPool.query = jest.fn().mockResolvedValue({ rows: [], rowCount: 1 });
-      
+
       const specialUserId = 'user-with@special#chars$123';
-      
+
       await updateUserEmailVerified(mockPool, specialUserId);
-      
+
       expect(mockPool.query).toHaveBeenCalledWith(
         expect.any(String),
         [specialUserId]
@@ -201,11 +201,11 @@ describe('Password Utils', () => {
 
     it('should use parameterized query for email verification', async () => {
       mockPool.query = jest.fn().mockResolvedValue({ rows: [], rowCount: 1 });
-      
+
       const maliciousUserId = "'; DROP TABLE users; --";
-      
+
       await updateUserEmailVerified(mockPool, maliciousUserId);
-      
+
       // Verify parameterized query is used
       expect(mockPool.query).toHaveBeenCalledWith(
         expect.any(String),
@@ -227,11 +227,11 @@ describe('Password Utils', () => {
         preferredLanguage: 'en',
         metadata: { theme: 'dark' }
       };
-      
+
       mockPool.query = jest.fn().mockResolvedValue({ rows: [mockUser] });
-      
+
       const result = await getUserWithPassword(mockPool, 'test@example.com');
-      
+
       expect(result).toEqual(mockUser);
       expect(mockPool.query).toHaveBeenCalledWith(
         expect.stringMatching(/SELECT[\s\S]*FROM users[\s\S]*WHERE LOWER\(email\) = LOWER\(\$1\)/),
@@ -241,9 +241,9 @@ describe('Password Utils', () => {
 
     it('should return null when user not found', async () => {
       mockPool.query = jest.fn().mockResolvedValue({ rows: [] });
-      
+
       const result = await getUserWithPassword(mockPool, 'nonexistent@example.com');
-      
+
       expect(result).toBeNull();
     });
 
@@ -259,9 +259,9 @@ describe('Password Utils', () => {
         preferredLanguage: 'en',
         metadata: {}
       };
-      
+
       mockPool.query = jest.fn().mockResolvedValue({ rows: [mockUser] });
-      
+
       // Test different case variations
       const testEmails = [
         'test@example.com',
@@ -269,7 +269,7 @@ describe('Password Utils', () => {
         'TEST@EXAMPLE.COM',
         'tEsT@ExAmPlE.cOm'
       ];
-      
+
       for (const email of testEmails) {
         const result = await getUserWithPassword(mockPool, email);
         expect(result).toEqual(mockUser);
@@ -292,11 +292,11 @@ describe('Password Utils', () => {
         preferredLanguage: 'en',
         metadata: {}
       };
-      
+
       mockPool.query = jest.fn().mockResolvedValue({ rows: [mockUser] });
-      
+
       const result = await getUserWithPassword(mockPool, 'user@example.com');
-      
+
       expect(result).toEqual(mockUser);
       expect(result?.passwordHash).toBeNull();
       expect(result?.role).toBeNull();
@@ -324,7 +324,7 @@ describe('Password Utils', () => {
           achievementCount: 15
         }
       };
-      
+
       const mockUser = {
         id: 'user-complex',
         email: 'complex@example.com',
@@ -336,11 +336,11 @@ describe('Password Utils', () => {
         preferredLanguage: 'zh-TW',
         metadata: complexMetadata
       };
-      
+
       mockPool.query = jest.fn().mockResolvedValue({ rows: [mockUser] });
-      
+
       const result = await getUserWithPassword(mockPool, 'complex@example.com');
-      
+
       expect(result).toEqual(mockUser);
       expect(result?.metadata).toEqual(complexMetadata);
       expect((result?.metadata as any).preferences.theme).toBe('dark');
@@ -349,7 +349,7 @@ describe('Password Utils', () => {
     it('should handle database errors during user retrieval', async () => {
       const dbError = new Error('Database query failed');
       mockPool.query = jest.fn().mockRejectedValue(dbError);
-      
+
       await expect(
         getUserWithPassword(mockPool, 'test@example.com')
       ).rejects.toThrow('Database query failed');
@@ -357,9 +357,9 @@ describe('Password Utils', () => {
 
     it('should handle empty email input', async () => {
       mockPool.query = jest.fn().mockResolvedValue({ rows: [] });
-      
+
       const result = await getUserWithPassword(mockPool, '');
-      
+
       expect(result).toBeNull();
       expect(mockPool.query).toHaveBeenCalledWith(
         expect.any(String),
@@ -375,9 +375,9 @@ describe('Password Utils', () => {
         'user@ex-ample.com',
         'test.email+tag+sorting@example.co.uk'
       ];
-      
+
       mockPool.query = jest.fn().mockResolvedValue({ rows: [] });
-      
+
       for (const email of specialEmails) {
         await getUserWithPassword(mockPool, email);
         expect(mockPool.query).toHaveBeenLastCalledWith(
@@ -394,9 +394,9 @@ describe('Password Utils', () => {
         'üser@example.com',
         'test@éxample.com'
       ];
-      
+
       mockPool.query = jest.fn().mockResolvedValue({ rows: [] });
-      
+
       for (const email of unicodeEmails) {
         await getUserWithPassword(mockPool, email);
         expect(mockPool.query).toHaveBeenLastCalledWith(
@@ -408,11 +408,11 @@ describe('Password Utils', () => {
 
     it('should use parameterized query for email lookup', async () => {
       mockPool.query = jest.fn().mockResolvedValue({ rows: [] });
-      
+
       const maliciousEmail = "test@example.com'; DROP TABLE users; --";
-      
+
       await getUserWithPassword(mockPool, maliciousEmail);
-      
+
       // Verify parameterized query is used
       expect(mockPool.query).toHaveBeenCalledWith(
         expect.any(String),
@@ -445,18 +445,18 @@ describe('Password Utils', () => {
           metadata: { duplicate: true }
         }
       ];
-      
+
       mockPool.query = jest.fn().mockResolvedValue({ rows: mockUsers });
-      
+
       const result = await getUserWithPassword(mockPool, 'duplicate@example.com');
-      
+
       expect(result).toEqual(mockUsers[0]); // Should return first user
       expect(result?.id).toBe('user-1');
     });
 
     it('should handle different user roles', async () => {
       const roles = ['student', 'teacher', 'admin', 'moderator', 'guest', 'premium'];
-      
+
       for (const role of roles) {
         const mockUser = {
           id: `user-${role}`,
@@ -469,11 +469,11 @@ describe('Password Utils', () => {
           preferredLanguage: 'en',
           metadata: { role: role }
         };
-        
+
         mockPool.query = jest.fn().mockResolvedValue({ rows: [mockUser] });
-        
+
         const result = await getUserWithPassword(mockPool, `${role}@example.com`);
-        
+
         expect(result).toEqual(mockUser);
         expect(result?.role).toBe(role);
       }
@@ -481,7 +481,7 @@ describe('Password Utils', () => {
 
     it('should handle different languages', async () => {
       const languages = ['en', 'zh-TW', 'zh-CN', 'es', 'fr', 'de', 'ja', 'ko'];
-      
+
       for (const lang of languages) {
         const mockUser = {
           id: `user-${lang}`,
@@ -494,11 +494,11 @@ describe('Password Utils', () => {
           preferredLanguage: lang,
           metadata: { language: lang }
         };
-        
+
         mockPool.query = jest.fn().mockResolvedValue({ rows: [mockUser] });
-        
+
         const result = await getUserWithPassword(mockPool, `user-${lang}@example.com`);
-        
+
         expect(result).toEqual(mockUser);
         expect(result?.preferredLanguage).toBe(lang);
       }
@@ -508,21 +508,21 @@ describe('Password Utils', () => {
   describe('SQL Injection Prevention', () => {
     it('should use parameterized queries in all functions', async () => {
       mockPool.query = jest.fn().mockResolvedValue({ rows: [], rowCount: 1 });
-      
+
       const maliciousInputs = [
         "'; DROP TABLE users; --",
         "' UNION SELECT * FROM admin_users --",
         "'; UPDATE users SET role='admin' --",
         "' OR 1=1 --"
       ];
-      
+
       // Test all functions with malicious inputs
       for (const input of maliciousInputs) {
         await updateUserPasswordHash(mockPool, input, 'hash', 'role');
         await updateUserEmailVerified(mockPool, input);
         await getUserWithPassword(mockPool, input);
       }
-      
+
       // Verify all calls used parameterized queries (inputs passed as parameters, not in SQL)
       const calls = (mockPool.query as jest.Mock).mock.calls;
       calls.forEach(call => {
@@ -540,27 +540,27 @@ describe('Password Utils', () => {
     it('should handle connection timeouts', async () => {
       const timeoutError = new Error('connection timeout');
       timeoutError.name = 'TimeoutError';
-      
+
       mockPool.query = jest.fn().mockRejectedValue(timeoutError);
-      
+
       await expect(
         updateUserPasswordHash(mockPool, 'user-123', 'hash')
       ).rejects.toThrow('connection timeout');
-      
+
       await expect(
         updateUserEmailVerified(mockPool, 'user-123')
       ).rejects.toThrow('connection timeout');
-      
+
       await expect(
         getUserWithPassword(mockPool, 'test@example.com')
       ).rejects.toThrow('connection timeout');
     });
 
     it('should handle concurrent database operations', async () => {
-      mockPool.query = jest.fn().mockImplementation(() => 
+      mockPool.query = jest.fn().mockImplementation(() =>
         new Promise(resolve => setTimeout(() => resolve({ rows: [], rowCount: 1 }), 10))
       );
-      
+
       // Simulate concurrent operations
       const promises = [
         updateUserPasswordHash(mockPool, 'user-1', 'hash1'),
@@ -569,7 +569,7 @@ describe('Password Utils', () => {
         getUserWithPassword(mockPool, 'test1@example.com'),
         getUserWithPassword(mockPool, 'test2@example.com')
       ];
-      
+
       await expect(Promise.all(promises)).resolves.not.toThrow();
       expect(mockPool.query).toHaveBeenCalledTimes(5);
     });
@@ -578,36 +578,36 @@ describe('Password Utils', () => {
   describe('Edge Cases and Boundary Values', () => {
     it('should handle extremely long inputs', async () => {
       mockPool.query = jest.fn().mockResolvedValue({ rows: [], rowCount: 1 });
-      
+
       const longUserId = 'user-' + 'a'.repeat(1000);
       const longPasswordHash = '$2b$12$' + 'hash'.repeat(100);
       const longRole = 'role-' + 'x'.repeat(500);
       const longEmail = 'user' + 'y'.repeat(500) + '@example.com';
-      
+
       await updateUserPasswordHash(mockPool, longUserId, longPasswordHash, longRole);
       await updateUserEmailVerified(mockPool, longUserId);
       await getUserWithPassword(mockPool, longEmail);
-      
+
       expect(mockPool.query).toHaveBeenCalledTimes(3);
     });
 
     it('should handle empty and whitespace inputs', async () => {
       mockPool.query = jest.fn().mockResolvedValue({ rows: [], rowCount: 1 });
-      
+
       const whitespaceInputs = ['', ' ', '\t', '\n', '\r\n', '   '];
-      
+
       for (const input of whitespaceInputs) {
         await updateUserPasswordHash(mockPool, input, 'hash');
         await updateUserEmailVerified(mockPool, input);
         await getUserWithPassword(mockPool, input);
       }
-      
+
       expect(mockPool.query).toHaveBeenCalledTimes(whitespaceInputs.length * 3);
     });
 
     it('should handle various character encodings', async () => {
       mockPool.query = jest.fn().mockResolvedValue({ rows: [], rowCount: 1 });
-      
+
       const encodingTests = [
         '用戶@例子.com',
         'пользователь@пример.com',
@@ -615,11 +615,11 @@ describe('Password Utils', () => {
         'usuario@ejemplo.com',
         'ユーザー@例.com'
       ];
-      
+
       for (const email of encodingTests) {
         await getUserWithPassword(mockPool, email);
       }
-      
+
       expect(mockPool.query).toHaveBeenCalledTimes(encodingTests.length);
     });
   });

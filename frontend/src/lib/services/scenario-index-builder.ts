@@ -33,7 +33,7 @@ class ScenarioIndexBuilder {
     }
 
     // Check if we recently built the index
-    if (this.lastBuildTime && 
+    if (this.lastBuildTime &&
         Date.now() - this.lastBuildTime.getTime() < this.MIN_BUILD_INTERVAL) {
       console.log('Index was recently built, skipping...');
       return;

@@ -16,10 +16,10 @@ describe.skip('Level 3 Simple Flow', () => {
   it('should check environment', () => {
     const dbHost = process.env.DB_HOST || 'localhost';
     const dbPort = process.env.DB_PORT || '5434';
-    
+
     expect(dbHost).toBeDefined();
     expect(dbPort).toBeDefined();
-    
+
     console.log(`Test environment: DB at ${dbHost}:${dbPort}`);
   });
 });

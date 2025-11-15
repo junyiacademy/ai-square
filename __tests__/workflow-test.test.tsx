@@ -24,7 +24,7 @@ describe('Workflow Test Complete', () => {
     // 測試文件模板生成
     const mockTemplates = [
       'feature-spec-template.md',
-      'bug-analysis-template.md', 
+      'bug-analysis-template.md',
       'refactor-plan-template.md'
     ];
 
@@ -52,7 +52,7 @@ describe('Workflow Test Complete', () => {
     // 測試Makefile優化
     const cleanedCommands = [
       'dev-ticket',
-      'dev-status', 
+      'dev-status',
       'check-docs',
       'commit-ticket',
       'test-workflow'

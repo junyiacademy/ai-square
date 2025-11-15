@@ -31,7 +31,7 @@ export function useMultilingualScenarios() {
       setLoading(true);
       const response = await authenticatedFetch('/api/assessment/scenarios?allLanguages=true');
       const data = await response.json();
-      
+
       if (data.success) {
         setScenarios(data.data.scenarios);
       } else {
@@ -51,10 +51,10 @@ export function useMultilingualScenarios() {
   // 獲取當前語言的 scenarios
   const getCurrentLanguageScenarios = useCallback(() => {
     return scenarios.map(scenario => {
-      const translation = scenario.translations?.[i18n.language] || 
-                         scenario.translations?.en || 
+      const translation = scenario.translations?.[i18n.language] ||
+                         scenario.translations?.en ||
                          { title: 'Untitled', description: '' };
-      
+
       return {
         ...scenario,
         title: translation.title,

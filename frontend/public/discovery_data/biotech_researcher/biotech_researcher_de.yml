@@ -6,10 +6,10 @@ metadata:
   title: Lebenscode-Architekt - Biotechnologie-Forscher
   short_description: Entschlüsseln Sie die Geheimnisse des Lebens durch KI und Biotechnologie
   long_description: |
-    Sie sind ein Junior-Forscher am "BioSynthese-Institut", wo die Grenzen zwischen 
-    Biologie und künstlicher Intelligenz verschwimmen. Ausgestattet mit KI-Tools und 
-    gentechnischen Verfahren werden Sie die grundlegenden Codes des Lebens erforschen 
-    und Lösungen schaffen, die Medizin, Landwirtschaft und menschliche Verbesserung 
+    Sie sind ein Junior-Forscher am "BioSynthese-Institut", wo die Grenzen zwischen
+    Biologie und künstlicher Intelligenz verschwimmen. Ausgestattet mit KI-Tools und
+    gentechnischen Verfahren werden Sie die grundlegenden Codes des Lebens erforschen
+    und Lösungen schaffen, die Medizin, Landwirtschaft und menschliche Verbesserung
     revolutionieren könnten.
   estimated_hours: 70
   skill_focus:
@@ -21,20 +21,20 @@ metadata:
 world_setting:
   name: BioSynthese-Institut
   description: |
-    Das BioSynthese-Institut ist eine hochmoderne Forschungseinrichtung, in der Biologie 
-    auf künstliche Intelligenz trifft. Forscher nutzen hier KI, um genetische Geheimnisse 
-    zu entschlüsseln, neue Organismen zu entwerfen und die Grenzen des Machbaren in der 
-    Biotechnologie zu erweitern, während sie sich mit tiefgreifenden ethischen Fragen 
+    Das BioSynthese-Institut ist eine hochmoderne Forschungseinrichtung, in der Biologie
+    auf künstliche Intelligenz trifft. Forscher nutzen hier KI, um genetische Geheimnisse
+    zu entschlüsseln, neue Organismen zu entwerfen und die Grenzen des Machbaren in der
+    Biotechnologie zu erweitern, während sie sich mit tiefgreifenden ethischen Fragen
     auseinandersetzen.
   atmosphere: scientific_innovative
   visual_theme: biotech_laboratory
 starting_scenario:
   title: Der lebende Algorithmus
   description: |
-    Dr. Elena Helix heißt Sie im Institut mit einer dringenden Mission willkommen: Eine 
-    geheimnisvolle genetische Sequenz wurde entdeckt, die auf KI-Algorithmen zu reagieren 
-    scheint. Aber Dr. Splice von der rivalisierenden BioCorp versucht, genetische 
-    Modifikationen zu Waffen zu machen. Sie müssen die Geheimnisse des Lebens 
+    Dr. Elena Helix heißt Sie im Institut mit einer dringenden Mission willkommen: Eine
+    geheimnisvolle genetische Sequenz wurde entdeckt, die auf KI-Algorithmen zu reagieren
+    scheint. Aber Dr. Splice von der rivalisierenden BioCorp versucht, genetische
+    Modifikationen zu Waffen zu machen. Sie müssen die Geheimnisse des Lebens
     verantwortungsvoll entschlüsseln und katastrophalen Missbrauch verhindern.
   initial_tasks:
     - understand_crispr

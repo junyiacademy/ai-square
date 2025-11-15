@@ -29,7 +29,7 @@ describe('HybridTranslationService', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     // Setup mock storage service
     mockStorageService = {
       getScenario: jest.fn(),
@@ -37,9 +37,9 @@ describe('HybridTranslationService', () => {
       getProgram: jest.fn(),
       getTask: jest.fn()
     };
-    
+
     (getScenarioStorageService as jest.Mock).mockReturnValue(mockStorageService);
-    
+
     service = new HybridTranslationService();
   });
 
@@ -67,14 +67,14 @@ describe('HybridTranslationService', () => {
 
     it('should apply translations for non-English languages', async () => {
       mockStorageService.getScenario.mockResolvedValue(mockScenario);
-      
+
       const yamlData = {
         scenario_info: {
           title_zh: '測試情境',
           description_zh: '測試描述'
         }
       };
-      
+
       (readFile as jest.Mock).mockResolvedValue('yaml content');
       (yaml.load as jest.Mock).mockReturnValue(yamlData);
 
@@ -94,14 +94,14 @@ describe('HybridTranslationService', () => {
 
     it('should fallback to YAML for non-English on GCS error', async () => {
       mockStorageService.getScenario.mockRejectedValue(new Error('GCS connection failed'));
-      
+
       const yamlData = {
         scenario_info: {
           id: 'test-scenario',
           title: 'Fallback Title'
         }
       };
-      
+
       (readFile as jest.Mock).mockResolvedValue('yaml content');
       (yaml.load as jest.Mock).mockReturnValue(yamlData);
 
@@ -118,15 +118,15 @@ describe('HybridTranslationService', () => {
 
       // First call succeeds and caches
       await service.getScenario('test-scenario', 'en');
-      
+
       // Second call fails
       await expect(service.getScenario('error-scenario', 'en'))
         .rejects.toThrow();
-      
+
       // Third call should hit storage again (cache cleared)
       mockStorageService.getScenario.mockResolvedValueOnce(mockScenario);
       await service.getScenario('error-scenario', 'en');
-      
+
       expect(mockStorageService.getScenario).toHaveBeenCalledTimes(3);
     });
   });
@@ -175,7 +175,7 @@ describe('HybridTranslationService', () => {
         userId: 'user-1',
         status: 'active'
       };
-      
+
       mockStorageService.getProgram.mockResolvedValue(mockProgram);
 
       const result = await service.getProgram('scenario-1', 'program-1', 'en');
@@ -193,7 +193,7 @@ describe('HybridTranslationService', () => {
         title: { en: 'Task 1' },
         status: 'pending'
       };
-      
+
       mockStorageService.getTask.mockResolvedValue(mockTask);
 
       const result = await service.getTask('scenario-1', 'program-1', 'task-1', 'en');
@@ -210,16 +210,16 @@ describe('HybridTranslationService', () => {
         title: { en: 'English Title' },
         description: { en: 'English Description' }
       };
-      
+
       mockStorageService.getScenario.mockResolvedValue(englishScenario);
-      
+
       const yamlData = {
         scenario_info: {
           title_es: 'Título en Español',
           description_es: 'Descripción en Español'
         }
       };
-      
+
       (readFile as jest.Mock).mockResolvedValue('yaml content');
       (yaml.load as jest.Mock).mockReturnValue(yamlData);
 
@@ -258,11 +258,11 @@ describe('HybridTranslationService', () => {
     it('should use separate cache keys for different languages', async () => {
       const englishScenario = { ...mockScenario, title: { en: 'English' } };
       const spanishScenario = { ...mockScenario, title: { es: 'Español' } };
-      
+
       mockStorageService.getScenario
         .mockResolvedValueOnce(englishScenario)
         .mockResolvedValueOnce(englishScenario);
-      
+
       (readFile as jest.Mock).mockResolvedValue('yaml');
       (yaml.load as jest.Mock).mockReturnValue({
         scenario_info: { title_es: 'Español' }
@@ -280,19 +280,19 @@ describe('HybridTranslationService', () => {
         .mockResolvedValueOnce(['scenario1'])
         .mockRejectedValueOnce(new Error('Error'))
         .mockResolvedValueOnce(['scenario1', 'scenario2']);
-      
+
       mockStorageService.getScenario.mockResolvedValue(mockScenario);
 
       // First call succeeds
       await service.listScenarios('en');
-      
+
       // Second call fails
       await expect(service.listScenarios('zh'))
         .rejects.toThrow();
-      
+
       // Third call should hit storage again
       await service.listScenarios('en');
-      
+
       expect(mockStorageService.list).toHaveBeenCalledTimes(3);
     });
   });

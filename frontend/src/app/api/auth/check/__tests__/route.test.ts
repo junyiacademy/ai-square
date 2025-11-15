@@ -15,10 +15,10 @@ describe('/api/auth/check', () => {
   describe('Session token authentication', () => {
     it('returns authenticated user when valid session token exists', async () => {
       const mockGetUnifiedAuth = getUnifiedAuth as jest.Mock;
-      
+
       mockGetUnifiedAuth.mockResolvedValue({
         user: {
-          id: '123',  
+          id: '123',
           email: 'test@example.com',
           role: 'user'
         }
@@ -43,7 +43,7 @@ describe('/api/auth/check', () => {
 
     it('returns unauthenticated when no session token exists', async () => {
       const mockGetUnifiedAuth = getUnifiedAuth as jest.Mock;
-      
+
       mockGetUnifiedAuth.mockResolvedValue(null);
 
       const mockRequest = new NextRequest('http://localhost:3000/api/auth/check');
@@ -59,7 +59,7 @@ describe('/api/auth/check', () => {
 
     it('returns unauthenticated when session token is invalid', async () => {
       const mockGetUnifiedAuth = getUnifiedAuth as jest.Mock;
-      
+
       mockGetUnifiedAuth.mockResolvedValue(null);
 
       const mockRequest = new NextRequest('http://localhost:3000/api/auth/check');
@@ -75,7 +75,7 @@ describe('/api/auth/check', () => {
 
     it('handles malformed session token gracefully', async () => {
       const mockGetUnifiedAuth = getUnifiedAuth as jest.Mock;
-      
+
       mockGetUnifiedAuth.mockRejectedValue(new Error('Invalid token'));
 
       const mockRequest = new NextRequest('http://localhost:3000/api/auth/check');
@@ -91,7 +91,7 @@ describe('/api/auth/check', () => {
 
     it('handles URL-encoded session token from cookies', async () => {
       const mockGetUnifiedAuth = getUnifiedAuth as jest.Mock;
-      
+
       mockGetUnifiedAuth.mockResolvedValue({
         user: {
           id: '456',
@@ -121,7 +121,7 @@ describe('/api/auth/check', () => {
   describe('response format validation', () => {
     it('always includes required fields in response', async () => {
       const mockGetUnifiedAuth = getUnifiedAuth as jest.Mock;
-      
+
       mockGetUnifiedAuth.mockResolvedValue(null);
 
       const mockRequest = new NextRequest('http://localhost:3000/api/auth/check');
@@ -137,7 +137,7 @@ describe('/api/auth/check', () => {
   describe('demo account roles', () => {
     it('returns student role for student@example.com', async () => {
       const mockGetUnifiedAuth = getUnifiedAuth as jest.Mock;
-      
+
       mockGetUnifiedAuth.mockResolvedValue({
         user: {
           id: 'demo-student',
@@ -155,7 +155,7 @@ describe('/api/auth/check', () => {
 
     it('returns teacher role for teacher@example.com', async () => {
       const mockGetUnifiedAuth = getUnifiedAuth as jest.Mock;
-      
+
       mockGetUnifiedAuth.mockResolvedValue({
         user: {
           id: 'demo-teacher',

@@ -86,4 +86,4 @@ describe('redis-cache-service (redis connected branch)', () => {
     expect(res).toEqual({ z: 9 });
     expect(mocks.setex).toHaveBeenCalled();
   });
-}); 
+});

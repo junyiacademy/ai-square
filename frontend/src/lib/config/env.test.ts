@@ -104,22 +104,22 @@ describe('env config', () => {
       const originalPort = process.env.DB_PORT;
       const originalName = process.env.DB_NAME;
       const originalUser = process.env.DB_USER;
-      
+
       // Clear env vars
       delete process.env.DB_HOST;
       delete process.env.DB_PORT;
       delete process.env.DB_NAME;
       delete process.env.DB_USER;
-      
+
       // Need to re-import to get updated config
       jest.resetModules();
       const { config: freshConfig } = require('./env');
-      
+
       expect(freshConfig.dbHost).toBe('localhost');
       expect(freshConfig.dbPort).toBe(5432);
       expect(freshConfig.dbName).toBe('ai_square_db');
       expect(freshConfig.dbUser).toBe('postgres');
-      
+
       // Restore original values
       if (originalHost) process.env.DB_HOST = originalHost;
       if (originalPort) process.env.DB_PORT = originalPort;
@@ -131,10 +131,10 @@ describe('env config', () => {
       process.env.DB_HOST = 'custom-host';
       process.env.DB_PORT = '3306';
       process.env.GOOGLE_CLOUD_PROJECT = 'my-project';
-      
+
       jest.resetModules();
       const { config: freshConfig } = require('./env');
-      
+
       expect(freshConfig.dbHost).toBe('custom-host');
       expect(freshConfig.dbPort).toBe(3306);
       expect(freshConfig.gcpProject).toBe('my-project');
@@ -142,10 +142,10 @@ describe('env config', () => {
 
     it('should handle boolean feature flags', () => {
       process.env.USE_POSTGRES = 'false';
-      
+
       jest.resetModules();
       const { config: freshConfig } = require('./env');
-      
+
       expect(freshConfig.usePostgres).toBe(false);
     });
   });

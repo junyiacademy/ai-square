@@ -7,9 +7,9 @@ metadata:
   title: Dream Architect - Game Designer
   short_description: Create infinite possibilities in virtual worlds
   long_description: |
-    You are a talented designer at the "Dream Architecture Academy," possessing the 
-    magic to transform imagination into interactive experiences. In this academy filled 
-    with creativity and fun, every game mechanic is a door to new worlds, and your 
+    You are a talented designer at the "Dream Architecture Academy," possessing the
+    magic to transform imagination into interactive experiences. In this academy filled
+    with creativity and fun, every game mechanic is a door to new worlds, and your
     mission is to create immersive digital dreams that captivate players.
   estimated_hours: 60
   skill_focus:
@@ -24,16 +24,16 @@ metadata:
 world_setting:
   name: Dream Architecture Academy
   description: |
-    The Dream Architecture Academy is a magical institution dedicated to training game 
-    designers. Here, students learn to balance creativity with technical constraints, 
+    The Dream Architecture Academy is a magical institution dedicated to training game
+    designers. Here, students learn to balance creativity with technical constraints,
     fun with challenge, and create experiences that resonate with players worldwide.
   atmosphere: playful_creative
   visual_theme: fantasy_academy
 starting_scenario:
   title: The Grind Invasion
   description: |
-    Creative God Dream welcomes you with troubling news: Grind, the King of Boredom, 
-    is turning all games into mindless number farms, pursuing efficiency over fun. 
+    Creative God Dream welcomes you with troubling news: Grind, the King of Boredom,
+    is turning all games into mindless number farms, pursuing efficiency over fun.
     You must use creativity and joy to combat the mechanization of gaming experiences.
   initial_tasks:
     - understand_game_design

@@ -23,7 +23,7 @@ function getPool() {
 
 export async function POST(request: NextRequest) {
   let pool: Pool | null = null;
-  
+
   try {
     // Check admin key
     const authHeader = request.headers.get('x-admin-key');
@@ -33,20 +33,20 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
     const action = body.action || 'check';
-    
+
     pool = getPool();
 
     if (action === 'check') {
       // Check current status
       const tables = await pool.query(`
-        SELECT table_name 
-        FROM information_schema.tables 
-        WHERE table_schema = 'public' 
+        SELECT table_name
+        FROM information_schema.tables
+        WHERE table_schema = 'public'
         AND table_name IN ('scenarios', 'users', 'programs', 'tasks', 'evaluations')
       `);
 
       const counts = await pool.query(`
-        SELECT 
+        SELECT
           (SELECT COUNT(*) FROM scenarios WHERE mode = 'pbl') as pbl_count,
           (SELECT COUNT(*) FROM scenarios WHERE mode = 'assessment') as assessment_count,
           (SELECT COUNT(*) FROM scenarios WHERE mode = 'discovery') as discovery_count,
@@ -77,22 +77,22 @@ export async function POST(request: NextRequest) {
       const pblDir = path.join(process.cwd(), 'public', 'pbl_data');
       const pblFiles = await fs.readdir(pblDir);
       const pblScenarioFiles = pblFiles.filter(f => f.endsWith('_scenario.yaml'));
-      
+
       let pblCount = 0;
       for (const file of pblScenarioFiles) {
         try {
           const content = await fs.readFile(path.join(pblDir, file), 'utf-8');
           const data = yamlParse(content) as Record<string, unknown>;
-          
+
           // Extract scenario ID from filename
           const scenarioId = file.replace('_scenario.yaml', '');
-          
+
           // Check if scenario already exists
           const existing = await pool.query(
             'SELECT id FROM scenarios WHERE source_id = $1 AND mode = $2',
             [scenarioId, 'pbl']
           );
-          
+
           if (existing.rows.length === 0) {
             // Insert scenario
             await pool.query(`
@@ -110,11 +110,11 @@ export async function POST(request: NextRequest) {
             `, [
               scenarioId,
               `pbl_data/${file}`,
-              JSON.stringify({ 
+              JSON.stringify({
                 en: data.title || data.scenario_name || scenarioId,
                 zh: data.title_zh || data.title || scenarioId
               }),
-              JSON.stringify({ 
+              JSON.stringify({
                 en: data.description || data.scenario_description || 'PBL Scenario',
                 zh: data.description_zh || data.description || 'PBL 場景'
               }),
@@ -134,14 +134,14 @@ export async function POST(request: NextRequest) {
           console.error(`Error loading PBL scenario ${file}:`, error);
         }
       }
-      
+
       console.log(`Loaded ${pblCount} PBL scenarios`);
 
       // Step 3: Load Assessment scenarios
       console.log('Loading Assessment scenarios...');
       const assessmentDir = path.join(process.cwd(), 'public', 'assessment_data');
       let assessmentCount = 0;
-      
+
       try {
         const assessmentFolders = await fs.readdir(assessmentDir, { withFileTypes: true });
         for (const folder of assessmentFolders.filter(f => f.isDirectory())) {
@@ -151,13 +151,13 @@ export async function POST(request: NextRequest) {
             const configPath = path.join(assessmentDir, folder.name, configFile);
             const content = await fs.readFile(configPath, 'utf-8');
             const data = yamlParse(content) as Record<string, unknown>;
-            
+
             // Check if already exists
             const existing = await pool.query(
               'SELECT id FROM scenarios WHERE source_id = $1 AND mode = $2',
               [folder.name, 'assessment']
             );
-            
+
             if (existing.rows.length === 0) {
               await pool.query(`
                 INSERT INTO scenarios (
@@ -172,11 +172,11 @@ export async function POST(request: NextRequest) {
               `, [
                 folder.name,
                 `assessment_data/${folder.name}/${configFile}`,
-                JSON.stringify({ 
+                JSON.stringify({
                   en: data.title || 'AI Literacy Assessment',
                   zh: data.title_zh || 'AI 素養評估'
                 }),
-                JSON.stringify({ 
+                JSON.stringify({
                   en: data.description || 'Assessment for AI literacy competencies',
                   zh: data.description_zh || 'AI 素養能力評估'
                 }),
@@ -197,30 +197,30 @@ export async function POST(request: NextRequest) {
       } catch (error) {
         console.error('Error reading assessment directory:', error);
       }
-      
+
       console.log(`Loaded ${assessmentCount} Assessment scenarios`);
 
       // Step 4: Load Discovery scenarios
       console.log('Loading Discovery scenarios...');
       const discoveryDir = path.join(process.cwd(), 'public', 'discovery_data');
       let discoveryCount = 0;
-      
+
       try {
         const discoveryFiles = await fs.readdir(discoveryDir);
         const careerFiles = discoveryFiles.filter(f => f.endsWith('_career.yaml'));
-        
+
         for (const file of careerFiles) {
           try {
             const content = await fs.readFile(path.join(discoveryDir, file), 'utf-8');
             const data = yamlParse(content) as Record<string, unknown>;
             const careerId = file.replace('_career.yaml', '');
-            
+
             // Check if exists
             const existing = await pool.query(
               'SELECT id FROM scenarios WHERE source_id = $1 AND mode = $2',
               [careerId, 'discovery']
             );
-            
+
             if (existing.rows.length === 0) {
               await pool.query(`
                 INSERT INTO scenarios (
@@ -235,11 +235,11 @@ export async function POST(request: NextRequest) {
               `, [
                 careerId,
                 `discovery_data/${file}`,
-                JSON.stringify({ 
+                JSON.stringify({
                   en: data.career_name || careerId,
                   zh: data.career_name_zh || data.career_name || careerId
                 }),
-                JSON.stringify({ 
+                JSON.stringify({
                   en: data.description || 'Career exploration path',
                   zh: data.description_zh || data.description || '職業探索路徑'
                 }),
@@ -260,7 +260,7 @@ export async function POST(request: NextRequest) {
       } catch (error) {
         console.error('Error reading discovery directory:', error);
       }
-      
+
       console.log(`Loaded ${discoveryCount} Discovery scenarios`);
 
       // Step 5: Create demo users (using valid roles from schema)
@@ -268,7 +268,7 @@ export async function POST(request: NextRequest) {
       // Generated with bcryptjs, salt rounds: 10
       await pool.query(`
         INSERT INTO users (id, email, password_hash, name, role, email_verified, created_at, updated_at)
-        VALUES 
+        VALUES
           ('550e8400-e29b-41d4-a716-446655440001', 'student@example.com', '$2b$10$qtr1b19D5AAqHdHIwk7kwO3O1Bc8NuAbMQLWBNXsssitWcqz2t51.', 'Demo Student', 'student', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
           ('550e8400-e29b-41d4-a716-446655440002', 'teacher@example.com', '$2b$10$yO.DFREVnZMJfUMwDY7p/.8cEbZFdeQHVDISIWyjF0CKW71BFkt4S', 'Demo Teacher', 'teacher', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
           ('550e8400-e29b-41d4-a716-446655440003', 'admin@example.com', '$2b$10$/6sb.PWC9OaZwLxPmCpSI..tVI/v8x8LoK0GPie0UZUOkj.hoq46y', 'Demo Admin', 'admin', true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
@@ -277,7 +277,7 @@ export async function POST(request: NextRequest) {
 
       // Get final counts
       const finalCounts = await pool.query(`
-        SELECT 
+        SELECT
           (SELECT COUNT(*) FROM scenarios WHERE mode = 'pbl') as pbl_count,
           (SELECT COUNT(*) FROM scenarios WHERE mode = 'assessment') as assessment_count,
           (SELECT COUNT(*) FROM scenarios WHERE mode = 'discovery') as discovery_count,
@@ -303,7 +303,7 @@ export async function POST(request: NextRequest) {
       await pool.query(`
         TRUNCATE TABLE evaluations, tasks, programs, scenarios, users CASCADE;
       `);
-      
+
       return NextResponse.json({
         success: true,
         message: 'Database cleared successfully',
@@ -322,7 +322,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Database init error:', error);
     return NextResponse.json(
-      { 
+      {
         error: 'Database initialization failed',
         details: error instanceof Error ? error.message : 'Unknown error'
       },

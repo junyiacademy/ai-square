@@ -87,24 +87,24 @@ export class TestMatrixReporter {
    */
   generateMatrix(): string {
     const lines: string[] = [];
-    
+
     lines.push('');
     lines.push('=' .repeat(80));
     lines.push('                    E2E TEST MATRIX RESULTS (3x5)');
     lines.push('=' .repeat(80));
     lines.push('');
-    
+
     // Header
     lines.push('Mode'.padEnd(12) + '| Stage 1    | Stage 2    | Stage 3    | Stage 4    | Stage 5    |');
     lines.push('-'.repeat(80));
-    
+
     // Results for each mode
     ['PBL', 'Assessment', 'Discovery'].forEach(mode => {
       const modeResult = this.results.get(mode);
       if (!modeResult) return;
-      
+
       let row = mode.padEnd(12) + '|';
-      
+
       // Ensure we have 5 stages
       const stages = modeResult.stages;
       for (let i = 0; i < 5; i++) {
@@ -116,12 +116,12 @@ export class TestMatrixReporter {
           row += ` ⏳ PENDING |`;
         }
       }
-      
+
       lines.push(row);
     });
-    
+
     lines.push('-'.repeat(80));
-    
+
     // Summary
     let totalPass = 0, totalFail = 0, totalSkip = 0;
     this.results.forEach(result => {
@@ -129,14 +129,14 @@ export class TestMatrixReporter {
       totalFail += result.failCount;
       totalSkip += result.skipCount;
     });
-    
+
     lines.push('');
     lines.push('Summary:');
     lines.push(`  ✅ Passed: ${totalPass}`);
     lines.push(`  ❌ Failed: ${totalFail}`);
     lines.push(`  ⏭️  Skipped: ${totalSkip}`);
     lines.push(`  Total: ${totalPass + totalFail + totalSkip}/15`);
-    
+
     // Failed details
     if (totalFail > 0) {
       lines.push('');
@@ -149,10 +149,10 @@ export class TestMatrixReporter {
         });
       });
     }
-    
+
     lines.push('');
     lines.push('=' .repeat(80));
-    
+
     return lines.join('\n');
   }
 

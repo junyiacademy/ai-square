@@ -9,14 +9,14 @@ export async function GET(
   try {
     // Try to get user from authentication
     const session = await getUnifiedAuth(request);
-    
+
     // If no auth, check if user info is in query params (for viewing history)
     let userEmail: string | null = null;
     let userId: string | null = null;
-    
+
     if (session?.user.email) {
       userEmail = session.user.email;
-      
+
       // Get user ID from email
       const userRepo = repositoryFactory.getUserRepository();
       const user = await userRepo.findByEmail(userEmail);
@@ -27,7 +27,7 @@ export async function GET(
       // Check for user info from query params
       const { searchParams } = new URL(request.url);
       const emailParam = searchParams.get('userEmail');
-      
+
       if (emailParam) {
         userEmail = emailParam;
         // Get user ID from email
@@ -40,13 +40,13 @@ export async function GET(
         return createUnauthorizedResponse();
       }
     }
-    
+
     // Await params before using
     const { programId } = await params;
-    
+
     const programRepo = repositoryFactory.getProgramRepository();
     const taskRepo = repositoryFactory.getTaskRepository();
-    
+
     // Get program
     const program = await programRepo.findById(programId);
     if (!program) {
@@ -55,7 +55,7 @@ export async function GET(
         { status: 404 }
       );
     }
-    
+
     // Verify ownership - compare user IDs not emails
     if (program.userId !== userId) {
       console.error('Access denied:', {
@@ -68,14 +68,14 @@ export async function GET(
         { status: 403 }
       );
     }
-    
+
     // Check if we should include all tasks (for complete page)
     const { searchParams } = new URL(request.url);
     const includeAllTasks = searchParams.get('includeAllTasks') === 'true';
-    
+
     // Get all tasks for the program
     const tasks = await taskRepo.findByProgram(programId);
-    
+
     console.log('Debug: Tasks loaded for program', programId, {
       tasksCount: tasks?.length || 0,
       includeAllTasks,
@@ -84,12 +84,12 @@ export async function GET(
         title: t.title,
         status: t.status,
         hasContent: !!t.content,
-        hasQuestions: Array.isArray((t.content as Record<string, unknown>)?.questions) 
+        hasQuestions: Array.isArray((t.content as Record<string, unknown>)?.questions)
           ? ((t.content as Record<string, unknown>)?.questions as unknown[]).length > 0
           : false
       })) || []
     });
-    
+
     if (!tasks || tasks.length === 0) {
       console.error('No tasks found for program', programId, {
         programData: program
@@ -99,11 +99,11 @@ export async function GET(
         { status: 404 }
       );
     }
-    
+
     // Find the current task based on currentTaskIndex
     const currentTaskIndex = program.currentTaskIndex || 0;
     const currentTask = tasks[currentTaskIndex] || tasks[0];
-    
+
     // For backward compatibility, if there's only one task, return it as before
     if (tasks.length === 1) {
       return NextResponse.json({
@@ -112,7 +112,7 @@ export async function GET(
         totalTasks: tasks.length
       });
     }
-    
+
     // If includeAllTasks is true, return full task data
     if (includeAllTasks) {
       return NextResponse.json({
@@ -124,14 +124,14 @@ export async function GET(
           id: t.id,
           title: t.title,
           status: t.status,
-          questionsCount: Array.isArray((t.content as Record<string, unknown>)?.questions) 
-            ? ((t.content as Record<string, unknown>)?.questions as unknown[]).length 
+          questionsCount: Array.isArray((t.content as Record<string, unknown>)?.questions)
+            ? ((t.content as Record<string, unknown>)?.questions as unknown[]).length
             : 0
         })),
         totalTasks: tasks.length
       });
     }
-    
+
     // For multiple tasks, return more information
     return NextResponse.json({
       program,

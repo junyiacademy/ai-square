@@ -6,7 +6,7 @@ BEGIN;
 
 -- Engaging with AI
 UPDATE domains
-SET 
+SET
     name = jsonb_build_object(
         'en', 'Engaging with AI',
         'zhTW', '與 AI 互動',
@@ -43,7 +43,7 @@ WHERE id = 'engaging_with_ai';
 
 -- Creating with AI
 UPDATE domains
-SET 
+SET
     name = jsonb_build_object(
         'en', 'Creating with AI',
         'zhTW', '用 AI 創造',
@@ -80,7 +80,7 @@ WHERE id = 'creating_with_ai';
 
 -- Managing AI
 UPDATE domains
-SET 
+SET
     name = jsonb_build_object(
         'en', 'Managing AI',
         'zhTW', '管理 AI',
@@ -117,7 +117,7 @@ WHERE id = 'managing_ai';
 
 -- Designing AI
 UPDATE domains
-SET 
+SET
     name = jsonb_build_object(
         'en', 'Designing AI',
         'zhTW', '設計 AI',

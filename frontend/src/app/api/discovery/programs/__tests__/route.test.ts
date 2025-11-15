@@ -12,7 +12,7 @@ import { getUnifiedAuth } from '@/lib/auth/unified-auth';
 jest.mock('@/lib/repositories/base/repository-factory');
 jest.mock('@/lib/auth/unified-auth', () => ({
   getUnifiedAuth: jest.fn(),
-  createUnauthorizedResponse: jest.fn(() => 
+  createUnauthorizedResponse: jest.fn(() =>
     new Response(
       JSON.stringify({ success: false, error: 'Authentication required' }),
       { status: 401, headers: { 'Content-Type': 'application/json' } }
@@ -256,7 +256,7 @@ describe('/api/discovery/programs', () => {
 
       expect(response.status).toBe(201);
       expect(data.success).toBe(true);
-      
+
       // Should still create program with default values
       expect(mockProgramRepo.create).toHaveBeenCalledWith(
         expect.objectContaining({

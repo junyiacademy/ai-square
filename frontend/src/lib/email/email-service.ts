@@ -131,27 +131,27 @@ class EmailService {
               <div class="logo">🤖 AI Square</div>
               <p>用 AI 學 AI 素養</p>
             </div>
-            
+
             <div class="content">
               <h2>歡迎加入 AI Square！</h2>
               <p>感謝您註冊 AI Square 學習平台。請點擊下方按鈕驗證您的電子郵件地址：</p>
-              
+
               <div style="text-align: center;">
                 <a href="${verificationUrl}" class="button">驗證電子郵件</a>
               </div>
-              
+
               <p>或複製以下連結到瀏覽器：</p>
               <p style="word-break: break-all; background-color: #f5f5f5; padding: 10px; border-radius: 5px;">
                 ${verificationUrl}
               </p>
-              
+
               <div class="warning">
                 <strong>⚠️ 注意：</strong>此驗證連結將在 24 小時後失效。
               </div>
-              
+
               <p>如果您沒有註冊 AI Square 帳號，請忽略此郵件。</p>
             </div>
-            
+
             <div class="footer">
               <p>© 2025 AI Square. All rights reserved.</p>
               <p>此為系統自動發送的郵件，請勿直接回覆。</p>
@@ -233,20 +233,20 @@ class EmailService {
               <div class="logo">🤖 AI Square</div>
               <p>密碼重設請求</p>
             </div>
-            
+
             <div class="content">
               <h2>重設您的密碼</h2>
               <p>我們收到了重設您 AI Square 帳號密碼的請求。請點擊下方按鈕設定新密碼：</p>
-              
+
               <div style="text-align: center;">
                 <a href="${resetUrl}" class="button">重設密碼</a>
               </div>
-              
+
               <p>或複製以下連結到瀏覽器：</p>
               <p style="word-break: break-all; background-color: #f5f5f5; padding: 10px; border-radius: 5px;">
                 ${resetUrl}
               </p>
-              
+
               <div class="warning">
                 <strong>⚠️ 注意：</strong>
                 <ul style="margin: 10px 0;">
@@ -256,7 +256,7 @@ class EmailService {
                 </ul>
               </div>
             </div>
-            
+
             <div class="footer">
               <p>© 2025 AI Square. All rights reserved.</p>
               <p>如有任何問題，請聯繫我們的支援團隊。</p>
@@ -338,32 +338,32 @@ class EmailService {
               <div class="logo">🤖 AI Square</div>
               <p>您的 AI 學習之旅開始了！</p>
             </div>
-            
+
             <div class="content">
               <h2>歡迎，${name}！</h2>
               <p>恭喜您成功驗證電子郵件並加入 AI Square 學習社群。我們很高興您選擇與我們一起探索 AI 的世界。</p>
-              
+
               <h3>🚀 開始您的學習旅程</h3>
-              
+
               <div class="feature">
                 <h4>📊 AI 素養評估</h4>
                 <p>透過我們的評估系統了解您目前的 AI 知識水平，獲得個人化的學習建議。</p>
               </div>
-              
+
               <div class="feature">
                 <h4>🎯 問題導向學習 (PBL)</h4>
                 <p>通過實際案例和互動式學習，深入了解 AI 在各領域的應用。</p>
               </div>
-              
+
               <div class="feature">
                 <h4>🗺️ 職涯探索</h4>
                 <p>探索 AI 相關的職業道路，了解不同角色所需的技能和知識。</p>
               </div>
-              
+
               <div style="text-align: center;">
                 <a href="${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/dashboard" class="button">開始學習</a>
               </div>
-              
+
               <p><strong>學習提示：</strong></p>
               <ul>
                 <li>每天花 15-30 分鐘學習，持續進步</li>
@@ -371,7 +371,7 @@ class EmailService {
                 <li>善用 AI 導師功能，隨時獲得學習支援</li>
               </ul>
             </div>
-            
+
             <div class="footer">
               <p>© 2025 AI Square. All rights reserved.</p>
               <p>期待看到您的學習成果！</p>

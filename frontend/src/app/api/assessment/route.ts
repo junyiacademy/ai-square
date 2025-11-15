@@ -10,11 +10,11 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const lang = searchParams.get('lang') || 'en';
-    
+
     // Use cache
     const cacheKey = `assessment:${lang}`;
     const cached = await cacheService.get(cacheKey);
-    
+
     if (cached) {
       return NextResponse.json(cached, {
         headers: {
@@ -27,19 +27,19 @@ export async function GET(request: NextRequest) {
     // Load assessment scenarios from database
     const scenarioRepo = repositoryFactory.getScenarioRepository();
     const scenarios = await scenarioRepo.findByMode?.('assessment') || [];
-    
+
     if (!scenarios || scenarios.length === 0) {
       return NextResponse.json(
         { error: 'No assessment scenarios found' },
         { status: 404 }
       );
     }
-    
+
     // Get the first active assessment scenario
     const activeScenario = scenarios.find(s => s.status === 'active') || scenarios[0];
-    
+
     console.log(`Loading assessment data from database for scenario: ${activeScenario.id}`);
-    
+
     // Convert scenario data to AssessmentData format
     let assessmentData: AssessmentData; // eslint-disable-line @typescript-eslint/no-unused-vars
     try {
@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
         time_limit_minutes: 30,
         passing_score: 70
       };
-      
+
       // Get questions from assessment data based on language
       let rawQuestions: Record<string, unknown>[] = [];
       if (activeScenario.assessmentData?.questions) {
@@ -59,7 +59,7 @@ export async function GET(request: NextRequest) {
         // Fallback to task templates
         rawQuestions = activeScenario.taskTemplates;
       }
-      
+
       // Get domains from assessment data
       const domains = activeScenario.assessmentData?.domains || {
         engaging_with_ai: { name: 'Engaging with AI', description: 'Understanding AI interactions', questions: 5 },
@@ -67,22 +67,22 @@ export async function GET(request: NextRequest) {
         managing_with_ai: { name: 'Managing AI', description: 'Managing AI systems', questions: 5 },
         designing_with_ai: { name: 'Designing AI', description: 'Designing AI solutions', questions: 5 }
       };
-      
+
       // Process questions to ensure they have the correct structure
       const processedQuestions = rawQuestions.map((q: Record<string, unknown>) => {
         // Handle multilingual fields
         const questionObj = q.question as Record<string, unknown> | string | null;
-        const question = typeof questionObj === 'object' && questionObj !== null 
+        const question = typeof questionObj === 'object' && questionObj !== null
           ? (questionObj[lang] as string) || (questionObj['en'] as string) || ''
           : (questionObj as string) || '';
-        
+
         const options = q.options;
-        
+
         const explanationObj = q.explanation as Record<string, unknown> | string | null;
         const explanation = typeof explanationObj === 'object' && explanationObj !== null
           ? (explanationObj[lang] as string) || (explanationObj['en'] as string) || ''
           : (explanationObj as string) || '';
-        
+
         return {
           ...q,
           question,
@@ -91,24 +91,24 @@ export async function GET(request: NextRequest) {
           domain: q.domain || 'engaging_with_ai' // Default domain if not specified
         };
       });
-      
+
       // Return the assessment data
       const result = {
         assessment_config: assessmentConfig,
         domains: domains,
         questions: processedQuestions,
       };
-      
+
       // Store in cache
       await cacheService.set(cacheKey, result, { ttl: 60 * 60 * 1000 }); // 1 hour
-      
+
       return NextResponse.json(result, {
         headers: {
           'Cache-Control': 'public, max-age=3600, stale-while-revalidate=86400',
           'X-Cache': 'MISS'
         }
       });
-      
+
     } catch (error) {
       console.error('Error processing assessment data:', error);
       throw error;
@@ -117,7 +117,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('Error loading assessment data:', error);
     return NextResponse.json(
-      { 
+      {
         error: 'Failed to load assessment data',
         details: error instanceof Error ? error.message : 'Unknown error',
         stack: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.stack : undefined) : undefined

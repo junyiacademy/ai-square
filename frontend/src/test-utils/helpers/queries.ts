@@ -13,7 +13,7 @@ export const getByTextInContainer = (
   containerSelector: string,
   text: string | RegExp
 ) => {
-  const container = screen.getByTestId(containerSelector) || 
+  const container = screen.getByTestId(containerSelector) ||
                    document.querySelector(containerSelector);
   if (!container) {
     throw new Error(`Container with selector "${containerSelector}" not found`);
@@ -40,23 +40,23 @@ export const getByTextInRole = (
 export const getStatisticByLabel = (label: string): HTMLElement => {
   // Find the label element
   const labelElement = screen.getByText(label);
-  
+
   // Find the parent container (usually a div with specific class)
   let parent = labelElement.parentElement;
   while (parent && !parent.classList.contains('text-center')) {
     parent = parent.parentElement;
   }
-  
+
   if (!parent) {
     throw new Error(`Could not find parent container for label: ${label}`);
   }
-  
+
   // Look for the value element (usually the first child with large font)
   const valueElement = parent.querySelector('.text-2xl, .text-3xl, .font-bold');
   if (!valueElement) {
     throw new Error(`Could not find value element for label: ${label}`);
   }
-  
+
   return valueElement as HTMLElement;
 };
 
@@ -65,20 +65,20 @@ export const getStatisticByLabel = (label: string): HTMLElement => {
  */
 export const getBadgeByCategory = (badgeName: string, category: 'earned' | 'available') => {
   const badgeElements = screen.getAllByText(badgeName);
-  
+
   for (const badge of badgeElements) {
     const container = badge.closest('.bg-white, .bg-gradient-to-br');
     if (!container) continue;
-    
+
     const statusText = within(container as HTMLElement).queryByText(
       category === 'earned' ? '已獲得' : '待獲得'
     );
-    
+
     if (statusText) {
       return badge;
     }
   }
-  
+
   throw new Error(`Could not find ${category} badge: ${badgeName}`);
 };
 
@@ -147,14 +147,14 @@ export const getByTextWithContext = (
   contextText: string | RegExp
 ) => {
   const elements = screen.getAllByText(text);
-  
+
   for (const element of elements) {
     const container = element.closest('div, section, article');
     if (container && within(container as HTMLElement).queryByText(contextText)) {
       return element;
     }
   }
-  
+
   throw new Error(
     `Could not find element with text "${text}" and context "${contextText}"`
   );

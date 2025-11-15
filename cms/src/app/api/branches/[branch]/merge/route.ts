@@ -9,7 +9,7 @@ export async function POST(
   try {
     const { branch } = await params;
     const { prNumber, deleteAfterMerge = true } = await request.json();
-    
+
     const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
     const owner = process.env.GITHUB_OWNER || 'junyiacademy';
     const repo = process.env.GITHUB_REPO || 'ai-square';
@@ -67,7 +67,7 @@ export async function POST(
   } catch (error) {
     console.error('Merge PR error:', error);
     const octokitError = error as OctokitError;
-    
+
     if (octokitError.status === 404) {
       return NextResponse.json(
         { error: 'PR not found' },
@@ -81,7 +81,7 @@ export async function POST(
         { status: 405 }
       );
     }
-    
+
     return NextResponse.json(
       { error: 'Failed to merge PR' },
       { status: 500 }

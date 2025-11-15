@@ -26,7 +26,7 @@ async function loadAssessmentScenarios() {
     const data = parse(yamlContent);
 
     const scenarioId = uuidv4();
-    
+
     // 準備多語言標題和描述
     const title = { en: data.assessment_config.title };
     const description = { en: data.assessment_config.description };
@@ -55,7 +55,7 @@ async function loadAssessmentScenarios() {
     await pool.query(`
       INSERT INTO scenarios (
         id, mode, status, source_type, source_path,
-        title, description, 
+        title, description,
         difficulty, estimated_minutes,
         task_templates, assessment_data,
         created_at, updated_at

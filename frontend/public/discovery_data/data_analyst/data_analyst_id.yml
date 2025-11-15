@@ -6,11 +6,11 @@ metadata:
   title: "Peramal Data - Analis Data"
   short_description: "Temukan kebenaran tersembunyi di lautan data"
   long_description: |
-    Anda adalah seorang peramal magang di "Kuil Peramal Data", memiliki kemampuan 
-    mistis untuk melihat tren masa depan dalam data yang kacau. Di kuil yang dipenuhi 
-    angka dan grafik ini, setiap titik data mengandung pesan penting, dan misi Anda 
+    Anda adalah seorang peramal magang di "Kuil Peramal Data", memiliki kemampuan
+    mistis untuk melihat tren masa depan dalam data yang kacau. Di kuil yang dipenuhi
+    angka dan grafik ini, setiap titik data mengandung pesan penting, dan misi Anda
     adalah menguraikan rahasia di balik angka-angka ini.
-  
+
   estimated_hours: 50
   skill_focus:
     - data_alchemy
@@ -20,20 +20,20 @@ metadata:
 world_setting:
   name: "Kuil Peramal Data"
   description: |
-    Kuil Peramal Data adalah tempat suci misterius yang mengumpulkan data dari seluruh 
-    dunia. Di sini, analis data dilatih sebagai peramal yang dapat menafsirkan bahasa 
+    Kuil Peramal Data adalah tempat suci misterius yang mengumpulkan data dari seluruh
+    dunia. Di sini, analis data dilatih sebagai peramal yang dapat menafsirkan bahasa
     angka dan mengungkap kebenaran yang membentuk keputusan di seluruh dunia.
-  
+
   atmosphere: "mystical_analytical"
   visual_theme: "digital_temple"
 starting_scenario:
   title: "Inisiasi di Kuil"
   description: |
-    Peramal Mentor yang Bijaksana menyambut Anda di kuil, berbicara dalam teka-teki 
-    tentang rahasia data. Namun ancaman mengintai: Chaos, sang penghancur data, 
-    mencemari sumber data dan menyebarkan analisis yang menyesatkan. Anda harus 
+    Peramal Mentor yang Bijaksana menyambut Anda di kuil, berbicara dalam teka-teki
+    tentang rahasia data. Namun ancaman mengintai: Chaos, sang penghancur data,
+    mencemari sumber data dan menyebarkan analisis yang menyesatkan. Anda harus
     menggunakan metode statistik murni untuk menemukan kebenaran di tengah kebingungan.
-  
+
   initial_tasks:
     - learn_data_basics
     - master_tools

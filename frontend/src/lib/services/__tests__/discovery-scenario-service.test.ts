@@ -115,14 +115,14 @@ describe('DiscoveryScenarioService', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     // Mock date to ensure consistent timestamps
     jest.useFakeTimers();
     jest.setSystemTime(new Date('2024-01-01'));
 
     // Setup repository mock
     mockScenarioRepo = {
-      create: jest.fn().mockImplementation((scenario) => 
+      create: jest.fn().mockImplementation((scenario) =>
         Promise.resolve({ ...scenario, id: 'scenario-123' })
       ),
       findBySource: jest.fn().mockResolvedValue([])

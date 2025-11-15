@@ -6,11 +6,11 @@ metadata:
   title: "Oráculo de Dados - Analista de Dados"
   short_description: "Descubra verdades ocultas no oceano de dados"
   long_description: |
-    Você é um oráculo aprendiz no "Templo do Oráculo de Dados", possuindo a 
-    habilidade mística de ver tendências futuras em dados caóticos. Neste templo 
-    cheio de números e gráficos, cada ponto de dados contém mensagens importantes, 
+    Você é um oráculo aprendiz no "Templo do Oráculo de Dados", possuindo a
+    habilidade mística de ver tendências futuras em dados caóticos. Neste templo
+    cheio de números e gráficos, cada ponto de dados contém mensagens importantes,
     e sua missão é decifrar os segredos por trás desses números.
-  
+
   estimated_hours: 50
   skill_focus:
     - data_alchemy
@@ -20,20 +20,20 @@ metadata:
 world_setting:
   name: "Templo do Oráculo de Dados"
   description: |
-    O Templo do Oráculo de Dados é um santuário misterioso que coleta dados de todo 
-    o mundo. Aqui, analistas de dados são treinados como oráculos que podem interpretar 
+    O Templo do Oráculo de Dados é um santuário misterioso que coleta dados de todo
+    o mundo. Aqui, analistas de dados são treinados como oráculos que podem interpretar
     a linguagem dos números e revelar verdades que moldam decisões em todos os reinos.
-  
+
   atmosphere: "mystical_analytical"
   visual_theme: "digital_temple"
 starting_scenario:
   title: "Iniciação no Templo"
   description: |
-    O Sábio Mentor Oráculo dá as boas-vindas ao templo, falando em enigmas sobre 
-    os segredos dos dados. Mas uma ameaça paira: Chaos, o destruidor de dados, está 
-    poluindo fontes de dados e espalhando análises enganosas. Você deve usar métodos 
+    O Sábio Mentor Oráculo dá as boas-vindas ao templo, falando em enigmas sobre
+    os segredos dos dados. Mas uma ameaça paira: Chaos, o destruidor de dados, está
+    poluindo fontes de dados e espalhando análises enganosas. Você deve usar métodos
     estatísticos puros para encontrar a verdade em meio à confusão.
-  
+
   initial_tasks:
     - learn_data_basics
     - master_tools

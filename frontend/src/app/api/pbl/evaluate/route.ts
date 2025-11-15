@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { VertexAI, SchemaType } from '@google-cloud/vertexai';
-import { 
-  EvaluateRequestBody, 
-  Conversation 
+import {
+  EvaluateRequestBody,
+  Conversation
 } from '@/types/pbl-evaluate';
 import { ErrorResponse } from '@/types/api';
 import { getUnifiedAuth } from '@/lib/auth/unified-auth';
@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
   try {
     // Use unified authentication
     const session = await getUnifiedAuth(request);
-    
+
     if (!session?.user?.email) {
       return NextResponse.json<ErrorResponse>(
         { error: 'User authentication required' },
@@ -20,8 +20,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { 
-      conversations, 
+    const {
+      conversations,
       task,
       targetDomains,
       focusKSA,
@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-    
+
     console.log('Evaluating task:', task.id, 'with', conversations.length, 'conversations');
 
     // Get target language
@@ -76,7 +76,7 @@ ${targetDomains && targetDomains.length > 0 ? `
 Evaluation Guidelines:
 - No meaningful engagement (only greetings like "hi", "hello"): 10-25 points
 - Minimal engagement (basic questions, simple statements): 25-40 points
-- Basic engagement (shows interest, asks relevant questions): 40-60 points  
+- Basic engagement (shows interest, asks relevant questions): 40-60 points
 - Good engagement (thoughtful questions, follows up, explores ideas): 60-75 points
 - Excellent engagement (deep exploration, insightful questions): 75-90 points
 - Outstanding performance (exceptional understanding, creative approaches): 90-100 points
@@ -119,7 +119,7 @@ Please evaluate and provide:
    - DO NOT comment on every message or provide generic feedback like "just said hi"
 
 6. Strengths: 1-2 most significant strengths with KSA codes
-7. Areas for improvement: 1-2 key areas with KSA codes  
+7. Areas for improvement: 1-2 key areas with KSA codes
 8. Next steps: 1-2 actionable suggestions with KSA codes
 
 Provide a comprehensive evaluation including:
@@ -136,9 +136,9 @@ SPECIAL CASE - MINIMAL ENGAGEMENT:
 If the learner only sent greetings or minimal responses:
 - Overall score: 15-25 points
 - Knowledge: 0-5 (minimal or no knowledge demonstrated)
-- Skills: 0-5 (minimal or no skills demonstrated)  
+- Skills: 0-5 (minimal or no skills demonstrated)
 - Attitudes: 15-25 (showed willingness to start)
-- Domain scores: 
+- Domain scores:
   - engaging_with_ai: 10-15 (initiated interaction)
   - Other domains: 0-5 (minimal demonstration)
 - Give partial credit for any attempt at engagement
@@ -158,7 +158,7 @@ Important evaluation principles:
    - Quality of interaction with AI (asking good questions, iterating on responses)
    - Understanding demonstrated through their responses
 
-REMEMBER: ALL text in your response MUST be in ${targetLanguage}. 
+REMEMBER: ALL text in your response MUST be in ${targetLanguage}.
 This includes strengths, improvements, nextSteps, and conversation insights (both quotes and reasons).
 ${languageCode !== 'en' ? `Do NOT use any English text.` : ''}
 `;
@@ -168,17 +168,17 @@ ${languageCode !== 'en' ? `Do NOT use any English text.` : ''}
       project: process.env.GOOGLE_CLOUD_PROJECT || 'ai-square-463013',
       location: process.env.VERTEX_AI_LOCATION || 'us-central1',
     });
-    
+
     // Get the generative model
     const model = vertexAI.getGenerativeModel({
       model: 'gemini-2.5-flash',
-      systemInstruction: `You are a multilingual AI literacy education expert. 
-CRITICAL: You must ALWAYS respond in the EXACT language specified in the prompt. 
+      systemInstruction: `You are a multilingual AI literacy education expert.
+CRITICAL: You must ALWAYS respond in the EXACT language specified in the prompt.
 Never mix languages. ALL text fields must be in the target language.
 For Traditional Chinese (繁體中文), use Traditional Chinese ONLY.
 For Simplified Chinese (简体中文), use Simplified Chinese ONLY.`,
     });
-    
+
     // Call AI for evaluation
     const result = await model.generateContent({
       contents: [
@@ -274,10 +274,10 @@ For Simplified Chinese (简体中文), use Simplified Chinese ONLY.`,
         }
       }
     });
-    
+
     const response = result.response;
     const text = response.candidates?.[0]?.content?.parts?.[0]?.text || '';
-    
+
     // Parse JSON response - should be clean JSON due to responseSchema
     let evaluation;
     try {
@@ -287,7 +287,7 @@ For Simplified Chinese (简体中文), use Simplified Chinese ONLY.`,
     } catch (parseError) {
       console.error('Error parsing AI response:', parseError);
       console.error('Raw response:', text);
-      
+
       // Fallback evaluation (conservative scoring)
       evaluation = {
         score: 20,
@@ -350,19 +350,19 @@ For Simplified Chinese (简体中文), use Simplified Chinese ONLY.`,
 
   } catch (error) {
     console.error('Error in evaluation:', error);
-    
+
     // Provide more detailed error information
     let errorMessage = 'Failed to evaluate';
     const statusCode = 500;
-    
+
     if (error instanceof Error) {
       errorMessage = error.message;
       console.error('Error details:', error.stack);
     }
-    
+
     return NextResponse.json(
-      { 
-        success: false, 
+      {
+        success: false,
         error: errorMessage,
         details: process.env.NODE_ENV === 'development' ? error : undefined
       },

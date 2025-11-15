@@ -1,9 +1,9 @@
-import { 
-  VertexAIService, 
-  createPBLVertexAIService, 
+import {
+  VertexAIService,
+  createPBLVertexAIService,
   vertexAIResponseToConversation,
   getVertexAI,
-  VertexAIResponse 
+  VertexAIResponse
 } from '../vertex-ai-service';
 import { GoogleAuth } from 'google-auth-library';
 import { VertexAI } from '@google-cloud/vertexai';
@@ -37,7 +37,7 @@ global.fetch = jest.fn();
 
 describe('VertexAIService', () => {
   let service: VertexAIService;
-  
+
   beforeEach(() => {
     jest.clearAllMocks();
     process.env.GOOGLE_CLOUD_PROJECT = 'test-project';
@@ -47,15 +47,15 @@ describe('VertexAIService', () => {
       writable: true,
       configurable: true
     });
-    
+
     const config = {
       systemPrompt: 'You are a helpful AI assistant',
       temperature: 0.7,
       maxOutputTokens: 4096
     };
-    
+
     service = new VertexAIService(config);
-    
+
     // Mock fetch responses
     (global.fetch as jest.Mock).mockResolvedValue({
       ok: true,
@@ -93,11 +93,11 @@ describe('VertexAIService', () => {
         writable: true,
         configurable: true
       });
-      
+
       expect(() => new VertexAIService({
         systemPrompt: 'Test'
       })).toThrow('GOOGLE_CLOUD_PROJECT environment variable is required');
-      
+
       // Restore
       Object.defineProperty(process.env, 'NODE_ENV', {
         value: originalEnv,
@@ -108,7 +108,7 @@ describe('VertexAIService', () => {
 
     it('should not throw error when project ID is missing in test', () => {
       delete process.env.GOOGLE_CLOUD_PROJECT;
-      
+
       const testService = new VertexAIService({
         systemPrompt: 'Test'
       });
@@ -119,13 +119,13 @@ describe('VertexAIService', () => {
   describe('sendMessage', () => {
     it('should send message and receive response', async () => {
       const response = await service.sendMessage('Hello AI');
-      
+
       expect(response).toEqual({
         content: 'Mock AI response',
         tokensUsed: expect.any(Number),
         processingTime: expect.any(Number)
       });
-      
+
       // In test mode, fetch should not be called
       expect(global.fetch).not.toHaveBeenCalled();
     });
@@ -135,7 +135,7 @@ describe('VertexAIService', () => {
         userId: '123',
         sessionId: 'abc'
       });
-      
+
       expect(response).toEqual({
         content: 'Mock AI response',
         tokensUsed: expect.any(Number),
@@ -152,20 +152,20 @@ describe('VertexAIService', () => {
         configurable: true
       });
       process.env.GOOGLE_CLOUD_PROJECT = 'test-project';
-      
+
       const prodService = new VertexAIService({
         systemPrompt: 'Test'
       });
-      
+
       (global.fetch as jest.Mock).mockResolvedValueOnce({
         ok: false,
         status: 500,
         text: async () => 'Internal Server Error'
       });
-      
+
       await expect(prodService.sendMessage('Hello'))
         .rejects.toThrow();
-      
+
       // Restore original env
       Object.defineProperty(process.env, 'NODE_ENV', {
         value: originalEnv,
@@ -191,10 +191,10 @@ describe('VertexAIService', () => {
     it('should calculate token usage based on message length in test mode', async () => {
       const shortMessage = 'Hi';
       const longMessage = 'This is a much longer message that should result in more tokens being calculated';
-      
+
       const shortResponse = await service.sendMessage(shortMessage);
       const longResponse = await service.sendMessage(longMessage);
-      
+
       expect(longResponse.tokensUsed! > shortResponse.tokensUsed!).toBe(true);
     });
   });
@@ -203,9 +203,9 @@ describe('VertexAIService', () => {
     it('should return chat history', async () => {
       await service.sendMessage('First message');
       await service.sendMessage('Second message');
-      
+
       const history = service.getChatHistory();
-      
+
       expect(history).toHaveLength(6); // System prompt + response + 2 user messages + 2 AI responses
       expect(history[0].role).toBe('user'); // System prompt
       expect(history[1].role).toBe('model'); // System response
@@ -217,7 +217,7 @@ describe('VertexAIService', () => {
 
     it('should include system prompt in history', () => {
       const history = service.getChatHistory();
-      
+
       expect(history).toHaveLength(2); // System prompt + response
       expect(history[0].role).toBe('user');
       expect(history[0].content).toContain('You are a helpful AI assistant');
@@ -230,12 +230,12 @@ describe('VertexAIService', () => {
     it('should reset chat history but keep system prompt', async () => {
       await service.sendMessage('Message 1');
       await service.sendMessage('Message 2');
-      
+
       let history = service.getChatHistory();
       expect(history.length).toBeGreaterThan(2);
-      
+
       service.resetChat();
-      
+
       history = service.getChatHistory();
       expect(history).toHaveLength(2); // System prompt + response
       expect(history[0].content).toContain('You are a helpful AI assistant');
@@ -247,10 +247,10 @@ describe('VertexAIService', () => {
     it('should handle conversation flow', async () => {
       const response1 = await service.sendMessage('First question');
       expect(response1.content).toBe('Mock AI response');
-      
+
       const response2 = await service.sendMessage('Follow up');
       expect(response2.content).toBe('Mock AI response');
-      
+
       const history = service.getChatHistory();
       expect(history.length).toBe(6); // System + 2 user messages + 2 AI responses + system response
     });
@@ -258,7 +258,7 @@ describe('VertexAIService', () => {
     it('should maintain context between messages', async () => {
       await service.sendMessage('My name is John');
       await service.sendMessage('What is my name?');
-      
+
       const history = service.getChatHistory();
       expect(history.some(h => h.content.includes('John'))).toBe(true);
     });
@@ -277,12 +277,12 @@ describe('VertexAIService', () => {
         getClient: jest.fn().mockRejectedValue(new Error('Auth failed')),
         getProjectId: jest.fn()
       } as any));
-      
+
       // In test mode, constructor doesn't throw
       const failService = new VertexAIService({
         systemPrompt: 'Test'
       });
-      
+
       expect(failService).toBeDefined();
     });
   });
@@ -290,7 +290,7 @@ describe('VertexAIService', () => {
   describe('token tracking', () => {
     it('should estimate token usage based on message length', async () => {
       const response = await service.sendMessage('Hello');
-      
+
       // In test mode, tokens are estimated
       expect(response.tokensUsed).toBeGreaterThan(0);
     });
@@ -298,7 +298,7 @@ describe('VertexAIService', () => {
     it('should calculate more tokens for longer messages', async () => {
       const shortResponse = await service.sendMessage('Hi');
       const longResponse = await service.sendMessage('This is a much longer message');
-      
+
       expect(longResponse.tokensUsed! > shortResponse.tokensUsed!).toBe(true);
     });
   });
@@ -306,7 +306,7 @@ describe('VertexAIService', () => {
   describe('processing time', () => {
     it('should measure processing time', async () => {
       const response = await service.sendMessage('Test');
-      
+
       expect(response.processingTime).toBeGreaterThanOrEqual(1);
       expect(response.processingTime).toBeLessThan(30000);
     });
@@ -429,9 +429,9 @@ describe('createPBLVertexAIService', () => {
 
   it('should create VertexAI service with PBL configuration in English', () => {
     const service = createPBLVertexAIService(mockAIModule, mockStageContext, 'en');
-    
+
     expect(service).toBeInstanceOf(VertexAIService);
-    
+
     const history = service.getChatHistory();
     expect(history[0].content).toContain('a helpful tutor');
     expect(history[0].content).toContain('Problem Analysis');
@@ -441,9 +441,9 @@ describe('createPBLVertexAIService', () => {
 
   it('should create VertexAI service with PBL configuration in Traditional Chinese', () => {
     const service = createPBLVertexAIService(mockAIModule, mockStageContext, 'zhTW');
-    
+
     expect(service).toBeInstanceOf(VertexAIService);
-    
+
     const history = service.getChatHistory();
     expect(history[0].content).toContain('Always respond in Traditional Chinese');
     expect(history[0].content).toContain('繁體中文');
@@ -454,9 +454,9 @@ describe('createPBLVertexAIService', () => {
       ...mockAIModule,
       persona: undefined
     };
-    
+
     const service = createPBLVertexAIService(aiModuleWithoutPersona, mockStageContext);
-    
+
     const history = service.getChatHistory();
     expect(history[0].content).toContain('an AI assistant');
     expect(history[0].content).toContain('a helpful assistant');
@@ -464,10 +464,10 @@ describe('createPBLVertexAIService', () => {
 
   it('should include all task instructions in system prompt', () => {
     const service = createPBLVertexAIService(mockAIModule, mockStageContext);
-    
+
     const history = service.getChatHistory();
     const systemPrompt = history[0].content;
-    
+
     mockStageContext.taskInstructions.forEach((instruction, index) => {
       expect(systemPrompt).toContain(`${index + 1}. ${instruction}`);
     });
@@ -555,7 +555,7 @@ describe('getVertexAI', () => {
 
   it('should create VertexAI instance with environment configuration', () => {
     const vertexAI = getVertexAI();
-    
+
     expect(VertexAI).toHaveBeenCalledWith({
       project: 'test-project',
       location: 'us-west1'
@@ -565,9 +565,9 @@ describe('getVertexAI', () => {
 
   it('should use default location when not specified', () => {
     delete process.env.VERTEX_AI_LOCATION;
-    
+
     const vertexAI = getVertexAI();
-    
+
     expect(VertexAI).toHaveBeenCalledWith({
       project: 'test-project',
       location: 'us-central1'

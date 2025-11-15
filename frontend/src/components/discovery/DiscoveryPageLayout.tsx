@@ -9,9 +9,9 @@ interface DiscoveryPageLayoutProps {
   requiresAssessment?: boolean;
 }
 
-export default function DiscoveryPageLayout({ 
-  children, 
-  requiresAssessment = false 
+export default function DiscoveryPageLayout({
+  children,
+  requiresAssessment = false
 }: DiscoveryPageLayoutProps) {
   const { isLoading, assessmentResults, achievementCount } = useDiscoveryData();
 
@@ -30,7 +30,7 @@ export default function DiscoveryPageLayout({
   if (requiresAssessment && !assessmentResults) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-        <DiscoveryHeader 
+        <DiscoveryHeader
           hasAssessmentResults={false}
           achievementCount={achievementCount}
           workspaceCount={0}
@@ -53,12 +53,12 @@ export default function DiscoveryPageLayout({
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      <DiscoveryHeader 
+      <DiscoveryHeader
         hasAssessmentResults={!!assessmentResults}
         achievementCount={achievementCount}
         workspaceCount={0}
       />
-      
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {children}
       </div>

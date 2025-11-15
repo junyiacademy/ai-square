@@ -27,30 +27,30 @@ export async function GET(request: NextRequest) {
     // Get language from query params
     const { searchParams } = new URL(request.url);
     const language = searchParams.get('lang') || 'en';
-    
+
     // Get user session to include learning progress
     const { getUnifiedAuth } = await import('@/lib/auth/unified-auth');
     const session = await getUnifiedAuth(request);
     const userId = session?.user.id || session?.user.email;
     const isTest = process.env.NODE_ENV === 'test' || Boolean(process.env.JEST_WORKER_ID);
-    
+
     // 匿名請求才使用快取；測試環境使用本地測試快取以符合既有測試
     const key = !userId ? cacheKeys.discoveryScenarios(language) : undefined;
 
     const scenarioRepo = repositoryFactory.getScenarioRepository();
     const programRepo = userId ? repositoryFactory.getProgramRepository() : null;
-    
+
     const compute = async () => {
       // 從資料庫獲取 scenarios
       const rawScenarios = await scenarioRepo.findByMode?.('discovery');
       const scenarios = rawScenarios || [];
-    
+
       // Get user programs if logged in
       const userPrograms: Map<string, unknown> = new Map();
       if (userId && programRepo) {
         const programs = await programRepo.findByUser(userId);
         const discoveryPrograms = programs.filter(p => p.mode === 'discovery');
-        
+
         // Group by scenario
         discoveryPrograms.forEach(program => {
           const scenarioId = program.scenarioId;
@@ -62,11 +62,11 @@ export async function GET(request: NextRequest) {
               bestScore: 0
             });
           }
-          
+
           const entry = userPrograms.get(scenarioId) as Record<string, unknown>;
           const programsList = entry.programs as unknown[];
           programsList.push(program);
-          
+
           if (program.status === 'completed') {
             entry.completedCount = (entry.completedCount as number) + 1;
             const score = program.totalScore || 0;
@@ -81,14 +81,14 @@ export async function GET(request: NextRequest) {
           }
         });
       }
-    
-    
+
+
     // 處理多語言字段並轉換為前端期望的格式
     const processedScenarios = scenarios.map(scenario => {
       // 處理 title 多語言字段
       const titleObj = scenario.title as Record<string, string>;
       const descObj = scenario.description as Record<string, string>;
-      
+
       // Get user progress for this scenario
       const userProgress = userPrograms.get(scenario.id);
       let primaryStatus: 'mastered' | 'in-progress' | 'new' = 'new';
@@ -99,7 +99,7 @@ export async function GET(request: NextRequest) {
         totalAttempts: 0,
         bestScore: 0
       };
-      
+
       if (userProgress) {
         const progress = userProgress as Record<string, unknown>;
         stats = {
@@ -108,7 +108,7 @@ export async function GET(request: NextRequest) {
           totalAttempts: (progress.programs as unknown[]).length,
           bestScore: progress.bestScore as number
         };
-        
+
         if (stats.completedCount > 0) {
           primaryStatus = 'mastered';
           currentProgress = 100;
@@ -120,8 +120,8 @@ export async function GET(request: NextRequest) {
           currentProgress = Math.round((completed / total) * 100);
         }
       }
-      
-      
+
+
       return {
         ...scenario,
         title: titleObj?.[language] || titleObj?.en || 'Untitled',
@@ -168,15 +168,15 @@ export async function GET(request: NextRequest) {
           headers: { 'Content-Type': 'application/json', 'X-Cache': 'HIT' }
         });
       }
-      
+
       // 沒有快取或快取為空，重新計算
       const result = await compute();
-      
+
       // 只有當結果不為空時才快取
       if (result.data?.scenarios?.length > 0) {
         await distributedCacheService.set(key, result, { ttl: TTL.DYNAMIC_5M });
       }
-      
+
       return new NextResponse(JSON.stringify(result), {
         headers: {
           'Content-Type': 'application/json',

@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
 
     // Store the error
     errorStore.unshift(errorReport);
-    
+
     // Keep only recent errors
     if (errorStore.length > MAX_STORED_ERRORS) {
       errorStore.splice(MAX_STORED_ERRORS);
@@ -42,9 +42,9 @@ export async function POST(request: NextRequest) {
     // 3. Aggregate and analyze patterns
 
     return NextResponse.json(
-      { 
-        success: true, 
-        errorId: errorReport.id 
+      {
+        success: true,
+        errorId: errorReport.id
       },
       { status: 201 }
     );
@@ -74,7 +74,7 @@ export async function GET(request: NextRequest) {
 
     // Filter by component
     if (component) {
-      filteredErrors = filteredErrors.filter(error => 
+      filteredErrors = filteredErrors.filter(error =>
         error.context.component === component
       );
     }
@@ -99,7 +99,7 @@ export async function GET(request: NextRequest) {
     const startIndex = paginationParams.offset || 0;
     const endIndex = startIndex + (paginationParams.limit || 20);
     const paginatedErrors = filteredErrors.slice(startIndex, endIndex);
-    
+
     const paginatedResponse = createPaginatedResponse(
       paginatedErrors,
       filteredErrors.length,

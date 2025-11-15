@@ -126,7 +126,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Error in POST /api/discovery/programs:', error);
     return NextResponse.json(
-      { 
+      {
         success: false,
         error: 'Internal server error',
         meta: {
@@ -180,7 +180,7 @@ export async function GET(request: NextRequest) {
 
     // Add progress metrics
     const programsWithProgress = programs.map(program => {
-      const completionRate = program.totalTaskCount > 0 
+      const completionRate = program.totalTaskCount > 0
         ? Math.round((program.completedTaskCount / program.totalTaskCount) * 100)
         : 0;
 
@@ -196,15 +196,15 @@ export async function GET(request: NextRequest) {
           tasksCompleted: program.completedTaskCount,
           totalTasks: program.totalTaskCount,
           careerReadiness: programDiscoveryData.careerReadiness || 0,
-          skillGaps: Array.isArray(programDiscoveryData.skillGapAnalysis) 
-            ? programDiscoveryData.skillGapAnalysis.length 
+          skillGaps: Array.isArray(programDiscoveryData.skillGapAnalysis)
+            ? programDiscoveryData.skillGapAnalysis.length
             : 0
         }
       };
     });
 
     // Sort by most recent first
-    programsWithProgress.sort((a, b) => 
+    programsWithProgress.sort((a, b) =>
       new Date(b.lastActivityAt).getTime() - new Date(a.lastActivityAt).getTime()
     );
 
@@ -225,7 +225,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('Error in GET /api/discovery/programs:', error);
     return NextResponse.json(
-      { 
+      {
         success: false,
         error: 'Internal server error',
         meta: {

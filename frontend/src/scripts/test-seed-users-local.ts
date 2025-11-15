@@ -31,11 +31,11 @@ async function testSeedUsers() {
     console.log('\n🔍 Checking users table schema...');
     const schemaResult = await pool.query(`
       SELECT column_name, data_type, is_nullable, column_default
-      FROM information_schema.columns 
+      FROM information_schema.columns
       WHERE table_name = 'users'
       ORDER BY ordinal_position
     `);
-    
+
     console.log('📊 Users table columns:');
     schemaResult.rows.forEach(col => {
       console.log(`  - ${col.column_name}: ${col.data_type} ${col.is_nullable === 'NO' ? '(NOT NULL)' : ''} ${col.column_default ? `DEFAULT ${col.column_default}` : ''}`);
@@ -60,7 +60,7 @@ async function testSeedUsers() {
         VALUES ($1, $2, $3, $4, $5)
       `, ['test-minimal@example.com', 'hash', 'Test User', 'student', true]);
       console.log('✅ Minimal INSERT successful (defaults work)');
-      
+
       // Clean up
       await pool.query('DELETE FROM users WHERE email = $1', ['test-minimal@example.com']);
     } catch (error: unknown) {
@@ -78,7 +78,7 @@ async function testSeedUsers() {
         ['test-current@example.com', passwordHash, 'Test User', 'student', true, JSON.stringify({ seeded: true })]
       );
       console.log('✅ Current seed-users INSERT successful');
-      
+
       // Clean up
       await pool.query('DELETE FROM users WHERE email = $1', ['test-current@example.com']);
     } catch (error: unknown) {
@@ -87,10 +87,10 @@ async function testSeedUsers() {
 
     // Test 4: Find all required fields
     console.log('\n🔍 Finding all required fields without defaults...');
-    const requiredFields = schemaResult.rows.filter(col => 
+    const requiredFields = schemaResult.rows.filter(col =>
       col.is_nullable === 'NO' && !col.column_default
     );
-    
+
     if (requiredFields.length > 0) {
       console.log('⚠️  Required fields without defaults:');
       requiredFields.forEach(field => {

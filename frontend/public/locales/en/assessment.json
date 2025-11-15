@@ -38,7 +38,7 @@
   },
   "difficulty": {
     "basic": "Basic",
-    "intermediate": "Intermediate", 
+    "intermediate": "Intermediate",
     "advanced": "Advanced"
   },
   "results": {
@@ -78,7 +78,7 @@
     "autoSaved": "Results automatically saved",
     "tabs": {
       "overview": "Overview",
-      "domains": "Domains", 
+      "domains": "Domains",
       "recommendations": "Recommendations",
       "ksa": "KSA Analysis",
       "knowledge-graph": "Knowledge Graph"

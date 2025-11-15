@@ -27,12 +27,12 @@ describe('LoadingSpinner', () => {
     let spinner = screen.getByRole('status');
     expect(spinner.className).toContain('h-4');
     expect(spinner.className).toContain('w-4');
-    
+
     rerender(<LoadingSpinner size="md" />);
     spinner = screen.getByRole('status');
     expect(spinner.className).toContain('h-8');
     expect(spinner.className).toContain('w-8');
-    
+
     rerender(<LoadingSpinner size="lg" />);
     spinner = screen.getByRole('status');
     expect(spinner.className).toContain('h-12');
@@ -68,10 +68,10 @@ describe('LoadingSpinner', () => {
   it('should render with all size variations', () => {
     const { rerender } = render(<LoadingSpinner size="sm" />);
     expect(screen.getByRole('status')).toBeInTheDocument();
-    
+
     rerender(<LoadingSpinner size="md" />);
     expect(screen.getByRole('status')).toBeInTheDocument();
-    
+
     rerender(<LoadingSpinner size="lg" />);
     expect(screen.getByRole('status')).toBeInTheDocument();
   });

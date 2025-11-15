@@ -243,7 +243,7 @@ tasks:
         - Ensuring privacy and ethical data collection
         - Analyzing survey results
         - Identifying meaningful patterns
-        
+
         Focus on helping them understand digital wellness challenges among teens.
 
   - id: task-2
@@ -335,7 +335,7 @@ tasks:
         - Writing engaging social media content
         - Creating compelling video scripts
         - Developing interactive elements
-        
+
         Focus on positive, teen-friendly messaging that promotes healthy digital habits.
 
   - id: task-3
@@ -427,7 +427,7 @@ tasks:
         - Creating empathetic and helpful responses
         - Building in appropriate wellness features
         - Testing and iterating on their design
-        
+
         Ensure the chatbot is supportive, non-judgmental, and age-appropriate.
 
   - id: task-4
@@ -519,7 +519,7 @@ tasks:
         - Developing promotional strategies
         - Identifying key stakeholders
         - Setting achievable goals
-        
+
         Help them create a campaign that will effectively reach and engage their peers.
 
   - id: task-5
@@ -611,7 +611,7 @@ tasks:
         - Analyzing data for insights
         - Creating compelling visualizations
         - Drawing actionable conclusions
-        
+
         Help them demonstrate the real impact of their digital wellness campaign.
 
 completion_criteria:
@@ -626,7 +626,7 @@ resources:
     name_zh: "數位健康研究所"
     url: "https://www.digitalwellnessinstitute.com/"
     type: reference
-    
+
   - name: "Common Sense Media"
     name_zh: "常識媒體"
     url: "https://www.commonsensemedia.org/"

@@ -6,9 +6,9 @@ metadata:
   title: "Guardião da Fortaleza Digital - Especialista em Cibersegurança"
   short_description: "Defenda o reino digital contra ameaças cibernéticas"
   long_description: |
-    Você é um recruta na "Academia de Defesa Cibernética", um campo de treinamento 
-    de elite para guerreiros digitais. Em um mundo onde dados são o novo ouro e hackers 
-    espreitam em cada sombra da internet, você aprenderá a proteger infraestruturas 
+    Você é um recruta na "Academia de Defesa Cibernética", um campo de treinamento
+    de elite para guerreiros digitais. Em um mundo onde dados são o novo ouro e hackers
+    espreitam em cada sombra da internet, você aprenderá a proteger infraestruturas
     críticas, caçar cibercriminosos e construir fortalezas digitais impenetráveis.
   estimated_hours: 65
   skill_focus:
@@ -20,19 +20,19 @@ metadata:
 world_setting:
   name: "Academia de Defesa Cibernética"
   description: |
-    A Academia de Defesa Cibernética existe tanto no reino físico quanto virtual. 
-    Estudantes navegam por ataques cibernéticos simulados, aprendem com hackers 
-    de chapéu branco lendários e se preparam para ameaças do mundo real que 
+    A Academia de Defesa Cibernética existe tanto no reino físico quanto virtual.
+    Estudantes navegam por ataques cibernéticos simulados, aprendem com hackers
+    de chapéu branco lendários e se preparam para ameaças do mundo real que
     podem paralisar nações ou corporações em segundos.
   atmosphere: high_stakes_tactical
   visual_theme: matrix_fortress
 starting_scenario:
   title: "A Ascensão da Dark Web"
   description: |
-    O Comandante Firewall informa sobre uma situação urgente: o notório coletivo 
-    de hackers "Shadow Byte", liderado pelo misterioso Zero Day, está planejando 
-    um ataque massivo à infraestrutura global. Você deve dominar rapidamente as 
-    habilidades de cibersegurança para se juntar à força de defesa e prevenir 
+    O Comandante Firewall informa sobre uma situação urgente: o notório coletivo
+    de hackers "Shadow Byte", liderado pelo misterioso Zero Day, está planejando
+    um ataque massivo à infraestrutura global. Você deve dominar rapidamente as
+    habilidades de cibersegurança para se juntar à força de defesa e prevenir
     o apocalipse digital.
   initial_tasks:
     - understand_threats

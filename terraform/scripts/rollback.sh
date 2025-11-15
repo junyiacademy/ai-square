@@ -22,5 +22,5 @@ echo "✅ Rolled back to ${PREVIOUS_COLOR}"
 if [ ! -z "" ]; then
   curl -X POST -H 'Content-type: application/json' \
     --data "{\"text\":\"🚨 Emergency rollback executed for ${ENVIRONMENT}. Switched to ${PREVIOUS_COLOR}.\"}" \
-    
+
 fi

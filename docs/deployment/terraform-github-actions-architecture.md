@@ -167,7 +167,7 @@ GET /api/admin/stats
    # Add service account keys
    gh secret set GCP_SA_KEY < staging-sa-key.json
    gh secret set GCP_SA_KEY_PROD < prod-sa-key.json
-   
+
    # Add admin API key
    ```
 
@@ -175,7 +175,7 @@ GET /api/admin/stats
    ```bash
    # Staging
    make terraform-deploy-staging
-   
+
    # Production (with confirmations)
    make terraform-deploy-production
    ```
@@ -184,7 +184,7 @@ GET /api/admin/stats
    ```bash
    # Staging - automatic on push
    git push origin staging
-   
+
    # Production - automatic on push to main
    git push origin main
    ```
@@ -245,7 +245,7 @@ SELECT COUNT(*) FROM scenarios GROUP BY mode;
    ```bash
    # List revisions
    gcloud run revisions list --service ai-square-frontend
-   
+
    # Route traffic to previous revision
    gcloud run services update-traffic ai-square-frontend \
      --to-revisions REVISION_ID=100
@@ -255,7 +255,7 @@ SELECT COUNT(*) FROM scenarios GROUP BY mode;
    ```bash
    # List backups
    gcloud sql backups list --instance ai-square-db-production
-   
+
    # Restore from backup
    gcloud sql backups restore BACKUP_ID \
      --restore-instance ai-square-db-production

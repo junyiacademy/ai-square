@@ -246,24 +246,24 @@ describe('/api/monitoring/cache', () => {
 
 /**
  * Cache Monitoring Considerations:
- * 
+ *
  * 1. Performance Impact:
  *    - Getting stats should be lightweight
  *    - Clear operations may impact performance
- * 
+ *
  * 2. Security:
  *    - Should require admin authentication in production
  *    - Cache keys might contain sensitive data patterns
- * 
+ *
  * 3. Multi-tier Cache:
  *    - Distributed cache (memory + localStorage)
  *    - Redis cache (centralized)
  *    - Both need monitoring
- * 
+ *
  * 4. Error Handling:
  *    - Redis might be unavailable
  *    - Clear operations might partially fail
- * 
+ *
  * 5. Metrics to Track:
  *    - Hit rate
  *    - Memory usage

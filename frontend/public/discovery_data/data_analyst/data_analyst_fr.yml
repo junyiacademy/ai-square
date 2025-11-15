@@ -6,12 +6,12 @@ metadata:
   title: "Oracle des Données - Analyste de Données"
   short_description: "Découvrez les vérités cachées dans l'océan des données"
   long_description: |
-    Vous êtes un oracle apprenti au "Temple de l'Oracle des Données", possédant la 
-    capacité mystique de voir les tendances futures dans les données chaotiques. 
-    Dans ce temple rempli de chiffres et de graphiques, chaque point de données 
-    contient des messages importants, et votre mission est de déchiffrer les 
+    Vous êtes un oracle apprenti au "Temple de l'Oracle des Données", possédant la
+    capacité mystique de voir les tendances futures dans les données chaotiques.
+    Dans ce temple rempli de chiffres et de graphiques, chaque point de données
+    contient des messages importants, et votre mission est de déchiffrer les
     secrets derrière ces nombres.
-  
+
   estimated_hours: 50
   skill_focus:
     - data_alchemy
@@ -21,22 +21,22 @@ metadata:
 world_setting:
   name: "Temple de l'Oracle des Données"
   description: |
-    Le Temple de l'Oracle des Données est un sanctuaire mystérieux qui collecte des 
-    données du monde entier. Ici, les analystes de données sont formés comme des 
-    oracles capables d'interpréter le langage des nombres et de révéler des vérités 
+    Le Temple de l'Oracle des Données est un sanctuaire mystérieux qui collecte des
+    données du monde entier. Ici, les analystes de données sont formés comme des
+    oracles capables d'interpréter le langage des nombres et de révéler des vérités
     qui façonnent les décisions à travers les royaumes.
-  
+
   atmosphere: "mystical_analytical"
   visual_theme: "digital_temple"
 starting_scenario:
   title: "Initiation au Temple"
   description: |
-    Le Sage Mentor Oracle vous accueille au temple, parlant en énigmes sur les 
-    secrets des données. Mais une menace plane : le Chaos, le destructeur de données, 
-    pollue les sources de données et propage des analyses trompeuses. Vous devez 
-    utiliser des méthodes statistiques pures pour trouver la vérité au milieu 
+    Le Sage Mentor Oracle vous accueille au temple, parlant en énigmes sur les
+    secrets des données. Mais une menace plane : le Chaos, le destructeur de données,
+    pollue les sources de données et propage des analyses trompeuses. Vous devez
+    utiliser des méthodes statistiques pures pour trouver la vérité au milieu
     de la confusion.
-  
+
   initial_tasks:
     - learn_data_basics
     - master_tools

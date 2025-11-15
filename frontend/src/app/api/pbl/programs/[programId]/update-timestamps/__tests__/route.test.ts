@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { POST } from '../route';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import { 
+import {
   createAuthenticatedRequestWithCookie,
   createUnauthenticatedRequest,
   setupAPITestEnvironment,
@@ -31,7 +31,7 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     mockProgram = {
       id: mockProgramId,
       scenarioId: mockScenarioId,
@@ -247,7 +247,7 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
   // Test 11-15: Program validation tests
   it('should return 404 when program does not exist', async () => {
     mockProgramRepo.findById.mockResolvedValue(null);
-    
+
     const request = createAuthenticatedRequestWithCookie(
       "http://localhost/api/pbl/programs/program-123/update-timestamps",
       "POST",
@@ -270,7 +270,7 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
   it('should return 404 when program scenarioId does not match', async () => {
     const mismatchedProgram = { ...mockProgram, scenarioId: 'different-scenario' };
     mockProgramRepo.findById.mockResolvedValue(mismatchedProgram);
-    
+
     const request = createAuthenticatedRequestWithCookie(
       "http://localhost/api/pbl/programs/program-123/update-timestamps",
       "POST",
@@ -291,7 +291,7 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
 
   it('should handle undefined program response', async () => {
     mockProgramRepo.findById.mockResolvedValue(undefined);
-    
+
     const request = createAuthenticatedRequestWithCookie(
       "http://localhost/api/pbl/programs/program-123/update-timestamps",
       "POST",
@@ -313,7 +313,7 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
   it('should handle program with missing scenarioId', async () => {
     const programWithoutScenario = { ...mockProgram, scenarioId: undefined };
     mockProgramRepo.findById.mockResolvedValue(programWithoutScenario);
-    
+
     const request = createAuthenticatedRequestWithCookie(
       "http://localhost/api/pbl/programs/program-123/update-timestamps",
       "POST",
@@ -335,7 +335,7 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
   it('should handle program with null scenarioId', async () => {
     const programWithNullScenario = { ...mockProgram, scenarioId: null };
     mockProgramRepo.findById.mockResolvedValue(programWithNullScenario);
-    
+
     const request = createAuthenticatedRequestWithCookie(
       "http://localhost/api/pbl/programs/program-123/update-timestamps",
       "POST",
@@ -364,10 +364,10 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
         updatedAt: expect.any(String)
       }
     };
-    
+
     mockProgramRepo.findById.mockResolvedValue(mockProgram);
     mockProgramRepo.update.mockResolvedValue(updatedProgram);
-    
+
     const request = createAuthenticatedRequestWithCookie(
       "http://localhost/api/pbl/programs/program-123/update-timestamps",
       "POST",
@@ -400,10 +400,10 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
         score: 85
       }
     };
-    
+
     mockProgramRepo.findById.mockResolvedValue(programWithExistingMetadata);
     mockProgramRepo.update.mockResolvedValue(programWithExistingMetadata);
-    
+
     const request = createAuthenticatedRequestWithCookie(
       "http://localhost/api/pbl/programs/program-123/update-timestamps",
       "POST",
@@ -428,10 +428,10 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
   it('should handle program with no metadata', async () => {
     const programWithoutMetadata = { ...mockProgram };
     delete programWithoutMetadata.metadata;
-    
+
     mockProgramRepo.findById.mockResolvedValue(programWithoutMetadata);
     mockProgramRepo.update.mockResolvedValue(programWithoutMetadata);
-    
+
     const request = createAuthenticatedRequestWithCookie(
       "http://localhost/api/pbl/programs/program-123/update-timestamps",
       "POST",
@@ -452,10 +452,10 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
 
   it('should handle program with empty metadata object', async () => {
     const programWithEmptyMetadata = { ...mockProgram, metadata: {} };
-    
+
     mockProgramRepo.findById.mockResolvedValue(programWithEmptyMetadata);
     mockProgramRepo.update.mockResolvedValue(programWithEmptyMetadata);
-    
+
     const request = createAuthenticatedRequestWithCookie(
       "http://localhost/api/pbl/programs/program-123/update-timestamps",
       "POST",
@@ -483,10 +483,10 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
         updatedAt: '2024-01-02T10:30:00.000Z'
       }
     };
-    
+
     mockProgramRepo.findById.mockResolvedValue(mockProgram);
     mockProgramRepo.update.mockResolvedValue(updatedProgram);
-    
+
     const request = createAuthenticatedRequestWithCookie(
       "http://localhost/api/pbl/programs/program-123/update-timestamps",
       "POST",
@@ -507,7 +507,7 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
   // Test 21-25: Error handling tests
   it('should handle database findById error', async () => {
     mockProgramRepo.findById.mockRejectedValue(new Error('Database connection error'));
-    
+
     const request = createAuthenticatedRequestWithCookie(
       "http://localhost/api/pbl/programs/program-123/update-timestamps",
       "POST",
@@ -529,7 +529,7 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
   it('should handle database update error', async () => {
     mockProgramRepo.findById.mockResolvedValue(mockProgram);
     mockProgramRepo.update.mockRejectedValue(new Error('Update failed'));
-    
+
     const request = createAuthenticatedRequestWithCookie(
       "http://localhost/api/pbl/programs/program-123/update-timestamps",
       "POST",
@@ -552,7 +552,7 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
     mockRepositoryFactory.getProgramRepository.mockImplementation(() => {
       throw new Error('Repository initialization failed');
     });
-    
+
     const request = createAuthenticatedRequestWithCookie(
       "http://localhost/api/pbl/programs/program-123/update-timestamps",
       "POST",
@@ -581,9 +581,9 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
       complete: jest.fn().mockResolvedValue(mockProgram)
       // No update method
     };
-    
+
     mockRepositoryFactory.getProgramRepository.mockReturnValue(repoWithoutUpdate);
-    
+
     const request = createAuthenticatedRequestWithCookie(
       "http://localhost/api/pbl/programs/program-123/update-timestamps",
       "POST",
@@ -609,7 +609,7 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
       { scenarioId: mockScenarioId },
       { email: mockUserEmail }
     );
-    
+
     const failingParams = Promise.reject(new Error('Params error'));
 
     const response = await POST(request, { params: failingParams });
@@ -626,11 +626,11 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
   it('should handle extra fields in request body', async () => {
     mockProgramRepo.findById.mockResolvedValue(mockProgram);
     mockProgramRepo.update.mockResolvedValue(mockProgram);
-    
+
     const request = createAuthenticatedRequestWithCookie(
       "http://localhost/api/pbl/programs/program-123/update-timestamps",
       "POST",
-      { 
+      {
         scenarioId: mockScenarioId,
         extraField: 'should be ignored',
         maliciousCode: '<script>alert("hack")</script>'
@@ -650,7 +650,7 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
     const specialEmail = 'user+test@example-domain.com';
     mockProgramRepo.findById.mockResolvedValue(mockProgram);
     mockProgramRepo.update.mockResolvedValue(mockProgram);
-    
+
     const request = createAuthenticatedRequestWithCookie(
       "http://localhost/api/pbl/programs/program-123/update-timestamps",
       "POST",
@@ -669,10 +669,10 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
   it('should handle very long scenario ID', async () => {
     const longScenarioId = 'a'.repeat(1000);
     const programWithLongScenarioId = { ...mockProgram, scenarioId: longScenarioId };
-    
+
     mockProgramRepo.findById.mockResolvedValue(programWithLongScenarioId);
     mockProgramRepo.update.mockResolvedValue(programWithLongScenarioId);
-    
+
     const request = createAuthenticatedRequestWithCookie(
       "http://localhost/api/pbl/programs/program-123/update-timestamps",
       "POST",
@@ -691,10 +691,10 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
   it('should handle unicode characters in scenario ID', async () => {
     const unicodeScenarioId = 'scenario-测试-🎯';
     const programWithUnicodeId = { ...mockProgram, scenarioId: unicodeScenarioId };
-    
+
     mockProgramRepo.findById.mockResolvedValue(programWithUnicodeId);
     mockProgramRepo.update.mockResolvedValue(programWithUnicodeId);
-    
+
     const request = createAuthenticatedRequestWithCookie(
       "http://localhost/api/pbl/programs/program-123/update-timestamps",
       "POST",
@@ -712,14 +712,14 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
 
   it('should generate different timestamps on subsequent calls', async () => {
     mockProgramRepo.findById.mockResolvedValue(mockProgram);
-    
+
     // First call
     let capturedUpdate1: any;
     mockProgramRepo.update.mockImplementationOnce((id: string, updates: unknown) => {
       capturedUpdate1 = updates;
       return Promise.resolve(mockProgram);
     });
-    
+
     const request1 = createAuthenticatedRequestWithCookie(
       "http://localhost/api/pbl/programs/program-123/update-timestamps",
       "POST",
@@ -729,17 +729,17 @@ describe('POST /api/pbl/programs/[programId]/update-timestamps', () => {
     const params1 = createMockParams();
 
     await POST(request1, { params: params1 });
-    
+
     // Advance the mock date to ensure different timestamp
     jest.advanceTimersByTime(1000);
-    
+
     // Second call
     let capturedUpdate2: any;
     mockProgramRepo.update.mockImplementationOnce((id: string, updates: unknown) => {
       capturedUpdate2 = updates;
       return Promise.resolve(mockProgram);
     });
-    
+
     const request2 = createAuthenticatedRequestWithCookie(
       "http://localhost/api/pbl/programs/program-123/update-timestamps",
       "POST",

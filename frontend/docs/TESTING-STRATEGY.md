@@ -54,9 +54,9 @@ test('POST /api/programs should create program in DB', async () => {
   const response = await request(app)
     .post('/api/programs')
     .send({ scenarioId: '123' });
-    
+
   expect(response.status).toBe(201);
-  
+
   // 檢查資料庫
   const program = await db.query('SELECT * FROM programs WHERE id = ?', [response.body.id]);
   expect(program).toBeDefined();
@@ -78,7 +78,7 @@ test('User completes onboarding flow', async ({ page }) => {
   await page.fill('[name=email]', 'user@example.com');
   await page.fill('[name=password]', 'password');
   await page.click('button[type=submit]');
-  
+
   await page.goto('/onboarding/welcome');
   await page.click('text=Continue');
   // ... 完整流程
@@ -95,7 +95,7 @@ test('User completes onboarding flow', async ({ page }) => {
 
 1. **Onboarding 流程**
    - 登入 → Welcome → Identity → Goals → Assessment
-   
+
 2. **PBL 學習流程**
    - 選擇 Scenario → 開始學習 → 提交答案 → 查看反饋
 

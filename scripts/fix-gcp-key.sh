@@ -106,7 +106,7 @@ gcloud auth activate-service-account --key-file="$TEMP_CRED_FILE"
 
 if [ $? -eq 0 ]; then
     echo "✅ Authentication test successful"
-    
+
     # Test basic gcloud commands
     echo "🔍 Testing gcloud commands..."
     gcloud config list

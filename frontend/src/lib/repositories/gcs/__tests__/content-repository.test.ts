@@ -273,7 +273,7 @@ describe('GCSContentRepository', () => {
       expect(repository.listYamlFiles).toHaveBeenCalledWith('pbl_data/');
       expect(repository.listYamlFiles).toHaveBeenCalledWith('assessment_data/');
       expect(repository.listYamlFiles).toHaveBeenCalledWith('discovery_data/');
-      
+
       expect(result).toHaveLength(3);
       expect(result.map(s => s.id)).toContain('scenario1');
       expect(result.map(s => s.id)).toContain('scenario2');
@@ -285,7 +285,7 @@ describe('GCSContentRepository', () => {
 
       expect(repository.listYamlFiles).toHaveBeenCalledWith('pbl_data/');
       expect(repository.listYamlFiles).not.toHaveBeenCalledWith('assessment_data/');
-      
+
       expect(result).toHaveLength(2);
       expect(result.every(s => s.id && s.type && s.title)).toBe(true);
     });
@@ -345,7 +345,7 @@ describe('GCSContentRepository', () => {
       jest.spyOn(repository, 'getYamlContent').mockRejectedValue(new Error('File not found'));
 
       const result = await repository.getKSAMappings();
-      
+
       expect(result).toEqual([]);
     });
   });
@@ -353,14 +353,14 @@ describe('GCSContentRepository', () => {
   describe('getAILiteracyDomains', () => {
     const mockDomainsData = {
       domains: [
-        { 
-          id: 'engaging', 
+        {
+          id: 'engaging',
           name: 'Engaging with AI',
           description: 'Understand AI capabilities',
           competencies: ['comp1', 'comp2']
         },
-        { 
-          id: 'creating', 
+        {
+          id: 'creating',
           name: 'Creating with AI',
           description: 'Create with AI tools',
           competencies: ['comp3', 'comp4']
@@ -390,7 +390,7 @@ describe('GCSContentRepository', () => {
       jest.spyOn(repository, 'getYamlContent').mockRejectedValue(new Error('File not found'));
 
       const result = await repository.getAILiteracyDomains();
-      
+
       expect(result).toEqual([]);
     });
   });
@@ -410,8 +410,8 @@ describe('GCSContentRepository', () => {
         duration: 60,
         prerequisites: ['req1'],
         tasks: [
-          { 
-            id: 'task1', 
+          {
+            id: 'task1',
             title: 'Task 1',
             type: 'discussion',
             description: 'Task description',
@@ -510,8 +510,8 @@ describe('GCSContentRepository', () => {
 
     it('should handle network timeouts', async () => {
       mockFile.exists.mockResolvedValueOnce([true]);
-      mockFile.download.mockImplementationOnce(() => 
-        new Promise((_, reject) => 
+      mockFile.download.mockImplementationOnce(() =>
+        new Promise((_, reject) =>
           setTimeout(() => reject(new Error('Timeout')), 100)
         )
       );

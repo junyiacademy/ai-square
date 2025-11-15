@@ -1,8 +1,8 @@
 import { UserDataService } from '../user-data-service';
-import type { 
-  UserData, 
-  AssessmentResults, 
-  UserAchievements 
+import type {
+  UserData,
+  AssessmentResults,
+  UserAchievements
 } from '@/lib/types/user-data';
 
 // Mock localStorage
@@ -206,7 +206,7 @@ describe('UserDataService', () => {
     it('resets user data to default values', async () => {
       const userData = createMockUserData();
 
-      mockLocalStorage.getItem.mockReturnValue(JSON.stringify({ 
+      mockLocalStorage.getItem.mockReturnValue(JSON.stringify({
         [mockUserId]: userData,
         'other-user': { id: 'other-user' },
       }));

@@ -39,10 +39,10 @@ check_column() {
     local table=$1
     local column=$2
     local exists=$(PGPASSWORD=$DB_PASSWORD psql -h $DB_HOST -p $DB_PORT -U $DB_USER -d $DB_NAME -t -c "
-        SELECT COUNT(*) FROM information_schema.columns 
+        SELECT COUNT(*) FROM information_schema.columns
         WHERE table_name = '$table' AND column_name = '$column';
     " 2>/dev/null || echo "0")
-    
+
     if [ "$exists" = "1" ]; then
         echo -e "  ${GREEN}✓${NC} $table.$column exists"
         return 0
@@ -74,8 +74,8 @@ echo "Demo users found: $DEMO_USERS"
 
 # Check if demo users have passwords
 USERS_WITH_PASSWORDS=$(PGPASSWORD=$DB_PASSWORD psql -h $DB_HOST -p $DB_PORT -U $DB_USER -d $DB_NAME -t -c "
-    SELECT COUNT(*) FROM users 
-    WHERE email LIKE '%example.com' 
+    SELECT COUNT(*) FROM users
+    WHERE email LIKE '%example.com'
     AND password_hash IS NOT NULL;
 " 2>/dev/null || echo "0")
 

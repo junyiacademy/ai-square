@@ -15,8 +15,8 @@ export async function GET(request: NextRequest) {
 
     const storage = getGitHubStorage();
     const file = await storage.getFile(filePath);
-    
-    return NextResponse.json({ 
+
+    return NextResponse.json({
       content: file.content,
       path: filePath,
       sha: file.sha
@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
 
     // Get current branch from session or use provided branch
     const currentBranch = branch || 'main';
-    
+
     // Use provided message or generate default
     const commitMessage = message || `更新 ${filePath}
 
@@ -53,8 +53,8 @@ export async function POST(request: NextRequest) {
 
     const storage = getGitHubStorage();
     await storage.updateFile(filePath, content, commitMessage, currentBranch);
-    
-    return NextResponse.json({ 
+
+    return NextResponse.json({
       success: true,
       path: filePath,
       branch: currentBranch

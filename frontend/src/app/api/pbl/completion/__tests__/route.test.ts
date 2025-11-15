@@ -3,8 +3,8 @@ import { NextRequest } from 'next/server';
 import { GET } from '../route';
 import { getUnifiedAuth } from '@/lib/auth/unified-auth';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import { 
-  createMockProgramRepository, 
+import {
+  createMockProgramRepository,
   createMockTaskRepository,
   createMockEvaluationRepository,
   createMockUserRepository,
@@ -81,7 +81,7 @@ describe('/api/pbl/completion', () => {
     mockGetTaskRepository.mockReturnValue(mockTaskRepo);
     mockGetEvaluationRepository.mockReturnValue(mockEvaluationRepo);
     mockGetUserRepository.mockReturnValue(mockUserRepo);
-    
+
     // Default mock fetch response
     mockFetch.mockResolvedValue({
       ok: true,
@@ -169,7 +169,7 @@ describe('/api/pbl/completion', () => {
 
       mockUserRepo.findByEmail.mockResolvedValue(createMockUser({ id: 'user123', email: 'test@example.com' }));
       mockProgramRepo.findById.mockResolvedValue(null);
-      
+
       // Since the route is wrapped in cachedGET, we need to ensure the mock properly returns null
       // Reset the fetch mock for this test
       mockFetch.mockClear();
@@ -203,14 +203,14 @@ describe('/api/pbl/completion', () => {
       });
 
       mockUserRepo.findByEmail.mockResolvedValue(createMockUser({ id: 'user123', email: 'test@example.com' }));
-      
+
       const mockProgram = createMockProgram({
         id: 'prog1',
         userId: 'user123',
         scenarioId: 'scenario1',
       });
       mockProgramRepo.findById.mockResolvedValue(mockProgram);
-      
+
       // Mock fetch to fail - need to override the default mock
       mockFetch.mockClear();
       mockFetch.mockResolvedValue({

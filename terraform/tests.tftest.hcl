@@ -84,7 +84,7 @@ run "health_check" {
 
 run "database_initialization" {
   command = apply
-  
+
   # Check that initialization resources ran
   assert {
     condition     = null_resource.init_database_schema.id != null

@@ -38,7 +38,7 @@
   },
   "difficulty": {
     "basic": "Dasar",
-    "intermediate": "Menengah", 
+    "intermediate": "Menengah",
     "advanced": "Lanjutan"
   },
   "results": {
@@ -76,7 +76,7 @@
     "autoSaved": "Hasil tersimpan otomatis",
     "tabs": {
       "overview": "Ikhtisar",
-      "domains": "Domain", 
+      "domains": "Domain",
       "recommendations": "Rekomendasi",
       "ksa": "Analisis KSA",
       "knowledge-graph": "Grafik Pengetahuan"

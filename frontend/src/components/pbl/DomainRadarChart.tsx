@@ -135,7 +135,7 @@ export default function DomainRadarChart({ domainScores, title }: DomainRadarCha
           {title}
         </h3>
       )}
-      
+
       <div className="h-80 flex items-center justify-center relative">
         <div className="w-full h-full max-w-md">
           <Radar data={data} options={options} />

@@ -42,7 +42,7 @@ describe('RootLayout', () => {
     // RootLayout component structure in test environment
     // doesn't render actual html/body tags, just the component structure
     expect(container.firstChild).toBeDefined();
-    
+
     // The actual html/body attributes are applied by Next.js at runtime
     // We can verify the component renders without errors
     expect(container.querySelector('div')).toHaveTextContent('Test Content');

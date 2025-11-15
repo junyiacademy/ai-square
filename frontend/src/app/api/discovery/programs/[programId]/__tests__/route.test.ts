@@ -41,7 +41,7 @@ describe('/api/discovery/programs/[programId]', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     // Setup repository factory mocks
     (repositoryFactory.getProgramRepository as jest.Mock).mockReturnValue(mockProgramRepo);
     (repositoryFactory.getTaskRepository as jest.Mock).mockReturnValue(mockTaskRepo);
@@ -177,26 +177,26 @@ describe('/api/discovery/programs/[programId]', () => {
 
 /**
  * Discovery Program API Considerations:
- * 
+ *
  * 1. Authorization:
  *    - Must verify user owns the program
  *    - Returns 403 for unauthorized access
- * 
+ *
  * 2. Discovery-specific Data:
  *    - Career type tracking
  *    - Interest areas
  *    - Skills assessment
- * 
+ *
  * 3. Program Lifecycle:
  *    - Supports status updates
  *    - Tracks completion timestamps
  *    - Preserves historical data
- * 
+ *
  * 4. Related Data:
  *    - Loads tasks for program
  *    - Includes scenario details
  *    - Calculates progress
- * 
+ *
  * 5. Error Handling:
  *    - Graceful handling of missing methods
  *    - Detailed error messages

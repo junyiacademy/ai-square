@@ -9,20 +9,20 @@ export async function POST(
   try {
     // Get user from authentication
     const session = await getUnifiedAuth(request);
-    
+
     if (!session?.user?.email) {
       return createUnauthorizedResponse();
     }
-    
+
     const body = await request.json();
     const { currentTaskId } = body;
-    
+
     // Await params before using
     const { programId } = await params;
-    
+
     const programRepo = repositoryFactory.getProgramRepository();
     const taskRepo = repositoryFactory.getTaskRepository();
-    
+
     // Get program
     const program = await programRepo.findById(programId);
     if (!program) {
@@ -31,7 +31,7 @@ export async function POST(
         { status: 404 }
       );
     }
-    
+
     // Verify ownership by getting user ID from email
     const userRepo = repositoryFactory.getUserRepository();
     const user = await userRepo.findByEmail(session.user.email);
@@ -41,20 +41,20 @@ export async function POST(
         { status: 403 }
       );
     }
-    
+
     // Complete current task if specified
     if (currentTaskId) {
       await taskRepo.updateStatus?.(currentTaskId, "completed");
     }
-    
+
     // Get all tasks
     const tasks = await taskRepo.findByProgram(programId);
     const currentIndex = program.currentTaskIndex || 0;
     const nextIndex = currentIndex + 1;
-    
+
     console.log('Tasks loaded:', tasks.length);
     console.log('Moving from task', currentIndex, 'to', nextIndex);
-    
+
     // Check if there are more tasks
     if (nextIndex >= tasks.length) {
       // No more tasks, assessment is complete
@@ -63,12 +63,12 @@ export async function POST(
         nextTask: null
       });
     }
-    
+
     // Update program's current task index
     await programRepo.update?.(programId, {
       currentTaskIndex: nextIndex
     });
-    
+
     // Start the next task if it's still pending
     let nextTask = tasks[nextIndex];
     if (nextTask && nextTask.status === 'pending' && !nextTask.startedAt) {
@@ -85,20 +85,20 @@ export async function POST(
         nextTask = updatedTask;
       }
     }
-    
+
     console.log('Next task details:', {
       id: nextTask?.id,
       title: nextTask?.title,
       hasContent: !!nextTask?.content,
       hasContext: !!nextTask?.content,
-      questionsInContext: Array.isArray((nextTask?.content as Record<string, unknown>)?.questions) 
-        ? ((nextTask?.content as Record<string, unknown>)?.questions as unknown[]).length 
+      questionsInContext: Array.isArray((nextTask?.content as Record<string, unknown>)?.questions)
+        ? ((nextTask?.content as Record<string, unknown>)?.questions as unknown[]).length
         : 0,
       questionsDirect: 0,
       contentKeys: nextTask?.content ? Object.keys(nextTask.content) : [],
       contextKeys: nextTask?.content ? Object.keys(nextTask.content) : []
     });
-    
+
     return NextResponse.json({
       complete: false,
       nextTask,

@@ -22,11 +22,11 @@ describe('/api/legal/documents', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     mockPool = {
       query: jest.fn()
     };
-    
+
     mockGetPool.mockReturnValue(mockPool as any);
   });
 
@@ -87,7 +87,7 @@ describe('/api/legal/documents', () => {
         expect(response.status).toBe(200);
         expect(data.success).toBe(true);
         expect(data.documents).toHaveLength(2);
-        
+
         // Should use latest version query
         expect(mockPool.query).toHaveBeenCalledWith(
           expect.stringContaining('DISTINCT ON (type)'),

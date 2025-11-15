@@ -46,7 +46,7 @@ describe('Discovery Evaluation Page', () => {
     jest.clearAllMocks();
     (global.fetch as jest.Mock).mockResolvedValue({
       ok: true,
-      json: async () => ({ 
+      json: async () => ({
         success: true,
         evaluation: {
           score: 85,

@@ -106,7 +106,7 @@ describe('ScenarioIndexService', () => {
 
   beforeEach(async () => {
     jest.clearAllMocks();
-    
+
     // Mock cache service
     mockCacheService = cacheService as jest.Mocked<typeof cacheService>;
     mockCacheService.get.mockResolvedValue(null);
@@ -115,7 +115,7 @@ describe('ScenarioIndexService', () => {
 
     // Use the singleton instance
     service = scenarioIndexService;
-    
+
     // Clear memory index before each test
     await service.invalidate();
   });
@@ -216,7 +216,7 @@ describe('ScenarioIndexService', () => {
     it('should return null if no index available', async () => {
       // Ensure cache returns null
       mockCacheService.get.mockResolvedValueOnce(null);
-      
+
       const index = await service.getIndex();
 
       expect(index).toBeNull();
@@ -233,10 +233,10 @@ describe('ScenarioIndexService', () => {
 
       // Check cache cleared
       expect(mockCacheService.delete).toHaveBeenCalledWith('scenario:index:v1');
-      
+
       // Ensure cache returns null after invalidation
       mockCacheService.get.mockResolvedValueOnce(null);
-      
+
       // Check memory cleared
       const index = await service.getIndex();
       expect(index).toBeNull();
@@ -288,7 +288,7 @@ describe('ScenarioIndexService', () => {
 
     it('should return full entry for YAML ID', async () => {
       const entry = await service.getEntryByYamlId('discovery-path-1');
-      
+
       expect(entry).toMatchObject({
         yamlId: 'discovery-path-1',
         uuid: 'uuid-3',
@@ -310,7 +310,7 @@ describe('ScenarioIndexService', () => {
 
     it('should return full entry for UUID', async () => {
       const entry = await service.getEntryByUuid('uuid-1');
-      
+
       expect(entry).toMatchObject({
         yamlId: 'pbl-scenario-1',
         uuid: 'uuid-1',
@@ -327,14 +327,14 @@ describe('ScenarioIndexService', () => {
   describe('exists', () => {
     it('should return true when index exists in memory', async () => {
       await service.buildIndex(mockScenarios);
-      
+
       const exists = await service.exists();
       expect(exists).toBe(true);
     });
 
     it('should return false when no index exists', async () => {
       await service.invalidate();
-      
+
       const exists = await service.exists();
       expect(exists).toBe(false);
     });
@@ -354,12 +354,12 @@ describe('ScenarioIndexService', () => {
     });
 
     it('should handle concurrent index builds', async () => {
-      const promises = Array(3).fill(null).map(() => 
+      const promises = Array(3).fill(null).map(() =>
         service.buildIndex(mockScenarios)
       );
 
       const results = await Promise.all(promises);
-      
+
       // All should succeed
       results.forEach((index) => {
         expect(index.yamlToUuid.size).toBe(3);

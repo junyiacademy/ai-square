@@ -39,13 +39,13 @@ describe('usePreloadData', () => {
 
   it('should complete preloading successfully', async () => {
     mockContentService.preloadEssentialData.mockResolvedValue(undefined);
-    
+
     const { result } = renderHook(() => usePreloadData());
-    
+
     await waitFor(() => {
       expect(result.current.isPreloading).toBe(false);
     });
-    
+
     expect(result.current.error).toBeNull();
     expect(mockContentService.preloadEssentialData).toHaveBeenCalledWith('en');
   });
@@ -53,13 +53,13 @@ describe('usePreloadData', () => {
   it('should handle preload errors', async () => {
     const testError = new Error('Preload failed');
     mockContentService.preloadEssentialData.mockRejectedValue(testError);
-    
+
     const { result } = renderHook(() => usePreloadData());
-    
+
     await waitFor(() => {
       expect(result.current.isPreloading).toBe(false);
     });
-    
+
     expect(result.current.error).toEqual(testError);
   });
 });

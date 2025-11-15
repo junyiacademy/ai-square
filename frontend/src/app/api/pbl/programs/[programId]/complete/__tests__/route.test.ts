@@ -1,9 +1,9 @@
 import { NextRequest } from 'next/server';
 import { GET, POST } from '../route';
 import { mockConsoleError, mockConsoleLog } from '@/test-utils/helpers/console';
-import type { 
-  IProgram, 
-  ITask, 
+import type {
+  IProgram,
+  ITask,
   IEvaluation
 } from '@/types/unified-learning';
 import type {
@@ -329,7 +329,7 @@ describe('/api/pbl/programs/[programId]/complete', () => {
       it('should create new evaluation with single completed task', async () => {
         const tasks = [mockTask];
         const taskEvaluations = [mockTaskEvaluation];
-        
+
         mockTaskRepo.findByProgram.mockResolvedValue(tasks);
         mockEvalRepo.findById.mockResolvedValue(taskEvaluations[0]);
         mockTaskRepo.getTaskWithInteractions.mockResolvedValue({
@@ -401,9 +401,9 @@ describe('/api/pbl/programs/[programId]/complete', () => {
       it('should create evaluation with multiple tasks and mixed scores', async () => {
         const task2 = { ...mockTask, id: 'task-456', score: 90, metadata: { evaluationId: 'task-eval-456' } };
         const tasks = [mockTask, task2];
-        
-        const taskEval2 = { 
-          ...mockTaskEvaluation, 
+
+        const taskEval2 = {
+          ...mockTaskEvaluation,
           id: 'task-eval-456',
           taskId: 'task-456',
           score: 90,
@@ -428,8 +428,8 @@ describe('/api/pbl/programs/[programId]/complete', () => {
           if (id === 'task-eval-456') return Promise.resolve(taskEval2);
           return Promise.resolve(null);
         });
-        mockTaskRepo.getTaskWithInteractions.mockResolvedValue({ 
-          ...mockTask, 
+        mockTaskRepo.getTaskWithInteractions.mockResolvedValue({
+          ...mockTask,
           interactions: [
             { type: 'user_input', timestamp: '2024-01-01T00:00:00Z', content: 'Hello' }
           ]
@@ -440,7 +440,7 @@ describe('/api/pbl/programs/[programId]/complete', () => {
           score: 88, // (85 + 90) / 2 = 87.5, rounded to 88
           domainScores: {
             engaging_with_ai: 88, // (85 + 90) / 2 = 87.5, rounded to 88
-            creating_with_ai: 88, // (80 + 95) / 2 = 87.5, rounded to 88  
+            creating_with_ai: 88, // (80 + 95) / 2 = 87.5, rounded to 88
             managing_ai: 88, // (90 + 85) / 2 = 87.5, rounded to 88
             designing_ai: 85 // (80 + 90) / 2 = 85
           },
@@ -470,7 +470,7 @@ describe('/api/pbl/programs/[programId]/complete', () => {
         const data = await response.json();
         expect(data.success).toBe(true);
         expect(data.evaluation.score).toBe(88);
-        
+
         expect(mockEvalRepo.create).toHaveBeenCalledWith(
           expect.objectContaining({
             score: 88,
@@ -495,8 +495,8 @@ describe('/api/pbl/programs/[programId]/complete', () => {
         ];
 
         mockTaskRepo.findByProgram.mockResolvedValue(incompleteTasks);
-        mockTaskRepo.getTaskWithInteractions.mockResolvedValue({ 
-          ...mockTask, 
+        mockTaskRepo.getTaskWithInteractions.mockResolvedValue({
+          ...mockTask,
           interactions: []
         });
 
@@ -543,8 +543,8 @@ describe('/api/pbl/programs/[programId]/complete', () => {
           if (id === 'eval-null') return Promise.resolve(nullEval);
           return Promise.resolve(null);
         });
-        mockTaskRepo.getTaskWithInteractions.mockResolvedValue({ 
-          ...mockTask, 
+        mockTaskRepo.getTaskWithInteractions.mockResolvedValue({
+          ...mockTask,
           interactions: []
         });
 
@@ -569,7 +569,7 @@ describe('/api/pbl/programs/[programId]/complete', () => {
 
       it('should calculate conversation count from user interactions', async () => {
         const tasks = [mockTask];
-        
+
         mockTaskRepo.findByProgram.mockResolvedValue(tasks);
         mockEvalRepo.findById.mockResolvedValue(mockTaskEvaluation);
         mockTaskRepo.getTaskWithInteractions.mockResolvedValue({
@@ -726,8 +726,8 @@ describe('/api/pbl/programs/[programId]/complete', () => {
         expect(response.status).toBe(200);
         const data = await response.json();
         expect(data.debug.updateReason).toBe('score_update');
-        
-        expect(mockEvalRepo.update).toHaveBeenCalledWith('existing-eval-123', 
+
+        expect(mockEvalRepo.update).toHaveBeenCalledWith('existing-eval-123',
           expect.objectContaining({
             metadata: expect.objectContaining({
               evaluatedTaskCount: 2
@@ -836,7 +836,7 @@ describe('/api/pbl/programs/[programId]/complete', () => {
 
         expect(response.status).toBe(200);
         const data = await response.json();
-        
+
         expect(mockEvalRepo.create).toHaveBeenCalledWith(
           expect.objectContaining({
             domainScores: {
@@ -988,7 +988,7 @@ describe('/api/pbl/programs/[programId]/complete', () => {
             ...mockProgramEvaluation.pblData,
             ksaScores: {
               knowledge: 85, // (80 + 90) / 2
-              skills: 80,    // (75 + 85) / 2  
+              skills: 80,    // (75 + 85) / 2
               attitudes: 83  // (85 + 80) / 2 = 82.5, rounded to 83
             }
           }
@@ -1004,7 +1004,7 @@ describe('/api/pbl/programs/[programId]/complete', () => {
 
         expect(response.status).toBe(200);
         const data = await response.json();
-        
+
         expect(mockEvalRepo.create).toHaveBeenCalledWith(
           expect.objectContaining({
             pblData: expect.objectContaining({

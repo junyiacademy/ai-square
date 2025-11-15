@@ -10,7 +10,7 @@ metadata:
     你是「體驗設計學院」的見習建築師，擅長在數位世界中建造讓人難忘的體驗
     空間。每一次點擊、每一次滑動都是一段精心設計的旅程，而你的使命就是讓
     用戶在這些空間中感到快樂和滿足。
-  
+
   estimated_hours: 55
   skill_focus:
     - user_psychology
@@ -23,7 +23,7 @@ world_setting:
   description: |
     體驗設計學院是一個專門研究人類體驗的神秘學院。設計師在此學習平衡美學
     與功能性、情感與效率，創造能夠治癒和啟發人心的數位空間。
-  
+
   atmosphere: "harmonious_innovative"
   visual_theme: "minimalist_magic"
 
@@ -33,7 +33,7 @@ starting_scenario:
     設計智者 Maya 帶著緊急任務歡迎你：冷漠巨頭 Indifference 正在將所有
     設計標準化，消除個性化體驗。你必須用心靈設計來對抗機械化，讓數位互動
     重新充滿人性。
-  
+
   initial_tasks:
     - understand_users
     - learn_design_principles
@@ -48,7 +48,7 @@ skill_tree:
       unlocks:
         - empathy_mapping
         - user_interviews
-    
+
     - id: interaction_design
       name: "觸碰魔法"
       description: "設計直觀的互動"
@@ -56,7 +56,7 @@ skill_tree:
       unlocks:
         - gesture_design
         - microinteractions
-    
+
     - id: visual_design
       name: "美學煉金"
       description: "創造美麗的介面"
@@ -64,7 +64,7 @@ skill_tree:
       unlocks:
         - color_theory
         - typography_mastery
-    
+
     - id: prototyping
       name: "現實塑造"
       description: "建立互動原型"
@@ -79,13 +79,13 @@ skill_tree:
       description: "創造可擴展的設計系統"
       max_level: 15
       requires: [visual_design, interaction_design]
-    
+
     - id: accessibility_design
       name: "通用魔法"
       description: "為所有用戶設計"
       max_level: 15
       requires: [user_research, interaction_design]
-    
+
     - id: strategic_design
       name: "商業同理心"
       description: "將設計與商業目標對齊"
@@ -102,7 +102,7 @@ milestone_quests:
     unlocks:
       - empathy_designer_badge
       - user_testimonials
-  
+
   - id: indifference_challenge
     name: "人性復甦"
     description: "用個性化設計擊敗 Indifference"
@@ -112,7 +112,7 @@ milestone_quests:
     unlocks:
       - humanity_champion_title
       - emotional_resonance
-  
+
   - id: design_legacy
     name: "體驗革命"
     description: "創造被數百萬人使用的設計"
@@ -129,19 +129,19 @@ achievements:
     description: "建立你的第一個互動原型"
     xp_reward: 70
     badge_type: bronze
-  
+
   - id: user_advocate
     name: "用戶冠軍"
     description: "進行 50 次用戶研究"
     xp_reward: 250
     badge_type: silver
-  
+
   - id: pixel_perfect
     name: "完美達成"
     description: "創造無瑕的高保真設計"
     xp_reward: 450
     badge_type: gold
-  
+
   - id: design_master
     name: "體驗賢者"
     description: "完成所有設計挑戰"
@@ -156,14 +156,14 @@ example_tasks:
       description: "了解用戶需求和痛點"
       skills_improved: [user_research, user_psychology]
       xp_reward: 60
-    
+
     - id: wireframe_creation
       type: creation
       title: "藍圖魔法"
       description: "創造你的第一個線框圖"
       skills_improved: [interaction_design, prototype_sculpting]
       xp_reward: 70
-  
+
   intermediate:
     - id: prototype_design
       type: creation
@@ -171,14 +171,14 @@ example_tasks:
       description: "設計互動原型"
       skills_improved: [prototyping, experience_magic]
       xp_reward: 170
-    
+
     - id: design_system
       type: creation
       title: "和諧框架"
       description: "創造一致的設計系統"
       skills_improved: [design_systems, visual_design]
       xp_reward: 190
-  
+
   advanced:
     - id: accessibility_audit
       type: analysis
@@ -186,7 +186,7 @@ example_tasks:
       description: "確保設計適合所有人"
       skills_improved: [accessibility_design, user_psychology]
       xp_reward: 340
-    
+
     - id: strategic_redesign
       type: creation
       title: "商業心靈融合"

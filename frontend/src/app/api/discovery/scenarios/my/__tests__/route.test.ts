@@ -11,7 +11,7 @@ import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 // Mock dependencies
 jest.mock('@/lib/auth/unified-auth', () => ({
   getUnifiedAuth: jest.fn(),
-  createUnauthorizedResponse: jest.fn(() => 
+  createUnauthorizedResponse: jest.fn(() =>
     new Response(JSON.stringify({ success: false, error: 'Authentication required' }), {
       status: 401,
       headers: { 'Content-Type': 'application/json' }
@@ -138,7 +138,7 @@ describe('/api/discovery/scenarios/my', () => {
       ];
 
       mockProgramRepo.findByUser.mockResolvedValue(mockPrograms);
-      
+
       // Mock scenario for discovery program only
       mockScenarioRepo.findById.mockImplementation((id: string) => {
         if (id === 'scenario-1') {
@@ -157,7 +157,7 @@ describe('/api/discovery/scenarios/my', () => {
 
       expect(response.status).toBe(200);
       const data = await response.json();
-      
+
       expect(data.scenarios).toHaveLength(1);
       expect(data.scenarios[0].scenarioId).toBe('scenario-1');
       expect(mockScenarioRepo.findById).toHaveBeenCalledTimes(1);
@@ -185,7 +185,7 @@ describe('/api/discovery/scenarios/my', () => {
         title: { en: 'Data Analyst Path', zh: '數據分析師路徑' },
         description: { en: 'Discover data analysis', zh: '探索數據分析' },
         discoveryData: { careerType: 'data_analyst' },
-        metadata: { 
+        metadata: {
           skillFocus: ['python', 'sql', 'statistics'],
           category: 'technology'
         }
@@ -199,28 +199,28 @@ describe('/api/discovery/scenarios/my', () => {
 
       expect(response.status).toBe(200);
       const data = await response.json();
-      
+
       expect(data.scenarios).toHaveLength(1);
       const scenario = data.scenarios[0];
-      
+
       // Check basic fields
       expect(scenario.scenarioId).toBe('scenario-1');
       expect(scenario.id).toBe('data_analyst');
       expect(scenario.title).toBe('Data Analyst Path');
       expect(scenario.subtitle).toBe('Discover data analysis');
       expect(scenario.careerType).toBe('data_analyst');
-      
+
       // Check status and progress
       expect(scenario.primaryStatus).toBe('in-progress');
       expect(scenario.currentProgress).toBe(50); // 2/4 = 50%
       expect(scenario.isActive).toBe(true);
-      
+
       // Check statistics
       expect(scenario.stats.completedCount).toBe(0);
       expect(scenario.stats.activeCount).toBe(1);
       expect(scenario.stats.totalAttempts).toBe(1);
       expect(scenario.stats.bestScore).toBe(0);
-      
+
       // Check active program details
       expect(scenario.userPrograms.active).toEqual({
         id: 'program-1',
@@ -231,7 +231,7 @@ describe('/api/discovery/scenarios/my', () => {
         xpEarned: 150
       });
       expect(scenario.userPrograms.total).toBe(1);
-      
+
       // Check metadata
       expect(scenario.skills).toEqual(['python', 'sql', 'statistics']);
       expect(scenario.category).toBe('technology');
@@ -293,20 +293,20 @@ describe('/api/discovery/scenarios/my', () => {
 
       expect(response.status).toBe(200);
       const data = await response.json();
-      
+
       expect(data.scenarios).toHaveLength(1);
       const scenario = data.scenarios[0];
-      
+
       // Should be mastered because has completed programs
       expect(scenario.primaryStatus).toBe('mastered');
       expect(scenario.currentProgress).toBe(100);
-      
+
       // Should count all programs correctly
       expect(scenario.stats.completedCount).toBe(2);
       expect(scenario.stats.activeCount).toBe(1);
       expect(scenario.stats.totalAttempts).toBe(3);
       expect(scenario.stats.bestScore).toBe(92); // Best among completed
-      
+
       // Should show the active program
       expect(scenario.userPrograms.active).toEqual({
         id: 'program-3',
@@ -345,7 +345,7 @@ describe('/api/discovery/scenarios/my', () => {
 
       expect(response.status).toBe(200);
       const data = await response.json();
-      
+
       const scenario = data.scenarios[0];
       expect(scenario.userPrograms.active.id).toBe('program-1'); // First active
       expect(scenario.stats.activeCount).toBe(2);
@@ -387,7 +387,7 @@ describe('/api/discovery/scenarios/my', () => {
 
       expect(response.status).toBe(200);
       const data = await response.json();
-      
+
       const scenario = data.scenarios[0];
       expect(scenario.primaryStatus).toBe('in-progress');
       expect(scenario.currentProgress).toBe(60); // 3/5 = 60%
@@ -412,7 +412,7 @@ describe('/api/discovery/scenarios/my', () => {
 
       expect(response.status).toBe(200);
       const data = await response.json();
-      
+
       const scenario = data.scenarios[0];
       expect(scenario.primaryStatus).toBe('in-progress');
       expect(scenario.currentProgress).toBe(0); // 0/1 = 0% (fallback)
@@ -436,7 +436,7 @@ describe('/api/discovery/scenarios/my', () => {
 
       expect(response.status).toBe(200);
       const data = await response.json();
-      
+
       const scenario = data.scenarios[0];
       expect(scenario.primaryStatus).toBe('mastered');
       expect(scenario.currentProgress).toBe(100);
@@ -495,9 +495,9 @@ describe('/api/discovery/scenarios/my', () => {
 
       expect(response.status).toBe(200);
       const data = await response.json();
-      
+
       expect(data.scenarios).toHaveLength(3);
-      
+
       // Should be sorted by updatedAt (most recent first)
       expect(data.scenarios[0].scenarioId).toBe('scenario-2'); // 2024-01-03
       expect(data.scenarios[1].scenarioId).toBe('scenario-3'); // 2024-01-02
@@ -530,7 +530,7 @@ describe('/api/discovery/scenarios/my', () => {
 
       expect(response.status).toBe(200);
       const data = await response.json();
-      
+
       expect(data.scenarios[0].lastActivity).toBe('2024-01-05T12:00:00Z');
     });
 
@@ -559,7 +559,7 @@ describe('/api/discovery/scenarios/my', () => {
 
       expect(response.status).toBe(200);
       const data = await response.json();
-      
+
       expect(data.scenarios[0].lastActivity).toBe('2024-01-01T12:00:00Z');
     });
   });
@@ -577,7 +577,7 @@ describe('/api/discovery/scenarios/my', () => {
       mockGetUnifiedAuth.mockResolvedValue({
         user: { id: 'user-123', email: 'test@example.com', role: 'student' }
       });
-      
+
       mockProgramRepo.findByUser.mockResolvedValue([
         {
           id: 'program-1',
@@ -586,7 +586,7 @@ describe('/api/discovery/scenarios/my', () => {
           status: 'active'
         }
       ]);
-      
+
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
     });
 
@@ -596,7 +596,7 @@ describe('/api/discovery/scenarios/my', () => {
 
       expect(response.status).toBe(200);
       const data = await response.json();
-      
+
       expect(data.scenarios[0].title).toBe('English Title');
       expect(data.scenarios[0].subtitle).toBe('English Description');
     });
@@ -607,7 +607,7 @@ describe('/api/discovery/scenarios/my', () => {
 
       expect(response.status).toBe(200);
       const data = await response.json();
-      
+
       expect(data.scenarios[0].title).toBe('繁體中文標題');
       expect(data.scenarios[0].subtitle).toBe('繁體中文描述');
     });
@@ -618,7 +618,7 @@ describe('/api/discovery/scenarios/my', () => {
 
       expect(response.status).toBe(200);
       const data = await response.json();
-      
+
       expect(data.scenarios[0].title).toBe('繁體中文標題');
       expect(data.scenarios[0].subtitle).toBe('繁體中文描述');
     });
@@ -629,7 +629,7 @@ describe('/api/discovery/scenarios/my', () => {
 
       expect(response.status).toBe(200);
       const data = await response.json();
-      
+
       expect(data.scenarios[0].title).toBe('English Title');
       expect(data.scenarios[0].subtitle).toBe('English Description');
     });
@@ -650,7 +650,7 @@ describe('/api/discovery/scenarios/my', () => {
 
       expect(response.status).toBe(200);
       const data = await response.json();
-      
+
       expect(data.scenarios[0].title).toBe('Simple String Title');
       expect(data.scenarios[0].subtitle).toBe('Simple String Description');
     });
@@ -731,7 +731,7 @@ describe('/api/discovery/scenarios/my', () => {
       mockGetUnifiedAuth.mockResolvedValue({
         user: { id: 'user-123', email: 'test@example.com', role: 'student' }
       });
-      
+
       mockProgramRepo.findByUser.mockResolvedValue([
         {
           id: 'program-1',
@@ -758,7 +758,7 @@ describe('/api/discovery/scenarios/my', () => {
 
       expect(response.status).toBe(200);
       const data = await response.json();
-      
+
       expect(data.scenarios[0].careerType).toBe('data_scientist');
       expect(data.scenarios[0].id).toBe('data_scientist');
     });
@@ -779,7 +779,7 @@ describe('/api/discovery/scenarios/my', () => {
 
       expect(response.status).toBe(200);
       const data = await response.json();
-      
+
       expect(data.scenarios[0].careerType).toBe('software_engineer');
       expect(data.scenarios[0].id).toBe('software_engineer');
     });
@@ -800,9 +800,9 @@ describe('/api/discovery/scenarios/my', () => {
 
       expect(response.status).toBe(200);
       const data = await response.json();
-      
+
       expect(data.scenarios[0].careerType).toBe('unknown');
       expect(data.scenarios[0].id).toBe('unknown');
     });
   });
-}); 
+});

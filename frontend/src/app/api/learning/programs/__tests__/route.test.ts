@@ -29,7 +29,7 @@ describe('/api/learning/programs', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     // Setup default mocks
     (getUnifiedAuth as jest.Mock).mockResolvedValue(null);
   });
@@ -201,21 +201,21 @@ describe('/api/learning/programs', () => {
 
 /**
  * Learning Programs API Considerations:
- * 
+ *
  * 1. Authentication:
  *    - All endpoints require valid user session
  *    - Uses getUnifiedAuth for authentication
- * 
+ *
  * 2. Program Creation:
  *    - Requires valid scenario ID
  *    - Associates program with authenticated user
  *    - Initializes with default status and scores
- * 
+ *
  * 3. Error Handling:
  *    - Validates required fields
  *    - Handles database errors gracefully
  *    - Returns appropriate HTTP status codes
- * 
+ *
  * 4. Repository Pattern:
  *    - Uses repository factory for data access
  *    - Supports different implementations

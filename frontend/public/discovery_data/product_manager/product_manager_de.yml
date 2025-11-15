@@ -7,12 +7,12 @@ metadata:
   title: "Produkt-Alchemist - Product Manager"
   short_description: "Erschaffe perfekte Produkte im Marktschmelztiegel"
   long_description: |
-    Du bist ein frisch ausgebildeter Alchemist in der "Produkt-Alchemie-Werkstatt", 
-    geschickt darin, Nutzerbedürfnisse, technische Fähigkeiten und Geschäftsziele 
-    zu mächtigen Produkten zu verschmelzen. In dieser von Innovationsfunken erfüllten 
-    Werkstatt ist jede Iteration ein alchemistisches Experiment, und dein Ziel ist es, 
+    Du bist ein frisch ausgebildeter Alchemist in der "Produkt-Alchemie-Werkstatt",
+    geschickt darin, Nutzerbedürfnisse, technische Fähigkeiten und Geschäftsziele
+    zu mächtigen Produkten zu verschmelzen. In dieser von Innovationsfunken erfüllten
+    Werkstatt ist jede Iteration ein alchemistisches Experiment, und dein Ziel ist es,
     perfekte Produkte zu schaffen, die die Welt verändern können.
-  
+
   estimated_hours: 55
   skill_focus:
     - requirement_alchemy
@@ -22,22 +22,22 @@ metadata:
 world_setting:
   name: "Produkt-Alchemie-Werkstatt"
   description: |
-    Die Produkt-Alchemie-Werkstatt ist eine magische Schmiede, in der Ideen zu 
-    echten Produkten verwandelt werden. Hier lernen Product Manager die uralte Kunst, 
-    Nutzerwünsche, technische Beschränkungen und Geschäftsziele auszubalancieren, 
+    Die Produkt-Alchemie-Werkstatt ist eine magische Schmiede, in der Ideen zu
+    echten Produkten verwandelt werden. Hier lernen Product Manager die uralte Kunst,
+    Nutzerwünsche, technische Beschränkungen und Geschäftsziele auszubalancieren,
     um Produkte zu schaffen, die bei Millionen von Menschen Anklang finden.
-  
+
   atmosphere: "dynamic_creative"
   visual_theme: "innovation_forge"
 starting_scenario:
   title: "Die Herausforderung des Alchemisten"
   description: |
-    Strategie-Meister begrüßt dich in der Werkstatt mit einer Warnung: Deadline, 
-    der Zeit-Tyrann, zwingt Teams dazu, Produktqualität für Geschwindigkeit zu opfern. 
-    Währenddessen wird die Stimme der Nutzer lauter mit widersprüchlichen Forderungen. 
-    Du musst den Stein der Weisen des Produktmanagements finden - die Balance zwischen 
+    Strategie-Meister begrüßt dich in der Werkstatt mit einer Warnung: Deadline,
+    der Zeit-Tyrann, zwingt Teams dazu, Produktqualität für Geschwindigkeit zu opfern.
+    Währenddessen wird die Stimme der Nutzer lauter mit widersprüchlichen Forderungen.
+    Du musst den Stein der Weisen des Produktmanagements finden - die Balance zwischen
     Qualität, Geschwindigkeit und Nutzerzufriedenheit.
-  
+
   initial_tasks:
     - understand_users
     - analyze_market

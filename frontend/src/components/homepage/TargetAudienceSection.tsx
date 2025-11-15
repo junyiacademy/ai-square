@@ -71,7 +71,7 @@ export default function TargetAudienceSection() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {audiences.map((audience) => (
-            <div 
+            <div
               key={audience.key}
               className={`relative overflow-hidden rounded-2xl p-8 ${bgColorClasses[audience.color]} hover:shadow-xl transition-all duration-300`}
             >

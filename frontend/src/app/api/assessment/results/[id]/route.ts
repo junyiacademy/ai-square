@@ -21,7 +21,7 @@ export async function GET(
 ) {
   const { searchParams } = new URL(request.url);
   const userId = searchParams.get('userId');
-  
+
   if (!userId) {
     return NextResponse.json(
       { error: 'userId is required' },
@@ -38,7 +38,7 @@ export async function GET(
       // Fetch from PostgreSQL
       const userRepo = repositoryFactory.getUserRepository();
       const evaluationRepo = repositoryFactory.getEvaluationRepository();
-      
+
       // Get user by email (userId might be email)
       let user;
       if (userId.includes('@')) {
@@ -46,18 +46,18 @@ export async function GET(
       } else {
         user = await userRepo.findById(userId);
       }
-      
+
       if (!user) {
         throw new Error('User not found');
       }
-      
+
       // Get evaluation by ID
       const evaluation = await evaluationRepo.findById(assessmentId);
-      
+
       if (!evaluation || evaluation.userId !== user.id) {
         throw new Error('Assessment not found');
       }
-      
+
       // Convert to legacy format for compatibility
       return {
         assessment_id: evaluation.id,
@@ -73,16 +73,16 @@ export async function GET(
     } else {
       // Fetch from local storage with memoization
       const results = await readLocalResults();
-      
+
       // Find the specific assessment
-      const result = results.find((r: { user_id: string; assessment_id: string }) => 
+      const result = results.find((r: { user_id: string; assessment_id: string }) =>
         r.user_id === userId && r.assessment_id === assessmentId
       );
-      
+
       if (!result) {
         throw new Error('Assessment not found');
       }
-      
+
       return result;
     }
   }, {

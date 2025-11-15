@@ -1,6 +1,6 @@
 /**
  * AuthManager - Centralized Authentication Management
- * 
+ *
  * Industry standard: Single session token in httpOnly cookie
  * No multiple cookies, no complex checks, just simple and secure
  */
@@ -62,7 +62,7 @@ export class AuthManager {
    */
   static isValidSessionToken(token: string): boolean {
     if (!token) return false;
-    
+
     // Validate hex token format (32 bytes = 64 hex characters)
     // Tokens are generated using crypto.randomBytes(32).toString('hex')
     return /^[a-f0-9]{64}$/i.test(token);

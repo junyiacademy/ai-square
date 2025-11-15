@@ -5,10 +5,10 @@ describe('core/index', () => {
     expect(core).toBeDefined();
     expect(Object.keys(core).length).toBeGreaterThanOrEqual(0);
   });
-  
+
   it('should have expected structure', () => {
     const exports = Object.keys(core);
-    
+
     // Core module may export various utilities
     expect(Array.isArray(exports)).toBe(true);
   });

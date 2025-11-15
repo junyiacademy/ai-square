@@ -107,17 +107,17 @@ open coverage/index.html
 // src/lib/services/__tests__/pbl-yaml-loader.test.ts
 describe('PBLYamlLoader', () => {
   let loader: PBLYamlLoader;
-  
+
   beforeEach(() => {
     loader = new PBLYamlLoader();
   });
-  
+
   it('should load scenario from YAML', async () => {
     const result = await loader.load('test.yaml');
     expect(result).toHaveProperty('id');
     expect(result.tasks).toHaveLength(3);
   });
-  
+
   it('should handle missing file', async () => {
     await expect(loader.load('missing.yaml'))
       .rejects.toThrow('File not found');
@@ -132,7 +132,7 @@ describe('GET /api/pbl/scenarios', () => {
   it('should return scenarios list', async () => {
     const response = await GET(new Request('http://localhost/api/pbl/scenarios'));
     const data = await response.json();
-    
+
     expect(response.status).toBe(200);
     expect(data.success).toBe(true);
     expect(data.data.scenarios).toBeInstanceOf(Array);

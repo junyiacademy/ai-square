@@ -22,7 +22,7 @@ check_result() {
     local expected=$1
     local actual=$2
     local test_name=$3
-    
+
     if [ "$actual" = "$expected" ]; then
         echo -e "${GREEN}✅ PASS${NC}: $test_name (expected: $expected, got: $actual)"
         ((TESTS_PASSED++))

@@ -117,7 +117,7 @@ describe.skip('repositoryFactory instance', () => {
     expect(typeof repositoryFactory).toBe('object');
     expect(typeof repositoryFactory.getUserRepository).toBe('function');
   });
-  
+
   it('should have repository getter methods', () => {
     const { repositoryFactory } = require('../repository-factory');
     expect(typeof repositoryFactory.getUserRepository).toBe('function');

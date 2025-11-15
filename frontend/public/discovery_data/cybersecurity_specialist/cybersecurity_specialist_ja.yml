@@ -10,7 +10,7 @@ metadata:
     エリート訓練所です。データが新しい金となり、ハッカーがインターネットのあらゆる
     影に潜んでいる世界で、あなたは重要インフラを保護し、サイバー犯罪者を狩り、
     難攻不落のデジタル要塞を構築することを学びます。
-  
+
   estimated_hours: 65
   skill_focus:
     - threat_detection
@@ -24,7 +24,7 @@ world_setting:
     サイバー防衛アカデミーは物理的世界と仮想世界の両方に存在しています。生徒たちは
     シミュレートされたサイバー攻撃をナビゲートし、伝説的なホワイトハットハッカーから
     学び、国家や企業を数秒で壊滅させる可能性のある現実世界の脅威に備えます。
-  
+
   atmosphere: "high_stakes_tactical"
   visual_theme: "matrix_fortress"
 starting_scenario:
@@ -34,7 +34,7 @@ starting_scenario:
     ハッカー集団「Shadow Byte」が、グローバルインフラへの大規模攻撃を計画しています。
     あなたはサイバーセキュリティスキルを素早く習得し、防衛部隊に加わって
     デジタルアポカリプスを阻止しなければなりません。
-  
+
   initial_tasks:
     - understand_threats
     - setup_defenses

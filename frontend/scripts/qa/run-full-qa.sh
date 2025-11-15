@@ -34,13 +34,13 @@ run_test() {
     local test_name=$1
     local test_file=$2
     local log_file="$LOG_DIR/${test_name}_${TIMESTAMP}.log"
-    
+
     echo -e "${YELLOW}▶ Running $test_name...${NC}"
-    
+
     if PGPASSWORD=$DB_PASSWORD psql -h $DB_HOST -p $DB_PORT -U $DB_USER -d $DB_NAME \
         -f $test_file > "$log_file" 2>&1; then
         echo -e "${GREEN}✓ $test_name completed${NC}"
-        
+
         # Check for critical issues
         if grep -q "✗ CRITICAL" "$log_file"; then
             echo -e "${RED}  ⚠ CRITICAL issues found! Check $log_file${NC}"
@@ -54,7 +54,7 @@ run_test() {
         echo -e "${RED}✗ $test_name failed! Check $log_file${NC}"
         return 1
     fi
-    
+
     return 0
 }
 
@@ -100,7 +100,7 @@ if [ "$SKIP_LOAD_TEST" != "true" ]; then
     echo ""
     echo -e "${YELLOW}Load test will create significant test data.${NC}"
     echo -e "${YELLOW}Set SKIP_LOAD_TEST=true to skip.${NC}"
-    
+
     if run_test "Load Testing" "scripts/qa/load-test.sql"; then
         ((TESTS_PASSED++))
     else

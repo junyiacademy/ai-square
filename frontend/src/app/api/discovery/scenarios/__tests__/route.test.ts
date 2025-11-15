@@ -74,7 +74,7 @@ describe('/api/discovery/scenarios', () => {
 
       expect(response.status).toBe(200);
       const data = await response.json();
-      
+
       expect(data.success).toBe(true);
       expect(data.data.scenarios).toHaveLength(2);
       expect(data.data.total).toBe(2);
@@ -104,7 +104,7 @@ describe('/api/discovery/scenarios', () => {
 
       expect(response.status).toBe(200);
       const data = await response.json();
-      
+
       expect(data.success).toBe(true);
       expect(data.data.scenarios).toHaveLength(0);
       expect(data.data.total).toBe(0);
@@ -120,7 +120,7 @@ describe('/api/discovery/scenarios', () => {
 
       expect(response.status).toBe(200);
       const data = await response.json();
-      
+
       expect(data.success).toBe(true);
       expect(data.data.scenarios).toHaveLength(0);
       expect(data.data.total).toBe(0);
@@ -150,7 +150,7 @@ describe('/api/discovery/scenarios', () => {
 
       expect(response.status).toBe(200);
       const data = await response.json();
-      
+
       expect(data.meta.language).toBe('en');
       expect(data.data.scenarios[0].title).toBe('English Title');
       expect(data.data.scenarios[0].description).toBe('English Description');
@@ -162,7 +162,7 @@ describe('/api/discovery/scenarios', () => {
 
       expect(response.status).toBe(200);
       const data = await response.json();
-      
+
       expect(data.meta.language).toBe('zh');
       expect(data.data.scenarios[0].title).toBe('中文標題');
       expect(data.data.scenarios[0].description).toBe('中文描述');
@@ -174,7 +174,7 @@ describe('/api/discovery/scenarios', () => {
 
       expect(response.status).toBe(200);
       const data = await response.json();
-      
+
       expect(data.meta.language).toBe('es');
       expect(data.data.scenarios[0].title).toBe('Título Español');
       expect(data.data.scenarios[0].description).toBe('Descripción Española');
@@ -186,7 +186,7 @@ describe('/api/discovery/scenarios', () => {
 
       expect(response.status).toBe(200);
       const data = await response.json();
-      
+
       expect(data.meta.language).toBe('fr');
       expect(data.data.scenarios[0].title).toBe('English Title');
       expect(data.data.scenarios[0].description).toBe('English Description');
@@ -210,7 +210,7 @@ describe('/api/discovery/scenarios', () => {
 
       expect(response.status).toBe(200);
       const data = await response.json();
-      
+
       expect(data.data.scenarios[0].title).toBe('Untitled');
       expect(data.data.scenarios[0].description).toBe('No description');
     });
@@ -271,7 +271,7 @@ describe('/api/discovery/scenarios', () => {
 
       expect(response.status).toBe(200);
       const data = await response.json();
-      
+
       // Check completed scenario
       const scenario1 = data.data.scenarios.find((s: any) => s.id === 'scenario-1');
       expect(scenario1.primaryStatus).toBe('mastered');
@@ -301,7 +301,7 @@ describe('/api/discovery/scenarios', () => {
 
       expect(response.status).toBe(200);
       const data = await response.json();
-      
+
       // All scenarios should be 'new' status
       data.data.scenarios.forEach((scenario: any) => {
         expect(scenario.primaryStatus).toBe('new');
@@ -348,7 +348,7 @@ describe('/api/discovery/scenarios', () => {
 
       expect(response.status).toBe(200);
       const data = await response.json();
-      
+
       const scenario1 = data.data.scenarios.find((s: any) => s.id === 'scenario-1');
       expect(scenario1.primaryStatus).toBe('mastered');
       expect(scenario1.stats.completedCount).toBe(2);
@@ -393,7 +393,7 @@ describe('/api/discovery/scenarios', () => {
 
       expect(response.status).toBe(200);
       const data = await response.json();
-      
+
       const scenario1 = data.data.scenarios.find((s: any) => s.id === 'scenario-1');
       expect(scenario1.stats.completedCount).toBe(1); // Only discovery program
       expect(scenario1.stats.bestScore).toBe(85); // Only discovery score
@@ -521,7 +521,7 @@ describe('/api/discovery/scenarios', () => {
 
     it('should handle missing repository methods gracefully', async () => {
       mockGetUnifiedAuth.mockResolvedValue(null);
-      
+
       // Mock scenario repo without findByMode method
       const mockScenarioRepoWithoutMethod = {} as unknown as import('@/lib/repositories/interfaces').IScenarioRepository;
       mockRepositoryFactory.getScenarioRepository.mockReturnValue(mockScenarioRepoWithoutMethod);
@@ -531,7 +531,7 @@ describe('/api/discovery/scenarios', () => {
 
       expect(response.status).toBe(200);
       const data = await response.json();
-      
+
       // Should handle gracefully and return empty array
       expect(data.success).toBe(true);
       expect(data.data.scenarios).toHaveLength(0);
@@ -566,10 +566,10 @@ describe('/api/discovery/scenarios', () => {
 
       expect(response.status).toBe(200);
       const data = await response.json();
-      
+
       expect(data.success).toBe(true);
       expect(data.data.scenarios).toHaveLength(2);
-      
+
       // Check graceful handling of malformed data
       const scenario1 = data.data.scenarios[0];
       expect(scenario1.title).toBe('Untitled'); // Fallback for non-object title
@@ -598,7 +598,7 @@ describe('/api/discovery/scenarios', () => {
 
       expect(response.status).toBe(200);
       const data = await response.json();
-      
+
       expect(data.success).toBe(true);
       expect(mockProgramRepo.findByUser).toHaveBeenCalledWith('test@example.com');
     });
@@ -636,10 +636,10 @@ describe('/api/discovery/scenarios', () => {
 
       expect(response.status).toBe(200);
       const data = await response.json();
-      
+
       const scenario1 = data.data.scenarios.find((s: any) => s.id === 'scenario-1');
       expect(scenario1.primaryStatus).toBe('in-progress');
       expect(scenario1.currentProgress).toBe(0); // 0/1 = 0% (fallback)
     });
   });
-}); 
+});

@@ -64,13 +64,13 @@ describe('TaskDetailPage', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     mockUseParams.mockReturnValue({
       id: 'scenario-1',
       programId: 'program-1',
       taskId: 'task-1'
     });
-    
+
     mockUseAuth.mockReturnValue({
       user: { email: 'test@example.com' },
       isLoggedIn: true,
@@ -169,7 +169,7 @@ describe('TaskDetailPage', () => {
 
     it('should show loading state during submission', async () => {
       const user = userEvent.setup();
-      
+
       // Mock slow submission
       (fetch as jest.MockedFunction<typeof fetch>)
         .mockResolvedValueOnce({

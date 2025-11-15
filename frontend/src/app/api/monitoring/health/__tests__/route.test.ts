@@ -30,17 +30,17 @@ describe('/api/monitoring/health', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     // Setup default successful mocks
     mockPoolInstance = {
       query: jest.fn().mockResolvedValue({ rows: [{ health_check: 1 }] }),
       end: jest.fn().mockResolvedValue(undefined),
     };
-    
+
     (Pool as unknown as jest.Mock).mockImplementation(() => mockPoolInstance);
-    
+
     (distributedCacheService.getWithRevalidation as jest.Mock).mockResolvedValue('test-value');
-    
+
     // Reset process.memoryUsage
     const mockMemoryUsage = jest.fn(() => ({
       rss: 100 * 1024 * 1024,
@@ -55,7 +55,7 @@ describe('/api/monitoring/health', () => {
   describe('GET /api/monitoring/health', () => {
     it('should return healthy status when all services are up', async () => {
       process.env.REDIS_ENABLED = 'true';
-      
+
       const response = await GET();
       const data = await response.json();
 
@@ -70,7 +70,7 @@ describe('/api/monitoring/health', () => {
 
     it('should return unhealthy when database is down', async () => {
       mockPoolInstance.query.mockRejectedValue(new Error('Connection refused'));
-      
+
       const response = await GET();
       const data = await response.json();
 
@@ -85,7 +85,7 @@ describe('/api/monitoring/health', () => {
       (distributedCacheService.getWithRevalidation as jest.Mock).mockRejectedValue(
         new Error('Redis connection failed')
       );
-      
+
       const response = await GET();
       const data = await response.json();
 
@@ -98,7 +98,7 @@ describe('/api/monitoring/health', () => {
 
     it('should show Redis as disabled when REDIS_ENABLED is not true', async () => {
       process.env.REDIS_ENABLED = 'false';
-      
+
       const response = await GET();
       const data = await response.json();
 
@@ -109,7 +109,7 @@ describe('/api/monitoring/health', () => {
 
     it('should return degraded when memory usage is high', async () => {
       process.env.REDIS_ENABLED = 'true';
-      
+
       // Mock high memory usage (> 90%)
       const highMemoryUsage = jest.fn(() => ({
         rss: 7.5 * 1024 * 1024 * 1024,
@@ -119,7 +119,7 @@ describe('/api/monitoring/health', () => {
         arrayBuffers: 500 * 1024 * 1024,
       }));
       (process.memoryUsage as unknown as jest.Mock) = highMemoryUsage;
-      
+
       const response = await GET();
       const data = await response.json();
 
@@ -130,7 +130,7 @@ describe('/api/monitoring/health', () => {
 
     it('should include response times for services', async () => {
       process.env.REDIS_ENABLED = 'true';
-      
+
       const response = await GET();
       const data = await response.json();
 
@@ -150,13 +150,13 @@ describe('/api/monitoring/health', () => {
         configurable: true
       });
       process.env.npm_package_version = '2.0.1';
-      
+
       const response = await GET();
       const data = await response.json();
 
       expect(data.environment).toBe('production');
       expect(data.version).toBe('2.0.1');
-      
+
       // Restore original values
       if (originalNodeEnv !== undefined) {
         Object.defineProperty(process.env, 'NODE_ENV', {
@@ -174,7 +174,7 @@ describe('/api/monitoring/health', () => {
 
     it('should handle unexpected database response', async () => {
       mockPoolInstance.query.mockResolvedValue({ rows: [] });
-      
+
       const response = await GET();
       const data = await response.json();
 
@@ -187,7 +187,7 @@ describe('/api/monitoring/health', () => {
       mockPoolInstance.query.mockImplementation(() => {
         throw new Error('Unexpected error');
       });
-      
+
       const response = await GET();
       const data = await response.json();
 
@@ -197,7 +197,7 @@ describe('/api/monitoring/health', () => {
 
     it('should set no-cache headers', async () => {
       const response = await GET();
-      
+
       expect(response.headers.get('Cache-Control')).toBe('no-cache, no-store, must-revalidate');
     });
   });
@@ -205,7 +205,7 @@ describe('/api/monitoring/health', () => {
   describe('HEAD /api/monitoring/health', () => {
     it('should return 200 status for simple alive check', async () => {
       const response = await HEAD();
-      
+
       expect(response.status).toBe(200);
       expect(response.body).toBeNull();
     });

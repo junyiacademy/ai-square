@@ -37,7 +37,7 @@ const originalConsoleWarn = console.warn;
 global.console.error = (...args: unknown[]) => {
   // Filter out expected errors
   const errorString = args[0]?.toString() || '';
-  
+
   // Ignore specific expected errors
   const ignoredErrors = [
     'Not Found',
@@ -54,11 +54,11 @@ global.console.error = (...args: unknown[]) => {
     'Error setting file metadata:',
     'Error downloading file:',
   ];
-  
-  const shouldIgnore = ignoredErrors.some(ignored => 
+
+  const shouldIgnore = ignoredErrors.some(ignored =>
     errorString.includes(ignored)
   );
-  
+
   if (!shouldIgnore) {
     originalConsoleError(...args);
   }
@@ -67,17 +67,17 @@ global.console.error = (...args: unknown[]) => {
 global.console.warn = (...args: unknown[]) => {
   // Filter out expected warnings
   const warnString = args[0]?.toString() || '';
-  
+
   const ignoredWarnings = [
     'Redis not available',
     'Cache miss',
     'Using fallback',
   ];
-  
-  const shouldIgnore = ignoredWarnings.some(ignored => 
+
+  const shouldIgnore = ignoredWarnings.some(ignored =>
     warnString.includes(ignored)
   );
-  
+
   if (!shouldIgnore) {
     originalConsoleWarn(...args);
   }
@@ -88,13 +88,13 @@ afterAll(async () => {
   // Restore console methods
   global.console.error = originalConsoleError;
   global.console.warn = originalConsoleWarn;
-  
+
   // Close any open handles
   await new Promise(resolve => setTimeout(resolve, 100));
 });
 
 // Global test utilities
-export const waitFor = (ms: number) => 
+export const waitFor = (ms: number) =>
   new Promise(resolve => setTimeout(resolve, ms));
 
 export const retryOperation = async <T>(
@@ -103,7 +103,7 @@ export const retryOperation = async <T>(
   delay: number = 1000
 ): Promise<T> => {
   let lastError: Error | undefined;
-  
+
   for (let i = 0; i < maxRetries; i++) {
     try {
       return await operation();
@@ -114,7 +114,7 @@ export const retryOperation = async <T>(
       }
     }
   }
-  
+
   throw lastError;
 };
 
@@ -136,7 +136,7 @@ expect.extend({
       };
     }
   },
-  
+
   toHaveStatus(response: { status: number }, expectedStatus: number) {
     const pass = response.status === expectedStatus;
     if (pass) {

@@ -200,7 +200,7 @@ describe('PBL Evaluate Types', () => {
       expect(result.detailedScores).toHaveProperty('criticalThinking');
       expect(result.detailedScores).toHaveProperty('ethicalConsideration');
       expect(result.detailedScores).toHaveProperty('practicalApplication');
-      
+
       expect(result.detailedScores.relevance).toBe(75);
       expect(result.detailedScores.depth).toBe(80);
       expect(result.detailedScores.criticalThinking).toBe(85);
@@ -395,7 +395,7 @@ describe('PBL Evaluate Types', () => {
         nextSteps: [],
         overallAssessment: 'Good work'
       };
-      
+
       const request: EvaluateRequestBody = {
         conversations: [conversation],
         task: {} as any

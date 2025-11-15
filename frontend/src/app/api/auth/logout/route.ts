@@ -6,21 +6,21 @@ export async function POST(request: NextRequest) {
   try {
     // Get session token from cookie
     const sessionToken = request.cookies.get('sessionToken')?.value;
-    
+
     // Destroy session in store
     if (sessionToken) {
       SecureSession.destroySession(sessionToken);
     }
-    
+
     // Create response
     const response = NextResponse.json({
       success: true,
       message: 'Logged out successfully'
     });
-    
+
     // Clear auth cookies
     AuthManager.clearAuthCookies(response);
-    
+
     return response;
   } catch (error) {
     console.error('Logout error:', error);

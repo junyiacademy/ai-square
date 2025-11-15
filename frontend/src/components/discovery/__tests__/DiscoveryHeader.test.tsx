@@ -47,7 +47,7 @@ describe('DiscoveryHeader', () => {
     expect(titles).toHaveLength(2);
     expect(titles[0]).toBeInTheDocument(); // breadcrumb
     expect(titles[1]).toBeInTheDocument(); // main title
-    
+
     expect(screen.getByText('發現你的 AI 學習路徑')).toBeInTheDocument();
   });
 
@@ -57,10 +57,10 @@ describe('DiscoveryHeader', () => {
     // Navigation items appear in both desktop and mobile views
     const overviewButtons = screen.getAllByText('總覽');
     expect(overviewButtons.length).toBeGreaterThanOrEqual(1);
-    
+
     const evaluationButtons = screen.getAllByText('評估');
     expect(evaluationButtons.length).toBeGreaterThanOrEqual(1);
-    
+
     const scenariosButtons = screen.getAllByText('職業冒險');
     expect(scenariosButtons.length).toBeGreaterThanOrEqual(1);
   });
@@ -116,7 +116,7 @@ describe('DiscoveryHeader', () => {
     const overviewButtons = screen.getAllByRole('button', { name: /總覽/i });
     const evaluationButtons = screen.getAllByRole('button', { name: /評估/i });
     const scenariosButtons = screen.getAllByRole('button', { name: /職業冒險/i });
-    
+
     expect(overviewButtons[0]).not.toBeDisabled();
     expect(evaluationButtons[0]).not.toBeDisabled();
     expect(scenariosButtons[0]).not.toBeDisabled();

@@ -18,7 +18,7 @@ describe('CMS Types', () => {
   describe('ContentType enum', () => {
     it('should define all content types', () => {
       const validTypes: ContentType[] = ['domain', 'question', 'rubric', 'ksa'];
-      
+
       validTypes.forEach(type => {
         expect(['domain', 'question', 'rubric', 'ksa']).toContain(type);
       });
@@ -28,7 +28,7 @@ describe('CMS Types', () => {
   describe('ContentStatus enum', () => {
     it('should define all content statuses', () => {
       const validStatuses: ContentStatus[] = ['draft', 'published', 'archived'];
-      
+
       validStatuses.forEach(status => {
         expect(['draft', 'published', 'archived']).toContain(status);
       });
@@ -48,7 +48,7 @@ describe('CMS Types', () => {
         updated_by: 'user-2',
         title: 'AI Literacy Domain',
         description: 'Core AI literacy competencies',
-        content: { 
+        content: {
           name: 'Engaging with AI',
           competencies: []
         },

@@ -11,11 +11,11 @@ export async function updateUserPasswordHash(
   role: string = 'student'
 ): Promise<void> {
   const query = `
-    UPDATE users 
+    UPDATE users
     SET password_hash = $1, role = $2, updated_at = CURRENT_TIMESTAMP
     WHERE id = $3
   `;
-  
+
   await pool.query(query, [passwordHash, role, userId]);
 }
 
@@ -27,11 +27,11 @@ export async function updateUserEmailVerified(
   userId: string
 ): Promise<void> {
   const query = `
-    UPDATE users 
-    SET email_verified = true, email_verified_at = CURRENT_TIMESTAMP 
+    UPDATE users
+    SET email_verified = true, email_verified_at = CURRENT_TIMESTAMP
     WHERE id = $1
   `;
-  
+
   await pool.query(query, [userId]);
 }
 
@@ -53,7 +53,7 @@ export async function getUserWithPassword(
   metadata: Record<string, unknown>;
 } | null> {
   const query = `
-    SELECT 
+    SELECT
       id, email, name, password_hash as "passwordHash",
       role, email_verified as "emailVerified",
       onboarding_completed as "onboardingCompleted",
@@ -62,7 +62,7 @@ export async function getUserWithPassword(
     FROM users
     WHERE LOWER(email) = LOWER($1)
   `;
-  
+
   const { rows } = await pool.query(query, [email]);
   return rows[0] || null;
 }

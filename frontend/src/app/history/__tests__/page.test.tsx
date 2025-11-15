@@ -84,7 +84,7 @@ jest.mock('react-i18next', () => ({
         'discovery:status.active': 'Active',
         'discovery:status.inactive': 'Inactive',
       };
-      
+
       // Handle template strings
       if (key.includes('{{') && options) {
         let result = translations[key] || key;
@@ -93,7 +93,7 @@ jest.mock('react-i18next', () => ({
         });
         return result;
       }
-      
+
       return translations[key] || key;
     },
     i18n: {
@@ -155,7 +155,7 @@ describe('UnifiedHistoryPage', () => {
       });
 
       renderWithProviders(<UnifiedHistoryPage />);
-      
+
       expect(screen.getByText('Please log in to view your history')).toBeInTheDocument();
       expect(screen.getByText('Take Assessment')).toBeInTheDocument();
       expect(screen.getByText('Start Learning')).toBeInTheDocument();
@@ -169,13 +169,13 @@ describe('UnifiedHistoryPage', () => {
       });
 
       renderWithProviders(<UnifiedHistoryPage />);
-      
+
       expect(screen.getByText('Please log in to view your history')).toBeInTheDocument();
     });
 
     it('should handle invalid JSON in user data gracefully', () => {
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
-      
+
       mockLocalStorage.getItem.mockImplementation((key) => {
         if (key === 'isLoggedIn') return 'true';
         if (key === 'user') return 'invalid json';
@@ -183,10 +183,10 @@ describe('UnifiedHistoryPage', () => {
       });
 
       renderWithProviders(<UnifiedHistoryPage />);
-      
+
       expect(consoleSpy).toHaveBeenCalledWith('Error parsing user data:', expect.any(Error));
       expect(screen.getByText('Please log in to view your history')).toBeInTheDocument();
-      
+
       consoleSpy.mockRestore();
     });
   });
@@ -203,7 +203,7 @@ describe('UnifiedHistoryPage', () => {
       mockFetch.mockImplementation(() => new Promise(resolve => setTimeout(resolve, 100)));
 
       renderWithProviders(<UnifiedHistoryPage />);
-      
+
       expect(screen.getByTestId('history-skeleton')).toBeInTheDocument();
       expect(screen.getByText('Loading history...')).toBeInTheDocument();
     });
@@ -239,7 +239,7 @@ describe('UnifiedHistoryPage', () => {
       });
 
       renderWithProviders(<UnifiedHistoryPage />);
-      
+
       await waitFor(() => {
         expect(screen.queryByTestId('history-skeleton')).not.toBeInTheDocument();
       });
@@ -446,7 +446,7 @@ describe('UnifiedHistoryPage', () => {
 
     it('should handle API errors gracefully', async () => {
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
-      
+
       mockFetch.mockRejectedValue(new Error('Network error'));
 
       renderWithProviders(<UnifiedHistoryPage />);
@@ -460,7 +460,7 @@ describe('UnifiedHistoryPage', () => {
 
     it('should handle partial API failures', async () => {
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
-      
+
       mockFetch.mockImplementation((url) => {
         if (url.includes('/api/assessment/results')) {
           return Promise.resolve({
@@ -1278,7 +1278,7 @@ describe('UnifiedHistoryPage', () => {
         const highScoreElements = screen.getAllByText('92%');
         const mediumScoreElements = screen.getAllByText('75%');
         const lowScoreElements = screen.getAllByText('45%');
-        
+
         expect(highScoreElements[0]).toHaveClass('text-green-600');
         expect(mediumScoreElements[0]).toHaveClass('text-blue-600');
         expect(lowScoreElements[0]).toHaveClass('text-red-600');
@@ -1334,7 +1334,7 @@ describe('UnifiedHistoryPage', () => {
 
     it('should handle malformed API responses gracefully', async () => {
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
-      
+
       mockFetch.mockImplementation((url) => {
         if (url.includes('/api/assessment/results')) {
           return Promise.resolve({
@@ -1400,7 +1400,7 @@ describe('UnifiedHistoryPage', () => {
 
     it('should handle discovery programs with no scenarios returned', async () => {
       const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
-      
+
       mockFetch.mockImplementation((url) => {
         if (url.includes('/api/discovery/my-programs')) {
           return Promise.resolve({

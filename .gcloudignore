@@ -28,7 +28,7 @@ __tests__/
 # Frontend specific ignores for backend deployment
 frontend/
 
-# Backend specific ignores for frontend deployment  
+# Backend specific ignores for frontend deployment
 backend/
 
 # Development files

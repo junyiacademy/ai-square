@@ -7,13 +7,13 @@ export class GitHubStorage {
   private owner: string;
   private repo: string;
   private basePath: string = 'cms/content';
-  
+
   constructor() {
     const token = process.env.GITHUB_TOKEN;
     if (!token) {
       throw new Error('GITHUB_TOKEN is required');
     }
-    
+
     this.octokit = new Octokit({ auth: token });
     this.owner = process.env.GITHUB_OWNER || 'junyiacademy';
     this.repo = process.env.GITHUB_REPO || 'ai-square';
@@ -27,12 +27,12 @@ export class GitHubStorage {
   private getFromCache<T>(key: string): T | null {
     const entry = this.cache.get(key);
     if (!entry) return null;
-    
+
     if (Date.now() > entry.expires) {
       this.cache.delete(key);
       return null;
     }
-    
+
     return entry.data as T;
   }
 
@@ -48,7 +48,7 @@ export class GitHubStorage {
       this.cache.clear();
       return;
     }
-    
+
     // Invalidate specific path and all parent paths
     const keys = Array.from(this.cache.keys());
     keys.forEach(key => {
@@ -118,7 +118,7 @@ export class GitHubStorage {
       }
 
       const content = Buffer.from(data.content, 'base64').toString('utf-8');
-      
+
       const file: FileContent = {
         name: data.name,
         path: path,
@@ -138,14 +138,14 @@ export class GitHubStorage {
 
   // Update file content
   async updateFile(
-    path: string, 
-    content: string, 
+    path: string,
+    content: string,
     message: string,
     branch?: string
   ): Promise<void> {
     try {
       const fullPath = `${this.basePath}/${path}`;
-      
+
       // Get current file to obtain SHA
       let sha: string | undefined;
       try {
@@ -155,7 +155,7 @@ export class GitHubStorage {
           path: fullPath,
           ref: branch
         });
-        
+
         if (!Array.isArray(data) && data.type === 'file') {
           sha = data.sha;
         }
@@ -223,7 +223,7 @@ export class GitHubStorage {
       owner: this.owner,
       repo: this.repo
     });
-    
+
     return data.map(branch => branch.name);
   }
 
@@ -305,7 +305,7 @@ export class GitHubStorage {
       repo: this.repo,
       branch: branchName
     });
-    
+
     return data;
   }
 }

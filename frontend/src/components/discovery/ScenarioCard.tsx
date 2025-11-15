@@ -33,11 +33,11 @@ export default function ScenarioCard({ scenario, index, showLastActivity = false
   const { t } = useTranslation('skills');
   const Icon = scenario.icon;
   const primaryStatus = scenario.primaryStatus || 'new';
-  const stats = scenario.stats || { 
-    completedCount: 0, 
-    activeCount: 0, 
+  const stats = scenario.stats || {
+    completedCount: 0,
+    activeCount: 0,
     totalAttempts: 0,
-    bestScore: 0 
+    bestScore: 0
   };
 
   return (
@@ -58,7 +58,7 @@ export default function ScenarioCard({ scenario, index, showLastActivity = false
           <div className="absolute inset-0 flex items-center justify-center">
             <Icon className="w-16 h-16 text-white/90" />
           </div>
-          
+
           {/* Status Badge */}
           {primaryStatus === 'mastered' && (
             <div className="absolute top-3 right-3 px-3 py-1 bg-green-100 backdrop-blur rounded-full flex items-center gap-1">
@@ -66,7 +66,7 @@ export default function ScenarioCard({ scenario, index, showLastActivity = false
               <span className="text-lg">🏆</span>
             </div>
           )}
-          
+
           {primaryStatus === 'in-progress' && (
             <div className="absolute top-3 right-3 px-3 py-1 bg-blue-100 backdrop-blur rounded-full">
               <span className="text-xs font-medium text-blue-700">
@@ -108,14 +108,14 @@ export default function ScenarioCard({ scenario, index, showLastActivity = false
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium text-gray-700">狀態</span>
               <div className={`px-3 py-1 rounded-full text-sm font-medium ${
-                primaryStatus === 'mastered' 
-                  ? 'bg-green-100 text-green-700' 
+                primaryStatus === 'mastered'
+                  ? 'bg-green-100 text-green-700'
                   : primaryStatus === 'in-progress'
                   ? 'bg-blue-100 text-blue-700'
                   : 'bg-gray-100 text-gray-600'
               }`}>
-                {primaryStatus === 'mastered' ? '已達成' : 
-                 primaryStatus === 'in-progress' ? '學習中' : 
+                {primaryStatus === 'mastered' ? '已達成' :
+                 primaryStatus === 'in-progress' ? '學習中' :
                  '尚未開始'}
               </div>
             </div>
@@ -153,8 +153,8 @@ export default function ScenarioCard({ scenario, index, showLastActivity = false
           {/* Action Button */}
           <div className="pt-4 mt-4 border-t border-gray-100">
             <button className="w-full py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-medium hover:from-purple-700 hover:to-blue-700 transition-all">
-              {primaryStatus === 'in-progress' ? '繼續學習' : 
-               primaryStatus === 'mastered' ? '再次挑戰' : 
+              {primaryStatus === 'in-progress' ? '繼續學習' :
+               primaryStatus === 'mastered' ? '再次挑戰' :
                '開始冒險'}
             </button>
           </div>

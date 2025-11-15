@@ -6,9 +6,9 @@ metadata:
   title: "Arsitek Pengalaman - UX Designer"
   short_description: "Bangun dunia pengalaman sempurna di ruang digital"
   long_description: |
-    Anda adalah arsitek magang di "Akademi Desain Pengalaman", terampil dalam 
-    membangun ruang pengalaman tak terlupakan di dunia digital. Setiap klik dan 
-    gesekan adalah perjalanan yang dirancang dengan hati-hati, dan misi Anda adalah 
+    Anda adalah arsitek magang di "Akademi Desain Pengalaman", terampil dalam
+    membangun ruang pengalaman tak terlupakan di dunia digital. Setiap klik dan
+    gesekan adalah perjalanan yang dirancang dengan hati-hati, dan misi Anda adalah
     membuat pengguna merasakan kegembiraan dan kepuasan di ruang-ruang ini.
   estimated_hours: 55
   skill_focus:
@@ -19,18 +19,18 @@ metadata:
 world_setting:
   name: "Akademi Desain Pengalaman"
   description: |
-    Akademi Desain Pengalaman adalah institusi misterius yang didedikasikan untuk 
-    mempelajari pengalaman manusia. Para desainer di sini belajar menyeimbangkan 
-    estetika dengan fungsionalitas, emosi dengan efisiensi, menciptakan ruang 
+    Akademi Desain Pengalaman adalah institusi misterius yang didedikasikan untuk
+    mempelajari pengalaman manusia. Para desainer di sini belajar menyeimbangkan
+    estetika dengan fungsionalitas, emosi dengan efisiensi, menciptakan ruang
     digital yang menyembuhkan dan menginspirasi.
   atmosphere: harmonious_innovative
   visual_theme: minimalist_magic
 starting_scenario:
   title: "Krisis Ketidakpedulian"
   description: |
-    Bijak Desain Maya menyambut Anda dengan misi mendesak: Ketidakpedulian, raksasa 
-    korporat yang dingin, sedang menstandarisasi semua desain, menghilangkan 
-    pengalaman yang dipersonalisasi. Anda harus menggunakan desain berjiwa untuk 
+    Bijak Desain Maya menyambut Anda dengan misi mendesak: Ketidakpedulian, raksasa
+    korporat yang dingin, sedang menstandarisasi semua desain, menghilangkan
+    pengalaman yang dipersonalisasi. Anda harus menggunakan desain berjiwa untuk
     memerangi mekanisasi dan mengembalikan kemanusiaan ke interaksi digital.
   initial_tasks:
     - understand_users

@@ -14,7 +14,7 @@ export async function GET(
   try {
     const programRepo = repositoryFactory.getProgramRepository();
     const program = await programRepo.findById(resolvedParams.id);
-    
+
     if (!program) {
       return NextResponse.json(
         { error: 'Program not found' },
@@ -52,11 +52,11 @@ export async function PATCH(
   try {
     const programRepo = repositoryFactory.getProgramRepository();
     const body = await request.json();
-    
+
     // Validate input
     const allowedFields = ['status', 'currentTaskIndex', 'completedTasks', 'totalScore', 'ksaScores'];
     const updateData: Record<string, unknown> = {};
-    
+
     for (const field of allowedFields) {
       if (body[field] !== undefined) {
         updateData[field] = body[field];
@@ -69,22 +69,22 @@ export async function PATCH(
     }
 
     const updatedProgram = await programRepo.update?.(resolvedParams.id, updateData);
-    
+
     if (!updatedProgram) {
       return NextResponse.json(
         { error: 'Failed to update program' },
         { status: 500 }
       );
     }
-    
+
     // If program is completed, update user XP
     if (body.status === 'completed') {
       const userRepo = repositoryFactory.getUserRepository();
       const scenarioRepo = repositoryFactory.getScenarioRepository();
-      
+
       const scenario = await scenarioRepo.findById(updatedProgram.scenarioId);
       const xpReward = scenario?.xpRewards?.completion || 100;
-      
+
       await userRepo.update(updatedProgram.userId, {
         totalXp: xpReward // This will be added to current XP in the repository
       });
@@ -93,14 +93,14 @@ export async function PATCH(
     return NextResponse.json(updatedProgram);
   } catch (error) {
     console.error('Error updating program:', error);
-    
+
     if (error instanceof Error && error.message === 'Program not found') {
       return NextResponse.json(
         { error: 'Program not found' },
         { status: 404 }
       );
     }
-    
+
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -115,12 +115,12 @@ export async function DELETE(
   const resolvedParams = await params;
   try {
     const programRepo = repositoryFactory.getProgramRepository();
-    
+
     // Mark as abandoned instead of deleting
     await programRepo.update?.(resolvedParams.id, { status: 'abandoned' });
-    
-    return NextResponse.json({ 
-      message: 'Program marked as abandoned' 
+
+    return NextResponse.json({
+      message: 'Program marked as abandoned'
     });
   } catch (error) {
     console.error('Error abandoning program:', error);

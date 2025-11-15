@@ -3,7 +3,7 @@
  * 統一的 repository mock 工廠，提供一致的測試資料
  */
 
-import type { 
+import type {
   IScenario, IProgram, ITask, IEvaluation
 } from '@/types/unified-learning';
 import type { User } from '@/lib/repositories/interfaces';
@@ -140,7 +140,7 @@ export const createMockEvaluation = (overrides?: Partial<IEvaluation>): IEvaluat
 // Repository Mock 工廠
 export const createMockRepository = <T>(defaultData: T | T[] = [] as T[]) => {
   const isArray = Array.isArray(defaultData);
-  
+
   return {
     findAll: jest.fn().mockResolvedValue(isArray ? defaultData : [defaultData]),
     findById: jest.fn().mockResolvedValue(isArray ? defaultData[0] : defaultData),

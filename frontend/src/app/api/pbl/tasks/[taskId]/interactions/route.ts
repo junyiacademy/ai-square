@@ -42,21 +42,21 @@ export async function POST(
         { status: 404 }
       );
     }
-    
+
     const currentInteractions = task.interactions || [];
-    
+
     // Add the new interaction with consistent format
     const newInteraction: Interaction = {
       timestamp: interaction.timestamp || new Date().toISOString(),
-      type: interaction.type === 'user' ? 'user_input' : 
-            interaction.type === 'ai' ? 'ai_response' : 
+      type: interaction.type === 'user' ? 'user_input' :
+            interaction.type === 'ai' ? 'ai_response' :
             'system_event',
       content: interaction.content,
       metadata: interaction.metadata
     };
-    
+
     const updatedInteractions = [...currentInteractions, newInteraction];
-    
+
     // Update task interactions using updateInteractions method
     if (taskRepo.updateInteractions) {
       await taskRepo.updateInteractions(taskId, updatedInteractions);
@@ -66,7 +66,7 @@ export async function POST(
         interactions: updatedInteractions
       });
     }
-    
+
     // For user interactions, also record attempt for scoring
     if (interaction.type === 'user') {
       await taskRepo.recordAttempt?.(taskId, {
@@ -77,7 +77,7 @@ export async function POST(
 
     // Clear cache for this task's interactions
     const cacheKey = `api:/api/pbl/tasks/${taskId}/interactions:`;
-    
+
     // Clear both local and distributed cache
     await Promise.all([
       cacheService.delete(cacheKey),
@@ -129,12 +129,12 @@ export async function GET(
 
     // Get interactions from task.interactions column
     const interactions = task.interactions || [];
-    
+
     // Transform interactions for frontend compatibility
     const transformedInteractions = interactions.map((i: Interaction) => ({
       id: `${task.id}_${i.timestamp}`,
-      type: i.type === 'user_input' ? 'user' : 
-            i.type === 'ai_response' ? 'ai' : 
+      type: i.type === 'user_input' ? 'user' :
+            i.type === 'ai_response' ? 'ai' :
             'system',
       content: i.content,
       timestamp: i.timestamp

@@ -78,7 +78,7 @@ describe('KSA Display Page', () => {
   describe('Loading State', () => {
     it('should show loading spinner initially', async () => {
       renderWithProviders(<KSADisplayPage />);
-      
+
       expect(screen.getByText('Loading...')).toBeInTheDocument();
     });
   });
@@ -86,7 +86,7 @@ describe('KSA Display Page', () => {
   describe('Data Loading and Display', () => {
     it('should fetch and display KSA data', async () => {
       renderWithProviders(<KSADisplayPage />);
-      
+
       await waitFor(() => {
         const element = screen.queryByText('title');
         if (element) expect(element).toBeInTheDocument();
@@ -94,7 +94,7 @@ describe('KSA Display Page', () => {
 
       // Check API was called
       expect(fetch).toHaveBeenCalledWith('/api/ksa?lang=en');
-      
+
       // Check content is displayed - use flexible matching and wait for load
       await waitFor(() => {
         expect(screen.getByText(/Knowledge framework description/i)).toBeInTheDocument();
@@ -103,7 +103,7 @@ describe('KSA Display Page', () => {
 
     it('should display section navigation with correct counts', async () => {
       renderWithProviders(<KSADisplayPage />);
-      
+
       await waitFor(() => {
         const element = screen.queryByText('title');
         if (element) expect(element).toBeInTheDocument();
@@ -131,7 +131,7 @@ describe('KSA Display Page', () => {
   describe('Section Navigation', () => {
     it('should switch between Knowledge, Skills, and Attitudes sections', async () => {
       renderWithProviders(<KSADisplayPage />);
-      
+
       await waitFor(() => {
         expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
       });
@@ -147,19 +147,19 @@ describe('KSA Display Page', () => {
                            screen.queryByText(/skills/i) ||
                            screen.queryByText('技能');
       if (skillsButton) await userEvent.click(skillsButton);
-      
+
       expect(screen.getByText('Skills framework description')).toBeInTheDocument();
 
       // Click on Attitudes - use flexible matching
       const attitudesButton = screen.getByRole('button', { name: /attitudes/i });
       await userEvent.click(attitudesButton);
-      
+
       expect(screen.getByText('Attitudes framework description')).toBeInTheDocument();
     });
 
     it('should highlight active section button', async () => {
       renderWithProviders(<KSADisplayPage />);
-      
+
       await waitFor(() => {
         expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
       });
@@ -175,7 +175,7 @@ describe('KSA Display Page', () => {
                            screen.queryByRole('tab', { name: /skills/i }) ||
                            screen.queryByText(/skills/i) ||
                            screen.queryByText('技能');
-      
+
       // Check if knowledge button is active (has indigo background)
       if (knowledgeButton && 'className' in knowledgeButton) {
         expect(knowledgeButton.className).toContain('bg-indigo-600');
@@ -190,7 +190,7 @@ describe('KSA Display Page', () => {
   describe('Theme Cards', () => {
     it('should display theme cards with correct information', async () => {
       renderWithProviders(<KSADisplayPage />);
-      
+
       await waitFor(() => {
         const element = screen.queryByText('title');
         if (element) expect(element).toBeInTheDocument();
@@ -202,11 +202,11 @@ describe('KSA Display Page', () => {
         const element = screen.queryByText('The Nature Of AI');
         if (element) expect(element).toBeInTheDocument();
       }, { timeout: 1000 });
-      
+
       // Click on theme card to expand and see the codes
       const themeCard = screen.getByText('The Nature Of AI').closest('div');
       await userEvent.click(themeCard!);
-      
+
       // Now the codes should be visible (since the component doesn't show theme explanation)
       expect(screen.getByText('K1.1')).toBeInTheDocument();
       expect(screen.getByText('AI systems use algorithms that combine step-by-step procedures')).toBeInTheDocument();
@@ -214,7 +214,7 @@ describe('KSA Display Page', () => {
 
     it('should expand and collapse theme details', async () => {
       renderWithProviders(<KSADisplayPage />);
-      
+
       await waitFor(() => {
         expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
       });
@@ -243,7 +243,7 @@ describe('KSA Display Page', () => {
   describe('Search Functionality', () => {
     it('should filter themes based on search term', async () => {
       renderWithProviders(<KSADisplayPage />);
-      
+
       await waitFor(() => {
         expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
       });
@@ -257,10 +257,10 @@ describe('KSA Display Page', () => {
                          screen.queryByRole('textbox') ||
                          document.querySelector('input[type="search"]') ||
                          document.querySelector('input');
-      
+
       // Type search term
       if (searchInput) await userEvent.type(searchInput, 'AI');
-      
+
       // Theme with AI should still be visible
       await waitFor(() => {
         expect(screen.getByText('The Nature Of AI')).toBeInTheDocument();
@@ -269,7 +269,7 @@ describe('KSA Display Page', () => {
 
     it('should show no results message when search yields no matches', async () => {
       renderWithProviders(<KSADisplayPage />);
-      
+
       await waitFor(() => {
         expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
       });
@@ -283,10 +283,10 @@ describe('KSA Display Page', () => {
                          screen.queryByRole('textbox') ||
                          document.querySelector('input[type="search"]') ||
                          document.querySelector('input');
-      
+
       // Type search term that doesn't match
       if (searchInput) await userEvent.type(searchInput, 'xyz123');
-      
+
       await waitFor(() => {
         // No results message should appear
         expect(screen.getByText('results.noResults')).toBeInTheDocument();
@@ -295,7 +295,7 @@ describe('KSA Display Page', () => {
 
     it('should clear search when clear button is clicked', async () => {
       renderWithProviders(<KSADisplayPage />);
-      
+
       await waitFor(() => {
         expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
       });
@@ -309,23 +309,23 @@ describe('KSA Display Page', () => {
                          screen.queryByRole('textbox') ||
                          document.querySelector('input[type="search"]') ||
                          document.querySelector('input');
-      
+
       // Type search term
       if (searchInput) {
         await userEvent.type(searchInput, 'test');
         expect(searchInput).toHaveValue('test');
       }
-      
+
       // Find and click the clear button if it exists
       if (searchInput) {
-        const clearButton = screen.queryByRole('button', { name: '' }) || 
-                          screen.queryAllByRole('button').find(btn => 
+        const clearButton = screen.queryByRole('button', { name: '' }) ||
+                          screen.queryAllByRole('button').find(btn =>
                             btn.querySelector('svg path[d*="M6"]')
                           );
-        
+
         if (clearButton) {
           await userEvent.click(clearButton);
-          
+
           // Wait for the state update
           await waitFor(() => {
             expect(searchInput).toHaveValue('');
@@ -338,7 +338,7 @@ describe('KSA Display Page', () => {
   describe('Questions Display', () => {
     it('should display reflection questions for skills', async () => {
       renderWithProviders(<KSADisplayPage />);
-      
+
       await waitFor(() => {
         expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
       });
@@ -367,9 +367,9 @@ describe('KSA Display Page', () => {
   describe('Error Handling', () => {
     it('should show error message when API fails', async () => {
       (fetch as jest.Mock).mockRejectedValueOnce(new Error('API Error'));
-      
+
       renderWithProviders(<KSADisplayPage />);
-      
+
       await waitFor(() => {
         const element = screen.queryByText('loadError');
         if (element) expect(element).toBeInTheDocument();
@@ -380,7 +380,7 @@ describe('KSA Display Page', () => {
   describe('Responsive Design', () => {
     it('should handle responsive design', async () => {
       renderWithProviders(<KSADisplayPage />);
-      
+
       // Should render without crashing
       expect(screen.getByText('Loading...')).toBeInTheDocument();
     });

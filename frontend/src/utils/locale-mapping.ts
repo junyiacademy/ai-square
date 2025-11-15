@@ -26,7 +26,7 @@ export function toBrowserLocale(internalCode: string): string {
     'ru': 'ru',
     'it': 'it',
   };
-  
+
   return mapping[internalCode] || internalCode;
 }
 
@@ -53,6 +53,6 @@ export function fromBrowserLocale(browserLocale: string): string {
     'ru': 'ru',
     'it': 'it',
   };
-  
+
   return mapping[browserLocale] || browserLocale;
 }

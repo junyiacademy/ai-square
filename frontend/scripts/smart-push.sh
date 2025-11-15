@@ -38,37 +38,37 @@ SAFE_PATTERNS=(
     "LICENSE"
     "*.yml"  # 大部分 yml 是配置
     "*.yaml"
-    
+
     # 配置類（但不包括關鍵配置）
     ".gitignore"
     ".prettierrc"
     ".prettierignore"
     ".dockerignore"
-    
+
     # 腳本和工具（不影響主程式）
     "scripts/*.sh"
     "scripts/*.js"
     "scripts/*.ts"
-    
+
     # 測試檔案本身
     "*.test.ts"
     "*.test.tsx"
     "*.spec.ts"
     "*.spec.tsx"
     "__tests__/*"
-    
+
     # 樣式檔案（通常安全）
     "*.css"
     "*.scss"
     "*.less"
-    
+
     # 靜態資源
     "public/images/*"
     "public/icons/*"
     "public/*.png"
     "public/*.jpg"
     "public/*.svg"
-    
+
     # 資料檔案
     "*.json"  # 大部分 JSON 是資料
     "public/*_data/*.yaml"
@@ -85,30 +85,30 @@ RISKY_PATTERNS=(
     "tailwind.config.*"
     "jest.config.*"
     ".env*"
-    
+
     # 資料庫相關
     "**/schema*.sql"
     "**/migration*.sql"
     "**/repositories/**/*.ts"
-    
+
     # API 路由
     "app/api/**/*.ts"
     "pages/api/**/*.ts"
-    
+
     # 核心服務
     "lib/services/**/*.ts"
     "lib/abstractions/**/*.ts"
     "lib/core/**/*.ts"
-    
+
     # 認證相關
     "**/auth/**/*.ts"
     "**/auth/**/*.tsx"
-    
+
     # Docker 和部署
     "Dockerfile*"
     "docker-compose*.yml"
     "deploy*.sh"
-    
+
     # CI/CD
     ".github/workflows/*.yml"
 )
@@ -120,7 +120,7 @@ echo ""
 for file in $CHANGED_FILES; do
     IS_SAFE=false
     IS_RISKY=false
-    
+
     # 檢查是否為安全檔案
     for pattern in "${SAFE_PATTERNS[@]}"; do
         if [[ "$file" == $pattern ]] || [[ "$file" == *"$pattern" ]]; then
@@ -128,7 +128,7 @@ for file in $CHANGED_FILES; do
             break
         fi
     done
-    
+
     # 檢查是否為高風險檔案
     for pattern in "${RISKY_PATTERNS[@]}"; do
         if [[ "$file" == $pattern ]] || [[ "$file" == *"$pattern" ]]; then
@@ -137,7 +137,7 @@ for file in $CHANGED_FILES; do
             break
         fi
     done
-    
+
     # 顯示檔案分析結果
     if [ "$IS_RISKY" = true ]; then
         echo -e "  ${RED}⚠️  $file ${NC}(需要測試)"
@@ -193,7 +193,7 @@ if [ "$NEEDS_FULL_TEST" = true ]; then
     echo "  3) 取消推送"
     echo ""
     read -p "請選擇 (1/2/3): " choice
-    
+
     case $choice in
         1)
             echo -e "${GREEN}執行完整測試...${NC}"
@@ -228,7 +228,7 @@ else
     echo "  3) 取消推送"
     echo ""
     read -p "請選擇 (1/2/3): " choice
-    
+
     case $choice in
         1)
             echo -e "${GREEN}推送中...${NC}"

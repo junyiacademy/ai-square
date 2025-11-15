@@ -4,7 +4,7 @@ import { CommitMessageRequest, CommitMessageResponse } from '@/types';
 
 export async function POST(request: NextRequest) {
   let requestData: CommitMessageRequest = { filePath: '', oldContent: '', newContent: '' };
-  
+
   try {
     requestData = await request.json() as CommitMessageRequest;
     const { filePath, oldContent, newContent } = requestData;
@@ -62,26 +62,26 @@ ${newContent}
 重要：必須詳細說明具體改了哪幾隻檔案，什麼樣的相關內容、為什麼要改、以及 review 時需要注意什麼。`;
 
     const commitMessage = await generateContent(prompt, systemPrompt);
-    
-    const response: CommitMessageResponse = { 
+
+    const response: CommitMessageResponse = {
       success: true,
       message: commitMessage.trim()
     };
     return NextResponse.json(response);
   } catch (error) {
     console.error('Generate commit message error:', error);
-    
+
     // Get filePath from requestData
     const filePath = requestData.filePath || 'unknown';
-    
+
     // Fallback to simple message if AI fails
     const fallbackMessage = `feat(cms): 更新 ${filePath} 內容
 
 更新檔案: ${filePath}
 
 🤖 Generated with AI Square CMS`;
-    
-    const response: CommitMessageResponse = { 
+
+    const response: CommitMessageResponse = {
       success: true,
       message: fallbackMessage
     };

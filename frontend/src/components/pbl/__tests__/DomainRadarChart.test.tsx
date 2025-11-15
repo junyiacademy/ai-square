@@ -47,8 +47,8 @@ import DomainRadarChart from '../DomainRadarChart'
 // Mock Chart.js and react-chartjs-2
 jest.mock('react-chartjs-2', () => ({
   Radar: ({ data, options }: any) => (
-    <div 
-      data-testid="radar-chart" 
+    <div
+      data-testid="radar-chart"
       data-chart-data={JSON.stringify(data)}
       data-chart-options={JSON.stringify(options)}
     >
@@ -114,7 +114,7 @@ describe('DomainRadarChart', () => {
     // Check dataset
     expect(chartData.datasets).toHaveLength(1)
     const dataset = chartData.datasets[0]
-    
+
     expect(dataset.label).toBe('homepage:domains.title')
     expect(dataset.data).toEqual([85, 72, 90, 78])
   })
@@ -159,7 +159,7 @@ describe('DomainRadarChart', () => {
       managing_with_ai: 0,
       designing_with_ai: 0,
     }
-    
+
     render(<DomainRadarChart domainScores={partialScores} />)
 
     const radarChart = screen.getByTestId('radar-chart')

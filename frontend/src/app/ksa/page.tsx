@@ -77,27 +77,27 @@ export default function KSADisplayPage() {
 
   const filterThemes = (themes: Record<string, KSATheme>) => {
     if (!searchTerm) return themes;
-    
+
     const filtered: Record<string, KSATheme> = {};
     Object.entries(themes).forEach(([themeKey, theme]) => {
       const themeMatches = formatThemeName(themeKey).toLowerCase().includes(searchTerm.toLowerCase()) ||
                           theme.explanation.toLowerCase().includes(searchTerm.toLowerCase());
-      
+
       const matchingCodes: Record<string, KSACode> = {};
       Object.entries(theme.codes).forEach(([codeKey, code]) => {
-        if (themeMatches || 
+        if (themeMatches ||
             code.summary.toLowerCase().includes(searchTerm.toLowerCase()) ||
             codeKey.toLowerCase().includes(searchTerm.toLowerCase()) ||
             (code.questions && code.questions.some(q => q.toLowerCase().includes(searchTerm.toLowerCase())))) {
           matchingCodes[codeKey] = code;
         }
       });
-      
+
       if (themeMatches || Object.keys(matchingCodes).length > 0) {
         filtered[themeKey] = { ...theme, codes: matchingCodes };
       }
     });
-    
+
     return filtered;
   };
 
@@ -127,10 +127,10 @@ export default function KSADisplayPage() {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full px-4 py-3 pl-12 pr-4 text-gray-700 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
             />
-            <svg 
+            <svg
               className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400"
-              fill="none" 
-              stroke="currentColor" 
+              fill="none"
+              stroke="currentColor"
               viewBox="0 0 24 24"
             >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -189,7 +189,7 @@ export default function KSADisplayPage() {
         {searchTerm && (
           <div className="text-center mb-6">
             <p className="text-gray-600">
-              {searchTerm ? 
+              {searchTerm ?
                 t('results.themesFoundFor', { count: Object.keys(filterThemes(currentSectionData?.themes || {})).length, search: searchTerm }) :
                 t('results.themesFound', { count: Object.keys(filterThemes(currentSectionData?.themes || {})).length })
               }

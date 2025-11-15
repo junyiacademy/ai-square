@@ -86,14 +86,14 @@ describe('ErrorTracker', () => {
       writable: true,
       configurable: true
     })
-    
+
     // Restore console spies to ensure they capture calls
     consoleGroupSpy.mockClear()
     consoleGroupEndSpy.mockClear()
     consoleErrorSpy.mockClear()
     consoleTableSpy.mockClear()
     consoleWarnSpy.mockClear()
-    
+
     // Clear errors before each test
     const errorTracker = getErrorTracker()
     errorTracker.clearErrors()
@@ -118,7 +118,7 @@ describe('ErrorTracker', () => {
     it('should return the same instance', () => {
       const instance1 = getErrorTracker()
       const instance2 = getErrorTracker()
-      
+
       expect(instance1).toBe(instance2)
     })
   })
@@ -127,9 +127,9 @@ describe('ErrorTracker', () => {
     it('should capture error with string message', () => {
       const errorTracker = getErrorTracker()
       const errorId = errorTracker.captureError('Test error message')
-      
+
       expect(errorId).toMatch(/^err_\d+_[a-z0-9]+$/)
-      
+
       const metrics = errorTracker.getMetrics()
       expect(metrics.totalErrors).toBe(1)
       expect(metrics.recentErrors[0].message).toBe('Test error message')
@@ -142,9 +142,9 @@ describe('ErrorTracker', () => {
         component: 'TestComponent',
         action: 'test_action'
       }, 'high')
-      
+
       expect(errorId).toBeTruthy()
-      
+
       const metrics = errorTracker.getMetrics()
       expect(metrics.totalErrors).toBe(1)
       expect(metrics.recentErrors[0].message).toBe('Test error object')
@@ -157,10 +157,10 @@ describe('ErrorTracker', () => {
       const errorTracker = getErrorTracker()
       const error = new Error('Context test')
       errorTracker.captureError(error, { userId: 'user123', url: 'https://example.com/test' })
-      
+
       const metrics = errorTracker.getMetrics()
       const capturedError = metrics.recentErrors[0]
-      
+
       expect(capturedError.context.userId).toBe('user123')
       expect(capturedError.context.url).toBe('https://example.com/test')
       expect(capturedError.context.userAgent).toBe('Mozilla/5.0 Test Browser')
@@ -171,7 +171,7 @@ describe('ErrorTracker', () => {
       const errorTracker = getErrorTracker()
       errorTracker.setEnabled(false)
       const errorId = errorTracker.captureError('Disabled error')
-      
+
       expect(errorId).toBe('')
       expect(errorTracker.getMetrics().totalErrors).toBe(0)
     })
@@ -180,7 +180,7 @@ describe('ErrorTracker', () => {
       const errorTracker = getErrorTracker()
       const id1 = errorTracker.captureError('Error 1')
       const id2 = errorTracker.captureError('Error 2')
-      
+
       expect(id1).not.toBe(id2)
       expect(id1).toMatch(/^err_\d+_[a-z0-9]+$/)
       expect(id2).toMatch(/^err_\d+_[a-z0-9]+$/)
@@ -196,12 +196,12 @@ describe('ErrorTracker', () => {
         { error: 'Not found' },
         { userId: 'user123' }
       )
-      
+
       expect(errorId).toBeTruthy()
-      
+
       const metrics = errorTracker.getMetrics()
       const apiError = metrics.recentErrors[0]
-      
+
       expect(apiError.message).toBe('API Error: 404 /api/test')
       expect(apiError.severity).toBe('medium')
       expect(apiError.context.component).toBe('API')
@@ -214,7 +214,7 @@ describe('ErrorTracker', () => {
     it('should set high severity for 5xx errors', () => {
       const errorTracker = getErrorTracker()
       errorTracker.captureApiError('/api/error', 500, 'Internal Server Error')
-      
+
       const metrics = errorTracker.getMetrics()
       expect(metrics.recentErrors[0].severity).toBe('high')
     })
@@ -223,7 +223,7 @@ describe('ErrorTracker', () => {
       const errorTracker = getErrorTracker()
       const response = { error: 'Complex error', code: 400 }
       errorTracker.captureApiError('/api/complex', 400, response)
-      
+
       const metrics = errorTracker.getMetrics()
       expect(metrics.recentErrors[0].context.response).toBe(JSON.stringify(response))
     })
@@ -238,12 +238,12 @@ describe('ErrorTracker', () => {
         'Validation failed',
         { formData: { email: 'test@example.com' } }
       )
-      
+
       expect(errorId).toBeTruthy()
-      
+
       const metrics = errorTracker.getMetrics()
       const userError = metrics.recentErrors[0]
-      
+
       expect(userError.message).toBe('Validation failed')
       expect(userError.severity).toBe('low')
       expect(userError.context.component).toBe('LoginForm')
@@ -256,7 +256,7 @@ describe('ErrorTracker', () => {
     it('should store errors in localStorage', () => {
       const errorTracker = getErrorTracker()
       errorTracker.captureError('Storage test')
-      
+
       expect(localStorageMock.setItem).toHaveBeenCalledWith(
         'error_tracker_reports',
         expect.stringContaining('Storage test')
@@ -267,17 +267,17 @@ describe('ErrorTracker', () => {
       localStorageMock.setItem.mockImplementationOnce(() => {
         throw new Error('Storage quota exceeded')
       })
-      
+
       const errorTracker = getErrorTracker()
       // The error should still be captured in memory even if localStorage fails
       const errorId = errorTracker.captureError('Storage error test')
-      
+
       // Verify error was captured in memory
       expect(errorId).toBeTruthy()
       const metrics = errorTracker.getMetrics()
       expect(metrics.totalErrors).toBe(1)
       expect(metrics.recentErrors[0].message).toBe('Storage error test')
-      
+
       // Verify localStorage was called but failed
       expect(localStorageMock.setItem).toHaveBeenCalled()
     })
@@ -288,10 +288,10 @@ describe('ErrorTracker', () => {
       for (let i = 0; i < 60; i++) {
         errorTracker.captureError(`Error ${i}`)
       }
-      
+
       const lastCall = localStorageMock.setItem.mock.calls[localStorageMock.setItem.mock.calls.length - 1]
       const storedErrors = JSON.parse(lastCall[1])
-      
+
       expect(storedErrors).toHaveLength(50)
     })
 
@@ -301,7 +301,7 @@ describe('ErrorTracker', () => {
       for (let i = 0; i < 150; i++) {
         errorTracker.captureError(`Memory Error ${i}`)
       }
-      
+
       const metrics = errorTracker.getMetrics()
       expect(metrics.totalErrors).toBe(100)
     })
@@ -313,9 +313,9 @@ describe('ErrorTracker', () => {
       errorTracker.captureError('Error 1', { component: 'ComponentA' }, 'high')
       errorTracker.captureError('Error 2', { component: 'ComponentA' }, 'medium')
       errorTracker.captureError('Error 3', { component: 'ComponentB' }, 'low')
-      
+
       const metrics = errorTracker.getMetrics()
-      
+
       expect(metrics.totalErrors).toBe(3)
       expect(metrics.errorsByType).toEqual({
         ComponentA: 2,
@@ -332,7 +332,7 @@ describe('ErrorTracker', () => {
     it('should handle errors without component', () => {
       const errorTracker = getErrorTracker()
       errorTracker.captureError('No component error')
-      
+
       const metrics = errorTracker.getMetrics()
       expect(metrics.errorsByType.Unknown).toBe(1)
     })
@@ -350,14 +350,14 @@ describe('ErrorTracker', () => {
         fingerprint: 'test'
       }
       localStorageMock.store['error_tracker_reports'] = JSON.stringify([storedError])
-      
+
       // Add error to memory
       const errorTracker = getErrorTracker()
       errorTracker.captureError('Memory error')
-      
+
       const allErrors = errorTracker.getAllErrors()
       expect(allErrors.length).toBeGreaterThan(1)
-      
+
       const messages = allErrors.map(e => e.message)
       expect(messages).toContain('Stored error')
       expect(messages).toContain('Memory error')
@@ -373,9 +373,9 @@ describe('ErrorTracker', () => {
         context: {},
         fingerprint: 'test'
       }
-      
+
       localStorageMock.store['error_tracker_reports'] = JSON.stringify([duplicateError, duplicateError])
-      
+
       const errorTracker = getErrorTracker()
       const allErrors = errorTracker.getAllErrors()
       const duplicateIds = allErrors.filter(e => e.id === sameId)
@@ -388,9 +388,9 @@ describe('ErrorTracker', () => {
       const errorTracker = getErrorTracker()
       errorTracker.captureError('Test error')
       expect(errorTracker.getMetrics().totalErrors).toBe(1)
-      
+
       errorTracker.clearErrors()
-      
+
       expect(errorTracker.getMetrics().totalErrors).toBe(0)
       expect(localStorageMock.removeItem).toHaveBeenCalledWith('error_tracker_reports')
     })
@@ -399,18 +399,18 @@ describe('ErrorTracker', () => {
       localStorageMock.removeItem.mockImplementationOnce(() => {
         throw new Error('Clear failed')
       })
-      
+
       const errorTracker = getErrorTracker()
       // Add an error first
       errorTracker.captureError('Test error for clear')
-      
-      // Clear should work for memory even if localStorage fails  
+
+      // Clear should work for memory even if localStorage fails
       errorTracker.clearErrors()
-      
+
       // Verify memory errors were cleared
       const metrics = errorTracker.getMetrics()
       expect(metrics.totalErrors).toBe(0)
-      
+
       // Verify localStorage removeItem was called but failed
       expect(localStorageMock.removeItem).toHaveBeenCalledWith('error_tracker_reports')
     })
@@ -424,14 +424,14 @@ describe('ErrorTracker', () => {
     it('should log errors in development mode', () => {
       const errorTracker = getErrorTracker()
       const errorId = errorTracker.captureError('Development error', { component: 'TestComp' })
-      
+
       // Verify error was captured
       expect(errorId).toBeTruthy()
       const metrics = errorTracker.getMetrics()
       expect(metrics.totalErrors).toBe(1)
       expect(metrics.recentErrors[0].message).toBe('Development error')
       expect(metrics.recentErrors[0].context.component).toBe('TestComp')
-      
+
       // In development mode, console methods should be called (though we can't spy on them due to setup.ts)
       // We verify the error was processed correctly instead
       expect(metrics.recentErrors[0].severity).toBe('medium')
@@ -440,17 +440,17 @@ describe('ErrorTracker', () => {
     it('should send to external service in production', async () => {
       Object.defineProperty(process.env, 'NODE_ENV', { value: 'production', writable: true, configurable: true })
       process.env.NEXT_PUBLIC_ERROR_REPORTING_URL = 'https://errors.example.com/api'
-      
+
       ;(global.fetch as jest.Mock).mockResolvedValueOnce({
         ok: true
       })
-      
+
       const errorTracker = getErrorTracker()
       errorTracker.captureError('Production error')
-      
+
       // Wait for async operation
       await new Promise(resolve => setTimeout(resolve, 0))
-      
+
       expect(global.fetch).toHaveBeenCalledWith(
         'https://errors.example.com/api',
         expect.objectContaining({
@@ -464,10 +464,10 @@ describe('ErrorTracker', () => {
     it('should not send to external service in development', () => {
       Object.defineProperty(process.env, 'NODE_ENV', { value: 'development', writable: true, configurable: true })
       delete process.env.NEXT_PUBLIC_ERROR_REPORTING_URL
-      
+
       const errorTracker = getErrorTracker()
       errorTracker.captureError('Development error')
-      
+
       expect(global.fetch).not.toHaveBeenCalled()
     })
   })
@@ -478,10 +478,10 @@ describe('ErrorTracker', () => {
       const error1 = new Error('Same message')
       const error2 = new Error('Same message')
       const context = { component: 'SameComponent', action: 'same_action' }
-      
+
       errorTracker.captureError(error1, context)
       errorTracker.captureError(error2, context)
-      
+
       const errors = errorTracker.getMetrics().recentErrors
       expect(errors[0].fingerprint).toBe(errors[1].fingerprint)
     })
@@ -490,7 +490,7 @@ describe('ErrorTracker', () => {
       const errorTracker = getErrorTracker()
       errorTracker.captureError('Message 1', { component: 'Comp1' })
       errorTracker.captureError('Message 2', { component: 'Comp2' })
-      
+
       const errors = errorTracker.getMetrics().recentErrors
       expect(errors[0].fingerprint).not.toBe(errors[1].fingerprint)
     })
@@ -499,12 +499,12 @@ describe('ErrorTracker', () => {
   describe('enable/disable functionality', () => {
     it('should track enabled state', () => {
       const errorTracker = getErrorTracker()
-      
+
       expect(errorTracker.isTrackingEnabled()).toBe(true)
-      
+
       errorTracker.setEnabled(false)
       expect(errorTracker.isTrackingEnabled()).toBe(false)
-      
+
       errorTracker.setEnabled(true)
       expect(errorTracker.isTrackingEnabled()).toBe(true)
     })

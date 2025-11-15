@@ -52,7 +52,7 @@ function ResetPasswordContent() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (password !== confirmPassword) {
       setError(t('resetPassword.passwordMismatch'));
       return;
@@ -122,7 +122,7 @@ function ResetPasswordContent() {
             {t('resetPassword.title')}
           </h2>
         </div>
-        
+
         {!isValidToken ? (
           <div className="rounded-md bg-red-50 dark:bg-red-900/20 p-4">
             <p className="text-sm text-red-800 dark:text-red-400">{error}</p>

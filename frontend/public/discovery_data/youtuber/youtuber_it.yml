@@ -6,9 +6,9 @@ metadata:
   title: "Bardo Video - YouTuber"
   short_description: "Esibisci storie video accattivanti su palcoscenici digitali"
   long_description: |
-    Sei un nuovo membro della "Gilda dei Bardi Video", dotato del talento di raccontare 
-    storie attraverso le lenti e intrattenere il pubblico. In questo regno digitale di 
-    creatività e tecnologia, ogni video è una performance, ogni iscritto è il tuo pubblico, 
+    Sei un nuovo membro della "Gilda dei Bardi Video", dotato del talento di raccontare
+    storie attraverso le lenti e intrattenere il pubblico. In questo regno digitale di
+    creatività e tecnologia, ogni video è una performance, ogni iscritto è il tuo pubblico,
     e la tua missione è creare contenuti video che tocchino i cuori e suscitino risonanza.
   estimated_hours: 55
   skill_focus:
@@ -19,18 +19,18 @@ metadata:
 world_setting:
   name: "Gilda dei Bardi Video"
   description: |
-    La Gilda dei Bardi Video è una gilda artistica che coltiva i migliori creatori di 
-    contenuti. Qui, i creatori imparano a bilanciare la creatività con le richieste 
-    dell'algoritmo, l'autenticità con le aspettative del pubblico, costruendo canali 
+    La Gilda dei Bardi Video è una gilda artistica che coltiva i migliori creatori di
+    contenuti. Qui, i creatori imparano a bilanciare la creatività con le richieste
+    dell'algoritmo, l'autenticità con le aspettative del pubblico, costruendo canali
     che ispirano e intrattengono milioni di persone.
   atmosphere: creative_dynamic
   visual_theme: digital_stage
 starting_scenario:
   title: "Il Cambiamento dell'Algoritmo"
   description: |
-    Il Direttore Creativo ti accoglie con notizie preoccupanti: Algoritmo, il re 
-    capriccioso, ha improvvisamente cambiato le sue preferenze, seppellendo il lavoro 
-    di molti creatori. Devi trovare l'equilibrio tra mantenere l'integrità creativa 
+    Il Direttore Creativo ti accoglie con notizie preoccupanti: Algoritmo, il re
+    capriccioso, ha improvvisamente cambiato le sue preferenze, seppellendo il lavoro
+    di molti creatori. Devi trovare l'equilibrio tra mantenere l'integrità creativa
     e adattarti alle richieste algoritmiche.
   initial_tasks:
     - understand_youtube

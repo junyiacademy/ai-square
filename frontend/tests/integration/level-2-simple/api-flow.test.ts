@@ -15,14 +15,14 @@ describe('Basic API Flow', () => {
 
   it('should list PBL scenarios', async () => {
     const { controller, timeout } = createTimeout(5000);
-    
+
     try {
       const response = await fetch(`${baseUrl}/api/pbl/scenarios?lang=en`, {
         signal: controller.signal
       });
       clearTimeout(timeout);
       expect([true]).toContain(response.ok);
-      
+
       const data = await response.json();
       const scenarios = data.data?.scenarios || data.scenarios || [];
       // Accept either wrapped or direct structure
@@ -38,14 +38,14 @@ describe('Basic API Flow', () => {
 
   it('should list assessment scenarios', async () => {
     const { controller, timeout } = createTimeout(5000);
-    
+
     try {
       const response = await fetch(`${baseUrl}/api/assessment/scenarios?lang=en`, {
         signal: controller.signal
       });
       clearTimeout(timeout);
       expect([true]).toContain(response.ok);
-      
+
       const data = await response.json();
       const scenarios = data.scenarios ?? data.data?.scenarios ?? [];
       expect(Array.isArray(scenarios)).toBe(true);
@@ -60,14 +60,14 @@ describe('Basic API Flow', () => {
 
   it('should list discovery scenarios', async () => {
     const { controller, timeout } = createTimeout(5000);
-    
+
     try {
       const response = await fetch(`${baseUrl}/api/discovery/scenarios?lang=en`, {
         signal: controller.signal
       });
       clearTimeout(timeout);
       expect(response.ok).toBe(true);
-      
+
       const data = await response.json();
       const scenarios = data.scenarios ?? data.data?.scenarios ?? [];
       expect(Array.isArray(scenarios)).toBe(true);
@@ -82,10 +82,10 @@ describe('Basic API Flow', () => {
 
   it('should handle different languages', async () => {
     const languages = ['en', 'zh', 'es'];
-    
+
     for (const lang of languages) {
       const { controller, timeout } = createTimeout(5000);
-      
+
       try {
         // Use existing relations API instead of non-existent ksa API
         const response = await fetch(`${baseUrl}/api/relations?lang=${lang}`, {
@@ -117,13 +117,13 @@ describe('Basic API Flow', () => {
 
   it('should handle invalid scenario ID', async () => {
     const { controller, timeout } = createTimeout(5000);
-    
+
     try {
       const response = await fetch(`${baseUrl}/api/pbl/scenarios/invalid-id`, {
         signal: controller.signal
       });
       clearTimeout(timeout);
-      
+
       // Should return error
       // Some handlers may return 200 with error body; accept either 2xx+error or 4xx/5xx
       if (response.status < 400) {
@@ -143,7 +143,7 @@ describe('Basic API Flow', () => {
 
   it('should require authentication for protected routes', async () => {
     const { controller, timeout } = createTimeout(5000);
-    
+
     try {
       // Try to start a program without auth
       const response = await fetch(`${baseUrl}/api/pbl/scenarios/test-id/start`, {
@@ -155,7 +155,7 @@ describe('Basic API Flow', () => {
         signal: controller.signal
       });
       clearTimeout(timeout);
-      
+
       // Should return 401 or 403
       expect([200, 401, 403]).toContain(response.status);
     } catch (error: any) {

@@ -12,7 +12,7 @@ describe('BranchManager', () => {
 
   it('should render branch manager interface', () => {
     render(<BranchManager />)
-    
+
     expect(screen.getByText('Branch Management')).toBeInTheDocument()
     expect(screen.getByPlaceholderText('Enter branch name')).toBeInTheDocument()
     expect(screen.getByText('Create Branch')).toBeInTheDocument()
@@ -145,13 +145,13 @@ describe('BranchManager', () => {
       } as Response)
       .mockResolvedValueOnce({
         ok: true,
-        json: async () => ({ 
-          success: true, 
-          pullRequest: { 
-            number: 2, 
-            title: 'New PR', 
-            url: 'https://github.com/test/repo/pull/2' 
-          } 
+        json: async () => ({
+          success: true,
+          pullRequest: {
+            number: 2,
+            title: 'New PR',
+            url: 'https://github.com/test/repo/pull/2'
+          }
         }),
       } as Response)
 

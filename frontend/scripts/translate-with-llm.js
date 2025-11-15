@@ -130,12 +130,12 @@ Translation:`;
   // In a real implementation, this would call an LLM API
   // For now, we'll return a placeholder
   console.log(`Translating to ${targetLang}: "${text.substring(0, 50)}..."`);
-  
+
   // Check if we have a common translation
   if (commonTranslations[targetLang] && commonTranslations[targetLang][text]) {
     return commonTranslations[targetLang][text];
   }
-  
+
   // Return original text with language prefix for now
   // In production, this would be the actual translation
   return `[${targetLang}] ${text}`;
@@ -148,11 +148,11 @@ async function translateObject(obj, targetLang, context = '') {
   if (typeof obj === 'string') {
     return await translateWithLLM(obj, targetLang, context);
   }
-  
+
   if (Array.isArray(obj)) {
     return Promise.all(obj.map(item => translateObject(item, targetLang, context)));
   }
-  
+
   if (typeof obj === 'object' && obj !== null) {
     const translated = {};
     for (const [key, value] of Object.entries(obj)) {
@@ -162,7 +162,7 @@ async function translateObject(obj, targetLang, context = '') {
     }
     return translated;
   }
-  
+
   return obj;
 }
 
@@ -173,20 +173,20 @@ async function translateFile(fileName, targetLang) {
   try {
     const sourcePath = path.join(__dirname, '..', 'public', 'locales', 'en', fileName);
     const targetPath = path.join(__dirname, '..', 'public', 'locales', targetLang, fileName);
-    
+
     // Read source file
     const sourceContent = await fs.readFile(sourcePath, 'utf8');
     const sourceData = JSON.parse(sourceContent);
-    
+
     // Check if target already has non-English content
     try {
       const targetContent = await fs.readFile(targetPath, 'utf8');
       const targetData = JSON.parse(targetContent);
-      
+
       // Simple check: if the first string value is different from English, skip
       const firstEnglishValue = Object.values(sourceData).find(v => typeof v === 'string');
       const firstTargetValue = Object.values(targetData).find(v => typeof v === 'string');
-      
+
       if (firstEnglishValue && firstTargetValue && firstEnglishValue !== firstTargetValue) {
         console.log(`✓ ${targetLang}/${fileName} already translated, skipping`);
         return { status: 'skipped', file: fileName, lang: targetLang };
@@ -194,18 +194,18 @@ async function translateFile(fileName, targetLang) {
     } catch (error) {
       // Target file doesn't exist or can't be read, continue with translation
     }
-    
+
     // Translate
     console.log(`Translating ${fileName} to ${targetLang}...`);
     const translatedData = await translateObject(sourceData, targetLang, fileName.replace('.json', ''));
-    
+
     // Write translated file
     await fs.writeFile(
       targetPath,
       JSON.stringify(translatedData, null, 2) + '\n',
       'utf8'
     );
-    
+
     return { status: 'translated', file: fileName, lang: targetLang };
   } catch (error) {
     console.error(`Error translating ${fileName} to ${targetLang}:`, error.message);
@@ -218,28 +218,28 @@ async function translateFile(fileName, targetLang) {
  */
 async function main() {
   console.log('Starting LLM-based translation process...\n');
-  
+
   const results = {
     translated: 0,
     skipped: 0,
     errors: 0
   };
-  
+
   // Process each language
   for (const [langCode, langName] of Object.entries(languages)) {
     console.log(`\n=== Processing ${langName} (${langCode}) ===`);
-    
+
     // Process each file
     for (const fileName of filesToTranslate) {
       const result = await translateFile(fileName, langCode);
-      results[result.status === 'translated' ? 'translated' : 
+      results[result.status === 'translated' ? 'translated' :
               result.status === 'skipped' ? 'skipped' : 'errors']++;
-      
+
       // Add a small delay to avoid rate limits in production
       await new Promise(resolve => setTimeout(resolve, 100));
     }
   }
-  
+
   // Summary
   console.log('\n=== Translation Summary ===');
   console.log(`✓ Translated: ${results.translated} files`);

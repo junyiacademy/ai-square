@@ -80,7 +80,7 @@ describe('POST /api/pbl/scenarios/[id]/create-draft', () => {
     const request = new NextRequest('http://localhost:3000/api/pbl/scenarios/test-scenario/create-draft', {
       method: 'POST'
     });
-    
+
     // Mock the cookies.get method
     request.cookies.get = jest.fn().mockReturnValue({
       value: JSON.stringify({ email: 'test@example.com' })
@@ -116,7 +116,7 @@ describe('POST /api/pbl/scenarios/[id]/create-draft', () => {
     const request = new NextRequest('http://localhost:3000/api/pbl/scenarios/invalid-scenario/create-draft', {
       method: 'POST'
     });
-    
+
     // Mock the cookies.get method
     request.cookies.get = jest.fn().mockReturnValue({
       value: JSON.stringify({ email: 'test@example.com' })
@@ -152,7 +152,7 @@ describe('POST /api/pbl/scenarios/[id]/create-draft', () => {
     const request = new NextRequest('http://localhost:3000/api/pbl/scenarios/test-scenario/create-draft', {
       method: 'POST'
     });
-    
+
     // Mock the cookies.get method
     request.cookies.get = jest.fn().mockReturnValue({
       value: JSON.stringify({ email: 'test@example.com' })
@@ -242,7 +242,7 @@ describe('POST /api/pbl/scenarios/[id]/create-draft', () => {
     const request = new NextRequest('http://localhost:3000/api/pbl/scenarios/test-scenario/create-draft', {
       method: 'POST'
     });
-    
+
     // Mock the cookies.get method
     request.cookies.get = jest.fn().mockReturnValue({
       value: JSON.stringify({ email: 'test@example.com' })
@@ -306,7 +306,7 @@ describe('POST /api/pbl/scenarios/[id]/create-draft', () => {
     const request = new NextRequest('http://localhost:3000/api/pbl/scenarios/test-scenario/create-draft', {
       method: 'POST'
     });
-    
+
     // Mock the cookies.get method
     request.cookies.get = jest.fn().mockReturnValue({
       value: JSON.stringify({ email: 'test@example.com' })

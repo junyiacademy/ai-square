@@ -26,14 +26,14 @@ echo ""
 # Users summary
 echo "👥 Demo Users:"
 psql -U $DB_USER -h $DB_HOST -p $DB_PORT -d $DB_NAME -t -c "
-SELECT '  - ' || email || ' (password: ' || 
-  CASE 
+SELECT '  - ' || email || ' (password: ' ||
+  CASE
     WHEN email = 'student@example.com' THEN 'student123'
     WHEN email = 'teacher@example.com' THEN 'teacher123'
     WHEN email = 'admin@example.com' THEN 'admin123'
     ELSE '123'
-  END || ')' 
-FROM users 
+  END || ')'
+FROM users
 WHERE email LIKE '%@example.com'
 ORDER BY email;"
 
@@ -51,7 +51,7 @@ echo ""
 # Stats
 echo "📈 Statistics:"
 psql -U $DB_USER -h $DB_HOST -p $DB_PORT -d $DB_NAME -t -c "
-SELECT 
+SELECT
   '  Total Users: ' || (SELECT COUNT(*) FROM users) || E'\n' ||
   '  Total Scenarios: ' || (SELECT COUNT(*) FROM scenarios) || E'\n' ||
   '  Total Programs: ' || (SELECT COUNT(*) FROM programs) || E'\n' ||

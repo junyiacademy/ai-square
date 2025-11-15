@@ -106,7 +106,7 @@ export default function DiscoveryScenarioDetailPage() {
   const params = useParams();
   const { t, i18n } = useTranslation();
   const { isLoggedIn, isLoading: authLoading } = useAuth();
-  
+
   const [loading, setLoading] = useState(true);
   const [scenarioData, setScenarioData] = useState<ScenarioData | null>(null);
   const [programs, setPrograms] = useState<ProgramData[]>([]);
@@ -121,14 +121,14 @@ export default function DiscoveryScenarioDetailPage() {
     try {
       setLoadingPrograms(true);
       const sessionToken = localStorage.getItem('ai_square_session');
-      
+
       const response = await authenticatedFetch(`/api/discovery/scenarios/${scenarioId}/programs?lang=${i18n.language}`, {
         credentials: 'include',
         headers: {
           'x-session-token': sessionToken || ''
         }
       });
-      
+
       if (response.ok) {
         const data = await response.json();
         setPrograms(data.programs || []);
@@ -155,10 +155,10 @@ export default function DiscoveryScenarioDetailPage() {
     try {
       setLoading(true);
       setError(null);
-      
+
       // Get session token from localStorage for API calls
       const sessionToken = localStorage.getItem('ai_square_session');
-      
+
       const response = await authenticatedFetch(`/api/discovery/scenarios/${scenarioId}`, {
         credentials: 'include',
         headers: {
@@ -203,10 +203,10 @@ export default function DiscoveryScenarioDetailPage() {
       setCreatingProgram(true);
       const sessionToken = localStorage.getItem('ai_square_session');
       const lang = normalizeLanguageCode(i18n.language);
-      
+
       const response = await authenticatedFetch(`/api/discovery/scenarios/${scenarioId}/programs`, {
         method: 'POST',
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
           'x-session-token': sessionToken || ''
         },
@@ -293,7 +293,7 @@ export default function DiscoveryScenarioDetailPage() {
               <Icon className="w-24 h-24 text-white/90" />
             </div>
           </div>
-          
+
           <div className="p-8">
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
               {scenarioData.title}
@@ -304,7 +304,7 @@ export default function DiscoveryScenarioDetailPage() {
             <p className="text-gray-700 mb-6">
               {(scenarioData.metadata?.longDescription as string) || ''}
             </p>
-            
+
             {/* Skills */}
             {skills.length > 0 && (
               <div className="flex flex-wrap gap-2">
@@ -363,8 +363,8 @@ export default function DiscoveryScenarioDetailPage() {
                           Learning Journey #{programs.indexOf(program) + 1}
                         </h3>
                         <span className={`px-2 py-1 text-xs rounded-full ${
-                          program.status === 'completed' 
-                            ? 'bg-green-100 text-green-700' 
+                          program.status === 'completed'
+                            ? 'bg-green-100 text-green-700'
                             : 'bg-blue-100 text-blue-700'
                         }`}>
                           {program.status}
@@ -385,7 +385,7 @@ export default function DiscoveryScenarioDetailPage() {
                       </div>
                       {/* Progress bar */}
                       <div className="mt-3 w-full bg-gray-200 rounded-full h-2">
-                        <div 
+                        <div
                           className="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full transition-all duration-300"
                           style={{ width: `${Math.round(((program.metadata?.completedTasks || 0) / (program.metadata?.totalTasks || 6)) * 100)}%` }}
                         />
@@ -422,7 +422,7 @@ export default function DiscoveryScenarioDetailPage() {
               </p>
             </div>
           )}
-          
+
           {/* Career Insights */}
           {scenarioData.discoveryData?.careerInsights && (
             <div className="grid md:grid-cols-2 gap-6 mt-8">
@@ -446,7 +446,7 @@ export default function DiscoveryScenarioDetailPage() {
                   </div>
                 </div>
               )}
-              
+
               {/* Required Skills */}
               {scenarioData.discoveryData.careerInsights.required_skills && (
                 <div className="bg-white rounded-xl p-6 shadow-md border border-gray-100">
@@ -484,7 +484,7 @@ export default function DiscoveryScenarioDetailPage() {
               )}
             </div>
           )}
-          
+
           {/* Hidden programs section for future use */}
           {false && (
             <div className="grid gap-4">
@@ -515,7 +515,7 @@ export default function DiscoveryScenarioDetailPage() {
                             </span>
                           )}
                         </div>
-                        
+
                         <div className="flex items-center space-x-4 text-sm text-gray-600">
                           <div className="flex items-center space-x-1">
                             <Clock className="w-4 h-4" />
@@ -526,7 +526,7 @@ export default function DiscoveryScenarioDetailPage() {
                             <span>{(program.metadata?.totalXP as number) || 0} XP</span>
                           </div>
                         </div>
-                        
+
                         {/* Progress Bar */}
                         <div className="mt-4">
                           <div className="flex items-center justify-between text-sm mb-1">
@@ -544,7 +544,7 @@ export default function DiscoveryScenarioDetailPage() {
                           </p>
                         </div>
                       </div>
-                      
+
                       <div className="ml-4 flex items-center">
                         {program.status === 'active' ? (
                           <button className="flex items-center space-x-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
@@ -552,7 +552,7 @@ export default function DiscoveryScenarioDetailPage() {
                             <span>{t('discovery:programCard.continue')}</span>
                           </button>
                         ) : program.status === 'completed' ? (
-                          <button 
+                          <button
                             onClick={(e) => {
                               e.stopPropagation();
                               router.push(`/discovery/scenarios/${scenarioId}/programs/${program.id}/complete`);

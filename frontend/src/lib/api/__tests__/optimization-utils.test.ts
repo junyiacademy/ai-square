@@ -99,11 +99,11 @@ describe('optimization-utils', () => {
     it('returns cached data when available in distributed cache', async () => {
       const cachedData = { ...mockData, cached: true };
       mockDistributedCacheService.get.mockResolvedValue(cachedData);
-      
+
       const request = new NextRequest('http://localhost:3000/api/test?param=value');
       const response = await cachedGET(request, mockHandler);
       const data = await response.json();
-      
+
       expect(mockDistributedCacheService.get).toHaveBeenCalledWith('api:/api/test:?param=value');
       expect(mockHandler).not.toHaveBeenCalled();
       expect(data).toEqual({ ...cachedData, cacheHit: true });
@@ -112,11 +112,11 @@ describe('optimization-utils', () => {
 
     it('calls handler and caches result when cache miss', async () => {
       mockDistributedCacheService.get.mockResolvedValue(null);
-      
+
       const request = new NextRequest('http://localhost:3000/api/test');
       const response = await cachedGET(request, mockHandler, { ttl: 600 });
       const data = await response.json();
-      
+
       expect(mockHandler).toHaveBeenCalled();
       expect(mockDistributedCacheService.set).toHaveBeenCalledWith(
         'api:/api/test:',
@@ -129,14 +129,14 @@ describe('optimization-utils', () => {
 
     it('uses stale-while-revalidate when specified', async () => {
       mockDistributedCacheService.getWithRevalidation.mockResolvedValue(mockData);
-      
+
       const request = new NextRequest('http://localhost:3000/api/test');
       const response = await cachedGET(request, mockHandler, {
         ttl: 300,
         staleWhileRevalidate: 3600,
       });
       const data = await response.json();
-      
+
       expect(mockDistributedCacheService.getWithRevalidation).toHaveBeenCalledWith(
         'api:/api/test:',
         mockHandler,
@@ -151,10 +151,10 @@ describe('optimization-utils', () => {
 
     it('uses local cache when useDistributedCache is false', async () => {
       mockCacheService.get.mockResolvedValue(null);
-      
+
       const request = new NextRequest('http://localhost:3000/api/test');
       await cachedGET(request, mockHandler, { useDistributedCache: false });
-      
+
       expect(mockCacheService.get).toHaveBeenCalled();
       expect(mockDistributedCacheService.get).not.toHaveBeenCalled();
     });
@@ -162,9 +162,9 @@ describe('optimization-utils', () => {
     it('handles cache errors gracefully', async () => {
       // Cache get throws error - the function should catch it and continue
       mockDistributedCacheService.get.mockRejectedValue(new Error('Cache error'));
-      
+
       const request = new NextRequest('http://localhost:3000/api/test');
-      
+
       // The function will throw if cache.get throws and it's not caught
       await expect(cachedGET(request, mockHandler)).rejects.toThrow('Cache error');
     });
@@ -174,7 +174,7 @@ describe('optimization-utils', () => {
     it('extracts pagination parameters from request', () => {
       const request = new NextRequest('http://localhost:3000/api/test?page=2&limit=50');
       const params = getPaginationParams(request);
-      
+
       expect(params).toEqual({
         page: 2,
         limit: 50,
@@ -185,7 +185,7 @@ describe('optimization-utils', () => {
     it('returns default values when no parameters provided', () => {
       const request = new NextRequest('http://localhost:3000/api/test');
       const params = getPaginationParams(request);
-      
+
       expect(params).toEqual({
         page: 1,
         limit: 20,
@@ -196,7 +196,7 @@ describe('optimization-utils', () => {
     it('calculates offset from page and limit', () => {
       const request = new NextRequest('http://localhost:3000/api/test?page=3&limit=25');
       const params = getPaginationParams(request);
-      
+
       expect(params).toEqual({
         page: 3,
         limit: 25,
@@ -210,7 +210,7 @@ describe('optimization-utils', () => {
 
     it('creates paginated response with correct structure', () => {
       const result = createPaginatedResponse(testData.slice(0, 20), 50, { page: 1, limit: 20 });
-      
+
       expect(result.data).toHaveLength(20);
       expect(result.pagination).toEqual({
         page: 1,
@@ -224,7 +224,7 @@ describe('optimization-utils', () => {
 
     it('handles last page correctly', () => {
       const result = createPaginatedResponse(testData.slice(40), 50, { page: 3, limit: 20 });
-      
+
       expect(result.data).toHaveLength(10);
       expect(result.pagination).toEqual({
         page: 3,
@@ -238,7 +238,7 @@ describe('optimization-utils', () => {
 
     it('handles empty data', () => {
       const result = createPaginatedResponse([], 0, { page: 1, limit: 20 });
-      
+
       expect(result.data).toHaveLength(0);
       expect(result.pagination).toEqual({
         page: 1,
@@ -254,21 +254,21 @@ describe('optimization-utils', () => {
 
 /**
  * Optimization Utils Test Considerations:
- * 
+ *
  * 1. Cache Testing:
  *    - Tests both distributed and local cache behavior
  *    - Validates cache hit/miss scenarios
  *    - Tests stale-while-revalidate functionality
- * 
+ *
  * 2. Performance Tracking:
  *    - Mocks performance monitoring
  *    - Ensures tracking doesn't interfere with functionality
- * 
+ *
  * 3. Pagination:
  *    - Tests parameter extraction from requests
  *    - Validates response structure
  *    - Handles edge cases (empty data, last page)
- * 
+ *
  * 4. Error Handling:
  *    - Tests graceful degradation on cache errors
  *    - Ensures system continues to function

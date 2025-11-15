@@ -10,7 +10,7 @@ describe('TypeScript Error Protection Demo', () => {
     const message: string = 'Protection mechanism works!';
     const count: number = 42;
     const isActive: boolean = true;
-    
+
     expect(message).toBe('Protection mechanism works!');
     expect(count).toBe(42);
     expect(isActive).toBe(true);
@@ -39,7 +39,7 @@ describe('TypeScript Error Protection Demo', () => {
     // ✅ 正確的陣列類型
     const numbers: number[] = [1, 2, 3, 4, 5];
     const strings: string[] = ['a', 'b', 'c'];
-    
+
     expect(numbers.length).toBe(5);
     expect(strings.length).toBe(3);
     expect(numbers.reduce((sum, n) => sum + n, 0)).toBe(15);
@@ -49,7 +49,7 @@ describe('TypeScript Error Protection Demo', () => {
     // ✅ 正確的函數類型
     const add = (a: number, b: number): number => a + b;
     const greet = (name: string): string => `Hello, ${name}!`;
-    
+
     expect(add(2, 3)).toBe(5);
     expect(greet('World')).toBe('Hello, World!');
   });

@@ -28,7 +28,7 @@ describe('AchievementsView', () => {
       'achievements.level': 'Level {{level}}',
       'achievements.badges.first_task.title': 'First Task',
       'achievements.badges.first_task.description': 'Completed your first task',
-      'achievements.badges.creative_thinker.title': 'Creative Thinker', 
+      'achievements.badges.creative_thinker.title': 'Creative Thinker',
       'achievements.badges.creative_thinker.description': 'Showed creative thinking',
       'achievements.badges.ai_collaborator.title': 'AI Collaborator',
       'achievements.badges.ai_collaborator.description': 'Worked well with AI',
@@ -193,7 +193,7 @@ describe('AchievementsView', () => {
     // Check that SVG icons exist (they should be present for badges)
     const svgElements = document.querySelectorAll('svg');
     expect(svgElements.length).toBeGreaterThan(0);
-    
+
     // Check that the component rendered without errors
     expect(screen.getByText('Your Achievements')).toBeInTheDocument();
   });
@@ -308,7 +308,7 @@ describe('AchievementsView', () => {
 
     // Main container
     expect(container.querySelector('.max-w-4xl')).toBeInTheDocument();
-    
+
     // Grid layouts
     expect(container.querySelector('.grid')).toBeInTheDocument();
     expect(container.querySelector('[class*="grid-cols"]')).toBeInTheDocument();

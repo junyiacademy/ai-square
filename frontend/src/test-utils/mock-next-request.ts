@@ -6,29 +6,29 @@ import { NextRequest } from 'next/server'
  */
 export function createMockNextRequest(
   url: string,
-  options?: RequestInit & { 
+  options?: RequestInit & {
     searchParams?: Record<string, string>
   }
 ) {
   // Build URL with search params
   const fullUrl = new URL(url, 'http://localhost:3000')
-  
+
   if (options?.searchParams) {
     Object.entries(options.searchParams).forEach(([key, value]) => {
       fullUrl.searchParams.set(key, value)
     })
   }
-  
+
   // Create request with proper URL
   const { signal, ...optionsWithoutSearchParams } = options || {};
   // Remove searchParams from options if it exists
   delete (optionsWithoutSearchParams as any).searchParams;
-  
+
   const request = new NextRequest(fullUrl.toString(), {
     ...optionsWithoutSearchParams,
     ...(signal && signal !== null ? { signal } : {})
   })
-  
+
   return request
 }
 

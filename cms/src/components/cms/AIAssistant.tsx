@@ -4,10 +4,10 @@ import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Card } from '@/components/ui/card';
-import { 
-  Wand2, 
-  Languages, 
-  CheckCircle, 
+import {
+  Wand2,
+  Languages,
+  CheckCircle,
   Sparkles,
   Send,
   Loader2,
@@ -38,9 +38,9 @@ export function AIAssistant({ content, onContentUpdate, selectedFile }: AIAssist
 
   const handleQuickAction = async (action: string) => {
     if (!content || !selectedFile) return;
-    
+
     setIsProcessing(true);
-    
+
     // Add processing message
     const actionMessages = {
       complete: '🔄 Completing content structure...',
@@ -48,15 +48,15 @@ export function AIAssistant({ content, onContentUpdate, selectedFile }: AIAssist
       improve: '✨ Improving and validating content...',
       ksa: '🔗 Mapping KSA competencies...'
     };
-    
+
     const processingMessage = {
       role: 'assistant' as const,
       content: actionMessages[action as keyof typeof actionMessages] || `🔄 Processing ${action}...`,
       isProcessing: true
     };
-    
+
     setMessages(prev => [...prev, processingMessage]);
-    
+
     try {
       const response = await fetch('/api/ai/assist', {
         method: 'POST',
@@ -67,9 +67,9 @@ export function AIAssistant({ content, onContentUpdate, selectedFile }: AIAssist
           file: selectedFile,
         }),
       });
-      
+
       const data = await response.json();
-      
+
       if (data.error) {
         setMessages(prev => [...prev.slice(0, -1), {
           role: 'assistant',
@@ -77,11 +77,11 @@ export function AIAssistant({ content, onContentUpdate, selectedFile }: AIAssist
         }]);
         return;
       }
-      
+
       if (data.result) {
         // Validate the result
         const validation = data.validation || { valid: true };
-        
+
         if (validation.valid) {
           onContentUpdate(data.result);
           setMessages(prev => [...prev.slice(0, -1), {
@@ -109,10 +109,10 @@ export function AIAssistant({ content, onContentUpdate, selectedFile }: AIAssist
 
   const handleCustomPrompt = async () => {
     if (!prompt.trim() || !content) return;
-    
+
     setIsProcessing(true);
     setMessages([...messages, { role: 'user', content: prompt }]);
-    
+
     try {
       const response = await fetch('/api/ai/chat', {
         method: 'POST',
@@ -123,9 +123,9 @@ export function AIAssistant({ content, onContentUpdate, selectedFile }: AIAssist
           file: selectedFile,
         }),
       });
-      
+
       const data = await response.json();
-      
+
       // If AI suggests content update, ask for confirmation
       if (data.updatedContent) {
         setMessages(prev => [...prev, {
@@ -178,7 +178,7 @@ export function AIAssistant({ content, onContentUpdate, selectedFile }: AIAssist
             <Wand2 className="w-3.5 h-3.5" />
             補完
           </button>
-          
+
           <button
             onClick={() => handleQuickAction('translate')}
             disabled={!content || isProcessing}
@@ -188,7 +188,7 @@ export function AIAssistant({ content, onContentUpdate, selectedFile }: AIAssist
             <Languages className="w-3.5 h-3.5" />
             翻譯
           </button>
-          
+
           <button
             onClick={() => handleQuickAction('improve')}
             disabled={!content || isProcessing}
@@ -198,7 +198,7 @@ export function AIAssistant({ content, onContentUpdate, selectedFile }: AIAssist
             <CheckCircle className="w-3.5 h-3.5" />
             改進
           </button>
-          
+
           <button
             onClick={() => handleQuickAction('ksa')}
             disabled={!content || isProcessing}
@@ -215,14 +215,14 @@ export function AIAssistant({ content, onContentUpdate, selectedFile }: AIAssist
       <div className="flex-1 overflow-y-auto p-4 space-y-3">
         {messages.map((msg, idx) => (
           <div key={idx} className={`p-4 rounded-xl transition-all duration-200 ${
-            msg.role === 'user' 
-              ? 'bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 ml-8' 
+            msg.role === 'user'
+              ? 'bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 ml-8'
               : 'bg-white border border-gray-100 mr-8 shadow-sm'
           }`}>
             <div className="flex items-start gap-3">
               <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                msg.role === 'user' 
-                  ? 'bg-gradient-to-br from-blue-500 to-indigo-600' 
+                msg.role === 'user'
+                  ? 'bg-gradient-to-br from-blue-500 to-indigo-600'
                   : 'bg-gradient-to-br from-purple-500 to-pink-600'
               }`}>
                 {msg.role === 'user' ? (
@@ -258,7 +258,7 @@ export function AIAssistant({ content, onContentUpdate, selectedFile }: AIAssist
                     </button>
                     <button
                       onClick={() => {
-                        setMessages(prev => prev.map((m, i) => 
+                        setMessages(prev => prev.map((m, i) =>
                           i === idx ? { ...m, suggestedContent: undefined } : m
                         ));
                       }}

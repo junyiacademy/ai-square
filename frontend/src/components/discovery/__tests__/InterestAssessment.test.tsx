@@ -92,7 +92,7 @@ describe('InterestAssessment', () => {
 
     // Select first option
     fireEvent.click(screen.getByText('Building apps'));
-    
+
     // Click next
     fireEvent.click(screen.getByText('下一題'));
 
@@ -100,7 +100,7 @@ describe('InterestAssessment', () => {
     await waitFor(() => {
       expect(screen.getByText('How do you prefer to work?')).toBeInTheDocument();
     }, { timeout: 2000 });
-    
+
     // Check progress (should be 100%)
     await waitFor(() => {
       expect(screen.getByText('100%')).toBeInTheDocument();
@@ -136,7 +136,7 @@ describe('InterestAssessment', () => {
     // Answer first question (tech)
     fireEvent.click(screen.getByText('Building apps'));
     fireEvent.click(screen.getByText('下一題'));
-    
+
     // Just check that the component handles the flow without errors
     expect(document.body).toBeInTheDocument();
   });
@@ -147,7 +147,7 @@ describe('InterestAssessment', () => {
     // Answer first question (creative)
     fireEvent.click(screen.getByText('Creating content'));
     fireEvent.click(screen.getByText('下一題'));
-    
+
     // Just check that the component handles the flow without errors
     expect(document.body).toBeInTheDocument();
   });
@@ -158,7 +158,7 @@ describe('InterestAssessment', () => {
     // Answer first question
     fireEvent.click(screen.getByText('Building apps'));
     fireEvent.click(screen.getByText('下一題'));
-    
+
     // Just check that the component handles the flow without errors
     expect(document.body).toBeInTheDocument();
   });

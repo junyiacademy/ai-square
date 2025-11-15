@@ -4,35 +4,35 @@ import bcrypt from 'bcryptjs';
 
 export async function POST() {
   const prisma = new PrismaClient();
-  
+
   try {
     // Initialize demo users
     const users = [
-      { 
-        email: 'student@example.com', 
-        password: 'student123', 
-        role: 'student', 
+      {
+        email: 'student@example.com',
+        password: 'student123',
+        role: 'student',
         name: 'Student User'
       },
-      { 
-        email: 'teacher@example.com', 
-        password: 'teacher123', 
-        role: 'teacher', 
+      {
+        email: 'teacher@example.com',
+        password: 'teacher123',
+        role: 'teacher',
         name: 'Teacher User'
       },
-      { 
-        email: 'admin@example.com', 
-        password: 'admin123', 
-        role: 'admin', 
+      {
+        email: 'admin@example.com',
+        password: 'admin123',
+        role: 'admin',
         name: 'Admin User'
       }
     ];
 
     const createdUsers = [];
-    
+
     for (const userData of users) {
       const passwordHash = await bcrypt.hash(userData.password, 10);
-      
+
       const user = await prisma.user.upsert({
         where: { email: userData.email },
         update: {

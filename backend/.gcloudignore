@@ -1,6 +1,6 @@
 # Backend-specific gcloudignore for Google Cloud deployment
 
-# Include base ignores  
+# Include base ignores
 #!include ../.gcloudignore
 
 # Python test files

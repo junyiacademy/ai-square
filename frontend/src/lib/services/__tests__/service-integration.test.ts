@@ -62,22 +62,22 @@ describe('Learning Service Integration', () => {
         it('should have correct method signatures', () => {
           expect(typeof service.startLearning).toBe('function');
           expect(service.startLearning.length).toBeGreaterThanOrEqual(2); // userId, scenarioId, options?
-          
+
           expect(typeof service.getProgress).toBe('function');
           expect(service.getProgress.length).toBe(1); // programId
-          
+
           expect(typeof service.submitResponse).toBe('function');
           expect(service.submitResponse.length).toBe(3); // programId, taskId, response
-          
+
           expect(typeof service.completeLearning).toBe('function');
           expect(service.completeLearning.length).toBe(1); // programId
-          
+
           expect(typeof service.getNextTask).toBe('function');
           expect(service.getNextTask.length).toBe(1); // programId
-          
+
           expect(typeof service.evaluateTask).toBe('function');
           expect(service.evaluateTask.length).toBe(1); // taskId
-          
+
           expect(typeof service.generateFeedback).toBe('function');
           expect(service.generateFeedback.length).toBe(2); // evaluationId, language
         });

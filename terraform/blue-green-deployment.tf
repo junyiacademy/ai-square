@@ -10,7 +10,7 @@ locals {
   # Read from a state file or use environment variable
   current_deployment_color = var.deployment_color != "" ? var.deployment_color : "blue"
   next_deployment_color    = local.current_deployment_color == "blue" ? "green" : "blue"
-  
+
   # Image tags
   current_image_tag = var.image_tag != "" ? var.image_tag : "latest"
   image_repository  = "gcr.io/${var.project_id}/ai-square-${var.environment}"
@@ -21,17 +21,17 @@ locals {
 # ============================================
 module "blue_green_deployment" {
   source = "./modules/blue-green"
-  
+
   service_name          = "ai-square-${var.environment}"
   region               = var.region
   active_color         = local.current_deployment_color
-  
+
   blue_image           = "${local.image_repository}:${local.current_deployment_color == "blue" ? local.current_image_tag : "stable"}"
   green_image          = "${local.image_repository}:${local.current_deployment_color == "green" ? local.current_image_tag : "stable"}"
-  
+
   service_account_email = google_service_account.cloud_run.email
   cloudsql_instance    = google_sql_database_instance.main.connection_name
-  
+
   env_vars = {
     NODE_ENV        = "production"
     DB_HOST         = "/cloudsql/${google_sql_database_instance.main.connection_name}"
@@ -41,18 +41,18 @@ module "blue_green_deployment" {
     ENVIRONMENT     = var.environment
     GOOGLE_CLOUD_PROJECT = var.project_id
   }
-  
+
   cpu_limit    = var.environment == "production" ? "2" : "1"
   memory_limit = var.environment == "production" ? "2Gi" : "1Gi"
-  
+
   allow_unauthenticated = true
   enable_canary        = var.environment == "production"
-  
+
   labels = {
     environment = var.environment
     managed-by  = "terraform"
   }
-  
+
   annotations = {
     "run.googleapis.com/execution-environment" = "gen2"
   }
@@ -94,26 +94,26 @@ done
 # Canary deployment (10% -> 50% -> 100%)
 if [ "$${ENVIRONMENT}" == "production" ]; then
   echo "Starting canary deployment..."
-  
+
   # 10% traffic
   gcloud run services update-traffic ai-square-$${ENVIRONMENT} \
     --region=$${REGION} \
     --to-revisions=$${NEXT_COLOR}=10
-  
+
   echo "📊 10% traffic shifted, monitoring for 2 minutes..."
   sleep 120
-  
+
   # Check metrics (simplified - in real scenario would check actual metrics)
   echo "✅ No issues detected at 10%"
-  
+
   # 50% traffic
   gcloud run services update-traffic ai-square-$${ENVIRONMENT} \
     --region=$${REGION} \
     --to-revisions=$${NEXT_COLOR}=50
-    
+
   echo "📊 50% traffic shifted, monitoring for 2 minutes..."
   sleep 120
-  
+
   echo "✅ No issues detected at 50%"
 fi
 
@@ -127,7 +127,7 @@ echo "✅ Successfully switched 100% traffic to $${NEXT_COLOR}"
 # Update Terraform state
 echo "$${NEXT_COLOR}" > ${path.module}/current-deployment-color.txt
 EOT
-  
+
   file_permission = "0755"
 }
 
@@ -164,7 +164,7 @@ if [ ! -z "${var.slack_webhook_url}" ]; then
     ${var.slack_webhook_url}
 fi
 EOT
-  
+
   file_permission = "0755"
 }
 
@@ -173,30 +173,30 @@ EOT
 # ============================================
 resource "null_resource" "post_deployment_tests" {
   depends_on = [module.blue_green_deployment]
-  
+
   triggers = {
     deployment_id = local.current_image_tag
   }
-  
+
   provisioner "local-exec" {
     command = <<-EOT
       echo "🧪 Running post-deployment tests..."
-      
+
       # Get the active service URL
       ACTIVE_URL="${module.blue_green_deployment.active_service_url}"
-      
+
       # Basic health check
       if ! curl -sf "$${ACTIVE_URL}/api/health" > /dev/null 2>&1; then
         echo "❌ Health check failed!"
         exit 1
       fi
-      
+
       # Run E2E tests if in CI/CD environment
       if [ ! -z "$${CI}" ]; then
         cd ${path.module}/../frontend
         PLAYWRIGHT_BASE_URL=$${ACTIVE_URL} npm run test:e2e -- --grep "@critical"
       fi
-      
+
       echo "✅ Post-deployment tests passed"
     EOT
   }

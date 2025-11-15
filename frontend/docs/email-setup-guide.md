@@ -41,23 +41,23 @@ import { emailService } from '../src/lib/email/email-service';
 
 async function testEmail() {
   const testEmail = process.env.GMAIL_USER || 'test@example.com';
-  
+
   console.log('🧪 Testing email service...');
-  
+
   // 測試驗證郵件
   const verificationSent = await emailService.sendVerificationEmail(
     testEmail,
     'http://localhost:3000/verify-email?token=test-token'
   );
-  
+
   console.log('Verification email sent:', verificationSent);
-  
+
   // 測試歡迎郵件
   const welcomeSent = await emailService.sendWelcomeEmail(
     testEmail,
     'Test User'
   );
-  
+
   console.log('Welcome email sent:', welcomeSent);
 }
 

@@ -30,7 +30,7 @@ DB_PASSWORD=postgres
 ### 常見錯誤避免
 
 1. **不要使用 `ai_square_dev`** - 已棄用
-2. **不要使用 `ai-square-development`** - 已棄用  
+2. **不要使用 `ai-square-development`** - 已棄用
 3. **不要使用 `aisquare2025local` 密碼** - 統一使用 `postgres`
 
 ### 如果遇到 "Scenario not found" 錯誤

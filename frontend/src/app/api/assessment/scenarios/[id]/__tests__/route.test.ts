@@ -98,7 +98,7 @@ describe('Assessment Scenario API Route', () => {
 
       const request = new NextRequest('http://localhost:3000/api/assessment/scenarios/test-scenario-id?lang=en');
       const params = Promise.resolve({ id: 'test-scenario-id' });
-      
+
       const response = await GET(request, { params });
       const data = await response.json();
 
@@ -149,7 +149,7 @@ describe('Assessment Scenario API Route', () => {
 
       const request = new NextRequest('http://localhost:3000/api/assessment/scenarios/test-scenario-id?lang=zh');
       const params = Promise.resolve({ id: 'test-scenario-id' });
-      
+
       const response = await GET(request, { params });
       const data = await response.json();
 
@@ -190,7 +190,7 @@ describe('Assessment Scenario API Route', () => {
 
       const request = new NextRequest('http://localhost:3000/api/assessment/scenarios/test-scenario-id');
       const params = Promise.resolve({ id: 'test-scenario-id' });
-      
+
       const response = await GET(request, { params });
       const data = await response.json();
 
@@ -204,7 +204,7 @@ describe('Assessment Scenario API Route', () => {
 
       const request = new NextRequest('http://localhost:3000/api/assessment/scenarios/non-existent');
       const params = Promise.resolve({ id: 'non-existent' });
-      
+
       const response = await GET(request, { params });
       const data = await response.json();
 
@@ -245,7 +245,7 @@ describe('Assessment Scenario API Route', () => {
 
       const request = new NextRequest('http://localhost:3000/api/assessment/scenarios/test-scenario-id');
       const params = Promise.resolve({ id: 'test-scenario-id' });
-      
+
       const response = await GET(request, { params });
       const data = await response.json();
 
@@ -313,7 +313,7 @@ describe('Assessment Scenario API Route', () => {
 
       const request = new NextRequest('http://localhost:3000/api/assessment/scenarios/test-scenario-id');
       const params = Promise.resolve({ id: 'test-scenario-id' });
-      
+
       const response = await GET(request, { params });
       const data = await response.json();
 
@@ -358,7 +358,7 @@ describe('Assessment Scenario API Route', () => {
 
       const request = new NextRequest('http://localhost:3000/api/assessment/scenarios/test-scenario-id?lang=fr');
       const params = Promise.resolve({ id: 'test-scenario-id' });
-      
+
       const response = await GET(request, { params });
       const data = await response.json();
 
@@ -399,7 +399,7 @@ describe('Assessment Scenario API Route', () => {
 
       const request = new NextRequest('http://localhost:3000/api/assessment/scenarios/test-scenario-id');
       const params = Promise.resolve({ id: 'test-scenario-id' });
-      
+
       const response = await GET(request, { params });
       const data = await response.json();
 
@@ -413,7 +413,7 @@ describe('Assessment Scenario API Route', () => {
 
       const request = new NextRequest('http://localhost:3000/api/assessment/scenarios/test-scenario-id');
       const params = Promise.resolve({ id: 'test-scenario-id' });
-      
+
       const response = await GET(request, { params });
       const data = await response.json();
 
@@ -454,7 +454,7 @@ describe('Assessment Scenario API Route', () => {
 
       const request = new NextRequest('http://localhost:3000/api/assessment/scenarios/test-scenario-id');
       const params = Promise.resolve({ id: 'test-scenario-id' });
-      
+
       const response = await GET(request, { params });
       const data = await response.json();
 

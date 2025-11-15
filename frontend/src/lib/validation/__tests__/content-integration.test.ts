@@ -11,7 +11,7 @@ jest.unmock('fs');
 describe.skip('Content Integration Tests', () => {
   describe.skip('YAML 檔案驗證 - requires physical files', () => {
     const publicDir = path.join(process.cwd(), 'public', 'rubrics_data');
-    
+
     // Helper function to load YAML file
     const loadYAMLFile = (filename: string) => {
       try {
@@ -25,7 +25,7 @@ describe.skip('Content Integration Tests', () => {
 
     it('應該驗證 ksa_codes.yaml 檔案結構', () => {
       const ksaData = loadYAMLFile('ksa_codes/ksa_codes_en.yaml');
-      
+
       if (!ksaData) {
         console.warn('ksa_codes.yaml not found, skipping test');
         return;
@@ -33,35 +33,35 @@ describe.skip('Content Integration Tests', () => {
 
 
       const result = KSACodesSchema.safeParse(ksaData);
-      
+
       if (!result.success) {
         console.error('KSA validation errors:', result.error.errors);
       }
-      
+
       expect(result.success).toBe(true);
     });
 
     it('應該驗證 ai_lit_domains.yaml 檔案結構', () => {
       const domainsData = loadYAMLFile('ai_lit_domains/ai_lit_domains_en.yaml');
-      
+
       if (!domainsData) {
         console.warn('ai_lit_domains.yaml not found, skipping test');
         return;
       }
 
       const result = DomainsSchema.safeParse(domainsData);
-      
+
       if (!result.success) {
         console.error('Domains validation errors:', result.error.errors);
       }
-      
+
       expect(result.success).toBe(true);
     });
 
     it('應該驗證 domains 中的 KSA 參考都存在於 ksa_codes 中', () => {
       const domainsData = loadYAMLFile('ai_lit_domains/ai_lit_domains_en.yaml');
       const ksaData = loadYAMLFile('ksa_codes/ksa_codes_en.yaml');
-      
+
       if (!domainsData || !ksaData) {
         console.warn('Data files not found, skipping test');
         return;
@@ -72,11 +72,11 @@ describe.skip('Content Integration Tests', () => {
       const knowledgeCodes = new Set(Object.keys(ksaTyped.knowledge_codes || {}));
       const skillCodes = new Set(Object.keys(ksaTyped.skill_codes || {}));
       const attitudeCodes = new Set(Object.keys(ksaTyped.attitude_codes || {}));
-      
+
       // Check each competency's KSA references
       const domainsTyped = domainsData as any;
       const domains = Object.values(domainsTyped.domains || {}) as any[];
-      
+
       domains.forEach((domain: any) => {
         const competencies = Object.values(domain.competencies || {}) as any[];
         competencies.forEach((competency: any) => {
@@ -106,10 +106,10 @@ describe.skip('Content Integration Tests', () => {
         description: 'Test Description',
         competencies: []
       };
-      
+
       const domainResult = DomainSchema.safeParse(testDomain);
       expect(domainResult.success).toBe(true);
-      
+
       // Test competency with all required fields
       const testCompetency = {
         code: 'C1.1',
@@ -121,7 +121,7 @@ describe.skip('Content Integration Tests', () => {
           attitudes: ['A1']
         }
       };
-      
+
       const competencyResult = CompetencySchema.safeParse(testCompetency);
       expect(competencyResult.success).toBe(true);
     });
@@ -129,11 +129,11 @@ describe.skip('Content Integration Tests', () => {
     it('應該驗證 competency ID 格式一致性', () => {
       const validCompetencyIds = ['C1.1', 'C1.2', 'C2.1', 'C10.15'];
       const invalidCompetencyIds = ['C1', '1.1', 'Comp1.1', 'C1.1.1'];
-      
+
       validCompetencyIds.forEach(id => {
         expect(id).toMatch(/^C\d+\.\d+$/);
       });
-      
+
       invalidCompetencyIds.forEach(id => {
         expect(id).not.toMatch(/^C\d+\.\d+$/);
       });
@@ -152,7 +152,7 @@ describe.skip('Content Integration Tests', () => {
           attitudes: ['A1.1']
         }
       };
-      
+
       expect(testCompetency.ksa_codes.knowledge.length).toBeGreaterThan(0);
       expect(testCompetency.ksa_codes.skills.length).toBeGreaterThan(0);
       expect(testCompetency.ksa_codes.attitudes.length).toBeGreaterThan(0);
@@ -160,7 +160,7 @@ describe.skip('Content Integration Tests', () => {
 
     it('應該驗證多語言欄位的一致性', () => {
       const languages = ['zhTW', 'es', 'ja', 'ko', 'fr', 'de', 'ru', 'it'];
-      
+
       // Helper function to check if all language fields exist
       const checkMultilingualField = (obj: any, fieldName: string) => {
         if (!obj[fieldName]) return false;
@@ -169,7 +169,7 @@ describe.skip('Content Integration Tests', () => {
         }
         return true;
       };
-      
+
       // Test with a sample object
       const testDomain = {
         overview: 'Overview',
@@ -183,7 +183,7 @@ describe.skip('Content Integration Tests', () => {
         overview_it: 'Panoramica',
         competencies: {}
       };
-      
+
       expect(checkMultilingualField(testDomain, 'overview')).toBe(true);
     });
   });
@@ -219,7 +219,7 @@ describe.skip('Content Integration Tests', () => {
           }
         ]
       };
-      
+
       // Add 100 competencies to test performance
       for (let i = 1; i <= 25; i++) {
         for (let j = 1; j <= 4; j++) {
@@ -236,11 +236,11 @@ describe.skip('Content Integration Tests', () => {
           });
         }
       }
-      
+
       const startTime = Date.now();
       const result = DomainsSchema.safeParse(largeDomainFile);
       const endTime = Date.now();
-      
+
       expect(result.success).toBe(true);
       expect(endTime - startTime).toBeLessThan(1000); // Should complete within 1 second
     });

@@ -6,11 +6,11 @@ metadata:
   title: "Oracolo dei Dati - Analista Dati"
   short_description: "Scopri le verità nascoste nell'oceano dei dati"
   long_description: |
-    Sei un oracolo apprendista nel "Tempio dell'Oracolo dei Dati", dotato della 
-    mistica capacità di vedere le tendenze future nei dati caotici. In questo tempio 
-    pieno di numeri e grafici, ogni punto dati contiene messaggi importanti, e la tua 
+    Sei un oracolo apprendista nel "Tempio dell'Oracolo dei Dati", dotato della
+    mistica capacità di vedere le tendenze future nei dati caotici. In questo tempio
+    pieno di numeri e grafici, ogni punto dati contiene messaggi importanti, e la tua
     missione è decifrare i segreti dietro questi numeri.
-  
+
   estimated_hours: 50
   skill_focus:
     - data_alchemy
@@ -20,21 +20,21 @@ metadata:
 world_setting:
   name: "Tempio dell'Oracolo dei Dati"
   description: |
-    Il Tempio dell'Oracolo dei Dati è un santuario misterioso che raccoglie dati da 
-    tutto il mondo. Qui, gli analisti di dati vengono addestrati come oracoli che 
-    possono interpretare il linguaggio dei numeri e rivelare verità che plasmano 
+    Il Tempio dell'Oracolo dei Dati è un santuario misterioso che raccoglie dati da
+    tutto il mondo. Qui, gli analisti di dati vengono addestrati come oracoli che
+    possono interpretare il linguaggio dei numeri e rivelare verità che plasmano
     le decisioni in tutti i regni.
-  
+
   atmosphere: "mystical_analytical"
   visual_theme: "digital_temple"
 starting_scenario:
   title: "Iniziazione al Tempio"
   description: |
-    Il Saggio Mentore Oracolo ti accoglie al tempio, parlando in enigmi sui segreti 
-    dei dati. Ma una minaccia incombe: Chaos, il distruttore di dati, sta inquinando 
-    le fonti di dati e diffondendo analisi fuorvianti. Devi usare metodi statistici 
+    Il Saggio Mentore Oracolo ti accoglie al tempio, parlando in enigmi sui segreti
+    dei dati. Ma una minaccia incombe: Chaos, il distruttore di dati, sta inquinando
+    le fonti di dati e diffondendo analisi fuorvianti. Devi usare metodi statistici
     puri per trovare la verità in mezzo alla confusione.
-  
+
   initial_tasks:
     - learn_data_basics
     - master_tools

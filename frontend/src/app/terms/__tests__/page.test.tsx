@@ -13,9 +13,9 @@ jest.mock('next/link', () => {
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string, defaultValue?: string) => defaultValue || key,
-    i18n: { 
-      changeLanguage: jest.fn(), 
-      language: 'en' 
+    i18n: {
+      changeLanguage: jest.fn(),
+      language: 'en'
     }
   })
 }));
@@ -45,7 +45,7 @@ describe('TermsOfServicePage', () => {
 
   it('should display all major sections', () => {
     render(<TermsOfServicePage />);
-    
+
     expect(screen.getByText('1. Acceptance of Terms')).toBeInTheDocument();
     expect(screen.getByText('2. Description of Service')).toBeInTheDocument();
     expect(screen.getByText('3. User Accounts')).toBeInTheDocument();

@@ -18,7 +18,7 @@ describe('RTLProvider', () => {
 
   it('should render children without modification', async () => {
     mockUseRTL.mockImplementation(() => {});
-    
+
     renderWithProviders(
       <RTLProvider>
         <div data-testid="child-component">Test Content</div>
@@ -31,7 +31,7 @@ describe('RTLProvider', () => {
 
   it('should call useRTL hook on mount', async () => {
     mockUseRTL.mockImplementation(() => {});
-    
+
     renderWithProviders(
       <RTLProvider>
         <div>Test</div>
@@ -44,7 +44,7 @@ describe('RTLProvider', () => {
 
   it('should render multiple children correctly', async () => {
     mockUseRTL.mockImplementation(() => {});
-    
+
     renderWithProviders(
       <RTLProvider>
         <div data-testid="child-1">Child 1</div>
@@ -63,7 +63,7 @@ describe('RTLProvider', () => {
 
   it('should handle empty children', async () => {
     mockUseRTL.mockImplementation(() => {});
-    
+
     const { container } = renderWithProviders(
       <RTLProvider>
         {null}
@@ -77,7 +77,7 @@ describe('RTLProvider', () => {
 
   it('should handle undefined children', async () => {
     mockUseRTL.mockImplementation(() => {});
-    
+
     const { container } = renderWithProviders(
       <RTLProvider>
         {undefined}
@@ -91,7 +91,7 @@ describe('RTLProvider', () => {
 
   it('should handle false children', async () => {
     mockUseRTL.mockImplementation(() => {});
-    
+
     const { container } = renderWithProviders(
       <RTLProvider>
         {false}
@@ -106,7 +106,7 @@ describe('RTLProvider', () => {
   it('should handle conditional children', async () => {
     mockUseRTL.mockImplementation(() => {});
     const showContent = true;
-    
+
     renderWithProviders(
       <RTLProvider>
         {showContent && <div data-testid="conditional-content">Conditional Content</div>}
@@ -120,7 +120,7 @@ describe('RTLProvider', () => {
 
   it('should work with complex nested components', async () => {
     mockUseRTL.mockImplementation(() => {});
-    
+
     const ComplexChild = () => (
       <div data-testid="complex-child">
         <h1>Title</h1>
@@ -151,7 +151,7 @@ describe('RTLProvider', () => {
     mockUseRTL.mockImplementation(() => {
       throw new Error('RTL hook failed');
     });
-    
+
     expect(() => {
       renderWithProviders(
         <RTLProvider>
@@ -167,7 +167,7 @@ describe('RTLProvider', () => {
 
   it('should re-call useRTL on re-render', async () => {
     mockUseRTL.mockImplementation(() => {});
-    
+
     const { rerender } = renderWithProviders(
       <RTLProvider>
         <div>Initial Content</div>
@@ -187,7 +187,7 @@ describe('RTLProvider', () => {
 
   it('should work with React fragments', async () => {
     mockUseRTL.mockImplementation(() => {});
-    
+
     renderWithProviders(
       <RTLProvider>
         <>
@@ -204,7 +204,7 @@ describe('RTLProvider', () => {
 
   it('should handle string children', async () => {
     mockUseRTL.mockImplementation(() => {});
-    
+
     renderWithProviders(
       <RTLProvider>
         Plain text content
@@ -217,7 +217,7 @@ describe('RTLProvider', () => {
 
   it('should handle number children', async () => {
     mockUseRTL.mockImplementation(() => {});
-    
+
     renderWithProviders(
       <RTLProvider>
         {42}
@@ -230,9 +230,9 @@ describe('RTLProvider', () => {
 
   it('should handle array of children', async () => {
     mockUseRTL.mockImplementation(() => {});
-    
+
     const items = ['Item 1', 'Item 2', 'Item 3'];
-    
+
     renderWithProviders(
       <RTLProvider>
         {items.map((item, index) => (
@@ -252,7 +252,7 @@ describe('RTLProvider', () => {
 
   it('should maintain component structure with providers', async () => {
     mockUseRTL.mockImplementation(() => {});
-    
+
     const TestProvider = ({ children }: { children: React.ReactNode }) => (
       <div data-testid="test-provider">{children}</div>
     );
@@ -272,7 +272,7 @@ describe('RTLProvider', () => {
 
   it('should work with components that have props', async () => {
     mockUseRTL.mockImplementation(() => {});
-    
+
     const ComponentWithProps = ({ title, content }: { title: string; content: string }) => (
       <div data-testid="component-with-props">
         <h2>{title}</h2>
@@ -294,7 +294,7 @@ describe('RTLProvider', () => {
 
   it('should handle mixed content types', async () => {
     mockUseRTL.mockImplementation(() => {});
-    
+
     renderWithProviders(
       <RTLProvider>
         <div data-testid="mixed-content">
@@ -323,7 +323,7 @@ describe('RTLProvider', () => {
       isRTL: true,
       direction: 'rtl'
     }));
-    
+
     renderWithProviders(
       <RTLProvider>
         <div data-testid="rtl-content">RTL Content</div>

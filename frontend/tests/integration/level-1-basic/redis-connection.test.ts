@@ -39,11 +39,11 @@ describe.skip('Basic Redis Connection', () => {
 
     // Set a test value
     await redisClient.set('test:key', 'test-value');
-    
+
     // Get the value back
     const value = await redisClient.get('test:key');
     expect(value).toBe('test-value');
-    
+
     // Clean up
     await redisClient.del('test:key');
   });
@@ -61,14 +61,14 @@ describe.skip('Basic Redis Connection', () => {
 
     // Set with 1 second expiration
     await redisClient.set('test:expire', 'will-expire', 'EX', 1);
-    
+
     // Should exist immediately
     const immediate = await redisClient.get('test:expire');
     expect(immediate).toBe('will-expire');
-    
+
     // Wait for expiration
     await new Promise(resolve => setTimeout(resolve, 1100));
-    
+
     // Should be gone
     const after = await redisClient.get('test:expire');
     expect(after).toBeNull();

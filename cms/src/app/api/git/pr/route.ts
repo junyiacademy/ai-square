@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
 
     // Get current branch from cookie
     const currentBranch = cookieStore.get('cms-branch')?.value || 'main';
-    
+
     // If we're on main, no PR to create
     if (currentBranch === 'main') {
       return NextResponse.json({
@@ -24,37 +24,37 @@ export async function POST(request: NextRequest) {
         message: 'Please make some changes and save first to create a feature branch.'
       });
     }
-    
+
     const storage = getGitHubStorage();
-    
+
     // Get commits for this branch
     const commits = await storage.getCommitsBetweenBranches(currentBranch, 'main');
-    console.log('Found commits:', commits.map(c => ({ 
-      sha: c.sha.substring(0, 7), 
-      message: c.message.substring(0, 50) + '...' 
+    console.log('Found commits:', commits.map(c => ({
+      sha: c.sha.substring(0, 7),
+      message: c.message.substring(0, 50) + '...'
     })));
-    
+
     // Generate intelligent PR description using LLM
     let detailedBody = body || 'Content updates made via AI Square CMS';
-    
+
     try {
       console.log('Generating PR description with commits:', commits.length);
       const descResponse = await fetch(`${request.headers.get('origin') || 'http://localhost:3000'}/api/git/generate-pr-description`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           commits,
           branch: currentBranch
         }),
       });
-      
+
       if (!descResponse.ok) {
         console.error('PR description API failed:', descResponse.status);
       }
-      
+
       const descData = await descResponse.json();
       console.log('PR description response:', descData);
-      
+
       if (descData.success) {
         detailedBody = descData.description;
         console.log('Using AI-generated PR description');
@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
       }
     } catch (error) {
       console.error('Failed to generate AI PR description:', error);
-      
+
       // Fallback to detailed commit list
       detailedBody = `${body || 'Content updates made via AI Square CMS'}
 
@@ -80,7 +80,7 @@ ${details ? '\n' + details : ''}
 `;
 }).join('\n')}`;
     }
-    
+
     // Add footer
     detailedBody += `
 
@@ -97,9 +97,9 @@ Branch: \`${currentBranch}\`
       currentBranch,
       'main'
     );
-    
+
     // Clear branch cookie to switch back to main
-    const response = NextResponse.json({ 
+    const response = NextResponse.json({
       success: true,
       prUrl: pr.url,
       prNumber: pr.number,
@@ -107,9 +107,9 @@ Branch: \`${currentBranch}\`
       message: 'Pull request created successfully',
       description: detailedBody
     });
-    
+
     response.cookies.delete('cms-branch');
-    
+
     return response;
   } catch (error) {
     console.error('Create PR error:', error);

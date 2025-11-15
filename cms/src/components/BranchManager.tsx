@@ -27,13 +27,13 @@ export default function BranchManager() {
     try {
       setLoading(true)
       setError(null)
-      
+
       const response = await fetch('/api/branches/list')
-      
+
       if (!response.ok) {
         throw new Error('Failed to load pull requests')
       }
-      
+
       const data = await response.json()
       setPullRequests(data.pullRequests || [])
     } catch (error) {
@@ -49,7 +49,7 @@ export default function BranchManager() {
     try {
       setCreating(true)
       setMessage(null)
-      
+
       const response = await fetch('/api/git/branch', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -57,11 +57,11 @@ export default function BranchManager() {
           branchName: newBranchName,
         }),
       })
-      
+
       if (!response.ok) {
         throw new Error('Failed to create branch')
       }
-      
+
       setMessage('Branch created successfully')
       setNewBranchName('')
     } catch (error) {
@@ -74,7 +74,7 @@ export default function BranchManager() {
   const handleCreatePR = async (pr: PullRequest) => {
     try {
       setMessage(null)
-      
+
       const response = await fetch('/api/git/pr', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -84,11 +84,11 @@ export default function BranchManager() {
           description: 'Automated PR created from CMS',
         }),
       })
-      
+
       if (!response.ok) {
         throw new Error('Failed to create pull request')
       }
-      
+
       setMessage('Pull request created successfully')
       loadPullRequests()
     } catch (error) {
@@ -99,7 +99,7 @@ export default function BranchManager() {
   const handleMergePR = async (pr: PullRequest) => {
     try {
       setMessage(null)
-      
+
       const response = await fetch(`/api/branches/${pr.branch}/merge`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -108,11 +108,11 @@ export default function BranchManager() {
           commitTitle: pr.title,
         }),
       })
-      
+
       if (!response.ok) {
         throw new Error('Failed to merge pull request')
       }
-      
+
       setMessage('Pull request merged successfully')
       loadPullRequests()
     } catch (error) {
@@ -123,7 +123,7 @@ export default function BranchManager() {
   return (
     <div>
       <h2>Branch Management</h2>
-      
+
       <div>
         <input
           type="text"
@@ -158,7 +158,7 @@ export default function BranchManager() {
             {pr.title} <span>#{pr.number}</span>
           </h3>
           <p>Branch: {pr.branch}</p>
-          
+
           <div>
             <button onClick={() => handleCreatePR(pr)}>
               Create PR

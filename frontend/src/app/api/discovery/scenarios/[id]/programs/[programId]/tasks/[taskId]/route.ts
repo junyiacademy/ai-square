@@ -54,7 +54,7 @@ Guidelines:
 - Include 1-2 concrete suggestions for improvement
 - Sign off with an appropriate authority figure name based on the career field:
   * For biotech/life sciences: Use historical figures like "Dr. Fleming" (Alexander Fleming), "Dr. Watson" (James Watson), or "Dr. McClintock" (Barbara McClintock)
-  * For technology/AI: Use figures like "Dr. Turing" (Alan Turing), "Prof. McCarthy" (John McCarthy), or "Dr. Hinton" (Geoffrey Hinton) 
+  * For technology/AI: Use figures like "Dr. Turing" (Alan Turing), "Prof. McCarthy" (John McCarthy), or "Dr. Hinton" (Geoffrey Hinton)
   * For creative fields: Use figures like "Prof. Jobs" (Steve Jobs), "Master da Vinci" (Leonardo da Vinci), or "Sensei Miyazaki" (Hayao Miyazaki)
   * For business/entrepreneurship: Use figures like "Prof. Drucker" (Peter Drucker), "Mr. Carnegie" (Andrew Carnegie), or "Ms. Graham" (Katherine Graham)
   * For data/analytics: Use figures like "Prof. Tukey" (John Tukey), "Dr. Fisher" (Ronald Fisher), or "Prof. Nightingale" (Florence Nightingale)
@@ -95,64 +95,64 @@ export async function GET(
 
     const { programId, taskId } = await params;
     const userId = session.user.id; // Use user ID not email
-    
+
     // Get language from query params
     const url = new URL(request.url);
     const requestedLanguage = url.searchParams.get('lang') || 'en';
-    
+
     // Debug log language request
     console.log('=== GET TASK LANGUAGE DEBUG ===');
     console.log('Requested URL:', request.url);
     console.log('Language parameter:', requestedLanguage);
     console.log('==============================');
-    
+
     // Get repositories
     const programRepo = repositoryFactory.getProgramRepository();
     const taskRepo = repositoryFactory.getTaskRepository();
     const scenarioRepo = repositoryFactory.getScenarioRepository();
     const evaluationRepo = repositoryFactory.getEvaluationRepository();
-    
+
     // Verify program ownership
     const program = await programRepo.findById(programId);
     if (!program || program.userId !== userId) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
-    
+
     // Get task with interactions
     const taskWithInteractions = await taskRepo.getTaskWithInteractions?.(taskId);
     if (!taskWithInteractions || taskWithInteractions.programId !== programId) {
       return NextResponse.json({ error: 'Task not found' }, { status: 404 });
     }
     const task = taskWithInteractions;
-    
+
     // Load scenario for career info
     const scenario = await scenarioRepo.findById(program.scenarioId);
-    
+
     // Handle multilingual evaluation if task is completed
     let processedEvaluation = null;
     const evaluationId = (task.metadata?.evaluationId as string) || (task.metadata?.evaluation as { id?: string })?.id || null;
-    
+
     if (evaluationId && task.status === 'completed') {
       // Get full evaluation record
       const fullEvaluation = await evaluationRepo.findById(evaluationId);
-      
+
       if (fullEvaluation) {
         const existingVersions = (fullEvaluation.feedbackData || fullEvaluation.metadata?.feedbackVersions || {}) as Record<string, string>;
-        
+
         // Debug log existing versions
         console.log('=== EVALUATION VERSIONS DEBUG ===');
         console.log('Requested language:', requestedLanguage);
         console.log('Existing versions:', Object.keys(existingVersions));
         console.log('Full evaluation feedback:', fullEvaluation.feedbackText?.substring(0, 100) + '...');
         console.log('=================================');
-        
+
         // Check if we need the requested language version
         if (!existingVersions[requestedLanguage]) {
           try {
             // Need to translate - determine source language and content
             let sourceFeedback: string;
             let sourceLanguage: string;
-            
+
             if (existingVersions['en']) {
               // Prefer English as source for translation
               sourceFeedback = existingVersions['en'];
@@ -164,13 +164,13 @@ export async function GET(
             } else {
               throw new Error('No source feedback available for translation');
             }
-            
+
             console.log(`Translating evaluation from ${sourceLanguage} to ${requestedLanguage}`);
             console.log('Source feedback preview:', sourceFeedback.substring(0, 100) + '...');
-            
+
             const translationService = new TranslationService();
             const careerType = ((scenario?.metadata as Record<string, unknown>)?.careerType || 'general') as string;
-            
+
             // Special handling: if requesting English and source is English, no translation needed
             if (requestedLanguage === 'en' && sourceLanguage === 'en') {
               processedEvaluation = {
@@ -186,13 +186,13 @@ export async function GET(
                 requestedLanguage,
                 careerType
               );
-              
+
               // Update evaluation with new translation
               const updatedVersions = {
                 ...existingVersions,
                 [requestedLanguage]: translatedFeedback
               };
-              
+
               // Note: evaluationRepo doesn't have update method
               // Store updated versions in task metadata
               await taskRepo.update?.(taskId, {
@@ -201,9 +201,9 @@ export async function GET(
                   evaluationFeedbackVersions: updatedVersions
                 }
               });
-              
+
               // Already updated task metadata above
-              
+
               // Use translated version for response
               processedEvaluation = {
                 id: fullEvaluation.id,
@@ -250,7 +250,7 @@ export async function GET(
         }
       }
     }
-    
+
     // Return task data
     return NextResponse.json({
       id: task.id,
@@ -298,7 +298,7 @@ export async function GET(
           }
           return value;
         };
-        
+
         // Process content fields
         return {
           ...content,
@@ -353,28 +353,28 @@ export async function PATCH(
     const { programId, taskId } = await params;
     const userId = session.user.id; // Use user ID not email
  // Keep for evaluation records
-    
+
     const body = await request.json();
     const { action, content } = body;
-    
+
     // Get repositories
     const programRepo = repositoryFactory.getProgramRepository();
     const taskRepo = repositoryFactory.getTaskRepository();
     const evaluationRepo = repositoryFactory.getEvaluationRepository();
-    
+
     // Verify program ownership
     const program = await programRepo.findById(programId);
     if (!program || program.userId !== userId) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
-    
+
     // Get task with interactions
     const taskWithInteractions = await taskRepo.getTaskWithInteractions?.(taskId);
     if (!taskWithInteractions || taskWithInteractions.programId !== programId) {
       return NextResponse.json({ error: 'Task not found' }, { status: 404 });
     }
     const task = taskWithInteractions;
-    
+
     if (action === 'submit') {
       // Add user response as interaction
       const newInteraction: Interaction = {
@@ -385,40 +385,40 @@ export async function PATCH(
           timeSpent: content.timeSpent || 0
         }
       };
-      
+
       // Get current interactions and add new one
       const currentInteractions = task.interactions || [];
       const updatedInteractions = [...currentInteractions, newInteraction];
-      
+
       // Update task with new interaction
       await taskRepo.updateInteractions?.(taskId, updatedInteractions);
-      
+
       // Also record attempt for score tracking
       await taskRepo.recordAttempt?.(taskId, {
         response: content.response,
         timeSpent: content.timeSpent || 0
       });
-      
+
       const language = (program.metadata?.language || 'en') as string;
-      
+
       // Get user's preferred language from request header
       const acceptLanguage = request.headers.get('accept-language')?.split(',')[0];
       const userLanguage = acceptLanguage || language;
-      
+
       // Use AI to evaluate the response
       const aiService = new VertexAIService({
-        systemPrompt: userLanguage === 'zhTW' 
+        systemPrompt: userLanguage === 'zhTW'
           ? '你是嚴格的學習評估助手。請根據任務要求客觀評估學習者是否真正完成了任務。如果回答與任務無關或未完成要求，必須給予誠實的評估。'
           : 'You are a strict learning evaluator. Objectively assess if the learner actually completed the task based on requirements. If response is unrelated or incomplete, provide honest assessment.',
         temperature: 0.7,
         model: 'gemini-2.5-flash'
       });
-      
+
       // Prepare evaluation prompt with clear task context
       const taskInstructions = (task.metadata as Record<string, unknown>)?.instructions || '';
       const maxXP = (task.content as Record<string, unknown>)?.xp as number || 100;
       const taskContent = task.content as Record<string, unknown> || {};
-      
+
       // Extract language-specific values from multilingual objects
       const getLocalizedValue = (obj: unknown): string => {
         if (typeof obj === 'string') return obj;
@@ -428,8 +428,8 @@ export async function PATCH(
         }
         return String(obj);
       };
-      
-      const evaluationPrompt = userLanguage === 'zhTW' 
+
+      const evaluationPrompt = userLanguage === 'zhTW'
         ? `嚴格評估學習者是否完成了指定任務：
 
 任務標題：${getLocalizedValue(task.title)}
@@ -483,7 +483,7 @@ Return JSON:
 
       try {
         const aiResponse = await aiService.sendMessage(evaluationPrompt);
-        
+
         // Parse JSON from AI response
         let evaluationResult;
         try {
@@ -506,7 +506,7 @@ Return JSON:
             skillsImproved: []
           };
         }
-        
+
         // Add AI evaluation as interaction
         const aiInteraction: Interaction = {
           timestamp: new Date().toISOString(),
@@ -517,15 +517,15 @@ Return JSON:
             xpEarned: evaluationResult.xpEarned
           }
         };
-        
+
         // Get latest interactions and add AI response
         const latestTask = await taskRepo.getTaskWithInteractions?.(taskId);
         const latestInteractions = latestTask?.interactions || updatedInteractions;
         const finalInteractions = [...latestInteractions, aiInteraction];
-        
+
         // Update task with AI interaction
         await taskRepo.updateInteractions?.(taskId, finalInteractions);
-        
+
         // Record AI evaluation as metadata (not a user attempt)
         // We'll store this in task metadata instead
         await taskRepo.update?.(taskId, {
@@ -534,7 +534,7 @@ Return JSON:
             lastEvaluatedAt: new Date().toISOString()
           }
         });
-        
+
         // Don't create evaluation or mark complete yet - wait for user confirmation
         // Just return the result
         return NextResponse.json({
@@ -562,18 +562,18 @@ Return JSON:
       const hasPassedInteraction = task.interactions.some(
         i => i.type === 'ai_response' && (i.content as { completed?: boolean })?.completed === true
       );
-      
+
       if (!hasPassedInteraction) {
         return NextResponse.json(
           { error: 'Task has not been passed yet' },
           { status: 400 }
         );
       }
-      
+
       // Create comprehensive evaluation based on all interactions
       const userAttempts = task.interactions.filter((i: Interaction) => i.type === 'user_input').length;
       const aiResponses = task.interactions.filter((i: Interaction) => i.type === 'ai_response');
-      
+
       // Debug log
       console.log('Task interactions for completion:', {
         taskId,
@@ -585,7 +585,7 @@ Return JSON:
           content: r.content
         }))
       });
-      
+
       const passedAttempts = aiResponses.filter((i: Interaction) => {
         try {
           const parsed = JSON.parse(String(i.content)) as { completed?: boolean };
@@ -594,23 +594,23 @@ Return JSON:
           return false;
         }
       }).length;
-      
+
       // Get all feedback for comprehensive review
       const allFeedback = task.interactions
         .filter(i => i.type === 'ai_response')
         .map(i => i.content);
-      
+
       // Calculate total XP from best attempt
       const bestXP = Math.max(
         ...allFeedback.map(f => typeof f === 'object' && f !== null && 'xpEarned' in f ? (f as { xpEarned?: number }).xpEarned || 0 : 0),
         (task.content as Record<string, unknown>)?.xp as number || 100
       );
-      
+
       // Generate comprehensive qualitative feedback using LLM based on full learning journey
       let comprehensiveFeedback = 'Task completed successfully!';
       let userLanguage = 'en'; // Default language
       let careerType = 'unknown'; // Default career type
-      
+
       // Generate comprehensive feedback based on learning journey
       try {
         // Prepare all user responses and AI feedback for comprehensive analysis
@@ -625,7 +625,7 @@ Return JSON:
           } else if (interaction.type === 'ai_response') {
             let parsed: { completed?: boolean; feedback?: string; strengths?: string[]; improvements?: string[]; xpEarned?: number };
             try {
-              parsed = typeof interaction.content === 'string' 
+              parsed = typeof interaction.content === 'string'
                 ? JSON.parse(interaction.content)
                 : interaction.content as { completed?: boolean; feedback?: string; strengths?: string[]; improvements?: string[]; xpEarned?: number };
             } catch {
@@ -643,17 +643,17 @@ Return JSON:
           }
           return null;
         }).filter(Boolean);
-        
+
         // Get scenario and task context
         const scenarioRepo = repositoryFactory.getScenarioRepository();
         const scenario = await scenarioRepo.findById(program.scenarioId);
         careerType = (scenario?.metadata?.careerType || 'unknown') as string;
         const language = (program.metadata?.language || 'en') as string;
-        
+
         // Get current user language preference from request headers or use program language
         const acceptLanguage = request.headers.get('accept-language')?.split(',')[0];
         userLanguage = (acceptLanguage || language) as string;
-        
+
         // Debug log language detection
         console.log('=== LANGUAGE DETECTION DEBUG ===');
         console.log('1. Raw headers:', {
@@ -672,14 +672,14 @@ Return JSON:
           taskTitle: task.title
         });
         console.log('================================');
-        
+
         // Load YAML data for world setting context
         let yamlData = null;
         if (careerType !== 'unknown') {
           const loader = new DiscoveryYAMLLoader();
           yamlData = await loader.loadPath(careerType, language);
         }
-        
+
         // Extract title as string
         const taskTitle = (() => {
           const titleObj = task.title;
@@ -690,7 +690,7 @@ Return JSON:
           }
           return '';
         })();
-        
+
         // Generate multilingual comprehensive qualitative feedback
         const comprehensivePrompt = generateComprehensiveFeedbackPrompt(
           userLanguage,
@@ -701,36 +701,36 @@ Return JSON:
           yamlData,
           learningJourney
         );
-        
+
         // Debug log the generated prompt
         console.log('=== GENERATED PROMPT DEBUG ===');
         console.log('Prompt language setting:', userLanguage);
         console.log('Full prompt to AI:');
         console.log(comprehensivePrompt);
         console.log('==============================');
-        
+
         // Use AI to generate comprehensive qualitative feedback
         const aiService = new VertexAIService({
           systemPrompt: getSystemPromptForLanguage(userLanguage),
           temperature: 0.8,
           model: 'gemini-2.5-flash'
         });
-        
+
         const aiResponse = await aiService.sendMessage(comprehensivePrompt);
         comprehensiveFeedback = aiResponse.content;
-        
+
         // Debug log AI response (confirm-complete)
         console.log('=== AI RESPONSE DEBUG (CONFIRM-COMPLETE) ===');
         console.log('AI response received:');
         console.log(comprehensiveFeedback);
         console.log('Response length:', comprehensiveFeedback.length);
         console.log('==========================================');
-        
+
         // Add learning statistics at the end
         if (userAttempts > 1) {
           const statsSection = getStatsSection(userLanguage, userAttempts, passedAttempts, bestXP);
           comprehensiveFeedback += statsSection;
-          
+
           // Add skills summary if available
           const allSkills = new Set<string>();
           allFeedback.forEach(f => {
@@ -743,7 +743,7 @@ Return JSON:
               });
             }
           });
-          
+
           if (allSkills.size > 0) {
             const skillsSection = getSkillsSection(userLanguage, Array.from(allSkills));
             comprehensiveFeedback += skillsSection;
@@ -763,7 +763,7 @@ Return JSON:
             }
           })
           .slice(-1)[0];
-        
+
         if (lastSuccessfulInteraction) {
           try {
             const parsed = JSON.parse(String(lastSuccessfulInteraction.content)) as { feedback?: string };
@@ -774,13 +774,13 @@ Return JSON:
         } else {
           comprehensiveFeedback = getFallbackMessage(userLanguage);
         }
-        
+
         if (userAttempts > 1) {
           const statsSection = getStatsSection(userLanguage, userAttempts, passedAttempts, bestXP);
           comprehensiveFeedback += statsSection;
         }
       }
-      
+
       // Collect all skills improved across attempts
       const allSkillsImproved = new Set<string>();
       allFeedback.forEach(f => {
@@ -795,17 +795,17 @@ Return JSON:
           }
         }
       });
-      
+
       // Prepare multilingual feedback versions
       // Store feedback in the generated language, no need to translate back
       const feedbackVersions: Record<string, string> = {};
       feedbackVersions[userLanguage] = comprehensiveFeedback;
-      
+
       // If not English, also store as English for compatibility
       if (userLanguage !== 'en') {
         feedbackVersions['en'] = comprehensiveFeedback; // Store as is, will be translated on demand if needed
       }
-      
+
       // Create formal evaluation record with multilingual support
       const evaluation = await evaluationRepo.create({
         userId: userId,
@@ -838,7 +838,7 @@ Return JSON:
           actualXPEarned: bestXP // Store the actual XP (can be > 100)
         }
       });
-      
+
       // Mark task as completed and save evaluation ID
       await taskRepo.update?.(taskId, {
         status: 'completed' as const,
@@ -855,24 +855,24 @@ Return JSON:
           }
         }
       });
-      
+
       // Get current XP (will be updated later with currentTaskId)
       const currentXP = (program.metadata?.totalXP as number) || 0;
-      
+
       // Update program progress
       // Use the task order from program.taskIds to ensure correct sequence
       const allTasks = await taskRepo.findByProgram(programId);
       const taskMap = new Map(allTasks.map(t => [t.id, t]));
-      
+
       // Get tasks in the correct order based on taskIds in metadata
       const taskIds = (program.metadata?.taskIds as string[]) || [];
       const orderedTasks = taskIds
         .map((id: string) => taskMap.get(id))
         .filter(Boolean) as ITask[];
-      
+
       const completedTasks = orderedTasks.filter(t => t.status === 'completed').length;
       const nextTaskIndex = completedTasks;
-      
+
       // Activate next task if available
       let nextTaskId = null;
       if (nextTaskIndex < orderedTasks.length) {
@@ -880,11 +880,11 @@ Return JSON:
         await taskRepo.updateStatus?.(nextTask.id, 'active');
         nextTaskId = nextTask.id;
       }
-      
+
       // Update program current task index and currentTaskId
       // Update program current task index
       await programRepo.update?.(programId, { currentTaskIndex: nextTaskIndex });
-      
+
       // Update currentTaskId in metadata
       await programRepo.update?.(programId, {
         metadata: {
@@ -894,11 +894,11 @@ Return JSON:
           totalXP: currentXP + bestXP
         }
       });
-      
+
       // If all tasks completed, complete the program
       if (completedTasks === orderedTasks.length) {
         await programRepo.update?.(programId, { status: "completed" });
-        
+
         // Create program completion evaluation
         await evaluationRepo.create({
           userId: session.user.id,
@@ -927,7 +927,7 @@ Return JSON:
           }
         });
       }
-      
+
       return NextResponse.json({
         success: true,
         taskCompleted: true,
@@ -948,7 +948,7 @@ Return JSON:
           { status: 403 }
         );
       }
-      
+
       // Check if task is completed
       if (task.status !== 'completed') {
         return NextResponse.json(
@@ -956,7 +956,7 @@ Return JSON:
           { status: 400 }
         );
       }
-      
+
       // Regenerate comprehensive feedback using the same logic as confirm-complete
       const userAttempts = task.interactions.filter((i: Interaction) => i.type === 'user_input').length;
       const aiResponses = task.interactions.filter((i: Interaction) => i.type === 'ai_response');
@@ -976,10 +976,10 @@ Return JSON:
         }
       });
       const bestXP = Math.max(...allFeedback.map(f => f.xpEarned || 0), (task.content as Record<string, unknown>)?.xp as number || 100);
-      
+
       let comprehensiveFeedback = 'Successfully regenerated task evaluation!';
       let userLanguage = 'en'; // Default language
-      
+
       try {
         // Same logic as in confirm-complete for generating comprehensive feedback
         const learningJourney = task.interactions.map((interaction, index) => {
@@ -993,7 +993,7 @@ Return JSON:
           } else if (interaction.type === 'ai_response') {
             let parsed: { completed?: boolean; feedback?: string; strengths?: string[]; improvements?: string[]; xpEarned?: number };
             try {
-              parsed = typeof interaction.content === 'string' 
+              parsed = typeof interaction.content === 'string'
                 ? JSON.parse(interaction.content)
                 : interaction.content as { completed?: boolean; feedback?: string; strengths?: string[]; improvements?: string[]; xpEarned?: number };
             } catch {
@@ -1011,14 +1011,14 @@ Return JSON:
           }
           return null;
         }).filter(Boolean);
-        
+
         const scenarioRepo = repositoryFactory.getScenarioRepository();
         const scenario = await scenarioRepo.findById(program.scenarioId);
         const careerType = (scenario?.metadata?.careerType || 'unknown') as string;
         const language = (program.metadata?.language || 'en') as string;
         const acceptLanguage = request.headers.get('accept-language')?.split(',')[0];
         userLanguage = (acceptLanguage || language) as string;
-        
+
         // Debug log language detection for regenerate-evaluation
         console.log('=== REGENERATE: LANGUAGE DETECTION DEBUG ===');
         console.log('1. Raw headers:', {
@@ -1032,13 +1032,13 @@ Return JSON:
           afterProcessing: userLanguage
         });
         console.log('==========================================');
-        
+
         let yamlData = null;
         if (careerType !== 'unknown') {
           const loader = new DiscoveryYAMLLoader();
           yamlData = await loader.loadPath(careerType, language);
         }
-        
+
         // Extract title as string
         const taskTitleStr = (() => {
           const titleObj = task.title;
@@ -1049,7 +1049,7 @@ Return JSON:
           }
           return '';
         })();
-        
+
         const comprehensivePrompt = generateComprehensiveFeedbackPrompt(
           userLanguage,
           careerType,
@@ -1059,41 +1059,41 @@ Return JSON:
           yamlData,
           learningJourney
         );
-        
+
         // Debug log for regenerate-evaluation
         console.log('=== REGENERATE EVALUATION DEBUG ===');
         console.log('Language for regeneration:', userLanguage);
         console.log('Full prompt:');
         console.log(comprehensivePrompt);
         console.log('==================================');
-        
+
         const aiService = new VertexAIService({
           systemPrompt: getSystemPromptForLanguage(userLanguage),
           temperature: 0.8,
           model: 'gemini-2.5-flash'
         });
-        
+
         const aiResponse = await aiService.sendMessage(comprehensivePrompt);
         comprehensiveFeedback = aiResponse.content;
-        
+
         // Debug log AI response (regenerate-evaluation)
         console.log('=== AI RESPONSE DEBUG (REGENERATE) ===');
         console.log('AI response received:');
         console.log(comprehensiveFeedback);
         console.log('Response length:', comprehensiveFeedback.length);
         console.log('=====================================');
-        
+
         if (userAttempts > 1) {
           const statsSection = getStatsSection(userLanguage, userAttempts, passedAttempts, bestXP);
           comprehensiveFeedback += statsSection;
-          
+
           const allSkills = new Set<string>();
           allFeedback.forEach(f => {
             if (f.skillsImproved) {
               f.skillsImproved.forEach((skill: string) => allSkills.add(skill));
             }
           });
-          
+
           if (allSkills.size > 0) {
             const skillsSection = getSkillsSection(userLanguage, Array.from(allSkills));
             comprehensiveFeedback += skillsSection;
@@ -1103,19 +1103,19 @@ Return JSON:
         console.error('Error regenerating comprehensive feedback:', error);
         comprehensiveFeedback = 'Failed to regenerate feedback. Please try again.';
       }
-      
+
       // Update the existing evaluation
       const evaluationId = (task.metadata?.evaluationId as string) || (task.metadata?.evaluation as { id?: string })?.id;
-      
+
       if (evaluationId) {
-        
+
         // Get the pool directly to update evaluation
         const { getPool } = await import('@/lib/db/get-pool');
         const pool = getPool();
-        
+
         // Update evaluation with new feedback
         await pool.query(
-          `UPDATE evaluations 
+          `UPDATE evaluations
            SET feedback_text = $1,
                feedback_data = feedback_data || $2::jsonb,
                metadata = metadata || $3::jsonb
@@ -1131,9 +1131,9 @@ Return JSON:
             evaluationId
           ]
         );
-        
+
         console.log('Successfully updated evaluation:', evaluationId);
-        
+
         // Also update task metadata with new feedback for quick access
         await taskRepo.update?.(taskId, {
           metadata: {
@@ -1150,7 +1150,7 @@ Return JSON:
           }
         });
       }
-      
+
       return NextResponse.json({
         success: true,
         evaluation: {
@@ -1163,7 +1163,7 @@ Return JSON:
     } else if (action === 'start') {
       // Mark task as active
       await taskRepo.updateStatus?.(taskId, 'active');
-      
+
       return NextResponse.json({
         success: true,
         status: 'active'

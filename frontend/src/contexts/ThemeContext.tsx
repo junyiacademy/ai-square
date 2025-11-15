@@ -40,7 +40,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     } else {
       document.documentElement.classList.remove('dark')
     }
-    
+
     // Save to localStorage
     localStorage.setItem('ai-square-theme', theme)
   }, [theme])

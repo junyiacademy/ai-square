@@ -48,19 +48,19 @@ graph TD
     B -->|CI| C[使用 CI 服務]
     B -->|Cloud| D[使用雲端服務]
     B -->|Local| E{Docker 可用?}
-    
+
     E -->|是| F[啟動 Docker 服務]
     E -->|否| G{本地服務可用?}
-    
+
     G -->|是| H[使用本地服務]
     G -->|否| I[嘗試開發服務]
-    
+
     C --> J[執行測試]
     D --> J
     F --> J
     H --> J
     I --> J
-    
+
     J --> K{測試完成}
     K -->|成功| L[清理資源]
     K -->|失敗| M[保留環境偵錯]
@@ -150,8 +150,8 @@ steps:
 ### 1. 環境隔離
 ```typescript
 // 使用不同的資料庫名稱
-const dbName = process.env.NODE_ENV === 'test' 
-  ? 'ai_square_test' 
+const dbName = process.env.NODE_ENV === 'test'
+  ? 'ai_square_test'
   : 'ai_square_db';
 ```
 
@@ -190,7 +190,7 @@ jest.setTimeout(30000); // 30 秒
 **A:** CI 環境會自動偵測 (CI=true)，使用預配置的服務。
 
 ### Q: 測試很慢怎麼辦？
-**A:** 
+**A:**
 1. 只執行特定層級: `npm run test:integration:level-1`
 2. 使用記憶體資料庫: `tmpfs` in Docker
 3. 並行執行獨立測試

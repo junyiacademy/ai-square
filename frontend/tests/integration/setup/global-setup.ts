@@ -7,7 +7,7 @@ import * as path from 'path';
 /**
  * Global setup for integration tests
  * Runs once before all test suites
- * 
+ *
  * IMPORTANT: Always clean up ports before starting services
  */
 
@@ -17,7 +17,7 @@ let dbPool: Pool;
 // Test-specific ports to avoid conflicts
 const TEST_PORTS = {
   NEXT: process.env.TEST_PORT || '3456',
-  DB: process.env.TEST_DB_PORT || '5433', 
+  DB: process.env.TEST_DB_PORT || '5433',
   REDIS: process.env.TEST_REDIS_PORT || '6380'
 };
 
@@ -28,14 +28,14 @@ const TEST_PORTS = {
  */
 function killPort(port: string, serviceName: string): void {
   console.log(`🧹 Checking port ${port} (${serviceName})...`);
-  
+
   // Special handling for PostgreSQL and Redis test ports - DON'T kill them!
-  if ((port === '5433' && serviceName === 'PostgreSQL') || 
+  if ((port === '5433' && serviceName === 'PostgreSQL') ||
       (port === '6380' && serviceName === 'Redis')) {
     console.log(`   ⏭️ Skipping ${serviceName} on port ${port} (test service)`);
     return;
   }
-  
+
   // Only kill Next.js port
   if (port === '3456' && serviceName === 'Next.js') {
     try {
@@ -69,7 +69,7 @@ async function tryStartContainers(): Promise<void> {
         : fs.existsSync(path.join(projectRoot, 'frontend', 'docker-compose.test.yml'))
         ? path.join(projectRoot, 'frontend', 'docker-compose.test.yml')
         : null;
-      
+
       if (composeFile) {
         execSync(`${composeCmd} -f ${composeFile} up -d`, { stdio: 'ignore' });
         console.log('   ✅ Test containers started/verified');
@@ -87,7 +87,7 @@ async function tryStartContainers(): Promise<void> {
 export default async function globalSetup() {
   console.log('\n🚀 Starting global test setup...\n');
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
-  
+
   // Set test environment variables
   process.env.PORT = TEST_PORTS.NEXT;
   process.env.DB_HOST = process.env.DB_HOST || '127.0.0.1';
@@ -98,7 +98,7 @@ export default async function globalSetup() {
   process.env.API_URL = `http://localhost:${TEST_PORTS.NEXT}`;
   // Force using shared DB to keep API and tests in sync
   process.env.USE_SHARED_DB = '1';
-  
+
   try {
     // STEP 1: Clean test ports (but keep working PostgreSQL/Redis)
     console.log('📌 Step 1: Cleaning test ports...');
@@ -106,7 +106,7 @@ export default async function globalSetup() {
     killPort(TEST_PORTS.DB, 'PostgreSQL');
     killPort(TEST_PORTS.REDIS, 'Redis');
     await new Promise(resolve => setTimeout(resolve, 2000)); // Wait for ports to be fully released
-    
+
     // STEP 2: Try to ensure test environment is available
     console.log('\n📌 Step 2: Test environment...');
     // Allow skipping docker in pre-push by setting SKIP_DOCKER=1
@@ -116,7 +116,7 @@ export default async function globalSetup() {
       console.log('   ⏭️ SKIP_DOCKER=1, will not start docker compose');
     }
     await new Promise(resolve => setTimeout(resolve, 2000)); // Give services time to start
-    
+
     // Optional: wait for DB port to be open when using compose
     try {
       await waitOn({
@@ -128,10 +128,10 @@ export default async function globalSetup() {
 
     // STEP 3: Verify database connection (flexible - try test port first, then dev port)
     console.log('\n📌 Step 3: Verifying database connection...');
-    
+
     let dbConnected = false;
     let actualDbPort = TEST_PORTS.DB;
-    
+
     // Try test database first
     dbPool = new Pool({
       host: process.env.DB_HOST || 'localhost',
@@ -140,7 +140,7 @@ export default async function globalSetup() {
       user: 'postgres',
       password: 'postgres',
     });
-    
+
     // Try to connect to test DB
     for (let i = 0; i < 15; i++) {
       try {
@@ -155,13 +155,13 @@ export default async function globalSetup() {
         await new Promise(resolve => setTimeout(resolve, 1000));
       }
     }
-    
+
     // If test DB fails, try development DB
     if (!dbConnected) {
       await dbPool.end();
       actualDbPort = '5433';
       console.log('   Trying development database on port 5433...');
-      
+
       dbPool = new Pool({
         host: process.env.DB_HOST || 'localhost',
         port: 5433,
@@ -169,7 +169,7 @@ export default async function globalSetup() {
         user: 'postgres',
         password: 'postgres',
       });
-      
+
       try {
         await dbPool.query('SELECT 1');
         dbConnected = true;
@@ -179,7 +179,7 @@ export default async function globalSetup() {
         console.log('   ❌ Development database also not available');
       }
     }
-    
+
     if (!dbConnected) {
       console.error('\n❌ No database available for testing');
       console.log('Please start either:');
@@ -187,7 +187,7 @@ export default async function globalSetup() {
       console.log('  2. Dev database: docker-compose -f docker-compose.postgres.yml up -d');
       process.exit(1);
     }
-    
+
     await dbPool.end();
 
     // STEP 4: Ensure DB exists and apply schema
@@ -247,7 +247,7 @@ export default async function globalSetup() {
 
     // STEP 5: Start Next.js server on clean test port
     console.log(`\n📌 Step 5: Starting Next.js server on port ${TEST_PORTS.NEXT}...`);
-    
+
     // Start Next.js dev server on test port
     nextProcess = spawn('npm', ['run', 'dev'], {
       cwd: process.cwd(),
@@ -266,10 +266,10 @@ export default async function globalSetup() {
     });
     // Do not keep the parent event loop alive because of the child
     try { nextProcess.unref(); } catch {}
-    
+
     // Store process reference for cleanup
     (global as unknown as { __NEXT_PROCESS__?: ReturnType<typeof spawn> }).__NEXT_PROCESS__ = nextProcess;
-    
+
     // Wait for server to be ready
     console.log(`   ⏳ Waiting for Next.js server to be ready...`);
     await waitOn({
@@ -278,9 +278,9 @@ export default async function globalSetup() {
       interval: 1000,
       validateStatus: (status) => status === 200 || status === 503,
     });
-    
+
     console.log(`   ✅ Next.js server is ready on port ${TEST_PORTS.NEXT}`);
-    
+
     // STEP 6: Prepare test data
     console.log('\n📌 Step 6: Preparing test database...');
     const testDbPool = new Pool({
@@ -290,7 +290,7 @@ export default async function globalSetup() {
       user: 'postgres',
       password: 'postgres',
     });
-    
+
     try {
       // Create test data or clean existing data
       // Use individual queries to handle missing tables gracefully
@@ -302,7 +302,7 @@ export default async function globalSetup() {
         `DELETE FROM verification_tokens WHERE user_id IN (SELECT id FROM users WHERE email LIKE '%@test.com')`,
         `DELETE FROM users WHERE email LIKE '%@test.com'`
       ];
-      
+
       for (const query of cleanupQueries) {
         try {
           await testDbPool.query(query);
@@ -310,21 +310,21 @@ export default async function globalSetup() {
           // Ignore errors from missing tables
         }
       }
-      
+
       console.log('   ✅ Test database prepared');
     } catch (error) {
       console.warn('   ⚠️ Could not clean test data:', error);
     } finally {
       await testDbPool.end();
     }
-    
+
     // STEP 7: Verify Redis connection (optional - tests can run without it)
     console.log('\n📌 Step 7: Verifying Redis connection...');
     const Redis = require('ioredis');
-    
+
     let redisConnected = false;
     let actualRedisPort = TEST_PORTS.REDIS;
-    
+
     // Try test Redis first
     let redis = new Redis({
       host: process.env.REDIS_HOST || 'localhost',
@@ -332,7 +332,7 @@ export default async function globalSetup() {
       retryStrategy: () => null,
       lazyConnect: true,
     });
-    
+
     try {
       await redis.connect();
       await redis.ping();
@@ -345,7 +345,7 @@ export default async function globalSetup() {
       } catch {
         // Ignore quit errors
       }
-      
+
       // Try development Redis
       console.log('   Trying development Redis on port 6379...');
       redis = new Redis({
@@ -354,7 +354,7 @@ export default async function globalSetup() {
         retryStrategy: () => null,
         lazyConnect: true,
       });
-      
+
       try {
         await redis.connect();
         await redis.ping();
@@ -372,22 +372,22 @@ export default async function globalSetup() {
         console.warn('   ⚠️ Redis not available, tests will run without cache');
       }
     }
-    
+
     console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     console.log('✨ Global setup complete!');
     console.log(`   Next.js: http://localhost:${TEST_PORTS.NEXT}`);
     console.log(`   PostgreSQL: localhost:${process.env.DB_PORT || TEST_PORTS.DB} (db: ${process.env.DB_NAME || 'ai_square_db'})`);
     console.log(`   Redis: localhost:${actualRedisPort || 'N/A'}`);
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
-    
+
   } catch (error) {
     console.error('❌ Global setup failed:', error);
-    
+
     // Cleanup on error
     if (nextProcess) {
       nextProcess.kill('SIGTERM');
     }
-    
+
     process.exit(1);
   }
 }
@@ -396,7 +396,7 @@ async function checkPort(port: number): Promise<boolean> {
   return new Promise((resolve) => {
     const net = require('net');
     const server = net.createServer();
-    
+
     server.once('error', (err: NodeJS.ErrnoException) => {
       if (err.code === 'EADDRINUSE') {
         resolve(true); // Port is in use
@@ -404,12 +404,12 @@ async function checkPort(port: number): Promise<boolean> {
         resolve(false);
       }
     });
-    
+
     server.once('listening', () => {
       server.close();
       resolve(false); // Port is available
     });
-    
+
     server.listen(port);
   });
 }

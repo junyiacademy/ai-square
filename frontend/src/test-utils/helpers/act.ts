@@ -26,7 +26,7 @@ export async function waitForAllSettled() {
   await act(async () => {
     await Promise.resolve();
   });
-  
+
   // Run all timers if using fake timers
   if (typeof jest !== 'undefined' && jest.isMockFunction(setTimeout)) {
     act(() => {
@@ -55,12 +55,12 @@ export async function waitForCondition(
   timeout = 5000
 ): Promise<void> {
   const startTime = Date.now();
-  
+
   while (!condition()) {
     if (Date.now() - startTime > timeout) {
       throw new Error('Timeout waiting for condition');
     }
-    
+
     await act(async () => {
       await new Promise(resolve => setTimeout(resolve, 50));
     });
@@ -73,7 +73,7 @@ export async function waitForCondition(
  */
 export function suppressActWarnings() {
   const originalError = console.error;
-  
+
   beforeEach(() => {
     console.error = (...args: any[]) => {
       if (args[0]?.includes?.('act()')) {
@@ -82,7 +82,7 @@ export function suppressActWarnings() {
       originalError.call(console, ...args);
     };
   });
-  
+
   afterEach(() => {
     console.error = originalError;
   });

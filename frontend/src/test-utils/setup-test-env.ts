@@ -119,7 +119,7 @@ beforeAll(() => {
       originalError(message, ...args);
     }
   });
-  
+
   console.warn = jest.fn((message, ...args) => {
     // Filter out known warnings
     if (
@@ -173,7 +173,7 @@ afterEach(() => {
   jest.clearAllMocks();
   localStorageMock.clear();
   sessionStorageMock.clear();
-  
+
   // Clear any test-specific environment variables
   if (process.env.NODE_ENV === 'test') {
     // Reset fetch mock if it exists

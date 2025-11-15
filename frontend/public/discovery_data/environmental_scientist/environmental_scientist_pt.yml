@@ -7,10 +7,10 @@ metadata:
   title: "Guardião do Planeta - Cientista Ambiental"
   short_description: "Proteja a Terra através de soluções ambientais baseadas em dados"
   long_description: |
-    Você é um cientista júnior no "Centro Global de Resposta Climática", onde sistemas 
-    de monitoramento alimentados por IA rastreiam a saúde planetária em tempo real. 
-    Armado com tecnologia de ponta e conhecimento em ciências ambientais, você trabalhará 
-    para entender e reverter os danos climáticos enquanto desenvolve soluções sustentáveis 
+    Você é um cientista júnior no "Centro Global de Resposta Climática", onde sistemas
+    de monitoramento alimentados por IA rastreiam a saúde planetária em tempo real.
+    Armado com tecnologia de ponta e conhecimento em ciências ambientais, você trabalhará
+    para entender e reverter os danos climáticos enquanto desenvolve soluções sustentáveis
     para o futuro.
   estimated_hours: 60
   skill_focus:
@@ -26,18 +26,18 @@ metadata:
 world_setting:
   name: "Centro Global de Resposta Climática"
   description: |
-    O Centro Global de Resposta Climática é uma instalação de alta tecnologia onde 
-    cientistas ambientais usam IA, dados de satélite e pesquisa de campo para monitorar 
-    e proteger os ecossistemas da Terra. Os cientistas aqui correm contra o tempo para 
+    O Centro Global de Resposta Climática é uma instalação de alta tecnologia onde
+    cientistas ambientais usam IA, dados de satélite e pesquisa de campo para monitorar
+    e proteger os ecossistemas da Terra. Os cientistas aqui correm contra o tempo para
     desenvolver soluções antes que pontos críticos sejam alcançados.
   atmosphere: urgent_hopeful
   visual_theme: eco_tech_fusion
 starting_scenario:
   title: "Código Vermelho: Crise Climática"
   description: |
-    Dra. Gaia Terra dá as boas-vindas com notícias alarmantes: múltiplos sistemas 
-    ambientais estão se aproximando de limiares críticos. Enquanto isso, o CEO Polluto 
-    da MegaCorp continua práticas destrutivas por lucro. Você deve usar ciência e 
+    Dra. Gaia Terra dá as boas-vindas com notícias alarmantes: múltiplos sistemas
+    ambientais estão se aproximando de limiares críticos. Enquanto isso, o CEO Polluto
+    da MegaCorp continua práticas destrutivas por lucro. Você deve usar ciência e
     inovação para salvar ecossistemas enquanto expõe crimes ambientais corporativos.
   initial_tasks:
     - analyze_climate_data

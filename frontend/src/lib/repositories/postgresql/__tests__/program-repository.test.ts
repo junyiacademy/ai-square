@@ -491,7 +491,7 @@ describe('PostgreSQLProgramRepository', () => {
   describe('getActivePrograms', () => {
     it('should find active programs for user', async () => {
       const activeProgram = { ...mockDBProgram, status: 'active' };
-      
+
       (mockPool.query as jest.Mock).mockResolvedValue({
         rows: [activeProgram],
         command: 'SELECT',

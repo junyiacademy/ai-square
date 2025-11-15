@@ -19,11 +19,11 @@
 
 -- Check table ownership
 \echo '1.1 Table Ownership Check:'
-SELECT 
+SELECT
     schemaname,
     tablename,
     tableowner,
-    CASE 
+    CASE
         WHEN tableowner = current_user THEN '✓ Current User'
         WHEN tableowner = 'postgres' THEN '⚠ Superuser Owned'
         ELSE '✗ Other User: ' || tableowner
@@ -35,7 +35,7 @@ ORDER BY tablename;
 -- Check column privileges
 \echo ''
 \echo '1.2 Column-level Privileges:'
-SELECT 
+SELECT
     table_name,
     column_name,
     privilege_type,
@@ -48,7 +48,7 @@ ORDER BY table_name, column_name;
 -- Check for PUBLIC access
 \echo ''
 \echo '1.3 PUBLIC Access Check:'
-SELECT 
+SELECT
     schemaname,
     tablename,
     has_table_privilege('PUBLIC', schemaname||'.'||tablename, 'SELECT') as public_select,
@@ -73,7 +73,7 @@ WHERE schemaname = 'public'
 DO $$
 DECLARE
     v_sensitive_patterns TEXT[] := ARRAY[
-        '%password%', '%secret%', '%token%', '%key%', 
+        '%password%', '%secret%', '%token%', '%key%',
         '%ssn%', '%credit%', '%card%', '%cvv%'
     ];
     v_pattern TEXT;
@@ -85,7 +85,7 @@ BEGIN
         FROM information_schema.columns
         WHERE table_schema = 'public'
           AND column_name ILIKE v_pattern;
-        
+
         IF v_count > 0 THEN
             RAISE WARNING 'Found % columns matching sensitive pattern: %', v_count, v_pattern;
         END IF;
@@ -96,18 +96,18 @@ END $$;
 \echo ''
 \echo '2.2 Checking for potential unencrypted PII:'
 
-SELECT 
+SELECT
     'Users table email field' as check_item,
-    CASE 
-        WHEN EXISTS (SELECT 1 FROM users WHERE email NOT LIKE '%@%.%') 
+    CASE
+        WHEN EXISTS (SELECT 1 FROM users WHERE email NOT LIKE '%@%.%')
         THEN '✗ Invalid emails found'
         ELSE '✓ Email format valid'
     END as status
 UNION ALL
-SELECT 
+SELECT
     'Users table name field',
-    CASE 
-        WHEN EXISTS (SELECT 1 FROM users WHERE length(name) > 100) 
+    CASE
+        WHEN EXISTS (SELECT 1 FROM users WHERE length(name) > 100)
         THEN '⚠ Unusually long names found'
         ELSE '✓ Name lengths normal'
     END;
@@ -138,20 +138,20 @@ BEGIN
     LOOP
         BEGIN
             -- Test scenario title injection
-            PERFORM 1 FROM scenarios 
+            PERFORM 1 FROM scenarios
             WHERE title->>'en' = v_input;
-            
+
             -- Test in dynamic query (this should be safe)
             EXECUTE format(
                 'SELECT 1 FROM scenarios WHERE title @> %L::jsonb',
                 json_build_object('test', v_input)::text
             );
-            
+
         EXCEPTION WHEN OTHERS THEN
             RAISE WARNING 'Injection test caused error (good): %', SQLERRM;
         END;
     END LOOP;
-    
+
     IF v_test_passed THEN
         RAISE NOTICE '✓ JSONB injection tests passed';
     END IF;
@@ -185,12 +185,12 @@ END $$;
 -- Check for weak session tokens
 \echo '4.1 Checking session token strength:'
 
-SELECT 
+SELECT
     'Session Token Length' as metric,
     MIN(length(session_token)) as min_length,
     MAX(length(session_token)) as max_length,
     AVG(length(session_token))::numeric(10,2) as avg_length,
-    CASE 
+    CASE
         WHEN MIN(length(session_token)) < 32 THEN '✗ Tokens too short!'
         WHEN MIN(length(session_token)) < 64 THEN '⚠ Consider longer tokens'
         ELSE '✓ Good token length'
@@ -202,10 +202,10 @@ WHERE created_at > CURRENT_DATE - INTERVAL '30 days';
 \echo ''
 \echo '4.2 Checking for expired sessions:'
 
-SELECT 
+SELECT
     COUNT(*) as expired_sessions,
     MIN(expires_at) as oldest_expiry,
-    CASE 
+    CASE
         WHEN COUNT(*) > 0 THEN '✗ Expired sessions found - should be cleaned up'
         ELSE '✓ No expired sessions'
     END as status
@@ -227,22 +227,22 @@ WITH fk_violations AS (
     SELECT 'programs->scenarios' as relationship, COUNT(*) as violations
     FROM programs p
     WHERE NOT EXISTS (SELECT 1 FROM scenarios s WHERE s.id = p.scenario_id)
-    
+
     UNION ALL
     SELECT 'tasks->programs', COUNT(*)
     FROM tasks t
     WHERE NOT EXISTS (SELECT 1 FROM programs p WHERE p.id = t.program_id)
-    
+
     UNION ALL
     SELECT 'evaluations->tasks', COUNT(*)
     FROM evaluations e
-    WHERE e.task_id IS NOT NULL 
+    WHERE e.task_id IS NOT NULL
       AND NOT EXISTS (SELECT 1 FROM tasks t WHERE t.id = e.task_id)
 )
-SELECT 
+SELECT
     relationship,
     violations,
-    CASE 
+    CASE
         WHEN violations > 0 THEN '✗ CRITICAL: Foreign key violations!'
         ELSE '✓ No violations'
     END as status
@@ -252,13 +252,13 @@ FROM fk_violations;
 \echo ''
 \echo '5.2 Check Constraint Validation:'
 
-SELECT 
+SELECT
     'Score Range Check' as constraint_check,
     COUNT(*) as violations
 FROM evaluations
 WHERE score < 0 OR score > 100
 UNION ALL
-SELECT 
+SELECT
     'Empty JSONB Titles',
     COUNT(*)
 FROM scenarios
@@ -276,7 +276,7 @@ WHERE title = '{}'::jsonb OR title IS NULL;
 \echo '6.1 Audit Column Coverage:'
 
 WITH audit_coverage AS (
-    SELECT 
+    SELECT
         table_name,
         bool_or(column_name = 'created_at') as has_created_at,
         bool_or(column_name = 'updated_at') as has_updated_at,
@@ -286,14 +286,14 @@ WITH audit_coverage AS (
       AND table_name IN ('users', 'scenarios', 'programs', 'tasks', 'evaluations')
     GROUP BY table_name
 )
-SELECT 
+SELECT
     table_name,
-    CASE 
+    CASE
         WHEN has_created_at AND has_updated_at THEN '✓ Full audit timestamps'
         WHEN has_created_at THEN '⚠ Missing updated_at'
         ELSE '✗ Missing audit timestamps'
     END as timestamp_audit,
-    CASE 
+    CASE
         WHEN has_user_tracking THEN '✓ User tracking'
         ELSE '⚠ No user tracking'
     END as user_audit
@@ -312,7 +312,7 @@ ORDER BY table_name;
 \echo '7.1 Checking for resource abuse patterns:'
 
 WITH user_activity AS (
-    SELECT 
+    SELECT
         user_id,
         COUNT(*) as total_programs,
         COUNT(*) FILTER (WHERE created_at > CURRENT_DATE - INTERVAL '1 day') as programs_today,
@@ -320,7 +320,7 @@ WITH user_activity AS (
     FROM programs
     GROUP BY user_id
 )
-SELECT 
+SELECT
     'Suspicious Activity Detection' as check_type,
     COUNT(*) FILTER (WHERE programs_today > 100) as users_over_100_daily,
     COUNT(*) FILTER (WHERE programs_last_hour > 50) as users_over_50_hourly,
@@ -332,7 +332,7 @@ FROM user_activity;
 \echo ''
 \echo '7.2 Large data accumulation check:'
 
-SELECT 
+SELECT
     'Users with excessive programs' as metric,
     COUNT(*) as user_count,
     MAX(program_count) as max_programs
@@ -343,7 +343,7 @@ FROM (
     HAVING COUNT(*) > 100
 ) excessive_users
 UNION ALL
-SELECT 
+SELECT
     'Programs with excessive tasks',
     COUNT(*),
     MAX(task_count)
@@ -365,10 +365,10 @@ FROM (
 -- Check for encryption capabilities
 \echo '8.1 Checking encryption extensions:'
 
-SELECT 
+SELECT
     name,
     installed_version,
-    CASE 
+    CASE
         WHEN name = 'pgcrypto' THEN '✓ Encryption available'
         ELSE '✓ ' || name || ' available'
     END as status

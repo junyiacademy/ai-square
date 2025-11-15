@@ -3,7 +3,7 @@
 # Each language file should follow this structure and translate all [TRANSLATE] values
 
 domains:
-  # Domain IDs (Engaging_with_AI, Creating_with_AI, Managing_AI, Designing_AI) 
+  # Domain IDs (Engaging_with_AI, Creating_with_AI, Managing_AI, Designing_AI)
   # should remain in English - DO NOT TRANSLATE
   [DOMAIN_ID]:  # e.g., Engaging_with_AI
     emoji: [KEEP_SAME]  # Keep emoji same across all languages

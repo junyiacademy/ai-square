@@ -112,7 +112,7 @@ For staging deployment with Cloud SQL:
    ```bash
    # Connect to Cloud SQL
     gcloud sql connect INSTANCE_NAME --user=postgres --database=ai_square_db
-   
+
    # Run initialization scripts
     \i src/lib/repositories/postgresql/schema-v4.sql
    \i src/scripts/init-demo-users.sql

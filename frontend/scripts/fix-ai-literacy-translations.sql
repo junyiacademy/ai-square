@@ -1,6 +1,6 @@
 -- 補充 AI Literacy Assessment 的多語言翻譯
 UPDATE scenarios
-SET 
+SET
     title = jsonb_build_object(
         'en', 'AI Literacy Assessment',
         'zhTW', 'AI 素養評估',

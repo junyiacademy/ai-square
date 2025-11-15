@@ -109,7 +109,7 @@ describe('/api/error-tracking', () => {
 
     it('should handle multiple error reports', async () => {
       const errors: ErrorReport[] = []
-      
+
       // Create multiple error reports
       for (let i = 0; i < 5; i++) {
         errors.push({
@@ -300,7 +300,7 @@ describe('/api/error-tracking', () => {
       expect(data.data).toBeDefined()
       expect(data.data.data).toBeDefined()
       expect(Array.isArray(data.data.data)).toBe(true)
-      
+
       // All returned errors should have critical severity
       data.data.data.forEach((error: ErrorReport) => {
         if (error.severity) {
@@ -318,7 +318,7 @@ describe('/api/error-tracking', () => {
       expect(data.success).toBe(true)
       expect(data.data).toBeDefined()
       expect(data.data.data).toBeDefined()
-      
+
       // All returned errors should have server source
       data.data.data.forEach((error: ErrorReport) => {
         // Source check removed - not part of ErrorReport interface

@@ -10,7 +10,7 @@ metadata:
     バイラルコンテンツに変える神秘的な力を持っています。このデジタル王国では、
     すべてのいいねとシェアがあなたの魔法の証であり、メンターのルナが
     アルゴリズムの秘密をマスターする方法を教えてくれます。
-  
+
   estimated_hours: 50
   skill_focus:
     - content_magic
@@ -24,7 +24,7 @@ world_setting:
     ここでコンテンツクリエイターたちは、アルゴリズム、エンゲージメント、
     バイラルメカニズムの神秘的な力を利用して、影響力を築き、
     何百万もの人生に影響を与える方法を学びます。
-  
+
   atmosphere: "vibrant_magical"
   visual_theme: "digital_fantasy"
 starting_scenario:
@@ -34,7 +34,7 @@ starting_scenario:
     堕ちたウィザードのシャドウが、禁断の魔法を使って偽のコンテンツを広め、
     クリエイティブ帝国の調和を脅かしています。あなたは本物の創造性の力を
     使って、彼の闇の影響力と戦わなければなりません。
-  
+
   initial_tasks:
     - understand_algorithms
     - learn_content_basics

@@ -79,10 +79,10 @@ export class AssessmentYAMLLoader extends BaseYAMLLoader<AssessmentYAMLData> {
       const filePath = this.getFilePath(fileName);
       const { promises: fs } = await import('fs');
       const yaml = await import('js-yaml');
-      
+
       const content = await fs.readFile(filePath, 'utf8');
       const data = yaml.load(content) as AssessmentYAMLData;
-      
+
       return { data };
     } catch (error) {
       return { data: null, error: error as Error };
@@ -109,7 +109,7 @@ export class AssessmentYAMLLoader extends BaseYAMLLoader<AssessmentYAMLData> {
       console.log(`Language-specific file not found for ${language}, falling back to English`);
       const fallbackFileName = `${assessmentName}_questions_en`;
       const fallbackResult = await this.load(fallbackFileName);
-      
+
       if (fallbackResult.data) {
         return fallbackResult.data;
       }
@@ -124,7 +124,7 @@ export class AssessmentYAMLLoader extends BaseYAMLLoader<AssessmentYAMLData> {
   async scanAssessments(): Promise<string[]> {
     const fs = await import('fs/promises');
     const assessmentDir = this.basePath;
-    
+
     try {
       const items = await fs.readdir(assessmentDir, { withFileTypes: true });
       return items
@@ -142,11 +142,11 @@ export class AssessmentYAMLLoader extends BaseYAMLLoader<AssessmentYAMLData> {
   async getAvailableLanguages(assessmentName: string): Promise<string[]> {
     const fs = await import('fs/promises');
     const assessmentDir = path.join(this.basePath, assessmentName);
-    
+
     try {
       const files = await fs.readdir(assessmentDir);
       const languagePattern = new RegExp(`${assessmentName}_questions_(\\w+)\\.yaml`);
-      
+
       return files
         .map(file => {
           const match = file.match(languagePattern);
@@ -202,7 +202,7 @@ export class AssessmentYAMLLoader extends BaseYAMLLoader<AssessmentYAMLData> {
   getTranslatedField(data: Record<string, unknown>, fieldName: string, language: string): string {
     const suffix = language === 'en' ? '' : `_${language}`;
     const fieldWithSuffix = `${fieldName}${suffix}`;
-    
+
     return (data[fieldWithSuffix] as string) || (data[fieldName] as string) || '';
   }
 }

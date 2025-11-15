@@ -5,16 +5,16 @@
 
 import { BaseLearningService } from '@/lib/abstractions/base-learning-service';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import type { 
-  IProgram, 
-  ITask, 
-  IEvaluation 
+import type {
+  IProgram,
+  ITask,
+  IEvaluation
 } from '@/types/unified-learning';
 
 export class PostgreSQLLearningService extends BaseLearningService {
   constructor() {
     const factory = repositoryFactory;
-    
+
     super(
       factory.getScenarioRepository(),
       factory.getProgramRepository(),

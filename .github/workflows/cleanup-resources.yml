@@ -161,7 +161,7 @@ jobs:
           PROTECTED_DIGESTS=$(echo "$IMAGES_IN_USE" | grep -oE '@sha256:[a-f0-9]{64}' | sed 's/@//' | sort -u)
           PROTECTED_COUNT=$(echo "$PROTECTED_DIGESTS" | wc -l)
           echo "   📌 Found $PROTECTED_COUNT unique images in use"
-          
+
           # Debug: show protected digests
           if [ -n "$PROTECTED_DIGESTS" ]; then
             echo "   🔒 Protected digests:"
@@ -194,10 +194,10 @@ jobs:
             RAW_IMAGES=$(gcloud container images list-tags "$REPO" \
               --format="json" \
               --sort-by="~timestamp" 2>&1)
-            
+
             # Extract just the digests (with sha256: prefix)
             IMAGES=$(echo "$RAW_IMAGES" | jq -r '.[].digest' 2>/dev/null || echo "")
-            
+
             # Get total count
             TOTAL_IMAGES=$(echo "$IMAGES" | grep -c '^sha256:' || echo "0")
 

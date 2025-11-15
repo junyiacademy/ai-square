@@ -3,7 +3,7 @@ describe('repositories', () => {
     try {
       const module = require('../repositories');
       expect(module).toBeDefined();
-      
+
       // Test exports
       Object.keys(module).forEach(key => {
         expect(module[key]).toBeDefined();

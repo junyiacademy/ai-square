@@ -52,7 +52,7 @@ describe('ContentService', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     // Setup GCS mocks
     mockFile = {
       save: jest.fn(),
@@ -74,7 +74,7 @@ describe('ContentService', () => {
 
     // Reset environment
     mockNodeEnv('test');
-    
+
     contentService = new ContentService();
   });
 
@@ -97,10 +97,10 @@ describe('ContentService', () => {
       (Storage as jest.MockedClass<typeof Storage>).mockImplementation(() => {
         throw new Error('GCS init failed');
       });
-      
+
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
       const service = new ContentService();
-      
+
       expect(consoleSpy).toHaveBeenCalledWith('ContentService: Failed to initialize GCS:', expect.any(Error));
       consoleSpy.mockRestore();
     });
@@ -110,7 +110,7 @@ describe('ContentService', () => {
         GCS_CONFIG: { bucketName: null },
         getStorageConfig: jest.fn()
       }));
-      
+
       const service = new ContentService();
       expect(service).toBeDefined();
     });
@@ -122,14 +122,14 @@ describe('ContentService', () => {
 
     it('should return cached content when cache is valid', async () => {
       const cachedData = { title: 'Cached Content' };
-      
+
       // Pre-populate cache
       await contentService.getContent(testType, testFileName);
       (mockYamlLoader.load as jest.MockedFunction<any>).mockResolvedValue(cachedData);
-      
+
       // Second call should use cache
       const result = await contentService.getContent(testType, testFileName);
-      
+
       expect(result).toEqual(expect.objectContaining({
         _source: 'repo'
       }));
@@ -179,7 +179,7 @@ describe('ContentService', () => {
     it('should return GCS override when available', async () => {
       const baseContent = { title: 'Base Content' };
       const overrideContent = { title: 'Override Content', version: 2 };
-      
+
       (mockYamlLoader.load as jest.MockedFunction<any>).mockResolvedValue(baseContent);
       (mockFile.download as jest.MockedFunction<any>).mockResolvedValue([Buffer.from('title: Override Content\nversion: 2')]);
       (mockYaml.load as jest.MockedFunction<any>).mockReturnValue(overrideContent);
@@ -237,7 +237,7 @@ describe('ContentService', () => {
     it('should list content from repository', async () => {
       const mockFiles = ['file1.yaml', 'file2.yml', 'other.txt'];
       const mockContent = { title: 'Test Content', description: 'Test Description' };
-      
+
       (mockFs.readdir as jest.MockedFunction<any>).mockResolvedValue(mockFiles as any);
       (mockFs.readFile as jest.MockedFunction<any>).mockResolvedValue('title: Test Content\ndescription: Test Description');
       (mockYaml.load as jest.MockedFunction<any>).mockReturnValue(mockContent);
@@ -257,7 +257,7 @@ describe('ContentService', () => {
 
     it('should skip inappropriate files for domain type', async () => {
       const mockFiles = ['ai_lit_domains.yaml', 'ksa_codes.yaml'];
-      
+
       (mockFs.readdir as jest.MockedFunction<any>).mockResolvedValue(mockFiles as any);
       (mockFs.readFile as jest.MockedFunction<any>).mockResolvedValue('title: Domain Content');
       (mockYaml.load as jest.MockedFunction<any>).mockReturnValue({ title: 'Domain Content' });
@@ -270,7 +270,7 @@ describe('ContentService', () => {
 
     it('should skip inappropriate files for ksa type', async () => {
       const mockFiles = ['ai_lit_domains.yaml', 'ksa_codes.yaml'];
-      
+
       (mockFs.readdir as jest.MockedFunction<any>).mockResolvedValue(mockFiles as any);
       (mockFs.readFile as jest.MockedFunction<any>).mockResolvedValue('title: KSA Content');
       (mockYaml.load as jest.MockedFunction<any>).mockReturnValue({ title: 'KSA Content' });
@@ -294,7 +294,7 @@ describe('ContentService', () => {
     it('should include GCS-only draft items', async () => {
       // Mock repo files
       mockFs.readdir.mockResolvedValue([]);
-      
+
       // Mock GCS files
       const mockGcsFiles = [
         { name: 'cms/drafts/domain/draft1.yaml' },
@@ -316,7 +316,7 @@ describe('ContentService', () => {
       mockFs.readdir.mockResolvedValue(['existing.yaml'] as any);
       (mockFs.readFile as jest.MockedFunction<any>).mockResolvedValue('title: Repo Content');
       (mockYaml.load as jest.MockedFunction<any>).mockReturnValue({ title: 'Repo Content' });
-      
+
       // Mock GCS files with same name
       const mockGcsFiles = [{ name: 'cms/drafts/domain/existing.yaml' }];
       (mockBucket.getFiles as jest.MockedFunction<any>).mockResolvedValue([mockGcsFiles as any]);
@@ -340,7 +340,7 @@ describe('ContentService', () => {
 
     it('should handle different working directory structures', async () => {
       jest.spyOn(process, 'cwd').mockReturnValue('/app'); // Not ending with /frontend
-      
+
       mockFs.readdir.mockResolvedValue(['test.yaml'] as any);
       (mockFs.readFile as jest.MockedFunction<any>).mockResolvedValue('title: Test');
       (mockYaml.load as jest.MockedFunction<any>).mockReturnValue({ title: 'Test' });
@@ -390,7 +390,7 @@ describe('ContentService', () => {
         updated_at: new Date('2023-01-01'),
         updated_by: 'old-user'
       };
-      
+
       (mockYaml.dump as jest.MockedFunction<any>).mockReturnValue('title: Test Content');
       (mockFile.download as jest.MockedFunction<any>)
         .mockResolvedValueOnce([Buffer.from(JSON.stringify(existingMetadata))]) // For getMetadata
@@ -427,7 +427,7 @@ describe('ContentService', () => {
       await contentService.saveContent(testType, testFileName, testContent, 'draft', testUser);
 
       // Check history save
-      const historyCall = (mockFile.save as jest.MockedFunction<any>).mock.calls.find((call: any) => 
+      const historyCall = (mockFile.save as jest.MockedFunction<any>).mock.calls.find((call: any) =>
         typeof call[0] === 'string' && call[0].includes('"action": "update"')
       );
       expect(historyCall).toBeDefined();
@@ -469,14 +469,14 @@ describe('ContentService', () => {
       // Pre-populate cache
       (mockYamlLoader.load as jest.MockedFunction<any>).mockResolvedValue({ title: 'Test' });
       await contentService.getContent(testType, testFileName);
-      
+
       // Now verify cache is cleared by testing content refresh
       await contentService.deleteOverride(testType, testFileName);
-      
+
       // Make another call - it should use fresh data, not cache
       (mockYamlLoader.load as jest.MockedFunction<any>).mockResolvedValue({ title: 'Fresh after delete' });
       const result = await contentService.getContent(testType, testFileName);
-      
+
       expect(result).toEqual(expect.objectContaining({ title: 'Fresh after delete' }));
     });
 
@@ -518,7 +518,7 @@ describe('ContentService', () => {
 
       await contentService.publish(testType, testFileName, testUser);
 
-      const metadataCall = (mockFile.save as jest.MockedFunction<any>).mock.calls.find((call: any) => 
+      const metadataCall = (mockFile.save as jest.MockedFunction<any>).mock.calls.find((call: any) =>
         typeof call[0] === 'string' && call[0].includes('"status": "published"')
       );
       expect(metadataCall).toBeDefined();
@@ -531,7 +531,7 @@ describe('ContentService', () => {
 
       await contentService.publish(testType, testFileName, testUser);
 
-      const historyCall = (mockFile.save as jest.MockedFunction<any>).mock.calls.find((call: any) => 
+      const historyCall = (mockFile.save as jest.MockedFunction<any>).mock.calls.find((call: any) =>
         typeof call[0] === 'string' && call[0].includes('"action": "publish"')
       );
       expect(historyCall).toBeDefined();
@@ -570,13 +570,13 @@ describe('ContentService', () => {
     it('should return sorted history entries', async () => {
       const history1 = { version: 1, timestamp: '2023-01-01T00:00:00Z' };
       const history2 = { version: 2, timestamp: '2023-01-02T00:00:00Z' };
-      
+
       // Mock file objects with download method
       const mockHistoryFile1 = { download: jest.fn().mockResolvedValue([Buffer.from(JSON.stringify(history1))]) };
       const mockHistoryFile2 = { download: jest.fn().mockResolvedValue([Buffer.from(JSON.stringify(history2))]) };
-      
+
       const historyFiles = [mockHistoryFile1, mockHistoryFile2];
-      
+
       (mockBucket.getFiles as jest.MockedFunction<any>).mockResolvedValue([historyFiles as any]);
 
       const result = await contentService.getHistory(testType, testFileName);
@@ -598,17 +598,17 @@ describe('ContentService', () => {
     it('should clear specific cache entry', async () => {
       const testType: ContentType = 'domain';
       const testFileName = 'test.yaml';
-      
+
       // Populate cache
       (mockYamlLoader.load as jest.MockedFunction<any>).mockResolvedValue({ title: 'Test' });
       await contentService.getContent(testType, testFileName);
-      
+
       contentService.clearCache(testType, testFileName);
-      
+
       // Next call should not use cache
       (mockYamlLoader.load as jest.MockedFunction<any>).mockResolvedValue({ title: 'Fresh' });
       const result = await contentService.getContent(testType, testFileName);
-      
+
       expect(result).toEqual(expect.objectContaining({ title: 'Fresh' }));
     });
 
@@ -617,14 +617,14 @@ describe('ContentService', () => {
       (mockYamlLoader.load as jest.MockedFunction<any>).mockResolvedValue({ title: 'Test' });
       await contentService.getContent('domain', 'file1.yaml');
       await contentService.getContent('ksa', 'file2.yaml');
-      
+
       contentService.clearCache();
-      
+
       // Both entries should be cleared
       (mockYamlLoader.load as jest.MockedFunction<any>).mockResolvedValue({ title: 'Fresh' });
       const result1 = await contentService.getContent('domain', 'file1.yaml');
       const result2 = await contentService.getContent('ksa', 'file2.yaml');
-      
+
       expect(result1).toEqual(expect.objectContaining({ title: 'Fresh' }));
       expect(result2).toEqual(expect.objectContaining({ title: 'Fresh' }));
     });
@@ -716,7 +716,7 @@ describe('ContentService', () => {
     it('should handle concurrent cache access safely', async () => {
       // Clear any existing cache first
       contentService.clearCache();
-      
+
       const testData = { title: 'Concurrent Test' };
       (mockYamlLoader.load as jest.MockedFunction<any>).mockResolvedValue(testData);
 
@@ -729,7 +729,7 @@ describe('ContentService', () => {
       // Both results should have the same content structure
       expect(result1).toEqual(expect.objectContaining({ title: 'Concurrent Test', _source: 'repo' }));
       expect(result2).toEqual(expect.objectContaining({ title: 'Concurrent Test', _source: 'repo' }));
-      
+
       // Verify loader was called (caching may or may not prevent duplicate calls in concurrent scenario)
       expect(mockYamlLoader.load).toHaveBeenCalledWith('concurrent-test.yaml');
     });

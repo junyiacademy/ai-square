@@ -1,10 +1,10 @@
 # AI Square Staging Deployment QA Report
 
-**Environment**: staging  
-**URL**: https://ai-square-staging-m7s4ucbgba-de.a.run.app  
-**Timestamp**: 2025-08-21T08:00:00Z  
-**Cloud Run Region**: asia-east1  
-**Cloud SQL Region**: asia-east1  
+**Environment**: staging
+**URL**: https://ai-square-staging-m7s4ucbgba-de.a.run.app
+**Timestamp**: 2025-08-21T08:00:00Z
+**Cloud Run Region**: asia-east1
+**Cloud SQL Region**: asia-east1
 
 ## Executive Summary
 

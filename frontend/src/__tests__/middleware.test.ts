@@ -25,7 +25,7 @@ describe('middleware', () => {
     it('should allow access to home page', () => {
       const request = new NextRequest('http://localhost:3000/');
       const response = middleware(request);
-      
+
       expect(NextResponse.next).toHaveBeenCalled();
       expect(response).toEqual({ type: 'next' });
     });
@@ -33,7 +33,7 @@ describe('middleware', () => {
     it('should allow access to login page', () => {
       const request = new NextRequest('http://localhost:3000/login');
       const response = middleware(request);
-      
+
       expect(NextResponse.next).toHaveBeenCalled();
       expect(response).toEqual({ type: 'next' });
     });
@@ -41,7 +41,7 @@ describe('middleware', () => {
     it('should allow access to register page', () => {
       const request = new NextRequest('http://localhost:3000/register');
       const response = middleware(request);
-      
+
       expect(NextResponse.next).toHaveBeenCalled();
       expect(response).toEqual({ type: 'next' });
     });
@@ -52,7 +52,7 @@ describe('middleware', () => {
       it('should redirect /pbl to login', () => {
         const request = new NextRequest('http://localhost:3000/pbl');
         const response = middleware(request);
-        
+
         expect(NextResponse.redirect).toHaveBeenCalled();
         expect(response).toEqual({
           type: 'redirect',
@@ -63,7 +63,7 @@ describe('middleware', () => {
       it('should redirect /assessment to login', () => {
         const request = new NextRequest('http://localhost:3000/assessment');
         const response = middleware(request);
-        
+
         expect(NextResponse.redirect).toHaveBeenCalled();
         expect(response).toEqual({
           type: 'redirect',
@@ -74,7 +74,7 @@ describe('middleware', () => {
       it('should redirect /discovery to login', () => {
         const request = new NextRequest('http://localhost:3000/discovery');
         const response = middleware(request);
-        
+
         expect(NextResponse.redirect).toHaveBeenCalled();
         expect(response).toEqual({
           type: 'redirect',
@@ -85,7 +85,7 @@ describe('middleware', () => {
       it('should redirect /admin to login', () => {
         const request = new NextRequest('http://localhost:3000/admin');
         const response = middleware(request);
-        
+
         expect(NextResponse.redirect).toHaveBeenCalled();
         expect(response).toEqual({
           type: 'redirect',
@@ -96,7 +96,7 @@ describe('middleware', () => {
       it('should redirect /profile to login', () => {
         const request = new NextRequest('http://localhost:3000/profile');
         const response = middleware(request);
-        
+
         expect(NextResponse.redirect).toHaveBeenCalled();
         expect(response).toEqual({
           type: 'redirect',
@@ -107,7 +107,7 @@ describe('middleware', () => {
       it('should preserve redirect parameter', () => {
         const request = new NextRequest('http://localhost:3000/pbl/scenarios/123');
         const response = middleware(request);
-        
+
         expect(NextResponse.redirect).toHaveBeenCalled();
         const redirectCall = (NextResponse.redirect as jest.Mock).mock.calls[0][0];
         expect(redirectCall.toString()).toContain('redirect=%2Fpbl%2Fscenarios%2F123');
@@ -120,36 +120,36 @@ describe('middleware', () => {
         // Create a valid hex session token (32 bytes = 64 hex chars)
         const validToken = 'a'.repeat(64); // Simple valid hex token for testing
         request.cookies.set('sessionToken', validToken);
-        
+
         const response = middleware(request);
-        
+
         expect(NextResponse.next).toHaveBeenCalled();
         expect(response).toEqual({ type: 'next' });
       });
 
       it('should redirect if sessionToken is missing', () => {
         const request = new NextRequest('http://localhost:3000/pbl');
-        
+
         const response = middleware(request);
-        
+
         expect(NextResponse.redirect).toHaveBeenCalled();
       });
 
       it('should redirect if sessionToken is invalid', () => {
         const request = new NextRequest('http://localhost:3000/pbl');
         request.cookies.set('sessionToken', 'invalid-token');
-        
+
         const response = middleware(request);
-        
+
         expect(NextResponse.redirect).toHaveBeenCalled();
       });
 
       it('should redirect if sessionToken is empty', () => {
         const request = new NextRequest('http://localhost:3000/pbl');
         request.cookies.set('sessionToken', '');
-        
+
         const response = middleware(request);
-        
+
         expect(NextResponse.redirect).toHaveBeenCalled();
       });
     });
@@ -159,7 +159,7 @@ describe('middleware', () => {
     it('should skip API routes', () => {
       const request = new NextRequest('http://localhost:3000/api/auth/login');
       const response = middleware(request);
-      
+
       expect(NextResponse.next).toHaveBeenCalled();
       expect(response).toEqual({ type: 'next' });
     });
@@ -167,7 +167,7 @@ describe('middleware', () => {
     it('should skip static files', () => {
       const request = new NextRequest('http://localhost:3000/image.png');
       const response = middleware(request);
-      
+
       expect(NextResponse.next).toHaveBeenCalled();
       expect(response).toEqual({ type: 'next' });
     });
@@ -175,7 +175,7 @@ describe('middleware', () => {
     it('should skip _next internal routes', () => {
       const request = new NextRequest('http://localhost:3000/_next/static/chunk.js');
       const response = middleware(request);
-      
+
       expect(NextResponse.next).toHaveBeenCalled();
       expect(response).toEqual({ type: 'next' });
     });

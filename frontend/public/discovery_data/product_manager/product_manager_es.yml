@@ -7,12 +7,12 @@ metadata:
   title: "Alquimista de Productos - Product Manager"
   short_description: "Forja productos perfectos en el crisol del mercado"
   long_description: |
-    Eres un alquimista recién graduado del "Taller de Alquimia de Productos", 
-    hábil en fusionar necesidades de usuarios, capacidades técnicas y objetivos 
-    empresariales en productos poderosos. En este taller lleno de chispas de 
-    innovación, cada iteración es un experimento alquímico, y tu objetivo es 
+    Eres un alquimista recién graduado del "Taller de Alquimia de Productos",
+    hábil en fusionar necesidades de usuarios, capacidades técnicas y objetivos
+    empresariales en productos poderosos. En este taller lleno de chispas de
+    innovación, cada iteración es un experimento alquímico, y tu objetivo es
     crear productos perfectos que puedan cambiar el mundo.
-  
+
   estimated_hours: 55
   skill_focus:
     - requirement_alchemy
@@ -22,23 +22,23 @@ metadata:
 world_setting:
   name: "Taller de Alquimia de Productos"
   description: |
-    El Taller de Alquimia de Productos es una forja mágica donde las ideas se 
-    transforman en productos reales. Aquí, los product managers aprenden el 
-    arte ancestral de equilibrar los deseos de los usuarios, las restricciones 
-    técnicas y los objetivos empresariales para crear productos que resuenen 
+    El Taller de Alquimia de Productos es una forja mágica donde las ideas se
+    transforman en productos reales. Aquí, los product managers aprenden el
+    arte ancestral de equilibrar los deseos de los usuarios, las restricciones
+    técnicas y los objetivos empresariales para crear productos que resuenen
     con millones de personas.
-  
+
   atmosphere: "dynamic_creative"
   visual_theme: "innovation_forge"
 starting_scenario:
   title: "El Desafío del Alquimista"
   description: |
-    El Maestro de Estrategia te da la bienvenida al taller con una advertencia: 
-    Deadline, el Tirano del Tiempo, está forzando a los equipos a sacrificar 
-    la calidad del producto por velocidad. Mientras tanto, la Voz de los Usuarios 
-    se vuelve más fuerte con demandas contradictorias. Debes encontrar la piedra 
+    El Maestro de Estrategia te da la bienvenida al taller con una advertencia:
+    Deadline, el Tirano del Tiempo, está forzando a los equipos a sacrificar
+    la calidad del producto por velocidad. Mientras tanto, la Voz de los Usuarios
+    se vuelve más fuerte con demandas contradictorias. Debes encontrar la piedra
     filosofal del product management - equilibrar calidad, velocidad y satisfacción del usuario.
-  
+
   initial_tasks:
     - understand_users
     - analyze_market

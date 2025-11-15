@@ -85,5 +85,3 @@ describe('test-utils/helpers/queries', () => {
     await expect(waitForElementWithTimeout(() => screen.queryByTestId('never'), 50)).rejects.toThrow('Element not found');
   });
 });
-
-

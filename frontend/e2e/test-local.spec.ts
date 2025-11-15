@@ -6,7 +6,7 @@ test.describe('Local Environment Testing', () => {
   test('1. Check health endpoint', async ({ page }) => {
     const response = await page.request.get(`${LOCAL_URL}/api/health`);
     console.log('Health status:', response.status());
-    
+
     if (response.ok()) {
       const data = await response.json();
       console.log('✅ Local Health:', data.status);
@@ -19,7 +19,7 @@ test.describe('Local Environment Testing', () => {
     const response = await page.request.get(`${LOCAL_URL}/api/pbl/scenarios?lang=zh`);
     const data = await response.json();
     console.log('✅ Local PBL API:', data.data?.scenarios?.length || 0, 'scenarios');
-    
+
     // Check first scenario structure
     if (data.data?.scenarios?.[0]) {
       const scenario = data.data.scenarios[0];
@@ -36,7 +36,7 @@ test.describe('Local Environment Testing', () => {
     const response = await page.request.get(`${LOCAL_URL}/api/discovery/scenarios?lang=zh`);
     const data = await response.json();
     console.log('✅ Local Discovery API:', data.data?.scenarios?.length || 0, 'scenarios');
-    
+
     if (data.data?.scenarios?.length > 0) {
       const categories = {};
       data.data.scenarios.forEach(s => {
@@ -55,14 +55,14 @@ test.describe('Local Environment Testing', () => {
 
   test('5. Browse PBL page', async ({ page }) => {
     await page.goto(`${LOCAL_URL}/pbl/scenarios`);
-    
+
     // Wait for any content
     await page.waitForTimeout(2000);
-    
+
     // Check what's on the page
     const title = await page.title();
     console.log('Page title:', title);
-    
+
     // Try different selectors
     const selectors = [
       '.grid > div',
@@ -71,14 +71,14 @@ test.describe('Local Environment Testing', () => {
       'main div',
       'button'
     ];
-    
+
     for (const selector of selectors) {
       const elements = await page.$$(selector);
       if (elements.length > 0) {
         console.log(`Found ${elements.length} elements with selector: ${selector}`);
       }
     }
-    
+
     // Get page content
     const content = await page.textContent('body');
     if (content?.includes('No scenarios')) {
@@ -91,13 +91,13 @@ test.describe('Local Environment Testing', () => {
 
   test('6. Browse Discovery page', async ({ page }) => {
     await page.goto(`${LOCAL_URL}/discovery/scenarios`);
-    
+
     await page.waitForTimeout(2000);
-    
+
     // Check for filter buttons
     const filterButtons = await page.$$('button:has-text("創意"), button:has-text("技術")');
     console.log('Filter buttons found:', filterButtons.length);
-    
+
     // Check for grid
     const grid = await page.$('.grid');
     if (grid) {
@@ -112,7 +112,7 @@ test.describe('Local Environment Testing', () => {
     // Check if local database is configured
     const envCheck = await page.request.get(`${LOCAL_URL}/api/health`);
     const health = await envCheck.json();
-    
+
     if (!health.checks.database.status) {
       console.log('❌ Local database not configured');
       console.log('To fix: Set DATABASE_URL in .env.local');
@@ -123,11 +123,11 @@ test.describe('Local Environment Testing', () => {
 
   test('8. Check for login page', async ({ page }) => {
     await page.goto(`${LOCAL_URL}/login`);
-    
+
     const emailInput = await page.$('input[type="email"]');
     const passwordInput = await page.$('input[type="password"]');
     const submitButton = await page.$('button[type="submit"]');
-    
+
     console.log('Login form elements:');
     console.log('  Email input:', emailInput ? '✅' : '❌');
     console.log('  Password input:', passwordInput ? '✅' : '❌');
@@ -145,21 +145,21 @@ test.describe('Local Environment Testing', () => {
     const apiResponse = await page.request.get(`${LOCAL_URL}/api/pbl/scenarios?lang=zh`);
     const apiData = await apiResponse.json();
     const apiCount = apiData.data?.scenarios?.length || 0;
-    
+
     // Get UI data
     await page.goto(`${LOCAL_URL}/pbl/scenarios`);
     await page.waitForTimeout(3000);
-    
+
     const uiCards = await page.$$('.grid > div');
     const uiCount = uiCards.length;
-    
+
     console.log('Data comparison:');
     console.log('  API returns:', apiCount, 'scenarios');
     console.log('  UI displays:', uiCount, 'cards');
-    
+
     if (apiCount !== uiCount) {
       console.log('⚠️ MISMATCH: API and UI show different counts!');
-      
+
       // Check console errors
       page.on('console', msg => {
         if (msg.type() === 'error') {

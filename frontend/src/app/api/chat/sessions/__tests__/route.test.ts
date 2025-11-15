@@ -10,7 +10,7 @@ const mockFile = jest.fn();
 
 jest.mock('@google-cloud/storage', () => ({
   Storage: jest.fn().mockImplementation(() => ({
-    bucket: jest.fn().mockImplementation(() => ({ 
+    bucket: jest.fn().mockImplementation(() => ({
       file: jest.fn().mockImplementation((path: string) => {
         mockFile(path);
         return {
@@ -234,26 +234,26 @@ describe('/api/chat/sessions', () => {
 
 /**
  * Chat Sessions API Considerations:
- * 
+ *
  * 1. Authentication:
  *    - Uses x-user-info header for user identification
  *    - Must validate header presence and format
- * 
+ *
  * 2. Data Storage:
  *    - Sessions stored in GCS under user directory
  *    - Email sanitization for file paths
  *    - Index file contains session metadata
- * 
+ *
  * 3. Session Structure:
  *    - Sessions have id, title, timestamps
  *    - Associated with scenarios
  *    - Track message counts
- * 
+ *
  * 4. Error Handling:
  *    - Graceful handling of missing data
  *    - Invalid JSON parsing
  *    - GCS operation failures
- * 
+ *
  * 5. Performance:
  *    - Index file may grow with many sessions
  *    - Consider pagination for large lists

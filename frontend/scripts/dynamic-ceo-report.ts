@@ -33,7 +33,7 @@ interface ReleaseStatus {
 
 class DynamicCEOReporter {
   private statusFile = path.join(process.cwd(), '.project-status.json');
-  
+
   /**
    * 從 .project-status.json 讀取近期重要更新
    */
@@ -71,17 +71,17 @@ class DynamicCEOReporter {
 
       const completed: string[] = [];
       const inProgress: string[] = [];
-      
+
       // 業務相關的 commit 類型
       const businessRelevantTypes = ['feat:', 'fix:', 'perf:', 'security:'];
 
       // 分析 commit messages
       commits.forEach(commit => {
         // 只處理業務相關的 commits
-        const isBusinessRelevant = businessRelevantTypes.some(type => 
+        const isBusinessRelevant = businessRelevantTypes.some(type =>
           commit.toLowerCase().includes(type)
         );
-        
+
         if (isBusinessRelevant) {
           if (commit.includes('完成') || commit.includes('complete') || commit.includes('done') || commit.includes('implemented')) {
             completed.push(commit);
@@ -158,7 +158,7 @@ class DynamicCEOReporter {
     if (fs.existsSync(this.statusFile)) {
       try {
         const projectStatus = JSON.parse(fs.readFileSync(this.statusFile, 'utf-8'));
-        
+
         // 從專案狀態檔轉換為 ReleaseStatus 格式
         return {
           targetDate: projectStatus.launchedDate || '2025-08-17',
@@ -240,7 +240,7 @@ class DynamicCEOReporter {
       const extraFeatures = status.completedFeatures.length - 5; // 基礎功能數
       return Math.min(92 + extraFeatures, 95);
     }
-    
+
     const total = status.completedFeatures.length + status.inProgressFeatures.length;
     const completed = status.completedFeatures.length;
     return Math.round((completed / total) * 100);
@@ -252,7 +252,7 @@ class DynamicCEOReporter {
   public generateReport(): string {
     const status = this.loadProjectStatus();
     const recentUpdates = this.getRecentUpdates();
-    
+
     // 更新品質指標
     status.qualityMetrics = {
       testCoverage: this.getTestCoverage(),
@@ -352,7 +352,7 @@ ${status.inProgressFeatures.map(f => `• ${f}`).join('\n')}
    */
   public async sendToSlack(dryRun: boolean = false): Promise<void> {
     const webhookUrl = process.env.SLACK_AISQUARE_WEBHOOK_URL || process.env.SLACK_AISQUARE_DEV_WEBHOOK_URL || process.env.SLACK_WEBHOOK_URL;
-    
+
     const report = this.generateReport();
     console.log('📋 報告預覽:');
     console.log(report);
@@ -361,7 +361,7 @@ ${status.inProgressFeatures.map(f => `• ${f}`).join('\n')}
       console.log('\n✅ Dry-run 模式 - 報告未發送');
       return;
     }
-    
+
     if (!webhookUrl) {
       console.error('❌ 未設定 Slack webhook URL');
       return;
@@ -401,10 +401,10 @@ ${status.inProgressFeatures.map(f => `• ${f}`).join('\n')}
 // 主程式
 async function main() {
   const reporter = new DynamicCEOReporter();
-  
+
   // 檢查命令列參數
   const args = process.argv.slice(2);
-  
+
   if (args.includes('--update-status')) {
     // 範例：更新狀態
     reporter.updateStatus({

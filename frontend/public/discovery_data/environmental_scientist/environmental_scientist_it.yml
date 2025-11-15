@@ -7,10 +7,10 @@ metadata:
   title: "Guardiano del Pianeta - Scienziato Ambientale"
   short_description: "Proteggi la Terra attraverso soluzioni ambientali basate sui dati"
   long_description: |
-    Sei uno scienziato junior presso il "Centro Globale di Risposta Climatica", dove 
-    sistemi di monitoraggio alimentati dall'IA tracciano la salute planetaria in tempo 
-    reale. Armato di tecnologia all'avanguardia e conoscenze di scienze ambientali, 
-    lavorerai per comprendere e invertire i danni climatici sviluppando soluzioni 
+    Sei uno scienziato junior presso il "Centro Globale di Risposta Climatica", dove
+    sistemi di monitoraggio alimentati dall'IA tracciano la salute planetaria in tempo
+    reale. Armato di tecnologia all'avanguardia e conoscenze di scienze ambientali,
+    lavorerai per comprendere e invertire i danni climatici sviluppando soluzioni
     sostenibili per il futuro.
   estimated_hours: 60
   skill_focus:
@@ -26,19 +26,19 @@ metadata:
 world_setting:
   name: "Centro Globale di Risposta Climatica"
   description: |
-    Il Centro Globale di Risposta Climatica è una struttura ad alta tecnologia dove 
-    gli scienziati ambientali utilizzano l'IA, i dati satellitari e la ricerca sul 
-    campo per monitorare e proteggere gli ecosistemi della Terra. Gli scienziati qui 
-    corrono contro il tempo per sviluppare soluzioni prima che vengano raggiunti 
+    Il Centro Globale di Risposta Climatica è una struttura ad alta tecnologia dove
+    gli scienziati ambientali utilizzano l'IA, i dati satellitari e la ricerca sul
+    campo per monitorare e proteggere gli ecosistemi della Terra. Gli scienziati qui
+    corrono contro il tempo per sviluppare soluzioni prima che vengano raggiunti
     punti critici di non ritorno.
   atmosphere: urgent_hopeful
   visual_theme: eco_tech_fusion
 starting_scenario:
   title: "Codice Rosso: Crisi Climatica"
   description: |
-    La Dott.ssa Gaia Terra ti accoglie con notizie allarmanti: molteplici sistemi 
-    ambientali si stanno avvicinando a soglie critiche. Nel frattempo, il CEO Polluto 
-    di MegaCorp continua pratiche distruttive per profitto. Devi usare scienza e 
+    La Dott.ssa Gaia Terra ti accoglie con notizie allarmanti: molteplici sistemi
+    ambientali si stanno avvicinando a soglie critiche. Nel frattempo, il CEO Polluto
+    di MegaCorp continua pratiche distruttive per profitto. Devi usare scienza e
     innovazione per salvare gli ecosistemi esponendo i crimini ambientali aziendali.
   initial_tasks:
     - analyze_climate_data

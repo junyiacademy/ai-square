@@ -11,7 +11,7 @@ import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 // Mock dependencies
 jest.mock('@/lib/auth/unified-auth', () => ({
   getUnifiedAuth: jest.fn(),
-  createUnauthorizedResponse: jest.fn(() => 
+  createUnauthorizedResponse: jest.fn(() =>
     new Response(
       JSON.stringify({ success: false, error: 'Authentication required' }),
       { status: 401, headers: { 'Content-Type': 'application/json' } }
@@ -107,7 +107,7 @@ describe('/api/discovery/scenarios/find-by-career', () => {
           metadata: { careerType: 'data_analyst' }
         },
         {
-          id: 'scenario-2', 
+          id: 'scenario-2',
           metadata: { careerType: 'app_developer' }
         }
       ];
@@ -130,7 +130,7 @@ describe('/api/discovery/scenarios/find-by-career', () => {
       expect(response.status).toBe(200);
       const data = await response.json();
       expect(data.scenarioId).toBe('scenario-1');
-      
+
       expect(mockScenarioRepo.findByMode).toHaveBeenCalledWith('discovery');
       expect(mockProgramRepo.findByScenario).toHaveBeenCalledWith('scenario-1');
     });
@@ -278,7 +278,7 @@ describe('/api/discovery/scenarios/find-by-career', () => {
       expect(response.status).toBe(200);
       const data = await response.json();
       expect(data.scenarioId).toBe(null);
-      
+
       // Should only check scenario-3 as it's the only one with matching careerType
       expect(mockProgramRepo.findByScenario).toHaveBeenCalledTimes(1);
       expect(mockProgramRepo.findByScenario).toHaveBeenCalledWith('scenario-3');
@@ -293,7 +293,7 @@ describe('/api/discovery/scenarios/find-by-career', () => {
       expect(response.status).toBe(200);
       const data = await response.json();
       expect(data.scenarioId).toBe(null);
-      
+
       expect(mockProgramRepo.findByScenario).not.toHaveBeenCalled();
     });
 
@@ -422,7 +422,7 @@ describe('/api/discovery/scenarios/find-by-career', () => {
       const response = await GET(request);
 
       expect(response.status).toBe(200);
-      
+
       // Verify only the matching scenario was checked for programs
       expect(mockProgramRepo.findByScenario).toHaveBeenCalledTimes(1);
       expect(mockProgramRepo.findByScenario).toHaveBeenCalledWith('scenario-1');
@@ -465,4 +465,4 @@ describe('/api/discovery/scenarios/find-by-career', () => {
       expect(data.scenarioId).toBe('scenario-1');
     });
   });
-}); 
+});

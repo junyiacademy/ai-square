@@ -1,7 +1,7 @@
 /**
  * Unified Scenario Initialization Service
  * 統一的 YAML to Scenarios 初始化服務
- * 
+ *
  * 負責從 YAML 檔案初始化所有類型的 Scenarios (PBL, Discovery, Assessment)
  * 符合統一學習架構：Content Source → Scenario → Program → Task → Evaluation
  */
@@ -157,7 +157,7 @@ export class ScenarioInitializationService {
               description: scenarioData.description,
               objectives: scenarioData.objectives
             };
-            
+
             const updated = await this.scenarioRepo.update(
               existingScenario.id,
               updateData
@@ -174,7 +174,7 @@ export class ScenarioInitializationService {
             };
             // Remove id as it will be generated
             delete (scenarioToCreate as Record<string, unknown>).id;
-            
+
             const created = await this.scenarioRepo.create(scenarioToCreate as Omit<IScenario, 'id'>);
             result.created++;
             result.scenarios.push(created);
@@ -213,20 +213,20 @@ export class ScenarioInitializationService {
       // Default to pbl if we can't determine from path
       mode = 'pbl';
     }
-    
+
     // Use findByMode to get scenarios of specific mode
     const scenarios = await this.scenarioRepo.findByMode?.(mode) || [];
-    
+
     // Find matching scenario by source path or sourceMetadata.configPath
-    const match = scenarios.find((s) => 
-      s.sourcePath === yamlPath || 
+    const match = scenarios.find((s) =>
+      s.sourcePath === yamlPath ||
       (s.sourceMetadata as Record<string, unknown>)?.sourcePath === yamlPath ||
       (s.sourceMetadata as Record<string, unknown>)?.configPath === yamlPath
     );
-    
+
     return match || null;
   }
-  
+
   /**
    * Convert database Scenario to IScenario
    */
@@ -234,7 +234,7 @@ export class ScenarioInitializationService {
     // Simply return the scenario as it's already in IScenario format
     return scenario;
   }
-  
+
   /**
    * Convert DifficultyLevel enum to string
    */
@@ -265,11 +265,11 @@ class PBLYAMLProcessor implements IYAMLProcessor {
   async scanYAMLFiles(basePath: string): Promise<string[]> {
     // const fs = await import('fs/promises');
     // const fullPath = path.join(process.cwd(), 'public', basePath);
-    
+
     try {
       const scenarios = await this.loader.scanScenarios();
       // Return full paths relative to project root (using English as default language)
-      return scenarios.map(scenarioId => 
+      return scenarios.map(scenarioId =>
         path.join(basePath, scenarioId, `${scenarioId}_en.yaml`)
       );
     } catch (error) {
@@ -282,22 +282,22 @@ class PBLYAMLProcessor implements IYAMLProcessor {
     // Extract scenario ID from path
     const parts = filePath.split(path.sep);
     const scenarioId = parts[parts.length - 2]; // Get folder name
-    
+
     const data = await this.loader.loadScenario(scenarioId);
     if (!data) {
       throw new Error(`Failed to load PBL scenario: ${filePath}`);
     }
-    
+
     return data;
   }
 
   async transformToScenario(yamlData: unknown, filePath: string): Promise<Omit<IScenario, 'id'>> {
     const parts = filePath.split(path.sep);
     const scenarioId = parts[parts.length - 2];
-    
+
     const pblData = yamlData as Record<string, unknown>;
     const scenarioInfo = (pblData.scenario_info || {}) as Record<string, unknown>;
-    
+
     // Debug: log the data structure to understand the issue
     console.log('PBL YAML Data for', scenarioId, ':', JSON.stringify({
       scenarioInfo: scenarioInfo,
@@ -305,7 +305,7 @@ class PBLYAMLProcessor implements IYAMLProcessor {
       tasks: pblData.tasks,
       aiModules: pblData.ai_modules
     }, null, 2));
-    
+
     return {
       mode: 'pbl' as const,
       status: 'active' as const,
@@ -360,7 +360,7 @@ class DiscoveryYAMLProcessor implements IYAMLProcessor {
   async scanYAMLFiles(basePath: string): Promise<string[]> {
     const careerTypes = await this.loader.scanPaths();
     const allPaths: string[] = [];
-    
+
     // For each career type, add paths for both languages
     for (const careerType of careerTypes) {
       // Add English version
@@ -368,7 +368,7 @@ class DiscoveryYAMLProcessor implements IYAMLProcessor {
       // Add Traditional Chinese version
       allPaths.push(path.join(basePath, careerType, `${careerType}_zhTW.yml`));
     }
-    
+
     return allPaths;
   }
 
@@ -377,26 +377,26 @@ class DiscoveryYAMLProcessor implements IYAMLProcessor {
     const parts = filePath.split(path.sep);
     const careerType = parts[parts.length - 2];
     const fileName = parts[parts.length - 1];
-    
+
     // Extract language from filename (e.g., app_developer_en.yml)
     const match = fileName.match(/_(\w+)\.yml$/);
     const language = match ? match[1] : 'en';
-    
+
     const data = await this.loader.loadPath(careerType, language);
     if (!data) {
       throw new Error(`Failed to load Discovery path: ${filePath}`);
     }
-    
+
     return data;
   }
 
   async transformToScenario(yamlData: unknown, filePath: string): Promise<Omit<IScenario, 'id'>> {
     const parts = filePath.split(path.sep);
     const careerType = parts[parts.length - 2];
-    
+
     const discoveryData = yamlData as Record<string, unknown>;
     const metadata = (discoveryData.metadata || {}) as Record<string, unknown>;
-    
+
     return {
       mode: 'discovery' as const,
       status: 'active' as const,
@@ -460,10 +460,10 @@ class AssessmentYAMLProcessor implements IYAMLProcessor {
 
   async scanYAMLFiles(basePath: string): Promise<string[]> {
     const assessments = await this.loader.scanAssessments();
-    
+
     // 根據 Rule #14: 每個 assessment 主題只返回一個路徑（主要語言版本）
     // 不要為每個語言版本創建獨立的路徑
-    return assessments.map(assessmentName => 
+    return assessments.map(assessmentName =>
       path.join(basePath, assessmentName, `${assessmentName}_questions_en.yaml`) // 使用英文作為主要版本
     );
   }
@@ -475,47 +475,47 @@ class AssessmentYAMLProcessor implements IYAMLProcessor {
     const assessmentName = parts[parts.length - 2];
     const match = fileName.match(/_questions_(\w+)\.yaml$/);
     const language = match ? match[1] : 'en';
-    
+
     const data = await this.loader.loadAssessment(assessmentName, language);
     if (!data) {
       throw new Error(`Failed to load Assessment: ${filePath}`);
     }
-    
+
     return data;
   }
 
   async transformToScenario(yamlData: unknown, filePath: string): Promise<Omit<IScenario, 'id'>> {
     const parts = filePath.split(path.sep);
     const assessmentName = parts[parts.length - 2];
-    
+
     // 根據 Rule #14: 載入所有語言版本並合併
     const availableLanguages = await this.loader.getAvailableLanguages(assessmentName);
     const titles: Record<string, string> = {};
     const descriptions: Record<string, string> = {};
     const allQuestionsByLang: Record<string, unknown[]> = {};
-    
+
     // 載入所有語言版本
     for (const lang of availableLanguages) {
       const langData = await this.loader.loadAssessment(assessmentName, lang);
       if (langData) {
         const config = (langData.config || langData.assessment_config || {}) as Record<string, unknown>;
-        
+
         // 收集多語言 title 和 description
         const titleValue = this.loader.getTranslatedField(config, 'title', lang) || `${assessmentName} Assessment`;
         const descValue = this.loader.getTranslatedField(config, 'description', lang) || '';
-        
+
         titles[lang] = titleValue;
         descriptions[lang] = descValue;
-        
+
         // 儲存該語言的題目
         allQuestionsByLang[lang] = langData.questions || [];
       }
     }
-    
+
     // 使用英文版本的配置作為基礎
     const baseData = yamlData as Record<string, unknown>;
     const config = (baseData.config || baseData.assessment_config || {}) as Record<string, unknown>;
-    
+
     return {
       mode: 'assessment' as const,
       status: 'active' as const,
@@ -543,7 +543,7 @@ class AssessmentYAMLProcessor implements IYAMLProcessor {
       prerequisites: (config.prerequisites as string[]) || [],
       taskTemplates: [{
         id: 'assessment-task',
-        title: { 
+        title: {
           en: 'Complete Assessment',
           zh: '完成評估',
           es: 'Completar evaluación',

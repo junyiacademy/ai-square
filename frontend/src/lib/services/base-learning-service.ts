@@ -1,14 +1,14 @@
 /**
  * Base Learning Service Interface
- * 
+ *
  * 定義所有學習服務的共同介面
  * 符合統一學習架構設計
  */
 
-import type { 
-  IProgram, 
-  ITask, 
-  IEvaluation 
+import type {
+  IProgram,
+  ITask,
+  IEvaluation
 } from '@/types/unified-learning';
 
 /**

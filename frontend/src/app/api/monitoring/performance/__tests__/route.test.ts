@@ -34,7 +34,7 @@ describe('/api/monitoring/performance', () => {
       const response = await GET(request);
 
       expect(response.status).toBe(200);
-      
+
       const data = await response.json();
       expect(data).toHaveProperty('summary');
       expect(data).toHaveProperty('alerts');
@@ -48,7 +48,7 @@ describe('/api/monitoring/performance', () => {
       const response = await GET(request);
 
       expect(response.status).toBe(200);
-      
+
       const data = await response.json();
       expect(data).toHaveProperty('summary');
       expect(data).toHaveProperty('alertCount');
@@ -60,7 +60,7 @@ describe('/api/monitoring/performance', () => {
       const response = await GET(request);
 
       expect(response.status).toBe(200);
-      
+
       const data = await response.json();
       expect(data).toHaveProperty('metrics');
       expect(data.metrics).toHaveProperty('requests', 10);
@@ -72,7 +72,7 @@ describe('/api/monitoring/performance', () => {
       const response = await GET(request);
 
       expect(response.status).toBe(404);
-      
+
       const data = await response.json();
       expect(data.error).toBe('No metrics found for this endpoint');
     });
@@ -87,14 +87,14 @@ describe('/api/monitoring/performance', () => {
       const response = await GET(request);
 
       expect(response.status).toBe(500);
-      
+
       const data = await response.json();
       expect(data.error).toBe('Failed to get performance metrics');
     });
 
     it('should default method to GET when not specified', async () => {
       const mockGetMetrics = require('@/lib/monitoring/performance-monitor').performanceMonitor.getMetrics;
-      
+
       const request = new NextRequest('http://localhost:3000/api/monitoring/performance?endpoint=api/test');
       await GET(request);
 
@@ -103,7 +103,7 @@ describe('/api/monitoring/performance', () => {
 
     it('should use provided method parameter', async () => {
       const mockGetMetrics = require('@/lib/monitoring/performance-monitor').performanceMonitor.getMetrics;
-      
+
       const request = new NextRequest('http://localhost:3000/api/monitoring/performance?endpoint=api/test&method=POST');
       await GET(request);
 
@@ -137,7 +137,7 @@ describe('/api/monitoring/performance', () => {
       const response = await DELETE();
 
       expect(response.status).toBe(200);
-      
+
       const data = await response.json();
       expect(data.success).toBe(true);
       expect(data.message).toBe('Performance metrics cleared');
@@ -145,7 +145,7 @@ describe('/api/monitoring/performance', () => {
 
     it('should call clearMetrics on performance monitor', async () => {
       const mockClearMetrics = require('@/lib/monitoring/performance-monitor').performanceMonitor.clearMetrics;
-      
+
       await DELETE();
 
       expect(mockClearMetrics).toHaveBeenCalled();
@@ -160,7 +160,7 @@ describe('/api/monitoring/performance', () => {
       const response = await DELETE();
 
       expect(response.status).toBe(500);
-      
+
       const data = await response.json();
       expect(data.error).toBe('Failed to clear performance metrics');
     });
@@ -184,7 +184,7 @@ describe('/api/monitoring/performance', () => {
     it('should log errors to console', async () => {
       const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
       const mockGetReport = require('@/lib/monitoring/performance-monitor').getPerformanceReport;
-      
+
       mockGetReport.mockImplementationOnce(() => {
         throw new Error('Test error');
       });
@@ -196,7 +196,7 @@ describe('/api/monitoring/performance', () => {
         'Error getting performance metrics:',
         expect.any(Error)
       );
-      
+
       consoleSpy.mockRestore();
     });
 

@@ -73,14 +73,14 @@ describe('ChatPage - Scroll and Session Features', () => {
     (useSearchParams as jest.Mock).mockReturnValue({
       get: jest.fn().mockReturnValue(null),
     });
-    
+
     // Mock localStorage
     Storage.prototype.getItem = jest.fn();
     Storage.prototype.setItem = jest.fn();
-    
+
     // Mock scrollIntoView
     window.HTMLElement.prototype.scrollIntoView = jest.fn();
-    
+
     // Mock successful auth check
     (global.fetch as jest.Mock).mockImplementation((url, options) => {
       if (url === '/api/auth/check') {
@@ -95,7 +95,7 @@ describe('ChatPage - Scroll and Session Features', () => {
       if (url === '/api/chat/sessions') {
         return Promise.resolve({
           ok: true,
-          json: () => Promise.resolve({ 
+          json: () => Promise.resolve({
             sessions: [
               {
                 id: 'session-123',
@@ -105,7 +105,7 @@ describe('ChatPage - Scroll and Session Features', () => {
                 last_message: 'Last message',
                 message_count: 5
               }
-            ] 
+            ]
           }),
         });
       }
@@ -157,7 +157,7 @@ describe('ChatPage - Scroll and Session Features', () => {
 
   it('shows scroll to bottom button when scrolled up', async () => {
     render(<ChatPage />);
-    
+
     await waitFor(() => {
       expect(screen.getAllByText('Header')).toHaveLength(2);
     });
@@ -168,7 +168,7 @@ describe('ChatPage - Scroll and Session Features', () => {
 
   it('updates URL when selecting a chat session', async () => {
     render(<ChatPage />);
-    
+
     await waitFor(() => {
       expect(screen.getAllByText('Previous Chat')).toHaveLength(2);
     });
@@ -209,7 +209,7 @@ describe('ChatPage - Scroll and Session Features', () => {
 
   it('clears URL when creating new chat', async () => {
     render(<ChatPage />);
-    
+
     await waitFor(() => {
       expect(screen.getAllByText('New Chat')).toHaveLength(2);
     });
@@ -222,7 +222,7 @@ describe('ChatPage - Scroll and Session Features', () => {
 
   it('updates URL when sending first message in new chat', async () => {
     render(<ChatPage />);
-    
+
     await waitFor(() => {
       const inputs = screen.getAllByPlaceholderText('Type your message... (Shift+Enter for new line)');
       expect(inputs).toHaveLength(2);
@@ -243,15 +243,15 @@ describe('ChatPage - Scroll and Session Features', () => {
 
   it('has enhanced input panel styling', () => {
     render(<ChatPage />);
-    
+
     // Check for the enhanced input area with gray background
     const inputAreas = screen.getAllByPlaceholderText('Type your message... (Shift+Enter for new line)');
     expect(inputAreas).toHaveLength(2);
-    
+
     // Check that at least one has the gray background container
     const grayBackgroundElement = inputAreas[0].closest('div[class*="bg-gray-50"]');
     expect(grayBackgroundElement).toBeInTheDocument();
-    
+
     // Check for the white rounded input container
     const whiteContainer = inputAreas[0].closest('div[class*="bg-white rounded-xl"]');
     expect(whiteContainer).toBeInTheDocument();
@@ -259,18 +259,18 @@ describe('ChatPage - Scroll and Session Features', () => {
 
   it('shows delete menu for chat sessions', async () => {
     render(<ChatPage />);
-    
+
     await waitFor(() => {
       expect(screen.getAllByText('Previous Chat')).toHaveLength(2);
     });
 
     // Initially, delete button should not be visible
     expect(screen.queryByText('Delete')).not.toBeInTheDocument();
-    
+
     // Find the three dots button using test ID
     const moreButton = screen.getAllByTestId('more-button-session-123')[0];
     fireEvent.click(moreButton);
-    
+
     await waitFor(() => {
       expect(screen.getAllByText('Delete')).toHaveLength(2); // Both mobile and desktop versions
     });
@@ -281,7 +281,7 @@ describe('ChatPage - Scroll and Session Features', () => {
     window.confirm = jest.fn().mockReturnValue(true);
 
     render(<ChatPage />);
-    
+
     await waitFor(() => {
       expect(screen.getAllByText('Previous Chat')).toHaveLength(2);
     });
@@ -289,7 +289,7 @@ describe('ChatPage - Scroll and Session Features', () => {
     // Find and click the more button
     const moreButton = screen.getAllByTestId('more-button-session-123')[0];
     fireEvent.click(moreButton);
-    
+
     await waitFor(() => {
       expect(screen.getAllByText('Delete')).toHaveLength(2); // Both mobile and desktop versions
     });

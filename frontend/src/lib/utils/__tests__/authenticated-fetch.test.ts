@@ -76,7 +76,7 @@ describe('authenticatedFetch', () => {
         'X-Custom': 'header'
       }
     });
-    
+
     await authenticatedFetch(request);
 
     expect(global.fetch).toHaveBeenCalledWith(request, {

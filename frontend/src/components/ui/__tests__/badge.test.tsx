@@ -21,17 +21,17 @@ describe('Badge', () => {
     let badge = screen.getByTestId('badge');
     expect(badge.className).toContain('bg-blue-600');
     expect(badge.className).toContain('text-white');
-    
+
     rerender(<Badge variant="secondary" data-testid="badge">Secondary</Badge>);
     badge = screen.getByTestId('badge');
     expect(badge.className).toContain('bg-gray-200');
     expect(badge.className).toContain('text-gray-900');
-    
+
     rerender(<Badge variant="destructive" data-testid="badge">Destructive</Badge>);
     badge = screen.getByTestId('badge');
     expect(badge.className).toContain('bg-red-600');
     expect(badge.className).toContain('text-white');
-    
+
     rerender(<Badge variant="outline" data-testid="badge">Outline</Badge>);
     badge = screen.getByTestId('badge');
     expect(badge.className).toContain('text-gray-900');
@@ -64,7 +64,7 @@ describe('Badge', () => {
 
   it('should pass through other props', () => {
     render(
-      <Badge 
+      <Badge
         id="test-badge"
         role="status"
         aria-label="Status badge"
@@ -73,7 +73,7 @@ describe('Badge', () => {
         Status
       </Badge>
     );
-    
+
     const badge = screen.getByTestId('badge');
     expect(badge).toHaveAttribute('id', 'test-badge');
     expect(badge).toHaveAttribute('role', 'status');

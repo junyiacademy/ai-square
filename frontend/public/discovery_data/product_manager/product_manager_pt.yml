@@ -6,12 +6,12 @@ metadata:
   title: "Alquimista de Produtos - Product Manager"
   short_description: "Forje produtos perfeitos no crisol do mercado"
   long_description: |
-    Você é um alquimista recém-formado na "Oficina de Alquimia de Produtos", especializado 
-    em fundir necessidades dos usuários, capacidades técnicas e objetivos de negócios 
-    em produtos poderosos. Nesta oficina cheia de faiscas de inovação, cada iteração 
-    é um experimento alquímico, e seu objetivo é criar produtos perfeitos que 
+    Você é um alquimista recém-formado na "Oficina de Alquimia de Produtos", especializado
+    em fundir necessidades dos usuários, capacidades técnicas e objetivos de negócios
+    em produtos poderosos. Nesta oficina cheia de faiscas de inovação, cada iteração
+    é um experimento alquímico, e seu objetivo é criar produtos perfeitos que
     podem mudar o mundo.
-  
+
   estimated_hours: 55
   skill_focus:
     - requirement_alchemy
@@ -21,22 +21,22 @@ metadata:
 world_setting:
   name: "Oficina de Alquimia de Produtos"
   description: |
-    A Oficina de Alquimia de Produtos é uma forja mágica onde ideias se transformam 
-    em produtos reais. Aqui, gerentes de produto aprendem a arte antiga de equilibrar 
-    desejos dos usuários, restrições técnicas e objetivos de negócios para criar 
+    A Oficina de Alquimia de Produtos é uma forja mágica onde ideias se transformam
+    em produtos reais. Aqui, gerentes de produto aprendem a arte antiga de equilibrar
+    desejos dos usuários, restrições técnicas e objetivos de negócios para criar
     produtos que ressoam com milhões de pessoas.
-  
+
   atmosphere: "dynamic_creative"
   visual_theme: "innovation_forge"
 starting_scenario:
   title: "O Desafio do Alquimista"
   description: |
-    O Mestre da Estratégia te recebe na oficina com um aviso: o Prazo, o Tirano 
-    do Tempo, está forçando equipes a sacrificar a qualidade do produto pela velocidade. 
-    Enquanto isso, a Voz dos Usuários fica mais alta com demandas conflitantes. 
-    Você deve encontrar a pedra filosofal da gestão de produtos - equilibrar 
+    O Mestre da Estratégia te recebe na oficina com um aviso: o Prazo, o Tirano
+    do Tempo, está forçando equipes a sacrificar a qualidade do produto pela velocidade.
+    Enquanto isso, a Voz dos Usuários fica mais alta com demandas conflitantes.
+    Você deve encontrar a pedra filosofal da gestão de produtos - equilibrar
     qualidade, velocidade e satisfação do usuário.
-  
+
   initial_tasks:
     - understand_users
     - analyze_market

@@ -7,7 +7,7 @@ export async function GET(
 ) {
   try {
     const { programId } = await params;
-    
+
     // Get user info from cookie
     let userEmail: string | undefined;
     try {
@@ -19,19 +19,19 @@ export async function GET(
     } catch {
       console.log('No user cookie found');
     }
-    
+
     if (!userEmail) {
       return NextResponse.json(
         { success: false, error: 'User authentication required' },
         { status: 401 }
       );
     }
-    
+
     // Get repositories
     const userRepo = repositoryFactory.getUserRepository();
     const programRepo = repositoryFactory.getProgramRepository();
     const taskRepo = repositoryFactory.getTaskRepository();
-    
+
     // Get user by email
     const user = await userRepo.findByEmail(userEmail);
     if (!user) {
@@ -40,23 +40,23 @@ export async function GET(
         { status: 404 }
       );
     }
-    
+
     // Get program
     const program = await programRepo.findById(programId);
-    
+
     if (!program || program.userId !== user.id) {
       return NextResponse.json(
         { success: false, error: 'Program not found' },
         { status: 404 }
       );
     }
-    
+
     // Get tasks for the program
     const tasks = await taskRepo.findByProgram(programId);
-    
+
     // Sort tasks by index
     tasks.sort((a, b) => a.taskIndex - b.taskIndex);
-    
+
     return NextResponse.json({
       success: true,
       program: {
@@ -76,7 +76,7 @@ export async function GET(
         metadata: program.metadata
       }
     });
-    
+
   } catch (error) {
     console.error('Error getting program:', error);
     return NextResponse.json(

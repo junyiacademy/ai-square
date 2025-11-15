@@ -20,7 +20,7 @@ async function generateSyncChecksum(tasks: TaskWithEvaluation[]): Promise<string
       completedAt: t.completedAt
     }))
     .sort((a, b) => a.id.localeCompare(b.id));
-  
+
   return crypto
     .createHash('md5')
     .update(JSON.stringify(checksumData))
@@ -33,7 +33,7 @@ function clearFeedbackFlags(qualitativeFeedback: Record<string, unknown> | undef
   if (!qualitativeFeedback || typeof qualitativeFeedback !== 'object') {
     return {};
   }
-  
+
   const clearedFeedback: Record<string, unknown> = {};
   Object.keys(qualitativeFeedback).forEach(lang => {
     const langFeedback = qualitativeFeedback[lang];
@@ -42,7 +42,7 @@ function clearFeedbackFlags(qualitativeFeedback: Record<string, unknown> | undef
       isValid: false
     };
   });
-  
+
   return clearedFeedback;
 }
 
@@ -54,11 +54,11 @@ export async function POST(
 ) {
   try {
     const { programId } = await params;
-    
+
     // Get user session (skip if internal call)
     let userEmail: string;
     let userId: string;
-    
+
     if (internalCall) {
       // Internal call from GET, use provided user info
       userEmail = internalCall.userEmail;
@@ -70,7 +70,7 @@ export async function POST(
         return createUnauthorizedResponse();
       }
       userEmail = session.user.email;
-      
+
       // Get user by email to get UUID
       const { repositoryFactory } = await import('@/lib/repositories/base/repository-factory');
       const userRepo = repositoryFactory.getUserRepository();
@@ -83,13 +83,13 @@ export async function POST(
       }
       userId = user.id;
     }
-    
+
     // Use unified architecture
     const { repositoryFactory } = await import('@/lib/repositories/base/repository-factory');
     const programRepo = repositoryFactory.getProgramRepository();
     const taskRepo = repositoryFactory.getTaskRepository();
     const evalRepo = repositoryFactory.getEvaluationRepository();
-    
+
     // Get program
     const program = await programRepo.findById(programId);
     if (!program) {
@@ -98,7 +98,7 @@ export async function POST(
         { status: 404 }
       );
     }
-    
+
     // Verify the program belongs to the user
     if (program.userId !== userId) {
       return NextResponse.json(
@@ -106,7 +106,7 @@ export async function POST(
         { status: 403 }
       );
     }
-    
+
     // Get all tasks and their evaluations
     const tasks = await taskRepo.findByProgram(programId);
     const taskEvaluations = await Promise.all(
@@ -118,11 +118,11 @@ export async function POST(
         return { task, evaluation: null };
       })
     );
-    
+
     // Calculate metrics
     const evaluatedTasks = taskEvaluations.filter(te => te.evaluation !== null);
     const totalTasks = tasks.length;
-    
+
     // Calculate overall score - handle both number and string scores from DB
     const validScores = evaluatedTasks
       .map(te => {
@@ -134,7 +134,7 @@ export async function POST(
         return score;
       })
       .filter(score => typeof score === 'number' && !isNaN(score) && score >= 0);
-    
+
     console.log('Complete route - score calculation:', {
       evaluatedTasksCount: evaluatedTasks.length,
       validScoresCount: validScores.length,
@@ -146,17 +146,17 @@ export async function POST(
         scoreType: typeof te.evaluation?.score
       }))
     });
-    
+
     const overallScore = validScores.length > 0
       ? Math.round(
           (validScores as number[]).reduce((sum: number, score: number) => sum + score, 0) / validScores.length
         )
       : 0;
-    
+
     // Calculate domain scores
     const domainScores: Record<string, number> = {};
     const domainCounts: Record<string, number> = {};
-    
+
     evaluatedTasks.forEach(({ evaluation }) => {
       // Check both domainScores (direct property) and metadata.domainScores
       const evalDomainScores = evaluation?.domainScores || evaluation?.metadata?.domainScores;
@@ -173,7 +173,7 @@ export async function POST(
         });
       }
     });
-    
+
     // Average domain scores
     Object.keys(domainScores).forEach(domain => {
       if (domainCounts[domain] > 0) {
@@ -182,14 +182,14 @@ export async function POST(
         domainScores[domain] = 0;
       }
     });
-    
+
     // Calculate KSA scores
     const ksaScores = {
       knowledge: 0,
       skills: 0,
       attitudes: 0
     };
-    
+
     let ksaCount = 0;
     evaluatedTasks.forEach(({ evaluation }) => {
       // Check both pblData.ksaScores (where it's actually stored) and metadata.ksaScores (fallback)
@@ -204,17 +204,17 @@ export async function POST(
         }
       }
     });
-    
+
     if (ksaCount > 0) {
       ksaScores.knowledge = Math.round(ksaScores.knowledge / ksaCount);
       ksaScores.skills = Math.round(ksaScores.skills / ksaCount);
       ksaScores.attitudes = Math.round(ksaScores.attitudes / ksaCount);
     }
-    
+
     // Calculate total time and conversation count
     let totalTimeSeconds = 0;
     let conversationCount = 0;
-    
+
     // Get interactions for each task to calculate time
     for (const task of tasks) {
       const taskWithInteractions = await taskRepo.getTaskWithInteractions?.(task.id);
@@ -226,12 +226,12 @@ export async function POST(
           (new Date(lastInteraction.timestamp).getTime() - new Date(firstInteraction.timestamp).getTime()) / 1000
         );
         totalTimeSeconds += taskTime;
-        
+
         // Count user interactions
         conversationCount += interactions.filter(i => i.type === 'user_input').length;
       }
     }
-    
+
     // Generate checksum for verification
     // Transform tasks to TaskWithEvaluation format
     const tasksWithEvaluation: TaskWithEvaluation[] = tasks.map(t => ({
@@ -241,7 +241,7 @@ export async function POST(
       completedAt: t.completedAt
     }));
     const syncChecksum = await generateSyncChecksum(tasksWithEvaluation);
-    
+
     // Debug information
     const debugInfo = {
       programId,
@@ -261,13 +261,13 @@ export async function POST(
       syncChecksum,
       calculatedAt: new Date().toISOString()
     };
-    
+
     console.log('Program evaluation calculation debug:', debugInfo);
-    
+
     // Check if program already has an evaluation
     let programEvaluation;
     let updateReason = 'new_evaluation';
-    
+
     const programEvaluationId = program.metadata?.evaluationId as string | undefined;
     if (programEvaluationId) {
       // Check if we need to update the existing evaluation
@@ -298,7 +298,7 @@ export async function POST(
             }
           }
         }) || existing;
-        
+
         // Clear the outdated flag after updating evaluation
         await programRepo.update?.(programId, {
           metadata: {
@@ -319,11 +319,11 @@ export async function POST(
         }
       }
     }
-    
+
     if (!programEvaluation) {
       // Validate score before creating evaluation
       const finalScore = typeof overallScore === 'number' && !isNaN(overallScore) ? overallScore : 0;
-      
+
       // Create new evaluation
       programEvaluation = await evalRepo.create({
         userId: userId,
@@ -365,7 +365,7 @@ export async function POST(
           generatedLanguages: []
         }
       });
-      
+
       // Update program with evaluation ID and clear outdated flag
       await programRepo.update?.(programId, {
         status: 'completed' as const,
@@ -378,7 +378,7 @@ export async function POST(
         }
       });
     }
-    
+
     return NextResponse.json({
       success: true,
       evaluation: programEvaluation,
@@ -387,7 +387,7 @@ export async function POST(
         ...debugInfo
       }
     });
-    
+
   } catch (error) {
     console.error('Error completing program:', error);
     return NextResponse.json(
@@ -409,25 +409,25 @@ async function verifyEvaluationStatus(
     evaluationOutdated: program.metadata?.evaluationOutdated,
     lastSyncedAt: evaluation.metadata?.lastSyncedAt
   };
-  
+
   // Layer 0: Check if marked as outdated
   if (program.metadata?.evaluationOutdated === true) {
-    return { 
-      needsUpdate: true, 
+    return {
+      needsUpdate: true,
       reason: 'evaluation_outdated',
       debug: { ...debug, evaluationOutdated: true }
     };
   }
-  
+
   // Layer 1: Flag check
   if (!evaluation.metadata?.isLatest) {
-    return { 
-      needsUpdate: true, 
+    return {
+      needsUpdate: true,
       reason: 'flag_outdated',
       debug: { ...debug, flagCheck: 'failed' }
     };
   }
-  
+
   // Layer 2: Task count check
   const tasks = await taskRepo.findByProgram(program.id);
   const currentEvaluatedCount = tasks.filter((t) => t.evaluationId).length;
@@ -435,25 +435,25 @@ async function verifyEvaluationStatus(
     stored: evaluation.metadata?.evaluatedTaskCount,
     current: currentEvaluatedCount
   };
-  
+
   if (currentEvaluatedCount !== evaluation.metadata?.evaluatedTaskCount) {
-    return { 
-      needsUpdate: true, 
+    return {
+      needsUpdate: true,
       reason: 'task_count_mismatch',
       debug
     };
   }
-  
+
   // Layer 3: Checksum verification (based on time since last sync)
   const lastSync = new Date((evaluation.metadata?.lastSyncedAt as string | number) || 0);
   const hoursSinceSync = (Date.now() - lastSync.getTime()) / (1000 * 60 * 60);
   debug.hoursSinceSync = hoursSinceSync;
-  
-  const shouldCheckChecksum = 
+
+  const shouldCheckChecksum =
     hoursSinceSync > 48 ? true :
     hoursSinceSync > 24 ? Math.random() < 0.2 :
     Math.random() < 0.05;
-  
+
   if (shouldCheckChecksum) {
     const currentChecksum = await generateSyncChecksum(tasks);
     debug.checksumVerification = {
@@ -461,10 +461,10 @@ async function verifyEvaluationStatus(
       current: currentChecksum,
       match: currentChecksum === evaluation.metadata?.syncChecksum
     };
-    
+
     if (currentChecksum !== evaluation.metadata?.syncChecksum) {
-      return { 
-        needsUpdate: true, 
+      return {
+        needsUpdate: true,
         reason: 'checksum_mismatch',
         debug
       };
@@ -472,7 +472,7 @@ async function verifyEvaluationStatus(
   } else {
     debug.checksumVerification = 'skipped';
   }
-  
+
   return { needsUpdate: false, reason: 'up_to_date', debug };
 }
 
@@ -485,20 +485,20 @@ export async function GET(
     const { programId } = await params;
     const { searchParams } = new URL(request.url);
     const language = searchParams.get('language') || 'en';
-    
+
     // Get user session
     const session = await getUnifiedAuth(request);
     if (!session?.user?.email) {
       return createUnauthorizedResponse();
     }
-    
+
     // Use unified architecture
     const { repositoryFactory } = await import('@/lib/repositories/base/repository-factory');
     const programRepo = repositoryFactory.getProgramRepository();
     const evalRepo = repositoryFactory.getEvaluationRepository();
     const taskRepo = repositoryFactory.getTaskRepository();
     const userRepo = repositoryFactory.getUserRepository();
-    
+
     // Get user by email to get UUID
     const user = await userRepo.findByEmail(session.user.email);
     if (!user) {
@@ -507,7 +507,7 @@ export async function GET(
         { status: 404 }
       );
     }
-    
+
     // Get program
     const program = await programRepo.findById(programId);
     if (!program) {
@@ -516,7 +516,7 @@ export async function GET(
         { status: 404 }
       );
     }
-    
+
     // Verify the program belongs to the user
     if (program.userId !== user.id) {
       return NextResponse.json(
@@ -524,14 +524,14 @@ export async function GET(
         { status: 403 }
       );
     }
-    
+
     let evaluation = null;
     let verificationResult = null;
-    
+
     const evaluationId = program.metadata?.evaluationId as string | undefined;
     if (evaluationId) {
       evaluation = await evalRepo.findById(evaluationId);
-      
+
       if (evaluation) {
         // Verify evaluation status
         // Create a wrapper to adapt Task[] to TaskWithEvaluation[]
@@ -547,7 +547,7 @@ export async function GET(
           }
         };
         verificationResult = await verifyEvaluationStatus(program, evaluation, taskRepoAdapter);
-        
+
         console.log('GET /api/pbl/programs/[programId]/complete - Verification result:', {
           programId,
           evaluationId: evaluation.id,
@@ -556,14 +556,14 @@ export async function GET(
           evaluationOutdated: program.metadata?.evaluationOutdated,
           debug: verificationResult.debug
         });
-        
+
         if (verificationResult.needsUpdate) {
           console.log('Triggering program evaluation recalculation due to:', verificationResult.reason);
-          
+
           // Trigger recalculation with user info
           const recalcResponse = await POST(request, { params }, { userEmail: session.user.email, userId: user.id });
           const recalcData = await recalcResponse.json();
-          
+
           if (recalcData.success) {
             console.log('Program evaluation recalculated successfully:', {
               evaluationId: recalcData.evaluation?.id,
@@ -581,23 +581,23 @@ export async function GET(
       // No evaluation yet, trigger calculation with user info
       const calcResponse = await POST(request, { params }, { userEmail: session.user.email, userId: user.id });
       const calcData = await calcResponse.json();
-      
+
       if (calcData.success) {
         evaluation = calcData.evaluation;
       }
     }
-    
+
     if (!evaluation) {
       return NextResponse.json(
         { success: false, error: 'Failed to get or create evaluation' },
         { status: 500 }
       );
     }
-    
+
     // Check if qualitative feedback exists for the requested language
     const langFeedback = evaluation.metadata?.qualitativeFeedback?.[language];
     const hasValidFeedback = langFeedback?.isValid;
-    
+
     return NextResponse.json({
       success: true,
       evaluation,
@@ -612,7 +612,7 @@ export async function GET(
         }
       }
     });
-    
+
   } catch (error) {
     console.error('Error fetching program evaluation:', error);
     return NextResponse.json(

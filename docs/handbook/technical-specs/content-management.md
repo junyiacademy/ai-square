@@ -121,12 +121,12 @@ const RubricsBuilder: React.FC = () => {
       const newCriteria = [...rubric.criteria]
       const dragIndex = newCriteria.findIndex(c => c.id === item.id)
       const dropIndex = newCriteria.findIndex(c => c.id === targetId)
-      
+
       if (dragIndex !== -1) {
         const [removed] = newCriteria.splice(dragIndex, 1)
         newCriteria.splice(dropIndex, 0, removed)
       }
-      
+
       setRubric({ ...rubric, criteria: newCriteria })
     }
   }, [rubric])
@@ -134,20 +134,20 @@ const RubricsBuilder: React.FC = () => {
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="rubrics-builder">
-        <RubricHeader 
+        <RubricHeader
           rubric={rubric}
           onUpdate={setRubric}
           onPreview={() => setPreviewMode(!previewMode)}
         />
-        
+
         <div className="builder-workspace">
           <ComponentPalette />
-          
+
           <div className="rubric-canvas">
             {previewMode ? (
               <RubricPreview rubric={rubric} />
             ) : (
-              <RubricEditor 
+              <RubricEditor
                 rubric={rubric}
                 onUpdate={setRubric}
                 selectedElement={selectedElement}
@@ -156,15 +156,15 @@ const RubricsBuilder: React.FC = () => {
               />
             )}
           </div>
-          
-          <PropertiesPanel 
+
+          <PropertiesPanel
             rubric={rubric}
             selectedElement={selectedElement}
             onUpdate={setRubric}
           />
         </div>
-        
-        <RubricToolbar 
+
+        <RubricToolbar
           onSave={() => saveRubric(rubric)}
           onExport={() => exportRubric(rubric)}
           onShare={() => shareRubric(rubric)}
@@ -199,12 +199,12 @@ const CriterionCard: React.FC<{
   })
 
   return (
-    <div 
+    <div
       ref={(node) => drag(drop(node))}
       className={`criterion-card ${isDragging ? 'dragging' : ''} ${isOver ? 'drop-target' : ''}`}
     >
       <div className="criterion-header">
-        <input 
+        <input
           value={criterion.name}
           onChange={(e) => onUpdate({ ...criterion, name: e.target.value })}
           className="criterion-name"
@@ -212,14 +212,14 @@ const CriterionCard: React.FC<{
         <span className="criterion-weight">{criterion.weight}%</span>
         <button onClick={onDelete} className="delete-btn">×</button>
       </div>
-      
-      <textarea 
+
+      <textarea
         value={criterion.description}
         onChange={(e) => onUpdate({ ...criterion, description: e.target.value })}
         className="criterion-description"
       />
-      
-      <LevelsGrid 
+
+      <LevelsGrid
         levels={criterion.levels}
         onUpdate={(levels) => onUpdate({ ...criterion, levels })}
       />
@@ -326,67 +326,67 @@ class GeneratedContent:
 
 class AIContentGenerator:
     """AI-powered content generation system with Git integration"""
-    
+
     def __init__(self, ai_service, content_validator, git_service):
         self.ai = ai_service
         self.validator = content_validator
         self.git = git_service  # 新增：Git 服務
         self.templates = self._load_templates()
         self.quality_checker = ContentQualityChecker()
-        
+
     async def generate_content(
-        self, 
+        self,
         request: ContentRequest
     ) -> GeneratedContent:
         """Generate content based on request with Git integration"""
-        
+
         # Phase 2: 直接呼叫 LLM
         # Phase 3+: 透過 Agent 系統
         if hasattr(self.ai, 'use_agent_system'):
             return await self._generate_via_agent(request)
-        
+
         # Select appropriate template and model
         template = self.templates.get(request.type)
         model_config = self._select_model_config(request)
-        
+
         # Build generation prompt
         prompt = self._build_prompt(request, template)
-        
+
         # Add examples if provided
         if request.examples:
             prompt = self._add_examples_to_prompt(prompt, request.examples)
-            
+
         # Generate content
         raw_content = await self.ai.generate(
-            prompt, 
+            prompt,
             model_config
         )
-        
+
         # Post-process based on format
         processed_content = await self._post_process(
-            raw_content, 
+            raw_content,
             request.format
         )
-        
+
         # Validate content
         validation_result = await self.validator.validate(
-            processed_content, 
+            processed_content,
             request.type
         )
-        
+
         if not validation_result.is_valid:
             # Attempt to fix issues
             processed_content = await self._fix_content_issues(
-                processed_content, 
+                processed_content,
                 validation_result.issues
             )
-            
+
         # Check quality
         quality_score = await self.quality_checker.check(
-            processed_content, 
+            processed_content,
             request
         )
-        
+
         # Create generated content object
         generated = GeneratedContent(
             id=self._generate_content_id(),
@@ -404,7 +404,7 @@ class AIContentGenerator:
             provider=model_config["provider"],
             model=model_config["model"]
         )
-        
+
         # Git-Based 內容儲存 (根據 PRD 3.3)
         if request.target_repo and request.auto_commit:
             file_path = await self._save_to_git(generated, request)
@@ -417,18 +417,18 @@ class AIContentGenerator:
                     files=[file_path]
                 )
                 generated.commit_hash = commit_hash
-        
+
         return generated
-        
+
     async def generate_lesson_plan(
-        self, 
-        topic: str, 
+        self,
+        topic: str,
         duration_minutes: int,
         learning_objectives: List[str],
         student_level: str
     ) -> Dict:
         """Generate complete lesson plan"""
-        
+
         # Generate main content sections
         sections = await asyncio.gather(
             self._generate_introduction(topic, student_level),
@@ -437,7 +437,7 @@ class AIContentGenerator:
             self._generate_assessment_items(topic, learning_objectives),
             self._generate_summary(topic, learning_objectives)
         )
-        
+
         lesson_plan = {
             "title": f"{topic} - {student_level.title()} Level",
             "duration_minutes": duration_minutes,
@@ -451,21 +451,21 @@ class AIContentGenerator:
             },
             "materials_needed": await self._suggest_materials(topic),
             "differentiation_strategies": await self._generate_differentiation(
-                topic, 
+                topic,
                 student_level
             ),
             "extension_activities": await self._generate_extensions(topic)
         }
-        
+
         return lesson_plan
-        
+
     async def enhance_content(
-        self, 
+        self,
         original_content: str,
         enhancement_type: str
     ) -> str:
         """Enhance existing content"""
-        
+
         enhancement_prompts = {
             "clarity": "Rewrite this content to be clearer and more concise",
             "engagement": "Make this content more engaging and interactive",
@@ -473,35 +473,35 @@ class AIContentGenerator:
             "examples": "Add relevant examples and illustrations",
             "visuals": "Suggest visual elements to support this content"
         }
-        
+
         prompt = f"""
         {enhancement_prompts.get(enhancement_type, "Improve this content")}:
-        
+
         {original_content}
-        
+
         Maintain the core information while enhancing based on the request.
         """
-        
+
         enhanced = await self.ai.generate(
             prompt,
             {"temperature": 0.7, "max_tokens": 2000}
         )
-        
+
         return enhanced
-        
+
     async def generate_multi_format(
-        self, 
+        self,
         content_request: ContentRequest,
         formats: List[str]
     ) -> Dict[str, GeneratedContent]:
         """Generate content in multiple formats"""
-        
+
         # Generate base content
         base_content = await self.generate_content(content_request)
-        
+
         # Convert to requested formats
         formatted_content = {}
-        
+
         for format in formats:
             if format == content_request.format:
                 formatted_content[format] = base_content
@@ -511,7 +511,7 @@ class AIContentGenerator:
                     base_content.format,
                     format
                 )
-                
+
                 formatted_content[format] = GeneratedContent(
                     id=f"{base_content.id}_{format}",
                     type=base_content.type,
@@ -523,37 +523,37 @@ class AIContentGenerator:
                     provider=base_content.provider,
                     model=base_content.model
                 )
-                
+
         return formatted_content
-        
+
     def _build_prompt(
-        self, 
-        request: ContentRequest, 
+        self,
+        request: ContentRequest,
         template: str
     ) -> str:
         """Build generation prompt from request and template"""
-        
+
         prompt_parts = [
             f"Generate {request.type.value} content for: {request.topic}",
             f"Target level: {request.level}",
         ]
-        
+
         if request.style:
             prompt_parts.append(f"Style: {request.style}")
-            
+
         if request.constraints:
             constraints_str = "\n".join([
                 f"- {k}: {v}" for k, v in request.constraints.items()
             ])
             prompt_parts.append(f"Constraints:\n{constraints_str}")
-            
+
         prompt_parts.append(f"\n{template}")
-        
+
         return "\n\n".join(prompt_parts)
 
 class ContentQualityChecker:
     """Check quality of generated content"""
-    
+
     def __init__(self):
         self.criteria = {
             "accuracy": 0.3,
@@ -562,46 +562,46 @@ class ContentQualityChecker:
             "engagement": 0.15,
             "structure": 0.1
         }
-        
+
     async def check(
-        self, 
-        content: Union[str, Dict], 
+        self,
+        content: Union[str, Dict],
         request: ContentRequest
     ) -> float:
         """Evaluate content quality"""
-        
+
         scores = {}
-        
+
         # Check accuracy (using fact-checking service)
         scores["accuracy"] = await self._check_accuracy(content)
-        
+
         # Check completeness
         scores["completeness"] = self._check_completeness(
-            content, 
+            content,
             request
         )
-        
+
         # Check clarity
         scores["clarity"] = self._check_clarity(content)
-        
+
         # Check engagement
         scores["engagement"] = self._check_engagement(
-            content, 
+            content,
             request.level
         )
-        
+
         # Check structure
         scores["structure"] = self._check_structure(
-            content, 
+            content,
             request.type
         )
-        
+
         # Calculate weighted score
         total_score = sum(
-            scores[criterion] * weight 
+            scores[criterion] * weight
             for criterion, weight in self.criteria.items()
         )
-        
+
         return total_score
 ```
 
@@ -630,51 +630,51 @@ class MediaAsset:
     created_by: str = None
     url: str = None
     thumbnail_url: Optional[str] = None
-    
+
 class MediaLibrary:
     """Comprehensive media asset management system"""
-    
+
     def __init__(self, storage_backend, processor):
         self.storage = storage_backend
         self.processor = processor
         self.search_engine = MediaSearchEngine()
-        
+
     async def upload_asset(
-        self, 
+        self,
         file: BinaryIO,
         filename: str,
         user_id: str,
         metadata: Optional[Dict] = None
     ) -> MediaAsset:
         """Upload and process media asset"""
-        
+
         # Validate file type
         content_type = self._detect_content_type(filename)
         if not self._is_allowed_type(content_type):
             raise ValueError(f"File type {content_type} not allowed")
-            
+
         # Generate unique ID and paths
         asset_id = self._generate_asset_id()
         storage_path = self._generate_storage_path(asset_id, filename)
-        
+
         # Upload original file
         file_size = await self.storage.upload(
-            file, 
+            file,
             storage_path
         )
-        
+
         # Process based on type
         processing_result = await self._process_asset(
-            storage_path, 
+            storage_path,
             content_type
         )
-        
+
         # Extract metadata
         extracted_metadata = await self._extract_metadata(
-            storage_path, 
+            storage_path,
             content_type
         )
-        
+
         # Create asset object
         asset = MediaAsset(
             id=asset_id,
@@ -691,27 +691,27 @@ class MediaLibrary:
             url=self.storage.get_url(storage_path),
             thumbnail_url=processing_result.get("thumbnail_url")
         )
-        
+
         # Auto-tag asset
         asset.tags = await self._auto_tag_asset(asset)
-        
+
         # Index for search
         await self.search_engine.index_asset(asset)
-        
+
         # Store in database
         await self.db.media_assets.insert_one(asset.dict())
-        
+
         return asset
-        
+
     async def _process_asset(
-        self, 
-        path: str, 
+        self,
+        path: str,
         content_type: str
     ) -> Dict:
         """Process asset based on type"""
-        
+
         result = {}
-        
+
         if content_type.startswith("image/"):
             result = await self._process_image(path)
         elif content_type.startswith("video/"):
@@ -720,33 +720,33 @@ class MediaLibrary:
             result = await self._process_audio(path)
         elif content_type == "application/pdf":
             result = await self._process_pdf(path)
-            
+
         return result
-        
+
     async def _process_image(self, path: str) -> Dict:
         """Process image asset"""
-        
+
         # Load image
         image = Image.open(path)
-        
+
         # Get dimensions
         dimensions = {
             "width": image.width,
             "height": image.height
         }
-        
+
         # Generate thumbnails
         thumbnails = await self._generate_image_thumbnails(
-            image, 
+            image,
             path
         )
-        
+
         # Optimize for web
         optimized_path = await self._optimize_image(image, path)
-        
+
         # Extract color palette
         colors = self._extract_color_palette(image)
-        
+
         return {
             "dimensions": dimensions,
             "thumbnail_url": thumbnails["medium"],
@@ -754,41 +754,41 @@ class MediaLibrary:
             "optimized_url": self.storage.get_url(optimized_path),
             "color_palette": colors
         }
-        
+
     async def _process_video(self, path: str) -> Dict:
         """Process video asset"""
-        
+
         # Load video
         video = mp.VideoFileClip(path)
-        
+
         # Get properties
         dimensions = {
             "width": video.w,
             "height": video.h
         }
         duration = video.duration
-        
+
         # Generate thumbnail
         thumbnail_path = await self._generate_video_thumbnail(
-            video, 
+            video,
             path
         )
-        
+
         # Generate preview clip
         preview_path = await self._generate_preview_clip(
-            video, 
+            video,
             path
         )
-        
+
         # Extract keyframes
         keyframes = await self._extract_keyframes(video)
-        
+
         # Transcode for streaming
         streaming_versions = await self._transcode_for_streaming(
-            video, 
+            video,
             path
         )
-        
+
         return {
             "dimensions": dimensions,
             "duration": duration,
@@ -797,16 +797,16 @@ class MediaLibrary:
             "keyframes": keyframes,
             "streaming_urls": streaming_versions
         }
-        
+
     async def search_assets(
-        self, 
+        self,
         query: str,
         filters: Optional[Dict] = None,
         limit: int = 20,
         offset: int = 0
     ) -> List[MediaAsset]:
         """Search media assets"""
-        
+
         # Build search query
         search_params = {
             "query": query,
@@ -814,23 +814,23 @@ class MediaLibrary:
             "limit": limit,
             "offset": offset
         }
-        
+
         # Execute search
         results = await self.search_engine.search(search_params)
-        
+
         # Enhance results with usage data
         for asset in results:
             asset["usage_count"] = await self._get_usage_count(asset["id"])
             asset["last_used"] = await self._get_last_used(asset["id"])
-            
+
         return results
-        
+
     async def get_asset_analytics(
-        self, 
+        self,
         asset_id: str
     ) -> Dict:
         """Get analytics for media asset"""
-        
+
         analytics = {
             "views": await self._get_view_count(asset_id),
             "downloads": await self._get_download_count(asset_id),
@@ -840,21 +840,21 @@ class MediaLibrary:
             ),
             "recommendations": await self._get_similar_assets(asset_id)
         }
-        
+
         return analytics
 
 class MediaSearchEngine:
     """Search engine for media assets"""
-    
+
     def __init__(self):
         self.index = self._initialize_search_index()
-        
+
     async def index_asset(self, asset: MediaAsset):
         """Index asset for search"""
-        
+
         # Extract searchable text
         searchable_text = self._extract_searchable_text(asset)
-        
+
         # Extract visual features for similarity search
         if asset.content_type.startswith("image/"):
             visual_features = await self._extract_visual_features(
@@ -862,7 +862,7 @@ class MediaSearchEngine:
             )
         else:
             visual_features = None
-            
+
         # Index document
         doc = {
             "id": asset.id,
@@ -874,16 +874,16 @@ class MediaSearchEngine:
             "visual_features": visual_features,
             "created_at": asset.created_at
         }
-        
+
         await self.index.add_document(doc)
-        
+
     async def search(self, params: Dict) -> List[Dict]:
         """Execute search query"""
-        
+
         # Parse query
         query = params["query"]
         filters = params.get("filters", {})
-        
+
         # Build search query
         search_query = {
             "multi_match": {
@@ -891,16 +891,16 @@ class MediaSearchEngine:
                 "fields": ["filename^2", "text", "tags^1.5", "metadata.*"]
             }
         }
-        
+
         # Apply filters
         if filters:
             filter_queries = []
-            
+
             if "content_type" in filters:
                 filter_queries.append({
                     "term": {"content_type": filters["content_type"]}
                 })
-                
+
             if "date_range" in filters:
                 filter_queries.append({
                     "range": {
@@ -910,21 +910,21 @@ class MediaSearchEngine:
                         }
                     }
                 })
-                
+
             search_query = {
                 "bool": {
                     "must": search_query,
                     "filter": filter_queries
                 }
             }
-            
+
         # Execute search
         results = await self.index.search(
             search_query,
             size=params.get("limit", 20),
             from_=params.get("offset", 0)
         )
-        
+
         return results
 ```
 
@@ -960,11 +960,11 @@ class ContentDiff:
 
 class ContentVersionControl:
     """Version control system for content"""
-    
+
     def __init__(self, db_session):
         self.db = db_session
         self.diff_engine = DiffEngine()
-        
+
     async def create_version(
         self,
         content_id: str,
@@ -974,18 +974,18 @@ class ContentVersionControl:
         parent_version: Optional[str] = None
     ) -> ContentVersion:
         """Create new version of content"""
-        
+
         # Get current version number
         current_version = await self._get_latest_version(content_id)
         version_number = (current_version.version_number + 1) if current_version else 1
-        
+
         # Calculate content hash
         content_hash = self._calculate_hash(content)
-        
+
         # Check if content actually changed
         if current_version and current_version.content_hash == content_hash:
             raise ValueError("No changes detected in content")
-            
+
         # Create version object
         version = ContentVersion(
             id=self._generate_version_id(),
@@ -998,32 +998,32 @@ class ContentVersionControl:
             created_at=datetime.utcnow(),
             parent_version=parent_version or (current_version.id if current_version else None)
         )
-        
+
         # Store version
         await self.db.content_versions.insert_one(version.dict())
-        
+
         # Update content pointer to latest version
         await self._update_content_pointer(content_id, version.id)
-        
+
         return version
-        
+
     async def get_diff(
         self,
         version_a_id: str,
         version_b_id: str
     ) -> ContentDiff:
         """Get diff between two versions"""
-        
+
         # Retrieve versions
         version_a = await self.get_version(version_a_id)
         version_b = await self.get_version(version_b_id)
-        
+
         # Calculate diff
         changes = self.diff_engine.calculate_diff(
             version_a.content,
             version_b.content
         )
-        
+
         # Create diff object
         diff = ContentDiff(
             version_a=version_a_id,
@@ -1033,9 +1033,9 @@ class ContentVersionControl:
             deletions=sum(1 for c in changes if c["type"] == "delete"),
             modifications=sum(1 for c in changes if c["type"] == "modify")
         )
-        
+
         return diff
-        
+
     async def rollback(
         self,
         content_id: str,
@@ -1044,10 +1044,10 @@ class ContentVersionControl:
         reason: str
     ) -> ContentVersion:
         """Rollback content to specific version"""
-        
+
         # Get target version
         target_version = await self.get_version(target_version_id)
-        
+
         # Create new version with old content
         rollback_version = await self.create_version(
             content_id=content_id,
@@ -1056,21 +1056,21 @@ class ContentVersionControl:
             message=f"Rollback to version {target_version.version_number}: {reason}",
             parent_version=None  # Break the chain to indicate rollback
         )
-        
+
         # Add rollback metadata
         rollback_version.metadata["rollback"] = {
             "from_version": await self._get_latest_version(content_id),
             "to_version": target_version_id,
             "reason": reason
         }
-        
+
         await self.db.content_versions.update_one(
             {"id": rollback_version.id},
             {"$set": {"metadata": rollback_version.metadata}}
         )
-        
+
         return rollback_version
-        
+
     async def merge_versions(
         self,
         version_a_id: str,
@@ -1079,10 +1079,10 @@ class ContentVersionControl:
         author_id: str
     ) -> ContentVersion:
         """Merge two versions of content"""
-        
+
         version_a = await self.get_version(version_a_id)
         version_b = await self.get_version(version_b_id)
-        
+
         # Perform merge based on strategy
         if merge_strategy == "auto":
             merged_content = await self._auto_merge(
@@ -1097,7 +1097,7 @@ class ContentVersionControl:
             )
         else:
             raise ValueError(f"Unknown merge strategy: {merge_strategy}")
-            
+
         # Create merged version
         merged_version = await self.create_version(
             content_id=version_a.content_id,
@@ -1105,27 +1105,27 @@ class ContentVersionControl:
             author_id=author_id,
             message=f"Merge versions {version_a.version_number} and {version_b.version_number}"
         )
-        
+
         # Add merge metadata
         merged_version.metadata["merge"] = {
             "version_a": version_a_id,
             "version_b": version_b_id,
             "strategy": merge_strategy
         }
-        
+
         return merged_version
-        
+
     async def get_version_history(
         self,
         content_id: str,
         limit: int = 50
     ) -> List[ContentVersion]:
         """Get version history for content"""
-        
+
         versions = await self.db.content_versions.find(
             {"content_id": content_id}
         ).sort("version_number", -1).limit(limit).to_list()
-        
+
         # Add diff summary to each version
         for i, version in enumerate(versions):
             if i < len(versions) - 1:
@@ -1138,12 +1138,12 @@ class ContentVersionControl:
                     "deletions": diff.deletions,
                     "modifications": diff.modifications
                 }
-                
+
         return versions
-        
+
     def _calculate_hash(self, content: Any) -> str:
         """Calculate hash of content"""
-        
+
         # Convert content to string representation
         if isinstance(content, dict):
             content_str = json.dumps(content, sort_keys=True)
@@ -1151,20 +1151,20 @@ class ContentVersionControl:
             content_str = json.dumps(content)
         else:
             content_str = str(content)
-            
+
         # Calculate SHA-256 hash
         return hashlib.sha256(content_str.encode()).hexdigest()
 
 class DiffEngine:
     """Engine for calculating content differences"""
-    
+
     def calculate_diff(
         self,
         content_a: Any,
         content_b: Any
     ) -> List[Dict]:
         """Calculate diff between two content objects"""
-        
+
         if isinstance(content_a, str) and isinstance(content_b, str):
             return self._text_diff(content_a, content_b)
         elif isinstance(content_a, dict) and isinstance(content_b, dict):
@@ -1173,19 +1173,19 @@ class DiffEngine:
             return self._list_diff(content_a, content_b)
         else:
             return self._generic_diff(content_a, content_b)
-            
+
     def _text_diff(self, text_a: str, text_b: str) -> List[Dict]:
         """Calculate text diff"""
-        
+
         lines_a = text_a.splitlines()
         lines_b = text_b.splitlines()
-        
+
         diff = difflib.unified_diff(
             lines_a,
             lines_b,
             lineterm=''
         )
-        
+
         changes = []
         for line in diff:
             if line.startswith('+'):
@@ -1200,14 +1200,14 @@ class DiffEngine:
                     "content": line[1:],
                     "line": len(changes)
                 })
-                
+
         return changes
-        
+
     def _dict_diff(self, dict_a: Dict, dict_b: Dict) -> List[Dict]:
         """Calculate dictionary diff"""
-        
+
         changes = []
-        
+
         # Check for added keys
         for key in dict_b:
             if key not in dict_a:
@@ -1216,7 +1216,7 @@ class DiffEngine:
                     "path": key,
                     "value": dict_b[key]
                 })
-                
+
         # Check for deleted keys
         for key in dict_a:
             if key not in dict_b:
@@ -1225,7 +1225,7 @@ class DiffEngine:
                     "path": key,
                     "value": dict_a[key]
                 })
-                
+
         # Check for modified values
         for key in dict_a:
             if key in dict_b and dict_a[key] != dict_b[key]:
@@ -1235,7 +1235,7 @@ class DiffEngine:
                     "old_value": dict_a[key],
                     "new_value": dict_b[key]
                 })
-                
+
         return changes
 ```
 
@@ -1457,19 +1457,19 @@ cache_config = {
         "key": "content:generated:{hash(request)}",
         "ttl": 86400
     },
-    
+
     # Media metadata cache (TTL: 1 hour)
     "media_metadata": {
         "key": "media:metadata:{asset_id}",
         "ttl": 3600
     },
-    
+
     # Version history cache (TTL: 15 minutes)
     "version_history": {
         "key": "content:versions:{content_id}",
         "ttl": 900
     },
-    
+
     # Search results cache (TTL: 5 minutes)
     "search_results": {
         "key": "search:{hash(query)}",

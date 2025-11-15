@@ -25,7 +25,7 @@ describe('User Data Service Interface', () => {
         importData: jest.fn(),
         migrateFromLocalStorage: jest.fn(),
       };
-      
+
       expect(mockService.loadUserData).toBeDefined();
       expect(mockService.saveUserData).toBeDefined();
       expect(mockService.userDataExists).toBeDefined();
@@ -38,7 +38,7 @@ describe('User Data Service Interface', () => {
       expect(mockService.importData).toBeDefined();
       expect(mockService.migrateFromLocalStorage).toBeDefined();
     });
-    
+
     it('should define all required methods from EvaluationOperations', () => {
       const mockService: Partial<IUserDataService> = {
         saveEvaluation: jest.fn(),
@@ -46,25 +46,25 @@ describe('User Data Service Interface', () => {
         loadEvaluationsByType: jest.fn(),
         deleteEvaluation: jest.fn(),
       };
-      
+
       expect(mockService.saveEvaluation).toBeDefined();
       expect(mockService.loadEvaluation).toBeDefined();
       expect(mockService.loadEvaluationsByType).toBeDefined();
       expect(mockService.deleteEvaluation).toBeDefined();
     });
-    
+
     it('should allow optional clearCache method', () => {
       const serviceWithCache: Partial<IUserDataService> = {
         clearCache: jest.fn(),
       };
-      
+
       const serviceWithoutCache: Partial<IUserDataService> = {};
-      
+
       expect(serviceWithCache.clearCache).toBeDefined();
       expect(serviceWithoutCache.clearCache).toBeUndefined();
     });
   });
-  
+
   describe('UserDataServiceConfig', () => {
     it('should accept valid configuration', () => {
       const config: UserDataServiceConfig = {
@@ -73,25 +73,25 @@ describe('User Data Service Interface', () => {
         cacheEnabled: true,
         cacheExpiry: 3600,
       };
-      
+
       expect(config.userId).toBe('user-123');
       expect(config.userEmail).toBe('test@example.com');
       expect(config.cacheEnabled).toBe(true);
       expect(config.cacheExpiry).toBe(3600);
     });
-    
+
     it('should work with minimal configuration', () => {
       const minimalConfig: UserDataServiceConfig = {
         userId: 'user-456',
       };
-      
+
       expect(minimalConfig.userId).toBe('user-456');
       expect(minimalConfig.userEmail).toBeUndefined();
       expect(minimalConfig.cacheEnabled).toBeUndefined();
       expect(minimalConfig.cacheExpiry).toBeUndefined();
     });
   });
-  
+
   describe('UserDataServiceFactory', () => {
     it('should create service instance with factory function', () => {
       const mockFactory: UserDataServiceFactory = (config) => {
@@ -112,7 +112,7 @@ describe('User Data Service Interface', () => {
           deleteEvaluation: jest.fn().mockResolvedValue(undefined),
         };
       };
-      
+
       const service = mockFactory({ userId: 'test-user' });
       expect(service).toBeDefined();
       expect(typeof service.loadUserData).toBe('function');

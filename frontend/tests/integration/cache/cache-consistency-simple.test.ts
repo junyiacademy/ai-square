@@ -1,13 +1,13 @@
 /**
  * Simplified Cache Consistency Test
  * Focus on basic cache functionality only
- * 
+ *
  * Note: Skipped in CI environment due to Redis dependency
  */
 
 describe.skip('Simple Cache Consistency', () => {
   const baseUrl = process.env.API_URL || 'http://localhost:3000';
-  
+
   beforeAll(() => {
     console.log('Cache consistency tests require Redis service - skipping in CI');
   });

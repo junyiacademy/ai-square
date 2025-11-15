@@ -105,7 +105,7 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
           ]
         })
       });
-      
+
       const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 
@@ -125,7 +125,7 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
           ]
         })
       });
-      
+
       const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 
@@ -143,7 +143,7 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
           answers: []
         })
       });
-      
+
       const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 
@@ -161,7 +161,7 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
           answers: []
         })
       });
-      
+
       const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 
@@ -178,7 +178,7 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
           answers: []
         })
       });
-      
+
       const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 
@@ -193,7 +193,7 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
           taskId: 'task-123'
         })
       });
-      
+
       const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 
@@ -209,7 +209,7 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
           answers: 'not-an-array'
         })
       });
-      
+
       const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 
@@ -229,7 +229,7 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
           answers: []
         })
       });
-      
+
       const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 
@@ -251,7 +251,7 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
           ]
         })
       });
-      
+
       const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 
@@ -262,9 +262,9 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
       // Check that interactions were updated with correct answers
       const updateCall = mockTaskRepo.update.mock.calls[0];
       const updatedInteractions = updateCall[1].interactions as IInteraction[];
-      
+
       expect(updatedInteractions).toHaveLength(3);
-      
+
       // Check first interaction (converted to IInteraction format)
       const firstInteraction = updatedInteractions[0];
       expect(firstInteraction.type).toBe('system_event');
@@ -290,7 +290,7 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
           ]
         })
       });
-      
+
       const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 
@@ -299,7 +299,7 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
 
       const updateCall = mockTaskRepo.update.mock.calls[0];
       const updatedInteractions = updateCall[1].interactions as IInteraction[];
-      
+
       // Check all answers are marked as incorrect
       updatedInteractions.forEach((interaction, index) => {
         expect((interaction.content as Record<string, unknown>)?.isCorrect).toBe(false);
@@ -327,7 +327,7 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
           ]
         })
       });
-      
+
       const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 
@@ -336,7 +336,7 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
 
       const updateCall = mockTaskRepo.update.mock.calls[0];
       const updatedInteractions = updateCall[1].interactions as IInteraction[];
-      
+
       // Should be marked as incorrect when no correct answer is defined
       expect((updatedInteractions[0].content as Record<string, unknown>)?.isCorrect).toBe(false);
     });
@@ -349,7 +349,7 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
           answers: []
         })
       });
-      
+
       const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 
@@ -364,7 +364,7 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
         type: 'system_event',
         content: 'Started assessment'
       };
-      
+
       mockTaskRepo.findById.mockResolvedValue({
         ...mockTask,
         interactions: [existingInteraction]
@@ -379,7 +379,7 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
           ]
         })
       });
-      
+
       const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 
@@ -387,7 +387,7 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
 
       const updateCall = mockTaskRepo.update.mock.calls[0];
       const updatedInteractions = updateCall[1].interactions as IInteraction[];
-      
+
       expect(updatedInteractions).toHaveLength(2);
       expect(updatedInteractions[0]).toEqual(existingInteraction);
       expect(updatedInteractions[1].type).toBe('system_event');
@@ -407,11 +407,11 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
           answers: [{ questionId: 'q1', answer: 'a' }]
         })
       });
-      
+
       await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
 
       const updateCall = mockTaskRepo.update.mock.calls[0];
-      
+
       expect(updateCall[1].metadata).toMatchObject({
         ...existingMetadata,
         lastAnsweredAt: expect.any(String)
@@ -429,14 +429,14 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
           ]
         })
       });
-      
+
       const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
-      
+
       expect(response.status).toBe(200);
 
       const updateCall = mockTaskRepo.update.mock.calls[0];
       const updatedInteractions = updateCall[1].interactions as IInteraction[];
-      
+
       // Should default to 0
       expect((updatedInteractions[0].content as Record<string, unknown>)?.timeSpent).toBe(0);
     });
@@ -465,14 +465,14 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
           ]
         })
       });
-      
+
       const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
-      
+
       expect(response.status).toBe(200);
 
       const updateCall = mockTaskRepo.update.mock.calls[0];
       const updatedInteractions = updateCall[1].interactions as IInteraction[];
-      
+
       // Should be correct even with type mismatch
       expect((updatedInteractions[0].content as Record<string, unknown>)?.isCorrect).toBe(true);
     });
@@ -487,7 +487,7 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
           answers: [{ questionId: 'q1', answer: 'a' }]
         })
       });
-      
+
       await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
 
       expect(mockTaskRepo.updateStatus).toHaveBeenCalledWith('task-123', 'active');
@@ -506,7 +506,7 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
           answers: [{ questionId: 'q1', answer: 'a' }]
         })
       });
-      
+
       await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
 
       expect(mockTaskRepo.updateStatus).not.toHaveBeenCalled();
@@ -525,7 +525,7 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
           answers: [{ questionId: 'q1', answer: 'a' }]
         })
       });
-      
+
       await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
 
       expect(mockTaskRepo.updateStatus).not.toHaveBeenCalled();
@@ -546,14 +546,14 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
           answers: [{ questionId: 'q1', answer: 'a' }]
         })
       });
-      
+
       const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
-      
+
       expect(response.status).toBe(200);
 
       const updateCall = mockTaskRepo.update.mock.calls[0];
       const updatedInteractions = updateCall[1].interactions as IInteraction[];
-      
+
       // All should be marked as incorrect when question not found
       expect((updatedInteractions[0].content as Record<string, unknown>)?.isCorrect).toBe(false);
     });
@@ -571,9 +571,9 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
           answers: [{ questionId: 'q1', answer: 'a' }]
         })
       });
-      
+
       const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
-      
+
       expect(response.status).toBe(200);
     });
 
@@ -599,14 +599,14 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
           answers: [{ questionId: 'q1', answer: 'a' }]
         })
       });
-      
+
       const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
-      
+
       expect(response.status).toBe(200);
 
       const updateCall = mockTaskRepo.update.mock.calls[0];
       const updatedInteractions = updateCall[1].interactions as IInteraction[];
-      
+
       expect((updatedInteractions[0].content as Record<string, unknown>)?.ksa_mapping).toBeUndefined();
     });
   });
@@ -622,7 +622,7 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
           answers: []
         })
       });
-      
+
       const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 
@@ -644,7 +644,7 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
           answers: [{ questionId: 'q1', answer: 'a' }]
         })
       });
-      
+
       const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 
@@ -657,7 +657,7 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
         method: 'POST',
         body: 'invalid json'
       });
-      
+
       const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 

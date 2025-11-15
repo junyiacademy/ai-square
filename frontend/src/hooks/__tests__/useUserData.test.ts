@@ -6,10 +6,10 @@ describe('useUserData', () => {
     const { result } = renderHook(() => useUserData());
     expect(result.current).toBeDefined();
   });
-  
+
   it('should handle state changes', async () => {
     const { result } = renderHook(() => useUserData());
-    
+
     await act(async () => {
       // Trigger state change if applicable
       await waitFor(() => {
@@ -17,10 +17,10 @@ describe('useUserData', () => {
       });
     });
   });
-  
+
   it('should cleanup on unmount', () => {
     const { unmount } = renderHook(() => useUserData());
-    
+
     expect(() => {
       unmount();
     }).not.toThrow();

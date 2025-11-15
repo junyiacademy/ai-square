@@ -80,10 +80,10 @@ describe('API Route: /api/pbl/scenarios/[id]/programs', () => {
     it('should return user programs for a scenario', async () => {
       // Setup mocks
       (getUnifiedAuth as jest.Mock).mockResolvedValue(mockSession);
-      
+
       // Use a proper UUID for this test
       const scenarioUuid = '123e4567-e89b-12d3-a456-426614174000';
-      
+
       const { repositoryFactory } = require('@/lib/repositories/base/repository-factory');
       const mockUserRepo = {
         findByEmail: jest.fn().mockResolvedValue(mockUser)
@@ -94,7 +94,7 @@ describe('API Route: /api/pbl/scenarios/[id]/programs', () => {
       const mockTaskRepo = {
         findByProgram: jest.fn().mockResolvedValue([mockTask])
       };
-      
+
       repositoryFactory.getUserRepository.mockReturnValue(mockUserRepo);
       repositoryFactory.getProgramRepository.mockReturnValue(mockProgramRepo);
       repositoryFactory.getTaskRepository.mockReturnValue(mockTaskRepo);
@@ -103,10 +103,10 @@ describe('API Route: /api/pbl/scenarios/[id]/programs', () => {
       const request = new NextRequest(`http://localhost:3000/api/pbl/scenarios/${scenarioUuid}/programs`, {
         method: 'GET',
       });
-      
+
       const response = await GET(request, { params: Promise.resolve({ id: scenarioUuid }) });
       const data = await response.json();
-      
+
       // Assertions
       expect(response.status).toBe(200);
       expect(data.success).toBe(true);
@@ -117,10 +117,10 @@ describe('API Route: /api/pbl/scenarios/[id]/programs', () => {
 
     it('should handle non-UUID scenario IDs', async () => {
       (getUnifiedAuth as jest.Mock).mockResolvedValue(mockSession);
-      
+
       const { scenarioIndexService } = require('@/lib/services/scenario-index-service');
       scenarioIndexService.getUuidByYamlId.mockResolvedValue('scenario-uuid-123');
-      
+
       const { repositoryFactory } = require('@/lib/repositories/base/repository-factory');
       const mockUserRepo = {
         findByEmail: jest.fn().mockResolvedValue(mockUser)
@@ -131,7 +131,7 @@ describe('API Route: /api/pbl/scenarios/[id]/programs', () => {
       const mockTaskRepo = {
         findByProgram: jest.fn().mockResolvedValue([])
       };
-      
+
       repositoryFactory.getUserRepository.mockReturnValue(mockUserRepo);
       repositoryFactory.getProgramRepository.mockReturnValue(mockProgramRepo);
       repositoryFactory.getTaskRepository.mockReturnValue(mockTaskRepo);
@@ -139,9 +139,9 @@ describe('API Route: /api/pbl/scenarios/[id]/programs', () => {
       const request = new NextRequest('http://localhost:3000/api/pbl/scenarios/yaml-scenario-id/programs', {
         method: 'GET',
       });
-      
+
       const response = await GET(request, { params: Promise.resolve({ id: 'yaml-scenario-id' }) });
-      
+
       expect(response.status).toBe(200);
       expect(scenarioIndexService.getUuidByYamlId).toHaveBeenCalledWith('yaml-scenario-id');
       expect(mockProgramRepo.findByScenario).toHaveBeenCalledWith('scenario-uuid-123');
@@ -149,14 +149,14 @@ describe('API Route: /api/pbl/scenarios/[id]/programs', () => {
 
     it('should return 401 when not authenticated', async () => {
       (getUnifiedAuth as jest.Mock).mockResolvedValue(null);
-      
+
       const request = new NextRequest('http://localhost:3000/api/pbl/scenarios/scenario-123/programs', {
         method: 'GET',
       });
-      
+
       const response = await GET(request, { params: Promise.resolve({ id: 'scenario-123' }) });
       const data = await response.json();
-      
+
       expect(response.status).toBe(401);
       expect(data.success).toBe(false);
       expect(data.error).toBe('Authentication required');
@@ -164,17 +164,17 @@ describe('API Route: /api/pbl/scenarios/[id]/programs', () => {
 
     it('should return 404 when scenario not found', async () => {
       (getUnifiedAuth as jest.Mock).mockResolvedValue(mockSession);
-      
+
       const { scenarioIndexService } = require('@/lib/services/scenario-index-service');
       scenarioIndexService.getUuidByYamlId.mockResolvedValue(null);
-      
+
       const request = new NextRequest('http://localhost:3000/api/pbl/scenarios/invalid-id/programs', {
         method: 'GET',
       });
-      
+
       const response = await GET(request, { params: Promise.resolve({ id: 'invalid-id' }) });
       const data = await response.json();
-      
+
       expect(response.status).toBe(404);
       expect(data.success).toBe(false);
       expect(data.error).toBe('Scenario not found');
@@ -182,10 +182,10 @@ describe('API Route: /api/pbl/scenarios/[id]/programs', () => {
 
     it('should auto-fix tasks with completedAt but wrong status', async () => {
       (getUnifiedAuth as jest.Mock).mockResolvedValue(mockSession);
-      
+
       // Use a proper UUID for this test
       const scenarioUuid = '123e4567-e89b-12d3-a456-426614174000';
-      
+
       const { repositoryFactory } = require('@/lib/repositories/base/repository-factory');
       const mockUserRepo = {
         findByEmail: jest.fn().mockResolvedValue(mockUser)
@@ -193,21 +193,21 @@ describe('API Route: /api/pbl/scenarios/[id]/programs', () => {
       const mockProgramRepo = {
         findByScenario: jest.fn().mockResolvedValue([{ ...mockProgram, scenarioId: scenarioUuid }])
       };
-      
+
       // Task with completedAt but wrong status
       const brokenTask = {
         ...mockTask,
         completedAt: '2025-08-12T12:00:00Z',
         status: 'active' // Should be 'completed'
       };
-      
+
       const mockTaskRepo = {
         findByProgram: jest.fn()
           .mockResolvedValueOnce([brokenTask]) // First call returns broken task
           .mockResolvedValueOnce([{ ...brokenTask, status: 'completed' }]), // After fix
         update: jest.fn().mockResolvedValue(true)
       };
-      
+
       repositoryFactory.getUserRepository.mockReturnValue(mockUserRepo);
       repositoryFactory.getProgramRepository.mockReturnValue(mockProgramRepo);
       repositoryFactory.getTaskRepository.mockReturnValue(mockTaskRepo);
@@ -215,9 +215,9 @@ describe('API Route: /api/pbl/scenarios/[id]/programs', () => {
       const request = new NextRequest(`http://localhost:3000/api/pbl/scenarios/${scenarioUuid}/programs`, {
         method: 'GET',
       });
-      
+
       const response = await GET(request, { params: Promise.resolve({ id: scenarioUuid }) });
-      
+
       expect(response.status).toBe(200);
       expect(mockTaskRepo.update).toHaveBeenCalledWith('task-123', {
         status: 'completed',

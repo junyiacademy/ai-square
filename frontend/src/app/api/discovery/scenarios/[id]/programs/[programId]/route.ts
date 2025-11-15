@@ -21,23 +21,23 @@ export async function GET(
 
     const { id: scenarioId, programId } = await params;
     const userId = session.user.id; // Get user ID
-    
+
     // Get language from query param
     const { searchParams } = new URL(request.url);
     const lang = normalizeLanguageCode(searchParams.get('lang') || 'en');
-    
+
     // Get repositories
     const programRepo = repositoryFactory.getProgramRepository();
     const taskRepo = repositoryFactory.getTaskRepository();
     const scenarioRepo = repositoryFactory.getScenarioRepository();
-    
+
     // Load program from repository
     const program = await programRepo.findById(programId);
-    
+
     if (!program) {
       return NextResponse.json({ error: 'Program not found' }, { status: 404 });
     }
-    
+
     // Verify this program belongs to the current user and scenario
     if (program.userId !== userId || program.scenarioId !== scenarioId) {
       console.log('Authorization check failed:', {
@@ -48,40 +48,40 @@ export async function GET(
       });
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
-    
+
     // Load all tasks for this program
     const allTasks = await taskRepo.findByProgram(programId);
     const taskMap = new Map(allTasks.map(t => [t.id, t]));
-    
+
     // Get tasks in the correct order based on program.taskIds
     const taskIds = (program.metadata?.taskIds || []) as string[];
     const tasks = taskIds
       .map((id: string) => taskMap.get(id))
       .filter(Boolean) as unknown as ITask[];
-    
+
     // Debug logging
     console.log('Program task order:', {
       programId: program.id,
       taskIds: taskIds,
       orderedTaskTitles: tasks.map(t => ({ id: t.id, title: t.title, status: t.status, index: t.scenarioTaskIndex }))
     });
-    
+
     // Calculate completed tasks and total XP
     let completedCount = 0;
     let totalXP = 0;
-    
+
     const tasksSummary = tasks.map((task, index) => {
       const xp = (task.content as Record<string, unknown>)?.xp as number || 0;
-      
+
       // Calculate statistics from interactions
       let actualXP = 0;
       let attempts = 0;
       let passCount = 0;
-      
+
       if (task.interactions && task.interactions.length > 0) {
         // Count user attempts
         attempts = task.interactions.filter(i => i.type === 'user_input').length;
-        
+
         // Count successful attempts and find highest XP
         const aiResponses = task.interactions.filter(i => i.type === 'ai_response');
         aiResponses.forEach(response => {
@@ -93,18 +93,18 @@ export async function GET(
             }
           }
         });
-        
+
         // If task is completed but actualXP is 0, use the evaluation score or default XP
         if (task.status === 'completed' && actualXP === 0) {
           actualXP = xp; // Use default XP since evaluation is not directly on task
         }
       }
-      
+
       if (task.status === 'completed') {
         completedCount++;
         totalXP += actualXP || xp; // Use actual XP if available, otherwise default
       }
-      
+
       // Determine display status for UI
       let displayStatus: string = task.status;
       if (task.status === 'pending' && index === completedCount) {
@@ -112,7 +112,7 @@ export async function GET(
       } else if (task.status === 'pending' && index > completedCount) {
         displayStatus = 'locked'; // Future tasks
       }
-      
+
       return {
         id: task.id,
         title: (() => {
@@ -161,7 +161,7 @@ export async function GET(
         passCount: passCount > 0 ? passCount : undefined
       };
     });
-    
+
     // Update program metadata if needed
     if (program.metadata?.totalXP !== totalXP) {
       await programRepo.update?.(programId, {
@@ -171,10 +171,10 @@ export async function GET(
         }
       });
     }
-    
+
     // Load scenario info for career details
     const scenario = await scenarioRepo.findById(scenarioId);
-    
+
     // Return data in format expected by frontend
     const responseData = {
       id: program.id,
@@ -192,13 +192,13 @@ export async function GET(
       metadata: program.metadata,
       // Add career info from scenario
       careerType: scenario?.sourceMetadata && (scenario.sourceMetadata as Record<string, unknown>)?.careerType as string || 'unknown',
-      scenarioTitle: scenario?.title ? 
-        (typeof scenario.title === 'object' && scenario.title !== null ? 
-          (scenario.title as Record<string, string>)[lang] || (scenario.title as Record<string, string>)['en'] || 'Discovery Scenario' : 
-          scenario.title as string) : 
+      scenarioTitle: scenario?.title ?
+        (typeof scenario.title === 'object' && scenario.title !== null ?
+          (scenario.title as Record<string, string>)[lang] || (scenario.title as Record<string, string>)['en'] || 'Discovery Scenario' :
+          scenario.title as string) :
         'Discovery Scenario'
     };
-    
+
     return NextResponse.json(responseData, { headers });
   } catch (error) {
     console.error('Error in GET /api/discovery/scenarios/[id]/programs/[programId]:', error);

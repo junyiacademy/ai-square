@@ -74,13 +74,13 @@ export async function POST(request: NextRequest) {
         userData.onboarding.welcomeCompleted = true;
         userData.onboarding.welcomeCompletedAt = new Date().toISOString();
         break;
-      
+
       case 'identity':
         userData.onboarding.identityCompleted = true;
         userData.onboarding.identityCompletedAt = new Date().toISOString();
         userData.identity = data.identity;
         break;
-      
+
       case 'goals':
         userData.onboarding.goalsCompleted = true;
         userData.onboarding.goalsCompletedAt = new Date().toISOString();

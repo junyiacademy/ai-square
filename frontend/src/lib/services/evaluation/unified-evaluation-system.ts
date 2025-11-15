@@ -3,11 +3,11 @@
  * 提供跨模組的評估功能
  */
 
-import { 
-  IEvaluationSystem, 
-  IEvaluation, 
-  ITask, 
-  IProgram, 
+import {
+  IEvaluationSystem,
+  IEvaluation,
+  ITask,
+  IProgram,
   IEvaluationContext,
   IInteraction
 } from '@/types/unified-learning';
@@ -43,14 +43,14 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
     const scores = taskEvaluations
       .filter(e => e.score !== undefined)
       .map(e => e.score!);
-    
-    const averageScore = scores.length > 0 
-      ? scores.reduce((a, b) => a + b, 0) / scores.length 
+
+    const averageScore = scores.length > 0
+      ? scores.reduce((a, b) => a + b, 0) / scores.length
       : undefined;
 
     // 彙整維度分數
     const dimensionMap = new Map<string, { total: number; count: number; maxTotal: number }>();
-    
+
     taskEvaluations.forEach(evaluation => {
       if (evaluation.domainScores) {
         Object.entries(evaluation.domainScores).forEach(([dim, score]: [string, number]) => {
@@ -110,14 +110,14 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
    */
   async generateFeedback(evaluation: IEvaluation, language: string): Promise<string> {
     const prompt = this.buildFeedbackPrompt(evaluation, language);
-    
+
     try {
       const response = await this.aiService.generateContent({
         prompt,
         maxTokens: 500,
         temperature: 0.7
       });
-      
+
       return response.content || evaluation.feedbackText || 'No feedback available';
     } catch (error) {
       console.error('Error generating feedback:', error);
@@ -130,10 +130,10 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
    */
   private async evaluatePBLTask(task: ITask, context: IEvaluationContext): Promise<IEvaluation> {
     const interactions = task.interactions;
-    
+
     // 分析對話品質
     const qualityScore = this.analyzePBLInteractionQuality(interactions);
-    
+
     // KSA 維度評分
     const domainScores: Record<string, number> = {
       knowledge: qualityScore.knowledge,
@@ -177,12 +177,12 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
   private async evaluateAssessmentTask(task: ITask, context: IEvaluationContext): Promise<IEvaluation> {
     const interactions = task.interactions;
     const questions = (task.content.context as Record<string, unknown>)?.questions as unknown[] || [];
-    
+
     // 計算正確率
-    const correctAnswers = interactions.filter(i => 
+    const correctAnswers = interactions.filter(i =>
       i.type === 'user_input' && i.metadata?.isCorrect === true
     ).length;
-    
+
     const score = questions.length > 0 ? (correctAnswers / questions.length) * 100 : 0;
 
     // 領域分數
@@ -222,7 +222,7 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
    */
   private async evaluateDiscoveryTask(task: ITask, context: IEvaluationContext): Promise<IEvaluation> {
     const interactions = task.interactions;
-    
+
     // 計算探索品質
     const explorationQuality = this.analyzeExplorationQuality(interactions);
     const xpEarned = Math.round(explorationQuality * 100);
@@ -262,7 +262,7 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
   private async evaluateGenericTask(task: ITask, context: IEvaluationContext): Promise<IEvaluation> {
     const interactions = task.interactions;
     const hasInteractions = interactions.length > 0;
-    
+
     return {
       id: uuidv4(),
       taskId: task.id,
@@ -296,10 +296,10 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
   private analyzePBLInteractionQuality(interactions: IInteraction[]): { knowledge: number; skills: number; attitudes: number } {
     // 簡化的品質分析邏輯
     const userInputs = interactions.filter(i => i.type === 'user_input');
-    
+
     // 基於互動深度給分
     const interactionDepth = Math.min(userInputs.length / 5, 1) * 100;
-    
+
     return {
       knowledge: interactionDepth * 0.9,
       skills: interactionDepth * 0.85,
@@ -312,7 +312,7 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
    */
   private calculateDomainScores(interactions: IInteraction[], questions: { domain?: string; [key: string]: unknown }[]): Record<string, number> {
     const domainMap = new Map<string, { correct: number; total: number }>();
-    
+
     interactions.forEach((interaction, index) => {
       if (interaction.type === 'user_input' && questions[index]) {
         const domain = questions[index].domain || 'general';
@@ -340,9 +340,9 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
     // 簡化的探索品質分析
     const totalInteractions = interactions.length;
     const userActions = interactions.filter(i => i.type === 'user_input').length;
-    
+
     if (totalInteractions === 0) return 0;
-    
+
     const engagementRate = userActions / totalInteractions;
     return Math.min(engagementRate * 1.5, 1); // 最高 1.0
   }
@@ -355,9 +355,9 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
     const averageScore = taskEvaluations
       .filter(e => e.score !== undefined)
       .reduce((sum, e) => sum + e.score!, 0) / completedTasks || 0;
-    
+
     const level = this.getScoreLevel(averageScore);
-    
+
     return `You have completed ${completedTasks} tasks with an average score of ${averageScore.toFixed(1)}%. ` +
            `Your overall performance is ${level}. Keep up the great work!`;
   }
@@ -367,21 +367,21 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
    */
   private buildFeedbackPrompt(evaluation: IEvaluation, language: string): string {
     return `Generate constructive feedback in ${language} for a learning evaluation:
-    
+
     Type: ${evaluation.evaluationType}
     Score: ${evaluation.score || 'N/A'}
     Target: ${evaluation.evaluationType}
-    
+
     ${evaluation.domainScores ? `
     Dimension Scores:
     ${Object.entries(evaluation.domainScores).map(([d, score]: [string, number]) => `- ${d}: ${score}/100`).join('\n')}
     ` : ''}
-    
+
     Please provide:
     1. Positive reinforcement for achievements
     2. Specific areas for improvement
     3. Actionable next steps
-    
+
     Keep the feedback encouraging and constructive.`;
   }
 
@@ -390,10 +390,10 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
    */
   private calculateCompletionTime(program: IProgram): number {
     if (!program.startedAt || !program.completedAt) return 0;
-    
+
     const start = new Date(program.startedAt).getTime();
     const end = new Date(program.completedAt).getTime();
-    
+
     return Math.round((end - start) / 1000); // 秒數
   }
 
@@ -402,10 +402,10 @@ export class UnifiedEvaluationSystem implements IEvaluationSystem {
    */
   private calculateTimeSpent(task: ITask): number {
     if (!task.startedAt || !task.completedAt) return 0;
-    
+
     const start = new Date(task.startedAt).getTime();
     const end = new Date(task.completedAt).getTime();
-    
+
     return Math.round((end - start) / 1000); // 秒數
   }
 

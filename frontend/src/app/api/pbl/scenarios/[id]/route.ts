@@ -297,7 +297,7 @@ export async function GET(
           const multilingualPrereqs = metadata.multilingualPrerequisites as Record<string, string[]>;
           return multilingualPrereqs[lang] || multilingualPrereqs.en || [];
         }
-        
+
         // Fallback to database prerequisites (English only for legacy data)
         const dbPrerequisites = scenarioResult.prerequisites;
         if (Array.isArray(dbPrerequisites) && dbPrerequisites.length > 0) {

@@ -107,7 +107,7 @@ export async function GET(
   } catch (error) {
     console.error('Error in GET /api/discovery/programs/[programId]/tasks:', error);
     return NextResponse.json(
-      { 
+      {
         success: false,
         error: 'Internal server error',
         meta: {
@@ -242,7 +242,7 @@ export async function POST(
   } catch (error) {
     console.error('Error in POST /api/discovery/programs/[programId]/tasks:', error);
     return NextResponse.json(
-      { 
+      {
         success: false,
         error: 'Internal server error',
         meta: {

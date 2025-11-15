@@ -42,9 +42,9 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <a 
-                  href="https://github.com/anthropics/claude-code/issues" 
-                  target="_blank" 
+                <a
+                  href="https://github.com/anthropics/claude-code/issues"
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-white transition-colors"
                 >
@@ -69,8 +69,8 @@ export function Footer() {
             <h3 className="text-white font-semibold mb-4">{t('footer.contact', 'Contact')}</h3>
             <ul className="space-y-2">
               <li>
-                <a 
-                  href="mailto:support@junyiacademy.org" 
+                <a
+                  href="mailto:support@junyiacademy.org"
                   className="hover:text-white transition-colors"
                 >
                   support@junyiacademy.org

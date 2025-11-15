@@ -22,7 +22,7 @@ export abstract class UnifiedLearningError extends Error {
     this.code = code;
     this.statusCode = statusCode;
     this.details = details;
-    
+
     // 確保原型鏈正確
     Object.setPrototypeOf(this, new.target.prototype);
   }
@@ -231,7 +231,7 @@ export class ErrorHandler {
     request: Request
   ): Promise<Response> {
     const handled = ErrorHandler.handle(error);
-    
+
     // 記錄錯誤
     console.error('API Error:', {
       url: request.url,
@@ -268,8 +268,8 @@ export class ErrorHandler {
       shouldRetry?: (error: unknown, attempt: number) => boolean;
     } = {}
   ): Promise<T> {
-    const { 
-      maxRetries = 3, 
+    const {
+      maxRetries = 3,
       delay = 1000,
       shouldRetry = (error) => !(error instanceof ValidationError || error instanceof UnauthorizedError)
     } = options;
@@ -281,7 +281,7 @@ export class ErrorHandler {
         return await fn();
       } catch (error) {
         lastError = error;
-        
+
         if (!shouldRetry(error, attempt) || attempt === maxRetries - 1) {
           throw error;
         }

@@ -119,5 +119,3 @@ describe('/api/admin/fix-demo-accounts', () => {
     expect(result.error).toBe('Failed to fix demo accounts');
   });
 });
-
-

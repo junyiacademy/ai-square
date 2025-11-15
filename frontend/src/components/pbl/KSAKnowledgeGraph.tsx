@@ -107,7 +107,7 @@ export default function KSAKnowledgeGraph({ ksaScores, title, ksaMapping }: KSAK
 
     // Create links
     const links: Link[] = [];
-    
+
     // Connect center to categories
     categories.forEach(cat => {
       links.push({ source: 'center', target: cat.id });
@@ -175,11 +175,11 @@ export default function KSAKnowledgeGraph({ ksaScores, title, ksaMapping }: KSAK
         event.stopPropagation();
         if (d.score !== undefined) {
           setSelectedNode(d);
-          
+
           // Center the clicked node with animation
           const scale = 1.5;
           const translate = [width / 2 - scale * d.x!, height / 2 - scale * d.y!];
-          
+
           svg.transition()
             .duration(750)
             .call(
@@ -298,7 +298,7 @@ export default function KSAKnowledgeGraph({ ksaScores, title, ksaMapping }: KSAK
   // Update visual selection state
   useEffect(() => {
     if (!svgRef.current) return;
-    
+
     d3.select(svgRef.current)
       .selectAll('.node-circle')
       .transition()
@@ -334,13 +334,13 @@ export default function KSAKnowledgeGraph({ ksaScores, title, ksaMapping }: KSAK
   return (
     <div ref={containerRef} className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
       <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">{title}</h3>
-      
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Knowledge Graph on the left */}
         <div>
           <div className="relative">
-            <svg 
-              ref={svgRef} 
+            <svg
+              ref={svgRef}
               className="w-full border border-gray-200 dark:border-gray-700 rounded-lg"
               style={{ cursor: 'grab' }}
             ></svg>
@@ -390,7 +390,7 @@ export default function KSAKnowledgeGraph({ ksaScores, title, ksaMapping }: KSAK
               </button>
             </div>
           </div>
-          
+
           {/* Legend and Instructions */}
           <div className="mt-4 space-y-3">
             <div className="flex flex-wrap justify-center gap-4 text-sm">
@@ -417,7 +417,7 @@ export default function KSAKnowledgeGraph({ ksaScores, title, ksaMapping }: KSAK
             </div>
           </div>
         </div>
-        
+
         {/* Selected Node Details on the right */}
         <div>
           {selectedNode && selectedNode.score !== undefined ? (
@@ -466,12 +466,12 @@ export default function KSAKnowledgeGraph({ ksaScores, title, ksaMapping }: KSAK
                   )}
                 </div>
               )}
-              
+
               <div className="pt-4 border-t border-gray-200 dark:border-gray-600">
                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
                   This competency is part of your AI literacy <span className="font-medium">{selectedNode.category}</span> assessment.
                 </p>
-                
+
                 {selectedNode.score < 80 && (
                   <div className="mt-4 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-200 dark:border-amber-700">
                     <p className="text-sm text-amber-800 dark:text-amber-200 flex items-start gap-2">
@@ -482,7 +482,7 @@ export default function KSAKnowledgeGraph({ ksaScores, title, ksaMapping }: KSAK
                     </p>
                   </div>
                 )}
-                
+
                 {selectedNode.score >= 80 && (
                   <div className="mt-4 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-700">
                     <p className="text-sm text-green-800 dark:text-green-200 flex items-start gap-2">

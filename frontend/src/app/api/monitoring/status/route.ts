@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
       },
       performance: {
         totalEndpoints: perfReport.length,
-        averageResponseTime: perfReport.length > 0 ? 
+        averageResponseTime: perfReport.length > 0 ?
           perfReport.reduce((sum, m) => sum + m.averageResponseTime, 0) / perfReport.length : 0,
         cacheHitRate: perfReport.length > 0 ?
           perfReport.reduce((sum, m) => sum + m.cacheHitRate, 0) / perfReport.length : 0,
@@ -54,7 +54,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error('Error getting monitoring status:', error);
     return NextResponse.json(
-      { 
+      {
         error: 'Failed to get monitoring status',
         timestamp: new Date().toISOString(),
         health: 'unhealthy'

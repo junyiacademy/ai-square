@@ -28,7 +28,7 @@ export function Header({ selectedFile, currentBranch, isOnMain, isLoading, onSav
             <p className="text-xs text-gray-500">Content Management System</p>
           </div>
         </div>
-        
+
         {selectedFile && (
           <div className="flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-xl">
             <FileText className="w-4 h-4 text-gray-400" />
@@ -38,12 +38,12 @@ export function Header({ selectedFile, currentBranch, isOnMain, isLoading, onSav
           </div>
         )}
       </div>
-      
+
       <div className="flex items-center gap-3">
         {/* Current branch indicator */}
         <div className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-300 ${
-          isOnMain 
-            ? 'bg-gray-100 text-gray-600' 
+          isOnMain
+            ? 'bg-gray-100 text-gray-600'
             : 'bg-gradient-to-r from-blue-50 to-indigo-50 text-indigo-700 border border-indigo-200'
         }`}>
           {isLoading ? (
@@ -53,7 +53,7 @@ export function Header({ selectedFile, currentBranch, isOnMain, isLoading, onSav
           )}
           <span>{currentBranch}</span>
         </div>
-        
+
         {/* Switch to main button - only show when not on main */}
         {!isOnMain && (
           <button

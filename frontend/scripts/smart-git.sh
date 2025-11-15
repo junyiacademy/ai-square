@@ -58,7 +58,7 @@ fi
 echo ""
 if [ "$UNSTAGED" -gt 0 ] || [ "$UNTRACKED" -gt 0 ]; then
     echo -e "${YELLOW}📝 有未暫存的變更：${NC}"
-    
+
     # 顯示變更摘要
     if [ "$UNSTAGED" -gt 0 ]; then
         echo -e "${BLUE}修改的檔案：${NC}"
@@ -67,7 +67,7 @@ if [ "$UNSTAGED" -gt 0 ] || [ "$UNTRACKED" -gt 0 ]; then
             echo "  ... 還有 $((UNSTAGED - 5)) 個檔案"
         fi
     fi
-    
+
     if [ "$UNTRACKED" -gt 0 ]; then
         echo -e "${CYAN}新檔案：${NC}"
         git ls-files --others --exclude-standard | head -5 | sed 's/^/  • /'
@@ -75,7 +75,7 @@ if [ "$UNSTAGED" -gt 0 ] || [ "$UNTRACKED" -gt 0 ]; then
             echo "  ... 還有 $((UNTRACKED - 5)) 個檔案"
         fi
     fi
-    
+
     echo ""
     echo "要如何處理？"
     echo "  a) 加入所有檔案 (git add -A)"
@@ -84,7 +84,7 @@ if [ "$UNSTAGED" -gt 0 ] || [ "$UNTRACKED" -gt 0 ]; then
     echo "  q) 退出"
     echo ""
     read -p "選擇 (a/i/s/q): " add_choice
-    
+
     case $add_choice in
         a)
             echo -e "${GREEN}加入所有檔案...${NC}"
@@ -167,29 +167,29 @@ echo -e "${CYAN}🎯 執行策略：${NC}"
 if [ "$RISK_LEVEL" = "LOW" ]; then
     echo -e "  ${GREEN}✓ 可以直接提交和推送${NC}"
     DEFAULT_ACTION="1"
-    
+
     echo ""
     echo "  1) 快速提交+推送 (無檢查) ⚡ [預設]"
     echo "  2) 安全提交+推送 (基本檢查)"
     echo "  3) 完整檢查後提交+推送"
     echo "  4) 只提交，不推送"
     echo "  5) 取消"
-    
+
 elif [ "$RISK_LEVEL" = "MEDIUM" ]; then
     echo -e "  ${YELLOW}建議執行基本檢查 (約15秒)${NC}"
     DEFAULT_ACTION="2"
-    
+
     echo ""
     echo "  1) 快速提交+推送 (無檢查)"
     echo "  2) 安全提交+推送 (lint+type) ⚡ [預設]"
     echo "  3) 完整檢查後提交+推送"
     echo "  4) 只提交，不推送"
     echo "  5) 取消"
-    
+
 else
     echo -e "  ${RED}強烈建議完整檢查 (約45秒)${NC}"
     DEFAULT_ACTION="3"
-    
+
     echo ""
     echo "  1) 快速提交+推送 (風險自負) ⚠️"
     echo "  2) 安全提交+推送 (基本檢查)"
@@ -208,12 +208,12 @@ action=${action:-$DEFAULT_ACTION}
 if [ "$action" != "5" ]; then
     echo ""
     echo -e "${CYAN}📝 提交訊息：${NC}"
-    
+
     # 顯示最近提交作為參考
     echo -e "${BLUE}最近的提交：${NC}"
     git log --oneline -3 | sed 's/^/  /'
     echo ""
-    
+
     # 智能建議提交類型
     if [ "$CONFIG_COUNT" -gt 0 ]; then
         SUGGESTED_TYPE="chore"
@@ -226,14 +226,14 @@ if [ "$action" != "5" ]; then
     else
         SUGGESTED_TYPE="docs"
     fi
-    
+
     echo -e "建議類型: ${YELLOW}$SUGGESTED_TYPE${NC}"
     echo "格式: <type>: <description>"
     echo "類型: feat|fix|docs|style|refactor|test|chore"
     echo ""
-    
+
     read -p "提交訊息: " commit_msg
-    
+
     if [ -z "$commit_msg" ]; then
         # 提供預設訊息
         if [ "$SAFE_COUNT" -eq "$STAGED" ]; then
@@ -255,80 +255,80 @@ case $action in
         # 快速提交+推送
         echo ""
         echo -e "${YELLOW}⚡ 快速模式 - 跳過所有檢查${NC}"
-        
+
         echo -e "${BLUE}提交中...${NC}"
         git commit --no-verify -m "$commit_msg"
-        
+
         echo -e "${BLUE}推送中...${NC}"
         git push origin $CURRENT_BRANCH --no-verify
-        
+
         echo -e "${GREEN}✅ 完成！${NC}"
         ;;
-        
+
     2)
         # 安全提交+推送
         echo ""
         echo -e "${BLUE}🛡️ 安全模式 - 執行基本檢查${NC}"
-        
+
         echo -e "${BLUE}執行 ESLint...${NC}"
         npm run lint || { echo -e "${RED}❌ Lint 失敗${NC}"; exit 1; }
-        
+
         echo -e "${BLUE}執行 TypeScript 檢查...${NC}"
         npm run typecheck || { echo -e "${RED}❌ TypeScript 檢查失敗${NC}"; exit 1; }
-        
+
         echo -e "${GREEN}✓ 檢查通過${NC}"
-        
+
         echo -e "${BLUE}提交中...${NC}"
         git commit -m "$commit_msg"
-        
+
         echo -e "${BLUE}推送中...${NC}"
         git push origin $CURRENT_BRANCH
-        
+
         echo -e "${GREEN}✅ 完成！${NC}"
         ;;
-        
+
     3)
         # 完整檢查
         echo ""
         echo -e "${BLUE}🔒 完整模式 - 執行所有檢查${NC}"
-        
+
         echo -e "${BLUE}執行 ESLint...${NC}"
         npm run lint || { echo -e "${RED}❌ Lint 失敗${NC}"; exit 1; }
-        
+
         echo -e "${BLUE}執行 TypeScript 檢查...${NC}"
         npm run typecheck || { echo -e "${RED}❌ TypeScript 檢查失敗${NC}"; exit 1; }
-        
+
         echo -e "${BLUE}執行測試...${NC}"
         npm run test:ci || { echo -e "${RED}❌ 測試失敗${NC}"; exit 1; }
-        
+
         echo -e "${GREEN}✓ 所有檢查通過${NC}"
-        
+
         echo -e "${BLUE}提交中...${NC}"
         git commit -m "$commit_msg"
-        
+
         echo -e "${BLUE}推送中...${NC}"
         git push origin $CURRENT_BRANCH
-        
+
         echo -e "${GREEN}✅ 完成！${NC}"
         ;;
-        
+
     4)
         # 只提交
         echo ""
         echo -e "${BLUE}📝 只提交，不推送${NC}"
-        
+
         echo -e "${BLUE}提交中...${NC}"
         git commit --no-verify -m "$commit_msg"
-        
+
         echo -e "${GREEN}✅ 提交完成！${NC}"
         echo -e "${YELLOW}記得稍後執行 git push${NC}"
         ;;
-        
+
     5)
         echo -e "${BLUE}👋 取消操作${NC}"
         exit 0
         ;;
-        
+
     *)
         echo -e "${RED}無效選擇${NC}"
         exit 1

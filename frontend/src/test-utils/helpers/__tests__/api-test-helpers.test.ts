@@ -3,7 +3,7 @@ describe('api-test-helpers', () => {
     try {
       const module = require('../api-test-helpers');
       expect(module).toBeDefined();
-      
+
       // Test exports
       Object.keys(module).forEach(key => {
         expect(module[key]).toBeDefined();

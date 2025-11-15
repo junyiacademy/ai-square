@@ -12,27 +12,27 @@ export async function POST(
   console.log('🚨 START API CALLED - This should only happen when explicitly requested!');
   console.log('   Timestamp:', new Date().toISOString());
   console.log('   Scenario ID:', id);
-  
+
   // Log request headers to trace the source
   console.log('   Request headers:', {
     referer: request.headers.get('referer'),
     userAgent: request.headers.get('user-agent'),
     origin: request.headers.get('origin')
   });
-  
+
   try {
     const scenarioId = id;
-    
+
     // Get user info using unified auth
     const auth = await getUnifiedAuth(request);
     const userEmail = auth?.user.email;
-    
+
     console.log('   User email:', userEmail);
-    
+
     if (!auth || !userEmail) {
       return createUnauthorizedResponse();
     }
-    
+
     // Get request body (handle empty body)
     let body: { language?: string } = {};
     try {
@@ -44,7 +44,7 @@ export async function POST(
       console.log('No JSON body provided, using defaults');
     }
     const language = body.language || 'en';
-    
+
     // Validate UUID format
     if (!scenarioId.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)) {
       return NextResponse.json(
@@ -55,11 +55,11 @@ export async function POST(
         { status: 400 }
       );
     }
-    
+
     // Get repositories
     const userRepo = repositoryFactory.getUserRepository();
     const scenarioRepo = repositoryFactory.getScenarioRepository();
-    
+
     // Verify scenario exists and is PBL type
     const scenario = await scenarioRepo.findById(scenarioId);
     if (!scenario) {
@@ -71,7 +71,7 @@ export async function POST(
         { status: 404 }
       );
     }
-    
+
     if (scenario.mode !== 'pbl') {
       return NextResponse.json(
         {
@@ -81,7 +81,7 @@ export async function POST(
         { status: 400 }
       );
     }
-    
+
     // Get or create user
     let user = await userRepo.findByEmail(userEmail);
     if (!user) {
@@ -92,7 +92,7 @@ export async function POST(
         preferredLanguage: language
       });
     }
-    
+
     // Use our TDD validator to check if program can be started
     const validation = validateProgramStart(scenario, user as unknown as import('@/types/database').DBUser);
     if (!validation.isValid) {
@@ -105,11 +105,11 @@ export async function POST(
         { status: 400 }
       );
     }
-    
+
     console.log('   ✅ Validation passed');
     console.log('   User ID:', user.id);
     console.log('   Using PBL Learning Service to start learning...');
-    
+
     // Use the new service layer
     const pblService = learningServiceFactory.getService('pbl');
     const program = await pblService.startLearning(
@@ -117,14 +117,14 @@ export async function POST(
       scenarioId,
       { language }
     );
-    
+
     console.log('   ✅ Program created with UUID:', program.id);
-    
+
     // Get created tasks to return their IDs
     const taskRepo = repositoryFactory.getTaskRepository();
     const tasks = await taskRepo.findByProgram(program.id);
     const taskIds = tasks.map(t => t.id);
-    
+
     // Return response compatible with frontend expectations
     return NextResponse.json({
       success: true,
@@ -134,7 +134,7 @@ export async function POST(
       taskIds,  // Also provide taskIds for compatibility
       language
     });
-    
+
   } catch (error) {
     console.error('Error starting PBL program:', error);
     return NextResponse.json(

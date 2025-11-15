@@ -1,10 +1,10 @@
 import { useUserData } from './useUserData';
 
 export function useDiscoveryData() {
-  const { 
-    userData, 
-    isLoading, 
-    error, 
+  const {
+    userData,
+    isLoading,
+    error,
     loadUserData
   } = useUserData();
 
@@ -13,9 +13,9 @@ export function useDiscoveryData() {
     return userData;
   };
 
-  return { 
-    data: userData, 
-    isLoading, 
+  return {
+    data: userData,
+    isLoading,
     error: error ? new Error(error) : null,
     refreshData,
     assessmentResults: userData?.assessmentResults || null,

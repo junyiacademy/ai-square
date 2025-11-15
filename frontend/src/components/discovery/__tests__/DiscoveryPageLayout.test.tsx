@@ -24,7 +24,7 @@ jest.mock('@/hooks/useDiscoveryData', () => ({
 
 const mockUseDiscoveryData = useDiscoveryData as jest.Mock;
 
-// Mock window.location - keep it simple  
+// Mock window.location - keep it simple
 beforeAll(() => {
   delete (window as any).location;
   window.location = { href: '' } as any;
@@ -118,7 +118,7 @@ describe('DiscoveryPageLayout', () => {
     fireEvent.click(assessmentButton);
 
     // JSDom converts relative URLs to absolute URLs, but the assignment still happens
-    // We can't easily test the exact value due to jsdom limitations, 
+    // We can't easily test the exact value due to jsdom limitations,
     // but we can verify the button is clickable and the onClick handler runs
     expect(assessmentButton).toBeTruthy();
   });
@@ -271,7 +271,7 @@ describe('DiscoveryPageLayout', () => {
     expect(spinner).toBeInTheDocument();
     expect(spinner).toHaveClass(
       'w-8',
-      'h-8', 
+      'h-8',
       'border-4',
       'border-blue-600',
       'border-t-transparent',

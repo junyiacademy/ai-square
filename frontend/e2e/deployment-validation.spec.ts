@@ -8,21 +8,21 @@ import { test, expect } from '@playwright/test';
 const DEPLOYMENT_URL = process.env.DEPLOYMENT_URL || 'http://localhost:3000';
 
 test.describe('🚨 部署驗證測試 - 必須全部通過', () => {
-  
+
   test('1. 首頁必須能載入', async ({ page }) => {
     await page.goto(DEPLOYMENT_URL);
     await expect(page).toHaveTitle(/AI Square/);
-    
+
     // 檢查沒有 500 錯誤
-    const responsePromise = page.waitForResponse(response => 
+    const responsePromise = page.waitForResponse(response =>
       response.status() >= 500
     );
-    
+
     const hasServerError = await Promise.race([
       responsePromise.then(() => true),
       page.waitForTimeout(3000).then(() => false)
     ]);
-    
+
     expect(hasServerError).toBe(false);
   });
 
@@ -31,7 +31,7 @@ test.describe('🚨 部署驗證測試 - 必須全部通過', () => {
     await page.fill('#email', 'student123@aisquare.com');
     await page.fill('#password', 'Demo123456');
     await page.click('button[type="submit"]');
-    
+
     // 應該要跳轉（不能還在 login 頁面）
     await page.waitForTimeout(3000);
     const currentUrl = page.url();
@@ -45,12 +45,12 @@ test.describe('🚨 部署驗證測試 - 必須全部通過', () => {
     await page.fill('#password', 'Demo123456');
     await page.click('button[type="submit"]');
     await page.waitForTimeout(3000);
-    
+
     // Go to Discovery
     await page.goto(`${DEPLOYMENT_URL}/discovery/scenarios`);
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
-    
+
     // 必須有 scenarios
     const scenarios = await page.locator('[data-testid="scenario-card"]').count();
     console.log(`Found ${scenarios} scenarios`);
@@ -65,12 +65,12 @@ test.describe('🚨 部署驗證測試 - 必須全部通過', () => {
     await page.fill('#password', 'Demo123456');
     await page.click('button[type="submit"]');
     await page.waitForTimeout(3000);
-    
+
     // Go to Discovery
     await page.goto(`${DEPLOYMENT_URL}/discovery/scenarios`);
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(2000);
-    
+
     // 測試每個分類
     const categories = [
       { name: '創意', minExpected: 1 },
@@ -78,17 +78,17 @@ test.describe('🚨 部署驗證測試 - 必須全部通過', () => {
       { name: '商業', minExpected: 1 },
       { name: '科學', minExpected: 1 }
     ];
-    
+
     for (const category of categories) {
       const button = page.locator(`button:has-text("${category.name}")`).first();
-      
+
       // 按鈕必須存在
       await expect(button).toBeVisible();
-      
+
       // 點擊分類
       await button.click();
       await page.waitForTimeout(1500);
-      
+
       // 必須顯示至少 1 個 scenario
       const count = await page.locator('[data-testid="scenario-card"]').count();
       console.log(`${category.name}: ${count} scenarios`);
@@ -99,7 +99,7 @@ test.describe('🚨 部署驗證測試 - 必須全部通過', () => {
   test('5. PBL 頁面必須能載入', async ({ page }) => {
     await page.goto(`${DEPLOYMENT_URL}/pbl/scenarios`);
     await page.waitForLoadState('networkidle');
-    
+
     // 應該要有標題
     const title = await page.locator('h1').textContent();
     expect(title).toBeTruthy();
@@ -108,7 +108,7 @@ test.describe('🚨 部署驗證測試 - 必須全部通過', () => {
   test('6. Assessment 頁面必須能載入', async ({ page }) => {
     await page.goto(`${DEPLOYMENT_URL}/assessment/scenarios`);
     await page.waitForLoadState('networkidle');
-    
+
     // 應該要有標題
     const title = await page.locator('h1').textContent();
     expect(title).toBeTruthy();
@@ -122,7 +122,7 @@ test.describe('🚨 部署驗證測試 - 必須全部通過', () => {
       '/api/pbl/scenarios?lang=zh',
       '/api/assessment/scenarios?lang=zh'
     ];
-    
+
     for (const api of apis) {
       const response = await page.request.get(`${DEPLOYMENT_URL}${api}`);
       console.log(`${api}: ${response.status()}`);
@@ -132,26 +132,26 @@ test.describe('🚨 部署驗證測試 - 必須全部通過', () => {
 
   test('8. 沒有 Console 錯誤', async ({ page }) => {
     const errors: string[] = [];
-    
+
     page.on('console', msg => {
       if (msg.type() === 'error') {
         errors.push(msg.text());
       }
     });
-    
+
     await page.goto(`${DEPLOYMENT_URL}/discovery/scenarios`);
     await page.waitForTimeout(3000);
-    
+
     // 不應該有錯誤（除了一些可接受的）
-    const criticalErrors = errors.filter(e => 
+    const criticalErrors = errors.filter(e =>
       !e.includes('Failed to load resource') && // 可能的外部資源
       !e.includes('favicon') // favicon 404 可接受
     );
-    
+
     if (criticalErrors.length > 0) {
       console.log('Console errors found:', criticalErrors);
     }
-    
+
     expect(criticalErrors.length).toBe(0);
   });
 });
@@ -163,7 +163,7 @@ test.describe('性能檢查', () => {
     await page.goto(DEPLOYMENT_URL);
     await page.waitForLoadState('networkidle');
     const loadTime = Date.now() - startTime;
-    
+
     console.log(`首頁載入時間: ${loadTime}ms`);
     expect(loadTime).toBeLessThan(10000); // 10 秒內
   });

@@ -6,19 +6,19 @@ class NextRequest {
     this.method = init.method || 'GET';
     this.headers = new Headers(init.headers || {});
     this.body = init.body || null;
-    
+
     // Parse body if it's a string
     if (typeof this.body === 'string') {
       this._bodyText = this.body;
     }
-    
+
     // Mock nextUrl with searchParams and pathname
     const parsedUrl = new URL(url);
     this.nextUrl = {
       searchParams: new URLSearchParams(parsedUrl.search),
       pathname: parsedUrl.pathname
     };
-    
+
     // Mock cookies with a basic Map-like interface
     this._cookieStore = new Map();
     this.cookies = {
@@ -57,7 +57,7 @@ class NextResponse extends Response {
     if (!this.headers) {
       this.headers = new Headers(init.headers || {});
     }
-    
+
     // Mock cookies
     this._cookieStore = new Map();
     this.cookies = {
@@ -71,7 +71,7 @@ class NextResponse extends Response {
       delete: (name) => this._cookieStore.delete(name)
     };
   }
-  
+
   static json(body, init = {}) {
     const response = new NextResponse(JSON.stringify(body), {
       ...init,
@@ -80,13 +80,13 @@ class NextResponse extends Response {
         ...(init.headers || {})
       }
     });
-    
+
     // Add json method to the response
     response.json = async () => body;
-    
+
     return response;
   }
-  
+
   static redirect(url, status = 307) {
     const response = new NextResponse(null, {
       status,

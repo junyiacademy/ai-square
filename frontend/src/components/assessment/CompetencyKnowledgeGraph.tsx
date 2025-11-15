@@ -40,14 +40,14 @@ interface GraphLink extends d3.SimulationLinkDatum<GraphNode> {
   value: number;
 }
 
-export default function CompetencyKnowledgeGraph({ 
-  result, 
-  questions = [], 
+export default function CompetencyKnowledgeGraph({
+  result,
+  questions = [],
   userAnswers = [],
   domainsData,
-  ksaMaps 
+  ksaMaps
 }: CompetencyKnowledgeGraphProps) {
-  
+
   // Log the result.ksaAnalysis data for debugging
   console.log('🎯 CompetencyKnowledgeGraph received data:', {
     resultKsaAnalysis: result.ksaAnalysis,
@@ -76,13 +76,13 @@ export default function CompetencyKnowledgeGraph({
         ksaMapping: questions[0].ksa_mapping
       } : 'No questions'
     });
-    
+
     // If we don't have KSA maps, return empty mastery
     if (!ksaMaps) {
       console.log('⚠️ No KSA maps available, returning empty mastery');
       return {};
     }
-    
+
     const ksaMastery: Record<string, { correct: number; total: number; questions: string[] }> = {};
 
     // First pass: collect all KSA codes from all questions (not just answered ones)
@@ -94,19 +94,19 @@ export default function CompetencyKnowledgeGraph({
           ...(question.ksa_mapping.skills || []),
           ...(question.ksa_mapping.attitudes || [])
         ];
-        
+
         allCodes.forEach(code => {
           // Check if this KSA code exists in the maps (only process valid codes)
-          const ksaMap = code.startsWith('K') ? ksaMaps?.kMap : 
-                         code.startsWith('S') ? ksaMaps?.sMap : 
+          const ksaMap = code.startsWith('K') ? ksaMaps?.kMap :
+                         code.startsWith('S') ? ksaMaps?.sMap :
                          ksaMaps?.aMap;
-          
+
           const ksaInfo = ksaMap?.[code];
           if (!ksaInfo) {
             console.log(`⚠️ Skipping unmapped KSA code: ${code}`);
             return; // Skip this code if it's not in the KSA maps
           }
-          
+
           if (!ksaMastery[code]) {
             ksaMastery[code] = { correct: 0, total: 0, questions: [] };
           }
@@ -129,7 +129,7 @@ export default function CompetencyKnowledgeGraph({
           ...(question.ksa_mapping.skills || []),
           ...(question.ksa_mapping.attitudes || [])
         ];
-        
+
         allCodes.forEach(code => {
           if (ksaMastery[code]) {
             ksaMastery[code].correct++;
@@ -148,7 +148,7 @@ export default function CompetencyKnowledgeGraph({
       })),
       allCodes: Object.keys(ksaMastery)
     });
-    
+
     return ksaMastery;
   }, [questions, userAnswers, ksaMaps]);
 
@@ -164,29 +164,29 @@ export default function CompetencyKnowledgeGraph({
   const buildGraphData = useCallback(() => {
     const nodes: GraphNode[] = [];
     const links: GraphLink[] = [];
-    
+
     // Use KSA analysis from result if available, otherwise fall back to calculated mastery
     let ksaMastery: Record<string, { correct: number; total: number; questions: string[] }> = {};
-    
+
     if (result.ksaAnalysis) {
       console.log('📊 Using KSA analysis from evaluation result:', result.ksaAnalysis);
-      
+
       // First, calculate actual mastery from questions and answers to get real totals
       const calculatedMastery = calculateKSAMastery();
-      
+
       // Then use the evaluation's ksaAnalysis to determine performance levels
       const { knowledge, skills, attitudes } = result.ksaAnalysis;
-      
+
       // Process knowledge codes with nuanced scoring
       if (knowledge) {
         knowledge.strong?.forEach(code => {
           const actual = calculatedMastery[code];
           if (actual) {
             // Strong = high performance, but use actual totals for accurate representation
-            ksaMastery[code] = { 
-              correct: Math.max(Math.ceil(actual.total * 0.8), actual.correct), 
-              total: actual.total, 
-              questions: actual.questions 
+            ksaMastery[code] = {
+              correct: Math.max(Math.ceil(actual.total * 0.8), actual.correct),
+              total: actual.total,
+              questions: actual.questions
             };
           } else {
             // Fallback if not in calculated data
@@ -197,10 +197,10 @@ export default function CompetencyKnowledgeGraph({
           const actual = calculatedMastery[code];
           if (actual) {
             // Weak = low performance, but use actual totals
-            ksaMastery[code] = { 
-              correct: Math.min(Math.floor(actual.total * 0.3), actual.correct), 
-              total: actual.total, 
-              questions: actual.questions 
+            ksaMastery[code] = {
+              correct: Math.min(Math.floor(actual.total * 0.3), actual.correct),
+              total: actual.total,
+              questions: actual.questions
             };
           } else {
             // Fallback if not in calculated data
@@ -208,16 +208,16 @@ export default function CompetencyKnowledgeGraph({
           }
         });
       }
-      
+
       // Process skills codes with nuanced scoring
       if (skills) {
         skills.strong?.forEach(code => {
           const actual = calculatedMastery[code];
           if (actual) {
-            ksaMastery[code] = { 
-              correct: Math.max(Math.ceil(actual.total * 0.8), actual.correct), 
-              total: actual.total, 
-              questions: actual.questions 
+            ksaMastery[code] = {
+              correct: Math.max(Math.ceil(actual.total * 0.8), actual.correct),
+              total: actual.total,
+              questions: actual.questions
             };
           } else {
             ksaMastery[code] = { correct: 2, total: 2, questions: [] };
@@ -226,26 +226,26 @@ export default function CompetencyKnowledgeGraph({
         skills.weak?.forEach(code => {
           const actual = calculatedMastery[code];
           if (actual) {
-            ksaMastery[code] = { 
-              correct: Math.min(Math.floor(actual.total * 0.3), actual.correct), 
-              total: actual.total, 
-              questions: actual.questions 
+            ksaMastery[code] = {
+              correct: Math.min(Math.floor(actual.total * 0.3), actual.correct),
+              total: actual.total,
+              questions: actual.questions
             };
           } else {
             ksaMastery[code] = { correct: 0, total: 2, questions: [] };
           }
         });
       }
-      
+
       // Process attitudes codes with nuanced scoring
       if (attitudes) {
         attitudes.strong?.forEach(code => {
           const actual = calculatedMastery[code];
           if (actual) {
-            ksaMastery[code] = { 
-              correct: Math.max(Math.ceil(actual.total * 0.8), actual.correct), 
-              total: actual.total, 
-              questions: actual.questions 
+            ksaMastery[code] = {
+              correct: Math.max(Math.ceil(actual.total * 0.8), actual.correct),
+              total: actual.total,
+              questions: actual.questions
             };
           } else {
             ksaMastery[code] = { correct: 2, total: 2, questions: [] };
@@ -254,17 +254,17 @@ export default function CompetencyKnowledgeGraph({
         attitudes.weak?.forEach(code => {
           const actual = calculatedMastery[code];
           if (actual) {
-            ksaMastery[code] = { 
-              correct: Math.min(Math.floor(actual.total * 0.3), actual.correct), 
-              total: actual.total, 
-              questions: actual.questions 
+            ksaMastery[code] = {
+              correct: Math.min(Math.floor(actual.total * 0.3), actual.correct),
+              total: actual.total,
+              questions: actual.questions
             };
           } else {
             ksaMastery[code] = { correct: 0, total: 2, questions: [] };
           }
         });
       }
-      
+
       // Add any other codes from calculated mastery that aren't in strong/weak (these become yellow)
       Object.entries(calculatedMastery).forEach(([code, data]) => {
         if (!ksaMastery[code]) {
@@ -272,7 +272,7 @@ export default function CompetencyKnowledgeGraph({
           ksaMastery[code] = data;
         }
       });
-      
+
       console.log('📊 Enhanced KSA mastery with nuanced scoring:', ksaMastery);
     } else {
       // Fall back to calculated mastery from questions and answers
@@ -302,7 +302,7 @@ export default function CompetencyKnowledgeGraph({
         name: ksaType.name,
         ksaType: ksaType.id as 'knowledge' | 'skills' | 'attitudes'
       });
-      
+
       links.push({
         source: 'center',
         target: ksaType.id,
@@ -313,7 +313,7 @@ export default function CompetencyKnowledgeGraph({
     // Group codes by parent (e.g., K1, K1.1, K1.2 -> K1 is parent)
     const parentCodes = new Map<string, string[]>();
     const allCodes = Object.keys(ksaMastery);
-    
+
     allCodes.forEach(code => {
       // Check if this is a subcode (e.g., K1.1)
       const match = code.match(/^([KSA]\d+)\.(\d+)$/);
@@ -337,25 +337,25 @@ export default function CompetencyKnowledgeGraph({
         // Parent code doesn't have its own data, skip it
         return;
       }
-      
-      const ksaMap = parentCode.startsWith('K') ? ksaMaps?.kMap : 
-                     parentCode.startsWith('S') ? ksaMaps?.sMap : 
+
+      const ksaMap = parentCode.startsWith('K') ? ksaMaps?.kMap :
+                     parentCode.startsWith('S') ? ksaMaps?.sMap :
                      ksaMaps?.aMap;
-      
+
       const ksaInfo = ksaMap?.[parentCode];
-      
+
       // If we don't have KSA info, skip this code (ignore unmapped codes)
       if (!ksaInfo) {
         console.log(`⚠️ No KSA info found for ${parentCode}, skipping (unmapped code)`);
         return; // Skip processing this code
       }
-      
-      const ksaType = parentCode.startsWith('K') ? 'knowledge' : 
+
+      const ksaType = parentCode.startsWith('K') ? 'knowledge' :
                       parentCode.startsWith('S') ? 'skills' : 'attitudes';
-      
+
       const data = ksaMastery[parentCode];
       const masteryStatus = getMasteryStatus(data.correct, data.total);
-      
+
       nodes.push({
         id: `code-${parentCode}`,
         type: 'ksa-code',
@@ -363,7 +363,7 @@ export default function CompetencyKnowledgeGraph({
         mastery: masteryStatus,
         ksaType,
         parentCode: undefined,
-        details: { 
+        details: {
           summary: ksaInfo.summary,
           explanation: ksaInfo.explanation,
           correct: data.correct,
@@ -372,7 +372,7 @@ export default function CompetencyKnowledgeGraph({
           theme: ksaInfo.theme
         }
       });
-      
+
       // Link to KSA type
       links.push({
         source: ksaType,
@@ -380,34 +380,34 @@ export default function CompetencyKnowledgeGraph({
         value: 0.8
       });
     });
-    
+
     // Then add all nodes (including subcodes)
     Object.entries(ksaMastery).forEach(([code, data]) => {
       // Skip if already added as parent
       if (nodes.some(n => n.id === `code-${code}`)) return;
-      
-      const ksaMap = code.startsWith('K') ? ksaMaps?.kMap : 
-                     code.startsWith('S') ? ksaMaps?.sMap : 
+
+      const ksaMap = code.startsWith('K') ? ksaMaps?.kMap :
+                     code.startsWith('S') ? ksaMaps?.sMap :
                      ksaMaps?.aMap;
-      
+
       const ksaInfo = ksaMap?.[code];
-      
+
       // If we don't have KSA info, skip this code (ignore unmapped codes)
       if (!ksaInfo) {
         console.log(`⚠️ No KSA info found for ${code}, skipping (unmapped code)`);
         return; // Skip processing this code
       }
 
-      const ksaType = code.startsWith('K') ? 'knowledge' : 
+      const ksaType = code.startsWith('K') ? 'knowledge' :
                       code.startsWith('S') ? 'skills' : 'attitudes';
-      
+
       const masteryStatus = getMasteryStatus(data.correct, data.total);
-      
+
       // Check if this is a subcode
       const isSubcode = code.includes('.');
       const parentMatch = code.match(/^([KSA]\d+)\.(\d+)$/);
       const parentCode = parentMatch ? parentMatch[1] : undefined;
-      
+
       // Add code node
       nodes.push({
         id: `code-${code}`,
@@ -416,7 +416,7 @@ export default function CompetencyKnowledgeGraph({
         mastery: masteryStatus,
         ksaType,
         parentCode,
-        details: { 
+        details: {
           summary: ksaInfo.summary,
           explanation: ksaInfo.explanation,
           correct: data.correct,
@@ -425,7 +425,7 @@ export default function CompetencyKnowledgeGraph({
           theme: ksaInfo.theme
         }
       });
-      
+
       // Link to parent - either KSA type or parent code
       if (isSubcode && parentCode) {
         // Check if parent node exists
@@ -493,12 +493,12 @@ export default function CompetencyKnowledgeGraph({
         aMap: Object.keys(ksaMaps.aMap || {}).length
       } : 'No KSA Maps'
     });
-    
+
     if (!svgRef.current) {
       console.log('⚠️ CompetencyKnowledgeGraph: No SVG ref, graph will not render');
       return;
     }
-    
+
     // Show a warning if we don't have KSA maps but still render with available data
     if (!domainsData || !ksaMaps) {
       console.log('⚠️ CompetencyKnowledgeGraph: Missing KSA maps data, using simplified display');
@@ -508,7 +508,7 @@ export default function CompetencyKnowledgeGraph({
     d3.select(svgRef.current).selectAll('*').remove();
 
     const { nodes, links } = buildGraphData();
-    
+
     // Set up SVG
     const svg = d3.select(svgRef.current)
       .attr('width', dimensions.width)
@@ -516,13 +516,13 @@ export default function CompetencyKnowledgeGraph({
 
     // Add zoom behavior
     const g = svg.append('g');
-    
+
     const zoom = d3.zoom<SVGSVGElement, unknown>()
       .scaleExtent([0.3, 3])
       .on('zoom', (event) => {
         g.attr('transform', event.transform);
       });
-    
+
     svg.call(zoom);
 
     // Set up force simulation with better spacing for KSA codes
@@ -615,23 +615,23 @@ export default function CompetencyKnowledgeGraph({
       .on('click', (event, d) => {
         event.stopPropagation();
         setSelectedNode(d);
-        
+
         // Zoom and center on the clicked node
         const scale = 2.0; // Zoom level
         const x = d.x || 0;
         const y = d.y || 0;
-        
+
         // Calculate transform to center the node
         const transform = d3.zoomIdentity
           .translate(dimensions.width / 2, dimensions.height / 2)
           .scale(scale)
           .translate(-x, -y);
-        
+
         // Apply smooth transition
         svg.transition()
           .duration(750)
           .call(zoom.transform, transform);
-        
+
         // If clicking on a KSA code or subcode node, show related questions
         if ((d.type === 'ksa-code' || d.type === 'ksa-subcode') && d.details?.questions && d.details.questions.length > 0) {
           setSelectedQuestionIds(d.details.questions);
@@ -680,11 +680,11 @@ export default function CompetencyKnowledgeGraph({
       .on('mouseover', (event, d) => {
         tooltip.transition().duration(200).style('opacity', .9);
         let content = `<strong>${d.name}</strong><br/>`;
-        
+
         // For KSA code and subcode nodes, show correct/total
         if ((d.type === 'ksa-code' || d.type === 'ksa-subcode') && d.details) {
-          const status = d.mastery === 2 ? '✅ 全對' : 
-                        d.mastery === 1 ? '⚠️ 部分正確' : 
+          const status = d.mastery === 2 ? '✅ 全對' :
+                        d.mastery === 1 ? '⚠️ 部分正確' :
                         '❌ 完全錯誤';
           content += `${status}<br/>`;
           content += `答對: ${d.details.correct}/${d.details.total} 題<br/>`;
@@ -694,11 +694,11 @@ export default function CompetencyKnowledgeGraph({
         } else if (d.mastery !== undefined && d.type !== 'ksa-code' && d.type !== 'ksa-subcode') {
           content += `${t('results.knowledgeGraph.mastery')}: ${d.score || 0}%<br/>`;
         }
-        
+
         if (d.details?.explanation) {
           content += `<br/><em>${d.details.explanation}</em>`;
         }
-        
+
         tooltip.html(content)
           .style('left', (event.pageX + 10) + 'px')
           .style('top', (event.pageY - 10) + 'px');
@@ -789,7 +789,7 @@ export default function CompetencyKnowledgeGraph({
           <p className="text-gray-600 text-sm">
             {t('results.knowledgeGraph.description')}
           </p>
-        
+
         {/* Legend */}
         <div className="flex flex-wrap gap-2 sm:gap-4 mt-4">
           <div className="flex items-center gap-2">
@@ -813,7 +813,7 @@ export default function CompetencyKnowledgeGraph({
             <span className="text-xs sm:text-sm text-gray-600">A (態度)</span>
           </div>
         </div>
-        
+
         {/* Instructions */}
         <div className="mt-2 text-xs text-gray-500">
           <p className="sm:hidden">提示：使用雙指縮放查看細節</p>
@@ -863,7 +863,7 @@ export default function CompetencyKnowledgeGraph({
         </div>
       )}
       </div>
-      
+
       {/* Right side - Question Review Panel */}
       {showQuestionReview && (
         <div className="w-full lg:w-1/2 lg:sticky lg:top-4 h-fit">

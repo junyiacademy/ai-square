@@ -86,11 +86,11 @@ INSERT INTO users (
 INSERT INTO programs (
     user_id, scenario_id, total_task_count
 )
-SELECT 
+SELECT
     '11111111-1111-1111-1111-111111111111'::uuid,
     id,
     1
-FROM scenarios 
+FROM scenarios
 WHERE mode = 'pbl' AND source_path = 'test/pbl_test.yaml'
 LIMIT 1;
 
@@ -98,11 +98,11 @@ LIMIT 1;
 INSERT INTO programs (
     user_id, scenario_id, total_task_count
 )
-SELECT 
+SELECT
     '11111111-1111-1111-1111-111111111111'::uuid,
     id,
     1
-FROM scenarios 
+FROM scenarios
 WHERE mode = 'discovery' AND source_path = 'test/discovery_test.yaml'
 LIMIT 1;
 
@@ -110,11 +110,11 @@ LIMIT 1;
 INSERT INTO programs (
     user_id, scenario_id, total_task_count
 )
-SELECT 
+SELECT
     '11111111-1111-1111-1111-111111111111'::uuid,
     id,
     1
-FROM scenarios 
+FROM scenarios
 WHERE mode = 'assessment' AND source_path = 'test/assessment_test.yaml'
 LIMIT 1;
 
@@ -124,7 +124,7 @@ LIMIT 1;
 \echo ''
 \echo '✅ Verifying mode propagation to programs...'
 
-SELECT 
+SELECT
     s.mode as scenario_mode,
     p.mode as program_mode,
     CASE WHEN s.mode = p.mode THEN '✓ PASS' ELSE '✗ FAIL' END as propagation_status
@@ -143,11 +143,11 @@ ORDER BY s.mode;
 INSERT INTO tasks (
     program_id, task_index, title, type
 )
-SELECT 
+SELECT
     p.id,
     0,
     jsonb_build_object('en', 'Test Task for ' || s.mode),
-    CASE 
+    CASE
         WHEN s.mode = 'pbl' THEN 'chat'::task_type
         WHEN s.mode = 'discovery' THEN 'exploration'::task_type
         WHEN s.mode = 'assessment' THEN 'question'::task_type
@@ -159,14 +159,14 @@ WHERE p.user_id = '11111111-1111-1111-1111-111111111111'::uuid;
 \echo ''
 \echo '✅ Verifying mode propagation to tasks...'
 
-SELECT 
+SELECT
     s.mode as scenario_mode,
     p.mode as program_mode,
     t.mode as task_mode,
     t.type as task_type,
-    CASE 
-        WHEN s.mode = p.mode AND p.mode = t.mode THEN '✓ PASS' 
-        ELSE '✗ FAIL' 
+    CASE
+        WHEN s.mode = p.mode AND p.mode = t.mode THEN '✓ PASS'
+        ELSE '✗ FAIL'
     END as propagation_status
 FROM tasks t
 JOIN programs p ON t.program_id = p.id
@@ -196,7 +196,7 @@ SELECT COUNT(*) as assessment_count FROM assessment_scenarios_view;
 \echo '✅ Testing helper functions...'
 
 -- Test get_user_programs_by_mode
-SELECT 
+SELECT
     mode,
     COUNT(*) as program_count
 FROM (
@@ -217,7 +217,7 @@ ORDER BY mode;
 \echo '📊 Test Summary Report'
 \echo '===================='
 
-SELECT 
+SELECT
     'Scenarios' as entity,
     COUNT(*) FILTER (WHERE mode = 'pbl') as pbl_count,
     COUNT(*) FILTER (WHERE mode = 'discovery') as discovery_count,
@@ -228,7 +228,7 @@ WHERE source_path LIKE 'test/%'
 
 UNION ALL
 
-SELECT 
+SELECT
     'Programs' as entity,
     COUNT(*) FILTER (WHERE mode = 'pbl') as pbl_count,
     COUNT(*) FILTER (WHERE mode = 'discovery') as discovery_count,
@@ -239,7 +239,7 @@ WHERE user_id = '11111111-1111-1111-1111-111111111111'::uuid
 
 UNION ALL
 
-SELECT 
+SELECT
     'Tasks' as entity,
     COUNT(*) FILTER (WHERE t.mode = 'pbl') as pbl_count,
     COUNT(*) FILTER (WHERE t.mode = 'discovery') as discovery_count,

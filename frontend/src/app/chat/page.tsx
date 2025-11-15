@@ -79,7 +79,7 @@ function ChatPageContent() {
   const [showScrollButton, setShowScrollButton] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState<string | null>(null);
   const [mobileActiveTab, setMobileActiveTab] = useState<'history' | 'chat' | 'resources'>('chat');
-  
+
   const leftPanelRef = useRef<ImperativePanelHandle>(null);
   const rightPanelRef = useRef<ImperativePanelHandle>(null);
   const messageEndRef = useRef<HTMLDivElement>(null);
@@ -99,7 +99,7 @@ function ChatPageContent() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams, currentUser]);
-  
+
   // Load assessment result from userData - commented out as types don't match
   // TODO: Convert AssessmentResults to AssessmentResult format if needed
   // useEffect(() => {
@@ -144,14 +144,14 @@ function ChatPageContent() {
       // First check if user is authenticated
       const authResponse = await authenticatedFetch('/api/auth/check');
       const authData = await authResponse.json();
-      
+
       if (!authData.authenticated) {
         setIsLoading(false);
         return;
       }
-      
+
       setCurrentUser(authData.user);
-      
+
       // Then load chat sessions
       const response = await authenticatedFetch('/api/chat/sessions', {
         headers: {
@@ -166,18 +166,18 @@ function ChatPageContent() {
       setIsLoading(false);
     }
   };
-  
+
   const loadUserAssessmentAndProgress = async () => {
     try {
       // Assessment result is now loaded from userData hook
       // This function now only loads PBL history
-      
+
       // Load PBL history if user is logged in
       if (currentUser) {
         try {
           const response = await authenticatedFetch('/api/pbl/history');
           const data = await response.json();
-          
+
           if (data.success && data.history) {
             // Transform history data
             const history: PBLHistory[] = data.history.map((item: {
@@ -196,7 +196,7 @@ function ChatPageContent() {
               timeSpent: item.time_spent || 0
             }));
             setPblHistory(history);
-            
+
             // Update progress based on actual data
             setUserProgress({
               completedScenarios: history.length,
@@ -209,7 +209,7 @@ function ChatPageContent() {
           console.error('Failed to load PBL history:', error);
         }
       }
-      
+
       // Generate recommendations after loading all data
       // TODO: Fix assessment result loading and generate recommendations
       // if (resultStr) {
@@ -220,39 +220,39 @@ function ChatPageContent() {
       console.error('Failed to load assessment and progress:', error);
     }
   };
-  
+
   const calculateStreak = (history: PBLHistory[]): number => {
     if (history.length === 0) return 0;
-    
+
     // Sort by date
-    const sorted = [...history].sort((a, b) => 
+    const sorted = [...history].sort((a, b) =>
       new Date(b.completedAt).getTime() - new Date(a.completedAt).getTime()
     );
-    
+
     let streak = 0;
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    
+
     for (let i = 0; i < sorted.length; i++) {
       const completedDate = new Date(sorted[i].completedAt);
       completedDate.setHours(0, 0, 0, 0);
-      
+
       const daysDiff = Math.floor((today.getTime() - completedDate.getTime()) / (1000 * 60 * 60 * 24));
-      
+
       if (daysDiff === i) {
         streak++;
       } else {
         break;
       }
     }
-    
+
     return streak;
   };
 
 
   const loadChatSession = async (sessionId: string) => {
     if (!currentUser) return;
-    
+
     try {
       const response = await authenticatedFetch(`/api/chat/sessions/${sessionId}`, {
         headers: {
@@ -263,7 +263,7 @@ function ChatPageContent() {
       setMessages(data.messages || []);
       setSelectedChat(sessionId);
       setSessionId(sessionId);
-      
+
       // Update URL without page reload
       const newUrl = `/chat?session=${sessionId}`;
       window.history.pushState({}, '', newUrl);
@@ -274,24 +274,24 @@ function ChatPageContent() {
 
   const handleSendMessage = async () => {
     if (!message.trim() || isSending || !currentUser) return;
-    
+
     const userMessage: ChatMessage = {
       id: `${Date.now()}-user`,
       role: 'user',
       content: message,
       timestamp: new Date().toISOString()
     };
-    
+
     setMessages(prev => [...prev, userMessage]);
     setMessage('');
     setIsSending(true);
     setIsTyping(true);
-    
+
     // Reset textarea height
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
     }
-    
+
     try {
       const response = await authenticatedFetch('/api/chat', {
         method: 'POST',
@@ -305,9 +305,9 @@ function ChatPageContent() {
           context: {}
         })
       });
-      
+
       const data = await response.json();
-      
+
       if (response.ok) {
         setIsTyping(false);
         const assistantMessage: ChatMessage = {
@@ -316,23 +316,23 @@ function ChatPageContent() {
           content: data.response,
           timestamp: new Date().toISOString()
         };
-        
+
         setMessages(prev => [...prev, assistantMessage]);
-        
+
         // Update session ID if it's a new session
         if (!sessionId && data.sessionId) {
           setSessionId(data.sessionId);
           setSelectedChat(data.sessionId);
-          
+
           // Update URL with new session ID
           const newUrl = `/chat?session=${data.sessionId}`;
           window.history.pushState({}, '', newUrl);
-          
+
           // Reload sessions to show the new one
           await loadUserAndSessions();
         } else if (data.title) {
           // Update session title in list
-          setChatSessions(prev => prev.map(session => 
+          setChatSessions(prev => prev.map(session =>
             session.id === sessionId ? { ...session, title: data.title } : session
           ));
         }
@@ -371,7 +371,7 @@ function ChatPageContent() {
 
   const handleTextareaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMessage(e.target.value);
-    
+
     // Auto-resize textarea
     const textarea = e.target;
     textarea.style.height = 'auto';
@@ -464,7 +464,7 @@ function ChatPageContent() {
 
   const deleteSession = async (sessionId: string) => {
     if (!currentUser) return;
-    
+
     try {
       const response = await authenticatedFetch(`/api/chat/sessions/${sessionId}`, {
         method: 'DELETE',
@@ -473,11 +473,11 @@ function ChatPageContent() {
           'x-user-info': JSON.stringify(currentUser)
         }
       });
-      
+
       if (response.ok) {
         // Remove from local state
         setChatSessions(prev => prev.filter(session => session.id !== sessionId));
-        
+
         // If this was the selected session, clear it
         if (selectedChat === sessionId) {
           setMessages([]);
@@ -491,7 +491,7 @@ function ChatPageContent() {
     } catch (error) {
       console.error('Error deleting session:', error);
     }
-    
+
     setDropdownOpen(null);
   };
 
@@ -525,7 +525,7 @@ function ChatPageContent() {
   const renderMobileLayout = () => (
     <div className="flex flex-col h-screen">
       <Header />
-      
+
       {/* Mobile Content Area */}
       <div className="flex-1 bg-gradient-to-br from-gray-50 via-white to-gray-50 relative">
         {/* Chat History Tab */}
@@ -574,7 +574,7 @@ function ChatPageContent() {
                         selectedChat === session.id ? 'bg-blue-50 border-blue-200 border' : ''
                       }`}
                     >
-                      <div 
+                      <div
                         onClick={() => {
                           loadChatSession(session.id);
                           setMobileActiveTab('chat'); // Switch to chat after loading
@@ -587,7 +587,7 @@ function ChatPageContent() {
                           {formatDateWithLocale(new Date(session.updated_at), 'en')}
                         </div>
                       </div>
-                      
+
                       {/* Three dots menu */}
                       <div className="absolute top-2 right-2">
                         <button
@@ -600,7 +600,7 @@ function ChatPageContent() {
                         >
                           <MoreHorizontal className="w-4 h-4 text-gray-500" />
                         </button>
-                        
+
                         {/* Dropdown menu */}
                         {dropdownOpen === session.id && (
                           <div className="absolute right-0 top-8 bg-white border border-gray-200 rounded-lg shadow-lg py-1 z-50 min-w-32">
@@ -634,8 +634,8 @@ function ChatPageContent() {
             <div className="border-b border-gray-200 px-6 py-4">
               <div className="flex items-center justify-between">
                 <h1 className="text-xl font-semibold text-gray-900">
-                  AI Assistant{sessionId && chatSessions.find(s => s.id === sessionId)?.title 
-                    ? ` + : ${chatSessions.find(s => s.id === sessionId)?.title}` 
+                  AI Assistant{sessionId && chatSessions.find(s => s.id === sessionId)?.title
+                    ? ` + : ${chatSessions.find(s => s.id === sessionId)?.title}`
                     : ''}
                 </h1>
                 <a
@@ -647,7 +647,7 @@ function ChatPageContent() {
                 </a>
               </div>
             </div>
-            
+
             {/* Messages Area */}
             <div className="flex-1 overflow-y-auto p-6 relative" ref={messagesContainerRef}>
               <div className="max-w-3xl mx-auto space-y-4">
@@ -681,7 +681,7 @@ function ChatPageContent() {
                           <div className="whitespace-pre-wrap">{msg.content}</div>
                         ) : (
                           <div className="prose prose-sm max-w-none dark:prose-invert">
-                            <ReactMarkdown 
+                            <ReactMarkdown
                               remarkPlugins={[remarkGfm]}
                               components={{
                               // Custom styling for markdown elements
@@ -734,7 +734,7 @@ function ChatPageContent() {
                 )}
                 <div ref={messageEndRef} />
               </div>
-              
+
               {/* Scroll to bottom button */}
               {showScrollButton && (
                 <button
@@ -746,7 +746,7 @@ function ChatPageContent() {
                 </button>
               )}
             </div>
-            
+
             {/* Input Area */}
             <div className="border-t border-gray-200 bg-gray-50 p-6">
               <div className="max-w-3xl mx-auto">
@@ -765,7 +765,7 @@ function ChatPageContent() {
                     ))}
                   </div>
                 )}
-                
+
                 {/* Input Container */}
                 <div className="flex gap-3 items-end bg-white rounded-xl shadow-sm border border-gray-200 p-3">
                   <textarea
@@ -819,7 +819,7 @@ function ChatPageContent() {
                           <span className="font-medium">{assessmentResult.overallScore}%</span>
                         </div>
                         <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div 
+                          <div
                             className="bg-gradient-to-r from-indigo-500 to-purple-500 h-2 rounded-full transition-all"
                             style={{ width: `${assessmentResult.overallScore}%` }}
                           />
@@ -840,7 +840,7 @@ function ChatPageContent() {
                     </div>
                   </div>
                 )}
-                
+
                 {/* Learning Resources */}
                 <div className="p-4 bg-amber-50 rounded-lg border border-amber-100">
                   <h3 className="font-medium text-gray-900 mb-3 flex items-center gap-2">
@@ -882,7 +882,7 @@ function ChatPageContent() {
             <MessageCircle className="w-5 h-5 mb-1" />
             <span className="text-xs font-medium">History</span>
           </button>
-          
+
           <button
             onClick={() => setMobileActiveTab('chat')}
             className={`flex flex-col items-center py-2 px-3 rounded-lg transition-colors ${
@@ -896,7 +896,7 @@ function ChatPageContent() {
             </svg>
             <span className="text-xs font-medium">Chat</span>
           </button>
-          
+
           <button
             onClick={() => setMobileActiveTab('resources')}
             className={`flex flex-col items-center py-2 px-3 rounded-lg transition-colors ${
@@ -973,7 +973,7 @@ function ChatPageContent() {
                           selectedChat === session.id ? 'bg-blue-50 border-blue-200 border' : ''
                         }`}
                       >
-                        <div 
+                        <div
                           onClick={() => loadChatSession(session.id)}
                           className="cursor-pointer pr-8"
                         >
@@ -983,7 +983,7 @@ function ChatPageContent() {
                             {formatDateWithLocale(new Date(session.updated_at), 'en')}
                           </div>
                         </div>
-                        
+
                         {/* Three dots menu */}
                         <div className="absolute top-2 right-2">
                           <button
@@ -996,7 +996,7 @@ function ChatPageContent() {
                           >
                             <MoreHorizontal className="w-4 h-4 text-gray-500" />
                           </button>
-                          
+
                           {/* Dropdown menu */}
                           {dropdownOpen === session.id && (
                             <div className="absolute right-0 top-8 bg-white border border-gray-200 rounded-lg shadow-lg py-1 z-50 min-w-32">
@@ -1067,8 +1067,8 @@ function ChatPageContent() {
               <div className="border-b border-gray-200 px-6 py-4">
                 <div className="flex items-center justify-between">
                   <h1 className="text-xl font-semibold text-gray-900">
-                  AI Assistant{sessionId && chatSessions.find(s => s.id === sessionId)?.title 
-                    ? ` - ${chatSessions.find(s => s.id === sessionId)?.title}` 
+                  AI Assistant{sessionId && chatSessions.find(s => s.id === sessionId)?.title
+                    ? ` - ${chatSessions.find(s => s.id === sessionId)?.title}`
                     : ''}
                 </h1>
                   <a
@@ -1080,7 +1080,7 @@ function ChatPageContent() {
                   </a>
                 </div>
               </div>
-              
+
               {/* Messages Area */}
               <div className="flex-1 overflow-y-auto p-6 relative" ref={messagesContainerRef}>
                 <div className="max-w-3xl mx-auto space-y-4">
@@ -1114,7 +1114,7 @@ function ChatPageContent() {
                             <div className="whitespace-pre-wrap">{msg.content}</div>
                           ) : (
                             <div className="prose prose-sm max-w-none dark:prose-invert">
-                              <ReactMarkdown 
+                              <ReactMarkdown
                                 remarkPlugins={[remarkGfm]}
                                 components={{
                                 // Custom styling for markdown elements
@@ -1167,7 +1167,7 @@ function ChatPageContent() {
                   )}
                   <div ref={messageEndRef} />
                 </div>
-                
+
                 {/* Scroll to bottom button */}
                 {showScrollButton && (
                   <button
@@ -1179,7 +1179,7 @@ function ChatPageContent() {
                   </button>
                 )}
               </div>
-              
+
               {/* Input Area */}
               <div className="border-t border-gray-200 bg-gray-50 p-6">
                 <div className="max-w-3xl mx-auto">
@@ -1283,7 +1283,7 @@ function ChatPageContent() {
                             <span className="font-medium">{assessmentResult.overallScore}%</span>
                           </div>
                           <div className="w-full bg-gray-200 rounded-full h-2">
-                            <div 
+                            <div
                               className="bg-gradient-to-r from-indigo-500 to-purple-500 h-2 rounded-full transition-all"
                               style={{ width: `${assessmentResult.overallScore}%` }}
                             />
@@ -1304,7 +1304,7 @@ function ChatPageContent() {
                       </div>
                     </div>
                   )}
-                  
+
                   {/* Recent PBL Completions */}
                   {pblHistory.length > 0 && (
                     <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-100">
@@ -1338,7 +1338,7 @@ function ChatPageContent() {
                       </div>
                     </div>
                   )}
-                  
+
                   {/* Recommended Scenarios */}
                   {recommendedScenarios.length > 0 && (
                     <div className="p-4 bg-blue-50 rounded-lg border border-blue-100">
@@ -1372,7 +1372,7 @@ function ChatPageContent() {
                       </div>
                     </div>
                   )}
-                  
+
                   {/* Learning Resources */}
                   <div className="p-4 bg-amber-50 rounded-lg border border-amber-100">
                     <h3 className="font-medium text-gray-900 mb-3 flex items-center gap-2">
@@ -1423,8 +1423,8 @@ function ChatPageContent() {
       <div className="block md:hidden">
         {renderMobileLayout()}
       </div>
-      
-      {/* Desktop Layout */}  
+
+      {/* Desktop Layout */}
       <div className="hidden md:block">
         {renderDesktopLayout()}
       </div>

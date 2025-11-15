@@ -39,32 +39,32 @@ export interface IStorageProvider {
    * 獲取單一項目
    */
   get<T>(key: string): Promise<T | null>;
-  
+
   /**
    * 設定單一項目
    */
   set<T>(key: string, value: T, options?: StorageOptions): Promise<void>;
-  
+
   /**
    * 刪除單一項目
    */
   delete(key: string): Promise<void>;
-  
+
   /**
    * 檢查項目是否存在
    */
   exists(key: string): Promise<boolean>;
-  
+
   /**
    * 列出符合前綴的所有項目
    */
   list<T>(prefix: string, options?: ListOptions): Promise<T[]>;
-  
+
   /**
    * 批次操作
    */
   batch(operations: BatchOperation[]): Promise<BatchResult>;
-  
+
   /**
    * 清空儲存（危險操作）
    */
@@ -140,12 +140,12 @@ import { StorageError, StorageQuotaExceededError } from '../../errors';
 export class LocalStorageProvider implements IStorageProvider {
   private prefix: string;
   private isAvailable: boolean;
-  
+
   constructor(prefix: string = 'ai_square_') {
     this.prefix = prefix;
     this.isAvailable = this.checkAvailability();
   }
-  
+
   private checkAvailability(): boolean {
     try {
       const testKey = `${this.prefix}_test`;
@@ -156,11 +156,11 @@ export class LocalStorageProvider implements IStorageProvider {
       return false;
     }
   }
-  
+
   private getFullKey(key: string): string {
     return `${this.prefix}${key}`;
   }
-  
+
   private serialize<T>(value: T): string {
     return JSON.stringify({
       value,
@@ -168,7 +168,7 @@ export class LocalStorageProvider implements IStorageProvider {
       version: 1
     });
   }
-  
+
   private deserialize<T>(data: string): { value: T; timestamp: number } | null {
     try {
       const parsed = JSON.parse(data);
@@ -177,25 +177,25 @@ export class LocalStorageProvider implements IStorageProvider {
       return null;
     }
   }
-  
+
   async get<T>(key: string): Promise<T | null> {
     if (!this.isAvailable) {
       throw new StorageError('LocalStorage is not available', 'STORAGE_UNAVAILABLE');
     }
-    
+
     try {
       const fullKey = this.getFullKey(key);
       const item = localStorage.getItem(fullKey);
-      
+
       if (!item) {
         return null;
       }
-      
+
       const deserialized = this.deserialize<T>(item);
       if (!deserialized) {
         return null;
       }
-      
+
       // Check TTL if exists
       const metadata = this.getMetadata(key);
       if (metadata?.ttl) {
@@ -205,7 +205,7 @@ export class LocalStorageProvider implements IStorageProvider {
           return null;
         }
       }
-      
+
       return deserialized.value;
     } catch (error) {
       throw new StorageError(
@@ -215,16 +215,16 @@ export class LocalStorageProvider implements IStorageProvider {
       );
     }
   }
-  
+
   async set<T>(key: string, value: T, options?: StorageOptions): Promise<void> {
     if (!this.isAvailable) {
       throw new StorageError('LocalStorage is not available', 'STORAGE_UNAVAILABLE');
     }
-    
+
     try {
       const fullKey = this.getFullKey(key);
       const serialized = this.serialize(value);
-      
+
       // Check storage quota
       try {
         localStorage.setItem(fullKey, serialized);
@@ -234,7 +234,7 @@ export class LocalStorageProvider implements IStorageProvider {
         }
         throw error;
       }
-      
+
       // Save metadata if options provided
       if (options) {
         this.setMetadata(key, options);
@@ -250,12 +250,12 @@ export class LocalStorageProvider implements IStorageProvider {
       );
     }
   }
-  
+
   async delete(key: string): Promise<void> {
     if (!this.isAvailable) {
       throw new StorageError('LocalStorage is not available', 'STORAGE_UNAVAILABLE');
     }
-    
+
     try {
       const fullKey = this.getFullKey(key);
       localStorage.removeItem(fullKey);
@@ -268,25 +268,25 @@ export class LocalStorageProvider implements IStorageProvider {
       );
     }
   }
-  
+
   async exists(key: string): Promise<boolean> {
     if (!this.isAvailable) {
       return false;
     }
-    
+
     const fullKey = this.getFullKey(key);
     return localStorage.getItem(fullKey) !== null;
   }
-  
+
   async list<T>(prefix: string, options?: ListOptions): Promise<T[]> {
     if (!this.isAvailable) {
       throw new StorageError('LocalStorage is not available', 'STORAGE_UNAVAILABLE');
     }
-    
+
     try {
       const results: T[] = [];
       const searchPrefix = this.getFullKey(prefix);
-      
+
       for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
         if (key && key.startsWith(searchPrefix)) {
@@ -297,11 +297,11 @@ export class LocalStorageProvider implements IStorageProvider {
           }
         }
       }
-      
+
       // Apply pagination
       const offset = options?.offset || 0;
       const limit = options?.limit || results.length;
-      
+
       return results.slice(offset, offset + limit);
     } catch (error) {
       throw new StorageError(
@@ -311,14 +311,14 @@ export class LocalStorageProvider implements IStorageProvider {
       );
     }
   }
-  
+
   async batch(operations: BatchOperation[]): Promise<BatchResult> {
     const result: BatchResult = {
       successful: 0,
       failed: 0,
       errors: []
     };
-    
+
     for (const operation of operations) {
       try {
         if (operation.type === 'set') {
@@ -335,40 +335,40 @@ export class LocalStorageProvider implements IStorageProvider {
         });
       }
     }
-    
+
     return result;
   }
-  
+
   async clear(prefix?: string): Promise<void> {
     if (!this.isAvailable) {
       throw new StorageError('LocalStorage is not available', 'STORAGE_UNAVAILABLE');
     }
-    
+
     const keysToRemove: string[] = [];
     const searchPrefix = prefix ? this.getFullKey(prefix) : this.prefix;
-    
+
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
       if (key && key.startsWith(searchPrefix)) {
         keysToRemove.push(key);
       }
     }
-    
+
     keysToRemove.forEach(key => localStorage.removeItem(key));
   }
-  
+
   // Metadata management
   private getMetadata(key: string): StorageOptions | null {
     const metaKey = `${this.prefix}_meta_${key}`;
     const meta = localStorage.getItem(metaKey);
     return meta ? JSON.parse(meta) : null;
   }
-  
+
   private setMetadata(key: string, options: StorageOptions): void {
     const metaKey = `${this.prefix}_meta_${key}`;
     localStorage.setItem(metaKey, JSON.stringify(options));
   }
-  
+
   private deleteMetadata(key: string): void {
     const metaKey = `${this.prefix}_meta_${key}`;
     localStorage.removeItem(metaKey);
@@ -396,17 +396,17 @@ export function Cacheable(options: CacheOptions = {}) {
     descriptor: PropertyDescriptor
   ) {
     const originalMethod = descriptor.value;
-    
+
     descriptor.value = async function (...args: any[]) {
       const cacheKey = getCacheKey(options.key, propertyKey, args);
       const cached = cacheMap.get(cacheKey);
-      
+
       if (cached && cached.expiresAt > Date.now()) {
         return cached.value;
       }
-      
+
       const result = await originalMethod.apply(this, args);
-      
+
       if (result !== null && result !== undefined) {
         const ttl = options.ttl || 3600; // 1 hour default
         cacheMap.set(cacheKey, {
@@ -414,10 +414,10 @@ export function Cacheable(options: CacheOptions = {}) {
           expiresAt: Date.now() + (ttl * 1000)
         });
       }
-      
+
       return result;
     };
-    
+
     return descriptor;
   };
 }
@@ -430,11 +430,11 @@ function getCacheKey(
   if (!keyOption) {
     return `${methodName}:${JSON.stringify(args)}`;
   }
-  
+
   if (typeof keyOption === 'function') {
     return keyOption(...args);
   }
-  
+
   return keyOption;
 }
 
@@ -444,7 +444,7 @@ export function clearCache(pattern?: string) {
     cacheMap.clear();
     return;
   }
-  
+
   for (const key of cacheMap.keys()) {
     if (key.includes(pattern)) {
       cacheMap.delete(key);
@@ -471,43 +471,43 @@ export function Retryable(options: RetryOptions = {}) {
     backoff = 'exponential',
     retryIf = () => true
   } = options;
-  
+
   return function (
     target: any,
     propertyKey: string,
     descriptor: PropertyDescriptor
   ) {
     const originalMethod = descriptor.value;
-    
+
     descriptor.value = async function (...args: any[]) {
       let lastError: Error;
-      
+
       for (let attempt = 1; attempt <= maxAttempts; attempt++) {
         try {
           return await originalMethod.apply(this, args);
         } catch (error) {
           lastError = error as Error;
-          
+
           if (attempt === maxAttempts || !retryIf(lastError)) {
             throw lastError;
           }
-          
+
           const waitTime = backoff === 'exponential'
             ? delay * Math.pow(2, attempt - 1)
             : delay * attempt;
-          
+
           console.warn(
             `Retry ${attempt}/${maxAttempts} for ${propertyKey} after ${waitTime}ms`,
             lastError.message
           );
-          
+
           await new Promise(resolve => setTimeout(resolve, waitTime));
         }
       }
-      
+
       throw lastError!;
     };
-    
+
     return descriptor;
   };
 }
@@ -526,7 +526,7 @@ export class GCSStorageProvider implements IStorageProvider {
   private storage: Storage;
   private bucket: string;
   private prefix: string;
-  
+
   constructor(config: GCSConfig) {
     this.storage = new Storage({
       projectId: config.projectId,
@@ -535,24 +535,24 @@ export class GCSStorageProvider implements IStorageProvider {
     this.bucket = config.bucket;
     this.prefix = config.prefix || '';
   }
-  
+
   private getFullPath(key: string): string {
     return this.prefix ? `${this.prefix}/${key}` : key;
   }
-  
+
   @Retryable({ maxAttempts: 3, retryIf: (error) => error.code === '503' })
   async get<T>(key: string): Promise<T | null> {
     try {
       const file = this.storage.bucket(this.bucket).file(this.getFullPath(key));
       const [exists] = await file.exists();
-      
+
       if (!exists) {
         return null;
       }
-      
+
       const [contents] = await file.download();
       const data = JSON.parse(contents.toString());
-      
+
       return data.value as T;
     } catch (error: any) {
       if (error.code === 404) {
@@ -565,7 +565,7 @@ export class GCSStorageProvider implements IStorageProvider {
       );
     }
   }
-  
+
   @Retryable({ maxAttempts: 3 })
   async set<T>(key: string, value: T, options?: StorageOptions): Promise<void> {
     try {
@@ -575,7 +575,7 @@ export class GCSStorageProvider implements IStorageProvider {
         timestamp: Date.now(),
         metadata: options
       };
-      
+
       await file.save(JSON.stringify(data), {
         contentType: 'application/json',
         metadata: {
@@ -590,7 +590,7 @@ export class GCSStorageProvider implements IStorageProvider {
       );
     }
   }
-  
+
   // ... 其他方法實作
 }
 
@@ -611,42 +611,42 @@ import { StorageQuotaExceededError } from '../../errors';
 
 describe('LocalStorageProvider', () => {
   let provider: LocalStorageProvider;
-  
+
   beforeEach(() => {
     localStorage.clear();
     provider = new LocalStorageProvider('test_');
   });
-  
+
   describe('get/set operations', () => {
     it('should store and retrieve values', async () => {
       const testData = { id: 1, name: 'Test' };
       await provider.set('test-key', testData);
-      
+
       const retrieved = await provider.get('test-key');
       expect(retrieved).toEqual(testData);
     });
-    
+
     it('should return null for non-existent keys', async () => {
       const result = await provider.get('non-existent');
       expect(result).toBeNull();
     });
-    
+
     it('should handle TTL expiration', async () => {
       jest.useFakeTimers();
-      
+
       await provider.set('ttl-key', 'value', { ttl: 1 }); // 1 second
-      
+
       // Should exist immediately
       expect(await provider.get('ttl-key')).toBe('value');
-      
+
       // Should expire after 1 second
       jest.advanceTimersByTime(1001);
       expect(await provider.get('ttl-key')).toBeNull();
-      
+
       jest.useRealTimers();
     });
   });
-  
+
   describe('batch operations', () => {
     it('should handle batch operations', async () => {
       const operations = [
@@ -654,36 +654,36 @@ describe('LocalStorageProvider', () => {
         { type: 'set' as const, key: 'batch2', value: 'value2' },
         { type: 'delete' as const, key: 'batch1' }
       ];
-      
+
       const result = await provider.batch(operations);
-      
+
       expect(result.successful).toBe(3);
       expect(result.failed).toBe(0);
       expect(await provider.exists('batch1')).toBe(false);
       expect(await provider.exists('batch2')).toBe(true);
     });
   });
-  
+
   describe('list operations', () => {
     it('should list items by prefix', async () => {
       await provider.set('users/1', { id: 1, name: 'User 1' });
       await provider.set('users/2', { id: 2, name: 'User 2' });
       await provider.set('posts/1', { id: 1, title: 'Post 1' });
-      
+
       const users = await provider.list('users/');
       expect(users).toHaveLength(2);
       expect(users[0]).toMatchObject({ id: 1, name: 'User 1' });
     });
-    
+
     it('should support pagination', async () => {
       // Create 10 items
       for (let i = 0; i < 10; i++) {
         await provider.set(`items/${i}`, { id: i });
       }
-      
+
       const page1 = await provider.list('items/', { limit: 5, offset: 0 });
       const page2 = await provider.list('items/', { limit: 5, offset: 5 });
-      
+
       expect(page1).toHaveLength(5);
       expect(page2).toHaveLength(5);
       expect(page1[0]).toMatchObject({ id: 0 });
@@ -702,26 +702,26 @@ import { IStorageProvider } from '@/lib/core/storage/interfaces';
 
 class UserService {
   private storage: IStorageProvider;
-  
+
   constructor() {
     this.storage = new LocalStorageProvider('users_');
   }
-  
+
   async getUser(id: string) {
     return this.storage.get<User>(`user_${id}`);
   }
-  
+
   async saveUser(user: User) {
     await this.storage.set(`user_${user.id}`, user, {
       ttl: 3600, // 1 hour cache
       tags: ['user', 'profile']
     });
   }
-  
+
   async deleteUser(id: string) {
     await this.storage.delete(`user_${id}`);
   }
-  
+
   async listUsers() {
     return this.storage.list<User>('user_');
   }
