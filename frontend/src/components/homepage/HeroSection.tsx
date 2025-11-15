@@ -66,18 +66,15 @@ export default function HeroSection() {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button
-              onClick={handleStartJourney}
+            <Link
+              href="/pbl"
               className="inline-flex items-center justify-center px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg hover:from-blue-700 hover:to-indigo-700 transform hover:scale-105 transition-all duration-200 shadow-lg"
             >
-              {isLoggedIn
-                ? (hasAssessmentResult ? t('hero.cta.continueLearning') : t('hero.cta.takeAssessment'))
-                : t('hero.cta.getStarted')
-              }
+              開始你的旅程
               <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>
-            </button>
+            </Link>
 
             <Link
               href="/relations"
