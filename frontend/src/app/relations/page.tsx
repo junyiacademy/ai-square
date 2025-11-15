@@ -302,6 +302,8 @@ function DomainAccordion({ domain, kMap, sMap, aMap, lang, emoji }: { domain: Do
   const { t } = useTranslation();
   // 使用通則函式，並斷言回傳型別為 string
   const overview = getTranslatedText(lang, domain, 'overview') as string;
+
+  // Image path - domain ID matches image filename exactly
   const imgSrc = `/images/${domain.id || domain.key}.png`;
   return (
     <div className="mb-6">
