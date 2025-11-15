@@ -232,9 +232,9 @@ export default function RelationsClient() {
 
       const treeData: TreeData = {
         domains: (data.domains as unknown as Domain[]) || [],
-        kMap,
-        sMap,
-        aMap,
+        kMap: (data.kMap as Record<string, KSAItem>) || kMap,
+        sMap: (data.sMap as Record<string, KSAItem>) || sMap,
+        aMap: (data.aMap as Record<string, KSAItem>) || aMap,
         ksa: data.ksa as TreeData['ksa']
       };
 
@@ -435,6 +435,7 @@ function KSAOverlay({ open, onClose, info, lang }: { open: boolean, onClose: () 
 function KSAList({ type, codes, map, lang }: { type: ReactNode, codes: string[], map: Record<string, KSAItem>, lang: string }) {
   const [selected, setSelected] = useState<string | null>(null);
   const isMobile = useIsMobile();
+
   return (
     <div className="mb-6 flex flex-col md:flex-row gap-6 items-start">
       <div className="flex flex-col gap-2 min-w-[80px]">
@@ -466,11 +467,12 @@ function KSAList({ type, codes, map, lang }: { type: ReactNode, codes: string[],
 function KSACard({ info, lang }: { info: KSAItem, lang: string }) {
   const { t } = useTranslation();
   if (!info) return null;
-  // 使用通則函式，並斷言回傳型別為 string
-  const summary = getTranslatedText(lang, info, 'summary') as string;
-  const themeKey = info.theme;
-  const theme = t(themeKey);
-  const explanation = getTranslatedText(lang, info, 'explanation') as string;
+
+  // API 返回語言特定的資料，但 theme 名稱仍是英文格式（從 ID 轉換）
+  // 直接顯示 theme，不需要再翻譯（因為 explanation 已經是該語言）
+  const summary = info.summary || '';
+  const theme = info.theme || '';
+  const explanation = info.explanation || '';
   return (
     <div className="w-full max-w-md mx-auto bg-white border border-blue-200 rounded-lg md:rounded-xl p-3 md:p-4 shadow-lg transition-all duration-200">
       <div className="flex items-center mb-2">
