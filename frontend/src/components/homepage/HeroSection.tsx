@@ -1,43 +1,11 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 
 export default function HeroSection() {
   const { t } = useTranslation('homepage');
-  const router = useRouter();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [hasAssessmentResult, setHasAssessmentResult] = useState(false);
-
-  useEffect(() => {
-    // Check if user is logged in
-    const userStr = localStorage.getItem('user');
-    const isAuthenticated = !!userStr;
-    setIsLoggedIn(isAuthenticated);
-
-    // Check if user has assessment result
-    if (isAuthenticated) {
-      const assessmentResult = localStorage.getItem('assessmentResult');
-      setHasAssessmentResult(!!assessmentResult);
-    }
-  }, []);
-
-  const handleStartJourney = () => {
-    if (isLoggedIn) {
-      // If logged in and has assessment result, go to PBL
-      if (hasAssessmentResult) {
-        router.push('/pbl');
-      } else {
-        // If logged in but no assessment, go to assessment
-        router.push('/assessment');
-      }
-    } else {
-      // If not logged in, go to register
-      router.push('/register');
-    }
-  };
 
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 pt-24 pb-20">
