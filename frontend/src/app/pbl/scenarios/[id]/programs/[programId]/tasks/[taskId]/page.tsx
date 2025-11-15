@@ -1000,16 +1000,14 @@ export default function ProgramLearningPage() {
                             }`}>
                               {getLocalizedField(task as unknown as Record<string, unknown>, 'title', i18n.language)}
                             </p>
-                            {isEvaluated && taskEval?.score !== undefined && (
-                              <p className={`text-xs ${
-                                taskEval.score >= 75 ? 'text-green-600' :
-                                taskEval.score >= 60 ? 'text-blue-600' :
-                                taskEval.score >= 40 ? 'text-yellow-600' :
-                                'text-red-600'
-                              }`}>
-                                {taskEval.score}%
-                              </p>
-                            )}
+                            {isEvaluated && taskEval?.score !== undefined && (() => {
+                              const rating = getQualitativeRating(taskEval.score);
+                              return (
+                                <p className={`text-xs font-medium ${rating.color}`}>
+                                  {t(rating.i18nKey)}
+                                </p>
+                              );
+                            })()}
                           </div>
                         </button>
                       );
@@ -1040,7 +1038,7 @@ export default function ProgramLearningPage() {
                             ? 'border-purple-600 dark:border-purple-500 ring-2 ring-purple-600 ring-offset-2'
                             : 'border-gray-300 dark:border-gray-600'
                         }`}
-                        title={`${getLocalizedField(task as unknown as Record<string, unknown>, 'title', i18n.language)}${isEvaluated && taskEval?.score !== undefined ? ` - ${taskEval.score}%` : ''}`}
+                        title={`${getLocalizedField(task as unknown as Record<string, unknown>, 'title', i18n.language)}${isEvaluated && taskEval?.score !== undefined ? ` - ${t(getQualitativeRating(taskEval.score).i18nKey)}` : ''}`}
                       >
                         {isEvaluated ? (
                           <svg className="h-5 w-5 text-green-600 dark:text-green-500" fill="currentColor" viewBox="0 0 20 20">
@@ -1528,11 +1526,14 @@ export default function ProgramLearningPage() {
                             }`}>
                               {getLocalizedField(task as unknown as Record<string, unknown>, 'title', i18n.language)}
                             </p>
-                            {hasEvaluation && taskEvaluation.score !== undefined && (
-                              <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                                {t('pbl:learn.score')}: {Math.round(taskEvaluation.score)}%
-                              </p>
-                            )}
+                            {hasEvaluation && taskEvaluation.score !== undefined && (() => {
+                              const rating = getQualitativeRating(taskEvaluation.score);
+                              return (
+                                <p className={`text-xs font-medium mt-0.5 ${rating.color}`}>
+                                  {t(rating.i18nKey)}
+                                </p>
+                              );
+                            })()}
                           </div>
                         </button>
                       );
