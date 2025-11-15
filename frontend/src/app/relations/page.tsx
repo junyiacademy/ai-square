@@ -303,8 +303,14 @@ function DomainAccordion({ domain, kMap, sMap, aMap, lang, emoji }: { domain: Do
   // 使用通則函式，並斷言回傳型別為 string
   const overview = getTranslatedText(lang, domain, 'overview') as string;
 
-  // Image path - domain ID matches image filename exactly
-  const imgSrc = `/images/${domain.id || domain.key}.png`;
+  // Static image paths - hardcoded for all domains
+  const imageMap: Record<string, string> = {
+    'Engaging_with_AI': '/images/Engaging_with_AI.png',
+    'Creating_with_AI': '/images/Creating_with_AI.png',
+    'Managing_AI': '/images/Managing_AI.png',
+    'Designing_AI': '/images/Designing_AI.png'
+  };
+  const imgSrc = imageMap[domain.id || domain.key || ''] || '/images/Engaging_with_AI.png';
   return (
     <div className="mb-6">
       <div
