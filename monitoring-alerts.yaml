@@ -1,0 +1,62 @@
+# Cloud Monitoring Alert Policies for AI Square Production
+#
+# To apply these alerts:
+# 1. Ensure Monitoring API is enabled: gcloud services enable monitoring.googleapis.com
+# 2. Create notification channels (email, Slack, etc.)
+# 3. Apply with: gcloud monitoring policies create --policy-from-file=monitoring-alerts.yaml
+#
+# For now, these are documented here for manual setup via Cloud Console
+
+alerts:
+  - name: "AI Square Production - High CPU Usage"
+    description: "Alert when Cloud Run CPU usage exceeds 80% for 5 minutes"
+    resource: cloud_run_revision
+    service: ai-square-production
+    metric: run.googleapis.com/container/cpu/utilizations
+    threshold: 0.8
+    duration: 300s
+
+  - name: "AI Square Production - High Memory Usage"
+    description: "Alert when Cloud Run memory usage exceeds 80% for 5 minutes"
+    resource: cloud_run_revision
+    service: ai-square-production
+    metric: run.googleapis.com/container/memory/utilizations
+    threshold: 0.8
+    duration: 300s
+
+  - name: "AI Square Production - High DB Connections"
+    description: "Alert when database connections exceed 40 (80% of max 50)"
+    resource: cloudsql_database
+    database_id: "ai-square-463013:ai-square-db-production"
+    metric: cloudsql.googleapis.com/database/postgresql/num_backends
+    threshold: 40
+    duration: 300s
+
+  - name: "AI Square Production - High Instance Count"
+    description: "Alert when Cloud Run instances exceed 8 (80% of max 10)"
+    resource: cloud_run_revision
+    service: ai-square-production
+    metric: run.googleapis.com/container/instance_count
+    threshold: 8
+    duration: 300s
+
+  - name: "AI Square Production - High Error Rate"
+    description: "Alert when error rate exceeds 5% for 5 minutes"
+    resource: cloud_run_revision
+    service: ai-square-production
+    metric: run.googleapis.com/request_count
+    filter: response_code_class="5xx"
+    threshold: 0.05
+    duration: 300s
+
+# Setup Instructions:
+#
+# Option 1: Google Cloud Console (Recommended for first-time setup)
+# 1. Go to https://console.cloud.google.com/monitoring/alerting
+# 2. Click "Create Policy"
+# 3. Configure each alert using the parameters above
+# 4. Add notification channels (email, Slack webhook)
+#
+# Option 2: gcloud CLI (Advanced)
+# Requires creating proper JSON format policy files
+# See: https://cloud.google.com/monitoring/alerts/using-alerting-api

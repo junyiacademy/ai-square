@@ -389,7 +389,7 @@ jobs:
           # Create env vars file with proper escaping - 完全複製 deploy-staging.yml.disabled 的方式
           cat > /tmp/env-vars.yaml << 'EOF'
           NODE_ENV: "${{ steps.env.outputs.environment }}"
-          DATABASE_URL: "postgresql://postgres:${{ steps.env.outputs.environment == 'production' && secrets.PROD_DB_PASSWORD || secrets.STAGING_DB_PASSWORD }}@/ai_square_db?host=/cloudsql/ai-square-463013:asia-east1:${{ steps.env.outputs.environment == 'production' && 'ai-square-db-production' || 'ai-square-db-staging-asia' }}"
+          DATABASE_URL: "postgresql://postgres:${{ steps.env.outputs.environment == 'production' && secrets.PROD_DB_PASSWORD || secrets.STAGING_DB_PASSWORD }}@/ai_square_db?host=/cloudsql/ai-square-463013:asia-east1:${{ steps.env.outputs.environment == 'production' && 'ai-square-db-production' || 'ai-square-db-staging-asia' }}&connection_limit=5&pool_timeout=10"
           DB_HOST: "/cloudsql/ai-square-463013:asia-east1:${{ steps.env.outputs.environment == 'production' && 'ai-square-db-production' || 'ai-square-db-staging-asia' }}"
           DB_NAME: "ai_square_db"
           DB_USER: "postgres"
@@ -413,14 +413,18 @@ jobs:
           EOF
 
           # Deploy using env vars file - directly with full traffic
+          # Conservative config for 50 daily active users (~10-20 concurrent)
           gcloud run deploy ${SERVICE_NAME} \
             --image gcr.io/${{ env.PROJECT_ID }}/${IMAGE_TAG}:${{ github.sha }} \
             --region ${{ env.REGION }} \
             --platform managed \
             --allow-unauthenticated \
             --timeout 60 \
-            --memory 1Gi \
-            --cpu 1 \
+            --memory 2Gi \
+            --cpu 2 \
+            --concurrency 10 \
+            --min-instances 1 \
+            --max-instances 10 \
             --port 3000 \
             --service-account=${{ steps.env.outputs.service_account }} \
             --add-cloudsql-instances ai-square-463013:asia-east1:${DB_INSTANCE} \
