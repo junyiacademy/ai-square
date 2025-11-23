@@ -173,7 +173,7 @@ resource "google_cloud_run_service" "ai_square" {
 
     metadata {
       annotations = {
-        "autoscaling.knative.dev/minScale"      = var.environment == "production" ? "1" : "0"
+        "autoscaling.knative.dev/minScale"      = "0"
         "autoscaling.knative.dev/maxScale"      = var.environment == "production" ? "10" : "5"
         "run.googleapis.com/cloudsql-instances" = google_sql_database_instance.main.connection_name
       }
