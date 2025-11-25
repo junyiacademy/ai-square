@@ -185,6 +185,16 @@ jobs:
 
           echo "🚀 Deploying preview environment for Issue #$ISSUE_NUMBER"
 
+          # Create env vars file for preview (use staging database)
+          cat > /tmp/preview-env-vars.yaml << 'EOF'
+          NODE_ENV: "staging"
+          DATABASE_URL: "postgresql://postgres:${{ secrets.STAGING_DB_PASSWORD }}@/ai_square_db?host=/cloudsql/ai-square-463013:asia-east1:ai-square-db-staging-asia&connection_limit=5&pool_timeout=10"
+          NEXTAUTH_SECRET: "${{ secrets.NEXTAUTH_SECRET }}"
+          GOOGLE_CLOUD_PROJECT: "ai-square-463013"
+          NEXT_PUBLIC_APP_URL: "https://${SERVICE_NAME}-731209836128.${{ env.REGION }}.run.app"
+          NEXT_PUBLIC_API_URL: "https://${SERVICE_NAME}-731209836128.${{ env.REGION }}.run.app/api"
+          EOF
+
           gcloud run deploy "$SERVICE_NAME" \
             --image "$IMAGE_NAME" \
             --region ${{ env.REGION }} \
@@ -195,10 +205,14 @@ jobs:
             --memory 1Gi \
             --cpu 1 \
             --timeout 300 \
-            --set-env-vars "NODE_ENV=staging" \
-            --set-env-vars "NEXT_PUBLIC_APP_URL=https://${SERVICE_NAME}-731209836128.${{ env.REGION }}.run.app" \
+            --service-account=ai-square-staging@ai-square-463013.iam.gserviceaccount.com \
+            --add-cloudsql-instances=ai-square-463013:asia-east1:ai-square-db-staging-asia \
+            --env-vars-file=/tmp/preview-env-vars.yaml \
             --tag "issue-${ISSUE_NUMBER}" \
             --labels "environment=preview,issue=${ISSUE_NUMBER},managed-by=github-actions"
+
+          # Clean up
+          rm -f /tmp/preview-env-vars.yaml
 
           # Get the service URL
           SERVICE_URL=$(gcloud run services describe "$SERVICE_NAME" \
