@@ -392,5 +392,29 @@ describe('LoginForm 組件測試', () => {
       expect(screen.queryByRole('button', { name: 'Teacher' })).not.toBeInTheDocument()
       expect(screen.queryByRole('button', { name: 'Admin' })).not.toBeInTheDocument()
     })
+
+    it('🔴 RED: 應該在 production 環境隱藏 placeholder 中的測試帳密', () => {
+      process.env.NEXT_PUBLIC_APP_URL = 'https://aisquare-production.web.app'
+      renderWithProviders(<LoginForm onSubmit={mockOnSubmit} />)
+
+      const emailInput = screen.getByLabelText('email') as HTMLInputElement
+      const passwordInput = screen.getByLabelText('password') as HTMLInputElement
+
+      // Production 環境不應該顯示測試帳密作為 placeholder
+      expect(emailInput.placeholder).not.toBe('student@example.com')
+      expect(passwordInput.placeholder).not.toBe('student123')
+    })
+
+    it('應該在 development 環境可以顯示 placeholder 提示', () => {
+      process.env.NEXT_PUBLIC_APP_URL = 'http://localhost:3001'
+      renderWithProviders(<LoginForm onSubmit={mockOnSubmit} />)
+
+      const emailInput = screen.getByLabelText('email') as HTMLInputElement
+      const passwordInput = screen.getByLabelText('password') as HTMLInputElement
+
+      // Development 可以有提示，但不一定要是測試帳密
+      expect(emailInput.placeholder).toBeDefined()
+      expect(passwordInput.placeholder).toBeDefined()
+    })
   })
 })

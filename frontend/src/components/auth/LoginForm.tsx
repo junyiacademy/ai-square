@@ -29,6 +29,10 @@ export function LoginForm({ onSubmit, loading = false, error }: LoginFormProps) 
   const isStaging = appUrl.includes('staging') || appUrl.includes('aisquare-staging')
   const shouldShowDemoAccounts = isLocalhost || isStaging
 
+  // Placeholder 根據環境決定
+  const emailPlaceholder = shouldShowDemoAccounts ? 'student@example.com' : 'your-email@example.com'
+  const passwordPlaceholder = shouldShowDemoAccounts ? 'student123' : '••••••••'
+
   // 示範帳號資料
   const demoAccounts = [
     { email: 'student@example.com', password: 'student123', label: 'Student', role: 'student' },
@@ -108,7 +112,7 @@ export function LoginForm({ onSubmit, loading = false, error }: LoginFormProps) 
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-gray-900 bg-white"
-            placeholder="student@example.com"
+            placeholder={emailPlaceholder}
             required
             disabled={loading}
           />
@@ -128,7 +132,7 @@ export function LoginForm({ onSubmit, loading = false, error }: LoginFormProps) 
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors text-gray-900 bg-white"
-            placeholder="student123"
+            placeholder={passwordPlaceholder}
             required
             disabled={loading}
           />
