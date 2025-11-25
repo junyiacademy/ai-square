@@ -47,16 +47,12 @@ function LoginContent() {
         console.log('Login successful, ignoring redirect params and navigating to: /pbl/scenarios')
 
         // Navigate to PBL scenarios directly - consistent UX
+        // Use router.push for client-side navigation to preserve React state
         router.push('/pbl/scenarios')
-        router.refresh()
 
-        // Fallback: Force navigation if router.push doesn't work
-        setTimeout(() => {
-          if (window.location.pathname === '/login') {
-            console.log('Router navigation fallback: forcing redirect to PBL scenarios')
-            window.location.href = '/pbl/scenarios'
-          }
-        }, 500)
+        // Note: Removed window.location.href fallback as it causes full page reload
+        // and breaks AuthContext state synchronization (Issue #28)
+        // router.push() is reliable in Next.js 15 and preserves auth state
       } else {
         // 顯示錯誤訊息
         console.log('Login failed:', result.error)
