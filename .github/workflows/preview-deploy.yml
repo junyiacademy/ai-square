@@ -155,13 +155,13 @@ jobs:
 
       - name: Configure Docker for GCR
         run: |
-          gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev
+          gcloud auth configure-docker gcr.io
 
       - name: Build and push Docker image
         working-directory: ./frontend
         run: |
           SERVICE_NAME="${{ steps.extract-info.outputs.service-name }}"
-          IMAGE_NAME="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/ai-square/${SERVICE_NAME}:${{ github.sha }}"
+          IMAGE_NAME="gcr.io/${{ env.PROJECT_ID }}/${SERVICE_NAME}:${{ github.sha }}"
 
           echo "🐳 Building Docker image: $IMAGE_NAME"
 
