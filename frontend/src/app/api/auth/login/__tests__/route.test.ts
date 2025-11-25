@@ -3,6 +3,8 @@ import { POST } from '../route'
 
 const mockQuery = jest.fn()
 const mockLoginUser = jest.fn()
+const mockSetAuthCookie = jest.fn()
+
 jest.mock('@/lib/auth/simple-auth', () => {
   const original = jest.requireActual('@/lib/auth/simple-auth')
   return {
@@ -11,6 +13,12 @@ jest.mock('@/lib/auth/simple-auth', () => {
     loginUser: (...args: any[]) => mockLoginUser(...args)
   }
 })
+
+jest.mock('@/lib/auth/auth-manager', () => ({
+  AuthManager: {
+    setAuthCookie: (...args: any[]) => mockSetAuthCookie(...args)
+  }
+}))
 
 describe('/api/auth/login', () => {
   beforeEach(() => {
