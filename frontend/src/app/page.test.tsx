@@ -2,6 +2,24 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import HomePage from './page';
 
+// Mock next/dynamic to return the mocked component immediately
+jest.mock('next/dynamic', () => ({
+  __esModule: true,
+  default: (fn: () => Promise<{ default: React.ComponentType }>, options?: { loading?: () => React.ReactElement }) => {
+    // Return a component that renders the mock directly
+    const MockedComponent = () => {
+      const [Component, setComponent] = React.useState<React.ComponentType | null>(null);
+      React.useEffect(() => {
+        fn().then((mod) => setComponent(() => mod.default));
+      }, []);
+      if (!Component && options?.loading) return options.loading();
+      if (!Component) return null;
+      return <Component />;
+    };
+    return MockedComponent;
+  }
+}));
+
 // Mock the components as default exports
 jest.mock('@/components/homepage/HeroSection', () => ({
   __esModule: true,
@@ -34,12 +52,14 @@ jest.mock('@/components/homepage/CTASection', () => ({
 }));
 
 describe('HomePage', () => {
-  it('should render all homepage sections', () => {
+  it('should render all homepage sections', async () => {
     render(<HomePage />);
 
     expect(screen.getByTestId('hero-section')).toBeInTheDocument();
     expect(screen.getByTestId('features-section')).toBeInTheDocument();
     expect(screen.getByTestId('knowledge-graph-section')).toBeInTheDocument();
+    // KnowledgeGraph is dynamically imported, so it may take a moment to appear
+    await screen.findByTestId('knowledge-graph');
     expect(screen.getByTestId('knowledge-graph')).toBeInTheDocument();
     expect(screen.getByTestId('how-it-works')).toBeInTheDocument();
     expect(screen.getByTestId('target-audience')).toBeInTheDocument();
