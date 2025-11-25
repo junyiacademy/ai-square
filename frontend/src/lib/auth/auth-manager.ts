@@ -28,7 +28,7 @@ export class AuthManager {
   static setAuthCookie(response: NextResponse, token: string, rememberMe = false): void {
     response.cookies.set(AUTH_COOKIE_NAME, token, {
       httpOnly: true,
-      secure: true, // Always use secure in production (HTTPS)
+      secure: process.env.NODE_ENV !== 'development', // HTTPS for staging/production, HTTP for dev
       sameSite: 'lax',
       maxAge: rememberMe ? COOKIE_MAX_AGE_REMEMBER : COOKIE_MAX_AGE,
       path: '/',

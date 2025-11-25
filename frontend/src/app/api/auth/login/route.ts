@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { loginUser, autoLoginDev } from '@/lib/auth/simple-auth';
 import { getPool } from '@/lib/auth/simple-auth';
+import { AuthManager } from '@/lib/auth/auth-manager';
 
 export async function POST(request: NextRequest) {
   try {
@@ -25,14 +26,8 @@ export async function POST(request: NextRequest) {
           user: autoLogin.user
         });
 
-        // Set cookie for 30 days
-        response.cookies.set('sessionToken', autoLogin.token, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV !== 'development',
-          sameSite: 'lax',
-          maxAge: 30 * 24 * 60 * 60,
-          path: '/'
-        });
+        // Use AuthManager for consistent cookie setting
+        AuthManager.setAuthCookie(response, autoLogin.token, true); // rememberMe=true for dev
 
         return response;
       }
@@ -79,14 +74,8 @@ export async function POST(request: NextRequest) {
       user: result.user
     });
 
-    // Set session cookie (7 days default, 30 days for remember me)
-    response.cookies.set('sessionToken', result.token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV !== 'development',
-      sameSite: 'lax',
-      maxAge: rememberMe ? 30 * 24 * 60 * 60 : 7 * 24 * 60 * 60,
-      path: '/'
-    });
+    // Use AuthManager for consistent cookie setting
+    AuthManager.setAuthCookie(response, result.token, rememberMe);
 
     return response;
   } catch (error) {
