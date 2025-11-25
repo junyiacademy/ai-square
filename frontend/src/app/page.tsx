@@ -1,9 +1,19 @@
+import dynamic from 'next/dynamic';
 import HeroSection from '@/components/homepage/HeroSection';
 import FeaturesSection from '@/components/homepage/FeaturesSection';
-import KnowledgeGraph from '@/components/homepage/KnowledgeGraph';
 import HowItWorksSection from '@/components/homepage/HowItWorksSection';
 import TargetAudienceSection from '@/components/homepage/TargetAudienceSection';
 import CTASection from '@/components/homepage/CTASection';
+
+// Dynamic import for KnowledgeGraph (contains D3.js - heavy library)
+// Loading on client side to reduce initial bundle size
+const KnowledgeGraph = dynamic(() => import('@/components/homepage/KnowledgeGraph'), {
+  loading: () => (
+    <div className="h-[400px] flex items-center justify-center">
+      <div className="animate-pulse text-gray-400">Loading visualization...</div>
+    </div>
+  )
+});
 
 export default function Home() {
   return (
