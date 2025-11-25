@@ -1,0 +1,325 @@
+name: Preview Deploy (Per-Issue Test Environment)
+
+on:
+  push:
+    branches:
+      - 'fix/issue-**'    # Matches fix/issue-27, fix/issue-28, etc.
+      - 'feat/issue-**'   # Matches feat/issue-1, feat/issue-2, etc.
+  pull_request:
+    types: [closed]       # Clean up when PR is closed/merged
+
+env:
+  PROJECT_ID: ai-square-463013
+  REGION: asia-east1
+  NODE_OPTIONS: "--max-old-space-size=4096"
+
+jobs:
+  # Detect changes - skip if only docs
+  detect-changes:
+    name: Detect Changed Files
+    runs-on: ubuntu-latest
+    outputs:
+      docs-only: ${{ steps.changes.outputs.docs-only }}
+      has-code-changes: ${{ steps.changes.outputs.has-code-changes }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Detect file changes
+        id: changes
+        run: |
+          echo "🔍 Analyzing changed files..."
+
+          CHANGED_FILES=$(git diff --name-only HEAD^ HEAD 2>/dev/null || echo "")
+
+          if [ -z "$CHANGED_FILES" ]; then
+            echo "No changes detected, treating as code change"
+            echo "docs-only=false" >> $GITHUB_OUTPUT
+            echo "has-code-changes=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          echo "Changed files:"
+          echo "$CHANGED_FILES"
+
+          CODE_CHANGED=false
+
+          while IFS= read -r file; do
+            if [ -n "$file" ]; then
+              if ! echo "$file" | grep -qE "^docs/" && \
+                 ! echo "$file" | grep -qE "README" && \
+                 ! echo "$file" | grep -qE "CHANGELOG" && \
+                 ! echo "$file" | grep -qE "\.md$" && \
+                 ! echo "$file" | grep -qE "\.txt$" && \
+                 ! echo "$file" | grep -qE "LICENSE"; then
+                CODE_CHANGED=true
+                echo "🔄 Non-docs file detected: $file"
+                break
+              fi
+            fi
+          done <<< "$CHANGED_FILES"
+
+          if [ "$CODE_CHANGED" = false ]; then
+            echo "docs-only=true" >> $GITHUB_OUTPUT
+            echo "has-code-changes=false" >> $GITHUB_OUTPUT
+            echo "✅ Only documentation changes - skipping preview deployment"
+          else
+            echo "docs-only=false" >> $GITHUB_OUTPUT
+            echo "has-code-changes=true" >> $GITHUB_OUTPUT
+            echo "🔄 Code changes detected - deploying preview environment"
+          fi
+
+  # Deploy preview environment
+  deploy-preview:
+    name: Deploy Preview Environment
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    if: |
+      github.event_name == 'push' &&
+      needs.detect-changes.outputs.docs-only == 'false' &&
+      (startsWith(github.ref, 'refs/heads/fix/issue-') || startsWith(github.ref, 'refs/heads/feat/issue-'))
+
+    outputs:
+      preview-url: ${{ steps.deploy.outputs.url }}
+      service-name: ${{ steps.extract-info.outputs.service-name }}
+      issue-number: ${{ steps.extract-info.outputs.issue-number }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Extract issue number and service name
+        id: extract-info
+        run: |
+          BRANCH_NAME="${{ github.ref_name }}"
+          echo "Branch: $BRANCH_NAME"
+
+          # Extract issue number from branch name (fix/issue-27 → 27)
+          ISSUE_NUMBER=$(echo "$BRANCH_NAME" | grep -oP '(?<=issue-)\d+' || echo "")
+
+          if [ -z "$ISSUE_NUMBER" ]; then
+            echo "❌ Could not extract issue number from branch: $BRANCH_NAME"
+            exit 1
+          fi
+
+          # Create service name: ai-square-preview-issue-27
+          SERVICE_NAME="ai-square-preview-issue-${ISSUE_NUMBER}"
+
+          echo "issue-number=$ISSUE_NUMBER" >> $GITHUB_OUTPUT
+          echo "service-name=$SERVICE_NAME" >> $GITHUB_OUTPUT
+
+          echo "📝 Issue Number: $ISSUE_NUMBER"
+          echo "📝 Service Name: $SERVICE_NAME"
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: npm ci --prefer-offline
+
+      - name: Run tests
+        working-directory: ./frontend
+        run: npm run test:ci
+
+      - name: Type check
+        working-directory: ./frontend
+        run: npm run typecheck
+
+      - name: Lint
+        working-directory: ./frontend
+        run: npm run lint
+
+      - name: Build application
+        working-directory: ./frontend
+        env:
+          NEXT_PUBLIC_APP_URL: "https://${{ steps.extract-info.outputs.service-name }}-731209836128.${{ env.REGION }}.run.app"
+          NEXT_PUBLIC_API_URL: "https://${{ steps.extract-info.outputs.service-name }}-731209836128.${{ env.REGION }}.run.app/api"
+        run: |
+          echo "🏗️ Building for preview environment..."
+          npm run build
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Setup Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker for GCR
+        run: |
+          gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev
+
+      - name: Build and push Docker image
+        working-directory: ./frontend
+        run: |
+          SERVICE_NAME="${{ steps.extract-info.outputs.service-name }}"
+          IMAGE_NAME="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/ai-square/${SERVICE_NAME}:${{ github.sha }}"
+
+          echo "🐳 Building Docker image: $IMAGE_NAME"
+
+          docker build -t "$IMAGE_NAME" .
+          docker push "$IMAGE_NAME"
+
+          echo "IMAGE_NAME=$IMAGE_NAME" >> $GITHUB_ENV
+
+      - name: Deploy to Cloud Run (Preview)
+        id: deploy
+        run: |
+          SERVICE_NAME="${{ steps.extract-info.outputs.service-name }}"
+          ISSUE_NUMBER="${{ steps.extract-info.outputs.issue-number }}"
+
+          echo "🚀 Deploying preview environment for Issue #$ISSUE_NUMBER"
+
+          gcloud run deploy "$SERVICE_NAME" \
+            --image "$IMAGE_NAME" \
+            --region ${{ env.REGION }} \
+            --platform managed \
+            --allow-unauthenticated \
+            --min-instances 0 \
+            --max-instances 2 \
+            --memory 1Gi \
+            --cpu 1 \
+            --timeout 300 \
+            --set-env-vars "NODE_ENV=staging" \
+            --set-env-vars "NEXT_PUBLIC_APP_URL=https://${SERVICE_NAME}-731209836128.${{ env.REGION }}.run.app" \
+            --tag "issue-${ISSUE_NUMBER}" \
+            --labels "environment=preview,issue=${ISSUE_NUMBER},managed-by=github-actions"
+
+          # Get the service URL
+          SERVICE_URL=$(gcloud run services describe "$SERVICE_NAME" \
+            --region ${{ env.REGION }} \
+            --format 'value(status.url)')
+
+          echo "url=$SERVICE_URL" >> $GITHUB_OUTPUT
+
+          echo "✅ Preview environment deployed!"
+          echo "📍 URL: $SERVICE_URL"
+
+      - name: Comment on Issue with Preview URL
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issueNumber = ${{ steps.extract-info.outputs.issue-number }};
+            const previewUrl = '${{ steps.deploy.outputs.url }}';
+            const serviceName = '${{ steps.extract-info.outputs.service-name }}';
+            const sha = context.sha.substring(0, 7);
+
+            const comment = `## 🚀 Preview Environment Ready!
+
+            **Issue #${issueNumber}** の専用テスト環境が準備できました：
+
+            ### 📍 Preview URL
+            🔗 **${previewUrl}**
+
+            ### 📊 環境情報
+            - **Service**: \`${serviceName}\`
+            - **Commit**: \`${sha}\`
+            - **Region**: \`${{ env.REGION }}\`
+            - **Auto-cleanup**: PR がクローズされると自動削除
+
+            ### 🧪 テスト方法
+            1. 上記の URL にアクセス
+            2. 修正内容を確認
+            3. 問題なければこの Issue に「測試通過」または「LGTM」とコメント
+
+            ### ⚠️ 注意
+            - この環境は **min-instances=0** で動作 (コスト削減)
+            - 初回アクセス時は起動に数秒かかる場合があります
+            - この環境は Issue #${issueNumber} 専用です
+
+            ---
+            *🤖 Automated preview deployment by GitHub Actions*`;
+
+            await github.rest.issues.createComment({
+              issue_number: issueNumber,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+  # Cleanup preview environment when PR is closed
+  cleanup-preview:
+    name: Cleanup Preview Environment
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Extract issue number
+        id: extract-info
+        run: |
+          BRANCH_NAME="${{ github.head_ref }}"
+          echo "Branch: $BRANCH_NAME"
+
+          ISSUE_NUMBER=$(echo "$BRANCH_NAME" | grep -oP '(?<=issue-)\d+' || echo "")
+
+          if [ -z "$ISSUE_NUMBER" ]; then
+            echo "⚠️ Could not extract issue number, skipping cleanup"
+            exit 0
+          fi
+
+          SERVICE_NAME="ai-square-preview-issue-${ISSUE_NUMBER}"
+
+          echo "issue-number=$ISSUE_NUMBER" >> $GITHUB_OUTPUT
+          echo "service-name=$SERVICE_NAME" >> $GITHUB_OUTPUT
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Setup Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Delete Cloud Run service
+        run: |
+          SERVICE_NAME="${{ steps.extract-info.outputs.service-name }}"
+          ISSUE_NUMBER="${{ steps.extract-info.outputs.issue-number }}"
+
+          echo "🧹 Cleaning up preview environment for Issue #$ISSUE_NUMBER"
+
+          # Check if service exists
+          if gcloud run services describe "$SERVICE_NAME" --region ${{ env.REGION }} &>/dev/null; then
+            gcloud run services delete "$SERVICE_NAME" \
+              --region ${{ env.REGION }} \
+              --quiet
+
+            echo "✅ Preview environment deleted: $SERVICE_NAME"
+          else
+            echo "ℹ️ Service $SERVICE_NAME not found, nothing to clean up"
+          fi
+
+      - name: Comment on Issue about cleanup
+        uses: actions/github-script@v7
+        if: steps.extract-info.outputs.issue-number != ''
+        with:
+          script: |
+            const issueNumber = ${{ steps.extract-info.outputs.issue-number }};
+            const serviceName = '${{ steps.extract-info.outputs.service-name }}';
+
+            const comment = `## 🧹 Preview Environment Cleaned Up
+
+            Preview environment for Issue #${issueNumber} has been automatically deleted.
+
+            - **Service**: \`${serviceName}\`
+            - **Reason**: PR was closed/merged
+
+            ---
+            *🤖 Automated cleanup by GitHub Actions*`;
+
+            await github.rest.issues.createComment({
+              issue_number: issueNumber,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
