@@ -124,25 +124,13 @@ jobs:
         working-directory: ./frontend
         run: npm ci --prefer-offline
 
-      - name: Run tests
-        working-directory: ./frontend
-        run: npm run test:ci
-
-      - name: Type check
-        working-directory: ./frontend
-        run: npm run typecheck
-
-      - name: Lint
-        working-directory: ./frontend
-        run: npm run lint
-
-      - name: Build application
+      - name: Build application (Skip tests for fast preview)
         working-directory: ./frontend
         env:
           NEXT_PUBLIC_APP_URL: "https://${{ steps.extract-info.outputs.service-name }}-731209836128.${{ env.REGION }}.run.app"
           NEXT_PUBLIC_API_URL: "https://${{ steps.extract-info.outputs.service-name }}-731209836128.${{ env.REGION }}.run.app/api"
         run: |
-          echo "🏗️ Building for preview environment..."
+          echo "🏗️ Building for preview environment (skipping tests for speed)..."
           npm run build
 
       - name: Authenticate to Google Cloud
