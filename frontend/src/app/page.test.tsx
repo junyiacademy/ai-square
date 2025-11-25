@@ -74,8 +74,12 @@ describe('HomePage', () => {
     expect(mainElement).toHaveClass('min-h-screen');
   });
 
-  it('should render sections in correct order', () => {
+  it('should render sections in correct order', async () => {
     const { container } = render(<HomePage />);
+
+    // Wait for dynamic component to load
+    await screen.findByTestId('knowledge-graph');
+
     const sections = container.querySelectorAll('[data-testid]');
 
     expect(sections[0]).toHaveAttribute('data-testid', 'hero-section');
