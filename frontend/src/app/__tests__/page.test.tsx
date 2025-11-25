@@ -1,6 +1,22 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import Home from '../page';
+
+// Mock next/dynamic to handle dynamic imports in tests
+jest.mock('next/dynamic', () => ({
+  __esModule: true,
+  default: (fn: () => Promise<{ default: React.ComponentType }>) => {
+    const MockedComponent = () => {
+      const [Component, setComponent] = React.useState<React.ComponentType | null>(null);
+      React.useEffect(() => {
+        fn().then((mod) => setComponent(() => mod.default));
+      }, []);
+      if (!Component) return null;
+      return <Component />;
+    };
+    return MockedComponent;
+  }
+}));
 
 // Mock all the components
 jest.mock('@/components/homepage/HeroSection', () => {
@@ -40,13 +56,16 @@ jest.mock('@/components/homepage/CTASection', () => {
 });
 
 describe('Home Page', () => {
-  it('renders all homepage sections', () => {
+  it('renders all homepage sections', async () => {
     render(<Home />);
 
     // Check that all sections are rendered
     expect(screen.getByTestId('hero-section')).toBeInTheDocument();
     expect(screen.getByTestId('features-section')).toBeInTheDocument();
-    expect(screen.getByTestId('knowledge-graph')).toBeInTheDocument();
+    // KnowledgeGraph is dynamically imported, wait for it
+    await waitFor(() => {
+      expect(screen.getByTestId('knowledge-graph')).toBeInTheDocument();
+    });
     expect(screen.getByTestId('how-it-works-section')).toBeInTheDocument();
     expect(screen.getByTestId('target-audience-section')).toBeInTheDocument();
     expect(screen.getByTestId('cta-section')).toBeInTheDocument();
