@@ -6,14 +6,15 @@ Essential documentation for building and maintaining AI Square.
 
 ```
 docs/
-├── technical/                    # Technical implementation docs
+├── weekly-reports/              # Weekly development reports
+├── technical/                   # Technical implementation docs
 │   ├── LOCAL_DEVELOPMENT.md     # Setup guide for developers
 │   ├── DB_CONFIG.md            # Database configuration
 │   ├── infrastructure/         # Architecture documentation
 │   ├── deployment/             # Deployment guides
 │   └── testing/                # Testing guidelines
 └── handbook/                    # Product & feature specs
-    ├── product-requirements-document.md  # Core PRD
+    ├── PRD.md                  # Core Product Requirements
     └── technical-specs/         # Feature specifications
 ```
 
@@ -21,7 +22,8 @@ docs/
 
 1. **Development Setup**: [technical/LOCAL_DEVELOPMENT.md](technical/LOCAL_DEVELOPMENT.md)
 2. **Architecture Overview**: [technical/infrastructure/unified-learning-architecture.md](technical/infrastructure/unified-learning-architecture.md)
-3. **Product Requirements**: [handbook/product-requirements-document.md](handbook/product-requirements-document.md)
+3. **Product Requirements**: [handbook/PRD.md](handbook/PRD.md)
+4. **Weekly Reports**: [weekly-reports/README.md](weekly-reports/README.md)
 
 ## 🏗️ Key Technical Documents
 
@@ -49,8 +51,14 @@ docs/
 - **Deployment**: Google Cloud Run, Docker
 - **Languages**: 14 languages supported
 
+## 📊 Project Progress
+
+- **Weekly Reports**: [weekly-reports/](weekly-reports/) - Track development by week
+- **Latest PRD**: [handbook/PRD.md](handbook/PRD.md) - Product vision and roadmap
+- **Current Phase**: Phase 2.5 - Production Ready (Oct-Nov 2025)
+
 ## 📝 Notes
 
-- Historical reports and updates have been archived
+- Weekly reports auto-generated from git commits
 - Development scripts are maintained separately
 - For the latest code, always refer to the source files
