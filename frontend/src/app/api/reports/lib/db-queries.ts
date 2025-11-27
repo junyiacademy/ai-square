@@ -91,20 +91,27 @@ export async function getWeeklyStats(pool: Pool): Promise<WeeklyStats> {
   const avgPerDay = newThisWeek / 7;
 
   // Query 2: User engagement statistics
-  // TEMPORARY FIX: Use created_at as proxy for activity since last_login_at is not maintained
-  // Weekly active users = users who registered OR logged in this week
-  // TODO: Implement proper last_login_at tracking
+  // Weekly active users = users who logged in this week
+  // Retention rate = (users registered last week who logged in this week) / (users registered last week)
   const engagementQuery = `
     SELECT
-      COUNT(DISTINCT id) as weekly_active_users,
-      ROUND(COUNT(DISTINCT id)::numeric / 7, 0) as daily_avg_active,
+      COUNT(DISTINCT CASE WHEN last_login_at >= CURRENT_DATE - INTERVAL '7 days' THEN id END) as weekly_active_users,
+      ROUND(COUNT(DISTINCT CASE WHEN last_login_at >= CURRENT_DATE - INTERVAL '7 days' THEN id END)::numeric / 7, 0) as daily_avg_active,
       ROUND(
-        (COUNT(DISTINCT CASE WHEN last_login_at >= CURRENT_DATE - INTERVAL '7 days' THEN id END)::numeric /
-        NULLIF(COUNT(DISTINCT CASE WHEN created_at >= CURRENT_DATE - INTERVAL '14 days' AND created_at < CURRENT_DATE - INTERVAL '7 days' THEN id END), 0)) * 100,
+        (COUNT(DISTINCT CASE
+          WHEN created_at >= CURRENT_DATE - INTERVAL '14 days'
+            AND created_at < CURRENT_DATE - INTERVAL '7 days'
+            AND last_login_at >= CURRENT_DATE - INTERVAL '7 days'
+          THEN id
+        END)::numeric /
+        NULLIF(COUNT(DISTINCT CASE
+          WHEN created_at >= CURRENT_DATE - INTERVAL '14 days'
+            AND created_at < CURRENT_DATE - INTERVAL '7 days'
+          THEN id
+        END), 0)) * 100,
         1
       ) as retention_rate
-    FROM users
-    WHERE last_login_at >= CURRENT_DATE - INTERVAL '7 days' OR created_at >= CURRENT_DATE - INTERVAL '7 days';
+    FROM users;
   `;
 
   const engagementResult = await pool.query(engagementQuery);
