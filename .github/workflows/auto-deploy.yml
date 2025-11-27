@@ -410,6 +410,8 @@ jobs:
           SMTP_PASS: "${{ secrets.SMTP_PASS }}"
           SMTP_FROM: "AI Square <ai-square@junyiacademy.org>"
           APP_BASE_URL: "${{ steps.env.outputs.environment == 'production' && 'https://www.ai-square.org' || 'https://ai-square-staging-731209836128.asia-east1.run.app' }}"
+          # Slack Integration for Weekly Reports
+          SLACK_AISQUARE_WEBHOOK_URL: "${{ secrets.SLACK_AISQUARE_WEBHOOK_URL }}"
           EOF
 
           # Deploy using env vars file - directly with full traffic
