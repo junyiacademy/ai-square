@@ -39,11 +39,23 @@ export async function GET(_request: NextRequest) {
     `;
     const retentionResult = await pool.query(retentionQuery);
 
+    // Check last_login_at status
+    const lastLoginQuery = `
+      SELECT
+        COUNT(*) as total_users,
+        COUNT(CASE WHEN last_login_at IS NOT NULL THEN 1 END) as users_with_last_login,
+        COUNT(CASE WHEN last_login_at >= CURRENT_DATE - INTERVAL '7 days' THEN 1 END) as logged_in_this_week,
+        COUNT(CASE WHEN created_at >= CURRENT_DATE - INTERVAL '7 days' THEN 1 END) as registered_this_week
+      FROM users
+    `;
+    const lastLoginResult = await pool.query(lastLoginQuery);
+
     return NextResponse.json({
       success: true,
       data: {
         programs: programsResult.rows[0],
-        retention: retentionResult.rows[0]
+        retention: retentionResult.rows[0],
+        lastLogin: lastLoginResult.rows[0]
       }
     });
 
