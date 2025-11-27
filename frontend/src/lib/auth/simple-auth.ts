@@ -98,6 +98,17 @@ export async function createSession(userData: {
        JSON.stringify({ name: userData.name })]
     );
 
+    // Update last_login_at for user
+    try {
+      await db.query(
+        'UPDATE users SET last_login_at = CURRENT_TIMESTAMP WHERE id = $1',
+        [userData.userId]
+      );
+    } catch (updateError) {
+      // Log but don't fail - last_login_at is tracking data, not critical
+      console.warn('Failed to update last_login_at:', updateError);
+    }
+
     console.log('[Auth] Session created in PostgreSQL');
     return token;
   } catch (error) {

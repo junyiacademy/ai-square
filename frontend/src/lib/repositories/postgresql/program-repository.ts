@@ -181,8 +181,14 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
       if (updates.status === 'active' && !updates.startedAt) {
         updateFields.push(`started_at = COALESCE(started_at, CURRENT_TIMESTAMP)`);
       }
-      if (updates.status === 'completed' && !updates.completedAt) {
-        updateFields.push(`completed_at = CURRENT_TIMESTAMP`);
+      if (updates.status === 'completed') {
+        // If completedAt is provided, use it; otherwise use CURRENT_TIMESTAMP
+        if (updates.completedAt) {
+          updateFields.push(`completed_at = $${paramCount++}`);
+          values.push(updates.completedAt);
+        } else {
+          updateFields.push(`completed_at = CURRENT_TIMESTAMP`);
+        }
       }
     }
 
