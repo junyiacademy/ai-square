@@ -225,5 +225,109 @@ describe('Weekly Report Database Queries', () => {
       // Act & Assert
       await expect(getWeeklyStats(mockPool)).rejects.toThrow('Database connection failed');
     });
+
+    it('should count programs completed this week regardless of creation date', async () => {
+      // TDD: Red → Green → Refactor
+      // This test verifies that learning statistics count ALL programs completed this week,
+      // not just those created this week
+
+      // Arrange
+      const mockUserStats = {
+        rows: [{
+          total_users: '400',
+          new_this_week: '50',
+          new_last_week: '45'
+        }]
+      };
+
+      const mockDailyTrend = {
+        rows: [{ day: '2025-11-27', count: '10' }]
+      };
+
+      const mockEngagementStats = {
+        rows: [{
+          weekly_active_users: '200',
+          daily_avg_active: '80',
+          retention_rate: '45.0'
+        }]
+      };
+
+      // Mock learning stats: 50 programs completed this week
+      // Even though only 10 were created this week
+      const mockLearningStats = {
+        rows: [{
+          total_completions: '50',
+          completion_rate: '80.0'
+        }]
+      };
+
+      mockQuery
+        .mockResolvedValueOnce(mockUserStats)
+        .mockResolvedValueOnce(mockDailyTrend)
+        .mockResolvedValueOnce(mockEngagementStats)
+        .mockResolvedValueOnce(mockLearningStats);
+
+      // Act
+      const result = await getWeeklyStats(mockPool);
+
+      // Assert
+      expect(result.learning.totalCompletions).toBe(50);
+
+      // Verify the SQL query doesn't have WHERE created_at filter
+      const learningQueryCall = mockQuery.mock.calls[3];
+      expect(learningQueryCall).toBeDefined();
+      const sqlQuery = learningQueryCall[0];
+
+      // The query should NOT filter by created_at
+      expect(sqlQuery).not.toContain('WHERE created_at >=');
+    });
+
+    it('should calculate retention rate correctly', async () => {
+      // TDD: Red → Green → Refactor
+      // Retention rate = (users from last week who logged in this week) / (users from last week)
+
+      // Arrange
+      const mockUserStats = {
+        rows: [{
+          total_users: '400',
+          new_this_week: '50',
+          new_last_week: '100'  // 100 users registered last week
+        }]
+      };
+
+      const mockDailyTrend = {
+        rows: [{ day: '2025-11-27', count: '10' }]
+      };
+
+      // Of the 100 users from last week, 60 logged in this week
+      // Retention rate = 60/100 = 60%
+      const mockEngagementStats = {
+        rows: [{
+          weekly_active_users: '200',
+          daily_avg_active: '80',
+          retention_rate: '60.0'  // Should be 60%, not 0%
+        }]
+      };
+
+      const mockLearningStats = {
+        rows: [{
+          total_completions: '50',
+          completion_rate: '80.0'
+        }]
+      };
+
+      mockQuery
+        .mockResolvedValueOnce(mockUserStats)
+        .mockResolvedValueOnce(mockDailyTrend)
+        .mockResolvedValueOnce(mockEngagementStats)
+        .mockResolvedValueOnce(mockLearningStats);
+
+      // Act
+      const result = await getWeeklyStats(mockPool);
+
+      // Assert
+      expect(result.engagement.retentionRate).toBe(60.0);
+      expect(result.engagement.retentionRate).toBeGreaterThan(0);
+    });
   });
 });

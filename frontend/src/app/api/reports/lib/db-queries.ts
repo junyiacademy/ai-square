@@ -91,17 +91,26 @@ export async function getWeeklyStats(pool: Pool): Promise<WeeklyStats> {
   const avgPerDay = newThisWeek / 7;
 
   // Query 2: User engagement statistics
+  // Retention rate = (users from last week who logged in this week) / (total users from last week)
   const engagementQuery = `
     SELECT
-      COUNT(DISTINCT id) as weekly_active_users,
-      ROUND(COUNT(DISTINCT id)::numeric / 7, 0) as daily_avg_active,
+      COUNT(DISTINCT CASE WHEN last_login_at >= CURRENT_DATE - INTERVAL '7 days' THEN id END) as weekly_active_users,
+      ROUND(COUNT(DISTINCT CASE WHEN last_login_at >= CURRENT_DATE - INTERVAL '7 days' THEN id END)::numeric / 7, 0) as daily_avg_active,
       ROUND(
-        (COUNT(DISTINCT CASE WHEN last_login_at >= CURRENT_DATE - INTERVAL '7 days' THEN id END)::numeric /
-        NULLIF(COUNT(DISTINCT CASE WHEN created_at >= CURRENT_DATE - INTERVAL '14 days' AND created_at < CURRENT_DATE - INTERVAL '7 days' THEN id END), 0)) * 100,
+        (COUNT(DISTINCT CASE
+          WHEN created_at >= CURRENT_DATE - INTERVAL '14 days'
+          AND created_at < CURRENT_DATE - INTERVAL '7 days'
+          AND last_login_at >= CURRENT_DATE - INTERVAL '7 days'
+          THEN id
+        END)::numeric /
+        NULLIF(COUNT(DISTINCT CASE
+          WHEN created_at >= CURRENT_DATE - INTERVAL '14 days'
+          AND created_at < CURRENT_DATE - INTERVAL '7 days'
+          THEN id
+        END), 0)) * 100,
         1
       ) as retention_rate
-    FROM users
-    WHERE last_login_at >= CURRENT_DATE - INTERVAL '7 days' OR created_at >= CURRENT_DATE - INTERVAL '7 days';
+    FROM users;
   `;
 
   const engagementResult = await pool.query(engagementQuery);
@@ -113,7 +122,8 @@ export async function getWeeklyStats(pool: Pool): Promise<WeeklyStats> {
   const activeRate = totalUsers > 0 ? (weeklyActiveUsers / totalUsers) * 100 : 0;
 
   // Query 3: Learning activity statistics
-  // Simplified: count all completions (TODO: differentiate by type later)
+  // Count ALL programs completed this week (regardless of creation date)
+  // Completion rate = (completed this week) / (created this week) * 100
   const learningQuery = `
     SELECT
       COUNT(CASE WHEN completed_at >= CURRENT_DATE - INTERVAL '7 days' THEN 1 END) as total_completions,
@@ -122,8 +132,7 @@ export async function getWeeklyStats(pool: Pool): Promise<WeeklyStats> {
         NULLIF(COUNT(CASE WHEN created_at >= CURRENT_DATE - INTERVAL '7 days' THEN 1 END), 0)) * 100,
         1
       ) as completion_rate
-    FROM programs
-    WHERE created_at >= CURRENT_DATE - INTERVAL '7 days';
+    FROM programs;
   `;
 
   const learningResult = await pool.query(learningQuery);
