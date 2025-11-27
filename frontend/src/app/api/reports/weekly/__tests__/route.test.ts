@@ -1,0 +1,183 @@
+/**
+ * Unit tests for weekly report API endpoint
+ * TDD: Red → Green → Refactor
+ */
+
+import { POST } from '../route';
+import { NextRequest } from 'next/server';
+import { getPool } from '@/lib/db/get-pool';
+import * as dbQueries from '../../lib/db-queries';
+import * as reportFormatter from '../../lib/report-formatter';
+import * as slackClient from '../../lib/slack-client';
+
+// Mock dependencies
+jest.mock('@/lib/db/get-pool');
+jest.mock('../../lib/db-queries');
+jest.mock('../../lib/report-formatter');
+jest.mock('../../lib/slack-client');
+
+describe('Weekly Report API Route', () => {
+  let mockPool: any;
+
+  const mockStats: dbQueries.WeeklyStats = {
+    userGrowth: {
+      totalUsers: 394,
+      newThisWeek: 142,
+      newLastWeek: 135,
+      weekOverWeekGrowth: 5.2,
+      dailyTrend: [20, 23, 29, 34, 20, 8, 13],
+      avgPerDay: 20.3
+    },
+    engagement: {
+      weeklyActiveUsers: 245,
+      dailyAvgActive: 85,
+      retentionRate: 45.0,
+      activeRate: 62.2
+    },
+    learning: {
+      assessmentCompletions: 234,
+      pblCompletions: 89,
+      discoveryCompletions: 156,
+      totalCompletions: 479,
+      completionRate: 78.5,
+      topContent: []
+    },
+    systemHealth: {
+      apiSuccessRate: 99.8,
+      avgResponseTime: 245,
+      uptime: 99.95,
+      dbStatus: 'normal'
+    }
+  };
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+
+    mockPool = {
+      query: jest.fn(),
+      connect: jest.fn(),
+      end: jest.fn()
+    };
+
+    (getPool as jest.Mock).mockReturnValue(mockPool);
+    (dbQueries.getWeeklyStats as jest.Mock).mockResolvedValue(mockStats);
+    (reportFormatter.formatWeeklyReport as jest.Mock).mockReturnValue('Mock report');
+    (slackClient.sendToSlack as jest.Mock).mockResolvedValue({
+      success: true,
+      message: 'Report sent successfully'
+    });
+  });
+
+  describe('POST /api/reports/weekly', () => {
+    it('should generate and send weekly report successfully', async () => {
+      // Arrange
+      const request = new NextRequest('http://localhost:3000/api/reports/weekly', {
+        method: 'POST'
+      });
+
+      // Act
+      const response = await POST(request);
+      const data = await response.json();
+
+      // Assert
+      expect(response.status).toBe(200);
+      expect(data.success).toBe(true);
+      expect(data.message).toContain('sent successfully');
+    });
+
+    it('should call database queries to get statistics', async () => {
+      // Arrange
+      const request = new NextRequest('http://localhost:3000/api/reports/weekly', {
+        method: 'POST'
+      });
+
+      // Act
+      await POST(request);
+
+      // Assert
+      expect(dbQueries.getWeeklyStats).toHaveBeenCalledWith(mockPool);
+    });
+
+    it('should format report with statistics', async () => {
+      // Arrange
+      const request = new NextRequest('http://localhost:3000/api/reports/weekly', {
+        method: 'POST'
+      });
+
+      // Act
+      await POST(request);
+
+      // Assert
+      expect(reportFormatter.formatWeeklyReport).toHaveBeenCalledWith(mockStats);
+    });
+
+    it('should send formatted report to Slack', async () => {
+      // Arrange
+      const request = new NextRequest('http://localhost:3000/api/reports/weekly', {
+        method: 'POST'
+      });
+
+      // Act
+      await POST(request);
+
+      // Assert
+      expect(slackClient.sendToSlack).toHaveBeenCalledWith('Mock report');
+    });
+
+    it('should handle database errors gracefully', async () => {
+      // Arrange
+      (dbQueries.getWeeklyStats as jest.Mock).mockRejectedValueOnce(
+        new Error('Database error')
+      );
+
+      const request = new NextRequest('http://localhost:3000/api/reports/weekly', {
+        method: 'POST'
+      });
+
+      // Act
+      const response = await POST(request);
+      const data = await response.json();
+
+      // Assert
+      expect(response.status).toBe(500);
+      expect(data.success).toBe(false);
+      expect(data.error).toContain('Database error');
+    });
+
+    it('should handle Slack sending errors gracefully', async () => {
+      // Arrange
+      (slackClient.sendToSlack as jest.Mock).mockResolvedValueOnce({
+        success: false,
+        error: 'Slack error'
+      });
+
+      const request = new NextRequest('http://localhost:3000/api/reports/weekly', {
+        method: 'POST'
+      });
+
+      // Act
+      const response = await POST(request);
+      const data = await response.json();
+
+      // Assert
+      expect(response.status).toBe(500);
+      expect(data.success).toBe(false);
+      expect(data.error).toContain('Slack error');
+    });
+
+    it('should return statistics in response', async () => {
+      // Arrange
+      const request = new NextRequest('http://localhost:3000/api/reports/weekly', {
+        method: 'POST'
+      });
+
+      // Act
+      const response = await POST(request);
+      const data = await response.json();
+
+      // Assert
+      expect(data.stats).toBeDefined();
+      expect(data.stats.userGrowth.totalUsers).toBe(394);
+    });
+  });
+});

@@ -44,6 +44,8 @@
     "report:ceo": "npx tsx scripts/dynamic-ceo-report.ts",
     "report:ceo:dry": "npx tsx scripts/dynamic-ceo-report.ts --dry-run",
     "report:dev": "npx tsx scripts/dynamic-dev-tracker.ts",
+    "report:weekly:dry": "npx tsx scripts/test-weekly-report.ts",
+    "report:weekly:dry:prod": "npx tsx scripts/test-weekly-report-production.ts",
     "dev:session:start": "npx tsx scripts/dynamic-dev-tracker.ts -- --start-session",
     "dev:session:end": "npx tsx scripts/dynamic-dev-tracker.ts -- --end-session",
     "seed": "npx tsx src/lib/repositories/postgresql/seeds/seed-runner.ts",
