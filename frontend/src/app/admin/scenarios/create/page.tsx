@@ -15,22 +15,27 @@ import { useState } from 'react';
 import { InputForm } from './components/InputForm';
 import { PreviewTabs } from './components/PreviewTabs';
 import { ValidationPanel } from './components/ValidationPanel';
-import type { CourseGenerationInput, GenerateScenarioResponse } from '@/types/prompt-to-course';
+import type { CourseGenerationInput, GenerateScenarioResponse, PublishScenarioResponse } from '@/types/prompt-to-course';
 
 export default function PromptToCoursePage() {
   const [yaml, setYaml] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isPublishing, setIsPublishing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [publishSuccess, setPublishSuccess] = useState<PublishScenarioResponse | null>(null);
   const [generationInfo, setGenerationInfo] = useState<{
     processingTime: number;
     tokensUsed?: number;
   } | null>(null);
   const [mode, setMode] = useState<'pbl' | 'discovery' | 'assessment'>('pbl');
+  const [scenarioId, setScenarioId] = useState('');
 
   const handleGenerate = async (input: CourseGenerationInput) => {
     setIsGenerating(true);
     setError(null);
+    setPublishSuccess(null);
     setMode(input.mode);
+    setScenarioId(input.scenarioId);
 
     try {
       const response = await fetch('/api/scenarios/generate', {
@@ -79,10 +84,49 @@ export default function PromptToCoursePage() {
     URL.revokeObjectURL(url);
   };
 
+  const handlePublish = async () => {
+    if (!yaml || !scenarioId) {
+      setError('Cannot publish: Missing scenario data');
+      return;
+    }
+
+    setIsPublishing(true);
+    setError(null);
+    setPublishSuccess(null);
+
+    try {
+      const response = await fetch('/api/scenarios/publish', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          scenarioId,
+          yaml,
+          mode,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json() as { error: string; details?: unknown };
+        throw new Error(errorData.error || 'Failed to publish to GitHub');
+      }
+
+      const result = await response.json() as PublishScenarioResponse;
+      setPublishSuccess(result);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to publish scenario';
+      setError(errorMessage);
+      console.error('Publish error:', err);
+    } finally {
+      setIsPublishing(false);
+    }
+  };
+
   const handleReset = () => {
     setYaml('');
     setError(null);
+    setPublishSuccess(null);
     setGenerationInfo(null);
+    setScenarioId('');
   };
 
   return (
@@ -97,10 +141,10 @@ export default function PromptToCoursePage() {
             Generate AI-powered learning scenarios from natural language descriptions
           </p>
           <div className="mt-2 flex items-center gap-2 text-sm text-gray-500">
-            <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded font-medium">
-              Phase 1: Preview Only
+            <span className="px-2 py-1 bg-green-100 text-green-800 rounded font-medium">
+              Phase 2: GitHub Integration Active
             </span>
-            <span>GitHub push will be available in Phase 2</span>
+            <span>Create Pull Requests directly from the UI</span>
           </div>
         </div>
 
@@ -110,8 +154,33 @@ export default function PromptToCoursePage() {
             <div className="flex items-start gap-2">
               <span className="text-red-600 text-xl">❌</span>
               <div>
-                <div className="font-medium text-red-900">Generation Error</div>
+                <div className="font-medium text-red-900">Error</div>
                 <div className="text-sm text-red-700 mt-1">{error}</div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Publish Success Display */}
+        {publishSuccess && (
+          <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+            <div className="flex items-start gap-2">
+              <span className="text-green-600 text-xl">✅</span>
+              <div className="flex-1">
+                <div className="font-medium text-green-900">{publishSuccess.message}</div>
+                <div className="text-sm text-green-700 mt-1">
+                  Branch: <code className="bg-green-100 px-1 rounded">{publishSuccess.branch}</code>
+                </div>
+                <div className="mt-2">
+                  <a
+                    href={publishSuccess.prUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-sm font-medium text-green-800 hover:text-green-900 underline"
+                  >
+                    View Pull Request →
+                  </a>
+                </div>
               </div>
             </div>
           </div>
@@ -166,7 +235,7 @@ export default function PromptToCoursePage() {
                   No Scenario Generated Yet
                 </h3>
                 <p className="text-gray-500">
-                  Fill in the form and click "Generate Scenario" to get started
+                  Fill in the form and click &quot;Generate Scenario&quot; to get started
                 </p>
               </div>
             ) : (
@@ -187,26 +256,42 @@ export default function PromptToCoursePage() {
                   <div className="flex gap-4">
                     <button
                       onClick={handleDownload}
-                      className="flex-1 px-6 py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors"
+                      disabled={isPublishing}
+                      className="flex-1 px-6 py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       📥 Download YAML
                     </button>
                     <button
                       onClick={handleReset}
-                      className="flex-1 px-6 py-3 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 transition-colors"
+                      disabled={isPublishing}
+                      className="flex-1 px-6 py-3 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       🔄 Start Over
                     </button>
                     <button
-                      disabled
-                      className="flex-1 px-6 py-3 bg-gray-100 text-gray-400 font-medium rounded-lg cursor-not-allowed"
-                      title="GitHub push will be available in Phase 2"
+                      onClick={handlePublish}
+                      disabled={isPublishing || !yaml || publishSuccess !== null}
+                      className="flex-1 px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      title={publishSuccess ? 'Already published' : 'Create Pull Request on GitHub'}
                     >
-                      🚫 Push to GitHub (Phase 2)
+                      {isPublishing ? (
+                        <>
+                          <span className="inline-block animate-spin mr-2">⏳</span>
+                          Publishing...
+                        </>
+                      ) : publishSuccess ? (
+                        '✅ Published'
+                      ) : (
+                        '🚀 Publish to GitHub'
+                      )}
                     </button>
                   </div>
                   <p className="mt-3 text-sm text-gray-500 text-center">
-                    Phase 1: Preview and download only. GitHub integration coming in Phase 2.
+                    {publishSuccess ? (
+                      'Scenario published successfully! You can now review the PR on GitHub.'
+                    ) : (
+                      'Phase 2: GitHub integration active. Ensure GITHUB_TOKEN is configured.'
+                    )}
                   </p>
                 </div>
               </>

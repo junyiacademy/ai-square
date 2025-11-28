@@ -108,6 +108,7 @@
     "@google-cloud/vertexai": "^1.10.0",
     "@google/generative-ai": "^0.24.1",
     "@monaco-editor/react": "^4.7.0",
+    "@octokit/rest": "^22.0.1",
     "@prisma/client": "^6.14.0",
     "@radix-ui/react-progress": "^1.1.7",
     "@slack/web-api": "^7.9.3",
