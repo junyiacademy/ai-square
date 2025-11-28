@@ -1,0 +1,15 @@
+{
+  "hooks": [
+    {
+      "matcher": "*",
+      "hooks": [
+        {
+          "eventName": "UserPromptSubmit",
+          "type": "command",
+          "command": "./.claude/hooks/check-agent-rules.py",
+          "timeout": 5
+        }
+      ]
+    }
+  ]
+}
