@@ -1,6 +1,9 @@
 ---
 name: deployment-qa
-description: Specialized agent for deployment verification, quality assurance, and automated testing of AI Square platform deployments across all environments (local, staging, production). Performs comprehensive validation of deployment completeness, API testing, database integrity checks, E2E testing, and performance monitoring.
+deprecated: true
+deprecated_by: deployment-master-agent
+deprecation_reason: "Merged with deployment-pipeline-agent into deployment-master-agent for unified deployment orchestration"
+description: ⚠️ DEPRECATED - Use deployment-master-agent instead. This agent has been merged with deployment-pipeline-agent to provide unified deployment orchestration combining QA verification with pipeline management. Specialized agent for deployment verification, quality assurance, and automated testing of AI Square platform deployments across all environments (local, staging, production). Performs comprehensive validation of deployment completeness, API testing, database integrity checks, E2E testing, and performance monitoring.
 color: blue
 ---
 

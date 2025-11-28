@@ -73,15 +73,64 @@ Infrastructure → infrastructure-first-agent
 Testing → tdd-validator-agent
 Architecture → unified-architecture-guardian
 Security → security-audit-agent
-Code Quality → code-quality-enforcer
-TypeScript Errors → typescript-eslint-fixer
-Deployment → deployment-pipeline-agent
+Code Quality & Type Safety → quality-guardian-agent (NEW: merged code-quality + typescript-eslint)
+Deployment & QA → deployment-master-agent (NEW: merged deployment-pipeline + deployment-qa)
 GCP Config → gcp-config-manager
 Documentation → documentation-sync-agent
 Git Operations → git-commit-push
+Performance → performance-optimization-agent
+Database → database-management-agent
+Monitoring → observability-monitoring-agent
+Error Learning → error-reflection-agent (NEW: analyzes errors and drives improvements)
 ```
 
-See `.claude/agents/agents-manager.md` for full decision tree.
+**Optimization Note**: agents-manager can run multiple independent agents in parallel for 30% faster workflows.
+
+See `.claude/agents/agents-manager.md` for full decision tree and parallel execution rules.
+
+## ⚡ Parallel Agent Execution (30% Faster)
+
+### When to Run Agents in Parallel
+
+**Safe Parallel Combinations:**
+```yaml
+Testing + Performance:
+  - tdd-validator-agent + performance-optimization-agent
+  - Tests verify performance improvements don't break functionality
+
+Security + Documentation:
+  - security-audit-agent + documentation-sync-agent
+  - Independent domains, no shared state
+
+Database + Monitoring:
+  - database-management-agent + observability-monitoring-agent
+  - Monitoring tracks database changes in real-time
+
+Quality + Architecture:
+  - quality-guardian-agent + unified-architecture-guardian
+  - Complementary validation from different perspectives
+```
+
+**Must Run Sequentially:**
+```yaml
+Pipeline Dependencies:
+  infrastructure-first-agent → deployment-master-agent
+  tdd-validator-agent → git-commit-push
+  gcp-config-manager → Any GCP operation
+  quality-guardian-agent → deployment-master-agent
+```
+
+**Example:**
+```typescript
+// ✅ Parallel - Independent tasks
+Task(subagent_type="security-audit-agent", ...);
+Task(subagent_type="documentation-sync-agent", ...);
+
+// ❌ Sequential - Dependent tasks
+Task(subagent_type="infrastructure-first-agent", ...);
+// Wait for completion, then:
+Task(subagent_type="deployment-master-agent", ...);
+```
 
 ## 📏 Code Quality Standards (Quick Reference)
 
@@ -239,6 +288,52 @@ Use `/visual-test` command for:
 - `/visual-test` - Screenshot-based UI iteration workflow
 - `/clear` - Reset context to prevent pollution
 
+## 🔄 Error Reflection & Continuous Improvement
+
+### Core Philosophy
+**"每個錯誤都是學習機會" (Every error is a learning opportunity)**
+
+### Automatic Reflection System
+Every error automatically triggers `error-reflection-agent`:
+1. **Root Cause Analysis** - Why did it happen?
+2. **Improvement Proposals** - How to prevent recurrence?
+3. **System Updates** - Immediate preventive measures
+4. **Learning Records** - Update `.claude/learning/` knowledge base
+
+### Improvement Priority
+When errors occur, evaluate in order:
+- **Agent Optimization**: Are responsibilities clear? Need enhancement?
+- **Skill Enhancement**: Missing capabilities?
+- **Command Addition**: Need new automation?
+- **CLAUDE.md Updates**: Rules need adjustment?
+
+### Learning System Structure
+```
+.claude/learning/
+├── error-patterns.json      # Error pattern tracking
+├── improvements.json         # Improvement history
+├── user-preferences.json    # User work patterns
+└── performance-metrics.json # Performance metrics
+```
+
+### Reflection Commands
+- `/reflect` - Manually trigger error reflection
+- `/weekly-review` - Weekly performance & improvement review
+
+### Continuous Improvement Metrics
+- 📉 Error rate decreases week-over-week
+- 🔄 Same error doesn't repeat more than twice
+- 📚 Documentation continuously improves
+- 🤖 Agent capabilities keep growing
+- ⚡ Resolution time keeps decreasing
+
+### Hook Integration
+- `error-reflection.py` - Auto-detects errors and triggers reflection
+- Updates `error-patterns.json` to track frequency
+- Provides intelligent improvement suggestions
+
+**Remember**: The goal is not perfection, but perfect improvement!
+
 ## 📁 Key Documentation
 
 - **Product**: `docs/handbook/PRD.md`
@@ -258,4 +353,4 @@ Use `/visual-test` command for:
 ---
 
 **Note**: This file should remain in project root for Claude Code auto-loading.
-**Version**: 3.1 (Added 2025 best practices, Extended Thinking, /context-check, /visual-test)
+**Version**: 3.2 (Added Error Reflection & Continuous Improvement System, /reflect, /weekly-review)

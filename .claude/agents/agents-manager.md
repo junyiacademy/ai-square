@@ -85,23 +85,42 @@ Architecture Consistency:
 Security Concerns:
   → security-audit-agent
 
-Code Quality Issues:
-  → code-quality-enforcer
+Code Quality & Type Safety (UNIFIED):
+  → quality-guardian-agent
+  Triggers:
+    - TypeScript errors: "TS2345", "type error", "compilation error"
+    - ESLint issues: "ESLint error", "linting violation"
+    - Quality enforcement: "code review", "enforce standards"
+    - Type safety: "remove any types", "make type-safe"
+    - Next.js compliance: "Next.js 15", "route params"
+  Replaces:
+    - code-quality-enforcer (deprecated)
+    - typescript-eslint-fixer (deprecated)
 
-TypeScript/ESLint Errors:
-  → typescript-eslint-fixer
-
-Deployment Process:
-  → deployment-pipeline-agent
-
-Deployment Verification:
-  → deployment-qa
+Deployment & QA (UNIFIED):
+  → deployment-master-agent
+  Triggers:
+    - Deployment: "deploy", "push to staging", "promote to production"
+    - Verification: "verify deployment", "check staging", "test production"
+    - QA: "run QA", "verify release", "deployment test"
+    - Issues: "deployment failing", "database connection errors"
+  Replaces:
+    - deployment-pipeline-agent (deprecated)
+    - deployment-qa (deprecated)
 
 GCP Configuration:
   → gcp-config-manager
 
 Documentation Updates:
   → documentation-sync-agent
+
+Error Analysis & Learning:
+  → error-reflection-agent
+  Triggers:
+    - Any error detected: "error", "failed", "exception", "錯誤", "失敗"
+    - Manual reflection: "/reflect" command
+    - Weekly review: "/weekly-review" command
+    - Improvement needed: "could be better", "optimize", "improve"
 
 Slack Reports:
   → slack-tracker-integration
@@ -152,6 +171,80 @@ Database Management:
     - Operations: "backup", "restore", "connection pool"
     - Maintenance: "database health", "index optimization", "VACUUM"
 ```
+
+## Parallel Execution Rules
+
+### Agents That Can Run in Parallel
+
+**Performance Optimization (30% faster workflows):**
+
+When multiple independent tasks are identified, execute agents in parallel using multiple Task calls in a single response.
+
+**Safe Parallel Combinations:**
+```yaml
+Group 1 - Testing & Performance:
+  - tdd-validator-agent
+  - performance-optimization-agent
+  Benefits: Tests verify performance improvements don't break functionality
+
+Group 2 - Security & Documentation:
+  - security-audit-agent
+  - documentation-sync-agent
+  Benefits: Independent domains, no shared state
+
+Group 3 - Database & Monitoring:
+  - database-management-agent
+  - observability-monitoring-agent
+  Benefits: Monitoring can track database changes in real-time
+
+Group 4 - Quality & Architecture:
+  - quality-guardian-agent
+  - unified-architecture-guardian
+  Benefits: Quality checks complement architecture validation
+```
+
+**Must Run Sequentially:**
+```yaml
+Pipeline Dependencies:
+  infrastructure-first-agent → deployment-master-agent
+  Reason: Infrastructure must exist before deployment
+
+  tdd-validator-agent → git-commit-push
+  Reason: Tests must pass before committing
+
+  gcp-config-manager → Any GCP operation
+  Reason: Configuration must be correct before operations
+
+  quality-guardian-agent → deployment-master-agent
+  Reason: Code quality must pass before deployment
+
+  deployment-master-agent → observability-monitoring-agent
+  Reason: Deploy first, then set up monitoring for new deployment
+```
+
+**Parallel Execution Example:**
+```typescript
+// ✅ GOOD - Run independent agents in parallel
+Task(subagent_type="security-audit-agent", ...);
+Task(subagent_type="documentation-sync-agent", ...);
+
+// ❌ BAD - Don't parallelize dependent tasks
+// This will fail because deployment needs infrastructure
+Task(subagent_type="infrastructure-first-agent", ...);
+Task(subagent_type="deployment-master-agent", ...);
+```
+
+**When to Use Parallel Execution:**
+- Multiple independent verification tasks
+- Simultaneous analysis from different perspectives
+- Batch operations on independent modules
+- Quality checks across different domains
+
+**When to Use Sequential Execution:**
+- Clear dependencies between tasks
+- State changes that affect subsequent tasks
+- Pipeline operations (infra → deploy → monitor)
+- Quality gates that must pass before proceeding
 
 ## Quality Gates
 
