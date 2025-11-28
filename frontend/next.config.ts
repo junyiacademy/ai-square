@@ -52,6 +52,20 @@ const nextConfig: NextConfig = {
     formats: ['image/avif', 'image/webp'],
   },
 
+  // Server-only packages (不應該被打包到 client bundle)
+  serverExternalPackages: [
+    '@google-cloud/storage',
+    '@google-cloud/translate',
+    '@google-cloud/vertexai',
+    '@google/generative-ai',
+    '@prisma/client',
+    'prisma',
+    'nodemailer',
+    'pg',
+    '@slack/web-api',
+    'google-auth-library',
+  ],
+
   // 實驗性功能
   experimental: {
     // 優化包大小
@@ -60,6 +74,8 @@ const nextConfig: NextConfig = {
       'd3',
       'react-i18next',
       'react-markdown',
+      'lucide-react',
+      'framer-motion',
     ],
   },
 
