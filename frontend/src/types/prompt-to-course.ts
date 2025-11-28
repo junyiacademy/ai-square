@@ -114,3 +114,23 @@ export interface DownloadOptions {
   filename: string;
   format: 'yaml' | 'json';
 }
+
+/**
+ * Publish to GitHub request
+ */
+export interface PublishScenarioRequest {
+  scenarioId: string;
+  yaml: string;
+  mode: LearningMode;
+}
+
+/**
+ * Publish to GitHub response
+ */
+export interface PublishScenarioResponse {
+  success: boolean;
+  prUrl: string;
+  branch: string;
+  commitSha: string;
+  message: string;
+}
