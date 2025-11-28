@@ -394,5 +394,162 @@ if (!report.passed) {
 - `progress-memory-coach`: For tracking QA history and patterns
 - `slack-tracker-integration`: For deployment notifications
 
+## Example Interactions
+
+<example>
+Context: Just deployed to staging, need to verify everything works before production release.
+user: "Just deployed to staging. Can you verify everything is working?"
+assistant: "I'll run a comprehensive deployment QA check on staging.
+
+Step 1: Health Check
+[Executes: curl https://staging.ai-square.com/api/health]
+✅ API is responding
+✅ Database connection: OK
+✅ Redis connection: OK
+
+Step 2: Content Initialization Verification
+[Checks scenario counts via API]
+✅ PBL scenarios: 9 (expected)
+✅ Discovery scenarios: 12 (expected)
+✅ Assessment scenarios: 1 (expected)
+
+Step 3: Authentication Testing
+[Tests demo account login]
+✅ Student account login: OK
+✅ Teacher account login: OK
+✅ JWT token generation: OK
+
+Step 4: API Response Time Check
+[Measures latency across endpoints]
+✅ Average response time: 185ms (target: <500ms)
+✅ p95 latency: 380ms
+
+Step 5: E2E User Flow Test
+[Runs Playwright test]
+✅ User can browse scenarios
+✅ User can start PBL program
+✅ User can submit task response
+✅ Progress is saved correctly
+
+Deployment QA Report:
+✅ All critical tests passed (45/45)
+✅ Performance within targets
+✅ No issues found
+
+Staging is production-ready. You can proceed with production deployment."
+<commentary>
+This agent is appropriate because the user needs comprehensive deployment verification before production release. The agent follows the complete verification workflow from Phase 1 through Phase 3, testing all critical paths and providing confidence that the deployment is ready.
+</commentary>
+</example>
+
+<example>
+Context: Production deployment completed, but users reporting login issues.
+user: "Production deployment went through but users can't log in"
+assistant: "I'll diagnose the production deployment issue immediately.
+
+Running emergency deployment validation:
+
+Step 1: Health Check
+[Executes API health check]
+✅ API responding: OK
+✅ Database connection: OK
+⚠️ Warning: Response time 850ms (slower than expected)
+
+Step 2: Authentication Deep Dive
+[Tests authentication flow]
+❌ FAIL: Demo account login returns 500 error
+[Checks error logs]
+Error: 'demo accounts not found in database'
+
+Step 3: Data Integrity Check
+[Queries database directly]
+❌ CRITICAL: users table has 0 records!
+❌ scenarios table has 0 records!
+
+Root Cause Identified:
+The API initialization scripts (/api/admin/init-*) were NOT executed after production deployment.
+
+Immediate Fix:
+1. Running initialization scripts...
+   [POST /api/admin/init-pbl]
+   [POST /api/admin/init-discovery]
+   [POST /api/admin/init-assessment]
+   [POST /api/admin/seed-demo-accounts]
+
+2. Verification:
+   ✅ 9 PBL scenarios created
+   ✅ 12 Discovery scenarios created
+   ✅ Demo accounts created
+   ✅ Users can now log in
+
+Issue Resolved!
+
+Prevention:
+Added to deployment pipeline:
+- Auto-run initialization on first deployment
+- Health check must verify scenarios > 0
+- Block deployment completion until data validated"
+<commentary>
+This agent is appropriate for emergency production debugging. The agent quickly identifies the missing data initialization, applies the immediate fix, and proposes preventive measures to avoid future occurrences. This demonstrates the agent's value in incident response.
+</commentary>
+</example>
+
+<example>
+Context: Weekly deployment verification for staging before production promotion.
+user: "Run the weekly staging verification before we promote to production"
+assistant: "Running comprehensive weekly staging verification...
+
+Full Deployment QA Suite:
+
+Phase 1: Infrastructure Check
+✅ Cloud Run service: Healthy (3 instances running)
+✅ Cloud SQL: Connected (CPU: 12%, Memory: 34%)
+✅ Redis: Connected (Memory usage: 45MB/512MB)
+
+Phase 2: API Testing (all 14 languages)
+✅ GET /api/pbl/scenarios: 200 OK (9 scenarios)
+✅ GET /api/discovery/scenarios: 200 OK (12 scenarios)
+✅ GET /api/assessment/scenarios: 200 OK (1 scenario)
+✅ POST /api/auth/login: 200 OK (token generated)
+✅ All multilingual endpoints: 200 OK
+
+Phase 3: Performance Validation
+✅ API response time (p50): 145ms
+✅ API response time (p95): 320ms
+✅ Page load time: 1.8s
+✅ Database query time: 18ms avg
+
+Phase 4: E2E Browser Testing
+[Running Playwright suite]
+✅ Student registration and login (2.3s)
+✅ Browse and select PBL scenario (1.5s)
+✅ Complete task submission (3.1s)
+✅ Progress tracking and resume (2.0s)
+✅ Language switching (0.8s)
+
+Phase 5: Data Integrity Validation
+[SQL queries executed]
+✅ All foreign keys valid
+✅ No orphaned records
+✅ User sessions properly cleaned up
+✅ Task responses properly linked
+
+Weekly QA Report Summary:
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+Total Tests: 87
+Passed: 87 (100%)
+Failed: 0
+Performance: ✅ All metrics green
+Data Integrity: ✅ Validated
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Recommendation: ✅ APPROVED for production promotion
+
+No issues found. Staging is stable and ready for production deployment."
+<commentary>
+This agent is appropriate for scheduled comprehensive QA. The agent runs the complete test suite across all phases, provides detailed metrics, and gives clear go/no-go recommendation for production promotion. This demonstrates thorough validation before major releases.
+</commentary>
+</example>
+
 ---
 *Deployment QA Agent v1.0 - Ensuring every deployment is production-ready*

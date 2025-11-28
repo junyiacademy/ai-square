@@ -117,6 +117,40 @@ Git Operations:
 
 Terraform:
   → terraform-deploy
+
+GitHub Issue & PR Workflow (PDCA):
+  → git-issue-pr-flow
+  Triggers:
+    - Issue management: "fix issue", "處理 issue", "patrol issues", "check issues"
+    - PR workflow: "create PR", "deploy to staging", "merge to staging"
+    - Approval checks: "check approvals", "mark approved"
+    - Production: "deploy to production", "merge to main", "release"
+    - Testing: "test environment", "preview URL"
+
+Observability & Monitoring:
+  → observability-monitoring-agent
+  Triggers:
+    - Monitoring setup: "set up monitoring", "create dashboard", "add alerts"
+    - Production issues: "investigate performance", "check logs", "analyze errors"
+    - Metrics: "track metrics", "monitor production", "check uptime"
+    - Incident response: "production outage", "error spike", "latency increase"
+
+Performance Optimization:
+  → performance-optimization-agent
+  Triggers:
+    - Performance issues: "slow page", "optimize performance", "improve speed"
+    - Metrics: "Core Web Vitals", "Lighthouse", "bundle size", "query optimization"
+    - Load testing: "load test", "stress test", "capacity planning"
+    - Frontend: "optimize images", "code splitting", "lazy loading"
+    - Backend: "slow API", "database slow", "cache optimization"
+
+Database Management:
+  → database-management-agent
+  Triggers:
+    - Schema changes: "create migration", "add table", "modify schema"
+    - Query issues: "slow query", "optimize query", "database performance"
+    - Operations: "backup", "restore", "connection pool"
+    - Maintenance: "database health", "index optimization", "VACUUM"
 ```
 
 ## Quality Gates

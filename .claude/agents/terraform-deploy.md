@@ -257,3 +257,230 @@ make staging-health
 # Rollback
 make production-rollback
 ```
+
+## Example Interactions
+
+<example>
+Context: Need to provision a new Cloud SQL database for the staging environment.
+user: "Set up a new PostgreSQL database for staging using Terraform"
+assistant: "I'll provision a new Cloud SQL PostgreSQL database for staging using Terraform.
+
+Step 1: Security Validation
+[Runs terraform/security-check.sh]
+✅ Password complexity verified
+✅ Sensitive variables marked
+✅ Network security configured
+
+Step 2: Terraform Configuration
+[Creating terraform configuration]
+```hcl
+resource \"google_sql_database_instance\" \"staging\" {
+  name             = \"ai-square-staging-db\"
+  database_version = \"POSTGRES_15\"
+  region           = \"asia-east1\"
+
+  settings {
+    tier = \"db-f1-micro\"
+    backup_configuration {
+      enabled = false
+    }
+    ip_configuration {
+      ipv4_enabled = true
+      authorized_networks {
+        name  = \"dev-access\"
+        value = \"0.0.0.0/0\"
+      }
+    }
+  }
+
+  deletion_protection = false
+}
+```
+
+Step 3: Planning Infrastructure Changes
+[Executes: terraform plan -var-file=environments/staging.tfvars]
+Terraform Plan Summary:
++ google_sql_database_instance.staging (new)
++ google_sql_database.ai_square (new)
++ google_sql_user.app_user (new)
+
+Estimated monthly cost: $10-15
+
+Step 4: Applying Changes
+[Executes: terraform apply -var-file=environments/staging.tfvars -auto-approve]
+✅ Cloud SQL instance created (5 minutes)
+✅ Database created
+✅ User credentials generated and stored in Secret Manager
+
+Step 5: Post-Deployment Validation
+[Tests database connectivity]
+✅ Database connection: OK
+✅ Can create tables: OK
+✅ Service account permissions: OK
+
+Staging database is now ready:
+- Instance: ai-square-staging-db
+- Database: ai_square
+- Region: asia-east1
+- Connection: Available in Secret Manager
+
+Next steps:
+1. Update Cloud Run environment variables
+2. Run database migrations
+3. Initialize data"
+<commentary>
+This agent is appropriate because infrastructure provisioning should always use Terraform (Infrastructure First principle). The agent runs security checks, creates proper Terraform configuration, previews changes, applies them, and validates the deployment.
+</commentary>
+</example>
+
+<example>
+Context: Manual changes were made in GCP console, need to import them to Terraform.
+user: "Someone manually created a Cloud Run service. Import it to Terraform."
+assistant: "I'll import the manually created Cloud Run service into Terraform state.
+
+Step 1: Discovering Manual Resources
+[Executes: gcloud run services list --region=asia-east1]
+Found manual resource:
+- Service: ai-square-api
+- Region: asia-east1
+- Created: 2 days ago (not in Terraform)
+
+Step 2: Generating Terraform Configuration
+[Creates Terraform resource block]
+```hcl
+resource \"google_cloud_run_service\" \"api\" {
+  name     = \"ai-square-api\"
+  location = \"asia-east1\"
+
+  template {
+    spec {
+      containers {
+        image = \"gcr.io/ai-square-463013/api:latest\"
+      }
+    }
+  }
+}
+```
+
+Step 3: Importing Resource to State
+[Executes: terraform import google_cloud_run_service.api ai-square-api]
+✅ Resource imported successfully
+
+Step 4: Validating Import
+[Executes: terraform plan]
+Checking if configuration matches actual state...
+⚠️ Found 2 differences:
+  - Missing: environment variables
+  - Missing: scaling configuration
+
+Step 5: Updating Configuration
+[Updates Terraform to match actual state]
+```hcl
+resource \"google_cloud_run_service\" \"api\" {
+  name     = \"ai-square-api\"
+  location = \"asia-east1\"
+
+  template {
+    spec {
+      containers {
+        image = \"gcr.io/ai-square-463013/api:latest\"
+        env {
+          name  = \"DATABASE_URL\"
+          value_from {
+            secret_key_ref {
+              name = \"database-url\"
+              key  = \"latest\"
+            }
+          }
+        }
+      }
+    }
+    metadata {
+      annotations = {
+        \"autoscaling.knative.dev/maxScale\" = \"10\"
+        \"autoscaling.knative.dev/minScale\" = \"1\"
+      }
+    }
+  }
+}
+```
+
+Step 6: Final Verification
+[Executes: terraform plan]
+✅ No changes needed - configuration matches state
+
+Import Complete:
+✅ Cloud Run service now managed by Terraform
+✅ Configuration matches actual deployment
+✅ No manual changes remaining
+
+Warning: Please avoid manual changes in GCP console.
+Always use Terraform for infrastructure modifications."
+<commentary>
+This agent is appropriate for handling infrastructure drift when manual changes are made. The agent imports the resource, generates proper Terraform configuration, validates it matches actual state, and warns against future manual changes to prevent drift.
+</commentary>
+</example>
+
+<example>
+Context: Need to rollback a failed production deployment.
+user: "Production deployment failed. Rollback now!"
+assistant: "I'll perform emergency rollback of the production deployment.
+
+Step 1: Assessing Current State
+[Checks Cloud Run service status]
+⚠️ Current revision: ai-square-prod-00042-xkt (FAILING)
+- Error rate: 85%
+- Status: Unhealthy
+- Traffic: 100%
+
+Step 2: Identifying Previous Stable Revision
+[Lists recent revisions]
+Found stable revision:
+- Revision: ai-square-prod-00041-abc
+- Last good deployment: 2 hours ago
+- Error rate: 0.5%
+- Status: Healthy
+
+Step 3: Executing Rollback
+[Updates traffic routing]
+```bash
+gcloud run services update-traffic ai-square-prod \
+  --to-revisions=ai-square-prod-00041-abc=100 \
+  --region=asia-east1
+```
+✅ Traffic shifted to previous revision (30 seconds)
+
+Step 4: Verifying Rollback
+[Tests production endpoints]
+✅ Health check: OK
+✅ API responding: 200 OK
+✅ Error rate: 0.5% (back to normal)
+✅ Response time: 180ms avg
+
+Step 5: Terraform State Sync
+[Updates Terraform state to reflect rollback]
+```bash
+terraform refresh
+```
+✅ State synchronized
+
+Rollback Complete:
+✅ Production restored to stable revision
+✅ Users can access application normally
+✅ Failed revision preserved for analysis
+
+Post-Incident Actions:
+1. Investigate failed revision logs
+2. Identify root cause
+3. Fix issues in staging first
+4. Re-deploy after validation
+
+Failed revision logs:
+[Provides link to Cloud Logging]
+
+Production is now stable on revision 00041."
+<commentary>
+This agent is appropriate for emergency rollback situations. The agent quickly identifies the problem, finds the last stable revision, executes rollback, validates success, and provides guidance for post-incident investigation. Speed is critical in production incidents.
+</commentary>
+</example>
+

@@ -353,6 +353,165 @@ npm run docs:validate
 npm run changelog:generate
 ```
 
+## Example Interactions
+
+<example>
+Context: Just created a new agent for database migrations and need to ensure all documentation is updated.
+user: "I just created the database-migration-agent. Make sure all docs are updated."
+assistant: "I'll synchronize all documentation to reflect the new database-migration-agent.
+
+Step 1: Analyzing new agent file
+[Reads .claude/agents/database-migration-agent.md]
+- Agent name: database-migration-agent
+- Purpose: Database migration management
+- Key capabilities: Schema changes, data migrations, rollback
+
+Step 2: Updating CLAUDE.md
+[Adds agent to decision tree]
+✅ Added to 'When to Call Other Agents' section:
+   'Database Migrations → database-migration-agent'
+
+Step 3: Updating agents-manager.md
+[Adds routing logic]
+✅ Added trigger patterns:
+   - 'migration', 'schema change', 'alter table'
+
+Step 4: Cross-reference validation
+✅ All agent references consistent
+✅ File paths validated
+✅ Command examples verified
+
+Step 5: Updating related documentation
+[Updates PRD.md and architecture docs]
+✅ Added migration workflow to PRD
+✅ Updated architecture diagram
+
+Documentation Sync Complete:
+- CLAUDE.md updated with new agent
+- agents-manager.md routing added
+- Cross-references validated
+- Related docs updated
+
+All documentation now reflects the new database-migration-agent."
+<commentary>
+This agent is appropriate because creating a new agent requires documentation updates across multiple files. The agent systematically updates CLAUDE.md, agents-manager, and related docs to ensure the new agent is properly integrated and discoverable.
+</commentary>
+</example>
+
+<example>
+Context: Made changes to the deployment pipeline in GitHub Actions, need to update documentation.
+user: "I updated the CI/CD pipeline. Sync the documentation."
+assistant: "I'll analyze the CI/CD changes and update all relevant documentation.
+
+Step 1: Detecting changes
+[Reads git diff .github/workflows/deploy.yml]
+Changes detected:
+- Added: Terraform validation step
+- Added: Security scanning
+- Modified: Deployment approval workflow
+- Removed: Manual deployment script reference
+
+Step 2: Updating CICD.md
+[Updates docs/deployment/CICD.md]
+✅ Added new steps to deployment workflow
+✅ Removed outdated manual process
+✅ Updated GitHub Actions configuration
+✅ Added security scanning documentation
+
+Step 3: Updating CLAUDE.md
+[Checks if process changes affect AI instructions]
+✅ Updated pre-deployment checklist
+✅ Added security validation requirement
+
+Step 4: Checking for script references
+[Searches for references to removed manual script]
+⚠️ Found 2 references to old deploy.sh:
+   - docs/handbook/operations.md
+   - scripts/README.md
+[Updates both files to reference new GitHub Actions workflow]
+
+Step 5: Validation
+✅ All references to old process removed
+✅ New workflow documented
+✅ Links verified
+✅ Command examples tested
+
+Documentation Sync Report:
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+Files Updated: 4
+- docs/deployment/CICD.md
+- CLAUDE.md
+- docs/handbook/operations.md
+- scripts/README.md
+
+Changes:
++ Added Terraform validation steps
++ Added security scanning documentation
++ Updated deployment approval process
+- Removed manual deployment references
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+All deployment documentation is now synchronized with the updated CI/CD pipeline."
+<commentary>
+This agent is appropriate for keeping documentation in sync with infrastructure changes. The agent detects all impacted documentation, updates multiple files consistently, and removes outdated references to ensure documentation accuracy.
+</commentary>
+</example>
+
+<example>
+Context: Added new environment variables for feature flags, need to document them.
+user: "Added FEATURE_FLAG_ANALYTICS=true to .env.local. Update docs."
+assistant: "I'll ensure the new environment variable is properly documented across all relevant files.
+
+Step 1: Analyzing the new variable
+[Reads code to understand usage]
+Variable: FEATURE_FLAG_ANALYTICS
+Type: boolean
+Purpose: Enable/disable analytics tracking
+Used in: src/lib/analytics.ts
+
+Step 2: Updating .env.example
+[Updates .env.example with new variable]
+✅ Added:
+```
+# Feature Flags
+FEATURE_FLAG_ANALYTICS=false  # Enable analytics tracking (set to true in production)
+```
+
+Step 3: Updating CICD.md
+[Adds to environment variables section]
+✅ Documented variable in deployment guide
+✅ Added to staging/production configuration checklist
+✅ Noted default values for each environment
+
+Step 4: Updating setup documentation
+[Updates docs/handbook/development-setup.md]
+✅ Added to required environment variables
+✅ Included setup instructions
+✅ Added troubleshooting note
+
+Step 5: Verifying Secret Manager
+[Checks if variable should be in Secret Manager]
+ℹ️ Note: Feature flags are config, not secrets
+✓ Appropriately using .env.local (not Secret Manager)
+
+Step 6: Cross-reference check
+[Searches for related feature flag documentation]
+✅ Added to feature flags section in PRD.md
+✅ Linked to analytics implementation docs
+
+Documentation Update Summary:
+Files Updated:
+✅ .env.example - Added variable with description
+✅ docs/deployment/CICD.md - Added to deployment checklist
+✅ docs/handbook/development-setup.md - Setup instructions
+✅ docs/handbook/PRD.md - Feature flag documentation
+
+The new FEATURE_FLAG_ANALYTICS variable is now fully documented and ready for team use."
+<commentary>
+This agent is appropriate for documenting configuration changes. The agent ensures the new environment variable is documented in .env.example, deployment guides, setup documentation, and cross-referenced in related docs. This prevents configuration drift and confusion.
+</commentary>
+</example>
+
 ---
 
 Remember: Documentation is the bridge between code and understanding. Keep it current, clear, and comprehensive!
