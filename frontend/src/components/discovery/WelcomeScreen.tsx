@@ -1,68 +1,25 @@
 'use client';
 
-import React, { useState, useEffect } from 'react'
-import { Sparkles, Zap, Cpu, Rocket, Database, Flame, Star } from 'lucide-react';;
+import React from 'react';
+import { Zap, Cpu, Rocket, Database, Flame, Star } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { motion, AnimatePresence } from 'framer-motion';
-;
-;
+import { motion } from 'framer-motion';
+import {
+  FloatingParticles,
+  DynamicPhraseCarousel,
+  StartButton,
+  FeatureCard,
+  HeroIcon
+} from './welcome-screen';
 
 interface WelcomeScreenProps {
   onStartJourney: () => void;
 }
 
-interface FloatingParticle {
-  id: number;
-  x: number;
-  y: number;
-  size: number;
-  speed: number;
-  color: string;
-}
-
 export default function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
   const { t } = useTranslation('discovery');
-  const [particles, setParticles] = useState<FloatingParticle[]>([]);
-  const [currentPhrase, setCurrentPhrase] = useState(0);
-  const [isHovering, setIsHovering] = useState(false);
 
-  // Dynamic phrases from i18n
   const phrases = t('welcomeScreen.phrases', { returnObjects: true }) as string[];
-
-  // 初始化浮動粒子 - 減少粒子數量避免性能問題
-  useEffect(() => {
-    const newParticles: FloatingParticle[] = [];
-    for (let i = 0; i < 10; i++) {
-      newParticles.push({
-        id: i,
-        x: Math.random() * 100,
-        y: Math.random() * 100,
-        size: Math.random() * 4 + 2,
-        speed: Math.random() * 2 + 1,
-        color: ['#8B5CF6', '#3B82F6', '#10B981', '#F59E0B', '#EF4444'][Math.floor(Math.random() * 5)]
-      });
-    }
-    setParticles(newParticles);
-  }, []);
-
-  // 粒子動畫
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setParticles(prev => prev.map(particle => ({
-        ...particle,
-        y: (particle.y + particle.speed) % 100
-      })));
-    }, 100);
-    return () => clearInterval(interval);
-  }, []);
-
-  // 標語輪播
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentPhrase(prev => (prev + 1) % phrases.length);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, [phrases.length]);
 
   const features = [
     {
@@ -87,57 +44,14 @@ export default function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
 
   return (
     <div className="relative h-screen overflow-hidden flex items-center justify-center">
-      {/* 動態背景粒子 */}
-      <div className="absolute inset-0 -z-10">
-        {particles.map((particle) => (
-          <motion.div
-            key={particle.id}
-            className="absolute rounded-full opacity-20"
-            style={{
-              left: `${particle.x}%`,
-              top: `${particle.y}%`,
-              width: `${particle.size}px`,
-              height: `${particle.size}px`,
-              backgroundColor: particle.color,
-            }}
-            animate={{
-              y: [`${particle.y}%`, `${(particle.y + 10) % 100}%`],
-              scale: [1, 1.2, 1],
-              opacity: [0.2, 0.4, 0.2]
-            }}
-            transition={{
-              duration: particle.speed * 2,
-              repeat: Infinity,
-              ease: "linear"
-            }}
-          />
-        ))}
-      </div>
+      <FloatingParticles />
 
       {/* 漸層背景 */}
       <div className="absolute inset-0 -z-20 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900" />
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_center,rgba(168,85,247,0.1),transparent_70%)]" />
 
       <div className="relative z-10 text-center text-white px-4 w-full max-h-screen overflow-y-auto py-8">
-        {/* 動態標語 */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="mb-8"
-        >
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentPhrase}
-              initial={{ opacity: 0, y: 20, scale: 0.8 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -20, scale: 0.8 }}
-              transition={{ duration: 0.5 }}
-              className="text-lg md:text-xl font-medium text-purple-300 mb-4"
-            >
-              {phrases[currentPhrase]}
-            </motion.div>
-          </AnimatePresence>
-        </motion.div>
+        <DynamicPhraseCarousel phrases={phrases} />
 
         {/* Hero Section */}
         <motion.div
@@ -146,28 +60,7 @@ export default function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="mb-8"
         >
-          {/* 3D 旋轉圖標 */}
-          <motion.div
-            animate={{
-              rotateY: 360,
-              scale: isHovering ? 1.1 : 1
-            }}
-            transition={{
-              rotateY: { duration: 8, repeat: Infinity, ease: "linear" },
-              scale: { duration: 0.2 }
-            }}
-            onHoverStart={() => setIsHovering(true)}
-            onHoverEnd={() => setIsHovering(false)}
-            className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-r from-purple-500 via-blue-500 to-cyan-500 rounded-3xl mb-4 shadow-2xl shadow-purple-500/50"
-            style={{ transformStyle: 'preserve-3d' }}
-          >
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-            >
-              <Sparkles className="w-12 h-12 text-white" />
-            </motion.div>
-          </motion.div>
+          <HeroIcon />
 
           <motion.h1
             className="text-4xl md:text-5xl font-black mb-4 bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent"
@@ -188,37 +81,7 @@ export default function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
             {t('welcomeScreen.subtitle')}
           </motion.p>
 
-          {/* 發光啟動按鈕 */}
-          <motion.button
-            onClick={onStartJourney}
-            whileHover={{
-              scale: 1.05,
-              boxShadow: "0 0 30px rgba(168, 85, 247, 0.6)"
-            }}
-            whileTap={{ scale: 0.98 }}
-            className="group relative inline-flex items-center space-x-3 bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-600 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-2xl shadow-purple-500/30 border border-purple-400/30 backdrop-blur-sm"
-          >
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-            >
-              <Rocket className="w-6 h-6" />
-            </motion.div>
-            <span className="relative z-10">{t('welcomeScreen.startJourney')}</span>
-
-            {/* 按鈕光效 */}
-            <motion.div
-              className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-400 to-cyan-400 opacity-0 group-hover:opacity-20 transition-opacity duration-300"
-              animate={{
-                background: [
-                  'linear-gradient(45deg, #a855f7, #3b82f6)',
-                  'linear-gradient(45deg, #3b82f6, #06b6d4)',
-                  'linear-gradient(45deg, #06b6d4, #a855f7)'
-                ]
-              }}
-              transition={{ duration: 2, repeat: Infinity }}
-            />
-          </motion.button>
+          <StartButton onClick={onStartJourney} label={t('welcomeScreen.startJourney')} />
 
           {/* 互動提示 */}
           <motion.div
@@ -250,57 +113,17 @@ export default function WelcomeScreen({ onStartJourney }: WelcomeScreenProps) {
           transition={{ duration: 0.8, delay: 0.6 }}
           className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto"
         >
-          {features.map((feature, index) => {
-            const Icon = feature.icon;
-
-            return (
-              <motion.div
-                key={feature.key}
-                initial={{ opacity: 0, y: 20, rotateY: -30 }}
-                animate={{ opacity: 1, y: 0, rotateY: 0 }}
-                transition={{ duration: 0.6, delay: 0.7 + index * 0.1 }}
-                whileHover={{
-                  y: -10,
-                  rotateY: 5,
-                  transition: { duration: 0.2 }
-                }}
-                className={`relative group bg-gradient-to-br from-gray-900/80 to-gray-800/80 backdrop-blur-lg rounded-2xl p-6 border border-gray-700/50 ${feature.glow} shadow-2xl hover:shadow-3xl transition-all duration-300`}
-                style={{ transformStyle: 'preserve-3d' }}
-              >
-                {/* 發光邊框 */}
-                <div className={`absolute inset-0 rounded-3xl bg-gradient-to-r ${feature.color} opacity-0 group-hover:opacity-20 transition-opacity duration-300`} />
-
-                {/* 圖標 */}
-                <motion.div
-                  whileHover={{ scale: 1.1, rotateZ: 5 }}
-                  className={`inline-flex items-center justify-center w-12 h-12 bg-gradient-to-r ${feature.color} rounded-xl mb-4 shadow-lg group-hover:shadow-xl transition-shadow`}
-                >
-                  <Icon className="w-6 h-6 text-white" />
-                </motion.div>
-
-                <h3 className="text-xl font-bold text-white mb-3 group-hover:text-purple-200 transition-colors">
-                  {t(`welcomeScreen.features.${feature.key}.title`)}
-                </h3>
-
-                <p className="text-sm text-gray-300 group-hover:text-gray-200 transition-colors leading-relaxed">
-                  {t(`welcomeScreen.features.${feature.key}.description`)}
-                </p>
-
-                {/* 裝飾元素 */}
-                <motion.div
-                  animate={{
-                    rotate: 360,
-                    scale: [1, 1.1, 1]
-                  }}
-                  transition={{
-                    rotate: { duration: 10, repeat: Infinity, ease: "linear" },
-                    scale: { duration: 2, repeat: Infinity }
-                  }}
-                  className="absolute top-4 right-4 w-3 h-3 bg-gradient-to-r from-purple-400 to-cyan-400 rounded-full opacity-60"
-                />
-              </motion.div>
-            );
-          })}
+          {features.map((feature, index) => (
+            <FeatureCard
+              key={feature.key}
+              icon={feature.icon}
+              title={t(`welcomeScreen.features.${feature.key}.title`)}
+              description={t(`welcomeScreen.features.${feature.key}.description`)}
+              colorGradient={feature.color}
+              glowColor={feature.glow}
+              index={index}
+            />
+          ))}
         </motion.div>
 
         {/* 底部 CTA */}
