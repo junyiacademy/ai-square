@@ -17,30 +17,7 @@ import { formatDateWithLocale } from '@/utils/locale';
 import { processInstructions } from '@/utils/pbl-instructions';
 import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
 import { StarRating } from '@/components/shared/StarRating';
-
-// Helper function: Convert score to qualitative rating
-function getQualitativeRating(score: number): {
-  label: 'Good' | 'Great' | 'Perfect';
-  color: string;
-  i18nKey: string;
-} {
-  if (score >= 91) return {
-    label: 'Perfect',
-    color: 'text-purple-600 dark:text-purple-400',
-    i18nKey: 'pbl:complete.rating.perfect'
-  };
-  if (score >= 71) return {
-    label: 'Great',
-    color: 'text-blue-600 dark:text-blue-400',
-    i18nKey: 'pbl:complete.rating.great'
-  };
-  return {
-    label: 'Good',
-    color: 'text-green-600 dark:text-green-400',
-    i18nKey: 'pbl:complete.rating.good'
-  };
-}
-
+import { getQualitativeRating, getLocalizedField } from './utils/task-helpers';
 
 interface ConversationEntry {
   id: string;
@@ -48,34 +25,6 @@ interface ConversationEntry {
   content: string;
   timestamp: string;
 }
-
-// Helper function to get localized field
-function getLocalizedField<T extends Record<string, unknown>>(obj: T | null | undefined, fieldName: string, language: string): string {
-  if (!obj) return '';
-
-  // Use language code directly as suffix
-  const langSuffix = language;
-
-  const fieldWithLang = `${fieldName}_${langSuffix}`;
-
-  // Return localized field if exists, otherwise return default
-  const value = obj[fieldWithLang] || obj[fieldName] || '';
-  return String(value);
-}
-
-// Helper function to get localized array field - currently unused
-// function getLocalizedArrayField<T extends Record<string, unknown>>(obj: T | null | undefined, fieldName: string, language: string): string[] {
-//   if (!obj) return [];
-//
-//   // Use language code directly as suffix
-//   const langSuffix = language;
-//
-//   const fieldWithLang = `${fieldName}_${langSuffix}`;
-//
-//   // Return localized field if exists, otherwise return default
-//   const value = obj[fieldWithLang] || obj[fieldName] || [];
-//   return Array.isArray(value) ? value.map(String) : [];
-// }
 
 export default function ProgramLearningPage() {
   const params = useParams();

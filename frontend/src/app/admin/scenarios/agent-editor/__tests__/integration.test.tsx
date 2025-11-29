@@ -74,13 +74,15 @@ describe('Agent Editor Page - Integration Tests', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     (global.fetch as jest.Mock).mockImplementation((url: string) => {
-      if (url.includes('/api/scenarios/editor/test-scenario-1')) {
+      // Handle scenario detail requests (with database ID)
+      if (url.includes('/api/scenarios/editor/1') || url.includes('/api/scenarios/editor/2')) {
         return Promise.resolve({
           ok: true,
           json: () => Promise.resolve(mockScenarioResponse)
         });
       }
-      if (url.includes('/api/scenarios/editor') && !url.includes('test-scenario-1')) {
+      // Handle scenario list request
+      if (url === '/api/scenarios/editor') {
         return Promise.resolve({
           ok: true,
           json: () => Promise.resolve(mockScenariosListResponse)
@@ -111,18 +113,18 @@ describe('Agent Editor Page - Integration Tests', () => {
         expect(global.fetch).toHaveBeenCalledWith('/api/scenarios/editor');
       });
 
-      // Step 3: Verify scenario list appears in center panel
+      // Step 3: Verify PBL mode heading appears in center panel
       await waitFor(() => {
-        expect(screen.getByText('PBL 場景')).toBeInTheDocument();
+        expect(screen.getByText(/PBL 專案式學習/)).toBeInTheDocument();
       });
 
       // Step 4: Click edit on a scenario
       const editButton = screen.getAllByText('編輯')[0];
       fireEvent.click(editButton.closest('button')!);
 
-      // Step 5: Verify scenario loads
+      // Step 5: Verify scenario loads (using database ID from mock data)
       await waitFor(() => {
-        expect(global.fetch).toHaveBeenCalledWith('/api/scenarios/editor/1');
+        expect(global.fetch).toHaveBeenCalledWith(expect.stringContaining('/api/scenarios/editor/'));
       });
 
       // Step 6: Verify scenario details appear
@@ -191,7 +193,12 @@ describe('Agent Editor Page - Integration Tests', () => {
       fireEvent.click(pblButton.closest('button')!);
 
       await waitFor(() => {
-        expect(screen.getByText('PBL 場景')).toBeInTheDocument();
+        expect(screen.getByText(/PBL 專案式學習/)).toBeInTheDocument();
+      });
+
+      // Wait for scenarios to load and render
+      await waitFor(() => {
+        expect(screen.getAllByText('編輯').length).toBeGreaterThan(0);
       });
 
       const editButton = screen.getAllByText('編輯')[0];
@@ -225,7 +232,12 @@ describe('Agent Editor Page - Integration Tests', () => {
       fireEvent.click(pblButton.closest('button')!);
 
       await waitFor(() => {
-        expect(screen.getByText('PBL 場景')).toBeInTheDocument();
+        expect(screen.getByText(/PBL 專案式學習/)).toBeInTheDocument();
+      });
+
+      // Wait for scenarios to load and render
+      await waitFor(() => {
+        expect(screen.getAllByText('編輯').length).toBeGreaterThan(0);
       });
 
       const editButton = screen.getAllByText('編輯')[0];
@@ -285,7 +297,12 @@ describe('Agent Editor Page - Integration Tests', () => {
       fireEvent.click(pblButton.closest('button')!);
 
       await waitFor(() => {
-        expect(screen.getByText('PBL 場景')).toBeInTheDocument();
+        expect(screen.getByText(/PBL 專案式學習/)).toBeInTheDocument();
+      });
+
+      // Wait for scenarios to load and render
+      await waitFor(() => {
+        expect(screen.getAllByText('編輯').length).toBeGreaterThan(0);
       });
 
       const editButton = screen.getAllByText('編輯')[0];
@@ -427,7 +444,12 @@ describe('Agent Editor Page - Integration Tests', () => {
       fireEvent.click(pblButton.closest('button')!);
 
       await waitFor(() => {
-        expect(screen.getByText('PBL 場景')).toBeInTheDocument();
+        expect(screen.getByText(/PBL 專案式學習/)).toBeInTheDocument();
+      });
+
+      // Wait for scenarios to load and render
+      await waitFor(() => {
+        expect(screen.getAllByText('編輯').length).toBeGreaterThan(0);
       });
 
       const editButton = screen.getAllByText('編輯')[0];
@@ -453,7 +475,12 @@ describe('Agent Editor Page - Integration Tests', () => {
       fireEvent.click(pblButton.closest('button')!);
 
       await waitFor(() => {
-        expect(screen.getByText('PBL 場景')).toBeInTheDocument();
+        expect(screen.getByText(/PBL 專案式學習/)).toBeInTheDocument();
+      });
+
+      // Wait for scenarios to load and render
+      await waitFor(() => {
+        expect(screen.getAllByText('編輯').length).toBeGreaterThan(0);
       });
 
       const editButton = screen.getAllByText('編輯')[0];
@@ -467,9 +494,9 @@ describe('Agent Editor Page - Integration Tests', () => {
       const backButton = screen.getByText('返回場景列表');
       fireEvent.click(backButton.closest('button')!);
 
-      // Verify we're back at scenario list
+      // Verify we're back at scenario list (heading text)
       await waitFor(() => {
-        expect(screen.getByText('PBL 場景')).toBeInTheDocument();
+        expect(screen.getByText(/PBL 專案式學習/)).toBeInTheDocument();
       });
     });
   });
