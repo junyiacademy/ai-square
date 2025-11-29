@@ -82,7 +82,7 @@ export class RepositoryFactory {
           poolConfig.host = dbHost;
         } else {
           poolConfig.host = dbHost;
-          poolConfig.port = parseInt(process.env.DB_PORT || '5433');
+          poolConfig.port = parseInt(process.env.DB_PORT || '5432');
         }
       }
     } else {
@@ -103,7 +103,7 @@ export class RepositoryFactory {
         poolConfig.host = dbHost;
       } else {
         poolConfig.host = dbHost;
-        poolConfig.port = parseInt(process.env.DB_PORT || '5433');
+        poolConfig.port = parseInt(process.env.DB_PORT || '5432');
       }
     }
 
