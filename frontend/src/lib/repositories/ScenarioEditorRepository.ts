@@ -1,13 +1,45 @@
 import { Pool } from 'pg';
 import { getPool } from '../db/get-pool';
 
+interface TaskTemplate {
+  id?: string;
+  title?: Record<string, string>;
+  type?: string;
+  description?: Record<string, string>;
+  content?: Record<string, unknown>;
+  [key: string]: unknown;
+}
+
+interface QuestionTemplate {
+  id?: string;
+  question?: Record<string, string>;
+  type?: string;
+  options?: Array<Record<string, unknown>>;
+  correctAnswer?: string | number;
+  [key: string]: unknown;
+}
+
+interface ScenarioContent {
+  pbl_data?: Record<string, unknown>;
+  discovery_data?: Record<string, unknown>;
+  assessment_data?: Record<string, unknown>;
+  tasks?: TaskTemplate[];
+  questions?: QuestionTemplate[];
+  objectives?: Record<string, string[]> | string[];
+  prerequisites?: string[];
+  xpRewards?: Record<string, number>;
+  resources?: Array<Record<string, unknown>>;
+  aiModules?: Record<string, unknown>;
+  taskTemplates?: TaskTemplate[];
+}
+
 export interface ScenarioEditor {
   id: string;
   scenario_id: string;
   mode: 'pbl' | 'discovery' | 'assessment';
   title: Record<string, string>;
   description: Record<string, string>;
-  content: any;
+  content: ScenarioContent;
   status?: string;
   tags?: string[];
   difficulty?: string;
@@ -186,7 +218,7 @@ export class ScenarioEditorRepository {
     const isInEditorTable = checkResult.rows.length > 0;
 
     const updateFields: string[] = [];
-    const values: any[] = [];
+    const values: (string | number | boolean | Record<string, unknown> | unknown[] | null)[] = [];
     let paramCount = 1;
 
     if (isInEditorTable) {

@@ -7,7 +7,7 @@
 
 'use client';
 
-import { Suspense, useState, useEffect, useRef } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useDraftManager } from '@/hooks/useDraftManager';
 import { useTaskChat } from '@/hooks/useTaskChat';
@@ -54,6 +54,7 @@ function AgentEditorContent() {
   // Navigation hierarchy state
   const [selectedMode, setSelectedMode] = useState<'pbl' | 'discovery' | 'assessment' | null>(null);
   const [selectedScenario, setSelectedScenario] = useState<string | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [activeSection, setActiveSection] = useState<string>('basic-info');
 
   // Scenarios list state
@@ -91,9 +92,7 @@ function AgentEditorContent() {
   const {
     draft,
     hasChanges,
-    lastSaved,
     isPublishing,
-    publishError,
     loadOriginal,
     updateDraft,
     publish,
@@ -123,13 +122,12 @@ function AgentEditorContent() {
     setInputMessage,
     isProcessing,
     handleSendMessage,
-    chatEndRef,
   } = useTaskChat(draft, language, updateDraft);
 
   useEffect(() => {
     // Don't auto-load scenario on mount - wait for user to select from sidebar
     setLoading(false);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);
 
   const loadScenarios = async () => {
     setLoadingScenarios(true);
@@ -161,33 +159,6 @@ function AgentEditorContent() {
     } catch (error) {
       console.error('Failed to delete scenario:', error);
       alert('刪除失敗！');
-    }
-  };
-
-  const loadScenario = async () => {
-    try {
-      if (scenarioId === 'new') {
-        const newScenario: ScenarioData = {
-          id: 'new',
-          title: { en: 'New Scenario', zh: '新場景' },
-          description: { en: 'Click to edit description', zh: '點擊編輯描述' },
-          mode: selectedMode || 'pbl',
-          difficulty: 'medium',
-          estimatedMinutes: 30,
-          taskTemplates: [],
-          objectives: { en: [], zh: [] }
-        };
-        loadOriginal(newScenario);
-      } else {
-        const response = await fetch(`/api/scenarios/editor/${scenarioId}`);
-        if (!response.ok) throw new Error('Failed to load scenario');
-        const data = await response.json();
-        loadOriginal(data);
-      }
-    } catch (error) {
-      console.error('Failed to load scenario:', error);
-    } finally {
-      setLoading(false);
     }
   };
 

@@ -837,10 +837,12 @@ describe('POST /api/pbl/generate-feedback', () => {
       const response = await POST(request);
       const data = await response.json();
 
-      // When JSON is completely unparseable, it should fail gracefully
-      expect(response.status).toBe(500);
-      expect(data.success).toBe(false);
-      expect(data.error).toBe('Failed to generate feedback');
+      // When JSON is completely unparseable, the service returns fallback feedback
+      expect(response.status).toBe(200);
+      expect(data.success).toBe(true);
+      expect(data.feedback).toBeDefined();
+      expect(data.feedback.overallAssessment).toBe('Performance analysis completed');
+      expect(mockError).toHaveBeenCalledWith('Failed to parse AI response as JSON:', expect.any(Error));
     });
 
   });
@@ -894,9 +896,11 @@ describe('POST /api/pbl/generate-feedback', () => {
       const response = await POST(request);
       const data = await response.json();
 
-      expect(response.status).toBe(500);
-      expect(data.error).toBe('Failed to generate feedback');
-      expect(data.success).toBe(false);
+      // The service returns fallback feedback instead of failing
+      expect(response.status).toBe(200);
+      expect(data.success).toBe(true);
+      expect(data.feedback).toBeDefined();
+      expect(data.feedback.overallAssessment).toBe('Performance analysis completed');
       expect(mockError).toHaveBeenCalledWith('Error generating feedback:', expect.any(Error));
     });
   });

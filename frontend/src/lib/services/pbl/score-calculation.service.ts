@@ -50,8 +50,8 @@ export class ScoreCalculationService {
       return 0;
     }
 
-    const sum = validScores.reduce((acc, score) => acc + score, 0);
-    return Math.round(sum / validScores.length);
+    const sum = validScores.reduce((acc: number, score: number) => acc + score, 0);
+    return Math.round((sum ?? 0) / validScores.length);
   }
 
   /**
