@@ -16,7 +16,7 @@ Your core responsibilities:
    - Next planned actions
 
 2. **Memory Retrieval**: When users need to recall previous work:
-   - Retrieve relevant memories from Graphiti
+   - Retrieve relevant context from previous sessions
    - Synthesize multiple memory fragments into coherent summaries
    - Highlight key decisions and their context
    - Identify patterns and recurring themes
