@@ -19,6 +19,7 @@ import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
 import { StarRating } from '@/components/shared/StarRating';
 import { getQualitativeRating, getLocalizedField } from './utils/task-helpers';
 import { useTaskData, type ConversationEntry } from '@/hooks/use-task-data';
+import { useTaskEvaluation } from '@/hooks/use-task-evaluation';
 
 export default function ProgramLearningPage() {
   const params = useParams();
@@ -41,7 +42,6 @@ export default function ProgramLearningPage() {
     loadHistory,
     reload: reloadTaskData
   } = useTaskData(scenarioId, programId, taskId);
-  // const isNewProgram = searchParams.get('isNew') === 'true';
 
   // States
   const [loading, setLoading] = useState(true);
@@ -52,14 +52,29 @@ export default function ProgramLearningPage() {
   const [userInput, setUserInput] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [isProgressCollapsed, setIsProgressCollapsed] = useState(false);
-  const [isTranslating, setIsTranslating] = useState(false);
   const [mobileView, setMobileView] = useState<'progress' | 'task' | 'chat'>('chat');
-  const [showEvaluateButton, setShowEvaluateButton] = useState(false);
-  const [isEvaluateDisabled, setIsEvaluateDisabled] = useState(false);
-  const [isEvaluating, setIsEvaluating] = useState(false);
-  const [evaluation, setEvaluation] = useState<TaskEvaluation | null>(null);
-  const [taskEvaluations, setTaskEvaluations] = useState<Record<string, TaskEvaluation>>({});
-  const [programTasks, setProgramTasks] = useState<Array<{ id: string; taskIndex: number }>>([]);
+
+  // Use the evaluation hook
+  const {
+    evaluation,
+    isEvaluating,
+    isEvaluateDisabled,
+    showEvaluateButton,
+    taskEvaluations,
+    programTasks,
+    isTranslating,
+    handleEvaluate,
+    handleTranslateEvaluation,
+    loadProgramTaskEvaluations,
+    enableEvaluateButtonAfterNewMessages
+  } = useTaskEvaluation({
+    taskId,
+    programId,
+    scenarioId,
+    currentTask,
+    scenario,
+    conversations
+  });
 
   const conversationEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -78,47 +93,8 @@ export default function ProgramLearningPage() {
   }, [taskData]);
 
   useEffect(() => {
-    const syncHistoryAndEvaluation = async () => {
-      setConversations(taskHistory);
-
-      // Show evaluate button if there are conversations
-      if (taskHistory.length > 0) {
-        setShowEvaluateButton(true);
-
-        // Load evaluation if exists
-        if (taskId && !programId.startsWith('temp_')) {
-          try {
-            const evalRes = await authenticatedFetch(`/api/pbl/tasks/${taskId}/evaluate`, {
-              headers: {
-                'Accept-Language': i18n.language
-              }
-            });
-            if (evalRes.ok) {
-              const evalData = await evalRes.json();
-              if (evalData.data?.evaluation) {
-                setEvaluation(evalData.data.evaluation);
-
-                const currentUserMessageCount = taskHistory.filter((c) => c.type === 'user').length;
-                const evaluationUserMessageCount = evalData.data.evaluation.metadata?.conversationCount || 0;
-
-                // If evaluation is up to date, disable button
-                if (evaluationUserMessageCount >= currentUserMessageCount) {
-                  setIsEvaluateDisabled(true);
-                } else {
-                  setIsEvaluateDisabled(false);
-                }
-              }
-            }
-          } catch (error) {
-            console.error('Error loading evaluation:', error);
-          }
-        }
-      }
-    };
-
-    syncHistoryAndEvaluation();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [taskHistory, taskId, programId]);
+    setConversations(taskHistory);
+  }, [taskHistory]);
 
   // Load program and scenario data
   useEffect(() => {
@@ -139,43 +115,7 @@ export default function ProgramLearningPage() {
         await loadProgram();
 
         // Load task evaluations for non-temp programs
-        if (!programId.startsWith('temp_')) {
-          try {
-            const tasksRes = await authenticatedFetch(`/api/pbl/programs/${programId}/tasks`);
-            if (tasksRes.ok) {
-              const tasksData = await tasksRes.json();
-              const sortedTasks = tasksData.sort((a: { taskIndex: number }, b: { taskIndex: number }) => a.taskIndex - b.taskIndex);
-              setProgramTasks(sortedTasks.map((t: { id: string; taskIndex: number }) => ({ id: t.id, taskIndex: t.taskIndex })));
-
-              const evaluations: Record<string, TaskEvaluation> = {};
-              const evalPromises = sortedTasks.map(async (task: { id: string }) => {
-                try {
-                  const evalRes = await authenticatedFetch(`/api/pbl/tasks/${task.id}/evaluate`);
-                  if (evalRes.ok) {
-                    const evalData = await evalRes.json();
-                    if (evalData.success && evalData.data?.evaluation) {
-                      return { taskId: task.id, evaluation: evalData.data.evaluation };
-                    }
-                  }
-                } catch (err) {
-                  console.error(`Error loading evaluation for task ${task.id}:`, err);
-                }
-                return null;
-              });
-
-              const evalResults = await Promise.all(evalPromises);
-              evalResults.forEach(result => {
-                if (result) {
-                  evaluations[result.taskId] = result.evaluation;
-                }
-              });
-
-              setTaskEvaluations(evaluations);
-            }
-          } catch (error) {
-            console.error('Error loading task evaluations:', error);
-          }
-        }
+        await loadProgramTaskEvaluations();
       } catch (error) {
         console.error('Error loading program data:', error);
       } finally {
@@ -363,17 +303,9 @@ export default function ProgramLearningPage() {
       };
       setConversations(prev => [...prev, aiEntry]);
 
-      // Show evaluate button and check if it should be disabled
-      setShowEvaluateButton(true);
-
-      // Check if we have more user messages than the last evaluation
+      // Enable evaluate button after new messages
       const updatedConversations = [...conversations, newUserEntry, aiEntry];
-      const userMessageCount = updatedConversations.filter(c => c.type === 'user').length;
-
-      // Enable button if there are user messages and no evaluation yet, or if new messages were added
-      if (userMessageCount > 0 && (!evaluation || userMessageCount > 1)) {
-        setIsEvaluateDisabled(false);
-      }
+      enableEvaluateButtonAfterNewMessages(updatedConversations);
 
       // Save AI interaction
       await authenticatedFetch(`/api/pbl/tasks/${currentTask.id}/interactions`, {
@@ -409,138 +341,6 @@ export default function ProgramLearningPage() {
       setConversations(prev => [...prev, errorEntry]);
     } finally {
       inputRef.current?.focus();
-    }
-  };
-
-  const handleEvaluate = async () => {
-    if (!currentTask || conversations.length === 0) return;
-
-    setIsEvaluating(true);
-
-    try {
-      // Get last 10 conversations
-      const recentConversations = conversations.slice(-10);
-
-      // Call evaluate API
-      const response = await authenticatedFetch('/api/pbl/evaluate', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          conversations: recentConversations,
-          task: currentTask,
-          targetDomains: scenario?.targetDomains || [],
-          focusKSA: [
-            ...(currentTask.assessmentFocus?.primary || []),
-            ...(currentTask.assessmentFocus?.secondary || [])
-          ],
-          language: i18n.language
-        })
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        console.error('Evaluation API error:', errorData);
-        throw new Error(errorData.error || `HTTP ${response.status}: Failed to evaluate`);
-      }
-
-      const data = await response.json();
-      console.log('Evaluation response:', data);
-
-      if (data.success) {
-        setEvaluation(data.evaluation);
-        // Disable the evaluate button after successful evaluation
-        setIsEvaluateDisabled(true);
-
-        // Update task evaluations map
-        setTaskEvaluations(prev => ({
-          ...prev,
-          [currentTask.id]: data.evaluation
-        }));
-
-        // Save evaluation to database
-        try {
-          const saveResponse = await authenticatedFetch(`/api/pbl/tasks/${currentTask.id}/evaluate`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept-Language': i18n.language
-            },
-            body: JSON.stringify({
-              programId,
-              evaluation: data.evaluation
-            })
-          });
-
-          if (!saveResponse.ok) {
-            console.error('Failed to save evaluation to database');
-          } else {
-            const saveData = await saveResponse.json();
-            if (saveData.success && saveData.data?.evaluationId) {
-              // Update the evaluation with the ID from backend
-              setEvaluation({
-                ...data.evaluation,
-                id: saveData.data.evaluationId
-              });
-            }
-          }
-        } catch (saveError) {
-          console.error('Error saving evaluation:', saveError);
-          // Don't fail the whole evaluation if saving fails
-        }
-      } else {
-        throw new Error(data.error || 'Evaluation failed');
-      }
-    } catch (error) {
-      console.error('Error evaluating:', error);
-      alert(`${t('pbl:learn.evaluationFailed')}: ${error instanceof Error ? error.message : t('pbl:learn.unknownError')}`);
-    } finally {
-      setIsEvaluating(false);
-    }
-  };
-
-  const handleTranslateEvaluation = async () => {
-    if (!currentTask || !evaluation || isTranslating) return;
-
-    setIsTranslating(true);
-    try {
-      const response = await authenticatedFetch(`/api/pbl/tasks/${currentTask.id}/translate-evaluation`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept-Language': i18n.language
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error('Translation failed');
-      }
-
-      const data = await response.json();
-      if (data.success && data.data?.evaluation) {
-        // Update evaluation with translated content
-        setEvaluation({
-          ...evaluation,
-          ...data.data.evaluation,
-          needsTranslation: false
-        });
-
-        // Update taskEvaluations map as well
-        setTaskEvaluations(prev => ({
-          ...prev,
-          [currentTask.id]: {
-            ...prev[currentTask.id],
-            ...data.data.evaluation,
-            needsTranslation: false
-          }
-        }));
-      }
-    } catch (error) {
-      console.error('Error translating evaluation:', error);
-      alert(t('pbl:learn.translationFailed', 'Failed to translate evaluation'));
-    } finally {
-      setIsTranslating(false);
     }
   };
 
