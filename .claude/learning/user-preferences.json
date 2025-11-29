@@ -1,0 +1,28 @@
+{
+  "preferences": {
+    "language": "zh-TW/en",
+    "workStyle": "proactive",
+    "commitFrequency": "after-feature",
+    "testingPreference": "tdd-first",
+    "deploymentFlow": "staging-first-then-main",
+    "errorHandling": "immediate-fix-with-reflection"
+  },
+  "commonPatterns": {
+    "morningRoutine": ["check status", "review PRs", "run tests"],
+    "deploymentSequence": ["test", "build", "deploy staging", "verify", "deploy main"],
+    "debuggingApproach": ["check logs", "reproduce locally", "fix", "add test"],
+    "featureWorkflow": ["create branch", "TDD", "implement", "test", "commit", "PR"]
+  },
+  "frequentCommands": {
+    "testing": ["npm run test:unit:ci", "npm run typecheck", "npm run lint"],
+    "deployment": ["make deploy-staging", "gh pr create", "gh pr merge"],
+    "debugging": ["git status", "git diff", "npm run dev"]
+  },
+  "preferredAgents": {
+    "codeQuality": "quality-guardian-agent",
+    "deployment": "deployment-master-agent",
+    "testing": "tdd-validator-agent",
+    "database": "database-management-agent",
+    "errors": "error-reflection-agent"
+  }
+}
