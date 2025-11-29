@@ -9,12 +9,11 @@ This file provides guidance to Claude Code when working with this repository.
 - Never create temporary scripts or workarounds
 - "There is nothing more permanent than a temporary solution"
 
-### Development Workflow
-```bash
-make ai-new TYPE=feature TICKET=name   # Start new work
-make ai-save                          # Save progress (track complexity)
-make ai-done                          # Complete (test+commit+merge)
-```
+### Development Workflow (Agent-Driven)
+Development workflow is now fully automated through specialized agents:
+- Use `agents-manager` for ALL tasks (features, bugs, deployments)
+- Agents handle quality checks, testing, commits, and merges
+- No manual workflow commands needed - agents orchestrate everything
 
 ## ☁️ GCP Configuration
 
@@ -149,8 +148,14 @@ Task(subagent_type="deployment-master-agent", ...);
    ```
 
 ### Pre-Commit Requirements
+Quality checks are handled by agents automatically. For manual verification:
 ```bash
-make pre-commit-check  # Must pass: TypeScript, ESLint, Tests, Build
+cd frontend
+npm run typecheck              # TypeScript check
+npm run lint                   # ESLint check
+npm run test:unit:ci          # Unit tests
+npm run build                  # Production build
+npm run schema:check           # Schema consistency
 ```
 
 ## 🎯 Context Management
