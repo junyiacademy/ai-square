@@ -20,6 +20,7 @@ import { StarRating } from '@/components/shared/StarRating';
 import { getQualitativeRating, getLocalizedField } from './utils/task-helpers';
 import { useTaskData, type ConversationEntry } from '@/hooks/use-task-data';
 import { useTaskEvaluation } from '@/hooks/use-task-evaluation';
+import { TaskHeader } from '@/components/pbl/task/TaskHeader';
 
 export default function ProgramLearningPage() {
   const params = useParams();
@@ -416,16 +417,7 @@ export default function ProgramLearningPage() {
 
   return (
     <div className="h-screen bg-gray-50 dark:bg-gray-900 flex flex-col overflow-hidden">
-      {/* Header */}
-      <header className="bg-white dark:bg-gray-800 shadow-sm flex-shrink-0">
-        <div className="px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <h1 className="text-lg font-semibold text-gray-900 dark:text-white">
-              {getLocalizedField(scenario as unknown as Record<string, unknown>, 'title', i18n.language)}
-            </h1>
-          </div>
-        </div>
-      </header>
+      <TaskHeader scenario={scenario} language={i18n.language} />
 
       {/* Main Content */}
       <div className="flex-1 flex relative overflow-hidden">
