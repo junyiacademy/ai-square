@@ -4,6 +4,7 @@ import '@testing-library/jest-dom';
 import { TaskProgressSidebar } from '../TaskProgressSidebar';
 import { Scenario, Task } from '@/types/pbl';
 import { TaskEvaluation } from '@/types/pbl-completion';
+import { TFunction } from 'i18next';
 
 // Mock next/link
 jest.mock('next/link', () => {
@@ -12,14 +13,23 @@ jest.mock('next/link', () => {
   );
 });
 
+// Create a mock t function that satisfies TFunction type
+const createMockT = (): TFunction<readonly ['pbl', 'common'], undefined> => {
+  const mockFn = ((key: string) => key) as TFunction<readonly ['pbl', 'common'], undefined>;
+  return mockFn;
+};
+
 const mockScenario: Scenario = {
   id: 'scenario-1',
   title: 'Test Scenario',
   title_zhTW: '測試場景',
   description: 'Test Description',
   description_zhTW: '測試描述',
-  domain: 'math',
-  gradeLevel: 8,
+  targetDomains: ['engaging_with_ai'],
+  difficulty: 'beginner',
+  estimatedDuration: 60,
+  learningObjectives: ['Test objective'],
+  ksaMapping: { knowledge: [], skills: [], attitudes: [] },
   tasks: [
     {
       id: 'task-1',
@@ -44,8 +54,6 @@ const mockScenario: Scenario = {
       expectedOutcome_zhTW: '完成任務 2',
     },
   ] as Task[],
-  learningObjectives: ['Objective 1'],
-  targetDomains: ['engaging_with_ai'],
 };
 
 const mockProgramTasks = [
@@ -87,7 +95,7 @@ describe('TaskProgressSidebar', () => {
         language="en"
         scenarioId="scenario-1"
         programId="program-1"
-        t={(key: string) => key}
+        t={createMockT()}
       />
     );
 
@@ -110,7 +118,7 @@ describe('TaskProgressSidebar', () => {
         language="en"
         scenarioId="scenario-1"
         programId="program-1"
-        t={(key: string) => key}
+        t={createMockT()}
       />
     );
 
@@ -133,7 +141,7 @@ describe('TaskProgressSidebar', () => {
         language="en"
         scenarioId="scenario-1"
         programId="program-1"
-        t={(key: string) => key}
+        t={createMockT()}
       />
     );
 
@@ -155,7 +163,7 @@ describe('TaskProgressSidebar', () => {
         language="en"
         scenarioId="scenario-1"
         programId="program-1"
-        t={(key: string) => key}
+        t={createMockT()}
       />
     );
 
@@ -179,7 +187,7 @@ describe('TaskProgressSidebar', () => {
         language="en"
         scenarioId="scenario-1"
         programId="program-1"
-        t={(key: string) => key}
+        t={createMockT()}
       />
     );
 
@@ -203,7 +211,7 @@ describe('TaskProgressSidebar', () => {
         language="en"
         scenarioId="scenario-1"
         programId="program-1"
-        t={(key: string) => key}
+        t={createMockT()}
       />
     );
 
@@ -223,7 +231,7 @@ describe('TaskProgressSidebar', () => {
         language="en"
         scenarioId="scenario-1"
         programId="program-1"
-        t={(key: string) => key}
+        t={createMockT()}
       />
     );
 
@@ -243,7 +251,7 @@ describe('TaskProgressSidebar', () => {
         language="zh"
         scenarioId="scenario-1"
         programId="program-1"
-        t={(key: string) => key}
+        t={createMockT()}
       />
     );
 

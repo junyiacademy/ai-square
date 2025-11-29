@@ -600,3 +600,9 @@ global.fetch = jest.fn(() =>
 if (typeof Element !== 'undefined') {
   Element.prototype.scrollIntoView = jest.fn()
 }
+
+// Mock remark-gfm (ESM module)
+jest.mock('remark-gfm', () => ({
+  __esModule: true,
+  default: jest.fn(),
+}))
