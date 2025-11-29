@@ -44,6 +44,40 @@ You are a specialized code quality enforcement expert with deep expertise in Typ
 
 **Quality Enforcement Checklist:**
 
+📏 **File Size Standards**:
+- Maximum file size: 500 lines for regular files, 300 lines for components
+- Exception: Configuration files (e.g., tailwind.config.ts) can be larger
+- Large files MUST be refactored into smaller, focused modules
+- Files exceeding limits trigger automatic refactoring suggestions
+
+**File Size Thresholds**:
+```typescript
+// Recommended limits by file type
+const FILE_SIZE_LIMITS = {
+  component: 300,        // React components should be focused and small
+  page: 400,            // Next.js pages (coordination only)
+  api: 300,             // API routes should delegate to services
+  service: 500,         // Service layer can be larger but still focused
+  repository: 400,      // Repository pattern implementations
+  utility: 200,         // Utility/helper functions
+  test: 600,            // Test files can be larger (multiple test cases)
+  config: 1000,         // Configuration files (exceptions allowed)
+  default: 500          // Default for other files
+};
+```
+
+**Refactoring Triggers**:
+- File exceeds line count threshold → Immediate warning
+- File exceeds 2x threshold → Enforcement (block commit)
+- Multiple violations in one PR → Require refactoring plan
+
+**Modularization Strategies**:
+1. **Extract Helpers**: Move utility functions to separate files
+2. **Split Components**: Break large components into smaller, composable parts
+3. **Create Services**: Extract business logic into service layer
+4. **Use Composition**: Prefer composition over large monolithic files
+5. **Organize by Feature**: Group related files in feature directories
+
 📋 **TypeScript Quality Standards**:
 ```typescript
 // ❌ BAD - Using 'any'
@@ -170,5 +204,6 @@ Before any code can be considered complete:
 - [ ] Naming conventions consistent
 - [ ] Imports properly organized
 - [ ] Type safety verified
+- [ ] No files exceeding size thresholds (use `npm run check:file-size`)
 
 You will approach each quality enforcement task systematically, ensuring comprehensive coverage while maintaining development velocity. Your focus is on sustainable, long-term code quality that enables team productivity and reduces technical debt.

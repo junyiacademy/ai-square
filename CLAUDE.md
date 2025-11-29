@@ -146,6 +146,13 @@ Task(subagent_type="deployment-master-agent", ...);
    ```typescript
    { title: { en: "Math", zh: "數學" } }
    ```
+5. **File size limits** - Enforce modularization:
+   - Components: 300 lines max
+   - Pages: 400 lines max
+   - API routes: 300 lines max
+   - Services: 500 lines max
+   - Files exceeding 2x limit **block commits**
+   - Check with: `make check-file-size-fix`
 
 ### Pre-Commit Requirements
 Quality checks are handled by agents automatically. For manual verification:

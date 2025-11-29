@@ -1,0 +1,49 @@
+id: c1234567-89ab-cdef-0123-456789abcdef
+mode: pbl
+status: draft
+version: 1.0.0
+sourceType: ai_generated
+title:
+  en: "AI Course Generator Test"
+  zh: "AI 課程生成器測試"
+description:
+  en: "Testing the Prompt-to-Course feature"
+  zh: "測試 Prompt-to-Course 功能"
+difficulty: beginner
+estimatedMinutes: 60
+objectives:
+  knowledge: [KNW-001]
+  skills: [SKL-001]
+  attitudes: [ATT-001]
+taskTemplates:
+  - id: task1
+    title:
+      en: "Analysis Task"
+      zh: "分析任務"
+    type: analysis
+    description:
+      en: "Analyze the requirements"
+      zh: "分析需求"
+pblData:
+  problemStatement:
+    en: "Create an AI course generator"
+    zh: "創建 AI 課程生成器"
+  scenario:
+    context:
+      en: "You work at an education company"
+      zh: "你在一家教育公司工作"
+    challenge:
+      en: "Build a system to generate courses"
+      zh: "建立一個生成課程的系統"
+  stages:
+    - id: stage1
+      name:
+        en: "Research Phase"
+        zh: "研究階段"
+      title:
+        en: "Research"
+        zh: "研究"
+      type: explore
+      taskIds: [task1]
+createdAt: "2025-11-28T16:00:00Z"
+updatedAt: "2025-11-28T16:00:00Z"
