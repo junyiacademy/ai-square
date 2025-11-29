@@ -16,6 +16,7 @@ import { TaskEvaluation } from '@/types/pbl-completion';
 import { formatDateWithLocale } from '@/utils/locale';
 import { processInstructions } from '@/utils/pbl-instructions';
 import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
+import { StarRating } from '@/components/shared/StarRating';
 
 // Helper function: Convert score to qualitative rating
 function getQualitativeRating(score: number): {
@@ -40,47 +41,6 @@ function getQualitativeRating(score: number): {
   };
 }
 
-// Helper function: Convert score to star rating
-function getStarRating(score: number): { filled: number; empty: number } {
-  if (score >= 91) return { filled: 3, empty: 0 };
-  if (score >= 71) return { filled: 2, empty: 1 };
-  return { filled: 1, empty: 2 };
-}
-
-// Star Rating Component
-interface StarRatingProps {
-  score: number;
-  size?: 'sm' | 'md' | 'lg';
-}
-
-function StarRating({ score, size = 'md' }: StarRatingProps) {
-  const { filled, empty } = getStarRating(score);
-
-  const sizeClasses = {
-    sm: 'w-4 h-4',
-    md: 'w-6 h-6',
-    lg: 'w-8 h-8'
-  };
-
-  const starClass = sizeClasses[size];
-
-  return (
-    <div className="flex items-center gap-0.5">
-      {/* Filled stars */}
-      {[...Array(filled)].map((_, i) => (
-        <svg key={`filled-${i}`} className={`${starClass} text-yellow-400 fill-current`} viewBox="0 0 24 24">
-          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-        </svg>
-      ))}
-      {/* Empty stars */}
-      {[...Array(empty)].map((_, i) => (
-        <svg key={`empty-${i}`} className={`${starClass} text-gray-300 dark:text-gray-600 fill-current`} viewBox="0 0 24 24">
-          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-        </svg>
-      ))}
-    </div>
-  );
-}
 
 interface ConversationEntry {
   id: string;
