@@ -148,6 +148,8 @@ help:
 	@echo "  $(GREEN)make dev-quality$(NC)                               - 執行所有品質檢查"
 	@echo "  $(GREEN)make dev-lint$(NC)                                  - 執行程式碼檢查"
 	@echo "  $(GREEN)make dev-typecheck$(NC)                             - 執行型別檢查"
+	@echo "  $(GREEN)make check-file-size$(NC)                           - 檢查檔案大小（防止過大檔案）"
+	@echo "  $(GREEN)make check-file-size-fix$(NC)                       - 檢查檔案大小並顯示重構建議"
 	@echo ""
 	@echo "$(CYAN)TypeScript 錯誤防護:$(NC)"
 	@echo "  $(YELLOW)make ts-safe-test$(NC)                              - 🛡️ 開始安全測試開發模式"
@@ -749,19 +751,23 @@ pre-commit-check:
 	@cd frontend && npm run typecheck || (echo "$(RED)❌ TypeScript 檢查失敗$(NC)" && exit 1)
 	@echo "$(GREEN)✅ TypeScript 檢查通過$(NC)"
 	@echo ""
-	@echo "$(YELLOW)2️⃣ ESLint 檢查變更的檔案...$(NC)"
+	@echo "$(YELLOW)2️⃣ File Size 檢查 (防止大型檔案)...$(NC)"
+	@cd frontend && npm run check:file-size:ci || (echo "$(RED)❌ File Size 檢查失敗 - 請執行 'npm run check:file-size:fix' 查看重構建議$(NC)" && exit 1)
+	@echo "$(GREEN)✅ File Size 檢查通過$(NC)"
+	@echo ""
+	@echo "$(YELLOW)3️⃣ ESLint 檢查變更的檔案...$(NC)"
 	@cd frontend && npx eslint $$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(ts|tsx|js|jsx)$$') || (echo "$(RED)❌ ESLint 檢查失敗$(NC)" && exit 1)
 	@echo "$(GREEN)✅ ESLint 檢查通過$(NC)"
 	@echo ""
-	@echo "$(YELLOW)3️⃣ 執行單元測試（排除 integration tests）...$(NC)"
+	@echo "$(YELLOW)4️⃣ 執行單元測試（排除 integration tests）...$(NC)"
 	@cd frontend && npm run test:unit:ci || (echo "$(RED)❌ 單元測試失敗$(NC)" && exit 1)
 	@echo "$(GREEN)✅ 單元測試通過$(NC)"
 	@echo ""
-	@echo "$(YELLOW)4️⃣ Build 檢查...$(NC)"
+	@echo "$(YELLOW)5️⃣ Build 檢查...$(NC)"
 	@cd frontend && npm run build || (echo "$(RED)❌ Build 失敗$(NC)" && exit 1)
 	@echo "$(GREEN)✅ Build 通過$(NC)"
 	@echo ""
-	@echo "$(YELLOW)5️⃣ CLAUDE.md 合規檢查清單:$(NC)"
+	@echo "$(YELLOW)6️⃣ CLAUDE.md 合規檢查清單:$(NC)"
 	@echo "   請手動確認:"
 	@echo "   $(CYAN)[ ]$(NC) 時間戳記欄位使用正確命名 (createdAt, startedAt, completedAt, updatedAt)"
 	@echo "   $(CYAN)[ ]$(NC) 沒有使用 'any' 類型"
@@ -772,6 +778,16 @@ pre-commit-check:
 	@echo "   $(CYAN)[ ]$(NC) 等待用戶確認後才 commit"
 	@echo ""
 	@echo "$(GREEN)✅ 所有自動化檢查通過！手動確認後即可 commit。$(NC)"
+
+## 檢查檔案大小
+check-file-size:
+	@echo "$(CYAN)📏 檢查檔案大小...$(NC)"
+	@cd frontend && npm run check:file-size
+
+## 檢查檔案大小並顯示重構建議
+check-file-size-fix:
+	@echo "$(CYAN)📏 檢查檔案大小（含重構建議）...$(NC)"
+	@cd frontend && npm run check:file-size:fix
 
 ## TypeScript 錯誤防護 - 測試開發輔助
 ts-safe-test:

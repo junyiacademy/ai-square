@@ -87,6 +87,11 @@ Security Concerns:
 
 Code Quality Issues:
   → code-quality-enforcer
+  Triggers:
+    - File size violations: "file too large", "refactor large file", "split file"
+    - Type safety: "any types", "type errors"
+    - Code standards: "improve code quality", "enforce standards"
+    - Naming conventions: "inconsistent naming", "rename variables"
 
 TypeScript/ESLint Errors:
   → typescript-eslint-fixer
@@ -175,19 +180,25 @@ Database Management:
    - Every file should have a proper home
    - Use scripts/ directory for utilities
 
-2. **Ignoring TypeScript errors**
+2. **Creating large monolithic files**
+   - Keep files under size thresholds (300-500 lines)
+   - Split large files into focused modules
+   - Run `make check-file-size-fix` for refactoring suggestions
+   - Files exceeding 2x threshold block commits
+
+3. **Ignoring TypeScript errors**
    - Fix immediately, don't use @ts-ignore
    - If complex, call typescript-eslint-fixer
 
-3. **Skipping tests**
+4. **Skipping tests**
    - Always write tests for new features
    - Fix failing tests before adding features
 
-4. **Direct database queries in API routes**
+5. **Direct database queries in API routes**
    - Always use Repository Pattern
    - Never import Pool directly in routes
 
-5. **Mixing concerns**
+6. **Mixing concerns**
    - Keep business logic in services
    - Keep data access in repositories
    - Keep validation in validators
