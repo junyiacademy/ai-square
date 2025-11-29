@@ -18,13 +18,7 @@ import { processInstructions } from '@/utils/pbl-instructions';
 import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
 import { StarRating } from '@/components/shared/StarRating';
 import { getQualitativeRating, getLocalizedField } from './utils/task-helpers';
-
-interface ConversationEntry {
-  id: string;
-  type: 'user' | 'ai' | 'system';
-  content: string;
-  timestamp: string;
-}
+import { useTaskData, type ConversationEntry } from '@/hooks/use-task-data';
 
 export default function ProgramLearningPage() {
   const params = useParams();
@@ -35,6 +29,18 @@ export default function ProgramLearningPage() {
   const [programId, setProgramId] = useState(params.programId as string);
   const scenarioId = params.id as string;
   const taskId = params.taskId as string;
+
+  // Use the custom hook for data fetching
+  const {
+    programData,
+    taskData,
+    taskHistory,
+    isLoading: isLoadingTaskData,
+    loadProgram,
+    loadTask,
+    loadHistory,
+    reload: reloadTaskData
+  } = useTaskData(scenarioId, programId, taskId);
   // const isNewProgram = searchParams.get('isNew') === 'true';
 
   // States
@@ -52,314 +58,36 @@ export default function ProgramLearningPage() {
   const [isEvaluateDisabled, setIsEvaluateDisabled] = useState(false);
   const [isEvaluating, setIsEvaluating] = useState(false);
   const [evaluation, setEvaluation] = useState<TaskEvaluation | null>(null);
-  const [isLoadingHistory, setIsLoadingHistory] = useState(false);
   const [taskEvaluations, setTaskEvaluations] = useState<Record<string, TaskEvaluation>>({});
   const [programTasks, setProgramTasks] = useState<Array<{ id: string; taskIndex: number }>>([]);
 
   const conversationEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  // Load program and scenario data
+  // Sync hook data to local state
   useEffect(() => {
-    loadProgramData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [programId, scenarioId, i18n.language]);
+    if (programData) {
+      setProgram(programData);
+    }
+  }, [programData]);
 
-  // Load task data when taskId or language changes
   useEffect(() => {
-    if (scenario && taskId) {
-      // For unified architecture, we need to fetch the task data
-      // Reload when taskId changes OR when language changes
-      loadTaskData();
+    if (taskData) {
+      setCurrentTask(taskData);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [taskId, scenario, i18n.language]);
+  }, [taskData]);
 
-  // Scroll to bottom when conversations change
   useEffect(() => {
-    conversationEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [conversations]);
+    const syncHistoryAndEvaluation = async () => {
+      setConversations(taskHistory);
 
-  const loadProgramData = async () => {
-    try {
-      setLoading(true);
+      // Show evaluate button if there are conversations
+      if (taskHistory.length > 0) {
+        setShowEvaluateButton(true);
 
-      // Load scenario data with language parameter using PBL API
-      const scenarioRes = await authenticatedFetch(`/api/pbl/scenarios/${scenarioId}?lang=${i18n.language}`);
-      if (!scenarioRes.ok) throw new Error('Failed to load scenario');
-      const scenarioData = await scenarioRes.json();
-      // Handle PBL API response structure
-      if (scenarioData.success && scenarioData.data) {
-        setScenario(scenarioData.data);
-      } else if (scenarioData.id) {
-        // Direct scenario object
-        setScenario(scenarioData);
-      }
-
-      // Load program and task data using unified architecture
-      let loadedProgram: Program | null = null;
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const _loadedTask: Task | null = null;
-
-      if (!programId.startsWith('temp_')) {
-        try {
-          // Use PBL unified architecture API to get program
-          const programRes = await authenticatedFetch(`/api/pbl/scenarios/${scenarioId}/programs/${programId}`);
-          if (programRes.ok) {
-            const programData = await programRes.json();
-            console.log('Loaded program data:', {
-              id: programData.id,
-              taskIds: programData.taskIds,
-              currentTaskIndex: programData.currentTaskIndex
-            });
-            if (programData) {
-              loadedProgram = {
-                id: programData.id,
-                scenarioId: scenarioId,
-                userId: programData.userId,
-                userEmail: '', // Will be populated separately if needed
-                startedAt: programData.startedAt,
-                updatedAt: programData.startedAt, // Using startedAt as updatedAt fallback
-                status: programData.status,
-                totalTasks: programData.totalTaskCount || 0,
-                currentTaskId: taskId,
-                language: i18n.language
-              } as Program;
-
-              // Load task data using PBL unified architecture
-              if (taskId) {
-                try {
-                  const taskRes = await authenticatedFetch(`/api/pbl/scenarios/${scenarioId}/programs/${programId}/tasks/${taskId}`);
-                  if (taskRes.ok) {
-                    const taskData = await taskRes.json();
-                    if (taskData) {
-                      // Extract task template data from unified architecture format
-                      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                      const _taskTemplate = taskData.content?.context?.taskTemplate || {};
-                      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                      const _originalTaskData = taskData.content?.context?.originalTaskData || {};
-
-                      // Removed this section - task loading is properly handled by loadTaskData() with multilingual support
-                    }
-                  }
-                } catch (error) {
-                  console.error('Error loading task:', error);
-                }
-              }
-
-              // If this is a draft program being accessed, update its timestamps
-              if (loadedProgram && loadedProgram.status === 'draft') {
-                try {
-                  const updateRes = await authenticatedFetch(`/api/pbl/programs/${programId}/update-timestamps`, {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                      scenarioId
-                    })
-                  });
-
-                  if (updateRes.ok) {
-                    const updatedData = await updateRes.json();
-                    if (updatedData.success && updatedData.program) {
-                      loadedProgram = updatedData.program;
-                    }
-                  }
-                } catch (error) {
-                  console.error('Error updating draft timestamps:', error);
-                }
-              }
-
-              setProgram(loadedProgram);
-            }
-          }
-        } catch (error) {
-          console.error('Error loading program data:', error);
-        }
-      }
-
-      // Fallback: create mock program for temp IDs or if loading failed
-      if (!loadedProgram) {
-        const mockProgram: Program = {
-          id: programId,
-          scenarioId: scenarioId,
-          userId: '', // Will be populated from actual user
-          userEmail: '', // Will be populated from actual user
-          startedAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-          status: programId.startsWith('temp_') ? 'in_progress' : 'draft',
-          totalTasks: scenarioData.data.tasks.length,
-          currentTaskId: taskId || scenarioData.data.tasks[0]?.id,
-          language: i18n.language,
-          // taskIds will be fetched separately
-        };
-        setProgram(mockProgram);
-      }
-
-      // Load all task evaluations for this program (only for non-temp programs)
-      if (!programId.startsWith('temp_')) {
-        try {
-          // Fetch all tasks for the program
-          const tasksRes = await authenticatedFetch(`/api/pbl/programs/${programId}/tasks`);
-          if (tasksRes.ok) {
-            const tasksData = await tasksRes.json();
-            const sortedTasks = tasksData.sort((a: { taskIndex: number }, b: { taskIndex: number }) => a.taskIndex - b.taskIndex);
-            setProgramTasks(sortedTasks.map((t: { id: string; taskIndex: number }) => ({ id: t.id, taskIndex: t.taskIndex })));
-
-            // Get evaluations for all tasks in this program
-            const evaluations: Record<string, TaskEvaluation> = {};
-
-            // Load evaluations for all tasks in parallel
-            const evalPromises = sortedTasks.map(async (task: { id: string }) => {
-              try {
-                const evalRes = await authenticatedFetch(`/api/pbl/tasks/${task.id}/evaluate`);
-                if (evalRes.ok) {
-                  const evalData = await evalRes.json();
-                  if (evalData.success && evalData.data?.evaluation) {
-                    return { taskId: task.id, evaluation: evalData.data.evaluation };
-                  }
-                }
-              } catch (err) {
-                console.error(`Error loading evaluation for task ${task.id}:`, err);
-              }
-              return null;
-            });
-
-            const evalResults = await Promise.all(evalPromises);
-            evalResults.forEach(result => {
-              if (result) {
-                evaluations[result.taskId] = result.evaluation;
-              }
-            });
-
-            setTaskEvaluations(evaluations);
-          }
-        } catch (error) {
-          console.error('Error loading task evaluations:', error);
-        }
-      }
-
-      // If no taskId provided, use the first task
-      if (!taskId && scenarioData.data.tasks.length > 0) {
-        const firstTaskId = scenarioData.data.tasks[0].id;
-        router.replace(`/pbl/scenarios/${scenarioId}/program/${programId}/tasks/${firstTaskId}`);
-      }
-
-    } catch (error) {
-      console.error('Error loading program data:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const loadTaskData = async () => {
-    if (!taskId || !scenarioId || !programId) return;
-
-    try {
-      const taskRes = await authenticatedFetch(`/api/pbl/scenarios/${scenarioId}/programs/${programId}/tasks/${taskId}`);
-      if (taskRes.ok) {
-        const taskData = await taskRes.json();
-        if (taskData) {
-          // Extract task template data from unified architecture format
-          const taskTemplate = taskData.content?.context?.taskTemplate || {};
-          const originalTaskData = taskData.content?.context?.originalTaskData || {};
-
-          const loadedTask = {
-            id: taskData.id || taskId,  // Use taskId from URL if no id in response
-            title: taskData.title,
-            type: taskData.type,
-            content: taskData.content,
-            interactions: taskData.interactions || [],
-            status: taskData.status,
-            // Add fields from task template for rendering
-            description: (() => {
-              const templateDescription = taskTemplate.description || originalTaskData.description;
-              if (typeof templateDescription === 'object' && !Array.isArray(templateDescription)) {
-                // If it's a multilingual object, get the text for current language
-                return templateDescription[i18n.language] || templateDescription.en || '';
-              }
-              return typeof templateDescription === 'string' ? templateDescription : '';
-            })(),
-            // Extract instructions based on current language
-            instructions: processInstructions(
-              taskTemplate.instructions || originalTaskData.instructions,
-              i18n.language
-            ),
-            expectedOutcome: (() => {
-              const templateOutcome = originalTaskData.expectedOutcome || taskTemplate.expectedOutcome;
-              if (typeof templateOutcome === 'object' && !Array.isArray(templateOutcome)) {
-                return templateOutcome[i18n.language] || templateOutcome.en || '';
-              }
-              return typeof templateOutcome === 'string' ? templateOutcome : '';
-            })(),
-            // Store the scenario task index for matching
-            scenarioTaskIndex: taskData.scenarioTaskIndex,
-            category: taskTemplate.category || originalTaskData.category || 'task',
-            assessmentFocus: taskTemplate.assessmentFocus || originalTaskData.assessmentFocus || null
-          } as unknown as Task;
-
-          setCurrentTask(loadedTask);
-          // Pass the loaded task directly to avoid React state async issue
-          await loadTaskHistory(loadedTask);
-        }
-      }
-    } catch (error) {
-      console.error('Error loading task data:', error);
-    }
-  };
-
-  const loadTaskHistory = async (taskToLoad?: Task) => {
-    // Prevent duplicate loading
-    if (isLoadingHistory) return;
-
-    // Use passed task or fall back to currentTask from state
-    const task = taskToLoad || currentTask;
-
-    try {
-      // Skip loading history for temp programs or invalid taskIds
-      if (programId.startsWith('temp_') || !taskId || taskId === 'undefined') {
-        // Don't clear conversations if we already have some (e.g., during transition)
-        if (conversations.length === 0) {
-          setConversations([]);
-        }
-        return;
-      }
-
-      // Only load history if we have a valid task
-      if (!task || !task.id) {
-        console.log('Skipping history load - no valid task');
-        return;
-      }
-
-      setIsLoadingHistory(true);
-      console.log('Loading task history for:', { programId, taskId: task.id, scenarioId });
-
-      // Load task conversation history and evaluation
-      const res = await authenticatedFetch(`/api/pbl/tasks/${task.id}/interactions`);
-      if (res.ok) {
-        const data = await res.json();
-        console.log('Task history response:', data);
-
-        if (data.data?.interactions) {
-          const loadedConversations = data.data.interactions.map((interaction: Record<string, unknown>): ConversationEntry => ({
-            id: String(interaction.id || `${interaction.timestamp}_${interaction.type}`),
-            type: interaction.type as 'user' | 'ai' | 'system',
-            content: String(interaction.content),
-            timestamp: String(interaction.timestamp)
-          }));
-          console.log('Loaded conversations:', loadedConversations);
-          setConversations(loadedConversations);
-
-          // Show evaluate button if there are conversations
-          if (loadedConversations.length > 0) {
-            setShowEvaluateButton(true);
-          }
-
-          // Check if task has an evaluation
-          if (data.data?.evaluationId) {
-            console.log('Task has evaluationId:', data.data.evaluationId);
-            // Fetch the evaluation details
+        // Load evaluation if exists
+        if (taskId && !programId.startsWith('temp_')) {
+          try {
             const evalRes = await authenticatedFetch(`/api/pbl/tasks/${taskId}/evaluate`, {
               headers: {
                 'Accept-Language': i18n.language
@@ -368,15 +96,12 @@ export default function ProgramLearningPage() {
             if (evalRes.ok) {
               const evalData = await evalRes.json();
               if (evalData.data?.evaluation) {
-                console.log('Loaded existing evaluation:', evalData.data.evaluation);
                 setEvaluation(evalData.data.evaluation);
 
-                const currentUserMessageCount = loadedConversations.filter((c: ConversationEntry) => c.type === 'user').length;
+                const currentUserMessageCount = taskHistory.filter((c) => c.type === 'user').length;
                 const evaluationUserMessageCount = evalData.data.evaluation.metadata?.conversationCount || 0;
 
-                console.log('User message count:', currentUserMessageCount, 'Evaluation count:', evaluationUserMessageCount);
-
-                // If evaluation is up to date (same or more conversations evaluated), disable button
+                // If evaluation is up to date, disable button
                 if (evaluationUserMessageCount >= currentUserMessageCount) {
                   setIsEvaluateDisabled(true);
                 } else {
@@ -384,31 +109,104 @@ export default function ProgramLearningPage() {
                 }
               }
             }
+          } catch (error) {
+            console.error('Error loading evaluation:', error);
           }
-        } else {
-          console.log('No interactions found in response');
-          // Only clear conversations if we don't have any in UI already
-          // This prevents clearing during the temp->actual ID transition
-          if (conversations.length === 0) {
-            setConversations([]);
-            setShowEvaluateButton(false);
-          }
-        }
-      } else {
-        if (res.status === 401) {
-          console.log('Authentication required for task history - user may need to log in');
-        } else if (res.status === 404) {
-          console.log('Task not found - may be a new task or incorrect ID');
-        } else {
-          console.error('Failed to load task history:', res.status);
         }
       }
-    } catch (error) {
-      console.error('Error loading task history:', error);
-    } finally {
-      setIsLoadingHistory(false);
+    };
+
+    syncHistoryAndEvaluation();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [taskHistory, taskId, programId]);
+
+  // Load program and scenario data
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        setLoading(true);
+        // Load scenario data
+        const scenarioRes = await authenticatedFetch(`/api/pbl/scenarios/${scenarioId}?lang=${i18n.language}`);
+        if (!scenarioRes.ok) throw new Error('Failed to load scenario');
+        const scenarioData = await scenarioRes.json();
+        if (scenarioData.success && scenarioData.data) {
+          setScenario(scenarioData.data);
+        } else if (scenarioData.id) {
+          setScenario(scenarioData);
+        }
+
+        // Load program data using hook
+        await loadProgram();
+
+        // Load task evaluations for non-temp programs
+        if (!programId.startsWith('temp_')) {
+          try {
+            const tasksRes = await authenticatedFetch(`/api/pbl/programs/${programId}/tasks`);
+            if (tasksRes.ok) {
+              const tasksData = await tasksRes.json();
+              const sortedTasks = tasksData.sort((a: { taskIndex: number }, b: { taskIndex: number }) => a.taskIndex - b.taskIndex);
+              setProgramTasks(sortedTasks.map((t: { id: string; taskIndex: number }) => ({ id: t.id, taskIndex: t.taskIndex })));
+
+              const evaluations: Record<string, TaskEvaluation> = {};
+              const evalPromises = sortedTasks.map(async (task: { id: string }) => {
+                try {
+                  const evalRes = await authenticatedFetch(`/api/pbl/tasks/${task.id}/evaluate`);
+                  if (evalRes.ok) {
+                    const evalData = await evalRes.json();
+                    if (evalData.success && evalData.data?.evaluation) {
+                      return { taskId: task.id, evaluation: evalData.data.evaluation };
+                    }
+                  }
+                } catch (err) {
+                  console.error(`Error loading evaluation for task ${task.id}:`, err);
+                }
+                return null;
+              });
+
+              const evalResults = await Promise.all(evalPromises);
+              evalResults.forEach(result => {
+                if (result) {
+                  evaluations[result.taskId] = result.evaluation;
+                }
+              });
+
+              setTaskEvaluations(evaluations);
+            }
+          } catch (error) {
+            console.error('Error loading task evaluations:', error);
+          }
+        }
+      } catch (error) {
+        console.error('Error loading program data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [programId, scenarioId, i18n.language]);
+
+  // Load task data when taskId or language changes
+  useEffect(() => {
+    if (taskId) {
+      loadTask();
     }
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [taskId, i18n.language]);
+
+  // Load task history after task is loaded
+  useEffect(() => {
+    if (taskData && taskId) {
+      loadHistory();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [taskData, taskId]);
+
+  // Scroll to bottom when conversations change
+  useEffect(() => {
+    conversationEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [conversations]);
 
   const handleSendMessage = async () => {
     if (!userInput.trim() || isProcessing || !currentTask || !currentTask.id) return;
