@@ -1,26 +1,32 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
-import Link from 'next/link';
 import { PBLLearningContentSkeleton } from '@/components/pbl/loading-skeletons';
 import {
   Program,
   Scenario,
   Task,
-  DomainType,
 } from '@/types/pbl';
 import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
-import { StarRating } from '@/components/shared/StarRating';
-import { formatDateWithLocale } from '@/utils/locale';
-import { getQualitativeRating, getLocalizedField } from './utils/task-helpers';
+import { getLocalizedField } from './utils/task-helpers';
 import { useTaskData, type ConversationEntry } from '@/hooks/use-task-data';
 import { useTaskEvaluation } from '@/hooks/use-task-evaluation';
+import {
+  createProgramIfNeeded,
+  saveInteraction,
+  getAIResponse,
+  navigateToNextTask
+} from './utils/message-handlers';
 import { TaskHeader } from '@/components/pbl/task/TaskHeader';
 import { TaskProgressSidebar } from '@/components/pbl/task/TaskProgressSidebar';
 import { TaskInfoPanel } from '@/components/pbl/task/TaskInfoPanel';
 import { TaskChatPanel } from '@/components/pbl/task/TaskChatPanel';
+import { MobileProgressView } from '@/components/pbl/task/mobile/MobileProgressView';
+import { MobileTaskInfoView } from '@/components/pbl/task/mobile/MobileTaskInfoView';
+import { MobileChatView } from '@/components/pbl/task/mobile/MobileChatView';
+import { MobileBottomNavigation } from '@/components/pbl/task/mobile/MobileBottomNavigation';
 
 export default function ProgramLearningPage() {
   const params = useParams();
@@ -77,9 +83,6 @@ export default function ProgramLearningPage() {
     conversations
   });
 
-  // Refs for mobile chat section
-  const conversationEndRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   // Sync hook data to local state
   useEffect(() => {
@@ -152,7 +155,6 @@ export default function ProgramLearningPage() {
     setUserInput('');
     setIsProcessing(true);
 
-    // Add user message to conversation
     const newUserEntry: ConversationEntry = {
       id: Date.now().toString(),
       type: 'user',
@@ -162,136 +164,43 @@ export default function ProgramLearningPage() {
     setConversations(prev => [...prev, newUserEntry]);
 
     try {
-      // Handle program ID conversion: temp ID or draft → active program
-      let actualProgramId = programId;
-
-      if (programId.startsWith('temp_')) {
-        // Legacy temp ID - create new program (fallback)
-        const createRes = await authenticatedFetch(`/api/pbl/scenarios/${scenarioId}/start`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            language: i18n.language
-          })
-        });
-
-        if (!createRes.ok) throw new Error('Failed to create program');
-
-        const createData = await createRes.json();
-        if (createData.success && createData.programId) {
-          actualProgramId = createData.programId;
-          setProgramId(actualProgramId);
-
-          // Update URL without navigation
-          const newUrl = `/pbl/scenarios/${scenarioId}/program/${actualProgramId}/tasks/${taskId}`;
-          window.history.replaceState({}, '', newUrl);
-
-          // Force update the params to ensure consistency
-          // Note: params from useParams are readonly, so we update programId state instead
-        } else {
-          throw new Error('Failed to create program');
-        }
-      }
-
-      // Save user interaction - skip if no valid task ID yet
-      const taskIdToUse = currentTask?.id || taskId;
-
-      // Only try to save interaction if we have a valid UUID task ID
-      let saveUserRes: Response | { ok: true } = { ok: true }; // Default to OK to not block flow
-
-      if (taskIdToUse && taskIdToUse.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)) {
-        saveUserRes = await authenticatedFetch(`/api/pbl/tasks/${taskIdToUse}/interactions`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept-Language': i18n.language
-        },
-        body: JSON.stringify({
-          interaction: {
-            type: 'user',
-            content: userMessage,
-            timestamp: newUserEntry.timestamp
-          }
-        })
+      // Create program if needed
+      const actualProgramId = await createProgramIfNeeded(programId, {
+        scenarioId,
+        language: i18n.language
       });
-      } else {
-        console.log('Skipping interaction save - no valid task ID yet');
+
+      if (actualProgramId !== programId) {
+        setProgramId(actualProgramId);
+        const newUrl = `/pbl/scenarios/${scenarioId}/program/${actualProgramId}/tasks/${taskId}`;
+        window.history.replaceState({}, '', newUrl);
       }
 
-      if (!saveUserRes.ok) {
-        // Only process as Response if it's actually a Response object
-        if ('text' in saveUserRes) {
-          const errorText = await saveUserRes.text().catch(() => 'Unknown error');
-          let errorData;
-          try {
-            errorData = JSON.parse(errorText);
-          } catch {
-            errorData = { error: errorText };
-          }
-
-          // Only log as error if it's not a 404 (task not found is expected for new tasks)
-          if ('status' in saveUserRes && saveUserRes.status === 404) {
-            console.log('Task not found yet - this is normal for new programs');
-          } else {
-            console.error('Failed to save user interaction:', {
-              status: 'status' in saveUserRes ? saveUserRes.status : 'unknown',
-              error: errorData.error || errorText,
-              taskId: currentTask?.id || 'no-task-id',
-              programId: actualProgramId
-            });
-          }
-        }
-        // Don't stop the flow, interactions might still be saved in the database
-      }
+      // Save user interaction
+      await saveInteraction({
+        taskId: currentTask.id,
+        interaction: {
+          type: 'user',
+          content: userMessage,
+          timestamp: newUserEntry.timestamp
+        },
+        language: i18n.language
+      });
 
       // Get AI response
-      const aiRes = await authenticatedFetch(`/api/pbl/chat?lang=${i18n.language}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept-Language': i18n.language
-        },
-        body: JSON.stringify({
-          message: userMessage,
-          sessionId: actualProgramId,
-          context: {
-            scenarioId: scenario?.id || scenarioId,  // Use actual UUID from scenario object
-            taskId: currentTask.id,
-            taskTitle: getLocalizedField(currentTask as unknown as Record<string, unknown>, 'title', i18n.language),
-            taskDescription: getLocalizedField(currentTask as unknown as Record<string, unknown>, 'description', i18n.language),
-            instructions: Array.isArray(currentTask.instructions) ? currentTask.instructions : [],
-            expectedOutcome: getLocalizedField(currentTask as unknown as Record<string, unknown>, 'expectedOutcome', i18n.language),
-            conversationHistory: conversations.slice(-10).map(conv => ({
-              role: conv.type === 'user' ? 'user' : 'assistant',
-              content: conv.content
-            }))
-          }
-        })
+      const aiMessage = await getAIResponse({
+        message: userMessage,
+        sessionId: actualProgramId,
+        currentTask,
+        scenario,
+        scenarioId,
+        conversations,
+        language: i18n.language
       });
 
-      if (!aiRes.ok) {
-        const errorData = await aiRes.json().catch(() => ({}));
-        console.error('Chat API error:', {
-          status: aiRes.status,
-          statusText: aiRes.statusText,
-          error: errorData.error || errorData,
-          url: aiRes.url
-        });
-        throw new Error(`Failed to get AI response: ${aiRes.status} ${errorData.error || aiRes.statusText}`);
-      }
-
-      const aiData = await aiRes.json();
-      const aiMessage = aiData.response;
-
-      // Hide thinking indicator first
       setIsProcessing(false);
-
-      // Small delay to ensure thinking indicator is hidden before showing response
       await new Promise(resolve => setTimeout(resolve, 100));
 
-      // Add AI response to conversation
       const aiEntry: ConversationEntry = {
         id: (Date.now() + 1).toString(),
         type: 'ai',
@@ -300,33 +209,22 @@ export default function ProgramLearningPage() {
       };
       setConversations(prev => [...prev, aiEntry]);
 
-      // Enable evaluate button after new messages
-      const updatedConversations = [...conversations, newUserEntry, aiEntry];
-      enableEvaluateButtonAfterNewMessages(updatedConversations);
+      enableEvaluateButtonAfterNewMessages([...conversations, newUserEntry, aiEntry]);
 
       // Save AI interaction
-      await authenticatedFetch(`/api/pbl/tasks/${currentTask.id}/interactions`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept-Language': i18n.language
+      await saveInteraction({
+        taskId: currentTask.id,
+        interaction: {
+          type: 'ai',
+          content: aiMessage,
+          timestamp: aiEntry.timestamp
         },
-        body: JSON.stringify({
-          interaction: {
-            type: 'ai',
-            content: aiMessage,
-            timestamp: aiEntry.timestamp
-          }
-        })
+        language: i18n.language
       });
 
     } catch (error) {
       console.error('Error processing message:', error);
-
-      // Hide thinking indicator first
       setIsProcessing(false);
-
-      // Small delay before showing error
       await new Promise(resolve => setTimeout(resolve, 100));
 
       const errorEntry: ConversationEntry = {
@@ -345,40 +243,12 @@ export default function ProgramLearningPage() {
       return;
     }
 
-    // Fetch all tasks for the program to find the current and next task
-    try {
-      const tasksRes = await authenticatedFetch(`/api/pbl/programs/${programId}/tasks`);
-      if (tasksRes.ok) {
-        const tasks = await tasksRes.json();
-        const sortedTasks = tasks.sort((a: { taskIndex: number }, b: { taskIndex: number }) => a.taskIndex - b.taskIndex);
-        const currentIndex = sortedTasks.findIndex((t: { id: string }) => t.id === currentTask.id);
-
-        console.log('handleCompleteTask:', {
-          currentTaskId: currentTask.id,
-          totalTaskCount: sortedTasks.length,
-          currentIndex,
-          hasNextTask: currentIndex !== -1 && currentIndex < sortedTasks.length - 1
-        });
-
-        if (currentIndex !== -1 && currentIndex < sortedTasks.length - 1) {
-          // Navigate to next task
-          const nextTaskId = sortedTasks[currentIndex + 1].id;
-          console.log('Navigating to next task:', nextTaskId);
-          router.push(`/pbl/scenarios/${scenarioId}/programs/${programId}/tasks/${nextTaskId}`);
-        } else {
-          // All tasks completed or current task not found
-          console.log('All tasks completed or task not found, going to complete page');
-          router.push(`/pbl/scenarios/${scenarioId}/programs/${programId}/complete`);
-        }
-      } else {
-        // Fallback to complete page if tasks fetch fails
-        console.log('Failed to fetch tasks, going to complete page');
-        router.push(`/pbl/scenarios/${scenarioId}/programs/${programId}/complete`);
-      }
-    } catch (error) {
-      console.error('Error fetching tasks:', error);
-      router.push(`/pbl/scenarios/${scenarioId}/programs/${programId}/complete`);
-    }
+    await navigateToNextTask({
+      programId,
+      currentTask,
+      scenarioId,
+      router
+    });
   };
 
   const switchTask = (newTaskId: string) => {
@@ -468,513 +338,55 @@ export default function ProgramLearningPage() {
         <div className="md:hidden flex flex-col h-full">
           {/* Mobile Content Area */}
           <div className="flex-1 overflow-hidden">
-            {/* Progress View */}
             {mobileView === 'progress' && (
-              <div className="h-full bg-white dark:bg-gray-800 p-4 overflow-y-auto">
-                <h3 className="font-semibold text-gray-900 dark:text-white mb-4">
-                  {t('pbl:learn.progress')}
-                </h3>
-                <div className="relative">
-                  <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gray-300 dark:bg-gray-600"></div>
-                  <div className="space-y-6 relative">
-                    {scenario.tasks.map((task, index) => {
-                      // Get the actual task UUID from programTasks
-                      const programTask = programTasks[index];
-                      const actualTaskId = programTask?.id || task.id;
-                      const isCurrent = currentTask && currentTask.id === actualTaskId;
-                      const taskEvaluation = taskEvaluations[actualTaskId];
-                      const hasEvaluation = !!taskEvaluation;
-
-                      return (
-                        <button
-                          key={task.id}
-                          onClick={() => {
-                            switchTask(actualTaskId);
-                            setMobileView('chat');
-                          }}
-                          className="flex items-center w-full text-left hover:bg-gray-50 dark:hover:bg-gray-700 p-2 rounded-lg transition-colors"
-                        >
-                          <div className={`relative z-10 flex h-8 w-8 items-center justify-center rounded-full border-2 bg-white dark:bg-gray-800 flex-shrink-0 ${
-                            hasEvaluation
-                              ? 'border-green-600 dark:border-green-500'
-                              : isCurrent
-                              ? 'border-purple-600 dark:border-purple-500 ring-2 ring-purple-600 ring-offset-2'
-                              : 'border-gray-300 dark:border-gray-600'
-                          }`}>
-                            {hasEvaluation ? (
-                              <svg className="h-5 w-5 text-green-600 dark:text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                              </svg>
-                            ) : (
-                              <span className={`text-sm font-medium ${
-                                isCurrent
-                                  ? 'text-purple-600 dark:text-purple-400'
-                                  : 'text-gray-500 dark:text-gray-400'
-                              }`}>
-                                {index + 1}
-                              </span>
-                            )}
-                          </div>
-                          <div className="ml-4 flex-1">
-                            <p className={`text-sm font-medium ${
-                              isCurrent
-                                ? 'text-purple-600 dark:text-purple-400'
-                                : hasEvaluation
-                                ? 'text-gray-900 dark:text-white'
-                                : 'text-gray-500 dark:text-gray-400'
-                            }`}>
-                              {getLocalizedField(task as unknown as Record<string, unknown>, 'title', i18n.language)}
-                            </p>
-                            {hasEvaluation && taskEvaluation.score !== undefined && (() => {
-                              const rating = getQualitativeRating(taskEvaluation.score);
-                              return (
-                                <p className={`text-xs font-medium mt-0.5 ${rating.color}`}>
-                                  {t(rating.i18nKey)}
-                                </p>
-                              );
-                            })()}
-                          </div>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* View Report Link for Mobile */}
-                {Object.keys(taskEvaluations).length > 0 && (
-                  <div className="mt-6">
-                    <Link
-                      href={`/pbl/scenarios/${scenarioId}/programs/${programId}/complete`}
-                      className="flex items-center justify-center w-full px-4 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium"
-                    >
-                      <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                      </svg>
-                      {t('pbl:complete.viewReport', 'View Report')}
-                    </Link>
-                  </div>
-                )}
-              </div>
+              <MobileProgressView
+                scenario={scenario}
+                currentTask={currentTask}
+                programTasks={programTasks}
+                taskEvaluations={taskEvaluations}
+                scenarioId={scenarioId}
+                programId={programId}
+                language={i18n.language}
+                onSwitchTask={switchTask}
+                onViewChange={setMobileView}
+                t={t}
+              />
             )}
 
-            {/* Task Info View */}
             {mobileView === 'task' && (
-              <div className="h-full bg-white dark:bg-gray-800 p-6 overflow-y-auto">
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                  {t('pbl:learn.task')} {taskIndex + 1}: {(() => {
-                    const title = currentTask.title;
-                    if (typeof title === 'object' && title !== null && !Array.isArray(title)) {
-                      // Handle multilingual object format {en: "...", zh: "..."}
-                      const titleObj = title as Record<string, string>;
-                      return titleObj[i18n.language] || titleObj['en'] || Object.values(titleObj)[0] || '';
-                    }
-                    // Fallback to suffix-based format
-                    return getLocalizedField(currentTask as unknown as Record<string, unknown>, 'title', i18n.language);
-                  })()}
-                </h2>
-
-                <div className="space-y-4">
-                  <div>
-                    <h3 className="font-medium text-gray-900 dark:text-white mb-2">
-                      {t('pbl:learn.description')}
-                    </h3>
-                    <p className="text-gray-600 dark:text-gray-400">
-                      {(() => {
-                        const description = currentTask.description;
-                        if (typeof description === 'object' && description !== null && !Array.isArray(description)) {
-                          // Handle multilingual object format {en: "...", zh: "..."}
-                          const descObj = description as Record<string, string>;
-                          return descObj[i18n.language] || descObj['en'] || Object.values(descObj)[0] || '';
-                        }
-                        // Fallback to suffix-based format
-                        return i18n.language === 'zhTW'
-                          ? (currentTask.description_zhTW || currentTask.description || '')
-                          : (currentTask.description || '');
-                      })()}
-                    </p>
-                  </div>
-
-                  <div>
-                    <h3 className="font-medium text-gray-900 dark:text-white mb-2">
-                      {t('pbl:learn.instructions')}
-                    </h3>
-                    <ul className="list-disc list-inside space-y-1 text-gray-600 dark:text-gray-400">
-                      {Array.isArray(currentTask.instructions) ? currentTask.instructions.map((instruction, index) => (
-                        <li key={index}>{instruction}</li>
-                      )) : (
-                        <li>{t('pbl:learn.noInstructionsAvailable')}</li>
-                      )}
-                    </ul>
-                  </div>
-
-                  {currentTask.expectedOutcome && (
-                    <div>
-                      <h3 className="font-medium text-gray-900 dark:text-white mb-2">
-                        {t('pbl:details.expectedOutcome')}
-                      </h3>
-                      <p className="text-gray-600 dark:text-gray-400">
-                        {i18n.language === 'zhTW'
-                          ? (currentTask.expectedOutcome_zhTW || currentTask.expectedOutcome)
-                          : currentTask.expectedOutcome}
-                      </p>
-                    </div>
-                  )}
-                </div>
-
-                {/* Evaluation Results for Mobile */}
-                {evaluation && (
-                  <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
-                    <h3 className="font-medium text-gray-900 dark:text-white mb-4">
-                      {t('pbl:learn.evaluationResults', 'Evaluation Results')}
-                    </h3>
-
-                    {/* Section 1: Overall Score */}
-                    <div className="mb-4 p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-800">
-                      <div className="flex items-center justify-between">
-                        <h4 className="text-lg font-semibold text-gray-900 dark:text-white">
-                          {t('pbl:learn.overallScore')}
-                        </h4>
-                        {(() => {
-                          const rating = getQualitativeRating(evaluation.score);
-                          return (
-                            <span className={`text-3xl font-bold ${rating.color}`}>
-                              {t(rating.i18nKey)}
-                            </span>
-                          );
-                        })()}
-                      </div>
-                    </div>
-
-                    {/* Section 2: Domain Scores */}
-                    <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-                      <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">
-                        {t('pbl:complete.domainScores')}
-                      </h4>
-                      <div className="space-y-2">
-                        {evaluation.domainScores && (() => {
-                          const domainOrder: DomainType[] = ['engaging_with_ai', 'creating_with_ai', 'managing_with_ai', 'designing_with_ai'];
-                          const targetDomainsList = scenario?.targetDomains || [];
-
-                          // Show all domains, but mark non-target ones as NA
-                          return domainOrder.map(domain => {
-                            const isTargetDomain = targetDomainsList.length === 0 || targetDomainsList.includes(domain);
-                            const score = isTargetDomain ? evaluation.domainScores![domain] : undefined;
-                            const isNA = !isTargetDomain || score === undefined || score === null;
-                            return (
-                          <div key={domain} className={`flex items-center justify-between ${!isTargetDomain ? 'opacity-50' : ''}`}>
-                            <span className={`text-sm ${!isTargetDomain ? 'text-gray-400 dark:text-gray-500 line-through' : 'text-gray-600 dark:text-gray-400'}`}>
-                              {t(`assessment:domains.${domain}`)}
-                            </span>
-                            <div className="flex items-center">
-                              {isNA ? (
-                                <span className="text-sm text-gray-400 dark:text-gray-500 w-36 text-right italic">
-                                  N/A
-                                </span>
-                              ) : (
-                                <StarRating score={Number(score)} size="sm" />
-                              )}
-                            </div>
-                          </div>
-                            );
-                          });
-                        })()}
-                      </div>
-                    </div>
-
-                    {/* Section 3: KSA Scores */}
-                    {evaluation.ksaScores && (
-                    <div className="mb-4 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
-                      <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">
-                        {t('pbl:complete.ksaScores', 'KSA Scores')}
-                      </h4>
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm text-gray-600 dark:text-gray-400">
-                            {t('pbl:complete.knowledge')}
-                          </span>
-                          <StarRating score={evaluation.ksaScores.knowledge} size="sm" />
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm text-gray-600 dark:text-gray-400">
-                            {t('pbl:complete.skills')}
-                          </span>
-                          <StarRating score={evaluation.ksaScores.skills} size="sm" />
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm text-gray-600 dark:text-gray-400">
-                            {t('pbl:complete.attitudes')}
-                          </span>
-                          <StarRating score={evaluation.ksaScores.attitudes} size="sm" />
-                        </div>
-                      </div>
-                    </div>
-                    )}
-
-                    {/* Conversation Insights - Only show if there are meaningful insights */}
-                    {evaluation.conversationInsights &&
-                     ((evaluation.conversationInsights.effectiveExamples &&
-                       Array.isArray(evaluation.conversationInsights.effectiveExamples) &&
-                       evaluation.conversationInsights.effectiveExamples.length > 0) ||
-                      (evaluation.conversationInsights.improvementAreas &&
-                       Array.isArray(evaluation.conversationInsights.improvementAreas) &&
-                       evaluation.conversationInsights.improvementAreas.length > 0)) && (
-                      <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                        <h4 className="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-3">
-                          {t('pbl:learn.conversationInsights', 'Conversation Insights')}
-                        </h4>
-
-                        {evaluation.conversationInsights.effectiveExamples &&
-                         Array.isArray(evaluation.conversationInsights.effectiveExamples) &&
-                         evaluation.conversationInsights.effectiveExamples.length > 0 && (
-                          <div className="mb-3">
-                            <h5 className="text-xs font-medium text-blue-800 dark:text-blue-200 mb-2">
-                              {t('pbl:learn.effectiveExamples', 'What worked well:')}
-                            </h5>
-                            <div className="space-y-2">
-                              {evaluation.conversationInsights.effectiveExamples.map((example, idx) => (
-                                <div key={idx} className="bg-white dark:bg-gray-800 p-2 rounded">
-                                  <p className="text-sm text-gray-700 dark:text-gray-300 italic">
-                                    &ldquo;{example.quote}&rdquo;
-                                  </p>
-                                  <p className="text-xs text-green-600 dark:text-green-400 mt-1">
-                                    ✓ {example.suggestion}
-                                  </p>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-
-                        {evaluation.conversationInsights.improvementAreas &&
-                         Array.isArray(evaluation.conversationInsights.improvementAreas) &&
-                         evaluation.conversationInsights.improvementAreas.length > 0 && (
-                          <div>
-                            <h5 className="text-xs font-medium text-blue-800 dark:text-blue-200 mb-2">
-                              {t('pbl:learn.improvementExamples', 'Areas for improvement:')}
-                            </h5>
-                            <div className="space-y-2">
-                              {evaluation.conversationInsights.improvementAreas.map((area, idx) => (
-                                <div key={idx} className="bg-white dark:bg-gray-800 p-2 rounded">
-                                  <p className="text-sm text-gray-700 dark:text-gray-300 italic">
-                                    &ldquo;{area.quote}&rdquo;
-                                  </p>
-                                  <p className="text-xs text-amber-600 dark:text-amber-400 mt-1">
-                                    → {area.suggestion}
-                                  </p>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    )}
-
-                    {/* Strengths & Improvements */}
-                    <div className="space-y-3">
-                      <div>
-                        <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                          {t('pbl:complete.strengths')}
-                        </h4>
-                        <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-                          {evaluation.strengths && evaluation.strengths.map((strength, idx) => (
-                            <li key={idx} className="flex items-start">
-                              <span className="text-green-500 mr-2">✓</span>
-                              {strength}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-
-                      <div>
-                        <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                          {t('pbl:complete.improvements')}
-                        </h4>
-                        <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-                          {evaluation.improvements && evaluation.improvements.map((improvement, idx) => (
-                            <li key={idx} className="flex items-start">
-                              <span className="text-yellow-500 mr-2">•</span>
-                              {improvement}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
-                  <button
-                    onClick={handleCompleteTask}
-                    className="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
-                  >
-                    {scenario && taskIndex < scenario.tasks.length - 1
-                      ? t('pbl:learn.nextTask', 'Next Task')
-                      : t('pbl:learn.completeProgram', 'Complete Program')}
-                  </button>
-                </div>
-              </div>
+              <MobileTaskInfoView
+                currentTask={currentTask}
+                scenario={scenario}
+                taskIndex={taskIndex}
+                evaluation={evaluation}
+                language={i18n.language}
+                onCompleteTask={handleCompleteTask}
+                t={t}
+              />
             )}
 
-            {/* Chat View */}
             {mobileView === 'chat' && (
-              <div className="h-full bg-white dark:bg-gray-800 flex flex-col overflow-hidden">
-                {/* Conversation Area */}
-                <div className="flex-1 overflow-y-auto p-4 min-h-0">
-                  <div className="space-y-4">
-                    {conversations.map((entry) => (
-                      <div
-                        key={entry.id}
-                        className={`flex ${entry.type === 'user' ? 'justify-end' : 'justify-start'}`}
-                      >
-                        <div
-                          className={`max-w-[80%] px-4 py-3 rounded-lg ${
-                            entry.type === 'user'
-                              ? 'bg-purple-600 text-white'
-                              : entry.type === 'ai'
-                              ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white'
-                              : 'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200'
-                          }`}
-                        >
-                          <p className="whitespace-pre-wrap">{entry.content}</p>
-                          <p className="text-xs mt-1 opacity-70">
-                            {formatDateWithLocale(new Date(entry.timestamp), i18n.language, { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-
-                    {/* AI thinking indicator */}
-                    {isProcessing && (
-                      <div className="flex justify-start">
-                        <div className="max-w-[80%] px-4 py-3 rounded-lg bg-gray-100 dark:bg-gray-700">
-                          <div className="flex items-center space-x-2">
-                            <span className="text-gray-600 dark:text-gray-400">
-                              {t('pbl:learn.thinking')}
-                            </span>
-                            <div className="flex space-x-1">
-                              <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                              <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                              <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-
-                    <div ref={conversationEndRef} />
-                  </div>
-                </div>
-
-                {/* Evaluate Button for Mobile */}
-                {showEvaluateButton && !isEvaluating && (
-                  <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 flex-shrink-0">
-                    <button
-                      onClick={handleEvaluate}
-                      disabled={isEvaluateDisabled}
-                      className={`w-full px-4 py-2 rounded-lg transition-colors font-medium ${
-                        isEvaluateDisabled
-                          ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
-                          : 'bg-blue-600 text-white hover:bg-blue-700'
-                      }`}
-                    >
-                      {isEvaluateDisabled
-                        ? t('pbl:learn.evaluationUpToDate', 'Evaluation Up to Date')
-                        : t('pbl:learn.evaluate', 'Evaluate Performance')}
-                    </button>
-                  </div>
-                )}
-
-                {/* Evaluating indicator for Mobile */}
-                {isEvaluating && (
-                  <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 flex-shrink-0">
-                    <div className="flex items-center justify-center space-x-2">
-                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
-                      <span className="text-gray-600 dark:text-gray-400">
-                        {t('pbl:learn.evaluating', 'Evaluating...')}
-                      </span>
-                    </div>
-                  </div>
-                )}
-
-                {/* Input Area */}
-                <div className="p-6 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 flex-shrink-0">
-                  <div className="flex gap-2">
-                    <textarea
-                      ref={inputRef}
-                      value={userInput}
-                      onChange={(e) => setUserInput(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' && !e.shiftKey) {
-                          e.preventDefault();
-                          handleSendMessage();
-                        }
-                      }}
-                      placeholder={t('pbl:learn.inputPlaceholder')}
-                      className="flex-1 p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white resize-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                      rows={2}
-                      disabled={isProcessing}
-                    />
-                    <button
-                      onClick={handleSendMessage}
-                      disabled={!userInput.trim() || isProcessing}
-                      className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors h-fit"
-                    >
-                      {isProcessing ? t('pbl:learn.sending') : t('pbl:learn.send')}
-                    </button>
-                  </div>
-                  {/* Bottom safe area - accounting for header and visual balance */}
-                  <div className="h-8"></div>
-                </div>
-              </div>
+              <MobileChatView
+                conversations={conversations}
+                userInput={userInput}
+                isProcessing={isProcessing}
+                isEvaluating={isEvaluating}
+                showEvaluateButton={showEvaluateButton}
+                isEvaluateDisabled={isEvaluateDisabled}
+                language={i18n.language}
+                onUserInputChange={setUserInput}
+                onSendMessage={handleSendMessage}
+                onEvaluate={handleEvaluate}
+                t={t}
+              />
             )}
           </div>
 
-          {/* Mobile Bottom Navigation */}
-          <div className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
-            <div className="flex justify-around">
-              <button
-                onClick={() => setMobileView('progress')}
-                className={`flex-1 py-4 flex flex-col items-center justify-center transition-colors ${
-                  mobileView === 'progress'
-                    ? 'text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/20'
-                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'
-                }`}
-              >
-                <svg className="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-                </svg>
-                <span className="text-xs font-medium">{t('pbl:learn.progress')}</span>
-              </button>
-
-              <button
-                onClick={() => setMobileView('task')}
-                className={`flex-1 py-4 flex flex-col items-center justify-center transition-colors ${
-                  mobileView === 'task'
-                    ? 'text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/20'
-                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'
-                }`}
-              >
-                <svg className="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                </svg>
-                <span className="text-xs font-medium">{t('pbl:learn.taskInfo')}</span>
-              </button>
-
-              <button
-                onClick={() => setMobileView('chat')}
-                className={`flex-1 py-4 flex flex-col items-center justify-center transition-colors ${
-                  mobileView === 'chat'
-                    ? 'text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/20'
-                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'
-                }`}
-              >
-                <svg className="w-6 h-6 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                </svg>
-                <span className="text-xs font-medium">{t('pbl:learn.chat')}</span>
-              </button>
-            </div>
-          </div>
+          <MobileBottomNavigation
+            currentView={mobileView}
+            onViewChange={setMobileView}
+            t={t}
+          />
         </div>
       </div>
     </div>
