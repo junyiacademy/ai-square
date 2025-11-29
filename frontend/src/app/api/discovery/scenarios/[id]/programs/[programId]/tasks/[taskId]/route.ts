@@ -2,10 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getUnifiedAuth, createUnauthorizedResponse } from '@/lib/auth/unified-auth';
 import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
 import { ITask } from '@/types/unified-learning';
-import { TranslationService } from '@/lib/services/translation-service';
 import { TaskEvaluationService } from '@/lib/services/discovery/task-evaluation-service';
 import { FeedbackGenerationService } from '@/lib/services/discovery/feedback-generation-service';
 import { MultilingualHelper } from '@/lib/services/discovery/multilingual-helper';
+import { EvaluationTranslationService } from '@/lib/services/discovery/evaluation-translation-service';
+import { DiscoveryTaskCompletionService } from '@/lib/services/discovery/discovery-task-completion-service';
+import { DiscoveryTaskProgressService } from '@/lib/services/discovery/discovery-task-progress-service';
 
 // GET a specific task
 export async function GET(
@@ -51,98 +53,15 @@ export async function GET(
       const fullEvaluation = await evaluationRepo.findById(evaluationId);
 
       if (fullEvaluation) {
-        const existingVersions = (fullEvaluation.feedbackData || fullEvaluation.metadata?.feedbackVersions || {}) as Record<string, string>;
+        const careerType = ((scenario?.metadata as Record<string, unknown>)?.careerType || 'general') as string;
 
-        console.log('Evaluation versions:', Object.keys(existingVersions), 'Requested:', requestedLanguage);
-
-        if (!existingVersions[requestedLanguage]) {
-          try {
-            let sourceFeedback: string;
-            let sourceLanguage: string;
-
-            if (existingVersions['en']) {
-              sourceFeedback = existingVersions['en'];
-              sourceLanguage = 'en';
-            } else if (fullEvaluation.feedbackText) {
-              sourceFeedback = fullEvaluation.feedbackText;
-              sourceLanguage = 'en';
-            } else {
-              throw new Error('No source feedback available for translation');
-            }
-
-            console.log(`Translating evaluation from ${sourceLanguage} to ${requestedLanguage}`);
-
-            const translationService = new TranslationService();
-            const careerType = ((scenario?.metadata as Record<string, unknown>)?.careerType || 'general') as string;
-
-            if (requestedLanguage === 'en' && sourceLanguage === 'en') {
-              processedEvaluation = {
-                id: fullEvaluation.id,
-                score: fullEvaluation.score,
-                feedback: sourceFeedback,
-                feedbackVersions: { ...existingVersions, 'en': sourceFeedback },
-                evaluatedAt: fullEvaluation.createdAt
-              };
-            } else {
-              const translatedFeedback = await translationService.translateFeedback(
-                sourceFeedback,
-                requestedLanguage,
-                careerType
-              );
-
-              const updatedVersions = {
-                ...existingVersions,
-                [requestedLanguage]: translatedFeedback
-              };
-
-              await taskRepo.update?.(taskId, {
-                metadata: {
-                  ...task.metadata,
-                  evaluationFeedbackVersions: updatedVersions
-                }
-              });
-
-              processedEvaluation = {
-                id: fullEvaluation.id,
-                score: fullEvaluation.score,
-                feedback: translatedFeedback,
-                feedbackVersions: updatedVersions,
-                evaluatedAt: fullEvaluation.createdAt
-              };
-            }
-          } catch (error) {
-            console.error('Translation failed:', error);
-            const fallbackFeedback = TranslationService.getFeedbackByLanguage(
-              existingVersions,
-              requestedLanguage,
-              'en'
-            );
-            if (fallbackFeedback) {
-              processedEvaluation = {
-                id: fullEvaluation.id,
-                score: fullEvaluation.score,
-                feedback: fallbackFeedback,
-                feedbackVersions: existingVersions,
-                evaluatedAt: fullEvaluation.createdAt
-              };
-            }
-          }
-        } else {
-          const feedbackByLanguage = TranslationService.getFeedbackByLanguage(
-            existingVersions,
-            requestedLanguage,
-            'en'
-          );
-          if (feedbackByLanguage) {
-            processedEvaluation = {
-              id: fullEvaluation.id,
-              score: fullEvaluation.score,
-              feedback: feedbackByLanguage,
-              feedbackVersions: existingVersions,
-              evaluatedAt: fullEvaluation.createdAt
-            };
-          }
-        }
+        processedEvaluation = await EvaluationTranslationService.getOrTranslateFeedback(
+          fullEvaluation,
+          requestedLanguage,
+          careerType,
+          taskId,
+          task.metadata || {}
+        );
       }
     }
 
@@ -296,14 +215,12 @@ async function handleConfirmCompleteAction(
   evaluationRepo: ReturnType<typeof repositoryFactory.getEvaluationRepository>,
   session: { user: { id: string; email?: string } }
 ) {
-  const hasPassedInteraction = task.interactions.some(
-    i => i.type === 'ai_response' && (i.content as { completed?: boolean })?.completed === true
-  );
-
-  if (!hasPassedInteraction) {
+  // Check if task has passed
+  if (!DiscoveryTaskCompletionService.hasTaskPassed(task)) {
     return NextResponse.json({ error: 'Task has not been passed yet' }, { status: 400 });
   }
 
+  // Get scenario and determine language
   const scenarioRepo = repositoryFactory.getScenarioRepository();
   const scenario = await scenarioRepo.findById(program.scenarioId);
   const careerType = (scenario?.metadata?.careerType || 'unknown') as string;
@@ -313,113 +230,41 @@ async function handleConfirmCompleteAction(
 
   console.log('Confirm-complete language:', userLanguage, 'Career:', careerType);
 
-  let comprehensiveFeedback = 'Task completed successfully!';
-  let bestXP = 100;
-  let passedAttempts = 0;
+  // Complete task with evaluation
+  const { evaluation, xpEarned, feedback } = await DiscoveryTaskCompletionService.completeTaskWithEvaluation(
+    task,
+    program,
+    userId,
+    userLanguage,
+    careerType
+  );
 
-  try {
-    const result = await FeedbackGenerationService.generateComprehensiveFeedback(
-      task,
-      program,
-      careerType,
-      userLanguage
-    );
-    comprehensiveFeedback = result.feedback;
-    bestXP = result.bestXP;
-    passedAttempts = result.passedAttempts;
-  } catch (error) {
-    console.error('Error generating comprehensive feedback:', error);
-    comprehensiveFeedback = FeedbackGenerationService.getFallbackMessage(userLanguage);
-  }
+  // Update program XP
+  await DiscoveryTaskProgressService.updateProgramXP(
+    programId,
+    xpEarned,
+    program.metadata as Record<string, unknown>
+  );
 
-  const allSkillsImproved = new Set<string>();
-  task.interactions.filter(i => i.type === 'ai_response').forEach(i => {
-    const content = i.content as { skillsImproved?: string[] };
-    if (content.skillsImproved) {
-      content.skillsImproved.forEach(skill => allSkillsImproved.add(skill));
-    }
-  });
-
-  const feedbackVersions: Record<string, string> = {};
-  feedbackVersions[userLanguage] = comprehensiveFeedback;
-  if (userLanguage !== 'en') {
-    feedbackVersions['en'] = comprehensiveFeedback;
-  }
-
-  const evaluation = await evaluationRepo.create({
-    userId: userId,
-    programId: programId,
-    taskId: taskId,
-    mode: 'discovery',
-    evaluationType: 'task',
-    evaluationSubtype: 'discovery_task',
-    score: Math.min(bestXP, 100),
-    maxScore: 100,
-    domainScores: {},
-    feedbackText: feedbackVersions['en'],
-    feedbackData: feedbackVersions,
-    aiAnalysis: {},
-    timeTakenSeconds: 0,
-    createdAt: new Date().toISOString(),
-    pblData: {},
-    discoveryData: {
-      xpEarned: bestXP,
-      totalAttempts: task.interactions.filter(i => i.type === 'user_input').length,
-      passedAttempts: passedAttempts,
-      skillsImproved: Array.from(allSkillsImproved),
-    },
-    assessmentData: {},
-    metadata: {
-      feedbackVersions: feedbackVersions,
-      completed: true,
-      originalLanguage: userLanguage,
-      actualXPEarned: bestXP
-    }
-  });
-
-  await taskRepo.update?.(taskId, {
-    status: 'completed' as const,
-    completedAt: new Date().toISOString(),
-    metadata: {
-      ...(task.metadata || {}),
-      evaluation: {
-        id: evaluation.id,
-        score: evaluation.score,
-        actualXP: bestXP,
-        feedback: feedbackVersions[userLanguage] || evaluation.feedbackText,
-        feedbackVersions: feedbackVersions,
-        evaluatedAt: evaluation.createdAt
-      }
-    }
-  });
-
-  const currentXP = (program.metadata as { totalXP?: number })?.totalXP || 0;
-  const allTasks = await taskRepo.findByProgram(programId);
-  const taskMap = new Map(allTasks.map(t => [t.id, t]));
+  // Activate next task
   const taskIds = (program.metadata as { taskIds?: string[] })?.taskIds || [];
-  const orderedTasks = taskIds.map((id: string) => taskMap.get(id)).filter(Boolean) as ITask[];
-  const completedTasks = orderedTasks.filter(t => t.status === 'completed').length;
-  const nextTaskIndex = completedTasks;
-
-  let nextTaskId = null;
-  if (nextTaskIndex < orderedTasks.length) {
-    const nextTask = orderedTasks[nextTaskIndex];
-    await taskRepo.updateStatus?.(nextTask.id, 'active');
-    nextTaskId = nextTask.id;
-  }
-
-  await programRepo.update?.(programId, { currentTaskIndex: nextTaskIndex });
-  await programRepo.update?.(programId, {
-    metadata: {
+  const progressResult = await DiscoveryTaskProgressService.activateNextTask(
+    programId,
+    taskIds,
+    {
       ...(program.metadata || {}),
-      currentTaskId: nextTaskId,
-      currentTaskIndex: nextTaskIndex,
-      totalXP: currentXP + bestXP
+      totalXP: ((program.metadata as { totalXP?: number })?.totalXP || 0) + xpEarned
     }
-  });
+  );
 
-  if (completedTasks === orderedTasks.length) {
+  // If program completed, create completion evaluation
+  if (progressResult.programCompleted) {
     await programRepo.update?.(programId, { status: "completed" });
+
+    const finalXP = ((program.metadata as { totalXP?: number })?.totalXP || 0) + xpEarned;
+    const allTasks = await taskRepo.findByProgram(programId);
+    const taskMap = new Map(allTasks.map(t => [t.id, t]));
+    const orderedTasks = taskIds.map((id: string) => taskMap.get(id)).filter(Boolean) as ITask[];
 
     await evaluationRepo.create({
       userId: session.user.id,
@@ -437,13 +282,13 @@ async function handleConfirmCompleteAction(
       createdAt: new Date().toISOString(),
       pblData: {},
       discoveryData: {
-        totalXP: currentXP + bestXP,
+        totalXP: finalXP,
         tasksCompleted: orderedTasks.length
       },
       assessmentData: {},
       metadata: {
         domainScores: {},
-        totalXP: currentXP + bestXP,
+        totalXP: finalXP,
         tasksCompleted: orderedTasks.length
       }
     });
@@ -455,11 +300,11 @@ async function handleConfirmCompleteAction(
     evaluation: {
       id: evaluation.id,
       score: evaluation.score,
-      xpEarned: bestXP,
-      feedback: comprehensiveFeedback
+      xpEarned,
+      feedback
     },
-    nextTaskId,
-    programCompleted: completedTasks === orderedTasks.length
+    nextTaskId: progressResult.nextTaskId,
+    programCompleted: progressResult.programCompleted
   });
 }
 
