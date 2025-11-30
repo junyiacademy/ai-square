@@ -167,5 +167,3 @@ metadata:
     - mlp
     - computer-vision
     - mnist
-  is_visible: true
-  is_production_ready: true
