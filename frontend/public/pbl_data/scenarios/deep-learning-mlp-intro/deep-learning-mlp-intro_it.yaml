@@ -1,0 +1,171 @@
+scenario_info:
+  id: deep-learning-mlp-intro
+  difficulty: beginner
+  estimated_duration: 90
+  target_domains:
+  - engaging_with_ai
+  - creating_with_ai
+  - managing_with_ai
+  title: 'Esplorare le Reti Neurali: Introduzione al Riconoscimento di Cifre Scritte a Mano'
+  description: Impara come l'IA riconosce modelli complessi come le cifre scritte a mano attraverso reti neurali che simulano strutture cerebrali biologiche. Questo corso fornisce approfondimenti profondi su neuroni, attivazioni, pesi e bias.
+  prerequisites:
+  - Curiosità di base su IA/Apprendimento Automatico
+  - Comprensione dei concetti matematici tra 0 e 1
+  - 'Raccomandato: Guardare la visualizzazione delle reti neurali 3Blue1Brown - https://www.youtube.com/watch?v=aircAruvnKk'
+  learning_objectives:
+  - Capacità di definire neuroni, attivazioni, pesi e bias
+  - Descrivere la struttura a strati del Perceptron Multi-Strato (MLP), inclusi strati di input, nascosti e di output
+  - Spiegare come le attivazioni si propagano da uno strato al successivo attraverso somme ponderate
+  - Comprendere il ruolo delle funzioni di attivazione (come Sigmoid e ReLU) nelle reti neurali
+  - Comprendere come pesi e bias influenzano le decisioni della rete neurale e servono come parametri regolabili nel processo di apprendimento
+ksa_mapping:
+  knowledge:
+  - K1.1
+  - K2.1
+  skills:
+  - S1.1
+  - S2.3
+  attitudes:
+  - A1.1
+  - A2.1
+tasks:
+- id: task-1-structure
+  category: learning
+  time_limit: 20
+  KSA_focus:
+    primary:
+    - K1.1
+    - S1.1
+    secondary:
+    - A1.1
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: Assistente Concetti Reti Neurali
+    initial_prompt: 'Sei un assistente per i concetti delle reti neurali che aiuta gli studenti a esplorare la struttura di base dei Perceptron Multi-Strato (MLP).
+
+      Il tuo obiettivo è guidarli a comprendere:
+
+      - Il ruolo dei neuroni nella rete e le "attivazioni" che portano (numeri tra 0 e 1)
+
+      - Le differenze e funzioni degli strati di input, nascosti e di output
+
+      - Come un''immagine 28x28 pixel viene convertita in 784 attivazioni di neuroni di input
+
+      - Come i 10 neuroni di output rappresentano il risultato finale di classificazione delle cifre
+
+      Per favore usa descrizioni visive chiare e incoraggia gli studenti a immaginare il processo di propagazione delle attivazioni.
+
+      '
+  title: Comprendere Strati e Neuroni delle Reti Neurali
+  description: Esplora la struttura a tre strati delle reti neurali (input, nascosto, output) e comprendi come le 'attivazioni' rappresentano informazioni.
+  instructions: 'Definisci neuroni e attivazioni. Descrivi il ruolo di 784 neuroni di input e 10 neuroni di output nelle reti di riconoscimento cifre scritte a mano. Discuti i ruoli potenziali dei neuroni dello strato nascosto (es: identificare tratti o bordi).
+
+    '
+  expected_outcome: Comprensione chiara della struttura del Perceptron Multi-Strato e delle funzioni dei suoi componenti
+- id: task-2-parameters
+  category: learning
+  time_limit: 30
+  KSA_focus:
+    primary:
+    - K2.1
+    - S1.1
+    secondary:
+    - S2.3
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: Tutor di Matematica
+    initial_prompt: 'Sei un tutor di matematica specializzato nell''aiutare gli studenti a comprendere pesi e bias nelle reti neurali.
+
+      I tuoi compiti sono:
+
+      - Spiegare il processo di calcolo della somma ponderata usando esempi matematici semplici
+
+      - Aiutare gli studenti a comprendere come i bias "regolano" le soglie di attivazione
+
+      - Guidarli a pensare: se cambi un certo peso, come influenzerebbe l''output?
+
+      - Spiegare come la discesa del gradiente regola gradualmente questi parametri per minimizzare l''errore
+
+      Per favore usa espressioni matematiche chiare evitando formule troppo complesse, mantenendo l''intuitività.
+
+      '
+  title: Esplorare il Ruolo di Pesi e Bias
+  description: Approfondisci come pesi e bias determinano la forza di connessione tra neuroni e come influenzano il processo di apprendimento della rete.
+  instructions: 'Spiega come i pesi rappresentano la forza di connessione tra neuroni. Descrivi il ruolo dei bias nel regolare le soglie di attivazione dei neuroni. Calcola un esempio semplice: date le attivazioni di input, pesi e bias, calcola le attivazioni dello strato successivo. Discuti come pesi e bias vengono regolati durante l''addestramento per migliorare le prestazioni della rete.
+
+    '
+  expected_outcome: Capacità di comprendere e calcolare l'impatto di pesi e bias sulla propagazione delle attivazioni, e riconoscere la loro importanza nell'apprendimento
+- id: task-3-activation-functions
+  category: learning
+  time_limit: 40
+  KSA_focus:
+    primary:
+    - K1.1
+    - K2.1
+    secondary:
+    - A2.1
+    - S2.3
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: Mentore Ricerca IA
+    initial_prompt: 'Sei un mentore di ricerca IA focalizzato nell''aiutare gli studenti a comprendere la teoria e pratica delle funzioni di attivazione.
+
+      Le tue aree di focus sono:
+
+      - Spiegare le limitazioni dell''impilamento lineare: perché le reti puramente lineari non possono risolvere problemi complessi
+
+      - Introdurre le forme matematiche e grafici delle funzioni di attivazione comuni come Sigmoid, ReLU e Tanh
+
+      - Discutere il problema del "gradiente che svanisce" e perché ReLU è più popolare nel deep learning
+
+      - Nel contesto del riconoscimento di cifre scritte a mano, spiegare come Softmax converte gli output in distribuzioni di probabilità
+
+      Incoraggia gli studenti a pensare criticamente: quale funzione di attivazione dovrebbe essere scelta per diversi scenari?
+
+      '
+  title: Comprendere l'Importanza delle Funzioni di Attivazione
+  description: Esplora come le funzioni di attivazione (come Sigmoid, ReLU) introducono non-linearità alle reti neurali, permettendo loro di apprendere modelli complessi.
+  instructions: 'Definisci le funzioni di attivazione e spiega perché sono necessarie trasformazioni non-lineari. Confronta le caratteristiche, vantaggi e svantaggi delle funzioni Sigmoid e ReLU. Comprensione visiva: cosa diventerebbe una rete neurale senza funzioni di attivazione? Discuti perché la funzione Softmax è comunemente usata nello strato di output per compiti di riconoscimento cifre scritte a mano.
+
+    '
+  expected_outcome: Comprendere il ruolo chiave delle funzioni di attivazione nelle reti neurali ed essere in grado di confrontare diversi scenari di applicazione delle funzioni
+
+completion_criteria:
+  min_tasks_completed: 3
+  required_competencies:
+    - K1.1
+    - K2.1
+    - S1.1
+  min_overall_score: 75
+
+resources:
+  - name: "Serie Reti Neurali 3Blue1Brown"
+    url: "https://www.youtube.com/watch?v=aircAruvnKk"
+    type: video
+  - name: "Reti Neurali e Deep Learning (Libro online gratuito)"
+    url: "http://neuralnetworksanddeeplearning.com/"
+    type: reference
+  - name: "Database MNIST di Cifre Scritte a Mano"
+    url: "http://yann.lecun.com/exdb/mnist/"
+    type: reference
+  - name: "Fondamenti del Deep Learning"
+    url: "https://www.deeplearningbook.org/"
+    type: guide
+
+metadata:
+  language: it
+  version: "1.0"
+  last_updated: "2025-11-30"
+  created_at: '2025-11-30T00:00:00Z'
+  created_by: Claude AI Assistant
+  tags:
+    - neural-networks
+    - deep-learning
+    - mlp
+    - computer-vision
+    - mnist
+  is_visible: true
+  is_production_ready: false

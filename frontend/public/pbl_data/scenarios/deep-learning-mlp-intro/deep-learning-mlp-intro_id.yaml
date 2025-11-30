@@ -1,0 +1,171 @@
+scenario_info:
+  id: deep-learning-mlp-intro
+  difficulty: beginner
+  estimated_duration: 90
+  target_domains:
+  - engaging_with_ai
+  - creating_with_ai
+  - managing_with_ai
+  title: 'Menjelajahi Jaringan Saraf: Pengantar Pengenalan Digit Tulisan Tangan'
+  description: Pelajari bagaimana AI mengenali pola kompleks seperti digit tulisan tangan melalui jaringan saraf yang mensimulasikan struktur otak biologis. Kursus ini memberikan wawasan mendalam tentang neuron, aktivasi, bobot, dan bias.
+  prerequisites:
+  - Rasa ingin tahu dasar tentang AI/Machine Learning
+  - Pemahaman konsep matematika antara 0 dan 1
+  - 'Direkomendasikan: Tonton visualisasi jaringan saraf 3Blue1Brown - https://www.youtube.com/watch?v=aircAruvnKk'
+  learning_objectives:
+  - Kemampuan untuk mendefinisikan neuron, aktivasi, bobot, dan bias
+  - Mendeskripsikan struktur berlapis Multi-Layer Perceptron (MLP), termasuk lapisan input, tersembunyi, dan output
+  - Menjelaskan bagaimana aktivasi merambat dari satu lapisan ke lapisan berikutnya melalui jumlah berbobot
+  - Memahami peran fungsi aktivasi (seperti Sigmoid dan ReLU) dalam jaringan saraf
+  - Memahami bagaimana bobot dan bias mempengaruhi keputusan jaringan saraf dan berfungsi sebagai parameter yang dapat disesuaikan dalam proses pembelajaran
+ksa_mapping:
+  knowledge:
+  - K1.1
+  - K2.1
+  skills:
+  - S1.1
+  - S2.3
+  attitudes:
+  - A1.1
+  - A2.1
+tasks:
+- id: task-1-structure
+  category: learning
+  time_limit: 20
+  KSA_focus:
+    primary:
+    - K1.1
+    - S1.1
+    secondary:
+    - A1.1
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: Asisten Konsep Jaringan Saraf
+    initial_prompt: 'Anda adalah asisten konsep jaringan saraf yang membantu siswa menjelajahi struktur dasar Multi-Layer Perceptron (MLP).
+
+      Tujuan Anda adalah membimbing mereka untuk memahami:
+
+      - Peran neuron dalam jaringan dan "aktivasi" yang mereka bawa (angka antara 0 dan 1)
+
+      - Perbedaan dan fungsi lapisan input, tersembunyi, dan output
+
+      - Bagaimana gambar 28x28 piksel dikonversi menjadi 784 aktivasi neuron input
+
+      - Bagaimana 10 neuron output mewakili hasil akhir klasifikasi digit
+
+      Silakan gunakan deskripsi visual yang jelas dan dorong siswa untuk membayangkan proses propagasi aktivasi.
+
+      '
+  title: Memahami Lapisan dan Neuron Jaringan Saraf
+  description: Jelajahi struktur tiga lapisan jaringan saraf (input, tersembunyi, output) dan pahami bagaimana 'aktivasi' mewakili informasi.
+  instructions: 'Definisikan neuron dan aktivasi. Deskripsikan peran 784 neuron input dan 10 neuron output dalam jaringan pengenalan digit tulisan tangan. Diskusikan peran potensial neuron lapisan tersembunyi (mis: mengidentifikasi goresan atau tepi).
+
+    '
+  expected_outcome: Pemahaman yang jelas tentang struktur Multi-Layer Perceptron dan fungsi komponennya
+- id: task-2-parameters
+  category: learning
+  time_limit: 30
+  KSA_focus:
+    primary:
+    - K2.1
+    - S1.1
+    secondary:
+    - S2.3
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: Tutor Matematika
+    initial_prompt: 'Anda adalah tutor matematika yang mengkhususkan diri dalam membantu siswa memahami bobot dan bias dalam jaringan saraf.
+
+      Tugas Anda adalah:
+
+      - Menjelaskan proses perhitungan jumlah berbobot menggunakan contoh matematika sederhana
+
+      - Membantu siswa memahami bagaimana bias "menyesuaikan" ambang aktivasi
+
+      - Membimbing mereka untuk berpikir: jika Anda mengubah bobot tertentu, bagaimana itu akan mempengaruhi output?
+
+      - Menjelaskan bagaimana gradient descent secara bertahap menyesuaikan parameter ini untuk meminimalkan kesalahan
+
+      Silakan gunakan ekspresi matematika yang jelas sambil menghindari rumus yang terlalu kompleks, menjaga intuitivitas.
+
+      '
+  title: Menjelajahi Peran Bobot dan Bias
+  description: Mendalami bagaimana bobot dan bias menentukan kekuatan koneksi antara neuron dan bagaimana mereka mempengaruhi proses pembelajaran jaringan.
+  instructions: 'Jelaskan bagaimana bobot mewakili kekuatan koneksi antara neuron. Deskripsikan peran bias dalam menyesuaikan ambang aktivasi neuron. Hitung contoh sederhana: diberikan aktivasi input, bobot, dan bias, hitung aktivasi lapisan berikutnya. Diskusikan bagaimana bobot dan bias disesuaikan selama pelatihan untuk meningkatkan kinerja jaringan.
+
+    '
+  expected_outcome: Kemampuan untuk memahami dan menghitung dampak bobot dan bias pada propagasi aktivasi, dan mengenali pentingnya mereka dalam pembelajaran
+- id: task-3-activation-functions
+  category: learning
+  time_limit: 40
+  KSA_focus:
+    primary:
+    - K1.1
+    - K2.1
+    secondary:
+    - A2.1
+    - S2.3
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: Mentor Penelitian AI
+    initial_prompt: 'Anda adalah mentor penelitian AI yang fokus membantu siswa memahami teori dan praktik fungsi aktivasi.
+
+      Area fokus Anda adalah:
+
+      - Menjelaskan keterbatasan penumpukan linier: mengapa jaringan yang murni linier tidak dapat menyelesaikan masalah kompleks
+
+      - Memperkenalkan bentuk matematika dan grafik fungsi aktivasi umum seperti Sigmoid, ReLU, dan Tanh
+
+      - Mendiskusikan masalah "gradien yang menghilang" dan mengapa ReLU lebih populer dalam deep learning
+
+      - Dalam konteks pengenalan digit tulisan tangan, menjelaskan bagaimana Softmax mengkonversi output menjadi distribusi probabilitas
+
+      Dorong siswa untuk berpikir kritis: fungsi aktivasi mana yang harus dipilih untuk skenario yang berbeda?
+
+      '
+  title: Memahami Pentingnya Fungsi Aktivasi
+  description: Jelajahi bagaimana fungsi aktivasi (seperti Sigmoid, ReLU) memperkenalkan non-linearitas ke jaringan saraf, memungkinkan mereka mempelajari pola kompleks.
+  instructions: 'Definisikan fungsi aktivasi dan jelaskan mengapa transformasi non-linier diperlukan. Bandingkan karakteristik, keuntungan, dan kerugian fungsi Sigmoid dan ReLU. Pemahaman visual: apa yang akan terjadi pada jaringan saraf tanpa fungsi aktivasi? Diskusikan mengapa fungsi Softmax umumnya digunakan di lapisan output untuk tugas pengenalan digit tulisan tangan.
+
+    '
+  expected_outcome: Memahami peran kunci fungsi aktivasi dalam jaringan saraf dan mampu membandingkan skenario aplikasi fungsi yang berbeda
+
+completion_criteria:
+  min_tasks_completed: 3
+  required_competencies:
+    - K1.1
+    - K2.1
+    - S1.1
+  min_overall_score: 75
+
+resources:
+  - name: "Seri Jaringan Saraf 3Blue1Brown"
+    url: "https://www.youtube.com/watch?v=aircAruvnKk"
+    type: video
+  - name: "Jaringan Saraf dan Deep Learning (Buku online gratis)"
+    url: "http://neuralnetworksanddeeplearning.com/"
+    type: reference
+  - name: "Database MNIST Digit Tulisan Tangan"
+    url: "http://yann.lecun.com/exdb/mnist/"
+    type: reference
+  - name: "Dasar-dasar Deep Learning"
+    url: "https://www.deeplearningbook.org/"
+    type: guide
+
+metadata:
+  language: id
+  version: "1.0"
+  last_updated: "2025-11-30"
+  created_at: '2025-11-30T00:00:00Z'
+  created_by: Claude AI Assistant
+  tags:
+    - neural-networks
+    - deep-learning
+    - mlp
+    - computer-vision
+    - mnist
+  is_visible: true
+  is_production_ready: false
