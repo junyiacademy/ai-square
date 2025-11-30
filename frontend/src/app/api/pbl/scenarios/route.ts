@@ -65,6 +65,7 @@ export async function GET(request: Request) {
           // Return empty array instead of falling back to YAML
           scenarios = [];
           metaSource = 'unified-empty';
+        }
       }
 
       return {
