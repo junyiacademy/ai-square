@@ -33,7 +33,7 @@ export default function ScenarioDetailPage() {
       'semiconductor-adventure'
     ]);
 
-    const record = scenario as Record<string, unknown>;
+    const record = scenario as unknown as Record<string, unknown>;
     const idCandidates: string[] = [];
 
     // Check top-level IDs
