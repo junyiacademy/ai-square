@@ -29,6 +29,7 @@ export async function GET(request: Request) {
 
     const compute = async () => {
       const scenarioLoader = new PBLScenarioLoaderService();
+      const isProduction = process.env.NODE_ENV === 'production';
 
       if (source === 'hybrid') {
         try {
@@ -49,6 +50,14 @@ export async function GET(request: Request) {
             thumbnailEmoji: scenarioLoader.getScenarioEmoji(scenario.id)
           }));
 
+          // Filter production-ready scenarios in production environment
+          if (isProduction) {
+            scenarios = scenarios.filter(s => {
+              const metadata = (s as Record<string, unknown>).metadata as Record<string, unknown> | undefined;
+              return metadata?.isProductionReady === true || metadata?.isProductionReady === 'true';
+            });
+          }
+
           metaSource = 'hybrid';
         } catch (error) {
           console.error('Hybrid service failed, falling back to unified:', error);
@@ -64,6 +73,12 @@ export async function GET(request: Request) {
           // Return empty array instead of falling back to YAML
           scenarios = [];
           metaSource = 'unified-empty';
+        } else if (isProduction) {
+          // Filter production-ready scenarios in production environment
+          scenarios = scenarios.filter(s => {
+            const metadata = (s as Record<string, unknown>).metadata as Record<string, unknown> | undefined;
+            return metadata?.isProductionReady === true || metadata?.isProductionReady === 'true';
+          });
         }
       }
 

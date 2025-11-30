@@ -35,20 +35,19 @@ describe('scenarioHelpers', () => {
   });
 
   describe('getScenarioData', () => {
-    const mockScenario: IScenario = {
+    const mockScenario = {
       id: 'test-id',
       title: { en: 'Test' },
       description: { en: 'Test' },
       mode: 'pbl',
       difficulty: 'intermediate',
-      estimatedDuration: 45,
       metadata: {
         difficulty: 'intermediate',
         estimatedDuration: 45,
         targetDomains: ['math', 'science'],
         tasks: []
       }
-    };
+    } as unknown as IScenario;
 
     it('should get top-level property', () => {
       expect(getScenarioData(mockScenario, 'difficulty')).toBe('intermediate');

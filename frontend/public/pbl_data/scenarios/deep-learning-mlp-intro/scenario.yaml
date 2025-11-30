@@ -1,0 +1,321 @@
+# PBL Scenario: Exploring Neural Networks - Handwritten Digit Recognition
+# 探索神經網路：手寫數字辨識入門
+#
+# ID: deep-learning-mlp-intro
+# Mode: pbl
+# Difficulty: beginner
+# Duration: 90 minutes
+# Created: 2025-11-30
+
+scenario_info:
+  id: deep-learning-mlp-intro
+  mode: pbl
+  difficulty: beginner
+  estimated_minutes: 90
+
+  # Multilingual title and description
+  title:
+    zh: "探索神經網路：手寫數字辨識入門"
+    en: "Exploring Neural Networks: Introduction to Handwritten Digit Recognition"
+
+  description:
+    zh: "了解人工智慧如何透過模擬生物大腦結構的神經網路來辨識複雜模式，例如手寫數字。本課程將深入解析神經元、激勵值、權重和偏置的運作原理。"
+    en: "Learn how AI recognizes complex patterns like handwritten digits through neural networks that simulate biological brain structures. This course provides deep insights into neurons, activations, weights, and biases."
+
+  # Target domains
+  target_domains:
+    - engaging_with_ai
+    - creating_with_ai
+    - managing_with_ai
+
+  # Prerequisites
+  prerequisites:
+    - type: knowledge
+      content:
+        zh: "對 AI/機器學習有基本的好奇心"
+        en: "Basic curiosity about AI/Machine Learning"
+    - type: knowledge
+      content:
+        zh: "了解數字 0 到 1 之間的數學概念"
+        en: "Understanding of mathematical concepts between 0 and 1"
+
+  # Learning objectives
+  learning_objectives:
+    - id: obj-1
+      content:
+        zh: "能夠定義神經元、激勵值、權重與偏置。"
+        en: "Ability to define neurons, activations, weights, and biases."
+    - id: obj-2
+      content:
+        zh: "描述多層感知機 (MLP) 的層狀結構，包含輸入層、隱藏層和輸出層。"
+        en: "Describe the layered structure of Multi-Layer Perceptron (MLP), including input, hidden, and output layers."
+    - id: obj-3
+      content:
+        zh: "解釋激勵值如何從一層傳遞到下一層，並透過加權總和計算其變化。"
+        en: "Explain how activations propagate from one layer to the next through weighted sums."
+    - id: obj-4
+      content:
+        zh: "認識激勵函數（如 Sigmoid 和 ReLU）在神經網路中的作用。"
+        en: "Understand the role of activation functions (such as Sigmoid and ReLU) in neural networks."
+    - id: obj-5
+      content:
+        zh: "了解權重和偏置是如何影響神經網路的決策，並作為學習過程中的調整參數。"
+        en: "Understand how weights and biases affect neural network decisions and serve as adjustable parameters in the learning process."
+
+# KSA Mapping (Knowledge, Skills, Attitudes)
+ksa_mapping:
+  knowledge:
+    - K1.1  # 瞭解 AI 基礎概念 / Understand basic AI concepts
+    - K2.1  # 瞭解模型的結構 / Understand model structures
+  skills:
+    - S1.1  # 資料分析與模式識別 / Data analysis and pattern recognition
+    - S2.3  # 評估 AI 系統的結果 / Evaluate AI system results
+  attitudes:
+    - A1.1  # 樂於探索 AI / Willingness to explore AI
+    - A2.1  # 對技術持批判性思考 / Critical thinking about technology
+
+# Resources
+resources:
+  - url: https://www.youtube.com/watch?v=aircAruvnKk
+    type: video
+    name:
+      zh: "3Blue1Brown - 神經網路視覺化：什麼是神經網路？"
+      en: "3Blue1Brown - Neural Network Visualization: What is a Neural Network?"
+    description:
+      zh: "通過精美的視覺化動畫，深入淺出地解釋神經網路的基本概念和運作原理。"
+      en: "An intuitive explanation of neural network fundamentals through beautiful visual animations."
+
+  - url: https://www.youtube.com/watch?v=kYB8IZa5AuE
+    type: video
+    name:
+      zh: "3Blue1Brown - 線性代數精華：線性轉換與矩陣"
+      en: "3Blue1Brown - Essence of Linear Algebra: Linear Transformations and Matrices"
+    description:
+      zh: "理解矩陣運算背後的幾何直覺，這是掌握神經網路數學基礎的關鍵。"
+      en: "Understand the geometric intuition behind matrix operations, key to grasping neural network mathematics."
+
+  - url: https://zh.khanacademy.org/math/linear-algebra
+    type: reference
+    name:
+      zh: "Khan Academy 線性代數課程（中文）"
+      en: "Khan Academy Linear Algebra Course (Chinese)"
+    description:
+      zh: "完整的線性代數學習資源，包含向量、矩陣運算等神經網路必備的數學知識。"
+      en: "Comprehensive linear algebra learning resources, including vectors and matrix operations essential for neural networks."
+
+# Tasks (3 tasks)
+tasks:
+  - id: task-1-structure
+    category: research
+    time_limit: 20
+
+    title:
+      zh: "了解神經網路的層次與神經元"
+      en: "Understanding Neural Network Layers and Neurons"
+
+    description:
+      zh: "探索神經網路的三層結構（輸入、隱藏、輸出），並理解「激勵值」如何代表資訊。"
+      en: "Explore the three-layer structure of neural networks (input, hidden, output) and understand how 'activations' represent information."
+
+    instructions:
+      - content:
+          zh: "定義神經元與激勵值。"
+          en: "Define neurons and activations."
+      - content:
+          zh: "描述手寫數字辨識網路中，784 個輸入神經元和 10 個輸出神經元的作用。"
+          en: "Describe the role of 784 input neurons and 10 output neurons in handwritten digit recognition networks."
+      - content:
+          zh: "討論隱藏層神經元可能扮演的角色（例如：識別筆劃或邊緣）。"
+          en: "Discuss the potential roles of hidden layer neurons (e.g., identifying strokes or edges)."
+
+    expected_outcome:
+      zh: "對多層感知機的結構及其元件功能有清晰的理解。"
+      en: "Clear understanding of Multi-Layer Perceptron structure and component functions."
+
+    ksa_focus:
+      primary:
+        - K1.1
+        - S1.1
+      secondary:
+        - A1.1
+
+    ai_module:
+      role: assistant
+      model: gemini-2.5-flash
+      persona:
+        zh: "神經網路概念助理"
+        en: "Neural Network Concept Assistant"
+      initial_prompt:
+        zh: |
+          你是一位神經網路概念助理，幫助學生探索多層感知機 (MLP) 的基本構造。
+          你的目標是引導他們理解：
+          - 神經元在網路中的角色，以及它們承載的「激勵值」（0 到 1 之間的數字）。
+          - 輸入層、隱藏層和輸出層的區別和功能。
+          - 如何將一個 28x28 像素的圖像轉換成輸入層的 784 個神經元激勵值。
+          - 輸出層的 10 個神經元如何表示最終的數字判斷結果。
+          請使用清晰的視覺化描述，並鼓勵學生想像激勵值傳遞的過程。
+        en: |
+          You are a neural network concept assistant helping students explore the basic structure of Multi-Layer Perceptrons (MLP).
+          Your goal is to guide them to understand:
+          - The role of neurons in the network and the 'activations' they carry (numbers between 0 and 1).
+          - The differences and functions of input, hidden, and output layers.
+          - How a 28x28 pixel image is converted into 784 input neuron activations.
+          - How the 10 output neurons represent the final digit classification result.
+          Please use clear visual descriptions and encourage students to imagine the activation propagation process.
+
+  - id: task-2-parameters
+    category: analysis
+    time_limit: 30
+
+    title:
+      zh: "探索權重與偏置的作用"
+      en: "Exploring the Role of Weights and Biases"
+
+    description:
+      zh: "深入了解權重和偏置如何決定神經元之間的連接強度，以及它們如何影響網路的學習過程。"
+      en: "Deep dive into how weights and biases determine connection strength between neurons and how they affect the network's learning process."
+
+    instructions:
+      - content:
+          zh: "解釋權重如何表示神經元之間的連接強度。"
+          en: "Explain how weights represent connection strength between neurons."
+      - content:
+          zh: "描述偏置在調整神經元激勵閾值中的角色。"
+          en: "Describe the role of biases in adjusting neuron activation thresholds."
+      - content:
+          zh: "計算一個簡單範例：給定輸入激勵值、權重和偏置，計算下一層的激勵值。"
+          en: "Calculate a simple example: given input activations, weights, and biases, compute the next layer's activations."
+      - content:
+          zh: "討論在訓練過程中，權重和偏置如何被調整以改善網路性能。"
+          en: "Discuss how weights and biases are adjusted during training to improve network performance."
+
+    expected_outcome:
+      zh: "能夠理解並計算權重、偏置對激勵值傳遞的影響，並認識它們在學習中的重要性。"
+      en: "Ability to understand and calculate the impact of weights and biases on activation propagation, and recognize their importance in learning."
+
+    ksa_focus:
+      primary:
+        - K2.1
+        - S1.1
+      secondary:
+        - S2.3
+
+    ai_module:
+      role: tutor
+      model: gemini-2.5-flash
+      persona:
+        zh: "數學導師"
+        en: "Mathematics Tutor"
+      initial_prompt:
+        zh: |
+          你是一位數學導師，專門協助學生理解神經網路中的權重和偏置。
+          你的任務是：
+          - 用簡單的數學範例說明加權總和的計算過程。
+          - 幫助學生理解偏置如何「調整」激勵閾值。
+          - 引導他們思考：如果改變某個權重，會如何影響輸出結果。
+          - 解釋梯度下降如何逐步調整這些參數以最小化誤差。
+          請確保使用清晰的數學表達式，但避免過於複雜的公式，保持直覺性。
+        en: |
+          You are a mathematics tutor specializing in helping students understand weights and biases in neural networks.
+          Your tasks are:
+          - Explain the weighted sum calculation process using simple mathematical examples.
+          - Help students understand how biases 'adjust' activation thresholds.
+          - Guide them to think: if you change a certain weight, how would it affect the output?
+          - Explain how gradient descent gradually adjusts these parameters to minimize error.
+          Please use clear mathematical expressions while avoiding overly complex formulas, maintaining intuitiveness.
+
+  - id: task-3-activation-functions
+    category: exploration
+    time_limit: 40
+
+    title:
+      zh: "認識激勵函數的重要性"
+      en: "Understanding the Importance of Activation Functions"
+
+    description:
+      zh: "探索激勵函數（如 Sigmoid、ReLU）如何為神經網路引入非線性，使其能夠學習複雜模式。"
+      en: "Explore how activation functions (such as Sigmoid, ReLU) introduce non-linearity to neural networks, enabling them to learn complex patterns."
+
+    instructions:
+      - content:
+          zh: "定義激勵函數，並解釋為何需要非線性轉換。"
+          en: "Define activation functions and explain why non-linear transformations are needed."
+      - content:
+          zh: "比較 Sigmoid 和 ReLU 函數的特性與優缺點。"
+          en: "Compare the characteristics, advantages, and disadvantages of Sigmoid and ReLU functions."
+      - content:
+          zh: "視覺化理解：如果沒有激勵函數，神經網路會變成什麼樣子？"
+          en: "Visual understanding: What would a neural network become without activation functions?"
+      - content:
+          zh: "討論在手寫數字辨識任務中，輸出層常使用 Softmax 函數的原因。"
+          en: "Discuss why the Softmax function is commonly used in the output layer for handwritten digit recognition tasks."
+
+    expected_outcome:
+      zh: "理解激勵函數在神經網路中的關鍵作用，並能比較不同函數的應用場景。"
+      en: "Understand the key role of activation functions in neural networks and be able to compare different function application scenarios."
+
+    ksa_focus:
+      primary:
+        - K1.1
+        - K2.1
+      secondary:
+        - A2.1
+        - S2.3
+
+    ai_module:
+      role: mentor
+      model: gemini-2.5-flash
+      persona:
+        zh: "AI 研究導師"
+        en: "AI Research Mentor"
+      initial_prompt:
+        zh: |
+          你是一位 AI 研究導師，專注於幫助學生理解激勵函數的理論與實務。
+          你的重點是：
+          - 解釋線性疊加的局限性：為什麼純線性網路無法解決複雜問題。
+          - 介紹 Sigmoid、ReLU、Tanh 等常見激勵函數的數學形式和圖形。
+          - 討論「梯度消失」問題，以及為何 ReLU 在深度學習中更受歡迎。
+          - 在手寫數字辨識的脈絡下，說明 Softmax 如何將輸出轉換為概率分布。
+          鼓勵學生批判性思考：不同場景下應該選擇哪種激勵函數？
+        en: |
+          You are an AI research mentor focusing on helping students understand the theory and practice of activation functions.
+          Your focus areas are:
+          - Explain the limitations of linear stacking: why purely linear networks cannot solve complex problems.
+          - Introduce the mathematical forms and graphs of common activation functions like Sigmoid, ReLU, and Tanh.
+          - Discuss the 'vanishing gradient' problem and why ReLU is more popular in deep learning.
+          - In the context of handwritten digit recognition, explain how Softmax converts outputs into probability distributions.
+          Encourage students to think critically: which activation function should be chosen for different scenarios?
+
+# Metadata
+metadata:
+  created_at: "2025-11-30T00:00:00Z"
+  created_by: "Claude AI Assistant"
+  version: "1.0.0"
+  tags:
+    - neural-networks
+    - deep-learning
+    - mlp
+    - computer-vision
+    - mnist
+
+  # Staging visibility flags
+  is_visible: true
+  is_production_ready: false  # Hidden in production, visible in staging
+
+  # Additional info
+  recommended_next_scenarios:
+    - gradient-descent-basics
+    - backpropagation-explained
+    - cnn-introduction
+
+  difficulty_details:
+    technical_level:
+      zh: "初學者友善，不需要編程經驗"
+      en: "Beginner-friendly, no programming experience required"
+    math_requirement:
+      zh: "基礎代數和簡單的矩陣概念"
+      en: "Basic algebra and simple matrix concepts"
+
+  learning_path:
+    zh: "AI 基礎 → 神經網路入門 → 深度學習應用"
+    en: "AI Fundamentals → Neural Network Introduction → Deep Learning Applications"

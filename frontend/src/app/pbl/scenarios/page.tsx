@@ -220,6 +220,20 @@ export default function PBLScenariosPage() {
 
               const isAvailable = !('isAvailable' in scenario) || scenario.isAvailable !== false;
 
+              // Get visibility status from metadata
+              const getVisibilityStatus = (scenario: FlexibleScenario): 'production' | 'staging' | 'draft' => {
+                const metadata = scenario.metadata as Record<string, unknown> | undefined;
+                const isProductionReady = metadata?.isProductionReady === true || metadata?.isProductionReady === 'true';
+                const isPublished = 'is_published' in scenario ? scenario.is_published === true : true;
+
+                if (isProductionReady && isPublished) return 'production';
+                if (isPublished && !isProductionReady) return 'staging';
+                return 'draft';
+              };
+
+              const visibilityStatus = getVisibilityStatus(scenario);
+              const showVisibilityTag = process.env.NODE_ENV !== 'production' || visibilityStatus !== 'production';
+
               return (
                 <div
                   key={String(scenario.id)}
@@ -228,15 +242,37 @@ export default function PBLScenariosPage() {
                   }`}
                 >
                   <div className="p-6">
-                    <div className="flex items-center mb-4">
+                    <div className="flex items-center mb-4 relative">
                       <div className={`w-12 h-12 ${
                         isAvailable ? 'bg-blue-100 dark:bg-blue-900' : 'bg-gray-200 dark:bg-gray-700'
                       } rounded-lg flex items-center justify-center`}>
                         <span className="text-2xl">{('thumbnailEmoji' in scenario ? String(scenario.thumbnailEmoji) : null) || '📚'}</span>
                       </div>
-                      <h2 className="ml-4 text-xl font-semibold text-gray-900 dark:text-white pr-16">
-                        {getLocalizedText(scenario.title as string | Record<string, string>)}
-                      </h2>
+                      <div className="ml-4 flex-1">
+                        <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                          {getLocalizedText(scenario.title as string | Record<string, string>)}
+                        </h2>
+                        {/* Visibility Tag */}
+                        {showVisibilityTag && (
+                          <div className="mt-1">
+                            {visibilityStatus === 'production' && (
+                              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                                🟢 Production Ready
+                              </span>
+                            )}
+                            {visibilityStatus === 'staging' && (
+                              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
+                                🟡 Staging Only
+                              </span>
+                            )}
+                            {visibilityStatus === 'draft' && (
+                              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
+                                🔴 Draft
+                              </span>
+                            )}
+                          </div>
+                        )}
+                      </div>
                     </div>
 
                     {/* Domain Labels */}
