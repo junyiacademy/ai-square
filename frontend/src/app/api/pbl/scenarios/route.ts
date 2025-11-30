@@ -29,7 +29,11 @@ export async function GET(request: Request) {
 
     const compute = async () => {
       const scenarioLoader = new PBLScenarioLoaderService();
-      const isProduction = process.env.NODE_ENV === 'production';
+      // Detect production environment based on URL (both staging and production use NODE_ENV=production)
+      const url = new URL(request.url);
+      const isProduction = url.hostname.includes('ai-square-production') ||
+                          url.hostname === 'ai-square.app' ||
+                          url.hostname === 'www.ai-square.app';
 
       if (source === 'hybrid') {
         try {
