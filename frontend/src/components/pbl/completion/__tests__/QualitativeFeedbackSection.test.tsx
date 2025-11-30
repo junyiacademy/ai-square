@@ -87,7 +87,8 @@ describe('QualitativeFeedbackSection', () => {
         generatingFeedback={false}
       />
     );
-    expect(screen.getByText(/"You broke down complex problems effectively."/)).toBeInTheDocument();
+    // Component uses curly quotes (&ldquo; and &rdquo;), which render as " and "
+    expect(screen.getByText(/You broke down complex problems effectively\./)).toBeInTheDocument();
   });
 
   it('renders areas for improvement', () => {

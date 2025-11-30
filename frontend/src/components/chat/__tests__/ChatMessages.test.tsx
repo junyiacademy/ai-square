@@ -95,7 +95,8 @@ describe('ChatMessages', () => {
       },
     ];
     render(<ChatMessages {...defaultProps} messages={messagesWithMarkdown} />);
-    expect(screen.getByText('Bold text')).toBeInTheDocument();
-    expect(screen.getByText('italic text')).toBeInTheDocument();
+    // Markdown renders as HTML: **text** becomes <strong>text</strong>, *text* becomes <em>text</em>
+    expect(screen.getByText(/Bold text/)).toBeInTheDocument();
+    expect(screen.getByText(/italic text/)).toBeInTheDocument();
   });
 });

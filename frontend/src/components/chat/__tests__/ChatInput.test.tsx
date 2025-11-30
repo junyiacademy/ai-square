@@ -57,12 +57,14 @@ describe('ChatInput', () => {
 
   it('disables send button when message is empty', () => {
     render(<ChatInput {...defaultProps} message="" />);
-    expect(screen.getByText('Send')).toBeDisabled();
+    const sendButton = screen.getByRole('button', { name: /send/i });
+    expect(sendButton).toBeDisabled();
   });
 
   it('disables send button when isSending is true', () => {
     render(<ChatInput {...defaultProps} message="Test" isSending={true} />);
-    expect(screen.getByText('Send')).toBeDisabled();
+    const sendButton = screen.getByRole('button', { name: /send/i });
+    expect(sendButton).toBeDisabled();
   });
 
   it('disables input when user is not logged in', () => {

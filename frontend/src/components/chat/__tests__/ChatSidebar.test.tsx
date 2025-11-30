@@ -76,8 +76,9 @@ describe('ChatSidebar', () => {
   });
 
   it('shows loading state', () => {
-    render(<ChatSidebar {...defaultProps} isLoading={true} />);
-    expect(screen.getByRole('generic', { hidden: true })).toHaveClass('animate-spin');
+    const { container } = render(<ChatSidebar {...defaultProps} isLoading={true} />);
+    const spinner = container.querySelector('.animate-spin');
+    expect(spinner).toBeInTheDocument();
   });
 
   it('shows empty state when no sessions', () => {

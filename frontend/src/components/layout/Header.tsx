@@ -76,6 +76,7 @@ export function Header() {
               user={user}
               isLoggedIn={isLoggedIn}
               onClose={closeMobileMenu}
+              onToggle={toggleMobileMenu}
               onLogout={handleLogout}
             />
 

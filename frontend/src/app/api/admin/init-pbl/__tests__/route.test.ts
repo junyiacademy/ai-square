@@ -1,7 +1,6 @@
 import { NextRequest } from 'next/server';
-import { POST, GET } from '../route';
 
-// Mock the repository factory
+// Mock the repository factory - declare mocks before imports
 const mockFindByMode = jest.fn();
 const mockCreate = jest.fn();
 const mockUpdate = jest.fn();
@@ -11,16 +10,19 @@ const mockTaskFindByScenario = jest.fn();
 jest.mock('@/lib/repositories/base/repository-factory', () => ({
   repositoryFactory: {
     getScenarioRepository: () => ({
-      findByMode: mockFindByMode,
-      create: mockCreate,
-      update: mockUpdate,
+      findByMode: (...args: unknown[]) => mockFindByMode(...args),
+      create: (...args: unknown[]) => mockCreate(...args),
+      update: (...args: unknown[]) => mockUpdate(...args),
     }),
     getTaskRepository: () => ({
-      create: mockTaskCreate,
-      findByScenario: mockTaskFindByScenario,
+      create: (...args: unknown[]) => mockTaskCreate(...args),
+      findByScenario: (...args: unknown[]) => mockTaskFindByScenario(...args),
     })
   }
 }));
+
+// Import route AFTER mocks are set up
+import { POST, GET } from '../route';
 
 // Mock fs/promises
 jest.mock('fs/promises', () => ({

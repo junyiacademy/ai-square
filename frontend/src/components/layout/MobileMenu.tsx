@@ -20,6 +20,7 @@ interface MobileMenuProps {
   user: User | null;
   isLoggedIn: boolean;
   onClose: () => void;
+  onToggle?: () => void;
   onLogout: () => Promise<void>;
 }
 
@@ -29,6 +30,7 @@ export function MobileMenu({
   user,
   isLoggedIn,
   onClose,
+  onToggle,
   onLogout,
 }: MobileMenuProps) {
   const pathname = usePathname();
@@ -40,7 +42,7 @@ export function MobileMenu({
       <button
         type="button"
         className="lg:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-300 hover:text-gray-500 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
-        onClick={isOpen ? onClose : onClose}
+        onClick={onToggle || onClose}
         aria-label="Toggle navigation menu"
         aria-expanded={isOpen}
       >

@@ -6,11 +6,8 @@
  */
 
 import { NextRequest } from 'next/server';
-import { POST as initPBL } from '../init-pbl/route';
-import { POST as initAssessment } from '../init-assessment/route';
-import { POST as initDiscovery } from '../init-discovery/route';
 
-// Mock the repository factory
+// Mock functions must be declared before imports that use them
 const mockFindByMode = jest.fn();
 const mockCreate = jest.fn();
 const mockUpdate = jest.fn();
@@ -18,20 +15,26 @@ const mockDelete = jest.fn();
 const mockFindByScenario = jest.fn();
 const mockDeleteProgram = jest.fn();
 
+// Mock the repository factory BEFORE importing the routes
 jest.mock('@/lib/repositories/base/repository-factory', () => ({
   repositoryFactory: {
     getScenarioRepository: () => ({
-      findByMode: mockFindByMode,
-      create: mockCreate,
-      update: mockUpdate,
-      delete: mockDelete,
+      findByMode: (...args: unknown[]) => mockFindByMode(...args),
+      create: (...args: unknown[]) => mockCreate(...args),
+      update: (...args: unknown[]) => mockUpdate(...args),
+      delete: (...args: unknown[]) => mockDelete(...args),
     }),
     getProgramRepository: () => ({
-      findByScenario: mockFindByScenario,
-      delete: mockDeleteProgram,
+      findByScenario: (...args: unknown[]) => mockFindByScenario(...args),
+      delete: (...args: unknown[]) => mockDeleteProgram(...args),
     })
   }
 }));
+
+// Now import the routes AFTER mocks are set up
+import { POST as initPBL } from '../init-pbl/route';
+import { POST as initAssessment } from '../init-assessment/route';
+import { POST as initDiscovery } from '../init-discovery/route';
 
 // Mock fs and yaml
 jest.mock('fs', () => ({
