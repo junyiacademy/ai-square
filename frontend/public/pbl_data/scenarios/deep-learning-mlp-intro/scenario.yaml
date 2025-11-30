@@ -28,16 +28,10 @@ scenario_info:
     - creating_with_ai
     - managing_with_ai
 
-  # Prerequisites
+  # Prerequisites (Chinese version for zhTW/zhCN, use English YAML for en)
   prerequisites:
-    - type: knowledge
-      content:
-        zh: "對 AI/機器學習有基本的好奇心"
-        en: "Basic curiosity about AI/Machine Learning"
-    - type: knowledge
-      content:
-        zh: "了解數字 0 到 1 之間的數學概念"
-        en: "Understanding of mathematical concepts between 0 and 1"
+    - "對 AI/機器學習有基本的好奇心"
+    - "了解數字 0 到 1 之間的數學概念"
 
   # Learning objectives
   learning_objectives:

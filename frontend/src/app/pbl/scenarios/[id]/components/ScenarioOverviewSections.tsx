@@ -58,21 +58,10 @@ export function ScenarioOverviewSections({
             {t('details.prerequisites', 'Prerequisites')}
           </h2>
           <ul className="space-y-2">
-            {(getScenarioData('prerequisites', []) as Array<string | {type: string; content: Record<string, string>}>).map((prereq, index: number) => {
-              // Handle both old format (string) and new format (object with content)
-              let prereqText: string;
-              if (typeof prereq === 'string') {
-                prereqText = prereq;
-              } else if (prereq && typeof prereq === 'object' && 'content' in prereq) {
-                const content = prereq.content;
-                prereqText = content[i18n.language] || content.en || content.zh || '';
-              } else {
-                return null;
-              }
-
+            {(getScenarioData('prerequisites', []) as string[]).map((prereq: string, index: number) => {
               // Check if the prerequisite contains a URL
               const urlRegex = /(https?:\/\/[^\s]+)/g;
-              const parts = prereqText.split(urlRegex);
+              const parts = prereq.split(urlRegex);
 
               return (
                 <li key={index} className="flex items-start">
@@ -97,7 +86,7 @@ export function ScenarioOverviewSections({
                 </li>
               );
             })}
-            {(getScenarioData('prerequisites', []) as Array<unknown>).length === 0 && (
+            {(getScenarioData('prerequisites', []) as string[]).length === 0 && (
               <li className="text-gray-500 dark:text-gray-400">{t('details.noPrerequisites', 'No prerequisites')}</li>
             )}
           </ul>
