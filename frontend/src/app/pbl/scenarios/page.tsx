@@ -15,6 +15,67 @@ export default function PBLScenariosPage() {
   const [scenarios, setScenarios] = useState<FlexibleScenario[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const isMlpScenario = (scenario: FlexibleScenario): boolean => {
+    if (!scenario || typeof scenario !== 'object') {
+      return false;
+    }
+
+    const record = scenario as Record<string, unknown>;
+    const candidates: string[] = [];
+
+    const pushIfString = (value: unknown) => {
+      if (typeof value === 'string' && value.trim().length > 0) {
+        candidates.push(value);
+      }
+    };
+
+    pushIfString(record.id);
+    pushIfString(record.yamlId);
+    pushIfString(record.sourceId);
+
+    const sourceMetadata = record.sourceMetadata as Record<string, unknown> | undefined;
+    if (sourceMetadata) {
+      pushIfString(sourceMetadata.yamlId);
+      pushIfString(sourceMetadata.id);
+    }
+
+    const metadata = record.metadata as Record<string, unknown> | undefined;
+    if (metadata) {
+      pushIfString(metadata.yamlId);
+      pushIfString(metadata.sourceId);
+    }
+
+    const title = record.title;
+    if (typeof title === 'string') {
+      pushIfString(title);
+    } else if (title && typeof title === 'object') {
+      const titleRecord = title as Record<string, unknown>;
+      pushIfString(titleRecord[i18n.language]);
+      pushIfString(titleRecord.en);
+      Object.values(titleRecord).forEach(pushIfString);
+    }
+
+    const normalizedCandidates = candidates
+      .map((value) => value.toLowerCase());
+
+    return normalizedCandidates.some((value, index) => {
+      const original = candidates[index];
+      return (
+        value.includes('mlp') ||
+        value.includes('neural') ||
+        value.includes('deep-learning') ||
+        value.includes('handwritten') ||
+        value.includes('digit') ||
+        original.includes('神經網路') ||
+        original.includes('神经网络') ||
+        original.includes('手寫數字') ||
+        original.includes('手写数字') ||
+        original.includes('多層感知機') ||
+        original.includes('多层感知机')
+      );
+    });
+  };
+
   const getDifficultyStars = (difficulty: string) => {
     switch (difficulty) {
       case 'beginner': return '⭐';
@@ -53,9 +114,8 @@ export default function PBLScenariosPage() {
         if (isMounted) {
           // Handle PBL API response structure
           if (result.success && result.data?.scenarios) {
-            // API already handles production filtering
-            // Staging shows all scenarios, production shows only isProductionReady=true
-            setScenarios(result.data.scenarios as FlexibleScenario[]);
+            const filteredScenarios = (result.data.scenarios as FlexibleScenario[]).filter(isMlpScenario);
+            setScenarios(filteredScenarios);
           } else {
             setScenarios([]);
           }
@@ -168,20 +228,6 @@ export default function PBLScenariosPage() {
 
               const isAvailable = !('isAvailable' in scenario) || scenario.isAvailable !== false;
 
-              // Get visibility status from metadata
-              const getVisibilityStatus = (scenario: FlexibleScenario): 'production' | 'staging' | 'draft' => {
-                const metadata = scenario.metadata as Record<string, unknown> | undefined;
-                const isProductionReady = metadata?.isProductionReady === true || metadata?.isProductionReady === 'true';
-                const isPublished = 'is_published' in scenario ? scenario.is_published === true : true;
-
-                if (isProductionReady && isPublished) return 'production';
-                if (isPublished && !isProductionReady) return 'staging';
-                return 'draft';
-              };
-
-              const visibilityStatus = getVisibilityStatus(scenario);
-              const showVisibilityTag = process.env.NODE_ENV !== 'production' || visibilityStatus !== 'production';
-
               return (
                 <div
                   key={String(scenario.id)}
@@ -196,31 +242,9 @@ export default function PBLScenariosPage() {
                       } rounded-lg flex items-center justify-center`}>
                         <span className="text-2xl">{('thumbnailEmoji' in scenario ? String(scenario.thumbnailEmoji) : null) || '📚'}</span>
                       </div>
-                      <div className="ml-4 flex-1">
-                        <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-                          {getLocalizedText(scenario.title as string | Record<string, string>)}
-                        </h2>
-                        {/* Visibility Tag */}
-                        {showVisibilityTag && (
-                          <div className="mt-1">
-                            {visibilityStatus === 'production' && (
-                              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-                                🟢 Production Ready
-                              </span>
-                            )}
-                            {visibilityStatus === 'staging' && (
-                              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
-                                🟡 Staging Only
-                              </span>
-                            )}
-                            {visibilityStatus === 'draft' && (
-                              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
-                                🔴 Draft
-                              </span>
-                            )}
-                          </div>
-                        )}
-                      </div>
+                      <h2 className="ml-4 text-xl font-semibold text-gray-900 dark:text-white pr-16">
+                        {getLocalizedText(scenario.title as string | Record<string, string>)}
+                      </h2>
                     </div>
 
                     {/* Domain Labels */}
