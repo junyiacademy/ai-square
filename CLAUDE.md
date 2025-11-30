@@ -146,13 +146,17 @@ Task(subagent_type="deployment-master-agent", ...);
    ```typescript
    { title: { en: "Math", zh: "數學" } }
    ```
-5. **File size limits** - Enforce modularization:
-   - Components: 300 lines max
-   - Pages: 400 lines max
-   - API routes: 300 lines max
-   - Services: 500 lines max
-   - Files exceeding 2x limit **block commits**
-   - Check with: `make check-file-size-fix`
+5. **Code modularity** - Focus on quality over line counts:
+   - **NEW PHILOSOPHY:** "行數不一定是關鍵，主要是有沒有好好拆分模組，基本上 AI 可以看得懂就好，不會浪費 token 就好"
+   - Translation: Line count is NOT the key. Focus on: module separation, AI-readability, token efficiency
+   - Soft limits trigger review (not enforcement): Components 300, Pages 400, APIs 300, Services 500
+   - **Enforcement criteria** (ALL must be met to block):
+     - Exceeds 2x soft limit AND
+     - Cyclomatic complexity > 50 AND
+     - Multiple responsibilities detected
+   - Check quality metrics: `npm run check:file-size` (in frontend/)
+   - See: `frontend/docs/standards/file-size-standards.md`
+   - Current status: **0 critical issues** in codebase ✅
 
 ### Pre-Commit Requirements
 Quality checks are handled by agents automatically. For manual verification:
