@@ -27,6 +27,48 @@ export default function ScenarioDetailPage() {
   const isScenarioInteractive = useMemo(() => {
     if (!scenario) return false;
 
+    // Check scenario ID whitelist (same as scenarios list page)
+    const ALLOWED_SCENARIO_IDS = new Set([
+      'deep-learning-mlp-intro',
+      'semiconductor-adventure'
+    ]);
+
+    const record = scenario as Record<string, unknown>;
+    const idCandidates: string[] = [];
+
+    // Check top-level IDs
+    [record.id, record.yamlId, record.sourceId].forEach(id => {
+      if (typeof id === 'string') {
+        idCandidates.push(id);
+      }
+    });
+
+    // Check metadata
+    const metadata = record.metadata as Record<string, unknown> | undefined;
+    if (metadata) {
+      [metadata.yamlId, metadata.sourceId].forEach(id => {
+        if (typeof id === 'string') {
+          idCandidates.push(id);
+        }
+      });
+    }
+
+    // Check sourceMetadata
+    const sourceMetadata = record.sourceMetadata as Record<string, unknown> | undefined;
+    if (sourceMetadata) {
+      [sourceMetadata.yamlId, sourceMetadata.id].forEach(id => {
+        if (typeof id === 'string') {
+          idCandidates.push(id);
+        }
+      });
+    }
+
+    // If scenario ID is in whitelist, allow interaction
+    if (idCandidates.some(id => ALLOWED_SCENARIO_IDS.has(id))) {
+      return true;
+    }
+
+    // Legacy check: also check title for semiconductor (for backward compatibility)
     const title =
       typeof scenario.title === 'string'
         ? scenario.title
