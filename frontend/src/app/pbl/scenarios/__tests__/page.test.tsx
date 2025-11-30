@@ -54,6 +54,8 @@ describe('PBLScenariosPage', () => {
     const mockScenarios = [
       {
         id: 'scenario-1',
+        sourceId: 'semiconductor-adventure',
+        yamlId: 'semiconductor-adventure',
         title: { en: 'Semiconductor Adventure' },
         description: { en: 'Learn about semiconductors' },
         difficulty: 'intermediate',
@@ -63,7 +65,9 @@ describe('PBLScenariosPage', () => {
       },
       {
         id: 'scenario-2',
-        title: { en: 'AI in Education' },
+        sourceId: 'deep-learning-mlp-intro',
+        yamlId: 'deep-learning-mlp-intro',
+        title: { en: 'Deep Learning MLP Intro' },
         description: { en: 'Explore AI applications in learning' },
         difficulty: 'beginner',
         taskCount: 3,
@@ -86,8 +90,8 @@ describe('PBLScenariosPage', () => {
       expect(screen.getByText('Semiconductor Adventure')).toBeInTheDocument();
     });
 
-    // Both scenarios should be visible (no semiconductor filtering)
-    expect(screen.getByText('AI in Education')).toBeInTheDocument();
+    // Both scenarios should be visible (whitelisted IDs)
+    expect(screen.getByText('Deep Learning MLP Intro')).toBeInTheDocument();
     expect(screen.getByText('Learn about semiconductors')).toBeInTheDocument();
   });
 
@@ -132,6 +136,8 @@ describe('PBLScenariosPage', () => {
     const mockScenarios = [
       {
         id: 's1',
+        sourceId: 'semiconductor-adventure',
+        yamlId: 'semiconductor-adventure',
         title: { en: 'Semiconductor Beginner Scenario' },
         description: { en: 'Easy' },
         difficulty: 'beginner',
@@ -139,6 +145,8 @@ describe('PBLScenariosPage', () => {
       },
       {
         id: 's2',
+        sourceId: 'deep-learning-mlp-intro',
+        yamlId: 'deep-learning-mlp-intro',
         title: { en: 'Semiconductor Intermediate Scenario' },
         description: { en: 'Medium' },
         difficulty: 'intermediate',
@@ -146,6 +154,8 @@ describe('PBLScenariosPage', () => {
       },
       {
         id: 's3',
+        sourceId: 'semiconductor-adventure',
+        yamlId: 'semiconductor-adventure',
         title: { en: 'Semiconductor Advanced Scenario' },
         description: { en: 'Hard' },
         difficulty: 'advanced',
@@ -181,6 +191,8 @@ describe('PBLScenariosPage', () => {
     const mockScenarios = [
       {
         id: 'scenario-1',
+        sourceId: 'semiconductor-adventure',
+        yamlId: 'semiconductor-adventure',
         title: { en: 'Semiconductor Test Scenario' },
         description: { en: 'Test' },
         domains: ['engaging_with_ai', 'creating_with_ai'],
@@ -210,6 +222,8 @@ describe('PBLScenariosPage', () => {
     const mockScenarios = [
       {
         id: 'scenario-1',
+        sourceId: 'semiconductor-adventure',
+        yamlId: 'semiconductor-adventure',
         title: { en: 'Semiconductor Duration Scenario' },
         description: { en: 'Test' },
         taskTemplates: [
@@ -242,6 +256,8 @@ describe('PBLScenariosPage', () => {
     const mockScenarios = [
       {
         id: 'scenario-1',
+        sourceId: 'deep-learning-mlp-intro',
+        yamlId: 'deep-learning-mlp-intro',
         title: { en: 'Unavailable Semiconductor Scenario' },
         description: { en: 'Not yet available' },
         isAvailable: false,
@@ -271,6 +287,8 @@ describe('PBLScenariosPage', () => {
     const mockScenarios = [
       {
         id: 'scenario-1',
+        sourceId: 'semiconductor-adventure',
+        yamlId: 'semiconductor-adventure',
         title: { en: 'Available Semiconductor Scenario' },
         description: { en: 'Ready to use' },
         isAvailable: true,
@@ -392,11 +410,14 @@ describe('PBLScenariosPage', () => {
     const mockScenarios = [
       {
         id: 'scenario-1',
+        sourceId: 'deep-learning-mlp-intro',
+        yamlId: 'deep-learning-mlp-intro',
         title: { en: 'Semiconductor Unified Format Scenario' },
         description: { en: 'Test scenario with unified format' },
         sourceMetadata: {
           domain: 'designing_with_ai',
-          difficulty: 'advanced'
+          difficulty: 'advanced',
+          yamlId: 'deep-learning-mlp-intro'
         },
         taskTemplates: []
       }
@@ -449,6 +470,8 @@ describe('PBLScenariosPage', () => {
     const mockScenarios = [
       {
         id: 'scenario-1',
+        sourceId: 'semiconductor-adventure',
+        yamlId: 'semiconductor-adventure',
         title: { en: 'Semiconductor Scenario With Target Domain' },
         description: { en: 'Test Description' },
         targetDomain: ['managing_with_ai', 'creating_with_ai'],
