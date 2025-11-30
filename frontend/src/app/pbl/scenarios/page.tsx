@@ -10,70 +10,56 @@ import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
 // Flexible scenario type for API responses that may not fully match unified architecture
 type FlexibleScenario = IScenario | Record<string, unknown>;
 
+// Whitelist: Allowed scenario IDs (moved outside component to avoid recreation on each render)
+const ALLOWED_SCENARIO_IDS = new Set([
+  'deep-learning-mlp-intro',
+  'semiconductor-adventure'
+]);
+
 export default function PBLScenariosPage() {
   const { t, i18n } = useTranslation(['pbl', 'assessment']);
   const [scenarios, setScenarios] = useState<FlexibleScenario[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const isMlpScenario = (scenario: FlexibleScenario): boolean => {
+  const isAllowedScenario = (scenario: FlexibleScenario): boolean => {
     if (!scenario || typeof scenario !== 'object') {
       return false;
     }
 
     const record = scenario as Record<string, unknown>;
-    const candidates: string[] = [];
-
-    const pushIfString = (value: unknown) => {
-      if (typeof value === 'string' && value.trim().length > 0) {
-        candidates.push(value);
+    
+    // Collect all possible ID candidates from various locations
+    const idCandidates: string[] = [];
+    
+    // Check top-level IDs
+    [record.id, record.yamlId, record.sourceId].forEach(id => {
+      if (typeof id === 'string') {
+        idCandidates.push(id);
       }
-    };
-
-    pushIfString(record.id);
-    pushIfString(record.yamlId);
-    pushIfString(record.sourceId);
-
-    const sourceMetadata = record.sourceMetadata as Record<string, unknown> | undefined;
-    if (sourceMetadata) {
-      pushIfString(sourceMetadata.yamlId);
-      pushIfString(sourceMetadata.id);
-    }
-
+    });
+    
+    // Check metadata
     const metadata = record.metadata as Record<string, unknown> | undefined;
     if (metadata) {
-      pushIfString(metadata.yamlId);
-      pushIfString(metadata.sourceId);
+      [metadata.yamlId, metadata.sourceId].forEach(id => {
+        if (typeof id === 'string') {
+          idCandidates.push(id);
+        }
+      });
     }
-
-    const title = record.title;
-    if (typeof title === 'string') {
-      pushIfString(title);
-    } else if (title && typeof title === 'object') {
-      const titleRecord = title as Record<string, unknown>;
-      pushIfString(titleRecord[i18n.language]);
-      pushIfString(titleRecord.en);
-      Object.values(titleRecord).forEach(pushIfString);
+    
+    // Check sourceMetadata
+    const sourceMetadata = record.sourceMetadata as Record<string, unknown> | undefined;
+    if (sourceMetadata) {
+      [sourceMetadata.yamlId, sourceMetadata.id].forEach(id => {
+        if (typeof id === 'string') {
+          idCandidates.push(id);
+        }
+      });
     }
-
-    const normalizedCandidates = candidates
-      .map((value) => value.toLowerCase());
-
-    return normalizedCandidates.some((value, index) => {
-      const original = candidates[index];
-      return (
-        value.includes('mlp') ||
-        value.includes('neural') ||
-        value.includes('deep-learning') ||
-        value.includes('handwritten') ||
-        value.includes('digit') ||
-        original.includes('神經網路') ||
-        original.includes('神经网络') ||
-        original.includes('手寫數字') ||
-        original.includes('手写数字') ||
-        original.includes('多層感知機') ||
-        original.includes('多层感知机')
-      );
-    });
+    
+    // Check if any candidate ID is in the whitelist
+    return idCandidates.some(id => ALLOWED_SCENARIO_IDS.has(id));
   };
 
   const getDifficultyStars = (difficulty: string) => {
@@ -114,7 +100,7 @@ export default function PBLScenariosPage() {
         if (isMounted) {
           // Handle PBL API response structure
           if (result.success && result.data?.scenarios) {
-            const filteredScenarios = (result.data.scenarios as FlexibleScenario[]).filter(isMlpScenario);
+            const filteredScenarios = (result.data.scenarios as FlexibleScenario[]).filter(isAllowedScenario);
             setScenarios(filteredScenarios);
           } else {
             setScenarios([]);
