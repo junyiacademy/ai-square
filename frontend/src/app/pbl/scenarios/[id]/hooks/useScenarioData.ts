@@ -43,6 +43,9 @@ export function useScenarioData(
               ...response.data,
               objectives: response.data.learningObjectives || [],
               prerequisites: response.data.prerequisites || [], // Move prerequisites to top level
+              // Preserve source tracking fields for whitelist filtering
+              sourceId: response.data.sourceId,
+              sourceMetadata: response.data.sourceMetadata,
               metadata: {
                 difficulty: response.data.difficulty,
                 estimatedDuration: response.data.estimatedDuration,

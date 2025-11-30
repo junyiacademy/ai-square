@@ -76,6 +76,9 @@ interface ScenarioResponse {
     expectedOutcome: string;
     timeLimit?: number;
   }>;
+  // Include source tracking fields for whitelist filtering
+  sourceId?: string;
+  sourceMetadata?: Record<string, unknown>;
 }
 
 // Memoized helper functions for better performance
@@ -290,6 +293,9 @@ export async function GET(
       difficulty: scenarioResult.difficulty || (scenarioResult.metadata as Record<string, unknown>)?.difficulty as string || 'intermediate',
       estimatedDuration: scenarioResult.estimatedMinutes || (scenarioResult.metadata as Record<string, unknown>)?.estimatedDuration as number || 60,
       targetDomains: (scenarioResult.pblData as Record<string, unknown>)?.targetDomains as string[] || (scenarioResult.metadata as Record<string, unknown>)?.targetDomains as string[] || [],
+      // Include source tracking fields for whitelist filtering
+      sourceId: scenarioResult.sourceId,
+      sourceMetadata: scenarioResult.sourceMetadata,
       prerequisites: (() => {
         // Check for multilingual prerequisites in metadata
         const metadata = scenarioResult.metadata as Record<string, unknown>;
