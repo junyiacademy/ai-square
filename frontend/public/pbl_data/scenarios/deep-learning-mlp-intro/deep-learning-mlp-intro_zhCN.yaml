@@ -1,0 +1,146 @@
+scenario_info:
+  id: deep-learning-mlp-intro
+  difficulty: beginner
+  estimated_duration: 90
+  target_domains:
+  - engaging_with_ai
+  - creating_with_ai
+  - managing_with_ai
+  title: 探索神经网络：手写数字识别入门
+  description: 了解人工智能如何透过模拟生物大脑结构的神经网络来识别复杂模式，例如手写数字。本课程将深入解析神经元、激励值、权重和偏置的运作原理。
+  prerequisites:
+  - 对 AI/机器学习有基本的好奇心
+  - 了解数字 0 到 1 之间的数学概念
+  - '推荐：观看 3Blue1Brown 神经网络视觉化影片 - https://www.youtube.com/watch?v=aircAruvnKk'
+  learning_objectives:
+  - 能够定义神经元、激励值、权重与偏置
+  - 描述多层感知机 (MLP) 的层状结构，包含输入层、隐藏层和输出层
+  - 解释激励值如何从一层传递到下一层，并透过加权总和计算其变化
+  - 认识激励函数（如 Sigmoid 和 ReLU）在神经网络中的作用
+  - 了解权重和偏置是如何影响神经网络的决策，并作为学习过程中的调整参数
+ksa_mapping:
+  knowledge:
+  - K1.1
+  - K2.1
+  skills:
+  - S1.1
+  - S2.3
+  attitudes:
+  - A1.1
+  - A2.1
+tasks:
+- id: task-1-structure
+  category: learning
+  time_limit: 20
+  KSA_focus:
+    primary:
+    - K1.1
+    - S1.1
+    secondary:
+    - A1.1
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: 神经网络概念助理
+    initial_prompt: '你是一位神经网络概念助理，帮助学生探索多层感知机 (MLP) 的基本构造。
+
+      你的目标是引导他们理解：
+
+      - 神经元在网络中的角色，以及它们承载的「激励值」（0 到 1 之间的数字）
+
+      - 输入层、隐藏层和输出层的区别和功能
+
+      - 如何将一个 28x28 像素的图像转换成输入层的 784 个神经元激励值
+
+      - 输出层的 10 个神经元如何表示最终的数字判断结果
+
+      请使用清晰的视觉化描述，并鼓励学生想象激励值传递的过程。
+
+      '
+  title: 了解神经网络的层次与神经元
+  description: 探索神经网络的三层结构（输入、隐藏、输出），并理解「激励值」如何代表信息。
+  instructions: '定义神经元与激励值。描述手写数字识别网络中，784 个输入神经元和 10 个输出神经元的作用。讨论隐藏层神经元可能扮演的角色（例如：识别笔划或边缘）。
+
+    '
+  expected_outcome: 对多层感知机的结构及其元件功能有清晰的理解
+- id: task-2-parameters
+  category: learning
+  time_limit: 30
+  KSA_focus:
+    primary:
+    - K2.1
+    - S1.1
+    secondary:
+    - S2.3
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: 数学导师
+    initial_prompt: '你是一位数学导师，专门协助学生理解神经网络中的权重和偏置。
+
+      你的任务是：
+
+      - 用简单的数学范例说明加权总和的计算过程
+
+      - 帮助学生理解偏置如何「调整」激励阈值
+
+      - 引导他们思考：如果改变某个权重，会如何影响输出结果
+
+      - 解释梯度下降如何逐步调整这些参数以最小化误差
+
+      请确保使用清晰的数学表达式，但避免过于复杂的公式，保持直觉性。
+
+      '
+  title: 探索权重与偏置的作用
+  description: 深入了解权重和偏置如何决定神经元之间的连接强度，以及它们如何影响网络的学习过程。
+  instructions: '解释权重如何表示神经元之间的连接强度。描述偏置在调整神经元激励阈值中的角色。计算一个简单范例：给定输入激励值、权重和偏置，计算下一层的激励值。讨论在训练过程中，权重和偏置如何被调整以改善网络性能。
+
+    '
+  expected_outcome: 能够理解并计算权重、偏置对激励值传递的影响，并认识它们在学习中的重要性
+- id: task-3-activation-functions
+  category: learning
+  time_limit: 40
+  KSA_focus:
+    primary:
+    - K1.1
+    - K2.1
+    secondary:
+    - A2.1
+    - S2.3
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: AI 研究导师
+    initial_prompt: '你是一位 AI 研究导师，专注于帮助学生理解激励函数的理论与实务。
+
+      你的重点是：
+
+      - 解释线性叠加的局限性：为什么纯线性网络无法解决复杂问题
+
+      - 介绍 Sigmoid、ReLU、Tanh 等常见激励函数的数学形式和图形
+
+      - 讨论「梯度消失」问题，以及为何 ReLU 在深度学习中更受欢迎
+
+      - 在手写数字识别的脉络下，说明 Softmax 如何将输出转换为概率分布
+
+      鼓励学生批判性思考：不同场景下应该选择哪种激励函数？
+
+      '
+  title: 认识激励函数的重要性
+  description: 探索激励函数（如 Sigmoid、ReLU）如何为神经网络引入非线性，使其能够学习复杂模式。
+  instructions: '定义激励函数，并解释为何需要非线性转换。比较 Sigmoid 和 ReLU 函数的特性与优缺点。视觉化理解：如果没有激励函数，神经网络会变成什么样子？讨论在手写数字识别任务中，输出层常使用 Softmax 函数的原因。
+
+    '
+  expected_outcome: 理解激励函数在神经网络中的关键作用，并能比较不同函数的应用场景
+metadata:
+  created_at: '2025-11-30T00:00:00Z'
+  created_by: Claude AI Assistant
+  version: 1.0.0
+  tags:
+  - neural-networks
+  - deep-learning
+  - mlp
+  - computer-vision
+  - mnist
+  is_visible: true
+  is_production_ready: false

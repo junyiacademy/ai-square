@@ -1,0 +1,146 @@
+scenario_info:
+  id: deep-learning-mlp-intro
+  difficulty: beginner
+  estimated_duration: 90
+  target_domains:
+  - engaging_with_ai
+  - creating_with_ai
+  - managing_with_ai
+  title: 'Exploring Neural Networks: Introduction to Handwritten Digit Recognition'
+  description: Learn how AI recognizes complex patterns like handwritten digits through neural networks that simulate biological brain structures. This course provides deep insights into neurons, activations, weights, and biases.
+  prerequisites:
+  - Basic curiosity about AI/Machine Learning
+  - Understanding of mathematical concepts between 0 and 1
+  - 'Recommended: Watch 3Blue1Brown Neural Network Visualization - https://www.youtube.com/watch?v=aircAruvnKk'
+  learning_objectives:
+  - Ability to define neurons, activations, weights, and biases
+  - Describe the layered structure of Multi-Layer Perceptron (MLP), including input, hidden, and output layers
+  - Explain how activations propagate from one layer to the next through weighted sums
+  - Understand the role of activation functions (such as Sigmoid and ReLU) in neural networks
+  - Understand how weights and biases affect neural network decisions and serve as adjustable parameters in the learning process
+ksa_mapping:
+  knowledge:
+  - K1.1
+  - K2.1
+  skills:
+  - S1.1
+  - S2.3
+  attitudes:
+  - A1.1
+  - A2.1
+tasks:
+- id: task-1-structure
+  category: learning
+  time_limit: 20
+  KSA_focus:
+    primary:
+    - K1.1
+    - S1.1
+    secondary:
+    - A1.1
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: Neural Network Concept Assistant
+    initial_prompt: 'You are a neural network concept assistant helping students explore the basic structure of Multi-Layer Perceptrons (MLP).
+
+      Your goal is to guide them to understand:
+
+      - The role of neurons in the network and the ''activations'' they carry (numbers between 0 and 1)
+
+      - The differences and functions of input, hidden, and output layers
+
+      - How a 28x28 pixel image is converted into 784 input neuron activations
+
+      - How the 10 output neurons represent the final digit classification result
+
+      Please use clear visual descriptions and encourage students to imagine the activation propagation process.
+
+      '
+  title: Understanding Neural Network Layers and Neurons
+  description: Explore the three-layer structure of neural networks (input, hidden, output) and understand how 'activations' represent information.
+  instructions: 'Define neurons and activations. Describe the role of 784 input neurons and 10 output neurons in handwritten digit recognition networks. Discuss the potential roles of hidden layer neurons (e.g., identifying strokes or edges).
+
+    '
+  expected_outcome: Clear understanding of Multi-Layer Perceptron structure and component functions
+- id: task-2-parameters
+  category: learning
+  time_limit: 30
+  KSA_focus:
+    primary:
+    - K2.1
+    - S1.1
+    secondary:
+    - S2.3
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: Mathematics Tutor
+    initial_prompt: 'You are a mathematics tutor specializing in helping students understand weights and biases in neural networks.
+
+      Your tasks are:
+
+      - Explain the weighted sum calculation process using simple mathematical examples
+
+      - Help students understand how biases ''adjust'' activation thresholds
+
+      - Guide them to think: if you change a certain weight, how would it affect the output?
+
+      - Explain how gradient descent gradually adjusts these parameters to minimize error
+
+      Please use clear mathematical expressions while avoiding overly complex formulas, maintaining intuitiveness.
+
+      '
+  title: Exploring the Role of Weights and Biases
+  description: Deep dive into how weights and biases determine connection strength between neurons and how they affect the network's learning process.
+  instructions: 'Explain how weights represent connection strength between neurons. Describe the role of biases in adjusting neuron activation thresholds. Calculate a simple example: given input activations, weights, and biases, compute the next layer''s activations. Discuss how weights and biases are adjusted during training to improve network performance.
+
+    '
+  expected_outcome: Ability to understand and calculate the impact of weights and biases on activation propagation, and recognize their importance in learning
+- id: task-3-activation-functions
+  category: learning
+  time_limit: 40
+  KSA_focus:
+    primary:
+    - K1.1
+    - K2.1
+    secondary:
+    - A2.1
+    - S2.3
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: AI Research Mentor
+    initial_prompt: 'You are an AI research mentor focusing on helping students understand the theory and practice of activation functions.
+
+      Your focus areas are:
+
+      - Explain the limitations of linear stacking: why purely linear networks cannot solve complex problems
+
+      - Introduce the mathematical forms and graphs of common activation functions like Sigmoid, ReLU, and Tanh
+
+      - Discuss the ''vanishing gradient'' problem and why ReLU is more popular in deep learning
+
+      - In the context of handwritten digit recognition, explain how Softmax converts outputs into probability distributions
+
+      Encourage students to think critically: which activation function should be chosen for different scenarios?
+
+      '
+  title: Understanding the Importance of Activation Functions
+  description: Explore how activation functions (such as Sigmoid, ReLU) introduce non-linearity to neural networks, enabling them to learn complex patterns.
+  instructions: 'Define activation functions and explain why non-linear transformations are needed. Compare the characteristics, advantages, and disadvantages of Sigmoid and ReLU functions. Visual understanding: What would a neural network become without activation functions? Discuss why the Softmax function is commonly used in the output layer for handwritten digit recognition tasks.
+
+    '
+  expected_outcome: Understand the key role of activation functions in neural networks and be able to compare different function application scenarios
+metadata:
+  created_at: '2025-11-30T00:00:00Z'
+  created_by: Claude AI Assistant
+  version: 1.0.0
+  tags:
+  - neural-networks
+  - deep-learning
+  - mlp
+  - computer-vision
+  - mnist
+  is_visible: true
+  is_production_ready: false
