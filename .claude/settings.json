@@ -6,8 +6,14 @@
         {
           "eventName": "UserPromptSubmit",
           "type": "command",
-          "command": "./.claude/hooks/universal-agent-rules.py",
+          "command": "/Users/young/project/ai-square/.claude/hooks/universal-agent-rules.py",
           "timeout": 5
+        },
+        {
+          "eventName": "Stop",
+          "type": "command",
+          "command": "echo '{\"output\": \"{output}\", \"prompt\": \"{prompt}\"}' | python3 /Users/young/project/ai-square/.claude/hooks/error-reflection.py",
+          "timeout": 3
         }
       ]
     }
