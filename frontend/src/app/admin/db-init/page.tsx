@@ -29,6 +29,19 @@ export default function DatabaseInitPage() {
   });
   const [loading, setLoading] = useState<string | null>(null);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [isProduction, setIsProduction] = useState(false);
+
+  // Check if we're in production environment
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const hostname = window.location.hostname;
+      const prodCheck = 
+        hostname.includes('ai-square.org') ||
+        hostname.includes('ai-square-production') ||
+        process.env.NEXT_PUBLIC_ENVIRONMENT === 'production';
+      setIsProduction(prodCheck);
+    }
+  }, []);
 
   // Check status on load
   useEffect(() => {
@@ -327,35 +340,51 @@ export default function DatabaseInitPage() {
                           'Update All'
                         )}
                       </Button>
-                      <Button
-                        onClick={() => clearAndReinit(module.key, module.endpoint)}
-                        disabled={loading === module.key}
-                        className="flex-1"
-                        variant="destructive"
-                        title="Delete everything and start fresh"
-                      >
-                        {loading === module.key ? (
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                        ) : (
-                          'Clear All'
-                        )}
-                      </Button>
+                      {!isProduction && (
+                        <Button
+                          onClick={() => clearAndReinit(module.key, module.endpoint)}
+                          disabled={loading === module.key}
+                          className="flex-1"
+                          variant="destructive"
+                          title="Delete everything and start fresh"
+                        >
+                          {loading === module.key ? (
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                          ) : (
+                            'Clear All'
+                          )}
+                        </Button>
+                      )}
+                      {isProduction && (
+                        <div className="flex-1 px-4 py-3 rounded-lg bg-gray-100 text-gray-500 text-center text-sm">
+                          Clear All (disabled in production)
+                        </div>
+                      )}
                     </>
                   )}
 
                   {hasData && module.key === 'users' && (
-                    <Button
-                      onClick={() => clearAndReinit(module.key, module.endpoint)}
-                      disabled={loading === module.key}
-                      className="flex-1"
-                      variant="destructive"
-                    >
-                      {loading === module.key ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                      ) : (
-                        'Clear & Reinitialize'
+                    <>
+                      {!isProduction && (
+                        <Button
+                          onClick={() => clearAndReinit(module.key, module.endpoint)}
+                          disabled={loading === module.key}
+                          className="flex-1"
+                          variant="destructive"
+                        >
+                          {loading === module.key ? (
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                          ) : (
+                            'Clear & Reinitialize'
+                          )}
+                        </Button>
                       )}
-                    </Button>
+                      {isProduction && (
+                        <div className="flex-1 px-4 py-3 rounded-lg bg-gray-100 text-gray-500 text-center text-sm">
+                          Clear & Reinitialize (disabled in production)
+                        </div>
+                      )}
+                    </>
                   )}
                 </div>
               </CardContent>
