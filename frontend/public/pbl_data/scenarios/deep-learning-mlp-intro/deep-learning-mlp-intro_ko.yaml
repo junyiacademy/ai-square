@@ -1,0 +1,171 @@
+scenario_info:
+  id: deep-learning-mlp-intro
+  difficulty: beginner
+  estimated_duration: 90
+  target_domains:
+  - engaging_with_ai
+  - creating_with_ai
+  - managing_with_ai
+  title: '신경망 탐구: 손글씨 숫자 인식 입문'
+  description: AI가 생물학적 뇌 구조를 모방한 신경망을 통해 손글씨 숫자와 같은 복잡한 패턴을 어떻게 인식하는지 학습합니다. 이 과정에서는 뉴런, 활성화, 가중치, 편향에 대한 깊은 통찰을 제공합니다.
+  prerequisites:
+  - AI/머신러닝에 대한 기본적인 호기심
+  - 0과 1 사이의 수학적 개념 이해
+  - '권장: 3Blue1Brown 신경망 시각화 영상 시청 - https://www.youtube.com/watch?v=aircAruvnKk'
+  learning_objectives:
+  - 뉴런, 활성화, 가중치, 편향을 정의할 수 있다
+  - 입력층, 은닉층, 출력층을 포함한 다층 퍼셉트론(MLP)의 계층 구조를 설명할 수 있다
+  - 가중합을 통해 활성화가 한 층에서 다음 층으로 어떻게 전파되는지 설명할 수 있다
+  - 신경망에서 활성화 함수(Sigmoid, ReLU 등)의 역할을 이해한다
+  - 가중치와 편향이 신경망의 결정에 어떻게 영향을 미치고 학습 과정에서 조정 가능한 매개변수로 어떻게 작용하는지 이해한다
+ksa_mapping:
+  knowledge:
+  - K1.1
+  - K2.1
+  skills:
+  - S1.1
+  - S2.3
+  attitudes:
+  - A1.1
+  - A2.1
+tasks:
+- id: task-1-structure
+  category: learning
+  time_limit: 20
+  KSA_focus:
+    primary:
+    - K1.1
+    - S1.1
+    secondary:
+    - A1.1
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: 신경망 개념 도우미
+    initial_prompt: '당신은 학생들이 다층 퍼셉트론(MLP)의 기본 구조를 탐구하도록 돕는 신경망 개념 도우미입니다.
+
+      당신의 목표는 다음을 이해하도록 안내하는 것입니다:
+
+      - 네트워크에서 뉴런의 역할과 그들이 담고 있는 "활성화"(0과 1 사이의 숫자)
+
+      - 입력층, 은닉층, 출력층의 차이점과 기능
+
+      - 28x28 픽셀 이미지가 784개의 입력 뉴런 활성화로 어떻게 변환되는지
+
+      - 10개의 출력 뉴런이 최종 숫자 분류 결과를 어떻게 나타내는지
+
+      명확한 시각적 설명을 사용하고 학생들이 활성화 전파 과정을 상상하도록 격려하세요.
+
+      '
+  title: 신경망의 층과 뉴런 이해하기
+  description: 신경망의 3층 구조(입력, 은닉, 출력)를 탐구하고 '활성화'가 정보를 어떻게 나타내는지 이해합니다.
+  instructions: '뉴런과 활성화를 정의하세요. 손글씨 숫자 인식 네트워크에서 784개의 입력 뉴런과 10개의 출력 뉴런의 역할을 설명하세요. 은닉층 뉴런이 담당할 수 있는 역할(예: 획이나 가장자리 식별)에 대해 논의하세요.
+
+    '
+  expected_outcome: 다층 퍼셉트론 구조와 구성 요소 기능에 대한 명확한 이해
+- id: task-2-parameters
+  category: learning
+  time_limit: 30
+  KSA_focus:
+    primary:
+    - K2.1
+    - S1.1
+    secondary:
+    - S2.3
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: 수학 튜터
+    initial_prompt: '당신은 신경망의 가중치와 편향을 학생들이 이해하도록 돕는 것을 전문으로 하는 수학 튜터입니다.
+
+      당신의 과제는:
+
+      - 간단한 수학적 예제를 사용하여 가중합 계산 과정을 설명하기
+
+      - 편향이 활성화 임계값을 어떻게 "조정"하는지 학생들이 이해하도록 돕기
+
+      - 특정 가중치를 변경하면 출력에 어떤 영향을 미치는지 생각하도록 안내하기
+
+      - 경사하강법이 이러한 매개변수를 점진적으로 조정하여 오차를 최소화하는 방법 설명하기
+
+      직관적이면서도 지나치게 복잡한 공식을 피하여 명확한 수학적 표현을 사용하세요.
+
+      '
+  title: 가중치와 편향의 역할 탐구
+  description: 가중치와 편향이 뉴런 간의 연결 강도를 어떻게 결정하고 네트워크의 학습 과정에 어떻게 영향을 미치는지 깊이 이해합니다.
+  instructions: '가중치가 뉴런 간의 연결 강도를 어떻게 나타내는지 설명하세요. 뉴런 활성화 임계값 조정에서 편향의 역할을 설명하세요. 간단한 예제를 계산하세요: 입력 활성화, 가중치, 편향이 주어졌을 때 다음 층의 활성화를 계산하세요. 훈련 과정에서 가중치와 편향이 네트워크 성능을 개선하기 위해 어떻게 조정되는지 논의하세요.
+
+    '
+  expected_outcome: 가중치와 편향이 활성화 전파에 미치는 영향을 이해하고 계산할 수 있으며, 학습에서의 중요성을 인식할 수 있다
+- id: task-3-activation-functions
+  category: learning
+  time_limit: 40
+  KSA_focus:
+    primary:
+    - K1.1
+    - K2.1
+    secondary:
+    - A2.1
+    - S2.3
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: AI 연구 멘토
+    initial_prompt: '당신은 활성화 함수의 이론과 실무를 학생들이 이해하도록 돕는 데 중점을 둔 AI 연구 멘토입니다.
+
+      당신의 중점 영역은:
+
+      - 선형 적층의 한계 설명: 순수하게 선형인 네트워크가 복잡한 문제를 해결할 수 없는 이유
+
+      - Sigmoid, ReLU, Tanh와 같은 일반적인 활성화 함수의 수학적 형태와 그래프 소개
+
+      - "기울기 소실" 문제와 왜 ReLU가 딥러닝에서 더 인기가 있는지 논의
+
+      - 손글씨 숫자 인식의 맥락에서 Softmax가 출력을 확률 분포로 변환하는 방법 설명
+
+      학생들이 비판적으로 사고하도록 격려하세요: 다른 시나리오에서 어떤 활성화 함수를 선택해야 할까요?
+
+      '
+  title: 활성화 함수의 중요성 이해
+  description: 활성화 함수(Sigmoid, ReLU 등)가 신경망에 비선형성을 도입하여 복잡한 패턴을 학습할 수 있게 하는 방법을 탐구합니다.
+  instructions: '활성화 함수를 정의하고 왜 비선형 변환이 필요한지 설명하세요. Sigmoid와 ReLU 함수의 특성, 장점, 단점을 비교하세요. 시각적 이해: 활성화 함수가 없다면 신경망은 어떻게 될까요? 손글씨 숫자 인식 작업에서 출력층에 Softmax 함수가 일반적으로 사용되는 이유를 논의하세요.
+
+    '
+  expected_outcome: 신경망에서 활성화 함수의 핵심 역할을 이해하고 다른 함수의 적용 시나리오를 비교할 수 있다
+
+completion_criteria:
+  min_tasks_completed: 3
+  required_competencies:
+    - K1.1
+    - K2.1
+    - S1.1
+  min_overall_score: 75
+
+resources:
+  - name: "3Blue1Brown 신경망 시리즈"
+    url: "https://www.youtube.com/watch?v=aircAruvnKk"
+    type: video
+  - name: "신경망과 딥러닝 (무료 온라인 도서)"
+    url: "http://neuralnetworksanddeeplearning.com/"
+    type: reference
+  - name: "MNIST 손글씨 숫자 데이터베이스"
+    url: "http://yann.lecun.com/exdb/mnist/"
+    type: reference
+  - name: "딥러닝 기초"
+    url: "https://www.deeplearningbook.org/"
+    type: guide
+
+metadata:
+  language: ko
+  version: "1.0"
+  last_updated: "2025-11-30"
+  created_at: '2025-11-30T00:00:00Z'
+  created_by: Claude AI Assistant
+  tags:
+    - neural-networks
+    - deep-learning
+    - mlp
+    - computer-vision
+    - mnist
+  is_visible: true
+  is_production_ready: false

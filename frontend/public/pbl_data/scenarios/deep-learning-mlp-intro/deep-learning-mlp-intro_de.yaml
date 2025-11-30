@@ -1,0 +1,171 @@
+scenario_info:
+  id: deep-learning-mlp-intro
+  difficulty: beginner
+  estimated_duration: 90
+  target_domains:
+  - engaging_with_ai
+  - creating_with_ai
+  - managing_with_ai
+  title: 'Erforschung Neuronaler Netzwerke: Einführung in die Handschrifterkennung'
+  description: Lernen Sie, wie KI komplexe Muster wie handgeschriebene Ziffern durch neuronale Netzwerke erkennt, die biologische Gehirnstrukturen simulieren. Dieser Kurs bietet tiefe Einblicke in Neuronen, Aktivierungen, Gewichte und Bias.
+  prerequisites:
+  - Grundlegende Neugier auf KI/Maschinelles Lernen
+  - Verständnis mathematischer Konzepte zwischen 0 und 1
+  - 'Empfohlen: 3Blue1Brown Neuronale Netzwerk Visualisierung ansehen - https://www.youtube.com/watch?v=aircAruvnKk'
+  learning_objectives:
+  - Fähigkeit, Neuronen, Aktivierungen, Gewichte und Bias zu definieren
+  - Die Schichtstruktur des Multi-Layer Perceptrons (MLP) beschreiben, einschließlich Eingabe-, versteckte und Ausgabeschichten
+  - Erklären, wie Aktivierungen durch gewichtete Summen von einer Schicht zur nächsten propagieren
+  - Die Rolle von Aktivierungsfunktionen (wie Sigmoid und ReLU) in neuronalen Netzwerken verstehen
+  - Verstehen, wie Gewichte und Bias die Entscheidungen des neuronalen Netzwerks beeinflussen und als anpassbare Parameter im Lernprozess dienen
+ksa_mapping:
+  knowledge:
+  - K1.1
+  - K2.1
+  skills:
+  - S1.1
+  - S2.3
+  attitudes:
+  - A1.1
+  - A2.1
+tasks:
+- id: task-1-structure
+  category: learning
+  time_limit: 20
+  KSA_focus:
+    primary:
+    - K1.1
+    - S1.1
+    secondary:
+    - A1.1
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: Neuronale Netzwerk Konzept-Assistent
+    initial_prompt: 'Sie sind ein Konzept-Assistent für neuronale Netzwerke, der Studenten dabei hilft, die Grundstruktur von Multi-Layer Perceptrons (MLP) zu erkunden.
+
+      Ihr Ziel ist es, sie zu führen, um zu verstehen:
+
+      - Die Rolle der Neuronen im Netzwerk und die "Aktivierungen", die sie tragen (Zahlen zwischen 0 und 1)
+
+      - Die Unterschiede und Funktionen von Eingabe-, versteckten und Ausgabeschichten
+
+      - Wie ein 28x28 Pixel Bild in 784 Eingabeneuron-Aktivierungen umgewandelt wird
+
+      - Wie die 10 Ausgabeneuronen das finale Ziffernklassifikationsergebnis darstellen
+
+      Bitte verwenden Sie klare visuelle Beschreibungen und ermutigen Sie die Studenten, sich den Aktivierungspropagationsprozess vorzustellen.
+
+      '
+  title: Verstehen der Schichten und Neuronen neuronaler Netzwerke
+  description: Erkunden Sie die dreischichtige Struktur neuronaler Netzwerke (Eingabe, versteckt, Ausgabe) und verstehen Sie, wie 'Aktivierungen' Informationen darstellen.
+  instructions: 'Definieren Sie Neuronen und Aktivierungen. Beschreiben Sie die Rolle von 784 Eingabeneuronen und 10 Ausgabeneuronen in Handschrifterkennungsnetzwerken. Diskutieren Sie die potenziellen Rollen versteckter Schichtneuronen (z.B.: Identifizierung von Strichen oder Kanten).
+
+    '
+  expected_outcome: Klares Verständnis der Multi-Layer Perceptron Struktur und Komponentenfunktionen
+- id: task-2-parameters
+  category: learning
+  time_limit: 30
+  KSA_focus:
+    primary:
+    - K2.1
+    - S1.1
+    secondary:
+    - S2.3
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: Mathematik-Tutor
+    initial_prompt: 'Sie sind ein Mathematik-Tutor, der sich darauf spezialisiert hat, Studenten beim Verstehen von Gewichten und Bias in neuronalen Netzwerken zu helfen.
+
+      Ihre Aufgaben sind:
+
+      - Den gewichteten Summenberechnungsprozess mit einfachen mathematischen Beispielen erklären
+
+      - Studenten dabei helfen zu verstehen, wie Bias die Aktivierungsschwellen "anpassen"
+
+      - Sie dazu anleiten zu denken: Wenn Sie ein bestimmtes Gewicht ändern, wie würde das die Ausgabe beeinflussen?
+
+      - Erklären, wie Gradientenabstieg diese Parameter schrittweise anpasst, um Fehler zu minimieren
+
+      Bitte verwenden Sie klare mathematische Ausdrücke, während Sie zu komplexe Formeln vermeiden und die Intuitivität beibehalten.
+
+      '
+  title: Erforschung der Rolle von Gewichten und Bias
+  description: Tauchen Sie tief ein, wie Gewichte und Bias die Verbindungsstärke zwischen Neuronen bestimmen und wie sie den Lernprozess des Netzwerks beeinflussen.
+  instructions: 'Erklären Sie, wie Gewichte die Verbindungsstärke zwischen Neuronen darstellen. Beschreiben Sie die Rolle von Bias bei der Anpassung von Neuronaktivierungsschwellen. Berechnen Sie ein einfaches Beispiel: Gegeben Eingabeaktivierungen, Gewichte und Bias, berechnen Sie die Aktivierungen der nächsten Schicht. Diskutieren Sie, wie Gewichte und Bias während des Trainings angepasst werden, um die Netzwerkleistung zu verbessern.
+
+    '
+  expected_outcome: Fähigkeit, den Einfluss von Gewichten und Bias auf die Aktivierungspropagation zu verstehen und zu berechnen, und ihre Bedeutung beim Lernen zu erkennen
+- id: task-3-activation-functions
+  category: learning
+  time_limit: 40
+  KSA_focus:
+    primary:
+    - K1.1
+    - K2.1
+    secondary:
+    - A2.1
+    - S2.3
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: KI-Forschungsmentor
+    initial_prompt: 'Sie sind ein KI-Forschungsmentor, der sich darauf konzentriert, Studenten beim Verstehen der Theorie und Praxis von Aktivierungsfunktionen zu helfen.
+
+      Ihre Schwerpunktbereiche sind:
+
+      - Die Grenzen linearer Stapelungen erklären: Warum rein lineare Netzwerke komplexe Probleme nicht lösen können
+
+      - Die mathematischen Formen und Graphen gängiger Aktivierungsfunktionen wie Sigmoid, ReLU und Tanh einführen
+
+      - Das Problem des "verschwindenden Gradienten" diskutieren und warum ReLU im Deep Learning beliebter ist
+
+      - Im Kontext der Handschrifterkennung erklären, wie Softmax Ausgaben in Wahrscheinlichkeitsverteilungen umwandelt
+
+      Ermutigen Sie die Studenten, kritisch zu denken: Welche Aktivierungsfunktion sollte für verschiedene Szenarien gewählt werden?
+
+      '
+  title: Die Bedeutung von Aktivierungsfunktionen verstehen
+  description: Erkunden Sie, wie Aktivierungsfunktionen (wie Sigmoid, ReLU) Nicht-Linearität in neuronale Netzwerke einführen und es ihnen ermöglichen, komplexe Muster zu lernen.
+  instructions: 'Definieren Sie Aktivierungsfunktionen und erklären Sie, warum nicht-lineare Transformationen benötigt werden. Vergleichen Sie die Eigenschaften, Vor- und Nachteile von Sigmoid- und ReLU-Funktionen. Visuelles Verständnis: Was würde ein neuronales Netzwerk ohne Aktivierungsfunktionen werden? Diskutieren Sie, warum die Softmax-Funktion häufig in der Ausgabeschicht für Handschrifterkennungsaufgaben verwendet wird.
+
+    '
+  expected_outcome: Die Schlüsselrolle von Aktivierungsfunktionen in neuronalen Netzwerken verstehen und verschiedene Funktionsanwendungsszenarien vergleichen können
+
+completion_criteria:
+  min_tasks_completed: 3
+  required_competencies:
+    - K1.1
+    - K2.1
+    - S1.1
+  min_overall_score: 75
+
+resources:
+  - name: "3Blue1Brown Neuronale Netzwerk Serie"
+    url: "https://www.youtube.com/watch?v=aircAruvnKk"
+    type: video
+  - name: "Neuronale Netzwerke und Deep Learning (Kostenloses Online-Buch)"
+    url: "http://neuralnetworksanddeeplearning.com/"
+    type: reference
+  - name: "MNIST Handschriftliche Ziffern Datenbank"
+    url: "http://yann.lecun.com/exdb/mnist/"
+    type: reference
+  - name: "Deep Learning Grundlagen"
+    url: "https://www.deeplearningbook.org/"
+    type: guide
+
+metadata:
+  language: de
+  version: "1.0"
+  last_updated: "2025-11-30"
+  created_at: '2025-11-30T00:00:00Z'
+  created_by: Claude AI Assistant
+  tags:
+    - neural-networks
+    - deep-learning
+    - mlp
+    - computer-vision
+    - mnist
+  is_visible: true
+  is_production_ready: false

@@ -1,0 +1,171 @@
+scenario_info:
+  id: deep-learning-mlp-intro
+  difficulty: beginner
+  estimated_duration: 90
+  target_domains:
+  - engaging_with_ai
+  - creating_with_ai
+  - managing_with_ai
+  title: 'Explorando Redes Neuronales: Introducción al Reconocimiento de Dígitos Manuscritos'
+  description: Aprende cómo la IA reconoce patrones complejos como dígitos manuscritos a través de redes neuronales que simulan estructuras cerebrales biológicas. Este curso proporciona conocimientos profundos sobre neuronas, activaciones, pesos y sesgos.
+  prerequisites:
+  - Curiosidad básica sobre IA/Aprendizaje Automático
+  - Comprensión de conceptos matemáticos entre 0 y 1
+  - 'Recomendado: Ver visualización de redes neuronales 3Blue1Brown - https://www.youtube.com/watch?v=aircAruvnKk'
+  learning_objectives:
+  - Capacidad de definir neuronas, activaciones, pesos y sesgos
+  - Describir la estructura en capas del Perceptrón Multicapa (MLP), incluyendo capas de entrada, ocultas y de salida
+  - Explicar cómo las activaciones se propagan de una capa a la siguiente a través de sumas ponderadas
+  - Entender el papel de las funciones de activación (como Sigmoid y ReLU) en las redes neuronales
+  - Comprender cómo los pesos y sesgos afectan las decisiones de la red neuronal y sirven como parámetros ajustables en el proceso de aprendizaje
+ksa_mapping:
+  knowledge:
+  - K1.1
+  - K2.1
+  skills:
+  - S1.1
+  - S2.3
+  attitudes:
+  - A1.1
+  - A2.1
+tasks:
+- id: task-1-structure
+  category: learning
+  time_limit: 20
+  KSA_focus:
+    primary:
+    - K1.1
+    - S1.1
+    secondary:
+    - A1.1
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: Asistente de Conceptos de Redes Neuronales
+    initial_prompt: 'Eres un asistente de conceptos de redes neuronales que ayuda a los estudiantes a explorar la estructura básica de los Perceptrones Multicapa (MLP).
+
+      Tu objetivo es guiarlos para entender:
+
+      - El papel de las neuronas en la red y las "activaciones" que llevan (números entre 0 y 1)
+
+      - Las diferencias y funciones de las capas de entrada, ocultas y de salida
+
+      - Cómo una imagen de 28x28 píxeles se convierte en 784 activaciones de neuronas de entrada
+
+      - Cómo las 10 neuronas de salida representan el resultado final de clasificación de dígitos
+
+      Por favor usa descripciones visuales claras y anima a los estudiantes a imaginar el proceso de propagación de activaciones.
+
+      '
+  title: Entendiendo las Capas y Neuronas de las Redes Neuronales
+  description: Explora la estructura de tres capas de las redes neuronales (entrada, oculta, salida) y entiende cómo las 'activaciones' representan información.
+  instructions: 'Define neuronas y activaciones. Describe el papel de 784 neuronas de entrada y 10 neuronas de salida en redes de reconocimiento de dígitos manuscritos. Discute los roles potenciales de las neuronas de capa oculta (ej: identificar trazos o bordes).
+
+    '
+  expected_outcome: Comprensión clara de la estructura del Perceptrón Multicapa y las funciones de sus componentes
+- id: task-2-parameters
+  category: learning
+  time_limit: 30
+  KSA_focus:
+    primary:
+    - K2.1
+    - S1.1
+    secondary:
+    - S2.3
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: Tutor de Matemáticas
+    initial_prompt: 'Eres un tutor de matemáticas especializado en ayudar a los estudiantes a entender pesos y sesgos en redes neuronales.
+
+      Tus tareas son:
+
+      - Explicar el proceso de cálculo de suma ponderada usando ejemplos matemáticos simples
+
+      - Ayudar a los estudiantes a entender cómo los sesgos "ajustan" los umbrales de activación
+
+      - Guiarlos a pensar: si cambias un cierto peso, ¿cómo afectaría la salida?
+
+      - Explicar cómo el descenso de gradiente ajusta gradualmente estos parámetros para minimizar el error
+
+      Por favor usa expresiones matemáticas claras mientras evitas fórmulas demasiado complejas, manteniendo la intuitividad.
+
+      '
+  title: Explorando el Papel de Pesos y Sesgos
+  description: Profundiza en cómo los pesos y sesgos determinan la fuerza de conexión entre neuronas y cómo afectan el proceso de aprendizaje de la red.
+  instructions: 'Explica cómo los pesos representan la fuerza de conexión entre neuronas. Describe el papel de los sesgos en ajustar los umbrales de activación de neuronas. Calcula un ejemplo simple: dados las activaciones de entrada, pesos y sesgos, calcula las activaciones de la siguiente capa. Discute cómo los pesos y sesgos se ajustan durante el entrenamiento para mejorar el rendimiento de la red.
+
+    '
+  expected_outcome: Capacidad de entender y calcular el impacto de pesos y sesgos en la propagación de activaciones, y reconocer su importancia en el aprendizaje
+- id: task-3-activation-functions
+  category: learning
+  time_limit: 40
+  KSA_focus:
+    primary:
+    - K1.1
+    - K2.1
+    secondary:
+    - A2.1
+    - S2.3
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: Mentor de Investigación IA
+    initial_prompt: 'Eres un mentor de investigación IA enfocado en ayudar a los estudiantes a entender la teoría y práctica de las funciones de activación.
+
+      Tus áreas de enfoque son:
+
+      - Explicar las limitaciones del apilamiento lineal: por qué las redes puramente lineales no pueden resolver problemas complejos
+
+      - Introducir las formas matemáticas y gráficas de funciones de activación comunes como Sigmoid, ReLU y Tanh
+
+      - Discutir el problema del "gradiente que se desvanece" y por qué ReLU es más popular en aprendizaje profundo
+
+      - En el contexto del reconocimiento de dígitos manuscritos, explicar cómo Softmax convierte las salidas en distribuciones de probabilidad
+
+      Anima a los estudiantes a pensar críticamente: ¿qué función de activación debería elegirse para diferentes escenarios?
+
+      '
+  title: Entendiendo la Importancia de las Funciones de Activación
+  description: Explora cómo las funciones de activación (como Sigmoid, ReLU) introducen no-linealidad a las redes neuronales, permitiéndoles aprender patrones complejos.
+  instructions: 'Define las funciones de activación y explica por qué se necesitan transformaciones no-lineales. Compara las características, ventajas y desventajas de las funciones Sigmoid y ReLU. Comprensión visual: ¿En qué se convertiría una red neuronal sin funciones de activación? Discute por qué la función Softmax se usa comúnmente en la capa de salida para tareas de reconocimiento de dígitos manuscritos.
+
+    '
+  expected_outcome: Entender el papel clave de las funciones de activación en redes neuronales y ser capaz de comparar diferentes escenarios de aplicación de funciones
+
+completion_criteria:
+  min_tasks_completed: 3
+  required_competencies:
+    - K1.1
+    - K2.1
+    - S1.1
+  min_overall_score: 75
+
+resources:
+  - name: "Serie de Redes Neuronales 3Blue1Brown"
+    url: "https://www.youtube.com/watch?v=aircAruvnKk"
+    type: video
+  - name: "Redes Neuronales y Aprendizaje Profundo (Libro en línea gratuito)"
+    url: "http://neuralnetworksanddeeplearning.com/"
+    type: reference
+  - name: "Base de Datos MNIST de Dígitos Manuscritos"
+    url: "http://yann.lecun.com/exdb/mnist/"
+    type: reference
+  - name: "Fundamentos del Aprendizaje Profundo"
+    url: "https://www.deeplearningbook.org/"
+    type: guide
+
+metadata:
+  language: es
+  version: "1.0"
+  last_updated: "2025-11-30"
+  created_at: '2025-11-30T00:00:00Z'
+  created_by: Claude AI Assistant
+  tags:
+    - neural-networks
+    - deep-learning
+    - mlp
+    - computer-vision
+    - mnist
+  is_visible: true
+  is_production_ready: false

@@ -1,0 +1,171 @@
+scenario_info:
+  id: deep-learning-mlp-intro
+  difficulty: beginner
+  estimated_duration: 90
+  target_domains:
+  - engaging_with_ai
+  - creating_with_ai
+  - managing_with_ai
+  title: 'Explorer les Réseaux de Neurones: Introduction à la Reconnaissance de Chiffres Manuscrits'
+  description: Apprenez comment l'IA reconnaît des motifs complexes comme les chiffres manuscrits grâce aux réseaux de neurones qui simulent les structures cérébrales biologiques. Ce cours fournit des insights approfondis sur les neurones, activations, poids et biais.
+  prerequisites:
+  - Curiosité de base sur l'IA/Apprentissage Automatique
+  - Compréhension des concepts mathématiques entre 0 et 1
+  - 'Recommandé: Regarder la visualisation des réseaux de neurones 3Blue1Brown - https://www.youtube.com/watch?v=aircAruvnKk'
+  learning_objectives:
+  - Capacité à définir les neurones, activations, poids et biais
+  - Décrire la structure en couches du Perceptron Multi-Couches (MLP), incluant les couches d'entrée, cachées et de sortie
+  - Expliquer comment les activations se propagent d'une couche à l'autre par des sommes pondérées
+  - Comprendre le rôle des fonctions d'activation (comme Sigmoid et ReLU) dans les réseaux de neurones
+  - Comprendre comment les poids et biais affectent les décisions du réseau de neurones et servent de paramètres ajustables dans le processus d'apprentissage
+ksa_mapping:
+  knowledge:
+  - K1.1
+  - K2.1
+  skills:
+  - S1.1
+  - S2.3
+  attitudes:
+  - A1.1
+  - A2.1
+tasks:
+- id: task-1-structure
+  category: learning
+  time_limit: 20
+  KSA_focus:
+    primary:
+    - K1.1
+    - S1.1
+    secondary:
+    - A1.1
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: Assistant Conceptuel de Réseaux de Neurones
+    initial_prompt: 'Vous êtes un assistant conceptuel de réseaux de neurones aidant les étudiants à explorer la structure de base des Perceptrons Multi-Couches (MLP).
+
+      Votre objectif est de les guider pour comprendre:
+
+      - Le rôle des neurones dans le réseau et les "activations" qu''ils portent (nombres entre 0 et 1)
+
+      - Les différences et fonctions des couches d''entrée, cachées et de sortie
+
+      - Comment une image de 28x28 pixels est convertie en 784 activations de neurones d''entrée
+
+      - Comment les 10 neurones de sortie représentent le résultat final de classification des chiffres
+
+      Veuillez utiliser des descriptions visuelles claires et encourager les étudiants à imaginer le processus de propagation des activations.
+
+      '
+  title: Comprendre les Couches et Neurones des Réseaux de Neurones
+  description: Explorez la structure à trois couches des réseaux de neurones (entrée, cachée, sortie) et comprenez comment les 'activations' représentent l'information.
+  instructions: 'Définissez les neurones et activations. Décrivez le rôle des 784 neurones d''entrée et 10 neurones de sortie dans les réseaux de reconnaissance de chiffres manuscrits. Discutez des rôles potentiels des neurones de couche cachée (par ex., identifier les traits ou contours).
+
+    '
+  expected_outcome: Compréhension claire de la structure du Perceptron Multi-Couches et des fonctions de ses composants
+- id: task-2-parameters
+  category: learning
+  time_limit: 30
+  KSA_focus:
+    primary:
+    - K2.1
+    - S1.1
+    secondary:
+    - S2.3
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: Tuteur de Mathématiques
+    initial_prompt: 'Vous êtes un tuteur de mathématiques spécialisé dans l''aide aux étudiants pour comprendre les poids et biais dans les réseaux de neurones.
+
+      Vos tâches sont:
+
+      - Expliquer le processus de calcul de somme pondérée en utilisant des exemples mathématiques simples
+
+      - Aider les étudiants à comprendre comment les biais "ajustent" les seuils d''activation
+
+      - Les guider à réfléchir: si vous changez un certain poids, comment cela affecterait-il la sortie?
+
+      - Expliquer comment la descente de gradient ajuste progressivement ces paramètres pour minimiser l''erreur
+
+      Veuillez utiliser des expressions mathématiques claires tout en évitant les formules trop complexes, en maintenant l''intuitivité.
+
+      '
+  title: Explorer le Rôle des Poids et Biais
+  description: Plongez profondément dans la façon dont les poids et biais déterminent la force de connexion entre neurones et comment ils affectent le processus d'apprentissage du réseau.
+  instructions: 'Expliquez comment les poids représentent la force de connexion entre neurones. Décrivez le rôle des biais dans l''ajustement des seuils d''activation des neurones. Calculez un exemple simple: étant donnés les activations d''entrée, poids et biais, calculez les activations de la couche suivante. Discutez comment les poids et biais sont ajustés pendant l''entraînement pour améliorer les performances du réseau.
+
+    '
+  expected_outcome: Capacité à comprendre et calculer l'impact des poids et biais sur la propagation des activations, et reconnaître leur importance dans l'apprentissage
+- id: task-3-activation-functions
+  category: learning
+  time_limit: 40
+  KSA_focus:
+    primary:
+    - K1.1
+    - K2.1
+    secondary:
+    - A2.1
+    - S2.3
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: Mentor de Recherche IA
+    initial_prompt: 'Vous êtes un mentor de recherche IA se concentrant sur l''aide aux étudiants pour comprendre la théorie et la pratique des fonctions d''activation.
+
+      Vos domaines de focus sont:
+
+      - Expliquer les limitations de l''empilement linéaire: pourquoi les réseaux purement linéaires ne peuvent pas résoudre des problèmes complexes
+
+      - Introduire les formes mathématiques et graphiques des fonctions d''activation communes comme Sigmoid, ReLU et Tanh
+
+      - Discuter du problème de "gradient qui s''évanouit" et pourquoi ReLU est plus populaire en apprentissage profond
+
+      - Dans le contexte de la reconnaissance de chiffres manuscrits, expliquer comment Softmax convertit les sorties en distributions de probabilité
+
+      Encouragez les étudiants à penser de manière critique: quelle fonction d''activation devrait être choisie pour différents scénarios?
+
+      '
+  title: Comprendre l'Importance des Fonctions d'Activation
+  description: Explorez comment les fonctions d'activation (comme Sigmoid, ReLU) introduisent la non-linéarité aux réseaux de neurones, leur permettant d'apprendre des motifs complexes.
+  instructions: 'Définissez les fonctions d''activation et expliquez pourquoi les transformations non-linéaires sont nécessaires. Comparez les caractéristiques, avantages et inconvénients des fonctions Sigmoid et ReLU. Compréhension visuelle: Que deviendrait un réseau de neurones sans fonctions d''activation? Discutez pourquoi la fonction Softmax est couramment utilisée dans la couche de sortie pour les tâches de reconnaissance de chiffres manuscrits.
+
+    '
+  expected_outcome: Comprendre le rôle clé des fonctions d'activation dans les réseaux de neurones et être capable de comparer différents scénarios d'application de fonctions
+
+completion_criteria:
+  min_tasks_completed: 3
+  required_competencies:
+    - K1.1
+    - K2.1
+    - S1.1
+  min_overall_score: 75
+
+resources:
+  - name: "Série Réseaux de Neurones 3Blue1Brown"
+    url: "https://www.youtube.com/watch?v=aircAruvnKk"
+    type: video
+  - name: "Réseaux de Neurones et Apprentissage Profond (Livre en ligne gratuit)"
+    url: "http://neuralnetworksanddeeplearning.com/"
+    type: reference
+  - name: "Base de Données MNIST de Chiffres Manuscrits"
+    url: "http://yann.lecun.com/exdb/mnist/"
+    type: reference
+  - name: "Fondamentaux de l'Apprentissage Profond"
+    url: "https://www.deeplearningbook.org/"
+    type: guide
+
+metadata:
+  language: fr
+  version: "1.0"
+  last_updated: "2025-11-30"
+  created_at: '2025-11-30T00:00:00Z'
+  created_by: Claude AI Assistant
+  tags:
+    - neural-networks
+    - deep-learning
+    - mlp
+    - computer-vision
+    - mnist
+  is_visible: true
+  is_production_ready: false

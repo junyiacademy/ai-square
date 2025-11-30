@@ -1,0 +1,171 @@
+scenario_info:
+  id: deep-learning-mlp-intro
+  difficulty: beginner
+  estimated_duration: 90
+  target_domains:
+  - engaging_with_ai
+  - creating_with_ai
+  - managing_with_ai
+  title: 'ニューラルネットワークの探索：手書き数字認識入門'
+  description: AIが生物学的な脳構造を模倣したニューラルネットワークを通じて、手書き数字のような複雑なパターンをどのように認識するかを学びます。このコースでは、ニューロン、活性化、重み、バイアスについて深く理解できます。
+  prerequisites:
+  - AI/機械学習への基本的な好奇心
+  - 0から1までの数学的概念の理解
+  - '推奨：3Blue1Brownニューラルネットワーク可視化動画を視聴 - https://www.youtube.com/watch?v=aircAruvnKk'
+  learning_objectives:
+  - ニューロン、活性化、重み、バイアスを定義できる
+  - 入力層、隠れ層、出力層を含む多層パーセプトロン（MLP）の層構造を説明できる
+  - 重み付き和を通じて活性化が一層から次の層へどのように伝播するかを説明できる
+  - ニューラルネットワークにおける活性化関数（SigmoidやReLUなど）の役割を理解する
+  - 重みとバイアスがニューラルネットワークの決定にどのように影響し、学習プロセスにおける調整可能なパラメータとしてどのように機能するかを理解する
+ksa_mapping:
+  knowledge:
+  - K1.1
+  - K2.1
+  skills:
+  - S1.1
+  - S2.3
+  attitudes:
+  - A1.1
+  - A2.1
+tasks:
+- id: task-1-structure
+  category: learning
+  time_limit: 20
+  KSA_focus:
+    primary:
+    - K1.1
+    - S1.1
+    secondary:
+    - A1.1
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: ニューラルネットワーク概念アシスタント
+    initial_prompt: 'あなたは多層パーセプトロン（MLP）の基本構造を学生が探索するのを支援するニューラルネットワーク概念アシスタントです。
+
+      あなたの目標は、以下を理解させることです：
+
+      - ネットワークにおけるニューロンの役割と、それらが保持する「活性化」（0から1の間の数値）
+
+      - 入力層、隠れ層、出力層の違いと機能
+
+      - 28x28ピクセルの画像が784個の入力ニューロン活性化にどのように変換されるか
+
+      - 10個の出力ニューロンが最終的な数字分類結果をどのように表すか
+
+      明確な視覚的説明を使用し、学生が活性化伝播プロセスを想像することを奨励してください。
+
+      '
+  title: ニューラルネットワークの層とニューロンの理解
+  description: ニューラルネットワークの3層構造（入力、隠れ、出力）を探索し、「活性化」が情報をどのように表現するかを理解します。
+  instructions: 'ニューロンと活性化を定義してください。手書き数字認識ネットワークにおける784個の入力ニューロンと10個の出力ニューロンの役割を説明してください。隠れ層ニューロンの潜在的な役割（例：ストロークやエッジの識別）について議論してください。
+
+    '
+  expected_outcome: 多層パーセプトロン構造とその構成要素の機能の明確な理解
+- id: task-2-parameters
+  category: learning
+  time_limit: 30
+  KSA_focus:
+    primary:
+    - K2.1
+    - S1.1
+    secondary:
+    - S2.3
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: 数学チューター
+    initial_prompt: 'あなたはニューラルネットワークの重みとバイアスを学生が理解するのを専門とする数学チューターです。
+
+      あなたのタスクは：
+
+      - 簡単な数学例を使用して重み付き和の計算プロセスを説明する
+
+      - バイアスが活性化閾値をどのように「調整」するかを学生が理解するのを支援する
+
+      - 特定の重みを変更すると出力にどのような影響があるかを考えさせる
+
+      - 勾配降下法がこれらのパラメータを徐々に調整してエラーを最小化する方法を説明する
+
+      直感的でありながら、過度に複雑な公式を避けて、明確な数学的表現を使用してください。
+
+      '
+  title: 重みとバイアスの役割の探索
+  description: 重みとバイアスがニューロン間の接続強度をどのように決定し、ネットワークの学習プロセスにどのように影響するかを深く理解します。
+  instructions: '重みがニューロン間の接続強度をどのように表すかを説明してください。ニューロン活性化閾値の調整におけるバイアスの役割を説明してください。簡単な例を計算してください：入力活性化、重み、バイアスが与えられた場合、次の層の活性化を計算してください。訓練中に重みとバイアスがネットワーク性能を改善するためにどのように調整されるかを議論してください。
+
+    '
+  expected_outcome: 重みとバイアスが活性化伝播に与える影響を理解し計算でき、学習における重要性を認識できる
+- id: task-3-activation-functions
+  category: learning
+  time_limit: 40
+  KSA_focus:
+    primary:
+    - K1.1
+    - K2.1
+    secondary:
+    - A2.1
+    - S2.3
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: AI研究メンター
+    initial_prompt: 'あなたは活性化関数の理論と実践を学生が理解するのを支援することに焦点を当てたAI研究メンターです。
+
+      あなたの焦点領域は：
+
+      - 線形積み重ねの限界を説明する：純粋に線形なネットワークが複雑な問題を解決できない理由
+
+      - Sigmoid、ReLU、Tanhなどの一般的な活性化関数の数学的形式とグラフを紹介する
+
+      - 「勾配消失」問題と、なぜReLUが深層学習でより人気があるかを議論する
+
+      - 手書き数字認識の文脈で、Softmaxが出力を確率分布に変換する方法を説明する
+
+      学生に批判的に考えることを奨励してください：異なるシナリオでどの活性化関数を選択すべきか？
+
+      '
+  title: 活性化関数の重要性の理解
+  description: 活性化関数（SigmoidやReLUなど）がニューラルネットワークに非線形性をもたらし、複雑なパターンを学習可能にする方法を探索します。
+  instructions: '活性化関数を定義し、なぜ非線形変換が必要かを説明してください。Sigmoid関数とReLU関数の特性、利点、欠点を比較してください。視覚的理解：活性化関数がなければニューラルネットワークはどうなるでしょうか？手書き数字認識タスクで出力層にSoftmax関数がよく使用される理由を議論してください。
+
+    '
+  expected_outcome: ニューラルネットワークにおける活性化関数の重要な役割を理解し、異なる関数の応用シナリオを比較できる
+
+completion_criteria:
+  min_tasks_completed: 3
+  required_competencies:
+    - K1.1
+    - K2.1
+    - S1.1
+  min_overall_score: 75
+
+resources:
+  - name: "3Blue1Brownニューラルネットワークシリーズ"
+    url: "https://www.youtube.com/watch?v=aircAruvnKk"
+    type: video
+  - name: "ニューラルネットワークと深層学習（無料オンライン書籍）"
+    url: "http://neuralnetworksanddeeplearning.com/"
+    type: reference
+  - name: "MNIST手書き数字データベース"
+    url: "http://yann.lecun.com/exdb/mnist/"
+    type: reference
+  - name: "深層学習の基礎"
+    url: "https://www.deeplearningbook.org/"
+    type: guide
+
+metadata:
+  language: ja
+  version: "1.0"
+  last_updated: "2025-11-30"
+  created_at: '2025-11-30T00:00:00Z'
+  created_by: Claude AI Assistant
+  tags:
+    - neural-networks
+    - deep-learning
+    - mlp
+    - computer-vision
+    - mnist
+  is_visible: true
+  is_production_ready: false

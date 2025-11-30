@@ -1,0 +1,171 @@
+scenario_info:
+  id: deep-learning-mlp-intro
+  difficulty: beginner
+  estimated_duration: 90
+  target_domains:
+  - engaging_with_ai
+  - creating_with_ai
+  - managing_with_ai
+  title: 'Explorando Redes Neurais: Introdução ao Reconhecimento de Dígitos Manuscritos'
+  description: Aprenda como a IA reconhece padrões complexos como dígitos manuscritos através de redes neurais que simulam estruturas cerebrais biológicas. Este curso fornece insights profundos sobre neurônios, ativações, pesos e vieses.
+  prerequisites:
+  - Curiosidade básica sobre IA/Aprendizado de Máquina
+  - Compreensão de conceitos matemáticos entre 0 e 1
+  - 'Recomendado: Assistir visualização de redes neurais 3Blue1Brown - https://www.youtube.com/watch?v=aircAruvnKk'
+  learning_objectives:
+  - Capacidade de definir neurônios, ativações, pesos e vieses
+  - Descrever a estrutura em camadas do Perceptron Multi-Camadas (MLP), incluindo camadas de entrada, ocultas e de saída
+  - Explicar como as ativações se propagam de uma camada para a próxima através de somas ponderadas
+  - Entender o papel das funções de ativação (como Sigmoid e ReLU) em redes neurais
+  - Compreender como pesos e vieses afetam as decisões da rede neural e servem como parâmetros ajustáveis no processo de aprendizagem
+ksa_mapping:
+  knowledge:
+  - K1.1
+  - K2.1
+  skills:
+  - S1.1
+  - S2.3
+  attitudes:
+  - A1.1
+  - A2.1
+tasks:
+- id: task-1-structure
+  category: learning
+  time_limit: 20
+  KSA_focus:
+    primary:
+    - K1.1
+    - S1.1
+    secondary:
+    - A1.1
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: Assistente de Conceitos de Redes Neurais
+    initial_prompt: 'Você é um assistente de conceitos de redes neurais ajudando estudantes a explorar a estrutura básica de Perceptrons Multi-Camadas (MLP).
+
+      Seu objetivo é guiá-los para entender:
+
+      - O papel dos neurônios na rede e as "ativações" que eles carregam (números entre 0 e 1)
+
+      - As diferenças e funções das camadas de entrada, ocultas e de saída
+
+      - Como uma imagem de 28x28 pixels é convertida em 784 ativações de neurônios de entrada
+
+      - Como os 10 neurônios de saída representam o resultado final de classificação de dígitos
+
+      Por favor, use descrições visuais claras e encoraje os estudantes a imaginar o processo de propagação de ativações.
+
+      '
+  title: Entendendo as Camadas e Neurônios das Redes Neurais
+  description: Explore a estrutura de três camadas das redes neurais (entrada, oculta, saída) e entenda como as 'ativações' representam informação.
+  instructions: 'Defina neurônios e ativações. Descreva o papel de 784 neurônios de entrada e 10 neurônios de saída em redes de reconhecimento de dígitos manuscritos. Discuta os papéis potenciais dos neurônios da camada oculta (ex: identificar traços ou bordas).
+
+    '
+  expected_outcome: Compreensão clara da estrutura do Perceptron Multi-Camadas e funções de seus componentes
+- id: task-2-parameters
+  category: learning
+  time_limit: 30
+  KSA_focus:
+    primary:
+    - K2.1
+    - S1.1
+    secondary:
+    - S2.3
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: Tutor de Matemática
+    initial_prompt: 'Você é um tutor de matemática especializado em ajudar estudantes a entender pesos e vieses em redes neurais.
+
+      Suas tarefas são:
+
+      - Explicar o processo de cálculo de soma ponderada usando exemplos matemáticos simples
+
+      - Ajudar estudantes a entender como vieses "ajustam" os limiares de ativação
+
+      - Guiá-los a pensar: se você mudar um certo peso, como isso afetaria a saída?
+
+      - Explicar como a descida do gradiente ajusta gradualmente esses parâmetros para minimizar o erro
+
+      Por favor, use expressões matemáticas claras enquanto evita fórmulas excessivamente complexas, mantendo a intuitividade.
+
+      '
+  title: Explorando o Papel de Pesos e Vieses
+  description: Mergulhe profundamente em como pesos e vieses determinam a força de conexão entre neurônios e como eles afetam o processo de aprendizagem da rede.
+  instructions: 'Explique como pesos representam a força de conexão entre neurônios. Descreva o papel dos vieses no ajuste dos limiares de ativação dos neurônios. Calcule um exemplo simples: dadas as ativações de entrada, pesos e vieses, calcule as ativações da próxima camada. Discuta como pesos e vieses são ajustados durante o treinamento para melhorar o desempenho da rede.
+
+    '
+  expected_outcome: Capacidade de entender e calcular o impacto de pesos e vieses na propagação de ativações, e reconhecer sua importância no aprendizado
+- id: task-3-activation-functions
+  category: learning
+  time_limit: 40
+  KSA_focus:
+    primary:
+    - K1.1
+    - K2.1
+    secondary:
+    - A2.1
+    - S2.3
+  ai_module:
+    role: educator
+    model: gemini-2.5-flash
+    persona: Mentor de Pesquisa IA
+    initial_prompt: 'Você é um mentor de pesquisa IA focado em ajudar estudantes a entender a teoria e prática das funções de ativação.
+
+      Suas áreas de foco são:
+
+      - Explicar as limitações do empilhamento linear: por que redes puramente lineares não podem resolver problemas complexos
+
+      - Introduzir as formas matemáticas e gráficos de funções de ativação comuns como Sigmoid, ReLU e Tanh
+
+      - Discutir o problema do "gradiente que desaparece" e por que ReLU é mais popular em aprendizado profundo
+
+      - No contexto do reconhecimento de dígitos manuscritos, explicar como Softmax converte saídas em distribuições de probabilidade
+
+      Encoraje os estudantes a pensar criticamente: qual função de ativação deveria ser escolhida para diferentes cenários?
+
+      '
+  title: Entendendo a Importância das Funções de Ativação
+  description: Explore como funções de ativação (como Sigmoid, ReLU) introduzem não-linearidade às redes neurais, permitindo que elas aprendam padrões complexos.
+  instructions: 'Defina funções de ativação e explique por que transformações não-lineares são necessárias. Compare as características, vantagens e desvantagens das funções Sigmoid e ReLU. Compreensão visual: O que uma rede neural se tornaria sem funções de ativação? Discuta por que a função Softmax é comumente usada na camada de saída para tarefas de reconhecimento de dígitos manuscritos.
+
+    '
+  expected_outcome: Entender o papel chave das funções de ativação em redes neurais e ser capaz de comparar diferentes cenários de aplicação de funções
+
+completion_criteria:
+  min_tasks_completed: 3
+  required_competencies:
+    - K1.1
+    - K2.1
+    - S1.1
+  min_overall_score: 75
+
+resources:
+  - name: "Série de Redes Neurais 3Blue1Brown"
+    url: "https://www.youtube.com/watch?v=aircAruvnKk"
+    type: video
+  - name: "Redes Neurais e Aprendizado Profundo (Livro online gratuito)"
+    url: "http://neuralnetworksanddeeplearning.com/"
+    type: reference
+  - name: "Base de Dados MNIST de Dígitos Manuscritos"
+    url: "http://yann.lecun.com/exdb/mnist/"
+    type: reference
+  - name: "Fundamentos do Aprendizado Profundo"
+    url: "https://www.deeplearningbook.org/"
+    type: guide
+
+metadata:
+  language: pt
+  version: "1.0"
+  last_updated: "2025-11-30"
+  created_at: '2025-11-30T00:00:00Z'
+  created_by: Claude AI Assistant
+  tags:
+    - neural-networks
+    - deep-learning
+    - mlp
+    - computer-vision
+    - mnist
+  is_visible: true
+  is_production_ready: false
