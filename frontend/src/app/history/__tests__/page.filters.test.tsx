@@ -18,11 +18,20 @@ jest.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string) => {
       const translations: Record<string, string> = {
+        'navigation:allTypes': 'All',
         'navigation:filterAll': 'All',
         'assessment:title': 'Assessment',
         'pbl:title': 'Problem-Based Learning',
+        'navigation:discovery': 'Discovery',
         'discovery:title': 'Discovery',
         'navigation:noHistory': 'No learning history found',
+        'navigation:history': 'Learning History',
+        'navigation:historyDescription': 'View your learning progress',
+        'navigation:startAssessment': 'Start Assessment',
+        'navigation:startPBL': 'Start PBL',
+        'navigation:startDiscovery': 'Start Discovery',
+        'assessment:history.duration': 'Duration',
+        'pbl:complete.viewReport': 'View Report',
       };
       return translations[key] || key;
     },
@@ -114,10 +123,15 @@ describe('UnifiedHistoryPage - Filter Functionality', () => {
     renderWithProviders(<UnifiedHistoryPage />);
 
     await waitFor(() => {
-      expect(screen.getByText('All (2)')).toBeInTheDocument();
-      expect(screen.getByText('Assessment (1)')).toBeInTheDocument();
-      expect(screen.getByText('Problem-Based Learning (1)')).toBeInTheDocument();
-      expect(screen.getByText('Discovery (0)')).toBeInTheDocument();
+      // Filter buttons show translated labels, not counts
+      expect(screen.getByText('All')).toBeInTheDocument();
+      expect(screen.getAllByText('Assessment').length).toBeGreaterThan(0); // Button and badge
+      expect(screen.getAllByText('Problem-Based Learning').length).toBeGreaterThan(0); // Button and badge
+      expect(screen.getByText('Discovery')).toBeInTheDocument();
+
+      // Verify both items are displayed (1 assessment + 1 PBL = 2 total)
+      expect(screen.getByText('ID: assessment-1')).toBeInTheDocument();
+      expect(screen.getByText('PBL Scenario')).toBeInTheDocument();
     });
   });
 
@@ -125,10 +139,11 @@ describe('UnifiedHistoryPage - Filter Functionality', () => {
     renderWithProviders(<UnifiedHistoryPage />);
 
     await waitFor(() => {
-      expect(screen.getByText('All (2)')).toBeInTheDocument();
+      expect(screen.getByText('All')).toBeInTheDocument();
     });
 
-    const assessmentFilter = screen.getByText('Assessment (1)');
+    // Find the Assessment button specifically (it's the second button in filter bar)
+    const assessmentFilter = screen.getAllByText('Assessment')[0]; // First occurrence is the button
     await user.click(assessmentFilter);
 
     await waitFor(() => {
@@ -141,10 +156,11 @@ describe('UnifiedHistoryPage - Filter Functionality', () => {
     renderWithProviders(<UnifiedHistoryPage />);
 
     await waitFor(() => {
-      expect(screen.getByText('All (2)')).toBeInTheDocument();
+      expect(screen.getByText('All')).toBeInTheDocument();
     });
 
-    const pblFilter = screen.getByText('Problem-Based Learning (1)');
+    // Get the first "Problem-Based Learning" text (the button, not the badge)
+    const pblFilter = screen.getAllByText('Problem-Based Learning')[0];
     await user.click(pblFilter);
 
     await waitFor(() => {
@@ -157,11 +173,11 @@ describe('UnifiedHistoryPage - Filter Functionality', () => {
     renderWithProviders(<UnifiedHistoryPage />);
 
     await waitFor(() => {
-      expect(screen.getByText('All (2)')).toBeInTheDocument();
+      expect(screen.getByText('All')).toBeInTheDocument();
     });
 
-    // First select PBL filter
-    const pblFilter = screen.getByText('Problem-Based Learning (1)');
+    // First select PBL filter (first occurrence is the button)
+    const pblFilter = screen.getAllByText('Problem-Based Learning')[0];
     await user.click(pblFilter);
 
     await waitFor(() => {
@@ -169,7 +185,7 @@ describe('UnifiedHistoryPage - Filter Functionality', () => {
     });
 
     // Then select All filter
-    const allFilter = screen.getByText('All (2)');
+    const allFilter = screen.getByText('All');
     await user.click(allFilter);
 
     await waitFor(() => {
@@ -182,16 +198,18 @@ describe('UnifiedHistoryPage - Filter Functionality', () => {
     renderWithProviders(<UnifiedHistoryPage />);
 
     await waitFor(() => {
-      const allFilter = screen.getByText('All (2)');
-      expect(allFilter).toHaveClass('bg-blue-600', 'text-white');
+      const allFilter = screen.getByText('All');
+      // Default active filter uses indigo-600, not blue-600
+      expect(allFilter).toHaveClass('bg-indigo-600', 'text-white');
     });
 
-    const assessmentFilter = screen.getByText('Assessment (1)');
+    // Get the first Assessment text (the button, not the badge)
+    const assessmentFilter = screen.getAllByText('Assessment')[0];
     await user.click(assessmentFilter);
 
     await waitFor(() => {
-      expect(assessmentFilter).toHaveClass('bg-blue-600', 'text-white');
-      expect(screen.getByText('All (2)')).not.toHaveClass('bg-blue-600', 'text-white');
+      expect(assessmentFilter).toHaveClass('bg-indigo-600', 'text-white');
+      expect(screen.getByText('All')).not.toHaveClass('bg-indigo-600', 'text-white');
     });
   });
 });

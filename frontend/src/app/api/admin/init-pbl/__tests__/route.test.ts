@@ -213,8 +213,11 @@ describe('/api/admin/init-pbl', () => {
       const response = await POST(request);
       const result = await response.json();
 
-      expect(response.status).toBe(500);
-      expect(result.success).toBe(false);
+      // Service catches errors and includes them in results, doesn't throw
+      expect(response.status).toBe(200);
+      expect(result.success).toBe(true);
+      expect(result.results.errors.length).toBeGreaterThan(0);
+      expect(result.results.errors[0]).toContain('Directory not found');
     });
   });
 

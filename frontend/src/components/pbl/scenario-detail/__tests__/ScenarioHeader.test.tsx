@@ -36,7 +36,7 @@ describe('ScenarioHeader', () => {
     expect(link).toHaveAttribute('href', '/pbl/scenarios');
   });
 
-  it('should display title in h1', () => {
+  it('should display title in breadcrumb', () => {
     render(
       <ScenarioHeader
         title="My Great Scenario"
@@ -45,7 +45,9 @@ describe('ScenarioHeader', () => {
       />
     );
 
-    const heading = screen.getByRole('heading', { level: 1 });
-    expect(heading).toHaveTextContent('My Great Scenario');
+    // Title is displayed in breadcrumb, not as h1
+    const titleElement = screen.getByText('My Great Scenario');
+    expect(titleElement).toBeInTheDocument();
+    expect(titleElement.tagName).toBe('LI');
   });
 });

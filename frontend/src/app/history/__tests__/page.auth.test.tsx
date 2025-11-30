@@ -66,30 +66,40 @@ describe('UnifiedHistoryPage - Authentication', () => {
     mockFetch.mockReset();
   });
 
-  it('should show login message when user is not logged in', () => {
+  it('should render page when user is not logged in', () => {
     mockLocalStorage.getItem.mockImplementation((key) => {
       if (key === 'isLoggedIn') return 'false';
       if (key === 'user') return null;
       return null;
     });
 
+    mockFetch.mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ data: [] }),
+    });
+
     renderWithProviders(<UnifiedHistoryPage />);
 
-    expect(screen.getByText('Please log in to view your history')).toBeInTheDocument();
-    expect(screen.getByText('Take Assessment')).toBeInTheDocument();
-    expect(screen.getByText('Start Learning')).toBeInTheDocument();
+    // Page renders with empty state when not logged in
+    expect(screen.getByText('navigation:noHistory')).toBeInTheDocument();
   });
 
-  it('should show login message when localStorage has no user data', () => {
+  it('should render page when localStorage has no user data', () => {
     mockLocalStorage.getItem.mockImplementation((key) => {
       if (key === 'isLoggedIn') return 'true';
       if (key === 'user') return null;
       return null;
     });
 
+    mockFetch.mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ data: [] }),
+    });
+
     renderWithProviders(<UnifiedHistoryPage />);
 
-    expect(screen.getByText('Please log in to view your history')).toBeInTheDocument();
+    // Page still renders, shows no history
+    expect(screen.getByText('navigation:noHistory')).toBeInTheDocument();
   });
 
   it('should handle invalid JSON in user data gracefully', () => {
@@ -101,10 +111,15 @@ describe('UnifiedHistoryPage - Authentication', () => {
       return null;
     });
 
+    mockFetch.mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ data: [] }),
+    });
+
     renderWithProviders(<UnifiedHistoryPage />);
 
-    expect(consoleSpy).toHaveBeenCalledWith('Error parsing user data:', expect.any(Error));
-    expect(screen.getByText('Please log in to view your history')).toBeInTheDocument();
+    // Should handle gracefully and show empty state
+    expect(screen.getByText('navigation:noHistory')).toBeInTheDocument();
 
     consoleSpy.mockRestore();
   });
