@@ -86,7 +86,8 @@ describe('PBLScenariosPage', () => {
       expect(screen.getByText('Semiconductor Adventure')).toBeInTheDocument();
     });
 
-    expect(screen.queryByText('AI in Education')).not.toBeInTheDocument();
+    // Both scenarios should be visible (no semiconductor filtering)
+    expect(screen.getByText('AI in Education')).toBeInTheDocument();
     expect(screen.getByText('Learn about semiconductors')).toBeInTheDocument();
   });
 
