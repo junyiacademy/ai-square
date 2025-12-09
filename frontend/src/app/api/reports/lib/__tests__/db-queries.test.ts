@@ -35,6 +35,16 @@ describe('Weekly Report Database Queries', () => {
     ]
   });
 
+  // Helper to create DB info mock (new validation query)
+  const createMockDbInfo = () => ({
+    rows: [{ db_name: 'test_db', host: '127.0.0.1' }]
+  });
+
+  // Helper to create sanity check mock (new validation query)
+  const createMockSanityCheck = (count: string = '394') => ({
+    rows: [{ count }]
+  });
+
   beforeEach(() => {
     jest.clearAllMocks();
 
@@ -96,7 +106,17 @@ describe('Weekly Report Database Queries', () => {
         ]
       };
 
+      const mockDbInfo = {
+        rows: [{ db_name: 'test_db', host: '127.0.0.1' }]
+      };
+
+      const mockSanityCheck = {
+        rows: [{ count: '394' }]
+      };
+
       mockQuery
+        .mockResolvedValueOnce(createMockDbInfo())          // db info query
+        .mockResolvedValueOnce(createMockSanityCheck())     // sanity check
         .mockResolvedValueOnce(mockUserStats)
         .mockResolvedValueOnce(mockDailyTrend)
         .mockResolvedValueOnce(mockEngagementStats)
@@ -139,6 +159,8 @@ describe('Weekly Report Database Queries', () => {
       };
 
       mockQuery
+        .mockResolvedValueOnce(createMockDbInfo())
+        .mockResolvedValueOnce(createMockSanityCheck())
         .mockResolvedValueOnce(mockUserStats)
         .mockResolvedValueOnce(mockDailyTrend)
         .mockResolvedValueOnce(mockEngagementStats)
@@ -180,6 +202,8 @@ describe('Weekly Report Database Queries', () => {
       const mockLearningStats = createMockLearningStats();
 
       mockQuery
+        .mockResolvedValueOnce(createMockDbInfo())
+        .mockResolvedValueOnce(createMockSanityCheck())
         .mockResolvedValueOnce(mockUserStats)
         .mockResolvedValueOnce(mockDailyTrend)
         .mockResolvedValueOnce(mockEngagementStats)
@@ -226,6 +250,8 @@ describe('Weekly Report Database Queries', () => {
       const mockLearningStats = createMockLearningStats();
 
       mockQuery
+        .mockResolvedValueOnce(createMockDbInfo())
+        .mockResolvedValueOnce(createMockSanityCheck())
         .mockResolvedValueOnce(mockUserStats)
         .mockResolvedValueOnce(mockDailyTrend)
         .mockResolvedValueOnce(mockEngagementStats)
@@ -244,7 +270,9 @@ describe('Weekly Report Database Queries', () => {
 
     it('should handle database errors gracefully', async () => {
       // Arrange
-      mockQuery.mockRejectedValueOnce(new Error('Database connection failed'));
+      mockQuery
+        .mockResolvedValueOnce(createMockDbInfo())  // dbInfo succeeds
+        .mockRejectedValueOnce(new Error('Database connection failed'));  // sanityCheck fails
 
       // Act & Assert
       await expect(getWeeklyStats(mockPool)).rejects.toThrow('Database connection failed');
@@ -291,6 +319,8 @@ describe('Weekly Report Database Queries', () => {
       const mockTopContent = createMockTopContent();
 
       mockQuery
+        .mockResolvedValueOnce(createMockDbInfo())
+        .mockResolvedValueOnce(createMockSanityCheck())
         .mockResolvedValueOnce(mockUserStats)
         .mockResolvedValueOnce(mockDailyTrend)
         .mockResolvedValueOnce(mockEngagementStats)
@@ -307,7 +337,8 @@ describe('Weekly Report Database Queries', () => {
       expect(result.learning.discoveryCompletions).toBe(15);
 
       // Verify the SQL query doesn't have WHERE created_at filter
-      const learningQueryCall = mockQuery.mock.calls[3];
+      // Call index: 0=dbInfo, 1=sanityCheck, 2=userStats, 3=dailyTrend, 4=engagement, 5=learning
+      const learningQueryCall = mockQuery.mock.calls[5];
       expect(learningQueryCall).toBeDefined();
       const sqlQuery = learningQueryCall[0];
 
@@ -353,6 +384,8 @@ describe('Weekly Report Database Queries', () => {
       };
 
       mockQuery
+        .mockResolvedValueOnce(createMockDbInfo())
+        .mockResolvedValueOnce(createMockSanityCheck())
         .mockResolvedValueOnce(mockUserStats)
         .mockResolvedValueOnce(mockDailyTrend)
         .mockResolvedValueOnce(mockEngagementStats)
@@ -418,6 +451,8 @@ describe('Weekly Report Database Queries', () => {
       };
 
       mockQuery
+        .mockResolvedValueOnce(createMockDbInfo())
+        .mockResolvedValueOnce(createMockSanityCheck())
         .mockResolvedValueOnce(mockUserStats)
         .mockResolvedValueOnce(mockDailyTrend)
         .mockResolvedValueOnce(mockEngagementStats)

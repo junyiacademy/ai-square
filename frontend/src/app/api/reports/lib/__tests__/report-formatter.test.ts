@@ -127,11 +127,36 @@ describe('Weekly Report Formatter', () => {
       expect(result).not.toContain('最受歡迎內容');
     });
 
-    it('should include date range in header', () => {
+    it('should include date range in header for LAST complete week', () => {
       const result = formatWeeklyReport(mockStats);
 
-      // Should contain date range (format may vary)
-      expect(result).toMatch(/\d{4}-\d{2}-\d{2}/);
+      // Should contain date range (format: YYYY-MM-DD ~ YYYY-MM-DD)
+      expect(result).toMatch(/\d{4}-\d{2}-\d{2} ~ \d{4}-\d{2}-\d{2}/);
+
+      // Verify it's showing last week (not current week)
+      // Extract dates from result
+      const dateMatch = result.match(/(\d{4}-\d{2}-\d{2}) ~ (\d{4}-\d{2}-\d{2})/);
+      expect(dateMatch).toBeTruthy();
+
+      if (dateMatch) {
+        const startDate = new Date(dateMatch[1]);
+        const endDate = new Date(dateMatch[2]);
+
+        // Should be exactly 6 days apart (Monday to Sunday)
+        const daysDiff = (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24);
+        expect(daysDiff).toBe(6);
+
+        // Start date should be a Monday (day of week = 1)
+        expect(startDate.getDay()).toBe(1);
+
+        // End date should be a Sunday (day of week = 0)
+        expect(endDate.getDay()).toBe(0);
+
+        // Both dates should be in the past (before today)
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        expect(endDate.getTime()).toBeLessThan(today.getTime());
+      }
     });
 
     it('should format numbers with proper precision', () => {
