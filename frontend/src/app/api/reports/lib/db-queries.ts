@@ -122,11 +122,14 @@ export async function getWeeklyStats(pool: Pool): Promise<WeeklyStats> {
   const retentionRate = parseFloat(engagementStats.retention_rate || '0');
   const activeRate = totalUsers > 0 ? (weeklyActiveUsers / totalUsers) * 100 : 0;
 
-  // Query 3: Learning activity statistics
-  // Count ALL programs completed this week (regardless of creation date)
+  // Query 3: Learning activity statistics by mode
+  // Count completions by mode (assessment, pbl, discovery)
   // Completion rate = (completed this week) / (created this week) * 100
   const learningQuery = `
     SELECT
+      COUNT(CASE WHEN completed_at >= CURRENT_DATE - INTERVAL '7 days' AND mode = 'assessment' THEN 1 END) as assessment_completions,
+      COUNT(CASE WHEN completed_at >= CURRENT_DATE - INTERVAL '7 days' AND mode = 'pbl' THEN 1 END) as pbl_completions,
+      COUNT(CASE WHEN completed_at >= CURRENT_DATE - INTERVAL '7 days' AND mode = 'discovery' THEN 1 END) as discovery_completions,
       COUNT(CASE WHEN completed_at >= CURRENT_DATE - INTERVAL '7 days' THEN 1 END) as total_completions,
       ROUND(
         (COUNT(CASE WHEN completed_at IS NOT NULL AND completed_at >= CURRENT_DATE - INTERVAL '7 days' THEN 1 END)::numeric /
@@ -139,13 +142,30 @@ export async function getWeeklyStats(pool: Pool): Promise<WeeklyStats> {
   const learningResult = await pool.query(learningQuery);
   const learningStats = learningResult.rows[0];
 
+  const assessmentCompletions = parseInt(learningStats.assessment_completions || '0');
+  const pblCompletions = parseInt(learningStats.pbl_completions || '0');
+  const discoveryCompletions = parseInt(learningStats.discovery_completions || '0');
   const totalCompletions = parseInt(learningStats.total_completions || '0');
   const completionRate = parseFloat(learningStats.completion_rate || '0');
 
-  // Simplified: distribute completions evenly (TODO: get real data)
-  const assessmentCompletions = Math.floor(totalCompletions * 0.4);
-  const pblCompletions = Math.floor(totalCompletions * 0.3);
-  const discoveryCompletions = totalCompletions - assessmentCompletions - pblCompletions;
+  // Query 3.5: Top content (most popular scenarios this week)
+  const topContentQuery = `
+    SELECT
+      s.title->>'en' as name,
+      COUNT(*) as count
+    FROM programs p
+    JOIN scenarios s ON p.scenario_id = s.id
+    WHERE p.completed_at >= CURRENT_DATE - INTERVAL '7 days'
+    GROUP BY s.id, s.title
+    ORDER BY count DESC
+    LIMIT 3;
+  `;
+
+  const topContentResult = await pool.query(topContentQuery);
+  const topContent = topContentResult.rows.map(row => ({
+    name: row.name || 'Untitled',
+    count: parseInt(row.count)
+  }));
 
   // Query 4: System health (placeholder for now)
   const healthStats = {
@@ -176,7 +196,7 @@ export async function getWeeklyStats(pool: Pool): Promise<WeeklyStats> {
       discoveryCompletions,
       totalCompletions,
       completionRate,
-      topContent: [] // Will implement in next iteration
+      topContent
     },
     systemHealth: healthStats
   };

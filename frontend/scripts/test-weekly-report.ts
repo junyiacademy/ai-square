@@ -47,7 +47,16 @@ async function main() {
     console.log(`   Assessment: ${stats.learning.assessmentCompletions}`);
     console.log(`   PBL: ${stats.learning.pblCompletions}`);
     console.log(`   Discovery: ${stats.learning.discoveryCompletions}`);
-    console.log(`   Completion Rate: ${stats.learning.completionRate.toFixed(1)}%\n`);
+    console.log(`   Total: ${stats.learning.totalCompletions}`);
+    console.log(`   Completion Rate: ${stats.learning.completionRate.toFixed(1)}%`);
+
+    if (stats.learning.topContent.length > 0) {
+      console.log(`   Top Content:`);
+      stats.learning.topContent.forEach((item, index) => {
+        console.log(`     ${index + 1}. ${item.name} - ${item.count} completions`);
+      });
+    }
+    console.log('');
 
     console.log('🚀 System Health:');
     console.log(`   API Success Rate: ${stats.systemHealth.apiSuccessRate.toFixed(1)}%`);

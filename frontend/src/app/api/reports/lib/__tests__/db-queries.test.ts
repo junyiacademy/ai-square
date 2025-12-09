@@ -15,6 +15,26 @@ describe('Weekly Report Database Queries', () => {
   let mockPool: jest.Mocked<Pool>;
   let mockQuery: jest.Mock;
 
+  // Helper function to create standard mock learning stats
+  const createMockLearningStats = () => ({
+    rows: [{
+      assessment_completions: '234',
+      pbl_completions: '89',
+      discovery_completions: '156',
+      total_completions: '479',
+      completion_rate: '78.5'
+    }]
+  });
+
+  // Helper function to create standard mock top content
+  const createMockTopContent = () => ({
+    rows: [
+      { name: 'Career Assessment', count: '45' },
+      { name: 'Software Engineer PBL', count: '38' },
+      { name: 'Data Science Discovery', count: '32' }
+    ]
+  });
+
   beforeEach(() => {
     jest.clearAllMocks();
 
@@ -60,16 +80,28 @@ describe('Weekly Report Database Queries', () => {
 
       const mockLearningStats = {
         rows: [{
+          assessment_completions: '234',
+          pbl_completions: '89',
+          discovery_completions: '156',
           total_completions: '479',
           completion_rate: '78.5'
         }]
+      };
+
+      const mockTopContent = {
+        rows: [
+          { name: 'Career Assessment', count: '45' },
+          { name: 'Software Engineer PBL', count: '38' },
+          { name: 'Data Science Discovery', count: '32' }
+        ]
       };
 
       mockQuery
         .mockResolvedValueOnce(mockUserStats)
         .mockResolvedValueOnce(mockDailyTrend)
         .mockResolvedValueOnce(mockEngagementStats)
-        .mockResolvedValueOnce(mockLearningStats);
+        .mockResolvedValueOnce(mockLearningStats)
+        .mockResolvedValueOnce(mockTopContent);
 
       // Act
       const result = await getWeeklyStats(mockPool);
@@ -106,18 +138,12 @@ describe('Weekly Report Database Queries', () => {
         }]
       };
 
-      const mockLearningStats = {
-        rows: [{
-          total_completions: '479',
-          completion_rate: '78.5'
-        }]
-      };
-
       mockQuery
         .mockResolvedValueOnce(mockUserStats)
         .mockResolvedValueOnce(mockDailyTrend)
         .mockResolvedValueOnce(mockEngagementStats)
-        .mockResolvedValueOnce(mockLearningStats);
+        .mockResolvedValueOnce(createMockLearningStats())
+        .mockResolvedValueOnce(createMockTopContent());
 
       // Act
       const result = await getWeeklyStats(mockPool);
@@ -151,26 +177,28 @@ describe('Weekly Report Database Queries', () => {
         }]
       };
 
-      const mockLearningStats = {
-        rows: [{
-          total_completions: '479',
-          completion_rate: '78.5'
-        }]
-      };
+      const mockLearningStats = createMockLearningStats();
 
       mockQuery
         .mockResolvedValueOnce(mockUserStats)
         .mockResolvedValueOnce(mockDailyTrend)
         .mockResolvedValueOnce(mockEngagementStats)
-        .mockResolvedValueOnce(mockLearningStats);
+        .mockResolvedValueOnce(mockLearningStats)
+        .mockResolvedValueOnce(createMockTopContent());
 
       // Act
       const result = await getWeeklyStats(mockPool);
 
       // Assert
       expect(result.learning).toBeDefined();
+      expect(result.learning.assessmentCompletions).toBe(234);
+      expect(result.learning.pblCompletions).toBe(89);
+      expect(result.learning.discoveryCompletions).toBe(156);
       expect(result.learning.totalCompletions).toBe(479);
       expect(result.learning.completionRate).toBe(78.5);
+      expect(result.learning.topContent).toHaveLength(3);
+      expect(result.learning.topContent[0].name).toBe('Career Assessment');
+      expect(result.learning.topContent[0].count).toBe(45);
     });
 
     it('should return system health statistics', async () => {
@@ -195,18 +223,14 @@ describe('Weekly Report Database Queries', () => {
         }]
       };
 
-      const mockLearningStats = {
-        rows: [{
-          total_completions: '479',
-          completion_rate: '78.5'
-        }]
-      };
+      const mockLearningStats = createMockLearningStats();
 
       mockQuery
         .mockResolvedValueOnce(mockUserStats)
         .mockResolvedValueOnce(mockDailyTrend)
         .mockResolvedValueOnce(mockEngagementStats)
-        .mockResolvedValueOnce(mockLearningStats);
+        .mockResolvedValueOnce(mockLearningStats)
+        .mockResolvedValueOnce(createMockTopContent());
 
       // Act
       const result = await getWeeklyStats(mockPool);
@@ -256,30 +280,41 @@ describe('Weekly Report Database Queries', () => {
       // Even though only 10 were created this week
       const mockLearningStats = {
         rows: [{
+          assessment_completions: '20',
+          pbl_completions: '15',
+          discovery_completions: '15',
           total_completions: '50',
           completion_rate: '80.0'
         }]
       };
 
+      const mockTopContent = createMockTopContent();
+
       mockQuery
         .mockResolvedValueOnce(mockUserStats)
         .mockResolvedValueOnce(mockDailyTrend)
         .mockResolvedValueOnce(mockEngagementStats)
-        .mockResolvedValueOnce(mockLearningStats);
+        .mockResolvedValueOnce(mockLearningStats)
+        .mockResolvedValueOnce(mockTopContent);
 
       // Act
       const result = await getWeeklyStats(mockPool);
 
       // Assert
       expect(result.learning.totalCompletions).toBe(50);
+      expect(result.learning.assessmentCompletions).toBe(20);
+      expect(result.learning.pblCompletions).toBe(15);
+      expect(result.learning.discoveryCompletions).toBe(15);
 
       // Verify the SQL query doesn't have WHERE created_at filter
       const learningQueryCall = mockQuery.mock.calls[3];
       expect(learningQueryCall).toBeDefined();
       const sqlQuery = learningQueryCall[0];
 
-      // The query should NOT filter by created_at
-      expect(sqlQuery).not.toContain('WHERE created_at >=');
+      // The query should count completions by mode
+      expect(sqlQuery).toContain("mode = 'assessment'");
+      expect(sqlQuery).toContain("mode = 'pbl'");
+      expect(sqlQuery).toContain("mode = 'discovery'");
     });
 
     it('should calculate retention rate correctly', async () => {
@@ -321,7 +356,8 @@ describe('Weekly Report Database Queries', () => {
         .mockResolvedValueOnce(mockUserStats)
         .mockResolvedValueOnce(mockDailyTrend)
         .mockResolvedValueOnce(mockEngagementStats)
-        .mockResolvedValueOnce(mockLearningStats);
+        .mockResolvedValueOnce(mockLearningStats)
+        .mockResolvedValueOnce(createMockTopContent());
 
       // Act
       const result = await getWeeklyStats(mockPool);
@@ -369,16 +405,24 @@ describe('Weekly Report Database Queries', () => {
       // Production: No programs have completed_at set
       const mockLearningStats = {
         rows: [{
+          assessment_completions: '0',
+          pbl_completions: '0',
+          discovery_completions: '0',
           total_completions: '0',
           completion_rate: '0.0'
         }]
+      };
+
+      const mockTopContent = {
+        rows: [] // No completions means no top content
       };
 
       mockQuery
         .mockResolvedValueOnce(mockUserStats)
         .mockResolvedValueOnce(mockDailyTrend)
         .mockResolvedValueOnce(mockEngagementStats)
-        .mockResolvedValueOnce(mockLearningStats);
+        .mockResolvedValueOnce(mockLearningStats)
+        .mockResolvedValueOnce(mockTopContent);
 
       // Act
       const result = await getWeeklyStats(mockPool);
@@ -388,7 +432,11 @@ describe('Weekly Report Database Queries', () => {
       expect(result.userGrowth.newThisWeek).toBe(155);
       expect(result.engagement.weeklyActiveUsers).toBe(155);
       expect(result.engagement.retentionRate).toBe(0.0);
+      expect(result.learning.assessmentCompletions).toBe(0);
+      expect(result.learning.pblCompletions).toBe(0);
+      expect(result.learning.discoveryCompletions).toBe(0);
       expect(result.learning.totalCompletions).toBe(0);
+      expect(result.learning.topContent).toHaveLength(0);
     });
   });
 });
