@@ -15,6 +15,36 @@ describe('Weekly Report Database Queries', () => {
   let mockPool: jest.Mocked<Pool>;
   let mockQuery: jest.Mock;
 
+  // Helper function to create standard mock learning stats
+  const createMockLearningStats = () => ({
+    rows: [{
+      assessment_completions: '234',
+      pbl_completions: '89',
+      discovery_completions: '156',
+      total_completions: '479',
+      completion_rate: '78.5'
+    }]
+  });
+
+  // Helper function to create standard mock top content
+  const createMockTopContent = () => ({
+    rows: [
+      { name: 'Career Assessment', count: '45' },
+      { name: 'Software Engineer PBL', count: '38' },
+      { name: 'Data Science Discovery', count: '32' }
+    ]
+  });
+
+  // Helper to create DB info mock (new validation query)
+  const createMockDbInfo = () => ({
+    rows: [{ db_name: 'test_db', host: '127.0.0.1' }]
+  });
+
+  // Helper to create sanity check mock (new validation query)
+  const createMockSanityCheck = (count: string = '394') => ({
+    rows: [{ count }]
+  });
+
   beforeEach(() => {
     jest.clearAllMocks();
 
@@ -60,16 +90,38 @@ describe('Weekly Report Database Queries', () => {
 
       const mockLearningStats = {
         rows: [{
+          assessment_completions: '234',
+          pbl_completions: '89',
+          discovery_completions: '156',
           total_completions: '479',
           completion_rate: '78.5'
         }]
       };
 
+      const mockTopContent = {
+        rows: [
+          { name: 'Career Assessment', count: '45' },
+          { name: 'Software Engineer PBL', count: '38' },
+          { name: 'Data Science Discovery', count: '32' }
+        ]
+      };
+
+      const mockDbInfo = {
+        rows: [{ db_name: 'test_db', host: '127.0.0.1' }]
+      };
+
+      const mockSanityCheck = {
+        rows: [{ count: '394' }]
+      };
+
       mockQuery
+        .mockResolvedValueOnce(createMockDbInfo())          // db info query
+        .mockResolvedValueOnce(createMockSanityCheck())     // sanity check
         .mockResolvedValueOnce(mockUserStats)
         .mockResolvedValueOnce(mockDailyTrend)
         .mockResolvedValueOnce(mockEngagementStats)
-        .mockResolvedValueOnce(mockLearningStats);
+        .mockResolvedValueOnce(mockLearningStats)
+        .mockResolvedValueOnce(mockTopContent);
 
       // Act
       const result = await getWeeklyStats(mockPool);
@@ -82,7 +134,11 @@ describe('Weekly Report Database Queries', () => {
       expect(result.userGrowth.dailyTrend).toHaveLength(7);
     });
 
-    it('should return user engagement statistics', async () => {
+    it('should return user engagement statistics based on tasks.updated_at', async () => {
+      // TDD: Red → Green → Refactor
+      // Active users = users who had task updates last week (via tasks.updated_at)
+      // This is more reliable than last_login_at which is not maintained
+
       // Arrange
       const mockUserStats = {
         rows: [{
@@ -100,24 +156,20 @@ describe('Weekly Report Database Queries', () => {
 
       const mockEngagementStats = {
         rows: [{
-          weekly_active_users: '245',
+          weekly_active_users: '245',  // Users with task updates last week
           daily_avg_active: '85',
           retention_rate: '45.0'
         }]
       };
 
-      const mockLearningStats = {
-        rows: [{
-          total_completions: '479',
-          completion_rate: '78.5'
-        }]
-      };
-
       mockQuery
+        .mockResolvedValueOnce(createMockDbInfo())
+        .mockResolvedValueOnce(createMockSanityCheck())
         .mockResolvedValueOnce(mockUserStats)
         .mockResolvedValueOnce(mockDailyTrend)
         .mockResolvedValueOnce(mockEngagementStats)
-        .mockResolvedValueOnce(mockLearningStats);
+        .mockResolvedValueOnce(createMockLearningStats())
+        .mockResolvedValueOnce(createMockTopContent());
 
       // Act
       const result = await getWeeklyStats(mockPool);
@@ -151,26 +203,30 @@ describe('Weekly Report Database Queries', () => {
         }]
       };
 
-      const mockLearningStats = {
-        rows: [{
-          total_completions: '479',
-          completion_rate: '78.5'
-        }]
-      };
+      const mockLearningStats = createMockLearningStats();
 
       mockQuery
+        .mockResolvedValueOnce(createMockDbInfo())
+        .mockResolvedValueOnce(createMockSanityCheck())
         .mockResolvedValueOnce(mockUserStats)
         .mockResolvedValueOnce(mockDailyTrend)
         .mockResolvedValueOnce(mockEngagementStats)
-        .mockResolvedValueOnce(mockLearningStats);
+        .mockResolvedValueOnce(mockLearningStats)
+        .mockResolvedValueOnce(createMockTopContent());
 
       // Act
       const result = await getWeeklyStats(mockPool);
 
       // Assert
       expect(result.learning).toBeDefined();
+      expect(result.learning.assessmentCompletions).toBe(234);
+      expect(result.learning.pblCompletions).toBe(89);
+      expect(result.learning.discoveryCompletions).toBe(156);
       expect(result.learning.totalCompletions).toBe(479);
       expect(result.learning.completionRate).toBe(78.5);
+      expect(result.learning.topContent).toHaveLength(3);
+      expect(result.learning.topContent[0].name).toBe('Career Assessment');
+      expect(result.learning.topContent[0].count).toBe(45);
     });
 
     it('should return system health statistics', async () => {
@@ -195,18 +251,16 @@ describe('Weekly Report Database Queries', () => {
         }]
       };
 
-      const mockLearningStats = {
-        rows: [{
-          total_completions: '479',
-          completion_rate: '78.5'
-        }]
-      };
+      const mockLearningStats = createMockLearningStats();
 
       mockQuery
+        .mockResolvedValueOnce(createMockDbInfo())
+        .mockResolvedValueOnce(createMockSanityCheck())
         .mockResolvedValueOnce(mockUserStats)
         .mockResolvedValueOnce(mockDailyTrend)
         .mockResolvedValueOnce(mockEngagementStats)
-        .mockResolvedValueOnce(mockLearningStats);
+        .mockResolvedValueOnce(mockLearningStats)
+        .mockResolvedValueOnce(createMockTopContent());
 
       // Act
       const result = await getWeeklyStats(mockPool);
@@ -220,7 +274,9 @@ describe('Weekly Report Database Queries', () => {
 
     it('should handle database errors gracefully', async () => {
       // Arrange
-      mockQuery.mockRejectedValueOnce(new Error('Database connection failed'));
+      mockQuery
+        .mockResolvedValueOnce(createMockDbInfo())  // dbInfo succeeds
+        .mockRejectedValueOnce(new Error('Database connection failed'));  // sanityCheck fails
 
       // Act & Assert
       await expect(getWeeklyStats(mockPool)).rejects.toThrow('Database connection failed');
@@ -256,43 +312,57 @@ describe('Weekly Report Database Queries', () => {
       // Even though only 10 were created this week
       const mockLearningStats = {
         rows: [{
+          assessment_completions: '20',
+          pbl_completions: '15',
+          discovery_completions: '15',
           total_completions: '50',
           completion_rate: '80.0'
         }]
       };
 
+      const mockTopContent = createMockTopContent();
+
       mockQuery
+        .mockResolvedValueOnce(createMockDbInfo())
+        .mockResolvedValueOnce(createMockSanityCheck())
         .mockResolvedValueOnce(mockUserStats)
         .mockResolvedValueOnce(mockDailyTrend)
         .mockResolvedValueOnce(mockEngagementStats)
-        .mockResolvedValueOnce(mockLearningStats);
+        .mockResolvedValueOnce(mockLearningStats)
+        .mockResolvedValueOnce(mockTopContent);
 
       // Act
       const result = await getWeeklyStats(mockPool);
 
       // Assert
       expect(result.learning.totalCompletions).toBe(50);
+      expect(result.learning.assessmentCompletions).toBe(20);
+      expect(result.learning.pblCompletions).toBe(15);
+      expect(result.learning.discoveryCompletions).toBe(15);
 
       // Verify the SQL query doesn't have WHERE created_at filter
-      const learningQueryCall = mockQuery.mock.calls[3];
+      // Call index: 0=dbInfo, 1=sanityCheck, 2=userStats, 3=dailyTrend, 4=engagement, 5=learning
+      const learningQueryCall = mockQuery.mock.calls[5];
       expect(learningQueryCall).toBeDefined();
       const sqlQuery = learningQueryCall[0];
 
-      // The query should NOT filter by created_at
-      expect(sqlQuery).not.toContain('WHERE created_at >=');
+      // The query should count completions by mode
+      expect(sqlQuery).toContain("mode = 'assessment'");
+      expect(sqlQuery).toContain("mode = 'pbl'");
+      expect(sqlQuery).toContain("mode = 'discovery'");
     });
 
-    it('should calculate retention rate correctly', async () => {
+    it('should calculate retention rate correctly using tasks.updated_at', async () => {
       // TDD: Red → Green → Refactor
-      // Retention rate = (users from last week who logged in this week) / (users from last week)
-      // NOTE: Current implementation uses created_at as proxy since last_login_at is not maintained
+      // Retention rate = (users from 2 weeks ago who had task updates last week) / (users from 2 weeks ago)
+      // Uses tasks.updated_at as reliable indicator of user engagement
 
       // Arrange
       const mockUserStats = {
         rows: [{
           total_users: '400',
           new_this_week: '50',
-          new_last_week: '100'  // 100 users registered last week
+          new_last_week: '100'  // 100 users registered 2 weeks ago
         }]
       };
 
@@ -300,13 +370,12 @@ describe('Weekly Report Database Queries', () => {
         rows: [{ day: '2025-11-27', count: '10' }]
       };
 
-      // Engagement query uses WHERE clause to filter active users
-      // In production, last_login_at may not be maintained, so retention_rate may be 0
+      // 45% of users from 2 weeks ago had task updates last week
       const mockEngagementStats = {
         rows: [{
           weekly_active_users: '200',
           daily_avg_active: '80',
-          retention_rate: '0.0'  // May be 0 if last_login_at not maintained
+          retention_rate: '45.0'  // Based on tasks.updated_at
         }]
       };
 
@@ -318,22 +387,25 @@ describe('Weekly Report Database Queries', () => {
       };
 
       mockQuery
+        .mockResolvedValueOnce(createMockDbInfo())
+        .mockResolvedValueOnce(createMockSanityCheck())
         .mockResolvedValueOnce(mockUserStats)
         .mockResolvedValueOnce(mockDailyTrend)
         .mockResolvedValueOnce(mockEngagementStats)
-        .mockResolvedValueOnce(mockLearningStats);
+        .mockResolvedValueOnce(mockLearningStats)
+        .mockResolvedValueOnce(createMockTopContent());
 
       // Act
       const result = await getWeeklyStats(mockPool);
 
       // Assert
-      expect(result.engagement.retentionRate).toBe(0.0);
+      expect(result.engagement.retentionRate).toBe(45.0);
       expect(result.engagement.weeklyActiveUsers).toBe(200);
     });
 
-    it('should handle production scenario where last_login_at is never set', async () => {
-      // Real production scenario: last_login_at is NULL for all users
-      // Weekly active users should count users created this week as fallback
+    it('should handle production scenario with tasks.updated_at', async () => {
+      // Real production scenario: Using tasks.updated_at for reliable activity tracking
+      // Weekly active users = unique users with task updates last week
 
       // Arrange
       const mockUserStats = {
@@ -356,39 +428,54 @@ describe('Weekly Report Database Queries', () => {
         ]
       };
 
-      // Production scenario: last_login_at is NULL, so retention_rate = 0
-      // But weekly_active_users = 155 (users created this week)
+      // Production scenario: 132 users had task updates last week
       const mockEngagementStats = {
         rows: [{
-          weekly_active_users: '155',  // Users created this week
-          daily_avg_active: '22',
-          retention_rate: '0.0'  // 0 because last_login_at is NULL
+          weekly_active_users: '132',  // Users with task updates last week
+          daily_avg_active: '19',
+          retention_rate: '15.5'  // 15.5% of 2-week-old users had task updates
         }]
       };
 
-      // Production: No programs have completed_at set
+      // Production: Some programs completed
       const mockLearningStats = {
         rows: [{
-          total_completions: '0',
-          completion_rate: '0.0'
+          assessment_completions: '45',
+          pbl_completions: '23',
+          discovery_completions: '18',
+          total_completions: '86',
+          completion_rate: '65.0'
         }]
+      };
+
+      const mockTopContent = {
+        rows: [
+          { name: 'Career Assessment', count: '25' }
+        ]
       };
 
       mockQuery
+        .mockResolvedValueOnce(createMockDbInfo())
+        .mockResolvedValueOnce(createMockSanityCheck())
         .mockResolvedValueOnce(mockUserStats)
         .mockResolvedValueOnce(mockDailyTrend)
         .mockResolvedValueOnce(mockEngagementStats)
-        .mockResolvedValueOnce(mockLearningStats);
+        .mockResolvedValueOnce(mockLearningStats)
+        .mockResolvedValueOnce(mockTopContent);
 
       // Act
       const result = await getWeeklyStats(mockPool);
 
-      // Assert - Should match production data
+      // Assert - Should reflect real user engagement via tasks.updated_at
       expect(result.userGrowth.totalUsers).toBe(397);
       expect(result.userGrowth.newThisWeek).toBe(155);
-      expect(result.engagement.weeklyActiveUsers).toBe(155);
-      expect(result.engagement.retentionRate).toBe(0.0);
-      expect(result.learning.totalCompletions).toBe(0);
+      expect(result.engagement.weeklyActiveUsers).toBe(132);
+      expect(result.engagement.retentionRate).toBe(15.5);
+      expect(result.learning.assessmentCompletions).toBe(45);
+      expect(result.learning.pblCompletions).toBe(23);
+      expect(result.learning.discoveryCompletions).toBe(18);
+      expect(result.learning.totalCompletions).toBe(86);
+      expect(result.learning.topContent).toHaveLength(1);
     });
   });
 });

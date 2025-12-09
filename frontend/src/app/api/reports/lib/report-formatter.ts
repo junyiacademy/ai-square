@@ -5,24 +5,41 @@
 import type { WeeklyStats } from './db-queries';
 
 /**
- * Get date range for the current week (Monday to Sunday)
+ * Get date range for the LAST complete week (Monday to Sunday)
+ * When run on any day, this returns the previous week's full range
+ * Example: Run on Tuesday 2025-12-09 → Returns "2025-12-01 ~ 2025-12-07"
  */
 function getWeekDateRange(): string {
   const now = new Date();
-  const dayOfWeek = now.getDay();
-  const diffToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek; // Sunday is 0, adjust to Monday
+  const dayOfWeek = now.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
 
-  const monday = new Date(now);
-  monday.setDate(now.getDate() + diffToMonday);
+  // Find this week's Monday first
+  // Days since this Monday: (dayOfWeek + 6) % 7
+  // For Sunday (0): (0 + 6) % 7 = 6 days ago
+  // For Monday (1): (1 + 6) % 7 = 0 days ago
+  // For Tuesday (2): (2 + 6) % 7 = 1 day ago
+  const daysFromMonday = (dayOfWeek + 6) % 7;
+  const thisMonday = new Date(now);
+  thisMonday.setDate(now.getDate() - daysFromMonday);
+  thisMonday.setHours(0, 0, 0, 0);
 
-  const sunday = new Date(monday);
-  sunday.setDate(monday.getDate() + 6);
+  // Last week's Monday is 7 days before this Monday
+  const lastMonday = new Date(thisMonday);
+  lastMonday.setDate(thisMonday.getDate() - 7);
+
+  // Last week's Sunday is 6 days after last Monday
+  const lastSunday = new Date(lastMonday);
+  lastSunday.setDate(lastMonday.getDate() + 6);
 
   const formatDate = (date: Date) => {
-    return date.toISOString().split('T')[0]; // YYYY-MM-DD
+    // Use local time to avoid timezone shift when formatting
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`; // YYYY-MM-DD
   };
 
-  return `${formatDate(monday)} ~ ${formatDate(sunday)}`;
+  return `${formatDate(lastMonday)} ~ ${formatDate(lastSunday)}`;
 }
 
 /**
