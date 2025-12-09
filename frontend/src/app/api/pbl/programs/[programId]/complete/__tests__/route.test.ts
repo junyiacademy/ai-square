@@ -1161,7 +1161,7 @@ describe('/api/pbl/programs/[programId]/complete', () => {
         const data = await response.json();
         expect(data).toEqual({
           success: false,
-          error: 'Program not found'
+          error: 'Program not found or access denied'
         });
       });
 
@@ -1175,11 +1175,11 @@ describe('/api/pbl/programs/[programId]/complete', () => {
 
         const response = await GET(request, { params: Promise.resolve({'programId':'test-id'}) });
 
-        expect(response.status).toBe(403);
+        expect(response.status).toBe(404);
         const data = await response.json();
         expect(data).toEqual({
           success: false,
-          error: 'Access denied'
+          error: 'Program not found or access denied'
         });
       });
     });

@@ -1,0 +1,46 @@
+{
+  "patterns": [
+    {
+      "id": "err-ts-001",
+      "type": "TypeScript",
+      "pattern": "TS2345 - Type assignment error",
+      "occurrences": 1,
+      "lastSeen": "2025-11-29T02:45:03.897257",
+      "resolution": "Ensure proper type casting or fix type definitions",
+      "preventionRule": "Always use strict typing, avoid 'any'"
+    },
+    {
+      "id": "err-deploy-001",
+      "type": "Deployment",
+      "pattern": "Cloud Run region mismatch with Cloud SQL",
+      "occurrences": 0,
+      "lastSeen": null,
+      "resolution": "Ensure all GCP services use asia-east1",
+      "preventionRule": "Always verify gcloud config before deployment"
+    },
+    {
+      "id": "err-test-001",
+      "type": "Testing",
+      "pattern": "Async test timeout",
+      "occurrences": 0,
+      "lastSeen": null,
+      "resolution": "Properly await async operations in tests",
+      "preventionRule": "Use proper async/await patterns in all tests"
+    },
+    {
+      "id": "err-next-001",
+      "type": "Next.js",
+      "pattern": "Params not awaited in Next.js 15",
+      "occurrences": 0,
+      "lastSeen": null,
+      "resolution": "Always await params in Next.js 15 routes",
+      "preventionRule": "export default async function Page(props) { const params = await props.params; }"
+    }
+  ],
+  "statistics": {
+    "totalErrors": 2,
+    "resolvedErrors": 0,
+    "preventedErrors": 0,
+    "lastUpdated": "2025-11-29T02:45:03.897249"
+  }
+}

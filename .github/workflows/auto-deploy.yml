@@ -412,6 +412,10 @@ jobs:
           APP_BASE_URL: "${{ steps.env.outputs.environment == 'production' && 'https://www.ai-square.org' || 'https://ai-square-staging-731209836128.asia-east1.run.app' }}"
           # Slack Integration for Weekly Reports
           SLACK_AISQUARE_WEBHOOK_URL: "${{ secrets.SLACK_AISQUARE_WEBHOOK_URL }}"
+          # GitHub API Integration (for Prompt-to-Course feature)
+          GITHUB_TOKEN: "${{ secrets.GITHUB_API_TOKEN }}"
+          GITHUB_OWNER: "junyiacademy"
+          GITHUB_REPO: "ai-square"
           EOF
 
           # Deploy using env vars file - directly with full traffic

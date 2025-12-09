@@ -1,0 +1,65 @@
+{
+  "hooks": [
+    {
+      "matcher": "*",
+      "hooks": [
+        {
+          "eventName": "UserPromptSubmit",
+          "type": "command",
+          "command": "./.claude/hooks/universal-agent-rules.py",
+          "timeout": 5
+        }
+      ]
+    }
+  ],
+  "permissions": {
+    "allow": [
+      "Read(*)",
+      "Write(*)",
+      "Edit(*)",
+      "MultiEdit(*)",
+      "Grep(*)",
+      "Glob(*)",
+      "LS(*)",
+      "Bash(find:*)",
+      "Bash(cat:*)",
+      "Bash(ls:*)",
+      "Bash(grep:*)",
+      "Bash(sed:*)",
+      "Bash(echo:*)",
+      "Bash(mkdir:*)",
+      "Bash(touch:*)",
+      "Bash(chmod:*)",
+      "Bash(curl:*)",
+      "Bash(jq:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git reset:*)",
+      "Bash(git config:*)",
+      "Bash(git push:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(rm:*)",
+      "Bash(pkill:*)",
+      "Bash(true)",
+      "Bash(for:*)",
+      "Bash(do)",
+      "Bash(if:*)",
+      "Bash(then)",
+      "Bash(fi)",
+      "Bash(done)",
+      "Bash(make:*)"
+    ],
+    "deny": []
+  },
+  "projectSettings": {
+    "name": "PROJECT_NAME",
+    "type": "PROJECT_TYPE",
+    "framework": "FRAMEWORK",
+    "language": "LANGUAGE",
+    "database": "DATABASE",
+    "testing": "TESTING_FRAMEWORK",
+    "package_manager": "PACKAGE_MANAGER"
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "hooks": [
+    {
+      "matcher": "*",
+      "hooks": [
+        {
+          "eventName": "UserPromptSubmit",
+          "type": "command",
+          "command": "./.claude/hooks/universal-agent-rules.py",
+          "timeout": 5
+        }
+      ]
+    }
+  ],
+  "permissions": {
+    "allow": [
+      "Read(*)",
+      "Write(*)",
+      "Edit(*)",
+      "MultiEdit(*)",
+      "Grep(*)",
+      "Glob(*)",
+      "LS(*)",
+      "Bash(poetry run:*)",
+      "Bash(poetry install:*)",
+      "Bash(poetry add:*)",
+      "Bash(poetry remove:*)",
+      "Bash(poetry update:*)",
+      "Bash(python:*)",
+      "Bash(python3:*)",
+      "Bash(pip:*)",
+      "Bash(pytest:*)",
+      "Bash(uvicorn:*)",
+      "Bash(fastapi:*)",
+      "Bash(alembic:*)",
+      "Bash(psql:*)",
+      "Bash(find:*)",
+      "Bash(cat:*)",
+      "Bash(ls:*)",
+      "Bash(grep:*)",
+      "Bash(sed:*)",
+      "Bash(echo:*)",
+      "Bash(mkdir:*)",
+      "Bash(touch:*)",
+      "Bash(chmod:*)",
+      "Bash(curl:*)",
+      "Bash(jq:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git reset:*)",
+      "Bash(git config:*)",
+      "Bash(git push:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(rm:*)",
+      "Bash(pkill:*)",
+      "Bash(true)",
+      "Bash(for:*)",
+      "Bash(do)",
+      "Bash(if:*)",
+      "Bash(then)",
+      "Bash(fi)",
+      "Bash(done)",
+      "Bash(make:*)",
+      "Bash(docker:*)",
+      "Bash(docker-compose:*)",
+      "Bash(PGPASSWORD=postgres psql:*)"
+    ],
+    "deny": []
+  },
+  "projectSettings": {
+    "name": "PROJECT_NAME",
+    "type": "backend",
+    "framework": "fastapi",
+    "language": "python",
+    "database": "postgresql",
+    "testing": "pytest",
+    "package_manager": "poetry"
+  }
+}

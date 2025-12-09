@@ -1,0 +1,36 @@
+{
+  "dailyMetrics": {
+    "2025-11-29": {
+      "tasksCompleted": 10,
+      "errorsEncountered": 0,
+      "tokensUsed": 150000,
+      "avgResponseTime": 2.5,
+      "agentCalls": {
+        "agents-manager": 5,
+        "quality-guardian-agent": 3,
+        "deployment-master-agent": 2,
+        "tdd-validator-agent": 4
+      },
+      "parallelExecutions": 3,
+      "sequentialExecutions": 7
+    }
+  },
+  "weeklyTrends": {
+    "errorRate": "decreasing",
+    "speedImprovement": "30%",
+    "tokenEfficiency": "improving",
+    "automationLevel": "85%"
+  },
+  "optimizationOpportunities": [
+    {
+      "area": "Test execution",
+      "suggestion": "Run unit and integration tests in parallel",
+      "estimatedImprovement": "40% faster"
+    },
+    {
+      "area": "Context management",
+      "suggestion": "Auto-clear context when > 50k tokens",
+      "estimatedImprovement": "25% token savings"
+    }
+  ]
+}

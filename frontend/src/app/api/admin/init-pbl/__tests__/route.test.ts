@@ -1,7 +1,6 @@
 import { NextRequest } from 'next/server';
-import { POST, GET } from '../route';
 
-// Mock the repository factory
+// Mock the repository factory - declare mocks before imports
 const mockFindByMode = jest.fn();
 const mockCreate = jest.fn();
 const mockUpdate = jest.fn();
@@ -11,16 +10,19 @@ const mockTaskFindByScenario = jest.fn();
 jest.mock('@/lib/repositories/base/repository-factory', () => ({
   repositoryFactory: {
     getScenarioRepository: () => ({
-      findByMode: mockFindByMode,
-      create: mockCreate,
-      update: mockUpdate,
+      findByMode: (...args: unknown[]) => mockFindByMode(...args),
+      create: (...args: unknown[]) => mockCreate(...args),
+      update: (...args: unknown[]) => mockUpdate(...args),
     }),
     getTaskRepository: () => ({
-      create: mockTaskCreate,
-      findByScenario: mockTaskFindByScenario,
+      create: (...args: unknown[]) => mockTaskCreate(...args),
+      findByScenario: (...args: unknown[]) => mockTaskFindByScenario(...args),
     })
   }
 }));
+
+// Import route AFTER mocks are set up
+import { POST, GET } from '../route';
 
 // Mock fs/promises
 jest.mock('fs/promises', () => ({
@@ -211,8 +213,11 @@ describe('/api/admin/init-pbl', () => {
       const response = await POST(request);
       const result = await response.json();
 
-      expect(response.status).toBe(500);
-      expect(result.success).toBe(false);
+      // Service catches errors and includes them in results, doesn't throw
+      expect(response.status).toBe(200);
+      expect(result.success).toBe(true);
+      expect(result.results.errors.length).toBeGreaterThan(0);
+      expect(result.results.errors[0]).toContain('Directory not found');
     });
   });
 

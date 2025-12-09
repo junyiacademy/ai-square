@@ -15,7 +15,15 @@ export function middleware(request: NextRequest) {
   }
 
   // Special case: Allow access to fix-demo and db-init pages without authentication in development
-  if (pathname === '/admin/fix-demo' || pathname === '/admin/db-init') {
+  // Also allow scenario editors for testing
+  if (pathname === '/admin/fix-demo' ||
+      pathname === '/admin/db-init' ||
+      pathname === '/admin/scenarios/wysiwyg' ||
+      pathname === '/admin/scenarios/database-editor' ||
+      pathname === '/admin/scenarios/unified' ||
+      pathname === '/admin/scenarios/live-editor' ||
+      pathname === '/admin/scenarios/agent-editor' ||
+      pathname === '/admin') {
     return NextResponse.next();
   }
 

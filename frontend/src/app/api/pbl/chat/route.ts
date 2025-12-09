@@ -111,10 +111,48 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const vertexAI = new VertexAI({
-      project: projectId,
-      location: process.env.VERTEX_AI_LOCATION || 'us-central1',
-    });
+    // Configure Vertex AI with authentication support
+    const location = process.env.VERTEX_AI_LOCATION || 'us-central1';
+    
+    let vertexAI: VertexAI;
+    
+    // Support service account JSON from environment variable (for Cloud Run)
+    if (process.env.VERTEX_AI_SERVICE_ACCOUNT_JSON) {
+      try {
+        const credentials = JSON.parse(process.env.VERTEX_AI_SERVICE_ACCOUNT_JSON);
+        vertexAI = new VertexAI({
+          project: projectId,
+          location,
+          googleAuthOptions: {
+            credentials: credentials as Record<string, unknown>,
+            scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+          },
+        });
+      } catch (error) {
+        console.error('Failed to parse VERTEX_AI_SERVICE_ACCOUNT_JSON:', error);
+        // Fall through to default initialization
+        vertexAI = new VertexAI({
+          project: projectId,
+          location,
+        });
+      }
+    } else if (process.env.GOOGLE_APPLICATION_CREDENTIALS) {
+      // Support key file for local development
+      vertexAI = new VertexAI({
+        project: projectId,
+        location,
+        googleAuthOptions: {
+          keyFile: process.env.GOOGLE_APPLICATION_CREDENTIALS,
+          scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+        },
+      });
+    } else {
+      // Default initialization (uses Application Default Credentials)
+      vertexAI = new VertexAI({
+        project: projectId,
+        location,
+      });
+    }
 
     const model = vertexAI.preview.getGenerativeModel({
       model: 'gemini-2.5-flash',

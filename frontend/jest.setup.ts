@@ -595,3 +595,14 @@ global.fetch = jest.fn(() =>
     headers: new Map(),
   })
 ) as jest.Mock
+
+// Mock scrollIntoView for jsdom environment (only if Element exists)
+if (typeof Element !== 'undefined') {
+  Element.prototype.scrollIntoView = jest.fn()
+}
+
+// Mock remark-gfm (ESM module)
+jest.mock('remark-gfm', () => ({
+  __esModule: true,
+  default: jest.fn(),
+}))

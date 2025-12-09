@@ -1348,7 +1348,6 @@ cache_keys = {
 - [ ] 知識圖譜視覺化 (D3.js)
 - [ ] 自適應學習建議
 - [ ] PostgreSQL 整合 (DAU > 100)
-- [ ] Neo4j 知識圖譜 (Phase 4 準備)
 
 ### Phase 4: 進階功能 (2026+)
 - [ ] AI 個人化推薦 (MCP Agent)

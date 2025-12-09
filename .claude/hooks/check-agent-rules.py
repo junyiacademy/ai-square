@@ -41,6 +41,24 @@ simple_questions = [
     "explain", "show me", "查看", "看", "是什麼"
 ]
 
+# Follow-up task indicators (suggest multiple Task calls)
+followup_indicators = [
+    "also", "然後", "另外", "and then", "after that", "接著",
+    "additionally", "furthermore", "moreover", "plus"
+]
+
+# Urgent task indicators (prioritize immediate action)
+urgent_indicators = [
+    "urgent", "critical", "broken", "emergency", "緊急", "立即",
+    "immediately", "asap", "production down", "outage"
+]
+
+# Batch operation indicators (suggest parallel execution)
+batch_indicators = [
+    "all", "every", "each", "batch", "全部", "所有",
+    "multiple", "several", "各個", "一起"
+]
+
 # Check for GCP keywords
 is_gcp_operation = any(keyword in user_prompt for keyword in gcp_keywords)
 
@@ -57,6 +75,15 @@ for keyword in task_keywords:
             break
 
 is_simple_question = any(q in user_prompt for q in simple_questions)
+
+# Check for follow-up tasks
+has_followup = any(indicator in user_prompt for indicator in followup_indicators)
+
+# Check for urgent tasks
+is_urgent = any(indicator in user_prompt for indicator in urgent_indicators)
+
+# Check for batch operations
+is_batch = any(indicator in user_prompt for indicator in batch_indicators)
 
 # Build context output
 context_parts = []
@@ -105,6 +132,65 @@ The agents-manager will:
 
 DO NOT proceed without launching agents-manager.
 """)
+
+# Add intelligent task detection suggestions
+if is_task and not is_simple_question:
+    suggestions = []
+
+    # Urgent task handling
+    if is_urgent:
+        suggestions.append("""
+🚨 URGENT TASK DETECTED → Prioritize immediate action
+
+⚡ URGENT MODE:
+   1. Skip extended analysis - act quickly
+   2. Use deployment-master-agent for production issues
+   3. Check logs immediately: gh run view --log-failed
+   4. Prepare rollback plan while fixing
+
+Remember: "不要解釋，直接修復！" (Don't explain, just fix!)
+""")
+
+    # Multiple tasks handling
+    if has_followup:
+        suggestions.append("""
+📋 MULTIPLE TASKS DETECTED → Consider task sequencing
+
+⚡ OPTIMIZATION SUGGESTION:
+   1. Identify independent vs dependent tasks
+   2. For independent tasks: Run agents in parallel
+      Example:
+      Task(subagent_type="security-audit-agent", ...)
+      Task(subagent_type="documentation-sync-agent", ...)
+
+   3. For dependent tasks: Run sequentially
+      Example: quality → deployment → monitoring
+
+See CLAUDE.md section "⚡ Parallel Agent Execution" for safe combinations.
+""")
+
+    # Batch operations handling
+    if is_batch:
+        suggestions.append("""
+🔄 BATCH OPERATION DETECTED → Consider parallel execution
+
+⚡ PARALLEL EXECUTION STRATEGY:
+   1. Check if items are independent
+   2. If yes, use parallel Task calls for 30% speed boost
+   3. Safe parallel combinations:
+      - Testing + Performance
+      - Security + Documentation
+      - Database + Monitoring
+      - Quality + Architecture
+
+   4. For large batches, consider headless mode:
+      claude -p "process all files"
+
+Avoid sequential processing when parallel is safe!
+""")
+
+    if suggestions:
+        context_parts.extend(suggestions)
 
 # Output final context
 if context_parts:

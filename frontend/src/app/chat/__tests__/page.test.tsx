@@ -669,8 +669,10 @@ beforeEach(() => {
       });
 
       await waitFor(() => {
-        expect(screen.getByText('Test Scenario 1')).toBeInTheDocument();
-        expect(screen.getByText('Test Scenario 2')).toBeInTheDocument();
+        const scenario1Elements = screen.getAllByText('Test Scenario 1');
+        const scenario2Elements = screen.getAllByText('Test Scenario 2');
+        expect(scenario1Elements.length).toBeGreaterThan(0);
+        expect(scenario2Elements.length).toBeGreaterThan(0);
       });
     });
 
@@ -680,9 +682,9 @@ beforeEach(() => {
       });
 
       await waitFor(() => {
-        const score85 = screen.queryByText('85%') || screen.queryByText(/85/);
-        const score92 = screen.queryByText('92%') || screen.queryByText(/92/);
-        expect(score85 || score92).toBeTruthy();
+        const score85Elements = screen.queryAllByText(/85/);
+        const score92Elements = screen.queryAllByText(/92/);
+        expect(score85Elements.length > 0 || score92Elements.length > 0).toBeTruthy();
       }, { timeout: 3000 });
     });
 

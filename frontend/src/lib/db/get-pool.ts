@@ -24,7 +24,7 @@ export function getPool(): Pool {
     } else {
       // For regular TCP connections (local/staging with IP)
       config.host = dbHost;
-      config.port = parseInt(process.env.DB_PORT || '5433');
+      config.port = parseInt(process.env.DB_PORT || '5432');
       config.ssl = false;
       config.keepAlive = true;
       config.keepAliveInitialDelayMillis = 0;
