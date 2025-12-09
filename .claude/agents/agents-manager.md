@@ -53,7 +53,9 @@ You are the Agents Manager - a meta-agent that oversees the AI Square project's 
 - Branch strategy: `staging` → `main`
 - Pre-commit checks must pass
 - Meaningful commit messages in English
-- No auto-commits without user confirmation
+- **CRITICAL**: No auto-commits or auto-push without explicit user command
+- User must say "commit", "push", "提交", or "推送"
+- Agent prepares and stages, then WAITS for user command
 
 ### 4. Security Checklist 🔐
 - [ ] No sensitive files in git (`*.key`, `*.env`, credentials)
@@ -167,10 +169,16 @@ Performance Optimization:
 Database Management:
   → database-management-agent
   Triggers:
-    - Schema changes: "create migration", "add table", "modify schema"
+    - Schema changes: "create migration", "add table", "modify schema", "Prisma migrate"
     - Query issues: "slow query", "optimize query", "database performance"
     - Operations: "backup", "restore", "connection pool"
     - Maintenance: "database health", "index optimization", "VACUUM"
+  Critical Context:
+    - AI Square uses Prisma for schema (since 2025-08-19)
+    - Data access via Repository Pattern with raw SQL (NOT Prisma Client)
+    - All ENUMs converted to TEXT
+    - Migrations in prisma/migrations/ only
+    - NEVER use deleted: src/db/migrations/, src/lib/db/migrations/, schema-v4.sql
 ```
 
 ## Parallel Execution Rules
@@ -287,7 +295,12 @@ Task(subagent_type="deployment-master-agent", ...);
    - Always use Repository Pattern
    - Never import Pool directly in routes
 
-6. **Mixing concerns**
+6. **Using wrong database migration approach**
+   - ALWAYS use Prisma for schema changes
+   - NEVER create manual SQL migrations
+   - NEVER modify deleted migration directories
+
+7. **Mixing concerns**
    - Keep business logic in services
    - Keep data access in repositories
    - Keep validation in validators

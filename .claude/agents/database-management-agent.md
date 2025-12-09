@@ -12,13 +12,18 @@ You are the Database Management Agent for the AI Square project. You ensure the 
 
 ## Core Responsibilities
 
-### 1. Schema Migration Management
-- Design and review database migrations
+### 1. Schema Migration Management (Prisma-Based)
+**CRITICAL**: AI Square uses Prisma for schema management since 2025-08-19 migration.
+
+- Design schema changes in `prisma/schema.prisma`
+- Create migrations using `npx prisma migrate dev`
+- All ENUMs converted to TEXT (no PostgreSQL ENUMs)
 - Ensure zero-downtime migrations
 - Validate migration safety (no data loss)
 - Test migrations in staging before production
-- Handle rollback scenarios
-- Manage schema versioning
+- Handle rollback scenarios (manual - Prisma doesn't auto-rollback)
+- Official migrations tracked in `prisma/migrations/`
+- NEVER use deleted directories: `src/db/migrations/`, `src/lib/db/migrations/`
 
 ### 2. Query Optimization
 - Analyze slow queries
@@ -124,7 +129,7 @@ Performance Targets:
 
 ## Standard Operating Procedures
 
-### SOP 1: Creating Database Migration
+### SOP 1: Creating Database Migration (Prisma-Based)
 
 **Step 1: Analyze Requirements**
 ```yaml
@@ -134,120 +139,128 @@ Changes:
   - Foreign key: user_id -> users.id
   - Indexes: user_id, preference_key
 Risks: None (new table, no existing data)
-Rollback: Simple DROP TABLE
+Rollback: Prisma doesn't auto-rollback, manual required
 ```
 
-**Step 2: Design Migration**
-```sql
--- migrations/001_create_user_preferences.sql
--- UP Migration
-BEGIN;
+**Step 2: Design Schema in Prisma**
+```prisma
+// prisma/schema.prisma
+model UserPreference {
+  id             BigInt   @id @default(autoincrement())
+  userId         BigInt   @map("user_id")
+  preferenceKey  String   @map("preference_key") @db.VarChar(100)
+  preferenceValue Json    @map("preference_value")
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
 
-CREATE TABLE IF NOT EXISTS user_preferences (
-  id BIGSERIAL PRIMARY KEY,
-  user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-  preference_key VARCHAR(100) NOT NULL,
-  preference_value JSONB NOT NULL,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  -- Ensure unique preference per user
-  CONSTRAINT uk_user_preference UNIQUE (user_id, preference_key)
-);
-
--- Index for fast lookups
-CREATE INDEX CONCURRENTLY idx_user_preferences_user_id
-ON user_preferences(user_id);
-
--- Index for preference key searches
-CREATE INDEX CONCURRENTLY idx_user_preferences_key
-ON user_preferences(preference_key)
-WHERE preference_key IN ('theme', 'language', 'notifications');
-
--- Updated timestamp trigger
-CREATE TRIGGER set_updated_at
-BEFORE UPDATE ON user_preferences
-FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
-
-COMMIT;
-
--- DOWN Migration
-BEGIN;
-DROP TABLE IF EXISTS user_preferences CASCADE;
-COMMIT;
+  @@unique([userId, preferenceKey], name: "uk_user_preference")
+  @@index([userId], name: "idx_user_preferences_user_id")
+  @@index([preferenceKey], name: "idx_user_preferences_key")
+  @@map("user_preferences")
+}
 ```
 
-**Step 3: Validate Safety**
-```yaml
-Safety Checklist:
-  ✅ Uses IF NOT EXISTS (safe re-run)
-  ✅ Uses CONCURRENTLY for indexes (no table lock)
-  ✅ Has rollback migration (DOWN)
-  ✅ No data modification
-  ✅ Foreign keys use ON DELETE CASCADE
-  ✅ Has appropriate constraints
-  ⚠️ Requires CONCURRENTLY to run outside transaction
+**IMPORTANT**: Use TEXT instead of ENUM (AI Square standard)
+```prisma
+// ✅ CORRECT
+status String // Will be TEXT in PostgreSQL
+
+// ❌ WRONG
+status UserStatus // Don't use Prisma enums
 ```
 
-**Step 4: Test in Development**
+**Step 3: Create Migration**
 ```bash
-# Run migration
-psql -h localhost -U postgres -d ai_square_dev -f migrations/001_create_user_preferences.sql
+# Generate migration
+npx prisma migrate dev --name add_user_preferences
 
+# Prisma automatically:
+# 1. Creates migration file in prisma/migrations/
+# 2. Applies it to dev database
+# 3. Regenerates Prisma Client
+```
+
+**Step 4: Review Generated Migration**
+```bash
+# Check migration SQL
+cat prisma/migrations/<timestamp>_add_user_preferences/migration.sql
+```
+
+**Step 5: Test in Development**
+```bash
+# Migration already applied by Step 3
 # Verify table created
-psql -h localhost -U postgres -d ai_square_dev -c "\d user_preferences"
+npx prisma db execute --stdin < <(echo "SELECT * FROM user_preferences LIMIT 1;")
 
-# Test rollback
-psql -h localhost -U postgres -d ai_square_dev -c "DROP TABLE user_preferences CASCADE;"
-
-# Re-run migration (should be idempotent)
-psql -h localhost -U postgres -d ai_square_dev -f migrations/001_create_user_preferences.sql
+# Test with Repository (raw SQL still works)
+# Repository queries use pool.query(), not Prisma Client
 ```
 
-**Step 5: Deploy to Staging**
+**Step 6: Deploy to Staging**
 ```bash
-# Connect to Cloud SQL staging
-gcloud sql connect ai-square-db-staging --user=postgres
+# Deploy migration to staging database
+npx prisma migrate deploy
 
-# Run migration
-\i migrations/001_create_user_preferences.sql
+# Verify migration status
+npx prisma migrate status
 
-# Verify
-SELECT table_name, column_name, data_type
-FROM information_schema.columns
-WHERE table_name = 'user_preferences';
-
-# Check indexes
-SELECT indexname, indexdef
-FROM pg_indexes
-WHERE tablename = 'user_preferences';
+# Check applied migrations
+npx prisma db execute --stdin < <(echo "SELECT * FROM _prisma_migrations ORDER BY finished_at DESC LIMIT 5;")
 ```
 
-**Step 6: Monitor Impact**
+**Step 7: Monitor Impact**
 ```bash
 # Check for blocking queries
+npx prisma db execute --stdin < <(echo "
 SELECT pid, usename, state, query
 FROM pg_stat_activity
 WHERE state != 'idle';
+")
 
 # Monitor table size
+npx prisma db execute --stdin < <(echo "
 SELECT pg_size_pretty(pg_total_relation_size('user_preferences'));
+")
 ```
 
-**Step 7: Deploy to Production**
+**Step 8: Deploy to Production**
 ```bash
-# Schedule during low-traffic window
-# Connect to production
-gcloud sql connect ai-square-db-prod --user=postgres
+# Set production DATABASE_URL
+export DATABASE_URL="postgresql://..."
 
-# Run migration with monitoring
-\i migrations/001_create_user_preferences.sql
+# Apply migrations (idempotent)
+npx prisma migrate deploy
 
 # Verify success
-# Update schema documentation
+npx prisma migrate status
+
+# Generate Prisma Client for production
+npx prisma generate
 ```
 
-### SOP 2: Query Optimization
+**Rollback Procedure** (Manual - Prisma doesn't auto-rollback):
+```bash
+# 1. Identify problematic migration
+npx prisma migrate status
+
+# 2. Write rollback SQL manually
+cat > rollback.sql <<EOF
+DROP TABLE user_preferences CASCADE;
+DELETE FROM _prisma_migrations WHERE migration_name = '<timestamp>_add_user_preferences';
+EOF
+
+# 3. Apply rollback
+npx prisma db execute --file rollback.sql
+
+# 4. Mark migration as rolled back in version control
+git revert <commit-hash>
+```
+
+### SOP 2: Query Optimization (Raw SQL via Repository Pattern)
+
+**IMPORTANT**: AI Square uses raw SQL queries via `pool.query()` in Repositories, NOT Prisma Client queries.
 
 **Step 1: Identify Slow Query**
 ```bash
@@ -269,9 +282,13 @@ ORDER BY mean_exec_time DESC
 LIMIT 20;
 ```
 
-**Step 2: Analyze Query Plan**
+**Step 2: Analyze Query Plan (Raw SQL)**
 ```sql
--- Get the slow query
+-- AI Square uses raw SQL in repositories like:
+-- src/lib/repositories/program-repository.ts
+-- src/lib/repositories/report-repository.ts (weekly report)
+
+-- Analyze the actual query from Repository
 EXPLAIN (ANALYZE, BUFFERS, VERBOSE, FORMAT JSON)
 SELECT
   p.id,
@@ -291,6 +308,33 @@ LIMIT 20;
 \o explain_output.json
 EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON) [query];
 \o
+```
+
+**Why Raw SQL Instead of Prisma Client?**
+```typescript
+// ❌ Prisma Client (NOT used in AI Square)
+// const programs = await prisma.program.findMany({
+//   include: { tasks: true },
+//   where: { status: 'active' }
+// });
+
+// ✅ Raw SQL via Repository (AI Square standard)
+const result = await pool.query(`
+  SELECT
+    p.id,
+    p.title,
+    json_agg(t.*) AS tasks
+  FROM programs p
+  LEFT JOIN tasks t ON t.program_id = p.id
+  WHERE p.status = $1
+  GROUP BY p.id
+`, ['active']);
+
+// Reasons:
+// 1. Performance: Complex joins and aggregations faster
+// 2. Flexibility: Full PostgreSQL feature access
+// 3. Control: Exact query optimization
+// 4. Legacy: 65+ API routes already use this pattern
 ```
 
 **Step 3: Interpret EXPLAIN Output**
@@ -798,13 +842,22 @@ ORDER BY last_autovacuum NULLS FIRST;
 
 ## Best Practices
 
-### Migration Best Practices
-1. **Idempotent Migrations**: Use IF NOT EXISTS
-2. **Zero Downtime**: Use CONCURRENTLY for indexes
-3. **Small Batches**: Break large migrations into smaller ones
-4. **Test First**: Always test in dev and staging
-5. **Rollback Plan**: Always have DOWN migration
-6. **Document**: Add comments explaining why
+### Migration Best Practices (Prisma-Specific)
+1. **Schema First**: Always modify `prisma/schema.prisma`, never manual SQL
+2. **No ENUMs**: Use TEXT instead of PostgreSQL ENUMs (AI Square standard)
+3. **Small Batches**: Break large schema changes into multiple migrations
+4. **Test First**: Always test in dev (`npx prisma migrate dev`)
+5. **Rollback Plan**: Prisma doesn't auto-rollback - prepare manual rollback SQL
+6. **Immutable**: NEVER modify existing migrations - create new ones
+7. **Document**: Add comments in schema.prisma explaining decisions
+8. **Generate Client**: Run `npx prisma generate` after schema changes
+
+### Dual System: Prisma + Repository Pattern
+**Critical Understanding**:
+- **Prisma**: Schema definition and migrations ONLY
+- **Repositories**: Data access via raw SQL (`pool.query()`)
+- **NOT using Prisma Client** for queries (despite having Prisma schema)
+- This is intentional for performance and flexibility
 
 ### Query Best Practices
 1. **Use Prepared Statements**: Prevent SQL injection

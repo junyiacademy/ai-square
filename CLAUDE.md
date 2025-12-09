@@ -366,7 +366,75 @@ When errors occur, evaluate in order:
 - **Deployment**: Cloud Run (asia-east1)
 - **AI Model**: Vertex AI `gemini-2.5-flash`
 
+## 🗄️ Database Management Strategy
+
+**CRITICAL**: Production uses unified Prisma-based schema (migrated 2025-08-19)
+
+### Schema Management: Prisma Only
+```bash
+# Create new migration
+npx prisma migrate dev --name description
+
+# Apply to production
+npx prisma migrate deploy
+
+# Generate Prisma Client
+npx prisma generate
+```
+
+**Official Migrations**: `prisma/migrations/` (tracked in git)
+**Deleted Obsolete**: `src/db/migrations/`, `src/lib/db/migrations/`, `schema-v4.sql`
+
+### Data Access: Repository Pattern with Raw SQL
+- **65+ API routes** use Repositories (`src/lib/repositories/`)
+- **Query execution**: Raw SQL via `pool.query()` (NOT Prisma Client)
+- **Complex queries**: Raw SQL for performance (e.g., weekly report)
+- **Why raw SQL**: Performance, flexibility for complex joins/aggregations
+
+### Key Architecture Decisions
+1. **ENUMs → TEXT**: All PostgreSQL ENUMs converted to TEXT for flexibility
+2. **Prisma for schema**: Migrations and schema definition
+3. **Raw SQL for queries**: Performance and Repository Pattern compatibility
+4. **Mode-based analytics**: Tracks assessment/pbl/discovery separately
+
+### Migration Workflow Going Forward
+```bash
+1. Design schema change in prisma/schema.prisma
+2. Run: npx prisma migrate dev --name add_feature_x
+3. Test in development
+4. Deploy to staging: npx prisma migrate deploy
+5. Verify production: Check migration status
+6. Never modify old migrations (immutable)
+```
+
+### ⚠️ Known Issues
+- `scripts/init-cloud-sql.sh` references deleted `schema-v4.sql` (needs update or removal)
+- Keep both Prisma AND Repository Pattern (don't consolidate to Prisma Client)
+
+## 🔒 Git Workflow Rules
+
+**CRITICAL USER RULE**: Only user can command commit and push!
+
+**Agent Behavior**:
+- ✅ Prepare changes and stage files
+- ✅ Present summary for review
+- ✅ Ask user for explicit confirmation
+- ❌ **NEVER** auto-commit without user command
+- ❌ **NEVER** auto-push without user command
+
+**User must explicitly say**: "commit", "push", "提交", "推送"
+
+**Pattern**:
+```
+Agent: "Changes ready. Files staged:
+- file1.ts
+- file2.ts
+
+To commit: say 'commit' or '提交'
+To push: say 'push' or '推送'"
+```
+
 ---
 
 **Note**: This file should remain in project root for Claude Code auto-loading.
-**Version**: 3.2 (Added Error Reflection & Continuous Improvement System, /reflect, /weekly-review)
+**Version**: 3.2 (Added Error Reflection & Continuous Improvement System, database management strategy, git workflow rules)

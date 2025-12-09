@@ -64,6 +64,12 @@ gcloud config get-value compute/region # Must be asia-east1
 gcloud sql instances describe ai-square-db --region=asia-east1
 gcloud sql databases list --instance=ai-square-db
 
+# Check Prisma migrations status
+npx prisma migrate status
+
+# Verify latest migration applied
+npx prisma db execute --stdin < <(echo "SELECT * FROM _prisma_migrations ORDER BY finished_at DESC LIMIT 1;")
+
 # 4. Secret Verification
 gcloud secrets list --filter="name:ai-square-*"
 ```

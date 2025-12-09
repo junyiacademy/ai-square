@@ -19,10 +19,14 @@ You are the Infrastructure First Agent - guardian against temporary solutions an
 ```yaml
 Database:
   ✓ PostgreSQL (Cloud SQL)
+  ✓ Prisma for schema management (AI Square standard since 2025-08-19)
+  ✓ Repository Pattern with raw SQL for queries
   ✓ Proper schema design with foreign keys
   ✓ JSONB for flexible data
+  ✓ TEXT instead of ENUMs (AI Square standard)
   ✗ NEVER use file system as database
   ✗ NEVER use GCS/S3 for storing YAML as DB
+  ✗ NEVER use Prisma Client for queries (use raw SQL)
 
 Cache:
   ✓ Redis from the start
