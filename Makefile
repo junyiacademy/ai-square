@@ -169,17 +169,7 @@ help:
 	@echo "  $(GREEN)make setup-service-accounts$(NC)                    - 創建 Service Accounts"
 	@echo "  $(GREEN)make check-deploy-size$(NC)                         - 檢查部署大小"
 	@echo ""
-	@echo "$(CYAN)Terraform 基礎設施管理 (推薦):$(NC)"
-	@echo "  $(GREEN)make terraform-init$(NC)                            - 初始化 Terraform"
-	@echo "  $(GREEN)make terraform-plan-staging$(NC)                    - 預覽 Staging 變更"
-	@echo "  $(GREEN)make terraform-plan-production$(NC)                 - 預覽 Production 變更"
-	@echo "  $(GREEN)make terraform-deploy-staging$(NC)                  - 🚀 部署基礎設施到 Staging"
-	@echo "  $(GREEN)make terraform-deploy-production$(NC)               - 🚀 部署基礎設施到 Production"
-	@echo "  $(GREEN)make terraform-status$(NC)                          - 檢查 Terraform 狀態"
-	@echo ""
-	@echo "  $(YELLOW)注意: 基礎設施部署後，應用程式會透過 GitHub Actions 自動部署$(NC)"
-	@echo ""
-	@echo "$(CYAN)舊版部署 (已棄用):$(NC)"
+	@echo "$(CYAN)部署 (GitHub Actions + gcloud CLI):$(NC)"
 	@echo "  $(GREEN)make gcp-build-and-push$(NC)                        - Cloud Build 並推送"
 	@echo "  $(GREEN)make gcp-deploy-frontend$(NC)                       - 部署前端到 Cloud Run"
 	@echo ""
@@ -528,38 +518,6 @@ deploy-backend-gcp:
 # Staging 部署命令
 #=============================================================================
 
-## Terraform 狀態檢查
-terraform-status:
-	@echo "$(CYAN)📊 檢查 Terraform 管理的資源...$(NC)"
-	@cd terraform && terraform state list
-	@echo ""
-	@echo "$(CYAN)目前環境:$(NC)"
-	@cd terraform && terraform workspace show
-
-## Terraform 導入現有資源
-terraform-import-staging:
-	@echo "$(YELLOW)📥 導入現有 Staging 資源到 Terraform...$(NC)"
-	@cd terraform && bash import-staging.sh
-	@echo "$(GREEN)✅ Staging 資源導入完成$(NC)"
-
-terraform-import-production:
-	@echo "$(YELLOW)📥 導入現有 Production 資源到 Terraform...$(NC)"
-	@cd terraform && bash import-production.sh
-	@echo "$(GREEN)✅ Production 資源導入完成$(NC)"
-
-## Terraform 部署基礎設施 - Staging
-terraform-deploy-staging:
-	@echo "$(GREEN)🚀 使用 Terraform 部署基礎設施到 Staging...$(NC)"
-	@cd terraform && make deploy-staging
-
-## Terraform 銷毀資源（危險！）
-terraform-destroy-staging:
-	@echo "$(RED)⚠️  銷毀 Staging 環境資源...$(NC)"
-	@echo "$(YELLOW)⚠️  警告: 這將刪除所有 Staging 資源！$(NC)"
-	@echo "按 Ctrl+C 取消，或等待 10 秒繼續..."
-	@sleep 10
-	@cd terraform && terraform destroy -var-file="environments/staging.tfvars" -auto-approve
-
 ## 查看 Staging logs
 staging-logs:
 	@echo "$(CYAN)📋 查看 Staging logs...$(NC)"
@@ -598,47 +556,6 @@ production-check:
 production-secrets:
 	@echo "$(BLUE)🔐 設定 Production Secrets...$(NC)"
 	@echo "$(YELLOW)📝 請手動設定 Production secrets（如果需要）$(NC)"
-
-## Terraform 部署基礎設施 - Production
-terraform-deploy-production:
-	@echo "$(GREEN)🚀 使用 Terraform 部署基礎設施到 Production...$(NC)"
-	@cd terraform && make deploy-production
-
-## Terraform 初始化
-terraform-init:
-	@echo "$(BLUE)🔧 初始化 Terraform...$(NC)"
-	@cd terraform && terraform init
-	@echo "$(GREEN)✅ Terraform 初始化完成$(NC)"
-
-## Terraform Plan - 預覽變更
-terraform-plan-staging:
-	@echo "$(CYAN)📋 預覽 Staging 環境變更...$(NC)"
-	@cd terraform && terraform plan -var-file="environments/staging.tfvars"
-
-terraform-plan-production:
-	@echo "$(CYAN)📋 預覽 Production 環境變更...$(NC)"
-	@cd terraform && terraform plan -var-file="environments/production.tfvars"
-
-## Terraform 導入現有資源
-terraform-import-staging:
-	@echo "$(YELLOW)📥 導入 Staging 環境現有資源到 Terraform...$(NC)"
-	@cd terraform && bash scripts/import-staging.sh
-
-terraform-import-production:
-	@echo "$(RED)📥 導入 Production 環境現有資源到 Terraform...$(NC)"
-	@echo "$(YELLOW)⚠️  警告: 這將導入 PRODUCTION 資源！$(NC)"
-	@echo "按 Ctrl+C 取消，或等待 3 秒繼續..."
-	@sleep 3
-	@cd terraform && bash scripts/import-production.sh
-
-## Terraform 部署驗證
-validate-staging:
-	@echo "$(CYAN)🧪 驗證 Staging 部署...$(NC)"
-	@cd terraform && bash scripts/validate-deployment.sh staging
-
-validate-production:
-	@echo "$(CYAN)🧪 驗證 Production 部署...$(NC)"
-	@cd terraform && bash scripts/validate-deployment.sh production
 
 ## 查看 Production logs
 production-logs:

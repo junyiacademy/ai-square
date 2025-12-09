@@ -85,9 +85,8 @@ User: [waits for explicit command]
    - 測試資料檔案
    - mock 資料
 
-5. **Terraform 基礎設施**
-   - `*.tf` 檔案（因為會在部署時驗證）
-   - terraform/ 目錄
+5. **GitHub Actions 工作流程**
+   - `.github/workflows/*.yml` 檔案
 
 ### 🔴 MUST VERIFY (必須執行完整測試)
 這些變更直接影響系統功能，必須通過所有測試：
@@ -143,11 +142,11 @@ git commit -m "docs: update installation guide" --no-verify
 git push --no-verify
 ```
 
-### Pattern 2: Terraform Changes
+### Pattern 2: Workflow Changes
 ```bash
-# Terraform 檔案變更
-git add terraform/
-git commit -m "infra: update cloud run configuration" --no-verify
+# GitHub Actions workflow 變更
+git add .github/workflows/
+git commit -m "ci: update deployment workflow" --no-verify
 git push --no-verify
 ```
 

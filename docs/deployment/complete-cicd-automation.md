@@ -18,12 +18,12 @@ AI Square now has a **fully automated CI/CD pipeline** that requires zero manual
 - Auto-rollback on failure
 - Slack notifications
 
-### 2. **Terraform Blue-Green Infrastructure**
-- Zero-downtime deployments
-- Automatic traffic switching
+### 2. **Blue-Green Deployment with GitHub Actions**
+- Zero-downtime deployments via Cloud Run revisions
+- Automatic traffic switching using gcloud CLI
 - Health checks before switching
 - Emergency rollback capability
-- Separate blue/green Cloud Run services
+- Separate blue/green Cloud Run revisions
 
 ### 3. **Comprehensive Monitoring**
 - Real-time dashboards
@@ -108,22 +108,17 @@ gh workflow run deploy-complete.yml -f environment=production
 
 ### Emergency Rollback
 ```bash
-# Terraform approach
-cd terraform
-./scripts/rollback.sh
+# Rollback via Makefile
+make production-rollback
 
-# Or via Cloud Console
+# Or via gcloud CLI
 gcloud run services update-traffic ai-square-production \
   --to-revisions=PREVIOUS_REVISION=100
 ```
 
 ### View Monitoring
 ```bash
-# Get dashboard URL
-cd terraform
-terraform output dashboard_url
-
-# Or direct link
+# Direct link to monitoring dashboard
 https://console.cloud.google.com/monitoring/dashboards
 ```
 
@@ -144,15 +139,15 @@ PROD_DB_PASSWORD: Production database password
 MONITORING_NOTIFICATION_CHANNEL: GCP notification channel ID
 ```
 
-### Terraform Variables
-```hcl
-# terraform.tfvars
-project_id = "ai-square-463013"
-region = "asia-east1"
-environment = "staging" # or "production"
-db_password = "your-secure-password"
-slack_webhook_url = "https://hooks.slack.com/..."
-alert_email = "alerts@your-domain.com"
+### Environment Variables
+```bash
+# .env.production
+PROJECT_ID=ai-square-463013
+REGION=asia-east1
+ENVIRONMENT=staging  # or production
+DB_PASSWORD=your-secure-password
+SLACK_WEBHOOK_URL=https://hooks.slack.com/...
+ALERT_EMAIL=alerts@your-domain.com
 ```
 
 ## 📊 Metrics & SLOs

@@ -34,10 +34,10 @@ Cache:
   ✗ NEVER rely on in-memory only
 
 Infrastructure as Code:
-  ✓ Terraform for ALL infrastructure
+  ✓ GitHub Actions + gcloud CLI for ALL infrastructure
   ✓ Everything in code, nothing manual
   ✗ NEVER manual console configuration
-  ✗ NEVER "we'll terraform it later"
+  ✗ NEVER "we'll automate it later"
 
 CI/CD:
   ✓ GitHub Actions from Day 1
@@ -86,7 +86,7 @@ Secrets:
 
    # ✅ RIGHT
    git push  # Triggers GitHub Actions
-   terraform apply
+   # GitHub Actions handles deployment automatically
    ```
 
 ## Detection Patterns
@@ -95,7 +95,7 @@ Secrets:
 - Files named: `deploy.sh`, `quick-fix.js`, `temp-*.js`
 - Code containing: `fs.writeFile`, `JSON.parse(fs.readFile)`
 - Comments like: `// TODO: fix later`, `// Temporary solution`
-- Missing files: `terraform/`, `.github/workflows/`
+- Missing files: `.github/workflows/`
 - Direct SQL queries in API routes
 - Hardcoded configuration values
 
@@ -173,7 +173,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: terraform apply -auto-approve
+      - run: gcloud run deploy --source .
 
 # ❌ WRONG: Shell script
 # #!/bin/bash
@@ -183,7 +183,6 @@ jobs:
 ## Monitoring Checklist
 
 ### Project Health Indicators:
-- [ ] `terraform/` directory exists
 - [ ] `.github/workflows/` has deployment pipeline
 - [ ] Database uses PostgreSQL/Cloud SQL
 - [ ] Redis configured for caching
@@ -226,8 +225,7 @@ This takes 30 min now, saves days later."
 
 ### Handoffs:
 - To `unified-architecture-guardian` → For repository pattern
-- To `deployment-pipeline-agent` → For CI/CD setup
-- To `terraform-deploy` → For infrastructure changes
+- To `deployment-pipeline-agent` → For CI/CD setup and infrastructure deployment
 
 ## Success Metrics
 - Zero temporary files in production
@@ -328,17 +326,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: hashicorp/setup-terraform@v2
-      - run: terraform apply -auto-approve
+      - uses: google-github-actions/setup-gcloud@v1
+      - run: gcloud run deploy --source .
 ```
 
-2. Terraform Configuration (terraform/main.tf):
-```hcl
-resource \"google_cloud_run_service\" \"app\" {
-  name     = \"ai-square\"
-  location = \"asia-east1\"
-  # ... configuration
-}
+2. GitHub Actions Configuration (.github/workflows/deploy.yml):
+```yaml
+# Deployment handled by GitHub Actions + gcloud CLI
+# Infrastructure managed declaratively
+# All configuration in code, not console
 ```
 
 Benefits:
@@ -355,7 +351,7 @@ Action Required:
 I'll set up the proper CI/CD pipeline now. Estimated time: 1 hour.
 This saves weeks of debugging manual deployments later."
 <commentary>
-This agent is appropriate for preventing manual deployment scripts. The agent explains why the script is problematic, provides the correct infrastructure-as-code solution using GitHub Actions and Terraform, and emphasizes long-term benefits.
+This agent is appropriate for preventing manual deployment scripts. The agent explains why the script is problematic, provides the correct infrastructure-as-code solution using GitHub Actions and gcloud CLI, and emphasizes long-term benefits.
 </commentary>
 </example>
 

@@ -38,7 +38,7 @@ Agent Definitions:
 Configuration:
   - package.json              # Dependencies and scripts
   - .env.example             # Environment variables
-  - terraform/               # Infrastructure as code
+  - .github/workflows/       # CI/CD and infrastructure
 ```
 
 ## Detection Patterns
@@ -89,8 +89,7 @@ File Type → Documentation Impact:
   src/components/* → Component documentation
   src/lib/repositories/* → Architecture documentation
   src/types/* → Type definitions documentation
-  .github/workflows/* → CICD.md
-  terraform/* → Infrastructure documentation
+  .github/workflows/* → CICD.md and Infrastructure documentation
   package.json → Setup/dependency docs
 ```
 

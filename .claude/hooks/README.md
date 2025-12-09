@@ -24,7 +24,7 @@ This directory contains hooks that automatically enhance Claude's behavior.
 **GCP Keywords**:
 - `gcloud`, `cloud run`, `cloud sql`
 - `deploy`, `deployment`, `staging`, `production`
-- `vertex ai`, `secret manager`, `terraform`
+- `vertex ai`, `secret manager`
 - `infrastructure`, `cloud build`, `artifact registry`
 
 **What happens**:

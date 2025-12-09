@@ -179,7 +179,7 @@ gcloud secrets versions access latest --secret="database-password"
 🤝 **Agent Collaboration**:
 - Coordinate with `deployment-pipeline-agent` for deployment infrastructure
 - Support `security-audit-agent` with service account security
-- Work with `terraform-deploy` agent on infrastructure as code
+- Work with `deployment-pipeline-agent` on infrastructure deployment
 - Provide configuration context to all development agents
 
 **Environment-Specific Configurations:**

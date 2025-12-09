@@ -1,12 +1,12 @@
-## CI/CD 部署與資料庫運維指南（使用 Terraform）
+## CI/CD 部署與資料庫運維指南
 
-> **🚀 重要更新**：所有部署現在都使用 **Terraform** 進行管理，不再使用 shell scripts。
+> **🚀 部署方式**：所有部署使用 **GitHub Actions + gcloud CLI** 進行管理。
 
-此文件聚焦「如何使用 Terraform 部署前後端」與「如何正確管理/遷移資料庫」。對應文件：
+此文件聚焦「如何使用 GitHub Actions 部署前後端」與「如何正確管理/遷移資料庫」。對應文件：
 
 - PM（產品視角）：`docs/handbook/PRD.md`
 - RD（技術架構）：`docs/technical/infrastructure/unified-learning-architecture.md`
-- **Terraform 配置**：`terraform/` 目錄
+- **CI/CD 配置**：`.github/workflows/` 目錄
 
 ## 🚨🚨🚨 部署監控與驗證流程 - 每次推送後必須執行！！！ 🚨🚨🚨
 
@@ -194,41 +194,31 @@ curl -X POST "$BASE_URL/api/admin/init-assessment"
 - Seed 創建帳號，API 創建內容
 - 沒有 API 初始化 = 空的應用程式
 
-## 🛠️ Terraform vs GitHub Actions 責任分工（2025/01 重要更新）
+## 🛠️ GitHub Actions + gcloud CLI 部署架構（2025/12 更新）
 
-**🧩 核心原則：把對的工具用在對的地方**
+**🧩 核心原則：使用 GitHub Actions + gcloud CLI 進行所有部署**
 
-### Terraform 只管基礎設施（Infrastructure Only）
-```yaml
-✅ Terraform 該管的：
-- Cloud SQL 實例、資料庫、使用者
-- Cloud Run 服務
-- Service Account、IAM 權限
-- Secret Manager
-- 網路設定（VPC、Domain Mapping）
-
-❌ Terraform 不該管的：
-- 資料庫 Schema 初始化
-- 建立 Demo 帳號
-- 載入初始資料
-- 執行測試
-- 任何應用程式邏輯
-```
-
-### GitHub Actions 管應用程式部署（Application Deployment）
+### GitHub Actions 負責完整部署流程
 ```yaml
 ✅ GitHub Actions 負責：
-- 建構 Docker image
-- 推送到 Container Registry
-- 執行資料庫遷移（Prisma migrate）
-- 初始化場景資料（/api/admin/init）
-- 執行 E2E 測試
-- 健康檢查驗證
+- 基礎設施管理（通過 gcloud CLI）
+  - Cloud SQL、Cloud Run 服務
+  - Service Account、IAM 權限
+  - Secret Manager 配置
+  - 網路設定（VPC、Domain Mapping）
+
+- 應用程式部署
+  - 建構 Docker image
+  - 推送到 Container Registry
+  - 執行資料庫遷移（Prisma migrate）
+  - 初始化場景資料（/api/admin/init）
+  - 執行 E2E 測試
+  - 健康檢查驗證
 
 工作流程：
 1. Push to branch → 觸發 GitHub Actions
 2. Build & Push Docker image
-3. Deploy to Cloud Run
+3. Deploy to Cloud Run (using gcloud CLI)
 4. Run database migrations
 5. Initialize application data
 6. Run E2E tests
@@ -236,37 +226,33 @@ curl -X POST "$BASE_URL/api/admin/init-assessment"
 
 ### 正確的部署流程
 ```bash
-# Step 1: 基礎設施（只需執行一次）
-cd terraform
-export TF_VAR_db_password="YOUR_SECURE_PASSWORD"
-terraform apply -var-file="environments/staging.tfvars"
-
-# Step 2: 應用程式部署（每次更新都要）
+# 部署流程（每次更新）
 git add -A
 git commit -m "feat: new feature"
-git push origin staging  # 這會觸發 GitHub Actions
+git push origin staging  # 觸發 GitHub Actions
+
+# GitHub Actions 自動執行：
+# 1. Build Docker image
+# 2. Push to GCR
+# 3. Deploy to Cloud Run
+# 4. Run migrations
+# 5. Initialize data
+# 6. Run tests
 ```
 
-**記住：Terraform 建房子，GitHub Actions 搬家具！**
-
-### 實際案例：Prisma 整合
-```yaml
-錯誤做法：
-- 寫了 deploy-staging-prisma.sh
-- 寫了 auto-staging-deploy.sh
-- 寫了 deploy-with-prisma.sh
-- 每個都是「臨時解決方案」
-
-正確做法：
-- 使用 Terraform Makefile: make deploy-staging
-- 整合到現有 CI/CD pipeline
-- 使用 Prisma 標準工具鏈
+### 手動部署命令（如果需要）
+```bash
+# 使用 Makefile 命令
+make deploy-staging          # 部署到 Staging
+make deploy-production       # 部署到 Production
+make staging-logs           # 查看 Staging logs
+make production-health      # 檢查 Production 健康狀態
 ```
 
 ### 關鍵原則：
 1. **先調查現有方案** - 不要假設沒有解決方案
 2. **整合而非創建** - 整合到現有系統，不要創建新系統
-3. **標準化工具** - 使用行業標準工具（Terraform, GitHub Actions, Prisma）
+3. **標準化工具** - 使用行業標準工具（GitHub Actions, gcloud CLI, Prisma）
 4. **避免臨時腳本** - 每個「臨時」腳本都會變成技術債
 
 ## 📚 Cloud Run + Cloud SQL Deployment Guide
