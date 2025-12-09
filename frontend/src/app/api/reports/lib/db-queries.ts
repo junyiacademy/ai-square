@@ -134,11 +134,9 @@ export async function getWeeklyStats(pool: Pool): Promise<WeeklyStats> {
   const avgPerDay = newThisWeek / 7;
 
   // Query 2: User engagement statistics for last complete week
-  // Weekly active users = users who performed ANY of these activities last week:
-  //   1. Logged in (last_login_at)
-  //   2. Started a learning program (programs.created_at)
-  //   3. Completed a task (tasks.completed_at)
-  // This comprehensive definition ensures we capture all engaged users, not just those who logged in
+  // Weekly active users = users who had task updates last week (tasks.updated_at)
+  // This is more reliable than last_login_at/last_active_date which are not consistently maintained
+  // Rationale: tasks.updated_at reflects actual user interaction with learning content
   const engagementQuery = `
     WITH week_bounds AS (
       SELECT
@@ -148,26 +146,14 @@ export async function getWeeklyStats(pool: Pool): Promise<WeeklyStats> {
         (CURRENT_DATE - (EXTRACT(DOW FROM CURRENT_DATE)::int + 6) % 7 - 8)::timestamp + INTERVAL '1 day' - INTERVAL '1 millisecond' as two_weeks_ago_end
     ),
     active_users AS (
-      -- Users who logged in last week
-      SELECT DISTINCT u.id FROM users u, week_bounds
-      WHERE u.last_login_at >= week_bounds.last_week_start
-        AND u.last_login_at <= week_bounds.last_week_end
-
-      UNION
-
-      -- Users who started learning last week
-      SELECT DISTINCT p.user_id as id FROM programs p, week_bounds
-      WHERE p.created_at >= week_bounds.last_week_start
-        AND p.created_at <= week_bounds.last_week_end
-
-      UNION
-
-      -- Users who completed tasks last week
-      SELECT DISTINCT p.user_id as id FROM tasks t
+      -- Users who had task updates last week
+      -- Join tasks → programs to get user_id
+      SELECT DISTINCT p.user_id as id
+      FROM tasks t
       JOIN programs p ON t.program_id = p.id
-      CROSS JOIN week_bounds
-      WHERE t.completed_at >= week_bounds.last_week_start
-        AND t.completed_at <= week_bounds.last_week_end
+      CROSS JOIN week_bounds wb
+      WHERE t.updated_at >= wb.last_week_start
+        AND t.updated_at <= wb.last_week_end
     ),
     two_weeks_ago_users AS (
       SELECT u.id FROM users u, week_bounds
@@ -177,7 +163,7 @@ export async function getWeeklyStats(pool: Pool): Promise<WeeklyStats> {
     retained_users AS (
       SELECT DISTINCT twu.id FROM two_weeks_ago_users twu
       WHERE EXISTS (
-        -- Check if user was active last week (login, program, or task)
+        -- Check if user had task updates last week
         SELECT 1 FROM active_users au WHERE au.id = twu.id
       )
     )

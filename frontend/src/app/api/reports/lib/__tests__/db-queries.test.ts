@@ -134,7 +134,11 @@ describe('Weekly Report Database Queries', () => {
       expect(result.userGrowth.dailyTrend).toHaveLength(7);
     });
 
-    it('should return user engagement statistics', async () => {
+    it('should return user engagement statistics based on tasks.updated_at', async () => {
+      // TDD: Red → Green → Refactor
+      // Active users = users who had task updates last week (via tasks.updated_at)
+      // This is more reliable than last_login_at which is not maintained
+
       // Arrange
       const mockUserStats = {
         rows: [{
@@ -152,7 +156,7 @@ describe('Weekly Report Database Queries', () => {
 
       const mockEngagementStats = {
         rows: [{
-          weekly_active_users: '245',
+          weekly_active_users: '245',  // Users with task updates last week
           daily_avg_active: '85',
           retention_rate: '45.0'
         }]
@@ -348,17 +352,17 @@ describe('Weekly Report Database Queries', () => {
       expect(sqlQuery).toContain("mode = 'discovery'");
     });
 
-    it('should calculate retention rate correctly', async () => {
+    it('should calculate retention rate correctly using tasks.updated_at', async () => {
       // TDD: Red → Green → Refactor
-      // Retention rate = (users from last week who logged in this week) / (users from last week)
-      // NOTE: Current implementation uses created_at as proxy since last_login_at is not maintained
+      // Retention rate = (users from 2 weeks ago who had task updates last week) / (users from 2 weeks ago)
+      // Uses tasks.updated_at as reliable indicator of user engagement
 
       // Arrange
       const mockUserStats = {
         rows: [{
           total_users: '400',
           new_this_week: '50',
-          new_last_week: '100'  // 100 users registered last week
+          new_last_week: '100'  // 100 users registered 2 weeks ago
         }]
       };
 
@@ -366,13 +370,12 @@ describe('Weekly Report Database Queries', () => {
         rows: [{ day: '2025-11-27', count: '10' }]
       };
 
-      // Engagement query uses WHERE clause to filter active users
-      // In production, last_login_at may not be maintained, so retention_rate may be 0
+      // 45% of users from 2 weeks ago had task updates last week
       const mockEngagementStats = {
         rows: [{
           weekly_active_users: '200',
           daily_avg_active: '80',
-          retention_rate: '0.0'  // May be 0 if last_login_at not maintained
+          retention_rate: '45.0'  // Based on tasks.updated_at
         }]
       };
 
@@ -396,13 +399,13 @@ describe('Weekly Report Database Queries', () => {
       const result = await getWeeklyStats(mockPool);
 
       // Assert
-      expect(result.engagement.retentionRate).toBe(0.0);
+      expect(result.engagement.retentionRate).toBe(45.0);
       expect(result.engagement.weeklyActiveUsers).toBe(200);
     });
 
-    it('should handle production scenario where last_login_at is never set', async () => {
-      // Real production scenario: last_login_at is NULL for all users
-      // Weekly active users should count users created this week as fallback
+    it('should handle production scenario with tasks.updated_at', async () => {
+      // Real production scenario: Using tasks.updated_at for reliable activity tracking
+      // Weekly active users = unique users with task updates last week
 
       // Arrange
       const mockUserStats = {
@@ -425,29 +428,30 @@ describe('Weekly Report Database Queries', () => {
         ]
       };
 
-      // Production scenario: last_login_at is NULL, so retention_rate = 0
-      // But weekly_active_users = 155 (users created this week)
+      // Production scenario: 132 users had task updates last week
       const mockEngagementStats = {
         rows: [{
-          weekly_active_users: '155',  // Users created this week
-          daily_avg_active: '22',
-          retention_rate: '0.0'  // 0 because last_login_at is NULL
+          weekly_active_users: '132',  // Users with task updates last week
+          daily_avg_active: '19',
+          retention_rate: '15.5'  // 15.5% of 2-week-old users had task updates
         }]
       };
 
-      // Production: No programs have completed_at set
+      // Production: Some programs completed
       const mockLearningStats = {
         rows: [{
-          assessment_completions: '0',
-          pbl_completions: '0',
-          discovery_completions: '0',
-          total_completions: '0',
-          completion_rate: '0.0'
+          assessment_completions: '45',
+          pbl_completions: '23',
+          discovery_completions: '18',
+          total_completions: '86',
+          completion_rate: '65.0'
         }]
       };
 
       const mockTopContent = {
-        rows: [] // No completions means no top content
+        rows: [
+          { name: 'Career Assessment', count: '25' }
+        ]
       };
 
       mockQuery
@@ -462,16 +466,16 @@ describe('Weekly Report Database Queries', () => {
       // Act
       const result = await getWeeklyStats(mockPool);
 
-      // Assert - Should match production data
+      // Assert - Should reflect real user engagement via tasks.updated_at
       expect(result.userGrowth.totalUsers).toBe(397);
       expect(result.userGrowth.newThisWeek).toBe(155);
-      expect(result.engagement.weeklyActiveUsers).toBe(155);
-      expect(result.engagement.retentionRate).toBe(0.0);
-      expect(result.learning.assessmentCompletions).toBe(0);
-      expect(result.learning.pblCompletions).toBe(0);
-      expect(result.learning.discoveryCompletions).toBe(0);
-      expect(result.learning.totalCompletions).toBe(0);
-      expect(result.learning.topContent).toHaveLength(0);
+      expect(result.engagement.weeklyActiveUsers).toBe(132);
+      expect(result.engagement.retentionRate).toBe(15.5);
+      expect(result.learning.assessmentCompletions).toBe(45);
+      expect(result.learning.pblCompletions).toBe(23);
+      expect(result.learning.discoveryCompletions).toBe(18);
+      expect(result.learning.totalCompletions).toBe(86);
+      expect(result.learning.topContent).toHaveLength(1);
     });
   });
 });
