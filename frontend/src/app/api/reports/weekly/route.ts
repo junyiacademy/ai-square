@@ -2,14 +2,16 @@
  * Weekly Report API Endpoint
  * POST /api/reports/weekly
  *
- * Generates and sends weekly statistics report to Slack
+ * Generates and sends weekly statistics report to Slack with chart visualizations
  */
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getPool } from '@/lib/db/get-pool';
 import { getWeeklyStats } from '../lib/db-queries';
 import { formatWeeklyReport } from '../lib/report-formatter';
-import { sendToSlack } from '../lib/slack-client';
+import { sendToSlackWithCharts } from '../lib/slack-client';
+import { generateAIInsights } from '../lib/ai-insights';
+import { generateWeeklyCharts } from '../lib/chart-generator';
 
 export async function POST(_request: NextRequest) {
   try {
@@ -19,11 +21,17 @@ export async function POST(_request: NextRequest) {
     // Fetch weekly statistics
     const stats = await getWeeklyStats(pool);
 
-    // Format report
-    const report = formatWeeklyReport(stats);
+    // Generate AI insights (non-blocking, graceful degradation)
+    const aiInsights = await generateAIInsights(stats);
 
-    // Send to Slack
-    const result = await sendToSlack(report);
+    // Format report (with optional AI insights)
+    const report = formatWeeklyReport(stats, aiInsights);
+
+    // Generate chart visualizations
+    const charts = generateWeeklyCharts(stats);
+
+    // Send to Slack with charts
+    const result = await sendToSlackWithCharts(report, charts);
 
     if (!result.success) {
       return NextResponse.json(
@@ -38,7 +46,9 @@ export async function POST(_request: NextRequest) {
     return NextResponse.json({
       success: true,
       message: 'Weekly report sent successfully',
-      stats
+      stats,
+      aiInsights: aiInsights !== null,
+      charts
     });
   } catch (error) {
     console.error('Error generating weekly report:', error);

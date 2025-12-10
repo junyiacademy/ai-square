@@ -4,6 +4,13 @@
 
 import type { WeeklyStats } from './db-queries';
 
+interface AIInsight {
+  summary: string;
+  highlights: string[];
+  recommendations: string[];
+  concerns: string[];
+}
+
 /**
  * Get date range for the LAST complete week (Monday to Sunday)
  * When run on any day, this returns the previous week's full range
@@ -55,7 +62,7 @@ function formatDailyTrend(trend: number[]): string {
 /**
  * Format weekly statistics into markdown report
  */
-export function formatWeeklyReport(stats: WeeklyStats): string {
+export function formatWeeklyReport(stats: WeeklyStats, aiInsights: AIInsight | null = null): string {
   const dateRange = getWeekDateRange();
   const weekOverWeekSign = stats.userGrowth.weekOverWeekGrowth >= 0 ? '+' : '';
 
@@ -67,6 +74,22 @@ ${stats.learning.topContent.map((item, index) =>
   `  ${index + 1}. ${item.name} - ${item.count} 次`
 ).join('\n')}
 `;
+  }
+
+  // Build AI insights section if available
+  let aiInsightsSection = '';
+  if (aiInsights) {
+    aiInsightsSection = `
+**🤖 AI 智能洞察**
+${aiInsights.summary}
+
+✅ **亮點**
+${aiInsights.highlights.map(h => `• ${h}`).join('\n')}
+
+💡 **建議**
+${aiInsights.recommendations.map(r => `• ${r}`).join('\n')}
+
+${aiInsights.concerns.length > 0 ? `⚠️ **關注點**\n${aiInsights.concerns.map(c => `• ${c}`).join('\n')}\n` : ''}`;
   }
 
   const report = `📊 **AI Square 週報** (${dateRange})
@@ -94,7 +117,7 @@ ${topContentSection}
 • 平均響應時間: ${stats.systemHealth.avgResponseTime}ms
 • 系統可用性: ${stats.systemHealth.uptime.toFixed(2)}%
 • 資料庫連線: ${stats.systemHealth.dbStatus === 'normal' ? '正常' : stats.systemHealth.dbStatus}
-
+${aiInsightsSection}
 ---
 🤖 自動生成 | 每週一 09:00`;
 
