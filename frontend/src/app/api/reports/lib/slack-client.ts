@@ -22,6 +22,20 @@ export interface SlackHeaderBlock {
   };
 }
 
+export interface SlackSectionBlock {
+  type: 'section';
+  text: {
+    type: 'mrkdwn';
+    text: string;
+  };
+}
+
+export interface SlackDividerBlock {
+  type: 'divider';
+}
+
+type SlackBlock = SlackHeaderBlock | SlackImageBlock | SlackSectionBlock | SlackDividerBlock;
+
 /**
  * Send formatted report to Slack
  */
@@ -84,8 +98,21 @@ export async function sendToSlackWithCharts(
   }
 
   try {
-    // Build Block Kit blocks for charts
-    const blocks: Array<SlackHeaderBlock | SlackImageBlock> = [
+    // Build Block Kit blocks: report text + charts
+    const blocks: Array<SlackBlock> = [
+      // 1. Report text content
+      {
+        type: 'section',
+        text: {
+          type: 'mrkdwn',
+          text: report
+        }
+      },
+      // 2. Divider between report and charts
+      {
+        type: 'divider'
+      },
+      // 3. Charts
       {
         type: 'header',
         text: {
