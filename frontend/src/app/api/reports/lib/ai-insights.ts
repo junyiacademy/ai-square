@@ -82,57 +82,58 @@ export async function generateAIInsights(
  * Build prompt for AI model
  */
 function buildPrompt(stats: WeeklyStats): string {
-  return `You are an educational analytics expert analyzing weekly statistics for AI Square, an online learning platform.
+  return `你是一位教育分析專家，正在分析 AI Square 線上學習平台的週報數據。
 
-Analyze the following weekly statistics and provide insights:
+請分析以下週報統計數據並提供洞察：
 
-**User Growth:**
-- Total Users: ${stats.userGrowth.totalUsers}
-- New This Week: ${stats.userGrowth.newThisWeek}
-- New Last Week: ${stats.userGrowth.newLastWeek}
-- Week-over-Week Growth: ${stats.userGrowth.weekOverWeekGrowth.toFixed(1)}%
-- Daily Trend: ${stats.userGrowth.dailyTrend.join(', ')}
-- Average Per Day: ${stats.userGrowth.avgPerDay.toFixed(1)}
+**用戶增長：**
+- 總用戶數：${stats.userGrowth.totalUsers}
+- 本週新增：${stats.userGrowth.newThisWeek}
+- 上週新增：${stats.userGrowth.newLastWeek}
+- 週增長率：${stats.userGrowth.weekOverWeekGrowth.toFixed(1)}%
+- 每日趨勢：${stats.userGrowth.dailyTrend.join(', ')}
+- 每日平均：${stats.userGrowth.avgPerDay.toFixed(1)}
 
-**Engagement:**
-- Weekly Active Users: ${stats.engagement.weeklyActiveUsers}
-- Daily Average Active: ${stats.engagement.dailyAvgActive}
-- Retention Rate: ${stats.engagement.retentionRate.toFixed(1)}%
-- Active Rate: ${stats.engagement.activeRate.toFixed(1)}%
+**用戶參與：**
+- 週活躍用戶：${stats.engagement.weeklyActiveUsers}
+- 每日平均活躍：${stats.engagement.dailyAvgActive}
+- 留存率：${stats.engagement.retentionRate.toFixed(1)}%
+- 活躍率：${stats.engagement.activeRate.toFixed(1)}%
 
-**Learning:**
-- Assessment Completions: ${stats.learning.assessmentCompletions}
-- PBL Completions: ${stats.learning.pblCompletions}
-- Discovery Completions: ${stats.learning.discoveryCompletions}
-- Total Completions: ${stats.learning.totalCompletions}
-- Completion Rate: ${stats.learning.completionRate.toFixed(1)}%
+**學習數據：**
+- 評量模式完成：${stats.learning.assessmentCompletions}
+- PBL模式完成：${stats.learning.pblCompletions}
+- 探索模式完成：${stats.learning.discoveryCompletions}
+- 總完成次數：${stats.learning.totalCompletions}
+- 完成率：${stats.learning.completionRate.toFixed(1)}%
 
-**System Health:**
-- API Success Rate: ${stats.systemHealth.apiSuccessRate.toFixed(2)}%
-- Average Response Time: ${stats.systemHealth.avgResponseTime}ms
-- Uptime: ${stats.systemHealth.uptime.toFixed(2)}%
-- Database Status: ${stats.systemHealth.dbStatus}
+**系統健康：**
+- API 成功率：${stats.systemHealth.apiSuccessRate.toFixed(2)}%
+- 平均回應時間：${stats.systemHealth.avgResponseTime}ms
+- 運行時間：${stats.systemHealth.uptime.toFixed(2)}%
+- 資料庫狀態：${stats.systemHealth.dbStatus}
 
-Provide insights in the following JSON format:
+請以以下 JSON 格式提供洞察（**重要：JSON 欄位名稱保持英文，但內容必須使用繁體中文**）：
 {
-  "summary": "One-sentence overall summary",
-  "highlights": ["Key positive finding 1", "Key positive finding 2", "Key positive finding 3"],
-  "recommendations": ["Actionable recommendation 1", "Actionable recommendation 2"],
-  "concerns": ["Potential concern 1", "Potential concern 2"]
+  "summary": "一句話整體摘要",
+  "highlights": ["關鍵正面發現 1", "關鍵正面發現 2", "關鍵正面發現 3"],
+  "recommendations": ["可行動建議 1", "可行動建議 2"],
+  "concerns": ["潛在問題 1", "潛在問題 2"]
 }
 
-Focus on:
-1. User growth trends and patterns
-2. Engagement quality and retention
-3. Learning mode preferences and effectiveness
-4. System performance and reliability
-5. Actionable recommendations for improvement
+重點分析：
+1. 用戶增長趨勢和模式
+2. 參與質量和留存情況
+3. 學習模式偏好和有效性
+4. 系統性能和可靠性
+5. 可行動的改進建議
 
-Keep the summary concise (max 150 characters).
-Keep each highlight/recommendation/concern to max 100 characters.
-Provide 2-3 items for each category.
-
-Return ONLY the JSON, no other text.`;
+要求：
+- 摘要簡潔（最多 150 字元）
+- 每個亮點/建議/問題最多 100 字元
+- 每個類別提供 2-3 項
+- **所有內容必須使用繁體中文**
+- **僅返回 JSON，不要其他文字**`;
 }
 
 /**

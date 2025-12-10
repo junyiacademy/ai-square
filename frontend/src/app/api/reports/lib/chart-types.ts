@@ -7,6 +7,7 @@ export interface ChartDataset {
   data: number[];
   borderColor?: string | string[];
   backgroundColor?: string | string[];
+  borderWidth?: number;
   fill?: boolean;
   tension?: number;
 }

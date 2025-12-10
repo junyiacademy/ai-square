@@ -3,7 +3,7 @@
  * Generates chart URLs for registration, active users, and completion rate trends
  */
 
-import type { ChartConfig, QuickChartParams } from './chart-types';
+import type { ChartConfig } from './chart-types';
 import type { WeeklyStats } from './db-queries';
 
 const QUICKCHART_BASE_URL = 'https://quickchart.io/chart';
@@ -12,17 +12,21 @@ const QUICKCHART_BASE_URL = 'https://quickchart.io/chart';
  * Generate QuickChart URL from chart configuration
  */
 export function generateQuickChartUrl(config: ChartConfig, width = 800, height = 400, devicePixelRatio = 2): string {
-  const params: QuickChartParams = {
-    chart: config,
-    width,
-    height,
-    devicePixelRatio,
-    backgroundColor: 'white'
-  };
+  // QuickChart expects just the chart config in 'c' parameter
+  // and other parameters separately in the URL
+  const chartJson = JSON.stringify(config);
 
-  // Encode config as URL parameter
-  const encodedConfig = encodeURIComponent(JSON.stringify(params));
-  return `${QUICKCHART_BASE_URL}?c=${encodedConfig}`;
+  // Use URLSearchParams to properly encode all parameters
+  // Do NOT manually encodeURIComponent - URLSearchParams handles encoding
+  const params = new URLSearchParams({
+    c: chartJson,
+    width: width.toString(),
+    height: height.toString(),
+    devicePixelRatio: devicePixelRatio.toString(),
+    backgroundColor: 'white'
+  });
+
+  return `${QUICKCHART_BASE_URL}?${params.toString()}`;
 }
 
 /**
@@ -41,6 +45,7 @@ export function generateRegistrationChart(stats: WeeklyStats): string {
           data: stats.userGrowth.dailyTrend,
           borderColor: 'rgb(75, 192, 192)',
           backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          borderWidth: 2,
           fill: true,
           tension: 0.3
         }
@@ -103,6 +108,7 @@ export function generateActiveUsersChart(stats: WeeklyStats): string {
           data: estimatedDailyActive,
           borderColor: 'rgb(255, 159, 64)',
           backgroundColor: 'rgba(255, 159, 64, 0.2)',
+          borderWidth: 2,
           fill: true,
           tension: 0.3
         }
@@ -163,10 +169,11 @@ export function generateCompletionRateChart(stats: WeeklyStats): string {
             'rgba(75, 192, 192, 0.6)'
           ],
           borderColor: [
-            'rgb(54, 162, 235)',
-            'rgb(255, 206, 86)',
-            'rgb(75, 192, 192)'
-          ]
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)'
+          ],
+          borderWidth: 1
         }
       ]
     },
