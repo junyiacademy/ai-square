@@ -8,10 +8,18 @@ export interface SlackResult {
   error?: string;
 }
 
-export interface SlackAttachment {
-  fallback: string;
-  title: string;
+export interface SlackImageBlock {
+  type: 'image';
   image_url: string;
+  alt_text: string;
+}
+
+export interface SlackHeaderBlock {
+  type: 'header';
+  text: {
+    type: 'plain_text';
+    text: string;
+  };
 }
 
 /**
@@ -57,6 +65,7 @@ export async function sendToSlack(report: string): Promise<SlackResult> {
 
 /**
  * Send formatted report with chart visualizations to Slack
+ * Uses Block Kit format for proper image display
  */
 export async function sendToSlackWithCharts(
   report: string,
@@ -75,21 +84,43 @@ export async function sendToSlackWithCharts(
   }
 
   try {
-    const attachments: SlackAttachment[] = [
+    // Build Block Kit blocks for charts
+    const blocks: Array<SlackHeaderBlock | SlackImageBlock> = [
       {
-        fallback: 'Daily Registration Trend Chart',
-        title: '📈 Daily Registration Trend',
-        image_url: charts.registrationChart
+        type: 'header',
+        text: {
+          type: 'plain_text',
+          text: '📈 Daily Registration Trend'
+        }
       },
       {
-        fallback: 'Daily Active Users Chart',
-        title: '👥 Daily Active Users',
-        image_url: charts.activeUsersChart
+        type: 'image',
+        image_url: charts.registrationChart,
+        alt_text: 'Daily Registration Trend Chart'
       },
       {
-        fallback: 'Completion Rate by Mode Chart',
-        title: '📚 Completions by Mode',
-        image_url: charts.completionRateChart
+        type: 'header',
+        text: {
+          type: 'plain_text',
+          text: '👥 Daily Active Users'
+        }
+      },
+      {
+        type: 'image',
+        image_url: charts.activeUsersChart,
+        alt_text: 'Daily Active Users Chart'
+      },
+      {
+        type: 'header',
+        text: {
+          type: 'plain_text',
+          text: '📚 Completions by Mode'
+        }
+      },
+      {
+        type: 'image',
+        image_url: charts.completionRateChart,
+        alt_text: 'Completion Rate by Mode Chart'
       }
     ];
 
@@ -99,7 +130,7 @@ export async function sendToSlackWithCharts(
       body: JSON.stringify({
         text: report,
         mrkdwn: true,
-        attachments
+        blocks
       })
     });
 
