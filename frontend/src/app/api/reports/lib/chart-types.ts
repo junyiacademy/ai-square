@@ -17,20 +17,33 @@ export interface ChartData {
 }
 
 export interface ChartOptions {
-  title?: {
-    display: boolean;
-    text: string;
-  };
-  legend?: {
-    display: boolean;
-    position?: 'top' | 'bottom' | 'left' | 'right';
+  plugins?: {
+    title?: {
+      display: boolean;
+      text: string;
+      font?: {
+        size?: number;
+      };
+    };
+    legend?: {
+      display: boolean;
+      position?: 'top' | 'bottom' | 'left' | 'right';
+    };
   };
   scales?: {
-    yAxes?: Array<{
-      ticks?: {
-        beginAtZero?: boolean;
+    y?: {
+      beginAtZero?: boolean;
+      title?: {
+        display: boolean;
+        text: string;
       };
-    }>;
+    };
+    x?: {
+      title?: {
+        display: boolean;
+        text: string;
+      };
+    };
   };
 }
 

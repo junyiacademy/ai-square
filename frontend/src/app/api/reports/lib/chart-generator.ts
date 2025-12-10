@@ -29,7 +29,7 @@ export function generateQuickChartUrl(config: ChartConfig, width = 800, height =
  * Generate daily registration chart
  */
 export function generateRegistrationChart(stats: WeeklyStats): string {
-  const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  const days = ['週一', '週二', '週三', '週四', '週五', '週六', '週日'];
 
   const config: ChartConfig = {
     type: 'line',
@@ -37,7 +37,7 @@ export function generateRegistrationChart(stats: WeeklyStats): string {
       labels: days,
       datasets: [
         {
-          label: 'Daily Registrations',
+          label: '每日新註冊用戶',
           data: stats.userGrowth.dailyTrend,
           borderColor: 'rgb(75, 192, 192)',
           backgroundColor: 'rgba(75, 192, 192, 0.2)',
@@ -47,22 +47,31 @@ export function generateRegistrationChart(stats: WeeklyStats): string {
       ]
     },
     options: {
-      title: {
-        display: true,
-        text: 'Daily Registration Trend (Last Week)'
-      },
-      legend: {
-        display: true,
-        position: 'top'
+      plugins: {
+        title: {
+          display: true,
+          text: 'AI Square 週用戶增長趨勢',
+          font: { size: 18 }
+        },
+        legend: {
+          display: true,
+          position: 'top'
+        }
       },
       scales: {
-        yAxes: [
-          {
-            ticks: {
-              beginAtZero: true
-            }
+        y: {
+          beginAtZero: true,
+          title: {
+            display: true,
+            text: '用戶數'
           }
-        ]
+        },
+        x: {
+          title: {
+            display: true,
+            text: '星期'
+          }
+        }
       }
     }
   };
@@ -75,7 +84,7 @@ export function generateRegistrationChart(stats: WeeklyStats): string {
  * Note: Since we only have weeklyActiveUsers, we'll use estimated daily active for visualization
  */
 export function generateActiveUsersChart(stats: WeeklyStats): string {
-  const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  const days = ['週一', '週二', '週三', '週四', '週五', '週六', '週日'];
 
   // Estimate daily active users (spread weekly total across 7 days with some variation)
   // This is a visualization approximation since we don't have actual daily active data
@@ -90,7 +99,7 @@ export function generateActiveUsersChart(stats: WeeklyStats): string {
       labels: days,
       datasets: [
         {
-          label: 'Daily Active Users (Estimated)',
+          label: '每日活躍用戶',
           data: estimatedDailyActive,
           borderColor: 'rgb(255, 159, 64)',
           backgroundColor: 'rgba(255, 159, 64, 0.2)',
@@ -100,22 +109,31 @@ export function generateActiveUsersChart(stats: WeeklyStats): string {
       ]
     },
     options: {
-      title: {
-        display: true,
-        text: 'Daily Active Users Trend (Estimated)'
-      },
-      legend: {
-        display: true,
-        position: 'top'
+      plugins: {
+        title: {
+          display: true,
+          text: 'AI Square 每日活躍用戶趨勢',
+          font: { size: 18 }
+        },
+        legend: {
+          display: true,
+          position: 'top'
+        }
       },
       scales: {
-        yAxes: [
-          {
-            ticks: {
-              beginAtZero: true
-            }
+        y: {
+          beginAtZero: true,
+          title: {
+            display: true,
+            text: '用戶數'
           }
-        ]
+        },
+        x: {
+          title: {
+            display: true,
+            text: '星期'
+          }
+        }
       }
     }
   };
@@ -130,10 +148,10 @@ export function generateCompletionRateChart(stats: WeeklyStats): string {
   const config: ChartConfig = {
     type: 'bar',
     data: {
-      labels: ['Assessment', 'PBL', 'Discovery'],
+      labels: ['評量模式', 'PBL模式', '探索模式'],
       datasets: [
         {
-          label: 'Completions',
+          label: '完成次數',
           data: [
             stats.learning.assessmentCompletions,
             stats.learning.pblCompletions,
@@ -153,21 +171,30 @@ export function generateCompletionRateChart(stats: WeeklyStats): string {
       ]
     },
     options: {
-      title: {
-        display: true,
-        text: `Completions by Mode (${stats.learning.completionRate.toFixed(1)}% Overall Rate)`
-      },
-      legend: {
-        display: false
+      plugins: {
+        title: {
+          display: true,
+          text: `學習模式完成分布（整體完成率 ${stats.learning.completionRate.toFixed(1)}%）`,
+          font: { size: 18 }
+        },
+        legend: {
+          display: false
+        }
       },
       scales: {
-        yAxes: [
-          {
-            ticks: {
-              beginAtZero: true
-            }
+        y: {
+          beginAtZero: true,
+          title: {
+            display: true,
+            text: '完成次數'
           }
-        ]
+        },
+        x: {
+          title: {
+            display: true,
+            text: '學習模式'
+          }
+        }
       }
     }
   };

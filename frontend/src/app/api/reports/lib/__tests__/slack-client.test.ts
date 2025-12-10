@@ -177,7 +177,7 @@ describe('Slack Client', () => {
       // Verify first block is section with report text
       expect(body.blocks[0].type).toBe('section');
       expect(body.blocks[0].text.type).toBe('mrkdwn');
-      expect(body.blocks[0].text.text).toContain('Mock report');
+      expect(body.blocks[0].text.text).toContain('Test report content');
 
       // Verify second block is divider
       expect(body.blocks[1].type).toBe('divider');
