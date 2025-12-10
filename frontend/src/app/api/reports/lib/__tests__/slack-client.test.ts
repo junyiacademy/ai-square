@@ -169,10 +169,22 @@ describe('Slack Client', () => {
       const callArgs = (global.fetch as jest.Mock).mock.calls[0];
       const body = JSON.parse(callArgs[1].body);
 
-      // Verify Block Kit structure
+      // Verify Block Kit structure: 1 section + 1 divider + 3 headers + 3 images = 8 blocks
       expect(body).toHaveProperty('blocks');
       expect(Array.isArray(body.blocks)).toBe(true);
-      expect(body.blocks.length).toBe(6); // 3 headers + 3 images
+      expect(body.blocks.length).toBe(8);
+
+      // Verify first block is section with report text
+      expect(body.blocks[0].type).toBe('section');
+      expect(body.blocks[0].text.type).toBe('mrkdwn');
+      expect(body.blocks[0].text.text).toContain('Mock report');
+
+      // Verify second block is divider
+      expect(body.blocks[1].type).toBe('divider');
+
+      // Verify remaining blocks are chart headers and images (3 + 3 = 6)
+      const chartBlocks = body.blocks.slice(2);
+      expect(chartBlocks.length).toBe(6);
     });
 
     it('should include all three chart images with proper Block Kit format', async () => {
