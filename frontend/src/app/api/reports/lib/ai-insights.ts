@@ -37,7 +37,7 @@ export async function generateAIInsights(
 
   // Check if Vertex AI is configured
   const projectId = process.env.GCP_PROJECT_ID;
-  const location = process.env.GCP_REGION || 'asia-east1';
+  const location = process.env.VERTEX_AI_LOCATION || 'us-central1';
 
   if (!projectId) {
     console.warn('GCP_PROJECT_ID not configured, skipping AI insights');
@@ -54,7 +54,7 @@ export async function generateAIInsights(
     });
 
     const model = vertexAI.getGenerativeModel({
-      model: 'gemini-2.0-flash-exp'
+      model: process.env.VERTEX_AI_MODEL || 'gemini-2.5-flash'
     });
 
     const prompt = buildPrompt(stats);
