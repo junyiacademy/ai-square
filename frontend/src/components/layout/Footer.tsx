@@ -61,6 +61,16 @@ export function Footer() {
                   {t('footer.terms', 'Terms of Service')}
                 </Link>
               </li>
+              <li>
+                <a
+                  href="https://www.junyiacademy.org/donate"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-white transition-colors"
+                >
+                  {t('footer.donate', 'Donate')}
+                </a>
+              </li>
             </ul>
           </div>
 
