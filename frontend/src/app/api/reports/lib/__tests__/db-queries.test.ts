@@ -45,6 +45,34 @@ describe('Weekly Report Database Queries', () => {
     rows: [{ count }]
   });
 
+  // Helper to create weekly registration trend mock
+  const createMockWeeklyRegTrend = () => ({
+    rows: [
+      { week_label: '11/04', new_users: '110' },
+      { week_label: '11/11', new_users: '125' },
+      { week_label: '11/18', new_users: '135' },
+      { week_label: '11/25', new_users: '130' },
+      { week_label: '12/02', new_users: '142' },
+      { week_label: '12/09', new_users: '150' },
+      { week_label: '12/16', new_users: '145' },
+      { week_label: '12/23', new_users: '152' }
+    ]
+  });
+
+  // Helper to create weekly active users trend mock
+  const createMockWeeklyActiveTrend = () => ({
+    rows: [
+      { week_label: '11/04', active_users: '200' },
+      { week_label: '11/11', active_users: '215' },
+      { week_label: '11/18', active_users: '230' },
+      { week_label: '11/25', active_users: '220' },
+      { week_label: '12/02', active_users: '245' },
+      { week_label: '12/09', active_users: '250' },
+      { week_label: '12/16', active_users: '255' },
+      { week_label: '12/23', active_users: '260' }
+    ]
+  });
+
   beforeEach(() => {
     jest.clearAllMocks();
 
@@ -117,11 +145,13 @@ describe('Weekly Report Database Queries', () => {
       mockQuery
         .mockResolvedValueOnce(createMockDbInfo())          // db info query
         .mockResolvedValueOnce(createMockSanityCheck())     // sanity check
-        .mockResolvedValueOnce(mockUserStats)
-        .mockResolvedValueOnce(mockDailyTrend)
-        .mockResolvedValueOnce(mockEngagementStats)
-        .mockResolvedValueOnce(mockLearningStats)
-        .mockResolvedValueOnce(mockTopContent);
+        .mockResolvedValueOnce(mockUserStats)               // user stats
+        .mockResolvedValueOnce(mockDailyTrend)              // daily trend
+        .mockResolvedValueOnce(createMockWeeklyRegTrend())  // weekly registration trend
+        .mockResolvedValueOnce(createMockWeeklyActiveTrend()) // weekly active trend
+        .mockResolvedValueOnce(mockEngagementStats)         // engagement stats
+        .mockResolvedValueOnce(mockLearningStats)           // learning stats
+        .mockResolvedValueOnce(mockTopContent);             // top content
 
       // Act
       const result = await getWeeklyStats(mockPool);
@@ -167,6 +197,8 @@ describe('Weekly Report Database Queries', () => {
         .mockResolvedValueOnce(createMockSanityCheck())
         .mockResolvedValueOnce(mockUserStats)
         .mockResolvedValueOnce(mockDailyTrend)
+        .mockResolvedValueOnce(createMockWeeklyRegTrend())
+        .mockResolvedValueOnce(createMockWeeklyActiveTrend())
         .mockResolvedValueOnce(mockEngagementStats)
         .mockResolvedValueOnce(createMockLearningStats())
         .mockResolvedValueOnce(createMockTopContent());
@@ -210,6 +242,8 @@ describe('Weekly Report Database Queries', () => {
         .mockResolvedValueOnce(createMockSanityCheck())
         .mockResolvedValueOnce(mockUserStats)
         .mockResolvedValueOnce(mockDailyTrend)
+        .mockResolvedValueOnce(createMockWeeklyRegTrend())
+        .mockResolvedValueOnce(createMockWeeklyActiveTrend())
         .mockResolvedValueOnce(mockEngagementStats)
         .mockResolvedValueOnce(mockLearningStats)
         .mockResolvedValueOnce(createMockTopContent());
@@ -258,6 +292,8 @@ describe('Weekly Report Database Queries', () => {
         .mockResolvedValueOnce(createMockSanityCheck())
         .mockResolvedValueOnce(mockUserStats)
         .mockResolvedValueOnce(mockDailyTrend)
+        .mockResolvedValueOnce(createMockWeeklyRegTrend())
+        .mockResolvedValueOnce(createMockWeeklyActiveTrend())
         .mockResolvedValueOnce(mockEngagementStats)
         .mockResolvedValueOnce(mockLearningStats)
         .mockResolvedValueOnce(createMockTopContent());
@@ -327,6 +363,8 @@ describe('Weekly Report Database Queries', () => {
         .mockResolvedValueOnce(createMockSanityCheck())
         .mockResolvedValueOnce(mockUserStats)
         .mockResolvedValueOnce(mockDailyTrend)
+        .mockResolvedValueOnce(createMockWeeklyRegTrend())
+        .mockResolvedValueOnce(createMockWeeklyActiveTrend())
         .mockResolvedValueOnce(mockEngagementStats)
         .mockResolvedValueOnce(mockLearningStats)
         .mockResolvedValueOnce(mockTopContent);
@@ -341,8 +379,8 @@ describe('Weekly Report Database Queries', () => {
       expect(result.learning.discoveryCompletions).toBe(15);
 
       // Verify the SQL query doesn't have WHERE created_at filter
-      // Call index: 0=dbInfo, 1=sanityCheck, 2=userStats, 3=dailyTrend, 4=engagement, 5=learning
-      const learningQueryCall = mockQuery.mock.calls[5];
+      // Call index: 0=dbInfo, 1=sanityCheck, 2=userStats, 3=dailyTrend, 4=weeklyRegTrend, 5=weeklyActiveTrend, 6=engagement, 7=learning
+      const learningQueryCall = mockQuery.mock.calls[7];
       expect(learningQueryCall).toBeDefined();
       const sqlQuery = learningQueryCall[0];
 
@@ -391,6 +429,8 @@ describe('Weekly Report Database Queries', () => {
         .mockResolvedValueOnce(createMockSanityCheck())
         .mockResolvedValueOnce(mockUserStats)
         .mockResolvedValueOnce(mockDailyTrend)
+        .mockResolvedValueOnce(createMockWeeklyRegTrend())
+        .mockResolvedValueOnce(createMockWeeklyActiveTrend())
         .mockResolvedValueOnce(mockEngagementStats)
         .mockResolvedValueOnce(mockLearningStats)
         .mockResolvedValueOnce(createMockTopContent());
@@ -459,6 +499,8 @@ describe('Weekly Report Database Queries', () => {
         .mockResolvedValueOnce(createMockSanityCheck())
         .mockResolvedValueOnce(mockUserStats)
         .mockResolvedValueOnce(mockDailyTrend)
+        .mockResolvedValueOnce(createMockWeeklyRegTrend())
+        .mockResolvedValueOnce(createMockWeeklyActiveTrend())
         .mockResolvedValueOnce(mockEngagementStats)
         .mockResolvedValueOnce(mockLearningStats)
         .mockResolvedValueOnce(mockTopContent);

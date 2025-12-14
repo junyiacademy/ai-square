@@ -14,13 +14,33 @@ describe('Weekly Report Formatter', () => {
       newLastWeek: 135,
       weekOverWeekGrowth: 5.2,
       dailyTrend: [20, 23, 29, 34, 20, 8, 13],
-      avgPerDay: 20.3
+      avgPerDay: 20.3,
+      weeklyTrend: [
+        { weekLabel: '11/04', value: 110 },
+        { weekLabel: '11/11', value: 125 },
+        { weekLabel: '11/18', value: 135 },
+        { weekLabel: '11/25', value: 130 },
+        { weekLabel: '12/02', value: 142 },
+        { weekLabel: '12/09', value: 150 },
+        { weekLabel: '12/16', value: 145 },
+        { weekLabel: '12/23', value: 152 }
+      ]
     },
     engagement: {
       weeklyActiveUsers: 245,
       dailyAvgActive: 85,
       retentionRate: 45.0,
-      activeRate: 62.2
+      activeRate: 62.2,
+      weeklyActiveTrend: [
+        { weekLabel: '11/04', value: 200 },
+        { weekLabel: '11/11', value: 215 },
+        { weekLabel: '11/18', value: 230 },
+        { weekLabel: '11/25', value: 220 },
+        { weekLabel: '12/02', value: 245 },
+        { weekLabel: '12/09', value: 250 },
+        { weekLabel: '12/16', value: 255 },
+        { weekLabel: '12/23', value: 260 }
+      ]
     },
     learning: {
       assessmentCompletions: 234,

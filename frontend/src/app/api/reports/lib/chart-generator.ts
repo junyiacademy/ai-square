@@ -30,19 +30,21 @@ export function generateQuickChartUrl(config: ChartConfig, width = 800, height =
 }
 
 /**
- * Generate daily registration chart
+ * Generate weekly registration trend chart (8 weeks)
+ * Shows total new registrations per week, labeled by Monday's date
  */
 export function generateRegistrationChart(stats: WeeklyStats): string {
-  const days = ['週一', '週二', '週三', '週四', '週五', '週六', '週日'];
+  const weekLabels = stats.userGrowth.weeklyTrend.map(w => w.weekLabel);
+  const weeklyData = stats.userGrowth.weeklyTrend.map(w => w.value);
 
   const config: ChartConfig = {
     type: 'line',
     data: {
-      labels: days,
+      labels: weekLabels,
       datasets: [
         {
-          label: '每日新註冊用戶',
-          data: stats.userGrowth.dailyTrend,
+          label: '週註冊用戶',
+          data: weeklyData,
           borderColor: 'rgb(75, 192, 192)',
           backgroundColor: 'rgba(75, 192, 192, 0.2)',
           borderWidth: 2,
@@ -55,7 +57,7 @@ export function generateRegistrationChart(stats: WeeklyStats): string {
       plugins: {
         title: {
           display: true,
-          text: 'AI Square 週用戶增長趨勢',
+          text: 'AI Square 週註冊用戶趨勢',
           font: { size: 18 }
         },
         legend: {
@@ -74,7 +76,7 @@ export function generateRegistrationChart(stats: WeeklyStats): string {
         x: {
           title: {
             display: true,
-            text: '星期'
+            text: '週（週一日期）'
           }
         }
       }
@@ -85,27 +87,21 @@ export function generateRegistrationChart(stats: WeeklyStats): string {
 }
 
 /**
- * Generate daily active users chart
- * Note: Since we only have weeklyActiveUsers, we'll use estimated daily active for visualization
+ * Generate weekly active users trend chart (8 weeks)
+ * Shows distinct active users per week, labeled by Monday's date
  */
 export function generateActiveUsersChart(stats: WeeklyStats): string {
-  const days = ['週一', '週二', '週三', '週四', '週五', '週六', '週日'];
-
-  // Estimate daily active users (spread weekly total across 7 days with some variation)
-  // This is a visualization approximation since we don't have actual daily active data
-  const dailyAvg = stats.engagement.dailyAvgActive;
-  const estimatedDailyActive = days.map(() =>
-    Math.round(dailyAvg + (Math.random() - 0.5) * dailyAvg * 0.3)
-  );
+  const weekLabels = stats.engagement.weeklyActiveTrend.map(w => w.weekLabel);
+  const weeklyData = stats.engagement.weeklyActiveTrend.map(w => w.value);
 
   const config: ChartConfig = {
     type: 'line',
     data: {
-      labels: days,
+      labels: weekLabels,
       datasets: [
         {
-          label: '每日活躍用戶',
-          data: estimatedDailyActive,
+          label: '週活躍用戶',
+          data: weeklyData,
           borderColor: 'rgb(255, 159, 64)',
           backgroundColor: 'rgba(255, 159, 64, 0.2)',
           borderWidth: 2,
@@ -118,7 +114,7 @@ export function generateActiveUsersChart(stats: WeeklyStats): string {
       plugins: {
         title: {
           display: true,
-          text: 'AI Square 每日活躍用戶趨勢',
+          text: 'AI Square 週活躍用戶趨勢',
           font: { size: 18 }
         },
         legend: {
@@ -137,7 +133,7 @@ export function generateActiveUsersChart(stats: WeeklyStats): string {
         x: {
           title: {
             display: true,
-            text: '星期'
+            text: '週（週一日期）'
           }
         }
       }

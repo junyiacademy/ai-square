@@ -4,20 +4,27 @@
 
 import { Pool } from 'pg';
 
+export interface WeeklyTrendData {
+  weekLabel: string; // Monday date in "MM/DD" format
+  value: number;
+}
+
 export interface WeeklyStats {
   userGrowth: {
     totalUsers: number;
     newThisWeek: number;
     newLastWeek: number;
     weekOverWeekGrowth: number;
-    dailyTrend: number[];
+    dailyTrend: number[]; // DEPRECATED: Use weeklyTrend instead
     avgPerDay: number;
+    weeklyTrend: WeeklyTrendData[]; // NEW: 8 weeks of registration data
   };
   engagement: {
     weeklyActiveUsers: number;
     dailyAvgActive: number;
     retentionRate: number;
     activeRate: number;
+    weeklyActiveTrend: WeeklyTrendData[]; // NEW: 8 weeks of active users data
   };
   learning: {
     assessmentCompletions: number;
@@ -132,6 +139,74 @@ export async function getWeeklyStats(pool: Pool): Promise<WeeklyStats> {
     ? ((newThisWeek - newLastWeek) / newLastWeek) * 100
     : 0;
   const avgPerDay = newThisWeek / 7;
+
+  // Query 1.6: Weekly registration trend for last 8 complete weeks
+  // Each week is labeled by Monday's date (MM/DD format)
+  const weeklyRegistrationTrendQuery = `
+    WITH week_series AS (
+      -- Generate 8 weeks of Monday dates, ending with most recent complete Sunday
+      SELECT
+        generate_series(
+          (CURRENT_DATE - (EXTRACT(DOW FROM CURRENT_DATE)::int + 6) % 7 - 7 * 8)::date,
+          (CURRENT_DATE - (EXTRACT(DOW FROM CURRENT_DATE)::int + 6) % 7 - 7)::date,
+          '7 days'::interval
+        )::date as week_start
+    ),
+    weekly_counts AS (
+      SELECT
+        ws.week_start,
+        COUNT(u.id) as new_users
+      FROM week_series ws
+      LEFT JOIN users u ON DATE(u.created_at) >= ws.week_start
+                        AND DATE(u.created_at) < ws.week_start + 7
+      GROUP BY ws.week_start
+    )
+    SELECT
+      TO_CHAR(week_start, 'MM/DD') as week_label,
+      new_users
+    FROM weekly_counts
+    ORDER BY week_start ASC;
+  `;
+
+  const weeklyRegTrendResult = await pool.query(weeklyRegistrationTrendQuery);
+  const weeklyTrend: WeeklyTrendData[] = weeklyRegTrendResult.rows.map(row => ({
+    weekLabel: row.week_label,
+    value: parseInt(row.new_users)
+  }));
+
+  // Query 1.7: Weekly active users trend for last 8 complete weeks
+  // Weekly active = distinct users who had task updates during that Mon-Sun period
+  const weeklyActiveTrendQuery = `
+    WITH week_series AS (
+      SELECT
+        generate_series(
+          (CURRENT_DATE - (EXTRACT(DOW FROM CURRENT_DATE)::int + 6) % 7 - 7 * 8)::date,
+          (CURRENT_DATE - (EXTRACT(DOW FROM CURRENT_DATE)::int + 6) % 7 - 7)::date,
+          '7 days'::interval
+        )::date as week_start
+    ),
+    weekly_active AS (
+      SELECT
+        ws.week_start,
+        COUNT(DISTINCT p.user_id) as active_users
+      FROM week_series ws
+      LEFT JOIN tasks t ON t.updated_at >= ws.week_start::timestamp
+                        AND t.updated_at < (ws.week_start + 7)::timestamp
+      LEFT JOIN programs p ON t.program_id = p.id
+      GROUP BY ws.week_start
+    )
+    SELECT
+      TO_CHAR(week_start, 'MM/DD') as week_label,
+      active_users
+    FROM weekly_active
+    ORDER BY week_start ASC;
+  `;
+
+  const weeklyActiveTrendResult = await pool.query(weeklyActiveTrendQuery);
+  const weeklyActiveTrend: WeeklyTrendData[] = weeklyActiveTrendResult.rows.map(row => ({
+    weekLabel: row.week_label,
+    value: parseInt(row.active_users)
+  }));
 
   // Query 2: User engagement statistics for last complete week
   // Weekly active users = users who had task updates last week (tasks.updated_at)
@@ -257,14 +332,16 @@ export async function getWeeklyStats(pool: Pool): Promise<WeeklyStats> {
       newThisWeek,
       newLastWeek,
       weekOverWeekGrowth,
-      dailyTrend,
-      avgPerDay
+      dailyTrend, // DEPRECATED: Kept for backward compatibility
+      avgPerDay,
+      weeklyTrend
     },
     engagement: {
       weeklyActiveUsers,
       dailyAvgActive,
       retentionRate,
-      activeRate
+      activeRate,
+      weeklyActiveTrend
     },
     learning: {
       assessmentCompletions,
