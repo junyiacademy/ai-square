@@ -15,7 +15,7 @@ export abstract class UnifiedLearningError extends Error {
     message: string,
     code: string,
     statusCode: number = 500,
-    details?: Record<string, unknown>
+    details?: Record<string, unknown>,
   ) {
     super(message);
     this.name = this.constructor.name;
@@ -33,7 +33,7 @@ export abstract class UnifiedLearningError extends Error {
       message: this.message,
       code: this.code,
       statusCode: this.statusCode,
-      details: this.details
+      details: this.details,
     };
   }
 }
@@ -45,9 +45,9 @@ export class ResourceNotFoundError extends UnifiedLearningError {
   constructor(resourceType: string, resourceId: string) {
     super(
       `${resourceType} not found: ${resourceId}`,
-      'RESOURCE_NOT_FOUND',
+      "RESOURCE_NOT_FOUND",
       404,
-      { resourceType, resourceId }
+      { resourceType, resourceId },
     );
   }
 }
@@ -57,12 +57,7 @@ export class ResourceNotFoundError extends UnifiedLearningError {
  */
 export class ValidationError extends UnifiedLearningError {
   constructor(message: string, field?: string, value?: unknown) {
-    super(
-      message,
-      'VALIDATION_ERROR',
-      400,
-      { field, value }
-    );
+    super(message, "VALIDATION_ERROR", 400, { field, value });
   }
 }
 
@@ -70,8 +65,8 @@ export class ValidationError extends UnifiedLearningError {
  * 權限錯誤
  */
 export class UnauthorizedError extends UnifiedLearningError {
-  constructor(message: string = 'Unauthorized access') {
-    super(message, 'UNAUTHORIZED', 401);
+  constructor(message: string = "Unauthorized access") {
+    super(message, "UNAUTHORIZED", 401);
   }
 }
 
@@ -82,9 +77,9 @@ export class ForbiddenError extends UnifiedLearningError {
   constructor(resource: string, action: string) {
     super(
       `You don't have permission to ${action} ${resource}`,
-      'FORBIDDEN',
+      "FORBIDDEN",
       403,
-      { resource, action }
+      { resource, action },
     );
   }
 }
@@ -94,12 +89,7 @@ export class ForbiddenError extends UnifiedLearningError {
  */
 export class InvalidStateError extends UnifiedLearningError {
   constructor(message: string, currentState: string, expectedState: string) {
-    super(
-      message,
-      'INVALID_STATE',
-      409,
-      { currentState, expectedState }
-    );
+    super(message, "INVALID_STATE", 409, { currentState, expectedState });
   }
 }
 
@@ -108,12 +98,7 @@ export class InvalidStateError extends UnifiedLearningError {
  */
 export class EvaluationError extends UnifiedLearningError {
   constructor(message: string, taskId?: string, reason?: string) {
-    super(
-      message,
-      'EVALUATION_ERROR',
-      500,
-      { taskId, reason }
-    );
+    super(message, "EVALUATION_ERROR", 500, { taskId, reason });
   }
 }
 
@@ -122,12 +107,7 @@ export class EvaluationError extends UnifiedLearningError {
  */
 export class StorageError extends UnifiedLearningError {
   constructor(message: string, operation: string, path?: string) {
-    super(
-      message,
-      'STORAGE_ERROR',
-      500,
-      { operation, path }
-    );
+    super(message, "STORAGE_ERROR", 500, { operation, path });
   }
 }
 
@@ -136,12 +116,10 @@ export class StorageError extends UnifiedLearningError {
  */
 export class AIServiceError extends UnifiedLearningError {
   constructor(message: string, service: string, originalError?: unknown) {
-    super(
-      message,
-      'AI_SERVICE_ERROR',
-      503,
-      { service, originalError: originalError?.toString() }
-    );
+    super(message, "AI_SERVICE_ERROR", 503, {
+      service,
+      originalError: originalError?.toString(),
+    });
   }
 }
 
@@ -152,9 +130,9 @@ export class QuotaExceededError extends UnifiedLearningError {
   constructor(resource: string, limit: number, current: number) {
     super(
       `Quota exceeded for ${resource}. Limit: ${limit}, Current: ${current}`,
-      'QUOTA_EXCEEDED',
+      "QUOTA_EXCEEDED",
       429,
-      { resource, limit, current }
+      { resource, limit, current },
     );
   }
 }
@@ -172,12 +150,12 @@ export class ErrorHandler {
       code: string;
       statusCode: number;
       details?: Record<string, unknown>;
-    }
+    };
   } {
     // 如果是我們的錯誤類型
     if (error instanceof UnifiedLearningError) {
       return {
-        error: error.toJSON()
+        error: error.toJSON(),
       };
     }
 
@@ -186,33 +164,36 @@ export class ErrorHandler {
       return {
         error: {
           message: error.message,
-          code: 'INTERNAL_ERROR',
+          code: "INTERNAL_ERROR",
           statusCode: 500,
           details: {
             name: error.name,
-            stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
-          }
-        }
+            stack:
+              process.env.NODE_ENV === "development" ? error.stack : undefined,
+          },
+        },
       };
     }
 
     // 未知錯誤
     return {
       error: {
-        message: 'An unknown error occurred',
-        code: 'UNKNOWN_ERROR',
+        message: "An unknown error occurred",
+        code: "UNKNOWN_ERROR",
         statusCode: 500,
         details: {
-          error: String(error)
-        }
-      }
+          error: String(error),
+        },
+      },
     };
   }
 
   /**
    * 包裝異步函數以處理錯誤
    */
-  static wrapAsync<T extends (...args: unknown[]) => Promise<unknown>>(fn: T): T {
+  static wrapAsync<T extends (...args: unknown[]) => Promise<unknown>>(
+    fn: T,
+  ): T {
     return (async (...args: Parameters<T>) => {
       try {
         return await fn(...args);
@@ -228,22 +209,22 @@ export class ErrorHandler {
    */
   static async apiErrorHandler(
     error: unknown,
-    request: Request
+    request: Request,
   ): Promise<Response> {
     const handled = ErrorHandler.handle(error);
 
     // 記錄錯誤
-    console.error('API Error:', {
+    console.error("API Error:", {
       url: request.url,
       method: request.method,
-      error: handled.error
+      error: handled.error,
     });
 
     return new Response(JSON.stringify(handled), {
       status: handled.error.statusCode,
       headers: {
-        'Content-Type': 'application/json'
-      }
+        "Content-Type": "application/json",
+      },
     });
   }
 
@@ -252,7 +233,7 @@ export class ErrorHandler {
    */
   static isErrorType<T extends UnifiedLearningError>(
     error: unknown,
-    ErrorClass: new (...args: unknown[]) => T
+    ErrorClass: new (...args: unknown[]) => T,
   ): error is T {
     return error instanceof ErrorClass;
   }
@@ -266,12 +247,15 @@ export class ErrorHandler {
       maxRetries?: number;
       delay?: number;
       shouldRetry?: (error: unknown, attempt: number) => boolean;
-    } = {}
+    } = {},
   ): Promise<T> {
     const {
       maxRetries = 3,
       delay = 1000,
-      shouldRetry = (error) => !(error instanceof ValidationError || error instanceof UnauthorizedError)
+      shouldRetry = (error) =>
+        !(
+          error instanceof ValidationError || error instanceof UnauthorizedError
+        ),
     } = options;
 
     let lastError: unknown;
@@ -287,7 +271,9 @@ export class ErrorHandler {
         }
 
         // 指數退避
-        await new Promise(resolve => setTimeout(resolve, delay * Math.pow(2, attempt)));
+        await new Promise((resolve) =>
+          setTimeout(resolve, delay * Math.pow(2, attempt)),
+        );
       }
     }
 

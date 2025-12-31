@@ -47,12 +47,7 @@
       "subtitle": "真实世界场景",
       "description": "9个实用场景，通过AI导师指导进行实践学习。",
       "userNeed": "如何在实践中应用AI？",
-      "features": [
-        "AI机器人开发",
-        "AI稳定币交易",
-        "AI求职培训",
-        "实时AI辅导"
-      ]
+      "features": ["AI机器人开发", "AI稳定币交易", "AI求职培训", "实时AI辅导"]
     },
     "chat": {
       "title": "AI顾问",

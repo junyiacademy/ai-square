@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server';
-import { Pool } from 'pg';
+import { NextResponse } from "next/server";
+import { Pool } from "pg";
 
 export async function GET() {
   let pool: Pool | null = null;
@@ -36,15 +36,20 @@ export async function GET() {
       success: true,
       counts: countResult.rows,
       samples: sampleResult.rows,
-      total: countResult.rows.reduce((sum, row) => sum + parseInt(row.count), 0)
+      total: countResult.rows.reduce(
+        (sum, row) => sum + parseInt(row.count),
+        0,
+      ),
     });
-
   } catch (error: unknown) {
-    console.error('Check scenarios error:', error);
-    return NextResponse.json({
-      success: false,
-      error: error instanceof Error ? error.message : 'Unknown error'
-    }, { status: 500 });
+    console.error("Check scenarios error:", error);
+    return NextResponse.json(
+      {
+        success: false,
+        error: error instanceof Error ? error.message : "Unknown error",
+      },
+      { status: 500 },
+    );
   } finally {
     if (pool) {
       await pool.end();

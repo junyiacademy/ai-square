@@ -1,5 +1,5 @@
 // PBL API Types
-import { Task, Program, PBLScenario } from './pbl';
+import { Task, Program, PBLScenario } from "./pbl";
 
 // Chat API
 export interface ChatRequest {
@@ -11,7 +11,7 @@ export interface ChatRequest {
 }
 
 export interface ChatMessage {
-  role: 'user' | 'assistant' | 'system';
+  role: "user" | "assistant" | "system";
   content: string;
   timestamp?: string;
 }

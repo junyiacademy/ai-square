@@ -1,17 +1,20 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import { getUnifiedAuth, createUnauthorizedResponse } from '@/lib/auth/unified-auth';
+import { NextRequest, NextResponse } from "next/server";
+import { repositoryFactory } from "@/lib/repositories/base/repository-factory";
+import {
+  getUnifiedAuth,
+  createUnauthorizedResponse,
+} from "@/lib/auth/unified-auth";
 import {
   AssessmentInteraction,
   AssessmentQuestion,
   DomainScore,
   isAssessmentInteraction,
-  fromIInteraction
-} from '@/types/assessment-types';
+  fromIInteraction,
+} from "@/types/assessment-types";
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: Promise<{ programId: string }> }
+  { params }: { params: Promise<{ programId: string }> },
 ) {
   try {
     // Try to get user from authentication
@@ -24,8 +27,8 @@ export async function POST(
       user = session.user;
     } else {
       const { searchParams } = new URL(request.url);
-      const emailParam = searchParams.get('userEmail');
-      const idParam = searchParams.get('userId');
+      const emailParam = searchParams.get("userEmail");
+      const idParam = searchParams.get("userId");
 
       if (emailParam) {
         user = { email: emailParam, id: idParam || undefined };
@@ -38,7 +41,7 @@ export async function POST(
       await request.json();
     } catch {
       // No JSON body provided, that's fine
-      console.log('No JSON body provided for complete request');
+      console.log("No JSON body provided for complete request");
     }
 
     // Await params before using
@@ -51,53 +54,57 @@ export async function POST(
     // Get program
     const program = await programRepo.findById(programId);
     if (!program) {
-      return NextResponse.json(
-        { error: 'Program not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Program not found" }, { status: 404 });
     }
 
     // Verify ownership by getting user ID from email
     const userRepo = repositoryFactory.getUserRepository();
     const userRecord = await userRepo.findByEmail(user.email);
     if (!userRecord || program.userId !== userRecord.id) {
-      return NextResponse.json(
-        { error: 'Access denied' },
-        { status: 403 }
-      );
+      return NextResponse.json({ error: "Access denied" }, { status: 403 });
     }
 
     // Check if program is already completed
-    if (program.status === 'completed' && program.metadata?.evaluationId) {
-      console.log('Program already completed with evaluation:', program.metadata.evaluationId);
+    if (program.status === "completed" && program.metadata?.evaluationId) {
+      console.log(
+        "Program already completed with evaluation:",
+        program.metadata.evaluationId,
+      );
 
       // Return existing evaluation instead of creating a new one
-      const existingEvaluation = await evaluationRepo.findById(program.metadata.evaluationId as string);
+      const existingEvaluation = await evaluationRepo.findById(
+        program.metadata.evaluationId as string,
+      );
       if (existingEvaluation) {
         return NextResponse.json({
           success: true,
           evaluationId: existingEvaluation.id,
           score: existingEvaluation.score,
-          alreadyCompleted: true
+          alreadyCompleted: true,
         });
       }
     }
 
     // Also check if there's already an evaluation for this program
     const existingEvaluations = await evaluationRepo.findByProgram(programId);
-    const existingAssessmentEval = existingEvaluations.find(e => e.evaluationType === 'assessment_complete');
+    const existingAssessmentEval = existingEvaluations.find(
+      (e) => e.evaluationType === "assessment_complete",
+    );
 
     if (existingAssessmentEval) {
-      console.log('Found existing evaluation for program:', existingAssessmentEval.id);
+      console.log(
+        "Found existing evaluation for program:",
+        existingAssessmentEval.id,
+      );
 
       // Update program to mark as completed if not already
-      if (program.status !== 'completed') {
+      if (program.status !== "completed") {
         await programRepo.update?.(programId, {
           metadata: {
             ...program.metadata,
             evaluationId: existingAssessmentEval.id,
-            score: existingAssessmentEval.score
-          }
+            score: existingAssessmentEval.score,
+          },
         });
         await programRepo.update?.(programId, { status: "completed" });
       }
@@ -106,7 +113,7 @@ export async function POST(
         success: true,
         evaluationId: existingAssessmentEval.id,
         score: existingAssessmentEval.score,
-        alreadyCompleted: true
+        alreadyCompleted: true,
       });
     }
 
@@ -118,44 +125,56 @@ export async function POST(
     let totalAnsweredQuestions = 0;
 
     for (const task of tasks) {
-      const taskQuestions = (task.content as { questions?: AssessmentQuestion[] })?.questions ||
-                           (task.metadata as { questions?: AssessmentQuestion[] })?.questions || [];
+      const taskQuestions =
+        (task.content as { questions?: AssessmentQuestion[] })?.questions ||
+        (task.metadata as { questions?: AssessmentQuestion[] })?.questions ||
+        [];
       totalExpectedQuestions += taskQuestions.length;
 
       // Ensure interactions is an array before filtering
-      const interactions = Array.isArray(task.interactions) ? task.interactions : [];
-      const taskAnswers = interactions.filter(i => {
+      const interactions = Array.isArray(task.interactions)
+        ? task.interactions
+        : [];
+      const taskAnswers = interactions.filter((i) => {
         // Check if it's already an assessment interaction
-        if (isAssessmentInteraction(i as unknown as AssessmentInteraction)) return true;
+        if (isAssessmentInteraction(i as unknown as AssessmentInteraction))
+          return true;
         // Or check if it's a system_event with assessment_answer
-        return i.type === 'system_event' &&
-               typeof i.content === 'object' &&
-               i.content !== null &&
-               'eventType' in i.content &&
-               i.content.eventType === 'assessment_answer';
+        return (
+          i.type === "system_event" &&
+          typeof i.content === "object" &&
+          i.content !== null &&
+          "eventType" in i.content &&
+          i.content.eventType === "assessment_answer"
+        );
       });
       totalAnsweredQuestions += taskAnswers.length;
     }
 
     // If user hasn't answered all questions, consider this an incomplete assessment
     if (totalAnsweredQuestions < totalExpectedQuestions) {
-      console.warn(`Incomplete assessment: ${totalAnsweredQuestions}/${totalExpectedQuestions} questions answered`);
+      console.warn(
+        `Incomplete assessment: ${totalAnsweredQuestions}/${totalExpectedQuestions} questions answered`,
+      );
 
       // Don't create evaluation for incomplete assessments
-      return NextResponse.json({
-        success: false,
-        error: 'Assessment incomplete',
-        details: {
-          totalQuestions: totalExpectedQuestions,
-          answeredQuestions: totalAnsweredQuestions,
-          missingQuestions: totalExpectedQuestions - totalAnsweredQuestions
-        }
-      }, { status: 400 });
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Assessment incomplete",
+          details: {
+            totalQuestions: totalExpectedQuestions,
+            answeredQuestions: totalAnsweredQuestions,
+            missingQuestions: totalExpectedQuestions - totalAnsweredQuestions,
+          },
+        },
+        { status: 400 },
+      );
     }
 
     // Complete all pending tasks
     for (const task of tasks) {
-      if (task.status !== 'completed') {
+      if (task.status !== "completed") {
         await taskRepo.updateStatus?.(task.id, "completed");
       }
     }
@@ -164,14 +183,16 @@ export async function POST(
     let allAnswers: AssessmentInteraction[] = [];
     let allQuestions: AssessmentQuestion[] = [];
 
-    console.log('Collecting answers and questions from', tasks.length, 'tasks');
+    console.log("Collecting answers and questions from", tasks.length, "tasks");
 
     for (const task of tasks) {
       // Handle both old format (system_event) and new format (assessment_answer)
       // Ensure interactions is an array before processing
-      const interactions = Array.isArray(task.interactions) ? task.interactions : [];
+      const interactions = Array.isArray(task.interactions)
+        ? task.interactions
+        : [];
       const taskAnswers = interactions
-        .map(i => {
+        .map((i) => {
           // Try to convert from IInteraction format first
           const converted = fromIInteraction(i);
           if (converted) return converted;
@@ -186,21 +207,27 @@ export async function POST(
         .filter((i): i is AssessmentInteraction => i !== null);
 
       // Questions can be in task.content.questions or task.metadata.questions
-      const rawQuestions = (task.content as { questions?: Record<string, unknown>[] })?.questions ||
-                           (task.metadata as { questions?: Record<string, unknown>[] })?.questions || [];
+      const rawQuestions =
+        (task.content as { questions?: Record<string, unknown>[] })
+          ?.questions ||
+        (task.metadata as { questions?: Record<string, unknown>[] })
+          ?.questions ||
+        [];
 
       // Map domainId to domain for compatibility with AssessmentQuestion interface
-      const taskQuestions: AssessmentQuestion[] = rawQuestions.map((q: Record<string, unknown>) => {
-        console.log(`Mapping question ${q.id as string}:`, {
-          originalDomainId: q.domainId as string,
-          originalDomain: q.domain as string,
-          mappedDomain: (q.domainId || q.domain) as string
-        });
-        return {
-          ...q,
-          domain: (q.domainId || q.domain) as string // Use domainId if available, fallback to domain
-        } as AssessmentQuestion;
-      });
+      const taskQuestions: AssessmentQuestion[] = rawQuestions.map(
+        (q: Record<string, unknown>) => {
+          console.log(`Mapping question ${q.id as string}:`, {
+            originalDomainId: q.domainId as string,
+            originalDomain: q.domain as string,
+            mappedDomain: (q.domainId || q.domain) as string,
+          });
+          return {
+            ...q,
+            domain: (q.domainId || q.domain) as string, // Use domainId if available, fallback to domain
+          } as AssessmentQuestion;
+        },
+      );
 
       console.log(`Task ${task.title}:`, {
         taskId: task.id,
@@ -209,30 +236,38 @@ export async function POST(
         questionsKSA: taskQuestions.map((q) => ({
           id: q.id,
           domain: q.domain,
-          ksa: q.ksa_mapping
-        }))
+          ksa: q.ksa_mapping,
+        })),
       });
 
       allAnswers = [...allAnswers, ...taskAnswers];
       allQuestions = [...allQuestions, ...taskQuestions];
     }
 
-    console.log('Total collected:', {
+    console.log("Total collected:", {
       allAnswersCount: allAnswers.length,
       allQuestionsCount: allQuestions.length,
-      allKSAMappings: allQuestions.map((q) => q.ksa_mapping).filter(Boolean)
+      allKSAMappings: allQuestions.map((q) => q.ksa_mapping).filter(Boolean),
     });
 
     const totalQuestions = allQuestions.length;
-    const correctAnswers = allAnswers.filter(a => a.context.isCorrect).length;
-    const overallScore = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
+    const correctAnswers = allAnswers.filter((a) => a.context.isCorrect).length;
+    const overallScore =
+      totalQuestions > 0
+        ? Math.round((correctAnswers / totalQuestions) * 100)
+        : 0;
 
     // Calculate domain scores based on actual questions and answers
     const domainScores: Map<string, DomainScore> = new Map();
 
     // Initialize four domains
-    const domains = ['engaging_with_ai', 'creating_with_ai', 'managing_with_ai', 'designing_with_ai'];
-    domains.forEach(domain => {
+    const domains = [
+      "engaging_with_ai",
+      "creating_with_ai",
+      "managing_with_ai",
+      "designing_with_ai",
+    ];
+    domains.forEach((domain) => {
       domainScores.set(domain, {
         domain,
         totalQuestions: 0,
@@ -242,8 +277,8 @@ export async function POST(
         ksa: {
           knowledge: new Set(),
           skills: new Set(),
-          attitudes: new Set()
-        }
+          attitudes: new Set(),
+        },
       });
     });
 
@@ -255,14 +290,14 @@ export async function POST(
       console.log(`Processing answer for question ${questionId}:`, {
         questionFound: !!question,
         questionDomain: question?.domain,
-        isCorrect: answer.context.isCorrect
+        isCorrect: answer.context.isCorrect,
       });
 
       if (question && question.domain) {
         const domainScore = domainScores.get(question.domain);
         console.log(`Domain "${question.domain}":`, {
           domainScoreFound: !!domainScore,
-          currentTotal: domainScore?.totalQuestions || 0
+          currentTotal: domainScore?.totalQuestions || 0,
         });
 
         if (domainScore) {
@@ -274,13 +309,19 @@ export async function POST(
           // Collect KSA mappings from question
           if (question.ksa_mapping) {
             if (question.ksa_mapping.knowledge) {
-              question.ksa_mapping.knowledge.forEach(k => domainScore.ksa.knowledge.add(k));
+              question.ksa_mapping.knowledge.forEach((k) =>
+                domainScore.ksa.knowledge.add(k),
+              );
             }
             if (question.ksa_mapping.skills) {
-              question.ksa_mapping.skills.forEach(s => domainScore.ksa.skills.add(s));
+              question.ksa_mapping.skills.forEach((s) =>
+                domainScore.ksa.skills.add(s),
+              );
             }
             if (question.ksa_mapping.attitudes) {
-              question.ksa_mapping.attitudes.forEach(a => domainScore.ksa.attitudes.add(a));
+              question.ksa_mapping.attitudes.forEach((a) =>
+                domainScore.ksa.attitudes.add(a),
+              );
             }
           }
         }
@@ -288,21 +329,32 @@ export async function POST(
     });
 
     // Calculate domain scores
-    domainScores.forEach(domainScore => {
+    domainScores.forEach((domainScore) => {
       if (domainScore.totalQuestions > 0) {
-        domainScore.score = Math.round((domainScore.correctAnswers / domainScore.totalQuestions) * 100);
+        domainScore.score = Math.round(
+          (domainScore.correctAnswers / domainScore.totalQuestions) * 100,
+        );
       }
     });
 
     // Calculate time spent
-    const startTime = program.metadata?.createdAt || program.metadata?.startTime || (program.startedAt ? Date.parse(program.startedAt.toString()) : (program.createdAt ? Date.parse(program.createdAt.toString()) : Date.now()));
-    const completionTime = Math.floor((Date.now() - (startTime as number)) / 1000);
+    const startTime =
+      program.metadata?.createdAt ||
+      program.metadata?.startTime ||
+      (program.startedAt
+        ? Date.parse(program.startedAt.toString())
+        : program.createdAt
+          ? Date.parse(program.createdAt.toString())
+          : Date.now());
+    const completionTime = Math.floor(
+      (Date.now() - (startTime as number)) / 1000,
+    );
 
     // Determine level
-    let level = 'beginner';
-    if (overallScore >= 80) level = 'expert';
-    else if (overallScore >= 70) level = 'advanced';
-    else if (overallScore >= 50) level = 'intermediate';
+    let level = "beginner";
+    if (overallScore >= 80) level = "expert";
+    else if (overallScore >= 70) level = "advanced";
+    else if (overallScore >= 50) level = "intermediate";
 
     // Generate recommendations
     const recommendations = generateRecommendations(domainScores, overallScore);
@@ -311,16 +363,16 @@ export async function POST(
     const correctKSA = {
       knowledge: new Set<string>(),
       skills: new Set<string>(),
-      attitudes: new Set<string>()
+      attitudes: new Set<string>(),
     };
     const incorrectKSA = {
       knowledge: new Set<string>(),
       skills: new Set<string>(),
-      attitudes: new Set<string>()
+      attitudes: new Set<string>(),
     };
 
     // Analyze each answer to determine KSA performance
-    console.log('Analyzing KSA performance for', allAnswers.length, 'answers');
+    console.log("Analyzing KSA performance for", allAnswers.length, "answers");
 
     allAnswers.forEach((answer, index) => {
       const questionId = answer.context.questionId;
@@ -330,96 +382,109 @@ export async function POST(
         questionId,
         isCorrect: answer.context.isCorrect,
         hasQuestion: !!question,
-        hasKSAMapping: !!(question?.ksa_mapping),
-        ksa: question?.ksa_mapping
+        hasKSAMapping: !!question?.ksa_mapping,
+        ksa: question?.ksa_mapping,
       });
 
       if (question && question.ksa_mapping) {
         const targetKSA = answer.context.isCorrect ? correctKSA : incorrectKSA;
 
         if (question.ksa_mapping.knowledge) {
-          question.ksa_mapping.knowledge.forEach(k => targetKSA.knowledge.add(k));
+          question.ksa_mapping.knowledge.forEach((k) =>
+            targetKSA.knowledge.add(k),
+          );
         }
         if (question.ksa_mapping.skills) {
-          question.ksa_mapping.skills.forEach(s => targetKSA.skills.add(s));
+          question.ksa_mapping.skills.forEach((s) => targetKSA.skills.add(s));
         }
         if (question.ksa_mapping.attitudes) {
-          question.ksa_mapping.attitudes.forEach(a => targetKSA.attitudes.add(a));
+          question.ksa_mapping.attitudes.forEach((a) =>
+            targetKSA.attitudes.add(a),
+          );
         }
       }
     });
 
-    console.log('Final KSA analysis:', {
+    console.log("Final KSA analysis:", {
       correctKSA: {
         knowledge: Array.from(correctKSA.knowledge),
         skills: Array.from(correctKSA.skills),
-        attitudes: Array.from(correctKSA.attitudes)
+        attitudes: Array.from(correctKSA.attitudes),
       },
       incorrectKSA: {
         knowledge: Array.from(incorrectKSA.knowledge),
         skills: Array.from(incorrectKSA.skills),
-        attitudes: Array.from(incorrectKSA.attitudes)
-      }
+        attitudes: Array.from(incorrectKSA.attitudes),
+      },
     });
 
     // Calculate KSA scores
-    const allKnowledge = new Set([...correctKSA.knowledge, ...incorrectKSA.knowledge]);
+    const allKnowledge = new Set([
+      ...correctKSA.knowledge,
+      ...incorrectKSA.knowledge,
+    ]);
     const allSkills = new Set([...correctKSA.skills, ...incorrectKSA.skills]);
-    const allAttitudes = new Set([...correctKSA.attitudes, ...incorrectKSA.attitudes]);
+    const allAttitudes = new Set([
+      ...correctKSA.attitudes,
+      ...incorrectKSA.attitudes,
+    ]);
 
     // Identify weak areas (more incorrect than correct)
     const weakKnowledge = new Set<string>();
     const weakSkills = new Set<string>();
     const weakAttitudes = new Set<string>();
 
-    incorrectKSA.knowledge.forEach(k => {
+    incorrectKSA.knowledge.forEach((k) => {
       if (!correctKSA.knowledge.has(k)) weakKnowledge.add(k);
     });
-    incorrectKSA.skills.forEach(s => {
+    incorrectKSA.skills.forEach((s) => {
       if (!correctKSA.skills.has(s)) weakSkills.add(s);
     });
-    incorrectKSA.attitudes.forEach(a => {
+    incorrectKSA.attitudes.forEach((a) => {
       if (!correctKSA.attitudes.has(a)) weakAttitudes.add(a);
     });
 
     // Create evaluation
-    console.log('Creating evaluation with data:', {
-      targetType: 'program',
+    console.log("Creating evaluation with data:", {
+      targetType: "program",
       targetId: programId,
-      evaluationType: 'assessment_complete',
+      evaluationType: "assessment_complete",
       score: overallScore,
       totalQuestions,
       correctAnswers,
       level,
-      completionTime
+      completionTime,
     });
 
     const evaluation = await evaluationRepo.create({
       userId: userRecord.id,
       programId: programId,
-      mode: 'assessment',
-      evaluationType: 'assessment_complete',  // Use simple descriptive naming
+      mode: "assessment",
+      evaluationType: "assessment_complete", // Use simple descriptive naming
       // evaluationSubtype: 'assessment_complete',  // Skip problematic field for staging compatibility
       score: overallScore,
       maxScore: 100,
       timeTakenSeconds: completionTime,
       feedbackText: generateOverallFeedback(overallScore, level),
       feedbackData: {},
-      domainScores: Array.from(domainScores.values()).reduce((acc, ds) => {
-        acc[ds.domain] = ds.score;
-        return acc;
-      }, {} as Record<string, number>),
+      domainScores: Array.from(domainScores.values()).reduce(
+        (acc, ds) => {
+          acc[ds.domain] = ds.score;
+          return acc;
+        },
+        {} as Record<string, number>,
+      ),
       aiAnalysis: {},
       pblData: {},
       discoveryData: {},
       assessmentData: {
         totalQuestions,
         correctAnswers,
-        domainScores: Array.from(domainScores.values()).map(ds => ({
+        domainScores: Array.from(domainScores.values()).map((ds) => ({
           name: ds.domain,
           score: ds.score,
-          maxScore: 100
-        }))
+          maxScore: 100,
+        })),
       },
       metadata: {
         completionTime,
@@ -429,33 +494,49 @@ export async function POST(
         recommendations,
         certificateEligible: overallScore >= 60,
         domainScores: Object.fromEntries(
-          Array.from(domainScores.entries()).map(([domain, ds]) => [domain, ds.score])
+          Array.from(domainScores.entries()).map(([domain, ds]) => [
+            domain,
+            ds.score,
+          ]),
         ),
         ksaAnalysis: {
           knowledge: {
-            score: allKnowledge.size > 0 ? Math.round((correctKSA.knowledge.size / allKnowledge.size) * 100) : 0,
+            score:
+              allKnowledge.size > 0
+                ? Math.round(
+                    (correctKSA.knowledge.size / allKnowledge.size) * 100,
+                  )
+                : 0,
             strong: Array.from(correctKSA.knowledge).slice(0, 3),
-            weak: Array.from(weakKnowledge).slice(0, 3)
+            weak: Array.from(weakKnowledge).slice(0, 3),
           },
           skills: {
-            score: allSkills.size > 0 ? Math.round((correctKSA.skills.size / allSkills.size) * 100) : 0,
+            score:
+              allSkills.size > 0
+                ? Math.round((correctKSA.skills.size / allSkills.size) * 100)
+                : 0,
             strong: Array.from(correctKSA.skills).slice(0, 3),
-            weak: Array.from(weakSkills).slice(0, 3)
+            weak: Array.from(weakSkills).slice(0, 3),
           },
           attitudes: {
-            score: allAttitudes.size > 0 ? Math.round((correctKSA.attitudes.size / allAttitudes.size) * 100) : 0,
+            score:
+              allAttitudes.size > 0
+                ? Math.round(
+                    (correctKSA.attitudes.size / allAttitudes.size) * 100,
+                  )
+                : 0,
             strong: Array.from(correctKSA.attitudes).slice(0, 3),
-            weak: Array.from(weakAttitudes).slice(0, 3)
-          }
-        }
+            weak: Array.from(weakAttitudes).slice(0, 3),
+          },
+        },
       },
-      createdAt: new Date().toISOString()  // Use ISO string as required by interface
+      createdAt: new Date().toISOString(), // Use ISO string as required by interface
     });
 
-    console.log('Evaluation created successfully:', {
+    console.log("Evaluation created successfully:", {
       evaluationId: evaluation.id,
       score: evaluation.score,
-      programId: evaluation.programId || evaluation.id
+      programId: evaluation.programId || evaluation.id,
     });
 
     // Update program score and complete it
@@ -464,8 +545,8 @@ export async function POST(
         ...program.metadata,
         score: overallScore,
         completionTime,
-        evaluationId: evaluation.id
-      }
+        evaluationId: evaluation.id,
+      },
     });
     await programRepo.update?.(programId, { status: "completed" });
 
@@ -477,14 +558,20 @@ export async function POST(
     return NextResponse.json({
       success: true,
       evaluationId: evaluation.id,
-      score: overallScore
+      score: overallScore,
     });
   } catch (error) {
-    console.error('Error completing assessment:', error);
-    console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace');
+    console.error("Error completing assessment:", error);
+    console.error(
+      "Error stack:",
+      error instanceof Error ? error.stack : "No stack trace",
+    );
     return NextResponse.json(
-      { error: 'Failed to complete assessment', details: error instanceof Error ? error.message : 'Unknown error' },
-      { status: 500 }
+      {
+        error: "Failed to complete assessment",
+        details: error instanceof Error ? error.message : "Unknown error",
+      },
+      { status: 500 },
     );
   }
 }
@@ -501,7 +588,10 @@ function generateOverallFeedback(score: number, level: string): string {
   }
 }
 
-function generateRecommendations(domainScores: Map<string, DomainScore>, overallScore: number): string[] {
+function generateRecommendations(
+  domainScores: Map<string, DomainScore>,
+  overallScore: number,
+): string[] {
   const recommendations: string[] = [];
 
   // Find weak domains
@@ -511,21 +601,25 @@ function generateRecommendations(domainScores: Map<string, DomainScore>, overall
 
   if (weakDomains.length > 0) {
     weakDomains.forEach(([domain]) => {
-      const domainName = domain.replace(/_/g, ' ').toLowerCase();
-      recommendations.push(`Focus on improving your ${domainName} skills through hands-on practice`);
+      const domainName = domain.replace(/_/g, " ").toLowerCase();
+      recommendations.push(
+        `Focus on improving your ${domainName} skills through hands-on practice`,
+      );
     });
   }
 
   // General recommendations based on score
   if (overallScore < 60) {
-    recommendations.push('Review the fundamental concepts of AI literacy');
-    recommendations.push('Take introductory courses on AI basics');
+    recommendations.push("Review the fundamental concepts of AI literacy");
+    recommendations.push("Take introductory courses on AI basics");
   } else if (overallScore < 80) {
-    recommendations.push('Practice with more advanced AI scenarios');
-    recommendations.push('Explore real-world AI applications in your field');
+    recommendations.push("Practice with more advanced AI scenarios");
+    recommendations.push("Explore real-world AI applications in your field");
   } else {
-    recommendations.push('Consider mentoring others in AI literacy');
-    recommendations.push('Stay updated with latest AI developments and best practices');
+    recommendations.push("Consider mentoring others in AI literacy");
+    recommendations.push(
+      "Stay updated with latest AI developments and best practices",
+    );
   }
 
   return recommendations.slice(0, 4); // Return top 4 recommendations

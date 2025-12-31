@@ -1,6 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getUnifiedAuth, createUnauthorizedResponse } from '@/lib/auth/unified-auth';
-import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
+import { NextRequest, NextResponse } from "next/server";
+import {
+  getUnifiedAuth,
+  createUnauthorizedResponse,
+} from "@/lib/auth/unified-auth";
+import { repositoryFactory } from "@/lib/repositories/base/repository-factory";
 
 export async function GET(request: NextRequest) {
   try {
@@ -11,10 +14,13 @@ export async function GET(request: NextRequest) {
 
     const userEmail = session.user.email;
     const { searchParams } = new URL(request.url);
-    const careerType = searchParams.get('career');
+    const careerType = searchParams.get("career");
 
     if (!careerType) {
-      return NextResponse.json({ error: 'Career type required' }, { status: 400 });
+      return NextResponse.json(
+        { error: "Career type required" },
+        { status: 400 },
+      );
     }
 
     // In v2 architecture, we search scenarios by their metadata
@@ -22,7 +28,7 @@ export async function GET(request: NextRequest) {
     const programRepo = repositoryFactory.getProgramRepository();
 
     // Find all discovery scenarios
-    const rawScenarios = await scenarioRepo.findByMode?.('discovery');
+    const rawScenarios = await scenarioRepo.findByMode?.("discovery");
     const allScenarios = rawScenarios || [];
     const discoveryScenarios = allScenarios.filter((s) => {
       const metadata = s.metadata as Record<string, unknown>;
@@ -34,7 +40,7 @@ export async function GET(request: NextRequest) {
       const rawPrograms = await programRepo.findByScenario(scenario.id);
       const allPrograms = rawPrograms || [];
       const userPrograms = allPrograms.filter((p) => p.userId === userEmail);
-      const activeProgram = userPrograms.find((p) => p.status === 'active');
+      const activeProgram = userPrograms.find((p) => p.status === "active");
 
       if (activeProgram) {
         return NextResponse.json({ scenarioId: scenario.id });
@@ -44,10 +50,13 @@ export async function GET(request: NextRequest) {
     // No existing scenario found for this career type
     return NextResponse.json({ scenarioId: null });
   } catch (error) {
-    console.error('Error in GET /api/discovery/scenarios/find-by-career:', error);
+    console.error(
+      "Error in GET /api/discovery/scenarios/find-by-career:",
+      error,
+    );
     return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
+      { error: "Internal server error" },
+      { status: 500 },
     );
   }
 }

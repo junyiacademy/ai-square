@@ -7,8 +7,8 @@
  * - Make dependencies explicit
  */
 
-import type { IScenario } from '../../types/unified-learning';
-import type { DBUser } from '../../types/database';
+import type { IScenario } from "../../types/unified-learning";
+import type { DBUser } from "../../types/database";
 
 export interface ValidationResult {
   isValid: boolean;
@@ -17,10 +17,10 @@ export interface ValidationResult {
 
 // Validation error messages as constants for reusability
 const ValidationErrors = {
-  SCENARIO_NOT_FOUND: 'Scenario not found',
-  USER_NOT_AUTHENTICATED: 'User not authenticated',
-  SCENARIO_NOT_AVAILABLE: 'Scenario is not available',
-  NO_TASKS_DEFINED: 'Scenario has no tasks defined'
+  SCENARIO_NOT_FOUND: "Scenario not found",
+  USER_NOT_AUTHENTICATED: "User not authenticated",
+  SCENARIO_NOT_AVAILABLE: "Scenario is not available",
+  NO_TASKS_DEFINED: "Scenario has no tasks defined",
 } as const;
 
 /**
@@ -31,7 +31,7 @@ const ValidationErrors = {
  */
 export function validateProgramStart(
   scenario: IScenario | null,
-  user: DBUser | null
+  user: DBUser | null,
 ): ValidationResult {
   // Check user first (authentication is prerequisite)
   const userValidation = validateUser(user);
@@ -57,21 +57,21 @@ function validateScenario(scenario: IScenario | null): ValidationResult {
   if (!scenario) {
     return {
       isValid: false,
-      error: ValidationErrors.SCENARIO_NOT_FOUND
+      error: ValidationErrors.SCENARIO_NOT_FOUND,
     };
   }
 
-  if (scenario.status !== 'active') {
+  if (scenario.status !== "active") {
     return {
       isValid: false,
-      error: ValidationErrors.SCENARIO_NOT_AVAILABLE
+      error: ValidationErrors.SCENARIO_NOT_AVAILABLE,
     };
   }
 
   if (!scenario.taskTemplates || scenario.taskTemplates.length === 0) {
     return {
       isValid: false,
-      error: ValidationErrors.NO_TASKS_DEFINED
+      error: ValidationErrors.NO_TASKS_DEFINED,
     };
   }
 
@@ -86,7 +86,7 @@ function validateUser(user: DBUser | null): ValidationResult {
   if (!user) {
     return {
       isValid: false,
-      error: ValidationErrors.USER_NOT_AUTHENTICATED
+      error: ValidationErrors.USER_NOT_AUTHENTICATED,
     };
   }
 

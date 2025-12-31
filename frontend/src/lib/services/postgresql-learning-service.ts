@@ -3,13 +3,9 @@
  * Implements the learning service using PostgreSQL repositories
  */
 
-import { BaseLearningService } from '@/lib/abstractions/base-learning-service';
-import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import type {
-  IProgram,
-  ITask,
-  IEvaluation
-} from '@/types/unified-learning';
+import { BaseLearningService } from "@/lib/abstractions/base-learning-service";
+import { repositoryFactory } from "@/lib/repositories/base/repository-factory";
+import type { IProgram, ITask, IEvaluation } from "@/types/unified-learning";
 
 export class PostgreSQLLearningService extends BaseLearningService {
   constructor() {
@@ -23,8 +19,8 @@ export class PostgreSQLLearningService extends BaseLearningService {
       undefined, // evaluationSystem - can be added later if needed
       {
         enableEvaluation: true,
-        enableHooks: true
-      }
+        enableHooks: true,
+      },
     );
   }
 
@@ -36,14 +32,24 @@ export class PostgreSQLLearningService extends BaseLearningService {
     console.log(`[PostgreSQLLearningService] Program created: ${program.id}`);
   }
 
-  protected async afterTaskComplete(task: ITask, evaluation: IEvaluation): Promise<void> {
+  protected async afterTaskComplete(
+    task: ITask,
+    evaluation: IEvaluation,
+  ): Promise<void> {
     // Log or perform PostgreSQL-specific actions
-    console.log(`[PostgreSQLLearningService] Task completed: ${task.id}, evaluation: ${evaluation.id}`);
+    console.log(
+      `[PostgreSQLLearningService] Task completed: ${task.id}, evaluation: ${evaluation.id}`,
+    );
   }
 
-  protected async afterProgramComplete(program: IProgram, evaluation: IEvaluation): Promise<void> {
+  protected async afterProgramComplete(
+    program: IProgram,
+    evaluation: IEvaluation,
+  ): Promise<void> {
     // Log or perform PostgreSQL-specific actions
-    console.log(`[PostgreSQLLearningService] Program completed: ${program.id}, evaluation: ${evaluation.id}`);
+    console.log(
+      `[PostgreSQLLearningService] Program completed: ${program.id}, evaluation: ${evaluation.id}`,
+    );
   }
 }
 

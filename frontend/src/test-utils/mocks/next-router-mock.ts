@@ -3,14 +3,16 @@
  * Comprehensive mock for Next.js 15 app router hooks
  */
 
-export const createMockRouter = (overrides: Partial<ReturnType<typeof useRouter>> = {}) => ({
+export const createMockRouter = (
+  overrides: Partial<ReturnType<typeof useRouter>> = {},
+) => ({
   push: jest.fn(),
   replace: jest.fn(),
   refresh: jest.fn(),
   back: jest.fn(),
   forward: jest.fn(),
   prefetch: jest.fn(),
-  ...overrides
+  ...overrides,
 });
 
 export const createMockSearchParams = (params: Record<string, string> = {}) => {
@@ -21,17 +23,19 @@ export const createMockSearchParams = (params: Record<string, string> = {}) => {
   return searchParams;
 };
 
-export const createMockPathname = (pathname = '/') => pathname;
+export const createMockPathname = (pathname = "/") => pathname;
 
 /**
  * Standard Next.js navigation mock
  * Use this in most test files that use Next.js routing
  */
-export const mockNextNavigation = (options: {
-  router?: Partial<ReturnType<typeof useRouter>>;
-  pathname?: string;
-  searchParams?: Record<string, string>;
-} = {}) => {
+export const mockNextNavigation = (
+  options: {
+    router?: Partial<ReturnType<typeof useRouter>>;
+    pathname?: string;
+    searchParams?: Record<string, string>;
+  } = {},
+) => {
   const mockRouter = createMockRouter(options.router);
   const mockPathname = createMockPathname(options.pathname);
   const mockSearchParams = createMockSearchParams(options.searchParams);
@@ -50,11 +54,13 @@ export const mockNextNavigation = (options: {
 /**
  * Helper to setup Next.js navigation mocks in tests
  */
-export function setupNextNavigationMocks(options?: Parameters<typeof mockNextNavigation>[0]) {
-  return jest.mock('next/navigation', () => mockNextNavigation(options));
+export function setupNextNavigationMocks(
+  options?: Parameters<typeof mockNextNavigation>[0],
+) {
+  return jest.mock("next/navigation", () => mockNextNavigation(options));
 }
 
 // Re-export useRouter type for convenience
-import type { useRouter } from 'next/navigation';
+import type { useRouter } from "next/navigation";
 export type MockRouter = ReturnType<typeof createMockRouter>;
 export type UseRouter = typeof useRouter;

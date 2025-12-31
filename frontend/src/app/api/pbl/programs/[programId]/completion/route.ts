@@ -1,44 +1,44 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
+import { NextRequest, NextResponse } from "next/server";
+import { repositoryFactory } from "@/lib/repositories/base/repository-factory";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ programId: string }> }
+  { params }: { params: Promise<{ programId: string }> },
 ) {
   try {
     const { searchParams } = new URL(request.url);
     const { programId } = await params;
-    const scenarioId = searchParams.get('scenarioId');
+    const scenarioId = searchParams.get("scenarioId");
 
     if (!scenarioId) {
       return NextResponse.json(
         {
           success: false,
-          error: 'Scenario ID is required'
+          error: "Scenario ID is required",
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     // Get user info from cookie
     let userEmail: string | undefined;
     try {
-      const userCookie = request.cookies.get('user')?.value;
+      const userCookie = request.cookies.get("user")?.value;
       if (userCookie) {
         const user = JSON.parse(userCookie);
         userEmail = user.email;
       }
     } catch {
-      console.log('No user cookie found');
+      console.log("No user cookie found");
     }
 
     if (!userEmail) {
       return NextResponse.json(
         {
           success: false,
-          error: 'User authentication required'
+          error: "User authentication required",
         },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -52,8 +52,8 @@ export async function GET(
     const user = await userRepo.findByEmail(userEmail);
     if (!user) {
       return NextResponse.json(
-        { success: false, error: 'User not found' },
-        { status: 404 }
+        { success: false, error: "User not found" },
+        { status: 404 },
       );
     }
 
@@ -63,64 +63,67 @@ export async function GET(
       return NextResponse.json(
         {
           success: false,
-          error: 'Program not found'
+          error: "Program not found",
         },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
     // Get tasks and evaluations
     const [tasks, evaluations] = await Promise.all([
       taskRepo.findByProgram(programId),
-      evaluationRepo.findByProgram(programId)
+      evaluationRepo.findByProgram(programId),
     ]);
 
     // Sort tasks by index
     tasks.sort((a, b) => a.taskIndex - b.taskIndex);
 
     // Calculate overall completion stats
-    const completedTasks = tasks.filter(t => t.status === 'completed');
+    const completedTasks = tasks.filter((t) => t.status === "completed");
     const totalScore = evaluations.reduce((sum, e) => sum + e.score, 0);
-    const averageScore = evaluations.length > 0 ? totalScore / evaluations.length : 0;
+    const averageScore =
+      evaluations.length > 0 ? totalScore / evaluations.length : 0;
 
     // Aggregate domain and KSA scores from evaluations
     const domainScores: Record<string, number> = {};
     const ksaScores: Record<string, number> = {};
     const ksaCounts: Record<string, number> = {};
 
-    evaluations.forEach(evaluation => {
+    evaluations.forEach((evaluation) => {
       if (evaluation.domainScores) {
-        Object.entries(evaluation.domainScores).forEach(([dimension, score]: [string, number]) => {
-          if (dimension.includes('_')) {
-            // Domain score
-            domainScores[dimension] = (domainScores[dimension] || 0) + score;
-          } else {
-            // KSA score
-            ksaScores[dimension] = (ksaScores[dimension] || 0) + score;
-            ksaCounts[dimension] = (ksaCounts[dimension] || 0) + 1;
-          }
-        });
+        Object.entries(evaluation.domainScores).forEach(
+          ([dimension, score]: [string, number]) => {
+            if (dimension.includes("_")) {
+              // Domain score
+              domainScores[dimension] = (domainScores[dimension] || 0) + score;
+            } else {
+              // KSA score
+              ksaScores[dimension] = (ksaScores[dimension] || 0) + score;
+              ksaCounts[dimension] = (ksaCounts[dimension] || 0) + 1;
+            }
+          },
+        );
       }
     });
 
     // Calculate averages
-    Object.keys(domainScores).forEach(key => {
+    Object.keys(domainScores).forEach((key) => {
       domainScores[key] = domainScores[key] / evaluations.length;
     });
-    Object.keys(ksaScores).forEach(key => {
+    Object.keys(ksaScores).forEach((key) => {
       ksaScores[key] = ksaScores[key] / ksaCounts[key];
     });
 
     // Build task summaries
-    const taskSummaries = tasks.map(task => {
-      const taskEvaluation = evaluations.find(e => e.taskId === task.id);
+    const taskSummaries = tasks.map((task) => {
+      const taskEvaluation = evaluations.find((e) => e.taskId === task.id);
       return {
         taskId: task.id,
         taskIndex: task.taskIndex,
         status: task.status,
         score: taskEvaluation?.score || task.score || 0,
         completedAt: task.completedAt,
-        timeSpentSeconds: task.timeSpentSeconds
+        timeSpentSeconds: task.timeSpentSeconds,
       };
     });
 
@@ -139,23 +142,22 @@ export async function GET(
       ksaScores,
       totalTimeSeconds: program.timeSpentSeconds,
       tasks: taskSummaries,
-      metadata: program.metadata
+      metadata: program.metadata,
     };
 
     return NextResponse.json({
       success: true,
-      summary
+      summary,
     });
-
   } catch (error) {
-    console.error('Get program summary error:', error);
+    console.error("Get program summary error:", error);
 
     return NextResponse.json(
       {
         success: false,
-        error: 'Failed to get program summary'
+        error: "Failed to get program summary",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -13,6 +13,7 @@
 ## 2. Configure AI Square
 
 Add to `.env.local`:
+
 ```bash
 # For development work
 SLACK_AISQUARE_DEV_WEBHOOK_URL=https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX
@@ -30,30 +31,34 @@ npx tsx scripts/test-slack-webhook.ts
 ## Usage Examples
 
 ### In Your Code
+
 ```typescript
-import { devTracker } from '@/lib/agents/development-tracker';
+import { devTracker } from "@/lib/agents/development-tracker";
 
 // Track progress
-devTracker.trackTests(150, 0, '10s');
-devTracker.trackFeature('User Auth', 'completed');
+devTracker.trackTests(150, 0, "10s");
+devTracker.trackFeature("User Auth", "completed");
 
 // Send summary
 await devTracker.sendSummary();
 ```
 
 ### Automatic Summaries
+
 - In development: Auto-sends summary when you press Ctrl+C
 - In production: Call `devTracker.sendSummary()` manually
 
 ### Quick Notifications
+
 ```typescript
-await devTracker.notify('Deployment started', 'info');
-await devTracker.notify('Build failed!', 'error');
+await devTracker.notify("Deployment started", "info");
+await devTracker.notify("Build failed!", "error");
 ```
 
 ## Message Format
 
 Messages appear in Slack with:
+
 - 📊 Work progress overview
 - ✅ Completed tasks with metrics
 - ❌ Failed tasks with errors

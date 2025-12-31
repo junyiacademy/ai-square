@@ -1,26 +1,26 @@
-import { renderHook, act } from '@testing-library/react';
-import { useDiscoveryData } from '../useDiscoveryData';
-import { useUserData } from '../useUserData';
+import { renderHook, act } from "@testing-library/react";
+import { useDiscoveryData } from "../useDiscoveryData";
+import { useUserData } from "../useUserData";
 
 // Mock useUserData hook
-jest.mock('../useUserData');
+jest.mock("../useUserData");
 
-describe('useDiscoveryData', () => {
+describe("useDiscoveryData", () => {
   const mockUserData = {
     assessmentResults: {
       tech: 80,
       creative: 60,
-      business: 70
+      business: 70,
     },
     achievements: {
-      badges: ['badge1', 'badge2'],
+      badges: ["badge1", "badge2"],
       totalXp: 1500,
       level: 5,
-      completedTasks: ['task1', 'task2']
+      completedTasks: ["task1", "task2"],
     },
     assessmentSessions: [],
-    lastUpdated: '2024-01-01T00:00:00.000Z',
-    version: '2.0'
+    lastUpdated: "2024-01-01T00:00:00.000Z",
+    version: "2.0",
   };
 
   const mockLoadUserData = jest.fn();
@@ -31,11 +31,11 @@ describe('useDiscoveryData', () => {
       userData: mockUserData,
       isLoading: false,
       error: null,
-      loadUserData: mockLoadUserData
+      loadUserData: mockLoadUserData,
     });
   });
 
-  it('should return user data correctly', () => {
+  it("should return user data correctly", () => {
     const { result } = renderHook(() => useDiscoveryData());
 
     expect(result.current.data).toEqual(mockUserData);
@@ -43,34 +43,34 @@ describe('useDiscoveryData', () => {
     expect(result.current.error).toBeNull();
   });
 
-  it('should return assessment results', () => {
+  it("should return assessment results", () => {
     const { result } = renderHook(() => useDiscoveryData());
 
     expect(result.current.assessmentResults).toEqual({
       tech: 80,
       creative: 60,
-      business: 70
+      business: 70,
     });
   });
 
-  it('should return achievements data', () => {
+  it("should return achievements data", () => {
     const { result } = renderHook(() => useDiscoveryData());
 
     expect(result.current.achievements).toEqual({
-      badges: ['badge1', 'badge2'],
+      badges: ["badge1", "badge2"],
       totalXp: 1500,
       level: 5,
-      completedTasks: ['task1', 'task2']
+      completedTasks: ["task1", "task2"],
     });
     expect(result.current.achievementCount).toBe(2);
   });
 
-  it('should handle null user data', () => {
+  it("should handle null user data", () => {
     (useUserData as jest.Mock).mockReturnValue({
       userData: null,
       isLoading: false,
       error: null,
-      loadUserData: mockLoadUserData
+      loadUserData: mockLoadUserData,
     });
 
     const { result } = renderHook(() => useDiscoveryData());
@@ -81,17 +81,17 @@ describe('useDiscoveryData', () => {
       badges: [],
       totalXp: 0,
       level: 1,
-      completedTasks: []
+      completedTasks: [],
     });
     expect(result.current.achievementCount).toBe(0);
   });
 
-  it('should handle loading state', () => {
+  it("should handle loading state", () => {
     (useUserData as jest.Mock).mockReturnValue({
       userData: null,
       isLoading: true,
       error: null,
-      loadUserData: mockLoadUserData
+      loadUserData: mockLoadUserData,
     });
 
     const { result } = renderHook(() => useDiscoveryData());
@@ -99,13 +99,13 @@ describe('useDiscoveryData', () => {
     expect(result.current.isLoading).toBe(true);
   });
 
-  it('should handle error state', () => {
-    const errorMessage = 'Failed to load data';
+  it("should handle error state", () => {
+    const errorMessage = "Failed to load data";
     (useUserData as jest.Mock).mockReturnValue({
       userData: null,
       isLoading: false,
       error: errorMessage,
-      loadUserData: mockLoadUserData
+      loadUserData: mockLoadUserData,
     });
 
     const { result } = renderHook(() => useDiscoveryData());
@@ -113,7 +113,7 @@ describe('useDiscoveryData', () => {
     expect(result.current.error).toEqual(new Error(errorMessage));
   });
 
-  it('should refresh data', async () => {
+  it("should refresh data", async () => {
     const { result } = renderHook(() => useDiscoveryData());
 
     await act(async () => {

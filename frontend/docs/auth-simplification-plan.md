@@ -1,15 +1,18 @@
 # Authentication System Simplification Plan
 
 ## Overview
+
 This document outlines the plan to simplify AI Square's authentication system from multiple overlapping mechanisms to a single, secure session-based system.
 
 ## Current State (Before Simplification)
+
 - Multiple auth mechanisms: JWT, session-simple, token-manager, auth-manager
 - Insecure base64 session tokens
 - Complex client/server synchronization
 - Multiple fallback mechanisms causing confusion
 
 ## Target State (After Simplification)
+
 - Single source of truth: sessionToken cookie
 - Secure hex token generation (crypto.randomBytes)
 - Server-side session storage
@@ -17,6 +20,7 @@ This document outlines the plan to simplify AI Square's authentication system fr
 - Clear separation of concerns
 
 ## Phase 1: Fix Critical Bug ✅
+
 - Fixed `isValidSessionToken` to accept hex tokens instead of base64
 - Users can now access protected routes
 - Immediate problem solved
@@ -24,6 +28,7 @@ This document outlines the plan to simplify AI Square's authentication system fr
 ## Phase 2: Simplify System (Current)
 
 ### New Components Created:
+
 1. **`secure-session.ts`** - Secure session management
    - Replaces insecure base64 tokens
    - Server-side session storage
@@ -43,6 +48,7 @@ This document outlines the plan to simplify AI Square's authentication system fr
 ### Migration Steps:
 
 #### Step 1: Test New System (Parallel Run)
+
 ```bash
 # Test new endpoints
 POST /api/auth/login-new
@@ -51,6 +57,7 @@ POST /api/auth/logout-new
 ```
 
 #### Step 2: Database Migration
+
 ```sql
 -- Add session storage table (if using DB instead of in-memory)
 CREATE TABLE sessions (
@@ -66,6 +73,7 @@ CREATE TABLE sessions (
 ```
 
 #### Step 3: Switch Routes
+
 ```typescript
 // Rename files
 mv route-simplified.ts route.ts
@@ -73,6 +81,7 @@ mv auth-utils-simplified.ts auth-utils.ts
 ```
 
 #### Step 4: Remove Old Files
+
 ```bash
 # Files to remove
 rm src/lib/auth/jwt.ts
@@ -85,6 +94,7 @@ rm src/app/api/auth/refresh/route.ts
 ```
 
 #### Step 5: Update Client Code
+
 ```typescript
 // Update useAuth hook to remove refresh logic
 // Update AuthContext to remove JWT handling
@@ -93,6 +103,7 @@ rm src/app/api/auth/refresh/route.ts
 ## Phase 3: Future Enhancements
 
 ### Option 1: Production-Ready Session Store
+
 ```typescript
 // Use Redis for session storage
 import Redis from 'ioredis';
@@ -104,6 +115,7 @@ sessionStore.get(token) → JSON.parse(await redis.get(token))
 ```
 
 ### Option 2: Migrate to NextAuth.js
+
 - Industry-standard authentication
 - OAuth provider support
 - Built-in session management
@@ -112,6 +124,7 @@ sessionStore.get(token) → JSON.parse(await redis.get(token))
 ## Testing Strategy
 
 ### Unit Tests
+
 - [x] SecureSession token generation
 - [x] Session CRUD operations
 - [x] Token validation
@@ -120,6 +133,7 @@ sessionStore.get(token) → JSON.parse(await redis.get(token))
 - [ ] API routes
 
 ### E2E Tests
+
 - [ ] Login flow with new system
 - [ ] Protected route access
 - [ ] Session persistence
@@ -127,13 +141,16 @@ sessionStore.get(token) → JSON.parse(await redis.get(token))
 - [ ] Parallel testing with old system
 
 ## Rollback Plan
+
 If issues arise:
+
 1. Keep old files as backups
 2. Switch route names back
 3. Monitor error logs
 4. Fix forward if possible
 
 ## Success Metrics
+
 - Zero authentication-related redirects
 - Reduced code complexity (LOC)
 - Improved security (no plaintext tokens)
@@ -141,6 +158,7 @@ If issues arise:
 - Easier debugging
 
 ## Timeline
+
 - Phase 1: ✅ Complete (Bug fix)
 - Phase 2: In Progress (Simplification)
   - Week 1: Create new components
@@ -150,6 +168,7 @@ If issues arise:
 - Phase 3: Future (NextAuth.js evaluation)
 
 ## Notes
+
 - Always test in staging first
 - Keep backups of old system
 - Monitor logs during migration

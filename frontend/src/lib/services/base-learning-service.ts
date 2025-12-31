@@ -5,11 +5,7 @@
  * 符合統一學習架構設計
  */
 
-import type {
-  IProgram,
-  ITask,
-  IEvaluation
-} from '@/types/unified-learning';
+import type { IProgram, ITask, IEvaluation } from "@/types/unified-learning";
 
 /**
  * 基礎學習服務介面
@@ -25,7 +21,7 @@ export interface BaseLearningService {
   startLearning(
     userId: string,
     scenarioId: string,
-    options?: LearningOptions
+    options?: LearningOptions,
   ): Promise<IProgram>;
 
   /**
@@ -43,7 +39,7 @@ export interface BaseLearningService {
   submitResponse(
     programId: string,
     taskId: string,
-    response: Record<string, unknown>
+    response: Record<string, unknown>,
   ): Promise<TaskResult>;
 
   /**
@@ -69,10 +65,7 @@ export interface BaseLearningService {
    * @param evaluationId 評估 ID
    * @param language 語言
    */
-  generateFeedback(
-    evaluationId: string,
-    language: string
-  ): Promise<string>;
+  generateFeedback(evaluationId: string, language: string): Promise<string>;
 }
 
 /**
@@ -80,7 +73,7 @@ export interface BaseLearningService {
  */
 export interface LearningOptions {
   language?: string;
-  difficulty?: 'beginner' | 'intermediate' | 'advanced';
+  difficulty?: "beginner" | "intermediate" | "advanced";
   timeLimit?: number;
   metadata?: Record<string, unknown>;
 }
@@ -90,7 +83,7 @@ export interface LearningOptions {
  */
 export interface LearningProgress {
   programId: string;
-  status: 'pending' | 'active' | 'completed' | 'expired';
+  status: "pending" | "active" | "completed" | "expired";
   currentTaskIndex: number;
   totalTasks: number;
   completedTasks: number;
@@ -129,5 +122,5 @@ export interface CompletionResult {
  * 學習服務工廠介面
  */
 export interface ILearningServiceFactory {
-  getService(mode: 'assessment' | 'pbl' | 'discovery'): BaseLearningService;
+  getService(mode: "assessment" | "pbl" | "discovery"): BaseLearningService;
 }

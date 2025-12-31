@@ -4,13 +4,13 @@
  * Eliminates the need for O(n) searches through all scenarios
  */
 
-import { IScenario } from '@/types/unified-learning';
-import { cacheService } from '@/lib/cache/cache-service';
+import { IScenario } from "@/types/unified-learning";
+import { cacheService } from "@/lib/cache/cache-service";
 
 export interface ScenarioIndexEntry {
   yamlId: string;
   uuid: string;
-  sourceType: 'pbl' | 'assessment' | 'discovery';
+  sourceType: "pbl" | "assessment" | "discovery";
   title?: string;
   lastUpdated: string;
 }
@@ -23,7 +23,7 @@ export interface ScenarioIndex {
 
 class ScenarioIndexService {
   private static instance: ScenarioIndexService;
-  private readonly CACHE_KEY = 'scenario:index:v1';
+  private readonly CACHE_KEY = "scenario:index:v1";
   private readonly CACHE_TTL = 30 * 60; // 30 minutes
   private memoryIndex: ScenarioIndex | null = null;
 
@@ -49,9 +49,12 @@ class ScenarioIndexService {
         const entry: ScenarioIndexEntry = {
           yamlId: yamlId as string,
           uuid: scenario.id,
-          sourceType: scenario.mode as 'pbl' | 'assessment' | 'discovery',
-          title: typeof scenario.title === 'object' && scenario.title.en ? scenario.title.en : undefined,
-          lastUpdated: scenario.updatedAt || scenario.createdAt
+          sourceType: scenario.mode as "pbl" | "assessment" | "discovery",
+          title:
+            typeof scenario.title === "object" && scenario.title.en
+              ? scenario.title.en
+              : undefined,
+          lastUpdated: scenario.updatedAt || scenario.createdAt,
         };
 
         yamlToUuid.set(yamlId as string, entry);
@@ -62,7 +65,7 @@ class ScenarioIndexService {
     const index: ScenarioIndex = {
       yamlToUuid,
       uuidToYaml,
-      lastUpdated: new Date().toISOString()
+      lastUpdated: new Date().toISOString(),
     };
 
     // Store in cache
@@ -153,17 +156,19 @@ class ScenarioIndexService {
     const serializable = {
       yamlToUuid: Array.from(index.yamlToUuid.entries()),
       uuidToYaml: Array.from(index.uuidToYaml.entries()),
-      lastUpdated: index.lastUpdated
+      lastUpdated: index.lastUpdated,
     };
 
-    await cacheService.set(this.CACHE_KEY, serializable, { ttl: this.CACHE_TTL });
+    await cacheService.set(this.CACHE_KEY, serializable, {
+      ttl: this.CACHE_TTL,
+    });
   }
 
   /**
    * Load index from cache
    */
   private async loadFromCache(): Promise<ScenarioIndex | null> {
-    const cached = await cacheService.get(this.CACHE_KEY) as {
+    const cached = (await cacheService.get(this.CACHE_KEY)) as {
       yamlToUuid: Array<[string, ScenarioIndexEntry]>;
       uuidToYaml: Array<[string, ScenarioIndexEntry]>;
       lastUpdated: string;
@@ -174,7 +179,7 @@ class ScenarioIndexService {
     return {
       yamlToUuid: new Map(cached.yamlToUuid),
       uuidToYaml: new Map(cached.uuidToYaml),
-      lastUpdated: cached.lastUpdated
+      lastUpdated: cached.lastUpdated,
     };
   }
 

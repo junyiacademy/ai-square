@@ -3,15 +3,15 @@
  * Uses modern-screenshot which supports all modern CSS including oklch/oklab
  */
 
-import { domToPng } from 'modern-screenshot';
-import { jsPDF } from 'jspdf';
+import { domToPng } from "modern-screenshot";
+import { jsPDF } from "jspdf";
 
 /**
  * Generate PDF from HTML element
  */
 export async function generatePDFFromElement(
   element: HTMLElement,
-  fileName: string
+  fileName: string,
 ): Promise<void> {
   try {
     // A4 Portrait dimensions in pixels (at 96 DPI)
@@ -33,12 +33,12 @@ export async function generatePDFFromElement(
     element.style.minWidth = `${A4_WIDTH_PX}px`;
 
     // Wait for layout to settle
-    await new Promise(resolve => setTimeout(resolve, 150));
+    await new Promise((resolve) => setTimeout(resolve, 150));
 
     // Capture at exact A4 dimensions
     const dataUrl = await domToPng(element, {
       scale: 2, // High quality (2x resolution)
-      backgroundColor: '#ffffff',
+      backgroundColor: "#ffffff",
       width: A4_WIDTH_PX,
       height: A4_HEIGHT_PX,
     });
@@ -52,18 +52,18 @@ export async function generatePDFFromElement(
 
     // Create PDF with A4 portrait
     const pdf = new jsPDF({
-      orientation: 'portrait',
-      unit: 'mm',
-      format: 'a4',
+      orientation: "portrait",
+      unit: "mm",
+      format: "a4",
     });
 
     // Add image filling entire A4 page
-    pdf.addImage(dataUrl, 'PNG', 0, 0, 210, 297);
+    pdf.addImage(dataUrl, "PNG", 0, 0, 210, 297);
 
     // Save PDF
     pdf.save(fileName);
   } catch (error) {
-    console.error('PDF generation error:', error);
+    console.error("PDF generation error:", error);
     throw error;
   }
 }

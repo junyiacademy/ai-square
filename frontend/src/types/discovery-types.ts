@@ -3,18 +3,18 @@
  * 職涯探索模組專屬型別定義
  */
 
-import { IScenario, IProgram, ITask, IEvaluation } from './unified-learning';
+import { IScenario, IProgram, ITask, IEvaluation } from "./unified-learning";
 
 /**
  * Discovery Scenario 擴展介面
  */
 export interface IDiscoveryScenario extends IScenario {
-  mode: 'discovery';
+  mode: "discovery";
   discoveryData: {
     careerPath: string;
     requiredSkills: string[];
     industryInsights: Record<string, unknown>;
-    careerLevel: 'entry' | 'intermediate' | 'senior' | 'expert';
+    careerLevel: "entry" | "intermediate" | "senior" | "expert";
     estimatedSalaryRange?: {
       min: number;
       max: number;
@@ -31,7 +31,7 @@ export interface IDiscoveryScenario extends IScenario {
  * Discovery Program 擴展介面
  */
 export interface IDiscoveryProgram extends IProgram {
-  mode: 'discovery';
+  mode: "discovery";
   discoveryData: {
     explorationPath: string[];
     milestones: IDiscoveryMilestone[];
@@ -45,13 +45,13 @@ export interface IDiscoveryProgram extends IProgram {
  * Discovery Task 擴展介面
  */
 export interface IDiscoveryTask extends ITask {
-  mode: 'discovery';
+  mode: "discovery";
   discoveryData: {
-    taskCategory: 'exploration' | 'skill_assessment' | 'project' | 'reflection';
+    taskCategory: "exploration" | "skill_assessment" | "project" | "reflection";
     realWorldContext: string;
     industryRelevance: string[];
     toolsUsed?: string[];
-    collaborationType?: 'individual' | 'team' | 'mentor-guided';
+    collaborationType?: "individual" | "team" | "mentor-guided";
   };
 }
 
@@ -59,7 +59,7 @@ export interface IDiscoveryTask extends ITask {
  * Discovery Evaluation 擴展介面
  */
 export interface IDiscoveryEvaluation extends IEvaluation {
-  mode: 'discovery';
+  mode: "discovery";
   discoveryData: {
     careerFit: number; // 0-100
     skillsAcquired: string[];
@@ -101,7 +101,7 @@ export interface ISkillGap {
   skill: string;
   currentLevel: number; // 0-100
   requiredLevel: number; // 0-100
-  importance: 'critical' | 'important' | 'nice-to-have';
+  importance: "critical" | "important" | "nice-to-have";
   suggestedResources: string[];
 }
 
@@ -115,7 +115,7 @@ export interface IPortfolioItem {
   taskId: string;
   createdAt: string;
   artifacts: {
-    type: 'code' | 'design' | 'document' | 'presentation';
+    type: "code" | "design" | "document" | "presentation";
     url: string;
     thumbnail?: string;
   }[];
@@ -171,8 +171,15 @@ export interface IDiscoveryRepository {
   }>;
 
   // Portfolio management
-  addPortfolioItem(userId: string, item: Omit<IPortfolioItem, 'id' | 'createdAt'>): Promise<IPortfolioItem>;
-  updatePortfolioItem(userId: string, itemId: string, updates: Partial<IPortfolioItem>): Promise<IPortfolioItem>;
+  addPortfolioItem(
+    userId: string,
+    item: Omit<IPortfolioItem, "id" | "createdAt">,
+  ): Promise<IPortfolioItem>;
+  updatePortfolioItem(
+    userId: string,
+    itemId: string,
+    updates: Partial<IPortfolioItem>,
+  ): Promise<IPortfolioItem>;
   deletePortfolioItem(userId: string, itemId: string): Promise<void>;
   getPortfolioItems(userId: string): Promise<IPortfolioItem[]>;
 }

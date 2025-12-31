@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
+import { NextRequest, NextResponse } from "next/server";
+import { repositoryFactory } from "@/lib/repositories/base/repository-factory";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ programId: string }> }
+  { params }: { params: Promise<{ programId: string }> },
 ) {
   try {
     const { programId } = await params;
@@ -11,19 +11,19 @@ export async function GET(
     // Get user info from cookie
     let userEmail: string | undefined;
     try {
-      const userCookie = request.cookies.get('user')?.value;
+      const userCookie = request.cookies.get("user")?.value;
       if (userCookie) {
         const user = JSON.parse(userCookie);
         userEmail = user.email;
       }
     } catch {
-      console.log('No user cookie found');
+      console.log("No user cookie found");
     }
 
     if (!userEmail) {
       return NextResponse.json(
-        { success: false, error: 'User authentication required' },
-        { status: 401 }
+        { success: false, error: "User authentication required" },
+        { status: 401 },
       );
     }
 
@@ -36,8 +36,8 @@ export async function GET(
     const user = await userRepo.findByEmail(userEmail);
     if (!user) {
       return NextResponse.json(
-        { success: false, error: 'User not found' },
-        { status: 404 }
+        { success: false, error: "User not found" },
+        { status: 404 },
       );
     }
 
@@ -46,8 +46,8 @@ export async function GET(
 
     if (!program || program.userId !== user.id) {
       return NextResponse.json(
-        { success: false, error: 'Program not found' },
-        { status: 404 }
+        { success: false, error: "Program not found" },
+        { status: 404 },
       );
     }
 
@@ -72,16 +72,15 @@ export async function GET(
         startedAt: program.startedAt || program.createdAt,
         updatedAt: program.lastActivityAt,
         completedAt: program.completedAt,
-        taskIds: tasks.map(t => t.id),
-        metadata: program.metadata
-      }
+        taskIds: tasks.map((t) => t.id),
+        metadata: program.metadata,
+      },
     });
-
   } catch (error) {
-    console.error('Error getting program:', error);
+    console.error("Error getting program:", error);
     return NextResponse.json(
-      { success: false, error: 'Failed to get program' },
-      { status: 500 }
+      { success: false, error: "Failed to get program" },
+      { status: 500 },
     );
   }
 }

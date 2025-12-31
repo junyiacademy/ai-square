@@ -4,11 +4,11 @@
  * Updated for unified schema v2
  */
 
-import { Pool } from 'pg';
-import type { DBTask, TaskStatus, TaskType } from '@/types/database';
-import type { ITask, IInteraction } from '@/types/unified-learning';
-import { BaseTaskRepository } from '@/types/unified-learning';
-import type { AttemptData } from '@/lib/repositories/interfaces';
+import { Pool } from "pg";
+import type { DBTask, TaskStatus, TaskType } from "@/types/database";
+import type { ITask, IInteraction } from "@/types/unified-learning";
+import { BaseTaskRepository } from "@/types/unified-learning";
+import type { AttemptData } from "@/lib/repositories/interfaces";
 
 export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
   constructor(private pool: Pool) {
@@ -22,14 +22,24 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
     return {
       id: row.id,
       programId: row.program_id,
-      scenarioId: row.scenario_id,  // Map database scenario_id to interface scenarioId
-      mode: row.mode,  // Include mode from database
+      scenarioId: row.scenario_id, // Map database scenario_id to interface scenarioId
+      mode: row.mode, // Include mode from database
       taskIndex: row.task_index,
-      scenarioTaskIndex: row.scenario_task_index !== null && row.scenario_task_index !== undefined ? row.scenario_task_index : undefined,
+      scenarioTaskIndex:
+        row.scenario_task_index !== null &&
+        row.scenario_task_index !== undefined
+          ? row.scenario_task_index
+          : undefined,
 
       // Basic info
-      title: typeof row.title === 'string' ? { en: row.title } : row.title || undefined,
-      description: typeof row.description === 'string' ? { en: row.description } : row.description || undefined,
+      title:
+        typeof row.title === "string"
+          ? { en: row.title }
+          : row.title || undefined,
+      description:
+        typeof row.description === "string"
+          ? { en: row.description }
+          : row.description || undefined,
       type: row.type,
       status: row.status,
 
@@ -40,10 +50,18 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
       interactions: Array.isArray(row.interactions)
         ? (row.interactions as unknown as IInteraction[])
         : [],
-      interactionCount: Array.isArray(row.interactions) ? row.interactions.length : 0,
+      interactionCount: Array.isArray(row.interactions)
+        ? row.interactions.length
+        : 0,
 
       // Response/solution (stored in metadata)
-      userResponse: row.user_response as Record<string, unknown> || (row.metadata as Record<string, unknown>)?.userResponse as Record<string, unknown> || {},
+      userResponse:
+        (row.user_response as Record<string, unknown>) ||
+        ((row.metadata as Record<string, unknown>)?.userResponse as Record<
+          string,
+          unknown
+        >) ||
+        {},
 
       // Scoring
       score: row.score || 0,
@@ -70,7 +88,7 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
       assessmentData: row.assessment_data || {},
 
       // Extensible metadata
-      metadata: row.metadata || {}
+      metadata: row.metadata || {},
     };
   }
 
@@ -91,7 +109,7 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
     `;
 
     const { rows } = await this.pool.query<DBTask>(query, [programId]);
-    return rows.map(row => this.toTask(row));
+    return rows.map((row) => this.toTask(row));
   }
 
   async findByProgramIds(programIds: string[]): Promise<ITask[]> {
@@ -105,14 +123,13 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
     `;
 
     const { rows } = await this.pool.query<DBTask>(query, [uniqueIds]);
-    return rows.map(row => this.toTask(row));
+    return rows.map((row) => this.toTask(row));
   }
 
-
-  async create(task: Omit<ITask, 'id'>): Promise<ITask> {
+  async create(task: Omit<ITask, "id">): Promise<ITask> {
     // Ensure scenarioId is provided - database requires it
     if (!task.scenarioId) {
-      throw new Error('scenarioId is required for task creation');
+      throw new Error("scenarioId is required for task creation");
     }
 
     const query = `
@@ -138,7 +155,7 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
       task.title || null,
       task.description || null,
       task.type,
-      task.status || 'pending',
+      task.status || "pending",
       JSON.stringify(task.content || {}),
       JSON.stringify(task.metadata || {}),
       JSON.stringify(task.interactions || []),
@@ -147,23 +164,23 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
       task.allowedAttempts || 1,
       task.score || null,
       task.timeSpentSeconds || 0,
-      task.startedAt || null
+      task.startedAt || null,
     ]);
 
     return this.toTask(rows[0]);
   }
 
-  async createBatch(tasks: Omit<ITask, 'id'>[]): Promise<ITask[]> {
+  async createBatch(tasks: Omit<ITask, "id">[]): Promise<ITask[]> {
     const client = await this.pool.connect();
     const createdTasks: ITask[] = [];
 
     try {
-      await client.query('BEGIN');
+      await client.query("BEGIN");
 
       for (const task of tasks) {
         // Ensure scenarioId is provided - database requires it
         if (!task.scenarioId) {
-          throw new Error('scenarioId is required for task creation');
+          throw new Error("scenarioId is required for task creation");
         }
         const query = `
           INSERT INTO tasks (
@@ -188,7 +205,7 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
           task.title || null,
           task.description || null,
           task.type,
-          task.status || 'pending',
+          task.status || "pending",
           JSON.stringify(task.content || {}),
           JSON.stringify(task.metadata || {}),
           JSON.stringify(task.interactions || []),
@@ -197,23 +214,26 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
           task.allowedAttempts || 1,
           task.score || null,
           task.timeSpentSeconds || 0,
-          task.startedAt || null
+          task.startedAt || null,
         ]);
 
         createdTasks.push(this.toTask(rows[0]));
       }
 
-      await client.query('COMMIT');
+      await client.query("COMMIT");
       return createdTasks;
     } catch (error) {
-      await client.query('ROLLBACK');
+      await client.query("ROLLBACK");
       throw error;
     } finally {
       client.release();
     }
   }
 
-  async updateInteractions(id: string, interactions: IInteraction[]): Promise<ITask> {
+  async updateInteractions(
+    id: string,
+    interactions: IInteraction[],
+  ): Promise<ITask> {
     const query = `
       UPDATE tasks
       SET interactions = $1,
@@ -224,11 +244,11 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
 
     const { rows } = await this.pool.query<DBTask>(query, [
       JSON.stringify(interactions),
-      id
+      id,
     ]);
 
     if (!rows[0]) {
-      throw new Error('Task not found');
+      throw new Error("Task not found");
     }
 
     return this.toTask(rows[0]);
@@ -247,7 +267,7 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
     const { rows } = await this.pool.query<DBTask>(query, [id]);
 
     if (!rows[0]) {
-      throw new Error('Task not found');
+      throw new Error("Task not found");
     }
 
     return this.toTask(rows[0]);
@@ -266,10 +286,12 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
       values.push(updates.status);
 
       // Update timestamps based on status
-      if (updates.status === 'active' && !updates.startedAt) {
-        updateFields.push(`started_at = COALESCE(started_at, CURRENT_TIMESTAMP)`);
+      if (updates.status === "active" && !updates.startedAt) {
+        updateFields.push(
+          `started_at = COALESCE(started_at, CURRENT_TIMESTAMP)`,
+        );
       }
-      if (updates.status === 'completed' && !updates.completedAt) {
+      if (updates.status === "completed" && !updates.completedAt) {
         updateFields.push(`completed_at = CURRENT_TIMESTAMP`);
       }
     }
@@ -298,7 +320,9 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
 
     // Response/solution - store in metadata
     if (updates.userResponse !== undefined) {
-      updateFields.push(`metadata = jsonb_set(COALESCE(metadata, '{}'::jsonb), '{userResponse}', $${paramCount++}::jsonb)`);
+      updateFields.push(
+        `metadata = jsonb_set(COALESCE(metadata, '{}'::jsonb), '{userResponse}', $${paramCount++}::jsonb)`,
+      );
       values.push(JSON.stringify(updates.userResponse));
     }
 
@@ -347,14 +371,14 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
     }
 
     if (updateFields.length === 0) {
-      throw new Error('No fields to update');
+      throw new Error("No fields to update");
     }
 
     values.push(id);
 
     const query = `
       UPDATE tasks
-      SET ${updateFields.join(', ')}, updated_at = CURRENT_TIMESTAMP
+      SET ${updateFields.join(", ")}, updated_at = CURRENT_TIMESTAMP
       WHERE id = $${paramCount}
       RETURNING *
     `;
@@ -362,19 +386,20 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
     const { rows } = await this.pool.query<DBTask>(query, values);
 
     if (!rows[0]) {
-      throw new Error('Task not found');
+      throw new Error("Task not found");
     }
 
     return this.toTask(rows[0]);
   }
 
   async updateStatus(id: string, status: TaskStatus): Promise<void> {
-    let additionalUpdates = '';
+    let additionalUpdates = "";
 
-    if (status === 'active') {
-      additionalUpdates = ', started_at = COALESCE(started_at, CURRENT_TIMESTAMP)';
-    } else if (status === 'completed') {
-      additionalUpdates = ', completed_at = CURRENT_TIMESTAMP';
+    if (status === "active") {
+      additionalUpdates =
+        ", started_at = COALESCE(started_at, CURRENT_TIMESTAMP)";
+    } else if (status === "completed") {
+      additionalUpdates = ", completed_at = CURRENT_TIMESTAMP";
     }
 
     const query = `
@@ -388,7 +413,10 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
   }
 
   // Add interaction to task
-  async addInteraction(taskId: string, interaction: IInteraction): Promise<void> {
+  async addInteraction(
+    taskId: string,
+    interaction: IInteraction,
+  ): Promise<void> {
     const getTaskQuery = `
       SELECT interactions FROM tasks WHERE id = $1
     `;
@@ -396,7 +424,7 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
     const { rows } = await this.pool.query(getTaskQuery, [taskId]);
 
     if (!rows[0]) {
-      throw new Error('Task not found');
+      throw new Error("Task not found");
     }
 
     const currentInteractions = rows[0].interactions as IInteraction[];
@@ -411,7 +439,7 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
 
     await this.pool.query(updateQuery, [
       JSON.stringify(currentInteractions),
-      taskId
+      taskId,
     ]);
   }
 
@@ -435,7 +463,7 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
       attempt.score || 0,
       JSON.stringify(attempt.response),
       attempt.timeSpent,
-      id
+      id,
     ]);
   }
 
@@ -482,7 +510,7 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
     query += ` ORDER BY task_index ASC`;
 
     const { rows } = await this.pool.query<DBTask>(query, params);
-    return rows.map(row => this.toTask(row));
+    return rows.map((row) => this.toTask(row));
   }
 
   // Get tasks by status
@@ -501,7 +529,7 @@ export class PostgreSQLTaskRepository extends BaseTaskRepository<ITask> {
     query += ` ORDER BY task_index ASC`;
 
     const { rows } = await this.pool.query<DBTask>(query, params);
-    return rows.map(row => this.toTask(row));
+    return rows.map((row) => this.toTask(row));
   }
 
   /**

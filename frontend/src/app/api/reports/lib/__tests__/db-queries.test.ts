@@ -3,74 +3,76 @@
  * TDD: Red → Green → Refactor
  */
 
-import { getWeeklyStats } from '../db-queries';
-import { Pool } from 'pg';
+import { getWeeklyStats } from "../db-queries";
+import { Pool } from "pg";
 
 // Mock pg Pool
-jest.mock('pg', () => ({
-  Pool: jest.fn()
+jest.mock("pg", () => ({
+  Pool: jest.fn(),
 }));
 
-describe('Weekly Report Database Queries', () => {
+describe("Weekly Report Database Queries", () => {
   let mockPool: jest.Mocked<Pool>;
   let mockQuery: jest.Mock;
 
   // Helper function to create standard mock learning stats
   const createMockLearningStats = () => ({
-    rows: [{
-      assessment_completions: '234',
-      pbl_completions: '89',
-      discovery_completions: '156',
-      total_completions: '479',
-      completion_rate: '78.5'
-    }]
+    rows: [
+      {
+        assessment_completions: "234",
+        pbl_completions: "89",
+        discovery_completions: "156",
+        total_completions: "479",
+        completion_rate: "78.5",
+      },
+    ],
   });
 
   // Helper function to create standard mock top content
   const createMockTopContent = () => ({
     rows: [
-      { name: 'Career Assessment', count: '45' },
-      { name: 'Software Engineer PBL', count: '38' },
-      { name: 'Data Science Discovery', count: '32' }
-    ]
+      { name: "Career Assessment", count: "45" },
+      { name: "Software Engineer PBL", count: "38" },
+      { name: "Data Science Discovery", count: "32" },
+    ],
   });
 
   // Helper to create DB info mock (new validation query)
   const createMockDbInfo = () => ({
-    rows: [{ db_name: 'test_db', host: '127.0.0.1' }]
+    rows: [{ db_name: "test_db", host: "127.0.0.1" }],
   });
 
   // Helper to create sanity check mock (new validation query)
-  const createMockSanityCheck = (count: string = '394') => ({
-    rows: [{ count }]
+  const createMockSanityCheck = (count: string = "394") => ({
+    rows: [{ count }],
   });
 
   // Helper to create weekly registration trend mock
   const createMockWeeklyRegTrend = () => ({
     rows: [
-      { week_label: '11/04', new_users: '110' },
-      { week_label: '11/11', new_users: '125' },
-      { week_label: '11/18', new_users: '135' },
-      { week_label: '11/25', new_users: '130' },
-      { week_label: '12/02', new_users: '142' },
-      { week_label: '12/09', new_users: '150' },
-      { week_label: '12/16', new_users: '145' },
-      { week_label: '12/23', new_users: '152' }
-    ]
+      { week_label: "11/04", new_users: "110" },
+      { week_label: "11/11", new_users: "125" },
+      { week_label: "11/18", new_users: "135" },
+      { week_label: "11/25", new_users: "130" },
+      { week_label: "12/02", new_users: "142" },
+      { week_label: "12/09", new_users: "150" },
+      { week_label: "12/16", new_users: "145" },
+      { week_label: "12/23", new_users: "152" },
+    ],
   });
 
   // Helper to create weekly active users trend mock
   const createMockWeeklyActiveTrend = () => ({
     rows: [
-      { week_label: '11/04', active_users: '200' },
-      { week_label: '11/11', active_users: '215' },
-      { week_label: '11/18', active_users: '230' },
-      { week_label: '11/25', active_users: '220' },
-      { week_label: '12/02', active_users: '245' },
-      { week_label: '12/09', active_users: '250' },
-      { week_label: '12/16', active_users: '255' },
-      { week_label: '12/23', active_users: '260' }
-    ]
+      { week_label: "11/04", active_users: "200" },
+      { week_label: "11/11", active_users: "215" },
+      { week_label: "11/18", active_users: "230" },
+      { week_label: "11/25", active_users: "220" },
+      { week_label: "12/02", active_users: "245" },
+      { week_label: "12/09", active_users: "250" },
+      { week_label: "12/16", active_users: "255" },
+      { week_label: "12/23", active_users: "260" },
+    ],
   });
 
   beforeEach(() => {
@@ -85,73 +87,79 @@ describe('Weekly Report Database Queries', () => {
     } as unknown as jest.Mocked<Pool>;
   });
 
-  describe('getWeeklyStats', () => {
-    it('should return user growth statistics', async () => {
+  describe("getWeeklyStats", () => {
+    it("should return user growth statistics", async () => {
       // Arrange
       const mockUserStats = {
-        rows: [{
-          total_users: '394',
-          new_this_week: '142',
-          new_last_week: '135'
-        }]
+        rows: [
+          {
+            total_users: "394",
+            new_this_week: "142",
+            new_last_week: "135",
+          },
+        ],
       };
 
       const mockDailyTrend = {
         rows: [
-          { day: '2025-11-27', count: '13' },
-          { day: '2025-11-26', count: '8' },
-          { day: '2025-11-25', count: '20' },
-          { day: '2025-11-24', count: '34' },
-          { day: '2025-11-23', count: '29' },
-          { day: '2025-11-22', count: '23' },
-          { day: '2025-11-21', count: '20' }
-        ]
+          { day: "2025-11-27", count: "13" },
+          { day: "2025-11-26", count: "8" },
+          { day: "2025-11-25", count: "20" },
+          { day: "2025-11-24", count: "34" },
+          { day: "2025-11-23", count: "29" },
+          { day: "2025-11-22", count: "23" },
+          { day: "2025-11-21", count: "20" },
+        ],
       };
 
       const mockEngagementStats = {
-        rows: [{
-          weekly_active_users: '245',
-          daily_avg_active: '85',
-          retention_rate: '45.0'
-        }]
+        rows: [
+          {
+            weekly_active_users: "245",
+            daily_avg_active: "85",
+            retention_rate: "45.0",
+          },
+        ],
       };
 
       const mockLearningStats = {
-        rows: [{
-          assessment_completions: '234',
-          pbl_completions: '89',
-          discovery_completions: '156',
-          total_completions: '479',
-          completion_rate: '78.5'
-        }]
+        rows: [
+          {
+            assessment_completions: "234",
+            pbl_completions: "89",
+            discovery_completions: "156",
+            total_completions: "479",
+            completion_rate: "78.5",
+          },
+        ],
       };
 
       const mockTopContent = {
         rows: [
-          { name: 'Career Assessment', count: '45' },
-          { name: 'Software Engineer PBL', count: '38' },
-          { name: 'Data Science Discovery', count: '32' }
-        ]
+          { name: "Career Assessment", count: "45" },
+          { name: "Software Engineer PBL", count: "38" },
+          { name: "Data Science Discovery", count: "32" },
+        ],
       };
 
       const mockDbInfo = {
-        rows: [{ db_name: 'test_db', host: '127.0.0.1' }]
+        rows: [{ db_name: "test_db", host: "127.0.0.1" }],
       };
 
       const mockSanityCheck = {
-        rows: [{ count: '394' }]
+        rows: [{ count: "394" }],
       };
 
       mockQuery
-        .mockResolvedValueOnce(createMockDbInfo())          // db info query
-        .mockResolvedValueOnce(createMockSanityCheck())     // sanity check
-        .mockResolvedValueOnce(mockUserStats)               // user stats
-        .mockResolvedValueOnce(mockDailyTrend)              // daily trend
-        .mockResolvedValueOnce(createMockWeeklyRegTrend())  // weekly registration trend
+        .mockResolvedValueOnce(createMockDbInfo()) // db info query
+        .mockResolvedValueOnce(createMockSanityCheck()) // sanity check
+        .mockResolvedValueOnce(mockUserStats) // user stats
+        .mockResolvedValueOnce(mockDailyTrend) // daily trend
+        .mockResolvedValueOnce(createMockWeeklyRegTrend()) // weekly registration trend
         .mockResolvedValueOnce(createMockWeeklyActiveTrend()) // weekly active trend
-        .mockResolvedValueOnce(mockEngagementStats)         // engagement stats
-        .mockResolvedValueOnce(mockLearningStats)           // learning stats
-        .mockResolvedValueOnce(mockTopContent);             // top content
+        .mockResolvedValueOnce(mockEngagementStats) // engagement stats
+        .mockResolvedValueOnce(mockLearningStats) // learning stats
+        .mockResolvedValueOnce(mockTopContent); // top content
 
       // Act
       const result = await getWeeklyStats(mockPool);
@@ -164,32 +172,34 @@ describe('Weekly Report Database Queries', () => {
       expect(result.userGrowth.dailyTrend).toHaveLength(7);
     });
 
-    it('should return user engagement statistics based on tasks.updated_at', async () => {
+    it("should return user engagement statistics based on tasks.updated_at", async () => {
       // TDD: Red → Green → Refactor
       // Active users = users who had task updates last week (via tasks.updated_at)
       // This is more reliable than last_login_at which is not maintained
 
       // Arrange
       const mockUserStats = {
-        rows: [{
-          total_users: '394',
-          new_this_week: '142',
-          new_last_week: '135'
-        }]
+        rows: [
+          {
+            total_users: "394",
+            new_this_week: "142",
+            new_last_week: "135",
+          },
+        ],
       };
 
       const mockDailyTrend = {
-        rows: [
-          { day: '2025-11-27', count: '13' }
-        ]
+        rows: [{ day: "2025-11-27", count: "13" }],
       };
 
       const mockEngagementStats = {
-        rows: [{
-          weekly_active_users: '245',  // Users with task updates last week
-          daily_avg_active: '85',
-          retention_rate: '45.0'
-        }]
+        rows: [
+          {
+            weekly_active_users: "245", // Users with task updates last week
+            daily_avg_active: "85",
+            retention_rate: "45.0",
+          },
+        ],
       };
 
       mockQuery
@@ -213,26 +223,30 @@ describe('Weekly Report Database Queries', () => {
       expect(result.engagement.retentionRate).toBe(45.0);
     });
 
-    it('should return learning activity statistics', async () => {
+    it("should return learning activity statistics", async () => {
       // Arrange
       const mockUserStats = {
-        rows: [{
-          total_users: '394',
-          new_this_week: '142',
-          new_last_week: '135'
-        }]
+        rows: [
+          {
+            total_users: "394",
+            new_this_week: "142",
+            new_last_week: "135",
+          },
+        ],
       };
 
       const mockDailyTrend = {
-        rows: [{ day: '2025-11-27', count: '13' }]
+        rows: [{ day: "2025-11-27", count: "13" }],
       };
 
       const mockEngagementStats = {
-        rows: [{
-          weekly_active_users: '245',
-          daily_avg_active: '85',
-          retention_rate: '45.0'
-        }]
+        rows: [
+          {
+            weekly_active_users: "245",
+            daily_avg_active: "85",
+            retention_rate: "45.0",
+          },
+        ],
       };
 
       const mockLearningStats = createMockLearningStats();
@@ -259,30 +273,34 @@ describe('Weekly Report Database Queries', () => {
       expect(result.learning.totalCompletions).toBe(479);
       expect(result.learning.completionRate).toBe(78.5);
       expect(result.learning.topContent).toHaveLength(3);
-      expect(result.learning.topContent[0].name).toBe('Career Assessment');
+      expect(result.learning.topContent[0].name).toBe("Career Assessment");
       expect(result.learning.topContent[0].count).toBe(45);
     });
 
-    it('should return system health statistics', async () => {
+    it("should return system health statistics", async () => {
       // Arrange
       const mockUserStats = {
-        rows: [{
-          total_users: '394',
-          new_this_week: '142',
-          new_last_week: '135'
-        }]
+        rows: [
+          {
+            total_users: "394",
+            new_this_week: "142",
+            new_last_week: "135",
+          },
+        ],
       };
 
       const mockDailyTrend = {
-        rows: [{ day: '2025-11-27', count: '13' }]
+        rows: [{ day: "2025-11-27", count: "13" }],
       };
 
       const mockEngagementStats = {
-        rows: [{
-          weekly_active_users: '245',
-          daily_avg_active: '85',
-          retention_rate: '45.0'
-        }]
+        rows: [
+          {
+            weekly_active_users: "245",
+            daily_avg_active: "85",
+            retention_rate: "45.0",
+          },
+        ],
       };
 
       const mockLearningStats = createMockLearningStats();
@@ -308,52 +326,60 @@ describe('Weekly Report Database Queries', () => {
       expect(result.systemHealth.uptime).toBe(99.95);
     });
 
-    it('should handle database errors gracefully', async () => {
+    it("should handle database errors gracefully", async () => {
       // Arrange
       mockQuery
-        .mockResolvedValueOnce(createMockDbInfo())  // dbInfo succeeds
-        .mockRejectedValueOnce(new Error('Database connection failed'));  // sanityCheck fails
+        .mockResolvedValueOnce(createMockDbInfo()) // dbInfo succeeds
+        .mockRejectedValueOnce(new Error("Database connection failed")); // sanityCheck fails
 
       // Act & Assert
-      await expect(getWeeklyStats(mockPool)).rejects.toThrow('Database connection failed');
+      await expect(getWeeklyStats(mockPool)).rejects.toThrow(
+        "Database connection failed",
+      );
     });
 
-    it('should count programs completed this week regardless of creation date', async () => {
+    it("should count programs completed this week regardless of creation date", async () => {
       // TDD: Red → Green → Refactor
       // This test verifies that learning statistics count ALL programs completed this week,
       // not just those created this week
 
       // Arrange
       const mockUserStats = {
-        rows: [{
-          total_users: '400',
-          new_this_week: '50',
-          new_last_week: '45'
-        }]
+        rows: [
+          {
+            total_users: "400",
+            new_this_week: "50",
+            new_last_week: "45",
+          },
+        ],
       };
 
       const mockDailyTrend = {
-        rows: [{ day: '2025-11-27', count: '10' }]
+        rows: [{ day: "2025-11-27", count: "10" }],
       };
 
       const mockEngagementStats = {
-        rows: [{
-          weekly_active_users: '200',
-          daily_avg_active: '80',
-          retention_rate: '45.0'
-        }]
+        rows: [
+          {
+            weekly_active_users: "200",
+            daily_avg_active: "80",
+            retention_rate: "45.0",
+          },
+        ],
       };
 
       // Mock learning stats: 50 programs completed this week
       // Even though only 10 were created this week
       const mockLearningStats = {
-        rows: [{
-          assessment_completions: '20',
-          pbl_completions: '15',
-          discovery_completions: '15',
-          total_completions: '50',
-          completion_rate: '80.0'
-        }]
+        rows: [
+          {
+            assessment_completions: "20",
+            pbl_completions: "15",
+            discovery_completions: "15",
+            total_completions: "50",
+            completion_rate: "80.0",
+          },
+        ],
       };
 
       const mockTopContent = createMockTopContent();
@@ -390,38 +416,44 @@ describe('Weekly Report Database Queries', () => {
       expect(sqlQuery).toContain("mode = 'discovery'");
     });
 
-    it('should calculate retention rate correctly using tasks.updated_at', async () => {
+    it("should calculate retention rate correctly using tasks.updated_at", async () => {
       // TDD: Red → Green → Refactor
       // Retention rate = (users from 2 weeks ago who had task updates last week) / (users from 2 weeks ago)
       // Uses tasks.updated_at as reliable indicator of user engagement
 
       // Arrange
       const mockUserStats = {
-        rows: [{
-          total_users: '400',
-          new_this_week: '50',
-          new_last_week: '100'  // 100 users registered 2 weeks ago
-        }]
+        rows: [
+          {
+            total_users: "400",
+            new_this_week: "50",
+            new_last_week: "100", // 100 users registered 2 weeks ago
+          },
+        ],
       };
 
       const mockDailyTrend = {
-        rows: [{ day: '2025-11-27', count: '10' }]
+        rows: [{ day: "2025-11-27", count: "10" }],
       };
 
       // 45% of users from 2 weeks ago had task updates last week
       const mockEngagementStats = {
-        rows: [{
-          weekly_active_users: '200',
-          daily_avg_active: '80',
-          retention_rate: '45.0'  // Based on tasks.updated_at
-        }]
+        rows: [
+          {
+            weekly_active_users: "200",
+            daily_avg_active: "80",
+            retention_rate: "45.0", // Based on tasks.updated_at
+          },
+        ],
       };
 
       const mockLearningStats = {
-        rows: [{
-          total_completions: '50',
-          completion_rate: '80.0'
-        }]
+        rows: [
+          {
+            total_completions: "50",
+            completion_rate: "80.0",
+          },
+        ],
       };
 
       mockQuery
@@ -443,55 +475,59 @@ describe('Weekly Report Database Queries', () => {
       expect(result.engagement.weeklyActiveUsers).toBe(200);
     });
 
-    it('should handle production scenario with tasks.updated_at', async () => {
+    it("should handle production scenario with tasks.updated_at", async () => {
       // Real production scenario: Using tasks.updated_at for reliable activity tracking
       // Weekly active users = unique users with task updates last week
 
       // Arrange
       const mockUserStats = {
-        rows: [{
-          total_users: '397',
-          new_this_week: '155',
-          new_last_week: '164'
-        }]
+        rows: [
+          {
+            total_users: "397",
+            new_this_week: "155",
+            new_last_week: "164",
+          },
+        ],
       };
 
       const mockDailyTrend = {
         rows: [
-          { day: '2025-11-27', count: '7' },
-          { day: '2025-11-26', count: '14' },
-          { day: '2025-11-25', count: '51' },
-          { day: '2025-11-24', count: '24' },
-          { day: '2025-11-23', count: '10' },
-          { day: '2025-11-22', count: '6' },
-          { day: '2025-11-21', count: '20' }
-        ]
+          { day: "2025-11-27", count: "7" },
+          { day: "2025-11-26", count: "14" },
+          { day: "2025-11-25", count: "51" },
+          { day: "2025-11-24", count: "24" },
+          { day: "2025-11-23", count: "10" },
+          { day: "2025-11-22", count: "6" },
+          { day: "2025-11-21", count: "20" },
+        ],
       };
 
       // Production scenario: 132 users had task updates last week
       const mockEngagementStats = {
-        rows: [{
-          weekly_active_users: '132',  // Users with task updates last week
-          daily_avg_active: '19',
-          retention_rate: '15.5'  // 15.5% of 2-week-old users had task updates
-        }]
+        rows: [
+          {
+            weekly_active_users: "132", // Users with task updates last week
+            daily_avg_active: "19",
+            retention_rate: "15.5", // 15.5% of 2-week-old users had task updates
+          },
+        ],
       };
 
       // Production: Some programs completed
       const mockLearningStats = {
-        rows: [{
-          assessment_completions: '45',
-          pbl_completions: '23',
-          discovery_completions: '18',
-          total_completions: '86',
-          completion_rate: '65.0'
-        }]
+        rows: [
+          {
+            assessment_completions: "45",
+            pbl_completions: "23",
+            discovery_completions: "18",
+            total_completions: "86",
+            completion_rate: "65.0",
+          },
+        ],
       };
 
       const mockTopContent = {
-        rows: [
-          { name: 'Career Assessment', count: '25' }
-        ]
+        rows: [{ name: "Career Assessment", count: "25" }],
       };
 
       mockQuery

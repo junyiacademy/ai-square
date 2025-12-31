@@ -1,42 +1,42 @@
-import { describe, it, expect, jest } from '@jest/globals';
+import { describe, it, expect, jest } from "@jest/globals";
 
 // Comprehensive integration tests to boost coverage
-describe('Integration Tests', () => {
-  describe('API Integration', () => {
-    it('should handle successful API calls', async () => {
+describe("Integration Tests", () => {
+  describe("API Integration", () => {
+    it("should handle successful API calls", async () => {
       global.fetch = jest.fn(() =>
         Promise.resolve({
           ok: true,
-          json: async () => ({ data: 'test' }),
-        } as Response)
+          json: async () => ({ data: "test" }),
+        } as Response),
       );
 
-      const response = await fetch('/api/test');
+      const response = await fetch("/api/test");
       const data = await response.json();
-      expect(data).toEqual({ data: 'test' });
+      expect(data).toEqual({ data: "test" });
     });
 
-    it('should handle API errors', async () => {
+    it("should handle API errors", async () => {
       global.fetch = jest.fn(() =>
         Promise.resolve({
           ok: false,
           status: 500,
-          json: async () => ({ error: 'Server error' }),
-        } as Response)
+          json: async () => ({ error: "Server error" }),
+        } as Response),
       );
 
-      const response = await fetch('/api/test');
+      const response = await fetch("/api/test");
       expect(response.ok).toBe(false);
       expect(response.status).toBe(500);
     });
   });
 
-  describe('Data Flow Integration', () => {
-    it('should handle complete data flow', () => {
+  describe("Data Flow Integration", () => {
+    it("should handle complete data flow", () => {
       const dataFlow = {
-        input: 'test',
+        input: "test",
         process: (data: string) => data.toUpperCase(),
-        output: 'TEST'
+        output: "TEST",
       };
 
       const result = dataFlow.process(dataFlow.input);
@@ -44,15 +44,15 @@ describe('Integration Tests', () => {
     });
   });
 
-  describe('Error Handling Integration', () => {
-    it('should handle and recover from errors', () => {
+  describe("Error Handling Integration", () => {
+    it("should handle and recover from errors", () => {
       const errorHandler = {
         try: () => {
-          throw new Error('Test error');
+          throw new Error("Test error");
         },
         catch: (error: Error) => {
           return `Handled: ${error.message}`;
-        }
+        },
       };
 
       let result;
@@ -62,14 +62,14 @@ describe('Integration Tests', () => {
         result = errorHandler.catch(error as Error);
       }
 
-      expect(result).toBe('Handled: Test error');
+      expect(result).toBe("Handled: Test error");
     });
   });
 
-  describe('State Management Integration', () => {
-    it('should manage state transitions', () => {
+  describe("State Management Integration", () => {
+    it("should manage state transitions", () => {
       class StateManager {
-        private state: string = 'initial';
+        private state: string = "initial";
 
         transition(newState: string) {
           this.state = newState;
@@ -81,69 +81,75 @@ describe('Integration Tests', () => {
       }
 
       const manager = new StateManager();
-      expect(manager.getState()).toBe('initial');
+      expect(manager.getState()).toBe("initial");
 
-      manager.transition('loading');
-      expect(manager.getState()).toBe('loading');
+      manager.transition("loading");
+      expect(manager.getState()).toBe("loading");
 
-      manager.transition('complete');
-      expect(manager.getState()).toBe('complete');
+      manager.transition("complete");
+      expect(manager.getState()).toBe("complete");
     });
   });
 
-  describe('Authentication Flow', () => {
-    it('should handle login flow', async () => {
+  describe("Authentication Flow", () => {
+    it("should handle login flow", async () => {
       const authFlow = {
         login: async (email: string, password: string) => {
-          if (email === 'test@example.com' && password === 'password') {
-            return { success: true, token: 'token123' };
+          if (email === "test@example.com" && password === "password") {
+            return { success: true, token: "token123" };
           }
-          return { success: false, error: 'Invalid credentials' };
+          return { success: false, error: "Invalid credentials" };
         },
         logout: async () => {
           return { success: true };
-        }
+        },
       };
 
-      const loginResult = await authFlow.login('test@example.com', 'password');
+      const loginResult = await authFlow.login("test@example.com", "password");
       expect(loginResult.success).toBe(true);
-      expect(loginResult.token).toBe('token123');
+      expect(loginResult.token).toBe("token123");
 
       const logoutResult = await authFlow.logout();
       expect(logoutResult.success).toBe(true);
     });
   });
 
-  describe('Data Validation Integration', () => {
-    it('should validate complex data structures', () => {
+  describe("Data Validation Integration", () => {
+    it("should validate complex data structures", () => {
       const validator = {
         validateUser: (user: any) => {
           const errors = [];
-          if (!user.email || !user.email.includes('@')) {
-            errors.push('Invalid email');
+          if (!user.email || !user.email.includes("@")) {
+            errors.push("Invalid email");
           }
           if (!user.age || user.age < 0) {
-            errors.push('Invalid age');
+            errors.push("Invalid age");
           }
           return errors;
-        }
+        },
       };
 
-      const validUser = { email: 'test@example.com', age: 25 };
-      const invalidUser = { email: 'invalid', age: -1 };
+      const validUser = { email: "test@example.com", age: 25 };
+      const invalidUser = { email: "invalid", age: -1 };
 
       expect(validator.validateUser(validUser)).toEqual([]);
-      expect(validator.validateUser(invalidUser)).toEqual(['Invalid email', 'Invalid age']);
+      expect(validator.validateUser(invalidUser)).toEqual([
+        "Invalid email",
+        "Invalid age",
+      ]);
     });
   });
 
-  describe('Cache Integration', () => {
-    it('should handle cache operations', () => {
+  describe("Cache Integration", () => {
+    it("should handle cache operations", () => {
       class Cache {
         private store = new Map();
 
         set(key: string, value: any, ttl?: number) {
-          this.store.set(key, { value, expires: ttl ? Date.now() + ttl : null });
+          this.store.set(key, {
+            value,
+            expires: ttl ? Date.now() + ttl : null,
+          });
         }
 
         get(key: string) {
@@ -162,19 +168,19 @@ describe('Integration Tests', () => {
       }
 
       const cache = new Cache();
-      cache.set('key1', 'value1');
-      expect(cache.get('key1')).toBe('value1');
+      cache.set("key1", "value1");
+      expect(cache.get("key1")).toBe("value1");
 
-      cache.set('key2', 'value2', 100);
-      expect(cache.get('key2')).toBe('value2');
+      cache.set("key2", "value2", 100);
+      expect(cache.get("key2")).toBe("value2");
 
       cache.clear();
-      expect(cache.get('key1')).toBeNull();
+      expect(cache.get("key1")).toBeNull();
     });
   });
 
-  describe('Event System Integration', () => {
-    it('should handle event emission and listening', () => {
+  describe("Event System Integration", () => {
+    it("should handle event emission and listening", () => {
       class EventEmitter {
         private listeners = new Map<string, Function[]>();
 
@@ -187,7 +193,7 @@ describe('Integration Tests', () => {
 
         emit(event: string, ...args: any[]) {
           const callbacks = this.listeners.get(event) || [];
-          callbacks.forEach(cb => cb(...args));
+          callbacks.forEach((cb) => cb(...args));
         }
 
         off(event: string, callback: Function) {
@@ -201,30 +207,32 @@ describe('Integration Tests', () => {
 
       const emitter = new EventEmitter();
       let called = false;
-      const handler = () => { called = true; };
+      const handler = () => {
+        called = true;
+      };
 
-      emitter.on('test', handler);
-      emitter.emit('test');
+      emitter.on("test", handler);
+      emitter.emit("test");
       expect(called).toBe(true);
 
       called = false;
-      emitter.off('test', handler);
-      emitter.emit('test');
+      emitter.off("test", handler);
+      emitter.emit("test");
       expect(called).toBe(false);
     });
   });
 
-  describe('Data Transformation Integration', () => {
-    it('should transform data through pipeline', () => {
+  describe("Data Transformation Integration", () => {
+    it("should transform data through pipeline", () => {
       const pipeline = {
         steps: [
           (data: number) => data * 2,
           (data: number) => data + 10,
-          (data: number) => data / 2
+          (data: number) => data / 2,
         ],
         execute(input: number) {
           return this.steps.reduce((acc, step) => step(acc), input);
-        }
+        },
       };
 
       expect(pipeline.execute(5)).toBe(10); // (5 * 2 + 10) / 2 = 10
@@ -232,8 +240,8 @@ describe('Integration Tests', () => {
     });
   });
 
-  describe('Rate Limiting Integration', () => {
-    it('should handle rate limiting', () => {
+  describe("Rate Limiting Integration", () => {
+    it("should handle rate limiting", () => {
       class RateLimiter {
         private attempts = new Map<string, number[]>();
         private limit: number;
@@ -249,7 +257,9 @@ describe('Integration Tests', () => {
           const attempts = this.attempts.get(key) || [];
 
           // Remove old attempts
-          const validAttempts = attempts.filter(time => now - time < this.window);
+          const validAttempts = attempts.filter(
+            (time) => now - time < this.window,
+          );
 
           if (validAttempts.length >= this.limit) {
             return false;
@@ -262,7 +272,7 @@ describe('Integration Tests', () => {
       }
 
       const limiter = new RateLimiter(3, 1000);
-      const key = 'user1';
+      const key = "user1";
 
       expect(limiter.isAllowed(key)).toBe(true);
       expect(limiter.isAllowed(key)).toBe(true);
@@ -273,36 +283,37 @@ describe('Integration Tests', () => {
 });
 
 // Additional edge case tests
-describe('Edge Cases', () => {
-  it('should handle null and undefined', () => {
+describe("Edge Cases", () => {
+  it("should handle null and undefined", () => {
     const handler = (value: any) => {
-      if (value === null) return 'null';
-      if (value === undefined) return 'undefined';
-      return 'defined';
+      if (value === null) return "null";
+      if (value === undefined) return "undefined";
+      return "defined";
     };
 
-    expect(handler(null)).toBe('null');
-    expect(handler(undefined)).toBe('undefined');
-    expect(handler(0)).toBe('defined');
-    expect(handler('')).toBe('defined');
+    expect(handler(null)).toBe("null");
+    expect(handler(undefined)).toBe("undefined");
+    expect(handler(0)).toBe("defined");
+    expect(handler("")).toBe("defined");
   });
 
-  it('should handle empty collections', () => {
+  it("should handle empty collections", () => {
     const processor = {
-      processArray: (arr: any[]) => arr.length > 0 ? arr[0] : null,
-      processObject: (obj: any) => Object.keys(obj).length > 0 ? 'has keys' : 'empty'
+      processArray: (arr: any[]) => (arr.length > 0 ? arr[0] : null),
+      processObject: (obj: any) =>
+        Object.keys(obj).length > 0 ? "has keys" : "empty",
     };
 
     expect(processor.processArray([])).toBeNull();
     expect(processor.processArray([1, 2, 3])).toBe(1);
-    expect(processor.processObject({})).toBe('empty');
-    expect(processor.processObject({ a: 1 })).toBe('has keys');
+    expect(processor.processObject({})).toBe("empty");
+    expect(processor.processObject({ a: 1 })).toBe("has keys");
   });
 
-  it('should handle boundary values', () => {
+  it("should handle boundary values", () => {
     const validator = {
       isValidAge: (age: number) => age >= 0 && age <= 120,
-      isValidScore: (score: number) => score >= 0 && score <= 100
+      isValidScore: (score: number) => score >= 0 && score <= 100,
     };
 
     expect(validator.isValidAge(-1)).toBe(false);
@@ -316,11 +327,11 @@ describe('Edge Cases', () => {
     expect(validator.isValidScore(100.1)).toBe(false);
   });
 
-  it('should handle concurrent operations', async () => {
+  it("should handle concurrent operations", async () => {
     const operations = [
       Promise.resolve(1),
       Promise.resolve(2),
-      Promise.resolve(3)
+      Promise.resolve(3),
     ];
 
     const results = await Promise.all(operations);
@@ -330,20 +341,22 @@ describe('Edge Cases', () => {
     expect(raceResult).toBe(1);
   });
 
-  it('should handle circular references', () => {
+  it("should handle circular references", () => {
     const obj: any = { a: 1 };
     obj.self = obj;
 
     const stringify = (obj: any, seen = new WeakSet()): string => {
-      if (seen.has(obj)) return '[Circular]';
-      if (typeof obj === 'object' && obj !== null) {
+      if (seen.has(obj)) return "[Circular]";
+      if (typeof obj === "object" && obj !== null) {
         seen.add(obj);
-        const entries = Object.entries(obj).map(([k, v]) => `${k}: ${stringify(v, seen)}`);
-        return `{ ${entries.join(', ')} }`;
+        const entries = Object.entries(obj).map(
+          ([k, v]) => `${k}: ${stringify(v, seen)}`,
+        );
+        return `{ ${entries.join(", ")} }`;
       }
       return String(obj);
     };
 
-    expect(stringify(obj)).toBe('{ a: 1, self: [Circular] }');
+    expect(stringify(obj)).toBe("{ a: 1, self: [Circular] }");
   });
 });

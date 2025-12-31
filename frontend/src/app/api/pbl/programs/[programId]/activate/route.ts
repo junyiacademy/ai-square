@@ -1,10 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getUnifiedAuth, createUnauthorizedResponse } from '@/lib/auth/unified-auth';
-import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
+import { NextRequest, NextResponse } from "next/server";
+import {
+  getUnifiedAuth,
+  createUnauthorizedResponse,
+} from "@/lib/auth/unified-auth";
+import { repositoryFactory } from "@/lib/repositories/base/repository-factory";
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: Promise<{ programId: string }> }
+  { params }: { params: Promise<{ programId: string }> },
 ) {
   try {
     const { programId } = await params;
@@ -22,8 +25,8 @@ export async function POST(
 
     if (!scenarioId || !taskId || !taskTitle) {
       return NextResponse.json(
-        { success: false, error: 'Missing required parameters' },
-        { status: 400 }
+        { success: false, error: "Missing required parameters" },
+        { status: 400 },
       );
     }
 
@@ -36,8 +39,8 @@ export async function POST(
     const user = await userRepo.findByEmail(userEmail);
     if (!user) {
       return NextResponse.json(
-        { success: false, error: 'User not found' },
-        { status: 404 }
+        { success: false, error: "User not found" },
+        { status: 404 },
       );
     }
 
@@ -45,8 +48,8 @@ export async function POST(
     const program = await programRepo.findById(programId);
     if (!program || program.userId !== user.id) {
       return NextResponse.json(
-        { success: false, error: 'Program not found' },
-        { status: 404 }
+        { success: false, error: "Program not found" },
+        { status: 404 },
       );
     }
 
@@ -55,21 +58,21 @@ export async function POST(
 
     // Initialize the first task if not already initialized
     const existingTasks = await taskRepo.findByProgram(programId);
-    const taskExists = existingTasks.some(t => t.taskIndex === 0);
+    const taskExists = existingTasks.some((t) => t.taskIndex === 0);
 
     if (!taskExists) {
       // Create the first task
       await taskRepo.create({
         programId: programId,
-        mode: 'pbl' as const,
+        mode: "pbl" as const,
         taskIndex: 0,
-        type: 'chat' as const,
-        status: 'active' as const,
+        type: "chat" as const,
+        status: "active" as const,
         title: taskTitle,
         content: {
           context: {
-            scenarioId: scenarioId
-          }
+            scenarioId: scenarioId,
+          },
         },
         interactions: [],
         interactionCount: 0,
@@ -87,8 +90,8 @@ export async function POST(
         assessmentData: {},
         metadata: {
           taskId: taskId,
-          title: taskTitle
-        }
+          title: taskTitle,
+        },
       });
     }
 
@@ -105,15 +108,14 @@ export async function POST(
         completedTaskCount: updatedProgram!.completedTaskCount,
         totalTaskCount: updatedProgram!.totalTaskCount,
         startedAt: updatedProgram!.startedAt || updatedProgram!.createdAt,
-        updatedAt: updatedProgram!.lastActivityAt
-      }
+        updatedAt: updatedProgram!.lastActivityAt,
+      },
     });
-
   } catch (error) {
-    console.error('Error activating program:', error);
+    console.error("Error activating program:", error);
     return NextResponse.json(
-      { success: false, error: 'Failed to activate program' },
-      { status: 500 }
+      { success: false, error: "Failed to activate program" },
+      { status: 500 },
     );
   }
 }

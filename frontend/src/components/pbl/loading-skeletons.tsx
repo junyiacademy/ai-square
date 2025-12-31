@@ -1,5 +1,5 @@
-import React from 'react';
-import { LoadingSkeleton, LoadingCard } from '@/components/ui/loading-skeleton';
+import React from "react";
+import { LoadingSkeleton, LoadingCard } from "@/components/ui/loading-skeleton";
 
 // Skeleton for PBL scenario cards in the list page
 export const PBLScenarioCardSkeleton: React.FC = () => (
@@ -120,8 +120,13 @@ export const PBLLearningContentSkeleton: React.FC = () => (
         <LoadingSkeleton className="h-6 w-32 mb-4" />
         <div className="space-y-4">
           {[...Array(3)].map((_, i) => (
-            <div key={i} className={`flex ${i % 2 === 0 ? 'justify-start' : 'justify-end'}`}>
-              <div className={`max-w-2xl ${i % 2 === 0 ? 'bg-gray-100' : 'bg-blue-100'} rounded-lg p-4`}>
+            <div
+              key={i}
+              className={`flex ${i % 2 === 0 ? "justify-start" : "justify-end"}`}
+            >
+              <div
+                className={`max-w-2xl ${i % 2 === 0 ? "bg-gray-100" : "bg-blue-100"} rounded-lg p-4`}
+              >
                 <LoadingSkeleton className="h-4 w-64 mb-2" />
                 <LoadingSkeleton className="h-4 w-48" />
               </div>

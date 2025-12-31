@@ -1,12 +1,12 @@
-import { NextRequest, NextResponse } from 'next/server';
-import fs from 'fs/promises';
-import path from 'path';
-import yaml from 'js-yaml';
-import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import type { IScenario, ITaskTemplate } from '@/types/unified-learning';
-import type { DifficultyLevel, TaskType } from '@/types/database';
+import { NextRequest, NextResponse } from "next/server";
+import fs from "fs/promises";
+import path from "path";
+import yaml from "js-yaml";
+import { repositoryFactory } from "@/lib/repositories/base/repository-factory";
+import type { IScenario, ITaskTemplate } from "@/types/unified-learning";
+import type { DifficultyLevel, TaskType } from "@/types/database";
 // import { cacheInvalidationService } from '@/lib/cache/cache-invalidation-service';
-import { distributedCacheService } from '@/lib/cache/distributed-cache-service';
+import { distributedCacheService } from "@/lib/cache/distributed-cache-service";
 
 interface PBLTaskYAML {
   id: string;
@@ -44,27 +44,38 @@ interface PBLScenarioYAML {
 
 export async function POST(request: NextRequest) {
   try {
-    const { force = false, clean = false } = await request.json().catch(() => ({})) as { force?: boolean; clean?: boolean };
+    const { force = false, clean = false } = (await request
+      .json()
+      .catch(() => ({}))) as { force?: boolean; clean?: boolean };
 
     // Get repository
     const scenarioRepo = repositoryFactory.getScenarioRepository();
 
     // If clean flag is set, delete ALL PBL scenarios first (including archived)
     if (clean) {
-      const allPblScenarios = await scenarioRepo.findByMode?.('pbl', true) || [];
+      const allPblScenarios =
+        (await scenarioRepo.findByMode?.("pbl", true)) || [];
       console.log(`[Init PBL] Cleaning ${allPblScenarios.length} scenarios`);
       for (const scenario of allPblScenarios) {
         try {
           await scenarioRepo.delete(scenario.id);
         } catch (error) {
-          console.error(`[Init PBL] Failed to delete scenario ${scenario.id}:`, error);
+          console.error(
+            `[Init PBL] Failed to delete scenario ${scenario.id}:`,
+            error,
+          );
           // Continue with other deletions
         }
       }
     }
 
     // Scan PBL YAML files recursively
-    const pblDataPath = path.join(process.cwd(), 'public', 'pbl_data', 'scenarios');
+    const pblDataPath = path.join(
+      process.cwd(),
+      "public",
+      "pbl_data",
+      "scenarios",
+    );
 
     // Find all scenario directories
     const scenarioDirs = await fs.readdir(pblDataPath);
@@ -74,14 +85,14 @@ export async function POST(request: NextRequest) {
       existing: 0,
       created: 0,
       updated: 0,
-      errors: [] as string[]
+      errors: [] as string[],
     };
 
     // Group files by scenario (remove language suffix)
     const scenarioGroups: Map<string, Map<string, string>> = new Map();
 
     for (const dir of scenarioDirs) {
-      if (dir.startsWith('_') || dir.includes('template')) continue;
+      if (dir.startsWith("_") || dir.includes("template")) continue;
 
       const dirPath = path.join(pblDataPath, dir);
       const stat = await fs.stat(dirPath);
@@ -90,7 +101,11 @@ export async function POST(request: NextRequest) {
 
       // Read all YAML files in this directory
       const files = await fs.readdir(dirPath);
-      const yamlFiles = files.filter(f => (f.endsWith('.yaml') || f.endsWith('.yml')) && !f.includes('template'));
+      const yamlFiles = files.filter(
+        (f) =>
+          (f.endsWith(".yaml") || f.endsWith(".yml")) &&
+          !f.includes("template"),
+      );
 
       if (yamlFiles.length === 0) continue;
 
@@ -102,7 +117,7 @@ export async function POST(request: NextRequest) {
       for (const file of yamlFiles) {
         // Extract language code from filename (e.g., ai_education_design_en.yaml -> en)
         const match = file.match(/_([a-zA-Z]{2,5})\.ya?ml$/);
-        const lang = match ? match[1] : 'en';
+        const lang = match ? match[1] : "en";
         languageFiles.set(lang, path.join(dirPath, file));
       }
 
@@ -113,10 +128,12 @@ export async function POST(request: NextRequest) {
     for (const [scenarioDir, languageFiles] of scenarioGroups) {
       try {
         // Start with English or first available language
-        const primaryLang = languageFiles.has('en') ? 'en' : Array.from(languageFiles.keys())[0];
+        const primaryLang = languageFiles.has("en")
+          ? "en"
+          : Array.from(languageFiles.keys())[0];
         const primaryFile = languageFiles.get(primaryLang)!;
 
-        const primaryContent = await fs.readFile(primaryFile, 'utf-8');
+        const primaryContent = await fs.readFile(primaryFile, "utf-8");
         const primaryData = yaml.load(primaryContent) as PBLScenarioYAML;
 
         if (!primaryData?.scenario_info?.id) {
@@ -127,9 +144,10 @@ export async function POST(request: NextRequest) {
         const scenarioId = primaryData.scenario_info.id;
 
         // Check if scenario already exists
-        const existingScenarios = await scenarioRepo.findByMode?.('pbl') || [];
-        const existing = existingScenarios.find(s =>
-          s.sourceId === scenarioId
+        const existingScenarios =
+          (await scenarioRepo.findByMode?.("pbl")) || [];
+        const existing = existingScenarios.find(
+          (s) => s.sourceId === scenarioId,
         );
 
         if (existing && !force) {
@@ -146,12 +164,15 @@ export async function POST(request: NextRequest) {
         const realWorldContext: Record<string, string> = {};
 
         // Store tasks by ID with multilingual content
-        const tasksByIdAndLang: Map<string, Map<string, PBLTaskYAML>> = new Map();
+        const tasksByIdAndLang: Map<
+          string,
+          Map<string, PBLTaskYAML>
+        > = new Map();
 
         // Process each language file
         for (const [lang, filePath] of languageFiles) {
           try {
-            const content = await fs.readFile(filePath, 'utf-8');
+            const content = await fs.readFile(filePath, "utf-8");
             const data = yaml.load(content) as PBLScenarioYAML;
 
             if (data?.scenario_info?.title) {
@@ -160,10 +181,16 @@ export async function POST(request: NextRequest) {
             if (data?.scenario_info?.description) {
               description[lang] = data.scenario_info.description;
             }
-            if (data?.scenario_info?.learning_objectives && Array.isArray(data.scenario_info.learning_objectives)) {
+            if (
+              data?.scenario_info?.learning_objectives &&
+              Array.isArray(data.scenario_info.learning_objectives)
+            ) {
               objectives[lang] = data.scenario_info.learning_objectives;
             }
-            if (data?.scenario_info?.prerequisites && Array.isArray(data.scenario_info.prerequisites)) {
+            if (
+              data?.scenario_info?.prerequisites &&
+              Array.isArray(data.scenario_info.prerequisites)
+            ) {
               prerequisites[lang] = data.scenario_info.prerequisites;
             }
             if (data?.challenge_statement) {
@@ -186,7 +213,10 @@ export async function POST(request: NextRequest) {
               }
             }
           } catch (error) {
-            console.error(`Error reading ${lang} file for ${scenarioDir}:`, error);
+            console.error(
+              `Error reading ${lang} file for ${scenarioDir}:`,
+              error,
+            );
           }
         }
 
@@ -209,12 +239,15 @@ export async function POST(request: NextRequest) {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         for (const [_taskId, langVersions] of tasksByIdAndLang) {
           // Get English version as base, or first available
-          const baseTask = langVersions.get('en') || langVersions.get(primaryLang) || Array.from(langVersions.values())[0];
+          const baseTask =
+            langVersions.get("en") ||
+            langVersions.get(primaryLang) ||
+            Array.from(langVersions.values())[0];
 
           // Build multilingual fields
           const multilingualTask: ITaskTemplate = {
             id: baseTask.id,
-            type: (baseTask.type as TaskType) || 'chat',
+            type: (baseTask.type as TaskType) || "chat",
             category: baseTask.category,
             time_limit: baseTask.time_limit,
             KSA_focus: baseTask.KSA_focus,
@@ -223,7 +256,7 @@ export async function POST(request: NextRequest) {
             title: {},
             description: {},
             instructions: {},
-            content: {}
+            content: {},
           };
 
           // Build question if exists (from base task, not as reference)
@@ -232,7 +265,7 @@ export async function POST(request: NextRequest) {
               type: baseTask.question.type,
               options: baseTask.question.options,
               correct_answer: baseTask.question.correct_answer,
-              text: {} // Will be filled with multilingual content
+              text: {}, // Will be filled with multilingual content
             };
           }
 
@@ -246,28 +279,45 @@ export async function POST(request: NextRequest) {
               multilingualTask.description[lang] = task.description as string;
             }
             if (task.instructions) {
-              (multilingualTask as Record<string, unknown>).instructions = (multilingualTask as Record<string, unknown>).instructions || {};
-              ((multilingualTask as Record<string, unknown>).instructions as Record<string, string>)[lang] = task.instructions as string;
+              (multilingualTask as Record<string, unknown>).instructions =
+                (multilingualTask as Record<string, unknown>).instructions ||
+                {};
+              (
+                (multilingualTask as Record<string, unknown>)
+                  .instructions as Record<string, string>
+              )[lang] = task.instructions as string;
             }
             if (task.content) {
-              (multilingualTask.content as Record<string, unknown>)[lang] = task.content;
+              (multilingualTask.content as Record<string, unknown>)[lang] =
+                task.content;
             }
 
             // Handle question text if exists
-            if (task.question?.text && (multilingualTask as Record<string, unknown>).question) {
-              const question = (multilingualTask as Record<string, unknown>).question as Record<string, unknown>;
+            if (
+              task.question?.text &&
+              (multilingualTask as Record<string, unknown>).question
+            ) {
+              const question = (multilingualTask as Record<string, unknown>)
+                .question as Record<string, unknown>;
               question.text = {
-                ...question.text as Record<string, string> || {},
-                [lang]: task.question.text
+                ...((question.text as Record<string, string>) || {}),
+                [lang]: task.question.text,
               };
             }
           }
 
           // Ensure at least English versions exist
-          if (!multilingualTask.title.en && Object.keys(multilingualTask.title).length > 0) {
-            multilingualTask.title.en = Object.values(multilingualTask.title)[0];
+          if (
+            !multilingualTask.title.en &&
+            Object.keys(multilingualTask.title).length > 0
+          ) {
+            multilingualTask.title.en = Object.values(
+              multilingualTask.title,
+            )[0];
           }
-          const instructionsObj = (multilingualTask as Record<string, unknown>).instructions as Record<string, string> || {};
+          const instructionsObj =
+            ((multilingualTask as Record<string, unknown>)
+              .instructions as Record<string, string>) || {};
           if (!instructionsObj.en && Object.keys(instructionsObj).length > 0) {
             instructionsObj.en = Object.values(instructionsObj)[0];
           }
@@ -275,22 +325,24 @@ export async function POST(request: NextRequest) {
           taskTemplates.push(multilingualTask);
         }
 
-        const scenarioData: Omit<IScenario, 'id'> = {
-          mode: 'pbl',
-          status: 'active',
-          version: '1.0.0',
-          sourceType: 'yaml',
+        const scenarioData: Omit<IScenario, "id"> = {
+          mode: "pbl",
+          status: "active",
+          version: "1.0.0",
+          sourceType: "yaml",
           sourcePath: `pbl_data/scenarios/${scenarioDir}`,
           sourceId: scenarioId,
           sourceMetadata: {
             scenarioDir,
             scenarioId,
-            languageFiles: Array.from(languageFiles.keys())
+            languageFiles: Array.from(languageFiles.keys()),
           },
           title,
           description,
           objectives,
-          difficulty: (primaryData.scenario_info.difficulty as DifficultyLevel) || 'beginner',
+          difficulty:
+            (primaryData.scenario_info.difficulty as DifficultyLevel) ||
+            "beginner",
           estimatedMinutes: primaryData.scenario_info.estimated_duration || 60,
           prerequisites: Array.isArray(primaryData.scenario_info.prerequisites)
             ? primaryData.scenario_info.prerequisites
@@ -307,21 +359,24 @@ export async function POST(request: NextRequest) {
           pblData: {
             challengeStatement,
             realWorldContext,
-            targetDomains: Array.isArray(primaryData.scenario_info.target_domains)
+            targetDomains: Array.isArray(
+              primaryData.scenario_info.target_domains,
+            )
               ? primaryData.scenario_info.target_domains
               : [],
             ksaMapping: primaryData.ksa_mapping || {},
             aiModules: Array.isArray(primaryData.ai_modules)
               ? primaryData.ai_modules
-              : []
+              : [],
           },
           metadata: {
             originalYamlId: scenarioId,
             importedAt: new Date().toISOString(),
-            importedBy: 'init-api',
+            importedBy: "init-api",
             languagesAvailable: Array.from(languageFiles.keys()),
-            multilingualPrerequisites: Object.keys(prerequisites).length > 0 ? prerequisites : undefined
-          }
+            multilingualPrerequisites:
+              Object.keys(prerequisites).length > 0 ? prerequisites : undefined,
+          },
         };
 
         if (existing && force) {
@@ -336,27 +391,29 @@ export async function POST(request: NextRequest) {
 
         // Note: Tasks will be created when user starts a Program, not during initialization
         // The taskTemplates are stored in the Scenario and will be used to create Tasks later
-
       } catch (error) {
         console.error(`Error processing scenario ${scenarioDir}:`, error);
-        results.errors.push(`Failed to process ${scenarioDir}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        results.errors.push(
+          `Failed to process ${scenarioDir}: ${error instanceof Error ? error.message : "Unknown error"}`,
+        );
       }
     }
 
     // Clear all PBL-related caches after successful initialization
     if (results.created > 0 || results.updated > 0) {
-      console.log('[Init PBL] Clearing PBL caches...');
+      console.log("[Init PBL] Clearing PBL caches...");
       try {
         // Clear PBL scenario caches
-        await distributedCacheService.delete('scenarios:by-mode:pbl');
-        await distributedCacheService.delete('pbl:scenarios:*');
+        await distributedCacheService.delete("scenarios:by-mode:pbl");
+        await distributedCacheService.delete("pbl:scenarios:*");
 
         // Clear all scenario-related caches using pattern
         const keys = await distributedCacheService.getAllKeys();
-        const pblKeys = keys.filter(key =>
-          key.includes('pbl') ||
-          key.includes('scenario') ||
-          key.startsWith('scenarios:')
+        const pblKeys = keys.filter(
+          (key) =>
+            key.includes("pbl") ||
+            key.includes("scenario") ||
+            key.startsWith("scenarios:"),
         );
 
         for (const key of pblKeys) {
@@ -365,7 +422,7 @@ export async function POST(request: NextRequest) {
 
         console.log(`[Init PBL] Cleared ${pblKeys.length} cache entries`);
       } catch (error) {
-        console.error('[Init PBL] Error clearing caches:', error);
+        console.error("[Init PBL] Error clearing caches:", error);
         // Don't fail the request if cache clearing fails
       }
     }
@@ -374,15 +431,20 @@ export async function POST(request: NextRequest) {
       success: true,
       message: `PBL initialization completed`,
       results,
-      summary: `Created: ${results.created}, Updated: ${results.updated}, Existing: ${results.existing}, Errors: ${results.errors.length}`
+      summary: `Created: ${results.created}, Updated: ${results.updated}, Existing: ${results.existing}, Errors: ${results.errors.length}`,
     });
-
   } catch (error) {
-    console.error('PBL init error:', error);
-    return NextResponse.json({
-      success: false,
-      error: error instanceof Error ? error.message : 'Failed to initialize PBL scenarios'
-    }, { status: 500 });
+    console.error("PBL init error:", error);
+    return NextResponse.json(
+      {
+        success: false,
+        error:
+          error instanceof Error
+            ? error.message
+            : "Failed to initialize PBL scenarios",
+      },
+      { status: 500 },
+    );
   }
 }
 
@@ -391,25 +453,30 @@ export async function GET() {
   try {
     const scenarioRepo = repositoryFactory.getScenarioRepository();
 
-    const scenarios = await scenarioRepo.findByMode?.('pbl') || [];
+    const scenarios = (await scenarioRepo.findByMode?.("pbl")) || [];
 
     return NextResponse.json({
       success: true,
       count: scenarios.length,
-      scenarios: scenarios.map(s => ({
+      scenarios: scenarios.map((s) => ({
         id: s.id,
         sourceId: s.sourceId,
         title: s.title,
         sourcePath: s.sourcePath,
         status: s.status,
-        languages: (s.metadata as Record<string, unknown>)?.languagesAvailable as string[] || []
-      }))
+        languages:
+          ((s.metadata as Record<string, unknown>)
+            ?.languagesAvailable as string[]) || [],
+      })),
     });
   } catch (error) {
-    console.error('PBL status check error:', error);
-    return NextResponse.json({
-      success: false,
-      error: 'Failed to check PBL status'
-    }, { status: 500 });
+    console.error("PBL status check error:", error);
+    return NextResponse.json(
+      {
+        success: false,
+        error: "Failed to check PBL status",
+      },
+      { status: 500 },
+    );
   }
 }

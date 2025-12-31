@@ -4,10 +4,10 @@
  * Updated for unified schema v2
  */
 
-import { Pool } from 'pg';
-import type { DBProgram, ProgramStatus } from '@/types/database';
-import type { IProgram } from '@/types/unified-learning';
-import { BaseProgramRepository } from '@/types/unified-learning';
+import { Pool } from "pg";
+import type { DBProgram, ProgramStatus } from "@/types/database";
+import type { IProgram } from "@/types/unified-learning";
+import { BaseProgramRepository } from "@/types/unified-learning";
 
 export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram> {
   constructor(private pool: Pool) {
@@ -22,7 +22,7 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
       id: row.id,
       userId: row.user_id,
       scenarioId: row.scenario_id,
-      mode: row.mode,  // Include mode from database
+      mode: row.mode, // Include mode from database
       status: row.status,
 
       // Progress tracking
@@ -54,7 +54,7 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
       assessmentData: row.assessment_data,
 
       // Extensible metadata
-      metadata: row.metadata
+      metadata: row.metadata,
     };
   }
 
@@ -75,7 +75,7 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
     `;
 
     const { rows } = await this.pool.query<DBProgram>(query, [userId]);
-    return rows.map(row => this.toProgram(row));
+    return rows.map((row) => this.toProgram(row));
   }
 
   async findByScenario(scenarioId: string): Promise<IProgram[]> {
@@ -86,10 +86,10 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
     `;
 
     const { rows } = await this.pool.query<DBProgram>(query, [scenarioId]);
-    return rows.map(row => this.toProgram(row));
+    return rows.map((row) => this.toProgram(row));
   }
 
-  async create(program: Omit<IProgram, 'id'>): Promise<IProgram> {
+  async create(program: Omit<IProgram, "id">): Promise<IProgram> {
     const query = `
       INSERT INTO programs (
         id, user_id, scenario_id, mode, status,
@@ -110,7 +110,7 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
       program.userId,
       program.scenarioId,
       program.mode,
-      program.status || 'pending',
+      program.status || "pending",
       program.currentTaskIndex || 0,
       program.completedTaskCount || 0,
       program.totalTaskCount || 0,
@@ -122,7 +122,7 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
       JSON.stringify(program.pblData || {}),
       JSON.stringify(program.discoveryData || {}),
       JSON.stringify(program.assessmentData || {}),
-      JSON.stringify(program.metadata || {})
+      JSON.stringify(program.metadata || {}),
     ]);
 
     return this.toProgram(rows[0]);
@@ -140,7 +140,7 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
     const { rows } = await this.pool.query<DBProgram>(query, [taskIndex, id]);
 
     if (!rows[0]) {
-      throw new Error('Program not found');
+      throw new Error("Program not found");
     }
 
     return this.toProgram(rows[0]);
@@ -159,7 +159,7 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
     const { rows } = await this.pool.query<DBProgram>(query, [id]);
 
     if (!rows[0]) {
-      throw new Error('Program not found');
+      throw new Error("Program not found");
     }
 
     return this.toProgram(rows[0]);
@@ -178,10 +178,12 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
       values.push(updates.status);
 
       // Update timestamps based on status
-      if (updates.status === 'active' && !updates.startedAt) {
-        updateFields.push(`started_at = COALESCE(started_at, CURRENT_TIMESTAMP)`);
+      if (updates.status === "active" && !updates.startedAt) {
+        updateFields.push(
+          `started_at = COALESCE(started_at, CURRENT_TIMESTAMP)`,
+        );
       }
-      if (updates.status === 'completed') {
+      if (updates.status === "completed") {
         // If completedAt is provided, use it; otherwise use CURRENT_TIMESTAMP
         if (updates.completedAt) {
           updateFields.push(`completed_at = $${paramCount++}`);
@@ -253,7 +255,7 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
     }
 
     if (updateFields.length === 0) {
-      throw new Error('No fields to update');
+      throw new Error("No fields to update");
     }
 
     // Always update this timestamp
@@ -263,7 +265,7 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
 
     const query = `
       UPDATE programs
-      SET ${updateFields.join(', ')}
+      SET ${updateFields.join(", ")}
       WHERE id = $${paramCount}
       RETURNING *
     `;
@@ -271,19 +273,20 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
     const { rows } = await this.pool.query<DBProgram>(query, values);
 
     if (!rows[0]) {
-      throw new Error('Program not found');
+      throw new Error("Program not found");
     }
 
     return this.toProgram(rows[0]);
   }
 
   async updateStatus(id: string, status: ProgramStatus): Promise<void> {
-    let additionalUpdates = '';
+    let additionalUpdates = "";
 
-    if (status === 'active') {
-      additionalUpdates = ', started_at = COALESCE(started_at, CURRENT_TIMESTAMP)';
-    } else if (status === 'completed') {
-      additionalUpdates = ', completed_at = CURRENT_TIMESTAMP';
+    if (status === "active") {
+      additionalUpdates =
+        ", started_at = COALESCE(started_at, CURRENT_TIMESTAMP)";
+    } else if (status === "completed") {
+      additionalUpdates = ", completed_at = CURRENT_TIMESTAMP";
     }
 
     const query = `
@@ -304,7 +307,7 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
     `;
 
     const { rows } = await this.pool.query<DBProgram>(query, [userId]);
-    return rows.map(row => this.toProgram(row));
+    return rows.map((row) => this.toProgram(row));
   }
 
   async getCompletedPrograms(userId: string): Promise<IProgram[]> {
@@ -315,7 +318,7 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
     `;
 
     const { rows } = await this.pool.query<DBProgram>(query, [userId]);
-    return rows.map(row => this.toProgram(row));
+    return rows.map((row) => this.toProgram(row));
   }
 
   // Utility method to update time spent
@@ -343,11 +346,13 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
   }
 
   // Get program with scenario info (join query)
-  async getProgramWithScenario(id: string): Promise<IProgram & {
-    scenarioMode?: string;
-    scenarioTitle?: Record<string, string>;
-    scenarioDifficulty?: string;
-  }> {
+  async getProgramWithScenario(id: string): Promise<
+    IProgram & {
+      scenarioMode?: string;
+      scenarioTitle?: Record<string, string>;
+      scenarioDifficulty?: string;
+    }
+  > {
     const query = `
       SELECT
         p.*,
@@ -370,12 +375,15 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
       ...this.toProgram(rows[0]),
       scenarioMode: rows[0].scenario_mode,
       scenarioTitle: rows[0].scenario_title,
-      scenarioDifficulty: rows[0].scenario_difficulty
+      scenarioDifficulty: rows[0].scenario_difficulty,
     };
   }
 
   // Get programs by status
-  async findByStatus(status: ProgramStatus, userId?: string): Promise<IProgram[]> {
+  async findByStatus(
+    status: ProgramStatus,
+    userId?: string,
+  ): Promise<IProgram[]> {
     let query = `
       SELECT * FROM programs
       WHERE status = $1
@@ -390,6 +398,6 @@ export class PostgreSQLProgramRepository extends BaseProgramRepository<IProgram>
     query += ` ORDER BY updated_at DESC`;
 
     const { rows } = await this.pool.query<DBProgram>(query, params);
-    return rows.map(row => this.toProgram(row));
+    return rows.map((row) => this.toProgram(row));
   }
 }

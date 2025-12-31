@@ -117,8 +117,8 @@ export interface AssessmentQuestion {
   question_ru?: string;
   question_it?: string;
   domain: string;
-  difficulty: 'beginner' | 'intermediate' | 'advanced';
-  type: 'multiple_choice' | 'likert_scale' | 'true_false';
+  difficulty: "beginner" | "intermediate" | "advanced";
+  type: "multiple_choice" | "likert_scale" | "true_false";
   options?: string[];
   correct_answer?: string | number;
 }

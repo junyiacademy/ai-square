@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { generateContent } from '@/lib/vertex-ai';
-import { GitHubCommit } from '@/types';
+import { NextRequest, NextResponse } from "next/server";
+import { generateContent } from "@/lib/vertex-ai";
+import { GitHubCommit } from "@/types";
 
 interface PRDescriptionRequest {
   commits: Array<{ message: string }>;
@@ -14,16 +14,16 @@ interface PRDescriptionResponse {
 }
 
 export async function POST(request: NextRequest) {
-  let requestData: PRDescriptionRequest = { commits: [], branch: '' };
+  let requestData: PRDescriptionRequest = { commits: [], branch: "" };
 
   try {
-    requestData = await request.json() as PRDescriptionRequest;
+    requestData = (await request.json()) as PRDescriptionRequest;
     const { commits, branch } = requestData;
 
     if (!commits || !Array.isArray(commits)) {
       return NextResponse.json(
-        { error: 'Commits array is required' },
-        { status: 400 }
+        { error: "Commits array is required" },
+        { status: 400 },
       );
     }
 
@@ -69,11 +69,15 @@ export async function POST(request: NextRequest) {
 
 以下是這個分支中所有的 commit messages：
 
-${commits.map((commit: { message: string }, index: number) => `
+${commits
+  .map(
+    (commit: { message: string }, index: number) => `
 Commit ${index + 1}:
 ${commit.message}
 ---
-`).join('\n')}
+`,
+  )
+  .join("\n")}
 
 請分析這些 commits，生成一個完整的 Pull Request 描述。
 注意：
@@ -81,17 +85,17 @@ ${commit.message}
 2. 找出共同的主題和模式
 3. 提供有價值的 review 指引`;
 
-    console.log('Generating PR description for', commits.length, 'commits');
+    console.log("Generating PR description for", commits.length, "commits");
     const prDescription = await generateContent(prompt, systemPrompt);
 
     const response: PRDescriptionResponse = {
       success: true,
       description: prDescription.trim(),
-      isGenerated: true
+      isGenerated: true,
     };
     return NextResponse.json(response);
   } catch (error) {
-    console.error('Generate PR description error:', error);
+    console.error("Generate PR description error:", error);
 
     // Get commits count from requestData
     const commitsCount = requestData.commits?.length || 0;
@@ -106,7 +110,7 @@ ${commit.message}
     const response: PRDescriptionResponse = {
       success: true,
       description: fallbackDescription,
-      isGenerated: false
+      isGenerated: false,
     };
     return NextResponse.json(response);
   }

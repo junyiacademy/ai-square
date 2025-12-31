@@ -29,7 +29,7 @@ import {
   mockApiError,
   navigationMocks,
   themeMocks,
-} from '@/test/utils/test-helpers';
+} from "@/test/utils/test-helpers";
 ```
 
 ### 2. 基本測試結構
@@ -81,9 +81,9 @@ setupUnauthenticatedUser();
 // 使用自定義用戶
 setupAuthenticatedUser({
   id: 123,
-  email: 'custom@example.com',
-  role: 'custom',
-  name: 'Custom User',
+  email: "custom@example.com",
+  role: "custom",
+  name: "Custom User",
 });
 ```
 
@@ -91,17 +91,13 @@ setupAuthenticatedUser({
 
 ```typescript
 // 成功響應
-mockFetch.mockResolvedValueOnce(
-  mockApiSuccess({ data: 'result' })
-);
+mockFetch.mockResolvedValueOnce(mockApiSuccess({ data: "result" }));
 
 // 錯誤響應
-mockFetch.mockResolvedValueOnce(
-  mockApiError('Not found', 404)
-);
+mockFetch.mockResolvedValueOnce(mockApiError("Not found", 404));
 
 // 驗證呼叫
-expect(mockFetch).toHaveBeenCalledWith('/api/endpoint');
+expect(mockFetch).toHaveBeenCalledWith("/api/endpoint");
 ```
 
 ### 導航 Mock
@@ -111,8 +107,8 @@ expect(mockFetch).toHaveBeenCalledWith('/api/endpoint');
 await user.click(loginButton);
 
 // 驗證導航
-expect(navigationMocks.mockPush).toHaveBeenCalledWith('/login');
-expect(navigationMocks.mockReplace).toHaveBeenCalledWith('/dashboard');
+expect(navigationMocks.mockPush).toHaveBeenCalledWith("/login");
+expect(navigationMocks.mockReplace).toHaveBeenCalledWith("/dashboard");
 ```
 
 ### 主題 Mock
@@ -130,8 +126,8 @@ expect(themeMocks.mockToggleTheme).toHaveBeenCalled();
 ```typescript
 // 建立測試情境
 const scenario = createMockScenario({
-  title: { en: 'Test Scenario', zh: '測試情境' },
-  mode: 'assessment',
+  title: { en: "Test Scenario", zh: "測試情境" },
+  mode: "assessment",
 });
 
 // 建立測試程式
@@ -142,7 +138,7 @@ const program = createMockProgram({
 
 // 建立測試任務
 const task = createMockTask({
-  type: 'question',
+  type: "question",
   score: 90,
 });
 ```
@@ -150,9 +146,9 @@ const task = createMockTask({
 ## 預設測試用戶
 
 ```typescript
-testUsers.student // { id: 1, email: 'student@example.com', role: 'student', name: 'Test Student' }
-testUsers.teacher // { id: 2, email: 'teacher@example.com', role: 'teacher', name: 'Test Teacher' }
-testUsers.admin   // { id: 3, email: 'admin@example.com', role: 'admin', name: 'Test Admin' }
+testUsers.student; // { id: 1, email: 'student@example.com', role: 'student', name: 'Test Student' }
+testUsers.teacher; // { id: 2, email: 'teacher@example.com', role: 'teacher', name: 'Test Teacher' }
+testUsers.admin; // { id: 3, email: 'admin@example.com', role: 'admin', name: 'Test Admin' }
 ```
 
 ## 完整範例
@@ -252,6 +248,7 @@ describe('Async Operations', () => {
    - 自動包含所有必要的 Context Provider
 
 3. **使用返回的 `user` 進行交互**
+
    ```typescript
    const { user } = renderWithProviders(<Component />);
    await user.click(button); // 而非 fireEvent.click
@@ -281,22 +278,25 @@ A: 確保你使用了 `renderWithProviders` 而非 `render`，並且設定了正
 ### Q: 如何測試路由變化？
 
 A: 使用 `navigationMocks.mockPush` 來驗證路由變化：
+
 ```typescript
-expect(navigationMocks.mockPush).toHaveBeenCalledWith('/new-route');
+expect(navigationMocks.mockPush).toHaveBeenCalledWith("/new-route");
 ```
 
 ### Q: 如何模擬不同的 API 響應？
 
 A: 使用 `mockFetch` 配合 `mockApiSuccess` 或 `mockApiError`：
+
 ```typescript
 mockFetch
-  .mockResolvedValueOnce(mockApiSuccess({ data: 'first' }))
-  .mockResolvedValueOnce(mockApiError('second failed', 500));
+  .mockResolvedValueOnce(mockApiSuccess({ data: "first" }))
+  .mockResolvedValueOnce(mockApiError("second failed", 500));
 ```
 
 ### Q: 如何在測試中切換認證狀態？
 
 A: 使用 `setupAuthenticatedUser` 和 `setupUnauthenticatedUser`，然後重新渲染：
+
 ```typescript
 const { rerender } = renderWithProviders(<Component />);
 setupAuthenticatedUser(testUsers.admin);

@@ -1,34 +1,34 @@
-import { NextResponse } from 'next/server';
-import { getGitHubStorage } from '@/services/github-storage';
-import { FileNode, FileContent } from '@/types';
+import { NextResponse } from "next/server";
+import { getGitHubStorage } from "@/services/github-storage";
+import { FileNode, FileContent } from "@/types";
 
 // Helper function to organize flat list into tree structure
 function buildFileTree(files: FileContent[]): FileNode[] {
   const tree: { [key: string]: FileNode } = {};
 
   // Initialize root directories
-  const rootDirs = ['rubrics_data', 'pbl_data', 'assessment_data'];
-  rootDirs.forEach(dir => {
+  const rootDirs = ["rubrics_data", "pbl_data", "assessment_data"];
+  rootDirs.forEach((dir) => {
     tree[dir] = {
       name: dir,
       path: dir,
-      type: 'directory',
-      children: []
+      type: "directory",
+      children: [],
     };
   });
 
   // Process each file
-  files.forEach(file => {
-    const pathParts = file.path.split('/');
+  files.forEach((file) => {
+    const pathParts = file.path.split("/");
 
     if (pathParts.length === 1) {
       // Top-level file in content directory
-      const rootDir = pathParts[0].replace(/\.(yaml|yml)$/, '');
+      const rootDir = pathParts[0].replace(/\.(yaml|yml)$/, "");
       if (tree[rootDir]) {
         tree[rootDir].children!.push({
           name: file.name,
           path: file.path,
-          type: 'file'
+          type: "file",
         });
       }
     } else {
@@ -38,7 +38,7 @@ function buildFileTree(files: FileContent[]): FileNode[] {
         tree[rootDir].children!.push({
           name: file.name,
           path: file.path,
-          type: 'file'
+          type: "file",
         });
       }
     }
@@ -46,7 +46,7 @@ function buildFileTree(files: FileContent[]): FileNode[] {
 
   // Filter out empty directories and sort
   return Object.values(tree)
-    .filter(node => node.children && node.children.length > 0)
+    .filter((node) => node.children && node.children.length > 0)
     .sort((a, b) => a.name.localeCompare(b.name));
 }
 
@@ -55,7 +55,7 @@ export async function GET() {
     const storage = getGitHubStorage();
 
     // Fetch files from each directory
-    const directories = ['rubrics_data', 'pbl_data', 'assessment_data'];
+    const directories = ["rubrics_data", "pbl_data", "assessment_data"];
     const allFiles: FileContent[] = [];
 
     for (const dir of directories) {
@@ -72,10 +72,10 @@ export async function GET() {
 
     return NextResponse.json({ files: fileTree });
   } catch (error) {
-    console.error('Failed to list files:', error);
+    console.error("Failed to list files:", error);
     return NextResponse.json(
-      { error: 'Failed to list files' },
-      { status: 500 }
+      { error: "Failed to list files" },
+      { status: 500 },
     );
   }
 }

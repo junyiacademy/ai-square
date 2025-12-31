@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
-import { AlertTriangle } from 'lucide-react';
+import { useEffect } from "react";
+import { AlertTriangle } from "lucide-react";
 
 export default function Error({
   error,
@@ -20,7 +20,9 @@ export default function Error({
         <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-red-100 to-pink-100 rounded-3xl flex items-center justify-center shadow-lg shadow-red-200/50">
           <AlertTriangle className="w-10 h-10 text-red-600" />
         </div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Oops! Something went wrong</h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">
+          Oops! Something went wrong
+        </h2>
         <p className="text-gray-600 mb-8">
           We encountered an unexpected error. Don't worry, your work is safe.
         </p>
@@ -30,9 +32,7 @@ export default function Error({
         >
           Try Again
         </button>
-        <p className="mt-4 text-xs text-gray-500">
-          Error ID: {error.digest}
-        </p>
+        <p className="mt-4 text-xs text-gray-500">Error ID: {error.digest}</p>
       </div>
     </div>
   );

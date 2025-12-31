@@ -5,10 +5,13 @@
  * 實現策略模式，根據學習模式返回對應的服務
  */
 
-import type { BaseLearningService, ILearningServiceFactory } from './base-learning-service';
-import { AssessmentLearningService } from './assessment-learning-service';
-import { PBLLearningService } from './pbl-learning-service';
-import { DiscoveryLearningService } from './discovery-learning-service';
+import type {
+  BaseLearningService,
+  ILearningServiceFactory,
+} from "./base-learning-service";
+import { AssessmentLearningService } from "./assessment-learning-service";
+import { PBLLearningService } from "./pbl-learning-service";
+import { DiscoveryLearningService } from "./discovery-learning-service";
 
 export class LearningServiceFactory implements ILearningServiceFactory {
   private static instance: LearningServiceFactory;
@@ -30,14 +33,16 @@ export class LearningServiceFactory implements ILearningServiceFactory {
     // 初始化各個學習服務
     // Note: AssessmentLearningService 需要適配 BaseLearningService 介面
     // 這裡暫時使用 adapter pattern
-    this.services.set('assessment', this.createAssessmentAdapter());
+    this.services.set("assessment", this.createAssessmentAdapter());
 
     // 實作其他服務
-    this.services.set('pbl', new PBLLearningService());
-    this.services.set('discovery', new DiscoveryLearningService());
+    this.services.set("pbl", new PBLLearningService());
+    this.services.set("discovery", new DiscoveryLearningService());
   }
 
-  public getService(mode: 'assessment' | 'pbl' | 'discovery'): BaseLearningService {
+  public getService(
+    mode: "assessment" | "pbl" | "discovery",
+  ): BaseLearningService {
     const service = this.services.get(mode);
     if (!service) {
       throw new Error(`Learning service for mode '${mode}' not found`);
@@ -57,7 +62,7 @@ export class LearningServiceFactory implements ILearningServiceFactory {
         return assessmentService.startAssessment(
           userId,
           scenarioId,
-          options?.language || 'en'
+          options?.language || "en",
         );
       },
 
@@ -68,14 +73,25 @@ export class LearningServiceFactory implements ILearningServiceFactory {
           status: progress.status,
           currentTaskIndex: 0,
           totalTasks: 1,
-          completedTasks: (progress.metadata as Record<string, unknown>)?.answeredQuestions === (progress.metadata as Record<string, unknown>)?.totalQuestions ? 1 : 0,
-          score: (progress.metadata as Record<string, unknown>)?.currentScore as number | undefined,
-          timeSpent: (progress.metadata as Record<string, unknown>)?.timeElapsed as number || progress.timeSpent,
-          estimatedTimeRemaining: (progress.metadata as Record<string, unknown>)?.timeRemaining as number | undefined,
+          completedTasks:
+            (progress.metadata as Record<string, unknown>)
+              ?.answeredQuestions ===
+            (progress.metadata as Record<string, unknown>)?.totalQuestions
+              ? 1
+              : 0,
+          score: (progress.metadata as Record<string, unknown>)
+            ?.currentScore as number | undefined,
+          timeSpent:
+            ((progress.metadata as Record<string, unknown>)
+              ?.timeElapsed as number) || progress.timeSpent,
+          estimatedTimeRemaining: (progress.metadata as Record<string, unknown>)
+            ?.timeRemaining as number | undefined,
           metadata: {
-            answeredQuestions: (progress.metadata as Record<string, unknown>)?.answeredQuestions,
-            totalQuestions: (progress.metadata as Record<string, unknown>)?.totalQuestions
-          }
+            answeredQuestions: (progress.metadata as Record<string, unknown>)
+              ?.answeredQuestions,
+            totalQuestions: (progress.metadata as Record<string, unknown>)
+              ?.totalQuestions,
+          },
         };
       },
 
@@ -83,16 +99,18 @@ export class LearningServiceFactory implements ILearningServiceFactory {
         const result = await assessmentService.submitAnswer(
           programId,
           response.questionId as string,
-          response.answer as string
+          response.answer as string,
         );
 
         return {
           taskId,
           success: true,
           score: result.isCorrect ? 100 : 0,
-          feedback: result.isCorrect ? 'Correct!' : `Incorrect. The correct answer is ${result.correctAnswer}`,
+          feedback: result.isCorrect
+            ? "Correct!"
+            : `Incorrect. The correct answer is ${result.correctAnswer}`,
           nextTaskAvailable: false, // Assessment only has one task
-          metadata: result as unknown as Record<string, unknown>
+          metadata: result as unknown as Record<string, unknown>,
         };
       },
 
@@ -104,8 +122,8 @@ export class LearningServiceFactory implements ILearningServiceFactory {
           passed: result.passed,
           finalScore: result.score,
           metadata: {
-            domainScores: result.domainScores
-          }
+            domainScores: result.domainScores,
+          },
         };
       },
 
@@ -118,15 +136,15 @@ export class LearningServiceFactory implements ILearningServiceFactory {
       async evaluateTask(taskId: string) {
         // This would be implemented if needed
         void taskId; // Mark as intentionally unused - assessment evaluation is handled differently
-        throw new Error('Not implemented for assessment mode');
+        throw new Error("Not implemented for assessment mode");
       },
 
       async generateFeedback(evaluationId: string, language: string) {
         // This would be implemented with AI service
         void evaluationId; // Mark as intentionally unused for now
         void language; // Mark as intentionally unused for now
-        return 'Thank you for completing the assessment.';
-      }
+        return "Thank you for completing the assessment.";
+      },
     };
   }
 }

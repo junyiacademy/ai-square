@@ -1,38 +1,40 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useRef } from 'react';
-import { useParams } from 'next/navigation';
-import { useTranslation } from 'react-i18next';
-import Link from 'next/link';
-import Image from 'next/image';
-import { PBLCompletionSkeleton } from '@/components/pbl/loading-skeletons';
+import { useState, useEffect, useRef } from "react";
+import { useParams } from "next/navigation";
+import { useTranslation } from "react-i18next";
+import Link from "next/link";
+import Image from "next/image";
+import { PBLCompletionSkeleton } from "@/components/pbl/loading-skeletons";
 import type {
   CompletionData,
   ScenarioData,
-  QualitativeFeedback
-} from '@/types/pbl-completion';
-import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
+  QualitativeFeedback,
+} from "@/types/pbl-completion";
+import { authenticatedFetch } from "@/lib/utils/authenticated-fetch";
 
 // Helper function: Convert score to qualitative rating
 function getQualitativeRating(score: number): {
-  label: 'Good' | 'Great' | 'Perfect';
+  label: "Good" | "Great" | "Perfect";
   color: string;
   i18nKey: string;
 } {
-  if (score >= 91) return {
-    label: 'Perfect',
-    color: 'text-purple-600 dark:text-purple-400',
-    i18nKey: 'pbl:complete.rating.perfect'
-  };
-  if (score >= 71) return {
-    label: 'Great',
-    color: 'text-blue-600 dark:text-blue-400',
-    i18nKey: 'pbl:complete.rating.great'
-  };
+  if (score >= 91)
+    return {
+      label: "Perfect",
+      color: "text-purple-600 dark:text-purple-400",
+      i18nKey: "pbl:complete.rating.perfect",
+    };
+  if (score >= 71)
+    return {
+      label: "Great",
+      color: "text-blue-600 dark:text-blue-400",
+      i18nKey: "pbl:complete.rating.great",
+    };
   return {
-    label: 'Good',
-    color: 'text-green-600 dark:text-green-400',
-    i18nKey: 'pbl:complete.rating.good'
+    label: "Good",
+    color: "text-green-600 dark:text-green-400",
+    i18nKey: "pbl:complete.rating.good",
   };
 }
 
@@ -46,16 +48,16 @@ function getStarRating(score: number): { filled: number; empty: number } {
 // Star Rating Component
 interface StarRatingProps {
   score: number;
-  size?: 'sm' | 'md' | 'lg';
+  size?: "sm" | "md" | "lg";
 }
 
-function StarRating({ score, size = 'md' }: StarRatingProps) {
+function StarRating({ score, size = "md" }: StarRatingProps) {
   const { filled, empty } = getStarRating(score);
 
   const sizeClasses = {
-    sm: 'w-4 h-4',
-    md: 'w-6 h-6',
-    lg: 'w-8 h-8'
+    sm: "w-4 h-4",
+    md: "w-6 h-6",
+    lg: "w-8 h-8",
   };
 
   const starClass = sizeClasses[size];
@@ -64,14 +66,22 @@ function StarRating({ score, size = 'md' }: StarRatingProps) {
     <div className="flex items-center gap-0.5">
       {/* Filled stars */}
       {[...Array(filled)].map((_, i) => (
-        <svg key={`filled-${i}`} className={`${starClass} text-yellow-400 fill-current`} viewBox="0 0 24 24">
-          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+        <svg
+          key={`filled-${i}`}
+          className={`${starClass} text-yellow-400 fill-current`}
+          viewBox="0 0 24 24"
+        >
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
         </svg>
       ))}
       {/* Empty stars */}
       {[...Array(empty)].map((_, i) => (
-        <svg key={`empty-${i}`} className={`${starClass} text-gray-300 dark:text-gray-600 fill-current`} viewBox="0 0 24 24">
-          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+        <svg
+          key={`empty-${i}`}
+          className={`${starClass} text-gray-300 dark:text-gray-600 fill-current`}
+          viewBox="0 0 24 24"
+        >
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
         </svg>
       ))}
     </div>
@@ -79,8 +89,8 @@ function StarRating({ score, size = 'md' }: StarRatingProps) {
 }
 
 // Add print styles - optimized for color printing with background graphics
-if (typeof window !== 'undefined') {
-  const style = document.createElement('style');
+if (typeof window !== "undefined") {
+  const style = document.createElement("style");
   style.textContent = `
     @media print {
       @page {
@@ -154,25 +164,30 @@ if (typeof window !== 'undefined') {
 export default function ProgramCompletePage() {
   const params = useParams();
   // const router = useRouter();
-  const { t, i18n } = useTranslation(['pbl', 'common', 'assessment']);
+  const { t, i18n } = useTranslation(["pbl", "common", "assessment"]);
 
   const programId = params.programId as string;
   const scenarioId = params.id as string;
 
   const [loading, setLoading] = useState(true);
-  const [completionData, setCompletionData] = useState<CompletionData | null>(null);
+  const [completionData, setCompletionData] = useState<CompletionData | null>(
+    null,
+  );
   const [scenarioData, setScenarioData] = useState<ScenarioData | null>(null);
   const [generatingFeedback, setGeneratingFeedback] = useState(false);
-  const [activeTab, setActiveTab] = useState<'results' | 'certificate'>('results');
+  const [activeTab, setActiveTab] = useState<"results" | "certificate">(
+    "results",
+  );
   const [isEditingName, setIsEditingName] = useState<boolean>(false);
-  const [editableName, setEditableName] = useState<string>('');
+  const [editableName, setEditableName] = useState<string>("");
   const [isGeneratingPDF, setIsGeneratingPDF] = useState<boolean>(false);
   // const [feedbackError, setFeedbackError] = useState<string | null>(null);
 
   // Check if all tasks are evaluated
-  const allTasksEvaluated = completionData ?
-    (completionData.evaluatedTasks === completionData.totalTasks && completionData.totalTasks > 0) :
-    false;
+  const allTasksEvaluated = completionData
+    ? completionData.evaluatedTasks === completionData.totalTasks &&
+      completionData.totalTasks > 0
+    : false;
 
   // Use ref to prevent duplicate API calls
   const loadingRef = useRef(false);
@@ -192,17 +207,21 @@ export default function ProgramCompletePage() {
     const detectTablet = () => {
       const userAgent = navigator.userAgent.toLowerCase();
       const isIOS = /ipad|iphone|ipod/.test(userAgent);
-      const isAndroidTablet = /android/.test(userAgent) && !/mobile/.test(userAgent);
-      const hasTouchPoints = navigator.maxTouchPoints && navigator.maxTouchPoints > 2;
+      const isAndroidTablet =
+        /android/.test(userAgent) && !/mobile/.test(userAgent);
+      const hasTouchPoints =
+        navigator.maxTouchPoints && navigator.maxTouchPoints > 2;
 
-      return isIOS || isAndroidTablet || (hasTouchPoints && window.innerWidth >= 768);
+      return (
+        isIOS || isAndroidTablet || (hasTouchPoints && window.innerWidth >= 768)
+      );
     };
 
     if (detectTablet()) {
       // Add .is-tablet class to certificate print element
-      const certificatePrint = document.querySelector('.certificate-print');
+      const certificatePrint = document.querySelector(".certificate-print");
       if (certificatePrint) {
-        certificatePrint.classList.add('is-tablet');
+        certificatePrint.classList.add("is-tablet");
       }
     }
 
@@ -215,13 +234,13 @@ export default function ProgramCompletePage() {
 
   const loadUserData = () => {
     try {
-      const userData = localStorage.getItem('user');
+      const userData = localStorage.getItem("user");
       if (userData) {
         // User data exists but we don't auto-fill name for certificates
-        setEditableName('');
+        setEditableName("");
       }
     } catch (error) {
-      console.error('Error loading user data:', error);
+      console.error("Error loading user data:", error);
     }
   };
 
@@ -234,30 +253,46 @@ export default function ProgramCompletePage() {
     // Reload scenario data for new language (to get translated title)
     const reloadScenarioForLanguage = async () => {
       try {
-        const scenarioRes = await fetch(`/api/pbl/scenarios/${scenarioId}?lang=${currentLang}`);
+        const scenarioRes = await fetch(
+          `/api/pbl/scenarios/${scenarioId}?lang=${currentLang}`,
+        );
         if (scenarioRes.ok) {
           const scenarioResult = await scenarioRes.json();
           setScenarioData(scenarioResult.data);
         }
       } catch (error) {
-        console.error('Error reloading scenario for language:', error);
+        console.error("Error reloading scenario for language:", error);
       }
     };
 
     reloadScenarioForLanguage();
 
     // Check if feedback exists for current language
-    const feedback = completionData.qualitativeFeedback as Record<string, {
-      content?: QualitativeFeedback;
-      isValid?: boolean;
-    }> | QualitativeFeedback | undefined;
+    const feedback = completionData.qualitativeFeedback as
+      | Record<
+          string,
+          {
+            content?: QualitativeFeedback;
+            isValid?: boolean;
+          }
+        >
+      | QualitativeFeedback
+      | undefined;
 
     const hasFeedbackForCurrentLang =
-      (feedback && 'overallAssessment' in feedback) || // Old format
-      (feedback && currentLang in feedback && (feedback as Record<string, { content?: QualitativeFeedback }>)[currentLang]?.content?.overallAssessment); // New format
+      (feedback && "overallAssessment" in feedback) || // Old format
+      (feedback &&
+        currentLang in feedback &&
+        (feedback as Record<string, { content?: QualitativeFeedback }>)[
+          currentLang
+        ]?.content?.overallAssessment); // New format
 
     // If no feedback for current language and not currently generating, trigger generation
-    if (!hasFeedbackForCurrentLang && !feedbackGeneratingRef.current && !generatingFeedback) {
+    if (
+      !hasFeedbackForCurrentLang &&
+      !feedbackGeneratingRef.current &&
+      !generatingFeedback
+    ) {
       generateFeedback();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -274,7 +309,9 @@ export default function ProgramCompletePage() {
       const currentLang = i18n.language;
       const [scenarioRes, completionRes] = await Promise.all([
         fetch(`/api/pbl/scenarios/${scenarioId}?lang=${currentLang}`),
-        fetch(`/api/pbl/completion?programId=${programId}&scenarioId=${scenarioId}`)
+        fetch(
+          `/api/pbl/completion?programId=${programId}&scenarioId=${scenarioId}`,
+        ),
       ]);
 
       // Process scenario data
@@ -287,14 +324,16 @@ export default function ProgramCompletePage() {
       if (!completionRes.ok) {
         // If completion.json doesn't exist, try to create it
         const updateRes = await authenticatedFetch(`/api/pbl/completion`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ programId, scenarioId })
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ programId, scenarioId }),
         });
 
         if (updateRes.ok) {
           // Try to get the newly created completion data
-          const retryResponse = await authenticatedFetch(`/api/pbl/completion?programId=${programId}&scenarioId=${scenarioId}`);
+          const retryResponse = await authenticatedFetch(
+            `/api/pbl/completion?programId=${programId}&scenarioId=${scenarioId}`,
+          );
           if (retryResponse.ok) {
             const data = await retryResponse.json();
             if (data.success && data.data) {
@@ -304,8 +343,9 @@ export default function ProgramCompletePage() {
               // Check for both old format (direct overallAssessment) and new format (language-wrapped)
               const feedback = data.data.qualitativeFeedback;
               const currentLang = i18n.language;
-              const hasFeedback = feedback?.overallAssessment ||
-                                  (feedback?.[currentLang]?.content?.overallAssessment);
+              const hasFeedback =
+                feedback?.overallAssessment ||
+                feedback?.[currentLang]?.content?.overallAssessment;
 
               if (!hasFeedback && !feedbackGeneratingRef.current) {
                 generateFeedback();
@@ -322,17 +362,17 @@ export default function ProgramCompletePage() {
           // Check for both old format (direct overallAssessment) and new format (language-wrapped)
           const feedback = data.data.qualitativeFeedback;
           const currentLang = i18n.language;
-          const hasFeedback = feedback?.overallAssessment ||
-                              (feedback?.[currentLang]?.content?.overallAssessment);
+          const hasFeedback =
+            feedback?.overallAssessment ||
+            feedback?.[currentLang]?.content?.overallAssessment;
 
           if (!hasFeedback && !feedbackGeneratingRef.current) {
             generateFeedback();
           }
         }
       }
-
     } catch (error) {
-      console.error('Error loading program data:', error);
+      console.error("Error loading program data:", error);
     } finally {
       setLoading(false);
       loadingRef.current = false;
@@ -347,11 +387,11 @@ export default function ProgramCompletePage() {
       setGeneratingFeedback(true);
 
       const currentLang = i18n.language;
-      const response = await authenticatedFetch('/api/pbl/generate-feedback', {
-        method: 'POST',
+      const response = await authenticatedFetch("/api/pbl/generate-feedback", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Accept-Language': i18n.language,
+          "Content-Type": "application/json",
+          "Accept-Language": i18n.language,
         },
         body: JSON.stringify({
           programId,
@@ -373,37 +413,44 @@ export default function ProgramCompletePage() {
           const feedbackWrapper = {
             content: result.feedback,
             isValid: true,
-            generatedAt: new Date().toISOString()
+            generatedAt: new Date().toISOString(),
           };
 
           // Handle multi-language feedback format
-          const isMultiLang = typeof prev.qualitativeFeedback === 'object' &&
-                             !('overallAssessment' in (prev.qualitativeFeedback as QualitativeFeedback));
+          const isMultiLang =
+            typeof prev.qualitativeFeedback === "object" &&
+            !(
+              "overallAssessment" in
+              (prev.qualitativeFeedback as QualitativeFeedback)
+            );
 
           if (isMultiLang) {
             // New multi-language format - update the specific language
             return {
               ...prev,
               qualitativeFeedback: {
-                ...(prev.qualitativeFeedback as unknown as Record<string, unknown>),
-                [currentLang]: feedbackWrapper
-              } as unknown as CompletionData['qualitativeFeedback']
+                ...(prev.qualitativeFeedback as unknown as Record<
+                  string,
+                  unknown
+                >),
+                [currentLang]: feedbackWrapper,
+              } as unknown as CompletionData["qualitativeFeedback"],
             };
           } else {
             // Migrate from old format to new format
             return {
               ...prev,
               qualitativeFeedback: {
-                [currentLang]: feedbackWrapper
-              } as unknown as CompletionData['qualitativeFeedback']
+                [currentLang]: feedbackWrapper,
+              } as unknown as CompletionData["qualitativeFeedback"],
             };
           }
         });
       } else {
-        throw new Error(result.error || 'Failed to generate feedback');
+        throw new Error(result.error || "Failed to generate feedback");
       }
     } catch (error) {
-      console.error('Error generating feedback:', error);
+      console.error("Error generating feedback:", error);
       // Error generating feedback
     } finally {
       setGeneratingFeedback(false);
@@ -417,21 +464,34 @@ export default function ProgramCompletePage() {
     const remainingSeconds = seconds % 60;
 
     if (hours > 0) {
-      return t('pbl:complete.timeFormat.hours', { hours, minutes });
+      return t("pbl:complete.timeFormat.hours", { hours, minutes });
     } else if (minutes > 0) {
-      return t('pbl:complete.timeFormat.minutes', { minutes, seconds: remainingSeconds });
+      return t("pbl:complete.timeFormat.minutes", {
+        minutes,
+        seconds: remainingSeconds,
+      });
     }
-    return t('pbl:complete.timeFormat.seconds', { seconds: remainingSeconds });
+    return t("pbl:complete.timeFormat.seconds", { seconds: remainingSeconds });
   };
 
   const handleDownloadPDF = async () => {
     if (!editableName) {
-      alert(t('pbl:complete.certificate.pleaseEnterName', 'Please enter your name first'));
+      alert(
+        t(
+          "pbl:complete.certificate.pleaseEnterName",
+          "Please enter your name first",
+        ),
+      );
       return;
     }
 
     if (!certificateRef.current) {
-      alert(t('pbl:complete.certificate.downloadFailed', 'Failed to generate PDF. Please try again.'));
+      alert(
+        t(
+          "pbl:complete.certificate.downloadFailed",
+          "Failed to generate PDF. Please try again.",
+        ),
+      );
       return;
     }
 
@@ -439,13 +499,19 @@ export default function ProgramCompletePage() {
 
     try {
       // Use client-side PDF generation from HTML element
-      const { generatePDFFromElement } = await import('@/lib/client-pdf-generator');
+      const { generatePDFFromElement } =
+        await import("@/lib/client-pdf-generator");
 
-      const fileName = `certificate-${editableName.replace(/\s+/g, '-')}.pdf`;
+      const fileName = `certificate-${editableName.replace(/\s+/g, "-")}.pdf`;
       await generatePDFFromElement(certificateRef.current, fileName);
     } catch (error) {
-      console.error('PDF generation error:', error);
-      alert(t('pbl:complete.certificate.downloadFailed', 'Failed to generate PDF. Please try again.'));
+      console.error("PDF generation error:", error);
+      alert(
+        t(
+          "pbl:complete.certificate.downloadFailed",
+          "Failed to generate PDF. Please try again.",
+        ),
+      );
     } finally {
       setIsGeneratingPDF(false);
     }
@@ -472,41 +538,45 @@ export default function ProgramCompletePage() {
 
   // Calculate scenario title from data
   const scenarioTitle = (() => {
-    if (!scenarioData) return 'Scenario';
+    if (!scenarioData) return "Scenario";
 
     const title = scenarioData.title;
 
-    if (typeof title === 'object' && title !== null && !Array.isArray(title)) {
+    if (typeof title === "object" && title !== null && !Array.isArray(title)) {
       // Handle multilingual object format {en: "...", zhTW: "...", zh-TW: "..."}
       const titleObj = title as Record<string, string>;
 
       // Try multiple language key formats
-      return titleObj[i18n.language] ||
-             titleObj['zhTW'] ||
-             titleObj['zh-TW'] ||
-             titleObj['zh_TW'] ||
-             titleObj['en'] ||
-             Object.values(titleObj)[0] ||
-             'Scenario';
+      return (
+        titleObj[i18n.language] ||
+        titleObj["zhTW"] ||
+        titleObj["zh-TW"] ||
+        titleObj["zh_TW"] ||
+        titleObj["en"] ||
+        Object.values(titleObj)[0] ||
+        "Scenario"
+      );
     }
 
     // Fallback to suffix-based format or direct string
-    if (i18n.language === 'zhTW' || i18n.language === 'zh-TW') {
-      return scenarioData.title_zhTW || scenarioData.title || 'Scenario';
+    if (i18n.language === "zhTW" || i18n.language === "zh-TW") {
+      return scenarioData.title_zhTW || scenarioData.title || "Scenario";
     }
-    return scenarioData.title || 'Scenario';
+    return scenarioData.title || "Scenario";
   })();
 
   if (!completionData) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-gray-600 dark:text-gray-400">{t('pbl:complete.noDataFound')}</p>
+          <p className="text-gray-600 dark:text-gray-400">
+            {t("pbl:complete.noDataFound")}
+          </p>
           <Link
             href={`/pbl/scenarios/${scenarioId}`}
             className="mt-4 inline-block px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
           >
-            {t('pbl:complete.backToPBL')}
+            {t("pbl:complete.backToPBL")}
           </Link>
         </div>
       </div>
@@ -518,20 +588,30 @@ export default function ProgramCompletePage() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Congratulations Header - hide when printing */}
         <div className="no-print">
-        {/* Celebration Header */}
-        <div className="text-center mb-8">
-          <div className="mb-4">
-            <svg className="w-24 h-24 text-green-500 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
+          {/* Celebration Header */}
+          <div className="text-center mb-8">
+            <div className="mb-4">
+              <svg
+                className="w-24 h-24 text-green-500 mx-auto"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+              {t("pbl:complete.congratulations")}
+            </h1>
+            <p className="text-xl text-gray-600 dark:text-gray-400">
+              {t("pbl:complete.scenarioCompleted", { title: scenarioTitle })}
+            </p>
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-            {t('pbl:complete.congratulations')}
-          </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-400">
-            {t('pbl:complete.scenarioCompleted', { title: scenarioTitle })}
-          </p>
-        </div>
         </div>
 
         {/* Tab Navigation - hide when printing */}
@@ -539,32 +619,37 @@ export default function ProgramCompletePage() {
           <div className="border-b border-gray-200 dark:border-gray-700">
             <nav className="flex space-x-8 px-6 overflow-x-auto">
               <button
-                onClick={() => setActiveTab('results')}
+                onClick={() => setActiveTab("results")}
                 className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap ${
-                  activeTab === 'results'
-                    ? 'border-purple-500 text-purple-600 dark:text-purple-400'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 hover:border-gray-300'
+                  activeTab === "results"
+                    ? "border-purple-500 text-purple-600 dark:text-purple-400"
+                    : "border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 hover:border-gray-300"
                 }`}
               >
-                {t('pbl:complete.results')}
+                {t("pbl:complete.results")}
               </button>
               <button
-                onClick={() => allTasksEvaluated && setActiveTab('certificate')}
+                onClick={() => allTasksEvaluated && setActiveTab("certificate")}
                 disabled={!allTasksEvaluated}
                 className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors whitespace-nowrap flex items-center gap-2 ${
                   !allTasksEvaluated
-                    ? 'border-transparent text-gray-400 dark:text-gray-600 cursor-not-allowed'
-                    : activeTab === 'certificate'
-                    ? 'border-purple-500 text-purple-600 dark:text-purple-400'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 hover:border-gray-300'
+                    ? "border-transparent text-gray-400 dark:text-gray-600 cursor-not-allowed"
+                    : activeTab === "certificate"
+                      ? "border-purple-500 text-purple-600 dark:text-purple-400"
+                      : "border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 hover:border-gray-300"
                 }`}
               >
-                <span>{t('pbl:complete.certificate.title')}</span>
+                <span>{t("pbl:complete.certificate.title")}</span>
                 {!allTasksEvaluated && (
                   <>
                     <span className="text-xs">🔒</span>
                     <span className="text-xs text-gray-500 dark:text-gray-500">
-                      ({t('pbl:complete.certificate.requireAllTasks', '需完成所有任務')})
+                      (
+                      {t(
+                        "pbl:complete.certificate.requireAllTasks",
+                        "需完成所有任務",
+                      )}
+                      )
                     </span>
                   </>
                 )}
@@ -574,532 +659,787 @@ export default function ProgramCompletePage() {
         </div>
 
         {/* Results Tab Content - hide when printing */}
-        {activeTab === 'results' && (
+        {activeTab === "results" && (
           <div className="no-print">
             {/* Qualitative Feedback Section */}
             {(() => {
               // Extract feedback for current language from multi-language structure
               const currentLang = i18n.language;
-              const feedbackData = completionData?.qualitativeFeedback as Record<string, {
-                content?: QualitativeFeedback;
-                isValid?: boolean;
-              }> | QualitativeFeedback | undefined;
+              const feedbackData = completionData?.qualitativeFeedback as
+                | Record<
+                    string,
+                    {
+                      content?: QualitativeFeedback;
+                      isValid?: boolean;
+                    }
+                  >
+                | QualitativeFeedback
+                | undefined;
 
               // Handle both old single-language format and new multi-language format
               let feedback: QualitativeFeedback | undefined;
-              if (feedbackData && 'overallAssessment' in feedbackData) {
+              if (feedbackData && "overallAssessment" in feedbackData) {
                 // Old format - direct QualitativeFeedback
                 feedback = feedbackData as QualitativeFeedback;
               } else if (feedbackData && currentLang in feedbackData) {
                 // New format - multi-language with wrapper
-                const langData = (feedbackData as Record<string, { content?: QualitativeFeedback }>)[currentLang];
+                const langData = (
+                  feedbackData as Record<
+                    string,
+                    { content?: QualitativeFeedback }
+                  >
+                )[currentLang];
                 feedback = langData?.content;
               }
 
               const hasFeedback = feedback?.overallAssessment;
 
-              return (hasFeedback || generatingFeedback) && (
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 mb-8">
-              {generatingFeedback ? (
-                <div className="text-center">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 mx-auto mb-4"></div>
-                  <p className="text-gray-600 dark:text-gray-400">
-                    {t('pbl:complete.generatingFeedback', 'Generating personalized feedback...')}
-                  </p>
-                </div>
-              ) : feedback ? (
-                <>
-                  <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
-                      {t('pbl:complete.qualitativeFeedback', 'Personalized Feedback')}
-                    </h2>
-                    {process.env.NODE_ENV === 'development' && (
-                      <button
-                        onClick={() => {
-                          // Force regenerate feedback
-                          generateFeedback(true);
-                        }}
-                        className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
-                        title="Regenerate feedback (Dev only)"
-                      >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                        </svg>
-                      </button>
-                    )}
-                  </div>
-
-                  {/* Overall Assessment */}
-                  <div className="mb-6">
-                    <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
-                      {feedback.overallAssessment}
-                    </p>
-                  </div>
-
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                  {/* Strengths */}
-                  <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-6">
-                    <h3 className="text-lg font-medium text-green-900 dark:text-green-100 mb-4 flex items-center">
-                      <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                      {t('pbl:complete.strengths', 'Your Strengths')}
-                    </h3>
-                    <div className="space-y-3">
-                      {feedback.strengths?.map((strength, index) => (
-                        <div key={index}>
-                          <h4 className="font-medium text-green-800 dark:text-green-200">
-                            {strength.area}
-                          </h4>
-                          <p className="text-sm text-green-700 dark:text-green-300 mt-1">
-                            {strength.description}
-                          </p>
-                          {strength.example && (
-                            <p className="text-sm text-green-600 dark:text-green-400 italic mt-2 pl-4 border-l-2 border-green-300 dark:border-green-600">
-                              &ldquo;{strength.example}&rdquo;
-                            </p>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Areas for Improvement */}
-                  <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-6">
-                    <h3 className="text-lg font-medium text-blue-900 dark:text-blue-100 mb-4 flex items-center">
-                      <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                      </svg>
-                      {t('pbl:complete.areasForImprovement', 'Growth Opportunities')}
-                    </h3>
-                    <div className="space-y-3">
-                      {feedback.areasForImprovement?.map((area, index) => (
-                        <div key={index}>
-                          <h4 className="font-medium text-blue-800 dark:text-blue-200">
-                            {area.area}
-                          </h4>
-                          <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">
-                            {area.description}
-                          </p>
-                          {area.suggestion && (
-                            <p className="text-sm text-blue-600 dark:text-blue-400 mt-2 flex items-start">
-                              <svg className="w-4 h-4 mr-1 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                              </svg>
-                              {area.suggestion}
-                            </p>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Next Steps */}
-                {feedback.nextSteps && feedback.nextSteps.length > 0 && (
-                  <div className="bg-purple-50 dark:bg-purple-900/20 rounded-lg p-6 mb-6">
-                    <h3 className="text-lg font-medium text-purple-900 dark:text-purple-100 mb-4">
-                      {t('pbl:complete.nextSteps', 'Recommended Next Steps')}
-                    </h3>
-                    <ul className="space-y-2">
-                      {feedback.nextSteps.map((step, index) => (
-                        <li key={index} className="flex items-start">
-                          <span className="text-purple-600 dark:text-purple-400 mr-2">
-                            {index + 1}.
-                          </span>
-                          <span className="text-purple-800 dark:text-purple-200">
-                            {step}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-
-                {/* Encouragement */}
-                {feedback.encouragement && (
-                  <div className="text-center p-6 bg-gradient-to-r from-purple-100 to-blue-100 dark:from-purple-900/20 dark:to-blue-900/20 rounded-lg">
-                    <p className="text-lg text-gray-800 dark:text-gray-200 italic">
-                      &ldquo;{feedback.encouragement}&rdquo;
-                    </p>
-                  </div>
-                )}
-              </>
-            ) : null}
-          </div>
-          );
-        })()}
-
-        {/* Three Column Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-          {/* Left Column - Overall Score */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
-              {t('pbl:complete.overallScore')}
-            </h3>
-            <div className="text-center mb-4">
-              {(() => {
-                const rating = getQualitativeRating(completionData.overallScore || 0);
-                return (
-                  <p className={`text-5xl font-bold ${rating.color}`}>
-                    {t(rating.i18nKey)}
-                  </p>
-                );
-              })()}
-              <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                {completionData.evaluatedTasks}/{completionData.totalTasks} {t('pbl:history.tasksEvaluated')}
-              </p>
-            </div>
-            <div className="pt-4 border-t border-gray-200 dark:border-gray-700 space-y-3">
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600 dark:text-gray-400">
-                  {t('pbl:complete.conversationCount')}
-                </span>
-                <span className="text-sm font-semibold text-gray-900 dark:text-white">
-                  {completionData.tasks?.reduce((sum, task) =>
-                    sum + (task.log?.interactions?.length || 0), 0) || 0} {t('pbl:history.times')}
-                </span>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-600 dark:text-gray-400">
-                  {t('pbl:complete.totalTimeSpent')}
-                </span>
-                <span className="text-sm font-semibold text-gray-900 dark:text-white">
-                  {formatDuration(completionData.totalTimeSeconds || 0)}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Middle Column - Domain Scores */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
-              {t('pbl:complete.domainScores')}
-            </h3>
-            {completionData.domainScores && (
-              <div className="space-y-4">
-                {['engaging_with_ai', 'creating_with_ai', 'managing_with_ai', 'designing_with_ai']
-                  .filter(domain => completionData.domainScores?.[domain] !== undefined)
-                  .map((domain) => {
-                    const score = completionData.domainScores?.[domain] || 0;
-                    return (
-                      <div key={domain}>
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm text-gray-600 dark:text-gray-400">
-                            {t(`assessment:domains.${domain}`)}
-                          </span>
-                          <StarRating score={score} size="sm" />
-                        </div>
-                      </div>
-                    );
-                  })}
-              </div>
-            )}
-          </div>
-
-          {/* Right Column - KSA Scores */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
-              {t('pbl:complete.ksaSummary')}
-            </h3>
-            {completionData.ksaScores && (
-              <div className="space-y-4">
-                <div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">
-                      {t('pbl:complete.knowledge')}
-                    </span>
-                    <StarRating score={completionData.ksaScores.knowledge} size="sm" />
-                  </div>
-                </div>
-
-                <div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">
-                      {t('pbl:complete.skills')}
-                    </span>
-                    <StarRating score={completionData.ksaScores.skills} size="sm" />
-                  </div>
-                </div>
-
-                <div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600 dark:text-gray-400">
-                      {t('pbl:complete.attitudes')}
-                    </span>
-                    <StarRating score={completionData.ksaScores.attitudes} size="sm" />
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-
-
-        {/* Task Details */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 mb-8">
-          <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">
-            {t('pbl:complete.taskSummary')}
-          </h2>
-
-          <div className="space-y-6">
-            {completionData.tasks?.map((task, index) => {
-              const taskTitle = (() => {
-                const title = task.taskTitle;
-                if (typeof title === 'object' && title !== null && !Array.isArray(title)) {
-                  // Handle multilingual object format {en: "...", zh: "..."}
-                  const titleObj = title as Record<string, string>;
-                  return titleObj[i18n.language] || titleObj['en'] || Object.values(titleObj)[0] || task.taskId;
-                }
-                return title || task.taskId;
-              })();
-
               return (
-                <div key={task.taskId} className="border-l-4 border-purple-600 pl-6">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
-                        {task.taskIndex || index + 1}. {taskTitle}
-                      </h3>
-
-                      {/* Task Metadata */}
-                      <div className="flex flex-wrap gap-4 text-sm text-gray-600 dark:text-gray-400 mb-3">
-                        <span className="flex items-center">
-                          <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                          </svg>
-                          {formatDuration(task.progress?.timeSpentSeconds || 0)}
-                        </span>
-                        <span className="flex items-center">
-                          <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                          </svg>
-                          {task.log?.interactions?.filter((i) => i.type === 'user').length || 0} {t('pbl:complete.conversations')}
-                        </span>
-                        {task.evaluation && (() => {
-                          const rating = getQualitativeRating(task.evaluation.score);
-                          return (
-                            <span className={`font-medium ${rating.color}`}>
-                              {t('pbl:learn.overallScore')}: {t(rating.i18nKey)}
-                            </span>
-                          );
-                        })()}
+                (hasFeedback || generatingFeedback) && (
+                  <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 mb-8">
+                    {generatingFeedback ? (
+                      <div className="text-center">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 mx-auto mb-4"></div>
+                        <p className="text-gray-600 dark:text-gray-400">
+                          {t(
+                            "pbl:complete.generatingFeedback",
+                            "Generating personalized feedback...",
+                          )}
+                        </p>
                       </div>
-
-                      {/* Task Evaluation Details - Collapsible */}
-                      {task.evaluation && (
-                        <details className="mt-4">
-                          <summary className="cursor-pointer text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 flex items-center gap-2">
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                            </svg>
-                            {t('pbl:complete.viewEvaluationDetails', '查看評估詳情')}
-                          </summary>
-                        <div className="mt-3 bg-gray-50 dark:bg-gray-700 rounded-lg p-4 space-y-4">
-                          {/* Two Column Layout for Domain & KSA Scores */}
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            {/* Domain Scores Column */}
-                            {task.evaluation.domainScores && (
-                              <div>
-                                <div className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
-                                  {t('pbl:complete.domainScores')}:
-                                </div>
-                                <div className="space-y-3">
-                                  {['engaging_with_ai', 'creating_with_ai', 'managing_with_ai', 'designing_with_ai']
-                                    .filter(domain => task.evaluation?.domainScores?.[domain] !== undefined)
-                                    .map((domain) => {
-                                      const score = task.evaluation?.domainScores?.[domain] || 0;
-                                      return (
-                                        <div key={domain}>
-                                          <div className="flex items-center justify-between">
-                                            <span className="text-sm text-gray-600 dark:text-gray-400">
-                                              {t(`assessment:domains.${domain}`)}
-                                            </span>
-                                            <StarRating score={score} size="sm" />
-                                          </div>
-                                        </div>
-                                      );
-                                    })}
-                                </div>
-                              </div>
+                    ) : feedback ? (
+                      <>
+                        <div className="flex items-center justify-between mb-6">
+                          <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
+                            {t(
+                              "pbl:complete.qualitativeFeedback",
+                              "Personalized Feedback",
                             )}
-
-                            {/* KSA Scores Column */}
-                            {task.evaluation.ksaScores && Object.keys(task.evaluation.ksaScores).length > 0 && (
-                              <div>
-                                <div className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
-                                  {t('pbl:complete.ksa')}:
-                                </div>
-                                <div className="space-y-3">
-                                  <div>
-                                    <div className="flex items-center justify-between">
-                                      <span className="text-sm text-gray-600 dark:text-gray-400">
-                                        {t('pbl:complete.knowledge')}
-                                      </span>
-                                      <StarRating score={task.evaluation.ksaScores?.knowledge || 0} size="sm" />
-                                    </div>
-                                  </div>
-
-                                  <div>
-                                    <div className="flex items-center justify-between">
-                                      <span className="text-sm text-gray-600 dark:text-gray-400">
-                                        {t('pbl:complete.skills')}
-                                      </span>
-                                      <StarRating score={task.evaluation.ksaScores?.skills || 0} size="sm" />
-                                    </div>
-                                  </div>
-
-                                  <div>
-                                    <div className="flex items-center justify-between">
-                                      <span className="text-sm text-gray-600 dark:text-gray-400">
-                                        {t('pbl:complete.attitudes')}
-                                      </span>
-                                      <StarRating score={task.evaluation.ksaScores?.attitudes || 0} size="sm" />
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            )}
-                          </div>
-
-                          {/* Conversation Insights */}
-                          {task.evaluation.conversationInsights && (
-                            <div className="mb-3">
-                              <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                {t('pbl:learn.conversationInsights')}
-                              </h4>
-                              <div className="text-sm text-gray-600 dark:text-gray-400 space-y-2">
-                                {/* Effective Examples */}
-                                {task.evaluation?.conversationInsights?.effectiveExamples &&
-                                 Array.isArray(task.evaluation.conversationInsights.effectiveExamples) &&
-                                 task.evaluation.conversationInsights.effectiveExamples.length > 0 && (
-                                  <div>
-                                    <p className="text-xs font-medium text-green-700 dark:text-green-300 mb-1">
-                                      {t('pbl:learn.effectiveExamples')}
-                                    </p>
-                                    {task.evaluation.conversationInsights.effectiveExamples.map((example, idx) => (
-                                      <div key={idx} className="bg-green-50 dark:bg-green-900/20 rounded p-2 mb-1">
-                                        <p className="text-xs italic border-l-2 border-green-300 dark:border-green-500 pl-2 mb-1">
-                                          &ldquo;{example.quote}&rdquo;
-                                        </p>
-                                        <p className="text-xs">{example.suggestion}</p>
-                                      </div>
-                                    ))}
-                                  </div>
-                                )}
-
-                                {/* Improvement Areas */}
-                                {task.evaluation.conversationInsights.improvementAreas &&
-                                 Array.isArray(task.evaluation.conversationInsights.improvementAreas) &&
-                                 task.evaluation.conversationInsights.improvementAreas.length > 0 && (
-                                  <div>
-                                    <p className="text-xs font-medium text-yellow-700 dark:text-yellow-300 mb-1">
-                                      {t('pbl:learn.improvementExamples')}
-                                    </p>
-                                    {task.evaluation.conversationInsights.improvementAreas.map((area, idx) => (
-                                      <div key={idx} className="bg-yellow-50 dark:bg-yellow-900/20 rounded p-2 mb-1">
-                                        <p className="text-xs italic border-l-2 border-yellow-300 dark:border-yellow-500 pl-2 mb-1">
-                                          &ldquo;{area.quote}&rdquo;
-                                        </p>
-                                        <p className="text-xs">{area.suggestion}</p>
-                                      </div>
-                                    ))}
-                                  </div>
-                                )}
-                              </div>
-                            </div>
+                          </h2>
+                          {process.env.NODE_ENV === "development" && (
+                            <button
+                              onClick={() => {
+                                // Force regenerate feedback
+                                generateFeedback(true);
+                              }}
+                              className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
+                              title="Regenerate feedback (Dev only)"
+                            >
+                              <svg
+                                className="w-5 h-5"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                                />
+                              </svg>
+                            </button>
                           )}
+                        </div>
 
+                        {/* Overall Assessment */}
+                        <div className="mb-6">
+                          <p className="text-lg text-gray-700 dark:text-gray-300 leading-relaxed">
+                            {feedback.overallAssessment}
+                          </p>
+                        </div>
+
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
                           {/* Strengths */}
-                          {task.evaluation.strengths &&
-                           Array.isArray(task.evaluation.strengths) &&
-                           task.evaluation.strengths.length > 0 && (
-                            <div>
-                              <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                {t('pbl:complete.strengths')}
-                              </h4>
-                              <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-                                {task.evaluation.strengths.map((strength, idx) => (
-                                  <li key={idx} className="flex items-start">
-                                    <span className="text-green-500 mr-2">✓</span>
-                                    {strength}
-                                  </li>
-                                ))}
-                              </ul>
+                          <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-6">
+                            <h3 className="text-lg font-medium text-green-900 dark:text-green-100 mb-4 flex items-center">
+                              <svg
+                                className="w-5 h-5 mr-2"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                                />
+                              </svg>
+                              {t("pbl:complete.strengths", "Your Strengths")}
+                            </h3>
+                            <div className="space-y-3">
+                              {feedback.strengths?.map((strength, index) => (
+                                <div key={index}>
+                                  <h4 className="font-medium text-green-800 dark:text-green-200">
+                                    {strength.area}
+                                  </h4>
+                                  <p className="text-sm text-green-700 dark:text-green-300 mt-1">
+                                    {strength.description}
+                                  </p>
+                                  {strength.example && (
+                                    <p className="text-sm text-green-600 dark:text-green-400 italic mt-2 pl-4 border-l-2 border-green-300 dark:border-green-600">
+                                      &ldquo;{strength.example}&rdquo;
+                                    </p>
+                                  )}
+                                </div>
+                              ))}
                             </div>
-                          )}
+                          </div>
 
                           {/* Areas for Improvement */}
-                          {task.evaluation.improvements &&
-                           Array.isArray(task.evaluation.improvements) &&
-                           task.evaluation.improvements.length > 0 && (
-                            <div>
-                              <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                {t('pbl:complete.improvements')}
-                              </h4>
-                              <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-                                {task.evaluation.improvements.map((improvement, idx) => (
-                                  <li key={idx} className="flex items-start">
-                                    <span className="text-yellow-500 mr-2">•</span>
-                                    {improvement}
+                          <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-6">
+                            <h3 className="text-lg font-medium text-blue-900 dark:text-blue-100 mb-4 flex items-center">
+                              <svg
+                                className="w-5 h-5 mr-2"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M13 10V3L4 14h7v7l9-11h-7z"
+                                />
+                              </svg>
+                              {t(
+                                "pbl:complete.areasForImprovement",
+                                "Growth Opportunities",
+                              )}
+                            </h3>
+                            <div className="space-y-3">
+                              {feedback.areasForImprovement?.map(
+                                (area, index) => (
+                                  <div key={index}>
+                                    <h4 className="font-medium text-blue-800 dark:text-blue-200">
+                                      {area.area}
+                                    </h4>
+                                    <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">
+                                      {area.description}
+                                    </p>
+                                    {area.suggestion && (
+                                      <p className="text-sm text-blue-600 dark:text-blue-400 mt-2 flex items-start">
+                                        <svg
+                                          className="w-4 h-4 mr-1 mt-0.5 flex-shrink-0"
+                                          fill="none"
+                                          stroke="currentColor"
+                                          viewBox="0 0 24 24"
+                                        >
+                                          <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M9 5l7 7-7 7"
+                                          />
+                                        </svg>
+                                        {area.suggestion}
+                                      </p>
+                                    )}
+                                  </div>
+                                ),
+                              )}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Next Steps */}
+                        {feedback.nextSteps &&
+                          feedback.nextSteps.length > 0 && (
+                            <div className="bg-purple-50 dark:bg-purple-900/20 rounded-lg p-6 mb-6">
+                              <h3 className="text-lg font-medium text-purple-900 dark:text-purple-100 mb-4">
+                                {t(
+                                  "pbl:complete.nextSteps",
+                                  "Recommended Next Steps",
+                                )}
+                              </h3>
+                              <ul className="space-y-2">
+                                {feedback.nextSteps.map((step, index) => (
+                                  <li key={index} className="flex items-start">
+                                    <span className="text-purple-600 dark:text-purple-400 mr-2">
+                                      {index + 1}.
+                                    </span>
+                                    <span className="text-purple-800 dark:text-purple-200">
+                                      {step}
+                                    </span>
                                   </li>
                                 ))}
                               </ul>
                             </div>
                           )}
-                        </div>
-                        </details>
-                      )}
 
-                      {/* Practice Records - 做題紀錄 */}
-                      {task.log?.interactions && task.log.interactions.length > 0 && (
-                        <details className="mt-4">
-                          <summary className="cursor-pointer text-sm font-medium text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 flex items-center gap-2">
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                            </svg>
-                            {t('pbl:complete.viewPracticeRecords', '查看做題紀錄')}
-                            <span className="text-xs text-gray-500">
-                              ({task.log.interactions.length} {t('pbl:complete.interactions', '次互動')})
-                            </span>
-                          </summary>
-                          <div className="mt-3 space-y-2 max-h-96 overflow-y-auto border-l-2 border-purple-200 dark:border-purple-800 pl-4">
-                            {task.log.interactions.map((interaction, idx) => (
-                              <div
-                                key={idx}
-                                className={`p-3 rounded-lg text-sm ${
-                                  interaction.type === 'user'
-                                    ? 'bg-blue-50 dark:bg-blue-900/20 ml-4'
-                                    : 'bg-gray-50 dark:bg-gray-800 mr-4'
-                                }`}
-                              >
-                                <div className="flex justify-between items-start mb-2">
-                                  <span className="font-medium text-xs text-gray-500 dark:text-gray-400">
-                                    {interaction.type === 'user'
-                                      ? '👤 ' + t('pbl:complete.yourAnswer', '你的回答')
-                                      : '🤖 ' + t('pbl:complete.aiFeedback', 'AI 回饋')}
-                                  </span>
-                                  <span className="text-xs text-gray-400">
-                                    #{idx + 1}
-                                  </span>
-                                </div>
-                                <div className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
-                                  {typeof interaction.message === 'string'
-                                    ? interaction.message
-                                    : JSON.stringify(interaction.message)}
-                                </div>
-                              </div>
-                            ))}
+                        {/* Encouragement */}
+                        {feedback.encouragement && (
+                          <div className="text-center p-6 bg-gradient-to-r from-purple-100 to-blue-100 dark:from-purple-900/20 dark:to-blue-900/20 rounded-lg">
+                            <p className="text-lg text-gray-800 dark:text-gray-200 italic">
+                              &ldquo;{feedback.encouragement}&rdquo;
+                            </p>
                           </div>
-                        </details>
-                      )}
-                    </div>
+                        )}
+                      </>
+                    ) : null}
+                  </div>
+                )
+              );
+            })()}
+
+            {/* Three Column Layout */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+              {/* Left Column - Overall Score */}
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+                <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
+                  {t("pbl:complete.overallScore")}
+                </h3>
+                <div className="text-center mb-4">
+                  {(() => {
+                    const rating = getQualitativeRating(
+                      completionData.overallScore || 0,
+                    );
+                    return (
+                      <p className={`text-5xl font-bold ${rating.color}`}>
+                        {t(rating.i18nKey)}
+                      </p>
+                    );
+                  })()}
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+                    {completionData.evaluatedTasks}/{completionData.totalTasks}{" "}
+                    {t("pbl:history.tasksEvaluated")}
+                  </p>
+                </div>
+                <div className="pt-4 border-t border-gray-200 dark:border-gray-700 space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">
+                      {t("pbl:complete.conversationCount")}
+                    </span>
+                    <span className="text-sm font-semibold text-gray-900 dark:text-white">
+                      {completionData.tasks?.reduce(
+                        (sum, task) =>
+                          sum + (task.log?.interactions?.length || 0),
+                        0,
+                      ) || 0}{" "}
+                      {t("pbl:history.times")}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">
+                      {t("pbl:complete.totalTimeSpent")}
+                    </span>
+                    <span className="text-sm font-semibold text-gray-900 dark:text-white">
+                      {formatDuration(completionData.totalTimeSeconds || 0)}
+                    </span>
                   </div>
                 </div>
-              );
-            })}
-          </div>
-        </div>
+              </div>
+
+              {/* Middle Column - Domain Scores */}
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+                <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
+                  {t("pbl:complete.domainScores")}
+                </h3>
+                {completionData.domainScores && (
+                  <div className="space-y-4">
+                    {[
+                      "engaging_with_ai",
+                      "creating_with_ai",
+                      "managing_with_ai",
+                      "designing_with_ai",
+                    ]
+                      .filter(
+                        (domain) =>
+                          completionData.domainScores?.[domain] !== undefined,
+                      )
+                      .map((domain) => {
+                        const score =
+                          completionData.domainScores?.[domain] || 0;
+                        return (
+                          <div key={domain}>
+                            <div className="flex items-center justify-between">
+                              <span className="text-sm text-gray-600 dark:text-gray-400">
+                                {t(`assessment:domains.${domain}`)}
+                              </span>
+                              <StarRating score={score} size="sm" />
+                            </div>
+                          </div>
+                        );
+                      })}
+                  </div>
+                )}
+              </div>
+
+              {/* Right Column - KSA Scores */}
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+                <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
+                  {t("pbl:complete.ksaSummary")}
+                </h3>
+                {completionData.ksaScores && (
+                  <div className="space-y-4">
+                    <div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-gray-600 dark:text-gray-400">
+                          {t("pbl:complete.knowledge")}
+                        </span>
+                        <StarRating
+                          score={completionData.ksaScores.knowledge}
+                          size="sm"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-gray-600 dark:text-gray-400">
+                          {t("pbl:complete.skills")}
+                        </span>
+                        <StarRating
+                          score={completionData.ksaScores.skills}
+                          size="sm"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm text-gray-600 dark:text-gray-400">
+                          {t("pbl:complete.attitudes")}
+                        </span>
+                        <StarRating
+                          score={completionData.ksaScores.attitudes}
+                          size="sm"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Task Details */}
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8 mb-8">
+              <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">
+                {t("pbl:complete.taskSummary")}
+              </h2>
+
+              <div className="space-y-6">
+                {completionData.tasks?.map((task, index) => {
+                  const taskTitle = (() => {
+                    const title = task.taskTitle;
+                    if (
+                      typeof title === "object" &&
+                      title !== null &&
+                      !Array.isArray(title)
+                    ) {
+                      // Handle multilingual object format {en: "...", zh: "..."}
+                      const titleObj = title as Record<string, string>;
+                      return (
+                        titleObj[i18n.language] ||
+                        titleObj["en"] ||
+                        Object.values(titleObj)[0] ||
+                        task.taskId
+                      );
+                    }
+                    return title || task.taskId;
+                  })();
+
+                  return (
+                    <div
+                      key={task.taskId}
+                      className="border-l-4 border-purple-600 pl-6"
+                    >
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+                            {task.taskIndex || index + 1}. {taskTitle}
+                          </h3>
+
+                          {/* Task Metadata */}
+                          <div className="flex flex-wrap gap-4 text-sm text-gray-600 dark:text-gray-400 mb-3">
+                            <span className="flex items-center">
+                              <svg
+                                className="w-4 h-4 mr-1"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                                />
+                              </svg>
+                              {formatDuration(
+                                task.progress?.timeSpentSeconds || 0,
+                              )}
+                            </span>
+                            <span className="flex items-center">
+                              <svg
+                                className="w-4 h-4 mr-1"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                                />
+                              </svg>
+                              {task.log?.interactions?.filter(
+                                (i) => i.type === "user",
+                              ).length || 0}{" "}
+                              {t("pbl:complete.conversations")}
+                            </span>
+                            {task.evaluation &&
+                              (() => {
+                                const rating = getQualitativeRating(
+                                  task.evaluation.score,
+                                );
+                                return (
+                                  <span
+                                    className={`font-medium ${rating.color}`}
+                                  >
+                                    {t("pbl:learn.overallScore")}:{" "}
+                                    {t(rating.i18nKey)}
+                                  </span>
+                                );
+                              })()}
+                          </div>
+
+                          {/* Task Evaluation Details - Collapsible */}
+                          {task.evaluation && (
+                            <details className="mt-4">
+                              <summary className="cursor-pointer text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 flex items-center gap-2">
+                                <svg
+                                  className="w-4 h-4"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                                  />
+                                </svg>
+                                {t(
+                                  "pbl:complete.viewEvaluationDetails",
+                                  "查看評估詳情",
+                                )}
+                              </summary>
+                              <div className="mt-3 bg-gray-50 dark:bg-gray-700 rounded-lg p-4 space-y-4">
+                                {/* Two Column Layout for Domain & KSA Scores */}
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                  {/* Domain Scores Column */}
+                                  {task.evaluation.domainScores && (
+                                    <div>
+                                      <div className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                                        {t("pbl:complete.domainScores")}:
+                                      </div>
+                                      <div className="space-y-3">
+                                        {[
+                                          "engaging_with_ai",
+                                          "creating_with_ai",
+                                          "managing_with_ai",
+                                          "designing_with_ai",
+                                        ]
+                                          .filter(
+                                            (domain) =>
+                                              task.evaluation?.domainScores?.[
+                                                domain
+                                              ] !== undefined,
+                                          )
+                                          .map((domain) => {
+                                            const score =
+                                              task.evaluation?.domainScores?.[
+                                                domain
+                                              ] || 0;
+                                            return (
+                                              <div key={domain}>
+                                                <div className="flex items-center justify-between">
+                                                  <span className="text-sm text-gray-600 dark:text-gray-400">
+                                                    {t(
+                                                      `assessment:domains.${domain}`,
+                                                    )}
+                                                  </span>
+                                                  <StarRating
+                                                    score={score}
+                                                    size="sm"
+                                                  />
+                                                </div>
+                                              </div>
+                                            );
+                                          })}
+                                      </div>
+                                    </div>
+                                  )}
+
+                                  {/* KSA Scores Column */}
+                                  {task.evaluation.ksaScores &&
+                                    Object.keys(task.evaluation.ksaScores)
+                                      .length > 0 && (
+                                      <div>
+                                        <div className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                                          {t("pbl:complete.ksa")}:
+                                        </div>
+                                        <div className="space-y-3">
+                                          <div>
+                                            <div className="flex items-center justify-between">
+                                              <span className="text-sm text-gray-600 dark:text-gray-400">
+                                                {t("pbl:complete.knowledge")}
+                                              </span>
+                                              <StarRating
+                                                score={
+                                                  task.evaluation.ksaScores
+                                                    ?.knowledge || 0
+                                                }
+                                                size="sm"
+                                              />
+                                            </div>
+                                          </div>
+
+                                          <div>
+                                            <div className="flex items-center justify-between">
+                                              <span className="text-sm text-gray-600 dark:text-gray-400">
+                                                {t("pbl:complete.skills")}
+                                              </span>
+                                              <StarRating
+                                                score={
+                                                  task.evaluation.ksaScores
+                                                    ?.skills || 0
+                                                }
+                                                size="sm"
+                                              />
+                                            </div>
+                                          </div>
+
+                                          <div>
+                                            <div className="flex items-center justify-between">
+                                              <span className="text-sm text-gray-600 dark:text-gray-400">
+                                                {t("pbl:complete.attitudes")}
+                                              </span>
+                                              <StarRating
+                                                score={
+                                                  task.evaluation.ksaScores
+                                                    ?.attitudes || 0
+                                                }
+                                                size="sm"
+                                              />
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    )}
+                                </div>
+
+                                {/* Conversation Insights */}
+                                {task.evaluation.conversationInsights && (
+                                  <div className="mb-3">
+                                    <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                      {t("pbl:learn.conversationInsights")}
+                                    </h4>
+                                    <div className="text-sm text-gray-600 dark:text-gray-400 space-y-2">
+                                      {/* Effective Examples */}
+                                      {task.evaluation?.conversationInsights
+                                        ?.effectiveExamples &&
+                                        Array.isArray(
+                                          task.evaluation.conversationInsights
+                                            .effectiveExamples,
+                                        ) &&
+                                        task.evaluation.conversationInsights
+                                          .effectiveExamples.length > 0 && (
+                                          <div>
+                                            <p className="text-xs font-medium text-green-700 dark:text-green-300 mb-1">
+                                              {t("pbl:learn.effectiveExamples")}
+                                            </p>
+                                            {task.evaluation.conversationInsights.effectiveExamples.map(
+                                              (example, idx) => (
+                                                <div
+                                                  key={idx}
+                                                  className="bg-green-50 dark:bg-green-900/20 rounded p-2 mb-1"
+                                                >
+                                                  <p className="text-xs italic border-l-2 border-green-300 dark:border-green-500 pl-2 mb-1">
+                                                    &ldquo;{example.quote}
+                                                    &rdquo;
+                                                  </p>
+                                                  <p className="text-xs">
+                                                    {example.suggestion}
+                                                  </p>
+                                                </div>
+                                              ),
+                                            )}
+                                          </div>
+                                        )}
+
+                                      {/* Improvement Areas */}
+                                      {task.evaluation.conversationInsights
+                                        .improvementAreas &&
+                                        Array.isArray(
+                                          task.evaluation.conversationInsights
+                                            .improvementAreas,
+                                        ) &&
+                                        task.evaluation.conversationInsights
+                                          .improvementAreas.length > 0 && (
+                                          <div>
+                                            <p className="text-xs font-medium text-yellow-700 dark:text-yellow-300 mb-1">
+                                              {t(
+                                                "pbl:learn.improvementExamples",
+                                              )}
+                                            </p>
+                                            {task.evaluation.conversationInsights.improvementAreas.map(
+                                              (area, idx) => (
+                                                <div
+                                                  key={idx}
+                                                  className="bg-yellow-50 dark:bg-yellow-900/20 rounded p-2 mb-1"
+                                                >
+                                                  <p className="text-xs italic border-l-2 border-yellow-300 dark:border-yellow-500 pl-2 mb-1">
+                                                    &ldquo;{area.quote}&rdquo;
+                                                  </p>
+                                                  <p className="text-xs">
+                                                    {area.suggestion}
+                                                  </p>
+                                                </div>
+                                              ),
+                                            )}
+                                          </div>
+                                        )}
+                                    </div>
+                                  </div>
+                                )}
+
+                                {/* Strengths */}
+                                {task.evaluation.strengths &&
+                                  Array.isArray(task.evaluation.strengths) &&
+                                  task.evaluation.strengths.length > 0 && (
+                                    <div>
+                                      <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                        {t("pbl:complete.strengths")}
+                                      </h4>
+                                      <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                                        {task.evaluation.strengths.map(
+                                          (strength, idx) => (
+                                            <li
+                                              key={idx}
+                                              className="flex items-start"
+                                            >
+                                              <span className="text-green-500 mr-2">
+                                                ✓
+                                              </span>
+                                              {strength}
+                                            </li>
+                                          ),
+                                        )}
+                                      </ul>
+                                    </div>
+                                  )}
+
+                                {/* Areas for Improvement */}
+                                {task.evaluation.improvements &&
+                                  Array.isArray(task.evaluation.improvements) &&
+                                  task.evaluation.improvements.length > 0 && (
+                                    <div>
+                                      <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                        {t("pbl:complete.improvements")}
+                                      </h4>
+                                      <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+                                        {task.evaluation.improvements.map(
+                                          (improvement, idx) => (
+                                            <li
+                                              key={idx}
+                                              className="flex items-start"
+                                            >
+                                              <span className="text-yellow-500 mr-2">
+                                                •
+                                              </span>
+                                              {improvement}
+                                            </li>
+                                          ),
+                                        )}
+                                      </ul>
+                                    </div>
+                                  )}
+                              </div>
+                            </details>
+                          )}
+
+                          {/* Practice Records - 做題紀錄 */}
+                          {task.log?.interactions &&
+                            task.log.interactions.length > 0 && (
+                              <details className="mt-4">
+                                <summary className="cursor-pointer text-sm font-medium text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 flex items-center gap-2">
+                                  <svg
+                                    className="w-4 h-4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                                    />
+                                  </svg>
+                                  {t(
+                                    "pbl:complete.viewPracticeRecords",
+                                    "查看做題紀錄",
+                                  )}
+                                  <span className="text-xs text-gray-500">
+                                    ({task.log.interactions.length}{" "}
+                                    {t("pbl:complete.interactions", "次互動")})
+                                  </span>
+                                </summary>
+                                <div className="mt-3 space-y-2 max-h-96 overflow-y-auto border-l-2 border-purple-200 dark:border-purple-800 pl-4">
+                                  {task.log.interactions.map(
+                                    (interaction, idx) => (
+                                      <div
+                                        key={idx}
+                                        className={`p-3 rounded-lg text-sm ${
+                                          interaction.type === "user"
+                                            ? "bg-blue-50 dark:bg-blue-900/20 ml-4"
+                                            : "bg-gray-50 dark:bg-gray-800 mr-4"
+                                        }`}
+                                      >
+                                        <div className="flex justify-between items-start mb-2">
+                                          <span className="font-medium text-xs text-gray-500 dark:text-gray-400">
+                                            {interaction.type === "user"
+                                              ? "👤 " +
+                                                t(
+                                                  "pbl:complete.yourAnswer",
+                                                  "你的回答",
+                                                )
+                                              : "🤖 " +
+                                                t(
+                                                  "pbl:complete.aiFeedback",
+                                                  "AI 回饋",
+                                                )}
+                                          </span>
+                                          <span className="text-xs text-gray-400">
+                                            #{idx + 1}
+                                          </span>
+                                        </div>
+                                        <div className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
+                                          {typeof interaction.message ===
+                                          "string"
+                                            ? interaction.message
+                                            : JSON.stringify(
+                                                interaction.message,
+                                              )}
+                                        </div>
+                                      </div>
+                                    ),
+                                  )}
+                                </div>
+                              </details>
+                            )}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
 
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -1107,18 +1447,21 @@ export default function ProgramCompletePage() {
                 href={`/pbl/scenarios/${scenarioId}`}
                 className="px-8 py-3 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition-colors text-center"
               >
-                {t('pbl:complete.retryScenario')}
+                {t("pbl:complete.retryScenario")}
               </Link>
             </div>
           </div>
         )}
 
         {/* Certificate Tab Content */}
-        {activeTab === 'certificate' && (
+        {activeTab === "certificate" && (
           <div className="bg-white rounded-lg shadow-lg p-8">
             <div className="max-w-5xl mx-auto">
               {/* Display Version - Only visible on screen */}
-              <div ref={certificateRef} className="relative border-4 sm:border-6 lg:border-8 border-double border-purple-600 p-8 sm:p-12 lg:p-16 rounded-lg bg-gradient-to-br from-white via-purple-50 to-white certificate-display flex items-center justify-center min-h-[600px]">
+              <div
+                ref={certificateRef}
+                className="relative border-4 sm:border-6 lg:border-8 border-double border-purple-600 p-8 sm:p-12 lg:p-16 rounded-lg bg-gradient-to-br from-white via-purple-50 to-white certificate-display flex items-center justify-center min-h-[600px]"
+              >
                 {/* Decorative corner elements */}
                 <div className="absolute top-4 left-4 w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 border-t-2 border-l-2 sm:border-t-3 sm:border-l-3 lg:border-t-4 lg:border-l-4 border-purple-400"></div>
                 <div className="absolute top-4 right-4 w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 border-t-2 border-r-2 sm:border-t-3 sm:border-r-3 lg:border-t-4 lg:border-r-4 border-purple-400"></div>
@@ -1127,176 +1470,203 @@ export default function ProgramCompletePage() {
 
                 {/* Certificate content - centered wrapper */}
                 <div className="w-full">
-                {/* Title */}
-                <div className="text-center mb-6 sm:mb-8 lg:mb-12">
-                  <h2 className="text-4xl sm:text-4xl lg:text-5xl font-serif font-bold text-purple-700 mb-3 sm:mb-3 lg:mb-4">
-                    {t('pbl:complete.certificate.title')}
-                  </h2>
-                  <div className="w-24 sm:w-24 lg:w-32 h-0.5 sm:h-0.5 lg:h-1 bg-purple-600 mx-auto"></div>
-                </div>
+                  {/* Title */}
+                  <div className="text-center mb-6 sm:mb-8 lg:mb-12">
+                    <h2 className="text-4xl sm:text-4xl lg:text-5xl font-serif font-bold text-purple-700 mb-3 sm:mb-3 lg:mb-4">
+                      {t("pbl:complete.certificate.title")}
+                    </h2>
+                    <div className="w-24 sm:w-24 lg:w-32 h-0.5 sm:h-0.5 lg:h-1 bg-purple-600 mx-auto"></div>
+                  </div>
 
-                {/* Certificate of Completion text */}
-                <div className="text-center mb-6 sm:mb-8">
-                  <p className="text-base sm:text-lg text-gray-700">
-                    {t('pbl:complete.certificate.certifies')}
-                  </p>
-                </div>
+                  {/* Certificate of Completion text */}
+                  <div className="text-center mb-6 sm:mb-8">
+                    <p className="text-base sm:text-lg text-gray-700">
+                      {t("pbl:complete.certificate.certifies")}
+                    </p>
+                  </div>
 
-                {/* Student name - red border box with edit capability (border changes when name is filled) */}
-                <div className="text-center mb-6 sm:mb-8">
-                  <div
-                    onClick={() => !isEditingName && setIsEditingName(true)}
-                    className={`inline-block border-2 px-6 py-3 w-[90%] max-w-sm sm:px-10 sm:py-4 sm:w-auto sm:min-w-80 lg:px-12 lg:min-w-96 relative group bg-white cursor-pointer transition-all hover:shadow-md ${
-                      editableName ? 'border-purple-400' : 'border-red-500'
-                    }`}
-                  >
-                    {isEditingName ? (
-                      <input
-                        type="text"
-                        value={editableName}
-                        onChange={(e) => setEditableName(e.target.value)}
-                        onBlur={() => setIsEditingName(false)}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter') {
-                            setIsEditingName(false);
-                          }
-                        }}
-                        autoFocus
-                        placeholder={t('pbl:complete.certificate.enterYourName', 'Enter your name')}
-                        className="text-2xl sm:text-2xl lg:text-4xl font-serif font-bold text-gray-900 bg-transparent border-none outline-none text-center w-full placeholder:text-gray-300"
-                      />
-                    ) : (
-                      <>
-                        {editableName ? (
-                          <p className="text-2xl sm:text-2xl lg:text-4xl font-serif font-bold text-gray-900">
-                            {editableName}
-                          </p>
-                        ) : (
-                          <p className="text-2xl sm:text-2xl lg:text-4xl font-serif text-gray-300 italic">
-                            {t('pbl:complete.certificate.clickToEnterName', 'Click to enter your name')}
-                          </p>
-                        )}
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setIsEditingName(true);
+                  {/* Student name - red border box with edit capability (border changes when name is filled) */}
+                  <div className="text-center mb-6 sm:mb-8">
+                    <div
+                      onClick={() => !isEditingName && setIsEditingName(true)}
+                      className={`inline-block border-2 px-6 py-3 w-[90%] max-w-sm sm:px-10 sm:py-4 sm:w-auto sm:min-w-80 lg:px-12 lg:min-w-96 relative group bg-white cursor-pointer transition-all hover:shadow-md ${
+                        editableName ? "border-purple-400" : "border-red-500"
+                      }`}
+                    >
+                      {isEditingName ? (
+                        <input
+                          type="text"
+                          value={editableName}
+                          onChange={(e) => setEditableName(e.target.value)}
+                          onBlur={() => setIsEditingName(false)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              setIsEditingName(false);
+                            }
                           }}
-                          className="absolute -right-8 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity"
-                          title={t('pbl:complete.certificate.editName', 'Edit name')}
-                        >
-                          <svg className="w-5 h-5 text-gray-400 hover:text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                          </svg>
-                        </button>
-                      </>
-                    )}
-                  </div>
-                </div>
-
-                {/* Completion statement */}
-                <div className="text-center mb-6 sm:mb-6">
-                  <p className="text-base sm:text-lg text-gray-700">
-                    {t('pbl:complete.certificate.hasCompleted')}
-                  </p>
-                </div>
-
-                {/* Scenario title - elegant box */}
-                <div className="text-center mb-6 sm:mb-8 px-4 sm:px-0">
-                  <div className="inline-block bg-purple-50 border-2 border-purple-300 px-6 py-3 sm:px-6 sm:py-3 lg:px-8 lg:py-4 rounded w-[90%] max-w-sm sm:w-auto sm:min-w-72 lg:min-w-96">
-                    <p className="text-lg sm:text-xl lg:text-2xl font-semibold text-purple-900 break-words">{scenarioTitle}</p>
-                  </div>
-                </div>
-
-                {/* Course description */}
-                <div className="text-center mb-6 sm:mb-8 lg:mb-12">
-                  <p className="text-sm sm:text-base text-gray-600">
-                    {t('pbl:complete.certificate.courseType')}
-                  </p>
-                </div>
-
-                {/* Date section */}
-                <div className="text-center mb-8 sm:mb-10 lg:mb-12">
-                  <p className="text-sm sm:text-sm text-gray-600 mb-2 sm:mb-2">
-                    {t('pbl:complete.certificate.completionDate')}
-                  </p>
-                  <p className="text-xl sm:text-xl lg:text-2xl font-semibold text-gray-900">
-                    {new Date().toLocaleDateString(i18n.language === 'zhTW' ? 'zh-TW' : 'en-US', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric'
-                    })}
-                  </p>
-                </div>
-
-                {/* Footer with logos and signatures */}
-                <div className="grid grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mt-8 sm:mt-12 lg:mt-16 pt-6 sm:pt-6 lg:pt-8 border-t border-gray-300">
-                  {/* code.org - 國際指導單位 */}
-                  <div className="text-center">
-                    <div className="border-t-2 border-gray-400 pt-3 sm:pt-3 lg:pt-4 mb-2 sm:mb-2 lg:mb-3">
-                      <div className="flex flex-col items-center justify-center gap-2 mb-2 sm:mb-1 lg:mb-2">
-                        <div className="h-6 sm:h-7 lg:h-8 flex items-center">
-                          <Image
-                            src="/images/HourAI_Logo_Stacked_Black.png"
-                            alt="code.org Logo"
-                            width={80}
-                            height={60}
-                            className="object-contain h-full w-auto"
-                          />
-                        </div>
-                        <p className="text-xs sm:text-sm lg:text-base font-semibold text-gray-700">
-                          code.org
-                        </p>
-                      </div>
+                          autoFocus
+                          placeholder={t(
+                            "pbl:complete.certificate.enterYourName",
+                            "Enter your name",
+                          )}
+                          className="text-2xl sm:text-2xl lg:text-4xl font-serif font-bold text-gray-900 bg-transparent border-none outline-none text-center w-full placeholder:text-gray-300"
+                        />
+                      ) : (
+                        <>
+                          {editableName ? (
+                            <p className="text-2xl sm:text-2xl lg:text-4xl font-serif font-bold text-gray-900">
+                              {editableName}
+                            </p>
+                          ) : (
+                            <p className="text-2xl sm:text-2xl lg:text-4xl font-serif text-gray-300 italic">
+                              {t(
+                                "pbl:complete.certificate.clickToEnterName",
+                                "Click to enter your name",
+                              )}
+                            </p>
+                          )}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setIsEditingName(true);
+                            }}
+                            className="absolute -right-8 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity"
+                            title={t(
+                              "pbl:complete.certificate.editName",
+                              "Edit name",
+                            )}
+                          >
+                            <svg
+                              className="w-5 h-5 text-gray-400 hover:text-purple-600"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                              />
+                            </svg>
+                          </button>
+                        </>
+                      )}
                     </div>
-                    <p className="text-xs sm:text-xs text-gray-500">
-                      {t('pbl:complete.certificate.internationalAdvisor', '國際指導單位')}
+                  </div>
+
+                  {/* Completion statement */}
+                  <div className="text-center mb-6 sm:mb-6">
+                    <p className="text-base sm:text-lg text-gray-700">
+                      {t("pbl:complete.certificate.hasCompleted")}
                     </p>
                   </div>
-                  {/* Junyi Academy */}
-                  <div className="text-center">
-                    <div className="border-t-2 border-gray-400 pt-3 sm:pt-3 lg:pt-4 mb-2 sm:mb-2 lg:mb-3">
-                      <div className="flex flex-col items-center justify-center gap-2 mb-2 sm:mb-1 lg:mb-2">
-                        <div className="h-6 sm:h-7 lg:h-8 flex items-center">
-                          <Image
-                            src="/images/junyi_logo.jpg"
-                            alt="Junyi Academy Logo"
-                            width={80}
-                            height={40}
-                            className="object-contain h-full w-auto"
-                          />
-                        </div>
-                        <p className="text-xs sm:text-sm lg:text-base font-semibold text-gray-700">
-                          {t('pbl:complete.certificate.junyiAcademy')}
-                        </p>
-                      </div>
+
+                  {/* Scenario title - elegant box */}
+                  <div className="text-center mb-6 sm:mb-8 px-4 sm:px-0">
+                    <div className="inline-block bg-purple-50 border-2 border-purple-300 px-6 py-3 sm:px-6 sm:py-3 lg:px-8 lg:py-4 rounded w-[90%] max-w-sm sm:w-auto sm:min-w-72 lg:min-w-96">
+                      <p className="text-lg sm:text-xl lg:text-2xl font-semibold text-purple-900 break-words">
+                        {scenarioTitle}
+                      </p>
                     </div>
-                    <p className="text-xs sm:text-xs text-gray-500">
-                      {t('pbl:complete.certificate.provider')}
+                  </div>
+
+                  {/* Course description */}
+                  <div className="text-center mb-6 sm:mb-8 lg:mb-12">
+                    <p className="text-sm sm:text-base text-gray-600">
+                      {t("pbl:complete.certificate.courseType")}
                     </p>
                   </div>
-                  {/* AI Square */}
-                  <div className="text-center">
-                    <div className="border-t-2 border-gray-400 pt-3 sm:pt-3 lg:pt-4 mb-2 sm:mb-2 lg:mb-3">
-                      <div className="flex flex-col items-center justify-center gap-2 mb-2 sm:mb-1 lg:mb-2">
-                        <div className="h-6 sm:h-7 lg:h-8 flex items-center">
-                          <Image
-                            src="/images/logo.png"
-                            alt="AI Square Logo"
-                            width={80}
-                            height={40}
-                            className="object-contain h-full w-auto"
-                          />
-                        </div>
-                        <p className="text-xs sm:text-sm lg:text-base font-semibold text-gray-700">
-                          {t('pbl:complete.certificate.aiSquare')}
-                        </p>
-                      </div>
-                    </div>
-                    <p className="text-xs sm:text-xs text-gray-500">
-                      {t('pbl:complete.certificate.platform')}
+
+                  {/* Date section */}
+                  <div className="text-center mb-8 sm:mb-10 lg:mb-12">
+                    <p className="text-sm sm:text-sm text-gray-600 mb-2 sm:mb-2">
+                      {t("pbl:complete.certificate.completionDate")}
+                    </p>
+                    <p className="text-xl sm:text-xl lg:text-2xl font-semibold text-gray-900">
+                      {new Date().toLocaleDateString(
+                        i18n.language === "zhTW" ? "zh-TW" : "en-US",
+                        {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        },
+                      )}
                     </p>
                   </div>
-                </div>
+
+                  {/* Footer with logos and signatures */}
+                  <div className="grid grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mt-8 sm:mt-12 lg:mt-16 pt-6 sm:pt-6 lg:pt-8 border-t border-gray-300">
+                    {/* code.org - 國際指導單位 */}
+                    <div className="text-center">
+                      <div className="border-t-2 border-gray-400 pt-3 sm:pt-3 lg:pt-4 mb-2 sm:mb-2 lg:mb-3">
+                        <div className="flex flex-col items-center justify-center gap-2 mb-2 sm:mb-1 lg:mb-2">
+                          <div className="h-6 sm:h-7 lg:h-8 flex items-center">
+                            <Image
+                              src="/images/HourAI_Logo_Stacked_Black.png"
+                              alt="code.org Logo"
+                              width={80}
+                              height={60}
+                              className="object-contain h-full w-auto"
+                            />
+                          </div>
+                          <p className="text-xs sm:text-sm lg:text-base font-semibold text-gray-700">
+                            code.org
+                          </p>
+                        </div>
+                      </div>
+                      <p className="text-xs sm:text-xs text-gray-500">
+                        {t(
+                          "pbl:complete.certificate.internationalAdvisor",
+                          "國際指導單位",
+                        )}
+                      </p>
+                    </div>
+                    {/* Junyi Academy */}
+                    <div className="text-center">
+                      <div className="border-t-2 border-gray-400 pt-3 sm:pt-3 lg:pt-4 mb-2 sm:mb-2 lg:mb-3">
+                        <div className="flex flex-col items-center justify-center gap-2 mb-2 sm:mb-1 lg:mb-2">
+                          <div className="h-6 sm:h-7 lg:h-8 flex items-center">
+                            <Image
+                              src="/images/junyi_logo.jpg"
+                              alt="Junyi Academy Logo"
+                              width={80}
+                              height={40}
+                              className="object-contain h-full w-auto"
+                            />
+                          </div>
+                          <p className="text-xs sm:text-sm lg:text-base font-semibold text-gray-700">
+                            {t("pbl:complete.certificate.junyiAcademy")}
+                          </p>
+                        </div>
+                      </div>
+                      <p className="text-xs sm:text-xs text-gray-500">
+                        {t("pbl:complete.certificate.provider")}
+                      </p>
+                    </div>
+                    {/* AI Square */}
+                    <div className="text-center">
+                      <div className="border-t-2 border-gray-400 pt-3 sm:pt-3 lg:pt-4 mb-2 sm:mb-2 lg:mb-3">
+                        <div className="flex flex-col items-center justify-center gap-2 mb-2 sm:mb-1 lg:mb-2">
+                          <div className="h-6 sm:h-7 lg:h-8 flex items-center">
+                            <Image
+                              src="/images/logo.png"
+                              alt="AI Square Logo"
+                              width={80}
+                              height={40}
+                              className="object-contain h-full w-auto"
+                            />
+                          </div>
+                          <p className="text-xs sm:text-sm lg:text-base font-semibold text-gray-700">
+                            {t("pbl:complete.certificate.aiSquare")}
+                          </p>
+                        </div>
+                      </div>
+                      <p className="text-xs sm:text-xs text-gray-500">
+                        {t("pbl:complete.certificate.platform")}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -1310,130 +1680,331 @@ export default function ProgramCompletePage() {
                   <div className="certificate-corner certificate-corner-bl"></div>
                   <div className="certificate-corner certificate-corner-br"></div>
 
-                  <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-                    <div style={{ width: '100%', textAlign: 'center' }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      height: "100%",
+                    }}
+                  >
+                    <div style={{ width: "100%", textAlign: "center" }}>
                       {/* Title */}
-                      <div style={{ marginBottom: '12px' }}>
-                        <h2 style={{ fontSize: '32px', fontFamily: 'serif', fontWeight: 'bold', color: 'rgb(147, 51, 234)', marginBottom: '8px' }}>
-                          {t('pbl:complete.certificate.title')}
+                      <div style={{ marginBottom: "12px" }}>
+                        <h2
+                          style={{
+                            fontSize: "32px",
+                            fontFamily: "serif",
+                            fontWeight: "bold",
+                            color: "rgb(147, 51, 234)",
+                            marginBottom: "8px",
+                          }}
+                        >
+                          {t("pbl:complete.certificate.title")}
                         </h2>
-                        <div style={{ width: '80px', height: '2px', background: 'rgb(147, 51, 234)', margin: '0 auto' }}></div>
+                        <div
+                          style={{
+                            width: "80px",
+                            height: "2px",
+                            background: "rgb(147, 51, 234)",
+                            margin: "0 auto",
+                          }}
+                        ></div>
                       </div>
 
                       {/* Certificate of Completion text */}
-                      <div style={{ marginBottom: '10px' }}>
-                        <p style={{ fontSize: '14px', color: 'rgb(55, 65, 81)' }}>
-                          {t('pbl:complete.certificate.certifies')}
+                      <div style={{ marginBottom: "10px" }}>
+                        <p
+                          style={{ fontSize: "14px", color: "rgb(55, 65, 81)" }}
+                        >
+                          {t("pbl:complete.certificate.certifies")}
                         </p>
                       </div>
 
                       {/* Student name */}
-                      <div style={{ marginBottom: '10px' }}>
-                        <div style={{ display: 'inline-block', border: '2px solid rgb(167, 139, 250)', padding: '6px 28px', background: 'white' }}>
-                          <p style={{ fontSize: '22px', fontFamily: 'serif', fontWeight: 'bold', color: 'rgb(17, 24, 39)' }}>
-                            {editableName || t('pbl:complete.certificate.enterYourName', 'Name')}
+                      <div style={{ marginBottom: "10px" }}>
+                        <div
+                          style={{
+                            display: "inline-block",
+                            border: "2px solid rgb(167, 139, 250)",
+                            padding: "6px 28px",
+                            background: "white",
+                          }}
+                        >
+                          <p
+                            style={{
+                              fontSize: "22px",
+                              fontFamily: "serif",
+                              fontWeight: "bold",
+                              color: "rgb(17, 24, 39)",
+                            }}
+                          >
+                            {editableName ||
+                              t(
+                                "pbl:complete.certificate.enterYourName",
+                                "Name",
+                              )}
                           </p>
                         </div>
                       </div>
 
                       {/* Completion statement */}
-                      <div style={{ marginBottom: '10px' }}>
-                        <p style={{ fontSize: '14px', color: 'rgb(55, 65, 81)' }}>
-                          {t('pbl:complete.certificate.hasCompleted')}
+                      <div style={{ marginBottom: "10px" }}>
+                        <p
+                          style={{ fontSize: "14px", color: "rgb(55, 65, 81)" }}
+                        >
+                          {t("pbl:complete.certificate.hasCompleted")}
                         </p>
                       </div>
 
                       {/* Scenario title */}
-                      <div style={{ marginBottom: '12px' }}>
-                        <div style={{ display: 'inline-block', background: 'rgb(243, 232, 255)', border: '2px solid rgb(216, 180, 254)', padding: '10px 20px', borderRadius: '4px' }}>
-                          <p style={{ fontSize: '18px', fontWeight: '600', color: 'rgb(88, 28, 135)' }}>{scenarioTitle}</p>
+                      <div style={{ marginBottom: "12px" }}>
+                        <div
+                          style={{
+                            display: "inline-block",
+                            background: "rgb(243, 232, 255)",
+                            border: "2px solid rgb(216, 180, 254)",
+                            padding: "10px 20px",
+                            borderRadius: "4px",
+                          }}
+                        >
+                          <p
+                            style={{
+                              fontSize: "18px",
+                              fontWeight: "600",
+                              color: "rgb(88, 28, 135)",
+                            }}
+                          >
+                            {scenarioTitle}
+                          </p>
                         </div>
                       </div>
 
                       {/* Course description */}
-                      <div style={{ marginBottom: '12px' }}>
-                        <p style={{ fontSize: '13px', color: 'rgb(75, 85, 99)' }}>
-                          {t('pbl:complete.certificate.courseType')}
+                      <div style={{ marginBottom: "12px" }}>
+                        <p
+                          style={{ fontSize: "13px", color: "rgb(75, 85, 99)" }}
+                        >
+                          {t("pbl:complete.certificate.courseType")}
                         </p>
                       </div>
 
                       {/* Date section */}
-                      <div style={{ marginBottom: '18px' }}>
-                        <p style={{ fontSize: '13px', color: 'rgb(75, 85, 99)', marginBottom: '6px' }}>
-                          {t('pbl:complete.certificate.completionDate')}
+                      <div style={{ marginBottom: "18px" }}>
+                        <p
+                          style={{
+                            fontSize: "13px",
+                            color: "rgb(75, 85, 99)",
+                            marginBottom: "6px",
+                          }}
+                        >
+                          {t("pbl:complete.certificate.completionDate")}
                         </p>
-                        <p style={{ fontSize: '16px', fontWeight: '600', color: 'rgb(17, 24, 39)' }}>
-                          {new Date().toLocaleDateString(i18n.language === 'zhTW' ? 'zh-TW' : 'en-US', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric'
-                          })}
+                        <p
+                          style={{
+                            fontSize: "16px",
+                            fontWeight: "600",
+                            color: "rgb(17, 24, 39)",
+                          }}
+                        >
+                          {new Date().toLocaleDateString(
+                            i18n.language === "zhTW" ? "zh-TW" : "en-US",
+                            {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                            },
+                          )}
                         </p>
                       </div>
 
                       {/* Footer with logos */}
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '20px', paddingTop: '12px', borderTop: '1px solid rgb(209, 213, 219)', marginTop: '12px' }}>
+                      <div
+                        style={{
+                          display: "grid",
+                          gridTemplateColumns: "1fr 1fr 1fr",
+                          gap: "20px",
+                          paddingTop: "12px",
+                          borderTop: "1px solid rgb(209, 213, 219)",
+                          marginTop: "12px",
+                        }}
+                      >
                         {/* code.org - 國際指導單位 */}
-                        <div style={{ textAlign: 'center' }}>
-                          <div style={{ borderTop: '2px solid rgb(156, 163, 175)', paddingTop: '8px', marginBottom: '4px' }}>
-                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '4px', marginBottom: '4px' }}>
-                              <div style={{ height: '24px', display: 'flex', alignItems: 'center' }}>
+                        <div style={{ textAlign: "center" }}>
+                          <div
+                            style={{
+                              borderTop: "2px solid rgb(156, 163, 175)",
+                              paddingTop: "8px",
+                              marginBottom: "4px",
+                            }}
+                          >
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                gap: "4px",
+                                marginBottom: "4px",
+                              }}
+                            >
+                              <div
+                                style={{
+                                  height: "24px",
+                                  display: "flex",
+                                  alignItems: "center",
+                                }}
+                              >
                                 {/* eslint-disable-next-line @next/next/no-img-element */}
                                 <img
                                   src="/images/HourAI_Logo_Stacked_Black.png"
                                   alt="code.org Logo"
-                                  style={{ objectFit: 'contain', display: 'block', height: '100%', width: 'auto' }}
+                                  style={{
+                                    objectFit: "contain",
+                                    display: "block",
+                                    height: "100%",
+                                    width: "auto",
+                                  }}
                                 />
                               </div>
-                              <p style={{ fontSize: '11px', fontWeight: '600', color: 'rgb(55, 65, 81)' }}>
+                              <p
+                                style={{
+                                  fontSize: "11px",
+                                  fontWeight: "600",
+                                  color: "rgb(55, 65, 81)",
+                                }}
+                              >
                                 code.org
                               </p>
                             </div>
                           </div>
-                          <p style={{ fontSize: '9px', color: 'rgb(107, 114, 128)' }}>
-                            {t('pbl:complete.certificate.internationalAdvisor', '國際指導單位')}
+                          <p
+                            style={{
+                              fontSize: "9px",
+                              color: "rgb(107, 114, 128)",
+                            }}
+                          >
+                            {t(
+                              "pbl:complete.certificate.internationalAdvisor",
+                              "國際指導單位",
+                            )}
                           </p>
                         </div>
                         {/* Junyi Academy */}
-                        <div style={{ textAlign: 'center' }}>
-                          <div style={{ borderTop: '2px solid rgb(156, 163, 175)', paddingTop: '8px', marginBottom: '4px' }}>
-                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '4px', marginBottom: '4px' }}>
-                              <div style={{ height: '24px', display: 'flex', alignItems: 'center' }}>
+                        <div style={{ textAlign: "center" }}>
+                          <div
+                            style={{
+                              borderTop: "2px solid rgb(156, 163, 175)",
+                              paddingTop: "8px",
+                              marginBottom: "4px",
+                            }}
+                          >
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                gap: "4px",
+                                marginBottom: "4px",
+                              }}
+                            >
+                              <div
+                                style={{
+                                  height: "24px",
+                                  display: "flex",
+                                  alignItems: "center",
+                                }}
+                              >
                                 {/* eslint-disable-next-line @next/next/no-img-element */}
                                 <img
                                   src="/images/junyi_logo.jpg"
                                   alt="Junyi Academy Logo"
-                                  style={{ objectFit: 'contain', display: 'block', height: '100%', width: 'auto' }}
+                                  style={{
+                                    objectFit: "contain",
+                                    display: "block",
+                                    height: "100%",
+                                    width: "auto",
+                                  }}
                                 />
                               </div>
-                              <p style={{ fontSize: '11px', fontWeight: '600', color: 'rgb(55, 65, 81)' }}>
-                                {t('pbl:complete.certificate.junyiAcademy')}
+                              <p
+                                style={{
+                                  fontSize: "11px",
+                                  fontWeight: "600",
+                                  color: "rgb(55, 65, 81)",
+                                }}
+                              >
+                                {t("pbl:complete.certificate.junyiAcademy")}
                               </p>
                             </div>
                           </div>
-                          <p style={{ fontSize: '9px', color: 'rgb(107, 114, 128)' }}>
-                            {t('pbl:complete.certificate.provider')}
+                          <p
+                            style={{
+                              fontSize: "9px",
+                              color: "rgb(107, 114, 128)",
+                            }}
+                          >
+                            {t("pbl:complete.certificate.provider")}
                           </p>
                         </div>
                         {/* AI Square */}
-                        <div style={{ textAlign: 'center' }}>
-                          <div style={{ borderTop: '2px solid rgb(156, 163, 175)', paddingTop: '8px', marginBottom: '4px' }}>
-                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '4px', marginBottom: '4px' }}>
-                              <div style={{ height: '24px', display: 'flex', alignItems: 'center' }}>
+                        <div style={{ textAlign: "center" }}>
+                          <div
+                            style={{
+                              borderTop: "2px solid rgb(156, 163, 175)",
+                              paddingTop: "8px",
+                              marginBottom: "4px",
+                            }}
+                          >
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                gap: "4px",
+                                marginBottom: "4px",
+                              }}
+                            >
+                              <div
+                                style={{
+                                  height: "24px",
+                                  display: "flex",
+                                  alignItems: "center",
+                                }}
+                              >
                                 {/* eslint-disable-next-line @next/next/no-img-element */}
                                 <img
                                   src="/images/logo.png"
                                   alt="AI Square Logo"
-                                  style={{ objectFit: 'contain', display: 'block', height: '100%', width: 'auto' }}
+                                  style={{
+                                    objectFit: "contain",
+                                    display: "block",
+                                    height: "100%",
+                                    width: "auto",
+                                  }}
                                 />
                               </div>
-                              <p style={{ fontSize: '11px', fontWeight: '600', color: 'rgb(55, 65, 81)' }}>
-                                {t('pbl:complete.certificate.aiSquare')}
+                              <p
+                                style={{
+                                  fontSize: "11px",
+                                  fontWeight: "600",
+                                  color: "rgb(55, 65, 81)",
+                                }}
+                              >
+                                {t("pbl:complete.certificate.aiSquare")}
                               </p>
                             </div>
                           </div>
-                          <p style={{ fontSize: '9px', color: 'rgb(107, 114, 128)' }}>
-                            {t('pbl:complete.certificate.platform')}
+                          <p
+                            style={{
+                              fontSize: "9px",
+                              color: "rgb(107, 114, 128)",
+                            }}
+                          >
+                            {t("pbl:complete.certificate.platform")}
                           </p>
                         </div>
                       </div>
@@ -1451,34 +2022,69 @@ export default function ProgramCompletePage() {
                     disabled={!editableName || isGeneratingPDF}
                     className={`px-8 py-3 rounded-lg font-medium transition-colors shadow-lg flex items-center gap-2 ${
                       editableName && !isGeneratingPDF
-                        ? 'bg-purple-600 text-white hover:bg-purple-700 cursor-pointer'
-                        : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                        ? "bg-purple-600 text-white hover:bg-purple-700 cursor-pointer"
+                        : "bg-gray-300 text-gray-500 cursor-not-allowed"
                     }`}
                   >
                     {isGeneratingPDF ? (
                       <>
-                        <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        <svg
+                          className="w-5 h-5 animate-spin"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          ></circle>
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
                         </svg>
-                        <span>{t('pbl:complete.certificate.generating', 'Generating...')}</span>
+                        <span>
+                          {t(
+                            "pbl:complete.certificate.generating",
+                            "Generating...",
+                          )}
+                        </span>
                       </>
                     ) : (
                       <>
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        <svg
+                          className="w-5 h-5"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                          />
                         </svg>
-                        {t('pbl:complete.certificate.downloadPDF', 'Download PDF')}
+                        {t(
+                          "pbl:complete.certificate.downloadPDF",
+                          "Download PDF",
+                        )}
                       </>
                     )}
                   </button>
                   {!editableName && (
                     <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-sm rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
-                      {t('pbl:complete.certificate.pleaseEnterName', 'Please enter your name first')}
+                      {t(
+                        "pbl:complete.certificate.pleaseEnterName",
+                        "Please enter your name first",
+                      )}
                     </div>
                   )}
                 </div>
-
               </div>
             </div>
           </div>

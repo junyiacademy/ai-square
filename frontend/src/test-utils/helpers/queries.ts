@@ -3,7 +3,7 @@
  * Helper functions for better test assertions and queries
  */
 
-import { screen, within, waitFor } from '@testing-library/react';
+import { screen, within, waitFor } from "@testing-library/react";
 
 /**
  * Find text within a specific parent container
@@ -11,10 +11,11 @@ import { screen, within, waitFor } from '@testing-library/react';
  */
 export const getByTextInContainer = (
   containerSelector: string,
-  text: string | RegExp
+  text: string | RegExp,
 ) => {
-  const container = screen.getByTestId(containerSelector) ||
-                   document.querySelector(containerSelector);
+  const container =
+    screen.getByTestId(containerSelector) ||
+    document.querySelector(containerSelector);
   if (!container) {
     throw new Error(`Container with selector "${containerSelector}" not found`);
   }
@@ -27,7 +28,7 @@ export const getByTextInContainer = (
 export const getByTextInRole = (
   role: string,
   text: string | RegExp,
-  options?: { name?: string }
+  options?: { name?: string },
 ) => {
   const container = screen.getByRole(role, options);
   return within(container).getByText(text);
@@ -43,7 +44,7 @@ export const getStatisticByLabel = (label: string): HTMLElement => {
 
   // Find the parent container (usually a div with specific class)
   let parent = labelElement.parentElement;
-  while (parent && !parent.classList.contains('text-center')) {
+  while (parent && !parent.classList.contains("text-center")) {
     parent = parent.parentElement;
   }
 
@@ -52,7 +53,7 @@ export const getStatisticByLabel = (label: string): HTMLElement => {
   }
 
   // Look for the value element (usually the first child with large font)
-  const valueElement = parent.querySelector('.text-2xl, .text-3xl, .font-bold');
+  const valueElement = parent.querySelector(".text-2xl, .text-3xl, .font-bold");
   if (!valueElement) {
     throw new Error(`Could not find value element for label: ${label}`);
   }
@@ -63,15 +64,18 @@ export const getStatisticByLabel = (label: string): HTMLElement => {
 /**
  * Get badge by its category (earned/available)
  */
-export const getBadgeByCategory = (badgeName: string, category: 'earned' | 'available') => {
+export const getBadgeByCategory = (
+  badgeName: string,
+  category: "earned" | "available",
+) => {
   const badgeElements = screen.getAllByText(badgeName);
 
   for (const badge of badgeElements) {
-    const container = badge.closest('.bg-white, .bg-gradient-to-br');
+    const container = badge.closest(".bg-white, .bg-gradient-to-br");
     if (!container) continue;
 
     const statusText = within(container as HTMLElement).queryByText(
-      category === 'earned' ? '已獲得' : '待獲得'
+      category === "earned" ? "已獲得" : "待獲得",
     );
 
     if (statusText) {
@@ -87,15 +91,18 @@ export const getBadgeByCategory = (badgeName: string, category: 'earned' | 'avai
  */
 export const waitForElementWithTimeout = async (
   getElement: () => HTMLElement | null,
-  timeout = 5000
+  timeout = 5000,
 ) => {
-  return waitFor(() => {
-    const element = getElement();
-    if (!element) {
-      throw new Error('Element not found');
-    }
-    return element;
-  }, { timeout });
+  return waitFor(
+    () => {
+      const element = getElement();
+      if (!element) {
+        throw new Error("Element not found");
+      }
+      return element;
+    },
+    { timeout },
+  );
 };
 
 /**
@@ -115,10 +122,11 @@ export const elementExists = (text: string | RegExp): boolean => {
  */
 export const getAllByTextInContainer = (
   containerSelector: string,
-  text: string | RegExp
+  text: string | RegExp,
 ) => {
-  const container = screen.getByTestId(containerSelector) ||
-                   document.querySelector(containerSelector);
+  const container =
+    screen.getByTestId(containerSelector) ||
+    document.querySelector(containerSelector);
   if (!container) {
     throw new Error(`Container with selector "${containerSelector}" not found`);
   }
@@ -131,7 +139,7 @@ export const getAllByTextInContainer = (
 export const expectElementCountInContainer = (
   containerSelector: string,
   text: string | RegExp,
-  expectedCount: number
+  expectedCount: number,
 ) => {
   const elements = getAllByTextInContainer(containerSelector, text);
   expect(elements).toHaveLength(expectedCount);
@@ -144,19 +152,22 @@ export const expectElementCountInContainer = (
  */
 export const getByTextWithContext = (
   text: string | RegExp,
-  contextText: string | RegExp
+  contextText: string | RegExp,
 ) => {
   const elements = screen.getAllByText(text);
 
   for (const element of elements) {
-    const container = element.closest('div, section, article');
-    if (container && within(container as HTMLElement).queryByText(contextText)) {
+    const container = element.closest("div, section, article");
+    if (
+      container &&
+      within(container as HTMLElement).queryByText(contextText)
+    ) {
       return element;
     }
   }
 
   throw new Error(
-    `Could not find element with text "${text}" and context "${contextText}"`
+    `Could not find element with text "${text}" and context "${contextText}"`,
   );
 };
 
@@ -172,7 +183,7 @@ export const hasClass = (element: HTMLElement, className: string): boolean => {
  */
 export const getComputedStyleProperty = (
   element: HTMLElement,
-  property: string
+  property: string,
 ): string => {
   return window.getComputedStyle(element).getPropertyValue(property);
 };

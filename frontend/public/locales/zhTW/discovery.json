@@ -38,40 +38,104 @@
         "id": "creativity",
         "text": "哪個活動對你最有吸引力？",
         "options": [
-          { "id": "create_content", "text": "創作影片或數位內容", "weight": { "tech": 2, "creative": 3, "business": 1 } },
-          { "id": "solve_problems", "text": "用程式碼解決複雜問題", "weight": { "tech": 3, "creative": 1, "business": 2 } },
-          { "id": "plan_strategies", "text": "規劃商業策略", "weight": { "tech": 1, "creative": 1, "business": 3 } },
-          { "id": "design_visuals", "text": "設計視覺體驗", "weight": { "tech": 2, "creative": 3, "business": 1 } }
+          {
+            "id": "create_content",
+            "text": "創作影片或數位內容",
+            "weight": { "tech": 2, "creative": 3, "business": 1 }
+          },
+          {
+            "id": "solve_problems",
+            "text": "用程式碼解決複雜問題",
+            "weight": { "tech": 3, "creative": 1, "business": 2 }
+          },
+          {
+            "id": "plan_strategies",
+            "text": "規劃商業策略",
+            "weight": { "tech": 1, "creative": 1, "business": 3 }
+          },
+          {
+            "id": "design_visuals",
+            "text": "設計視覺體驗",
+            "weight": { "tech": 2, "creative": 3, "business": 1 }
+          }
         ]
       },
       {
         "id": "work_style",
         "text": "你偏好怎樣的工作方式？",
         "options": [
-          { "id": "independent", "text": "獨立工作，享有創作自由", "weight": { "tech": 2, "creative": 3, "business": 1 } },
-          { "id": "team_tech", "text": "在技術團隊中開發產品", "weight": { "tech": 3, "creative": 1, "business": 2 } },
-          { "id": "leading", "text": "領導專案和團隊", "weight": { "tech": 1, "creative": 2, "business": 3 } },
-          { "id": "collaborative", "text": "在創意專案中協作", "weight": { "tech": 2, "creative": 3, "business": 1 } }
+          {
+            "id": "independent",
+            "text": "獨立工作，享有創作自由",
+            "weight": { "tech": 2, "creative": 3, "business": 1 }
+          },
+          {
+            "id": "team_tech",
+            "text": "在技術團隊中開發產品",
+            "weight": { "tech": 3, "creative": 1, "business": 2 }
+          },
+          {
+            "id": "leading",
+            "text": "領導專案和團隊",
+            "weight": { "tech": 1, "creative": 2, "business": 3 }
+          },
+          {
+            "id": "collaborative",
+            "text": "在創意專案中協作",
+            "weight": { "tech": 2, "creative": 3, "business": 1 }
+          }
         ]
       },
       {
         "id": "interests",
         "text": "你對哪些主題最感興趣？",
         "options": [
-          { "id": "technology", "text": "最新科技和程式設計", "weight": { "tech": 3, "creative": 1, "business": 1 } },
-          { "id": "art_media", "text": "藝術、媒體和故事敘述", "weight": { "tech": 1, "creative": 3, "business": 1 } },
-          { "id": "business_trends", "text": "商業趨勢和市場", "weight": { "tech": 1, "creative": 1, "business": 3 } },
-          { "id": "digital_innovation", "text": "數位創新和設計", "weight": { "tech": 2, "creative": 2, "business": 2 } }
+          {
+            "id": "technology",
+            "text": "最新科技和程式設計",
+            "weight": { "tech": 3, "creative": 1, "business": 1 }
+          },
+          {
+            "id": "art_media",
+            "text": "藝術、媒體和故事敘述",
+            "weight": { "tech": 1, "creative": 3, "business": 1 }
+          },
+          {
+            "id": "business_trends",
+            "text": "商業趨勢和市場",
+            "weight": { "tech": 1, "creative": 1, "business": 3 }
+          },
+          {
+            "id": "digital_innovation",
+            "text": "數位創新和設計",
+            "weight": { "tech": 2, "creative": 2, "business": 2 }
+          }
         ]
       },
       {
         "id": "goals",
         "text": "你的主要目標是什麼？",
         "options": [
-          { "id": "build_apps", "text": "開發出色的應用程式和遊戲", "weight": { "tech": 3, "creative": 2, "business": 1 } },
-          { "id": "create_content", "text": "創作能激勵他人的內容", "weight": { "tech": 1, "creative": 3, "business": 1 } },
-          { "id": "start_business", "text": "創立自己的事業", "weight": { "tech": 2, "creative": 1, "business": 3 } },
-          { "id": "make_impact", "text": "透過工作產生正面影響", "weight": { "tech": 2, "creative": 2, "business": 2 } }
+          {
+            "id": "build_apps",
+            "text": "開發出色的應用程式和遊戲",
+            "weight": { "tech": 3, "creative": 2, "business": 1 }
+          },
+          {
+            "id": "create_content",
+            "text": "創作能激勵他人的內容",
+            "weight": { "tech": 1, "creative": 3, "business": 1 }
+          },
+          {
+            "id": "start_business",
+            "text": "創立自己的事業",
+            "weight": { "tech": 2, "creative": 1, "business": 3 }
+          },
+          {
+            "id": "make_impact",
+            "text": "透過工作產生正面影響",
+            "weight": { "tech": 2, "creative": 2, "business": 2 }
+          }
         ]
       }
     ]

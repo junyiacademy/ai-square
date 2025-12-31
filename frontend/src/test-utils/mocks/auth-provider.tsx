@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 // Mock AuthContext and Provider for testing
 export const mockAuthValue = {
@@ -12,15 +12,14 @@ export const mockAuthValue = {
 
 export const AuthContext = React.createContext(mockAuthValue);
 
-export const MockAuthProvider = ({ children, value = mockAuthValue }: {
+export const MockAuthProvider = ({
+  children,
+  value = mockAuthValue,
+}: {
   children: React.ReactNode;
   value?: any;
 }) => {
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 // Mock useAuth hook

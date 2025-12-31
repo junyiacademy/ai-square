@@ -1,7 +1,7 @@
-import { Pool } from 'pg';
-import Redis from 'ioredis';
-import * as fs from 'fs';
-import * as path from 'path';
+import { Pool } from "pg";
+import Redis from "ioredis";
+import * as fs from "fs";
+import * as path from "path";
 
 export class IntegrationTestEnvironment {
   private dbPool: Pool | null = null;
@@ -14,7 +14,7 @@ export class IntegrationTestEnvironment {
   constructor() {
     // Use timestamp and process ID to ensure uniqueness
     this.testDbName = `test_db_${Date.now()}_${process.pid}`;
-    this.useSharedDb = process.env.USE_SHARED_DB === '1';
+    this.useSharedDb = process.env.USE_SHARED_DB === "1";
   }
 
   async setup() {
@@ -42,16 +42,16 @@ export class IntegrationTestEnvironment {
       this.setupEnvironmentVariables();
 
       this.isSetup = true;
-      console.log('✅ Test environment ready');
+      console.log("✅ Test environment ready");
     } catch (error) {
-      console.error('❌ Setup failed:', error);
+      console.error("❌ Setup failed:", error);
       await this.teardown();
       throw error;
     }
   }
 
   async teardown() {
-    console.log('🧹 Cleaning up test environment');
+    console.log("🧹 Cleaning up test environment");
 
     try {
       // Close connections
@@ -69,22 +69,24 @@ export class IntegrationTestEnvironment {
       // Drop test database
       await this.dropTestDatabase();
 
-      console.log('✅ Cleanup complete');
+      console.log("✅ Cleanup complete");
     } catch (error) {
-      console.error('⚠️ Cleanup error:', error);
+      console.error("⚠️ Cleanup error:", error);
     }
   }
 
   private async createTestDatabase() {
     if (this.useSharedDb) {
       // Connect to existing shared DB (keep in sync with Next.js server)
-      const sharedDbName = process.env.DB_NAME || 'ai_square_db';
+      const sharedDbName = process.env.DB_NAME || "ai_square_db";
       this.dbPool = new Pool({
-        host: process.env.TEST_DB_HOST || process.env.DB_HOST || 'localhost',
-        port: parseInt(process.env.TEST_DB_PORT || process.env.DB_PORT || '5434'),
+        host: process.env.TEST_DB_HOST || process.env.DB_HOST || "localhost",
+        port: parseInt(
+          process.env.TEST_DB_PORT || process.env.DB_PORT || "5434",
+        ),
         database: sharedDbName,
-        user: process.env.DB_USER || 'postgres',
-        password: process.env.DB_PASSWORD || 'postgres',
+        user: process.env.DB_USER || "postgres",
+        password: process.env.DB_PASSWORD || "postgres",
         max: 20,
         idleTimeoutMillis: 30000,
         connectionTimeoutMillis: 2000,
@@ -92,29 +94,25 @@ export class IntegrationTestEnvironment {
       this.shouldDropDb = false;
       // Test the connection
       const client = await this.dbPool.connect();
-      await client.query('SELECT 1');
+      await client.query("SELECT 1");
       client.release();
       return;
     }
 
     const adminPool = new Pool({
-      host: process.env.TEST_DB_HOST || 'localhost',
-      port: parseInt(process.env.TEST_DB_PORT || '5434'),
-      database: 'postgres',
-      user: 'postgres',
-      password: 'postgres',
+      host: process.env.TEST_DB_HOST || "localhost",
+      port: parseInt(process.env.TEST_DB_PORT || "5434"),
+      database: "postgres",
+      user: "postgres",
+      password: "postgres",
     });
 
     try {
-        // Check and drop existing test database
-      await adminPool.query(
-        `DROP DATABASE IF EXISTS "${this.testDbName}"`
-      );
+      // Check and drop existing test database
+      await adminPool.query(`DROP DATABASE IF EXISTS "${this.testDbName}"`);
 
       // Create new test database
-      await adminPool.query(
-        `CREATE DATABASE "${this.testDbName}"`
-      );
+      await adminPool.query(`CREATE DATABASE "${this.testDbName}"`);
 
       console.log(`📦 Created test database: ${this.testDbName}`);
     } finally {
@@ -123,11 +121,11 @@ export class IntegrationTestEnvironment {
 
     // Connect to new database
     this.dbPool = new Pool({
-      host: process.env.TEST_DB_HOST || 'localhost',
-      port: parseInt(process.env.TEST_DB_PORT || '5434'),
+      host: process.env.TEST_DB_HOST || "localhost",
+      port: parseInt(process.env.TEST_DB_PORT || "5434"),
       database: this.testDbName,
-      user: 'postgres',
-      password: 'postgres',
+      user: "postgres",
+      password: "postgres",
       max: 20,
       idleTimeoutMillis: 30000,
       connectionTimeoutMillis: 2000,
@@ -136,32 +134,32 @@ export class IntegrationTestEnvironment {
     // Test the connection
     try {
       const client = await this.dbPool.connect();
-      await client.query('SELECT 1');
+      await client.query("SELECT 1");
       client.release();
     } catch (error) {
-      console.error('Failed to connect to test database:', error);
+      console.error("Failed to connect to test database:", error);
       throw error;
     }
   }
 
   private async runMigrations() {
     if (!this.dbPool) {
-      throw new Error('Database pool not initialized');
+      throw new Error("Database pool not initialized");
     }
 
     // Check if schema file exists
     const schemaPath = path.join(
       process.cwd(),
-      'src/lib/repositories/postgresql/schema-v4.sql'
+      "src/lib/repositories/postgresql/schema-v4.sql",
     );
 
     if (!fs.existsSync(schemaPath)) {
-      console.warn('⚠️ Schema file not found, using basic schema');
+      console.warn("⚠️ Schema file not found, using basic schema");
       await this.createBasicSchema();
       return;
     }
 
-    const sql = fs.readFileSync(schemaPath, 'utf8');
+    const sql = fs.readFileSync(schemaPath, "utf8");
 
     // Execute the full schema file in one go to preserve PL/pgSQL blocks
     try {
@@ -173,17 +171,19 @@ export class IntegrationTestEnvironment {
     // After base schema, also apply auth migration to add password/session related structures
     const authMigrationPath = path.join(
       process.cwd(),
-      'src/lib/repositories/postgresql/migrations/20250204-add-password-column.sql'
+      "src/lib/repositories/postgresql/migrations/20250204-add-password-column.sql",
     );
     if (fs.existsSync(authMigrationPath)) {
       try {
-        const authSql = fs.readFileSync(authMigrationPath, 'utf8');
+        const authSql = fs.readFileSync(authMigrationPath, "utf8");
         await this.dbPool.query(authSql);
       } catch (error: any) {
         console.error(`Auth migration error: ${error.message}`);
       }
     } else {
-      console.warn('⚠️ Auth migration SQL not found, skipping password/session columns');
+      console.warn(
+        "⚠️ Auth migration SQL not found, skipping password/session columns",
+      );
     }
 
     // Ensure compatibility 'sessions' table exists for tests expecting this name
@@ -197,12 +197,17 @@ export class IntegrationTestEnvironment {
           created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
         );
       `);
-      await this.dbPool.query('CREATE INDEX IF NOT EXISTS idx_sessions_user_id ON sessions(user_id)');
+      await this.dbPool.query(
+        "CREATE INDEX IF NOT EXISTS idx_sessions_user_id ON sessions(user_id)",
+      );
     } catch (error: any) {
-      console.error('Error ensuring compatibility sessions table:', error.message);
+      console.error(
+        "Error ensuring compatibility sessions table:",
+        error.message,
+      );
     }
 
-    console.log('📋 Migrations completed');
+    console.log("📋 Migrations completed");
   }
 
   private async createBasicSchema() {
@@ -366,14 +371,14 @@ export class IntegrationTestEnvironment {
       `CREATE INDEX IF NOT EXISTS idx_tasks_program_id ON tasks(program_id)`,
       `CREATE INDEX IF NOT EXISTS idx_tasks_mode ON tasks(mode)`,
       `CREATE INDEX IF NOT EXISTS idx_evaluations_task_id ON evaluations(task_id)`,
-      `CREATE INDEX IF NOT EXISTS idx_evaluations_user_id ON evaluations(user_id)`
+      `CREATE INDEX IF NOT EXISTS idx_evaluations_user_id ON evaluations(user_id)`,
     ];
 
     for (const query of queries) {
       try {
         await this.dbPool.query(query);
       } catch (error: any) {
-        if (!error.message?.includes('already exists')) {
+        if (!error.message?.includes("already exists")) {
           console.error(`Schema error: ${error.message}`);
         }
       }
@@ -382,17 +387,17 @@ export class IntegrationTestEnvironment {
 
   public async setupRedis() {
     // Check if Redis should be enabled for tests
-    const redisEnabled = process.env.TEST_REDIS_ENABLED !== 'false';
+    const redisEnabled = process.env.TEST_REDIS_ENABLED !== "false";
 
     if (!redisEnabled) {
-      console.log('⏭️ Skipping Redis setup (TEST_REDIS_ENABLED=false)');
+      console.log("⏭️ Skipping Redis setup (TEST_REDIS_ENABLED=false)");
       return;
     }
 
     try {
       this.redisClient = new Redis({
-        host: process.env.TEST_REDIS_HOST || 'localhost',
-        port: parseInt(process.env.TEST_REDIS_PORT || '6380'),
+        host: process.env.TEST_REDIS_HOST || "localhost",
+        port: parseInt(process.env.TEST_REDIS_PORT || "6380"),
         db: 1, // Use different db index to avoid conflicts
         retryStrategy: () => null, // Don't retry if Redis is down
       });
@@ -401,9 +406,9 @@ export class IntegrationTestEnvironment {
       await this.redisClient.ping();
       await this.redisClient.flushdb();
 
-      console.log('🔴 Redis connected and cleared');
+      console.log("🔴 Redis connected and cleared");
     } catch (error) {
-      console.warn('⚠️ Redis connection failed, tests will run without cache');
+      console.warn("⚠️ Redis connection failed, tests will run without cache");
       if (this.redisClient) {
         this.redisClient.quit();
         this.redisClient = null;
@@ -413,62 +418,62 @@ export class IntegrationTestEnvironment {
 
   private setupEnvironmentVariables() {
     // Set test-specific environment variables
-    if (process.env.NODE_ENV !== 'test') {
-      Object.defineProperty(process.env, 'NODE_ENV', {
-        value: 'test',
+    if (process.env.NODE_ENV !== "test") {
+      Object.defineProperty(process.env, "NODE_ENV", {
+        value: "test",
         writable: true,
         enumerable: true,
-        configurable: true
+        configurable: true,
       });
     }
-    process.env.DB_HOST = process.env.DB_HOST || 'localhost';
-    process.env.DB_PORT = process.env.DB_PORT || '5434';
+    process.env.DB_HOST = process.env.DB_HOST || "localhost";
+    process.env.DB_PORT = process.env.DB_PORT || "5434";
     // If using shared DB, keep existing DB_NAME to match Next.js; otherwise use test DB
     if (!this.useSharedDb) {
       process.env.DB_NAME = this.testDbName;
     }
-    process.env.DB_USER = 'postgres';
-    process.env.DB_PASSWORD = 'postgres';
-    process.env.REDIS_ENABLED = 'true';
-    process.env.REDIS_URL = 'redis://localhost:6380';
+    process.env.DB_USER = "postgres";
+    process.env.DB_PASSWORD = "postgres";
+    process.env.REDIS_ENABLED = "true";
+    process.env.REDIS_URL = "redis://localhost:6380";
   }
 
   private async waitForDatabase(maxRetries = 30): Promise<void> {
     for (let i = 0; i < maxRetries; i++) {
       try {
         if (!this.dbPool) {
-          throw new Error('Database pool not initialized');
+          throw new Error("Database pool not initialized");
         }
         const client = await this.dbPool.connect();
-        await client.query('SELECT 1');
+        await client.query("SELECT 1");
         client.release();
-        console.log('✅ Database connection established');
+        console.log("✅ Database connection established");
         return;
       } catch (error) {
         console.log(`⏳ Waiting for database... (${i + 1}/${maxRetries})`);
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 1000));
       }
     }
-    throw new Error('Database connection timeout');
+    throw new Error("Database connection timeout");
   }
 
   private async waitForRedis(maxRetries = 30): Promise<void> {
     if (!this.redisClient) {
-      console.log('⚠️ Redis client not initialized, skipping Redis wait');
+      console.log("⚠️ Redis client not initialized, skipping Redis wait");
       return;
     }
 
     for (let i = 0; i < maxRetries; i++) {
       try {
         await this.redisClient.ping();
-        console.log('✅ Redis connection established');
+        console.log("✅ Redis connection established");
         return;
       } catch (error) {
         console.log(`⏳ Waiting for Redis... (${i + 1}/${maxRetries})`);
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 1000));
       }
     }
-    throw new Error('Redis connection timeout');
+    throw new Error("Redis connection timeout");
   }
 
   private async dropTestDatabase() {
@@ -476,11 +481,11 @@ export class IntegrationTestEnvironment {
       return; // Do not drop shared database
     }
     const adminPool = new Pool({
-      host: process.env.TEST_DB_HOST || 'localhost',
-      port: parseInt(process.env.TEST_DB_PORT || '5434'),
-      database: 'postgres',
-      user: 'postgres',
-      password: 'postgres',
+      host: process.env.TEST_DB_HOST || "localhost",
+      port: parseInt(process.env.TEST_DB_PORT || "5434"),
+      database: "postgres",
+      user: "postgres",
+      password: "postgres",
     });
 
     try {
@@ -493,13 +498,11 @@ export class IntegrationTestEnvironment {
       `);
 
       // Drop database
-      await adminPool.query(
-        `DROP DATABASE IF EXISTS "${this.testDbName}"`
-      );
+      await adminPool.query(`DROP DATABASE IF EXISTS "${this.testDbName}"`);
 
       console.log(`🗑️ Dropped test database: ${this.testDbName}`);
     } catch (error) {
-      console.error('Error dropping database:', error);
+      console.error("Error dropping database:", error);
     } finally {
       await adminPool.end();
     }
@@ -508,7 +511,7 @@ export class IntegrationTestEnvironment {
   // Getters for test access
   getDbPool() {
     if (!this.dbPool) {
-      console.warn('Warning: Database pool is null');
+      console.warn("Warning: Database pool is null");
     }
     return this.dbPool;
   }

@@ -13,10 +13,10 @@
  * - Returns user data
  */
 
-import { NextRequest, NextResponse } from 'next/server';
-import crypto from 'crypto';
-import bcrypt from 'bcryptjs';
-import { getPool } from '@/lib/auth/simple-auth';
+import { NextRequest, NextResponse } from "next/server";
+import crypto from "crypto";
+import bcrypt from "bcryptjs";
+import { getPool } from "@/lib/auth/simple-auth";
 
 /**
  * Generate unique guest email
@@ -24,7 +24,7 @@ import { getPool } from '@/lib/auth/simple-auth';
  */
 function generateGuestEmail(): string {
   const timestamp = Date.now();
-  const random = crypto.randomBytes(3).toString('hex'); // 6 hex characters
+  const random = crypto.randomBytes(3).toString("hex"); // 6 hex characters
   return `guest-${timestamp}-${random}@temp.ai-square.com`;
 }
 
@@ -33,7 +33,7 @@ function generateGuestEmail(): string {
  * 64-character hex string for maximum entropy
  */
 function generateGuestPassword(): string {
-  return crypto.randomBytes(32).toString('hex');
+  return crypto.randomBytes(32).toString("hex");
 }
 
 /**
@@ -42,14 +42,18 @@ function generateGuestPassword(): string {
  */
 function getGuestName(nickname?: string): string {
   const trimmed = nickname?.trim();
-  return trimmed || '訪客用戶';
+  return trimmed || "訪客用戶";
 }
 
 /**
  * Create guest user in database
  * Uses metadata JSONB field to store isGuest flag (no schema migration needed)
  */
-async function createGuestUser(email: string, name: string, passwordHash: string) {
+async function createGuestUser(
+  email: string,
+  name: string,
+  passwordHash: string,
+) {
   const db = getPool();
 
   const result = await db.query(
@@ -58,7 +62,7 @@ async function createGuestUser(email: string, name: string, passwordHash: string
     ) VALUES (
       gen_random_uuid(), $1, $2, $3, 'student', $4, true, NOW(), NOW()
     ) RETURNING id, email, name, role, metadata, email_verified`,
-    [email, passwordHash, name, JSON.stringify({ isGuest: true })]
+    [email, passwordHash, name, JSON.stringify({ isGuest: true })],
   );
 
   return result.rows[0];
@@ -67,9 +71,13 @@ async function createGuestUser(email: string, name: string, passwordHash: string
 /**
  * Create session for guest user
  */
-async function createGuestSession(userId: string, email: string, name: string): Promise<string> {
+async function createGuestSession(
+  userId: string,
+  email: string,
+  name: string,
+): Promise<string> {
   const db = getPool();
-  const sessionToken = crypto.randomBytes(32).toString('hex');
+  const sessionToken = crypto.randomBytes(32).toString("hex");
   const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
 
   await db.query(
@@ -78,7 +86,13 @@ async function createGuestSession(userId: string, email: string, name: string): 
     ) VALUES (
       $1, $2, $3, 'student', $4, NOW(), $5
     )`,
-    [sessionToken, userId, email, expiresAt, JSON.stringify({ name, isGuest: true })]
+    [
+      sessionToken,
+      userId,
+      email,
+      expiresAt,
+      JSON.stringify({ name, isGuest: true }),
+    ],
   );
 
   return sessionToken;
@@ -110,13 +124,18 @@ export async function POST(request: NextRequest) {
     const user = await createGuestUser(email, name, passwordHash);
 
     // Create session
-    const sessionToken = await createGuestSession(user.id, user.email, user.name);
+    const sessionToken = await createGuestSession(
+      user.id,
+      user.email,
+      user.name,
+    );
 
     // Create response
     // Note: PostgreSQL returns JSONB as object, but parse for safety
-    const metadata = typeof user.metadata === 'string'
-      ? JSON.parse(user.metadata)
-      : user.metadata;
+    const metadata =
+      typeof user.metadata === "string"
+        ? JSON.parse(user.metadata)
+        : user.metadata;
 
     const response = NextResponse.json({
       success: true,
@@ -130,23 +149,23 @@ export async function POST(request: NextRequest) {
     });
 
     // Set session cookie (7 days)
-    response.cookies.set('sessionToken', sessionToken, {
+    response.cookies.set("sessionToken", sessionToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV !== 'development',
-      sameSite: 'lax',
+      secure: process.env.NODE_ENV !== "development",
+      sameSite: "lax",
       maxAge: 7 * 24 * 60 * 60, // 7 days in seconds
-      path: '/',
+      path: "/",
     });
 
     return response;
   } catch (error) {
-    console.error('[Guest Login] Error:', error);
+    console.error("[Guest Login] Error:", error);
     return NextResponse.json(
       {
         success: false,
-        error: 'Failed to create guest account',
+        error: "Failed to create guest account",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -158,9 +177,9 @@ export async function OPTIONS() {
   return new NextResponse(null, {
     status: 200,
     headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type',
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type",
     },
   });
 }

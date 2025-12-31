@@ -1,13 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getSession } from '@/lib/auth/session';
-import { getPool } from '@/lib/db/get-pool';
-import { z } from 'zod';
+import { NextRequest, NextResponse } from "next/server";
+import { getSession } from "@/lib/auth/session";
+import { getPool } from "@/lib/db/get-pool";
+import { z } from "zod";
 
 // 同意記錄 schema
 const consentSchema = z.object({
-  documentType: z.enum(['terms_of_service', 'privacy_policy']),
+  documentType: z.enum(["terms_of_service", "privacy_policy"]),
   documentVersion: z.string(),
-  consent: z.boolean()
+  consent: z.boolean(),
 });
 
 // POST - 記錄用戶同意
@@ -17,8 +17,8 @@ export async function POST(request: NextRequest) {
 
     if (!session || !session.user) {
       return NextResponse.json(
-        { success: false, error: 'Not authenticated' },
-        { status: 401 }
+        { success: false, error: "Not authenticated" },
+        { status: 401 },
       );
     }
 
@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
     if (!validationResult.success) {
       return NextResponse.json(
         { success: false, error: validationResult.error.errors[0].message },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -37,8 +37,8 @@ export async function POST(request: NextRequest) {
 
     if (!consent) {
       return NextResponse.json(
-        { success: false, error: 'Consent is required' },
-        { status: 400 }
+        { success: false, error: "Consent is required" },
+        { status: 400 },
       );
     }
 
@@ -46,14 +46,14 @@ export async function POST(request: NextRequest) {
 
     // 查找文件
     const { rows: documents } = await pool.query(
-      'SELECT id FROM legal_documents WHERE type = $1 AND version = $2',
-      [documentType, documentVersion]
+      "SELECT id FROM legal_documents WHERE type = $1 AND version = $2",
+      [documentType, documentVersion],
     );
 
     if (documents.length === 0) {
       return NextResponse.json(
-        { success: false, error: 'Document not found' },
-        { status: 404 }
+        { success: false, error: "Document not found" },
+        { status: 404 },
       );
     }
 
@@ -67,22 +67,22 @@ export async function POST(request: NextRequest) {
         documents[0].id,
         documentType,
         documentVersion,
-        request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip'),
-        request.headers.get('user-agent'),
-        'click'
-      ]
+        request.headers.get("x-forwarded-for") ||
+          request.headers.get("x-real-ip"),
+        request.headers.get("user-agent"),
+        "click",
+      ],
     );
 
     return NextResponse.json({
       success: true,
-      message: 'Consent recorded successfully'
+      message: "Consent recorded successfully",
     });
-
   } catch (error) {
-    console.error('Record consent error:', error);
+    console.error("Record consent error:", error);
     return NextResponse.json(
-      { success: false, error: 'Failed to record consent' },
-      { status: 500 }
+      { success: false, error: "Failed to record consent" },
+      { status: 500 },
     );
   }
 }
@@ -94,8 +94,8 @@ export async function GET() {
 
     if (!session || !session.user) {
       return NextResponse.json(
-        { success: false, error: 'Not authenticated' },
-        { status: 401 }
+        { success: false, error: "Not authenticated" },
+        { status: 401 },
       );
     }
 
@@ -113,7 +113,7 @@ export async function GET() {
        JOIN legal_documents ld ON uc.document_id = ld.id
        WHERE uc.user_id = $1
        ORDER BY uc.document_type, uc.consented_at DESC`,
-      [session.user.id]
+      [session.user.id],
     );
 
     // 檢查是否有新版本需要同意
@@ -121,38 +121,39 @@ export async function GET() {
       `SELECT DISTINCT ON (type)
         type, version, title, effective_date
        FROM legal_documents
-       ORDER BY type, created_at DESC`
+       ORDER BY type, created_at DESC`,
     );
 
-    const consents = rows.map(consent => ({
+    const consents = rows.map((consent) => ({
       type: consent.document_type,
       version: consent.document_version,
       consentedAt: consent.consented_at,
       title: consent.title,
-      effectiveDate: consent.effective_date
+      effectiveDate: consent.effective_date,
     }));
 
-    const requiresConsent = latestDocs.filter(doc => {
-      const userConsent = consents.find(c => c.type === doc.type);
-      return !userConsent || userConsent.version !== doc.version;
-    }).map(doc => ({
-      type: doc.type,
-      version: doc.version,
-      title: doc.title,
-      effectiveDate: doc.effective_date
-    }));
+    const requiresConsent = latestDocs
+      .filter((doc) => {
+        const userConsent = consents.find((c) => c.type === doc.type);
+        return !userConsent || userConsent.version !== doc.version;
+      })
+      .map((doc) => ({
+        type: doc.type,
+        version: doc.version,
+        title: doc.title,
+        effectiveDate: doc.effective_date,
+      }));
 
     return NextResponse.json({
       success: true,
       consents,
-      requiresConsent
+      requiresConsent,
     });
-
   } catch (error) {
-    console.error('Get consents error:', error);
+    console.error("Get consents error:", error);
     return NextResponse.json(
-      { success: false, error: 'Failed to get consents' },
-      { status: 500 }
+      { success: false, error: "Failed to get consents" },
+      { status: 500 },
     );
   }
 }

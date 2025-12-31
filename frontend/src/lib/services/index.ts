@@ -14,27 +14,27 @@ export type {
   Achievement,
   UserDataOperations,
   EvaluationOperations,
-  EvaluationData
-} from '@/lib/types/user-data';
+  EvaluationData,
+} from "@/lib/types/user-data";
 
 // Interfaces
 export type {
   IUserDataService,
   UserDataServiceConfig,
-  UserDataServiceFactory
-} from './user-data-service.interface';
+  UserDataServiceFactory,
+} from "./user-data-service.interface";
 
 // LocalStorage Implementation
 export {
   UserDataService,
   createUserDataService,
-  userDataService
-} from './user-data-service';
+  userDataService,
+} from "./user-data-service";
 
 // GCS Implementation removed - now using PostgreSQL
 
 // Client Implementation (for browser/API communication)
 export {
   UserDataServiceClient,
-  createUserDataServiceClient
-} from './user-data-service-client';
+  createUserDataServiceClient,
+} from "./user-data-service-client";

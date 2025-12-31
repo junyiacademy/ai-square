@@ -1,8 +1,11 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { VertexAI, SchemaType } from '@google-cloud/vertexai';
-import { getUnifiedAuth, createUnauthorizedResponse } from '@/lib/auth/unified-auth';
-import { getLanguageFromHeader, LANGUAGE_NAMES } from '@/lib/utils/language';
-import { Task, Evaluation } from '@/lib/repositories/interfaces';
+import { NextRequest, NextResponse } from "next/server";
+import { VertexAI, SchemaType } from "@google-cloud/vertexai";
+import {
+  getUnifiedAuth,
+  createUnauthorizedResponse,
+} from "@/lib/auth/unified-auth";
+import { getLanguageFromHeader, LANGUAGE_NAMES } from "@/lib/utils/language";
+import { Task, Evaluation } from "@/lib/repositories/interfaces";
 
 // Types for feedback structure
 interface FeedbackStrength {
@@ -46,7 +49,9 @@ interface CompletionData {
       }>;
     };
   }>;
-  qualitativeFeedback?: QualitativeFeedback | Record<string, QualitativeFeedback>;
+  qualitativeFeedback?:
+    | QualitativeFeedback
+    | Record<string, QualitativeFeedback>;
   feedbackLanguage?: string;
 }
 
@@ -83,7 +88,7 @@ const feedbackSchema = {
   properties: {
     overallAssessment: {
       type: SchemaType.STRING,
-      description: "Brief overall assessment of performance"
+      description: "Brief overall assessment of performance",
     },
     strengths: {
       type: SchemaType.ARRAY,
@@ -92,19 +97,19 @@ const feedbackSchema = {
         properties: {
           area: {
             type: SchemaType.STRING,
-            description: "Specific strength area"
+            description: "Specific strength area",
           },
           description: {
             type: SchemaType.STRING,
-            description: "Detailed description of what they did well"
+            description: "Detailed description of what they did well",
           },
           example: {
             type: SchemaType.STRING,
-            description: "Specific example from their conversations"
-          }
+            description: "Specific example from their conversations",
+          },
         },
-        required: ["area", "description", "example"]
-      }
+        required: ["area", "description", "example"],
+      },
     },
     areasForImprovement: {
       type: SchemaType.ARRAY,
@@ -113,43 +118,49 @@ const feedbackSchema = {
         properties: {
           area: {
             type: SchemaType.STRING,
-            description: "Area needing improvement"
+            description: "Area needing improvement",
           },
           description: {
             type: SchemaType.STRING,
-            description: "What needs work"
+            description: "What needs work",
           },
           suggestion: {
             type: SchemaType.STRING,
-            description: "Specific actionable suggestion"
-          }
+            description: "Specific actionable suggestion",
+          },
         },
-        required: ["area", "description", "suggestion"]
-      }
+        required: ["area", "description", "suggestion"],
+      },
     },
     nextSteps: {
       type: SchemaType.ARRAY,
       items: {
         type: SchemaType.STRING,
-        description: "Specific next step"
-      }
+        description: "Specific next step",
+      },
     },
     encouragement: {
       type: SchemaType.STRING,
-      description: "Personalized encouraging message"
-    }
+      description: "Personalized encouraging message",
+    },
   },
-  required: ["overallAssessment", "strengths", "areasForImprovement", "nextSteps", "encouragement"]
+  required: [
+    "overallAssessment",
+    "strengths",
+    "areasForImprovement",
+    "nextSteps",
+    "encouragement",
+  ],
 };
 
 // Initialize Vertex AI
 const vertexAI = new VertexAI({
-  project: process.env.GOOGLE_CLOUD_PROJECT || 'ai-square-463013',
-  location: process.env.VERTEX_AI_LOCATION || 'us-central1',
+  project: process.env.GOOGLE_CLOUD_PROJECT || "ai-square-463013",
+  location: process.env.VERTEX_AI_LOCATION || "us-central1",
 });
 
 const model = vertexAI.getGenerativeModel({
-  model: 'gemini-2.5-flash',
+  model: "gemini-2.5-flash",
   systemInstruction: `You are a multilingual AI literacy education expert providing qualitative feedback for Problem-Based Learning scenarios.
 Your role is to analyze learners' performance based on their conversations and provide constructive, encouraging feedback.
 
@@ -168,13 +179,18 @@ You must always respond with a valid JSON object following the exact schema prov
 
 export async function POST(request: NextRequest) {
   try {
-    const { programId, scenarioId, forceRegenerate: originalForceRegenerate = false, language }: GenerateFeedbackBody = await request.json();
+    const {
+      programId,
+      scenarioId,
+      forceRegenerate: originalForceRegenerate = false,
+      language,
+    }: GenerateFeedbackBody = await request.json();
     let forceRegenerate = originalForceRegenerate;
 
     if (!programId || !scenarioId) {
       return NextResponse.json(
-        { success: false, error: 'Missing required parameters' },
-        { status: 400 }
+        { success: false, error: "Missing required parameters" },
+        { status: 400 },
       );
     }
 
@@ -186,7 +202,8 @@ export async function POST(request: NextRequest) {
     const userEmail = session.user.email;
 
     // Get repositories
-    const { repositoryFactory } = await import('@/lib/repositories/base/repository-factory');
+    const { repositoryFactory } =
+      await import("@/lib/repositories/base/repository-factory");
     const programRepo = repositoryFactory.getProgramRepository();
     const evalRepo = repositoryFactory.getEvaluationRepository();
     const taskRepo = repositoryFactory.getTaskRepository();
@@ -196,8 +213,8 @@ export async function POST(request: NextRequest) {
     const user = await userRepo.findByEmail(userEmail);
     if (!user) {
       return NextResponse.json(
-        { success: false, error: 'User not found' },
-        { status: 404 }
+        { success: false, error: "User not found" },
+        { status: 404 },
       );
     }
 
@@ -205,15 +222,15 @@ export async function POST(request: NextRequest) {
     const program = await programRepo.findById(programId);
     if (!program) {
       return NextResponse.json(
-        { success: false, error: 'Program not found' },
-        { status: 404 }
+        { success: false, error: "Program not found" },
+        { status: 404 },
       );
     }
 
     if (program.userId !== user.id) {
       return NextResponse.json(
-        { success: false, error: 'Access denied' },
-        { status: 403 }
+        { success: false, error: "Access denied" },
+        { status: 403 },
       );
     }
 
@@ -226,20 +243,23 @@ export async function POST(request: NextRequest) {
 
     if (!evaluation) {
       // Trigger evaluation calculation if needed
-      const completeUrl = new URL(`/api/pbl/programs/${programId}/complete`, request.url);
+      const completeUrl = new URL(
+        `/api/pbl/programs/${programId}/complete`,
+        request.url,
+      );
       const completeRes = await fetch(completeUrl.toString(), {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          cookie: request.headers.get('cookie') || '',
+          "Content-Type": "application/json",
+          cookie: request.headers.get("cookie") || "",
         },
-        body: JSON.stringify({})
+        body: JSON.stringify({}),
       });
 
       if (!completeRes.ok) {
         return NextResponse.json(
-          { success: false, error: 'Failed to create program evaluation' },
-          { status: 500 }
+          { success: false, error: "Failed to create program evaluation" },
+          { status: 500 },
         );
       }
 
@@ -249,8 +269,8 @@ export async function POST(request: NextRequest) {
 
     if (!evaluation) {
       return NextResponse.json(
-        { success: false, error: 'Evaluation not found' },
-        { status: 404 }
+        { success: false, error: "Evaluation not found" },
+        { status: 404 },
       );
     }
 
@@ -259,45 +279,70 @@ export async function POST(request: NextRequest) {
     const taskEvaluations = await Promise.all(
       tasks.map(async (task: Task) => {
         if (task.metadata?.evaluationId) {
-          const taskEval = await evalRepo.findById(task.metadata.evaluationId as string);
+          const taskEval = await evalRepo.findById(
+            task.metadata.evaluationId as string,
+          );
           return { task, evaluation: taskEval };
         }
         return { task, evaluation: null };
-      })
+      }),
     );
 
     const completionData: CompletionData = {
       overallScore: evaluation.score || 0,
-      evaluatedTasks: evaluation.metadata?.evaluatedTasks as number || 0,
-      totalTasks: evaluation.metadata?.totalTasks as number || tasks.length,
-      totalTimeSeconds: evaluation.metadata?.totalTimeSeconds as number || 0,
-      domainScores: evaluation.metadata?.domainScores as Record<string, number> || {},
-      tasks: taskEvaluations.map(({ task, evaluation: taskEval }: { task: Task; evaluation: Evaluation | null }) => ({
-        taskId: task.id,
-        evaluation: taskEval ? {
-          score: taskEval.score || 0,
-          feedback: (taskEval.metadata?.feedback as string) || '',
-          strengths: (taskEval.metadata?.strengths as string[]) || [],
-          improvements: (taskEval.metadata?.improvements as string[]) || []
-        } : undefined,
-        log: {
-          interactions: [] // Task interactions would need to be fetched separately if needed
-        }
-      })),
-      qualitativeFeedback: evaluation.metadata?.qualitativeFeedback as QualitativeFeedback | Record<string, QualitativeFeedback> | undefined,
-      feedbackLanguage: evaluation.metadata?.feedbackLanguage as string | undefined
+      evaluatedTasks: (evaluation.metadata?.evaluatedTasks as number) || 0,
+      totalTasks: (evaluation.metadata?.totalTasks as number) || tasks.length,
+      totalTimeSeconds: (evaluation.metadata?.totalTimeSeconds as number) || 0,
+      domainScores:
+        (evaluation.metadata?.domainScores as Record<string, number>) || {},
+      tasks: taskEvaluations.map(
+        ({
+          task,
+          evaluation: taskEval,
+        }: {
+          task: Task;
+          evaluation: Evaluation | null;
+        }) => ({
+          taskId: task.id,
+          evaluation: taskEval
+            ? {
+                score: taskEval.score || 0,
+                feedback: (taskEval.metadata?.feedback as string) || "",
+                strengths: (taskEval.metadata?.strengths as string[]) || [],
+                improvements:
+                  (taskEval.metadata?.improvements as string[]) || [],
+              }
+            : undefined,
+          log: {
+            interactions: [], // Task interactions would need to be fetched separately if needed
+          },
+        }),
+      ),
+      qualitativeFeedback: evaluation.metadata?.qualitativeFeedback as
+        | QualitativeFeedback
+        | Record<string, QualitativeFeedback>
+        | undefined,
+      feedbackLanguage: evaluation.metadata?.feedbackLanguage as
+        | string
+        | undefined,
     };
 
     // Get current language - prioritize explicit language parameter
     const currentLang = language || getLanguageFromHeader(request);
 
     // If forceRegenerate, mark existing feedback for current language as invalid
-    const existingQualitativeFeedback = evaluation.metadata?.qualitativeFeedback as Record<string, {
-      content?: QualitativeFeedback;
-      isValid?: boolean;
-      generatedAt?: string;
-      evaluationVersion?: string;
-    }> | undefined;
+    const existingQualitativeFeedback = evaluation.metadata
+      ?.qualitativeFeedback as
+      | Record<
+          string,
+          {
+            content?: QualitativeFeedback;
+            isValid?: boolean;
+            generatedAt?: string;
+            evaluationVersion?: string;
+          }
+        >
+      | undefined;
     if (forceRegenerate && existingQualitativeFeedback?.[currentLang]) {
       // Mark the feedback as invalid to trigger regeneration
       const updatedMetadata = {
@@ -306,14 +351,14 @@ export async function POST(request: NextRequest) {
           ...existingQualitativeFeedback,
           [currentLang]: {
             ...existingQualitativeFeedback[currentLang],
-            isValid: false
-          }
-        }
+            isValid: false,
+          },
+        },
       };
 
       // Update evaluation metadata directly
       await evalRepo.update?.(evaluation.id, {
-        metadata: updatedMetadata
+        metadata: updatedMetadata,
       });
 
       // Update local evaluation object
@@ -321,27 +366,35 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if valid feedback already exists for current language
-    const feedbackData = evaluation.metadata?.qualitativeFeedback as Record<string, {
-      content?: QualitativeFeedback;
-      isValid?: boolean;
-      generatedAt?: string;
-      evaluationVersion?: string;
-    }> | undefined;
+    const feedbackData = evaluation.metadata?.qualitativeFeedback as
+      | Record<
+          string,
+          {
+            content?: QualitativeFeedback;
+            isValid?: boolean;
+            generatedAt?: string;
+            evaluationVersion?: string;
+          }
+        >
+      | undefined;
     const existingFeedback = feedbackData?.[currentLang];
 
     // Check if feedback needs regeneration due to evaluation updates
-    const currentEvaluationVersion = evaluation.metadata?.lastSyncedAt || evaluation.createdAt;
-    const feedbackOutdated = existingFeedback?.evaluationVersion &&
-                            currentEvaluationVersion &&
-                            new Date(currentEvaluationVersion) > new Date(existingFeedback.evaluationVersion);
+    const currentEvaluationVersion =
+      evaluation.metadata?.lastSyncedAt || evaluation.createdAt;
+    const feedbackOutdated =
+      existingFeedback?.evaluationVersion &&
+      currentEvaluationVersion &&
+      new Date(currentEvaluationVersion) >
+        new Date(existingFeedback.evaluationVersion);
 
     // If evaluation is outdated, clear all language feedback
     if (feedbackOutdated && feedbackData) {
-      console.log('Evaluation updated - clearing all language feedback');
+      console.log("Evaluation updated - clearing all language feedback");
 
       // Clear all language feedback since evaluation has been updated
       const clearedFeedback: Record<string, { isValid: boolean }> = {};
-      Object.keys(feedbackData).forEach(lang => {
+      Object.keys(feedbackData).forEach((lang) => {
         clearedFeedback[lang] = { isValid: false };
       });
 
@@ -349,15 +402,20 @@ export async function POST(request: NextRequest) {
       await evalRepo.update?.(evaluation.id, {
         metadata: {
           ...evaluation.metadata,
-          qualitativeFeedback: clearedFeedback
-        }
+          qualitativeFeedback: clearedFeedback,
+        },
       });
 
       // Force regeneration for current language
       forceRegenerate = true;
     }
 
-    if (!forceRegenerate && existingFeedback?.isValid && existingFeedback?.content && !feedbackOutdated) {
+    if (
+      !forceRegenerate &&
+      existingFeedback?.isValid &&
+      existingFeedback?.content &&
+      !feedbackOutdated
+    ) {
       return NextResponse.json({
         success: true,
         feedback: existingFeedback.content,
@@ -367,8 +425,8 @@ export async function POST(request: NextRequest) {
           feedbackGeneratedAt: existingFeedback.generatedAt,
           evaluationVersion: existingFeedback.evaluationVersion,
           currentEvaluationVersion,
-          outdated: feedbackOutdated
-        }
+          outdated: feedbackOutdated,
+        },
       });
     }
 
@@ -380,35 +438,59 @@ export async function POST(request: NextRequest) {
       const scenario = await scenarioRepo.findById(scenarioId);
       if (scenario) {
         scenarioData = {
-          title: typeof scenario.title === 'string' ? scenario.title : (scenario.title as Record<string, string>)?.[language || 'en'] || (scenario.title as Record<string, string>)?.en || '',
-          learning_objectives: scenario.metadata?.learningObjectives as string[] || [],
+          title:
+            typeof scenario.title === "string"
+              ? scenario.title
+              : (scenario.title as Record<string, string>)?.[
+                  language || "en"
+                ] ||
+                (scenario.title as Record<string, string>)?.en ||
+                "",
+          learning_objectives:
+            (scenario.metadata?.learningObjectives as string[]) || [],
           scenario_info: {
-            title: typeof scenario.title === 'string' ? scenario.title : (scenario.title as Record<string, string>)?.[language || 'en'] || (scenario.title as Record<string, string>)?.en || '',
-            learning_objectives: scenario.metadata?.learningObjectives as string[] || []
-          }
+            title:
+              typeof scenario.title === "string"
+                ? scenario.title
+                : (scenario.title as Record<string, string>)?.[
+                    language || "en"
+                  ] ||
+                  (scenario.title as Record<string, string>)?.en ||
+                  "",
+            learning_objectives:
+              (scenario.metadata?.learningObjectives as string[]) || [],
+          },
         };
       }
     } catch (error) {
-      console.error('Error reading scenario data:', error);
+      console.error("Error reading scenario data:", error);
     }
 
     // Prepare task summaries for AI analysis
-    const taskSummaries: TaskSummary[] = completionData.tasks?.map((task) => ({
-      taskId: task.taskId,
-      score: task.evaluation?.score || 0,
-      conversations: task.log?.interactions?.filter((i: { role: string; context: string }) => i.role === 'user')
-        .map((i: { role: string; context: string }) => (i as { content?: unknown }).content as string || '') || [],
-      feedback: task.evaluation?.feedback || '',
-      strengths: task.evaluation?.strengths || [],
-      improvements: task.evaluation?.improvements || []
-    })) || [];
+    const taskSummaries: TaskSummary[] =
+      completionData.tasks?.map((task) => ({
+        taskId: task.taskId,
+        score: task.evaluation?.score || 0,
+        conversations:
+          task.log?.interactions
+            ?.filter(
+              (i: { role: string; context: string }) => i.role === "user",
+            )
+            .map(
+              (i: { role: string; context: string }) =>
+                ((i as { content?: unknown }).content as string) || "",
+            ) || [],
+        feedback: task.evaluation?.feedback || "",
+        strengths: task.evaluation?.strengths || [],
+        improvements: task.evaluation?.improvements || [],
+      })) || [];
 
     // Generate prompt
     const prompt = `
 Analyze this learner's performance in the "${scenarioData.title}" scenario.
 
 Scenario Objectives:
-${scenarioData.learning_objectives?.join('\n') || 'General AI literacy improvement'}
+${scenarioData.learning_objectives?.join("\n") || "General AI literacy improvement"}
 
 Overall Performance:
 - Overall Score: ${completionData.overallScore}%
@@ -416,16 +498,20 @@ Overall Performance:
 - Total Time: ${Math.round((completionData.totalTimeSeconds || 0) / 60)} minutes
 
 Task Performance:
-${taskSummaries.map((task, index) => `
+${taskSummaries
+  .map(
+    (task, index) => `
 Task ${index + 1}: Score ${task.score}%
-Key conversations: ${task.conversations.slice(0, 3).join('; ')}
+Key conversations: ${task.conversations.slice(0, 3).join("; ")}
 Feedback: ${task.feedback}
-`).join('\n')}
+`,
+  )
+  .join("\n")}
 
 Domain Scores:
-${Object.entries(completionData.domainScores || {}).map(([domain, score]) =>
-  `${domain}: ${score}%`
-).join('\n')}
+${Object.entries(completionData.domainScores || {})
+  .map(([domain, score]) => `${domain}: ${score}%`)
+  .join("\n")}
 
 Generate comprehensive qualitative feedback for this learner's performance.
 
@@ -436,34 +522,35 @@ The feedback should:
 - Suggest 2-3 specific next steps for continued learning
 - End with a personalized encouraging message
 
-IMPORTANT: You MUST provide ALL feedback in ${LANGUAGE_NAMES[currentLang as keyof typeof LANGUAGE_NAMES] || LANGUAGE_NAMES['en']} language.
-Do not mix languages. The entire response must be in ${LANGUAGE_NAMES[currentLang as keyof typeof LANGUAGE_NAMES] || LANGUAGE_NAMES['en']}.
+IMPORTANT: You MUST provide ALL feedback in ${LANGUAGE_NAMES[currentLang as keyof typeof LANGUAGE_NAMES] || LANGUAGE_NAMES["en"]} language.
+Do not mix languages. The entire response must be in ${LANGUAGE_NAMES[currentLang as keyof typeof LANGUAGE_NAMES] || LANGUAGE_NAMES["en"]}.
 `;
 
     // Generate feedback with JSON schema
     const result = await model.generateContent({
-      contents: [{ role: 'user', parts: [{ text: prompt }] }],
+      contents: [{ role: "user", parts: [{ text: prompt }] }],
       generationConfig: {
         temperature: 0.7,
-        maxOutputTokens: 65535,  // Increased token limit
-        responseMimeType: 'application/json',
+        maxOutputTokens: 65535, // Increased token limit
+        responseMimeType: "application/json",
         responseSchema: feedbackSchema,
-      }
+      },
     });
 
     const response = result.response;
-    const feedbackText = response.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+    const feedbackText =
+      response.candidates?.[0]?.content?.parts?.[0]?.text || "{}";
 
     let feedback: QualitativeFeedback | undefined;
     try {
       // Parse the JSON response
       feedback = JSON.parse(feedbackText) as QualitativeFeedback;
     } catch (parseError) {
-      console.error('Failed to parse AI response as JSON:', parseError);
-      console.error('Response text:', feedbackText);
+      console.error("Failed to parse AI response as JSON:", parseError);
+      console.error("Response text:", feedbackText);
 
       // Try to repair truncated JSON
-      if (feedbackText.includes('{') && !feedbackText.trim().endsWith('}')) {
+      if (feedbackText.includes("{") && !feedbackText.trim().endsWith("}")) {
         try {
           // Attempt to close unclosed strings and objects
           let repairedJson = feedbackText;
@@ -476,26 +563,31 @@ Do not mix languages. The entire response must be in ${LANGUAGE_NAMES[currentLan
 
           // Close any unclosed strings (look for last quote)
           const lastQuoteIndex = repairedJson.lastIndexOf('"');
-          const secondLastQuoteIndex = repairedJson.lastIndexOf('"', lastQuoteIndex - 1);
-          if (lastQuoteIndex > secondLastQuoteIndex &&
-              repairedJson.substring(lastQuoteIndex + 1).trim().length > 0) {
+          const secondLastQuoteIndex = repairedJson.lastIndexOf(
+            '"',
+            lastQuoteIndex - 1,
+          );
+          if (
+            lastQuoteIndex > secondLastQuoteIndex &&
+            repairedJson.substring(lastQuoteIndex + 1).trim().length > 0
+          ) {
             // There's an unclosed string
             repairedJson += '"';
           }
 
           // Close unclosed arrays and objects
           for (let i = 0; i < openBrackets - closeBrackets; i++) {
-            repairedJson += ']';
+            repairedJson += "]";
           }
           for (let i = 0; i < openBraces - closeBraces; i++) {
-            repairedJson += '}';
+            repairedJson += "}";
           }
 
-          console.log('Attempting to parse repaired JSON...');
+          console.log("Attempting to parse repaired JSON...");
           feedback = JSON.parse(repairedJson) as QualitativeFeedback;
-          console.log('Successfully parsed repaired JSON');
+          console.log("Successfully parsed repaired JSON");
         } catch (repairError) {
-          console.error('Failed to repair JSON:', repairError);
+          console.error("Failed to repair JSON:", repairError);
           throw parseError;
         }
       } else {
@@ -507,47 +599,64 @@ Do not mix languages. The entire response must be in ${LANGUAGE_NAMES[currentLan
     if (!feedback) {
       // Fallback to a default structured response
       feedback = {
-        overallAssessment: currentLang === 'zhTW'
-          ? "已完成效能分析評估"
-          : "Performance analysis completed",
-        strengths: [{
-          area: currentLang === 'zhTW' ? "任務完成" : "Task Completion",
-          description: currentLang === 'zhTW'
-            ? "成功完成情境任務"
-            : "Successfully completed the scenario tasks",
-          example: currentLang === 'zhTW'
-            ? "積極與 AI 助手互動"
-            : "Engaged actively with the AI assistant"
-        }],
-        areasForImprovement: [{
-          area: currentLang === 'zhTW' ? "進階練習" : "Further Practice",
-          description: currentLang === 'zhTW'
-            ? "持續探索 AI 的能力"
-            : "Continue exploring AI capabilities",
-          suggestion: currentLang === 'zhTW'
-            ? "嘗試更複雜的情境以加深理解"
-            : "Try more complex scenarios to deepen understanding"
-        }],
-        nextSteps: currentLang === 'zhTW'
-          ? ["回顧情境目標並反思學習成果", "探索更多 AI 素養資源"]
-          : ["Review the scenario objectives and reflect on learning", "Explore additional AI literacy resources"],
-        encouragement: currentLang === 'zhTW'
-          ? "做得很好！完成了這個情境！繼續探索和學習 AI 吧。"
-          : "Great job completing this scenario! Keep exploring and learning about AI."
+        overallAssessment:
+          currentLang === "zhTW"
+            ? "已完成效能分析評估"
+            : "Performance analysis completed",
+        strengths: [
+          {
+            area: currentLang === "zhTW" ? "任務完成" : "Task Completion",
+            description:
+              currentLang === "zhTW"
+                ? "成功完成情境任務"
+                : "Successfully completed the scenario tasks",
+            example:
+              currentLang === "zhTW"
+                ? "積極與 AI 助手互動"
+                : "Engaged actively with the AI assistant",
+          },
+        ],
+        areasForImprovement: [
+          {
+            area: currentLang === "zhTW" ? "進階練習" : "Further Practice",
+            description:
+              currentLang === "zhTW"
+                ? "持續探索 AI 的能力"
+                : "Continue exploring AI capabilities",
+            suggestion:
+              currentLang === "zhTW"
+                ? "嘗試更複雜的情境以加深理解"
+                : "Try more complex scenarios to deepen understanding",
+          },
+        ],
+        nextSteps:
+          currentLang === "zhTW"
+            ? ["回顧情境目標並反思學習成果", "探索更多 AI 素養資源"]
+            : [
+                "Review the scenario objectives and reflect on learning",
+                "Explore additional AI literacy resources",
+              ],
+        encouragement:
+          currentLang === "zhTW"
+            ? "做得很好！完成了這個情境！繼續探索和學習 AI 吧。"
+            : "Great job completing this scenario! Keep exploring and learning about AI.",
       };
     }
 
     // Save feedback to evaluation with language info
     // Keep existing feedback for other languages unless they were invalidated
-    const currentQualitativeFeedback = evaluation.metadata?.qualitativeFeedback as Record<string, unknown> || {};
+    const currentQualitativeFeedback =
+      (evaluation.metadata?.qualitativeFeedback as Record<string, unknown>) ||
+      {};
     const updatedQualitativeFeedback = {
       ...currentQualitativeFeedback,
       [currentLang]: {
         content: feedback,
         generatedAt: new Date().toISOString(),
         isValid: true,
-        evaluationVersion: evaluation.metadata?.lastSyncedAt || evaluation.createdAt
-      }
+        evaluationVersion:
+          evaluation.metadata?.lastSyncedAt || evaluation.createdAt,
+      },
     };
 
     // Store updated feedback in evaluation metadata
@@ -556,10 +665,12 @@ Do not mix languages. The entire response must be in ${LANGUAGE_NAMES[currentLan
         ...evaluation.metadata,
         qualitativeFeedback: updatedQualitativeFeedback,
         generatedLanguages: [
-          ...(evaluation.metadata?.generatedLanguages || []).filter((l: string) => l !== currentLang),
-          currentLang
-        ]
-      }
+          ...(evaluation.metadata?.generatedLanguages || []).filter(
+            (l: string) => l !== currentLang,
+          ),
+          currentLang,
+        ],
+      },
     });
 
     return NextResponse.json({
@@ -567,14 +678,13 @@ Do not mix languages. The entire response must be in ${LANGUAGE_NAMES[currentLan
       feedback,
       cached: false,
       language: currentLang,
-      evaluationId: evaluation.id
+      evaluationId: evaluation.id,
     });
-
   } catch (error) {
-    console.error('Error generating feedback:', error);
+    console.error("Error generating feedback:", error);
     return NextResponse.json(
-      { success: false, error: 'Failed to generate feedback' },
-      { status: 500 }
+      { success: false, error: "Failed to generate feedback" },
+      { status: 500 },
     );
   }
 }

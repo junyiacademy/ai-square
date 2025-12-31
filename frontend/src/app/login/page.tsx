@@ -1,106 +1,122 @@
-'use client'
+"use client";
 
-import { useState, useEffect, Suspense } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
-import { useTranslation } from 'react-i18next'
-import { LoginForm } from '@/components/auth/LoginForm'
-import { useAuth } from '@/contexts/AuthContext'
+import { useState, useEffect, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useTranslation } from "react-i18next";
+import { LoginForm } from "@/components/auth/LoginForm";
+import { useAuth } from "@/contexts/AuthContext";
 
 function LoginContent() {
-  const { t } = useTranslation('auth')
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const { login } = useAuth()
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [info, setInfo] = useState('')
-  const [showNicknameModal, setShowNicknameModal] = useState(false)
-  const [guestLoading, setGuestLoading] = useState(false)
+  const { t } = useTranslation("auth");
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { login } = useAuth();
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [info, setInfo] = useState("");
+  const [showNicknameModal, setShowNicknameModal] = useState(false);
+  const [guestLoading, setGuestLoading] = useState(false);
 
   useEffect(() => {
     // 檢查是否因為 token 過期而被重定向
     try {
-      if (searchParams.get('expired') === 'true') {
-        setInfo(t('info.sessionExpired', 'Your session has expired. Please login again.'))
+      if (searchParams.get("expired") === "true") {
+        setInfo(
+          t(
+            "info.sessionExpired",
+            "Your session has expired. Please login again.",
+          ),
+        );
       }
     } catch (e) {
-      console.error('Error checking search params:', e)
+      console.error("Error checking search params:", e);
     }
-  }, [searchParams, t])
+  }, [searchParams, t]);
 
-  const handleLogin = async (credentials: { email: string; password: string; rememberMe: boolean }) => {
-    console.log('handleLogin called with:', credentials)
-    setLoading(true)
-    setError('')
+  const handleLogin = async (credentials: {
+    email: string;
+    password: string;
+    rememberMe: boolean;
+  }) => {
+    console.log("handleLogin called with:", credentials);
+    setLoading(true);
+    setError("");
 
     try {
       // Use AuthContext login method which handles all state updates
-      console.log('Calling login method...')
-      const result = await login(credentials)
-      console.log('Login result:', result)
+      console.log("Calling login method...");
+      const result = await login(credentials);
+      console.log("Login result:", result);
 
       if (result.success) {
-        console.log('Login successful, preparing to navigate...')
+        console.log("Login successful, preparing to navigate...");
 
         // Always redirect to PBL scenarios after login for consistent UX
         // Ignore any redirect parameters to avoid middleware interference
-        console.log('Login successful, ignoring redirect params and navigating to: /pbl/scenarios')
+        console.log(
+          "Login successful, ignoring redirect params and navigating to: /pbl/scenarios",
+        );
 
         // Navigate to PBL scenarios directly - consistent UX
-        router.push('/pbl/scenarios')
-        router.refresh()
+        router.push("/pbl/scenarios");
+        router.refresh();
 
         // Fallback: Force navigation if router.push doesn't work
         setTimeout(() => {
-          if (window.location.pathname === '/login') {
-            console.log('Router navigation fallback: forcing redirect to PBL scenarios')
-            window.location.href = '/pbl/scenarios'
+          if (window.location.pathname === "/login") {
+            console.log(
+              "Router navigation fallback: forcing redirect to PBL scenarios",
+            );
+            window.location.href = "/pbl/scenarios";
           }
-        }, 500)
+        }, 500);
       } else {
         // 顯示錯誤訊息
-        console.log('Login failed:', result.error)
-        setError(result.error || t('error.invalidCredentials'))
+        console.log("Login failed:", result.error);
+        setError(result.error || t("error.invalidCredentials"));
       }
     } catch (err) {
-      console.error('Login error:', err)
-      setError(t('error.networkError'))
+      console.error("Login error:", err);
+      setError(t("error.networkError"));
     } finally {
-      console.log('Login process complete, loading:', false)
-      setLoading(false)
+      console.log("Login process complete, loading:", false);
+      setLoading(false);
     }
-  }
+  };
 
   const handleGuestLogin = async (nickname?: string) => {
-    console.log('handleGuestLogin called with nickname:', nickname)
-    setGuestLoading(true)
-    setError('')
-    setShowNicknameModal(false)
+    console.log("handleGuestLogin called with nickname:", nickname);
+    setGuestLoading(true);
+    setError("");
+    setShowNicknameModal(false);
 
     try {
-      const response = await fetch('/api/auth/guest-login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/auth/guest-login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ nickname: nickname?.trim() || undefined }),
-      })
+      });
 
-      const data = await response.json()
+      const data = await response.json();
 
       if (data.success) {
-        console.log('Guest login successful:', data.user)
+        console.log("Guest login successful:", data.user);
         // Use window.location.href to force full page reload
         // This ensures AuthContext reinitializes with the new session
-        window.location.href = '/pbl/scenarios'
+        window.location.href = "/pbl/scenarios";
       } else {
-        setError(data.error || t('error.guestLoginFailed', 'Failed to create guest account'))
+        setError(
+          data.error ||
+            t("error.guestLoginFailed", "Failed to create guest account"),
+        );
       }
     } catch (err) {
-      console.error('Guest login error:', err)
-      setError(t('error.networkError'))
+      console.error("Guest login error:", err);
+      setError(t("error.networkError"));
     } finally {
-      setGuestLoading(false)
+      setGuestLoading(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-4 sm:px-6 lg:px-8">
@@ -123,26 +139,31 @@ function LoginContent() {
             </svg>
           </div>
           <h2 className="text-3xl font-bold text-gray-900">
-            {t('loginTitle')}
+            {t("loginTitle")}
           </h2>
-          <p className="mt-2 text-sm text-gray-600">
-            {t('platformSubtitle')}
-          </p>
+          <p className="mt-2 text-sm text-gray-600">{t("platformSubtitle")}</p>
         </div>
 
         {/* 註冊連結 - 移到最上方 */}
         <div className="bg-blue-50 rounded-lg p-4 text-center space-y-2">
           <p className="text-sm text-gray-700">
-            {t('dontHaveAccount', "Don't have an account?")}{' '}
+            {t("dontHaveAccount", "Don't have an account?")}{" "}
             <a
-              href={searchParams.get('redirect') ? `/register?redirect=${encodeURIComponent(searchParams.get('redirect')!)}` : '/register'}
+              href={
+                searchParams.get("redirect")
+                  ? `/register?redirect=${encodeURIComponent(searchParams.get("redirect")!)}`
+                  : "/register"
+              }
               className="font-semibold text-blue-600 hover:text-blue-700 underline"
             >
-              {t('createAccount', 'Create one')}
+              {t("createAccount", "Create one")}
             </a>
           </p>
           <p className="text-xs text-gray-600">
-            {t('emailRegistrationHint', 'Please register with your email to start exploring the world of AI Square')}
+            {t(
+              "emailRegistrationHint",
+              "Please register with your email to start exploring the world of AI Square",
+            )}
           </p>
         </div>
 
@@ -153,11 +174,7 @@ function LoginContent() {
               {info}
             </div>
           )}
-          <LoginForm
-            onSubmit={handleLogin}
-            loading={loading}
-            error={error}
-          />
+          <LoginForm onSubmit={handleLogin} loading={loading} error={error} />
 
           {/* Divider */}
           <div className="relative my-6">
@@ -166,7 +183,7 @@ function LoginContent() {
             </div>
             <div className="relative flex justify-center text-sm">
               <span className="px-2 bg-white text-gray-500">
-                {t('or', '或')}
+                {t("or", "或")}
               </span>
             </div>
           </div>
@@ -179,20 +196,34 @@ function LoginContent() {
           >
             {guestLoading ? (
               <>
-                <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                <svg
+                  className="animate-spin h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
                 </svg>
-                {t('guestLoginLoading', '正在創建訪客帳號...')}
+                {t("guestLoginLoading", "正在創建訪客帳號...")}
               </>
             ) : (
-              <>
-                🚀 {t('guestLoginButton', '立即開始體驗')}
-              </>
+              <>🚀 {t("guestLoginButton", "立即開始體驗")}</>
             )}
           </button>
           <p className="mt-2 text-xs text-center text-gray-500">
-            {t('guestLoginHint', '無需註冊，立即探索 AI Square')}
+            {t("guestLoginHint", "無需註冊，立即探索 AI Square")}
           </p>
         </div>
 
@@ -201,50 +232,65 @@ function LoginContent() {
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
             <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full relative">
               <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
-                {t('guestNicknameTitle', '歡迎！')}
+                {t("guestNicknameTitle", "歡迎！")}
               </h3>
               <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
-                {t('guestNicknameDescription', '請輸入你的暱稱（可選），讓我們更好地稱呼你')}
+                {t(
+                  "guestNicknameDescription",
+                  "請輸入你的暱稱（可選），讓我們更好地稱呼你",
+                )}
               </p>
               <input
                 type="text"
                 id="guest-nickname"
                 maxLength={20}
-                placeholder={t('nicknamePlaceholder', '例如：小明')}
+                placeholder={t("nicknamePlaceholder", "例如：小明")}
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-4"
                 onKeyPress={(e) => {
-                  if (e.key === 'Enter') {
-                    const nickname = (e.target as HTMLInputElement).value
-                    handleGuestLogin(nickname)
+                  if (e.key === "Enter") {
+                    const nickname = (e.target as HTMLInputElement).value;
+                    handleGuestLogin(nickname);
                   }
                 }}
               />
               <div className="flex gap-3">
                 <button
                   onClick={() => {
-                    setShowNicknameModal(false)
-                    handleGuestLogin()
+                    setShowNicknameModal(false);
+                    handleGuestLogin();
                   }}
                   className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
                 >
-                  {t('skip', '跳過')}
+                  {t("skip", "跳過")}
                 </button>
                 <button
                   onClick={() => {
-                    const input = document.getElementById('guest-nickname') as HTMLInputElement
-                    handleGuestLogin(input?.value)
+                    const input = document.getElementById(
+                      "guest-nickname",
+                    ) as HTMLInputElement;
+                    handleGuestLogin(input?.value);
                   }}
                   className="flex-1 px-4 py-2 bg-indigo-600 dark:bg-indigo-500 text-white rounded-md text-sm font-medium hover:bg-indigo-700 dark:hover:bg-indigo-600"
                 >
-                  {t('startExperience', '開始體驗')}
+                  {t("startExperience", "開始體驗")}
                 </button>
               </div>
               <button
                 onClick={() => setShowNicknameModal(false)}
                 className="absolute top-4 right-4 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
               </button>
             </div>
@@ -253,11 +299,11 @@ function LoginContent() {
 
         {/* 底部說明 */}
         <div className="text-center text-xs text-gray-500 mt-4">
-          {t('devNote')}
+          {t("devNote")}
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 function LoginFallback() {
@@ -273,7 +319,7 @@ function LoginFallback() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export default function LoginPage() {
@@ -281,5 +327,5 @@ export default function LoginPage() {
     <Suspense fallback={<LoginFallback />}>
       <LoginContent />
     </Suspense>
-  )
+  );
 }

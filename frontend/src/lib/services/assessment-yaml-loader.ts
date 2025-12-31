@@ -3,8 +3,11 @@
  * 繼承自 BaseYAMLLoader，專門處理 Assessment YAML 檔案
  */
 
-import { BaseYAMLLoader, LoadResult } from '@/lib/abstractions/base-yaml-loader';
-import path from 'path';
+import {
+  BaseYAMLLoader,
+  LoadResult,
+} from "@/lib/abstractions/base-yaml-loader";
+import path from "path";
 
 export interface AssessmentConfig {
   title?: string;
@@ -61,14 +64,14 @@ export interface AssessmentYAMLData {
 }
 
 export class AssessmentYAMLLoader extends BaseYAMLLoader<AssessmentYAMLData> {
-  protected readonly loaderName = 'AssessmentYAMLLoader';
+  protected readonly loaderName = "AssessmentYAMLLoader";
 
   private basePath: string;
 
   constructor() {
     super();
     // Set base path for assessment data
-    this.basePath = path.join(process.cwd(), 'public', 'assessment_data');
+    this.basePath = path.join(process.cwd(), "public", "assessment_data");
   }
 
   /**
@@ -77,10 +80,10 @@ export class AssessmentYAMLLoader extends BaseYAMLLoader<AssessmentYAMLData> {
   async load(fileName: string): Promise<LoadResult<AssessmentYAMLData>> {
     try {
       const filePath = this.getFilePath(fileName);
-      const { promises: fs } = await import('fs');
-      const yaml = await import('js-yaml');
+      const { promises: fs } = await import("fs");
+      const yaml = await import("js-yaml");
 
-      const content = await fs.readFile(filePath, 'utf8');
+      const content = await fs.readFile(filePath, "utf8");
       const data = yaml.load(content) as AssessmentYAMLData;
 
       return { data };
@@ -94,7 +97,7 @@ export class AssessmentYAMLLoader extends BaseYAMLLoader<AssessmentYAMLData> {
    */
   async loadAssessment(
     assessmentName: string,
-    language: string = 'en'
+    language: string = "en",
   ): Promise<AssessmentYAMLData | null> {
     // Try language-specific file first
     const fileName = `${assessmentName}_questions_${language}`;
@@ -105,8 +108,10 @@ export class AssessmentYAMLLoader extends BaseYAMLLoader<AssessmentYAMLData> {
     }
 
     // Fallback to English if language-specific file not found
-    if (language !== 'en') {
-      console.log(`Language-specific file not found for ${language}, falling back to English`);
+    if (language !== "en") {
+      console.log(
+        `Language-specific file not found for ${language}, falling back to English`,
+      );
       const fallbackFileName = `${assessmentName}_questions_en`;
       const fallbackResult = await this.load(fallbackFileName);
 
@@ -122,16 +127,16 @@ export class AssessmentYAMLLoader extends BaseYAMLLoader<AssessmentYAMLData> {
    * Scan all available assessment folders
    */
   async scanAssessments(): Promise<string[]> {
-    const fs = await import('fs/promises');
+    const fs = await import("fs/promises");
     const assessmentDir = this.basePath;
 
     try {
       const items = await fs.readdir(assessmentDir, { withFileTypes: true });
       return items
-        .filter(item => item.isDirectory())
-        .map(item => item.name);
+        .filter((item) => item.isDirectory())
+        .map((item) => item.name);
     } catch (error) {
-      console.error('Error scanning assessment directory:', error);
+      console.error("Error scanning assessment directory:", error);
       return [];
     }
   }
@@ -140,15 +145,17 @@ export class AssessmentYAMLLoader extends BaseYAMLLoader<AssessmentYAMLData> {
    * Get all available languages for an assessment
    */
   async getAvailableLanguages(assessmentName: string): Promise<string[]> {
-    const fs = await import('fs/promises');
+    const fs = await import("fs/promises");
     const assessmentDir = path.join(this.basePath, assessmentName);
 
     try {
       const files = await fs.readdir(assessmentDir);
-      const languagePattern = new RegExp(`${assessmentName}_questions_(\\w+)\\.yaml`);
+      const languagePattern = new RegExp(
+        `${assessmentName}_questions_(\\w+)\\.yaml`,
+      );
 
       return files
-        .map(file => {
+        .map((file) => {
           const match = file.match(languagePattern);
           return match ? match[1] : null;
         })
@@ -170,7 +177,9 @@ export class AssessmentYAMLLoader extends BaseYAMLLoader<AssessmentYAMLData> {
   /**
    * Override to handle Assessment-specific post-processing
    */
-  protected async postProcess(data: AssessmentYAMLData): Promise<AssessmentYAMLData> {
+  protected async postProcess(
+    data: AssessmentYAMLData,
+  ): Promise<AssessmentYAMLData> {
     // Normalize config field (could be 'config' or 'assessment_config')
     if (!data.config && data.assessment_config) {
       data.config = data.assessment_config;
@@ -180,7 +189,7 @@ export class AssessmentYAMLLoader extends BaseYAMLLoader<AssessmentYAMLData> {
     if (data.questions) {
       data.questions = data.questions.map((q, index) => ({
         ...q,
-        id: q.id || `question_${index + 1}`
+        id: q.id || `question_${index + 1}`,
       }));
     }
 
@@ -192,18 +201,24 @@ export class AssessmentYAMLLoader extends BaseYAMLLoader<AssessmentYAMLData> {
    */
   protected getFilePath(fileName: string): string {
     // Assessment files are in subdirectories
-    const assessmentName = fileName.replace(/_questions_\w+$/, '');
+    const assessmentName = fileName.replace(/_questions_\w+$/, "");
     return path.join(this.basePath, assessmentName, `${fileName}.yaml`);
   }
 
   /**
    * Get translated field helper specific to Assessment
    */
-  getTranslatedField(data: Record<string, unknown>, fieldName: string, language: string): string {
-    const suffix = language === 'en' ? '' : `_${language}`;
+  getTranslatedField(
+    data: Record<string, unknown>,
+    fieldName: string,
+    language: string,
+  ): string {
+    const suffix = language === "en" ? "" : `_${language}`;
     const fieldWithSuffix = `${fieldName}${suffix}`;
 
-    return (data[fieldWithSuffix] as string) || (data[fieldName] as string) || '';
+    return (
+      (data[fieldWithSuffix] as string) || (data[fieldName] as string) || ""
+    );
   }
 }
 

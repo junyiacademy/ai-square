@@ -9,7 +9,7 @@ const mockDownload = jest.fn();
 const mockExists = jest.fn();
 const mockFile = jest.fn();
 
-jest.mock('@google-cloud/storage', () => ({
+jest.mock("@google-cloud/storage", () => ({
   Storage: jest.fn().mockImplementation(() => ({
     bucket: jest.fn().mockImplementation(() => ({
       file: jest.fn().mockImplementation((path: string) => {
@@ -19,21 +19,21 @@ jest.mock('@google-cloud/storage', () => ({
           download: mockDownload,
           exists: mockExists,
         };
-      })
+      }),
     })),
   })),
 }));
 
-import { POST } from '../route';
-import { NextRequest } from 'next/server';
-import { Storage } from '@google-cloud/storage';
-import { mockConsoleError as createMockConsoleError } from '@/test-utils/helpers/console';
+import { POST } from "../route";
+import { NextRequest } from "next/server";
+import { Storage } from "@google-cloud/storage";
+import { mockConsoleError as createMockConsoleError } from "@/test-utils/helpers/console";
 
 // Mock console
-const mockConsoleLog = jest.spyOn(console, 'log').mockImplementation();
+const mockConsoleLog = jest.spyOn(console, "log").mockImplementation();
 const mockConsoleError = createMockConsoleError();
 
-describe('/api/users/update-progress', () => {
+describe("/api/users/update-progress", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockExists.mockResolvedValue([false]);
@@ -44,24 +44,27 @@ describe('/api/users/update-progress', () => {
     mockConsoleError.mockRestore();
   });
 
-  describe('POST - Update User Progress', () => {
-    it('should update welcome stage progress', async () => {
+  describe("POST - Update User Progress", () => {
+    it("should update welcome stage progress", async () => {
       const requestData = {
-        email: 'test@example.com',
-        stage: 'welcome',
+        email: "test@example.com",
+        stage: "welcome",
       };
 
-      const request = new NextRequest('http://localhost:3000/api/users/update-progress', {
-        method: 'POST',
-        body: JSON.stringify(requestData),
-      });
+      const request = new NextRequest(
+        "http://localhost:3000/api/users/update-progress",
+        {
+          method: "POST",
+          body: JSON.stringify(requestData),
+        },
+      );
 
       const response = await POST(request);
       const data = await response.json();
 
       expect(response.status).toBe(200);
       expect(data.success).toBe(true);
-      expect(data.message).toBe('welcome progress updated successfully');
+      expect(data.message).toBe("welcome progress updated successfully");
       expect(data.userData.onboarding.welcomeCompleted).toBe(true);
       expect(data.userData.onboarding.welcomeCompletedAt).toBeDefined();
 
@@ -69,47 +72,53 @@ describe('/api/users/update-progress', () => {
       expect(mockSave).toHaveBeenCalledWith(
         expect.stringContaining('"welcomeCompleted": true'),
         expect.objectContaining({
-          metadata: { contentType: 'application/json' },
-        })
+          metadata: { contentType: "application/json" },
+        }),
       );
     });
 
-    it('should update identity stage progress with data', async () => {
+    it("should update identity stage progress with data", async () => {
       const requestData = {
-        email: 'test@example.com',
-        stage: 'identity',
+        email: "test@example.com",
+        stage: "identity",
         data: {
-          identity: 'student',
+          identity: "student",
         },
       };
 
-      const request = new NextRequest('http://localhost:3000/api/users/update-progress', {
-        method: 'POST',
-        body: JSON.stringify(requestData),
-      });
+      const request = new NextRequest(
+        "http://localhost:3000/api/users/update-progress",
+        {
+          method: "POST",
+          body: JSON.stringify(requestData),
+        },
+      );
 
       const response = await POST(request);
       const data = await response.json();
 
       expect(response.status).toBe(200);
       expect(data.userData.onboarding.identityCompleted).toBe(true);
-      expect(data.userData.identity).toBe('student');
+      expect(data.userData.identity).toBe("student");
     });
 
-    it('should update goals stage and mark onboarding complete', async () => {
+    it("should update goals stage and mark onboarding complete", async () => {
       const requestData = {
-        email: 'test@example.com',
-        stage: 'goals',
+        email: "test@example.com",
+        stage: "goals",
         data: {
-          interests: ['AI', 'Machine Learning'],
-          goals: ['Learn AI basics', 'Build AI projects'],
+          interests: ["AI", "Machine Learning"],
+          goals: ["Learn AI basics", "Build AI projects"],
         },
       };
 
-      const request = new NextRequest('http://localhost:3000/api/users/update-progress', {
-        method: 'POST',
-        body: JSON.stringify(requestData),
-      });
+      const request = new NextRequest(
+        "http://localhost:3000/api/users/update-progress",
+        {
+          method: "POST",
+          body: JSON.stringify(requestData),
+        },
+      );
 
       const response = await POST(request);
       const data = await response.json();
@@ -117,14 +126,17 @@ describe('/api/users/update-progress', () => {
       expect(response.status).toBe(200);
       expect(data.userData.onboarding.goalsCompleted).toBe(true);
       expect(data.userData.onboarding.completedAt).toBeDefined();
-      expect(data.userData.interests).toEqual(['AI', 'Machine Learning']);
-      expect(data.userData.learningGoals).toEqual(['Learn AI basics', 'Build AI projects']);
+      expect(data.userData.interests).toEqual(["AI", "Machine Learning"]);
+      expect(data.userData.learningGoals).toEqual([
+        "Learn AI basics",
+        "Build AI projects",
+      ]);
     });
 
-    it('should update assessment stage with results', async () => {
+    it("should update assessment stage with results", async () => {
       const requestData = {
-        email: 'test@example.com',
-        stage: 'assessment',
+        email: "test@example.com",
+        stage: "assessment",
         data: {
           result: {
             overallScore: 85,
@@ -134,15 +146,18 @@ describe('/api/users/update-progress', () => {
               managing_ai: 85,
               designing_ai: 85,
             },
-            level: 'intermediate',
+            level: "intermediate",
           },
         },
       };
 
-      const request = new NextRequest('http://localhost:3000/api/users/update-progress', {
-        method: 'POST',
-        body: JSON.stringify(requestData),
-      });
+      const request = new NextRequest(
+        "http://localhost:3000/api/users/update-progress",
+        {
+          method: "POST",
+          body: JSON.stringify(requestData),
+        },
+      );
 
       const response = await POST(request);
       const data = await response.json();
@@ -153,10 +168,10 @@ describe('/api/users/update-progress', () => {
       expect(data.userData.assessmentResult.overallScore).toBe(85);
     });
 
-    it('should load and merge existing user data', async () => {
+    it("should load and merge existing user data", async () => {
       const existingData = {
-        email: 'test@example.com',
-        name: 'Test User',
+        email: "test@example.com",
+        name: "Test User",
         onboarding: {
           welcomeCompleted: true,
           identityCompleted: false,
@@ -166,79 +181,93 @@ describe('/api/users/update-progress', () => {
       };
 
       mockExists.mockResolvedValue([true]);
-      mockDownload.mockResolvedValue([Buffer.from(JSON.stringify(existingData))]);
+      mockDownload.mockResolvedValue([
+        Buffer.from(JSON.stringify(existingData)),
+      ]);
 
       const requestData = {
-        email: 'test@example.com',
-        stage: 'identity',
-        data: { identity: 'teacher' },
+        email: "test@example.com",
+        stage: "identity",
+        data: { identity: "teacher" },
       };
 
-      const request = new NextRequest('http://localhost:3000/api/users/update-progress', {
-        method: 'POST',
-        body: JSON.stringify(requestData),
-      });
+      const request = new NextRequest(
+        "http://localhost:3000/api/users/update-progress",
+        {
+          method: "POST",
+          body: JSON.stringify(requestData),
+        },
+      );
 
       const response = await POST(request);
       const data = await response.json();
 
       expect(response.status).toBe(200);
-      expect(data.userData.name).toBe('Test User'); // Preserved
+      expect(data.userData.name).toBe("Test User"); // Preserved
       expect(data.userData.onboarding.welcomeCompleted).toBe(true); // Preserved
       expect(data.userData.onboarding.identityCompleted).toBe(true); // Updated
-      expect(data.userData.identity).toBe('teacher');
+      expect(data.userData.identity).toBe("teacher");
     });
 
-    it('should handle missing email or stage', async () => {
+    it("should handle missing email or stage", async () => {
       const testCases = [
-        { email: 'test@example.com' }, // Missing stage
-        { stage: 'welcome' }, // Missing email
+        { email: "test@example.com" }, // Missing stage
+        { stage: "welcome" }, // Missing email
         {}, // Missing both
       ];
 
       for (const requestData of testCases) {
-        const request = new NextRequest('http://localhost:3000/api/users/update-progress', {
-          method: 'POST',
-          body: JSON.stringify(requestData),
-        });
+        const request = new NextRequest(
+          "http://localhost:3000/api/users/update-progress",
+          {
+            method: "POST",
+            body: JSON.stringify(requestData),
+          },
+        );
 
         const response = await POST(request);
         const data = await response.json();
 
         expect(response.status).toBe(400);
         expect(data.success).toBe(false);
-        expect(data.error).toBe('Email and stage are required');
+        expect(data.error).toBe("Email and stage are required");
       }
     });
 
-    it('should reject invalid stage', async () => {
-      const request = new NextRequest('http://localhost:3000/api/users/update-progress', {
-        method: 'POST',
-        body: JSON.stringify({
-          email: 'test@example.com',
-          stage: 'invalid-stage',
-        }),
-      });
+    it("should reject invalid stage", async () => {
+      const request = new NextRequest(
+        "http://localhost:3000/api/users/update-progress",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            email: "test@example.com",
+            stage: "invalid-stage",
+          }),
+        },
+      );
 
       const response = await POST(request);
       const data = await response.json();
 
       expect(response.status).toBe(400);
       expect(data.success).toBe(false);
-      expect(data.error).toBe('Invalid stage');
+      expect(data.error).toBe("Invalid stage");
     });
 
-    it('should handle GCS errors when loading data', async () => {
+    it("should handle GCS errors when loading data", async () => {
       mockExists.mockResolvedValue([true]);
-      mockDownload.mockRejectedValue(new Error('GCS read error'));
+      mockDownload.mockRejectedValue(new Error("GCS read error"));
 
-      const request = new NextRequest('http://localhost:3000/api/users/update-progress', {
-        method: 'POST',
-        body: JSON.stringify({
-          email: 'test@example.com',
-          stage: 'welcome',
-        }),
-      });
+      const request = new NextRequest(
+        "http://localhost:3000/api/users/update-progress",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            email: "test@example.com",
+            stage: "welcome",
+          }),
+        },
+      );
 
       const response = await POST(request);
       const data = await response.json();
@@ -246,66 +275,84 @@ describe('/api/users/update-progress', () => {
       // Should continue with empty user data
       expect(response.status).toBe(200);
       expect(data.success).toBe(true);
-      expect(mockConsoleError).toHaveBeenCalledWith('Error loading user data:', expect.any(Error));
+      expect(mockConsoleError).toHaveBeenCalledWith(
+        "Error loading user data:",
+        expect.any(Error),
+      );
     });
 
-    it('should handle GCS save errors', async () => {
-      mockSave.mockRejectedValue(new Error('GCS write error'));
+    it("should handle GCS save errors", async () => {
+      mockSave.mockRejectedValue(new Error("GCS write error"));
 
-      const request = new NextRequest('http://localhost:3000/api/users/update-progress', {
-        method: 'POST',
-        body: JSON.stringify({
-          email: 'test@example.com',
-          stage: 'welcome',
-        }),
-      });
+      const request = new NextRequest(
+        "http://localhost:3000/api/users/update-progress",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            email: "test@example.com",
+            stage: "welcome",
+          }),
+        },
+      );
 
       const response = await POST(request);
       const data = await response.json();
 
       expect(response.status).toBe(500);
       expect(data.success).toBe(false);
-      expect(data.error).toBe('Failed to update progress');
-      expect(mockConsoleError).toHaveBeenCalledWith('Error updating user progress:', expect.any(Error));
+      expect(data.error).toBe("Failed to update progress");
+      expect(mockConsoleError).toHaveBeenCalledWith(
+        "Error updating user progress:",
+        expect.any(Error),
+      );
     });
 
-    it('should sanitize email for file path', async () => {
-      const request = new NextRequest('http://localhost:3000/api/users/update-progress', {
-        method: 'POST',
-        body: JSON.stringify({
-          email: 'user.name@example.com',
-          stage: 'welcome',
-        }),
-      });
+    it("should sanitize email for file path", async () => {
+      const request = new NextRequest(
+        "http://localhost:3000/api/users/update-progress",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            email: "user.name@example.com",
+            stage: "welcome",
+          }),
+        },
+      );
 
       await POST(request);
 
-      expect(mockFile).toHaveBeenCalledWith('user/user_name_at_example_com/user_data.json');
+      expect(mockFile).toHaveBeenCalledWith(
+        "user/user_name_at_example_com/user_data.json",
+      );
     });
 
-    it('should update lastModified timestamp', async () => {
+    it("should update lastModified timestamp", async () => {
       // Ensure clean state
       mockExists.mockResolvedValue([false]);
       mockSave.mockResolvedValue(undefined);
 
-      const request = new NextRequest('http://localhost:3000/api/users/update-progress', {
-        method: 'POST',
-        body: JSON.stringify({
-          email: 'test@example.com',
-          stage: 'welcome',
-        }),
-      });
+      const request = new NextRequest(
+        "http://localhost:3000/api/users/update-progress",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            email: "test@example.com",
+            stage: "welcome",
+          }),
+        },
+      );
 
       const response = await POST(request);
       const data = await response.json();
 
       if (response.status !== 200) {
-        console.log('Response data:', data);
+        console.log("Response data:", data);
       }
       expect(response.status).toBe(200);
       expect(data.userData?.lastModified).toBeDefined();
       // Check timestamp is within last 5 seconds
-      const timeDiff = Date.now() - new Date(data.userData.lastModified).getTime();
+      const timeDiff =
+        Date.now() - new Date(data.userData.lastModified).getTime();
       expect(timeDiff).toBeGreaterThanOrEqual(0);
       expect(timeDiff).toBeLessThan(5000);
     });

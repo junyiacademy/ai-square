@@ -1,15 +1,15 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getGitHubStorage } from '@/services/github-storage';
-import { OctokitError } from '@/types';
+import { NextRequest, NextResponse } from "next/server";
+import { getGitHubStorage } from "@/services/github-storage";
+import { OctokitError } from "@/types";
 
 export async function POST(request: NextRequest) {
   try {
     const { branch } = await request.json();
 
-    if (!branch || branch === 'main') {
+    if (!branch || branch === "main") {
       return NextResponse.json(
-        { error: 'Invalid branch name' },
-        { status: 400 }
+        { error: "Invalid branch name" },
+        { status: 400 },
       );
     }
 
@@ -20,23 +20,23 @@ export async function POST(request: NextRequest) {
 
       return NextResponse.json({
         success: true,
-        message: `Branch ${branch} deleted successfully`
+        message: `Branch ${branch} deleted successfully`,
       });
     } catch (error) {
       const octokitError = error as OctokitError;
       if (octokitError.status === 403) {
         return NextResponse.json({
           success: false,
-          message: 'Branch is protected or you lack permissions'
+          message: "Branch is protected or you lack permissions",
         });
       }
       throw error;
     }
   } catch (error) {
-    console.error('Delete branch error:', error);
+    console.error("Delete branch error:", error);
     return NextResponse.json(
-      { error: 'Failed to delete branch' },
-      { status: 500 }
+      { error: "Failed to delete branch" },
+      { status: 500 },
     );
   }
 }
@@ -49,18 +49,18 @@ export async function GET() {
 
     // Filter CMS branches (starting with 'cms-')
     const cmsBranches = branches
-      .filter(branch => branch.startsWith('cms-') && branch !== 'main')
+      .filter((branch) => branch.startsWith("cms-") && branch !== "main")
       .sort((a, b) => b.localeCompare(a)); // Newest first
 
     return NextResponse.json({
       branches: cmsBranches,
-      total: cmsBranches.length
+      total: cmsBranches.length,
     });
   } catch (error) {
-    console.error('List branches error:', error);
+    console.error("List branches error:", error);
     return NextResponse.json(
-      { error: 'Failed to list branches' },
-      { status: 500 }
+      { error: "Failed to list branches" },
+      { status: 500 },
     );
   }
 }

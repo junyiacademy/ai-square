@@ -13,6 +13,7 @@
 ### Current Schema Version: v4
 
 We use a **single schema file** approach for simplicity:
+
 - `schema-v4.sql` - Original schema (without authentication)
 - `schema-v4-safe.sql` - Safe version without DROP commands
 - `schema-v4.sql` - Complete schema with authentication support
@@ -20,6 +21,7 @@ We use a **single schema file** approach for simplicity:
 ### Why Not Migrations?
 
 For staging environment, we decided against a migration system because:
+
 1. **Not yet in production** - Can rebuild database when needed
 2. **Simplicity** - One schema file is clearer than multiple migrations
 3. **Easier debugging** - Complete schema in one place
@@ -52,15 +54,16 @@ curl -X POST https://ai-square-staging-731209836128.asia-east1.run.app/api/auth/
 
 ## Demo Accounts
 
-| Email | Password | Role |
-|-------|----------|------|
+| Email               | Password   | Role    |
+| ------------------- | ---------- | ------- |
 | student@example.com | student123 | student |
 | teacher@example.com | teacher123 | teacher |
-| admin@example.com | admin123 | admin |
+| admin@example.com   | admin123   | admin   |
 
 ## Environment Variables
 
 Key environment variables (stored in Cloud Run):
+
 - `DB_HOST`: /cloudsql/ai-square-463013:asia-east1:ai-square-db-staging-asia
 - `DB_PASSWORD`: postgres
 - `DB_NAME`: ai_square_db
@@ -76,11 +79,13 @@ Key environment variables (stored in Cloud Run):
 ## Troubleshooting
 
 ### Login Issues
+
 - Verify database has authentication fields (password_hash, role, etc.)
 - Check demo users exist with correct password hashes
 - Ensure Cloud Run has correct DB_PASSWORD environment variable
 
 ### Database Connection
+
 - Cloud SQL and Cloud Run must be in same region (asia-east1)
 - Use Unix socket connection, not IP-based
 - Verify Cloud SQL instance is mounted to Cloud Run service
@@ -88,6 +93,7 @@ Key environment variables (stored in Cloud Run):
 ## Testing Before Deployment
 
 ### E2E Test Suite
+
 We maintain a focused set of E2E tests that verify critical functionality:
 
 ```bash
@@ -103,6 +109,7 @@ npx playwright test
 ```
 
 ### Test User for E2E
+
 ```javascript
 // Test account for automated testing
 Email: test@example.com
@@ -110,6 +117,7 @@ Password: Test123!
 ```
 
 ### Pre-deployment Checklist
+
 ```bash
 # 1. Run tests locally
 npm run test:e2e
@@ -132,6 +140,7 @@ curl -X POST http://localhost:3004/api/auth/login \
 ## Future Improvements
 
 When moving to production:
+
 1. Consider implementing migration system for zero-downtime updates
 2. Use Secret Manager for database passwords
 3. Set up automated backups
@@ -140,4 +149,5 @@ When moving to production:
 6. Implement rollback procedures
 
 ---
+
 Last Updated: 2025-01-14

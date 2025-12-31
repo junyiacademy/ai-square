@@ -1,10 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import { getUnifiedAuth, createUnauthorizedResponse } from '@/lib/auth/unified-auth';
+import { NextRequest, NextResponse } from "next/server";
+import { repositoryFactory } from "@/lib/repositories/base/repository-factory";
+import {
+  getUnifiedAuth,
+  createUnauthorizedResponse,
+} from "@/lib/auth/unified-auth";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ programId: string }> }
+  { params }: { params: Promise<{ programId: string }> },
 ) {
   try {
     // Try to get user from authentication
@@ -26,7 +29,7 @@ export async function GET(
     } else {
       // Check for user info from query params
       const { searchParams } = new URL(request.url);
-      const emailParam = searchParams.get('userEmail');
+      const emailParam = searchParams.get("userEmail");
 
       if (emailParam) {
         userEmail = emailParam;
@@ -50,54 +53,49 @@ export async function GET(
     // Get program
     const program = await programRepo.findById(programId);
     if (!program) {
-      return NextResponse.json(
-        { error: 'Program not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Program not found" }, { status: 404 });
     }
 
     // Verify ownership - compare user IDs not emails
     if (program.userId !== userId) {
-      console.error('Access denied:', {
+      console.error("Access denied:", {
         programUserId: program.userId,
         currentUserId: userId,
-        userEmail
+        userEmail,
       });
-      return NextResponse.json(
-        { error: 'Access denied' },
-        { status: 403 }
-      );
+      return NextResponse.json({ error: "Access denied" }, { status: 403 });
     }
 
     // Check if we should include all tasks (for complete page)
     const { searchParams } = new URL(request.url);
-    const includeAllTasks = searchParams.get('includeAllTasks') === 'true';
+    const includeAllTasks = searchParams.get("includeAllTasks") === "true";
 
     // Get all tasks for the program
     const tasks = await taskRepo.findByProgram(programId);
 
-    console.log('Debug: Tasks loaded for program', programId, {
+    console.log("Debug: Tasks loaded for program", programId, {
       tasksCount: tasks?.length || 0,
       includeAllTasks,
-      tasks: tasks?.map(t => ({
-        id: t.id,
-        title: t.title,
-        status: t.status,
-        hasContent: !!t.content,
-        hasQuestions: Array.isArray((t.content as Record<string, unknown>)?.questions)
-          ? ((t.content as Record<string, unknown>)?.questions as unknown[]).length > 0
-          : false
-      })) || []
+      tasks:
+        tasks?.map((t) => ({
+          id: t.id,
+          title: t.title,
+          status: t.status,
+          hasContent: !!t.content,
+          hasQuestions: Array.isArray(
+            (t.content as Record<string, unknown>)?.questions,
+          )
+            ? ((t.content as Record<string, unknown>)?.questions as unknown[])
+                .length > 0
+            : false,
+        })) || [],
     });
 
     if (!tasks || tasks.length === 0) {
-      console.error('No tasks found for program', programId, {
-        programData: program
+      console.error("No tasks found for program", programId, {
+        programData: program,
       });
-      return NextResponse.json(
-        { error: 'No tasks found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "No tasks found" }, { status: 404 });
     }
 
     // Find the current task based on currentTaskIndex
@@ -109,7 +107,7 @@ export async function GET(
       return NextResponse.json({
         program,
         currentTask,
-        totalTasks: tasks.length
+        totalTasks: tasks.length,
       });
     }
 
@@ -120,15 +118,18 @@ export async function GET(
         currentTask,
         currentTaskIndex,
         allTasks: tasks, // Return full task objects with all content
-        tasks: tasks.map(t => ({
+        tasks: tasks.map((t) => ({
           id: t.id,
           title: t.title,
           status: t.status,
-          questionsCount: Array.isArray((t.content as Record<string, unknown>)?.questions)
-            ? ((t.content as Record<string, unknown>)?.questions as unknown[]).length
-            : 0
+          questionsCount: Array.isArray(
+            (t.content as Record<string, unknown>)?.questions,
+          )
+            ? ((t.content as Record<string, unknown>)?.questions as unknown[])
+                .length
+            : 0,
         })),
-        totalTasks: tasks.length
+        totalTasks: tasks.length,
       });
     }
 
@@ -137,19 +138,24 @@ export async function GET(
       program,
       currentTask,
       currentTaskIndex,
-      tasks: tasks.map(t => ({
+      tasks: tasks.map((t) => ({
         id: t.id,
         title: t.title,
         status: t.status,
-        questionsCount: ((t.content as Record<string, unknown>)?.questions as unknown[] | undefined)?.length || 0
+        questionsCount:
+          (
+            (t.content as Record<string, unknown>)?.questions as
+              | unknown[]
+              | undefined
+          )?.length || 0,
       })),
-      totalTasks: tasks.length
+      totalTasks: tasks.length,
     });
   } catch (error) {
-    console.error('Error getting program:', error);
+    console.error("Error getting program:", error);
     return NextResponse.json(
-      { error: 'Failed to load program' },
-      { status: 500 }
+      { error: "Failed to load program" },
+      { status: 500 },
     );
   }
 }

@@ -5,38 +5,40 @@
  * across all scenarios: Route Handlers, Server Components, and Middleware
  */
 
-import { NextRequest, NextResponse } from 'next/server';
-import { getUnifiedAuth } from '../unified-auth';
-import { SecureSession } from '../secure-session';
+import { NextRequest, NextResponse } from "next/server";
+import { getUnifiedAuth } from "../unified-auth";
+import { SecureSession } from "../secure-session";
 
 // Mock SecureSession
-jest.mock('../secure-session');
+jest.mock("../secure-session");
 
-describe.skip('Unified Authentication System', () => {
+describe.skip("Unified Authentication System", () => {
   const mockSessionData = {
-    userId: 'user-123',
-    email: 'test@example.com',
-    role: 'student',
+    userId: "user-123",
+    email: "test@example.com",
+    role: "student",
     createdAt: new Date(),
-    expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000)
+    expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
   };
 
-  const validToken = 'a'.repeat(64); // Valid 64-char hex token
+  const validToken = "a".repeat(64); // Valid 64-char hex token
 
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  describe.skip('getUnifiedAuth', () => {
-    describe.skip('Route Handler Context', () => {
-      it('should extract auth from cookie in NextRequest', async () => {
-        const request = new NextRequest('http://localhost:3000/api/test', {
+  describe.skip("getUnifiedAuth", () => {
+    describe.skip("Route Handler Context", () => {
+      it("should extract auth from cookie in NextRequest", async () => {
+        const request = new NextRequest("http://localhost:3000/api/test", {
           headers: {
-            cookie: `sessionToken=${validToken}`
-          }
+            cookie: `sessionToken=${validToken}`,
+          },
         });
 
-        (SecureSession.getSession as jest.Mock).mockReturnValue(mockSessionData);
+        (SecureSession.getSession as jest.Mock).mockReturnValue(
+          mockSessionData,
+        );
 
         const auth = await getUnifiedAuth(request);
 
@@ -44,14 +46,14 @@ describe.skip('Unified Authentication System', () => {
           user: {
             id: mockSessionData.userId,
             email: mockSessionData.email,
-            role: mockSessionData.role
-          }
+            role: mockSessionData.role,
+          },
         });
         expect(SecureSession.getSession).toHaveBeenCalledWith(validToken);
       });
 
-      it('should return null when no cookie present', async () => {
-        const request = new NextRequest('http://localhost:3000/api/test');
+      it("should return null when no cookie present", async () => {
+        const request = new NextRequest("http://localhost:3000/api/test");
 
         const auth = await getUnifiedAuth(request);
 
@@ -59,11 +61,11 @@ describe.skip('Unified Authentication System', () => {
         expect(SecureSession.getSession).not.toHaveBeenCalled();
       });
 
-      it('should return null for invalid token format', async () => {
-        const request = new NextRequest('http://localhost:3000/api/test', {
+      it("should return null for invalid token format", async () => {
+        const request = new NextRequest("http://localhost:3000/api/test", {
           headers: {
-            cookie: 'sessionToken=invalid-token'
-          }
+            cookie: "sessionToken=invalid-token",
+          },
         });
 
         const auth = await getUnifiedAuth(request);
@@ -72,14 +74,16 @@ describe.skip('Unified Authentication System', () => {
         expect(SecureSession.getSession).not.toHaveBeenCalled();
       });
 
-      it('should check header token as fallback', async () => {
-        const request = new NextRequest('http://localhost:3000/api/test', {
+      it("should check header token as fallback", async () => {
+        const request = new NextRequest("http://localhost:3000/api/test", {
           headers: {
-            'x-session-token': validToken
-          }
+            "x-session-token": validToken,
+          },
         });
 
-        (SecureSession.getSession as jest.Mock).mockReturnValue(mockSessionData);
+        (SecureSession.getSession as jest.Mock).mockReturnValue(
+          mockSessionData,
+        );
 
         const auth = await getUnifiedAuth(request);
 
@@ -87,16 +91,16 @@ describe.skip('Unified Authentication System', () => {
           user: {
             id: mockSessionData.userId,
             email: mockSessionData.email,
-            role: mockSessionData.role
-          }
+            role: mockSessionData.role,
+          },
         });
       });
 
-      it('should handle expired sessions', async () => {
-        const request = new NextRequest('http://localhost:3000/api/test', {
+      it("should handle expired sessions", async () => {
+        const request = new NextRequest("http://localhost:3000/api/test", {
           headers: {
-            cookie: `sessionToken=${validToken}`
-          }
+            cookie: `sessionToken=${validToken}`,
+          },
         });
 
         (SecureSession.getSession as jest.Mock).mockReturnValue(null);
@@ -107,26 +111,26 @@ describe.skip('Unified Authentication System', () => {
       });
     });
 
-    describe.skip('Server Component Context', () => {
+    describe.skip("Server Component Context", () => {
       // Note: In real implementation, this would use Next.js cookies() API
       // For now, we test the same interface works
-      it('should work with no parameters (Server Component usage)', async () => {
+      it("should work with no parameters (Server Component usage)", async () => {
         // This would internally use cookies() from 'next/headers'
         // Mock implementation would be needed
         expect(true).toBe(true); // Placeholder
       });
     });
 
-    describe.skip('Error Handling', () => {
-      it('should handle SecureSession errors gracefully', async () => {
-        const request = new NextRequest('http://localhost:3000/api/test', {
+    describe.skip("Error Handling", () => {
+      it("should handle SecureSession errors gracefully", async () => {
+        const request = new NextRequest("http://localhost:3000/api/test", {
           headers: {
-            cookie: `sessionToken=${validToken}`
-          }
+            cookie: `sessionToken=${validToken}`,
+          },
         });
 
         (SecureSession.getSession as jest.Mock).mockImplementation(() => {
-          throw new Error('Session store error');
+          throw new Error("Session store error");
         });
 
         const auth = await getUnifiedAuth(request);
@@ -136,58 +140,62 @@ describe.skip('Unified Authentication System', () => {
     });
   });
 
-  describe.skip('Authentication Helpers', () => {
-    describe.skip('requireAuth', () => {
-      it('should throw error when not authenticated', async () => {
-        const request = new NextRequest('http://localhost:3000/api/test');
+  describe.skip("Authentication Helpers", () => {
+    describe.skip("requireAuth", () => {
+      it("should throw error when not authenticated", async () => {
+        const request = new NextRequest("http://localhost:3000/api/test");
 
         await expect(async () => {
           const auth = await getUnifiedAuth(request);
-          if (!auth) throw new Error('Authentication required');
-        }).rejects.toThrow('Authentication required');
+          if (!auth) throw new Error("Authentication required");
+        }).rejects.toThrow("Authentication required");
       });
 
-      it('should not throw when authenticated', async () => {
-        const request = new NextRequest('http://localhost:3000/api/test', {
+      it("should not throw when authenticated", async () => {
+        const request = new NextRequest("http://localhost:3000/api/test", {
           headers: {
-            cookie: `sessionToken=${validToken}`
-          }
+            cookie: `sessionToken=${validToken}`,
+          },
         });
 
-        (SecureSession.getSession as jest.Mock).mockReturnValue(mockSessionData);
+        (SecureSession.getSession as jest.Mock).mockReturnValue(
+          mockSessionData,
+        );
 
         const auth = await getUnifiedAuth(request);
         expect(auth).not.toBeNull();
       });
     });
 
-    describe.skip('hasRole', () => {
-      it('should check user role correctly', async () => {
-        const request = new NextRequest('http://localhost:3000/api/test', {
+    describe.skip("hasRole", () => {
+      it("should check user role correctly", async () => {
+        const request = new NextRequest("http://localhost:3000/api/test", {
           headers: {
-            cookie: `sessionToken=${validToken}`
-          }
+            cookie: `sessionToken=${validToken}`,
+          },
         });
 
-        (SecureSession.getSession as jest.Mock).mockReturnValue(mockSessionData);
+        (SecureSession.getSession as jest.Mock).mockReturnValue(
+          mockSessionData,
+        );
 
         const auth = await getUnifiedAuth(request);
-        expect(auth?.user.role).toBe('student');
+        expect(auth?.user.role).toBe("student");
       });
     });
   });
 
-  describe.skip('Integration Scenarios', () => {
-    it('should handle login -> authenticated request -> logout flow', async () => {
+  describe.skip("Integration Scenarios", () => {
+    it("should handle login -> authenticated request -> logout flow", async () => {
       // Login creates session
       const loginToken = validToken;
       (SecureSession.createSession as jest.Mock).mockReturnValue(loginToken);
 
       // Authenticated request
-      const request = new NextRequest('http://localhost:3000/api/test', {
+      const request = new NextRequest("http://localhost:3000/api/test", {
         headers: {
-          cookie: `sessionToken=${loginToken}`
-        }
+          cookie: `sessionToken=${loginToken}`,
+        },
       });
 
       (SecureSession.getSession as jest.Mock).mockReturnValue(mockSessionData);
@@ -205,11 +213,11 @@ describe.skip('Unified Authentication System', () => {
       expect(authAfterLogout).toBeNull();
     });
 
-    it('should work consistently across all three major modules', async () => {
-      const request = new NextRequest('http://localhost:3000/api/test', {
+    it("should work consistently across all three major modules", async () => {
+      const request = new NextRequest("http://localhost:3000/api/test", {
         headers: {
-          cookie: `sessionToken=${validToken}`
-        }
+          cookie: `sessionToken=${validToken}`,
+        },
       });
 
       (SecureSession.getSession as jest.Mock).mockReturnValue(mockSessionData);

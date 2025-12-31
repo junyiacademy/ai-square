@@ -1,17 +1,17 @@
-import { useState, useEffect, useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
-import '@/i18n'
+import { useState, useEffect, useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import "@/i18n";
 
 interface Language {
-  code: string
-  name: string
-  flag: string
+  code: string;
+  name: string;
+  flag: string;
 }
 
 const languages: Language[] = [
-  { code: 'zhTW', name: '繁體中文', flag: '' },
-  { code: 'en', name: 'English', flag: '' },
-  { code: 'zhCN', name: '简体中文', flag: '' },
+  { code: "zhTW", name: "繁體中文", flag: "" },
+  { code: "en", name: "English", flag: "" },
+  { code: "zhCN", name: "简体中文", flag: "" },
   // Temporarily disabled languages:
   // { code: 'pt', name: 'Português', flag: '' },
   // { code: 'ar', name: 'العربية', flag: '' },
@@ -24,48 +24,57 @@ const languages: Language[] = [
   // { code: 'de', name: 'Deutsch', flag: '' },
   // { code: 'ru', name: 'Русский', flag: '' },
   // { code: 'it', name: 'Italiano', flag: '' },
-]
+];
 
 interface LanguageSelectorProps {
-  className?: string
+  className?: string;
 }
 
-export function LanguageSelector({ className = '' }: LanguageSelectorProps) {
-  const { i18n } = useTranslation()
-  const supportedCodes = useMemo(() => languages.map((language) => language.code), [])
-  const fallbackLang = 'zhTW' // 預設使用繁體中文
+export function LanguageSelector({ className = "" }: LanguageSelectorProps) {
+  const { i18n } = useTranslation();
+  const supportedCodes = useMemo(
+    () => languages.map((language) => language.code),
+    [],
+  );
+  const fallbackLang = "zhTW"; // 預設使用繁體中文
   const [currentLang, setCurrentLang] = useState(
-    supportedCodes.includes(i18n.language) ? i18n.language : fallbackLang
-  )
+    supportedCodes.includes(i18n.language) ? i18n.language : fallbackLang,
+  );
 
   // 初始化時同步語言狀態
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const savedLang = localStorage.getItem('ai-square-language')
-      if (savedLang && supportedCodes.includes(savedLang) && savedLang !== i18n.language) {
-        i18n.changeLanguage(savedLang)
-        setCurrentLang(savedLang)
+    if (typeof window !== "undefined") {
+      const savedLang = localStorage.getItem("ai-square-language");
+      if (
+        savedLang &&
+        supportedCodes.includes(savedLang) &&
+        savedLang !== i18n.language
+      ) {
+        i18n.changeLanguage(savedLang);
+        setCurrentLang(savedLang);
       } else if (!supportedCodes.includes(i18n.language)) {
-        i18n.changeLanguage(fallbackLang)
-        setCurrentLang(fallbackLang)
+        i18n.changeLanguage(fallbackLang);
+        setCurrentLang(fallbackLang);
       }
     }
-  }, [fallbackLang, i18n, supportedCodes])
+  }, [fallbackLang, i18n, supportedCodes]);
 
   const handleLanguageChange = (lng: string) => {
-    if (!supportedCodes.includes(lng)) return
+    if (!supportedCodes.includes(lng)) return;
 
-    i18n.changeLanguage(lng)
-    setCurrentLang(lng)
+    i18n.changeLanguage(lng);
+    setCurrentLang(lng);
     // 儲存用戶語言偏好
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('ai-square-language', lng)
+    if (typeof window !== "undefined") {
+      localStorage.setItem("ai-square-language", lng);
     }
     // 觸發自定義事件通知其他組件語言已改變
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent('language-changed', { detail: { language: lng } }))
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(
+        new CustomEvent("language-changed", { detail: { language: lng } }),
+      );
     }
-  }
+  };
 
   return (
     <div className={`relative ${className}`}>
@@ -98,5 +107,5 @@ export function LanguageSelector({ className = '' }: LanguageSelectorProps) {
         </svg>
       </div>
     </div>
-  )
+  );
 }

@@ -1,172 +1,169 @@
-import { z } from 'zod';
-import {
-  KSACodesSchema,
-  type KSACodes
-} from '../schemas/ksa-codes.schema';
+import { z } from "zod";
+import { KSACodesSchema, type KSACodes } from "../schemas/ksa-codes.schema";
 
-describe('KSA Codes Schema Validation', () => {
-  describe('KSACodesSchema', () => {
-    it('應該驗證有效的 KSA codes 檔案結構', () => {
+describe("KSA Codes Schema Validation", () => {
+  describe("KSACodesSchema", () => {
+    it("應該驗證有效的 KSA codes 檔案結構", () => {
       const validKSAFile: KSACodes = {
         knowledge_codes: {
-          description: 'Knowledge codes description',
+          description: "Knowledge codes description",
           themes: {
-            'theme1': {
+            theme1: {
               codes: {
-                'K1.1': { summary: 'Knowledge summary' },
-                'K1.2': { summary: 'Another knowledge summary' }
-              }
-            }
-          }
+                "K1.1": { summary: "Knowledge summary" },
+                "K1.2": { summary: "Another knowledge summary" },
+              },
+            },
+          },
         },
         skill_codes: {
-          description: 'Skills codes description',
+          description: "Skills codes description",
           themes: {
-            'theme1': {
+            theme1: {
               codes: {
-                'S1.1': { summary: 'Skills summary' }
-              }
-            }
-          }
+                "S1.1": { summary: "Skills summary" },
+              },
+            },
+          },
         },
         attitude_codes: {
-          description: 'Attitudes codes description',
+          description: "Attitudes codes description",
           themes: {
-            'theme1': {
+            theme1: {
               codes: {
-                'A1.1': { summary: 'Attitudes summary' }
-              }
-            }
-          }
-        }
+                "A1.1": { summary: "Attitudes summary" },
+              },
+            },
+          },
+        },
       };
 
       const result = KSACodesSchema.safeParse(validKSAFile);
       expect(result.success).toBe(true);
     });
 
-    it.skip('應該驗證有效的 KSA codes 檔案結構 - old format', () => {
+    it.skip("應該驗證有效的 KSA codes 檔案結構 - old format", () => {
       const validKSAFile = {
         knowledge_codes: {
-          description: 'Knowledge codes description',
-          description_zhTW: '知識代碼描述',
-          description_es: 'Descripción de códigos de conocimiento',
-          description_ja: '知識コードの説明',
-          description_ko: '지식 코드 설명',
-          description_fr: 'Description des codes de connaissance',
-          description_de: 'Beschreibung der Wissenscodes',
-          description_ru: 'Описание кодов знаний',
-          description_it: 'Descrizione dei codici di conoscenza',
+          description: "Knowledge codes description",
+          description_zhTW: "知識代碼描述",
+          description_es: "Descripción de códigos de conocimiento",
+          description_ja: "知識コードの説明",
+          description_ko: "지식 코드 설명",
+          description_fr: "Description des codes de connaissance",
+          description_de: "Beschreibung der Wissenscodes",
+          description_ru: "Описание кодов знаний",
+          description_it: "Descrizione dei codici di conoscenza",
           themes: {
-            'Theme_1': {
+            Theme_1: {
               codes: {
-                'K1.1': {
-                  summary: 'Knowledge summary',
-                  summary_zhTW: '知識摘要',
-                  summary_es: 'Resumen de conocimiento',
-                  summary_ja: '知識の要約',
-                  summary_ko: '지식 요약',
-                  summary_fr: 'Résumé des connaissances',
-                  summary_de: 'Wissenszusammenfassung',
-                  summary_ru: 'Краткое изложение знаний',
-                  summary_it: 'Riassunto delle conoscenze'
+                "K1.1": {
+                  summary: "Knowledge summary",
+                  summary_zhTW: "知識摘要",
+                  summary_es: "Resumen de conocimiento",
+                  summary_ja: "知識の要約",
+                  summary_ko: "지식 요약",
+                  summary_fr: "Résumé des connaissances",
+                  summary_de: "Wissenszusammenfassung",
+                  summary_ru: "Краткое изложение знаний",
+                  summary_it: "Riassunto delle conoscenze",
                 },
-                'K1.2': {
-                  summary: 'Another knowledge summary',
-                  summary_zhTW: '另一個知識摘要',
-                  summary_es: 'Otro resumen de conocimiento',
-                  summary_ja: '別の知識の要約',
-                  summary_ko: '또 다른 지식 요약',
-                  summary_fr: 'Un autre résumé des connaissances',
-                  summary_de: 'Eine weitere Wissenszusammenfassung',
-                  summary_ru: 'Еще одно краткое изложение знаний',
-                  summary_it: 'Un altro riassunto delle conoscenze'
-                }
-              }
-            }
-          }
+                "K1.2": {
+                  summary: "Another knowledge summary",
+                  summary_zhTW: "另一個知識摘要",
+                  summary_es: "Otro resumen de conocimiento",
+                  summary_ja: "別の知識の要約",
+                  summary_ko: "또 다른 지식 요약",
+                  summary_fr: "Un autre résumé des connaissances",
+                  summary_de: "Eine weitere Wissenszusammenfassung",
+                  summary_ru: "Еще одно краткое изложение знаний",
+                  summary_it: "Un altro riassunto delle conoscenze",
+                },
+              },
+            },
+          },
         },
         skills_codes: {
-          description: 'Skills codes description',
-          description_zhTW: '技能代碼描述',
-          description_es: 'Descripción de códigos de habilidades',
-          description_ja: 'スキルコードの説明',
-          description_ko: '기술 코드 설명',
-          description_fr: 'Description des codes de compétences',
-          description_de: 'Beschreibung der Fertigkeitscodes',
-          description_ru: 'Описание кодов навыков',
-          description_it: 'Descrizione dei codici di competenze',
+          description: "Skills codes description",
+          description_zhTW: "技能代碼描述",
+          description_es: "Descripción de códigos de habilidades",
+          description_ja: "スキルコードの説明",
+          description_ko: "기술 코드 설명",
+          description_fr: "Description des codes de compétences",
+          description_de: "Beschreibung der Fertigkeitscodes",
+          description_ru: "Описание кодов навыков",
+          description_it: "Descrizione dei codici di competenze",
           themes: {
-            'Theme_1': {
+            Theme_1: {
               codes: {
-                'S1.1': {
-                  summary: 'Skill summary',
-                  summary_zhTW: '技能摘要',
-                  summary_es: 'Resumen de habilidad',
-                  summary_ja: 'スキルの要約',
-                  summary_ko: '기술 요약',
-                  summary_fr: 'Résumé des compétences',
-                  summary_de: 'Fertigkeitszusammenfassung',
-                  summary_ru: 'Краткое изложение навыков',
-                  summary_it: 'Riassunto delle competenze'
-                }
-              }
-            }
-          }
+                "S1.1": {
+                  summary: "Skill summary",
+                  summary_zhTW: "技能摘要",
+                  summary_es: "Resumen de habilidad",
+                  summary_ja: "スキルの要約",
+                  summary_ko: "기술 요약",
+                  summary_fr: "Résumé des compétences",
+                  summary_de: "Fertigkeitszusammenfassung",
+                  summary_ru: "Краткое изложение навыков",
+                  summary_it: "Riassunto delle competenze",
+                },
+              },
+            },
+          },
         },
         attitudes_codes: {
-          description: 'Attitudes codes description',
-          description_zhTW: '態度代碼描述',
-          description_es: 'Descripción de códigos de actitudes',
-          description_ja: '態度コードの説明',
-          description_ko: '태도 코드 설명',
-          description_fr: 'Description des codes d\'attitudes',
-          description_de: 'Beschreibung der Einstellungscodes',
-          description_ru: 'Описание кодов отношений',
-          description_it: 'Descrizione dei codici di atteggiamenti',
+          description: "Attitudes codes description",
+          description_zhTW: "態度代碼描述",
+          description_es: "Descripción de códigos de actitudes",
+          description_ja: "態度コードの説明",
+          description_ko: "태도 코드 설명",
+          description_fr: "Description des codes d'attitudes",
+          description_de: "Beschreibung der Einstellungscodes",
+          description_ru: "Описание кодов отношений",
+          description_it: "Descrizione dei codici di atteggiamenti",
           themes: {
-            'Theme_1': {
+            Theme_1: {
               codes: {
-                'A1.1': {
-                  summary: 'Attitude summary',
-                  summary_zhTW: '態度摘要',
-                  summary_es: 'Resumen de actitud',
-                  summary_ja: '態度の要約',
-                  summary_ko: '태도 요약',
-                  summary_fr: 'Résumé des attitudes',
-                  summary_de: 'Einstellungszusammenfassung',
-                  summary_ru: 'Краткое изложение отношений',
-                  summary_it: 'Riassunto degli atteggiamenti'
-                }
-              }
-            }
-          }
-        }
+                "A1.1": {
+                  summary: "Attitude summary",
+                  summary_zhTW: "態度摘要",
+                  summary_es: "Resumen de actitud",
+                  summary_ja: "態度の要約",
+                  summary_ko: "태도 요약",
+                  summary_fr: "Résumé des attitudes",
+                  summary_de: "Einstellungszusammenfassung",
+                  summary_ru: "Краткое изложение отношений",
+                  summary_it: "Riassunto degli atteggiamenti",
+                },
+              },
+            },
+          },
+        },
       };
 
       const result = KSACodesSchema.safeParse(validKSAFile);
       expect(result.success).toBe(true);
     });
 
-    it('應該拒絕缺少必要欄位的檔案', () => {
+    it("應該拒絕缺少必要欄位的檔案", () => {
       const invalidFile = {
         knowledge_codes: {
-          description: 'Knowledge codes description',
+          description: "Knowledge codes description",
           // Missing other language descriptions
-          themes: {}
+          themes: {},
         },
         skills_codes: {
-          description: 'Skills codes description',
-          description_zhTW: '技能代碼描述',
-          description_es: 'Descripción',
-          description_ja: '説明',
-          description_ko: '설명',
-          description_fr: 'Description',
-          description_de: 'Beschreibung',
-          description_ru: 'Описание',
-          description_it: 'Descrizione',
-          themes: {}
-        }
+          description: "Skills codes description",
+          description_zhTW: "技能代碼描述",
+          description_es: "Descripción",
+          description_ja: "説明",
+          description_ko: "설명",
+          description_fr: "Description",
+          description_de: "Beschreibung",
+          description_ru: "Описание",
+          description_it: "Descrizione",
+          themes: {},
+        },
         // Missing attitudes_codes
       };
 
@@ -174,224 +171,225 @@ describe('KSA Codes Schema Validation', () => {
       expect(result.success).toBe(false);
     });
 
-    it('應該驗證 KSA code ID 格式', () => {
+    it("應該驗證 KSA code ID 格式", () => {
       const fileWithInvalidIds = {
         knowledge_codes: {
-          description: 'Knowledge codes description',
-          description_zhTW: '知識代碼描述',
-          description_es: 'Descripción',
-          description_ja: '説明',
-          description_ko: '설명',
-          description_fr: 'Description',
-          description_de: 'Beschreibung',
-          description_ru: 'Описание',
-          description_it: 'Descrizione',
+          description: "Knowledge codes description",
+          description_zhTW: "知識代碼描述",
+          description_es: "Descripción",
+          description_ja: "説明",
+          description_ko: "설명",
+          description_fr: "Description",
+          description_de: "Beschreibung",
+          description_ru: "Описание",
+          description_it: "Descrizione",
           themes: {
-            'Theme_1': {
+            Theme_1: {
               codes: {
-                'INVALID_ID': { // Should be K#.#
-                  summary: 'Summary',
-                  summary_zhTW: '摘要',
-                  summary_es: 'Resumen',
-                  summary_ja: '要約',
-                  summary_ko: '요약',
-                  summary_fr: 'Résumé',
-                  summary_de: 'Zusammenfassung',
-                  summary_ru: 'Резюме',
-                  summary_it: 'Riassunto'
-                }
-              }
-            }
-          }
+                INVALID_ID: {
+                  // Should be K#.#
+                  summary: "Summary",
+                  summary_zhTW: "摘要",
+                  summary_es: "Resumen",
+                  summary_ja: "要約",
+                  summary_ko: "요약",
+                  summary_fr: "Résumé",
+                  summary_de: "Zusammenfassung",
+                  summary_ru: "Резюме",
+                  summary_it: "Riassunto",
+                },
+              },
+            },
+          },
         },
         skills_codes: {
-          description: 'Skills codes description',
-          description_zhTW: '技能代碼描述',
-          description_es: 'Descripción',
-          description_ja: '説明',
-          description_ko: '설명',
-          description_fr: 'Description',
-          description_de: 'Beschreibung',
-          description_ru: 'Описание',
-          description_it: 'Descrizione',
-          themes: {}
+          description: "Skills codes description",
+          description_zhTW: "技能代碼描述",
+          description_es: "Descripción",
+          description_ja: "説明",
+          description_ko: "설명",
+          description_fr: "Description",
+          description_de: "Beschreibung",
+          description_ru: "Описание",
+          description_it: "Descrizione",
+          themes: {},
         },
         attitudes_codes: {
-          description: 'Attitudes codes description',
-          description_zhTW: '態度代碼描述',
-          description_es: 'Descripción',
-          description_ja: '説明',
-          description_ko: '설명',
-          description_fr: 'Description',
-          description_de: 'Beschreibung',
-          description_ru: 'Описание',
-          description_it: 'Descrizione',
-          themes: {}
-        }
+          description: "Attitudes codes description",
+          description_zhTW: "態度代碼描述",
+          description_es: "Descripción",
+          description_ja: "説明",
+          description_ko: "설명",
+          description_fr: "Description",
+          description_de: "Beschreibung",
+          description_ru: "Описание",
+          description_it: "Descrizione",
+          themes: {},
+        },
       };
 
       const result = KSACodesSchema.safeParse(fileWithInvalidIds);
       expect(result.success).toBe(false);
     });
 
-    it('應該允許多個主題和多個代碼', () => {
+    it("應該允許多個主題和多個代碼", () => {
       const fileWithMultipleThemes = {
         knowledge_codes: {
-          description: 'Knowledge codes description',
+          description: "Knowledge codes description",
           themes: {
-            'theme1': {
+            theme1: {
               codes: {
-                'K1.1': { summary: 'Knowledge 1.1' },
-                'K1.2': { summary: 'Knowledge 1.2' }
-              }
+                "K1.1": { summary: "Knowledge 1.1" },
+                "K1.2": { summary: "Knowledge 1.2" },
+              },
             },
-            'theme2': {
+            theme2: {
               codes: {
-                'K2.1': { summary: 'Knowledge 2.1' }
-              }
-            }
-          }
+                "K2.1": { summary: "Knowledge 2.1" },
+              },
+            },
+          },
         },
         skill_codes: {
-          description: 'Skills codes description',
+          description: "Skills codes description",
           themes: {
-            'theme1': {
+            theme1: {
               codes: {
-                'S1.1': { summary: 'Skill 1.1' },
-                'S1.2': { summary: 'Skill 1.2' }
-              }
-            }
-          }
+                "S1.1": { summary: "Skill 1.1" },
+                "S1.2": { summary: "Skill 1.2" },
+              },
+            },
+          },
         },
         attitude_codes: {
-          description: 'Attitudes codes description',
+          description: "Attitudes codes description",
           themes: {
-            'theme1': {
+            theme1: {
               codes: {
-                'A1.1': { summary: 'Attitude 1.1' },
-                'A1.2': { summary: 'Attitude 1.2' }
-              }
-            }
-          }
-        }
+                "A1.1": { summary: "Attitude 1.1" },
+                "A1.2": { summary: "Attitude 1.2" },
+              },
+            },
+          },
+        },
       };
 
       const result = KSACodesSchema.safeParse(fileWithMultipleThemes);
       expect(result.success).toBe(true);
     });
 
-    it.skip('應該允許多個主題和多個代碼 - old format', () => {
+    it.skip("應該允許多個主題和多個代碼 - old format", () => {
       const fileWithMultipleThemes = {
         knowledge_codes: {
-          description: 'Knowledge codes description',
-          description_zhTW: '知識代碼描述',
-          description_es: 'Descripción',
-          description_ja: '説明',
-          description_ko: '설명',
-          description_fr: 'Description',
-          description_de: 'Beschreibung',
-          description_ru: 'Описание',
-          description_it: 'Descrizione',
+          description: "Knowledge codes description",
+          description_zhTW: "知識代碼描述",
+          description_es: "Descripción",
+          description_ja: "説明",
+          description_ko: "설명",
+          description_fr: "Description",
+          description_de: "Beschreibung",
+          description_ru: "Описание",
+          description_it: "Descrizione",
           themes: {
-            'Theme_1': {
+            Theme_1: {
               codes: {
-                'K1.1': {
-                  summary: 'Summary 1.1',
-                  summary_zhTW: '摘要 1.1',
-                  summary_es: 'Resumen 1.1',
-                  summary_ja: '要約 1.1',
-                  summary_ko: '요약 1.1',
-                  summary_fr: 'Résumé 1.1',
-                  summary_de: 'Zusammenfassung 1.1',
-                  summary_ru: 'Резюме 1.1',
-                  summary_it: 'Riassunto 1.1'
+                "K1.1": {
+                  summary: "Summary 1.1",
+                  summary_zhTW: "摘要 1.1",
+                  summary_es: "Resumen 1.1",
+                  summary_ja: "要約 1.1",
+                  summary_ko: "요약 1.1",
+                  summary_fr: "Résumé 1.1",
+                  summary_de: "Zusammenfassung 1.1",
+                  summary_ru: "Резюме 1.1",
+                  summary_it: "Riassunto 1.1",
                 },
-                'K1.2': {
-                  summary: 'Summary 1.2',
-                  summary_zhTW: '摘要 1.2',
-                  summary_es: 'Resumen 1.2',
-                  summary_ja: '要約 1.2',
-                  summary_ko: '요약 1.2',
-                  summary_fr: 'Résumé 1.2',
-                  summary_de: 'Zusammenfassung 1.2',
-                  summary_ru: 'Резюме 1.2',
-                  summary_it: 'Riassunto 1.2'
-                }
-              }
+                "K1.2": {
+                  summary: "Summary 1.2",
+                  summary_zhTW: "摘要 1.2",
+                  summary_es: "Resumen 1.2",
+                  summary_ja: "要約 1.2",
+                  summary_ko: "요약 1.2",
+                  summary_fr: "Résumé 1.2",
+                  summary_de: "Zusammenfassung 1.2",
+                  summary_ru: "Резюме 1.2",
+                  summary_it: "Riassunto 1.2",
+                },
+              },
             },
-            'Theme_2': {
+            Theme_2: {
               codes: {
-                'K2.1': {
-                  summary: 'Summary 2.1',
-                  summary_zhTW: '摘要 2.1',
-                  summary_es: 'Resumen 2.1',
-                  summary_ja: '要約 2.1',
-                  summary_ko: '요약 2.1',
-                  summary_fr: 'Résumé 2.1',
-                  summary_de: 'Zusammenfassung 2.1',
-                  summary_ru: 'Резюме 2.1',
-                  summary_it: 'Riassunto 2.1'
-                }
-              }
-            }
-          }
+                "K2.1": {
+                  summary: "Summary 2.1",
+                  summary_zhTW: "摘要 2.1",
+                  summary_es: "Resumen 2.1",
+                  summary_ja: "要約 2.1",
+                  summary_ko: "요약 2.1",
+                  summary_fr: "Résumé 2.1",
+                  summary_de: "Zusammenfassung 2.1",
+                  summary_ru: "Резюме 2.1",
+                  summary_it: "Riassunto 2.1",
+                },
+              },
+            },
+          },
         },
         skills_codes: {
-          description: 'Skills codes description',
-          description_zhTW: '技能代碼描述',
-          description_es: 'Descripción',
-          description_ja: '説明',
-          description_ko: '설명',
-          description_fr: 'Description',
-          description_de: 'Beschreibung',
-          description_ru: 'Описание',
-          description_it: 'Descrizione',
+          description: "Skills codes description",
+          description_zhTW: "技能代碼描述",
+          description_es: "Descripción",
+          description_ja: "説明",
+          description_ko: "설명",
+          description_fr: "Description",
+          description_de: "Beschreibung",
+          description_ru: "Описание",
+          description_it: "Descrizione",
           themes: {
-            'Theme_1': {
+            Theme_1: {
               codes: {
-                'S1.1': {
-                  summary: 'Skill 1.1',
-                  summary_zhTW: '技能 1.1',
-                  summary_es: 'Habilidad 1.1',
-                  summary_ja: 'スキル 1.1',
-                  summary_ko: '기술 1.1',
-                  summary_fr: 'Compétence 1.1',
-                  summary_de: 'Fertigkeit 1.1',
-                  summary_ru: 'Навык 1.1',
-                  summary_it: 'Competenza 1.1'
-                }
-              }
-            }
-          }
+                "S1.1": {
+                  summary: "Skill 1.1",
+                  summary_zhTW: "技能 1.1",
+                  summary_es: "Habilidad 1.1",
+                  summary_ja: "スキル 1.1",
+                  summary_ko: "기술 1.1",
+                  summary_fr: "Compétence 1.1",
+                  summary_de: "Fertigkeit 1.1",
+                  summary_ru: "Навык 1.1",
+                  summary_it: "Competenza 1.1",
+                },
+              },
+            },
+          },
         },
         attitudes_codes: {
-          description: 'Attitudes codes description',
-          description_zhTW: '態度代碼描述',
-          description_es: 'Descripción',
-          description_ja: '説明',
-          description_ko: '설명',
-          description_fr: 'Description',
-          description_de: 'Beschreibung',
-          description_ru: 'Описание',
-          description_it: 'Descrizione',
+          description: "Attitudes codes description",
+          description_zhTW: "態度代碼描述",
+          description_es: "Descripción",
+          description_ja: "説明",
+          description_ko: "설명",
+          description_fr: "Description",
+          description_de: "Beschreibung",
+          description_ru: "Описание",
+          description_it: "Descrizione",
           themes: {
-            'Theme_1': {
+            Theme_1: {
               codes: {
-                'A1.1': {
-                  summary: 'Attitude 1.1',
-                  summary_zhTW: '態度 1.1',
-                  summary_es: 'Actitud 1.1',
-                  summary_ja: '態度 1.1',
-                  summary_ko: '태도 1.1',
-                  summary_fr: 'Attitude 1.1',
-                  summary_de: 'Einstellung 1.1',
-                  summary_ru: 'Отношение 1.1',
-                  summary_it: 'Atteggiamento 1.1'
-                }
-              }
-            }
-          }
-        }
+                "A1.1": {
+                  summary: "Attitude 1.1",
+                  summary_zhTW: "態度 1.1",
+                  summary_es: "Actitud 1.1",
+                  summary_ja: "態度 1.1",
+                  summary_ko: "태도 1.1",
+                  summary_fr: "Attitude 1.1",
+                  summary_de: "Einstellung 1.1",
+                  summary_ru: "Отношение 1.1",
+                  summary_it: "Atteggiamento 1.1",
+                },
+              },
+            },
+          },
+        },
       };
 
       const result = KSACodesSchema.safeParse(fileWithMultipleThemes);
@@ -399,147 +397,147 @@ describe('KSA Codes Schema Validation', () => {
     });
   });
 
-  describe('extractKSAIds', () => {
+  describe("extractKSAIds", () => {
     const createValidKSAFile = (): any => ({
       knowledge_codes: {
-        description: 'Knowledge codes',
-        description_zhTW: '知識代碼',
-        description_es: 'Códigos de conocimiento',
-        description_ja: '知識コード',
-        description_ko: '지식 코드',
-        description_fr: 'Codes de connaissance',
-        description_de: 'Wissenscodes',
-        description_ru: 'Коды знаний',
-        description_it: 'Codici di conoscenza',
+        description: "Knowledge codes",
+        description_zhTW: "知識代碼",
+        description_es: "Códigos de conocimiento",
+        description_ja: "知識コード",
+        description_ko: "지식 코드",
+        description_fr: "Codes de connaissance",
+        description_de: "Wissenscodes",
+        description_ru: "Коды знаний",
+        description_it: "Codici di conoscenza",
         themes: {
-          'Theme_1': {
+          Theme_1: {
             codes: {
-              'K1.1': {
-                summary: 'Knowledge 1.1',
-                summary_zhTW: '知識 1.1',
-                summary_es: 'Conocimiento 1.1',
-                summary_ja: '知識 1.1',
-                summary_ko: '지식 1.1',
-                summary_fr: 'Connaissance 1.1',
-                summary_de: 'Wissen 1.1',
-                summary_ru: 'Знание 1.1',
-                summary_it: 'Conoscenza 1.1'
+              "K1.1": {
+                summary: "Knowledge 1.1",
+                summary_zhTW: "知識 1.1",
+                summary_es: "Conocimiento 1.1",
+                summary_ja: "知識 1.1",
+                summary_ko: "지식 1.1",
+                summary_fr: "Connaissance 1.1",
+                summary_de: "Wissen 1.1",
+                summary_ru: "Знание 1.1",
+                summary_it: "Conoscenza 1.1",
               },
-              'K1.2': {
-                summary: 'Knowledge 1.2',
-                summary_zhTW: '知識 1.2',
-                summary_es: 'Conocimiento 1.2',
-                summary_ja: '知識 1.2',
-                summary_ko: '지식 1.2',
-                summary_fr: 'Connaissance 1.2',
-                summary_de: 'Wissen 1.2',
-                summary_ru: 'Знание 1.2',
-                summary_it: 'Conoscenza 1.2'
-              }
-            }
+              "K1.2": {
+                summary: "Knowledge 1.2",
+                summary_zhTW: "知識 1.2",
+                summary_es: "Conocimiento 1.2",
+                summary_ja: "知識 1.2",
+                summary_ko: "지식 1.2",
+                summary_fr: "Connaissance 1.2",
+                summary_de: "Wissen 1.2",
+                summary_ru: "Знание 1.2",
+                summary_it: "Conoscenza 1.2",
+              },
+            },
           },
-          'Theme_2': {
+          Theme_2: {
             codes: {
-              'K2.1': {
-                summary: 'Knowledge 2.1',
-                summary_zhTW: '知識 2.1',
-                summary_es: 'Conocimiento 2.1',
-                summary_ja: '知識 2.1',
-                summary_ko: '지식 2.1',
-                summary_fr: 'Connaissance 2.1',
-                summary_de: 'Wissen 2.1',
-                summary_ru: 'Знание 2.1',
-                summary_it: 'Conoscenza 2.1'
-              }
-            }
-          }
-        }
+              "K2.1": {
+                summary: "Knowledge 2.1",
+                summary_zhTW: "知識 2.1",
+                summary_es: "Conocimiento 2.1",
+                summary_ja: "知識 2.1",
+                summary_ko: "지식 2.1",
+                summary_fr: "Connaissance 2.1",
+                summary_de: "Wissen 2.1",
+                summary_ru: "Знание 2.1",
+                summary_it: "Conoscenza 2.1",
+              },
+            },
+          },
+        },
       },
       skills_codes: {
-        description: 'Skills codes',
-        description_zhTW: '技能代碼',
-        description_es: 'Códigos de habilidades',
-        description_ja: 'スキルコード',
-        description_ko: '기술 코드',
-        description_fr: 'Codes de compétences',
-        description_de: 'Fertigkeitscodes',
-        description_ru: 'Коды навыков',
-        description_it: 'Codici di competenze',
+        description: "Skills codes",
+        description_zhTW: "技能代碼",
+        description_es: "Códigos de habilidades",
+        description_ja: "スキルコード",
+        description_ko: "기술 코드",
+        description_fr: "Codes de compétences",
+        description_de: "Fertigkeitscodes",
+        description_ru: "Коды навыков",
+        description_it: "Codici di competenze",
         themes: {
-          'Theme_1': {
+          Theme_1: {
             codes: {
-              'S1.1': {
-                summary: 'Skill 1.1',
-                summary_zhTW: '技能 1.1',
-                summary_es: 'Habilidad 1.1',
-                summary_ja: 'スキル 1.1',
-                summary_ko: '기술 1.1',
-                summary_fr: 'Compétence 1.1',
-                summary_de: 'Fertigkeit 1.1',
-                summary_ru: 'Навык 1.1',
-                summary_it: 'Competenza 1.1'
+              "S1.1": {
+                summary: "Skill 1.1",
+                summary_zhTW: "技能 1.1",
+                summary_es: "Habilidad 1.1",
+                summary_ja: "スキル 1.1",
+                summary_ko: "기술 1.1",
+                summary_fr: "Compétence 1.1",
+                summary_de: "Fertigkeit 1.1",
+                summary_ru: "Навык 1.1",
+                summary_it: "Competenza 1.1",
               },
-              'S1.2': {
-                summary: 'Skill 1.2',
-                summary_zhTW: '技能 1.2',
-                summary_es: 'Habilidad 1.2',
-                summary_ja: 'スキル 1.2',
-                summary_ko: '기술 1.2',
-                summary_fr: 'Compétence 1.2',
-                summary_de: 'Fertigkeit 1.2',
-                summary_ru: 'Навык 1.2',
-                summary_it: 'Competenza 1.2'
-              }
-            }
-          }
-        }
+              "S1.2": {
+                summary: "Skill 1.2",
+                summary_zhTW: "技能 1.2",
+                summary_es: "Habilidad 1.2",
+                summary_ja: "スキル 1.2",
+                summary_ko: "기술 1.2",
+                summary_fr: "Compétence 1.2",
+                summary_de: "Fertigkeit 1.2",
+                summary_ru: "Навык 1.2",
+                summary_it: "Competenza 1.2",
+              },
+            },
+          },
+        },
       },
       attitudes_codes: {
-        description: 'Attitudes codes',
-        description_zhTW: '態度代碼',
-        description_es: 'Códigos de actitudes',
-        description_ja: '態度コード',
-        description_ko: '태도 코드',
-        description_fr: 'Codes d\'attitudes',
-        description_de: 'Einstellungscodes',
-        description_ru: 'Коды отношений',
-        description_it: 'Codici di atteggiamenti',
+        description: "Attitudes codes",
+        description_zhTW: "態度代碼",
+        description_es: "Códigos de actitudes",
+        description_ja: "態度コード",
+        description_ko: "태도 코드",
+        description_fr: "Codes d'attitudes",
+        description_de: "Einstellungscodes",
+        description_ru: "Коды отношений",
+        description_it: "Codici di atteggiamenti",
         themes: {
-          'Theme_1': {
+          Theme_1: {
             codes: {
-              'A1.1': {
-                summary: 'Attitude 1.1',
-                summary_zhTW: '態度 1.1',
-                summary_es: 'Actitud 1.1',
-                summary_ja: '態度 1.1',
-                summary_ko: '태도 1.1',
-                summary_fr: 'Attitude 1.1',
-                summary_de: 'Einstellung 1.1',
-                summary_ru: 'Отношение 1.1',
-                summary_it: 'Atteggiamento 1.1'
-              }
-            }
+              "A1.1": {
+                summary: "Attitude 1.1",
+                summary_zhTW: "態度 1.1",
+                summary_es: "Actitud 1.1",
+                summary_ja: "態度 1.1",
+                summary_ko: "태도 1.1",
+                summary_fr: "Attitude 1.1",
+                summary_de: "Einstellung 1.1",
+                summary_ru: "Отношение 1.1",
+                summary_it: "Atteggiamento 1.1",
+              },
+            },
           },
-          'Theme_2': {
+          Theme_2: {
             codes: {
-              'A2.1': {
-                summary: 'Attitude 2.1',
-                summary_zhTW: '態度 2.1',
-                summary_es: 'Actitud 2.1',
-                summary_ja: '態度 2.1',
-                summary_ko: '태도 2.1',
-                summary_fr: 'Attitude 2.1',
-                summary_de: 'Einstellung 2.1',
-                summary_ru: 'Отношение 2.1',
-                summary_it: 'Atteggiamento 2.1'
-              }
-            }
-          }
-        }
-      }
+              "A2.1": {
+                summary: "Attitude 2.1",
+                summary_zhTW: "態度 2.1",
+                summary_es: "Actitud 2.1",
+                summary_ja: "態度 2.1",
+                summary_ko: "태도 2.1",
+                summary_fr: "Attitude 2.1",
+                summary_de: "Einstellung 2.1",
+                summary_ru: "Отношение 2.1",
+                summary_it: "Atteggiamento 2.1",
+              },
+            },
+          },
+        },
+      },
     });
 
-    it.skip('應該正確提取所有 KSA IDs', () => {
+    it.skip("應該正確提取所有 KSA IDs", () => {
       const ksaFile = createValidKSAFile();
       // const result = extractKSAIds(ksaFile);
 
@@ -548,20 +546,20 @@ describe('KSA Codes Schema Validation', () => {
       // expect(result.attitudeIds).toEqual(['A1.1', 'A2.1']);
     });
 
-    it('應該處理空的主題', () => {
+    it("應該處理空的主題", () => {
       const ksaFile: KSACodes = {
         knowledge_codes: {
-          description: 'Knowledge codes description',
-          themes: {}
+          description: "Knowledge codes description",
+          themes: {},
         },
         skill_codes: {
-          description: 'Skills codes description',
-          themes: {}
+          description: "Skills codes description",
+          themes: {},
         },
         attitude_codes: {
-          description: 'Attitudes codes description',
-          themes: {}
-        }
+          description: "Attitudes codes description",
+          themes: {},
+        },
       };
 
       expect(() => KSACodesSchema.parse(ksaFile)).not.toThrow();

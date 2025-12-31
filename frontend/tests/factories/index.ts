@@ -3,52 +3,52 @@
  * 快速建立測試資料，支援 N+1 查詢測試
  */
 
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 // ============ User Factory ============
 export const createUser = (overrides: Partial<any> = {}) => ({
   id: overrides.id ?? uuidv4(),
   email: overrides.email ?? `test-${Date.now()}@example.com`,
-  name: overrides.name ?? 'Test User',
+  name: overrides.name ?? "Test User",
   avatar: overrides.avatar ?? null,
-  provider: overrides.provider ?? 'google',
+  provider: overrides.provider ?? "google",
   providerId: overrides.providerId ?? `google-${Date.now()}`,
-  role: overrides.role ?? 'STUDENT',
-  status: overrides.status ?? 'ACTIVE',
+  role: overrides.role ?? "STUDENT",
+  status: overrides.status ?? "ACTIVE",
   createdAt: overrides.createdAt ?? new Date(),
   updatedAt: overrides.updatedAt ?? new Date(),
   lastLoginAt: overrides.lastLoginAt ?? new Date(),
-  ...overrides
+  ...overrides,
 });
 
 // ============ Scenario Factory ============
 export const createScenario = (overrides: Partial<any> = {}) => ({
   id: overrides.id ?? uuidv4(),
-  title: overrides.title ?? { en: 'Test Scenario', zh: '測試場景' },
-  description: overrides.description ?? { en: 'Test scenario description' },
-  category: overrides.category ?? 'EDUCATION',
-  tags: overrides.tags ?? ['test', 'factory'],
-  difficulty: overrides.difficulty ?? 'MEDIUM',
+  title: overrides.title ?? { en: "Test Scenario", zh: "測試場景" },
+  description: overrides.description ?? { en: "Test scenario description" },
+  category: overrides.category ?? "EDUCATION",
+  tags: overrides.tags ?? ["test", "factory"],
+  difficulty: overrides.difficulty ?? "MEDIUM",
   estimatedMinutes: overrides.estimatedMinutes ?? 30,
-  objectives: overrides.objectives ?? { en: ['Learn testing'] },
+  objectives: overrides.objectives ?? { en: ["Learn testing"] },
   prerequisites: overrides.prerequisites ?? { en: [] },
   isPublished: overrides.isPublished ?? true,
   sourceUrl: overrides.sourceUrl ?? null,
-  contentType: overrides.contentType ?? 'SCENARIO',
+  contentType: overrides.contentType ?? "SCENARIO",
   userId: overrides.userId ?? uuidv4(),
   createdAt: overrides.createdAt ?? new Date(),
   updatedAt: overrides.updatedAt ?? new Date(),
-  ...overrides
+  ...overrides,
 });
 
 // ============ Program Factory ============
 export const createProgram = (overrides: Partial<any> = {}) => ({
   id: overrides.id ?? uuidv4(),
-  title: overrides.title ?? { en: 'Test Program', zh: '測試程式' },
-  description: overrides.description ?? { en: 'Test program description' },
+  title: overrides.title ?? { en: "Test Program", zh: "測試程式" },
+  description: overrides.description ?? { en: "Test program description" },
   metadata: overrides.metadata ?? {},
-  status: overrides.status ?? 'NOT_STARTED',
-  learningMode: overrides.learningMode ?? 'ASSESSMENT',
+  status: overrides.status ?? "NOT_STARTED",
+  learningMode: overrides.learningMode ?? "ASSESSMENT",
   startedAt: overrides.startedAt ?? null,
   completedAt: overrides.completedAt ?? null,
   timeSpentMinutes: overrides.timeSpentMinutes ?? 0,
@@ -57,29 +57,29 @@ export const createProgram = (overrides: Partial<any> = {}) => ({
   scenarioId: overrides.scenarioId ?? uuidv4(),
   createdAt: overrides.createdAt ?? new Date(),
   updatedAt: overrides.updatedAt ?? new Date(),
-  ...overrides
+  ...overrides,
 });
 
 // ============ Task Factory ============
 export const createTask = (overrides: Partial<any> = {}) => ({
   id: overrides.id ?? uuidv4(),
-  title: overrides.title ?? { en: 'Test Task' },
-  description: overrides.description ?? { en: 'Complete this test task' },
-  type: overrides.type ?? 'QUIZ',
+  title: overrides.title ?? { en: "Test Task" },
+  description: overrides.description ?? { en: "Complete this test task" },
+  type: overrides.type ?? "QUIZ",
   content: overrides.content ?? {
-    question: { en: 'What is 2+2?' },
+    question: { en: "What is 2+2?" },
     options: [
-      { id: 'a', text: { en: '3' } },
-      { id: 'b', text: { en: '4' } },
-      { id: 'c', text: { en: '5' } }
+      { id: "a", text: { en: "3" } },
+      { id: "b", text: { en: "4" } },
+      { id: "c", text: { en: "5" } },
     ],
-    correctAnswer: 'b'
+    correctAnswer: "b",
   },
   order: overrides.order ?? 1,
   points: overrides.points ?? 10,
   requiredForCompletion: overrides.requiredForCompletion ?? true,
   metadata: overrides.metadata ?? {},
-  status: overrides.status ?? 'NOT_STARTED',
+  status: overrides.status ?? "NOT_STARTED",
   startedAt: overrides.startedAt ?? null,
   completedAt: overrides.completedAt ?? null,
   timeSpentSeconds: overrides.timeSpentSeconds ?? 0,
@@ -89,7 +89,7 @@ export const createTask = (overrides: Partial<any> = {}) => ({
   programId: overrides.programId ?? uuidv4(),
   createdAt: overrides.createdAt ?? new Date(),
   updatedAt: overrides.updatedAt ?? new Date(),
-  ...overrides
+  ...overrides,
 });
 
 // ============ Evaluation Factory ============
@@ -98,16 +98,16 @@ export const createEvaluation = (overrides: Partial<any> = {}) => ({
   score: overrides.score ?? 85,
   maxScore: overrides.maxScore ?? 100,
   percentage: overrides.percentage ?? 85,
-  feedback: overrides.feedback ?? { en: 'Good job!' },
-  strengths: overrides.strengths ?? { en: ['Problem solving'] },
-  improvements: overrides.improvements ?? { en: ['Time management'] },
+  feedback: overrides.feedback ?? { en: "Good job!" },
+  strengths: overrides.strengths ?? { en: ["Problem solving"] },
+  improvements: overrides.improvements ?? { en: ["Time management"] },
   metadata: overrides.metadata ?? {},
-  evaluationType: overrides.evaluationType ?? 'assessment_complete',
+  evaluationType: overrides.evaluationType ?? "assessment_complete",
   taskId: overrides.taskId ?? uuidv4(),
   programId: overrides.programId ?? uuidv4(),
   userId: overrides.userId ?? uuidv4(),
   createdAt: overrides.createdAt ?? new Date(),
-  ...overrides
+  ...overrides,
 });
 
 // ============ Batch Creation Helpers ============
@@ -120,8 +120,8 @@ export const createUsers = (count: number, overrides: Partial<any> = {}) => {
     createUser({
       email: `user-${i}@example.com`,
       name: `User ${i}`,
-      ...overrides
-    })
+      ...overrides,
+    }),
   );
 };
 
@@ -132,12 +132,12 @@ export const createProgramWithRelations = (overrides: Partial<any> = {}) => {
   const user = createUser(overrides.user || {});
   const scenario = createScenario({
     userId: user.id,
-    ...(overrides.scenario || {})
+    ...(overrides.scenario || {}),
   });
   const program = createProgram({
     userId: user.id,
     scenarioId: scenario.id,
-    ...overrides.program
+    ...overrides.program,
   });
 
   return { user, scenario, program };
@@ -151,23 +151,23 @@ export const createLearningPath = (taskCount = 3) => {
   const scenario = createScenario({ userId: user.id });
   const program = createProgram({
     userId: user.id,
-    scenarioId: scenario.id
+    scenarioId: scenario.id,
   });
 
   const tasks = Array.from({ length: taskCount }, (_, i) =>
     createTask({
       programId: program.id,
       order: i + 1,
-      title: { en: `Task ${i + 1}` }
-    })
+      title: { en: `Task ${i + 1}` },
+    }),
   );
 
-  const evaluations = tasks.map(task =>
+  const evaluations = tasks.map((task) =>
     createEvaluation({
       taskId: task.id,
       programId: program.id,
-      userId: user.id
-    })
+      userId: user.id,
+    }),
   );
 
   return { user, scenario, program, tasks, evaluations };
@@ -204,7 +204,7 @@ export class QueryCounter {
     if (this.count > maxQueries) {
       throw new Error(
         `N+1 query detected! Expected <= ${maxQueries} queries, but got ${this.count}.\n` +
-        `Queries:\n${this.queries.join('\n')}`
+          `Queries:\n${this.queries.join("\n")}`,
       );
     }
   }

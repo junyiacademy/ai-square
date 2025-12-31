@@ -7,6 +7,7 @@
 ### 1. BaseApiHandler - API 路由抽象層
 
 提供統一的 API 路由處理模式，包含：
+
 - 標準化的請求/回應格式
 - 自動錯誤處理和記錄
 - 內建快取支援
@@ -25,6 +26,7 @@ export class MyApiHandler extends BaseApiHandler<RequestType, ResponseType> {
 ### 2. BaseStorageService - 儲存服務抽象層
 
 統一的資料存取介面，支援：
+
 - 雲端儲存（GCS）和本地儲存自動切換
 - 內建快取機制
 - 批次操作
@@ -33,7 +35,7 @@ export class MyApiHandler extends BaseApiHandler<RequestType, ResponseType> {
 ```typescript
 // 使用範例
 export class MyStorageService extends BaseStorageService<DataType> {
-  protected readonly serviceName = 'MyService';
+  protected readonly serviceName = "MyService";
 
   protected async saveToStorage(key: string, data: DataType) {
     // 實作儲存邏輯
@@ -44,6 +46,7 @@ export class MyStorageService extends BaseStorageService<DataType> {
 ### 3. BaseAIService - AI 服務抽象層
 
 統一的 AI/LLM 服務介面，提供：
+
 - 文字生成、聊天、結構化輸出
 - 串流支援
 - Token 計算和成本估算
@@ -53,7 +56,10 @@ export class MyStorageService extends BaseStorageService<DataType> {
 ```typescript
 // 使用範例
 export class GeminiService extends BaseAIService {
-  protected async callTextGeneration(prompt: string, options: AIServiceOptions) {
+  protected async callTextGeneration(
+    prompt: string,
+    options: AIServiceOptions,
+  ) {
     // 實作 Gemini API 呼叫
   }
 }
@@ -62,6 +68,7 @@ export class GeminiService extends BaseAIService {
 ### 4. BaseYAMLLoader - YAML 載入器抽象層
 
 統一的 YAML 檔案處理，包含：
+
 - 自動多語言欄位處理
 - Schema 驗證
 - 快取支援
@@ -81,6 +88,7 @@ export class ContentLoader extends BaseYAMLLoader<ContentType> {
 ### 錯誤處理統一
 
 所有抽象層都整合了統一的錯誤追蹤：
+
 - 自動錯誤捕獲和記錄
 - 上下文資訊收集
 - 開發/生產環境差異處理
@@ -88,6 +96,7 @@ export class ContentLoader extends BaseYAMLLoader<ContentType> {
 ### 快取策略統一
 
 使用 `cacheService` 提供多層快取：
+
 - 記憶體快取（快速存取）
 - localStorage 快取（持久化）
 - 自動快取失效和更新
@@ -95,6 +104,7 @@ export class ContentLoader extends BaseYAMLLoader<ContentType> {
 ### 多語言支援統一
 
 內建多語言處理機制：
+
 - 自動欄位翻譯（`field_zh`, `field_es` 等）
 - zhTW 到 zh 的自動映射
 - Fallback 語言支援
@@ -113,7 +123,7 @@ export class ContentLoader extends BaseYAMLLoader<ContentType> {
 ### 1. 建立新的 API 路由
 
 ```typescript
-import { BaseApiHandler } from '@/lib/abstractions';
+import { BaseApiHandler } from "@/lib/abstractions";
 
 export class UserApiHandler extends BaseApiHandler<UserRequest, UserResponse> {
   protected async executeGet(request: NextRequest, context: RequestContext) {
@@ -136,10 +146,10 @@ export const GET = (req: NextRequest) => handler.handleGet(req);
 ### 2. 建立新的儲存服務
 
 ```typescript
-import { BaseStorageService } from '@/lib/abstractions';
+import { BaseStorageService } from "@/lib/abstractions";
 
 export class UserStorageService extends BaseStorageService<User> {
-  protected readonly serviceName = 'UserStorage';
+  protected readonly serviceName = "UserStorage";
 
   protected async saveToStorage(key: string, data: User) {
     // 實作儲存邏輯
@@ -148,27 +158,27 @@ export class UserStorageService extends BaseStorageService<User> {
 
 // 使用服務
 const userStorage = new UserStorageService();
-await userStorage.save('user123', userData);
+await userStorage.save("user123", userData);
 ```
 
 ### 3. 整合 AI 服務
 
 ```typescript
-import { BaseAIService } from '@/lib/abstractions';
+import { BaseAIService } from "@/lib/abstractions";
 
 const aiService = new GeminiAIServiceImpl();
 
 // 生成文字
-const response = await aiService.generateText('Hello AI', {
+const response = await aiService.generateText("Hello AI", {
   temperature: 0.7,
-  maxTokens: 500
+  maxTokens: 500,
 });
 
 // 結構化輸出
 const structured = await aiService.generateStructured(
-  'Generate user profile',
+  "Generate user profile",
   userSchema,
-  { model: 'gemini-2.5-pro' }
+  { model: "gemini-2.5-pro" },
 );
 ```
 

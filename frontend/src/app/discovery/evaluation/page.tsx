@@ -1,30 +1,30 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react'
-import { CheckCircle } from 'lucide-react';;
-import { useTranslation } from 'react-i18next';
-import { useRouter } from 'next/navigation';
-;
-import dynamic from 'next/dynamic';
-import DiscoveryNavigation from '@/components/layout/DiscoveryNavigation';
+import React, { useState, useEffect } from "react";
+import { CheckCircle } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
+import DiscoveryNavigation from "@/components/layout/DiscoveryNavigation";
 
 // Dynamic import to avoid SSR issues
 const InterestAssessment = dynamic(
-  () => import('@/components/discovery/InterestAssessment'),
+  () => import("@/components/discovery/InterestAssessment"),
   {
     ssr: false,
-    loading: () => <div className="text-center py-8">載入中...</div>
-  }
+    loading: () => <div className="text-center py-8">載入中...</div>,
+  },
 );
 
 // Import types only
-import type { AssessmentResults } from '@/lib/types/user-data';
-import DiscoveryHeader from '@/components/discovery/DiscoveryHeader';
+import type { AssessmentResults } from "@/lib/types/user-data";
+import DiscoveryHeader from "@/components/discovery/DiscoveryHeader";
 
 export default function EvaluationPage() {
-  const { t } = useTranslation(['discovery', 'navigation']);
+  const { t } = useTranslation(["discovery", "navigation"]);
   const router = useRouter();
-  const [assessmentResults, setAssessmentResults] = useState<AssessmentResults | null>(null);
+  const [assessmentResults, setAssessmentResults] =
+    useState<AssessmentResults | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [achievementCount, setAchievementCount] = useState(0);
 
@@ -33,7 +33,8 @@ export default function EvaluationPage() {
     const loadData = async () => {
       try {
         // Dynamic import to avoid webpack issues
-        const { userDataService } = await import('@/lib/services/user-data-service');
+        const { userDataService } =
+          await import("@/lib/services/user-data-service");
         const userData = await userDataService.loadUserData();
         if (userData?.assessmentResults) {
           setAssessmentResults(userData.assessmentResults);
@@ -43,12 +44,15 @@ export default function EvaluationPage() {
         // TODO: Query program count from database if needed
 
         // Load the latest assessment session's answers
-        if (userData?.assessmentSessions && userData.assessmentSessions.length > 0) {
+        if (
+          userData?.assessmentSessions &&
+          userData.assessmentSessions.length > 0
+        ) {
           // const latestSession = userData.assessmentSessions[userData.assessmentSessions.length - 1];
           // Assessment answers are available in latestSession if needed
         }
       } catch (error) {
-        console.error('Failed to load assessment data:', error);
+        console.error("Failed to load assessment data:", error);
       } finally {
         setIsLoading(false);
       }
@@ -56,7 +60,10 @@ export default function EvaluationPage() {
     loadData();
   }, []);
 
-  const handleAssessmentComplete = async (results: AssessmentResults, answers?: Record<string, string[]>) => {
+  const handleAssessmentComplete = async (
+    results: AssessmentResults,
+    answers?: Record<string, string[]>,
+  ) => {
     setAssessmentResults(results);
     if (answers) {
       // Assessment answers saved
@@ -64,23 +71,21 @@ export default function EvaluationPage() {
 
     // Save assessment session
     try {
-      const { userDataService } = await import('@/lib/services/user-data-service');
+      const { userDataService } =
+        await import("@/lib/services/user-data-service");
 
       const assessmentSession = {
         id: `assessment_${Date.now()}`,
         createdAt: new Date().toISOString(),
         results: results,
-        answers: answers || {}
+        answers: answers || {},
       };
 
       await userDataService.addAssessmentSession(assessmentSession);
     } catch (error) {
-      console.error('Failed to save assessment results:', error);
+      console.error("Failed to save assessment results:", error);
     }
   };
-
-
-
 
   const handleRetakeAssessment = () => {
     setAssessmentResults(null);
@@ -110,10 +115,10 @@ export default function EvaluationPage() {
             <div className="text-center mb-8">
               <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
               <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                {t('discovery:evaluation.completedTitle')}
+                {t("discovery:evaluation.completedTitle")}
               </h2>
               <p className="text-gray-600">
-                {t('discovery:evaluation.completedDescription')}
+                {t("discovery:evaluation.completedDescription")}
               </p>
             </div>
 
@@ -122,7 +127,7 @@ export default function EvaluationPage() {
               <div>
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-gray-700 font-medium">
-                    {t('discovery:evaluation.techInterest')}
+                    {t("discovery:evaluation.techInterest")}
                   </span>
                   <span className="text-gray-900 font-bold">
                     {assessmentResults.tech}%
@@ -140,7 +145,7 @@ export default function EvaluationPage() {
               <div>
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-gray-700 font-medium">
-                    {t('discovery:evaluation.creativeInterest')}
+                    {t("discovery:evaluation.creativeInterest")}
                   </span>
                   <span className="text-gray-900 font-bold">
                     {assessmentResults.creative}%
@@ -158,7 +163,7 @@ export default function EvaluationPage() {
               <div>
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-gray-700 font-medium">
-                    {t('discovery:evaluation.businessInterest')}
+                    {t("discovery:evaluation.businessInterest")}
                   </span>
                   <span className="text-gray-900 font-bold">
                     {assessmentResults.business}%
@@ -175,17 +180,17 @@ export default function EvaluationPage() {
 
             <div className="mt-8 space-y-4">
               <button
-                onClick={() => router.push('/discovery/scenarios')}
+                onClick={() => router.push("/discovery/scenarios")}
                 className="w-full bg-purple-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-purple-700 transition-colors"
               >
-                {t('discovery:evaluation.viewScenarios')}
+                {t("discovery:evaluation.viewScenarios")}
               </button>
 
               <button
                 onClick={handleRetakeAssessment}
                 className="w-full bg-gray-100 text-gray-700 py-3 px-6 rounded-lg font-medium hover:bg-gray-200 transition-colors"
               >
-                {t('discovery:evaluation.retakeAssessment')}
+                {t("discovery:evaluation.retakeAssessment")}
               </button>
             </div>
           </div>

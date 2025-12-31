@@ -3,9 +3,9 @@
  * Builds and maintains the scenario index for all sources
  */
 
-import { scenarioIndexService } from './scenario-index-service';
-import { IScenario } from '@/types/unified-learning';
-import { SourceType } from '@/types/database';
+import { scenarioIndexService } from "./scenario-index-service";
+import { IScenario } from "@/types/unified-learning";
+import { SourceType } from "@/types/database";
 
 class ScenarioIndexBuilder {
   private static instance: ScenarioIndexBuilder;
@@ -28,36 +28,40 @@ class ScenarioIndexBuilder {
   async buildFullIndex(): Promise<void> {
     // Prevent concurrent builds
     if (this.isBuilding) {
-      console.log('Index build already in progress, skipping...');
+      console.log("Index build already in progress, skipping...");
       return;
     }
 
     // Check if we recently built the index
-    if (this.lastBuildTime &&
-        Date.now() - this.lastBuildTime.getTime() < this.MIN_BUILD_INTERVAL) {
-      console.log('Index was recently built, skipping...');
+    if (
+      this.lastBuildTime &&
+      Date.now() - this.lastBuildTime.getTime() < this.MIN_BUILD_INTERVAL
+    ) {
+      console.log("Index was recently built, skipping...");
       return;
     }
 
     this.isBuilding = true;
-    console.log('Building scenario index...');
+    console.log("Building scenario index...");
 
     try {
-      const { repositoryFactory } = await import('@/lib/repositories/base/repository-factory');
+      const { repositoryFactory } =
+        await import("@/lib/repositories/base/repository-factory");
       const scenarioRepo = repositoryFactory.getScenarioRepository();
 
       // Fetch all scenarios from all sources
-      const [pblScenarios, assessmentScenarios, discoveryScenarios] = await Promise.all([
-        scenarioRepo.findBySource('pbl'),
-        scenarioRepo.findBySource('assessment'),
-        scenarioRepo.findBySource('discovery')
-      ]);
+      const [pblScenarios, assessmentScenarios, discoveryScenarios] =
+        await Promise.all([
+          scenarioRepo.findBySource("pbl"),
+          scenarioRepo.findBySource("assessment"),
+          scenarioRepo.findBySource("discovery"),
+        ]);
 
       // Combine all scenarios
       const allScenarios: IScenario[] = [
         ...pblScenarios,
         ...assessmentScenarios,
-        ...discoveryScenarios
+        ...discoveryScenarios,
       ];
 
       console.log(`Building index for ${allScenarios.length} scenarios...`);
@@ -66,9 +70,9 @@ class ScenarioIndexBuilder {
       await scenarioIndexService.buildIndex(allScenarios);
 
       this.lastBuildTime = new Date();
-      console.log('Scenario index built successfully');
+      console.log("Scenario index built successfully");
     } catch (error) {
-      console.error('Error building scenario index:', error);
+      console.error("Error building scenario index:", error);
       throw error;
     } finally {
       this.isBuilding = false;
@@ -78,11 +82,14 @@ class ScenarioIndexBuilder {
   /**
    * Build index for a specific source type
    */
-  async buildSourceIndex(sourceType: 'pbl' | 'assessment' | 'discovery'): Promise<void> {
+  async buildSourceIndex(
+    sourceType: "pbl" | "assessment" | "discovery",
+  ): Promise<void> {
     console.log(`Building index for ${sourceType} scenarios...`);
 
     try {
-      const { repositoryFactory } = await import('@/lib/repositories/base/repository-factory');
+      const { repositoryFactory } =
+        await import("@/lib/repositories/base/repository-factory");
       const scenarioRepo = repositoryFactory.getScenarioRepository();
 
       // Fetch scenarios for the specific source
@@ -99,17 +106,17 @@ class ScenarioIndexBuilder {
             // This is a simplified scenario object just for the index
             allScenarios.push({
               id: uuid,
-              mode: 'pbl' as const, // Default mode
-              status: 'active' as const,
-              version: '1.0.0',
+              mode: "pbl" as const, // Default mode
+              status: "active" as const,
+              version: "1.0.0",
               sourceType: entry.sourceType as SourceType,
               sourceId: entry.yamlId,
               sourceMetadata: { yamlId: entry.yamlId },
-              title: { en: entry.title || '' },
-              description: { en: '' },
+              title: { en: entry.title || "" },
+              description: { en: "" },
               objectives: [],
               taskTemplates: [],
-              difficulty: 'intermediate' as const,
+              difficulty: "intermediate" as const,
               estimatedMinutes: 60,
               prerequisites: [],
               taskCount: 0,
@@ -122,7 +129,7 @@ class ScenarioIndexBuilder {
               resources: [],
               createdAt: entry.lastUpdated,
               updatedAt: entry.lastUpdated,
-              metadata: {}
+              metadata: {},
             } as unknown as IScenario);
           }
         }
@@ -134,7 +141,9 @@ class ScenarioIndexBuilder {
       // Rebuild the complete index
       await scenarioIndexService.buildIndex(allScenarios);
 
-      console.log(`Index updated with ${scenarios.length} ${sourceType} scenarios`);
+      console.log(
+        `Index updated with ${scenarios.length} ${sourceType} scenarios`,
+      );
     } catch (error) {
       console.error(`Error building ${sourceType} index:`, error);
       throw error;
@@ -157,7 +166,7 @@ class ScenarioIndexBuilder {
   getStatus(): { isBuilding: boolean; lastBuildTime: Date | null } {
     return {
       isBuilding: this.isBuilding,
-      lastBuildTime: this.lastBuildTime
+      lastBuildTime: this.lastBuildTime,
     };
   }
 }

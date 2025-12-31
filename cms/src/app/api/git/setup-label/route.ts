@@ -1,26 +1,26 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { Octokit } from '@octokit/rest';
-import { OctokitError } from '@/types';
+import { NextRequest, NextResponse } from "next/server";
+import { Octokit } from "@octokit/rest";
+import { OctokitError } from "@/types";
 
 export async function POST(request: NextRequest) {
   try {
     const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
-    const owner = process.env.GITHUB_OWNER || 'junyiacademy';
-    const repo = process.env.GITHUB_REPO || 'ai-square';
-    const labelName = 'cms-content-change';
+    const owner = process.env.GITHUB_OWNER || "junyiacademy";
+    const repo = process.env.GITHUB_REPO || "ai-square";
+    const labelName = "cms-content-change";
 
     // Check if label exists
     try {
       await octokit.issues.getLabel({
         owner,
         repo,
-        name: labelName
+        name: labelName,
       });
 
       return NextResponse.json({
         success: true,
-        message: 'Label already exists',
-        exists: true
+        message: "Label already exists",
+        exists: true,
       });
     } catch (error) {
       const octokitError = error as OctokitError;
@@ -30,24 +30,24 @@ export async function POST(request: NextRequest) {
           owner,
           repo,
           name: labelName,
-          color: '7057ff', // Purple color
-          description: 'Content changes made via AI Square CMS'
+          color: "7057ff", // Purple color
+          description: "Content changes made via AI Square CMS",
         });
 
         return NextResponse.json({
           success: true,
-          message: 'Label created successfully',
+          message: "Label created successfully",
           label: data,
-          exists: false
+          exists: false,
         });
       }
       throw error;
     }
   } catch (error) {
-    console.error('Setup label error:', error);
+    console.error("Setup label error:", error);
     return NextResponse.json(
-      { error: 'Failed to setup label' },
-      { status: 500 }
+      { error: "Failed to setup label" },
+      { status: 500 },
     );
   }
 }

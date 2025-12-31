@@ -29,6 +29,7 @@ feature/* → staging → main
 ## 🚀 CI/CD Workflows
 
 ### Workflow Files Location
+
 ```
 ai-square/
 ├── .github/workflows/          # 根目錄的 workflows (正確版本)
@@ -52,6 +53,7 @@ on:
 ```
 
 **Steps**:
+
 1. Build and test
 2. Build Docker image
 3. Deploy to Cloud Run (staging)
@@ -73,6 +75,7 @@ on:
 ```
 
 **Steps**:
+
 1. Require manual confirmation
 2. Full test suite
 3. Build Docker image
@@ -86,6 +89,7 @@ on:
 ### Database Environments
 
 - **Local**: PostgreSQL in Docker (port 5433)
+
   ```
   DB_NAME=ai_square_db
   DB_USER=postgres
@@ -93,6 +97,7 @@ on:
   ```
 
 - **Staging**: Cloud SQL in asia-east1
+
   ```
   Instance: ai-square-db-staging-asia
   Connection: /cloudsql/ai-square-463013:asia-east1:ai-square-db-staging-asia
@@ -111,11 +116,13 @@ on:
 ### 💰 Database Cost Optimization (2025-08-27 更新)
 
 #### 成本優化成果
+
 - **優化前**: ~$85/月
 - **優化後**: $0/月（停止狀態）
 - **節省**: 100% 成本削減
 
 #### 快速指令（開發工作流程）
+
 ```bash
 # 開始開發（啟動資料庫）
 make db-start
@@ -128,20 +135,24 @@ make db-cost
 ```
 
 #### 成本分析表
-| 配置項目 | 優化前 | 優化後 | 節省 |
-|---------|--------|--------|------|
-| 資料庫規格 | db-custom-2-4096 | db-f1-micro | ~$40/月 |
-| 運行時間 | 24/7 | 按需啟動 | ~$25/月 |
-| 備份功能 | 啟用 | 關閉 | ~$10/月 |
-| **總計** | **~$85/月** | **$0/月** | **$85/月** |
+
+| 配置項目   | 優化前           | 優化後      | 節省       |
+| ---------- | ---------------- | ----------- | ---------- |
+| 資料庫規格 | db-custom-2-4096 | db-f1-micro | ~$40/月    |
+| 運行時間   | 24/7             | 按需啟動    | ~$25/月    |
+| 備份功能   | 啟用             | 關閉        | ~$10/月    |
+| **總計**   | **~$85/月**      | **$0/月**   | **$85/月** |
 
 #### 自動化成本管理
+
 專案已配置 GitHub Actions 每天晚上自動停止資料庫：
+
 - **檔案**: `.github/workflows/db-cost-management.yml`
 - **排程**: 每天晚上 10 點（台北時間）自動停止
 - **手動控制**: 可在 GitHub Actions 頁面手動觸發 start/stop/status
 
 #### 最佳實踐
+
 1. **開發習慣**: 開始工作 `make db-start`，結束工作 `make db-stop`
 2. **環境分離**: 開發用 staging DB，生產只在部署時使用
 3. **成本監控**: 定期執行 `make db-cost` 檢查
@@ -152,6 +163,7 @@ make db-cost
 #### Using Prisma
 
 1. **Schema Changes**:
+
    ```bash
    # Edit schema
    vi prisma/schema.prisma
@@ -168,6 +180,7 @@ make db-cost
    - Production: Requires manual approval
 
 3. **Manual Migration** (if needed):
+
    ```bash
    # Connect to Cloud SQL proxy
    cloud_sql_proxy -instances=CONNECTION_NAME=tcp:5432
@@ -183,6 +196,7 @@ make db-cost
 Staging 環境提供完整的資料庫重設功能，可透過 API 快速清空並重新載入所有內容。
 
 **重要架構說明**：
+
 - `/api/admin/init-staging` - 管理資料庫和 demo 使用者
 - `/api/admin/init-pbl` - 載入 PBL scenarios (9 個)
 - `/api/admin/init-assessment` - 載入 Assessment scenarios (1 個)
@@ -191,6 +205,7 @@ Staging 環境提供完整的資料庫重設功能，可透過 API 快速清空�
 #### 快速重設指令
 
 1. **完整重設（清空並重新載入所有內容）**：
+
    ```bash
    # Step 1: 重設資料庫並建立 demo 使用者
    curl -X POST "https://ai-square-staging-m7s4ucbgba-de.a.run.app/api/admin/init-staging" \
@@ -205,6 +220,7 @@ Staging 環境提供完整的資料庫重設功能，可透過 API 快速清空�
    ```
 
 2. **檢查資料庫狀態**：
+
    ```bash
    curl -X POST "https://ai-square-staging-m7s4ucbgba-de.a.run.app/api/admin/init-staging" \
      -H "Content-Type: application/json" \
@@ -223,6 +239,7 @@ Staging 環境提供完整的資料庫重設功能，可透過 API 快速清空�
 #### Demo 使用者帳號
 
 重設後會自動建立以下測試帳號：
+
 - **Student**: `student@example.com` / `student123`
 - **Teacher**: `teacher@example.com` / `teacher123`
 - **Admin**: `admin@example.com` / `admin123`
@@ -230,6 +247,7 @@ Staging 環境提供完整的資料庫重設功能，可透過 API 快速清空�
 #### 預期結果
 
 成功執行完整重設後應該看到：
+
 ```json
 {
   "counts": {
@@ -245,6 +263,7 @@ Staging 環境提供完整的資料庫重設功能，可透過 API 快速清空�
 #### 本地開發重設
 
 本地開發環境使用相同的 API：
+
 ```bash
 # 本地重設（確保 dev server 在 port 3000）
 BASE_URL="http://localhost:3000"
@@ -263,6 +282,7 @@ curl -X POST "$BASE_URL/api/admin/init-discovery"
 ### Adding New Fields (Example: email_verified_at)
 
 1. **Update Prisma Schema**:
+
    ```prisma
    model User {
      // ... existing fields
@@ -271,11 +291,13 @@ curl -X POST "$BASE_URL/api/admin/init-discovery"
    ```
 
 2. **Generate Migration**:
+
    ```bash
    npx prisma migrate dev --name add_email_verified_at
    ```
 
 3. **Deploy**:
+
    ```bash
    # Commit and push to staging
    git add -A
@@ -291,6 +313,7 @@ curl -X POST "$BASE_URL/api/admin/init-discovery"
 ## 📋 Deployment Checklist
 
 ### Before Deploying to Staging
+
 - [ ] All tests pass locally
 - [ ] TypeScript no errors (`npm run typecheck`)
 - [ ] ESLint no warnings (`npm run lint`)
@@ -300,6 +323,7 @@ curl -X POST "$BASE_URL/api/admin/init-discovery"
 - [ ] E2E authentication tests pass (`npm run test:e2e -- auth`)
 
 ### Before Deploying to Production
+
 - [ ] Staging deployment successful
 - [ ] E2E tests pass on staging
 - [ ] No critical bugs in staging
@@ -309,6 +333,7 @@ curl -X POST "$BASE_URL/api/admin/init-discovery"
 ## 🔧 Common Tasks
 
 ### Check Deployment Status
+
 ```bash
 # View recent deployments
 gh run list --repo junyiacademy/ai-square --limit 5
@@ -318,6 +343,7 @@ gh run watch RUN_ID --repo junyiacademy/ai-square
 ```
 
 ### Manual Deployment
+
 ```bash
 # Trigger staging deployment
 gh workflow run deploy-staging.yml --repo junyiacademy/ai-square
@@ -327,6 +353,7 @@ gh workflow run deploy-production.yml --repo junyiacademy/ai-square
 ```
 
 ### Rollback
+
 ```bash
 # Revert to previous revision in Cloud Run
 gcloud run services update-traffic SERVICE_NAME \

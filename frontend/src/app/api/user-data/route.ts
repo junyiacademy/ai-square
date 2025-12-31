@@ -1,13 +1,16 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getUnifiedAuth, createUnauthorizedResponse } from '@/lib/auth/unified-auth';
-import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
+import { NextRequest, NextResponse } from "next/server";
+import {
+  getUnifiedAuth,
+  createUnauthorizedResponse,
+} from "@/lib/auth/unified-auth";
+import { repositoryFactory } from "@/lib/repositories/base/repository-factory";
 
 export async function GET(request: NextRequest) {
   try {
     const auth = await getUnifiedAuth(request);
 
     if (!auth) {
-      console.log('[API] GET /api/user-data - authentication failed');
+      console.log("[API] GET /api/user-data - authentication failed");
       return createUnauthorizedResponse();
     }
 
@@ -16,13 +19,13 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      data: userData
+      data: userData,
     });
   } catch (error) {
-    console.error('Failed to get user data:', error);
+    console.error("Failed to get user data:", error);
     return NextResponse.json(
-      { error: 'Failed to get user data' },
-      { status: 500 }
+      { error: "Failed to get user data" },
+      { status: 500 },
     );
   }
 }
@@ -32,7 +35,7 @@ export async function POST(request: NextRequest) {
     const auth = await getUnifiedAuth(request);
 
     if (!auth) {
-      console.log('[API] POST /api/user-data - authentication failed');
+      console.log("[API] POST /api/user-data - authentication failed");
       return createUnauthorizedResponse();
     }
 
@@ -44,13 +47,13 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      data: savedData
+      data: savedData,
     });
   } catch (error) {
-    console.error('Failed to save user data:', error);
+    console.error("Failed to save user data:", error);
     return NextResponse.json(
-      { error: 'Failed to save user data' },
-      { status: 500 }
+      { error: "Failed to save user data" },
+      { status: 500 },
     );
   }
 }
@@ -67,13 +70,13 @@ export async function DELETE(request: NextRequest) {
     const success = await userRepo.deleteUserData(auth.user.email);
 
     return NextResponse.json({
-      success
+      success,
     });
   } catch (error) {
-    console.error('Failed to delete user data:', error);
+    console.error("Failed to delete user data:", error);
     return NextResponse.json(
-      { error: 'Failed to delete user data' },
-      { status: 500 }
+      { error: "Failed to delete user data" },
+      { status: 500 },
     );
   }
 }

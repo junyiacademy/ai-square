@@ -3,14 +3,14 @@
  * Provides seamless fallback and optimal performance
  */
 
-import { redisCacheService } from './redis-cache-service';
-import { cacheService } from './cache-service';
+import { redisCacheService } from "./redis-cache-service";
+import { cacheService } from "./cache-service";
 
 interface CacheOptions {
   ttl?: number; // Time to live in milliseconds
   useRedis?: boolean; // Whether to use Redis (default: true)
   staleWhileRevalidate?: number; // Serve stale content while revalidating
-  onStatus?: (status: 'HIT' | 'MISS' | 'STALE') => void;
+  onStatus?: (status: "HIT" | "MISS" | "STALE") => void;
 }
 
 interface CacheItem<T> {
@@ -27,13 +27,13 @@ class DistributedCacheService {
   private stats = { hits: 0, misses: 0, stale: 0, revalidate: 0 };
 
   private applyPrefix(key: string): string {
-    const prefix = process.env.CACHE_KEY_PREFIX || '';
+    const prefix = process.env.CACHE_KEY_PREFIX || "";
     return prefix ? `${prefix}:${key}` : key;
   }
 
   private withJitter(ms: number | undefined): number | undefined {
     if (!ms) return ms;
-    if (process.env.NODE_ENV === 'test') return ms;
+    if (process.env.NODE_ENV === "test") return ms;
     const jitter = 0.1; // ±10%
     const factor = 1 + (Math.random() * 2 * jitter - jitter);
     return Math.max(1, Math.floor(ms * factor));
@@ -70,7 +70,7 @@ class DistributedCacheService {
       }
       return fallback;
     } catch (error) {
-      console.error('Distributed cache get error:', error);
+      console.error("Distributed cache get error:", error);
       return null;
     }
   }
@@ -78,7 +78,11 @@ class DistributedCacheService {
   /**
    * Set value in distributed cache
    */
-  async set<T>(key: string, value: T, options: CacheOptions = {}): Promise<void> {
+  async set<T>(
+    key: string,
+    value: T,
+    options: CacheOptions = {},
+  ): Promise<void> {
     const { useRedis = true } = options;
     const realKey = this.applyPrefix(key);
     const ttl = this.withJitter(options.ttl) ?? 300000;
@@ -95,7 +99,7 @@ class DistributedCacheService {
       // Set in fallback cache
       await cacheService.set(realKey, value, { ttl });
     } catch (error) {
-      console.error('Distributed cache set error:', error);
+      console.error("Distributed cache set error:", error);
     }
   }
 
@@ -105,7 +109,7 @@ class DistributedCacheService {
   async getWithRevalidation<T>(
     key: string,
     fetcher: () => Promise<T>,
-    options: CacheOptions = {}
+    options: CacheOptions = {},
   ): Promise<T> {
     const { onStatus } = options;
     const ttl = this.withJitter(options.ttl) ?? 300000;
@@ -118,14 +122,14 @@ class DistributedCacheService {
         if (localItem.expiresAt > Date.now()) {
           // Fresh data
           this.stats.hits += 1;
-          onStatus?.('HIT');
+          onStatus?.("HIT");
           return localItem.value as T;
         } else if (localItem.staleAt > Date.now()) {
           // Stale data - return it but trigger revalidation
           this.revalidateInBackground(realKey, fetcher, { ...options, ttl });
           this.stats.stale += 1;
           this.stats.revalidate += 1;
-          onStatus?.('STALE');
+          onStatus?.("STALE");
           return localItem.value as T;
         }
       }
@@ -135,7 +139,7 @@ class DistributedCacheService {
       if (redisValue !== null) {
         this.setLocal(realKey, redisValue, { ttl });
         this.stats.hits += 1;
-        onStatus?.('HIT');
+        onStatus?.("HIT");
         return redisValue;
       }
 
@@ -145,21 +149,21 @@ class DistributedCacheService {
         this.setLocal(realKey, fallbackValue, { ttl });
         await redisCacheService.set(realKey, fallbackValue, { ttl });
         this.stats.hits += 1;
-        onStatus?.('HIT');
+        onStatus?.("HIT");
         return fallbackValue;
       }
 
       // Fetch fresh data
       this.stats.misses += 1;
-      onStatus?.('MISS');
+      onStatus?.("MISS");
       return await this.fetchAndCache(realKey, fetcher, { ...options, ttl });
     } catch (error) {
-      console.error('Distributed cache getWithRevalidation error:', error);
+      console.error("Distributed cache getWithRevalidation error:", error);
       // Try to return stale data on error
       const localItem = this.localCache.get(realKey);
       if (localItem) {
         this.stats.stale += 1;
-        onStatus?.('STALE');
+        onStatus?.("STALE");
         return localItem.value as T;
       }
       throw error;
@@ -184,7 +188,7 @@ class DistributedCacheService {
       // Cancel any pending revalidation
       this.revalidationPromises.delete(realKey);
     } catch (error) {
-      console.error('Distributed cache delete error:', error);
+      console.error("Distributed cache delete error:", error);
     }
   }
 
@@ -205,7 +209,7 @@ class DistributedCacheService {
       // Clear revalidation promises
       this.revalidationPromises.clear();
     } catch (error) {
-      console.error('Distributed cache clear error:', error);
+      console.error("Distributed cache clear error:", error);
     }
   }
 
@@ -218,7 +222,12 @@ class DistributedCacheService {
     fallbackCacheSize: number;
     activeRevalidations: number;
     hitRate?: number;
-    counters?: { hits: number; misses: number; stale: number; revalidate: number };
+    counters?: {
+      hits: number;
+      misses: number;
+      stale: number;
+      revalidate: number;
+    };
   }> {
     try {
       const redisStats = await redisCacheService.getStats();
@@ -228,19 +237,29 @@ class DistributedCacheService {
         redisStats,
         fallbackCacheSize: 0, // cacheService doesn't expose size
         activeRevalidations: this.revalidationPromises.size,
-        hitRate: (this.stats.hits + this.stats.misses) > 0 ? Math.round((this.stats.hits * 100) / (this.stats.hits + this.stats.misses)) : 0,
-        counters: { ...this.stats }
+        hitRate:
+          this.stats.hits + this.stats.misses > 0
+            ? Math.round(
+                (this.stats.hits * 100) / (this.stats.hits + this.stats.misses),
+              )
+            : 0,
+        counters: { ...this.stats },
       };
       return summary;
     } catch (error) {
-      console.error('Distributed cache stats error:', error);
+      console.error("Distributed cache stats error:", error);
       return {
         localCacheSize: this.localCache.size,
         redisStats: null,
         fallbackCacheSize: 0,
         activeRevalidations: this.revalidationPromises.size,
-        hitRate: (this.stats.hits + this.stats.misses) > 0 ? Math.round((this.stats.hits * 100) / (this.stats.hits + this.stats.misses)) : 0,
-        counters: { ...this.stats }
+        hitRate:
+          this.stats.hits + this.stats.misses > 0
+            ? Math.round(
+                (this.stats.hits * 100) / (this.stats.hits + this.stats.misses),
+              )
+            : 0,
+        counters: { ...this.stats },
       };
     }
   }
@@ -254,7 +273,7 @@ class DistributedCacheService {
     try {
       await redisCacheService.flushAll();
     } catch (error) {
-      console.error('Error flushing Redis cache:', error);
+      console.error("Error flushing Redis cache:", error);
     }
   }
 
@@ -275,7 +294,7 @@ class DistributedCacheService {
   async mget<T>(keys: string[]): Promise<(T | null)[]> {
     try {
       // Try Redis first for batch operation
-      const prefixed = keys.map(k => this.applyPrefix(k));
+      const prefixed = keys.map((k) => this.applyPrefix(k));
       const redisValues = await redisCacheService.mget<T>(prefixed);
 
       // Fill in missing values from local cache
@@ -295,7 +314,7 @@ class DistributedCacheService {
 
       return results;
     } catch (error) {
-      console.error('Distributed cache mget error:', error);
+      console.error("Distributed cache mget error:", error);
       return keys.map(() => null);
     }
   }
@@ -303,7 +322,10 @@ class DistributedCacheService {
   /**
    * Batch set operations
    */
-  async mset<T>(pairs: Array<[string, T]>, options: CacheOptions = {}): Promise<void> {
+  async mset<T>(
+    pairs: Array<[string, T]>,
+    options: CacheOptions = {},
+  ): Promise<void> {
     try {
       // Set in local cache
       pairs.forEach(([key, value]) => {
@@ -317,10 +339,10 @@ class DistributedCacheService {
 
       // Set in fallback cache
       await Promise.all(
-        pairs.map(([key, value]) => cacheService.set(key, value, options))
+        pairs.map(([key, value]) => cacheService.set(key, value, options)),
       );
     } catch (error) {
-      console.error('Distributed cache mset error:', error);
+      console.error("Distributed cache mset error:", error);
     }
   }
 
@@ -329,14 +351,15 @@ class DistributedCacheService {
    */
   private setLocal<T>(key: string, value: T, options: CacheOptions = {}): void {
     const ttl = this.withJitter(options.ttl) ?? 300000;
-    const staleWhileRevalidate = this.withJitter(options.staleWhileRevalidate) ?? 3600000;
+    const staleWhileRevalidate =
+      this.withJitter(options.staleWhileRevalidate) ?? 3600000;
     const now = Date.now();
 
     this.localCache.set(key, {
       value,
       expiresAt: now + ttl,
       staleAt: now + ttl + staleWhileRevalidate,
-      createdAt: now
+      createdAt: now,
     });
 
     // Cleanup if cache is too large
@@ -351,7 +374,7 @@ class DistributedCacheService {
   private revalidateInBackground<T>(
     key: string,
     fetcher: () => Promise<T>,
-    options: CacheOptions = {}
+    options: CacheOptions = {},
   ): void {
     // Avoid duplicate revalidations
     if (this.revalidationPromises.has(key)) {
@@ -359,8 +382,8 @@ class DistributedCacheService {
     }
 
     const promise = this.fetchAndCache(key, fetcher, options)
-      .catch(error => {
-        console.error('Background revalidation failed:', error);
+      .catch((error) => {
+        console.error("Background revalidation failed:", error);
       })
       .finally(() => {
         this.revalidationPromises.delete(key);
@@ -375,7 +398,7 @@ class DistributedCacheService {
   private async fetchAndCache<T>(
     key: string,
     fetcher: () => Promise<T>,
-    options: CacheOptions = {}
+    options: CacheOptions = {},
   ): Promise<T> {
     const value = await fetcher();
     // key here已為 applyPrefix 後的 realKey，避免再次加前綴
@@ -386,13 +409,13 @@ class DistributedCacheService {
       // Redis
       await redisCacheService.set(key, value, { ttl });
     } catch (e) {
-      console.error('Distributed cache fetchAndCache redis set error:', e);
+      console.error("Distributed cache fetchAndCache redis set error:", e);
     }
     try {
       // 後援快取
       await cacheService.set(key, value, { ttl });
     } catch (e) {
-      console.error('Distributed cache fetchAndCache fallback set error:', e);
+      console.error("Distributed cache fetchAndCache fallback set error:", e);
     }
     return value;
   }
@@ -411,14 +434,17 @@ class DistributedCacheService {
     }
 
     // Remove expired items
-    expired.forEach(key => this.localCache.delete(key));
+    expired.forEach((key) => this.localCache.delete(key));
 
     // If still too large, remove oldest items
     if (this.localCache.size > this.MAX_LOCAL_SIZE) {
       const entries = Array.from(this.localCache.entries());
       entries.sort((a, b) => a[1].createdAt - b[1].createdAt);
 
-      const toRemove = entries.slice(0, this.localCache.size - this.MAX_LOCAL_SIZE);
+      const toRemove = entries.slice(
+        0,
+        this.localCache.size - this.MAX_LOCAL_SIZE,
+      );
       toRemove.forEach(([key]) => this.localCache.delete(key));
     }
   }

@@ -1,19 +1,28 @@
 // PBL v2 (Problem-Based Learning) Type Definitions
 // This is the new simplified structure without stages
 
-export type DomainType = 'engaging_with_ai' | 'creating_with_ai' | 'managing_with_ai' | 'designing_with_ai';
-export type DifficultyLevel = 'beginner' | 'intermediate' | 'advanced';
-export type TaskCategory = 'research' | 'analysis' | 'creation' | 'interaction';
-export type ModalityFocus = 'reading' | 'writing' | 'listening' | 'speaking' | 'mixed';
-export type AIRole = 'assistant' | 'evaluator' | 'actor';
-export type ProgramStatus = 'draft' | 'in_progress' | 'completed';
-export type TaskStatus = 'not_started' | 'in_progress' | 'completed';
-export type InteractionType = 'user' | 'ai' | 'system';
+export type DomainType =
+  | "engaging_with_ai"
+  | "creating_with_ai"
+  | "managing_with_ai"
+  | "designing_with_ai";
+export type DifficultyLevel = "beginner" | "intermediate" | "advanced";
+export type TaskCategory = "research" | "analysis" | "creation" | "interaction";
+export type ModalityFocus =
+  | "reading"
+  | "writing"
+  | "listening"
+  | "speaking"
+  | "mixed";
+export type AIRole = "assistant" | "evaluator" | "actor";
+export type ProgramStatus = "draft" | "in_progress" | "completed";
+export type TaskStatus = "not_started" | "in_progress" | "completed";
+export type InteractionType = "user" | "ai" | "system";
 
 // KSA Mapping
 export interface KSAMapping {
   knowledge: string[]; // K1.1, K2.3 etc
-  skills: string[];    // S1.2, S3.1 etc
+  skills: string[]; // S1.2, S3.1 etc
   attitudes: string[]; // A1.1, A2.2 etc
 }
 
@@ -60,10 +69,10 @@ export interface Task {
   timeLimit?: number; // minutes
   resources?: string[];
   assessmentFocus: {
-    primary: string[];   // Primary KSA codes to assess
+    primary: string[]; // Primary KSA codes to assess
     secondary: string[]; // Secondary KSA codes
   };
-  focusKSA?: string[];  // Combined KSA codes for evaluation
+  focusKSA?: string[]; // Combined KSA codes for evaluation
   aiModule?: AIModule;
 }
 
@@ -125,7 +134,6 @@ export interface ScenarioListItem {
   taskCount: number;
   tags?: string[];
 }
-
 
 // Program - represents one learning journey through a scenario
 export interface Program {
@@ -223,7 +231,7 @@ export interface ProgramSummary {
 export interface ConversationTurn {
   id: string;
   timestamp: Date;
-  role: 'user' | 'ai' | 'system';
+  role: "user" | "ai" | "system";
   content: string;
   metadata?: {
     processingTime?: number;
@@ -236,7 +244,7 @@ export interface ProcessLog {
   timestamp: Date;
   sessionId: string;
   stageId: string;
-  actionType: 'interaction' | 'evaluation' | 'navigation';
+  actionType: "interaction" | "evaluation" | "navigation";
   detail: {
     aiInteraction?: {
       model: string;

@@ -1,47 +1,47 @@
-import { NextRequest } from 'next/server';
-import { POST } from '../route';
-import { VertexAI } from '@google-cloud/vertexai';
-import { getUnifiedAuth } from '@/lib/auth/unified-auth';
+import { NextRequest } from "next/server";
+import { POST } from "../route";
+import { VertexAI } from "@google-cloud/vertexai";
+import { getUnifiedAuth } from "@/lib/auth/unified-auth";
 
 // Mock unified auth
-jest.mock('@/lib/auth/unified-auth', () => ({
-  getUnifiedAuth: jest.fn()
+jest.mock("@/lib/auth/unified-auth", () => ({
+  getUnifiedAuth: jest.fn(),
 }));
 
 // Mock VertexAI
-jest.mock('@google-cloud/vertexai', () => ({
+jest.mock("@google-cloud/vertexai", () => ({
   VertexAI: jest.fn().mockImplementation(() => ({
     getGenerativeModel: jest.fn().mockReturnValue({
-      generateContent: jest.fn()
-    })
+      generateContent: jest.fn(),
+    }),
   })),
   SchemaType: {
-    OBJECT: 'OBJECT',
-    STRING: 'STRING',
-    NUMBER: 'NUMBER',
-    ARRAY: 'ARRAY',
-    BOOLEAN: 'BOOLEAN'
-  }
+    OBJECT: "OBJECT",
+    STRING: "STRING",
+    NUMBER: "NUMBER",
+    ARRAY: "ARRAY",
+    BOOLEAN: "BOOLEAN",
+  },
 }));
 
-describe('/api/pbl/evaluate', () => {
+describe("/api/pbl/evaluate", () => {
   const validRequestBody = {
     conversations: [
-      { type: 'user', content: 'How do I analyze industry trends?' },
-      { type: 'assistant', content: 'To analyze industry trends...' },
-      { type: 'user', content: 'What metrics should I focus on?' },
-      { type: 'assistant', content: 'Key metrics include...' }
+      { type: "user", content: "How do I analyze industry trends?" },
+      { type: "assistant", content: "To analyze industry trends..." },
+      { type: "user", content: "What metrics should I focus on?" },
+      { type: "assistant", content: "Key metrics include..." },
     ],
     task: {
-      id: 'task1',
-      title: 'Industry Analysis',
-      description: 'Learn to analyze industry trends',
-      instructions: ['Research current trends', 'Identify key metrics'],
-      expectedOutcome: 'Understanding of industry analysis'
+      id: "task1",
+      title: "Industry Analysis",
+      description: "Learn to analyze industry trends",
+      instructions: ["Research current trends", "Identify key metrics"],
+      expectedOutcome: "Understanding of industry analysis",
     },
-    targetDomains: ['engaging_with_ai', 'analyzing_with_ai'],
-    focusKSA: ['K1.1', 'S2.1'],
-    language: 'en'
+    targetDomains: ["engaging_with_ai", "analyzing_with_ai"],
+    focusKSA: ["K1.1", "S2.1"],
+    language: "en",
   };
 
   const mockEvaluationResponse = {
@@ -49,52 +49,48 @@ describe('/api/pbl/evaluate', () => {
     ksaScores: {
       knowledge: 80,
       skills: 70,
-      attitudes: 75
+      attitudes: 75,
     },
     individualKsaScores: {
-      'K1.1': 85,
-      'S2.1': 70
+      "K1.1": 85,
+      "S2.1": 70,
     },
     domainScores: {
       engaging_with_ai: 80,
       creating_with_ai: 70,
       managing_with_ai: 75,
-      designing_with_ai: 70
+      designing_with_ai: 70,
     },
     rubricsScores: {
-      'Research Quality': 3,
-      'AI Utilization': 3,
-      'Content Quality': 3,
-      'Learning Progress': 4
+      "Research Quality": 3,
+      "AI Utilization": 3,
+      "Content Quality": 3,
+      "Learning Progress": 4,
     },
     conversationInsights: {
       effectiveExamples: [
         {
-          quote: 'What metrics should I focus on?',
-          reason: 'Shows strategic thinking about analysis'
-        }
+          quote: "What metrics should I focus on?",
+          reason: "Shows strategic thinking about analysis",
+        },
       ],
-      improvementAreas: []
+      improvementAreas: [],
     },
     strengths: [
-      'Good questioning approach (S1.1)',
-      'Shows interest in systematic analysis (K2.1)'
+      "Good questioning approach (S1.1)",
+      "Shows interest in systematic analysis (K2.1)",
     ],
-    improvements: [
-      'Could explore more specific industry examples (K3.1)'
-    ],
-    nextSteps: [
-      'Apply these concepts to a real industry case (S3.1)'
-    ]
+    improvements: ["Could explore more specific industry examples (K3.1)"],
+    nextSteps: ["Apply these concepts to a real industry case (S3.1)"],
   };
 
   const createRequest = (body: any) => {
-    return new NextRequest('http://localhost:3000/api/pbl/evaluate', {
-      method: 'POST',
+    return new NextRequest("http://localhost:3000/api/pbl/evaluate", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(body)
+      body: JSON.stringify(body),
     });
   };
 
@@ -102,29 +98,33 @@ describe('/api/pbl/evaluate', () => {
     jest.clearAllMocks();
   });
 
-  describe('successful evaluations', () => {
-    it('evaluates a task with valid conversations', async () => {
+  describe("successful evaluations", () => {
+    it("evaluates a task with valid conversations", async () => {
       // Mock authenticated user
       (getUnifiedAuth as jest.Mock).mockResolvedValue({
-        user: { email: 'test@example.com', id: 'user-123', role: 'student' }
+        user: { email: "test@example.com", id: "user-123", role: "student" },
       });
 
       const mockGenerateContent = jest.fn().mockResolvedValue({
         response: {
-          candidates: [{
-            content: {
-              parts: [{
-                text: JSON.stringify(mockEvaluationResponse)
-              }]
-            }
-          }]
-        }
+          candidates: [
+            {
+              content: {
+                parts: [
+                  {
+                    text: JSON.stringify(mockEvaluationResponse),
+                  },
+                ],
+              },
+            },
+          ],
+        },
       });
 
       (VertexAI as jest.Mock).mockImplementation(() => ({
         getGenerativeModel: jest.fn().mockReturnValue({
-          generateContent: mockGenerateContent
-        })
+          generateContent: mockGenerateContent,
+        }),
       }));
 
       const request = createRequest(validRequestBody);
@@ -135,34 +135,38 @@ describe('/api/pbl/evaluate', () => {
       expect(data.success).toBe(true);
       expect(data.evaluation).toMatchObject({
         ...mockEvaluationResponse,
-        taskId: 'task1',
-        conversationCount: 2
+        taskId: "task1",
+        conversationCount: 2,
       });
       expect(data.evaluation.evaluatedAt).toBeDefined();
     });
 
-    it('filters only user messages for evaluation', async () => {
+    it("filters only user messages for evaluation", async () => {
       // Mock authenticated user
       (getUnifiedAuth as jest.Mock).mockResolvedValue({
-        user: { email: 'test@example.com', id: 'user-123', role: 'student' }
+        user: { email: "test@example.com", id: "user-123", role: "student" },
       });
 
       const mockGenerateContent = jest.fn().mockResolvedValue({
         response: {
-          candidates: [{
-            content: {
-              parts: [{
-                text: JSON.stringify(mockEvaluationResponse)
-              }]
-            }
-          }]
-        }
+          candidates: [
+            {
+              content: {
+                parts: [
+                  {
+                    text: JSON.stringify(mockEvaluationResponse),
+                  },
+                ],
+              },
+            },
+          ],
+        },
       });
 
       (VertexAI as jest.Mock).mockImplementation(() => ({
         getGenerativeModel: jest.fn().mockReturnValue({
-          generateContent: mockGenerateContent
-        })
+          generateContent: mockGenerateContent,
+        }),
       }));
 
       const request = createRequest(validRequestBody);
@@ -172,16 +176,16 @@ describe('/api/pbl/evaluate', () => {
       const callArgs = mockGenerateContent.mock.calls[0][0];
       const promptText = callArgs.contents[0].parts[0].text;
 
-      expect(promptText).toContain('How do I analyze industry trends?');
-      expect(promptText).toContain('What metrics should I focus on?');
-      expect(promptText).not.toContain('To analyze industry trends...');
-      expect(promptText).not.toContain('Key metrics include...');
+      expect(promptText).toContain("How do I analyze industry trends?");
+      expect(promptText).toContain("What metrics should I focus on?");
+      expect(promptText).not.toContain("To analyze industry trends...");
+      expect(promptText).not.toContain("Key metrics include...");
     });
 
-    it('handles minimal engagement with low scores', async () => {
+    it("handles minimal engagement with low scores", async () => {
       // Mock authenticated user
       (getUnifiedAuth as jest.Mock).mockResolvedValue({
-        user: { email: 'test@example.com', id: 'user-123', role: 'student' }
+        user: { email: "test@example.com", id: "user-123", role: "student" },
       });
 
       const minimalEngagementResponse = {
@@ -190,46 +194,50 @@ describe('/api/pbl/evaluate', () => {
         ksaScores: {
           knowledge: 20,
           skills: 20,
-          attitudes: 20
+          attitudes: 20,
         },
         domainScores: {
           engaging_with_ai: 20,
           creating_with_ai: 20,
           managing_with_ai: 20,
-          designing_with_ai: 20
+          designing_with_ai: 20,
         },
         rubricsScores: {
-          'Research Quality': 1,
-          'AI Utilization': 1,
-          'Content Quality': 1,
-          'Learning Progress': 1
-        }
+          "Research Quality": 1,
+          "AI Utilization": 1,
+          "Content Quality": 1,
+          "Learning Progress": 1,
+        },
       };
 
       const mockGenerateContent = jest.fn().mockResolvedValue({
         response: {
-          candidates: [{
-            content: {
-              parts: [{
-                text: JSON.stringify(minimalEngagementResponse)
-              }]
-            }
-          }]
-        }
+          candidates: [
+            {
+              content: {
+                parts: [
+                  {
+                    text: JSON.stringify(minimalEngagementResponse),
+                  },
+                ],
+              },
+            },
+          ],
+        },
       });
 
       (VertexAI as jest.Mock).mockImplementation(() => ({
         getGenerativeModel: jest.fn().mockReturnValue({
-          generateContent: mockGenerateContent
-        })
+          generateContent: mockGenerateContent,
+        }),
       }));
 
       const request = createRequest({
         ...validRequestBody,
         conversations: [
-          { type: 'user', content: 'Hi' },
-          { type: 'assistant', content: 'Hello! How can I help?' }
-        ]
+          { type: "user", content: "Hi" },
+          { type: "assistant", content: "Hello! How can I help?" },
+        ],
       });
       const response = await POST(request);
       const data = await response.json();
@@ -240,8 +248,8 @@ describe('/api/pbl/evaluate', () => {
     });
   });
 
-  describe('error handling', () => {
-    it('returns 401 when user is not authenticated', async () => {
+  describe("error handling", () => {
+    it("returns 401 when user is not authenticated", async () => {
       // Mock no authentication
       (getUnifiedAuth as jest.Mock).mockResolvedValue(null);
 
@@ -250,55 +258,61 @@ describe('/api/pbl/evaluate', () => {
       const data = await response.json();
 
       expect(response.status).toBe(401);
-      expect(data.error).toBe('User authentication required');
+      expect(data.error).toBe("User authentication required");
     });
 
-    it('returns 400 when conversations are missing', async () => {
+    it("returns 400 when conversations are missing", async () => {
       // Mock authenticated user
       (getUnifiedAuth as jest.Mock).mockResolvedValue({
-        user: { email: 'test@example.com', id: 'user-123', role: 'student' }
+        user: { email: "test@example.com", id: "user-123", role: "student" },
       });
 
       const request = createRequest({
         ...validRequestBody,
-        conversations: undefined
+        conversations: undefined,
       });
       const response = await POST(request);
       const data = await response.json();
 
       expect(response.status).toBe(400);
       expect(data.success).toBe(false);
-      expect(data.error).toBe('Missing required fields: conversations and task are required');
+      expect(data.error).toBe(
+        "Missing required fields: conversations and task are required",
+      );
     });
 
-    it('returns 400 when task is missing', async () => {
+    it("returns 400 when task is missing", async () => {
       // Mock authenticated user
       (getUnifiedAuth as jest.Mock).mockResolvedValue({
-        user: { email: 'test@example.com', id: 'user-123', role: 'student' }
+        user: { email: "test@example.com", id: "user-123", role: "student" },
       });
 
       const request = createRequest({
         ...validRequestBody,
-        task: undefined
+        task: undefined,
       });
       const response = await POST(request);
       const data = await response.json();
 
       expect(response.status).toBe(400);
       expect(data.success).toBe(false);
-      expect(data.error).toBe('Missing required fields: conversations and task are required');
+      expect(data.error).toBe(
+        "Missing required fields: conversations and task are required",
+      );
     });
 
-    it('handles AI service errors', async () => {
+    it("handles AI service errors", async () => {
       // Mock authenticated user
       (getUnifiedAuth as jest.Mock).mockResolvedValue({
-        user: { email: 'test@example.com', id: 'user-123', role: 'student' }
+        user: { email: "test@example.com", id: "user-123", role: "student" },
       });
 
       (VertexAI as jest.Mock).mockImplementation(() => ({
         getGenerativeModel: jest.fn().mockReturnValue({
-          generateContent: jest.fn().mockRejectedValue(new Error('AI service unavailable'))
-        })
+          generateContent: jest
+            .fn()
+            .mockRejectedValue(new Error("AI service unavailable")),
+        }),
       }));
 
       const request = createRequest(validRequestBody);
@@ -307,31 +321,35 @@ describe('/api/pbl/evaluate', () => {
 
       expect(response.status).toBe(500);
       expect(data.success).toBe(false);
-      expect(data.error).toBe('AI service unavailable');
+      expect(data.error).toBe("AI service unavailable");
     });
 
-    it('provides fallback evaluation when JSON parsing fails', async () => {
+    it("provides fallback evaluation when JSON parsing fails", async () => {
       // Mock authenticated user
       (getUnifiedAuth as jest.Mock).mockResolvedValue({
-        user: { email: 'test@example.com', id: 'user-123', role: 'student' }
+        user: { email: "test@example.com", id: "user-123", role: "student" },
       });
 
       const mockGenerateContent = jest.fn().mockResolvedValue({
         response: {
-          candidates: [{
-            content: {
-              parts: [{
-                text: 'Invalid JSON response'
-              }]
-            }
-          }]
-        }
+          candidates: [
+            {
+              content: {
+                parts: [
+                  {
+                    text: "Invalid JSON response",
+                  },
+                ],
+              },
+            },
+          ],
+        },
       });
 
       (VertexAI as jest.Mock).mockImplementation(() => ({
         getGenerativeModel: jest.fn().mockReturnValue({
-          generateContent: mockGenerateContent
-        })
+          generateContent: mockGenerateContent,
+        }),
       }));
 
       const request = createRequest(validRequestBody);
@@ -344,43 +362,49 @@ describe('/api/pbl/evaluate', () => {
       expect(data.evaluation.ksaScores).toEqual({
         knowledge: 20,
         skills: 20,
-        attitudes: 20
+        attitudes: 20,
       });
-      expect(data.evaluation.conversationInsights.improvementAreas).toHaveLength(1);
+      expect(
+        data.evaluation.conversationInsights.improvementAreas,
+      ).toHaveLength(1);
     });
   });
 
-  describe('edge cases', () => {
-    it('handles empty conversation history', async () => {
+  describe("edge cases", () => {
+    it("handles empty conversation history", async () => {
       // Mock authenticated user
       (getUnifiedAuth as jest.Mock).mockResolvedValue({
-        user: { email: 'test@example.com', id: 'user-123', role: 'student' }
+        user: { email: "test@example.com", id: "user-123", role: "student" },
       });
 
       const mockGenerateContent = jest.fn().mockResolvedValue({
         response: {
-          candidates: [{
-            content: {
-              parts: [{
-                text: JSON.stringify({
-                  ...mockEvaluationResponse,
-                  score: 0
-                })
-              }]
-            }
-          }]
-        }
+          candidates: [
+            {
+              content: {
+                parts: [
+                  {
+                    text: JSON.stringify({
+                      ...mockEvaluationResponse,
+                      score: 0,
+                    }),
+                  },
+                ],
+              },
+            },
+          ],
+        },
       });
 
       (VertexAI as jest.Mock).mockImplementation(() => ({
         getGenerativeModel: jest.fn().mockReturnValue({
-          generateContent: mockGenerateContent
-        })
+          generateContent: mockGenerateContent,
+        }),
       }));
 
       const request = createRequest({
         ...validRequestBody,
-        conversations: []
+        conversations: [],
       });
       const response = await POST(request);
       const data = await response.json();
@@ -390,36 +414,40 @@ describe('/api/pbl/evaluate', () => {
       expect(data.evaluation.conversationCount).toBe(0);
     });
 
-    it('handles conversations with only assistant messages', async () => {
+    it("handles conversations with only assistant messages", async () => {
       // Mock authenticated user
       (getUnifiedAuth as jest.Mock).mockResolvedValue({
-        user: { email: 'test@example.com', id: 'user-123', role: 'student' }
+        user: { email: "test@example.com", id: "user-123", role: "student" },
       });
 
       const mockGenerateContent = jest.fn().mockResolvedValue({
         response: {
-          candidates: [{
-            content: {
-              parts: [{
-                text: JSON.stringify(mockEvaluationResponse)
-              }]
-            }
-          }]
-        }
+          candidates: [
+            {
+              content: {
+                parts: [
+                  {
+                    text: JSON.stringify(mockEvaluationResponse),
+                  },
+                ],
+              },
+            },
+          ],
+        },
       });
 
       (VertexAI as jest.Mock).mockImplementation(() => ({
         getGenerativeModel: jest.fn().mockReturnValue({
-          generateContent: mockGenerateContent
-        })
+          generateContent: mockGenerateContent,
+        }),
       }));
 
       const request = createRequest({
         ...validRequestBody,
         conversations: [
-          { type: 'assistant', content: 'Welcome!' },
-          { type: 'assistant', content: 'How can I help?' }
-        ]
+          { type: "assistant", content: "Welcome!" },
+          { type: "assistant", content: "How can I help?" },
+        ],
       });
       const response = await POST(request);
       const data = await response.json();
@@ -428,38 +456,44 @@ describe('/api/pbl/evaluate', () => {
       expect(data.evaluation.conversationCount).toBe(0);
     });
 
-    it('limits user messages to last 10', async () => {
+    it("limits user messages to last 10", async () => {
       // Mock authenticated user
       (getUnifiedAuth as jest.Mock).mockResolvedValue({
-        user: { email: 'test@example.com', id: 'user-123', role: 'student' }
+        user: { email: "test@example.com", id: "user-123", role: "student" },
       });
 
       const mockGenerateContent = jest.fn().mockResolvedValue({
         response: {
-          candidates: [{
-            content: {
-              parts: [{
-                text: JSON.stringify(mockEvaluationResponse)
-              }]
-            }
-          }]
-        }
+          candidates: [
+            {
+              content: {
+                parts: [
+                  {
+                    text: JSON.stringify(mockEvaluationResponse),
+                  },
+                ],
+              },
+            },
+          ],
+        },
       });
 
       (VertexAI as jest.Mock).mockImplementation(() => ({
         getGenerativeModel: jest.fn().mockReturnValue({
-          generateContent: mockGenerateContent
-        })
+          generateContent: mockGenerateContent,
+        }),
       }));
 
-      const manyConversations = Array(20).fill(null).map((_, i) => ({
-        type: i % 2 === 0 ? 'user' : 'assistant',
-        content: `Message ${i}`
-      }));
+      const manyConversations = Array(20)
+        .fill(null)
+        .map((_, i) => ({
+          type: i % 2 === 0 ? "user" : "assistant",
+          content: `Message ${i}`,
+        }));
 
       const request = createRequest({
         ...validRequestBody,
-        conversations: manyConversations
+        conversations: manyConversations,
       });
       await POST(request);
 
@@ -467,40 +501,42 @@ describe('/api/pbl/evaluate', () => {
       const promptText = callArgs.contents[0].parts[0].text;
 
       // Should contain last 10 user messages (indices 0, 2, 4, 6, 8, 10, 12, 14, 16, 18)
-      expect(promptText).toContain('Message 18');
-      expect(promptText).toContain('Message 0'); // The oldest of the last 10 user messages
+      expect(promptText).toContain("Message 18");
+      expect(promptText).toContain("Message 0"); // The oldest of the last 10 user messages
     });
 
-    it('truncates long messages in the prompt', async () => {
+    it("truncates long messages in the prompt", async () => {
       // Mock authenticated user
       (getUnifiedAuth as jest.Mock).mockResolvedValue({
-        user: { email: 'test@example.com', id: 'user-123', role: 'student' }
+        user: { email: "test@example.com", id: "user-123", role: "student" },
       });
 
       const mockGenerateContent = jest.fn().mockResolvedValue({
         response: {
-          candidates: [{
-            content: {
-              parts: [{
-                text: JSON.stringify(mockEvaluationResponse)
-              }]
-            }
-          }]
-        }
+          candidates: [
+            {
+              content: {
+                parts: [
+                  {
+                    text: JSON.stringify(mockEvaluationResponse),
+                  },
+                ],
+              },
+            },
+          ],
+        },
       });
 
       (VertexAI as jest.Mock).mockImplementation(() => ({
         getGenerativeModel: jest.fn().mockReturnValue({
-          generateContent: mockGenerateContent
-        })
+          generateContent: mockGenerateContent,
+        }),
       }));
 
-      const longMessage = 'A'.repeat(300);
+      const longMessage = "A".repeat(300);
       const request = createRequest({
         ...validRequestBody,
-        conversations: [
-          { type: 'user', content: longMessage }
-        ]
+        conversations: [{ type: "user", content: longMessage }],
       });
       await POST(request);
 
@@ -508,29 +544,29 @@ describe('/api/pbl/evaluate', () => {
       const promptText = callArgs.contents[0].parts[0].text;
 
       // Message should be truncated to 200 characters
-      expect(promptText).toContain('A'.repeat(200));
-      expect(promptText).not.toContain('A'.repeat(201));
+      expect(promptText).toContain("A".repeat(200));
+      expect(promptText).not.toContain("A".repeat(201));
     });
 
-    it('includes development error details in dev mode', async () => {
+    it("includes development error details in dev mode", async () => {
       // Mock authenticated user
       (getUnifiedAuth as jest.Mock).mockResolvedValue({
-        user: { email: 'test@example.com', id: 'user-123', role: 'student' }
+        user: { email: "test@example.com", id: "user-123", role: "student" },
       });
 
       const originalEnv = process.env.NODE_ENV;
       // Use Object.defineProperty to mock NODE_ENV
-      Object.defineProperty(process.env, 'NODE_ENV', {
-        value: 'development',
+      Object.defineProperty(process.env, "NODE_ENV", {
+        value: "development",
         writable: true,
-        configurable: true
+        configurable: true,
       });
 
-      const error = new Error('Detailed error message');
+      const error = new Error("Detailed error message");
       (VertexAI as jest.Mock).mockImplementation(() => ({
         getGenerativeModel: jest.fn().mockReturnValue({
-          generateContent: jest.fn().mockRejectedValue(error)
-        })
+          generateContent: jest.fn().mockRejectedValue(error),
+        }),
       }));
 
       const request = createRequest(validRequestBody);
@@ -541,10 +577,10 @@ describe('/api/pbl/evaluate', () => {
       expect(data.details).toBeDefined();
 
       // Restore original NODE_ENV
-      Object.defineProperty(process.env, 'NODE_ENV', {
+      Object.defineProperty(process.env, "NODE_ENV", {
         value: originalEnv,
         writable: true,
-        configurable: true
+        configurable: true,
       });
     });
   });

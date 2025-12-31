@@ -1,34 +1,34 @@
-import { PrismaClient } from '@prisma/client';
-import bcrypt from 'bcryptjs';
+import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('🌱 Starting database seed...');
+  console.log("🌱 Starting database seed...");
 
   // Create demo users
   const users = [
     {
-      email: 'student@example.com',
-      password: 'student123',
-      role: 'student',
-      name: 'Student User',
-      preferredLanguage: 'en'
+      email: "student@example.com",
+      password: "student123",
+      role: "student",
+      name: "Student User",
+      preferredLanguage: "en",
     },
     {
-      email: 'teacher@example.com',
-      password: 'teacher123',
-      role: 'teacher',
-      name: 'Teacher User',
-      preferredLanguage: 'en'
+      email: "teacher@example.com",
+      password: "teacher123",
+      role: "teacher",
+      name: "Teacher User",
+      preferredLanguage: "en",
     },
     {
-      email: 'admin@example.com',
-      password: 'admin123',
-      role: 'admin',
-      name: 'Admin User',
-      preferredLanguage: 'en'
-    }
+      email: "admin@example.com",
+      password: "admin123",
+      role: "admin",
+      name: "Admin User",
+      preferredLanguage: "en",
+    },
   ];
 
   for (const userData of users) {
@@ -55,19 +55,19 @@ async function main() {
         achievements: [],
         skills: [],
         preferences: {},
-        metadata: {}
+        metadata: {},
       },
     });
 
     console.log(`✅ Created/Updated user: ${user.email} (${user.role})`);
   }
 
-  console.log('🎉 Database seed completed!');
+  console.log("🎉 Database seed completed!");
 }
 
 main()
   .catch((e) => {
-    console.error('❌ Seed error:', e);
+    console.error("❌ Seed error:", e);
     process.exit(1);
   })
   .finally(async () => {

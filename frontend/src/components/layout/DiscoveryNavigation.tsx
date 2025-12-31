@@ -1,11 +1,13 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react'
-import { GraduationCap, Globe, BarChart } from 'lucide-react';;
-import { useRouter, usePathname } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
-;
-import { userDataService, type UserAchievements } from '@/lib/services/user-data-service';
+import React, { useState, useEffect } from "react";
+import { GraduationCap, Globe, BarChart } from "lucide-react";
+import { useRouter, usePathname } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  userDataService,
+  type UserAchievements,
+} from "@/lib/services/user-data-service";
 
 export default function DiscoveryNavigation() {
   const router = useRouter();
@@ -17,7 +19,7 @@ export default function DiscoveryNavigation() {
     badges: [],
     totalXp: 0,
     level: 1,
-    completedTasks: []
+    completedTasks: [],
   });
 
   // Load user data
@@ -29,7 +31,7 @@ export default function DiscoveryNavigation() {
           setAchievements(userData.achievements);
         }
       } catch (error) {
-        console.error('Failed to load navigation data:', error);
+        console.error("Failed to load navigation data:", error);
       }
     };
     loadData();
@@ -46,8 +48,8 @@ export default function DiscoveryNavigation() {
       setShowSideNav(scrollTop > 100);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const navigationItems: Array<{
@@ -60,41 +62,43 @@ export default function DiscoveryNavigation() {
     badge?: string | number;
   }> = [
     {
-      id: 'overview',
-      label: '總覽',
+      id: "overview",
+      label: "總覽",
       icon: GraduationCap,
-      href: '/discovery/overview',
-      path: '/discovery/overview'
+      href: "/discovery/overview",
+      path: "/discovery/overview",
     },
     {
-      id: 'evaluation',
-      label: '評估',
+      id: "evaluation",
+      label: "評估",
       icon: BarChart,
-      href: '/discovery/evaluation',
-      path: '/discovery/evaluation'
+      href: "/discovery/evaluation",
+      path: "/discovery/evaluation",
     },
     {
-      id: 'scenarios',
-      label: '職業冒險',
+      id: "scenarios",
+      label: "職業冒險",
       icon: Globe,
-      href: '/discovery/scenarios',
-      path: '/discovery/scenarios'
-    }
+      href: "/discovery/scenarios",
+      path: "/discovery/scenarios",
+    },
   ];
 
-  const isActive = (item: typeof navigationItems[0]) => {
+  const isActive = (item: (typeof navigationItems)[0]) => {
     // Check if current path starts with the item path (for nested routes)
-    return pathname === item.path || pathname.startsWith(item.path + '/');
+    return pathname === item.path || pathname.startsWith(item.path + "/");
   };
 
   return (
     <>
       {/* Desktop: Floating Side Navigation */}
-      <div className={`
+      <div
+        className={`
         hidden lg:block fixed left-8 top-1/2 -translate-y-1/2 z-30
         transition-all duration-500
-        ${showSideNav ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-full'}
-      `}>
+        ${showSideNav ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-full"}
+      `}
+      >
         {/* Vertical Progress Bar */}
         <div className="relative">
           <div className="absolute left-0 top-0 w-1 h-40 bg-gray-200 rounded-full" />
@@ -121,22 +125,25 @@ export default function DiscoveryNavigation() {
                   disabled={item.disabled}
                   className={`
                     absolute group
-                    ${active ? 'scale-110' : 'scale-100'}
-                    ${item.disabled ? 'cursor-not-allowed' : 'cursor-pointer'}
+                    ${active ? "scale-110" : "scale-100"}
+                    ${item.disabled ? "cursor-not-allowed" : "cursor-pointer"}
                   `}
                   style={{ top: `${position}%`, transform: `translateY(-50%)` }}
                 >
                   {/* Circle Button */}
-                  <div className={`
+                  <div
+                    className={`
                     w-8 h-8 rounded-full flex items-center justify-center
                     transition-all duration-300 shadow-lg
-                    ${active
-                      ? 'bg-purple-600 text-white'
-                      : item.disabled
-                      ? 'bg-gray-200 text-gray-400'
-                      : 'bg-white text-gray-600 hover:bg-purple-50 hover:text-purple-600'
+                    ${
+                      active
+                        ? "bg-purple-600 text-white"
+                        : item.disabled
+                          ? "bg-gray-200 text-gray-400"
+                          : "bg-white text-gray-600 hover:bg-purple-50 hover:text-purple-600"
                     }
-                  `}>
+                  `}
+                  >
                     <Icon className="w-4 h-4" />
                     {item.badge && (
                       <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-4 h-4 rounded-full flex items-center justify-center">
@@ -146,12 +153,14 @@ export default function DiscoveryNavigation() {
                   </div>
 
                   {/* Label Tooltip */}
-                  <div className={`
+                  <div
+                    className={`
                     absolute left-12 top-1/2 -translate-y-1/2 whitespace-nowrap
                     bg-gray-900 text-white px-2 py-1 rounded text-xs
                     opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none
-                    ${item.disabled ? 'hidden' : ''}
-                  `}>
+                    ${item.disabled ? "hidden" : ""}
+                  `}
+                  >
                     {item.label}
                   </div>
                 </button>
@@ -232,11 +241,12 @@ export default function DiscoveryNavigation() {
                     disabled={item.disabled}
                     className={`
                       w-full flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors
-                      ${active
-                        ? 'bg-purple-100 text-purple-700'
-                        : item.disabled
-                        ? 'bg-gray-50 text-gray-400 cursor-not-allowed'
-                        : 'hover:bg-gray-50 text-gray-700'
+                      ${
+                        active
+                          ? "bg-purple-100 text-purple-700"
+                          : item.disabled
+                            ? "bg-gray-50 text-gray-400 cursor-not-allowed"
+                            : "hover:bg-gray-50 text-gray-700"
                       }
                     `}
                   >

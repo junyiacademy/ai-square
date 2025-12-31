@@ -7,8 +7,8 @@
  * @deprecated Use getUnifiedAuth from unified-auth.ts instead
  */
 
-import { getUnifiedAuth } from './unified-auth';
-import type { NextRequest } from 'next/server';
+import { getUnifiedAuth } from "./unified-auth";
+import type { NextRequest } from "next/server";
 
 export interface Session {
   user: {
@@ -25,7 +25,9 @@ export interface Session {
  *
  * @deprecated Use getUnifiedAuth directly
  */
-export async function getServerSession(request?: NextRequest): Promise<Session | null> {
+export async function getServerSession(
+  request?: NextRequest,
+): Promise<Session | null> {
   // Try to get auth using the unified system
   const auth = await getUnifiedAuth(request);
 
@@ -37,8 +39,8 @@ export async function getServerSession(request?: NextRequest): Promise<Session |
   return {
     user: {
       id: auth.user.id,
-      email: auth.user.email
-    }
+      email: auth.user.email,
+    },
   };
 }
 

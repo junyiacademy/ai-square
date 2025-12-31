@@ -1,352 +1,392 @@
-import { NextRequest } from 'next/server'
-import { POST, GET } from '../route'
-import { ErrorReport } from '@/lib/error-tracking/error-tracker'
+import { NextRequest } from "next/server";
+import { POST, GET } from "../route";
+import { ErrorReport } from "@/lib/error-tracking/error-tracker";
 
 // Mock console methods
-const originalConsoleError = console.error
+const originalConsoleError = console.error;
 beforeAll(() => {
-  console.error = jest.fn()
-})
+  console.error = jest.fn();
+});
 
 afterAll(() => {
-  console.error = originalConsoleError
-})
+  console.error = originalConsoleError;
+});
 
-describe('/api/error-tracking', () => {
+describe("/api/error-tracking", () => {
   beforeEach(() => {
-    jest.clearAllMocks()
-  })
+    jest.clearAllMocks();
+  });
 
-  describe('POST', () => {
-    it('should log error reports successfully', async () => {
+  describe("POST", () => {
+    it("should log error reports successfully", async () => {
       const errorReport: ErrorReport = {
-        id: 'error123',
-        message: 'Test error',
-        stack: 'Error: Test error\n    at Component.render',
-        severity: 'medium',
+        id: "error123",
+        message: "Test error",
+        stack: "Error: Test error\n    at Component.render",
+        severity: "medium",
         timestamp: new Date().toISOString(),
         context: {
-          component: 'TestComponent',
-          action: 'render',
-          userAgent: 'Mozilla/5.0',
-          url: '/test-page',
+          component: "TestComponent",
+          action: "render",
+          userAgent: "Mozilla/5.0",
+          url: "/test-page",
         },
-        fingerprint: 'test-error-fingerprint'
-      }
+        fingerprint: "test-error-fingerprint",
+      };
 
-      const request = new NextRequest('http://localhost:3000/api/error-tracking', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const request = new NextRequest(
+        "http://localhost:3000/api/error-tracking",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(errorReport),
         },
-        body: JSON.stringify(errorReport),
-      })
+      );
 
-      const response = await POST(request)
+      const response = await POST(request);
 
-      expect(response.status).toBe(201)
-      const data = await response.json()
-      expect(data.success).toBe(true)
-      expect(data.errorId).toBe('error123')
-    })
+      expect(response.status).toBe(201);
+      const data = await response.json();
+      expect(data.success).toBe(true);
+      expect(data.errorId).toBe("error123");
+    });
 
-    it('should validate required fields', async () => {
+    it("should validate required fields", async () => {
       const invalidReport = {
         // Missing required fields: id, message, timestamp
-        severity: 'medium',
-      }
+        severity: "medium",
+      };
 
-      const request = new NextRequest('http://localhost:3000/api/error-tracking', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const request = new NextRequest(
+        "http://localhost:3000/api/error-tracking",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(invalidReport),
         },
-        body: JSON.stringify(invalidReport),
-      })
+      );
 
-      const response = await POST(request)
+      const response = await POST(request);
 
-      expect(response.status).toBe(400)
-      const data = await response.json()
-      expect(data.error).toBe('Invalid error report format')
-    })
+      expect(response.status).toBe(400);
+      const data = await response.json();
+      expect(data.error).toBe("Invalid error report format");
+    });
 
-    it('should log critical errors to console', async () => {
+    it("should log critical errors to console", async () => {
       const criticalError: ErrorReport = {
-        id: 'critical123',
-        message: 'Critical system failure',
-        stack: 'Error stack trace',
-        severity: 'critical',
+        id: "critical123",
+        message: "Critical system failure",
+        stack: "Error stack trace",
+        severity: "critical",
         timestamp: new Date().toISOString(),
         context: {
-          component: 'DatabaseConnection',
-          error: 'Connection timeout',
+          component: "DatabaseConnection",
+          error: "Connection timeout",
         },
-        fingerprint: 'critical-error-fingerprint'
-      }
+        fingerprint: "critical-error-fingerprint",
+      };
 
-      const request = new NextRequest('http://localhost:3000/api/error-tracking', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const request = new NextRequest(
+        "http://localhost:3000/api/error-tracking",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(criticalError),
         },
-        body: JSON.stringify(criticalError),
-      })
+      );
 
-      const response = await POST(request)
+      const response = await POST(request);
 
-      expect(response.status).toBe(201)
+      expect(response.status).toBe(201);
       expect(console.error).toHaveBeenCalledWith(
-        'CRITICAL ERROR REPORTED:',
+        "CRITICAL ERROR REPORTED:",
         expect.objectContaining({
-          id: 'critical123',
-          message: 'Critical system failure',
+          id: "critical123",
+          message: "Critical system failure",
           context: criticalError.context,
           timestamp: criticalError.timestamp,
-        })
-      )
-    })
+        }),
+      );
+    });
 
-    it('should handle multiple error reports', async () => {
-      const errors: ErrorReport[] = []
+    it("should handle multiple error reports", async () => {
+      const errors: ErrorReport[] = [];
 
       // Create multiple error reports
       for (let i = 0; i < 5; i++) {
         errors.push({
           id: `error${i}`,
           message: `Test error ${i}`,
-          severity: 'low',
+          severity: "low",
           timestamp: new Date().toISOString(),
           context: {},
-          fingerprint: `error-${i}-fingerprint`
-        })
+          fingerprint: `error-${i}-fingerprint`,
+        });
       }
 
       // Send all errors
       for (const error of errors) {
-        const request = new NextRequest('http://localhost:3000/api/error-tracking', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
+        const request = new NextRequest(
+          "http://localhost:3000/api/error-tracking",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(error),
           },
-          body: JSON.stringify(error),
-        })
+        );
 
-        const response = await POST(request)
-        expect(response.status).toBe(201)
+        const response = await POST(request);
+        expect(response.status).toBe(201);
       }
-    })
+    });
 
-    it('should handle errors with missing optional fields', async () => {
+    it("should handle errors with missing optional fields", async () => {
       const minimalError: ErrorReport = {
-        id: 'minimal123',
-        message: 'Minimal error',
+        id: "minimal123",
+        message: "Minimal error",
         timestamp: new Date().toISOString(),
-        severity: 'low',
+        severity: "low",
         context: {},
-        fingerprint: 'minimal-error-fingerprint'
-      }
+        fingerprint: "minimal-error-fingerprint",
+      };
 
-      const request = new NextRequest('http://localhost:3000/api/error-tracking', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const request = new NextRequest(
+        "http://localhost:3000/api/error-tracking",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(minimalError),
         },
-        body: JSON.stringify(minimalError),
-      })
+      );
 
-      const response = await POST(request)
+      const response = await POST(request);
 
-      expect(response.status).toBe(201)
-      const data = await response.json()
-      expect(data.success).toBe(true)
-      expect(data.errorId).toBe('minimal123')
-    })
+      expect(response.status).toBe(201);
+      const data = await response.json();
+      expect(data.success).toBe(true);
+      expect(data.errorId).toBe("minimal123");
+    });
 
-    it('should handle invalid JSON gracefully', async () => {
-      const request = new NextRequest('http://localhost:3000/api/error-tracking', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+    it("should handle invalid JSON gracefully", async () => {
+      const request = new NextRequest(
+        "http://localhost:3000/api/error-tracking",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: "invalid json {",
         },
-        body: 'invalid json {',
-      })
+      );
 
-      const response = await POST(request)
+      const response = await POST(request);
 
-      expect(response.status).toBe(500)
-      const data = await response.json()
-      expect(data.error).toBe('Failed to process error report')
-    })
+      expect(response.status).toBe(500);
+      const data = await response.json();
+      expect(data.error).toBe("Failed to process error report");
+    });
 
-    it('should validate error report with missing id', async () => {
+    it("should validate error report with missing id", async () => {
       const errorWithoutId = {
-        message: 'Error without ID',
+        message: "Error without ID",
         timestamp: new Date().toISOString(),
-      }
+      };
 
-      const request = new NextRequest('http://localhost:3000/api/error-tracking', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const request = new NextRequest(
+        "http://localhost:3000/api/error-tracking",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(errorWithoutId),
         },
-        body: JSON.stringify(errorWithoutId),
-      })
+      );
 
-      const response = await POST(request)
+      const response = await POST(request);
 
-      expect(response.status).toBe(400)
-      const data = await response.json()
-      expect(data.error).toBe('Invalid error report format')
-    })
+      expect(response.status).toBe(400);
+      const data = await response.json();
+      expect(data.error).toBe("Invalid error report format");
+    });
 
-    it('should validate error report with missing message', async () => {
+    it("should validate error report with missing message", async () => {
       const errorWithoutMessage = {
-        id: 'error123',
+        id: "error123",
         timestamp: new Date().toISOString(),
-      }
+      };
 
-      const request = new NextRequest('http://localhost:3000/api/error-tracking', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const request = new NextRequest(
+        "http://localhost:3000/api/error-tracking",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(errorWithoutMessage),
         },
-        body: JSON.stringify(errorWithoutMessage),
-      })
+      );
 
-      const response = await POST(request)
+      const response = await POST(request);
 
-      expect(response.status).toBe(400)
-      const data = await response.json()
-      expect(data.error).toBe('Invalid error report format')
-    })
+      expect(response.status).toBe(400);
+      const data = await response.json();
+      expect(data.error).toBe("Invalid error report format");
+    });
 
-    it('should validate error report with missing timestamp', async () => {
+    it("should validate error report with missing timestamp", async () => {
       const errorWithoutTimestamp = {
-        id: 'error123',
-        message: 'Error without timestamp',
-      }
+        id: "error123",
+        message: "Error without timestamp",
+      };
 
-      const request = new NextRequest('http://localhost:3000/api/error-tracking', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const request = new NextRequest(
+        "http://localhost:3000/api/error-tracking",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(errorWithoutTimestamp),
         },
-        body: JSON.stringify(errorWithoutTimestamp),
-      })
+      );
 
-      const response = await POST(request)
+      const response = await POST(request);
 
-      expect(response.status).toBe(400)
-      const data = await response.json()
-      expect(data.error).toBe('Invalid error report format')
-    })
-  })
+      expect(response.status).toBe(400);
+      const data = await response.json();
+      expect(data.error).toBe("Invalid error report format");
+    });
+  });
 
-  describe('GET', () => {
-    it('should return stored errors', async () => {
+  describe("GET", () => {
+    it("should return stored errors", async () => {
       // First, add some errors
       const errors: ErrorReport[] = [
         {
-          id: 'get-test-1',
-          message: 'First error',
+          id: "get-test-1",
+          message: "First error",
           timestamp: new Date().toISOString(),
-          severity: 'high',
+          severity: "high",
           context: {},
-          fingerprint: 'first-error-fingerprint'
+          fingerprint: "first-error-fingerprint",
         },
         {
-          id: 'get-test-2',
-          message: 'Second error',
+          id: "get-test-2",
+          message: "Second error",
           timestamp: new Date().toISOString(),
-          severity: 'low',
+          severity: "low",
           context: {},
-          fingerprint: 'second-error-fingerprint'
+          fingerprint: "second-error-fingerprint",
         },
-      ]
+      ];
 
       for (const error of errors) {
-        const postRequest = new NextRequest('http://localhost:3000/api/error-tracking', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
+        const postRequest = new NextRequest(
+          "http://localhost:3000/api/error-tracking",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(error),
           },
-          body: JSON.stringify(error),
-        })
-        await POST(postRequest)
+        );
+        await POST(postRequest);
       }
 
       // Now GET the errors
-      const getRequest = new NextRequest('http://localhost:3000/api/error-tracking')
-      const response = await GET(getRequest)
+      const getRequest = new NextRequest(
+        "http://localhost:3000/api/error-tracking",
+      );
+      const response = await GET(getRequest);
 
-      expect(response.status).toBe(200)
-      const data = await response.json()
-      expect(data.success).toBe(true)
-      expect(data.data).toBeDefined()
-      expect(data.data.data).toBeDefined()
-      expect(Array.isArray(data.data.data)).toBe(true)
-      expect(data.data.pagination).toBeDefined()
-      expect(data.data.pagination.total).toBeGreaterThanOrEqual(2)
-    })
+      expect(response.status).toBe(200);
+      const data = await response.json();
+      expect(data.success).toBe(true);
+      expect(data.data).toBeDefined();
+      expect(data.data.data).toBeDefined();
+      expect(Array.isArray(data.data.data)).toBe(true);
+      expect(data.data.pagination).toBeDefined();
+      expect(data.data.pagination.total).toBeGreaterThanOrEqual(2);
+    });
 
-    it('should return filtered errors by severity', async () => {
-      const request = new NextRequest('http://localhost:3000/api/error-tracking?severity=critical')
-      const response = await GET(request)
+    it("should return filtered errors by severity", async () => {
+      const request = new NextRequest(
+        "http://localhost:3000/api/error-tracking?severity=critical",
+      );
+      const response = await GET(request);
 
-      expect(response.status).toBe(200)
-      const data = await response.json()
-      expect(data.success).toBe(true)
-      expect(data.data).toBeDefined()
-      expect(data.data.data).toBeDefined()
-      expect(Array.isArray(data.data.data)).toBe(true)
+      expect(response.status).toBe(200);
+      const data = await response.json();
+      expect(data.success).toBe(true);
+      expect(data.data).toBeDefined();
+      expect(data.data.data).toBeDefined();
+      expect(Array.isArray(data.data.data)).toBe(true);
 
       // All returned errors should have critical severity
       data.data.data.forEach((error: ErrorReport) => {
         if (error.severity) {
-          expect(error.severity).toBe('critical')
+          expect(error.severity).toBe("critical");
         }
-      })
-    })
+      });
+    });
 
-    it('should return filtered errors by source', async () => {
-      const request = new NextRequest('http://localhost:3000/api/error-tracking?source=server')
-      const response = await GET(request)
+    it("should return filtered errors by source", async () => {
+      const request = new NextRequest(
+        "http://localhost:3000/api/error-tracking?source=server",
+      );
+      const response = await GET(request);
 
-      expect(response.status).toBe(200)
-      const data = await response.json()
-      expect(data.success).toBe(true)
-      expect(data.data).toBeDefined()
-      expect(data.data.data).toBeDefined()
+      expect(response.status).toBe(200);
+      const data = await response.json();
+      expect(data.success).toBe(true);
+      expect(data.data).toBeDefined();
+      expect(data.data.data).toBeDefined();
 
       // All returned errors should have server source
       data.data.data.forEach((error: ErrorReport) => {
         // Source check removed - not part of ErrorReport interface
-      })
-    })
+      });
+    });
 
-    it('should support pagination with limit parameter', async () => {
-      const request = new NextRequest('http://localhost:3000/api/error-tracking?limit=5')
-      const response = await GET(request)
+    it("should support pagination with limit parameter", async () => {
+      const request = new NextRequest(
+        "http://localhost:3000/api/error-tracking?limit=5",
+      );
+      const response = await GET(request);
 
-      expect(response.status).toBe(200)
-      const data = await response.json()
-      expect(data.success).toBe(true)
-      expect(data.data).toBeDefined()
-      expect(data.data.data).toBeDefined()
-      expect(data.data.data.length).toBeLessThanOrEqual(5)
-    })
+      expect(response.status).toBe(200);
+      const data = await response.json();
+      expect(data.success).toBe(true);
+      expect(data.data).toBeDefined();
+      expect(data.data.data).toBeDefined();
+      expect(data.data.data.length).toBeLessThanOrEqual(5);
+    });
 
-    it('should handle invalid query parameters gracefully', async () => {
-      const request = new NextRequest('http://localhost:3000/api/error-tracking?limit=invalid')
-      const response = await GET(request)
+    it("should handle invalid query parameters gracefully", async () => {
+      const request = new NextRequest(
+        "http://localhost:3000/api/error-tracking?limit=invalid",
+      );
+      const response = await GET(request);
 
-      expect(response.status).toBe(200)
-      const data = await response.json()
-      expect(data.success).toBe(true)
-      expect(data.data).toBeDefined()
-      expect(data.data.data).toBeDefined()
-      expect(Array.isArray(data.data.data)).toBe(true)
-    })
-  })
-})
+      expect(response.status).toBe(200);
+      const data = await response.json();
+      expect(data.success).toBe(true);
+      expect(data.data).toBeDefined();
+      expect(data.data.data).toBeDefined();
+      expect(Array.isArray(data.data.data)).toBe(true);
+    });
+  });
+});

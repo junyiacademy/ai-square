@@ -1,11 +1,11 @@
-describe('repositories', () => {
-  it('should load module', () => {
+describe("repositories", () => {
+  it("should load module", () => {
     try {
-      const module = require('../repositories');
+      const module = require("../repositories");
       expect(module).toBeDefined();
 
       // Test exports
-      Object.keys(module).forEach(key => {
+      Object.keys(module).forEach((key) => {
         expect(module[key]).toBeDefined();
       });
     } catch (error) {

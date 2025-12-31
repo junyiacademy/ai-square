@@ -9,9 +9,9 @@ import type {
   ITaskRepository,
   IEvaluationRepository,
   IScenarioRepository,
-  IDiscoveryRepository
-} from '@/lib/repositories/interfaces';
-import type { IScenario, IProgram } from '@/types/unified-learning';
+  IDiscoveryRepository,
+} from "@/lib/repositories/interfaces";
+import type { IScenario, IProgram } from "@/types/unified-learning";
 
 /**
  * Create a complete mock for UserRepository
@@ -62,7 +62,7 @@ export function createMockTaskRepository(): jest.Mocked<ITaskRepository> {
   return {
     findById: jest.fn(),
     findByProgram: jest.fn(),
-    findByProgramIds: jest.fn(),  // Added for N+1 prevention
+    findByProgramIds: jest.fn(), // Added for N+1 prevention
     create: jest.fn(),
     createBatch: jest.fn(),
     updateInteractions: jest.fn(),
@@ -81,7 +81,7 @@ export function createMockEvaluationRepository(): jest.Mocked<IEvaluationReposit
   return {
     findById: jest.fn(),
     findByProgram: jest.fn(),
-    findByProgramIds: jest.fn(),  // Added for N+1 prevention
+    findByProgramIds: jest.fn(), // Added for N+1 prevention
     findByTask: jest.fn(),
     findByUser: jest.fn(),
     findByType: jest.fn(),
@@ -98,7 +98,7 @@ export function createMockEvaluationRepository(): jest.Mocked<IEvaluationReposit
 export function createMockScenarioRepository(): jest.Mocked<IScenarioRepository> {
   return {
     findById: jest.fn(),
-    findByIds: jest.fn(),  // Added for N+1 prevention
+    findByIds: jest.fn(), // Added for N+1 prevention
     findBySource: jest.fn(),
     update: jest.fn(),
     create: jest.fn(),
@@ -126,7 +126,6 @@ export function createMockDiscoveryRepository(): jest.Mocked<IDiscoveryRepositor
   };
 }
 
-
 /**
  * Create all repository mocks with default behaviors
  */
@@ -147,7 +146,7 @@ export function createAllRepositoryMocks() {
 export function setupRepositoryFactoryMock() {
   const mocks = createAllRepositoryMocks();
 
-  jest.mock('@/lib/repositories/base/repository-factory', () => ({
+  jest.mock("@/lib/repositories/base/repository-factory", () => ({
     repositoryFactory: {
       getUserRepository: jest.fn(() => mocks.userRepo),
       getProgramRepository: jest.fn(() => mocks.programRepo),
@@ -155,7 +154,7 @@ export function setupRepositoryFactoryMock() {
       getEvaluationRepository: jest.fn(() => mocks.evaluationRepo),
       getScenarioRepository: jest.fn(() => mocks.scenarioRepo),
       getDiscoveryRepository: jest.fn(() => mocks.discoveryRepo),
-    }
+    },
   }));
 
   return mocks;
@@ -164,20 +163,22 @@ export function setupRepositoryFactoryMock() {
 /**
  * Create a complete mock IScenario object
  */
-export function createMockScenario(overrides: Partial<IScenario> = {}): IScenario {
+export function createMockScenario(
+  overrides: Partial<IScenario> = {},
+): IScenario {
   return {
-    id: 'mock-scenario-id',
-    mode: 'assessment',
-    status: 'active',
-    version: '1.0.0',
-    sourceType: 'yaml',
-    sourcePath: '/mock/path',
+    id: "mock-scenario-id",
+    mode: "assessment",
+    status: "active",
+    version: "1.0.0",
+    sourceType: "yaml",
+    sourcePath: "/mock/path",
     sourceId: undefined,
     sourceMetadata: {},
-    title: { en: 'Mock Scenario', zh: '模擬情境' },
-    description: { en: 'Mock scenario description', zh: '模擬情境描述' },
-    objectives: ['Learn AI concepts'],
-    difficulty: 'beginner',
+    title: { en: "Mock Scenario", zh: "模擬情境" },
+    description: { en: "Mock scenario description", zh: "模擬情境描述" },
+    objectives: ["Learn AI concepts"],
+    difficulty: "beginner",
     estimatedMinutes: 30,
     prerequisites: [],
     taskTemplates: [],
@@ -191,29 +192,37 @@ export function createMockScenario(overrides: Partial<IScenario> = {}): IScenari
         total_questions: 12,
         time_limit_minutes: 15,
         passing_score: 60,
-        domains: ['engaging_with_ai', 'creating_with_ai', 'managing_ai', 'designing_ai'],
+        domains: [
+          "engaging_with_ai",
+          "creating_with_ai",
+          "managing_ai",
+          "designing_ai",
+        ],
       },
       domains: {
         engaging_with_ai: {
-          name: 'Engaging with AI',
-          name_zhTW: '與 AI 互動',
-          description: 'Understanding and effectively communicating with AI systems',
+          name: "Engaging with AI",
+          name_zhTW: "與 AI 互動",
+          description:
+            "Understanding and effectively communicating with AI systems",
           questions: 3,
         },
       },
       questions: {
-        en: [{
-          id: 'Q001',
-          domain: 'engaging_with_ai',
-          difficulty: 'basic',
-          type: 'multiple_choice',
-          question: 'What is AI?',
-          options: [
-            { id: 'a', text: 'Artificial Intelligence' },
-            { id: 'b', text: 'Animal Intelligence' },
-          ],
-          correct_answer: 'a',
-        }],
+        en: [
+          {
+            id: "Q001",
+            domain: "engaging_with_ai",
+            difficulty: "basic",
+            type: "multiple_choice",
+            question: "What is AI?",
+            options: [
+              { id: "a", text: "Artificial Intelligence" },
+              { id: "b", text: "Animal Intelligence" },
+            ],
+            correct_answer: "a",
+          },
+        ],
       },
     },
     aiModules: {},
@@ -229,19 +238,21 @@ export function createMockScenario(overrides: Partial<IScenario> = {}): IScenari
 /**
  * Create a complete mock User object
  */
-export function createMockUser(overrides: Partial<import('@/lib/repositories/interfaces').User> = {}): import('@/lib/repositories/interfaces').User {
+export function createMockUser(
+  overrides: Partial<import("@/lib/repositories/interfaces").User> = {},
+): import("@/lib/repositories/interfaces").User {
   return {
-    id: 'mock-user-id',
-    email: 'test@example.com',
-    name: 'Test User',
-    preferredLanguage: 'en',
+    id: "mock-user-id",
+    email: "test@example.com",
+    name: "Test User",
+    preferredLanguage: "en",
     level: 1,
     totalXp: 0,
     learningPreferences: {
       goals: [],
       interests: [],
       learningPreferences: [],
-      learningStyle: 'visual',
+      learningStyle: "visual",
     },
     onboardingCompleted: true,
     createdAt: new Date(),
@@ -255,17 +266,19 @@ export function createMockUser(overrides: Partial<import('@/lib/repositories/int
 /**
  * Create a complete mock ITask object
  */
-export function createMockTask(overrides: Partial<import('@/types/unified-learning').ITask> = {}): import('@/types/unified-learning').ITask {
+export function createMockTask(
+  overrides: Partial<import("@/types/unified-learning").ITask> = {},
+): import("@/types/unified-learning").ITask {
   return {
-    id: 'mock-task-id',
-    programId: 'mock-program-id',
-    mode: 'assessment',
+    id: "mock-task-id",
+    programId: "mock-program-id",
+    mode: "assessment",
     taskIndex: 0,
-    type: 'question',
-    status: 'pending',
-    title: { en: 'Mock Task' },
-    description: { en: 'Mock task description' },
-    content: { question: 'What is AI?' },
+    type: "question",
+    status: "pending",
+    title: { en: "Mock Task" },
+    description: { en: "Mock task description" },
+    content: { question: "What is AI?" },
     interactions: [],
     interactionCount: 0,
     userResponse: {},
@@ -291,22 +304,24 @@ export function createMockTask(overrides: Partial<import('@/types/unified-learni
 /**
  * Create a complete mock IEvaluation object
  */
-export function createMockEvaluation(overrides: Partial<import('@/types/unified-learning').IEvaluation> = {}): import('@/types/unified-learning').IEvaluation {
+export function createMockEvaluation(
+  overrides: Partial<import("@/types/unified-learning").IEvaluation> = {},
+): import("@/types/unified-learning").IEvaluation {
   return {
-    id: 'mock-eval-id',
-    userId: 'mock-user-id',
-    programId: 'mock-program-id',
-    taskId: 'mock-task-id',
-    mode: 'assessment',
-    evaluationType: 'formative',
+    id: "mock-eval-id",
+    userId: "mock-user-id",
+    programId: "mock-program-id",
+    taskId: "mock-task-id",
+    mode: "assessment",
+    evaluationType: "formative",
     evaluationSubtype: undefined,
     score: 85,
     maxScore: 100,
     domainScores: {},
-    feedbackText: 'Good job!',
+    feedbackText: "Good job!",
     feedbackData: {},
-    aiProvider: 'vertex-ai',
-    aiModel: 'gemini-2.5-flash',
+    aiProvider: "vertex-ai",
+    aiModel: "gemini-2.5-flash",
     aiAnalysis: {},
     timeTakenSeconds: 120,
     createdAt: new Date().toISOString(),
@@ -323,11 +338,11 @@ export function createMockEvaluation(overrides: Partial<import('@/types/unified-
  */
 export function createMockProgram(overrides: Partial<IProgram> = {}): IProgram {
   return {
-    id: 'mock-program-id',
-    userId: 'mock-user-id',
-    scenarioId: 'mock-scenario-id',
-    mode: 'assessment',
-    status: 'active',
+    id: "mock-program-id",
+    userId: "mock-user-id",
+    scenarioId: "mock-scenario-id",
+    mode: "assessment",
+    status: "active",
     currentTaskIndex: 0,
     completedTaskCount: 0,
     totalTaskCount: 5,

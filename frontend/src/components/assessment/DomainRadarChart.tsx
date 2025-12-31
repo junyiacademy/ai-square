@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import React from 'react';
+import React from "react";
 import {
   RadarChart,
   PolarGrid,
   PolarAngleAxis,
   PolarRadiusAxis,
   Radar,
-  ResponsiveContainer
-} from 'recharts';
-import { RadarChartData } from '../../types/assessment';
+  ResponsiveContainer,
+} from "recharts";
+import { RadarChartData } from "../../types/assessment";
 
 interface DomainRadarChartProps {
   data: RadarChartData[];

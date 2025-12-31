@@ -3,8 +3,8 @@
  * Manages cache invalidation strategies and patterns
  */
 
-import { distributedCacheService } from './distributed-cache-service';
-import { cacheKeys } from './cache-keys';
+import { distributedCacheService } from "./distributed-cache-service";
+import { cacheKeys } from "./cache-keys";
 
 export interface InvalidationRule {
   pattern: string | RegExp;
@@ -35,52 +35,33 @@ export class CacheInvalidationService {
    */
   private setupInvalidationRules() {
     // Scenario invalidation rules
-    this.invalidationRules.set('scenario', {
-      pattern: 'scenario:*',
-      cascade: [
-        'scenarios:list:*',
-        'scenarios:by-mode:*',
-        'scenario:index:*'
-      ]
+    this.invalidationRules.set("scenario", {
+      pattern: "scenario:*",
+      cascade: ["scenarios:list:*", "scenarios:by-mode:*", "scenario:index:*"],
     });
 
     // Program invalidation rules
-    this.invalidationRules.set('program', {
-      pattern: 'program:*',
-      cascade: [
-        'programs:user:*',
-        'programs:scenario:*',
-        'user:progress:*'
-      ]
+    this.invalidationRules.set("program", {
+      pattern: "program:*",
+      cascade: ["programs:user:*", "programs:scenario:*", "user:progress:*"],
     });
 
     // Task invalidation rules
-    this.invalidationRules.set('task', {
-      pattern: 'task:*',
-      cascade: [
-        'tasks:program:*',
-        'program:progress:*'
-      ]
+    this.invalidationRules.set("task", {
+      pattern: "task:*",
+      cascade: ["tasks:program:*", "program:progress:*"],
     });
 
     // Evaluation invalidation rules
-    this.invalidationRules.set('evaluation', {
-      pattern: 'evaluation:*',
-      cascade: [
-        'evaluations:user:*',
-        'evaluations:task:*',
-        'user:stats:*'
-      ]
+    this.invalidationRules.set("evaluation", {
+      pattern: "evaluation:*",
+      cascade: ["evaluations:user:*", "evaluations:task:*", "user:stats:*"],
     });
 
     // User invalidation rules
-    this.invalidationRules.set('user', {
-      pattern: 'user:*',
-      cascade: [
-        'user:programs:*',
-        'user:achievements:*',
-        'user:progress:*'
-      ]
+    this.invalidationRules.set("user", {
+      pattern: "user:*",
+      cascade: ["user:programs:*", "user:achievements:*", "user:progress:*"],
     });
   }
 
@@ -103,8 +84,8 @@ export class CacheInvalidationService {
     // Add cascade invalidations
     if (rule.cascade) {
       for (const cascadePattern of rule.cascade) {
-        if (entityId && cascadePattern.includes('*')) {
-          const cascadeKey = cascadePattern.replace('*', entityId);
+        if (entityId && cascadePattern.includes("*")) {
+          const cascadeKey = cascadePattern.replace("*", entityId);
           this.invalidationQueue.add(cascadeKey);
         } else {
           this.invalidationQueue.add(cascadePattern);
@@ -146,7 +127,7 @@ export class CacheInvalidationService {
     // Process invalidations in parallel
     const promises = keysToInvalidate.map(async (key) => {
       try {
-        if (key.includes('*')) {
+        if (key.includes("*")) {
           // Pattern-based deletion
           await this.deleteByPattern(key);
         } else {
@@ -166,12 +147,12 @@ export class CacheInvalidationService {
    */
   private async deleteByPattern(pattern: string): Promise<void> {
     // Convert simple wildcard to regex
-    const regex = new RegExp('^' + pattern.replace(/\*/g, '.*') + '$');
+    const regex = new RegExp("^" + pattern.replace(/\*/g, ".*") + "$");
 
     // Note: This is a simplified implementation
     // In production, you'd use Redis SCAN command
     const keys = await distributedCacheService.getAllKeys();
-    const keysToDelete = keys.filter(key => regex.test(key));
+    const keysToDelete = keys.filter((key) => regex.test(key));
 
     for (const key of keysToDelete) {
       await distributedCacheService.delete(key);
@@ -182,7 +163,7 @@ export class CacheInvalidationService {
    * Invalidate all caches for a scenario update
    */
   async invalidateScenario(scenarioId: string, mode?: string): Promise<void> {
-    await this.invalidate('scenario', scenarioId);
+    await this.invalidate("scenario", scenarioId);
 
     // Also invalidate mode-specific caches
     if (mode) {
@@ -194,8 +175,12 @@ export class CacheInvalidationService {
   /**
    * Invalidate all caches for a program update
    */
-  async invalidateProgram(programId: string, userId?: string, scenarioId?: string): Promise<void> {
-    await this.invalidate('program', programId);
+  async invalidateProgram(
+    programId: string,
+    userId?: string,
+    scenarioId?: string,
+  ): Promise<void> {
+    await this.invalidate("program", programId);
 
     if (userId) {
       await distributedCacheService.delete(cacheKeys.userPrograms(userId));
@@ -210,7 +195,7 @@ export class CacheInvalidationService {
    * Invalidate all caches for a task update
    */
   async invalidateTask(taskId: string, programId?: string): Promise<void> {
-    await this.invalidate('task', taskId);
+    await this.invalidate("task", taskId);
 
     if (programId) {
       await distributedCacheService.delete(`tasks:program:${programId}`);
@@ -221,7 +206,9 @@ export class CacheInvalidationService {
    * Smart cache warming based on access patterns
    */
   async warmCache(entityType: string, popularIds: string[]): Promise<void> {
-    console.log(`[Cache] Warming cache for ${entityType} with ${popularIds.length} items`);
+    console.log(
+      `[Cache] Warming cache for ${entityType} with ${popularIds.length} items`,
+    );
 
     // This would be implemented based on actual repository methods
     // Example implementation would pre-load frequently accessed data
@@ -238,7 +225,7 @@ export class CacheInvalidationService {
     return {
       rulesCount: this.invalidationRules.size,
       queueSize: this.invalidationQueue.size,
-      rules: Array.from(this.invalidationRules.keys())
+      rules: Array.from(this.invalidationRules.keys()),
     };
   }
 
@@ -246,7 +233,7 @@ export class CacheInvalidationService {
    * Clear all caches (use with caution)
    */
   async clearAll(): Promise<void> {
-    console.warn('[Cache] Clearing all caches');
+    console.warn("[Cache] Clearing all caches");
     await distributedCacheService.flushAll();
   }
 }

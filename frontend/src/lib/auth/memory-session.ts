@@ -3,7 +3,7 @@
  * WARNING: This is only for local development. Production should use Redis.
  */
 
-import crypto from 'crypto';
+import crypto from "crypto";
 
 interface SessionData {
   userId: string;
@@ -17,24 +17,28 @@ class MemorySessionStore {
   private sessions: Map<string, SessionData> = new Map();
 
   generateToken(): string {
-    return crypto.randomBytes(32).toString('hex');
+    return crypto.randomBytes(32).toString("hex");
   }
 
-  async createSession(userData: {
-    userId: string;
-    email: string;
-    role: string;
-  }, rememberMe = false): Promise<string> {
+  async createSession(
+    userData: {
+      userId: string;
+      email: string;
+      role: string;
+    },
+    rememberMe = false,
+  ): Promise<string> {
     const token = this.generateToken();
     const now = new Date();
     const expiresAt = new Date(
-      now.getTime() + (rememberMe ? 30 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000)
+      now.getTime() +
+        (rememberMe ? 30 * 24 * 60 * 60 * 1000 : 24 * 60 * 60 * 1000),
     );
 
     this.sessions.set(token, {
       ...userData,
       createdAt: now,
-      expiresAt
+      expiresAt,
     });
 
     // Clean up expired sessions

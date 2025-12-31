@@ -3,12 +3,12 @@
 class NextRequest {
   constructor(url, init = {}) {
     this.url = url;
-    this.method = init.method || 'GET';
+    this.method = init.method || "GET";
     this.headers = new Headers(init.headers || {});
     this.body = init.body || null;
 
     // Parse body if it's a string
-    if (typeof this.body === 'string') {
+    if (typeof this.body === "string") {
       this._bodyText = this.body;
     }
 
@@ -16,7 +16,7 @@ class NextRequest {
     const parsedUrl = new URL(url);
     this.nextUrl = {
       searchParams: new URLSearchParams(parsedUrl.search),
-      pathname: parsedUrl.pathname
+      pathname: parsedUrl.pathname,
     };
 
     // Mock cookies with a basic Map-like interface
@@ -30,7 +30,7 @@ class NextRequest {
         this._cookieStore.set(name, value);
       },
       has: (name) => this._cookieStore.has(name),
-      delete: (name) => this._cookieStore.delete(name)
+      delete: (name) => this._cookieStore.delete(name),
     };
   }
 
@@ -39,14 +39,14 @@ class NextRequest {
       try {
         return JSON.parse(this._bodyText);
       } catch (error) {
-        throw new SyntaxError('Unexpected end of JSON input');
+        throw new SyntaxError("Unexpected end of JSON input");
       }
     }
     return {};
   }
 
   text() {
-    return Promise.resolve(this._bodyText || '');
+    return Promise.resolve(this._bodyText || "");
   }
 }
 
@@ -68,7 +68,7 @@ class NextResponse extends Response {
       set: (name, value, options) => {
         this._cookieStore.set(name, { value, options });
       },
-      delete: (name) => this._cookieStore.delete(name)
+      delete: (name) => this._cookieStore.delete(name),
     };
   }
 
@@ -76,9 +76,9 @@ class NextResponse extends Response {
     const response = new NextResponse(JSON.stringify(body), {
       ...init,
       headers: {
-        'content-type': 'application/json',
-        ...(init.headers || {})
-      }
+        "content-type": "application/json",
+        ...(init.headers || {}),
+      },
     });
 
     // Add json method to the response
@@ -91,8 +91,8 @@ class NextResponse extends Response {
     const response = new NextResponse(null, {
       status,
       headers: {
-        location: url.toString()
-      }
+        location: url.toString(),
+      },
     });
     return response;
   }
@@ -103,5 +103,5 @@ exports.NextRequest = NextRequest;
 exports.NextResponse = NextResponse;
 module.exports = {
   NextRequest,
-  NextResponse
+  NextResponse,
 };

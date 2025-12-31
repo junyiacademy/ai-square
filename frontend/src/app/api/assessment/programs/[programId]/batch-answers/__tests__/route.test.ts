@@ -1,68 +1,69 @@
-import { mockRepositoryFactory } from '@/test-utils/mocks/repositories';
+import { mockRepositoryFactory } from "@/test-utils/mocks/repositories";
 /**
  * Assessment Batch Answers Route Tests
  * 提升覆蓋率從 0% 到 100%
  */
 
-import { NextRequest } from 'next/server';
-import { POST } from '../route';
-import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import { getUnifiedAuth } from '@/lib/auth/unified-auth';
-import { mockConsoleError as createMockConsoleError } from '@/test-utils/helpers/console';
-import type { ITask, IInteraction } from '@/types/unified-learning';
+import { NextRequest } from "next/server";
+import { POST } from "../route";
+import { repositoryFactory } from "@/lib/repositories/base/repository-factory";
+import { getUnifiedAuth } from "@/lib/auth/unified-auth";
+import { mockConsoleError as createMockConsoleError } from "@/test-utils/helpers/console";
+import type { ITask, IInteraction } from "@/types/unified-learning";
 
 // Mock dependencies
-jest.mock('@/lib/repositories/base/repository-factory');
-jest.mock('@/lib/auth/unified-auth', () => ({
+jest.mock("@/lib/repositories/base/repository-factory");
+jest.mock("@/lib/auth/unified-auth", () => ({
   getUnifiedAuth: jest.fn(),
   createUnauthorizedResponse: jest.fn(() => ({
-    json: () => Promise.resolve({ success: false, error: 'Authentication required' }),
-    status: 401
-  }))
+    json: () =>
+      Promise.resolve({ success: false, error: "Authentication required" }),
+    status: 401,
+  })),
 }));
 
 // Mock console
 const mockConsoleError = createMockConsoleError();
 
-describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
+describe("POST /api/assessment/programs/[programId]/batch-answers", () => {
   const mockTaskRepo = {
     findById: jest.fn(),
     update: jest.fn(),
-    updateStatus: jest.fn()
+    updateStatus: jest.fn(),
   };
 
   const mockTask: ITask = {
-    id: 'task-123',
-    programId: 'program-123',
-    mode: 'assessment',
+    id: "task-123",
+    programId: "program-123",
+    mode: "assessment",
     taskIndex: 0,
     scenarioTaskIndex: 0,
-    type: 'question',
-    status: 'pending',
-    title: { en: 'Assessment Task' },
-    description: { en: 'Task Description' },
+    type: "question",
+    status: "pending",
+    title: { en: "Assessment Task" },
+    description: { en: "Task Description" },
     content: {
-      instructions: 'Answer these questions',
+      instructions: "Answer these questions",
       questions: [
         {
-          id: 'q1',
-          text: 'What is AI?',
-          correct_answer: 'a',
-          ksa_mapping: { knowledge: ['K1', 'K2'] }
+          id: "q1",
+          text: "What is AI?",
+          correct_answer: "a",
+          ksa_mapping: { knowledge: ["K1", "K2"] },
         },
         {
-          id: 'q2',
-          text: 'What is ML?',
-          correct_answer: 'b',
-          ksa_mapping: { skills: ['S1'] }
+          id: "q2",
+          text: "What is ML?",
+          correct_answer: "b",
+          ksa_mapping: { skills: ["S1"] },
         },
         {
-          id: 'q3',
-          text: 'What is DL?',
-          correct_answer: 'c',
-          ksa_mapping: { attitudes: ['A1'] }
-        }
-      ]
+          id: "q3",
+          text: "What is DL?",
+          correct_answer: "c",
+          ksa_mapping: { attitudes: ["A1"] },
+        },
+      ],
     },
     interactions: [],
     interactionCount: 0,
@@ -73,19 +74,21 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
     attemptCount: 0,
     timeSpentSeconds: 0,
     aiConfig: {},
-    createdAt: '2024-01-01T00:00:00Z',
-    updatedAt: '2024-01-01T00:00:00Z',
+    createdAt: "2024-01-01T00:00:00Z",
+    updatedAt: "2024-01-01T00:00:00Z",
     pblData: {},
     discoveryData: {},
     assessmentData: {},
-    metadata: {}
+    metadata: {},
   };
 
   beforeEach(() => {
     jest.clearAllMocks();
-    (repositoryFactory.getTaskRepository as jest.Mock).mockReturnValue(mockTaskRepo);
+    (repositoryFactory.getTaskRepository as jest.Mock).mockReturnValue(
+      mockTaskRepo,
+    );
     (getUnifiedAuth as jest.Mock).mockResolvedValue({
-      user: { email: 'test@example.com' }
+      user: { email: "test@example.com" },
     });
     mockTaskRepo.findById.mockResolvedValue(mockTask);
   });
@@ -94,165 +97,206 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
     mockConsoleError.mockRestore();
   });
 
-  describe('Authentication', () => {
-    it('should accept authenticated session', async () => {
-      const request = new NextRequest('http://localhost/api/assessment/programs/program-123/batch-answers', {
-        method: 'POST',
-        body: JSON.stringify({
-          taskId: 'task-123',
-          answers: [
-            { questionId: 'q1', answer: 'a', timeSpent: 10 }
-          ]
-        })
-      });
+  describe("Authentication", () => {
+    it("should accept authenticated session", async () => {
+      const request = new NextRequest(
+        "http://localhost/api/assessment/programs/program-123/batch-answers",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            taskId: "task-123",
+            answers: [{ questionId: "q1", answer: "a", timeSpent: 10 }],
+          }),
+        },
+      );
 
-      const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
+      const response = await POST(request, {
+        params: Promise.resolve({ programId: "test-id" }),
+      });
       const data = await response.json();
 
       expect(response.status).toBe(200);
       expect(data.success).toBe(true);
     });
 
-    it('should accept userEmail query parameter when no session', async () => {
+    it("should accept userEmail query parameter when no session", async () => {
       (getUnifiedAuth as jest.Mock).mockResolvedValue(null);
 
-      const request = new NextRequest('http://localhost/api/assessment/programs/program-123/batch-answers?userEmail=test@example.com', {
-        method: 'POST',
-        body: JSON.stringify({
-          taskId: 'task-123',
-          answers: [
-            { questionId: 'q1', answer: 'a' }
-          ]
-        })
-      });
+      const request = new NextRequest(
+        "http://localhost/api/assessment/programs/program-123/batch-answers?userEmail=test@example.com",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            taskId: "task-123",
+            answers: [{ questionId: "q1", answer: "a" }],
+          }),
+        },
+      );
 
-      const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
+      const response = await POST(request, {
+        params: Promise.resolve({ programId: "test-id" }),
+      });
       const data = await response.json();
 
       expect(response.status).toBe(200);
       expect(data.success).toBe(true);
     });
 
-    it('should return 401 when no authentication', async () => {
+    it("should return 401 when no authentication", async () => {
       (getUnifiedAuth as jest.Mock).mockResolvedValue(null);
 
-      const request = new NextRequest('http://localhost/api/assessment/programs/program-123/batch-answers', {
-        method: 'POST',
-        body: JSON.stringify({
-          taskId: 'task-123',
-          answers: []
-        })
-      });
+      const request = new NextRequest(
+        "http://localhost/api/assessment/programs/program-123/batch-answers",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            taskId: "task-123",
+            answers: [],
+          }),
+        },
+      );
 
-      const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
+      const response = await POST(request, {
+        params: Promise.resolve({ programId: "test-id" }),
+      });
       const data = await response.json();
 
       expect(response.status).toBe(401);
-      expect(data.error).toBe('Authentication required');
+      expect(data.error).toBe("Authentication required");
     });
 
-    it('should handle session without email', async () => {
+    it("should handle session without email", async () => {
       (getUnifiedAuth as jest.Mock).mockResolvedValue({ user: {} }); // No email
 
-      const request = new NextRequest('http://localhost/api/assessment/programs/program-123/batch-answers', {
-        method: 'POST',
-        body: JSON.stringify({
-          taskId: 'task-123',
-          answers: []
-        })
-      });
+      const request = new NextRequest(
+        "http://localhost/api/assessment/programs/program-123/batch-answers",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            taskId: "task-123",
+            answers: [],
+          }),
+        },
+      );
 
-      const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
+      const response = await POST(request, {
+        params: Promise.resolve({ programId: "test-id" }),
+      });
       const data = await response.json();
 
       expect(response.status).toBe(401);
-      expect(data.error).toBe('Authentication required');
+      expect(data.error).toBe("Authentication required");
     });
   });
 
-  describe('Request Validation', () => {
-    it('should return 400 when missing taskId', async () => {
-      const request = new NextRequest('http://localhost/api/assessment/programs/program-123/batch-answers', {
-        method: 'POST',
-        body: JSON.stringify({
-          answers: []
-        })
-      });
+  describe("Request Validation", () => {
+    it("should return 400 when missing taskId", async () => {
+      const request = new NextRequest(
+        "http://localhost/api/assessment/programs/program-123/batch-answers",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            answers: [],
+          }),
+        },
+      );
 
-      const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
+      const response = await POST(request, {
+        params: Promise.resolve({ programId: "test-id" }),
+      });
       const data = await response.json();
 
       expect(response.status).toBe(400);
-      expect(data.error).toBe('Missing required fields');
+      expect(data.error).toBe("Missing required fields");
     });
 
-    it('should return 400 when missing answers', async () => {
-      const request = new NextRequest('http://localhost/api/assessment/programs/program-123/batch-answers', {
-        method: 'POST',
-        body: JSON.stringify({
-          taskId: 'task-123'
-        })
-      });
+    it("should return 400 when missing answers", async () => {
+      const request = new NextRequest(
+        "http://localhost/api/assessment/programs/program-123/batch-answers",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            taskId: "task-123",
+          }),
+        },
+      );
 
-      const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
+      const response = await POST(request, {
+        params: Promise.resolve({ programId: "test-id" }),
+      });
       const data = await response.json();
 
       expect(response.status).toBe(400);
-      expect(data.error).toBe('Missing required fields');
+      expect(data.error).toBe("Missing required fields");
     });
 
-    it('should return 400 when answers is not an array', async () => {
-      const request = new NextRequest('http://localhost/api/assessment/programs/program-123/batch-answers', {
-        method: 'POST',
-        body: JSON.stringify({
-          taskId: 'task-123',
-          answers: 'not-an-array'
-        })
-      });
+    it("should return 400 when answers is not an array", async () => {
+      const request = new NextRequest(
+        "http://localhost/api/assessment/programs/program-123/batch-answers",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            taskId: "task-123",
+            answers: "not-an-array",
+          }),
+        },
+      );
 
-      const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
+      const response = await POST(request, {
+        params: Promise.resolve({ programId: "test-id" }),
+      });
       const data = await response.json();
 
       expect(response.status).toBe(400);
-      expect(data.error).toBe('Missing required fields');
+      expect(data.error).toBe("Missing required fields");
     });
   });
 
-  describe('Task Handling', () => {
-    it('should return 404 when task not found', async () => {
+  describe("Task Handling", () => {
+    it("should return 404 when task not found", async () => {
       mockTaskRepo.findById.mockResolvedValue(null);
 
-      const request = new NextRequest('http://localhost/api/assessment/programs/program-123/batch-answers', {
-        method: 'POST',
-        body: JSON.stringify({
-          taskId: 'invalid-task',
-          answers: []
-        })
-      });
+      const request = new NextRequest(
+        "http://localhost/api/assessment/programs/program-123/batch-answers",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            taskId: "invalid-task",
+            answers: [],
+          }),
+        },
+      );
 
-      const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
+      const response = await POST(request, {
+        params: Promise.resolve({ programId: "test-id" }),
+      });
       const data = await response.json();
 
       expect(response.status).toBe(404);
-      expect(data.error).toBe('Task not found');
+      expect(data.error).toBe("Task not found");
     });
   });
 
-  describe('Answer Processing', () => {
-    it('should process correct answers', async () => {
-      const request = new NextRequest('http://localhost/api/assessment/programs/program-123/batch-answers', {
-        method: 'POST',
-        body: JSON.stringify({
-          taskId: 'task-123',
-          answers: [
-            { questionId: 'q1', answer: 'a', timeSpent: 10 },
-            { questionId: 'q2', answer: 'b', timeSpent: 15 },
-            { questionId: 'q3', answer: 'c', timeSpent: 20 }
-          ]
-        })
-      });
+  describe("Answer Processing", () => {
+    it("should process correct answers", async () => {
+      const request = new NextRequest(
+        "http://localhost/api/assessment/programs/program-123/batch-answers",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            taskId: "task-123",
+            answers: [
+              { questionId: "q1", answer: "a", timeSpent: 10 },
+              { questionId: "q2", answer: "b", timeSpent: 15 },
+              { questionId: "q3", answer: "c", timeSpent: 20 },
+            ],
+          }),
+        },
+      );
 
-      const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
+      const response = await POST(request, {
+        params: Promise.resolve({ programId: "test-id" }),
+      });
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -267,31 +311,36 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
 
       // Check first interaction (converted to IInteraction format)
       const firstInteraction = updatedInteractions[0];
-      expect(firstInteraction.type).toBe('system_event');
+      expect(firstInteraction.type).toBe("system_event");
       expect(firstInteraction.content).toMatchObject({
-        eventType: 'assessment_answer',
-        questionId: 'q1',
-        selectedAnswer: 'a',
+        eventType: "assessment_answer",
+        questionId: "q1",
+        selectedAnswer: "a",
         isCorrect: true,
         timeSpent: 10,
-        ksa_mapping: { knowledge: ['K1', 'K2'] }
+        ksa_mapping: { knowledge: ["K1", "K2"] },
       });
     });
 
-    it('should process incorrect answers', async () => {
-      const request = new NextRequest('http://localhost/api/assessment/programs/program-123/batch-answers', {
-        method: 'POST',
-        body: JSON.stringify({
-          taskId: 'task-123',
-          answers: [
-            { questionId: 'q1', answer: 'b' }, // Wrong answer
-            { questionId: 'q2', answer: 'c' }, // Wrong answer
-            { questionId: 'q3', answer: 'a' }  // Wrong answer
-          ]
-        })
-      });
+    it("should process incorrect answers", async () => {
+      const request = new NextRequest(
+        "http://localhost/api/assessment/programs/program-123/batch-answers",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            taskId: "task-123",
+            answers: [
+              { questionId: "q1", answer: "b" }, // Wrong answer
+              { questionId: "q2", answer: "c" }, // Wrong answer
+              { questionId: "q3", answer: "a" }, // Wrong answer
+            ],
+          }),
+        },
+      );
 
-      const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
+      const response = await POST(request, {
+        params: Promise.resolve({ programId: "test-id" }),
+      });
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -302,33 +351,38 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
 
       // Check all answers are marked as incorrect
       updatedInteractions.forEach((interaction, index) => {
-        expect((interaction.content as Record<string, unknown>)?.isCorrect).toBe(false);
+        expect(
+          (interaction.content as Record<string, unknown>)?.isCorrect,
+        ).toBe(false);
       });
     });
 
-    it('should handle questions without correct_answer', async () => {
+    it("should handle questions without correct_answer", async () => {
       const taskWithoutCorrectAnswers = {
         ...mockTask,
         content: {
-          instructions: 'Answer these questions',
+          instructions: "Answer these questions",
           questions: [
-            { id: 'q1', text: 'Open ended question' } // No correct_answer
-          ]
-        }
+            { id: "q1", text: "Open ended question" }, // No correct_answer
+          ],
+        },
       };
       mockTaskRepo.findById.mockResolvedValue(taskWithoutCorrectAnswers);
 
-      const request = new NextRequest('http://localhost/api/assessment/programs/program-123/batch-answers', {
-        method: 'POST',
-        body: JSON.stringify({
-          taskId: 'task-123',
-          answers: [
-            { questionId: 'q1', answer: 'any answer' }
-          ]
-        })
-      });
+      const request = new NextRequest(
+        "http://localhost/api/assessment/programs/program-123/batch-answers",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            taskId: "task-123",
+            answers: [{ questionId: "q1", answer: "any answer" }],
+          }),
+        },
+      );
 
-      const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
+      const response = await POST(request, {
+        params: Promise.resolve({ programId: "test-id" }),
+      });
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -338,19 +392,26 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
       const updatedInteractions = updateCall[1].interactions as IInteraction[];
 
       // Should be marked as incorrect when no correct answer is defined
-      expect((updatedInteractions[0].content as Record<string, unknown>)?.isCorrect).toBe(false);
+      expect(
+        (updatedInteractions[0].content as Record<string, unknown>)?.isCorrect,
+      ).toBe(false);
     });
 
-    it('should handle empty answers array', async () => {
-      const request = new NextRequest('http://localhost/api/assessment/programs/program-123/batch-answers', {
-        method: 'POST',
-        body: JSON.stringify({
-          taskId: 'task-123',
-          answers: []
-        })
-      });
+    it("should handle empty answers array", async () => {
+      const request = new NextRequest(
+        "http://localhost/api/assessment/programs/program-123/batch-answers",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            taskId: "task-123",
+            answers: [],
+          }),
+        },
+      );
 
-      const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
+      const response = await POST(request, {
+        params: Promise.resolve({ programId: "test-id" }),
+      });
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -358,29 +419,32 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
       expect(data.submitted).toBe(0);
     });
 
-    it('should merge with existing interactions', async () => {
+    it("should merge with existing interactions", async () => {
       const existingInteraction: IInteraction = {
-        timestamp: '2024-01-01T00:00:00Z',
-        type: 'system_event',
-        content: 'Started assessment'
+        timestamp: "2024-01-01T00:00:00Z",
+        type: "system_event",
+        content: "Started assessment",
       };
 
       mockTaskRepo.findById.mockResolvedValue({
         ...mockTask,
-        interactions: [existingInteraction]
+        interactions: [existingInteraction],
       });
 
-      const request = new NextRequest('http://localhost/api/assessment/programs/program-123/batch-answers', {
-        method: 'POST',
-        body: JSON.stringify({
-          taskId: 'task-123',
-          answers: [
-            { questionId: 'q1', answer: 'a' }
-          ]
-        })
-      });
+      const request = new NextRequest(
+        "http://localhost/api/assessment/programs/program-123/batch-answers",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            taskId: "task-123",
+            answers: [{ questionId: "q1", answer: "a" }],
+          }),
+        },
+      );
 
-      const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
+      const response = await POST(request, {
+        params: Promise.resolve({ programId: "test-id" }),
+      });
       const data = await response.json();
 
       expect(response.status).toBe(200);
@@ -390,47 +454,57 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
 
       expect(updatedInteractions).toHaveLength(2);
       expect(updatedInteractions[0]).toEqual(existingInteraction);
-      expect(updatedInteractions[1].type).toBe('system_event');
+      expect(updatedInteractions[1].type).toBe("system_event");
     });
 
-    it('should update task metadata', async () => {
-      const existingMetadata = { startedAt: '2024-01-01T00:00:00Z' };
+    it("should update task metadata", async () => {
+      const existingMetadata = { startedAt: "2024-01-01T00:00:00Z" };
       mockTaskRepo.findById.mockResolvedValue({
         ...mockTask,
-        metadata: existingMetadata
+        metadata: existingMetadata,
       });
 
-      const request = new NextRequest('http://localhost/api/assessment/programs/program-123/batch-answers', {
-        method: 'POST',
-        body: JSON.stringify({
-          taskId: 'task-123',
-          answers: [{ questionId: 'q1', answer: 'a' }]
-        })
-      });
+      const request = new NextRequest(
+        "http://localhost/api/assessment/programs/program-123/batch-answers",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            taskId: "task-123",
+            answers: [{ questionId: "q1", answer: "a" }],
+          }),
+        },
+      );
 
-      await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
+      await POST(request, {
+        params: Promise.resolve({ programId: "test-id" }),
+      });
 
       const updateCall = mockTaskRepo.update.mock.calls[0];
 
       expect(updateCall[1].metadata).toMatchObject({
         ...existingMetadata,
-        lastAnsweredAt: expect.any(String)
+        lastAnsweredAt: expect.any(String),
       });
       expect(updateCall[1].interactionCount).toBe(1);
     });
 
-    it('should handle answers with missing timeSpent', async () => {
-      const request = new NextRequest('http://localhost/api/assessment/programs/program-123/batch-answers', {
-        method: 'POST',
-        body: JSON.stringify({
-          taskId: 'task-123',
-          answers: [
-            { questionId: 'q1', answer: 'a' } // No timeSpent
-          ]
-        })
-      });
+    it("should handle answers with missing timeSpent", async () => {
+      const request = new NextRequest(
+        "http://localhost/api/assessment/programs/program-123/batch-answers",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            taskId: "task-123",
+            answers: [
+              { questionId: "q1", answer: "a" }, // No timeSpent
+            ],
+          }),
+        },
+      );
 
-      const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
+      const response = await POST(request, {
+        params: Promise.resolve({ programId: "test-id" }),
+      });
 
       expect(response.status).toBe(200);
 
@@ -438,35 +512,42 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
       const updatedInteractions = updateCall[1].interactions as IInteraction[];
 
       // Should default to 0
-      expect((updatedInteractions[0].content as Record<string, unknown>)?.timeSpent).toBe(0);
+      expect(
+        (updatedInteractions[0].content as Record<string, unknown>)?.timeSpent,
+      ).toBe(0);
     });
 
-    it('should convert numeric answers to strings for comparison', async () => {
+    it("should convert numeric answers to strings for comparison", async () => {
       const taskWithNumericAnswer = {
         ...mockTask,
         content: {
           questions: [
             {
-              id: 'q1',
-              text: 'What is 2+2?',
-              correct_answer: 4 // Numeric answer
-            }
-          ]
-        }
+              id: "q1",
+              text: "What is 2+2?",
+              correct_answer: 4, // Numeric answer
+            },
+          ],
+        },
       };
       mockTaskRepo.findById.mockResolvedValue(taskWithNumericAnswer);
 
-      const request = new NextRequest('http://localhost/api/assessment/programs/program-123/batch-answers', {
-        method: 'POST',
-        body: JSON.stringify({
-          taskId: 'task-123',
-          answers: [
-            { questionId: 'q1', answer: '4' } // String answer
-          ]
-        })
-      });
+      const request = new NextRequest(
+        "http://localhost/api/assessment/programs/program-123/batch-answers",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            taskId: "task-123",
+            answers: [
+              { questionId: "q1", answer: "4" }, // String answer
+            ],
+          }),
+        },
+      );
 
-      const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
+      const response = await POST(request, {
+        params: Promise.resolve({ programId: "test-id" }),
+      });
 
       expect(response.status).toBe(200);
 
@@ -474,80 +555,105 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
       const updatedInteractions = updateCall[1].interactions as IInteraction[];
 
       // Should be correct even with type mismatch
-      expect((updatedInteractions[0].content as Record<string, unknown>)?.isCorrect).toBe(true);
+      expect(
+        (updatedInteractions[0].content as Record<string, unknown>)?.isCorrect,
+      ).toBe(true);
     });
   });
 
-  describe('Task Status Update', () => {
-    it('should update task status from pending to active', async () => {
-      const request = new NextRequest('http://localhost/api/assessment/programs/program-123/batch-answers', {
-        method: 'POST',
-        body: JSON.stringify({
-          taskId: 'task-123',
-          answers: [{ questionId: 'q1', answer: 'a' }]
-        })
+  describe("Task Status Update", () => {
+    it("should update task status from pending to active", async () => {
+      const request = new NextRequest(
+        "http://localhost/api/assessment/programs/program-123/batch-answers",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            taskId: "task-123",
+            answers: [{ questionId: "q1", answer: "a" }],
+          }),
+        },
+      );
+
+      await POST(request, {
+        params: Promise.resolve({ programId: "test-id" }),
       });
 
-      await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
-
-      expect(mockTaskRepo.updateStatus).toHaveBeenCalledWith('task-123', 'active');
+      expect(mockTaskRepo.updateStatus).toHaveBeenCalledWith(
+        "task-123",
+        "active",
+      );
     });
 
-    it('should not update task status if already active', async () => {
+    it("should not update task status if already active", async () => {
       mockTaskRepo.findById.mockResolvedValue({
         ...mockTask,
-        status: 'active'
+        status: "active",
       });
 
-      const request = new NextRequest('http://localhost/api/assessment/programs/program-123/batch-answers', {
-        method: 'POST',
-        body: JSON.stringify({
-          taskId: 'task-123',
-          answers: [{ questionId: 'q1', answer: 'a' }]
-        })
-      });
+      const request = new NextRequest(
+        "http://localhost/api/assessment/programs/program-123/batch-answers",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            taskId: "task-123",
+            answers: [{ questionId: "q1", answer: "a" }],
+          }),
+        },
+      );
 
-      await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
+      await POST(request, {
+        params: Promise.resolve({ programId: "test-id" }),
+      });
 
       expect(mockTaskRepo.updateStatus).not.toHaveBeenCalled();
     });
 
-    it('should not update task status if completed', async () => {
+    it("should not update task status if completed", async () => {
       mockTaskRepo.findById.mockResolvedValue({
         ...mockTask,
-        status: 'completed'
+        status: "completed",
       });
 
-      const request = new NextRequest('http://localhost/api/assessment/programs/program-123/batch-answers', {
-        method: 'POST',
-        body: JSON.stringify({
-          taskId: 'task-123',
-          answers: [{ questionId: 'q1', answer: 'a' }]
-        })
-      });
+      const request = new NextRequest(
+        "http://localhost/api/assessment/programs/program-123/batch-answers",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            taskId: "task-123",
+            answers: [{ questionId: "q1", answer: "a" }],
+          }),
+        },
+      );
 
-      await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
+      await POST(request, {
+        params: Promise.resolve({ programId: "test-id" }),
+      });
 
       expect(mockTaskRepo.updateStatus).not.toHaveBeenCalled();
     });
   });
 
-  describe('Edge Cases', () => {
-    it('should handle task without questions', async () => {
+  describe("Edge Cases", () => {
+    it("should handle task without questions", async () => {
       mockTaskRepo.findById.mockResolvedValue({
         ...mockTask,
-        content: { instructions: 'No questions' }
+        content: { instructions: "No questions" },
       });
 
-      const request = new NextRequest('http://localhost/api/assessment/programs/program-123/batch-answers', {
-        method: 'POST',
-        body: JSON.stringify({
-          taskId: 'task-123',
-          answers: [{ questionId: 'q1', answer: 'a' }]
-        })
-      });
+      const request = new NextRequest(
+        "http://localhost/api/assessment/programs/program-123/batch-answers",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            taskId: "task-123",
+            answers: [{ questionId: "q1", answer: "a" }],
+          }),
+        },
+      );
 
-      const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
+      const response = await POST(request, {
+        params: Promise.resolve({ programId: "test-id" }),
+      });
 
       expect(response.status).toBe(200);
 
@@ -555,114 +661,144 @@ describe('POST /api/assessment/programs/[programId]/batch-answers', () => {
       const updatedInteractions = updateCall[1].interactions as IInteraction[];
 
       // All should be marked as incorrect when question not found
-      expect((updatedInteractions[0].content as Record<string, unknown>)?.isCorrect).toBe(false);
+      expect(
+        (updatedInteractions[0].content as Record<string, unknown>)?.isCorrect,
+      ).toBe(false);
     });
 
-    it('should handle task with no content', async () => {
+    it("should handle task with no content", async () => {
       mockTaskRepo.findById.mockResolvedValue({
         ...mockTask,
-        content: undefined
+        content: undefined,
       });
 
-      const request = new NextRequest('http://localhost/api/assessment/programs/program-123/batch-answers', {
-        method: 'POST',
-        body: JSON.stringify({
-          taskId: 'task-123',
-          answers: [{ questionId: 'q1', answer: 'a' }]
-        })
-      });
+      const request = new NextRequest(
+        "http://localhost/api/assessment/programs/program-123/batch-answers",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            taskId: "task-123",
+            answers: [{ questionId: "q1", answer: "a" }],
+          }),
+        },
+      );
 
-      const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
+      const response = await POST(request, {
+        params: Promise.resolve({ programId: "test-id" }),
+      });
 
       expect(response.status).toBe(200);
     });
 
-    it('should handle question without ksa_mapping', async () => {
+    it("should handle question without ksa_mapping", async () => {
       const taskWithoutKSA = {
         ...mockTask,
         content: {
           questions: [
             {
-              id: 'q1',
-              text: 'Question without KSA',
-              correct_answer: 'a'
-            }
-          ]
-        }
+              id: "q1",
+              text: "Question without KSA",
+              correct_answer: "a",
+            },
+          ],
+        },
       };
       mockTaskRepo.findById.mockResolvedValue(taskWithoutKSA);
 
-      const request = new NextRequest('http://localhost/api/assessment/programs/program-123/batch-answers', {
-        method: 'POST',
-        body: JSON.stringify({
-          taskId: 'task-123',
-          answers: [{ questionId: 'q1', answer: 'a' }]
-        })
-      });
+      const request = new NextRequest(
+        "http://localhost/api/assessment/programs/program-123/batch-answers",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            taskId: "task-123",
+            answers: [{ questionId: "q1", answer: "a" }],
+          }),
+        },
+      );
 
-      const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
+      const response = await POST(request, {
+        params: Promise.resolve({ programId: "test-id" }),
+      });
 
       expect(response.status).toBe(200);
 
       const updateCall = mockTaskRepo.update.mock.calls[0];
       const updatedInteractions = updateCall[1].interactions as IInteraction[];
 
-      expect((updatedInteractions[0].content as Record<string, unknown>)?.ksa_mapping).toBeUndefined();
+      expect(
+        (updatedInteractions[0].content as Record<string, unknown>)
+          ?.ksa_mapping,
+      ).toBeUndefined();
     });
   });
 
-  describe('Error Handling', () => {
-    it('should handle repository errors gracefully', async () => {
-      mockTaskRepo.findById.mockRejectedValue(new Error('Database error'));
+  describe("Error Handling", () => {
+    it("should handle repository errors gracefully", async () => {
+      mockTaskRepo.findById.mockRejectedValue(new Error("Database error"));
 
-      const request = new NextRequest('http://localhost/api/assessment/programs/program-123/batch-answers', {
-        method: 'POST',
-        body: JSON.stringify({
-          taskId: 'task-123',
-          answers: []
-        })
+      const request = new NextRequest(
+        "http://localhost/api/assessment/programs/program-123/batch-answers",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            taskId: "task-123",
+            answers: [],
+          }),
+        },
+      );
+
+      const response = await POST(request, {
+        params: Promise.resolve({ programId: "test-id" }),
       });
-
-      const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(500);
-      expect(data.error).toBe('Failed to submit answers');
+      expect(data.error).toBe("Failed to submit answers");
       expect(mockConsoleError).toHaveBeenCalledWith(
-        'Error submitting batch answers:',
-        expect.any(Error)
+        "Error submitting batch answers:",
+        expect.any(Error),
       );
     });
 
-    it('should handle update errors', async () => {
-      mockTaskRepo.update.mockRejectedValue(new Error('Update failed'));
+    it("should handle update errors", async () => {
+      mockTaskRepo.update.mockRejectedValue(new Error("Update failed"));
 
-      const request = new NextRequest('http://localhost/api/assessment/programs/program-123/batch-answers', {
-        method: 'POST',
-        body: JSON.stringify({
-          taskId: 'task-123',
-          answers: [{ questionId: 'q1', answer: 'a' }]
-        })
+      const request = new NextRequest(
+        "http://localhost/api/assessment/programs/program-123/batch-answers",
+        {
+          method: "POST",
+          body: JSON.stringify({
+            taskId: "task-123",
+            answers: [{ questionId: "q1", answer: "a" }],
+          }),
+        },
+      );
+
+      const response = await POST(request, {
+        params: Promise.resolve({ programId: "test-id" }),
       });
-
-      const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
       const data = await response.json();
 
       expect(response.status).toBe(500);
-      expect(data.error).toBe('Failed to submit answers');
+      expect(data.error).toBe("Failed to submit answers");
     });
 
-    it('should handle invalid JSON body', async () => {
-      const request = new NextRequest('http://localhost/api/assessment/programs/program-123/batch-answers', {
-        method: 'POST',
-        body: 'invalid json'
-      });
+    it("should handle invalid JSON body", async () => {
+      const request = new NextRequest(
+        "http://localhost/api/assessment/programs/program-123/batch-answers",
+        {
+          method: "POST",
+          body: "invalid json",
+        },
+      );
 
-      const response = await POST(request, { params: Promise.resolve({'programId':'test-id'}) });
+      const response = await POST(request, {
+        params: Promise.resolve({ programId: "test-id" }),
+      });
       const data = await response.json();
 
       expect(response.status).toBe(500);
-      expect(data.error).toBe('Failed to submit answers');
+      expect(data.error).toBe("Failed to submit answers");
     });
   });
 });

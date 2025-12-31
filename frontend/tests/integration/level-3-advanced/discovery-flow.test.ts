@@ -3,26 +3,26 @@
  * Test Discovery module exploration journey
  */
 
-import type { Pool, PoolClient } from 'pg';
+import type { Pool, PoolClient } from "pg";
 
-describe.skip('Discovery Learning Flow', () => {
-  const baseUrl = process.env.API_URL || 'http://localhost:3000';
+describe.skip("Discovery Learning Flow", () => {
+  const baseUrl = process.env.API_URL || "http://localhost:3000";
   let pool: Pool | null = null;
 
   beforeAll(async () => {
     try {
-      const { Pool } = require('pg');
+      const { Pool } = require("pg");
       pool = new Pool({
-        host: process.env.DB_HOST || 'localhost',
-        port: parseInt(process.env.DB_PORT || '5434'),
-        database: process.env.DB_NAME || 'ai_square_db',
-        user: process.env.DB_USER || 'postgres',
-        password: process.env.DB_PASSWORD || 'postgres',
+        host: process.env.DB_HOST || "localhost",
+        port: parseInt(process.env.DB_PORT || "5434"),
+        database: process.env.DB_NAME || "ai_square_db",
+        user: process.env.DB_USER || "postgres",
+        password: process.env.DB_PASSWORD || "postgres",
         connectionTimeoutMillis: 3000,
       });
-      await pool!.query('SELECT 1');
+      await pool!.query("SELECT 1");
     } catch (error) {
-      console.error('Database connection failed:', error);
+      console.error("Database connection failed:", error);
       pool = null;
     }
   }, 5000);
@@ -32,44 +32,47 @@ describe.skip('Discovery Learning Flow', () => {
       try {
         await pool.end();
       } catch (error) {
-        console.error('Error closing pool:', error);
+        console.error("Error closing pool:", error);
       }
     }
   });
 
-  it('should fetch Discovery scenarios from API', async () => {
+  it("should fetch Discovery scenarios from API", async () => {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 2000);
 
     try {
-      const response = await fetch(`${baseUrl}/api/discovery/scenarios?lang=en`, {
-        signal: controller.signal
-      }).catch(() => null);
+      const response = await fetch(
+        `${baseUrl}/api/discovery/scenarios?lang=en`,
+        {
+          signal: controller.signal,
+        },
+      ).catch(() => null);
       clearTimeout(timeoutId);
 
       if (!response) {
-        console.log('Discovery API not reachable, skipping');
+        console.log("Discovery API not reachable, skipping");
         expect(true).toBe(true);
         return;
       }
 
       if (!response.ok) {
-        console.log('Discovery API not available, skipping');
+        console.log("Discovery API not available, skipping");
         expect(true).toBe(true);
         return;
       }
 
       const data = await response.json();
-      expect(data).toHaveProperty('success');
+      expect(data).toHaveProperty("success");
 
       if (data.success && data.data) {
         console.log(`Found Discovery scenarios from API`);
-        expect(data.data).toHaveProperty('scenarios');
+        expect(data.data).toHaveProperty("scenarios");
       }
     } catch (error) {
       clearTimeout(timeoutId);
-      if (error instanceof Error && error.name === 'AbortError') {
-        console.log('API timeout, skipping test');
+      if (error instanceof Error && error.name === "AbortError") {
+        console.log("API timeout, skipping test");
         expect(true).toBe(true);
       } else {
         throw error;
@@ -77,9 +80,9 @@ describe.skip('Discovery Learning Flow', () => {
     }
   }, 10000);
 
-  it('should query Discovery scenarios from database', async () => {
+  it("should query Discovery scenarios from database", async () => {
     if (!pool) {
-      console.log('No database connection, skipping');
+      console.log("No database connection, skipping");
       expect(true).toBe(true);
       return;
     }
@@ -104,9 +107,9 @@ describe.skip('Discovery Learning Flow', () => {
     console.log(`Found ${result.rows.length} active Discovery scenarios in DB`);
 
     if (result.rows.length > 0) {
-      expect(result.rows[0]).toHaveProperty('id');
-      expect(result.rows[0]).toHaveProperty('status');
-      expect(result.rows[0].status).toBe('active');
+      expect(result.rows[0]).toHaveProperty("id");
+      expect(result.rows[0]).toHaveProperty("status");
+      expect(result.rows[0].status).toBe("active");
 
       if (result.rows[0].career_type) {
         console.log(`Career type: ${result.rows[0].career_type}`);
@@ -116,27 +119,27 @@ describe.skip('Discovery Learning Flow', () => {
     expect(true).toBe(true);
   });
 
-  it('should create Discovery program with exploration path', async () => {
+  it("should create Discovery program with exploration path", async () => {
     if (!pool) {
-      console.log('No database connection, skipping');
+      console.log("No database connection, skipping");
       expect(true).toBe(true);
       return;
     }
 
     const client: PoolClient = await pool.connect();
-    const { v4: uuidv4 } = require('uuid');
+    const { v4: uuidv4 } = require("uuid");
 
     try {
-      await client.query('BEGIN');
+      await client.query("BEGIN");
 
       // Check if we have Discovery scenarios
       const scenarios = await client.query<{ id: string }>(
-        `SELECT id FROM scenarios WHERE mode = 'discovery' AND status = 'active' LIMIT 1`
+        `SELECT id FROM scenarios WHERE mode = 'discovery' AND status = 'active' LIMIT 1`,
       );
 
       if (scenarios.rows.length === 0) {
-        console.log('No active Discovery scenarios to test with');
-        await client.query('ROLLBACK');
+        console.log("No active Discovery scenarios to test with");
+        await client.query("ROLLBACK");
         expect(true).toBe(true);
         return;
       }
@@ -146,7 +149,13 @@ describe.skip('Discovery Learning Flow', () => {
       await client.query(
         `INSERT INTO users (id, email, name, role, email_verified)
          VALUES ($1, $2, $3, $4, $5)`,
-        [userId, `discovery-test-${Date.now()}@example.com`, 'Discovery Test User', 'user', true]
+        [
+          userId,
+          `discovery-test-${Date.now()}@example.com`,
+          "Discovery Test User",
+          "user",
+          true,
+        ],
       );
 
       // Create Discovery program
@@ -158,11 +167,11 @@ describe.skip('Discovery Learning Flow', () => {
           programId,
           scenarios.rows[0].id,
           userId,
-          'active',
+          "active",
           JSON.stringify({ explorationPath: [], milestones: [] }),
           0,
-          0
-        ]
+          0,
+        ],
       );
 
       // Verify program has correct mode (should be inherited via trigger)
@@ -171,14 +180,13 @@ describe.skip('Discovery Learning Flow', () => {
         mode: string;
         status: string;
         metadata: Record<string, unknown>;
-      }>(
-        `SELECT id, mode, status, metadata FROM programs WHERE id = $1`,
-        [programId]
-      );
+      }>(`SELECT id, mode, status, metadata FROM programs WHERE id = $1`, [
+        programId,
+      ]);
 
-      expect(program.rows[0].mode).toBe('discovery');
-      expect(program.rows[0].status).toBe('active');
-      expect(program.rows[0].metadata).toHaveProperty('explorationPath');
+      expect(program.rows[0].mode).toBe("discovery");
+      expect(program.rows[0].status).toBe("active");
+      expect(program.rows[0].metadata).toHaveProperty("explorationPath");
 
       // Create exploration task
       const taskId = uuidv4();
@@ -188,38 +196,38 @@ describe.skip('Discovery Learning Flow', () => {
         [
           taskId,
           programId,
-          'exploration',
-          'active',
+          "exploration",
+          "active",
           '{"en": "Explore AI Career Path"}',
           '{"instructions": "Discover your path in AI"}',
-          0
-        ]
+          0,
+        ],
       );
 
       // Check task mode inheritance
       const task = await client.query<{ mode: string; type: string }>(
         `SELECT mode, type FROM tasks WHERE id = $1`,
-        [taskId]
+        [taskId],
       );
 
-      expect(task.rows[0].mode).toBe('discovery');
-      expect(task.rows[0].type).toBe('exploration');
+      expect(task.rows[0].mode).toBe("discovery");
+      expect(task.rows[0].type).toBe("exploration");
 
       // Rollback to clean up
-      await client.query('ROLLBACK');
+      await client.query("ROLLBACK");
 
-      console.log('Discovery program with exploration path test successful');
+      console.log("Discovery program with exploration path test successful");
     } catch (error) {
-      await client.query('ROLLBACK');
+      await client.query("ROLLBACK");
       throw error;
     } finally {
       client.release();
     }
   });
 
-  it('should check user exploration progress', async () => {
+  it("should check user exploration progress", async () => {
     if (!pool) {
-      console.log('No database connection, skipping');
+      console.log("No database connection, skipping");
       expect(true).toBe(true);
       return;
     }
@@ -239,10 +247,10 @@ describe.skip('Discovery Learning Flow', () => {
       WHERE s.mode = 'discovery'
     `);
 
-    console.log('Discovery progress stats:', {
+    console.log("Discovery progress stats:", {
       users: result.rows[0].user_count,
       programs: result.rows[0].program_count,
-      active: result.rows[0].active_programs
+      active: result.rows[0].active_programs,
     });
 
     expect(result.rows).toBeDefined();

@@ -3,10 +3,10 @@
  * Common utilities for optimizing API performance
  */
 
-import { NextRequest, NextResponse } from 'next/server';
-import { cacheService } from '@/lib/cache/cache-service';
-import { distributedCacheService } from '@/lib/cache/distributed-cache-service';
-import { withPerformanceTracking } from '@/lib/monitoring/performance-monitor';
+import { NextRequest, NextResponse } from "next/server";
+import { cacheService } from "@/lib/cache/cache-service";
+import { distributedCacheService } from "@/lib/cache/distributed-cache-service";
+import { withPerformanceTracking } from "@/lib/monitoring/performance-monitor";
 
 interface CacheOptions {
   ttl?: number; // Time to live in seconds
@@ -39,74 +39,97 @@ interface PaginatedResponse<T> {
 export async function cachedGET<T>(
   request: NextRequest,
   handler: () => Promise<T>,
-  options: CacheOptions = {}
+  options: CacheOptions = {},
 ): Promise<NextResponse> {
-  return withPerformanceTracking(async () => {
-    const url = new URL(request.url);
-    const cacheKey = `api:${url.pathname}:${url.search}`;
-    const { useDistributedCache = true } = options;
+  return withPerformanceTracking(
+    async () => {
+      const url = new URL(request.url);
+      const cacheKey = `api:${url.pathname}:${url.search}`;
+      const { useDistributedCache = true } = options;
 
-    const cache = useDistributedCache ? distributedCacheService : cacheService;
+      const cache = useDistributedCache
+        ? distributedCacheService
+        : cacheService;
 
-    // Use stale-while-revalidate if supported
-    if (useDistributedCache && options.staleWhileRevalidate) {
-      try {
-        const result = await distributedCacheService.getWithRevalidation(
-          cacheKey,
-          handler,
-          {
-            ttl: (options.ttl || 300) * 1000,
-            staleWhileRevalidate: options.staleWhileRevalidate * 1000
-          }
-        );
+      // Use stale-while-revalidate if supported
+      if (useDistributedCache && options.staleWhileRevalidate) {
+        try {
+          const result = await distributedCacheService.getWithRevalidation(
+            cacheKey,
+            handler,
+            {
+              ttl: (options.ttl || 300) * 1000,
+              staleWhileRevalidate: options.staleWhileRevalidate * 1000,
+            },
+          );
 
-        return NextResponse.json({ ...result, cacheHit: false }, {
-          headers: {
-            'X-Cache': 'SWR',
-            'Cache-Control': `public, max-age=${options.ttl || 300}, stale-while-revalidate=${options.staleWhileRevalidate || 3600}`
-          }
-        });
-      } catch (error) {
+          return NextResponse.json(
+            { ...result, cacheHit: false },
+            {
+              headers: {
+                "X-Cache": "SWR",
+                "Cache-Control": `public, max-age=${options.ttl || 300}, stale-while-revalidate=${options.staleWhileRevalidate || 3600}`,
+              },
+            },
+          );
+        } catch (error) {
+          return NextResponse.json(
+            {
+              error:
+                error instanceof Error
+                  ? error.message
+                  : "Internal server error",
+            },
+            { status: 500 },
+          );
+        }
+      }
+
+      // Traditional cache approach
+      const cached = await cache.get(cacheKey);
+      if (cached) {
         return NextResponse.json(
-          { error: (error instanceof Error ? error.message : 'Internal server error') },
-          { status: 500 }
+          { ...cached, cacheHit: true },
+          {
+            headers: {
+              "X-Cache": "HIT",
+              "Cache-Control": `public, max-age=${options.ttl || 300}, stale-while-revalidate=${options.staleWhileRevalidate || 3600}`,
+            },
+          },
         );
       }
-    }
 
-    // Traditional cache approach
-    const cached = await cache.get(cacheKey);
-    if (cached) {
-      return NextResponse.json({ ...cached, cacheHit: true }, {
-        headers: {
-          'X-Cache': 'HIT',
-          'Cache-Control': `public, max-age=${options.ttl || 300}, stale-while-revalidate=${options.staleWhileRevalidate || 3600}`
-        }
-      });
-    }
+      // Execute handler
+      try {
+        const result = await handler();
 
-    // Execute handler
-    try {
-      const result = await handler();
+        // Cache the result
+        await cache.set(cacheKey, result, {
+          ttl: (options.ttl || 300) * 1000, // Convert to milliseconds
+        });
 
-      // Cache the result
-      await cache.set(cacheKey, result, {
-        ttl: (options.ttl || 300) * 1000 // Convert to milliseconds
-      });
-
-      return NextResponse.json({ ...result, cacheHit: false }, {
-        headers: {
-          'X-Cache': 'MISS',
-          'Cache-Control': `public, max-age=${options.ttl || 300}, stale-while-revalidate=${options.staleWhileRevalidate || 3600}`
-        }
-      });
-    } catch (error) {
-      return NextResponse.json(
-        { error: error instanceof Error ? error.message : 'Internal server error' },
-        { status: 500 }
-      );
-    }
-  }, new URL(request.url).pathname, 'GET');
+        return NextResponse.json(
+          { ...result, cacheHit: false },
+          {
+            headers: {
+              "X-Cache": "MISS",
+              "Cache-Control": `public, max-age=${options.ttl || 300}, stale-while-revalidate=${options.staleWhileRevalidate || 3600}`,
+            },
+          },
+        );
+      } catch (error) {
+        return NextResponse.json(
+          {
+            error:
+              error instanceof Error ? error.message : "Internal server error",
+          },
+          { status: 500 },
+        );
+      }
+    },
+    new URL(request.url).pathname,
+    "GET",
+  );
 }
 
 /**
@@ -115,14 +138,14 @@ export async function cachedGET<T>(
 export function getPaginationParams(request: NextRequest): PaginationParams {
   const { searchParams } = new URL(request.url);
 
-  const page = parseInt(searchParams.get('page') || '1', 10);
-  const limit = parseInt(searchParams.get('limit') || '20', 10);
+  const page = parseInt(searchParams.get("page") || "1", 10);
+  const limit = parseInt(searchParams.get("limit") || "20", 10);
   const offset = (page - 1) * limit;
 
   return {
     page: Math.max(1, page),
     limit: Math.min(100, Math.max(1, limit)), // Max 100 items per page
-    offset
+    offset,
   };
 }
 
@@ -132,7 +155,7 @@ export function getPaginationParams(request: NextRequest): PaginationParams {
 export function createPaginatedResponse<T>(
   items: T[],
   total: number,
-  params: PaginationParams
+  params: PaginationParams,
 ): PaginatedResponse<T> {
   const { page = 1, limit = 20 } = params;
   const totalPages = Math.ceil(total / limit);
@@ -145,8 +168,8 @@ export function createPaginatedResponse<T>(
       total,
       totalPages,
       hasNext: page < totalPages,
-      hasPrev: page > 1
-    }
+      hasPrev: page > 1,
+    },
   };
 }
 
@@ -165,7 +188,7 @@ export async function parallel<T extends readonly unknown[]>(
 export async function batchQueries<T, R>(
   items: T[],
   batchSize: number,
-  handler: (batch: T[]) => Promise<R[]>
+  handler: (batch: T[]) => Promise<R[]>,
 ): Promise<R[]> {
   const results: R[] = [];
 
@@ -191,31 +214,33 @@ export function streamJSON(data: unknown[], chunkSize = 100): ReadableStream {
 
     pull(controller) {
       if (index >= data.length) {
-        controller.enqueue(new TextEncoder().encode(']}'));
+        controller.enqueue(new TextEncoder().encode("]}"));
         controller.close();
         return;
       }
 
       const chunk = data.slice(index, index + chunkSize);
-      const jsonChunk = chunk.map((item, i) => {
-        const json = JSON.stringify(item);
-        return i === 0 && index === 0 ? json : ',' + json;
-      }).join('');
+      const jsonChunk = chunk
+        .map((item, i) => {
+          const json = JSON.stringify(item);
+          return i === 0 && index === 0 ? json : "," + json;
+        })
+        .join("");
 
       controller.enqueue(new TextEncoder().encode(jsonChunk));
       index += chunkSize;
-    }
+    },
   });
 }
 
 /**
  * Select only specific fields from objects (reduces payload size)
  */
-export function selectFields<T extends Record<string, unknown>, K extends keyof T>(
-  items: T[],
-  fields: K[]
-): Pick<T, K>[] {
-  return items.map(item => {
+export function selectFields<
+  T extends Record<string, unknown>,
+  K extends keyof T,
+>(items: T[], fields: K[]): Pick<T, K>[] {
+  return items.map((item) => {
     const selected = {} as Pick<T, K>;
     for (const field of fields) {
       if (field in item) {
@@ -231,15 +256,15 @@ export function selectFields<T extends Record<string, unknown>, K extends keyof 
  */
 export function compressedResponse(
   data: unknown,
-  request: NextRequest
+  request: NextRequest,
 ): NextResponse {
-  const acceptEncoding = request.headers.get('accept-encoding') || '';
+  const acceptEncoding = request.headers.get("accept-encoding") || "";
   const response = NextResponse.json(data);
 
-  if (acceptEncoding.includes('gzip')) {
-    response.headers.set('Content-Encoding', 'gzip');
-  } else if (acceptEncoding.includes('br')) {
-    response.headers.set('Content-Encoding', 'br');
+  if (acceptEncoding.includes("gzip")) {
+    response.headers.set("Content-Encoding", "gzip");
+  } else if (acceptEncoding.includes("br")) {
+    response.headers.set("Content-Encoding", "br");
   }
 
   return response;
@@ -252,15 +277,15 @@ const rateLimitMap = new Map<string, number[]>();
 
 export function rateLimit(
   windowMs: number = 60000, // 1 minute
-  maxRequests: number = 60
+  maxRequests: number = 60,
 ) {
   return (request: NextRequest): { allowed: boolean; retryAfter?: number } => {
-    const ip = request.headers.get('x-forwarded-for') || 'anonymous';
+    const ip = request.headers.get("x-forwarded-for") || "anonymous";
     const now = Date.now();
     const windowStart = now - windowMs;
 
     const requests = rateLimitMap.get(ip) || [];
-    const recentRequests = requests.filter(time => time > windowStart);
+    const recentRequests = requests.filter((time) => time > windowStart);
 
     if (recentRequests.length >= maxRequests) {
       const oldestRequest = recentRequests[0];
@@ -281,7 +306,7 @@ export function rateLimit(
  */
 export function memoize<T extends (...args: unknown[]) => unknown>(
   fn: T,
-  maxAge: number = 5 * 60 * 1000 // 5 minutes
+  maxAge: number = 5 * 60 * 1000, // 5 minutes
 ): T {
   const cache = new Map<string, { value: unknown; timestamp: number }>();
 

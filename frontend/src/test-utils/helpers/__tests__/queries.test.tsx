@@ -1,5 +1,5 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
+import React from "react";
+import { render, screen } from "@testing-library/react";
 import {
   getByTextInContainer,
   getByTextInRole,
@@ -10,10 +10,10 @@ import {
   hasClass,
   getComputedStyleProperty,
   waitForElementWithTimeout,
-} from '../queries';
+} from "../queries";
 
-describe('test-utils/helpers/queries', () => {
-  it('getByTextInContainer and expectElementCountInContainer work with data-testid', () => {
+describe("test-utils/helpers/queries", () => {
+  it("getByTextInContainer and expectElementCountInContainer work with data-testid", () => {
     render(
       <div>
         <section data-testid="stats">
@@ -21,16 +21,16 @@ describe('test-utils/helpers/queries', () => {
           <div>Users</div>
           <div>Admins</div>
         </section>
-      </div>
+      </div>,
     );
 
-    const el = getByTextInContainer('stats', 'Admins');
+    const el = getByTextInContainer("stats", "Admins");
     expect(el).toBeInTheDocument();
-    const elements = expectElementCountInContainer('stats', 'Users', 2);
+    const elements = expectElementCountInContainer("stats", "Users", 2);
     expect(elements.length).toBe(2);
   });
 
-  it('getByTextInRole works and getByTextWithContext disambiguates by context', () => {
+  it("getByTextInRole works and getByTextWithContext disambiguates by context", () => {
     render(
       <div>
         <div role="group" aria-label="A">
@@ -40,33 +40,43 @@ describe('test-utils/helpers/queries', () => {
           <span>Label</span>
           <span>Context</span>
         </div>
-      </div>
+      </div>,
     );
 
-    expect(getByTextInRole('group', 'Label', { name: 'A' })).toBeInTheDocument();
-    expect(getByTextWithContext('Label', 'Context')).toBeInTheDocument();
+    expect(
+      getByTextInRole("group", "Label", { name: "A" }),
+    ).toBeInTheDocument();
+    expect(getByTextWithContext("Label", "Context")).toBeInTheDocument();
   });
 
-  it('getStatisticByLabel finds adjacent value element', () => {
+  it("getStatisticByLabel finds adjacent value element", () => {
     render(
       <div className="text-center">
         <div className="text-3xl">42</div>
         <div>Score</div>
-      </div>
+      </div>,
     );
-    const value = getStatisticByLabel('Score');
-    expect(value).toHaveTextContent('42');
+    const value = getStatisticByLabel("Score");
+    expect(value).toHaveTextContent("42");
   });
 
-  it('elementExists, hasClass, and getComputedStyleProperty behave correctly', () => {
-    render(<div><span className="foo" style={{ color: 'rgb(255, 0, 0)' }}>Hello</span></div>);
-    expect(elementExists('Hello')).toBe(true);
-    const el = screen.getByText('Hello');
-    expect(hasClass(el, 'foo')).toBe(true);
-    expect(getComputedStyleProperty(el as HTMLElement, 'color')).toBe('rgb(255, 0, 0)');
+  it("elementExists, hasClass, and getComputedStyleProperty behave correctly", () => {
+    render(
+      <div>
+        <span className="foo" style={{ color: "rgb(255, 0, 0)" }}>
+          Hello
+        </span>
+      </div>,
+    );
+    expect(elementExists("Hello")).toBe(true);
+    const el = screen.getByText("Hello");
+    expect(hasClass(el, "foo")).toBe(true);
+    expect(getComputedStyleProperty(el as HTMLElement, "color")).toBe(
+      "rgb(255, 0, 0)",
+    );
   });
 
-  it('waitForElementWithTimeout resolves when element appears', async () => {
+  it("waitForElementWithTimeout resolves when element appears", async () => {
     const Test = () => {
       const [show, setShow] = React.useState(false);
       React.useEffect(() => {
@@ -76,12 +86,17 @@ describe('test-utils/helpers/queries', () => {
       return <div>{show ? <span data-testid="late">Ready</span> : null}</div>;
     };
     render(<Test />);
-    const el = await waitForElementWithTimeout(() => screen.queryByTestId('late'), 200);
+    const el = await waitForElementWithTimeout(
+      () => screen.queryByTestId("late"),
+      200,
+    );
     expect(el).toBeInTheDocument();
   });
 
-  it('waitForElementWithTimeout throws on timeout', async () => {
+  it("waitForElementWithTimeout throws on timeout", async () => {
     render(<div />);
-    await expect(waitForElementWithTimeout(() => screen.queryByTestId('never'), 50)).rejects.toThrow('Element not found');
+    await expect(
+      waitForElementWithTimeout(() => screen.queryByTestId("never"), 50),
+    ).rejects.toThrow("Element not found");
   });
 });

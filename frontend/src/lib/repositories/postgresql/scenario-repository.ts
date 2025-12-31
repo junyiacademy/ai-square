@@ -4,18 +4,18 @@
  * Updated for unified schema v2
  */
 
-import { Pool } from 'pg';
+import { Pool } from "pg";
 import type {
   DBScenario,
   LearningMode,
   ScenarioStatus,
   DifficultyLevel,
-  TaskType
-} from '@/types/database';
-import type { IScenario, ITaskTemplate } from '@/types/unified-learning';
-import { BaseScenarioRepository } from '@/types/unified-learning';
-import { distributedCacheService } from '@/lib/cache/distributed-cache-service';
-import { cacheKeys, TTL } from '@/lib/cache/cache-keys';
+  TaskType,
+} from "@/types/database";
+import type { IScenario, ITaskTemplate } from "@/types/unified-learning";
+import { BaseScenarioRepository } from "@/types/unified-learning";
+import { distributedCacheService } from "@/lib/cache/distributed-cache-service";
+import { cacheKeys, TTL } from "@/lib/cache/cache-keys";
 
 export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenario> {
   constructor(private pool: Pool) {
@@ -29,19 +29,19 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
     // console.log('ensureArray input:', { value, type: typeof value, isArray: Array.isArray(value) });
 
     if (Array.isArray(value)) {
-      return value.map(item => String(item));
+      return value.map((item) => String(item));
     }
 
-    if (typeof value === 'string') {
+    if (typeof value === "string") {
       // Check if it's a JSON string array
-      if (value.startsWith('[') && value.endsWith(']')) {
+      if (value.startsWith("[") && value.endsWith("]")) {
         try {
           const parsed = JSON.parse(value);
           if (Array.isArray(parsed)) {
-            return parsed.map(item => String(item));
+            return parsed.map((item) => String(item));
           }
         } catch (error) {
-          console.error('Failed to parse JSON array:', value, error);
+          console.error("Failed to parse JSON array:", value, error);
         }
       }
       // Single string value
@@ -83,14 +83,19 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
       prerequisites: row.prerequisites,
 
       // Task templates
-      taskTemplates: (row.task_templates as Array<Record<string, unknown>> || []).map((t): ITaskTemplate => ({
-        id: t.id as string,
-        title: t.title as Record<string, string>,
-        type: t.type as TaskType,
-        description: t.description as Record<string, string> | undefined,
-        ...t
-      })),
-      taskCount: (row.task_templates as Array<Record<string, unknown>> || []).length,
+      taskTemplates: (
+        (row.task_templates as Array<Record<string, unknown>>) || []
+      ).map(
+        (t): ITaskTemplate => ({
+          id: t.id as string,
+          title: t.title as Record<string, string>,
+          type: t.type as TaskType,
+          description: t.description as Record<string, string> | undefined,
+          ...t,
+        }),
+      ),
+      taskCount: ((row.task_templates as Array<Record<string, unknown>>) || [])
+        .length,
 
       // Rewards and progression
       xpRewards: row.xp_rewards,
@@ -111,12 +116,13 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
       publishedAt: row.published_at || undefined,
 
       // Extensible metadata
-      metadata: row.metadata
+      metadata: row.metadata,
     };
   }
 
   async findById(id: string): Promise<IScenario | null> {
-    const isTest = process.env.NODE_ENV === 'test' || Boolean(process.env.JEST_WORKER_ID);
+    const isTest =
+      process.env.NODE_ENV === "test" || Boolean(process.env.JEST_WORKER_ID);
     const key = cacheKeys.scenarioById(id);
     if (!isTest) {
       const cached = await distributedCacheService.get<IScenario | null>(key);
@@ -148,11 +154,15 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
     `;
 
     const { rows } = await this.pool.query<DBScenario>(query, [uniqueIds]);
-    return rows.map(row => this.toScenario(row));
+    return rows.map((row) => this.toScenario(row));
   }
 
-  async findBySource(sourceType: string, sourceId?: string): Promise<IScenario[]> {
-    const isTest = process.env.NODE_ENV === 'test' || Boolean(process.env.JEST_WORKER_ID);
+  async findBySource(
+    sourceType: string,
+    sourceId?: string,
+  ): Promise<IScenario[]> {
+    const isTest =
+      process.env.NODE_ENV === "test" || Boolean(process.env.JEST_WORKER_ID);
     const key = cacheKeys.scenariosBySource(sourceType, sourceId);
     if (!isTest) {
       const cached = await distributedCacheService.get<IScenario[]>(key);
@@ -173,14 +183,14 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
     query += ` ORDER BY created_at DESC`;
 
     const { rows } = await this.pool.query<DBScenario>(query, params);
-    const list = rows.map(row => this.toScenario(row));
+    const list = rows.map((row) => this.toScenario(row));
     if (!isTest) {
       await distributedCacheService.set(key, list, { ttl: TTL.STATIC_24H });
     }
     return list;
   }
 
-  async create(scenario: Omit<IScenario, 'id'>): Promise<IScenario> {
+  async create(scenario: Omit<IScenario, "id">): Promise<IScenario> {
     const query = `
       INSERT INTO scenarios (
         id, mode, status, source_type, source_path, source_id, source_metadata,
@@ -196,33 +206,35 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
     `;
 
     const { rows } = await this.pool.query<DBScenario>(query, [
-      scenario.mode,                                                          // $1 - mode
-      scenario.status || 'draft',                                            // $2 - status
-      scenario.sourceType,                                                   // $3 - source_type
-      scenario.sourcePath || null,                                          // $4 - source_path
-      scenario.sourceId || null,                                            // $5 - source_id
-      JSON.stringify(scenario.sourceMetadata || {}),                        // $6 - source_metadata
-      JSON.stringify(scenario.title || {}),                                 // $7 - title
-      JSON.stringify(scenario.description || {}),                           // $8 - description
-      JSON.stringify(scenario.objectives || []),                           // $9 - objectives
-      this.ensureArray(scenario.prerequisites),  // $10 - prerequisites
-      JSON.stringify(scenario.taskTemplates || []),                        // $11 - task_templates
-      JSON.stringify(scenario.pblData || {}),                              // $12 - pbl_data
-      JSON.stringify(scenario.discoveryData || {}),                        // $13 - discovery_data
-      JSON.stringify(scenario.assessmentData || {}),                       // $14 - assessment_data
-      JSON.stringify(scenario.aiModules || {}),                            // $15 - ai_modules
-      JSON.stringify(scenario.resources || []),                            // $16 - resources
-      scenario.version || '1.0.0',                                         // $17 - version
-      scenario.difficulty,                                                  // $18 - difficulty
-      scenario.estimatedMinutes,                                           // $19 - estimated_minutes
-      JSON.stringify(scenario.xpRewards || {}),                           // $20 - xp_rewards
-      JSON.stringify(scenario.unlockRequirements || {}),                  // $21 - unlock_requirements
-      JSON.stringify(scenario.metadata || {})                             // $22 - metadata
+      scenario.mode, // $1 - mode
+      scenario.status || "draft", // $2 - status
+      scenario.sourceType, // $3 - source_type
+      scenario.sourcePath || null, // $4 - source_path
+      scenario.sourceId || null, // $5 - source_id
+      JSON.stringify(scenario.sourceMetadata || {}), // $6 - source_metadata
+      JSON.stringify(scenario.title || {}), // $7 - title
+      JSON.stringify(scenario.description || {}), // $8 - description
+      JSON.stringify(scenario.objectives || []), // $9 - objectives
+      this.ensureArray(scenario.prerequisites), // $10 - prerequisites
+      JSON.stringify(scenario.taskTemplates || []), // $11 - task_templates
+      JSON.stringify(scenario.pblData || {}), // $12 - pbl_data
+      JSON.stringify(scenario.discoveryData || {}), // $13 - discovery_data
+      JSON.stringify(scenario.assessmentData || {}), // $14 - assessment_data
+      JSON.stringify(scenario.aiModules || {}), // $15 - ai_modules
+      JSON.stringify(scenario.resources || []), // $16 - resources
+      scenario.version || "1.0.0", // $17 - version
+      scenario.difficulty, // $18 - difficulty
+      scenario.estimatedMinutes, // $19 - estimated_minutes
+      JSON.stringify(scenario.xpRewards || {}), // $20 - xp_rewards
+      JSON.stringify(scenario.unlockRequirements || {}), // $21 - unlock_requirements
+      JSON.stringify(scenario.metadata || {}), // $22 - metadata
     ]);
 
     const created = this.toScenario(rows[0]);
     // Invalidate related caches
-    await distributedCacheService.delete(cacheKeys.scenariosBySource(created.sourceType, created.sourceId));
+    await distributedCacheService.delete(
+      cacheKeys.scenariosBySource(created.sourceType, created.sourceId),
+    );
     return created;
   }
 
@@ -237,8 +249,10 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
       values.push(updates.status);
 
       // Set published_at when scenario becomes active
-      if (updates.status === 'active') {
-        updateFields.push(`published_at = COALESCE(published_at, CURRENT_TIMESTAMP)`);
+      if (updates.status === "active") {
+        updateFields.push(
+          `published_at = COALESCE(published_at, CURRENT_TIMESTAMP)`,
+        );
       }
     }
 
@@ -335,35 +349,41 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
     }
 
     if (updateFields.length === 0) {
-      throw new Error('No fields to update');
+      throw new Error("No fields to update");
     }
 
     values.push(id);
 
     const query = `
       UPDATE scenarios
-      SET ${updateFields.join(', ')}, updated_at = CURRENT_TIMESTAMP
+      SET ${updateFields.join(", ")}, updated_at = CURRENT_TIMESTAMP
       WHERE id = $${paramCount}
       RETURNING *
     `;
 
     const { rows } = await this.pool.query<DBScenario>(query, values);
     if (!rows[0]) {
-      throw new Error('Scenario not found');
+      throw new Error("Scenario not found");
     }
     const updated = this.toScenario(rows[0]);
     // Invalidate caches
-    const isTest = process.env.NODE_ENV === 'test' || Boolean(process.env.JEST_WORKER_ID);
+    const isTest =
+      process.env.NODE_ENV === "test" || Boolean(process.env.JEST_WORKER_ID);
     if (!isTest) {
       await distributedCacheService.delete(cacheKeys.scenarioById(id));
-      await distributedCacheService.delete(cacheKeys.scenariosBySource(updated.sourceType, updated.sourceId));
+      await distributedCacheService.delete(
+        cacheKeys.scenariosBySource(updated.sourceType, updated.sourceId),
+      );
     }
     return updated;
   }
 
   // Additional methods specific to PostgreSQL implementation
 
-  async findByMode(mode: LearningMode, includeArchived = false): Promise<IScenario[]> {
+  async findByMode(
+    mode: LearningMode,
+    includeArchived = false,
+  ): Promise<IScenario[]> {
     let query = `
       SELECT * FROM scenarios
       WHERE mode = $1
@@ -377,7 +397,7 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
     query += ` ORDER BY created_at DESC`;
 
     const { rows } = await this.pool.query<DBScenario>(query, params);
-    return rows.map(row => this.toScenario(row));
+    return rows.map((row) => this.toScenario(row));
   }
 
   async findActive(): Promise<IScenario[]> {
@@ -388,7 +408,7 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
     `;
 
     const { rows } = await this.pool.query<DBScenario>(query);
-    return rows.map(row => this.toScenario(row));
+    return rows.map((row) => this.toScenario(row));
   }
 
   async delete(id: string): Promise<boolean> {
@@ -409,14 +429,14 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
     `;
 
     const { rows } = await this.pool.query<DBScenario>(query, [difficulty]);
-    return rows.map(row => this.toScenario(row));
+    return rows.map((row) => this.toScenario(row));
   }
 
   async updateStatus(id: string, status: ScenarioStatus): Promise<void> {
     const query = `
       UPDATE scenarios
       SET status = $1,
-          ${status === 'active' ? 'published_at = COALESCE(published_at, CURRENT_TIMESTAMP),' : ''}
+          ${status === "active" ? "published_at = COALESCE(published_at, CURRENT_TIMESTAMP)," : ""}
           updated_at = CURRENT_TIMESTAMP
       WHERE id = $2
     `;
@@ -425,13 +445,17 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
   }
 
   // Get scenarios with usage statistics
-  async getScenariosWithStats(): Promise<Array<IScenario & {
-    totalPrograms?: number;
-    completedPrograms?: number;
-    uniqueUsers?: number;
-    averageScore?: number;
-    averageTimeSpent?: number;
-  }>> {
+  async getScenariosWithStats(): Promise<
+    Array<
+      IScenario & {
+        totalPrograms?: number;
+        completedPrograms?: number;
+        uniqueUsers?: number;
+        averageScore?: number;
+        averageTimeSpent?: number;
+      }
+    >
+  > {
     const query = `
       SELECT
         s.*,
@@ -447,13 +471,15 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
     `;
 
     const { rows } = await this.pool.query(query);
-    return rows.map(row => ({
+    return rows.map((row) => ({
       ...this.toScenario(row),
       totalPrograms: Number(row.totalPrograms),
       completedPrograms: Number(row.completedPrograms),
       uniqueUsers: Number(row.uniqueUsers),
       averageScore: row.averageScore ? Number(row.averageScore) : undefined,
-      averageTimeSpent: row.averageTimeSpent ? Number(row.averageTimeSpent) : undefined
+      averageTimeSpent: row.averageTimeSpent
+        ? Number(row.averageTimeSpent)
+        : undefined,
     }));
   }
 
@@ -472,7 +498,10 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
   }
 
   // Check if user meets prerequisites
-  async checkPrerequisites(scenarioId: string, userId: string): Promise<boolean> {
+  async checkPrerequisites(
+    scenarioId: string,
+    userId: string,
+  ): Promise<boolean> {
     const query = `
       WITH scenario_prereqs AS (
         SELECT prerequisites
@@ -503,7 +532,11 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
 
   // Domain-related methods
 
-  async addDomainMapping(scenarioId: string, domainId: string, isPrimary: boolean = false): Promise<void> {
+  async addDomainMapping(
+    scenarioId: string,
+    domainId: string,
+    isPrimary: boolean = false,
+  ): Promise<void> {
     const query = `
       INSERT INTO scenario_domains (scenario_id, domain_id, is_primary)
       VALUES ($1, $2, $3)
@@ -524,14 +557,17 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
     `;
 
     const { rows } = await this.pool.query<DBScenario>(query, [domainId]);
-    return rows.map(row => this.toScenario(row));
+    return rows.map((row) => this.toScenario(row));
   }
 
   /**
    * Find all scenarios with optional pagination
    */
-  async findAll(options?: { limit?: number; offset?: number }): Promise<IScenario[]> {
-    let query = 'SELECT * FROM scenarios ORDER BY created_at DESC';
+  async findAll(options?: {
+    limit?: number;
+    offset?: number;
+  }): Promise<IScenario[]> {
+    let query = "SELECT * FROM scenarios ORDER BY created_at DESC";
     const values: Array<string | number> = [];
 
     if (options?.limit) {
@@ -544,14 +580,14 @@ export class PostgreSQLScenarioRepository extends BaseScenarioRepository<IScenar
     }
 
     const { rows } = await this.pool.query<DBScenario>(query, values);
-    return rows.map(row => this.toScenario(row));
+    return rows.map((row) => this.toScenario(row));
   }
 
   /**
    * Find scenario by source path
    */
   async findBySourcePath(sourcePath: string): Promise<IScenario | null> {
-    const query = 'SELECT * FROM scenarios WHERE source_path = $1 LIMIT 1';
+    const query = "SELECT * FROM scenarios WHERE source_path = $1 LIMIT 1";
     const { rows } = await this.pool.query<DBScenario>(query, [sourcePath]);
 
     if (rows.length === 0) {

@@ -1,10 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import { getUnifiedAuth, createUnauthorizedResponse } from '@/lib/auth/unified-auth';
+import { NextRequest, NextResponse } from "next/server";
+import { repositoryFactory } from "@/lib/repositories/base/repository-factory";
+import {
+  getUnifiedAuth,
+  createUnauthorizedResponse,
+} from "@/lib/auth/unified-auth";
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: Promise<{ programId: string }> }
+  { params }: { params: Promise<{ programId: string }> },
 ) {
   try {
     // Get user from authentication
@@ -26,20 +29,14 @@ export async function POST(
     // Get program
     const program = await programRepo.findById(programId);
     if (!program) {
-      return NextResponse.json(
-        { error: 'Program not found' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: "Program not found" }, { status: 404 });
     }
 
     // Verify ownership by getting user ID from email
     const userRepo = repositoryFactory.getUserRepository();
     const user = await userRepo.findByEmail(session.user.email);
     if (!user || program.userId !== user.id) {
-      return NextResponse.json(
-        { error: 'Access denied' },
-        { status: 403 }
-      );
+      return NextResponse.json({ error: "Access denied" }, { status: 403 });
     }
 
     // Complete current task if specified
@@ -52,32 +49,32 @@ export async function POST(
     const currentIndex = program.currentTaskIndex || 0;
     const nextIndex = currentIndex + 1;
 
-    console.log('Tasks loaded:', tasks.length);
-    console.log('Moving from task', currentIndex, 'to', nextIndex);
+    console.log("Tasks loaded:", tasks.length);
+    console.log("Moving from task", currentIndex, "to", nextIndex);
 
     // Check if there are more tasks
     if (nextIndex >= tasks.length) {
       // No more tasks, assessment is complete
       return NextResponse.json({
         complete: true,
-        nextTask: null
+        nextTask: null,
       });
     }
 
     // Update program's current task index
     await programRepo.update?.(programId, {
-      currentTaskIndex: nextIndex
+      currentTaskIndex: nextIndex,
     });
 
     // Start the next task if it's still pending
     let nextTask = tasks[nextIndex];
-    if (nextTask && nextTask.status === 'pending' && !nextTask.startedAt) {
+    if (nextTask && nextTask.status === "pending" && !nextTask.startedAt) {
       await taskRepo.update?.(nextTask.id, {
-        status: 'active',
+        status: "active",
         metadata: {
           ...nextTask.metadata,
-          startedAt: new Date().toISOString()
-        }
+          startedAt: new Date().toISOString(),
+        },
       });
       // Re-fetch to get updated task
       const updatedTask = await taskRepo.findById(nextTask.id);
@@ -86,30 +83,35 @@ export async function POST(
       }
     }
 
-    console.log('Next task details:', {
+    console.log("Next task details:", {
       id: nextTask?.id,
       title: nextTask?.title,
       hasContent: !!nextTask?.content,
       hasContext: !!nextTask?.content,
-      questionsInContext: Array.isArray((nextTask?.content as Record<string, unknown>)?.questions)
-        ? ((nextTask?.content as Record<string, unknown>)?.questions as unknown[]).length
+      questionsInContext: Array.isArray(
+        (nextTask?.content as Record<string, unknown>)?.questions,
+      )
+        ? (
+            (nextTask?.content as Record<string, unknown>)
+              ?.questions as unknown[]
+          ).length
         : 0,
       questionsDirect: 0,
       contentKeys: nextTask?.content ? Object.keys(nextTask.content) : [],
-      contextKeys: nextTask?.content ? Object.keys(nextTask.content) : []
+      contextKeys: nextTask?.content ? Object.keys(nextTask.content) : [],
     });
 
     return NextResponse.json({
       complete: false,
       nextTask,
       currentTaskIndex: nextIndex,
-      totalTasks: tasks.length
+      totalTasks: tasks.length,
     });
   } catch (error) {
-    console.error('Error moving to next task:', error);
+    console.error("Error moving to next task:", error);
     return NextResponse.json(
-      { error: 'Failed to move to next task' },
-      { status: 500 }
+      { error: "Failed to move to next task" },
+      { status: 500 },
     );
   }
 }

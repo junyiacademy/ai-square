@@ -1,8 +1,12 @@
 export interface AssessmentQuestion {
   id: string;
-  domain: 'engaging_with_ai' | 'creating_with_ai' | 'managing_with_ai' | 'designing_with_ai';
-  difficulty: 'basic' | 'intermediate' | 'advanced';
-  type: 'multiple_choice';
+  domain:
+    | "engaging_with_ai"
+    | "creating_with_ai"
+    | "managing_with_ai"
+    | "designing_with_ai";
+  difficulty: "basic" | "intermediate" | "advanced";
+  type: "multiple_choice";
   question: string;
   question_zhTW?: string;
   question_zhCN?: string;
@@ -101,7 +105,7 @@ export interface AssessmentQuestion {
     c: string;
     d: string;
   };
-  correct_answer: 'a' | 'b' | 'c' | 'd';
+  correct_answer: "a" | "b" | "c" | "d";
   explanation: string;
   ksa_mapping: {
     knowledge: string[];
@@ -167,7 +171,7 @@ export interface AssessmentData {
 
 export interface UserAnswer {
   questionId: string;
-  selectedAnswer: 'a' | 'b' | 'c' | 'd';
+  selectedAnswer: "a" | "b" | "c" | "d";
   timeSpent: number;
   isCorrect: boolean;
 }
@@ -186,7 +190,7 @@ export interface AssessmentResult {
   correctAnswers: number;
   timeSpentSeconds: number;
   completedAt: Date;
-  level: 'beginner' | 'intermediate' | 'advanced' | 'expert';
+  level: "beginner" | "intermediate" | "advanced" | "expert";
   recommendations: string[];
   ksaAnalysis?: {
     knowledge: {

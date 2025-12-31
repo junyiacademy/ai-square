@@ -1,13 +1,13 @@
-import { renderHook, act, waitFor } from '@testing-library/react';
-import { useUserData } from '../useUserData';
+import { renderHook, act, waitFor } from "@testing-library/react";
+import { useUserData } from "../useUserData";
 
-describe('useUserData', () => {
-  it('should initialize correctly', () => {
+describe("useUserData", () => {
+  it("should initialize correctly", () => {
     const { result } = renderHook(() => useUserData());
     expect(result.current).toBeDefined();
   });
 
-  it('should handle state changes', async () => {
+  it("should handle state changes", async () => {
     const { result } = renderHook(() => useUserData());
 
     await act(async () => {
@@ -18,7 +18,7 @@ describe('useUserData', () => {
     });
   });
 
-  it('should cleanup on unmount', () => {
+  it("should cleanup on unmount", () => {
     const { unmount } = renderHook(() => useUserData());
 
     expect(() => {

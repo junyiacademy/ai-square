@@ -1,21 +1,21 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
-import { AuthManager } from '@/lib/auth/auth-manager';
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { AuthManager } from "@/lib/auth/auth-manager";
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Skip middleware for API routes and static files
-  const isApiRoute = pathname.startsWith('/api/');
-  const isStaticFile = pathname.includes('.');
-  const isNextInternal = pathname.startsWith('/_next');
+  const isApiRoute = pathname.startsWith("/api/");
+  const isStaticFile = pathname.includes(".");
+  const isNextInternal = pathname.startsWith("/_next");
 
   if (isApiRoute || isStaticFile || isNextInternal) {
     return NextResponse.next();
   }
 
   // Special case: Allow access to fix-demo and db-init pages without authentication in development
-  if (pathname === '/admin/fix-demo' || pathname === '/admin/db-init') {
+  if (pathname === "/admin/fix-demo" || pathname === "/admin/db-init") {
     return NextResponse.next();
   }
 
@@ -40,6 +40,6 @@ export const config = {
      * - favicon.ico (favicon file)
      * - public folder
      */
-    '/((?!_next/static|_next/image|favicon.ico|public).*)',
+    "/((?!_next/static|_next/image|favicon.ico|public).*)",
   ],
 };

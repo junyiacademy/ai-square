@@ -5,8 +5,8 @@
  * to properly extract authentication from NextRequest
  */
 
-import { NextRequest } from 'next/server';
-import { SecureSession } from './secure-session';
+import { NextRequest } from "next/server";
+import { SecureSession } from "./secure-session";
 
 export interface RouteSession {
   user: {
@@ -20,14 +20,16 @@ export interface RouteSession {
  * Get session from request in Route Handlers
  * This should be used in all API routes instead of getServerSession
  */
-export async function getRouteSession(request: NextRequest): Promise<RouteSession | null> {
+export async function getRouteSession(
+  request: NextRequest,
+): Promise<RouteSession | null> {
   try {
     // Get session token from cookie
-    const sessionToken = request.cookies.get('sessionToken')?.value;
+    const sessionToken = request.cookies.get("sessionToken")?.value;
 
     if (!sessionToken) {
       // Try header as fallback (for API calls)
-      const headerToken = request.headers.get('x-session-token');
+      const headerToken = request.headers.get("x-session-token");
       if (!headerToken) {
         return null;
       }
@@ -41,8 +43,8 @@ export async function getRouteSession(request: NextRequest): Promise<RouteSessio
         user: {
           id: sessionData.userId,
           email: sessionData.email,
-          role: sessionData.role
-        }
+          role: sessionData.role,
+        },
       };
     }
 
@@ -58,11 +60,11 @@ export async function getRouteSession(request: NextRequest): Promise<RouteSessio
       user: {
         id: sessionData.userId,
         email: sessionData.email,
-        role: sessionData.role
-      }
+        role: sessionData.role,
+      },
     };
   } catch (error) {
-    console.error('[RouteAuth] Authentication error:', error);
+    console.error("[RouteAuth] Authentication error:", error);
     return null;
   }
 }
@@ -70,8 +72,10 @@ export async function getRouteSession(request: NextRequest): Promise<RouteSessio
 /**
  * Helper to require authentication in routes
  */
-export function requireAuth(session: RouteSession | null): asserts session is RouteSession {
+export function requireAuth(
+  session: RouteSession | null,
+): asserts session is RouteSession {
   if (!session) {
-    throw new Error('Authentication required');
+    throw new Error("Authentication required");
   }
 }

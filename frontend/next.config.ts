@@ -2,32 +2,32 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   // 輸出配置 (for Docker deployment)
-  output: 'standalone',
+  output: "standalone",
 
   // 安全標頭配置
   async headers() {
     return [
       {
-        source: '/:path*',
+        source: "/:path*",
         headers: [
           {
-            key: 'X-Frame-Options',
-            value: 'DENY',
+            key: "X-Frame-Options",
+            value: "DENY",
           },
           {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff',
+            key: "X-Content-Type-Options",
+            value: "nosniff",
           },
           {
-            key: 'Referrer-Policy',
-            value: 'strict-origin-when-cross-origin',
+            key: "Referrer-Policy",
+            value: "strict-origin-when-cross-origin",
           },
           {
-            key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=()',
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=()",
           },
           {
-            key: 'Content-Security-Policy',
+            key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
               "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://cdn.jsdelivr.net",
@@ -39,7 +39,7 @@ const nextConfig: NextConfig = {
               "frame-ancestors 'none'",
               "base-uri 'self'",
               "form-action 'self'",
-            ].join('; '),
+            ].join("; "),
           },
         ],
       },
@@ -49,33 +49,33 @@ const nextConfig: NextConfig = {
   // 優化配置
   images: {
     domains: [],
-    formats: ['image/avif', 'image/webp'],
+    formats: ["image/avif", "image/webp"],
   },
 
   // Server-only packages (不應該被打包到 client bundle)
   serverExternalPackages: [
-    '@google-cloud/storage',
-    '@google-cloud/translate',
-    '@google-cloud/vertexai',
-    '@google/generative-ai',
-    '@prisma/client',
-    'prisma',
-    'nodemailer',
-    'pg',
-    '@slack/web-api',
-    'google-auth-library',
+    "@google-cloud/storage",
+    "@google-cloud/translate",
+    "@google-cloud/vertexai",
+    "@google/generative-ai",
+    "@prisma/client",
+    "prisma",
+    "nodemailer",
+    "pg",
+    "@slack/web-api",
+    "google-auth-library",
   ],
 
   // 實驗性功能
   experimental: {
     // 優化包大小
     optimizePackageImports: [
-      'recharts',
-      'd3',
-      'react-i18next',
-      'react-markdown',
-      'lucide-react',
-      'framer-motion',
+      "recharts",
+      "d3",
+      "react-i18next",
+      "react-markdown",
+      "lucide-react",
+      "framer-motion",
     ],
   },
 
@@ -86,48 +86,48 @@ const nextConfig: NextConfig = {
       config.resolve.alias = {
         ...config.resolve.alias,
         // 減少 moment.js 大小（如果有使用）
-        'moment': 'moment/min/moment.min.js',
+        moment: "moment/min/moment.min.js",
       };
 
       // Bundle 分割優化
       config.optimization = {
         ...config.optimization,
         splitChunks: {
-          chunks: 'all',
+          chunks: "all",
           cacheGroups: {
             // Google 服務單獨打包
             google: {
               test: /[\\/]node_modules[\\/](@google|google-)/,
-              name: 'google-services',
-              chunks: 'all',
+              name: "google-services",
+              chunks: "all",
               priority: 30,
             },
             // 圖表庫單獨打包
             charts: {
               test: /[\\/]node_modules[\\/](recharts|d3|chart\.js|react-chartjs-2)/,
-              name: 'charts',
-              chunks: 'all',
+              name: "charts",
+              chunks: "all",
               priority: 25,
             },
             // i18n 相關單獨打包
             i18n: {
               test: /[\\/]node_modules[\\/](i18next|react-i18next|next-i18next)/,
-              name: 'i18n',
-              chunks: 'all',
+              name: "i18n",
+              chunks: "all",
               priority: 20,
             },
             // React 生態系統
             react: {
               test: /[\\/]node_modules[\\/](react|react-dom)/,
-              name: 'react',
-              chunks: 'all',
+              name: "react",
+              chunks: "all",
               priority: 15,
             },
             // 其他第三方庫
             vendor: {
               test: /[\\/]node_modules[\\/]/,
-              name: 'vendor',
-              chunks: 'all',
+              name: "vendor",
+              chunks: "all",
               priority: 10,
             },
           },
@@ -147,7 +147,6 @@ const nextConfig: NextConfig = {
     return config;
   },
 
-
   // 生產環境優化
   productionBrowserSourceMaps: false,
 
@@ -166,8 +165,8 @@ const nextConfig: NextConfig = {
 };
 
 // Bundle Analyzer 配置
-if (process.env.ANALYZE === 'true') {
-  const withBundleAnalyzer = require('@next/bundle-analyzer')({
+if (process.env.ANALYZE === "true") {
+  const withBundleAnalyzer = require("@next/bundle-analyzer")({
     enabled: true,
   });
   module.exports = withBundleAnalyzer(nextConfig);

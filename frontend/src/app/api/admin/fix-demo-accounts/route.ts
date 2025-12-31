@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
-import bcrypt from 'bcryptjs';
-import { getPool } from '@/lib/db/get-pool';
+import { NextRequest, NextResponse } from "next/server";
+import bcrypt from "bcryptjs";
+import { getPool } from "@/lib/db/get-pool";
 
 // This is a temporary endpoint to fix demo accounts
 // It will be removed after fixing the staging environment
@@ -9,23 +9,23 @@ export async function POST(request: NextRequest) {
     // Simple auth check - require a secret key
     const { secretKey } = await request.json();
 
-    if (secretKey !== 'fix-demo-accounts-2025') {
+    if (secretKey !== "fix-demo-accounts-2025") {
       return NextResponse.json(
-        { success: false, error: 'Unauthorized' },
-        { status: 401 }
+        { success: false, error: "Unauthorized" },
+        { status: 401 },
       );
     }
 
-    console.log('🔧 Fixing demo accounts...');
+    console.log("🔧 Fixing demo accounts...");
 
     const pool = getPool();
     const results = [];
 
     // Define demo accounts with their intended passwords and roles
     const demoAccounts = [
-      { email: 'student@example.com', password: 'student123', role: 'student' },
-      { email: 'teacher@example.com', password: 'teacher123', role: 'teacher' },
-      { email: 'admin@example.com', password: 'admin123', role: 'admin' }
+      { email: "student@example.com", password: "student123", role: "student" },
+      { email: "teacher@example.com", password: "teacher123", role: "teacher" },
+      { email: "admin@example.com", password: "admin123", role: "admin" },
     ];
 
     for (const account of demoAccounts) {
@@ -33,8 +33,8 @@ export async function POST(request: NextRequest) {
 
       // Check if user exists
       const checkResult = await pool.query(
-        'SELECT id, email, password_hash, role FROM users WHERE email = $1',
-        [account.email]
+        "SELECT id, email, password_hash, role FROM users WHERE email = $1",
+        [account.email],
       );
 
       if (checkResult.rows.length === 0) {
@@ -51,15 +51,15 @@ export async function POST(request: NextRequest) {
             passwordHash,
             account.role,
             `${account.role.charAt(0).toUpperCase() + account.role.slice(1)} User`,
-            'en',
-            true // Mark demo accounts as verified
-          ]
+            "en",
+            true, // Mark demo accounts as verified
+          ],
         );
 
         results.push({
           email: account.email,
-          action: 'created',
-          role: account.role
+          action: "created",
+          role: account.role,
         });
       } else {
         // Hash the password
@@ -72,13 +72,13 @@ export async function POST(request: NextRequest) {
                role = $2,
                email_verified = true
            WHERE email = $3`,
-          [passwordHash, account.role, account.email]
+          [passwordHash, account.role, account.email],
         );
 
         results.push({
           email: account.email,
-          action: 'updated',
-          role: account.role
+          action: "updated",
+          role: account.role,
         });
       }
     }
@@ -95,26 +95,25 @@ export async function POST(request: NextRequest) {
            WHEN 'student' THEN 1
            WHEN 'teacher' THEN 2
            WHEN 'admin' THEN 3
-         END`
+         END`,
     );
 
     return NextResponse.json({
       success: true,
-      message: 'Demo accounts fixed successfully',
+      message: "Demo accounts fixed successfully",
       results,
       verification: verifyResult.rows,
       credentials: {
-        student: 'student@example.com / student123',
-        teacher: 'teacher@example.com / teacher123',
-        admin: 'admin@example.com / admin123'
-      }
+        student: "student@example.com / student123",
+        teacher: "teacher@example.com / teacher123",
+        admin: "admin@example.com / admin123",
+      },
     });
-
   } catch (error) {
-    console.error('Error fixing demo accounts:', error);
+    console.error("Error fixing demo accounts:", error);
     return NextResponse.json(
-      { success: false, error: 'Failed to fix demo accounts' },
-      { status: 500 }
+      { success: false, error: "Failed to fix demo accounts" },
+      { status: 500 },
     );
   }
 }

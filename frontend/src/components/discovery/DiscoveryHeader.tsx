@@ -1,11 +1,9 @@
-'use client';
+"use client";
 
-import React from 'react'
-import { GraduationCap, BarChart, Sparkles, Rocket } from 'lucide-react';;
-import { useRouter, usePathname } from 'next/navigation';
-import { useTranslation } from 'react-i18next';
-;
-
+import React from "react";
+import { GraduationCap, BarChart, Sparkles, Rocket } from "lucide-react";
+import { useRouter, usePathname } from "next/navigation";
+import { useTranslation } from "react-i18next";
 interface NavigationItem {
   id: string;
   label: string;
@@ -24,27 +22,27 @@ interface DiscoveryHeaderProps {
 export default function DiscoveryHeader({}: DiscoveryHeaderProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const { t } = useTranslation(['discovery', 'navigation']);
+  const { t } = useTranslation(["discovery", "navigation"]);
 
   const navigationItems: NavigationItem[] = [
     {
-      id: 'overview',
-      label: t('discovery:navigation.overview'),
+      id: "overview",
+      label: t("discovery:navigation.overview"),
       icon: GraduationCap,
-      href: '/discovery/overview'
+      href: "/discovery/overview",
     },
     {
-      id: 'evaluation',
-      label: t('discovery:navigation.evaluation'),
+      id: "evaluation",
+      label: t("discovery:navigation.evaluation"),
       icon: BarChart,
-      href: '/discovery/evaluation'
+      href: "/discovery/evaluation",
     },
     {
-      id: 'scenarios',
-      label: t('discovery:navigation.scenarios'),
+      id: "scenarios",
+      label: t("discovery:navigation.scenarios"),
       icon: Rocket,
-      href: '/discovery/scenarios'
-    }
+      href: "/discovery/scenarios",
+    },
   ];
 
   const isActive = (item: NavigationItem) => {
@@ -57,13 +55,13 @@ export default function DiscoveryHeader({}: DiscoveryHeaderProps) {
         {/* Breadcrumb */}
         <nav className="flex items-center space-x-2 text-sm text-gray-500 mb-4">
           <button
-            onClick={() => router.push('/')}
+            onClick={() => router.push("/")}
             className="hover:text-gray-700 transition-colors"
           >
-            {t('navigation:home')}
+            {t("navigation:home")}
           </button>
           <span>/</span>
-          <span className="text-gray-900 font-medium">{t('title')}</span>
+          <span className="text-gray-900 font-medium">{t("title")}</span>
         </nav>
 
         {/* Title and Quick Navigation */}
@@ -71,8 +69,8 @@ export default function DiscoveryHeader({}: DiscoveryHeaderProps) {
           <div className="flex items-center space-x-3">
             <Sparkles className="w-8 h-8 text-purple-600" />
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">{t('title')}</h1>
-              <p className="text-sm text-gray-600 mt-1">{t('subtitle')}</p>
+              <h1 className="text-2xl font-bold text-gray-900">{t("title")}</h1>
+              <p className="text-sm text-gray-600 mt-1">{t("subtitle")}</p>
             </div>
           </div>
 
@@ -93,20 +91,27 @@ export default function DiscoveryHeader({}: DiscoveryHeaderProps) {
                   disabled={item.disabled}
                   className={`
                     inline-flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-200 group
-                    ${active
-                      ? 'bg-purple-600 text-white shadow-lg'
-                      : item.disabled
-                      ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                      : 'bg-white text-gray-700 hover:bg-purple-50 hover:text-purple-700 border border-gray-200'
+                    ${
+                      active
+                        ? "bg-purple-600 text-white shadow-lg"
+                        : item.disabled
+                          ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                          : "bg-white text-gray-700 hover:bg-purple-50 hover:text-purple-700 border border-gray-200"
                     }
                   `}
                 >
-                  <Icon className={`w-4 h-4 ${active ? '' : 'group-hover:scale-110 transition-transform'}`} />
+                  <Icon
+                    className={`w-4 h-4 ${active ? "" : "group-hover:scale-110 transition-transform"}`}
+                  />
                   <span className="text-sm font-medium">{item.label}</span>
                   {item.badge && (
-                    <span className={`ml-1 px-1.5 py-0.5 text-xs rounded-full ${
-                      active ? 'bg-purple-800 text-white' : 'bg-red-500 text-white'
-                    }`}>
+                    <span
+                      className={`ml-1 px-1.5 py-0.5 text-xs rounded-full ${
+                        active
+                          ? "bg-purple-800 text-white"
+                          : "bg-red-500 text-white"
+                      }`}
+                    >
                       {item.badge}
                     </span>
                   )}
@@ -121,7 +126,10 @@ export default function DiscoveryHeader({}: DiscoveryHeaderProps) {
               if (isActive(item)) {
                 const Icon = item.icon;
                 return (
-                  <div key={item.id} className="flex items-center space-x-2 text-purple-600">
+                  <div
+                    key={item.id}
+                    className="flex items-center space-x-2 text-purple-600"
+                  >
                     <Icon className="w-5 h-5" />
                     <span className="font-medium">{item.label}</span>
                   </div>

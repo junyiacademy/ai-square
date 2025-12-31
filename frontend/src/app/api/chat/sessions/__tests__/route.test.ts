@@ -8,7 +8,7 @@ const mockDownload = jest.fn();
 const mockExists = jest.fn();
 const mockFile = jest.fn();
 
-jest.mock('@google-cloud/storage', () => ({
+jest.mock("@google-cloud/storage", () => ({
   Storage: jest.fn().mockImplementation(() => ({
     bucket: jest.fn().mockImplementation(() => ({
       file: jest.fn().mockImplementation((path: string) => {
@@ -17,20 +17,20 @@ jest.mock('@google-cloud/storage', () => ({
           download: mockDownload,
           exists: mockExists,
         };
-      })
+      }),
     })),
   })),
 }));
 
-import { GET } from '../route';
-import { NextRequest } from 'next/server';
-import { Storage } from '@google-cloud/storage';
-import { mockConsoleError as createMockConsoleError } from '@/test-utils/helpers/console';
+import { GET } from "../route";
+import { NextRequest } from "next/server";
+import { Storage } from "@google-cloud/storage";
+import { mockConsoleError as createMockConsoleError } from "@/test-utils/helpers/console";
 
 // Mock console
 const mockConsoleError = createMockConsoleError();
 
-describe('/api/chat/sessions', () => {
+describe("/api/chat/sessions", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -39,30 +39,30 @@ describe('/api/chat/sessions', () => {
     mockConsoleError.mockRestore();
   });
 
-  describe('GET - List Chat Sessions', () => {
+  describe("GET - List Chat Sessions", () => {
     const mockSessions = [
       {
-        id: 'session-1',
-        title: 'AI Job Search Help',
-        scenarioId: 'jobsearch',
-        createdAt: '2025-07-30T10:00:00Z',
-        lastMessageAt: '2025-07-30T11:00:00Z',
+        id: "session-1",
+        title: "AI Job Search Help",
+        scenarioId: "jobsearch",
+        createdAt: "2025-07-30T10:00:00Z",
+        lastMessageAt: "2025-07-30T11:00:00Z",
         messageCount: 15,
       },
       {
-        id: 'session-2',
-        title: 'Resume Builder Assistance',
-        scenarioId: 'resume_builder',
-        createdAt: '2025-07-29T14:00:00Z',
-        lastMessageAt: '2025-07-29T15:30:00Z',
+        id: "session-2",
+        title: "Resume Builder Assistance",
+        scenarioId: "resume_builder",
+        createdAt: "2025-07-29T14:00:00Z",
+        lastMessageAt: "2025-07-29T15:30:00Z",
         messageCount: 8,
       },
     ];
 
-    it('should return chat sessions for authenticated user', async () => {
+    it("should return chat sessions for authenticated user", async () => {
       const userInfo = {
-        email: 'user@example.com',
-        name: 'Test User',
+        email: "user@example.com",
+        name: "Test User",
       };
 
       mockExists.mockResolvedValue([true]);
@@ -70,33 +70,41 @@ describe('/api/chat/sessions', () => {
         Buffer.from(JSON.stringify({ sessions: mockSessions })),
       ]);
 
-      const request = new NextRequest('http://localhost:3000/api/chat/sessions', {
-        headers: {
-          'x-user-info': JSON.stringify(userInfo),
+      const request = new NextRequest(
+        "http://localhost:3000/api/chat/sessions",
+        {
+          headers: {
+            "x-user-info": JSON.stringify(userInfo),
+          },
         },
-      });
+      );
 
       const response = await GET(request);
       const data = await response.json();
 
       expect(response.status).toBe(200);
       expect(data.sessions).toEqual(mockSessions);
-      expect(mockFile).toHaveBeenCalledWith('user/user_at_example_com/chat/index.json');
+      expect(mockFile).toHaveBeenCalledWith(
+        "user/user_at_example_com/chat/index.json",
+      );
     });
 
-    it('should return empty array when no sessions exist', async () => {
+    it("should return empty array when no sessions exist", async () => {
       const userInfo = {
-        email: 'newuser@example.com',
-        name: 'New User',
+        email: "newuser@example.com",
+        name: "New User",
       };
 
       mockExists.mockResolvedValue([false]);
 
-      const request = new NextRequest('http://localhost:3000/api/chat/sessions', {
-        headers: {
-          'x-user-info': JSON.stringify(userInfo),
+      const request = new NextRequest(
+        "http://localhost:3000/api/chat/sessions",
+        {
+          headers: {
+            "x-user-info": JSON.stringify(userInfo),
+          },
         },
-      });
+      );
 
       const response = await GET(request);
       const data = await response.json();
@@ -106,39 +114,44 @@ describe('/api/chat/sessions', () => {
       expect(mockDownload).not.toHaveBeenCalled();
     });
 
-    it('should return 401 when user info header is missing', async () => {
-      const request = new NextRequest('http://localhost:3000/api/chat/sessions');
+    it("should return 401 when user info header is missing", async () => {
+      const request = new NextRequest(
+        "http://localhost:3000/api/chat/sessions",
+      );
 
       const response = await GET(request);
       const data = await response.json();
 
       expect(response.status).toBe(401);
-      expect(data.error).toBe('Unauthorized');
+      expect(data.error).toBe("Unauthorized");
       expect(mockFile).not.toHaveBeenCalled();
     });
 
-    it('should handle invalid user info JSON', async () => {
-      const request = new NextRequest('http://localhost:3000/api/chat/sessions', {
-        headers: {
-          'x-user-info': 'invalid-json',
+    it("should handle invalid user info JSON", async () => {
+      const request = new NextRequest(
+        "http://localhost:3000/api/chat/sessions",
+        {
+          headers: {
+            "x-user-info": "invalid-json",
+          },
         },
-      });
+      );
 
       const response = await GET(request);
       const data = await response.json();
 
       expect(response.status).toBe(500);
-      expect(data.error).toBe('Failed to load chat sessions');
+      expect(data.error).toBe("Failed to load chat sessions");
       expect(mockConsoleError).toHaveBeenCalledWith(
-        'Error loading chat sessions:',
-        expect.any(SyntaxError)
+        "Error loading chat sessions:",
+        expect.any(SyntaxError),
       );
     });
 
-    it('should handle empty sessions in index', async () => {
+    it("should handle empty sessions in index", async () => {
       const userInfo = {
-        email: 'user@example.com',
-        name: 'Test User',
+        email: "user@example.com",
+        name: "Test User",
       };
 
       mockExists.mockResolvedValue([true]);
@@ -146,11 +159,14 @@ describe('/api/chat/sessions', () => {
         Buffer.from(JSON.stringify({})), // No sessions property
       ]);
 
-      const request = new NextRequest('http://localhost:3000/api/chat/sessions', {
-        headers: {
-          'x-user-info': JSON.stringify(userInfo),
+      const request = new NextRequest(
+        "http://localhost:3000/api/chat/sessions",
+        {
+          headers: {
+            "x-user-info": JSON.stringify(userInfo),
+          },
         },
-      });
+      );
 
       const response = await GET(request);
       const data = await response.json();
@@ -159,74 +175,85 @@ describe('/api/chat/sessions', () => {
       expect(data.sessions).toEqual([]);
     });
 
-    it('should sanitize email for file path', async () => {
+    it("should sanitize email for file path", async () => {
       const userInfo = {
-        email: 'user.name@sub.example.com',
-        name: 'Test User',
+        email: "user.name@sub.example.com",
+        name: "Test User",
       };
 
       mockExists.mockResolvedValue([false]);
 
-      const request = new NextRequest('http://localhost:3000/api/chat/sessions', {
-        headers: {
-          'x-user-info': JSON.stringify(userInfo),
+      const request = new NextRequest(
+        "http://localhost:3000/api/chat/sessions",
+        {
+          headers: {
+            "x-user-info": JSON.stringify(userInfo),
+          },
         },
-      });
+      );
 
       await GET(request);
 
-      expect(mockFile).toHaveBeenCalledWith('user/user_name_at_sub_example_com/chat/index.json');
-    });
-
-    it('should handle GCS download errors', async () => {
-      const userInfo = {
-        email: 'user@example.com',
-        name: 'Test User',
-      };
-
-      mockExists.mockResolvedValue([true]);
-      mockDownload.mockRejectedValue(new Error('GCS download failed'));
-
-      const request = new NextRequest('http://localhost:3000/api/chat/sessions', {
-        headers: {
-          'x-user-info': JSON.stringify(userInfo),
-        },
-      });
-
-      const response = await GET(request);
-      const data = await response.json();
-
-      expect(response.status).toBe(500);
-      expect(data.error).toBe('Failed to load chat sessions');
-      expect(mockConsoleError).toHaveBeenCalledWith(
-        'Error loading chat sessions:',
-        expect.any(Error)
+      expect(mockFile).toHaveBeenCalledWith(
+        "user/user_name_at_sub_example_com/chat/index.json",
       );
     });
 
-    it('should handle malformed index JSON', async () => {
+    it("should handle GCS download errors", async () => {
       const userInfo = {
-        email: 'user@example.com',
-        name: 'Test User',
+        email: "user@example.com",
+        name: "Test User",
       };
 
       mockExists.mockResolvedValue([true]);
-      mockDownload.mockResolvedValue([Buffer.from('invalid json')]);
+      mockDownload.mockRejectedValue(new Error("GCS download failed"));
 
-      const request = new NextRequest('http://localhost:3000/api/chat/sessions', {
-        headers: {
-          'x-user-info': JSON.stringify(userInfo),
+      const request = new NextRequest(
+        "http://localhost:3000/api/chat/sessions",
+        {
+          headers: {
+            "x-user-info": JSON.stringify(userInfo),
+          },
         },
-      });
+      );
 
       const response = await GET(request);
       const data = await response.json();
 
       expect(response.status).toBe(500);
-      expect(data.error).toBe('Failed to load chat sessions');
+      expect(data.error).toBe("Failed to load chat sessions");
       expect(mockConsoleError).toHaveBeenCalledWith(
-        'Error loading chat sessions:',
-        expect.any(SyntaxError)
+        "Error loading chat sessions:",
+        expect.any(Error),
+      );
+    });
+
+    it("should handle malformed index JSON", async () => {
+      const userInfo = {
+        email: "user@example.com",
+        name: "Test User",
+      };
+
+      mockExists.mockResolvedValue([true]);
+      mockDownload.mockResolvedValue([Buffer.from("invalid json")]);
+
+      const request = new NextRequest(
+        "http://localhost:3000/api/chat/sessions",
+        {
+          headers: {
+            "x-user-info": JSON.stringify(userInfo),
+          },
+        },
+      );
+
+      const response = await GET(request);
+      const data = await response.json();
+
+      expect(response.status).toBe(500);
+      expect(data.error).toBe("Failed to load chat sessions");
+      expect(mockConsoleError).toHaveBeenCalledWith(
+        "Error loading chat sessions:",
+        expect.any(SyntaxError),
       );
     });
   });

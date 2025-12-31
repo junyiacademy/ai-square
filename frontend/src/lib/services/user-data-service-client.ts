@@ -9,8 +9,8 @@ import type {
   UserData,
   AssessmentResults,
   UserAchievements,
-  AssessmentSession
-} from '@/lib/types/user-data';
+  AssessmentSession,
+} from "@/lib/types/user-data";
 
 export class UserDataServiceClient {
   private cache: UserData | null = null;
@@ -28,25 +28,28 @@ export class UserDataServiceClient {
 
     try {
       // Get session token from localStorage
-      const sessionToken = localStorage.getItem('ai_square_session');
-      console.log('[UserDataService] Loading user data, session token:', sessionToken ? 'present' : 'missing');
+      const sessionToken = localStorage.getItem("ai_square_session");
+      console.log(
+        "[UserDataService] Loading user data, session token:",
+        sessionToken ? "present" : "missing",
+      );
 
       const headers: HeadersInit = {};
 
       // Add session token to headers if available
       if (sessionToken) {
-        headers['x-session-token'] = sessionToken;
+        headers["x-session-token"] = sessionToken;
       }
 
-      const response = await fetch('/api/user-data', {
+      const response = await fetch("/api/user-data", {
         headers,
-        credentials: 'include'
+        credentials: "include",
       });
 
       if (!response.ok) {
         if (response.status === 401) {
-          console.log('User not authenticated for user data API');
-          console.log('Session token present:', !!sessionToken);
+          console.log("User not authenticated for user data API");
+          console.log("Session token present:", !!sessionToken);
           return null;
         }
         throw new Error(`Failed to load user data: ${response.status}`);
@@ -63,12 +66,12 @@ export class UserDataServiceClient {
 
       return null;
     } catch (error) {
-      console.error('Failed to load user data:', error);
+      console.error("Failed to load user data:", error);
 
       // Try localStorage migration if API fails
       const localData = this.loadFromLocalStorage();
       if (localData) {
-        console.log('Loaded from localStorage fallback');
+        console.log("Loaded from localStorage fallback");
         return localData;
       }
 
@@ -82,23 +85,26 @@ export class UserDataServiceClient {
   async saveUserData(data: UserData): Promise<void> {
     try {
       // Get session token from localStorage
-      const sessionToken = localStorage.getItem('ai_square_session');
-      console.log('[UserDataService] Saving user data, session token:', sessionToken ? 'present' : 'missing');
+      const sessionToken = localStorage.getItem("ai_square_session");
+      console.log(
+        "[UserDataService] Saving user data, session token:",
+        sessionToken ? "present" : "missing",
+      );
 
       const headers: HeadersInit = {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       };
 
       // Add session token to headers if available
       if (sessionToken) {
-        headers['x-session-token'] = sessionToken;
+        headers["x-session-token"] = sessionToken;
       }
 
-      const response = await fetch('/api/user-data', {
-        method: 'POST',
+      const response = await fetch("/api/user-data", {
+        method: "POST",
         headers,
-        credentials: 'include',
-        body: JSON.stringify({ data })
+        credentials: "include",
+        body: JSON.stringify({ data }),
       });
 
       if (!response.ok) {
@@ -109,7 +115,7 @@ export class UserDataServiceClient {
       this.cache = data;
       this.lastCacheTime = Date.now();
     } catch (error) {
-      console.error('Failed to save user data:', error);
+      console.error("Failed to save user data:", error);
       throw error;
     }
   }
@@ -133,25 +139,19 @@ export class UserDataServiceClient {
   // Convenience methods for specific data types
 
   async saveAssessmentResults(results: AssessmentResults): Promise<void> {
-    const userData = await this.loadUserData() || this.getDefaultUserData();
+    const userData = (await this.loadUserData()) || this.getDefaultUserData();
     userData.assessmentResults = results;
     await this.saveUserData(userData);
   }
 
   async saveAchievements(achievements: UserAchievements): Promise<void> {
-    const userData = await this.loadUserData() || this.getDefaultUserData();
+    const userData = (await this.loadUserData()) || this.getDefaultUserData();
     userData.achievements = achievements;
     await this.saveUserData(userData);
   }
 
-
-
-
-
-
-
   async addAssessmentSession(session: AssessmentSession): Promise<void> {
-    const userData = await this.loadUserData() || this.getDefaultUserData();
+    const userData = (await this.loadUserData()) || this.getDefaultUserData();
 
     userData.assessmentSessions.push(session);
     userData.assessmentResults = session.results;
@@ -160,36 +160,40 @@ export class UserDataServiceClient {
   }
 
   async updateAchievements(updates: Partial<UserAchievements>): Promise<void> {
-    const userData = await this.loadUserData() || this.getDefaultUserData();
+    const userData = (await this.loadUserData()) || this.getDefaultUserData();
     userData.achievements = { ...userData.achievements, ...updates };
     await this.saveUserData(userData);
   }
 
-
-
-
   // Evaluation system methods (delegated to API)
 
-  async saveEvaluation({}: string, {}: string, {}: Record<string, unknown>): Promise<void> {
+  async saveEvaluation(
+    {}: string,
+    {}: string,
+    {}: Record<string, unknown>,
+  ): Promise<void> {
     // This would call a separate API endpoint for evaluations
-    console.warn('Evaluation save not implemented in client service');
+    console.warn("Evaluation save not implemented in client service");
   }
 
-  async loadEvaluation({}: string, {}: string): Promise<Record<string, unknown> | null> {
+  async loadEvaluation(
+    {}: string,
+    {}: string,
+  ): Promise<Record<string, unknown> | null> {
     // This would call a separate API endpoint for evaluations
-    console.warn('Evaluation load not implemented in client service');
+    console.warn("Evaluation load not implemented in client service");
     return null;
   }
 
   async loadEvaluationsByType({}: string): Promise<Record<string, unknown>[]> {
     // This would call a separate API endpoint for evaluations
-    console.warn('Evaluation load by type not implemented in client service');
+    console.warn("Evaluation load by type not implemented in client service");
     return [];
   }
 
   async deleteEvaluation({}: string, {}: string): Promise<void> {
     // This would call a separate API endpoint for evaluations
-    console.warn('Evaluation delete not implemented in client service');
+    console.warn("Evaluation delete not implemented in client service");
   }
 
   // Utility methods
@@ -214,14 +218,14 @@ export class UserDataServiceClient {
       // Check if already has data
       const existingData = await this.loadUserData();
       if (existingData) {
-        console.log('User data already exists, skipping migration');
+        console.log("User data already exists, skipping migration");
         return true;
       }
 
       // Try to load from localStorage
       const localData = this.loadFromLocalStorage();
       if (!localData) {
-        console.log('No localStorage data to migrate');
+        console.log("No localStorage data to migrate");
         return false;
       }
 
@@ -229,24 +233,24 @@ export class UserDataServiceClient {
       await this.saveUserData(localData);
 
       // Clear localStorage after successful migration
-      localStorage.removeItem('discoveryData');
+      localStorage.removeItem("discoveryData");
 
-      console.log('Successfully migrated data from localStorage');
+      console.log("Successfully migrated data from localStorage");
       return true;
     } catch (error) {
-      console.error('Failed to migrate from localStorage:', error);
+      console.error("Failed to migrate from localStorage:", error);
       return false;
     }
   }
 
   private loadFromLocalStorage(): UserData | null {
     try {
-      const localStorageData = localStorage.getItem('discoveryData');
+      const localStorageData = localStorage.getItem("discoveryData");
       if (localStorageData) {
         return JSON.parse(localStorageData) as UserData;
       }
     } catch (error) {
-      console.error('Failed to load from localStorage:', error);
+      console.error("Failed to load from localStorage:", error);
     }
     return null;
   }
@@ -257,11 +261,11 @@ export class UserDataServiceClient {
         badges: [],
         totalXp: 0,
         level: 1,
-        completedTasks: []
+        completedTasks: [],
       },
       assessmentSessions: [],
       lastUpdated: new Date().toISOString(),
-      version: '2.0'
+      version: "2.0",
     };
   }
 }

@@ -1,6 +1,7 @@
 # Redis 快取優化工程實作指南
 
 ## 目錄
+
 1. [架構決策](#架構決策)
 2. [實作步驟](#實作步驟)
 3. [工程實作細節](#工程實作細節)
@@ -15,13 +16,14 @@
 
 #### 選項分析
 
-| 架構類型 | 成本 | 適用場景 | 優缺點 |
-|---------|------|---------|--------|
-| **單機版** | ~$50/月 | 開發/測試環境 | ✅ 成本低<br>❌ 無高可用性 |
-| **主從複製** | ~$150/月 | Staging/小型生產 | ✅ 讀寫分離<br>✅ 自動故障轉移 |
-| **Redis Cluster** | ~$500+/月 | 大型生產環境 | ✅ 水平擴展<br>✅ 自動分片 |
+| 架構類型          | 成本      | 適用場景         | 優缺點                         |
+| ----------------- | --------- | ---------------- | ------------------------------ |
+| **單機版**        | ~$50/月   | 開發/測試環境    | ✅ 成本低<br>❌ 無高可用性     |
+| **主從複製**      | ~$150/月  | Staging/小型生產 | ✅ 讀寫分離<br>✅ 自動故障轉移 |
+| **Redis Cluster** | ~$500+/月 | 大型生產環境     | ✅ 水平擴展<br>✅ 自動分片     |
 
 #### 推薦方案：Google Cloud Memorystore (Redis)
+
 - **區域**: asia-east1 (與 Cloud Run 同區，避免跨區延遲)
 - **規格**: 基礎級 1GB (開始) → 標準級 5GB (生產)
 - **網路**: 使用 VPC 連接器確保安全連接
@@ -29,6 +31,7 @@
 ### 2. 快取策略選擇
 
 #### Cache-Aside Pattern (推薦)
+
 ```
 流程：
 1. 檢查 Redis 是否有資料
@@ -43,6 +46,7 @@
 ```
 
 #### Write-Through Pattern
+
 ```
 適用場景：
 - 寫入頻率低
@@ -83,6 +87,7 @@ gcloud run services update ai-square-frontend \
 ### Step 2: 快取鍵設計模式
 
 #### 鍵命名規範
+
 ```
 格式: {prefix}:{entity}:{id}:{field}
 
@@ -100,16 +105,17 @@ gcloud run services update ai-square-frontend \
 
 ### Step 3: TTL (過期時間) 策略
 
-| 資料類型 | TTL | 範例 |
-|---------|-----|------|
-| **靜態內容** | 24小時 | YAML 情境資料、KSA 對應關係、翻譯內容 |
-| **半靜態內容** | 1小時 | 用戶資料、學習進度摘要、排行榜 |
-| **動態內容** | 5分鐘 | 即時評分、線上狀態、通知計數 |
-| **不快取** | - | 交易資料、密碼/敏感資訊、即時對話 |
+| 資料類型       | TTL    | 範例                                  |
+| -------------- | ------ | ------------------------------------- |
+| **靜態內容**   | 24小時 | YAML 情境資料、KSA 對應關係、翻譯內容 |
+| **半靜態內容** | 1小時  | 用戶資料、學習進度摘要、排行榜        |
+| **動態內容**   | 5分鐘  | 即時評分、線上狀態、通知計數          |
+| **不快取**     | -      | 交易資料、密碼/敏感資訊、即時對話     |
 
 ### Step 4: 快取失效策略
 
 #### 主動失效
+
 ```yaml
 觸發時機:
   - 資料更新時
@@ -123,6 +129,7 @@ gcloud run services update ai-square-frontend \
 ```
 
 #### 被動失效
+
 - TTL 自動過期
 - LRU 淘汰策略 (記憶體滿時)
 
@@ -130,19 +137,20 @@ gcloud run services update ai-square-frontend \
 
 #### 關鍵指標
 
-| 類別 | 指標 | 目標值 |
-|-----|------|--------|
-| **效能指標** | 命中率 (Hit Rate) | > 80% |
-| | 響應時間 P95 | < 10ms |
-| | 連接數 | 監控突增 |
-| **資源指標** | 記憶體使用率 | 警告 > 80% |
-| | CPU 使用率 | 警告 > 60% |
-| | 網路流量 | 監控異常 |
-| **業務指標** | 熱點鍵分析 | - |
-| | 慢查詢日誌 | - |
-| | 錯誤率追蹤 | < 0.1% |
+| 類別         | 指標              | 目標值     |
+| ------------ | ----------------- | ---------- |
+| **效能指標** | 命中率 (Hit Rate) | > 80%      |
+|              | 響應時間 P95      | < 10ms     |
+|              | 連接數            | 監控突增   |
+| **資源指標** | 記憶體使用率      | 警告 > 80% |
+|              | CPU 使用率        | 警告 > 60% |
+|              | 網路流量          | 監控異常   |
+| **業務指標** | 熱點鍵分析        | -          |
+|              | 慢查詢日誌        | -          |
+|              | 錯誤率追蹤        | < 0.1%     |
 
 #### 監控工具
+
 - Google Cloud Monitoring
 - Redis INFO 命令
 - 自定義 metrics 收集
@@ -150,9 +158,9 @@ gcloud run services update ai-square-frontend \
 ### Step 6: 降級與容錯
 
 #### 降級策略
+
 ```yaml
-Redis 不可用時:
-  1. 自動切換到資料庫直連
+Redis 不可用時: 1. 自動切換到資料庫直連
   2. 記錄降級事件
   3. 限流保護資料庫
   4. 定時重試連接
@@ -175,6 +183,7 @@ Redis 不可用時:
 ### 第一步：開發環境準備
 
 #### 1.1 本地 Redis 安裝
+
 ```bash
 # macOS
 brew install redis
@@ -189,6 +198,7 @@ redis-cli ping
 ```
 
 #### 1.2 環境變數配置
+
 ```bash
 # .env.local 新增
 REDIS_HOST=localhost
@@ -201,6 +211,7 @@ REDIS_ENABLED=true
 ### 第二步：建立快取層架構
 
 #### 2.1 創建快取服務檔案結構
+
 ```
 frontend/src/lib/cache/
 ├── redis-client.ts      # Redis 連接管理
@@ -213,19 +224,21 @@ frontend/src/lib/cache/
 ```
 
 #### 2.2 定義快取介面
+
 ```typescript
 interface ICacheService {
-  get(key: string): Promise<any>
-  set(key: string, value: any, ttl?: number): Promise<void>
-  delete(key: string): Promise<void>
-  exists(key: string): Promise<boolean>
-  flush(pattern: string): Promise<void>
+  get(key: string): Promise<any>;
+  set(key: string, value: any, ttl?: number): Promise<void>;
+  delete(key: string): Promise<void>;
+  exists(key: string): Promise<boolean>;
+  flush(pattern: string): Promise<void>;
 }
 ```
 
 ### 第三步：實作快取策略
 
 #### 3.1 Cache-Aside Pattern 實作流程
+
 ```
 1. 收到請求
 2. 生成快取鍵 (例: "scenario:pbl:uuid-123")
@@ -237,6 +250,7 @@ interface ICacheService {
 ```
 
 #### 3.2 快取鍵設計
+
 ```yaml
 靜態資料 (TTL: 24小時):
   - scenario:{mode}:{id}
@@ -256,6 +270,7 @@ interface ICacheService {
 ### 第四步：整合到現有系統
 
 #### 4.1 Repository 層整合優先順序
+
 ```
 1. ScenarioRepository
    - getById() 加入快取
@@ -272,6 +287,7 @@ interface ICacheService {
 ```
 
 #### 4.2 高優先級 API 整合
+
 1. `/api/pbl/scenarios`
 2. `/api/assessment/scenarios`
 3. `/api/discovery/scenarios`
@@ -281,6 +297,7 @@ interface ICacheService {
 ### 第五步：效能測試與調優
 
 #### 5.1 測試腳本結構
+
 ```
 frontend/scripts/
 └── test-cache-performance.ts
@@ -293,6 +310,7 @@ frontend/scripts/
 ```
 
 #### 5.2 壓力測試命令
+
 ```bash
 # 使用 Apache Bench
 ab -n 1000 -c 10 http://localhost:3000/api/pbl/scenarios
@@ -309,6 +327,7 @@ npx autocannon -c 100 -d 30 http://localhost:3000/api/pbl/scenarios
 ### 第六步：監控與告警
 
 #### 6.1 監控 Dashboard 配置
+
 ```yaml
 Redis 指標:
   - 連接數
@@ -323,6 +342,7 @@ Redis 指標:
 ```
 
 #### 6.2 關鍵事件日誌
+
 - 快取命中/未命中
 - 快取更新/刪除
 - Redis 連接錯誤
@@ -331,6 +351,7 @@ Redis 指標:
 ### 第七步：生產環境部署
 
 #### 7.1 Google Cloud Memorystore 設置
+
 ```bash
 # 1. 創建 Redis 實例
 gcloud redis instances create ai-square-cache \
@@ -357,6 +378,7 @@ gcloud run services update ai-square-staging \
 ```
 
 #### 7.2 環境變數更新
+
 ```bash
 # 更新 Cloud Run 環境變數
 gcloud run services update ai-square-staging \
@@ -370,6 +392,7 @@ gcloud run services update ai-square-staging \
 ### 第八步：驗證與回滾計劃
 
 #### 8.1 驗證檢查清單
+
 - [ ] Redis 連接成功
 - [ ] 快取寫入/讀取正常
 - [ ] TTL 設置正確
@@ -378,6 +401,7 @@ gcloud run services update ai-square-staging \
 - [ ] 監控數據正常
 
 #### 8.2 回滾計劃
+
 ```
 如果出現問題:
 1. 設置 REDIS_ENABLED=false
@@ -391,24 +415,24 @@ gcloud run services update ai-square-staging \
 
 ## 實施時間表
 
-| 階段 | 時間 | 工作內容 |
-|-----|------|---------|
-| **Phase 1: 基礎建設** | 第1週 | 1. 部署 Redis 實例<br>2. 配置網路連接<br>3. 實作連接池管理<br>4. 基礎健康檢查 |
+| 階段                  | 時間  | 工作內容                                                                               |
+| --------------------- | ----- | -------------------------------------------------------------------------------------- |
+| **Phase 1: 基礎建設** | 第1週 | 1. 部署 Redis 實例<br>2. 配置網路連接<br>3. 實作連接池管理<br>4. 基礎健康檢查          |
 | **Phase 2: 核心功能** | 第2週 | 1. 實作 Cache-Aside 模式<br>2. 設計鍵命名規範<br>3. 配置 TTL 策略<br>4. 測試快取命中率 |
-| **Phase 3: 優化調整** | 第3週 | 1. 分析熱點資料<br>2. 調整 TTL 時間<br>3. 實作快取預熱<br>4. 壓力測試 |
-| **Phase 4: 監控完善** | 第4週 | 1. 設置監控告警<br>2. 建立 Dashboard<br>3. 性能基準測試<br>4. 文檔編寫 |
+| **Phase 3: 優化調整** | 第3週 | 1. 分析熱點資料<br>2. 調整 TTL 時間<br>3. 實作快取預熱<br>4. 壓力測試                  |
+| **Phase 4: 監控完善** | 第4週 | 1. 設置監控告警<br>2. 建立 Dashboard<br>3. 性能基準測試<br>4. 文檔編寫                 |
 
 ### 每日實施細節
 
-| 天數 | 任務 |
-|-----|------|
+| 天數  | 任務                      |
+| ----- | ------------------------- |
 | 第1天 | 本地環境設置 + 基礎程式碼 |
-| 第2天 | Repository 層整合 |
-| 第3天 | API Routes 整合 |
-| 第4天 | 測試與調優 |
-| 第5天 | Staging 環境部署 |
-| 第6天 | 監控設置 |
-| 第7天 | 文檔完善 + 知識轉移 |
+| 第2天 | Repository 層整合         |
+| 第3天 | API Routes 整合           |
+| 第4天 | 測試與調優                |
+| 第5天 | Staging 環境部署          |
+| 第6天 | 監控設置                  |
+| 第7天 | 文檔完善 + 知識轉移       |
 
 ---
 
@@ -416,25 +440,27 @@ gcloud run services update ai-square-staging \
 
 ### 效能提升
 
-| 指標 | 現況 | 優化後 | 提升倍數 |
-|-----|------|--------|---------|
-| **API 響應時間** | | | |
-| `/api/pbl/scenarios` | 500ms | 50ms | 10x |
-| `/api/relations` | 300ms | 30ms | 10x |
-| `/api/user/profile` | 200ms | 20ms | 10x |
-| **系統容量** | | | |
-| 並發用戶 | 100 | 1000 | 10x |
-| RPS | 50 | 500 | 10x |
-| **資料庫負載** | | | |
-| 查詢量 | 100% | 20% | -80% |
-| CPU 使用率 | 100% | 40% | -60% |
+| 指標                 | 現況  | 優化後 | 提升倍數 |
+| -------------------- | ----- | ------ | -------- |
+| **API 響應時間**     |       |        |          |
+| `/api/pbl/scenarios` | 500ms | 50ms   | 10x      |
+| `/api/relations`     | 300ms | 30ms   | 10x      |
+| `/api/user/profile`  | 200ms | 20ms   | 10x      |
+| **系統容量**         |       |        |          |
+| 並發用戶             | 100   | 1000   | 10x      |
+| RPS                  | 50    | 500    | 10x      |
+| **資料庫負載**       |       |        |          |
+| 查詢量               | 100%  | 20%    | -80%     |
+| CPU 使用率           | 100%  | 40%    | -60%     |
 
 ### 用戶體驗提升
+
 - 頁面載入時間：3秒 → 0.5秒
 - API 回應：立即響應
 - 整體流暢度：顯著提升
 
 ### 成本效益
+
 - 資料庫查詢成本降低 80%
 - 資料庫 CPU 成本降低 60%
 - 整體雲端成本節省約 40%
@@ -483,5 +509,5 @@ gcloud run services update ai-square-staging \
 
 ---
 
-*最後更新：2025-08-11*
-*版本：1.0.0*
+_最後更新：2025-08-11_
+_版本：1.0.0_

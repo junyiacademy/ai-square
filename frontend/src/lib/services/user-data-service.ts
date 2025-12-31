@@ -10,8 +10,8 @@ import type {
   AssessmentResults,
   UserAchievements,
   AssessmentSession,
-  UserDataOperations
-} from '@/lib/types/user-data';
+  UserDataOperations,
+} from "@/lib/types/user-data";
 
 // Re-export types for backward compatibility
 export type {
@@ -20,8 +20,8 @@ export type {
   UserAchievements,
   AssessmentSession,
   Badge,
-  Achievement
-} from '@/lib/types/user-data';
+  Achievement,
+} from "@/lib/types/user-data";
 
 // Storage interface for different backends
 interface StorageBackend {
@@ -32,15 +32,15 @@ interface StorageBackend {
 
 // localStorage implementation
 class LocalStorageBackend implements StorageBackend {
-  private readonly STORAGE_KEY = 'discoveryData';
+  private readonly STORAGE_KEY = "discoveryData";
 
   // Safe JSON serialization to handle circular references
   private safeStringify(obj: unknown): string {
     const seen = new WeakSet();
     return JSON.stringify(obj, (key, value) => {
-      if (typeof value === 'object' && value !== null) {
+      if (typeof value === "object" && value !== null) {
         if (seen.has(value)) {
-          return '[Circular]';
+          return "[Circular]";
         }
         seen.add(value);
       }
@@ -53,7 +53,7 @@ class LocalStorageBackend implements StorageBackend {
       const storageKey = this.getStorageKey(userId);
       localStorage.setItem(storageKey, this.safeStringify(data));
     } catch (error) {
-      console.error('Failed to save to localStorage:', error);
+      console.error("Failed to save to localStorage:", error);
       throw error;
     }
   }
@@ -79,15 +79,17 @@ class LocalStorageBackend implements StorageBackend {
 
       return JSON.parse(data);
     } catch (error) {
-      console.error('Failed to load from localStorage:', error);
+      console.error("Failed to load from localStorage:", error);
       return null;
     }
   }
 
   async exists(userId: string): Promise<boolean> {
     const storageKey = this.getStorageKey(userId);
-    return localStorage.getItem(storageKey) !== null ||
-           localStorage.getItem(this.STORAGE_KEY) !== null;
+    return (
+      localStorage.getItem(storageKey) !== null ||
+      localStorage.getItem(this.STORAGE_KEY) !== null
+    );
   }
 
   private getStorageKey(userId: string): string {
@@ -98,15 +100,15 @@ class LocalStorageBackend implements StorageBackend {
 // Placeholder for future GCS implementation
 class GCSBackend implements StorageBackend {
   async save({}: string, {}: UserData): Promise<void> {
-    throw new Error('GCS backend not implemented - use UserDataServiceV2');
+    throw new Error("GCS backend not implemented - use UserDataServiceV2");
   }
 
   async load({}: string): Promise<UserData | null> {
-    throw new Error('GCS backend not implemented - use UserDataServiceV2');
+    throw new Error("GCS backend not implemented - use UserDataServiceV2");
   }
 
   async exists({}: string): Promise<boolean> {
-    throw new Error('GCS backend not implemented - use UserDataServiceV2');
+    throw new Error("GCS backend not implemented - use UserDataServiceV2");
   }
 }
 
@@ -114,7 +116,7 @@ export class UserDataService implements UserDataOperations {
   private backend: StorageBackend;
   private userId: string;
 
-  constructor(userId: string = 'default', useGCS: boolean = false) {
+  constructor(userId: string = "default", useGCS: boolean = false) {
     this.userId = userId;
     this.backend = useGCS ? new GCSBackend() : new LocalStorageBackend();
   }
@@ -133,21 +135,21 @@ export class UserDataService implements UserDataOperations {
 
   // Convenience methods
   async saveAssessmentResults(results: AssessmentResults): Promise<void> {
-    const userData = await this.loadUserData() || this.getDefaultUserData();
+    const userData = (await this.loadUserData()) || this.getDefaultUserData();
     userData.assessmentResults = results;
     userData.lastUpdated = new Date().toISOString();
     await this.saveUserData(userData);
   }
 
   async saveAchievements(achievements: UserAchievements): Promise<void> {
-    const userData = await this.loadUserData() || this.getDefaultUserData();
+    const userData = (await this.loadUserData()) || this.getDefaultUserData();
     userData.achievements = achievements;
     userData.lastUpdated = new Date().toISOString();
     await this.saveUserData(userData);
   }
 
   async addAssessmentSession(session: AssessmentSession): Promise<void> {
-    const userData = await this.loadUserData() || this.getDefaultUserData();
+    const userData = (await this.loadUserData()) || this.getDefaultUserData();
 
     // Add new session
     userData.assessmentSessions.push(session);
@@ -160,7 +162,7 @@ export class UserDataService implements UserDataOperations {
   }
 
   async updateAchievements(updates: Partial<UserAchievements>): Promise<void> {
-    const userData = await this.loadUserData() || this.getDefaultUserData();
+    const userData = (await this.loadUserData()) || this.getDefaultUserData();
     userData.achievements = { ...userData.achievements, ...updates };
     userData.lastUpdated = new Date().toISOString();
     await this.saveUserData(userData);
@@ -185,17 +187,20 @@ export class UserDataService implements UserDataOperations {
         badges: [],
         totalXp: 0,
         level: 1,
-        completedTasks: []
+        completedTasks: [],
       },
       assessmentSessions: [],
       lastUpdated: new Date().toISOString(),
-      version: '2.0'
+      version: "2.0",
     };
   }
 }
 
 // Factory function
-export function createUserDataService(userId: string = 'default', useGCS: boolean = false): UserDataService {
+export function createUserDataService(
+  userId: string = "default",
+  useGCS: boolean = false,
+): UserDataService {
   return new UserDataService(userId, useGCS);
 }
 

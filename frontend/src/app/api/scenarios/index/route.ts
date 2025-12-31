@@ -1,6 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { scenarioIndexService, type ScenarioIndexEntry } from '@/lib/services/scenario-index-service';
-import { scenarioIndexBuilder } from '@/lib/services/scenario-index-builder';
+import { NextRequest, NextResponse } from "next/server";
+import {
+  scenarioIndexService,
+  type ScenarioIndexEntry,
+} from "@/lib/services/scenario-index-service";
+import { scenarioIndexBuilder } from "@/lib/services/scenario-index-builder";
 
 /**
  * GET /api/scenarios/index
@@ -10,7 +13,7 @@ export async function GET(request: NextRequest) {
   try {
     // Check for rebuild query parameter
     const { searchParams } = new URL(request.url);
-    const rebuild = searchParams.get('rebuild') === 'true';
+    const rebuild = searchParams.get("rebuild") === "true";
 
     if (rebuild) {
       // Rebuild the entire index
@@ -26,10 +29,10 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          error: 'Index not available',
-          status: scenarioIndexBuilder.getStatus()
+          error: "Index not available",
+          status: scenarioIndexBuilder.getStatus(),
         },
-        { status: 503 }
+        { status: 503 },
       );
     }
 
@@ -52,18 +55,18 @@ export async function GET(request: NextRequest) {
         totalMappings: index.yamlToUuid.size,
         yamlToUuid: yamlToUuidObject,
         uuidToYaml: uuidToYamlObject,
-        status: scenarioIndexBuilder.getStatus()
-      }
+        status: scenarioIndexBuilder.getStatus(),
+      },
     });
   } catch (error) {
-    console.error('Error getting scenario index:', error);
+    console.error("Error getting scenario index:", error);
     return NextResponse.json(
       {
         success: false,
-        error: 'Failed to get scenario index',
-        details: error instanceof Error ? error.message : 'Unknown error'
+        error: "Failed to get scenario index",
+        details: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -78,17 +81,17 @@ export async function DELETE() {
 
     return NextResponse.json({
       success: true,
-      message: 'Scenario index cache invalidated'
+      message: "Scenario index cache invalidated",
     });
   } catch (error) {
-    console.error('Error invalidating scenario index:', error);
+    console.error("Error invalidating scenario index:", error);
     return NextResponse.json(
       {
         success: false,
-        error: 'Failed to invalidate scenario index',
-        details: error instanceof Error ? error.message : 'Unknown error'
+        error: "Failed to invalidate scenario index",
+        details: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

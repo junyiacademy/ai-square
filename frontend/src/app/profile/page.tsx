@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useTranslation } from 'react-i18next';
-import { useAuth } from '@/hooks/useAuth';
-import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useTranslation } from "react-i18next";
+import { useAuth } from "@/hooks/useAuth";
+import { authenticatedFetch } from "@/lib/utils/authenticated-fetch";
 
 interface UserProfile {
   id: string;
@@ -18,14 +18,14 @@ interface UserProfile {
 
 export default function ProfilePage() {
   const router = useRouter();
-  const { t, i18n } = useTranslation(['common', 'auth']);
+  const { t, i18n } = useTranslation(["common", "auth"]);
   const { user, isLoading: authLoading } = useAuth();
 
   // 支援的語言列表
   const supportedLanguages = [
-    { code: 'en', name: 'English' },
-    { code: 'zhTW', name: '繁體中文' },
-    { code: 'zhCN', name: '简体中文' },
+    { code: "en", name: "English" },
+    { code: "zhTW", name: "繁體中文" },
+    { code: "zhCN", name: "简体中文" },
     // Temporarily disabled languages:
     // { code: 'es', name: 'Español' },
     // { code: 'fr', name: 'Français' },
@@ -39,7 +39,9 @@ export default function ProfilePage() {
     // { code: 'id', name: 'Bahasa Indonesia' },
     // { code: 'it', name: 'Italiano' },
   ];
-  const supportedLanguageCodes = supportedLanguages.map((language) => language.code);
+  const supportedLanguageCodes = supportedLanguages.map(
+    (language) => language.code,
+  );
   const fallbackLanguage = supportedLanguages[0].code;
   const normalizeLanguage = (languageCode?: string | null) =>
     languageCode && supportedLanguageCodes.includes(languageCode)
@@ -50,20 +52,20 @@ export default function ProfilePage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [isResending, setIsResending] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   // Form fields
-  const [name, setName] = useState('');
+  const [name, setName] = useState("");
   const [preferredLanguage, setPreferredLanguage] = useState(fallbackLanguage);
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPasswordSection, setShowPasswordSection] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !user) {
-      router.push('/login');
+      router.push("/login");
       return;
     }
 
@@ -74,22 +76,22 @@ export default function ProfilePage() {
 
   const fetchProfile = async () => {
     try {
-      const response = await authenticatedFetch('/api/auth/profile');
+      const response = await authenticatedFetch("/api/auth/profile");
       const data = await response.json();
 
       if (data.success) {
         setProfile(data.user);
-        setName(data.user.name || '');
+        setName(data.user.name || "");
         const updatedLanguage = normalizeLanguage(data.user.preferredLanguage);
         setPreferredLanguage(updatedLanguage);
         if (updatedLanguage !== i18n.language) {
           await i18n.changeLanguage(updatedLanguage);
         }
       } else {
-        setError(data.error || 'Failed to load profile');
+        setError(data.error || "Failed to load profile");
       }
     } catch {
-      setError('Failed to load profile');
+      setError("Failed to load profile");
     } finally {
       setIsLoading(false);
     }
@@ -97,17 +99,17 @@ export default function ProfilePage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
-    setSuccess('');
+    setError("");
+    setSuccess("");
 
     // 驗證密碼
     if (showPasswordSection && newPassword) {
       if (newPassword !== confirmPassword) {
-        setError(t('auth:resetPassword.passwordMismatch'));
+        setError(t("auth:resetPassword.passwordMismatch"));
         return;
       }
       if (!currentPassword) {
-        setError(t('profile.currentPasswordRequired'));
+        setError(t("profile.currentPasswordRequired"));
         return;
       }
     }
@@ -127,16 +129,16 @@ export default function ProfilePage() {
         updates.newPassword = newPassword;
       }
 
-      const response = await authenticatedFetch('/api/auth/profile', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await authenticatedFetch("/api/auth/profile", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updates),
       });
 
       const data = await response.json();
 
       if (data.success) {
-        setSuccess(t('profile.updateSuccess'));
+        setSuccess(t("profile.updateSuccess"));
         setProfile(data.user);
 
         // 如果更改了語言，立即切換
@@ -145,41 +147,44 @@ export default function ProfilePage() {
         }
 
         // 清空密碼欄位
-        setCurrentPassword('');
-        setNewPassword('');
-        setConfirmPassword('');
+        setCurrentPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
         setShowPasswordSection(false);
       } else {
-        setError(data.error || t('profile.updateError'));
+        setError(data.error || t("profile.updateError"));
       }
     } catch {
-      setError(t('profile.updateError'));
+      setError(t("profile.updateError"));
     } finally {
       setIsSaving(false);
     }
   };
 
   const handleResendVerification = async () => {
-    setError('');
-    setSuccess('');
+    setError("");
+    setSuccess("");
     setIsResending(true);
 
     try {
-      const response = await authenticatedFetch('/api/auth/resend-verification', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({}), // Session will be used
-      });
+      const response = await authenticatedFetch(
+        "/api/auth/resend-verification",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({}), // Session will be used
+        },
+      );
 
       const data = await response.json();
 
       if (data.success) {
-        setSuccess(t('profile.verificationEmailSent'));
+        setSuccess(t("profile.verificationEmailSent"));
       } else {
-        setError(data.error || t('profile.resendError'));
+        setError(data.error || t("profile.resendError"));
       }
     } catch {
-      setError(t('profile.resendError'));
+      setError(t("profile.resendError"));
     } finally {
       setIsResending(false);
     }
@@ -202,7 +207,7 @@ export default function ProfilePage() {
       <div className="max-w-2xl mx-auto">
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-8">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-            {t('profile.title')}
+            {t("profile.title")}
           </h1>
 
           {error && (
@@ -221,12 +226,12 @@ export default function ProfilePage() {
             {/* 基本資訊區塊 */}
             <div className="space-y-4">
               <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
-                {t('profile.basicInfo')}
+                {t("profile.basicInfo")}
               </h2>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  {t('auth:email')}
+                  {t("auth:email")}
                 </label>
                 <input
                   type="email"
@@ -237,7 +242,7 @@ export default function ProfilePage() {
                 {!profile.emailVerified && (
                   <div className="mt-2 flex items-center justify-between">
                     <p className="text-sm text-yellow-600 dark:text-yellow-400">
-                      {t('profile.emailNotVerified')}
+                      {t("profile.emailNotVerified")}
                     </p>
                     <button
                       type="button"
@@ -245,15 +250,20 @@ export default function ProfilePage() {
                       disabled={isResending}
                       className="text-sm text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {isResending ? t('profile.resending') : t('profile.resendVerification')}
+                      {isResending
+                        ? t("profile.resending")
+                        : t("profile.resendVerification")}
                     </button>
                   </div>
                 )}
               </div>
 
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  {t('profile.name')}
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                >
+                  {t("profile.name")}
                 </label>
                 <input
                   id="name"
@@ -266,8 +276,11 @@ export default function ProfilePage() {
               </div>
 
               <div>
-                <label htmlFor="language" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  {t('profile.preferredLanguage')}
+                <label
+                  htmlFor="language"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                >
+                  {t("profile.preferredLanguage")}
                 </label>
                 <select
                   id="language"
@@ -285,10 +298,12 @@ export default function ProfilePage() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  {t('profile.accountType')}
+                  {t("profile.accountType")}
                 </label>
                 <div className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-700">
-                  <span className="text-gray-700 dark:text-gray-300 capitalize">{profile.role}</span>
+                  <span className="text-gray-700 dark:text-gray-300 capitalize">
+                    {profile.role}
+                  </span>
                 </div>
               </div>
             </div>
@@ -297,22 +312,27 @@ export default function ProfilePage() {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
-                  {t('profile.security')}
+                  {t("profile.security")}
                 </h2>
                 <button
                   type="button"
                   onClick={() => setShowPasswordSection(!showPasswordSection)}
                   className="text-sm text-indigo-600 hover:text-indigo-500 dark:text-indigo-400"
                 >
-                  {showPasswordSection ? t('profile.cancel') : t('profile.changePassword')}
+                  {showPasswordSection
+                    ? t("profile.cancel")
+                    : t("profile.changePassword")}
                 </button>
               </div>
 
               {showPasswordSection && (
                 <div className="space-y-4">
                   <div>
-                    <label htmlFor="currentPassword" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      {t('profile.currentPassword')}
+                    <label
+                      htmlFor="currentPassword"
+                      className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                    >
+                      {t("profile.currentPassword")}
                     </label>
                     <input
                       id="currentPassword"
@@ -324,8 +344,11 @@ export default function ProfilePage() {
                   </div>
 
                   <div>
-                    <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      {t('auth:newPassword')}
+                    <label
+                      htmlFor="newPassword"
+                      className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                    >
+                      {t("auth:newPassword")}
                     </label>
                     <input
                       id="newPassword"
@@ -338,8 +361,11 @@ export default function ProfilePage() {
                   </div>
 
                   <div>
-                    <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      {t('auth:confirmPassword')}
+                    <label
+                      htmlFor="confirmPassword"
+                      className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                    >
+                      {t("auth:confirmPassword")}
                     </label>
                     <input
                       id="confirmPassword"
@@ -357,7 +383,8 @@ export default function ProfilePage() {
             {/* 帳號資訊 */}
             <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                {t('profile.memberSince')}: {new Date(profile.createdAt).toLocaleDateString()}
+                {t("profile.memberSince")}:{" "}
+                {new Date(profile.createdAt).toLocaleDateString()}
               </p>
             </div>
 
@@ -368,7 +395,7 @@ export default function ProfilePage() {
                 disabled={isSaving}
                 className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
-                {isSaving ? t('profile.saving') : t('profile.saveChanges')}
+                {isSaving ? t("profile.saving") : t("profile.saveChanges")}
               </button>
             </div>
           </form>

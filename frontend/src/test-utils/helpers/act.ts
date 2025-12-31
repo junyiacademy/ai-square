@@ -3,7 +3,7 @@
  * 協助處理 React 18+ 的 act() 警告
  */
 
-import { act } from '@testing-library/react';
+import { act } from "@testing-library/react";
 
 /**
  * Wrapper for async operations that might cause act() warnings
@@ -28,7 +28,7 @@ export async function waitForAllSettled() {
   });
 
   // Run all timers if using fake timers
-  if (typeof jest !== 'undefined' && jest.isMockFunction(setTimeout)) {
+  if (typeof jest !== "undefined" && jest.isMockFunction(setTimeout)) {
     act(() => {
       jest.runAllTimers();
     });
@@ -52,17 +52,17 @@ export async function userEventAct(userEventOperation: () => Promise<void>) {
  */
 export async function waitForCondition(
   condition: () => boolean,
-  timeout = 5000
+  timeout = 5000,
 ): Promise<void> {
   const startTime = Date.now();
 
   while (!condition()) {
     if (Date.now() - startTime > timeout) {
-      throw new Error('Timeout waiting for condition');
+      throw new Error("Timeout waiting for condition");
     }
 
     await act(async () => {
-      await new Promise(resolve => setTimeout(resolve, 50));
+      await new Promise((resolve) => setTimeout(resolve, 50));
     });
   }
 }
@@ -76,7 +76,7 @@ export function suppressActWarnings() {
 
   beforeEach(() => {
     console.error = (...args: any[]) => {
-      if (args[0]?.includes?.('act()')) {
+      if (args[0]?.includes?.("act()")) {
         return;
       }
       originalError.call(console, ...args);

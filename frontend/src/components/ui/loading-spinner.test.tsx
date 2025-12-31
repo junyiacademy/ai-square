@@ -1,48 +1,57 @@
-import React from 'react';
-import { render } from '@testing-library/react';
-import { LoadingSpinner } from './loading-spinner';
+import React from "react";
+import { render } from "@testing-library/react";
+import { LoadingSpinner } from "./loading-spinner";
 
-describe('LoadingSpinner', () => {
-  it('renders spinner element', () => {
+describe("LoadingSpinner", () => {
+  it("renders spinner element", () => {
     const { container } = render(<LoadingSpinner />);
-    const spinner = container.querySelector('.animate-spin');
+    const spinner = container.querySelector(".animate-spin");
     expect(spinner).toBeInTheDocument();
   });
 
-  it('applies default medium size classes', () => {
+  it("applies default medium size classes", () => {
     const { container } = render(<LoadingSpinner />);
-    const spinner = container.querySelector('.animate-spin');
-    expect(spinner).toHaveClass('h-8', 'w-8');
+    const spinner = container.querySelector(".animate-spin");
+    expect(spinner).toHaveClass("h-8", "w-8");
   });
 
-  it('applies small size classes', () => {
+  it("applies small size classes", () => {
     const { container } = render(<LoadingSpinner size="sm" />);
-    const spinner = container.querySelector('.animate-spin');
-    expect(spinner).toHaveClass('h-4', 'w-4');
+    const spinner = container.querySelector(".animate-spin");
+    expect(spinner).toHaveClass("h-4", "w-4");
   });
 
-  it('applies large size classes', () => {
+  it("applies large size classes", () => {
     const { container } = render(<LoadingSpinner size="lg" />);
-    const spinner = container.querySelector('.animate-spin');
-    expect(spinner).toHaveClass('h-12', 'w-12');
+    const spinner = container.querySelector(".animate-spin");
+    expect(spinner).toHaveClass("h-12", "w-12");
   });
 
-  it('applies custom className to wrapper', () => {
+  it("applies custom className to wrapper", () => {
     const { container } = render(<LoadingSpinner className="custom-spinner" />);
     const wrapper = container.firstChild;
-    expect(wrapper).toHaveClass('custom-spinner', 'flex', 'items-center', 'justify-center');
+    expect(wrapper).toHaveClass(
+      "custom-spinner",
+      "flex",
+      "items-center",
+      "justify-center",
+    );
   });
 
-  it('has proper accessibility attributes', () => {
+  it("has proper accessibility attributes", () => {
     const { container } = render(<LoadingSpinner />);
     const spinner = container.querySelector('[role="status"]');
     expect(spinner).toBeInTheDocument();
-    expect(spinner).toHaveAttribute('aria-label', '載入中');
+    expect(spinner).toHaveAttribute("aria-label", "載入中");
   });
 
-  it('applies border styling', () => {
+  it("applies border styling", () => {
     const { container } = render(<LoadingSpinner />);
-    const spinner = container.querySelector('.animate-spin');
-    expect(spinner).toHaveClass('rounded-full', 'border-b-2', 'border-blue-600');
+    const spinner = container.querySelector(".animate-spin");
+    expect(spinner).toHaveClass(
+      "rounded-full",
+      "border-b-2",
+      "border-blue-600",
+    );
   });
 });

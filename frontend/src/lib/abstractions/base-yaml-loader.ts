@@ -20,9 +20,9 @@ export abstract class BaseYAMLLoader<T = unknown> {
 
   constructor(options: YAMLLoaderOptions = {}) {
     this.options = {
-      basePath: 'public',
+      basePath: "public",
       cache: true,
-      ...options
+      ...options,
     };
   }
 

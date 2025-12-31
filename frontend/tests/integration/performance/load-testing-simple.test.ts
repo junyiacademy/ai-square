@@ -3,47 +3,47 @@
  * Focus on basic concurrent request handling
  */
 
-describe('Simple Load Testing', () => {
-  const baseUrl = process.env.API_URL || 'http://localhost:3456';
+describe("Simple Load Testing", () => {
+  const baseUrl = process.env.API_URL || "http://localhost:3456";
 
-  it('should handle 5 concurrent requests', async () => {
-    const requests = Array(5).fill(null).map(() =>
-      fetch(`${baseUrl}/api/monitoring/health`)
-    );
+  it("should handle 5 concurrent requests", async () => {
+    const requests = Array(5)
+      .fill(null)
+      .map(() => fetch(`${baseUrl}/api/monitoring/health`));
 
     const results = await Promise.allSettled(requests);
 
-    const successful = results.filter(r =>
-      r.status === 'fulfilled' && r.value.ok
+    const successful = results.filter(
+      (r) => r.status === "fulfilled" && r.value.ok,
     );
 
     expect(successful.length).toBeGreaterThanOrEqual(4); // Allow 1 failure
   });
 
-  it('should handle concurrent API calls', async () => {
+  it("should handle concurrent API calls", async () => {
     const endpoints = [
-      '/api/ksa?lang=en',
-      '/api/relations?lang=en',
-      '/api/pbl/scenarios?lang=en',
-      '/api/assessment/scenarios?lang=en',
-      '/api/discovery/scenarios?lang=en'
+      "/api/ksa?lang=en",
+      "/api/relations?lang=en",
+      "/api/pbl/scenarios?lang=en",
+      "/api/assessment/scenarios?lang=en",
+      "/api/discovery/scenarios?lang=en",
     ];
 
-    const requests = endpoints.map(endpoint =>
-      fetch(`${baseUrl}${endpoint}`)
+    const requests = endpoints.map((endpoint) =>
+      fetch(`${baseUrl}${endpoint}`),
     );
 
     const results = await Promise.allSettled(requests);
 
-    const successful = results.filter(r =>
-      r.status === 'fulfilled' && r.value.ok
+    const successful = results.filter(
+      (r) => r.status === "fulfilled" && r.value.ok,
     );
 
     // At least 80% should succeed
     expect(successful.length).toBeGreaterThanOrEqual(4);
   });
 
-  it('should maintain reasonable response times under load', async () => {
+  it("should maintain reasonable response times under load", async () => {
     const times: number[] = [];
 
     // Make 10 sequential requests

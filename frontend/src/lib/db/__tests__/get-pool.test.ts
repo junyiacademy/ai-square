@@ -1,6 +1,6 @@
-import { getPool, closePool } from '../get-pool';
+import { getPool, closePool } from "../get-pool";
 
-describe('get-pool', () => {
+describe("get-pool", () => {
   let originalEnv: any;
 
   beforeEach(() => {
@@ -25,8 +25,8 @@ describe('get-pool', () => {
     await closePool();
   });
 
-  describe('getPool', () => {
-    it('returns a pool instance', () => {
+  describe("getPool", () => {
+    it("returns a pool instance", () => {
       const pool = getPool();
 
       expect(pool).toBeDefined();
@@ -35,7 +35,7 @@ describe('get-pool', () => {
       expect(pool.end).toBeDefined();
     });
 
-    it('returns the same pool instance on subsequent calls', () => {
+    it("returns the same pool instance on subsequent calls", () => {
       const pool1 = getPool();
       const pool2 = getPool();
 
@@ -43,17 +43,17 @@ describe('get-pool', () => {
     });
   });
 
-  describe('closePool', () => {
-    it('can be called without throwing', async () => {
+  describe("closePool", () => {
+    it("can be called without throwing", async () => {
       await expect(closePool()).resolves.not.toThrow();
     });
 
-    it('can be called multiple times safely', async () => {
+    it("can be called multiple times safely", async () => {
       await closePool();
       await expect(closePool()).resolves.not.toThrow();
     });
 
-    it('allows creating a new pool after closing', async () => {
+    it("allows creating a new pool after closing", async () => {
       const pool1 = getPool();
       await closePool();
       const pool2 = getPool();

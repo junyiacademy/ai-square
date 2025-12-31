@@ -5,13 +5,13 @@
  * Generates and sends weekly statistics report to Slack with chart visualizations
  */
 
-import { NextRequest, NextResponse } from 'next/server';
-import { getPool } from '@/lib/db/get-pool';
-import { getWeeklyStats } from '../lib/db-queries';
-import { formatWeeklyReport } from '../lib/report-formatter';
-import { sendToSlackWithCharts } from '../lib/slack-client';
-import { generateAIInsights } from '../lib/ai-insights';
-import { generateWeeklyCharts } from '../lib/chart-generator';
+import { NextRequest, NextResponse } from "next/server";
+import { getPool } from "@/lib/db/get-pool";
+import { getWeeklyStats } from "../lib/db-queries";
+import { formatWeeklyReport } from "../lib/report-formatter";
+import { sendToSlackWithCharts } from "../lib/slack-client";
+import { generateAIInsights } from "../lib/ai-insights";
+import { generateWeeklyCharts } from "../lib/chart-generator";
 
 export async function POST(_request: NextRequest) {
   try {
@@ -37,28 +37,28 @@ export async function POST(_request: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          error: result.error || 'Failed to send report to Slack'
+          error: result.error || "Failed to send report to Slack",
         },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
     return NextResponse.json({
       success: true,
-      message: 'Weekly report sent successfully',
+      message: "Weekly report sent successfully",
       stats,
       aiInsights: aiInsights !== null,
-      charts
+      charts,
     });
   } catch (error) {
-    console.error('Error generating weekly report:', error);
+    console.error("Error generating weekly report:", error);
 
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown error'
+        error: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

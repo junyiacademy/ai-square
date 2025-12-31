@@ -17,6 +17,7 @@ Frontend-specific development guidelines for Claude Code.
 ### Zero Tolerance Policies
 
 1. **No `any` types** - EVER
+
    ```typescript
    // ❌ WRONG
    const data: any = fetchData();
@@ -32,6 +33,7 @@ Frontend-specific development guidelines for Claude Code.
    - If truly necessary, create a typed wrapper
 
 3. **Next.js 15 Route Params Must Be Awaited**
+
    ```typescript
    // ❌ WRONG
    export default function Page({ params }: { params: { id: string } }) {
@@ -39,30 +41,32 @@ Frontend-specific development guidelines for Claude Code.
    }
 
    // ✅ CORRECT
-   export default async function Page(
-     props: { params: Promise<{ id: string }> }
-   ) {
+   export default async function Page(props: {
+     params: Promise<{ id: string }>;
+   }) {
      const params = await props.params;
      // ...
    }
    ```
 
 4. **Multilingual Fields Format**
+
    ```typescript
    // ❌ WRONG
-   title: string
+   title: string;
 
    // ✅ CORRECT
-   title: Record<string, string>
-   description: Record<string, string>
+   title: Record<string, string>;
+   description: Record<string, string>;
 
    // Usage
    const program = {
-     title: { en: "Math Program", zh: "數學課程" }
-   }
+     title: { en: "Math Program", zh: "數學課程" },
+   };
    ```
 
 5. **Repository Optional Methods**
+
    ```typescript
    // ❌ WRONG
    const program = await repository.getById(id);
@@ -74,26 +78,28 @@ Frontend-specific development guidelines for Claude Code.
 ## 📏 Code Style Guidelines
 
 ### Import Organization
+
 ```typescript
 // 1. React/Next.js
-import { useState } from 'react';
-import { notFound } from 'next/navigation';
+import { useState } from "react";
+import { notFound } from "next/navigation";
 
 // 2. External libraries
-import { z } from 'zod';
+import { z } from "zod";
 
 // 3. Internal aliases (@/)
-import { Button } from '@/components/ui/button';
-import { createProgramRepository } from '@/lib/db/program-repository';
+import { Button } from "@/components/ui/button";
+import { createProgramRepository } from "@/lib/db/program-repository";
 
 // 4. Types
-import type { Program, Scenario } from '@/types';
+import type { Program, Scenario } from "@/types";
 
 // 5. Relative imports
-import { helper } from './helper';
+import { helper } from "./helper";
 ```
 
 ### Component Structure
+
 ```typescript
 // 1. Type definitions
 type ComponentProps = {
@@ -126,6 +132,7 @@ export function Component({ title, onAction }: ComponentProps) {
 ```
 
 ### Naming Conventions
+
 ```typescript
 // Components: PascalCase
 export function UserProfile() {}
@@ -152,6 +159,7 @@ export interface ApiResponse {...}
 ### Test Coverage Minimum: 70%
 
 **Test Priority (must have tests):**
+
 1. API routes (`app/api/**/route.ts`)
 2. Repository functions (`lib/db/*-repository.ts`)
 3. Utility functions (`lib/utils/*.ts`)
@@ -159,13 +167,14 @@ export interface ApiResponse {...}
 5. Critical user flows (E2E with Playwright)
 
 ### API Route Testing Pattern
+
 ```typescript
 // __tests__/api/programs.test.ts
-import { GET } from '@/app/api/programs/route';
+import { GET } from "@/app/api/programs/route";
 
-describe('GET /api/programs', () => {
-  it('returns programs list', async () => {
-    const request = new Request('http://localhost:3000/api/programs');
+describe("GET /api/programs", () => {
+  it("returns programs list", async () => {
+    const request = new Request("http://localhost:3000/api/programs");
     const response = await GET(request);
     const data = await response.json();
 
@@ -176,6 +185,7 @@ describe('GET /api/programs', () => {
 ```
 
 ### Component Testing Pattern
+
 ```typescript
 // __tests__/components/Button.test.tsx
 import { render, screen, fireEvent } from '@testing-library/react';
@@ -193,23 +203,25 @@ describe('Button', () => {
 ```
 
 ### E2E Testing Pattern
+
 ```typescript
 // e2e/program-flow.spec.ts
-import { test, expect } from '@playwright/test';
+import { test, expect } from "@playwright/test";
 
-test('user can create and view program', async ({ page }) => {
-  await page.goto('/programs');
-  await page.click('text=Create Program');
-  await page.fill('input[name="title"]', 'Test Program');
+test("user can create and view program", async ({ page }) => {
+  await page.goto("/programs");
+  await page.click("text=Create Program");
+  await page.fill('input[name="title"]', "Test Program");
   await page.click('button[type="submit"]');
 
-  await expect(page.locator('text=Test Program')).toBeVisible();
+  await expect(page.locator("text=Test Program")).toBeVisible();
 });
 ```
 
 ## 🎨 UI Development Workflow
 
 ### Visual Iteration Process
+
 1. **Design Reference** - Screenshot/Figma export
 2. **Initial Implementation** - Build component
 3. **Screenshot Comparison** - Take screenshot of implementation
@@ -217,6 +229,7 @@ test('user can create and view program', async ({ page }) => {
 5. **Playwright Visual Test** - Add visual regression test
 
 ### Responsive Design Requirements
+
 ```typescript
 // Must test on all breakpoints
 const breakpoints = {
@@ -233,9 +246,10 @@ const breakpoints = {
 ## 🔄 State Management Patterns
 
 ### Client State (Zustand)
+
 ```typescript
 // stores/useAuthStore.ts
-import { create } from 'zustand';
+import { create } from "zustand";
 
 type AuthState = {
   user: User | null;
@@ -251,16 +265,17 @@ export const useAuthStore = create<AuthState>((set) => ({
 ```
 
 ### Server State (TanStack Query)
+
 ```typescript
 // hooks/usePrograms.ts
-import { useQuery } from '@tanstack/react-query';
+import { useQuery } from "@tanstack/react-query";
 
 export function usePrograms() {
   return useQuery({
-    queryKey: ['programs'],
+    queryKey: ["programs"],
     queryFn: async () => {
-      const res = await fetch('/api/programs');
-      if (!res.ok) throw new Error('Failed to fetch programs');
+      const res = await fetch("/api/programs");
+      if (!res.ok) throw new Error("Failed to fetch programs");
       return res.json() as Promise<Program[]>;
     },
   });
@@ -270,6 +285,7 @@ export function usePrograms() {
 ## 🚀 Performance Optimization
 
 ### Code Splitting
+
 ```typescript
 // Use dynamic imports for heavy components
 import dynamic from 'next/dynamic';
@@ -281,6 +297,7 @@ const HeavyChart = dynamic(() => import('@/components/HeavyChart'), {
 ```
 
 ### Image Optimization
+
 ```typescript
 import Image from 'next/image';
 
@@ -295,6 +312,7 @@ import Image from 'next/image';
 ```
 
 ### Font Optimization
+
 ```typescript
 // app/layout.tsx
 import { Inter } from 'next/font/google';
@@ -313,6 +331,7 @@ export default function RootLayout({ children }) {
 ## 📦 Common Patterns
 
 ### Error Handling
+
 ```typescript
 // API route error handling
 export async function GET(request: Request) {
@@ -320,16 +339,14 @@ export async function GET(request: Request) {
     const data = await fetchData();
     return Response.json(data);
   } catch (error) {
-    console.error('API Error:', error);
-    return Response.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    console.error("API Error:", error);
+    return Response.json({ error: "Internal server error" }, { status: 500 });
   }
 }
 ```
 
 ### Loading States
+
 ```typescript
 // app/programs/page.tsx
 import { Suspense } from 'react';
@@ -345,8 +362,9 @@ export default function ProgramsPage() {
 ```
 
 ### Form Validation (Zod)
+
 ```typescript
-import { z } from 'zod';
+import { z } from "zod";
 
 const programSchema = z.object({
   title: z.record(z.string()),

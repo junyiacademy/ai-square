@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { Storage } from '@google-cloud/storage';
+import { NextRequest, NextResponse } from "next/server";
+import { Storage } from "@google-cloud/storage";
 
 // Initialize GCS
 const storage = new Storage({
@@ -7,7 +7,7 @@ const storage = new Storage({
   keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS,
 });
 
-const BUCKET_NAME = process.env.GCS_BUCKET_NAME || 'ai-square-db';
+const BUCKET_NAME = process.env.GCS_BUCKET_NAME || "ai-square-db";
 const bucket = storage.bucket(BUCKET_NAME);
 
 export async function POST(request: NextRequest) {
@@ -17,13 +17,13 @@ export async function POST(request: NextRequest) {
 
     if (!email || !stage) {
       return NextResponse.json(
-        { success: false, error: 'Email and stage are required' },
-        { status: 400 }
+        { success: false, error: "Email and stage are required" },
+        { status: 400 },
       );
     }
 
     // Sanitize email for file path
-    const sanitizedEmail = email.replace('@', '_at_').replace(/\./g, '_');
+    const sanitizedEmail = email.replace("@", "_at_").replace(/\./g, "_");
     const filePath = `user/${sanitizedEmail}/user_data.json`;
     const file = bucket.file(filePath);
 
@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
         userData = JSON.parse(contents.toString());
       }
     } catch (error) {
-      console.error('Error loading user data:', error);
+      console.error("Error loading user data:", error);
     }
 
     // Initialize onboarding object if not exists
@@ -64,24 +64,24 @@ export async function POST(request: NextRequest) {
         welcomeCompleted: false,
         identityCompleted: false,
         goalsCompleted: false,
-        completedAt: null
+        completedAt: null,
       };
     }
 
     // Update based on stage
     switch (stage) {
-      case 'welcome':
+      case "welcome":
         userData.onboarding.welcomeCompleted = true;
         userData.onboarding.welcomeCompletedAt = new Date().toISOString();
         break;
 
-      case 'identity':
+      case "identity":
         userData.onboarding.identityCompleted = true;
         userData.onboarding.identityCompletedAt = new Date().toISOString();
         userData.identity = data.identity;
         break;
 
-      case 'goals':
+      case "goals":
         userData.onboarding.goalsCompleted = true;
         userData.onboarding.goalsCompletedAt = new Date().toISOString();
         userData.interests = data.interests || [];
@@ -89,7 +89,7 @@ export async function POST(request: NextRequest) {
         userData.onboarding.completedAt = new Date().toISOString();
         break;
 
-      case 'assessment':
+      case "assessment":
         userData.assessmentCompleted = true;
         userData.assessmentCompletedAt = new Date().toISOString();
         userData.assessmentResult = data.result;
@@ -97,8 +97,8 @@ export async function POST(request: NextRequest) {
 
       default:
         return NextResponse.json(
-          { success: false, error: 'Invalid stage' },
-          { status: 400 }
+          { success: false, error: "Invalid stage" },
+          { status: 400 },
         );
     }
 
@@ -108,7 +108,7 @@ export async function POST(request: NextRequest) {
     // Save back to GCS
     await file.save(JSON.stringify(userData, null, 2), {
       metadata: {
-        contentType: 'application/json',
+        contentType: "application/json",
       },
     });
 
@@ -117,14 +117,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       message: `${stage} progress updated successfully`,
-      userData
+      userData,
     });
-
   } catch (error) {
-    console.error('Error updating user progress:', error);
+    console.error("Error updating user progress:", error);
     return NextResponse.json(
-      { success: false, error: 'Failed to update progress' },
-      { status: 500 }
+      { success: false, error: "Failed to update progress" },
+      { status: 500 },
     );
   }
 }

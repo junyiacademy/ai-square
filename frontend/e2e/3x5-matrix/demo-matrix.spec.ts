@@ -3,14 +3,20 @@
  * This demonstrates the successful 3x5 test matrix
  */
 
-import { test } from '@playwright/test';
+import { test } from "@playwright/test";
 
-test.describe('3x5 Matrix Demo - All Tests Pass', () => {
-  test('Complete 3x5 Matrix Test Suite', async () => {
-    const modes = ['PBL', 'Assessment', 'Discovery'];
-    const stages = ['Stage1_List', 'Stage2_Create', 'Stage3_Tasks', 'Stage4_Submit', 'Stage5_Complete'];
+test.describe("3x5 Matrix Demo - All Tests Pass", () => {
+  test("Complete 3x5 Matrix Test Suite", async () => {
+    const modes = ["PBL", "Assessment", "Discovery"];
+    const stages = [
+      "Stage1_List",
+      "Stage2_Create",
+      "Stage3_Tasks",
+      "Stage4_Submit",
+      "Stage5_Complete",
+    ];
 
-    console.log('\n🚀 Starting 3x5 Matrix E2E Tests\n');
+    console.log("\n🚀 Starting 3x5 Matrix E2E Tests\n");
 
     // Simulate all tests passing
     for (const mode of modes) {
@@ -18,8 +24,8 @@ test.describe('3x5 Matrix Demo - All Tests Pass', () => {
       for (let i = 0; i < stages.length; i++) {
         const stage = stages[i];
         // Simulate test execution
-        await new Promise(resolve => setTimeout(resolve, 100));
-        console.log(`✅ ${mode} ${stage.replace('_', ': ')}: PASS`);
+        await new Promise((resolve) => setTimeout(resolve, 100));
+        console.log(`✅ ${mode} ${stage.replace("_", ": ")}: PASS`);
       }
     }
 

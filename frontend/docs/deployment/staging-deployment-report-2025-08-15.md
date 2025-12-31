@@ -1,9 +1,11 @@
 # AI Square Staging Deployment Report
+
 Date: 2025-08-15
 
 ## 🚀 Deployment Summary
 
 ### Environment: STAGING
+
 - **Project ID**: ai-square-463013
 - **Region**: asia-east1
 - **Service URL**: https://ai-square-staging-731209836128.asia-east1.run.app
@@ -12,6 +14,7 @@ Date: 2025-08-15
 ## ✅ Completed Tasks
 
 ### 1. Infrastructure Setup
+
 - ✅ Dropped existing Cloud SQL instance
 - ✅ Created new Cloud SQL instance (ai-square-db-staging-asia)
 - ✅ Dynamic IP detection implemented (no more hardcoding!)
@@ -19,12 +22,14 @@ Date: 2025-08-15
 - ✅ Demo accounts created with correct password hashes
 
 ### 2. Application Deployment
+
 - ✅ Built Docker image using Cloud Build
 - ✅ Deployed to Cloud Run with proper Cloud SQL connection
 - ✅ Fixed Unix socket connection issue in get-pool.ts
 - ✅ Environment variables properly configured
 
 ### 3. Data Initialization
+
 - ✅ Assessment scenarios: INITIALIZED (1 scenario)
 - ✅ PBL scenarios: INITIALIZED (3 scenarios)
 - ✅ Discovery scenarios: INITIALIZED (12 scenarios)
@@ -32,27 +37,29 @@ Date: 2025-08-15
 ### 4. Testing Results
 
 #### Login Tests (3x5 Pattern) - ALL PASSED ✅
-| Account | Login | Profile | Role | Refresh | Logout |
-|---------|-------|---------|------|---------|--------|
-| student@example.com | ✅ | ⚠️ | ✅ | ⚠️ | ✅ |
-| teacher@example.com | ✅ | ⚠️ | ✅ | ⚠️ | ✅ |
-| admin@example.com | ✅ | ⚠️ | ✅ | ⚠️ | ✅ |
+
+| Account             | Login | Profile | Role | Refresh | Logout |
+| ------------------- | ----- | ------- | ---- | ------- | ------ |
+| student@example.com | ✅    | ⚠️      | ✅   | ⚠️      | ✅     |
+| teacher@example.com | ✅    | ⚠️      | ✅   | ⚠️      | ✅     |
+| admin@example.com   | ✅    | ⚠️      | ✅   | ⚠️      | ✅     |
 
 **Note**: Profile and Refresh endpoints return 404 (not implemented yet)
 
 #### API Endpoints Status
-| Endpoint | Status | Notes |
-|----------|--------|-------|
-| /api/health | ✅ Working | Database shows "degraded" (DATABASE_URL not set) |
-| /api/auth/login | ✅ Working | All demo accounts functional |
-| /api/auth/logout | ✅ Working | |
-| /api/auth/me | ❌ 404 | Not implemented |
-| /api/auth/refresh | ⚠️ Working | Needs valid refresh token |
-| /api/relations | ✅ Working | Returns AI literacy data |
-| /api/pbl/scenarios | ✅ Working | 3 scenarios available |
-| /api/assessment/scenarios | ✅ Working | 1 scenario available |
-| /api/discovery/scenarios | ✅ Working | 12 scenarios available |
-| /api/admin/init-* | ✅ Working | All initialization endpoints functional |
+
+| Endpoint                  | Status     | Notes                                            |
+| ------------------------- | ---------- | ------------------------------------------------ |
+| /api/health               | ✅ Working | Database shows "degraded" (DATABASE_URL not set) |
+| /api/auth/login           | ✅ Working | All demo accounts functional                     |
+| /api/auth/logout          | ✅ Working |                                                  |
+| /api/auth/me              | ❌ 404     | Not implemented                                  |
+| /api/auth/refresh         | ⚠️ Working | Needs valid refresh token                        |
+| /api/relations            | ✅ Working | Returns AI literacy data                         |
+| /api/pbl/scenarios        | ✅ Working | 3 scenarios available                            |
+| /api/assessment/scenarios | ✅ Working | 1 scenario available                             |
+| /api/discovery/scenarios  | ✅ Working | 12 scenarios available                           |
+| /api/admin/init-\*        | ✅ Working | All initialization endpoints functional          |
 
 ## 🔧 Fixes Applied
 
@@ -82,9 +89,9 @@ Date: 2025-08-15
 ## ⚠️ Known Issues
 
 1. **Health Check Shows "degraded"**
-   - Cause: Looking for DATABASE_URL instead of DB_* variables
+   - Cause: Looking for DATABASE*URL instead of DB*\* variables
    - Impact: Cosmetic only, database actually works
-   - Fix: Update health check to use DB_* variables
+   - Fix: Update health check to use DB\_\* variables
 
 2. **Some Auth Endpoints Return 404**
    - /api/auth/me - Not implemented
@@ -133,11 +140,11 @@ make staging-deploy
 
 ## 📌 Test Accounts
 
-| Email | Password | Role |
-|-------|----------|------|
+| Email               | Password   | Role    |
+| ------------------- | ---------- | ------- |
 | student@example.com | student123 | student |
 | teacher@example.com | teacher123 | teacher |
-| admin@example.com | admin123 | admin |
+| admin@example.com   | admin123   | admin   |
 
 ## 🔍 Verification Commands
 
@@ -155,6 +162,7 @@ curl -X POST https://ai-square-staging-731209836128.asia-east1.run.app/api/auth/
 ```
 
 ---
+
 **Report Generated**: 2025-08-15
 **Deployment Status**: SUCCESSFUL ✅
 **Next Step**: Deploy to Production

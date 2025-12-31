@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { generateContent } from '@/lib/vertex-ai';
-import * as yaml from 'js-yaml';
+import { NextRequest, NextResponse } from "next/server";
+import { generateContent } from "@/lib/vertex-ai";
+import * as yaml from "js-yaml";
 
 export async function POST(request: NextRequest) {
   try {
@@ -8,8 +8,8 @@ export async function POST(request: NextRequest) {
 
     if (!prompt) {
       return NextResponse.json(
-        { error: 'Prompt is required' },
-        { status: 400 }
+        { error: "Prompt is required" },
+        { status: 400 },
       );
     }
 
@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
 You help content creators with YAML-based educational content including PBL scenarios, rubrics, and learning materials.
 
 Current context:
-- File: ${file || 'No file selected'}
+- File: ${file || "No file selected"}
 - Content type: YAML educational content
 - Platform: AI Square CMS
 
@@ -30,23 +30,39 @@ Guidelines:
 6. Be concise but thorough in explanations
 
 Current file content:
-${content || 'No content available'}`;
+${content || "No content available"}`;
 
     const response = await generateContent(prompt, systemPrompt);
 
     // Only auto-update content if user explicitly asks for changes
     let updatedContent = null;
     const updateKeywords = [
-      'update', 'change', 'modify', 'replace', 'fix', 'correct',
-      '更新', '修改', '替換', '修正', '改成', '改為',
-      'set it to', 'make it', 'fill in', 'complete this'
+      "update",
+      "change",
+      "modify",
+      "replace",
+      "fix",
+      "correct",
+      "更新",
+      "修改",
+      "替換",
+      "修正",
+      "改成",
+      "改為",
+      "set it to",
+      "make it",
+      "fill in",
+      "complete this",
     ];
 
-    const isUpdateRequest = updateKeywords.some(keyword =>
-      prompt.toLowerCase().includes(keyword.toLowerCase())
+    const isUpdateRequest = updateKeywords.some((keyword) =>
+      prompt.toLowerCase().includes(keyword.toLowerCase()),
     );
 
-    if (isUpdateRequest && (response.includes('```yaml') || response.includes('```yml'))) {
+    if (
+      isUpdateRequest &&
+      (response.includes("```yaml") || response.includes("```yml"))
+    ) {
       // Extract YAML from response
       const yamlMatch = response.match(/```ya?ml\n([\s\S]*?)\n```/);
       if (yamlMatch) {
@@ -55,20 +71,17 @@ ${content || 'No content available'}`;
           yaml.load(yamlMatch[1]);
           updatedContent = yamlMatch[1];
         } catch (error) {
-          console.warn('Invalid YAML in response:', error);
+          console.warn("Invalid YAML in response:", error);
         }
       }
     }
 
     return NextResponse.json({
       response,
-      updatedContent
+      updatedContent,
     });
   } catch (error) {
-    console.error('AI chat error:', error);
-    return NextResponse.json(
-      { error: 'AI chat failed' },
-      { status: 500 }
-    );
+    console.error("AI chat error:", error);
+    return NextResponse.json({ error: "AI chat failed" }, { status: 500 });
   }
 }

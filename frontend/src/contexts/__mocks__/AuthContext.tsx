@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 // Mock AuthContext for testing
 export const mockAuthValue = {

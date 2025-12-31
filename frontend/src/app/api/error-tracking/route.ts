@@ -1,6 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { ErrorReport } from '@/lib/error-tracking/error-tracker';
-import { cachedGET, getPaginationParams, createPaginatedResponse } from '@/lib/api/optimization-utils';
+import { NextRequest, NextResponse } from "next/server";
+import { ErrorReport } from "@/lib/error-tracking/error-tracker";
+import {
+  cachedGET,
+  getPaginationParams,
+  createPaginatedResponse,
+} from "@/lib/api/optimization-utils";
 
 // In-memory storage for errors (in production, use a database)
 const errorStore: ErrorReport[] = [];
@@ -13,8 +17,8 @@ export async function POST(request: NextRequest) {
     // Validate error report structure
     if (!errorReport.id || !errorReport.message || !errorReport.timestamp) {
       return NextResponse.json(
-        { error: 'Invalid error report format' },
-        { status: 400 }
+        { error: "Invalid error report format" },
+        { status: 400 },
       );
     }
 
@@ -27,12 +31,12 @@ export async function POST(request: NextRequest) {
     }
 
     // Log critical errors immediately
-    if (errorReport.severity === 'critical') {
-      console.error('CRITICAL ERROR REPORTED:', {
+    if (errorReport.severity === "critical") {
+      console.error("CRITICAL ERROR REPORTED:", {
         id: errorReport.id,
         message: errorReport.message,
         context: errorReport.context,
-        timestamp: errorReport.timestamp
+        timestamp: errorReport.timestamp,
       });
     }
 
@@ -44,109 +48,119 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         success: true,
-        errorId: errorReport.id
+        errorId: errorReport.id,
       },
-      { status: 201 }
+      { status: 201 },
     );
-
   } catch (error) {
-    console.error('Failed to process error report:', error);
+    console.error("Failed to process error report:", error);
     return NextResponse.json(
-      { error: 'Failed to process error report' },
-      { status: 500 }
+      { error: "Failed to process error report" },
+      { status: 500 },
     );
   }
 }
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const severity = searchParams.get('severity');
-  const component = searchParams.get('component');
+  const severity = searchParams.get("severity");
+  const component = searchParams.get("component");
   const paginationParams = getPaginationParams(request);
 
-  return cachedGET(request, async () => {
-    let filteredErrors = [...errorStore];
+  return cachedGET(
+    request,
+    async () => {
+      let filteredErrors = [...errorStore];
 
-    // Filter by severity
-    if (severity) {
-      filteredErrors = filteredErrors.filter(error => error.severity === severity);
-    }
-
-    // Filter by component
-    if (component) {
-      filteredErrors = filteredErrors.filter(error =>
-        error.context.component === component
-      );
-    }
-
-    // Calculate metrics
-    const metrics = {
-      totalErrors: errorStore.length,
-      filteredCount: filteredErrors.length,
-      errorsBySeverity: errorStore.reduce((acc, error) => {
-        acc[error.severity] = (acc[error.severity] || 0) + 1;
-        return acc;
-      }, {} as Record<string, number>),
-      errorsByComponent: errorStore.reduce((acc, error) => {
-        const component = error.context.component || 'Unknown';
-        acc[component] = (acc[component] || 0) + 1;
-        return acc;
-      }, {} as Record<string, number>),
-      recentErrors: errorStore.slice(0, 10)
-    };
-
-    // Apply pagination - slice the array based on pagination params
-    const startIndex = paginationParams.offset || 0;
-    const endIndex = startIndex + (paginationParams.limit || 20);
-    const paginatedErrors = filteredErrors.slice(startIndex, endIndex);
-
-    const paginatedResponse = createPaginatedResponse(
-      paginatedErrors,
-      filteredErrors.length,
-      paginationParams
-    );
-
-    return {
-      success: true,
-      data: {
-        ...paginatedResponse,
-        metrics
+      // Filter by severity
+      if (severity) {
+        filteredErrors = filteredErrors.filter(
+          (error) => error.severity === severity,
+        );
       }
-    };
-  }, {
-    ttl: 30, // 30 seconds cache (error data changes frequently)
-    staleWhileRevalidate: 120 // 2 minutes
-  });
+
+      // Filter by component
+      if (component) {
+        filteredErrors = filteredErrors.filter(
+          (error) => error.context.component === component,
+        );
+      }
+
+      // Calculate metrics
+      const metrics = {
+        totalErrors: errorStore.length,
+        filteredCount: filteredErrors.length,
+        errorsBySeverity: errorStore.reduce(
+          (acc, error) => {
+            acc[error.severity] = (acc[error.severity] || 0) + 1;
+            return acc;
+          },
+          {} as Record<string, number>,
+        ),
+        errorsByComponent: errorStore.reduce(
+          (acc, error) => {
+            const component = error.context.component || "Unknown";
+            acc[component] = (acc[component] || 0) + 1;
+            return acc;
+          },
+          {} as Record<string, number>,
+        ),
+        recentErrors: errorStore.slice(0, 10),
+      };
+
+      // Apply pagination - slice the array based on pagination params
+      const startIndex = paginationParams.offset || 0;
+      const endIndex = startIndex + (paginationParams.limit || 20);
+      const paginatedErrors = filteredErrors.slice(startIndex, endIndex);
+
+      const paginatedResponse = createPaginatedResponse(
+        paginatedErrors,
+        filteredErrors.length,
+        paginationParams,
+      );
+
+      return {
+        success: true,
+        data: {
+          ...paginatedResponse,
+          metrics,
+        },
+      };
+    },
+    {
+      ttl: 30, // 30 seconds cache (error data changes frequently)
+      staleWhileRevalidate: 120, // 2 minutes
+    },
+  );
 }
 
 export async function DELETE(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const errorId = searchParams.get('errorId');
+    const errorId = searchParams.get("errorId");
 
     if (errorId) {
       // Delete specific error
-      const index = errorStore.findIndex(error => error.id === errorId);
+      const index = errorStore.findIndex((error) => error.id === errorId);
       if (index > -1) {
         errorStore.splice(index, 1);
-        return NextResponse.json({ success: true, message: 'Error deleted' });
+        return NextResponse.json({ success: true, message: "Error deleted" });
       } else {
-        return NextResponse.json(
-          { error: 'Error not found' },
-          { status: 404 }
-        );
+        return NextResponse.json({ error: "Error not found" }, { status: 404 });
       }
     } else {
       // Clear all errors
       errorStore.length = 0;
-      return NextResponse.json({ success: true, message: 'All errors cleared' });
+      return NextResponse.json({
+        success: true,
+        message: "All errors cleared",
+      });
     }
-
   } catch (error) {
-    console.error('Failed to delete error reports:', error);
+    console.error("Failed to delete error reports:", error);
     return NextResponse.json(
-      { error: 'Failed to delete error reports' },
-      { status: 500 }
+      { error: "Failed to delete error reports" },
+      { status: 500 },
     );
   }
 }

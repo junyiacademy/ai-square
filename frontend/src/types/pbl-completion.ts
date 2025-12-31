@@ -57,7 +57,7 @@ export interface TaskEvaluation {
 
 // Task interaction
 export interface TaskInteraction {
-  type: 'user' | 'assistant';
+  type: "user" | "assistant";
   message: string;
   timestamp: string;
 }

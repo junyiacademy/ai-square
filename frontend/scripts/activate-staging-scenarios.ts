@@ -3,7 +3,7 @@
  * Script to activate all draft scenarios in staging database
  */
 
-import { Pool } from 'pg';
+import { Pool } from "pg";
 
 async function activateScenarios() {
   const pool = new Pool({
@@ -13,7 +13,7 @@ async function activateScenarios() {
   });
 
   try {
-    console.log('Connecting to staging database...');
+    console.log("Connecting to staging database...");
 
     // Update all draft scenarios to active
     const result = await pool.query(`
@@ -26,11 +26,12 @@ async function activateScenarios() {
     console.log(`Updated ${result.rowCount || 0} scenarios to active status`);
 
     if (result.rowCount && result.rowCount > 0) {
-      console.log('Updated scenarios:');
-      result.rows.forEach(row => {
-        const title = typeof row.title === 'object' ?
-          (row.title.en || row.title.zh || Object.values(row.title)[0]) :
-          row.title;
+      console.log("Updated scenarios:");
+      result.rows.forEach((row) => {
+        const title =
+          typeof row.title === "object"
+            ? row.title.en || row.title.zh || Object.values(row.title)[0]
+            : row.title;
         console.log(`  - [${row.mode}] ${row.id}: ${title}`);
       });
     }
@@ -43,13 +44,12 @@ async function activateScenarios() {
       ORDER BY mode, status
     `);
 
-    console.log('\nScenario counts by mode and status:');
-    countResult.rows.forEach(row => {
+    console.log("\nScenario counts by mode and status:");
+    countResult.rows.forEach((row) => {
       console.log(`  ${row.mode} - ${row.status}: ${row.count}`);
     });
-
   } catch (error) {
-    console.error('Error:', error);
+    console.error("Error:", error);
     process.exit(1);
   } finally {
     await pool.end();

@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 // PBL Evaluation Types
 
-import { Task } from './pbl';
+import { Task } from "./pbl";
 
 export interface EvaluateRequestBody {
   conversations: Conversation[];
@@ -12,7 +12,7 @@ export interface EvaluateRequestBody {
 }
 
 export interface Conversation {
-  type: 'user' | 'assistant';
+  type: "user" | "assistant";
   content: string;
   timestamp?: string;
 }

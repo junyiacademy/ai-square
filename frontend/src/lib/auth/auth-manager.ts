@@ -5,34 +5,38 @@
  * No multiple cookies, no complex checks, just simple and secure
  */
 
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 
-const AUTH_COOKIE_NAME = 'sessionToken';
+const AUTH_COOKIE_NAME = "sessionToken";
 const COOKIE_MAX_AGE = 24 * 60 * 60; // 24 hours
 const COOKIE_MAX_AGE_REMEMBER = 30 * 24 * 60 * 60; // 30 days
 
 // Protected routes that require authentication
 const PROTECTED_ROUTES = [
-  '/pbl',
-  '/assessment',
-  '/discovery',
-  '/admin',
-  '/profile',
-  '/dashboard'
+  "/pbl",
+  "/assessment",
+  "/discovery",
+  "/admin",
+  "/profile",
+  "/dashboard",
 ];
 
 export class AuthManager {
   /**
    * Set authentication cookie
    */
-  static setAuthCookie(response: NextResponse, token: string, rememberMe = false): void {
+  static setAuthCookie(
+    response: NextResponse,
+    token: string,
+    rememberMe = false,
+  ): void {
     response.cookies.set(AUTH_COOKIE_NAME, token, {
       httpOnly: true,
       secure: true, // Always use secure in production (HTTPS)
-      sameSite: 'lax',
+      sameSite: "lax",
       maxAge: rememberMe ? COOKIE_MAX_AGE_REMEMBER : COOKIE_MAX_AGE,
-      path: '/',
-      domain: undefined // Let browser determine the domain
+      path: "/",
+      domain: undefined, // Let browser determine the domain
     });
   }
 
@@ -48,12 +52,12 @@ export class AuthManager {
    * Clear all authentication cookies
    */
   static clearAuthCookies(response: NextResponse): void {
-    response.cookies.set(AUTH_COOKIE_NAME, '', {
+    response.cookies.set(AUTH_COOKIE_NAME, "", {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
       maxAge: 0,
-      path: '/'
+      path: "/",
     });
   }
 
@@ -72,7 +76,7 @@ export class AuthManager {
    * Check if a route is protected
    */
   static isProtectedRoute(pathname: string): boolean {
-    return PROTECTED_ROUTES.some(route => pathname.startsWith(route));
+    return PROTECTED_ROUTES.some((route) => pathname.startsWith(route));
   }
 
   /**
@@ -86,8 +90,8 @@ export class AuthManager {
    * Create redirect response to login
    */
   static createLoginRedirect(request: NextRequest): NextResponse {
-    const loginUrl = new URL('/login', request.url);
-    loginUrl.searchParams.set('redirect', request.nextUrl.pathname);
+    const loginUrl = new URL("/login", request.url);
+    loginUrl.searchParams.set("redirect", request.nextUrl.pathname);
     return NextResponse.redirect(loginUrl);
   }
 }

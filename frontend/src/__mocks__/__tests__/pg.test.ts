@@ -1,11 +1,11 @@
-describe('pg', () => {
-  it('should load module', () => {
+describe("pg", () => {
+  it("should load module", () => {
     try {
-      const module = require('../pg');
+      const module = require("../pg");
       expect(module).toBeDefined();
 
       // Test exports
-      Object.keys(module).forEach(key => {
+      Object.keys(module).forEach((key) => {
         expect(module[key]).toBeDefined();
       });
     } catch (error) {

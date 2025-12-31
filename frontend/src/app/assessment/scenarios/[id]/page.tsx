@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { FileQuestion, ChevronLeft, Play, RotateCcw } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
-import { useAuth } from '@/contexts/AuthContext';
-import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { FileQuestion, ChevronLeft, Play, RotateCcw } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { useAuth } from "@/contexts/AuthContext";
+import { authenticatedFetch } from "@/lib/utils/authenticated-fetch";
 // Remove date-fns import - will use custom formatting
 
 interface AssessmentScenario {
@@ -28,7 +28,7 @@ interface Program {
   id: string;
   startedAt: string;
   completedAt?: string;
-  status: 'active' | 'completed' | 'abandoned';
+  status: "active" | "completed" | "abandoned";
   score?: number;
   currentTaskIndex: number;
   metadata?: {
@@ -42,22 +42,22 @@ interface Program {
 }
 
 export default function AssessmentScenarioDetailPage({
-  params
+  params,
 }: {
-  params: Promise<{ id: string }>
+  params: Promise<{ id: string }>;
 }) {
   const [scenario, setScenario] = useState<AssessmentScenario | null>(null);
   const [programs, setPrograms] = useState<Program[]>([]);
   const [loading, setLoading] = useState(true);
   const [startingProgram, setStartingProgram] = useState(false);
-  const [scenarioId, setScenarioId] = useState<string>('');
+  const [scenarioId, setScenarioId] = useState<string>("");
   const router = useRouter();
   const { i18n } = useTranslation();
   const { isLoggedIn, user } = useAuth();
 
   useEffect(() => {
     // Unwrap the params Promise
-    params.then(p => {
+    params.then((p) => {
       setScenarioId(p.id);
       loadScenarioAndPrograms(p.id);
     });
@@ -66,17 +66,22 @@ export default function AssessmentScenarioDetailPage({
   const loadScenarioAndPrograms = async (id: string) => {
     try {
       // Load scenario details
-      const scenarioRes = await authenticatedFetch(`/api/assessment/scenarios/${id}?lang=${i18n.language}`);
+      const scenarioRes = await authenticatedFetch(
+        `/api/assessment/scenarios/${id}?lang=${i18n.language}`,
+      );
       const scenarioData = await scenarioRes.json();
       setScenario(scenarioData);
 
       // Load user's programs
       try {
-        const programsRes = await authenticatedFetch(`/api/assessment/scenarios/${id}/programs`, {
-          headers: {
-            'Content-Type': 'application/json',
-          }
-        });
+        const programsRes = await authenticatedFetch(
+          `/api/assessment/scenarios/${id}/programs`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          },
+        );
 
         if (programsRes.ok) {
           const programsData = await programsRes.json();
@@ -87,11 +92,11 @@ export default function AssessmentScenarioDetailPage({
         }
       } catch (error) {
         // Silently handle programs loading error
-        console.error('Error loading programs:', error);
+        console.error("Error loading programs:", error);
         setPrograms([]);
       }
     } catch (error) {
-      console.error('Failed to load data:', error);
+      console.error("Failed to load data:", error);
     } finally {
       setLoading(false);
     }
@@ -100,7 +105,7 @@ export default function AssessmentScenarioDetailPage({
   const startNewProgram = async () => {
     // Prevent double-clicking
     if (startingProgram) {
-      console.log('Already starting a program, ignoring click');
+      console.log("Already starting a program, ignoring click");
       return;
     }
 
@@ -108,36 +113,43 @@ export default function AssessmentScenarioDetailPage({
     try {
       if (!isLoggedIn || !user) {
         // Redirect to login if not authenticated
-        router.push('/login?redirect=' + encodeURIComponent(window.location.pathname));
+        router.push(
+          "/login?redirect=" + encodeURIComponent(window.location.pathname),
+        );
         setStartingProgram(false);
         return;
       }
 
-      const res = await authenticatedFetch(`/api/assessment/scenarios/${scenarioId}/programs`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const res = await authenticatedFetch(
+        `/api/assessment/scenarios/${scenarioId}/programs`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            action: "start",
+            language: i18n.language,
+          }),
         },
-        body: JSON.stringify({
-          action: 'start',
-          language: i18n.language
-        })
-      });
+      );
 
       if (res.status === 401) {
         // Redirect to login if still not authenticated
-        router.push('/login?redirect=' + encodeURIComponent(window.location.pathname));
+        router.push(
+          "/login?redirect=" + encodeURIComponent(window.location.pathname),
+        );
         return;
       }
 
       if (!res.ok) {
-        throw new Error('Failed to start program');
+        throw new Error("Failed to start program");
       }
 
       const { program } = await res.json();
       router.push(`/assessment/scenarios/${scenarioId}/programs/${program.id}`);
     } catch (error) {
-      console.error('Failed to start program:', error);
+      console.error("Failed to start program:", error);
       setStartingProgram(false);
     }
   };
@@ -147,7 +159,9 @@ export default function AssessmentScenarioDetailPage({
   };
 
   const viewResults = (programId: string) => {
-    router.push(`/assessment/scenarios/${scenarioId}/programs/${programId}/complete`);
+    router.push(
+      `/assessment/scenarios/${scenarioId}/programs/${programId}/complete`,
+    );
   };
 
   if (loading) {
@@ -168,7 +182,10 @@ export default function AssessmentScenarioDetailPage({
       <div className="container mx-auto py-8 max-w-4xl">
         <Card className="p-8 text-center">
           <p className="text-gray-600 mb-4">Assessment not found.</p>
-          <Button variant="outline" onClick={() => router.push('/assessment/scenarios')}>
+          <Button
+            variant="outline"
+            onClick={() => router.push("/assessment/scenarios")}
+          >
             Back to Assessments
           </Button>
         </Card>
@@ -189,14 +206,20 @@ export default function AssessmentScenarioDetailPage({
         </Link>
 
         <h1 className="text-3xl font-bold mb-4">
-          {typeof scenario.title === 'string'
+          {typeof scenario.title === "string"
             ? scenario.title
-            : (scenario.title as Record<string, string>)?.[i18n.language] || (scenario.title as Record<string, string>)?.en || 'Assessment'}
+            : (scenario.title as Record<string, string>)?.[i18n.language] ||
+              (scenario.title as Record<string, string>)?.en ||
+              "Assessment"}
         </h1>
         <p className="text-gray-600 mb-6">
-          {typeof scenario.description === 'string'
+          {typeof scenario.description === "string"
             ? scenario.description
-            : (scenario.description as Record<string, string>)?.[i18n.language] || (scenario.description as Record<string, string>)?.en || ''}
+            : (scenario.description as Record<string, string>)?.[
+                i18n.language
+              ] ||
+              (scenario.description as Record<string, string>)?.en ||
+              ""}
         </p>
 
         {/* Assessment Details */}
@@ -205,15 +228,21 @@ export default function AssessmentScenarioDetailPage({
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div>
               <span className="text-gray-600 text-sm block">Questions</span>
-              <span className="font-medium">{scenario.config.totalQuestions}</span>
+              <span className="font-medium">
+                {scenario.config.totalQuestions}
+              </span>
             </div>
             <div>
               <span className="text-gray-600 text-sm block">Time Limit</span>
-              <span className="font-medium">{scenario.config.timeLimit} minutes</span>
+              <span className="font-medium">
+                {scenario.config.timeLimit} minutes
+              </span>
             </div>
             <div>
               <span className="text-gray-600 text-sm block">Passing Score</span>
-              <span className="font-medium">{scenario.config.passingScore}%</span>
+              <span className="font-medium">
+                {scenario.config.passingScore}%
+              </span>
             </div>
             <div>
               <span className="text-gray-600 text-sm block">Domains</span>
@@ -248,7 +277,9 @@ export default function AssessmentScenarioDetailPage({
         {programs.length === 0 ? (
           <Card className="p-8 text-center">
             <FileQuestion className="h-12 w-12 mx-auto mb-4 text-gray-400" />
-            <p className="text-gray-600 mb-4">You haven&apos;t taken this assessment yet.</p>
+            <p className="text-gray-600 mb-4">
+              You haven&apos;t taken this assessment yet.
+            </p>
             <Button onClick={startNewProgram} disabled={startingProgram}>
               Take Your First Assessment
             </Button>
@@ -261,15 +292,23 @@ export default function AssessmentScenarioDetailPage({
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
                       <span className="text-sm text-gray-600">
-                        Started {new Date(program.startedAt).toLocaleDateString()}
+                        Started{" "}
+                        {new Date(program.startedAt).toLocaleDateString()}
                       </span>
-                      {program.status === 'completed' && (
-                        <Badge variant="default" className="bg-green-600">Completed</Badge>
+                      {program.status === "completed" && (
+                        <Badge variant="default" className="bg-green-600">
+                          Completed
+                        </Badge>
                       )}
-                      {program.status === 'active' && (
-                        <Badge variant="secondary" className="bg-yellow-600 text-white">In Progress</Badge>
+                      {program.status === "active" && (
+                        <Badge
+                          variant="secondary"
+                          className="bg-yellow-600 text-white"
+                        >
+                          In Progress
+                        </Badge>
                       )}
-                      {program.status === 'abandoned' && (
+                      {program.status === "abandoned" && (
                         <Badge variant="secondary">Abandoned</Badge>
                       )}
                     </div>
@@ -281,9 +320,13 @@ export default function AssessmentScenarioDetailPage({
                             {program.score}%
                           </span>
                           {program.score >= scenario.config.passingScore ? (
-                            <span className="text-sm text-green-600">Passed</span>
+                            <span className="text-sm text-green-600">
+                              Passed
+                            </span>
                           ) : (
-                            <span className="text-sm text-red-600">Not Passed</span>
+                            <span className="text-sm text-red-600">
+                              Not Passed
+                            </span>
                           )}
                           {program.metadata?.level && (
                             <Badge variant="outline" className="ml-2">
@@ -293,31 +336,40 @@ export default function AssessmentScenarioDetailPage({
                         </div>
                         {program.metadata?.correctAnswers !== undefined && (
                           <p className="text-sm text-gray-600">
-                            {program.metadata.correctAnswers} of {program.metadata.totalQuestions} correct
+                            {program.metadata.correctAnswers} of{" "}
+                            {program.metadata.totalQuestions} correct
                             {program.metadata.timeSpent && (
-                              <span> • {Math.floor(program.metadata.timeSpent / 60)} minutes</span>
+                              <span>
+                                {" "}
+                                • {Math.floor(
+                                  program.metadata.timeSpent / 60,
+                                )}{" "}
+                                minutes
+                              </span>
                             )}
                           </p>
                         )}
                       </div>
                     )}
 
-                    {program.status === 'active' && program.metadata?.questionsAnswered && (
-                      <p className="text-sm text-gray-600 mt-1">
-                        Progress: {program.metadata.questionsAnswered} of {scenario.config.totalQuestions} questions
-                      </p>
-                    )}
+                    {program.status === "active" &&
+                      program.metadata?.questionsAnswered && (
+                        <p className="text-sm text-gray-600 mt-1">
+                          Progress: {program.metadata.questionsAnswered} of{" "}
+                          {scenario.config.totalQuestions} questions
+                        </p>
+                      )}
                   </div>
 
                   <div>
-                    {program.status === 'completed' ? (
+                    {program.status === "completed" ? (
                       <Button
                         variant="outline"
                         onClick={() => viewResults(program.id)}
                       >
                         View Results
                       </Button>
-                    ) : program.status === 'active' ? (
+                    ) : program.status === "active" ? (
                       <Button onClick={() => continueProgram(program.id)}>
                         <RotateCcw className="h-4 w-4 mr-2" />
                         Continue

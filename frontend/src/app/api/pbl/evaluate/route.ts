@@ -1,12 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { VertexAI, SchemaType } from '@google-cloud/vertexai';
-import {
-  EvaluateRequestBody,
-  Conversation
-} from '@/types/pbl-evaluate';
-import { ErrorResponse } from '@/types/api';
-import { getUnifiedAuth } from '@/lib/auth/unified-auth';
-import { LANGUAGE_NAMES } from '@/lib/utils/language';
+import { NextRequest, NextResponse } from "next/server";
+import { VertexAI, SchemaType } from "@google-cloud/vertexai";
+import { EvaluateRequestBody, Conversation } from "@/types/pbl-evaluate";
+import { ErrorResponse } from "@/types/api";
+import { getUnifiedAuth } from "@/lib/auth/unified-auth";
+import { LANGUAGE_NAMES } from "@/lib/utils/language";
 
 export async function POST(request: NextRequest) {
   try {
@@ -15,8 +12,8 @@ export async function POST(request: NextRequest) {
 
     if (!session?.user?.email) {
       return NextResponse.json<ErrorResponse>(
-        { error: 'User authentication required' },
-        { status: 401 }
+        { error: "User authentication required" },
+        { status: 401 },
       );
     }
 
@@ -25,21 +22,32 @@ export async function POST(request: NextRequest) {
       task,
       targetDomains,
       focusKSA,
-      language = 'en'
+      language = "en",
     }: EvaluateRequestBody = await request.json();
 
     if (!conversations || !task) {
       return NextResponse.json(
-        { success: false, error: 'Missing required fields: conversations and task are required' },
-        { status: 400 }
+        {
+          success: false,
+          error: "Missing required fields: conversations and task are required",
+        },
+        { status: 400 },
       );
     }
 
-    console.log('Evaluating task:', task.id, 'with', conversations.length, 'conversations');
+    console.log(
+      "Evaluating task:",
+      task.id,
+      "with",
+      conversations.length,
+      "conversations",
+    );
 
     // Get target language
-    const targetLanguage = LANGUAGE_NAMES[language as keyof typeof LANGUAGE_NAMES] || LANGUAGE_NAMES['en'];
-    const languageCode = language || 'en';
+    const targetLanguage =
+      LANGUAGE_NAMES[language as keyof typeof LANGUAGE_NAMES] ||
+      LANGUAGE_NAMES["en"];
+    const languageCode = language || "en";
 
     // Prepare the evaluation prompt
     const evaluationPrompt = `
@@ -53,17 +61,26 @@ DO NOT use English unless the target language is English.
 Task Information:
 - Title: ${task.title}
 - Description: ${task.description}
-- Instructions: ${task.instructions?.join(', ')}
+- Instructions: ${task.instructions?.join(", ")}
 - Expected Outcome: ${task.expectedOutcome}
-- Target Domains: ${targetDomains?.join(', ') || 'All domains'}
-- Focus KSA: ${focusKSA?.join(', ') || 'All KSA'}
+- Target Domains: ${targetDomains?.join(", ") || "All domains"}
+- Focus KSA: ${focusKSA?.join(", ") || "All KSA"}
 
 User Messages (learner's input only):
-${conversations.filter((conv: Conversation) => conv.type === 'user').slice(-10).map((conv: Conversation, index: number) => `${index + 1}. ${conv.content.substring(0, 200)}`).join('\n')}
+${conversations
+  .filter((conv: Conversation) => conv.type === "user")
+  .slice(-10)
+  .map(
+    (conv: Conversation, index: number) =>
+      `${index + 1}. ${conv.content.substring(0, 200)}`,
+  )
+  .join("\n")}
 
 CRITICAL DOMAIN SCORING RULE:
-${targetDomains && targetDomains.length > 0 ? `
-- ONLY evaluate the following domains: ${targetDomains.join(', ')}
+${
+  targetDomains && targetDomains.length > 0
+    ? `
+- ONLY evaluate the following domains: ${targetDomains.join(", ")}
 - For domains IN the target list: Score them normally (0-100)
 - For domains NOT in the target list: You MUST return -1 (which will be converted to "NA")
 - Example: If targetDomains = ['engaging_with_ai', 'creating_with_ai'], then:
@@ -71,7 +88,9 @@ ${targetDomains && targetDomains.length > 0 ? `
   - creating_with_ai: normal score (0-100)
   - managing_with_ai: -1 (not in target domains)
   - designing_with_ai: -1 (not in target domains)
-` : 'Evaluate all four domains normally (0-100)'}
+`
+    : "Evaluate all four domains normally (0-100)"
+}
 
 Evaluation Guidelines:
 - No meaningful engagement (only greetings like "hi", "hello"): 10-25 points
@@ -160,18 +179,18 @@ Important evaluation principles:
 
 REMEMBER: ALL text in your response MUST be in ${targetLanguage}.
 This includes strengths, improvements, nextSteps, and conversation insights (both quotes and reasons).
-${languageCode !== 'en' ? `Do NOT use any English text.` : ''}
+${languageCode !== "en" ? `Do NOT use any English text.` : ""}
 `;
 
     // Initialize Vertex AI
     const vertexAI = new VertexAI({
-      project: process.env.GOOGLE_CLOUD_PROJECT || 'ai-square-463013',
-      location: process.env.VERTEX_AI_LOCATION || 'us-central1',
+      project: process.env.GOOGLE_CLOUD_PROJECT || "ai-square-463013",
+      location: process.env.VERTEX_AI_LOCATION || "us-central1",
     });
 
     // Get the generative model
     const model = vertexAI.getGenerativeModel({
-      model: 'gemini-2.5-flash',
+      model: "gemini-2.5-flash",
       systemInstruction: `You are a multilingual AI literacy education expert.
 CRITICAL: You must ALWAYS respond in the EXACT language specified in the prompt.
 Never mix languages. ALL text fields must be in the target language.
@@ -183,18 +202,18 @@ For Simplified Chinese (简体中文), use Simplified Chinese ONLY.`,
     const result = await model.generateContent({
       contents: [
         {
-          role: 'user',
+          role: "user",
           parts: [
             {
-              text: evaluationPrompt
-            }
-          ]
-        }
+              text: evaluationPrompt,
+            },
+          ],
+        },
       ],
       generationConfig: {
         temperature: 0.7,
         maxOutputTokens: 65535,
-        responseMimeType: 'application/json',
+        responseMimeType: "application/json",
         responseSchema: {
           type: SchemaType.OBJECT,
           properties: {
@@ -204,9 +223,9 @@ For Simplified Chinese (简体中文), use Simplified Chinese ONLY.`,
               properties: {
                 knowledge: { type: SchemaType.NUMBER },
                 skills: { type: SchemaType.NUMBER },
-                attitudes: { type: SchemaType.NUMBER }
+                attitudes: { type: SchemaType.NUMBER },
               },
-              required: ['knowledge', 'skills', 'attitudes']
+              required: ["knowledge", "skills", "attitudes"],
             },
             individualKsaScores: { type: SchemaType.OBJECT },
             domainScores: {
@@ -215,19 +234,29 @@ For Simplified Chinese (简体中文), use Simplified Chinese ONLY.`,
                 engaging_with_ai: { type: SchemaType.NUMBER },
                 creating_with_ai: { type: SchemaType.NUMBER },
                 managing_with_ai: { type: SchemaType.NUMBER },
-                designing_with_ai: { type: SchemaType.NUMBER }
+                designing_with_ai: { type: SchemaType.NUMBER },
               },
-              required: ['engaging_with_ai', 'creating_with_ai', 'managing_with_ai', 'designing_with_ai']
+              required: [
+                "engaging_with_ai",
+                "creating_with_ai",
+                "managing_with_ai",
+                "designing_with_ai",
+              ],
             },
             rubricsScores: {
               type: SchemaType.OBJECT,
               properties: {
-                'Research Quality': { type: SchemaType.NUMBER },
-                'AI Utilization': { type: SchemaType.NUMBER },
-                'Content Quality': { type: SchemaType.NUMBER },
-                'Learning Progress': { type: SchemaType.NUMBER }
+                "Research Quality": { type: SchemaType.NUMBER },
+                "AI Utilization": { type: SchemaType.NUMBER },
+                "Content Quality": { type: SchemaType.NUMBER },
+                "Learning Progress": { type: SchemaType.NUMBER },
               },
-              required: ['Research Quality', 'AI Utilization', 'Content Quality', 'Learning Progress']
+              required: [
+                "Research Quality",
+                "AI Utilization",
+                "Content Quality",
+                "Learning Progress",
+              ],
             },
             conversationInsights: {
               type: SchemaType.OBJECT,
@@ -238,10 +267,10 @@ For Simplified Chinese (简体中文), use Simplified Chinese ONLY.`,
                     type: SchemaType.OBJECT,
                     properties: {
                       quote: { type: SchemaType.STRING },
-                      reason: { type: SchemaType.STRING }
+                      reason: { type: SchemaType.STRING },
                     },
-                    required: ['quote', 'reason']
-                  }
+                    required: ["quote", "reason"],
+                  },
                 },
                 improvementAreas: {
                   type: SchemaType.ARRAY,
@@ -249,44 +278,56 @@ For Simplified Chinese (简体中文), use Simplified Chinese ONLY.`,
                     type: SchemaType.OBJECT,
                     properties: {
                       quote: { type: SchemaType.STRING },
-                      suggestion: { type: SchemaType.STRING }
+                      suggestion: { type: SchemaType.STRING },
                     },
-                    required: ['quote', 'suggestion']
-                  }
-                }
+                    required: ["quote", "suggestion"],
+                  },
+                },
               },
-              required: ['effectiveExamples', 'improvementAreas']
+              required: ["effectiveExamples", "improvementAreas"],
             },
             strengths: {
               type: SchemaType.ARRAY,
-              items: { type: SchemaType.STRING }
+              items: { type: SchemaType.STRING },
             },
             improvements: {
               type: SchemaType.ARRAY,
-              items: { type: SchemaType.STRING }
+              items: { type: SchemaType.STRING },
             },
             nextSteps: {
               type: SchemaType.ARRAY,
-              items: { type: SchemaType.STRING }
-            }
+              items: { type: SchemaType.STRING },
+            },
           },
-          required: ['score', 'ksaScores', 'domainScores', 'rubricsScores', 'conversationInsights', 'strengths', 'improvements', 'nextSteps']
-        }
-      }
+          required: [
+            "score",
+            "ksaScores",
+            "domainScores",
+            "rubricsScores",
+            "conversationInsights",
+            "strengths",
+            "improvements",
+            "nextSteps",
+          ],
+        },
+      },
     });
 
     const response = result.response;
-    const text = response.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    const text = response.candidates?.[0]?.content?.parts?.[0]?.text || "";
 
     // Parse JSON response - should be clean JSON due to responseSchema
     let evaluation;
     try {
       evaluation = JSON.parse(text);
-      console.log('Successfully parsed evaluation response');
-      console.log('AI Response - domainScores:', JSON.stringify(evaluation.domainScores || {}, null, 2));
+      console.log("Successfully parsed evaluation response");
+      console.log(
+        "AI Response - domainScores:",
+        JSON.stringify(evaluation.domainScores || {}, null, 2),
+      );
     } catch (parseError) {
-      console.error('Error parsing AI response:', parseError);
-      console.error('Raw response:', text);
+      console.error("Error parsing AI response:", parseError);
+      console.error("Raw response:", text);
 
       // Fallback evaluation (conservative scoring)
       evaluation = {
@@ -294,33 +335,42 @@ For Simplified Chinese (简体中文), use Simplified Chinese ONLY.`,
         ksaScores: {
           knowledge: 20,
           skills: 20,
-          attitudes: 20
+          attitudes: 20,
         },
         individualKsaScores: {},
         domainScores: {
           engaging_with_ai: 20,
           creating_with_ai: 20,
           managing_with_ai: 20,
-          designing_with_ai: 20
+          designing_with_ai: 20,
         },
         rubricsScores: {
           "Research Quality": 1,
           "AI Utilization": 1,
           "Content Quality": 1,
-          "Learning Progress": 1
+          "Learning Progress": 1,
         },
         conversationInsights: {
           effectiveExamples: [],
           improvementAreas: [
             {
-              quote: conversations.filter((c: Conversation) => c.type === 'user')[0]?.content || "No message",
-              suggestion: "Instead of just greeting, try asking a specific question about the task"
-            }
-          ]
+              quote:
+                conversations.filter((c: Conversation) => c.type === "user")[0]
+                  ?.content || "No message",
+              suggestion:
+                "Instead of just greeting, try asking a specific question about the task",
+            },
+          ],
         },
         strengths: ["Initiated contact with learning system (A1.1)"],
-        improvements: ["Need to engage more meaningfully with learning content (K1.1)", "Ask specific questions related to the task (S1.1)"],
-        nextSteps: ["Read the task instructions carefully (K1.1)", "Formulate questions about the learning objectives (S1.1, A1.1)"]
+        improvements: [
+          "Need to engage more meaningfully with learning content (K1.1)",
+          "Ask specific questions related to the task (S1.1)",
+        ],
+        nextSteps: [
+          "Read the task instructions carefully (K1.1)",
+          "Formulate questions about the learning objectives (S1.1, A1.1)",
+        ],
       };
     }
 
@@ -329,7 +379,8 @@ For Simplified Chinese (简体中文), use Simplified Chinese ONLY.`,
       const processedDomainScores: Record<string, number | undefined> = {};
       for (const [domain, score] of Object.entries(evaluation.domainScores)) {
         // If score is -1, it means the domain is not in targetDomains
-        processedDomainScores[domain] = score === -1 ? undefined : score as number;
+        processedDomainScores[domain] =
+          score === -1 ? undefined : (score as number);
       }
       evaluation.domainScores = processedDomainScores;
     }
@@ -339,34 +390,35 @@ For Simplified Chinese (简体中文), use Simplified Chinese ONLY.`,
       ...evaluation,
       evaluatedAt: new Date().toISOString(),
       taskId: task.id,
-      conversationCount: conversations.filter((c: Conversation) => c.type === 'user').length,
-      targetDomains: targetDomains || []
+      conversationCount: conversations.filter(
+        (c: Conversation) => c.type === "user",
+      ).length,
+      targetDomains: targetDomains || [],
     };
 
     return NextResponse.json({
       success: true,
-      evaluation: evaluationResult
+      evaluation: evaluationResult,
     });
-
   } catch (error) {
-    console.error('Error in evaluation:', error);
+    console.error("Error in evaluation:", error);
 
     // Provide more detailed error information
-    let errorMessage = 'Failed to evaluate';
+    let errorMessage = "Failed to evaluate";
     const statusCode = 500;
 
     if (error instanceof Error) {
       errorMessage = error.message;
-      console.error('Error details:', error.stack);
+      console.error("Error details:", error.stack);
     }
 
     return NextResponse.json(
       {
         success: false,
         error: errorMessage,
-        details: process.env.NODE_ENV === 'development' ? error : undefined
+        details: process.env.NODE_ENV === "development" ? error : undefined,
       },
-      { status: statusCode }
+      { status: statusCode },
     );
   }
 }

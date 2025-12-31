@@ -1,32 +1,49 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getUnifiedAuth, createUnauthorizedResponse } from '@/lib/auth/unified-auth';
+import { NextRequest, NextResponse } from "next/server";
+import {
+  getUnifiedAuth,
+  createUnauthorizedResponse,
+} from "@/lib/auth/unified-auth";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string; programId: string; taskId: string }> }
+  {
+    params,
+  }: { params: Promise<{ id: string; programId: string; taskId: string }> },
 ) {
   try {
     const { id: scenarioId, programId, taskId } = await params;
 
     // Only accept UUID format for all IDs
-    if (!scenarioId.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)) {
+    if (
+      !scenarioId.match(
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,
+      )
+    ) {
       return NextResponse.json(
-        { success: false, error: 'Invalid scenario ID format. UUID required.' },
-        { status: 400 }
+        { success: false, error: "Invalid scenario ID format. UUID required." },
+        { status: 400 },
       );
     }
 
-    if (!programId.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)) {
+    if (
+      !programId.match(
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,
+      )
+    ) {
       return NextResponse.json(
-        { success: false, error: 'Invalid program ID format. UUID required.' },
-        { status: 400 }
+        { success: false, error: "Invalid program ID format. UUID required." },
+        { status: 400 },
       );
     }
 
-    if (!taskId.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)) {
+    if (
+      !taskId.match(
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i,
+      )
+    ) {
       return NextResponse.json(
-        { success: false, error: 'Invalid task ID format. UUID required.' },
-        { status: 400 }
+        { success: false, error: "Invalid task ID format. UUID required." },
+        { status: 400 },
       );
     }
 
@@ -37,7 +54,8 @@ export async function GET(
     }
 
     // Use unified architecture to get task
-    const { createRepositoryFactory } = await import('@/lib/db/repositories/factory');
+    const { createRepositoryFactory } =
+      await import("@/lib/db/repositories/factory");
     const repositoryFactory = createRepositoryFactory;
     const taskRepo = repositoryFactory.getTaskRepository();
     const programRepo = repositoryFactory.getProgramRepository();
@@ -47,8 +65,8 @@ export async function GET(
     const user = await userRepo.findByEmail(session.user.email);
     if (!user) {
       return NextResponse.json(
-        { success: false, error: 'User not found' },
-        { status: 404 }
+        { success: false, error: "User not found" },
+        { status: 404 },
       );
     }
 
@@ -56,8 +74,8 @@ export async function GET(
     const program = await programRepo.findById(programId);
     if (!program || program.userId !== user.id) {
       return NextResponse.json(
-        { success: false, error: 'Program not found or access denied' },
-        { status: 404 }
+        { success: false, error: "Program not found or access denied" },
+        { status: 404 },
       );
     }
 
@@ -65,16 +83,16 @@ export async function GET(
     const task = await taskRepo.findById(taskId);
     if (!task) {
       return NextResponse.json(
-        { success: false, error: 'Task not found' },
-        { status: 404 }
+        { success: false, error: "Task not found" },
+        { status: 404 },
       );
     }
 
     // Verify the task belongs to the program
     if (task.programId !== programId) {
       return NextResponse.json(
-        { success: false, error: 'Task does not belong to this program' },
-        { status: 403 }
+        { success: false, error: "Task does not belong to this program" },
+        { status: 403 },
       );
     }
 
@@ -84,9 +102,17 @@ export async function GET(
 
     // Find the corresponding task template from scenario
     let taskTemplate = null;
-    if (scenario && scenario.taskTemplates && task.scenarioTaskIndex !== null && task.scenarioTaskIndex !== undefined) {
+    if (
+      scenario &&
+      scenario.taskTemplates &&
+      task.scenarioTaskIndex !== null &&
+      task.scenarioTaskIndex !== undefined
+    ) {
       taskTemplate = scenario.taskTemplates[task.scenarioTaskIndex];
-      console.log(`[Task API] Found taskTemplate for index ${task.scenarioTaskIndex}:`, taskTemplate ? 'yes' : 'no');
+      console.log(
+        `[Task API] Found taskTemplate for index ${task.scenarioTaskIndex}:`,
+        taskTemplate ? "yes" : "no",
+      );
     }
 
     // Enhance task with template data
@@ -97,18 +123,17 @@ export async function GET(
         context: {
           ...(task.content?.context || {}),
           taskTemplate: taskTemplate || {},
-          originalTaskData: taskTemplate || {}
-        }
-      }
+          originalTaskData: taskTemplate || {},
+        },
+      },
     };
 
     return NextResponse.json(enhancedTask);
-
   } catch (error) {
-    console.error('Error fetching task:', error);
+    console.error("Error fetching task:", error);
     return NextResponse.json(
-      { success: false, error: 'Failed to fetch task' },
-      { status: 500 }
+      { success: false, error: "Failed to fetch task" },
+      { status: 500 },
     );
   }
 }

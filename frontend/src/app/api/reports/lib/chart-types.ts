@@ -28,7 +28,7 @@ export interface ChartOptions {
     };
     legend?: {
       display: boolean;
-      position?: 'top' | 'bottom' | 'left' | 'right';
+      position?: "top" | "bottom" | "left" | "right";
     };
   };
   scales?: {
@@ -49,7 +49,7 @@ export interface ChartOptions {
 }
 
 export interface ChartConfig {
-  type: 'line' | 'bar' | 'pie' | 'doughnut';
+  type: "line" | "bar" | "pie" | "doughnut";
   data: ChartData;
   options?: ChartOptions;
 }

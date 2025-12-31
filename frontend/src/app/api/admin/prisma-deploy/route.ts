@@ -1,37 +1,37 @@
-import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
-import { execSync } from 'child_process';
-import bcrypt from 'bcryptjs';
+import { NextResponse } from "next/server";
+import { PrismaClient } from "@prisma/client";
+import { execSync } from "child_process";
+import bcrypt from "bcryptjs";
 
 export async function POST() {
-  console.log('🚀 Starting Prisma deployment...');
+  console.log("🚀 Starting Prisma deployment...");
 
   try {
     // 1. Run Prisma migrations
-    console.log('📦 Running Prisma migrations...');
+    console.log("📦 Running Prisma migrations...");
     try {
       // In production, we use prisma migrate deploy
-      execSync('npx prisma migrate deploy', {
-        stdio: 'inherit',
+      execSync("npx prisma migrate deploy", {
+        stdio: "inherit",
         env: {
           ...process.env,
-          DATABASE_URL: process.env.DATABASE_URL
-        }
+          DATABASE_URL: process.env.DATABASE_URL,
+        },
       });
-      console.log('✅ Prisma migrations completed');
+      console.log("✅ Prisma migrations completed");
     } catch (migrateError) {
-      console.error('Migration error:', migrateError);
+      console.error("Migration error:", migrateError);
       // Continue anyway - migrations might already be applied
     }
 
     // 2. Initialize Prisma Client
     const prisma = new PrismaClient({
-      log: ['query', 'info', 'warn', 'error'],
+      log: ["query", "info", "warn", "error"],
     });
 
     // 3. Test connection
     await prisma.$connect();
-    console.log('✅ Connected to database');
+    console.log("✅ Connected to database");
 
     // 4. Check if users exist
     const userCount = await prisma.user.count();
@@ -40,23 +40,23 @@ export async function POST() {
     // 5. Create demo users if needed
     const demoUsers = [
       {
-        email: 'student@example.com',
-        password: 'student123',
-        role: 'student',
-        name: 'Student User'
+        email: "student@example.com",
+        password: "student123",
+        role: "student",
+        name: "Student User",
       },
       {
-        email: 'teacher@example.com',
-        password: 'teacher123',
-        role: 'teacher',
-        name: 'Teacher User'
+        email: "teacher@example.com",
+        password: "teacher123",
+        role: "teacher",
+        name: "Teacher User",
       },
       {
-        email: 'admin@example.com',
-        password: 'admin123',
-        role: 'admin',
-        name: 'Admin User'
-      }
+        email: "admin@example.com",
+        password: "admin123",
+        role: "admin",
+        name: "Admin User",
+      },
     ];
 
     const createdUsers = [];
@@ -78,7 +78,7 @@ export async function POST() {
             passwordHash,
             role: userData.role,
             name: userData.name,
-            preferredLanguage: 'en',
+            preferredLanguage: "en",
             emailVerified: true,
             onboardingCompleted: true,
             level: 1,
@@ -86,14 +86,14 @@ export async function POST() {
             achievements: [],
             skills: [],
             preferences: {},
-            metadata: {}
+            metadata: {},
           },
         });
 
         createdUsers.push({
           email: user.email,
           role: user.role,
-          created: user.createdAt
+          created: user.createdAt,
         });
         console.log(`✅ User ${user.email} ready`);
       } catch (userError) {
@@ -102,35 +102,39 @@ export async function POST() {
     }
 
     // 6. Verify database schema
-    const tables = await prisma.$queryRaw`
+    const tables = (await prisma.$queryRaw`
       SELECT table_name
       FROM information_schema.tables
       WHERE table_schema = 'public'
       ORDER BY table_name;
-    ` as Array<{ table_name: string }>;
+    `) as Array<{ table_name: string }>;
 
     await prisma.$disconnect();
 
     return NextResponse.json({
       success: true,
-      message: 'Prisma deployment completed successfully',
+      message: "Prisma deployment completed successfully",
       details: {
         userCount: userCount + createdUsers.length,
         usersCreated: createdUsers,
-        tables: tables.map(t => t.table_name),
-        databaseUrl: process.env.DATABASE_URL ? 'Configured' : 'Not configured'
-      }
+        tables: tables.map((t) => t.table_name),
+        databaseUrl: process.env.DATABASE_URL ? "Configured" : "Not configured",
+      },
     });
-
   } catch (error) {
-    console.error('Prisma deployment error:', error);
-    return NextResponse.json({
-      success: false,
-      error: error instanceof Error ? error.message : 'Unknown error',
-      details: {
-        databaseUrl: process.env.DATABASE_URL ? 'Configured' : 'Not configured',
-        nodeEnv: process.env.NODE_ENV
-      }
-    }, { status: 500 });
+    console.error("Prisma deployment error:", error);
+    return NextResponse.json(
+      {
+        success: false,
+        error: error instanceof Error ? error.message : "Unknown error",
+        details: {
+          databaseUrl: process.env.DATABASE_URL
+            ? "Configured"
+            : "Not configured",
+          nodeEnv: process.env.NODE_ENV,
+        },
+      },
+      { status: 500 },
+    );
   }
 }

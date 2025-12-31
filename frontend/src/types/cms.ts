@@ -1,7 +1,7 @@
 // CMS Type Definitions
 
-export type ContentType = 'domain' | 'question' | 'rubric' | 'ksa';
-export type ContentStatus = 'draft' | 'published' | 'archived';
+export type ContentType = "domain" | "question" | "rubric" | "ksa";
+export type ContentStatus = "draft" | "published" | "archived";
 
 export interface ContentItem {
   id: string;
@@ -25,7 +25,7 @@ export interface ContentHistory {
   version: number;
   timestamp: Date;
   user: string;
-  action: 'create' | 'update' | 'delete' | 'publish';
+  action: "create" | "update" | "delete" | "publish";
   changes: string;
   content_snapshot: unknown;
 }
@@ -40,7 +40,9 @@ export interface ContentFilter {
 export interface ContentService {
   list(filter?: ContentFilter): Promise<ContentItem[]>;
   get(id: string): Promise<ContentItem | null>;
-  create(item: Omit<ContentItem, 'id' | 'version' | 'created_at' | 'updated_at'>): Promise<ContentItem>;
+  create(
+    item: Omit<ContentItem, "id" | "version" | "created_at" | "updated_at">,
+  ): Promise<ContentItem>;
   update(id: string, updates: Partial<ContentItem>): Promise<ContentItem>;
   delete(id: string): Promise<void>;
   getHistory(id: string): Promise<ContentHistory[]>;
@@ -51,7 +53,7 @@ export interface ContentService {
 export interface AdminUser {
   id: string;
   email: string;
-  role: 'admin' | 'editor' | 'viewer';
+  role: "admin" | "editor" | "viewer";
   permissions: string[];
 }
 

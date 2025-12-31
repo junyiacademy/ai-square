@@ -1,5 +1,5 @@
-describe('render-with-providers', () => {
-  it('smoke test', () => {
+describe("render-with-providers", () => {
+  it("smoke test", () => {
     expect(true).toBe(true);
   });
 });

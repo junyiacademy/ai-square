@@ -1,4 +1,4 @@
-import { mockRepositoryFactory } from '@/test-utils/mocks/repositories';
+import { mockRepositoryFactory } from "@/test-utils/mocks/repositories";
 /**
  * AssessmentLearningService Tests
  *
@@ -6,19 +6,19 @@ import { mockRepositoryFactory } from '@/test-utils/mocks/repositories';
  * 測試 Assessment 學習服務的所有功能
  */
 
-import { AssessmentLearningService } from '../assessment-learning-service';
-import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
+import { AssessmentLearningService } from "../assessment-learning-service";
+import { repositoryFactory } from "@/lib/repositories/base/repository-factory";
 import type {
   IScenario,
   IProgram,
   ITask,
-  IEvaluation
-} from '@/types/unified-learning';
+  IEvaluation,
+} from "@/types/unified-learning";
 
 // Mock repositories
-jest.mock('@/lib/repositories/base/repository-factory');
+jest.mock("@/lib/repositories/base/repository-factory");
 
-describe('AssessmentLearningService', () => {
+describe("AssessmentLearningService", () => {
   let service: AssessmentLearningService;
   let mockScenarioRepo: any;
   let mockProgramRepo: any;
@@ -56,36 +56,50 @@ describe('AssessmentLearningService', () => {
     };
 
     // Mock factory returns
-    (repositoryFactory.getScenarioRepository as jest.Mock).mockReturnValue(mockScenarioRepo);
-    (repositoryFactory.getProgramRepository as jest.Mock).mockReturnValue(mockProgramRepo);
-    (repositoryFactory.getTaskRepository as jest.Mock).mockReturnValue(mockTaskRepo);
-    (repositoryFactory.getEvaluationRepository as jest.Mock).mockReturnValue(mockEvaluationRepo);
+    (repositoryFactory.getScenarioRepository as jest.Mock).mockReturnValue(
+      mockScenarioRepo,
+    );
+    (repositoryFactory.getProgramRepository as jest.Mock).mockReturnValue(
+      mockProgramRepo,
+    );
+    (repositoryFactory.getTaskRepository as jest.Mock).mockReturnValue(
+      mockTaskRepo,
+    );
+    (repositoryFactory.getEvaluationRepository as jest.Mock).mockReturnValue(
+      mockEvaluationRepo,
+    );
 
     service = new AssessmentLearningService();
   });
 
-  describe('startAssessment', () => {
-    it('should create a new assessment program', async () => {
+  describe("startAssessment", () => {
+    it("should create a new assessment program", async () => {
       // Arrange
-      const userId = 'user-123';
-      const scenarioId = 'scenario-456';
-      const language = 'en';
+      const userId = "user-123";
+      const scenarioId = "scenario-456";
+      const language = "en";
 
       const mockScenario: IScenario = {
         id: scenarioId,
-        mode: 'assessment',
-        status: 'active',
-        version: '1.0',
-        sourceType: 'yaml',
-        sourcePath: 'assessment_data/ai_literacy/ai_literacy_questions_en.yaml',
+        mode: "assessment",
+        status: "active",
+        version: "1.0",
+        sourceType: "yaml",
+        sourcePath: "assessment_data/ai_literacy/ai_literacy_questions_en.yaml",
         sourceMetadata: {},
-        title: { en: 'AI Literacy Assessment' },
-        description: { en: 'Test your AI knowledge' },
-        objectives: ['Evaluate AI knowledge'],
-        difficulty: 'intermediate',
+        title: { en: "AI Literacy Assessment" },
+        description: { en: "Test your AI knowledge" },
+        objectives: ["Evaluate AI knowledge"],
+        difficulty: "intermediate",
         estimatedMinutes: 15,
         prerequisites: [],
-        taskTemplates: [{ id: 'assessment-task', title: { en: 'Complete Assessment' }, type: 'question' }],
+        taskTemplates: [
+          {
+            id: "assessment-task",
+            title: { en: "Complete Assessment" },
+            type: "question",
+          },
+        ],
         taskCount: 12,
         xpRewards: {},
         unlockRequirements: {},
@@ -95,28 +109,33 @@ describe('AssessmentLearningService', () => {
           totalQuestions: 12,
           timeLimit: 15,
           passingScore: 60,
-          domains: ['domain1', 'domain2'],
+          domains: ["domain1", "domain2"],
           questionBankByLanguage: {
             en: [
-              { id: 'q1', question: 'What is AI?', options: ['A', 'B', 'C'], correct_answer: 'A' }
-            ]
-          }
+              {
+                id: "q1",
+                question: "What is AI?",
+                options: ["A", "B", "C"],
+                correct_answer: "A",
+              },
+            ],
+          },
         },
         aiModules: {},
         resources: [],
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-        metadata: {}
+        metadata: {},
       };
 
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
 
       const createdProgram: IProgram = {
-        id: 'program-789',
+        id: "program-789",
         userId,
         scenarioId,
-        mode: 'assessment',
-        status: 'active',
+        mode: "assessment",
+        status: "active",
         currentTaskIndex: 0,
         completedTaskCount: 0,
         totalTaskCount: 1,
@@ -132,17 +151,21 @@ describe('AssessmentLearningService', () => {
         pblData: {},
         discoveryData: {},
         assessmentData: {
-          selectedQuestions: ['q1'],
+          selectedQuestions: ["q1"],
           timeStarted: new Date().toISOString(),
-          timeLimit: 15
+          timeLimit: 15,
         },
-        metadata: {}
+        metadata: {},
       };
 
       mockProgramRepo.create.mockResolvedValue(createdProgram);
 
       // Act
-      const result = await service.startAssessment(userId, scenarioId, language);
+      const result = await service.startAssessment(
+        userId,
+        scenarioId,
+        language,
+      );
 
       // Assert
       expect(mockScenarioRepo.findById).toHaveBeenCalledWith(scenarioId);
@@ -150,59 +173,64 @@ describe('AssessmentLearningService', () => {
         expect.objectContaining({
           userId,
           scenarioId,
-          mode: 'assessment',
-          status: 'active',
-          totalTaskCount: 1
-        })
+          mode: "assessment",
+          status: "active",
+          totalTaskCount: 1,
+        }),
       );
       expect(result).toEqual(createdProgram);
     });
 
-    it('should throw error if scenario not found', async () => {
+    it("should throw error if scenario not found", async () => {
       // Arrange
       mockScenarioRepo.findById.mockResolvedValue(null);
 
       // Act & Assert
       await expect(
-        service.startAssessment('user-123', 'invalid-id', 'en')
-      ).rejects.toThrow('Scenario not found');
+        service.startAssessment("user-123", "invalid-id", "en"),
+      ).rejects.toThrow("Scenario not found");
     });
 
-    it('should throw error if scenario is not assessment type', async () => {
+    it("should throw error if scenario is not assessment type", async () => {
       // Arrange
       const mockScenario = {
-        id: 'scenario-456',
-        mode: 'pbl', // Wrong mode
-        assessmentData: null
+        id: "scenario-456",
+        mode: "pbl", // Wrong mode
+        assessmentData: null,
       };
       mockScenarioRepo.findById.mockResolvedValue(mockScenario);
 
       // Act & Assert
       await expect(
-        service.startAssessment('user-123', 'scenario-456', 'en')
-      ).rejects.toThrow('Scenario is not an assessment');
+        service.startAssessment("user-123", "scenario-456", "en"),
+      ).rejects.toThrow("Scenario is not an assessment");
     });
   });
 
-  describe('submitAnswer', () => {
-    it('should record answer and update task interactions', async () => {
+  describe("submitAnswer", () => {
+    it("should record answer and update task interactions", async () => {
       // Arrange
-      const programId = 'program-789';
-      const questionId = 'q1';
-      const answer = 'A';
+      const programId = "program-789";
+      const questionId = "q1";
+      const answer = "A";
 
       const mockTask: ITask = {
-        id: 'task-123',
+        id: "task-123",
         programId,
-        mode: 'assessment',
+        mode: "assessment",
         taskIndex: 0,
-        title: { en: 'Assessment Task' },
-        type: 'question',
-        status: 'active',
+        title: { en: "Assessment Task" },
+        type: "question",
+        status: "active",
         content: {
           questions: [
-            { id: 'q1', question: 'What is AI?', options: ['A', 'B', 'C'], correct_answer: 'A' }
-          ]
+            {
+              id: "q1",
+              question: "What is AI?",
+              options: ["A", "B", "C"],
+              correct_answer: "A",
+            },
+          ],
         },
         interactions: [],
         interactionCount: 0,
@@ -219,22 +247,24 @@ describe('AssessmentLearningService', () => {
         pblData: {},
         discoveryData: {},
         assessmentData: {},
-        metadata: {}
+        metadata: {},
       };
 
       mockTaskRepo.findByProgram.mockResolvedValue([mockTask]);
       mockTaskRepo.updateInteractions.mockResolvedValue({
         ...mockTask,
-        interactions: [{
-          timestamp: new Date().toISOString(),
-          type: 'user_input',
-          content: {
-            questionId,
-            selectedAnswer: answer,
-            isCorrect: true,
-            timeSpent: 5
-          }
-        }]
+        interactions: [
+          {
+            timestamp: new Date().toISOString(),
+            type: "user_input",
+            content: {
+              questionId,
+              selectedAnswer: answer,
+              isCorrect: true,
+              timeSpent: 5,
+            },
+          },
+        ],
       });
 
       // Act
@@ -247,17 +277,17 @@ describe('AssessmentLearningService', () => {
     });
   });
 
-  describe('completeAssessment', () => {
-    it('should calculate scores and complete the program', async () => {
+  describe("completeAssessment", () => {
+    it("should calculate scores and complete the program", async () => {
       // Arrange
-      const programId = 'program-789';
+      const programId = "program-789";
 
       const mockProgram: IProgram = {
         id: programId,
-        userId: 'user-123',
-        scenarioId: 'scenario-456',
-        mode: 'assessment',
-        status: 'active',
+        userId: "user-123",
+        scenarioId: "scenario-456",
+        mode: "assessment",
+        status: "active",
         currentTaskIndex: 0,
         completedTaskCount: 0,
         totalTaskCount: 1,
@@ -273,28 +303,28 @@ describe('AssessmentLearningService', () => {
         pblData: {},
         discoveryData: {},
         assessmentData: {},
-        metadata: {}
+        metadata: {},
       };
 
       const mockTask: ITask = {
-        id: 'task-123',
+        id: "task-123",
         programId,
-        mode: 'assessment',
+        mode: "assessment",
         taskIndex: 0,
-        type: 'question',
-        status: 'active',
+        type: "question",
+        status: "active",
         content: {},
         interactions: [
           {
             timestamp: new Date().toISOString(),
-            type: 'user_input',
+            type: "user_input",
             content: {
-              questionId: 'q1',
-              selectedAnswer: 'A',
+              questionId: "q1",
+              selectedAnswer: "A",
               isCorrect: true,
-              timeSpent: 5
-            }
-          }
+              timeSpent: 5,
+            },
+          },
         ],
         interactionCount: 1,
         userResponse: {},
@@ -310,24 +340,24 @@ describe('AssessmentLearningService', () => {
         pblData: {},
         discoveryData: {},
         assessmentData: {},
-        metadata: {}
+        metadata: {},
       };
 
       mockProgramRepo.findById.mockResolvedValue(mockProgram);
       mockTaskRepo.findByProgram.mockResolvedValue([mockTask]);
       mockProgramRepo.complete.mockResolvedValue({
         ...mockProgram,
-        status: 'completed',
+        status: "completed",
         totalScore: 100,
-        completedAt: new Date().toISOString()
+        completedAt: new Date().toISOString(),
       });
 
       const mockEvaluation: IEvaluation = {
-        id: 'eval-123',
-        userId: 'user-123',
+        id: "eval-123",
+        userId: "user-123",
         programId,
-        mode: 'assessment',
-        evaluationType: 'program',
+        mode: "assessment",
+        evaluationType: "program",
         score: 100,
         maxScore: 100,
         domainScores: { domain1: 100 },
@@ -338,7 +368,7 @@ describe('AssessmentLearningService', () => {
         pblData: {},
         discoveryData: {},
         assessmentData: {},
-        metadata: {}
+        metadata: {},
       };
 
       mockEvaluationRepo.create.mockResolvedValue(mockEvaluation);
@@ -356,17 +386,17 @@ describe('AssessmentLearningService', () => {
     });
   });
 
-  describe('getProgress', () => {
-    it('should return current assessment progress', async () => {
+  describe("getProgress", () => {
+    it("should return current assessment progress", async () => {
       // Arrange
-      const programId = 'program-789';
+      const programId = "program-789";
 
       const mockProgram: IProgram = {
         id: programId,
-        userId: 'user-123',
-        scenarioId: 'scenario-456',
-        mode: 'assessment',
-        status: 'active',
+        userId: "user-123",
+        scenarioId: "scenario-456",
+        mode: "assessment",
+        status: "active",
         currentTaskIndex: 0,
         completedTaskCount: 0,
         totalTaskCount: 1,
@@ -382,29 +412,29 @@ describe('AssessmentLearningService', () => {
         pblData: {},
         discoveryData: {},
         assessmentData: {
-          selectedQuestions: ['q1', 'q2', 'q3'],
+          selectedQuestions: ["q1", "q2", "q3"],
           timeStarted: new Date(Date.now() - 120000).toISOString(), // 2 minutes ago
-          timeLimit: 15
+          timeLimit: 15,
         },
-        metadata: {}
+        metadata: {},
       };
 
       const mockTask: ITask = {
-        id: 'task-123',
+        id: "task-123",
         programId,
-        mode: 'assessment',
+        mode: "assessment",
         taskIndex: 0,
-        type: 'question',
-        status: 'active',
+        type: "question",
+        status: "active",
         content: {
           questions: [
-            { id: 'q1', question: 'Q1' },
-            { id: 'q2', question: 'Q2' },
-            { id: 'q3', question: 'Q3' }
-          ]
+            { id: "q1", question: "Q1" },
+            { id: "q2", question: "Q2" },
+            { id: "q3", question: "Q3" },
+          ],
         },
         interactions: [
-          { timestamp: '', type: 'user_input', content: { questionId: 'q1' } }
+          { timestamp: "", type: "user_input", content: { questionId: "q1" } },
         ],
         interactionCount: 1,
         userResponse: {},
@@ -419,7 +449,7 @@ describe('AssessmentLearningService', () => {
         pblData: {},
         discoveryData: {},
         assessmentData: {},
-        metadata: {}
+        metadata: {},
       };
 
       mockProgramRepo.findById.mockResolvedValue(mockProgram);
@@ -429,10 +459,16 @@ describe('AssessmentLearningService', () => {
       const result = await service.getProgress(programId);
 
       // Assert
-      expect((result.metadata as Record<string, unknown>)?.answeredQuestions).toBe(1);
-      expect((result.metadata as Record<string, unknown>)?.totalQuestions).toBe(3);
-      expect((result.metadata as Record<string, unknown>)?.timeRemaining).toBeLessThan(15 * 60); // Less than 15 minutes
-      expect(result.status).toBe('active');
+      expect(
+        (result.metadata as Record<string, unknown>)?.answeredQuestions,
+      ).toBe(1);
+      expect((result.metadata as Record<string, unknown>)?.totalQuestions).toBe(
+        3,
+      );
+      expect(
+        (result.metadata as Record<string, unknown>)?.timeRemaining,
+      ).toBeLessThan(15 * 60); // Less than 15 minutes
+      expect(result.status).toBe("active");
     });
   });
 });

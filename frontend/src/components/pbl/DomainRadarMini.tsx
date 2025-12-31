@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import React from 'react';
+import React from "react";
 
 interface DomainRadarMiniProps {
   domainScores: {
@@ -11,13 +11,15 @@ interface DomainRadarMiniProps {
   };
 }
 
-export default function DomainRadarMini({ domainScores }: DomainRadarMiniProps) {
+export default function DomainRadarMini({
+  domainScores,
+}: DomainRadarMiniProps) {
   // Convert domain scores to array format for radar chart
   const data = [
-    { domain: 'Engaging', score: domainScores.engaging_with_ai },
-    { domain: 'Creating', score: domainScores.creating_with_ai },
-    { domain: 'Managing', score: domainScores.managing_with_ai },
-    { domain: 'Designing', score: domainScores.designing_with_ai }
+    { domain: "Engaging", score: domainScores.engaging_with_ai },
+    { domain: "Creating", score: domainScores.creating_with_ai },
+    { domain: "Managing", score: domainScores.managing_with_ai },
+    { domain: "Designing", score: domainScores.designing_with_ai },
   ];
 
   // Calculate positions for radar chart (square layout)
@@ -30,29 +32,59 @@ export default function DomainRadarMini({ domainScores }: DomainRadarMiniProps) 
   const startAngle = -Math.PI / 2; // Start from top
 
   // Calculate points for the radar polygon
-  const points = data.map((item, index) => {
-    const angle = startAngle + index * angleStep;
-    const distance = (item.score / 100) * radius;
-    const x = center + Math.cos(angle) * distance;
-    const y = center + Math.sin(angle) * distance;
-    return `${x},${y}`;
-  }).join(' ');
+  const points = data
+    .map((item, index) => {
+      const angle = startAngle + index * angleStep;
+      const distance = (item.score / 100) * radius;
+      const x = center + Math.cos(angle) * distance;
+      const y = center + Math.sin(angle) * distance;
+      return `${x},${y}`;
+    })
+    .join(" ");
 
   // Background grid points (at 100% scale)
-  const gridPoints = Array(4).fill(0).map((_, index) => {
-    const angle = startAngle + index * angleStep;
-    const x = center + Math.cos(angle) * radius;
-    const y = center + Math.sin(angle) * radius;
-    return { x, y };
-  });
+  const gridPoints = Array(4)
+    .fill(0)
+    .map((_, index) => {
+      const angle = startAngle + index * angleStep;
+      const x = center + Math.cos(angle) * radius;
+      const y = center + Math.sin(angle) * radius;
+      return { x, y };
+    });
 
   return (
     <div className="flex items-center justify-center">
       <svg width={size} height={size} className="transform">
         {/* Background circles */}
-        <circle cx={center} cy={center} r={radius} fill="none" stroke="currentColor" strokeWidth="1" className="text-gray-200 dark:text-gray-700" />
-        <circle cx={center} cy={center} r={radius * 0.66} fill="none" stroke="currentColor" strokeWidth="1" className="text-gray-200 dark:text-gray-700" strokeDasharray="2,2" />
-        <circle cx={center} cy={center} r={radius * 0.33} fill="none" stroke="currentColor" strokeWidth="1" className="text-gray-200 dark:text-gray-700" strokeDasharray="2,2" />
+        <circle
+          cx={center}
+          cy={center}
+          r={radius}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1"
+          className="text-gray-200 dark:text-gray-700"
+        />
+        <circle
+          cx={center}
+          cy={center}
+          r={radius * 0.66}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1"
+          className="text-gray-200 dark:text-gray-700"
+          strokeDasharray="2,2"
+        />
+        <circle
+          cx={center}
+          cy={center}
+          r={radius * 0.33}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1"
+          className="text-gray-200 dark:text-gray-700"
+          strokeDasharray="2,2"
+        />
 
         {/* Grid lines from center */}
         {gridPoints.map((point, index) => (
@@ -105,9 +137,9 @@ export default function DomainRadarMini({ domainScores }: DomainRadarMiniProps) 
           const y = center + Math.sin(angle) * labelDistance;
 
           // Adjust text anchor based on position
-          let textAnchor = 'middle';
-          if (index === 1) textAnchor = 'start';
-          else if (index === 3) textAnchor = 'end';
+          let textAnchor = "middle";
+          if (index === 1) textAnchor = "start";
+          else if (index === 3) textAnchor = "end";
 
           return (
             <text

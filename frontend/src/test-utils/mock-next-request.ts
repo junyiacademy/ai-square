@@ -1,4 +1,4 @@
-import { NextRequest } from 'next/server'
+import { NextRequest } from "next/server";
 
 /**
  * Create a properly mocked NextRequest for testing
@@ -7,16 +7,16 @@ import { NextRequest } from 'next/server'
 export function createMockNextRequest(
   url: string,
   options?: RequestInit & {
-    searchParams?: Record<string, string>
-  }
+    searchParams?: Record<string, string>;
+  },
 ) {
   // Build URL with search params
-  const fullUrl = new URL(url, 'http://localhost:3000')
+  const fullUrl = new URL(url, "http://localhost:3000");
 
   if (options?.searchParams) {
     Object.entries(options.searchParams).forEach(([key, value]) => {
-      fullUrl.searchParams.set(key, value)
-    })
+      fullUrl.searchParams.set(key, value);
+    });
   }
 
   // Create request with proper URL
@@ -26,10 +26,10 @@ export function createMockNextRequest(
 
   const request = new NextRequest(fullUrl.toString(), {
     ...optionsWithoutSearchParams,
-    ...(signal && signal !== null ? { signal } : {})
-  })
+    ...(signal && signal !== null ? { signal } : {}),
+  });
 
-  return request
+  return request;
 }
 
 /**
@@ -38,15 +38,15 @@ export function createMockNextRequest(
 export function createMockPostRequest(
   url: string,
   body: unknown,
-  options?: RequestInit
+  options?: RequestInit,
 ) {
   return createMockNextRequest(url, {
     ...options,
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
-      ...options?.headers
+      "Content-Type": "application/json",
+      ...options?.headers,
     },
-    body: JSON.stringify(body)
-  })
+    body: JSON.stringify(body),
+  });
 }

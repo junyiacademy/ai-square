@@ -1,17 +1,17 @@
-const nextJest = require('next/jest')
+const nextJest = require("next/jest");
 
 const createJestConfig = nextJest({
-  dir: './',
-})
+  dir: "./",
+});
 
 const customJestConfig = {
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
-  testEnvironment: 'jsdom',
+  setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
+  testEnvironment: "jsdom",
   collectCoverageFrom: [
-    'src/**/*.{js,jsx,ts,tsx}',
-    '!src/**/*.d.ts',
-    '!src/**/*.stories.{js,jsx,ts,tsx}',
-    '!src/**/index.{js,jsx,ts,tsx}',
+    "src/**/*.{js,jsx,ts,tsx}",
+    "!src/**/*.d.ts",
+    "!src/**/*.stories.{js,jsx,ts,tsx}",
+    "!src/**/index.{js,jsx,ts,tsx}",
   ],
   coverageThreshold: {
     global: {
@@ -22,12 +22,12 @@ const customJestConfig = {
     },
   },
   testMatch: [
-    '<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}',
-    '<rootDir>/src/**/*.{test,spec}.{js,jsx,ts,tsx}',
+    "<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}",
+    "<rootDir>/src/**/*.{test,spec}.{js,jsx,ts,tsx}",
   ],
   moduleNameMapping: {
-    '^@/(.*)$': '<rootDir>/src/$1',
+    "^@/(.*)$": "<rootDir>/src/$1",
   },
-}
+};
 
-module.exports = createJestConfig(customJestConfig)
+module.exports = createJestConfig(customJestConfig);

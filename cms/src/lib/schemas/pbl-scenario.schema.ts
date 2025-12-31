@@ -25,9 +25,14 @@ export interface ScenarioInfo {
   description_de?: string;
   description_ru?: string;
   description_it?: string;
-  difficulty: 'beginner' | 'intermediate' | 'advanced';
+  difficulty: "beginner" | "intermediate" | "advanced";
   estimated_duration: number;
-  target_domains: ('engaging_with_ai' | 'creating_with_ai' | 'managing_with_ai' | 'designing_with_ai')[];
+  target_domains: (
+    | "engaging_with_ai"
+    | "creating_with_ai"
+    | "managing_with_ai"
+    | "designing_with_ai"
+  )[];
   prerequisites: string[];
   prerequisites_zh?: string[];
   prerequisites_es?: string[];
@@ -74,7 +79,7 @@ export interface Task {
   description_de?: string;
   description_ru?: string;
   description_it?: string;
-  category: 'research' | 'analysis' | 'creation' | 'interaction';
+  category: "research" | "analysis" | "creation" | "interaction";
   instructions: string[];
   instructions_zh?: string[];
   instructions_es?: string[];
@@ -108,7 +113,7 @@ export interface Task {
     secondary?: string[];
   };
   ai_module?: {
-    role: 'assistant' | 'evaluator' | 'actor';
+    role: "assistant" | "evaluator" | "actor";
     model: string;
     persona: string;
     initial_prompt: string;
@@ -121,7 +126,16 @@ export const PBL_SCENARIO_JSON_SCHEMA = {
   properties: {
     scenario_info: {
       type: "object",
-      required: ["id", "title", "description", "difficulty", "estimated_duration", "target_domains", "prerequisites", "learning_objectives"],
+      required: [
+        "id",
+        "title",
+        "description",
+        "difficulty",
+        "estimated_duration",
+        "target_domains",
+        "prerequisites",
+        "learning_objectives",
+      ],
       properties: {
         id: { type: "string" },
         title: { type: "string" },
@@ -142,14 +156,22 @@ export const PBL_SCENARIO_JSON_SCHEMA = {
         description_de: { type: "string" },
         description_ru: { type: "string" },
         description_it: { type: "string" },
-        difficulty: { type: "string", enum: ["beginner", "intermediate", "advanced"] },
+        difficulty: {
+          type: "string",
+          enum: ["beginner", "intermediate", "advanced"],
+        },
         estimated_duration: { type: "number" },
         target_domains: {
           type: "array",
           items: {
             type: "string",
-            enum: ["engaging_with_ai", "creating_with_ai", "managing_with_ai", "designing_with_ai"]
-          }
+            enum: [
+              "engaging_with_ai",
+              "creating_with_ai",
+              "managing_with_ai",
+              "designing_with_ai",
+            ],
+          },
         },
         prerequisites: { type: "array", items: { type: "string" } },
         prerequisites_zh: { type: "array", items: { type: "string" } },
@@ -168,22 +190,29 @@ export const PBL_SCENARIO_JSON_SCHEMA = {
         learning_objectives_fr: { type: "array", items: { type: "string" } },
         learning_objectives_de: { type: "array", items: { type: "string" } },
         learning_objectives_ru: { type: "array", items: { type: "string" } },
-        learning_objectives_it: { type: "array", items: { type: "string" } }
-      }
+        learning_objectives_it: { type: "array", items: { type: "string" } },
+      },
     },
     ksa_mapping: {
       type: "object",
       properties: {
         knowledge: { type: "array", items: { type: "string" } },
         skills: { type: "array", items: { type: "string" } },
-        attitudes: { type: "array", items: { type: "string" } }
-      }
+        attitudes: { type: "array", items: { type: "string" } },
+      },
     },
     tasks: {
       type: "array",
       items: {
         type: "object",
-        required: ["id", "title", "description", "category", "instructions", "expected_outcome"],
+        required: [
+          "id",
+          "title",
+          "description",
+          "category",
+          "instructions",
+          "expected_outcome",
+        ],
         properties: {
           id: { type: "string" },
           title: { type: "string" },
@@ -204,7 +233,10 @@ export const PBL_SCENARIO_JSON_SCHEMA = {
           description_de: { type: "string" },
           description_ru: { type: "string" },
           description_it: { type: "string" },
-          category: { type: "string", enum: ["research", "analysis", "creation", "interaction"] },
+          category: {
+            type: "string",
+            enum: ["research", "analysis", "creation", "interaction"],
+          },
           instructions: { type: "array", items: { type: "string" } },
           instructions_zh: { type: "array", items: { type: "string" } },
           instructions_es: { type: "array", items: { type: "string" } },
@@ -237,21 +269,24 @@ export const PBL_SCENARIO_JSON_SCHEMA = {
             type: "object",
             properties: {
               primary: { type: "array", items: { type: "string" } },
-              secondary: { type: "array", items: { type: "string" } }
-            }
+              secondary: { type: "array", items: { type: "string" } },
+            },
           },
           ai_module: {
             type: "object",
             properties: {
-              role: { type: "string", enum: ["assistant", "evaluator", "actor"] },
+              role: {
+                type: "string",
+                enum: ["assistant", "evaluator", "actor"],
+              },
               model: { type: "string" },
               persona: { type: "string" },
-              initial_prompt: { type: "string" }
-            }
-          }
-        }
-      }
-    }
+              initial_prompt: { type: "string" },
+            },
+          },
+        },
+      },
+    },
   },
-  required: ["scenario_info", "tasks"]
+  required: ["scenario_info", "tasks"],
 };

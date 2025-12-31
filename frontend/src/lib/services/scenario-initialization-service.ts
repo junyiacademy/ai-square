@@ -6,16 +6,19 @@
  * 符合統一學習架構：Content Source → Scenario → Program → Task → Evaluation
  */
 
-import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import { IScenario } from '@/types/unified-learning';
-import { DifficultyLevel, LearningMode as DBLearningMode } from '@/types/database';
-import { assessmentYAMLLoader } from './assessment-yaml-loader';
-import { pblYAMLLoader } from './pbl-yaml-loader';
-import { discoveryYAMLLoader } from './discovery-yaml-loader';
-import path from 'path';
+import { repositoryFactory } from "@/lib/repositories/base/repository-factory";
+import { IScenario } from "@/types/unified-learning";
+import {
+  DifficultyLevel,
+  LearningMode as DBLearningMode,
+} from "@/types/database";
+import { assessmentYAMLLoader } from "./assessment-yaml-loader";
+import { pblYAMLLoader } from "./pbl-yaml-loader";
+import { discoveryYAMLLoader } from "./discovery-yaml-loader";
+import path from "path";
 
 export interface ScenarioInitConfig {
-  sourceType: 'pbl' | 'discovery' | 'assessment';
+  sourceType: "pbl" | "discovery" | "assessment";
   yamlBasePath: string;
   forceUpdate?: boolean;
   dryRun?: boolean;
@@ -41,17 +44,17 @@ export class ScenarioInitializationService {
     const results: InitializationResult[] = [];
 
     // 1. Initialize PBL Scenarios
-    console.log('Initializing PBL scenarios...');
+    console.log("Initializing PBL scenarios...");
     const pblResult = await this.initializePBLScenarios();
     results.push(pblResult);
 
     // 2. Initialize Discovery Scenarios
-    console.log('Initializing Discovery scenarios...');
+    console.log("Initializing Discovery scenarios...");
     const discoveryResult = await this.initializeDiscoveryScenarios();
     results.push(discoveryResult);
 
     // 3. Initialize Assessment Scenarios
-    console.log('Initializing Assessment scenarios...');
+    console.log("Initializing Assessment scenarios...");
     const assessmentResult = await this.initializeAssessmentScenarios();
     results.push(assessmentResult);
 
@@ -61,12 +64,15 @@ export class ScenarioInitializationService {
   /**
    * 初始化 PBL Scenarios
    */
-  async initializePBLScenarios(options?: { forceUpdate?: boolean; dryRun?: boolean }): Promise<InitializationResult> {
+  async initializePBLScenarios(options?: {
+    forceUpdate?: boolean;
+    dryRun?: boolean;
+  }): Promise<InitializationResult> {
     const config: ScenarioInitConfig = {
-      sourceType: 'pbl',
-      yamlBasePath: 'pbl_data/scenarios',
+      sourceType: "pbl",
+      yamlBasePath: "pbl_data/scenarios",
       forceUpdate: options?.forceUpdate,
-      dryRun: options?.dryRun
+      dryRun: options?.dryRun,
     };
 
     return this.initializeFromYAML(config, new PBLYAMLProcessor());
@@ -75,12 +81,15 @@ export class ScenarioInitializationService {
   /**
    * 初始化 Discovery Scenarios
    */
-  async initializeDiscoveryScenarios(options?: { forceUpdate?: boolean; dryRun?: boolean }): Promise<InitializationResult> {
+  async initializeDiscoveryScenarios(options?: {
+    forceUpdate?: boolean;
+    dryRun?: boolean;
+  }): Promise<InitializationResult> {
     const config: ScenarioInitConfig = {
-      sourceType: 'discovery',
-      yamlBasePath: 'discovery_data',
+      sourceType: "discovery",
+      yamlBasePath: "discovery_data",
       forceUpdate: options?.forceUpdate,
-      dryRun: options?.dryRun
+      dryRun: options?.dryRun,
     };
 
     return this.initializeFromYAML(config, new DiscoveryYAMLProcessor());
@@ -89,12 +98,15 @@ export class ScenarioInitializationService {
   /**
    * 初始化 Assessment Scenarios
    */
-  async initializeAssessmentScenarios(options?: { forceUpdate?: boolean; dryRun?: boolean }): Promise<InitializationResult> {
+  async initializeAssessmentScenarios(options?: {
+    forceUpdate?: boolean;
+    dryRun?: boolean;
+  }): Promise<InitializationResult> {
     const config: ScenarioInitConfig = {
-      sourceType: 'assessment',
-      yamlBasePath: 'assessment_data',
+      sourceType: "assessment",
+      yamlBasePath: "assessment_data",
       forceUpdate: options?.forceUpdate,
-      dryRun: options?.dryRun
+      dryRun: options?.dryRun,
     };
 
     return this.initializeFromYAML(config, new AssessmentYAMLProcessor());
@@ -105,7 +117,7 @@ export class ScenarioInitializationService {
    */
   private async initializeFromYAML(
     config: ScenarioInitConfig,
-    processor: IYAMLProcessor
+    processor: IYAMLProcessor,
   ): Promise<InitializationResult> {
     const result: InitializationResult = {
       sourceType: config.sourceType,
@@ -114,7 +126,7 @@ export class ScenarioInitializationService {
       updated: 0,
       skipped: 0,
       errors: [],
-      scenarios: []
+      scenarios: [],
     };
 
     try {
@@ -128,7 +140,7 @@ export class ScenarioInitializationService {
           // 檢查是否已存在
           const existingScenario = await this.findExistingScenario(
             config.sourceType,
-            yamlFile
+            yamlFile,
           );
 
           if (existingScenario && !config.forceUpdate) {
@@ -139,10 +151,16 @@ export class ScenarioInitializationService {
 
           // 載入並處理 YAML
           const yamlData = await processor.loadYAML(yamlFile);
-          const scenarioData = await processor.transformToScenario(yamlData, yamlFile);
+          const scenarioData = await processor.transformToScenario(
+            yamlData,
+            yamlFile,
+          );
 
           if (config.dryRun) {
-            console.log(`[DRY RUN] Would create/update scenario:`, scenarioData.title);
+            console.log(
+              `[DRY RUN] Would create/update scenario:`,
+              scenarioData.title,
+            );
             result.created++;
             continue;
           }
@@ -151,16 +169,16 @@ export class ScenarioInitializationService {
           if (existingScenario) {
             // Convert IScenario to UpdateScenarioDto
             const updateData: Partial<IScenario> = {
-              status: 'active' as const,
+              status: "active" as const,
               version: scenarioData.version,
               title: scenarioData.title,
               description: scenarioData.description,
-              objectives: scenarioData.objectives
+              objectives: scenarioData.objectives,
             };
 
             const updated = await this.scenarioRepo.update(
               existingScenario.id,
-              updateData
+              updateData,
             );
             result.updated++;
             result.scenarios.push(updated);
@@ -170,23 +188,23 @@ export class ScenarioInitializationService {
             const scenarioToCreate = {
               ...scenarioData,
               createdAt: new Date().toISOString(),
-              updatedAt: new Date().toISOString()
+              updatedAt: new Date().toISOString(),
             };
             // Remove id as it will be generated
             delete (scenarioToCreate as Record<string, unknown>).id;
 
-            const created = await this.scenarioRepo.create(scenarioToCreate as Omit<IScenario, 'id'>);
+            const created = await this.scenarioRepo.create(
+              scenarioToCreate as Omit<IScenario, "id">,
+            );
             result.created++;
             result.scenarios.push(created);
           }
-
         } catch (error) {
           const errorMsg = `Failed to process ${yamlFile}: ${error}`;
           console.error(errorMsg);
           result.errors.push(errorMsg);
         }
       }
-
     } catch (error) {
       result.errors.push(`Fatal error: ${error}`);
     }
@@ -199,29 +217,37 @@ export class ScenarioInitializationService {
    */
   private async findExistingScenario(
     sourceType: string,
-    yamlPath: string
+    yamlPath: string,
   ): Promise<IScenario | null> {
     // Determine the mode based on the yamlPath
     let mode: DBLearningMode;
-    if (yamlPath.includes('/pbl_data/') || yamlPath.includes('pbl')) {
-      mode = 'pbl';
-    } else if (yamlPath.includes('/discovery_data/') || yamlPath.includes('discovery')) {
-      mode = 'discovery';
-    } else if (yamlPath.includes('/assessment_data/') || yamlPath.includes('assessment')) {
-      mode = 'assessment';
+    if (yamlPath.includes("/pbl_data/") || yamlPath.includes("pbl")) {
+      mode = "pbl";
+    } else if (
+      yamlPath.includes("/discovery_data/") ||
+      yamlPath.includes("discovery")
+    ) {
+      mode = "discovery";
+    } else if (
+      yamlPath.includes("/assessment_data/") ||
+      yamlPath.includes("assessment")
+    ) {
+      mode = "assessment";
     } else {
       // Default to pbl if we can't determine from path
-      mode = 'pbl';
+      mode = "pbl";
     }
 
     // Use findByMode to get scenarios of specific mode
-    const scenarios = await this.scenarioRepo.findByMode?.(mode) || [];
+    const scenarios = (await this.scenarioRepo.findByMode?.(mode)) || [];
 
     // Find matching scenario by source path or sourceMetadata.configPath
-    const match = scenarios.find((s) =>
-      s.sourcePath === yamlPath ||
-      (s.sourceMetadata as Record<string, unknown>)?.sourcePath === yamlPath ||
-      (s.sourceMetadata as Record<string, unknown>)?.configPath === yamlPath
+    const match = scenarios.find(
+      (s) =>
+        s.sourcePath === yamlPath ||
+        (s.sourceMetadata as Record<string, unknown>)?.sourcePath ===
+          yamlPath ||
+        (s.sourceMetadata as Record<string, unknown>)?.configPath === yamlPath,
     );
 
     return match || null;
@@ -249,7 +275,10 @@ export class ScenarioInitializationService {
 interface IYAMLProcessor {
   scanYAMLFiles(basePath: string): Promise<string[]>;
   loadYAML(filePath: string): Promise<unknown>;
-  transformToScenario(yamlData: unknown, filePath: string): Promise<Omit<IScenario, 'id'>>;
+  transformToScenario(
+    yamlData: unknown,
+    filePath: string,
+  ): Promise<Omit<IScenario, "id">>;
 }
 
 /**
@@ -269,11 +298,11 @@ class PBLYAMLProcessor implements IYAMLProcessor {
     try {
       const scenarios = await this.loader.scanScenarios();
       // Return full paths relative to project root (using English as default language)
-      return scenarios.map(scenarioId =>
-        path.join(basePath, scenarioId, `${scenarioId}_en.yaml`)
+      return scenarios.map((scenarioId) =>
+        path.join(basePath, scenarioId, `${scenarioId}_en.yaml`),
       );
     } catch (error) {
-      console.error('Error scanning PBL scenarios:', error);
+      console.error("Error scanning PBL scenarios:", error);
       return [];
     }
   }
@@ -291,38 +320,57 @@ class PBLYAMLProcessor implements IYAMLProcessor {
     return data;
   }
 
-  async transformToScenario(yamlData: unknown, filePath: string): Promise<Omit<IScenario, 'id'>> {
+  async transformToScenario(
+    yamlData: unknown,
+    filePath: string,
+  ): Promise<Omit<IScenario, "id">> {
     const parts = filePath.split(path.sep);
     const scenarioId = parts[parts.length - 2];
 
     const pblData = yamlData as Record<string, unknown>;
-    const scenarioInfo = (pblData.scenario_info || {}) as Record<string, unknown>;
+    const scenarioInfo = (pblData.scenario_info || {}) as Record<
+      string,
+      unknown
+    >;
 
     // Debug: log the data structure to understand the issue
-    console.log('PBL YAML Data for', scenarioId, ':', JSON.stringify({
-      scenarioInfo: scenarioInfo,
-      ksaMapping: pblData.ksa_mapping,
-      tasks: pblData.tasks,
-      aiModules: pblData.ai_modules
-    }, null, 2));
+    console.log(
+      "PBL YAML Data for",
+      scenarioId,
+      ":",
+      JSON.stringify(
+        {
+          scenarioInfo: scenarioInfo,
+          ksaMapping: pblData.ksa_mapping,
+          tasks: pblData.tasks,
+          aiModules: pblData.ai_modules,
+        },
+        null,
+        2,
+      ),
+    );
 
     return {
-      mode: 'pbl' as const,
-      status: 'active' as const,
-      version: '1.0',
-      sourceType: 'yaml' as const,
+      mode: "pbl" as const,
+      status: "active" as const,
+      version: "1.0",
+      sourceType: "yaml" as const,
       sourcePath: filePath,
       sourceId: scenarioId,
       sourceMetadata: {
         scenarioId,
         configPath: filePath,
-        lastSync: new Date().toISOString()
+        lastSync: new Date().toISOString(),
       },
-      title: { en: (scenarioInfo.title as string) || 'Untitled PBL Scenario' },
-      description: { en: (scenarioInfo.description as string) || '' },
+      title: { en: (scenarioInfo.title as string) || "Untitled PBL Scenario" },
+      description: { en: (scenarioInfo.description as string) || "" },
       objectives: (scenarioInfo.learning_objectives as string[]) || [],
-      difficulty: ((scenarioInfo.difficulty as string) || 'intermediate') as DifficultyLevel,
-      estimatedMinutes: parseInt((scenarioInfo.estimated_duration as string)?.replace('minutes', '') || '60'),
+      difficulty: ((scenarioInfo.difficulty as string) ||
+        "intermediate") as DifficultyLevel,
+      estimatedMinutes: parseInt(
+        (scenarioInfo.estimated_duration as string)?.replace("minutes", "") ||
+          "60",
+      ),
       prerequisites: (scenarioInfo.prerequisites as string[]) || [],
       taskTemplates: [], // PBL tasks are defined in the YAML
       taskCount: ((pblData.tasks as Array<unknown>) || []).length,
@@ -330,19 +378,25 @@ class PBLYAMLProcessor implements IYAMLProcessor {
       unlockRequirements: {},
       pblData: {
         targetDomains: (scenarioInfo.target_domains as string[]) || [],
-        ksaMappings: JSON.parse(JSON.stringify((pblData.ksa_mapping as Record<string, unknown>) || {})),
-        tasks: (pblData.tasks as Array<Record<string, unknown>>) || []
+        ksaMappings: JSON.parse(
+          JSON.stringify(
+            (pblData.ksa_mapping as Record<string, unknown>) || {},
+          ),
+        ),
+        tasks: (pblData.tasks as Array<Record<string, unknown>>) || [],
       },
       discoveryData: {},
       assessmentData: {},
-      aiModules: JSON.parse(JSON.stringify((pblData.ai_modules as Record<string, unknown>) || {})),
+      aiModules: JSON.parse(
+        JSON.stringify((pblData.ai_modules as Record<string, unknown>) || {}),
+      ),
       resources: [],
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       metadata: {
         difficulty: scenarioInfo.difficulty,
-        estimatedDuration: scenarioInfo.estimated_duration
-      }
+        estimatedDuration: scenarioInfo.estimated_duration,
+      },
     };
   }
 }
@@ -380,7 +434,7 @@ class DiscoveryYAMLProcessor implements IYAMLProcessor {
 
     // Extract language from filename (e.g., app_developer_en.yml)
     const match = fileName.match(/_(\w+)\.yml$/);
-    const language = match ? match[1] : 'en';
+    const language = match ? match[1] : "en";
 
     const data = await this.loader.loadPath(careerType, language);
     if (!data) {
@@ -390,7 +444,10 @@ class DiscoveryYAMLProcessor implements IYAMLProcessor {
     return data;
   }
 
-  async transformToScenario(yamlData: unknown, filePath: string): Promise<Omit<IScenario, 'id'>> {
+  async transformToScenario(
+    yamlData: unknown,
+    filePath: string,
+  ): Promise<Omit<IScenario, "id">> {
     const parts = filePath.split(path.sep);
     const careerType = parts[parts.length - 2];
 
@@ -398,27 +455,32 @@ class DiscoveryYAMLProcessor implements IYAMLProcessor {
     const metadata = (discoveryData.metadata || {}) as Record<string, unknown>;
 
     return {
-      mode: 'discovery' as const,
-      status: 'active' as const,
-      version: '1.0',
-      sourceType: 'yaml' as const,
+      mode: "discovery" as const,
+      status: "active" as const,
+      version: "1.0",
+      sourceType: "yaml" as const,
       sourcePath: filePath,
       sourceId: careerType,
       sourceMetadata: {
         careerType,
         category: discoveryData.category,
         configPath: filePath,
-        lastSync: new Date().toISOString()
+        lastSync: new Date().toISOString(),
       },
-      title: { en: (metadata.title as string) || 'Untitled Discovery Path' },
-      description: { en: (metadata.long_description as string) || (metadata.short_description as string) || '' },
+      title: { en: (metadata.title as string) || "Untitled Discovery Path" },
+      description: {
+        en:
+          (metadata.long_description as string) ||
+          (metadata.short_description as string) ||
+          "",
+      },
       objectives: [
-        'Explore career possibilities',
-        'Develop practical skills',
-        'Complete challenges',
-        'Build portfolio projects'
+        "Explore career possibilities",
+        "Develop practical skills",
+        "Complete challenges",
+        "Build portfolio projects",
       ],
-      difficulty: 'intermediate' as DifficultyLevel,
+      difficulty: "intermediate" as DifficultyLevel,
       estimatedMinutes: ((metadata.estimated_hours as number) || 1) * 60,
       prerequisites: (metadata.prerequisites as string[]) || [],
       taskTemplates: [], // Discovery generates tasks dynamically
@@ -433,7 +495,7 @@ class DiscoveryYAMLProcessor implements IYAMLProcessor {
         skillFocus: (metadata.skill_focus as string[]) || [],
         worldSetting: discoveryData.world_setting,
         skillTree: discoveryData.skill_tree,
-        milestoneQuests: discoveryData.milestone_quests || []
+        milestoneQuests: discoveryData.milestone_quests || [],
       },
       assessmentData: {},
       aiModules: {},
@@ -442,8 +504,8 @@ class DiscoveryYAMLProcessor implements IYAMLProcessor {
       updatedAt: new Date().toISOString(),
       metadata: {
         category: discoveryData.category,
-        difficultyRange: discoveryData.difficulty_range
-      }
+        difficultyRange: discoveryData.difficulty_range,
+      },
     };
   }
 }
@@ -463,8 +525,13 @@ class AssessmentYAMLProcessor implements IYAMLProcessor {
 
     // 根據 Rule #14: 每個 assessment 主題只返回一個路徑（主要語言版本）
     // 不要為每個語言版本創建獨立的路徑
-    return assessments.map(assessmentName =>
-      path.join(basePath, assessmentName, `${assessmentName}_questions_en.yaml`) // 使用英文作為主要版本
+    return assessments.map(
+      (assessmentName) =>
+        path.join(
+          basePath,
+          assessmentName,
+          `${assessmentName}_questions_en.yaml`,
+        ), // 使用英文作為主要版本
     );
   }
 
@@ -474,7 +541,7 @@ class AssessmentYAMLProcessor implements IYAMLProcessor {
     const fileName = parts[parts.length - 1];
     const assessmentName = parts[parts.length - 2];
     const match = fileName.match(/_questions_(\w+)\.yaml$/);
-    const language = match ? match[1] : 'en';
+    const language = match ? match[1] : "en";
 
     const data = await this.loader.loadAssessment(assessmentName, language);
     if (!data) {
@@ -484,12 +551,16 @@ class AssessmentYAMLProcessor implements IYAMLProcessor {
     return data;
   }
 
-  async transformToScenario(yamlData: unknown, filePath: string): Promise<Omit<IScenario, 'id'>> {
+  async transformToScenario(
+    yamlData: unknown,
+    filePath: string,
+  ): Promise<Omit<IScenario, "id">> {
     const parts = filePath.split(path.sep);
     const assessmentName = parts[parts.length - 2];
 
     // 根據 Rule #14: 載入所有語言版本並合併
-    const availableLanguages = await this.loader.getAvailableLanguages(assessmentName);
+    const availableLanguages =
+      await this.loader.getAvailableLanguages(assessmentName);
     const titles: Record<string, string> = {};
     const descriptions: Record<string, string> = {};
     const allQuestionsByLang: Record<string, unknown[]> = {};
@@ -498,11 +569,16 @@ class AssessmentYAMLProcessor implements IYAMLProcessor {
     for (const lang of availableLanguages) {
       const langData = await this.loader.loadAssessment(assessmentName, lang);
       if (langData) {
-        const config = (langData.config || langData.assessment_config || {}) as Record<string, unknown>;
+        const config = (langData.config ||
+          langData.assessment_config ||
+          {}) as Record<string, unknown>;
 
         // 收集多語言 title 和 description
-        const titleValue = this.loader.getTranslatedField(config, 'title', lang) || `${assessmentName} Assessment`;
-        const descValue = this.loader.getTranslatedField(config, 'description', lang) || '';
+        const titleValue =
+          this.loader.getTranslatedField(config, "title", lang) ||
+          `${assessmentName} Assessment`;
+        const descValue =
+          this.loader.getTranslatedField(config, "description", lang) || "";
 
         titles[lang] = titleValue;
         descriptions[lang] = descValue;
@@ -514,48 +590,52 @@ class AssessmentYAMLProcessor implements IYAMLProcessor {
 
     // 使用英文版本的配置作為基礎
     const baseData = yamlData as Record<string, unknown>;
-    const config = (baseData.config || baseData.assessment_config || {}) as Record<string, unknown>;
+    const config = (baseData.config ||
+      baseData.assessment_config ||
+      {}) as Record<string, unknown>;
 
     return {
-      mode: 'assessment' as const,
-      status: 'active' as const,
-      version: '1.0',
-      sourceType: 'yaml' as const,
+      mode: "assessment" as const,
+      status: "active" as const,
+      version: "1.0",
+      sourceType: "yaml" as const,
       sourcePath: filePath,
       sourceId: assessmentName,
       sourceMetadata: {
-        assessmentType: 'standard',
+        assessmentType: "standard",
         assessmentName,
         availableLanguages,
-        primaryLanguage: 'en',
+        primaryLanguage: "en",
         configPath: filePath,
-        lastSync: new Date().toISOString()
+        lastSync: new Date().toISOString(),
       },
       title: titles, // 包含所有語言的標題
       description: descriptions, // 包含所有語言的描述
       objectives: [
-        'Evaluate your knowledge and skills',
-        'Identify areas for improvement',
-        'Get personalized recommendations'
+        "Evaluate your knowledge and skills",
+        "Identify areas for improvement",
+        "Get personalized recommendations",
       ],
-      difficulty: 'intermediate' as DifficultyLevel,
+      difficulty: "intermediate" as DifficultyLevel,
       estimatedMinutes: (config.time_limit_minutes as number) || 15,
       prerequisites: (config.prerequisites as string[]) || [],
-      taskTemplates: [{
-        id: 'assessment-task',
-        title: {
-          en: 'Complete Assessment',
-          zh: '完成評估',
-          es: 'Completar evaluación',
-          ja: '評価を完了する',
-          ko: '평가 완료',
-          fr: 'Terminer l\'évaluation',
-          de: 'Bewertung abschließen',
-          ru: 'Завершить оценку',
-          it: 'Completa valutazione'
+      taskTemplates: [
+        {
+          id: "assessment-task",
+          title: {
+            en: "Complete Assessment",
+            zh: "完成評估",
+            es: "Completar evaluación",
+            ja: "評価を完了する",
+            ko: "평가 완료",
+            fr: "Terminer l'évaluation",
+            de: "Bewertung abschließen",
+            ru: "Завершить оценку",
+            it: "Completa valutazione",
+          },
+          type: "question" as const,
         },
-        type: 'question' as const
-      }],
+      ],
       taskCount: (config.total_questions as number) || 12,
       xpRewards: {},
       unlockRequirements: {},
@@ -567,7 +647,7 @@ class AssessmentYAMLProcessor implements IYAMLProcessor {
         passingScore: (config.passing_score as number) || 60,
         domains: (config.domains as string[]) || [],
         questionBankByLanguage: allQuestionsByLang, // 儲存所有語言的題目
-        primaryLanguage: 'en'
+        primaryLanguage: "en",
       },
       aiModules: {},
       resources: [],
@@ -576,8 +656,8 @@ class AssessmentYAMLProcessor implements IYAMLProcessor {
       metadata: {
         totalQuestions: (config.total_questions as number) || 12,
         timeLimit: (config.time_limit_minutes as number) || 15,
-        passingScore: (config.passing_score as number) || 60
-      }
+        passingScore: (config.passing_score as number) || 60,
+      },
     };
   }
 }

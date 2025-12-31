@@ -1,12 +1,7 @@
-import { useUserData } from './useUserData';
+import { useUserData } from "./useUserData";
 
 export function useDiscoveryData() {
-  const {
-    userData,
-    isLoading,
-    error,
-    loadUserData
-  } = useUserData();
+  const { userData, isLoading, error, loadUserData } = useUserData();
 
   const refreshData = async () => {
     await loadUserData();
@@ -19,7 +14,12 @@ export function useDiscoveryData() {
     error: error ? new Error(error) : null,
     refreshData,
     assessmentResults: userData?.assessmentResults || null,
-    achievements: userData?.achievements || { badges: [], totalXp: 0, level: 1, completedTasks: [] },
-    achievementCount: userData?.achievements?.badges?.length || 0
+    achievements: userData?.achievements || {
+      badges: [],
+      totalXp: 0,
+      level: 1,
+      completedTasks: [],
+    },
+    achievementCount: userData?.achievements?.badges?.length || 0,
   };
 }

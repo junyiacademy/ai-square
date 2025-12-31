@@ -1,39 +1,43 @@
-import { SecureSession } from '../secure-session';
-import { PostgresSession } from '../postgres-session';
+import { SecureSession } from "../secure-session";
+import { PostgresSession } from "../postgres-session";
 
 // Mock PostgresSession to avoid database connections in tests
-jest.mock('../postgres-session');
+jest.mock("../postgres-session");
 
-describe('SecureSession', () => {
-  const mockPostgresSession = PostgresSession as jest.Mocked<typeof PostgresSession>;
+describe("SecureSession", () => {
+  const mockPostgresSession = PostgresSession as jest.Mocked<
+    typeof PostgresSession
+  >;
 
   beforeEach(() => {
     jest.clearAllMocks();
 
     // Setup default mock behaviors
     mockPostgresSession.generateToken.mockImplementation(() => {
-      return Array.from({length: 64}, () => Math.floor(Math.random() * 16).toString(16)).join('');
+      return Array.from({ length: 64 }, () =>
+        Math.floor(Math.random() * 16).toString(16),
+      ).join("");
     });
-    mockPostgresSession.createSession.mockResolvedValue('mock-token-123');
+    mockPostgresSession.createSession.mockResolvedValue("mock-token-123");
     mockPostgresSession.getSession.mockResolvedValue({
-      userId: '123',
-      email: 'test@example.com',
-      role: 'student',
+      userId: "123",
+      email: "test@example.com",
+      role: "student",
       createdAt: new Date(),
-      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours from now
+      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours from now
     });
     mockPostgresSession.destroySession.mockResolvedValue();
     mockPostgresSession.cleanupExpiredSessions.mockResolvedValue();
   });
 
-  describe('Token Generation', () => {
-    it('should generate 64-character hex tokens', () => {
+  describe("Token Generation", () => {
+    it("should generate 64-character hex tokens", () => {
       const token = SecureSession.generateToken();
       expect(token).toMatch(/^[a-f0-9]{64}$/i);
       expect(token).toHaveLength(64);
     });
 
-    it('should generate unique tokens', () => {
+    it("should generate unique tokens", () => {
       const tokens = new Set<string>();
       for (let i = 0; i < 100; i++) {
         tokens.add(SecureSession.generateToken());
@@ -42,22 +46,22 @@ describe('SecureSession', () => {
     });
   });
 
-  describe('Session Management', () => {
+  describe("Session Management", () => {
     const testUser = {
-      userId: '123',
-      email: 'test@example.com',
-      role: 'student'
+      userId: "123",
+      email: "test@example.com",
+      role: "student",
     };
 
-    it('should create and retrieve a session', async () => {
-      const testToken = 'test-token-123';
+    it("should create and retrieve a session", async () => {
+      const testToken = "test-token-123";
       mockPostgresSession.createSession.mockResolvedValue(testToken);
       mockPostgresSession.getSession.mockResolvedValue({
         userId: testUser.userId,
         email: testUser.email,
         role: testUser.role,
         createdAt: new Date(),
-        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000)
+        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
       });
 
       const token = await SecureSession.createSessionAsync(testUser);
@@ -69,15 +73,15 @@ describe('SecureSession', () => {
       expect(session?.role).toBe(testUser.role);
     });
 
-    it('should return null for invalid token', async () => {
+    it("should return null for invalid token", async () => {
       mockPostgresSession.getSession.mockResolvedValue(null);
 
-      const session = await SecureSession.getSessionAsync('invalid-token');
+      const session = await SecureSession.getSessionAsync("invalid-token");
       expect(session).toBeNull();
     });
 
-    it('should destroy a session', async () => {
-      const testToken = 'test-token-123';
+    it("should destroy a session", async () => {
+      const testToken = "test-token-123";
       mockPostgresSession.createSession.mockResolvedValue(testToken);
 
       // First call should return a session
@@ -86,7 +90,7 @@ describe('SecureSession', () => {
         email: testUser.email,
         role: testUser.role,
         createdAt: new Date(),
-        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000)
+        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
       });
 
       // After destroy, should return null
@@ -99,12 +103,12 @@ describe('SecureSession', () => {
       expect(await SecureSession.getSessionAsync(token)).toBeNull();
     });
 
-    it('should handle remember me correctly', async () => {
+    it("should handle remember me correctly", async () => {
       const regularExpiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
       const rememberExpiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days
 
-      mockPostgresSession.createSession.mockResolvedValueOnce('regular-token');
-      mockPostgresSession.createSession.mockResolvedValueOnce('remember-token');
+      mockPostgresSession.createSession.mockResolvedValueOnce("regular-token");
+      mockPostgresSession.createSession.mockResolvedValueOnce("remember-token");
 
       // Mock getSession to return different expiry times
       mockPostgresSession.getSession.mockResolvedValueOnce({
@@ -112,7 +116,7 @@ describe('SecureSession', () => {
         email: testUser.email,
         role: testUser.role,
         createdAt: new Date(),
-        expiresAt: regularExpiresAt
+        expiresAt: regularExpiresAt,
       });
 
       mockPostgresSession.getSession.mockResolvedValueOnce({
@@ -120,78 +124,87 @@ describe('SecureSession', () => {
         email: testUser.email,
         role: testUser.role,
         createdAt: new Date(),
-        expiresAt: rememberExpiresAt
+        expiresAt: rememberExpiresAt,
       });
 
-      const regularToken = await SecureSession.createSessionAsync(testUser, false);
-      const rememberToken = await SecureSession.createSessionAsync(testUser, true);
+      const regularToken = await SecureSession.createSessionAsync(
+        testUser,
+        false,
+      );
+      const rememberToken = await SecureSession.createSessionAsync(
+        testUser,
+        true,
+      );
 
       const regularSession = await SecureSession.getSessionAsync(regularToken);
-      const rememberSession = await SecureSession.getSessionAsync(rememberToken);
+      const rememberSession =
+        await SecureSession.getSessionAsync(rememberToken);
 
       // Remember me session should expire later
       expect(rememberSession!.expiresAt.getTime()).toBeGreaterThan(
-        regularSession!.expiresAt.getTime()
+        regularSession!.expiresAt.getTime(),
       );
     });
   });
 
-  describe('Token Validation', () => {
-    it('should validate correct token format', () => {
+  describe("Token Validation", () => {
+    it("should validate correct token format", () => {
       const validTokens = [
-        'a'.repeat(64),
-        'f'.repeat(64),
-        '0123456789abcdef'.repeat(4),
-        SecureSession.generateToken()
+        "a".repeat(64),
+        "f".repeat(64),
+        "0123456789abcdef".repeat(4),
+        SecureSession.generateToken(),
       ];
 
-      validTokens.forEach(token => {
+      validTokens.forEach((token) => {
         expect(SecureSession.isValidTokenFormat(token)).toBe(true);
       });
     });
 
-    it('should reject invalid token formats', () => {
+    it("should reject invalid token formats", () => {
       const invalidTokens = [
-        '',
-        'too-short',
-        'g'.repeat(64), // invalid hex char
-        'a'.repeat(63), // too short
-        'a'.repeat(65), // too long
+        "",
+        "too-short",
+        "g".repeat(64), // invalid hex char
+        "a".repeat(63), // too short
+        "a".repeat(65), // too long
       ];
 
-      invalidTokens.forEach(token => {
+      invalidTokens.forEach((token) => {
         expect(SecureSession.isValidTokenFormat(token)).toBe(false);
       });
     });
   });
 
-  describe('Multi-Session Management', () => {
-    const userId = '123';
+  describe("Multi-Session Management", () => {
+    const userId = "123";
     const testUser = {
       userId,
-      email: 'test@example.com',
-      role: 'student'
+      email: "test@example.com",
+      role: "student",
     };
 
-    it('should get all sessions for a user', async () => {
+    it("should get all sessions for a user", async () => {
       // Method not implemented yet, returns empty array
       const userSessions = await SecureSession.getUserSessions(userId);
       expect(userSessions).toEqual([]);
     });
 
-    it('should revoke all sessions for a user', async () => {
+    it("should revoke all sessions for a user", async () => {
       // Method not implemented yet, it's a no-op
       // Just test that it can be called without error
-      await expect(SecureSession.revokeUserSessions(userId)).resolves.toBeUndefined();
+      await expect(
+        SecureSession.revokeUserSessions(userId),
+      ).resolves.toBeUndefined();
     });
   });
 
-  describe('Session Expiration', () => {
-    it('should clean up expired sessions', async () => {
+  describe("Session Expiration", () => {
+    it("should clean up expired sessions", async () => {
       const testUser = {
-        userId: '123',
-        email: 'test@example.com',
-        role: 'student'
+        userId: "123",
+        email: "test@example.com",
+        role: "student",
       };
 
       // Create a session

@@ -9,7 +9,7 @@
  * - Fast and cost-effective: Uses gemini-2.5-flash model
  */
 
-import type { WeeklyStats } from './db-queries';
+import type { WeeklyStats } from "./db-queries";
 
 interface AIInsight {
   summary: string;
@@ -28,43 +28,43 @@ interface AIInsight {
  * - AI generation fails (graceful degradation)
  */
 export async function generateAIInsights(
-  stats: WeeklyStats
+  stats: WeeklyStats,
 ): Promise<AIInsight | null> {
   // Skip AI in test environment
-  if (process.env.NODE_ENV === 'test') {
+  if (process.env.NODE_ENV === "test") {
     return null;
   }
 
   // Check if Vertex AI is configured
   const projectId = process.env.GCP_PROJECT_ID;
-  const location = process.env.VERTEX_AI_LOCATION || 'us-central1';
+  const location = process.env.VERTEX_AI_LOCATION || "us-central1";
 
   if (!projectId) {
-    console.warn('GCP_PROJECT_ID not configured, skipping AI insights');
+    console.warn("GCP_PROJECT_ID not configured, skipping AI insights");
     return null;
   }
 
   try {
     // Dynamic import to avoid loading in test environment
-    const { VertexAI } = await import('@google-cloud/vertexai');
+    const { VertexAI } = await import("@google-cloud/vertexai");
 
     const vertexAI = new VertexAI({
       project: projectId,
-      location: location
+      location: location,
     });
 
     const model = vertexAI.getGenerativeModel({
-      model: process.env.VERTEX_AI_MODEL || 'gemini-2.5-flash'
+      model: process.env.VERTEX_AI_MODEL || "gemini-2.5-flash",
     });
 
     const prompt = buildPrompt(stats);
 
     const result = await model.generateContent(prompt);
     const response = result.response;
-    const text = response.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    const text = response.candidates?.[0]?.content?.parts?.[0]?.text || "";
 
     if (!text) {
-      console.warn('AI generated empty response');
+      console.warn("AI generated empty response");
       return null;
     }
 
@@ -72,7 +72,7 @@ export async function generateAIInsights(
     const insight = parseAIResponse(text);
     return insight;
   } catch (error) {
-    console.error('Error generating AI insights:', error);
+    console.error("Error generating AI insights:", error);
     // Graceful degradation: return null if AI fails
     return null;
   }
@@ -91,7 +91,7 @@ function buildPrompt(stats: WeeklyStats): string {
 - 本週新增：${stats.userGrowth.newThisWeek}
 - 上週新增：${stats.userGrowth.newLastWeek}
 - 週增長率：${stats.userGrowth.weekOverWeekGrowth.toFixed(1)}%
-- 每日趨勢：${stats.userGrowth.dailyTrend.join(', ')}
+- 每日趨勢：${stats.userGrowth.dailyTrend.join(", ")}
 - 每日平均：${stats.userGrowth.avgPerDay.toFixed(1)}
 
 **用戶參與：**
@@ -143,15 +143,15 @@ function parseAIResponse(text: string): AIInsight | null {
   try {
     // Remove markdown code blocks if present
     const cleaned = text
-      .replace(/```json\n?/g, '')
-      .replace(/```\n?/g, '')
+      .replace(/```json\n?/g, "")
+      .replace(/```\n?/g, "")
       .trim();
 
     const parsed = JSON.parse(cleaned);
 
     // Validate structure
     if (
-      typeof parsed.summary === 'string' &&
+      typeof parsed.summary === "string" &&
       Array.isArray(parsed.highlights) &&
       Array.isArray(parsed.recommendations) &&
       Array.isArray(parsed.concerns)
@@ -159,10 +159,10 @@ function parseAIResponse(text: string): AIInsight | null {
       return parsed as AIInsight;
     }
 
-    console.warn('AI response missing required fields');
+    console.warn("AI response missing required fields");
     return null;
   } catch (error) {
-    console.error('Error parsing AI response:', error);
+    console.error("Error parsing AI response:", error);
     return null;
   }
 }

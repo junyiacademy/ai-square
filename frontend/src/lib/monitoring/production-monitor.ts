@@ -3,8 +3,8 @@
  * Core monitoring functionality without external dependencies
  */
 
-import { performanceMonitor } from './performance-monitor';
-import { distributedCacheService } from '@/lib/cache/distributed-cache-service';
+import { performanceMonitor } from "./performance-monitor";
+import { distributedCacheService } from "@/lib/cache/distributed-cache-service";
 
 interface MonitoringConfig {
   alertThresholds: {
@@ -22,7 +22,7 @@ class ProductionMonitor {
 
   constructor() {
     this.config = this.loadConfig();
-    this.isEnabled = process.env.NODE_ENV === 'production';
+    this.isEnabled = process.env.NODE_ENV === "production";
 
     if (this.isEnabled) {
       this.startPeriodicReporting();
@@ -32,13 +32,12 @@ class ProductionMonitor {
   private loadConfig(): MonitoringConfig {
     return {
       alertThresholds: {
-        responseTime: parseInt(process.env.ALERT_RESPONSE_TIME || '5000'),
-        errorRate: parseInt(process.env.ALERT_ERROR_RATE || '5'),
-        cacheHitRate: parseInt(process.env.ALERT_CACHE_HIT_RATE || '50')
-      }
+        responseTime: parseInt(process.env.ALERT_RESPONSE_TIME || "5000"),
+        errorRate: parseInt(process.env.ALERT_ERROR_RATE || "5"),
+        cacheHitRate: parseInt(process.env.ALERT_CACHE_HIT_RATE || "50"),
+      },
     };
   }
-
 
   private startPeriodicReporting(): void {
     // Report metrics every 1 minute
@@ -59,31 +58,34 @@ class ProductionMonitor {
 
       // Calculate summary
       const summary = {
-        averageResponseTime: metrics.length > 0
-          ? metrics.reduce((sum, m) => sum + m.averageResponseTime, 0) / metrics.length
-          : 0,
-        averageCacheHitRate: metrics.length > 0
-          ? metrics.reduce((sum, m) => sum + m.cacheHitRate, 0) / metrics.length
-          : 0,
-        averageErrorRate: metrics.length > 0
-          ? metrics.reduce((sum, m) => sum + m.errorRate, 0) / metrics.length
-          : 0
+        averageResponseTime:
+          metrics.length > 0
+            ? metrics.reduce((sum, m) => sum + m.averageResponseTime, 0) /
+              metrics.length
+            : 0,
+        averageCacheHitRate:
+          metrics.length > 0
+            ? metrics.reduce((sum, m) => sum + m.cacheHitRate, 0) /
+              metrics.length
+            : 0,
+        averageErrorRate:
+          metrics.length > 0
+            ? metrics.reduce((sum, m) => sum + m.errorRate, 0) / metrics.length
+            : 0,
       };
 
       // Log metrics locally
-      console.log('Performance Metrics:', {
+      console.log("Performance Metrics:", {
         timestamp: new Date().toISOString(),
         averageResponseTime: summary.averageResponseTime,
         averageCacheHitRate: summary.averageCacheHitRate,
         averageErrorRate: summary.averageErrorRate,
-        cacheStats
+        cacheStats,
       });
-
     } catch (error) {
-      console.error('Failed to report metrics:', error);
+      console.error("Failed to report metrics:", error);
     }
   }
-
 
   private async checkAlerts(): Promise<void> {
     const metrics = performanceMonitor.getAllMetrics();
@@ -91,43 +93,56 @@ class ProductionMonitor {
 
     // Calculate summary
     const summary = {
-      averageResponseTime: metrics.length > 0
-        ? metrics.reduce((sum, m) => sum + m.averageResponseTime, 0) / metrics.length
-        : 0,
-      averageErrorRate: metrics.length > 0
-        ? metrics.reduce((sum, m) => sum + m.errorRate, 0) / metrics.length
-        : 0,
-      averageCacheHitRate: (cacheStats as { hitRate?: number }).hitRate || 0
+      averageResponseTime:
+        metrics.length > 0
+          ? metrics.reduce((sum, m) => sum + m.averageResponseTime, 0) /
+            metrics.length
+          : 0,
+      averageErrorRate:
+        metrics.length > 0
+          ? metrics.reduce((sum, m) => sum + m.errorRate, 0) / metrics.length
+          : 0,
+      averageCacheHitRate: (cacheStats as { hitRate?: number }).hitRate || 0,
     };
 
     // Check response time alerts
-    if (summary.averageResponseTime > this.config.alertThresholds.responseTime) {
-      this.sendAlert('high_response_time', {
+    if (
+      summary.averageResponseTime > this.config.alertThresholds.responseTime
+    ) {
+      this.sendAlert("high_response_time", {
         current: summary.averageResponseTime,
-        threshold: this.config.alertThresholds.responseTime
+        threshold: this.config.alertThresholds.responseTime,
       });
     }
 
     // Check error rate alerts
     if (summary.averageErrorRate > this.config.alertThresholds.errorRate) {
-      this.sendAlert('high_error_rate', {
+      this.sendAlert("high_error_rate", {
         current: summary.averageErrorRate,
-        threshold: this.config.alertThresholds.errorRate
+        threshold: this.config.alertThresholds.errorRate,
       });
     }
 
     // Check cache hit rate alerts
-    if (summary.averageCacheHitRate < this.config.alertThresholds.cacheHitRate) {
-      this.sendAlert('low_cache_hit_rate', {
+    if (
+      summary.averageCacheHitRate < this.config.alertThresholds.cacheHitRate
+    ) {
+      this.sendAlert("low_cache_hit_rate", {
         current: summary.averageCacheHitRate,
-        threshold: this.config.alertThresholds.cacheHitRate
+        threshold: this.config.alertThresholds.cacheHitRate,
       });
     }
 
     // Check Redis connectivity
-    if (cacheStats.redisStats && typeof cacheStats.redisStats === 'object' && cacheStats.redisStats !== null && 'redisConnected' in cacheStats.redisStats && !cacheStats.redisStats.redisConnected) {
-      this.sendAlert('redis_disconnected', {
-        fallbackCacheSize: cacheStats.localCacheSize
+    if (
+      cacheStats.redisStats &&
+      typeof cacheStats.redisStats === "object" &&
+      cacheStats.redisStats !== null &&
+      "redisConnected" in cacheStats.redisStats &&
+      !cacheStats.redisStats.redisConnected
+    ) {
+      this.sendAlert("redis_disconnected", {
+        fallbackCacheSize: cacheStats.localCacheSize,
       });
     }
   }
@@ -150,22 +165,25 @@ class ProductionMonitor {
     }
   }
 
-  private async sendWebhookAlert(type: string, data: Record<string, unknown>): Promise<void> {
+  private async sendWebhookAlert(
+    type: string,
+    data: Record<string, unknown>,
+  ): Promise<void> {
     try {
       await fetch(process.env.ALERT_WEBHOOK_URL!, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           alert_type: type,
           data,
           timestamp: new Date().toISOString(),
-          service: 'ai-square-frontend'
-        })
+          service: "ai-square-frontend",
+        }),
       });
     } catch (error) {
-      console.error('Failed to send webhook alert:', error);
+      console.error("Failed to send webhook alert:", error);
     }
   }
 
@@ -174,13 +192,13 @@ class ProductionMonitor {
    */
   getStatus(): {
     enabled: boolean;
-    alertThresholds: MonitoringConfig['alertThresholds'];
+    alertThresholds: MonitoringConfig["alertThresholds"];
     lastReported: Date;
   } {
     return {
       enabled: this.isEnabled,
       alertThresholds: this.config.alertThresholds,
-      lastReported: new Date()
+      lastReported: new Date(),
     };
   }
 }

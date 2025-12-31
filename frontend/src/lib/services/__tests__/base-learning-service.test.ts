@@ -4,19 +4,19 @@
  * This file validates the interface definition exists and is properly typed
  */
 
-import { BaseLearningService } from '../base-learning-service';
+import { BaseLearningService } from "../base-learning-service";
 
-describe('BaseLearningService interface', () => {
-  it('should define the correct interface structure', () => {
+describe("BaseLearningService interface", () => {
+  it("should define the correct interface structure", () => {
     // Verify the interface has required methods
     const interfaceKeys = [
-      'startLearning',
-      'getProgress',
-      'submitResponse',
-      'completeLearning',
-      'getNextTask',
-      'evaluateTask',
-      'generateFeedback'
+      "startLearning",
+      "getProgress",
+      "submitResponse",
+      "completeLearning",
+      "getNextTask",
+      "evaluateTask",
+      "generateFeedback",
     ];
 
     // This test ensures the interface is properly exported and typed
@@ -28,7 +28,7 @@ describe('BaseLearningService interface', () => {
     expect(true).toBe(true);
   });
 
-  it('should export LearningOptions interface', () => {
+  it("should export LearningOptions interface", () => {
     // Verify associated interfaces are exported
     // LearningOptions, LearningProgress, TaskResult, CompletionResult
     // should be available from the module

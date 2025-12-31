@@ -3,33 +3,41 @@
  * Tests for PATCH /api/discovery/programs/[programId]/tasks/[taskId]
  */
 
-import { NextRequest } from 'next/server';
-import { PATCH } from '../route';
-import { getUnifiedAuth } from '@/lib/auth/unified-auth';
-import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import type { IProgram, ITask } from '@/types/unified-learning';
-import type { User } from '@/lib/repositories/interfaces';
-import { mockConsoleError as createMockConsoleError } from '@/test-utils/helpers/console';
+import { NextRequest } from "next/server";
+import { PATCH } from "../route";
+import { getUnifiedAuth } from "@/lib/auth/unified-auth";
+import { repositoryFactory } from "@/lib/repositories/base/repository-factory";
+import type { IProgram, ITask } from "@/types/unified-learning";
+import type { User } from "@/lib/repositories/interfaces";
+import { mockConsoleError as createMockConsoleError } from "@/test-utils/helpers/console";
 
 // Mock dependencies
-jest.mock('@/lib/auth/unified-auth', () => ({
+jest.mock("@/lib/auth/unified-auth", () => ({
   getUnifiedAuth: jest.fn(),
-  createUnauthorizedResponse: jest.fn(() =>
-    new Response(JSON.stringify({ success: false, error: 'Authentication required' }), {
-      status: 401,
-      headers: { 'Content-Type': 'application/json' }
-    })
-  )
+  createUnauthorizedResponse: jest.fn(
+    () =>
+      new Response(
+        JSON.stringify({ success: false, error: "Authentication required" }),
+        {
+          status: 401,
+          headers: { "Content-Type": "application/json" },
+        },
+      ),
+  ),
 }));
-jest.mock('@/lib/repositories/base/repository-factory');
+jest.mock("@/lib/repositories/base/repository-factory");
 
-const mockGetUnifiedAuth = getUnifiedAuth as jest.MockedFunction<typeof getUnifiedAuth>;
-const mockRepositoryFactory = repositoryFactory as jest.Mocked<typeof repositoryFactory>;
+const mockGetUnifiedAuth = getUnifiedAuth as jest.MockedFunction<
+  typeof getUnifiedAuth
+>;
+const mockRepositoryFactory = repositoryFactory as jest.Mocked<
+  typeof repositoryFactory
+>;
 
 // Mock console
 const mockConsoleError = createMockConsoleError();
 
-describe('PATCH /api/discovery/programs/[programId]/tasks/[taskId]', () => {
+describe("PATCH /api/discovery/programs/[programId]/tasks/[taskId]", () => {
   let mockUserRepo: {
     findByEmail: jest.Mock;
   };
@@ -44,25 +52,25 @@ describe('PATCH /api/discovery/programs/[programId]/tasks/[taskId]', () => {
   };
 
   const mockUser: User = {
-    id: 'user-123',
-    email: 'test@example.com',
-    name: 'Test User',
-    preferredLanguage: 'en',
+    id: "user-123",
+    email: "test@example.com",
+    name: "Test User",
+    preferredLanguage: "en",
     level: 1,
     totalXp: 0,
     learningPreferences: {},
     onboardingCompleted: true,
     createdAt: new Date(),
     updatedAt: new Date(),
-    lastActiveAt: new Date()
+    lastActiveAt: new Date(),
   };
 
   const mockProgram: IProgram = {
-    id: 'program-123',
-    userId: 'user-123',
-    scenarioId: 'scenario-123',
-    mode: 'discovery',
-    status: 'active',
+    id: "program-123",
+    userId: "user-123",
+    scenarioId: "scenario-123",
+    mode: "discovery",
+    status: "active",
     currentTaskIndex: 0,
     completedTaskCount: 0,
     totalTaskCount: 3,
@@ -70,28 +78,28 @@ describe('PATCH /api/discovery/programs/[programId]/tasks/[taskId]', () => {
     domainScores: {},
     xpEarned: 0,
     badgesEarned: [],
-    createdAt: '2024-01-01T00:00:00Z',
-    startedAt: '2024-01-01T00:00:00Z',
-    updatedAt: '2024-01-01T00:00:00Z',
-    lastActivityAt: '2024-01-01T00:00:00Z',
+    createdAt: "2024-01-01T00:00:00Z",
+    startedAt: "2024-01-01T00:00:00Z",
+    updatedAt: "2024-01-01T00:00:00Z",
+    lastActivityAt: "2024-01-01T00:00:00Z",
     timeSpentSeconds: 0,
     pblData: {},
     discoveryData: {},
     assessmentData: {},
-    metadata: {}
+    metadata: {},
   };
 
   const mockTask: ITask = {
-    id: 'task-123',
-    programId: 'program-123',
-    mode: 'discovery',
+    id: "task-123",
+    programId: "program-123",
+    mode: "discovery",
     taskIndex: 0,
     scenarioTaskIndex: 0,
-    title: { en: 'Task 1' },
-    description: { en: 'First task' },
-    type: 'question',
-    status: 'pending',
-    content: { instructions: 'Complete this' },
+    title: { en: "Task 1" },
+    description: { en: "First task" },
+    type: "question",
+    status: "pending",
+    content: { instructions: "Complete this" },
     interactions: [],
     interactionCount: 0,
     userResponse: {},
@@ -101,16 +109,16 @@ describe('PATCH /api/discovery/programs/[programId]/tasks/[taskId]', () => {
     attemptCount: 0,
     timeSpentSeconds: 0,
     aiConfig: {},
-    createdAt: '2024-01-01T00:00:00Z',
-    updatedAt: '2024-01-01T00:00:00Z',
+    createdAt: "2024-01-01T00:00:00Z",
+    updatedAt: "2024-01-01T00:00:00Z",
     pblData: {},
     discoveryData: {},
     assessmentData: {},
-    metadata: {}
+    metadata: {},
   };
 
   const mockContext = {
-    params: Promise.resolve({'programId':'program-123','taskId':'task-123'})
+    params: Promise.resolve({ programId: "program-123", taskId: "task-123" }),
   };
 
   beforeEach(() => {
@@ -118,31 +126,39 @@ describe('PATCH /api/discovery/programs/[programId]/tasks/[taskId]', () => {
 
     // Setup repository mocks
     mockUserRepo = {
-      findByEmail: jest.fn().mockResolvedValue(mockUser)
+      findByEmail: jest.fn().mockResolvedValue(mockUser),
     };
 
     mockProgramRepo = {
       findById: jest.fn().mockResolvedValue(mockProgram),
-      update: jest.fn().mockResolvedValue(mockProgram)
+      update: jest.fn().mockResolvedValue(mockProgram),
     };
 
     mockTaskRepo = {
       findById: jest.fn().mockResolvedValue(mockTask),
-      findByProgram: jest.fn().mockResolvedValue([
-        mockTask,
-        { ...mockTask, id: 'task-2', taskIndex: 1, status: 'pending' },
-        { ...mockTask, id: 'task-3', taskIndex: 2, status: 'pending' }
-      ]),
-      update: jest.fn().mockResolvedValue(mockTask)
+      findByProgram: jest
+        .fn()
+        .mockResolvedValue([
+          mockTask,
+          { ...mockTask, id: "task-2", taskIndex: 1, status: "pending" },
+          { ...mockTask, id: "task-3", taskIndex: 2, status: "pending" },
+        ]),
+      update: jest.fn().mockResolvedValue(mockTask),
     };
 
-    mockRepositoryFactory.getUserRepository.mockReturnValue(mockUserRepo as any);
-    mockRepositoryFactory.getProgramRepository.mockReturnValue(mockProgramRepo as any);
-    mockRepositoryFactory.getTaskRepository.mockReturnValue(mockTaskRepo as any);
+    mockRepositoryFactory.getUserRepository.mockReturnValue(
+      mockUserRepo as any,
+    );
+    mockRepositoryFactory.getProgramRepository.mockReturnValue(
+      mockProgramRepo as any,
+    );
+    mockRepositoryFactory.getTaskRepository.mockReturnValue(
+      mockTaskRepo as any,
+    );
 
     // Default session
     mockGetUnifiedAuth.mockResolvedValue({
-      user: { email: 'test@example.com' }
+      user: { email: "test@example.com" },
     } as any);
   });
 
@@ -150,307 +166,389 @@ describe('PATCH /api/discovery/programs/[programId]/tasks/[taskId]', () => {
     mockConsoleError.mockRestore();
   });
 
-  it('should require authentication', async () => {
+  it("should require authentication", async () => {
     mockGetUnifiedAuth.mockResolvedValueOnce(null);
 
-    const request = new NextRequest('http://localhost:3000/api/discovery/programs/program-123/tasks/task-123', {
-      method: 'PATCH',
-      body: JSON.stringify({ status: 'active' })
-    });
+    const request = new NextRequest(
+      "http://localhost:3000/api/discovery/programs/program-123/tasks/task-123",
+      {
+        method: "PATCH",
+        body: JSON.stringify({ status: "active" }),
+      },
+    );
 
     const response = await PATCH(request, mockContext);
     const data = await response.json();
 
     expect(response.status).toBe(401);
     expect(data.success).toBe(false);
-    expect(data.error).toBe('Authentication required');
+    expect(data.error).toBe("Authentication required");
   });
 
-  it('should return 404 if user not found', async () => {
+  it("should return 404 if user not found", async () => {
     mockUserRepo.findByEmail.mockResolvedValueOnce(null);
 
-    const request = new NextRequest('http://localhost:3000/api/discovery/programs/program-123/tasks/task-123', {
-      method: 'PATCH',
-      body: JSON.stringify({ status: 'active' })
-    });
+    const request = new NextRequest(
+      "http://localhost:3000/api/discovery/programs/program-123/tasks/task-123",
+      {
+        method: "PATCH",
+        body: JSON.stringify({ status: "active" }),
+      },
+    );
 
     const response = await PATCH(request, mockContext);
     const data = await response.json();
 
     expect(response.status).toBe(404);
     expect(data.success).toBe(false);
-    expect(data.error).toBe('User not found');
+    expect(data.error).toBe("User not found");
   });
 
-  it('should return 404 if program not found', async () => {
+  it("should return 404 if program not found", async () => {
     mockProgramRepo.findById.mockResolvedValueOnce(null);
 
-    const request = new NextRequest('http://localhost:3000/api/discovery/programs/program-123/tasks/task-123', {
-      method: 'PATCH',
-      body: JSON.stringify({ status: 'active' })
-    });
+    const request = new NextRequest(
+      "http://localhost:3000/api/discovery/programs/program-123/tasks/task-123",
+      {
+        method: "PATCH",
+        body: JSON.stringify({ status: "active" }),
+      },
+    );
 
     const response = await PATCH(request, mockContext);
     const data = await response.json();
 
     expect(response.status).toBe(404);
     expect(data.success).toBe(false);
-    expect(data.error).toBe('Program not found');
+    expect(data.error).toBe("Program not found");
   });
 
-  it('should return 403 if user does not own program', async () => {
+  it("should return 403 if user does not own program", async () => {
     mockProgramRepo.findById.mockResolvedValueOnce({
       ...mockProgram,
-      userId: 'other-user'
+      userId: "other-user",
     });
 
-    const request = new NextRequest('http://localhost:3000/api/discovery/programs/program-123/tasks/task-123', {
-      method: 'PATCH',
-      body: JSON.stringify({ status: 'active' })
-    });
+    const request = new NextRequest(
+      "http://localhost:3000/api/discovery/programs/program-123/tasks/task-123",
+      {
+        method: "PATCH",
+        body: JSON.stringify({ status: "active" }),
+      },
+    );
 
     const response = await PATCH(request, mockContext);
     const data = await response.json();
 
     expect(response.status).toBe(403);
     expect(data.success).toBe(false);
-    expect(data.error).toBe('Access denied');
+    expect(data.error).toBe("Access denied");
   });
 
-  it('should return 404 if task not found', async () => {
+  it("should return 404 if task not found", async () => {
     mockTaskRepo.findById.mockResolvedValueOnce(null);
 
-    const request = new NextRequest('http://localhost:3000/api/discovery/programs/program-123/tasks/task-123', {
-      method: 'PATCH',
-      body: JSON.stringify({ status: 'active' })
-    });
+    const request = new NextRequest(
+      "http://localhost:3000/api/discovery/programs/program-123/tasks/task-123",
+      {
+        method: "PATCH",
+        body: JSON.stringify({ status: "active" }),
+      },
+    );
 
     const response = await PATCH(request, mockContext);
     const data = await response.json();
 
     expect(response.status).toBe(404);
     expect(data.success).toBe(false);
-    expect(data.error).toBe('Task not found');
+    expect(data.error).toBe("Task not found");
   });
 
-  it('should return 403 if task does not belong to program', async () => {
+  it("should return 403 if task does not belong to program", async () => {
     mockTaskRepo.findById.mockResolvedValueOnce({
       ...mockTask,
-      programId: 'other-program'
+      programId: "other-program",
     });
 
-    const request = new NextRequest('http://localhost:3000/api/discovery/programs/program-123/tasks/task-123', {
-      method: 'PATCH',
-      body: JSON.stringify({ status: 'active' })
-    });
+    const request = new NextRequest(
+      "http://localhost:3000/api/discovery/programs/program-123/tasks/task-123",
+      {
+        method: "PATCH",
+        body: JSON.stringify({ status: "active" }),
+      },
+    );
 
     const response = await PATCH(request, mockContext);
     const data = await response.json();
 
     expect(response.status).toBe(403);
     expect(data.success).toBe(false);
-    expect(data.error).toBe('Task does not belong to this program');
+    expect(data.error).toBe("Task does not belong to this program");
   });
 
-  it('should update task status from pending to active', async () => {
-    const request = new NextRequest('http://localhost:3000/api/discovery/programs/program-123/tasks/task-123', {
-      method: 'PATCH',
-      body: JSON.stringify({ status: 'active' })
-    });
+  it("should update task status from pending to active", async () => {
+    const request = new NextRequest(
+      "http://localhost:3000/api/discovery/programs/program-123/tasks/task-123",
+      {
+        method: "PATCH",
+        body: JSON.stringify({ status: "active" }),
+      },
+    );
 
     const response = await PATCH(request, mockContext);
     const data = await response.json();
 
     expect(response.status).toBe(200);
     expect(data.success).toBe(true);
-    expect(mockTaskRepo.update).toHaveBeenCalledWith('task-123', expect.objectContaining({
-      status: 'active',
-      startedAt: expect.any(String),
-      updatedAt: expect.any(String)
-    }));
+    expect(mockTaskRepo.update).toHaveBeenCalledWith(
+      "task-123",
+      expect.objectContaining({
+        status: "active",
+        startedAt: expect.any(String),
+        updatedAt: expect.any(String),
+      }),
+    );
   });
 
-  it('should update task status from active to completed', async () => {
+  it("should update task status from active to completed", async () => {
     mockTaskRepo.findById.mockResolvedValueOnce({
       ...mockTask,
-      status: 'active'
+      status: "active",
     });
 
-    const request = new NextRequest('http://localhost:3000/api/discovery/programs/program-123/tasks/task-123', {
-      method: 'PATCH',
-      body: JSON.stringify({ status: 'completed' })
-    });
+    const request = new NextRequest(
+      "http://localhost:3000/api/discovery/programs/program-123/tasks/task-123",
+      {
+        method: "PATCH",
+        body: JSON.stringify({ status: "completed" }),
+      },
+    );
 
     const response = await PATCH(request, mockContext);
     const data = await response.json();
 
     expect(response.status).toBe(200);
     expect(data.success).toBe(true);
-    expect(mockTaskRepo.update).toHaveBeenCalledWith('task-123', expect.objectContaining({
-      status: 'completed',
-      completedAt: expect.any(String),
-      updatedAt: expect.any(String)
-    }));
+    expect(mockTaskRepo.update).toHaveBeenCalledWith(
+      "task-123",
+      expect.objectContaining({
+        status: "completed",
+        completedAt: expect.any(String),
+        updatedAt: expect.any(String),
+      }),
+    );
 
     // Should update program progress
-    expect(mockProgramRepo.update).toHaveBeenCalledWith('program-123', expect.objectContaining({
-      completedTaskCount: 1,
-      currentTaskIndex: 1,
-      lastActivityAt: expect.any(String)
-    }));
+    expect(mockProgramRepo.update).toHaveBeenCalledWith(
+      "program-123",
+      expect.objectContaining({
+        completedTaskCount: 1,
+        currentTaskIndex: 1,
+        lastActivityAt: expect.any(String),
+      }),
+    );
   });
 
-  it('should update task score', async () => {
-    const request = new NextRequest('http://localhost:3000/api/discovery/programs/program-123/tasks/task-123', {
-      method: 'PATCH',
-      body: JSON.stringify({ score: 85 })
-    });
+  it("should update task score", async () => {
+    const request = new NextRequest(
+      "http://localhost:3000/api/discovery/programs/program-123/tasks/task-123",
+      {
+        method: "PATCH",
+        body: JSON.stringify({ score: 85 }),
+      },
+    );
 
     const response = await PATCH(request, mockContext);
     const data = await response.json();
 
     expect(response.status).toBe(200);
     expect(data.success).toBe(true);
-    expect(mockTaskRepo.update).toHaveBeenCalledWith('task-123', expect.objectContaining({
-      score: 85,
-      updatedAt: expect.any(String)
-    }));
+    expect(mockTaskRepo.update).toHaveBeenCalledWith(
+      "task-123",
+      expect.objectContaining({
+        score: 85,
+        updatedAt: expect.any(String),
+      }),
+    );
   });
 
-  it('should update task feedback', async () => {
-    const feedback = { text: 'Great job!', rating: 5 };
-    const request = new NextRequest('http://localhost:3000/api/discovery/programs/program-123/tasks/task-123', {
-      method: 'PATCH',
-      body: JSON.stringify({ feedback })
-    });
+  it("should update task feedback", async () => {
+    const feedback = { text: "Great job!", rating: 5 };
+    const request = new NextRequest(
+      "http://localhost:3000/api/discovery/programs/program-123/tasks/task-123",
+      {
+        method: "PATCH",
+        body: JSON.stringify({ feedback }),
+      },
+    );
 
     const response = await PATCH(request, mockContext);
     const data = await response.json();
 
     expect(response.status).toBe(200);
     expect(data.success).toBe(true);
-    expect(mockTaskRepo.update).toHaveBeenCalledWith('task-123', expect.objectContaining({
-      feedback,
-      updatedAt: expect.any(String)
-    }));
+    expect(mockTaskRepo.update).toHaveBeenCalledWith(
+      "task-123",
+      expect.objectContaining({
+        feedback,
+        updatedAt: expect.any(String),
+      }),
+    );
   });
 
-  it('should update task time spent', async () => {
-    const request = new NextRequest('http://localhost:3000/api/discovery/programs/program-123/tasks/task-123', {
-      method: 'PATCH',
-      body: JSON.stringify({ timeSpentSeconds: 300 })
-    });
+  it("should update task time spent", async () => {
+    const request = new NextRequest(
+      "http://localhost:3000/api/discovery/programs/program-123/tasks/task-123",
+      {
+        method: "PATCH",
+        body: JSON.stringify({ timeSpentSeconds: 300 }),
+      },
+    );
 
     const response = await PATCH(request, mockContext);
     const data = await response.json();
 
     expect(response.status).toBe(200);
     expect(data.success).toBe(true);
-    expect(mockTaskRepo.update).toHaveBeenCalledWith('task-123', expect.objectContaining({
-      timeSpentSeconds: 300,
-      updatedAt: expect.any(String)
-    }));
+    expect(mockTaskRepo.update).toHaveBeenCalledWith(
+      "task-123",
+      expect.objectContaining({
+        timeSpentSeconds: 300,
+        updatedAt: expect.any(String),
+      }),
+    );
   });
 
-  it('should update task interactions', async () => {
+  it("should update task interactions", async () => {
     const interactions = [
-      { type: 'user_input', content: 'My answer', timestamp: '2024-01-01T00:00:00Z' }
+      {
+        type: "user_input",
+        content: "My answer",
+        timestamp: "2024-01-01T00:00:00Z",
+      },
     ];
-    const request = new NextRequest('http://localhost:3000/api/discovery/programs/program-123/tasks/task-123', {
-      method: 'PATCH',
-      body: JSON.stringify({ interactions })
-    });
+    const request = new NextRequest(
+      "http://localhost:3000/api/discovery/programs/program-123/tasks/task-123",
+      {
+        method: "PATCH",
+        body: JSON.stringify({ interactions }),
+      },
+    );
 
     const response = await PATCH(request, mockContext);
     const data = await response.json();
 
     expect(response.status).toBe(200);
     expect(data.success).toBe(true);
-    expect(mockTaskRepo.update).toHaveBeenCalledWith('task-123', expect.objectContaining({
-      interactions,
-      updatedAt: expect.any(String)
-    }));
+    expect(mockTaskRepo.update).toHaveBeenCalledWith(
+      "task-123",
+      expect.objectContaining({
+        interactions,
+        updatedAt: expect.any(String),
+      }),
+    );
   });
 
-  it('should merge metadata when updating', async () => {
+  it("should merge metadata when updating", async () => {
     mockTaskRepo.findById.mockResolvedValueOnce({
       ...mockTask,
-      metadata: { existing: 'value' }
+      metadata: { existing: "value" },
     });
 
-    const request = new NextRequest('http://localhost:3000/api/discovery/programs/program-123/tasks/task-123', {
-      method: 'PATCH',
-      body: JSON.stringify({ metadata: { new: 'data' } })
-    });
+    const request = new NextRequest(
+      "http://localhost:3000/api/discovery/programs/program-123/tasks/task-123",
+      {
+        method: "PATCH",
+        body: JSON.stringify({ metadata: { new: "data" } }),
+      },
+    );
 
     const response = await PATCH(request, mockContext);
     const data = await response.json();
 
     expect(response.status).toBe(200);
     expect(data.success).toBe(true);
-    expect(mockTaskRepo.update).toHaveBeenCalledWith('task-123', expect.objectContaining({
-      metadata: { existing: 'value', new: 'data' },
-      updatedAt: expect.any(String)
-    }));
+    expect(mockTaskRepo.update).toHaveBeenCalledWith(
+      "task-123",
+      expect.objectContaining({
+        metadata: { existing: "value", new: "data" },
+        updatedAt: expect.any(String),
+      }),
+    );
   });
 
-  it('should update multiple fields at once', async () => {
-    const request = new NextRequest('http://localhost:3000/api/discovery/programs/program-123/tasks/task-123', {
-      method: 'PATCH',
-      body: JSON.stringify({
-        status: 'completed',
+  it("should update multiple fields at once", async () => {
+    const request = new NextRequest(
+      "http://localhost:3000/api/discovery/programs/program-123/tasks/task-123",
+      {
+        method: "PATCH",
+        body: JSON.stringify({
+          status: "completed",
+          score: 95,
+          feedback: { text: "Excellent!" },
+          timeSpentSeconds: 600,
+        }),
+      },
+    );
+
+    const response = await PATCH(request, mockContext);
+    const data = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(data.success).toBe(true);
+    expect(mockTaskRepo.update).toHaveBeenCalledWith(
+      "task-123",
+      expect.objectContaining({
+        status: "completed",
+        completedAt: expect.any(String),
         score: 95,
-        feedback: { text: 'Excellent!' },
-        timeSpentSeconds: 600
-      })
-    });
-
-    const response = await PATCH(request, mockContext);
-    const data = await response.json();
-
-    expect(response.status).toBe(200);
-    expect(data.success).toBe(true);
-    expect(mockTaskRepo.update).toHaveBeenCalledWith('task-123', expect.objectContaining({
-      status: 'completed',
-      completedAt: expect.any(String),
-      score: 95,
-      feedback: { text: 'Excellent!' },
-      timeSpentSeconds: 600,
-      updatedAt: expect.any(String)
-    }));
+        feedback: { text: "Excellent!" },
+        timeSpentSeconds: 600,
+        updatedAt: expect.any(String),
+      }),
+    );
   });
 
-  it('should handle when all tasks are completed', async () => {
+  it("should handle when all tasks are completed", async () => {
     mockTaskRepo.findByProgram.mockResolvedValueOnce([
-      { ...mockTask, id: 'task-1', status: 'completed' },
-      { ...mockTask, id: 'task-2', status: 'completed' },
-      { ...mockTask, id: 'task-123', status: 'active' }
+      { ...mockTask, id: "task-1", status: "completed" },
+      { ...mockTask, id: "task-2", status: "completed" },
+      { ...mockTask, id: "task-123", status: "active" },
     ]);
 
-    const request = new NextRequest('http://localhost:3000/api/discovery/programs/program-123/tasks/task-123', {
-      method: 'PATCH',
-      body: JSON.stringify({ status: 'completed' })
-    });
+    const request = new NextRequest(
+      "http://localhost:3000/api/discovery/programs/program-123/tasks/task-123",
+      {
+        method: "PATCH",
+        body: JSON.stringify({ status: "completed" }),
+      },
+    );
 
     const response = await PATCH(request, mockContext);
     const data = await response.json();
 
     expect(response.status).toBe(200);
     expect(data.success).toBe(true);
-    expect(mockProgramRepo.update).toHaveBeenCalledWith('program-123', expect.objectContaining({
-      completedTaskCount: 3,
-      currentTaskIndex: 3, // No more pending tasks
-      lastActivityAt: expect.any(String)
-    }));
+    expect(mockProgramRepo.update).toHaveBeenCalledWith(
+      "program-123",
+      expect.objectContaining({
+        completedTaskCount: 3,
+        currentTaskIndex: 3, // No more pending tasks
+        lastActivityAt: expect.any(String),
+      }),
+    );
   });
 
-  it('should handle repository update method not available', async () => {
+  it("should handle repository update method not available", async () => {
     (mockTaskRepo as any).update = undefined;
 
-    const request = new NextRequest('http://localhost:3000/api/discovery/programs/program-123/tasks/task-123', {
-      method: 'PATCH',
-      body: JSON.stringify({ status: 'active' })
-    });
+    const request = new NextRequest(
+      "http://localhost:3000/api/discovery/programs/program-123/tasks/task-123",
+      {
+        method: "PATCH",
+        body: JSON.stringify({ status: "active" }),
+      },
+    );
 
     const response = await PATCH(request, mockContext);
     const data = await response.json();
@@ -459,31 +557,39 @@ describe('PATCH /api/discovery/programs/[programId]/tasks/[taskId]', () => {
     expect(data.success).toBe(true);
   });
 
-  it('should handle errors gracefully', async () => {
-    mockTaskRepo.update.mockRejectedValueOnce(new Error('Database error'));
+  it("should handle errors gracefully", async () => {
+    mockTaskRepo.update.mockRejectedValueOnce(new Error("Database error"));
 
-    const request = new NextRequest('http://localhost:3000/api/discovery/programs/program-123/tasks/task-123', {
-      method: 'PATCH',
-      body: JSON.stringify({ status: 'active' })
-    });
+    const request = new NextRequest(
+      "http://localhost:3000/api/discovery/programs/program-123/tasks/task-123",
+      {
+        method: "PATCH",
+        body: JSON.stringify({ status: "active" }),
+      },
+    );
 
     const response = await PATCH(request, mockContext);
     const data = await response.json();
 
     expect(response.status).toBe(500);
     expect(data.success).toBe(false);
-    expect(data.error).toBe('Internal server error');
+    expect(data.error).toBe("Internal server error");
     expect(mockConsoleError).toHaveBeenCalledWith(
-      expect.stringContaining('Error in PATCH /api/discovery/programs/[programId]/tasks/[taskId]:'),
-      expect.any(Error)
+      expect.stringContaining(
+        "Error in PATCH /api/discovery/programs/[programId]/tasks/[taskId]:",
+      ),
+      expect.any(Error),
     );
   });
 
-  it('should include metadata in response', async () => {
-    const request = new NextRequest('http://localhost:3000/api/discovery/programs/program-123/tasks/task-123', {
-      method: 'PATCH',
-      body: JSON.stringify({ status: 'active' })
-    });
+  it("should include metadata in response", async () => {
+    const request = new NextRequest(
+      "http://localhost:3000/api/discovery/programs/program-123/tasks/task-123",
+      {
+        method: "PATCH",
+        body: JSON.stringify({ status: "active" }),
+      },
+    );
 
     const response = await PATCH(request, mockContext);
     const data = await response.json();

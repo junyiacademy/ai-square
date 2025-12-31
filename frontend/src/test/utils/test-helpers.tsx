@@ -3,11 +3,11 @@
  * 提供統一的測試工具函數和 wrapper 組件
  */
 
-import React from 'react';
-import { render, RenderOptions } from '@testing-library/react';
-import { AuthProvider } from '@/contexts/AuthContext';
-import { ThemeProvider } from '@/contexts/ThemeContext';
-import userEvent from '@testing-library/user-event';
+import React from "react";
+import { render, RenderOptions } from "@testing-library/react";
+import { AuthProvider } from "@/contexts/AuthContext";
+import { ThemeProvider } from "@/contexts/ThemeContext";
+import userEvent from "@testing-library/user-event";
 
 // User type from AuthContext
 interface User {
@@ -24,9 +24,9 @@ const mockRefresh = jest.fn();
 const mockPrefetch = jest.fn();
 const mockBack = jest.fn();
 const mockForward = jest.fn();
-const mockPathname = jest.fn(() => '/');
+const mockPathname = jest.fn(() => "/");
 
-jest.mock('next/navigation', () => ({
+jest.mock("next/navigation", () => ({
   useRouter: jest.fn(() => ({
     push: mockPush,
     replace: mockReplace,
@@ -41,16 +41,18 @@ jest.mock('next/navigation', () => ({
 }));
 
 // Mock react-i18next
-jest.mock('react-i18next', () => ({
+jest.mock("react-i18next", () => ({
   useTranslation: () => ({
     t: (key: string) => key,
     i18n: {
-      language: 'en',
+      language: "en",
       changeLanguage: jest.fn(),
     },
   }),
   Trans: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-  I18nextProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  I18nextProvider: ({ children }: { children: React.ReactNode }) => (
+    <>{children}</>
+  ),
 }));
 
 // Default auth state for tests
@@ -66,22 +68,26 @@ export const defaultAuthState = {
 };
 
 // Mock AuthContext
-jest.mock('@/contexts/AuthContext', () => ({
+jest.mock("@/contexts/AuthContext", () => ({
   useAuth: () => defaultAuthState,
-  AuthProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  AuthProvider: ({ children }: { children: React.ReactNode }) => (
+    <>{children}</>
+  ),
 }));
 
 // Mock ThemeContext
 const mockToggleTheme = jest.fn();
 
-jest.mock('@/contexts/ThemeContext', () => {
+jest.mock("@/contexts/ThemeContext", () => {
   const toggleTheme = jest.fn();
   return {
     useTheme: jest.fn(() => ({
-      theme: 'light',
+      theme: "light",
       toggleTheme,
     })),
-    ThemeProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+    ThemeProvider: ({ children }: { children: React.ReactNode }) => (
+      <>{children}</>
+    ),
   };
 });
 
@@ -93,7 +99,7 @@ export const mockLocalStorage = {
   clear: jest.fn(),
 };
 
-Object.defineProperty(window, 'localStorage', {
+Object.defineProperty(window, "localStorage", {
   value: mockLocalStorage,
   writable: true,
 });
@@ -108,30 +114,30 @@ export const mockFetch = global.fetch as jest.MockedFunction<typeof fetch>;
 export const testUsers = {
   student: {
     id: 1,
-    email: 'student@example.com',
-    role: 'student',
-    name: 'Test Student',
+    email: "student@example.com",
+    role: "student",
+    name: "Test Student",
   },
   teacher: {
     id: 2,
-    email: 'teacher@example.com',
-    role: 'teacher',
-    name: 'Test Teacher',
+    email: "teacher@example.com",
+    role: "teacher",
+    name: "Test Teacher",
   },
   admin: {
     id: 3,
-    email: 'admin@example.com',
-    role: 'admin',
-    name: 'Test Admin',
+    email: "admin@example.com",
+    role: "admin",
+    name: "Test Admin",
   },
 };
 
 /**
  * Custom render function with all providers
  */
-interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
+interface CustomRenderOptions extends Omit<RenderOptions, "wrapper"> {
   authState?: Partial<typeof defaultAuthState>;
-  theme?: 'light' | 'dark';
+  theme?: "light" | "dark";
   route?: string;
 }
 
@@ -139,10 +145,10 @@ export function renderWithProviders(
   ui: React.ReactElement,
   {
     authState = {},
-    theme = 'light',
-    route = '/',
+    theme = "light",
+    route = "/",
     ...renderOptions
-  }: CustomRenderOptions = {}
+  }: CustomRenderOptions = {},
 ) {
   // Update auth state if provided
   Object.assign(defaultAuthState, authState);
@@ -151,7 +157,7 @@ export function renderWithProviders(
   mockPathname.mockReturnValue(route);
 
   // Update theme mock
-  const useThemeMock = jest.requireMock('@/contexts/ThemeContext').useTheme;
+  const useThemeMock = jest.requireMock("@/contexts/ThemeContext").useTheme;
   useThemeMock.mockReturnValue({
     theme,
     toggleTheme: mockToggleTheme,
@@ -160,9 +166,7 @@ export function renderWithProviders(
   function Wrapper({ children }: { children: React.ReactNode }) {
     return (
       <ThemeProvider>
-        <AuthProvider>
-          {children}
-        </AuthProvider>
+        <AuthProvider>{children}</AuthProvider>
       </ThemeProvider>
     );
   }
@@ -212,7 +216,7 @@ export function resetAllMocks() {
  * Wait for async operations with better error handling
  */
 export async function waitForAsync(ms: number = 100) {
-  await new Promise(resolve => setTimeout(resolve, ms));
+  await new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 /**
@@ -251,8 +255,8 @@ export function setupAuthenticatedUser(user = testUsers.student) {
   });
 
   mockLocalStorage.getItem.mockImplementation((key: string) => {
-    if (key === 'isLoggedIn') return 'true';
-    if (key === 'user') return JSON.stringify(user);
+    if (key === "isLoggedIn") return "true";
+    if (key === "user") return JSON.stringify(user);
     return null;
   });
 }
@@ -275,15 +279,15 @@ export function setupUnauthenticatedUser() {
  */
 export function createMockScenario(overrides = {}) {
   return {
-    id: 'test-scenario-123',
-    mode: 'pbl',
-    status: 'active',
-    sourceType: 'yaml',
-    sourcePath: 'test/scenario.yaml',
-    title: { en: 'Test Scenario', zh: '測試情境' },
-    description: { en: 'Test description', zh: '測試描述' },
-    objectives: ['Learn testing', 'Write good tests'],
-    difficulty: 'beginner',
+    id: "test-scenario-123",
+    mode: "pbl",
+    status: "active",
+    sourceType: "yaml",
+    sourcePath: "test/scenario.yaml",
+    title: { en: "Test Scenario", zh: "測試情境" },
+    description: { en: "Test description", zh: "測試描述" },
+    objectives: ["Learn testing", "Write good tests"],
+    difficulty: "beginner",
     estimatedMinutes: 30,
     taskTemplates: [],
     ...overrides,
@@ -295,11 +299,11 @@ export function createMockScenario(overrides = {}) {
  */
 export function createMockProgram(overrides = {}) {
   return {
-    id: 'test-program-456',
-    userId: 'test-user-789',
-    scenarioId: 'test-scenario-123',
-    mode: 'pbl',
-    status: 'active',
+    id: "test-program-456",
+    userId: "test-user-789",
+    scenarioId: "test-scenario-123",
+    mode: "pbl",
+    status: "active",
     totalScore: 0,
     completedTaskCount: 0,
     totalTaskCount: 5,
@@ -315,13 +319,13 @@ export function createMockProgram(overrides = {}) {
  */
 export function createMockTask(overrides = {}) {
   return {
-    id: 'test-task-789',
-    programId: 'test-program-456',
+    id: "test-task-789",
+    programId: "test-program-456",
     taskIndex: 0,
-    title: { en: 'Test Task', zh: '測試任務' },
-    type: 'question',
-    status: 'active',
-    content: { instructions: 'Complete this task' },
+    title: { en: "Test Task", zh: "測試任務" },
+    type: "question",
+    status: "active",
+    content: { instructions: "Complete this task" },
     interactions: [],
     score: 0,
     maxScore: 100,
@@ -351,5 +355,5 @@ export const themeMocks = {
 };
 
 // Re-export testing library utilities
-export * from '@testing-library/react';
+export * from "@testing-library/react";
 export { userEvent };

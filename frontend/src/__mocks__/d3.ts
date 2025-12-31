@@ -7,31 +7,56 @@ const createChainableMock = (): ChainableMock => {
   const mock = jest.fn() as ChainableMock;
 
   // All methods that should create new chainable mocks
-  const chainingMethods = ['select', 'selectAll', 'append', 'data', 'enter', 'exit', 'merge', 'transition', 'remove', 'join'];
+  const chainingMethods = [
+    "select",
+    "selectAll",
+    "append",
+    "data",
+    "enter",
+    "exit",
+    "merge",
+    "transition",
+    "remove",
+    "join",
+  ];
 
   // Methods that return this for continued chaining
   const thisMethods = [
-    'attr', 'style', 'text', 'on', 'call', 'classed',
-    'duration', 'delay', 'ease', 'interpolate',
-    'property', 'html', 'raise', 'lower', 'sort', 'order',
-    'each', 'filter'
+    "attr",
+    "style",
+    "text",
+    "on",
+    "call",
+    "classed",
+    "duration",
+    "delay",
+    "ease",
+    "interpolate",
+    "property",
+    "html",
+    "raise",
+    "lower",
+    "sort",
+    "order",
+    "each",
+    "filter",
   ];
 
   // Utility methods that return values
   // const utilityMethods = ['node', 'nodes', 'size', 'empty']; // Not used, methods added directly
 
   // Add chaining methods that return new mocks
-  chainingMethods.forEach(method => {
+  chainingMethods.forEach((method) => {
     mock[method] = jest.fn(() => createChainableMock());
   });
 
   // Add methods that return this
-  thisMethods.forEach(method => {
+  thisMethods.forEach((method) => {
     mock[method] = jest.fn(() => mock);
   });
 
   // Add utility methods with specific return values
-  mock.node = jest.fn(() => ({ tagName: 'g' }));
+  mock.node = jest.fn(() => ({ tagName: "g" }));
   mock.nodes = jest.fn(() => []);
   mock.size = jest.fn(() => 0);
   mock.empty = jest.fn(() => true);
@@ -53,7 +78,7 @@ const createSimulationMock = () => {
     stop: jest.fn().mockReturnThis(),
     restart: jest.fn().mockReturnThis(),
     tick: jest.fn().mockReturnThis(),
-    find: jest.fn()
+    find: jest.fn(),
   };
   return mock;
 };
@@ -66,7 +91,7 @@ const createForceMock = () => ({
   y: jest.fn().mockReturnThis(),
   id: jest.fn().mockReturnThis(),
   links: jest.fn().mockReturnThis(),
-  iterations: jest.fn().mockReturnThis()
+  iterations: jest.fn().mockReturnThis(),
 });
 
 type ZoomMock = jest.Mock & {
@@ -111,11 +136,11 @@ const d3Mock = {
   zoom: jest.fn(() => createZoomMock()),
   zoomIdentity: {
     translate: jest.fn(() => ({
-      scale: jest.fn(() => ({}))
+      scale: jest.fn(() => ({})),
     })),
     k: 1,
     x: 0,
-    y: 0
+    y: 0,
   },
 
   // Drag
@@ -124,19 +149,19 @@ const d3Mock = {
     container: jest.fn().mockReturnThis(),
     filter: jest.fn().mockReturnThis(),
     subject: jest.fn().mockReturnThis(),
-    clickDistance: jest.fn().mockReturnThis()
+    clickDistance: jest.fn().mockReturnThis(),
   })),
 
   // Scales
   scaleLinear: jest.fn(() => ({
     domain: jest.fn().mockReturnThis(),
     range: jest.fn().mockReturnThis(),
-    clamp: jest.fn().mockReturnThis()
+    clamp: jest.fn().mockReturnThis(),
   })),
 
   scaleOrdinal: jest.fn(() => ({
     domain: jest.fn().mockReturnThis(),
-    range: jest.fn().mockReturnThis()
+    range: jest.fn().mockReturnThis(),
   })),
 
   // Other utilities
@@ -145,20 +170,20 @@ const d3Mock = {
   pointer: jest.fn(() => [0, 0]),
 
   // Colors
-  schemeCategory10: ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd'],
+  schemeCategory10: ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd"],
 
   // Shapes
   arc: jest.fn(() => ({
     innerRadius: jest.fn().mockReturnThis(),
     outerRadius: jest.fn().mockReturnThis(),
     startAngle: jest.fn().mockReturnThis(),
-    endAngle: jest.fn().mockReturnThis()
+    endAngle: jest.fn().mockReturnThis(),
   })),
 
   pie: jest.fn(() => ({
     value: jest.fn().mockReturnThis(),
-    sort: jest.fn().mockReturnThis()
-  }))
+    sort: jest.fn().mockReturnThis(),
+  })),
 };
 
 // Export as both default and named exports for compatibility

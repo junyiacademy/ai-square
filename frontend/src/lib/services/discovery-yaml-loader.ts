@@ -3,8 +3,11 @@
  * 繼承自 BaseYAMLLoader，專門處理 Discovery Path YAML 檔案
  */
 
-import { BaseYAMLLoader, LoadResult } from '@/lib/abstractions/base-yaml-loader';
-import path from 'path';
+import {
+  BaseYAMLLoader,
+  LoadResult,
+} from "@/lib/abstractions/base-yaml-loader";
+import path from "path";
 
 export interface DiscoveryMetadata {
   title: string;
@@ -98,11 +101,11 @@ export interface DiscoveryPath {
 }
 
 export class DiscoveryYAMLLoader extends BaseYAMLLoader<DiscoveryPath> {
-  protected readonly loaderName = 'DiscoveryYAMLLoader';
+  protected readonly loaderName = "DiscoveryYAMLLoader";
 
   constructor() {
     super({
-      basePath: path.join(process.cwd(), 'public', 'discovery_data')
+      basePath: path.join(process.cwd(), "public", "discovery_data"),
     });
   }
 
@@ -112,10 +115,10 @@ export class DiscoveryYAMLLoader extends BaseYAMLLoader<DiscoveryPath> {
   async load(fileName: string): Promise<LoadResult<DiscoveryPath>> {
     try {
       const filePath = this.getFilePath(fileName);
-      const { promises: fs } = await import('fs');
-      const yaml = await import('js-yaml');
+      const { promises: fs } = await import("fs");
+      const yaml = await import("js-yaml");
 
-      const content = await fs.readFile(filePath, 'utf8');
+      const content = await fs.readFile(filePath, "utf8");
       const data = yaml.load(content) as DiscoveryPath;
 
       return { data };
@@ -136,10 +139,10 @@ export class DiscoveryYAMLLoader extends BaseYAMLLoader<DiscoveryPath> {
    */
   async loadPath(
     careerType: string,
-    language: string = 'en'
+    language: string = "en",
   ): Promise<DiscoveryPath | null> {
     // Discovery paths use format: careertype/careertype_lang.yml
-    const langCode = language === 'zh-TW' ? 'zhTW' : language;
+    const langCode = language === "zh-TW" ? "zhTW" : language;
     const fileName = `${careerType}/${careerType}_${langCode}`;
     const result = await this.load(fileName);
 
@@ -148,7 +151,7 @@ export class DiscoveryYAMLLoader extends BaseYAMLLoader<DiscoveryPath> {
     }
 
     // Fallback to English if language not found
-    if (language !== 'en') {
+    if (language !== "en") {
       const fallbackFileName = `${careerType}/${careerType}_en`;
       const fallbackResult = await this.load(fallbackFileName);
 
@@ -164,17 +167,17 @@ export class DiscoveryYAMLLoader extends BaseYAMLLoader<DiscoveryPath> {
    * Scan all available discovery paths
    */
   async scanPaths(): Promise<string[]> {
-    const fs = await import('fs/promises');
+    const fs = await import("fs/promises");
     const pathsDir = this.options.basePath!;
 
     try {
       const items = await fs.readdir(pathsDir, { withFileTypes: true });
       // Return directories that are career types
       return items
-        .filter(item => item.isDirectory())
-        .map(item => item.name);
+        .filter((item) => item.isDirectory())
+        .map((item) => item.name);
     } catch (error) {
-      console.error('Error scanning Discovery paths:', error);
+      console.error("Error scanning Discovery paths:", error);
       return [];
     }
   }
@@ -202,7 +205,7 @@ export class DiscoveryYAMLLoader extends BaseYAMLLoader<DiscoveryPath> {
     // Ensure path_id exists
     if (!data.path_id && data.metadata) {
       // Try to infer from other fields
-      data.path_id = 'discovery_path';
+      data.path_id = "discovery_path";
     }
 
     // Ensure all skills have IDs
@@ -210,12 +213,16 @@ export class DiscoveryYAMLLoader extends BaseYAMLLoader<DiscoveryPath> {
       const processSkills = (skills: SkillTreeSkill[]) => {
         return skills.map((skill, index) => ({
           ...skill,
-          id: skill.id || `skill_${index + 1}`
+          id: skill.id || `skill_${index + 1}`,
         }));
       };
 
-      data.skill_tree.core_skills = processSkills(data.skill_tree.core_skills || []);
-      data.skill_tree.advanced_skills = processSkills(data.skill_tree.advanced_skills || []);
+      data.skill_tree.core_skills = processSkills(
+        data.skill_tree.core_skills || [],
+      );
+      data.skill_tree.advanced_skills = processSkills(
+        data.skill_tree.advanced_skills || [],
+      );
     }
 
     return data;
@@ -242,7 +249,7 @@ export class DiscoveryYAMLLoader extends BaseYAMLLoader<DiscoveryPath> {
     const dependencies = new Map<string, string[]>();
     const allSkills = this.extractAllSkills(data);
 
-    allSkills.forEach(skill => {
+    allSkills.forEach((skill) => {
       if (skill.requires && skill.requires.length > 0) {
         dependencies.set(skill.id, skill.requires);
       }

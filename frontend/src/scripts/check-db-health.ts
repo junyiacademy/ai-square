@@ -4,14 +4,14 @@
  * 檢查 PostgreSQL 和 GCS 連線狀態
  */
 
-import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import chalk from 'chalk';
-import ora from 'ora';
+import { repositoryFactory } from "@/lib/repositories/base/repository-factory";
+import chalk from "chalk";
+import ora from "ora";
 
 async function checkHealth() {
-  console.log(chalk.blue('\n🏥 AI Square Storage Health Check\n'));
+  console.log(chalk.blue("\n🏥 AI Square Storage Health Check\n"));
 
-  const spinner = ora('Checking storage systems...').start();
+  const spinner = ora("Checking storage systems...").start();
 
   try {
     // Run health check
@@ -20,56 +20,71 @@ async function checkHealth() {
     spinner.stop();
 
     // PostgreSQL Status
-    console.log(chalk.yellow('📊 PostgreSQL Status:'));
+    console.log(chalk.yellow("📊 PostgreSQL Status:"));
     if (health.postgresql) {
-      console.log(chalk.green('  ✓ Connected'));
-      console.log(chalk.gray(`  Time: ${(health.details as Record<string, unknown>).postgresql?.time}`));
+      console.log(chalk.green("  ✓ Connected"));
+      console.log(
+        chalk.gray(
+          `  Time: ${(health.details as Record<string, unknown>).postgresql?.time}`,
+        ),
+      );
     } else {
-      console.log(chalk.red('  ✗ Connection Failed'));
-      console.log(chalk.red(`  Error: ${(health.details as Record<string, unknown>).postgresql?.error}`));
+      console.log(chalk.red("  ✗ Connection Failed"));
+      console.log(
+        chalk.red(
+          `  Error: ${(health.details as Record<string, unknown>).postgresql?.error}`,
+        ),
+      );
     }
 
     // GCS Status
-    console.log(chalk.yellow('\n☁️  Google Cloud Storage Status:'));
+    console.log(chalk.yellow("\n☁️  Google Cloud Storage Status:"));
     if (health.gcs) {
-      console.log(chalk.green('  ✓ Connected'));
-      console.log(chalk.gray(`  Buckets Accessible: ${(health.details as Record<string, unknown>).gcs?.bucketsAccessible}`));
+      console.log(chalk.green("  ✓ Connected"));
+      console.log(
+        chalk.gray(
+          `  Buckets Accessible: ${(health.details as Record<string, unknown>).gcs?.bucketsAccessible}`,
+        ),
+      );
     } else {
-      console.log(chalk.red('  ✗ Connection Failed'));
-      console.log(chalk.red(`  Error: ${(health.details as Record<string, unknown>).gcs?.error}`));
+      console.log(chalk.red("  ✗ Connection Failed"));
+      console.log(
+        chalk.red(
+          `  Error: ${(health.details as Record<string, unknown>).gcs?.error}`,
+        ),
+      );
     }
 
     // Quick database stats
     if (health.postgresql) {
-      console.log(chalk.yellow('\n📈 Database Statistics:'));
+      console.log(chalk.yellow("\n📈 Database Statistics:"));
 
       const userRepo = repositoryFactory.getUserRepository();
       const programRepo = repositoryFactory.getProgramRepository();
       const scenarioRepo = repositoryFactory.getScenarioRepository();
 
       await userRepo.findAll({ limit: 1 });
-      await programRepo.findByUser('dummy'); // Just to test connection
-      const scenarios = await scenarioRepo.findActive?.() || [];
+      await programRepo.findByUser("dummy"); // Just to test connection
+      const scenarios = (await scenarioRepo.findActive?.()) || [];
 
       console.log(chalk.gray(`  Active Scenarios: ${scenarios.length}`));
       console.log(chalk.gray(`  Database: Connected and operational`));
     }
 
     // Overall status
-    console.log(chalk.blue('\n🎯 Overall Status:'));
+    console.log(chalk.blue("\n🎯 Overall Status:"));
     if (health.postgresql && health.gcs) {
-      console.log(chalk.green('  ✅ All systems operational'));
+      console.log(chalk.green("  ✅ All systems operational"));
     } else if (health.postgresql) {
-      console.log(chalk.yellow('  ⚠️  PostgreSQL working, GCS issues'));
+      console.log(chalk.yellow("  ⚠️  PostgreSQL working, GCS issues"));
     } else if (health.gcs) {
-      console.log(chalk.yellow('  ⚠️  GCS working, PostgreSQL issues'));
+      console.log(chalk.yellow("  ⚠️  GCS working, PostgreSQL issues"));
     } else {
-      console.log(chalk.red('  ❌ Both systems have issues'));
+      console.log(chalk.red("  ❌ Both systems have issues"));
     }
-
   } catch (error) {
-    spinner.fail('Health check failed');
-    console.error(chalk.red('\n❌ Error:'), error);
+    spinner.fail("Health check failed");
+    console.error(chalk.red("\n❌ Error:"), error);
     process.exit(1);
   } finally {
     await repositoryFactory.shutdown();

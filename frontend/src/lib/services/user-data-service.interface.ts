@@ -6,14 +6,15 @@
 
 import type {
   UserDataOperations,
-  EvaluationOperations
-} from '@/lib/types/user-data';
+  EvaluationOperations,
+} from "@/lib/types/user-data";
 
 /**
  * Complete interface for user data services
  * Combines user data operations with evaluation operations
  */
-export interface IUserDataService extends UserDataOperations, EvaluationOperations {
+export interface IUserDataService
+  extends UserDataOperations, EvaluationOperations {
   // Additional methods that may be implementation-specific
   clearCache?: () => void;
 }
@@ -31,4 +32,6 @@ export interface UserDataServiceConfig {
 /**
  * Factory function type for creating service instances
  */
-export type UserDataServiceFactory = (config: UserDataServiceConfig) => IUserDataService;
+export type UserDataServiceFactory = (
+  config: UserDataServiceConfig,
+) => IUserDataService;

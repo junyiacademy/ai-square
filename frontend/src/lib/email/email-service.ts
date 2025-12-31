@@ -1,5 +1,5 @@
-import nodemailer from 'nodemailer';
-import type { Transporter } from 'nodemailer';
+import nodemailer from "nodemailer";
+import type { Transporter } from "nodemailer";
 
 interface EmailOptions {
   to: string;
@@ -22,14 +22,16 @@ class EmailService {
     const pass = process.env.GMAIL_APP_PASSWORD;
 
     if (!user || !pass) {
-      console.warn('⚠️ Email service not configured. Please set GMAIL_USER and GMAIL_APP_PASSWORD in .env.local');
+      console.warn(
+        "⚠️ Email service not configured. Please set GMAIL_USER and GMAIL_APP_PASSWORD in .env.local",
+      );
       return;
     }
 
     try {
       // 建立 Nodemailer transporter 使用 Gmail SMTP
       this.transporter = nodemailer.createTransport({
-        service: 'gmail',
+        service: "gmail",
         auth: {
           user,
           pass, // 使用應用程式專用密碼
@@ -37,15 +39,15 @@ class EmailService {
       });
 
       this.isConfigured = true;
-      console.log('✅ Email service configured with Gmail SMTP');
+      console.log("✅ Email service configured with Gmail SMTP");
     } catch (error) {
-      console.error('❌ Failed to configure email service:', error);
+      console.error("❌ Failed to configure email service:", error);
     }
   }
 
   async sendEmail(options: EmailOptions): Promise<boolean> {
     if (!this.isConfigured || !this.transporter) {
-      console.warn('Email service not configured, skipping email send');
+      console.warn("Email service not configured, skipping email send");
       return false;
     }
 
@@ -58,15 +60,18 @@ class EmailService {
         html: options.html,
       });
 
-      console.log('✅ Email sent successfully:', info.messageId);
+      console.log("✅ Email sent successfully:", info.messageId);
       return true;
     } catch (error) {
-      console.error('❌ Failed to send email:', error);
+      console.error("❌ Failed to send email:", error);
       return false;
     }
   }
 
-  async sendVerificationEmail(email: string, verificationUrl: string): Promise<boolean> {
+  async sendVerificationEmail(
+    email: string,
+    verificationUrl: string,
+  ): Promise<boolean> {
     const html = `
       <!DOCTYPE html>
       <html>
@@ -163,12 +168,15 @@ class EmailService {
 
     return this.sendEmail({
       to: email,
-      subject: '【AI Square】請驗證您的電子郵件地址',
+      subject: "【AI Square】請驗證您的電子郵件地址",
       html,
     });
   }
 
-  async sendPasswordResetEmail(email: string, resetUrl: string): Promise<boolean> {
+  async sendPasswordResetEmail(
+    email: string,
+    resetUrl: string,
+  ): Promise<boolean> {
     const html = `
       <!DOCTYPE html>
       <html>
@@ -268,7 +276,7 @@ class EmailService {
 
     return this.sendEmail({
       to: email,
-      subject: '【AI Square】重設您的密碼',
+      subject: "【AI Square】重設您的密碼",
       html,
     });
   }
@@ -361,7 +369,7 @@ class EmailService {
               </div>
 
               <div style="text-align: center;">
-                <a href="${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/dashboard" class="button">開始學習</a>
+                <a href="${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/dashboard" class="button">開始學習</a>
               </div>
 
               <p><strong>學習提示：</strong></p>
@@ -391,10 +399,10 @@ class EmailService {
   // 簡單的 HTML 轉文字功能
   private htmlToText(html: string): string {
     return html
-      .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
-      .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, '')
-      .replace(/<[^>]+>/g, ' ')
-      .replace(/\s+/g, ' ')
+      .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, "")
+      .replace(/<script[^>]*>[\s\S]*?<\/script>/gi, "")
+      .replace(/<[^>]+>/g, " ")
+      .replace(/\s+/g, " ")
       .trim();
   }
 }

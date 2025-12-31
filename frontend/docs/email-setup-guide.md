@@ -37,34 +37,35 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 建立測試腳本 `scripts/test-email.ts`：
 
 ```typescript
-import { emailService } from '../src/lib/email/email-service';
+import { emailService } from "../src/lib/email/email-service";
 
 async function testEmail() {
-  const testEmail = process.env.GMAIL_USER || 'test@example.com';
+  const testEmail = process.env.GMAIL_USER || "test@example.com";
 
-  console.log('🧪 Testing email service...');
+  console.log("🧪 Testing email service...");
 
   // 測試驗證郵件
   const verificationSent = await emailService.sendVerificationEmail(
     testEmail,
-    'http://localhost:3000/verify-email?token=test-token'
+    "http://localhost:3000/verify-email?token=test-token",
   );
 
-  console.log('Verification email sent:', verificationSent);
+  console.log("Verification email sent:", verificationSent);
 
   // 測試歡迎郵件
   const welcomeSent = await emailService.sendWelcomeEmail(
     testEmail,
-    'Test User'
+    "Test User",
   );
 
-  console.log('Welcome email sent:', welcomeSent);
+  console.log("Welcome email sent:", welcomeSent);
 }
 
 testEmail().catch(console.error);
 ```
 
 執行測試：
+
 ```bash
 npx tsx scripts/test-email.ts
 ```

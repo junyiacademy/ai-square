@@ -1,6 +1,6 @@
 // Test utility functions
 export function delay(ms: number): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 export function mockConsole() {
@@ -24,7 +24,7 @@ export function mockConsole() {
 }
 
 export function createMockFile(name: string, size: number, type: string): File {
-  const file = new File(['a'.repeat(size)], name, { type });
+  const file = new File(["a".repeat(size)], name, { type });
   return file;
 }
 
@@ -33,9 +33,9 @@ export function generateId(): string {
 }
 
 // Tests for the utility functions
-describe('Test Utils', () => {
-  describe('delay', () => {
-    it('should delay execution', async () => {
+describe("Test Utils", () => {
+  describe("delay", () => {
+    it("should delay execution", async () => {
       const start = Date.now();
       await delay(100);
       const end = Date.now();
@@ -43,34 +43,34 @@ describe('Test Utils', () => {
     });
   });
 
-  describe('mockConsole', () => {
-    it('should mock console methods', () => {
+  describe("mockConsole", () => {
+    it("should mock console methods", () => {
       const { restore } = mockConsole();
 
-      console.log('test');
-      console.error('error');
-      console.warn('warn');
+      console.log("test");
+      console.error("error");
+      console.warn("warn");
 
-      expect(console.log).toHaveBeenCalledWith('test');
-      expect(console.error).toHaveBeenCalledWith('error');
-      expect(console.warn).toHaveBeenCalledWith('warn');
+      expect(console.log).toHaveBeenCalledWith("test");
+      expect(console.error).toHaveBeenCalledWith("error");
+      expect(console.warn).toHaveBeenCalledWith("warn");
 
       restore();
     });
   });
 
-  describe('createMockFile', () => {
-    it('should create a mock file', () => {
-      const file = createMockFile('test.txt', 100, 'text/plain');
+  describe("createMockFile", () => {
+    it("should create a mock file", () => {
+      const file = createMockFile("test.txt", 100, "text/plain");
 
-      expect(file.name).toBe('test.txt');
+      expect(file.name).toBe("test.txt");
       expect(file.size).toBe(100);
-      expect(file.type).toBe('text/plain');
+      expect(file.type).toBe("text/plain");
     });
   });
 
-  describe('generateId', () => {
-    it('should generate unique ids', () => {
+  describe("generateId", () => {
+    it("should generate unique ids", () => {
       const id1 = generateId();
       const id2 = generateId();
 

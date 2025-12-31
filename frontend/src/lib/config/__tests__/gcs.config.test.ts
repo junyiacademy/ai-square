@@ -1,6 +1,6 @@
-import { GCS_CONFIG, getStorageConfig, PUBLIC_GCS_BUCKET } from '../gcs.config';
+import { GCS_CONFIG, getStorageConfig, PUBLIC_GCS_BUCKET } from "../gcs.config";
 
-describe('gcs.config', () => {
+describe("gcs.config", () => {
   const originalEnv = process.env;
 
   beforeEach(() => {
@@ -12,137 +12,138 @@ describe('gcs.config', () => {
     process.env = originalEnv;
   });
 
-  describe('GCS_CONFIG', () => {
-    it('uses default bucket name when GCS_BUCKET_NAME not set', () => {
+  describe("GCS_CONFIG", () => {
+    it("uses default bucket name when GCS_BUCKET_NAME not set", () => {
       delete process.env.GCS_BUCKET_NAME;
-      const { GCS_CONFIG: config } = require('../gcs.config');
+      const { GCS_CONFIG: config } = require("../gcs.config");
 
-      expect(config.bucketName).toBe('ai-square-db-v2');
+      expect(config.bucketName).toBe("ai-square-db-v2");
     });
 
-    it('uses GCS_BUCKET_NAME from environment when set', () => {
-      process.env.GCS_BUCKET_NAME = 'custom-bucket';
-      const { GCS_CONFIG: config } = require('../gcs.config');
+    it("uses GCS_BUCKET_NAME from environment when set", () => {
+      process.env.GCS_BUCKET_NAME = "custom-bucket";
+      const { GCS_CONFIG: config } = require("../gcs.config");
 
-      expect(config.bucketName).toBe('custom-bucket');
+      expect(config.bucketName).toBe("custom-bucket");
     });
 
-    it('includes projectId from GOOGLE_CLOUD_PROJECT', () => {
-      process.env.GOOGLE_CLOUD_PROJECT = 'my-project';
-      const { GCS_CONFIG: config } = require('../gcs.config');
+    it("includes projectId from GOOGLE_CLOUD_PROJECT", () => {
+      process.env.GOOGLE_CLOUD_PROJECT = "my-project";
+      const { GCS_CONFIG: config } = require("../gcs.config");
 
-      expect(config.projectId).toBe('my-project');
+      expect(config.projectId).toBe("my-project");
     });
 
-    it('includes keyFilename from GOOGLE_APPLICATION_CREDENTIALS', () => {
-      process.env.GOOGLE_APPLICATION_CREDENTIALS = '/path/to/key.json';
-      const { GCS_CONFIG: config } = require('../gcs.config');
+    it("includes keyFilename from GOOGLE_APPLICATION_CREDENTIALS", () => {
+      process.env.GOOGLE_APPLICATION_CREDENTIALS = "/path/to/key.json";
+      const { GCS_CONFIG: config } = require("../gcs.config");
 
-      expect(config.keyFilename).toBe('/path/to/key.json');
+      expect(config.keyFilename).toBe("/path/to/key.json");
     });
 
-    it('has correct path structure', () => {
+    it("has correct path structure", () => {
       expect(GCS_CONFIG.paths).toEqual({
-        assessments: 'assessments',
-        scenarios: 'v2/scenarios',
-        programs: 'v2/programs',
-        tasks: 'v2/tasks',
-        evaluations: 'v2/evaluations',
+        assessments: "assessments",
+        scenarios: "v2/scenarios",
+        programs: "v2/programs",
+        tasks: "v2/tasks",
+        evaluations: "v2/evaluations",
         cms: {
-          overrides: 'cms/overrides',
-          drafts: 'cms/drafts',
-          history: 'cms/history',
-          metadata: 'cms/metadata'
-        }
+          overrides: "cms/overrides",
+          drafts: "cms/drafts",
+          history: "cms/history",
+          metadata: "cms/metadata",
+        },
       });
     });
   });
 
-  describe('getStorageConfig', () => {
-    it('returns config with projectId', () => {
+  describe("getStorageConfig", () => {
+    it("returns config with projectId", () => {
       // Save original env vars
       const originalProject = process.env.GOOGLE_CLOUD_PROJECT;
       const originalKeyFile = process.env.GOOGLE_APPLICATION_CREDENTIALS;
 
       // Set test environment
-      process.env.GOOGLE_CLOUD_PROJECT = 'test-project';
+      process.env.GOOGLE_CLOUD_PROJECT = "test-project";
       delete process.env.GOOGLE_APPLICATION_CREDENTIALS;
 
-      const { getStorageConfig: getConfig } = require('../gcs.config');
+      const { getStorageConfig: getConfig } = require("../gcs.config");
 
       const config = getConfig();
 
       expect(config).toEqual({
-        projectId: 'test-project'
+        projectId: "test-project",
       });
 
       // Restore original env vars
       if (originalProject) process.env.GOOGLE_CLOUD_PROJECT = originalProject;
-      if (originalKeyFile) process.env.GOOGLE_APPLICATION_CREDENTIALS = originalKeyFile;
+      if (originalKeyFile)
+        process.env.GOOGLE_APPLICATION_CREDENTIALS = originalKeyFile;
     });
 
-    it('includes keyFilename when set', () => {
-      process.env.GOOGLE_CLOUD_PROJECT = 'test-project';
-      process.env.GOOGLE_APPLICATION_CREDENTIALS = '/credentials.json';
-      const { getStorageConfig: getConfig } = require('../gcs.config');
+    it("includes keyFilename when set", () => {
+      process.env.GOOGLE_CLOUD_PROJECT = "test-project";
+      process.env.GOOGLE_APPLICATION_CREDENTIALS = "/credentials.json";
+      const { getStorageConfig: getConfig } = require("../gcs.config");
 
       const config = getConfig();
 
       expect(config).toEqual({
-        projectId: 'test-project',
-        keyFilename: '/credentials.json'
+        projectId: "test-project",
+        keyFilename: "/credentials.json",
       });
     });
 
-    it('omits keyFilename when not set', () => {
-      process.env.GOOGLE_CLOUD_PROJECT = 'test-project';
+    it("omits keyFilename when not set", () => {
+      process.env.GOOGLE_CLOUD_PROJECT = "test-project";
       delete process.env.GOOGLE_APPLICATION_CREDENTIALS;
-      const { getStorageConfig: getConfig } = require('../gcs.config');
+      const { getStorageConfig: getConfig } = require("../gcs.config");
 
       const config = getConfig();
 
       expect(config).toEqual({
-        projectId: 'test-project'
+        projectId: "test-project",
       });
       expect(config.keyFilename).toBeUndefined();
     });
 
-    it('returns empty config when no env vars set', () => {
+    it("returns empty config when no env vars set", () => {
       delete process.env.GOOGLE_CLOUD_PROJECT;
       delete process.env.GOOGLE_APPLICATION_CREDENTIALS;
-      const { getStorageConfig: getConfig } = require('../gcs.config');
+      const { getStorageConfig: getConfig } = require("../gcs.config");
 
       const config = getConfig();
 
       expect(config).toEqual({
-        projectId: undefined
+        projectId: undefined,
       });
     });
   });
 
-  describe('PUBLIC_GCS_BUCKET', () => {
-    it('uses NEXT_PUBLIC_GCS_BUCKET when set', () => {
-      process.env.NEXT_PUBLIC_GCS_BUCKET = 'public-bucket';
-      process.env.GCS_BUCKET_NAME = 'private-bucket';
-      const { PUBLIC_GCS_BUCKET: publicBucket } = require('../gcs.config');
+  describe("PUBLIC_GCS_BUCKET", () => {
+    it("uses NEXT_PUBLIC_GCS_BUCKET when set", () => {
+      process.env.NEXT_PUBLIC_GCS_BUCKET = "public-bucket";
+      process.env.GCS_BUCKET_NAME = "private-bucket";
+      const { PUBLIC_GCS_BUCKET: publicBucket } = require("../gcs.config");
 
-      expect(publicBucket).toBe('public-bucket');
+      expect(publicBucket).toBe("public-bucket");
     });
 
-    it('falls back to GCS_BUCKET_NAME when NEXT_PUBLIC_GCS_BUCKET not set', () => {
+    it("falls back to GCS_BUCKET_NAME when NEXT_PUBLIC_GCS_BUCKET not set", () => {
       delete process.env.NEXT_PUBLIC_GCS_BUCKET;
-      process.env.GCS_BUCKET_NAME = 'private-bucket';
-      const { PUBLIC_GCS_BUCKET: publicBucket } = require('../gcs.config');
+      process.env.GCS_BUCKET_NAME = "private-bucket";
+      const { PUBLIC_GCS_BUCKET: publicBucket } = require("../gcs.config");
 
-      expect(publicBucket).toBe('private-bucket');
+      expect(publicBucket).toBe("private-bucket");
     });
 
-    it('uses default bucket name when no env vars set', () => {
+    it("uses default bucket name when no env vars set", () => {
       delete process.env.NEXT_PUBLIC_GCS_BUCKET;
       delete process.env.GCS_BUCKET_NAME;
-      const { PUBLIC_GCS_BUCKET: publicBucket } = require('../gcs.config');
+      const { PUBLIC_GCS_BUCKET: publicBucket } = require("../gcs.config");
 
-      expect(publicBucket).toBe('ai-square-db-v2');
+      expect(publicBucket).toBe("ai-square-db-v2");
     });
   });
 });

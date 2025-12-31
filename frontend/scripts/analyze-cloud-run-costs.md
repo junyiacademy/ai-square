@@ -3,18 +3,24 @@
 ## Critical Performance Issues Found
 
 ### 1. KSA File Loading (HIGH PRIORITY)
+
 **Problem**: Loading 280KB of YAML files from filesystem on every API request
+
 - **Location**: `/api/pbl/scenarios/[id]/route.ts` line 90-109
 - **Impact**: High I/O costs, CPU spikes, memory waste
 - **Solution**: Migrate KSA data to PostgreSQL
 
 ### 2. Missing Redis Configuration
+
 **Problem**: Falling back to in-memory cache
+
 - **Impact**: Each Cloud Run instance maintains separate cache
 - **Solution**: Configure Redis for shared caching
 
 ### 3. Resource Multiplication
+
 **Problem**: No shared state between containers
+
 - **Cost Formula**:
   - 1 user = 1 container = 280KB KSA data
   - 100 users = 100 containers = 28MB duplicated data
@@ -23,12 +29,14 @@
 ## Cost Estimation
 
 ### Current Architecture (File-based)
+
 - **Cold Start Cost**: ~500ms CPU for YAML parsing
 - **Memory Cost**: 280KB per container instance
 - **I/O Cost**: File read on every cold start
 - **Monthly estimate**: $50-200 depending on traffic
 
 ### Optimized Architecture (PostgreSQL + Redis)
+
 - **Cold Start Cost**: ~50ms database query
 - **Memory Cost**: Minimal (Redis shared cache)
 - **I/O Cost**: One-time database load
@@ -74,12 +82,14 @@
 ## Risk Assessment
 
 **Without fixes**:
+
 - ❌ Costs will scale linearly with users
 - ❌ Cold starts will be slow
 - ❌ Memory usage will be high
 - ❌ Potential for timeouts under load
 
 **With fixes**:
+
 - ✅ Costs remain flat regardless of users
 - ✅ Fast cold starts
 - ✅ Minimal memory usage

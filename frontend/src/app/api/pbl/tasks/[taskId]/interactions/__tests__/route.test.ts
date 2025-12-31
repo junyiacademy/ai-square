@@ -3,44 +3,47 @@
  * This API manages task interactions (user inputs, AI responses, system events)
  */
 
-import { GET, POST } from '../route';
-import { NextRequest } from 'next/server';
-import { getUnifiedAuth } from '@/lib/auth/unified-auth';
-import type { ITask, IInteraction } from '@/types/unified-learning';
+import { GET, POST } from "../route";
+import { NextRequest } from "next/server";
+import { getUnifiedAuth } from "@/lib/auth/unified-auth";
+import type { ITask, IInteraction } from "@/types/unified-learning";
 
 // Mock dependencies
-jest.mock('@/lib/auth/unified-auth', () => ({
+jest.mock("@/lib/auth/unified-auth", () => ({
   getUnifiedAuth: jest.fn(),
   createUnauthorizedResponse: jest.fn(() => ({
-    json: () => Promise.resolve({ success: false, error: 'Authentication required' }),
-    status: 401
-  }))
+    json: () =>
+      Promise.resolve({ success: false, error: "Authentication required" }),
+    status: 401,
+  })),
 }));
-jest.mock('@/lib/repositories/base/repository-factory', () => ({
+jest.mock("@/lib/repositories/base/repository-factory", () => ({
   repositoryFactory: {
-    getTaskRepository: jest.fn()
-  }
+    getTaskRepository: jest.fn(),
+  },
 }));
-jest.mock('@/lib/cache/cache-service', () => ({
+jest.mock("@/lib/cache/cache-service", () => ({
   cacheService: {
     get: jest.fn().mockResolvedValue(null),
     set: jest.fn().mockResolvedValue(undefined),
-    delete: jest.fn().mockResolvedValue(undefined)
-  }
+    delete: jest.fn().mockResolvedValue(undefined),
+  },
 }));
-jest.mock('@/lib/cache/distributed-cache-service', () => ({
+jest.mock("@/lib/cache/distributed-cache-service", () => ({
   distributedCacheService: {
     get: jest.fn().mockResolvedValue(null),
     set: jest.fn().mockResolvedValue(undefined),
     delete: jest.fn().mockResolvedValue(undefined),
-    getWithRevalidation: jest.fn(async (key, handler) => handler())
-  }
+    getWithRevalidation: jest.fn(async (key, handler) => handler()),
+  },
 }));
-jest.mock('@/lib/monitoring/performance-monitor', () => ({
-  withPerformanceTracking: jest.fn((handler) => handler())
+jest.mock("@/lib/monitoring/performance-monitor", () => ({
+  withPerformanceTracking: jest.fn((handler) => handler()),
 }));
 
-const mockGetUnifiedAuth = getUnifiedAuth as jest.MockedFunction<typeof getUnifiedAuth>;
+const mockGetUnifiedAuth = getUnifiedAuth as jest.MockedFunction<
+  typeof getUnifiedAuth
+>;
 
 // Mock task repository
 const mockTaskRepo = {
@@ -48,48 +51,51 @@ const mockTaskRepo = {
   addInteraction: jest.fn(),
   update: jest.fn(),
   updateInteractions: jest.fn(),
-  recordAttempt: jest.fn()
+  recordAttempt: jest.fn(),
 };
 
 // Mock getTaskRepository
-const mockRepositoryFactory = jest.requireMock('@/lib/repositories/base/repository-factory').repositoryFactory;
+const mockRepositoryFactory = jest.requireMock(
+  "@/lib/repositories/base/repository-factory",
+).repositoryFactory;
 mockRepositoryFactory.getTaskRepository.mockReturnValue(mockTaskRepo);
 
-describe('Task Interactions API', () => {
+describe("Task Interactions API", () => {
   const mockSession = {
     user: {
-      email: 'test@example.com',
-      name: 'Test User'
-    }
+      email: "test@example.com",
+      name: "Test User",
+    },
   };
 
-  const mockTaskId = 'task_123';
+  const mockTaskId = "task_123";
   const mockParams = Promise.resolve({ taskId: mockTaskId });
 
   const mockTask: Partial<ITask> = {
     id: mockTaskId,
-    programId: 'prog_123',
-    status: 'active',
+    programId: "prog_123",
+    status: "active",
     interactions: [
       {
-        timestamp: '2024-01-15T10:00:00Z',
-        type: 'user_input',
-        content: 'Hello, I need help with my resume',
-        metadata: { role: 'user' }
+        timestamp: "2024-01-15T10:00:00Z",
+        type: "user_input",
+        content: "Hello, I need help with my resume",
+        metadata: { role: "user" },
       },
       {
-        timestamp: '2024-01-15T10:00:05Z',
-        type: 'ai_response',
-        content: 'I\'d be happy to help you improve your resume. What specific areas would you like to focus on?',
-        metadata: { role: 'ai' }
+        timestamp: "2024-01-15T10:00:05Z",
+        type: "ai_response",
+        content:
+          "I'd be happy to help you improve your resume. What specific areas would you like to focus on?",
+        metadata: { role: "ai" },
       },
       {
-        timestamp: '2024-01-15T10:01:00Z',
-        type: 'system_event',
-        content: { event: 'task_paused' },
-        metadata: { role: 'system' }
-      }
-    ]
+        timestamp: "2024-01-15T10:01:00Z",
+        type: "system_event",
+        content: { event: "task_paused" },
+        metadata: { role: "system" },
+      },
+    ],
   };
 
   beforeEach(() => {
@@ -99,19 +105,25 @@ describe('Task Interactions API', () => {
   });
 
   const createRequest = (url: string, options: RequestInit = {}) => {
-    return new NextRequest(url, options as ConstructorParameters<typeof NextRequest>[1]);
+    return new NextRequest(
+      url,
+      options as ConstructorParameters<typeof NextRequest>[1],
+    );
   };
 
-  describe('POST /api/pbl/tasks/[taskId]/interactions', () => {
-    describe('Authentication', () => {
-      it('should return 401 when no session exists', async () => {
+  describe("POST /api/pbl/tasks/[taskId]/interactions", () => {
+    describe("Authentication", () => {
+      it("should return 401 when no session exists", async () => {
         mockGetUnifiedAuth.mockResolvedValueOnce(null);
 
-        const request = createRequest(`http://localhost:3000/api/pbl/tasks/${mockTaskId}/interactions`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ interaction: {} })
-        });
+        const request = createRequest(
+          `http://localhost:3000/api/pbl/tasks/${mockTaskId}/interactions`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ interaction: {} }),
+          },
+        );
 
         const response = await POST(request, { params: mockParams });
         const data = await response.json();
@@ -119,18 +131,23 @@ describe('Task Interactions API', () => {
         expect(response.status).toBe(401);
         expect(data).toEqual({
           success: false,
-          error: 'Authentication required'
+          error: "Authentication required",
         });
       });
 
-      it('should return 401 when session has no email', async () => {
-        mockGetUnifiedAuth.mockResolvedValueOnce({ user: { name: 'Test' } } as any);
+      it("should return 401 when session has no email", async () => {
+        mockGetUnifiedAuth.mockResolvedValueOnce({
+          user: { name: "Test" },
+        } as any);
 
-        const request = createRequest(`http://localhost:3000/api/pbl/tasks/${mockTaskId}/interactions`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ interaction: {} })
-        });
+        const request = createRequest(
+          `http://localhost:3000/api/pbl/tasks/${mockTaskId}/interactions`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ interaction: {} }),
+          },
+        );
 
         const response = await POST(request, { params: mockParams });
         const data = await response.json();
@@ -138,18 +155,21 @@ describe('Task Interactions API', () => {
         expect(response.status).toBe(401);
         expect(data).toEqual({
           success: false,
-          error: 'Authentication required'
+          error: "Authentication required",
         });
       });
     });
 
-    describe('Validation', () => {
-      it('should return 400 when interaction data is missing', async () => {
-        const request = createRequest(`http://localhost:3000/api/pbl/tasks/${mockTaskId}/interactions`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({})
-        });
+    describe("Validation", () => {
+      it("should return 400 when interaction data is missing", async () => {
+        const request = createRequest(
+          `http://localhost:3000/api/pbl/tasks/${mockTaskId}/interactions`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({}),
+          },
+        );
 
         const response = await POST(request, { params: mockParams });
         const data = await response.json();
@@ -157,24 +177,27 @@ describe('Task Interactions API', () => {
         expect(response.status).toBe(400);
         expect(data).toEqual({
           success: false,
-          error: 'Missing interaction data'
+          error: "Missing interaction data",
         });
       });
     });
 
-    describe('Adding interactions', () => {
-      it('should successfully add a user interaction', async () => {
+    describe("Adding interactions", () => {
+      it("should successfully add a user interaction", async () => {
         const userInteraction = {
-          type: 'user',
-          content: 'I want to highlight my technical skills',
-          timestamp: '2024-01-15T10:05:00Z'
+          type: "user",
+          content: "I want to highlight my technical skills",
+          timestamp: "2024-01-15T10:05:00Z",
         };
 
-        const request = createRequest(`http://localhost:3000/api/pbl/tasks/${mockTaskId}/interactions`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ interaction: userInteraction })
-        });
+        const request = createRequest(
+          `http://localhost:3000/api/pbl/tasks/${mockTaskId}/interactions`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ interaction: userInteraction }),
+          },
+        );
 
         const response = await POST(request, { params: mockParams });
         const data = await response.json();
@@ -182,7 +205,7 @@ describe('Task Interactions API', () => {
         expect(response.status).toBe(200);
         expect(data).toEqual({
           success: true,
-          message: 'Interaction saved successfully'
+          message: "Interaction saved successfully",
         });
 
         // Verify interaction was added with correct transformation
@@ -191,31 +214,35 @@ describe('Task Interactions API', () => {
           expect.arrayContaining([
             expect.objectContaining({
               timestamp: userInteraction.timestamp,
-              type: 'user_input',
-              content: userInteraction.content
-            })
-          ])
+              type: "user_input",
+              content: userInteraction.content,
+            }),
+          ]),
         );
 
         // Verify recordAttempt was called for user interaction
         expect(mockTaskRepo.recordAttempt).toHaveBeenCalledWith(mockTaskId, {
           response: userInteraction.content,
-          timeSpent: 0
+          timeSpent: 0,
         });
       });
 
-      it('should successfully add an AI interaction', async () => {
+      it("should successfully add an AI interaction", async () => {
         const aiInteraction = {
-          type: 'ai',
-          content: 'Here are some suggestions for highlighting your technical skills...',
-          role: 'career_advisor'
+          type: "ai",
+          content:
+            "Here are some suggestions for highlighting your technical skills...",
+          role: "career_advisor",
         };
 
-        const request = createRequest(`http://localhost:3000/api/pbl/tasks/${mockTaskId}/interactions`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ interaction: aiInteraction })
-        });
+        const request = createRequest(
+          `http://localhost:3000/api/pbl/tasks/${mockTaskId}/interactions`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ interaction: aiInteraction }),
+          },
+        );
 
         const response = await POST(request, { params: mockParams });
         const data = await response.json();
@@ -223,7 +250,7 @@ describe('Task Interactions API', () => {
         expect(response.status).toBe(200);
         expect(data).toEqual({
           success: true,
-          message: 'Interaction saved successfully'
+          message: "Interaction saved successfully",
         });
 
         // Verify interaction was added with correct transformation
@@ -232,25 +259,28 @@ describe('Task Interactions API', () => {
           expect.arrayContaining([
             expect.objectContaining({
               timestamp: expect.any(String), // Auto-generated timestamp
-              type: 'ai_response',
-              content: aiInteraction.content
-            })
-          ])
+              type: "ai_response",
+              content: aiInteraction.content,
+            }),
+          ]),
         );
       });
 
-      it('should handle system events', async () => {
+      it("should handle system events", async () => {
         const systemInteraction = {
-          type: 'system',
-          content: { event: 'task_completed', score: 85 },
-          metadata: { triggeredBy: 'auto_evaluation' }
+          type: "system",
+          content: { event: "task_completed", score: 85 },
+          metadata: { triggeredBy: "auto_evaluation" },
         };
 
-        const request = createRequest(`http://localhost:3000/api/pbl/tasks/${mockTaskId}/interactions`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ interaction: systemInteraction })
-        });
+        const request = createRequest(
+          `http://localhost:3000/api/pbl/tasks/${mockTaskId}/interactions`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ interaction: systemInteraction }),
+          },
+        );
 
         const response = await POST(request, { params: mockParams });
         const data = await response.json();
@@ -258,7 +288,7 @@ describe('Task Interactions API', () => {
         expect(response.status).toBe(200);
         expect(data).toEqual({
           success: true,
-          message: 'Interaction saved successfully'
+          message: "Interaction saved successfully",
         });
 
         expect(mockTaskRepo.updateInteractions).toHaveBeenCalledWith(
@@ -266,24 +296,27 @@ describe('Task Interactions API', () => {
           expect.arrayContaining([
             expect.objectContaining({
               timestamp: expect.any(String),
-              type: 'system_event',
-              content: systemInteraction.content
-            })
-          ])
+              type: "system_event",
+              content: systemInteraction.content,
+            }),
+          ]),
         );
       });
 
-      it('should auto-generate timestamp when not provided', async () => {
+      it("should auto-generate timestamp when not provided", async () => {
         const interaction = {
-          type: 'user',
-          content: 'Test message'
+          type: "user",
+          content: "Test message",
         };
 
-        const request = createRequest(`http://localhost:3000/api/pbl/tasks/${mockTaskId}/interactions`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ interaction })
-        });
+        const request = createRequest(
+          `http://localhost:3000/api/pbl/tasks/${mockTaskId}/interactions`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ interaction }),
+          },
+        );
 
         await POST(request, { params: mockParams });
 
@@ -291,31 +324,36 @@ describe('Task Interactions API', () => {
           mockTaskId,
           expect.arrayContaining([
             expect.objectContaining({
-              timestamp: expect.stringMatching(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/)
-            })
-          ])
+              timestamp: expect.stringMatching(
+                /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/,
+              ),
+            }),
+          ]),
         );
 
         // Also verify recordAttempt was called since this is a user interaction
         expect(mockTaskRepo.recordAttempt).toHaveBeenCalled();
       });
 
-      it('should preserve additional metadata', async () => {
+      it("should preserve additional metadata", async () => {
         const interaction = {
-          type: 'ai',
-          content: 'Response with metadata',
+          type: "ai",
+          content: "Response with metadata",
           metadata: {
-            model: 'gemini-2.5-flash',
+            model: "gemini-2.5-flash",
             confidence: 0.95,
-            tokens: 150
-          }
+            tokens: 150,
+          },
         };
 
-        const request = createRequest(`http://localhost:3000/api/pbl/tasks/${mockTaskId}/interactions`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ interaction })
-        });
+        const request = createRequest(
+          `http://localhost:3000/api/pbl/tasks/${mockTaskId}/interactions`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ interaction }),
+          },
+        );
 
         await POST(request, { params: mockParams });
 
@@ -323,26 +361,31 @@ describe('Task Interactions API', () => {
           mockTaskId,
           expect.arrayContaining([
             expect.objectContaining({
-              type: 'ai_response',
+              type: "ai_response",
               content: interaction.content,
-              metadata: interaction.metadata
-            })
-          ])
+              metadata: interaction.metadata,
+            }),
+          ]),
         );
       });
     });
 
-    describe('Error handling', () => {
-      it('should handle repository errors', async () => {
-        mockTaskRepo.findById.mockRejectedValueOnce(new Error('Database error'));
+    describe("Error handling", () => {
+      it("should handle repository errors", async () => {
+        mockTaskRepo.findById.mockRejectedValueOnce(
+          new Error("Database error"),
+        );
 
-        const request = createRequest(`http://localhost:3000/api/pbl/tasks/${mockTaskId}/interactions`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            interaction: { type: 'user', content: 'Test' }
-          })
-        });
+        const request = createRequest(
+          `http://localhost:3000/api/pbl/tasks/${mockTaskId}/interactions`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              interaction: { type: "user", content: "Test" },
+            }),
+          },
+        );
 
         const response = await POST(request, { params: mockParams });
         const data = await response.json();
@@ -350,18 +393,20 @@ describe('Task Interactions API', () => {
         expect(response.status).toBe(500);
         expect(data).toEqual({
           success: false,
-          error: 'Failed to save interaction'
+          error: "Failed to save interaction",
         });
       });
     });
   });
 
-  describe('GET /api/pbl/tasks/[taskId]/interactions', () => {
-    describe('Authentication', () => {
-      it('should return 401 when no session exists', async () => {
+  describe("GET /api/pbl/tasks/[taskId]/interactions", () => {
+    describe("Authentication", () => {
+      it("should return 401 when no session exists", async () => {
         mockGetUnifiedAuth.mockResolvedValueOnce(null);
 
-        const request = createRequest(`http://localhost:3000/api/pbl/tasks/${mockTaskId}/interactions`);
+        const request = createRequest(
+          `http://localhost:3000/api/pbl/tasks/${mockTaskId}/interactions`,
+        );
 
         const response = await GET(request, { params: mockParams });
         const data = await response.json();
@@ -369,16 +414,18 @@ describe('Task Interactions API', () => {
         expect(response.status).toBe(401);
         expect(data).toEqual({
           success: false,
-          error: 'Authentication required'
+          error: "Authentication required",
         });
       });
     });
 
-    describe('Fetching interactions', () => {
-      it('should return task interactions with proper transformation', async () => {
+    describe("Fetching interactions", () => {
+      it("should return task interactions with proper transformation", async () => {
         mockTaskRepo.findById.mockResolvedValueOnce(mockTask);
 
-        const request = createRequest(`http://localhost:3000/api/pbl/tasks/${mockTaskId}/interactions`);
+        const request = createRequest(
+          `http://localhost:3000/api/pbl/tasks/${mockTaskId}/interactions`,
+        );
 
         const response = await GET(request, { params: mockParams });
         const data = await response.json();
@@ -390,32 +437,35 @@ describe('Task Interactions API', () => {
         // Verify transformation
         expect(data.data.interactions[0]).toEqual({
           id: `${mockTaskId}_2024-01-15T10:00:00Z`,
-          type: 'user',
-          content: 'Hello, I need help with my resume',
-          timestamp: '2024-01-15T10:00:00Z'
+          type: "user",
+          content: "Hello, I need help with my resume",
+          timestamp: "2024-01-15T10:00:00Z",
         });
 
         expect(data.data.interactions[1]).toEqual({
           id: `${mockTaskId}_2024-01-15T10:00:05Z`,
-          type: 'ai',
-          content: 'I\'d be happy to help you improve your resume. What specific areas would you like to focus on?',
-          timestamp: '2024-01-15T10:00:05Z'
+          type: "ai",
+          content:
+            "I'd be happy to help you improve your resume. What specific areas would you like to focus on?",
+          timestamp: "2024-01-15T10:00:05Z",
         });
 
         expect(data.data.interactions[2]).toEqual({
           id: `${mockTaskId}_2024-01-15T10:01:00Z`,
-          type: 'system',
-          content: { event: 'task_paused' },
-          timestamp: '2024-01-15T10:01:00Z'
+          type: "system",
+          content: { event: "task_paused" },
+          timestamp: "2024-01-15T10:01:00Z",
         });
 
-        expect(data.data.taskStatus).toBe('active');
+        expect(data.data.taskStatus).toBe("active");
       });
 
-      it('should return empty array when task not found', async () => {
+      it("should return empty array when task not found", async () => {
         mockTaskRepo.findById.mockResolvedValueOnce(null);
 
-        const request = createRequest(`http://localhost:3000/api/pbl/tasks/${mockTaskId}/interactions`);
+        const request = createRequest(
+          `http://localhost:3000/api/pbl/tasks/${mockTaskId}/interactions`,
+        );
 
         const response = await GET(request, { params: mockParams });
         const data = await response.json();
@@ -424,19 +474,21 @@ describe('Task Interactions API', () => {
         expect(data).toEqual({
           success: true,
           data: {
-            interactions: []
+            interactions: [],
           },
-          cacheHit: false
+          cacheHit: false,
         });
       });
 
-      it('should handle task with no interactions', async () => {
+      it("should handle task with no interactions", async () => {
         mockTaskRepo.findById.mockResolvedValueOnce({
           ...mockTask,
-          interactions: undefined
+          interactions: undefined,
         });
 
-        const request = createRequest(`http://localhost:3000/api/pbl/tasks/${mockTaskId}/interactions`);
+        const request = createRequest(
+          `http://localhost:3000/api/pbl/tasks/${mockTaskId}/interactions`,
+        );
 
         const response = await GET(request, { params: mockParams });
         const data = await response.json();
@@ -445,22 +497,26 @@ describe('Task Interactions API', () => {
         expect(data.data.interactions).toEqual([]);
       });
 
-      it('should handle interactions with missing metadata', async () => {
+      it("should handle interactions with missing metadata", async () => {
         const taskWithMinimalInteractions = {
           ...mockTask,
           interactions: [
             {
-              timestamp: '2024-01-15T10:00:00Z',
-              type: 'user_input' as const,
-              content: 'Test message'
+              timestamp: "2024-01-15T10:00:00Z",
+              type: "user_input" as const,
+              content: "Test message",
               // No metadata
-            }
-          ]
+            },
+          ],
         };
 
-        mockTaskRepo.findById.mockResolvedValueOnce(taskWithMinimalInteractions);
+        mockTaskRepo.findById.mockResolvedValueOnce(
+          taskWithMinimalInteractions,
+        );
 
-        const request = createRequest(`http://localhost:3000/api/pbl/tasks/${mockTaskId}/interactions`);
+        const request = createRequest(
+          `http://localhost:3000/api/pbl/tasks/${mockTaskId}/interactions`,
+        );
 
         const response = await GET(request, { params: mockParams });
         const data = await response.json();
@@ -468,38 +524,46 @@ describe('Task Interactions API', () => {
         expect(response.status).toBe(200);
         expect(data.data.interactions[0]).toEqual({
           id: `${mockTaskId}_2024-01-15T10:00:00Z`,
-          type: 'user',
-          content: 'Test message',
-          timestamp: '2024-01-15T10:00:00Z'
+          type: "user",
+          content: "Test message",
+          timestamp: "2024-01-15T10:00:00Z",
         });
       });
     });
 
-    describe('Caching', () => {
-      it('should include appropriate cache headers', async () => {
+    describe("Caching", () => {
+      it("should include appropriate cache headers", async () => {
         mockTaskRepo.findById.mockResolvedValueOnce(mockTask);
 
-        const request = createRequest(`http://localhost:3000/api/pbl/tasks/${mockTaskId}/interactions`);
+        const request = createRequest(
+          `http://localhost:3000/api/pbl/tasks/${mockTaskId}/interactions`,
+        );
 
         const response = await GET(request, { params: mockParams });
 
-        expect(response.headers.get('Cache-Control')).toContain('max-age=10');
-        expect(response.headers.get('Cache-Control')).toContain('stale-while-revalidate=30');
-        expect(response.headers.get('X-Cache')).toBeDefined();
+        expect(response.headers.get("Cache-Control")).toContain("max-age=10");
+        expect(response.headers.get("Cache-Control")).toContain(
+          "stale-while-revalidate=30",
+        );
+        expect(response.headers.get("X-Cache")).toBeDefined();
       });
     });
 
-    describe('Error handling', () => {
-      it('should handle repository errors', async () => {
-        mockTaskRepo.findById.mockRejectedValueOnce(new Error('Database error'));
+    describe("Error handling", () => {
+      it("should handle repository errors", async () => {
+        mockTaskRepo.findById.mockRejectedValueOnce(
+          new Error("Database error"),
+        );
 
-        const request = createRequest(`http://localhost:3000/api/pbl/tasks/${mockTaskId}/interactions`);
+        const request = createRequest(
+          `http://localhost:3000/api/pbl/tasks/${mockTaskId}/interactions`,
+        );
 
         const response = await GET(request, { params: mockParams });
         const data = await response.json();
 
         expect(response.status).toBe(500);
-        expect(data.error).toBe('Database error');
+        expect(data.error).toBe("Database error");
       });
     });
   });

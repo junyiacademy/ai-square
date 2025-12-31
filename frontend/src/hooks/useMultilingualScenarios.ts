@@ -3,9 +3,9 @@
  * 支援語言切換而不需要重新載入資料
  */
 
-import { useState, useEffect, useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
-import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
+import { useState, useEffect, useCallback } from "react";
+import { useTranslation } from "react-i18next";
+import { authenticatedFetch } from "@/lib/utils/authenticated-fetch";
 
 interface MultilingualScenario {
   id: string;
@@ -29,16 +29,18 @@ export function useMultilingualScenarios() {
   const loadScenarios = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await authenticatedFetch('/api/assessment/scenarios?allLanguages=true');
+      const response = await authenticatedFetch(
+        "/api/assessment/scenarios?allLanguages=true",
+      );
       const data = await response.json();
 
       if (data.success) {
         setScenarios(data.data.scenarios);
       } else {
-        setError(data.error || 'Failed to load scenarios');
+        setError(data.error || "Failed to load scenarios");
       }
     } catch {
-      setError('Network error');
+      setError("Network error");
     } finally {
       setLoading(false);
     }
@@ -50,16 +52,15 @@ export function useMultilingualScenarios() {
 
   // 獲取當前語言的 scenarios
   const getCurrentLanguageScenarios = useCallback(() => {
-    return scenarios.map(scenario => {
+    return scenarios.map((scenario) => {
       const translation = scenario.translations?.[i18n.language] ||
-                         scenario.translations?.en ||
-                         { title: 'Untitled', description: '' };
+        scenario.translations?.en || { title: "Untitled", description: "" };
 
       return {
         ...scenario,
         title: translation.title,
         description: translation.description,
-        config: translation.content || {}
+        config: translation.content || {},
       };
     });
   }, [scenarios, i18n.language]);
@@ -71,6 +72,6 @@ export function useMultilingualScenarios() {
     scenarios: localizedScenarios,
     loading,
     error,
-    refresh: loadScenarios
+    refresh: loadScenarios,
   };
 }

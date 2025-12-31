@@ -4,21 +4,21 @@
  * 明確分離 PostgreSQL 和 GCS 的責任
  */
 
-import { Pool } from 'pg';
-import { Storage } from '@google-cloud/storage';
-import { runMigrations } from '@/lib/db/migration-runner';
+import { Pool } from "pg";
+import { Storage } from "@google-cloud/storage";
+import { runMigrations } from "@/lib/db/migration-runner";
 
 // PostgreSQL Repositories
-import { PostgreSQLUserRepository } from '../postgresql/user-repository';
-import { PostgreSQLProgramRepository } from '../postgresql/program-repository';
-import { PostgreSQLTaskRepository } from '../postgresql/task-repository';
-import { PostgreSQLEvaluationRepository } from '../postgresql/evaluation-repository';
-import { PostgreSQLScenarioRepository } from '../postgresql/scenario-repository';
-import { PostgreSQLDiscoveryRepository } from '../postgresql/discovery-repository';
+import { PostgreSQLUserRepository } from "../postgresql/user-repository";
+import { PostgreSQLProgramRepository } from "../postgresql/program-repository";
+import { PostgreSQLTaskRepository } from "../postgresql/task-repository";
+import { PostgreSQLEvaluationRepository } from "../postgresql/evaluation-repository";
+import { PostgreSQLScenarioRepository } from "../postgresql/scenario-repository";
+import { PostgreSQLDiscoveryRepository } from "../postgresql/discovery-repository";
 
 // GCS Repositories (for content only)
-import { GCSContentRepository } from '../gcs/content-repository';
-import { GCSMediaRepository } from '../gcs/media-repository';
+import { GCSContentRepository } from "../gcs/content-repository";
+import { GCSMediaRepository } from "../gcs/media-repository";
 
 // Interfaces
 import type {
@@ -29,8 +29,8 @@ import type {
   IScenarioRepository,
   IDiscoveryRepository,
   IContentRepository,
-  IMediaRepository
-} from '../interfaces';
+  IMediaRepository,
+} from "../interfaces";
 
 export class RepositoryFactory {
   private static instance: RepositoryFactory;
@@ -46,7 +46,9 @@ export class RepositoryFactory {
     if (process.env.DATABASE_URL) {
       try {
         const url = new URL(process.env.DATABASE_URL);
-        const isCloudSQL = url.searchParams.has('host') && url.searchParams.get('host')?.startsWith('/cloudsql/');
+        const isCloudSQL =
+          url.searchParams.has("host") &&
+          url.searchParams.get("host")?.startsWith("/cloudsql/");
 
         poolConfig = {
           database: url.pathname.slice(1), // Remove leading /
@@ -58,21 +60,24 @@ export class RepositoryFactory {
         };
 
         if (isCloudSQL) {
-          poolConfig.host = url.searchParams.get('host') as string;
+          poolConfig.host = url.searchParams.get("host") as string;
         } else {
           poolConfig.host = url.hostname;
-          poolConfig.port = parseInt(url.port || '5432');
+          poolConfig.port = parseInt(url.port || "5432");
         }
       } catch (e) {
-        console.error('Failed to parse DATABASE_URL, falling back to individual env vars:', e);
+        console.error(
+          "Failed to parse DATABASE_URL, falling back to individual env vars:",
+          e,
+        );
         // Fall back to individual env vars
-        const dbHost = process.env.DB_HOST || 'localhost';
-        const isCloudSQL = dbHost.startsWith('/cloudsql/');
+        const dbHost = process.env.DB_HOST || "localhost";
+        const isCloudSQL = dbHost.startsWith("/cloudsql/");
 
         poolConfig = {
-          database: process.env.DB_NAME || 'ai_square_db',
-          user: process.env.DB_USER || 'postgres',
-          password: process.env.DB_PASSWORD || 'postgres',
+          database: process.env.DB_NAME || "ai_square_db",
+          user: process.env.DB_USER || "postgres",
+          password: process.env.DB_PASSWORD || "postgres",
           max: 20,
           idleTimeoutMillis: 30000,
           connectionTimeoutMillis: isCloudSQL ? 10000 : 2000,
@@ -82,18 +87,18 @@ export class RepositoryFactory {
           poolConfig.host = dbHost;
         } else {
           poolConfig.host = dbHost;
-          poolConfig.port = parseInt(process.env.DB_PORT || '5433');
+          poolConfig.port = parseInt(process.env.DB_PORT || "5433");
         }
       }
     } else {
       // Use individual env vars
-      const dbHost = process.env.DB_HOST || 'localhost';
-      const isCloudSQL = dbHost.startsWith('/cloudsql/');
+      const dbHost = process.env.DB_HOST || "localhost";
+      const isCloudSQL = dbHost.startsWith("/cloudsql/");
 
       poolConfig = {
-        database: process.env.DB_NAME || 'ai_square_db',
-        user: process.env.DB_USER || 'postgres',
-        password: process.env.DB_PASSWORD || '',
+        database: process.env.DB_NAME || "ai_square_db",
+        user: process.env.DB_USER || "postgres",
+        password: process.env.DB_PASSWORD || "",
         max: 20,
         idleTimeoutMillis: 30000,
         connectionTimeoutMillis: isCloudSQL ? 10000 : 2000,
@@ -103,15 +108,16 @@ export class RepositoryFactory {
         poolConfig.host = dbHost;
       } else {
         poolConfig.host = dbHost;
-        poolConfig.port = parseInt(process.env.DB_PORT || '5433');
+        poolConfig.port = parseInt(process.env.DB_PORT || "5433");
       }
     }
 
-    console.log('Initializing database connection:', {
+    console.log("Initializing database connection:", {
       host: poolConfig.host,
       database: poolConfig.database,
-      isCloudSQL: poolConfig.host && (poolConfig.host as string).startsWith('/cloudsql/'),
-      port: poolConfig.port
+      isCloudSQL:
+        poolConfig.host && (poolConfig.host as string).startsWith("/cloudsql/"),
+      port: poolConfig.port,
     });
 
     this.pool = new Pool(poolConfig);
@@ -136,7 +142,7 @@ export class RepositoryFactory {
         await runMigrations(this.pool);
         this.migrationsRun = true;
       } catch (error) {
-        console.error('Failed to run migrations:', error);
+        console.error("Failed to run migrations:", error);
         // Don't throw - allow app to continue even if migrations fail
       }
     }
@@ -177,12 +183,12 @@ export class RepositoryFactory {
   // ========================================
 
   public getContentRepository(): IContentRepository {
-    const bucketName = process.env.GCS_CONTENT_BUCKET || 'ai-square-content';
+    const bucketName = process.env.GCS_CONTENT_BUCKET || "ai-square-content";
     return new GCSContentRepository(this.storage, bucketName);
   }
 
   public getMediaRepository(): IMediaRepository {
-    const bucketName = process.env.GCS_MEDIA_BUCKET || 'ai-square-media';
+    const bucketName = process.env.GCS_MEDIA_BUCKET || "ai-square-media";
     return new GCSMediaRepository(this.storage, bucketName);
   }
 
@@ -198,23 +204,23 @@ export class RepositoryFactory {
     const results = {
       postgresql: false,
       gcs: false,
-      details: {} as Record<string, unknown>
+      details: {} as Record<string, unknown>,
     };
 
     // Check PostgreSQL
     try {
       const client = await this.pool.connect();
-      const result = await client.query('SELECT NOW()');
+      const result = await client.query("SELECT NOW()");
       client.release();
       results.postgresql = true;
       results.details.postgresql = {
-        status: 'connected',
-        time: result.rows[0].now
+        status: "connected",
+        time: result.rows[0].now,
       };
     } catch (error) {
       results.details.postgresql = {
-        status: 'error',
-        error: error instanceof Error ? error.message : String(error)
+        status: "error",
+        error: error instanceof Error ? error.message : String(error),
       };
     }
 
@@ -223,13 +229,13 @@ export class RepositoryFactory {
       const [buckets] = await this.storage.getBuckets({ maxResults: 1 });
       results.gcs = true;
       results.details.gcs = {
-        status: 'connected',
-        bucketsAccessible: buckets.length > 0
+        status: "connected",
+        bucketsAccessible: buckets.length > 0,
       };
     } catch (error) {
       results.details.gcs = {
-        status: 'error',
-        error: error instanceof Error ? error.message : String(error)
+        status: "error",
+        error: error instanceof Error ? error.message : String(error),
       };
     }
 

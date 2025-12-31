@@ -1,10 +1,10 @@
-import { VertexAI, SchemaType } from '@google-cloud/vertexai';
-import { GoogleAuth } from 'google-auth-library';
-import * as yaml from 'js-yaml';
-import { type PBLScenarioSchema } from './schemas/pbl-scenario.schema';
-import { sortPBLScenario } from './utils/yaml-order';
-import { formatKSACodesForPrompt } from './utils/ksa-codes-loader';
-import { PBLScenario, KSAMapping } from '@/types';
+import { VertexAI, SchemaType } from "@google-cloud/vertexai";
+import { GoogleAuth } from "google-auth-library";
+import * as yaml from "js-yaml";
+import { type PBLScenarioSchema } from "./schemas/pbl-scenario.schema";
+import { sortPBLScenario } from "./utils/yaml-order";
+import { formatKSACodesForPrompt } from "./utils/ksa-codes-loader";
+import { PBLScenario, KSAMapping } from "@/types";
 
 let vertexAI: VertexAI | null = null;
 
@@ -12,10 +12,12 @@ function getVertexAI() {
   if (!vertexAI) {
     try {
       const projectId = process.env.GOOGLE_CLOUD_PROJECT_ID;
-      const location = process.env.GOOGLE_CLOUD_LOCATION || 'us-central1';
+      const location = process.env.GOOGLE_CLOUD_LOCATION || "us-central1";
 
       if (!projectId) {
-        throw new Error('GOOGLE_CLOUD_PROJECT_ID environment variable is required');
+        throw new Error(
+          "GOOGLE_CLOUD_PROJECT_ID environment variable is required",
+        );
       }
 
       // Check if we have service account JSON from Secret Manager
@@ -28,7 +30,7 @@ function getVertexAI() {
         // Create GoogleAuth with the parsed credentials
         const auth = new GoogleAuth({
           credentials,
-          scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+          scopes: ["https://www.googleapis.com/auth/cloud-platform"],
         });
 
         vertexAI = new VertexAI({
@@ -36,8 +38,8 @@ function getVertexAI() {
           location: location,
           googleAuthOptions: {
             credentials,
-            scopes: ['https://www.googleapis.com/auth/cloud-platform'],
-          }
+            scopes: ["https://www.googleapis.com/auth/cloud-platform"],
+          },
         });
       } else {
         // Fallback to default authentication (for local development)
@@ -47,10 +49,12 @@ function getVertexAI() {
         });
       }
 
-      console.log('Vertex AI initialized successfully');
+      console.log("Vertex AI initialized successfully");
     } catch (error) {
-      console.error('Failed to initialize Vertex AI:', error);
-      throw new Error('Failed to initialize Vertex AI. Please check your Google Cloud credentials.');
+      console.error("Failed to initialize Vertex AI:", error);
+      throw new Error(
+        "Failed to initialize Vertex AI. Please check your Google Cloud credentials.",
+      );
     }
   }
   return vertexAI;
@@ -60,7 +64,7 @@ export async function generateContent(prompt: string, systemPrompt?: string) {
   try {
     const vertex = getVertexAI();
     const model = vertex.getGenerativeModel({
-      model: 'gemini-2.5-flash',
+      model: "gemini-2.5-flash",
       generationConfig: {
         maxOutputTokens: 65535,
         temperature: 0.3,
@@ -74,31 +78,34 @@ export async function generateContent(prompt: string, systemPrompt?: string) {
 
     const result = await model.generateContent(fullPrompt);
     const response = result.response;
-    return response.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    return response.candidates?.[0]?.content?.parts?.[0]?.text || "";
   } catch (error) {
-    console.error('Vertex AI error:', error);
-    throw new Error('Failed to generate content');
+    console.error("Vertex AI error:", error);
+    throw new Error("Failed to generate content");
   }
 }
 
-export async function completeYAMLContent(yamlContent: string, context?: string) {
+export async function completeYAMLContent(
+  yamlContent: string,
+  context?: string,
+) {
   try {
     // Parse existing YAML to understand what's already there
     let existingData: Partial<PBLScenarioSchema> = {};
     try {
       existingData = yaml.load(yamlContent) as Partial<PBLScenarioSchema>;
     } catch (e) {
-      console.warn('Could not parse existing YAML, starting fresh');
+      console.warn("Could not parse existing YAML, starting fresh");
     }
 
     const vertex = getVertexAI();
     const model = vertex.getGenerativeModel({
-      model: 'gemini-2.5-flash',
+      model: "gemini-2.5-flash",
       generationConfig: {
         maxOutputTokens: 65535,
         temperature: 0.3,
         topP: 0.8,
-        responseMimeType: 'application/json',
+        responseMimeType: "application/json",
         responseSchema: {
           type: SchemaType.OBJECT,
           properties: {
@@ -112,35 +119,44 @@ export async function completeYAMLContent(yamlContent: string, context?: string)
                 estimated_duration: { type: SchemaType.NUMBER },
                 target_domains: {
                   type: SchemaType.ARRAY,
-                  items: { type: SchemaType.STRING }
+                  items: { type: SchemaType.STRING },
                 },
                 prerequisites: {
                   type: SchemaType.ARRAY,
-                  items: { type: SchemaType.STRING }
+                  items: { type: SchemaType.STRING },
                 },
                 learning_objectives: {
                   type: SchemaType.ARRAY,
-                  items: { type: SchemaType.STRING }
-                }
+                  items: { type: SchemaType.STRING },
+                },
               },
-              required: ["id", "title", "description", "difficulty", "estimated_duration", "target_domains", "prerequisites", "learning_objectives"]
+              required: [
+                "id",
+                "title",
+                "description",
+                "difficulty",
+                "estimated_duration",
+                "target_domains",
+                "prerequisites",
+                "learning_objectives",
+              ],
             },
             ksa_mapping: {
               type: SchemaType.OBJECT,
               properties: {
                 knowledge: {
                   type: SchemaType.ARRAY,
-                  items: { type: SchemaType.STRING }
+                  items: { type: SchemaType.STRING },
                 },
                 skills: {
                   type: SchemaType.ARRAY,
-                  items: { type: SchemaType.STRING }
+                  items: { type: SchemaType.STRING },
                 },
                 attitudes: {
                   type: SchemaType.ARRAY,
-                  items: { type: SchemaType.STRING }
-                }
-              }
+                  items: { type: SchemaType.STRING },
+                },
+              },
             },
             tasks: {
               type: SchemaType.ARRAY,
@@ -151,12 +167,12 @@ export async function completeYAMLContent(yamlContent: string, context?: string)
                   title: { type: SchemaType.STRING },
                   description: { type: SchemaType.STRING },
                   type: { type: SchemaType.STRING },
-                  estimated_duration: { type: SchemaType.NUMBER }
-                }
-              }
-            }
+                  estimated_duration: { type: SchemaType.NUMBER },
+                },
+              },
+            },
           },
-          required: ["scenario_info", "tasks"]
+          required: ["scenario_info", "tasks"],
         },
       },
     });
@@ -166,7 +182,7 @@ export async function completeYAMLContent(yamlContent: string, context?: string)
 Complete this PBL scenario with appropriate educational content. The existing content is:
 ${yamlContent}
 
-Context: ${context || 'Educational content for AI Square platform'}
+Context: ${context || "Educational content for AI Square platform"}
 
 Requirements:
 1. Complete all missing fields with meaningful educational content
@@ -183,7 +199,8 @@ ${formatKSACodesForPrompt()}
 Return a complete JSON object following the PBL scenario schema.`;
 
     const result = await model.generateContent(prompt);
-    const jsonResponse = result.response.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+    const jsonResponse =
+      result.response.candidates?.[0]?.content?.parts?.[0]?.text || "{}";
 
     // Parse JSON and convert back to YAML
     const jsonData = JSON.parse(jsonResponse);
@@ -200,11 +217,11 @@ Return a complete JSON object following the PBL scenario schema.`;
 
     return yamlOutput;
   } catch (error) {
-    console.error('Error in completeYAMLContent:', error);
+    console.error("Error in completeYAMLContent:", error);
     // Fallback to non-JSON mode
     return generateContent(
       `Complete this YAML content:\n\n${yamlContent}`,
-      `Complete the YAML with educational content. Return only valid YAML, no explanations.`
+      `Complete the YAML with educational content. Return only valid YAML, no explanations.`,
     );
   }
 }
@@ -216,19 +233,19 @@ export async function translateYAMLContent(yamlContent: string) {
 
     const vertex = getVertexAI();
     const model = vertex.getGenerativeModel({
-      model: 'gemini-2.5-flash',
+      model: "gemini-2.5-flash",
       generationConfig: {
         maxOutputTokens: 65535,
         temperature: 0.3,
         topP: 0.8,
-        responseMimeType: 'application/json',
+        responseMimeType: "application/json",
         responseSchema: {
           type: SchemaType.OBJECT,
           properties: {
             scenario_info: { type: SchemaType.OBJECT },
             ksa_mapping: { type: SchemaType.OBJECT },
-            tasks: { type: SchemaType.ARRAY }
-          }
+            tasks: { type: SchemaType.ARRAY },
+          },
         },
       },
     });
@@ -251,7 +268,8 @@ Guidelines:
 Return a complete JSON object with all translations added.`;
 
     const result = await model.generateContent(prompt);
-    const jsonResponse = result.response.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+    const jsonResponse =
+      result.response.candidates?.[0]?.content?.parts?.[0]?.text || "{}";
 
     // Parse JSON and convert back to YAML
     const jsonData = JSON.parse(jsonResponse);
@@ -268,12 +286,26 @@ Return a complete JSON object with all translations added.`;
 
     return yamlOutput;
   } catch (error) {
-    console.error('Error in translateYAMLContent:', error);
+    console.error("Error in translateYAMLContent:", error);
     // Fallback to non-JSON mode
-    const languages = ['zhTW', 'es', 'ja', 'ko', 'fr', 'de', 'ru', 'it', 'zhCN', 'pt', 'ar', 'id', 'th'];
+    const languages = [
+      "zhTW",
+      "es",
+      "ja",
+      "ko",
+      "fr",
+      "de",
+      "ru",
+      "it",
+      "zhCN",
+      "pt",
+      "ar",
+      "id",
+      "th",
+    ];
     return generateContent(
-      `Translate this YAML content to languages: ${languages.join(', ')}\n\n${yamlContent}`,
-      `Translate all text fields. Add language suffixes like _zhTW, _es, etc. Return only valid YAML.`
+      `Translate this YAML content to languages: ${languages.join(", ")}\n\n${yamlContent}`,
+      `Translate all text fields. Add language suffixes like _zhTW, _es, etc. Return only valid YAML.`,
     );
   }
 }
@@ -285,19 +317,19 @@ export async function improveYAMLContent(yamlContent: string) {
 
     const vertex = getVertexAI();
     const model = vertex.getGenerativeModel({
-      model: 'gemini-2.5-flash',
+      model: "gemini-2.5-flash",
       generationConfig: {
         maxOutputTokens: 65535,
         temperature: 0.3,
         topP: 0.8,
-        responseMimeType: 'application/json',
+        responseMimeType: "application/json",
         responseSchema: {
           type: SchemaType.OBJECT,
           properties: {
             scenario_info: { type: SchemaType.OBJECT },
             ksa_mapping: { type: SchemaType.OBJECT },
-            tasks: { type: SchemaType.ARRAY }
-          }
+            tasks: { type: SchemaType.ARRAY },
+          },
         },
       },
     });
@@ -324,7 +356,8 @@ ${formatKSACodesForPrompt()}
 Return a complete JSON object with all improvements applied while preserving all existing content.`;
 
     const result = await model.generateContent(prompt);
-    const jsonResponse = result.response.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+    const jsonResponse =
+      result.response.candidates?.[0]?.content?.parts?.[0]?.text || "{}";
 
     // Parse JSON and convert back to YAML
     const jsonData = JSON.parse(jsonResponse);
@@ -341,11 +374,11 @@ Return a complete JSON object with all improvements applied while preserving all
 
     return yamlOutput;
   } catch (error) {
-    console.error('Error in improveYAMLContent:', error);
+    console.error("Error in improveYAMLContent:", error);
     // Fallback to non-JSON mode
     return generateContent(
       `Improve this YAML content for educational effectiveness:\n\n${yamlContent}`,
-      `Enhance the content quality while preserving structure. Return only valid YAML.`
+      `Enhance the content quality while preserving structure. Return only valid YAML.`,
     );
   }
 }
@@ -358,7 +391,7 @@ export async function mapKSAContent(yamlContent: string) {
     // Keep only KSA mapping, return original content with updated KSA
     const updatedData: PBLScenarioSchema = {
       ...existingData,
-      ksa_mapping: { knowledge: [], skills: [], attitudes: [] } // Will be replaced
+      ksa_mapping: { knowledge: [], skills: [], attitudes: [] }, // Will be replaced
     };
 
     const vertex = getVertexAI();
@@ -372,30 +405,30 @@ export async function mapKSAContent(yamlContent: string) {
           properties: {
             knowledge: {
               type: SchemaType.ARRAY,
-              items: { type: SchemaType.STRING }
+              items: { type: SchemaType.STRING },
             },
             skills: {
               type: SchemaType.ARRAY,
-              items: { type: SchemaType.STRING }
+              items: { type: SchemaType.STRING },
             },
             attitudes: {
               type: SchemaType.ARRAY,
-              items: { type: SchemaType.STRING }
-            }
+              items: { type: SchemaType.STRING },
+            },
           },
-          required: ["knowledge", "skills", "attitudes"]
-        }
+          required: ["knowledge", "skills", "attitudes"],
+        },
       },
-      required: ["ksa_mapping"]
+      required: ["ksa_mapping"],
     };
 
     const model = vertex.getGenerativeModel({
-      model: 'gemini-2.5-flash',
+      model: "gemini-2.5-flash",
       generationConfig: {
         maxOutputTokens: 8192,
         temperature: 0.3,
         topP: 0.8,
-        responseMimeType: 'application/json',
+        responseMimeType: "application/json",
         responseSchema: ksaSchema,
       },
     });
@@ -429,7 +462,8 @@ Return your response as a valid JSON object with EXACTLY this structure:
 IMPORTANT: Return ONLY the JSON object above. No explanations, no markdown, no additional text.`;
 
     const result = await model.generateContent(prompt);
-    const response = result.response.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+    const response =
+      result.response.candidates?.[0]?.content?.parts?.[0]?.text || "{}";
 
     // Parse the KSA mapping
     let ksaMapping: KSAMapping;
@@ -438,32 +472,42 @@ IMPORTANT: Return ONLY the JSON object above. No explanations, no markdown, no a
       let cleanResponse = response.trim();
 
       // Extract JSON if wrapped in markdown code blocks
-      const jsonMatch = cleanResponse.match(/```(?:json)?\s*(\{[\s\S]*\})\s*```/);
+      const jsonMatch = cleanResponse.match(
+        /```(?:json)?\s*(\{[\s\S]*\})\s*```/,
+      );
       if (jsonMatch) {
         cleanResponse = jsonMatch[1];
       }
 
       // Find the JSON object in the response
-      const jsonStart = cleanResponse.indexOf('{');
-      const jsonEnd = cleanResponse.lastIndexOf('}');
+      const jsonStart = cleanResponse.indexOf("{");
+      const jsonEnd = cleanResponse.lastIndexOf("}");
       if (jsonStart !== -1 && jsonEnd !== -1) {
         cleanResponse = cleanResponse.substring(jsonStart, jsonEnd + 1);
       }
 
-      const jsonResponse = JSON.parse(cleanResponse) as { ksa_mapping: KSAMapping };
-      ksaMapping = jsonResponse.ksa_mapping || { knowledge: [], skills: [], attitudes: [] };
+      const jsonResponse = JSON.parse(cleanResponse) as {
+        ksa_mapping: KSAMapping;
+      };
+      ksaMapping = jsonResponse.ksa_mapping || {
+        knowledge: [],
+        skills: [],
+        attitudes: [],
+      };
 
       // Validate the structure
-      if (!Array.isArray(ksaMapping.knowledge) ||
-          !Array.isArray(ksaMapping.skills) ||
-          !Array.isArray(ksaMapping.attitudes)) {
-        throw new Error('Invalid KSA mapping structure');
+      if (
+        !Array.isArray(ksaMapping.knowledge) ||
+        !Array.isArray(ksaMapping.skills) ||
+        !Array.isArray(ksaMapping.attitudes)
+      ) {
+        throw new Error("Invalid KSA mapping structure");
       }
 
-      console.log('Successfully parsed KSA mapping:', ksaMapping);
+      console.log("Successfully parsed KSA mapping:", ksaMapping);
     } catch (e) {
-      console.error('Failed to parse KSA response:', e);
-      console.log('Raw response:', response);
+      console.error("Failed to parse KSA response:", e);
+      console.log("Raw response:", response);
       ksaMapping = { knowledge: [], skills: [], attitudes: [] };
     }
 
@@ -481,7 +525,7 @@ IMPORTANT: Return ONLY the JSON object above. No explanations, no markdown, no a
 
     return yamlOutput;
   } catch (error) {
-    console.error('Error in mapKSAContent:', error);
+    console.error("Error in mapKSAContent:", error);
     // Fallback: return original content
     return yamlContent;
   }

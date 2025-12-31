@@ -2,9 +2,9 @@
  * JSON/YAML Loader with fallback support
  */
 
-import fs from 'fs';
-import path from 'path';
-import yaml from 'js-yaml';
+import fs from "fs";
+import path from "path";
+import yaml from "js-yaml";
 
 export interface LoaderOptions {
   preferJson?: boolean;
@@ -17,9 +17,9 @@ export const jsonYamlLoader = {
    */
   async load<T = unknown>(
     filePath: string,
-    options: LoaderOptions = { preferJson: true, fallbackToYaml: true }
+    options: LoaderOptions = { preferJson: true, fallbackToYaml: true },
   ): Promise<T | null> {
-    const basePath = filePath.replace(/\.(json|yaml|yml)$/, '');
+    const basePath = filePath.replace(/\.(json|yaml|yml)$/, "");
 
     if (options.preferJson) {
       // Try JSON first
@@ -56,8 +56,8 @@ export const jsonYamlLoader = {
    */
   async loadJson<T = unknown>(filePath: string): Promise<T | null> {
     try {
-      const fullPath = path.join(process.cwd(), 'public', filePath);
-      const content = fs.readFileSync(fullPath, 'utf-8');
+      const fullPath = path.join(process.cwd(), "public", filePath);
+      const content = fs.readFileSync(fullPath, "utf-8");
       return JSON.parse(content);
     } catch (error) {
       console.error(`Failed to load JSON ${filePath}:`, error);
@@ -70,8 +70,8 @@ export const jsonYamlLoader = {
    */
   async loadYaml<T = unknown>(filePath: string): Promise<T | null> {
     try {
-      const fullPath = path.join(process.cwd(), 'public', filePath);
-      const content = fs.readFileSync(fullPath, 'utf-8');
+      const fullPath = path.join(process.cwd(), "public", filePath);
+      const content = fs.readFileSync(fullPath, "utf-8");
       return yaml.load(content) as T;
     } catch (error) {
       console.error(`Failed to load YAML ${filePath}:`, error);
@@ -84,11 +84,11 @@ export const jsonYamlLoader = {
    */
   async exists(filePath: string): Promise<boolean> {
     try {
-      const fullPath = path.join(process.cwd(), 'public', filePath);
+      const fullPath = path.join(process.cwd(), "public", filePath);
       await fs.promises.access(fullPath);
       return true;
     } catch {
       return false;
     }
-  }
+  },
 };

@@ -3,7 +3,7 @@
  * Provides high-performance caching with Redis backend
  */
 
-import { Redis } from 'ioredis';
+import { Redis } from "ioredis";
 
 interface CacheItem<T> {
   value: T;
@@ -25,7 +25,7 @@ class RedisCacheService {
   private breakerOpenUntil = 0;
 
   private applyPrefix(key: string): string {
-    const prefix = process.env.CACHE_KEY_PREFIX || '';
+    const prefix = process.env.CACHE_KEY_PREFIX || "";
     return prefix ? `${prefix}:${key}` : key;
   }
 
@@ -36,32 +36,35 @@ class RedisCacheService {
   private async initializeRedis() {
     try {
       // Allow hard disable via env, but permit explicit enable in tests
-      const explicitlyEnabled = String(process.env.REDIS_ENABLED || '').toLowerCase() === 'true';
+      const explicitlyEnabled =
+        String(process.env.REDIS_ENABLED || "").toLowerCase() === "true";
       if (
-        !explicitlyEnabled && (
-          process.env.NODE_ENV === 'test' ||
+        !explicitlyEnabled &&
+        (process.env.NODE_ENV === "test" ||
           Boolean(process.env.JEST_WORKER_ID) ||
-          String(process.env.REDIS_ENABLED || '').toLowerCase() === 'false'
-        )
+          String(process.env.REDIS_ENABLED || "").toLowerCase() === "false")
       ) {
-        console.warn('Redis disabled by REDIS_ENABLED=false, using in-memory fallback');
+        console.warn(
+          "Redis disabled by REDIS_ENABLED=false, using in-memory fallback",
+        );
         return;
       }
 
-      const redisUrl = process.env.REDIS_URL || process.env.REDIS_CONNECTION_STRING;
+      const redisUrl =
+        process.env.REDIS_URL || process.env.REDIS_CONNECTION_STRING;
       const host = process.env.REDIS_HOST;
       const port = process.env.REDIS_PORT;
       const password = process.env.REDIS_PASSWORD;
       const db = process.env.REDIS_DB;
 
       const urlFromHostPort = host
-        ? `redis://${password ? `:${password}@` : ''}${host}${port ? `:${port}` : ''}${db ? `/${db}` : ''}`
+        ? `redis://${password ? `:${password}@` : ""}${host}${port ? `:${port}` : ""}${db ? `/${db}` : ""}`
         : undefined;
 
       const connectionString = redisUrl || urlFromHostPort;
 
       if (!connectionString) {
-        console.warn('Redis URL not configured, using in-memory fallback');
+        console.warn("Redis URL not configured, using in-memory fallback");
         return;
       }
 
@@ -72,19 +75,19 @@ class RedisCacheService {
         commandTimeout: 2000,
         // Reconnect settings
         reconnectOnError: (err) => {
-          const targetError = 'READONLY';
+          const targetError = "READONLY";
           return err.message.includes(targetError);
-        }
+        },
       });
 
       // Event listeners
-      this.redis.on('connect', () => {
-        console.log('Redis connected');
+      this.redis.on("connect", () => {
+        console.log("Redis connected");
         this.isConnected = true;
       });
 
-      this.redis.on('error', (err) => {
-        console.error('Redis error:', err);
+      this.redis.on("error", (err) => {
+        console.error("Redis error:", err);
         this.isConnected = false;
         this.errorCount += 1;
         if (this.errorCount >= 3) {
@@ -92,8 +95,8 @@ class RedisCacheService {
         }
       });
 
-      this.redis.on('close', () => {
-        console.log('Redis connection closed');
+      this.redis.on("close", () => {
+        console.log("Redis connection closed");
         this.isConnected = false;
       });
 
@@ -101,9 +104,8 @@ class RedisCacheService {
       await this.redis.ping();
       this.isConnected = true;
       this.errorCount = 0;
-
     } catch (error) {
-      console.error('Failed to initialize Redis:', error);
+      console.error("Failed to initialize Redis:", error);
       this.isConnected = false;
     }
   }
@@ -136,7 +138,7 @@ class RedisCacheService {
 
       return null;
     } catch (error) {
-      console.error('Cache get error:', error);
+      console.error("Cache get error:", error);
       return null;
     }
   }
@@ -144,19 +146,27 @@ class RedisCacheService {
   /**
    * Set value in cache
    */
-  async set<T>(key: string, value: T, options: CacheOptions = {}): Promise<void> {
+  async set<T>(
+    key: string,
+    value: T,
+    options: CacheOptions = {},
+  ): Promise<void> {
     const { ttl = 300000, serialize = true } = options; // Default 5 minutes
     const realKey = this.applyPrefix(key);
 
     const serializedValue = serialize ? JSON.stringify(value) : value;
     try {
       // Try Redis first
-      if (Date.now() >= this.breakerOpenUntil && this.isConnected && this.redis) {
+      if (
+        Date.now() >= this.breakerOpenUntil &&
+        this.isConnected &&
+        this.redis
+      ) {
         const seconds = Math.max(1, Math.floor(ttl / 1000));
         await this.redis.setex(realKey, seconds, serializedValue as string);
       }
     } catch (error) {
-      console.error('Cache set error:', error);
+      console.error("Cache set error:", error);
       this.errorCount += 1;
       if (this.errorCount >= 3) {
         this.breakerOpenUntil = Date.now() + 60_000;
@@ -166,7 +176,7 @@ class RedisCacheService {
       this.fallbackCache.set(realKey, {
         value,
         expiresAt: Date.now() + ttl,
-        createdAt: Date.now()
+        createdAt: Date.now(),
       });
 
       // Cleanup fallback cache if too large
@@ -183,14 +193,18 @@ class RedisCacheService {
     try {
       const realKey = this.applyPrefix(key);
       // Delete from Redis
-      if (Date.now() >= this.breakerOpenUntil && this.isConnected && this.redis) {
+      if (
+        Date.now() >= this.breakerOpenUntil &&
+        this.isConnected &&
+        this.redis
+      ) {
         await this.redis.del(realKey);
       }
 
       // Delete from fallback cache
       this.fallbackCache.delete(realKey);
     } catch (error) {
-      console.error('Cache delete error:', error);
+      console.error("Cache delete error:", error);
     }
   }
 
@@ -207,7 +221,7 @@ class RedisCacheService {
       // Clear fallback cache
       this.fallbackCache.clear();
     } catch (error) {
-      console.error('Cache clear error:', error);
+      console.error("Cache clear error:", error);
     }
   }
 
@@ -224,7 +238,7 @@ class RedisCacheService {
       // Clear fallback cache
       this.fallbackCache.clear();
     } catch (error) {
-      console.error('Cache flushAll error:', error);
+      console.error("Cache flushAll error:", error);
     }
   }
 
@@ -235,7 +249,11 @@ class RedisCacheService {
     try {
       const realKey = this.applyPrefix(key);
       // Check Redis first
-      if (Date.now() >= this.breakerOpenUntil && this.isConnected && this.redis) {
+      if (
+        Date.now() >= this.breakerOpenUntil &&
+        this.isConnected &&
+        this.redis
+      ) {
         const exists = await this.redis.exists(realKey);
         if (exists) return true;
       }
@@ -248,7 +266,7 @@ class RedisCacheService {
 
       return false;
     } catch (error) {
-      console.error('Cache has error:', error);
+      console.error("Cache has error:", error);
       return false;
     }
   }
@@ -258,15 +276,19 @@ class RedisCacheService {
    */
   async mget<T>(keys: string[]): Promise<(T | null)[]> {
     try {
-      const prefixed = keys.map(k => this.applyPrefix(k));
+      const prefixed = keys.map((k) => this.applyPrefix(k));
       // Try Redis first
-      if (Date.now() >= this.breakerOpenUntil && this.isConnected && this.redis) {
+      if (
+        Date.now() >= this.breakerOpenUntil &&
+        this.isConnected &&
+        this.redis
+      ) {
         const values = await this.redis.mget(...prefixed);
-        return values.map(v => v ? JSON.parse(v) as T : null);
+        return values.map((v) => (v ? (JSON.parse(v) as T) : null));
       }
 
       // Fallback to in-memory cache
-      return prefixed.map(key => {
+      return prefixed.map((key) => {
         const item = this.fallbackCache.get(key);
         if (item && item.expiresAt > Date.now()) {
           return item.value as T;
@@ -274,7 +296,7 @@ class RedisCacheService {
         return null;
       });
     } catch (error) {
-      console.error('Cache mget error:', error);
+      console.error("Cache mget error:", error);
       return keys.map(() => null);
     }
   }
@@ -282,12 +304,17 @@ class RedisCacheService {
   /**
    * Set multiple keys at once
    */
-  async mset<T>(pairs: Array<[string, T]>, options: CacheOptions = {}): Promise<void> {
+  async mset<T>(
+    pairs: Array<[string, T]>,
+    options: CacheOptions = {},
+  ): Promise<void> {
     try {
-      const promises = pairs.map(([key, value]) => this.set(key, value, options));
+      const promises = pairs.map(([key, value]) =>
+        this.set(key, value, options),
+      );
       await Promise.all(promises);
     } catch (error) {
-      console.error('Cache mset error:', error);
+      console.error("Cache mset error:", error);
     }
   }
 
@@ -298,24 +325,28 @@ class RedisCacheService {
     try {
       const realKey = this.applyPrefix(key);
       // Try Redis first
-      if (Date.now() >= this.breakerOpenUntil && this.isConnected && this.redis) {
+      if (
+        Date.now() >= this.breakerOpenUntil &&
+        this.isConnected &&
+        this.redis
+      ) {
         return await this.redis.incrby(realKey, amount);
       }
 
       // Fallback to in-memory cache
       const item = this.fallbackCache.get(realKey);
-      const currentValue = typeof item?.value === 'number' ? item.value : 0;
+      const currentValue = typeof item?.value === "number" ? item.value : 0;
       const newValue = currentValue + amount;
 
       this.fallbackCache.set(realKey, {
         value: newValue,
         expiresAt: Date.now() + 300000, // 5 minutes default
-        createdAt: Date.now()
+        createdAt: Date.now(),
       });
 
       return newValue;
     } catch (error) {
-      console.error('Cache incr error:', error);
+      console.error("Cache incr error:", error);
       return 0;
     }
   }
@@ -332,19 +363,19 @@ class RedisCacheService {
       const stats = {
         redisConnected: this.isConnected,
         fallbackCacheSize: this.fallbackCache.size,
-        redisInfo: undefined as string | undefined
+        redisInfo: undefined as string | undefined,
       };
 
       if (this.isConnected && this.redis) {
-        stats.redisInfo = await this.redis.info('memory');
+        stats.redisInfo = await this.redis.info("memory");
       }
 
       return stats;
     } catch (error) {
-      console.error('Cache stats error:', error);
+      console.error("Cache stats error:", error);
       return {
         redisConnected: false,
-        fallbackCacheSize: this.fallbackCache.size
+        fallbackCacheSize: this.fallbackCache.size,
       };
     }
   }
@@ -363,14 +394,17 @@ class RedisCacheService {
     }
 
     // Remove expired items
-    expired.forEach(key => this.fallbackCache.delete(key));
+    expired.forEach((key) => this.fallbackCache.delete(key));
 
     // If still too large, remove oldest items
     if (this.fallbackCache.size > this.MAX_FALLBACK_SIZE) {
       const entries = Array.from(this.fallbackCache.entries());
       entries.sort((a, b) => a[1].createdAt - b[1].createdAt);
 
-      const toRemove = entries.slice(0, this.fallbackCache.size - this.MAX_FALLBACK_SIZE);
+      const toRemove = entries.slice(
+        0,
+        this.fallbackCache.size - this.MAX_FALLBACK_SIZE,
+      );
       toRemove.forEach(([key]) => this.fallbackCache.delete(key));
     }
   }

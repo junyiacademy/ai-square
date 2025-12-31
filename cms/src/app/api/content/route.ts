@@ -1,15 +1,15 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getGitHubStorage } from '@/services/github-storage';
+import { NextRequest, NextResponse } from "next/server";
+import { getGitHubStorage } from "@/services/github-storage";
 
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
-    const filePath = searchParams.get('path');
+    const filePath = searchParams.get("path");
 
     if (!filePath) {
       return NextResponse.json(
-        { error: 'File path is required' },
-        { status: 400 }
+        { error: "File path is required" },
+        { status: 400 },
       );
     }
 
@@ -19,14 +19,11 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       content: file.content,
       path: filePath,
-      sha: file.sha
+      sha: file.sha,
     });
   } catch (error) {
-    console.error('Failed to read file:', error);
-    return NextResponse.json(
-      { error: 'Failed to read file' },
-      { status: 500 }
-    );
+    console.error("Failed to read file:", error);
+    return NextResponse.json({ error: "Failed to read file" }, { status: 500 });
   }
 }
 
@@ -36,16 +33,18 @@ export async function POST(request: NextRequest) {
 
     if (!filePath || content === undefined) {
       return NextResponse.json(
-        { error: 'File path and content are required' },
-        { status: 400 }
+        { error: "File path and content are required" },
+        { status: 400 },
       );
     }
 
     // Get current branch from session or use provided branch
-    const currentBranch = branch || 'main';
+    const currentBranch = branch || "main";
 
     // Use provided message or generate default
-    const commitMessage = message || `更新 ${filePath}
+    const commitMessage =
+      message ||
+      `更新 ${filePath}
 
 透過 AI Square CMS 更新內容
 
@@ -57,13 +56,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       path: filePath,
-      branch: currentBranch
+      branch: currentBranch,
     });
   } catch (error) {
-    console.error('Failed to save file:', error);
-    return NextResponse.json(
-      { error: 'Failed to save file' },
-      { status: 500 }
-    );
+    console.error("Failed to save file:", error);
+    return NextResponse.json({ error: "Failed to save file" }, { status: 500 });
   }
 }
