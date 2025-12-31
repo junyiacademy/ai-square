@@ -18,7 +18,6 @@ import { cacheKeys, TTL } from "@/lib/cache/cache-keys";
 // }
 
 interface CachedScenario {
-  // eslint-disable-line @typescript-eslint/no-unused-vars
   id: string;
   title: string;
   description: string;

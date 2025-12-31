@@ -133,15 +133,13 @@ describe("/api/assessment/scenarios", () => {
         mockScenarioRepo,
       );
       jest.doMock("@/lib/auth/session", () => ({
-        getUnifiedAuth: jest
-          .fn()
-          .mockResolvedValue({
-            user: {
-              id: "user-123",
-              email: "user@example.com",
-              role: "student",
-            },
-          }),
+        getUnifiedAuth: jest.fn().mockResolvedValue({
+          user: {
+            id: "user-123",
+            email: "user@example.com",
+            role: "student",
+          },
+        }),
       }));
       jest.isolateModules(() => {
         // eslint-disable-next-line @typescript-eslint/no-var-requires

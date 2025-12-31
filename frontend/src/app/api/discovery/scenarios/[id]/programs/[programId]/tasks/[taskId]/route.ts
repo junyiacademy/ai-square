@@ -12,7 +12,6 @@ import { Interaction } from "@/lib/repositories/interfaces";
 
 // System prompt for AI - keep in English as it's for the AI model
 function getSystemPromptForLanguage(_language: string): string {
-  // eslint-disable-line @typescript-eslint/no-unused-vars
   return "You are an expert educational psychologist and learning coach.";
 }
 
@@ -87,7 +86,6 @@ function getSkillsSection(language: string, skills: string[]): string {
 }
 
 function getFallbackMessage(_language: string): string {
-  // eslint-disable-line @typescript-eslint/no-unused-vars
   // For now, use simple message - will be replaced with i18n
   return "Congratulations on successfully completing this task! Your effort and persistence are commendable.";
 }

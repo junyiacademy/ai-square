@@ -83,7 +83,6 @@ export function useHybridScenarios() {
       } finally {
         if (!isPreload) setLoading(false);
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     },
     [CACHE_TTL],
   );

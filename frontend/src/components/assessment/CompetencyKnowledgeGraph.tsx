@@ -663,7 +663,7 @@ export default function CompetencyKnowledgeGraph({
           .on("start", dragstarted)
           .on("drag", dragged)
           .on("end", dragended) as any,
-      ); // eslint-disable-line @typescript-eslint/no-explicit-any
+      );
 
     // Add circles for nodes
     node

@@ -287,13 +287,11 @@ describe("POST /api/chat", () => {
                 throw new Error("ai down");
               }),
             }),
-            generateContent: jest
-              .fn()
-              .mockResolvedValue({
-                response: {
-                  candidates: [{ content: { parts: [{ text: "Title" }] } }],
-                },
-              }),
+            generateContent: jest.fn().mockResolvedValue({
+              response: {
+                candidates: [{ content: { parts: [{ text: "Title" }] } }],
+              },
+            }),
           }),
         },
       })),
@@ -491,17 +489,15 @@ describe("POST /api/chat", () => {
             if (filePath.endsWith("user_data.json")) {
               return {
                 exists: jest.fn().mockResolvedValue([true]),
-                download: jest
-                  .fn()
-                  .mockResolvedValue([
-                    JSON.stringify({
-                      identity: "student",
-                      goals: [],
-                      assessmentResult: { overallScore: 70, domainScores: {} },
-                      completedPBLs: [],
-                      learningStyle: "visual",
-                    }),
-                  ]),
+                download: jest.fn().mockResolvedValue([
+                  JSON.stringify({
+                    identity: "student",
+                    goals: [],
+                    assessmentResult: { overallScore: 70, domainScores: {} },
+                    completedPBLs: [],
+                    learningStyle: "visual",
+                  }),
+                ]),
                 save,
               };
             }
@@ -521,23 +517,17 @@ describe("POST /api/chat", () => {
         preview: {
           getGenerativeModel: jest.fn().mockReturnValue({
             startChat: jest.fn().mockReturnValue({
-              sendMessage: jest
-                .fn()
-                .mockResolvedValue({
-                  response: {
-                    candidates: [{ content: { parts: [{ text: "AI says" }] } }],
-                  },
-                }),
-            }),
-            generateContent: jest
-              .fn()
-              .mockResolvedValue({
+              sendMessage: jest.fn().mockResolvedValue({
                 response: {
-                  candidates: [
-                    { content: { parts: [{ text: "更新後標題" }] } },
-                  ],
+                  candidates: [{ content: { parts: [{ text: "AI says" }] } }],
                 },
               }),
+            }),
+            generateContent: jest.fn().mockResolvedValue({
+              response: {
+                candidates: [{ content: { parts: [{ text: "更新後標題" }] } }],
+              },
+            }),
           }),
         },
       })),
@@ -582,17 +572,15 @@ describe("POST /api/chat", () => {
             if (filePath.endsWith("user_data.json")) {
               return {
                 exists: jest.fn().mockResolvedValue([true]),
-                download: jest
-                  .fn()
-                  .mockResolvedValue([
-                    JSON.stringify({
-                      identity: "student",
-                      goals: [],
-                      assessmentResult: { overallScore: 60, domainScores: {} },
-                      completedPBLs: [],
-                      learningStyle: "visual",
-                    }),
-                  ]),
+                download: jest.fn().mockResolvedValue([
+                  JSON.stringify({
+                    identity: "student",
+                    goals: [],
+                    assessmentResult: { overallScore: 60, domainScores: {} },
+                    completedPBLs: [],
+                    learningStyle: "visual",
+                  }),
+                ]),
                 save: jest.fn(),
               };
             }
@@ -625,21 +613,17 @@ describe("POST /api/chat", () => {
         preview: {
           getGenerativeModel: jest.fn().mockReturnValue({
             startChat: jest.fn().mockReturnValue({
-              sendMessage: jest
-                .fn()
-                .mockResolvedValue({
-                  response: {
-                    candidates: [{ content: { parts: [{ text: "OK" }] } }],
-                  },
-                }),
-            }),
-            generateContent: jest
-              .fn()
-              .mockResolvedValue({
+              sendMessage: jest.fn().mockResolvedValue({
                 response: {
-                  candidates: [{ content: { parts: [{ text: "標題" }] } }],
+                  candidates: [{ content: { parts: [{ text: "OK" }] } }],
                 },
               }),
+            }),
+            generateContent: jest.fn().mockResolvedValue({
+              response: {
+                candidates: [{ content: { parts: [{ text: "標題" }] } }],
+              },
+            }),
           }),
         },
       })),

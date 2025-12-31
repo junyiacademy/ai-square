@@ -236,84 +236,66 @@ jest.mock("./src/lib/repositories/base/repository-factory", () => ({
       count: jest.fn().mockResolvedValue(0),
     }),
     getScenarioRepository: jest.fn().mockReturnValue({
-      findById: jest
-        .fn()
-        .mockResolvedValue({
-          id: "scenario-1",
-          mode: "pbl",
-          title: { en: "Test" },
-        }),
+      findById: jest.fn().mockResolvedValue({
+        id: "scenario-1",
+        mode: "pbl",
+        title: { en: "Test" },
+      }),
       findByMode: jest.fn().mockResolvedValue([]),
-      create: jest
-        .fn()
-        .mockResolvedValue({
-          id: "scenario-1",
-          mode: "pbl",
-          title: { en: "Test" },
-        }),
-      update: jest
-        .fn()
-        .mockResolvedValue({
-          id: "scenario-1",
-          mode: "pbl",
-          title: { en: "Test" },
-        }),
+      create: jest.fn().mockResolvedValue({
+        id: "scenario-1",
+        mode: "pbl",
+        title: { en: "Test" },
+      }),
+      update: jest.fn().mockResolvedValue({
+        id: "scenario-1",
+        mode: "pbl",
+        title: { en: "Test" },
+      }),
       delete: jest.fn().mockResolvedValue(true),
       findAll: jest.fn().mockResolvedValue([]),
       findActive: jest.fn().mockResolvedValue([]),
       count: jest.fn().mockResolvedValue(0),
     }),
     getProgramRepository: jest.fn().mockReturnValue({
-      findById: jest
-        .fn()
-        .mockResolvedValue({
-          id: "program-1",
-          scenarioId: "scenario-1",
-          userId: "user-1",
-        }),
+      findById: jest.fn().mockResolvedValue({
+        id: "program-1",
+        scenarioId: "scenario-1",
+        userId: "user-1",
+      }),
       findByUserId: jest.fn().mockResolvedValue([]),
       findByScenarioId: jest.fn().mockResolvedValue([]),
-      create: jest
-        .fn()
-        .mockResolvedValue({
-          id: "program-1",
-          scenarioId: "scenario-1",
-          userId: "user-1",
-        }),
-      update: jest
-        .fn()
-        .mockResolvedValue({
-          id: "program-1",
-          scenarioId: "scenario-1",
-          userId: "user-1",
-        }),
+      create: jest.fn().mockResolvedValue({
+        id: "program-1",
+        scenarioId: "scenario-1",
+        userId: "user-1",
+      }),
+      update: jest.fn().mockResolvedValue({
+        id: "program-1",
+        scenarioId: "scenario-1",
+        userId: "user-1",
+      }),
       delete: jest.fn().mockResolvedValue(true),
       findAll: jest.fn().mockResolvedValue([]),
       count: jest.fn().mockResolvedValue(0),
     }),
     getTaskRepository: jest.fn().mockReturnValue({
-      findById: jest
-        .fn()
-        .mockResolvedValue({
-          id: "task-1",
-          programId: "program-1",
-          type: "question",
-        }),
+      findById: jest.fn().mockResolvedValue({
+        id: "task-1",
+        programId: "program-1",
+        type: "question",
+      }),
       findByProgramId: jest.fn().mockResolvedValue([]),
-      create: jest
-        .fn()
-        .mockResolvedValue({
-          id: "task-1",
-          programId: "program-1",
-          type: "question",
-        }),
-      update: jest
-        .fn()
-        .mockResolvedValue({
-          id: "task-1",
-          programId: "program-1",
-          type: "question",
-        }),
+      create: jest.fn().mockResolvedValue({
+        id: "task-1",
+        programId: "program-1",
+        type: "question",
+      }),
+      update: jest.fn().mockResolvedValue({
+        id: "task-1",
+        programId: "program-1",
+        type: "question",
+      }),
       delete: jest.fn().mockResolvedValue(true),
       findAll: jest.fn().mockResolvedValue([]),
       count: jest.fn().mockResolvedValue(0),
@@ -354,83 +336,65 @@ jest.mock("./src/lib/repositories/base/repository-factory", () => ({
       count: jest.fn().mockResolvedValue(0),
     },
     scenarios: {
-      findById: jest
-        .fn()
-        .mockResolvedValue({
-          id: "scenario-1",
-          mode: "pbl",
-          title: { en: "Test" },
-        }),
+      findById: jest.fn().mockResolvedValue({
+        id: "scenario-1",
+        mode: "pbl",
+        title: { en: "Test" },
+      }),
       findByMode: jest.fn().mockResolvedValue([]),
-      create: jest
-        .fn()
-        .mockResolvedValue({
-          id: "scenario-1",
-          mode: "pbl",
-          title: { en: "Test" },
-        }),
-      update: jest
-        .fn()
-        .mockResolvedValue({
-          id: "scenario-1",
-          mode: "pbl",
-          title: { en: "Test" },
-        }),
+      create: jest.fn().mockResolvedValue({
+        id: "scenario-1",
+        mode: "pbl",
+        title: { en: "Test" },
+      }),
+      update: jest.fn().mockResolvedValue({
+        id: "scenario-1",
+        mode: "pbl",
+        title: { en: "Test" },
+      }),
       delete: jest.fn().mockResolvedValue(true),
       findAll: jest.fn().mockResolvedValue([]),
       count: jest.fn().mockResolvedValue(0),
     },
     programs: {
-      findById: jest
-        .fn()
-        .mockResolvedValue({
-          id: "program-1",
-          scenarioId: "scenario-1",
-          userId: "user-1",
-        }),
+      findById: jest.fn().mockResolvedValue({
+        id: "program-1",
+        scenarioId: "scenario-1",
+        userId: "user-1",
+      }),
       findByUserId: jest.fn().mockResolvedValue([]),
       findByScenarioId: jest.fn().mockResolvedValue([]),
-      create: jest
-        .fn()
-        .mockResolvedValue({
-          id: "program-1",
-          scenarioId: "scenario-1",
-          userId: "user-1",
-        }),
-      update: jest
-        .fn()
-        .mockResolvedValue({
-          id: "program-1",
-          scenarioId: "scenario-1",
-          userId: "user-1",
-        }),
+      create: jest.fn().mockResolvedValue({
+        id: "program-1",
+        scenarioId: "scenario-1",
+        userId: "user-1",
+      }),
+      update: jest.fn().mockResolvedValue({
+        id: "program-1",
+        scenarioId: "scenario-1",
+        userId: "user-1",
+      }),
       delete: jest.fn().mockResolvedValue(true),
       findAll: jest.fn().mockResolvedValue([]),
       count: jest.fn().mockResolvedValue(0),
     },
     tasks: {
-      findById: jest
-        .fn()
-        .mockResolvedValue({
-          id: "task-1",
-          programId: "program-1",
-          type: "question",
-        }),
+      findById: jest.fn().mockResolvedValue({
+        id: "task-1",
+        programId: "program-1",
+        type: "question",
+      }),
       findByProgramId: jest.fn().mockResolvedValue([]),
-      create: jest
-        .fn()
-        .mockResolvedValue({
-          id: "task-1",
-          programId: "program-1",
-          type: "question",
-        }),
-      update: jest
-        .fn()
-        .mockResolvedValue({
-          id: "task-1",
-          programId: "program-1",
-          type: "question",
-        }),
+      create: jest.fn().mockResolvedValue({
+        id: "task-1",
+        programId: "program-1",
+        type: "question",
+      }),
+      update: jest.fn().mockResolvedValue({
+        id: "task-1",
+        programId: "program-1",
+        type: "question",
+      }),
       delete: jest.fn().mockResolvedValue(true),
       findAll: jest.fn().mockResolvedValue([]),
       count: jest.fn().mockResolvedValue(0),
@@ -505,84 +469,66 @@ jest.mock("./src/lib/repositories/base/repository-factory", () => ({
       count: jest.fn().mockResolvedValue(0),
     }),
     getScenarioRepository: jest.fn().mockReturnValue({
-      findById: jest
-        .fn()
-        .mockResolvedValue({
-          id: "scenario-1",
-          mode: "pbl",
-          title: { en: "Test" },
-        }),
+      findById: jest.fn().mockResolvedValue({
+        id: "scenario-1",
+        mode: "pbl",
+        title: { en: "Test" },
+      }),
       findByMode: jest.fn().mockResolvedValue([]),
-      create: jest
-        .fn()
-        .mockResolvedValue({
-          id: "scenario-1",
-          mode: "pbl",
-          title: { en: "Test" },
-        }),
-      update: jest
-        .fn()
-        .mockResolvedValue({
-          id: "scenario-1",
-          mode: "pbl",
-          title: { en: "Test" },
-        }),
+      create: jest.fn().mockResolvedValue({
+        id: "scenario-1",
+        mode: "pbl",
+        title: { en: "Test" },
+      }),
+      update: jest.fn().mockResolvedValue({
+        id: "scenario-1",
+        mode: "pbl",
+        title: { en: "Test" },
+      }),
       delete: jest.fn().mockResolvedValue(true),
       findAll: jest.fn().mockResolvedValue([]),
       findActive: jest.fn().mockResolvedValue([]),
       count: jest.fn().mockResolvedValue(0),
     }),
     getProgramRepository: jest.fn().mockReturnValue({
-      findById: jest
-        .fn()
-        .mockResolvedValue({
-          id: "program-1",
-          scenarioId: "scenario-1",
-          userId: "user-1",
-        }),
+      findById: jest.fn().mockResolvedValue({
+        id: "program-1",
+        scenarioId: "scenario-1",
+        userId: "user-1",
+      }),
       findByUserId: jest.fn().mockResolvedValue([]),
       findByScenarioId: jest.fn().mockResolvedValue([]),
-      create: jest
-        .fn()
-        .mockResolvedValue({
-          id: "program-1",
-          scenarioId: "scenario-1",
-          userId: "user-1",
-        }),
-      update: jest
-        .fn()
-        .mockResolvedValue({
-          id: "program-1",
-          scenarioId: "scenario-1",
-          userId: "user-1",
-        }),
+      create: jest.fn().mockResolvedValue({
+        id: "program-1",
+        scenarioId: "scenario-1",
+        userId: "user-1",
+      }),
+      update: jest.fn().mockResolvedValue({
+        id: "program-1",
+        scenarioId: "scenario-1",
+        userId: "user-1",
+      }),
       delete: jest.fn().mockResolvedValue(true),
       findAll: jest.fn().mockResolvedValue([]),
       count: jest.fn().mockResolvedValue(0),
     }),
     getTaskRepository: jest.fn().mockReturnValue({
-      findById: jest
-        .fn()
-        .mockResolvedValue({
-          id: "task-1",
-          programId: "program-1",
-          type: "question",
-        }),
+      findById: jest.fn().mockResolvedValue({
+        id: "task-1",
+        programId: "program-1",
+        type: "question",
+      }),
       findByProgramId: jest.fn().mockResolvedValue([]),
-      create: jest
-        .fn()
-        .mockResolvedValue({
-          id: "task-1",
-          programId: "program-1",
-          type: "question",
-        }),
-      update: jest
-        .fn()
-        .mockResolvedValue({
-          id: "task-1",
-          programId: "program-1",
-          type: "question",
-        }),
+      create: jest.fn().mockResolvedValue({
+        id: "task-1",
+        programId: "program-1",
+        type: "question",
+      }),
+      update: jest.fn().mockResolvedValue({
+        id: "task-1",
+        programId: "program-1",
+        type: "question",
+      }),
       delete: jest.fn().mockResolvedValue(true),
       findAll: jest.fn().mockResolvedValue([]),
       count: jest.fn().mockResolvedValue(0),
@@ -621,83 +567,65 @@ jest.mock("./src/lib/repositories/base/repository-factory", () => ({
       count: jest.fn().mockResolvedValue(0),
     },
     scenarios: {
-      findById: jest
-        .fn()
-        .mockResolvedValue({
-          id: "scenario-1",
-          mode: "pbl",
-          title: { en: "Test" },
-        }),
+      findById: jest.fn().mockResolvedValue({
+        id: "scenario-1",
+        mode: "pbl",
+        title: { en: "Test" },
+      }),
       findByMode: jest.fn().mockResolvedValue([]),
-      create: jest
-        .fn()
-        .mockResolvedValue({
-          id: "scenario-1",
-          mode: "pbl",
-          title: { en: "Test" },
-        }),
-      update: jest
-        .fn()
-        .mockResolvedValue({
-          id: "scenario-1",
-          mode: "pbl",
-          title: { en: "Test" },
-        }),
+      create: jest.fn().mockResolvedValue({
+        id: "scenario-1",
+        mode: "pbl",
+        title: { en: "Test" },
+      }),
+      update: jest.fn().mockResolvedValue({
+        id: "scenario-1",
+        mode: "pbl",
+        title: { en: "Test" },
+      }),
       delete: jest.fn().mockResolvedValue(true),
       findAll: jest.fn().mockResolvedValue([]),
       count: jest.fn().mockResolvedValue(0),
     },
     programs: {
-      findById: jest
-        .fn()
-        .mockResolvedValue({
-          id: "program-1",
-          scenarioId: "scenario-1",
-          userId: "user-1",
-        }),
+      findById: jest.fn().mockResolvedValue({
+        id: "program-1",
+        scenarioId: "scenario-1",
+        userId: "user-1",
+      }),
       findByUserId: jest.fn().mockResolvedValue([]),
       findByScenarioId: jest.fn().mockResolvedValue([]),
-      create: jest
-        .fn()
-        .mockResolvedValue({
-          id: "program-1",
-          scenarioId: "scenario-1",
-          userId: "user-1",
-        }),
-      update: jest
-        .fn()
-        .mockResolvedValue({
-          id: "program-1",
-          scenarioId: "scenario-1",
-          userId: "user-1",
-        }),
+      create: jest.fn().mockResolvedValue({
+        id: "program-1",
+        scenarioId: "scenario-1",
+        userId: "user-1",
+      }),
+      update: jest.fn().mockResolvedValue({
+        id: "program-1",
+        scenarioId: "scenario-1",
+        userId: "user-1",
+      }),
       delete: jest.fn().mockResolvedValue(true),
       findAll: jest.fn().mockResolvedValue([]),
       count: jest.fn().mockResolvedValue(0),
     },
     tasks: {
-      findById: jest
-        .fn()
-        .mockResolvedValue({
-          id: "task-1",
-          programId: "program-1",
-          type: "question",
-        }),
+      findById: jest.fn().mockResolvedValue({
+        id: "task-1",
+        programId: "program-1",
+        type: "question",
+      }),
       findByProgramId: jest.fn().mockResolvedValue([]),
-      create: jest
-        .fn()
-        .mockResolvedValue({
-          id: "task-1",
-          programId: "program-1",
-          type: "question",
-        }),
-      update: jest
-        .fn()
-        .mockResolvedValue({
-          id: "task-1",
-          programId: "program-1",
-          type: "question",
-        }),
+      create: jest.fn().mockResolvedValue({
+        id: "task-1",
+        programId: "program-1",
+        type: "question",
+      }),
+      update: jest.fn().mockResolvedValue({
+        id: "task-1",
+        programId: "program-1",
+        type: "question",
+      }),
       delete: jest.fn().mockResolvedValue(true),
       findAll: jest.fn().mockResolvedValue([]),
       count: jest.fn().mockResolvedValue(0),

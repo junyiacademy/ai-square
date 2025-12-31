@@ -143,12 +143,10 @@ describe("LearningServiceFactory", () => {
     });
 
     it("submitResponse returns success/score/feedback/nextTaskAvailable from isCorrect", async () => {
-      const submitAnswerMock = jest
-        .fn()
-        .mockImplementation(async () => ({
-          isCorrect: false,
-          correctAnswer: "B",
-        }));
+      const submitAnswerMock = jest.fn().mockImplementation(async () => ({
+        isCorrect: false,
+        correctAnswer: "B",
+      }));
 
       jest.isolateModules(async () => {
         jest.doMock("../assessment-learning-service", () => ({

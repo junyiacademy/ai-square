@@ -259,9 +259,7 @@ export class PBLEvaluationStrategy implements IEvaluationStrategy {
     ];
   }
 
-  private aggregateKSADimensions(
-    evaluations: IEvaluation[],
-  ): {
+  private aggregateKSADimensions(evaluations: IEvaluation[]): {
     dimension: string;
     score: number;
     feedback: string;
@@ -555,9 +553,7 @@ export class AssessmentEvaluationStrategy implements IEvaluationStrategy {
     }));
   }
 
-  private aggregateDomainScores(
-    evaluations: IEvaluation[],
-  ): {
+  private aggregateDomainScores(evaluations: IEvaluation[]): {
     dimension: string;
     score: number;
     feedback: string;
