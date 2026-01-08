@@ -17,6 +17,7 @@ wc -l src/app/[PATH]/page.tsx
 ```
 
 **What to look for**:
+
 - Large JSX blocks (>100 lines)
 - Repeated component patterns
 - Complex state management
@@ -98,11 +99,13 @@ export default function Page() {
 ### Page 2: learning-path/page.tsx (725 lines)
 
 **Extract**:
+
 1. `LearningPathHeader` (~150 lines) - Header with progress, filters
 2. `LearningPathGrid` (~200 lines) - Grid of learning path cards
 3. `ProgressSidebar` (~120 lines) - User progress tracking
 
 **Hook**:
+
 - `useLearningPaths()` - Fetch learning paths and user progress
 
 **Target**: ~400 lines
@@ -112,11 +115,13 @@ export default function Page() {
 ### Page 3: chat/page.tsx (701 lines)
 
 **Extract**:
+
 1. `ChatMessageList` (~250 lines) - Message list with scrolling
 2. `ChatInputPanel` (~120 lines) - Input with attachments, send button
 3. `ChatSidebar` (~150 lines) - Conversations list
 
 **Hook**:
+
 - `useChatMessages()` - WebSocket/polling for messages
 - `useChatInput()` - Input state, file uploads
 
@@ -127,11 +132,13 @@ export default function Page() {
 ### Page 4: discovery/task page (631 lines)
 
 **Extract**:
+
 1. `TaskInstructionsPanel` (~180 lines) - Task description, instructions
 2. `TaskChatPanel` (~200 lines) - Chat interface for task
 3. `TaskEvaluationPanel` (~120 lines) - Evaluation results
 
 **Hook**:
+
 - `useTaskData()` - Load task, scenario, program data
 
 **Target**: ~400 lines
@@ -141,11 +148,13 @@ export default function Page() {
 ### Page 5: discovery/complete page (589 lines)
 
 **Extract**:
+
 1. `CompletionSummary` (~150 lines) - Summary card with scores
 2. `TaskResultsList` (~200 lines) - List of completed tasks with evaluations
 3. `NextStepsPanel` (~100 lines) - Recommendations, next actions
 
 **Hook**:
+
 - `useProgramCompletion()` - Fetch completion data
 
 **Target**: ~400 lines
@@ -155,11 +164,13 @@ export default function Page() {
 ### Page 6: discovery/scenarios page (579 lines)
 
 **Extract**:
+
 1. `ScenarioHeader` (~120 lines) - Similar to PBL, can reuse pattern
 2. `ScenarioOverview` (~150 lines) - Objectives, prerequisites
 3. `ProgramsList` (~180 lines) - Programs list with progress
 
 **Hook**:
+
 - `useDiscoveryScenario()` - Load scenario and programs
 
 **Target**: ~400 lines
@@ -169,11 +180,13 @@ export default function Page() {
 ### Page 7: dashboard/page.tsx (519 lines)
 
 **Extract**:
+
 1. `DashboardStats` (~120 lines) - Stats cards (programs, scenarios, achievements)
 2. `RecentActivity` (~150 lines) - Recent programs, progress
 3. `RecommendationsPanel` (~120 lines) - Recommended scenarios
 
 **Hook**:
+
 - `useDashboardData()` - Load all dashboard data
 
 **Target**: ~400 lines
@@ -183,11 +196,13 @@ export default function Page() {
 ### Page 8: relations/page.tsx (493 lines)
 
 **Extract**:
+
 1. `RelationsGraph` (~180 lines) - Graph visualization
 2. `RelationsFilter` (~80 lines) - Filters for graph
 3. `RelationDetails` (~100 lines) - Selected relation details
 
 **Hook**:
+
 - `useRelations()` - Load relations data
 
 **Target**: ~400 lines
@@ -197,6 +212,7 @@ export default function Page() {
 ### Page 9-12: Simpler Pages (461-442 lines)
 
 For pages already close to target:
+
 - Extract 1-2 largest components (~100-150 lines each)
 - **No hooks** unless complex data fetching
 - **Minimal changes** to reduce risk
@@ -220,20 +236,24 @@ export function useData(id: string, language: string) {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await authenticatedFetch(`/api/.../${id}?lang=${language}`);
+        const response = await authenticatedFetch(
+          `/api/.../${id}?lang=${language}`,
+        );
         if (!ignore && response.ok) {
           const result = await response.json();
           setData(result.data);
         }
       } catch (error) {
-        if (!ignore) console.error('Error:', error);
+        if (!ignore) console.error("Error:", error);
       } finally {
         if (!ignore) setLoading(false);
       }
     };
 
     fetchData();
-    return () => { ignore = true; };
+    return () => {
+      ignore = true;
+    };
   }, [id, language]);
 
   return { data, loading };

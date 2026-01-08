@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { motion } from 'framer-motion';
-import { LucideIcon } from 'lucide-react';
+import React from "react";
+import { motion } from "framer-motion";
+import { LucideIcon } from "lucide-react";
 
 interface FeatureCardProps {
   icon: LucideIcon;
@@ -19,7 +19,7 @@ export default function FeatureCard({
   description,
   colorGradient,
   glowColor,
-  index = 0
+  index = 0,
 }: FeatureCardProps) {
   return (
     <motion.div
@@ -29,13 +29,15 @@ export default function FeatureCard({
       whileHover={{
         y: -10,
         rotateY: 5,
-        transition: { duration: 0.2 }
+        transition: { duration: 0.2 },
       }}
       className={`relative group bg-gradient-to-br from-gray-900/80 to-gray-800/80 backdrop-blur-lg rounded-2xl p-6 border border-gray-700/50 ${glowColor} shadow-2xl hover:shadow-3xl transition-all duration-300`}
-      style={{ transformStyle: 'preserve-3d' }}
+      style={{ transformStyle: "preserve-3d" }}
     >
       {/* Glow border */}
-      <div className={`absolute inset-0 rounded-3xl bg-gradient-to-r ${colorGradient} opacity-0 group-hover:opacity-20 transition-opacity duration-300`} />
+      <div
+        className={`absolute inset-0 rounded-3xl bg-gradient-to-r ${colorGradient} opacity-0 group-hover:opacity-20 transition-opacity duration-300`}
+      />
 
       {/* Icon */}
       <motion.div
@@ -57,11 +59,11 @@ export default function FeatureCard({
       <motion.div
         animate={{
           rotate: 360,
-          scale: [1, 1.1, 1]
+          scale: [1, 1.1, 1],
         }}
         transition={{
           rotate: { duration: 10, repeat: Infinity, ease: "linear" },
-          scale: { duration: 2, repeat: Infinity }
+          scale: { duration: 2, repeat: Infinity },
         }}
         className="absolute top-4 right-4 w-3 h-3 bg-gradient-to-r from-purple-400 to-cyan-400 rounded-full opacity-60"
       />

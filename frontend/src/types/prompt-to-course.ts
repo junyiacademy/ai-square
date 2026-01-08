@@ -3,7 +3,7 @@
  * Types for AI-powered course generation from natural language prompts
  */
 
-import type { LearningMode, DifficultyLevel } from './database';
+import type { LearningMode, DifficultyLevel } from "./database";
 
 /**
  * Input form data for course generation
@@ -63,7 +63,7 @@ export interface ValidateScenarioRequest {
 export interface ValidationError {
   path: string;
   message: string;
-  severity: 'error' | 'warning' | 'info';
+  severity: "error" | "warning" | "info";
 }
 
 /**
@@ -79,7 +79,7 @@ export interface ValidateScenarioResponse {
 /**
  * Preview mode for the PreviewTabs component
  */
-export type PreviewMode = 'visual' | 'markdown' | 'code';
+export type PreviewMode = "visual" | "markdown" | "code";
 
 /**
  * Parsed scenario data for preview
@@ -112,7 +112,7 @@ export interface ParsedScenarioData {
  */
 export interface DownloadOptions {
   filename: string;
-  format: 'yaml' | 'json';
+  format: "yaml" | "json";
 }
 
 /**

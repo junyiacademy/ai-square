@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
 /**
  * YAMLEditor Component
  * Monaco Editor for YAML code editing
  */
 
-import { Editor } from '@monaco-editor/react';
+import { Editor } from "@monaco-editor/react";
 
 interface YAMLEditorProps {
   yaml: string;
@@ -30,10 +30,10 @@ export function YAMLEditor({ yaml, onChange }: YAMLEditorProps) {
         options={{
           minimap: { enabled: true },
           fontSize: 14,
-          lineNumbers: 'on',
+          lineNumbers: "on",
           rulers: [80],
-          wordWrap: 'on',
-          wrappingIndent: 'indent',
+          wordWrap: "on",
+          wrappingIndent: "indent",
           scrollBeyondLastLine: false,
           automaticLayout: true,
           tabSize: 2,

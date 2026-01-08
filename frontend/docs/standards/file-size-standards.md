@@ -3,11 +3,13 @@
 ## Philosophy Shift
 
 **OLD (Line-Count Focused):**
+
 - "File is 301 lines → Must refactor"
 - Hard limits enforced arbitrarily
 - Focus on raw numbers
 
 **NEW (Modularity Focused):**
+
 - "File has multiple responsibilities → Should refactor"
 - Focus on cognitive load and AI-readability
 - Pragmatic, context-aware enforcement
@@ -21,72 +23,87 @@ Translation: Line count is NOT the key metric. What matters is proper module sep
 ## New Quality Metrics
 
 ### 1. Single Responsibility Principle (SRP)
+
 **Check:** Does this file do ONE thing well?
 
 **Good Examples:**
+
 - A 500-line service that handles ALL user authentication logic (login, logout, token refresh, session management)
 - A 400-line repository that provides comprehensive CRUD operations for a single domain entity
 - A 600-line test file covering all edge cases for a single component
 
 **Bad Examples:**
+
 - A 250-line file mixing API route handling, business logic, database queries, and validation
 - A 300-line component with form logic, API calls, state management, and UI rendering mixed together
 
 ### 2. AI-Readability Score
+
 **Check:** Can AI navigate and understand this file efficiently?
 
 **Good Indicators:**
+
 - Clear section comments marking different logical blocks
 - Consistent naming conventions throughout
 - Logical grouping of related functions
 - Minimal cognitive jumps between sections
 
 **Bad Indicators:**
+
 - Random function order with no logical grouping
 - Mixed concerns (UI + business logic + data access)
 - Unclear variable names requiring context from other files
 - Deeply nested logic requiring extensive mental tracking
 
 ### 3. Token Efficiency
+
 **Check:** Is there unnecessary repetition or redundancy?
 
 **Good Patterns:**
+
 - DRY principle applied (Don't Repeat Yourself)
 - Extracted common patterns into utilities
 - Type definitions reused across file
 - Clear imports without circular dependencies
 
 **Bad Patterns:**
+
 - Copy-pasted code blocks with minor variations
 - Redundant type definitions
 - Unnecessary verbose comments explaining obvious code
 - Multiple similar functions that could be generalized
 
 ### 4. Cohesion Score
+
 **Check:** How related are the elements within this file?
 
 **High Cohesion (Good):**
+
 - All functions work toward the same goal
 - Shared state is minimal and well-managed
 - Functions naturally call each other
 - File represents a clear, bounded context
 
 **Low Cohesion (Bad):**
+
 - Unrelated utility functions thrown together
 - Mix of different domain concepts
 - Functions that never interact with each other
 - "Junk drawer" files with miscellaneous code
 
 ### 5. Coupling Score
+
 **Check:** How dependent is this file on other modules?
 
 **Loose Coupling (Good):**
+
 - Clear, minimal interfaces with other modules
 - Dependencies injected or imported explicitly
 - Easy to test in isolation
 - Changes in other files rarely require changes here
 
 **Tight Coupling (Bad):**
+
 - Circular dependencies with other files
 - Direct access to internal state of other modules
 - Changes cascade across multiple files
@@ -166,6 +183,7 @@ Translation: Line count is NOT the key metric. What matters is proper module sep
 ```
 
 **Why This is Good:**
+
 - Single responsibility: Authentication
 - Logical sections with clear boundaries
 - All functions serve the same domain
@@ -199,6 +217,7 @@ export async function GET(req: Request) { ... }
 ```
 
 **Why This is Bad:**
+
 - Multiple responsibilities: API, utils, types, business logic
 - Poor cohesion - unrelated functions together
 - AI must parse entire file to understand any part
@@ -219,15 +238,16 @@ export async function GET(req: Request) { ... }
  * - Edge Cases & Error Handling (100 lines)
  */
 
-describe('UserService', () => {
+describe("UserService", () => {
   // ✅ Organized by feature
   // ✅ Each test focused and clear
   // ✅ Comprehensive coverage
   // ✅ AI can navigate by describe blocks
-})
+});
 ```
 
 **Why This is Good:**
+
 - Single responsibility: Testing UserService
 - Organized with clear describe blocks
 - Comprehensive coverage justifies length
@@ -241,6 +261,7 @@ describe('UserService', () => {
 ### 1. Extract by Concern
 
 **Before (Mixed Concerns):**
+
 ```typescript
 // page.tsx - 400 lines
 export default function UserPage() {
@@ -263,6 +284,7 @@ export default function UserPage() {
 ```
 
 **After (Separated Concerns):**
+
 ```typescript
 // page.tsx - 150 lines (UI coordination only)
 import { useUserService } from '@/services/user-service';
@@ -301,6 +323,7 @@ export function UserForm({ onSubmit }: Props) {
 ### 2. Extract by Feature
 
 **Before (Feature Spread Across File):**
+
 ```typescript
 // user-repository.ts - 600 lines
 export class UserRepository {
@@ -319,6 +342,7 @@ export class UserRepository {
 ```
 
 **After (Separated by Feature):**
+
 ```typescript
 // repositories/user-repository.ts - 250 lines (core CRUD)
 export class UserRepository {
@@ -341,6 +365,7 @@ export class UserAnalyticsRepository {
 ### 3. Extract Utilities
 
 **Before (Utilities Mixed with Logic):**
+
 ```typescript
 // service.ts - 500 lines
 export class ScenarioService {
@@ -360,6 +385,7 @@ export class ScenarioService {
 ```
 
 **After (Utilities Extracted):**
+
 ```typescript
 // services/scenario-service.ts - 200 lines (core logic)
 import { multilingualFormatter } from '@/lib/utils/multilingual';
@@ -393,20 +419,21 @@ export const structureValidator = {
 
 ```typescript
 const FILE_SIZE_SOFT_LIMITS = {
-  component: 300,    // UI components (review if exceeded)
-  page: 400,         // Next.js pages (review if exceeded)
-  api: 300,          // API routes (review if exceeded)
-  service: 500,      // Service layer (context-dependent)
-  repository: 400,   // Repository pattern (context-dependent)
-  utility: 200,      // Utility functions (usually should be smaller)
-  test: 800,         // Tests (can be larger with good organization)
-  config: 1500,      // Configuration (often necessarily large)
+  component: 300, // UI components (review if exceeded)
+  page: 400, // Next.js pages (review if exceeded)
+  api: 300, // API routes (review if exceeded)
+  service: 500, // Service layer (context-dependent)
+  repository: 400, // Repository pattern (context-dependent)
+  utility: 200, // Utility functions (usually should be smaller)
+  test: 800, // Tests (can be larger with good organization)
+  config: 1500, // Configuration (often necessarily large)
 };
 ```
 
 ### Hard Limits (Enforcement)
 
 **Only enforce when:**
+
 - File exceeds 2x soft limit AND has clear modularity issues
 - Multiple responsibilities detected (automated analysis)
 - High cognitive complexity score (cyclomatic complexity > 50)
@@ -491,24 +518,28 @@ const ENFORCEMENT_CRITERIA = {
 ## Migration Strategy
 
 ### Phase 1: Update Tooling (Week 1)
+
 - [x] Update check-file-size.ts with new metrics
 - [ ] Add cognitive complexity analysis
 - [ ] Add cohesion/coupling detection
 - [ ] Create exemption list for justified large files
 
 ### Phase 2: Documentation (Week 1)
+
 - [x] Create this standards document
 - [ ] Update code-quality-enforcer agent
 - [ ] Create refactoring playbook with examples
 - [ ] Add to CLAUDE.md
 
 ### Phase 3: Gradual Application (Ongoing)
+
 - [ ] Review existing large files against new criteria
 - [ ] Refactor only those with clear modularity issues
 - [ ] Document justified exceptions
 - [ ] Update as patterns emerge
 
 ### Phase 4: Continuous Improvement (Ongoing)
+
 - [ ] Collect feedback from developers
 - [ ] Track which files cause most confusion
 - [ ] Refine metrics based on real-world data
@@ -519,17 +550,20 @@ const ENFORCEMENT_CRITERIA = {
 ## Exemptions & Exceptions
 
 ### Automatically Exempt:
+
 - Configuration files (tailwind.config.ts, etc.)
 - Generated files
 - Test fixtures with large datasets
 - Type definition aggregators
 
 ### Requires Justification:
+
 - Services > 600 lines (document why complexity is inherent)
 - Components > 400 lines (explain why splitting would reduce clarity)
 - API routes > 400 lines (justify why can't delegate to services)
 
 ### Documentation Template:
+
 ```typescript
 /**
  * FILE SIZE EXEMPTION

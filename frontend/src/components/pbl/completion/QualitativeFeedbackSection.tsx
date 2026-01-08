@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useTranslation } from 'react-i18next';
-import type { QualitativeFeedback } from '@/types/pbl-completion';
+import { useTranslation } from "react-i18next";
+import type { QualitativeFeedback } from "@/types/pbl-completion";
 
 interface QualitativeFeedbackSectionProps {
   feedback: QualitativeFeedback | undefined;
@@ -12,9 +12,9 @@ interface QualitativeFeedbackSectionProps {
 export function QualitativeFeedbackSection({
   feedback,
   generatingFeedback,
-  onRegenerateFeedback
+  onRegenerateFeedback,
 }: QualitativeFeedbackSectionProps) {
-  const { t } = useTranslation('pbl');
+  const { t } = useTranslation("pbl");
 
   if (!feedback && !generatingFeedback) {
     return null;
@@ -26,23 +26,36 @@ export function QualitativeFeedbackSection({
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 mx-auto mb-4"></div>
           <p className="text-gray-600 dark:text-gray-400">
-            {t('complete.generatingFeedback', 'Generating personalized feedback...')}
+            {t(
+              "complete.generatingFeedback",
+              "Generating personalized feedback...",
+            )}
           </p>
         </div>
       ) : feedback ? (
         <>
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
-              {t('complete.qualitativeFeedback', 'Personalized Feedback')}
+              {t("complete.qualitativeFeedback", "Personalized Feedback")}
             </h2>
-            {process.env.NODE_ENV === 'development' && onRegenerateFeedback && (
+            {process.env.NODE_ENV === "development" && onRegenerateFeedback && (
               <button
                 onClick={onRegenerateFeedback}
                 className="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
                 title="Regenerate feedback (Dev only)"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                  />
                 </svg>
               </button>
             )}
@@ -59,10 +72,20 @@ export function QualitativeFeedbackSection({
             {/* Strengths */}
             <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-6">
               <h3 className="text-lg font-medium text-green-900 dark:text-green-100 mb-4 flex items-center">
-                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <svg
+                  className="w-5 h-5 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
                 </svg>
-                {t('complete.strengths', 'Your Strengths')}
+                {t("complete.strengths", "Your Strengths")}
               </h3>
               <div className="space-y-3">
                 {feedback.strengths?.map((strength, index) => (
@@ -86,10 +109,20 @@ export function QualitativeFeedbackSection({
             {/* Areas for Improvement */}
             <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-6">
               <h3 className="text-lg font-medium text-blue-900 dark:text-blue-100 mb-4 flex items-center">
-                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                <svg
+                  className="w-5 h-5 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 10V3L4 14h7v7l9-11h-7z"
+                  />
                 </svg>
-                {t('complete.areasForImprovement', 'Growth Opportunities')}
+                {t("complete.areasForImprovement", "Growth Opportunities")}
               </h3>
               <div className="space-y-3">
                 {feedback.areasForImprovement?.map((area, index) => (
@@ -102,8 +135,18 @@ export function QualitativeFeedbackSection({
                     </p>
                     {area.suggestion && (
                       <p className="text-sm text-blue-600 dark:text-blue-400 mt-2 flex items-start">
-                        <svg className="w-4 h-4 mr-1 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        <svg
+                          className="w-4 h-4 mr-1 mt-0.5 flex-shrink-0"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 5l7 7-7 7"
+                          />
                         </svg>
                         {area.suggestion}
                       </p>
@@ -118,7 +161,7 @@ export function QualitativeFeedbackSection({
           {feedback.nextSteps && feedback.nextSteps.length > 0 && (
             <div className="bg-purple-50 dark:bg-purple-900/20 rounded-lg p-6 mb-6">
               <h3 className="text-lg font-medium text-purple-900 dark:text-purple-100 mb-4">
-                {t('complete.nextSteps', 'Recommended Next Steps')}
+                {t("complete.nextSteps", "Recommended Next Steps")}
               </h3>
               <ul className="space-y-2">
                 {feedback.nextSteps.map((step, index) => (

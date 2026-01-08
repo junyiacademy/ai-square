@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 interface QuizHeaderProps {
   currentQuestionIndex: number;
@@ -8,29 +8,34 @@ interface QuizHeaderProps {
   timeLeft: number;
 }
 
-export function QuizHeader({ currentQuestionIndex, totalQuestions, timeLeft }: QuizHeaderProps) {
-  const { t } = useTranslation('assessment');
+export function QuizHeader({
+  currentQuestionIndex,
+  totalQuestions,
+  timeLeft,
+}: QuizHeaderProps) {
+  const { t } = useTranslation("assessment");
 
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
   };
 
-  const progressPercentage = ((currentQuestionIndex + 1) / totalQuestions) * 100;
+  const progressPercentage =
+    ((currentQuestionIndex + 1) / totalQuestions) * 100;
 
   return (
     <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold text-gray-900">
-          {t('quiz.title')}
-        </h1>
+        <h1 className="text-2xl font-bold text-gray-900">{t("quiz.title")}</h1>
         <div className="flex items-center space-x-4">
           <div className="text-sm text-gray-600">
-            {t('quiz.question')} {currentQuestionIndex + 1} / {totalQuestions}
+            {t("quiz.question")} {currentQuestionIndex + 1} / {totalQuestions}
           </div>
-          <div className={`text-sm font-medium ${timeLeft < 300 ? 'text-red-600' : 'text-gray-600'}`}>
-            {t('quiz.timeLeft')}: {formatTime(timeLeft)}
+          <div
+            className={`text-sm font-medium ${timeLeft < 300 ? "text-red-600" : "text-gray-600"}`}
+          >
+            {t("quiz.timeLeft")}: {formatTime(timeLeft)}
           </div>
         </div>
       </div>

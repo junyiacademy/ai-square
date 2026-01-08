@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
       console.error("ADMIN_SEED_SECRET environment variable not set");
       return NextResponse.json(
         { success: false, error: "Server configuration error" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -39,8 +39,16 @@ export async function POST(request: NextRequest) {
 
     // Define demo accounts with their intended passwords and roles
     const demoAccounts = [
-      { email: "student@example.com", password: studentPassword, role: "student" },
-      { email: "teacher@example.com", password: teacherPassword, role: "teacher" },
+      {
+        email: "student@example.com",
+        password: studentPassword,
+        role: "student",
+      },
+      {
+        email: "teacher@example.com",
+        password: teacherPassword,
+        role: "teacher",
+      },
       { email: "admin@example.com", password: adminPassword, role: "admin" },
     ];
 

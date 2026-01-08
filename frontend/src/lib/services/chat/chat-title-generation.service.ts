@@ -5,7 +5,7 @@
 
 export interface ChatMessage {
   id: string;
-  role: 'user' | 'assistant';
+  role: "user" | "assistant";
   content: string;
   timestamp: string;
 }
@@ -42,26 +42,26 @@ export class ChatTitleGenerationService {
    */
   async generateTitle(messages: ChatMessage[]): Promise<string> {
     if (messages.length < 2) {
-      return 'New Chat';
+      return "New Chat";
     }
 
     try {
       const model = this.vertexAI.preview.getGenerativeModel({
-        model: 'gemini-2.5-flash',
+        model: "gemini-2.5-flash",
         generationConfig: {
           maxOutputTokens: 50,
-          temperature: 0.7
-        }
+          temperature: 0.7,
+        },
       });
 
       // Use up to 3 messages (first 3 exchanges) for better context
       const conversationContext = messages
         .slice(0, 6) // user, assistant, user, assistant, user, assistant
         .map((msg) => {
-          const role = msg.role === 'user' ? 'User' : 'Assistant';
+          const role = msg.role === "user" ? "User" : "Assistant";
           return `${role}: ${msg.content.substring(0, 150)}`;
         })
-        .join('\n');
+        .join("\n");
 
       const prompt = `Based on this conversation, generate a short, descriptive title in Traditional Chinese (max 6 words, 繁體中文):
 
@@ -77,13 +77,14 @@ Title:`;
 
       const result = await model.generateContent(prompt);
       const response = result.response;
-      const text = response.candidates?.[0]?.content?.parts?.[0]?.text || '學習討論';
+      const text =
+        response.candidates?.[0]?.content?.parts?.[0]?.text || "學習討論";
 
       // Remove quotes
-      return text.trim().replace(/['"「」]/g, '');
+      return text.trim().replace(/['"「」]/g, "");
     } catch (error) {
-      console.error('Error generating title:', error);
-      return '學習討論';
+      console.error("Error generating title:", error);
+      return "學習討論";
     }
   }
 }

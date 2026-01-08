@@ -9,28 +9,28 @@
  * @returns Object with rating label, color class, and i18n key
  */
 export function getQualitativeRating(score: number): {
-  label: 'Good' | 'Great' | 'Perfect';
+  label: "Good" | "Great" | "Perfect";
   color: string;
   i18nKey: string;
 } {
   if (score >= 91) {
     return {
-      label: 'Perfect',
-      color: 'text-purple-600 dark:text-purple-400',
-      i18nKey: 'pbl:complete.rating.perfect',
+      label: "Perfect",
+      color: "text-purple-600 dark:text-purple-400",
+      i18nKey: "pbl:complete.rating.perfect",
     };
   }
   if (score >= 71) {
     return {
-      label: 'Great',
-      color: 'text-blue-600 dark:text-blue-400',
-      i18nKey: 'pbl:complete.rating.great',
+      label: "Great",
+      color: "text-blue-600 dark:text-blue-400",
+      i18nKey: "pbl:complete.rating.great",
     };
   }
   return {
-    label: 'Good',
-    color: 'text-green-600 dark:text-green-400',
-    i18nKey: 'pbl:complete.rating.good',
+    label: "Good",
+    color: "text-green-600 dark:text-green-400",
+    i18nKey: "pbl:complete.rating.good",
   };
 }
 
@@ -52,15 +52,15 @@ export function getQualitativeRating(score: number): {
 export function getLocalizedField<T extends Record<string, unknown>>(
   obj: T | null | undefined,
   fieldName: string,
-  language: string
+  language: string,
 ): string {
-  if (!obj) return '';
+  if (!obj) return "";
 
   // Use language code directly as suffix
   const langSuffix = language;
   const fieldWithLang = `${fieldName}_${langSuffix}`;
 
   // Return localized field if exists, otherwise return default
-  const value = obj[fieldWithLang] || obj[fieldName] || '';
+  const value = obj[fieldWithLang] || obj[fieldName] || "";
   return String(value);
 }

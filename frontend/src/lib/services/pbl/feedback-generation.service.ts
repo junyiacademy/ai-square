@@ -1,17 +1,17 @@
-import { VertexAI, SchemaType } from '@google-cloud/vertexai';
+import { VertexAI, SchemaType } from "@google-cloud/vertexai";
 
 // Language names mapping
 const LANGUAGE_NAMES: Record<string, string> = {
-  en: 'English',
-  zhTW: 'Traditional Chinese (繁體中文)',
-  'zh-TW': 'Traditional Chinese (繁體中文)',
-  zhCN: 'Simplified Chinese (简体中文)',
-  'zh-CN': 'Simplified Chinese (简体中文)',
-  ja: 'Japanese (日本語)',
-  ko: 'Korean (한국어)',
-  es: 'Spanish (Español)',
-  fr: 'French (Français)',
-  de: 'German (Deutsch)',
+  en: "English",
+  zhTW: "Traditional Chinese (繁體中文)",
+  "zh-TW": "Traditional Chinese (繁體中文)",
+  zhCN: "Simplified Chinese (简体中文)",
+  "zh-CN": "Simplified Chinese (简体中文)",
+  ja: "Japanese (日本語)",
+  ko: "Korean (한국어)",
+  es: "Spanish (Español)",
+  fr: "French (Français)",
+  de: "German (Deutsch)",
 };
 
 // Types for feedback structure
@@ -64,7 +64,7 @@ export interface ScenarioContext {
  */
 export class FeedbackGenerationService {
   private vertexAI: VertexAI;
-  private model: ReturnType<VertexAI['getGenerativeModel']>;
+  private model: ReturnType<VertexAI["getGenerativeModel"]>;
 
   // Feedback JSON schema for structured output
   private readonly feedbackSchema = {
@@ -72,7 +72,7 @@ export class FeedbackGenerationService {
     properties: {
       overallAssessment: {
         type: SchemaType.STRING,
-        description: 'Brief overall assessment of performance',
+        description: "Brief overall assessment of performance",
       },
       strengths: {
         type: SchemaType.ARRAY,
@@ -81,18 +81,18 @@ export class FeedbackGenerationService {
           properties: {
             area: {
               type: SchemaType.STRING,
-              description: 'Specific strength area',
+              description: "Specific strength area",
             },
             description: {
               type: SchemaType.STRING,
-              description: 'Detailed description of what they did well',
+              description: "Detailed description of what they did well",
             },
             example: {
               type: SchemaType.STRING,
-              description: 'Specific example from their conversations',
+              description: "Specific example from their conversations",
             },
           },
-          required: ['area', 'description', 'example'],
+          required: ["area", "description", "example"],
         },
       },
       areasForImprovement: {
@@ -102,49 +102,49 @@ export class FeedbackGenerationService {
           properties: {
             area: {
               type: SchemaType.STRING,
-              description: 'Area needing improvement',
+              description: "Area needing improvement",
             },
             description: {
               type: SchemaType.STRING,
-              description: 'What needs work',
+              description: "What needs work",
             },
             suggestion: {
               type: SchemaType.STRING,
-              description: 'Specific actionable suggestion',
+              description: "Specific actionable suggestion",
             },
           },
-          required: ['area', 'description', 'suggestion'],
+          required: ["area", "description", "suggestion"],
         },
       },
       nextSteps: {
         type: SchemaType.ARRAY,
         items: {
           type: SchemaType.STRING,
-          description: 'Specific next step',
+          description: "Specific next step",
         },
       },
       encouragement: {
         type: SchemaType.STRING,
-        description: 'Personalized encouraging message',
+        description: "Personalized encouraging message",
       },
     },
     required: [
-      'overallAssessment',
-      'strengths',
-      'areasForImprovement',
-      'nextSteps',
-      'encouragement',
+      "overallAssessment",
+      "strengths",
+      "areasForImprovement",
+      "nextSteps",
+      "encouragement",
     ],
   };
 
   constructor() {
     this.vertexAI = new VertexAI({
-      project: process.env.GOOGLE_CLOUD_PROJECT || 'ai-square-463013',
-      location: process.env.VERTEX_AI_LOCATION || 'us-central1',
+      project: process.env.GOOGLE_CLOUD_PROJECT || "ai-square-463013",
+      location: process.env.VERTEX_AI_LOCATION || "us-central1",
     });
 
     this.model = this.vertexAI.getGenerativeModel({
-      model: 'gemini-2.5-flash',
+      model: "gemini-2.5-flash",
       systemInstruction: `You are a multilingual AI literacy education expert providing qualitative feedback for Problem-Based Learning scenarios.
 Your role is to analyze learners' performance based on their conversations and provide constructive, encouraging feedback.
 
@@ -168,27 +168,32 @@ You must always respond with a valid JSON object following the exact schema prov
   async generateQualitativeFeedback(
     performanceData: PerformanceData,
     scenarioContext: ScenarioContext,
-    language: string
+    language: string,
   ): Promise<QualitativeFeedback> {
     try {
-      const prompt = this.buildPrompt(performanceData, scenarioContext, language);
+      const prompt = this.buildPrompt(
+        performanceData,
+        scenarioContext,
+        language,
+      );
 
       const result = await this.model.generateContent({
-        contents: [{ role: 'user', parts: [{ text: prompt }] }],
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
         generationConfig: {
           temperature: 0.7,
           maxOutputTokens: 65535,
-          responseMimeType: 'application/json',
+          responseMimeType: "application/json",
           responseSchema: this.feedbackSchema,
         },
       });
 
       const response = result.response;
-      const feedbackText = response.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+      const feedbackText =
+        response.candidates?.[0]?.content?.parts?.[0]?.text || "{}";
 
       return this.parseFeedbackResponse(feedbackText, language);
     } catch (error) {
-      console.error('Error generating feedback:', error);
+      console.error("Error generating feedback:", error);
       return this.getFallbackFeedback(language);
     }
   }
@@ -199,15 +204,15 @@ You must always respond with a valid JSON object following the exact schema prov
   buildPrompt(
     performanceData: PerformanceData,
     scenarioContext: ScenarioContext,
-    language: string
+    language: string,
   ): string {
-    const languageName = LANGUAGE_NAMES[language] || LANGUAGE_NAMES['en'];
+    const languageName = LANGUAGE_NAMES[language] || LANGUAGE_NAMES["en"];
 
     return `
 Analyze this learner's performance in the "${scenarioContext.title}" scenario.
 
 Scenario Objectives:
-${scenarioContext.learningObjectives?.join('\n') || 'General AI literacy improvement'}
+${scenarioContext.learningObjectives?.join("\n") || "General AI literacy improvement"}
 
 Overall Performance:
 - Overall Score: ${performanceData.overallScore}%
@@ -219,16 +224,16 @@ ${performanceData.taskSummaries
   .map(
     (task, index) => `
 Task ${index + 1}: Score ${task.score}%
-Key conversations: ${task.conversations.slice(0, 3).join('; ')}
+Key conversations: ${task.conversations.slice(0, 3).join("; ")}
 Feedback: ${task.feedback}
-`
+`,
   )
-  .join('\n')}
+  .join("\n")}
 
 Domain Scores:
 ${Object.entries(performanceData.domainScores || {})
   .map(([domain, score]) => `${domain}: ${score}%`)
-  .join('\n')}
+  .join("\n")}
 
 Generate comprehensive qualitative feedback for this learner's performance.
 
@@ -249,13 +254,13 @@ Do not mix languages. The entire response must be in ${languageName}.
    */
   private parseFeedbackResponse(
     feedbackText: string,
-    language: string
+    language: string,
   ): QualitativeFeedback {
     try {
       return JSON.parse(feedbackText) as QualitativeFeedback;
     } catch (parseError) {
-      console.error('Failed to parse AI response as JSON:', parseError);
-      console.error('Response text:', feedbackText);
+      console.error("Failed to parse AI response as JSON:", parseError);
+      console.error("Response text:", feedbackText);
 
       // Try to repair truncated JSON
       const repaired = this.repairTruncatedJSON(feedbackText);
@@ -263,7 +268,7 @@ Do not mix languages. The entire response must be in ${languageName}.
         try {
           return JSON.parse(repaired) as QualitativeFeedback;
         } catch (repairError) {
-          console.error('Failed to parse repaired JSON:', repairError);
+          console.error("Failed to parse repaired JSON:", repairError);
         }
       }
 
@@ -277,7 +282,7 @@ Do not mix languages. The entire response must be in ${languageName}.
    * Returns repaired JSON string or null if repair fails
    */
   repairTruncatedJSON(truncatedJson: string): string | null {
-    if (!truncatedJson.includes('{')) {
+    if (!truncatedJson.includes("{")) {
       return null;
     }
 
@@ -299,12 +304,12 @@ Do not mix languages. The entire response must be in ${languageName}.
 
       // Close unclosed arrays
       for (let i = 0; i < openBrackets - closeBrackets; i++) {
-        repairedJson += ']';
+        repairedJson += "]";
       }
 
       // Close unclosed objects
       for (let i = 0; i < openBraces - closeBraces; i++) {
-        repairedJson += '}';
+        repairedJson += "}";
       }
 
       // Validate repaired JSON
@@ -319,50 +324,51 @@ Do not mix languages. The entire response must be in ${languageName}.
    * Get fallback feedback when AI generation fails
    */
   getFallbackFeedback(language: string): QualitativeFeedback {
-    if (language === 'zhTW' || language === 'zh-TW') {
+    if (language === "zhTW" || language === "zh-TW") {
       return {
-        overallAssessment: '已完成效能分析評估',
+        overallAssessment: "已完成效能分析評估",
         strengths: [
           {
-            area: '任務完成',
-            description: '成功完成情境任務',
-            example: '積極與 AI 助手互動',
+            area: "任務完成",
+            description: "成功完成情境任務",
+            example: "積極與 AI 助手互動",
           },
         ],
         areasForImprovement: [
           {
-            area: '進階練習',
-            description: '持續探索 AI 的能力',
-            suggestion: '嘗試更複雜的情境以加深理解',
+            area: "進階練習",
+            description: "持續探索 AI 的能力",
+            suggestion: "嘗試更複雜的情境以加深理解",
           },
         ],
-        nextSteps: ['回顧情境目標並反思學習成果', '探索更多 AI 素養資源'],
-        encouragement: '做得很好!完成了這個情境!繼續探索和學習 AI 吧。',
+        nextSteps: ["回顧情境目標並反思學習成果", "探索更多 AI 素養資源"],
+        encouragement: "做得很好!完成了這個情境!繼續探索和學習 AI 吧。",
       };
     }
 
     // Default English fallback
     return {
-      overallAssessment: 'Performance analysis completed',
+      overallAssessment: "Performance analysis completed",
       strengths: [
         {
-          area: 'Task Completion',
-          description: 'Successfully completed the scenario tasks',
-          example: 'Engaged actively with the AI assistant',
+          area: "Task Completion",
+          description: "Successfully completed the scenario tasks",
+          example: "Engaged actively with the AI assistant",
         },
       ],
       areasForImprovement: [
         {
-          area: 'Further Practice',
-          description: 'Continue exploring AI capabilities',
-          suggestion: 'Try more complex scenarios to deepen understanding',
+          area: "Further Practice",
+          description: "Continue exploring AI capabilities",
+          suggestion: "Try more complex scenarios to deepen understanding",
         },
       ],
       nextSteps: [
-        'Review the scenario objectives and reflect on learning',
-        'Explore additional AI literacy resources',
+        "Review the scenario objectives and reflect on learning",
+        "Explore additional AI literacy resources",
       ],
-      encouragement: 'Great job completing this scenario! Keep exploring and learning about AI.',
+      encouragement:
+        "Great job completing this scenario! Keep exploring and learning about AI.",
     };
   }
 }

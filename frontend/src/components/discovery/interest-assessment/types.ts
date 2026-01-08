@@ -21,5 +21,8 @@ export interface Question {
 }
 
 export interface InterestAssessmentProps {
-  onComplete: (results: AssessmentResults, answers?: Record<string, string[]>) => void;
+  onComplete: (
+    results: AssessmentResults,
+    answers?: Record<string, string[]>,
+  ) => void;
 }

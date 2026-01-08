@@ -1,6 +1,6 @@
-import { motion, AnimatePresence } from 'framer-motion';
-import { OptionButton } from './OptionButton';
-import type { Question } from './types';
+import { motion, AnimatePresence } from "framer-motion";
+import { OptionButton } from "./OptionButton";
+import type { Question } from "./types";
 
 interface QuestionCardProps {
   question: Question;
@@ -9,7 +9,12 @@ interface QuestionCardProps {
   onOptionSelect: (optionId: string) => void;
 }
 
-export function QuestionCard({ question, questionIndex, selectedOptions, onOptionSelect }: QuestionCardProps) {
+export function QuestionCard({
+  question,
+  questionIndex,
+  selectedOptions,
+  onOptionSelect,
+}: QuestionCardProps) {
   return (
     <div className="flex-1 overflow-y-auto mb-4">
       <AnimatePresence mode="wait">

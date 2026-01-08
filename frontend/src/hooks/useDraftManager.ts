@@ -2,8 +2,8 @@
  * Draft manager hook for handling draft state and publish workflow
  */
 
-import { useState, useCallback } from 'react';
-import { useAutoSave } from './useAutoSave';
+import { useState, useCallback } from "react";
+import { useAutoSave } from "./useAutoSave";
 
 interface DraftState<T> {
   original: T | null;
@@ -21,13 +21,13 @@ interface UseDraftManagerOptions<T> {
 export function useDraftManager<T extends Record<string, unknown>>({
   scenarioId,
   onPublish,
-  autoSaveDelay = 2000
+  autoSaveDelay = 2000,
 }: UseDraftManagerOptions<T>) {
   const [state, setState] = useState<DraftState<T>>({
     original: null,
     draft: null,
     hasChanges: false,
-    lastSaved: null
+    lastSaved: null,
   });
 
   const [isPublishing, setIsPublishing] = useState(false);
@@ -42,37 +42,42 @@ export function useDraftManager<T extends Record<string, unknown>>({
     delay: autoSaveDelay,
     enabled: state.hasChanges,
     onSave: () => {
-      setState(prev => ({ ...prev, lastSaved: new Date() }));
-    }
+      setState((prev) => ({ ...prev, lastSaved: new Date() }));
+    },
   });
 
   // Load original data
-  const loadOriginal = useCallback((data: T) => {
-    const saved = loadSaved();
+  const loadOriginal = useCallback(
+    (data: T) => {
+      const saved = loadSaved();
 
-    setState({
-      original: data,
-      draft: saved || data,
-      hasChanges: saved !== null,
-      lastSaved: saved ? new Date() : null
-    });
-  }, [loadSaved]);
+      setState({
+        original: data,
+        draft: saved || data,
+        hasChanges: saved !== null,
+        lastSaved: saved ? new Date() : null,
+      });
+    },
+    [loadSaved],
+  );
 
   // Update draft
   const updateDraft = useCallback((updates: Partial<T> | ((prev: T) => T)) => {
-    setState(prev => {
+    setState((prev) => {
       if (!prev.draft) return prev;
 
-      const newDraft = typeof updates === 'function'
-        ? updates(prev.draft)
-        : { ...prev.draft, ...updates };
+      const newDraft =
+        typeof updates === "function"
+          ? updates(prev.draft)
+          : { ...prev.draft, ...updates };
 
-      const hasChanges = JSON.stringify(newDraft) !== JSON.stringify(prev.original);
+      const hasChanges =
+        JSON.stringify(newDraft) !== JSON.stringify(prev.original);
 
       return {
         ...prev,
         draft: newDraft,
-        hasChanges
+        hasChanges,
       };
     });
   }, []);
@@ -88,16 +93,17 @@ export function useDraftManager<T extends Record<string, unknown>>({
       await onPublish(state.draft);
 
       // Update original to match draft
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         original: prev.draft,
-        hasChanges: false
+        hasChanges: false,
       }));
 
       // Clear saved draft
       clearSaved();
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to publish';
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to publish";
       setPublishError(errorMessage);
       throw error;
     } finally {
@@ -109,11 +115,11 @@ export function useDraftManager<T extends Record<string, unknown>>({
   const discardChanges = useCallback(() => {
     if (!state.original) return;
 
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
       draft: prev.original,
       hasChanges: false,
-      lastSaved: null
+      lastSaved: null,
     }));
 
     clearSaved();
@@ -128,10 +134,14 @@ export function useDraftManager<T extends Record<string, unknown>>({
     const draft = state.draft;
 
     // Deep comparison to find changes
-    const compareObjects = (obj1: Record<string, unknown>, obj2: Record<string, unknown>, path = ''): void => {
+    const compareObjects = (
+      obj1: Record<string, unknown>,
+      obj2: Record<string, unknown>,
+      path = "",
+    ): void => {
       const allKeys = new Set([...Object.keys(obj1), ...Object.keys(obj2)]);
 
-      allKeys.forEach(key => {
+      allKeys.forEach((key) => {
         const val1 = obj1[key];
         const val2 = obj2[key];
         const currentPath = path ? `${path}.${key}` : key;
@@ -158,6 +168,6 @@ export function useDraftManager<T extends Record<string, unknown>>({
     updateDraft,
     publish,
     discardChanges,
-    getChangeSummary
+    getChangeSummary,
   };
 }

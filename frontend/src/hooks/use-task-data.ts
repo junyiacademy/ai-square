@@ -1,12 +1,12 @@
-import { useState, useCallback, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Program, Task } from '@/types/pbl';
-import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
-import { processInstructions } from '@/utils/pbl-instructions';
+import { useState, useCallback, useRef } from "react";
+import { useTranslation } from "react-i18next";
+import { Program, Task } from "@/types/pbl";
+import { authenticatedFetch } from "@/lib/utils/authenticated-fetch";
+import { processInstructions } from "@/utils/pbl-instructions";
 
 export interface ConversationEntry {
   id: string;
-  type: 'user' | 'ai' | 'system';
+  type: "user" | "ai" | "system";
   content: string;
   timestamp: string;
 }
@@ -26,7 +26,7 @@ export interface UseTaskDataReturn {
 export function useTaskData(
   scenarioId: string,
   programId: string,
-  taskId: string
+  taskId: string,
 ): UseTaskDataReturn {
   const { i18n } = useTranslation();
   const [programData, setProgramData] = useState<Program | null>(null);
@@ -42,22 +42,24 @@ export function useTaskData(
       setError(null);
 
       // Load scenario data with language parameter using PBL API
-      const scenarioRes = await authenticatedFetch(`/api/pbl/scenarios/${scenarioId}?lang=${i18n.language}`);
-      if (!scenarioRes.ok) throw new Error('Failed to load scenario');
+      const scenarioRes = await authenticatedFetch(
+        `/api/pbl/scenarios/${scenarioId}?lang=${i18n.language}`,
+      );
+      if (!scenarioRes.ok) throw new Error("Failed to load scenario");
       const scenarioData = await scenarioRes.json();
 
       let loadedProgram: Program | null = null;
 
       // Handle temp program IDs
-      if (programId.startsWith('temp_')) {
+      if (programId.startsWith("temp_")) {
         const mockProgram: Program = {
           id: programId,
           scenarioId: scenarioId,
-          userId: '',
-          userEmail: '',
+          userId: "",
+          userEmail: "",
           startedAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
-          status: 'in_progress',
+          status: "in_progress",
           totalTasks: scenarioData?.data?.tasks?.length || 0,
           currentTaskId: taskId,
           language: i18n.language,
@@ -66,7 +68,9 @@ export function useTaskData(
       } else {
         // Load actual program data
         try {
-          const programRes = await authenticatedFetch(`/api/pbl/scenarios/${scenarioId}/programs/${programId}`);
+          const programRes = await authenticatedFetch(
+            `/api/pbl/scenarios/${scenarioId}/programs/${programId}`,
+          );
           if (programRes.ok) {
             const programResponseData = await programRes.json();
             if (programResponseData) {
@@ -74,27 +78,30 @@ export function useTaskData(
                 id: programResponseData.id,
                 scenarioId: scenarioId,
                 userId: programResponseData.userId,
-                userEmail: '',
+                userEmail: "",
                 startedAt: programResponseData.startedAt,
                 updatedAt: programResponseData.startedAt,
                 status: programResponseData.status,
                 totalTasks: programResponseData.totalTaskCount || 0,
                 currentTaskId: taskId,
-                language: i18n.language
+                language: i18n.language,
               } as Program;
 
               // If this is a draft program, update its timestamps
-              if (loadedProgram.status === 'draft') {
+              if (loadedProgram.status === "draft") {
                 try {
-                  const updateRes = await authenticatedFetch(`/api/pbl/programs/${programId}/update-timestamps`, {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json',
+                  const updateRes = await authenticatedFetch(
+                    `/api/pbl/programs/${programId}/update-timestamps`,
+                    {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({
+                        scenarioId,
+                      }),
                     },
-                    body: JSON.stringify({
-                      scenarioId
-                    })
-                  });
+                  );
 
                   if (updateRes.ok) {
                     const updatedData = await updateRes.json();
@@ -103,23 +110,28 @@ export function useTaskData(
                     }
                   }
                 } catch (updateError) {
-                  console.error('Error updating draft timestamps:', updateError);
+                  console.error(
+                    "Error updating draft timestamps:",
+                    updateError,
+                  );
                 }
               }
             }
           }
 
           // Load task evaluations for program
-          if (loadedProgram && !programId.startsWith('temp_')) {
-            const tasksRes = await authenticatedFetch(`/api/pbl/programs/${programId}/tasks`);
+          if (loadedProgram && !programId.startsWith("temp_")) {
+            const tasksRes = await authenticatedFetch(
+              `/api/pbl/programs/${programId}/tasks`,
+            );
             if (tasksRes.ok) {
               const tasksData = await tasksRes.json();
               // Additional processing can be done here if needed
-              console.log('Loaded tasks for program:', tasksData);
+              console.log("Loaded tasks for program:", tasksData);
             }
           }
         } catch (programError) {
-          console.error('Error loading program data:', programError);
+          console.error("Error loading program data:", programError);
         }
       }
 
@@ -128,11 +140,11 @@ export function useTaskData(
         const mockProgram: Program = {
           id: programId,
           scenarioId: scenarioId,
-          userId: '',
-          userEmail: '',
+          userId: "",
+          userEmail: "",
           startedAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
-          status: programId.startsWith('temp_') ? 'in_progress' : 'draft',
+          status: programId.startsWith("temp_") ? "in_progress" : "draft",
           totalTasks: scenarioData?.data?.tasks?.length || 0,
           currentTaskId: taskId,
           language: i18n.language,
@@ -142,9 +154,10 @@ export function useTaskData(
 
       setProgramData(loadedProgram);
     } catch (err) {
-      const error = err instanceof Error ? err : new Error('Failed to load program');
+      const error =
+        err instanceof Error ? err : new Error("Failed to load program");
       setError(error);
-      console.error('Error loading program data:', error);
+      console.error("Error loading program data:", error);
     } finally {
       setIsLoading(false);
     }
@@ -157,13 +170,17 @@ export function useTaskData(
       setIsLoading(true);
       setError(null);
 
-      const taskRes = await authenticatedFetch(`/api/pbl/scenarios/${scenarioId}/programs/${programId}/tasks/${taskId}`);
+      const taskRes = await authenticatedFetch(
+        `/api/pbl/scenarios/${scenarioId}/programs/${programId}/tasks/${taskId}`,
+      );
       if (taskRes.ok) {
         const taskResponseData = await taskRes.json();
         if (taskResponseData) {
           // Extract task template data from unified architecture format
-          const taskTemplate = taskResponseData.content?.context?.taskTemplate || {};
-          const originalTaskData = taskResponseData.content?.context?.originalTaskData || {};
+          const taskTemplate =
+            taskResponseData.content?.context?.taskTemplate || {};
+          const originalTaskData =
+            taskResponseData.content?.context?.originalTaskData || {};
 
           const loadedTask = {
             id: taskResponseData.id || taskId,
@@ -174,37 +191,59 @@ export function useTaskData(
             status: taskResponseData.status,
             // Add fields from task template for rendering
             description: (() => {
-              const templateDescription = taskTemplate.description || originalTaskData.description;
-              if (typeof templateDescription === 'object' && !Array.isArray(templateDescription)) {
-                return templateDescription[i18n.language] || templateDescription.en || '';
+              const templateDescription =
+                taskTemplate.description || originalTaskData.description;
+              if (
+                typeof templateDescription === "object" &&
+                !Array.isArray(templateDescription)
+              ) {
+                return (
+                  templateDescription[i18n.language] ||
+                  templateDescription.en ||
+                  ""
+                );
               }
-              return typeof templateDescription === 'string' ? templateDescription : '';
+              return typeof templateDescription === "string"
+                ? templateDescription
+                : "";
             })(),
             // Extract instructions based on current language
             instructions: processInstructions(
               taskTemplate.instructions || originalTaskData.instructions,
-              i18n.language
+              i18n.language,
             ),
             expectedOutcome: (() => {
-              const templateOutcome = originalTaskData.expectedOutcome || taskTemplate.expectedOutcome;
-              if (typeof templateOutcome === 'object' && !Array.isArray(templateOutcome)) {
-                return templateOutcome[i18n.language] || templateOutcome.en || '';
+              const templateOutcome =
+                originalTaskData.expectedOutcome ||
+                taskTemplate.expectedOutcome;
+              if (
+                typeof templateOutcome === "object" &&
+                !Array.isArray(templateOutcome)
+              ) {
+                return (
+                  templateOutcome[i18n.language] || templateOutcome.en || ""
+                );
               }
-              return typeof templateOutcome === 'string' ? templateOutcome : '';
+              return typeof templateOutcome === "string" ? templateOutcome : "";
             })(),
             // Store the scenario task index for matching
             scenarioTaskIndex: taskResponseData.scenarioTaskIndex,
-            category: taskTemplate.category || originalTaskData.category || 'task',
-            assessmentFocus: taskTemplate.assessmentFocus || originalTaskData.assessmentFocus || null
+            category:
+              taskTemplate.category || originalTaskData.category || "task",
+            assessmentFocus:
+              taskTemplate.assessmentFocus ||
+              originalTaskData.assessmentFocus ||
+              null,
           } as unknown as Task;
 
           setTaskData(loadedTask);
         }
       }
     } catch (err) {
-      const error = err instanceof Error ? err : new Error('Failed to load task');
+      const error =
+        err instanceof Error ? err : new Error("Failed to load task");
       setError(error);
-      console.error('Error loading task data:', error);
+      console.error("Error loading task data:", error);
     } finally {
       setIsLoading(false);
     }
@@ -216,7 +255,7 @@ export function useTaskData(
 
     try {
       // Skip loading history for temp programs or invalid taskIds
-      if (programId.startsWith('temp_') || !taskId || taskId === 'undefined') {
+      if (programId.startsWith("temp_") || !taskId || taskId === "undefined") {
         setTaskHistory([]);
         return;
       }
@@ -225,59 +264,77 @@ export function useTaskData(
       isLoadingHistoryRef.current = true;
       setError(null);
 
-      console.log('Loading task history for:', { programId, taskId, scenarioId });
+      console.log("Loading task history for:", {
+        programId,
+        taskId,
+        scenarioId,
+      });
 
       // Load task conversation history and evaluation
-      const res = await authenticatedFetch(`/api/pbl/tasks/${taskId}/interactions`);
+      const res = await authenticatedFetch(
+        `/api/pbl/tasks/${taskId}/interactions`,
+      );
       if (res.ok) {
         const data = await res.json();
-        console.log('Task history response:', data);
+        console.log("Task history response:", data);
 
         if (data.data?.interactions) {
-          const loadedConversations = data.data.interactions.map((interaction: Record<string, unknown>): ConversationEntry => ({
-            id: String(interaction.id || `${interaction.timestamp}_${interaction.type}`),
-            type: interaction.type as 'user' | 'ai' | 'system',
-            content: String(interaction.content),
-            timestamp: String(interaction.timestamp)
-          }));
-          console.log('Loaded conversations:', loadedConversations);
+          const loadedConversations = data.data.interactions.map(
+            (interaction: Record<string, unknown>): ConversationEntry => ({
+              id: String(
+                interaction.id ||
+                  `${interaction.timestamp}_${interaction.type}`,
+              ),
+              type: interaction.type as "user" | "ai" | "system",
+              content: String(interaction.content),
+              timestamp: String(interaction.timestamp),
+            }),
+          );
+          console.log("Loaded conversations:", loadedConversations);
           setTaskHistory(loadedConversations);
 
           // Check if task has an evaluation
           if (data.data?.evaluationId) {
-            console.log('Task has evaluationId:', data.data.evaluationId);
+            console.log("Task has evaluationId:", data.data.evaluationId);
             // Fetch the evaluation details if needed
-            const evalRes = await authenticatedFetch(`/api/pbl/tasks/${taskId}/evaluate`, {
-              headers: {
-                'Accept-Language': i18n.language
-              }
-            });
+            const evalRes = await authenticatedFetch(
+              `/api/pbl/tasks/${taskId}/evaluate`,
+              {
+                headers: {
+                  "Accept-Language": i18n.language,
+                },
+              },
+            );
             if (evalRes.ok) {
               const evalData = await evalRes.json();
               if (evalData.data?.evaluation) {
-                console.log('Loaded existing evaluation:', evalData.data.evaluation);
+                console.log(
+                  "Loaded existing evaluation:",
+                  evalData.data.evaluation,
+                );
                 // Evaluation data available if needed
               }
             }
           }
         } else {
-          console.log('No interactions found in response');
+          console.log("No interactions found in response");
           setTaskHistory([]);
         }
       } else {
         if (res.status === 401) {
-          console.log('Authentication required for task history');
+          console.log("Authentication required for task history");
         } else if (res.status === 404) {
-          console.log('Task not found');
+          console.log("Task not found");
         } else {
-          console.error('Failed to load task history:', res.status);
+          console.error("Failed to load task history:", res.status);
         }
         setTaskHistory([]);
       }
     } catch (err) {
-      const error = err instanceof Error ? err : new Error('Failed to load history');
+      const error =
+        err instanceof Error ? err : new Error("Failed to load history");
       setError(error);
-      console.error('Error loading task history:', error);
+      console.error("Error loading task history:", error);
       setTaskHistory([]);
     } finally {
       setIsLoading(false);
@@ -302,6 +359,6 @@ export function useTaskData(
     loadProgram,
     loadTask,
     loadHistory,
-    reload
+    reload,
   };
 }

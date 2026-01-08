@@ -3,8 +3,8 @@
  * TDD Phase 1.4.2: Extract responsive sizing hook
  */
 
-import { renderHook, act } from '@testing-library/react';
-import { useGraphDimensions } from '../useGraphDimensions';
+import { renderHook, act } from "@testing-library/react";
+import { useGraphDimensions } from "../useGraphDimensions";
 
 // Mock container element
 const createMockContainer = (width: number) => ({
@@ -17,28 +17,30 @@ const createMockContainer = (width: number) => ({
     right: 0,
     x: 0,
     y: 0,
-    toJSON: jest.fn()
-  }))
+    toJSON: jest.fn(),
+  })),
 });
 
-describe('useGraphDimensions', () => {
+describe("useGraphDimensions", () => {
   beforeEach(() => {
     // Reset window event listeners
     window.addEventListener = jest.fn();
     window.removeEventListener = jest.fn();
   });
 
-  it('should return default dimensions when container is null', () => {
+  it("should return default dimensions when container is null", () => {
     const { result } = renderHook(() => useGraphDimensions({ current: null }));
 
     expect(result.current.width).toBe(800);
     expect(result.current.height).toBe(600);
   });
 
-  it('should calculate dimensions based on container width', () => {
+  it("should calculate dimensions based on container width", () => {
     const mockContainer = createMockContainer(1000);
     const { result } = renderHook(() =>
-      useGraphDimensions({ current: mockContainer as unknown as HTMLDivElement })
+      useGraphDimensions({
+        current: mockContainer as unknown as HTMLDivElement,
+      }),
     );
 
     // width = container width - padding (48)
@@ -47,10 +49,12 @@ describe('useGraphDimensions', () => {
     expect(result.current.height).toBe(600);
   });
 
-  it('should maintain aspect ratio for smaller containers', () => {
+  it("should maintain aspect ratio for smaller containers", () => {
     const mockContainer = createMockContainer(400);
     const { result } = renderHook(() =>
-      useGraphDimensions({ current: mockContainer as unknown as HTMLDivElement })
+      useGraphDimensions({
+        current: mockContainer as unknown as HTMLDivElement,
+      }),
     );
 
     const expectedWidth = 400 - 48; // 352
@@ -60,37 +64,49 @@ describe('useGraphDimensions', () => {
     expect(result.current.height).toBe(expectedHeight);
   });
 
-  it('should cap height at 600px', () => {
+  it("should cap height at 600px", () => {
     const mockContainer = createMockContainer(1200);
     const { result } = renderHook(() =>
-      useGraphDimensions({ current: mockContainer as unknown as HTMLDivElement })
+      useGraphDimensions({
+        current: mockContainer as unknown as HTMLDivElement,
+      }),
     );
 
     expect(result.current.width).toBe(1200 - 48);
     expect(result.current.height).toBe(600); // Capped at 600
   });
 
-  it('should register resize event listener on mount', () => {
+  it("should register resize event listener on mount", () => {
     const mockContainer = createMockContainer(800);
     renderHook(() =>
-      useGraphDimensions({ current: mockContainer as unknown as HTMLDivElement })
+      useGraphDimensions({
+        current: mockContainer as unknown as HTMLDivElement,
+      }),
     );
 
-    expect(window.addEventListener).toHaveBeenCalledWith('resize', expect.any(Function));
+    expect(window.addEventListener).toHaveBeenCalledWith(
+      "resize",
+      expect.any(Function),
+    );
   });
 
-  it('should cleanup resize listener on unmount', () => {
+  it("should cleanup resize listener on unmount", () => {
     const mockContainer = createMockContainer(800);
     const { unmount } = renderHook(() =>
-      useGraphDimensions({ current: mockContainer as unknown as HTMLDivElement })
+      useGraphDimensions({
+        current: mockContainer as unknown as HTMLDivElement,
+      }),
     );
 
     unmount();
 
-    expect(window.removeEventListener).toHaveBeenCalledWith('resize', expect.any(Function));
+    expect(window.removeEventListener).toHaveBeenCalledWith(
+      "resize",
+      expect.any(Function),
+    );
   });
 
-  it('should update dimensions on resize', () => {
+  it("should update dimensions on resize", () => {
     let containerWidth = 800;
     const mockContainer = {
       getBoundingClientRect: jest.fn(() => ({
@@ -102,12 +118,14 @@ describe('useGraphDimensions', () => {
         right: 0,
         x: 0,
         y: 0,
-        toJSON: jest.fn()
-      }))
+        toJSON: jest.fn(),
+      })),
     };
 
     const { result } = renderHook(() =>
-      useGraphDimensions({ current: mockContainer as unknown as HTMLDivElement })
+      useGraphDimensions({
+        current: mockContainer as unknown as HTMLDivElement,
+      }),
     );
 
     // Initial dimensions
@@ -117,28 +135,32 @@ describe('useGraphDimensions', () => {
     act(() => {
       containerWidth = 1000;
       // Trigger the resize event
-      const resizeHandler = (window.addEventListener as jest.Mock).mock.calls.find(
-        call => call[0] === 'resize'
-      )?.[1];
+      const resizeHandler = (
+        window.addEventListener as jest.Mock
+      ).mock.calls.find((call) => call[0] === "resize")?.[1];
       if (resizeHandler) resizeHandler();
     });
 
     expect(result.current.width).toBe(1000 - 48);
   });
 
-  it('should subtract padding from container width', () => {
+  it("should subtract padding from container width", () => {
     const mockContainer = createMockContainer(896); // 896 - 48 = 848
     const { result } = renderHook(() =>
-      useGraphDimensions({ current: mockContainer as unknown as HTMLDivElement })
+      useGraphDimensions({
+        current: mockContainer as unknown as HTMLDivElement,
+      }),
     );
 
     expect(result.current.width).toBe(848);
   });
 
-  it('should use aspect ratio of 0.75 for height calculation', () => {
+  it("should use aspect ratio of 0.75 for height calculation", () => {
     const mockContainer = createMockContainer(400);
     const { result } = renderHook(() =>
-      useGraphDimensions({ current: mockContainer as unknown as HTMLDivElement })
+      useGraphDimensions({
+        current: mockContainer as unknown as HTMLDivElement,
+      }),
     );
 
     const width = 400 - 48; // 352

@@ -32,13 +32,20 @@ interface UserMemory {
 }
 
 export class ChatContextBuilderService {
-  constructor(private bucket: { file: (path: string) => { exists: () => Promise<[boolean]>; download: () => Promise<[Buffer]> } }) {}
+  constructor(
+    private bucket: {
+      file: (path: string) => {
+        exists: () => Promise<[boolean]>;
+        download: () => Promise<[Buffer]>;
+      };
+    },
+  ) {}
 
   /**
    * Sanitize email for file path
    */
   private sanitizeEmail(email: string): string {
-    return email.replace('@', '_at_').replace(/\./g, '_');
+    return email.replace("@", "_at_").replace(/\./g, "_");
   }
 
   /**
@@ -49,7 +56,9 @@ export class ChatContextBuilderService {
       const sanitizedEmail = this.sanitizeEmail(userEmail);
 
       // Load user data
-      const userFile = this.bucket.file(`user/${sanitizedEmail}/user_data.json`);
+      const userFile = this.bucket.file(
+        `user/${sanitizedEmail}/user_data.json`,
+      );
       const [exists] = await userFile.exists();
 
       if (!exists) {
@@ -73,24 +82,24 @@ export class ChatContextBuilderService {
       // Build context
       const domainScores = userData.assessmentResult?.domainScores || {};
       const weakDomains = Object.entries(domainScores)
-        .filter(([, score]) => typeof score === 'number' && score < 60)
+        .filter(([, score]) => typeof score === "number" && score < 60)
         .map(([domain]) => domain);
 
       const context: UserContext = {
-        identity: userData.identity || 'learner',
+        identity: userData.identity || "learner",
         goals: userData.goals || [],
         assessmentScore: userData.assessmentResult?.overallScore || null,
         domainScores,
         weakDomains,
         recentActivities: memory?.shortTerm.recentActivities || [],
-        learningStyle: memory?.longTerm.learningStyle || 'balanced',
+        learningStyle: memory?.longTerm.learningStyle || "balanced",
         completedPBLs: userData.completedPBLs || [],
-        currentProgress: memory?.shortTerm.currentProgress || {}
+        currentProgress: memory?.shortTerm.currentProgress || {},
       };
 
       return context;
     } catch (error) {
-      console.error('Error building context:', error);
+      console.error("Error building context:", error);
       return null;
     }
   }
@@ -102,8 +111,12 @@ export class ChatContextBuilderService {
     try {
       const sanitizedEmail = this.sanitizeEmail(userEmail);
 
-      const shortTermFile = this.bucket.file(`user/${sanitizedEmail}/memory/short_term.json`);
-      const longTermFile = this.bucket.file(`user/${sanitizedEmail}/memory/long_term.json`);
+      const shortTermFile = this.bucket.file(
+        `user/${sanitizedEmail}/memory/short_term.json`,
+      );
+      const longTermFile = this.bucket.file(
+        `user/${sanitizedEmail}/memory/long_term.json`,
+      );
 
       const [shortTermExists] = await shortTermFile.exists();
       const [longTermExists] = await longTermFile.exists();
@@ -113,30 +126,34 @@ export class ChatContextBuilderService {
           recentActivities: [],
           currentProgress: {},
           recentTopics: [],
-          lastUpdated: new Date().toISOString()
+          lastUpdated: new Date().toISOString(),
         },
         longTerm: {
           profile: {},
-          learningStyle: 'balanced',
+          learningStyle: "balanced",
           achievements: [],
           preferences: {},
-          lastUpdated: new Date().toISOString()
-        }
+          lastUpdated: new Date().toISOString(),
+        },
       };
 
       if (shortTermExists) {
         const [shortTermData] = await shortTermFile.download();
-        memory.shortTerm = JSON.parse(shortTermData.toString()) as UserMemory['shortTerm'];
+        memory.shortTerm = JSON.parse(
+          shortTermData.toString(),
+        ) as UserMemory["shortTerm"];
       }
 
       if (longTermExists) {
         const [longTermData] = await longTermFile.download();
-        memory.longTerm = JSON.parse(longTermData.toString()) as UserMemory['longTerm'];
+        memory.longTerm = JSON.parse(
+          longTermData.toString(),
+        ) as UserMemory["longTerm"];
       }
 
       return memory;
     } catch (error) {
-      console.error('Error loading user memory:', error);
+      console.error("Error loading user memory:", error);
       return null;
     }
   }
@@ -145,19 +162,21 @@ export class ChatContextBuilderService {
    * Build system prompt with user context
    */
   buildSystemPrompt(context: UserContext): string {
-    const weakDomainsText = context.weakDomains.length > 0
-      ? context.weakDomains.join(', ')
-      : 'None - all domains are strong!';
+    const weakDomainsText =
+      context.weakDomains.length > 0
+        ? context.weakDomains.join(", ")
+        : "None - all domains are strong!";
 
-    const assessmentScoreText = context.assessmentScore !== null
-      ? `${context.assessmentScore}%`
-      : 'Not yet assessed';
+    const assessmentScoreText =
+      context.assessmentScore !== null
+        ? `${context.assessmentScore}%`
+        : "Not yet assessed";
 
     const systemPrompt = `You are an AI learning advisor for AI Square platform. You help users with their AI literacy learning journey.
 
 User Profile:
 - Identity: ${context.identity}
-- Learning Goals: ${context.goals.join(', ')}
+- Learning Goals: ${context.goals.join(", ")}
 - Overall Assessment Score: ${assessmentScoreText}
 - Weak Domains: ${weakDomainsText}
 - Learning Style: ${context.learningStyle}

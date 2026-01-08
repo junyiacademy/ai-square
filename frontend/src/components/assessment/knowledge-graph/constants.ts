@@ -45,33 +45,33 @@ export const FORCE_CONFIG = {
 
 export const COLORS = {
   trafficLight: {
-    red: '#ef4444',    // Completely wrong
-    yellow: '#f59e0b', // Partially correct
-    green: '#10b981',  // All correct
-    gray: '#6b7280',   // No data
+    red: "#ef4444", // Completely wrong
+    yellow: "#f59e0b", // Partially correct
+    green: "#10b981", // All correct
+    gray: "#6b7280", // No data
   },
   score: {
-    high: '#10b981',   // >= 80
-    medium: '#f59e0b', // >= 60
-    low: '#ef4444',    // < 60
+    high: "#10b981", // >= 80
+    medium: "#f59e0b", // >= 60
+    low: "#ef4444", // < 60
   },
   ksa: {
-    knowledge: '#3b82f6',
-    skills: '#10b981',
-    attitudes: '#a855f7',
-    default: '#6b7280',
+    knowledge: "#3b82f6",
+    skills: "#10b981",
+    attitudes: "#a855f7",
+    default: "#6b7280",
   },
-  link: '#999',
+  link: "#999",
   stroke: {
-    normal: '#fff',
-    selected: '#4f46e5',
+    normal: "#fff",
+    selected: "#4f46e5",
   },
 } as const;
 
 export const KSA_TYPES = [
-  { id: 'knowledge', color: COLORS.ksa.knowledge },
-  { id: 'skills', color: COLORS.ksa.skills },
-  { id: 'attitudes', color: COLORS.ksa.attitudes },
+  { id: "knowledge", color: COLORS.ksa.knowledge },
+  { id: "skills", color: COLORS.ksa.skills },
+  { id: "attitudes", color: COLORS.ksa.attitudes },
 ] as const;
 
 export const ANIMATION = {

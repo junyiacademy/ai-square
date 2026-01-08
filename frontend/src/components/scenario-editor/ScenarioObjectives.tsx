@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { CheckCircle2, Edit3, ChevronUp, ChevronDown } from 'lucide-react';
+import { CheckCircle2, Edit3, ChevronUp, ChevronDown } from "lucide-react";
 
 interface ScenarioObjectivesProps {
   objectives: string[] | Record<string, string[]> | undefined;
@@ -12,7 +12,11 @@ interface ScenarioObjectivesProps {
   onStartEditing: (field: string, value: string) => void;
   onEditingValueChange: (value: string) => void;
   onCancel: () => void;
-  onUpdateObjective: (index: number, value: string, isMultilingual: boolean) => void;
+  onUpdateObjective: (
+    index: number,
+    value: string,
+    isMultilingual: boolean,
+  ) => void;
 }
 
 export function ScenarioObjectives({
@@ -25,7 +29,7 @@ export function ScenarioObjectives({
   onStartEditing,
   onEditingValueChange,
   onCancel,
-  onUpdateObjective
+  onUpdateObjective,
 }: ScenarioObjectivesProps) {
   // Handle both array and multilingual object formats
   let objectivesList: string[] = [];
@@ -33,13 +37,14 @@ export function ScenarioObjectives({
 
   if (Array.isArray(objectives)) {
     objectivesList = objectives;
-  } else if (objectives && typeof objectives === 'object') {
+  } else if (objectives && typeof objectives === "object") {
     isMultilingual = true;
-    objectivesList = objectives[language] ||
-                    objectives.zhTW ||
-                    objectives.zh ||
-                    objectives.en ||
-                    [];
+    objectivesList =
+      objectives[language] ||
+      objectives.zhTW ||
+      objectives.zh ||
+      objectives.en ||
+      [];
   }
 
   const handleSaveObjective = (index: number) => {
@@ -53,7 +58,11 @@ export function ScenarioObjectives({
         className="w-full px-4 py-3 flex items-center justify-between hover:bg-gray-50 transition-colors rounded-t-lg"
       >
         <span className="font-bold text-gray-800">🎯 學習目標</span>
-        {isExpanded ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
+        {isExpanded ? (
+          <ChevronUp className="h-5 w-5" />
+        ) : (
+          <ChevronDown className="h-5 w-5" />
+        )}
       </button>
       {isExpanded && (
         <div className="px-4 pb-4 border-t border-gray-100">
@@ -68,8 +77,8 @@ export function ScenarioObjectives({
                     onChange={(e) => onEditingValueChange(e.target.value)}
                     onBlur={() => handleSaveObjective(i)}
                     onKeyDown={(e) => {
-                      if (e.key === 'Enter') handleSaveObjective(i);
-                      if (e.key === 'Escape') onCancel();
+                      if (e.key === "Enter") handleSaveObjective(i);
+                      if (e.key === "Escape") onCancel();
                     }}
                     className="flex-1 px-2 py-1 text-sm border-2 border-purple-400 rounded focus:outline-none focus:border-purple-600"
                     autoFocus

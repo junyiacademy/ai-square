@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 /**
  * Prompt-to-Course Admin Page
@@ -11,24 +11,29 @@
  * - Download functionality
  */
 
-import { useState } from 'react';
-import { InputForm } from './components/InputForm';
-import { PreviewTabs } from './components/PreviewTabs';
-import { ValidationPanel } from './components/ValidationPanel';
-import type { CourseGenerationInput, GenerateScenarioResponse, PublishScenarioResponse } from '@/types/prompt-to-course';
+import { useState } from "react";
+import { InputForm } from "./components/InputForm";
+import { PreviewTabs } from "./components/PreviewTabs";
+import { ValidationPanel } from "./components/ValidationPanel";
+import type {
+  CourseGenerationInput,
+  GenerateScenarioResponse,
+  PublishScenarioResponse,
+} from "@/types/prompt-to-course";
 
 export default function PromptToCoursePage() {
-  const [yaml, setYaml] = useState('');
+  const [yaml, setYaml] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [isPublishing, setIsPublishing] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [publishSuccess, setPublishSuccess] = useState<PublishScenarioResponse | null>(null);
+  const [publishSuccess, setPublishSuccess] =
+    useState<PublishScenarioResponse | null>(null);
   const [generationInfo, setGenerationInfo] = useState<{
     processingTime: number;
     tokensUsed?: number;
   } | null>(null);
-  const [mode, setMode] = useState<'pbl' | 'discovery' | 'assessment'>('pbl');
-  const [scenarioId, setScenarioId] = useState('');
+  const [mode, setMode] = useState<"pbl" | "discovery" | "assessment">("pbl");
+  const [scenarioId, setScenarioId] = useState("");
 
   const handleGenerate = async (input: CourseGenerationInput) => {
     setIsGenerating(true);
@@ -38,18 +43,18 @@ export default function PromptToCoursePage() {
     setScenarioId(input.scenarioId);
 
     try {
-      const response = await fetch('/api/scenarios/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/scenarios/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ input }),
       });
 
       if (!response.ok) {
-        const errorData = await response.json() as { error: string };
-        throw new Error(errorData.error || 'Generation failed');
+        const errorData = (await response.json()) as { error: string };
+        throw new Error(errorData.error || "Generation failed");
       }
 
-      const result = await response.json() as GenerateScenarioResponse;
+      const result = (await response.json()) as GenerateScenarioResponse;
 
       setYaml(result.yaml);
       setGenerationInfo({
@@ -59,12 +64,13 @@ export default function PromptToCoursePage() {
 
       // Show warnings if any
       if (result.warnings && result.warnings.length > 0) {
-        console.warn('Generation warnings:', result.warnings);
+        console.warn("Generation warnings:", result.warnings);
       }
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to generate scenario';
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to generate scenario";
       setError(errorMessage);
-      console.error('Generation error:', err);
+      console.error("Generation error:", err);
     } finally {
       setIsGenerating(false);
     }
@@ -73,9 +79,9 @@ export default function PromptToCoursePage() {
   const handleDownload = () => {
     if (!yaml) return;
 
-    const blob = new Blob([yaml], { type: 'text/yaml' });
+    const blob = new Blob([yaml], { type: "text/yaml" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
     a.download = `scenario-${Date.now()}.yml`;
     document.body.appendChild(a);
@@ -86,7 +92,7 @@ export default function PromptToCoursePage() {
 
   const handlePublish = async () => {
     if (!yaml || !scenarioId) {
-      setError('Cannot publish: Missing scenario data');
+      setError("Cannot publish: Missing scenario data");
       return;
     }
 
@@ -95,9 +101,9 @@ export default function PromptToCoursePage() {
     setPublishSuccess(null);
 
     try {
-      const response = await fetch('/api/scenarios/publish', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/scenarios/publish", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           scenarioId,
           yaml,
@@ -106,27 +112,31 @@ export default function PromptToCoursePage() {
       });
 
       if (!response.ok) {
-        const errorData = await response.json() as { error: string; details?: unknown };
-        throw new Error(errorData.error || 'Failed to publish to GitHub');
+        const errorData = (await response.json()) as {
+          error: string;
+          details?: unknown;
+        };
+        throw new Error(errorData.error || "Failed to publish to GitHub");
       }
 
-      const result = await response.json() as PublishScenarioResponse;
+      const result = (await response.json()) as PublishScenarioResponse;
       setPublishSuccess(result);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to publish scenario';
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to publish scenario";
       setError(errorMessage);
-      console.error('Publish error:', err);
+      console.error("Publish error:", err);
     } finally {
       setIsPublishing(false);
     }
   };
 
   const handleReset = () => {
-    setYaml('');
+    setYaml("");
     setError(null);
     setPublishSuccess(null);
     setGenerationInfo(null);
-    setScenarioId('');
+    setScenarioId("");
   };
 
   return (
@@ -138,7 +148,8 @@ export default function PromptToCoursePage() {
             Prompt-to-Course Generator
           </h1>
           <p className="text-gray-600">
-            Generate AI-powered learning scenarios from natural language descriptions
+            Generate AI-powered learning scenarios from natural language
+            descriptions
           </p>
           <div className="mt-2 flex items-center gap-2 text-sm text-gray-500">
             <span className="px-2 py-1 bg-green-100 text-green-800 rounded font-medium">
@@ -167,9 +178,14 @@ export default function PromptToCoursePage() {
             <div className="flex items-start gap-2">
               <span className="text-green-600 text-xl">✅</span>
               <div className="flex-1">
-                <div className="font-medium text-green-900">{publishSuccess.message}</div>
+                <div className="font-medium text-green-900">
+                  {publishSuccess.message}
+                </div>
                 <div className="text-sm text-green-700 mt-1">
-                  Branch: <code className="bg-green-100 px-1 rounded">{publishSuccess.branch}</code>
+                  Branch:{" "}
+                  <code className="bg-green-100 px-1 rounded">
+                    {publishSuccess.branch}
+                  </code>
                 </div>
                 <div className="mt-2">
                   <a
@@ -235,7 +251,8 @@ export default function PromptToCoursePage() {
                   No Scenario Generated Yet
                 </h3>
                 <p className="text-gray-500">
-                  Fill in the form and click &quot;Generate Scenario&quot; to get started
+                  Fill in the form and click &quot;Generate Scenario&quot; to
+                  get started
                 </p>
               </div>
             ) : (
@@ -270,28 +287,34 @@ export default function PromptToCoursePage() {
                     </button>
                     <button
                       onClick={handlePublish}
-                      disabled={isPublishing || !yaml || publishSuccess !== null}
+                      disabled={
+                        isPublishing || !yaml || publishSuccess !== null
+                      }
                       className="flex-1 px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                      title={publishSuccess ? 'Already published' : 'Create Pull Request on GitHub'}
+                      title={
+                        publishSuccess
+                          ? "Already published"
+                          : "Create Pull Request on GitHub"
+                      }
                     >
                       {isPublishing ? (
                         <>
-                          <span className="inline-block animate-spin mr-2">⏳</span>
+                          <span className="inline-block animate-spin mr-2">
+                            ⏳
+                          </span>
                           Publishing...
                         </>
                       ) : publishSuccess ? (
-                        '✅ Published'
+                        "✅ Published"
                       ) : (
-                        '🚀 Publish to GitHub'
+                        "🚀 Publish to GitHub"
                       )}
                     </button>
                   </div>
                   <p className="mt-3 text-sm text-gray-500 text-center">
-                    {publishSuccess ? (
-                      'Scenario published successfully! You can now review the PR on GitHub.'
-                    ) : (
-                      'Phase 2: GitHub integration active. Ensure GITHUB_TOKEN is configured.'
-                    )}
+                    {publishSuccess
+                      ? "Scenario published successfully! You can now review the PR on GitHub."
+                      : "Phase 2: GitHub integration active. Ensure GITHUB_TOKEN is configured."}
                   </p>
                 </div>
               </>

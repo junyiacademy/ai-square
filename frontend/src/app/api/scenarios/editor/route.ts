@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { ScenarioEditorRepository } from '@/lib/repositories/ScenarioEditorRepository';
+import { NextRequest, NextResponse } from "next/server";
+import { ScenarioEditorRepository } from "@/lib/repositories/ScenarioEditorRepository";
 
 const repository = new ScenarioEditorRepository();
 
@@ -9,10 +9,10 @@ export async function GET() {
     const scenarios = await repository.findAll();
     return NextResponse.json({ scenarios });
   } catch (error) {
-    console.error('Error fetching scenarios:', error);
+    console.error("Error fetching scenarios:", error);
     return NextResponse.json(
-      { error: 'Failed to fetch scenarios' },
-      { status: 500 }
+      { error: "Failed to fetch scenarios" },
+      { status: 500 },
     );
   }
 }
@@ -22,17 +22,20 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    console.log('📥 Received data from frontend:', JSON.stringify(body, null, 2));
+    console.log(
+      "📥 Received data from frontend:",
+      JSON.stringify(body, null, 2),
+    );
 
     // Handle publish operation (update existing)
-    if (body.id && body.id !== 'new') {
+    if (body.id && body.id !== "new") {
       const existing = await repository.findByScenarioId(body.id);
 
       if (existing) {
         // Transform frontend camelCase to database snake_case
         const content: Record<string, unknown> = {
           tasks: body.taskTemplates || [],
-          objectives: body.objectives
+          objectives: body.objectives,
         };
 
         // Add mode-specific data (transform camelCase to snake_case)
@@ -46,7 +49,10 @@ export async function POST(request: NextRequest) {
           content.assessment_data = body.assessmentData;
         }
 
-        console.log('💾 Transformed content for database:', JSON.stringify(content, null, 2));
+        console.log(
+          "💾 Transformed content for database:",
+          JSON.stringify(content, null, 2),
+        );
 
         // Update existing scenario
         const updated = await repository.update(existing.id, {
@@ -56,36 +62,37 @@ export async function POST(request: NextRequest) {
           difficulty: body.difficulty,
           estimated_time: body.estimatedMinutes,
           content,
-          status: 'published',
-          tags: body.tags || []
+          status: "published",
+          tags: body.tags || [],
         });
 
         return NextResponse.json({
           success: true,
           scenario: updated,
-          message: 'Scenario published successfully'
+          message: "Scenario published successfully",
         });
       }
     }
 
     // Create new scenario
-    const scenario_id = body.id === 'new'
-      ? `scenario-${Date.now()}`
-      : body.id || body.scenario_id;
+    const scenario_id =
+      body.id === "new"
+        ? `scenario-${Date.now()}`
+        : body.id || body.scenario_id;
 
     // Check if scenario_id already exists
     const existing = await repository.findByScenarioId(scenario_id);
     if (existing) {
       return NextResponse.json(
-        { error: 'Scenario with this ID already exists' },
-        { status: 409 }
+        { error: "Scenario with this ID already exists" },
+        { status: 409 },
       );
     }
 
     // Transform frontend camelCase to database snake_case
     const content: Record<string, unknown> = {
       tasks: body.taskTemplates || [],
-      objectives: body.objectives || { en: [], zh: [] }
+      objectives: body.objectives || { en: [], zh: [] },
     };
 
     // Add mode-specific data (transform camelCase to snake_case)
@@ -99,31 +106,37 @@ export async function POST(request: NextRequest) {
       content.assessment_data = body.assessmentData;
     }
 
-    console.log('💾 Transformed content for database (new):', JSON.stringify(content, null, 2));
+    console.log(
+      "💾 Transformed content for database (new):",
+      JSON.stringify(content, null, 2),
+    );
 
     // Create new scenario with default structure
     const newScenario = await repository.create({
       scenario_id,
-      mode: body.mode || 'pbl',
-      title: body.title || { en: 'New Scenario', zh: '新場景' },
-      description: body.description || { en: '', zh: '' },
+      mode: body.mode || "pbl",
+      title: body.title || { en: "New Scenario", zh: "新場景" },
+      description: body.description || { en: "", zh: "" },
       content,
-      status: 'draft',
+      status: "draft",
       tags: body.tags || [],
-      difficulty: body.difficulty || 'medium',
-      estimated_time: body.estimatedMinutes || 60
+      difficulty: body.difficulty || "medium",
+      estimated_time: body.estimatedMinutes || 60,
     });
 
-    return NextResponse.json({
-      success: true,
-      scenario: newScenario,
-      message: 'Scenario created successfully'
-    }, { status: 201 });
-  } catch (error) {
-    console.error('Error creating/updating scenario:', error);
     return NextResponse.json(
-      { error: 'Failed to create/update scenario' },
-      { status: 500 }
+      {
+        success: true,
+        scenario: newScenario,
+        message: "Scenario created successfully",
+      },
+      { status: 201 },
+    );
+  } catch (error) {
+    console.error("Error creating/updating scenario:", error);
+    return NextResponse.json(
+      { error: "Failed to create/update scenario" },
+      { status: 500 },
     );
   }
 }

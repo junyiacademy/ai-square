@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { Sparkles, Target, CheckCircle2 } from 'lucide-react';
+import { Sparkles, Target, CheckCircle2 } from "lucide-react";
 
 export function WelcomePanel() {
   return (
@@ -9,7 +9,9 @@ export function WelcomePanel() {
         <div className="w-24 h-24 bg-gradient-to-br from-purple-100 to-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
           <Sparkles className="h-12 w-12 text-purple-600" />
         </div>
-        <h2 className="text-3xl font-bold text-gray-800 mb-3">歡迎使用場景編輯器</h2>
+        <h2 className="text-3xl font-bold text-gray-800 mb-3">
+          歡迎使用場景編輯器
+        </h2>
         <p className="text-gray-600 mb-6">請從左側選擇學習模式開始</p>
         <div className="flex items-center justify-center gap-4 text-sm text-gray-500">
           <div className="flex items-center gap-2">

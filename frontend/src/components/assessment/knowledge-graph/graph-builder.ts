@@ -2,33 +2,39 @@
  * Graph data builder for Knowledge Graph visualization
  */
 
-import { AssessmentResult, AssessmentQuestion, UserAnswer } from '../../../types/assessment';
-import { GraphNode, GraphLink, GraphData, KSAMastery, KSAMaps } from './types';
-import { KSA_TYPES } from './constants';
+import {
+  AssessmentResult,
+  AssessmentQuestion,
+  UserAnswer,
+} from "../../../types/assessment";
+import { GraphNode, GraphLink, GraphData, KSAMastery, KSAMaps } from "./types";
+import { KSA_TYPES } from "./constants";
 
 export function calculateKSAMastery(
   questions: AssessmentQuestion[],
   userAnswers: UserAnswer[],
-  ksaMaps: KSAMaps | null
+  ksaMaps: KSAMaps | null,
 ): Record<string, KSAMastery> {
   if (!ksaMaps) return {};
 
   const ksaMastery: Record<string, KSAMastery> = {};
 
   // First pass: collect all KSA codes from questions
-  questions.forEach(question => {
+  questions.forEach((question) => {
     if (!question?.ksa_mapping) return;
 
     const allCodes = [
       ...(question.ksa_mapping.knowledge || []),
       ...(question.ksa_mapping.skills || []),
-      ...(question.ksa_mapping.attitudes || [])
+      ...(question.ksa_mapping.attitudes || []),
     ];
 
-    allCodes.forEach(code => {
-      const ksaMap = code.startsWith('K') ? ksaMaps.kMap :
-                     code.startsWith('S') ? ksaMaps.sMap :
-                     ksaMaps.aMap;
+    allCodes.forEach((code) => {
+      const ksaMap = code.startsWith("K")
+        ? ksaMaps.kMap
+        : code.startsWith("S")
+          ? ksaMaps.sMap
+          : ksaMaps.aMap;
 
       if (!ksaMap?.[code]) return; // Skip unmapped codes
 
@@ -43,17 +49,17 @@ export function calculateKSAMastery(
   });
 
   // Second pass: count correct answers
-  userAnswers.forEach(answer => {
-    const question = questions.find(q => q?.id === answer.questionId);
+  userAnswers.forEach((answer) => {
+    const question = questions.find((q) => q?.id === answer.questionId);
     if (!question?.ksa_mapping || !answer.isCorrect) return;
 
     const allCodes = [
       ...(question.ksa_mapping.knowledge || []),
       ...(question.ksa_mapping.skills || []),
-      ...(question.ksa_mapping.attitudes || [])
+      ...(question.ksa_mapping.attitudes || []),
     ];
 
-    allCodes.forEach(code => {
+    allCodes.forEach((code) => {
       if (ksaMastery[code]) {
         ksaMastery[code].correct++;
       }
@@ -72,7 +78,7 @@ export function getMasteryStatus(correct: number, total: number): number {
 
 function enhanceWithEvaluation(
   calculatedMastery: Record<string, KSAMastery>,
-  ksaAnalysis: AssessmentResult['ksaAnalysis']
+  ksaAnalysis: AssessmentResult["ksaAnalysis"],
 ): Record<string, KSAMastery> {
   if (!ksaAnalysis) return calculatedMastery;
 
@@ -80,7 +86,7 @@ function enhanceWithEvaluation(
   const { knowledge, skills, attitudes } = ksaAnalysis;
 
   const processCategory = (codes: string[] = [], isStrong: boolean) => {
-    codes.forEach(code => {
+    codes.forEach((code) => {
       const actual = calculatedMastery[code];
       if (actual) {
         enhanced[code] = {
@@ -88,13 +94,13 @@ function enhanceWithEvaluation(
             ? Math.max(Math.ceil(actual.total * 0.8), actual.correct)
             : Math.min(Math.floor(actual.total * 0.3), actual.correct),
           total: actual.total,
-          questions: actual.questions
+          questions: actual.questions,
         };
       } else {
         enhanced[code] = {
           correct: isStrong ? 2 : 0,
           total: 2,
-          questions: []
+          questions: [],
         };
       }
     });
@@ -120,7 +126,7 @@ export function buildGraphData(
   questions: AssessmentQuestion[],
   userAnswers: UserAnswer[],
   ksaMaps: KSAMaps | null,
-  t: (key: string) => string
+  t: (key: string) => string,
 ): GraphData {
   const nodes: GraphNode[] = [];
   const links: GraphLink[] = [];
@@ -133,31 +139,31 @@ export function buildGraphData(
 
   // Add center node
   nodes.push({
-    id: 'center',
-    type: 'domain',
-    name: t('results.knowledgeGraph.yourProfile'),
-    score: result.overallScore
+    id: "center",
+    type: "domain",
+    name: t("results.knowledgeGraph.yourProfile"),
+    score: result.overallScore,
   });
 
   // Add KSA type nodes
-  KSA_TYPES.forEach(ksaType => {
+  KSA_TYPES.forEach((ksaType) => {
     nodes.push({
       id: ksaType.id,
-      type: 'ksa-theme',
+      type: "ksa-theme",
       name: t(`quiz.${ksaType.id}`),
-      ksaType: ksaType.id as 'knowledge' | 'skills' | 'attitudes'
+      ksaType: ksaType.id as "knowledge" | "skills" | "attitudes",
     });
 
     links.push({
-      source: 'center',
+      source: "center",
       target: ksaType.id,
-      value: 1
+      value: 1,
     });
   });
 
   // Group codes by parent
   const parentCodes = new Map<string, string[]>();
-  Object.keys(ksaMastery).forEach(code => {
+  Object.keys(ksaMastery).forEach((code) => {
     const match = code.match(/^([KSA]\d+)\.(\d+)$/);
     if (match) {
       const parentCode = match[1];
@@ -172,20 +178,25 @@ export function buildGraphData(
   parentCodes.forEach((_, parentCode) => {
     if (!ksaMastery[parentCode]) return;
 
-    const ksaMap = parentCode.startsWith('K') ? ksaMaps?.kMap :
-                   parentCode.startsWith('S') ? ksaMaps?.sMap :
-                   ksaMaps?.aMap;
+    const ksaMap = parentCode.startsWith("K")
+      ? ksaMaps?.kMap
+      : parentCode.startsWith("S")
+        ? ksaMaps?.sMap
+        : ksaMaps?.aMap;
 
     const ksaInfo = ksaMap?.[parentCode];
     if (!ksaInfo) return;
 
-    const ksaType = parentCode.startsWith('K') ? 'knowledge' :
-                    parentCode.startsWith('S') ? 'skills' : 'attitudes';
+    const ksaType = parentCode.startsWith("K")
+      ? "knowledge"
+      : parentCode.startsWith("S")
+        ? "skills"
+        : "attitudes";
 
     const data = ksaMastery[parentCode];
     nodes.push({
       id: `code-${parentCode}`,
-      type: 'ksa-code',
+      type: "ksa-code",
       name: parentCode,
       mastery: getMasteryStatus(data.correct, data.total),
       ksaType,
@@ -195,38 +206,43 @@ export function buildGraphData(
         correct: data.correct,
         total: data.total,
         questions: data.questions,
-        theme: ksaInfo.theme
-      }
+        theme: ksaInfo.theme,
+      },
     });
 
     links.push({
       source: ksaType,
       target: `code-${parentCode}`,
-      value: 0.8
+      value: 0.8,
     });
   });
 
   // Add all nodes (including subcodes)
   Object.entries(ksaMastery).forEach(([code, data]) => {
-    if (nodes.some(n => n.id === `code-${code}`)) return;
+    if (nodes.some((n) => n.id === `code-${code}`)) return;
 
-    const ksaMap = code.startsWith('K') ? ksaMaps?.kMap :
-                   code.startsWith('S') ? ksaMaps?.sMap :
-                   ksaMaps?.aMap;
+    const ksaMap = code.startsWith("K")
+      ? ksaMaps?.kMap
+      : code.startsWith("S")
+        ? ksaMaps?.sMap
+        : ksaMaps?.aMap;
 
     const ksaInfo = ksaMap?.[code];
     if (!ksaInfo) return;
 
-    const ksaType = code.startsWith('K') ? 'knowledge' :
-                    code.startsWith('S') ? 'skills' : 'attitudes';
+    const ksaType = code.startsWith("K")
+      ? "knowledge"
+      : code.startsWith("S")
+        ? "skills"
+        : "attitudes";
 
-    const isSubcode = code.includes('.');
+    const isSubcode = code.includes(".");
     const parentMatch = code.match(/^([KSA]\d+)\.(\d+)$/);
     const parentCode = parentMatch?.[1];
 
     nodes.push({
       id: `code-${code}`,
-      type: isSubcode ? 'ksa-subcode' : 'ksa-code',
+      type: isSubcode ? "ksa-subcode" : "ksa-code",
       name: code,
       mastery: getMasteryStatus(data.correct, data.total),
       ksaType,
@@ -237,22 +253,26 @@ export function buildGraphData(
         correct: data.correct,
         total: data.total,
         questions: data.questions,
-        theme: ksaInfo.theme
-      }
+        theme: ksaInfo.theme,
+      },
     });
 
     // Link to parent
-    if (isSubcode && parentCode && nodes.some(n => n.id === `code-${parentCode}`)) {
+    if (
+      isSubcode &&
+      parentCode &&
+      nodes.some((n) => n.id === `code-${parentCode}`)
+    ) {
       links.push({
         source: `code-${parentCode}`,
         target: `code-${code}`,
-        value: 0.6
+        value: 0.6,
       });
     } else {
       links.push({
         source: ksaType,
         target: `code-${code}`,
-        value: 0.8
+        value: 0.8,
       });
     }
   });

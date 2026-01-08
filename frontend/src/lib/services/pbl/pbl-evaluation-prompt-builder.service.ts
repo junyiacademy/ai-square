@@ -3,8 +3,8 @@
  * Builds evaluation prompts for PBL task evaluation
  */
 
-import { Conversation } from '@/types/pbl-evaluate';
-import { LANGUAGE_NAMES } from '@/lib/utils/language';
+import { Conversation } from "@/types/pbl-evaluate";
+import { LANGUAGE_NAMES } from "@/lib/utils/language";
 
 export interface EvaluationPromptParams {
   task: {
@@ -28,7 +28,10 @@ export class PBLEvaluationPromptBuilder {
    * Get localized language name
    */
   public getLanguageName(languageCode: string): string {
-    return LANGUAGE_NAMES[languageCode as keyof typeof LANGUAGE_NAMES] || LANGUAGE_NAMES['en'];
+    return (
+      LANGUAGE_NAMES[languageCode as keyof typeof LANGUAGE_NAMES] ||
+      LANGUAGE_NAMES["en"]
+    );
   }
 
   /**
@@ -40,24 +43,26 @@ export class PBLEvaluationPromptBuilder {
       conversations,
       targetDomains = [],
       focusKSA = [],
-      language
+      language,
     } = params;
 
     const targetLanguage = this.getLanguageName(language);
-    const languageCode = language || 'en';
+    const languageCode = language || "en";
 
     // Filter and format user messages (last 10 only, truncate to 200 chars)
     const userMessages = conversations
-      .filter((conv: Conversation) => conv.type === 'user')
+      .filter((conv: Conversation) => conv.type === "user")
       .slice(-10)
-      .map((conv: Conversation, index: number) =>
-        `${index + 1}. ${conv.content.substring(0, 200)}`
+      .map(
+        (conv: Conversation, index: number) =>
+          `${index + 1}. ${conv.content.substring(0, 200)}`,
       )
-      .join('\n');
+      .join("\n");
 
-    const domainScoringRules = targetDomains.length > 0
-      ? `
-- ONLY evaluate the following domains: ${targetDomains.join(', ')}
+    const domainScoringRules =
+      targetDomains.length > 0
+        ? `
+- ONLY evaluate the following domains: ${targetDomains.join(", ")}
 - For domains IN the target list: Score them normally (0-100)
 - For domains NOT in the target list: You MUST return -1 (which will be converted to "NA")
 - Example: If targetDomains = ['engaging_with_ai', 'creating_with_ai'], then:
@@ -66,7 +71,7 @@ export class PBLEvaluationPromptBuilder {
   - managing_with_ai: -1 (not in target domains)
   - designing_with_ai: -1 (not in target domains)
 `
-      : 'Evaluate all four domains normally (0-100)';
+        : "Evaluate all four domains normally (0-100)";
 
     return `
 You are an AI literacy education expert evaluating a learner's performance on a PBL (Problem-Based Learning) task.
@@ -79,10 +84,10 @@ DO NOT use English unless the target language is English.
 Task Information:
 - Title: ${task.title}
 - Description: ${task.description}
-- Instructions: ${task.instructions?.join(', ') || 'N/A'}
-- Expected Outcome: ${task.expectedOutcome || 'N/A'}
-- Target Domains: ${targetDomains.join(', ') || 'All domains'}
-- Focus KSA: ${focusKSA.join(', ') || 'All KSA'}
+- Instructions: ${task.instructions?.join(", ") || "N/A"}
+- Expected Outcome: ${task.expectedOutcome || "N/A"}
+- Target Domains: ${targetDomains.join(", ") || "All domains"}
+- Focus KSA: ${focusKSA.join(", ") || "All KSA"}
 
 User Messages (learner's input only):
 ${userMessages}
@@ -177,7 +182,7 @@ Important evaluation principles:
 
 REMEMBER: ALL text in your response MUST be in ${targetLanguage}.
 This includes strengths, improvements, nextSteps, and conversation insights (both quotes and reasons).
-${languageCode !== 'en' ? `Do NOT use any English text.` : ''}
+${languageCode !== "en" ? `Do NOT use any English text.` : ""}
 `;
   }
 }

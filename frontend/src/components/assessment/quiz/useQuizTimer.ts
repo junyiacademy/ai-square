@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from "react";
 
 interface UseQuizTimerProps {
   timeLimit: number; // in minutes
@@ -19,7 +19,7 @@ export function useQuizTimer({ timeLimit, onTimeUp }: UseQuizTimerProps) {
     }
 
     const timer = setInterval(() => {
-      setTimeLeft(prev => prev - 1);
+      setTimeLeft((prev) => prev - 1);
     }, 1000);
 
     return () => clearInterval(timer);

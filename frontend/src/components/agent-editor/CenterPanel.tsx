@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { Target } from 'lucide-react';
-import { WelcomePanel } from '../scenario-editor/WelcomePanel';
-import { ScenarioListPanel } from '../scenario-editor/ScenarioListPanel';
-import { ScenarioBasicInfo } from '../scenario-editor/ScenarioBasicInfo';
-import { ScenarioObjectives } from '../scenario-editor/ScenarioObjectives';
-import { PBLModeSettings } from '../scenario-editor/PBLModeSettings';
-import { DiscoveryModeSettings } from '../scenario-editor/DiscoveryModeSettings';
-import { AssessmentModeSettings } from '../scenario-editor/AssessmentModeSettings';
-import { TaskList, TaskTemplate } from '../scenario-editor/TaskList';
+import { Target } from "lucide-react";
+import { WelcomePanel } from "../scenario-editor/WelcomePanel";
+import { ScenarioListPanel } from "../scenario-editor/ScenarioListPanel";
+import { ScenarioBasicInfo } from "../scenario-editor/ScenarioBasicInfo";
+import { ScenarioObjectives } from "../scenario-editor/ScenarioObjectives";
+import { PBLModeSettings } from "../scenario-editor/PBLModeSettings";
+import { DiscoveryModeSettings } from "../scenario-editor/DiscoveryModeSettings";
+import { AssessmentModeSettings } from "../scenario-editor/AssessmentModeSettings";
+import { TaskList, TaskTemplate } from "../scenario-editor/TaskList";
 
 // Type definitions
 interface KSAMapping {
@@ -72,7 +72,7 @@ interface TimeLimits {
 }
 
 interface AssessmentData {
-  assessmentType?: 'diagnostic' | 'formative' | 'summative';
+  assessmentType?: "diagnostic" | "formative" | "summative";
   questionBank?: QuestionBank;
   scoringRubric?: ScoringRubric;
   timeLimits?: TimeLimits;
@@ -83,7 +83,7 @@ interface ScenarioData extends Record<string, unknown> {
   id: string;
   title: Record<string, string>;
   description: Record<string, string>;
-  mode: 'pbl' | 'discovery' | 'assessment';
+  mode: "pbl" | "discovery" | "assessment";
   difficulty: string;
   estimatedMinutes: number;
   taskTemplates: TaskTemplate[];
@@ -99,7 +99,7 @@ interface ScenarioData extends Record<string, unknown> {
 
 // Props interface
 interface CenterPanelProps {
-  selectedMode: 'pbl' | 'discovery' | 'assessment' | null;
+  selectedMode: "pbl" | "discovery" | "assessment" | null;
   selectedScenario: string | null;
   draft: ScenarioData | null;
   language: string;
@@ -152,29 +152,39 @@ export function CenterPanel({
   setEditingValue,
   saveInlineEdit,
   cancelInlineEdit,
-  updateDraft
+  updateDraft,
 }: CenterPanelProps) {
   // Handler functions
   const handleCreateNew = () => {
-    setSelectedScenario('new');
-    setActiveSection('basic-info');
-    loadScenarioById('new');
+    setSelectedScenario("new");
+    setActiveSection("basic-info");
+    loadScenarioById("new");
   };
 
   const handleEditScenario = (scenarioId: string, dbId: string) => {
     setSelectedScenario(scenarioId);
-    setActiveSection('basic-info');
+    setActiveSection("basic-info");
     loadScenarioById(dbId);
   };
 
-  const handleUpdateObjective = (index: number, value: string, isMultilingual: boolean) => {
+  const handleUpdateObjective = (
+    index: number,
+    value: string,
+    isMultilingual: boolean,
+  ) => {
     if (!draft?.objectives) return;
 
-    if (isMultilingual && typeof draft.objectives === 'object' && !Array.isArray(draft.objectives)) {
+    if (
+      isMultilingual &&
+      typeof draft.objectives === "object" &&
+      !Array.isArray(draft.objectives)
+    ) {
       const objectivesList = draft.objectives[language] || [];
       const newObjectives = [...objectivesList];
       newObjectives[index] = value;
-      updateDraft({ objectives: { ...draft.objectives, [language]: newObjectives } });
+      updateDraft({
+        objectives: { ...draft.objectives, [language]: newObjectives },
+      });
     } else if (Array.isArray(draft.objectives)) {
       const newObjectives = [...draft.objectives];
       newObjectives[index] = value;
@@ -186,25 +196,27 @@ export function CenterPanel({
     updateDraft({
       pblData: {
         ...draft?.pblData,
-        ...updates
-      }
+        ...updates,
+      },
     });
   };
 
   const handleAddTask = () => {
     const newTask: TaskTemplate = {
       id: `task-${Date.now()}`,
-      title: { en: 'New Task', zh: '新任務' },
-      type: 'conversation',
-      description: { en: 'Click to edit description', zh: '點擊編輯描述' },
-      content: {}
+      title: { en: "New Task", zh: "新任務" },
+      type: "conversation",
+      description: { en: "Click to edit description", zh: "點擊編輯描述" },
+      content: {},
     };
     updateDraft({ taskTemplates: [...(draft?.taskTemplates || []), newTask] });
   };
 
   const handleDeleteTask = (taskId: string) => {
     if (!draft) return;
-    updateDraft({ taskTemplates: draft.taskTemplates.filter(t => t.id !== taskId) });
+    updateDraft({
+      taskTemplates: draft.taskTemplates.filter((t) => t.id !== taskId),
+    });
   };
 
   return (
@@ -242,8 +254,8 @@ export function CenterPanel({
                 language={language}
                 editingField={editingField}
                 editingValue={editingValue}
-                isExpanded={expandedSections['scenario-basic'] || false}
-                onToggle={() => toggleSection('scenario-basic')}
+                isExpanded={expandedSections["scenario-basic"] || false}
+                onToggle={() => toggleSection("scenario-basic")}
                 onStartEditing={startEditing}
                 onEditingValueChange={setEditingValue}
                 onSave={saveInlineEdit}
@@ -257,8 +269,8 @@ export function CenterPanel({
                 language={language}
                 editingField={editingField}
                 editingValue={editingValue}
-                isExpanded={expandedSections['scenario-objectives'] || false}
-                onToggle={() => toggleSection('scenario-objectives')}
+                isExpanded={expandedSections["scenario-objectives"] || false}
+                onToggle={() => toggleSection("scenario-objectives")}
                 onStartEditing={startEditing}
                 onEditingValueChange={setEditingValue}
                 onCancel={cancelInlineEdit}
@@ -266,13 +278,15 @@ export function CenterPanel({
               />
 
               {/* Mode-Specific Settings */}
-              {draft.mode === 'pbl' && (
+              {draft.mode === "pbl" && (
                 <PBLModeSettings
                   pblData={draft.pblData}
                   editingField={editingField}
                   editingValue={editingValue}
-                  isExpanded={expandedSections['scenario-mode-specific'] || false}
-                  onToggle={() => toggleSection('scenario-mode-specific')}
+                  isExpanded={
+                    expandedSections["scenario-mode-specific"] || false
+                  }
+                  onToggle={() => toggleSection("scenario-mode-specific")}
                   onStartEditing={startEditing}
                   onEditingValueChange={setEditingValue}
                   onCancel={cancelInlineEdit}
@@ -280,19 +294,23 @@ export function CenterPanel({
                 />
               )}
 
-              {draft.mode === 'discovery' && (
+              {draft.mode === "discovery" && (
                 <DiscoveryModeSettings
                   discoveryData={draft.discoveryData}
-                  isExpanded={expandedSections['scenario-mode-specific'] || false}
-                  onToggle={() => toggleSection('scenario-mode-specific')}
+                  isExpanded={
+                    expandedSections["scenario-mode-specific"] || false
+                  }
+                  onToggle={() => toggleSection("scenario-mode-specific")}
                 />
               )}
 
-              {draft.mode === 'assessment' && (
+              {draft.mode === "assessment" && (
                 <AssessmentModeSettings
                   assessmentData={draft.assessmentData}
-                  isExpanded={expandedSections['scenario-mode-specific'] || false}
-                  onToggle={() => toggleSection('scenario-mode-specific')}
+                  isExpanded={
+                    expandedSections["scenario-mode-specific"] || false
+                  }
+                  onToggle={() => toggleSection("scenario-mode-specific")}
                 />
               )}
             </div>

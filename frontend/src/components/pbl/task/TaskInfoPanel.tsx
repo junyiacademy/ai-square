@@ -1,9 +1,12 @@
-import React from 'react';
-import { Task, Scenario, Program, DomainType } from '@/types/pbl';
-import { TaskEvaluation } from '@/types/pbl-completion';
-import { StarRating } from '@/components/shared/StarRating';
-import { getQualitativeRating, getLocalizedField } from '../../../app/pbl/scenarios/[id]/programs/[programId]/tasks/[taskId]/utils/task-helpers';
-import { TFunction } from 'i18next';
+import React from "react";
+import { Task, Scenario, Program, DomainType } from "@/types/pbl";
+import { TaskEvaluation } from "@/types/pbl-completion";
+import { StarRating } from "@/components/shared/StarRating";
+import {
+  getQualitativeRating,
+  getLocalizedField,
+} from "../../../app/pbl/scenarios/[id]/programs/[programId]/tasks/[taskId]/utils/task-helpers";
+import { TFunction } from "i18next";
 
 interface ProgramTask {
   id: string;
@@ -21,7 +24,7 @@ export interface TaskInfoPanelProps {
   language: string;
   onCompleteTask: () => void;
   onTranslateEvaluation: () => void;
-  t: TFunction<readonly ['pbl', 'common'], undefined>;
+  t: TFunction<readonly ["pbl", "common"], undefined>;
 }
 
 export const TaskInfoPanel: React.FC<TaskInfoPanelProps> = ({
@@ -41,17 +44,26 @@ export const TaskInfoPanel: React.FC<TaskInfoPanelProps> = ({
     <div className="w-96 bg-white dark:bg-gray-800 border-l border-r border-gray-200 dark:border-gray-700 overflow-y-auto flex-shrink-0">
       <div className="p-6">
         <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-          {t('pbl:learn.task')} {taskIndex + 1}:{' '}
+          {t("pbl:learn.task")} {taskIndex + 1}:{" "}
           {(() => {
             const title = currentTask.title;
-            if (typeof title === 'object' && title !== null && !Array.isArray(title)) {
+            if (
+              typeof title === "object" &&
+              title !== null &&
+              !Array.isArray(title)
+            ) {
               const titleObj = title as Record<string, string>;
-              return titleObj[language] || titleObj['en'] || Object.values(titleObj)[0] || '';
+              return (
+                titleObj[language] ||
+                titleObj["en"] ||
+                Object.values(titleObj)[0] ||
+                ""
+              );
             }
             return getLocalizedField(
               currentTask as unknown as Record<string, unknown>,
-              'title',
-              language
+              "title",
+              language,
             );
           })()}
         </h2>
@@ -59,20 +71,20 @@ export const TaskInfoPanel: React.FC<TaskInfoPanelProps> = ({
         <div className="space-y-4">
           <div>
             <h3 className="font-medium text-gray-900 dark:text-white mb-2">
-              {t('pbl:learn.description')}
+              {t("pbl:learn.description")}
             </h3>
             <p className="text-gray-600 dark:text-gray-400">
               {getLocalizedField(
                 currentTask as unknown as Record<string, unknown>,
-                'description',
-                language
+                "description",
+                language,
               )}
             </p>
           </div>
 
           <div>
             <h3 className="font-medium text-gray-900 dark:text-white mb-2">
-              {t('pbl:learn.instructions')}
+              {t("pbl:learn.instructions")}
             </h3>
             <ul className="list-disc list-inside space-y-1 text-gray-600 dark:text-gray-400">
               {Array.isArray(currentTask.instructions) ? (
@@ -80,7 +92,7 @@ export const TaskInfoPanel: React.FC<TaskInfoPanelProps> = ({
                   <li key={index}>{instruction}</li>
                 ))
               ) : (
-                <li>{t('pbl:learn.noInstructionsAvailable')}</li>
+                <li>{t("pbl:learn.noInstructionsAvailable")}</li>
               )}
             </ul>
           </div>
@@ -88,13 +100,13 @@ export const TaskInfoPanel: React.FC<TaskInfoPanelProps> = ({
           {currentTask.expectedOutcome && (
             <div>
               <h3 className="font-medium text-gray-900 dark:text-white mb-2">
-                {t('pbl:details.expectedOutcome')}
+                {t("pbl:details.expectedOutcome")}
               </h3>
               <p className="text-gray-600 dark:text-gray-400">
                 {getLocalizedField(
                   currentTask as unknown as Record<string, unknown>,
-                  'expectedOutcome',
-                  language
+                  "expectedOutcome",
+                  language,
                 )}
               </p>
             </div>
@@ -105,14 +117,14 @@ export const TaskInfoPanel: React.FC<TaskInfoPanelProps> = ({
         {evaluation && (
           <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
             <h3 className="font-medium text-gray-900 dark:text-white mb-4">
-              {t('pbl:learn.evaluationResults', 'Evaluation Results')}
+              {t("pbl:learn.evaluationResults", "Evaluation Results")}
             </h3>
 
             {/* Overall Score */}
             <div className="mb-4 p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-800">
               <div className="flex items-center justify-between">
                 <h4 className="text-lg font-semibold text-gray-900 dark:text-white">
-                  {t('pbl:learn.overallScore')}
+                  {t("pbl:learn.overallScore")}
                 </h4>
                 {(() => {
                   const rating = getQualitativeRating(evaluation.score);
@@ -128,16 +140,16 @@ export const TaskInfoPanel: React.FC<TaskInfoPanelProps> = ({
             {/* Domain Scores */}
             <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
               <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">
-                {t('pbl:complete.domainScores')}
+                {t("pbl:complete.domainScores")}
               </h4>
               <div className="space-y-2">
                 {evaluation.domainScores &&
                   (() => {
                     const domainOrder: DomainType[] = [
-                      'engaging_with_ai',
-                      'creating_with_ai',
-                      'managing_with_ai',
-                      'designing_with_ai',
+                      "engaging_with_ai",
+                      "creating_with_ai",
+                      "managing_with_ai",
+                      "designing_with_ai",
                     ];
                     const targetDomainsList = scenario?.targetDomains || [];
 
@@ -149,19 +161,21 @@ export const TaskInfoPanel: React.FC<TaskInfoPanelProps> = ({
                         ? evaluation.domainScores![domain]
                         : undefined;
                       const isNA =
-                        !isTargetDomain || score === undefined || score === null;
+                        !isTargetDomain ||
+                        score === undefined ||
+                        score === null;
                       return (
                         <div
                           key={domain}
                           className={`flex items-center justify-between ${
-                            !isTargetDomain ? 'opacity-50' : ''
+                            !isTargetDomain ? "opacity-50" : ""
                           }`}
                         >
                           <span
                             className={`text-sm ${
                               !isTargetDomain
-                                ? 'text-gray-400 dark:text-gray-500 line-through'
-                                : 'text-gray-600 dark:text-gray-400'
+                                ? "text-gray-400 dark:text-gray-500 line-through"
+                                : "text-gray-600 dark:text-gray-400"
                             }`}
                           >
                             {t(`assessment:domains.${domain}`)}
@@ -186,26 +200,32 @@ export const TaskInfoPanel: React.FC<TaskInfoPanelProps> = ({
             {evaluation.ksaScores && (
               <div className="mb-4 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
                 <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">
-                  {t('pbl:complete.ksaScores', 'KSA Scores')}
+                  {t("pbl:complete.ksaScores", "KSA Scores")}
                 </h4>
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-600 dark:text-gray-400">
-                      {t('pbl:complete.knowledge')}
+                      {t("pbl:complete.knowledge")}
                     </span>
-                    <StarRating score={evaluation.ksaScores.knowledge} size="sm" />
+                    <StarRating
+                      score={evaluation.ksaScores.knowledge}
+                      size="sm"
+                    />
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-600 dark:text-gray-400">
-                      {t('pbl:complete.skills')}
+                      {t("pbl:complete.skills")}
                     </span>
                     <StarRating score={evaluation.ksaScores.skills} size="sm" />
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-600 dark:text-gray-400">
-                      {t('pbl:complete.attitudes')}
+                      {t("pbl:complete.attitudes")}
                     </span>
-                    <StarRating score={evaluation.ksaScores.attitudes} size="sm" />
+                    <StarRating
+                      score={evaluation.ksaScores.attitudes}
+                      size="sm"
+                    />
                   </div>
                 </div>
               </div>
@@ -216,8 +236,8 @@ export const TaskInfoPanel: React.FC<TaskInfoPanelProps> = ({
               <div className="mb-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
                 <p className="text-sm text-yellow-800 dark:text-yellow-200 mb-2">
                   {t(
-                    'pbl:learn.evaluationNeedsTranslation',
-                    'This evaluation is in a different language.'
+                    "pbl:learn.evaluationNeedsTranslation",
+                    "This evaluation is in a different language.",
                   )}
                 </p>
                 <button
@@ -247,7 +267,7 @@ export const TaskInfoPanel: React.FC<TaskInfoPanelProps> = ({
                           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                         ></path>
                       </svg>
-                      {t('pbl:learn.translating', 'Translating...')}
+                      {t("pbl:learn.translating", "Translating...")}
                     </>
                   ) : (
                     <>
@@ -265,8 +285,8 @@ export const TaskInfoPanel: React.FC<TaskInfoPanelProps> = ({
                         />
                       </svg>
                       {t(
-                        'pbl:learn.translateToCurrentLanguage',
-                        'Translate to Current Language'
+                        "pbl:learn.translateToCurrentLanguage",
+                        "Translate to Current Language",
                       )}
                     </>
                   )}
@@ -277,22 +297,36 @@ export const TaskInfoPanel: React.FC<TaskInfoPanelProps> = ({
             {/* Conversation Insights */}
             {evaluation.conversationInsights &&
               ((evaluation.conversationInsights.effectiveExamples &&
-                Array.isArray(evaluation.conversationInsights.effectiveExamples) &&
+                Array.isArray(
+                  evaluation.conversationInsights.effectiveExamples,
+                ) &&
                 evaluation.conversationInsights.effectiveExamples.length > 0) ||
                 (evaluation.conversationInsights.improvementAreas &&
-                  Array.isArray(evaluation.conversationInsights.improvementAreas) &&
-                  evaluation.conversationInsights.improvementAreas.length > 0)) && (
+                  Array.isArray(
+                    evaluation.conversationInsights.improvementAreas,
+                  ) &&
+                  evaluation.conversationInsights.improvementAreas.length >
+                    0)) && (
                 <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                   <h4 className="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-3">
-                    {t('pbl:learn.conversationInsights', 'Conversation Insights')}
+                    {t(
+                      "pbl:learn.conversationInsights",
+                      "Conversation Insights",
+                    )}
                   </h4>
 
                   {evaluation.conversationInsights.effectiveExamples &&
-                    Array.isArray(evaluation.conversationInsights.effectiveExamples) &&
-                    evaluation.conversationInsights.effectiveExamples.length > 0 && (
+                    Array.isArray(
+                      evaluation.conversationInsights.effectiveExamples,
+                    ) &&
+                    evaluation.conversationInsights.effectiveExamples.length >
+                      0 && (
                       <div className="mb-3">
                         <h5 className="text-xs font-medium text-blue-800 dark:text-blue-200 mb-2">
-                          {t('pbl:learn.effectiveExamples', 'What worked well:')}
+                          {t(
+                            "pbl:learn.effectiveExamples",
+                            "What worked well:",
+                          )}
                         </h5>
                         <div className="space-y-2">
                           {evaluation.conversationInsights.effectiveExamples.map(
@@ -308,18 +342,24 @@ export const TaskInfoPanel: React.FC<TaskInfoPanelProps> = ({
                                   ✓ {example.suggestion}
                                 </p>
                               </div>
-                            )
+                            ),
                           )}
                         </div>
                       </div>
                     )}
 
                   {evaluation.conversationInsights.improvementAreas &&
-                    Array.isArray(evaluation.conversationInsights.improvementAreas) &&
-                    evaluation.conversationInsights.improvementAreas.length > 0 && (
+                    Array.isArray(
+                      evaluation.conversationInsights.improvementAreas,
+                    ) &&
+                    evaluation.conversationInsights.improvementAreas.length >
+                      0 && (
                       <div>
                         <h5 className="text-xs font-medium text-blue-800 dark:text-blue-200 mb-2">
-                          {t('pbl:learn.improvementExamples', 'Areas for improvement:')}
+                          {t(
+                            "pbl:learn.improvementExamples",
+                            "Areas for improvement:",
+                          )}
                         </h5>
                         <div className="space-y-2">
                           {evaluation.conversationInsights.improvementAreas.map(
@@ -335,7 +375,7 @@ export const TaskInfoPanel: React.FC<TaskInfoPanelProps> = ({
                                   → {area.suggestion}
                                 </p>
                               </div>
-                            )
+                            ),
                           )}
                         </div>
                       </div>
@@ -347,7 +387,7 @@ export const TaskInfoPanel: React.FC<TaskInfoPanelProps> = ({
             <div className="space-y-3">
               <div>
                 <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  {t('pbl:complete.strengths')}
+                  {t("pbl:complete.strengths")}
                 </h4>
                 <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
                   {evaluation.strengths &&
@@ -362,7 +402,7 @@ export const TaskInfoPanel: React.FC<TaskInfoPanelProps> = ({
 
               <div>
                 <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  {t('pbl:complete.improvements')}
+                  {t("pbl:complete.improvements")}
                 </h4>
                 <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
                   {evaluation.improvements &&
@@ -385,9 +425,10 @@ export const TaskInfoPanel: React.FC<TaskInfoPanelProps> = ({
           >
             {program &&
             currentTask &&
-            programTasks.findIndex((t) => t.id === currentTask.id) < programTasks.length - 1
-              ? t('pbl:learn.nextTask', 'Next Task')
-              : t('pbl:learn.completeProgram', 'Complete Program')}
+            programTasks.findIndex((t) => t.id === currentTask.id) <
+              programTasks.length - 1
+              ? t("pbl:learn.nextTask", "Next Task")
+              : t("pbl:learn.completeProgram", "Complete Program")}
           </button>
         </div>
       </div>

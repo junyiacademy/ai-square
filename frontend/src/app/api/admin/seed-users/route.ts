@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
       console.error("ADMIN_SEED_SECRET environment variable not set");
       return NextResponse.json(
         { success: false, error: "Server configuration error" },
-        { status: 500 }
+        { status: 500 },
       );
     }
 
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
     if (!providedSecret || providedSecret !== adminSecret) {
       return NextResponse.json(
         { success: false, error: "Unauthorized" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 

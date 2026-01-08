@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { Plus, Edit3, Trash2, Clock, FileText } from 'lucide-react';
+import { Plus, Edit3, Trash2, Clock, FileText } from "lucide-react";
 
 interface ScenarioListItem {
   id: string;
@@ -12,7 +12,7 @@ interface ScenarioListItem {
 }
 
 interface ScenarioListPanelProps {
-  selectedMode: 'pbl' | 'discovery' | 'assessment';
+  selectedMode: "pbl" | "discovery" | "assessment";
   language: string;
   loadingScenarios: boolean;
   allScenarios: ScenarioListItem[];
@@ -28,31 +28,40 @@ export function ScenarioListPanel({
   allScenarios,
   onCreateNew,
   onEditScenario,
-  onDeleteScenario
+  onDeleteScenario,
 }: ScenarioListPanelProps) {
-  const modeTitle = selectedMode === 'pbl'
-    ? '🎯 PBL 專案式學習'
-    : selectedMode === 'discovery'
-    ? '🔍 Discovery 探索學習'
-    : '📊 Assessment 評測';
+  const modeTitle =
+    selectedMode === "pbl"
+      ? "🎯 PBL 專案式學習"
+      : selectedMode === "discovery"
+        ? "🔍 Discovery 探索學習"
+        : "📊 Assessment 評測";
 
-  const filteredScenarios = allScenarios.filter(s => s.mode === selectedMode);
+  const filteredScenarios = allScenarios.filter((s) => s.mode === selectedMode);
 
   const getDifficultyDisplay = (difficulty: string) => {
     switch (difficulty) {
-      case 'easy': return { label: '簡單', className: 'bg-green-100 text-green-700' };
-      case 'medium': return { label: '中等', className: 'bg-yellow-100 text-yellow-700' };
-      case 'hard': return { label: '困難', className: 'bg-red-100 text-red-700' };
-      default: return { label: difficulty, className: 'bg-gray-100 text-gray-700' };
+      case "easy":
+        return { label: "簡單", className: "bg-green-100 text-green-700" };
+      case "medium":
+        return { label: "中等", className: "bg-yellow-100 text-yellow-700" };
+      case "hard":
+        return { label: "困難", className: "bg-red-100 text-red-700" };
+      default:
+        return { label: difficulty, className: "bg-gray-100 text-gray-700" };
     }
   };
 
   const getButtonStyle = () => {
     switch (selectedMode) {
-      case 'pbl': return 'bg-purple-600 hover:bg-purple-700';
-      case 'discovery': return 'bg-green-600 hover:bg-green-700';
-      case 'assessment': return 'bg-blue-600 hover:bg-blue-700';
-      default: return 'bg-gray-600 hover:bg-gray-700';
+      case "pbl":
+        return "bg-purple-600 hover:bg-purple-700";
+      case "discovery":
+        return "bg-green-600 hover:bg-green-700";
+      case "assessment":
+        return "bg-blue-600 hover:bg-blue-700";
+      default:
+        return "bg-gray-600 hover:bg-gray-700";
     }
   };
 
@@ -77,8 +86,10 @@ export function ScenarioListPanel({
         <>
           {filteredScenarios.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {filteredScenarios.map(scenario => {
-                const difficultyInfo = getDifficultyDisplay(scenario.difficulty);
+              {filteredScenarios.map((scenario) => {
+                const difficultyInfo = getDifficultyDisplay(
+                  scenario.difficulty,
+                );
                 return (
                   <div
                     key={scenario.id}
@@ -88,7 +99,9 @@ export function ScenarioListPanel({
                       {scenario.title[language] || scenario.title.en}
                     </h4>
                     <div className="flex items-center gap-3 mb-4 text-sm text-gray-500">
-                      <span className={`px-2 py-1 rounded-full ${difficultyInfo.className}`}>
+                      <span
+                        className={`px-2 py-1 rounded-full ${difficultyInfo.className}`}
+                      >
                         {difficultyInfo.label}
                       </span>
                       <span>•</span>
@@ -97,7 +110,9 @@ export function ScenarioListPanel({
                     </div>
                     <div className="flex items-center gap-2">
                       <button
-                        onClick={() => onEditScenario(scenario.scenario_id, scenario.id)}
+                        onClick={() =>
+                          onEditScenario(scenario.scenario_id, scenario.id)
+                        }
                         className={`flex-1 px-4 py-2 rounded-lg hover:shadow-lg transition-colors font-medium ${getButtonStyle()} text-white`}
                       >
                         <Edit3 className="h-4 w-4 inline mr-2" />

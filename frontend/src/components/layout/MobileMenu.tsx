@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { useTranslation } from 'react-i18next';
-import { LanguageSelector } from '@/components/ui/LanguageSelector';
-import type { NavLink } from './types';
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useTranslation } from "react-i18next";
+import { LanguageSelector } from "@/components/ui/LanguageSelector";
+import type { NavLink } from "./types";
 
 interface User {
   id: number;
@@ -34,7 +34,7 @@ export function MobileMenu({
   onLogout,
 }: MobileMenuProps) {
   const pathname = usePathname();
-  const { t } = useTranslation(['navigation']);
+  const { t } = useTranslation(["navigation"]);
 
   return (
     <>
@@ -99,20 +99,20 @@ export function MobileMenu({
                     href={link.href}
                     className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
                       pathname === link.href
-                        ? 'text-gray-900 dark:text-white bg-gray-100 dark:bg-slate-700'
-                        : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-slate-700'
+                        ? "text-gray-900 dark:text-white bg-gray-100 dark:bg-slate-700"
+                        : "text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-slate-700"
                     }`}
                     onClick={onClose}
                   >
                     {link.label}
                   </Link>
-                ) : null
+                ) : null,
               )}
 
               {/* Language Selector for Mobile */}
               <div className="px-3 py-3 border-t border-gray-200 dark:border-gray-700">
                 <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
-                  {t('language')}
+                  {t("language")}
                 </p>
                 <LanguageSelector className="w-full" />
               </div>
@@ -129,7 +129,7 @@ export function MobileMenu({
                     {user.name || user.email}
                     {user.isGuest && (
                       <span className="text-xs text-green-600 ml-1">
-                        ({t('guestMode', '訪客模式')})
+                        ({t("guestMode", "訪客模式")})
                       </span>
                     )}
                   </div>
@@ -142,9 +142,9 @@ export function MobileMenu({
                 <button
                   onClick={onLogout}
                   className="text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
-                  aria-label={t('signOut')}
+                  aria-label={t("signOut")}
                 >
-                  {t('signOut')}
+                  {t("signOut")}
                 </button>
               </div>
             </div>

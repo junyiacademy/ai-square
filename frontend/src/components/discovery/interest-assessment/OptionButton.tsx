@@ -1,5 +1,5 @@
-import { motion } from 'framer-motion';
-import type { QuestionOption } from './types';
+import { motion } from "framer-motion";
+import type { QuestionOption } from "./types";
 
 interface OptionButtonProps {
   option: QuestionOption;
@@ -8,7 +8,12 @@ interface OptionButtonProps {
   onSelect: (optionId: string) => void;
 }
 
-export function OptionButton({ option, isSelected, index, onSelect }: OptionButtonProps) {
+export function OptionButton({
+  option,
+  isSelected,
+  index,
+  onSelect,
+}: OptionButtonProps) {
   return (
     <motion.div
       initial={{ opacity: 0, x: -50, scale: 0.9 }}
@@ -17,21 +22,22 @@ export function OptionButton({ option, isSelected, index, onSelect }: OptionButt
         duration: 0.5,
         delay: index * 0.15,
         type: "spring",
-        stiffness: 100
+        stiffness: 100,
       }}
     >
       <motion.button
         onClick={() => onSelect(option.id)}
         whileHover={{
           scale: 1.02,
-          boxShadow: "0 8px 25px rgba(168, 85, 247, 0.15)"
+          boxShadow: "0 8px 25px rgba(168, 85, 247, 0.15)",
         }}
         whileTap={{ scale: 0.98 }}
         className={`
           relative w-full p-4 text-left rounded-xl border-2 transition-all duration-300 group overflow-hidden
-          ${isSelected
-            ? 'border-purple-500 bg-gradient-to-br from-purple-50 to-purple-100 text-purple-800 shadow-lg'
-            : 'border-gray-200 bg-white hover:border-purple-300 hover:bg-gradient-to-br hover:from-purple-25 hover:to-white'
+          ${
+            isSelected
+              ? "border-purple-500 bg-gradient-to-br from-purple-50 to-purple-100 text-purple-800 shadow-lg"
+              : "border-gray-200 bg-white hover:border-purple-300 hover:bg-gradient-to-br hover:from-purple-25 hover:to-white"
           }
         `}
       >
@@ -66,9 +72,10 @@ export function OptionButton({ option, isSelected, index, onSelect }: OptionButt
             <motion.div
               className={`
                 mt-1 w-8 h-8 rounded-xl border-3 transition-all duration-300 flex items-center justify-center
-                ${isSelected
-                  ? 'border-purple-500 bg-gradient-to-br from-purple-500 to-purple-600 shadow-lg'
-                  : 'border-gray-300 bg-white group-hover:border-purple-400'
+                ${
+                  isSelected
+                    ? "border-purple-500 bg-gradient-to-br from-purple-500 to-purple-600 shadow-lg"
+                    : "border-gray-300 bg-white group-hover:border-purple-400"
                 }
               `}
               whileHover={{ scale: 1.1 }}
@@ -83,15 +90,23 @@ export function OptionButton({ option, isSelected, index, onSelect }: OptionButt
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
-                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  <path
+                    fillRule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clipRule="evenodd"
+                  />
                 </motion.svg>
               )}
             </motion.div>
 
             <div className="flex-1">
-              <span className={`font-semibold text-base transition-colors ${
-                isSelected ? 'text-purple-800' : 'text-gray-800 group-hover:text-purple-700'
-              }`}>
+              <span
+                className={`font-semibold text-base transition-colors ${
+                  isSelected
+                    ? "text-purple-800"
+                    : "text-gray-800 group-hover:text-purple-700"
+                }`}
+              >
                 {option.text}
               </span>
             </div>

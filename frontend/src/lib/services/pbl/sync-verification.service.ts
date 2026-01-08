@@ -1,7 +1,7 @@
 /**
  * Service for verifying evaluation sync status and generating checksums
  */
-import crypto from 'crypto';
+import crypto from "crypto";
 
 interface TaskWithEvaluation {
   id: string;
@@ -32,18 +32,18 @@ export class SyncVerificationService {
    */
   async generateChecksum(tasks: TaskWithEvaluation[]): Promise<string> {
     const checksumData = tasks
-      .filter(t => t.evaluationId)
-      .map(t => ({
+      .filter((t) => t.evaluationId)
+      .map((t) => ({
         id: t.id,
         evaluationId: t.evaluationId,
-        completedAt: t.completedAt
+        completedAt: t.completedAt,
       }))
       .sort((a, b) => a.id.localeCompare(b.id));
 
     return crypto
-      .createHash('md5')
+      .createHash("md5")
       .update(JSON.stringify(checksumData))
-      .digest('hex')
+      .digest("hex")
       .substring(0, 8);
   }
 
@@ -58,21 +58,21 @@ export class SyncVerificationService {
   async verifyEvaluationStatus(
     program: Program,
     evaluation: Evaluation,
-    tasks: TaskWithEvaluation[]
+    tasks: TaskWithEvaluation[],
   ): Promise<VerificationResult> {
     const debug: Record<string, unknown> = {
       evaluationId: evaluation.id,
       isLatest: evaluation.metadata?.isLatest,
       evaluationOutdated: program.metadata?.evaluationOutdated,
-      lastSyncedAt: evaluation.metadata?.lastSyncedAt
+      lastSyncedAt: evaluation.metadata?.lastSyncedAt,
     };
 
     // Layer 0: Check if marked as outdated
     if (program.metadata?.evaluationOutdated === true) {
       return {
         needsUpdate: true,
-        reason: 'evaluation_outdated',
-        debug: { ...debug, evaluationOutdated: true }
+        reason: "evaluation_outdated",
+        debug: { ...debug, evaluationOutdated: true },
       };
     }
 
@@ -80,55 +80,59 @@ export class SyncVerificationService {
     if (!evaluation.metadata?.isLatest) {
       return {
         needsUpdate: true,
-        reason: 'flag_outdated',
-        debug: { ...debug, flagCheck: 'failed' }
+        reason: "flag_outdated",
+        debug: { ...debug, flagCheck: "failed" },
       };
     }
 
     // Layer 2: Task count check
-    const currentEvaluatedCount = tasks.filter(t => t.evaluationId).length;
+    const currentEvaluatedCount = tasks.filter((t) => t.evaluationId).length;
     debug.taskCountCheck = {
       stored: evaluation.metadata?.evaluatedTaskCount,
-      current: currentEvaluatedCount
+      current: currentEvaluatedCount,
     };
 
     if (currentEvaluatedCount !== evaluation.metadata?.evaluatedTaskCount) {
       return {
         needsUpdate: true,
-        reason: 'task_count_mismatch',
-        debug
+        reason: "task_count_mismatch",
+        debug,
       };
     }
 
     // Layer 3: Checksum verification (based on time since last sync)
-    const lastSync = new Date((evaluation.metadata?.lastSyncedAt as string | number) || 0);
+    const lastSync = new Date(
+      (evaluation.metadata?.lastSyncedAt as string | number) || 0,
+    );
     const hoursSinceSync = (Date.now() - lastSync.getTime()) / (1000 * 60 * 60);
     debug.hoursSinceSync = hoursSinceSync;
 
     const shouldCheckChecksum =
-      hoursSinceSync > 48 ? true :
-      hoursSinceSync > 24 ? Math.random() < 0.2 :
-      Math.random() < 0.05;
+      hoursSinceSync > 48
+        ? true
+        : hoursSinceSync > 24
+          ? Math.random() < 0.2
+          : Math.random() < 0.05;
 
     if (shouldCheckChecksum) {
       const currentChecksum = await this.generateChecksum(tasks);
       debug.checksumVerification = {
         stored: evaluation.metadata?.syncChecksum,
         current: currentChecksum,
-        match: currentChecksum === evaluation.metadata?.syncChecksum
+        match: currentChecksum === evaluation.metadata?.syncChecksum,
       };
 
       if (currentChecksum !== evaluation.metadata?.syncChecksum) {
         return {
           needsUpdate: true,
-          reason: 'checksum_mismatch',
-          debug
+          reason: "checksum_mismatch",
+          debug,
         };
       }
     } else {
-      debug.checksumVerification = 'skipped';
+      debug.checksumVerification = "skipped";
     }
 
-    return { needsUpdate: false, reason: 'up_to_date', debug };
+    return { needsUpdate: false, reason: "up_to_date", debug };
   }
 }

@@ -1,6 +1,10 @@
-import { AssessmentResult, AssessmentDomain, RadarChartData } from '@/types/assessment';
-import { DynamicDomainRadarChart } from '@/lib/dynamic-imports';
-import { DomainBreakdownCards } from '../DomainBreakdownCards';
+import {
+  AssessmentResult,
+  AssessmentDomain,
+  RadarChartData,
+} from "@/types/assessment";
+import { DynamicDomainRadarChart } from "@/lib/dynamic-imports";
+import { DomainBreakdownCards } from "../DomainBreakdownCards";
 
 interface OverviewTabProps {
   result: AssessmentResult;
@@ -15,12 +19,18 @@ interface OverviewTabProps {
   t: (key: string, options?: Record<string, unknown>) => string;
 }
 
-export function OverviewTab({ result, radarData, domains, getDomainName, t }: OverviewTabProps) {
+export function OverviewTab({
+  result,
+  radarData,
+  domains,
+  getDomainName,
+  t,
+}: OverviewTabProps) {
   return (
     <div className="space-y-8">
       <div>
         <h3 className="text-lg font-semibold text-gray-900 mb-4">
-          {t('results.skillRadar')}
+          {t("results.skillRadar")}
         </h3>
         <div className="bg-gray-50 rounded-lg p-6">
           <DynamicDomainRadarChart data={radarData} />
@@ -29,15 +39,15 @@ export function OverviewTab({ result, radarData, domains, getDomainName, t }: Ov
 
       <div>
         <h3 className="text-lg font-semibold text-gray-900 mb-4">
-          {t('results.summary')}
+          {t("results.summary")}
         </h3>
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
           <p className="text-blue-800">
-            {t('results.summaryText', {
+            {t("results.summaryText", {
               level: t(`level.${result.level}`),
               score: result.overallScore,
               correct: result.correctAnswers,
-              total: result.totalQuestions
+              total: result.totalQuestions,
             })}
           </p>
         </div>
@@ -45,7 +55,7 @@ export function OverviewTab({ result, radarData, domains, getDomainName, t }: Ov
 
       <div>
         <h3 className="text-lg font-semibold text-gray-900 mb-4">
-          {t('results.domainBreakdown')}
+          {t("results.domainBreakdown")}
         </h3>
         <DomainBreakdownCards
           domainScores={result.domainScores}

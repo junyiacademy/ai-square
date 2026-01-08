@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { Brain, ChevronRight } from 'lucide-react';
-import type { RecommendedScenario } from '@/types/chat';
+import { Brain, ChevronRight } from "lucide-react";
+import type { RecommendedScenario } from "@/types/chat";
 
 interface RecommendationsCardProps {
   scenarios: RecommendedScenario[];
@@ -25,12 +25,18 @@ export function RecommendationsCard({ scenarios }: RecommendationsCardProps) {
           >
             <div className="flex items-start justify-between">
               <div className="flex-1">
-                <div className="font-medium text-sm text-gray-900">{scenario.title}</div>
-                <div className="text-xs text-gray-500 mt-1">{scenario.reason}</div>
+                <div className="font-medium text-sm text-gray-900">
+                  {scenario.title}
+                </div>
+                <div className="text-xs text-gray-500 mt-1">
+                  {scenario.reason}
+                </div>
                 <div className="flex items-center gap-3 mt-2 text-xs">
                   <span className="text-gray-400">{scenario.difficulty}</span>
                   <span className="text-gray-400">•</span>
-                  <span className="text-gray-400">{scenario.estimatedTime} min</span>
+                  <span className="text-gray-400">
+                    {scenario.estimatedTime} min
+                  </span>
                 </div>
               </div>
               <div className="text-blue-500 ml-2">

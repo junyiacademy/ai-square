@@ -1,14 +1,14 @@
-import { renderHook, act } from '@testing-library/react';
-import { useMobileMenu } from '../useMobileMenu';
+import { renderHook, act } from "@testing-library/react";
+import { useMobileMenu } from "../useMobileMenu";
 
-describe('useMobileMenu', () => {
-  it('initializes with menu closed', () => {
+describe("useMobileMenu", () => {
+  it("initializes with menu closed", () => {
     const { result } = renderHook(() => useMobileMenu());
 
     expect(result.current.isOpen).toBe(false);
   });
 
-  it('opens menu when toggle is called', () => {
+  it("opens menu when toggle is called", () => {
     const { result } = renderHook(() => useMobileMenu());
 
     act(() => {
@@ -18,7 +18,7 @@ describe('useMobileMenu', () => {
     expect(result.current.isOpen).toBe(true);
   });
 
-  it('closes menu when toggle is called again', () => {
+  it("closes menu when toggle is called again", () => {
     const { result } = renderHook(() => useMobileMenu());
 
     act(() => {
@@ -34,7 +34,7 @@ describe('useMobileMenu', () => {
     expect(result.current.isOpen).toBe(false);
   });
 
-  it('closes menu when close is called', () => {
+  it("closes menu when close is called", () => {
     const { result } = renderHook(() => useMobileMenu());
 
     act(() => {
@@ -50,7 +50,7 @@ describe('useMobileMenu', () => {
     expect(result.current.isOpen).toBe(false);
   });
 
-  it('close is idempotent', () => {
+  it("close is idempotent", () => {
     const { result } = renderHook(() => useMobileMenu());
 
     act(() => {
@@ -61,7 +61,7 @@ describe('useMobileMenu', () => {
     expect(result.current.isOpen).toBe(false);
   });
 
-  it('toggle works multiple times', () => {
+  it("toggle works multiple times", () => {
     const { result } = renderHook(() => useMobileMenu());
 
     // First toggle - open
@@ -83,7 +83,7 @@ describe('useMobileMenu', () => {
     expect(result.current.isOpen).toBe(true);
   });
 
-  it('maintains state across re-renders', () => {
+  it("maintains state across re-renders", () => {
     const { result, rerender } = renderHook(() => useMobileMenu());
 
     act(() => {

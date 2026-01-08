@@ -5,7 +5,7 @@
 
 export interface ChatMessage {
   id: string;
-  role: 'user' | 'assistant';
+  role: "user" | "assistant";
   content: string;
   timestamp: string;
   context_used?: string[];
@@ -34,13 +34,21 @@ interface ChatIndex {
 }
 
 export class ChatSessionService {
-  constructor(private bucket: { file: (path: string) => { exists: () => Promise<[boolean]>; download: () => Promise<[Buffer]>; save: (data: string) => Promise<void> } }) {}
+  constructor(
+    private bucket: {
+      file: (path: string) => {
+        exists: () => Promise<[boolean]>;
+        download: () => Promise<[Buffer]>;
+        save: (data: string) => Promise<void>;
+      };
+    },
+  ) {}
 
   /**
    * Sanitize email for file path
    */
   private sanitizeEmail(email: string): string {
-    return email.replace('@', '_at_').replace(/\./g, '_');
+    return email.replace("@", "_at_").replace(/\./g, "_");
   }
 
   /**
@@ -49,20 +57,22 @@ export class ChatSessionService {
   async createSession(
     userEmail: string,
     sessionId: string,
-    message: ChatMessage
+    message: ChatMessage,
   ): Promise<ChatSession> {
     const sanitizedEmail = this.sanitizeEmail(userEmail);
-    const sessionFile = this.bucket.file(`user/${sanitizedEmail}/chat/sessions/${sessionId}.json`);
+    const sessionFile = this.bucket.file(
+      `user/${sanitizedEmail}/chat/sessions/${sessionId}.json`,
+    );
 
     const session: ChatSession = {
       id: sessionId,
-      title: 'New Chat',
+      title: "New Chat",
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
       messages: [message],
       last_message: message.content.substring(0, 100),
       message_count: 1,
-      tags: []
+      tags: [],
     };
 
     await sessionFile.save(JSON.stringify(session, null, 2));
@@ -76,11 +86,13 @@ export class ChatSessionService {
    */
   async getSession(
     userEmail: string,
-    sessionId: string
+    sessionId: string,
   ): Promise<ChatSession | null> {
     try {
       const sanitizedEmail = this.sanitizeEmail(userEmail);
-      const sessionFile = this.bucket.file(`user/${sanitizedEmail}/chat/sessions/${sessionId}.json`);
+      const sessionFile = this.bucket.file(
+        `user/${sanitizedEmail}/chat/sessions/${sessionId}.json`,
+      );
 
       const [exists] = await sessionFile.exists();
       if (!exists) {
@@ -90,7 +102,7 @@ export class ChatSessionService {
       const [data] = await sessionFile.download();
       return JSON.parse(data.toString()) as ChatSession;
     } catch (error) {
-      console.error('Error getting session:', error);
+      console.error("Error getting session:", error);
       return null;
     }
   }
@@ -101,7 +113,7 @@ export class ChatSessionService {
   async addMessage(
     userEmail: string,
     sessionId: string,
-    message: ChatMessage
+    message: ChatMessage,
   ): Promise<ChatSession> {
     const existingSession = await this.getSession(userEmail, sessionId);
 
@@ -113,7 +125,9 @@ export class ChatSessionService {
       existingSession.updated_at = new Date().toISOString();
 
       const sanitizedEmail = this.sanitizeEmail(userEmail);
-      const sessionFile = this.bucket.file(`user/${sanitizedEmail}/chat/sessions/${sessionId}.json`);
+      const sessionFile = this.bucket.file(
+        `user/${sanitizedEmail}/chat/sessions/${sessionId}.json`,
+      );
       await sessionFile.save(JSON.stringify(existingSession, null, 2));
       await this.updateChatIndex(userEmail, sessionId, existingSession);
 
@@ -130,7 +144,7 @@ export class ChatSessionService {
   async updateSessionTitle(
     userEmail: string,
     sessionId: string,
-    title: string
+    title: string,
   ): Promise<ChatSession | null> {
     const session = await this.getSession(userEmail, sessionId);
 
@@ -142,7 +156,9 @@ export class ChatSessionService {
     session.updated_at = new Date().toISOString();
 
     const sanitizedEmail = this.sanitizeEmail(userEmail);
-    const sessionFile = this.bucket.file(`user/${sanitizedEmail}/chat/sessions/${sessionId}.json`);
+    const sessionFile = this.bucket.file(
+      `user/${sanitizedEmail}/chat/sessions/${sessionId}.json`,
+    );
     await sessionFile.save(JSON.stringify(session, null, 2));
     await this.updateChatIndex(userEmail, sessionId, session);
 
@@ -155,11 +171,13 @@ export class ChatSessionService {
   async updateChatIndex(
     userEmail: string,
     sessionId: string,
-    session: ChatSession
+    session: ChatSession,
   ): Promise<void> {
     try {
       const sanitizedEmail = this.sanitizeEmail(userEmail);
-      const indexFile = this.bucket.file(`user/${sanitizedEmail}/chat/index.json`);
+      const indexFile = this.bucket.file(
+        `user/${sanitizedEmail}/chat/index.json`,
+      );
 
       const [exists] = await indexFile.exists();
       let index: ChatIndex = { sessions: [] };
@@ -177,7 +195,7 @@ export class ChatSessionService {
         created_at: session.created_at || session.updated_at,
         updated_at: session.updated_at,
         last_message: session.last_message,
-        message_count: session.message_count
+        message_count: session.message_count,
       };
 
       if (sessionIndex >= 0) {
@@ -187,13 +205,14 @@ export class ChatSessionService {
       }
 
       // Sort by updated_at (descending)
-      index.sessions.sort((a, b) =>
-        new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
+      index.sessions.sort(
+        (a, b) =>
+          new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime(),
       );
 
       await indexFile.save(JSON.stringify(index, null, 2));
     } catch (error) {
-      console.error('Error updating chat index:', error);
+      console.error("Error updating chat index:", error);
     }
   }
 }

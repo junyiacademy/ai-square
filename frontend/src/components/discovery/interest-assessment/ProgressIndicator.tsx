@@ -1,11 +1,14 @@
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
 
 interface ProgressIndicatorProps {
   currentQuestion: number;
   totalQuestions: number;
 }
 
-export function ProgressIndicator({ currentQuestion, totalQuestions }: ProgressIndicatorProps) {
+export function ProgressIndicator({
+  currentQuestion,
+  totalQuestions,
+}: ProgressIndicatorProps) {
   const progress = Math.round(((currentQuestion + 1) / totalQuestions) * 100);
 
   return (
@@ -22,15 +25,15 @@ export function ProgressIndicator({ currentQuestion, totalQuestions }: ProgressI
             transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
             className="w-5 h-5 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center shadow-lg"
           >
-            <span className="text-white text-xs font-bold">{currentQuestion + 1}</span>
+            <span className="text-white text-xs font-bold">
+              {currentQuestion + 1}
+            </span>
           </motion.div>
           <span className="text-sm font-bold text-gray-800">AI 興趣分析中</span>
         </div>
 
         <div className="text-right">
-          <div className="text-lg font-bold text-purple-600">
-            {progress}%
-          </div>
+          <div className="text-lg font-bold text-purple-600">{progress}%</div>
         </div>
       </div>
 
@@ -44,8 +47,8 @@ export function ProgressIndicator({ currentQuestion, totalQuestions }: ProgressI
           {/* Progress bar glow effect */}
           <motion.div
             className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-30"
-            animate={{ x: ['-100%', '100%'] }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
+            animate={{ x: ["-100%", "100%"] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
           />
         </motion.div>
 
@@ -56,12 +59,15 @@ export function ProgressIndicator({ currentQuestion, totalQuestions }: ProgressI
               key={i}
               className={`w-4 h-4 rounded-full border-2 transition-all duration-300 ${
                 i <= currentQuestion
-                  ? 'bg-white border-purple-200 shadow-lg'
-                  : 'bg-gray-300 border-gray-400'
+                  ? "bg-white border-purple-200 shadow-lg"
+                  : "bg-gray-300 border-gray-400"
               }`}
               animate={i === currentQuestion ? { scale: [1, 1.3, 1] } : {}}
               transition={{ duration: 0.5 }}
-              style={{ marginLeft: i === 0 ? '0' : 'auto', marginRight: i === totalQuestions - 1 ? '0' : 'auto' }}
+              style={{
+                marginLeft: i === 0 ? "0" : "auto",
+                marginRight: i === totalQuestions - 1 ? "0" : "auto",
+              }}
             >
               {i <= currentQuestion && (
                 <motion.div

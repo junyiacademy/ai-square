@@ -26,16 +26,16 @@ File exceeds soft limit?
 
 ## Soft Limits (Trigger Review Only)
 
-| File Type | Soft Limit | 2x Limit (Enforcement Trigger) |
-|-----------|------------|-------------------------------|
-| Component | 300 lines  | 600 lines |
-| Page | 400 lines  | 800 lines |
-| API Route | 300 lines  | 600 lines |
-| Service | 500 lines  | 1000 lines |
-| Repository | 400 lines  | 800 lines |
-| Utility | 200 lines  | 400 lines |
-| Test | 800 lines  | 1600 lines |
-| Config | 1500 lines | 3000 lines |
+| File Type  | Soft Limit | 2x Limit (Enforcement Trigger) |
+| ---------- | ---------- | ------------------------------ |
+| Component  | 300 lines  | 600 lines                      |
+| Page       | 400 lines  | 800 lines                      |
+| API Route  | 300 lines  | 600 lines                      |
+| Service    | 500 lines  | 1000 lines                     |
+| Repository | 400 lines  | 800 lines                      |
+| Utility    | 200 lines  | 400 lines                      |
+| Test       | 800 lines  | 1600 lines                     |
+| Config     | 1500 lines | 3000 lines                     |
 
 ---
 
@@ -136,6 +136,7 @@ Add to file header if justified > soft limit:
 ```
 
 **Why Good:**
+
 - Single domain (auth)
 - Clear sections
 - All related
@@ -167,12 +168,14 @@ export async function GET() { ... }
 ```
 
 **Why Bad:**
+
 - Multiple responsibilities
 - Low cohesion
 - Mixed concerns
 - Hard to navigate
 
 **Fix:** Split into:
+
 - `route.ts` (API coordination)
 - `validators.ts` (validation)
 - `types.ts` (type definitions)
@@ -187,6 +190,7 @@ export async function GET() { ... }
 **Problem:** Mixed API + business logic + data access
 
 **Solution:**
+
 ```
 page.tsx (400 lines, mixed)
   → page.tsx (150 lines, UI coordination)
@@ -201,6 +205,7 @@ page.tsx (400 lines, mixed)
 **Problem:** Single file handling multiple features
 
 **Solution:**
+
 ```
 user-repository.ts (600 lines)
   → user-repository.ts (250 lines, core CRUD)
@@ -215,6 +220,7 @@ user-repository.ts (600 lines)
 **Problem:** Many helper functions mixed with logic
 
 **Solution:**
+
 ```
 service.ts (500 lines)
   → service.ts (200 lines, core logic)
@@ -254,6 +260,7 @@ npm run check:file-size --ci
 ```
 
 **High Priority for Review:**
+
 1. `src/app/chat/page.tsx` - Complexity: 83
 2. `src/app/discovery/scenarios/[id]/page.tsx` - Complexity: 120
 

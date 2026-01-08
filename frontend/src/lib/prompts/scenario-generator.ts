@@ -3,7 +3,7 @@
  * Templates for generating PBL, Discovery, and Assessment scenarios using Vertex AI
  */
 
-import type { CourseGenerationInput } from '@/types/prompt-to-course';
+import type { CourseGenerationInput } from "@/types/prompt-to-course";
 
 /**
  * System prompt for scenario generation
@@ -28,15 +28,13 @@ NEVER use plain strings for these fields!`;
 /**
  * Get prompt template by mode
  */
-export function getPromptByMode(
-  input: CourseGenerationInput
-): string {
+export function getPromptByMode(input: CourseGenerationInput): string {
   switch (input.mode) {
-    case 'pbl':
+    case "pbl":
       return generatePBLPrompt(input);
-    case 'discovery':
+    case "discovery":
       return generateDiscoveryPrompt(input);
-    case 'assessment':
+    case "assessment":
       return generateAssessmentPrompt(input);
     default:
       throw new Error(`Unknown mode: ${input.mode}`);
@@ -58,8 +56,8 @@ INPUT:
 - Difficulty: ${input.difficulty}
 - Estimated Time: ${input.estimatedMinutes} minutes
 - Number of Tasks: ${input.taskCount}
-- Target Domains: ${input.targetDomains.join(', ')}
-- Prerequisites: ${input.prerequisites?.join(', ') || 'None'}
+- Target Domains: ${input.targetDomains.join(", ")}
+- Prerequisites: ${input.prerequisites?.join(", ") || "None"}
 - Language: ${input.language}
 
 REQUIRED YAML STRUCTURE:
@@ -184,7 +182,7 @@ INPUT:
 - Difficulty: ${input.difficulty}
 - Estimated Time: ${input.estimatedMinutes} minutes
 - Number of Tasks: ${input.taskCount}
-- Target Domains: ${input.targetDomains.join(', ')}
+- Target Domains: ${input.targetDomains.join(", ")}
 - Language: ${input.language}
 
 REQUIRED YAML STRUCTURE:
@@ -244,7 +242,7 @@ discoveryData:
     growthRate: "<percentage>"
     demandLevel: "high" # or medium, low
     futureOutlook: "<outlook-description>"
-  careerLevel: ${input.difficulty === 'beginner' ? 'entry' : input.difficulty === 'advanced' ? 'senior' : 'intermediate'}
+  careerLevel: ${input.difficulty === "beginner" ? "entry" : input.difficulty === "advanced" ? "senior" : "intermediate"}
   estimatedSalaryRange:
     min: <min-salary>
     max: <max-salary>
@@ -321,7 +319,7 @@ INPUT:
 - Difficulty: ${input.difficulty}
 - Estimated Time: ${input.estimatedMinutes} minutes
 - Number of Questions: ${input.taskCount}
-- Target Domains: ${input.targetDomains.join(', ')}
+- Target Domains: ${input.targetDomains.join(", ")}
 - Language: ${input.language}
 
 REQUIRED YAML STRUCTURE:

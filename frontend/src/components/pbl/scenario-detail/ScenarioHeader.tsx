@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import Link from "next/link";
 
 export interface ScenarioHeaderProps {
   title: string;
@@ -6,7 +6,11 @@ export interface ScenarioHeaderProps {
   breadcrumbHref: string;
 }
 
-export function ScenarioHeader({ title, breadcrumbLabel, breadcrumbHref }: ScenarioHeaderProps) {
+export function ScenarioHeader({
+  title,
+  breadcrumbLabel,
+  breadcrumbHref,
+}: ScenarioHeaderProps) {
   return (
     <nav className="mb-8">
       <ol className="flex items-center space-x-2 text-sm">

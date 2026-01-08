@@ -946,7 +946,9 @@ describe("POST /api/pbl/generate-feedback", () => {
       expect(response.status).toBe(200);
       expect(data.success).toBe(true);
       expect(data.feedback).toBeDefined();
-      expect(data.feedback.overallAssessment).toBe("Performance analysis completed");
+      expect(data.feedback.overallAssessment).toBe(
+        "Performance analysis completed",
+      );
       expect(mockError).toHaveBeenCalledWith(
         "Failed to parse AI response as JSON:",
         expect.any(Error),
@@ -1015,7 +1017,9 @@ describe("POST /api/pbl/generate-feedback", () => {
       expect(response.status).toBe(200);
       expect(data.success).toBe(true);
       expect(data.feedback).toBeDefined();
-      expect(data.feedback.overallAssessment).toBe("Performance analysis completed");
+      expect(data.feedback.overallAssessment).toBe(
+        "Performance analysis completed",
+      );
       expect(mockError).toHaveBeenCalledWith(
         "Error generating feedback:",
         expect.any(Error),

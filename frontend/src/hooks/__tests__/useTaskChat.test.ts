@@ -1,8 +1,8 @@
 /**
  * @jest-environment jsdom
  */
-import { renderHook, act, waitFor } from '@testing-library/react';
-import { useTaskChat } from '../useTaskChat';
+import { renderHook, act, waitFor } from "@testing-library/react";
+import { useTaskChat } from "../useTaskChat";
 
 interface TaskTemplate {
   id: string;
@@ -17,21 +17,21 @@ interface ScenarioData {
   id: string;
   title: Record<string, string>;
   description: Record<string, string>;
-  mode: 'pbl' | 'discovery' | 'assessment';
+  mode: "pbl" | "discovery" | "assessment";
   difficulty: string;
   estimatedMinutes: number;
   taskTemplates: TaskTemplate[];
   [key: string]: unknown;
 }
 
-describe('useTaskChat', () => {
+describe("useTaskChat", () => {
   const mockUpdateDraft = jest.fn();
   const mockDraft: ScenarioData = {
-    id: 'test-scenario',
-    title: { en: 'Test Scenario', zh: '測試場景' },
-    description: { en: 'Test Description', zh: '測試描述' },
-    mode: 'pbl',
-    difficulty: 'medium',
+    id: "test-scenario",
+    title: { en: "Test Scenario", zh: "測試場景" },
+    description: { en: "Test Description", zh: "測試描述" },
+    mode: "pbl",
+    difficulty: "medium",
     estimatedMinutes: 30,
     taskTemplates: [],
   };
@@ -46,73 +46,73 @@ describe('useTaskChat', () => {
     jest.useRealTimers();
   });
 
-  describe('initialization', () => {
-    it('should initialize with welcome message', () => {
+  describe("initialization", () => {
+    it("should initialize with welcome message", () => {
       const { result } = renderHook(() =>
-        useTaskChat(mockDraft, 'zh', mockUpdateDraft)
+        useTaskChat(mockDraft, "zh", mockUpdateDraft),
       );
 
       expect(result.current.chatMessages).toHaveLength(1);
-      expect(result.current.chatMessages[0].role).toBe('assistant');
-      expect(result.current.chatMessages[0].content).toContain('嗨！');
-      expect(result.current.inputMessage).toBe('');
+      expect(result.current.chatMessages[0].role).toBe("assistant");
+      expect(result.current.chatMessages[0].content).toContain("嗨！");
+      expect(result.current.inputMessage).toBe("");
       expect(result.current.isProcessing).toBe(false);
     });
 
-    it('should have empty input message initially', () => {
+    it("should have empty input message initially", () => {
       const { result } = renderHook(() =>
-        useTaskChat(mockDraft, 'zh', mockUpdateDraft)
+        useTaskChat(mockDraft, "zh", mockUpdateDraft),
       );
 
-      expect(result.current.inputMessage).toBe('');
+      expect(result.current.inputMessage).toBe("");
     });
 
-    it('should not be processing initially', () => {
+    it("should not be processing initially", () => {
       const { result } = renderHook(() =>
-        useTaskChat(mockDraft, 'zh', mockUpdateDraft)
+        useTaskChat(mockDraft, "zh", mockUpdateDraft),
       );
 
       expect(result.current.isProcessing).toBe(false);
     });
   });
 
-  describe('setInputMessage', () => {
-    it('should update input message', () => {
+  describe("setInputMessage", () => {
+    it("should update input message", () => {
       const { result } = renderHook(() =>
-        useTaskChat(mockDraft, 'zh', mockUpdateDraft)
+        useTaskChat(mockDraft, "zh", mockUpdateDraft),
       );
 
       act(() => {
-        result.current.setInputMessage('測試訊息');
+        result.current.setInputMessage("測試訊息");
       });
 
-      expect(result.current.inputMessage).toBe('測試訊息');
+      expect(result.current.inputMessage).toBe("測試訊息");
     });
   });
 
-  describe('handleSendMessage', () => {
-    it('should not send empty message', async () => {
+  describe("handleSendMessage", () => {
+    it("should not send empty message", async () => {
       const { result } = renderHook(() =>
-        useTaskChat(mockDraft, 'zh', mockUpdateDraft)
+        useTaskChat(mockDraft, "zh", mockUpdateDraft),
       );
 
       const initialMessageCount = result.current.chatMessages.length;
 
       await act(async () => {
-        result.current.setInputMessage('   ');
+        result.current.setInputMessage("   ");
         result.current.handleSendMessage();
       });
 
       expect(result.current.chatMessages).toHaveLength(initialMessageCount);
     });
 
-    it('should not send message when processing', async () => {
+    it("should not send message when processing", async () => {
       const { result } = renderHook(() =>
-        useTaskChat(mockDraft, 'zh', mockUpdateDraft)
+        useTaskChat(mockDraft, "zh", mockUpdateDraft),
       );
 
       act(() => {
-        result.current.setInputMessage('測試訊息');
+        result.current.setInputMessage("測試訊息");
       });
 
       // Start first message
@@ -124,25 +124,25 @@ describe('useTaskChat', () => {
 
       // Try to send second message while processing
       act(() => {
-        result.current.setInputMessage('第二個訊息');
+        result.current.setInputMessage("第二個訊息");
         result.current.handleSendMessage();
       });
 
       // Should not add more messages
       expect(result.current.chatMessages.length).toBeLessThanOrEqual(
-        messageCountDuringProcessing + 1
+        messageCountDuringProcessing + 1,
       );
     });
 
-    it('should add user message immediately', async () => {
+    it("should add user message immediately", async () => {
       const { result } = renderHook(() =>
-        useTaskChat(mockDraft, 'zh', mockUpdateDraft)
+        useTaskChat(mockDraft, "zh", mockUpdateDraft),
       );
 
       const initialCount = result.current.chatMessages.length;
 
       act(() => {
-        result.current.setInputMessage('測試訊息');
+        result.current.setInputMessage("測試訊息");
       });
 
       act(() => {
@@ -150,36 +150,40 @@ describe('useTaskChat', () => {
       });
 
       await waitFor(() => {
-        expect(result.current.chatMessages.length).toBeGreaterThan(initialCount);
+        expect(result.current.chatMessages.length).toBeGreaterThan(
+          initialCount,
+        );
       });
 
-      expect(result.current.chatMessages[initialCount].role).toBe('user');
-      expect(result.current.chatMessages[initialCount].content).toBe('測試訊息');
+      expect(result.current.chatMessages[initialCount].role).toBe("user");
+      expect(result.current.chatMessages[initialCount].content).toBe(
+        "測試訊息",
+      );
     });
 
-    it('should clear input after sending', async () => {
+    it("should clear input after sending", async () => {
       const { result } = renderHook(() =>
-        useTaskChat(mockDraft, 'zh', mockUpdateDraft)
+        useTaskChat(mockDraft, "zh", mockUpdateDraft),
       );
 
       act(() => {
-        result.current.setInputMessage('測試訊息');
+        result.current.setInputMessage("測試訊息");
       });
 
       act(() => {
         result.current.handleSendMessage();
       });
 
-      expect(result.current.inputMessage).toBe('');
+      expect(result.current.inputMessage).toBe("");
     });
 
-    it('should set processing state to true', async () => {
+    it("should set processing state to true", async () => {
       const { result } = renderHook(() =>
-        useTaskChat(mockDraft, 'zh', mockUpdateDraft)
+        useTaskChat(mockDraft, "zh", mockUpdateDraft),
       );
 
       act(() => {
-        result.current.setInputMessage('測試訊息');
+        result.current.setInputMessage("測試訊息");
       });
 
       act(() => {
@@ -191,13 +195,13 @@ describe('useTaskChat', () => {
       });
     });
 
-    it('should add assistant response after processing', async () => {
+    it("should add assistant response after processing", async () => {
       const { result } = renderHook(() =>
-        useTaskChat(mockDraft, 'zh', mockUpdateDraft)
+        useTaskChat(mockDraft, "zh", mockUpdateDraft),
       );
 
       act(() => {
-        result.current.setInputMessage('測試訊息');
+        result.current.setInputMessage("測試訊息");
         result.current.handleSendMessage();
       });
 
@@ -211,18 +215,18 @@ describe('useTaskChat', () => {
       });
 
       const messages = result.current.chatMessages;
-      expect(messages[messages.length - 1].role).toBe('assistant');
+      expect(messages[messages.length - 1].role).toBe("assistant");
     });
   });
 
-  describe('command processing - title', () => {
+  describe("command processing - title", () => {
     it('should update title when command contains "標題"', async () => {
       const { result } = renderHook(() =>
-        useTaskChat(mockDraft, 'zh', mockUpdateDraft)
+        useTaskChat(mockDraft, "zh", mockUpdateDraft),
       );
 
       act(() => {
-        result.current.setInputMessage('把標題改成「AI基礎課程」');
+        result.current.setInputMessage("把標題改成「AI基礎課程」");
       });
 
       act(() => {
@@ -237,20 +241,20 @@ describe('useTaskChat', () => {
         expect(mockUpdateDraft).toHaveBeenCalledWith(
           expect.objectContaining({
             title: expect.objectContaining({
-              zh: 'AI基礎課程',
+              zh: "AI基礎課程",
             }),
-          })
+          }),
         );
       });
     });
 
-    it('should show error if title not quoted', async () => {
-      const { result} = renderHook(() =>
-        useTaskChat(mockDraft, 'zh', mockUpdateDraft)
+    it("should show error if title not quoted", async () => {
+      const { result } = renderHook(() =>
+        useTaskChat(mockDraft, "zh", mockUpdateDraft),
       );
 
       act(() => {
-        result.current.setInputMessage('把標題改成AI基礎課程');
+        result.current.setInputMessage("把標題改成AI基礎課程");
       });
 
       act(() => {
@@ -264,19 +268,19 @@ describe('useTaskChat', () => {
       await waitFor(() => {
         const lastMessage =
           result.current.chatMessages[result.current.chatMessages.length - 1];
-        expect(lastMessage.content).toContain('請用引號');
+        expect(lastMessage.content).toContain("請用引號");
       });
     });
   });
 
-  describe('command processing - difficulty', () => {
-    it('should update difficulty to easy', async () => {
+  describe("command processing - difficulty", () => {
+    it("should update difficulty to easy", async () => {
       const { result } = renderHook(() =>
-        useTaskChat(mockDraft, 'zh', mockUpdateDraft)
+        useTaskChat(mockDraft, "zh", mockUpdateDraft),
       );
 
       act(() => {
-        result.current.setInputMessage('設定難度為簡單');
+        result.current.setInputMessage("設定難度為簡單");
       });
 
       act(() => {
@@ -289,16 +293,16 @@ describe('useTaskChat', () => {
       });
 
       expect(mockUpdateDraft).toHaveBeenCalled();
-      expect(mockUpdateDraft).toHaveBeenCalledWith({ difficulty: 'easy' });
+      expect(mockUpdateDraft).toHaveBeenCalledWith({ difficulty: "easy" });
     });
 
-    it('should update difficulty to medium', async () => {
+    it("should update difficulty to medium", async () => {
       const { result } = renderHook(() =>
-        useTaskChat(mockDraft, 'zh', mockUpdateDraft)
+        useTaskChat(mockDraft, "zh", mockUpdateDraft),
       );
 
       act(() => {
-        result.current.setInputMessage('難度設定為中等');
+        result.current.setInputMessage("難度設定為中等");
       });
 
       act(() => {
@@ -309,16 +313,16 @@ describe('useTaskChat', () => {
         await jest.runAllTimersAsync();
       });
 
-      expect(mockUpdateDraft).toHaveBeenCalledWith({ difficulty: 'medium' });
+      expect(mockUpdateDraft).toHaveBeenCalledWith({ difficulty: "medium" });
     });
 
-    it('should update difficulty to hard', async () => {
+    it("should update difficulty to hard", async () => {
       const { result } = renderHook(() =>
-        useTaskChat(mockDraft, 'zh', mockUpdateDraft)
+        useTaskChat(mockDraft, "zh", mockUpdateDraft),
       );
 
       act(() => {
-        result.current.setInputMessage('設定難度為困難');
+        result.current.setInputMessage("設定難度為困難");
       });
 
       act(() => {
@@ -329,18 +333,18 @@ describe('useTaskChat', () => {
         await jest.runAllTimersAsync();
       });
 
-      expect(mockUpdateDraft).toHaveBeenCalledWith({ difficulty: 'hard' });
+      expect(mockUpdateDraft).toHaveBeenCalledWith({ difficulty: "hard" });
     });
   });
 
-  describe('command processing - duration', () => {
-    it('should update estimated minutes', async () => {
+  describe("command processing - duration", () => {
+    it("should update estimated minutes", async () => {
       const { result } = renderHook(() =>
-        useTaskChat(mockDraft, 'zh', mockUpdateDraft)
+        useTaskChat(mockDraft, "zh", mockUpdateDraft),
       );
 
       act(() => {
-        result.current.setInputMessage('設定時長為45分鐘');
+        result.current.setInputMessage("設定時長為45分鐘");
       });
 
       act(() => {
@@ -354,13 +358,13 @@ describe('useTaskChat', () => {
       expect(mockUpdateDraft).toHaveBeenCalledWith({ estimatedMinutes: 45 });
     });
 
-    it('should extract number from duration command', async () => {
+    it("should extract number from duration command", async () => {
       const { result } = renderHook(() =>
-        useTaskChat(mockDraft, 'zh', mockUpdateDraft)
+        useTaskChat(mockDraft, "zh", mockUpdateDraft),
       );
 
       act(() => {
-        result.current.setInputMessage('修改時長為60分鐘');
+        result.current.setInputMessage("修改時長為60分鐘");
       });
 
       act(() => {
@@ -375,14 +379,14 @@ describe('useTaskChat', () => {
     });
   });
 
-  describe('command processing - add task', () => {
-    it('should add new task', async () => {
+  describe("command processing - add task", () => {
+    it("should add new task", async () => {
       const { result } = renderHook(() =>
-        useTaskChat(mockDraft, 'zh', mockUpdateDraft)
+        useTaskChat(mockDraft, "zh", mockUpdateDraft),
       );
 
       act(() => {
-        result.current.setInputMessage('新增任務');
+        result.current.setInputMessage("新增任務");
       });
 
       act(() => {
@@ -397,23 +401,23 @@ describe('useTaskChat', () => {
         expect.objectContaining({
           taskTemplates: expect.arrayContaining([
             expect.objectContaining({
-              title: { en: 'New Task', zh: '新任務' },
-              type: 'conversation',
+              title: { en: "New Task", zh: "新任務" },
+              type: "conversation",
             }),
           ]),
-        })
+        }),
       );
     });
   });
 
-  describe('command processing - description', () => {
-    it('should update description', async () => {
+  describe("command processing - description", () => {
+    it("should update description", async () => {
       const { result } = renderHook(() =>
-        useTaskChat(mockDraft, 'zh', mockUpdateDraft)
+        useTaskChat(mockDraft, "zh", mockUpdateDraft),
       );
 
       act(() => {
-        result.current.setInputMessage('修改描述為「這是新的描述」');
+        result.current.setInputMessage("修改描述為「這是新的描述」");
       });
 
       act(() => {
@@ -427,21 +431,21 @@ describe('useTaskChat', () => {
       expect(mockUpdateDraft).toHaveBeenCalledWith(
         expect.objectContaining({
           description: expect.objectContaining({
-            zh: '這是新的描述',
+            zh: "這是新的描述",
           }),
-        })
+        }),
       );
     });
   });
 
-  describe('command processing - unknown command', () => {
-    it('should show help message for unknown command', async () => {
+  describe("command processing - unknown command", () => {
+    it("should show help message for unknown command", async () => {
       const { result } = renderHook(() =>
-        useTaskChat(mockDraft, 'zh', mockUpdateDraft)
+        useTaskChat(mockDraft, "zh", mockUpdateDraft),
       );
 
       act(() => {
-        result.current.setInputMessage('做一些未知的事情');
+        result.current.setInputMessage("做一些未知的事情");
       });
 
       act(() => {
@@ -454,14 +458,14 @@ describe('useTaskChat', () => {
 
       const lastMessage =
         result.current.chatMessages[result.current.chatMessages.length - 1];
-      expect(lastMessage.content).toContain('不太理解');
+      expect(lastMessage.content).toContain("不太理解");
     });
   });
 
-  describe('chatEndRef', () => {
-    it('should provide chatEndRef', () => {
+  describe("chatEndRef", () => {
+    it("should provide chatEndRef", () => {
       const { result } = renderHook(() =>
-        useTaskChat(mockDraft, 'zh', mockUpdateDraft)
+        useTaskChat(mockDraft, "zh", mockUpdateDraft),
       );
 
       expect(result.current.chatEndRef).toBeDefined();

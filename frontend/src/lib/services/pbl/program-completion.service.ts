@@ -3,9 +3,13 @@
  * Coordinates evaluation creation, score calculation, and sync verification
  */
 
-import { ScoreCalculationService } from './score-calculation.service';
-import { SyncVerificationService } from './sync-verification.service';
-import type { IEvaluationRepository, IProgramRepository, ITaskRepository } from '@/lib/repositories/interfaces';
+import { ScoreCalculationService } from "./score-calculation.service";
+import { SyncVerificationService } from "./sync-verification.service";
+import type {
+  IEvaluationRepository,
+  IProgramRepository,
+  ITaskRepository,
+} from "@/lib/repositories/interfaces";
 
 interface Task {
   id: string;
@@ -75,25 +79,31 @@ export class ProgramCompletionService {
     programId: string,
     tasks: Task[],
     taskRepo: TaskRepository,
-    evalRepo: EvaluationRepository
+    evalRepo: EvaluationRepository,
   ): Promise<CompletionMetrics> {
     // Get all task evaluations
     const taskEvaluations = await Promise.all(
       tasks.map(async (task) => {
         if (task.metadata?.evaluationId) {
-          const evaluation = await evalRepo.findById(task.metadata.evaluationId as string);
+          const evaluation = await evalRepo.findById(
+            task.metadata.evaluationId as string,
+          );
           return { task, evaluation };
         }
         return { task, evaluation: null };
-      })
+      }),
     );
 
-    const evaluatedTasks = taskEvaluations.filter(te => te.evaluation !== null);
-    const evaluations = evaluatedTasks.map(te => te.evaluation!);
+    const evaluatedTasks = taskEvaluations.filter(
+      (te) => te.evaluation !== null,
+    );
+    const evaluations = evaluatedTasks.map((te) => te.evaluation!);
 
     // Calculate scores
-    const overallScore = this.scoreCalculator.calculateOverallScore(evaluations);
-    const domainScores = this.scoreCalculator.calculateDomainScores(evaluations);
+    const overallScore =
+      this.scoreCalculator.calculateOverallScore(evaluations);
+    const domainScores =
+      this.scoreCalculator.calculateDomainScores(evaluations);
     const ksaScores = this.scoreCalculator.calculateKSAScores(evaluations);
 
     // Calculate time and conversations
@@ -101,26 +111,36 @@ export class ProgramCompletionService {
     let conversationCount = 0;
 
     for (const task of tasks) {
-      const taskWithInteractions = await taskRepo.getTaskWithInteractions?.(task.id);
-      if (taskWithInteractions?.interactions && taskWithInteractions.interactions.length > 0) {
+      const taskWithInteractions = await taskRepo.getTaskWithInteractions?.(
+        task.id,
+      );
+      if (
+        taskWithInteractions?.interactions &&
+        taskWithInteractions.interactions.length > 0
+      ) {
         const interactions = taskWithInteractions.interactions;
         const firstInteraction = interactions[0];
         const lastInteraction = interactions[interactions.length - 1];
         const taskTime = Math.floor(
-          (new Date(lastInteraction.timestamp).getTime() - new Date(firstInteraction.timestamp).getTime()) / 1000
+          (new Date(lastInteraction.timestamp).getTime() -
+            new Date(firstInteraction.timestamp).getTime()) /
+            1000,
         );
         totalTimeSeconds += taskTime;
-        conversationCount += interactions.filter(i => i.type === 'user_input').length;
+        conversationCount += interactions.filter(
+          (i) => i.type === "user_input",
+        ).length;
       }
     }
 
     // Generate checksum
-    const tasksWithEvaluation = tasks.map(t => ({
+    const tasksWithEvaluation = tasks.map((t) => ({
       id: t.id,
       evaluationId: t.metadata?.evaluationId as string | undefined,
-      completedAt: t.completedAt
+      completedAt: t.completedAt,
     }));
-    const syncChecksum = await this.syncVerifier.generateChecksum(tasksWithEvaluation);
+    const syncChecksum =
+      await this.syncVerifier.generateChecksum(tasksWithEvaluation);
 
     return {
       overallScore,
@@ -128,24 +148,28 @@ export class ProgramCompletionService {
       ksaScores,
       totalTimeSeconds,
       conversationCount,
-      syncChecksum
+      syncChecksum,
     };
   }
 
   /**
    * Clear feedback validity flags when evaluation changes
    */
-  clearFeedbackFlags(qualitativeFeedback: Record<string, unknown> | undefined | null): Record<string, unknown> {
-    if (!qualitativeFeedback || typeof qualitativeFeedback !== 'object') {
+  clearFeedbackFlags(
+    qualitativeFeedback: Record<string, unknown> | undefined | null,
+  ): Record<string, unknown> {
+    if (!qualitativeFeedback || typeof qualitativeFeedback !== "object") {
       return {};
     }
 
     const clearedFeedback: Record<string, unknown> = {};
-    Object.keys(qualitativeFeedback).forEach(lang => {
+    Object.keys(qualitativeFeedback).forEach((lang) => {
       const langFeedback = qualitativeFeedback[lang];
       clearedFeedback[lang] = {
-        ...(typeof langFeedback === 'object' && langFeedback !== null ? langFeedback : {}),
-        isValid: false
+        ...(typeof langFeedback === "object" && langFeedback !== null
+          ? langFeedback
+          : {}),
+        isValid: false,
       };
     });
 
@@ -162,19 +186,25 @@ export class ProgramCompletionService {
     taskEvaluationIds: string[],
     totalTasks: number,
     evalRepo: EvaluationRepository,
-    programRepo: ProgramRepository
+    programRepo: ProgramRepository,
   ): Promise<{ evaluation: Evaluation; updateReason: string }> {
     const evaluatedTasksCount = taskEvaluationIds.length;
     let evaluation: Evaluation;
-    let updateReason = 'new_evaluation';
+    let updateReason = "new_evaluation";
 
-    const programEvaluationId = program.metadata?.evaluationId as string | undefined;
+    const programEvaluationId = program.metadata?.evaluationId as
+      | string
+      | undefined;
 
     if (programEvaluationId) {
       const existing = await evalRepo.findById(programEvaluationId);
 
-      if (existing && (existing.score !== metrics.overallScore || existing.metadata?.evaluatedTaskCount !== evaluatedTasksCount)) {
-        updateReason = 'score_update';
+      if (
+        existing &&
+        (existing.score !== metrics.overallScore ||
+          existing.metadata?.evaluatedTaskCount !== evaluatedTasksCount)
+      ) {
+        updateReason = "score_update";
 
         const updated = await evalRepo.update?.(programEvaluationId, {
           score: metrics.overallScore,
@@ -191,11 +221,13 @@ export class ProgramCompletionService {
             syncChecksum: metrics.syncChecksum,
             evaluatedTaskCount: evaluatedTasksCount,
             lastSyncedAt: new Date().toISOString(),
-            qualitativeFeedback: this.clearFeedbackFlags(existing.metadata?.qualitativeFeedback as Record<string, unknown>),
+            qualitativeFeedback: this.clearFeedbackFlags(
+              existing.metadata?.qualitativeFeedback as Record<string, unknown>,
+            ),
             conversationInsights: {
-              totalConversations: metrics.conversationCount
-            }
-          }
+              totalConversations: metrics.conversationCount,
+            },
+          },
         });
 
         evaluation = updated || existing;
@@ -204,8 +236,8 @@ export class ProgramCompletionService {
         await programRepo.update?.(program.id, {
           metadata: {
             ...program.metadata,
-            evaluationOutdated: false
-          }
+            evaluationOutdated: false,
+          },
         });
       } else {
         evaluation = existing!;
@@ -214,27 +246,28 @@ export class ProgramCompletionService {
           await programRepo.update?.(program.id, {
             metadata: {
               ...program.metadata,
-              evaluationOutdated: false
-            }
+              evaluationOutdated: false,
+            },
           });
         }
       }
     } else {
       // Create new evaluation
-      const finalScore = typeof metrics.overallScore === 'number' && !isNaN(metrics.overallScore)
-        ? metrics.overallScore
-        : 0;
+      const finalScore =
+        typeof metrics.overallScore === "number" && !isNaN(metrics.overallScore)
+          ? metrics.overallScore
+          : 0;
 
       evaluation = await evalRepo.create({
         userId,
         programId: program.id,
-        mode: 'pbl',
-        evaluationType: 'pbl_complete',
+        mode: "pbl",
+        evaluationType: "pbl_complete",
         score: finalScore,
         maxScore: 100,
         timeTakenSeconds: metrics.totalTimeSeconds,
         domainScores: metrics.domainScores,
-        feedbackText: '',
+        feedbackText: "",
         feedbackData: {},
         aiAnalysis: {},
         createdAt: new Date().toISOString(),
@@ -243,7 +276,7 @@ export class ProgramCompletionService {
           ksaScores: metrics.ksaScores,
           evaluatedTasks: evaluatedTasksCount,
           totalTasks,
-          conversationCount: metrics.conversationCount
+          conversationCount: metrics.conversationCount,
         },
         discoveryData: {},
         assessmentData: {},
@@ -259,20 +292,20 @@ export class ProgramCompletionService {
           evaluatedTaskCount: evaluatedTasksCount,
           lastSyncedAt: new Date().toISOString(),
           qualitativeFeedback: {},
-          generatedLanguages: []
-        }
+          generatedLanguages: [],
+        },
       });
 
       // Update program with evaluation ID
       await programRepo.update?.(program.id, {
-        status: 'completed' as const,
+        status: "completed" as const,
         completedAt: new Date().toISOString(),
         metadata: {
           ...program.metadata,
           evaluationId: evaluation.id,
           evaluationOutdated: false,
-          completedAt: program.completedAt || new Date().toISOString()
-        }
+          completedAt: program.completedAt || new Date().toISOString(),
+        },
       });
     }
 

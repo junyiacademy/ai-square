@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { Send } from 'lucide-react';
-import type { QuickAction, User } from '@/types/chat';
-import type { RefObject } from 'react';
+import { Send } from "lucide-react";
+import type { QuickAction, User } from "@/types/chat";
+import type { RefObject } from "react";
 
 interface ChatInputProps {
   message: string;
@@ -50,7 +50,7 @@ export function ChatInput({
             onChange={(e) => {
               onMessageChange(e.target.value);
               const textarea = e.target;
-              textarea.style.height = 'auto';
+              textarea.style.height = "auto";
               textarea.style.height = `${Math.min(textarea.scrollHeight, 120)}px`;
             }}
             onKeyDown={onKeyDown}

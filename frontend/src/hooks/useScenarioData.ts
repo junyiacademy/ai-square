@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { IScenario } from '@/types/unified-learning';
-import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
+import { useState, useEffect } from "react";
+import { IScenario } from "@/types/unified-learning";
+import { authenticatedFetch } from "@/lib/utils/authenticated-fetch";
 
 export interface UseScenarioDataReturn {
   scenario: IScenario | null;
@@ -10,7 +10,10 @@ export interface UseScenarioDataReturn {
 /**
  * Custom hook to fetch and manage scenario data
  */
-export function useScenarioData(scenarioId: string, language: string): UseScenarioDataReturn {
+export function useScenarioData(
+  scenarioId: string,
+  language: string,
+): UseScenarioDataReturn {
   const [scenario, setScenario] = useState<IScenario | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -22,7 +25,7 @@ export function useScenarioData(scenarioId: string, language: string): UseScenar
         setLoading(true);
 
         const response = await authenticatedFetch(
-          `/api/pbl/scenarios/${scenarioId}?lang=${language}`
+          `/api/pbl/scenarios/${scenarioId}?lang=${language}`,
         );
 
         if (ignore) return;
@@ -41,19 +44,23 @@ export function useScenarioData(scenarioId: string, language: string): UseScenar
                 prerequisites: result.data.prerequisites || [],
                 targetDomains: result.data.targetDomains || [],
                 tasks: result.data.tasks || [],
-                ksaMapping: result.data.ksaMapping
-              }
+                ksaMapping: result.data.ksaMapping,
+              },
             };
             setScenario(scenarioData);
           } else {
-            console.error('Invalid PBL API response:', result);
+            console.error("Invalid PBL API response:", result);
           }
         } else {
-          console.error('Failed to fetch scenario:', response.status, response.statusText);
+          console.error(
+            "Failed to fetch scenario:",
+            response.status,
+            response.statusText,
+          );
         }
       } catch (error) {
         if (!ignore) {
-          console.error('Error fetching scenario data:', error);
+          console.error("Error fetching scenario data:", error);
         }
       } finally {
         if (!ignore) {

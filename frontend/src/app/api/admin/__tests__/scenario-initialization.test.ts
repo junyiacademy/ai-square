@@ -32,9 +32,9 @@ jest.mock("@/lib/repositories/base/repository-factory", () => ({
 }));
 
 // Now import the routes AFTER mocks are set up
-import { POST as initPBL } from '../init-pbl/route';
-import { POST as initAssessment } from '../init-assessment/route';
-import { POST as initDiscovery } from '../init-discovery/route';
+import { POST as initPBL } from "../init-pbl/route";
+import { POST as initAssessment } from "../init-assessment/route";
+import { POST as initDiscovery } from "../init-discovery/route";
 
 // Mock fs and yaml
 jest.mock("fs", () => ({

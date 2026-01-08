@@ -52,19 +52,20 @@ Lines 847-1943: JSX Return - 1097 lines (56% of file!)
 
 ```typescript
 export function getQualitativeRating(score: number): {
-  label: 'Good' | 'Great' | 'Perfect';
+  label: "Good" | "Great" | "Perfect";
   color: string;
   i18nKey: string;
-}
+};
 
 export function getLocalizedField<T extends Record<string, unknown>>(
   obj: T | null | undefined,
   fieldName: string,
-  language: string
-): string
+  language: string,
+): string;
 ```
 
 **Tests**: `task-helpers.test.ts`
+
 - Test all score ranges for qualitative rating
 - Test multilingual field extraction
 - Test edge cases (null, undefined, missing fields)
@@ -74,7 +75,11 @@ export function getLocalizedField<T extends Record<string, unknown>>(
 #### Hook 1: `useTaskData.ts` (~150 lines)
 
 ```typescript
-export function useTaskData(scenarioId: string, programId: string, taskId: string) {
+export function useTaskData(
+  scenarioId: string,
+  programId: string,
+  taskId: string,
+) {
   // Manages: program, scenario, currentTask, loading states
   // Combines: loadProgramData(), loadTaskData(), loadTaskHistory()
 
@@ -85,17 +90,19 @@ export function useTaskData(scenarioId: string, programId: string, taskId: strin
     loading,
     error,
     refetch,
-  }
+  };
 }
 ```
 
 **Extracts**:
+
 - `loadProgramData()` - 173 lines
 - `loadTaskData()` - 55 lines
 - `loadTaskHistory()` - 100 lines
 - Related state: program, scenario, currentTask, loading, programTasks, taskEvaluations
 
 **Tests**: `useTaskData.test.ts`
+
 - Mock authenticatedFetch responses
 - Test loading states
 - Test error handling
@@ -108,7 +115,7 @@ export function useTaskChat(
   scenarioId: string,
   programId: string,
   taskId: string,
-  currentTask: Task | null
+  currentTask: Task | null,
 ) {
   // Manages: conversations, userInput, isProcessing
   // Handles: handleSendMessage() logic
@@ -120,18 +127,20 @@ export function useTaskChat(
     isProcessing,
     sendMessage,
     conversationEndRef,
-  }
+  };
 }
 ```
 
 **Extracts**:
+
 - `handleSendMessage()` - 203 lines
 - Related state: conversations, userInput, isProcessing, showEvaluateButton
 - conversationEndRef
 
 **Tests**: `useTaskChat.test.ts`
+
 - Test message sending flow
-- Test program ID conversion (temp_ → actual)
+- Test program ID conversion (temp\_ → actual)
 - Test interaction saving
 - Test error handling
 - Test conversation history
@@ -143,7 +152,7 @@ export function useTaskEvaluation(
   scenarioId: string,
   programId: string,
   taskId: string,
-  currentTask: Task | null
+  currentTask: Task | null,
 ) {
   // Manages: evaluation, isEvaluating, isTranslating
   // Handles: handleEvaluate(), handleTranslateEvaluation()
@@ -155,16 +164,18 @@ export function useTaskEvaluation(
     evaluate,
     translateEvaluation,
     isEvaluateDisabled,
-  }
+  };
 }
 ```
 
 **Extracts**:
+
 - `handleEvaluate()` - 87 lines
 - `handleTranslateEvaluation()` - 43 lines
 - Related state: evaluation, isEvaluating, isTranslating, isEvaluateDisabled
 
 **Tests**: `useTaskEvaluation.test.ts`
+
 - Test evaluation request/response
 - Test translation flow
 - Test disabled states
@@ -176,7 +187,7 @@ export function useTaskEvaluation(
 export function useTaskProgress(
   scenario: Scenario | null,
   currentTask: Task | null,
-  programId: string
+  programId: string,
 ) {
   // Manages: progress tracking, task completion, task switching
   // Handles: handleCompleteTask(), switchTask()
@@ -188,17 +199,19 @@ export function useTaskProgress(
     switchTask,
     isProgressCollapsed,
     setIsProgressCollapsed,
-  }
+  };
 }
 ```
 
 **Extracts**:
+
 - `handleCompleteTask()` - 41 lines
 - `switchTask()` - 4 lines
 - Related state: isProgressCollapsed
 - Progress calculation logic
 
 **Tests**: `useTaskProgress.test.ts`
+
 - Test task completion
 - Test task switching
 - Test progress calculation
@@ -230,6 +243,7 @@ export function ChatPanel(props: ChatPanelProps) {
 **Extracts**: Lines ~1450-1700 from JSX (chat panel section)
 
 **Tests**: `ChatPanel.test.tsx`
+
 - Render with messages
 - Test message input
 - Test send button states
@@ -252,6 +266,7 @@ export function TaskInstructionsPanel(props: TaskInstructionsPanelProps) {
 **Extracts**: Lines ~1100-1300 from JSX (task content section)
 
 **Tests**: `TaskInstructionsPanel.test.tsx`
+
 - Render task details
 - Test multilingual content
 - Test instruction processing
@@ -274,6 +289,7 @@ export function TaskEvaluationPanel(props: TaskEvaluationPanelProps) {
 **Extracts**: Lines ~1300-1450 from JSX (evaluation display)
 
 **Tests**: `TaskEvaluationPanel.test.tsx`
+
 - Render evaluation results
 - Test rating display
 - Test translation button
@@ -300,6 +316,7 @@ export function ProgressSidebar(props: ProgressSidebarProps) {
 **Extracts**: Lines ~925-1045 from JSX (progress sidebar)
 
 **Tests**: `ProgressSidebar.test.tsx`
+
 - Render task list
 - Test current task highlighting
 - Test task switching
@@ -323,6 +340,7 @@ export function TaskHeader(props: TaskHeaderProps) {
 **Extracts**: Lines ~872-952 from JSX (header section)
 
 **Tests**: `TaskHeader.test.tsx`
+
 - Render header elements
 - Test breadcrumb links
 - Test progress display
@@ -331,8 +349,8 @@ export function TaskHeader(props: TaskHeaderProps) {
 
 ```typescript
 interface MobileViewSwitcherProps {
-  view: 'progress' | 'task' | 'chat';
-  onViewChange: (view: 'progress' | 'task' | 'chat') => void;
+  view: "progress" | "task" | "chat";
+  onViewChange: (view: "progress" | "task" | "chat") => void;
 }
 
 export function MobileViewSwitcher(props: MobileViewSwitcherProps) {
@@ -343,6 +361,7 @@ export function MobileViewSwitcher(props: MobileViewSwitcherProps) {
 **Extracts**: Mobile view switching UI from JSX
 
 **Tests**: `MobileViewSwitcher.test.tsx`
+
 - Render view tabs
 - Test view switching
 - Test active state
@@ -432,13 +451,16 @@ export default function ProgramLearningPage() {
 ## Implementation Steps (TDD)
 
 ### Step 1: Utilities
+
 1. Create `task-helpers.test.ts`
 2. Implement `task-helpers.ts`
 3. Verify tests pass
 4. Commit: "refactor(pbl): extract task helper utilities"
 
 ### Step 2: Hooks (one at a time)
+
 For each hook:
+
 1. Create `useX.test.ts` with comprehensive tests
 2. Implement `useX.ts`
 3. Verify tests pass
@@ -447,13 +469,16 @@ For each hook:
 6. Commit: "refactor(pbl): extract useX hook"
 
 Order:
+
 1. useTaskData (most foundational)
 2. useTaskProgress (depends on useTaskData)
 3. useTaskEvaluation (independent)
 4. useTaskChat (uses some state from useTaskData)
 
 ### Step 3: Components (one at a time)
+
 For each component:
+
 1. Create `ComponentX.test.tsx`
 2. Implement `ComponentX.tsx`
 3. Verify tests pass
@@ -462,6 +487,7 @@ For each component:
 6. Commit: "refactor(pbl): extract ComponentX"
 
 Order:
+
 1. TaskHeader (simplest, least dependencies)
 2. MobileViewSwitcher (simple, independent)
 3. ProgressSidebar (uses task data)
@@ -470,6 +496,7 @@ Order:
 6. ChatPanel (most complex, uses multiple hooks)
 
 ### Step 4: Final Cleanup
+
 1. Remove unused imports
 2. Remove commented code
 3. Organize imports
@@ -477,6 +504,7 @@ Order:
 5. Commit: "refactor(pbl): finalize task page cleanup"
 
 ### Step 5: Quality Gates
+
 1. Run `npm run test:ci` - ensure 70%+ coverage
 2. Run `npx tsc --noEmit` - zero errors
 3. Run `npm run lint` - zero errors

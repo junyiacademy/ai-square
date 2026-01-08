@@ -1,6 +1,6 @@
-import { VertexAIService } from '@/lib/ai/vertex-ai-service';
-import { DiscoveryYAMLLoader } from '@/lib/services/discovery-yaml-loader';
-import { Interaction } from '@/lib/repositories/interfaces';
+import { VertexAIService } from "@/lib/ai/vertex-ai-service";
+import { DiscoveryYAMLLoader } from "@/lib/services/discovery-yaml-loader";
+import { Interaction } from "@/lib/repositories/interfaces";
 
 export interface LearningJourneyItem {
   type: string;
@@ -16,7 +16,7 @@ export interface LearningJourneyItem {
 
 export class FeedbackGenerationService {
   static getSystemPromptForLanguage(_language: string): string {
-    return 'You are an expert educational psychologist and learning coach.';
+    return "You are an expert educational psychologist and learning coach.";
   }
 
   static generateComprehensiveFeedbackPrompt(
@@ -26,12 +26,12 @@ export class FeedbackGenerationService {
     taskInstructions: string,
     taskContext: unknown,
     yamlData: unknown,
-    learningJourney: unknown[]
+    learningJourney: unknown[],
   ): string {
-    console.log('Language detection for feedback:', {
+    console.log("Language detection for feedback:", {
       inputLanguage: language,
       careerType,
-      taskTitle
+      taskTitle,
     });
 
     return `
@@ -41,8 +41,8 @@ Context & Setting:
 - Career Field: ${careerType}
 - Task: ${taskTitle}
 - Objective: ${taskInstructions}
-${yamlData && (yamlData as { world_setting?: { description?: string; atmosphere?: string } }).world_setting ? `- World Setting: ${(yamlData as { world_setting?: { description?: string; atmosphere?: string } }).world_setting?.description || 'Unknown'}` : ''}
-${yamlData && (yamlData as { world_setting?: { description?: string; atmosphere?: string } }).world_setting ? `- Atmosphere: ${(yamlData as { world_setting?: { description?: string; atmosphere?: string } }).world_setting?.atmosphere || 'Unknown'}` : ''}
+${yamlData && (yamlData as { world_setting?: { description?: string; atmosphere?: string } }).world_setting ? `- World Setting: ${(yamlData as { world_setting?: { description?: string; atmosphere?: string } }).world_setting?.description || "Unknown"}` : ""}
+${yamlData && (yamlData as { world_setting?: { description?: string; atmosphere?: string } }).world_setting ? `- Atmosphere: ${(yamlData as { world_setting?: { description?: string; atmosphere?: string } }).world_setting?.atmosphere || "Unknown"}` : ""}
 
 Learning Journey:
 ${JSON.stringify(learningJourney, null, 2)}
@@ -72,132 +72,193 @@ Guidelines:
 Write in language code: ${language} with an encouraging but professional tone that reflects expertise in the ${careerType} domain.`;
   }
 
-  static getStatsSection(language: string, attempts: number, passCount: number, bestXP: number): string {
+  static getStatsSection(
+    language: string,
+    attempts: number,
+    passCount: number,
+    bestXP: number,
+  ): string {
     return `\n\n📊 Learning Statistics Summary:\n- Total attempts: ${attempts}\n- Passed times: ${passCount}\n- Highest score: ${bestXP} XP`;
   }
 
   static getSkillsSection(language: string, skills: string[]): string {
-    return `\n- Demonstrated abilities: ${skills.join(', ')}`;
+    return `\n- Demonstrated abilities: ${skills.join(", ")}`;
   }
 
   static getFallbackMessage(_language: string): string {
-    return 'Congratulations on successfully completing this task! Your effort and persistence are commendable.';
+    return "Congratulations on successfully completing this task! Your effort and persistence are commendable.";
   }
 
-  static buildLearningJourney(interactions: Interaction[]): LearningJourneyItem[] {
-    return interactions.map((interaction, index) => {
-      if (interaction.type === 'user_input') {
-        return {
-          type: 'user_response',
-          attempt: Math.floor(index / 2) + 1,
-          content: interaction.content,
-          timeSpent: (interaction.metadata as { timeSpent?: number })?.timeSpent || 0
-        };
-      } else if (interaction.type === 'ai_response') {
-        let parsed: { completed?: boolean; feedback?: string; strengths?: string[]; improvements?: string[]; xpEarned?: number };
-        try {
-          parsed = typeof interaction.content === 'string'
-            ? JSON.parse(interaction.content)
-            : interaction.content as { completed?: boolean; feedback?: string; strengths?: string[]; improvements?: string[]; xpEarned?: number };
-        } catch {
-          parsed = { completed: false, feedback: '', strengths: [], improvements: [], xpEarned: 0 };
+  static buildLearningJourney(
+    interactions: Interaction[],
+  ): LearningJourneyItem[] {
+    return interactions
+      .map((interaction, index) => {
+        if (interaction.type === "user_input") {
+          return {
+            type: "user_response",
+            attempt: Math.floor(index / 2) + 1,
+            content: interaction.content,
+            timeSpent:
+              (interaction.metadata as { timeSpent?: number })?.timeSpent || 0,
+          };
+        } else if (interaction.type === "ai_response") {
+          let parsed: {
+            completed?: boolean;
+            feedback?: string;
+            strengths?: string[];
+            improvements?: string[];
+            xpEarned?: number;
+          };
+          try {
+            parsed =
+              typeof interaction.content === "string"
+                ? JSON.parse(interaction.content)
+                : (interaction.content as {
+                    completed?: boolean;
+                    feedback?: string;
+                    strengths?: string[];
+                    improvements?: string[];
+                    xpEarned?: number;
+                  });
+          } catch {
+            parsed = {
+              completed: false,
+              feedback: "",
+              strengths: [],
+              improvements: [],
+              xpEarned: 0,
+            };
+          }
+          return {
+            type: "ai_feedback",
+            attempt: Math.floor(index / 2) + 1,
+            passed: parsed.completed || false,
+            feedback: parsed.feedback || "",
+            strengths: parsed.strengths || [],
+            improvements: parsed.improvements || [],
+            xpEarned: parsed.xpEarned || 0,
+          };
         }
-        return {
-          type: 'ai_feedback',
-          attempt: Math.floor(index / 2) + 1,
-          passed: parsed.completed || false,
-          feedback: parsed.feedback || '',
-          strengths: parsed.strengths || [],
-          improvements: parsed.improvements || [],
-          xpEarned: parsed.xpEarned || 0
-        };
-      }
-      return { type: 'unknown', attempt: 0 };
-    }).filter(item => item.type !== 'unknown');
+        return { type: "unknown", attempt: 0 };
+      })
+      .filter((item) => item.type !== "unknown");
   }
 
   static async generateComprehensiveFeedback(
-    task: { title?: unknown; metadata?: unknown; content?: unknown; interactions: Interaction[] },
+    task: {
+      title?: unknown;
+      metadata?: unknown;
+      content?: unknown;
+      interactions: Interaction[];
+    },
     program: { scenarioId: string; metadata?: unknown },
     careerType: string,
-    userLanguage: string
+    userLanguage: string,
   ): Promise<{ feedback: string; bestXP: number; passedAttempts: number }> {
-    const language = (program.metadata as { language?: string })?.language || 'en';
-    const userAttempts = task.interactions.filter(i => i.type === 'user_input').length;
-    const aiResponses = task.interactions.filter(i => i.type === 'ai_response');
+    const language =
+      (program.metadata as { language?: string })?.language || "en";
+    const userAttempts = task.interactions.filter(
+      (i) => i.type === "user_input",
+    ).length;
+    const aiResponses = task.interactions.filter(
+      (i) => i.type === "ai_response",
+    );
 
-    const passedAttempts = aiResponses.filter(i => {
+    const passedAttempts = aiResponses.filter((i) => {
       try {
-        const content = typeof i.content === 'string' ? JSON.parse(i.content) : i.content;
+        const content =
+          typeof i.content === "string" ? JSON.parse(i.content) : i.content;
         return (content as { completed?: boolean }).completed === true;
       } catch {
         return false;
       }
     }).length;
 
-    const allFeedback = task.interactions.filter(i => i.type === 'ai_response').map(i => {
-      try {
-        return JSON.parse(String(i.content)) as { xpEarned?: number; skillsImproved?: string[] };
-      } catch {
-        return { xpEarned: 0, skillsImproved: [] };
-      }
-    });
+    const allFeedback = task.interactions
+      .filter((i) => i.type === "ai_response")
+      .map((i) => {
+        try {
+          return JSON.parse(String(i.content)) as {
+            xpEarned?: number;
+            skillsImproved?: string[];
+          };
+        } catch {
+          return { xpEarned: 0, skillsImproved: [] };
+        }
+      });
 
     const bestXP = Math.max(
-      ...allFeedback.map(f => f.xpEarned || 0),
-      (task.content as Record<string, unknown>)?.xp as number || 100
+      ...allFeedback.map((f) => f.xpEarned || 0),
+      ((task.content as Record<string, unknown>)?.xp as number) || 100,
     );
 
     const learningJourney = this.buildLearningJourney(task.interactions);
 
     let yamlData = null;
-    if (careerType !== 'unknown') {
+    if (careerType !== "unknown") {
       const loader = new DiscoveryYAMLLoader();
       yamlData = await loader.loadPath(careerType, language);
     }
 
     const taskTitle = (() => {
       const titleObj = task.title;
-      if (typeof titleObj === 'string') return titleObj;
-      if (typeof titleObj === 'object' && titleObj !== null) {
-        return (titleObj as Record<string, string>)[language] || (titleObj as Record<string, string>)['en'] || '';
+      if (typeof titleObj === "string") return titleObj;
+      if (typeof titleObj === "object" && titleObj !== null) {
+        return (
+          (titleObj as Record<string, string>)[language] ||
+          (titleObj as Record<string, string>)["en"] ||
+          ""
+        );
       }
-      return '';
+      return "";
     })();
 
     const comprehensivePrompt = this.generateComprehensiveFeedbackPrompt(
       userLanguage,
       careerType,
       taskTitle,
-      (task.metadata as Record<string, unknown>)?.instructions as string || '',
+      ((task.metadata as Record<string, unknown>)?.instructions as string) ||
+        "",
       task.content || {},
       yamlData,
-      learningJourney
+      learningJourney,
     );
 
-    console.log('Generated prompt for comprehensive feedback:', { language: userLanguage, careerType });
+    console.log("Generated prompt for comprehensive feedback:", {
+      language: userLanguage,
+      careerType,
+    });
 
     const aiService = new VertexAIService({
       systemPrompt: this.getSystemPromptForLanguage(userLanguage),
       temperature: 0.8,
-      model: 'gemini-2.5-flash'
+      model: "gemini-2.5-flash",
     });
 
     const aiResponse = await aiService.sendMessage(comprehensivePrompt);
     let comprehensiveFeedback = aiResponse.content;
 
     if (userAttempts > 1) {
-      comprehensiveFeedback += this.getStatsSection(userLanguage, userAttempts, passedAttempts, bestXP);
+      comprehensiveFeedback += this.getStatsSection(
+        userLanguage,
+        userAttempts,
+        passedAttempts,
+        bestXP,
+      );
 
       const allSkills = new Set<string>();
-      allFeedback.forEach(f => {
+      allFeedback.forEach((f) => {
         if (f.skillsImproved) {
           f.skillsImproved.forEach((skill: string) => allSkills.add(skill));
         }
       });
 
       if (allSkills.size > 0) {
-        comprehensiveFeedback += this.getSkillsSection(userLanguage, Array.from(allSkills));
+        comprehensiveFeedback += this.getSkillsSection(
+          userLanguage,
+          Array.from(allSkills),
+        );
       }
     }
 

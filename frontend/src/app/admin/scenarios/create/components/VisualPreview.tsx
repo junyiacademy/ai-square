@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
 /**
  * VisualPreview Component
  * Visual representation of the scenario
  */
 
-import * as yaml from 'js-yaml';
-import type { ParsedScenarioData } from '@/types/prompt-to-course';
+import * as yaml from "js-yaml";
+import type { ParsedScenarioData } from "@/types/prompt-to-course";
 
 interface VisualPreviewProps {
   yaml: string;
@@ -19,7 +19,8 @@ export function VisualPreview({ yaml: yamlContent }: VisualPreviewProps) {
   try {
     data = yaml.load(yamlContent) as ParsedScenarioData;
   } catch (error) {
-    parseError = error instanceof Error ? error.message : 'Failed to parse YAML';
+    parseError =
+      error instanceof Error ? error.message : "Failed to parse YAML";
   }
 
   if (parseError) {
@@ -33,16 +34,17 @@ export function VisualPreview({ yaml: yamlContent }: VisualPreviewProps) {
 
   if (!data) {
     return (
-      <div className="text-center py-12 text-gray-500">
-        No data to preview
-      </div>
+      <div className="text-center py-12 text-gray-500">No data to preview</div>
     );
   }
 
-  const getMultilingualText = (field: Record<string, string> | string | undefined, lang = 'en'): string => {
-    if (!field) return 'N/A';
-    if (typeof field === 'string') return field;
-    return field[lang] || field.en || Object.values(field)[0] || 'N/A';
+  const getMultilingualText = (
+    field: Record<string, string> | string | undefined,
+    lang = "en",
+  ): string => {
+    if (!field) return "N/A";
+    if (typeof field === "string") return field;
+    return field[lang] || field.en || Object.values(field)[0] || "N/A";
   };
 
   return (
@@ -63,9 +65,7 @@ export function VisualPreview({ yaml: yamlContent }: VisualPreviewProps) {
         <h2 className="text-2xl font-bold text-gray-900 mb-2">
           {getMultilingualText(data.title)}
         </h2>
-        <p className="text-gray-600">
-          {getMultilingualText(data.description)}
-        </p>
+        <p className="text-gray-600">{getMultilingualText(data.description)}</p>
       </div>
 
       {/* Tasks */}
@@ -105,27 +105,39 @@ export function VisualPreview({ yaml: yamlContent }: VisualPreviewProps) {
       )}
 
       {/* Mode-specific data preview */}
-      {data.mode === 'pbl' && data.pblData && Object.keys(data.pblData).length > 0 ? (
+      {data.mode === "pbl" &&
+      data.pblData &&
+      Object.keys(data.pblData).length > 0 ? (
         <div className="p-4 bg-purple-50 border border-purple-200 rounded-lg">
-          <h3 className="text-sm font-semibold text-purple-900 mb-2">🎯 PBL Scenario</h3>
+          <h3 className="text-sm font-semibold text-purple-900 mb-2">
+            🎯 PBL Scenario
+          </h3>
           <p className="text-sm text-purple-700">
             Problem-Based Learning scenario with interactive stages
           </p>
         </div>
       ) : null}
 
-      {data.mode === 'discovery' && data.discoveryData && Object.keys(data.discoveryData).length > 0 ? (
+      {data.mode === "discovery" &&
+      data.discoveryData &&
+      Object.keys(data.discoveryData).length > 0 ? (
         <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-          <h3 className="text-sm font-semibold text-green-900 mb-2">🚀 Discovery Path</h3>
+          <h3 className="text-sm font-semibold text-green-900 mb-2">
+            🚀 Discovery Path
+          </h3>
           <p className="text-sm text-green-700">
             Career exploration with hands-on experience
           </p>
         </div>
       ) : null}
 
-      {data.mode === 'assessment' && data.assessmentData && Object.keys(data.assessmentData).length > 0 ? (
+      {data.mode === "assessment" &&
+      data.assessmentData &&
+      Object.keys(data.assessmentData).length > 0 ? (
         <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
-          <h3 className="text-sm font-semibold text-amber-900 mb-2">📊 Assessment</h3>
+          <h3 className="text-sm font-semibold text-amber-900 mb-2">
+            📊 Assessment
+          </h3>
           <p className="text-sm text-amber-700">
             Structured assessment to evaluate learning
           </p>

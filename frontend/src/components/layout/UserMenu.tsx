@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useCallback } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { useTranslation } from 'react-i18next';
-import { useTheme } from '@/contexts/ThemeContext';
+import { useCallback } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { useTranslation } from "react-i18next";
+import { useTheme } from "@/contexts/ThemeContext";
 
 interface User {
   id: number;
@@ -30,11 +30,11 @@ export function UserMenu({
   mounted,
 }: UserMenuProps) {
   const router = useRouter();
-  const { t } = useTranslation(['navigation']);
+  const { t } = useTranslation(["navigation"]);
   const { theme, toggleTheme } = useTheme();
 
   const handleLogin = useCallback(() => {
-    router.push('/login');
+    router.push("/login");
   }, [router]);
 
   if (isLoading) {
@@ -51,9 +51,9 @@ export function UserMenu({
       <button
         onClick={handleLogin}
         className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
-        aria-label={t('signIn')}
+        aria-label={t("signIn")}
       >
-        {t('signIn')}
+        {t("signIn")}
       </button>
     );
   }
@@ -67,12 +67,12 @@ export function UserMenu({
       >
         <div
           className={`h-8 w-8 ${
-            user.isGuest ? 'bg-green-100' : 'bg-blue-100'
+            user.isGuest ? "bg-green-100" : "bg-blue-100"
           } rounded-full flex items-center justify-center`}
         >
           <span
             className={`${
-              user.isGuest ? 'text-green-600' : 'text-blue-600'
+              user.isGuest ? "text-green-600" : "text-blue-600"
             } text-sm font-medium`}
           >
             {user.name
@@ -83,7 +83,7 @@ export function UserMenu({
         <span className="hidden md:block text-sm text-gray-700 dark:text-gray-300 font-medium">
           {user.isGuest
             ? `👤 ${user.name}`
-            : user.name || user.email.split('@')[0]}
+            : user.name || user.email.split("@")[0]}
         </span>
         <svg
           className="h-4 w-4 text-gray-400"
@@ -110,7 +110,7 @@ export function UserMenu({
               {user.name || user.email}
               {user.isGuest && (
                 <span className="text-xs text-green-600 ml-1">
-                  ({t('guestMode', '訪客模式')})
+                  ({t("guestMode", "訪客模式")})
                 </span>
               )}
             </p>
@@ -139,22 +139,22 @@ export function UserMenu({
                 d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
               />
             </svg>
-            <span>{t('profile')}</span>
+            <span>{t("profile")}</span>
           </Link>
 
           {/* Theme toggle */}
           <button
             onClick={toggleTheme}
             className="w-full px-4 py-3 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center justify-between border-b border-gray-200 dark:border-gray-700"
-            aria-label={t('theme')}
+            aria-label={t("theme")}
           >
-            <span>{t('theme')}</span>
+            <span>{t("theme")}</span>
             <div className="flex items-center space-x-2">
               <span className="text-xs text-gray-500 dark:text-gray-400">
-                {theme === 'light' ? t('light') : t('dark')}
+                {theme === "light" ? t("light") : t("dark")}
               </span>
               {mounted &&
-                (theme === 'light' ? (
+                (theme === "light" ? (
                   <svg
                     className="h-4 w-4"
                     fill="none"
@@ -190,7 +190,7 @@ export function UserMenu({
           <button
             onClick={onLogout}
             className="w-full px-4 py-3 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-3"
-            aria-label={t('signOut')}
+            aria-label={t("signOut")}
           >
             <svg
               className="h-4 w-4"
@@ -205,7 +205,7 @@ export function UserMenu({
                 d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
               />
             </svg>
-            <span>{t('signOut')}</span>
+            <span>{t("signOut")}</span>
           </button>
         </div>
       </div>

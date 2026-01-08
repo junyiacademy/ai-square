@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface DynamicPhraseCarouselProps {
   phrases: string[];
@@ -10,7 +10,7 @@ interface DynamicPhraseCarouselProps {
 
 export default function DynamicPhraseCarousel({
   phrases,
-  intervalMs = 3000
+  intervalMs = 3000,
 }: DynamicPhraseCarouselProps) {
   const [currentPhrase, setCurrentPhrase] = useState(0);
 
@@ -18,7 +18,7 @@ export default function DynamicPhraseCarousel({
     if (phrases.length === 0) return;
 
     const interval = setInterval(() => {
-      setCurrentPhrase(prev => (prev + 1) % phrases.length);
+      setCurrentPhrase((prev) => (prev + 1) % phrases.length);
     }, intervalMs);
 
     return () => clearInterval(interval);

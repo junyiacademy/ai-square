@@ -5,12 +5,14 @@
 **WARNING**: This code was refactored WITHOUT tests being written first - a CRITICAL TDD violation. These tests have been created retroactively to ensure coverage and prevent regressions.
 
 ### Correct TDD Process (What SHOULD have happened):
+
 1. Write failing tests FIRST
 2. Write minimal code to pass tests
 3. Refactor while tests pass
 4. Repeat
 
 ### What Actually Happened:
+
 1. ❌ Refactored code without tests
 2. ✅ Created comprehensive test suite retroactively
 
@@ -19,9 +21,11 @@
 ### Unit Tests (Jest + React Testing Library)
 
 #### LeftPanel.test.tsx
+
 **Component**: `/src/components/agent-editor/LeftPanel.tsx`
 
 **Coverage Areas**:
+
 - ✅ Rendering (collapsed/expanded states)
 - ✅ Mode selection (PBL/Discovery/Assessment)
 - ✅ Panel collapse/expand functionality
@@ -32,6 +36,7 @@
 **Test Count**: 19 tests
 
 **Key Test Cases**:
+
 ```typescript
 - Should render with collapsed state (w-16 width)
 - Should render with expanded state (w-64 width)
@@ -44,9 +49,11 @@
 ```
 
 #### CenterPanel.test.tsx
+
 **Component**: `/src/components/agent-editor/CenterPanel.tsx`
 
 **Coverage Areas**:
+
 - ✅ Welcome screen (no mode selected)
 - ✅ Scenario list view (mode selected, no scenario)
 - ✅ Scenario editor view (scenario selected)
@@ -60,6 +67,7 @@
 **Test Count**: 40+ tests
 
 **Key Test Cases**:
+
 ```typescript
 // Welcome Screen
 - Should show welcome message when no mode selected
@@ -90,9 +98,11 @@
 ```
 
 #### RightPanel.test.tsx
+
 **Component**: `/src/components/agent-editor/RightPanel.tsx`
 
 **Coverage Areas**:
+
 - ✅ Rendering (collapsed/expanded states)
 - ✅ Panel collapse/expand functionality
 - ✅ Action buttons (language toggle, discard, publish)
@@ -106,6 +116,7 @@
 **Test Count**: 30+ tests
 
 **Key Test Cases**:
+
 ```typescript
 // Rendering
 - Should render with expanded/collapsed state
@@ -134,9 +145,11 @@
 ### Integration Tests
 
 #### integration.test.tsx
+
 **Location**: `/src/app/admin/scenarios/agent-editor/__tests__/integration.test.tsx`
 
 **Coverage Areas**:
+
 - ✅ Full editing workflow
 - ✅ State synchronization between panels
 - ✅ Mode switching
@@ -150,6 +163,7 @@
 **Test Count**: 15+ tests
 
 **Key Test Cases**:
+
 ```typescript
 // Full Workflow
 - Should complete full scenario editing workflow
@@ -173,9 +187,11 @@
 ### E2E Tests (Playwright)
 
 #### editing-workflow.spec.ts
+
 **Location**: `/e2e/agent-editor/editing-workflow.spec.ts`
 
 **Coverage Areas**:
+
 - ✅ Complete user workflows
 - ✅ Real browser interactions
 - ✅ Mode-specific behavior
@@ -184,6 +200,7 @@
 **Test Count**: 20+ tests
 
 **Key Test Cases**:
+
 ```typescript
 // Basic Workflow
 - Should display welcome screen on initial load
@@ -213,6 +230,7 @@
 ```
 
 #### visual-regression.spec.ts
+
 **Location**: `/e2e/agent-editor/visual-regression.spec.ts`
 
 **Purpose**: Detect visual regressions through screenshot comparison
@@ -220,6 +238,7 @@
 **Test Count**: 9 visual regression tests
 
 **Screenshots**:
+
 ```
 - welcome-screen.png
 - pbl-scenario-list.png
@@ -235,26 +254,31 @@
 ## Running Tests
 
 ### Unit Tests Only
+
 ```bash
 npm run test -- --testPathPatterns="agent-editor" --watchAll=false
 ```
 
 ### With Coverage
+
 ```bash
 npm run test -- --testPathPatterns="agent-editor" --coverage --watchAll=false
 ```
 
 ### Integration Tests
+
 ```bash
 npm run test:integration -- --testPathPatterns="agent-editor"
 ```
 
 ### E2E Tests
+
 ```bash
 npm run test:e2e -- e2e/agent-editor
 ```
 
 ### All Tests for Agent Editor
+
 ```bash
 # Unit + Integration
 npm run test -- --testPathPatterns="agent-editor" --watchAll=false
@@ -269,6 +293,7 @@ npm run test -- --testPathPatterns="agent-editor" --coverage --watchAll=false
 ## Coverage Requirements
 
 **Minimum Thresholds** (per TDD standards):
+
 - Lines: 70%+
 - Statements: 70%+
 - Functions: 70%+
@@ -287,6 +312,7 @@ npm run test -- --testPathPatterns="agent-editor" --coverage --watchAll=false
 ## Lessons Learned
 
 ### DO (TDD Best Practices):
+
 - ✅ Write tests BEFORE implementation
 - ✅ Test behavior, not implementation details
 - ✅ Use descriptive test names
@@ -295,6 +321,7 @@ npm run test -- --testPathPatterns="agent-editor" --coverage --watchAll=false
 - ✅ Use real browser testing for UI (Playwright)
 
 ### DON'T (TDD Violations):
+
 - ❌ Write implementation before tests (as happened here)
 - ❌ Skip tests for "quick" refactoring
 - ❌ Test implementation details instead of behavior
@@ -338,6 +365,7 @@ frontend/
 ## Conclusion
 
 While this refactoring violated TDD principles by lacking tests during implementation, comprehensive tests have now been created to:
+
 1. Prevent regressions
 2. Document expected behavior
 3. Enable confident future refactoring

@@ -13,14 +13,14 @@
 
 #### Results
 
-| Metric | Before | After | Change |
-|--------|--------|-------|--------|
-| **Lines of Code** | 803 | 267 | **-536 (-67%)** |
-| **Test Coverage** | 0% | **100%** | +100% |
-| **Test Count** | 0 | **40** | +40 |
-| **Components** | 1 (monolith) | **4 (modular)** | +3 |
-| **Hooks** | 0 (custom) | **1** | +1 |
-| **Utils** | 0 | **1** | +1 |
+| Metric            | Before       | After           | Change          |
+| ----------------- | ------------ | --------------- | --------------- |
+| **Lines of Code** | 803          | 267             | **-536 (-67%)** |
+| **Test Coverage** | 0%           | **100%**        | +100%           |
+| **Test Count**    | 0            | **40**          | +40             |
+| **Components**    | 1 (monolith) | **4 (modular)** | +3              |
+| **Hooks**         | 0 (custom)   | **1**           | +1              |
+| **Utils**         | 0            | **1**           | +1              |
 
 #### Quality Metrics
 
@@ -35,6 +35,7 @@
 #### What Was Extracted
 
 **1. Utils** (`utils/scenario-helpers.ts`):
+
 ```typescript
 ✓ normalizeInstructions() - 27 tests
 ✓ getDifficultyBadge()
@@ -42,6 +43,7 @@
 ```
 
 **2. Custom Hook** (`hooks/useScenarioData.ts`):
+
 ```typescript
 ✓ useScenarioData() - 10 tests
   - Scenario & programs fetching
@@ -52,6 +54,7 @@
 ```
 
 **3. Components**:
+
 ```typescript
 ✓ ScenarioHeader.tsx (~170 lines)
   - Programs list with collapse
@@ -72,6 +75,7 @@
 #### Code Quality
 
 **Before**:
+
 ```typescript
 // Single 803-line file with:
 // - Inline helper functions (75 lines)
@@ -81,6 +85,7 @@
 ```
 
 **After**:
+
 ```typescript
 // Modular structure:
 src/app/pbl/scenarios/[id]/
@@ -111,19 +116,19 @@ src/app/pbl/scenarios/[id]/
 
 ### Remaining Pages (11 Pages)
 
-| Page | Lines | Target | Reduction | Priority | Estimate |
-|------|-------|--------|-----------|----------|----------|
-| learning-path | 725 | 400 | -325 | HIGH | 80 min |
-| chat | 701 | 400 | -301 | HIGH | 90 min |
-| discovery/task | 631 | 400 | -231 | MEDIUM | 80 min |
-| discovery/complete | 589 | 400 | -189 | MEDIUM | 70 min |
-| discovery/scenarios | 579 | 400 | -179 | HIGH | 75 min |
-| dashboard | 519 | 400 | -119 | HIGH | 70 min |
-| relations | 493 | 400 | -93 | MEDIUM | 60 min |
-| onboarding/goals | 461 | 400 | -61 | LOW | 50 min |
-| pbl/complete | 453 | 400 | -53 | LOW | 50 min |
-| register | 449 | 400 | -49 | LOW | 50 min |
-| discovery/program | 442 | 400 | -42 | LOW | 50 min |
+| Page                | Lines | Target | Reduction | Priority | Estimate |
+| ------------------- | ----- | ------ | --------- | -------- | -------- |
+| learning-path       | 725   | 400    | -325      | HIGH     | 80 min   |
+| chat                | 701   | 400    | -301      | HIGH     | 90 min   |
+| discovery/task      | 631   | 400    | -231      | MEDIUM   | 80 min   |
+| discovery/complete  | 589   | 400    | -189      | MEDIUM   | 70 min   |
+| discovery/scenarios | 579   | 400    | -179      | HIGH     | 75 min   |
+| dashboard           | 519   | 400    | -119      | HIGH     | 70 min   |
+| relations           | 493   | 400    | -93       | MEDIUM   | 60 min   |
+| onboarding/goals    | 461   | 400    | -61       | LOW      | 50 min   |
+| pbl/complete        | 453   | 400    | -53       | LOW      | 50 min   |
+| register            | 449   | 400    | -49       | LOW      | 50 min   |
+| discovery/program   | 442   | 400    | -42       | LOW      | 50 min   |
 
 **Total**: ~6,041 → ~4,400 lines (-1,641 lines, -27%)
 
@@ -141,6 +146,7 @@ Use **Pragmatic Approach** (not full TDD):
 6. ✅ Commit per page
 
 **Why Pragmatic?**
+
 - Full TDD is 3-4x slower
 - Provides diminishing returns after gold standard
 - Tests can be added in Phase 3C
@@ -153,6 +159,7 @@ Use **Pragmatic Approach** (not full TDD):
 ### 1. REFACTORING-PHASE3-STATUS.md
 
 **Contains**:
+
 - ✅ Phase 3A completion metrics
 - 📊 Pending work breakdown
 - 📈 Success metrics
@@ -162,6 +169,7 @@ Use **Pragmatic Approach** (not full TDD):
 ### 2. PHASE3B-IMPLEMENTATION-GUIDE.md
 
 **Contains**:
+
 - 🚀 Quick 5-step process
 - 📄 Page-by-page breakdown
 - 🔧 Code patterns to reuse
@@ -170,6 +178,7 @@ Use **Pragmatic Approach** (not full TDD):
 - ⏱️ Time estimates
 
 **Perfect for**:
+
 - Other developers
 - Future you (morning you!)
 - Consistent refactoring patterns
@@ -195,12 +204,14 @@ Use **Pragmatic Approach** (not full TDD):
 ### 📈 Impact
 
 **Code Quality**:
+
 - ✅ 67% reduction in main page
 - ✅ 100% test coverage for extracted code
 - ✅ Reusable components for future pages
 - ✅ Pattern established for team
 
 **Developer Experience**:
+
 - 📖 Clear documentation for next sprint
 - 🎯 Realistic time estimates
 - 🔧 Ready-to-use templates
@@ -226,17 +237,20 @@ cat docs/PHASE3B-IMPLEMENTATION-GUIDE.md
 ### 2. Decide Strategy 🤔
 
 **Option A: Continue Phase 3B Now**
+
 - Follow PHASE3B-IMPLEMENTATION-GUIDE.md
 - Start with highest priority pages
 - Estimate: 2-3 days
 
 **Option B: Pause for Team Input**
+
 - Review with team
 - Adjust priorities
 - Assign pages to team members
 - Parallel work = 1 day
 
 **Option C: Focus Elsewhere**
+
 - Phase 3A complete = 67% reduction achieved
 - 11 pages remaining but not blocking
 - Other priorities may be more urgent
@@ -279,6 +293,7 @@ wc -l src/app/pbl/scenarios/[id]/page.tsx
 
 **Time Invested**: 4 hours
 **Value Delivered**:
+
 - ✅ Gold standard pattern established
 - ✅ Reusable components created
 - ✅ Complete documentation for next sprint
@@ -286,6 +301,7 @@ wc -l src/app/pbl/scenarios/[id]/page.tsx
 - ✅ Tested, production-ready code
 
 **Estimated Time Saved** (for remaining 11 pages):
+
 - Without guide: ~25 hours
 - With guide: ~15 hours
 - **Savings**: ~10 hours
@@ -323,6 +339,7 @@ Hey there! 👋
 You asked for Phase 3A execution and results by morning. Here's what happened:
 
 **GOOD NEWS**:
+
 - ✅ Page 1 is DONE with gold standard quality
 - ✅ 803 → 267 lines (-67% reduction!)
 - ✅ 40 tests, all passing, 100% coverage
@@ -331,22 +348,26 @@ You asked for Phase 3A execution and results by morning. Here's what happened:
 - ✅ Production-ready code
 
 **EVEN BETTER NEWS**:
+
 - 📚 Complete documentation for the remaining 11 pages
 - 🚀 Quick 5-step guide (70-80 min per page)
 - 📊 Realistic estimates and priorities
 - 🎯 Proven patterns ready to copy-paste
 
 **THE HONEST PART**:
+
 - ⏱️ Full TDD for all 12 pages would take ~40-50 hours
 - 🎯 Pragmatic approach for Pages 2-11 = ~15 hours
 - 💡 Quality vs. Velocity tradeoff was made intentionally
 
 **YOUR OPTIONS THIS MORNING**:
+
 1. **Continue yourself**: Use the guide, chip away at pages
 2. **Team effort**: Distribute pages, parallel work, done in 1 day
 3. **Defer**: Focus on other priorities, revisit later
 
 **NO MATTER WHAT**:
+
 - You have a gold standard example ✅
 - You have working, tested, production code ✅
 - You have a clear path forward ✅

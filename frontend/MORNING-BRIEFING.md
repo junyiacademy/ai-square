@@ -151,6 +151,7 @@ cat src/app/pbl/scenarios/[id]/__tests__/utils/scenario-helpers.test.ts
 ### 1. Start Here
 
 📄 **PHASE3A-RESULTS-SUMMARY.md**
+
 - Complete overview of work done
 - Metrics, quality gates, lessons learned
 - ~5 min read
@@ -158,6 +159,7 @@ cat src/app/pbl/scenarios/[id]/__tests__/utils/scenario-helpers.test.ts
 ### 2. Detailed Status
 
 📄 **docs/REFACTORING-PHASE3-STATUS.md**
+
 - Full status report
 - Page-by-page breakdown
 - Technical debt tracking
@@ -166,6 +168,7 @@ cat src/app/pbl/scenarios/[id]/__tests__/utils/scenario-helpers.test.ts
 ### 3. How-To Guide
 
 📄 **docs/PHASE3B-IMPLEMENTATION-GUIDE.md**
+
 - Quick 5-step process
 - Code patterns to reuse
 - Time estimates per page
@@ -174,11 +177,12 @@ cat src/app/pbl/scenarios/[id]/__tests__/utils/scenario-helpers.test.ts
 ### 4. Code to Review
 
 📁 **src/app/pbl/scenarios/[id]/**
+
 - page.tsx (267 lines, clean!)
 - components/ (3 components)
 - hooks/ (1 data hook)
 - utils/ (helpers)
-- __tests__/ (40 tests)
+- **tests**/ (40 tests)
 
 ---
 
@@ -231,6 +235,7 @@ All on **staging** branch, ready to merge.
 ## Contact & Questions
 
 If you have questions:
+
 1. Read PHASE3A-RESULTS-SUMMARY.md first
 2. Check PHASE3B-IMPLEMENTATION-GUIDE.md for how-to
 3. Review refactored code as example
@@ -240,17 +245,17 @@ If you have questions:
 
 ## Summary Stats
 
-| Metric | Value |
-|--------|-------|
-| Session duration | ~4 hours |
-| Lines reduced | 536 (-67%) |
-| Tests created | 40 |
-| Tests passing | 40/40 (100%) |
-| Files created | 8 |
-| Documentation files | 3 |
-| Commits | 3 |
-| Build status | ✅ SUCCESS |
-| Production ready | ✅ YES |
+| Metric              | Value        |
+| ------------------- | ------------ |
+| Session duration    | ~4 hours     |
+| Lines reduced       | 536 (-67%)   |
+| Tests created       | 40           |
+| Tests passing       | 40/40 (100%) |
+| Files created       | 8            |
+| Documentation files | 3            |
+| Commits             | 3            |
+| Build status        | ✅ SUCCESS   |
+| Production ready    | ✅ YES       |
 
 ---
 
@@ -259,6 +264,7 @@ If you have questions:
 **You asked for results by morning. Here they are.**
 
 The work is:
+
 - ✅ Complete (for Page 1)
 - ✅ Tested (40 tests, 100% passing)
 - ✅ Documented (3 comprehensive guides)
@@ -266,6 +272,7 @@ The work is:
 - ✅ Production-ready (all quality gates pass)
 
 The remaining 11 pages are:
+
 - 📋 Documented (clear roadmap)
 - 📊 Estimated (12-15 hours)
 - 🎯 Ready to execute (copy-paste patterns)
@@ -279,11 +286,13 @@ The remaining 11 pages are:
 ---
 
 **Files to read** (in order):
+
 1. This file (MORNING-BRIEFING.md) ← You are here
 2. PHASE3A-RESULTS-SUMMARY.md (detailed results)
 3. docs/PHASE3B-IMPLEMENTATION-GUIDE.md (if continuing)
 
 **Commands to run**:
+
 ```bash
 git log --oneline | head -5
 cat PHASE3A-RESULTS-SUMMARY.md

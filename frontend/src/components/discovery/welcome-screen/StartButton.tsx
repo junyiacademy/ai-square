@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Rocket } from 'lucide-react';
+import React from "react";
+import { motion } from "framer-motion";
+import { Rocket } from "lucide-react";
 
 interface StartButtonProps {
   onClick: () => void;
@@ -15,7 +15,7 @@ export default function StartButton({ onClick, label }: StartButtonProps) {
       onClick={onClick}
       whileHover={{
         scale: 1.05,
-        boxShadow: "0 0 30px rgba(168, 85, 247, 0.6)"
+        boxShadow: "0 0 30px rgba(168, 85, 247, 0.6)",
       }}
       whileTap={{ scale: 0.98 }}
       className="group relative inline-flex items-center space-x-3 bg-gradient-to-r from-purple-600 via-blue-600 to-cyan-600 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-2xl shadow-purple-500/30 border border-purple-400/30 backdrop-blur-sm"
@@ -32,10 +32,10 @@ export default function StartButton({ onClick, label }: StartButtonProps) {
         className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-400 to-cyan-400 opacity-0 group-hover:opacity-20 transition-opacity duration-300"
         animate={{
           background: [
-            'linear-gradient(45deg, #a855f7, #3b82f6)',
-            'linear-gradient(45deg, #3b82f6, #06b6d4)',
-            'linear-gradient(45deg, #06b6d4, #a855f7)'
-          ]
+            "linear-gradient(45deg, #a855f7, #3b82f6)",
+            "linear-gradient(45deg, #3b82f6, #06b6d4)",
+            "linear-gradient(45deg, #06b6d4, #a855f7)",
+          ],
         }}
         transition={{ duration: 2, repeat: Infinity }}
       />

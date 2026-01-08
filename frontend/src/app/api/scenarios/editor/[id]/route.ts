@@ -1,8 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { ScenarioEditorRepository } from '@/lib/repositories/ScenarioEditorRepository';
-import * as yaml from 'js-yaml';
-import fs from 'fs/promises';
-import path from 'path';
+import { NextRequest, NextResponse } from "next/server";
+import { ScenarioEditorRepository } from "@/lib/repositories/ScenarioEditorRepository";
+import * as yaml from "js-yaml";
+import fs from "fs/promises";
+import path from "path";
 
 const repository = new ScenarioEditorRepository();
 
@@ -19,17 +19,17 @@ export async function GET(request: NextRequest, props: RouteParams) {
 
     if (!scenario) {
       return NextResponse.json(
-        { error: 'Scenario not found' },
-        { status: 404 }
+        { error: "Scenario not found" },
+        { status: 404 },
       );
     }
 
     return NextResponse.json({ scenario });
   } catch (error) {
-    console.error('Error fetching scenario:', error);
+    console.error("Error fetching scenario:", error);
     return NextResponse.json(
-      { error: 'Failed to fetch scenario' },
-      { status: 500 }
+      { error: "Failed to fetch scenario" },
+      { status: 500 },
     );
   }
 }
@@ -44,8 +44,8 @@ export async function PUT(request: NextRequest, props: RouteParams) {
 
     if (!scenario) {
       return NextResponse.json(
-        { error: 'Scenario data is required' },
-        { status: 400 }
+        { error: "Scenario data is required" },
+        { status: 400 },
       );
     }
 
@@ -59,7 +59,8 @@ export async function PUT(request: NextRequest, props: RouteParams) {
     // Export to YML if requested
     if (saveToYml) {
       // Get the scenario data
-      const scenarioData = updatedScenario || await repository.findById(params.id);
+      const scenarioData =
+        updatedScenario || (await repository.findById(params.id));
 
       if (scenarioData) {
         // Convert to YML format
@@ -68,26 +69,28 @@ export async function PUT(request: NextRequest, props: RouteParams) {
           mode: scenarioData.mode,
           title: scenarioData.title,
           description: scenarioData.description,
-          ...scenarioData.content
+          ...scenarioData.content,
         });
 
         // Save to file
         const ymlPath = path.join(
           process.cwd(),
-          'data',
-          'scenarios',
-          `${scenarioData.scenario_id}.yml`
+          "data",
+          "scenarios",
+          `${scenarioData.scenario_id}.yml`,
         );
 
         // Create directory if it doesn't exist
         await fs.mkdir(path.dirname(ymlPath), { recursive: true });
-        await fs.writeFile(ymlPath, ymlContent, 'utf-8');
+        await fs.writeFile(ymlPath, ymlContent, "utf-8");
 
         // Update yml_path in database
         if (saveToDb !== false) {
           await repository.update(params.id, {
             yml_path: `data/scenarios/${scenarioData.scenario_id}.yml`,
-            yml_hash: Buffer.from(ymlContent).toString('base64').substring(0, 64)
+            yml_hash: Buffer.from(ymlContent)
+              .toString("base64")
+              .substring(0, 64),
           });
         }
       }
@@ -96,13 +99,13 @@ export async function PUT(request: NextRequest, props: RouteParams) {
     return NextResponse.json({
       success: true,
       scenario: updatedScenario,
-      message: `Saved to: ${[saveToDb !== false && 'database', saveToYml && 'YML'].filter(Boolean).join(' and ')}`
+      message: `Saved to: ${[saveToDb !== false && "database", saveToYml && "YML"].filter(Boolean).join(" and ")}`,
     });
   } catch (error) {
-    console.error('Error updating scenario:', error);
+    console.error("Error updating scenario:", error);
     return NextResponse.json(
-      { error: 'Failed to update scenario' },
-      { status: 500 }
+      { error: "Failed to update scenario" },
+      { status: 500 },
     );
   }
 }
@@ -116,17 +119,17 @@ export async function DELETE(request: NextRequest, props: RouteParams) {
 
     if (!deleted) {
       return NextResponse.json(
-        { error: 'Scenario not found' },
-        { status: 404 }
+        { error: "Scenario not found" },
+        { status: 404 },
       );
     }
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Error deleting scenario:', error);
+    console.error("Error deleting scenario:", error);
     return NextResponse.json(
-      { error: 'Failed to delete scenario' },
-      { status: 500 }
+      { error: "Failed to delete scenario" },
+      { status: 500 },
     );
   }
 }

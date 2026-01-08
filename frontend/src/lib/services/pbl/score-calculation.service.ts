@@ -36,21 +36,27 @@ export class ScoreCalculationService {
    */
   calculateOverallScore(evaluations: EvaluationWithScore[]): number {
     const validScores = evaluations
-      .map(e => {
+      .map((e) => {
         const score = e.score;
         // Convert string scores from PostgreSQL to numbers
-        if (typeof score === 'string') {
+        if (typeof score === "string") {
           return parseFloat(score);
         }
         return score;
       })
-      .filter((score): score is number => typeof score === 'number' && !isNaN(score) && score >= 0);
+      .filter(
+        (score): score is number =>
+          typeof score === "number" && !isNaN(score) && score >= 0,
+      );
 
     if (validScores.length === 0) {
       return 0;
     }
 
-    const sum = validScores.reduce((acc: number, score: number) => acc + score, 0);
+    const sum = validScores.reduce(
+      (acc: number, score: number) => acc + score,
+      0,
+    );
     return Math.round((sum ?? 0) / validScores.length);
   }
 
@@ -58,17 +64,20 @@ export class ScoreCalculationService {
    * Calculate domain scores (e.g., math, science, english)
    * Aggregates scores across all evaluations
    */
-  calculateDomainScores(evaluations: EvaluationWithScore[]): Record<string, number> {
+  calculateDomainScores(
+    evaluations: EvaluationWithScore[],
+  ): Record<string, number> {
     const domainScores: Record<string, number> = {};
     const domainCounts: Record<string, number> = {};
 
-    evaluations.forEach(evaluation => {
+    evaluations.forEach((evaluation) => {
       // Check both domainScores (direct property) and metadata.domainScores
-      const evalDomainScores = evaluation.domainScores || evaluation.metadata?.domainScores;
+      const evalDomainScores =
+        evaluation.domainScores || evaluation.metadata?.domainScores;
 
-      if (evalDomainScores && typeof evalDomainScores === 'object') {
+      if (evalDomainScores && typeof evalDomainScores === "object") {
         Object.entries(evalDomainScores).forEach(([domain, score]) => {
-          if (typeof score === 'number' && !isNaN(score)) {
+          if (typeof score === "number" && !isNaN(score)) {
             if (!domainScores[domain]) {
               domainScores[domain] = 0;
               domainCounts[domain] = 0;
@@ -81,9 +90,11 @@ export class ScoreCalculationService {
     });
 
     // Average domain scores
-    Object.keys(domainScores).forEach(domain => {
+    Object.keys(domainScores).forEach((domain) => {
       if (domainCounts[domain] > 0) {
-        domainScores[domain] = Math.round(domainScores[domain] / domainCounts[domain]);
+        domainScores[domain] = Math.round(
+          domainScores[domain] / domainCounts[domain],
+        );
       } else {
         domainScores[domain] = 0;
       }
@@ -100,18 +111,23 @@ export class ScoreCalculationService {
     const ksaScores: KSAScores = {
       knowledge: 0,
       skills: 0,
-      attitudes: 0
+      attitudes: 0,
     };
 
     let ksaCount = 0;
 
-    evaluations.forEach(evaluation => {
+    evaluations.forEach((evaluation) => {
       // Check both pblData.ksaScores (where it's actually stored) and metadata.ksaScores (fallback)
-      const scores = evaluation.pblData?.ksaScores || evaluation.metadata?.ksaScores;
+      const scores =
+        evaluation.pblData?.ksaScores || evaluation.metadata?.ksaScores;
 
-      if (scores && typeof scores === 'object') {
+      if (scores && typeof scores === "object") {
         // Only count if at least one KSA value exists
-        if (scores.knowledge !== undefined || scores.skills !== undefined || scores.attitudes !== undefined) {
+        if (
+          scores.knowledge !== undefined ||
+          scores.skills !== undefined ||
+          scores.attitudes !== undefined
+        ) {
           ksaScores.knowledge += scores.knowledge || 0;
           ksaScores.skills += scores.skills || 0;
           ksaScores.attitudes += scores.attitudes || 0;

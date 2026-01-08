@@ -27,6 +27,7 @@ Based on the new file-size-standards focusing on **modularity**, **AI-readabilit
 **Recommendation:** STOP arbitrary line-count-based refactoring.
 
 **Rationale:**
+
 - Current codebase has ZERO critical quality issues
 - 30 files exceed soft limits but may be justified
 - Focus should shift to **quality** over **quantity**
@@ -42,12 +43,15 @@ Based on the new file-size-standards focusing on **modularity**, **AI-readabilit
 Files that show **both** size issues AND quality concerns:
 
 #### 1. `src/app/chat/page.tsx` (625 lines, Complexity: 83)
+
 **Issues:**
+
 - High complexity (83 vs threshold 50)
 - Mixed concerns detected
 - Exceeds page soft limit (400)
 
 **Recommendation:** REFACTOR
+
 - Extract chat logic into service layer
 - Separate UI components
 - Reduce complexity with early returns
@@ -57,12 +61,15 @@ Files that show **both** size issues AND quality concerns:
 ---
 
 #### 2. `src/app/discovery/scenarios/[id]/page.tsx` (529 lines, Complexity: 120)
+
 **Issues:**
+
 - VERY high complexity (120 vs threshold 50)
 - Mixed concerns detected
 - Exceeds page soft limit
 
 **Recommendation:** REFACTOR (Priority 1)
+
 - Extract business logic to discovery-service
 - Create smaller components for UI sections
 - Break down complex conditional logic
@@ -72,11 +79,14 @@ Files that show **both** size issues AND quality concerns:
 ---
 
 #### 3. `src/app/api/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]/route.ts` (344 lines)
+
 **Issues:**
+
 - Exceeds API route soft limit (300)
 - Likely has mixed concerns (API + business logic)
 
 **Recommendation:** REVIEW
+
 - Check if business logic should move to service layer
 - Verify Repository Pattern usage
 - If well-structured, document exemption
@@ -90,6 +100,7 @@ Files that show **both** size issues AND quality concerns:
 Files that exceed limits but may be justified:
 
 #### Test Files (4 files)
+
 ```
 src/app/api/pbl/programs/[programId]/complete/__tests__/route.test.ts - 1148 lines
 src/lib/repositories/postgresql/__tests__/task-repository.test.ts - 1123 lines
@@ -98,6 +109,7 @@ src/lib/types/__tests__/user-data.test.ts - 846 lines
 ```
 
 **Recommendation:** KEEP AS-IS (with monitoring)
+
 - Test files can be larger with good organization
 - Soft limit for tests increased to 800 lines
 - Check if well-organized with describe blocks
@@ -108,17 +120,20 @@ src/lib/types/__tests__/user-data.test.ts - 846 lines
 ---
 
 #### Service Files (2 files)
+
 ```
 src/lib/services/evaluation/evaluation-strategies.ts - 582 lines
 src/lib/services/discovery-learning-service.ts - 573 lines
 ```
 
 **Recommendation:** REVIEW for Single Responsibility
+
 - Check if handling ONE domain or multiple
 - If multiple strategies/features, consider splitting
 - If single complex domain, document exemption
 
 **Example Exemption:**
+
 ```typescript
 /**
  * FILE SIZE EXEMPTION
@@ -146,6 +161,7 @@ src/lib/services/discovery-learning-service.ts - 573 lines
 ---
 
 #### Repository Files (3 files)
+
 ```
 src/lib/repositories/postgresql/scenario-repository.ts - 436 lines
 src/lib/repositories/postgresql/evaluation-repository.ts - 429 lines
@@ -153,6 +169,7 @@ src/lib/repositories/interfaces/index.ts - 448 lines
 ```
 
 **Recommendation:** KEEP AS-IS
+
 - Repository Pattern naturally creates comprehensive files
 - These provide CRUD + domain queries for single entity
 - Soft limit is 400, these are just slightly over
@@ -167,6 +184,7 @@ src/lib/repositories/interfaces/index.ts - 448 lines
 Files that slightly exceed limits but are well-structured:
 
 #### Page Components (7 files)
+
 ```
 src/app/learning-path/page.tsx - 619 lines
 src/app/discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]/page.tsx - 558 lines
@@ -175,11 +193,13 @@ src/app/dashboard/page.tsx - 466 lines
 ```
 
 **Recommendation:** MONITOR
+
 - Pages are coordination layers (should delegate to services)
 - Check if business logic can be extracted
 - If primarily UI coordination, may be justified
 
 **Action Plan:**
+
 1. For each page, check for inline business logic
 2. Extract any business logic to services
 3. If remains large after extraction, document why (e.g., complex UI state management)
@@ -187,6 +207,7 @@ src/app/dashboard/page.tsx - 466 lines
 ---
 
 #### Utility/Helper Files (3 files)
+
 ```
 src/test-utils/mocks/repository-helpers.ts - 290 lines
 src/test/utils/test-helpers.tsx - 257 lines
@@ -194,11 +215,13 @@ src/test-utils/mocks/components.tsx - 213 lines
 ```
 
 **Recommendation:** REVIEW & POSSIBLY SPLIT
+
 - Utility soft limit is 200 lines (lowest)
 - Check if mixing multiple utility types
 - Consider splitting by feature/domain
 
 **Example:**
+
 ```
 repository-helpers.ts (290 lines)
   → scenario-mock-helpers.ts (100 lines)
@@ -225,6 +248,7 @@ repository-helpers.ts (290 lines)
    - Improve structure
 
 **Success Metrics:**
+
 - Complexity reduced by 50%+
 - Clear separation of concerns
 - Easier to test
@@ -247,6 +271,7 @@ repository-helpers.ts (290 lines)
    - Extract validation to validators
 
 **Success Metrics:**
+
 - All service files documented (exemption or refactored)
 - All API routes follow coordination pattern
 - Clear architectural consistency
@@ -268,6 +293,7 @@ repository-helpers.ts (290 lines)
    - Maintain cohesion
 
 **Success Metrics:**
+
 - All test files have clear organization
 - Utility files split by logical domains
 - No reduction in test coverage
@@ -390,12 +416,12 @@ npm run check:file-size:ci
 
 ### Estimated Effort:
 
-| Priority | Files | Effort (hours) | Impact |
-|----------|-------|----------------|--------|
-| High (Complex Pages) | 2-3 | 8-12h | High - User-facing, reduces bugs |
-| Medium (Services/APIs) | 5-7 | 10-15h | Medium - Improves maintainability |
-| Low (Tests/Utils) | 10-15 | 5-10h | Low - Organizational improvement |
-| Documentation | All | 3-5h | High - Prevents future issues |
+| Priority               | Files | Effort (hours) | Impact                            |
+| ---------------------- | ----- | -------------- | --------------------------------- |
+| High (Complex Pages)   | 2-3   | 8-12h          | High - User-facing, reduces bugs  |
+| Medium (Services/APIs) | 5-7   | 10-15h         | Medium - Improves maintainability |
+| Low (Tests/Utils)      | 10-15 | 5-10h          | Low - Organizational improvement  |
+| Documentation          | All   | 3-5h           | High - Prevents future issues     |
 
 **Total Estimated Effort:** 26-42 hours (~5-8 working days)
 

@@ -1,5 +1,5 @@
-import { Pool } from 'pg';
-import { getPool } from '../db/get-pool';
+import { Pool } from "pg";
+import { getPool } from "../db/get-pool";
 
 interface TaskTemplate {
   id?: string;
@@ -36,7 +36,7 @@ interface ScenarioContent {
 export interface ScenarioEditor {
   id: string;
   scenario_id: string;
-  mode: 'pbl' | 'discovery' | 'assessment';
+  mode: "pbl" | "discovery" | "assessment";
   title: Record<string, string>;
   description: Record<string, string>;
   content: ScenarioContent;
@@ -197,28 +197,38 @@ export class ScenarioEditorRepository {
 
     const values = [
       data.scenario_id,
-      data.mode || 'pbl',
-      JSON.stringify(data.title || { en: '', zh: '' }),
-      JSON.stringify(data.description || { en: '', zh: '' }),
+      data.mode || "pbl",
+      JSON.stringify(data.title || { en: "", zh: "" }),
+      JSON.stringify(data.description || { en: "", zh: "" }),
       JSON.stringify(data.content || {}),
-      data.status || 'draft',
+      data.status || "draft",
       data.tags || [],
       data.difficulty,
-      data.estimated_time
+      data.estimated_time,
     ];
 
     const result = await this.pool.query(query, values);
     return result.rows[0];
   }
 
-  async update(id: string, data: Partial<ScenarioEditor>): Promise<ScenarioEditor> {
+  async update(
+    id: string,
+    data: Partial<ScenarioEditor>,
+  ): Promise<ScenarioEditor> {
     // First check if this scenario exists in scenarios_editor
     const checkQuery = `SELECT id FROM scenarios_editor WHERE id = $1`;
     const checkResult = await this.pool.query(checkQuery, [id]);
     const isInEditorTable = checkResult.rows.length > 0;
 
     const updateFields: string[] = [];
-    const values: (string | number | boolean | Record<string, unknown> | unknown[] | null)[] = [];
+    const values: (
+      | string
+      | number
+      | boolean
+      | Record<string, unknown>
+      | unknown[]
+      | null
+    )[] = [];
     let paramCount = 1;
 
     if (isInEditorTable) {
@@ -264,7 +274,7 @@ export class ScenarioEditorRepository {
 
       const query = `
         UPDATE scenarios_editor
-        SET ${updateFields.join(', ')}
+        SET ${updateFields.join(", ")}
         WHERE id = $${paramCount}
         RETURNING *
       `;
@@ -328,7 +338,7 @@ export class ScenarioEditorRepository {
 
       const query = `
         UPDATE scenarios
-        SET ${updateFields.join(', ')}
+        SET ${updateFields.join(", ")}
         WHERE id = $${paramCount}
         RETURNING
           id,
@@ -368,6 +378,6 @@ export class ScenarioEditorRepository {
   async exportToYml(id: string): Promise<string> {
     const query = `SELECT export_scenario_to_yml($1) as yml`;
     const result = await this.pool.query(query, [id]);
-    return result.rows[0]?.yml || '';
+    return result.rows[0]?.yml || "";
   }
 }

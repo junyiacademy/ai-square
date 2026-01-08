@@ -1,6 +1,6 @@
-import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import { FeedbackGenerationService } from './feedback-generation-service';
-import { ITask } from '@/types/unified-learning';
+import { repositoryFactory } from "@/lib/repositories/base/repository-factory";
+import { FeedbackGenerationService } from "./feedback-generation-service";
+import { ITask } from "@/types/unified-learning";
 
 export interface TaskCompletionResult {
   evaluation: {
@@ -23,10 +23,12 @@ export class DiscoveryTaskCompletionService {
    * Check if task has at least one passing interaction
    */
   static hasTaskPassed(
-    task: ITask & { interactions: Array<{ type: string; content: unknown }> }
+    task: ITask & { interactions: Array<{ type: string; content: unknown }> },
   ): boolean {
     return task.interactions.some(
-      i => i.type === 'ai_response' && (i.content as { completed?: boolean })?.completed === true
+      (i) =>
+        i.type === "ai_response" &&
+        (i.content as { completed?: boolean })?.completed === true,
     );
   }
 
@@ -34,33 +36,41 @@ export class DiscoveryTaskCompletionService {
    * Complete a task with comprehensive evaluation
    */
   static async completeTaskWithEvaluation(
-    task: ITask & { interactions: Array<{ type: string; content: unknown; metadata?: unknown }> },
+    task: ITask & {
+      interactions: Array<{
+        type: string;
+        content: unknown;
+        metadata?: unknown;
+      }>;
+    },
     program: { scenarioId: string; metadata?: unknown },
     userId: string,
     userLanguage: string,
-    careerType: string
+    careerType: string,
   ): Promise<TaskCompletionResult> {
     const evaluationRepo = repositoryFactory.getEvaluationRepository();
     const taskRepo = repositoryFactory.getTaskRepository();
 
     // Generate comprehensive feedback
-    let comprehensiveFeedback = 'Task completed successfully!';
+    let comprehensiveFeedback = "Task completed successfully!";
     let bestXP = this.findBestXPEarned(task);
     let passedAttempts = this.countPassedAttempts(task);
 
     try {
-      const result = await FeedbackGenerationService.generateComprehensiveFeedback(
-        task,
-        program,
-        careerType,
-        userLanguage
-      );
+      const result =
+        await FeedbackGenerationService.generateComprehensiveFeedback(
+          task,
+          program,
+          careerType,
+          userLanguage,
+        );
       comprehensiveFeedback = result.feedback;
       bestXP = result.bestXP;
       passedAttempts = result.passedAttempts;
     } catch (error) {
-      console.error('Error generating comprehensive feedback:', error);
-      comprehensiveFeedback = FeedbackGenerationService.getFallbackMessage(userLanguage);
+      console.error("Error generating comprehensive feedback:", error);
+      comprehensiveFeedback =
+        FeedbackGenerationService.getFallbackMessage(userLanguage);
     }
 
     // Extract skills improved
@@ -69,8 +79,8 @@ export class DiscoveryTaskCompletionService {
     // Build feedback versions
     const feedbackVersions: Record<string, string> = {};
     feedbackVersions[userLanguage] = comprehensiveFeedback;
-    if (userLanguage !== 'en') {
-      feedbackVersions['en'] = comprehensiveFeedback;
+    if (userLanguage !== "en") {
+      feedbackVersions["en"] = comprehensiveFeedback;
     }
 
     // Create evaluation
@@ -78,13 +88,13 @@ export class DiscoveryTaskCompletionService {
       userId: userId,
       programId: task.programId,
       taskId: task.id,
-      mode: 'discovery',
-      evaluationType: 'task',
-      evaluationSubtype: 'discovery_task',
+      mode: "discovery",
+      evaluationType: "task",
+      evaluationSubtype: "discovery_task",
       score: Math.min(bestXP, 100),
       maxScore: 100,
       domainScores: {},
-      feedbackText: feedbackVersions['en'],
+      feedbackText: feedbackVersions["en"],
       feedbackData: feedbackVersions,
       aiAnalysis: {},
       timeTakenSeconds: 0,
@@ -92,7 +102,8 @@ export class DiscoveryTaskCompletionService {
       pblData: {},
       discoveryData: {
         xpEarned: bestXP,
-        totalAttempts: task.interactions.filter(i => i.type === 'user_input').length,
+        totalAttempts: task.interactions.filter((i) => i.type === "user_input")
+          .length,
         passedAttempts: passedAttempts,
         skillsImproved: allSkillsImproved,
       },
@@ -101,13 +112,13 @@ export class DiscoveryTaskCompletionService {
         feedbackVersions: feedbackVersions,
         completed: true,
         originalLanguage: userLanguage,
-        actualXPEarned: bestXP
-      }
+        actualXPEarned: bestXP,
+      },
     });
 
     // Update task status to completed
     await taskRepo.update?.(task.id, {
-      status: 'completed' as const,
+      status: "completed" as const,
       completedAt: new Date().toISOString(),
       metadata: {
         ...(task.metadata || {}),
@@ -117,16 +128,16 @@ export class DiscoveryTaskCompletionService {
           actualXP: bestXP,
           feedback: feedbackVersions[userLanguage] || evaluation.feedbackText,
           feedbackVersions: feedbackVersions,
-          evaluatedAt: evaluation.createdAt
-        }
-      }
+          evaluatedAt: evaluation.createdAt,
+        },
+      },
     });
 
     return {
       evaluation,
       xpEarned: bestXP,
       feedback: comprehensiveFeedback,
-      feedbackVersions
+      feedbackVersions,
     };
   }
 
@@ -134,16 +145,18 @@ export class DiscoveryTaskCompletionService {
    * Extract unique skills improved from all AI interactions
    */
   static extractSkillsImproved(
-    task: ITask & { interactions: Array<{ type: string; content: unknown }> }
+    task: ITask & { interactions: Array<{ type: string; content: unknown }> },
   ): string[] {
     const allSkillsImproved = new Set<string>();
 
     task.interactions
-      .filter(i => i.type === 'ai_response')
-      .forEach(i => {
+      .filter((i) => i.type === "ai_response")
+      .forEach((i) => {
         const content = i.content as { skillsImproved?: string[] };
         if (content.skillsImproved) {
-          content.skillsImproved.forEach(skill => allSkillsImproved.add(skill));
+          content.skillsImproved.forEach((skill) =>
+            allSkillsImproved.add(skill),
+          );
         }
       });
 
@@ -154,10 +167,12 @@ export class DiscoveryTaskCompletionService {
    * Find the best (maximum) XP earned from passed attempts
    */
   static findBestXPEarned(
-    task: ITask & { interactions: Array<{ type: string; content: unknown }> }
+    task: ITask & { interactions: Array<{ type: string; content: unknown }> },
   ): number {
     const passedInteractions = task.interactions.filter(
-      i => i.type === 'ai_response' && (i.content as { completed?: boolean })?.completed === true
+      (i) =>
+        i.type === "ai_response" &&
+        (i.content as { completed?: boolean })?.completed === true,
     );
 
     if (passedInteractions.length === 0) {
@@ -166,8 +181,8 @@ export class DiscoveryTaskCompletionService {
 
     return Math.max(
       ...passedInteractions.map(
-        i => (i.content as { xpEarned?: number })?.xpEarned || 0
-      )
+        (i) => (i.content as { xpEarned?: number })?.xpEarned || 0,
+      ),
     );
   }
 
@@ -175,10 +190,12 @@ export class DiscoveryTaskCompletionService {
    * Count number of passed attempts
    */
   static countPassedAttempts(
-    task: ITask & { interactions: Array<{ type: string; content: unknown }> }
+    task: ITask & { interactions: Array<{ type: string; content: unknown }> },
   ): number {
     return task.interactions.filter(
-      i => i.type === 'ai_response' && (i.content as { completed?: boolean })?.completed === true
+      (i) =>
+        i.type === "ai_response" &&
+        (i.content as { completed?: boolean })?.completed === true,
     ).length;
   }
 }

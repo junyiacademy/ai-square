@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { CheckCircle, Lightbulb, Trophy, AlertCircle } from 'lucide-react';
-import ReactMarkdown from 'react-markdown';
+import { useState } from "react";
+import { CheckCircle, Lightbulb, Trophy, AlertCircle } from "lucide-react";
+import ReactMarkdown from "react-markdown";
 
 interface TaskSubmitSectionProps {
   userResponse: string;
@@ -35,12 +35,13 @@ export function TaskSubmitSection({
   feedback,
   hasPassedBefore,
   passCount,
-  interactionCount
+  interactionCount,
 }: TaskSubmitSectionProps) {
   const getPlaceholder = () => {
     if (interactionCount === 0) return "在這裡寫下你的回答...";
     if (hasPassedBefore) {
-      if (passCount > 1) return `您已經通過 ${passCount} 次了！想要挑戰更高分嗎？`;
+      if (passCount > 1)
+        return `您已經通過 ${passCount} 次了！想要挑戰更高分嗎？`;
       return "您已經通過了！可以嘗試其他解決方案或繼續優化...";
     }
     return "根據 AI 的回饋，改進你的回答...";
@@ -53,9 +54,9 @@ export function TaskSubmitSection({
         <h3 className="text-xl font-semibold text-gray-900 mb-4">
           {interactionCount > 0
             ? hasPassedBefore
-              ? `繼續挑戰 ${passCount > 1 ? `(已通過 ${passCount} 次)` : '(已通過)'}`
-              : '繼續作答'
-            : '你的回答'}
+              ? `繼續挑戰 ${passCount > 1 ? `(已通過 ${passCount} 次)` : "(已通過)"}`
+              : "繼續作答"
+            : "你的回答"}
         </h3>
 
         <textarea
@@ -71,7 +72,7 @@ export function TaskSubmitSection({
             className="flex items-center space-x-2 text-purple-600 hover:text-purple-700"
           >
             <Lightbulb className="w-5 h-5" />
-            <span>{showHints ? '隱藏提示' : '需要提示？'}</span>
+            <span>{showHints ? "隱藏提示" : "需要提示？"}</span>
           </button>
 
           <button
@@ -79,9 +80,10 @@ export function TaskSubmitSection({
             disabled={!userResponse.trim() || submitting}
             className={`
               flex items-center space-x-2 px-6 py-3 rounded-lg font-medium transition-all
-              ${userResponse.trim() && !submitting
-                ? 'bg-purple-600 text-white hover:bg-purple-700'
-                : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+              ${
+                userResponse.trim() && !submitting
+                  ? "bg-purple-600 text-white hover:bg-purple-700"
+                  : "bg-gray-200 text-gray-400 cursor-not-allowed"
               }
             `}
           >
@@ -120,9 +122,13 @@ export function TaskSubmitSection({
 
       {/* AI Feedback Section */}
       {feedback && (
-        <div className={`rounded-2xl shadow-lg p-8 mb-6 ${
-          feedback.completed ? 'bg-green-50 border-2 border-green-200' : 'bg-orange-50 border-2 border-orange-200'
-        }`}>
+        <div
+          className={`rounded-2xl shadow-lg p-8 mb-6 ${
+            feedback.completed
+              ? "bg-green-50 border-2 border-green-200"
+              : "bg-orange-50 border-2 border-orange-200"
+          }`}
+        >
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-xl font-semibold text-gray-900 flex items-center space-x-2">
               {feedback.completed ? (
@@ -139,7 +145,9 @@ export function TaskSubmitSection({
             </h3>
             <div className="flex items-center space-x-2 px-4 py-2 bg-white rounded-full shadow-sm">
               <Trophy className="w-5 h-5 text-purple-600" />
-              <span className="font-semibold text-purple-700">+{feedback.xpEarned} XP</span>
+              <span className="font-semibold text-purple-700">
+                +{feedback.xpEarned} XP
+              </span>
             </div>
           </div>
 

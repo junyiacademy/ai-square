@@ -1,6 +1,10 @@
-import { AssessmentResult, AssessmentQuestion, UserAnswer } from '@/types/assessment';
-import CompetencyKnowledgeGraph from '../../CompetencyKnowledgeGraph';
-import type { KsaMaps } from '@/hooks/assessment/useAssessmentData';
+import {
+  AssessmentResult,
+  AssessmentQuestion,
+  UserAnswer,
+} from "@/types/assessment";
+import CompetencyKnowledgeGraph from "../../CompetencyKnowledgeGraph";
+import type { KsaMaps } from "@/hooks/assessment/useAssessmentData";
 
 interface KnowledgeGraphTabProps {
   result: AssessmentResult;
@@ -15,7 +19,7 @@ export function KnowledgeGraphTab({
   questions,
   userAnswers,
   domainsData,
-  ksaMaps
+  ksaMaps,
 }: KnowledgeGraphTabProps) {
   return (
     <div className="space-y-6">

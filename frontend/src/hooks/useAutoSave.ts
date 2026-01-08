@@ -3,7 +3,7 @@
  * Automatically saves content to localStorage with debouncing
  */
 
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback } from "react";
 
 interface UseAutoSaveOptions<T> {
   key: string;
@@ -18,30 +18,33 @@ export function useAutoSave<T>({
   data,
   delay = 2000,
   onSave,
-  enabled = true
+  enabled = true,
 }: UseAutoSaveOptions<T>) {
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const lastSavedRef = useRef<string>('');
+  const lastSavedRef = useRef<string>("");
 
-  const save = useCallback((dataToSave: T) => {
-    try {
-      const serialized = JSON.stringify(dataToSave);
+  const save = useCallback(
+    (dataToSave: T) => {
+      try {
+        const serialized = JSON.stringify(dataToSave);
 
-      // Skip if data hasn't changed
-      if (serialized === lastSavedRef.current) {
-        return;
+        // Skip if data hasn't changed
+        if (serialized === lastSavedRef.current) {
+          return;
+        }
+
+        localStorage.setItem(key, serialized);
+        lastSavedRef.current = serialized;
+
+        if (onSave) {
+          onSave(dataToSave);
+        }
+      } catch (error) {
+        console.error("Failed to auto-save:", error);
       }
-
-      localStorage.setItem(key, serialized);
-      lastSavedRef.current = serialized;
-
-      if (onSave) {
-        onSave(dataToSave);
-      }
-    } catch (error) {
-      console.error('Failed to auto-save:', error);
-    }
-  }, [key, onSave]);
+    },
+    [key, onSave],
+  );
 
   useEffect(() => {
     if (!enabled) return;
@@ -72,7 +75,7 @@ export function useAutoSave<T>({
       lastSavedRef.current = saved;
       return parsed;
     } catch (error) {
-      console.error('Failed to load saved data:', error);
+      console.error("Failed to load saved data:", error);
       return null;
     }
   }, [key]);
@@ -80,15 +83,15 @@ export function useAutoSave<T>({
   const clearSaved = useCallback(() => {
     try {
       localStorage.removeItem(key);
-      lastSavedRef.current = '';
+      lastSavedRef.current = "";
     } catch (error) {
-      console.error('Failed to clear saved data:', error);
+      console.error("Failed to clear saved data:", error);
     }
   }, [key]);
 
   return {
     loadSaved,
     clearSaved,
-    forceSave: () => save(data)
+    forceSave: () => save(data),
   };
 }

@@ -1,5 +1,14 @@
-import Link from 'next/link';
-import { FileEdit, PlusCircle, Database, Layout, Server, Wand2, MousePointer, PanelLeft } from 'lucide-react';
+import Link from "next/link";
+import {
+  FileEdit,
+  PlusCircle,
+  Database,
+  Layout,
+  Server,
+  Wand2,
+  MousePointer,
+  PanelLeft,
+} from "lucide-react";
 
 export default function AdminPage() {
   return (
@@ -26,7 +35,8 @@ export default function AdminPage() {
             </div>
           </div>
           <p className="text-gray-700 mb-6 text-xl font-medium">
-            n8n 風格專業介面 + AI 智能對話 + 前台視覺設計 + 多模式編輯 - 一個編輯器搞定所有需求！
+            n8n 風格專業介面 + AI 智能對話 + 前台視覺設計 + 多模式編輯 -
+            一個編輯器搞定所有需求！
           </p>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
@@ -53,7 +63,9 @@ export default function AdminPage() {
           </div>
 
           <div className="bg-gradient-to-r from-indigo-100 to-purple-100 rounded-lg p-4 mb-6">
-            <div className="font-bold text-gray-800 mb-2">✨ 整合所有優點：</div>
+            <div className="font-bold text-gray-800 mb-2">
+              ✨ 整合所有優點：
+            </div>
             <ul className="text-sm text-gray-700 space-y-1">
               <li>• n8n 專業 3 面板佈局（左導航、中預覽、右 AI）</li>
               <li>• AI Agent 自然語言對話編輯</li>
@@ -66,13 +78,21 @@ export default function AdminPage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center text-indigo-600 font-bold text-lg">
               <span>開始使用終極編輯器</span>
-              <svg className="w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              <svg
+                className="w-6 h-6 ml-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
               </svg>
             </div>
-            <div className="text-sm text-gray-500">
-              取代了 3 個舊編輯器
-            </div>
+            <div className="text-sm text-gray-500">取代了 3 個舊編輯器</div>
           </div>
         </Link>
 

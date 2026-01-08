@@ -3,7 +3,11 @@
  * Handles calculation of domain-specific performance and KSA mappings
  */
 
-import type { AssessmentQuestion, AssessmentInteraction, DomainScore } from '@/types/assessment-types';
+import type {
+  AssessmentQuestion,
+  AssessmentInteraction,
+  DomainScore,
+} from "@/types/assessment-types";
 
 interface KSASet {
   knowledge: Set<string>;
@@ -23,19 +27,24 @@ export interface KSAAnalysis {
 }
 
 export class DomainScoreAggregationService {
-  private readonly DOMAINS = ['engaging_with_ai', 'creating_with_ai', 'managing_with_ai', 'designing_with_ai'];
+  private readonly DOMAINS = [
+    "engaging_with_ai",
+    "creating_with_ai",
+    "managing_with_ai",
+    "designing_with_ai",
+  ];
 
   /**
    * Calculate domain scores from questions and answers
    */
   calculateDomainScores(
     questions: AssessmentQuestion[],
-    answers: AssessmentInteraction[]
+    answers: AssessmentInteraction[],
   ): Map<string, DomainScore> {
     const domainScores = new Map<string, DomainScore>();
 
     // Initialize all four domains
-    this.DOMAINS.forEach(domain => {
+    this.DOMAINS.forEach((domain) => {
       domainScores.set(domain, {
         domain,
         totalQuestions: 0,
@@ -45,15 +54,15 @@ export class DomainScoreAggregationService {
         ksa: {
           knowledge: new Set(),
           skills: new Set(),
-          attitudes: new Set()
-        }
+          attitudes: new Set(),
+        },
       });
     });
 
     // Process each answer
-    answers.forEach(answer => {
+    answers.forEach((answer) => {
       const questionId = answer.context.questionId;
-      const question = questions.find(q => q.id === questionId);
+      const question = questions.find((q) => q.id === questionId);
 
       if (question?.domain) {
         const domainScore = domainScores.get(question.domain);
@@ -65,18 +74,26 @@ export class DomainScoreAggregationService {
 
           // Collect KSA mappings
           if (question.ksa_mapping) {
-            question.ksa_mapping.knowledge?.forEach(k => domainScore.ksa.knowledge.add(k));
-            question.ksa_mapping.skills?.forEach(s => domainScore.ksa.skills.add(s));
-            question.ksa_mapping.attitudes?.forEach(a => domainScore.ksa.attitudes.add(a));
+            question.ksa_mapping.knowledge?.forEach((k) =>
+              domainScore.ksa.knowledge.add(k),
+            );
+            question.ksa_mapping.skills?.forEach((s) =>
+              domainScore.ksa.skills.add(s),
+            );
+            question.ksa_mapping.attitudes?.forEach((a) =>
+              domainScore.ksa.attitudes.add(a),
+            );
           }
         }
       }
     });
 
     // Calculate scores
-    domainScores.forEach(domainScore => {
+    domainScores.forEach((domainScore) => {
       if (domainScore.totalQuestions > 0) {
-        domainScore.score = Math.round((domainScore.correctAnswers / domainScore.totalQuestions) * 100);
+        domainScore.score = Math.round(
+          (domainScore.correctAnswers / domainScore.totalQuestions) * 100,
+        );
       }
     });
 
@@ -88,59 +105,80 @@ export class DomainScoreAggregationService {
    */
   analyzeKSAPerformance(
     questions: AssessmentQuestion[],
-    answers: AssessmentInteraction[]
+    answers: AssessmentInteraction[],
   ): KSAAnalysis {
     const correctKSA: KSASet = {
       knowledge: new Set(),
       skills: new Set(),
-      attitudes: new Set()
+      attitudes: new Set(),
     };
 
     const incorrectKSA: KSASet = {
       knowledge: new Set(),
       skills: new Set(),
-      attitudes: new Set()
+      attitudes: new Set(),
     };
 
     // Analyze each answer
-    answers.forEach(answer => {
-      const question = questions.find(q => q.id === answer.context.questionId);
+    answers.forEach((answer) => {
+      const question = questions.find(
+        (q) => q.id === answer.context.questionId,
+      );
       if (question?.ksa_mapping) {
         const targetKSA = answer.context.isCorrect ? correctKSA : incorrectKSA;
 
-        question.ksa_mapping.knowledge?.forEach(k => targetKSA.knowledge.add(k));
-        question.ksa_mapping.skills?.forEach(s => targetKSA.skills.add(s));
-        question.ksa_mapping.attitudes?.forEach(a => targetKSA.attitudes.add(a));
+        question.ksa_mapping.knowledge?.forEach((k) =>
+          targetKSA.knowledge.add(k),
+        );
+        question.ksa_mapping.skills?.forEach((s) => targetKSA.skills.add(s));
+        question.ksa_mapping.attitudes?.forEach((a) =>
+          targetKSA.attitudes.add(a),
+        );
       }
     });
 
     // Calculate all KSA items
-    const allKnowledge = new Set([...correctKSA.knowledge, ...incorrectKSA.knowledge]);
+    const allKnowledge = new Set([
+      ...correctKSA.knowledge,
+      ...incorrectKSA.knowledge,
+    ]);
     const allSkills = new Set([...correctKSA.skills, ...incorrectKSA.skills]);
-    const allAttitudes = new Set([...correctKSA.attitudes, ...incorrectKSA.attitudes]);
+    const allAttitudes = new Set([
+      ...correctKSA.attitudes,
+      ...incorrectKSA.attitudes,
+    ]);
 
     // Identify weak areas (only incorrect, not correct)
     const weakKSA: KSASet = {
       knowledge: new Set(),
       skills: new Set(),
-      attitudes: new Set()
+      attitudes: new Set(),
     };
 
-    incorrectKSA.knowledge.forEach(k => {
+    incorrectKSA.knowledge.forEach((k) => {
       if (!correctKSA.knowledge.has(k)) weakKSA.knowledge.add(k);
     });
-    incorrectKSA.skills.forEach(s => {
+    incorrectKSA.skills.forEach((s) => {
       if (!correctKSA.skills.has(s)) weakKSA.skills.add(s);
     });
-    incorrectKSA.attitudes.forEach(a => {
+    incorrectKSA.attitudes.forEach((a) => {
       if (!correctKSA.attitudes.has(a)) weakKSA.attitudes.add(a);
     });
 
     // Calculate KSA scores
     const ksaScores = {
-      knowledge: allKnowledge.size > 0 ? Math.round((correctKSA.knowledge.size / allKnowledge.size) * 100) : 0,
-      skills: allSkills.size > 0 ? Math.round((correctKSA.skills.size / allSkills.size) * 100) : 0,
-      attitudes: allAttitudes.size > 0 ? Math.round((correctKSA.attitudes.size / allAttitudes.size) * 100) : 0
+      knowledge:
+        allKnowledge.size > 0
+          ? Math.round((correctKSA.knowledge.size / allKnowledge.size) * 100)
+          : 0,
+      skills:
+        allSkills.size > 0
+          ? Math.round((correctKSA.skills.size / allSkills.size) * 100)
+          : 0,
+      attitudes:
+        allAttitudes.size > 0
+          ? Math.round((correctKSA.attitudes.size / allAttitudes.size) * 100)
+          : 0,
     };
 
     return { correctKSA, incorrectKSA, weakKSA, ksaScores };
@@ -149,7 +187,10 @@ export class DomainScoreAggregationService {
   /**
    * Calculate overall score
    */
-  calculateOverallScore(totalQuestions: number, correctAnswers: number): number {
+  calculateOverallScore(
+    totalQuestions: number,
+    correctAnswers: number,
+  ): number {
     if (totalQuestions === 0) return 0;
     return Math.round((correctAnswers / totalQuestions) * 100);
   }
@@ -158,16 +199,19 @@ export class DomainScoreAggregationService {
    * Determine proficiency level based on score
    */
   determineLevel(score: number): string {
-    if (score >= 80) return 'expert';
-    if (score >= 70) return 'advanced';
-    if (score >= 50) return 'intermediate';
-    return 'beginner';
+    if (score >= 80) return "expert";
+    if (score >= 70) return "advanced";
+    if (score >= 50) return "intermediate";
+    return "beginner";
   }
 
   /**
    * Generate recommendations based on performance
    */
-  generateRecommendations(domainScores: Map<string, DomainScore>, overallScore: number): string[] {
+  generateRecommendations(
+    domainScores: Map<string, DomainScore>,
+    overallScore: number,
+  ): string[] {
     const recommendations: string[] = [];
 
     // Find weak domains
@@ -177,21 +221,25 @@ export class DomainScoreAggregationService {
 
     if (weakDomains.length > 0) {
       weakDomains.forEach(([domain]) => {
-        const domainName = domain.replace(/_/g, ' ').toLowerCase();
-        recommendations.push(`Focus on improving your ${domainName} skills through hands-on practice`);
+        const domainName = domain.replace(/_/g, " ").toLowerCase();
+        recommendations.push(
+          `Focus on improving your ${domainName} skills through hands-on practice`,
+        );
       });
     }
 
     // General recommendations based on score
     if (overallScore < 60) {
-      recommendations.push('Review the fundamental concepts of AI literacy');
-      recommendations.push('Take introductory courses on AI basics');
+      recommendations.push("Review the fundamental concepts of AI literacy");
+      recommendations.push("Take introductory courses on AI basics");
     } else if (overallScore < 80) {
-      recommendations.push('Practice with more advanced AI scenarios');
-      recommendations.push('Explore real-world AI applications in your field');
+      recommendations.push("Practice with more advanced AI scenarios");
+      recommendations.push("Explore real-world AI applications in your field");
     } else {
-      recommendations.push('Consider mentoring others in AI literacy');
-      recommendations.push('Stay updated with latest AI developments and best practices');
+      recommendations.push("Consider mentoring others in AI literacy");
+      recommendations.push(
+        "Stay updated with latest AI developments and best practices",
+      );
     }
 
     return recommendations.slice(0, 4);

@@ -21,18 +21,21 @@ We have redefined our file size standards and quality enforcement approach based
 ### Before (Line-Count Focused)
 
 **Philosophy:**
+
 - Hard limits enforced arbitrarily
 - Component = 300 lines MAX
 - Page = 400 lines MAX
 - Any file exceeding 2x limit = ERROR
 
 **Problems:**
+
 - Forced arbitrary splits of well-structured files
 - Ignored complexity and quality
 - Created artificial boundaries
 - Reduced cohesion in some cases
 
 **Example Issue:**
+
 ```
 File: auth-service.ts (550 lines)
 Old System: ❌ ERROR - Exceeds 500 line limit
@@ -44,6 +47,7 @@ Reality: ✅ Well-structured, single responsibility, clear sections
 ### After (Modularity Focused)
 
 **Philosophy:**
+
 - Soft limits trigger review, not automatic enforcement
 - Focus on cognitive complexity
 - Check for mixed concerns
@@ -51,6 +55,7 @@ Reality: ✅ Well-structured, single responsibility, clear sections
 - Measure token efficiency
 
 **Quality Metrics:**
+
 1. **Single Responsibility:** Does file do ONE thing well?
 2. **AI-Readability:** Can AI navigate efficiently?
 3. **Token Efficiency:** Is there unnecessary repetition?
@@ -58,11 +63,13 @@ Reality: ✅ Well-structured, single responsibility, clear sections
 5. **Coupling:** Is it loosely coupled?
 
 **Enforcement Criteria (ALL must be met to block):**
+
 - File exceeds 2x soft limit AND
 - Cyclomatic complexity > 50 AND
 - Multiple responsibilities detected
 
 **Example:**
+
 ```
 File: auth-service.ts (550 lines)
 New System: ⚠️  WARNING - Review recommended
@@ -81,6 +88,7 @@ Decision: KEEP AS-IS with documentation
 ### Updated `check-file-size.ts`
 
 **New Checks:**
+
 - ✅ Cyclomatic complexity calculation
 - ✅ Export/import counting
 - ✅ Mixed concern detection
@@ -89,6 +97,7 @@ Decision: KEEP AS-IS with documentation
 - ✅ Exemption documentation support
 
 **New Flags:**
+
 ```bash
 npm run check:file-size              # Standard check
 npm run check:file-size --fix        # Show suggestions
@@ -97,6 +106,7 @@ npm run check:file-size --ci         # CI mode (only errors block)
 ```
 
 **Output Example:**
+
 ```
 🔍 Analyzing file quality metrics...
 
@@ -131,18 +141,19 @@ npm run check:file-size --ci         # CI mode (only errors block)
 
 ```typescript
 const FILE_SIZE_SOFT_LIMITS = {
-  component: 300,    // UI components (review if exceeded)
-  page: 400,         // Next.js pages (review if exceeded)
-  api: 300,          // API routes (review if exceeded)
-  service: 500,      // Service layer (context-dependent)
-  repository: 400,   // Repository pattern (context-dependent)
-  utility: 200,      // Utility functions (usually should be smaller)
-  test: 800,         // Tests (increased! Can be larger with good organization)
-  config: 1500,      // Configuration (increased! Often necessarily large)
+  component: 300, // UI components (review if exceeded)
+  page: 400, // Next.js pages (review if exceeded)
+  api: 300, // API routes (review if exceeded)
+  service: 500, // Service layer (context-dependent)
+  repository: 400, // Repository pattern (context-dependent)
+  utility: 200, // Utility functions (usually should be smaller)
+  test: 800, // Tests (increased! Can be larger with good organization)
+  config: 1500, // Configuration (increased! Often necessarily large)
 };
 ```
 
 **Key Changes:**
+
 - Test limit: 600 → 800 lines
 - Config limit: 1000 → 1500 lines
 - All limits are now "soft" (trigger review, not enforcement)
@@ -152,8 +163,9 @@ const FILE_SIZE_SOFT_LIMITS = {
 ## Exemption Process
 
 ### Automatic Exemptions
+
 - Configuration files (tailwind.config.ts, etc.)
-- Type definition files (*.d.ts, types.ts)
+- Type definition files (\*.d.ts, types.ts)
 - Generated files
 
 ### Documented Exemptions
@@ -218,11 +230,13 @@ Are all functions highly cohesive?
 ### Immediate Impact
 
 **Before Update:**
+
 - 39 files flagged as violations
 - Mix of true issues and false positives
 - Unclear which files truly needed refactoring
 
 **After Update:**
+
 - **0 critical issues** (no files meet all enforcement criteria)
 - 30 warnings (soft limit exceeded, review recommended)
 - 451 info (tracking metrics, no action needed)
@@ -231,10 +245,12 @@ Are all functions highly cohesive?
 ### Quality Insights
 
 **Files Needing Attention:**
+
 1. `src/app/chat/page.tsx` - Complexity: 83 (High)
 2. `src/app/discovery/scenarios/[id]/page.tsx` - Complexity: 120 (Very High)
 
 **Files Likely Justified:**
+
 - Test files with comprehensive coverage
 - Service files handling complex domains
 - Repository files with full CRUD operations
@@ -248,6 +264,7 @@ Are all functions highly cohesive?
 **code-quality-enforcer (deprecated) → quality-guardian-agent**
 
 Now considers:
+
 - File metrics beyond just line count
 - Complexity and cohesion scores
 - AI-readability factors
@@ -256,6 +273,7 @@ Now considers:
 **agents-manager**
 
 Updated decision tree:
+
 ```yaml
 File size violations:
   → quality-guardian-agent
@@ -274,6 +292,7 @@ File size violations:
 **When you see a warning:**
 
 1. **Check metrics:**
+
    ```bash
    npm run check:file-size --fix
    ```
@@ -302,6 +321,7 @@ File size violations:
 **When asked to refactor "large" file:**
 
 1. **Analyze metrics first:**
+
    ```bash
    npm run check:file-size --verbose
    ```
@@ -404,6 +424,7 @@ A: If well-organized with describe blocks and testing a complex feature comprehe
 
 **Q: How do I know if my file should be exempt?**
 A: Ask:
+
 - Single responsibility? ✅
 - Clear sections? ✅
 - Low complexity? ✅

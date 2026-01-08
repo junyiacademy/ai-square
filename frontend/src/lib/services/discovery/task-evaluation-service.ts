@@ -1,5 +1,5 @@
-import { VertexAIService } from '@/lib/ai/vertex-ai-service';
-import { Interaction } from '@/lib/repositories/interfaces';
+import { VertexAIService } from "@/lib/ai/vertex-ai-service";
+import { Interaction } from "@/lib/repositories/interfaces";
 
 export interface EvaluationResult {
   feedback: string;
@@ -12,10 +12,14 @@ export interface EvaluationResult {
 
 export class TaskEvaluationService {
   static getLocalizedValue(obj: unknown, language: string): string {
-    if (typeof obj === 'string') return obj;
-    if (typeof obj === 'object' && obj !== null) {
+    if (typeof obj === "string") return obj;
+    if (typeof obj === "object" && obj !== null) {
       const multilingualObj = obj as Record<string, string>;
-      return multilingualObj[language] || multilingualObj['en'] || JSON.stringify(obj);
+      return (
+        multilingualObj[language] ||
+        multilingualObj["en"] ||
+        JSON.stringify(obj)
+      );
     }
     return String(obj);
   }
@@ -23,28 +27,32 @@ export class TaskEvaluationService {
   static async evaluateTaskSubmission(
     task: { title?: unknown; metadata?: unknown; content?: unknown },
     userResponse: string,
-    userLanguage: string
+    userLanguage: string,
   ): Promise<EvaluationResult> {
-    const taskInstructions = (task.metadata as Record<string, unknown>)?.instructions || '';
-    const maxXP = (task.content as Record<string, unknown>)?.xp as number || 100;
-    const taskContent = task.content as Record<string, unknown> || {};
+    const taskInstructions =
+      (task.metadata as Record<string, unknown>)?.instructions || "";
+    const maxXP =
+      ((task.content as Record<string, unknown>)?.xp as number) || 100;
+    const taskContent = (task.content as Record<string, unknown>) || {};
 
     const aiService = new VertexAIService({
-      systemPrompt: userLanguage === 'zhTW'
-        ? '你是嚴格的學習評估助手。請根據任務要求客觀評估學習者是否真正完成了任務。如果回答與任務無關或未完成要求，必須給予誠實的評估。'
-        : 'You are a strict learning evaluator. Objectively assess if the learner actually completed the task based on requirements. If response is unrelated or incomplete, provide honest assessment.',
+      systemPrompt:
+        userLanguage === "zhTW"
+          ? "你是嚴格的學習評估助手。請根據任務要求客觀評估學習者是否真正完成了任務。如果回答與任務無關或未完成要求，必須給予誠實的評估。"
+          : "You are a strict learning evaluator. Objectively assess if the learner actually completed the task based on requirements. If response is unrelated or incomplete, provide honest assessment.",
       temperature: 0.7,
-      model: 'gemini-2.5-flash'
+      model: "gemini-2.5-flash",
     });
 
-    const evaluationPrompt = userLanguage === 'zhTW'
-      ? `嚴格評估學習者是否完成了指定任務：
+    const evaluationPrompt =
+      userLanguage === "zhTW"
+        ? `嚴格評估學習者是否完成了指定任務：
 
 任務標題：${this.getLocalizedValue(task.title, userLanguage)}
 任務說明：${this.getLocalizedValue(taskInstructions, userLanguage)}
-${taskContent.description ? `任務描述：${this.getLocalizedValue(taskContent.description, userLanguage)}` : ''}
-${taskContent.instructions ? `任務指示：${this.getLocalizedValue(taskContent.instructions, userLanguage)}` : ''}
-${taskContent.requirements ? `具體要求：${JSON.stringify(taskContent.requirements)}` : ''}
+${taskContent.description ? `任務描述：${this.getLocalizedValue(taskContent.description, userLanguage)}` : ""}
+${taskContent.instructions ? `任務指示：${this.getLocalizedValue(taskContent.instructions, userLanguage)}` : ""}
+${taskContent.requirements ? `具體要求：${JSON.stringify(taskContent.requirements)}` : ""}
 
 學習者回答：
 ${userResponse}
@@ -63,13 +71,13 @@ ${userResponse}
   "xpEarned": number (0-${maxXP}，未完成任務應該很低),
   "skillsImproved": ["實際展現的相關技能"]
 }`
-      : `Strictly evaluate if the learner completed the assigned task:
+        : `Strictly evaluate if the learner completed the assigned task:
 
 Task Title: ${this.getLocalizedValue(task.title, userLanguage)}
 Instructions: ${this.getLocalizedValue(taskInstructions, userLanguage)}
-${taskContent.description ? `Description: ${this.getLocalizedValue(taskContent.description, userLanguage)}` : ''}
-${taskContent.instructions ? `Task Instructions: ${this.getLocalizedValue(taskContent.instructions, userLanguage)}` : ''}
-${taskContent.requirements ? `Requirements: ${JSON.stringify(taskContent.requirements)}` : ''}
+${taskContent.description ? `Description: ${this.getLocalizedValue(taskContent.description, userLanguage)}` : ""}
+${taskContent.instructions ? `Task Instructions: ${this.getLocalizedValue(taskContent.instructions, userLanguage)}` : ""}
+${taskContent.requirements ? `Requirements: ${JSON.stringify(taskContent.requirements)}` : ""}
 
 Learner's Response:
 ${userResponse}
@@ -96,40 +104,43 @@ Return JSON:
       if (jsonMatch) {
         return JSON.parse(jsonMatch[0]) as EvaluationResult;
       }
-      throw new Error('No JSON found in AI response');
+      throw new Error("No JSON found in AI response");
     } catch (parseError) {
-      console.error('Failed to parse AI response as JSON:', parseError);
+      console.error("Failed to parse AI response as JSON:", parseError);
       return {
         feedback: aiResponse.content,
         completed: true,
         xpEarned: maxXP,
         strengths: [],
         improvements: [],
-        skillsImproved: []
+        skillsImproved: [],
       };
     }
   }
 
-  static createUserInteraction(content: { response: string; timeSpent?: number }): Interaction {
+  static createUserInteraction(content: {
+    response: string;
+    timeSpent?: number;
+  }): Interaction {
     return {
       timestamp: new Date().toISOString(),
-      type: 'user_input',
+      type: "user_input",
       content: content.response,
       metadata: {
-        timeSpent: content.timeSpent || 0
-      }
+        timeSpent: content.timeSpent || 0,
+      },
     };
   }
 
   static createAIInteraction(evaluationResult: EvaluationResult): Interaction {
     return {
       timestamp: new Date().toISOString(),
-      type: 'ai_response',
+      type: "ai_response",
       content: evaluationResult,
       metadata: {
         completed: evaluationResult.completed,
-        xpEarned: evaluationResult.xpEarned
-      }
+        xpEarned: evaluationResult.xpEarned,
+      },
     };
   }
 }

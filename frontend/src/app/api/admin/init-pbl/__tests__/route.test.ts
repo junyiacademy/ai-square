@@ -22,7 +22,7 @@ jest.mock("@/lib/repositories/base/repository-factory", () => ({
 }));
 
 // Import route AFTER mocks are set up
-import { POST, GET } from '../route';
+import { POST, GET } from "../route";
 
 // Mock fs/promises
 jest.mock("fs/promises", () => ({

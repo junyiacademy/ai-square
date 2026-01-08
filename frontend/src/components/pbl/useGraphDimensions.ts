@@ -3,9 +3,9 @@
  * Extracted from KSAKnowledgeGraph.tsx
  */
 
-import { useEffect, useState, RefObject } from 'react';
-import { GraphDimensions } from './graph-types';
-import { GRAPH_CONFIG } from './graph-constants';
+import { useEffect, useState, RefObject } from "react";
+import { GraphDimensions } from "./graph-types";
+import { GRAPH_CONFIG } from "./graph-constants";
 
 /**
  * Custom hook to calculate and manage responsive graph dimensions
@@ -13,11 +13,11 @@ import { GRAPH_CONFIG } from './graph-constants';
  * @returns Current width and height for the graph
  */
 export function useGraphDimensions(
-  containerRef: RefObject<HTMLDivElement | null>
+  containerRef: RefObject<HTMLDivElement | null>,
 ): GraphDimensions {
   const [dimensions, setDimensions] = useState<GraphDimensions>({
     width: 800,
-    height: 600
+    height: 600,
   });
 
   useEffect(() => {
@@ -25,9 +25,12 @@ export function useGraphDimensions(
       if (containerRef.current) {
         const { width } = containerRef.current.getBoundingClientRect();
         const newWidth = width - GRAPH_CONFIG.layout.padding;
-        const newHeight = Math.min(600, newWidth * GRAPH_CONFIG.layout.aspectRatio);
+        const newHeight = Math.min(
+          600,
+          newWidth * GRAPH_CONFIG.layout.aspectRatio,
+        );
 
-        setDimensions(prev => {
+        setDimensions((prev) => {
           // Only update if dimensions actually changed to avoid infinite loops
           if (prev.width !== newWidth || prev.height !== newHeight) {
             return { width: newWidth, height: newHeight };
@@ -41,10 +44,10 @@ export function useGraphDimensions(
     handleResize();
 
     // Listen to window resize
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
     // Cleanup
-    return () => window.removeEventListener('resize', handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []); // Empty deps - only run on mount/unmount
 
   return dimensions;

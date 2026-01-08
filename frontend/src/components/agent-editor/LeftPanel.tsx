@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   AlertCircle,
@@ -7,14 +7,14 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   Target,
-  Sparkles
-} from 'lucide-react';
+  Sparkles,
+} from "lucide-react";
 
 interface LeftPanelProps {
   leftPanelCollapsed: boolean;
   setLeftPanelCollapsed: (collapsed: boolean) => void;
-  selectedMode: 'pbl' | 'discovery' | 'assessment' | null;
-  setSelectedMode: (mode: 'pbl' | 'discovery' | 'assessment' | null) => void;
+  selectedMode: "pbl" | "discovery" | "assessment" | null;
+  setSelectedMode: (mode: "pbl" | "discovery" | "assessment" | null) => void;
   selectedScenario: string | null;
   setSelectedScenario: (id: string | null) => void;
   loadScenarios: () => void;
@@ -35,29 +35,41 @@ export function LeftPanel({
   setExpandedSections,
   setExpandedTasks,
   hasChanges,
-  getChangeSummary
+  getChangeSummary,
 }: LeftPanelProps) {
   return (
-    <div className={`${leftPanelCollapsed ? 'w-16' : 'w-64'} bg-white border-r border-gray-200 transition-all duration-300 flex flex-col overflow-hidden`}>
+    <div
+      className={`${leftPanelCollapsed ? "w-16" : "w-64"} bg-white border-r border-gray-200 transition-all duration-300 flex flex-col overflow-hidden`}
+    >
       <div className="flex-shrink-0 p-4 border-b border-gray-200">
         <button
           onClick={() => setLeftPanelCollapsed(!leftPanelCollapsed)}
           className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
         >
-          {leftPanelCollapsed ? <PanelLeftOpen className="h-5 w-5" /> : <PanelLeftClose className="h-5 w-5" />}
+          {leftPanelCollapsed ? (
+            <PanelLeftOpen className="h-5 w-5" />
+          ) : (
+            <PanelLeftClose className="h-5 w-5" />
+          )}
         </button>
       </div>
 
       {!leftPanelCollapsed && (
         <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
           {/* Mode Selection - Always visible, highlight selected */}
-          <div className="text-xs font-semibold text-gray-500 mb-3 px-3">學習模式</div>
+          <div className="text-xs font-semibold text-gray-500 mb-3 px-3">
+            學習模式
+          </div>
           <button
-            onClick={() => { setSelectedMode('pbl'); loadScenarios(); setSelectedScenario(null); }}
+            onClick={() => {
+              setSelectedMode("pbl");
+              loadScenarios();
+              setSelectedScenario(null);
+            }}
             className={`w-full text-left px-4 py-3 rounded-lg transition-all ${
-              selectedMode === 'pbl'
-                ? 'bg-gradient-to-r from-purple-100 to-purple-200 border-2 border-purple-400 shadow-md'
-                : 'bg-gradient-to-r from-purple-50 to-purple-100 hover:from-purple-100 hover:to-purple-200 border-2 border-purple-200'
+              selectedMode === "pbl"
+                ? "bg-gradient-to-r from-purple-100 to-purple-200 border-2 border-purple-400 shadow-md"
+                : "bg-gradient-to-r from-purple-50 to-purple-100 hover:from-purple-100 hover:to-purple-200 border-2 border-purple-200"
             }`}
           >
             <div className="flex items-center">
@@ -71,11 +83,15 @@ export function LeftPanel({
             </div>
           </button>
           <button
-            onClick={() => { setSelectedMode('discovery'); loadScenarios(); setSelectedScenario(null); }}
+            onClick={() => {
+              setSelectedMode("discovery");
+              loadScenarios();
+              setSelectedScenario(null);
+            }}
             className={`w-full text-left px-4 py-3 rounded-lg transition-all ${
-              selectedMode === 'discovery'
-                ? 'bg-gradient-to-r from-green-100 to-green-200 border-2 border-green-400 shadow-md'
-                : 'bg-gradient-to-r from-green-50 to-green-100 hover:from-green-100 hover:to-green-200 border-2 border-green-200'
+              selectedMode === "discovery"
+                ? "bg-gradient-to-r from-green-100 to-green-200 border-2 border-green-400 shadow-md"
+                : "bg-gradient-to-r from-green-50 to-green-100 hover:from-green-100 hover:to-green-200 border-2 border-green-200"
             }`}
           >
             <div className="flex items-center">
@@ -89,11 +105,15 @@ export function LeftPanel({
             </div>
           </button>
           <button
-            onClick={() => { setSelectedMode('assessment'); loadScenarios(); setSelectedScenario(null); }}
+            onClick={() => {
+              setSelectedMode("assessment");
+              loadScenarios();
+              setSelectedScenario(null);
+            }}
             className={`w-full text-left px-4 py-3 rounded-lg transition-all ${
-              selectedMode === 'assessment'
-                ? 'bg-gradient-to-r from-blue-100 to-blue-200 border-2 border-blue-400 shadow-md'
-                : 'bg-gradient-to-r from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-200 border-2 border-blue-200'
+              selectedMode === "assessment"
+                ? "bg-gradient-to-r from-blue-100 to-blue-200 border-2 border-blue-400 shadow-md"
+                : "bg-gradient-to-r from-blue-50 to-blue-100 hover:from-blue-100 hover:to-blue-200 border-2 border-blue-200"
             }`}
           >
             <div className="flex items-center">
@@ -115,10 +135,10 @@ export function LeftPanel({
                 onClick={() => {
                   setSelectedScenario(null);
                   setExpandedSections({
-                    'scenario-basic': true,
-                    'scenario-objectives': true,
-                    'scenario-mode-specific': true,
-                    'scenario-advanced': false
+                    "scenario-basic": true,
+                    "scenario-objectives": true,
+                    "scenario-mode-specific": true,
+                    "scenario-advanced": false,
                   });
                   setExpandedTasks({});
                 }}
@@ -136,7 +156,9 @@ export function LeftPanel({
         {hasChanges ? (
           <div className="text-sm text-yellow-600 flex items-center">
             <AlertCircle className="h-4 w-4 mr-1" />
-            {!leftPanelCollapsed && <span>{getChangeSummary().length} 個變更</span>}
+            {!leftPanelCollapsed && (
+              <span>{getChangeSummary().length} 個變更</span>
+            )}
           </div>
         ) : (
           <div className="text-sm text-green-600 flex items-center">

@@ -17,6 +17,7 @@
 **File**: `src/app/pbl/scenarios/[id]/page.tsx`
 
 **Results**:
+
 - **Before**: 803 lines
 - **After**: 267 lines
 - **Reduction**: 536 lines (67% reduction)
@@ -44,6 +45,7 @@
    - `LearningTasksSection.tsx` (~160 lines) - KSA overview, tasks list with instructions
 
 **Quality Metrics**:
+
 - ✅ All TypeScript strict mode compliance
 - ✅ Zero `any` types
 - ✅ Multilingual support maintained
@@ -61,19 +63,19 @@
 
 The following pages still exceed the 500-line target and require refactoring:
 
-| # | Page | Current Lines | Target | Priority | Complexity |
-|---|------|---------------|--------|----------|------------|
-| 2 | `learning-path/page.tsx` | 725 | ~400 | HIGH | Medium |
-| 3 | `chat/page.tsx` | 701 | ~400 | HIGH | High |
-| 4 | `discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]/page.tsx` | 631 | ~400 | MEDIUM | High |
-| 5 | `discovery/scenarios/[id]/programs/[programId]/complete/page.tsx` | 589 | ~400 | MEDIUM | Medium |
-| 6 | `discovery/scenarios/[id]/page.tsx` | 579 | ~400 | HIGH | Medium |
-| 7 | `dashboard/page.tsx` | 519 | ~400 | HIGH | Medium |
-| 8 | `relations/page.tsx` | 493 | ~400 | MEDIUM | Low |
-| 9 | `onboarding/goals/page.tsx` | 461 | ~400 | LOW | Low |
-| 10 | `pbl/scenarios/[id]/programs/[programId]/complete/page.tsx` | 453 | ~400 | LOW | Low |
-| 11 | `register/page.tsx` | 449 | ~400 | LOW | Medium |
-| 12 | `discovery/scenarios/[id]/programs/[programId]/page.tsx` | 442 | ~400 | LOW | Low |
+| #   | Page                                                                    | Current Lines | Target | Priority | Complexity |
+| --- | ----------------------------------------------------------------------- | ------------- | ------ | -------- | ---------- |
+| 2   | `learning-path/page.tsx`                                                | 725           | ~400   | HIGH     | Medium     |
+| 3   | `chat/page.tsx`                                                         | 701           | ~400   | HIGH     | High       |
+| 4   | `discovery/scenarios/[id]/programs/[programId]/tasks/[taskId]/page.tsx` | 631           | ~400   | MEDIUM   | High       |
+| 5   | `discovery/scenarios/[id]/programs/[programId]/complete/page.tsx`       | 589           | ~400   | MEDIUM   | Medium     |
+| 6   | `discovery/scenarios/[id]/page.tsx`                                     | 579           | ~400   | HIGH     | Medium     |
+| 7   | `dashboard/page.tsx`                                                    | 519           | ~400   | HIGH     | Medium     |
+| 8   | `relations/page.tsx`                                                    | 493           | ~400   | MEDIUM   | Low        |
+| 9   | `onboarding/goals/page.tsx`                                             | 461           | ~400   | LOW      | Low        |
+| 10  | `pbl/scenarios/[id]/programs/[programId]/complete/page.tsx`             | 453           | ~400   | LOW      | Low        |
+| 11  | `register/page.tsx`                                                     | 449           | ~400   | LOW      | Medium     |
+| 12  | `discovery/scenarios/[id]/programs/[programId]/page.tsx`                | 442           | ~400   | LOW      | Low        |
 
 **Total**: ~6,041 lines → ~4,800 lines target (save ~1,200 lines)
 
@@ -106,6 +108,7 @@ The following pages still exceed the 500-line target and require refactoring:
    - ⚠️ Tests: Not required (mark as technical debt)
 
 5. **Commit Message Format**:
+
    ```
    refactor(pragmatic): [page name] ([before]→[after] lines, -[%])
 
@@ -133,17 +136,20 @@ The following pages still exceed the 500-line target and require refactoring:
 ### Phase 3B (Next Sprint)
 
 **Week 1: High Priority Pages**
+
 - Day 1: learning-path/page.tsx (725 lines)
 - Day 2: chat/page.tsx (701 lines)
 - Day 3: discovery/scenarios/[id]/page.tsx (579 lines)
 - Day 4: dashboard/page.tsx (519 lines)
 
 **Week 2: Medium Priority Pages**
+
 - Day 1: discovery task page (631 lines)
 - Day 2: discovery complete page (589 lines)
 - Day 3: relations/page.tsx (493 lines)
 
 **Week 3: Low Priority Pages**
+
 - Day 1: onboarding goals (461 lines)
 - Day 2: pbl complete page (453 lines)
 - Day 3: register/page.tsx (449 lines)
@@ -152,6 +158,7 @@ The following pages still exceed the 500-line target and require refactoring:
 ### Phase 3C: Test Coverage (After Phase 3B)
 
 Add comprehensive tests for all pragmatically refactored pages:
+
 - Component tests (React Testing Library)
 - Hook tests (renderHook)
 - Integration tests (Playwright)
@@ -182,6 +189,7 @@ TARGET_LINES=${2:-400}
 ```
 
 **Benefits**:
+
 - Consistent refactoring pattern
 - Faster execution (1-2 hours per page vs 3-4 hours)
 - Automatic TODO tracking
@@ -192,16 +200,19 @@ TARGET_LINES=${2:-400}
 ## Success Metrics
 
 ### Phase 3A (Current)
+
 - [x] **Page 1**: 803 → 267 lines (-67%) with 100% test coverage
 - [ ] **Pages 2-11**: Pending pragmatic refactoring
 
 ### Phase 3B (Target)
+
 - [ ] **All pages** < 500 lines
 - [ ] **Average reduction**: 50%+
 - [ ] **TypeScript errors**: 0
 - [ ] **Build failures**: 0
 
 ### Phase 3C (Future)
+
 - [ ] **Test coverage**: 70%+ for all refactored code
 - [ ] **Technical debt**: Resolved
 - [ ] **Documentation**: Updated with patterns

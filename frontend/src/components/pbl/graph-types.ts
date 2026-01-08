@@ -3,12 +3,12 @@
  * Extracted from KSAKnowledgeGraph.tsx for better maintainability
  */
 
-import * as d3 from 'd3';
+import * as d3 from "d3";
 
 /**
  * Valid categories for graph nodes
  */
-export type GraphCategory = 'knowledge' | 'skills' | 'attitudes' | 'center';
+export type GraphCategory = "knowledge" | "skills" | "attitudes" | "center";
 
 /**
  * Node in the force-directed graph
@@ -41,7 +41,7 @@ export interface KSAKnowledgeGraphProps {
   ksaScores: {
     [ksa: string]: {
       score: number;
-      category: 'knowledge' | 'skills' | 'attitudes';
+      category: "knowledge" | "skills" | "attitudes";
     };
   };
   title: string;

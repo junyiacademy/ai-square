@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { MessageCircle, MoreHorizontal, Trash2 } from 'lucide-react';
-import { formatDateWithLocale } from '@/utils/locale';
-import type { ChatSession, User } from '@/types/chat';
+import { MessageCircle, MoreHorizontal, Trash2 } from "lucide-react";
+import { formatDateWithLocale } from "@/utils/locale";
+import type { ChatSession, User } from "@/types/chat";
 
 interface ChatSidebarProps {
   sessions: ChatSession[];
@@ -37,8 +37,18 @@ export function ChatSidebar({
               className="w-full mb-3 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center justify-center gap-2"
               title="New Chat"
             >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 4v16m8-8H4"
+                />
               </svg>
               <span className="text-sm font-medium">New Chat</span>
             </button>
@@ -63,17 +73,23 @@ export function ChatSidebar({
               <div
                 key={session.id}
                 className={`relative group p-3 rounded-lg hover:bg-gray-50 transition-colors ${
-                  selectedChat === session.id ? 'bg-blue-50 border-blue-200 border' : ''
+                  selectedChat === session.id
+                    ? "bg-blue-50 border-blue-200 border"
+                    : ""
                 }`}
               >
                 <div
                   onClick={() => onLoadSession(session.id)}
                   className="cursor-pointer pr-8"
                 >
-                  <div className="font-medium text-gray-900">{session.title}</div>
-                  <div className="text-sm text-gray-500 truncate">{session.last_message}</div>
+                  <div className="font-medium text-gray-900">
+                    {session.title}
+                  </div>
+                  <div className="text-sm text-gray-500 truncate">
+                    {session.last_message}
+                  </div>
                   <div className="text-xs text-gray-400 mt-1">
-                    {formatDateWithLocale(new Date(session.updated_at), 'en')}
+                    {formatDateWithLocale(new Date(session.updated_at), "en")}
                   </div>
                 </div>
 
@@ -81,7 +97,9 @@ export function ChatSidebar({
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      onToggleDropdown(dropdownOpen === session.id ? null : session.id);
+                      onToggleDropdown(
+                        dropdownOpen === session.id ? null : session.id,
+                      );
                     }}
                     className="opacity-0 group-hover:opacity-100 p-1 hover:bg-gray-200 rounded transition-all duration-200"
                     data-testid={`more-button-${session.id}`}
@@ -94,7 +112,11 @@ export function ChatSidebar({
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          if (window.confirm('Are you sure you want to delete this chat session?')) {
+                          if (
+                            window.confirm(
+                              "Are you sure you want to delete this chat session?",
+                            )
+                          ) {
                             onDeleteSession(session.id);
                           }
                         }}

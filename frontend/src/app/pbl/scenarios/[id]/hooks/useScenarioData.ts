@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { IScenario, IProgram } from '@/types/unified-learning';
-import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
+import { useState, useEffect } from "react";
+import { IScenario, IProgram } from "@/types/unified-learning";
+import { authenticatedFetch } from "@/lib/utils/authenticated-fetch";
 
 export interface UseScenarioDataReturn {
   scenario: IScenario | null;
@@ -13,7 +13,7 @@ export interface UseScenarioDataReturn {
  */
 export function useScenarioData(
   scenarioId: string,
-  language: string
+  language: string,
 ): UseScenarioDataReturn {
   const [scenario, setScenario] = useState<IScenario | null>(null);
   const [userPrograms, setUserPrograms] = useState<IProgram[]>([]);
@@ -28,8 +28,10 @@ export function useScenarioData(
 
         // Fetch scenario details and programs in parallel
         const [scenarioResponse, programsResponse] = await Promise.all([
-          authenticatedFetch(`/api/pbl/scenarios/${scenarioId}?lang=${language}`),
-          authenticatedFetch(`/api/pbl/scenarios/${scenarioId}/programs`)
+          authenticatedFetch(
+            `/api/pbl/scenarios/${scenarioId}?lang=${language}`,
+          ),
+          authenticatedFetch(`/api/pbl/scenarios/${scenarioId}/programs`),
         ]);
 
         if (ignore) return;
@@ -52,21 +54,25 @@ export function useScenarioData(
                 prerequisites: response.data.prerequisites || [], // Keep in metadata for compatibility
                 targetDomains: response.data.targetDomains || [],
                 tasks: response.data.tasks || [],
-                ksaMapping: response.data.ksaMapping
-              }
+                ksaMapping: response.data.ksaMapping,
+              },
             };
             setScenario(scenarioData);
           } else {
-            console.error('Invalid PBL API response:', response);
+            console.error("Invalid PBL API response:", response);
           }
         } else {
-          console.error('Failed to fetch scenario:', scenarioResponse.status, scenarioResponse.statusText);
+          console.error(
+            "Failed to fetch scenario:",
+            scenarioResponse.status,
+            scenarioResponse.statusText,
+          );
         }
 
         // Handle programs response
         if (programsResponse.ok) {
           const programsData = await programsResponse.json();
-          console.log('Programs API response:', programsData);
+          console.log("Programs API response:", programsData);
           // Handle API response format: { success: true, data: { programs: [] } }
           if (programsData.success && programsData.data?.programs) {
             setUserPrograms(programsData.data.programs);
@@ -77,7 +83,7 @@ export function useScenarioData(
         }
       } catch (error) {
         if (!ignore) {
-          console.error('Error fetching scenario data:', error);
+          console.error("Error fetching scenario data:", error);
         }
       } finally {
         if (!ignore) {
@@ -96,6 +102,6 @@ export function useScenarioData(
   return {
     scenario,
     userPrograms,
-    loading
+    loading,
   };
 }

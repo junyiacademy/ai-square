@@ -1,5 +1,5 @@
-import { motion } from 'framer-motion';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { motion } from "framer-motion";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface NavigationControlsProps {
   canGoPrevious: boolean;
@@ -18,7 +18,7 @@ export function NavigationControls({
   isLastQuestion,
   selectedCount,
   onPrevious,
-  onNext
+  onNext,
 }: NavigationControlsProps) {
   return (
     <div className="flex justify-between items-center flex-shrink-0">
@@ -43,9 +43,10 @@ export function NavigationControls({
         whileTap={canGoPrevious ? { scale: 0.95 } : {}}
         className={`
           flex items-center space-x-2 px-6 py-3 rounded-xl font-medium transition-all duration-200
-          ${canGoPrevious && !isAnimating
-            ? 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            : 'bg-gray-50 text-gray-400 cursor-not-allowed'
+          ${
+            canGoPrevious && !isAnimating
+              ? "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              : "bg-gray-50 text-gray-400 cursor-not-allowed"
           }
         `}
       >
@@ -61,15 +62,14 @@ export function NavigationControls({
         whileTap={canGoNext ? { scale: 0.95 } : {}}
         className={`
           flex items-center space-x-2 px-6 py-3 rounded-xl font-medium transition-all duration-200
-          ${canGoNext && !isAnimating
-            ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg hover:shadow-xl'
-            : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+          ${
+            canGoNext && !isAnimating
+              ? "bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg hover:shadow-xl"
+              : "bg-gray-100 text-gray-400 cursor-not-allowed"
           }
         `}
       >
-        <span>
-          {isLastQuestion ? '完成分析' : '下一題'}
-        </span>
+        <span>{isLastQuestion ? "完成分析" : "下一題"}</span>
         {!isLastQuestion && <ChevronRight className="w-5 h-5" />}
       </motion.button>
     </div>

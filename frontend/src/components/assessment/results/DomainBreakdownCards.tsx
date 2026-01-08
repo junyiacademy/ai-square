@@ -1,4 +1,4 @@
-import { AssessmentDomain, DomainScores } from '@/types/assessment';
+import { AssessmentDomain, DomainScores } from "@/types/assessment";
 
 interface DomainBreakdownCardsProps {
   domainScores: DomainScores;
@@ -11,12 +11,16 @@ interface DomainBreakdownCardsProps {
   getDomainName: (domainKey: string) => string;
 }
 
-export function DomainBreakdownCards({ domainScores, domains, getDomainName }: DomainBreakdownCardsProps) {
+export function DomainBreakdownCards({
+  domainScores,
+  domains,
+  getDomainName,
+}: DomainBreakdownCardsProps) {
   const getScoreColor = (score: number) => {
-    if (score >= 85) return 'text-green-600';
-    if (score >= 70) return 'text-blue-600';
-    if (score >= 55) return 'text-yellow-600';
-    return 'text-red-600';
+    if (score >= 85) return "text-green-600";
+    if (score >= 70) return "text-blue-600";
+    if (score >= 55) return "text-yellow-600";
+    return "text-red-600";
   };
 
   return (
@@ -24,7 +28,10 @@ export function DomainBreakdownCards({ domainScores, domains, getDomainName }: D
       {Object.entries(domainScores).map(([domainKey, score]) => {
         const domain = domains[domainKey as keyof typeof domains];
         return (
-          <div key={domainKey} className="border border-gray-200 rounded-lg p-6">
+          <div
+            key={domainKey}
+            className="border border-gray-200 rounded-lg p-6"
+          >
             <div className="flex justify-between items-start mb-3">
               <h4 className="font-semibold text-gray-900">
                 {getDomainName(domainKey)}
@@ -33,9 +40,7 @@ export function DomainBreakdownCards({ domainScores, domains, getDomainName }: D
                 {score}%
               </span>
             </div>
-            <p className="text-sm text-gray-600 mb-4">
-              {domain.description}
-            </p>
+            <p className="text-sm text-gray-600 mb-4">{domain.description}</p>
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div
                 className="bg-indigo-600 h-2 rounded-full transition-all duration-300"

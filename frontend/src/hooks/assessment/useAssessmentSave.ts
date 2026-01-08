@@ -1,7 +1,11 @@
-import { useState, useEffect, useCallback } from 'react';
-import { AssessmentResult, AssessmentQuestion, UserAnswer } from '@/types/assessment';
-import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
-import type { CurrentUser } from './useCurrentUser';
+import { useState, useEffect, useCallback } from "react";
+import {
+  AssessmentResult,
+  AssessmentQuestion,
+  UserAnswer,
+} from "@/types/assessment";
+import { authenticatedFetch } from "@/lib/utils/authenticated-fetch";
+import type { CurrentUser } from "./useCurrentUser";
 
 interface UseAssessmentSaveProps {
   currentUser: CurrentUser | null;
@@ -18,94 +22,102 @@ export function useAssessmentSave({
   userAnswers,
   questions,
   language,
-  isReview
+  isReview,
 }: UseAssessmentSaveProps) {
   const [isSaving, setIsSaving] = useState(false);
-  const [saveMessage, setSaveMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [saveMessage, setSaveMessage] = useState<{
+    type: "success" | "error";
+    text: string;
+  } | null>(null);
   const [isSaved, setIsSaved] = useState(false);
 
-  const handleSaveResults = useCallback(async (t: (key: string, options?: Record<string, unknown>) => string) => {
-    console.log('=== Save button clicked ===');
-    console.log('Current user:', currentUser);
-    console.log('Is saved:', isSaved);
+  const handleSaveResults = useCallback(
+    async (t: (key: string, options?: Record<string, unknown>) => string) => {
+      console.log("=== Save button clicked ===");
+      console.log("Current user:", currentUser);
+      console.log("Is saved:", isSaved);
 
-    if (!currentUser || isSaved) return;
+      if (!currentUser || isSaved) return;
 
-    setIsSaving(true);
-    setSaveMessage(null);
+      setIsSaving(true);
+      setSaveMessage(null);
 
-    const requestBody = {
-      userId: currentUser.id,
-      userEmail: currentUser.email,
-      language,
-      answers: userAnswers,
-      questions,
-      result: {
-        ...result,
-        timeSpentSeconds: result.timeSpentSeconds,
-      },
-    };
-
-    console.log('Sending request to API with body:', requestBody);
-
-    try {
-      const response = await authenticatedFetch('/api/assessment/results', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const requestBody = {
+        userId: currentUser.id,
+        userEmail: currentUser.email,
+        language,
+        answers: userAnswers,
+        questions,
+        result: {
+          ...result,
+          timeSpentSeconds: result.timeSpentSeconds,
         },
-        body: JSON.stringify(requestBody),
-      });
+      };
 
-      const data = await response.json();
+      console.log("Sending request to API with body:", requestBody);
 
-      if (response.ok) {
-        setIsSaved(true);
-        setSaveMessage({
-          type: 'success',
-          text: t('results.saveSuccess', { assessmentId: data.assessmentId }),
+      try {
+        const response = await authenticatedFetch("/api/assessment/results", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
         });
 
-        if (currentUser.email) {
-          try {
-            await authenticatedFetch('/api/users/update-progress', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                email: currentUser.email,
-                stage: 'assessment',
-                data: { result }
-              })
-            });
-          } catch (error) {
-            console.error('Failed to update GCS progress:', error);
+        const data = await response.json();
+
+        if (response.ok) {
+          setIsSaved(true);
+          setSaveMessage({
+            type: "success",
+            text: t("results.saveSuccess", { assessmentId: data.assessmentId }),
+          });
+
+          if (currentUser.email) {
+            try {
+              await authenticatedFetch("/api/users/update-progress", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  email: currentUser.email,
+                  stage: "assessment",
+                  data: { result },
+                }),
+              });
+            } catch (error) {
+              console.error("Failed to update GCS progress:", error);
+            }
           }
+        } else {
+          setSaveMessage({
+            type: "error",
+            text: t("results.saveError", { error: data.error }),
+          });
         }
-      } else {
+      } catch (error) {
+        console.error("Error saving results:", error);
         setSaveMessage({
-          type: 'error',
-          text: t('results.saveError', { error: data.error }),
+          type: "error",
+          text: t("results.saveError", { error: "Network error" }),
         });
+      } finally {
+        setIsSaving(false);
       }
-    } catch (error) {
-      console.error('Error saving results:', error);
-      setSaveMessage({
-        type: 'error',
-        text: t('results.saveError', { error: 'Network error' }),
-      });
-    } finally {
-      setIsSaving(false);
-    }
-  }, [currentUser, isSaved, userAnswers, questions, result, language]);
+    },
+    [currentUser, isSaved, userAnswers, questions, result, language],
+  );
 
   useEffect(() => {
     if (currentUser && !isSaved && result && !isReview) {
-      console.log('Auto-saving assessment result...');
+      console.log("Auto-saving assessment result...");
       const mockT = (key: string, options?: Record<string, unknown>) => {
-        if (key === 'results.saveSuccess') return `Results saved successfully: ${options?.assessmentId}`;
-        if (key === 'results.saveError') return `Failed to save results: ${options?.error}`;
+        if (key === "results.saveSuccess")
+          return `Results saved successfully: ${options?.assessmentId}`;
+        if (key === "results.saveError")
+          return `Failed to save results: ${options?.error}`;
         return key;
       };
       handleSaveResults(mockT);
@@ -116,6 +128,6 @@ export function useAssessmentSave({
     isSaving,
     saveMessage,
     isSaved,
-    handleSaveResults
+    handleSaveResults,
   };
 }

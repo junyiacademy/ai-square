@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { FileText, Trash2, Plus } from 'lucide-react';
-import { TaskDetail } from './TaskDetail';
+import { FileText, Trash2, Plus } from "lucide-react";
+import { TaskDetail } from "./TaskDetail";
 
 interface AIModule {
   role?: string;
@@ -63,7 +63,7 @@ export function TaskList({
   onStartEditing,
   onEditingValueChange,
   onSaveEdit,
-  onCancelEdit
+  onCancelEdit,
 }: TaskListProps) {
   return (
     <div className="bg-gradient-to-r from-green-50 to-teal-50 rounded-xl p-6 border-2 border-green-200">
@@ -74,24 +74,33 @@ export function TaskList({
 
       <div className="space-y-3">
         {tasks.map((task, index) => (
-          <div key={task.id} className="bg-white rounded-lg shadow-md overflow-hidden">
+          <div
+            key={task.id}
+            className="bg-white rounded-lg shadow-md overflow-hidden"
+          >
             <div className="flex items-center p-4 hover:bg-gray-50 transition-colors">
               <div className="flex-shrink-0 w-8 h-8 bg-green-100 text-green-700 rounded-full flex items-center justify-center font-bold text-sm mr-3">
                 {index + 1}
               </div>
               <div className="flex-1">
-                <h3 className="font-bold text-gray-800">{task.title?.[language] || task.title?.en || 'Untitled Task'}</h3>
-                <p className="text-sm text-gray-600 mt-0.5">{task.description?.[language] || task.description?.en || 'No description'}</p>
+                <h3 className="font-bold text-gray-800">
+                  {task.title?.[language] || task.title?.en || "Untitled Task"}
+                </h3>
+                <p className="text-sm text-gray-600 mt-0.5">
+                  {task.description?.[language] ||
+                    task.description?.en ||
+                    "No description"}
+                </p>
               </div>
               <button
                 onClick={() => onToggleTask(task.id)}
                 className="ml-3 px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700 transition-colors text-sm font-medium"
               >
-                {expandedTasks[task.id] ? '收合' : '展開編輯'}
+                {expandedTasks[task.id] ? "收合" : "展開編輯"}
               </button>
               <button
                 onClick={() => {
-                  if (confirm('確定要刪除此任務嗎？')) {
+                  if (confirm("確定要刪除此任務嗎？")) {
                     onDeleteTask(task.id);
                   }
                 }}
