@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
     if (!token || !email) {
       return NextResponse.json(
         { success: false, error: "Token and email required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -32,13 +32,13 @@ export async function GET(request: NextRequest) {
        WHERE LOWER(email)=LOWER($1)
        AND reset_password_token=$2
        AND reset_password_expires > NOW()`,
-      [email, hash]
+      [email, hash],
     );
 
     if (check.rows.length === 0) {
       return NextResponse.json(
         { success: false, error: "Invalid or expired token" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -47,7 +47,7 @@ export async function GET(request: NextRequest) {
     console.error("[forgot-password GET] error", err);
     return NextResponse.json(
       { success: false, error: "Verification failed" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

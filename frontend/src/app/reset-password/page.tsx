@@ -31,7 +31,9 @@ function ResetPasswordContent() {
   useEffect(() => {
     // 驗證 token
     if (token && email) {
-      fetch(`/api/auth/forgot-password?token=${token}&email=${encodeURIComponent(email)}`)
+      fetch(
+        `/api/auth/forgot-password?token=${token}&email=${encodeURIComponent(email)}`,
+      )
         .then((res) => res.json())
         .then((data) => {
           setIsValidToken(data.success);
