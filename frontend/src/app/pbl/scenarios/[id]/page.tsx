@@ -533,7 +533,9 @@ export default function ScenarioDetailPage() {
                               {program.startedAt
                                 ? new Date(
                                     program.startedAt,
-                                  ).toLocaleDateString(getStandardLocale(i18n.language))
+                                  ).toLocaleDateString(
+                                    getStandardLocale(i18n.language),
+                                  )
                                 : "Not started"}
                               {program.completedAt && (
                                 <>
@@ -541,7 +543,9 @@ export default function ScenarioDetailPage() {
                                   {t("common:completedAt", "Completed")}:{" "}
                                   {new Date(
                                     program.completedAt,
-                                  ).toLocaleDateString(getStandardLocale(i18n.language))}
+                                  ).toLocaleDateString(
+                                    getStandardLocale(i18n.language),
+                                  )}
                                 </>
                               )}
                             </div>
