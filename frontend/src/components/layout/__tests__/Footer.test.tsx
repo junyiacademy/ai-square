@@ -67,7 +67,7 @@ describe("Footer", () => {
     expect(roadmapLink).toHaveAttribute("href", "/about/roadmap");
     expect(feedbackLink).toHaveAttribute(
       "href",
-      "https://github.com/anthropics/claude-code/issues",
+      "https://github.com/junyiacademy/ai-square/issues",
     );
     expect(privacyLink).toHaveAttribute("href", "/privacy");
     expect(termsLink).toHaveAttribute("href", "/terms");

@@ -63,7 +63,7 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="https://github.com/anthropics/claude-code/issues"
+                  href="https://github.com/junyiacademy/ai-square/issues"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-white transition-colors"

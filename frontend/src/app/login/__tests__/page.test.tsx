@@ -54,7 +54,6 @@ jest.mock("react-i18next", () => ({
         platformSubtitle: "AI Literacy Platform",
         dontHaveAccount: "Don't have an account?",
         createAccount: "Create one",
-        devNote: "Development version",
         "error.invalidCredentials": "Invalid email or password",
         "error.networkError": "Network error occurred",
         "info.sessionExpired": "Your session has expired. Please login again.",
@@ -93,7 +92,6 @@ describe("LoginPage", () => {
 
     expect(screen.getByText("Sign In")).toBeInTheDocument();
     expect(screen.getByText("AI Literacy Platform")).toBeInTheDocument();
-    expect(screen.getByText("Development version")).toBeInTheDocument();
   });
 
   it("should show session expired message when expired=true in URL", async () => {
