@@ -3,12 +3,12 @@
   "subtitle": "這是您的 AI 素養進度概覽",
   "aiLiteracyProgress": "AI 素養進度",
   "domains": {
-    "engaging_with_ai": "與 AI 互動",
-    "creating_with_ai": "與 AI 共創",
-    "managing_with_ai": "管理 AI",
-    "designing_with_ai": "設計 AI",
-    "managing_ai": "管理 AI",
-    "designing_ai": "設計 AI"
+    "engaging_with_ai": "與 AI 互動（問AI）",
+    "creating_with_ai": "與 AI 共創（用AI）",
+    "managing_with_ai": "管理 AI（管AI）",
+    "designing_with_ai": "設計 AI（造AI）",
+    "managing_ai": "管理 AI（管AI）",
+    "designing_ai": "設計 AI（造AI）"
   },
   "viewDetailedProgress": "查看詳細學習路徑",
   "learningStatistics": "學習統計",
