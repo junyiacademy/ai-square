@@ -2,6 +2,8 @@
  * Date utility functions
  */
 
+import { getStandardLocale } from "@/utils/locale";
+
 /**
  * Format a date for display
  */
@@ -12,7 +14,7 @@ export function formatDate(date: Date | string, locale: string = "en"): string {
     return "Invalid Date";
   }
 
-  return dateObj.toLocaleDateString(locale, {
+  return dateObj.toLocaleDateString(getStandardLocale(locale), {
     year: "numeric",
     month: "long",
     day: "numeric",
@@ -32,7 +34,7 @@ export function formatDateTime(
     return "Invalid Date";
   }
 
-  return dateObj.toLocaleString(locale, {
+  return dateObj.toLocaleString(getStandardLocale(locale), {
     year: "numeric",
     month: "long",
     day: "numeric",

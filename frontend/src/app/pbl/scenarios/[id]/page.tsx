@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import Link from "next/link";
 import { IScenario, IProgram } from "@/types/unified-learning";
 import { authenticatedFetch } from "@/lib/utils/authenticated-fetch";
+import { getStandardLocale } from "@/utils/locale";
 // Date formatting utility
 
 // Helper function to normalize various instruction shapes to string[]
@@ -532,7 +533,7 @@ export default function ScenarioDetailPage() {
                               {program.startedAt
                                 ? new Date(
                                     program.startedAt,
-                                  ).toLocaleDateString(i18n.language)
+                                  ).toLocaleDateString(getStandardLocale(i18n.language))
                                 : "Not started"}
                               {program.completedAt && (
                                 <>
@@ -540,7 +541,7 @@ export default function ScenarioDetailPage() {
                                   {t("common:completedAt", "Completed")}:{" "}
                                   {new Date(
                                     program.completedAt,
-                                  ).toLocaleDateString(i18n.language)}
+                                  ).toLocaleDateString(getStandardLocale(i18n.language))}
                                 </>
                               )}
                             </div>
