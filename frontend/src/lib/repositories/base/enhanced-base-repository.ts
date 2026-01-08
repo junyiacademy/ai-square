@@ -3,20 +3,24 @@
  * Provides common functionality for all repositories with advanced features
  */
 
-import { Pool, PoolClient } from 'pg';
-import { cacheInvalidationService } from '@/lib/cache/cache-invalidation-service';
-import { distributedCacheService } from '@/lib/cache/distributed-cache-service';
-import { TTL } from '@/lib/cache/cache-keys';
+import { Pool, PoolClient } from "pg";
+import { cacheInvalidationService } from "@/lib/cache/cache-invalidation-service";
+import { distributedCacheService } from "@/lib/cache/distributed-cache-service";
+import { TTL } from "@/lib/cache/cache-keys";
 import type {
   IBulkOperations,
   IQueryOperations,
   ICacheAwareOperations,
-  ITransactionalOperations
-} from '../interfaces/extended';
+  ITransactionalOperations,
+} from "../interfaces/extended";
 
 export abstract class EnhancedBaseRepository<T extends { id: string }>
-  implements IBulkOperations<T>, IQueryOperations<T>, ICacheAwareOperations, ITransactionalOperations {
-
+  implements
+    IBulkOperations<T>,
+    IQueryOperations<T>,
+    ICacheAwareOperations,
+    ITransactionalOperations
+{
   protected currentTransaction: PoolClient | null = null;
   protected cachePrefix: string;
   protected entityName: string;
@@ -24,7 +28,7 @@ export abstract class EnhancedBaseRepository<T extends { id: string }>
   constructor(
     protected pool: Pool,
     protected tableName: string,
-    entityName: string
+    entityName: string,
   ) {
     this.entityName = entityName;
     this.cachePrefix = `${entityName}:`;
@@ -45,15 +49,15 @@ export abstract class EnhancedBaseRepository<T extends { id: string }>
     const client = await this.pool.connect();
 
     try {
-      await client.query('BEGIN');
+      await client.query("BEGIN");
       this.currentTransaction = client;
 
       const result = await callback();
 
-      await client.query('COMMIT');
+      await client.query("COMMIT");
       return result;
     } catch (error) {
-      await client.query('ROLLBACK');
+      await client.query("ROLLBACK");
       throw error;
     } finally {
       this.currentTransaction = null;
@@ -63,30 +67,30 @@ export abstract class EnhancedBaseRepository<T extends { id: string }>
 
   async beginTransaction(): Promise<void> {
     if (this.currentTransaction) {
-      throw new Error('Transaction already in progress');
+      throw new Error("Transaction already in progress");
     }
 
     const client = await this.pool.connect();
-    await client.query('BEGIN');
+    await client.query("BEGIN");
     this.currentTransaction = client;
   }
 
   async commitTransaction(): Promise<void> {
     if (!this.currentTransaction) {
-      throw new Error('No transaction in progress');
+      throw new Error("No transaction in progress");
     }
 
-    await this.currentTransaction.query('COMMIT');
+    await this.currentTransaction.query("COMMIT");
     this.currentTransaction.release();
     this.currentTransaction = null;
   }
 
   async rollbackTransaction(): Promise<void> {
     if (!this.currentTransaction) {
-      throw new Error('No transaction in progress');
+      throw new Error("No transaction in progress");
     }
 
-    await this.currentTransaction.query('ROLLBACK');
+    await this.currentTransaction.query("ROLLBACK");
     this.currentTransaction.release();
     this.currentTransaction = null;
   }
@@ -95,7 +99,7 @@ export abstract class EnhancedBaseRepository<T extends { id: string }>
   // Bulk Operations
   // ========================================
 
-  async createBulk(items: Omit<T, 'id'>[]): Promise<T[]> {
+  async createBulk(items: Omit<T, "id">[]): Promise<T[]> {
     if (items.length === 0) return [];
 
     return this.withTransaction(async () => {
@@ -105,10 +109,10 @@ export abstract class EnhancedBaseRepository<T extends { id: string }>
         const dbData = this.toDatabase(item as Partial<T>);
         const columns = Object.keys(dbData);
         const values = Object.values(dbData);
-        const placeholders = columns.map((_, i) => `$${i + 1}`).join(', ');
+        const placeholders = columns.map((_, i) => `$${i + 1}`).join(", ");
 
         const query = `
-          INSERT INTO ${this.tableName} (${columns.join(', ')})
+          INSERT INTO ${this.tableName} (${columns.join(", ")})
           VALUES (${placeholders})
           RETURNING *
         `;
@@ -118,13 +122,15 @@ export abstract class EnhancedBaseRepository<T extends { id: string }>
       }
 
       // Invalidate cache after bulk creation
-      await this.invalidateCache('bulk-create');
+      await this.invalidateCache("bulk-create");
 
       return created;
     });
   }
 
-  async updateBulk(updates: Array<{ id: string; data: Partial<T> }>): Promise<T[]> {
+  async updateBulk(
+    updates: Array<{ id: string; data: Partial<T> }>,
+  ): Promise<T[]> {
     if (updates.length === 0) return [];
 
     return this.withTransaction(async () => {
@@ -134,7 +140,9 @@ export abstract class EnhancedBaseRepository<T extends { id: string }>
         const dbData = this.toDatabase(data);
         const columns = Object.keys(dbData);
         const values = Object.values(dbData);
-        const setClause = columns.map((col, i) => `${col} = $${i + 2}`).join(', ');
+        const setClause = columns
+          .map((col, i) => `${col} = $${i + 2}`)
+          .join(", ");
 
         const query = `
           UPDATE ${this.tableName}
@@ -154,7 +162,9 @@ export abstract class EnhancedBaseRepository<T extends { id: string }>
     });
   }
 
-  async deleteBulk(ids: string[]): Promise<{ deleted: number; failed: string[] }> {
+  async deleteBulk(
+    ids: string[],
+  ): Promise<{ deleted: number; failed: string[] }> {
     if (ids.length === 0) return { deleted: 0, failed: [] };
 
     return this.withTransaction(async () => {
@@ -190,7 +200,7 @@ export abstract class EnhancedBaseRepository<T extends { id: string }>
     page?: number;
     limit?: number;
     orderBy?: string;
-    order?: 'ASC' | 'DESC';
+    order?: "ASC" | "DESC";
     filters?: Record<string, unknown>;
   }): Promise<{
     data: T[];
@@ -202,8 +212,8 @@ export abstract class EnhancedBaseRepository<T extends { id: string }>
     const page = options.page || 1;
     const limit = options.limit || 10;
     const offset = (page - 1) * limit;
-    const orderBy = options.orderBy || 'created_at';
-    const order = options.order || 'DESC';
+    const orderBy = options.orderBy || "created_at";
+    const order = options.order || "DESC";
 
     // Build WHERE clause from filters
     const whereConditions: string[] = [];
@@ -219,13 +229,17 @@ export abstract class EnhancedBaseRepository<T extends { id: string }>
       }
     }
 
-    const whereClause = whereConditions.length > 0
-      ? `WHERE ${whereConditions.join(' AND ')}`
-      : '';
+    const whereClause =
+      whereConditions.length > 0
+        ? `WHERE ${whereConditions.join(" AND ")}`
+        : "";
 
     // Get total count
     const countQuery = `SELECT COUNT(*) FROM ${this.tableName} ${whereClause}`;
-    const { rows: countRows } = await this.getClient().query(countQuery, values);
+    const { rows: countRows } = await this.getClient().query(
+      countQuery,
+      values,
+    );
     const total = parseInt(countRows[0].count, 10);
 
     // Get paginated data
@@ -236,15 +250,19 @@ export abstract class EnhancedBaseRepository<T extends { id: string }>
       LIMIT $${paramCount} OFFSET $${paramCount + 1}
     `;
 
-    const { rows } = await this.getClient().query(dataQuery, [...values, limit, offset]);
-    const data = rows.map(row => this.toEntity(row));
+    const { rows } = await this.getClient().query(dataQuery, [
+      ...values,
+      limit,
+      offset,
+    ]);
+    const data = rows.map((row) => this.toEntity(row));
 
     return {
       data,
       total,
       page,
       limit,
-      totalPages: Math.ceil(total / limit)
+      totalPages: Math.ceil(total / limit),
     };
   }
 
@@ -262,9 +280,10 @@ export abstract class EnhancedBaseRepository<T extends { id: string }>
       }
     }
 
-    const whereClause = whereConditions.length > 0
-      ? `WHERE ${whereConditions.join(' AND ')}`
-      : '';
+    const whereClause =
+      whereConditions.length > 0
+        ? `WHERE ${whereConditions.join(" AND ")}`
+        : "";
 
     const query = `SELECT COUNT(*) FROM ${this.tableName} ${whereClause}`;
     const { rows } = await this.getClient().query(query, values);
@@ -299,16 +318,18 @@ export abstract class EnhancedBaseRepository<T extends { id: string }>
 
     // Fetch uncached items from database
     if (uncached.length > 0) {
-      const placeholders = uncached.map((_, i) => `$${i + 1}`).join(', ');
+      const placeholders = uncached.map((_, i) => `$${i + 1}`).join(", ");
       const query = `SELECT * FROM ${this.tableName} WHERE id IN (${placeholders})`;
       const { rows } = await this.getClient().query(query, uncached);
 
-      const fetched = rows.map(row => this.toEntity(row));
+      const fetched = rows.map((row) => this.toEntity(row));
 
       // Cache the fetched items
       for (const item of fetched) {
         const cacheKey = `${this.cachePrefix}${item.id}`;
-        await distributedCacheService.set(cacheKey, item, { ttl: TTL.STANDARD });
+        await distributedCacheService.set(cacheKey, item, {
+          ttl: TTL.STANDARD,
+        });
       }
 
       return [...cached, ...fetched];
@@ -339,7 +360,9 @@ export abstract class EnhancedBaseRepository<T extends { id: string }>
     for (const row of rows) {
       const entity = this.toEntity(row);
       const cacheKey = `${this.cachePrefix}${entity.id}`;
-      await distributedCacheService.set(cacheKey, entity, { ttl: TTL.STANDARD });
+      await distributedCacheService.set(cacheKey, entity, {
+        ttl: TTL.STANDARD,
+      });
     }
   }
 
@@ -351,19 +374,23 @@ export abstract class EnhancedBaseRepository<T extends { id: string }>
   }> {
     const stats = await distributedCacheService.getStats();
     const allKeys = await distributedCacheService.getAllKeys();
-    const entityKeys = allKeys.filter(key => key.startsWith(this.cachePrefix));
+    const entityKeys = allKeys.filter((key) =>
+      key.startsWith(this.cachePrefix),
+    );
 
     return {
       hits: stats.counters?.hits || 0,
       misses: stats.counters?.misses || 0,
       size: entityKeys.length,
-      keys: entityKeys
+      keys: entityKeys,
     };
   }
 
   async clearCache(): Promise<void> {
     const allKeys = await distributedCacheService.getAllKeys();
-    const entityKeys = allKeys.filter(key => key.startsWith(this.cachePrefix));
+    const entityKeys = allKeys.filter((key) =>
+      key.startsWith(this.cachePrefix),
+    );
 
     for (const key of entityKeys) {
       await distributedCacheService.delete(key);

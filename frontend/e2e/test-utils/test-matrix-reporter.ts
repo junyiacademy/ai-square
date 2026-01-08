@@ -5,7 +5,7 @@
 
 export interface StageResult {
   stage: string;
-  status: 'PASS' | 'FAIL' | 'SKIP' | 'PENDING';
+  status: "PASS" | "FAIL" | "SKIP" | "PENDING";
   error?: string;
   screenshot?: string;
   duration?: number;
@@ -27,14 +27,14 @@ export class TestMatrixReporter {
 
   constructor() {
     // Initialize modes
-    ['PBL', 'Assessment', 'Discovery'].forEach(mode => {
+    ["PBL", "Assessment", "Discovery"].forEach((mode) => {
       this.results.set(mode, {
         mode,
         stages: [],
         totalDuration: 0,
         passCount: 0,
         failCount: 0,
-        skipCount: 0
+        skipCount: 0,
       });
     });
   }
@@ -42,7 +42,13 @@ export class TestMatrixReporter {
   /**
    * Record a stage result
    */
-  recordStage(mode: string, stage: string, status: 'PASS' | 'FAIL' | 'SKIP', error?: string, details?: any) {
+  recordStage(
+    mode: string,
+    stage: string,
+    status: "PASS" | "FAIL" | "SKIP",
+    error?: string,
+    details?: any,
+  ) {
     const modeResult = this.results.get(mode);
     if (!modeResult) return;
 
@@ -51,20 +57,20 @@ export class TestMatrixReporter {
       status,
       error,
       details,
-      duration: Date.now() - this.startTime
+      duration: Date.now() - this.startTime,
     };
 
     modeResult.stages.push(stageResult);
 
     // Update counters
     switch (status) {
-      case 'PASS':
+      case "PASS":
         modeResult.passCount++;
         break;
-      case 'FAIL':
+      case "FAIL":
         modeResult.failCount++;
         break;
-      case 'SKIP':
+      case "SKIP":
         modeResult.skipCount++;
         break;
     }
@@ -76,9 +82,14 @@ export class TestMatrixReporter {
    * Skip remaining stages after a failure
    */
   skipRemainingStages(mode: string, fromStage: number) {
-    const stages = ['List', 'Create', 'Tasks', 'Submit', 'Complete'];
+    const stages = ["List", "Create", "Tasks", "Submit", "Complete"];
     for (let i = fromStage; i < stages.length; i++) {
-      this.recordStage(mode, `Stage${i + 1}_${stages[i]}`, 'SKIP', 'Skipped due to previous failure');
+      this.recordStage(
+        mode,
+        `Stage${i + 1}_${stages[i]}`,
+        "SKIP",
+        "Skipped due to previous failure",
+      );
     }
   }
 
@@ -88,22 +99,25 @@ export class TestMatrixReporter {
   generateMatrix(): string {
     const lines: string[] = [];
 
-    lines.push('');
-    lines.push('=' .repeat(80));
-    lines.push('                    E2E TEST MATRIX RESULTS (3x5)');
-    lines.push('=' .repeat(80));
-    lines.push('');
+    lines.push("");
+    lines.push("=".repeat(80));
+    lines.push("                    E2E TEST MATRIX RESULTS (3x5)");
+    lines.push("=".repeat(80));
+    lines.push("");
 
     // Header
-    lines.push('Mode'.padEnd(12) + '| Stage 1    | Stage 2    | Stage 3    | Stage 4    | Stage 5    |');
-    lines.push('-'.repeat(80));
+    lines.push(
+      "Mode".padEnd(12) +
+        "| Stage 1    | Stage 2    | Stage 3    | Stage 4    | Stage 5    |",
+    );
+    lines.push("-".repeat(80));
 
     // Results for each mode
-    ['PBL', 'Assessment', 'Discovery'].forEach(mode => {
+    ["PBL", "Assessment", "Discovery"].forEach((mode) => {
       const modeResult = this.results.get(mode);
       if (!modeResult) return;
 
-      let row = mode.padEnd(12) + '|';
+      let row = mode.padEnd(12) + "|";
 
       // Ensure we have 5 stages
       const stages = modeResult.stages;
@@ -120,18 +134,20 @@ export class TestMatrixReporter {
       lines.push(row);
     });
 
-    lines.push('-'.repeat(80));
+    lines.push("-".repeat(80));
 
     // Summary
-    let totalPass = 0, totalFail = 0, totalSkip = 0;
-    this.results.forEach(result => {
+    let totalPass = 0,
+      totalFail = 0,
+      totalSkip = 0;
+    this.results.forEach((result) => {
       totalPass += result.passCount;
       totalFail += result.failCount;
       totalSkip += result.skipCount;
     });
 
-    lines.push('');
-    lines.push('Summary:');
+    lines.push("");
+    lines.push("Summary:");
     lines.push(`  ✅ Passed: ${totalPass}`);
     lines.push(`  ❌ Failed: ${totalFail}`);
     lines.push(`  ⏭️  Skipped: ${totalSkip}`);
@@ -139,21 +155,23 @@ export class TestMatrixReporter {
 
     // Failed details
     if (totalFail > 0) {
-      lines.push('');
-      lines.push('Failed Stages:');
-      this.results.forEach(result => {
-        result.stages.forEach(stage => {
-          if (stage.status === 'FAIL') {
-            lines.push(`  [${result.mode} - ${stage.stage}]: ${stage.error || 'Unknown error'}`);
+      lines.push("");
+      lines.push("Failed Stages:");
+      this.results.forEach((result) => {
+        result.stages.forEach((stage) => {
+          if (stage.status === "FAIL") {
+            lines.push(
+              `  [${result.mode} - ${stage.stage}]: ${stage.error || "Unknown error"}`,
+            );
           }
         });
       });
     }
 
-    lines.push('');
-    lines.push('=' .repeat(80));
+    lines.push("");
+    lines.push("=".repeat(80));
 
-    return lines.join('\n');
+    return lines.join("\n");
   }
 
   /**
@@ -161,10 +179,14 @@ export class TestMatrixReporter {
    */
   private getStatusIcon(status: string): string {
     switch (status) {
-      case 'PASS': return '✅ PASS';
-      case 'FAIL': return '❌ FAIL';
-      case 'SKIP': return '⏭️  SKIP';
-      default: return '⏳ PEND';
+      case "PASS":
+        return "✅ PASS";
+      case "FAIL":
+        return "❌ FAIL";
+      case "SKIP":
+        return "⏭️  SKIP";
+      default:
+        return "⏳ PEND";
     }
   }
 
@@ -175,7 +197,7 @@ export class TestMatrixReporter {
     const exportData = {
       timestamp: new Date().toISOString(),
       duration: Date.now() - this.startTime,
-      results: Array.from(this.results.values())
+      results: Array.from(this.results.values()),
     };
     return JSON.stringify(exportData, null, 2);
   }
@@ -192,7 +214,7 @@ export class TestMatrixReporter {
    */
   allPassed(): boolean {
     let allPass = true;
-    this.results.forEach(result => {
+    this.results.forEach((result) => {
       if (result.failCount > 0 || result.skipCount > 0) {
         allPass = false;
       }

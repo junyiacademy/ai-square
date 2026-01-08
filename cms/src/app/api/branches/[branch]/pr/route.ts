@@ -1,30 +1,30 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { Octokit } from '@octokit/rest';
-import { GitHubPullRequest, OctokitError } from '@/types';
+import { NextRequest, NextResponse } from "next/server";
+import { Octokit } from "@octokit/rest";
+import { GitHubPullRequest, OctokitError } from "@/types";
 
 // GET - Get PR info for a branch
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ branch: string }> }
+  { params }: { params: Promise<{ branch: string }> },
 ) {
   try {
     const { branch } = await params;
     const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
-    const owner = process.env.GITHUB_OWNER || 'junyiacademy';
-    const repo = process.env.GITHUB_REPO || 'ai-square';
+    const owner = process.env.GITHUB_OWNER || "junyiacademy";
+    const repo = process.env.GITHUB_REPO || "ai-square";
 
     // Check for existing PR
     const { data: prs } = await octokit.pulls.list({
       owner,
       repo,
       head: `${owner}:${branch}`,
-      state: 'all'
+      state: "all",
     });
 
     if (prs.length === 0) {
       return NextResponse.json({
         success: true,
-        pr: null
+        pr: null,
       });
     }
 
@@ -44,14 +44,14 @@ export async function GET(
         url: pr.html_url,
         author: pr.user?.login,
         mergeable: pr.mergeable || null,
-        mergeableState: pr.mergeable_state || 'unknown'
-      }
+        mergeableState: pr.mergeable_state || "unknown",
+      },
     });
   } catch (error) {
-    console.error('Get PR error:', error);
+    console.error("Get PR error:", error);
     return NextResponse.json(
-      { error: 'Failed to get PR info' },
-      { status: 500 }
+      { error: "Failed to get PR info" },
+      { status: 500 },
     );
   }
 }
@@ -59,32 +59,32 @@ export async function GET(
 // POST - Create PR for a branch
 export async function POST(
   request: NextRequest,
-  { params }: { params: Promise<{ branch: string }> }
+  { params }: { params: Promise<{ branch: string }> },
 ) {
   try {
     const { branch } = await params;
     const { title, body } = await request.json();
 
     const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
-    const owner = process.env.GITHUB_OWNER || 'junyiacademy';
-    const repo = process.env.GITHUB_REPO || 'ai-square';
+    const owner = process.env.GITHUB_OWNER || "junyiacademy";
+    const repo = process.env.GITHUB_REPO || "ai-square";
 
     // Check if PR already exists
     const { data: existingPrs } = await octokit.pulls.list({
       owner,
       repo,
       head: `${owner}:${branch}`,
-      state: 'open'
+      state: "open",
     });
 
     if (existingPrs.length > 0) {
       return NextResponse.json({
         success: false,
-        error: 'PR already exists',
+        error: "PR already exists",
         pr: {
           number: existingPrs[0].number,
-          url: existingPrs[0].html_url
-        }
+          url: existingPrs[0].html_url,
+        },
       });
     }
 
@@ -97,8 +97,8 @@ export async function POST(
       const { data: comparison } = await octokit.repos.compareCommits({
         owner,
         repo,
-        base: 'main',
-        head: branch
+        base: "main",
+        head: branch,
       });
 
       if (!prTitle) {
@@ -106,7 +106,9 @@ export async function POST(
       }
 
       if (!prBody) {
-        const commits = comparison.commits.map(c => `- ${c.commit.message}`).join('\n');
+        const commits = comparison.commits
+          .map((c) => `- ${c.commit.message}`)
+          .join("\n");
         prBody = `## Summary\n\nContent updates made through AI Square CMS.\n\n## Changes\n\n${commits}\n\n## Branch\n\n\`${branch}\``;
       }
     }
@@ -118,7 +120,7 @@ export async function POST(
       title: prTitle,
       body: prBody,
       head: branch,
-      base: 'main'
+      base: "main",
     });
 
     return NextResponse.json({
@@ -127,23 +129,20 @@ export async function POST(
         number: pr.number,
         url: pr.html_url,
         title: pr.title,
-        body: pr.body
-      }
+        body: pr.body,
+      },
     });
   } catch (error) {
-    console.error('Create PR error:', error);
+    console.error("Create PR error:", error);
     const octokitError = error as OctokitError;
 
     if (octokitError.status === 422) {
       return NextResponse.json(
-        { error: 'Cannot create PR - no changes or branch issues' },
-        { status: 422 }
+        { error: "Cannot create PR - no changes or branch issues" },
+        { status: 422 },
       );
     }
 
-    return NextResponse.json(
-      { error: 'Failed to create PR' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to create PR" }, { status: 500 });
   }
 }

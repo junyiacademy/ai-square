@@ -1,11 +1,11 @@
-describe('api-test-helpers', () => {
-  it('should load module', () => {
+describe("api-test-helpers", () => {
+  it("should load module", () => {
     try {
-      const module = require('../api-test-helpers');
+      const module = require("../api-test-helpers");
       expect(module).toBeDefined();
 
       // Test exports
-      Object.keys(module).forEach(key => {
+      Object.keys(module).forEach((key) => {
         expect(module[key]).toBeDefined();
       });
     } catch (error) {

@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useTranslation } from 'react-i18next';
-import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useTranslation } from "react-i18next";
+import { authenticatedFetch } from "@/lib/utils/authenticated-fetch";
 
 interface LearningGoal {
   id: string;
@@ -16,81 +16,87 @@ interface LearningGoal {
 
 export default function OnboardingGoalsPage() {
   const router = useRouter();
-  const { t } = useTranslation(['onboarding', 'common']);
+  const { t } = useTranslation(["onboarding", "common"]);
   const [selectedGoals, setSelectedGoals] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
 
   const learningGoals: LearningGoal[] = [
     {
-      id: 'understand-ai',
-      title: t('onboarding:goals.understand.title'),
-      description: t('onboarding:goals.understand.description'),
-      icon: '🧠',
-      category: 'foundation',
-      recommendedDomains: ['Engaging_with_AI']
+      id: "understand-ai",
+      title: t("onboarding:goals.understand.title"),
+      description: t("onboarding:goals.understand.description"),
+      icon: "🧠",
+      category: "foundation",
+      recommendedDomains: ["Engaging_with_AI"],
     },
     {
-      id: 'create-content',
-      title: t('onboarding:goals.create.title'),
-      description: t('onboarding:goals.create.description'),
-      icon: '🎨',
-      category: 'creative',
-      recommendedDomains: ['Creating_with_AI']
+      id: "create-content",
+      title: t("onboarding:goals.create.title"),
+      description: t("onboarding:goals.create.description"),
+      icon: "🎨",
+      category: "creative",
+      recommendedDomains: ["Creating_with_AI"],
     },
     {
-      id: 'analyze-data',
-      title: t('onboarding:goals.analyze.title'),
-      description: t('onboarding:goals.analyze.description'),
-      icon: '📊',
-      category: 'analytical',
-      recommendedDomains: ['Managing_AI']
+      id: "analyze-data",
+      title: t("onboarding:goals.analyze.title"),
+      description: t("onboarding:goals.analyze.description"),
+      icon: "📊",
+      category: "analytical",
+      recommendedDomains: ["Managing_AI"],
     },
     {
-      id: 'build-solutions',
-      title: t('onboarding:goals.build.title'),
-      description: t('onboarding:goals.build.description'),
-      icon: '🔧',
-      category: 'technical',
-      recommendedDomains: ['Designing_AI']
+      id: "build-solutions",
+      title: t("onboarding:goals.build.title"),
+      description: t("onboarding:goals.build.description"),
+      icon: "🔧",
+      category: "technical",
+      recommendedDomains: ["Designing_AI"],
     },
     {
-      id: 'teach-others',
-      title: t('onboarding:goals.teach.title'),
-      description: t('onboarding:goals.teach.description'),
-      icon: '👩‍🏫',
-      category: 'educational',
-      recommendedDomains: ['Engaging_with_AI', 'Managing_AI']
+      id: "teach-others",
+      title: t("onboarding:goals.teach.title"),
+      description: t("onboarding:goals.teach.description"),
+      icon: "👩‍🏫",
+      category: "educational",
+      recommendedDomains: ["Engaging_with_AI", "Managing_AI"],
     },
     {
-      id: 'ethical-ai',
-      title: t('onboarding:goals.ethical.title'),
-      description: t('onboarding:goals.ethical.description'),
-      icon: '⚖️',
-      category: 'ethical',
-      recommendedDomains: ['Managing_AI', 'Designing_AI']
-    }
+      id: "ethical-ai",
+      title: t("onboarding:goals.ethical.title"),
+      description: t("onboarding:goals.ethical.description"),
+      icon: "⚖️",
+      category: "ethical",
+      recommendedDomains: ["Managing_AI", "Designing_AI"],
+    },
   ];
 
   const categoryColors = {
-    foundation: 'bg-blue-100 dark:bg-blue-900/30 border-blue-300 dark:border-blue-700',
-    creative: 'bg-purple-100 dark:bg-purple-900/30 border-purple-300 dark:border-purple-700',
-    analytical: 'bg-green-100 dark:bg-green-900/30 border-green-300 dark:border-green-700',
-    technical: 'bg-orange-100 dark:bg-orange-900/30 border-orange-300 dark:border-orange-700',
-    educational: 'bg-pink-100 dark:bg-pink-900/30 border-pink-300 dark:border-pink-700',
-    ethical: 'bg-indigo-100 dark:bg-indigo-900/30 border-indigo-300 dark:border-indigo-700'
+    foundation:
+      "bg-blue-100 dark:bg-blue-900/30 border-blue-300 dark:border-blue-700",
+    creative:
+      "bg-purple-100 dark:bg-purple-900/30 border-purple-300 dark:border-purple-700",
+    analytical:
+      "bg-green-100 dark:bg-green-900/30 border-green-300 dark:border-green-700",
+    technical:
+      "bg-orange-100 dark:bg-orange-900/30 border-orange-300 dark:border-orange-700",
+    educational:
+      "bg-pink-100 dark:bg-pink-900/30 border-pink-300 dark:border-pink-700",
+    ethical:
+      "bg-indigo-100 dark:bg-indigo-900/30 border-indigo-300 dark:border-indigo-700",
   };
 
   const handleGoalToggle = (goalId: string) => {
-    setSelectedGoals(prev =>
+    setSelectedGoals((prev) =>
       prev.includes(goalId)
-        ? prev.filter(id => id !== goalId)
-        : [...prev, goalId]
+        ? prev.filter((id) => id !== goalId)
+        : [...prev, goalId],
     );
   };
 
   const handleSubmit = async () => {
     if (selectedGoals.length === 0) {
-      alert(t('onboarding:goals.selectAtLeastOne'));
+      alert(t("onboarding:goals.selectAtLeastOne"));
       return;
     }
 
@@ -98,172 +104,208 @@ export default function OnboardingGoalsPage() {
 
     try {
       // Save selected goals to user profile
-      const userStr = localStorage.getItem('user');
+      const userStr = localStorage.getItem("user");
       if (userStr) {
         const user = JSON.parse(userStr);
         user.learningGoals = selectedGoals;
         user.hasCompletedOnboarding = true;
-        localStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem("user", JSON.stringify(user));
 
         // Update onboarding status in database
         try {
-          const updateResponse = await authenticatedFetch(`/api/users/${user.id}`, {
-            method: 'PATCH',
-            headers: {
-              'Content-Type': 'application/json',
+          const updateResponse = await authenticatedFetch(
+            `/api/users/${user.id}`,
+            {
+              method: "PATCH",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                onboardingCompleted: true,
+                learningPreferences: {
+                  goals: selectedGoals,
+                  interests: selectedGoals,
+                  identity: user.identity || "learner",
+                },
+              }),
+              credentials: "include",
             },
-            body: JSON.stringify({
-              onboardingCompleted: true,
-              learningPreferences: {
-                goals: selectedGoals,
-                interests: selectedGoals,
-                identity: user.identity || 'learner'
-              }
-            }),
-            credentials: 'include'
-          });
+          );
 
           if (!updateResponse.ok) {
-            console.error('Failed to update onboarding status in database');
+            console.error("Failed to update onboarding status in database");
           } else {
-            console.log('Onboarding status successfully updated in database');
+            console.log("Onboarding status successfully updated in database");
           }
         } catch (error) {
-          console.error('Error updating onboarding status:', error);
+          console.error("Error updating onboarding status:", error);
         }
 
         // Save profile including interests to localStorage for personalization
         const userProfile = {
-          identity: user.identity || 'learner',
+          identity: user.identity || "learner",
           interests: selectedGoals,
-          goals: selectedGoals
+          goals: selectedGoals,
         };
-        localStorage.setItem('userProfile', JSON.stringify(userProfile));
+        localStorage.setItem("userProfile", JSON.stringify(userProfile));
 
         // Update progress in GCS
-        await authenticatedFetch('/api/users/update-progress', {
-          method: 'POST',
+        await authenticatedFetch("/api/users/update-progress", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             email: user.email,
-            stage: 'goals',
+            stage: "goals",
             data: {
               goals: selectedGoals,
-              interests: selectedGoals
-            }
-          })
+              interests: selectedGoals,
+            },
+          }),
         });
       }
 
       // Check both frontend and backend authentication status
-      console.log('Checking user authentication...');
+      console.log("Checking user authentication...");
 
       // First check frontend state
-      const authUserStr = localStorage.getItem('user');
+      const authUserStr = localStorage.getItem("user");
       const frontendUser = authUserStr ? JSON.parse(authUserStr) : null;
-      console.log('Frontend user state:', frontendUser ? 'logged in' : 'not logged in');
+      console.log(
+        "Frontend user state:",
+        frontendUser ? "logged in" : "not logged in",
+      );
 
       // Then check backend API
-      const authCheckResponse = await authenticatedFetch('/api/auth/check');
+      const authCheckResponse = await authenticatedFetch("/api/auth/check");
       const authData = await authCheckResponse.json();
-      console.log('Backend auth response:', authData);
+      console.log("Backend auth response:", authData);
 
       // If backend auth fails but frontend shows user is logged in, try to proceed anyway
       if (!authData.authenticated && !frontendUser) {
-        console.log('Neither frontend nor backend shows user as authenticated');
-        alert('請先完成登入，然後選擇評估項目開始您的 AI 學習之旅！');
-        router.push('/assessment/scenarios');
+        console.log("Neither frontend nor backend shows user as authenticated");
+        alert("請先完成登入，然後選擇評估項目開始您的 AI 學習之旅！");
+        router.push("/assessment/scenarios");
         return;
       }
 
       if (!authData.authenticated && frontendUser) {
-        console.log('Frontend shows user logged in but backend auth failed - proceeding with frontend user info');
-        console.log('This might be a session sync issue, but we\'ll try to create the program');
+        console.log(
+          "Frontend shows user logged in but backend auth failed - proceeding with frontend user info",
+        );
+        console.log(
+          "This might be a session sync issue, but we'll try to create the program",
+        );
       }
 
-      console.log('User authenticated, proceeding with automatic program creation');
+      console.log(
+        "User authenticated, proceeding with automatic program creation",
+      );
 
       // Get first assessment scenario and auto-create program
-      console.log('Fetching assessment scenarios...');
-      const scenariosResponse = await authenticatedFetch('/api/assessment/scenarios?lang=en');
+      console.log("Fetching assessment scenarios...");
+      const scenariosResponse = await authenticatedFetch(
+        "/api/assessment/scenarios?lang=en",
+      );
 
       if (!scenariosResponse.ok) {
-        console.error('Failed to fetch scenarios:', scenariosResponse.status, scenariosResponse.statusText);
+        console.error(
+          "Failed to fetch scenarios:",
+          scenariosResponse.status,
+          scenariosResponse.statusText,
+        );
         const errorText = await scenariosResponse.text();
-        console.error('Error details:', errorText);
-        router.push('/assessment/scenarios');
+        console.error("Error details:", errorText);
+        router.push("/assessment/scenarios");
         return;
       }
 
       const scenariosData = await scenariosResponse.json();
-      console.log('Scenarios API response:', scenariosData);
+      console.log("Scenarios API response:", scenariosData);
 
       // 確保正確提取 scenarios 陣列
       let scenarios = [];
       if (Array.isArray(scenariosData)) {
         scenarios = scenariosData;
-      } else if (scenariosData.scenarios && Array.isArray(scenariosData.scenarios)) {
+      } else if (
+        scenariosData.scenarios &&
+        Array.isArray(scenariosData.scenarios)
+      ) {
         scenarios = scenariosData.scenarios;
-      } else if (scenariosData.data && scenariosData.data.scenarios && Array.isArray(scenariosData.data.scenarios)) {
+      } else if (
+        scenariosData.data &&
+        scenariosData.data.scenarios &&
+        Array.isArray(scenariosData.data.scenarios)
+      ) {
         // API 返回的格式是 { success: true, data: { scenarios: [...] } }
         scenarios = scenariosData.data.scenarios;
       } else if (scenariosData.data && Array.isArray(scenariosData.data)) {
         scenarios = scenariosData.data;
       }
 
-      console.log('Extracted scenarios:', scenarios.length, 'scenarios found');
+      console.log("Extracted scenarios:", scenarios.length, "scenarios found");
 
       if (!scenarios || scenarios.length === 0) {
-        console.error('No assessment scenarios found');
-        router.push('/assessment/scenarios');
+        console.error("No assessment scenarios found");
+        router.push("/assessment/scenarios");
         return;
       }
 
       // Get first scenario
       const firstScenario = scenarios[0];
       if (!firstScenario || !firstScenario.id) {
-        console.error('Invalid scenario structure:', firstScenario);
-        router.push('/assessment/scenarios');
+        console.error("Invalid scenario structure:", firstScenario);
+        router.push("/assessment/scenarios");
         return;
       }
 
-      console.log('Creating program for first scenario:', firstScenario.id);
+      console.log("Creating program for first scenario:", firstScenario.id);
 
       // Create program for the first scenario
-      console.log('Attempting to create program with current auth state...');
-      const programResponse = await authenticatedFetch(`/api/assessment/scenarios/${firstScenario.id}/programs`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      console.log("Attempting to create program with current auth state...");
+      const programResponse = await authenticatedFetch(
+        `/api/assessment/scenarios/${firstScenario.id}/programs`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            action: "start",
+            language: "en",
+          }),
+          credentials: "include", // Include cookies in the request
         },
-        body: JSON.stringify({
-          action: 'start',
-          language: 'en'
-        }),
-        credentials: 'include' // Include cookies in the request
-      });
+      );
 
       if (!programResponse.ok) {
-        console.error('Failed to create program:', programResponse.status, programResponse.statusText);
+        console.error(
+          "Failed to create program:",
+          programResponse.status,
+          programResponse.statusText,
+        );
         const errorText = await programResponse.text();
-        console.error('Program creation error details:', errorText);
+        console.error("Program creation error details:", errorText);
 
         // If program creation fails due to auth, redirect to scenarios page
         if (programResponse.status === 401 || programResponse.status === 403) {
-          console.log('Program creation failed due to authentication - redirecting to scenarios page');
-          alert('將為您開啟評估項目清單，請手動選擇第一個項目開始測驗。');
-          router.push('/assessment/scenarios');
+          console.log(
+            "Program creation failed due to authentication - redirecting to scenarios page",
+          );
+          alert("將為您開啟評估項目清單，請手動選擇第一個項目開始測驗。");
+          router.push("/assessment/scenarios");
         } else {
-          console.log('Program creation failed for other reasons - redirecting to scenarios page');
-          router.push('/assessment/scenarios');
+          console.log(
+            "Program creation failed for other reasons - redirecting to scenarios page",
+          );
+          router.push("/assessment/scenarios");
         }
         return;
       }
 
       const programData = await programResponse.json();
-      console.log('Program created successfully:', programData.program?.id);
+      console.log("Program created successfully:", programData.program?.id);
 
       // Navigate to the assessment program using correct route structure
       const scenarioId = firstScenario.id;
@@ -271,16 +313,19 @@ export default function OnboardingGoalsPage() {
 
       if (programData.existing) {
         // Use existing program
-        router.push(`/assessment/scenarios/${scenarioId}/programs/${programId}`);
+        router.push(
+          `/assessment/scenarios/${scenarioId}/programs/${programId}`,
+        );
       } else {
         // New program created
-        router.push(`/assessment/scenarios/${scenarioId}/programs/${programId}`);
+        router.push(
+          `/assessment/scenarios/${scenarioId}/programs/${programId}`,
+        );
       }
-
     } catch (error) {
-      console.error('Error in onboarding completion:', error);
+      console.error("Error in onboarding completion:", error);
       // Fallback to assessment scenarios page
-      router.push('/assessment/scenarios');
+      router.push("/assessment/scenarios");
     } finally {
       setLoading(false);
     }
@@ -308,21 +353,27 @@ export default function OnboardingGoalsPage() {
               <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-white text-sm font-medium">
                 ✓
               </div>
-              <span className="ml-2 text-sm text-gray-600">{t('onboarding:progress.welcome', 'Welcome')}</span>
+              <span className="ml-2 text-sm text-gray-600">
+                {t("onboarding:progress.welcome", "Welcome")}
+              </span>
             </div>
             <div className="w-16 h-0.5 bg-gray-300"></div>
             <div className="flex items-center">
               <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-white text-sm font-medium">
                 ✓
               </div>
-              <span className="ml-2 text-sm text-gray-600">{t('onboarding:progress.identity', 'Identity')}</span>
+              <span className="ml-2 text-sm text-gray-600">
+                {t("onboarding:progress.identity", "Identity")}
+              </span>
             </div>
             <div className="w-16 h-0.5 bg-gray-300"></div>
             <div className="flex items-center">
               <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-sm font-medium">
                 3
               </div>
-              <span className="ml-2 text-sm font-medium text-gray-900">{t('onboarding:progress.goals', 'Goals')}</span>
+              <span className="ml-2 text-sm font-medium text-gray-900">
+                {t("onboarding:progress.goals", "Goals")}
+              </span>
             </div>
           </div>
         </div>
@@ -330,10 +381,10 @@ export default function OnboardingGoalsPage() {
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
-            {t('onboarding:goals.title')}
+            {t("onboarding:goals.title")}
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-            {t('onboarding:goals.subtitle')}
+            {t("onboarding:goals.subtitle")}
           </p>
         </div>
 
@@ -347,16 +398,24 @@ export default function OnboardingGoalsPage() {
                 onClick={() => handleGoalToggle(goal.id)}
                 className={`relative cursor-pointer rounded-xl p-6 border-2 transition-all transform hover:scale-105 ${
                   isSelected
-                    ? 'ring-2 ring-blue-500 shadow-lg'
-                    : 'hover:shadow-md'
+                    ? "ring-2 ring-blue-500 shadow-lg"
+                    : "hover:shadow-md"
                 } ${categoryColors[goal.category as keyof typeof categoryColors]}`}
               >
                 {/* Selection Indicator */}
                 {isSelected && (
                   <div className="absolute top-4 right-4">
                     <div className="bg-blue-600 rounded-full p-1">
-                      <svg className="h-4 w-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      <svg
+                        className="h-4 w-4 text-white"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                          clipRule="evenodd"
+                        />
                       </svg>
                     </div>
                   </div>
@@ -376,7 +435,7 @@ export default function OnboardingGoalsPage() {
                 {/* Recommended Domains */}
                 <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
                   <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
-                    {t('onboarding:goals.recommendedDomains')}:
+                    {t("onboarding:goals.recommendedDomains")}:
                   </p>
                   <div className="flex flex-wrap gap-1">
                     {goal.recommendedDomains.map((domain) => (
@@ -384,7 +443,7 @@ export default function OnboardingGoalsPage() {
                         key={domain}
                         className="text-xs px-2 py-1 bg-white dark:bg-slate-700 rounded-full"
                       >
-                        {domain.replace('_', ' ')}
+                        {domain.replace("_", " ")}
                       </span>
                     ))}
                   </div>
@@ -398,11 +457,11 @@ export default function OnboardingGoalsPage() {
         {selectedGoals.length > 0 && (
           <div className="bg-white dark:bg-slate-800 rounded-xl p-6 mb-8 shadow-lg">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
-              {t('onboarding:goals.selected', { count: selectedGoals.length })}
+              {t("onboarding:goals.selected", { count: selectedGoals.length })}
             </h3>
             <div className="flex flex-wrap gap-2">
               {selectedGoals.map((goalId) => {
-                const goal = learningGoals.find(g => g.id === goalId);
+                const goal = learningGoals.find((g) => g.id === goalId);
                 return goal ? (
                   <span
                     key={goalId}
@@ -420,10 +479,10 @@ export default function OnboardingGoalsPage() {
         {/* Action Buttons */}
         <div className="flex justify-between items-center">
           <button
-            onClick={() => router.push('/onboarding/identity')}
+            onClick={() => router.push("/onboarding/identity")}
             className="px-6 py-3 text-gray-700 hover:text-gray-900 transition-colors"
           >
-            {t('onboarding:button.back', 'Back')}
+            {t("onboarding:button.back", "Back")}
           </button>
 
           <button
@@ -431,20 +490,30 @@ export default function OnboardingGoalsPage() {
             disabled={loading || selectedGoals.length === 0}
             className={`px-8 py-3 rounded-lg font-medium transition-all flex items-center ${
               selectedGoals.length === 0
-                ? 'bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed'
-                : 'bg-blue-600 text-white hover:bg-blue-700 hover:shadow-lg'
+                ? "bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400 cursor-not-allowed"
+                : "bg-blue-600 text-white hover:bg-blue-700 hover:shadow-lg"
             }`}
           >
             {loading ? (
               <>
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                {t('common:loading')}
+                {t("common:loading")}
               </>
             ) : (
               <>
                 Continue to Assessment
-                <svg className="ml-2 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                <svg
+                  className="ml-2 h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 7l5 5m0 0l-5 5m5-5H6"
+                  />
                 </svg>
               </>
             )}
@@ -453,7 +522,7 @@ export default function OnboardingGoalsPage() {
 
         {/* Help Text */}
         <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-8">
-          {t('onboarding:goals.helpText')}
+          {t("onboarding:goals.helpText")}
         </p>
       </div>
     </div>

@@ -3,11 +3,14 @@
  * GET /api/discovery/my-programs
  */
 
-import { NextRequest, NextResponse } from 'next/server';
-import { getUnifiedAuth, createUnauthorizedResponse } from '@/lib/auth/unified-auth';
-import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import { cacheService } from '@/lib/cache/cache-service';
-import type { Task } from '@/lib/repositories/interfaces';
+import { NextRequest, NextResponse } from "next/server";
+import {
+  getUnifiedAuth,
+  createUnauthorizedResponse,
+} from "@/lib/auth/unified-auth";
+import { repositoryFactory } from "@/lib/repositories/base/repository-factory";
+import { cacheService } from "@/lib/cache/cache-service";
+import type { Task } from "@/lib/repositories/interfaces";
 
 export async function GET(request: NextRequest) {
   try {
@@ -22,7 +25,7 @@ export async function GET(request: NextRequest) {
     const cacheKey = `discovery-my-scenarios-${user.email}`;
     const cached = await cacheService.get<unknown[]>(cacheKey);
     if (cached) {
-      console.log('Returning cached my scenarios');
+      console.log("Returning cached my scenarios");
       return NextResponse.json(cached);
     }
 
@@ -35,11 +38,13 @@ export async function GET(request: NextRequest) {
     const allPrograms = await programRepo.findByUser(user.id);
 
     // Filter for Discovery programs
-    const discoveryPrograms = allPrograms.filter(program => {
+    const discoveryPrograms = allPrograms.filter((program) => {
       // Check if this is a Discovery program by looking at the scenario
-      return program.metadata?.sourceType === 'discovery' ||
-             program.scenarioId.includes('discovery') ||
-             program.metadata?.careerType; // Discovery programs have careerType
+      return (
+        program.metadata?.sourceType === "discovery" ||
+        program.scenarioId.includes("discovery") ||
+        program.metadata?.careerType
+      ); // Discovery programs have careerType
     });
 
     if (discoveryPrograms.length === 0) {
@@ -49,7 +54,9 @@ export async function GET(request: NextRequest) {
     }
 
     // Get unique scenario IDs
-    const scenarioIds = [...new Set(discoveryPrograms.map(p => p.scenarioId))];
+    const scenarioIds = [
+      ...new Set(discoveryPrograms.map((p) => p.scenarioId)),
+    ];
 
     // Batch load scenarios to prevent N+1 queries
     let validScenarios: unknown[] = [];
@@ -59,7 +66,10 @@ export async function GET(request: NextRequest) {
         try {
           validScenarios = await scenarioRepo.findByIds(scenarioIds);
         } catch (error) {
-          console.error('Batch scenario loading failed, falling back to individual queries:', error);
+          console.error(
+            "Batch scenario loading failed, falling back to individual queries:",
+            error,
+          );
           // Fallback to individual queries
           const scenarios = await Promise.all(
             scenarioIds.map(async (id) => {
@@ -69,9 +79,9 @@ export async function GET(request: NextRequest) {
                 console.error(`Failed to load scenario ${id}:`, error);
                 return null;
               }
-            })
+            }),
           );
-          validScenarios = scenarios.filter(s => s !== null);
+          validScenarios = scenarios.filter((s) => s !== null);
         }
       } else {
         // Fallback to individual queries if batch method not available
@@ -83,20 +93,21 @@ export async function GET(request: NextRequest) {
               console.error(`Failed to load scenario ${id}:`, error);
               return null;
             }
-          })
+          }),
         );
-        validScenarios = scenarios.filter(s => s !== null);
+        validScenarios = scenarios.filter((s) => s !== null);
       }
     }
 
     // Batch load all tasks for active programs to prevent N+1 queries
     const activeProgramIds = discoveryPrograms
-      .filter(p => p.status === 'active')
-      .map(p => p.id);
+      .filter((p) => p.status === "active")
+      .map((p) => p.id);
 
-    const allTasks = activeProgramIds.length > 0
-      ? await taskRepo.findByProgramIds(activeProgramIds)
-      : [];
+    const allTasks =
+      activeProgramIds.length > 0
+        ? await taskRepo.findByProgramIds(activeProgramIds)
+        : [];
 
     // Group tasks by program ID for efficient lookup
     const tasksByProgram = new Map<string, typeof allTasks>();
@@ -110,10 +121,14 @@ export async function GET(request: NextRequest) {
     // Build response with scenario and program details
     const myScenarios = validScenarios.map((scenario) => {
       // Get programs for this scenario
-      const scenarioPrograms = discoveryPrograms.filter(p => p.scenarioId === (scenario as Record<string, unknown>)?.id as string);
+      const scenarioPrograms = discoveryPrograms.filter(
+        (p) =>
+          p.scenarioId ===
+          ((scenario as Record<string, unknown>)?.id as string),
+      );
 
       // Find active program
-      const activeProgram = scenarioPrograms.find(p => p.status === 'active');
+      const activeProgram = scenarioPrograms.find((p) => p.status === "active");
 
       // Calculate progress for active program and get latest activity
       let progress = 0;
@@ -125,8 +140,11 @@ export async function GET(request: NextRequest) {
         // Get tasks for the active program from batched data
         activeProgramTasks = tasksByProgram.get(activeProgram.id) || [];
         totalTasks = activeProgramTasks.length;
-        completedTasks = activeProgramTasks.filter(t => t.status === 'completed').length;
-        progress = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+        completedTasks = activeProgramTasks.filter(
+          (t) => t.status === "completed",
+        ).length;
+        progress =
+          totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
       }
 
       // Get latest activity from programs and their tasks
@@ -134,7 +152,7 @@ export async function GET(request: NextRequest) {
 
       if (scenarioPrograms.length > 0) {
         // Check program start times and completed times
-        const programTimes = scenarioPrograms.map(p => {
+        const programTimes = scenarioPrograms.map((p) => {
           const times: number[] = [];
           if (p.createdAt) {
             times.push(new Date(p.createdAt).getTime());
@@ -153,7 +171,7 @@ export async function GET(request: NextRequest) {
 
         // Also check task update times for active program
         if (activeProgram && activeProgramTasks.length > 0) {
-          const taskTimes = activeProgramTasks.map(t => {
+          const taskTimes = activeProgramTasks.map((t) => {
             const times: number[] = [];
             if (t.startedAt) {
               times.push(new Date(t.startedAt).getTime());
@@ -170,28 +188,32 @@ export async function GET(request: NextRequest) {
       }
 
       return {
-        ...scenario as Record<string, unknown>,
+        ...(scenario as Record<string, unknown>),
         // Add user-specific data
         userPrograms: {
           total: scenarioPrograms.length,
-          active: activeProgram ? {
-            id: activeProgram.id,
-            startedAt: activeProgram.startedAt,
-            progress,
-            completedTasks,
-            totalTasks,
-            currentTaskIndex: activeProgram.currentTaskIndex
-          } : null,
-          completed: scenarioPrograms.filter(p => p.status === 'completed').length,
-          lastActivity: new Date(latestActivity).toISOString()
-        }
+          active: activeProgram
+            ? {
+                id: activeProgram.id,
+                startedAt: activeProgram.startedAt,
+                progress,
+                completedTasks,
+                totalTasks,
+                currentTaskIndex: activeProgram.currentTaskIndex,
+              }
+            : null,
+          completed: scenarioPrograms.filter((p) => p.status === "completed")
+            .length,
+          lastActivity: new Date(latestActivity).toISOString(),
+        },
       };
     });
 
     // Sort by last activity (most recent first)
-    myScenarios.sort((a, b) =>
-      new Date(b.userPrograms.lastActivity).getTime() -
-      new Date(a.userPrograms.lastActivity).getTime()
+    myScenarios.sort(
+      (a, b) =>
+        new Date(b.userPrograms.lastActivity).getTime() -
+        new Date(a.userPrograms.lastActivity).getTime(),
     );
 
     // Cache the result
@@ -199,10 +221,10 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(myScenarios);
   } catch (error) {
-    console.error('Error in GET /api/discovery/my-programs:', error);
+    console.error("Error in GET /api/discovery/my-programs:", error);
     return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
+      { error: "Internal server error" },
+      { status: 500 },
     );
   }
 }

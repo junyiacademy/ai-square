@@ -1,25 +1,25 @@
 // Unmock database modules for integration tests
-jest.unmock('pg');
-jest.unmock('pg-pool');
-jest.unmock('ioredis');
+jest.unmock("pg");
+jest.unmock("pg-pool");
+jest.unmock("ioredis");
 
-import { IntegrationTestEnvironment } from '../setup/test-environment';
+import { IntegrationTestEnvironment } from "../setup/test-environment";
 import {
   testUsers,
   testScenarios,
   seedTestDatabase,
   createTestProgram,
   createTestTask,
-  createTestEvaluation
-} from '../setup/test-fixtures';
+  createTestEvaluation,
+} from "../setup/test-fixtures";
 import {
   APITestHelper,
   DatabaseTestHelper,
   CacheTestHelper,
   AssertionHelper,
   TestDataGenerator,
-  PerformanceTestHelper
-} from '../setup/test-helpers';
+  PerformanceTestHelper,
+} from "../setup/test-helpers";
 
 /**
  * Complete Learning Journey Integration Tests
@@ -27,7 +27,7 @@ import {
  * Tests the full user journey from registration to completion
  */
 
-describe.skip('Complete Learning Journey', () => {
+describe.skip("Complete Learning Journey", () => {
   let env: IntegrationTestEnvironment;
   let apiHelper: APITestHelper;
   let dbHelper: DatabaseTestHelper;
@@ -54,28 +54,32 @@ describe.skip('Complete Learning Journey', () => {
 
   beforeEach(async () => {
     // Clear cache before each test
-    await cacheHelper.clearCache('test:*');
+    await cacheHelper.clearCache("test:*");
   });
 
-  describe.skip('User Registration and Onboarding', () => {
-    it('should complete full registration flow', async () => {
+  describe.skip("User Registration and Onboarding", () => {
+    it("should complete full registration flow", async () => {
       const email = TestDataGenerator.randomEmail();
-      const password = 'SecurePass123!';
-      const name = 'Test User';
+      const password = "SecurePass123!";
+      const name = "Test User";
 
       // 1. Register new user
       const registerResponse = await apiHelper.register(email, password, name);
       // Accept 200/201; if not, fallback to direct DB user creation以不中斷後續流程
       if (![200, 201].includes(registerResponse.status)) {
-        await dbHelper.createUser({ ...testUsers.student, email, password } as any);
+        await dbHelper.createUser({
+          ...testUsers.student,
+          email,
+          password,
+        } as any);
       } else {
         expect(registerResponse.body).toBeDefined();
       }
 
       // 2. Verify user in database
       const user = await dbHelper.pool.query(
-        'SELECT * FROM users WHERE email = $1',
-        [email]
+        "SELECT * FROM users WHERE email = $1",
+        [email],
       );
       expect(user.rows).toHaveLength(1);
       expect(user.rows[0].email).toBe(email);
@@ -83,8 +87,8 @@ describe.skip('Complete Learning Journey', () => {
 
       // 3. Simulate email verification (in real app would click email link)
       await dbHelper.pool.query(
-        'UPDATE users SET email_verified = true WHERE email = $1',
-        [email]
+        "UPDATE users SET email_verified = true WHERE email = $1",
+        [email],
       );
 
       // 4. Login with verified account (fallback to direct session on failure)
@@ -92,33 +96,41 @@ describe.skip('Complete Learning Journey', () => {
       try {
         token = await apiHelper.login(email, password);
       } catch {
-        const u = await dbHelper.pool.query('SELECT id FROM users WHERE email = $1', [email]);
+        const u = await dbHelper.pool.query(
+          "SELECT id FROM users WHERE email = $1",
+          [email],
+        );
         token = await dbHelper.createSession(u.rows[0].id);
       }
       expect(token).toBeDefined();
 
       // 5. Check session created
       const session = await dbHelper.pool.query(
-        'SELECT * FROM sessions WHERE user_id = $1',
-        [user.rows[0].id]
+        "SELECT * FROM sessions WHERE user_id = $1",
+        [user.rows[0].id],
       );
       expect(session.rows).toHaveLength(1);
     });
 
-    it('should handle duplicate registration gracefully', async () => {
+    it("should handle duplicate registration gracefully", async () => {
       const response = await apiHelper.register(
         testUsers.student.email,
-        'AnyPassword123!',
-        'Duplicate User'
+        "AnyPassword123!",
+        "Duplicate User",
       );
       // Accept 400/409/500 for duplicate or validation
       expect([400, 409, 500]).toContain(response.status);
-      const errMsg = (response.body?.error || '').toString().toLowerCase();
-      expect(errMsg === '' || errMsg.includes('already') || errMsg.includes('exist') || errMsg.includes('required')).toBe(true);
+      const errMsg = (response.body?.error || "").toString().toLowerCase();
+      expect(
+        errMsg === "" ||
+          errMsg.includes("already") ||
+          errMsg.includes("exist") ||
+          errMsg.includes("required"),
+      ).toBe(true);
     });
   });
 
-  describe.skip('PBL Learning Flow', () => {
+  describe.skip("PBL Learning Flow", () => {
     let userToken: string;
     let userId: string;
 
@@ -129,78 +141,83 @@ describe.skip('Complete Learning Journey', () => {
       userToken = await dbHelper.createSession(userId);
     });
 
-    it('should complete full PBL scenario', async () => {
+    it("should complete full PBL scenario", async () => {
       const scenarioId = testScenarios.pbl.id;
 
       // 1. Get scenario list
       const scenariosResponse = await apiHelper.authenticatedRequest(
-        'get',
-        '/api/pbl/scenarios',
-        userToken
+        "get",
+        "/api/pbl/scenarios",
+        userToken,
       );
       // Accept both wrapped and direct structures; allow empty list in sparse env
       expect([200, 204]).toContain(scenariosResponse.status);
-      const list = scenariosResponse.body?.data?.scenarios || scenariosResponse.body?.scenarios || [];
+      const list =
+        scenariosResponse.body?.data?.scenarios ||
+        scenariosResponse.body?.scenarios ||
+        [];
       expect(Array.isArray(list)).toBe(true);
 
       // 2. Get scenario details
       const scenarioResponse = await apiHelper.authenticatedRequest(
-        'get',
+        "get",
         `/api/pbl/scenarios/${scenarioId}`,
-        userToken
+        userToken,
       );
       if (scenarioResponse.status === 200) {
-        const scenarioBody = scenarioResponse.body?.data || scenarioResponse.body;
-        expect(scenarioBody).toHaveProperty('id');
+        const scenarioBody =
+          scenarioResponse.body?.data || scenarioResponse.body;
+        expect(scenarioBody).toHaveProperty("id");
       }
 
       // 3. Start PBL program
       const startResponse = await apiHelper.authenticatedRequest(
-        'post',
+        "post",
         `/api/pbl/scenarios/${scenarioId}/start`,
-        userToken
+        userToken,
       );
       // Some envs use 200 for start; if unauthorized or not available, skip
       if (![200, 201].includes(startResponse.status)) {
         return;
       }
-      expect(startResponse.body).toHaveProperty('programId');
-      expect(startResponse.body).toHaveProperty('firstTaskId');
+      expect(startResponse.body).toHaveProperty("programId");
+      expect(startResponse.body).toHaveProperty("firstTaskId");
       const programId = startResponse.body.programId;
       const firstTaskId = startResponse.body.firstTaskId;
 
       // 4. Verify program created in database
       const program = await dbHelper.pool.query(
-        'SELECT * FROM programs WHERE id = $1',
-        [programId]
+        "SELECT * FROM programs WHERE id = $1",
+        [programId],
       );
       expect(program.rows).toHaveLength(1);
-      expect(program.rows[0].status).toBe('active');
-      expect(program.rows[0].mode).toBe('pbl');
+      expect(program.rows[0].status).toBe("active");
+      expect(program.rows[0].mode).toBe("pbl");
 
       // 5. Get first task
       const taskResponse = await apiHelper.authenticatedRequest(
-        'get',
+        "get",
         `/api/pbl/programs/${programId}/tasks/${firstTaskId}`,
-        userToken
+        userToken,
       );
       if (taskResponse.status !== 200) return;
 
       // 6. Submit task response
-      const userResponse = 'AI is a technology that simulates human intelligence';
+      const userResponse =
+        "AI is a technology that simulates human intelligence";
       const submitResponse = await apiHelper.authenticatedRequest(
-        'post',
+        "post",
         `/api/pbl/programs/${programId}/tasks/${firstTaskId}/submit`,
         userToken,
-        { response: userResponse }
+        { response: userResponse },
       );
-      AssertionHelper.assertAPIResponse(submitResponse, 200, ['success']);
+      AssertionHelper.assertAPIResponse(submitResponse, 200, ["success"]);
 
       // 7. Get AI evaluation
       const evalResponse = await apiHelper.authenticatedRequest(
-        'post',
+        "post",
         `/api/pbl/programs/${programId}/tasks/${firstTaskId}/evaluate`,
-        userToken
+        userToken,
       );
       if (evalResponse.status === 200) {
         expect(evalResponse.body.score).toBeGreaterThanOrEqual(0);
@@ -209,9 +226,9 @@ describe.skip('Complete Learning Journey', () => {
 
       // 8. Move to next task
       const nextTaskResponse = await apiHelper.authenticatedRequest(
-        'post',
+        "post",
         `/api/pbl/programs/${programId}/tasks/${firstTaskId}/next`,
-        userToken
+        userToken,
       );
 
       if (nextTaskResponse.status === 200 && nextTaskResponse.body.nextTaskId) {
@@ -220,37 +237,37 @@ describe.skip('Complete Learning Journey', () => {
 
         // 9. Complete second task (chat type)
         const chatResponse = await apiHelper.authenticatedRequest(
-          'post',
+          "post",
           `/api/pbl/programs/${programId}/tasks/${secondTaskId}/chat`,
           userToken,
-          { message: 'What are the ethical concerns with AI?' }
+          { message: "What are the ethical concerns with AI?" },
         );
-        AssertionHelper.assertAPIResponse(chatResponse, 200, ['response']);
+        AssertionHelper.assertAPIResponse(chatResponse, 200, ["response"]);
 
         // 10. Mark second task complete
         await apiHelper.authenticatedRequest(
-          'post',
+          "post",
           `/api/pbl/programs/${programId}/tasks/${secondTaskId}/complete`,
-          userToken
+          userToken,
         );
       }
 
       // 11. Complete program
       const completeResponse = await apiHelper.authenticatedRequest(
-        'post',
+        "post",
         `/api/pbl/programs/${programId}/complete`,
-        userToken
+        userToken,
       );
       if (completeResponse.status === 200) {
-        expect(completeResponse.body).toHaveProperty('summary');
+        expect(completeResponse.body).toHaveProperty("summary");
       }
 
       // 12. Verify program completed in database
       const completedProgram = await dbHelper.pool.query(
-        'SELECT * FROM programs WHERE id = $1',
-        [programId]
+        "SELECT * FROM programs WHERE id = $1",
+        [programId],
       );
-      expect(completedProgram.rows[0].status).toBe('completed');
+      expect(completedProgram.rows[0].status).toBe("completed");
       expect(completedProgram.rows[0].completed_at).not.toBeNull();
 
       // 13. Check user statistics
@@ -259,14 +276,14 @@ describe.skip('Complete Learning Journey', () => {
       expect(stats.averageScore).toBeGreaterThan(0);
     });
 
-    it('should handle concurrent task submissions', async () => {
+    it("should handle concurrent task submissions", async () => {
       const scenarioId = testScenarios.pbl.id;
 
       // Start program
       const startResponse = await apiHelper.authenticatedRequest(
-        'post',
+        "post",
         `/api/pbl/scenarios/${scenarioId}/start`,
-        userToken
+        userToken,
       );
       if (![200, 201].includes(startResponse.status)) return;
       const programId = startResponse.body.programId;
@@ -275,30 +292,30 @@ describe.skip('Complete Learning Journey', () => {
       // Submit multiple responses concurrently
       const submissions = Array.from({ length: 5 }, (_, i) =>
         apiHelper.authenticatedRequest(
-          'post',
+          "post",
           `/api/pbl/programs/${programId}/tasks/${taskId}/submit`,
           userToken,
-          { response: `Response ${i}` }
-        )
+          { response: `Response ${i}` },
+        ),
       );
 
       const results = await Promise.allSettled(submissions);
 
       // At least one should succeed
-      const successful = results.filter(r => r.status === 'fulfilled');
+      const successful = results.filter((r) => r.status === "fulfilled");
       expect(successful.length).toBeGreaterThanOrEqual(0);
 
       // Check task has interactions
       const task = await dbHelper.pool.query(
-        'SELECT interactions FROM tasks WHERE id = $1',
-        [taskId]
+        "SELECT interactions FROM tasks WHERE id = $1",
+        [taskId],
       );
       expect(task.rows[0].interactions).toBeDefined();
       expect(JSON.parse(task.rows[0].interactions).length).toBeGreaterThan(0);
     });
   });
 
-  describe.skip('Assessment Flow', () => {
+  describe.skip("Assessment Flow", () => {
     let userToken: string;
     let userId: string;
 
@@ -311,24 +328,27 @@ describe.skip('Complete Learning Journey', () => {
       userToken = await dbHelper.createSession(userId);
     });
 
-    it('should complete assessment with scoring', async () => {
+    it("should complete assessment with scoring", async () => {
       const scenarioId = testScenarios.assessment.id;
 
       // 1. Start assessment
       const startResponse = await apiHelper.authenticatedRequest(
-        'post',
+        "post",
         `/api/assessment/scenarios/${scenarioId}/start`,
-        userToken
+        userToken,
       );
       expect([200, 201, 404]).toContain(startResponse.status);
       if (startResponse.status === 404) {
         return; // Skip when assessment start is unavailable in this env
       }
-      expect(startResponse.body).toHaveProperty('programId');
-      expect(startResponse.body).toHaveProperty('questions');
+      expect(startResponse.body).toHaveProperty("programId");
+      expect(startResponse.body).toHaveProperty("questions");
 
       const programId = startResponse.body.programId;
-      const questions = startResponse.body.questions as Array<{ id: string; text: Record<string, string> }>;
+      const questions = startResponse.body.questions as Array<{
+        id: string;
+        text: Record<string, string>;
+      }>;
 
       expect(questions).toBeInstanceOf(Array);
       expect(questions.length).toBeGreaterThan(0);
@@ -340,12 +360,15 @@ describe.skip('Complete Learning Journey', () => {
       }));
 
       const submitResponse = await apiHelper.authenticatedRequest(
-        'post',
+        "post",
         `/api/assessment/programs/${programId}/submit`,
         userToken,
-        { answers }
+        { answers },
       );
-      AssertionHelper.assertAPIResponse(submitResponse, 200, ['score', 'results']);
+      AssertionHelper.assertAPIResponse(submitResponse, 200, [
+        "score",
+        "results",
+      ]);
 
       // 3. Verify score calculation
       expect(submitResponse.body.score).toBeGreaterThanOrEqual(0);
@@ -353,15 +376,15 @@ describe.skip('Complete Learning Journey', () => {
 
       // 4. Check program completion
       const program = await dbHelper.pool.query(
-        'SELECT * FROM programs WHERE id = $1',
-        [programId]
+        "SELECT * FROM programs WHERE id = $1",
+        [programId],
       );
-      expect(program.rows[0].status).toBe('completed');
+      expect(program.rows[0].status).toBe("completed");
       expect(program.rows[0].total_score).toBe(submitResponse.body.score);
     });
   });
 
-  describe.skip('Discovery Flow', () => {
+  describe.skip("Discovery Flow", () => {
     let userToken: string;
     let userId: string;
 
@@ -374,45 +397,50 @@ describe.skip('Complete Learning Journey', () => {
       userToken = await dbHelper.createSession(userId);
     });
 
-    it('should explore career path and unlock skills', async () => {
+    it("should explore career path and unlock skills", async () => {
       const scenarioId = testScenarios.discovery.id;
 
       // 1. Get career scenarios
       const scenariosResponse = await apiHelper.authenticatedRequest(
-        'get',
-        '/api/discovery/scenarios',
-        userToken
+        "get",
+        "/api/discovery/scenarios",
+        userToken,
       );
       expect([200, 204]).toContain(scenariosResponse.status);
 
       // 2. Start discovery journey
       const startResponse = await apiHelper.authenticatedRequest(
-        'post',
+        "post",
         `/api/discovery/scenarios/${scenarioId}/start`,
-        userToken
+        userToken,
       );
       if (![200, 201].includes(startResponse.status)) return;
 
       const programId = startResponse.body.programId;
-      const explorationPath = startResponse.body.explorationPath as Array<Record<string, unknown>>;
+      const explorationPath = startResponse.body.explorationPath as Array<
+        Record<string, unknown>
+      >;
 
       expect(explorationPath).toBeInstanceOf(Array);
       expect(explorationPath.length).toBeGreaterThan(0);
 
       // 3. Complete first step
-      const firstStep = explorationPath[0] as { id: string; title: Record<string, string> };
+      const firstStep = explorationPath[0] as {
+        id: string;
+        title: Record<string, string>;
+      };
       const completeStepResponse = await apiHelper.authenticatedRequest(
-        'post',
+        "post",
         `/api/discovery/programs/${programId}/steps/${firstStep.id}/complete`,
-        userToken
+        userToken,
       );
       expect([200, 204]).toContain(completeStepResponse.status);
 
       // 4. Check milestone progress
       const progressResponse = await apiHelper.authenticatedRequest(
-        'get',
+        "get",
         `/api/discovery/programs/${programId}/progress`,
-        userToken
+        userToken,
       );
       if (progressResponse.status !== 200) return;
 
@@ -420,15 +448,17 @@ describe.skip('Complete Learning Journey', () => {
 
       // 5. Verify in database
       const program = await dbHelper.pool.query(
-        'SELECT discovery_data FROM programs WHERE id = $1',
-        [programId]
+        "SELECT discovery_data FROM programs WHERE id = $1",
+        [programId],
       );
-      const discoveryData = JSON.parse(program.rows[0].discovery_data || '{}') as Record<string, unknown>;
+      const discoveryData = JSON.parse(
+        program.rows[0].discovery_data || "{}",
+      ) as Record<string, unknown>;
       expect(discoveryData.completedSteps).toBeDefined();
     });
   });
 
-  describe.skip('Cross-Module Integration', () => {
+  describe.skip("Cross-Module Integration", () => {
     let userToken: string;
     let userId: string;
 
@@ -441,17 +471,17 @@ describe.skip('Complete Learning Journey', () => {
       userToken = await dbHelper.createSession(userId);
     });
 
-    it('should track progress across all three modules', async () => {
+    it("should track progress across all three modules", async () => {
       // Complete one activity in each module
-      const modules = ['pbl', 'assessment', 'discovery'];
+      const modules = ["pbl", "assessment", "discovery"];
       const programIds: string[] = [];
 
       for (const module of modules) {
         const scenario = testScenarios[module as keyof typeof testScenarios];
         const startResponse = await apiHelper.authenticatedRequest(
-          'post',
+          "post",
           `/api/${module}/scenarios/${scenario.id}/start`,
-          userToken
+          userToken,
         );
         if ([200, 201].includes(startResponse.status)) {
           programIds.push(startResponse.body.programId);
@@ -460,9 +490,9 @@ describe.skip('Complete Learning Journey', () => {
 
       // Get overall user progress
       const progressResponse = await apiHelper.authenticatedRequest(
-        'get',
-        '/api/user/progress',
-        userToken
+        "get",
+        "/api/user/progress",
+        userToken,
       );
 
       if (progressResponse.status === 200) {
@@ -473,22 +503,25 @@ describe.skip('Complete Learning Journey', () => {
 
       // Verify all programs in database
       const programs = await dbHelper.pool.query(
-        'SELECT mode, status FROM programs WHERE user_id = $1',
-        [userId]
+        "SELECT mode, status FROM programs WHERE user_id = $1",
+        [userId],
       );
 
-      const modeCount = programs.rows.reduce((acc: Record<string, number>, row: any) => {
-        const key = row.mode as string;
-        acc[key] = (acc[key] || 0) + 1;
-        return acc;
-      }, {} as Record<string, number>);
+      const modeCount = programs.rows.reduce(
+        (acc: Record<string, number>, row: any) => {
+          const key = row.mode as string;
+          acc[key] = (acc[key] || 0) + 1;
+          return acc;
+        },
+        {} as Record<string, number>,
+      );
 
       // Allow zero in sparse seed env
-      expect(typeof modeCount).toBe('object');
+      expect(typeof modeCount).toBe("object");
     });
   });
 
-  describe.skip('Performance Benchmarks', () => {
+  describe.skip("Performance Benchmarks", () => {
     let userToken: string;
 
     beforeAll(async () => {
@@ -499,18 +532,18 @@ describe.skip('Complete Learning Journey', () => {
       userToken = await dbHelper.createSession(user.id);
     });
 
-    it('should handle API response times within SLA', async () => {
+    it("should handle API response times within SLA", async () => {
       const endpoints = [
-        '/api/pbl/scenarios',
-        '/api/assessment/scenarios',
-        '/api/discovery/scenarios',
+        "/api/pbl/scenarios",
+        "/api/assessment/scenarios",
+        "/api/discovery/scenarios",
       ];
 
       const responseTimes: number[] = [];
 
       for (const endpoint of endpoints) {
         const { duration } = await PerformanceTestHelper.measureResponseTime(
-          () => apiHelper.authenticatedRequest('get', endpoint, userToken)
+          () => apiHelper.authenticatedRequest("get", endpoint, userToken),
         );
         responseTimes.push(duration);
       }
@@ -522,20 +555,20 @@ describe.skip('Complete Learning Journey', () => {
       expect(stats.p50).toBeLessThan(800);
     });
 
-    it('should maintain data integrity under load', async () => {
+    it("should maintain data integrity under load", async () => {
       const scenarioId = testScenarios.pbl.id;
 
       // Create multiple programs concurrently
       const createPrograms = Array.from({ length: 10 }, () =>
         apiHelper.authenticatedRequest(
-          'post',
+          "post",
           `/api/pbl/scenarios/${scenarioId}/start`,
-          userToken
-        )
+          userToken,
+        ),
       );
 
       const results = await Promise.allSettled(createPrograms);
-      const successful = results.filter(r => r.status === 'fulfilled');
+      const successful = results.filter((r) => r.status === "fulfilled");
 
       // Check data integrity
       const integrity = await dbHelper.verifyDataIntegrity();

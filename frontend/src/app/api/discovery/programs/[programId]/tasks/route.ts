@@ -3,12 +3,21 @@
  * 管理 Discovery 學習任務
  */
 
-import { NextRequest, NextResponse } from 'next/server';
-import { getUnifiedAuth, createUnauthorizedResponse } from '@/lib/auth/unified-auth';
-import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import type { ITask } from '@/types/unified-learning';
+import { NextRequest, NextResponse } from "next/server";
+import {
+  getUnifiedAuth,
+  createUnauthorizedResponse,
+} from "@/lib/auth/unified-auth";
+import { repositoryFactory } from "@/lib/repositories/base/repository-factory";
+import type { ITask } from "@/types/unified-learning";
 
-const VALID_TASK_TYPES = ['exploration', 'practice', 'reflection', 'project', 'assessment'];
+const VALID_TASK_TYPES = [
+  "exploration",
+  "practice",
+  "reflection",
+  "project",
+  "assessment",
+];
 
 /**
  * GET /api/discovery/programs/[programId]/tasks
@@ -16,7 +25,7 @@ const VALID_TASK_TYPES = ['exploration', 'practice', 'reflection', 'project', 'a
  */
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ programId: string }> }
+  { params }: { params: Promise<{ programId: string }> },
 ) {
   try {
     // Check authentication
@@ -27,7 +36,7 @@ export async function GET(
 
     // Get language from query params
     const { searchParams } = new URL(request.url);
-    const language = searchParams.get('lang') || 'en';
+    const language = searchParams.get("lang") || "en";
 
     const { programId } = await params;
 
@@ -40,8 +49,8 @@ export async function GET(
     const user = await userRepo.findByEmail(session.user.email);
     if (!user) {
       return NextResponse.json(
-        { success: false, error: 'User not found' },
-        { status: 404 }
+        { success: false, error: "User not found" },
+        { status: 404 },
       );
     }
 
@@ -49,15 +58,15 @@ export async function GET(
     const program = await programRepo.findById(programId);
     if (!program) {
       return NextResponse.json(
-        { success: false, error: 'Program not found' },
-        { status: 404 }
+        { success: false, error: "Program not found" },
+        { status: 404 },
       );
     }
 
     if (program.userId !== user.id) {
       return NextResponse.json(
-        { success: false, error: 'Access denied' },
-        { status: 403 }
+        { success: false, error: "Access denied" },
+        { status: 403 },
       );
     }
 
@@ -66,27 +75,37 @@ export async function GET(
 
     // Process multilingual fields and sort by order
     const processedTasks = tasks
-      .map(task => {
+      .map((task) => {
         const titleObj = task.title as Record<string, string>;
-        const instructionsObj = (task.content as Record<string, unknown>)?.instructions as Record<string, string> | undefined;
-        const feedbackObj = (task.metadata as Record<string, unknown>)?.feedback as Record<string, string> | undefined;
+        const instructionsObj = (task.content as Record<string, unknown>)
+          ?.instructions as Record<string, string> | undefined;
+        const feedbackObj = (task.metadata as Record<string, unknown>)
+          ?.feedback as Record<string, string> | undefined;
 
         return {
           ...task,
-          title: titleObj?.[language] || titleObj?.en || 'Untitled',
-          instructions: instructionsObj ? (instructionsObj[language] || instructionsObj.en || '') : '',
-          feedback: feedbackObj ? (feedbackObj[language] || feedbackObj.en || '') : undefined,
+          title: titleObj?.[language] || titleObj?.en || "Untitled",
+          instructions: instructionsObj
+            ? instructionsObj[language] || instructionsObj.en || ""
+            : "",
+          feedback: feedbackObj
+            ? feedbackObj[language] || feedbackObj.en || ""
+            : undefined,
           // Preserve original objects
           titleObj,
           instructionsObj,
-          feedbackObj
+          feedbackObj,
         };
       })
-      .sort((a, b) => ((a as unknown as {order?: number}).order || 0) - ((b as unknown as {order?: number}).order || 0));
+      .sort(
+        (a, b) =>
+          ((a as unknown as { order?: number }).order || 0) -
+          ((b as unknown as { order?: number }).order || 0),
+      );
 
     // Calculate progress
-    const completedCount = tasks.filter(t => t.status === 'completed').length;
-    const activeTaskIndex = tasks.findIndex(t => t.status === 'active');
+    const completedCount = tasks.filter((t) => t.status === "completed").length;
+    const activeTaskIndex = tasks.findIndex((t) => t.status === "active");
 
     return NextResponse.json({
       success: true,
@@ -95,26 +114,28 @@ export async function GET(
         progress: {
           completed: completedCount,
           total: tasks.length,
-          current: activeTaskIndex >= 0 ? activeTaskIndex : completedCount
-        }
+          current: activeTaskIndex >= 0 ? activeTaskIndex : completedCount,
+        },
       },
       meta: {
         timestamp: new Date().toISOString(),
-        language
-      }
+        language,
+      },
     });
-
   } catch (error) {
-    console.error('Error in GET /api/discovery/programs/[programId]/tasks:', error);
+    console.error(
+      "Error in GET /api/discovery/programs/[programId]/tasks:",
+      error,
+    );
     return NextResponse.json(
       {
         success: false,
-        error: 'Internal server error',
+        error: "Internal server error",
         meta: {
-          timestamp: new Date().toISOString()
-        }
+          timestamp: new Date().toISOString(),
+        },
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -125,7 +146,7 @@ export async function GET(
  */
 export async function POST(
   request: NextRequest,
-  { params }: { params: Promise<{ programId: string }> }
+  { params }: { params: Promise<{ programId: string }> },
 ) {
   try {
     // Check authentication
@@ -141,15 +162,15 @@ export async function POST(
     // Validate input
     if (!type || !VALID_TASK_TYPES.includes(type)) {
       return NextResponse.json(
-        { success: false, error: 'Invalid task type' },
-        { status: 400 }
+        { success: false, error: "Invalid task type" },
+        { status: 400 },
       );
     }
 
     if (!title || !instructions) {
       return NextResponse.json(
-        { success: false, error: 'Title and instructions are required' },
-        { status: 400 }
+        { success: false, error: "Title and instructions are required" },
+        { status: 400 },
       );
     }
 
@@ -162,8 +183,8 @@ export async function POST(
     const user = await userRepo.findByEmail(session.user.email);
     if (!user) {
       return NextResponse.json(
-        { success: false, error: 'User not found' },
-        { status: 404 }
+        { success: false, error: "User not found" },
+        { status: 404 },
       );
     }
 
@@ -171,15 +192,15 @@ export async function POST(
     const program = await programRepo.findById(programId);
     if (!program) {
       return NextResponse.json(
-        { success: false, error: 'Program not found' },
-        { status: 404 }
+        { success: false, error: "Program not found" },
+        { status: 404 },
       );
     }
 
     if (program.userId !== user.id) {
       return NextResponse.json(
-        { success: false, error: 'Access denied' },
-        { status: 403 }
+        { success: false, error: "Access denied" },
+        { status: 403 },
       );
     }
 
@@ -188,12 +209,12 @@ export async function POST(
     const nextOrder = existingTasks.length;
 
     // Create task
-    const newTask: Omit<ITask, 'id'> = {
+    const newTask: Omit<ITask, "id"> = {
       programId,
-      mode: 'discovery',
+      mode: "discovery",
       type,
       title,
-      status: 'pending',
+      status: "pending",
       taskIndex: nextOrder,
       score: 0,
       maxScore: 100,
@@ -204,7 +225,7 @@ export async function POST(
       updatedAt: new Date().toISOString(),
       content: {
         instructions,
-        ...context
+        ...context,
       },
       interactions: [],
       interactionCount: 0,
@@ -214,8 +235,8 @@ export async function POST(
       discoveryData: {},
       assessmentData: {},
       metadata: {
-        order: nextOrder
-      }
+        order: nextOrder,
+      },
     };
 
     const createdTask = await taskRepo.create(newTask);
@@ -224,32 +245,37 @@ export async function POST(
     await programRepo.update?.(programId, {
       metadata: {
         ...(program.metadata || {}),
-        lastTaskCreatedAt: new Date().toISOString()
+        lastTaskCreatedAt: new Date().toISOString(),
       },
-      lastActivityAt: new Date().toISOString()
+      lastActivityAt: new Date().toISOString(),
     });
 
-    return NextResponse.json({
-      success: true,
-      data: {
-        task: createdTask
+    return NextResponse.json(
+      {
+        success: true,
+        data: {
+          task: createdTask,
+        },
+        meta: {
+          timestamp: new Date().toISOString(),
+        },
       },
-      meta: {
-        timestamp: new Date().toISOString()
-      }
-    }, { status: 201 });
-
+      { status: 201 },
+    );
   } catch (error) {
-    console.error('Error in POST /api/discovery/programs/[programId]/tasks:', error);
+    console.error(
+      "Error in POST /api/discovery/programs/[programId]/tasks:",
+      error,
+    );
     return NextResponse.json(
       {
         success: false,
-        error: 'Internal server error',
+        error: "Internal server error",
         meta: {
-          timestamp: new Date().toISOString()
-        }
+          timestamp: new Date().toISOString(),
+        },
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -26,7 +26,7 @@ export interface Badge {
   description: string;
   imageUrl?: string;
   unlockedAt: string;
-  category: 'exploration' | 'learning' | 'mastery' | 'community' | 'special';
+  category: "exploration" | "learning" | "mastery" | "community" | "special";
   xpReward: number;
 }
 
@@ -97,8 +97,15 @@ export interface EvaluationData {
 }
 
 export interface EvaluationOperations {
-  saveEvaluation: (type: string, id: string, data: Record<string, unknown>) => Promise<void>;
-  loadEvaluation: (type: string, id: string) => Promise<Record<string, unknown> | null>;
+  saveEvaluation: (
+    type: string,
+    id: string,
+    data: Record<string, unknown>,
+  ) => Promise<void>;
+  loadEvaluation: (
+    type: string,
+    id: string,
+  ) => Promise<Record<string, unknown> | null>;
   loadEvaluationsByType: (type: string) => Promise<Record<string, unknown>[]>;
   deleteEvaluation: (type: string, id: string) => Promise<void>;
 }

@@ -5,8 +5,8 @@
  * This replaces Redis/memory storage with database persistence
  */
 
-import crypto from 'crypto';
-import { Pool } from 'pg';
+import crypto from "crypto";
+import { Pool } from "pg";
 
 export interface SessionData {
   userId: string;
@@ -47,11 +47,11 @@ export class PostgresSession {
 
       // If no DATABASE_URL, use individual settings
       if (!dbConfig.connectionString) {
-        dbConfig.host = process.env.DB_HOST || '127.0.0.1';
-        dbConfig.port = parseInt(process.env.DB_PORT || '5432');
-        dbConfig.database = process.env.DB_NAME || 'ai_square_db';
-        dbConfig.user = process.env.DB_USER || 'postgres';
-        dbConfig.password = process.env.DB_PASSWORD || 'postgres';
+        dbConfig.host = process.env.DB_HOST || "127.0.0.1";
+        dbConfig.port = parseInt(process.env.DB_PORT || "5432");
+        dbConfig.database = process.env.DB_NAME || "ai_square_db";
+        dbConfig.user = process.env.DB_USER || "postgres";
+        dbConfig.password = process.env.DB_PASSWORD || "postgres";
         delete dbConfig.connectionString;
       }
 
@@ -64,17 +64,20 @@ export class PostgresSession {
    * Generate a secure session token
    */
   static generateToken(): string {
-    return crypto.randomBytes(32).toString('hex');
+    return crypto.randomBytes(32).toString("hex");
   }
 
   /**
    * Create a new session
    */
-  static async createSession(userData: {
-    userId: string;
-    email: string;
-    role: string;
-  }, rememberMe = false): Promise<string> {
+  static async createSession(
+    userData: {
+      userId: string;
+      email: string;
+      role: string;
+    },
+    rememberMe = false,
+  ): Promise<string> {
     const token = this.generateToken();
     const now = new Date();
     const ttl = rememberMe ? REMEMBER_ME_TTL : DEFAULT_TTL;
@@ -84,22 +87,21 @@ export class PostgresSession {
       const pool = await this.getPool();
 
       // Delete any existing sessions for this user (single session per user)
-      await pool.query(
-        'DELETE FROM sessions WHERE user_id = $1',
-        [userData.userId]
-      );
+      await pool.query("DELETE FROM sessions WHERE user_id = $1", [
+        userData.userId,
+      ]);
 
       // Insert new session
       await pool.query(
         `INSERT INTO sessions (token, user_id, email, role, created_at, expires_at)
          VALUES ($1, $2, $3, $4, $5, $6)`,
-        [token, userData.userId, userData.email, userData.role, now, expiresAt]
+        [token, userData.userId, userData.email, userData.role, now, expiresAt],
       );
 
-      console.log('[PostgresSession] Session stored in database');
+      console.log("[PostgresSession] Session stored in database");
       return token;
     } catch (error) {
-      console.error('[PostgresSession] Failed to create session:', error);
+      console.error("[PostgresSession] Failed to create session:", error);
       throw error;
     }
   }
@@ -120,7 +122,7 @@ export class PostgresSession {
         `SELECT user_id, email, role, created_at, expires_at
          FROM sessions
          WHERE token = $1 AND expires_at > NOW()`,
-        [token]
+        [token],
       );
 
       if (result.rows.length === 0) {
@@ -133,10 +135,10 @@ export class PostgresSession {
         email: row.email,
         role: row.role,
         createdAt: row.created_at,
-        expiresAt: row.expires_at
+        expiresAt: row.expires_at,
       };
     } catch (error) {
-      console.error('[PostgresSession] Failed to get session:', error);
+      console.error("[PostgresSession] Failed to get session:", error);
       return null;
     }
   }
@@ -149,10 +151,10 @@ export class PostgresSession {
 
     try {
       const pool = await this.getPool();
-      await pool.query('DELETE FROM sessions WHERE token = $1', [token]);
-      console.log('[PostgresSession] Session destroyed');
+      await pool.query("DELETE FROM sessions WHERE token = $1", [token]);
+      console.log("[PostgresSession] Session destroyed");
     } catch (error) {
-      console.error('[PostgresSession] Failed to destroy session:', error);
+      console.error("[PostgresSession] Failed to destroy session:", error);
     }
   }
 
@@ -163,13 +165,15 @@ export class PostgresSession {
     try {
       const pool = await this.getPool();
       const result = await pool.query(
-        'DELETE FROM sessions WHERE expires_at < NOW()'
+        "DELETE FROM sessions WHERE expires_at < NOW()",
       );
       if (result.rowCount && result.rowCount > 0) {
-        console.log(`[PostgresSession] Cleaned up ${result.rowCount} expired sessions`);
+        console.log(
+          `[PostgresSession] Cleaned up ${result.rowCount} expired sessions`,
+        );
       }
     } catch (error) {
-      console.error('[PostgresSession] Failed to cleanup sessions:', error);
+      console.error("[PostgresSession] Failed to cleanup sessions:", error);
     }
   }
 

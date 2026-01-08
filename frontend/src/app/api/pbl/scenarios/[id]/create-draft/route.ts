@@ -1,26 +1,33 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-import { promises as fs } from 'fs';
-import path from 'path';
-import yaml from 'js-yaml';
-import { Scenario, DomainType, DifficultyLevel, KSAMapping, TaskCategory, AIModule } from '@/types/pbl';
+import { NextRequest, NextResponse } from "next/server";
+import { repositoryFactory } from "@/lib/repositories/base/repository-factory";
+import { promises as fs } from "fs";
+import path from "path";
+import yaml from "js-yaml";
+import {
+  Scenario,
+  DomainType,
+  DifficultyLevel,
+  KSAMapping,
+  TaskCategory,
+  AIModule,
+} from "@/types/pbl";
 
 // Load scenario data from YAML file
 async function loadScenario(scenarioId: string): Promise<Scenario | null> {
   try {
-    const scenarioFolder = scenarioId.replace(/-/g, '_');
+    const scenarioFolder = scenarioId.replace(/-/g, "_");
     // Default to English for draft creation
     const fileName = `${scenarioFolder}_en.yaml`;
     const yamlPath = path.join(
       process.cwd(),
-      'public',
-      'pbl_data',
-      'scenarios',
+      "public",
+      "pbl_data",
+      "scenarios",
       scenarioFolder,
-      fileName
+      fileName,
     );
 
-    const yamlContent = await fs.readFile(yamlPath, 'utf8');
+    const yamlContent = await fs.readFile(yamlPath, "utf8");
     interface ScenarioYAML {
       scenario_info: {
         id: string;
@@ -57,9 +64,14 @@ async function loadScenario(scenarioId: string): Promise<Scenario | null> {
       estimatedDuration: data.scenario_info.estimated_duration,
       prerequisites: data.scenario_info.prerequisites || [],
       learningObjectives: data.scenario_info.learning_objectives || [],
-      learningObjectives_zhTW: data.scenario_info.learning_objectives_zhTW || [],
-      ksaMapping: (data.ksa_mapping as unknown as KSAMapping) || { knowledge: [], skills: [], attitudes: [] },
-      tasks: []
+      learningObjectives_zhTW:
+        data.scenario_info.learning_objectives_zhTW || [],
+      ksaMapping: (data.ksa_mapping as unknown as KSAMapping) || {
+        knowledge: [],
+        skills: [],
+        attitudes: [],
+      },
+      tasks: [],
     };
 
     // Load tasks directly from root level
@@ -71,15 +83,24 @@ async function loadScenario(scenarioId: string): Promise<Scenario | null> {
           title_zhTW: task.title_zhTW as string,
           description: task.description as string,
           description_zhTW: task.description_zhTW as string,
-          category: (task.category as TaskCategory) || 'research',
+          category: (task.category as TaskCategory) || "research",
           instructions: (task.instructions as string[]) || [],
           instructions_zhTW: (task.instructions_zhTW as string[]) || [],
-          expectedOutcome: (task.expected_outcome as string) || (task.expectedOutcome as string) || '',
-          expectedOutcome_zhTW: (task.expected_outcome_zhTW as string) || (task.expectedOutcome_zhTW as string) || '',
+          expectedOutcome:
+            (task.expected_outcome as string) ||
+            (task.expectedOutcome as string) ||
+            "",
+          expectedOutcome_zhTW:
+            (task.expected_outcome_zhTW as string) ||
+            (task.expectedOutcome_zhTW as string) ||
+            "",
           timeLimit: task.time_limit as number,
           resources: (task.resources as string[]) || [],
-          assessmentFocus: (task.assessment_focus as { primary: string[]; secondary: string[] }) || { primary: [], secondary: [] },
-          aiModule: (task.ai_module as unknown as AIModule) || undefined
+          assessmentFocus: (task.assessment_focus as {
+            primary: string[];
+            secondary: string[];
+          }) || { primary: [], secondary: [] },
+          aiModule: (task.ai_module as unknown as AIModule) || undefined,
         });
       }
     }
@@ -93,7 +114,7 @@ async function loadScenario(scenarioId: string): Promise<Scenario | null> {
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const { id: scenarioId } = await params;
@@ -101,19 +122,19 @@ export async function POST(
     // Get user info from cookie
     let userEmail: string | undefined;
     try {
-      const userCookie = request.cookies.get('user')?.value;
+      const userCookie = request.cookies.get("user")?.value;
       if (userCookie) {
         const user = JSON.parse(userCookie);
         userEmail = user.email;
       }
     } catch {
-      console.log('No user cookie found');
+      console.log("No user cookie found");
     }
 
     if (!userEmail) {
       return NextResponse.json(
-        { success: false, error: 'User authentication required' },
-        { status: 401 }
+        { success: false, error: "User authentication required" },
+        { status: 401 },
       );
     }
 
@@ -124,8 +145,8 @@ export async function POST(
     const scenario = await loadScenario(scenarioId);
     if (!scenario) {
       return NextResponse.json(
-        { success: false, error: 'Scenario not found' },
-        { status: 404 }
+        { success: false, error: "Scenario not found" },
+        { status: 404 },
       );
     }
 
@@ -134,8 +155,8 @@ export async function POST(
     const program = await programRepo.create({
       scenarioId,
       userId: userEmail,
-      mode: 'pbl' as const,
-      status: 'active' as const,
+      mode: "pbl" as const,
+      status: "active" as const,
       currentTaskIndex: 0,
       completedTaskCount: 0,
       totalTaskCount: scenario.tasks.length,
@@ -152,21 +173,20 @@ export async function POST(
       discoveryData: {},
       assessmentData: {},
       metadata: {
-        language: 'en'
-      }
+        language: "en",
+      },
     });
 
     return NextResponse.json({
       success: true,
       programId: program.id,
-      program
+      program,
     });
-
   } catch (error) {
-    console.error('Create draft program error:', error);
+    console.error("Create draft program error:", error);
     return NextResponse.json(
-      { success: false, error: 'Failed to create draft program' },
-      { status: 500 }
+      { success: false, error: "Failed to create draft program" },
+      { status: 500 },
     );
   }
 }

@@ -3,82 +3,87 @@
  * 提升覆蓋率從 0% 到 80%+
  */
 
-import { renderWithProviders, screen, waitFor } from '@/test-utils/helpers/render';
-import { useRouter } from 'next/navigation';
-import DashboardPage from '../page';
-import { suppressActWarnings } from '@/test-utils/helpers/act';
+import {
+  renderWithProviders,
+  screen,
+  waitFor,
+} from "@/test-utils/helpers/render";
+import { useRouter } from "next/navigation";
+import DashboardPage from "../page";
+import { suppressActWarnings } from "@/test-utils/helpers/act";
 
 // Mock next/navigation
-jest.mock('next/navigation', () => ({
+jest.mock("next/navigation", () => ({
   useRouter: jest.fn(),
 }));
 
 // Mock react-i18next
-jest.mock('react-i18next', () => ({
+jest.mock("react-i18next", () => ({
   useTranslation: () => ({
     t: (key: string, options?: Record<string, unknown>) => {
       const translations: { [key: string]: string } = {
-        'dashboard:welcome': 'Welcome back, {{name}}!',
-        'dashboard:subtitle': 'Continue your AI literacy journey',
-        'dashboard:learningPathQuickAccess': 'Your Learning Path',
-        'dashboard:learningPathDescription': 'Based on your assessment results',
-        'dashboard:viewAllPaths': 'View All Paths',
-        'dashboard:aiAdvisor': 'AI Advisor',
-        'dashboard:aiLiteracyProgress': 'AI Literacy Progress',
-        'dashboard:domains.engaging_with_ai': 'Engaging with AI',
-        'dashboard:domains.creating_with_ai': 'Creating with AI',
-        'dashboard:domains.managing_ai': 'Managing AI',
-        'dashboard:domains.designing_ai': 'Designing AI',
-        'dashboard:viewDetailedProgress': 'View detailed progress',
-        'dashboard:learningStatistics': 'Learning Statistics',
-        'dashboard:completedScenarios': 'Completed',
-        'dashboard:inProgress': 'In Progress',
-        'dashboard:learningHours': 'Learning Hours',
-        'dashboard:dayStreak': 'Day Streak',
-        'dashboard:recentActivities': 'Recent Activities',
-        'Completed Assessment': 'Completed Assessment',
-        'View your results': 'View your results',
-        'Take Assessment': 'Take Assessment',
-        'dashboard:noRecentActivities': 'No recent activities',
-        'dashboard:recommendedActions': 'Recommended Actions',
-        'dashboard:priority.high': 'High',
-        'dashboard:priority.medium': 'Medium',
-        'dashboard:priority.low': 'Low',
-        'dashboard:quickLinks': 'Quick Links',
-        'dashboard:explorePBL': 'Explore PBL',
-        'dashboard:viewCompetencies': 'View Competencies',
-        'dashboard:viewHistory': 'View History',
-        'dashboard:exploreKSA': 'Explore KSA',
-        'dashboard:yourGoals': 'Your Goals',
-        'dashboard:updateGoals': 'Update Goals',
-        'dashboard:activities.completedAssessment': 'Completed Assessment',
-        'dashboard:activities.assessmentDesc': 'View your results',
-        'dashboard:nextActions.takeAssessment': 'Take Assessment',
-        'dashboard:nextActions.assessmentDesc': 'Evaluate your AI literacy',
-        'dashboard:nextActions.viewLearningPath': 'View Learning Path',
-        'dashboard:nextActions.learningPathDesc': 'Personalized recommendations',
-        'dashboard:nextActions.startPBL': 'Start PBL',
-        'dashboard:nextActions.pblDesc': 'Learn by doing',
-        'common:minutes': 'minutes',
-        'common:view': 'View',
-        'onboarding:goals.build_ai_apps.title': 'Build AI Applications',
+        "dashboard:welcome": "Welcome back, {{name}}!",
+        "dashboard:subtitle": "Continue your AI literacy journey",
+        "dashboard:learningPathQuickAccess": "Your Learning Path",
+        "dashboard:learningPathDescription": "Based on your assessment results",
+        "dashboard:viewAllPaths": "View All Paths",
+        "dashboard:aiAdvisor": "AI Advisor",
+        "dashboard:aiLiteracyProgress": "AI Literacy Progress",
+        "dashboard:domains.engaging_with_ai": "Engaging with AI",
+        "dashboard:domains.creating_with_ai": "Creating with AI",
+        "dashboard:domains.managing_ai": "Managing AI",
+        "dashboard:domains.designing_ai": "Designing AI",
+        "dashboard:viewDetailedProgress": "View detailed progress",
+        "dashboard:learningStatistics": "Learning Statistics",
+        "dashboard:completedScenarios": "Completed",
+        "dashboard:inProgress": "In Progress",
+        "dashboard:learningHours": "Learning Hours",
+        "dashboard:dayStreak": "Day Streak",
+        "dashboard:recentActivities": "Recent Activities",
+        "Completed Assessment": "Completed Assessment",
+        "View your results": "View your results",
+        "Take Assessment": "Take Assessment",
+        "dashboard:noRecentActivities": "No recent activities",
+        "dashboard:recommendedActions": "Recommended Actions",
+        "dashboard:priority.high": "High",
+        "dashboard:priority.medium": "Medium",
+        "dashboard:priority.low": "Low",
+        "dashboard:quickLinks": "Quick Links",
+        "dashboard:explorePBL": "Explore PBL",
+        "dashboard:viewCompetencies": "View Competencies",
+        "dashboard:viewHistory": "View History",
+        "dashboard:exploreKSA": "Explore KSA",
+        "dashboard:yourGoals": "Your Goals",
+        "dashboard:updateGoals": "Update Goals",
+        "dashboard:activities.completedAssessment": "Completed Assessment",
+        "dashboard:activities.assessmentDesc": "View your results",
+        "dashboard:nextActions.takeAssessment": "Take Assessment",
+        "dashboard:nextActions.assessmentDesc": "Evaluate your AI literacy",
+        "dashboard:nextActions.viewLearningPath": "View Learning Path",
+        "dashboard:nextActions.learningPathDesc":
+          "Personalized recommendations",
+        "dashboard:nextActions.startPBL": "Start PBL",
+        "dashboard:nextActions.pblDesc": "Learn by doing",
+        "common:minutes": "minutes",
+        "common:view": "View",
+        "onboarding:goals.build_ai_apps.title": "Build AI Applications",
       };
       // Handle template interpolation
-      if (key === 'dashboard:welcome' && options?.name) {
+      if (key === "dashboard:welcome" && options?.name) {
         return `Welcome back, ${options.name}!`;
       }
       return translations[key] || key;
     },
     i18n: {
-      language: 'en',
-      changeLanguage: jest.fn()
-    }
+      language: "en",
+      changeLanguage: jest.fn(),
+    },
   }),
 }));
 
 // Mock utilities
-jest.mock('@/utils/locale', () => ({
-  formatDateWithLocale: (date: Date) => date.toLocaleDateString()
+jest.mock("@/utils/locale", () => ({
+  formatDateWithLocale: (date: Date) => date.toLocaleDateString(),
 }));
 
 // Mock fetch
@@ -91,9 +96,9 @@ const localStorageMock = {
   removeItem: jest.fn(),
   clear: jest.fn(),
 };
-Object.defineProperty(window, 'localStorage', { value: localStorageMock });
+Object.defineProperty(window, "localStorage", { value: localStorageMock });
 
-describe('DashboardPage', () => {
+describe("DashboardPage", () => {
   const mockPush = jest.fn();
   const mockRouter = { push: mockPush };
 
@@ -106,15 +111,15 @@ describe('DashboardPage', () => {
 
     // Mock localStorage.getItem to return different values based on key
     localStorageMock.getItem.mockImplementation((key: string) => {
-      if (key === 'user') {
+      if (key === "user") {
         return JSON.stringify({
-          id: '1',
-          email: 'test@example.com',
-          name: 'Test User',
-          role: 'student'
+          id: "1",
+          email: "test@example.com",
+          name: "Test User",
+          role: "student",
         });
       }
-      if (key === 'assessmentResult') {
+      if (key === "assessmentResult") {
         return null; // No assessment result by default
       }
       return null;
@@ -123,215 +128,243 @@ describe('DashboardPage', () => {
     // Default mock for fetch to prevent hanging tests
     (global.fetch as jest.Mock).mockResolvedValue({
       ok: true,
-      json: async () => ({ results: [] })
+      json: async () => ({ results: [] }),
     });
   });
 
-  it('should redirect to login if no user', async () => {
+  it("should redirect to login if no user", async () => {
     localStorageMock.getItem.mockImplementation(() => null);
 
     renderWithProviders(<DashboardPage />);
 
-    expect(mockPush).toHaveBeenCalledWith('/login');
+    expect(mockPush).toHaveBeenCalledWith("/login");
   });
 
-  it('should show loading state initially', async () => {
-    (global.fetch as jest.Mock).mockImplementation(() =>
-      new Promise(() => {}) // Never resolves to keep loading state
+  it("should show loading state initially", async () => {
+    (global.fetch as jest.Mock).mockImplementation(
+      () => new Promise(() => {}), // Never resolves to keep loading state
     );
 
     renderWithProviders(<DashboardPage />);
 
-    const spinner = screen.getByTestId('loading-spinner');
+    const spinner = screen.getByTestId("loading-spinner");
     expect(spinner).toBeInTheDocument();
-    expect(spinner).toHaveClass('animate-spin');
+    expect(spinner).toHaveClass("animate-spin");
   });
 
-  it('should fetch and display assessment results from API', async () => {
+  it("should fetch and display assessment results from API", async () => {
     const mockAssessmentData = {
-      results: [{
-        scores: {
-          overall: 85,
-          domains: {
-            engaging_with_ai: 80,
-            creating_with_ai: 90,
-            managing_ai: 85,
-            designing_ai: 85
-          }
+      results: [
+        {
+          scores: {
+            overall: 85,
+            domains: {
+              engaging_with_ai: 80,
+              creating_with_ai: 90,
+              managing_ai: 85,
+              designing_ai: 85,
+            },
+          },
+          summary: {
+            level: "Intermediate",
+            total_questions: 40,
+            correct_answers: 34,
+          },
+          duration_seconds: 1200,
+          timestamp: "2024-01-20T10:00:00Z",
+          recommendations: [],
         },
-        summary: {
-          level: 'Intermediate',
-          total_questions: 40,
-          correct_answers: 34
-        },
-        duration_seconds: 1200,
-        timestamp: '2024-01-20T10:00:00Z',
-        recommendations: []
-      }]
+      ],
     };
 
     (global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
-      json: async () => mockAssessmentData
+      json: async () => mockAssessmentData,
     });
 
     renderWithProviders(<DashboardPage />);
 
-    await waitFor(() => {
-        const element = screen.queryByText('Welcome back, Test User!');
+    await waitFor(
+      () => {
+        const element = screen.queryByText("Welcome back, Test User!");
         if (element) expect(element).toBeInTheDocument();
-      }, { timeout: 1000 });
+      },
+      { timeout: 1000 },
+    );
 
     // Check if assessment results are displayed
     await waitFor(() => {
-      const progressText = screen.queryByText('AI Literacy Progress') ||
-                          screen.queryByText(/literacy/i) ||
-                          screen.queryByText(/progress/i);
+      const progressText =
+        screen.queryByText("AI Literacy Progress") ||
+        screen.queryByText(/literacy/i) ||
+        screen.queryByText(/progress/i);
       if (progressText) expect(progressText).toBeInTheDocument();
 
       // Check scores
-      const score80 = screen.queryByText('80%');
-      const score90 = screen.queryByText('90%');
+      const score80 = screen.queryByText("80%");
+      const score90 = screen.queryByText("90%");
       if (score80) expect(score80).toBeInTheDocument();
       if (score90) expect(score90).toBeInTheDocument();
     });
 
     expect(global.fetch).toHaveBeenCalledWith(
-      expect.stringContaining('/api/assessment/results?userId=1&userEmail=test%40example.com'),
-      { credentials: 'include' }
+      expect.stringContaining(
+        "/api/assessment/results?userId=1&userEmail=test%40example.com",
+      ),
+      { credentials: "include" },
     );
   });
 
-  it('should handle no assessment results', async () => {
+  it("should handle no assessment results", async () => {
     (global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
-      json: async () => ({ results: [] })
+      json: async () => ({ results: [] }),
     });
 
     renderWithProviders(<DashboardPage />);
 
     await waitFor(() => {
-      expect(screen.getByText('Take Assessment')).toBeInTheDocument();
-      expect(screen.getByText('Evaluate your AI literacy')).toBeInTheDocument();
+      expect(screen.getByText("Take Assessment")).toBeInTheDocument();
+      expect(screen.getByText("Evaluate your AI literacy")).toBeInTheDocument();
     });
 
     // Should not show AI Literacy Progress section
-    expect(screen.queryByText('AI Literacy Progress')).not.toBeInTheDocument();
+    expect(screen.queryByText("AI Literacy Progress")).not.toBeInTheDocument();
   });
 
-  it('should display learning statistics', async () => {
+  it("should display learning statistics", async () => {
     (global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
-      json: async () => ({ results: [] })
+      json: async () => ({ results: [] }),
     });
 
     renderWithProviders(<DashboardPage />);
 
     await waitFor(() => {
-      expect(screen.getByText('Learning Statistics')).toBeInTheDocument();
+      expect(screen.getByText("Learning Statistics")).toBeInTheDocument();
       // Check for all the stat labels
-      expect(screen.getByText('Completed')).toBeInTheDocument();
-      expect(screen.getByText('In Progress')).toBeInTheDocument();
-      expect(screen.getByText('Learning Hours')).toBeInTheDocument();
-      expect(screen.getByText('Day Streak')).toBeInTheDocument();
+      expect(screen.getByText("Completed")).toBeInTheDocument();
+      expect(screen.getByText("In Progress")).toBeInTheDocument();
+      expect(screen.getByText("Learning Hours")).toBeInTheDocument();
+      expect(screen.getByText("Day Streak")).toBeInTheDocument();
     });
   });
 
-  it('should display recent activities for users with assessment', async () => {
+  it("should display recent activities for users with assessment", async () => {
     const mockAssessmentData = {
-      results: [{
-        scores: { overall: 85, domains: {} },
-        summary: { level: 'Intermediate', total_questions: 40, correct_answers: 34 },
-        duration_seconds: 1200,
-        timestamp: '2024-01-20T10:00:00Z'
-      }]
+      results: [
+        {
+          scores: { overall: 85, domains: {} },
+          summary: {
+            level: "Intermediate",
+            total_questions: 40,
+            correct_answers: 34,
+          },
+          duration_seconds: 1200,
+          timestamp: "2024-01-20T10:00:00Z",
+        },
+      ],
     };
 
     (global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
-      json: async () => mockAssessmentData
+      json: async () => mockAssessmentData,
     });
 
     renderWithProviders(<DashboardPage />);
 
     await waitFor(() => {
-      expect(screen.getByText('Recent Activities')).toBeInTheDocument();
-      expect(screen.getByText('Completed Assessment')).toBeInTheDocument();
-      expect(screen.getByText('View your results')).toBeInTheDocument();
+      expect(screen.getByText("Recent Activities")).toBeInTheDocument();
+      expect(screen.getByText("Completed Assessment")).toBeInTheDocument();
+      expect(screen.getByText("View your results")).toBeInTheDocument();
     });
   });
 
-  it('should display recommended actions based on assessment status', async () => {
+  it("should display recommended actions based on assessment status", async () => {
     // User without assessment
     (global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
-      json: async () => ({ results: [] })
+      json: async () => ({ results: [] }),
     });
 
     renderWithProviders(<DashboardPage />);
 
-    await waitFor(() => {
-        const element = screen.queryByText('Welcome back, Test User!');
+    await waitFor(
+      () => {
+        const element = screen.queryByText("Welcome back, Test User!");
         if (element) expect(element).toBeInTheDocument();
-      }, { timeout: 1000 });
+      },
+      { timeout: 1000 },
+    );
 
     await waitFor(() => {
-      expect(screen.getByText('Recommended Actions')).toBeInTheDocument();
-      expect(screen.getByText('Take Assessment')).toBeInTheDocument();
+      expect(screen.getByText("Recommended Actions")).toBeInTheDocument();
+      expect(screen.getByText("Take Assessment")).toBeInTheDocument();
     });
   });
 
-  it('should display quick links', async () => {
+  it("should display quick links", async () => {
     (global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
-      json: async () => ({ results: [] })
+      json: async () => ({ results: [] }),
     });
 
     renderWithProviders(<DashboardPage />);
 
-    await waitFor(() => {
-        const element = screen.queryByText('Welcome back, Test User!');
+    await waitFor(
+      () => {
+        const element = screen.queryByText("Welcome back, Test User!");
         if (element) expect(element).toBeInTheDocument();
-      }, { timeout: 1000 });
+      },
+      { timeout: 1000 },
+    );
 
     await waitFor(() => {
-      expect(screen.getByText('Quick Links')).toBeInTheDocument();
-      expect(screen.getByText('📚 Explore PBL')).toBeInTheDocument();
-      expect(screen.getByText('🔗 View Competencies')).toBeInTheDocument();
-      expect(screen.getByText('📊 View History')).toBeInTheDocument();
-      expect(screen.getByText('🎯 Explore KSA')).toBeInTheDocument();
+      expect(screen.getByText("Quick Links")).toBeInTheDocument();
+      expect(screen.getByText("📚 Explore PBL")).toBeInTheDocument();
+      expect(screen.getByText("🔗 View Competencies")).toBeInTheDocument();
+      expect(screen.getByText("📊 View History")).toBeInTheDocument();
+      expect(screen.getByText("🎯 Explore KSA")).toBeInTheDocument();
     });
 
     // Check links
-    const pblLink = screen.getByText('📚 Explore PBL').closest('a');
-    expect(pblLink).toHaveAttribute('href', '/pbl');
+    const pblLink = screen.getByText("📚 Explore PBL").closest("a");
+    expect(pblLink).toHaveAttribute("href", "/pbl");
   });
 
-  it('should handle API errors gracefully', async () => {
-    (global.fetch as jest.Mock).mockRejectedValueOnce(new Error('Network error'));
+  it("should handle API errors gracefully", async () => {
+    (global.fetch as jest.Mock).mockRejectedValueOnce(
+      new Error("Network error"),
+    );
 
-    const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+    const consoleSpy = jest.spyOn(console, "error").mockImplementation();
 
     renderWithProviders(<DashboardPage />);
 
-    await waitFor(() => {
-        const element = screen.queryByText('Welcome back, Test User!');
+    await waitFor(
+      () => {
+        const element = screen.queryByText("Welcome back, Test User!");
         if (element) expect(element).toBeInTheDocument();
-      }, { timeout: 1000 });
+      },
+      { timeout: 1000 },
+    );
 
-    expect(consoleSpy).toHaveBeenCalledWith('Error loading assessment result:', expect.any(Error));
+    expect(consoleSpy).toHaveBeenCalledWith(
+      "Error loading assessment result:",
+      expect.any(Error),
+    );
     consoleSpy.mockRestore();
   });
 
-  it('should display learning goals if user has them', async () => {
+  it("should display learning goals if user has them", async () => {
     localStorageMock.getItem.mockImplementation((key: string) => {
-      if (key === 'user') {
+      if (key === "user") {
         return JSON.stringify({
-          id: '1',
-          email: 'test@example.com',
-          name: 'Test User',
-          role: 'student',
-          learningGoals: ['build_ai_apps']
+          id: "1",
+          email: "test@example.com",
+          name: "Test User",
+          role: "student",
+          learningGoals: ["build_ai_apps"],
         });
       }
       return null;
@@ -339,119 +372,135 @@ describe('DashboardPage', () => {
 
     (global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
-      json: async () => ({ results: [] })
+      json: async () => ({ results: [] }),
     });
 
     renderWithProviders(<DashboardPage />);
 
     await waitFor(() => {
-      expect(screen.getByText('Your Goals')).toBeInTheDocument();
-      expect(screen.getByText('Build AI Applications')).toBeInTheDocument();
-      expect(screen.getByText('Update Goals')).toBeInTheDocument();
+      expect(screen.getByText("Your Goals")).toBeInTheDocument();
+      expect(screen.getByText("Build AI Applications")).toBeInTheDocument();
+      expect(screen.getByText("Update Goals")).toBeInTheDocument();
     });
   });
 
-  it('should sync localStorage with API assessment data', async () => {
+  it("should sync localStorage with API assessment data", async () => {
     const mockAssessmentData = {
-      results: [{
-        scores: {
-          overall: 85,
-          domains: {
-            engaging_with_ai: 80,
-            creating_with_ai: 90,
-            managing_ai: 85,
-            designing_ai: 85
-          }
+      results: [
+        {
+          scores: {
+            overall: 85,
+            domains: {
+              engaging_with_ai: 80,
+              creating_with_ai: 90,
+              managing_ai: 85,
+              designing_ai: 85,
+            },
+          },
+          summary: {
+            level: "Intermediate",
+            total_questions: 40,
+            correct_answers: 34,
+          },
+          duration_seconds: 1200,
+          timestamp: "2024-01-20T10:00:00Z",
         },
-        summary: {
-          level: 'Intermediate',
-          total_questions: 40,
-          correct_answers: 34
-        },
-        duration_seconds: 1200,
-        timestamp: '2024-01-20T10:00:00Z'
-      }]
+      ],
     };
 
     (global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
-      json: async () => mockAssessmentData
+      json: async () => mockAssessmentData,
     });
 
     renderWithProviders(<DashboardPage />);
 
-    await waitFor(() => {
-        const element = screen.queryByText('Welcome back, Test User!');
+    await waitFor(
+      () => {
+        const element = screen.queryByText("Welcome back, Test User!");
         if (element) expect(element).toBeInTheDocument();
-      }, { timeout: 1000 });
+      },
+      { timeout: 1000 },
+    );
 
     await waitFor(() => {
       expect(localStorageMock.setItem).toHaveBeenCalledWith(
-        'assessmentResult',
-        expect.stringContaining('"overallScore":85')
+        "assessmentResult",
+        expect.stringContaining('"overallScore":85'),
       );
     });
   });
 
-  it('should display learning path quick access for users with assessment', async () => {
+  it("should display learning path quick access for users with assessment", async () => {
     const mockAssessmentData = {
-      results: [{
-        scores: { overall: 85, domains: {} },
-        summary: { level: 'Intermediate', total_questions: 40, correct_answers: 34 },
-        duration_seconds: 1200,
-        timestamp: '2024-01-20T10:00:00Z'
-      }]
+      results: [
+        {
+          scores: { overall: 85, domains: {} },
+          summary: {
+            level: "Intermediate",
+            total_questions: 40,
+            correct_answers: 34,
+          },
+          duration_seconds: 1200,
+          timestamp: "2024-01-20T10:00:00Z",
+        },
+      ],
     };
 
     (global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
-      json: async () => mockAssessmentData
+      json: async () => mockAssessmentData,
     });
 
     renderWithProviders(<DashboardPage />);
 
-    await waitFor(() => {
-        const element = screen.queryByText('Welcome back, Test User!');
+    await waitFor(
+      () => {
+        const element = screen.queryByText("Welcome back, Test User!");
         if (element) expect(element).toBeInTheDocument();
-      }, { timeout: 1000 });
+      },
+      { timeout: 1000 },
+    );
 
     await waitFor(() => {
-      expect(screen.getByText('🎯 Your Learning Path')).toBeInTheDocument();
-      expect(screen.getByText('Based on your assessment results')).toBeInTheDocument();
-      expect(screen.getByText('View All Paths')).toBeInTheDocument();
+      expect(screen.getByText("🎯 Your Learning Path")).toBeInTheDocument();
+      expect(
+        screen.getByText("Based on your assessment results"),
+      ).toBeInTheDocument();
+      expect(screen.getByText("View All Paths")).toBeInTheDocument();
     });
 
-    const viewPathsLink = screen.getByText('View All Paths').closest('a');
-    expect(viewPathsLink).toHaveAttribute('href', '/learning-path');
+    const viewPathsLink = screen.getByText("View All Paths").closest("a");
+    expect(viewPathsLink).toHaveAttribute("href", "/learning-path");
   });
 
-  it('should handle assessment API failure and fallback to localStorage', async () => {
+  it("should handle assessment API failure and fallback to localStorage", async () => {
     const mockLocalAssessment = {
       overallScore: 75,
       domainScores: {
         engaging_with_ai: 70,
         creating_with_ai: 75,
         managing_ai: 80,
-        designing_ai: 75
+        designing_ai: 75,
       },
-      level: 'Beginner',
+      level: "Beginner",
       totalQuestions: 40,
       correctAnswers: 30,
       timeSpentSeconds: 1000,
-      completedAt: new Date('2024-01-15'),
-      recommendations: []
+      completedAt: new Date("2024-01-15"),
+      recommendations: [],
     };
 
     localStorageMock.getItem.mockImplementation((key) => {
-      if (key === 'user') {
+      if (key === "user") {
         return JSON.stringify({
-          id: '1',
-          email: 'test@example.com',
-          name: 'Test User',
-          role: 'student'
+          id: "1",
+          email: "test@example.com",
+          name: "Test User",
+          role: "student",
         });
       }
-      if (key === 'assessmentResult') {
+      if (key === "assessmentResult") {
         return JSON.stringify(mockLocalAssessment);
       }
       return null;
@@ -459,83 +508,91 @@ describe('DashboardPage', () => {
 
     (global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: false,
-      status: 500
+      status: 500,
     });
 
-    const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
+    const consoleSpy = jest.spyOn(console, "warn").mockImplementation();
 
     renderWithProviders(<DashboardPage />);
 
-    await waitFor(() => {
-        const element = screen.queryByText('Welcome back, Test User!');
+    await waitFor(
+      () => {
+        const element = screen.queryByText("Welcome back, Test User!");
         if (element) expect(element).toBeInTheDocument();
-      }, { timeout: 1000 });
+      },
+      { timeout: 1000 },
+    );
 
     await waitFor(() => {
-      expect(screen.getByText('AI Literacy Progress')).toBeInTheDocument();
+      expect(screen.getByText("AI Literacy Progress")).toBeInTheDocument();
       // Check that assessment data from localStorage is displayed
       const percentElements = screen.getAllByText(/\d+%/);
       expect(percentElements.length).toBeGreaterThan(0);
     });
 
     expect(consoleSpy).toHaveBeenCalledWith(
-      'Failed to fetch assessment results from database, using localStorage only'
+      "Failed to fetch assessment results from database, using localStorage only",
     );
     consoleSpy.mockRestore();
   });
 
-  it('should test score color function', async () => {
+  it("should test score color function", async () => {
     const mockAssessmentData = {
-      results: [{
-        scores: {
-          overall: 85,
-          domains: {
-            engaging_with_ai: 85, // green
-            creating_with_ai: 70, // yellow
-            managing_ai: 50, // red
-            designing_ai: 90 // green
-          }
+      results: [
+        {
+          scores: {
+            overall: 85,
+            domains: {
+              engaging_with_ai: 85, // green
+              creating_with_ai: 70, // yellow
+              managing_ai: 50, // red
+              designing_ai: 90, // green
+            },
+          },
+          summary: {
+            level: "Intermediate",
+            total_questions: 40,
+            correct_answers: 34,
+          },
+          duration_seconds: 1200,
+          timestamp: "2024-01-20T10:00:00Z",
         },
-        summary: {
-          level: 'Intermediate',
-          total_questions: 40,
-          correct_answers: 34
-        },
-        duration_seconds: 1200,
-        timestamp: '2024-01-20T10:00:00Z'
-      }]
+      ],
     };
 
     (global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
-      json: async () => mockAssessmentData
+      json: async () => mockAssessmentData,
     });
 
     renderWithProviders(<DashboardPage />);
 
-    await waitFor(() => {
-        const element = screen.queryByText('Welcome back, Test User!');
+    await waitFor(
+      () => {
+        const element = screen.queryByText("Welcome back, Test User!");
         if (element) expect(element).toBeInTheDocument();
-      }, { timeout: 1000 });
+      },
+      { timeout: 1000 },
+    );
 
     await waitFor(() => {
       // Check if scores are displayed
-      expect(screen.getByText('AI Literacy Progress')).toBeInTheDocument();
+      expect(screen.getByText("AI Literacy Progress")).toBeInTheDocument();
       // Check for domain labels
-      expect(screen.getByText('Engaging with AI')).toBeInTheDocument();
-      expect(screen.getByText('Creating with AI')).toBeInTheDocument();
-      expect(screen.getByText('Managing AI')).toBeInTheDocument();
-      expect(screen.getByText('Designing AI')).toBeInTheDocument();
+      expect(screen.getByText("Engaging with AI")).toBeInTheDocument();
+      expect(screen.getByText("Creating with AI")).toBeInTheDocument();
+      expect(screen.getByText("Managing AI")).toBeInTheDocument();
+      expect(screen.getByText("Designing AI")).toBeInTheDocument();
     });
   });
 
-  it('should handle user without name properly', async () => {
+  it("should handle user without name properly", async () => {
     localStorageMock.getItem.mockImplementation((key: string) => {
-      if (key === 'user') {
+      if (key === "user") {
         return JSON.stringify({
-          id: '1',
-          email: 'test@example.com',
-          role: 'student'
+          id: "1",
+          email: "test@example.com",
+          role: "student",
           // No name field
         });
       }
@@ -544,57 +601,62 @@ describe('DashboardPage', () => {
 
     (global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
-      json: async () => ({ results: [] })
+      json: async () => ({ results: [] }),
     });
 
     renderWithProviders(<DashboardPage />);
 
     await waitFor(() => {
       // Should use email prefix as fallback
-      expect(screen.getByText('Welcome back, test!')).toBeInTheDocument();
+      expect(screen.getByText("Welcome back, test!")).toBeInTheDocument();
     });
   });
 
-  it('should display all domain scores correctly', async () => {
+  it("should display all domain scores correctly", async () => {
     const mockAssessmentData = {
-      results: [{
-        scores: {
-          overall: 85,
-          domains: {
-            engaging_with_ai: 80,
-            creating_with_ai: 90,
-            managing_ai: 85,
-            designing_ai: 75
-          }
+      results: [
+        {
+          scores: {
+            overall: 85,
+            domains: {
+              engaging_with_ai: 80,
+              creating_with_ai: 90,
+              managing_ai: 85,
+              designing_ai: 75,
+            },
+          },
+          summary: {
+            level: "Intermediate",
+            total_questions: 40,
+            correct_answers: 34,
+          },
+          duration_seconds: 1200,
+          timestamp: "2024-01-20T10:00:00Z",
         },
-        summary: {
-          level: 'Intermediate',
-          total_questions: 40,
-          correct_answers: 34
-        },
-        duration_seconds: 1200,
-        timestamp: '2024-01-20T10:00:00Z'
-      }]
+      ],
     };
 
     (global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
-      json: async () => mockAssessmentData
+      json: async () => mockAssessmentData,
     });
 
     renderWithProviders(<DashboardPage />);
 
-    await waitFor(() => {
-        const element = screen.queryByText('Welcome back, Test User!');
+    await waitFor(
+      () => {
+        const element = screen.queryByText("Welcome back, Test User!");
         if (element) expect(element).toBeInTheDocument();
-      }, { timeout: 1000 });
+      },
+      { timeout: 1000 },
+    );
 
     await waitFor(() => {
       // Check all domain names are displayed
-      expect(screen.getByText('Engaging with AI')).toBeInTheDocument();
-      expect(screen.getByText('Creating with AI')).toBeInTheDocument();
-      expect(screen.getByText('Managing AI')).toBeInTheDocument();
-      expect(screen.getByText('Designing AI')).toBeInTheDocument();
+      expect(screen.getByText("Engaging with AI")).toBeInTheDocument();
+      expect(screen.getByText("Creating with AI")).toBeInTheDocument();
+      expect(screen.getByText("Managing AI")).toBeInTheDocument();
+      expect(screen.getByText("Designing AI")).toBeInTheDocument();
 
       // Check that scores are displayed
       const scoreElements = screen.getAllByText(/\d+%/);
@@ -602,108 +664,119 @@ describe('DashboardPage', () => {
     });
   });
 
-  it('should display estimated time for actions', async () => {
+  it("should display estimated time for actions", async () => {
     (global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
-      json: async () => ({ results: [] })
+      json: async () => ({ results: [] }),
     });
 
     renderWithProviders(<DashboardPage />);
 
-    await waitFor(() => {
-        const element = screen.queryByText('Welcome back, Test User!');
+    await waitFor(
+      () => {
+        const element = screen.queryByText("Welcome back, Test User!");
         if (element) expect(element).toBeInTheDocument();
-      }, { timeout: 1000 });
+      },
+      { timeout: 1000 },
+    );
 
     await waitFor(() => {
       // Check that recommended actions are displayed
-      expect(screen.getByText('Recommended Actions')).toBeInTheDocument();
+      expect(screen.getByText("Recommended Actions")).toBeInTheDocument();
       // Take Assessment action should be shown
-      expect(screen.getByText('Take Assessment')).toBeInTheDocument();
+      expect(screen.getByText("Take Assessment")).toBeInTheDocument();
     });
   });
 
-  it('should render all quick link icons', async () => {
+  it("should render all quick link icons", async () => {
     (global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
-      json: async () => ({ results: [] })
+      json: async () => ({ results: [] }),
     });
 
     renderWithProviders(<DashboardPage />);
 
     await waitFor(() => {
       // Check for emoji icons
-      expect(screen.getByText('📚 Explore PBL')).toBeInTheDocument();
-      expect(screen.getByText('🔗 View Competencies')).toBeInTheDocument();
-      expect(screen.getByText('📊 View History')).toBeInTheDocument();
-      expect(screen.getByText('🎯 Explore KSA')).toBeInTheDocument();
-      expect(screen.getByText('💬 AI Advisor')).toBeInTheDocument();
+      expect(screen.getByText("📚 Explore PBL")).toBeInTheDocument();
+      expect(screen.getByText("🔗 View Competencies")).toBeInTheDocument();
+      expect(screen.getByText("📊 View History")).toBeInTheDocument();
+      expect(screen.getByText("🎯 Explore KSA")).toBeInTheDocument();
+      expect(screen.getByText("💬 AI Advisor")).toBeInTheDocument();
     });
   });
 
-  it('should show empty state for recent activities', async () => {
+  it("should show empty state for recent activities", async () => {
     (global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
-      json: async () => ({ results: [] })
+      json: async () => ({ results: [] }),
     });
 
     renderWithProviders(<DashboardPage />);
 
-    await waitFor(() => {
-        const element = screen.queryByText('No recent activities');
+    await waitFor(
+      () => {
+        const element = screen.queryByText("No recent activities");
         if (element) expect(element).toBeInTheDocument();
-      }, { timeout: 1000 });
+      },
+      { timeout: 1000 },
+    );
   });
 
-  it('should display progress bars for domain scores', async () => {
+  it("should display progress bars for domain scores", async () => {
     const mockAssessmentData = {
-      results: [{
-        scores: {
-          overall: 85,
-          domains: {
-            engaging_with_ai: 80,
-            creating_with_ai: 90,
-            managing_ai: 85,
-            designing_ai: 75
-          }
+      results: [
+        {
+          scores: {
+            overall: 85,
+            domains: {
+              engaging_with_ai: 80,
+              creating_with_ai: 90,
+              managing_ai: 85,
+              designing_ai: 75,
+            },
+          },
+          summary: {
+            level: "Intermediate",
+            total_questions: 40,
+            correct_answers: 34,
+          },
+          duration_seconds: 1200,
+          timestamp: "2024-01-20T10:00:00Z",
+          recommendations: [],
         },
-        summary: {
-          level: 'Intermediate',
-          total_questions: 40,
-          correct_answers: 34
-        },
-        duration_seconds: 1200,
-        timestamp: '2024-01-20T10:00:00Z',
-        recommendations: []
-      }]
+      ],
     };
 
     (global.fetch as jest.Mock).mockResolvedValueOnce({
       ok: true,
-      json: async () => mockAssessmentData
+      json: async () => mockAssessmentData,
     });
 
     const { container } = renderWithProviders(<DashboardPage />);
 
-    await waitFor(() => {
-        const element = screen.queryByText('Welcome back, Test User!');
+    await waitFor(
+      () => {
+        const element = screen.queryByText("Welcome back, Test User!");
         if (element) expect(element).toBeInTheDocument();
-      }, { timeout: 1000 });
+      },
+      { timeout: 1000 },
+    );
 
     // Wait for assessment data to be loaded and rendered
     await waitFor(() => {
       // First check if the AI Literacy Progress section exists
-      expect(screen.getByText('AI Literacy Progress')).toBeInTheDocument();
+      expect(screen.getByText("AI Literacy Progress")).toBeInTheDocument();
     });
 
     await waitFor(() => {
       // Check for progress bars
-      const progressBars = container.querySelectorAll('.bg-blue-600');
+      const progressBars = container.querySelectorAll(".bg-blue-600");
       expect(progressBars.length).toBeGreaterThan(0);
 
       // Check if progress bars have correct width styles
       const progressBar80 = Array.from(progressBars).find(
-        bar => (bar as HTMLElement).style.width === '80%'
+        (bar) => (bar as HTMLElement).style.width === "80%",
       );
       expect(progressBar80).toBeTruthy();
     });

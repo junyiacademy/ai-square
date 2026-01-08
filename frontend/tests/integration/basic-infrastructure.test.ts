@@ -1,6 +1,6 @@
-import { IntegrationTestEnvironment } from './setup/test-environment';
-import { testUsers, seedTestDatabase } from './setup/test-fixtures';
-import { DatabaseTestHelper } from './setup/test-helpers';
+import { IntegrationTestEnvironment } from "./setup/test-environment";
+import { testUsers, seedTestDatabase } from "./setup/test-fixtures";
+import { DatabaseTestHelper } from "./setup/test-helpers";
 
 /**
  * Basic Infrastructure Test
@@ -8,7 +8,7 @@ import { DatabaseTestHelper } from './setup/test-helpers';
  * Verifies that the integration test setup works correctly
  */
 
-describe.skip('Integration Test Infrastructure', () => {
+describe.skip("Integration Test Infrastructure", () => {
   let env: IntegrationTestEnvironment;
   let dbHelper: DatabaseTestHelper;
 
@@ -27,13 +27,13 @@ describe.skip('Integration Test Infrastructure', () => {
     await env.teardown();
   });
 
-  describe.skip('Database Connection', () => {
-    it('should connect to test database', async () => {
+  describe.skip("Database Connection", () => {
+    it("should connect to test database", async () => {
       const pool = env.getDbPool();
       expect(pool).toBeDefined();
 
       if (pool) {
-        const result = await pool.query('SELECT 1 as test');
+        const result = await pool.query("SELECT 1 as test");
         expect(Array.isArray(result.rows)).toBe(true);
         if (result.rows[0]) {
           expect(result.rows[0].test).toBe(1);
@@ -41,9 +41,9 @@ describe.skip('Integration Test Infrastructure', () => {
       }
     });
 
-    it('should have correct test database name', () => {
+    it("should have correct test database name", () => {
       const dbName = env.getTestDbName();
-      if (process.env.USE_SHARED_DB === '1') {
+      if (process.env.USE_SHARED_DB === "1") {
         expect(process.env.DB_NAME).toBeDefined();
       } else {
         expect(dbName).toMatch(/^test_db_\d+_\d+$/);
@@ -51,20 +51,20 @@ describe.skip('Integration Test Infrastructure', () => {
     });
   });
 
-  describe.skip('User Management', () => {
-    it('should create test user', async () => {
+  describe.skip("User Management", () => {
+    it("should create test user", async () => {
       if (!dbHelper) {
-        console.log('Skipping: Database helper not available');
+        console.log("Skipping: Database helper not available");
         return;
       }
 
       const userData = {
-        id: 'test-user-' + Date.now(),
+        id: "test-user-" + Date.now(),
         email: `test-${Date.now()}@test.com`,
-        password: 'TestPass123!',
-        passwordHash: '$2b$10$test',
-        name: 'Test User',
-        role: 'user' as const,
+        password: "TestPass123!",
+        passwordHash: "$2b$10$test",
+        name: "Test User",
+        role: "user" as const,
         emailVerified: true,
       };
 
@@ -75,30 +75,30 @@ describe.skip('Integration Test Infrastructure', () => {
       expect(user.id).toBeDefined();
     });
 
-    it('should create session token', async () => {
+    it("should create session token", async () => {
       if (!dbHelper) {
-        console.log('Skipping: Database helper not available');
+        console.log("Skipping: Database helper not available");
         return;
       }
 
-      const token = await dbHelper.createSession('test-user-id');
+      const token = await dbHelper.createSession("test-user-id");
       expect(token).toBeDefined();
-      expect(typeof token).toBe('string');
+      expect(typeof token).toBe("string");
     });
   });
 
-  describe.skip('Redis Connection', () => {
-    it('should check Redis availability', () => {
+  describe.skip("Redis Connection", () => {
+    it("should check Redis availability", () => {
       const redis = env.getRedisClient();
       // Redis is optional, so we just check if it's defined or null
       expect(redis !== undefined).toBe(true);
     });
   });
 
-  describe.skip('Environment Variables', () => {
-    it('should set test environment variables', () => {
-      expect(process.env.NODE_ENV).toBe('test');
-      if (process.env.USE_SHARED_DB === '1') {
+  describe.skip("Environment Variables", () => {
+    it("should set test environment variables", () => {
+      expect(process.env.NODE_ENV).toBe("test");
+      if (process.env.USE_SHARED_DB === "1") {
         expect(process.env.DB_NAME).toBeDefined();
       } else {
         expect(process.env.DB_NAME).toMatch(/^test_db_/);
@@ -107,16 +107,16 @@ describe.skip('Integration Test Infrastructure', () => {
     });
   });
 
-  describe.skip('Schema Loading', () => {
-    it('should load schema and create tables', async () => {
+  describe.skip("Schema Loading", () => {
+    it("should load schema and create tables", async () => {
       const pool = env.getDbPool();
       if (!pool) {
-        console.log('Skipping: Database pool not available');
+        console.log("Skipping: Database pool not available");
         return;
       }
 
       // Check if essential tables exist
-      const tables = ['users', 'scenarios', 'programs', 'tasks', 'evaluations'];
+      const tables = ["users", "scenarios", "programs", "tasks", "evaluations"];
 
       for (const table of tables) {
         const result = await pool.query(
@@ -125,17 +125,17 @@ describe.skip('Integration Test Infrastructure', () => {
             WHERE table_schema = 'public'
             AND table_name = $1
           )`,
-          [table]
+          [table],
         );
 
         expect(result.rows[0]?.exists).toBe(true);
       }
     });
 
-    it('should have custom types created', async () => {
+    it("should have custom types created", async () => {
       const pool = env.getDbPool();
       if (!pool) {
-        console.log('Skipping: Database pool not available');
+        console.log("Skipping: Database pool not available");
         return;
       }
 

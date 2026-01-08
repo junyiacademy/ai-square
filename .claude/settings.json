@@ -1,23 +1,35 @@
 {
-  "hooks": [
-    {
-      "matcher": "*",
-      "hooks": [
-        {
-          "eventName": "UserPromptSubmit",
-          "type": "command",
-          "command": "/Users/young/project/ai-square/.claude/hooks/universal-agent-rules.py",
-          "timeout": 5
-        },
-        {
-          "eventName": "Stop",
-          "type": "command",
-          "command": "echo '{\"output\": \"{output}\", \"prompt\": \"{prompt}\"}' | python3 /Users/young/project/ai-square/.claude/hooks/error-reflection.py",
-          "timeout": 3
-        }
-      ]
-    }
-  ],
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "./.claude/hooks/check-agent-rules.py",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "/Users/young/project/ai-square/.claude/hooks/universal-agent-rules.py",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"output\": \"{output}\", \"prompt\": \"{prompt}\"}' | python3 /Users/young/project/ai-square/.claude/hooks/error-reflection.py",
+            "timeout": 3
+          }
+        ]
+      }
+    ]
+  },
   "permissions": {
     "allow": [
       "Read(*)",

@@ -2,32 +2,32 @@
  * E2E 測試輔助函數 - 認證相關
  */
 
-import { Page, expect } from '@playwright/test'
+import { Page, expect } from "@playwright/test";
 
 export interface TestUser {
-  email: string
-  password: string
-  role: 'student' | 'teacher' | 'admin'
+  email: string;
+  password: string;
+  role: "student" | "teacher" | "admin";
 }
 
 // 預設測試用戶
 export const TEST_USERS: Record<string, TestUser> = {
   student: {
-    email: 'student@example.com',
-    password: 'student123',
-    role: 'student'
+    email: "student@example.com",
+    password: "student123",
+    role: "student",
   },
   teacher: {
-    email: 'teacher@example.com',
-    password: 'teacher123',
-    role: 'teacher'
+    email: "teacher@example.com",
+    password: "teacher123",
+    role: "teacher",
   },
   admin: {
-    email: 'admin@example.com',
-    password: 'admin123',
-    role: 'admin'
-  }
-}
+    email: "admin@example.com",
+    password: "admin123",
+    role: "admin",
+  },
+};
 
 /**
  * 執行登入操作
@@ -36,30 +36,33 @@ export async function performLogin(
   page: Page,
   user: TestUser = TEST_USERS.student,
   options: {
-    rememberMe?: boolean
-    expectSuccess?: boolean
-  } = {}
+    rememberMe?: boolean;
+    expectSuccess?: boolean;
+  } = {},
 ) {
-  const { rememberMe = false, expectSuccess = true } = options
+  const { rememberMe = false, expectSuccess = true } = options;
 
   // 前往登入頁
-  await page.goto('/login')
+  await page.goto("/login");
 
   // 填寫表單 - 使用 id 選擇器更穩定
-  await page.locator('#email').fill(user.email)
-  await page.locator('#password').fill(user.password)
+  await page.locator("#email").fill(user.email);
+  await page.locator("#password").fill(user.password);
 
   // 設定 Remember Me
   if (rememberMe) {
-    await page.locator('#remember-me').check()
+    await page.locator("#remember-me").check();
   }
 
   // 提交表單 - 使用更穩定的選擇器
-  await page.locator('button[type="submit"]').click()
+  await page.locator('button[type="submit"]').click();
 
   // 驗證結果
   if (expectSuccess) {
-    await expect(page).toHaveURL(/\/(relations|onboarding|discovery|assessment|dashboard)/, { timeout: 10000 })
+    await expect(page).toHaveURL(
+      /\/(relations|onboarding|discovery|assessment|dashboard)/,
+      { timeout: 10000 },
+    );
   }
 }
 
@@ -68,11 +71,11 @@ export async function performLogin(
  */
 export async function performLogout(page: Page) {
   // 尋找並點擊登出按鈕
-  const logoutButton = page.getByRole('button', { name: /logout|sign out/i })
-  await logoutButton.click()
+  const logoutButton = page.getByRole("button", { name: /logout|sign out/i });
+  await logoutButton.click();
 
   // 驗證登出成功
-  await expect(page).toHaveURL(/\/login/)
+  await expect(page).toHaveURL(/\/login/);
 }
 
 /**
@@ -80,32 +83,30 @@ export async function performLogout(page: Page) {
  */
 export async function isLoggedIn(page: Page): Promise<boolean> {
   const isLoggedInStorage = await page.evaluate(() =>
-    localStorage.getItem('isLoggedIn')
-  )
-  return isLoggedInStorage === 'true'
+    localStorage.getItem("isLoggedIn"),
+  );
+  return isLoggedInStorage === "true";
 }
 
 /**
  * 取得當前用戶資訊
  */
 export async function getCurrentUser(page: Page): Promise<any | null> {
-  const userData = await page.evaluate(() =>
-    localStorage.getItem('user')
-  )
-  return userData ? JSON.parse(userData) : null
+  const userData = await page.evaluate(() => localStorage.getItem("user"));
+  return userData ? JSON.parse(userData) : null;
 }
 
 /**
  * 清除認證狀態
  */
 export async function clearAuthState(page: Page) {
-  await page.context().clearCookies()
+  await page.context().clearCookies();
   await page.evaluate(() => {
-    localStorage.removeItem('isLoggedIn')
-    localStorage.removeItem('user')
-    localStorage.removeItem('accessToken')
-    localStorage.removeItem('refreshToken')
-  })
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("user");
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+  });
 }
 
 /**
@@ -115,61 +116,67 @@ export async function setMockAuthState(
   page: Page,
   user: TestUser,
   options: {
-    accessToken?: string
-    refreshToken?: string
-    rememberMe?: boolean
-  } = {}
+    accessToken?: string;
+    refreshToken?: string;
+    rememberMe?: boolean;
+  } = {},
 ) {
   const {
-    accessToken = 'mock-access-token',
-    refreshToken = 'mock-refresh-token',
-    rememberMe = false
-  } = options
+    accessToken = "mock-access-token",
+    refreshToken = "mock-refresh-token",
+    rememberMe = false,
+  } = options;
 
-  await page.evaluate(({ user, accessToken, refreshToken }) => {
-    localStorage.setItem('isLoggedIn', 'true')
-    localStorage.setItem('user', JSON.stringify({
-      id: `${user.role}-123`,
-      email: user.email,
-      role: user.role
-    }))
-    localStorage.setItem('accessToken', accessToken)
-    localStorage.setItem('refreshToken', refreshToken)
-  }, { user, accessToken, refreshToken })
+  await page.evaluate(
+    ({ user, accessToken, refreshToken }) => {
+      localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          id: `${user.role}-123`,
+          email: user.email,
+          role: user.role,
+        }),
+      );
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
+    },
+    { user, accessToken, refreshToken },
+  );
 
   // 設定 cookies
   await page.context().addCookies([
     {
-      name: 'accessToken',
+      name: "accessToken",
       value: accessToken,
-      domain: 'localhost',
-      path: '/',
+      domain: "localhost",
+      path: "/",
       httpOnly: true,
       secure: false,
-      sameSite: 'Lax'
+      sameSite: "Lax",
     },
     {
-      name: 'refreshToken',
+      name: "refreshToken",
       value: refreshToken,
-      domain: 'localhost',
-      path: '/',
+      domain: "localhost",
+      path: "/",
       httpOnly: true,
       secure: false,
-      sameSite: 'Lax',
+      sameSite: "Lax",
       expires: rememberMe
         ? Date.now() / 1000 + 30 * 24 * 60 * 60 // 30 天
-        : Date.now() / 1000 + 7 * 24 * 60 * 60  // 7 天
+        : Date.now() / 1000 + 7 * 24 * 60 * 60, // 7 天
     },
     {
-      name: 'rememberMe',
+      name: "rememberMe",
       value: rememberMe.toString(),
-      domain: 'localhost',
-      path: '/',
+      domain: "localhost",
+      path: "/",
       httpOnly: false,
       secure: false,
-      sameSite: 'Lax'
-    }
-  ])
+      sameSite: "Lax",
+    },
+  ]);
 }
 
 /**
@@ -177,18 +184,18 @@ export async function setMockAuthState(
  */
 export async function waitForAuthRequest(
   page: Page,
-  urlPattern: string | RegExp
+  urlPattern: string | RegExp,
 ): Promise<any> {
   return page.waitForResponse(
-    response => {
-      const url = response.url()
-      if (typeof urlPattern === 'string') {
-        return url.includes(urlPattern)
+    (response) => {
+      const url = response.url();
+      if (typeof urlPattern === "string") {
+        return url.includes(urlPattern);
       }
-      return urlPattern.test(url)
+      return urlPattern.test(url);
     },
-    { timeout: 10000 }
-  )
+    { timeout: 10000 },
+  );
 }
 
 /**
@@ -198,18 +205,18 @@ export async function verifyProtectedRoute(
   page: Page,
   route: string,
   options: {
-    shouldRedirect?: boolean
-    redirectTo?: string
-  } = {}
+    shouldRedirect?: boolean;
+    redirectTo?: string;
+  } = {},
 ) {
-  const { shouldRedirect = true, redirectTo = '/login' } = options
+  const { shouldRedirect = true, redirectTo = "/login" } = options;
 
-  await page.goto(route)
+  await page.goto(route);
 
   if (shouldRedirect) {
-    await expect(page).toHaveURL(new RegExp(redirectTo))
+    await expect(page).toHaveURL(new RegExp(redirectTo));
   } else {
-    await expect(page).toHaveURL(new RegExp(route))
+    await expect(page).toHaveURL(new RegExp(route));
   }
 }
 
@@ -219,9 +226,10 @@ export async function verifyProtectedRoute(
 export async function simulateTokenExpiry(page: Page) {
   await page.evaluate(() => {
     // 設定一個過期的 token
-    const expiredToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDAwMDAwMDB9.expired'
-    localStorage.setItem('accessToken', expiredToken)
-  })
+    const expiredToken =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MDAwMDAwMDB9.expired";
+    localStorage.setItem("accessToken", expiredToken);
+  });
 }
 
 /**
@@ -231,16 +239,16 @@ export async function mockApiResponse(
   page: Page,
   urlPattern: string | RegExp,
   response: {
-    status?: number
-    body?: unknown
-    headers?: Record<string, string>
-  }
+    status?: number;
+    body?: unknown;
+    headers?: Record<string, string>;
+  },
 ) {
-  await page.route(urlPattern, route => {
+  await page.route(urlPattern, (route) => {
     route.fulfill({
       status: response.status || 200,
-      headers: response.headers || { 'Content-Type': 'application/json' },
-      body: JSON.stringify(response.body || {})
-    })
-  })
+      headers: response.headers || { "Content-Type": "application/json" },
+      body: JSON.stringify(response.body || {}),
+    });
+  });
 }

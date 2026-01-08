@@ -98,9 +98,11 @@ Cost: $1000+/month
 ### 1. GCP Project Structure (根據階段)
 
 #### Phase 1-2: Minimal Setup
+> **Note**: Infrastructure is managed via GitHub Actions + gcloud CLI. Examples below are for reference only.
+
 ```yaml
-# terraform/gcp/phase1/main.tf
-# 只需要最基本的 Cloud Run 和 Vertex AI
+# Historical example (not in use)
+# Infrastructure managed via .github/workflows/
 terraform {
   required_version = ">= 1.0"
   required_providers {
@@ -131,8 +133,10 @@ resource "google_project_service" "required_apis" {
 ```
 
 #### Phase 3+: Full Project Structure
+> **Note**: Infrastructure is managed via GitHub Actions + gcloud CLI.
+
 ```yaml
-# terraform/gcp/phase3/main.tf
+# Historical example (not in use)
 terraform {
   required_version = ">= 1.0"
   required_providers {
@@ -1340,11 +1344,13 @@ class CostOptimizer:
 
 ## Infrastructure as Code
 
-### Terraform Modules
-```hcl
-# terraform/modules/gke-cluster/main.tf
-module "gke" {
-  source = "./modules/gke-cluster"
+### GitHub Actions + gcloud CLI
+> **Note**: Infrastructure is managed via GitHub Actions workflows using gcloud CLI commands.
+
+```yaml
+# .github/workflows/deploy.yml
+# Infrastructure deployment handled by GitHub Actions
+# See .github/workflows/ for actual implementation
 
   project_id     = var.project_id
   region         = var.region

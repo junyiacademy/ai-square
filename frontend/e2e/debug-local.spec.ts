@@ -1,16 +1,16 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from "@playwright/test";
 
-test('Debug Discovery categories locally', async ({ page }) => {
+test("Debug Discovery categories locally", async ({ page }) => {
   // 1. Login
-  await page.goto('http://localhost:3001/login');
-  await page.fill('#email', 'student123@aisquare.com');
-  await page.fill('#password', 'Demo123456');
+  await page.goto("http://localhost:3001/login");
+  await page.fill("#email", "student123@aisquare.com");
+  await page.fill("#password", "Demo123456");
   await page.click('button[type="submit"]');
   await page.waitForTimeout(2000);
 
   // 2. Go to Discovery
-  await page.goto('http://localhost:3001/discovery/scenarios');
-  await page.waitForLoadState('networkidle');
+  await page.goto("http://localhost:3001/discovery/scenarios");
+  await page.waitForLoadState("networkidle");
   await page.waitForTimeout(2000);
 
   // 3. Count all scenarios
@@ -18,7 +18,7 @@ test('Debug Discovery categories locally', async ({ page }) => {
   console.log(`\n全部: ${allCards} scenarios`);
 
   // 4. Test each filter
-  const filters = ['創意', '技術', '商業', '科學'];
+  const filters = ["創意", "技術", "商業", "科學"];
 
   for (const filter of filters) {
     console.log(`\nTesting ${filter} filter...`);
@@ -34,17 +34,19 @@ test('Debug Discovery categories locally', async ({ page }) => {
       console.log(`${filter}: ${count} scenarios`);
 
       // Log what the frontend shows
-      const titles = await page.locator('[data-testid="scenario-card"] h3').allTextContents();
-      titles.forEach(title => console.log(`  - ${title}`));
+      const titles = await page
+        .locator('[data-testid="scenario-card"] h3')
+        .allTextContents();
+      titles.forEach((title) => console.log(`  - ${title}`));
     } else {
       console.log(`⚠️ Filter button "${filter}" not found`);
     }
   }
 
   // 5. Check console for errors
-  page.on('console', msg => {
-    if (msg.type() === 'log') {
-      console.log('Browser log:', msg.text());
+  page.on("console", (msg) => {
+    if (msg.type() === "log") {
+      console.log("Browser log:", msg.text());
     }
   });
 });

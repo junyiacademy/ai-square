@@ -3,7 +3,7 @@
  * 遵循 TDD Red → Green → Refactor
  */
 
-import { BaseLearningService } from '../base-learning-service';
+import { BaseLearningService } from "../base-learning-service";
 import {
   IScenario,
   IProgram,
@@ -14,15 +14,18 @@ import {
   BaseProgramRepository,
   BaseTaskRepository,
   BaseEvaluationRepository,
-  IEvaluationSystem
-} from '@/types/unified-learning';
+  IEvaluationSystem,
+} from "@/types/unified-learning";
 
 // Mock repositories
 class MockScenarioRepository implements BaseScenarioRepository<IScenario> {
   private scenarios: Map<string, IScenario> = new Map();
 
-  async create(scenario: Omit<IScenario, 'id'>): Promise<IScenario> {
-    const newScenario = { ...scenario, id: 'scenario-' + Date.now() } as IScenario;
+  async create(scenario: Omit<IScenario, "id">): Promise<IScenario> {
+    const newScenario = {
+      ...scenario,
+      id: "scenario-" + Date.now(),
+    } as IScenario;
     this.scenarios.set(newScenario.id, newScenario);
     return newScenario;
   }
@@ -32,18 +35,24 @@ class MockScenarioRepository implements BaseScenarioRepository<IScenario> {
   }
 
   async findByIds(ids: string[]): Promise<IScenario[]> {
-    return ids.map(id => this.scenarios.get(id)).filter((s): s is IScenario => s !== undefined);
+    return ids
+      .map((id) => this.scenarios.get(id))
+      .filter((s): s is IScenario => s !== undefined);
   }
 
-  async findBySource(sourceType: string, sourceId?: string): Promise<IScenario[]> {
-    return Array.from(this.scenarios.values()).filter(s =>
-      s.sourceType === sourceType && (!sourceId || s.sourceId === sourceId)
+  async findBySource(
+    sourceType: string,
+    sourceId?: string,
+  ): Promise<IScenario[]> {
+    return Array.from(this.scenarios.values()).filter(
+      (s) =>
+        s.sourceType === sourceType && (!sourceId || s.sourceId === sourceId),
     );
   }
 
   async update(id: string, updates: Partial<IScenario>): Promise<IScenario> {
     const scenario = this.scenarios.get(id);
-    if (!scenario) throw new Error('Scenario not found');
+    if (!scenario) throw new Error("Scenario not found");
     const updated = { ...scenario, ...updates };
     this.scenarios.set(id, updated);
     return updated;
@@ -53,8 +62,8 @@ class MockScenarioRepository implements BaseScenarioRepository<IScenario> {
 class MockProgramRepository implements BaseProgramRepository<IProgram> {
   public programs: Map<string, IProgram> = new Map();
 
-  async create(program: Omit<IProgram, 'id'>): Promise<IProgram> {
-    const newProgram = { ...program, id: 'program-' + Date.now() } as IProgram;
+  async create(program: Omit<IProgram, "id">): Promise<IProgram> {
+    const newProgram = { ...program, id: "program-" + Date.now() } as IProgram;
     this.programs.set(newProgram.id, newProgram);
     return newProgram;
   }
@@ -64,16 +73,23 @@ class MockProgramRepository implements BaseProgramRepository<IProgram> {
   }
 
   async findByUser(userId: string): Promise<IProgram[]> {
-    return Array.from(this.programs.values()).filter(p => p.userId === userId);
+    return Array.from(this.programs.values()).filter(
+      (p) => p.userId === userId,
+    );
   }
 
   async findByScenario(scenarioId: string): Promise<IProgram[]> {
-    return Array.from(this.programs.values()).filter(p => p.scenarioId === scenarioId);
+    return Array.from(this.programs.values()).filter(
+      (p) => p.scenarioId === scenarioId,
+    );
   }
 
-  async updateProgress(id: string, currentTaskIndex: number): Promise<IProgram> {
+  async updateProgress(
+    id: string,
+    currentTaskIndex: number,
+  ): Promise<IProgram> {
     const program = this.programs.get(id);
-    if (!program) throw new Error('Program not found');
+    if (!program) throw new Error("Program not found");
     program.currentTaskIndex = currentTaskIndex;
     this.programs.set(id, program); // Ensure the updated program is stored back
     return program;
@@ -81,11 +97,11 @@ class MockProgramRepository implements BaseProgramRepository<IProgram> {
 
   async complete(id: string): Promise<IProgram> {
     const program = this.programs.get(id);
-    if (!program) throw new Error('Program not found');
+    if (!program) throw new Error("Program not found");
     const updated = {
       ...program,
-      status: 'completed' as const,
-      completedAt: new Date().toISOString()
+      status: "completed" as const,
+      completedAt: new Date().toISOString(),
     };
     this.programs.set(id, updated); // Ensure the updated program is stored back
     return updated;
@@ -96,14 +112,14 @@ class MockTaskRepository implements BaseTaskRepository<ITask> {
   public tasks: Map<string, ITask> = new Map();
   private counter = 0;
 
-  async create(task: Omit<ITask, 'id'>): Promise<ITask> {
-    const newTask = { ...task, id: 'task-' + (++this.counter) } as ITask;
+  async create(task: Omit<ITask, "id">): Promise<ITask> {
+    const newTask = { ...task, id: "task-" + ++this.counter } as ITask;
     this.tasks.set(newTask.id, newTask);
     return newTask;
   }
 
-  async createBatch(tasks: Omit<ITask, 'id'>[]): Promise<ITask[]> {
-    return Promise.all(tasks.map(task => this.create(task)));
+  async createBatch(tasks: Omit<ITask, "id">[]): Promise<ITask[]> {
+    return Promise.all(tasks.map((task) => this.create(task)));
   }
 
   async findById(id: string): Promise<ITask | null> {
@@ -112,13 +128,16 @@ class MockTaskRepository implements BaseTaskRepository<ITask> {
 
   async findByProgram(programId: string): Promise<ITask[]> {
     return Array.from(this.tasks.values())
-      .filter(t => t.programId === programId)
+      .filter((t) => t.programId === programId)
       .sort((a, b) => (a.taskIndex || 0) - (b.taskIndex || 0));
   }
 
-  async updateInteractions(id: string, interactions: IInteraction[]): Promise<ITask> {
+  async updateInteractions(
+    id: string,
+    interactions: IInteraction[],
+  ): Promise<ITask> {
     const task = this.tasks.get(id);
-    if (!task) throw new Error('Task not found');
+    if (!task) throw new Error("Task not found");
     task.interactions = interactions;
     task.interactionCount = interactions.length;
     return task;
@@ -126,8 +145,8 @@ class MockTaskRepository implements BaseTaskRepository<ITask> {
 
   async complete(id: string): Promise<ITask> {
     const task = this.tasks.get(id);
-    if (!task) throw new Error('Task not found');
-    task.status = 'completed';
+    if (!task) throw new Error("Task not found");
+    task.status = "completed";
     task.completedAt = new Date().toISOString();
     return task;
   }
@@ -137,8 +156,11 @@ class MockEvaluationRepository implements BaseEvaluationRepository<IEvaluation> 
   private evaluations: Map<string, IEvaluation> = new Map();
   private counter = 0;
 
-  async create(evaluation: Omit<IEvaluation, 'id'>): Promise<IEvaluation> {
-    const newEval = { ...evaluation, id: 'eval-' + (++this.counter) } as IEvaluation;
+  async create(evaluation: Omit<IEvaluation, "id">): Promise<IEvaluation> {
+    const newEval = {
+      ...evaluation,
+      id: "eval-" + ++this.counter,
+    } as IEvaluation;
     this.evaluations.set(newEval.id, newEval);
     return newEval;
   }
@@ -148,25 +170,37 @@ class MockEvaluationRepository implements BaseEvaluationRepository<IEvaluation> 
   }
 
   async findByProgram(programId: string): Promise<IEvaluation[]> {
-    return Array.from(this.evaluations.values()).filter(e => e.programId === programId);
+    return Array.from(this.evaluations.values()).filter(
+      (e) => e.programId === programId,
+    );
   }
 
   async findByProgramIds(programIds: string[]): Promise<IEvaluation[]> {
-    return Array.from(this.evaluations.values()).filter(e => e.programId && programIds.includes(e.programId));
+    return Array.from(this.evaluations.values()).filter(
+      (e) => e.programId && programIds.includes(e.programId),
+    );
   }
 
   async findByTask(taskId: string): Promise<IEvaluation[]> {
-    return Array.from(this.evaluations.values()).filter(e => e.taskId === taskId);
+    return Array.from(this.evaluations.values()).filter(
+      (e) => e.taskId === taskId,
+    );
   }
 
   async findByUser(userId: string): Promise<IEvaluation[]> {
-    return Array.from(this.evaluations.values()).filter(e => e.userId === userId);
+    return Array.from(this.evaluations.values()).filter(
+      (e) => e.userId === userId,
+    );
   }
 
-  async findByType(evaluationType: string, evaluationSubtype?: string): Promise<IEvaluation[]> {
-    return Array.from(this.evaluations.values()).filter(e =>
-      e.evaluationType === evaluationType &&
-      (!evaluationSubtype || e.evaluationSubtype === evaluationSubtype)
+  async findByType(
+    evaluationType: string,
+    evaluationSubtype?: string,
+  ): Promise<IEvaluation[]> {
+    return Array.from(this.evaluations.values()).filter(
+      (e) =>
+        e.evaluationType === evaluationType &&
+        (!evaluationSubtype || e.evaluationSubtype === evaluationSubtype),
     );
   }
 }
@@ -174,8 +208,13 @@ class MockEvaluationRepository implements BaseEvaluationRepository<IEvaluation> 
 // Concrete implementation for testing
 class TestLearningService extends BaseLearningService {
   // Hook implementations for testing
-  protected async beforeProgramCreate(data: Partial<IProgram>): Promise<Partial<IProgram>> {
-    return { ...data, metadata: { ...data.metadata, beforeCreateCalled: true } };
+  protected async beforeProgramCreate(
+    data: Partial<IProgram>,
+  ): Promise<Partial<IProgram>> {
+    return {
+      ...data,
+      metadata: { ...data.metadata, beforeCreateCalled: true },
+    };
   }
 
   protected async afterProgramCreate(program: IProgram): Promise<void> {
@@ -186,12 +225,15 @@ class TestLearningService extends BaseLearningService {
     // For testing hooks
   }
 
-  protected async afterTaskComplete(task: ITask, evaluation: IEvaluation): Promise<void> {
+  protected async afterTaskComplete(
+    task: ITask,
+    evaluation: IEvaluation,
+  ): Promise<void> {
     // For testing hooks
   }
 }
 
-describe('BaseLearningService', () => {
+describe("BaseLearningService", () => {
   let service: TestLearningService;
   let mockScenarioRepo: MockScenarioRepository;
   let mockProgramRepo: MockProgramRepository;
@@ -208,40 +250,40 @@ describe('BaseLearningService', () => {
       mockScenarioRepo,
       mockProgramRepo,
       mockTaskRepo,
-      mockEvaluationRepo
+      mockEvaluationRepo,
     );
   });
 
-  describe('createLearningProgram', () => {
-    it('should create a complete learning program with tasks', async () => {
+  describe("createLearningProgram", () => {
+    it("should create a complete learning program with tasks", async () => {
       // Arrange
       const scenario = await mockScenarioRepo.create({
-        sourceType: 'yaml' as const,
-        sourcePath: 'test_scenario.yaml',
-        sourceId: 'test_scenario',
+        sourceType: "yaml" as const,
+        sourcePath: "test_scenario.yaml",
+        sourceId: "test_scenario",
         sourceMetadata: {},
-        mode: 'pbl' as const,
-        title: { en: 'Test Scenario' },
-        description: { en: 'Test Description' },
-        difficulty: 'intermediate',
+        mode: "pbl" as const,
+        title: { en: "Test Scenario" },
+        description: { en: "Test Description" },
+        difficulty: "intermediate",
         estimatedMinutes: 30,
         prerequisites: [],
-        status: 'active' as const,
-        version: '1.0.0',
+        status: "active" as const,
+        version: "1.0.0",
         objectives: [],
         taskTemplates: [
           {
-            id: 'template-1',
-            title: { en: 'Task 1' },
-            type: 'interactive',
-            metadata: {}
+            id: "template-1",
+            title: { en: "Task 1" },
+            type: "interactive",
+            metadata: {},
           },
           {
-            id: 'template-2',
-            title: { en: 'Task 2' },
-            type: 'assessment',
-            metadata: {}
-          }
+            id: "template-2",
+            title: { en: "Task 2" },
+            type: "assessment",
+            metadata: {},
+          },
         ],
         taskCount: 2,
         xpRewards: {},
@@ -253,31 +295,34 @@ describe('BaseLearningService', () => {
         resources: [],
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-        metadata: {}
+        metadata: {},
       });
 
       // Act
-      const result = await service.createLearningProgram(scenario.id, 'user-123');
+      const result = await service.createLearningProgram(
+        scenario.id,
+        "user-123",
+      );
 
       // Assert
       expect(result.scenario.id).toBe(scenario.id);
       expect(result.program.scenarioId).toBe(scenario.id);
-      expect(result.program.userId).toBe('user-123');
-      expect(result.program.status).toBe('active');
+      expect(result.program.userId).toBe("user-123");
+      expect(result.program.status).toBe("active");
       expect(result.program.metadata?.beforeCreateCalled).toBe(true); // Hook was called
       expect(result.tasks).toHaveLength(2);
-      expect(result.tasks[0].title).toEqual({ en: 'Task 1' });
-      expect(result.tasks[1].title).toEqual({ en: 'Task 2' });
+      expect(result.tasks[0].title).toEqual({ en: "Task 1" });
+      expect(result.tasks[1].title).toEqual({ en: "Task 2" });
     });
 
-    it('should throw error if scenario not found', async () => {
+    it("should throw error if scenario not found", async () => {
       await expect(
-        service.createLearningProgram('non-existent', 'user-123')
-      ).rejects.toThrow('Scenario not found');
+        service.createLearningProgram("non-existent", "user-123"),
+      ).rejects.toThrow("Scenario not found");
     });
   });
 
-  describe('completeTask', () => {
+  describe("completeTask", () => {
     let program: IProgram;
     let task1: ITask;
     let task2: ITask;
@@ -285,10 +330,10 @@ describe('BaseLearningService', () => {
     beforeEach(async () => {
       // Setup test data
       program = await mockProgramRepo.create({
-        scenarioId: 'scenario-1',
-        userId: 'user-123',
-        mode: 'pbl' as const,
-        status: 'active' as const,
+        scenarioId: "scenario-1",
+        userId: "user-123",
+        mode: "pbl" as const,
+        status: "active" as const,
         currentTaskIndex: 0,
         completedTaskCount: 0,
         totalTaskCount: 2,
@@ -304,19 +349,19 @@ describe('BaseLearningService', () => {
         pblData: {},
         discoveryData: {},
         assessmentData: {},
-        metadata: {}
+        metadata: {},
       });
 
       // Create task1 with fixed ID
-      const task1Data: Omit<ITask, 'id'> = {
+      const task1Data: Omit<ITask, "id"> = {
         programId: program.id,
-        mode: 'pbl' as const,
+        mode: "pbl" as const,
         taskIndex: 0,
         scenarioTaskIndex: 0,
-        title: { en: 'Task 1' },
-        description: { en: 'Test Task 1' },
-        type: 'question' as const,
-        status: 'active' as const,
+        title: { en: "Task 1" },
+        description: { en: "Test Task 1" },
+        type: "question" as const,
+        status: "active" as const,
         content: {},
         interactions: [],
         interactionCount: 0,
@@ -332,21 +377,21 @@ describe('BaseLearningService', () => {
         pblData: {},
         discoveryData: {},
         assessmentData: {},
-        metadata: {}
+        metadata: {},
       };
-      task1 = { ...task1Data, id: 'task-1' } as ITask;
-      mockTaskRepo.tasks.set('task-1', task1);
+      task1 = { ...task1Data, id: "task-1" } as ITask;
+      mockTaskRepo.tasks.set("task-1", task1);
 
       // Create task2 with fixed ID
-      const task2Data: Omit<ITask, 'id'> = {
+      const task2Data: Omit<ITask, "id"> = {
         programId: program.id,
-        mode: 'pbl' as const,
+        mode: "pbl" as const,
         taskIndex: 1,
         scenarioTaskIndex: 1,
-        title: { en: 'Task 2' },
-        description: { en: 'Test Task 2' },
-        type: 'question' as const,
-        status: 'pending' as const,
+        title: { en: "Task 2" },
+        description: { en: "Test Task 2" },
+        type: "question" as const,
+        status: "pending" as const,
         content: {},
         interactions: [],
         interactionCount: 0,
@@ -362,54 +407,56 @@ describe('BaseLearningService', () => {
         pblData: {},
         discoveryData: {},
         assessmentData: {},
-        metadata: {}
+        metadata: {},
       };
-      task2 = { ...task2Data, id: 'task-2' } as ITask;
-      mockTaskRepo.tasks.set('task-2', task2);
+      task2 = { ...task2Data, id: "task-2" } as ITask;
+      mockTaskRepo.tasks.set("task-2", task2);
 
       // No need to store taskIds - tasks are linked via programId
     });
 
-    it('should complete task and create evaluation', async () => {
+    it("should complete task and create evaluation", async () => {
       // Act
-      const result = await service.completeTask('task-1', 'user-123', { answer: 'test' });
+      const result = await service.completeTask("task-1", "user-123", {
+        answer: "test",
+      });
 
       // Assert
-      expect(result.task.status).toBe('completed');
-      expect(result.task.userResponse).toEqual({ answer: 'test' });
-      expect(result.evaluation.evaluationType).toBe('task');
-      expect(result.evaluation.taskId).toBe('task-1');
-      expect(result.nextTask?.id).toBe('task-2');
-      expect(result.nextTask?.status).toBe('active');
+      expect(result.task.status).toBe("completed");
+      expect(result.task.userResponse).toEqual({ answer: "test" });
+      expect(result.evaluation.evaluationType).toBe("task");
+      expect(result.evaluation.taskId).toBe("task-1");
+      expect(result.nextTask?.id).toBe("task-2");
+      expect(result.nextTask?.status).toBe("active");
     });
 
-    it('should complete last task and complete program', async () => {
+    it("should complete last task and complete program", async () => {
       // Complete first task
-      await service.completeTask(task1.id, 'user-123');
+      await service.completeTask(task1.id, "user-123");
 
       // Act - Complete last task
-      const result = await service.completeTask(task2.id, 'user-123');
+      const result = await service.completeTask(task2.id, "user-123");
 
       // Assert
-      expect(result.task.status).toBe('completed');
+      expect(result.task.status).toBe("completed");
       expect(result.evaluation).toBeDefined();
       expect(result.nextTask).toBeUndefined();
 
       // Check program is completed
       const completedProgram = await mockProgramRepo.findById(program.id);
-      expect(completedProgram?.status).toBe('completed');
+      expect(completedProgram?.status).toBe("completed");
     });
   });
 
-  describe('getLearningProgress', () => {
-    it('should return user learning progress with metrics', async () => {
+  describe("getLearningProgress", () => {
+    it("should return user learning progress with metrics", async () => {
       // Arrange - Create multiple programs with evaluations
       const program1 = await mockProgramRepo.create({
-        scenarioId: 'scenario-1',
-        userId: 'user-123',
-        status: 'active',
+        scenarioId: "scenario-1",
+        userId: "user-123",
+        status: "active",
         startedAt: new Date().toISOString(),
-        mode: 'pbl' as const,
+        mode: "pbl" as const,
         currentTaskIndex: 0,
         completedTaskCount: 0,
         totalTaskCount: 0,
@@ -424,20 +471,20 @@ describe('BaseLearningService', () => {
         pblData: {},
         discoveryData: {},
         assessmentData: {},
-        metadata: {}
+        metadata: {},
       });
 
       // Complete the program by updating its fields directly
-      program1.status = 'completed';
+      program1.status = "completed";
       program1.completedAt = new Date().toISOString();
       mockProgramRepo.findByUser = jest.fn().mockResolvedValue([program1]);
 
       const program2 = await mockProgramRepo.create({
-        scenarioId: 'scenario-2',
-        userId: 'user-123',
-        status: 'active',
+        scenarioId: "scenario-2",
+        userId: "user-123",
+        status: "active",
         startedAt: new Date().toISOString(),
-        mode: 'pbl' as const,
+        mode: "pbl" as const,
         currentTaskIndex: 0,
         completedTaskCount: 0,
         totalTaskCount: 0,
@@ -452,15 +499,15 @@ describe('BaseLearningService', () => {
         pblData: {},
         discoveryData: {},
         assessmentData: {},
-        metadata: {}
+        metadata: {},
       });
 
       const eval1 = await mockEvaluationRepo.create({
-        evaluationType: 'task',
-        taskId: 'task-1',
+        evaluationType: "task",
+        taskId: "task-1",
         programId: program1.id,
-        userId: 'user-123',
-        mode: 'pbl' as const,
+        userId: "user-123",
+        mode: "pbl" as const,
         score: 85,
         maxScore: 100,
         domainScores: {},
@@ -471,15 +518,15 @@ describe('BaseLearningService', () => {
         pblData: {},
         discoveryData: {},
         assessmentData: {},
-        metadata: {}
+        metadata: {},
       });
 
       const eval2 = await mockEvaluationRepo.create({
-        evaluationType: 'task',
-        taskId: 'task-2',
+        evaluationType: "task",
+        taskId: "task-2",
         programId: program1.id,
-        userId: 'user-123',
-        mode: 'pbl' as const,
+        userId: "user-123",
+        mode: "pbl" as const,
         score: 90,
         maxScore: 100,
         domainScores: {},
@@ -490,14 +537,16 @@ describe('BaseLearningService', () => {
         pblData: {},
         discoveryData: {},
         assessmentData: {},
-        metadata: {}
+        metadata: {},
       });
 
       // Set up mock to return both programs
-      mockProgramRepo.findByUser = jest.fn().mockResolvedValue([program1, program2]);
+      mockProgramRepo.findByUser = jest
+        .fn()
+        .mockResolvedValue([program1, program2]);
 
       // Act
-      const progress = await service.getLearningProgress('user-123');
+      const progress = await service.getLearningProgress("user-123");
 
       // Assert
       expect(progress.activePrograms).toHaveLength(1);
@@ -507,22 +556,22 @@ describe('BaseLearningService', () => {
     });
   });
 
-  describe('getProgramStatus', () => {
-    it('should return detailed program status with completion rate', async () => {
+  describe("getProgramStatus", () => {
+    it("should return detailed program status with completion rate", async () => {
       // Arrange
       const scenario = await mockScenarioRepo.create({
-        sourceType: 'yaml' as const,
-        sourcePath: 'test_scenario.yaml',
-        sourceId: 'test_scenario',
+        sourceType: "yaml" as const,
+        sourcePath: "test_scenario.yaml",
+        sourceId: "test_scenario",
         sourceMetadata: {},
-        mode: 'pbl' as const,
-        title: { en: 'Test Scenario' },
-        description: { en: 'Test' },
-        difficulty: 'intermediate',
+        mode: "pbl" as const,
+        title: { en: "Test Scenario" },
+        description: { en: "Test" },
+        difficulty: "intermediate",
         estimatedMinutes: 30,
         prerequisites: [],
-        status: 'active' as const,
-        version: '1.0.0',
+        status: "active" as const,
+        version: "1.0.0",
         objectives: [],
         taskTemplates: [],
         taskCount: 0,
@@ -535,15 +584,15 @@ describe('BaseLearningService', () => {
         resources: [],
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
-        metadata: {}
+        metadata: {},
       });
 
       const program = await mockProgramRepo.create({
         scenarioId: scenario.id,
-        userId: 'user-123',
-        status: 'active',
+        userId: "user-123",
+        status: "active",
         startedAt: new Date().toISOString(),
-        mode: 'pbl' as const,
+        mode: "pbl" as const,
         currentTaskIndex: 0,
         completedTaskCount: 0,
         totalTaskCount: 0,
@@ -558,17 +607,17 @@ describe('BaseLearningService', () => {
         pblData: {},
         discoveryData: {},
         assessmentData: {},
-        metadata: {}
+        metadata: {},
       });
 
       const task1 = await mockTaskRepo.create({
         programId: program.id,
-        mode: 'pbl' as const,
+        mode: "pbl" as const,
         taskIndex: 0,
-        title: { en: 'Task 1' },
-        type: 'question' as const,
-        status: 'completed' as const,
-        description: { en: 'Test Task 1' },
+        title: { en: "Task 1" },
+        type: "question" as const,
+        status: "completed" as const,
+        description: { en: "Test Task 1" },
         interactions: [],
         interactionCount: 0,
         userResponse: {},
@@ -586,17 +635,17 @@ describe('BaseLearningService', () => {
         pblData: {},
         discoveryData: {},
         assessmentData: {},
-        metadata: {}
+        metadata: {},
       });
 
       const task2 = await mockTaskRepo.create({
         programId: program.id,
-        mode: 'pbl' as const,
+        mode: "pbl" as const,
         taskIndex: 1,
-        title: { en: 'Task 2' },
-        type: 'question' as const,
-        status: 'active' as const,
-        description: { en: 'Test Task 2' },
+        title: { en: "Task 2" },
+        type: "question" as const,
+        status: "active" as const,
+        description: { en: "Test Task 2" },
         interactions: [],
         interactionCount: 0,
         userResponse: {},
@@ -613,7 +662,7 @@ describe('BaseLearningService', () => {
         pblData: {},
         discoveryData: {},
         assessmentData: {},
-        metadata: {}
+        metadata: {},
       });
 
       // Fix the mock repository to store the updated program
@@ -622,8 +671,8 @@ describe('BaseLearningService', () => {
         currentTaskIndex: 1,
         metadata: {
           ...program.metadata,
-          taskIds: [task1.id, task2.id]
-        }
+          taskIds: [task1.id, task2.id],
+        },
       });
 
       // Act

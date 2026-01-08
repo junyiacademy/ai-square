@@ -34,8 +34,11 @@ class PerformanceMonitor {
 
   constructor() {
     // Start periodic aggregation only in non-test environments
-    if (process.env.NODE_ENV !== 'test' && !process.env.JEST_WORKER_ID) {
-      this.intervalId = setInterval(() => this.aggregateMetrics(), this.aggregationInterval);
+    if (process.env.NODE_ENV !== "test" && !process.env.JEST_WORKER_ID) {
+      this.intervalId = setInterval(
+        () => this.aggregateMetrics(),
+        this.aggregationInterval,
+      );
     }
   }
 
@@ -54,7 +57,10 @@ class PerformanceMonitor {
   /**
    * Get aggregated metrics for an endpoint
    */
-  getMetrics(endpoint: string, method: string = 'GET'): AggregatedMetrics | null {
+  getMetrics(
+    endpoint: string,
+    method: string = "GET",
+  ): AggregatedMetrics | null {
     const key = `${method}:${endpoint}`;
     return this.aggregated.get(key) || null;
   }
@@ -96,8 +102,8 @@ class PerformanceMonitor {
     const fiveMinutesAgo = Date.now() - this.aggregationInterval;
 
     // Get recent metrics
-    const recentMetrics = this.metrics.filter(m =>
-      new Date(m.timestamp).getTime() > fiveMinutesAgo
+    const recentMetrics = this.metrics.filter(
+      (m) => new Date(m.timestamp).getTime() > fiveMinutesAgo,
     );
 
     // Group by endpoint and method
@@ -113,11 +119,11 @@ class PerformanceMonitor {
 
     // Calculate aggregated metrics
     for (const [key, metrics] of groups) {
-      const [method, endpoint] = key.split(':');
+      const [method, endpoint] = key.split(":");
 
-      const responseTimes = metrics.map(m => m.responseTime);
-      const cacheHits = metrics.filter(m => m.cacheHit).length;
-      const errors = metrics.filter(m => m.statusCode >= 400).length;
+      const responseTimes = metrics.map((m) => m.responseTime);
+      const cacheHits = metrics.filter((m) => m.cacheHit).length;
+      const errors = metrics.filter((m) => m.statusCode >= 400).length;
 
       responseTimes.sort((a, b) => a - b);
       const p95Index = Math.floor(responseTimes.length * 0.95);
@@ -126,11 +132,13 @@ class PerformanceMonitor {
         endpoint,
         method,
         totalRequests: metrics.length,
-        averageResponseTime: responseTimes.reduce((a, b) => a + b, 0) / responseTimes.length,
+        averageResponseTime:
+          responseTimes.reduce((a, b) => a + b, 0) / responseTimes.length,
         p95ResponseTime: responseTimes[p95Index] || 0,
-        cacheHitRate: metrics.length > 0 ? (cacheHits / metrics.length) * 100 : 0,
+        cacheHitRate:
+          metrics.length > 0 ? (cacheHits / metrics.length) * 100 : 0,
         errorRate: metrics.length > 0 ? (errors / metrics.length) * 100 : 0,
-        lastUpdated: now
+        lastUpdated: now,
       };
 
       this.aggregated.set(key, aggregated);
@@ -147,8 +155,8 @@ export const performanceMonitor = new PerformanceMonitor();
 export function withPerformanceTracking<T>(
   handler: () => Promise<T>,
   endpoint: string,
-  method: string = 'GET',
-  userId?: string
+  method: string = "GET",
+  userId?: string,
 ): Promise<T> {
   const startTime = Date.now();
   let cacheHit = false;
@@ -156,15 +164,19 @@ export function withPerformanceTracking<T>(
   let errorMessage: string | undefined;
 
   return handler()
-    .then(result => {
+    .then((result) => {
       // Check if result came from cache
-      if (typeof result === 'object' && result !== null && 'cacheHit' in result) {
+      if (
+        typeof result === "object" &&
+        result !== null &&
+        "cacheHit" in result
+      ) {
         cacheHit = (result as { cacheHit: boolean }).cacheHit;
       }
 
       return result;
     })
-    .catch(error => {
+    .catch((error) => {
       statusCode = 500;
       errorMessage = error.message;
       throw error;
@@ -180,7 +192,7 @@ export function withPerformanceTracking<T>(
         statusCode,
         timestamp: new Date().toISOString(),
         userId,
-        errorMessage
+        errorMessage,
       });
     });
 }
@@ -202,9 +214,15 @@ export function getPerformanceReport(): {
 
   const summary = {
     totalEndpoints: allMetrics.length,
-    averageResponseTime: allMetrics.reduce((sum, m) => sum + m.averageResponseTime, 0) / allMetrics.length || 0,
-    averageCacheHitRate: allMetrics.reduce((sum, m) => sum + m.cacheHitRate, 0) / allMetrics.length || 0,
-    averageErrorRate: allMetrics.reduce((sum, m) => sum + m.errorRate, 0) / allMetrics.length || 0
+    averageResponseTime:
+      allMetrics.reduce((sum, m) => sum + m.averageResponseTime, 0) /
+        allMetrics.length || 0,
+    averageCacheHitRate:
+      allMetrics.reduce((sum, m) => sum + m.cacheHitRate, 0) /
+        allMetrics.length || 0,
+    averageErrorRate:
+      allMetrics.reduce((sum, m) => sum + m.errorRate, 0) / allMetrics.length ||
+      0,
   };
 
   const alerts: string[] = [];
@@ -212,19 +230,27 @@ export function getPerformanceReport(): {
   // Generate alerts for problematic endpoints
   for (const metric of allMetrics) {
     if (metric.averageResponseTime > 5000) {
-      alerts.push(`⚠️ ${metric.endpoint} (${metric.method}) - Slow response time: ${metric.averageResponseTime.toFixed(0)}ms`);
+      alerts.push(
+        `⚠️ ${metric.endpoint} (${metric.method}) - Slow response time: ${metric.averageResponseTime.toFixed(0)}ms`,
+      );
     }
     if (metric.errorRate > 5) {
-      alerts.push(`🚨 ${metric.endpoint} (${metric.method}) - High error rate: ${metric.errorRate.toFixed(1)}%`);
+      alerts.push(
+        `🚨 ${metric.endpoint} (${metric.method}) - High error rate: ${metric.errorRate.toFixed(1)}%`,
+      );
     }
-    if (metric.cacheHitRate < 50 && metric.method === 'GET') {
-      alerts.push(`📊 ${metric.endpoint} (${metric.method}) - Low cache hit rate: ${metric.cacheHitRate.toFixed(1)}%`);
+    if (metric.cacheHitRate < 50 && metric.method === "GET") {
+      alerts.push(
+        `📊 ${metric.endpoint} (${metric.method}) - Low cache hit rate: ${metric.cacheHitRate.toFixed(1)}%`,
+      );
     }
   }
 
   return {
     summary,
-    endpoints: allMetrics.sort((a, b) => b.averageResponseTime - a.averageResponseTime),
-    alerts
+    endpoints: allMetrics.sort(
+      (a, b) => b.averageResponseTime - a.averageResponseTime,
+    ),
+    alerts,
   };
 }

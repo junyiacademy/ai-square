@@ -1,137 +1,149 @@
-import { renderHook, act, waitFor } from '@testing-library/react'
-import { useRouter } from 'next/navigation'
-import { useAuth } from '../useAuth'
-import { mockConsoleError as createMockConsoleError } from '@/test-utils/helpers/console'
+import { renderHook, act, waitFor } from "@testing-library/react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "../useAuth";
+import { mockConsoleError as createMockConsoleError } from "@/test-utils/helpers/console";
 
 // Mock next/navigation
-jest.mock('next/navigation', () => ({
-  useRouter: jest.fn()
-}))
+jest.mock("next/navigation", () => ({
+  useRouter: jest.fn(),
+}));
 
 // Mock fetch
-global.fetch = jest.fn()
+global.fetch = jest.fn();
 
 // Define LocalStorageMock interface
 interface LocalStorageMock {
-  store: Record<string, string>
-  getItem: jest.Mock<string | null, [string]>
-  setItem: jest.Mock<void, [string, string]>
-  removeItem: jest.Mock<void, [string]>
-  clear: jest.Mock<void, []>
+  store: Record<string, string>;
+  getItem: jest.Mock<string | null, [string]>;
+  setItem: jest.Mock<void, [string, string]>;
+  removeItem: jest.Mock<void, [string]>;
+  clear: jest.Mock<void, []>;
 }
 
 // Mock localStorage
 const createLocalStorageMock = (): LocalStorageMock => {
-  let store: Record<string, string> = {}
+  let store: Record<string, string> = {};
   const mock: LocalStorageMock = {
     store,
     getItem: jest.fn((key: string) => mock.store[key] || null),
     setItem: jest.fn((key: string, value: string) => {
-      mock.store[key] = value
+      mock.store[key] = value;
     }),
     removeItem: jest.fn((key: string) => {
-      delete mock.store[key]
+      delete mock.store[key];
     }),
     clear: jest.fn(() => {
-      store = {}
-      mock.store = store
-    })
-  }
-  return mock
-}
-const localStorageMock = createLocalStorageMock()
+      store = {};
+      mock.store = store;
+    }),
+  };
+  return mock;
+};
+const localStorageMock = createLocalStorageMock();
 
-Object.defineProperty(window, 'localStorage', {
+Object.defineProperty(window, "localStorage", {
   value: localStorageMock,
-  writable: true
-})
+  writable: true,
+});
 
 // Mock console methods
-const mockConsoleError = createMockConsoleError()
+const mockConsoleError = createMockConsoleError();
 
-describe('useAuth', () => {
-  const mockPush = jest.fn()
-  const mockRouter = { push: mockPush }
-  const mockFetch = global.fetch as jest.MockedFunction<typeof fetch>
+describe("useAuth", () => {
+  const mockPush = jest.fn();
+  const mockRouter = { push: mockPush };
+  const mockFetch = global.fetch as jest.MockedFunction<typeof fetch>;
 
   beforeEach(() => {
-    jest.clearAllMocks()
-    localStorageMock.store = {}
-    ;(useRouter as jest.Mock).mockReturnValue(mockRouter)
+    jest.clearAllMocks();
+    localStorageMock.store = {};
+    (useRouter as jest.Mock).mockReturnValue(mockRouter);
 
     // Mock fetch to always return something to prevent undefined errors
     // This handles the setTimeout auth check calls
     mockFetch.mockImplementation(() =>
       Promise.resolve({
         ok: true,
-        json: () => Promise.resolve({ authenticated: false })
-      } as Response)
-    )
-  })
+        json: () => Promise.resolve({ authenticated: false }),
+      } as Response),
+    );
+  });
 
   afterEach(() => {
-    jest.clearAllMocks()
-  })
+    jest.clearAllMocks();
+  });
 
   afterAll(() => {
-    mockConsoleError.mockRestore()
-  })
+    mockConsoleError.mockRestore();
+  });
 
-  describe('initial state', () => {
-    it('should start with loading state', () => {
-      const { result } = renderHook(() => useAuth())
+  describe("initial state", () => {
+    it("should start with loading state", () => {
+      const { result } = renderHook(() => useAuth());
 
-      expect(result.current.isLoading).toBe(true)
-      expect(result.current.isLoggedIn).toBe(false)
-      expect(result.current.user).toBeNull()
-      expect(result.current.tokenExpiringSoon).toBe(false)
-    })
+      expect(result.current.isLoading).toBe(true);
+      expect(result.current.isLoggedIn).toBe(false);
+      expect(result.current.user).toBeNull();
+      expect(result.current.tokenExpiringSoon).toBe(false);
+    });
 
-    it('should check authentication on mount', async () => {
+    it("should check authentication on mount", async () => {
       mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => ({
           authenticated: true,
-          user: { id: 1, email: 'test@example.com', role: 'student', name: 'Test User' },
-          tokenExpiringSoon: false
-        })
-      } as Response)
+          user: {
+            id: 1,
+            email: "test@example.com",
+            role: "student",
+            name: "Test User",
+          },
+          tokenExpiringSoon: false,
+        }),
+      } as Response);
 
-      const { result } = renderHook(() => useAuth())
+      const { result } = renderHook(() => useAuth());
 
       await waitFor(() => {
-        expect(result.current.isLoading).toBe(false)
-      })
+        expect(result.current.isLoading).toBe(false);
+      });
 
-      expect(mockFetch).toHaveBeenCalledWith('/api/auth/check', { credentials: 'include' })
-      expect(result.current.isLoggedIn).toBe(true)
+      expect(mockFetch).toHaveBeenCalledWith("/api/auth/check", {
+        credentials: "include",
+      });
+      expect(result.current.isLoggedIn).toBe(true);
       expect(result.current.user).toEqual({
         id: 1,
-        email: 'test@example.com',
-        role: 'student',
-        name: 'Test User'
-      })
-    })
-  })
+        email: "test@example.com",
+        role: "student",
+        name: "Test User",
+      });
+    });
+  });
 
-  describe('checkAuth', () => {
-    it('should set user data when authenticated', async () => {
-      const mockUser = { id: 1, email: 'test@example.com', role: 'student', name: 'Test User' }
+  describe("checkAuth", () => {
+    it("should set user data when authenticated", async () => {
+      const mockUser = {
+        id: 1,
+        email: "test@example.com",
+        role: "student",
+        name: "Test User",
+      };
 
       // First mock for initial checkAuth during hook mount
       mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => ({
-          authenticated: false
-        })
-      } as Response)
+          authenticated: false,
+        }),
+      } as Response);
 
-      const { result } = renderHook(() => useAuth())
+      const { result } = renderHook(() => useAuth());
 
       // Wait for initial check to complete
       await waitFor(() => {
-        expect(result.current.isLoading).toBe(false)
-      })
+        expect(result.current.isLoading).toBe(false);
+      });
 
       // Now mock for manual checkAuth call
       mockFetch.mockResolvedValueOnce({
@@ -139,584 +151,686 @@ describe('useAuth', () => {
         json: async () => ({
           authenticated: true,
           user: mockUser,
-          tokenExpiringSoon: true
-        })
-      } as Response)
+          tokenExpiringSoon: true,
+        }),
+      } as Response);
 
       await act(async () => {
-        await result.current.checkAuth()
-      })
+        await result.current.checkAuth();
+      });
 
-      expect(result.current.isLoggedIn).toBe(true)
-      expect(result.current.user).toEqual(mockUser)
-      expect(result.current.tokenExpiringSoon).toBe(true)
-      expect(localStorageMock.setItem).toHaveBeenCalledWith('isLoggedIn', 'true')
-      expect(localStorageMock.setItem).toHaveBeenCalledWith('user', JSON.stringify(mockUser))
-    })
+      expect(result.current.isLoggedIn).toBe(true);
+      expect(result.current.user).toEqual(mockUser);
+      expect(result.current.tokenExpiringSoon).toBe(true);
+      expect(localStorageMock.setItem).toHaveBeenCalledWith(
+        "isLoggedIn",
+        "true",
+      );
+      expect(localStorageMock.setItem).toHaveBeenCalledWith(
+        "user",
+        JSON.stringify(mockUser),
+      );
+    });
 
-    it('should clear auth state when not authenticated', async () => {
+    it("should clear auth state when not authenticated", async () => {
       mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => ({
-          authenticated: false
-        })
-      } as Response)
+          authenticated: false,
+        }),
+      } as Response);
 
-      const { result } = renderHook(() => useAuth())
-
-      await waitFor(() => {
-        expect(result.current.isLoading).toBe(false)
-      })
-
-      expect(result.current.isLoggedIn).toBe(false)
-      expect(result.current.user).toBeNull()
-      expect(localStorageMock.removeItem).toHaveBeenCalledWith('isLoggedIn')
-      expect(localStorageMock.removeItem).toHaveBeenCalledWith('user')
-    })
-
-    it('should fallback to localStorage on API error', async () => {
-      const storedUser = { id: 2, email: 'stored@example.com', role: 'teacher', name: 'Stored User' }
-      localStorageMock.store['isLoggedIn'] = 'true'
-      localStorageMock.store['user'] = JSON.stringify(storedUser)
-
-      mockFetch.mockRejectedValueOnce(new Error('Network error'))
-
-      const { result } = renderHook(() => useAuth())
+      const { result } = renderHook(() => useAuth());
 
       await waitFor(() => {
-        expect(result.current.isLoading).toBe(false)
-      })
+        expect(result.current.isLoading).toBe(false);
+      });
 
-      expect(result.current.isLoggedIn).toBe(true)
-      expect(result.current.user).toEqual(storedUser)
-      expect(mockConsoleError).toHaveBeenCalledWith('Error checking auth:', expect.any(Error))
-    })
+      expect(result.current.isLoggedIn).toBe(false);
+      expect(result.current.user).toBeNull();
+      expect(localStorageMock.removeItem).toHaveBeenCalledWith("isLoggedIn");
+      expect(localStorageMock.removeItem).toHaveBeenCalledWith("user");
+    });
 
-    it('should clear auth state on invalid localStorage data', async () => {
-      localStorageMock.store['isLoggedIn'] = 'true'
-      localStorageMock.store['user'] = 'invalid-json'
+    it("should fallback to localStorage on API error", async () => {
+      const storedUser = {
+        id: 2,
+        email: "stored@example.com",
+        role: "teacher",
+        name: "Stored User",
+      };
+      localStorageMock.store["isLoggedIn"] = "true";
+      localStorageMock.store["user"] = JSON.stringify(storedUser);
 
-      mockFetch.mockRejectedValueOnce(new Error('Network error'))
+      mockFetch.mockRejectedValueOnce(new Error("Network error"));
 
-      const { result } = renderHook(() => useAuth())
+      const { result } = renderHook(() => useAuth());
 
       await waitFor(() => {
-        expect(result.current.isLoading).toBe(false)
-      })
+        expect(result.current.isLoading).toBe(false);
+      });
 
-      expect(result.current.isLoggedIn).toBe(false)
-      expect(result.current.user).toBeNull()
-    })
-  })
+      expect(result.current.isLoggedIn).toBe(true);
+      expect(result.current.user).toEqual(storedUser);
+      expect(mockConsoleError).toHaveBeenCalledWith(
+        "Error checking auth:",
+        expect.any(Error),
+      );
+    });
 
-  describe('login', () => {
-    it('should login successfully', async () => {
-      const credentials = { email: 'test@example.com', password: 'password123' }
-      const mockUser = { id: 1, email: 'test@example.com', role: 'student', name: 'Test User' }
+    it("should clear auth state on invalid localStorage data", async () => {
+      localStorageMock.store["isLoggedIn"] = "true";
+      localStorageMock.store["user"] = "invalid-json";
+
+      mockFetch.mockRejectedValueOnce(new Error("Network error"));
+
+      const { result } = renderHook(() => useAuth());
+
+      await waitFor(() => {
+        expect(result.current.isLoading).toBe(false);
+      });
+
+      expect(result.current.isLoggedIn).toBe(false);
+      expect(result.current.user).toBeNull();
+    });
+  });
+
+  describe("login", () => {
+    it("should login successfully", async () => {
+      const credentials = {
+        email: "test@example.com",
+        password: "password123",
+      };
+      const mockUser = {
+        id: 1,
+        email: "test@example.com",
+        role: "student",
+        name: "Test User",
+      };
 
       // Mock initial checkAuth call
       mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => ({
-          authenticated: false
-        })
-      } as Response)
+          authenticated: false,
+        }),
+      } as Response);
 
-      const { result } = renderHook(() => useAuth())
+      const { result } = renderHook(() => useAuth());
 
       // Wait for initial check to complete
       await waitFor(() => {
-        expect(result.current.isLoading).toBe(false)
-      })
+        expect(result.current.isLoading).toBe(false);
+      });
 
       // Now mock the login call
       mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => ({
           success: true,
-          user: mockUser
-        })
-      } as Response)
+          user: mockUser,
+        }),
+      } as Response);
 
       // Spy on dispatchEvent before login
-      const dispatchEventSpy = jest.spyOn(window, 'dispatchEvent')
+      const dispatchEventSpy = jest.spyOn(window, "dispatchEvent");
 
-      let loginResult: any
+      let loginResult: any;
       await act(async () => {
-        loginResult = await result.current.login(credentials)
-      })
+        loginResult = await result.current.login(credentials);
+      });
 
-      expect(loginResult).toEqual({ success: true })
-      expect(result.current.isLoggedIn).toBe(true)
-      expect(result.current.user).toEqual(mockUser)
-      expect(localStorageMock.setItem).toHaveBeenCalledWith('user', JSON.stringify(mockUser))
-      expect(localStorageMock.setItem).toHaveBeenCalledWith('isLoggedIn', 'true')
+      expect(loginResult).toEqual({ success: true });
+      expect(result.current.isLoggedIn).toBe(true);
+      expect(result.current.user).toEqual(mockUser);
+      expect(localStorageMock.setItem).toHaveBeenCalledWith(
+        "user",
+        JSON.stringify(mockUser),
+      );
+      expect(localStorageMock.setItem).toHaveBeenCalledWith(
+        "isLoggedIn",
+        "true",
+      );
 
       // Check if auth-changed event was dispatched
-      expect(dispatchEventSpy).toHaveBeenCalledWith(expect.objectContaining({
-        type: 'auth-changed'
-      }))
-    })
+      expect(dispatchEventSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          type: "auth-changed",
+        }),
+      );
+    });
 
-    it('should handle login failure', async () => {
-      const credentials = { email: 'test@example.com', password: 'wrong' }
+    it("should handle login failure", async () => {
+      const credentials = { email: "test@example.com", password: "wrong" };
 
       // Mock initial checkAuth call
       mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => ({
-          authenticated: false
-        })
-      } as Response)
+          authenticated: false,
+        }),
+      } as Response);
 
-      const { result } = renderHook(() => useAuth())
+      const { result } = renderHook(() => useAuth());
 
       // Wait for initial check to complete
       await waitFor(() => {
-        expect(result.current.isLoading).toBe(false)
-      })
+        expect(result.current.isLoading).toBe(false);
+      });
 
       // Now mock the failed login call
       mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => ({
           success: false,
-          error: 'Invalid credentials'
-        })
-      } as Response)
+          error: "Invalid credentials",
+        }),
+      } as Response);
 
-      let loginResult: any
+      let loginResult: any;
       await act(async () => {
-        loginResult = await result.current.login(credentials)
-      })
+        loginResult = await result.current.login(credentials);
+      });
 
-      expect(loginResult).toEqual({ success: false, error: 'Invalid credentials' })
-      expect(result.current.isLoggedIn).toBe(false)
-      expect(result.current.user).toBeNull()
-    })
+      expect(loginResult).toEqual({
+        success: false,
+        error: "Invalid credentials",
+      });
+      expect(result.current.isLoggedIn).toBe(false);
+      expect(result.current.user).toBeNull();
+    });
 
-    it('should handle network error during login', async () => {
-      const credentials = { email: 'test@example.com', password: 'password' }
+    it("should handle network error during login", async () => {
+      const credentials = { email: "test@example.com", password: "password" };
 
       // Mock initial checkAuth call
       mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => ({
-          authenticated: false
-        })
-      } as Response)
+          authenticated: false,
+        }),
+      } as Response);
 
-      const { result } = renderHook(() => useAuth())
+      const { result } = renderHook(() => useAuth());
 
       // Wait for initial check to complete
       await waitFor(() => {
-        expect(result.current.isLoading).toBe(false)
-      })
+        expect(result.current.isLoading).toBe(false);
+      });
 
       // Now mock the network error
-      mockFetch.mockRejectedValueOnce(new Error('Network error'))
+      mockFetch.mockRejectedValueOnce(new Error("Network error"));
 
-      let loginResult: any
+      let loginResult: any;
       await act(async () => {
-        loginResult = await result.current.login(credentials)
-      })
+        loginResult = await result.current.login(credentials);
+      });
 
-      expect(loginResult).toEqual({ success: false, error: 'Network error' })
-      expect(mockConsoleError).toHaveBeenCalledWith('Login error:', expect.any(Error))
-    })
+      expect(loginResult).toEqual({ success: false, error: "Network error" });
+      expect(mockConsoleError).toHaveBeenCalledWith(
+        "Login error:",
+        expect.any(Error),
+      );
+    });
 
-    it('should include rememberMe in login request', async () => {
-      const credentials = { email: 'test@example.com', password: 'password', rememberMe: true }
+    it("should include rememberMe in login request", async () => {
+      const credentials = {
+        email: "test@example.com",
+        password: "password",
+        rememberMe: true,
+      };
 
       // Mock initial checkAuth call
       mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => ({
-          authenticated: false
-        })
-      } as Response)
+          authenticated: false,
+        }),
+      } as Response);
 
-      const { result } = renderHook(() => useAuth())
+      const { result } = renderHook(() => useAuth());
 
       // Wait for initial check to complete
       await waitFor(() => {
-        expect(result.current.isLoading).toBe(false)
-      })
+        expect(result.current.isLoading).toBe(false);
+      });
 
       // Now mock the login call
       mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => ({
           success: true,
-          user: { id: 1, email: 'test@example.com', role: 'student', name: 'Test' }
-        })
-      } as Response)
+          user: {
+            id: 1,
+            email: "test@example.com",
+            role: "student",
+            name: "Test",
+          },
+        }),
+      } as Response);
 
       await act(async () => {
-        await result.current.login(credentials)
-      })
+        await result.current.login(credentials);
+      });
 
-      expect(mockFetch).toHaveBeenCalledWith('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify(credentials)
-      })
-    })
-  })
+      expect(mockFetch).toHaveBeenCalledWith("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(credentials),
+      });
+    });
+  });
 
-  describe('logout', () => {
-    it('should logout and clear auth state', async () => {
+  describe("logout", () => {
+    it("should logout and clear auth state", async () => {
       // Setup logged in state
-      localStorageMock.store['isLoggedIn'] = 'true'
-      localStorageMock.store['user'] = JSON.stringify({ id: 1, email: 'test@example.com' })
+      localStorageMock.store["isLoggedIn"] = "true";
+      localStorageMock.store["user"] = JSON.stringify({
+        id: 1,
+        email: "test@example.com",
+      });
 
       mockFetch
         .mockResolvedValueOnce({
           ok: true,
-          json: async () => ({ authenticated: true, user: { id: 1, email: 'test@example.com' } })
+          json: async () => ({
+            authenticated: true,
+            user: { id: 1, email: "test@example.com" },
+          }),
         } as Response)
         .mockResolvedValueOnce({
           ok: true,
-          json: async () => ({ success: true })
-        } as Response)
+          json: async () => ({ success: true }),
+        } as Response);
 
-      const { result } = renderHook(() => useAuth())
+      const { result } = renderHook(() => useAuth());
 
       await waitFor(() => {
-        expect(result.current.isLoggedIn).toBe(true)
-      })
+        expect(result.current.isLoggedIn).toBe(true);
+      });
 
       await act(async () => {
-        await result.current.logout()
-      })
+        await result.current.logout();
+      });
 
-      expect(mockFetch).toHaveBeenCalledWith('/api/auth/logout', {
-        method: 'POST',
-        credentials: 'include'
-      })
-      expect(result.current.isLoggedIn).toBe(false)
-      expect(result.current.user).toBeNull()
-      expect(localStorageMock.removeItem).toHaveBeenCalledWith('isLoggedIn')
-      expect(localStorageMock.removeItem).toHaveBeenCalledWith('user')
-      expect(mockPush).toHaveBeenCalledWith('/login')
-    })
+      expect(mockFetch).toHaveBeenCalledWith("/api/auth/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+      expect(result.current.isLoggedIn).toBe(false);
+      expect(result.current.user).toBeNull();
+      expect(localStorageMock.removeItem).toHaveBeenCalledWith("isLoggedIn");
+      expect(localStorageMock.removeItem).toHaveBeenCalledWith("user");
+      expect(mockPush).toHaveBeenCalledWith("/login");
+    });
 
-    it('should handle logout API error gracefully', async () => {
+    it("should handle logout API error gracefully", async () => {
       // Mock initial checkAuth call
       mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => ({
-          authenticated: false
-        })
-      } as Response)
+          authenticated: false,
+        }),
+      } as Response);
 
-      const { result } = renderHook(() => useAuth())
+      const { result } = renderHook(() => useAuth());
 
       // Wait for initial check to complete
       await waitFor(() => {
-        expect(result.current.isLoading).toBe(false)
-      })
+        expect(result.current.isLoading).toBe(false);
+      });
 
       // Now mock the logout error
-      mockFetch.mockRejectedValueOnce(new Error('Network error'))
+      mockFetch.mockRejectedValueOnce(new Error("Network error"));
 
       await act(async () => {
-        await result.current.logout()
-      })
+        await result.current.logout();
+      });
 
-      expect(mockConsoleError).toHaveBeenCalledWith('Logout error:', expect.any(Error))
-      expect(result.current.isLoggedIn).toBe(false)
-      expect(mockPush).toHaveBeenCalledWith('/login')
-    })
-  })
+      expect(mockConsoleError).toHaveBeenCalledWith(
+        "Logout error:",
+        expect.any(Error),
+      );
+      expect(result.current.isLoggedIn).toBe(false);
+      expect(mockPush).toHaveBeenCalledWith("/login");
+    });
+  });
 
-  describe('refreshToken', () => {
-    it('should refresh token successfully', async () => {
+  describe("refreshToken", () => {
+    it("should refresh token successfully", async () => {
       // Mock initial checkAuth call
       mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => ({
-          authenticated: false
-        })
-      } as Response)
+          authenticated: false,
+        }),
+      } as Response);
 
-      const { result } = renderHook(() => useAuth())
+      const { result } = renderHook(() => useAuth());
 
       // Wait for initial check to complete
       await waitFor(() => {
-        expect(result.current.isLoading).toBe(false)
-      })
+        expect(result.current.isLoading).toBe(false);
+      });
 
       // Now mock the refresh token calls
       mockFetch
         .mockResolvedValueOnce({
           ok: true,
-          json: async () => ({ success: true })
+          json: async () => ({ success: true }),
         } as Response)
         .mockResolvedValueOnce({
           ok: true,
           json: async () => ({
             authenticated: true,
-            user: { id: 1, email: 'test@example.com', role: 'student', name: 'Test' }
-          })
-        } as Response)
+            user: {
+              id: 1,
+              email: "test@example.com",
+              role: "student",
+              name: "Test",
+            },
+          }),
+        } as Response);
 
-      let refreshResult: boolean
+      let refreshResult: boolean;
       await act(async () => {
-        refreshResult = await result.current.refreshToken()
-      })
+        refreshResult = await result.current.refreshToken();
+      });
 
-      expect(refreshResult!).toBe(true)
-      expect(mockFetch).toHaveBeenCalledWith('/api/auth/refresh', {
-        method: 'POST',
-        credentials: 'include'
-      })
-    })
+      expect(refreshResult!).toBe(true);
+      expect(mockFetch).toHaveBeenCalledWith("/api/auth/refresh", {
+        method: "POST",
+        credentials: "include",
+      });
+    });
 
-    it('should return false on refresh failure', async () => {
+    it("should return false on refresh failure", async () => {
       // Mock initial checkAuth call
       mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => ({
-          authenticated: false
-        })
-      } as Response)
+          authenticated: false,
+        }),
+      } as Response);
 
-      const { result } = renderHook(() => useAuth())
+      const { result } = renderHook(() => useAuth());
 
       // Wait for initial check to complete
       await waitFor(() => {
-        expect(result.current.isLoading).toBe(false)
-      })
+        expect(result.current.isLoading).toBe(false);
+      });
 
       // Now mock the failed refresh
       mockFetch.mockResolvedValueOnce({
         ok: false,
-        status: 401
-      } as Response)
+        status: 401,
+      } as Response);
 
-      let refreshResult: boolean
+      let refreshResult: boolean;
       await act(async () => {
-        refreshResult = await result.current.refreshToken()
-      })
+        refreshResult = await result.current.refreshToken();
+      });
 
-      expect(refreshResult!).toBe(false)
-    })
+      expect(refreshResult!).toBe(false);
+    });
 
-    it('should handle refresh network error', async () => {
+    it("should handle refresh network error", async () => {
       // Mock initial checkAuth call
       mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => ({
-          authenticated: false
-        })
-      } as Response)
+          authenticated: false,
+        }),
+      } as Response);
 
-      const { result } = renderHook(() => useAuth())
+      const { result } = renderHook(() => useAuth());
 
       // Wait for initial check to complete
       await waitFor(() => {
-        expect(result.current.isLoading).toBe(false)
-      })
+        expect(result.current.isLoading).toBe(false);
+      });
 
       // Now mock the network error
-      mockFetch.mockRejectedValueOnce(new Error('Network error'))
+      mockFetch.mockRejectedValueOnce(new Error("Network error"));
 
-      let refreshResult: boolean
+      let refreshResult: boolean;
       await act(async () => {
-        refreshResult = await result.current.refreshToken()
-      })
+        refreshResult = await result.current.refreshToken();
+      });
 
-      expect(refreshResult!).toBe(false)
-      expect(mockConsoleError).toHaveBeenCalledWith('Token refresh error:', expect.any(Error))
-    })
-  })
+      expect(refreshResult!).toBe(false);
+      expect(mockConsoleError).toHaveBeenCalledWith(
+        "Token refresh error:",
+        expect.any(Error),
+      );
+    });
+  });
 
-  describe('event listeners', () => {
-    it('should listen to auth-changed events', async () => {
+  describe("event listeners", () => {
+    it("should listen to auth-changed events", async () => {
       mockFetch.mockResolvedValue({
         ok: true,
         json: async () => ({
           authenticated: true,
-          user: { id: 1, email: 'test@example.com', role: 'student', name: 'Test' }
-        })
-      } as Response)
+          user: {
+            id: 1,
+            email: "test@example.com",
+            role: "student",
+            name: "Test",
+          },
+        }),
+      } as Response);
 
-      const { result } = renderHook(() => useAuth())
+      const { result } = renderHook(() => useAuth());
 
       await waitFor(() => {
-        expect(result.current.isLoading).toBe(false)
-      })
+        expect(result.current.isLoading).toBe(false);
+      });
 
       // Reset fetch mock
-      mockFetch.mockClear()
+      mockFetch.mockClear();
 
       // Dispatch auth-changed event
       await act(async () => {
-        window.dispatchEvent(new CustomEvent('auth-changed'))
-      })
+        window.dispatchEvent(new CustomEvent("auth-changed"));
+      });
 
       await waitFor(() => {
-        expect(mockFetch).toHaveBeenCalledWith('/api/auth/check', { credentials: 'include' })
-      })
-    })
+        expect(mockFetch).toHaveBeenCalledWith("/api/auth/check", {
+          credentials: "include",
+        });
+      });
+    });
 
-    it('should listen to storage events', async () => {
+    it("should listen to storage events", async () => {
       mockFetch.mockResolvedValue({
         ok: true,
         json: async () => ({
           authenticated: true,
-          user: { id: 1, email: 'test@example.com', role: 'student', name: 'Test' }
-        })
-      } as Response)
+          user: {
+            id: 1,
+            email: "test@example.com",
+            role: "student",
+            name: "Test",
+          },
+        }),
+      } as Response);
 
-      const { result } = renderHook(() => useAuth())
+      const { result } = renderHook(() => useAuth());
 
       await waitFor(() => {
-        expect(result.current.isLoading).toBe(false)
-      })
+        expect(result.current.isLoading).toBe(false);
+      });
 
       // Reset fetch mock
-      mockFetch.mockClear()
+      mockFetch.mockClear();
 
       // Dispatch storage event
       await act(async () => {
-        window.dispatchEvent(new StorageEvent('storage'))
-      })
+        window.dispatchEvent(new StorageEvent("storage"));
+      });
 
       await waitFor(() => {
-        expect(mockFetch).toHaveBeenCalledWith('/api/auth/check', { credentials: 'include' })
-      })
-    })
+        expect(mockFetch).toHaveBeenCalledWith("/api/auth/check", {
+          credentials: "include",
+        });
+      });
+    });
 
-    it('should clean up event listeners on unmount', () => {
-      const removeEventListenerSpy = jest.spyOn(window, 'removeEventListener')
+    it("should clean up event listeners on unmount", () => {
+      const removeEventListenerSpy = jest.spyOn(window, "removeEventListener");
 
-      const { unmount } = renderHook(() => useAuth())
+      const { unmount } = renderHook(() => useAuth());
 
-      unmount()
+      unmount();
 
-      expect(removeEventListenerSpy).toHaveBeenCalledWith('auth-changed', expect.any(Function))
-      expect(removeEventListenerSpy).toHaveBeenCalledWith('storage', expect.any(Function))
-    })
-  })
+      expect(removeEventListenerSpy).toHaveBeenCalledWith(
+        "auth-changed",
+        expect.any(Function),
+      );
+      expect(removeEventListenerSpy).toHaveBeenCalledWith(
+        "storage",
+        expect.any(Function),
+      );
+    });
+  });
 
-  describe('auto token refresh', () => {
-    it('should auto-refresh when token is expiring soon', async () => {
+  describe("auto token refresh", () => {
+    it("should auto-refresh when token is expiring soon", async () => {
       // First check returns tokenExpiringSoon: true
       mockFetch
         .mockResolvedValueOnce({
           ok: true,
           json: async () => ({
             authenticated: true,
-            user: { id: 1, email: 'test@example.com', role: 'student', name: 'Test' },
-            tokenExpiringSoon: true
-          })
+            user: {
+              id: 1,
+              email: "test@example.com",
+              role: "student",
+              name: "Test",
+            },
+            tokenExpiringSoon: true,
+          }),
         } as Response)
         .mockResolvedValueOnce({
           ok: true,
-          json: async () => ({ success: true })
+          json: async () => ({ success: true }),
         } as Response)
         .mockResolvedValueOnce({
           ok: true,
           json: async () => ({
             authenticated: true,
-            user: { id: 1, email: 'test@example.com', role: 'student', name: 'Test' },
-            tokenExpiringSoon: false
-          })
-        } as Response)
+            user: {
+              id: 1,
+              email: "test@example.com",
+              role: "student",
+              name: "Test",
+            },
+            tokenExpiringSoon: false,
+          }),
+        } as Response);
 
-      renderHook(() => useAuth())
+      renderHook(() => useAuth());
 
       await waitFor(() => {
-        expect(mockFetch).toHaveBeenCalledTimes(3) // Initial check + refresh + check after refresh
-      })
+        expect(mockFetch).toHaveBeenCalledTimes(3); // Initial check + refresh + check after refresh
+      });
 
-      expect(mockFetch).toHaveBeenNthCalledWith(2, '/api/auth/refresh', {
-        method: 'POST',
-        credentials: 'include'
-      })
-    })
-  })
+      expect(mockFetch).toHaveBeenNthCalledWith(2, "/api/auth/refresh", {
+        method: "POST",
+        credentials: "include",
+      });
+    });
+  });
 
-  describe('periodic auth check', () => {
-    jest.useFakeTimers()
+  describe("periodic auth check", () => {
+    jest.useFakeTimers();
 
     afterEach(() => {
-      jest.useRealTimers()
-    })
+      jest.useRealTimers();
+    });
 
-    it('should check auth periodically when logged in', async () => {
+    it("should check auth periodically when logged in", async () => {
       mockFetch.mockResolvedValue({
         ok: true,
         json: async () => ({
           authenticated: true,
-          user: { id: 1, email: 'test@example.com', role: 'student', name: 'Test' }
-        })
-      } as Response)
+          user: {
+            id: 1,
+            email: "test@example.com",
+            role: "student",
+            name: "Test",
+          },
+        }),
+      } as Response);
 
-      const { result } = renderHook(() => useAuth())
+      const { result } = renderHook(() => useAuth());
 
       await waitFor(() => {
-        expect(result.current.isLoggedIn).toBe(true)
-      })
+        expect(result.current.isLoggedIn).toBe(true);
+      });
 
-      expect(mockFetch).toHaveBeenCalledTimes(1)
+      expect(mockFetch).toHaveBeenCalledTimes(1);
 
       // Fast forward 5 minutes
       act(() => {
-        jest.advanceTimersByTime(5 * 60 * 1000)
-      })
+        jest.advanceTimersByTime(5 * 60 * 1000);
+      });
 
       await waitFor(() => {
-        expect(mockFetch).toHaveBeenCalledTimes(2)
-      })
-    })
+        expect(mockFetch).toHaveBeenCalledTimes(2);
+      });
+    });
 
-    it('should not check auth periodically when not logged in', async () => {
+    it("should not check auth periodically when not logged in", async () => {
       mockFetch.mockResolvedValue({
         ok: true,
         json: async () => ({
-          authenticated: false
-        })
-      } as Response)
+          authenticated: false,
+        }),
+      } as Response);
 
-      renderHook(() => useAuth())
+      renderHook(() => useAuth());
 
       await waitFor(() => {
-        expect(mockFetch).toHaveBeenCalledTimes(1)
-      })
+        expect(mockFetch).toHaveBeenCalledTimes(1);
+      });
 
       // Fast forward 5 minutes
       act(() => {
-        jest.advanceTimersByTime(5 * 60 * 1000)
-      })
+        jest.advanceTimersByTime(5 * 60 * 1000);
+      });
 
       // Should not make additional calls
-      expect(mockFetch).toHaveBeenCalledTimes(1)
-    })
+      expect(mockFetch).toHaveBeenCalledTimes(1);
+    });
 
-    it('should clear interval on unmount', async () => {
-      const clearIntervalSpy = jest.spyOn(global, 'clearInterval')
+    it("should clear interval on unmount", async () => {
+      const clearIntervalSpy = jest.spyOn(global, "clearInterval");
 
       mockFetch.mockResolvedValue({
         ok: true,
         json: async () => ({
           authenticated: true,
-          user: { id: 1, email: 'test@example.com', role: 'student', name: 'Test' }
-        })
-      } as Response)
+          user: {
+            id: 1,
+            email: "test@example.com",
+            role: "student",
+            name: "Test",
+          },
+        }),
+      } as Response);
 
-      const { result, unmount } = renderHook(() => useAuth())
+      const { result, unmount } = renderHook(() => useAuth());
 
       await waitFor(() => {
-        expect(result.current.isLoggedIn).toBe(true)
-      })
+        expect(result.current.isLoggedIn).toBe(true);
+      });
 
-      unmount()
+      unmount();
 
-      expect(clearIntervalSpy).toHaveBeenCalled()
-    })
-  })
-})
+      expect(clearIntervalSpy).toHaveBeenCalled();
+    });
+  });
+});

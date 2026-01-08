@@ -1,70 +1,191 @@
-import { NextResponse } from 'next/server';
-import { distributedCacheService } from '@/lib/cache/distributed-cache-service';
-import { cacheKeys, TTL } from '@/lib/cache/cache-keys';
-import { HybridTranslationService } from '@/lib/services/hybrid-translation-service';
-import { cacheService } from '@/lib/cache/cache-service';
-import { PBLScenarioLoaderService } from '@/lib/services/pbl/pbl-scenario-loader.service';
+import { NextResponse } from "next/server";
+import { distributedCacheService } from "@/lib/cache/distributed-cache-service";
+import { cacheKeys, TTL } from "@/lib/cache/cache-keys";
+import { HybridTranslationService } from "@/lib/services/hybrid-translation-service";
+import type { IScenario } from "@/types/unified-learning";
+import { cacheService } from "@/lib/cache/cache-service";
+
+// Helper function to get scenario emoji
+function getScenarioEmoji(scenarioId: string): string {
+  const emojiMap: Record<string, string> = {
+    "ai-job-search": "💼",
+    "ai-education-design": "🎓",
+    "ai-stablecoin-trading": "₿",
+    "ai-robotics-development": "🤖",
+    "high-school-climate-change": "🌍",
+    "high-school-digital-wellness": "📱",
+    "high-school-smart-city": "🏙️",
+    "high-school-creative-arts": "🎨",
+    "high-school-health-assistant": "💗",
+  };
+
+  return emojiMap[scenarioId] || "🤖";
+}
+
+// Load scenarios from database only
+async function loadScenariosFromUnifiedArchitecture(
+  lang: string,
+): Promise<Record<string, unknown>[]> {
+  const scenarios: Record<string, unknown>[] = [];
+
+  try {
+    // Get all PBL scenarios from database
+    const { repositoryFactory } =
+      await import("@/lib/repositories/base/repository-factory");
+    const scenarioRepo = repositoryFactory.getScenarioRepository();
+    const rawScenarios = (await scenarioRepo.findByMode?.("pbl")) || [];
+    const existingScenarios = rawScenarios as IScenario[];
+
+    console.log(
+      `[PBL API] Repository returned ${rawScenarios.length} raw scenarios`,
+    );
+    console.log(
+      `[PBL API] Found ${existingScenarios.length} PBL scenarios in database`,
+    );
+    if (existingScenarios.length > 0) {
+      console.log("[PBL API] First scenario:", {
+        id: existingScenarios[0].id,
+        title: existingScenarios[0].title,
+        status: existingScenarios[0].status,
+        mode: existingScenarios[0].mode,
+      });
+    } else {
+      console.log("[PBL API] No scenarios found, checking repository...");
+      console.log(
+        "[PBL API] Repository findByMode exists?",
+        !!scenarioRepo.findByMode,
+      );
+    }
+
+    // Build/update the index with PBL scenarios
+    const { scenarioIndexService } =
+      await import("@/lib/services/scenario-index-service");
+    await scenarioIndexService.buildIndex(existingScenarios);
+
+    // Process each scenario from database
+    for (const scenario of existingScenarios) {
+      try {
+        // Extract title and description with proper language support
+        const title =
+          typeof scenario.title === "string"
+            ? scenario.title
+            : scenario.title?.[lang] || scenario.title?.en || "";
+        const description =
+          typeof scenario.description === "string"
+            ? scenario.description
+            : scenario.description?.[lang] || scenario.description?.en || "";
+
+        // Get yamlId from metadata or sourceId
+        const yamlId =
+          (scenario.metadata?.yamlId as string) ||
+          scenario.sourceId ||
+          scenario.id;
+
+        scenarios.push({
+          id: scenario.id, // UUID
+          yamlId: yamlId, // for compatibility
+          sourceType: "pbl",
+          title,
+          description,
+          difficulty:
+            scenario.difficulty ||
+            (scenario.metadata?.difficulty as string | undefined),
+          estimatedDuration:
+            scenario.estimatedMinutes ||
+            (scenario.metadata?.estimatedDuration as number | undefined),
+          targetDomains:
+            (scenario.metadata?.targetDomains as string[] | undefined) ||
+            ((scenario.pblData as Record<string, unknown>)?.targetDomains as
+              | string[]
+              | undefined),
+          targetDomain:
+            (scenario.metadata?.targetDomains as string[] | undefined) ||
+            ((scenario.pblData as Record<string, unknown>)?.targetDomains as
+              | string[]
+              | undefined), // for compatibility
+          domains:
+            (scenario.metadata?.targetDomains as string[] | undefined) ||
+            ((scenario.pblData as Record<string, unknown>)?.targetDomains as
+              | string[]
+              | undefined), // for compatibility
+          taskCount: scenario.taskTemplates?.length || scenario.taskCount || 0,
+          isAvailable: true,
+          thumbnailEmoji: getScenarioEmoji(yamlId),
+        });
+      } catch (error) {
+        console.error(`Error processing scenario ${scenario.id}:`, error);
+      }
+    }
+  } catch (error) {
+    console.error("Error loading scenarios from database:", error);
+  }
+
+  return scenarios;
+}
 
 export const revalidate = 3600; // Revalidate every hour
-export const dynamic = 'force-dynamic'; // Force dynamic rendering
+export const dynamic = "force-dynamic"; // Force dynamic rendering
 
-/**
- * GET /api/pbl/scenarios
- * Returns list of PBL scenarios with caching support
- */
 export async function GET(request: Request) {
   try {
     // Get language and source from query params
     const { searchParams } = new URL(request.url);
-    const lang = searchParams.get('lang') || 'en';
-    const source = searchParams.get('source') || 'unified'; // 'unified', 'hybrid', 'yaml'
-    const isTest = process.env.NODE_ENV === 'test' || Boolean(process.env.JEST_WORKER_ID);
+    const lang = searchParams.get("lang") || "en";
+    const source = searchParams.get("source") || "unified"; // 'unified', 'hybrid', 'yaml'
+    const isTest =
+      process.env.NODE_ENV === "test" || Boolean(process.env.JEST_WORKER_ID);
 
-    // Cache key for anonymous users (this route doesn't read session, it's public)
+    // 匿名使用者才使用快取（此路由未讀取 session，屬於公開列表）
     const key = cacheKeys.pblScenarios(lang, source);
 
     // Load scenarios based on source parameter
-    let scenarios: unknown[];
+    let scenarios: Record<string, unknown>[];
     let metaSource = source;
 
     const compute = async () => {
-      const scenarioLoader = new PBLScenarioLoaderService();
-
-      if (source === 'hybrid') {
+      if (source === "hybrid") {
         try {
           // Use hybrid translation service
           const hybridService = new HybridTranslationService();
           const hybridScenarios = await hybridService.listScenarios(lang);
 
           // Transform to match expected format
-          scenarios = hybridScenarios.map(scenario => ({
+          scenarios = hybridScenarios.map((scenario) => ({
             ...scenario,
             yamlId: scenario.id,
-            sourceType: 'pbl',
-            estimatedDuration: (scenario.metadata?.estimatedDuration as number | undefined) || 60,
-            targetDomain: scenario.metadata?.targetDomains as string[] | undefined,
+            sourceType: "pbl",
+            estimatedDuration:
+              (scenario.metadata?.estimatedDuration as number | undefined) ||
+              60,
+            targetDomain: scenario.metadata?.targetDomains as
+              | string[]
+              | undefined,
             domains: scenario.metadata?.targetDomains as string[] | undefined,
             taskCount: scenario.taskTemplates?.length || 0,
             isAvailable: true,
-            thumbnailEmoji: scenarioLoader.getScenarioEmoji(scenario.id)
+            thumbnailEmoji: getScenarioEmoji(scenario.id),
           }));
 
-
-          metaSource = 'hybrid';
+          metaSource = "hybrid";
         } catch (error) {
-          console.error('Hybrid service failed, falling back to unified:', error);
-          scenarios = await scenarioLoader.loadScenarios(lang);
-          metaSource = 'unified-fallback';
+          console.error(
+            "Hybrid service failed, falling back to unified:",
+            error,
+          );
+          scenarios = await loadScenariosFromUnifiedArchitecture(lang);
+          metaSource = "unified-fallback";
         }
       } else {
         // Default to unified architecture - STRICT DATABASE ONLY
-        scenarios = await scenarioLoader.loadScenarios(lang);
+        scenarios = await loadScenariosFromUnifiedArchitecture(lang);
         // NO FALLBACK - if database is empty, that's an error condition
         if (!scenarios || scenarios.length === 0) {
-          console.error('[PBL API] ERROR: No scenarios in database. Database initialization required!');
+          console.error(
+            "[PBL API] ERROR: No scenarios in database. Database initialization required!",
+          );
           // Return empty array instead of falling back to YAML
           scenarios = [];
-          metaSource = 'unified-empty';
+          metaSource = "unified-empty";
         }
       }
 
@@ -73,14 +194,16 @@ export async function GET(request: Request) {
         data: {
           scenarios,
           total: scenarios.length,
-          available: scenarios.filter(s => (s as Record<string, unknown>).isAvailable).length
+          available: scenarios.filter(
+            (s) => (s as Record<string, unknown>).isAvailable,
+          ).length,
         },
         meta: {
           timestamp: new Date().toISOString(),
-          version: '1.0.0',
+          version: "1.0.0",
           language: lang,
-          source: metaSource
-        }
+          source: metaSource,
+        },
       };
     };
 
@@ -90,7 +213,7 @@ export async function GET(request: Request) {
       const cached = await cacheService.get(keyTest);
       if (cached) {
         return new NextResponse(JSON.stringify(cached), {
-          headers: { 'Content-Type': 'application/json', 'X-Cache': 'HIT' }
+          headers: { "Content-Type": "application/json", "X-Cache": "HIT" },
         });
       }
       const result = await compute();
@@ -100,26 +223,37 @@ export async function GET(request: Request) {
         return NextResponse.json(
           {
             success: false,
-            error: { code: 'FETCH_SCENARIOS_ERROR', message: 'Failed to fetch PBL scenarios' }
+            error: {
+              code: "FETCH_SCENARIOS_ERROR",
+              message: "Failed to fetch PBL scenarios",
+            },
           },
-          { status: 500 }
+          { status: 500 },
         );
       }
-      return new NextResponse(JSON.stringify(result), { headers: { 'Content-Type': 'application/json', 'X-Cache': 'MISS' } });
+      return new NextResponse(JSON.stringify(result), {
+        headers: { "Content-Type": "application/json", "X-Cache": "MISS" },
+      });
     }
 
     // 先嘗試從快取取得
-    let cacheStatus: 'HIT' | 'MISS' | 'STALE' = 'MISS';
-    const cached = await distributedCacheService.get(key) as { data?: { scenarios?: unknown[] } } | null;
+    let cacheStatus: "HIT" | "MISS" | "STALE" = "MISS";
+    const cached = (await distributedCacheService.get(key)) as {
+      data?: { scenarios?: unknown[] };
+    } | null;
 
-    if (cached && cached.data?.scenarios?.length && cached.data.scenarios.length > 0) {
+    if (
+      cached &&
+      cached.data?.scenarios?.length &&
+      cached.data.scenarios.length > 0
+    ) {
       // 如果快取有資料且不為空，直接返回
-      cacheStatus = 'HIT';
+      cacheStatus = "HIT";
       return new NextResponse(JSON.stringify(cached), {
         headers: {
-          'Content-Type': 'application/json',
-          'X-Cache': cacheStatus
-        }
+          "Content-Type": "application/json",
+          "X-Cache": cacheStatus,
+        },
       });
     }
 
@@ -128,26 +262,28 @@ export async function GET(request: Request) {
 
     // 只有當結果不為空時才快取
     if (result.data?.scenarios?.length > 0) {
-      await distributedCacheService.set(key, result, { ttl: TTL.SEMI_STATIC_1H });
+      await distributedCacheService.set(key, result, {
+        ttl: TTL.SEMI_STATIC_1H,
+      });
     }
 
     return new NextResponse(JSON.stringify(result), {
       headers: {
-        'Content-Type': 'application/json',
-        'X-Cache': 'MISS'
-      }
+        "Content-Type": "application/json",
+        "X-Cache": "MISS",
+      },
     });
   } catch (error) {
-    console.error('Error fetching PBL scenarios:', error);
+    console.error("Error fetching PBL scenarios:", error);
     return NextResponse.json(
       {
         success: false,
         error: {
-          code: 'FETCH_SCENARIOS_ERROR',
-          message: 'Failed to fetch PBL scenarios'
-        }
+          code: "FETCH_SCENARIOS_ERROR",
+          message: "Failed to fetch PBL scenarios",
+        },
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

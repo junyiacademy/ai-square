@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useRef } from 'react';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
-import { Card } from '@/components/ui/card';
+import { useState, useEffect, useRef } from "react";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Card } from "@/components/ui/card";
 import {
   Wand2,
   Languages,
@@ -11,8 +11,8 @@ import {
   Sparkles,
   Send,
   Loader2,
-  Network
-} from 'lucide-react';
+  Network,
+} from "lucide-react";
 
 interface AIAssistantProps {
   content: string;
@@ -20,20 +20,26 @@ interface AIAssistantProps {
   selectedFile: string | null;
 }
 
-export function AIAssistant({ content, onContentUpdate, selectedFile }: AIAssistantProps) {
-  const [prompt, setPrompt] = useState('');
+export function AIAssistant({
+  content,
+  onContentUpdate,
+  selectedFile,
+}: AIAssistantProps) {
+  const [prompt, setPrompt] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
-  const [messages, setMessages] = useState<Array<{
-    role: 'user' | 'assistant';
-    content: string;
-    suggestedContent?: string;
-    isProcessing?: boolean;
-  }>>([]);
+  const [messages, setMessages] = useState<
+    Array<{
+      role: "user" | "assistant";
+      content: string;
+      suggestedContent?: string;
+      isProcessing?: boolean;
+    }>
+  >([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll to bottom when new messages are added
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   const handleQuickAction = async (action: string) => {
@@ -43,24 +49,26 @@ export function AIAssistant({ content, onContentUpdate, selectedFile }: AIAssist
 
     // Add processing message
     const actionMessages = {
-      complete: '🔄 Completing content structure...',
-      translate: '🌐 Translating to all languages...',
-      improve: '✨ Improving and validating content...',
-      ksa: '🔗 Mapping KSA competencies...'
+      complete: "🔄 Completing content structure...",
+      translate: "🌐 Translating to all languages...",
+      improve: "✨ Improving and validating content...",
+      ksa: "🔗 Mapping KSA competencies...",
     };
 
     const processingMessage = {
-      role: 'assistant' as const,
-      content: actionMessages[action as keyof typeof actionMessages] || `🔄 Processing ${action}...`,
-      isProcessing: true
+      role: "assistant" as const,
+      content:
+        actionMessages[action as keyof typeof actionMessages] ||
+        `🔄 Processing ${action}...`,
+      isProcessing: true,
     };
 
-    setMessages(prev => [...prev, processingMessage]);
+    setMessages((prev) => [...prev, processingMessage]);
 
     try {
-      const response = await fetch('/api/ai/assist', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/ai/assist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           action,
           content,
@@ -71,10 +79,13 @@ export function AIAssistant({ content, onContentUpdate, selectedFile }: AIAssist
       const data = await response.json();
 
       if (data.error) {
-        setMessages(prev => [...prev.slice(0, -1), {
-          role: 'assistant',
-          content: `❌ Error: ${data.error}`
-        }]);
+        setMessages((prev) => [
+          ...prev.slice(0, -1),
+          {
+            role: "assistant",
+            content: `❌ Error: ${data.error}`,
+          },
+        ]);
         return;
       }
 
@@ -84,24 +95,33 @@ export function AIAssistant({ content, onContentUpdate, selectedFile }: AIAssist
 
         if (validation.valid) {
           onContentUpdate(data.result);
-          setMessages(prev => [...prev.slice(0, -1), {
-            role: 'assistant',
-            content: `✅ ${action.charAt(0).toUpperCase() + action.slice(1)} completed successfully!\n\n${validation.summary || ''}`
-          }]);
+          setMessages((prev) => [
+            ...prev.slice(0, -1),
+            {
+              role: "assistant",
+              content: `✅ ${action.charAt(0).toUpperCase() + action.slice(1)} completed successfully!\n\n${validation.summary || ""}`,
+            },
+          ]);
         } else {
-          setMessages(prev => [...prev.slice(0, -1), {
-            role: 'assistant',
-            content: `⚠️ ${action.charAt(0).toUpperCase() + action.slice(1)} completed with warnings:\n\n${validation.errors?.join('\n') || 'Unknown validation error'}\n\nWould you like to apply the changes anyway?`,
-            suggestedContent: data.result
-          }]);
+          setMessages((prev) => [
+            ...prev.slice(0, -1),
+            {
+              role: "assistant",
+              content: `⚠️ ${action.charAt(0).toUpperCase() + action.slice(1)} completed with warnings:\n\n${validation.errors?.join("\n") || "Unknown validation error"}\n\nWould you like to apply the changes anyway?`,
+              suggestedContent: data.result,
+            },
+          ]);
         }
       }
     } catch (error) {
-      console.error('AI assist error:', error);
-      setMessages(prev => [...prev.slice(0, -1), {
-        role: 'assistant',
-        content: `❌ Failed to ${action}: ${error}`
-      }]);
+      console.error("AI assist error:", error);
+      setMessages((prev) => [
+        ...prev.slice(0, -1),
+        {
+          role: "assistant",
+          content: `❌ Failed to ${action}: ${error}`,
+        },
+      ]);
     } finally {
       setIsProcessing(false);
     }
@@ -111,12 +131,12 @@ export function AIAssistant({ content, onContentUpdate, selectedFile }: AIAssist
     if (!prompt.trim() || !content) return;
 
     setIsProcessing(true);
-    setMessages([...messages, { role: 'user', content: prompt }]);
+    setMessages([...messages, { role: "user", content: prompt }]);
 
     try {
-      const response = await fetch('/api/ai/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/ai/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           prompt,
           content,
@@ -128,26 +148,37 @@ export function AIAssistant({ content, onContentUpdate, selectedFile }: AIAssist
 
       // If AI suggests content update, ask for confirmation
       if (data.updatedContent) {
-        setMessages(prev => [...prev, {
-          role: 'assistant',
-          content: data.response + '\n\n💡 **Would you like to apply these changes?**',
-          suggestedContent: data.updatedContent
-        }]);
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: "assistant",
+            content:
+              data.response +
+              "\n\n💡 **Would you like to apply these changes?**",
+            suggestedContent: data.updatedContent,
+          },
+        ]);
       } else {
-        setMessages(prev => [...prev, {
-          role: 'assistant',
-          content: data.response
-        }]);
+        setMessages((prev) => [
+          ...prev,
+          {
+            role: "assistant",
+            content: data.response,
+          },
+        ]);
       }
     } catch (error) {
-      console.error('AI chat error:', error);
-      setMessages(prev => [...prev, {
-        role: 'assistant',
-        content: `Error: ${error}`
-      }]);
+      console.error("AI chat error:", error);
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: `Error: ${error}`,
+        },
+      ]);
     } finally {
       setIsProcessing(false);
-      setPrompt('');
+      setPrompt("");
     }
   };
 
@@ -167,10 +198,12 @@ export function AIAssistant({ content, onContentUpdate, selectedFile }: AIAssist
 
       {/* Quick Actions */}
       <div className="p-3 border-b border-gray-100 bg-white/50">
-        <div className="text-xs font-medium text-gray-600 mb-2">Quick Actions</div>
+        <div className="text-xs font-medium text-gray-600 mb-2">
+          Quick Actions
+        </div>
         <div className="flex gap-2">
           <button
-            onClick={() => handleQuickAction('complete')}
+            onClick={() => handleQuickAction("complete")}
             disabled={!content || isProcessing}
             className="flex-1 px-2 py-2 bg-gradient-to-r from-violet-50 to-purple-50 hover:from-violet-100 hover:to-purple-100 text-purple-700 rounded-lg transition-all duration-200 flex items-center justify-center gap-1.5 text-xs font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-sm border border-purple-100"
             title="Complete Content"
@@ -180,7 +213,7 @@ export function AIAssistant({ content, onContentUpdate, selectedFile }: AIAssist
           </button>
 
           <button
-            onClick={() => handleQuickAction('translate')}
+            onClick={() => handleQuickAction("translate")}
             disabled={!content || isProcessing}
             className="flex-1 px-2 py-2 bg-gradient-to-r from-blue-50 to-cyan-50 hover:from-blue-100 hover:to-cyan-100 text-blue-700 rounded-lg transition-all duration-200 flex items-center justify-center gap-1.5 text-xs font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-sm border border-blue-100"
             title="Translate to All Languages"
@@ -190,7 +223,7 @@ export function AIAssistant({ content, onContentUpdate, selectedFile }: AIAssist
           </button>
 
           <button
-            onClick={() => handleQuickAction('improve')}
+            onClick={() => handleQuickAction("improve")}
             disabled={!content || isProcessing}
             className="flex-1 px-2 py-2 bg-gradient-to-r from-emerald-50 to-green-50 hover:from-emerald-100 hover:to-green-100 text-emerald-700 rounded-lg transition-all duration-200 flex items-center justify-center gap-1.5 text-xs font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-sm border border-emerald-100"
             title="Improve & Validate"
@@ -200,7 +233,7 @@ export function AIAssistant({ content, onContentUpdate, selectedFile }: AIAssist
           </button>
 
           <button
-            onClick={() => handleQuickAction('ksa')}
+            onClick={() => handleQuickAction("ksa")}
             disabled={!content || isProcessing}
             className="flex-1 px-2 py-2 bg-gradient-to-r from-orange-50 to-amber-50 hover:from-orange-100 hover:to-amber-100 text-orange-700 rounded-lg transition-all duration-200 flex items-center justify-center gap-1.5 text-xs font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-sm border border-orange-100"
             title="Map KSA Competencies"
@@ -214,18 +247,23 @@ export function AIAssistant({ content, onContentUpdate, selectedFile }: AIAssist
       {/* Chat Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-3">
         {messages.map((msg, idx) => (
-          <div key={idx} className={`p-4 rounded-xl transition-all duration-200 ${
-            msg.role === 'user'
-              ? 'bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 ml-8'
-              : 'bg-white border border-gray-100 mr-8 shadow-sm'
-          }`}>
+          <div
+            key={idx}
+            className={`p-4 rounded-xl transition-all duration-200 ${
+              msg.role === "user"
+                ? "bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 ml-8"
+                : "bg-white border border-gray-100 mr-8 shadow-sm"
+            }`}
+          >
             <div className="flex items-start gap-3">
-              <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                msg.role === 'user'
-                  ? 'bg-gradient-to-br from-blue-500 to-indigo-600'
-                  : 'bg-gradient-to-br from-purple-500 to-pink-600'
-              }`}>
-                {msg.role === 'user' ? (
+              <div
+                className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                  msg.role === "user"
+                    ? "bg-gradient-to-br from-blue-500 to-indigo-600"
+                    : "bg-gradient-to-br from-purple-500 to-pink-600"
+                }`}
+              >
+                {msg.role === "user" ? (
                   <span className="text-white text-xs font-bold">U</span>
                 ) : (
                   <Sparkles className="w-4 h-4 text-white" />
@@ -233,7 +271,9 @@ export function AIAssistant({ content, onContentUpdate, selectedFile }: AIAssist
               </div>
               <div className="flex-1">
                 <div className="flex items-start gap-2">
-                  <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap flex-1">{msg.content}</p>
+                  <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap flex-1">
+                    {msg.content}
+                  </p>
                   {msg.isProcessing && (
                     <div className="flex items-center gap-1">
                       <div className="w-2 h-2 bg-purple-600 rounded-full processing-dot" />
@@ -247,10 +287,13 @@ export function AIAssistant({ content, onContentUpdate, selectedFile }: AIAssist
                     <button
                       onClick={() => {
                         onContentUpdate(msg.suggestedContent!);
-                        setMessages(prev => [...prev.slice(0, idx + 1), {
-                          role: 'assistant',
-                          content: '✅ Changes applied successfully!'
-                        }]);
+                        setMessages((prev) => [
+                          ...prev.slice(0, idx + 1),
+                          {
+                            role: "assistant",
+                            content: "✅ Changes applied successfully!",
+                          },
+                        ]);
                       }}
                       className="px-3 py-1.5 bg-gradient-to-r from-green-500 to-emerald-600 text-white text-xs font-medium rounded-lg hover:shadow-md transition-all duration-200"
                     >
@@ -258,9 +301,13 @@ export function AIAssistant({ content, onContentUpdate, selectedFile }: AIAssist
                     </button>
                     <button
                       onClick={() => {
-                        setMessages(prev => prev.map((m, i) =>
-                          i === idx ? { ...m, suggestedContent: undefined } : m
-                        ));
+                        setMessages((prev) =>
+                          prev.map((m, i) =>
+                            i === idx
+                              ? { ...m, suggestedContent: undefined }
+                              : m,
+                          ),
+                        );
                       }}
                       className="px-3 py-1.5 bg-gray-200 text-gray-700 text-xs font-medium rounded-lg hover:bg-gray-300 transition-all duration-200"
                     >
@@ -297,7 +344,7 @@ export function AIAssistant({ content, onContentUpdate, selectedFile }: AIAssist
             onChange={(e) => setPrompt(e.target.value)}
             className="min-h-[80px] flex-1 resize-none px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-sm placeholder-gray-400"
             onKeyDown={(e) => {
-              if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+              if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
                 handleCustomPrompt();
               }
             }}
@@ -315,7 +362,9 @@ export function AIAssistant({ content, onContentUpdate, selectedFile }: AIAssist
           </button>
         </div>
         <p className="text-xs text-gray-500 mt-3 text-center">
-          Press <kbd className="px-2 py-0.5 bg-gray-100 rounded text-xs">⌘</kbd>+<kbd className="px-2 py-0.5 bg-gray-100 rounded text-xs">Enter</kbd> to send
+          Press <kbd className="px-2 py-0.5 bg-gray-100 rounded text-xs">⌘</kbd>
+          +<kbd className="px-2 py-0.5 bg-gray-100 rounded text-xs">Enter</kbd>{" "}
+          to send
         </p>
       </div>
     </div>

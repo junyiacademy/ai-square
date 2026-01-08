@@ -32,20 +32,22 @@ export const createD3Mock = () => ({
     // Fix: Add properties as functions that return this
     Object.assign(arcFn, {
       innerRadius: jest.fn().mockReturnThis(),
-      outerRadius: jest.fn().mockReturnThis()
+      outerRadius: jest.fn().mockReturnThis(),
     });
     return arcFn;
   }),
   pie: jest.fn(() => {
-    const pieFn = jest.fn((data: unknown[]) => data.map((d: unknown, i: number) => ({ data: d, index: i })));
+    const pieFn = jest.fn((data: unknown[]) =>
+      data.map((d: unknown, i: number) => ({ data: d, index: i })),
+    );
     // Fix: Add value property as a function
     Object.assign(pieFn, {
-      value: jest.fn().mockReturnThis()
+      value: jest.fn().mockReturnThis(),
     });
     return pieFn;
   }),
 });
 
 export const setupD3Mock = () => {
-  jest.mock('d3', () => createD3Mock());
+  jest.mock("d3", () => createD3Mock());
 };

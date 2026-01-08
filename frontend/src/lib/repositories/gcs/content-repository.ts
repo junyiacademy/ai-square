@@ -3,22 +3,22 @@
  * 處理所有靜態內容（YAML、設定檔等）
  */
 
-import { Storage, Bucket } from '@google-cloud/storage';
-import { parse as parseYaml } from 'yaml';
+import { Storage, Bucket } from "@google-cloud/storage";
+import { parse as parseYaml } from "yaml";
 import {
   IContentRepository,
   ScenarioContent,
   KSAMapping,
   AILiteracyDomain,
-  ScenarioType
-} from '../interfaces';
+  ScenarioType,
+} from "../interfaces";
 
 export class GCSContentRepository implements IContentRepository {
   private bucket: Bucket;
 
   constructor(
     private storage: Storage,
-    private bucketName: string
+    private bucketName: string,
   ) {
     this.bucket = storage.bucket(bucketName);
   }
@@ -44,26 +44,31 @@ export class GCSContentRepository implements IContentRepository {
     try {
       const [files] = await this.bucket.getFiles({
         prefix,
-        delimiter: '/'
+        delimiter: "/",
       });
 
       return files
-        .filter(file => file.name.endsWith('.yaml') || file.name.endsWith('.yml'))
-        .map(file => file.name);
+        .filter(
+          (file) => file.name.endsWith(".yaml") || file.name.endsWith(".yml"),
+        )
+        .map((file) => file.name);
     } catch (error) {
       console.error(`Error listing YAML files: ${prefix}`, error);
       throw error;
     }
   }
 
-  async getScenarioContent(scenarioId: string, language: string = 'en'): Promise<ScenarioContent> {
+  async getScenarioContent(
+    scenarioId: string,
+    language: string = "en",
+  ): Promise<ScenarioContent> {
     // Try language-specific file first
     const paths = [
       `scenarios/${scenarioId}/content_${language}.yaml`,
       `scenarios/${scenarioId}/content.yaml`,
       `pbl_data/${scenarioId}_scenario.yaml`,
       `assessment_data/${scenarioId}_scenario.yaml`,
-      `discovery_data/${scenarioId}_scenario.yaml`
+      `discovery_data/${scenarioId}_scenario.yaml`,
     ];
 
     for (const path of paths) {
@@ -81,7 +86,7 @@ export class GCSContentRepository implements IContentRepository {
   async getAllScenarios(type?: ScenarioType): Promise<ScenarioContent[]> {
     const prefixes = type
       ? [`${type}_data/`]
-      : ['pbl_data/', 'assessment_data/', 'discovery_data/'];
+      : ["pbl_data/", "assessment_data/", "discovery_data/"];
 
     const scenarios: ScenarioContent[] = [];
 
@@ -89,12 +94,17 @@ export class GCSContentRepository implements IContentRepository {
       const files = await this.listYamlFiles(prefix);
 
       for (const file of files) {
-        if (file.includes('_scenario.yaml')) {
+        if (file.includes("_scenario.yaml")) {
           try {
             const content = await this.getYamlContent(file);
-            const scenarioId = file.split('/').pop()?.replace('_scenario.yaml', '');
+            const scenarioId = file
+              .split("/")
+              .pop()
+              ?.replace("_scenario.yaml", "");
             if (scenarioId) {
-              scenarios.push(this.transformScenarioContent(content, scenarioId));
+              scenarios.push(
+                this.transformScenarioContent(content, scenarioId),
+              );
             }
           } catch (error) {
             console.error(`Error loading scenario: ${file}`, error);
@@ -108,20 +118,22 @@ export class GCSContentRepository implements IContentRepository {
 
   async getKSAMappings(): Promise<KSAMapping[]> {
     try {
-      const content = await this.getYamlContent('rubrics_data/ksa_codes.yaml');
+      const content = await this.getYamlContent("rubrics_data/ksa_codes.yaml");
       return this.transformKSAMappings(content);
     } catch (error) {
-      console.error('Error loading KSA mappings', error);
+      console.error("Error loading KSA mappings", error);
       return [];
     }
   }
 
   async getAILiteracyDomains(): Promise<AILiteracyDomain[]> {
     try {
-      const content = await this.getYamlContent('rubrics_data/ai_lit_domains.yaml');
+      const content = await this.getYamlContent(
+        "rubrics_data/ai_lit_domains.yaml",
+      );
       return this.transformAILiteracyDomains(content);
     } catch (error) {
-      console.error('Error loading AI literacy domains', error);
+      console.error("Error loading AI literacy domains", error);
       return [];
     }
   }
@@ -130,27 +142,32 @@ export class GCSContentRepository implements IContentRepository {
   // Private transformation methods
   // ========================================
 
-  private transformScenarioContent(raw: Record<string, unknown>, id: string): ScenarioContent {
+  private transformScenarioContent(
+    raw: Record<string, unknown>,
+    id: string,
+  ): ScenarioContent {
     return {
       id,
-      type: (raw.type as string) || 'pbl',
-      title: this.extractMultilingualField(raw, 'title'),
-      description: this.extractMultilingualField(raw, 'description'),
-      tasks: ((raw.tasks as Array<Record<string, unknown>>) || []).map((t: Record<string, unknown>) => ({
-        id: t.id as string,
-        type: t.type as string,
-        title: t.title as string | undefined,
-        description: t.description as string | undefined,
-        estimatedTime: t.estimatedTime as number | undefined,
-        requiredForCompletion: t.requiredForCompletion as boolean | undefined,
-        ksaCodes: t.ksaCodes as string[] | undefined
-      })),
+      type: (raw.type as string) || "pbl",
+      title: this.extractMultilingualField(raw, "title"),
+      description: this.extractMultilingualField(raw, "description"),
+      tasks: ((raw.tasks as Array<Record<string, unknown>>) || []).map(
+        (t: Record<string, unknown>) => ({
+          id: t.id as string,
+          type: t.type as string,
+          title: t.title as string | undefined,
+          description: t.description as string | undefined,
+          estimatedTime: t.estimatedTime as number | undefined,
+          requiredForCompletion: t.requiredForCompletion as boolean | undefined,
+          ksaCodes: t.ksaCodes as string[] | undefined,
+        }),
+      ),
       metadata: {
         difficulty: raw.difficulty as string | undefined,
         duration: raw.duration as number | undefined,
         prerequisites: raw.prerequisites as string[] | undefined,
-        ...(raw.metadata as Record<string, unknown> | undefined)
-      }
+        ...(raw.metadata as Record<string, unknown> | undefined),
+      },
     };
   }
 
@@ -159,14 +176,24 @@ export class GCSContentRepository implements IContentRepository {
 
     // Process each type (knowledge, skills, attitudes)
     for (const [type, items] of Object.entries(raw)) {
-      if (typeof items === 'object' && items !== null) {
-        for (const [code, data] of Object.entries(items as Record<string, unknown>)) {
-          if (typeof data === 'object' && data !== null) {
+      if (typeof items === "object" && items !== null) {
+        for (const [code, data] of Object.entries(
+          items as Record<string, unknown>,
+        )) {
+          if (typeof data === "object" && data !== null) {
             mappings.push({
               code,
-              type: (type === 'knowledge' ? 'knowledge' : type === 'skills' ? 'skill' : 'attitude') as 'knowledge' | 'skill' | 'attitude',
-              domain: (data as Record<string, unknown>).domain as string || '',
-              description: this.extractMultilingualField(data as Record<string, unknown>, 'description')
+              type: (type === "knowledge"
+                ? "knowledge"
+                : type === "skills"
+                  ? "skill"
+                  : "attitude") as "knowledge" | "skill" | "attitude",
+              domain:
+                ((data as Record<string, unknown>).domain as string) || "",
+              description: this.extractMultilingualField(
+                data as Record<string, unknown>,
+                "description",
+              ),
             });
           }
         }
@@ -176,16 +203,18 @@ export class GCSContentRepository implements IContentRepository {
     return mappings;
   }
 
-  private transformAILiteracyDomains(raw: Record<string, unknown>): AILiteracyDomain[] {
+  private transformAILiteracyDomains(
+    raw: Record<string, unknown>,
+  ): AILiteracyDomain[] {
     const domains: AILiteracyDomain[] = [];
 
     if (raw.domains && Array.isArray(raw.domains)) {
       for (const domain of raw.domains as Array<Record<string, unknown>>) {
         domains.push({
           id: domain.id as string,
-          name: this.extractMultilingualField(domain, 'name'),
-          description: this.extractMultilingualField(domain, 'description'),
-          competencies: (domain.competencies as string[]) || []
+          name: this.extractMultilingualField(domain, "name"),
+          description: this.extractMultilingualField(domain, "description"),
+          competencies: (domain.competencies as string[]) || [],
         });
       }
     }
@@ -193,7 +222,10 @@ export class GCSContentRepository implements IContentRepository {
     return domains;
   }
 
-  private extractMultilingualField(obj: Record<string, unknown>, fieldName: string): { [lang: string]: string } {
+  private extractMultilingualField(
+    obj: Record<string, unknown>,
+    fieldName: string,
+  ): { [lang: string]: string } {
     const result: { [lang: string]: string } = {};
 
     // Check for direct field
@@ -202,7 +234,23 @@ export class GCSContentRepository implements IContentRepository {
     }
 
     // Check for language-specific fields
-    const languages = ['en', 'zh', 'zhTW', 'zhCN', 'pt', 'ar', 'id', 'th', 'es', 'ja', 'ko', 'fr', 'de', 'ru', 'it'];
+    const languages = [
+      "en",
+      "zh",
+      "zhTW",
+      "zhCN",
+      "pt",
+      "ar",
+      "id",
+      "th",
+      "es",
+      "ja",
+      "ko",
+      "fr",
+      "de",
+      "ru",
+      "it",
+    ];
     for (const lang of languages) {
       const fieldKey = `${fieldName}_${lang}`;
       if (obj[fieldKey]) {

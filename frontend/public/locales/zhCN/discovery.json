@@ -38,40 +38,104 @@
         "id": "creativity",
         "text": "Which activity sounds most appealing to you?",
         "options": [
-          { "id": "create_content", "text": "Creating videos or digital content", "weight": { "tech": 2, "creative": 3, "business": 1 } },
-          { "id": "solve_problems", "text": "Solving complex problems with code", "weight": { "tech": 3, "creative": 1, "business": 2 } },
-          { "id": "plan_strategies", "text": "Planning business strategies", "weight": { "tech": 1, "creative": 1, "business": 3 } },
-          { "id": "design_visuals", "text": "Designing visual experiences", "weight": { "tech": 2, "creative": 3, "business": 1 } }
+          {
+            "id": "create_content",
+            "text": "Creating videos or digital content",
+            "weight": { "tech": 2, "creative": 3, "business": 1 }
+          },
+          {
+            "id": "solve_problems",
+            "text": "Solving complex problems with code",
+            "weight": { "tech": 3, "creative": 1, "business": 2 }
+          },
+          {
+            "id": "plan_strategies",
+            "text": "Planning business strategies",
+            "weight": { "tech": 1, "creative": 1, "business": 3 }
+          },
+          {
+            "id": "design_visuals",
+            "text": "Designing visual experiences",
+            "weight": { "tech": 2, "creative": 3, "business": 1 }
+          }
         ]
       },
       {
         "id": "work_style",
         "text": "How do you prefer to work?",
         "options": [
-          { "id": "independent", "text": "Independently with creative freedom", "weight": { "tech": 2, "creative": 3, "business": 1 } },
-          { "id": "team_tech", "text": "In tech teams building products", "weight": { "tech": 3, "creative": 1, "business": 2 } },
-          { "id": "leading", "text": "Leading projects and teams", "weight": { "tech": 1, "creative": 2, "business": 3 } },
-          { "id": "collaborative", "text": "Collaborating on creative projects", "weight": { "tech": 2, "creative": 3, "business": 1 } }
+          {
+            "id": "independent",
+            "text": "Independently with creative freedom",
+            "weight": { "tech": 2, "creative": 3, "business": 1 }
+          },
+          {
+            "id": "team_tech",
+            "text": "In tech teams building products",
+            "weight": { "tech": 3, "creative": 1, "business": 2 }
+          },
+          {
+            "id": "leading",
+            "text": "Leading projects and teams",
+            "weight": { "tech": 1, "creative": 2, "business": 3 }
+          },
+          {
+            "id": "collaborative",
+            "text": "Collaborating on creative projects",
+            "weight": { "tech": 2, "creative": 3, "business": 1 }
+          }
         ]
       },
       {
         "id": "interests",
         "text": "What topics interest you most?",
         "options": [
-          { "id": "technology", "text": "Latest technology and programming", "weight": { "tech": 3, "creative": 1, "business": 1 } },
-          { "id": "art_media", "text": "Art, media, and storytelling", "weight": { "tech": 1, "creative": 3, "business": 1 } },
-          { "id": "business_trends", "text": "Business trends and markets", "weight": { "tech": 1, "creative": 1, "business": 3 } },
-          { "id": "digital_innovation", "text": "Digital innovation and design", "weight": { "tech": 2, "creative": 2, "business": 2 } }
+          {
+            "id": "technology",
+            "text": "Latest technology and programming",
+            "weight": { "tech": 3, "creative": 1, "business": 1 }
+          },
+          {
+            "id": "art_media",
+            "text": "Art, media, and storytelling",
+            "weight": { "tech": 1, "creative": 3, "business": 1 }
+          },
+          {
+            "id": "business_trends",
+            "text": "Business trends and markets",
+            "weight": { "tech": 1, "creative": 1, "business": 3 }
+          },
+          {
+            "id": "digital_innovation",
+            "text": "Digital innovation and design",
+            "weight": { "tech": 2, "creative": 2, "business": 2 }
+          }
         ]
       },
       {
         "id": "goals",
         "text": "What's your main goal?",
         "options": [
-          { "id": "build_apps", "text": "Build amazing apps and games", "weight": { "tech": 3, "creative": 2, "business": 1 } },
-          { "id": "create_content", "text": "Create content that inspires others", "weight": { "tech": 1, "creative": 3, "business": 1 } },
-          { "id": "start_business", "text": "Start my own business", "weight": { "tech": 2, "creative": 1, "business": 3 } },
-          { "id": "make_impact", "text": "Make a positive impact through work", "weight": { "tech": 2, "creative": 2, "business": 2 } }
+          {
+            "id": "build_apps",
+            "text": "Build amazing apps and games",
+            "weight": { "tech": 3, "creative": 2, "business": 1 }
+          },
+          {
+            "id": "create_content",
+            "text": "Create content that inspires others",
+            "weight": { "tech": 1, "creative": 3, "business": 1 }
+          },
+          {
+            "id": "start_business",
+            "text": "Start my own business",
+            "weight": { "tech": 2, "creative": 1, "business": 3 }
+          },
+          {
+            "id": "make_impact",
+            "text": "Make a positive impact through work",
+            "weight": { "tech": 2, "creative": 2, "business": 2 }
+          }
         ]
       }
     ]
@@ -92,8 +156,17 @@
       "subtitle": "Create engaging video content and build an audience",
       "description": "Learn to create, edit, and promote video content while building a personal brand and engaging with audiences.",
       "category": "Creative",
-      "skills": ["Video Production", "Content Strategy", "Audience Engagement", "Personal Branding"],
-      "aiAssistants": ["Creative Director", "Analytics Expert", "Community Manager"],
+      "skills": [
+        "Video Production",
+        "Content Strategy",
+        "Audience Engagement",
+        "Personal Branding"
+      ],
+      "aiAssistants": [
+        "Creative Director",
+        "Analytics Expert",
+        "Community Manager"
+      ],
       "tasks": [
         {
           "id": "script_writing",
@@ -120,8 +193,17 @@
       "subtitle": "Design immersive gaming experiences and mechanics",
       "description": "Create game concepts, design characters, and develop gameplay mechanics using modern AI-assisted tools.",
       "category": "Technology",
-      "skills": ["Game Design", "Creative Thinking", "User Experience", "Technical Design"],
-      "aiAssistants": ["Design Partner", "Technical Advisor", "Player Psychology Expert"],
+      "skills": [
+        "Game Design",
+        "Creative Thinking",
+        "User Experience",
+        "Technical Design"
+      ],
+      "aiAssistants": [
+        "Design Partner",
+        "Technical Advisor",
+        "Player Psychology Expert"
+      ],
       "tasks": [
         {
           "id": "character_design",
@@ -148,7 +230,12 @@
       "subtitle": "Build mobile applications that solve real problems",
       "description": "Learn to design, develop, and launch mobile applications using AI-powered development tools.",
       "category": "Technology",
-      "skills": ["Programming", "Problem Solving", "User Interface Design", "Project Management"],
+      "skills": [
+        "Programming",
+        "Problem Solving",
+        "User Interface Design",
+        "Project Management"
+      ],
       "aiAssistants": ["Code Mentor", "UI Designer", "Testing Specialist"],
       "tasks": [
         {

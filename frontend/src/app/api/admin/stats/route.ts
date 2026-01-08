@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server';
-import { Pool } from 'pg';
+import { NextResponse } from "next/server";
+import { Pool } from "pg";
 
 /**
  * Get database statistics for deployment verification
@@ -19,13 +19,13 @@ export async function GET() {
         connectionTimeoutMillis: 5000,
       });
     } else {
-      const dbHost = process.env.DB_HOST || '127.0.0.1';
-      const isCloudSQL = dbHost.startsWith('/cloudsql/');
+      const dbHost = process.env.DB_HOST || "127.0.0.1";
+      const isCloudSQL = dbHost.startsWith("/cloudsql/");
 
       const dbConfig: Record<string, unknown> = {
-        database: process.env.DB_NAME || 'ai_square_db',
-        user: process.env.DB_USER || 'postgres',
-        password: process.env.DB_PASSWORD || '',
+        database: process.env.DB_NAME || "ai_square_db",
+        user: process.env.DB_USER || "postgres",
+        password: process.env.DB_PASSWORD || "",
         max: 1,
         connectionTimeoutMillis: 5000,
       };
@@ -34,7 +34,7 @@ export async function GET() {
         dbConfig.host = dbHost;
       } else {
         dbConfig.host = dbHost;
-        dbConfig.port = parseInt(process.env.DB_PORT || '5433');
+        dbConfig.port = parseInt(process.env.DB_PORT || "5433");
       }
 
       pool = new Pool(dbConfig);
@@ -49,10 +49,13 @@ export async function GET() {
       GROUP BY mode
     `);
 
-    const scenarioCounts = scenarioStats.rows.reduce((acc: Record<string, number>, row: { mode: string; count: string }) => {
-      acc[row.mode] = parseInt(row.count);
-      return acc;
-    }, {});
+    const scenarioCounts = scenarioStats.rows.reduce(
+      (acc: Record<string, number>, row: { mode: string; count: string }) => {
+        acc[row.mode] = parseInt(row.count);
+        return acc;
+      },
+      {},
+    );
 
     // Get user counts by role
     const userStats = await pool.query(`
@@ -63,17 +66,26 @@ export async function GET() {
       GROUP BY role
     `);
 
-    const userCounts = userStats.rows.reduce((acc: Record<string, number>, row: { role: string; count: string }) => {
-      acc[row.role] = parseInt(row.count);
-      return acc;
-    }, {});
+    const userCounts = userStats.rows.reduce(
+      (acc: Record<string, number>, row: { role: string; count: string }) => {
+        acc[row.role] = parseInt(row.count);
+        return acc;
+      },
+      {},
+    );
 
     // Get total counts
-    const totalScenarios = await pool.query('SELECT COUNT(*) as count FROM scenarios');
-    const totalUsers = await pool.query('SELECT COUNT(*) as count FROM users');
-    const totalPrograms = await pool.query('SELECT COUNT(*) as count FROM programs');
-    const totalTasks = await pool.query('SELECT COUNT(*) as count FROM tasks');
-    const totalEvaluations = await pool.query('SELECT COUNT(*) as count FROM evaluations');
+    const totalScenarios = await pool.query(
+      "SELECT COUNT(*) as count FROM scenarios",
+    );
+    const totalUsers = await pool.query("SELECT COUNT(*) as count FROM users");
+    const totalPrograms = await pool.query(
+      "SELECT COUNT(*) as count FROM programs",
+    );
+    const totalTasks = await pool.query("SELECT COUNT(*) as count FROM tasks");
+    const totalEvaluations = await pool.query(
+      "SELECT COUNT(*) as count FROM evaluations",
+    );
 
     return NextResponse.json({
       success: true,
@@ -81,26 +93,25 @@ export async function GET() {
         total: parseInt(totalScenarios.rows[0].count),
         pbl: scenarioCounts.pbl || 0,
         assessment: scenarioCounts.assessment || 0,
-        discovery: scenarioCounts.discovery || 0
+        discovery: scenarioCounts.discovery || 0,
       },
       users: {
         total: parseInt(totalUsers.rows[0].count),
-        ...userCounts
+        ...userCounts,
       },
       programs: parseInt(totalPrograms.rows[0].count),
       tasks: parseInt(totalTasks.rows[0].count),
       evaluations: parseInt(totalEvaluations.rows[0].count),
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
-
   } catch (error) {
-    console.error('Stats error:', error);
+    console.error("Stats error:", error);
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : 'Failed to get stats'
+        error: error instanceof Error ? error.message : "Failed to get stats",
       },
-      { status: 500 }
+      { status: 500 },
     );
   } finally {
     if (pool) {

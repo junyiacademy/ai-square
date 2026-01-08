@@ -1,79 +1,94 @@
-import { NextRequest } from 'next/server';
-import { GET } from '../route';
-import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
+import { NextRequest } from "next/server";
+import { GET } from "../route";
+import { repositoryFactory } from "@/lib/repositories/base/repository-factory";
 
-jest.mock('@/lib/repositories/base/repository-factory', () => ({
+jest.mock("@/lib/repositories/base/repository-factory", () => ({
   repositoryFactory: {
     getUserRepository: jest.fn(),
     getProgramRepository: jest.fn(),
     getTaskRepository: jest.fn(),
-    getScenarioRepository: jest.fn()
-  }
+    getScenarioRepository: jest.fn(),
+  },
 }));
 
-describe('API Route: src/app/api/pbl/draft-program', () => {
+describe("API Route: src/app/api/pbl/draft-program", () => {
   const mockUserRepo = {
     findByEmail: jest.fn(),
-    create: jest.fn()
+    create: jest.fn(),
   };
 
   const mockProgramRepo = {
     findByUser: jest.fn(),
     create: jest.fn(),
-    update: jest.fn()
+    update: jest.fn(),
   };
 
   const mockScenarioRepo = {
-    findAll: jest.fn()
+    findAll: jest.fn(),
   };
 
   beforeEach(() => {
     jest.clearAllMocks();
-    (repositoryFactory.getUserRepository as jest.Mock).mockReturnValue(mockUserRepo);
-    (repositoryFactory.getProgramRepository as jest.Mock).mockReturnValue(mockProgramRepo);
-    (repositoryFactory.getScenarioRepository as jest.Mock).mockReturnValue(mockScenarioRepo);
+    (repositoryFactory.getUserRepository as jest.Mock).mockReturnValue(
+      mockUserRepo,
+    );
+    (repositoryFactory.getProgramRepository as jest.Mock).mockReturnValue(
+      mockProgramRepo,
+    );
+    (repositoryFactory.getScenarioRepository as jest.Mock).mockReturnValue(
+      mockScenarioRepo,
+    );
   });
 
-  describe('GET', () => {
-    it('should return 400 when scenarioId is missing', async () => {
-      const request = new NextRequest('http://localhost:3000/api/pbl/draft-program');
+  describe("GET", () => {
+    it("should return 400 when scenarioId is missing", async () => {
+      const request = new NextRequest(
+        "http://localhost:3000/api/pbl/draft-program",
+      );
       request.cookies.get = jest.fn().mockReturnValue({
-        value: JSON.stringify({ email: 'test@example.com' })
+        value: JSON.stringify({ email: "test@example.com" }),
       });
 
       const response = await GET(request);
       expect(response.status).toBe(400);
     });
 
-    it('should return 401 when user is not authenticated', async () => {
-      const request = new NextRequest('http://localhost:3000/api/pbl/draft-program?scenarioId=test-scenario');
+    it("should return 401 when user is not authenticated", async () => {
+      const request = new NextRequest(
+        "http://localhost:3000/api/pbl/draft-program?scenarioId=test-scenario",
+      );
 
       const response = await GET(request);
       expect(response.status).toBe(401);
     });
 
-    it('should return draft programs for authenticated user', async () => {
-      mockUserRepo.findByEmail.mockResolvedValue({ id: 'user-id', email: 'test@example.com' });
+    it("should return draft programs for authenticated user", async () => {
+      mockUserRepo.findByEmail.mockResolvedValue({
+        id: "user-id",
+        email: "test@example.com",
+      });
       mockProgramRepo.findByUser.mockResolvedValue([
         {
-          id: 'prog-1',
-          status: 'active',
-          scenarioId: 'scenario-1',
-          userId: 'user-id',
+          id: "prog-1",
+          status: "active",
+          scenarioId: "scenario-1",
+          userId: "user-id",
           currentTaskIndex: 0,
           completedTaskCount: 0,
           totalTaskCount: 5,
           createdAt: new Date().toISOString(),
-          lastActivityAt: new Date().toISOString()
-        }
+          lastActivityAt: new Date().toISOString(),
+        },
       ]);
       mockScenarioRepo.findAll.mockResolvedValue([
-        { id: 'scenario-1', title: { en: 'Test Scenario' } }
+        { id: "scenario-1", title: { en: "Test Scenario" } },
       ]);
 
-      const request = new NextRequest('http://localhost:3000/api/pbl/draft-program?scenarioId=scenario-1');
+      const request = new NextRequest(
+        "http://localhost:3000/api/pbl/draft-program?scenarioId=scenario-1",
+      );
       request.cookies.get = jest.fn().mockReturnValue({
-        value: JSON.stringify({ email: 'test@example.com' })
+        value: JSON.stringify({ email: "test@example.com" }),
       });
 
       const response = await GET(request);
@@ -82,13 +97,15 @@ describe('API Route: src/app/api/pbl/draft-program', () => {
       const data = await response.json();
       expect(data.success).toBe(true);
       expect(data.program).toBeDefined();
-      expect(data.program.id).toBe('prog-1');
+      expect(data.program.id).toBe("prog-1");
     });
 
-    it('should handle errors gracefully', async () => {
-      mockUserRepo.findByEmail.mockRejectedValue(new Error('DB error'));
+    it("should handle errors gracefully", async () => {
+      mockUserRepo.findByEmail.mockRejectedValue(new Error("DB error"));
 
-      const request = new NextRequest('http://localhost:3000/api/pbl/draft-program');
+      const request = new NextRequest(
+        "http://localhost:3000/api/pbl/draft-program",
+      );
 
       const response = await GET(request);
 

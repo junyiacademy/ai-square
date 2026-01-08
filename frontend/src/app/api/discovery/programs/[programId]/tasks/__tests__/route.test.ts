@@ -3,74 +3,80 @@
  * 測試 Discovery 任務管理 API
  */
 
-import { GET, POST } from '../route';
-import { PATCH } from '../[taskId]/route';
-import { createMockNextRequest } from '@/test-utils/mock-next-request';
-import type { ITask } from '@/types/unified-learning';
-import type { IDiscoveryTask } from '@/types/discovery-types';
+import { GET, POST } from "../route";
+import { PATCH } from "../[taskId]/route";
+import { createMockNextRequest } from "@/test-utils/mock-next-request";
+import type { ITask } from "@/types/unified-learning";
+import type { IDiscoveryTask } from "@/types/discovery-types";
 
 // Mock auth session
 const mockGetUnifiedAuth = jest.fn();
-jest.mock('@/lib/auth/unified-auth', () => ({
+jest.mock("@/lib/auth/unified-auth", () => ({
   getUnifiedAuth: () => mockGetUnifiedAuth(),
   createUnauthorizedResponse: jest.fn(() => ({
     status: 401,
-    json: jest.fn().mockResolvedValue({ error: 'Authentication required', success: false }),
-    text: jest.fn().mockResolvedValue('{"error":"Authentication required","success":false}')
-  }))
+    json: jest
+      .fn()
+      .mockResolvedValue({ error: "Authentication required", success: false }),
+    text: jest
+      .fn()
+      .mockResolvedValue('{"error":"Authentication required","success":false}'),
+  })),
 }));
 
 // Mock repository factory
-jest.mock('@/lib/repositories/base/repository-factory', () => ({
+jest.mock("@/lib/repositories/base/repository-factory", () => ({
   repositoryFactory: {
     getTaskRepository: jest.fn(),
     getProgramRepository: jest.fn(),
-    getUserRepository: jest.fn()
-  }
+    getUserRepository: jest.fn(),
+  },
 }));
 
 // Get mocked factory after mocking
-import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
-const mockRepositoryFactory = repositoryFactory as jest.Mocked<typeof repositoryFactory>;
+import { repositoryFactory } from "@/lib/repositories/base/repository-factory";
+const mockRepositoryFactory = repositoryFactory as jest.Mocked<
+  typeof repositoryFactory
+>;
 
-describe('Discovery Tasks API', () => {
+describe("Discovery Tasks API", () => {
   let mockTaskRepo: any;
   let mockProgramRepo: any;
   let mockUserRepo: any;
 
   const mockUser = {
-    id: 'user123',
-    email: 'test@example.com',
-    name: 'Test User'
+    id: "user123",
+    email: "test@example.com",
+    name: "Test User",
   };
 
   const mockProgram = {
-    id: 'prog123',
-    scenarioId: 'scenario123',
-    userId: 'user123',
-    mode: 'discovery',
-    status: 'active',
+    id: "prog123",
+    scenarioId: "scenario123",
+    userId: "user123",
+    mode: "discovery",
+    status: "active",
     currentTaskIndex: 0,
     totalTaskCount: 3,
     discoveryData: {
-      careerPath: 'software-developer',
+      careerPath: "software-developer",
       skillGapAnalysis: [
-        { skill: 'JavaScript', currentLevel: 60, requiredLevel: 75 }
-      ]
-    }
+        { skill: "JavaScript", currentLevel: 60, requiredLevel: 75 },
+      ],
+    },
   };
 
   const mockTasks: ITask[] = [
     {
-      id: 'task1',
-      programId: 'prog123',
-      mode: 'discovery',
+      id: "task1",
+      programId: "prog123",
+      mode: "discovery",
       taskIndex: 0,
-      type: 'exploration',
-      title: { en: 'Introduction to Software Development' },
-      description: { en: 'Learn about the basics' },
-      status: 'completed',
-      content: { instructions: { en: 'Learn about the basics' } },
+      type: "exploration",
+      title: { en: "Introduction to Software Development" },
+      description: { en: "Learn about the basics" },
+      status: "completed",
+      content: { instructions: { en: "Learn about the basics" } },
       interactions: [],
       interactionCount: 0,
       userResponse: {},
@@ -87,18 +93,18 @@ describe('Discovery Tasks API', () => {
       pblData: {},
       discoveryData: {},
       assessmentData: {},
-      metadata: {}
+      metadata: {},
     },
     {
-      id: 'task2',
-      programId: 'prog123',
-      mode: 'discovery',
+      id: "task2",
+      programId: "prog123",
+      mode: "discovery",
       taskIndex: 1,
-      type: 'exploration',
-      title: { en: 'Build Your First App' },
-      description: { en: 'Create a simple web application' },
-      status: 'active',
-      content: { instructions: { en: 'Create a simple web application' } },
+      type: "exploration",
+      title: { en: "Build Your First App" },
+      description: { en: "Create a simple web application" },
+      status: "active",
+      content: { instructions: { en: "Create a simple web application" } },
       interactions: [],
       interactionCount: 0,
       userResponse: {},
@@ -114,18 +120,18 @@ describe('Discovery Tasks API', () => {
       pblData: {},
       discoveryData: {},
       assessmentData: {},
-      metadata: {}
+      metadata: {},
     },
     {
-      id: 'task3',
-      programId: 'prog123',
-      mode: 'discovery',
+      id: "task3",
+      programId: "prog123",
+      mode: "discovery",
       taskIndex: 2,
-      type: 'exploration',
-      title: { en: 'Career Reflection' },
-      description: { en: 'Reflect on your learning journey' },
-      status: 'pending',
-      content: { instructions: { en: 'Reflect on your learning journey' } },
+      type: "exploration",
+      title: { en: "Career Reflection" },
+      description: { en: "Reflect on your learning journey" },
+      status: "pending",
+      content: { instructions: { en: "Reflect on your learning journey" } },
       interactions: [],
       interactionCount: 0,
       userResponse: {},
@@ -140,8 +146,8 @@ describe('Discovery Tasks API', () => {
       pblData: {},
       discoveryData: {},
       assessmentData: {},
-      metadata: {}
-    }
+      metadata: {},
+    },
   ];
 
   beforeEach(() => {
@@ -152,16 +158,16 @@ describe('Discovery Tasks API', () => {
       findByProgram: jest.fn(),
       findById: jest.fn(),
       create: jest.fn(),
-      update: jest.fn()
+      update: jest.fn(),
     };
 
     mockProgramRepo = {
       findById: jest.fn(),
-      update: jest.fn()
+      update: jest.fn(),
     };
 
     mockUserRepo = {
-      findByEmail: jest.fn()
+      findByEmail: jest.fn(),
     };
 
     // Setup mocks
@@ -173,60 +179,81 @@ describe('Discovery Tasks API', () => {
     mockGetUnifiedAuth.mockResolvedValue({ user: mockUser });
   });
 
-  describe('GET /api/discovery/programs/[programId]/tasks', () => {
-    it('should return all tasks for a program', async () => {
+  describe("GET /api/discovery/programs/[programId]/tasks", () => {
+    it("should return all tasks for a program", async () => {
       // Arrange
       mockUserRepo.findByEmail.mockResolvedValue(mockUser);
       mockProgramRepo.findById.mockResolvedValue(mockProgram);
       mockTaskRepo.findByProgram.mockResolvedValue(mockTasks);
 
-      const request = createMockNextRequest('http://localhost:3000/api/discovery/programs/prog123/tasks');
+      const request = createMockNextRequest(
+        "http://localhost:3000/api/discovery/programs/prog123/tasks",
+      );
 
       // Act
-      const response = await GET(request, { params: Promise.resolve({'programId':'prog123'}) });
+      const response = await GET(request, {
+        params: Promise.resolve({ programId: "prog123" }),
+      });
       const data = await response.json();
 
       // Assert
       expect(response.status).toBe(200);
       expect(data.success).toBe(true);
       expect(data.data.tasks).toHaveLength(3);
-      expect(data.data.tasks[0].title).toBe('Introduction to Software Development');
+      expect(data.data.tasks[0].title).toBe(
+        "Introduction to Software Development",
+      );
     });
 
-    it('should process language parameter', async () => {
+    it("should process language parameter", async () => {
       // Arrange
-      const tasksWithMultilang = mockTasks.map(task => ({
+      const tasksWithMultilang = mockTasks.map((task) => ({
         ...task,
         title: { en: task.title!.en, zh: `${task.title!.en} (中文)` },
-        description: { en: task.description!.en, zh: `${task.description!.en} (中文)` }
+        description: {
+          en: task.description!.en,
+          zh: `${task.description!.en} (中文)`,
+        },
       }));
 
       mockUserRepo.findByEmail.mockResolvedValue(mockUser);
       mockProgramRepo.findById.mockResolvedValue(mockProgram);
       mockTaskRepo.findByProgram.mockResolvedValue(tasksWithMultilang);
 
-      const request = createMockNextRequest('http://localhost:3000/api/discovery/programs/prog123/tasks?lang=zh');
+      const request = createMockNextRequest(
+        "http://localhost:3000/api/discovery/programs/prog123/tasks?lang=zh",
+      );
 
       // Act
-      const response = await GET(request, { params: Promise.resolve({'programId':'prog123'}) });
+      const response = await GET(request, {
+        params: Promise.resolve({ programId: "prog123" }),
+      });
       const data = await response.json();
 
       // Assert
       expect(response.status).toBe(200);
-      expect(data.data.tasks[0].title.zh || data.data.tasks[0].title).toContain('(中文)');
-      expect(data.data.tasks[0].description.zh || data.data.tasks[0].description).toContain('(中文)');
+      expect(data.data.tasks[0].title.zh || data.data.tasks[0].title).toContain(
+        "(中文)",
+      );
+      expect(
+        data.data.tasks[0].description.zh || data.data.tasks[0].description,
+      ).toContain("(中文)");
     });
 
-    it('should include task progress information', async () => {
+    it("should include task progress information", async () => {
       // Arrange
       mockUserRepo.findByEmail.mockResolvedValue(mockUser);
       mockProgramRepo.findById.mockResolvedValue(mockProgram);
       mockTaskRepo.findByProgram.mockResolvedValue(mockTasks);
 
-      const request = createMockNextRequest('http://localhost:3000/api/discovery/programs/prog123/tasks');
+      const request = createMockNextRequest(
+        "http://localhost:3000/api/discovery/programs/prog123/tasks",
+      );
 
       // Act
-      const response = await GET(request, { params: Promise.resolve({'programId':'prog123'}) });
+      const response = await GET(request, {
+        params: Promise.resolve({ programId: "prog123" }),
+      });
       const data = await response.json();
 
       // Assert
@@ -237,43 +264,51 @@ describe('Discovery Tasks API', () => {
       expect(data.data.progress.current).toBe(1); // index of active task
     });
 
-    it('should require authentication', async () => {
+    it("should require authentication", async () => {
       // Arrange
       mockGetUnifiedAuth.mockResolvedValue(null);
 
-      const request = createMockNextRequest('http://localhost:3000/api/discovery/programs/prog123/tasks');
+      const request = createMockNextRequest(
+        "http://localhost:3000/api/discovery/programs/prog123/tasks",
+      );
 
       // Act
-      const response = await GET(request, { params: Promise.resolve({'programId':'prog123'}) });
+      const response = await GET(request, {
+        params: Promise.resolve({ programId: "prog123" }),
+      });
       const data = await response.json();
 
       // Assert
       expect(response.status).toBe(401);
-      expect(data.error).toBe('Authentication required');
+      expect(data.error).toBe("Authentication required");
     });
 
-    it('should verify program ownership', async () => {
+    it("should verify program ownership", async () => {
       // Arrange
       mockUserRepo.findByEmail.mockResolvedValue(mockUser);
       mockProgramRepo.findById.mockResolvedValue({
         ...mockProgram,
-        userId: 'different-user'
+        userId: "different-user",
       });
 
-      const request = createMockNextRequest('http://localhost:3000/api/discovery/programs/prog123/tasks');
+      const request = createMockNextRequest(
+        "http://localhost:3000/api/discovery/programs/prog123/tasks",
+      );
 
       // Act
-      const response = await GET(request, { params: Promise.resolve({'programId':'prog123'}) });
+      const response = await GET(request, {
+        params: Promise.resolve({ programId: "prog123" }),
+      });
       const data = await response.json();
 
       // Assert
       expect(response.status).toBe(403);
-      expect(data.error).toBe('Access denied');
+      expect(data.error).toBe("Access denied");
     });
   });
 
-  describe('POST /api/discovery/programs/[programId]/tasks', () => {
-    it('should create a new task', async () => {
+  describe("POST /api/discovery/programs/[programId]/tasks", () => {
+    it("should create a new task", async () => {
       // Arrange
       mockUserRepo.findByEmail.mockResolvedValue(mockUser);
       mockProgramRepo.findById.mockResolvedValue(mockProgram);
@@ -281,64 +316,77 @@ describe('Discovery Tasks API', () => {
 
       const newTask = {
         ...mockTasks[0],
-        id: 'task4',
+        id: "task4",
         order: 3,
-        title: { en: 'Advanced Topics' }
+        title: { en: "Advanced Topics" },
       };
       mockTaskRepo.create.mockResolvedValue(newTask);
 
-      const request = createMockNextRequest('http://localhost:3000/api/discovery/programs/prog123/tasks', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          type: 'exploration',
-          title: { en: 'Advanced Topics' },
-          instructions: { en: 'Explore advanced concepts' }
-        })
-      });
+      const request = createMockNextRequest(
+        "http://localhost:3000/api/discovery/programs/prog123/tasks",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            type: "exploration",
+            title: { en: "Advanced Topics" },
+            instructions: { en: "Explore advanced concepts" },
+          }),
+        },
+      );
 
       // Act
-      const response = await POST(request, { params: Promise.resolve({'programId':'prog123'}) });
+      const response = await POST(request, {
+        params: Promise.resolve({ programId: "prog123" }),
+      });
       const data = await response.json();
 
       // Assert
       expect(response.status).toBe(201);
       expect(data.success).toBe(true);
-      expect(data.data.task.title.en).toBe('Advanced Topics');
+      expect(data.data.task.title.en).toBe("Advanced Topics");
     });
 
-    it('should update program task count', async () => {
+    it("should update program task count", async () => {
       // Arrange
       mockUserRepo.findByEmail.mockResolvedValue(mockUser);
       mockProgramRepo.findById.mockResolvedValue(mockProgram);
       mockTaskRepo.findByProgram.mockResolvedValue(mockTasks);
-      mockTaskRepo.create.mockResolvedValue({ id: 'task4' });
+      mockTaskRepo.create.mockResolvedValue({ id: "task4" });
 
-      const request = createMockNextRequest('http://localhost:3000/api/discovery/programs/prog123/tasks', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          type: 'practice',
-          title: { en: 'New Task' },
-          instructions: { en: 'Do something' }
-        })
-      });
+      const request = createMockNextRequest(
+        "http://localhost:3000/api/discovery/programs/prog123/tasks",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            type: "practice",
+            title: { en: "New Task" },
+            instructions: { en: "Do something" },
+          }),
+        },
+      );
 
       // Act
-      await POST(request, { params: Promise.resolve({'programId':'prog123'}) });
+      await POST(request, {
+        params: Promise.resolve({ programId: "prog123" }),
+      });
 
       // Assert
-      expect(mockProgramRepo.update).toHaveBeenCalledWith('prog123', expect.objectContaining({
-        lastActivityAt: expect.any(String),
-        metadata: expect.objectContaining({
-          lastTaskCreatedAt: expect.any(String)
-        })
-      }));
+      expect(mockProgramRepo.update).toHaveBeenCalledWith(
+        "prog123",
+        expect.objectContaining({
+          lastActivityAt: expect.any(String),
+          metadata: expect.objectContaining({
+            lastTaskCreatedAt: expect.any(String),
+          }),
+        }),
+      );
     });
   });
 
-  describe('PATCH /api/discovery/programs/[programId]/tasks/[taskId]', () => {
-    it('should update task status', async () => {
+  describe("PATCH /api/discovery/programs/[programId]/tasks/[taskId]", () => {
+    it("should update task status", async () => {
       // Arrange
       mockUserRepo.findByEmail.mockResolvedValue(mockUser);
       mockProgramRepo.findById.mockResolvedValue(mockProgram);
@@ -346,34 +394,39 @@ describe('Discovery Tasks API', () => {
       mockTaskRepo.findByProgram.mockResolvedValue(mockTasks); // Add this mock
       mockTaskRepo.update.mockResolvedValue({
         ...mockTasks[1],
-        status: 'completed',
+        status: "completed",
         completedAt: new Date().toISOString(),
         score: 95,
-        feedback: { en: 'Excellent work!' }
+        feedback: { en: "Excellent work!" },
       });
 
-      const request = createMockNextRequest('http://localhost:3000/api/discovery/programs/prog123/tasks/task2', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          status: 'completed',
-          score: 95,
-          feedback: { en: 'Excellent work!' }
-        })
-      });
+      const request = createMockNextRequest(
+        "http://localhost:3000/api/discovery/programs/prog123/tasks/task2",
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            status: "completed",
+            score: 95,
+            feedback: { en: "Excellent work!" },
+          }),
+        },
+      );
 
       // Act
-      const response = await PATCH(request, { params: Promise.resolve({'programId':'prog123','taskId':'task2'}) });
+      const response = await PATCH(request, {
+        params: Promise.resolve({ programId: "prog123", taskId: "task2" }),
+      });
       const data = await response.json();
 
       // Assert
       expect(response.status).toBe(200);
       expect(data.success).toBe(true);
-      expect(data.data.task.status).toBe('completed');
+      expect(data.data.task.status).toBe("completed");
       expect(data.data.task.score).toBe(95);
     });
 
-    it('should update program progress on task completion', async () => {
+    it("should update program progress on task completion", async () => {
       // Arrange
       mockUserRepo.findByEmail.mockResolvedValue(mockUser);
       mockProgramRepo.findById.mockResolvedValue(mockProgram);
@@ -381,120 +434,154 @@ describe('Discovery Tasks API', () => {
       mockTaskRepo.findByProgram.mockResolvedValue(mockTasks); // Add this mock
       mockTaskRepo.update.mockResolvedValue({
         ...mockTasks[1],
-        status: 'completed'
+        status: "completed",
       });
 
-      const request = createMockNextRequest('http://localhost:3000/api/discovery/programs/prog123/tasks/task2', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: 'completed' })
-      });
+      const request = createMockNextRequest(
+        "http://localhost:3000/api/discovery/programs/prog123/tasks/task2",
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status: "completed" }),
+        },
+      );
 
       // Act
-      await PATCH(request, { params: Promise.resolve({'programId':'prog123','taskId':'task2'}) });
+      await PATCH(request, {
+        params: Promise.resolve({ programId: "prog123", taskId: "task2" }),
+      });
 
       // Assert
-      expect(mockProgramRepo.update).toHaveBeenCalledWith('prog123', expect.objectContaining({
-        completedTaskCount: 2,
-        currentTaskIndex: 2,
-        lastActivityAt: expect.any(String)
-      }));
+      expect(mockProgramRepo.update).toHaveBeenCalledWith(
+        "prog123",
+        expect.objectContaining({
+          completedTaskCount: 2,
+          currentTaskIndex: 2,
+          lastActivityAt: expect.any(String),
+        }),
+      );
     });
 
-    it('should track time spent', async () => {
+    it("should track time spent", async () => {
       // Arrange
       mockUserRepo.findByEmail.mockResolvedValue(mockUser);
       mockProgramRepo.findById.mockResolvedValue(mockProgram);
       mockTaskRepo.findById.mockResolvedValue(mockTasks[1]);
 
-      const request = createMockNextRequest('http://localhost:3000/api/discovery/programs/prog123/tasks/task2', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          timeSpentSeconds: 600,
-          interactions: [
-            { type: 'chat', content: 'Asked about arrays', timestamp: new Date().toISOString() }
-          ]
-        })
-      });
+      const request = createMockNextRequest(
+        "http://localhost:3000/api/discovery/programs/prog123/tasks/task2",
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            timeSpentSeconds: 600,
+            interactions: [
+              {
+                type: "chat",
+                content: "Asked about arrays",
+                timestamp: new Date().toISOString(),
+              },
+            ],
+          }),
+        },
+      );
 
       // Act
-      const response = await PATCH(request, { params: Promise.resolve({'programId':'prog123','taskId':'task2'}) });
+      const response = await PATCH(request, {
+        params: Promise.resolve({ programId: "prog123", taskId: "task2" }),
+      });
 
       // Assert
       expect(response.status).toBe(200);
-      expect(mockTaskRepo.update).toHaveBeenCalledWith('task2', expect.objectContaining({
-        timeSpentSeconds: 600,
-        interactions: expect.arrayContaining([
-          expect.objectContaining({ type: 'chat' })
-        ])
-      }));
+      expect(mockTaskRepo.update).toHaveBeenCalledWith(
+        "task2",
+        expect.objectContaining({
+          timeSpentSeconds: 600,
+          interactions: expect.arrayContaining([
+            expect.objectContaining({ type: "chat" }),
+          ]),
+        }),
+      );
     });
 
-    it('should validate task belongs to program', async () => {
+    it("should validate task belongs to program", async () => {
       // Arrange
       mockUserRepo.findByEmail.mockResolvedValue(mockUser);
       mockProgramRepo.findById.mockResolvedValue(mockProgram);
       mockTaskRepo.findById.mockResolvedValue({
         ...mockTasks[0],
-        programId: 'different-program'
+        programId: "different-program",
       });
 
-      const request = createMockNextRequest('http://localhost:3000/api/discovery/programs/prog123/tasks/task1', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: 'completed' })
-      });
+      const request = createMockNextRequest(
+        "http://localhost:3000/api/discovery/programs/prog123/tasks/task1",
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status: "completed" }),
+        },
+      );
 
       // Act
-      const response = await PATCH(request, { params: Promise.resolve({'programId':'prog123','taskId':'task2'}) });
+      const response = await PATCH(request, {
+        params: Promise.resolve({ programId: "prog123", taskId: "task2" }),
+      });
       const data = await response.json();
 
       // Assert
       expect(response.status).toBe(403);
-      expect(data.error).toBe('Task does not belong to this program');
+      expect(data.error).toBe("Task does not belong to this program");
     });
   });
 
-  describe('Error Handling', () => {
-    it('should handle repository errors gracefully', async () => {
+  describe("Error Handling", () => {
+    it("should handle repository errors gracefully", async () => {
       // Arrange
       mockUserRepo.findByEmail.mockResolvedValue(mockUser);
-      mockProgramRepo.findById.mockRejectedValue(new Error('Database error'));
+      mockProgramRepo.findById.mockRejectedValue(new Error("Database error"));
 
-      const request = createMockNextRequest('http://localhost:3000/api/discovery/programs/prog123/tasks');
+      const request = createMockNextRequest(
+        "http://localhost:3000/api/discovery/programs/prog123/tasks",
+      );
 
       // Act
-      const response = await GET(request, { params: Promise.resolve({'programId':'prog123'}) });
+      const response = await GET(request, {
+        params: Promise.resolve({ programId: "prog123" }),
+      });
       const data = await response.json();
 
       // Assert
       expect(response.status).toBe(500);
-      expect(data.error).toBe('Internal server error');
+      expect(data.error).toBe("Internal server error");
     });
 
-    it('should handle invalid task type', async () => {
+    it("should handle invalid task type", async () => {
       // Arrange
       mockUserRepo.findByEmail.mockResolvedValue(mockUser);
       mockProgramRepo.findById.mockResolvedValue(mockProgram);
 
-      const request = createMockNextRequest('http://localhost:3000/api/discovery/programs/prog123/tasks', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          type: 'invalid-type',
-          title: { en: 'Test' },
-          instructions: { en: 'Test' }
-        })
-      });
+      const request = createMockNextRequest(
+        "http://localhost:3000/api/discovery/programs/prog123/tasks",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            type: "invalid-type",
+            title: { en: "Test" },
+            instructions: { en: "Test" },
+          }),
+        },
+      );
 
       // Act
-      const response = await POST(request, { params: Promise.resolve({'programId':'test-id','taskId':'test-id'}) });
+      const response = await POST(request, {
+        params: Promise.resolve({ programId: "test-id", taskId: "test-id" }),
+      });
       const data = await response.json();
 
       // Assert
       expect(response.status).toBe(400);
-      expect(data.error).toBe('Invalid task type');
+      expect(data.error).toBe("Invalid task type");
     });
   });
 });

@@ -1,97 +1,195 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useMemo } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import { useTranslation } from 'react-i18next';
-import Link from 'next/link';
-import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
-import { useScenarioData } from './hooks/useScenarioData';
-import { ScenarioHeader } from './components/ScenarioHeader';
-import { ScenarioOverviewSections } from './components/ScenarioOverviewSections';
-import { LearningTasksSection } from './components/LearningTasksSection';
+import { useState, useEffect, useMemo } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { useTranslation } from "react-i18next";
+import Link from "next/link";
+import { IScenario, IProgram } from "@/types/unified-learning";
+import { authenticatedFetch } from "@/lib/utils/authenticated-fetch";
+// Date formatting utility
+
+// Helper function to normalize various instruction shapes to string[]
+// Acceptable shapes: string | string[] | Record<string,string> | Record<string,string[]>
+// Fallback: try to stringify non-primitive safely, never render [object Object]
+function normalizeInstructions(input: unknown, lang: string): string[] {
+  if (!input) return [];
+
+  // If it's already an array, process each item
+  if (Array.isArray(input)) {
+    return input
+      .map((v) => {
+        if (typeof v === "string") return v;
+        if (typeof v === "object" && v !== null) {
+          // Check for text property
+          if ("text" in v) return String((v as Record<string, unknown>).text);
+          // Check for multilingual object
+          if (lang in v) return String((v as Record<string, unknown>)[lang]);
+          if ("en" in v) return String((v as Record<string, unknown>).en);
+          // Check for content property
+          if ("content" in v)
+            return String((v as Record<string, unknown>).content);
+        }
+        // Don't stringify objects - skip them
+        return null;
+      })
+      .filter((s): s is string => s !== null && s.trim().length > 0);
+  }
+
+  // If it's a single string, return as array
+  if (typeof input === "string") return [input];
+
+  // If it's an object, check for language-specific or standard fields
+  if (typeof input === "object" && input !== null) {
+    const obj = input as Record<string, unknown>;
+
+    // Check for language-specific field
+    if (obj[lang]) {
+      if (Array.isArray(obj[lang])) {
+        return (obj[lang] as unknown[])
+          .map((v) => (typeof v === "string" ? v : null))
+          .filter((s): s is string => s !== null);
+      }
+      if (typeof obj[lang] === "string") return [String(obj[lang])];
+    }
+
+    // English fallback
+    if (obj.en) {
+      if (Array.isArray(obj.en)) {
+        return (obj.en as unknown[])
+          .map((v) => (typeof v === "string" ? v : null))
+          .filter((s): s is string => s !== null);
+      }
+      if (typeof obj.en === "string") return [String(obj.en)];
+    }
+
+    // Check for direct array properties that might contain instructions
+    const possibleArrayFields = ["items", "list", "steps", "instructions"];
+    for (const field of possibleArrayFields) {
+      if (Array.isArray(obj[field])) {
+        return normalizeInstructions(obj[field], lang);
+      }
+    }
+  }
+
+  // Return empty array instead of stringifying objects
+  return [];
+}
 
 export default function ScenarioDetailPage() {
   const params = useParams();
   const router = useRouter();
-  const { t, i18n } = useTranslation(['pbl', 'common']);
-  const scenarioId = params.id as string;
-
-  // Use custom hook for data fetching
-  const { scenario, userPrograms, loading } = useScenarioData(scenarioId, i18n.language);
-
-  // Local state
+  const { t, i18n } = useTranslation(["pbl", "common"]);
+  const [scenario, setScenario] = useState<IScenario | null>(null);
+  const [userPrograms, setUserPrograms] = useState<IProgram[]>([]);
+  const [loading, setLoading] = useState(true);
   const [isStarting, setIsStarting] = useState(false);
   const [isProgramsCollapsed, setIsProgramsCollapsed] = useState(false);
   const [videoModalUrl, setVideoModalUrl] = useState<string | null>(null);
+  const scenarioId = params.id as string;
 
   const isScenarioInteractive = useMemo(() => {
     if (!scenario) return false;
 
-    // Check scenario ID whitelist (same as scenarios list page)
-    const ALLOWED_SCENARIO_IDS = new Set([
-      'deep-learning-mlp-intro',
-      'semiconductor-adventure'
-    ]);
-
-    const record = scenario as unknown as Record<string, unknown>;
-    const idCandidates: string[] = [];
-
-    // Check top-level IDs
-    [record.id, record.yamlId, record.sourceId].forEach(id => {
-      if (typeof id === 'string') {
-        idCandidates.push(id);
-      }
-    });
-
-    // Check metadata
-    const metadata = record.metadata as Record<string, unknown> | undefined;
-    if (metadata) {
-      [metadata.yamlId, metadata.sourceId].forEach(id => {
-        if (typeof id === 'string') {
-          idCandidates.push(id);
-        }
-      });
-    }
-
-    // Check sourceMetadata
-    const sourceMetadata = record.sourceMetadata as Record<string, unknown> | undefined;
-    if (sourceMetadata) {
-      [sourceMetadata.yamlId, sourceMetadata.id].forEach(id => {
-        if (typeof id === 'string') {
-          idCandidates.push(id);
-        }
-      });
-    }
-
-    // If scenario ID is in whitelist, allow interaction
-    if (idCandidates.some(id => ALLOWED_SCENARIO_IDS.has(id))) {
-      return true;
-    }
-
-    // Legacy check: also check title for semiconductor (for backward compatibility)
     const title =
-      typeof scenario.title === 'string'
+      typeof scenario.title === "string"
         ? scenario.title
-        : scenario.title?.[i18n.language] || scenario.title?.en || '';
+        : scenario.title?.[i18n.language] || scenario.title?.en || "";
 
-    const normalizedTitle = title?.toLowerCase?.() || '';
+    const normalizedTitle = title?.toLowerCase?.() || "";
 
-    if (normalizedTitle.includes('semiconductor')) return true;
-    if (title?.includes('半導體')) return true;
-    if (title?.includes('半导体')) return true;
+    if (normalizedTitle.includes("semiconductor")) return true;
+    if (title?.includes("半導體")) return true;
+    if (title?.includes("半导体")) return true;
 
     return false;
   }, [scenario, i18n.language]);
 
   // Load Hour of Code tracking image for semiconductor scenario
   useEffect(() => {
-    if (scenarioId === '7fc0aa9b-6294-46a3-a954-45331ab026b3') {
+    if (scenarioId === "7fc0aa9b-6294-46a3-a954-45331ab026b3") {
       const trackingImg = new Image();
-      trackingImg.src = 'https://studio.code.org/api/hour/begin_aisquare.png';
-      trackingImg.onload = () => console.log('[Hour of Code] Tracking image loaded');
-      trackingImg.onerror = () => console.warn('[Hour of Code] Tracking image failed to load');
+      trackingImg.src = "https://studio.code.org/api/hour/begin_aisquare.png";
+      trackingImg.onload = () =>
+        console.log("[Hour of Code] Tracking image loaded");
+      trackingImg.onerror = () =>
+        console.warn("[Hour of Code] Tracking image failed to load");
     }
   }, [scenarioId]);
+
+  useEffect(() => {
+    let ignore = false;
+
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+
+        // Fetch scenario details
+        const [scenarioResponse, programsResponse] = await Promise.all([
+          authenticatedFetch(
+            `/api/pbl/scenarios/${params.id}?lang=${i18n.language}`,
+          ),
+          authenticatedFetch(`/api/pbl/scenarios/${params.id}/programs`),
+        ]);
+
+        if (ignore) return;
+
+        if (scenarioResponse.ok) {
+          const response = await scenarioResponse.json();
+          if (response.success && response.data) {
+            // Transform PBL API response to match expected format
+            const scenarioData = {
+              ...response.data,
+              objectives: response.data.learningObjectives || [],
+              prerequisites: response.data.prerequisites || [], // Move prerequisites to top level
+              metadata: {
+                difficulty: response.data.difficulty,
+                estimatedDuration: response.data.estimatedDuration,
+                prerequisites: response.data.prerequisites || [], // Keep in metadata for compatibility
+                targetDomains: response.data.targetDomains || [],
+                tasks: response.data.tasks || [],
+                ksaMapping: response.data.ksaMapping,
+              },
+            };
+            setScenario(scenarioData);
+          } else {
+            console.error("Invalid PBL API response:", response);
+          }
+        } else {
+          console.error(
+            "Failed to fetch scenario:",
+            scenarioResponse.status,
+            scenarioResponse.statusText,
+          );
+        }
+
+        if (programsResponse.ok) {
+          const programsData = await programsResponse.json();
+          console.log("Programs API response:", programsData);
+          // Handle API response format: { success: true, data: { programs: [] } }
+          if (programsData.success && programsData.data?.programs) {
+            setUserPrograms(programsData.data.programs);
+          } else {
+            // Fallback for direct array format
+            setUserPrograms(Array.isArray(programsData) ? programsData : []);
+          }
+        }
+      } catch (error) {
+        if (!ignore) {
+          console.error("Error fetching scenario data:", error);
+        }
+      } finally {
+        if (!ignore) {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchData();
+
+    return () => {
+      ignore = true;
+    };
+  }, [params.id, i18n.language]);
 
   // Helper function to get data from scenario metadata
   const getScenarioData = (key: string, fallback: unknown = null) => {
@@ -116,7 +214,7 @@ export default function ScenarioDetailPage() {
   // Handle video link click
   const handleVideoClick = (url: string) => {
     // For now, just open in new tab to avoid CSP issues
-    window.open(url, '_blank', 'noopener,noreferrer');
+    window.open(url, "_blank", "noopener,noreferrer");
 
     // Original modal code (commented out for now)
     // const embedUrl = getYouTubeEmbedUrl(url);
@@ -127,7 +225,7 @@ export default function ScenarioDetailPage() {
     // }
   };
 
-const handleStartProgram = async (programId?: string) => {
+  const handleStartProgram = async (programId?: string) => {
     if (!isScenarioInteractive) {
       return;
     }
@@ -138,7 +236,7 @@ const handleStartProgram = async (programId?: string) => {
     try {
       if (programId) {
         // Continue existing program
-        const program = userPrograms.find(p => p.id === programId);
+        const program = userPrograms.find((p) => p.id === programId);
         if (program) {
           // Get the current task or the first task
           const currentTaskIndex = program.currentTaskIndex || 0;
@@ -146,27 +244,40 @@ const handleStartProgram = async (programId?: string) => {
           const targetTaskId = taskIds[currentTaskIndex] || taskIds[0];
 
           if (!targetTaskId) {
-            console.error('No task ID found for navigation in program:', program);
-            alert(t('details.errorStarting', 'Error starting program - no tasks found'));
+            console.error(
+              "No task ID found for navigation in program:",
+              program,
+            );
+            alert(
+              t(
+                "details.errorStarting",
+                "Error starting program - no tasks found",
+              ),
+            );
             setIsStarting(false);
             return;
           }
-          router.push(`/pbl/scenarios/${scenarioId}/programs/${programId}/tasks/${targetTaskId}`);
+          router.push(
+            `/pbl/scenarios/${scenarioId}/programs/${programId}/tasks/${targetTaskId}`,
+          );
         }
       } else {
         // Create new program
-        const response = await authenticatedFetch(`/api/pbl/scenarios/${scenarioId}/start`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
+        const response = await authenticatedFetch(
+          `/api/pbl/scenarios/${scenarioId}/start`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              language: i18n.language,
+            }),
           },
-          body: JSON.stringify({
-            language: i18n.language
-          })
-        });
+        );
 
         if (!response.ok) {
-          throw new Error('Failed to create program');
+          throw new Error("Failed to create program");
         }
 
         const data = await response.json();
@@ -174,31 +285,70 @@ const handleStartProgram = async (programId?: string) => {
           // Navigate to the first task using the UUID from created tasks
           const firstTaskId = data.tasks?.[0]?.id || data.taskIds?.[0];
           if (!firstTaskId) {
-            console.error('No task ID found in created program:', data);
-            alert(t('details.errorStarting', 'Error starting program - no tasks created'));
+            console.error("No task ID found in created program:", data);
+            alert(
+              t(
+                "details.errorStarting",
+                "Error starting program - no tasks created",
+              ),
+            );
             setIsStarting(false);
             return;
           }
-          router.push(`/pbl/scenarios/${scenarioId}/programs/${data.id}/tasks/${firstTaskId}`);
+          router.push(
+            `/pbl/scenarios/${scenarioId}/programs/${data.id}/tasks/${firstTaskId}`,
+          );
         }
       }
     } catch (error) {
-      console.error('Error starting program:', error);
+      console.error("Error starting program:", error);
       // Enhanced error message prompting user to re-login
-      const errorMessage = t('details.errorStarting', 'Error starting program') +
-        '\n\n' +
-        t('details.reloginPrompt', 'Please try logging out and logging in again to refresh your session.') +
-        '\n\n' +
-        t('details.reloginHint', '請先登出，再重新登入以刷新您的會話。');
+      const errorMessage =
+        t("details.errorStarting", "Error starting program") +
+        "\n\n" +
+        t(
+          "details.reloginPrompt",
+          "Please try logging out and logging in again to refresh your session.",
+        ) +
+        "\n\n" +
+        t("details.reloginHint", "請先登出，再重新登入以刷新您的會話。");
       alert(errorMessage);
     } finally {
       setIsStarting(false);
     }
   };
 
-  // Helper function for domain translation
+  // Helper functions
+  const getDifficultyBadge = (difficulty: string) => {
+    switch (difficulty) {
+      case "beginner":
+        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200";
+      case "intermediate":
+        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200";
+      case "advanced":
+        return "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200";
+      default:
+        return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200";
+    }
+  };
+
   const getDomainTranslation = (domain: string) => {
-    return t(`domains.${domain}`, { ns: 'pbl', defaultValue: domain });
+    return t(`domains.${domain}`, { ns: "pbl", defaultValue: domain });
+  };
+
+  const getCategoryIcon = (category: string) => {
+    switch (category) {
+      case "analysis":
+        return "📊";
+      case "creation":
+        return "✨";
+      case "evaluation":
+        return "🔍";
+      case "application":
+        return "🚀";
+      default:
+        return "📝";
+    }
   };
 
   if (loading) {
@@ -219,9 +369,14 @@ const handleStartProgram = async (programId?: string) => {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-gray-600 dark:text-gray-400 mb-4">{t('details.scenarioNotFound', 'Scenario not found')}</p>
-          <Link href="/pbl/scenarios" className="text-blue-600 hover:text-blue-700">
-            {t('details.backToScenarios', 'Back to Scenarios')}
+          <p className="text-gray-600 dark:text-gray-400 mb-4">
+            {t("details.scenarioNotFound", "Scenario not found")}
+          </p>
+          <Link
+            href="/pbl/scenarios"
+            className="text-blue-600 hover:text-blue-700"
+          >
+            {t("details.backToScenarios", "Back to Scenarios")}
           </Link>
         </div>
       </div>
@@ -235,42 +390,611 @@ const handleStartProgram = async (programId?: string) => {
         <nav className="mb-8">
           <ol className="flex items-center space-x-2 text-sm">
             <li>
-              <Link href="/pbl/scenarios" className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-                {t('pbl', 'PBL')}
+              <Link
+                href="/pbl/scenarios"
+                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+              >
+                {t("pbl", "PBL")}
               </Link>
             </li>
             <li className="text-gray-400 dark:text-gray-600">/</li>
-            <li className="text-gray-900 dark:text-white">{typeof scenario.title === 'string' ? scenario.title : (scenario.title[i18n.language] || scenario.title.en || '')}</li>
+            <li className="text-gray-900 dark:text-white">
+              {typeof scenario.title === "string"
+                ? scenario.title
+                : scenario.title[i18n.language] || scenario.title.en || ""}
+            </li>
           </ol>
         </nav>
 
         {/* Header Section */}
-        <ScenarioHeader
-          scenario={scenario}
-          userPrograms={userPrograms}
-          scenarioId={scenarioId}
-          isScenarioInteractive={isScenarioInteractive}
-          isStarting={isStarting}
-          isProgramsCollapsed={isProgramsCollapsed}
-          setIsProgramsCollapsed={setIsProgramsCollapsed}
-          handleStartProgram={handleStartProgram}
-          getScenarioData={getScenarioData}
-        />
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 mb-8">
+          <div className="flex flex-col md:flex-row md:items-start md:justify-between mb-6">
+            <div className="flex-1">
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+                {typeof scenario.title === "string"
+                  ? scenario.title
+                  : scenario.title[i18n.language] || scenario.title.en || ""}
+              </h1>
+              <p className="text-lg text-gray-600 dark:text-gray-300 mb-4">
+                {typeof scenario.description === "string"
+                  ? scenario.description
+                  : scenario.description[i18n.language] ||
+                    scenario.description.en ||
+                    ""}
+              </p>
 
-        {/* Overview Sections */}
-        <ScenarioOverviewSections
-          scenario={scenario}
-          getScenarioData={getScenarioData}
-          handleVideoClick={handleVideoClick}
-          getDomainTranslation={getDomainTranslation}
-        />
+              {/* Metadata */}
+              <div className="flex flex-wrap gap-4 mb-6">
+                <div className="flex items-center">
+                  <span
+                    className={`px-3 py-1 rounded-full text-sm font-medium ${getDifficultyBadge(String(getScenarioData("difficulty", "beginner")))}`}
+                  >
+                    {t(
+                      `difficulty.${String(getScenarioData("difficulty", "beginner"))}`,
+                      String(getScenarioData("difficulty", "beginner")),
+                    )}
+                  </span>
+                </div>
+                <div className="flex items-center text-gray-600 dark:text-gray-400">
+                  <svg
+                    className="w-5 h-5 mr-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                  <span>
+                    {String(getScenarioData("estimatedDuration", 30))}{" "}
+                    {t("common:minutes", "minutes")}
+                  </span>
+                </div>
+              </div>
+
+              {/* Programs Section */}
+              {userPrograms.length > 0 && (
+                <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                  <button
+                    onClick={() => setIsProgramsCollapsed(!isProgramsCollapsed)}
+                    className="flex items-center w-full mb-3 text-left hover:bg-gray-100 dark:hover:bg-gray-600 rounded-md p-2 -m-2 transition-colors"
+                  >
+                    {/* Triangle icon */}
+                    <svg
+                      className={`w-3 h-3 mr-2 text-gray-500 dark:text-gray-400 transition-transform duration-200 ${
+                        isProgramsCollapsed ? "rotate-0" : "rotate-90"
+                      }`}
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M8.59 16.59L13.17 12L8.59 7.41L10 6l6 6-6 6-1.41-1.41z" />
+                    </svg>
+                    <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                      {t("details.yourPrograms", "Your Programs")} (
+                      {userPrograms.length})
+                    </h3>
+                  </button>
+                  {!isProgramsCollapsed && (
+                    <div className="space-y-2">
+                      {userPrograms.map((program, index) => (
+                        <div
+                          key={program.id}
+                          className="p-4 bg-white dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-600"
+                        >
+                          <div className="flex items-start justify-between mb-3">
+                            <div>
+                              <span className="font-medium text-gray-900 dark:text-white">
+                                {index === 0
+                                  ? t("details.latestProgram", "Latest Program")
+                                  : `${t("common:program", "Program")} ${userPrograms.length - index}`}
+                              </span>
+                              <span
+                                className={`ml-3 text-xs px-2 py-1 rounded-full ${
+                                  program.status === "completed"
+                                    ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
+                                    : program.status === "active"
+                                      ? "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
+                                      : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300"
+                                }`}
+                              >
+                                {t(`status.${program.status}`, program.status)}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                            <div>
+                              {t("common:progress", "Progress")}:{" "}
+                              {(program.metadata
+                                ?.completedTaskCount as number) || 0}
+                              /
+                              {(program.metadata?.totalTaskCount as number) ||
+                                0}{" "}
+                              {t("common:tasks", "tasks")}
+                              {program.metadata &&
+                              typeof program.metadata.completedTaskCount ===
+                                "number" &&
+                              program.metadata.completedTaskCount > 0 &&
+                              program.metadata.evaluationId ? (
+                                <>
+                                  <span className="mx-2">•</span>
+                                  <span className="font-medium">
+                                    {t("hasEvaluation", "Has Evaluation")}
+                                  </span>
+                                </>
+                              ) : null}
+                            </div>
+                            <div>
+                              {t("common:startedAt", "Started")}:{" "}
+                              {program.startedAt
+                                ? new Date(
+                                    program.startedAt,
+                                  ).toLocaleDateString(i18n.language)
+                                : "Not started"}
+                              {program.completedAt && (
+                                <>
+                                  <span className="mx-2">•</span>
+                                  {t("common:completedAt", "Completed")}:{" "}
+                                  {new Date(
+                                    program.completedAt,
+                                  ).toLocaleDateString(i18n.language)}
+                                </>
+                              )}
+                            </div>
+                          </div>
+                          <div className="flex gap-2 justify-end">
+                            <button
+                              onClick={() =>
+                                isScenarioInteractive &&
+                                handleStartProgram(program.id)
+                              }
+                              disabled={!isScenarioInteractive}
+                              className={`text-sm px-4 py-2 rounded-md transition-colors font-medium ${
+                                isScenarioInteractive
+                                  ? "bg-blue-600 text-white hover:bg-blue-700"
+                                  : "bg-gray-200 text-gray-600 cursor-not-allowed dark:bg-gray-700 dark:text-gray-400"
+                              }`}
+                            >
+                              {t("common:continue", "Continue")}
+                            </button>
+                            {(program.metadata &&
+                              typeof program.metadata.completedTaskCount ===
+                                "number" &&
+                              program.metadata.completedTaskCount > 0) ||
+                            program.status === "completed" ||
+                            program.metadata?.evaluationId ? (
+                              <button
+                                onClick={() =>
+                                  router.push(
+                                    `/pbl/scenarios/${scenarioId}/programs/${program.id}/complete`,
+                                  )
+                                }
+                                className="text-sm px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors font-medium"
+                              >
+                                {t("viewResults", "View Results")}
+                              </button>
+                            ) : null}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Action Buttons */}
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+                <div className="flex flex-col gap-2">
+                  <button
+                    onClick={() => handleStartProgram()}
+                    disabled={isStarting || !isScenarioInteractive}
+                    className={`px-6 py-3 rounded-lg font-medium transition-colors disabled:cursor-not-allowed ${
+                      isScenarioInteractive
+                        ? "bg-green-600 text-white hover:bg-green-700"
+                        : "bg-gray-300 text-gray-600"
+                    }`}
+                  >
+                    {isStarting
+                      ? t("common:loading", "Loading...")
+                      : isScenarioInteractive
+                        ? t("details.startNewProgram", "Start New Program")
+                        : t("details.startUnavailable", "尚未開放")}
+                  </button>
+                  {!isScenarioInteractive && (
+                    <span className="text-sm text-gray-500 dark:text-gray-400">
+                      {t(
+                        "details.startUnavailableHint",
+                        "此活動目前僅供瀏覽內容。",
+                      )}
+                    </span>
+                  )}
+                </div>
+                <Link
+                  href="/pbl/scenarios"
+                  className="border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-6 py-3 rounded-lg font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                >
+                  {t("details.backToScenarios", "Back to Scenarios")}
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Overview Section */}
+        <div className="grid md:grid-cols-2 gap-8 mb-8">
+          {/* Learning Objectives */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+              <span className="text-2xl mr-2">🎯</span>
+              {t("details.learningObjectives", "Learning Objectives")}
+            </h2>
+            <ul className="space-y-2">
+              {(() => {
+                const objectives = scenario.objectives || [];
+                // Handle both legacy string[] and new multilingual Record<string, string[]> formats
+                if (Array.isArray(objectives)) {
+                  return objectives;
+                } else {
+                  // It's a Record<string, string[]>, get the current language or fallback to English
+                  const lang = i18n.language;
+                  return (
+                    (objectives as Record<string, string[]>)[lang] ||
+                    (objectives as Record<string, string[]>).en ||
+                    []
+                  );
+                }
+              })().map((objective: string, index: number) => (
+                <li key={index} className="flex items-start">
+                  <svg
+                    className="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                  <span className="text-gray-600 dark:text-gray-300">
+                    {objective}
+                  </span>
+                </li>
+              ))}
+              {(!scenario.objectives || scenario.objectives.length === 0) && (
+                <li className="text-gray-500 dark:text-gray-400">
+                  {t("details.noObjectives", "No objectives specified")}
+                </li>
+              )}
+            </ul>
+          </div>
+
+          {/* Prerequisites */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+              <span className="text-2xl mr-2">📋</span>
+              {t("details.prerequisites", "Prerequisites")}
+            </h2>
+            <ul className="space-y-2">
+              {(getScenarioData("prerequisites", []) as string[]).map(
+                (prereq: string, index: number) => {
+                  // Check if the prerequisite contains a URL
+                  const urlRegex = /(https?:\/\/[^\s]+)/g;
+                  const parts = prereq.split(urlRegex);
+
+                  return (
+                    <li key={index} className="flex items-start">
+                      <span className="text-blue-500 mr-2">•</span>
+                      <span className="text-gray-600 dark:text-gray-300">
+                        {parts.map((part, i) => {
+                          // If this part is a URL, make it a clickable link
+                          if (part.match(/^https?:\/\//)) {
+                            return (
+                              <button
+                                key={i}
+                                onClick={() => handleVideoClick(part)}
+                                className="text-blue-600 dark:text-blue-400 hover:underline cursor-pointer"
+                              >
+                                {part}
+                              </button>
+                            );
+                          }
+                          return <span key={i}>{part}</span>;
+                        })}
+                      </span>
+                    </li>
+                  );
+                },
+              )}
+              {(getScenarioData("prerequisites", []) as string[]).length ===
+                0 && (
+                <li className="text-gray-500 dark:text-gray-400">
+                  {t("details.noPrerequisites", "No prerequisites")}
+                </li>
+              )}
+            </ul>
+          </div>
+        </div>
+
+        {/* Target Domains */}
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+            <span className="text-2xl mr-2">🌐</span>
+            {t("details.targetDomains", "Target Domains")}
+          </h2>
+          <div className="flex flex-wrap gap-2">
+            {(getScenarioData("targetDomains", []) as string[]).map(
+              (domain: string, index: number) => (
+                <span
+                  key={index}
+                  className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
+                >
+                  {getDomainTranslation(domain)}
+                </span>
+              ),
+            )}
+            {(getScenarioData("targetDomains", []) as string[]).length ===
+              0 && (
+              <span className="text-gray-500 dark:text-gray-400">
+                {t("details.noTargetDomains", "No target domains specified")}
+              </span>
+            )}
+          </div>
+        </div>
 
         {/* Learning Tasks */}
-        <LearningTasksSection
-          tasks={(getScenarioData('tasks', []) as Record<string, unknown>[])}
-          ksaMapping={(getScenarioData('ksaMapping') as Record<string, unknown> | null)}
-        />
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8">
+          <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">
+            {t("details.learningTasks", "Learning Tasks")}
+          </h2>
 
+          {/* Scenario KSA Overview */}
+          {(() => {
+            const ksaMapping = getScenarioData("ksaMapping") as Record<
+              string,
+              unknown
+            > | null;
+            return ksaMapping ? (
+              <div className="mb-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center">
+                  🧠{" "}
+                  {t(
+                    "details.ksaCompetenciesCovered",
+                    "KSA Competencies Covered in This Scenario",
+                  )}
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                  {ksaMapping?.knowledge &&
+                  Array.isArray(ksaMapping.knowledge) &&
+                  ksaMapping.knowledge.length > 0 ? (
+                    <div>
+                      <span className="font-medium text-green-700 dark:text-green-300">
+                        {t("details.knowledge", "Knowledge")}:{" "}
+                      </span>
+                      <span className="text-green-600 dark:text-green-400">
+                        {ksaMapping?.knowledge &&
+                          Array.isArray(ksaMapping.knowledge) &&
+                          ksaMapping.knowledge
+                            .map((item: unknown) =>
+                              typeof item === "string"
+                                ? item
+                                : item &&
+                                    typeof item === "object" &&
+                                    "code" in item
+                                  ? String(item.code)
+                                  : "",
+                            )
+                            .filter(Boolean)
+                            .join(", ")}
+                      </span>
+                    </div>
+                  ) : null}
+                  {ksaMapping?.skills &&
+                  Array.isArray(ksaMapping.skills) &&
+                  ksaMapping.skills.length > 0 ? (
+                    <div>
+                      <span className="font-medium text-blue-700 dark:text-blue-300">
+                        {t("details.skills", "Skills")}:{" "}
+                      </span>
+                      <span className="text-blue-600 dark:text-blue-400">
+                        {ksaMapping?.skills &&
+                          Array.isArray(ksaMapping.skills) &&
+                          ksaMapping.skills
+                            .map((item: unknown) =>
+                              typeof item === "string"
+                                ? item
+                                : item &&
+                                    typeof item === "object" &&
+                                    "code" in item
+                                  ? String(item.code)
+                                  : "",
+                            )
+                            .filter(Boolean)
+                            .join(", ")}
+                      </span>
+                    </div>
+                  ) : null}
+                  {ksaMapping?.attitudes &&
+                  Array.isArray(ksaMapping.attitudes) &&
+                  ksaMapping.attitudes.length > 0 ? (
+                    <div>
+                      <span className="font-medium text-purple-700 dark:text-purple-300">
+                        {t("details.attitudes", "Attitudes")}:{" "}
+                      </span>
+                      <span className="text-purple-600 dark:text-purple-400">
+                        {ksaMapping?.attitudes &&
+                          Array.isArray(ksaMapping.attitudes) &&
+                          ksaMapping.attitudes
+                            .map((item: unknown) =>
+                              typeof item === "string"
+                                ? item
+                                : item &&
+                                    typeof item === "object" &&
+                                    "code" in item
+                                  ? String(item.code)
+                                  : "",
+                            )
+                            .filter(Boolean)
+                            .join(", ")}
+                      </span>
+                    </div>
+                  ) : null}
+                </div>
+              </div>
+            ) : null;
+          })()}
+
+          {/* Tasks List */}
+          <div className="space-y-4">
+            {/** Normalize various instruction shapes to string[] */}
+            {/** helper inside render scope to access i18n.language */}
+            {/** acceptable shapes: string | string[] | Record<string,string> | Record<string,string[]> */}
+            {/** fallback: try to stringify non-primitive safely */}
+            {/** never render [object Object] */}
+            {/* Instructions display removed - using existing normalizeInstructions function in individual task rendering below */}
+            {(getScenarioData("tasks", []) as Record<string, unknown>[]).map(
+              (task: Record<string, unknown>, taskIndex: number) => (
+                <div
+                  key={(task.id as string) || taskIndex}
+                  className="border border-gray-200 dark:border-gray-700 rounded-lg p-4"
+                >
+                  <div className="flex items-start justify-between mb-2">
+                    <h5 className="font-medium text-gray-900 dark:text-white">
+                      {taskIndex + 1}. {task.title as string}
+                    </h5>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-gray-500 dark:text-gray-400">
+                        {getCategoryIcon(
+                          (task.category as string) || (task.type as string),
+                        )}
+                      </span>
+                      {task.timeLimit ? (
+                        <span className="text-sm text-gray-500 dark:text-gray-400">
+                          {String(task.timeLimit)} {t("details.min", "min")}
+                        </span>
+                      ) : null}
+                    </div>
+                  </div>
+                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
+                    {String(task.description)}
+                  </p>
+
+                  {/* Instructions */}
+                  {(() => {
+                    // Re-use the normalizeInstructions function from top of file
+                    const instructions = normalizeInstructions(
+                      (task as Record<string, unknown>).instructions,
+                      i18n.language,
+                    );
+                    return instructions.length > 0 ? (
+                      <div className="mb-3">
+                        <p className="text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">
+                          {t("details.instructions", "Instructions")}
+                        </p>
+                        <ul className="text-sm text-gray-600 dark:text-gray-300 space-y-1">
+                          {instructions.map(
+                            (instruction: string, i: number) => (
+                              <li key={i} className="flex items-start">
+                                <span className="text-gray-400 mr-2">•</span>
+                                {instruction}
+                              </li>
+                            ),
+                          )}
+                        </ul>
+                      </div>
+                    ) : null;
+                  })()}
+
+                  {/* KSA Focus */}
+                  {(() => {
+                    const ksaFocus = task.KSA_focus as
+                      | Record<string, unknown>
+                      | undefined;
+                    return ksaFocus ? (
+                      <div className="bg-purple-50 dark:bg-purple-900/20 rounded p-3 mb-3">
+                        <p className="text-sm font-medium text-purple-700 dark:text-purple-300 mb-2">
+                          🧠 KSA
+                        </p>
+                        <div className="space-y-1">
+                          {ksaFocus.primary &&
+                          Array.isArray(ksaFocus.primary) &&
+                          ksaFocus.primary.length > 0 ? (
+                            <div>
+                              <span className="text-xs font-medium text-purple-600 dark:text-purple-400">
+                                {t("details.primary", "Primary")}:{" "}
+                              </span>
+                              <span className="text-xs text-purple-600 dark:text-purple-400">
+                                {(ksaFocus.primary as unknown[])
+                                  .map((item: unknown) =>
+                                    String(
+                                      typeof item === "string"
+                                        ? item
+                                        : item &&
+                                            typeof item === "object" &&
+                                            "code" in item
+                                          ? item.code
+                                          : item,
+                                    ),
+                                  )
+                                  .join(", ")}
+                              </span>
+                            </div>
+                          ) : null}
+                          {ksaFocus.secondary &&
+                          Array.isArray(ksaFocus.secondary) &&
+                          ksaFocus.secondary.length > 0 ? (
+                            <div>
+                              <span className="text-xs font-medium text-purple-600 dark:text-purple-400">
+                                {t("details.secondary", "Secondary")}:{" "}
+                              </span>
+                              <span className="text-xs text-purple-600 dark:text-purple-400">
+                                {(ksaFocus.secondary as unknown[])
+                                  .map((item: unknown) =>
+                                    String(
+                                      typeof item === "string"
+                                        ? item
+                                        : item &&
+                                            typeof item === "object" &&
+                                            "code" in item
+                                          ? item.code
+                                          : item,
+                                    ),
+                                  )
+                                  .join(", ")}
+                              </span>
+                            </div>
+                          ) : null}
+                        </div>
+                      </div>
+                    ) : null;
+                  })()}
+
+                  {/* Expected Outcome */}
+                  {task.expectedOutcome ? (
+                    <div className="bg-blue-50 dark:bg-blue-900/20 rounded p-3">
+                      <p className="text-sm font-medium text-blue-700 dark:text-blue-300 mb-1">
+                        {t("details.expectedOutcome", "Expected Outcome")}
+                      </p>
+                      <p className="text-sm text-blue-600 dark:text-blue-400">
+                        {String(task.expectedOutcome)}
+                      </p>
+                    </div>
+                  ) : null}
+                </div>
+              ),
+            )}
+            {(getScenarioData("tasks", []) as unknown[]).length === 0 && (
+              <div className="text-center text-gray-500 dark:text-gray-400 py-8">
+                {t("details.noTasks", "No tasks defined for this scenario")}
+              </div>
+            )}
+          </div>
+        </div>
       </div>
 
       {/* Video Modal */}
@@ -279,14 +1003,24 @@ const handleStartProgram = async (programId?: string) => {
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-4xl">
             <div className="flex justify-between items-center p-4 border-b dark:border-gray-700">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                {t('common:video', 'Video')}
+                {t("common:video", "Video")}
               </h3>
               <button
                 onClick={() => setVideoModalUrl(null)}
                 className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
               >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
               </button>
             </div>

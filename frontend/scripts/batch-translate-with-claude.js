@@ -5,48 +5,48 @@
  * This script processes all languages and files systematically
  */
 
-const fs = require('fs').promises;
-const path = require('path');
+const fs = require("fs").promises;
+const path = require("path");
 
 // Import the translation function from our Claude script
-const { createTranslationPrompt } = require('./translate-with-claude');
+const { createTranslationPrompt } = require("./translate-with-claude");
 
 // Language configurations
 const languages = {
-  zhTW: { code: 'zh-TW', name: '繁體中文', region: 'Taiwan' },
-  zhCN: { code: 'zh-CN', name: '简体中文', region: 'China' },
-  pt: { code: 'pt', name: 'Português', region: 'Brazil' },
-  ar: { code: 'ar', name: 'العربية', region: 'Middle East' },
-  id: { code: 'id', name: 'Bahasa Indonesia', region: 'Indonesia' },
-  th: { code: 'th', name: 'ไทย', region: 'Thailand' },
-  es: { code: 'es', name: 'Español', region: 'Latin America' },
-  ja: { code: 'ja', name: '日本語', region: 'Japan' },
-  ko: { code: 'ko', name: '한국어', region: 'South Korea' },
-  fr: { code: 'fr', name: 'Français', region: 'France' },
-  de: { code: 'de', name: 'Deutsch', region: 'Germany' },
-  ru: { code: 'ru', name: 'Русский', region: 'Russia' },
-  it: { code: 'it', name: 'Italiano', region: 'Italy' }
+  zhTW: { code: "zh-TW", name: "繁體中文", region: "Taiwan" },
+  zhCN: { code: "zh-CN", name: "简体中文", region: "China" },
+  pt: { code: "pt", name: "Português", region: "Brazil" },
+  ar: { code: "ar", name: "العربية", region: "Middle East" },
+  id: { code: "id", name: "Bahasa Indonesia", region: "Indonesia" },
+  th: { code: "th", name: "ไทย", region: "Thailand" },
+  es: { code: "es", name: "Español", region: "Latin America" },
+  ja: { code: "ja", name: "日本語", region: "Japan" },
+  ko: { code: "ko", name: "한국어", region: "South Korea" },
+  fr: { code: "fr", name: "Français", region: "France" },
+  de: { code: "de", name: "Deutsch", region: "Germany" },
+  ru: { code: "ru", name: "Русский", region: "Russia" },
+  it: { code: "it", name: "Italiano", region: "Italy" },
 };
 
 // All locale files
 const allFiles = [
-  'admin.json',
-  'assessment.json',
-  'auth.json',
-  'chat.json',
-  'common.json',
-  'dashboard.json',
-  'discovery.json',
-  'homepage.json',
-  'journey.json',
-  'ksa.json',
-  'learning.json',
-  'learningPath.json',
-  'legal.json',
-  'navigation.json',
-  'onboarding.json',
-  'pbl.json',
-  'relations.json'
+  "admin.json",
+  "assessment.json",
+  "auth.json",
+  "chat.json",
+  "common.json",
+  "dashboard.json",
+  "discovery.json",
+  "homepage.json",
+  "journey.json",
+  "ksa.json",
+  "learning.json",
+  "learningPath.json",
+  "legal.json",
+  "navigation.json",
+  "onboarding.json",
+  "pbl.json",
+  "relations.json",
 ];
 
 /**
@@ -57,25 +57,42 @@ async function createTranslationBatch() {
 
   for (const [langCode, langInfo] of Object.entries(languages)) {
     for (const fileName of allFiles) {
-      const sourcePath = path.join(__dirname, '..', 'public', 'locales', 'en', fileName);
-      const targetPath = path.join(__dirname, '..', 'public', 'locales', langCode, fileName);
+      const sourcePath = path.join(
+        __dirname,
+        "..",
+        "public",
+        "locales",
+        "en",
+        fileName,
+      );
+      const targetPath = path.join(
+        __dirname,
+        "..",
+        "public",
+        "locales",
+        langCode,
+        fileName,
+      );
 
       try {
         // Check if source file exists
         await fs.access(sourcePath);
 
         // Read source content
-        const sourceContent = await fs.readFile(sourcePath, 'utf8');
+        const sourceContent = await fs.readFile(sourcePath, "utf8");
         const sourceData = JSON.parse(sourceContent);
 
         // Check if already translated
         let needsTranslation = true;
         try {
-          const targetContent = await fs.readFile(targetPath, 'utf8');
+          const targetContent = await fs.readFile(targetPath, "utf8");
           const targetData = JSON.parse(targetContent);
 
           // Simple check: if file has _note or is identical to source, needs translation
-          if (targetData._note || JSON.stringify(targetData) === JSON.stringify(sourceData)) {
+          if (
+            targetData._note ||
+            JSON.stringify(targetData) === JSON.stringify(sourceData)
+          ) {
             needsTranslation = true;
           } else {
             needsTranslation = false;
@@ -92,7 +109,7 @@ async function createTranslationBatch() {
             langInfo,
             sourcePath,
             targetPath,
-            sourceData
+            sourceData,
           });
         }
       } catch (error) {
@@ -108,8 +125,8 @@ async function createTranslationBatch() {
  * Display translation tasks for user
  */
 async function displayTranslationPlan(tasks) {
-  console.log('Claude Batch Translation Plan');
-  console.log('=============================\n');
+  console.log("Claude Batch Translation Plan");
+  console.log("=============================\n");
 
   // Group by language
   const byLanguage = {};
@@ -123,40 +140,50 @@ async function displayTranslationPlan(tasks) {
   console.log(`Total files to translate: ${tasks.length}\n`);
 
   for (const [langCode, files] of Object.entries(byLanguage)) {
-    console.log(`${languages[langCode].name} (${langCode}): ${files.length} files`);
-    console.log(`  Files: ${files.slice(0, 3).join(', ')}${files.length > 3 ? '...' : ''}`);
+    console.log(
+      `${languages[langCode].name} (${langCode}): ${files.length} files`,
+    );
+    console.log(
+      `  Files: ${files.slice(0, 3).join(", ")}${files.length > 3 ? "..." : ""}`,
+    );
   }
 
-  console.log('\n📋 Translation Process:');
-  console.log('1. Each file will be sent to Claude with context');
-  console.log('2. Claude will provide culturally appropriate translations');
-  console.log('3. Technical terms will be preserved appropriately');
-  console.log('4. Placeholders like {{variable}} will remain unchanged');
+  console.log("\n📋 Translation Process:");
+  console.log("1. Each file will be sent to Claude with context");
+  console.log("2. Claude will provide culturally appropriate translations");
+  console.log("3. Technical terms will be preserved appropriately");
+  console.log("4. Placeholders like {{variable}} will remain unchanged");
 
-  console.log('\n⚡ To execute translations:');
-  console.log('Copy the prompts generated by this script and use them with Claude');
-  console.log('Or integrate with Claude API for automated processing');
+  console.log("\n⚡ To execute translations:");
+  console.log(
+    "Copy the prompts generated by this script and use them with Claude",
+  );
+  console.log("Or integrate with Claude API for automated processing");
 }
 
 /**
  * Generate translation prompts for manual use
  */
 async function generatePrompts(tasks, maxPrompts = 5) {
-  console.log('\n\n📝 Sample Translation Prompts for Claude:');
-  console.log('=========================================\n');
+  console.log("\n\n📝 Sample Translation Prompts for Claude:");
+  console.log("=========================================\n");
 
   // Show first few prompts as examples
   const sampleTasks = tasks.slice(0, maxPrompts);
 
   for (const task of sampleTasks) {
     console.log(`\n--- ${task.langCode}/${task.fileName} ---`);
-    console.log('Copy this prompt to Claude:\n');
-    console.log(createTranslationPrompt(task.sourceData, task.langCode, task.fileName));
-    console.log('\n' + '='.repeat(80));
+    console.log("Copy this prompt to Claude:\n");
+    console.log(
+      createTranslationPrompt(task.sourceData, task.langCode, task.fileName),
+    );
+    console.log("\n" + "=".repeat(80));
   }
 
   if (tasks.length > maxPrompts) {
-    console.log(`\n... and ${tasks.length - maxPrompts} more files need translation.`);
+    console.log(
+      `\n... and ${tasks.length - maxPrompts} more files need translation.`,
+    );
   }
 }
 
@@ -164,17 +191,17 @@ async function generatePrompts(tasks, maxPrompts = 5) {
  * Save translation tasks to a file for reference
  */
 async function saveTranslationTasks(tasks) {
-  const tasksFile = path.join(__dirname, 'translation-tasks.json');
-  const tasksSummary = tasks.map(t => ({
+  const tasksFile = path.join(__dirname, "translation-tasks.json");
+  const tasksSummary = tasks.map((t) => ({
     file: t.fileName,
     language: t.langCode,
-    targetPath: t.targetPath.replace(path.join(__dirname, '..'), '.')
+    targetPath: t.targetPath.replace(path.join(__dirname, ".."), "."),
   }));
 
   await fs.writeFile(
     tasksFile,
-    JSON.stringify(tasksSummary, null, 2) + '\n',
-    'utf8'
+    JSON.stringify(tasksSummary, null, 2) + "\n",
+    "utf8",
   );
 
   console.log(`\n✅ Saved translation tasks to: ${tasksFile}`);
@@ -189,7 +216,7 @@ async function main() {
     const tasks = await createTranslationBatch();
 
     if (tasks.length === 0) {
-      console.log('✅ All files are already translated!');
+      console.log("✅ All files are already translated!");
       return;
     }
 
@@ -202,13 +229,12 @@ async function main() {
     // Save tasks for reference
     await saveTranslationTasks(tasks);
 
-    console.log('\n💡 Next Steps:');
-    console.log('1. Use the generated prompts with Claude to get translations');
-    console.log('2. Save Claude\'s responses to the corresponding locale files');
-    console.log('3. Or implement Claude API integration for automation');
-
+    console.log("\n💡 Next Steps:");
+    console.log("1. Use the generated prompts with Claude to get translations");
+    console.log("2. Save Claude's responses to the corresponding locale files");
+    console.log("3. Or implement Claude API integration for automation");
   } catch (error) {
-    console.error('Error:', error);
+    console.error("Error:", error);
     process.exit(1);
   }
 }

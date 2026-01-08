@@ -3,7 +3,7 @@
  * 處理所有用戶相關的資料庫操作
  */
 
-import { Pool } from 'pg';
+import { Pool } from "pg";
 import {
   IUserRepository,
   User,
@@ -16,9 +16,9 @@ import {
   CreateAssessmentSessionDto,
   CreateBadgeDto,
   UserDataResponse,
-  UserDataInput
-} from '../interfaces';
-import type { Achievement } from '../interfaces';
+  UserDataInput,
+} from "../interfaces";
+import type { Achievement } from "../interfaces";
 
 export class PostgreSQLUserRepository implements IUserRepository {
   constructor(private pool: Pool) {}
@@ -75,8 +75,8 @@ export class PostgreSQLUserRepository implements IUserRepository {
     const { rows } = await this.pool.query(query, [
       data.email.toLowerCase(),
       data.name,
-      data.preferredLanguage || 'en',
-      JSON.stringify(data.learningPreferences || {})
+      data.preferredLanguage || "en",
+      JSON.stringify(data.learningPreferences || {}),
     ]);
 
     return rows[0];
@@ -123,7 +123,7 @@ export class PostgreSQLUserRepository implements IUserRepository {
 
     const query = `
       UPDATE users
-      SET ${updates.join(', ')}
+      SET ${updates.join(", ")}
       WHERE id = $${paramCount}
       RETURNING
         id, email, name, preferred_language as "preferredLanguage",
@@ -136,14 +136,14 @@ export class PostgreSQLUserRepository implements IUserRepository {
     const { rows } = await this.pool.query(query, values);
 
     if (!rows[0]) {
-      throw new Error('User not found');
+      throw new Error("User not found");
     }
 
     return rows[0];
   }
 
   async delete(id: string): Promise<boolean> {
-    const query = 'DELETE FROM users WHERE id = $1';
+    const query = "DELETE FROM users WHERE id = $1";
     const result = await this.pool.query(query, [id]);
     return (result.rowCount || 0) > 0;
   }
@@ -152,8 +152,8 @@ export class PostgreSQLUserRepository implements IUserRepository {
     const {
       limit = 100,
       offset = 0,
-      orderBy = 'created_at',
-      order = 'DESC'
+      orderBy = "created_at",
+      order = "DESC",
     } = options;
 
     const query = `
@@ -186,14 +186,14 @@ export class PostgreSQLUserRepository implements IUserRepository {
     const client = await this.pool.connect();
 
     try {
-      await client.query('BEGIN');
+      await client.query("BEGIN");
 
       // Check if achievement exists
-      const achQuery = 'SELECT id, xp_reward FROM achievements WHERE id = $1';
+      const achQuery = "SELECT id, xp_reward FROM achievements WHERE id = $1";
       const { rows: achRows } = await client.query(achQuery, [achievementId]);
 
       if (!achRows[0]) {
-        throw new Error('Achievement not found');
+        throw new Error("Achievement not found");
       }
 
       const xpReward = achRows[0].xp_reward;
@@ -215,9 +215,9 @@ export class PostgreSQLUserRepository implements IUserRepository {
       `;
       await client.query(updateXpQuery, [xpReward, userId]);
 
-      await client.query('COMMIT');
+      await client.query("COMMIT");
     } catch (error) {
-      await client.query('ROLLBACK');
+      await client.query("ROLLBACK");
       throw error;
     } finally {
       client.release();
@@ -228,7 +228,10 @@ export class PostgreSQLUserRepository implements IUserRepository {
   // Assessment System Methods (Updated for Unified Architecture)
   // ========================================
 
-  async saveAssessmentSession(userId: string, session: CreateAssessmentSessionDto): Promise<AssessmentSession> {
+  async saveAssessmentSession(
+    userId: string,
+    session: CreateAssessmentSessionDto,
+  ): Promise<AssessmentSession> {
     // In the unified architecture, assessment results are stored in evaluations table
     // This method is kept for backward compatibility but redirects to evaluations
 
@@ -255,13 +258,14 @@ export class PostgreSQLUserRepository implements IUserRepository {
         score as "overallScore", feedback, metadata
     `;
 
-    const overallScore = (session.techScore + session.creativeScore + session.businessScore) / 3;
+    const overallScore =
+      (session.techScore + session.creativeScore + session.businessScore) / 3;
     const feedback = {
       techScore: session.techScore,
       creativeScore: session.creativeScore,
       businessScore: session.businessScore,
       answers: session.answers,
-      generatedPaths: session.generatedPaths
+      generatedPaths: session.generatedPaths,
     };
 
     const { rows } = await this.pool.query(evalQuery, [
@@ -269,8 +273,8 @@ export class PostgreSQLUserRepository implements IUserRepository {
       userId,
       overallScore,
       JSON.stringify(feedback),
-      JSON.stringify({ domains: ['tech', 'creative', 'business'] }),
-      JSON.stringify({ sessionKey: session.sessionKey })
+      JSON.stringify({ domains: ["tech", "creative", "business"] }),
+      JSON.stringify({ sessionKey: session.sessionKey }),
     ]);
 
     // Transform to match legacy AssessmentSession interface
@@ -284,7 +288,7 @@ export class PostgreSQLUserRepository implements IUserRepository {
       answers: session.answers || {},
       generatedPaths: session.generatedPaths || [],
       createdAt: rows[0].createdAt,
-      metadata: rows[0].metadata
+      metadata: rows[0].metadata,
     };
   }
 
@@ -328,7 +332,7 @@ export class PostgreSQLUserRepository implements IUserRepository {
       badge.description,
       badge.imageUrl,
       badge.category,
-      badge.xpReward
+      badge.xpReward,
     ]);
 
     return rows[0];
@@ -351,7 +355,7 @@ export class PostgreSQLUserRepository implements IUserRepository {
       // Auto-create user if doesn't exist (for backward compatibility)
       user = await this.create({
         email: userEmail,
-        name: userEmail.split('@')[0] // Use email prefix as default name
+        name: userEmail.split("@")[0], // Use email prefix as default name
       });
     }
 
@@ -376,33 +380,36 @@ export class PostgreSQLUserRepository implements IUserRepository {
         totalXp: user.totalXp,
         level: user.level,
         completedTasks: [], // TODO: Could derive from completed tasks
-        achievements
+        achievements,
       },
-      assessmentSessions: assessmentSessions.map(session => ({
+      assessmentSessions: assessmentSessions.map((session) => ({
         ...session,
         results: {
           tech: session.techScore,
           creative: session.creativeScore,
-          business: session.businessScore
-        }
+          business: session.businessScore,
+        },
       })),
       lastUpdated: new Date().toISOString(),
-      version: '3.0' // PostgreSQL version
+      version: "3.0", // PostgreSQL version
     };
   }
 
-  async saveUserData(userEmail: string, data: UserDataInput): Promise<UserDataResponse> {
+  async saveUserData(
+    userEmail: string,
+    data: UserDataInput,
+  ): Promise<UserDataResponse> {
     const client = await this.pool.connect();
 
     try {
-      await client.query('BEGIN');
+      await client.query("BEGIN");
 
       // Find or create user
       let user = await this.findByEmail(userEmail);
       if (!user) {
         user = await this.create({
           email: userEmail,
-          name: userEmail.split('@')[0]
+          name: userEmail.split("@")[0],
         });
       }
 
@@ -410,7 +417,7 @@ export class PostgreSQLUserRepository implements IUserRepository {
       if (data.achievements) {
         await this.update(user.id, {
           level: data.achievements.level,
-          totalXp: data.achievements.totalXp
+          totalXp: data.achievements.totalXp,
         });
       }
 
@@ -423,7 +430,7 @@ export class PostgreSQLUserRepository implements IUserRepository {
             creativeScore: session.results.creative,
             businessScore: session.results.business,
             answers: session.answers,
-            generatedPaths: session.generatedPaths
+            generatedPaths: session.generatedPaths,
           });
         }
       }
@@ -437,18 +444,17 @@ export class PostgreSQLUserRepository implements IUserRepository {
             description: badge.description,
             imageUrl: badge.imageUrl,
             category: badge.category,
-            xpReward: badge.xpReward
+            xpReward: badge.xpReward,
           });
         }
       }
 
-      await client.query('COMMIT');
+      await client.query("COMMIT");
 
       // Return updated user data
-      return await this.getUserData(userEmail) as UserDataResponse;
-
+      return (await this.getUserData(userEmail)) as UserDataResponse;
     } catch (error) {
-      await client.query('ROLLBACK');
+      await client.query("ROLLBACK");
       throw error;
     } finally {
       client.release();

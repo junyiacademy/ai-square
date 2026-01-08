@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import React from 'react';
-import DiscoveryHeader from '@/components/discovery/DiscoveryHeader';
-import { useDiscoveryData } from '@/hooks/useDiscoveryData';
+import React from "react";
+import DiscoveryHeader from "@/components/discovery/DiscoveryHeader";
+import { useDiscoveryData } from "@/hooks/useDiscoveryData";
 
 interface DiscoveryPageLayoutProps {
   children: React.ReactNode;
@@ -11,7 +11,7 @@ interface DiscoveryPageLayoutProps {
 
 export default function DiscoveryPageLayout({
   children,
-  requiresAssessment = false
+  requiresAssessment = false,
 }: DiscoveryPageLayoutProps) {
   const { isLoading, assessmentResults, achievementCount } = useDiscoveryData();
 
@@ -37,10 +37,14 @@ export default function DiscoveryPageLayout({
         />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center py-12">
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">需要先完成評估</h2>
-            <p className="text-gray-600 mb-6">請先完成興趣評估，以獲得個人化的體驗。</p>
+            <h2 className="text-xl font-semibold text-gray-900 mb-2">
+              需要先完成評估
+            </h2>
+            <p className="text-gray-600 mb-6">
+              請先完成興趣評估，以獲得個人化的體驗。
+            </p>
             <button
-              onClick={() => window.location.href = '/discovery/evaluation'}
+              onClick={() => (window.location.href = "/discovery/evaluation")}
               className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
             >
               開始評估

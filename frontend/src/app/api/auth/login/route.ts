@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { loginUser, autoLoginDev } from '@/lib/auth/simple-auth';
-import { getPool } from '@/lib/auth/simple-auth';
+import { NextRequest, NextResponse } from "next/server";
+import { loginUser, autoLoginDev } from "@/lib/auth/simple-auth";
+import { getPool } from "@/lib/auth/simple-auth";
 
 export async function POST(request: NextRequest) {
   try {
@@ -15,23 +15,23 @@ export async function POST(request: NextRequest) {
     const { email, password, rememberMe = false } = body;
 
     // Dev mode auto-login if no credentials provided
-    if (process.env.NODE_ENV === 'development' && !email && !password) {
-      console.log('[Login] Attempting dev auto-login...');
+    if (process.env.NODE_ENV === "development" && !email && !password) {
+      console.log("[Login] Attempting dev auto-login...");
       const autoLogin = await autoLoginDev();
 
       if (autoLogin.success && autoLogin.token) {
         const response = NextResponse.json({
           success: true,
-          user: autoLogin.user
+          user: autoLogin.user,
         });
 
         // Set cookie for 30 days
-        response.cookies.set('sessionToken', autoLogin.token, {
+        response.cookies.set("sessionToken", autoLogin.token, {
           httpOnly: true,
-          secure: process.env.NODE_ENV !== 'development',
-          sameSite: 'lax',
+          secure: process.env.NODE_ENV !== "development",
+          sameSite: "lax",
           maxAge: 30 * 24 * 60 * 60,
-          path: '/'
+          path: "/",
         });
 
         return response;
@@ -39,27 +39,30 @@ export async function POST(request: NextRequest) {
 
       // If auto-login fails, return error
       return NextResponse.json(
-        { success: false, error: 'No dev user available for auto-login' },
-        { status: 401 }
+        { success: false, error: "No dev user available for auto-login" },
+        { status: 401 },
       );
     }
 
     // Normal login
     if (!email || !password) {
       return NextResponse.json(
-        { success: false, error: 'Email and password are required' },
-        { status: 400 }
+        { success: false, error: "Email and password are required" },
+        { status: 400 },
       );
     }
 
     // Enforce email verified policy before password check
     try {
       const db = getPool();
-      const verifiedRes = await db.query('SELECT email_verified FROM users WHERE LOWER(email)=LOWER($1)', [email]);
+      const verifiedRes = await db.query(
+        "SELECT email_verified FROM users WHERE LOWER(email)=LOWER($1)",
+        [email],
+      );
       if (verifiedRes.rows.length > 0 && !verifiedRes.rows[0].email_verified) {
         return NextResponse.json(
-          { success: false, error: 'Email not verified' },
-          { status: 403 }
+          { success: false, error: "Email not verified" },
+          { status: 403 },
         );
       }
     } catch {}
@@ -68,32 +71,32 @@ export async function POST(request: NextRequest) {
 
     if (!result.success || !result.token) {
       return NextResponse.json(
-        { success: false, error: result.error || 'Login failed' },
-        { status: 401 }
+        { success: false, error: result.error || "Login failed" },
+        { status: 401 },
       );
     }
 
     // Create response with user data
     const response = NextResponse.json({
       success: true,
-      user: result.user
+      user: result.user,
     });
 
     // Set session cookie (7 days default, 30 days for remember me)
-    response.cookies.set('sessionToken', result.token, {
+    response.cookies.set("sessionToken", result.token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV !== 'development',
-      sameSite: 'lax',
+      secure: process.env.NODE_ENV !== "development",
+      sameSite: "lax",
       maxAge: rememberMe ? 30 * 24 * 60 * 60 : 7 * 24 * 60 * 60,
-      path: '/'
+      path: "/",
     });
 
     return response;
   } catch (error) {
-    console.error('Login error:', error);
+    console.error("Login error:", error);
     return NextResponse.json(
-      { success: false, error: 'An error occurred during login' },
-      { status: 500 }
+      { success: false, error: "An error occurred during login" },
+      { status: 500 },
     );
   }
 }
@@ -103,9 +106,9 @@ export async function OPTIONS() {
   return new NextResponse(null, {
     status: 200,
     headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type',
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type",
     },
   });
 }

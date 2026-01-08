@@ -3,17 +3,17 @@
  * GET /api/discovery/scenarios/[id] - 獲取單一 Discovery 場景詳細資訊
  */
 
-import { NextRequest, NextResponse } from 'next/server';
-import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
+import { NextRequest, NextResponse } from "next/server";
+import { repositoryFactory } from "@/lib/repositories/base/repository-factory";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     // Get language from query params
     const { searchParams } = new URL(request.url);
-    const language = searchParams.get('lang') || 'en';
+    const language = searchParams.get("lang") || "en";
 
     const { id: scenarioId } = await params;
 
@@ -23,16 +23,16 @@ export async function GET(
     // Check if scenario exists
     const scenario = await scenarioRepo.findById(scenarioId);
 
-    if (!scenario || scenario.mode !== 'discovery') {
+    if (!scenario || scenario.mode !== "discovery") {
       return NextResponse.json(
         {
           success: false,
-          error: 'Scenario not found',
+          error: "Scenario not found",
           meta: {
-            timestamp: new Date().toISOString()
-          }
+            timestamp: new Date().toISOString(),
+          },
         },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -42,52 +42,60 @@ export async function GET(
 
     const processedScenario = {
       ...scenario,
-      title: titleObj?.[language] || titleObj?.en || 'Untitled',
-      description: descObj?.[language] || descObj?.en || 'No description',
+      title: titleObj?.[language] || titleObj?.en || "Untitled",
+      description: descObj?.[language] || descObj?.en || "No description",
       // Preserve original multilingual objects
       titleObj,
       descObj,
       // Process discoveryData multilingual fields
-      discoveryData: scenario.discoveryData ? {
-        ...scenario.discoveryData,
-        dayInLife: (() => {
-          const dayInLife = (scenario.discoveryData as Record<string, unknown>).dayInLife as Record<string, string> | undefined;
-          return dayInLife?.[language] || dayInLife?.en || '';
-        })(),
-        challenges: (() => {
-          const challenges = (scenario.discoveryData as Record<string, unknown>).challenges as Record<string, unknown[]> | undefined;
-          return challenges?.[language] || challenges?.en || [];
-        })(),
-        rewards: (() => {
-          const rewards = (scenario.discoveryData as Record<string, unknown>).rewards as Record<string, unknown[]> | undefined;
-          return rewards?.[language] || rewards?.en || [];
-        })()
-      } : {}
+      discoveryData: scenario.discoveryData
+        ? {
+            ...scenario.discoveryData,
+            dayInLife: (() => {
+              const dayInLife = (
+                scenario.discoveryData as Record<string, unknown>
+              ).dayInLife as Record<string, string> | undefined;
+              return dayInLife?.[language] || dayInLife?.en || "";
+            })(),
+            challenges: (() => {
+              const challenges = (
+                scenario.discoveryData as Record<string, unknown>
+              ).challenges as Record<string, unknown[]> | undefined;
+              return challenges?.[language] || challenges?.en || [];
+            })(),
+            rewards: (() => {
+              const rewards = (
+                scenario.discoveryData as Record<string, unknown>
+              ).rewards as Record<string, unknown[]> | undefined;
+              return rewards?.[language] || rewards?.en || [];
+            })(),
+          }
+        : {},
     };
 
     // Return scenario data
     return NextResponse.json({
       success: true,
       data: {
-        scenario: processedScenario
+        scenario: processedScenario,
       },
       meta: {
         timestamp: new Date().toISOString(),
-        version: '1.0.0',
-        language: language
-      }
+        version: "1.0.0",
+        language: language,
+      },
     });
   } catch (error) {
-    console.error('Error in GET /api/discovery/scenarios/[id]:', error);
+    console.error("Error in GET /api/discovery/scenarios/[id]:", error);
     return NextResponse.json(
       {
         success: false,
-        error: 'Internal server error',
+        error: "Internal server error",
         meta: {
-          timestamp: new Date().toISOString()
-        }
+          timestamp: new Date().toISOString(),
+        },
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

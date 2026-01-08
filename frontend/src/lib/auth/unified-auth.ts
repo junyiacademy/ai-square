@@ -6,9 +6,9 @@
  * Sessions persist across server restarts.
  */
 
-import { NextRequest, NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
-import { getSession } from './simple-auth';
+import { NextRequest, NextResponse } from "next/server";
+import { cookies } from "next/headers";
+import { getSession } from "./simple-auth";
 
 export interface UnifiedAuth {
   user: {
@@ -26,7 +26,9 @@ export interface UnifiedAuth {
  * @param request - NextRequest object (for Route Handlers) or undefined (for Server Components)
  * @returns Authentication data or null if not authenticated
  */
-export async function getUnifiedAuth(request?: NextRequest): Promise<UnifiedAuth | null> {
+export async function getUnifiedAuth(
+  request?: NextRequest,
+): Promise<UnifiedAuth | null> {
   try {
     let sessionToken: string | undefined;
 
@@ -56,11 +58,11 @@ export async function getUnifiedAuth(request?: NextRequest): Promise<UnifiedAuth
         email: sessionData.email,
         role: sessionData.role,
         name: sessionData.name,
-        isGuest: sessionData.isGuest
-      }
+        isGuest: sessionData.isGuest,
+      },
     };
   } catch (error) {
-    console.error('[UnifiedAuth] Error getting authentication:', error);
+    console.error("[UnifiedAuth] Error getting authentication:", error);
     return null;
   }
 }
@@ -70,13 +72,13 @@ export async function getUnifiedAuth(request?: NextRequest): Promise<UnifiedAuth
  */
 function extractTokenFromRequest(request: NextRequest): string | undefined {
   // First try cookie
-  const cookieToken = request.cookies.get('sessionToken')?.value;
+  const cookieToken = request.cookies.get("sessionToken")?.value;
   if (cookieToken) {
     return cookieToken;
   }
 
   // Fallback to header (for API-to-API calls)
-  const headerToken = request.headers.get('x-session-token');
+  const headerToken = request.headers.get("x-session-token");
   if (headerToken) {
     return headerToken;
   }
@@ -90,9 +92,9 @@ function extractTokenFromRequest(request: NextRequest): string | undefined {
 async function extractTokenFromCookies(): Promise<string | undefined> {
   try {
     const cookieStore = await cookies();
-    return cookieStore.get('sessionToken')?.value;
+    return cookieStore.get("sessionToken")?.value;
   } catch (error) {
-    console.error('[UnifiedAuth] Error reading cookies:', error);
+    console.error("[UnifiedAuth] Error reading cookies:", error);
     return undefined;
   }
 }
@@ -102,8 +104,8 @@ async function extractTokenFromCookies(): Promise<string | undefined> {
  */
 export function createUnauthorizedResponse(): NextResponse {
   return NextResponse.json(
-    { error: 'Authentication required' },
-    { status: 401 }
+    { error: "Authentication required" },
+    { status: 401 },
   );
 }
 
@@ -111,8 +113,5 @@ export function createUnauthorizedResponse(): NextResponse {
  * Create forbidden response
  */
 export function createForbiddenResponse(): NextResponse {
-  return NextResponse.json(
-    { error: 'Access denied' },
-    { status: 403 }
-  );
+  return NextResponse.json({ error: "Access denied" }, { status: 403 });
 }

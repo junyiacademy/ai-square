@@ -2,7 +2,12 @@
  * Database queries for weekly report generation
  */
 
-import { Pool } from 'pg';
+import { Pool } from "pg";
+
+export interface WeeklyTrendData {
+  weekLabel: string; // Monday date in "MM/DD" format
+  value: number;
+}
 
 export interface WeeklyStats {
   userGrowth: {
@@ -10,14 +15,16 @@ export interface WeeklyStats {
     newThisWeek: number;
     newLastWeek: number;
     weekOverWeekGrowth: number;
-    dailyTrend: number[];
+    dailyTrend: number[]; // DEPRECATED: Use weeklyTrend instead
     avgPerDay: number;
+    weeklyTrend: WeeklyTrendData[]; // NEW: 8 weeks of registration data
   };
   engagement: {
     weeklyActiveUsers: number;
     dailyAvgActive: number;
     retentionRate: number;
     activeRate: number;
+    weeklyActiveTrend: WeeklyTrendData[]; // NEW: 8 weeks of active users data
   };
   learning: {
     assessmentCompletions: number;
@@ -41,17 +48,23 @@ export interface WeeklyStats {
 export async function getWeeklyStats(pool: Pool): Promise<WeeklyStats> {
   // Environment validation: Log database connection info for debugging
   try {
-    const dbInfo = await pool.query("SELECT current_database() as db_name, inet_server_addr() as host");
-    console.log(`📊 Weekly Report - Querying database: ${dbInfo.rows[0]?.db_name || 'unknown'} @ ${dbInfo.rows[0]?.host || 'unknown'}`);
+    const dbInfo = await pool.query(
+      "SELECT current_database() as db_name, inet_server_addr() as host",
+    );
+    console.log(
+      `📊 Weekly Report - Querying database: ${dbInfo.rows[0]?.db_name || "unknown"} @ ${dbInfo.rows[0]?.host || "unknown"}`,
+    );
   } catch (err) {
-    console.warn('⚠️  Could not fetch database info:', err);
+    console.warn("⚠️  Could not fetch database info:", err);
   }
 
   // Sanity check: Warn if user count seems suspiciously low
-  const sanityCheck = await pool.query('SELECT COUNT(*) as count FROM users');
-  const userCount = parseInt(sanityCheck.rows[0]?.count || '0');
+  const sanityCheck = await pool.query("SELECT COUNT(*) as count FROM users");
+  const userCount = parseInt(sanityCheck.rows[0]?.count || "0");
   if (userCount < 10) {
-    console.warn(`⚠️  WARNING: Low user count detected (${userCount}) - verify you're querying the correct environment`);
+    console.warn(
+      `⚠️  WARNING: Low user count detected (${userCount}) - verify you're querying the correct environment`,
+    );
   }
 
   // Query 1: User growth statistics (basic counts)
@@ -99,12 +112,11 @@ export async function getWeeklyStats(pool: Pool): Promise<WeeklyStats> {
 
   const dailyTrendResult = await pool.query(dailyTrendQuery);
   const dailyTrendMap = new Map(
-    dailyTrendResult.rows.map(row => {
-      const dateStr = row.day instanceof Date
-        ? row.day.toISOString().split('T')[0]
-        : row.day;
+    dailyTrendResult.rows.map((row) => {
+      const dateStr =
+        row.day instanceof Date ? row.day.toISOString().split("T")[0] : row.day;
       return [dateStr, parseInt(row.count)];
-    })
+    }),
   );
 
   // Build daily trend array for last complete week (Mon to Sun)
@@ -121,17 +133,88 @@ export async function getWeeklyStats(pool: Pool): Promise<WeeklyStats> {
   for (let i = 0; i < 7; i++) {
     const date = new Date(lastMonday);
     date.setDate(lastMonday.getDate() + i);
-    const dateStr = date.toISOString().split('T')[0];
+    const dateStr = date.toISOString().split("T")[0];
     dailyTrend.push(dailyTrendMap.get(dateStr) || 0);
   }
 
   const totalUsers = parseInt(userStats.total_users);
   const newThisWeek = parseInt(userStats.new_this_week);
   const newLastWeek = parseInt(userStats.new_last_week);
-  const weekOverWeekGrowth = newLastWeek > 0
-    ? ((newThisWeek - newLastWeek) / newLastWeek) * 100
-    : 0;
+  const weekOverWeekGrowth =
+    newLastWeek > 0 ? ((newThisWeek - newLastWeek) / newLastWeek) * 100 : 0;
   const avgPerDay = newThisWeek / 7;
+
+  // Query 1.6: Weekly registration trend for last 8 complete weeks
+  // Each week is labeled by Monday's date (MM/DD format)
+  const weeklyRegistrationTrendQuery = `
+    WITH week_series AS (
+      -- Generate 8 weeks of Monday dates, ending with most recent complete Sunday
+      SELECT
+        generate_series(
+          (CURRENT_DATE - (EXTRACT(DOW FROM CURRENT_DATE)::int + 6) % 7 - 7 * 8)::date,
+          (CURRENT_DATE - (EXTRACT(DOW FROM CURRENT_DATE)::int + 6) % 7 - 7)::date,
+          '7 days'::interval
+        )::date as week_start
+    ),
+    weekly_counts AS (
+      SELECT
+        ws.week_start,
+        COUNT(u.id) as new_users
+      FROM week_series ws
+      LEFT JOIN users u ON DATE(u.created_at) >= ws.week_start
+                        AND DATE(u.created_at) < ws.week_start + 7
+      GROUP BY ws.week_start
+    )
+    SELECT
+      TO_CHAR(week_start, 'MM/DD') as week_label,
+      new_users
+    FROM weekly_counts
+    ORDER BY week_start ASC;
+  `;
+
+  const weeklyRegTrendResult = await pool.query(weeklyRegistrationTrendQuery);
+  const weeklyTrend: WeeklyTrendData[] = weeklyRegTrendResult.rows.map(
+    (row) => ({
+      weekLabel: row.week_label,
+      value: parseInt(row.new_users),
+    }),
+  );
+
+  // Query 1.7: Weekly active users trend for last 8 complete weeks
+  // Weekly active = distinct users who had task updates during that Mon-Sun period
+  const weeklyActiveTrendQuery = `
+    WITH week_series AS (
+      SELECT
+        generate_series(
+          (CURRENT_DATE - (EXTRACT(DOW FROM CURRENT_DATE)::int + 6) % 7 - 7 * 8)::date,
+          (CURRENT_DATE - (EXTRACT(DOW FROM CURRENT_DATE)::int + 6) % 7 - 7)::date,
+          '7 days'::interval
+        )::date as week_start
+    ),
+    weekly_active AS (
+      SELECT
+        ws.week_start,
+        COUNT(DISTINCT p.user_id) as active_users
+      FROM week_series ws
+      LEFT JOIN tasks t ON t.updated_at >= ws.week_start::timestamp
+                        AND t.updated_at < (ws.week_start + 7)::timestamp
+      LEFT JOIN programs p ON t.program_id = p.id
+      GROUP BY ws.week_start
+    )
+    SELECT
+      TO_CHAR(week_start, 'MM/DD') as week_label,
+      active_users
+    FROM weekly_active
+    ORDER BY week_start ASC;
+  `;
+
+  const weeklyActiveTrendResult = await pool.query(weeklyActiveTrendQuery);
+  const weeklyActiveTrend: WeeklyTrendData[] = weeklyActiveTrendResult.rows.map(
+    (row) => ({
+      weekLabel: row.week_label,
+      value: parseInt(row.active_users),
+    }),
+  );
 
   // Query 2: User engagement statistics for last complete week
   // Weekly active users = users who had task updates last week (tasks.updated_at)
@@ -180,10 +263,13 @@ export async function getWeeklyStats(pool: Pool): Promise<WeeklyStats> {
   const engagementResult = await pool.query(engagementQuery);
   const engagementStats = engagementResult.rows[0];
 
-  const weeklyActiveUsers = parseInt(engagementStats.weekly_active_users || '0');
-  const dailyAvgActive = parseInt(engagementStats.daily_avg_active || '0');
-  const retentionRate = parseFloat(engagementStats.retention_rate || '0');
-  const activeRate = totalUsers > 0 ? (weeklyActiveUsers / totalUsers) * 100 : 0;
+  const weeklyActiveUsers = parseInt(
+    engagementStats.weekly_active_users || "0",
+  );
+  const dailyAvgActive = parseInt(engagementStats.daily_avg_active || "0");
+  const retentionRate = parseFloat(engagementStats.retention_rate || "0");
+  const activeRate =
+    totalUsers > 0 ? (weeklyActiveUsers / totalUsers) * 100 : 0;
 
   // Query 3: Learning activity statistics by mode for last complete week
   // Count completions by mode (assessment, pbl, discovery)
@@ -211,11 +297,15 @@ export async function getWeeklyStats(pool: Pool): Promise<WeeklyStats> {
   const learningResult = await pool.query(learningQuery);
   const learningStats = learningResult.rows[0];
 
-  const assessmentCompletions = parseInt(learningStats.assessment_completions || '0');
-  const pblCompletions = parseInt(learningStats.pbl_completions || '0');
-  const discoveryCompletions = parseInt(learningStats.discovery_completions || '0');
-  const totalCompletions = parseInt(learningStats.total_completions || '0');
-  const completionRate = parseFloat(learningStats.completion_rate || '0');
+  const assessmentCompletions = parseInt(
+    learningStats.assessment_completions || "0",
+  );
+  const pblCompletions = parseInt(learningStats.pbl_completions || "0");
+  const discoveryCompletions = parseInt(
+    learningStats.discovery_completions || "0",
+  );
+  const totalCompletions = parseInt(learningStats.total_completions || "0");
+  const completionRate = parseFloat(learningStats.completion_rate || "0");
 
   // Query 3.5: Top content (most popular scenarios last complete week)
   const topContentQuery = `
@@ -238,9 +328,9 @@ export async function getWeeklyStats(pool: Pool): Promise<WeeklyStats> {
   `;
 
   const topContentResult = await pool.query(topContentQuery);
-  const topContent = topContentResult.rows.map(row => ({
-    name: row.name || 'Untitled',
-    count: parseInt(row.count)
+  const topContent = topContentResult.rows.map((row) => ({
+    name: row.name || "Untitled",
+    count: parseInt(row.count),
   }));
 
   // Query 4: System health (placeholder for now)
@@ -248,7 +338,7 @@ export async function getWeeklyStats(pool: Pool): Promise<WeeklyStats> {
     apiSuccessRate: 99.8,
     avgResponseTime: 245,
     uptime: 99.95,
-    dbStatus: 'normal'
+    dbStatus: "normal",
   };
 
   return {
@@ -257,14 +347,16 @@ export async function getWeeklyStats(pool: Pool): Promise<WeeklyStats> {
       newThisWeek,
       newLastWeek,
       weekOverWeekGrowth,
-      dailyTrend,
-      avgPerDay
+      dailyTrend, // DEPRECATED: Kept for backward compatibility
+      avgPerDay,
+      weeklyTrend,
     },
     engagement: {
       weeklyActiveUsers,
       dailyAvgActive,
       retentionRate,
-      activeRate
+      activeRate,
+      weeklyActiveTrend,
     },
     learning: {
       assessmentCompletions,
@@ -272,8 +364,8 @@ export async function getWeeklyStats(pool: Pool): Promise<WeeklyStats> {
       discoveryCompletions,
       totalCompletions,
       completionRate,
-      topContent
+      topContent,
     },
-    systemHealth: healthStats
+    systemHealth: healthStats,
   };
 }

@@ -1,38 +1,46 @@
-import { renderWithProviders, screen, waitFor } from '@/test-utils/helpers/render';
-import userEvent from '@testing-library/user-event';
-import { useRouter, useParams } from 'next/navigation';
-import ProgramDetailPage from '../page';
+import {
+  renderWithProviders,
+  screen,
+  waitFor,
+} from "@/test-utils/helpers/render";
+import userEvent from "@testing-library/user-event";
+import { useRouter, useParams } from "next/navigation";
+import ProgramDetailPage from "../page";
 
 // Mock dependencies
-jest.mock('next/navigation', () => ({
+jest.mock("next/navigation", () => ({
   useRouter: jest.fn(),
   useParams: jest.fn(),
-  usePathname: jest.fn(() => '/discovery/scenarios/scenario-1/programs/program-1')
+  usePathname: jest.fn(
+    () => "/discovery/scenarios/scenario-1/programs/program-1",
+  ),
 }));
-jest.mock('@/contexts/AuthContext', () => ({
-  useAuth: jest.fn()
+jest.mock("@/contexts/AuthContext", () => ({
+  useAuth: jest.fn(),
 }));
-jest.mock('react-i18next', () => ({
+jest.mock("react-i18next", () => ({
   useTranslation: () => ({
     t: (key: string) => key,
     i18n: {
-      language: 'en',
-      changeLanguage: jest.fn()
-    }
-  })
+      language: "en",
+      changeLanguage: jest.fn(),
+    },
+  }),
 }));
 
 // Mock framer-motion
-jest.mock('framer-motion', () => ({
+jest.mock("framer-motion", () => ({
   motion: {
-    div: ({ children, ...props }: any) => <div {...props}>{children}</div>
-  }
+    div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+  },
 }));
 
 // Mock DiscoveryPageLayout
-jest.mock('@/components/discovery/DiscoveryPageLayout', () => ({
+jest.mock("@/components/discovery/DiscoveryPageLayout", () => ({
   __esModule: true,
-  default: ({ children }: { children: React.ReactNode }) => <div>{children}</div>
+  default: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
 }));
 
 // Mock fetch globally
@@ -44,51 +52,51 @@ const mockRouter = {
   forward: jest.fn(),
   refresh: jest.fn(),
   replace: jest.fn(),
-  prefetch: jest.fn()
+  prefetch: jest.fn(),
 };
 
 const mockUseRouter = useRouter as jest.Mock;
 const mockUseParams = useParams as jest.Mock;
 
 // Import and mock useAuth after the mock is set up
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth } from "@/contexts/AuthContext";
 const mockUseAuth = useAuth as jest.Mock;
 
-describe('ProgramDetailPage', () => {
+describe("ProgramDetailPage", () => {
   const mockProgramData = {
-    id: 'program-1',
-    scenarioId: 'scenario-1',
-    status: 'active',
+    id: "program-1",
+    scenarioId: "scenario-1",
+    status: "active",
     completedTasks: 1,
     totalTasks: 3,
     totalXP: 95,
-    careerType: 'content_creator',
-    scenarioTitle: 'Content Creator Discovery',
-    createdAt: '2023-01-01T00:00:00Z',
+    careerType: "content_creator",
+    scenarioTitle: "Content Creator Discovery",
+    createdAt: "2023-01-01T00:00:00Z",
     tasks: [
       {
-        id: 'task-1',
-        title: 'understand_algorithms',
-        description: '學習演算法基本概念',
+        id: "task-1",
+        title: "understand_algorithms",
+        description: "學習演算法基本概念",
         xp: 95,
-        status: 'completed',
-        completedAt: '2023-01-01T10:00:00Z'
+        status: "completed",
+        completedAt: "2023-01-01T10:00:00Z",
       },
       {
-        id: 'task-2',
-        title: 'learn_content_basics',
-        description: '學習內容創作基礎',
+        id: "task-2",
+        title: "learn_content_basics",
+        description: "學習內容創作基礎",
         xp: 100,
-        status: 'active'
+        status: "active",
       },
       {
-        id: 'task-3',
-        title: 'advanced_techniques',
-        description: '進階技巧應用',
+        id: "task-3",
+        title: "advanced_techniques",
+        description: "進階技巧應用",
         xp: 120,
-        status: 'locked'
-      }
-    ]
+        status: "locked",
+      },
+    ],
   };
 
   beforeEach(() => {
@@ -96,40 +104,43 @@ describe('ProgramDetailPage', () => {
 
     mockUseRouter.mockReturnValue(mockRouter);
     mockUseParams.mockReturnValue({
-      id: 'scenario-1',
-      programId: 'program-1'
+      id: "scenario-1",
+      programId: "program-1",
     });
 
     mockUseAuth.mockReturnValue({
-      user: { email: 'test@example.com' },
+      user: { email: "test@example.com" },
       isLoggedIn: true,
-      isLoading: false
+      isLoading: false,
     } as any);
 
     // Mock localStorage
-    Object.defineProperty(window, 'localStorage', {
+    Object.defineProperty(window, "localStorage", {
       value: {
-        getItem: jest.fn(() => 'mock-session-token'),
+        getItem: jest.fn(() => "mock-session-token"),
         setItem: jest.fn(),
-        removeItem: jest.fn()
+        removeItem: jest.fn(),
       },
-      writable: true
+      writable: true,
     });
 
     // Default fetch mock
     (fetch as jest.MockedFunction<typeof fetch>).mockResolvedValue({
       ok: true,
-      json: async () => mockProgramData
+      json: async () => mockProgramData,
     } as Response);
   });
 
-  describe('Rendering', () => {
-    it('should render program details correctly', async () => {
+  describe("Rendering", () => {
+    it("should render program details correctly", async () => {
       renderWithProviders(<ProgramDetailPage />);
 
-      await waitFor(() => {
-        expect(screen.queryByText('載入中...')).not.toBeInTheDocument();
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(screen.queryByText("載入中...")).not.toBeInTheDocument();
+        },
+        { timeout: 3000 },
+      );
 
       // Check for any content from the program data
       expect(screen.getByText(/understand_algorithms/i)).toBeInTheDocument();
@@ -137,354 +148,412 @@ describe('ProgramDetailPage', () => {
       expect(screen.getByText(/33%/)).toBeInTheDocument(); // Progress percentage
     });
 
-    it('should show loading state initially', async () => {
+    it("should show loading state initially", async () => {
       renderWithProviders(<ProgramDetailPage />);
-      expect(screen.getByText('載入中...')).toBeInTheDocument();
+      expect(screen.getByText("載入中...")).toBeInTheDocument();
     });
 
-    it('should redirect to login when not authenticated', async () => {
+    it("should redirect to login when not authenticated", async () => {
       mockUseAuth.mockReturnValue({
         user: null,
         isLoggedIn: false,
-        isLoading: false
+        isLoading: false,
       } as any);
 
       renderWithProviders(<ProgramDetailPage />);
 
-      expect(mockRouter.push).toHaveBeenCalledWith('/login?redirect=/discovery/scenarios');
+      expect(mockRouter.push).toHaveBeenCalledWith(
+        "/login?redirect=/discovery/scenarios",
+      );
     });
 
-    it('should show error message when program not found', async () => {
+    it("should show error message when program not found", async () => {
       (fetch as jest.MockedFunction<typeof fetch>).mockResolvedValue({
         ok: false,
-        status: 404
+        status: 404,
       } as Response);
 
       renderWithProviders(<ProgramDetailPage />);
 
-      await waitFor(() => {
-        const element = screen.queryByText('找不到此學習歷程');
-        if (element) expect(element).toBeInTheDocument();
-      }, { timeout: 1000 });
+      await waitFor(
+        () => {
+          const element = screen.queryByText("找不到此學習歷程");
+          if (element) expect(element).toBeInTheDocument();
+        },
+        { timeout: 1000 },
+      );
     });
   });
 
-  describe('Career Information', () => {
-    it('should display correct career information for content creator', async () => {
+  describe("Career Information", () => {
+    it("should display correct career information for content creator", async () => {
       renderWithProviders(<ProgramDetailPage />);
 
-      await waitFor(() => {
-        const element = screen.queryByText('數位魔法師 - 內容創作者');
-        if (element) expect(element).toBeInTheDocument();
-      }, { timeout: 1000 });
+      await waitFor(
+        () => {
+          const element = screen.queryByText("數位魔法師 - 內容創作者");
+          if (element) expect(element).toBeInTheDocument();
+        },
+        { timeout: 1000 },
+      );
 
-      expect(screen.getByText('內容魔法')).toBeInTheDocument();
-      expect(screen.getByText('視覺咒語')).toBeInTheDocument();
-      expect(screen.getByText('文字煉金術')).toBeInTheDocument();
-      expect(screen.getByText('社群召喚術')).toBeInTheDocument();
+      expect(screen.getByText("內容魔法")).toBeInTheDocument();
+      expect(screen.getByText("視覺咒語")).toBeInTheDocument();
+      expect(screen.getByText("文字煉金術")).toBeInTheDocument();
+      expect(screen.getByText("社群召喚術")).toBeInTheDocument();
     });
 
-    it('should display correct career information for different career types', async () => {
+    it("should display correct career information for different career types", async () => {
       const youtuberProgramData = {
         ...mockProgramData,
-        careerType: 'youtuber'
+        careerType: "youtuber",
       };
 
       (fetch as jest.MockedFunction<typeof fetch>).mockResolvedValue({
         ok: true,
-        json: async () => youtuberProgramData
+        json: async () => youtuberProgramData,
       } as Response);
 
       renderWithProviders(<ProgramDetailPage />);
 
-      await waitFor(() => {
-        const element = screen.queryByText('星際廣播員 - YouTuber');
-        if (element) expect(element).toBeInTheDocument();
-      }, { timeout: 1000 });
+      await waitFor(
+        () => {
+          const element = screen.queryByText("星際廣播員 - YouTuber");
+          if (element) expect(element).toBeInTheDocument();
+        },
+        { timeout: 1000 },
+      );
 
-      expect(screen.getByText('星際剪輯術')).toBeInTheDocument();
-      expect(screen.getByText('觀眾心理學')).toBeInTheDocument();
+      expect(screen.getByText("星際剪輯術")).toBeInTheDocument();
+      expect(screen.getByText("觀眾心理學")).toBeInTheDocument();
     });
 
-    it('should handle unknown career types', async () => {
+    it("should handle unknown career types", async () => {
       const unknownCareerData = {
         ...mockProgramData,
-        careerType: 'unknown_career'
+        careerType: "unknown_career",
       };
 
       (fetch as jest.MockedFunction<typeof fetch>).mockResolvedValue({
         ok: true,
-        json: async () => unknownCareerData
+        json: async () => unknownCareerData,
       } as Response);
 
       renderWithProviders(<ProgramDetailPage />);
 
-      await waitFor(() => {
-        const element = screen.queryByText('Content Creator Discovery');
-        if (element) expect(element).toBeInTheDocument();
-      }, { timeout: 1000 });
+      await waitFor(
+        () => {
+          const element = screen.queryByText("Content Creator Discovery");
+          if (element) expect(element).toBeInTheDocument();
+        },
+        { timeout: 1000 },
+      );
     });
   });
 
-  describe('Task List', () => {
-    it('should render all tasks with correct status', async () => {
+  describe("Task List", () => {
+    it("should render all tasks with correct status", async () => {
       renderWithProviders(<ProgramDetailPage />);
 
-      await waitFor(() => {
-        const element = screen.queryByText('discovery:task 1: understand_algorithms');
-        if (element) expect(element).toBeInTheDocument();
-      }, { timeout: 1000 });
+      await waitFor(
+        () => {
+          const element = screen.queryByText(
+            "discovery:task 1: understand_algorithms",
+          );
+          if (element) expect(element).toBeInTheDocument();
+        },
+        { timeout: 1000 },
+      );
 
       expect(screen.getByText(/learn_content_basics/i)).toBeInTheDocument();
       expect(screen.getByText(/advanced_techniques/i)).toBeInTheDocument();
 
       // Check XP values - use getAllByText for multiple occurrences
-      expect(screen.getAllByText('95 XP')[0]).toBeInTheDocument();
-      expect(screen.getByText('100 XP')).toBeInTheDocument();
-      expect(screen.getByText('120 XP')).toBeInTheDocument();
+      expect(screen.getAllByText("95 XP")[0]).toBeInTheDocument();
+      expect(screen.getByText("100 XP")).toBeInTheDocument();
+      expect(screen.getByText("120 XP")).toBeInTheDocument();
     });
 
-    it('should show correct buttons for different task statuses', async () => {
+    it("should show correct buttons for different task statuses", async () => {
       renderWithProviders(<ProgramDetailPage />);
 
-      await waitFor(() => {
-        expect(screen.queryByText('載入中...')).not.toBeInTheDocument();
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(screen.queryByText("載入中...")).not.toBeInTheDocument();
+        },
+        { timeout: 3000 },
+      );
 
       // Just check that the component renders
       expect(screen.getByText(/understand_algorithms/i)).toBeInTheDocument();
     });
 
-    it('should show completion date for completed tasks', async () => {
+    it("should show completion date for completed tasks", async () => {
       renderWithProviders(<ProgramDetailPage />);
 
-      await waitFor(() => {
-        const element = screen.queryByText(/完成於/);
-        if (element) expect(element).toBeInTheDocument();
-      }, { timeout: 1000 });
+      await waitFor(
+        () => {
+          const element = screen.queryByText(/完成於/);
+          if (element) expect(element).toBeInTheDocument();
+        },
+        { timeout: 1000 },
+      );
     });
 
-    it('should show statistics for completed tasks', async () => {
+    it("should show statistics for completed tasks", async () => {
       const completedTaskData = {
         ...mockProgramData,
         tasks: [
           {
             ...mockProgramData.tasks[0],
-            status: 'completed'
+            status: "completed",
           },
-          ...mockProgramData.tasks.slice(1)
-        ]
+          ...mockProgramData.tasks.slice(1),
+        ],
       };
 
       (fetch as jest.MockedFunction<typeof fetch>).mockResolvedValue({
         ok: true,
-        json: async () => completedTaskData
+        json: async () => completedTaskData,
       } as Response);
 
       renderWithProviders(<ProgramDetailPage />);
 
-      await waitFor(() => {
-        expect(screen.queryByText('載入中...')).not.toBeInTheDocument();
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(screen.queryByText("載入中...")).not.toBeInTheDocument();
+        },
+        { timeout: 3000 },
+      );
 
       // Just check that the component renders
       expect(screen.getByText(/understand_algorithms/i)).toBeInTheDocument();
     });
   });
 
-  describe('Task Navigation', () => {
-    it('should navigate to active task when clicked', async () => {
+  describe("Task Navigation", () => {
+    it("should navigate to active task when clicked", async () => {
       renderWithProviders(<ProgramDetailPage />);
 
-      await waitFor(() => {
-        expect(screen.queryByText('載入中...')).not.toBeInTheDocument();
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(screen.queryByText("載入中...")).not.toBeInTheDocument();
+        },
+        { timeout: 3000 },
+      );
 
       // Just check that the component renders
       expect(screen.getByText(/learn_content_basics/i)).toBeInTheDocument();
     });
 
-    it('should navigate to completed task for viewing', async () => {
+    it("should navigate to completed task for viewing", async () => {
       renderWithProviders(<ProgramDetailPage />);
 
-      await waitFor(() => {
-        expect(screen.queryByText('載入中...')).not.toBeInTheDocument();
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(screen.queryByText("載入中...")).not.toBeInTheDocument();
+        },
+        { timeout: 3000 },
+      );
 
       // Just check that the component renders
       expect(screen.getByText(/understand_algorithms/i)).toBeInTheDocument();
     });
 
-    it('should not allow navigation to locked tasks', async () => {
+    it("should not allow navigation to locked tasks", async () => {
       renderWithProviders(<ProgramDetailPage />);
 
-      await waitFor(() => {
-        expect(screen.queryByText('載入中...')).not.toBeInTheDocument();
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(screen.queryByText("載入中...")).not.toBeInTheDocument();
+        },
+        { timeout: 3000 },
+      );
 
       // Just check that the component renders
       expect(screen.getByText(/advanced_techniques/i)).toBeInTheDocument();
     });
   });
 
-  describe('Progress Tracking', () => {
-    it('should display correct progress percentage', async () => {
+  describe("Progress Tracking", () => {
+    it("should display correct progress percentage", async () => {
       renderWithProviders(<ProgramDetailPage />);
 
       await waitFor(() => {
-        expect(screen.getByText('33%')).toBeInTheDocument(); // 1/3 = 33%
+        expect(screen.getByText("33%")).toBeInTheDocument(); // 1/3 = 33%
       });
 
       expect(screen.getByText(/1 \/ 3/)).toBeInTheDocument();
     });
 
-    it('should handle zero progress', async () => {
+    it("should handle zero progress", async () => {
       const noProgramData = {
         ...mockProgramData,
         completedTasks: 0,
-        totalXP: 0
+        totalXP: 0,
       };
 
       (fetch as jest.MockedFunction<typeof fetch>).mockResolvedValue({
         ok: true,
-        json: async () => noProgramData
+        json: async () => noProgramData,
       } as Response);
 
       renderWithProviders(<ProgramDetailPage />);
 
-      await waitFor(() => {
-        expect(screen.queryByText('載入中...')).not.toBeInTheDocument();
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(screen.queryByText("載入中...")).not.toBeInTheDocument();
+        },
+        { timeout: 3000 },
+      );
 
       // Just check that the component renders
       expect(screen.getByText(/understand_algorithms/i)).toBeInTheDocument();
     });
 
-    it('should handle 100% completion', async () => {
+    it("should handle 100% completion", async () => {
       const completedProgramData = {
         ...mockProgramData,
         completedTasks: 3,
         totalTasks: 3,
-        status: 'completed',
-        tasks: mockProgramData.tasks.map(task => ({
+        status: "completed",
+        tasks: mockProgramData.tasks.map((task) => ({
           ...task,
-          status: 'completed',
-          completedAt: '2023-01-01T10:00:00Z'
-        }))
+          status: "completed",
+          completedAt: "2023-01-01T10:00:00Z",
+        })),
       };
 
       (fetch as jest.MockedFunction<typeof fetch>).mockResolvedValue({
         ok: true,
-        json: async () => completedProgramData
+        json: async () => completedProgramData,
       } as Response);
 
       renderWithProviders(<ProgramDetailPage />);
 
-      await waitFor(() => {
-        expect(screen.queryByText('載入中...')).not.toBeInTheDocument();
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(screen.queryByText("載入中...")).not.toBeInTheDocument();
+        },
+        { timeout: 3000 },
+      );
 
       // Just check that the component renders
       expect(screen.getByText(/understand_algorithms/i)).toBeInTheDocument();
     });
   });
 
-  describe('Program Completion', () => {
-    it('should show completion message when all tasks are finished', async () => {
+  describe("Program Completion", () => {
+    it("should show completion message when all tasks are finished", async () => {
       const completedProgramData = {
         ...mockProgramData,
         completedTasks: 3,
         totalTasks: 3,
-        status: 'completed',
-        tasks: mockProgramData.tasks.map(task => ({
+        status: "completed",
+        tasks: mockProgramData.tasks.map((task) => ({
           ...task,
-          status: 'completed',
-          completedAt: '2023-01-01T10:00:00Z'
-        }))
+          status: "completed",
+          completedAt: "2023-01-01T10:00:00Z",
+        })),
       };
 
       (fetch as jest.MockedFunction<typeof fetch>).mockResolvedValue({
         ok: true,
-        json: async () => completedProgramData
+        json: async () => completedProgramData,
       } as Response);
 
       renderWithProviders(<ProgramDetailPage />);
 
-      await waitFor(() => {
-        expect(screen.queryByText('載入中...')).not.toBeInTheDocument();
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(screen.queryByText("載入中...")).not.toBeInTheDocument();
+        },
+        { timeout: 3000 },
+      );
 
       // Just check that the component renders without errors
       expect(document.body).toBeInTheDocument();
     });
 
-    it('should navigate to scenario list when starting new journey', async () => {
+    it("should navigate to scenario list when starting new journey", async () => {
       const completedProgramData = {
         ...mockProgramData,
         completedTasks: 3,
         totalTasks: 3,
-        tasks: mockProgramData.tasks.map(task => ({
+        tasks: mockProgramData.tasks.map((task) => ({
           ...task,
-          status: 'completed'
-        }))
+          status: "completed",
+        })),
       };
 
       (fetch as jest.MockedFunction<typeof fetch>).mockResolvedValue({
         ok: true,
-        json: async () => completedProgramData
+        json: async () => completedProgramData,
       } as Response);
 
       renderWithProviders(<ProgramDetailPage />);
 
-      await waitFor(() => {
-        expect(screen.queryByText('載入中...')).not.toBeInTheDocument();
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(screen.queryByText("載入中...")).not.toBeInTheDocument();
+        },
+        { timeout: 3000 },
+      );
 
       // Just check that the component renders without errors
       expect(document.body).toBeInTheDocument();
     });
   });
 
-  describe('Navigation', () => {
-    it('should have back button to scenario details', async () => {
+  describe("Navigation", () => {
+    it("should have back button to scenario details", async () => {
       renderWithProviders(<ProgramDetailPage />);
 
-      await waitFor(() => {
-        expect(screen.queryByText('載入中...')).not.toBeInTheDocument();
-      }, { timeout: 3000 });
+      await waitFor(
+        () => {
+          expect(screen.queryByText("載入中...")).not.toBeInTheDocument();
+        },
+        { timeout: 3000 },
+      );
 
       // Just check that the component renders
       expect(screen.getByText(/understand_algorithms/i)).toBeInTheDocument();
     });
   });
 
-  describe('Status Display', () => {
-    it('should show correct status for active program', async () => {
+  describe("Status Display", () => {
+    it("should show correct status for active program", async () => {
       renderWithProviders(<ProgramDetailPage />);
 
-      await waitFor(() => {
-        const element = screen.queryByText('進行中');
-        if (element) expect(element).toBeInTheDocument();
-      }, { timeout: 1000 });
+      await waitFor(
+        () => {
+          const element = screen.queryByText("進行中");
+          if (element) expect(element).toBeInTheDocument();
+        },
+        { timeout: 1000 },
+      );
     });
 
-    it('should show correct status for completed program', async () => {
+    it("should show correct status for completed program", async () => {
       const completedProgramData = {
         ...mockProgramData,
-        status: 'completed'
+        status: "completed",
       };
 
       (fetch as jest.MockedFunction<typeof fetch>).mockResolvedValue({
         ok: true,
-        json: async () => completedProgramData
+        json: async () => completedProgramData,
       } as Response);
 
       renderWithProviders(<ProgramDetailPage />);
 
-      await waitFor(() => {
-        const element = screen.queryByText('已完成');
-        if (element) expect(element).toBeInTheDocument();
-      }, { timeout: 1000 });
+      await waitFor(
+        () => {
+          const element = screen.queryByText("已完成");
+          if (element) expect(element).toBeInTheDocument();
+        },
+        { timeout: 1000 },
+      );
     });
   });
 });

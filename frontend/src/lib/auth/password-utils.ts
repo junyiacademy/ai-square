@@ -1,4 +1,4 @@
-import { Pool } from 'pg';
+import { Pool } from "pg";
 
 /**
  * Update user password hash in database
@@ -8,7 +8,7 @@ export async function updateUserPasswordHash(
   pool: Pool,
   userId: string,
   passwordHash: string,
-  role: string = 'student'
+  role: string = "student",
 ): Promise<void> {
   const query = `
     UPDATE users
@@ -24,7 +24,7 @@ export async function updateUserPasswordHash(
  */
 export async function updateUserEmailVerified(
   pool: Pool,
-  userId: string
+  userId: string,
 ): Promise<void> {
   const query = `
     UPDATE users
@@ -40,7 +40,7 @@ export async function updateUserEmailVerified(
  */
 export async function getUserWithPassword(
   pool: Pool,
-  email: string
+  email: string,
 ): Promise<{
   id: string;
   email: string;

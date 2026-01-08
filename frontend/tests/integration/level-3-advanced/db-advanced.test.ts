@@ -3,25 +3,25 @@
  * More complex database operations without API dependencies
  */
 
-import type { Pool, PoolClient } from 'pg';
+import type { Pool, PoolClient } from "pg";
 
-describe.skip('Advanced Database Operations', () => {
+describe.skip("Advanced Database Operations", () => {
   let pool: Pool | null = null;
 
   beforeAll(async () => {
     try {
-      const { Pool } = require('pg');
+      const { Pool } = require("pg");
       pool = new Pool({
-        host: process.env.DB_HOST || 'localhost',
-        port: parseInt(process.env.DB_PORT || '5434'),
-        database: process.env.DB_NAME || 'ai_square_db',
-        user: process.env.DB_USER || 'postgres',
-        password: process.env.DB_PASSWORD || 'postgres',
+        host: process.env.DB_HOST || "localhost",
+        port: parseInt(process.env.DB_PORT || "5434"),
+        database: process.env.DB_NAME || "ai_square_db",
+        user: process.env.DB_USER || "postgres",
+        password: process.env.DB_PASSWORD || "postgres",
         connectionTimeoutMillis: 3000,
       });
-      await pool!.query('SELECT 1');
+      await pool!.query("SELECT 1");
     } catch (error) {
-      console.error('DB connection failed:', error);
+      console.error("DB connection failed:", error);
       pool = null;
     }
   }, 5000);
@@ -32,9 +32,9 @@ describe.skip('Advanced Database Operations', () => {
     }
   });
 
-  it('should perform complex scenario query', async () => {
+  it("should perform complex scenario query", async () => {
     if (!pool) {
-      console.log('No database connection, skipping');
+      console.log("No database connection, skipping");
       expect(true).toBe(true);
       return;
     }
@@ -42,7 +42,7 @@ describe.skip('Advanced Database Operations', () => {
     const result = await pool.query<{
       mode: string;
       count: string;
-      active_count: string
+      active_count: string;
     }>(`
       SELECT
         mode,
@@ -53,35 +53,35 @@ describe.skip('Advanced Database Operations', () => {
       ORDER BY mode
     `);
 
-    console.log('Scenario distribution:', result.rows);
+    console.log("Scenario distribution:", result.rows);
     expect(result.rows).toBeDefined();
   });
 
-  it('should test transaction with multiple tables', async () => {
+  it("should test transaction with multiple tables", async () => {
     if (!pool) {
-      console.log('No database connection, skipping');
+      console.log("No database connection, skipping");
       expect(true).toBe(true);
       return;
     }
 
     const client: PoolClient = await pool.connect();
-    const { v4: uuidv4 } = require('uuid');
+    const { v4: uuidv4 } = require("uuid");
     const userId = uuidv4();
     const programId = uuidv4();
 
     try {
-      await client.query('BEGIN');
+      await client.query("BEGIN");
 
       // Insert user
       await client.query(
         `INSERT INTO users (id, email, name, role, email_verified)
          VALUES ($1, $2, $3, $4, $5)`,
-        [userId, `test-${Date.now()}@example.com`, 'Test User', 'user', true]
+        [userId, `test-${Date.now()}@example.com`, "Test User", "user", true],
       );
 
       // Check if we have scenarios to link
       const scenarios = await client.query(
-        `SELECT id FROM scenarios WHERE mode = 'pbl' AND status = 'active' LIMIT 1`
+        `SELECT id FROM scenarios WHERE mode = 'pbl' AND status = 'active' LIMIT 1`,
       );
 
       if (scenarios.rows.length > 0) {
@@ -89,36 +89,35 @@ describe.skip('Advanced Database Operations', () => {
         await client.query(
           `INSERT INTO programs (id, scenario_id, user_id, status, total_task_count, time_spent_seconds)
            VALUES ($1, $2, $3, $4, $5, $6)`,
-          [programId, scenarios.rows[0].id, userId, 'pending', 0, 0]
+          [programId, scenarios.rows[0].id, userId, "pending", 0, 0],
         );
 
         // Verify program was created with inherited mode
         const program = await client.query(
           `SELECT id, mode, status FROM programs WHERE id = $1`,
-          [programId]
+          [programId],
         );
 
-        expect(program.rows[0].mode).toBe('pbl');
+        expect(program.rows[0].mode).toBe("pbl");
       }
 
       // Rollback to clean up
-      await client.query('ROLLBACK');
+      await client.query("ROLLBACK");
 
       // Verify rollback worked
       const checkUser = await client.query(
         `SELECT id FROM users WHERE id = $1`,
-        [userId]
+        [userId],
       );
       expect(checkUser.rows.length).toBe(0);
-
     } finally {
       client.release();
     }
   });
 
-  it('should analyze table relationships', async () => {
+  it("should analyze table relationships", async () => {
     if (!pool) {
-      console.log('No database connection, skipping');
+      console.log("No database connection, skipping");
       expect(true).toBe(true);
       return;
     }

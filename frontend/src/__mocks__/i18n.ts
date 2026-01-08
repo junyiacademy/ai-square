@@ -3,8 +3,8 @@ const i18n = {
   use: jest.fn().mockReturnThis(),
   init: jest.fn().mockReturnThis(),
   changeLanguage: jest.fn(() => Promise.resolve()),
-  language: 'en',
-  languages: ['en', 'zhTW', 'zhCN'],
+  language: "en",
+  languages: ["en", "zhTW", "zhCN"],
   t: (key: string) => key,
   exists: jest.fn(),
   getFixedT: jest.fn(),
@@ -29,12 +29,12 @@ const i18n = {
   } as Record<string, unknown>,
   store: {
     data: {},
-    options: {}
+    options: {},
   } as Record<string, unknown>,
   format: jest.fn(),
   options: {},
   isInitialized: true,
   logger: { log: jest.fn() } as Record<string, unknown>,
-} as unknown as typeof import('i18next').default;
+} as unknown as typeof import("i18next").default;
 
 export default i18n;

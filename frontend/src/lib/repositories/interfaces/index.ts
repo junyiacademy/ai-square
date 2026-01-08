@@ -8,21 +8,21 @@ import type {
   ITask,
   IEvaluation,
   IScenario,
-  IInteraction
-} from '@/types/unified-learning';
+  IInteraction,
+} from "@/types/unified-learning";
 import type {
   IDiscoveryScenario,
   ICareerRecommendation,
   IDiscoveryMilestone,
-  IPortfolioItem
-} from '@/types/discovery-types';
+  IPortfolioItem,
+} from "@/types/discovery-types";
 import type {
   LearningMode as DBLearningMode,
   ProgramStatus as DBProgramStatus,
   TaskStatus as DBTaskStatus,
   ScenarioStatus as DBScenarioStatus,
-  SourceType as DBSourceType
-} from '@/types/database';
+  SourceType as DBSourceType,
+} from "@/types/database";
 
 // ========================================
 // 動態資料 Repositories (PostgreSQL)
@@ -39,7 +39,10 @@ export interface IUserRepository {
   addAchievement(userId: string, achievementId: string): Promise<void>;
 
   // Assessment-related methods
-  saveAssessmentSession(userId: string, session: CreateAssessmentSessionDto): Promise<AssessmentSession>;
+  saveAssessmentSession(
+    userId: string,
+    session: CreateAssessmentSessionDto,
+  ): Promise<AssessmentSession>;
   getAssessmentSessions(userId: string): Promise<AssessmentSession[]>;
   getLatestAssessmentResults(userId: string): Promise<AssessmentResults | null>;
 
@@ -49,7 +52,10 @@ export interface IUserRepository {
 
   // Complete user data operations
   getUserData(userEmail: string): Promise<UserDataResponse | null>;
-  saveUserData(userEmail: string, data: UserDataInput): Promise<UserDataResponse>;
+  saveUserData(
+    userEmail: string,
+    data: UserDataInput,
+  ): Promise<UserDataResponse>;
   deleteUserData(userEmail: string): Promise<boolean>;
 }
 
@@ -57,7 +63,7 @@ export interface IProgramRepository {
   findById(id: string): Promise<IProgram | null>;
   findByUser(userId: string): Promise<IProgram[]>;
   findByScenario(scenarioId: string): Promise<IProgram[]>;
-  create(data: Omit<IProgram, 'id'>): Promise<IProgram>;
+  create(data: Omit<IProgram, "id">): Promise<IProgram>;
   updateProgress(id: string, taskIndex: number): Promise<IProgram>;
   complete(id: string): Promise<IProgram>;
   update?(id: string, data: UpdateProgramDto): Promise<IProgram>;
@@ -69,9 +75,9 @@ export interface IProgramRepository {
 export interface ITaskRepository {
   findById(id: string): Promise<ITask | null>;
   findByProgram(programId: string): Promise<ITask[]>;
-  findByProgramIds(programIds: string[]): Promise<ITask[]>;  // Batch loading for N+1 prevention
-  create(data: Omit<ITask, 'id'>): Promise<ITask>;
-  createBatch(tasks: Omit<ITask, 'id'>[]): Promise<ITask[]>;
+  findByProgramIds(programIds: string[]): Promise<ITask[]>; // Batch loading for N+1 prevention
+  create(data: Omit<ITask, "id">): Promise<ITask>;
+  createBatch(tasks: Omit<ITask, "id">[]): Promise<ITask[]>;
   updateInteractions(id: string, interactions: IInteraction[]): Promise<ITask>;
   complete(id: string): Promise<ITask>;
   update?(id: string, data: UpdateTaskDto): Promise<ITask>;
@@ -85,11 +91,14 @@ export interface ITaskRepository {
 export interface IEvaluationRepository {
   findById(id: string): Promise<IEvaluation | null>;
   findByProgram(programId: string): Promise<IEvaluation[]>;
-  findByProgramIds(programIds: string[]): Promise<IEvaluation[]>;  // Batch loading for N+1 prevention
+  findByProgramIds(programIds: string[]): Promise<IEvaluation[]>; // Batch loading for N+1 prevention
   findByTask(taskId: string): Promise<IEvaluation[]>;
   findByUser(userId: string): Promise<IEvaluation[]>;
-  findByType(evaluationType: string, evaluationSubtype?: string): Promise<IEvaluation[]>;
-  create(data: Omit<IEvaluation, 'id'>): Promise<IEvaluation>;
+  findByType(
+    evaluationType: string,
+    evaluationSubtype?: string,
+  ): Promise<IEvaluation[]>;
+  create(data: Omit<IEvaluation, "id">): Promise<IEvaluation>;
   update?(id: string, data: UpdateEvaluationDto): Promise<IEvaluation>;
   getLatestForTask?(taskId: string): Promise<IEvaluation | null>;
   getUserProgress?(userId: string): Promise<UserProgress>;
@@ -97,11 +106,14 @@ export interface IEvaluationRepository {
 
 export interface IScenarioRepository {
   findById(id: string): Promise<IScenario | null>;
-  findByIds(ids: string[]): Promise<IScenario[]>;  // Batch loading for N+1 prevention
+  findByIds(ids: string[]): Promise<IScenario[]>; // Batch loading for N+1 prevention
   findBySource(sourceType: string, sourceId?: string): Promise<IScenario[]>;
   update(id: string, updates: Partial<IScenario>): Promise<IScenario>;
-  create(data: Omit<IScenario, 'id'>): Promise<IScenario>;
-  findByMode?(mode: DBLearningMode, includeArchived?: boolean): Promise<IScenario[]>;
+  create(data: Omit<IScenario, "id">): Promise<IScenario>;
+  findByMode?(
+    mode: DBLearningMode,
+    includeArchived?: boolean,
+  ): Promise<IScenario[]>;
   findActive?(): Promise<IScenario[]>;
   updateStatus?(id: string, status: DBScenarioStatus): Promise<void>;
   delete(id: string): Promise<boolean>;
@@ -125,8 +137,15 @@ export interface IDiscoveryRepository {
   }>;
 
   // Portfolio management
-  addPortfolioItem(userId: string, item: Omit<IPortfolioItem, 'id' | 'createdAt'>): Promise<IPortfolioItem>;
-  updatePortfolioItem(userId: string, itemId: string, updates: Partial<IPortfolioItem>): Promise<IPortfolioItem>;
+  addPortfolioItem(
+    userId: string,
+    item: Omit<IPortfolioItem, "id" | "createdAt">,
+  ): Promise<IPortfolioItem>;
+  updatePortfolioItem(
+    userId: string,
+    itemId: string,
+    updates: Partial<IPortfolioItem>,
+  ): Promise<IPortfolioItem>;
   deletePortfolioItem(userId: string, itemId: string): Promise<void>;
   getPortfolioItems(userId: string): Promise<IPortfolioItem[]>;
 }
@@ -141,7 +160,10 @@ export interface IContentRepository {
   listYamlFiles(prefix: string): Promise<string[]>;
 
   // Scenario content
-  getScenarioContent(scenarioId: string, language?: string): Promise<ScenarioContent>;
+  getScenarioContent(
+    scenarioId: string,
+    language?: string,
+  ): Promise<ScenarioContent>;
   getAllScenarios(type?: ScenarioType): Promise<ScenarioContent[]>;
 
   // KSA content
@@ -358,7 +380,7 @@ export interface FindUsersOptions {
   limit?: number;
   offset?: number;
   orderBy?: string;
-  order?: 'ASC' | 'DESC';
+  order?: "ASC" | "DESC";
 }
 
 // Extended Types
@@ -415,7 +437,7 @@ export interface ScenarioContent {
 
 export interface KSAMapping {
   code: string;
-  type: 'knowledge' | 'skill' | 'attitude';
+  type: "knowledge" | "skill" | "attitude";
   domain: string;
   description: { [lang: string]: string };
 }
@@ -465,7 +487,7 @@ export interface UserBadge {
   name: string;
   description?: string;
   imageUrl?: string;
-  category: 'exploration' | 'learning' | 'mastery' | 'community' | 'special';
+  category: "exploration" | "learning" | "mastery" | "community" | "special";
   xpReward: number;
   unlockedAt: Date;
   metadata?: Record<string, unknown>;
@@ -485,7 +507,7 @@ export interface CreateBadgeDto {
   name: string;
   description?: string;
   imageUrl?: string;
-  category: 'exploration' | 'learning' | 'mastery' | 'community' | 'special';
+  category: "exploration" | "learning" | "mastery" | "community" | "special";
   xpReward: number;
 }
 
@@ -514,7 +536,12 @@ export interface UserDataInput {
       description: string;
       imageUrl?: string;
       unlockedAt: string;
-      category: 'exploration' | 'learning' | 'mastery' | 'community' | 'special';
+      category:
+        | "exploration"
+        | "learning"
+        | "mastery"
+        | "community"
+        | "special";
       xpReward: number;
     }>;
     totalXp: number;

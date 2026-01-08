@@ -1,35 +1,35 @@
-import React from 'react';
-import { render, screen, waitFor, fireEvent } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { useRouter } from 'next/navigation';
-import AccountSettingsPage from '../page';
-import { useAuth } from '@/hooks/useAuth';
+import React from "react";
+import { render, screen, waitFor, fireEvent } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { useRouter } from "next/navigation";
+import AccountSettingsPage from "../page";
+import { useAuth } from "@/hooks/useAuth";
 
 // Mock next/navigation
-jest.mock('next/navigation', () => ({
-  useRouter: jest.fn()
+jest.mock("next/navigation", () => ({
+  useRouter: jest.fn(),
 }));
 
 // Mock useAuth hook
-jest.mock('@/hooks/useAuth', () => ({
-  useAuth: jest.fn()
+jest.mock("@/hooks/useAuth", () => ({
+  useAuth: jest.fn(),
 }));
 
 // Mock react-i18next
-jest.mock('react-i18next', () => ({
+jest.mock("react-i18next", () => ({
   useTranslation: () => ({
     t: (key: string, defaultValue?: string) => defaultValue || key,
     i18n: {
       changeLanguage: jest.fn(),
-      language: 'en'
-    }
-  })
+      language: "en",
+    },
+  }),
 }));
 
 // Mock fetch
 global.fetch = jest.fn();
 
-describe('AccountSettingsPage', () => {
+describe("AccountSettingsPage", () => {
   const mockPush = jest.fn();
   const mockRouter = { push: mockPush };
 
@@ -40,28 +40,28 @@ describe('AccountSettingsPage', () => {
       ok: true,
       json: async () => ({
         consents: [],
-        requiredConsents: []
-      })
+        requiredConsents: [],
+      }),
     });
   });
 
-  it('should redirect to login if user is not authenticated', async () => {
+  it("should redirect to login if user is not authenticated", async () => {
     (useAuth as jest.Mock).mockReturnValue({
       user: null,
-      isLoading: false
+      isLoading: false,
     });
 
     render(<AccountSettingsPage />);
 
     await waitFor(() => {
-      expect(mockPush).toHaveBeenCalledWith('/login');
+      expect(mockPush).toHaveBeenCalledWith("/login");
     });
   });
 
-  it('should render when user is authenticated', async () => {
+  it("should render when user is authenticated", async () => {
     (useAuth as jest.Mock).mockReturnValue({
-      user: { email: 'test@example.com', id: '123' },
-      isLoading: false
+      user: { email: "test@example.com", id: "123" },
+      isLoading: false,
     });
 
     const { container } = render(<AccountSettingsPage />);
@@ -72,10 +72,10 @@ describe('AccountSettingsPage', () => {
     });
   });
 
-  it('should show loading state initially', () => {
+  it("should show loading state initially", () => {
     (useAuth as jest.Mock).mockReturnValue({
-      user: { email: 'test@example.com', id: '123' },
-      isLoading: true
+      user: { email: "test@example.com", id: "123" },
+      isLoading: true,
     });
 
     render(<AccountSettingsPage />);
@@ -84,33 +84,35 @@ describe('AccountSettingsPage', () => {
     expect(screen.queryByText(/Account Settings/)).toBeDefined();
   });
 
-  it.skip('should fetch consents when user is authenticated', async () => {
+  it.skip("should fetch consents when user is authenticated", async () => {
     (useAuth as jest.Mock).mockReturnValue({
-      user: { email: 'test@example.com', id: '123' },
-      isLoading: false
+      user: { email: "test@example.com", id: "123" },
+      isLoading: false,
     });
 
     render(<AccountSettingsPage />);
 
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith(
-        expect.stringContaining('/api/legal/consent'),
-        expect.any(Object)
+        expect.stringContaining("/api/legal/consent"),
+        expect.any(Object),
       );
     });
   });
 
-  it.skip('should handle delete account modal', async () => {
+  it.skip("should handle delete account modal", async () => {
     const user = userEvent.setup();
     (useAuth as jest.Mock).mockReturnValue({
-      user: { email: 'test@example.com', id: '123' },
-      isLoading: false
+      user: { email: "test@example.com", id: "123" },
+      isLoading: false,
     });
 
     render(<AccountSettingsPage />);
 
     // Find and click delete account button - use the translation key
-    const deleteButton = await screen.findByText('accountSettings.deleteAccount');
+    const deleteButton = await screen.findByText(
+      "accountSettings.deleteAccount",
+    );
     await user.click(deleteButton);
 
     // Modal should be visible
@@ -119,14 +121,16 @@ describe('AccountSettingsPage', () => {
     });
   });
 
-  it('should handle consent fetch error', async () => {
-    const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+  it("should handle consent fetch error", async () => {
+    const consoleSpy = jest.spyOn(console, "error").mockImplementation();
     (useAuth as jest.Mock).mockReturnValue({
-      user: { email: 'test@example.com', id: '123' },
-      isLoading: false
+      user: { email: "test@example.com", id: "123" },
+      isLoading: false,
     });
 
-    (global.fetch as jest.Mock).mockRejectedValueOnce(new Error('Network error'));
+    (global.fetch as jest.Mock).mockRejectedValueOnce(
+      new Error("Network error"),
+    );
 
     render(<AccountSettingsPage />);
 
@@ -137,10 +141,10 @@ describe('AccountSettingsPage', () => {
     consoleSpy.mockRestore();
   });
 
-  it('should not fetch consents while auth is loading', () => {
+  it("should not fetch consents while auth is loading", () => {
     (useAuth as jest.Mock).mockReturnValue({
       user: null,
-      isLoading: true
+      isLoading: true,
     });
 
     render(<AccountSettingsPage />);
@@ -148,84 +152,92 @@ describe('AccountSettingsPage', () => {
     expect(global.fetch).not.toHaveBeenCalled();
   });
 
-  it.skip('should handle delete account form submission', async () => {
+  it.skip("should handle delete account form submission", async () => {
     const user = userEvent.setup();
     (useAuth as jest.Mock).mockReturnValue({
-      user: { email: 'test@example.com', id: '123' },
-      isLoading: false
+      user: { email: "test@example.com", id: "123" },
+      isLoading: false,
     });
 
     (global.fetch as jest.Mock)
       .mockResolvedValueOnce({
         ok: true,
-        json: async () => ({ consents: [], requiredConsents: [] })
+        json: async () => ({ consents: [], requiredConsents: [] }),
       })
       .mockResolvedValueOnce({
         ok: true,
-        json: async () => ({ success: true })
+        json: async () => ({ success: true }),
       });
 
     render(<AccountSettingsPage />);
 
     // Open delete modal
-    const deleteButton = await screen.findByText('accountSettings.deleteAccount');
+    const deleteButton = await screen.findByText(
+      "accountSettings.deleteAccount",
+    );
     await user.click(deleteButton);
 
     // Fill in form
     const passwordInput = await screen.findByPlaceholderText(/password/i);
-    await user.type(passwordInput, 'testpassword');
+    await user.type(passwordInput, "testpassword");
 
     const reasonInput = await screen.findByPlaceholderText(/reason/i);
-    await user.type(reasonInput, 'No longer needed');
+    await user.type(reasonInput, "No longer needed");
 
     // Check confirmation
-    const confirmCheckbox = await screen.findByRole('checkbox');
+    const confirmCheckbox = await screen.findByRole("checkbox");
     await user.click(confirmCheckbox);
 
     // Submit
-    const confirmButton = await screen.findByText('accountSettings.deleteForever');
+    const confirmButton = await screen.findByText(
+      "accountSettings.deleteForever",
+    );
     await user.click(confirmButton);
 
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith(
-        expect.stringContaining('/api/auth/delete-account'),
+        expect.stringContaining("/api/auth/delete-account"),
         expect.objectContaining({
-          method: 'POST'
-        })
+          method: "POST",
+        }),
       );
     });
   });
 
-  it.skip('should display error when delete account fails', async () => {
+  it.skip("should display error when delete account fails", async () => {
     const user = userEvent.setup();
     (useAuth as jest.Mock).mockReturnValue({
-      user: { email: 'test@example.com', id: '123' },
-      isLoading: false
+      user: { email: "test@example.com", id: "123" },
+      isLoading: false,
     });
 
     (global.fetch as jest.Mock)
       .mockResolvedValueOnce({
         ok: true,
-        json: async () => ({ consents: [], requiredConsents: [] })
+        json: async () => ({ consents: [], requiredConsents: [] }),
       })
       .mockResolvedValueOnce({
         ok: false,
-        json: async () => ({ error: 'Invalid password' })
+        json: async () => ({ error: "Invalid password" }),
       });
 
     render(<AccountSettingsPage />);
 
     // Open modal and submit
-    const deleteButton = await screen.findByText('accountSettings.deleteAccount');
+    const deleteButton = await screen.findByText(
+      "accountSettings.deleteAccount",
+    );
     await user.click(deleteButton);
 
     const passwordInput = await screen.findByPlaceholderText(/password/i);
-    await user.type(passwordInput, 'wrongpassword');
+    await user.type(passwordInput, "wrongpassword");
 
-    const confirmCheckbox = await screen.findByRole('checkbox');
+    const confirmCheckbox = await screen.findByRole("checkbox");
     await user.click(confirmCheckbox);
 
-    const confirmButton = await screen.findByText('accountSettings.deleteForever');
+    const confirmButton = await screen.findByText(
+      "accountSettings.deleteForever",
+    );
     await user.click(confirmButton);
 
     await waitFor(() => {

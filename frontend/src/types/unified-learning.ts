@@ -11,8 +11,8 @@ import type {
   TaskStatus,
   TaskType,
   DifficultyLevel,
-  SourceType
-} from './database';
+  SourceType,
+} from "./database";
 
 // ===== Core Interfaces =====
 
@@ -21,8 +21,8 @@ import type {
  */
 export interface IContentSource {
   type: SourceType;
-  path?: string;  // YAML檔案路徑
-  id?: string;  // API或AI生成的來源ID
+  path?: string; // YAML檔案路徑
+  id?: string; // API或AI生成的來源ID
   metadata: Record<string, unknown>;
 }
 
@@ -30,8 +30,8 @@ export interface IContentSource {
  * Scenario - 學習情境（UUID檔案）
  */
 export interface IScenario {
-  id: string;  // UUID
-  mode: LearningMode;  // 改用統一的 ENUM
+  id: string; // UUID
+  mode: LearningMode; // 改用統一的 ENUM
   status: ScenarioStatus;
   version: string;
 
@@ -42,9 +42,9 @@ export interface IScenario {
   sourceMetadata: Record<string, unknown>;
 
   // Basic info (multi-language)
-  title: Record<string, string>;  // {"en": "Title", "zh": "標題"}
+  title: Record<string, string>; // {"en": "Title", "zh": "標題"}
   description: Record<string, string>;
-  objectives: string[] | Record<string, string[]>;  // Support both legacy string[] and multilingual Record<string, string[]>
+  objectives: string[] | Record<string, string[]>; // Support both legacy string[] and multilingual Record<string, string[]>
 
   // Common attributes
   difficulty: DifficultyLevel;
@@ -53,7 +53,7 @@ export interface IScenario {
 
   // Task templates
   taskTemplates: ITaskTemplate[];
-  taskCount?: number;  // computed field - optional
+  taskCount?: number; // computed field - optional
 
   // Rewards and progression
   xpRewards: Record<string, number>;
@@ -82,20 +82,20 @@ export interface IScenario {
  */
 export interface ITaskTemplate {
   id: string;
-  title: Record<string, string>;  // Multilingual title
+  title: Record<string, string>; // Multilingual title
   type: TaskType;
-  description?: Record<string, string>;  // Multilingual description
-  [key: string]: unknown;  // Allow additional properties
+  description?: Record<string, string>; // Multilingual description
+  [key: string]: unknown; // Allow additional properties
 }
 
 /**
  * Program - 學習實例（每次開局）
  */
 export interface IProgram {
-  id: string;  // UUID
+  id: string; // UUID
   userId: string;
-  scenarioId: string;  // 關聯Scenario UUID
-  mode: LearningMode;  // Mode propagated from scenario
+  scenarioId: string; // 關聯Scenario UUID
+  mode: LearningMode; // Mode propagated from scenario
   status: ProgramStatus;
 
   // Progress tracking
@@ -105,7 +105,7 @@ export interface IProgram {
 
   // Scoring (unified)
   totalScore: number;
-  domainScores: Record<string, number>;     // {"ksa": {...}, "creativity": 8}
+  domainScores: Record<string, number>; // {"ksa": {...}, "creativity": 8}
 
   // XP and rewards (mainly for Discovery)
   xpEarned: number;
@@ -134,28 +134,28 @@ export interface IProgram {
  * Task - 學習任務（UUID檔案）
  */
 export interface ITask {
-  id: string;  // UUID
-  programId: string;  // 關聯Program UUID
-  scenarioId?: string;  // 關聯Scenario UUID (database has it as required, but making optional for backward compatibility)
-  mode: LearningMode;  // Mode propagated from program
-  taskIndex: number;  // Order within program
-  scenarioTaskIndex?: number;  // Reference to scenario template
+  id: string; // UUID
+  programId: string; // 關聯Program UUID
+  scenarioId?: string; // 關聯Scenario UUID (database has it as required, but making optional for backward compatibility)
+  mode: LearningMode; // Mode propagated from program
+  taskIndex: number; // Order within program
+  scenarioTaskIndex?: number; // Reference to scenario template
 
   // Basic info (multilingual support)
-  title?: Record<string, string>;  // {"en": "...", "zhTW": "..."}
-  description?: Record<string, string>;  // {"en": "...", "zhTW": "..."}
+  title?: Record<string, string>; // {"en": "...", "zhTW": "..."}
+  description?: Record<string, string>; // {"en": "...", "zhTW": "..."}
   type: TaskType;
   status: TaskStatus;
 
   // Content (unified structure)
-  content: Record<string, unknown>;  // Instructions, questions, etc.
+  content: Record<string, unknown>; // Instructions, questions, etc.
 
   // Interaction tracking
-  interactions: IInteraction[];  // Array of interactions
-  interactionCount: number;  // computed field
+  interactions: IInteraction[]; // Array of interactions
+  interactionCount: number; // computed field
 
   // Response/solution
-  userResponse: Record<string, unknown>;  // User's answer/solution
+  userResponse: Record<string, unknown>; // User's answer/solution
 
   // Scoring
   score: number;
@@ -164,11 +164,11 @@ export interface ITask {
   // Attempts and timing
   allowedAttempts: number;
   attemptCount: number;
-  timeLimitSeconds?: number;  // Optional time limit
+  timeLimitSeconds?: number; // Optional time limit
   timeSpentSeconds: number;
 
   // AI configuration
-  aiConfig: Record<string, unknown>;  // AI module settings
+  aiConfig: Record<string, unknown>; // AI module settings
 
   // Timestamps
   createdAt: string;
@@ -190,7 +190,7 @@ export interface ITask {
  */
 export interface IInteraction {
   timestamp: string;
-  type: 'user_input' | 'ai_response' | 'system_event';
+  type: "user_input" | "ai_response" | "system_event";
   content: unknown;
   metadata?: Record<string, unknown>;
 }
@@ -199,15 +199,15 @@ export interface IInteraction {
  * Evaluation - 評估結果（多語言支援）
  */
 export interface IEvaluation {
-  id: string;  // UUID
+  id: string; // UUID
   userId: string;
   programId?: string;
   taskId?: string;
-  mode: LearningMode;  // Mode for easy filtering
+  mode: LearningMode; // Mode for easy filtering
 
   // Evaluation scope
-  evaluationType: string;  // 'task', 'program', 'skill'
-  evaluationSubtype?: string;  // Mode-specific subtypes
+  evaluationType: string; // 'task', 'program', 'skill'
+  evaluationSubtype?: string; // Mode-specific subtypes
 
   // Scoring (unified 0-100 scale)
   score: number;
@@ -218,10 +218,10 @@ export interface IEvaluation {
 
   // Feedback
   feedbackText?: string;
-  feedbackData: Record<string, unknown>;  // Structured feedback
+  feedbackData: Record<string, unknown>; // Structured feedback
 
   // AI analysis
-  aiProvider?: string;  // 'vertex', 'openai', etc.
+  aiProvider?: string; // 'vertex', 'openai', etc.
   aiModel?: string;
   aiAnalysis: Record<string, unknown>;
 
@@ -256,9 +256,9 @@ export interface IDomainScore {
  * Base Scenario Repository
  */
 export abstract class BaseScenarioRepository<T extends IScenario> {
-  abstract create(scenario: Omit<T, 'id'>): Promise<T>;
+  abstract create(scenario: Omit<T, "id">): Promise<T>;
   abstract findById(id: string): Promise<T | null>;
-  abstract findByIds(ids: string[]): Promise<T[]>;  // Batch loading for N+1 prevention
+  abstract findByIds(ids: string[]): Promise<T[]>; // Batch loading for N+1 prevention
   abstract findBySource(sourceType: string, sourceId?: string): Promise<T[]>;
   abstract update(id: string, updates: Partial<T>): Promise<T>;
 }
@@ -267,7 +267,7 @@ export abstract class BaseScenarioRepository<T extends IScenario> {
  * Base Program Repository
  */
 export abstract class BaseProgramRepository<T extends IProgram> {
-  abstract create(program: Omit<T, 'id'>): Promise<T>;
+  abstract create(program: Omit<T, "id">): Promise<T>;
   abstract findById(id: string): Promise<T | null>;
   abstract findByUser(userId: string): Promise<T[]>;
   abstract findByScenario(scenarioId: string): Promise<T[]>;
@@ -279,11 +279,14 @@ export abstract class BaseProgramRepository<T extends IProgram> {
  * Base Task Repository
  */
 export abstract class BaseTaskRepository<T extends ITask> {
-  abstract create(task: Omit<T, 'id'>): Promise<T>;
-  abstract createBatch(tasks: Omit<T, 'id'>[]): Promise<T[]>;
+  abstract create(task: Omit<T, "id">): Promise<T>;
+  abstract createBatch(tasks: Omit<T, "id">[]): Promise<T[]>;
   abstract findById(id: string): Promise<T | null>;
   abstract findByProgram(programId: string): Promise<T[]>;
-  abstract updateInteractions(id: string, interactions: IInteraction[]): Promise<T>;
+  abstract updateInteractions(
+    id: string,
+    interactions: IInteraction[],
+  ): Promise<T>;
   abstract complete(id: string): Promise<T>;
 }
 
@@ -291,13 +294,16 @@ export abstract class BaseTaskRepository<T extends ITask> {
  * Base Evaluation Repository
  */
 export abstract class BaseEvaluationRepository<T extends IEvaluation> {
-  abstract create(evaluation: Omit<T, 'id'>): Promise<T>;
+  abstract create(evaluation: Omit<T, "id">): Promise<T>;
   abstract findById(id: string): Promise<T | null>;
   abstract findByProgram(programId: string): Promise<T[]>;
-  abstract findByProgramIds(programIds: string[]): Promise<T[]>;  // Batch loading for N+1 prevention
+  abstract findByProgramIds(programIds: string[]): Promise<T[]>; // Batch loading for N+1 prevention
   abstract findByTask(taskId: string): Promise<T[]>;
   abstract findByUser(userId: string): Promise<T[]>;
-  abstract findByType(evaluationType: string, evaluationSubtype?: string): Promise<T[]>;
+  abstract findByType(
+    evaluationType: string,
+    evaluationSubtype?: string,
+  ): Promise<T[]>;
 }
 
 // ===== Service Interfaces =====
@@ -310,7 +316,10 @@ export interface IEvaluationSystem {
   evaluateTask(task: ITask, context: IEvaluationContext): Promise<IEvaluation>;
 
   // Program級別總結評估
-  evaluateProgram(program: IProgram, taskEvaluations: IEvaluation[]): Promise<IEvaluation>;
+  evaluateProgram(
+    program: IProgram,
+    taskEvaluations: IEvaluation[],
+  ): Promise<IEvaluation>;
 
   // 產生回饋
   generateFeedback(evaluation: IEvaluation, language: string): Promise<string>;

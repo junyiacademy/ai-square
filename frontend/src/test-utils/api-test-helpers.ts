@@ -14,29 +14,32 @@ interface MockRequest {
   text: () => Promise<string>;
 }
 
-export function createMockRequest(url: string, options: MockRequestOptions = {}): MockRequest {
-  const { method = 'GET', headers = {}, body } = options;
+export function createMockRequest(
+  url: string,
+  options: MockRequestOptions = {},
+): MockRequest {
+  const { method = "GET", headers = {}, body } = options;
 
   return {
     url,
     method,
     headers: new Headers(headers),
     json: async () => {
-      if (typeof body === 'string') {
+      if (typeof body === "string") {
         try {
           return JSON.parse(body);
         } catch {
-          throw new SyntaxError('Unexpected end of JSON input');
+          throw new SyntaxError("Unexpected end of JSON input");
         }
       }
       return body || {};
     },
     text: async () => {
-      if (typeof body === 'string') {
+      if (typeof body === "string") {
         return body;
       }
       return JSON.stringify(body || {});
-    }
+    },
   };
 }
 
@@ -64,10 +67,10 @@ export function createMockResponse(): MockResponse {
         json: (data: unknown) => {
           jsonData = data;
           return Promise.resolve(data);
-        }
+        },
       };
     },
     getStatus: () => status,
-    getJson: () => jsonData
+    getJson: () => jsonData,
   };
 }

@@ -1,10 +1,10 @@
-'use client';
-import React, { useState, useEffect, ReactNode } from 'react';
-import { useTranslation } from 'react-i18next';
-import '../../i18n';
-import Image from 'next/image';
-import { contentService } from '@/services/content-service';
-import { LoadingAccordion } from '@/components/ui/loading-skeleton';
+"use client";
+import React, { useState, useEffect, ReactNode } from "react";
+import { useTranslation } from "react-i18next";
+import "../../i18n";
+import Image from "next/image";
+import { contentService } from "@/services/content-service";
+import { LoadingAccordion } from "@/components/ui/loading-skeleton";
 
 interface Competency {
   id: string;
@@ -128,8 +128,12 @@ interface TreeData {
  * 由於所有語言現在都使用獨立的 YAML 檔案，API 會根據語言參數載入對應檔案，
  * 直接返回已翻譯的內容在基本欄位中
  */
-const getTranslatedText = (lang: string, item: object | null, fieldName: string): unknown => {
-  if (!item) return '';
+const getTranslatedText = (
+  lang: string,
+  item: object | null,
+  fieldName: string,
+): unknown => {
+  if (!item) return "";
   const record = item as Record<string, unknown>;
   return record[fieldName];
 };
@@ -142,8 +146,8 @@ export default function RelationsClient() {
 
   // 初始化時同步語言狀態
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const savedLang = localStorage.getItem('ai-square-language');
+    if (typeof window !== "undefined") {
+      const savedLang = localStorage.getItem("ai-square-language");
       if (savedLang && savedLang !== i18n.language) {
         i18n.changeLanguage(savedLang);
         setLang(savedLang);
@@ -161,9 +165,9 @@ export default function RelationsClient() {
       await contentService.clearLanguageCache(lang);
     };
 
-    window.addEventListener('language-changed', handleLanguageChange);
+    window.addEventListener("language-changed", handleLanguageChange);
     return () => {
-      window.removeEventListener('language-changed', handleLanguageChange);
+      window.removeEventListener("language-changed", handleLanguageChange);
     };
   }, [lang]);
 
@@ -181,47 +185,65 @@ export default function RelationsClient() {
       if (data.ksa) {
         // Process knowledge items
         if (data.ksa.knowledge && data.ksa.knowledge.themes) {
-          Object.values(data.ksa.knowledge.themes).forEach((theme: Record<string, unknown>) => {
-            if (theme.codes && typeof theme.codes === 'object') {
-              Object.entries(theme.codes).forEach(([code, item]: [string, Record<string, unknown>]) => {
-                kMap[code] = {
-                  summary: String(item.summary || ''),
-                  theme: String(theme.name || ''),
-                  explanation: theme.explanation ? String(theme.explanation) : undefined
-                };
-              });
-            }
-          });
+          Object.values(data.ksa.knowledge.themes).forEach(
+            (theme: Record<string, unknown>) => {
+              if (theme.codes && typeof theme.codes === "object") {
+                Object.entries(theme.codes).forEach(
+                  ([code, item]: [string, Record<string, unknown>]) => {
+                    kMap[code] = {
+                      summary: String(item.summary || ""),
+                      theme: String(theme.name || ""),
+                      explanation: theme.explanation
+                        ? String(theme.explanation)
+                        : undefined,
+                    };
+                  },
+                );
+              }
+            },
+          );
         }
 
         // Process skills items
         if (data.ksa.skills && data.ksa.skills.themes) {
-          Object.values(data.ksa.skills.themes).forEach((theme: Record<string, unknown>) => {
-            if (theme.codes && typeof theme.codes === 'object') {
-              Object.entries(theme.codes).forEach(([code, item]: [string, Record<string, unknown>]) => {
-                sMap[code] = {
-                  summary: String(item.summary || ''),
-                  theme: String(theme.name || ''),
-                  explanation: theme.explanation ? String(theme.explanation) : undefined
-                };
-              });
-            }
-          });
+          Object.values(data.ksa.skills.themes).forEach(
+            (theme: Record<string, unknown>) => {
+              if (theme.codes && typeof theme.codes === "object") {
+                Object.entries(theme.codes).forEach(
+                  ([code, item]: [string, Record<string, unknown>]) => {
+                    sMap[code] = {
+                      summary: String(item.summary || ""),
+                      theme: String(theme.name || ""),
+                      explanation: theme.explanation
+                        ? String(theme.explanation)
+                        : undefined,
+                    };
+                  },
+                );
+              }
+            },
+          );
         }
 
         // Process attitudes items
         if (data.ksa.attitudes && data.ksa.attitudes.themes) {
-          Object.values(data.ksa.attitudes.themes).forEach((theme: Record<string, unknown>) => {
-            if (theme.codes && typeof theme.codes === 'object') {
-              Object.entries(theme.codes).forEach(([code, item]: [string, Record<string, unknown>]) => {
-                aMap[code] = {
-                  summary: String(item.summary || ''),
-                  theme: String(theme.name || ''),
-                  explanation: theme.explanation ? String(theme.explanation) : undefined
-                };
-              });
-            }
-          });
+          Object.values(data.ksa.attitudes.themes).forEach(
+            (theme: Record<string, unknown>) => {
+              if (theme.codes && typeof theme.codes === "object") {
+                Object.entries(theme.codes).forEach(
+                  ([code, item]: [string, Record<string, unknown>]) => {
+                    aMap[code] = {
+                      summary: String(item.summary || ""),
+                      theme: String(theme.name || ""),
+                      explanation: theme.explanation
+                        ? String(theme.explanation)
+                        : undefined,
+                    };
+                  },
+                );
+              }
+            },
+          );
         }
       } else if (data.kMap && data.sMap && data.aMap) {
         // Legacy structure - use existing maps
@@ -235,12 +257,12 @@ export default function RelationsClient() {
         kMap: (data.kMap as Record<string, KSAItem>) || kMap,
         sMap: (data.sMap as Record<string, KSAItem>) || sMap,
         aMap: (data.aMap as Record<string, KSAItem>) || aMap,
-        ksa: data.ksa as TreeData['ksa']
+        ksa: data.ksa as TreeData["ksa"],
       };
 
       setTree(treeData);
     } catch (error) {
-      console.error('Failed to load relations tree:', error);
+      console.error("Failed to load relations tree:", error);
     } finally {
       setLoading(false);
     }
@@ -265,8 +287,10 @@ export default function RelationsClient() {
 
   return (
     <main className="p-8 bg-gray-50 min-h-screen">
-      <h1 className="mb-2 text-xl sm:text-2xl md:text-3xl font-bold text-center px-4 break-words">{t('pageTitle')}</h1>
-      <p className="text-center text-gray-500 mb-4 px-4">{t('pageSubtitle')}</p>
+      <h1 className="mb-2 text-xl sm:text-2xl md:text-3xl font-bold text-center px-4 break-words">
+        {t("pageTitle")}
+      </h1>
+      <p className="text-center text-gray-500 mb-4 px-4">{t("pageSubtitle")}</p>
       <div className="text-center mb-8">
         <a
           href="https://ailiteracyframework.org/wp-content/uploads/2025/05/AILitFramework_ReviewDraft.pdf"
@@ -274,10 +298,20 @@ export default function RelationsClient() {
           rel="noopener noreferrer"
           className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+            />
           </svg>
-          {t('frameworkResource')}
+          {t("frameworkResource")}
         </a>
       </div>
       <div className="max-w-3xl mx-auto">
@@ -289,7 +323,7 @@ export default function RelationsClient() {
             sMap={tree.sMap || {}}
             aMap={tree.aMap || {}}
             lang={lang}
-            emoji={domain.emoji || '🤖'}
+            emoji={domain.emoji || "🤖"}
           />
         ))}
       </div>
@@ -297,30 +331,49 @@ export default function RelationsClient() {
   );
 }
 
-function DomainAccordion({ domain, kMap, sMap, aMap, lang, emoji }: { domain: Domain, kMap: Record<string, KSAItem>, sMap: Record<string, KSAItem>, aMap: Record<string, KSAItem>, lang: string, emoji: string }) {
+function DomainAccordion({
+  domain,
+  kMap,
+  sMap,
+  aMap,
+  lang,
+  emoji,
+}: {
+  domain: Domain;
+  kMap: Record<string, KSAItem>;
+  sMap: Record<string, KSAItem>;
+  aMap: Record<string, KSAItem>;
+  lang: string;
+  emoji: string;
+}) {
   const [open, setOpen] = useState(false);
   const { t } = useTranslation();
   // 使用通則函式，並斷言回傳型別為 string
-  const overview = getTranslatedText(lang, domain, 'overview') as string;
+  const overview = getTranslatedText(lang, domain, "overview") as string;
 
   // Static image paths - hardcoded for all domains
   const imageMap: Record<string, string> = {
-    'Engaging_with_AI': '/images/Engaging_with_AI.png',
-    'Creating_with_AI': '/images/Creating_with_AI.png',
-    'Managing_AI': '/images/Managing_AI.png',
-    'Designing_AI': '/images/Designing_AI.png'
+    Engaging_with_AI: "/images/Engaging_with_AI.png",
+    Creating_with_AI: "/images/Creating_with_AI.png",
+    Managing_AI: "/images/Managing_AI.png",
+    Designing_AI: "/images/Designing_AI.png",
   };
-  const imgSrc = imageMap[domain.id || domain.key || ''] || '/images/Engaging_with_AI.png';
+  const imgSrc =
+    imageMap[domain.id || domain.key || ""] || "/images/Engaging_with_AI.png";
   return (
     <div className="mb-6">
       <div
         className="cursor-pointer bg-gradient-to-r from-blue-100 to-purple-100 px-6 py-4 rounded-lg shadow flex items-center justify-between"
-        onClick={() => setOpen(o => !o)}
+        onClick={() => setOpen((o) => !o)}
       >
         <div className="flex items-center">
           <span className="text-2xl mr-3">{emoji}</span>
-          <span className="text-lg sm:text-xl font-bold text-blue-800 mr-2">{domain.name || t(domain.id || domain.key || '')}</span>
-          <span className="text-gray-700 text-base font-medium">{open ? '▲' : '▼'}</span>
+          <span className="text-lg sm:text-xl font-bold text-blue-800 mr-2">
+            {domain.name || t(domain.id || domain.key || "")}
+          </span>
+          <span className="text-gray-700 text-base font-medium">
+            {open ? "▲" : "▼"}
+          </span>
         </div>
       </div>
       {open && (
@@ -329,11 +382,11 @@ function DomainAccordion({ domain, kMap, sMap, aMap, lang, emoji }: { domain: Do
             <div className="w-full md:w-56 max-w-xs md:max-w-[224px] mb-2 md:mb-0 md:mr-6">
               <Image
                 src={imgSrc}
-                alt={domain.name || t(domain.id || domain.key || '')}
+                alt={domain.name || t(domain.id || domain.key || "")}
                 width={400}
                 height={240}
                 className="rounded-xl shadow-md object-cover"
-                style={{background: '#f3f4f6'}}
+                style={{ background: "#f3f4f6" }}
                 sizes="(max-width: 768px) 100vw, 224px"
                 priority={true}
               />
@@ -341,7 +394,14 @@ function DomainAccordion({ domain, kMap, sMap, aMap, lang, emoji }: { domain: Do
             <p className="text-gray-700 flex-1">{overview}</p>
           </div>
           {domain.competencies.map((comp) => (
-            <CompetencyAccordion key={comp.id || comp.key} comp={comp} kMap={kMap} sMap={sMap} aMap={aMap} lang={lang} />
+            <CompetencyAccordion
+              key={comp.id || comp.key}
+              comp={comp}
+              kMap={kMap}
+              sMap={sMap}
+              aMap={aMap}
+              lang={lang}
+            />
           ))}
         </div>
       )}
@@ -349,35 +409,56 @@ function DomainAccordion({ domain, kMap, sMap, aMap, lang, emoji }: { domain: Do
   );
 }
 
-function CompetencyAccordion({ comp, kMap, sMap, aMap, lang }: { comp: Competency, kMap: Record<string, KSAItem>, sMap: Record<string, KSAItem>, aMap: Record<string, KSAItem>, lang: string }) {
+function CompetencyAccordion({
+  comp,
+  kMap,
+  sMap,
+  aMap,
+  lang,
+}: {
+  comp: Competency;
+  kMap: Record<string, KSAItem>;
+  sMap: Record<string, KSAItem>;
+  aMap: Record<string, KSAItem>;
+  lang: string;
+}) {
   const [open, setOpen] = useState(false);
   const { t } = useTranslation();
   // 使用通則函式，並斷言對應的型別
-  const description = getTranslatedText(lang, comp, 'description') as string;
-  const scenarios = getTranslatedText(lang, comp, 'scenarios') as string[];
-  const content = getTranslatedText(lang, comp, 'content') as string;
+  const description = getTranslatedText(lang, comp, "description") as string;
+  const scenarios = getTranslatedText(lang, comp, "scenarios") as string[];
+  const content = getTranslatedText(lang, comp, "content") as string;
   return (
     <div className="mb-4">
       <div
         className="cursor-pointer bg-gray-100 px-4 py-2 rounded flex items-center justify-between"
-        onClick={() => setOpen(o => !o)}
+        onClick={() => setOpen((o) => !o)}
       >
-        <span className="font-semibold text-blue-700 mr-2">{comp.id || comp.key || ''}</span>
+        <span className="font-semibold text-blue-700 mr-2">
+          {comp.id || comp.key || ""}
+        </span>
         <span className="text-gray-700 font-medium flex-1">{description}</span>
-        <span className="ml-2">{open ? '▲' : '▼'}</span>
+        <span className="ml-2">{open ? "▲" : "▼"}</span>
       </div>
       {open && (
         <div className="bg-white border border-blue-100 rounded-xl px-6 py-4 mt-2 shadow-md">
           <div className="mb-4">
             {content && (
-              <div className="text-base font-bold text-blue-900 mb-2 whitespace-pre-line">{content}</div>
+              <div className="text-base font-bold text-blue-900 mb-2 whitespace-pre-line">
+                {content}
+              </div>
             )}
             {scenarios && scenarios.length > 0 && (
               <div>
-                <div className="font-bold text-gray-600 mb-1">{t('scenarios')}</div>
+                <div className="font-bold text-gray-600 mb-1">
+                  {t("scenarios")}
+                </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2">
                   {scenarios.map((s: string, i: number) => (
-                    <div key={i} className="flex items-start gap-2 text-gray-800 text-sm">
+                    <div
+                      key={i}
+                      className="flex items-start gap-2 text-gray-800 text-sm"
+                    >
                       <span className="mt-0.5">📘</span>
                       <span>{s}</span>
                     </div>
@@ -391,14 +472,46 @@ function CompetencyAccordion({ comp, kMap, sMap, aMap, lang }: { comp: Competenc
               <div className="mb-4 px-4 py-2">
                 <div className="text-lg font-bold text-blue-700 flex items-center gap-2 mb-1">
                   <span>🧭</span>
-                  <span>{t('ksaTitle')}</span>
+                  <span>{t("ksaTitle")}</span>
                 </div>
-                <div className="text-gray-600 text-sm">{t('ksaDescription')}</div>
+                <div className="text-gray-600 text-sm">
+                  {t("ksaDescription")}
+                </div>
               </div>
               <div className="px-4">
-                <KSAList type={<span className="flex items-center gap-1 text-blue-700 font-semibold"><span>📖</span>{t('knowledge')}</span>} codes={comp.knowledge} map={kMap} lang={lang} />
-                <KSAList type={<span className="flex items-center gap-1 text-green-700 font-semibold"><span>🛠️</span>{t('skills')}</span>} codes={comp.skills} map={sMap} lang={lang} />
-                <KSAList type={<span className="flex items-center gap-1 text-yellow-700 font-semibold"><span>💡</span>{t('attitudes')}</span>} codes={comp.attitudes} map={aMap} lang={lang} />
+                <KSAList
+                  type={
+                    <span className="flex items-center gap-1 text-blue-700 font-semibold">
+                      <span>📖</span>
+                      {t("knowledge")}
+                    </span>
+                  }
+                  codes={comp.knowledge}
+                  map={kMap}
+                  lang={lang}
+                />
+                <KSAList
+                  type={
+                    <span className="flex items-center gap-1 text-green-700 font-semibold">
+                      <span>🛠️</span>
+                      {t("skills")}
+                    </span>
+                  }
+                  codes={comp.skills}
+                  map={sMap}
+                  lang={lang}
+                />
+                <KSAList
+                  type={
+                    <span className="flex items-center gap-1 text-yellow-700 font-semibold">
+                      <span>💡</span>
+                      {t("attitudes")}
+                    </span>
+                  }
+                  codes={comp.attitudes}
+                  map={aMap}
+                  lang={lang}
+                />
               </div>
             </div>
           </div>
@@ -413,26 +526,55 @@ function useIsMobile() {
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
     check();
-    window.addEventListener('resize', check);
-    return () => window.removeEventListener('resize', check);
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
   }, []);
   return isMobile;
 }
 
-function KSAOverlay({ open, onClose, info, lang }: { open: boolean, onClose: () => void, info: KSAItem | null, lang: string }) {
+function KSAOverlay({
+  open,
+  onClose,
+  info,
+  lang,
+}: {
+  open: boolean;
+  onClose: () => void;
+  info: KSAItem | null;
+  lang: string;
+}) {
   if (!open || !info) return null;
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center md:hidden">
-      <div className="absolute inset-0 bg-black bg-opacity-60" onClick={onClose}></div>
+      <div
+        className="absolute inset-0 bg-black bg-opacity-60"
+        onClick={onClose}
+      ></div>
       <div className="relative w-full max-w-md bg-white rounded-2xl shadow-lg p-4 max-h-[90vh] overflow-y-auto">
-        <button className="absolute right-4 top-3 text-2xl text-gray-400" onClick={onClose} aria-label="關閉">✕</button>
+        <button
+          className="absolute right-4 top-3 text-2xl text-gray-400"
+          onClick={onClose}
+          aria-label="關閉"
+        >
+          ✕
+        </button>
         <KSACard info={info} lang={lang} />
       </div>
     </div>
   );
 }
 
-function KSAList({ type, codes, map, lang }: { type: ReactNode, codes: string[], map: Record<string, KSAItem>, lang: string }) {
+function KSAList({
+  type,
+  codes,
+  map,
+  lang,
+}: {
+  type: ReactNode;
+  codes: string[];
+  map: Record<string, KSAItem>;
+  lang: string;
+}) {
   const [selected, setSelected] = useState<string | null>(null);
   const isMobile = useIsMobile();
 
@@ -443,7 +585,7 @@ function KSAList({ type, codes, map, lang }: { type: ReactNode, codes: string[],
         {codes.map((code: string) => (
           <span
             key={code}
-            className={`inline-block px-3 py-1 rounded text-sm font-semibold cursor-pointer mb-1 transition-all ${selected === code ? 'bg-blue-500 text-white' : 'bg-blue-100 text-blue-800'}`}
+            className={`inline-block px-3 py-1 rounded text-sm font-semibold cursor-pointer mb-1 transition-all ${selected === code ? "bg-blue-500 text-white" : "bg-blue-100 text-blue-800"}`}
             onClick={() => setSelected(code)}
           >
             {code}
@@ -455,33 +597,48 @@ function KSAList({ type, codes, map, lang }: { type: ReactNode, codes: string[],
           {selected ? (
             <KSACard info={map[selected]} lang={lang} />
           ) : (
-            <div className="text-gray-400 italic mt-8">請點選左側代碼以檢視詳細內容</div>
+            <div className="text-gray-400 italic mt-8">
+              請點選左側代碼以檢視詳細內容
+            </div>
           )}
         </div>
       )}
-      <KSAOverlay open={isMobile && !!selected} onClose={() => setSelected(null)} info={selected ? map[selected] : null} lang={lang} />
+      <KSAOverlay
+        open={isMobile && !!selected}
+        onClose={() => setSelected(null)}
+        info={selected ? map[selected] : null}
+        lang={lang}
+      />
     </div>
   );
 }
 
-function KSACard({ info, lang }: { info: KSAItem, lang: string }) {
+function KSACard({ info, lang }: { info: KSAItem; lang: string }) {
   const { t } = useTranslation();
   if (!info) return null;
 
   // API 返回語言特定的資料，但 theme 名稱仍是英文格式（從 ID 轉換）
   // 直接顯示 theme，不需要再翻譯（因為 explanation 已經是該語言）
-  const summary = info.summary || '';
-  const theme = info.theme || '';
-  const explanation = info.explanation || '';
+  const summary = info.summary || "";
+  const theme = info.theme || "";
+  const explanation = info.explanation || "";
   return (
     <div className="w-full max-w-md mx-auto bg-white border border-blue-200 rounded-lg md:rounded-xl p-3 md:p-4 shadow-lg transition-all duration-200">
       <div className="flex items-center mb-2">
-        <span className="text-blue-600 text-lg md:text-xl font-extrabold mr-2">🔎</span>
-        <span className="text-base md:text-lg font-bold text-blue-800 leading-snug break-words">{summary}</span>
+        <span className="text-blue-600 text-lg md:text-xl font-extrabold mr-2">
+          🔎
+        </span>
+        <span className="text-base md:text-lg font-bold text-blue-800 leading-snug break-words">
+          {summary}
+        </span>
       </div>
       <div className="flex flex-col md:flex-row items-start md:items-center mb-2 gap-2">
-        <span className="bg-blue-100 text-blue-700 rounded-full px-3 py-0.5 text-xs font-semibold mr-2 mb-1 md:mb-0">{t('theme')}</span>
-        <span className="text-blue-700 text-sm md:text-base font-medium break-words">{theme}</span>
+        <span className="bg-blue-100 text-blue-700 rounded-full px-3 py-0.5 text-xs font-semibold mr-2 mb-1 md:mb-0">
+          {t("theme")}
+        </span>
+        <span className="text-blue-700 text-sm md:text-base font-medium break-words">
+          {theme}
+        </span>
       </div>
       {explanation && (
         <div className="bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 mt-2 text-gray-700 text-sm md:text-base whitespace-pre-line break-words">

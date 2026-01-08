@@ -1,45 +1,43 @@
-import React from 'react'
+import React from "react";
 
 interface LoadingSkeletonProps {
-  className?: string
-  animate?: boolean
+  className?: string;
+  animate?: boolean;
 }
 
 export function LoadingSkeleton({
-  className = '',
-  animate = true
+  className = "",
+  animate = true,
 }: LoadingSkeletonProps) {
   return (
     <div
       className={`
         bg-gray-200 rounded
-        ${animate ? 'animate-pulse' : ''}
+        ${animate ? "animate-pulse" : ""}
         ${className}
       `}
     />
-  )
+  );
 }
 
 interface LoadingCardProps {
-  showImage?: boolean
-  lines?: number
+  showImage?: boolean;
+  lines?: number;
 }
 
 export function LoadingCard({ showImage = true, lines = 3 }: LoadingCardProps) {
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
-      {showImage && (
-        <LoadingSkeleton className="h-48 w-full mb-4" />
-      )}
+      {showImage && <LoadingSkeleton className="h-48 w-full mb-4" />}
       <LoadingSkeleton className="h-6 w-3/4 mb-2" />
       {Array.from({ length: lines }).map((_, i) => (
         <LoadingSkeleton
           key={i}
-          className={`h-4 ${i === lines - 1 ? 'w-1/2' : 'w-full'} mb-2`}
+          className={`h-4 ${i === lines - 1 ? "w-1/2" : "w-full"} mb-2`}
         />
       ))}
     </div>
-  )
+  );
 }
 
 export function LoadingAccordion() {
@@ -60,5 +58,5 @@ export function LoadingAccordion() {
         </div>
       ))}
     </div>
-  )
+  );
 }

@@ -3,9 +3,12 @@
  * POST /api/learning/programs - Create new learning program
  */
 
-import { NextRequest, NextResponse } from 'next/server';
-import { getUnifiedAuth, createUnauthorizedResponse } from '@/lib/auth/unified-auth';
-import { postgresqlLearningService } from '@/lib/services/postgresql-learning-service';
+import { NextRequest, NextResponse } from "next/server";
+import {
+  getUnifiedAuth,
+  createUnauthorizedResponse,
+} from "@/lib/auth/unified-auth";
+import { postgresqlLearningService } from "@/lib/services/postgresql-learning-service";
 
 export async function POST(request: NextRequest) {
   try {
@@ -22,8 +25,8 @@ export async function POST(request: NextRequest) {
     // Validate required fields
     if (!scenarioId) {
       return NextResponse.json(
-        { success: false, error: 'scenarioId is required' },
-        { status: 400 }
+        { success: false, error: "scenarioId is required" },
+        { status: 400 },
       );
     }
 
@@ -31,27 +34,23 @@ export async function POST(request: NextRequest) {
     const result = await postgresqlLearningService.createLearningProgram(
       scenarioId,
       session.user.email,
-      metadata
+      metadata,
     );
 
-    return NextResponse.json(
-      { success: true, data: result },
-      { status: 201 }
-    );
-
+    return NextResponse.json({ success: true, data: result }, { status: 201 });
   } catch (error) {
-    console.error('Error creating learning program:', error);
+    console.error("Error creating learning program:", error);
 
-    if (error instanceof Error && error.message.includes('not found')) {
+    if (error instanceof Error && error.message.includes("not found")) {
       return NextResponse.json(
         { success: false, error: error.message },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
     return NextResponse.json(
-      { success: false, error: 'Internal server error' },
-      { status: 500 }
+      { success: false, error: "Internal server error" },
+      { status: 500 },
     );
   }
 }

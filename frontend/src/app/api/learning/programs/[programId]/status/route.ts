@@ -3,9 +3,12 @@
  * GET /api/learning/programs/[programId]/status - Get detailed program status
  */
 
-import { NextRequest, NextResponse } from 'next/server';
-import { getUnifiedAuth, createUnauthorizedResponse } from '@/lib/auth/unified-auth';
-import { postgresqlLearningService } from '@/lib/services/postgresql-learning-service';
+import { NextRequest, NextResponse } from "next/server";
+import {
+  getUnifiedAuth,
+  createUnauthorizedResponse,
+} from "@/lib/auth/unified-auth";
+import { postgresqlLearningService } from "@/lib/services/postgresql-learning-service";
 
 interface RouteParams {
   params: Promise<{ programId: string }>;
@@ -25,24 +28,20 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
     // Get program status
     const result = await postgresqlLearningService.getProgramStatus(programId);
 
-    return NextResponse.json(
-      { success: true, data: result },
-      { status: 200 }
-    );
-
+    return NextResponse.json({ success: true, data: result }, { status: 200 });
   } catch (error) {
-    console.error('Error getting program status:', error);
+    console.error("Error getting program status:", error);
 
-    if (error instanceof Error && error.message.includes('not found')) {
+    if (error instanceof Error && error.message.includes("not found")) {
       return NextResponse.json(
         { success: false, error: error.message },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
     return NextResponse.json(
-      { success: false, error: 'Internal server error' },
-      { status: 500 }
+      { success: false, error: "Internal server error" },
+      { status: 500 },
     );
   }
 }

@@ -1,9 +1,9 @@
-import React from 'react';
-import { render } from '@testing-library/react';
-import RootLayout, { metadata } from '../layout';
+import React from "react";
+import { render } from "@testing-library/react";
+import RootLayout, { metadata } from "../layout";
 
 // Mock the ClientLayout component
-jest.mock('@/components/layout/ClientLayout', () => {
+jest.mock("@/components/layout/ClientLayout", () => {
   return {
     ClientLayout: ({ children }: { children: React.ReactNode }) => (
       <div data-testid="client-layout">{children}</div>
@@ -12,31 +12,31 @@ jest.mock('@/components/layout/ClientLayout', () => {
 });
 
 // Mock next/font/google
-jest.mock('next/font/google', () => ({
+jest.mock("next/font/google", () => ({
   Geist: jest.fn(() => ({
-    variable: '--font-geist-sans',
+    variable: "--font-geist-sans",
   })),
   Geist_Mono: jest.fn(() => ({
-    variable: '--font-geist-mono',
+    variable: "--font-geist-mono",
   })),
 }));
 
-describe('RootLayout', () => {
-  it('renders children within the layout', () => {
+describe("RootLayout", () => {
+  it("renders children within the layout", () => {
     const { container, getByText } = render(
       <RootLayout>
         <div>Test Child Content</div>
-      </RootLayout>
+      </RootLayout>,
     );
 
-    expect(getByText('Test Child Content')).toBeInTheDocument();
+    expect(getByText("Test Child Content")).toBeInTheDocument();
   });
 
-  it('applies correct HTML structure', () => {
+  it("applies correct HTML structure", () => {
     const { container } = render(
       <RootLayout>
         <div>Test Content</div>
-      </RootLayout>
+      </RootLayout>,
     );
 
     // RootLayout component structure in test environment
@@ -45,23 +45,23 @@ describe('RootLayout', () => {
 
     // The actual html/body attributes are applied by Next.js at runtime
     // We can verify the component renders without errors
-    expect(container.querySelector('div')).toHaveTextContent('Test Content');
+    expect(container.querySelector("div")).toHaveTextContent("Test Content");
   });
 
-  it('wraps children with ClientLayout', () => {
+  it("wraps children with ClientLayout", () => {
     const { getByTestId } = render(
       <RootLayout>
         <div>Test Content</div>
-      </RootLayout>
+      </RootLayout>,
     );
 
-    expect(getByTestId('client-layout')).toBeInTheDocument();
+    expect(getByTestId("client-layout")).toBeInTheDocument();
   });
 
-  it('has correct metadata', () => {
+  it("has correct metadata", () => {
     expect(metadata).toEqual({
-      title: 'AI Square - AI Literacy Platform',
-      description: 'Multi-agent learning platform for AI literacy education',
+      title: "AI Square - AI Literacy Platform",
+      description: "Multi-agent learning platform for AI literacy education",
     });
   });
 });

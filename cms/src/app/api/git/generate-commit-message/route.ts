@@ -1,18 +1,22 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { generateContent } from '@/lib/vertex-ai';
-import { CommitMessageRequest, CommitMessageResponse } from '@/types';
+import { NextRequest, NextResponse } from "next/server";
+import { generateContent } from "@/lib/vertex-ai";
+import { CommitMessageRequest, CommitMessageResponse } from "@/types";
 
 export async function POST(request: NextRequest) {
-  let requestData: CommitMessageRequest = { filePath: '', oldContent: '', newContent: '' };
+  let requestData: CommitMessageRequest = {
+    filePath: "",
+    oldContent: "",
+    newContent: "",
+  };
 
   try {
-    requestData = await request.json() as CommitMessageRequest;
+    requestData = (await request.json()) as CommitMessageRequest;
     const { filePath, oldContent, newContent } = requestData;
 
     if (!filePath || !newContent) {
       return NextResponse.json(
-        { error: 'File path and new content are required' },
-        { status: 400 }
+        { error: "File path and new content are required" },
+        { status: 400 },
       );
     }
 
@@ -53,7 +57,7 @@ Co-Authored-By: Vertex AI <noreply@google.com>`;
     const prompt = `檔案路徑: ${filePath}
 
 原始內容:
-${oldContent || '(新檔案)'}
+${oldContent || "(新檔案)"}
 
 更新內容:
 ${newContent}
@@ -65,14 +69,14 @@ ${newContent}
 
     const response: CommitMessageResponse = {
       success: true,
-      message: commitMessage.trim()
+      message: commitMessage.trim(),
     };
     return NextResponse.json(response);
   } catch (error) {
-    console.error('Generate commit message error:', error);
+    console.error("Generate commit message error:", error);
 
     // Get filePath from requestData
-    const filePath = requestData.filePath || 'unknown';
+    const filePath = requestData.filePath || "unknown";
 
     // Fallback to simple message if AI fails
     const fallbackMessage = `feat(cms): 更新 ${filePath} 內容
@@ -83,7 +87,7 @@ ${newContent}
 
     const response: CommitMessageResponse = {
       success: true,
-      message: fallbackMessage
+      message: fallbackMessage,
     };
     return NextResponse.json(response);
   }

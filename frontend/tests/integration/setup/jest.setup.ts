@@ -1,28 +1,29 @@
 // CRITICAL: Unmock database modules for integration tests
 // This MUST be done before any imports
-jest.unmock('pg');
-jest.unmock('pg-pool');
-jest.unmock('ioredis');
-jest.unmock('uuid'); // Integration tests need real UUIDs
+jest.unmock("pg");
+jest.unmock("pg-pool");
+jest.unmock("ioredis");
+jest.unmock("uuid"); // Integration tests need real UUIDs
 
-import dotenv from 'dotenv';
-import path from 'path';
+import dotenv from "dotenv";
+import path from "path";
 
 // Load test environment variables
-dotenv.config({ path: path.resolve(process.cwd(), '.env.test') });
-dotenv.config({ path: path.resolve(process.cwd(), '.env.local') });
+dotenv.config({ path: path.resolve(process.cwd(), ".env.test") });
+dotenv.config({ path: path.resolve(process.cwd(), ".env.local") });
 
 // Set test environment
-if (process.env.NODE_ENV !== 'test') {
-  Object.defineProperty(process.env, 'NODE_ENV', {
-    value: 'test',
+if (process.env.NODE_ENV !== "test") {
+  Object.defineProperty(process.env, "NODE_ENV", {
+    value: "test",
     writable: true,
     enumerable: true,
-    configurable: true
+    configurable: true,
   });
 }
-process.env.NEXTAUTH_URL = process.env.NEXTAUTH_URL || 'http://localhost:3000';
-process.env.NEXTAUTH_SECRET = process.env.NEXTAUTH_SECRET || 'test-secret-for-integration-tests';
+process.env.NEXTAUTH_URL = process.env.NEXTAUTH_URL || "http://localhost:3000";
+process.env.NEXTAUTH_SECRET =
+  process.env.NEXTAUTH_SECRET || "test-secret-for-integration-tests";
 
 // Increase test timeout for integration tests
 jest.setTimeout(30000);
@@ -36,27 +37,27 @@ const originalConsoleWarn = console.warn;
 
 global.console.error = (...args: unknown[]) => {
   // Filter out expected errors
-  const errorString = args[0]?.toString() || '';
+  const errorString = args[0]?.toString() || "";
 
   // Ignore specific expected errors
   const ignoredErrors = [
-    'Not Found',
-    'Unauthorized',
-    'Bad Request',
-    'Redis connection failed', // Expected when Redis is not running
+    "Not Found",
+    "Unauthorized",
+    "Bad Request",
+    "Redis connection failed", // Expected when Redis is not running
     // GCS repository tests intentionally simulate failures; suppress error noise
-    'Error getting file URL:',
-    'Error deleting file:',
-    'Error listing files:',
-    'Error copying file:',
-    'Error checking file existence:',
-    'Error getting file metadata:',
-    'Error setting file metadata:',
-    'Error downloading file:',
+    "Error getting file URL:",
+    "Error deleting file:",
+    "Error listing files:",
+    "Error copying file:",
+    "Error checking file existence:",
+    "Error getting file metadata:",
+    "Error setting file metadata:",
+    "Error downloading file:",
   ];
 
-  const shouldIgnore = ignoredErrors.some(ignored =>
-    errorString.includes(ignored)
+  const shouldIgnore = ignoredErrors.some((ignored) =>
+    errorString.includes(ignored),
   );
 
   if (!shouldIgnore) {
@@ -66,16 +67,16 @@ global.console.error = (...args: unknown[]) => {
 
 global.console.warn = (...args: unknown[]) => {
   // Filter out expected warnings
-  const warnString = args[0]?.toString() || '';
+  const warnString = args[0]?.toString() || "";
 
   const ignoredWarnings = [
-    'Redis not available',
-    'Cache miss',
-    'Using fallback',
+    "Redis not available",
+    "Cache miss",
+    "Using fallback",
   ];
 
-  const shouldIgnore = ignoredWarnings.some(ignored =>
-    warnString.includes(ignored)
+  const shouldIgnore = ignoredWarnings.some((ignored) =>
+    warnString.includes(ignored),
   );
 
   if (!shouldIgnore) {
@@ -90,17 +91,17 @@ afterAll(async () => {
   global.console.warn = originalConsoleWarn;
 
   // Close any open handles
-  await new Promise(resolve => setTimeout(resolve, 100));
+  await new Promise((resolve) => setTimeout(resolve, 100));
 });
 
 // Global test utilities
 export const waitFor = (ms: number) =>
-  new Promise(resolve => setTimeout(resolve, ms));
+  new Promise((resolve) => setTimeout(resolve, ms));
 
 export const retryOperation = async <T>(
   operation: () => Promise<T>,
   maxRetries: number = 3,
-  delay: number = 1000
+  delay: number = 1000,
 ): Promise<T> => {
   let lastError: Error | undefined;
 
@@ -141,8 +142,7 @@ expect.extend({
     const pass = response.status === expectedStatus;
     if (pass) {
       return {
-        message: () =>
-          `expected response not to have status ${expectedStatus}`,
+        message: () => `expected response not to have status ${expectedStatus}`,
         pass: true,
       };
     } else {

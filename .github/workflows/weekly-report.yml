@@ -1,0 +1,32 @@
+name: Weekly Report
+
+on:
+  schedule:
+    # Every Monday at 09:00 Asia/Taipei (01:00 UTC)
+    - cron: '0 1 * * 1'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  send-weekly-report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Send Weekly Report to Slack
+        run: |
+          curl -X POST https://ai-square-production-m7s4ucbgba-de.a.run.app/api/reports/weekly \
+            -H "Content-Type: application/json" \
+            -w "\nHTTP Status: %{http_code}\n" \
+            --fail-with-body
+
+      - name: Notify on Failure
+        if: failure()
+        run: |
+          curl -X POST ${{ secrets.SLACK_AISQUARE_WEBHOOK_URL }} \
+            -H "Content-Type: application/json" \
+            -d '{
+              "text": "⚠️ Weekly Report Failed\n\nThe weekly report generation failed. Please check GitHub Actions logs.",
+              "mrkdwn": true
+            }'
+        env:
+          SLACK_AISQUARE_WEBHOOK_URL: ${{ secrets.SLACK_AISQUARE_WEBHOOK_URL }}

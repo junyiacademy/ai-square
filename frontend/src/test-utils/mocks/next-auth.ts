@@ -4,9 +4,9 @@
 
 export const mockSession = {
   user: {
-    id: 'test-user-id',
-    email: 'test@example.com',
-    name: 'Test User',
+    id: "test-user-id",
+    email: "test@example.com",
+    name: "Test User",
     image: null,
   },
   expires: new Date(Date.now() + 86400000).toISOString(), // 24 hours from now
@@ -14,7 +14,7 @@ export const mockSession = {
 
 export const mockUseSession = jest.fn(() => ({
   data: mockSession,
-  status: 'authenticated',
+  status: "authenticated",
   update: jest.fn(),
 }));
 
@@ -23,7 +23,7 @@ export const mockSignOut = jest.fn();
 export const mockGetServerSession = jest.fn(() => Promise.resolve(mockSession));
 
 // Mock next-auth/react
-jest.mock('next-auth/react', () => ({
+jest.mock("next-auth/react", () => ({
   useSession: mockUseSession,
   signIn: mockSignIn,
   signOut: mockSignOut,
@@ -32,7 +32,7 @@ jest.mock('next-auth/react', () => ({
 }));
 
 // Mock next-auth
-jest.mock('next-auth', () => ({
+jest.mock("next-auth", () => ({
   default: jest.fn(),
   getServerSession: jest.fn(() => Promise.resolve(mockSession)),
 }));
@@ -46,7 +46,7 @@ export const clearAuthMocks = () => {
 export const setUnauthenticated = () => {
   mockUseSession.mockReturnValue({
     data: null as any,
-    status: 'unauthenticated',
+    status: "unauthenticated",
     update: jest.fn(),
   });
 };

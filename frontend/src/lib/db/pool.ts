@@ -3,8 +3,8 @@
  * Re-exports from get-pool for backward compatibility
  */
 
-export * from './get-pool';
-import { getPool } from './get-pool';
+export * from "./get-pool";
+import { getPool } from "./get-pool";
 export { getPool };
 
 // Add query function for backward compatibility

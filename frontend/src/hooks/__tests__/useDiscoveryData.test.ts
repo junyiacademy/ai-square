@@ -1,13 +1,13 @@
-import { renderHook, act, waitFor } from '@testing-library/react';
-import { useDiscoveryData } from '../useDiscoveryData';
+import { renderHook, act, waitFor } from "@testing-library/react";
+import { useDiscoveryData } from "../useDiscoveryData";
 
-describe('useDiscoveryData', () => {
-  it('should initialize correctly', () => {
+describe("useDiscoveryData", () => {
+  it("should initialize correctly", () => {
     const { result } = renderHook(() => useDiscoveryData());
     expect(result.current).toBeDefined();
   });
 
-  it('should handle state changes', async () => {
+  it("should handle state changes", async () => {
     const { result } = renderHook(() => useDiscoveryData());
 
     await act(async () => {
@@ -18,7 +18,7 @@ describe('useDiscoveryData', () => {
     });
   });
 
-  it('should cleanup on unmount', () => {
+  it("should cleanup on unmount", () => {
     const { unmount } = renderHook(() => useDiscoveryData());
 
     expect(() => {

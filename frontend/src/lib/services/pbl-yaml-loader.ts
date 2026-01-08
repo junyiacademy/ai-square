@@ -3,8 +3,11 @@
  * 繼承自 BaseYAMLLoader，專門處理 PBL Scenario YAML 檔案
  */
 
-import { BaseYAMLLoader, LoadResult } from '@/lib/abstractions/base-yaml-loader';
-import path from 'path';
+import {
+  BaseYAMLLoader,
+  LoadResult,
+} from "@/lib/abstractions/base-yaml-loader";
+import path from "path";
 
 export interface PBLScenarioInfo {
   id: string;
@@ -71,14 +74,14 @@ export interface PBLYAMLData {
 }
 
 export class PBLYAMLLoader extends BaseYAMLLoader<PBLYAMLData> {
-  protected readonly loaderName = 'PBLYAMLLoader';
+  protected readonly loaderName = "PBLYAMLLoader";
 
   private basePath: string;
 
   constructor() {
     super();
     // Set base path for PBL data
-    this.basePath = path.join(process.cwd(), 'public', 'pbl_data', 'scenarios');
+    this.basePath = path.join(process.cwd(), "public", "pbl_data", "scenarios");
   }
 
   /**
@@ -87,10 +90,10 @@ export class PBLYAMLLoader extends BaseYAMLLoader<PBLYAMLData> {
   async load(fileName: string): Promise<LoadResult<PBLYAMLData>> {
     try {
       const filePath = this.getFilePath(fileName);
-      const { promises: fs } = await import('fs');
-      const yaml = await import('js-yaml');
+      const { promises: fs } = await import("fs");
+      const yaml = await import("js-yaml");
 
-      const content = await fs.readFile(filePath, 'utf8');
+      const content = await fs.readFile(filePath, "utf8");
       const data = yaml.load(content) as PBLYAMLData;
 
       return { data };
@@ -104,16 +107,14 @@ export class PBLYAMLLoader extends BaseYAMLLoader<PBLYAMLData> {
    */
   protected getFilePath(fileName: string): string {
     // PBL files are in subdirectories with language-specific files
-    const scenarioId = fileName.replace(/_scenario$/, '');
+    const scenarioId = fileName.replace(/_scenario$/, "");
     return path.join(this.basePath, scenarioId, `${scenarioId}_en.yaml`);
   }
 
   /**
    * Load PBL scenario YAML file
    */
-  async loadScenario(
-    scenarioId: string
-  ): Promise<PBLYAMLData | null> {
+  async loadScenario(scenarioId: string): Promise<PBLYAMLData | null> {
     // PBL scenarios are organized in subdirectories
     const fileName = scenarioId;
     const result = await this.load(fileName);
@@ -129,19 +130,23 @@ export class PBLYAMLLoader extends BaseYAMLLoader<PBLYAMLData> {
    * Scan all available PBL scenario folders
    */
   async scanScenarios(): Promise<string[]> {
-    const fs = await import('fs/promises');
+    const fs = await import("fs/promises");
     const scenariosDir = this.basePath;
 
     try {
       const items = await fs.readdir(scenariosDir, { withFileTypes: true });
       const scenarioFolders = items
-        .filter(item => item.isDirectory())
-        .map(item => item.name);
+        .filter((item) => item.isDirectory())
+        .map((item) => item.name);
 
       // Validate each folder contains an English scenario file
       const validScenarios: string[] = [];
       for (const folder of scenarioFolders) {
-        const scenarioFile = path.join(scenariosDir, folder, `${folder}_en.yaml`);
+        const scenarioFile = path.join(
+          scenariosDir,
+          folder,
+          `${folder}_en.yaml`,
+        );
         try {
           await fs.access(scenarioFile);
           validScenarios.push(folder);
@@ -152,7 +157,7 @@ export class PBLYAMLLoader extends BaseYAMLLoader<PBLYAMLData> {
 
       return validScenarios;
     } catch (error) {
-      console.error('Error scanning PBL scenarios:', error);
+      console.error("Error scanning PBL scenarios:", error);
       return [];
     }
   }
@@ -160,7 +165,9 @@ export class PBLYAMLLoader extends BaseYAMLLoader<PBLYAMLData> {
   /**
    * Get scenario metadata without loading full content
    */
-  async getScenarioMetadata(scenarioId: string): Promise<PBLScenarioInfo | null> {
+  async getScenarioMetadata(
+    scenarioId: string,
+  ): Promise<PBLScenarioInfo | null> {
     const data = await this.loadScenario(scenarioId);
     return data?.scenario_info || null;
   }
@@ -182,17 +189,18 @@ export class PBLYAMLLoader extends BaseYAMLLoader<PBLYAMLData> {
       data.programs = data.programs.map((program, pIndex) => ({
         ...program,
         id: program.id || `program_${pIndex + 1}`,
-        tasks: program.tasks?.map((task, tIndex) => ({
-          ...task,
-          id: task.id || `task_${pIndex + 1}_${tIndex + 1}`
-        })) || []
+        tasks:
+          program.tasks?.map((task, tIndex) => ({
+            ...task,
+            id: task.id || `task_${pIndex + 1}_${tIndex + 1}`,
+          })) || [],
       }));
     }
 
     // Ensure scenario_info has an ID
     if (data.scenario_info && !data.scenario_info.id) {
       // Extract ID from the file path or generate one
-      data.scenario_info.id = 'pbl_scenario';
+      data.scenario_info.id = "pbl_scenario";
     }
 
     return data;
@@ -201,11 +209,17 @@ export class PBLYAMLLoader extends BaseYAMLLoader<PBLYAMLData> {
   /**
    * Get translated field helper specific to PBL
    */
-  getTranslatedField(data: Record<string, unknown>, fieldName: string, language: string): string {
-    const suffix = language === 'en' ? '' : `_${language}`;
+  getTranslatedField(
+    data: Record<string, unknown>,
+    fieldName: string,
+    language: string,
+  ): string {
+    const suffix = language === "en" ? "" : `_${language}`;
     const fieldWithSuffix = `${fieldName}${suffix}`;
 
-    return (data[fieldWithSuffix] as string) || (data[fieldName] as string) || '';
+    return (
+      (data[fieldWithSuffix] as string) || (data[fieldName] as string) || ""
+    );
   }
 
   /**
@@ -215,16 +229,16 @@ export class PBLYAMLLoader extends BaseYAMLLoader<PBLYAMLData> {
     const ksaCodes = new Set<string>();
 
     // From KSA mappings
-    data.ksa_mappings?.forEach(mapping => {
-      Object.values(mapping.ksa_codes).forEach(codes => {
-        codes?.forEach(code => ksaCodes.add(code));
+    data.ksa_mappings?.forEach((mapping) => {
+      Object.values(mapping.ksa_codes).forEach((codes) => {
+        codes?.forEach((code) => ksaCodes.add(code));
       });
     });
 
     // From tasks
-    data.programs?.forEach(program => {
-      program.tasks?.forEach(task => {
-        task.ksa_codes?.forEach(code => ksaCodes.add(code));
+    data.programs?.forEach((program) => {
+      program.tasks?.forEach((task) => {
+        task.ksa_codes?.forEach((code) => ksaCodes.add(code));
       });
     });
 
@@ -237,9 +251,9 @@ export class PBLYAMLLoader extends BaseYAMLLoader<PBLYAMLData> {
   extractAIModules(data: PBLYAMLData): string[] {
     const modules = new Set<string>();
 
-    data.programs?.forEach(program => {
-      program.tasks?.forEach(task => {
-        task.ai_modules?.forEach(module => modules.add(module));
+    data.programs?.forEach((program) => {
+      program.tasks?.forEach((task) => {
+        task.ai_modules?.forEach((module) => modules.add(module));
       });
     });
 

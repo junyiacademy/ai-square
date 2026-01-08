@@ -3,8 +3,8 @@
  * 統一的 API 測試輔助函數
  */
 
-import { NextRequest } from 'next/server';
-import { mockSession, mockGetServerSession } from '../mocks/next-auth';
+import { NextRequest } from "next/server";
+import { mockSession, mockGetServerSession } from "../mocks/next-auth";
 
 /**
  * 創建 mock NextRequest
@@ -16,12 +16,12 @@ export const createMockRequest = (
   options: RequestInit & {
     json?: Record<string, unknown>;
     searchParams?: Record<string, string>;
-  } = {}
+  } = {},
 ): NextRequest => {
   const { json, searchParams, ...init } = options;
 
   // 構建完整 URL
-  let fullUrl = url.startsWith('http') ? url : `http://localhost:3000${url}`;
+  let fullUrl = url.startsWith("http") ? url : `http://localhost:3000${url}`;
 
   // 添加查詢參數
   if (searchParams) {
@@ -33,7 +33,7 @@ export const createMockRequest = (
   if (json) {
     init.body = JSON.stringify(json);
     init.headers = {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
       ...init.headers,
     };
   }
@@ -54,7 +54,7 @@ export const createMockRequest = (
 export const createAuthenticatedRequest = (
   url: string,
   options: Parameters<typeof createMockRequest>[1] = {},
-  session: typeof mockSession | null = mockSession
+  session: typeof mockSession | null = mockSession,
 ): NextRequest => {
   // 設定 mock session
   mockGetServerSession.mockResolvedValueOnce(session as any);
@@ -69,7 +69,7 @@ export const createAuthenticatedRequest = (
  */
 export const createUnauthenticatedRequest = (
   url: string,
-  options: Parameters<typeof createMockRequest>[1] = {}
+  options: Parameters<typeof createMockRequest>[1] = {},
 ): NextRequest => {
   // 設定 null session
   mockGetServerSession.mockResolvedValueOnce(null as any);
@@ -82,7 +82,7 @@ export const createUnauthenticatedRequest = (
  * @param params - 路由參數
  */
 export const createMockContext = <T extends Record<string, string>>(
-  params: T
+  params: T,
 ): { params: Promise<T> } => ({
   params: Promise.resolve(params),
 });
@@ -94,9 +94,12 @@ export const createMockContext = <T extends Record<string, string>>(
  * @param context - Route context
  */
 export const executeRoute = async (
-  handler: (req: NextRequest, ctx?: Record<string, unknown>) => Promise<Response>,
+  handler: (
+    req: NextRequest,
+    ctx?: Record<string, unknown>,
+  ) => Promise<Response>,
   request: NextRequest,
-  context?: Record<string, unknown>
+  context?: Record<string, unknown>,
 ) => {
   const response = await handler(request, context);
   const data = await response.json();
@@ -118,16 +121,20 @@ export const apiAssertions = {
    */
   expectSuccess: (response: Response, data: Record<string, unknown>) => {
     expect(response.status).toBe(200);
-    expect(data).toHaveProperty('success', true);
+    expect(data).toHaveProperty("success", true);
   },
 
   /**
    * 驗證錯誤回應
    */
-  expectError: (response: Response, data: Record<string, unknown>, status: number = 400) => {
+  expectError: (
+    response: Response,
+    data: Record<string, unknown>,
+    status: number = 400,
+  ) => {
     expect(response.status).toBe(status);
-    expect(data).toHaveProperty('success', false);
-    expect(data).toHaveProperty('error');
+    expect(data).toHaveProperty("success", false);
+    expect(data).toHaveProperty("error");
   },
 
   /**
@@ -135,7 +142,7 @@ export const apiAssertions = {
    */
   expectUnauthorized: (response: Response, data: Record<string, unknown>) => {
     expect(response.status).toBe(401);
-    expect(data).toHaveProperty('success', false);
+    expect(data).toHaveProperty("success", false);
     expect(data.error).toMatch(/auth|unauthorized/i);
   },
 
@@ -144,7 +151,7 @@ export const apiAssertions = {
    */
   expectForbidden: (response: Response, data: Record<string, unknown>) => {
     expect(response.status).toBe(403);
-    expect(data).toHaveProperty('success', false);
+    expect(data).toHaveProperty("success", false);
     expect(data.error).toMatch(/forbidden|denied|access/i);
   },
 
@@ -153,14 +160,17 @@ export const apiAssertions = {
    */
   expectNotFound: (response: Response, data: Record<string, unknown>) => {
     expect(response.status).toBe(404);
-    expect(data).toHaveProperty('success', false);
+    expect(data).toHaveProperty("success", false);
     expect(data.error).toMatch(/not found/i);
   },
 
   /**
    * 驗證資料結構
    */
-  expectDataStructure: (data: Record<string, unknown>, structure: Record<string, unknown>) => {
+  expectDataStructure: (
+    data: Record<string, unknown>,
+    structure: Record<string, unknown>,
+  ) => {
     expect(data).toMatchObject(structure);
   },
 };

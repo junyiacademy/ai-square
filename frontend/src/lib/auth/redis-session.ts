@@ -5,9 +5,9 @@
  * Falls back to in-memory storage if Redis is unavailable
  */
 
-import crypto from 'crypto';
-import { getRedisClient } from '@/lib/cache/redis-client';
-import type Redis from 'ioredis';
+import crypto from "crypto";
+import { getRedisClient } from "@/lib/cache/redis-client";
+import type Redis from "ioredis";
 
 export interface SessionData {
   userId: string;
@@ -25,7 +25,7 @@ const DEFAULT_TTL = 24 * 60 * 60; // 24 hours
 const REMEMBER_ME_TTL = 30 * 24 * 60 * 60; // 30 days
 
 export class RedisSession {
-  private static readonly PREFIX = 'session:';
+  private static readonly PREFIX = "session:";
 
   /**
    * Get Redis client if available
@@ -42,17 +42,20 @@ export class RedisSession {
    * Generate a secure session token
    */
   static generateToken(): string {
-    return crypto.randomBytes(32).toString('hex');
+    return crypto.randomBytes(32).toString("hex");
   }
 
   /**
    * Create a new session
    */
-  static async createSession(userData: {
-    userId: string;
-    email: string;
-    role: string;
-  }, rememberMe = false): Promise<string> {
+  static async createSession(
+    userData: {
+      userId: string;
+      email: string;
+      role: string;
+    },
+    rememberMe = false,
+  ): Promise<string> {
     const token = this.generateToken();
     const now = new Date();
     const ttl = rememberMe ? REMEMBER_ME_TTL : DEFAULT_TTL;
@@ -63,7 +66,7 @@ export class RedisSession {
       email: userData.email,
       role: userData.role,
       createdAt: now,
-      expiresAt
+      expiresAt,
     };
 
     // Try Redis first
@@ -72,16 +75,19 @@ export class RedisSession {
       try {
         const key = `${this.PREFIX}${token}`;
         await redis.setex(key, ttl, JSON.stringify(sessionData));
-        console.log('[RedisSession] Session stored in Redis');
+        console.log("[RedisSession] Session stored in Redis");
         return token;
       } catch (error) {
-        console.error('[RedisSession] Redis storage failed, falling back to memory:', error);
+        console.error(
+          "[RedisSession] Redis storage failed, falling back to memory:",
+          error,
+        );
       }
     }
 
     // Fallback to memory
     memoryStore.set(token, sessionData);
-    console.log('[RedisSession] Session stored in memory (fallback)');
+    console.log("[RedisSession] Session stored in memory (fallback)");
 
     // Schedule cleanup for memory store
     setTimeout(() => {
@@ -121,7 +127,10 @@ export class RedisSession {
           return session;
         }
       } catch (error) {
-        console.error('[RedisSession] Redis retrieval failed, falling back to memory:', error);
+        console.error(
+          "[RedisSession] Redis retrieval failed, falling back to memory:",
+          error,
+        );
       }
     }
 
@@ -151,7 +160,7 @@ export class RedisSession {
         const key = `${this.PREFIX}${token}`;
         await redis.del(key);
       } catch (error) {
-        console.error('[RedisSession] Redis deletion failed:', error);
+        console.error("[RedisSession] Redis deletion failed:", error);
       }
     }
 
@@ -195,12 +204,15 @@ export class RedisSession {
           if (data) {
             const session = JSON.parse(data) as SessionData;
             if (session.userId === userId) {
-              sessions.push(key.replace(this.PREFIX, ''));
+              sessions.push(key.replace(this.PREFIX, ""));
             }
           }
         }
       } catch (error) {
-        console.error('[RedisSession] Error getting user sessions from Redis:', error);
+        console.error(
+          "[RedisSession] Error getting user sessions from Redis:",
+          error,
+        );
       }
     }
 
@@ -227,7 +239,10 @@ export class RedisSession {
   /**
    * Extend session expiry (for remember me functionality)
    */
-  static async extendSession(token: string, rememberMe = false): Promise<boolean> {
+  static async extendSession(
+    token: string,
+    rememberMe = false,
+  ): Promise<boolean> {
     const session = await this.getSession(token);
     if (!session) {
       return false;
@@ -245,7 +260,10 @@ export class RedisSession {
         await redis.setex(key, ttl, JSON.stringify(session));
         return true;
       } catch (error) {
-        console.error('[RedisSession] Failed to extend session in Redis:', error);
+        console.error(
+          "[RedisSession] Failed to extend session in Redis:",
+          error,
+        );
       }
     }
 
@@ -256,8 +274,11 @@ export class RedisSession {
 }
 
 // Cleanup expired sessions every hour (for memory store)
-if (typeof setInterval !== 'undefined') {
-  setInterval(() => {
-    RedisSession.cleanupExpiredSessions();
-  }, 60 * 60 * 1000); // 1 hour
+if (typeof setInterval !== "undefined") {
+  setInterval(
+    () => {
+      RedisSession.cleanupExpiredSessions();
+    },
+    60 * 60 * 1000,
+  ); // 1 hour
 }

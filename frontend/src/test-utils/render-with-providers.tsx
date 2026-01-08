@@ -3,16 +3,22 @@
  * Follows @CLAUDE.md TDD principles
  */
 
-import React from 'react';
-import { render as rtlRender, RenderOptions } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import React from "react";
+import { render as rtlRender, RenderOptions } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 
 // Mock providers
-const MockSessionProvider = ({ children }: { children: React.ReactNode }) => <>{children}</>;
-const MockI18nextProvider = ({ children }: { children: React.ReactNode }) => <>{children}</>;
-const MockAuthProvider = ({ children }: { children: React.ReactNode }) => <>{children}</>;
+const MockSessionProvider = ({ children }: { children: React.ReactNode }) => (
+  <>{children}</>
+);
+const MockI18nextProvider = ({ children }: { children: React.ReactNode }) => (
+  <>{children}</>
+);
+const MockAuthProvider = ({ children }: { children: React.ReactNode }) => (
+  <>{children}</>
+);
 
-interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
+interface CustomRenderOptions extends Omit<RenderOptions, "wrapper"> {
   session?: unknown;
   locale?: string;
   initialEntries?: string[];
@@ -52,9 +58,7 @@ function AllProviders({ children }: AllProvidersProps) {
   return (
     <MockAuthProvider>
       <MockSessionProvider>
-        <MockI18nextProvider>
-          {children}
-        </MockI18nextProvider>
+        <MockI18nextProvider>{children}</MockI18nextProvider>
       </MockSessionProvider>
     </MockAuthProvider>
   );
@@ -68,14 +72,9 @@ function AllProviders({ children }: AllProvidersProps) {
  */
 export function renderWithProviders(
   ui: React.ReactElement,
-  options: CustomRenderOptions = {}
+  options: CustomRenderOptions = {},
 ) {
-  const {
-    session,
-    locale = 'en',
-    authState,
-    ...renderOptions
-  } = options;
+  const { session, locale = "en", authState, ...renderOptions } = options;
 
   const user = userEvent.setup();
 
@@ -95,5 +94,5 @@ export function renderWithProviders(
 }
 
 // Re-export everything from @testing-library/react
-export * from '@testing-library/react';
+export * from "@testing-library/react";
 export { userEvent };

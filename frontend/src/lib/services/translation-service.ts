@@ -2,16 +2,17 @@
  * 翻譯服務 - 用於評價多語言版本
  */
 
-import { VertexAIService } from '@/lib/ai/vertex-ai-service';
+import { VertexAIService } from "@/lib/ai/vertex-ai-service";
 
 export class TranslationService {
   private aiService: VertexAIService;
 
   constructor() {
     this.aiService = new VertexAIService({
-      systemPrompt: 'You are a professional translator specializing in educational feedback translation.',
+      systemPrompt:
+        "You are a professional translator specializing in educational feedback translation.",
       temperature: 0.3, // Lower temperature for more consistent translations
-      model: 'gemini-2.5-flash'
+      model: "gemini-2.5-flash",
     });
   }
 
@@ -25,26 +26,26 @@ export class TranslationService {
   async translateFeedback(
     originalFeedback: string,
     targetLanguage: string,
-    careerField?: string
+    careerField?: string,
   ): Promise<string> {
     // Map language codes to proper names
     const languageMap: Record<string, string> = {
-      'zhTW': 'Traditional Chinese (繁體中文)',
-      'zh-TW': 'Traditional Chinese (繁體中文)',
-      'zhCN': 'Simplified Chinese (简体中文)',
-      'zh-CN': 'Simplified Chinese (简体中文)',
-      'en': 'English',
-      'es': 'Spanish',
-      'ja': 'Japanese',
-      'ko': 'Korean',
-      'fr': 'French',
-      'de': 'German',
-      'ru': 'Russian',
-      'it': 'Italian',
-      'pt': 'Portuguese',
-      'ar': 'Arabic',
-      'id': 'Indonesian',
-      'th': 'Thai'
+      zhTW: "Traditional Chinese (繁體中文)",
+      "zh-TW": "Traditional Chinese (繁體中文)",
+      zhCN: "Simplified Chinese (简体中文)",
+      "zh-CN": "Simplified Chinese (简体中文)",
+      en: "English",
+      es: "Spanish",
+      ja: "Japanese",
+      ko: "Korean",
+      fr: "French",
+      de: "German",
+      ru: "Russian",
+      it: "Italian",
+      pt: "Portuguese",
+      ar: "Arabic",
+      id: "Indonesian",
+      th: "Thai",
     };
 
     const targetLanguageName = languageMap[targetLanguage] || targetLanguage;
@@ -60,7 +61,7 @@ Important:
 - Maintain all formatting (markdown, **bold**, bullet points)
 - Keep proper names and signatures unchanged
 - Preserve the encouraging and professional tone
-${careerField ? `- Use appropriate terminology for the ${careerField} field` : ''}
+${careerField ? `- Use appropriate terminology for the ${careerField} field` : ""}
 
 Translate now:`;
 
@@ -71,13 +72,13 @@ Translate now:`;
       let content = response.content;
 
       // Remove common translation labels/headers
-      content = content.replace(/^Translation.*?:\s*/gim, '');
-      content = content.replace(/^Translated.*?:\s*/gim, '');
-      content = content.replace(/^.*?Translation:\s*/gim, '');
-      content = content.replace(/^.*?Snippet \d+:\s*/gim, '');
+      content = content.replace(/^Translation.*?:\s*/gim, "");
+      content = content.replace(/^Translated.*?:\s*/gim, "");
+      content = content.replace(/^.*?Translation:\s*/gim, "");
+      content = content.replace(/^.*?Snippet \d+:\s*/gim, "");
 
       // Remove bullet points that might be added
-      if (content.startsWith('• ')) {
+      if (content.startsWith("• ")) {
         content = content.substring(2);
       }
 
@@ -86,7 +87,7 @@ Translate now:`;
 
       return content;
     } catch (error) {
-      console.error('Translation failed:', error);
+      console.error("Translation failed:", error);
       throw new Error(`Failed to translate feedback to ${targetLanguage}`);
     }
   }
@@ -101,22 +102,26 @@ Translate now:`;
   async translateFeedbackBatch(
     originalFeedback: string,
     targetLanguages: string[],
-    careerField?: string
+    careerField?: string,
   ): Promise<Record<string, string>> {
     const results: Record<string, string> = {};
 
     // 並行翻譯所有目標語言
     const translations = await Promise.allSettled(
       targetLanguages.map(async (lang) => {
-        const translated = await this.translateFeedback(originalFeedback, lang, careerField);
+        const translated = await this.translateFeedback(
+          originalFeedback,
+          lang,
+          careerField,
+        );
         return { lang, translated };
-      })
+      }),
     );
 
     // 處理翻譯結果
     translations.forEach((result, index) => {
       const lang = targetLanguages[index];
-      if (result.status === 'fulfilled') {
+      if (result.status === "fulfilled") {
         results[lang] = result.value.translated;
       } else {
         console.error(`Translation failed for ${lang}:`, result.reason);
@@ -136,7 +141,7 @@ Translate now:`;
    */
   static needsTranslation(
     existingVersions: Record<string, string> | undefined,
-    requiredLanguage: string
+    requiredLanguage: string,
   ): boolean {
     if (!existingVersions) return true;
     return !existingVersions[requiredLanguage];
@@ -152,7 +157,7 @@ Translate now:`;
   static getFeedbackByLanguage(
     versions: Record<string, string> | undefined,
     language: string,
-    fallbackLanguage: string = 'en'
+    fallbackLanguage: string = "en",
   ): string | null {
     if (!versions) return null;
 

@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { VertexAI } from '@google-cloud/vertexai';
+import { NextRequest, NextResponse } from "next/server";
+import { VertexAI } from "@google-cloud/vertexai";
 
 export async function POST(request: NextRequest) {
   try {
@@ -8,8 +8,8 @@ export async function POST(request: NextRequest) {
 
     if (!message || !context) {
       return NextResponse.json(
-        { error: 'Message and context are required' },
-        { status: 400 }
+        { error: "Message and context are required" },
+        { status: 400 },
       );
     }
 
@@ -21,7 +21,7 @@ Current Context:
 - Task Description: ${context.currentTaskDescription}
 - Task Progress: ${context.taskProgress}%
 - Completed Tasks: ${context.completedTasks}
-- Path Skills: ${context.skills.join(', ')}
+- Path Skills: ${context.skills.join(", ")}
 - Language: Traditional Chinese (Taiwan)
 
 Your role is to:
@@ -46,12 +46,12 @@ Please respond as the AI ${context.aiRole} in Traditional Chinese, being helpful
 
     // Initialize Vertex AI
     const vertexAI = new VertexAI({
-      project: process.env.GOOGLE_CLOUD_PROJECT || 'ai-square-463013',
-      location: process.env.VERTEX_AI_LOCATION || 'us-central1',
+      project: process.env.GOOGLE_CLOUD_PROJECT || "ai-square-463013",
+      location: process.env.VERTEX_AI_LOCATION || "us-central1",
     });
 
     const model = vertexAI.preview.getGenerativeModel({
-      model: 'gemini-2.5-flash',
+      model: "gemini-2.5-flash",
       generationConfig: {
         temperature: 0.8,
         topP: 0.95,
@@ -63,29 +63,37 @@ Please respond as the AI ${context.aiRole} in Traditional Chinese, being helpful
     // Generate response using Vertex AI
     const result = await model.generateContent({
       contents: [
-        { role: 'user', parts: [{ text: systemPrompt }] },
-        { role: 'model', parts: [{ text: '我了解了，我會扮演AI助手的角色，用繁體中文友善地協助學生。' }] },
-        { role: 'user', parts: [{ text: userPrompt }] }
+        { role: "user", parts: [{ text: systemPrompt }] },
+        {
+          role: "model",
+          parts: [
+            {
+              text: "我了解了，我會扮演AI助手的角色，用繁體中文友善地協助學生。",
+            },
+          ],
+        },
+        { role: "user", parts: [{ text: userPrompt }] },
       ],
     });
 
     const response = result.response;
-    const text = response.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    const text = response.candidates?.[0]?.content?.parts?.[0]?.text || "";
 
     if (!text) {
-      throw new Error('No response generated');
+      throw new Error("No response generated");
     }
 
     return NextResponse.json({ response: text });
   } catch (error) {
-    console.error('AI chat error:', error);
+    console.error("AI chat error:", error);
 
     // Return a generic error response
     return NextResponse.json(
       {
-        response: '抱歉，我暫時無法處理你的訊息。請稍後再試，或者繼續探索當前的任務！💪'
+        response:
+          "抱歉，我暫時無法處理你的訊息。請稍後再試，或者繼續探索當前的任務！💪",
       },
-      { status: 200 } // Return 200 to avoid breaking the UI
+      { status: 200 }, // Return 200 to avoid breaking the UI
     );
   }
 }

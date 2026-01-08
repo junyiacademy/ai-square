@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   Chart as ChartJS,
@@ -9,10 +9,10 @@ import {
   Tooltip,
   Legend,
   ChartData,
-  ChartOptions
-} from 'chart.js';
-import { Radar } from 'react-chartjs-2';
-import { useTranslation } from 'react-i18next';
+  ChartOptions,
+} from "chart.js";
+import { Radar } from "react-chartjs-2";
+import { useTranslation } from "react-i18next";
 
 // Register Chart.js components
 ChartJS.register(
@@ -21,7 +21,7 @@ ChartJS.register(
   LineElement,
   Filler,
   Tooltip,
-  Legend
+  Legend,
 );
 
 interface DomainRadarChartProps {
@@ -34,41 +34,44 @@ interface DomainRadarChartProps {
   title?: string;
 }
 
-export default function DomainRadarChart({ domainScores, title }: DomainRadarChartProps) {
-  const { t } = useTranslation(['homepage', 'assessment']);
+export default function DomainRadarChart({
+  domainScores,
+  title,
+}: DomainRadarChartProps) {
+  const { t } = useTranslation(["homepage", "assessment"]);
 
   const domainLabels = [
-    t('homepage:domains.items.engaging.name'),
-    t('homepage:domains.items.creating.name'),
-    t('homepage:domains.items.managing.name'),
-    t('homepage:domains.items.designing.name')
+    t("homepage:domains.items.engaging.name"),
+    t("homepage:domains.items.creating.name"),
+    t("homepage:domains.items.managing.name"),
+    t("homepage:domains.items.designing.name"),
   ];
 
-  const data: ChartData<'radar'> = {
+  const data: ChartData<"radar"> = {
     labels: domainLabels,
     datasets: [
       {
-        label: t('homepage:domains.title'),
+        label: t("homepage:domains.title"),
         data: [
           domainScores.engaging_with_ai,
           domainScores.creating_with_ai,
           domainScores.managing_with_ai,
-          domainScores.designing_with_ai
+          domainScores.designing_with_ai,
         ],
-        backgroundColor: 'rgba(99, 102, 241, 0.2)',
-        borderColor: 'rgba(99, 102, 241, 1)',
+        backgroundColor: "rgba(99, 102, 241, 0.2)",
+        borderColor: "rgba(99, 102, 241, 1)",
         borderWidth: 2,
-        pointBackgroundColor: 'rgba(99, 102, 241, 1)',
-        pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: 'rgba(99, 102, 241, 1)',
+        pointBackgroundColor: "rgba(99, 102, 241, 1)",
+        pointBorderColor: "#fff",
+        pointHoverBackgroundColor: "#fff",
+        pointHoverBorderColor: "rgba(99, 102, 241, 1)",
         pointRadius: 5,
-        pointHoverRadius: 7
-      }
-    ]
+        pointHoverRadius: 7,
+      },
+    ],
   };
 
-  const options: ChartOptions<'radar'> = {
+  const options: ChartOptions<"radar"> = {
     responsive: true,
     maintainAspectRatio: false,
     layout: {
@@ -76,20 +79,20 @@ export default function DomainRadarChart({ domainScores, title }: DomainRadarCha
         top: 20,
         right: 20,
         bottom: 20,
-        left: 20
-      }
+        left: 20,
+      },
     },
     plugins: {
       legend: {
-        display: false
+        display: false,
       },
       tooltip: {
         callbacks: {
           label: (context) => {
             return `${context.parsed.r}%`;
-          }
-        }
-      }
+          },
+        },
+      },
     },
     scales: {
       r: {
@@ -99,33 +102,33 @@ export default function DomainRadarChart({ domainScores, title }: DomainRadarCha
           stepSize: 20,
           callback: (value) => `${value}%`,
           font: {
-            size: 11
+            size: 11,
           },
-          backdropColor: 'transparent',
-          color: 'rgba(107, 114, 128, 0.7)'
+          backdropColor: "transparent",
+          color: "rgba(107, 114, 128, 0.7)",
         },
         grid: {
-          color: 'rgba(107, 114, 128, 0.2)',
-          circular: true
+          color: "rgba(107, 114, 128, 0.2)",
+          circular: true,
         },
         pointLabels: {
           font: {
             size: 13,
             weight: 500,
-            family: 'inherit'
+            family: "inherit",
           },
           padding: 15,
           centerPointLabels: false,
-          color: 'rgb(75, 85, 99)',
+          color: "rgb(75, 85, 99)",
           display: true,
-          backdropColor: 'rgba(255, 255, 255, 0.8)',
-          backdropPadding: 4
+          backdropColor: "rgba(255, 255, 255, 0.8)",
+          backdropPadding: 4,
         },
         angleLines: {
-          color: 'rgba(107, 114, 128, 0.2)'
-        }
-      }
-    }
+          color: "rgba(107, 114, 128, 0.2)",
+        },
+      },
+    },
   };
 
   return (

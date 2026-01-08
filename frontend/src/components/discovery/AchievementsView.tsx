@@ -1,14 +1,19 @@
-'use client';
+"use client";
 
-import React from 'react'
-import { Trophy, Sparkles, Cpu, Puzzle, Globe, GraduationCap, Star } from 'lucide-react';;
-import { useTranslation } from 'react-i18next';
-import { motion } from 'framer-motion';
-;
-;
-
+import React from "react";
+import {
+  Trophy,
+  Sparkles,
+  Cpu,
+  Puzzle,
+  Globe,
+  GraduationCap,
+  Star,
+} from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { motion } from "framer-motion";
 // Import types from the unified service
-import type { UserAchievements } from '@/lib/services/user-data-service';
+import type { UserAchievements } from "@/lib/services/user-data-service";
 
 interface AchievementsViewProps {
   achievements: UserAchievements;
@@ -24,76 +29,82 @@ interface BadgeData {
   bgColor: string;
 }
 
-export default function AchievementsView({ achievements }: AchievementsViewProps) {
-  const { t } = useTranslation('discovery');
+export default function AchievementsView({
+  achievements,
+}: AchievementsViewProps) {
+  const { t } = useTranslation("discovery");
 
   // Define available badges
   const allBadges: BadgeData[] = [
     {
-      id: 'first_task',
-      title: t('achievements.badges.first_task.title'),
-      description: t('achievements.badges.first_task.description'),
+      id: "first_task",
+      title: t("achievements.badges.first_task.title"),
+      description: t("achievements.badges.first_task.description"),
       icon: GraduationCap,
       iconSolid: Trophy,
-      color: 'text-green-600',
-      bgColor: 'bg-green-100'
+      color: "text-green-600",
+      bgColor: "bg-green-100",
     },
     {
-      id: 'creative_thinker',
-      title: t('achievements.badges.creative_thinker.title'),
-      description: t('achievements.badges.creative_thinker.description'),
+      id: "creative_thinker",
+      title: t("achievements.badges.creative_thinker.title"),
+      description: t("achievements.badges.creative_thinker.description"),
       icon: Sparkles,
       iconSolid: Sparkles,
-      color: 'text-purple-600',
-      bgColor: 'bg-purple-100'
+      color: "text-purple-600",
+      bgColor: "bg-purple-100",
     },
     {
-      id: 'ai_collaborator',
-      title: t('achievements.badges.ai_collaborator.title'),
-      description: t('achievements.badges.ai_collaborator.description'),
+      id: "ai_collaborator",
+      title: t("achievements.badges.ai_collaborator.title"),
+      description: t("achievements.badges.ai_collaborator.description"),
       icon: Cpu,
       iconSolid: Cpu,
-      color: 'text-blue-600',
-      bgColor: 'bg-blue-100'
+      color: "text-blue-600",
+      bgColor: "bg-blue-100",
     },
     {
-      id: 'problem_solver',
-      title: t('achievements.badges.problem_solver.title'),
-      description: t('achievements.badges.problem_solver.description'),
+      id: "problem_solver",
+      title: t("achievements.badges.problem_solver.title"),
+      description: t("achievements.badges.problem_solver.description"),
       icon: Puzzle,
       iconSolid: Puzzle,
-      color: 'text-orange-600',
-      bgColor: 'bg-orange-100'
+      color: "text-orange-600",
+      bgColor: "bg-orange-100",
     },
     {
-      id: 'path_explorer',
-      title: t('achievements.badges.path_explorer.title'),
-      description: t('achievements.badges.path_explorer.description'),
+      id: "path_explorer",
+      title: t("achievements.badges.path_explorer.title"),
+      description: t("achievements.badges.path_explorer.description"),
       icon: Globe,
       iconSolid: Globe,
-      color: 'text-indigo-600',
-      bgColor: 'bg-indigo-100'
-    }
+      color: "text-indigo-600",
+      bgColor: "bg-indigo-100",
+    },
   ];
 
   // Calculate next level XP requirement
   const nextLevelXp = achievements.level * 100;
-  const currentLevelXp = achievements.totalXp - ((achievements.level - 1) * 100);
+  const currentLevelXp = achievements.totalXp - (achievements.level - 1) * 100;
   const progressToNextLevel = (currentLevelXp / 100) * 100;
 
   // Get level benefits
   const getLevelBenefits = (level: number): string[] => {
     const benefits: string[] = [];
-    if (level >= 2) benefits.push('解鎖進階任務');
-    if (level >= 3) benefits.push('獲得專屬稱號');
-    if (level >= 5) benefits.push('解鎖特殊成就');
-    if (level >= 10) benefits.push('探索大師認證');
+    if (level >= 2) benefits.push("解鎖進階任務");
+    if (level >= 3) benefits.push("獲得專屬稱號");
+    if (level >= 5) benefits.push("解鎖特殊成就");
+    if (level >= 10) benefits.push("探索大師認證");
     return benefits;
   };
 
-  const earnedBadgeIds = achievements.badges.map(b => b.id);
-  const earnedBadges = allBadges.filter(badge => earnedBadgeIds.includes(badge.id));
-  const availableBadges = allBadges.filter(badge => !earnedBadgeIds.includes(badge.id));
+  const earnedBadgeIds = achievements.badges.map((b) => b.id);
+  const earnedBadges = allBadges.filter((badge) =>
+    earnedBadgeIds.includes(badge.id),
+  );
+  const availableBadges = allBadges.filter(
+    (badge) => !earnedBadgeIds.includes(badge.id),
+  );
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -108,11 +119,9 @@ export default function AchievementsView({ achievements }: AchievementsViewProps
           <Trophy className="w-8 h-8 text-white" />
         </div>
         <h2 className="text-3xl font-bold text-gray-900 mb-2">
-          {t('achievements.title')}
+          {t("achievements.title")}
         </h2>
-        <p className="text-lg text-gray-600">
-          追蹤你的學習成就和技能發展
-        </p>
+        <p className="text-lg text-gray-600">追蹤你的學習成就和技能發展</p>
       </motion.div>
 
       {/* Level and XP Overview */}
@@ -125,7 +134,7 @@ export default function AchievementsView({ achievements }: AchievementsViewProps
         <div className="grid md:grid-cols-3 gap-6">
           <div className="text-center">
             <div className="text-3xl font-bold mb-2">
-              {t('achievements.level', { level: achievements.level })}
+              {t("achievements.level", { level: achievements.level })}
             </div>
             <div className="text-purple-100">目前等級</div>
           </div>
@@ -138,9 +147,7 @@ export default function AchievementsView({ achievements }: AchievementsViewProps
           </div>
 
           <div className="text-center">
-            <div className="text-3xl font-bold mb-2">
-              {earnedBadges.length}
-            </div>
+            <div className="text-3xl font-bold mb-2">{earnedBadges.length}</div>
             <div className="text-purple-100">已獲得徽章</div>
           </div>
         </div>
@@ -160,7 +167,8 @@ export default function AchievementsView({ achievements }: AchievementsViewProps
             />
           </div>
           <div className="text-sm text-purple-100 mt-2">
-            還需要 {nextLevelXp - achievements.totalXp} XP 升級到等級 {achievements.level + 1}
+            還需要 {nextLevelXp - achievements.totalXp} XP 升級到等級{" "}
+            {achievements.level + 1}
           </div>
         </div>
       </motion.div>
@@ -191,12 +199,20 @@ export default function AchievementsView({ achievements }: AchievementsViewProps
                     className="bg-white rounded-xl p-4 shadow-lg border border-gray-100"
                   >
                     <div className="flex items-center space-x-4">
-                      <div className={`w-12 h-12 ${badge.bgColor} rounded-xl flex items-center justify-center`}>
-                        {IconSolid && <IconSolid className={`w-6 h-6 ${badge.color}`} />}
+                      <div
+                        className={`w-12 h-12 ${badge.bgColor} rounded-xl flex items-center justify-center`}
+                      >
+                        {IconSolid && (
+                          <IconSolid className={`w-6 h-6 ${badge.color}`} />
+                        )}
                       </div>
                       <div className="flex-1">
-                        <h4 className="font-semibold text-gray-900">{badge.title}</h4>
-                        <p className="text-sm text-gray-600">{badge.description}</p>
+                        <h4 className="font-semibold text-gray-900">
+                          {badge.title}
+                        </h4>
+                        <p className="text-sm text-gray-600">
+                          {badge.description}
+                        </p>
                       </div>
                       <div className="bg-green-100 text-green-600 px-2 py-1 rounded-full text-xs font-medium">
                         已獲得
@@ -210,7 +226,9 @@ export default function AchievementsView({ achievements }: AchievementsViewProps
             <div className="bg-gray-50 rounded-xl p-6 text-center">
               <Trophy className="w-12 h-12 text-gray-400 mx-auto mb-3" />
               <p className="text-gray-600">還沒有獲得任何徽章</p>
-              <p className="text-sm text-gray-500 mt-1">完成任務來獲得你的第一個徽章！</p>
+              <p className="text-sm text-gray-500 mt-1">
+                完成任務來獲得你的第一個徽章！
+              </p>
             </div>
           )}
         </motion.div>
@@ -243,8 +261,12 @@ export default function AchievementsView({ achievements }: AchievementsViewProps
                       <Icon className="w-6 h-6 text-gray-400" />
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-semibold text-gray-700">{badge.title}</h4>
-                      <p className="text-sm text-gray-500">{badge.description}</p>
+                      <h4 className="font-semibold text-gray-700">
+                        {badge.title}
+                      </h4>
+                      <p className="text-sm text-gray-500">
+                        {badge.description}
+                      </p>
                     </div>
                     <div className="bg-gray-100 text-gray-500 px-2 py-1 rounded-full text-xs font-medium">
                       待獲得
@@ -287,19 +309,27 @@ export default function AchievementsView({ achievements }: AchievementsViewProps
         <h3 className="text-lg font-semibold text-gray-900 mb-4">學習統計</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="text-center">
-            <div className="text-2xl font-bold text-blue-600">{achievements.completedTasks.length}</div>
+            <div className="text-2xl font-bold text-blue-600">
+              {achievements.completedTasks.length}
+            </div>
             <div className="text-sm text-gray-600">已完成任務</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl font-bold text-purple-600">{earnedBadges.length}</div>
+            <div className="text-2xl font-bold text-purple-600">
+              {earnedBadges.length}
+            </div>
             <div className="text-sm text-gray-600">獲得徽章</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl font-bold text-green-600">{achievements.level}</div>
+            <div className="text-2xl font-bold text-green-600">
+              {achievements.level}
+            </div>
             <div className="text-sm text-gray-600">目前等級</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl font-bold text-orange-600">{Math.floor(achievements.totalXp / 50)}</div>
+            <div className="text-2xl font-bold text-orange-600">
+              {Math.floor(achievements.totalXp / 50)}
+            </div>
             <div className="text-sm text-gray-600">學習時數</div>
           </div>
         </div>

@@ -41,7 +41,7 @@ src/app/api/reports/
 ```yaml
 # .github/workflows/weekly-report.yml
 schedule:
-  - cron: '0 1 * * 1'  # 每週一 01:00 UTC = 09:00 台北
+  - cron: "0 1 * * 1" # 每週一 01:00 UTC = 09:00 台北
 ```
 
 ### 手動執行

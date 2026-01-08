@@ -1,20 +1,20 @@
-import { NextRequest } from 'next/server';
-import { Pool } from 'pg';
-import Redis from 'ioredis';
-import jwt from 'jsonwebtoken';
-import bcrypt from 'bcryptjs';
-import crypto from 'crypto';
-import { testUsers } from './test-fixtures';
+import { NextRequest } from "next/server";
+import { Pool } from "pg";
+import Redis from "ioredis";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
+import crypto from "crypto";
+import { testUsers } from "./test-fixtures";
 
 // Import API route handlers directly
-import * as authLoginRoute from '@/app/api/auth/login/route';
-import * as authRegisterRoute from '@/app/api/auth/register/route';
-import * as pblScenariosRoute from '@/app/api/pbl/scenarios/route';
-import * as pblScenarioDetailRoute from '@/app/api/pbl/scenarios/[id]/route';
-import * as pblStartRoute from '@/app/api/pbl/scenarios/[id]/start/route';
-import * as pblTaskRoute from '@/app/api/pbl/scenarios/[id]/programs/[programId]/tasks/[taskId]/route';
-import * as pblEvaluateRoute from '@/app/api/pbl/tasks/[taskId]/evaluate/route';
-import * as pblCompleteRoute from '@/app/api/pbl/programs/[programId]/complete/route';
+import * as authLoginRoute from "@/app/api/auth/login/route";
+import * as authRegisterRoute from "@/app/api/auth/register/route";
+import * as pblScenariosRoute from "@/app/api/pbl/scenarios/route";
+import * as pblScenarioDetailRoute from "@/app/api/pbl/scenarios/[id]/route";
+import * as pblStartRoute from "@/app/api/pbl/scenarios/[id]/start/route";
+import * as pblTaskRoute from "@/app/api/pbl/scenarios/[id]/programs/[programId]/tasks/[taskId]/route";
+import * as pblEvaluateRoute from "@/app/api/pbl/tasks/[taskId]/evaluate/route";
+import * as pblCompleteRoute from "@/app/api/pbl/programs/[programId]/complete/route";
 
 /**
  * Test Helper Functions for Integration Testing
@@ -26,7 +26,9 @@ import * as pblCompleteRoute from '@/app/api/pbl/programs/[programId]/complete/r
 export class APITestHelper {
   private baseUrl: string;
 
-  constructor(baseUrl: string = (process.env.API_URL || 'http://localhost:3456')) {
+  constructor(
+    baseUrl: string = process.env.API_URL || "http://localhost:3456",
+  ) {
     this.baseUrl = baseUrl;
   }
 
@@ -37,16 +39,16 @@ export class APITestHelper {
     method: string,
     path: string,
     body?: Record<string, unknown>,
-    headers?: Record<string, string>
+    headers?: Record<string, string>,
   ): NextRequest {
     const url = `${this.baseUrl}${path}`;
     const init = {
       method,
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         // Provide a default user cookie for routes that rely on cookies (e.g., start endpoints)
         // Do NOT URL-encode; NextRequest.cookies expects raw JSON string here
-        'cookie': `user=${JSON.stringify({ email: 'integration@test.com' })}`,
+        cookie: `user=${JSON.stringify({ email: "integration@test.com" })}`,
         ...headers,
       },
       body: body ? JSON.stringify(body) : undefined,
@@ -59,31 +61,41 @@ export class APITestHelper {
    * Make authenticated API request directly to route handler
    */
   async authenticatedRequest(
-    method: 'get' | 'post' | 'put' | 'delete',
+    method: "get" | "post" | "put" | "delete",
     path: string,
     token: string,
-    body?: Record<string, unknown>
+    body?: Record<string, unknown>,
   ) {
     const request = this.createRequest(method.toUpperCase(), path, body, {
-      'Authorization': `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
     });
 
     // Route to the appropriate handler based on path
     let response: Response;
 
-    if (path === '/api/pbl/scenarios' && method === 'get') {
+    if (path === "/api/pbl/scenarios" && method === "get") {
       response = await pblScenariosRoute.GET(request);
-    } else if (path.startsWith('/api/pbl/scenarios/') && path.includes('/start')) {
-      const id = path.split('/')[4];
-      response = await pblStartRoute.POST(request, { params: Promise.resolve({ id }) });
-    } else if (path.match(/^\/api\/pbl\/scenarios\/[^/]+$/) && method === 'get') {
-      const id = path.split('/').pop()!;
-      response = await pblScenarioDetailRoute.GET(request, { params: Promise.resolve({ id }) });
-    } else if (path.includes('/tasks/') && path.includes('/evaluate')) {
+    } else if (
+      path.startsWith("/api/pbl/scenarios/") &&
+      path.includes("/start")
+    ) {
+      const id = path.split("/")[4];
+      response = await pblStartRoute.POST(request, {
+        params: Promise.resolve({ id }),
+      });
+    } else if (
+      path.match(/^\/api\/pbl\/scenarios\/[^/]+$/) &&
+      method === "get"
+    ) {
+      const id = path.split("/").pop()!;
+      response = await pblScenarioDetailRoute.GET(request, {
+        params: Promise.resolve({ id }),
+      });
+    } else if (path.includes("/tasks/") && path.includes("/evaluate")) {
       const taskId = path.match(/tasks\/([^/]+)\/evaluate/)?.[1];
       if (taskId) {
         response = await pblEvaluateRoute.POST(request, {
-          params: Promise.resolve({ taskId })
+          params: Promise.resolve({ taskId }),
         });
       } else {
         throw new Error(`Invalid evaluate path: ${path}`);
@@ -94,17 +106,20 @@ export class APITestHelper {
       const res = await fetch(url, {
         method: method.toUpperCase(),
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
           // Provide cookie for endpoints that rely on request.cookies
-          'cookie': `user=${JSON.stringify({ email: 'integration@test.com' })}`,
+          cookie: `user=${JSON.stringify({ email: "integration@test.com" })}`,
         },
         body: body ? JSON.stringify(body) : undefined,
       });
       return {
         status: res.status,
         body: await res.json().catch(() => ({})),
-        headers: Object.fromEntries(res.headers.entries()) as Record<string, string>,
+        headers: Object.fromEntries(res.headers.entries()) as Record<
+          string,
+          string
+        >,
       };
     }
 
@@ -113,7 +128,10 @@ export class APITestHelper {
     return {
       status: response.status,
       body: responseBody,
-      headers: Object.fromEntries(response.headers.entries()) as Record<string, string>,
+      headers: Object.fromEntries(response.headers.entries()) as Record<
+        string,
+        string
+      >,
     };
   }
 
@@ -121,7 +139,10 @@ export class APITestHelper {
    * Login and get token
    */
   async login(email: string, password: string): Promise<string> {
-    const request = this.createRequest('POST', '/api/auth/login', { email, password });
+    const request = this.createRequest("POST", "/api/auth/login", {
+      email,
+      password,
+    });
     const response = await authLoginRoute.POST(request);
 
     if (response.status !== 200) {
@@ -140,15 +161,15 @@ export class APITestHelper {
     // Use HTTP call to ensure Next.js runtime (cookies handling) is consistent
     const url = `${this.baseUrl}/api/auth/register`;
     const res = await fetch(url, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         email,
         password,
         name,
-        preferredLanguage: 'en',
+        preferredLanguage: "en",
         acceptTerms: true,
       }),
     });
@@ -156,7 +177,10 @@ export class APITestHelper {
     return {
       status: res.status,
       body,
-      headers: Object.fromEntries(res.headers.entries()) as Record<string, string>,
+      headers: Object.fromEntries(res.headers.entries()) as Record<
+        string,
+        string
+      >,
     };
   }
 
@@ -165,9 +189,9 @@ export class APITestHelper {
    */
   async createPBLProgram(scenarioId: string, token: string) {
     const response = await this.authenticatedRequest(
-      'post',
+      "post",
       `/api/pbl/scenarios/${scenarioId}/start`,
-      token
+      token,
     );
 
     return response.body;
@@ -180,13 +204,13 @@ export class APITestHelper {
     programId: string,
     taskId: string,
     response: string,
-    token: string
+    token: string,
   ) {
     return this.authenticatedRequest(
-      'post',
+      "post",
       `/api/pbl/tasks/${taskId}/evaluate`,
       token,
-      { response, programId }
+      { response, programId },
     );
   }
 
@@ -195,9 +219,9 @@ export class APITestHelper {
    */
   async getEvaluation(taskId: string, token: string) {
     return this.authenticatedRequest(
-      'get',
+      "get",
       `/api/evaluations/task/${taskId}`,
-      token
+      token,
     );
   }
 }
@@ -230,16 +254,19 @@ export class DatabaseTestHelper {
           userData.role,
           userData.emailVerified,
           new Date(),
-          new Date()
-        ]
+          new Date(),
+        ],
       );
 
       return result.rows[0];
     } catch (error) {
-      console.error('Error creating user:', error);
+      console.error("Error creating user:", error);
       // If duplicate email, fetch existing user and return it
       try {
-        const existing = await this.pool.query('SELECT * FROM users WHERE email = $1 LIMIT 1', [userData.email]);
+        const existing = await this.pool.query(
+          "SELECT * FROM users WHERE email = $1 LIMIT 1",
+          [userData.email],
+        );
         if (existing.rows[0]) {
           return existing.rows[0];
         }
@@ -252,7 +279,7 @@ export class DatabaseTestHelper {
         role: userData.role,
         email_verified: userData.emailVerified,
         created_at: new Date(),
-        updated_at: new Date()
+        updated_at: new Date(),
       };
     }
   }
@@ -262,26 +289,21 @@ export class DatabaseTestHelper {
    */
   async createSession(userId: string): Promise<string> {
     const token = jwt.sign(
-      { userId, email: 'test@test.com' },
-      process.env.NEXTAUTH_SECRET || 'test-secret',
-      { expiresIn: '24h' }
+      { userId, email: "test@test.com" },
+      process.env.NEXTAUTH_SECRET || "test-secret",
+      { expiresIn: "24h" },
     );
 
     try {
       await this.pool.query(
         `INSERT INTO sessions (user_id, token, expires_at, created_at)
          VALUES ($1, $2, $3, $4)`,
-        [
-          userId,
-          token,
-          new Date(Date.now() + 24 * 60 * 60 * 1000),
-          new Date()
-        ]
+        [userId, token, new Date(Date.now() + 24 * 60 * 60 * 1000), new Date()],
       );
     } catch (error) {
       // Sessions table might not exist in test environment
       // Just return the token for testing
-      console.log('Sessions table not available, returning mock token');
+      console.log("Sessions table not available, returning mock token");
     }
 
     return token;
@@ -292,12 +314,20 @@ export class DatabaseTestHelper {
    */
   async cleanupUser(userId: string) {
     // Delete in reverse order of dependencies
-    await this.pool.query('DELETE FROM evaluations WHERE user_id = $1', [userId]);
-    await this.pool.query('DELETE FROM tasks WHERE program_id IN (SELECT id FROM programs WHERE user_id = $1)', [userId]);
-    await this.pool.query('DELETE FROM programs WHERE user_id = $1', [userId]);
-    await this.pool.query('DELETE FROM sessions WHERE user_id = $1', [userId]);
-    await this.pool.query('DELETE FROM verification_tokens WHERE user_id = $1', [userId]);
-    await this.pool.query('DELETE FROM users WHERE id = $1', [userId]);
+    await this.pool.query("DELETE FROM evaluations WHERE user_id = $1", [
+      userId,
+    ]);
+    await this.pool.query(
+      "DELETE FROM tasks WHERE program_id IN (SELECT id FROM programs WHERE user_id = $1)",
+      [userId],
+    );
+    await this.pool.query("DELETE FROM programs WHERE user_id = $1", [userId]);
+    await this.pool.query("DELETE FROM sessions WHERE user_id = $1", [userId]);
+    await this.pool.query(
+      "DELETE FROM verification_tokens WHERE user_id = $1",
+      [userId],
+    );
+    await this.pool.query("DELETE FROM users WHERE id = $1", [userId]);
   }
 
   /**
@@ -364,38 +394,47 @@ export class DatabaseTestHelper {
     };
 
     // Get program stats
-    const programStats = await this.pool.query(`
+    const programStats = await this.pool.query(
+      `
       SELECT
         COUNT(*) as total,
         COUNT(CASE WHEN status = 'completed' THEN 1 END) as completed,
         SUM(time_spent_seconds) as total_time
       FROM programs
       WHERE user_id = $1
-    `, [userId]);
+    `,
+      [userId],
+    );
 
     stats.totalPrograms = parseInt(programStats.rows[0].total);
     stats.completedPrograms = parseInt(programStats.rows[0].completed);
     stats.totalTimeSpent = parseInt(programStats.rows[0].total_time || 0);
 
     // Get task stats
-    const taskStats = await this.pool.query(`
+    const taskStats = await this.pool.query(
+      `
       SELECT
         COUNT(*) as total,
         COUNT(CASE WHEN t.status = 'completed' THEN 1 END) as completed
       FROM tasks t
       JOIN programs p ON t.program_id = p.id
       WHERE p.user_id = $1
-    `, [userId]);
+    `,
+      [userId],
+    );
 
     stats.totalTasks = parseInt(taskStats.rows[0].total);
     stats.completedTasks = parseInt(taskStats.rows[0].completed);
 
     // Get average score
-    const scoreStats = await this.pool.query(`
+    const scoreStats = await this.pool.query(
+      `
       SELECT AVG(e.score) as avg_score
       FROM evaluations e
       WHERE e.user_id = $1
-    `, [userId]);
+    `,
+      [userId],
+    );
 
     stats.averageScore = parseFloat(scoreStats.rows[0].avg_score || 0);
 
@@ -416,7 +455,7 @@ export class CacheTestHelper {
    */
   async warmUpCache(data: Record<string, any>) {
     if (!this.redisClient) {
-      console.log('Redis not available, skipping cache warmup');
+      console.log("Redis not available, skipping cache warmup");
       return;
     }
 
@@ -424,8 +463,8 @@ export class CacheTestHelper {
       await this.redisClient.set(
         key,
         JSON.stringify(value),
-        'EX',
-        3600 // 1 hour TTL
+        "EX",
+        3600, // 1 hour TTL
       );
     }
   }
@@ -433,7 +472,7 @@ export class CacheTestHelper {
   /**
    * Clear specific cache keys
    */
-  async clearCache(pattern: string = '*') {
+  async clearCache(pattern: string = "*") {
     if (!this.redisClient) return;
 
     const keys = await this.redisClient.keys(pattern);
@@ -450,7 +489,7 @@ export class CacheTestHelper {
       return { available: false };
     }
 
-    const info = await this.redisClient.info('stats');
+    const info = await this.redisClient.info("stats");
     const keyCount = await this.redisClient.dbsize();
 
     // Parse hit/miss stats from info
@@ -466,7 +505,7 @@ export class CacheTestHelper {
       keyCount,
       hits,
       misses,
-      hitRate: hitRate.toFixed(2) + '%',
+      hitRate: hitRate.toFixed(2) + "%",
     };
   }
 
@@ -477,7 +516,7 @@ export class CacheTestHelper {
     if (!this.redisClient) return false;
 
     // Set initial value
-    await this.redisClient.set(key, JSON.stringify(newValue), 'EX', 60);
+    await this.redisClient.set(key, JSON.stringify(newValue), "EX", 60);
 
     // Get value
     const cached = await this.redisClient.get(key);
@@ -496,7 +535,7 @@ export class PerformanceTestHelper {
    * Measure API response time
    */
   static async measureResponseTime(
-    fn: () => Promise<any>
+    fn: () => Promise<any>,
   ): Promise<{ result: any; duration: number }> {
     const start = Date.now();
     const result = await fn();
@@ -510,14 +549,14 @@ export class PerformanceTestHelper {
    */
   static async runConcurrentRequests(
     requestFn: () => Promise<any>,
-    concurrency: number
+    concurrency: number,
   ) {
     const results = await Promise.allSettled(
-      Array.from({ length: concurrency }, () => requestFn())
+      Array.from({ length: concurrency }, () => requestFn()),
     );
 
-    const successful = results.filter(r => r.status === 'fulfilled').length;
-    const failed = results.filter(r => r.status === 'rejected').length;
+    const successful = results.filter((r) => r.status === "fulfilled").length;
+    const failed = results.filter((r) => r.status === "rejected").length;
 
     return {
       total: concurrency,
@@ -533,10 +572,10 @@ export class PerformanceTestHelper {
   static getMemoryUsage() {
     const usage = process.memoryUsage();
     return {
-      rss: Math.round(usage.rss / 1024 / 1024) + ' MB',
-      heapTotal: Math.round(usage.heapTotal / 1024 / 1024) + ' MB',
-      heapUsed: Math.round(usage.heapUsed / 1024 / 1024) + ' MB',
-      external: Math.round(usage.external / 1024 / 1024) + ' MB',
+      rss: Math.round(usage.rss / 1024 / 1024) + " MB",
+      heapTotal: Math.round(usage.heapTotal / 1024 / 1024) + " MB",
+      heapUsed: Math.round(usage.heapUsed / 1024 / 1024) + " MB",
+      external: Math.round(usage.external / 1024 / 1024) + " MB",
     };
   }
 
@@ -563,7 +602,11 @@ export class AssertionHelper {
   /**
    * Assert API response structure
    */
-  static assertAPIResponse(response: any, expectedStatus: number, requiredFields: string[]) {
+  static assertAPIResponse(
+    response: any,
+    expectedStatus: number,
+    requiredFields: string[],
+  ) {
     expect(response.status).toBe(expectedStatus);
     expect(response.body).toBeDefined();
 
@@ -575,20 +618,26 @@ export class AssertionHelper {
   /**
    * Assert multilingual field structure
    */
-  static assertMultilingualField(field: any, requiredLanguages: string[] = ['en']) {
+  static assertMultilingualField(
+    field: any,
+    requiredLanguages: string[] = ["en"],
+  ) {
     expect(field).toBeDefined();
-    expect(typeof field).toBe('object');
+    expect(typeof field).toBe("object");
 
     for (const lang of requiredLanguages) {
       expect(field).toHaveProperty(lang);
-      expect(typeof field[lang]).toBe('string');
+      expect(typeof field[lang]).toBe("string");
     }
   }
 
   /**
    * Assert timestamp fields
    */
-  static assertTimestamps(object: any, fields: string[] = ['createdAt', 'updatedAt']) {
+  static assertTimestamps(
+    object: any,
+    fields: string[] = ["createdAt", "updatedAt"],
+  ) {
     for (const field of fields) {
       expect(object).toHaveProperty(field);
       expect(new Date(object[field]).getTime()).not.toBeNaN();
@@ -599,7 +648,8 @@ export class AssertionHelper {
    * Assert UUID format
    */
   static assertUUID(value: string) {
-    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    const uuidRegex =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
     expect(value).toMatch(uuidRegex);
   }
 }
@@ -616,7 +666,9 @@ export class TestDataGenerator {
   /**
    * Generate random multilingual text
    */
-  static randomMultilingualText(prefix: string = 'Test'): Record<string, string> {
+  static randomMultilingualText(
+    prefix: string = "Test",
+  ): Record<string, string> {
     const suffix = Math.random().toString(36).substring(7);
     return {
       en: `${prefix} ${suffix}`,
@@ -629,7 +681,10 @@ export class TestDataGenerator {
   /**
    * Generate test interaction
    */
-  static generateInteraction(type: 'user' | 'ai' = 'user', content: string = 'Test message') {
+  static generateInteraction(
+    type: "user" | "ai" = "user",
+    content: string = "Test message",
+  ) {
     return {
       type,
       content,

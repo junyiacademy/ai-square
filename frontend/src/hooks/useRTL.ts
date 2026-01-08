@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 /**
  * Hook to handle RTL (Right-to-Left) languages
@@ -9,24 +9,24 @@ export function useRTL() {
   const { i18n } = useTranslation();
 
   useEffect(() => {
-    const isRTL = i18n.language === 'ar';
+    const isRTL = i18n.language === "ar";
 
     // Update document direction
-    document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
+    document.documentElement.dir = isRTL ? "rtl" : "ltr";
 
     // Add/remove RTL class for additional styling
     if (isRTL) {
-      document.documentElement.classList.add('rtl');
+      document.documentElement.classList.add("rtl");
     } else {
-      document.documentElement.classList.remove('rtl');
+      document.documentElement.classList.remove("rtl");
     }
 
     return () => {
       // Cleanup on unmount
-      document.documentElement.dir = 'ltr';
-      document.documentElement.classList.remove('rtl');
+      document.documentElement.dir = "ltr";
+      document.documentElement.classList.remove("rtl");
     };
   }, [i18n.language]);
 
-  return i18n.language === 'ar';
+  return i18n.language === "ar";
 }

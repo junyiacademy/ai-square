@@ -9,12 +9,12 @@ import {
   createMockTaskRepository,
   createMockEvaluationRepository,
   createMockAchievementRepository,
-  createMockRepositoryFactory
-} from '../mock-repositories';
+  createMockRepositoryFactory,
+} from "../mock-repositories";
 
-describe('mock-repositories', () => {
-  describe('createMockUserRepository', () => {
-    it('creates mock user repository with all methods', () => {
+describe("mock-repositories", () => {
+  describe("createMockUserRepository", () => {
+    it("creates mock user repository with all methods", () => {
       const repo = createMockUserRepository();
 
       expect(repo.findById).toBeDefined();
@@ -25,11 +25,11 @@ describe('mock-repositories', () => {
       expect(repo.findAll).toBeDefined();
       expect(repo.count).toBeDefined();
 
-      expect(typeof repo.findById).toBe('function');
+      expect(typeof repo.findById).toBe("function");
       expect(jest.isMockFunction(repo.findById)).toBe(true);
     });
 
-    it('has default mock implementations', async () => {
+    it("has default mock implementations", async () => {
       const repo = createMockUserRepository();
 
       const users = await repo.findAll();
@@ -39,20 +39,20 @@ describe('mock-repositories', () => {
       expect(count).toBe(0);
     });
 
-    it('allows overriding mock implementations', async () => {
+    it("allows overriding mock implementations", async () => {
       const repo = createMockUserRepository();
 
-      const mockUser = { id: 'user-1', email: 'test@example.com' };
+      const mockUser = { id: "user-1", email: "test@example.com" };
       repo.findById.mockResolvedValue(mockUser);
 
-      const result = await repo.findById('user-1');
+      const result = await repo.findById("user-1");
       expect(result).toEqual(mockUser);
-      expect(repo.findById).toHaveBeenCalledWith('user-1');
+      expect(repo.findById).toHaveBeenCalledWith("user-1");
     });
   });
 
-  describe('createMockScenarioRepository', () => {
-    it('creates mock scenario repository with all methods', () => {
+  describe("createMockScenarioRepository", () => {
+    it("creates mock scenario repository with all methods", () => {
       const repo = createMockScenarioRepository();
 
       expect(repo.findById).toBeDefined();
@@ -65,38 +65,38 @@ describe('mock-repositories', () => {
       expect(repo.search).toBeDefined();
     });
 
-    it('has default mock implementations', async () => {
+    it("has default mock implementations", async () => {
       const repo = createMockScenarioRepository();
 
       const scenarios = await repo.findAll();
       expect(scenarios).toEqual([]);
 
-      const byMode = await repo.findByMode('pbl');
+      const byMode = await repo.findByMode("pbl");
       expect(byMode).toEqual([]);
 
-      const searchResults = await repo.search('test');
+      const searchResults = await repo.search("test");
       expect(searchResults).toEqual([]);
 
       const count = await repo.count();
       expect(count).toBe(0);
     });
 
-    it('can mock complex search results', async () => {
+    it("can mock complex search results", async () => {
       const repo = createMockScenarioRepository();
 
       const mockResults = [
-        { id: 's1', title: { en: 'Result 1' } },
-        { id: 's2', title: { en: 'Result 2' } }
+        { id: "s1", title: { en: "Result 1" } },
+        { id: "s2", title: { en: "Result 2" } },
       ];
       repo.search.mockResolvedValue(mockResults);
 
-      const results = await repo.search('query');
+      const results = await repo.search("query");
       expect(results).toEqual(mockResults);
     });
   });
 
-  describe('createMockProgramRepository', () => {
-    it('creates mock program repository with all methods', () => {
+  describe("createMockProgramRepository", () => {
+    it("creates mock program repository with all methods", () => {
       const repo = createMockProgramRepository();
 
       expect(repo.findById).toBeDefined();
@@ -111,56 +111,56 @@ describe('mock-repositories', () => {
       expect(repo.count).toBeDefined();
     });
 
-    it('has default mock implementations', async () => {
+    it("has default mock implementations", async () => {
       const repo = createMockProgramRepository();
 
-      const byUser = await repo.findByUser('user-1');
+      const byUser = await repo.findByUser("user-1");
       expect(byUser).toEqual([]);
 
-      const byScenario = await repo.findByScenario('scenario-1');
+      const byScenario = await repo.findByScenario("scenario-1");
       expect(byScenario).toEqual([]);
 
-      const active = await repo.getActivePrograms('user-1');
+      const active = await repo.getActivePrograms("user-1");
       expect(active).toEqual([]);
 
       const count = await repo.count();
       expect(count).toBe(0);
     });
 
-    it('can mock status updates', async () => {
+    it("can mock status updates", async () => {
       const repo = createMockProgramRepository();
 
       repo.updateStatus.mockResolvedValue({
-        id: 'prog-1',
-        status: 'completed'
+        id: "prog-1",
+        status: "completed",
       });
 
-      const result = await repo.updateStatus('prog-1', 'completed');
-      expect(result).toEqual({ id: 'prog-1', status: 'completed' });
-      expect(repo.updateStatus).toHaveBeenCalledWith('prog-1', 'completed');
+      const result = await repo.updateStatus("prog-1", "completed");
+      expect(result).toEqual({ id: "prog-1", status: "completed" });
+      expect(repo.updateStatus).toHaveBeenCalledWith("prog-1", "completed");
     });
 
-    it('can mock completion recording', async () => {
+    it("can mock completion recording", async () => {
       const repo = createMockProgramRepository();
 
       const completionData = {
         score: 95,
         timeSpent: 3600,
-        completedAt: new Date().toISOString()
+        completedAt: new Date().toISOString(),
       };
 
       repo.recordCompletion.mockResolvedValue({
-        id: 'prog-1',
-        ...completionData
+        id: "prog-1",
+        ...completionData,
       });
 
-      const result = await repo.recordCompletion('prog-1', completionData);
+      const result = await repo.recordCompletion("prog-1", completionData);
       expect(result.score).toBe(95);
     });
   });
 
-  describe('createMockTaskRepository', () => {
-    it('creates mock task repository with all methods', () => {
+  describe("createMockTaskRepository", () => {
+    it("creates mock task repository with all methods", () => {
       const repo = createMockTaskRepository();
 
       expect(repo.findById).toBeDefined();
@@ -175,63 +175,63 @@ describe('mock-repositories', () => {
       expect(repo.count).toBeDefined();
     });
 
-    it('has default mock implementations', async () => {
+    it("has default mock implementations", async () => {
       const repo = createMockTaskRepository();
 
-      const byProgram = await repo.findByProgram('prog-1');
+      const byProgram = await repo.findByProgram("prog-1");
       expect(byProgram).toEqual([]);
 
       const count = await repo.count();
       expect(count).toBe(0);
     });
 
-    it('can mock interaction updates', async () => {
+    it("can mock interaction updates", async () => {
       const repo = createMockTaskRepository();
 
       const interactions = [
-        { type: 'user', content: 'Question?' },
-        { type: 'ai', content: 'Answer.' }
+        { type: "user", content: "Question?" },
+        { type: "ai", content: "Answer." },
       ];
 
       repo.updateInteractions.mockResolvedValue({
-        id: 'task-1',
-        interactions
+        id: "task-1",
+        interactions,
       });
 
-      const result = await repo.updateInteractions('task-1', interactions);
+      const result = await repo.updateInteractions("task-1", interactions);
       expect(result.interactions).toEqual(interactions);
     });
 
-    it('can mock adding single interaction', async () => {
+    it("can mock adding single interaction", async () => {
       const repo = createMockTaskRepository();
 
-      const interaction = { type: 'user', content: 'Hello' };
+      const interaction = { type: "user", content: "Hello" };
 
       repo.addInteraction.mockResolvedValue({
-        id: 'task-1',
-        interactions: [interaction]
+        id: "task-1",
+        interactions: [interaction],
       });
 
-      const result = await repo.addInteraction('task-1', interaction);
+      const result = await repo.addInteraction("task-1", interaction);
       expect(result.interactions).toContainEqual(interaction);
     });
 
-    it('can mock recording attempts', async () => {
+    it("can mock recording attempts", async () => {
       const repo = createMockTaskRepository();
 
       repo.recordAttempt.mockResolvedValue({
-        id: 'task-1',
+        id: "task-1",
         attempts: 3,
-        lastAttempt: new Date().toISOString()
+        lastAttempt: new Date().toISOString(),
       });
 
-      const result = await repo.recordAttempt('task-1');
+      const result = await repo.recordAttempt("task-1");
       expect(result.attempts).toBe(3);
     });
   });
 
-  describe('createMockEvaluationRepository', () => {
-    it('creates mock evaluation repository with all methods', () => {
+  describe("createMockEvaluationRepository", () => {
+    it("creates mock evaluation repository with all methods", () => {
       const repo = createMockEvaluationRepository();
 
       expect(repo.findById).toBeDefined();
@@ -245,69 +245,69 @@ describe('mock-repositories', () => {
       expect(repo.count).toBeDefined();
     });
 
-    it('has default mock implementations', async () => {
+    it("has default mock implementations", async () => {
       const repo = createMockEvaluationRepository();
 
-      const byProgram = await repo.findByProgram('prog-1');
+      const byProgram = await repo.findByProgram("prog-1");
       expect(byProgram).toEqual([]);
 
-      const byTask = await repo.findByTask('task-1');
+      const byTask = await repo.findByTask("task-1");
       expect(byTask).toEqual([]);
 
-      const byUser = await repo.findByUser('user-1');
+      const byUser = await repo.findByUser("user-1");
       expect(byUser).toEqual([]);
 
       const count = await repo.count();
       expect(count).toBe(0);
     });
 
-    it('create method has default implementation that adds id', async () => {
+    it("create method has default implementation that adds id", async () => {
       const repo = createMockEvaluationRepository();
 
       const evalData = {
-        programId: 'prog-1',
+        programId: "prog-1",
         score: 85,
-        feedback: 'Good work!'
+        feedback: "Good work!",
       };
 
       const result = await repo.create(evalData);
-      expect(result.id).toBe('eval-123');
-      expect(result.programId).toBe('prog-1');
+      expect(result.id).toBe("eval-123");
+      expect(result.programId).toBe("prog-1");
       expect(result.score).toBe(85);
-      expect(result.feedback).toBe('Good work!');
+      expect(result.feedback).toBe("Good work!");
     });
 
-    it('can override create implementation', async () => {
+    it("can override create implementation", async () => {
       const repo = createMockEvaluationRepository();
 
       repo.create.mockResolvedValue({
-        id: 'custom-id',
-        score: 100
+        id: "custom-id",
+        score: 100,
       });
 
       const result = await repo.create({ score: 90 });
-      expect(result.id).toBe('custom-id');
+      expect(result.id).toBe("custom-id");
       expect(result.score).toBe(100);
     });
 
-    it('can mock getting latest evaluation', async () => {
+    it("can mock getting latest evaluation", async () => {
       const repo = createMockEvaluationRepository();
 
       const latestEval = {
-        id: 'eval-latest',
+        id: "eval-latest",
         score: 95,
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
       };
 
       repo.getLatestForProgram.mockResolvedValue(latestEval);
 
-      const result = await repo.getLatestForProgram('prog-1');
+      const result = await repo.getLatestForProgram("prog-1");
       expect(result).toEqual(latestEval);
     });
   });
 
-  describe('createMockAchievementRepository', () => {
-    it('creates mock achievement repository with all methods', () => {
+  describe("createMockAchievementRepository", () => {
+    it("creates mock achievement repository with all methods", () => {
       const repo = createMockAchievementRepository();
 
       expect(repo.findById).toBeDefined();
@@ -319,36 +319,36 @@ describe('mock-repositories', () => {
       expect(repo.count).toBeDefined();
     });
 
-    it('has default mock implementations', async () => {
+    it("has default mock implementations", async () => {
       const repo = createMockAchievementRepository();
 
-      const byUser = await repo.findByUser('user-1');
+      const byUser = await repo.findByUser("user-1");
       expect(byUser).toEqual([]);
 
       const count = await repo.count();
       expect(count).toBe(0);
     });
 
-    it('can mock awarding achievements', async () => {
+    it("can mock awarding achievements", async () => {
       const repo = createMockAchievementRepository();
 
       const achievement = {
-        id: 'achieve-1',
-        userId: 'user-1',
-        type: 'first_completion',
-        awardedAt: new Date().toISOString()
+        id: "achieve-1",
+        userId: "user-1",
+        type: "first_completion",
+        awardedAt: new Date().toISOString(),
       };
 
       repo.award.mockResolvedValue(achievement);
 
-      const result = await repo.award('user-1', 'first_completion');
+      const result = await repo.award("user-1", "first_completion");
       expect(result).toEqual(achievement);
-      expect(repo.award).toHaveBeenCalledWith('user-1', 'first_completion');
+      expect(repo.award).toHaveBeenCalledWith("user-1", "first_completion");
     });
   });
 
-  describe('createMockRepositoryFactory', () => {
-    it('creates factory with all repository getters', () => {
+  describe("createMockRepositoryFactory", () => {
+    it("creates factory with all repository getters", () => {
       const factory = createMockRepositoryFactory();
 
       expect(factory.getUserRepository).toBeDefined();
@@ -359,7 +359,7 @@ describe('mock-repositories', () => {
       expect(factory.getAchievementRepository).toBeDefined();
     });
 
-    it('returns mock repositories from getters', () => {
+    it("returns mock repositories from getters", () => {
       const factory = createMockRepositoryFactory();
 
       const userRepo = factory.getUserRepository();
@@ -371,7 +371,7 @@ describe('mock-repositories', () => {
       expect(jest.isMockFunction(scenarioRepo.search)).toBe(true);
     });
 
-    it('returns new instances on each call', () => {
+    it("returns new instances on each call", () => {
       const factory = createMockRepositoryFactory();
 
       const repo1 = factory.getUserRepository();
@@ -380,7 +380,7 @@ describe('mock-repositories', () => {
       expect(repo1).not.toBe(repo2);
     });
 
-    it('getter methods are jest mocks themselves', () => {
+    it("getter methods are jest mocks themselves", () => {
       const factory = createMockRepositoryFactory();
 
       expect(jest.isMockFunction(factory.getUserRepository)).toBe(true);
@@ -390,17 +390,17 @@ describe('mock-repositories', () => {
       expect(factory.getUserRepository).toHaveBeenCalled();
     });
 
-    it('can override factory methods', () => {
+    it("can override factory methods", () => {
       const factory = createMockRepositoryFactory();
 
       const customUserRepo = {
-        findById: jest.fn().mockResolvedValue({ id: 'custom' }),
+        findById: jest.fn().mockResolvedValue({ id: "custom" }),
         findByEmail: jest.fn(),
         create: jest.fn(),
         update: jest.fn(),
         delete: jest.fn(),
         findAll: jest.fn(),
-        count: jest.fn()
+        count: jest.fn(),
       };
 
       factory.getUserRepository.mockReturnValue(customUserRepo);
@@ -409,7 +409,7 @@ describe('mock-repositories', () => {
       expect(repo).toBe(customUserRepo);
     });
 
-    it('can track how many times repositories are requested', () => {
+    it("can track how many times repositories are requested", () => {
       const factory = createMockRepositoryFactory();
 
       factory.getUserRepository();
@@ -422,31 +422,31 @@ describe('mock-repositories', () => {
     });
   });
 
-  describe('Integration scenarios', () => {
-    it('can use factory in test setup', async () => {
+  describe("Integration scenarios", () => {
+    it("can use factory in test setup", async () => {
       const factory = createMockRepositoryFactory();
 
       // Setup mock data
       const userRepo = factory.getUserRepository();
       userRepo.findById.mockResolvedValue({
-        id: 'user-1',
-        email: 'test@example.com'
+        id: "user-1",
+        email: "test@example.com",
       });
 
       const programRepo = factory.getProgramRepository();
       programRepo.findByUser.mockResolvedValue([
-        { id: 'prog-1', userId: 'user-1', status: 'active' }
+        { id: "prog-1", userId: "user-1", status: "active" },
       ]);
 
       // Simulate usage
-      const user = await userRepo.findById('user-1');
+      const user = await userRepo.findById("user-1");
       const programs = await programRepo.findByUser(user.id);
 
       expect(programs).toHaveLength(1);
       expect(programs[0].userId).toBe(user.id);
     });
 
-    it('can chain multiple repository operations', async () => {
+    it("can chain multiple repository operations", async () => {
       const factory = createMockRepositoryFactory();
 
       const scenarioRepo = factory.getScenarioRepository();
@@ -455,31 +455,31 @@ describe('mock-repositories', () => {
 
       // Mock scenario
       scenarioRepo.findById.mockResolvedValue({
-        id: 'scenario-1',
-        title: { en: 'Test Scenario' }
+        id: "scenario-1",
+        title: { en: "Test Scenario" },
       });
 
       // Mock program creation
       programRepo.create.mockResolvedValue({
-        id: 'prog-1',
-        scenarioId: 'scenario-1',
-        userId: 'user-1'
+        id: "prog-1",
+        scenarioId: "scenario-1",
+        userId: "user-1",
       });
 
       // Mock task creation
       taskRepo.create.mockResolvedValue({
-        id: 'task-1',
-        programId: 'prog-1'
+        id: "task-1",
+        programId: "prog-1",
       });
 
       // Simulate workflow
-      const scenario = await scenarioRepo.findById('scenario-1');
+      const scenario = await scenarioRepo.findById("scenario-1");
       const program = await programRepo.create({
         scenarioId: scenario.id,
-        userId: 'user-1'
+        userId: "user-1",
       });
       const task = await taskRepo.create({
-        programId: program.id
+        programId: program.id,
       });
 
       expect(task.programId).toBe(program.id);

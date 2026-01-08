@@ -1,12 +1,15 @@
-'use client';
+"use client";
 
-import React from 'react';
+import React from "react";
 
 export function HistoryListSkeleton() {
   return (
     <div className="space-y-4">
       {[...Array(5)].map((_, i) => (
-        <div key={i} className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 animate-pulse">
+        <div
+          key={i}
+          className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 animate-pulse"
+        >
           <div className="flex items-start justify-between mb-4">
             <div className="flex-1">
               <div className="flex items-center mb-2">
@@ -82,7 +85,10 @@ export function HistoryFiltersSkeleton() {
     <div className="mb-6 animate-pulse">
       <div className="flex space-x-2">
         {[...Array(3)].map((_, i) => (
-          <div key={i} className="h-10 w-32 bg-gray-200 dark:bg-gray-700 rounded-lg" />
+          <div
+            key={i}
+            className="h-10 w-32 bg-gray-200 dark:bg-gray-700 rounded-lg"
+          />
         ))}
       </div>
     </div>

@@ -6,7 +6,7 @@
  * Maintains backward compatibility with existing code
  */
 
-import { PostgresSession } from './postgres-session';
+import { PostgresSession } from "./postgres-session";
 // import { memorySession } from './memory-session';
 
 export interface SessionData {
@@ -32,18 +32,21 @@ export class SecureSession {
    * Create a new session (legacy synchronous - avoid using)
    * @deprecated Use createSessionAsync instead
    */
-  static createSession(userData: {
-    userId: string;
-    email: string;
-    role: string;
-  }, rememberMe = false): string {
+  static createSession(
+    userData: {
+      userId: string;
+      email: string;
+      role: string;
+    },
+    rememberMe = false,
+  ): string {
     // Use async method but return synchronously for backward compatibility
     // This is a temporary solution until all code is updated to async
     const token = this.generateToken();
 
     // Fire and forget - create session asynchronously
-    PostgresSession.createSession(userData, rememberMe).catch(error => {
-      console.error('[SecureSession] Failed to create session:', error);
+    PostgresSession.createSession(userData, rememberMe).catch((error) => {
+      console.error("[SecureSession] Failed to create session:", error);
     });
 
     return token;
@@ -53,11 +56,14 @@ export class SecureSession {
    * Create a new session (async version - preferred)
    * Uses PostgreSQL for persistent storage
    */
-  static async createSessionAsync(userData: {
-    userId: string;
-    email: string;
-    role: string;
-  }, rememberMe = false): Promise<string> {
+  static async createSessionAsync(
+    userData: {
+      userId: string;
+      email: string;
+      role: string;
+    },
+    rememberMe = false,
+  ): Promise<string> {
     return await PostgresSession.createSession(userData, rememberMe);
   }
 
@@ -68,7 +74,9 @@ export class SecureSession {
     // This is synchronous for backward compatibility
     // It will only work with in-memory fallback
     // TODO: Update all callers to use async version
-    console.warn('[SecureSession] Using synchronous getSession - should migrate to async');
+    console.warn(
+      "[SecureSession] Using synchronous getSession - should migrate to async",
+    );
 
     if (!token || !this.isValidTokenFormat(token)) {
       return null;
@@ -90,8 +98,8 @@ export class SecureSession {
    */
   static destroySession(token: string): void {
     // Fire and forget
-    PostgresSession.destroySession(token).catch(error => {
-      console.error('[SecureSession] Failed to destroy session:', error);
+    PostgresSession.destroySession(token).catch((error) => {
+      console.error("[SecureSession] Failed to destroy session:", error);
     });
   }
 

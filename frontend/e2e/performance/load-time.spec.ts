@@ -1,15 +1,15 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from "@playwright/test";
 
-test.describe('Page Load Time Tests', () => {
+test.describe("Page Load Time Tests", () => {
   const MAX_LOAD_TIME = 3000; // 3 seconds
   const MAX_FIRST_PAINT = 1500; // 1.5 seconds
   const MAX_INTERACTIVE = 5000; // 5 seconds
 
-  test('homepage should load within acceptable time', async ({ page }) => {
+  test("homepage should load within acceptable time", async ({ page }) => {
     const startTime = Date.now();
 
-    await page.goto('http://localhost:3004', {
-      waitUntil: 'networkidle',
+    await page.goto("http://localhost:3004", {
+      waitUntil: "networkidle",
     });
 
     const loadTime = Date.now() - startTime;
@@ -18,8 +18,10 @@ test.describe('Page Load Time Tests', () => {
 
     // Check First Contentful Paint
     const fcp = await page.evaluate(() => {
-      const perfData = performance.getEntriesByType('paint');
-      const fcpEntry = perfData.find(entry => entry.name === 'first-contentful-paint');
+      const perfData = performance.getEntriesByType("paint");
+      const fcpEntry = perfData.find(
+        (entry) => entry.name === "first-contentful-paint",
+      );
       return fcpEntry ? fcpEntry.startTime : 0;
     });
 
@@ -27,20 +29,20 @@ test.describe('Page Load Time Tests', () => {
     expect(fcp).toBeGreaterThan(0);
   });
 
-  test('critical pages should load quickly', async ({ page }) => {
+  test("critical pages should load quickly", async ({ page }) => {
     const criticalPages = [
-      { url: '/', name: 'Homepage', maxTime: 3000 },
-      { url: '/pbl/scenarios', name: 'PBL Scenarios', maxTime: 4000 },
-      { url: '/assessment/scenarios', name: 'Assessment', maxTime: 4000 },
-      { url: '/discovery', name: 'Discovery', maxTime: 4000 },
-      { url: '/auth/login', name: 'Login', maxTime: 2000 },
+      { url: "/", name: "Homepage", maxTime: 3000 },
+      { url: "/pbl/scenarios", name: "PBL Scenarios", maxTime: 4000 },
+      { url: "/assessment/scenarios", name: "Assessment", maxTime: 4000 },
+      { url: "/discovery", name: "Discovery", maxTime: 4000 },
+      { url: "/auth/login", name: "Login", maxTime: 2000 },
     ];
 
     for (const pageConfig of criticalPages) {
       const startTime = Date.now();
 
       await page.goto(`http://localhost:3004${pageConfig.url}`, {
-        waitUntil: 'domcontentloaded',
+        waitUntil: "domcontentloaded",
       });
 
       const loadTime = Date.now() - startTime;
@@ -50,8 +52,8 @@ test.describe('Page Load Time Tests', () => {
     }
   });
 
-  test('should achieve good Core Web Vitals scores', async ({ page }) => {
-    await page.goto('http://localhost:3004');
+  test("should achieve good Core Web Vitals scores", async ({ page }) => {
+    await page.goto("http://localhost:3004");
 
     // Measure Largest Contentful Paint (LCP)
     const lcp = await page.evaluate(() => {
@@ -60,7 +62,7 @@ test.describe('Page Load Time Tests', () => {
           const entries = entryList.getEntries();
           const lastEntry = entries[entries.length - 1];
           resolve(lastEntry.renderTime || lastEntry.loadTime);
-        }).observe({ entryTypes: ['largest-contentful-paint'] });
+        }).observe({ entryTypes: ["largest-contentful-paint"] });
 
         // Fallback after 10 seconds
         setTimeout(() => resolve(0), 10000);
@@ -71,7 +73,7 @@ test.describe('Page Load Time Tests', () => {
     expect(lcp).toBeLessThan(2500);
 
     // Measure First Input Delay (FID) - simulated
-    await page.click('body');
+    await page.click("body");
     const fidStart = Date.now();
     await page.evaluate(() => document.body.click());
     const fidEnd = Date.now();
@@ -89,7 +91,7 @@ test.describe('Page Load Time Tests', () => {
             clsValue += entry.value;
           }
         }
-      }).observe({ entryTypes: ['layout-shift'] });
+      }).observe({ entryTypes: ["layout-shift"] });
 
       return clsValue;
     });
@@ -98,24 +100,24 @@ test.describe('Page Load Time Tests', () => {
     expect(cls).toBeLessThan(0.1);
   });
 
-  test('should lazy load images efficiently', async ({ page }) => {
-    await page.goto('http://localhost:3004/pbl/scenarios');
+  test("should lazy load images efficiently", async ({ page }) => {
+    await page.goto("http://localhost:3004/pbl/scenarios");
 
     // Get all images
-    const images = await page.$$('img');
+    const images = await page.$$("img");
 
     for (const img of images) {
-      const loading = await img.getAttribute('loading');
+      const loading = await img.getAttribute("loading");
       const isInViewport = await img.isIntersectingViewport();
 
       if (!isInViewport) {
         // Images outside viewport should have lazy loading
-        expect(loading).toBe('lazy');
+        expect(loading).toBe("lazy");
       }
 
       // Check that image has proper dimensions to prevent layout shift
-      const width = await img.getAttribute('width');
-      const height = await img.getAttribute('height');
+      const width = await img.getAttribute("width");
+      const height = await img.getAttribute("height");
 
       if (width && height) {
         expect(parseInt(width)).toBeGreaterThan(0);
@@ -124,33 +126,33 @@ test.describe('Page Load Time Tests', () => {
     }
   });
 
-  test('should cache static assets', async ({ page }) => {
+  test("should cache static assets", async ({ page }) => {
     // First load
-    const response1 = await page.goto('http://localhost:3004');
+    const response1 = await page.goto("http://localhost:3004");
 
     // Check for cache headers on static assets
     const resources = await page.evaluate(() =>
-      performance.getEntriesByType('resource').map(r => ({
+      performance.getEntriesByType("resource").map((r) => ({
         name: r.name,
         duration: r.duration,
         transferSize: r.transferSize,
-      }))
+      })),
     );
 
     // Second load
     await page.reload();
 
     const cachedResources = await page.evaluate(() =>
-      performance.getEntriesByType('resource').map(r => ({
+      performance.getEntriesByType("resource").map((r) => ({
         name: r.name,
         duration: r.duration,
         transferSize: r.transferSize,
-      }))
+      })),
     );
 
     // Static assets should load faster on second load
-    const cssFiles = cachedResources.filter(r => r.name.includes('.css'));
-    const jsFiles = cachedResources.filter(r => r.name.includes('.js'));
+    const cssFiles = cachedResources.filter((r) => r.name.includes(".css"));
+    const jsFiles = cachedResources.filter((r) => r.name.includes(".js"));
 
     for (const file of [...cssFiles, ...jsFiles]) {
       // Cached files should have minimal transfer size
@@ -160,13 +162,13 @@ test.describe('Page Load Time Tests', () => {
     }
   });
 
-  test('should minimize bundle sizes', async ({ page }) => {
-    const response = await page.goto('http://localhost:3004');
+  test("should minimize bundle sizes", async ({ page }) => {
+    const response = await page.goto("http://localhost:3004");
 
     // Get all JavaScript files
     const jsFiles = await page.evaluate(() => {
-      const scripts = Array.from(document.querySelectorAll('script[src]'));
-      return scripts.map(script => script.src);
+      const scripts = Array.from(document.querySelectorAll("script[src]"));
+      return scripts.map((script) => script.src);
     });
 
     const MAX_BUNDLE_SIZE = 500 * 1024; // 500KB per bundle
@@ -182,7 +184,9 @@ test.describe('Page Load Time Tests', () => {
 
       // Individual bundles should be reasonably sized
       if (size > MAX_BUNDLE_SIZE) {
-        console.log(`Warning: Large bundle ${url}: ${(size / 1024).toFixed(2)}KB`);
+        console.log(
+          `Warning: Large bundle ${url}: ${(size / 1024).toFixed(2)}KB`,
+        );
       }
     }
 
@@ -191,17 +195,17 @@ test.describe('Page Load Time Tests', () => {
     console.log(`Total JS size: ${(totalSize / 1024).toFixed(2)}KB`);
   });
 
-  test('should handle slow network gracefully', async ({ page }) => {
+  test("should handle slow network gracefully", async ({ page }) => {
     // Simulate slow 3G network
-    await page.route('**/*', async route => {
-      await new Promise(resolve => setTimeout(resolve, 100)); // Add 100ms delay
+    await page.route("**/*", async (route) => {
+      await new Promise((resolve) => setTimeout(resolve, 100)); // Add 100ms delay
       await route.continue();
     });
 
     const startTime = Date.now();
 
-    await page.goto('http://localhost:3004', {
-      waitUntil: 'domcontentloaded',
+    await page.goto("http://localhost:3004", {
+      waitUntil: "domcontentloaded",
     });
 
     const loadTime = Date.now() - startTime;
@@ -210,9 +214,10 @@ test.describe('Page Load Time Tests', () => {
     expect(loadTime).toBeLessThan(10000); // 10 seconds max
 
     // Check that loading indicators are shown
-    const hasLoadingIndicator = await page.locator('[aria-label="Loading"]').count() > 0 ||
-                                await page.locator('.loading').count() > 0 ||
-                                await page.locator('.spinner').count() > 0;
+    const hasLoadingIndicator =
+      (await page.locator('[aria-label="Loading"]').count()) > 0 ||
+      (await page.locator(".loading").count()) > 0 ||
+      (await page.locator(".spinner").count()) > 0;
 
     // App should show loading state on slow network
     console.log(`Loading indicator shown: ${hasLoadingIndicator}`);

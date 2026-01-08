@@ -12,9 +12,9 @@ import {
   BaseProgramRepository,
   BaseTaskRepository,
   BaseEvaluationRepository,
-  IEvaluationSystem
-} from '@/types/unified-learning';
-import { ResourceNotFoundError } from '@/lib/errors/unified-learning-errors';
+  IEvaluationSystem,
+} from "@/types/unified-learning";
+import { ResourceNotFoundError } from "@/lib/errors/unified-learning-errors";
 
 export interface LearningServiceConfig {
   enableEvaluation?: boolean;
@@ -35,7 +35,7 @@ export abstract class BaseLearningService {
     taskRepo: BaseTaskRepository<ITask>,
     evaluationRepo: BaseEvaluationRepository<IEvaluation>,
     evaluationSystem?: IEvaluationSystem,
-    config: LearningServiceConfig = {}
+    config: LearningServiceConfig = {},
   ) {
     this.scenarioRepo = scenarioRepo;
     this.programRepo = programRepo;
@@ -45,14 +45,16 @@ export abstract class BaseLearningService {
     this.config = {
       enableEvaluation: true,
       enableHooks: true,
-      ...config
+      ...config,
     };
   }
 
   /**
    * Hook methods for subclasses to override
    */
-  protected async beforeProgramCreate(data: Partial<IProgram>): Promise<Partial<IProgram>> {
+  protected async beforeProgramCreate(
+    data: Partial<IProgram>,
+  ): Promise<Partial<IProgram>> {
     return data;
   }
 
@@ -72,7 +74,10 @@ export abstract class BaseLearningService {
     // Default: no-op
   }
 
-  protected async afterProgramComplete({}: IProgram, {}: IEvaluation): Promise<void> {
+  protected async afterProgramComplete(
+    {}: IProgram,
+    {}: IEvaluation,
+  ): Promise<void> {
     // Default: no-op
   }
 
@@ -82,7 +87,7 @@ export abstract class BaseLearningService {
   async createLearningProgram(
     scenarioId: string,
     userId: string,
-    metadata?: Record<string, unknown>
+    metadata?: Record<string, unknown>,
   ): Promise<{
     scenario: IScenario;
     program: IProgram;
@@ -91,15 +96,15 @@ export abstract class BaseLearningService {
     // Get scenario
     const scenario = await this.scenarioRepo.findById(scenarioId);
     if (!scenario) {
-      throw new ResourceNotFoundError('Scenario', scenarioId);
+      throw new ResourceNotFoundError("Scenario", scenarioId);
     }
 
     // Prepare program data
-    let programData: Omit<IProgram, 'id'> = {
+    let programData: Omit<IProgram, "id"> = {
       scenarioId,
       userId,
       mode: scenario.mode,
-      status: 'active',
+      status: "active",
       currentTaskIndex: 0,
       completedTaskCount: 0,
       totalTaskCount: scenario.taskTemplates.length,
@@ -117,13 +122,16 @@ export abstract class BaseLearningService {
       assessmentData: {},
       metadata: {
         sourceType: scenario.sourceType,
-        ...metadata
-      }
+        ...metadata,
+      },
     };
 
     // Apply before hook
     if (this.config.enableHooks) {
-      programData = await this.beforeProgramCreate(programData) as Omit<IProgram, 'id'>;
+      programData = (await this.beforeProgramCreate(programData)) as Omit<
+        IProgram,
+        "id"
+      >;
     }
 
     // Create program
@@ -138,15 +146,18 @@ export abstract class BaseLearningService {
     const tasks: ITask[] = [];
     for (let i = 0; i < scenario.taskTemplates.length; i++) {
       const template = scenario.taskTemplates[i];
-      const taskData: Omit<ITask, 'id'> = {
+      const taskData: Omit<ITask, "id"> = {
         programId: program.id,
         mode: scenario.mode,
         taskIndex: i,
         scenarioTaskIndex: i,
         title: template.title,
-        description: typeof template.description === 'string' ? { en: template.description } : template.description || { en: '' },
+        description:
+          typeof template.description === "string"
+            ? { en: template.description }
+            : template.description || { en: "" },
         type: template.type,
-        status: i === 0 ? 'active' : 'pending',
+        status: i === 0 ? "active" : "pending",
         content: {},
         interactions: [],
         interactionCount: 0,
@@ -165,8 +176,8 @@ export abstract class BaseLearningService {
         metadata: {
           sourceType: scenario.sourceType,
           templateId: template.id,
-          ...(typeof template.metadata === 'object' ? template.metadata : {})
-        }
+          ...(typeof template.metadata === "object" ? template.metadata : {}),
+        },
       };
 
       const task = await this.taskRepo.create(taskData);
@@ -178,7 +189,7 @@ export abstract class BaseLearningService {
     return {
       scenario,
       program,
-      tasks
+      tasks,
     };
   }
 
@@ -189,7 +200,7 @@ export abstract class BaseLearningService {
     taskId: string,
     userId: string,
     response?: unknown,
-    evaluationData?: Partial<IEvaluation>
+    evaluationData?: Partial<IEvaluation>,
   ): Promise<{
     task: ITask;
     evaluation: IEvaluation;
@@ -198,7 +209,7 @@ export abstract class BaseLearningService {
     // Get task
     const task = await this.taskRepo.findById(taskId);
     if (!task) {
-      throw new ResourceNotFoundError('Task', taskId);
+      throw new ResourceNotFoundError("Task", taskId);
     }
 
     // Apply before hook
@@ -219,7 +230,7 @@ export abstract class BaseLearningService {
     const evaluation = await this.createTaskEvaluation(
       completedTask,
       userId,
-      evaluationData
+      evaluationData,
     );
 
     // Apply after hook
@@ -230,7 +241,7 @@ export abstract class BaseLearningService {
     // Get program and update progress
     const program = await this.programRepo.findById(task.programId);
     if (!program) {
-      throw new ResourceNotFoundError('Program', task.programId);
+      throw new ResourceNotFoundError("Program", task.programId);
     }
 
     const nextTaskIndex = program.currentTaskIndex + 1;
@@ -246,7 +257,7 @@ export abstract class BaseLearningService {
 
       if (nextTask) {
         // Mark next task as active by storing in metadata
-        nextTask.status = 'active';
+        nextTask.status = "active";
       }
     } else {
       // Complete program
@@ -256,7 +267,7 @@ export abstract class BaseLearningService {
     return {
       task: completedTask,
       evaluation,
-      nextTask
+      nextTask,
     };
   }
 
@@ -266,7 +277,7 @@ export abstract class BaseLearningService {
   async completeProgram(
     programId: string,
     userId: string,
-    evaluationData?: Partial<IEvaluation>
+    evaluationData?: Partial<IEvaluation>,
   ): Promise<{
     program: IProgram;
     evaluation: IEvaluation;
@@ -275,7 +286,7 @@ export abstract class BaseLearningService {
     // Get program
     const program = await this.programRepo.findById(programId);
     if (!program) {
-      throw new ResourceNotFoundError('Program', programId);
+      throw new ResourceNotFoundError("Program", programId);
     }
 
     // Apply before hook
@@ -294,7 +305,7 @@ export abstract class BaseLearningService {
       completedProgram,
       userId,
       taskEvaluations,
-      evaluationData
+      evaluationData,
     );
 
     // Apply after hook
@@ -305,7 +316,7 @@ export abstract class BaseLearningService {
     return {
       program: completedProgram,
       evaluation,
-      taskEvaluations
+      taskEvaluations,
     };
   }
 
@@ -321,18 +332,25 @@ export abstract class BaseLearningService {
     // Get all user programs
     const allPrograms = await this.programRepo.findByUser(userId);
 
-    const activePrograms = allPrograms.filter(p => p.status === 'active');
-    const completedPrograms = allPrograms.filter(p => p.status === 'completed');
+    const activePrograms = allPrograms.filter((p) => p.status === "active");
+    const completedPrograms = allPrograms.filter(
+      (p) => p.status === "completed",
+    );
 
     // Get all user evaluations
     const evaluations = await this.evaluationRepo.findByUser(userId);
 
     // Calculate average score if available
     let averageScore: number | undefined;
-    const evaluationsWithScores = evaluations.filter(e => e.score !== undefined);
+    const evaluationsWithScores = evaluations.filter(
+      (e) => e.score !== undefined,
+    );
 
     if (evaluationsWithScores.length > 0) {
-      const totalScore = evaluationsWithScores.reduce((sum, e) => sum + (e.score || 0), 0);
+      const totalScore = evaluationsWithScores.reduce(
+        (sum, e) => sum + (e.score || 0),
+        0,
+      );
       averageScore = totalScore / evaluationsWithScores.length;
     }
 
@@ -340,7 +358,7 @@ export abstract class BaseLearningService {
       activePrograms,
       completedPrograms,
       totalEvaluations: evaluations.length,
-      averageScore
+      averageScore,
     };
   }
 
@@ -358,13 +376,13 @@ export abstract class BaseLearningService {
     // Get program
     const program = await this.programRepo.findById(programId);
     if (!program) {
-      throw new ResourceNotFoundError('Program', programId);
+      throw new ResourceNotFoundError("Program", programId);
     }
 
     // Get scenario
     const scenario = await this.scenarioRepo.findById(program.scenarioId);
     if (!scenario) {
-      throw new ResourceNotFoundError('Scenario', program.scenarioId);
+      throw new ResourceNotFoundError("Scenario", program.scenarioId);
     }
 
     // Get tasks
@@ -375,13 +393,17 @@ export abstract class BaseLearningService {
 
     // Get current task
     let currentTask: ITask | undefined;
-    if (program.status === 'active' && program.currentTaskIndex < tasks.length) {
+    if (
+      program.status === "active" &&
+      program.currentTaskIndex < tasks.length
+    ) {
       currentTask = tasks[program.currentTaskIndex];
     }
 
     // Calculate completion rate
-    const completedTasks = tasks.filter(t => t.status === 'completed').length;
-    const completionRate = tasks.length > 0 ? (completedTasks / tasks.length) * 100 : 0;
+    const completedTasks = tasks.filter((t) => t.status === "completed").length;
+    const completionRate =
+      tasks.length > 0 ? (completedTasks / tasks.length) * 100 : 0;
 
     return {
       program,
@@ -389,7 +411,7 @@ export abstract class BaseLearningService {
       tasks,
       evaluations,
       currentTask,
-      completionRate
+      completionRate,
     };
   }
 
@@ -399,14 +421,14 @@ export abstract class BaseLearningService {
   protected async createTaskEvaluation(
     task: ITask,
     userId: string,
-    evaluationData?: Partial<IEvaluation>
+    evaluationData?: Partial<IEvaluation>,
   ): Promise<IEvaluation> {
-    const baseEvaluation: Omit<IEvaluation, 'id'> = {
+    const baseEvaluation: Omit<IEvaluation, "id"> = {
       userId,
       programId: task.programId,
       taskId: task.id,
       mode: task.mode,
-      evaluationType: evaluationData?.evaluationType || 'task',
+      evaluationType: evaluationData?.evaluationType || "task",
       score: evaluationData?.score || 0,
       maxScore: evaluationData?.maxScore || 100,
       domainScores: evaluationData?.domainScores || {},
@@ -418,9 +440,9 @@ export abstract class BaseLearningService {
       discoveryData: evaluationData?.discoveryData || {},
       assessmentData: evaluationData?.assessmentData || {},
       metadata: {
-        sourceType: task.metadata?.sourceType || 'unknown',
-        ...evaluationData?.metadata
-      }
+        sourceType: task.metadata?.sourceType || "unknown",
+        ...evaluationData?.metadata,
+      },
     };
 
     return this.evaluationRepo.create(baseEvaluation);
@@ -433,13 +455,13 @@ export abstract class BaseLearningService {
     program: IProgram,
     userId: string,
     _taskEvaluations: IEvaluation[],
-    evaluationData?: Partial<IEvaluation>
+    evaluationData?: Partial<IEvaluation>,
   ): Promise<IEvaluation> {
-    const baseEvaluation: Omit<IEvaluation, 'id'> = {
+    const baseEvaluation: Omit<IEvaluation, "id"> = {
       userId,
       programId: program.id,
       mode: program.mode,
-      evaluationType: evaluationData?.evaluationType || 'program',
+      evaluationType: evaluationData?.evaluationType || "program",
       score: evaluationData?.score || 0,
       maxScore: evaluationData?.maxScore || 100,
       domainScores: evaluationData?.domainScores || {},
@@ -451,10 +473,10 @@ export abstract class BaseLearningService {
       discoveryData: evaluationData?.discoveryData || {},
       assessmentData: evaluationData?.assessmentData || {},
       metadata: {
-        sourceType: program.metadata?.sourceType || 'unknown',
+        sourceType: program.metadata?.sourceType || "unknown",
         taskCount: _taskEvaluations.length,
-        ...evaluationData?.metadata
-      }
+        ...evaluationData?.metadata,
+      },
     };
 
     return this.evaluationRepo.create(baseEvaluation);

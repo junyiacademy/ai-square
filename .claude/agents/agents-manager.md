@@ -137,9 +137,6 @@ Memory/Progress:
 Git Operations:
   → git-commit-push
 
-Terraform:
-  → terraform-deploy
-
 GitHub Issue & PR Workflow (PDCA):
   → git-issue-pr-flow
   Triggers:

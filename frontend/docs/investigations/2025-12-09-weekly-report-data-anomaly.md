@@ -1,4 +1,5 @@
 # 週報數據異常調查報告
+
 **Date**: 2025-12-09
 **Investigator**: Claude (Agents Manager)
 **Status**: ✅ RESOLVED
@@ -27,6 +28,7 @@
 ### 1. Field Mismatch（欄位不一致）
 
 **Schema** (migration.sql):
+
 ```sql
 CREATE TABLE users (
   ...
@@ -37,6 +39,7 @@ CREATE TABLE users (
 ```
 
 **Code Inconsistency**:
+
 ```typescript
 // ❌ 報告查詢 (db-queries.ts:98)
 WHERE last_login_at >= CURRENT_DATE - INTERVAL '7 days'
@@ -53,6 +56,7 @@ SET last_login_at = CURRENT_TIMESTAMP
 ### 2. Production 數據現況
 
 **Direct Database Query**:
+
 ```sql
 -- 基本統計
 SELECT
@@ -101,6 +105,7 @@ it('should handle production scenario where last_login_at is never set', ...)
 ### ✅ 1. 綜合活躍用戶定義（Comprehensive Active User Definition）
 
 **修改前** (過於狹隘):
+
 ```sql
 -- 僅計算登入的用戶
 SELECT COUNT(DISTINCT id)
@@ -109,6 +114,7 @@ WHERE last_login_at >= CURRENT_DATE - INTERVAL '7 days'
 ```
 
 **修改後** (全面追蹤):
+
 ```sql
 WITH active_users AS (
   -- 1. 登入過的用戶
@@ -136,22 +142,28 @@ SELECT COUNT(*) FROM active_users;
 ### ✅ 2. 環境驗證（Environment Validation）
 
 **新增驗證邏輯** (`db-queries.ts:42-55`):
+
 ```typescript
 // 記錄資料庫資訊供除錯
 const dbInfo = await pool.query(
-  "SELECT current_database() as db_name, inet_server_addr() as host"
+  "SELECT current_database() as db_name, inet_server_addr() as host",
 );
-console.log(`📊 Weekly Report - Querying database: ${dbInfo.rows[0].db_name} @ ${dbInfo.rows[0].host}`);
+console.log(
+  `📊 Weekly Report - Querying database: ${dbInfo.rows[0].db_name} @ ${dbInfo.rows[0].host}`,
+);
 
 // 數據合理性檢查
-const sanityCheck = await pool.query('SELECT COUNT(*) as count FROM users');
-const userCount = parseInt(sanityCheck.rows[0]?.count || '0');
+const sanityCheck = await pool.query("SELECT COUNT(*) as count FROM users");
+const userCount = parseInt(sanityCheck.rows[0]?.count || "0");
 if (userCount < 10) {
-  console.warn(`⚠️  WARNING: Low user count detected (${userCount}) - verify you're querying the correct environment`);
+  console.warn(
+    `⚠️  WARNING: Low user count detected (${userCount}) - verify you're querying the correct environment`,
+  );
 }
 ```
 
 **影響**:
+
 - 清楚記錄查詢的資料庫
 - 當用戶數異常低時發出警告
 - 防止誤用錯誤環境的數據
@@ -159,12 +171,14 @@ if (userCount < 10) {
 ### ✅ 3. 保留率計算優化（Retention Rate Calculation）
 
 **修改前**:
+
 ```sql
 -- 僅基於 last_login_at（總是 NULL）
 COUNT(...) / NULLIF(COUNT(...), 0) * 100
 ```
 
 **修改後**:
+
 ```sql
 WITH retained_users AS (
   SELECT DISTINCT lwu.id
@@ -191,6 +205,7 @@ SELECT
 ## 測試結果
 
 **Before Fix**:
+
 ```
 ❌ 8 failed, 0 passed
 - Cannot read properties of undefined (reading 'rows')
@@ -198,6 +213,7 @@ SELECT
 ```
 
 **After Fix**:
+
 ```
 ✅ 8 passed, 0 failed
 - All tests passing
@@ -228,12 +244,14 @@ Completions this week: 0
 ### ⚠️ 1. Field Inconsistency 未完全修復
 
 雖然報告查詢已改進，但底層不一致仍存在:
+
 - `last_login_at` vs `last_active_date`
 - 建議: 統一使用 `last_login_at`，移除 `last_active_date`
 
 ### ⚠️ 2. 報告數據來源不明
 
 報告中的 767 用戶數據來源仍未確定:
+
 - 可能是 Staging 環境
 - 可能是歷史 Slack 訊息
 - 需要用戶確認數據來源
@@ -241,6 +259,7 @@ Completions this week: 0
 ### ⚠️ 3. 缺乏完整的 Activity Tracking
 
 當前方案是基於現有欄位的改進，但理想方案應該:
+
 - 建立專用的 `user_activities` 表
 - 記錄所有用戶行為事件
 - 支援更細粒度的分析
@@ -250,6 +269,7 @@ Completions this week: 0
 ### 立即執行（本週）
 
 1. **統一 Activity Tracking 欄位**
+
    ```sql
    -- Migration: Remove last_active_date, standardize on last_login_at
    ALTER TABLE users DROP COLUMN last_active_date;
@@ -273,6 +293,7 @@ Completions this week: 0
 ### 中期改善（下個 Sprint）
 
 4. **建立 User Activity Tracking 系統**
+
    ```sql
    CREATE TABLE user_activities (
      id UUID PRIMARY KEY,
@@ -367,12 +388,14 @@ created_at TIMESTAMP(3)
 ### C. Query Performance
 
 **Before** (simple WHERE):
+
 ```sql
 -- ~10ms, but wrong results
 WHERE last_login_at >= ...
 ```
 
 **After** (CTE with UNION):
+
 ```sql
 -- ~50-100ms, correct results
 WITH active_users AS (

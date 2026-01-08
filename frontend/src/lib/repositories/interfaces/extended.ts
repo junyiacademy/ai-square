@@ -3,8 +3,13 @@
  * Provides additional operations for repositories
  */
 
-import type { IScenario, IProgram, ITask, IEvaluation } from '@/types/unified-learning';
-import type { LearningMode as DBLearningMode } from '@/types/database';
+import type {
+  IScenario,
+  IProgram,
+  ITask,
+  IEvaluation,
+} from "@/types/unified-learning";
+import type { LearningMode as DBLearningMode } from "@/types/database";
 
 // ========================================
 // Extended Repository Operations
@@ -14,7 +19,7 @@ export interface IBulkOperations<T> {
   /**
    * Create multiple entities in a single transaction
    */
-  createBulk(items: Omit<T, 'id'>[]): Promise<T[]>;
+  createBulk(items: Omit<T, "id">[]): Promise<T[]>;
 
   /**
    * Update multiple entities in a single transaction
@@ -57,7 +62,7 @@ export interface IQueryOperations<T> {
     page?: number;
     limit?: number;
     orderBy?: string;
-    order?: 'ASC' | 'DESC';
+    order?: "ASC" | "DESC";
     filters?: Record<string, unknown>;
   }): Promise<{
     data: T[];
@@ -87,11 +92,14 @@ export interface ICascadeOperations {
   /**
    * Delete with cascade option
    */
-  deleteWithCascade(id: string, options?: {
-    deletePrograms?: boolean;
-    deleteTasks?: boolean;
-    deleteEvaluations?: boolean;
-  }): Promise<{
+  deleteWithCascade(
+    id: string,
+    options?: {
+      deletePrograms?: boolean;
+      deleteTasks?: boolean;
+      deleteEvaluations?: boolean;
+    },
+  ): Promise<{
     deleted: {
       scenario?: boolean;
       programs?: number;
@@ -125,35 +133,46 @@ export interface IStatusOperations {
   /**
    * Transition status with validation
    */
-  transitionStatus(id: string, fromStatus: string, toStatus: string): Promise<boolean>;
+  transitionStatus(
+    id: string,
+    fromStatus: string,
+    toStatus: string,
+  ): Promise<boolean>;
 }
 
 // ========================================
 // Extended Repository Interfaces
 // ========================================
 
-export interface IExtendedScenarioRepository extends
-  IBulkOperations<IScenario>,
-  IQueryOperations<IScenario>,
-  ICascadeOperations,
-  IStatusOperations {
-
+export interface IExtendedScenarioRepository
+  extends
+    IBulkOperations<IScenario>,
+    IQueryOperations<IScenario>,
+    ICascadeOperations,
+    IStatusOperations {
   /**
    * Find scenarios with related counts
    */
-  findWithStats(mode?: DBLearningMode): Promise<Array<IScenario & {
-    programCount: number;
-    activePrograms: number;
-    completedPrograms: number;
-  }>>;
+  findWithStats(mode?: DBLearningMode): Promise<
+    Array<
+      IScenario & {
+        programCount: number;
+        activePrograms: number;
+        completedPrograms: number;
+      }
+    >
+  >;
 
   /**
    * Clone a scenario
    */
-  clone(id: string, options?: {
-    title?: Record<string, string>;
-    status?: string;
-  }): Promise<IScenario>;
+  clone(
+    id: string,
+    options?: {
+      title?: Record<string, string>;
+      status?: string;
+    },
+  ): Promise<IScenario>;
 
   /**
    * Find orphaned scenarios (no programs)
@@ -169,11 +188,11 @@ export interface IExtendedScenarioRepository extends
   }>;
 }
 
-export interface IExtendedProgramRepository extends
-  IBulkOperations<IProgram>,
-  IQueryOperations<IProgram>,
-  IStatusOperations {
-
+export interface IExtendedProgramRepository
+  extends
+    IBulkOperations<IProgram>,
+    IQueryOperations<IProgram>,
+    IStatusOperations {
   /**
    * Find expired programs
    */
@@ -201,10 +220,8 @@ export interface IExtendedProgramRepository extends
   resetProgress(id: string): Promise<IProgram>;
 }
 
-export interface IExtendedTaskRepository extends
-  IBulkOperations<ITask>,
-  IQueryOperations<ITask> {
-
+export interface IExtendedTaskRepository
+  extends IBulkOperations<ITask>, IQueryOperations<ITask> {
   /**
    * Find incomplete tasks
    */
@@ -213,10 +230,12 @@ export interface IExtendedTaskRepository extends
   /**
    * Batch update scores
    */
-  updateScoresBulk(scores: Array<{
-    taskId: string;
-    score: number;
-  }>): Promise<number>;
+  updateScoresBulk(
+    scores: Array<{
+      taskId: string;
+      score: number;
+    }>,
+  ): Promise<number>;
 
   /**
    * Get task statistics
@@ -229,14 +248,15 @@ export interface IExtendedTaskRepository extends
   }>;
 }
 
-export interface IExtendedEvaluationRepository extends
-  IBulkOperations<IEvaluation>,
-  IQueryOperations<IEvaluation> {
-
+export interface IExtendedEvaluationRepository
+  extends IBulkOperations<IEvaluation>, IQueryOperations<IEvaluation> {
   /**
    * Get evaluation trends
    */
-  getTrends(userId: string, days?: number): Promise<{
+  getTrends(
+    userId: string,
+    days?: number,
+  ): Promise<{
     dates: string[];
     scores: number[];
     completions: number[];
@@ -250,11 +270,16 @@ export interface IExtendedEvaluationRepository extends
   /**
    * Get domain analysis
    */
-  getDomainAnalysis(userId: string): Promise<Record<string, {
-    averageScore: number;
-    totalAttempts: number;
-    improvement: number;
-  }>>;
+  getDomainAnalysis(userId: string): Promise<
+    Record<
+      string,
+      {
+        averageScore: number;
+        totalAttempts: number;
+        improvement: number;
+      }
+    >
+  >;
 }
 
 // ========================================

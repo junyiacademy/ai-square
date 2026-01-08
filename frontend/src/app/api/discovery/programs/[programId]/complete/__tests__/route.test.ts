@@ -1,24 +1,27 @@
-import { mockRepositoryFactory } from '@/test-utils/mocks/repositories';
-import { NextRequest } from 'next/server';
-import { POST } from '../route';
-import { getUnifiedAuth } from '@/lib/auth/unified-auth';
+import { mockRepositoryFactory } from "@/test-utils/mocks/repositories";
+import { NextRequest } from "next/server";
+import { POST } from "../route";
+import { getUnifiedAuth } from "@/lib/auth/unified-auth";
 
 // Mock dependencies
-jest.mock('@/lib/auth/unified-auth', () => ({
+jest.mock("@/lib/auth/unified-auth", () => ({
   getUnifiedAuth: jest.fn(),
   createUnauthorizedResponse: jest.fn(() => ({
-    json: () => Promise.resolve({ success: false, error: 'Authentication required' }),
-    status: 401
-  }))
-}));;
+    json: () =>
+      Promise.resolve({ success: false, error: "Authentication required" }),
+    status: 401,
+  })),
+}));
 
 // Mock auth session
-jest.mock('@/lib/auth/session', () => ({
-  getUnifiedAuth: jest.fn()
+jest.mock("@/lib/auth/session", () => ({
+  getUnifiedAuth: jest.fn(),
 }));
 
 // Get mocked function
-const mockGetUnifiedAuth = getUnifiedAuth as jest.MockedFunction<typeof getUnifiedAuth>;
+const mockGetUnifiedAuth = getUnifiedAuth as jest.MockedFunction<
+  typeof getUnifiedAuth
+>;
 
 // Mock repositories
 const mockFindById = jest.fn();
@@ -28,7 +31,7 @@ const mockCreate = jest.fn();
 const mockFindByIdEval = jest.fn();
 const mockFindByIdScenario = jest.fn();
 
-jest.mock('@/lib/repositories/base/repository-factory', () => ({
+jest.mock("@/lib/repositories/base/repository-factory", () => ({
   repositoryFactory: {
     getProgramRepository: () => ({
       findById: mockFindById,
@@ -47,55 +50,55 @@ jest.mock('@/lib/repositories/base/repository-factory', () => ({
   },
 }));
 
-describe('POST /api/discovery/programs/[programId]/complete', () => {
+describe("POST /api/discovery/programs/[programId]/complete", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
   const mockProgram = {
-    id: 'program123',
-    userId: 'user123',
-    scenarioId: 'scenario123',
-    status: 'active',
+    id: "program123",
+    userId: "user123",
+    scenarioId: "scenario123",
+    status: "active",
     metadata: {
-      careerType: 'software-engineer',
+      careerType: "software-engineer",
     },
   };
 
   const mockTasks = [
     {
-      id: 'task1',
-      status: 'completed',
-      title: { en: 'Task 1', zhTW: '任務 1' },
-      metadata: { taskType: 'question' },
+      id: "task1",
+      status: "completed",
+      title: { en: "Task 1", zhTW: "任務 1" },
+      metadata: { taskType: "question" },
       interactions: [
         {
-          type: 'user_input',
-          content: 'user answer',
+          type: "user_input",
+          content: "user answer",
         },
         {
-          type: 'ai_response',
+          type: "ai_response",
           content: JSON.stringify({
             completed: true,
             xpEarned: 100,
             score: 85,
-            skillsImproved: ['problem-solving'],
+            skillsImproved: ["problem-solving"],
           }),
           context: { completed: true },
         },
       ],
     },
     {
-      id: 'task2',
-      status: 'completed',
-      title: 'Task 2',
+      id: "task2",
+      status: "completed",
+      title: "Task 2",
       interactions: [
         {
-          type: 'user_input',
-          content: 'user answer 2',
+          type: "user_input",
+          content: "user answer 2",
         },
         {
-          type: 'ai_response',
+          type: "ai_response",
           content: JSON.stringify({
             completed: true,
             xpEarned: 150,
@@ -109,103 +112,136 @@ describe('POST /api/discovery/programs/[programId]/complete', () => {
   ];
 
   const mockScenario = {
-    id: 'scenario123',
-    title: { en: 'Software Engineer Path' },
-    metadata: { careerType: 'software-engineer' },
+    id: "scenario123",
+    title: { en: "Software Engineer Path" },
+    metadata: { careerType: "software-engineer" },
   };
 
-  it('returns 401 when not authenticated', async () => {
+  it("returns 401 when not authenticated", async () => {
     mockGetUnifiedAuth.mockResolvedValue(null);
 
-    const request = new NextRequest('http://localhost:3000/api/discovery/programs/program123/complete', {
-      method: 'POST',
-    });
+    const request = new NextRequest(
+      "http://localhost:3000/api/discovery/programs/program123/complete",
+      {
+        method: "POST",
+      },
+    );
 
-    const response = await POST(request, { params: Promise.resolve({'programId':'program123'}) });
+    const response = await POST(request, {
+      params: Promise.resolve({ programId: "program123" }),
+    });
     const data = await response.json();
 
     expect(response.status).toBe(401);
-    expect(data).toEqual({ success: false, error: 'Authentication required' });
+    expect(data).toEqual({ success: false, error: "Authentication required" });
   });
 
-  it('returns 404 when program not found', async () => {
-    mockGetUnifiedAuth.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com', role: 'student' } });
+  it("returns 404 when program not found", async () => {
+    mockGetUnifiedAuth.mockResolvedValue({
+      user: { id: "user123", email: "test@example.com", role: "student" },
+    });
     mockFindById.mockResolvedValue(null);
 
-    const request = new NextRequest('http://localhost:3000/api/discovery/programs/program123/complete', {
-      method: 'POST',
-    });
+    const request = new NextRequest(
+      "http://localhost:3000/api/discovery/programs/program123/complete",
+      {
+        method: "POST",
+      },
+    );
 
-    const response = await POST(request, { params: Promise.resolve({'programId':'program123'}) });
+    const response = await POST(request, {
+      params: Promise.resolve({ programId: "program123" }),
+    });
     const data = await response.json();
 
     expect(response.status).toBe(404);
-    expect(data).toEqual({ error: 'Program not found or access denied' });
+    expect(data).toEqual({ error: "Program not found or access denied" });
   });
 
-  it('returns 404 when user does not own the program', async () => {
-    mockGetUnifiedAuth.mockResolvedValue({ user: { id: 'otheruser', email: 'other@example.com', role: 'student' } });
+  it("returns 404 when user does not own the program", async () => {
+    mockGetUnifiedAuth.mockResolvedValue({
+      user: { id: "otheruser", email: "other@example.com", role: "student" },
+    });
     mockFindById.mockResolvedValue(mockProgram);
 
-    const request = new NextRequest('http://localhost:3000/api/discovery/programs/program123/complete', {
-      method: 'POST',
-    });
+    const request = new NextRequest(
+      "http://localhost:3000/api/discovery/programs/program123/complete",
+      {
+        method: "POST",
+      },
+    );
 
-    const response = await POST(request, { params: Promise.resolve({'programId':'program123'}) });
+    const response = await POST(request, {
+      params: Promise.resolve({ programId: "program123" }),
+    });
     const data = await response.json();
 
     expect(response.status).toBe(404);
-    expect(data).toEqual({ error: 'Program not found or access denied' });
+    expect(data).toEqual({ error: "Program not found or access denied" });
   });
 
-  it('returns existing evaluation if program already completed', async () => {
+  it("returns existing evaluation if program already completed", async () => {
     const completedProgram = {
       ...mockProgram,
-      status: 'completed',
+      status: "completed",
       metadata: {
         ...mockProgram.metadata,
-        evaluationId: 'eval123',
+        evaluationId: "eval123",
       },
     };
 
-    mockGetUnifiedAuth.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com', role: 'student' } });
-    mockFindById.mockResolvedValue(completedProgram);
-    mockFindByIdEval.mockResolvedValue({ id: 'eval123' });
-
-    const request = new NextRequest('http://localhost:3000/api/discovery/programs/program123/complete', {
-      method: 'POST',
+    mockGetUnifiedAuth.mockResolvedValue({
+      user: { id: "user123", email: "test@example.com", role: "student" },
     });
+    mockFindById.mockResolvedValue(completedProgram);
+    mockFindByIdEval.mockResolvedValue({ id: "eval123" });
 
-    const response = await POST(request, { params: Promise.resolve({'programId':'program123'}) });
+    const request = new NextRequest(
+      "http://localhost:3000/api/discovery/programs/program123/complete",
+      {
+        method: "POST",
+      },
+    );
+
+    const response = await POST(request, {
+      params: Promise.resolve({ programId: "program123" }),
+    });
     const data = await response.json();
 
     expect(response.status).toBe(200);
     expect(data).toEqual({
       success: true,
-      evaluationId: 'eval123',
+      evaluationId: "eval123",
       alreadyCompleted: true,
     });
   });
 
-  it('successfully completes program and creates evaluation', async () => {
-    mockGetUnifiedAuth.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com', role: 'student' } });
+  it("successfully completes program and creates evaluation", async () => {
+    mockGetUnifiedAuth.mockResolvedValue({
+      user: { id: "user123", email: "test@example.com", role: "student" },
+    });
     mockFindById.mockResolvedValue(mockProgram);
     mockFindByProgram.mockResolvedValue(mockTasks);
     mockFindByIdScenario.mockResolvedValue(mockScenario);
-    mockCreate.mockResolvedValue({ id: 'eval-new' });
+    mockCreate.mockResolvedValue({ id: "eval-new" });
 
-    const request = new NextRequest('http://localhost:3000/api/discovery/programs/program123/complete', {
-      method: 'POST',
-      headers: { 'accept-language': 'zhTW' },
+    const request = new NextRequest(
+      "http://localhost:3000/api/discovery/programs/program123/complete",
+      {
+        method: "POST",
+        headers: { "accept-language": "zhTW" },
+      },
+    );
+
+    const response = await POST(request, {
+      params: Promise.resolve({ programId: "program123" }),
     });
-
-    const response = await POST(request, { params: Promise.resolve({'programId':'program123'}) });
     const data = await response.json();
 
     expect(response.status).toBe(200);
     expect(data).toEqual({
       success: true,
-      evaluationId: 'eval-new',
+      evaluationId: "eval-new",
       score: 88, // Average of 85 and 90
       totalXP: 250, // 100 + 150
     });
@@ -213,69 +249,70 @@ describe('POST /api/discovery/programs/[programId]/complete', () => {
     // Verify evaluation was created with correct data
     expect(mockCreate).toHaveBeenCalledWith(
       expect.objectContaining({
-        userId: 'user123',
-        programId: 'program123',
-        mode: 'discovery',
-        evaluationType: 'discovery_complete',
+        userId: "user123",
+        programId: "program123",
+        mode: "discovery",
+        evaluationType: "discovery_complete",
         score: 88,
         maxScore: 100,
         discoveryData: {
-          careerType: 'software-engineer',
+          careerType: "software-engineer",
           totalXP: 250,
           totalTasks: 2,
           completedTasks: 2,
         },
         metadata: expect.objectContaining({
-          scenarioId: 'scenario123',
+          scenarioId: "scenario123",
           overallScore: 88,
           taskEvaluations: expect.arrayContaining([
             expect.objectContaining({
-              taskId: 'task1',
-              taskTitle: '任務 1', // Should use zhTW based on accept-language
-              taskType: 'question',
+              taskId: "task1",
+              taskTitle: "任務 1", // Should use zhTW based on accept-language
+              taskType: "question",
               score: 85,
               xpEarned: 100,
               attempts: 1,
               passCount: 1,
-              skillsImproved: ['problem-solving'],
+              skillsImproved: ["problem-solving"],
             }),
             expect.objectContaining({
-              taskId: 'task2',
-              taskTitle: 'Task 2',
+              taskId: "task2",
+              taskTitle: "Task 2",
               score: 90,
               xpEarned: 150,
             }),
           ]),
         }),
-      })
+      }),
     );
 
     // Verify program was updated
-    expect(mockUpdate).toHaveBeenCalledWith('program123',
+    expect(mockUpdate).toHaveBeenCalledWith(
+      "program123",
       expect.objectContaining({
-        status: 'completed',
+        status: "completed",
         metadata: expect.objectContaining({
-          evaluationId: 'eval-new',
+          evaluationId: "eval-new",
           totalXP: 250,
           finalScore: 88,
         }),
-      })
+      }),
     );
   });
 
-  it('handles tasks without successful completions', async () => {
+  it("handles tasks without successful completions", async () => {
     const tasksWithoutSuccess = [
       {
-        id: 'task1',
-        status: 'completed',
-        title: 'Task 1',
+        id: "task1",
+        status: "completed",
+        title: "Task 1",
         interactions: [
           {
-            type: 'user_input',
-            content: 'user answer',
+            type: "user_input",
+            content: "user answer",
           },
           {
-            type: 'ai_response',
+            type: "ai_response",
             content: JSON.stringify({ completed: false }),
             context: { completed: false },
           },
@@ -283,40 +320,54 @@ describe('POST /api/discovery/programs/[programId]/complete', () => {
       },
     ];
 
-    mockGetUnifiedAuth.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com', role: 'student' } });
+    mockGetUnifiedAuth.mockResolvedValue({
+      user: { id: "user123", email: "test@example.com", role: "student" },
+    });
     mockFindById.mockResolvedValue(mockProgram);
     mockFindByProgram.mockResolvedValue(tasksWithoutSuccess);
     mockFindByIdScenario.mockResolvedValue(mockScenario);
-    mockCreate.mockResolvedValue({ id: 'eval-new' });
+    mockCreate.mockResolvedValue({ id: "eval-new" });
 
-    const request = new NextRequest('http://localhost:3000/api/discovery/programs/program123/complete', {
-      method: 'POST',
+    const request = new NextRequest(
+      "http://localhost:3000/api/discovery/programs/program123/complete",
+      {
+        method: "POST",
+      },
+    );
+
+    const response = await POST(request, {
+      params: Promise.resolve({ programId: "program123" }),
     });
-
-    const response = await POST(request, { params: Promise.resolve({'programId':'program123'}) });
     const data = await response.json();
 
     expect(response.status).toBe(200);
     expect(data).toEqual({
       success: true,
-      evaluationId: 'eval-new',
+      evaluationId: "eval-new",
       score: 0,
       totalXP: 0,
     });
   });
 
-  it('handles database errors gracefully', async () => {
-    mockGetUnifiedAuth.mockResolvedValue({ user: { id: 'user123', email: 'test@example.com', role: 'student' } });
-    mockFindById.mockRejectedValue(new Error('Database error'));
-
-    const request = new NextRequest('http://localhost:3000/api/discovery/programs/program123/complete', {
-      method: 'POST',
+  it("handles database errors gracefully", async () => {
+    mockGetUnifiedAuth.mockResolvedValue({
+      user: { id: "user123", email: "test@example.com", role: "student" },
     });
+    mockFindById.mockRejectedValue(new Error("Database error"));
 
-    const response = await POST(request, { params: Promise.resolve({'programId':'program123'}) });
+    const request = new NextRequest(
+      "http://localhost:3000/api/discovery/programs/program123/complete",
+      {
+        method: "POST",
+      },
+    );
+
+    const response = await POST(request, {
+      params: Promise.resolve({ programId: "program123" }),
+    });
     const data = await response.json();
 
     expect(response.status).toBe(500);
-    expect(data).toEqual({ error: 'Failed to complete program' });
+    expect(data).toEqual({ error: "Failed to complete program" });
   });
 });

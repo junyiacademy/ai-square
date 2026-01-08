@@ -4,8 +4,8 @@ export const useTranslation = () => {
     t: (key: string) => key,
     i18n: {
       changeLanguage: jest.fn(() => Promise.resolve()),
-      language: 'en',
-      languages: ['en', 'zhTW', 'zhCN'],
+      language: "en",
+      languages: ["en", "zhTW", "zhCN"],
     },
     ready: true,
   };
@@ -14,8 +14,9 @@ export const useTranslation = () => {
 export const Trans = ({ children }: { children: React.ReactNode }) => children;
 
 export const initReactI18next = {
-  type: '3rdParty',
+  type: "3rdParty",
   init: jest.fn(),
 };
 
-export const I18nextProvider = ({ children }: { children: React.ReactNode }) => children;
+export const I18nextProvider = ({ children }: { children: React.ReactNode }) =>
+  children;

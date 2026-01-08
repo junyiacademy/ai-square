@@ -2,7 +2,14 @@
  * Format weekly statistics into Slack-friendly markdown report
  */
 
-import type { WeeklyStats } from './db-queries';
+import type { WeeklyStats } from "./db-queries";
+
+interface AIInsight {
+  summary: string;
+  highlights: string[];
+  recommendations: string[];
+  concerns: string[];
+}
 
 /**
  * Get date range for the LAST complete week (Monday to Sunday)
@@ -34,8 +41,8 @@ function getWeekDateRange(): string {
   const formatDate = (date: Date) => {
     // Use local time to avoid timezone shift when formatting
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
     return `${year}-${month}-${day}`; // YYYY-MM-DD
   };
 
@@ -46,27 +53,44 @@ function getWeekDateRange(): string {
  * Format daily trend as day names with counts
  */
 function formatDailyTrend(trend: number[]): string {
-  const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-  return trend
-    .map((count, index) => `${days[index]}: ${count}`)
-    .join(' | ');
+  const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  return trend.map((count, index) => `${days[index]}: ${count}`).join(" | ");
 }
 
 /**
  * Format weekly statistics into markdown report
  */
-export function formatWeeklyReport(stats: WeeklyStats): string {
+export function formatWeeklyReport(
+  stats: WeeklyStats,
+  aiInsights: AIInsight | null = null,
+): string {
   const dateRange = getWeekDateRange();
-  const weekOverWeekSign = stats.userGrowth.weekOverWeekGrowth >= 0 ? '+' : '';
+  const weekOverWeekSign = stats.userGrowth.weekOverWeekGrowth >= 0 ? "+" : "";
 
   // Build top content section if available
-  let topContentSection = '';
+  let topContentSection = "";
   if (stats.learning.topContent.length > 0) {
     topContentSection = `• 最受歡迎內容 Top 3:
-${stats.learning.topContent.map((item, index) =>
-  `  ${index + 1}. ${item.name} - ${item.count} 次`
-).join('\n')}
+${stats.learning.topContent
+  .map((item, index) => `  ${index + 1}. ${item.name} - ${item.count} 次`)
+  .join("\n")}
 `;
+  }
+
+  // Build AI insights section if available
+  let aiInsightsSection = "";
+  if (aiInsights) {
+    aiInsightsSection = `
+**🤖 AI 智能洞察**
+${aiInsights.summary}
+
+✅ **亮點**
+${aiInsights.highlights.map((h) => `• ${h}`).join("\n")}
+
+💡 **建議**
+${aiInsights.recommendations.map((r) => `• ${r}`).join("\n")}
+
+${aiInsights.concerns.length > 0 ? `⚠️ **關注點**\n${aiInsights.concerns.map((c) => `• ${c}`).join("\n")}\n` : ""}`;
   }
 
   const report = `📊 **AI Square 週報** (${dateRange})
@@ -93,8 +117,8 @@ ${topContentSection}
 • API 成功率: ${stats.systemHealth.apiSuccessRate.toFixed(1)}%
 • 平均響應時間: ${stats.systemHealth.avgResponseTime}ms
 • 系統可用性: ${stats.systemHealth.uptime.toFixed(2)}%
-• 資料庫連線: ${stats.systemHealth.dbStatus === 'normal' ? '正常' : stats.systemHealth.dbStatus}
-
+• 資料庫連線: ${stats.systemHealth.dbStatus === "normal" ? "正常" : stats.systemHealth.dbStatus}
+${aiInsightsSection}
 ---
 🤖 自動生成 | 每週一 09:00`;
 

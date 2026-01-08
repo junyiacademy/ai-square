@@ -9,7 +9,7 @@ export const createMockUserRepository = () => ({
   update: jest.fn(),
   delete: jest.fn(),
   findAll: jest.fn().mockResolvedValue([]),
-  count: jest.fn().mockResolvedValue(0)
+  count: jest.fn().mockResolvedValue(0),
 });
 
 export const createMockScenarioRepository = () => ({
@@ -20,7 +20,7 @@ export const createMockScenarioRepository = () => ({
   update: jest.fn(),
   delete: jest.fn(),
   count: jest.fn().mockResolvedValue(0),
-  search: jest.fn().mockResolvedValue([])
+  search: jest.fn().mockResolvedValue([]),
 });
 
 export const createMockProgramRepository = () => ({
@@ -33,7 +33,7 @@ export const createMockProgramRepository = () => ({
   updateStatus: jest.fn(),
   recordCompletion: jest.fn(),
   getActivePrograms: jest.fn().mockResolvedValue([]),
-  count: jest.fn().mockResolvedValue(0)
+  count: jest.fn().mockResolvedValue(0),
 });
 
 export const createMockTaskRepository = () => ({
@@ -46,7 +46,7 @@ export const createMockTaskRepository = () => ({
   updateInteractions: jest.fn(),
   recordAttempt: jest.fn(),
   addInteraction: jest.fn(),
-  count: jest.fn().mockResolvedValue(0)
+  count: jest.fn().mockResolvedValue(0),
 });
 
 export const createMockEvaluationRepository = () => ({
@@ -54,11 +54,13 @@ export const createMockEvaluationRepository = () => ({
   findByProgram: jest.fn().mockResolvedValue([]),
   findByTask: jest.fn().mockResolvedValue([]),
   findByUser: jest.fn().mockResolvedValue([]),
-  create: jest.fn().mockImplementation(async (data) => ({ id: 'eval-123', ...data })),
+  create: jest
+    .fn()
+    .mockImplementation(async (data) => ({ id: "eval-123", ...data })),
   update: jest.fn(),
   delete: jest.fn(),
   getLatestForProgram: jest.fn(),
-  count: jest.fn().mockResolvedValue(0)
+  count: jest.fn().mockResolvedValue(0),
 });
 
 export const createMockAchievementRepository = () => ({
@@ -68,7 +70,7 @@ export const createMockAchievementRepository = () => ({
   update: jest.fn(),
   delete: jest.fn(),
   award: jest.fn(),
-  count: jest.fn().mockResolvedValue(0)
+  count: jest.fn().mockResolvedValue(0),
 });
 
 export const createMockRepositoryFactory = () => ({
@@ -77,5 +79,5 @@ export const createMockRepositoryFactory = () => ({
   getProgramRepository: jest.fn(() => createMockProgramRepository()),
   getTaskRepository: jest.fn(() => createMockTaskRepository()),
   getEvaluationRepository: jest.fn(() => createMockEvaluationRepository()),
-  getAchievementRepository: jest.fn(() => createMockAchievementRepository())
+  getAchievementRepository: jest.fn(() => createMockAchievementRepository()),
 });

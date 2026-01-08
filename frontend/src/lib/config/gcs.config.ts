@@ -6,7 +6,7 @@
 // 統一使用 GCS_BUCKET_NAME 環境變數
 export const GCS_CONFIG = {
   // 主要 bucket 名稱
-  bucketName: process.env.GCS_BUCKET_NAME || 'ai-square-db-v2',
+  bucketName: process.env.GCS_BUCKET_NAME || "ai-square-db-v2",
 
   // Google Cloud Project ID
   projectId: process.env.GOOGLE_CLOUD_PROJECT,
@@ -17,22 +17,22 @@ export const GCS_CONFIG = {
   // 資料路徑前綴
   paths: {
     // 評估結果
-    assessments: 'assessments',
+    assessments: "assessments",
 
     // 統一架構的資料路徑
-    scenarios: 'v2/scenarios',
-    programs: 'v2/programs',
-    tasks: 'v2/tasks',
-    evaluations: 'v2/evaluations',
+    scenarios: "v2/scenarios",
+    programs: "v2/programs",
+    tasks: "v2/tasks",
+    evaluations: "v2/evaluations",
 
     // CMS 資料
     cms: {
-      overrides: 'cms/overrides',
-      drafts: 'cms/drafts',
-      history: 'cms/history',
-      metadata: 'cms/metadata'
-    }
-  }
+      overrides: "cms/overrides",
+      drafts: "cms/drafts",
+      history: "cms/history",
+      metadata: "cms/metadata",
+    },
+  },
 } as const;
 
 // Storage 配置（用於初始化 GCS client）
@@ -53,4 +53,5 @@ export const getStorageConfig = () => {
 };
 
 // 確保 bucket 名稱在 client 端也可用
-export const PUBLIC_GCS_BUCKET = process.env.NEXT_PUBLIC_GCS_BUCKET || GCS_CONFIG.bucketName;
+export const PUBLIC_GCS_BUCKET =
+  process.env.NEXT_PUBLIC_GCS_BUCKET || GCS_CONFIG.bucketName;

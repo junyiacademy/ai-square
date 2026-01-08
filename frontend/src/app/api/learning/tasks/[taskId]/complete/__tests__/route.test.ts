@@ -1,44 +1,50 @@
-import { NextRequest } from 'next/server';
-import { POST } from '../route';
-import { getUnifiedAuth } from '@/lib/auth/unified-auth';
-import { postgresqlLearningService } from '@/lib/services/postgresql-learning-service';
-import type { ITask, IEvaluation } from '@/types/unified-learning';
+import { NextRequest } from "next/server";
+import { POST } from "../route";
+import { getUnifiedAuth } from "@/lib/auth/unified-auth";
+import { postgresqlLearningService } from "@/lib/services/postgresql-learning-service";
+import type { ITask, IEvaluation } from "@/types/unified-learning";
 
 // Mock dependencies
-jest.mock('@/lib/auth/unified-auth', () => ({
+jest.mock("@/lib/auth/unified-auth", () => ({
   getUnifiedAuth: jest.fn(),
   createUnauthorizedResponse: jest.fn(() => ({
-    json: () => Promise.resolve({ success: false, error: 'Authentication required' }),
-    status: 401
-  }))
+    json: () =>
+      Promise.resolve({ success: false, error: "Authentication required" }),
+    status: 401,
+  })),
 }));
-jest.mock('@/lib/services/postgresql-learning-service');
+jest.mock("@/lib/services/postgresql-learning-service");
 
 const mockGetUnifiedAuth = getUnifiedAuth as jest.Mock;
-const mockPostgresqlLearningService = postgresqlLearningService as jest.Mocked<typeof postgresqlLearningService>;
+const mockPostgresqlLearningService = postgresqlLearningService as jest.Mocked<
+  typeof postgresqlLearningService
+>;
 
-describe('/api/learning/tasks/[taskId]/complete', () => {
+describe("/api/learning/tasks/[taskId]/complete", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  describe('POST', () => {
+  describe("POST", () => {
     const mockSession = {
-      user: { id: 'user123', email: 'test@example.com',
-        name: 'Test User'
-      , role: 'student' }
+      user: {
+        id: "user123",
+        email: "test@example.com",
+        name: "Test User",
+        role: "student",
+      },
     };
 
     const mockTask: ITask = {
-      id: 'task123',
-      programId: 'program123',
-      mode: 'pbl',
+      id: "task123",
+      programId: "program123",
+      mode: "pbl",
       taskIndex: 0,
-      status: 'completed',
-      type: 'question',
-      title: { en: 'Test Task' },
-      description: { en: 'Test Description' },
-      content: { instructions: 'Complete this task' },
+      status: "completed",
+      type: "question",
+      title: { en: "Test Task" },
+      description: { en: "Test Description" },
+      content: { instructions: "Complete this task" },
       interactions: [],
       interactionCount: 0,
       userResponse: {},
@@ -55,27 +61,27 @@ describe('/api/learning/tasks/[taskId]/complete', () => {
       pblData: {},
       discoveryData: {},
       assessmentData: {},
-      metadata: {}
+      metadata: {},
     };
 
     const mockEvaluation: IEvaluation = {
-      id: 'eval123',
-      taskId: 'task123',
-      userId: 'test@example.com',
-      mode: 'pbl',
-      evaluationType: 'formative',
+      id: "eval123",
+      taskId: "task123",
+      userId: "test@example.com",
+      mode: "pbl",
+      evaluationType: "formative",
       score: 85,
       maxScore: 100,
       domainScores: { problem_solving: 85, creativity: 90 },
-      feedbackText: 'Great job!',
-      feedbackData: { detailed: { en: 'Great job!' } },
+      feedbackText: "Great job!",
+      feedbackData: { detailed: { en: "Great job!" } },
       timeTakenSeconds: 120,
       aiAnalysis: {},
       pblData: {},
       discoveryData: {},
       assessmentData: {},
       metadata: {},
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
     };
 
     const mockTaskResult = {
@@ -84,140 +90,174 @@ describe('/api/learning/tasks/[taskId]/complete', () => {
       programProgress: {
         tasksCompleted: 3,
         totalTasks: 5,
-        overallScore: 80
-      }
+        overallScore: 80,
+      },
     };
 
-    it('successfully completes a task with evaluation', async () => {
+    it("successfully completes a task with evaluation", async () => {
       mockGetUnifiedAuth.mockResolvedValue(mockSession);
-      mockPostgresqlLearningService.completeTask.mockResolvedValue(mockTaskResult);
+      mockPostgresqlLearningService.completeTask.mockResolvedValue(
+        mockTaskResult,
+      );
 
       const requestBody = {
-        response: 'My task response',
+        response: "My task response",
         evaluationData: {
           timeSpent: 300,
-          attempts: 1
-        }
+          attempts: 1,
+        },
       };
 
-      const request = new NextRequest('http://localhost:3000/api/learning/tasks/task123/complete', {
-        method: 'POST',
-        body: JSON.stringify(requestBody)
-      });
+      const request = new NextRequest(
+        "http://localhost:3000/api/learning/tasks/task123/complete",
+        {
+          method: "POST",
+          body: JSON.stringify(requestBody),
+        },
+      );
 
-      const response = await POST(request, { params: Promise.resolve({'taskId':'task123'}) });
+      const response = await POST(request, {
+        params: Promise.resolve({ taskId: "task123" }),
+      });
       const data = await response.json();
 
       expect(mockPostgresqlLearningService.completeTask).toHaveBeenCalledWith(
-        'task123',
-        'test@example.com',
-        'My task response',
-        { timeSpent: 300, attempts: 1 }
+        "task123",
+        "test@example.com",
+        "My task response",
+        { timeSpent: 300, attempts: 1 },
       );
       expect(response.status).toBe(200);
       expect(data).toEqual({
         success: true,
-        data: mockTaskResult
+        data: mockTaskResult,
       });
     });
 
-    it('returns 401 when not authenticated', async () => {
+    it("returns 401 when not authenticated", async () => {
       mockGetUnifiedAuth.mockResolvedValue(null);
 
-      const request = new NextRequest('http://localhost:3000/api/learning/tasks/task123/complete', {
-        method: 'POST',
-        body: JSON.stringify({ response: 'test' })
-      });
+      const request = new NextRequest(
+        "http://localhost:3000/api/learning/tasks/task123/complete",
+        {
+          method: "POST",
+          body: JSON.stringify({ response: "test" }),
+        },
+      );
 
-      const response = await POST(request, { params: Promise.resolve({'taskId':'task123'}) });
+      const response = await POST(request, {
+        params: Promise.resolve({ taskId: "task123" }),
+      });
       const data = await response.json();
 
       expect(response.status).toBe(401);
       expect(data).toEqual({
         success: false,
-        error: 'Authentication required'
+        error: "Authentication required",
       });
       expect(mockPostgresqlLearningService.completeTask).not.toHaveBeenCalled();
     });
 
-    it('returns 401 when session missing email', async () => {
-      mockGetUnifiedAuth.mockResolvedValue({ user: { id: 'user123' } });
+    it("returns 401 when session missing email", async () => {
+      mockGetUnifiedAuth.mockResolvedValue({ user: { id: "user123" } });
 
-      const request = new NextRequest('http://localhost:3000/api/learning/tasks/task123/complete', {
-        method: 'POST',
-        body: JSON.stringify({ response: 'test' })
+      const request = new NextRequest(
+        "http://localhost:3000/api/learning/tasks/task123/complete",
+        {
+          method: "POST",
+          body: JSON.stringify({ response: "test" }),
+        },
+      );
+
+      const response = await POST(request, {
+        params: Promise.resolve({ taskId: "task123" }),
       });
-
-      const response = await POST(request, { params: Promise.resolve({'taskId':'task123'}) });
       const data = await response.json();
 
       expect(response.status).toBe(401);
       expect(data).toEqual({
         success: false,
-        error: 'Authentication required'
+        error: "Authentication required",
       });
     });
 
-    it('returns 404 when task not found', async () => {
+    it("returns 404 when task not found", async () => {
       mockGetUnifiedAuth.mockResolvedValue(mockSession);
       mockPostgresqlLearningService.completeTask.mockRejectedValue(
-        new Error('Task not found')
+        new Error("Task not found"),
       );
 
-      const request = new NextRequest('http://localhost:3000/api/learning/tasks/nonexistent/complete', {
-        method: 'POST',
-        body: JSON.stringify({ response: 'test' })
-      });
+      const request = new NextRequest(
+        "http://localhost:3000/api/learning/tasks/nonexistent/complete",
+        {
+          method: "POST",
+          body: JSON.stringify({ response: "test" }),
+        },
+      );
 
-      const response = await POST(request, { params: Promise.resolve({'taskId':'task123'}) });
+      const response = await POST(request, {
+        params: Promise.resolve({ taskId: "task123" }),
+      });
       const data = await response.json();
 
       expect(response.status).toBe(404);
       expect(data).toEqual({
         success: false,
-        error: 'Task not found'
+        error: "Task not found",
       });
     });
 
-    it('handles missing request body', async () => {
+    it("handles missing request body", async () => {
       mockGetUnifiedAuth.mockResolvedValue(mockSession);
-      mockPostgresqlLearningService.completeTask.mockResolvedValue(mockTaskResult);
+      mockPostgresqlLearningService.completeTask.mockResolvedValue(
+        mockTaskResult,
+      );
 
-      const request = new NextRequest('http://localhost:3000/api/learning/tasks/task123/complete', {
-        method: 'POST',
-        body: JSON.stringify({})
+      const request = new NextRequest(
+        "http://localhost:3000/api/learning/tasks/task123/complete",
+        {
+          method: "POST",
+          body: JSON.stringify({}),
+        },
+      );
+
+      const response = await POST(request, {
+        params: Promise.resolve({ taskId: "task123" }),
       });
-
-      const response = await POST(request, { params: Promise.resolve({'taskId':'task123'}) });
       const data = await response.json();
 
       expect(mockPostgresqlLearningService.completeTask).toHaveBeenCalledWith(
-        'task123',
-        'test@example.com',
+        "task123",
+        "test@example.com",
         undefined,
-        undefined
+        undefined,
       );
       expect(response.status).toBe(200);
     });
 
-    it('handles general errors', async () => {
+    it("handles general errors", async () => {
       mockGetUnifiedAuth.mockResolvedValue(mockSession);
       mockPostgresqlLearningService.completeTask.mockRejectedValue(
-        new Error('Database connection failed')
+        new Error("Database connection failed"),
       );
 
-      const request = new NextRequest('http://localhost:3000/api/learning/tasks/task123/complete', {
-        method: 'POST',
-        body: JSON.stringify({ response: 'test' })
-      });
+      const request = new NextRequest(
+        "http://localhost:3000/api/learning/tasks/task123/complete",
+        {
+          method: "POST",
+          body: JSON.stringify({ response: "test" }),
+        },
+      );
 
-      const response = await POST(request, { params: Promise.resolve({'taskId':'task123'}) });
+      const response = await POST(request, {
+        params: Promise.resolve({ taskId: "task123" }),
+      });
       const data = await response.json();
 
       expect(response.status).toBe(500);
       expect(data).toEqual({
         success: false,
-        error: 'Internal server error'
+        error: "Internal server error",
       });
     });
   });

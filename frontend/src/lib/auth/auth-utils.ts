@@ -1,5 +1,5 @@
-import { NextRequest } from 'next/server';
-import { SecureSession } from './secure-session';
+import { NextRequest } from "next/server";
+import { SecureSession } from "./secure-session";
 
 export interface AuthUser {
   userId: string;
@@ -12,10 +12,12 @@ export interface AuthUser {
  * Extract and verify authentication from request
  * Simplified to only use sessionToken cookie
  */
-export async function getAuthFromRequest(request: NextRequest): Promise<AuthUser | null> {
+export async function getAuthFromRequest(
+  request: NextRequest,
+): Promise<AuthUser | null> {
   try {
     // Only check sessionToken cookie (single source of truth)
-    const sessionToken = request.cookies.get('sessionToken')?.value;
+    const sessionToken = request.cookies.get("sessionToken")?.value;
 
     if (!sessionToken) {
       return null;
@@ -33,10 +35,10 @@ export async function getAuthFromRequest(request: NextRequest): Promise<AuthUser
       userId: sessionData.userId,
       email: sessionData.email,
       role: sessionData.role,
-      name: sessionData.email.split('@')[0] // Default name from email
+      name: sessionData.email.split("@")[0], // Default name from email
     };
   } catch (error) {
-    console.error('[Auth] Authentication error:', error);
+    console.error("[Auth] Authentication error:", error);
     return null;
   }
 }
@@ -52,7 +54,10 @@ export function hasRole(user: AuthUser | null, requiredRole: string): boolean {
 /**
  * Check if user has any of the required roles
  */
-export function hasAnyRole(user: AuthUser | null, requiredRoles: string[]): boolean {
+export function hasAnyRole(
+  user: AuthUser | null,
+  requiredRoles: string[],
+): boolean {
   if (!user) return false;
   return requiredRoles.includes(user.role);
 }
@@ -61,8 +66,8 @@ export function hasAnyRole(user: AuthUser | null, requiredRoles: string[]): bool
  * Mock user for testing
  */
 export const mockUser: AuthUser = {
-  userId: '1',
-  email: 'test@example.com',
-  role: 'student',
-  name: 'Test User'
+  userId: "1",
+  email: "test@example.com",
+  role: "student",
+  name: "Test User",
 };

@@ -11,8 +11,12 @@ export default function Loading() {
             </div>
           </div>
         </div>
-        <p className="mt-6 text-lg font-medium gradient-text">Loading AI Square CMS</p>
-        <p className="mt-2 text-sm text-gray-600">Preparing your content management experience...</p>
+        <p className="mt-6 text-lg font-medium gradient-text">
+          Loading AI Square CMS
+        </p>
+        <p className="mt-2 text-sm text-gray-600">
+          Preparing your content management experience...
+        </p>
       </div>
     </div>
   );

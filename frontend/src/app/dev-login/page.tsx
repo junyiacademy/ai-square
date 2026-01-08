@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 /**
  * Development Auto-Login Page
@@ -11,21 +11,21 @@ import { useRouter } from 'next/navigation';
  */
 export default function DevLoginPage() {
   const router = useRouter();
-  const [status, setStatus] = useState('Attempting auto-login...');
-  const [error, setError] = useState('');
+  const [status, setStatus] = useState("Attempting auto-login...");
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    if (process.env.NODE_ENV !== 'development') {
-      setError('This page is only available in development mode');
+    if (process.env.NODE_ENV !== "development") {
+      setError("This page is only available in development mode");
       return;
     }
 
     const autoLogin = async () => {
       try {
-        const res = await fetch('/api/auth/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({}) // Empty body triggers auto-login
+        const res = await fetch("/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({}), // Empty body triggers auto-login
         });
 
         const data = await res.json();
@@ -34,16 +34,16 @@ export default function DevLoginPage() {
           setStatus(`Logged in as ${data.user.email}! Redirecting...`);
 
           // Store user in localStorage for client components
-          localStorage.setItem('user', JSON.stringify(data.user));
+          localStorage.setItem("user", JSON.stringify(data.user));
 
           setTimeout(() => {
-            router.push('/dashboard');
+            router.push("/dashboard");
           }, 1000);
         } else {
-          setError(data.error || 'Auto-login failed');
+          setError(data.error || "Auto-login failed");
         }
       } catch (err) {
-        setError('Failed to connect to login API');
+        setError("Failed to connect to login API");
         console.error(err);
       }
     };
@@ -78,7 +78,9 @@ export default function DevLoginPage() {
             )}
           </div>
           <div className="mt-8 text-sm text-gray-500">
-            <p>💡 Tip: Bookmark this page for instant login during development</p>
+            <p>
+              💡 Tip: Bookmark this page for instant login during development
+            </p>
             <p className="mt-2">Session will last for 30 days</p>
           </div>
         </div>

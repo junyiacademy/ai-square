@@ -8,31 +8,38 @@
  */
 export async function authenticatedFetch(
   input: RequestInfo | URL,
-  init?: RequestInit
+  init?: RequestInit,
 ): Promise<Response> {
-  const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url;
+  const url =
+    typeof input === "string"
+      ? input
+      : input instanceof URL
+        ? input.href
+        : input.url;
 
   // User-specific API patterns that should never be cached
   const userDataPatterns = [
-    '/programs',      // User's programs
-    '/user/',         // User endpoints
-    '/profile',       // User profile
-    '/evaluations',   // User evaluations
-    '/history',       // User history
-    '/my-programs',   // User's programs list
+    "/programs", // User's programs
+    "/user/", // User endpoints
+    "/profile", // User profile
+    "/evaluations", // User evaluations
+    "/history", // User history
+    "/my-programs", // User's programs list
   ];
 
   // Check if this is a user-specific request
-  const isUserSpecificRequest = userDataPatterns.some(pattern => url.includes(pattern));
+  const isUserSpecificRequest = userDataPatterns.some((pattern) =>
+    url.includes(pattern),
+  );
 
   const options: RequestInit = {
     ...init,
-    credentials: 'include', // Always include cookies
+    credentials: "include", // Always include cookies
   };
 
   // Disable cache for user-specific requests to prevent cross-user data leakage
   if (isUserSpecificRequest && !init?.cache) {
-    options.cache = 'no-store';
+    options.cache = "no-store";
   }
 
   // Only add headers if they exist in init

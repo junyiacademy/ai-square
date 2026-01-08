@@ -1,6 +1,6 @@
-'use client'
+"use client";
 
-import { useRTL } from '@/hooks/useRTL'
+import { useRTL } from "@/hooks/useRTL";
 
 export function RTLProvider({ children }: { children: React.ReactNode }) {
   useRTL(); // This hook handles all RTL logic

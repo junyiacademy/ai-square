@@ -4,16 +4,19 @@
  */
 
 import type {
-  IScenario, IProgram, ITask, IEvaluation
-} from '@/types/unified-learning';
-import type { User } from '@/lib/repositories/interfaces';
+  IScenario,
+  IProgram,
+  ITask,
+  IEvaluation,
+} from "@/types/unified-learning";
+import type { User } from "@/lib/repositories/interfaces";
 
 // Mock 資料生成器
 export const createMockUser = (overrides?: Partial<User>): User => ({
-  id: 'user-123',
-  email: 'test@example.com',
-  name: 'Test User',
-  preferredLanguage: 'en',
+  id: "user-123",
+  email: "test@example.com",
+  name: "Test User",
+  preferredLanguage: "en",
   level: 1,
   totalXp: 0,
   learningPreferences: {},
@@ -24,17 +27,19 @@ export const createMockUser = (overrides?: Partial<User>): User => ({
   ...overrides,
 });
 
-export const createMockScenario = (overrides?: Partial<IScenario>): IScenario => ({
-  id: 'scenario-123',
-  mode: 'pbl',
-  status: 'active',
-  sourceType: 'yaml',
-  sourcePath: 'test-scenario.yaml',
+export const createMockScenario = (
+  overrides?: Partial<IScenario>,
+): IScenario => ({
+  id: "scenario-123",
+  mode: "pbl",
+  status: "active",
+  sourceType: "yaml",
+  sourcePath: "test-scenario.yaml",
   sourceMetadata: {},
-  title: { en: 'Test Scenario' },
-  description: { en: 'Test Description' },
-  objectives: ['Learn testing'],
-  difficulty: 'intermediate',
+  title: { en: "Test Scenario" },
+  description: { en: "Test Description" },
+  objectives: ["Learn testing"],
+  difficulty: "intermediate",
   estimatedMinutes: 30,
   prerequisites: [],
   taskTemplates: [],
@@ -45,7 +50,7 @@ export const createMockScenario = (overrides?: Partial<IScenario>): IScenario =>
   resources: [],
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
-  version: '1.0.0',
+  version: "1.0.0",
   metadata: {},
   pblData: {},
   discoveryData: {},
@@ -54,11 +59,11 @@ export const createMockScenario = (overrides?: Partial<IScenario>): IScenario =>
 });
 
 export const createMockProgram = (overrides?: Partial<IProgram>): IProgram => ({
-  id: 'program-123',
-  userId: 'user-123',
-  scenarioId: 'scenario-123',
-  mode: 'pbl',
-  status: 'active',
+  id: "program-123",
+  userId: "user-123",
+  scenarioId: "scenario-123",
+  mode: "pbl",
+  status: "active",
   currentTaskIndex: 0,
   completedTaskCount: 0,
   totalTaskCount: 3,
@@ -79,16 +84,16 @@ export const createMockProgram = (overrides?: Partial<IProgram>): IProgram => ({
 });
 
 export const createMockTask = (overrides?: Partial<ITask>): ITask => ({
-  id: 'task-123',
-  programId: 'program-123',
-  mode: 'pbl',
+  id: "task-123",
+  programId: "program-123",
+  mode: "pbl",
   taskIndex: 0,
   scenarioTaskIndex: 0,
-  title: { en: 'Test Task' },
-  description: { en: 'Test task description' },
-  type: 'question',
-  status: 'pending',
-  content: { instructions: 'Complete this task' },
+  title: { en: "Test Task" },
+  description: { en: "Test task description" },
+  type: "question",
+  status: "pending",
+  content: { instructions: "Complete this task" },
   interactions: [],
   interactionCount: 0,
   userResponse: {},
@@ -107,23 +112,25 @@ export const createMockTask = (overrides?: Partial<ITask>): ITask => ({
   ...overrides,
 });
 
-export const createMockEvaluation = (overrides?: Partial<IEvaluation>): IEvaluation => ({
-  id: 'eval-123',
-  userId: 'user-123',
-  programId: 'program-123',
-  taskId: 'task-123',
-  mode: 'pbl',
-  evaluationType: 'task',
-  evaluationSubtype: 'pbl_task',
+export const createMockEvaluation = (
+  overrides?: Partial<IEvaluation>,
+): IEvaluation => ({
+  id: "eval-123",
+  userId: "user-123",
+  programId: "program-123",
+  taskId: "task-123",
+  mode: "pbl",
+  evaluationType: "task",
+  evaluationSubtype: "pbl_task",
   score: 85,
   maxScore: 100,
-  domainScores: { 'engaging_with_ai': 90, 'creating_with_ai': 80 },
+  domainScores: { engaging_with_ai: 90, creating_with_ai: 80 },
   feedbackData: {
-    strengths: ['Good understanding'],
-    improvements: ['Need more practice'],
-    nextSteps: ['Try advanced features'],
+    strengths: ["Good understanding"],
+    improvements: ["Need more practice"],
+    nextSteps: ["Try advanced features"],
   },
-  aiAnalysis: { insights: 'Good performance' },
+  aiAnalysis: { insights: "Good performance" },
   timeTakenSeconds: 300,
   createdAt: new Date().toISOString(),
   pblData: {
@@ -143,31 +150,51 @@ export const createMockRepository = <T>(defaultData: T | T[] = [] as T[]) => {
 
   return {
     findAll: jest.fn().mockResolvedValue(isArray ? defaultData : [defaultData]),
-    findById: jest.fn().mockResolvedValue(isArray ? defaultData[0] : defaultData),
-    findByEmail: jest.fn().mockResolvedValue(isArray ? defaultData[0] : defaultData),
+    findById: jest
+      .fn()
+      .mockResolvedValue(isArray ? defaultData[0] : defaultData),
+    findByEmail: jest
+      .fn()
+      .mockResolvedValue(isArray ? defaultData[0] : defaultData),
     create: jest.fn().mockResolvedValue(isArray ? defaultData[0] : defaultData),
     update: jest.fn().mockResolvedValue(isArray ? defaultData[0] : defaultData),
     delete: jest.fn().mockResolvedValue(true),
     // 額外的查詢方法
-    findByUser: jest.fn().mockResolvedValue(isArray ? defaultData : [defaultData]),
-    findByProgram: jest.fn().mockResolvedValue(isArray ? defaultData : [defaultData]),
-    findByTask: jest.fn().mockResolvedValue(isArray ? defaultData : [defaultData]),
-    findByScenario: jest.fn().mockResolvedValue(isArray ? defaultData : [defaultData]),
-    findActive: jest.fn().mockResolvedValue(isArray ? defaultData : [defaultData]),
+    findByUser: jest
+      .fn()
+      .mockResolvedValue(isArray ? defaultData : [defaultData]),
+    findByProgram: jest
+      .fn()
+      .mockResolvedValue(isArray ? defaultData : [defaultData]),
+    findByTask: jest
+      .fn()
+      .mockResolvedValue(isArray ? defaultData : [defaultData]),
+    findByScenario: jest
+      .fn()
+      .mockResolvedValue(isArray ? defaultData : [defaultData]),
+    findActive: jest
+      .fn()
+      .mockResolvedValue(isArray ? defaultData : [defaultData]),
   };
 };
 
 // Mock repositoryFactory
 export const mockRepositoryFactory = {
   getUserRepository: jest.fn(() => createMockRepository(createMockUser())),
-  getScenarioRepository: jest.fn(() => createMockRepository(createMockScenario())),
-  getProgramRepository: jest.fn(() => createMockRepository(createMockProgram())),
+  getScenarioRepository: jest.fn(() =>
+    createMockRepository(createMockScenario()),
+  ),
+  getProgramRepository: jest.fn(() =>
+    createMockRepository(createMockProgram()),
+  ),
   getTaskRepository: jest.fn(() => createMockRepository(createMockTask())),
-  getEvaluationRepository: jest.fn(() => createMockRepository(createMockEvaluation())),
+  getEvaluationRepository: jest.fn(() =>
+    createMockRepository(createMockEvaluation()),
+  ),
 };
 
 // Mock the factory module
-jest.mock('@/lib/repositories/base/repository-factory', () => ({
+jest.mock("@/lib/repositories/base/repository-factory", () => ({
   repositoryFactory: mockRepositoryFactory,
   createRepositoryFactory: jest.fn(() => mockRepositoryFactory),
 }));

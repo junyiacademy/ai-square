@@ -1,12 +1,12 @@
-import { createMockRepository, createMockEvaluation } from '../repositories';
+import { createMockRepository, createMockEvaluation } from "../repositories";
 
-describe('repository mocks', () => {
+describe("repository mocks", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  describe('createMockRepository', () => {
-    it('should create a base mock repository', () => {
+  describe("createMockRepository", () => {
+    it("should create a base mock repository", () => {
       const repo = createMockRepository();
       expect(repo.findById).toBeDefined();
       expect(repo.findAll).toBeDefined();
@@ -16,8 +16,8 @@ describe('repository mocks', () => {
     });
   });
 
-  describe('createMockEvaluation', () => {
-    it('should create a mock evaluation', () => {
+  describe("createMockEvaluation", () => {
+    it("should create a mock evaluation", () => {
       const evaluation = createMockEvaluation();
       expect(evaluation).toBeDefined();
       expect(evaluation.id).toBeDefined();

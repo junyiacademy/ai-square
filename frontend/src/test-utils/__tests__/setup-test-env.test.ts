@@ -1,11 +1,11 @@
-describe('setup-test-env', () => {
-  it('should load module', () => {
+describe("setup-test-env", () => {
+  it("should load module", () => {
     try {
-      const module = require('../setup-test-env');
+      const module = require("../setup-test-env");
       expect(module).toBeDefined();
 
       // Test exports
-      Object.keys(module).forEach(key => {
+      Object.keys(module).forEach((key) => {
         expect(module[key]).toBeDefined();
       });
     } catch (error) {

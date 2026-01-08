@@ -1,24 +1,26 @@
-'use client';
+"use client";
 
-import { useEffect, useState, Suspense } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
-import { useTranslation } from 'react-i18next';
-import Link from 'next/link';
-import Image from 'next/image';
+import { useEffect, useState, Suspense } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import { useTranslation } from "react-i18next";
+import Link from "next/link";
+import Image from "next/image";
 
 function VerifyEmailContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const { t } = useTranslation(['auth', 'common']);
-  const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
-  const [message, setMessage] = useState('');
+  const { t } = useTranslation(["auth", "common"]);
+  const [status, setStatus] = useState<"loading" | "success" | "error">(
+    "loading",
+  );
+  const [message, setMessage] = useState("");
 
-  const token = searchParams.get('token');
+  const token = searchParams.get("token");
 
   useEffect(() => {
     if (!token) {
-      setStatus('error');
-      setMessage(t('auth:verifyEmail.noToken'));
+      setStatus("error");
+      setMessage(t("auth:verifyEmail.noToken"));
       return;
     }
 
@@ -29,20 +31,20 @@ function VerifyEmailContent() {
         const data = await response.json();
 
         if (response.ok && data.success) {
-          setStatus('success');
-          setMessage(data.message || t('auth:verifyEmail.success'));
+          setStatus("success");
+          setMessage(data.message || t("auth:verifyEmail.success"));
 
           // Redirect to login after 3 seconds
           setTimeout(() => {
-            router.push('/login');
+            router.push("/login");
           }, 3000);
         } else {
-          setStatus('error');
-          setMessage(data.error || t('auth:verifyEmail.failed'));
+          setStatus("error");
+          setMessage(data.error || t("auth:verifyEmail.failed"));
         }
       } catch {
-        setStatus('error');
-        setMessage(t('auth:verifyEmail.networkError'));
+        setStatus("error");
+        setMessage(t("auth:verifyEmail.networkError"));
       }
     };
 
@@ -64,25 +66,35 @@ function VerifyEmailContent() {
             />
           </div>
           <h2 className="mt-6 text-3xl font-extrabold text-gray-900 dark:text-white">
-            {t('auth:verifyEmail.title')}
+            {t("auth:verifyEmail.title")}
           </h2>
         </div>
 
         <div className="mt-8">
-          {status === 'loading' && (
+          {status === "loading" && (
             <div className="space-y-4">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
               <p className="text-gray-600 dark:text-gray-400">
-                {t('auth:verifyEmail.verifying')}
+                {t("auth:verifyEmail.verifying")}
               </p>
             </div>
           )}
 
-          {status === 'success' && (
+          {status === "success" && (
             <div className="space-y-4">
               <div className="rounded-full bg-green-100 dark:bg-green-900 p-3 mx-auto w-fit">
-                <svg className="h-8 w-8 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                <svg
+                  className="h-8 w-8 text-green-600 dark:text-green-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M5 13l4 4L19 7"
+                  ></path>
                 </svg>
               </div>
               <div className="space-y-2">
@@ -90,22 +102,32 @@ function VerifyEmailContent() {
                   {message}
                 </p>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  {t('auth:verifyEmail.redirecting')}
+                  {t("auth:verifyEmail.redirecting")}
                 </p>
               </div>
             </div>
           )}
 
-          {status === 'error' && (
+          {status === "error" && (
             <div className="space-y-4">
               <div className="rounded-full bg-red-100 dark:bg-red-900 p-3 mx-auto w-fit">
-                <svg className="h-8 w-8 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+                <svg
+                  className="h-8 w-8 text-red-600 dark:text-red-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  ></path>
                 </svg>
               </div>
               <div className="space-y-2">
                 <p className="text-lg font-medium text-gray-900 dark:text-white">
-                  {t('auth:verifyEmail.errorTitle')}
+                  {t("auth:verifyEmail.errorTitle")}
                 </p>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
                   {message}
@@ -116,14 +138,14 @@ function VerifyEmailContent() {
                   href="/register"
                   className="inline-block text-sm font-medium text-blue-600 hover:text-blue-500"
                 >
-                  {t('auth:verifyEmail.tryAgain')}
+                  {t("auth:verifyEmail.tryAgain")}
                 </Link>
                 <span className="mx-2 text-gray-400">|</span>
                 <Link
                   href="/contact"
                   className="inline-block text-sm font-medium text-blue-600 hover:text-blue-500"
                 >
-                  {t('auth:verifyEmail.contactSupport')}
+                  {t("auth:verifyEmail.contactSupport")}
                 </Link>
               </div>
             </div>
@@ -136,7 +158,11 @@ function VerifyEmailContent() {
 
 export default function VerifyEmailPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100" />}>
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100" />
+      }
+    >
       <VerifyEmailContent />
     </Suspense>
   );

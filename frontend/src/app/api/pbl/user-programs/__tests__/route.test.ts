@@ -1,117 +1,137 @@
-import { NextRequest } from 'next/server';
-import { GET } from '../route';
-import { repositoryFactory } from '@/lib/repositories/base/repository-factory';
+import { NextRequest } from "next/server";
+import { GET } from "../route";
+import { repositoryFactory } from "@/lib/repositories/base/repository-factory";
 
-jest.mock('@/lib/repositories/base/repository-factory', () => ({
+jest.mock("@/lib/repositories/base/repository-factory", () => ({
   repositoryFactory: {
     getUserRepository: jest.fn(),
     getProgramRepository: jest.fn(),
     getTaskRepository: jest.fn(),
     getScenarioRepository: jest.fn(),
     getEvaluationRepository: jest.fn(),
-    getContentRepository: jest.fn()
-  }
+    getContentRepository: jest.fn(),
+  },
 }));
 
 // Mock optimization utils to handle cachedGET
-jest.mock('@/lib/api/optimization-utils', () => ({
+jest.mock("@/lib/api/optimization-utils", () => ({
   cachedGET: jest.fn(async (req, handler) => {
     const result = await handler();
     // Return a proper NextResponse like the real cachedGET does
     return new Response(JSON.stringify({ ...result, cacheHit: false }), {
       status: 200,
-      headers: { 'Content-Type': 'application/json' }
+      headers: { "Content-Type": "application/json" },
     });
   }),
   getPaginationParams: jest.fn(() => ({ page: 1, limit: 20 })),
-  createPaginatedResponse: jest.fn((data, total, params) => ({ data, total, ...params }))
+  createPaginatedResponse: jest.fn((data, total, params) => ({
+    data,
+    total,
+    ...params,
+  })),
 }));
 
-describe('PBL User Programs API Route', () => {
+describe("PBL User Programs API Route", () => {
   const mockUserRepo = {
     findById: jest.fn(),
     findByEmail: jest.fn(),
     create: jest.fn(),
-    update: jest.fn()
+    update: jest.fn(),
   };
 
   const mockProgramRepo = {
     findById: jest.fn(),
     findByUser: jest.fn(),
     create: jest.fn(),
-    update: jest.fn()
+    update: jest.fn(),
   };
 
   const mockTaskRepo = {
     findByProgram: jest.fn(),
     findByProgramIds: jest.fn(),
     create: jest.fn(),
-    update: jest.fn()
+    update: jest.fn(),
   };
 
   const mockEvaluationRepo = {
     findByProgram: jest.fn(),
     findByProgramIds: jest.fn(),
-    create: jest.fn()
+    create: jest.fn(),
   };
 
   const mockContentRepo = {
-    getScenarioContent: jest.fn()
+    getScenarioContent: jest.fn(),
   };
 
   beforeEach(() => {
     jest.clearAllMocks();
-    (repositoryFactory.getUserRepository as jest.Mock).mockReturnValue(mockUserRepo);
-    (repositoryFactory.getProgramRepository as jest.Mock).mockReturnValue(mockProgramRepo);
-    (repositoryFactory.getTaskRepository as jest.Mock).mockReturnValue(mockTaskRepo);
-    (repositoryFactory.getEvaluationRepository as jest.Mock).mockReturnValue(mockEvaluationRepo);
-    (repositoryFactory.getContentRepository as jest.Mock).mockReturnValue(mockContentRepo);
+    (repositoryFactory.getUserRepository as jest.Mock).mockReturnValue(
+      mockUserRepo,
+    );
+    (repositoryFactory.getProgramRepository as jest.Mock).mockReturnValue(
+      mockProgramRepo,
+    );
+    (repositoryFactory.getTaskRepository as jest.Mock).mockReturnValue(
+      mockTaskRepo,
+    );
+    (repositoryFactory.getEvaluationRepository as jest.Mock).mockReturnValue(
+      mockEvaluationRepo,
+    );
+    (repositoryFactory.getContentRepository as jest.Mock).mockReturnValue(
+      mockContentRepo,
+    );
   });
 
-  it('should return 401 when user is not authenticated', async () => {
-    const request = new NextRequest('http://localhost:3000/api/pbl/user-programs');
+  it("should return 401 when user is not authenticated", async () => {
+    const request = new NextRequest(
+      "http://localhost:3000/api/pbl/user-programs",
+    );
 
     const response = await GET(request);
     expect(response.status).toBe(401);
 
     const data = await response.json();
     expect(data.success).toBe(false);
-    expect(data.error).toBe('User authentication required');
+    expect(data.error).toBe("User authentication required");
   });
 
-  it('should return user programs when authenticated', async () => {
+  it("should return user programs when authenticated", async () => {
     const mockUser = {
-      id: 'user-123',
-      email: 'test@example.com',
-      preferredLanguage: 'en'
+      id: "user-123",
+      email: "test@example.com",
+      preferredLanguage: "en",
     };
 
-    const mockPrograms = [{
-      id: 'prog-1',
-      scenarioId: 'scenario-1',
-      status: 'active',
-      totalTaskCount: 5,
-      createdAt: new Date().toISOString(),
-      lastActivityAt: new Date().toISOString()
-    }];
+    const mockPrograms = [
+      {
+        id: "prog-1",
+        scenarioId: "scenario-1",
+        status: "active",
+        totalTaskCount: 5,
+        createdAt: new Date().toISOString(),
+        lastActivityAt: new Date().toISOString(),
+      },
+    ];
 
     mockUserRepo.findByEmail.mockResolvedValue(mockUser);
     mockProgramRepo.findByUser.mockResolvedValue(mockPrograms);
     mockTaskRepo.findByProgramIds.mockResolvedValue([
-      { id: 'task-1', programId: 'prog-1', status: 'completed' },
-      { id: 'task-2', programId: 'prog-1', status: 'active' }
+      { id: "task-1", programId: "prog-1", status: "completed" },
+      { id: "task-2", programId: "prog-1", status: "active" },
     ]);
     mockEvaluationRepo.findByProgramIds.mockResolvedValue([
-      { programId: 'prog-1', score: 80 },
-      { programId: 'prog-1', score: 90 }
+      { programId: "prog-1", score: 80 },
+      { programId: "prog-1", score: 90 },
     ]);
     mockContentRepo.getScenarioContent.mockResolvedValue({
-      title: { en: 'Test Scenario' }
+      title: { en: "Test Scenario" },
     });
 
-    const request = new NextRequest('http://localhost:3000/api/pbl/user-programs');
+    const request = new NextRequest(
+      "http://localhost:3000/api/pbl/user-programs",
+    );
     request.cookies.get = jest.fn().mockReturnValue({
-      value: JSON.stringify({ email: 'test@example.com' })
+      value: JSON.stringify({ email: "test@example.com" }),
     });
 
     const response = await GET(request);
@@ -120,7 +140,7 @@ describe('PBL User Programs API Route', () => {
     const data = await response.json();
     expect(data.success).toBe(true);
     expect(data.data).toHaveLength(1);
-    expect(data.data[0].id).toBe('prog-1');
+    expect(data.data[0].id).toBe("prog-1");
   });
 });
 

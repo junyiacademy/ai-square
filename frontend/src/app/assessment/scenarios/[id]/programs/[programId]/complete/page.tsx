@@ -1,11 +1,17 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useTranslation } from 'react-i18next';
-import AssessmentResults from '@/components/assessment/AssessmentResults';
-import { AssessmentResult, AssessmentData, UserAnswer, DomainScores, AssessmentQuestion } from '@/types/assessment';
-import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useTranslation } from "react-i18next";
+import AssessmentResults from "@/components/assessment/AssessmentResults";
+import {
+  AssessmentResult,
+  AssessmentData,
+  UserAnswer,
+  DomainScores,
+  AssessmentQuestion,
+} from "@/types/assessment";
+import { authenticatedFetch } from "@/lib/utils/authenticated-fetch";
 interface Evaluation {
   id: string;
   score: number;
@@ -37,29 +43,32 @@ interface Evaluation {
 }
 
 export default function AssessmentCompletePage({
-  params
+  params,
 }: {
-  params: Promise<{ id: string; programId: string }>
+  params: Promise<{ id: string; programId: string }>;
 }) {
   const [evaluation, setEvaluation] = useState<Evaluation | null>(null);
   const [loading, setLoading] = useState(true);
-  const [programId, setProgramId] = useState<string>('');
-  const [scenarioId, setScenarioId] = useState<string>('');
-  const [taskData, setTaskData] = useState<{ questions: AssessmentQuestion[]; interactions: Array<{
-    type: string;
-    content: {
-      questionId: string;
-      selectedAnswer: string;
-      timeSpent: number;
-      isCorrect: boolean;
-    };
-    timestamp: string;
-  }> } | null>(null);
+  const [programId, setProgramId] = useState<string>("");
+  const [scenarioId, setScenarioId] = useState<string>("");
+  const [taskData, setTaskData] = useState<{
+    questions: AssessmentQuestion[];
+    interactions: Array<{
+      type: string;
+      content: {
+        questionId: string;
+        selectedAnswer: string;
+        timeSpent: number;
+        isCorrect: boolean;
+      };
+      timestamp: string;
+    }>;
+  } | null>(null);
   const router = useRouter();
   const { t } = useTranslation();
 
   useEffect(() => {
-    params.then(p => {
+    params.then((p) => {
       setProgramId(p.programId);
       setScenarioId(p.id);
       loadEvaluation(p.programId);
@@ -69,27 +78,33 @@ export default function AssessmentCompletePage({
   const loadEvaluation = async (progId: string) => {
     try {
       const headers: HeadersInit = {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       };
 
       // First check if evaluation exists
-      const res = await authenticatedFetch(`/api/assessment/programs/${progId}/evaluation`, {
-        credentials: 'include',
-        headers
-      });
+      const res = await authenticatedFetch(
+        `/api/assessment/programs/${progId}/evaluation`,
+        {
+          credentials: "include",
+          headers,
+        },
+      );
 
       if (res.status === 404) {
-        console.log('Evaluation not found, checking program status...');
+        console.log("Evaluation not found, checking program status...");
 
         // Check program status
-        const programRes = await authenticatedFetch(`/api/assessment/programs/${progId}`, {
-          credentials: 'include',
-          headers
-        });
+        const programRes = await authenticatedFetch(
+          `/api/assessment/programs/${progId}`,
+          {
+            credentials: "include",
+            headers,
+          },
+        );
 
         if (programRes.status === 403) {
           // Try to get program with user email from URL or localStorage
-          console.error('Access denied to program, user mismatch');
+          console.error("Access denied to program, user mismatch");
           setLoading(false);
           return;
         }
@@ -99,19 +114,22 @@ export default function AssessmentCompletePage({
           const program = programData.program || programData;
 
           // If program is not completed, show appropriate message
-          if (program.status !== 'completed') {
-            console.log('Program not completed yet, status:', program.status);
+          if (program.status !== "completed") {
+            console.log("Program not completed yet, status:", program.status);
             setLoading(false);
             return;
           }
 
           // Try to complete the program if not done
-          console.log('Attempting to complete the program...');
-          const completeRes = await authenticatedFetch(`/api/assessment/programs/${progId}/complete`, {
-            method: 'POST',
-            credentials: 'include',
-            headers
-          });
+          console.log("Attempting to complete the program...");
+          const completeRes = await authenticatedFetch(
+            `/api/assessment/programs/${progId}/complete`,
+            {
+              method: "POST",
+              credentials: "include",
+              headers,
+            },
+          );
 
           if (completeRes.ok) {
             const completeData = await completeRes.json();
@@ -127,7 +145,7 @@ export default function AssessmentCompletePage({
       }
 
       if (!res.ok) {
-        console.error('Failed to load evaluation:', res.status);
+        console.error("Failed to load evaluation:", res.status);
         setLoading(false);
         return;
       }
@@ -136,18 +154,24 @@ export default function AssessmentCompletePage({
       setEvaluation(data.evaluation);
 
       // Also load the task to get questions and answers
-      const programRes = await authenticatedFetch(`/api/assessment/programs/${progId}`, {
-        credentials: 'include',
-        headers
-      });
+      const programRes = await authenticatedFetch(
+        `/api/assessment/programs/${progId}`,
+        {
+          credentials: "include",
+          headers,
+        },
+      );
       const programData = await programRes.json();
 
       // For completed assessments, we need to load ALL tasks data
       // Let's fetch detailed program data with all tasks
-      const detailedRes = await authenticatedFetch(`/api/assessment/programs/${progId}?includeAllTasks=true`, {
-        credentials: 'include',
-        headers
-      });
+      const detailedRes = await authenticatedFetch(
+        `/api/assessment/programs/${progId}?includeAllTasks=true`,
+        {
+          credentials: "include",
+          headers,
+        },
+      );
       const detailedData = await detailedRes.json();
 
       if (detailedData.allTasks && detailedData.allTasks.length > 0) {
@@ -164,65 +188,66 @@ export default function AssessmentCompletePage({
           timestamp: string;
         }> = [];
 
-        detailedData.allTasks.forEach((task: {
-          content?: {
-            context?: { questions?: AssessmentQuestion[] };
-            questions?: AssessmentQuestion[];
-          };
-          interactions?: Array<{
-            type: string;
-            content: {
-              questionId: string;
-              selectedAnswer: string;
-              timeSpent: number;
-              isCorrect: boolean;
+        detailedData.allTasks.forEach(
+          (task: {
+            content?: {
+              context?: { questions?: AssessmentQuestion[] };
+              questions?: AssessmentQuestion[];
             };
-            timestamp: string;
-          }>;
-        }) => {
-          const taskQuestions = task.content?.context?.questions ||
-                               task.content?.questions ||
-                               [];
-          const taskInteractions = task.interactions || [];
+            interactions?: Array<{
+              type: string;
+              content: {
+                questionId: string;
+                selectedAnswer: string;
+                timeSpent: number;
+                isCorrect: boolean;
+              };
+              timestamp: string;
+            }>;
+          }) => {
+            const taskQuestions =
+              task.content?.context?.questions || task.content?.questions || [];
+            const taskInteractions = task.interactions || [];
 
-          allQuestions = [...allQuestions, ...taskQuestions];
-          allInteractions = [...allInteractions, ...taskInteractions];
-        });
+            allQuestions = [...allQuestions, ...taskQuestions];
+            allInteractions = [...allInteractions, ...taskInteractions];
+          },
+        );
 
-        console.log('Loaded all tasks data:', {
+        console.log("Loaded all tasks data:", {
           tasksCount: detailedData.allTasks.length,
           totalQuestions: allQuestions.length,
-          totalInteractions: allInteractions.length
+          totalInteractions: allInteractions.length,
         });
 
         setTaskData({
           questions: allQuestions,
-          interactions: allInteractions
+          interactions: allInteractions,
         });
       } else if (programData.currentTask) {
         // Fallback to single task (legacy support)
-        const questions = programData.currentTask.content?.context?.questions ||
-                         programData.currentTask.content?.questions ||
-                         [];
+        const questions =
+          programData.currentTask.content?.context?.questions ||
+          programData.currentTask.content?.questions ||
+          [];
         setTaskData({
           questions: questions,
-          interactions: programData.currentTask.interactions || []
+          interactions: programData.currentTask.interactions || [],
         });
       }
     } catch (error) {
-      console.error('Failed to load evaluation:', error);
+      console.error("Failed to load evaluation:", error);
     } finally {
       setLoading(false);
     }
   };
-
 
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">{t('loading')}</p>
+          <p className="mt-4 text-gray-600">{t("loading")}</p>
         </div>
       </div>
     );
@@ -233,26 +258,45 @@ export default function AssessmentCompletePage({
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center max-w-md">
           <div className="mb-6">
-            <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            <svg
+              className="mx-auto h-12 w-12 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              />
             </svg>
           </div>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">{t('assessmentNotCompleted', 'Assessment Not Completed')}</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">
+            {t("assessmentNotCompleted", "Assessment Not Completed")}
+          </h3>
           <p className="text-gray-600 mb-6">
-            {t('assessmentNotCompletedDesc', 'This assessment hasn\'t been completed yet. Please complete all questions and submit your answers to view the results.')}
+            {t(
+              "assessmentNotCompletedDesc",
+              "This assessment hasn't been completed yet. Please complete all questions and submit your answers to view the results.",
+            )}
           </p>
           <div className="space-y-3">
             <button
-              onClick={() => router.push(`/assessment/scenarios/${scenarioId}/programs/${programId}`)}
+              onClick={() =>
+                router.push(
+                  `/assessment/scenarios/${scenarioId}/programs/${programId}`,
+                )
+              }
               className="w-full bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700"
             >
-              {t('continueAssessment', 'Continue Assessment')}
+              {t("continueAssessment", "Continue Assessment")}
             </button>
             <button
               onClick={() => router.push(`/assessment/scenarios/${scenarioId}`)}
               className="w-full bg-gray-100 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-200"
             >
-              {t('backToScenario', 'Back to Scenario')}
+              {t("backToScenario", "Back to Scenario")}
             </button>
           </div>
         </div>
@@ -266,7 +310,7 @@ export default function AssessmentCompletePage({
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">{t('loading')}</p>
+          <p className="text-gray-600">{t("loading")}</p>
         </div>
       </div>
     );
@@ -277,15 +321,19 @@ export default function AssessmentCompletePage({
     engaging_with_ai: 0,
     creating_with_ai: 0,
     managing_with_ai: 0,
-    designing_with_ai: 0
+    designing_with_ai: 0,
   };
 
   const domainScores = evaluation.metadata?.domainScores
     ? {
-        engaging_with_ai: evaluation.metadata.domainScores.engaging_with_ai || 0,
-        creating_with_ai: evaluation.metadata.domainScores.creating_with_ai || 0,
-        managing_with_ai: evaluation.metadata.domainScores.managing_with_ai || 0,
-        designing_with_ai: evaluation.metadata.domainScores.designing_with_ai || 0
+        engaging_with_ai:
+          evaluation.metadata.domainScores.engaging_with_ai || 0,
+        creating_with_ai:
+          evaluation.metadata.domainScores.creating_with_ai || 0,
+        managing_with_ai:
+          evaluation.metadata.domainScores.managing_with_ai || 0,
+        designing_with_ai:
+          evaluation.metadata.domainScores.designing_with_ai || 0,
       }
     : defaultDomainScores;
 
@@ -296,107 +344,135 @@ export default function AssessmentCompletePage({
     correctAnswers: evaluation.metadata?.correctAnswers || 0,
     timeSpentSeconds: evaluation.metadata?.completionTime || 0,
     completedAt: new Date(),
-    level: (evaluation.metadata?.level || 'beginner') as 'beginner' | 'intermediate' | 'advanced' | 'expert',
+    level: (evaluation.metadata?.level || "beginner") as
+      | "beginner"
+      | "intermediate"
+      | "advanced"
+      | "expert",
     recommendations: evaluation.metadata?.recommendations || [],
-    ksaAnalysis: evaluation.metadata?.ksaAnalysis
+    ksaAnalysis: evaluation.metadata?.ksaAnalysis,
   };
 
   // Convert interactions to UserAnswer format
   const userAnswers: UserAnswer[] = taskData.interactions
     .filter((i: Record<string, unknown>) => {
       // Check for both old and new formats
-      if (i.type === 'assessment_answer') return true;
-      if (i.type === 'system_event') {
+      if (i.type === "assessment_answer") return true;
+      if (i.type === "system_event") {
         const content = i.content as Record<string, unknown>;
-        return content?.eventType === 'assessment_answer';
+        return content?.eventType === "assessment_answer";
       }
       return false;
     })
     .map((interaction: Record<string, unknown>) => {
       // Handle both old format (context) and new format (content)
-      const data = (interaction.context || interaction.content) as Record<string, unknown>;
+      const data = (interaction.context || interaction.content) as Record<
+        string,
+        unknown
+      >;
       return {
         questionId: data.questionId as string,
-        selectedAnswer: data.selectedAnswer as 'a' | 'b' | 'c' | 'd',
+        selectedAnswer: data.selectedAnswer as "a" | "b" | "c" | "d",
         timeSpent: (data.timeSpent as number) || 0,
-        isCorrect: (data.isCorrect as boolean) ?? false
+        isCorrect: (data.isCorrect as boolean) ?? false,
       };
     });
 
-  console.log('📊 Assessment Complete Page - Preparing data for KSA graph:', {
+  console.log("📊 Assessment Complete Page - Preparing data for KSA graph:", {
     questionsCount: taskData.questions?.length || 0,
     userAnswersCount: userAnswers.length,
     sampleUserAnswers: userAnswers.slice(0, 3),
-    questionsWithKSA: taskData.questions?.filter(q => q && q.ksa_mapping).length || 0,
-    sampleQuestionKSA: taskData.questions?.[0]?.ksa_mapping || 'No KSA mapping',
-    userAnswersSample: userAnswers.slice(0, 3).map(a => ({
+    questionsWithKSA:
+      taskData.questions?.filter((q) => q && q.ksa_mapping).length || 0,
+    sampleQuestionKSA: taskData.questions?.[0]?.ksa_mapping || "No KSA mapping",
+    userAnswersSample: userAnswers.slice(0, 3).map((a) => ({
       questionId: a.questionId,
-      isCorrect: a.isCorrect
-    }))
+      isCorrect: a.isCorrect,
+    })),
   });
 
   // Debug logging
-  console.log('Assessment Complete - User Answers:', {
+  console.log("Assessment Complete - User Answers:", {
     totalAnswers: userAnswers.length,
-    correctAnswers: userAnswers.filter(a => a.isCorrect).length,
-    answers: userAnswers.map(a => ({
+    correctAnswers: userAnswers.filter((a) => a.isCorrect).length,
+    answers: userAnswers.map((a) => ({
       questionId: a.questionId,
       isCorrect: a.isCorrect,
-      selectedAnswer: a.selectedAnswer
-    }))
+      selectedAnswer: a.selectedAnswer,
+    })),
   });
 
   // Create assessment data structure for domains
   const assessmentData: AssessmentData = {
     assessment_config: {
-      id: scenarioId || 'assessment',
-      title: 'AI Literacy Assessment',
-      description: 'Test your AI literacy competencies',
+      id: scenarioId || "assessment",
+      title: "AI Literacy Assessment",
+      description: "Test your AI literacy competencies",
       total_questions: 12,
       time_limit_minutes: 15,
       passing_score: 60,
       domains: {
-        engaging_with_ai: { description: 'Understanding and effectively communicating with AI systems', questions: 3 },
-        creating_with_ai: { description: 'Using AI tools to enhance creativity and productivity', questions: 3 },
-        managing_with_ai: { description: 'Understanding AI limitations, privacy, and ethical considerations', questions: 3 },
-        designing_with_ai: { description: 'Strategic thinking about AI implementation and innovation', questions: 3 }
-      }
+        engaging_with_ai: {
+          description:
+            "Understanding and effectively communicating with AI systems",
+          questions: 3,
+        },
+        creating_with_ai: {
+          description: "Using AI tools to enhance creativity and productivity",
+          questions: 3,
+        },
+        managing_with_ai: {
+          description:
+            "Understanding AI limitations, privacy, and ethical considerations",
+          questions: 3,
+        },
+        designing_with_ai: {
+          description:
+            "Strategic thinking about AI implementation and innovation",
+          questions: 3,
+        },
+      },
     },
     domains: {
       engaging_with_ai: {
-        name: 'Engaging with AI',
-        description: 'Understanding and effectively communicating with AI systems',
-        questions: 3
+        name: "Engaging with AI",
+        description:
+          "Understanding and effectively communicating with AI systems",
+        questions: 3,
       },
       creating_with_ai: {
-        name: 'Creating with AI',
-        description: 'Using AI tools to enhance creativity and productivity',
-        questions: 3
+        name: "Creating with AI",
+        description: "Using AI tools to enhance creativity and productivity",
+        questions: 3,
       },
       managing_with_ai: {
-        name: 'Managing with AI',
-        description: 'Understanding AI limitations, privacy, and ethical considerations',
-        questions: 3
+        name: "Managing with AI",
+        description:
+          "Understanding AI limitations, privacy, and ethical considerations",
+        questions: 3,
       },
       designing_with_ai: {
-        name: 'Designing with AI',
-        description: 'Strategic thinking about AI implementation and innovation',
-        questions: 3
-      }
+        name: "Designing with AI",
+        description:
+          "Strategic thinking about AI implementation and innovation",
+        questions: 3,
+      },
     },
     questions: taskData.questions || [],
-    tasks: [] // Required by AssessmentData interface
+    tasks: [], // Required by AssessmentData interface
   };
 
   return (
     <AssessmentResults
       result={assessmentResult}
-      domains={assessmentData.domains || {
-        engaging_with_ai: { name: '', description: '', questions: 0 },
-        creating_with_ai: { name: '', description: '', questions: 0 },
-        managing_with_ai: { name: '', description: '', questions: 0 },
-        designing_with_ai: { name: '', description: '', questions: 0 }
-      }}
+      domains={
+        assessmentData.domains || {
+          engaging_with_ai: { name: "", description: "", questions: 0 },
+          creating_with_ai: { name: "", description: "", questions: 0 },
+          managing_with_ai: { name: "", description: "", questions: 0 },
+          designing_with_ai: { name: "", description: "", questions: 0 },
+        }
+      }
       onRetake={() => router.push(`/assessment/scenarios/${scenarioId}`)}
       questions={assessmentData.questions}
       userAnswers={userAnswers}

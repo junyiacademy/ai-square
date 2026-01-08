@@ -4,10 +4,10 @@
  * 檢查 Prisma Schema、TypeScript Types 和實際資料庫的一致性
  */
 
-import { execSync } from 'child_process';
-import * as fs from 'fs';
-import * as path from 'path';
-import { Pool } from 'pg';
+import { execSync } from "child_process";
+import * as fs from "fs";
+import * as path from "path";
+import { Pool } from "pg";
 
 interface ValidationResult {
   passed: boolean;
@@ -23,23 +23,23 @@ class SchemaValidator {
    * 1. 檢查 Prisma Schema 與 TypeScript Types 的一致性
    */
   async validatePrismaVsTypes(): Promise<void> {
-    console.log('🔍 Checking Prisma Schema vs TypeScript Types...');
+    console.log("🔍 Checking Prisma Schema vs TypeScript Types...");
 
-    const prismaPath = path.join(process.cwd(), 'prisma/schema.prisma');
-    const typesPath = path.join(process.cwd(), 'src/types/database.ts');
+    const prismaPath = path.join(process.cwd(), "prisma/schema.prisma");
+    const typesPath = path.join(process.cwd(), "src/types/database.ts");
 
     if (!fs.existsSync(prismaPath)) {
-      this.errors.push('❌ Prisma schema file not found');
+      this.errors.push("❌ Prisma schema file not found");
       return;
     }
 
     if (!fs.existsSync(typesPath)) {
-      this.warnings.push('⚠️ TypeScript database types file not found');
+      this.warnings.push("⚠️ TypeScript database types file not found");
       return;
     }
 
-    const prismaContent = fs.readFileSync(prismaPath, 'utf-8');
-    const typesContent = fs.readFileSync(typesPath, 'utf-8');
+    const prismaContent = fs.readFileSync(prismaPath, "utf-8");
+    const typesContent = fs.readFileSync(typesPath, "utf-8");
 
     // Parse Prisma models
     const prismaModels = this.parsePrismaModels(prismaContent);
@@ -52,14 +52,18 @@ class SchemaValidator {
       const tsInterface = tsInterfaces[modelName];
 
       if (!tsInterface) {
-        this.warnings.push(`⚠️ TypeScript interface missing for Prisma model: ${modelName}`);
+        this.warnings.push(
+          `⚠️ TypeScript interface missing for Prisma model: ${modelName}`,
+        );
         continue;
       }
 
       // Check for fields in Prisma but not in TypeScript
       for (const field of prismaFields) {
         if (!tsInterface.includes(field)) {
-          this.errors.push(`❌ Field '${field}' exists in Prisma model '${modelName}' but not in TypeScript interface`);
+          this.errors.push(
+            `❌ Field '${field}' exists in Prisma model '${modelName}' but not in TypeScript interface`,
+          );
         }
       }
 
@@ -67,10 +71,14 @@ class SchemaValidator {
       for (const field of tsInterface) {
         if (!prismaFields.includes(field)) {
           // Special handling for evaluation_subtype - this is our problem!
-          if (field === 'evaluation_subtype') {
-            this.errors.push(`🚨 CRITICAL: Field 'evaluation_subtype' exists in TypeScript but not in Prisma Schema!`);
+          if (field === "evaluation_subtype") {
+            this.errors.push(
+              `🚨 CRITICAL: Field 'evaluation_subtype' exists in TypeScript but not in Prisma Schema!`,
+            );
           } else {
-            this.errors.push(`❌ Field '${field}' exists in TypeScript interface '${modelName}' but not in Prisma model`);
+            this.errors.push(
+              `❌ Field '${field}' exists in TypeScript interface '${modelName}' but not in Prisma model`,
+            );
           }
         }
       }
@@ -81,14 +89,14 @@ class SchemaValidator {
    * 2. 檢查實際資料庫與 Prisma Schema 的一致性
    */
   async validateDatabaseVsPrisma(): Promise<void> {
-    console.log('🔍 Checking Database vs Prisma Schema...');
+    console.log("🔍 Checking Database vs Prisma Schema...");
 
     const dbConfig = {
-      host: process.env.DB_HOST || '127.0.0.1',
-      port: parseInt(process.env.DB_PORT || '5433'),
-      user: process.env.DB_USER || 'postgres',
-      password: process.env.DB_PASSWORD || 'postgres',
-      database: process.env.DB_NAME || 'ai_square_db'
+      host: process.env.DB_HOST || "127.0.0.1",
+      port: parseInt(process.env.DB_PORT || "5433"),
+      user: process.env.DB_USER || "postgres",
+      password: process.env.DB_PASSWORD || "postgres",
+      database: process.env.DB_NAME || "ai_square_db",
     };
 
     const pool = new Pool(dbConfig);
@@ -107,37 +115,51 @@ class SchemaValidator {
         GROUP BY t.table_name
       `);
 
-      const dbSchema = result.rows.reduce((acc, row) => {
-        acc[row.table_name] = row.columns;
-        return acc;
-      }, {} as Record<string, string[]>);
+      const dbSchema = result.rows.reduce(
+        (acc, row) => {
+          acc[row.table_name] = row.columns;
+          return acc;
+        },
+        {} as Record<string, string[]>,
+      );
 
       // Compare with Prisma schema
-      const prismaPath = path.join(process.cwd(), 'prisma/schema.prisma');
-      const prismaContent = fs.readFileSync(prismaPath, 'utf-8');
+      const prismaPath = path.join(process.cwd(), "prisma/schema.prisma");
+      const prismaContent = fs.readFileSync(prismaPath, "utf-8");
       const prismaModels = this.parsePrismaModels(prismaContent);
 
       // Check evaluations table specifically
-      if (dbSchema['evaluations']) {
-        const dbFields = dbSchema['evaluations'];
-        const prismaFields = prismaModels['Evaluation'] || [];
+      if (dbSchema["evaluations"]) {
+        const dbFields = dbSchema["evaluations"];
+        const prismaFields = prismaModels["Evaluation"] || [];
 
         // Check for evaluation_subtype specifically
-        if (dbFields.includes('evaluation_subtype') && !prismaFields.includes('evaluationSubtype')) {
-          this.errors.push(`🚨 CRITICAL: 'evaluation_subtype' exists in database but not in Prisma Schema!`);
+        if (
+          dbFields.includes("evaluation_subtype") &&
+          !prismaFields.includes("evaluationSubtype")
+        ) {
+          this.errors.push(
+            `🚨 CRITICAL: 'evaluation_subtype' exists in database but not in Prisma Schema!`,
+          );
         }
 
         // General field comparison
         for (const dbField of dbFields) {
           const prismaField = this.dbFieldToPrismaField(dbField);
-          if (!prismaFields.includes(prismaField) && !this.isSystemField(dbField)) {
-            this.warnings.push(`⚠️ Database field '${dbField}' not found in Prisma model`);
+          if (
+            !prismaFields.includes(prismaField) &&
+            !this.isSystemField(dbField)
+          ) {
+            this.warnings.push(
+              `⚠️ Database field '${dbField}' not found in Prisma model`,
+            );
           }
         }
       }
-
     } catch (error) {
-      this.errors.push(`❌ Failed to connect to database: ${(error as Error).message}`);
+      this.errors.push(
+        `❌ Failed to connect to database: ${(error as Error).message}`,
+      );
     } finally {
       await pool.end();
     }
@@ -147,20 +169,28 @@ class SchemaValidator {
    * 3. 檢查 Repository 實作與 Schema 的一致性
    */
   async validateRepositoryImplementations(): Promise<void> {
-    console.log('🔍 Checking Repository Implementations...');
+    console.log("🔍 Checking Repository Implementations...");
 
-    const repoPath = path.join(process.cwd(), 'src/lib/repositories/postgresql/evaluation-repository.ts');
+    const repoPath = path.join(
+      process.cwd(),
+      "src/lib/repositories/postgresql/evaluation-repository.ts",
+    );
 
     if (fs.existsSync(repoPath)) {
-      const repoContent = fs.readFileSync(repoPath, 'utf-8');
+      const repoContent = fs.readFileSync(repoPath, "utf-8");
 
       // Check for evaluation_subtype usage
-      if (repoContent.includes('evaluation_subtype') || repoContent.includes('evaluationSubtype')) {
-        const prismaPath = path.join(process.cwd(), 'prisma/schema.prisma');
-        const prismaContent = fs.readFileSync(prismaPath, 'utf-8');
+      if (
+        repoContent.includes("evaluation_subtype") ||
+        repoContent.includes("evaluationSubtype")
+      ) {
+        const prismaPath = path.join(process.cwd(), "prisma/schema.prisma");
+        const prismaContent = fs.readFileSync(prismaPath, "utf-8");
 
-        if (!prismaContent.includes('evaluationSubtype')) {
-          this.errors.push(`🚨 Repository uses 'evaluation_subtype' but it's not in Prisma Schema!`);
+        if (!prismaContent.includes("evaluationSubtype")) {
+          this.errors.push(
+            `🚨 Repository uses 'evaluation_subtype' but it's not in Prisma Schema!`,
+          );
         }
       }
     }
@@ -184,7 +214,7 @@ class SchemaValidator {
 
       while ((fieldMatch = fieldRegex.exec(modelContent)) !== null) {
         const fieldName = fieldMatch[1];
-        if (!['model', '@@map', '@@index'].includes(fieldName)) {
+        if (!["model", "@@map", "@@index"].includes(fieldName)) {
           fields.push(fieldName);
         }
       }
@@ -233,14 +263,14 @@ class SchemaValidator {
    * Helper: Check if field is a system field
    */
   private isSystemField(field: string): boolean {
-    return ['id', 'created_at', 'updated_at'].includes(field);
+    return ["id", "created_at", "updated_at"].includes(field);
   }
 
   /**
    * Run all validations
    */
   async validate(): Promise<ValidationResult> {
-    console.log('🚀 Starting Schema Consistency Validation...\n');
+    console.log("🚀 Starting Schema Consistency Validation...\n");
 
     await this.validatePrismaVsTypes();
     await this.validateDatabaseVsPrisma();
@@ -248,29 +278,31 @@ class SchemaValidator {
 
     const passed = this.errors.length === 0;
 
-    console.log('\n📊 Validation Results:');
-    console.log('='.repeat(50));
+    console.log("\n📊 Validation Results:");
+    console.log("=".repeat(50));
 
     if (this.errors.length > 0) {
-      console.log('\n❌ ERRORS:');
-      this.errors.forEach(error => console.log(`  ${error}`));
+      console.log("\n❌ ERRORS:");
+      this.errors.forEach((error) => console.log(`  ${error}`));
     }
 
     if (this.warnings.length > 0) {
-      console.log('\n⚠️  WARNINGS:');
-      this.warnings.forEach(warning => console.log(`  ${warning}`));
+      console.log("\n⚠️  WARNINGS:");
+      this.warnings.forEach((warning) => console.log(`  ${warning}`));
     }
 
     if (passed) {
-      console.log('\n✅ All schema validations passed!');
+      console.log("\n✅ All schema validations passed!");
     } else {
-      console.log('\n❌ Schema validation failed! Please fix the errors above.');
+      console.log(
+        "\n❌ Schema validation failed! Please fix the errors above.",
+      );
     }
 
     return {
       passed,
       errors: this.errors,
-      warnings: this.warnings
+      warnings: this.warnings,
     };
   }
 }
@@ -278,7 +310,7 @@ class SchemaValidator {
 // Run validation if called directly
 if (require.main === module) {
   const validator = new SchemaValidator();
-  validator.validate().then(result => {
+  validator.validate().then((result) => {
     process.exit(result.passed ? 0 : 1);
   });
 }

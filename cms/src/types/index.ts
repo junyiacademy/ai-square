@@ -13,7 +13,7 @@ export interface GitHubFileContent {
   sha: string;
   content: string;
   size: number;
-  type: 'file' | 'dir';
+  type: "file" | "dir";
   download_url?: string;
   html_url?: string;
 }
@@ -32,7 +32,7 @@ export interface GitHubPullRequest {
   number: number;
   title: string;
   body: string | null;
-  state: 'open' | 'closed';
+  state: "open" | "closed";
   merged: boolean;
   merged_at: string | null;
   created_at: string;
@@ -66,7 +66,7 @@ export interface GitHubBranch {
 export interface FileNode {
   name: string;
   path: string;
-  type: 'file' | 'directory';
+  type: "file" | "directory";
   children?: FileNode[];
 }
 
@@ -76,7 +76,7 @@ export interface FileContent {
   sha: string;
   content: string;
   size: number;
-  type: 'file' | 'dir';
+  type: "file" | "dir";
 }
 
 // Cache Types
@@ -97,7 +97,7 @@ export interface ScenarioInfo {
   id: string;
   title: string;
   description: string;
-  difficulty: 'beginner' | 'intermediate' | 'advanced';
+  difficulty: "beginner" | "intermediate" | "advanced";
   estimated_duration: number;
   target_domains: string[];
   prerequisites: string[];
@@ -143,7 +143,7 @@ export interface PBLScenario {
 
 // AI Assistant Types
 export interface AIAssistRequest {
-  action: 'complete' | 'translate' | 'improve' | 'ksa';
+  action: "complete" | "translate" | "improve" | "ksa";
   content: string;
   file?: string;
 }
@@ -194,7 +194,7 @@ export interface PullRequestCreateResponse {
 export interface ProcessingStep {
   id: string;
   label: string;
-  status: 'pending' | 'processing' | 'completed' | 'error';
+  status: "pending" | "processing" | "completed" | "error";
   error?: string;
 }
 

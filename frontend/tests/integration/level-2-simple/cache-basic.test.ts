@@ -3,15 +3,15 @@
  * Simple cache functionality tests
  */
 
-describe.skip('Basic Cache Operations', () => {
-  const baseUrl = process.env.API_URL || 'http://localhost:3000';
+describe.skip("Basic Cache Operations", () => {
+  const baseUrl = process.env.API_URL || "http://localhost:3000";
   let redisClient: any;
 
   beforeAll(async () => {
-    const Redis = require('ioredis');
+    const Redis = require("ioredis");
     redisClient = new Redis({
-      host: process.env.REDIS_HOST || 'localhost',
-      port: parseInt(process.env.REDIS_PORT || '6380'),
+      host: process.env.REDIS_HOST || "localhost",
+      port: parseInt(process.env.REDIS_PORT || "6380"),
       maxRetriesPerRequest: 1,
       retryStrategy: () => null,
     });
@@ -25,15 +25,15 @@ describe.skip('Basic Cache Operations', () => {
 
   beforeEach(async () => {
     // Clear test keys before each test
-    const keys = await redisClient.keys('test:*');
+    const keys = await redisClient.keys("test:*");
     if (keys.length > 0) {
       await redisClient.del(...keys);
     }
   });
 
-  it('should cache API responses', async () => {
+  it("should cache API responses", async () => {
     // Clear any existing cache for KSA
-    const cacheKeys = await redisClient.keys('ksa:*');
+    const cacheKeys = await redisClient.keys("ksa:*");
     if (cacheKeys.length > 0) {
       await redisClient.del(...cacheKeys);
     }
@@ -44,33 +44,36 @@ describe.skip('Basic Cache Operations', () => {
     try {
       // First request - should be cache MISS
       const response1 = await fetch(`${baseUrl}/api/ksa?lang=en`, {
-        signal: controller.signal
+        signal: controller.signal,
       });
 
       if (!response1.ok) {
         clearTimeout(timeout);
-        console.log('API server not available, skipping cache test');
+        console.log("API server not available, skipping cache test");
         expect(true).toBe(true);
         return;
       }
 
-      const cacheHeader1 = response1.headers.get('x-cache');
+      const cacheHeader1 = response1.headers.get("x-cache");
 
       // Second request - should be cache HIT (if caching is enabled)
       const response2 = await fetch(`${baseUrl}/api/ksa?lang=en`, {
-        signal: controller.signal
+        signal: controller.signal,
       });
       clearTimeout(timeout);
 
       expect(response2.ok).toBe(true);
-      const cacheHeader2 = response2.headers.get('x-cache');
+      const cacheHeader2 = response2.headers.get("x-cache");
 
       // At least one should indicate cache behavior
-      console.log('Cache headers:', { first: cacheHeader1, second: cacheHeader2 });
+      console.log("Cache headers:", {
+        first: cacheHeader1,
+        second: cacheHeader2,
+      });
     } catch (error: any) {
       clearTimeout(timeout);
-      if (error.name === 'AbortError') {
-        console.log('API server not running, skipping cache test');
+      if (error.name === "AbortError") {
+        console.log("API server not running, skipping cache test");
         expect(true).toBe(true);
       } else {
         throw error;
@@ -78,60 +81,55 @@ describe.skip('Basic Cache Operations', () => {
     }
   }, 10000);
 
-  it('should store and retrieve JSON data', async () => {
+  it("should store and retrieve JSON data", async () => {
     const testData = {
-      id: 'test-123',
-      name: 'Test Item',
-      timestamp: Date.now()
+      id: "test-123",
+      name: "Test Item",
+      timestamp: Date.now(),
     };
 
     // Store JSON in cache
-    await redisClient.set(
-      'test:json:item',
-      JSON.stringify(testData),
-      'EX',
-      60
-    );
+    await redisClient.set("test:json:item", JSON.stringify(testData), "EX", 60);
 
     // Retrieve and parse
-    const cached = await redisClient.get('test:json:item');
+    const cached = await redisClient.get("test:json:item");
     const parsed = JSON.parse(cached);
 
     expect(parsed).toEqual(testData);
-    expect(parsed.id).toBe('test-123');
+    expect(parsed.id).toBe("test-123");
   });
 
-  it('should handle cache expiration', async () => {
+  it("should handle cache expiration", async () => {
     // Set with short TTL
-    await redisClient.set('test:ttl', 'value', 'EX', 1);
+    await redisClient.set("test:ttl", "value", "EX", 1);
 
     // Check TTL
-    const ttl = await redisClient.ttl('test:ttl');
+    const ttl = await redisClient.ttl("test:ttl");
     expect(ttl).toBeGreaterThan(0);
     expect(ttl).toBeLessThanOrEqual(1);
 
     // Value should exist
-    const value = await redisClient.get('test:ttl');
-    expect(value).toBe('value');
+    const value = await redisClient.get("test:ttl");
+    expect(value).toBe("value");
 
     // Wait for expiration
-    await new Promise(resolve => setTimeout(resolve, 1100));
+    await new Promise((resolve) => setTimeout(resolve, 1100));
 
     // Should be expired
-    const expired = await redisClient.get('test:ttl');
+    const expired = await redisClient.get("test:ttl");
     expect(expired).toBeNull();
   });
 
-  it('should handle multiple language caches', async () => {
-    const languages = ['en', 'zh', 'es'];
+  it("should handle multiple language caches", async () => {
+    const languages = ["en", "zh", "es"];
 
     // Set cache for each language
     for (const lang of languages) {
       await redisClient.set(
         `test:lang:${lang}`,
         JSON.stringify({ content: `Content in ${lang}` }),
-        'EX',
-        60
+        "EX",
+        60,
       );
     }
 
@@ -143,7 +141,7 @@ describe.skip('Basic Cache Operations', () => {
     }
 
     // Verify all keys exist
-    const keys = await redisClient.keys('test:lang:*');
+    const keys = await redisClient.keys("test:lang:*");
     expect(keys.length).toBe(3);
   });
 });

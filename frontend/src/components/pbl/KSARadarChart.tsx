@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   Chart as ChartJS,
@@ -9,10 +9,10 @@ import {
   Tooltip,
   Legend,
   ChartData,
-  ChartOptions
-} from 'chart.js';
-import { Radar } from 'react-chartjs-2';
-import { useTranslation } from 'react-i18next';
+  ChartOptions,
+} from "chart.js";
+import { Radar } from "react-chartjs-2";
+import { useTranslation } from "react-i18next";
 
 // Register Chart.js components
 ChartJS.register(
@@ -21,32 +21,35 @@ ChartJS.register(
   LineElement,
   Filler,
   Tooltip,
-  Legend
+  Legend,
 );
 
 interface KSARadarChartProps {
   ksaScores: {
     [ksaCode: string]: {
       score: number;
-      category: 'knowledge' | 'skills' | 'attitudes';
+      category: "knowledge" | "skills" | "attitudes";
     };
   };
   title?: string;
 }
 
-export default function KSARadarChart({ ksaScores, title }: KSARadarChartProps) {
-  const { t } = useTranslation(['pbl']);
+export default function KSARadarChart({
+  ksaScores,
+  title,
+}: KSARadarChartProps) {
+  const { t } = useTranslation(["pbl"]);
 
   // Group scores by category and calculate averages
   const scoresByCategory = {
     knowledge: [] as number[],
     skills: [] as number[],
-    attitudes: [] as number[]
+    attitudes: [] as number[],
   };
 
   const ksaLabels = Object.keys(ksaScores).sort();
 
-  ksaLabels.forEach(ksa => {
+  ksaLabels.forEach((ksa) => {
     const { score, category } = ksaScores[ksa];
     scoresByCategory[category].push(score);
   });
@@ -55,86 +58,86 @@ export default function KSARadarChart({ ksaScores, title }: KSARadarChartProps) 
   const avgScore = (scores: number[]) =>
     scores.length > 0 ? scores.reduce((a, b) => a + b, 0) / scores.length : 0;
 
-  const data: ChartData<'radar'> = {
+  const data: ChartData<"radar"> = {
     labels: ksaLabels,
     datasets: [
       {
-        label: t('complete.knowledge'),
-        data: ksaLabels.map(ksa =>
-          ksa.startsWith('K') ? ksaScores[ksa].score : 0
+        label: t("complete.knowledge"),
+        data: ksaLabels.map((ksa) =>
+          ksa.startsWith("K") ? ksaScores[ksa].score : 0,
         ),
-        backgroundColor: 'rgba(59, 130, 246, 0.2)',
-        borderColor: 'rgba(59, 130, 246, 1)',
+        backgroundColor: "rgba(59, 130, 246, 0.2)",
+        borderColor: "rgba(59, 130, 246, 1)",
         borderWidth: 2,
-        pointBackgroundColor: 'rgba(59, 130, 246, 1)',
-        pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: 'rgba(59, 130, 246, 1)',
+        pointBackgroundColor: "rgba(59, 130, 246, 1)",
+        pointBorderColor: "#fff",
+        pointHoverBackgroundColor: "#fff",
+        pointHoverBorderColor: "rgba(59, 130, 246, 1)",
       },
       {
-        label: t('complete.skills'),
-        data: ksaLabels.map(ksa =>
-          ksa.startsWith('S') ? ksaScores[ksa].score : 0
+        label: t("complete.skills"),
+        data: ksaLabels.map((ksa) =>
+          ksa.startsWith("S") ? ksaScores[ksa].score : 0,
         ),
-        backgroundColor: 'rgba(34, 197, 94, 0.2)',
-        borderColor: 'rgba(34, 197, 94, 1)',
+        backgroundColor: "rgba(34, 197, 94, 0.2)",
+        borderColor: "rgba(34, 197, 94, 1)",
         borderWidth: 2,
-        pointBackgroundColor: 'rgba(34, 197, 94, 1)',
-        pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: 'rgba(34, 197, 94, 1)',
+        pointBackgroundColor: "rgba(34, 197, 94, 1)",
+        pointBorderColor: "#fff",
+        pointHoverBackgroundColor: "#fff",
+        pointHoverBorderColor: "rgba(34, 197, 94, 1)",
       },
       {
-        label: t('complete.attitudes'),
-        data: ksaLabels.map(ksa =>
-          ksa.startsWith('A') ? ksaScores[ksa].score : 0
+        label: t("complete.attitudes"),
+        data: ksaLabels.map((ksa) =>
+          ksa.startsWith("A") ? ksaScores[ksa].score : 0,
         ),
-        backgroundColor: 'rgba(168, 85, 247, 0.2)',
-        borderColor: 'rgba(168, 85, 247, 1)',
+        backgroundColor: "rgba(168, 85, 247, 0.2)",
+        borderColor: "rgba(168, 85, 247, 1)",
         borderWidth: 2,
-        pointBackgroundColor: 'rgba(168, 85, 247, 1)',
-        pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: 'rgba(168, 85, 247, 1)',
-      }
-    ]
+        pointBackgroundColor: "rgba(168, 85, 247, 1)",
+        pointBorderColor: "#fff",
+        pointHoverBackgroundColor: "#fff",
+        pointHoverBorderColor: "rgba(168, 85, 247, 1)",
+      },
+    ],
   };
 
-  const options: ChartOptions<'radar'> = {
+  const options: ChartOptions<"radar"> = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: 'bottom',
+        position: "bottom",
         labels: {
           padding: 20,
           usePointStyle: true,
           font: {
-            size: 13
+            size: 13,
           },
           generateLabels: (chart) => {
             const data = chart.data;
             if (data.datasets) {
               return data.datasets.map((dataset, i) => ({
-                text: dataset.label || '',
+                text: dataset.label || "",
                 fillStyle: dataset.borderColor as string,
                 strokeStyle: dataset.borderColor as string,
-                pointStyle: 'circle',
+                pointStyle: "circle",
                 hidden: false,
-                index: i
+                index: i,
               }));
             }
             return [];
-          }
-        }
+          },
+        },
       },
       tooltip: {
         callbacks: {
           label: (context) => {
             return `${context.dataset.label}: ${context.parsed.r}%`;
-          }
-        }
-      }
+          },
+        },
+      },
     },
     scales: {
       r: {
@@ -144,32 +147,32 @@ export default function KSARadarChart({ ksaScores, title }: KSARadarChartProps) 
           stepSize: 20,
           callback: (value) => `${value}%`,
           font: {
-            size: 11
+            size: 11,
           },
-          backdropColor: 'transparent',
-          color: 'rgba(107, 114, 128, 0.7)'
+          backdropColor: "transparent",
+          color: "rgba(107, 114, 128, 0.7)",
         },
         grid: {
-          color: 'rgba(107, 114, 128, 0.2)',
-          circular: true
+          color: "rgba(107, 114, 128, 0.2)",
+          circular: true,
         },
         pointLabels: {
           font: {
             size: 12,
-            weight: 600
+            weight: 600,
           },
           padding: 10,
-          color: 'rgb(55, 65, 81)',
+          color: "rgb(55, 65, 81)",
           callback: (label) => {
             // Show KSA code with description if available
             return label;
-          }
+          },
         },
         angleLines: {
-          color: 'rgba(107, 114, 128, 0.2)'
-        }
-      }
-    }
+          color: "rgba(107, 114, 128, 0.2)",
+        },
+      },
+    },
   };
 
   return (
@@ -192,7 +195,7 @@ export default function KSARadarChart({ ksaScores, title }: KSARadarChartProps) 
               {Math.round(avgScore(scoresByCategory.knowledge))}%
             </div>
             <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mt-1">
-              {t('complete.knowledge')}
+              {t("complete.knowledge")}
             </p>
           </div>
         </div>
@@ -203,7 +206,7 @@ export default function KSARadarChart({ ksaScores, title }: KSARadarChartProps) 
               {Math.round(avgScore(scoresByCategory.skills))}%
             </div>
             <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mt-1">
-              {t('complete.skills')}
+              {t("complete.skills")}
             </p>
           </div>
         </div>
@@ -214,7 +217,7 @@ export default function KSARadarChart({ ksaScores, title }: KSARadarChartProps) 
               {Math.round(avgScore(scoresByCategory.attitudes))}%
             </div>
             <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mt-1">
-              {t('complete.attitudes')}
+              {t("complete.attitudes")}
             </p>
           </div>
         </div>

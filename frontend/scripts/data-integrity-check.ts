@@ -8,14 +8,14 @@
  *   npx tsx scripts/data-integrity-check.ts --fix
  */
 
-import { Pool } from 'pg';
-import * as dotenv from 'dotenv';
-import { createHash } from 'crypto';
+import { Pool } from "pg";
+import * as dotenv from "dotenv";
+import { createHash } from "crypto";
 
-dotenv.config({ path: '.env.local' });
+dotenv.config({ path: ".env.local" });
 
 interface IntegrityIssue {
-  severity: 'critical' | 'warning' | 'info';
+  severity: "critical" | "warning" | "info";
   category: string;
   description: string;
   details?: unknown;
@@ -31,11 +31,11 @@ class DataIntegrityChecker {
   constructor(shouldFix = false) {
     this.shouldFix = shouldFix;
     this.pool = new Pool({
-      host: process.env.DB_HOST || 'localhost',
-      port: parseInt(process.env.DB_PORT || '5433'),
-      database: process.env.DB_NAME || 'ai_square_db',
-      user: process.env.DB_USER || 'postgres',
-      password: process.env.DB_PASSWORD || 'postgres',
+      host: process.env.DB_HOST || "localhost",
+      port: parseInt(process.env.DB_PORT || "5433"),
+      database: process.env.DB_NAME || "ai_square_db",
+      user: process.env.DB_USER || "postgres",
+      password: process.env.DB_PASSWORD || "postgres",
     });
   }
 
@@ -47,7 +47,7 @@ class DataIntegrityChecker {
    * Check for orphaned records (records without parent)
    */
   async checkOrphanedRecords() {
-    console.log('🔍 Checking for orphaned records...');
+    console.log("🔍 Checking for orphaned records...");
 
     // Check orphaned programs (no scenario)
     const orphanedPrograms = await this.pool.query(`
@@ -59,11 +59,11 @@ class DataIntegrityChecker {
 
     if (parseInt(orphanedPrograms.rows[0].count) > 0) {
       this.addIssue({
-        severity: 'critical',
-        category: 'Orphaned Records',
+        severity: "critical",
+        category: "Orphaned Records",
         description: `Found ${orphanedPrograms.rows[0].count} programs without scenarios`,
         fixable: true,
-        fixQuery: `DELETE FROM programs WHERE scenario_id NOT IN (SELECT id FROM scenarios)`
+        fixQuery: `DELETE FROM programs WHERE scenario_id NOT IN (SELECT id FROM scenarios)`,
       });
     }
 
@@ -77,11 +77,11 @@ class DataIntegrityChecker {
 
     if (parseInt(orphanedTasks.rows[0].count) > 0) {
       this.addIssue({
-        severity: 'critical',
-        category: 'Orphaned Records',
+        severity: "critical",
+        category: "Orphaned Records",
         description: `Found ${orphanedTasks.rows[0].count} tasks without programs`,
         fixable: true,
-        fixQuery: `DELETE FROM tasks WHERE program_id NOT IN (SELECT id FROM programs)`
+        fixQuery: `DELETE FROM tasks WHERE program_id NOT IN (SELECT id FROM programs)`,
       });
     }
 
@@ -95,11 +95,11 @@ class DataIntegrityChecker {
 
     if (parseInt(orphanedEvaluations.rows[0].count) > 0) {
       this.addIssue({
-        severity: 'critical',
-        category: 'Orphaned Records',
+        severity: "critical",
+        category: "Orphaned Records",
         description: `Found ${orphanedEvaluations.rows[0].count} evaluations without tasks`,
         fixable: true,
-        fixQuery: `DELETE FROM evaluations WHERE task_id NOT IN (SELECT id FROM tasks)`
+        fixQuery: `DELETE FROM evaluations WHERE task_id NOT IN (SELECT id FROM tasks)`,
       });
     }
   }
@@ -108,7 +108,7 @@ class DataIntegrityChecker {
    * Check mode propagation consistency
    */
   async checkModePropagation() {
-    console.log('🔍 Checking mode propagation...');
+    console.log("🔍 Checking mode propagation...");
 
     // Check programs with different mode than scenario
     const mismatchedPrograms = await this.pool.query(`
@@ -120,11 +120,11 @@ class DataIntegrityChecker {
 
     if (parseInt(mismatchedPrograms.rows[0].count) > 0) {
       this.addIssue({
-        severity: 'critical',
-        category: 'Mode Propagation',
+        severity: "critical",
+        category: "Mode Propagation",
         description: `Found ${mismatchedPrograms.rows[0].count} programs with incorrect mode`,
         fixable: true,
-        fixQuery: `UPDATE programs p SET mode = s.mode FROM scenarios s WHERE p.scenario_id = s.id AND p.mode != s.mode`
+        fixQuery: `UPDATE programs p SET mode = s.mode FROM scenarios s WHERE p.scenario_id = s.id AND p.mode != s.mode`,
       });
     }
 
@@ -138,11 +138,11 @@ class DataIntegrityChecker {
 
     if (parseInt(mismatchedTasks.rows[0].count) > 0) {
       this.addIssue({
-        severity: 'critical',
-        category: 'Mode Propagation',
+        severity: "critical",
+        category: "Mode Propagation",
         description: `Found ${mismatchedTasks.rows[0].count} tasks with incorrect mode`,
         fixable: true,
-        fixQuery: `UPDATE tasks t SET mode = p.mode FROM programs p WHERE t.program_id = p.id AND t.mode != p.mode`
+        fixQuery: `UPDATE tasks t SET mode = p.mode FROM programs p WHERE t.program_id = p.id AND t.mode != p.mode`,
       });
     }
   }
@@ -151,7 +151,7 @@ class DataIntegrityChecker {
    * Check multilingual field structure
    */
   async checkMultilingualFields() {
-    console.log('🔍 Checking multilingual fields...');
+    console.log("🔍 Checking multilingual fields...");
 
     // Check scenarios with invalid title/description structure
     const invalidScenarios = await this.pool.query(`
@@ -166,10 +166,10 @@ class DataIntegrityChecker {
 
     if (parseInt(invalidScenarios.rows[0].count) > 0) {
       this.addIssue({
-        severity: 'warning',
-        category: 'Multilingual Fields',
+        severity: "warning",
+        category: "Multilingual Fields",
         description: `Found ${invalidScenarios.rows[0].count} scenarios with invalid multilingual fields`,
-        fixable: false
+        fixable: false,
       });
     }
 
@@ -191,10 +191,10 @@ class DataIntegrityChecker {
     for (const row of missingTranslations.rows) {
       if (row.missing_title > 0 || row.missing_description > 0) {
         this.addIssue({
-          severity: 'warning',
-          category: 'Multilingual Fields',
+          severity: "warning",
+          category: "Multilingual Fields",
           description: `Table ${row.table_name}: ${row.missing_title} missing titles, ${row.missing_description} missing descriptions (English)`,
-          fixable: false
+          fixable: false,
         });
       }
     }
@@ -204,31 +204,31 @@ class DataIntegrityChecker {
    * Check required fields for NULL values
    */
   async checkRequiredFields() {
-    console.log('🔍 Checking required fields...');
+    console.log("🔍 Checking required fields...");
 
     const checks = [
-      { table: 'users', field: 'email' },
-      { table: 'scenarios', field: 'mode' },
-      { table: 'scenarios', field: 'status' },
-      { table: 'programs', field: 'user_id' },
-      { table: 'programs', field: 'scenario_id' },
-      { table: 'programs', field: 'status' },
-      { table: 'tasks', field: 'program_id' },
-      { table: 'tasks', field: 'type' },
-      { table: 'tasks', field: 'status' }
+      { table: "users", field: "email" },
+      { table: "scenarios", field: "mode" },
+      { table: "scenarios", field: "status" },
+      { table: "programs", field: "user_id" },
+      { table: "programs", field: "scenario_id" },
+      { table: "programs", field: "status" },
+      { table: "tasks", field: "program_id" },
+      { table: "tasks", field: "type" },
+      { table: "tasks", field: "status" },
     ];
 
     for (const check of checks) {
       const result = await this.pool.query(
-        `SELECT COUNT(*) as count FROM ${check.table} WHERE ${check.field} IS NULL`
+        `SELECT COUNT(*) as count FROM ${check.table} WHERE ${check.field} IS NULL`,
       );
 
       if (parseInt(result.rows[0].count) > 0) {
         this.addIssue({
-          severity: 'critical',
-          category: 'Required Fields',
+          severity: "critical",
+          category: "Required Fields",
           description: `Found ${result.rows[0].count} records in ${check.table} with NULL ${check.field}`,
-          fixable: false
+          fixable: false,
         });
       }
     }
@@ -238,7 +238,7 @@ class DataIntegrityChecker {
    * Check task order consistency
    */
   async checkTaskOrder() {
-    console.log('🔍 Checking task order consistency...');
+    console.log("🔍 Checking task order consistency...");
 
     // Check for duplicate task indices within the same program
     const duplicateIndices = await this.pool.query(`
@@ -251,11 +251,11 @@ class DataIntegrityChecker {
 
     if (duplicateIndices.rows.length > 0) {
       this.addIssue({
-        severity: 'critical',
-        category: 'Task Order',
+        severity: "critical",
+        category: "Task Order",
         description: `Found ${duplicateIndices.rows.length} programs with duplicate task indices`,
         details: duplicateIndices.rows,
-        fixable: false
+        fixable: false,
       });
     }
 
@@ -278,10 +278,10 @@ class DataIntegrityChecker {
 
     if (gapsInIndices.rows.length > 0) {
       this.addIssue({
-        severity: 'warning',
-        category: 'Task Order',
+        severity: "warning",
+        category: "Task Order",
         description: `Found ${gapsInIndices.rows.length} programs with gaps in task indices`,
-        fixable: false
+        fixable: false,
       });
     }
   }
@@ -290,7 +290,7 @@ class DataIntegrityChecker {
    * Check timestamp logic
    */
   async checkTimestamps() {
-    console.log('🔍 Checking timestamp logic...');
+    console.log("🔍 Checking timestamp logic...");
 
     // Check programs where completed_at is before started_at
     const invalidProgramTimes = await this.pool.query(`
@@ -303,10 +303,10 @@ class DataIntegrityChecker {
 
     if (parseInt(invalidProgramTimes.rows[0].count) > 0) {
       this.addIssue({
-        severity: 'warning',
-        category: 'Timestamps',
+        severity: "warning",
+        category: "Timestamps",
         description: `Found ${invalidProgramTimes.rows[0].count} programs with completed_at before started_at`,
-        fixable: false
+        fixable: false,
       });
     }
 
@@ -321,10 +321,10 @@ class DataIntegrityChecker {
 
     if (parseInt(invalidTaskTimes.rows[0].count) > 0) {
       this.addIssue({
-        severity: 'warning',
-        category: 'Timestamps',
+        severity: "warning",
+        category: "Timestamps",
         description: `Found ${invalidTaskTimes.rows[0].count} tasks with completed_at before started_at`,
-        fixable: false
+        fixable: false,
       });
     }
 
@@ -346,10 +346,10 @@ class DataIntegrityChecker {
     for (const row of futureTimes.rows) {
       if (parseInt(row.count) > 0) {
         this.addIssue({
-          severity: 'warning',
-          category: 'Timestamps',
+          severity: "warning",
+          category: "Timestamps",
           description: `Found ${row.count} ${row.table_name} with future timestamps`,
-          fixable: false
+          fixable: false,
         });
       }
     }
@@ -359,7 +359,7 @@ class DataIntegrityChecker {
    * Check score validity
    */
   async checkScores() {
-    console.log('🔍 Checking score validity...');
+    console.log("🔍 Checking score validity...");
 
     // Check for invalid scores (outside 0-100 range)
     const invalidScores = await this.pool.query(`
@@ -370,11 +370,11 @@ class DataIntegrityChecker {
 
     if (parseInt(invalidScores.rows[0].count) > 0) {
       this.addIssue({
-        severity: 'warning',
-        category: 'Data Validation',
+        severity: "warning",
+        category: "Data Validation",
         description: `Found ${invalidScores.rows[0].count} evaluations with scores outside 0-100 range`,
         fixable: true,
-        fixQuery: `UPDATE evaluations SET score = GREATEST(0, LEAST(100, score)) WHERE score IS NOT NULL`
+        fixQuery: `UPDATE evaluations SET score = GREATEST(0, LEAST(100, score)) WHERE score IS NOT NULL`,
       });
     }
 
@@ -387,10 +387,10 @@ class DataIntegrityChecker {
 
     if (parseInt(completedWithoutScore.rows[0].count) > 0) {
       this.addIssue({
-        severity: 'info',
-        category: 'Data Validation',
+        severity: "info",
+        category: "Data Validation",
         description: `Found ${completedWithoutScore.rows[0].count} completed programs without total score`,
-        fixable: false
+        fixable: false,
       });
     }
   }
@@ -399,7 +399,7 @@ class DataIntegrityChecker {
    * Check for duplicate data
    */
   async checkDuplicates() {
-    console.log('🔍 Checking for duplicates...');
+    console.log("🔍 Checking for duplicates...");
 
     // Check for duplicate user emails
     const duplicateEmails = await this.pool.query(`
@@ -411,11 +411,11 @@ class DataIntegrityChecker {
 
     if (duplicateEmails.rows.length > 0) {
       this.addIssue({
-        severity: 'critical',
-        category: 'Duplicates',
+        severity: "critical",
+        category: "Duplicates",
         description: `Found ${duplicateEmails.rows.length} duplicate email addresses`,
         details: duplicateEmails.rows,
-        fixable: false
+        fixable: false,
       });
     }
 
@@ -430,11 +430,11 @@ class DataIntegrityChecker {
 
     if (duplicateScenarios.rows.length > 0) {
       this.addIssue({
-        severity: 'warning',
-        category: 'Duplicates',
+        severity: "warning",
+        category: "Duplicates",
         description: `Found ${duplicateScenarios.rows.length} duplicate scenario source paths`,
         details: duplicateScenarios.rows,
-        fixable: false
+        fixable: false,
       });
     }
   }
@@ -443,9 +443,11 @@ class DataIntegrityChecker {
    * Apply fixes for fixable issues
    */
   async applyFixes() {
-    console.log('\n🔧 Applying fixes...');
+    console.log("\n🔧 Applying fixes...");
 
-    const fixableIssues = this.issues.filter(issue => issue.fixable && issue.fixQuery);
+    const fixableIssues = this.issues.filter(
+      (issue) => issue.fixable && issue.fixQuery,
+    );
 
     for (const issue of fixableIssues) {
       try {
@@ -462,15 +464,15 @@ class DataIntegrityChecker {
    * Generate summary report
    */
   generateReport() {
-    console.log('\n' + '='.repeat(60));
-    console.log('📊 DATA INTEGRITY CHECK REPORT');
-    console.log('='.repeat(60));
+    console.log("\n" + "=".repeat(60));
+    console.log("📊 DATA INTEGRITY CHECK REPORT");
+    console.log("=".repeat(60));
 
     const summary = {
-      critical: this.issues.filter(i => i.severity === 'critical').length,
-      warning: this.issues.filter(i => i.severity === 'warning').length,
-      info: this.issues.filter(i => i.severity === 'info').length,
-      fixable: this.issues.filter(i => i.fixable).length,
+      critical: this.issues.filter((i) => i.severity === "critical").length,
+      warning: this.issues.filter((i) => i.severity === "warning").length,
+      info: this.issues.filter((i) => i.severity === "info").length,
+      fixable: this.issues.filter((i) => i.fixable).length,
     };
 
     console.log(`\n📈 Summary:`);
@@ -480,51 +482,57 @@ class DataIntegrityChecker {
     console.log(`  Fixable Issues: ${summary.fixable}`);
 
     if (this.issues.length === 0) {
-      console.log('\n✅ No integrity issues found! Database is healthy.');
+      console.log("\n✅ No integrity issues found! Database is healthy.");
       return;
     }
 
-    console.log('\n📋 Issues by Category:\n');
+    console.log("\n📋 Issues by Category:\n");
 
-    const categories = [...new Set(this.issues.map(i => i.category))];
+    const categories = [...new Set(this.issues.map((i) => i.category))];
 
     for (const category of categories) {
-      const categoryIssues = this.issues.filter(i => i.category === category);
+      const categoryIssues = this.issues.filter((i) => i.category === category);
       console.log(`${category}:`);
 
       for (const issue of categoryIssues) {
-        const icon = issue.severity === 'critical' ? '❌' :
-                    issue.severity === 'warning' ? '⚠️' : 'ℹ️';
-        const fixable = issue.fixable ? ' [FIXABLE]' : '';
+        const icon =
+          issue.severity === "critical"
+            ? "❌"
+            : issue.severity === "warning"
+              ? "⚠️"
+              : "ℹ️";
+        const fixable = issue.fixable ? " [FIXABLE]" : "";
         console.log(`  ${icon} ${issue.description}${fixable}`);
 
-        if (issue.details && process.env.DEBUG === 'true') {
-          console.log(`     Details: ${JSON.stringify(issue.details, null, 2)}`);
+        if (issue.details && process.env.DEBUG === "true") {
+          console.log(
+            `     Details: ${JSON.stringify(issue.details, null, 2)}`,
+          );
         }
       }
       console.log();
     }
 
     // Decision matrix
-    console.log('='.repeat(60));
-    console.log('🎯 DEPLOYMENT DECISION:');
+    console.log("=".repeat(60));
+    console.log("🎯 DEPLOYMENT DECISION:");
 
     if (summary.critical > 0) {
-      console.log('❌ DO NOT DEPLOY - Critical issues found');
+      console.log("❌ DO NOT DEPLOY - Critical issues found");
     } else if (summary.warning > 5) {
-      console.log('⚠️  DEPLOY WITH CAUTION - Multiple warnings found');
+      console.log("⚠️  DEPLOY WITH CAUTION - Multiple warnings found");
     } else {
-      console.log('✅ SAFE TO DEPLOY - No critical issues');
+      console.log("✅ SAFE TO DEPLOY - No critical issues");
     }
 
-    console.log('='.repeat(60));
+    console.log("=".repeat(60));
   }
 
   /**
    * Run all checks
    */
   async runAllChecks() {
-    console.log('🚀 Starting data integrity checks...\n');
+    console.log("🚀 Starting data integrity checks...\n");
 
     try {
       await this.checkOrphanedRecords();
@@ -543,11 +551,12 @@ class DataIntegrityChecker {
       this.generateReport();
 
       // Return exit code based on critical issues
-      const criticalCount = this.issues.filter(i => i.severity === 'critical').length;
+      const criticalCount = this.issues.filter(
+        (i) => i.severity === "critical",
+      ).length;
       return criticalCount > 0 ? 1 : 0;
-
     } catch (error) {
-      console.error('❌ Error during integrity check:', error);
+      console.error("❌ Error during integrity check:", error);
       return 1;
     } finally {
       await this.pool.end();
@@ -557,12 +566,12 @@ class DataIntegrityChecker {
 
 // Main execution
 async function main() {
-  const shouldFix = process.argv.includes('--fix');
+  const shouldFix = process.argv.includes("--fix");
 
   if (shouldFix) {
-    console.log('⚠️  Running in FIX mode - will attempt to fix issues\n');
+    console.log("⚠️  Running in FIX mode - will attempt to fix issues\n");
   } else {
-    console.log('ℹ️  Running in CHECK mode - use --fix to apply fixes\n');
+    console.log("ℹ️  Running in CHECK mode - use --fix to apply fixes\n");
   }
 
   const checker = new DataIntegrityChecker(shouldFix);

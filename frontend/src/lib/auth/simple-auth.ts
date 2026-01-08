@@ -7,9 +7,9 @@
  * - Dev mode auto-login for better DX
  */
 
-import crypto from 'crypto';
-import { Pool } from 'pg';
-import bcrypt from 'bcryptjs';
+import crypto from "crypto";
+import { Pool } from "pg";
+import bcrypt from "bcryptjs";
 
 export interface SessionData {
   userId: string;
@@ -49,11 +49,11 @@ export function getPool(): Pool {
 
     // If no DATABASE_URL, use individual settings
     if (!dbConfig.connectionString) {
-      dbConfig.host = process.env.DB_HOST || '127.0.0.1';
-      dbConfig.port = parseInt(process.env.DB_PORT || '5432');
-      dbConfig.database = process.env.DB_NAME || 'ai_square_db';
-      dbConfig.user = process.env.DB_USER || 'postgres';
-      dbConfig.password = process.env.DB_PASSWORD || 'postgres';
+      dbConfig.host = process.env.DB_HOST || "127.0.0.1";
+      dbConfig.port = parseInt(process.env.DB_PORT || "5432");
+      dbConfig.database = process.env.DB_NAME || "ai_square_db";
+      dbConfig.user = process.env.DB_USER || "postgres";
+      dbConfig.password = process.env.DB_PASSWORD || "postgres";
       delete dbConfig.connectionString;
     }
 
@@ -66,18 +66,21 @@ export function getPool(): Pool {
  * Generate secure token
  */
 export function generateToken(): string {
-  return crypto.randomBytes(32).toString('hex');
+  return crypto.randomBytes(32).toString("hex");
 }
 
 /**
  * Create session in database
  */
-export async function createSession(userData: {
-  userId: string;
-  email: string;
-  role: string;
-  name: string;
-}, rememberMe = false): Promise<string> {
+export async function createSession(
+  userData: {
+    userId: string;
+    email: string;
+    role: string;
+    name: string;
+  },
+  rememberMe = false,
+): Promise<string> {
   const token = generateToken();
   const now = new Date();
   // 30 days for remember me, 7 days default (better dev experience)
@@ -88,31 +91,40 @@ export async function createSession(userData: {
 
   try {
     // Delete old sessions for this user
-    await db.query('DELETE FROM sessions WHERE user_id = $1', [userData.userId]);
+    await db.query("DELETE FROM sessions WHERE user_id = $1", [
+      userData.userId,
+    ]);
 
     // Create new session
     await db.query(
       `INSERT INTO sessions (token, user_id, email, role, created_at, expires_at, metadata)
        VALUES ($1, $2, $3, $4, $5, $6, $7)`,
-      [token, userData.userId, userData.email, userData.role, now, expiresAt,
-       JSON.stringify({ name: userData.name })]
+      [
+        token,
+        userData.userId,
+        userData.email,
+        userData.role,
+        now,
+        expiresAt,
+        JSON.stringify({ name: userData.name }),
+      ],
     );
 
     // Update last_login_at for user
     try {
       await db.query(
-        'UPDATE users SET last_login_at = CURRENT_TIMESTAMP WHERE id = $1',
-        [userData.userId]
+        "UPDATE users SET last_login_at = CURRENT_TIMESTAMP WHERE id = $1",
+        [userData.userId],
       );
     } catch (updateError) {
       // Log but don't fail - last_login_at is tracking data, not critical
-      console.warn('Failed to update last_login_at:', updateError);
+      console.warn("Failed to update last_login_at:", updateError);
     }
 
-    console.log('[Auth] Session created in PostgreSQL');
+    console.log("[Auth] Session created in PostgreSQL");
     return token;
   } catch (error) {
-    console.error('[Auth] Failed to create session:', error);
+    console.error("[Auth] Failed to create session:", error);
     throw error;
   }
 }
@@ -132,7 +144,7 @@ export async function getSession(token: string): Promise<SessionData | null> {
       `SELECT user_id, email, role, created_at, expires_at, metadata
        FROM sessions
        WHERE token = $1 AND expires_at > NOW()`,
-      [token]
+      [token],
     );
 
     if (result.rows.length === 0) {
@@ -146,14 +158,14 @@ export async function getSession(token: string): Promise<SessionData | null> {
       userId: row.user_id,
       email: row.email,
       role: row.role,
-      name: metadata.name || row.email.split('@')[0],
+      name: metadata.name || row.email.split("@")[0],
       createdAt: row.created_at,
       expiresAt: row.expires_at,
       metadata,
-      isGuest: metadata.isGuest || false
+      isGuest: metadata.isGuest || false,
     };
   } catch (error) {
-    console.error('[Auth] Failed to get session:', error);
+    console.error("[Auth] Failed to get session:", error);
     return null;
   }
 }
@@ -167,17 +179,20 @@ export async function destroySession(token: string): Promise<void> {
   const db = getPool();
 
   try {
-    await db.query('DELETE FROM sessions WHERE token = $1', [token]);
-    console.log('[Auth] Session destroyed');
+    await db.query("DELETE FROM sessions WHERE token = $1", [token]);
+    console.log("[Auth] Session destroyed");
   } catch (error) {
-    console.error('[Auth] Failed to destroy session:', error);
+    console.error("[Auth] Failed to destroy session:", error);
   }
 }
 
 /**
  * Login user
  */
-export async function loginUser(email: string, password: string): Promise<{
+export async function loginUser(
+  email: string,
+  password: string,
+): Promise<{
   success: boolean;
   user?: {
     id: string;
@@ -193,12 +208,12 @@ export async function loginUser(email: string, password: string): Promise<{
   try {
     // Get user
     const result = await db.query(
-      'SELECT id, email, name, role, password_hash FROM users WHERE LOWER(email) = LOWER($1)',
-      [email]
+      "SELECT id, email, name, role, password_hash FROM users WHERE LOWER(email) = LOWER($1)",
+      [email],
     );
 
     if (result.rows.length === 0) {
-      return { success: false, error: 'Invalid credentials' };
+      return { success: false, error: "Invalid credentials" };
     }
 
     const user = result.rows[0];
@@ -206,16 +221,19 @@ export async function loginUser(email: string, password: string): Promise<{
     // Check password
     const validPassword = await bcrypt.compare(password, user.password_hash);
     if (!validPassword) {
-      return { success: false, error: 'Invalid credentials' };
+      return { success: false, error: "Invalid credentials" };
     }
 
     // Create session
-    const token = await createSession({
-      userId: user.id,
-      email: user.email,
-      role: user.role,
-      name: user.name
-    }, true); // Always remember for better DX
+    const token = await createSession(
+      {
+        userId: user.id,
+        email: user.email,
+        role: user.role,
+        name: user.name,
+      },
+      true,
+    ); // Always remember for better DX
 
     return {
       success: true,
@@ -223,13 +241,13 @@ export async function loginUser(email: string, password: string): Promise<{
         id: user.id,
         email: user.email,
         name: user.name,
-        role: user.role
+        role: user.role,
       },
-      token
+      token,
     };
   } catch (error) {
-    console.error('[Auth] Login error:', error);
-    return { success: false, error: 'Login failed' };
+    console.error("[Auth] Login error:", error);
+    return { success: false, error: "Login failed" };
   }
 }
 
@@ -246,7 +264,7 @@ export async function autoLoginDev(): Promise<{
   };
   token?: string;
 }> {
-  if (process.env.NODE_ENV !== 'development') {
+  if (process.env.NODE_ENV !== "development") {
     return { success: false };
   }
 
@@ -258,25 +276,28 @@ export async function autoLoginDev(): Promise<{
       `SELECT id, email, name, role FROM users
        WHERE email = 'student@example.com'
        OR email = 'test@example.com'
-       LIMIT 1`
+       LIMIT 1`,
     );
 
     if (result.rows.length === 0) {
-      console.log('[Auth] No dev user found for auto-login');
+      console.log("[Auth] No dev user found for auto-login");
       return { success: false };
     }
 
     const user = result.rows[0];
 
     // Create session
-    const token = await createSession({
-      userId: user.id,
-      email: user.email,
-      role: user.role,
-      name: user.name
-    }, true);
+    const token = await createSession(
+      {
+        userId: user.id,
+        email: user.email,
+        role: user.role,
+        name: user.name,
+      },
+      true,
+    );
 
-    console.log('[Auth] Auto-login successful:', user.email);
+    console.log("[Auth] Auto-login successful:", user.email);
 
     return {
       success: true,
@@ -284,12 +305,12 @@ export async function autoLoginDev(): Promise<{
         id: user.id,
         email: user.email,
         name: user.name,
-        role: user.role
+        role: user.role,
       },
-      token
+      token,
     };
   } catch (error) {
-    console.error('[Auth] Auto-login error:', error);
+    console.error("[Auth] Auto-login error:", error);
     return { success: false };
   }
 }
@@ -301,11 +322,13 @@ export async function cleanupSessions(): Promise<void> {
   const db = getPool();
 
   try {
-    const result = await db.query('DELETE FROM sessions WHERE expires_at < NOW()');
+    const result = await db.query(
+      "DELETE FROM sessions WHERE expires_at < NOW()",
+    );
     if (result.rowCount && result.rowCount > 0) {
       console.log(`[Auth] Cleaned up ${result.rowCount} expired sessions`);
     }
   } catch (error) {
-    console.error('[Auth] Cleanup error:', error);
+    console.error("[Auth] Cleanup error:", error);
   }
 }

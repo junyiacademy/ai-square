@@ -1,38 +1,38 @@
-const nextJest = require('next/jest');
+const nextJest = require("next/jest");
 
 const createJestConfig = nextJest({
   // Provide the path to your Next.js app to load next.config.js and .env files in your test environment
-  dir: './',
+  dir: "./",
 });
 
 // Add any custom config to be passed to Jest
 const customJestConfig = {
-  displayName: 'Integration Tests',
-  testEnvironment: 'node',
+  displayName: "Integration Tests",
+  testEnvironment: "node",
   testMatch: [
-    '<rootDir>/tests/integration/**/*.test.ts',
-    '<rootDir>/tests/integration/**/*.test.tsx',
+    "<rootDir>/tests/integration/**/*.test.ts",
+    "<rootDir>/tests/integration/**/*.test.tsx",
   ],
   testPathIgnorePatterns: [
-    '<rootDir>/.next/',
-    '<rootDir>/node_modules/',
-    '<rootDir>/src/',
+    "<rootDir>/.next/",
+    "<rootDir>/node_modules/",
+    "<rootDir>/src/",
   ],
   moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/src/$1',
-    '^@/types/(.*)$': '<rootDir>/src/types/$1',
-    '^@/lib/(.*)$': '<rootDir>/src/lib/$1',
+    "^@/(.*)$": "<rootDir>/src/$1",
+    "^@/types/(.*)$": "<rootDir>/src/types/$1",
+    "^@/lib/(.*)$": "<rootDir>/src/lib/$1",
   },
-  setupFilesAfterEnv: ['<rootDir>/tests/integration/setup/jest.setup.ts'],
+  setupFilesAfterEnv: ["<rootDir>/tests/integration/setup/jest.setup.ts"],
   // Don't use the main jest setup that mocks pg
   setupFiles: [],
   testTimeout: 30000, // 30 seconds for integration tests
   maxWorkers: 1, // Run integration tests sequentially
   collectCoverageFrom: [
-    'src/**/*.{js,jsx,ts,tsx}',
-    '!src/**/*.d.ts',
-    '!src/**/*.stories.{js,jsx,ts,tsx}',
-    '!src/**/_*.{js,jsx,ts,tsx}',
+    "src/**/*.{js,jsx,ts,tsx}",
+    "!src/**/*.d.ts",
+    "!src/**/*.stories.{js,jsx,ts,tsx}",
+    "!src/**/_*.{js,jsx,ts,tsx}",
   ],
   coverageThreshold: {
     global: {
@@ -42,8 +42,8 @@ const customJestConfig = {
       statements: 75,
     },
   },
-  globalSetup: '<rootDir>/tests/integration/setup/global-setup.ts',
-  globalTeardown: '<rootDir>/tests/integration/setup/global-teardown.ts',
+  globalSetup: "<rootDir>/tests/integration/setup/global-setup.ts",
+  globalTeardown: "<rootDir>/tests/integration/setup/global-teardown.ts",
   verbose: true,
   bail: false, // Don't stop on first test failure
 };

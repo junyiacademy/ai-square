@@ -1,10 +1,10 @@
-import { POST } from '../route';
-import { NextRequest } from 'next/server';
-import { Pool } from 'pg';
-import bcrypt from 'bcryptjs';
+import { POST } from "../route";
+import { NextRequest } from "next/server";
+import { Pool } from "pg";
+import bcrypt from "bcryptjs";
 
 // Mock the database pool
-jest.mock('pg', () => {
+jest.mock("pg", () => {
   const mockPool = {
     query: jest.fn(),
     end: jest.fn(),
@@ -12,9 +12,9 @@ jest.mock('pg', () => {
   return { Pool: jest.fn(() => mockPool) };
 });
 
-jest.mock('bcryptjs');
+jest.mock("bcryptjs");
 
-describe('/api/admin/seed-users', () => {
+describe("/api/admin/seed-users", () => {
   let mockPool: any;
   const originalEnv = process.env;
 
@@ -22,35 +22,37 @@ describe('/api/admin/seed-users', () => {
     jest.clearAllMocks();
     process.env = {
       ...originalEnv,
-      DB_NAME: 'test_db',
-      DB_USER: 'test_user',
-      DB_PASSWORD: 'test_pass',
+      DB_NAME: "test_db",
+      DB_USER: "test_user",
+      DB_PASSWORD: "test_pass",
+      ADMIN_SEED_SECRET: "test-secret-key",
     };
     mockPool = new Pool();
-    (bcrypt.hash as jest.Mock).mockResolvedValue('hashed_password');
+    (bcrypt.hash as jest.Mock).mockResolvedValue("hashed_password");
   });
 
   afterEach(() => {
     process.env = originalEnv;
   });
 
-  describe('Database Schema Compatibility', () => {
-    it('should handle INSERT with all required fields including timestamps', async () => {
+  describe("Database Schema Compatibility", () => {
+    it("should handle INSERT with all required fields including timestamps", async () => {
       // Mock existing user check
       mockPool.query.mockResolvedValueOnce({ rows: [] });
 
       // Mock successful insert
       mockPool.query.mockResolvedValueOnce({ rowCount: 1 });
 
-      const request = new NextRequest('http://localhost/api/admin/seed-users', {
-        method: 'POST',
+      const request = new NextRequest("http://localhost/api/admin/seed-users", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          secretKey: "test-secret-key",
           users: [
-            { email: 'test@example.com', password: 'test123', role: 'student' }
-          ]
+            { email: "test@example.com", password: "test123", role: "student" },
+          ],
         }),
       });
 
@@ -62,32 +64,35 @@ describe('/api/admin/seed-users', () => {
 
       // Check that the INSERT query includes all required fields
       const insertCall = mockPool.query.mock.calls[1];
-      expect(insertCall[0]).toContain('INSERT INTO users');
-      expect(insertCall[0]).toContain('id');
-      expect(insertCall[0]).toContain('created_at');
-      expect(insertCall[0]).toContain('updated_at');
-      expect(insertCall[0]).toContain('gen_random_uuid()');
-      expect(insertCall[0]).toContain('CURRENT_TIMESTAMP');
+      expect(insertCall[0]).toContain("INSERT INTO users");
+      expect(insertCall[0]).toContain("id");
+      expect(insertCall[0]).toContain("created_at");
+      expect(insertCall[0]).toContain("updated_at");
+      expect(insertCall[0]).toContain("gen_random_uuid()");
+      expect(insertCall[0]).toContain("CURRENT_TIMESTAMP");
     });
 
-    it('should handle database error for missing required fields', async () => {
+    it("should handle database error for missing required fields", async () => {
       // Mock existing user check
       mockPool.query.mockResolvedValueOnce({ rows: [] });
 
       // Mock insert failure due to missing field
       mockPool.query.mockRejectedValueOnce(
-        new Error('null value in column "updated_at" of relation "users" violates not-null constraint')
+        new Error(
+          'null value in column "updated_at" of relation "users" violates not-null constraint',
+        ),
       );
 
-      const request = new NextRequest('http://localhost/api/admin/seed-users', {
-        method: 'POST',
+      const request = new NextRequest("http://localhost/api/admin/seed-users", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          secretKey: "test-secret-key",
           users: [
-            { email: 'test@example.com', password: 'test123', role: 'student' }
-          ]
+            { email: "test@example.com", password: "test123", role: "student" },
+          ],
         }),
       });
 
@@ -98,54 +103,62 @@ describe('/api/admin/seed-users', () => {
       expect(data.success).toBe(false);
       expect(data.results.details).toBeDefined();
       expect(Array.isArray(data.results.details)).toBe(true);
-      expect(data.results.details[0].status).toBe('failed');
-      expect(data.results.details[0].error).toContain('null value in column "updated_at"');
+      expect(data.results.details[0].status).toBe("failed");
+      expect(data.results.details[0].error).toContain(
+        'null value in column "updated_at"',
+      );
     });
 
-    it('should verify gen_random_uuid() is used for ID generation', async () => {
+    it("should verify gen_random_uuid() is used for ID generation", async () => {
       mockPool.query.mockResolvedValueOnce({ rows: [] });
       mockPool.query.mockResolvedValueOnce({ rowCount: 1 });
 
-      const request = new NextRequest('http://localhost/api/admin/seed-users', {
-        method: 'POST',
+      const request = new NextRequest("http://localhost/api/admin/seed-users", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          secretKey: "test-secret-key",
           users: [
-            { email: 'test@example.com', password: 'test123', role: 'student' }
-          ]
+            { email: "test@example.com", password: "test123", role: "student" },
+          ],
         }),
       });
 
       await POST(request);
 
       const insertQuery = mockPool.query.mock.calls[1][0];
-      expect(insertQuery).toContain('gen_random_uuid()');
+      expect(insertQuery).toContain("gen_random_uuid()");
     });
   });
 
   // Authorization tests removed - admin key no longer required
 
-  describe('User Creation', () => {
-    it('should update existing users', async () => {
+  describe("User Creation", () => {
+    it("should update existing users", async () => {
       // Mock existing user
       mockPool.query.mockResolvedValueOnce({
-        rows: [{ id: 'existing-user-id' }]
+        rows: [{ id: "existing-user-id" }],
       });
 
       // Mock successful update
       mockPool.query.mockResolvedValueOnce({ rowCount: 1 });
 
-      const request = new NextRequest('http://localhost/api/admin/seed-users', {
-        method: 'POST',
+      const request = new NextRequest("http://localhost/api/admin/seed-users", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          secretKey: "test-secret-key",
           users: [
-            { email: 'existing@example.com', password: 'new123', role: 'teacher' }
-          ]
+            {
+              email: "existing@example.com",
+              password: "new123",
+              role: "teacher",
+            },
+          ],
         }),
       });
 
@@ -156,38 +169,43 @@ describe('/api/admin/seed-users', () => {
       expect(data.success).toBe(true);
       expect(data.results.details).toBeDefined();
       expect(Array.isArray(data.results.details)).toBe(true);
-      expect(data.results.details[0].status).toBe('updated');
+      expect(data.results.details[0].status).toBe("updated");
 
       // Check UPDATE query
       const updateCall = mockPool.query.mock.calls[1];
-      expect(updateCall[0]).toContain('UPDATE users');
-      expect(updateCall[0]).toContain('updated_at = CURRENT_TIMESTAMP');
+      expect(updateCall[0]).toContain("UPDATE users");
+      expect(updateCall[0]).toContain("updated_at = CURRENT_TIMESTAMP");
     });
 
-    it('should handle multiple users with mixed results', async () => {
+    it("should handle multiple users with mixed results", async () => {
       // First user - doesn't exist, create succeeds
       mockPool.query.mockResolvedValueOnce({ rows: [] });
       mockPool.query.mockResolvedValueOnce({ rowCount: 1 });
 
       // Second user - exists, update succeeds
-      mockPool.query.mockResolvedValueOnce({ rows: [{ id: 'user-2' }] });
+      mockPool.query.mockResolvedValueOnce({ rows: [{ id: "user-2" }] });
       mockPool.query.mockResolvedValueOnce({ rowCount: 1 });
 
       // Third user - doesn't exist, create fails
       mockPool.query.mockResolvedValueOnce({ rows: [] });
-      mockPool.query.mockRejectedValueOnce(new Error('Database error'));
+      mockPool.query.mockRejectedValueOnce(new Error("Database error"));
 
-      const request = new NextRequest('http://localhost/api/admin/seed-users', {
-        method: 'POST',
+      const request = new NextRequest("http://localhost/api/admin/seed-users", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          secretKey: "test-secret-key",
           users: [
-            { email: 'new@example.com', password: 'pass1', role: 'student' },
-            { email: 'existing@example.com', password: 'pass2', role: 'teacher' },
-            { email: 'failed@example.com', password: 'pass3', role: 'admin' },
-          ]
+            { email: "new@example.com", password: "pass1", role: "student" },
+            {
+              email: "existing@example.com",
+              password: "pass2",
+              role: "teacher",
+            },
+            { email: "failed@example.com", password: "pass3", role: "admin" },
+          ],
         }),
       });
 
@@ -196,7 +214,7 @@ describe('/api/admin/seed-users', () => {
 
       expect(response.status).toBe(200);
       expect(data.success).toBe(false);
-      expect(data.message).toBe('Created: 1, Updated: 1, Failed: 1');
+      expect(data.message).toBe("Created: 1, Updated: 1, Failed: 1");
     });
   });
 });

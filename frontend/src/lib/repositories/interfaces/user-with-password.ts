@@ -4,7 +4,7 @@
  * Only used in authentication contexts
  */
 
-import { User } from './index';
+import { User } from "./index";
 
 export interface UserWithPassword extends User {
   passwordHash: string;

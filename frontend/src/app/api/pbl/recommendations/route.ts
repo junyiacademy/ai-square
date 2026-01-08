@@ -1,14 +1,14 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { promises as fs } from 'fs';
-import path from 'path';
-import yaml from 'js-yaml';
-import { getLanguageFromHeader } from '@/lib/utils/language';
+import { NextRequest, NextResponse } from "next/server";
+import { promises as fs } from "fs";
+import path from "path";
+import yaml from "js-yaml";
+import { getLanguageFromHeader } from "@/lib/utils/language";
 
 interface ScenarioData {
   id: string;
   title: string;
   description: string;
-  difficulty: 'beginner' | 'intermediate' | 'advanced';
+  difficulty: "beginner" | "intermediate" | "advanced";
   targetDomain: string[];
   estimatedDuration: number;
   prerequisites?: string[];
@@ -52,7 +52,12 @@ export async function POST(request: NextRequest) {
     const { domainScores, completedScenarios = [], learningGoals = [] } = body;
 
     // Load all scenario data
-    const scenariosDir = path.join(process.cwd(), 'public', 'pbl_data', 'scenarios');
+    const scenariosDir = path.join(
+      process.cwd(),
+      "public",
+      "pbl_data",
+      "scenarios",
+    );
     const folders = await fs.readdir(scenariosDir);
 
     // Get language from request headers or default to 'en'
@@ -60,11 +65,15 @@ export async function POST(request: NextRequest) {
 
     const scenarios: ScenarioData[] = [];
     for (const folder of folders) {
-      if (folder.startsWith('_')) continue; // Skip template folders
+      if (folder.startsWith("_")) continue; // Skip template folders
 
       try {
         // Try language-specific file first
-        let filePath = path.join(scenariosDir, folder, `${folder}_${lang}.yaml`);
+        let filePath = path.join(
+          scenariosDir,
+          folder,
+          `${folder}_${lang}.yaml`,
+        );
 
         // Check if language-specific file exists, fallback to English
         try {
@@ -73,7 +82,7 @@ export async function POST(request: NextRequest) {
           filePath = path.join(scenariosDir, folder, `${folder}_en.yaml`);
         }
 
-        const content = await fs.readFile(filePath, 'utf8');
+        const content = await fs.readFile(filePath, "utf8");
         const data = yaml.load(content) as ScenarioData;
         scenarios.push(data);
       } catch (error) {
@@ -83,25 +92,31 @@ export async function POST(request: NextRequest) {
 
     // Filter out completed scenarios
     const availableScenarios = scenarios.filter(
-      scenario => !completedScenarios.includes(scenario.id)
+      (scenario) => !completedScenarios.includes(scenario.id),
     );
 
     // Calculate recommendations
-    const recommendations: ScenarioRecommendation[] = availableScenarios.map(scenario => {
-      const relevance = calculateRelevance(scenario, domainScores, learningGoals);
-      const improvement = estimateImprovement(scenario, domainScores);
+    const recommendations: ScenarioRecommendation[] = availableScenarios.map(
+      (scenario) => {
+        const relevance = calculateRelevance(
+          scenario,
+          domainScores,
+          learningGoals,
+        );
+        const improvement = estimateImprovement(scenario, domainScores);
 
-      return {
-        scenarioId: scenario.id,
-        title: scenario.title,
-        description: scenario.description,
-        difficulty: scenario.difficulty,
-        relevanceScore: relevance.score,
-        reasons: relevance.reasons,
-        estimatedImprovement: improvement,
-        estimatedDuration: scenario.estimatedDuration
-      };
-    });
+        return {
+          scenarioId: scenario.id,
+          title: scenario.title,
+          description: scenario.description,
+          difficulty: scenario.difficulty,
+          relevanceScore: relevance.score,
+          reasons: relevance.reasons,
+          estimatedImprovement: improvement,
+          estimatedDuration: scenario.estimatedDuration,
+        };
+      },
+    );
 
     // Sort by relevance score
     recommendations.sort((a, b) => b.relevanceScore - a.relevanceScore);
@@ -112,46 +127,51 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       recommendations: topRecommendations,
-      totalAvailable: availableScenarios.length
+      totalAvailable: availableScenarios.length,
     });
-
   } catch (error) {
-    console.error('Error generating recommendations:', error);
+    console.error("Error generating recommendations:", error);
     return NextResponse.json(
       {
         success: false,
-        error: 'Failed to generate recommendations'
+        error: "Failed to generate recommendations",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
 
 function calculateRelevance(
   scenario: ScenarioData,
-  domainScores: RecommendationRequest['domainScores'],
-  learningGoals: string[]
+  domainScores: RecommendationRequest["domainScores"],
+  learningGoals: string[],
 ): { score: number; reasons: string[] } {
   let score = 0;
   const reasons: string[] = [];
 
   // Check target domains
-  scenario.targetDomain.forEach(domain => {
-    const domainKey = domain.replace(' ', '_').toLowerCase() as keyof typeof domainScores;
+  scenario.targetDomain.forEach((domain) => {
+    const domainKey = domain
+      .replace(" ", "_")
+      .toLowerCase() as keyof typeof domainScores;
     const domainScore = domainScores[domainKey];
 
     if (domainScore !== undefined) {
       if (domainScore < 60) {
         // Weak domain - high priority
         score += 30;
-        reasons.push(`Targets weak domain: ${domain} (current: ${domainScore}%)`);
+        reasons.push(
+          `Targets weak domain: ${domain} (current: ${domainScore}%)`,
+        );
       } else if (domainScore < 80) {
         // Average domain - medium priority
         score += 20;
-        reasons.push(`Improves average domain: ${domain} (current: ${domainScore}%)`);
+        reasons.push(
+          `Improves average domain: ${domain} (current: ${domainScore}%)`,
+        );
       } else {
         // Strong domain - low priority for basics, high for advanced
-        if (scenario.difficulty === 'advanced') {
+        if (scenario.difficulty === "advanced") {
           score += 25;
           reasons.push(`Advanced challenge for strong domain: ${domain}`);
         } else {
@@ -164,23 +184,28 @@ function calculateRelevance(
 
   // Difficulty matching
   const avgScore = Object.values(domainScores).reduce((a, b) => a + b, 0) / 4;
-  if (avgScore < 50 && scenario.difficulty === 'beginner') {
+  if (avgScore < 50 && scenario.difficulty === "beginner") {
     score += 15;
-    reasons.push('Beginner-friendly for current level');
-  } else if (avgScore >= 50 && avgScore < 70 && scenario.difficulty === 'intermediate') {
+    reasons.push("Beginner-friendly for current level");
+  } else if (
+    avgScore >= 50 &&
+    avgScore < 70 &&
+    scenario.difficulty === "intermediate"
+  ) {
     score += 15;
-    reasons.push('Appropriate intermediate challenge');
-  } else if (avgScore >= 70 && scenario.difficulty === 'advanced') {
+    reasons.push("Appropriate intermediate challenge");
+  } else if (avgScore >= 70 && scenario.difficulty === "advanced") {
     score += 15;
-    reasons.push('Advanced challenge for high performer');
+    reasons.push("Advanced challenge for high performer");
   }
 
   // Learning goals alignment
   if (learningGoals.length > 0) {
-    const goalKeywords = learningGoals.map(g => g.toLowerCase());
-    const scenarioText = `${scenario.title} ${scenario.description}`.toLowerCase();
+    const goalKeywords = learningGoals.map((g) => g.toLowerCase());
+    const scenarioText =
+      `${scenario.title} ${scenario.description}`.toLowerCase();
 
-    goalKeywords.forEach(keyword => {
+    goalKeywords.forEach((keyword) => {
       if (scenarioText.includes(keyword)) {
         score += 10;
         reasons.push(`Aligns with learning goal: ${keyword}`);
@@ -196,7 +221,7 @@ function calculateRelevance(
 
   if (ksaCount > 10) {
     score += 5;
-    reasons.push('Comprehensive KSA coverage');
+    reasons.push("Comprehensive KSA coverage");
   }
 
   return { score, reasons };
@@ -204,25 +229,27 @@ function calculateRelevance(
 
 function estimateImprovement(
   scenario: ScenarioData,
-  domainScores: RecommendationRequest['domainScores']
+  domainScores: RecommendationRequest["domainScores"],
 ): { domain: string; expectedGain: number } {
   // Find the primary target domain
   const primaryDomain = scenario.targetDomain[0];
-  const domainKey = primaryDomain.replace(' ', '_').toLowerCase() as keyof typeof domainScores;
+  const domainKey = primaryDomain
+    .replace(" ", "_")
+    .toLowerCase() as keyof typeof domainScores;
   const currentScore = domainScores[domainKey] || 50;
 
   // Estimate gain based on difficulty and current level
   let expectedGain = 0;
 
-  if (scenario.difficulty === 'beginner') {
+  if (scenario.difficulty === "beginner") {
     if (currentScore < 40) expectedGain = 15;
     else if (currentScore < 60) expectedGain = 10;
     else expectedGain = 5;
-  } else if (scenario.difficulty === 'intermediate') {
+  } else if (scenario.difficulty === "intermediate") {
     if (currentScore < 50) expectedGain = 8;
     else if (currentScore < 70) expectedGain = 12;
     else expectedGain = 6;
-  } else if (scenario.difficulty === 'advanced') {
+  } else if (scenario.difficulty === "advanced") {
     if (currentScore < 60) expectedGain = 5;
     else if (currentScore < 80) expectedGain = 10;
     else expectedGain = 8;
@@ -233,6 +260,6 @@ function estimateImprovement(
 
   return {
     domain: primaryDomain,
-    expectedGain
+    expectedGain,
   };
 }

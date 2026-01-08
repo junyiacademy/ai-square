@@ -7,24 +7,28 @@
 // ENUM Types (matching PostgreSQL ENUMs)
 // ============================================
 
-export type LearningMode = 'pbl' | 'discovery' | 'assessment';
-export type ScenarioStatus = 'draft' | 'active' | 'archived';
-export type ProgramStatus = 'pending' | 'active' | 'completed' | 'abandoned';
-export type TaskStatus = 'pending' | 'active' | 'completed' | 'skipped';
+export type LearningMode = "pbl" | "discovery" | "assessment";
+export type ScenarioStatus = "draft" | "active" | "archived";
+export type ProgramStatus = "pending" | "active" | "completed" | "abandoned";
+export type TaskStatus = "pending" | "active" | "completed" | "skipped";
 export type TaskType =
-  | 'interactive'   // Common types
-  | 'reflection'
-  | 'chat'         // PBL specific
-  | 'creation'
-  | 'analysis'
-  | 'exploration'  // Discovery specific
-  | 'experiment'
-  | 'challenge'
-  | 'question'     // Assessment specific
-  | 'quiz'
-  | 'assessment';
-export type DifficultyLevel = 'beginner' | 'intermediate' | 'advanced' | 'expert';
-export type SourceType = 'yaml' | 'api' | 'ai-generated' | 'manual';
+  | "interactive" // Common types
+  | "reflection"
+  | "chat" // PBL specific
+  | "creation"
+  | "analysis"
+  | "exploration" // Discovery specific
+  | "experiment"
+  | "challenge"
+  | "question" // Assessment specific
+  | "quiz"
+  | "assessment";
+export type DifficultyLevel =
+  | "beginner"
+  | "intermediate"
+  | "advanced"
+  | "expert";
+export type SourceType = "yaml" | "api" | "ai-generated" | "manual";
 
 // ============================================
 // Database Table Types
@@ -58,8 +62,8 @@ export interface DBScenario {
   source_metadata: Record<string, unknown>;
 
   // Basic info (multi-language)
-  title: Record<string, string>;       // {"en": "Title", "zh": "標題"}
-  description: Record<string, string>;  // {"en": "Desc", "zh": "描述"}
+  title: Record<string, string>; // {"en": "Title", "zh": "標題"}
+  description: Record<string, string>; // {"en": "Desc", "zh": "描述"}
   objectives: string[];
 
   // Common attributes
@@ -120,7 +124,7 @@ export interface DBProgram {
   id: string;
   user_id: string;
   scenario_id: string;
-  mode: LearningMode;  // NEW: Propagated from scenario
+  mode: LearningMode; // NEW: Propagated from scenario
   status: ProgramStatus;
 
   // Progress tracking
@@ -157,8 +161,8 @@ export interface DBProgram {
 export interface DBTask {
   id: string;
   program_id: string;
-  scenario_id: string;  // Foreign key to scenarios table
-  mode: LearningMode;  // NEW: Propagated from program
+  scenario_id: string; // Foreign key to scenarios table
+  mode: LearningMode; // NEW: Propagated from program
   task_index: number;
   scenario_task_index: number | null;
 
@@ -208,7 +212,7 @@ export interface DBTask {
 
 export interface DBInteraction {
   timestamp: Date;
-  type: 'user_input' | 'ai_response' | 'system_event';
+  type: "user_input" | "ai_response" | "system_event";
   content: unknown;
   metadata?: Record<string, unknown>;
 }
@@ -218,7 +222,7 @@ export interface DBEvaluation {
   user_id: string;
   program_id: string | null;
   task_id: string | null;
-  mode: LearningMode;  // NEW: Mode for easy filtering
+  mode: LearningMode; // NEW: Mode for easy filtering
 
   // Evaluation scope
   evaluation_type: string;
@@ -257,7 +261,7 @@ export interface DBEvaluation {
 
 export interface DBDomain {
   id: string;
-  name: Record<string, string>;        // Multi-language
+  name: Record<string, string>; // Multi-language
   description: Record<string, string>; // Multi-language
   icon: string | null;
   display_order: number | null;
@@ -275,7 +279,7 @@ export interface DBScenarioDomain {
 export interface DBAchievement {
   id: string;
   code: string;
-  name: Record<string, string>;        // Multi-language
+  name: Record<string, string>; // Multi-language
   description: Record<string, string>; // Multi-language
   category: string;
   icon_url: string | null;
@@ -388,7 +392,7 @@ export interface DiscoverySpecificData {
 }
 
 export interface AssessmentSpecificData {
-  assessmentType?: 'diagnostic' | 'formative' | 'summative';
+  assessmentType?: "diagnostic" | "formative" | "summative";
   questionBank?: {
     total?: number;
     byDomain?: Record<string, number>;

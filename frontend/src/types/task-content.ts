@@ -41,7 +41,7 @@ export interface PBLTaskContext {
 
 // System event content types
 export interface AssessmentAnswerContent {
-  eventType: 'assessment_answer';
+  eventType: "assessment_answer";
   questionId: string;
   questionIndex?: number;
   selectedAnswer: string;
@@ -74,38 +74,44 @@ export type InteractionContent =
   | Record<string, unknown>;
 
 // Type guards
-export function isAssessmentAnswerContent(content: unknown): content is AssessmentAnswerContent {
+export function isAssessmentAnswerContent(
+  content: unknown,
+): content is AssessmentAnswerContent {
   return (
-    typeof content === 'object' &&
+    typeof content === "object" &&
     content !== null &&
-    'eventType' in content &&
-    (content as Record<string, unknown>).eventType === 'assessment_answer'
+    "eventType" in content &&
+    (content as Record<string, unknown>).eventType === "assessment_answer"
   );
 }
 
-export function hasQuestions(context: unknown): context is { questions: unknown[] } {
+export function hasQuestions(
+  context: unknown,
+): context is { questions: unknown[] } {
   return (
-    typeof context === 'object' &&
+    typeof context === "object" &&
     context !== null &&
-    'questions' in context &&
+    "questions" in context &&
     Array.isArray((context as Record<string, unknown>).questions)
   );
 }
 
 export function hasXP(context: unknown): context is { xp: number } {
   return (
-    typeof context === 'object' &&
+    typeof context === "object" &&
     context !== null &&
-    'xp' in context &&
-    typeof (context as Record<string, unknown>).xp === 'number'
+    "xp" in context &&
+    typeof (context as Record<string, unknown>).xp === "number"
   );
 }
 
-export function hasCareerType(metadata: unknown): metadata is { careerType: string } {
+export function hasCareerType(
+  metadata: unknown,
+): metadata is { careerType: string } {
   return (
-    typeof metadata === 'object' &&
+    typeof metadata === "object" &&
     metadata !== null &&
-    'careerType' in metadata &&
-    typeof (metadata as Record<string, unknown>).careerType === 'string'
+    "careerType" in metadata &&
+    typeof (metadata as Record<string, unknown>).careerType === "string"
   );
 }

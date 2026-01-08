@@ -5,10 +5,10 @@
  * - Other languages: loaded from YAML files on demand
  */
 
-import * as fs from 'fs/promises';
-import * as yaml from 'js-yaml';
-import * as path from 'path';
-import { IScenario } from '@/types/unified-learning';
+import * as fs from "fs/promises";
+import * as yaml from "js-yaml";
+import * as path from "path";
+import { IScenario } from "@/types/unified-learning";
 
 export interface TranslationContent {
   title?: string;
@@ -33,10 +33,10 @@ export class ScenarioTranslationService {
    */
   async loadTranslation(
     scenario: IScenario,
-    language: string
+    language: string,
   ): Promise<TranslationContent | null> {
     // English content is already in GCS
-    if (language === 'en') {
+    if (language === "en") {
       return null;
     }
 
@@ -55,35 +55,37 @@ export class ScenarioTranslationService {
         return null;
       }
 
-      const baseDir = process.cwd().endsWith('/frontend')
+      const baseDir = process.cwd().endsWith("/frontend")
         ? process.cwd()
-        : path.join(process.cwd(), 'frontend');
+        : path.join(process.cwd(), "frontend");
 
       const filePath = path.join(
         baseDir,
-        'public',
-        'assessment_data',
+        "public",
+        "assessment_data",
         String(folderName),
-        `${folderName}_questions_${language}.yaml`
+        `${folderName}_questions_${language}.yaml`,
       );
 
       // Read and parse YAML
-      const content = await fs.readFile(filePath, 'utf-8');
+      const content = await fs.readFile(filePath, "utf-8");
       const yamlData = yaml.load(content) as Record<string, unknown>;
 
       // Extract translation content based on scenario type
       let translationContent: TranslationContent;
 
-      if (scenario.mode === 'assessment') {
-        const config = (yamlData.assessment_config || yamlData.config || {}) as Record<string, unknown>;
+      if (scenario.mode === "assessment") {
+        const config = (yamlData.assessment_config ||
+          yamlData.config ||
+          {}) as Record<string, unknown>;
         translationContent = {
           title: config.title as string,
           description: config.description as string,
           config: {
             totalQuestions: config.total_questions as number,
             timeLimit: config.time_limit_minutes as number,
-            passingScore: config.passing_score as number
-          }
+            passingScore: config.passing_score as number,
+          },
         };
       } else {
         // Handle other source types if needed
@@ -93,7 +95,7 @@ export class ScenarioTranslationService {
       // Update cache
       this.cache.set(cacheKey, {
         content: translationContent,
-        timestamp: this.timeProvider()
+        timestamp: this.timeProvider(),
       });
 
       return translationContent;
@@ -108,10 +110,10 @@ export class ScenarioTranslationService {
    */
   async translateScenario(
     scenario: IScenario,
-    language: string
+    language: string,
   ): Promise<IScenario> {
     // Return original for English
-    if (language === 'en') {
+    if (language === "en") {
       return scenario;
     }
 
@@ -123,25 +125,27 @@ export class ScenarioTranslationService {
         ...scenario,
         metadata: {
           ...scenario.metadata,
-          translationFailed: true
-        }
+          translationFailed: true,
+        },
       };
     }
 
     // Merge translation with original scenario
     return {
       ...scenario,
-      title: typeof translation.title === 'string'
-        ? { [language]: translation.title }
-        : scenario.title,
-      description: typeof translation.description === 'string'
-        ? { [language]: translation.description }
-        : scenario.description,
+      title:
+        typeof translation.title === "string"
+          ? { [language]: translation.title }
+          : scenario.title,
+      description:
+        typeof translation.description === "string"
+          ? { [language]: translation.description }
+          : scenario.description,
       metadata: {
         ...scenario.metadata,
-        translatedFrom: 'yaml',
-        ...(translation.config && { config: translation.config })
-      }
+        translatedFrom: "yaml",
+        ...(translation.config && { config: translation.config }),
+      },
     };
   }
 
@@ -150,10 +154,10 @@ export class ScenarioTranslationService {
    */
   async translateMultipleScenarios(
     scenarios: IScenario[],
-    language: string
+    language: string,
   ): Promise<IScenario[]> {
     return Promise.all(
-      scenarios.map(scenario => this.translateScenario(scenario, language))
+      scenarios.map((scenario) => this.translateScenario(scenario, language)),
     );
   }
 
@@ -182,7 +186,7 @@ export class ScenarioTranslationService {
   getCacheStats() {
     return {
       size: this.cache.size,
-      entries: Array.from(this.cache.keys())
+      entries: Array.from(this.cache.keys()),
     };
   }
 }

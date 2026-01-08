@@ -3,9 +3,9 @@
  * 英文從 GCS，其他語言從 YAML
  */
 
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
-import { authenticatedFetch } from '@/lib/utils/authenticated-fetch';
+import { useState, useEffect, useCallback, useRef } from "react";
+import { useTranslation } from "react-i18next";
+import { authenticatedFetch } from "@/lib/utils/authenticated-fetch";
 
 interface Scenario {
   id: string;
@@ -34,78 +34,85 @@ export function useHybridScenarios() {
   // 預載下一個可能的語言
   const preloadLanguages = useRef<Set<string>>(new Set());
 
-  const loadScenarios = useCallback(async (language: string, isPreload = false) => {
-    // 檢查快取
-    const cached = cache.current.get(language);
-    if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
-      if (!isPreload) {
-        setScenarios(cached.data);
-        setLoading(false);
-      }
-      return cached.data;
-    }
-
-    try {
-      if (!isPreload) setLoading(true);
-
-      const response = await authenticatedFetch(`/api/assessment/scenarios?lang=${language}`);
-      const data = await response.json();
-
-      if (data.success) {
-        const scenarioData = data.data.scenarios;
-
-        // 更新快取
-        cache.current.set(language, {
-          data: scenarioData,
-          timestamp: Date.now(),
-          language
-        });
-
+  const loadScenarios = useCallback(
+    async (language: string, isPreload = false) => {
+      // 檢查快取
+      const cached = cache.current.get(language);
+      if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
         if (!isPreload) {
-          setScenarios(scenarioData);
-
-          // 預載其他常用語言
-          preloadNextLanguages(language);
+          setScenarios(cached.data);
+          setLoading(false);
         }
+        return cached.data;
+      }
 
-        return scenarioData;
-      } else {
-        throw new Error(data.error || 'Failed to load scenarios');
+      try {
+        if (!isPreload) setLoading(true);
+
+        const response = await authenticatedFetch(
+          `/api/assessment/scenarios?lang=${language}`,
+        );
+        const data = await response.json();
+
+        if (data.success) {
+          const scenarioData = data.data.scenarios;
+
+          // 更新快取
+          cache.current.set(language, {
+            data: scenarioData,
+            timestamp: Date.now(),
+            language,
+          });
+
+          if (!isPreload) {
+            setScenarios(scenarioData);
+
+            // 預載其他常用語言
+            preloadNextLanguages(language);
+          }
+
+          return scenarioData;
+        } else {
+          throw new Error(data.error || "Failed to load scenarios");
+        }
+      } catch (err) {
+        if (!isPreload) {
+          setError(err instanceof Error ? err.message : "Unknown error");
+        }
+        return null;
+      } finally {
+        if (!isPreload) setLoading(false);
       }
-    } catch (err) {
-      if (!isPreload) {
-        setError(err instanceof Error ? err.message : 'Unknown error');
-      }
-      return null;
-    } finally {
-      if (!isPreload) setLoading(false);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [CACHE_TTL]);
+    },
+    [CACHE_TTL],
+  );
 
   // 預載策略
-  const preloadNextLanguages = useCallback((currentLang: string) => {
-    // 預載常用語言組合
-    const preloadMap: Record<string, string[]> = {
-      'en': ['zhTW', 'zhCN'],
-      'zhTW': ['en', 'zhCN'],
-      'zhCN': ['en', 'zhTW'],
-      'ja': ['en'],
-      'ko': ['en']
-    };
+  const preloadNextLanguages = useCallback(
+    (currentLang: string) => {
+      // 預載常用語言組合
+      const preloadMap: Record<string, string[]> = {
+        en: ["zhTW", "zhCN"],
+        zhTW: ["en", "zhCN"],
+        zhCN: ["en", "zhTW"],
+        ja: ["en"],
+        ko: ["en"],
+      };
 
-    const toPreload = preloadMap[currentLang] || ['en'];
+      const toPreload = preloadMap[currentLang] || ["en"];
 
-    toPreload.forEach(lang => {
-      if (!preloadLanguages.current.has(lang)) {
-        preloadLanguages.current.add(lang);
-        // 延遲預載，避免影響主要請求
-        setTimeout(() => {
-          loadScenarios(lang, true);
-        }, 1000);
-      }
-    });
-  }, [loadScenarios]);
+      toPreload.forEach((lang) => {
+        if (!preloadLanguages.current.has(lang)) {
+          preloadLanguages.current.add(lang);
+          // 延遲預載，避免影響主要請求
+          setTimeout(() => {
+            loadScenarios(lang, true);
+          }, 1000);
+        }
+      });
+    },
+    [loadScenarios],
+  );
 
   // 語言變更時載入
   useEffect(() => {
@@ -133,7 +140,7 @@ export function useHybridScenarios() {
     refresh: () => loadScenarios(i18n.language),
     cacheStatus: {
       size: cache.current.size,
-      languages: Array.from(cache.current.keys())
-    }
+      languages: Array.from(cache.current.keys()),
+    },
   };
 }

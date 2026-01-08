@@ -25,7 +25,7 @@ global.ResizeObserver = class ResizeObserver {
 } as any;
 
 // Mock window.matchMedia
-Object.defineProperty(window, 'matchMedia', {
+Object.defineProperty(window, "matchMedia", {
   writable: true,
   value: jest.fn().mockImplementation((query) => ({
     matches: false,
@@ -65,7 +65,7 @@ global.fetch = jest.fn();
 
 // Mock crypto
 global.crypto = {
-  randomUUID: () => 'test-uuid-' + Math.random().toString(36).substr(2, 9),
+  randomUUID: () => "test-uuid-" + Math.random().toString(36).substr(2, 9),
   getRandomValues: (arr: any) => {
     for (let i = 0; i < arr.length; i++) {
       arr[i] = Math.floor(Math.random() * 256);
