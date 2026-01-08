@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { AuthManager } from "@/lib/auth/auth-manager";
-import { SecureSession } from "@/lib/auth/secure-session";
+import {
+  getSession,
+  destroySession,
+  createSession,
+} from "@/lib/auth/simple-auth";
 
 export async function POST(request: NextRequest) {
   try {
@@ -14,8 +18,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get current session data
-    const sessionData = SecureSession.getSession(currentToken);
+    // Get current session data from database (async)
+    const sessionData = await getSession(currentToken);
 
     if (!sessionData) {
       return NextResponse.json(
@@ -25,17 +29,18 @@ export async function POST(request: NextRequest) {
     }
 
     // Destroy old session
-    SecureSession.destroySession(currentToken);
+    await destroySession(currentToken);
 
     // Create new session with same user data
-    const newToken = SecureSession.createSession(
+    const newToken = await createSession(
       {
         userId: sessionData.userId,
         email: sessionData.email,
         role: sessionData.role,
+        name: sessionData.name || sessionData.email.split("@")[0],
       },
-      false,
-    ); // Don't extend to remember me on refresh
+      false, // Don't extend to remember me on refresh
+    );
 
     // Create response
     const response = NextResponse.json({

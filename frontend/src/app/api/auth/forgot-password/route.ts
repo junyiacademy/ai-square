@@ -8,6 +8,50 @@ function hashToken(raw: string) {
   return crypto.createHash("sha256").update(raw).digest("hex");
 }
 
+/**
+ * GET - Validate reset token
+ */
+export async function GET(request: NextRequest) {
+  try {
+    const url = new URL(request.url);
+    const token = url.searchParams.get("token");
+    const email = url.searchParams.get("email");
+
+    if (!token || !email) {
+      return NextResponse.json(
+        { success: false, error: "Token and email required" },
+        { status: 400 }
+      );
+    }
+
+    const db = getPool();
+    const hash = hashToken(token);
+
+    const check = await db.query(
+      `SELECT id FROM users
+       WHERE LOWER(email)=LOWER($1)
+       AND reset_password_token=$2
+       AND reset_password_expires > NOW()`,
+      [email, hash]
+    );
+
+    if (check.rows.length === 0) {
+      return NextResponse.json(
+        { success: false, error: "Invalid or expired token" },
+        { status: 400 }
+      );
+    }
+
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    console.error("[forgot-password GET] error", err);
+    return NextResponse.json(
+      { success: false, error: "Verification failed" },
+      { status: 500 }
+    );
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();

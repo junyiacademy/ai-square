@@ -19,6 +19,7 @@ function ResetPasswordContent() {
   const [isI18nReady, setIsI18nReady] = useState(false);
 
   const token = searchParams.get("token");
+  const email = searchParams.get("email");
 
   useEffect(() => {
     // 確保 i18n 完全載入
@@ -29,8 +30,8 @@ function ResetPasswordContent() {
 
   useEffect(() => {
     // 驗證 token
-    if (token) {
-      fetch(`/api/auth/forgot-password?token=${token}`)
+    if (token && email) {
+      fetch(`/api/auth/forgot-password?token=${token}&email=${encodeURIComponent(email)}`)
         .then((res) => res.json())
         .then((data) => {
           setIsValidToken(data.success);
@@ -48,7 +49,7 @@ function ResetPasswordContent() {
       setCheckingToken(false);
       setError(t("resetPassword.noToken"));
     }
-  }, [token, t]);
+  }, [token, email, t]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,7 +66,7 @@ function ResetPasswordContent() {
       const response = await fetch("/api/auth/reset-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token, password }),
+        body: JSON.stringify({ token, email, newPassword: password }),
       });
 
       const data = await response.json();

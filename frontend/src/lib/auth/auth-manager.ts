@@ -32,7 +32,7 @@ export class AuthManager {
   ): void {
     response.cookies.set(AUTH_COOKIE_NAME, token, {
       httpOnly: true,
-      secure: true, // Always use secure in production (HTTPS)
+      secure: process.env.NODE_ENV === "production", // Only secure in production (HTTPS)
       sameSite: "lax",
       maxAge: rememberMe ? COOKIE_MAX_AGE_REMEMBER : COOKIE_MAX_AGE,
       path: "/",
