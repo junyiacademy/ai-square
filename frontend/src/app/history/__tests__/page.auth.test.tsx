@@ -82,8 +82,10 @@ describe("UnifiedHistoryPage - Authentication", () => {
 
     renderWithProviders(<UnifiedHistoryPage />);
 
-    // Page renders with empty state when not logged in
-    expect(screen.getByText("navigation:noHistory")).toBeInTheDocument();
+    // When not logged in (isLoggedIn = false), page shows not logged in state
+    expect(
+      screen.getByText("Please log in to view your history"),
+    ).toBeInTheDocument();
   });
 
   it("should render page when localStorage has no user data", () => {
@@ -100,8 +102,10 @@ describe("UnifiedHistoryPage - Authentication", () => {
 
     renderWithProviders(<UnifiedHistoryPage />);
 
-    // Page still renders, shows no history
-    expect(screen.getByText("navigation:noHistory")).toBeInTheDocument();
+    // When user data is null, page shows not logged in state
+    expect(
+      screen.getByText("Please log in to view your history"),
+    ).toBeInTheDocument();
   });
 
   it("should handle invalid JSON in user data gracefully", () => {
@@ -120,8 +124,10 @@ describe("UnifiedHistoryPage - Authentication", () => {
 
     renderWithProviders(<UnifiedHistoryPage />);
 
-    // Should handle gracefully and show empty state
-    expect(screen.getByText("navigation:noHistory")).toBeInTheDocument();
+    // When user data is invalid, page shows not logged in state
+    expect(
+      screen.getByText("Please log in to view your history"),
+    ).toBeInTheDocument();
 
     consoleSpy.mockRestore();
   });

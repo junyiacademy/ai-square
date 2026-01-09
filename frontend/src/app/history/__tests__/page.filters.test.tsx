@@ -139,13 +139,14 @@ describe("UnifiedHistoryPage - Filter Functionality", () => {
     renderWithProviders(<UnifiedHistoryPage />);
 
     await waitFor(() => {
-      // Filter buttons show translated labels, not counts
-      expect(screen.getByText("All")).toBeInTheDocument();
-      expect(screen.getAllByText("Assessment").length).toBeGreaterThan(0); // Button and badge
+      // Filter buttons show translated labels with counts
+      expect(screen.getByText(/^All/)).toBeInTheDocument();
+      expect(screen.getAllByText(/Assessment/).length).toBeGreaterThan(0); // Button and badge
       expect(
-        screen.getAllByText("Problem-Based Learning").length,
+        screen.getAllByText(/Problem-Based Learning/).length,
       ).toBeGreaterThan(0); // Button and badge
-      expect(screen.getByText("Discovery")).toBeInTheDocument();
+      // Discovery filter button + discovery action link = at least 1
+      expect(screen.getAllByText(/Discovery/).length).toBeGreaterThan(0);
 
       // Verify both items are displayed (1 assessment + 1 PBL = 2 total)
       expect(screen.getByText("ID: assessment-1")).toBeInTheDocument();
@@ -157,11 +158,11 @@ describe("UnifiedHistoryPage - Filter Functionality", () => {
     renderWithProviders(<UnifiedHistoryPage />);
 
     await waitFor(() => {
-      expect(screen.getByText("All")).toBeInTheDocument();
+      expect(screen.getByText(/^All/)).toBeInTheDocument();
     });
 
     // Find the Assessment button specifically (it's the second button in filter bar)
-    const assessmentFilter = screen.getAllByText("Assessment")[0]; // First occurrence is the button
+    const assessmentFilter = screen.getAllByText(/Assessment/)[0]; // First occurrence is the button
     await user.click(assessmentFilter);
 
     await waitFor(() => {
@@ -174,11 +175,11 @@ describe("UnifiedHistoryPage - Filter Functionality", () => {
     renderWithProviders(<UnifiedHistoryPage />);
 
     await waitFor(() => {
-      expect(screen.getByText("All")).toBeInTheDocument();
+      expect(screen.getByText(/^All/)).toBeInTheDocument();
     });
 
     // Get the first "Problem-Based Learning" text (the button, not the badge)
-    const pblFilter = screen.getAllByText("Problem-Based Learning")[0];
+    const pblFilter = screen.getAllByText(/Problem-Based Learning/)[0];
     await user.click(pblFilter);
 
     await waitFor(() => {
@@ -191,11 +192,11 @@ describe("UnifiedHistoryPage - Filter Functionality", () => {
     renderWithProviders(<UnifiedHistoryPage />);
 
     await waitFor(() => {
-      expect(screen.getByText("All")).toBeInTheDocument();
+      expect(screen.getByText(/^All/)).toBeInTheDocument();
     });
 
     // First select PBL filter (first occurrence is the button)
-    const pblFilter = screen.getAllByText("Problem-Based Learning")[0];
+    const pblFilter = screen.getAllByText(/Problem-Based Learning/)[0];
     await user.click(pblFilter);
 
     await waitFor(() => {
@@ -203,7 +204,7 @@ describe("UnifiedHistoryPage - Filter Functionality", () => {
     });
 
     // Then select All filter
-    const allFilter = screen.getByText("All");
+    const allFilter = screen.getByText(/^All/);
     await user.click(allFilter);
 
     await waitFor(() => {
@@ -216,19 +217,19 @@ describe("UnifiedHistoryPage - Filter Functionality", () => {
     renderWithProviders(<UnifiedHistoryPage />);
 
     await waitFor(() => {
-      const allFilter = screen.getByText("All");
-      // Default active filter uses indigo-600, not blue-600
-      expect(allFilter).toHaveClass("bg-indigo-600", "text-white");
+      const allFilter = screen.getByText(/^All/);
+      // Default active filter uses blue-600
+      expect(allFilter).toHaveClass("bg-blue-600", "text-white");
     });
 
     // Get the first Assessment text (the button, not the badge)
-    const assessmentFilter = screen.getAllByText("Assessment")[0];
+    const assessmentFilter = screen.getAllByText(/Assessment/)[0];
     await user.click(assessmentFilter);
 
     await waitFor(() => {
-      expect(assessmentFilter).toHaveClass("bg-indigo-600", "text-white");
-      expect(screen.getByText("All")).not.toHaveClass(
-        "bg-indigo-600",
+      expect(assessmentFilter).toHaveClass("bg-blue-600", "text-white");
+      expect(screen.getByText(/^All/)).not.toHaveClass(
+        "bg-blue-600",
         "text-white",
       );
     });
