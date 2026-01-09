@@ -69,10 +69,10 @@ describe("PBLScenariosPage", () => {
       },
       {
         id: "scenario-2",
-        sourceId: "deep-learning-mlp-intro",
-        yamlId: "deep-learning-mlp-intro",
-        title: { en: "Deep Learning MLP Intro" },
-        description: { en: "Explore AI applications in learning" },
+        sourceId: "semiconductor-basics",
+        yamlId: "semiconductor-basics",
+        title: { en: "Semiconductor Basics" },
+        description: { en: "Introduction to semiconductor technology" },
         difficulty: "beginner",
         taskCount: 3,
         domains: ["engaging_with_ai"],
@@ -94,8 +94,8 @@ describe("PBLScenariosPage", () => {
       expect(screen.getByText("Semiconductor Adventure")).toBeInTheDocument();
     });
 
-    // Both scenarios should be visible (whitelisted IDs)
-    expect(screen.getByText("Deep Learning MLP Intro")).toBeInTheDocument();
+    // Both scenarios should be visible (both pass semiconductor filter)
+    expect(screen.getByText("Semiconductor Basics")).toBeInTheDocument();
     expect(screen.getByText("Learn about semiconductors")).toBeInTheDocument();
   });
 
