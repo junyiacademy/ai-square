@@ -15,7 +15,6 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useParams } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import DiscoveryPageLayout from "@/components/discovery/DiscoveryPageLayout";
 import { useAuth } from "@/contexts/AuthContext";
@@ -54,9 +53,12 @@ interface TaskData {
   };
 }
 
-export default function TaskDetailPage() {
+export default function TaskDetailPage({
+  params,
+}: {
+  params: Promise<{ id: string; programId: string; taskId: string }>;
+}) {
   const router = useRouter();
-  const params = useParams();
   const { i18n } = useTranslation();
   const { isLoggedIn, isLoading: authLoading } = useAuth();
   const [loading, setLoading] = useState(true);
@@ -74,14 +76,22 @@ export default function TaskDetailPage() {
   const [showHistory, setShowHistory] = useState(true);
   const [completingTask, setCompletingTask] = useState(false);
   const [regeneratingEvaluation, setRegeneratingEvaluation] = useState(false);
+  const [scenarioId, setScenarioId] = useState<string>("");
+  const [programId, setProgramId] = useState<string>("");
+  const [taskId, setTaskId] = useState<string>("");
 
-  const scenarioId = params.id as string;
-  const programId = params.programId as string;
-  const taskId = params.taskId as string;
+  // Unwrap the params Promise
+  useEffect(() => {
+    params.then((p) => {
+      setScenarioId(p.id);
+      setProgramId(p.programId);
+      setTaskId(p.taskId);
+    });
+  }, [params]);
 
   useEffect(() => {
-    // Don't redirect while auth is still loading
-    if (authLoading) {
+    // Don't proceed until params are loaded
+    if (!scenarioId || !programId || !taskId || authLoading) {
       return;
     }
 

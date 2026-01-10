@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import Link from "next/link";
 import { IScenario, IProgram } from "@/types/unified-learning";
@@ -76,8 +76,11 @@ function normalizeInstructions(input: unknown, lang: string): string[] {
   return [];
 }
 
-export default function ScenarioDetailPage() {
-  const params = useParams();
+export default function ScenarioDetailPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const router = useRouter();
   const { t, i18n } = useTranslation(["pbl", "common"]);
   const [scenario, setScenario] = useState<IScenario | null>(null);
@@ -86,7 +89,14 @@ export default function ScenarioDetailPage() {
   const [isStarting, setIsStarting] = useState(false);
   const [isProgramsCollapsed, setIsProgramsCollapsed] = useState(false);
   const [videoModalUrl, setVideoModalUrl] = useState<string | null>(null);
-  const scenarioId = params.id as string;
+  const [scenarioId, setScenarioId] = useState<string>("");
+
+  // Unwrap the params Promise
+  useEffect(() => {
+    params.then((p) => {
+      setScenarioId(p.id);
+    });
+  }, [params]);
 
   const isScenarioInteractive = useMemo(() => {
     if (!scenario) return false;
@@ -118,6 +128,11 @@ export default function ScenarioDetailPage() {
   }, [scenarioId]);
 
   useEffect(() => {
+    // Don't proceed until params are loaded
+    if (!scenarioId) {
+      return;
+    }
+
     let ignore = false;
 
     const fetchData = async () => {
@@ -127,9 +142,9 @@ export default function ScenarioDetailPage() {
         // Fetch scenario details
         const [scenarioResponse, programsResponse] = await Promise.all([
           authenticatedFetch(
-            `/api/pbl/scenarios/${params.id}?lang=${i18n.language}`,
+            `/api/pbl/scenarios/${scenarioId}?lang=${i18n.language}`,
           ),
-          authenticatedFetch(`/api/pbl/scenarios/${params.id}/programs`),
+          authenticatedFetch(`/api/pbl/scenarios/${scenarioId}/programs`),
         ]);
 
         if (ignore) return;
@@ -190,7 +205,7 @@ export default function ScenarioDetailPage() {
     return () => {
       ignore = true;
     };
-  }, [params.id, i18n.language]);
+  }, [scenarioId, i18n.language]);
 
   // Helper function to get data from scenario metadata
   const getScenarioData = (key: string, fallback: unknown = null) => {

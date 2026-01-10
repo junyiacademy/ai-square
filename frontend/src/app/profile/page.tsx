@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/hooks/useAuth";
@@ -43,10 +43,13 @@ export default function ProfilePage() {
     (language) => language.code,
   );
   const fallbackLanguage = supportedLanguages[0].code;
-  const normalizeLanguage = (languageCode?: string | null) =>
-    languageCode && supportedLanguageCodes.includes(languageCode)
-      ? languageCode
-      : fallbackLanguage;
+  const normalizeLanguage = useCallback(
+    (languageCode?: string | null) =>
+      languageCode && supportedLanguageCodes.includes(languageCode)
+        ? languageCode
+        : fallbackLanguage,
+    [supportedLanguageCodes, fallbackLanguage],
+  );
 
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -63,18 +66,7 @@ export default function ProfilePage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPasswordSection, setShowPasswordSection] = useState(false);
 
-  useEffect(() => {
-    if (!authLoading && !user) {
-      router.push("/login");
-      return;
-    }
-
-    if (user) {
-      fetchProfile();
-    }
-  }, [user, authLoading, router]);
-
-  const fetchProfile = async () => {
+  const fetchProfile = useCallback(async () => {
     try {
       const response = await authenticatedFetch("/api/auth/profile");
       const data = await response.json();
@@ -95,7 +87,18 @@ export default function ProfilePage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [i18n, normalizeLanguage]);
+
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.push("/login");
+      return;
+    }
+
+    if (user) {
+      fetchProfile();
+    }
+  }, [user, authLoading, router, fetchProfile]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

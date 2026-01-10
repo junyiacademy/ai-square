@@ -76,7 +76,6 @@ export function useGraphRenderer(
   dimensions: GraphDimensions,
   selectedNode: GraphNode | null,
   onNodeClick: (node: GraphNode) => void,
-  dependencies: unknown[],
 ) {
   useEffect(() => {
     if (!svgRef.current) return;
@@ -335,5 +334,12 @@ export function useGraphRenderer(
     return () => {
       tooltip.remove();
     };
-  }, dependencies);
+  }, [
+    svgRef,
+    graphData,
+    dimensions.width,
+    dimensions.height,
+    selectedNode?.id,
+    onNodeClick,
+  ]);
 }
