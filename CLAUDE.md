@@ -411,6 +411,66 @@ npx prisma generate
 - `scripts/init-cloud-sql.sh` references deleted `schema-v4.sql` (needs update or removal)
 - Keep both Prisma AND Repository Pattern (don't consolidate to Prisma Client)
 
+## 🔀 Per-Issue Preview Workflow (MANDATORY)
+
+**CRITICAL**: 每個 Issue 必須使用獨立分支和 Preview 環境！
+
+### 🔴 絕對禁止
+```bash
+❌ 直接推送到 staging 或 main
+❌ 多個 Issue 共用同一個 Preview URL
+❌ 跳過 Per-Issue Preview 直接部署
+```
+
+### ✅ 正確流程
+```
+main → fix/issue-34 → 自動 Preview Deploy → PR → merge to staging
+```
+
+### 完整步驟
+
+```bash
+# 1. 為 Issue 建立專用分支
+git checkout main
+git checkout -b fix/issue-34
+
+# 2. 修改程式碼
+
+# 3. 推送 (自動觸發 Per-Issue Preview)
+git push origin fix/issue-34
+
+# 4. 系統自動：
+#    - 部署到獨立 Cloud Run: ai-square-preview-issue-34
+#    - 產生獨立 URL: https://ai-square-preview-issue-34-731209836128.asia-east1.run.app
+#    - 在 Issue #34 留言 Preview URL
+
+# 5. 案主測試通過後
+#    - 建立 PR (fix/issue-34 → staging)
+#    - Merge 後自動清理 Preview 環境
+```
+
+### Preview URL 格式
+```
+https://ai-square-preview-issue-{N}-731209836128.asia-east1.run.app
+```
+
+| Issue | 分支 | Preview URL |
+|-------|------|-------------|
+| #34 | `fix/issue-34` | `ai-square-preview-issue-34-...run.app` |
+| #35 | `fix/issue-35` | `ai-square-preview-issue-35-...run.app` |
+
+### 為何這樣做？
+1. **隔離測試**: 每個 Issue 有獨立環境，不互相影響
+2. **案主清晰**: 案主知道哪個 URL 對應哪個 Issue
+3. **自動清理**: PR merge 後自動刪除，不浪費資源
+4. **成本極低**: min-instances=0，每個 Issue 約 $0.02-0.10
+
+### 工作流程配置
+- **觸發**: `.github/workflows/preview-deploy.yml`
+- **分支模式**: `fix/issue-**` 或 `feat/issue-**`
+- **自動留言**: 部署完成後自動在 Issue 留言
+- **自動清理**: PR 關閉/合併後自動刪除 Cloud Run service
+
 ## 🔒 Git Workflow Rules
 
 **CRITICAL USER RULE**: Only user can command commit and push!
@@ -497,4 +557,4 @@ If tests fail after push:
 ---
 
 **Note**: This file should remain in project root for Claude Code auto-loading.
-**Version**: 3.3 (Added Post-Commit Verification rules - 2026-01-10)
+**Version**: 3.4 (Added Per-Issue Preview Workflow MANDATORY rules - 2026-01-10)
