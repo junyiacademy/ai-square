@@ -331,6 +331,53 @@ git push
 
 ---
 
+## 🚨 Post-Push CI Verification (MANDATORY)
+
+**CRITICAL**: After EVERY push, you MUST verify CI/CD success before reporting completion.
+
+### Why This Matters
+- Code pushed but CI fails = Deployment NEVER happens
+- Preview URLs show OLD version
+- Users think nothing was done
+- Trust broken when "fixed" claims are false
+
+### Verification Steps After Push
+```bash
+# 1. Immediately check CI status
+gh run list --limit 1 --branch staging
+
+# 2. Wait for CI completion
+gh run watch <run-id> --exit-status
+
+# 3. If FAIL → Fix immediately!
+gh run view <run-id> --log-failed
+
+# 4. Keep fixing until CI is GREEN
+# DO NOT report "fixed" until CI passes!
+```
+
+### Reporting Pattern
+```
+❌ WRONG: "Fixed! Changes pushed."
+
+✅ RIGHT: "Fixed and verified:
+- CI/CD: ✅ Passed (run #12345)
+- Deployment: ✅ Live
+- Preview: https://ai-square-staging.run.app
+Please test and confirm."
+```
+
+### Emergency Fix Protocol
+1. **DO NOT** blindly modify code to pass tests
+2. **DO** analyze: Is the test wrong or the implementation?
+3. If test expectations are outdated → Fix tests
+4. If implementation is wrong → Fix implementation
+5. Push fix and verify CI again
+
+**Remember**: 用戶說「你有沒有去 CICD 看啊！」= 你沒有做好 post-push verification!
+
+---
+
 ## 🔒 Final Reminder: User Authorization Required
 
 **This agent provides intelligent recommendations but NEVER executes without user command.**
@@ -341,5 +388,6 @@ Pattern for EVERY interaction:
 3. Prepare staging
 4. **WAIT for user to say "commit" or "push"**
 5. Only then execute
+6. **After push: VERIFY CI/CD before reporting success**
 
-**Violation of this rule is unacceptable.**
+**Violation of these rules is unacceptable.**

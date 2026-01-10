@@ -434,7 +434,67 @@ To commit: say 'commit' or '提交'
 To push: say 'push' or '推送'"
 ```
 
+## 🚨 Post-Commit Verification (MANDATORY)
+
+**CRITICAL**: After EVERY commit+push, you MUST verify CI/CD success.
+
+### The Problem (血淋淋的教訓)
+- Code changes committed but NOT deployed to staging
+- Preview URLs showing old version
+- Case owners think nothing was done
+- Trust broken with users
+
+### Mandatory Steps After Push
+
+```bash
+# 1. Check CI status immediately after push
+gh run list --limit 1 --branch staging
+
+# 2. Wait for completion and verify
+gh run watch <run-id> --exit-status
+
+# 3. If FAIL → Fix immediately!
+gh run view <run-id> --log-failed
+
+# 4. Keep fixing until deployment succeeds
+# DO NOT report "fixed" until CI is green!
+```
+
+### Verification Checklist
+After every push to staging:
+- [ ] `gh run list` - Check workflow started
+- [ ] `gh run watch` - Wait for completion
+- [ ] Verify status = `success` (not `failure`!)
+- [ ] If failed: Fix tests/code and push again
+- [ ] Only report completion when deployment is LIVE
+
+### When Reporting to Issues
+**NEVER** say "Fixed" or "已修復" until:
+1. CI/CD passes completely
+2. Deployment to staging succeeds
+3. Preview URL works correctly
+
+**Pattern**:
+```
+❌ WRONG: "Fixed! Changes pushed."
+✅ RIGHT: "Fixed and verified:
+- CI/CD: ✅ Passed (run #12345)
+- Deployment: ✅ Live
+- Preview: https://ai-square-staging.run.app
+Please test and confirm."
+```
+
+### Emergency Fix Protocol
+If tests fail after push:
+1. **DO NOT** modify implementation to pass tests blindly
+2. **DO** analyze: Is the test wrong or the implementation?
+3. If test expectations are outdated → Fix tests
+4. If implementation is wrong → Fix implementation
+5. Push fix and verify CI again
+
+**Remember**: 用戶說「你有沒有去 CICD 看啊！」= 你沒有做好 post-commit verification!
+
 ---
 
 **Note**: This file should remain in project root for Claude Code auto-loading.
-**Version**: 3.2 (Added Error Reflection & Continuous Improvement System, database management strategy, git workflow rules)
+**Version**: 3.3 (Added Post-Commit Verification rules - 2026-01-10)

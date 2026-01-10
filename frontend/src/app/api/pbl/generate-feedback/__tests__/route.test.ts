@@ -942,13 +942,11 @@ describe("POST /api/pbl/generate-feedback", () => {
       const response = await POST(request);
       const data = await response.json();
 
-      // When JSON is completely unparseable, the service returns fallback feedback
-      expect(response.status).toBe(200);
-      expect(data.success).toBe(true);
-      expect(data.feedback).toBeDefined();
-      expect(data.feedback.overallAssessment).toBe(
-        "Performance analysis completed",
-      );
+      // When JSON is completely unparseable and can't be repaired, the route returns 500
+      // (The throw at line 594 propagates to the outer catch)
+      expect(response.status).toBe(500);
+      expect(data.success).toBe(false);
+      expect(data.error).toBe("Failed to generate feedback");
       expect(mockError).toHaveBeenCalledWith(
         "Failed to parse AI response as JSON:",
         expect.any(Error),
@@ -1013,13 +1011,11 @@ describe("POST /api/pbl/generate-feedback", () => {
       const response = await POST(request);
       const data = await response.json();
 
-      // The service returns fallback feedback instead of failing
-      expect(response.status).toBe(200);
-      expect(data.success).toBe(true);
-      expect(data.feedback).toBeDefined();
-      expect(data.feedback.overallAssessment).toBe(
-        "Performance analysis completed",
-      );
+      // When AI service fails, the route returns 500 error
+      // (The error propagates to the outer catch block)
+      expect(response.status).toBe(500);
+      expect(data.success).toBe(false);
+      expect(data.error).toBe("Failed to generate feedback");
       expect(mockError).toHaveBeenCalledWith(
         "Error generating feedback:",
         expect.any(Error),
