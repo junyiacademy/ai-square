@@ -15,6 +15,7 @@ export function ActionButtons({ scenarioId }: ActionButtonsProps) {
       <Link
         href={`/pbl/scenarios/${scenarioId}`}
         className="px-8 py-3 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition-colors text-center"
+        data-testid="pbl-retry-scenario"
       >
         {t("complete.retryScenario")}
       </Link>
