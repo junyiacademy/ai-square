@@ -5,10 +5,12 @@ import { useSearchParams } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import Link from "next/link";
 import Image from "next/image";
+import { OAuthButtons } from "@/components/auth/OAuthButtons";
 
 function RegisterContent() {
   const searchParams = useSearchParams();
   const { t } = useTranslation(["auth", "common"]);
+  const redirectPath = searchParams.get("redirect") || "/pbl/scenarios";
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -184,7 +186,20 @@ function RegisterContent() {
           </p>
         </div>
 
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+        <div className="mt-8 space-y-6">
+          <OAuthButtons redirectPath={redirectPath} />
+          <div className="relative my-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-300" />
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 bg-white text-gray-500">
+                {t("auth:or", "或")}
+              </span>
+            </div>
+          </div>
+        </div>
+        <form className="space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
             <div>
               <label
