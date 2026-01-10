@@ -411,6 +411,66 @@ npx prisma generate
 - `scripts/init-cloud-sql.sh` references deleted `schema-v4.sql` (needs update or removal)
 - Keep both Prisma AND Repository Pattern (don't consolidate to Prisma Client)
 
+## 🔀 Per-Issue Preview Workflow (MANDATORY)
+
+**CRITICAL**: 每個 Issue 必須使用獨立分支和 Preview 環境！
+
+### 🔴 絕對禁止
+```bash
+❌ 直接推送到 staging 或 main
+❌ 多個 Issue 共用同一個 Preview URL
+❌ 跳過 Per-Issue Preview 直接部署
+```
+
+### ✅ 正確流程
+```
+main → fix/issue-34 → 自動 Preview Deploy → PR → merge to staging
+```
+
+### 完整步驟
+
+```bash
+# 1. 為 Issue 建立專用分支
+git checkout main
+git checkout -b fix/issue-34
+
+# 2. 修改程式碼
+
+# 3. 推送 (自動觸發 Per-Issue Preview)
+git push origin fix/issue-34
+
+# 4. 系統自動：
+#    - 部署到獨立 Cloud Run: ai-square-preview-issue-34
+#    - 產生獨立 URL: https://ai-square-preview-issue-34-731209836128.asia-east1.run.app
+#    - 在 Issue #34 留言 Preview URL
+
+# 5. 案主測試通過後
+#    - 建立 PR (fix/issue-34 → staging)
+#    - Merge 後自動清理 Preview 環境
+```
+
+### Preview URL 格式
+```
+https://ai-square-preview-issue-{N}-731209836128.asia-east1.run.app
+```
+
+| Issue | 分支 | Preview URL |
+|-------|------|-------------|
+| #34 | `fix/issue-34` | `ai-square-preview-issue-34-...run.app` |
+| #35 | `fix/issue-35` | `ai-square-preview-issue-35-...run.app` |
+
+### 為何這樣做？
+1. **隔離測試**: 每個 Issue 有獨立環境，不互相影響
+2. **案主清晰**: 案主知道哪個 URL 對應哪個 Issue
+3. **自動清理**: PR merge 後自動刪除，不浪費資源
+4. **成本極低**: min-instances=0，每個 Issue 約 $0.02-0.10
+
+### 工作流程配置
+- **觸發**: `.github/workflows/preview-deploy.yml`
+- **分支模式**: `fix/issue-**` 或 `feat/issue-**`
+- **自動留言**: 部署完成後自動在 Issue 留言
+- **自動清理**: PR 關閉/合併後自動刪除 Cloud Run service
+
 ## 🔒 Git Workflow Rules
 
 **CRITICAL USER RULE**: Only user can command commit and push!
@@ -434,7 +494,67 @@ To commit: say 'commit' or '提交'
 To push: say 'push' or '推送'"
 ```
 
+## 🚨 Post-Commit Verification (MANDATORY)
+
+**CRITICAL**: After EVERY commit+push, you MUST verify CI/CD success.
+
+### The Problem (血淋淋的教訓)
+- Code changes committed but NOT deployed to staging
+- Preview URLs showing old version
+- Case owners think nothing was done
+- Trust broken with users
+
+### Mandatory Steps After Push
+
+```bash
+# 1. Check CI status immediately after push
+gh run list --limit 1 --branch staging
+
+# 2. Wait for completion and verify
+gh run watch <run-id> --exit-status
+
+# 3. If FAIL → Fix immediately!
+gh run view <run-id> --log-failed
+
+# 4. Keep fixing until deployment succeeds
+# DO NOT report "fixed" until CI is green!
+```
+
+### Verification Checklist
+After every push to staging:
+- [ ] `gh run list` - Check workflow started
+- [ ] `gh run watch` - Wait for completion
+- [ ] Verify status = `success` (not `failure`!)
+- [ ] If failed: Fix tests/code and push again
+- [ ] Only report completion when deployment is LIVE
+
+### When Reporting to Issues
+**NEVER** say "Fixed" or "已修復" until:
+1. CI/CD passes completely
+2. Deployment to staging succeeds
+3. Preview URL works correctly
+
+**Pattern**:
+```
+❌ WRONG: "Fixed! Changes pushed."
+✅ RIGHT: "Fixed and verified:
+- CI/CD: ✅ Passed (run #12345)
+- Deployment: ✅ Live
+- Preview: https://ai-square-staging.run.app
+Please test and confirm."
+```
+
+### Emergency Fix Protocol
+If tests fail after push:
+1. **DO NOT** modify implementation to pass tests blindly
+2. **DO** analyze: Is the test wrong or the implementation?
+3. If test expectations are outdated → Fix tests
+4. If implementation is wrong → Fix implementation
+5. Push fix and verify CI again
+
+**Remember**: 用戶說「你有沒有去 CICD 看啊！」= 你沒有做好 post-commit verification!
+
 ---
 
 **Note**: This file should remain in project root for Claude Code auto-loading.
-**Version**: 3.2 (Added Error Reflection & Continuous Improvement System, database management strategy, git workflow rules)
+**Version**: 3.4 (Added Per-Issue Preview Workflow MANDATORY rules - 2026-01-10)

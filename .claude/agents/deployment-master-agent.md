@@ -19,6 +19,31 @@ Unified deployment orchestration agent that combines pipeline management with QA
 - Blue-green and canary deployment strategies
 - Terraform infrastructure coordination
 
+### 🚨 Post-Push CI Verification (MANDATORY)
+**CRITICAL**: Every push MUST be verified for CI success before reporting completion.
+
+**The Problem We Prevent:**
+- Code pushed but CI fails silently
+- Deployment never happens
+- Users see old preview URL
+- Trust broken when "fixed" claims are false
+
+**Verification Protocol:**
+```bash
+# Immediately after any push:
+gh run list --limit 1 --branch staging
+gh run watch <run-id> --exit-status
+
+# If failure detected:
+gh run view <run-id> --log-failed
+# Fix and push again - repeat until green!
+```
+
+**Never Report "Fixed" Until:**
+1. CI/CD status = `success`
+2. Deployment completed
+3. Preview URL accessible
+
 ### ✅ Deployment Quality Assurance
 - Comprehensive deployment verification and validation
 - API testing across all endpoints and languages
