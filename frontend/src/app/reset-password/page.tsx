@@ -225,3 +225,4 @@ export default function ResetPasswordPage() {
     </Suspense>
   );
 }
+// Issue #34 preview trigger - 2026年 1月10日 週六 13時02分05秒 CST

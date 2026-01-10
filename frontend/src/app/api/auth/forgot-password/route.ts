@@ -58,6 +58,9 @@ export async function POST(request: NextRequest) {
     const email: string = String(body.email || "")
       .trim()
       .toLowerCase();
+
+    console.log("[forgot-password] Processing request for email:", email.substring(0, 3) + "***");
+
     if (!email) {
       return NextResponse.json(
         { success: false, error: "Email is required" },
@@ -70,10 +73,14 @@ export async function POST(request: NextRequest) {
       "SELECT id, name FROM users WHERE LOWER(email)=LOWER($1)",
       [email],
     );
+
     if (userRes.rows.length === 0) {
       // Always return success to avoid enumeration
+      console.log("[forgot-password] User not found, returning success (anti-enumeration)");
       return NextResponse.json({ success: true });
     }
+
+    console.log("[forgot-password] User found, generating reset token...");
 
     const raw = crypto.randomBytes(32).toString("hex");
     const hash = hashToken(raw);
@@ -87,12 +94,24 @@ export async function POST(request: NextRequest) {
       [hash, expires, now, email],
     );
 
+    console.log("[forgot-password] Token saved to database, preparing email...");
+
     const base = appBaseUrl(request.headers.get("origin") || undefined);
     // Assume a UI page at /reset-password that posts to /api/auth/reset-password
     const resetUrl = `${base}/reset-password?token=${raw}&email=${encodeURIComponent(email)}`;
     const display = userRes.rows[0].name || email;
     const { html, text } = renderResetPassword(display, resetUrl);
-    await sendEmail({ to: email, subject: "Reset your password", html, text });
+
+    console.log("[forgot-password] Sending email to:", email.substring(0, 3) + "***");
+
+    try {
+      await sendEmail({ to: email, subject: "Reset your password", html, text });
+      console.log("[forgot-password] ✅ Email sent successfully!");
+    } catch (emailErr) {
+      console.error("[forgot-password] ❌ Email sending failed:", emailErr);
+      // Still return success to avoid revealing whether email exists
+      // But log the error for debugging
+    }
 
     return NextResponse.json({ success: true });
   } catch (err) {
