@@ -16,10 +16,10 @@
       "description": "掌握 AI 素養的基本領域",
       "content": "我們的綜合框架涵蓋了您需要了解的一切，以便有效且負責任地使用 AI。",
       "domains": "AI 素養領域",
-      "engaging": "與 AI 互動",
-      "creating": "與 AI 共創",
-      "managing": "管理 AI",
-      "designing": "設計 AI"
+      "engaging": "與 AI 互動（問AI）",
+      "creating": "與 AI 共創（用AI）",
+      "managing": "管理 AI（管AI）",
+      "designing": "設計 AI（造AI）"
     },
     "step3": {
       "title": "開始您的旅程",
