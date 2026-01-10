@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslation } from "react-i18next";
 import { LoginForm } from "@/components/auth/LoginForm";
+import { OAuthButtons } from "@/components/auth/OAuthButtons";
 import { useAuth } from "@/contexts/AuthContext";
 
 function LoginContent() {
@@ -16,6 +17,7 @@ function LoginContent() {
   const [info, setInfo] = useState("");
   const [showNicknameModal, setShowNicknameModal] = useState(false);
   const [guestLoading, setGuestLoading] = useState(false);
+  const redirectPath = searchParams.get("redirect") || "/pbl/scenarios";
 
   useEffect(() => {
     // 檢查是否因為 token 過期而被重定向
@@ -174,6 +176,18 @@ function LoginContent() {
               {info}
             </div>
           )}
+          <OAuthButtons redirectPath={redirectPath} />
+
+          <div className="relative my-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-300" />
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 bg-white text-gray-500">
+                {t("or", "或")}
+              </span>
+            </div>
+          </div>
           <LoginForm onSubmit={handleLogin} loading={loading} error={error} />
 
           {/* Divider */}
