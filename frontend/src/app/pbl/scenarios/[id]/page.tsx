@@ -577,6 +577,7 @@ export default function ScenarioDetailPage({
                                   ? "bg-blue-600 text-white hover:bg-blue-700"
                                   : "bg-gray-200 text-gray-600 cursor-not-allowed dark:bg-gray-700 dark:text-gray-400"
                               }`}
+                              data-testid="pbl-continue-program"
                             >
                               {t("common:continue", "Continue")}
                             </button>
@@ -616,6 +617,7 @@ export default function ScenarioDetailPage({
                         ? "bg-green-600 text-white hover:bg-green-700"
                         : "bg-gray-300 text-gray-600"
                     }`}
+                    data-testid="pbl-start-program"
                   >
                     {isStarting
                       ? t("common:loading", "Loading...")

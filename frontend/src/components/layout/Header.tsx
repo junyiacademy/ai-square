@@ -243,7 +243,10 @@ export function Header() {
               /* 已登入狀態 */
               <div className="relative group">
                 {/* 用戶頭像按鈕 */}
-                <button className="flex items-center space-x-2 p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                <button
+                  className="flex items-center space-x-2 p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                  data-testid="header-user-menu"
+                >
                   <div
                     className={`h-8 w-8 ${user.isGuest ? "bg-green-100" : "bg-blue-100"} rounded-full flex items-center justify-center`}
                   >
@@ -279,7 +282,10 @@ export function Header() {
                 <div className="absolute right-0 mt-2 w-56 rounded-lg shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
                   <div className="py-1">
                     {/* User info */}
-                    <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                    <div
+                      className="px-4 py-3 border-b border-gray-200 dark:border-gray-700"
+                      data-testid="header-user-info"
+                    >
                       <p className="text-sm text-gray-900 dark:text-white font-medium flex items-center gap-1">
                         {user.isGuest && (
                           <span className="text-green-600">👤</span>
@@ -366,6 +372,7 @@ export function Header() {
                     <button
                       onClick={handleLogout}
                       className="w-full px-4 py-3 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center space-x-3"
+                      data-testid="header-sign-out"
                     >
                       <svg
                         className="h-4 w-4"
@@ -391,6 +398,7 @@ export function Header() {
                 onClick={handleLogin}
                 className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
                 aria-label={t("signIn")}
+                data-testid="header-sign-in"
               >
                 {t("signIn")}
               </button>
@@ -471,6 +479,7 @@ export function Header() {
             <button
               onClick={handleLogout}
               className="text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+              data-testid="header-mobile-sign-out"
             >
               {t("signOut")}
             </button>

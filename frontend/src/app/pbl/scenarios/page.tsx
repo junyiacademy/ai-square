@@ -284,6 +284,7 @@ export default function PBLScenariosPage() {
                       ? "hover:shadow-lg transition-shadow"
                       : "opacity-60"
                   }`}
+                  data-testid="pbl-scenario-card"
                 >
                   <div className="p-6">
                     <div className="flex items-center mb-4">
@@ -365,6 +366,7 @@ export default function PBLScenariosPage() {
                       <Link
                         href={`/pbl/scenarios/${scenario.id}`}
                         className="block w-full bg-blue-600 text-white text-center px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                        data-testid="pbl-scenario-view"
                       >
                         {t("viewDetails")}
                       </Link>

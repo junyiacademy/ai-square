@@ -193,6 +193,7 @@ function LoginContent() {
             onClick={() => setShowNicknameModal(true)}
             disabled={guestLoading || loading}
             className="w-full flex justify-center items-center gap-2 py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+            data-testid="guest-login-button"
           >
             {guestLoading ? (
               <>
@@ -230,7 +231,10 @@ function LoginContent() {
         {/* Nickname Modal */}
         {showNicknameModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full relative">
+            <div
+              className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md w-full relative"
+              data-testid="guest-login-modal"
+            >
               <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
                 {t("guestNicknameTitle", "歡迎！")}
               </h3>
@@ -246,6 +250,7 @@ function LoginContent() {
                 maxLength={20}
                 placeholder={t("nicknamePlaceholder", "例如：小明")}
                 className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 mb-4"
+                data-testid="guest-login-input"
                 onKeyPress={(e) => {
                   if (e.key === "Enter") {
                     const nickname = (e.target as HTMLInputElement).value;
@@ -260,6 +265,7 @@ function LoginContent() {
                     handleGuestLogin();
                   }}
                   className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+                  data-testid="guest-login-skip"
                 >
                   {t("skip", "跳過")}
                 </button>
@@ -271,6 +277,7 @@ function LoginContent() {
                     handleGuestLogin(input?.value);
                   }}
                   className="flex-1 px-4 py-2 bg-indigo-600 dark:bg-indigo-500 text-white rounded-md text-sm font-medium hover:bg-indigo-700 dark:hover:bg-indigo-600"
+                  data-testid="guest-login-confirm"
                 >
                   {t("startExperience", "開始體驗")}
                 </button>
@@ -278,6 +285,7 @@ function LoginContent() {
               <button
                 onClick={() => setShowNicknameModal(false)}
                 className="absolute top-4 right-4 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300"
+                data-testid="guest-login-close"
               >
                 <svg
                   className="w-5 h-5"

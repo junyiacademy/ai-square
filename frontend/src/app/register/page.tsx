@@ -298,7 +298,10 @@ function RegisterContent() {
           </div>
 
           {successMessage && (
-            <div className="rounded-lg bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 border-2 border-green-300 dark:border-green-700 p-6 shadow-lg">
+            <div
+              className="rounded-lg bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 border-2 border-green-300 dark:border-green-700 p-6 shadow-lg"
+              data-testid="register-success"
+            >
               <div className="flex items-start">
                 <div className="flex-shrink-0">
                   <div className="flex items-center justify-center h-12 w-12 rounded-full bg-green-100 dark:bg-green-800">
