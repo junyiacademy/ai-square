@@ -9,6 +9,35 @@ export interface WeeklyTrendData {
   value: number;
 }
 
+export interface VertexAICostBreakdown {
+  model: string;
+  inputTokens: number;
+  outputTokens: number;
+  cost: number;
+}
+
+export interface GCPCostStats {
+  vertexAI: {
+    totalCost: number;
+    costThisWeek: number;
+    costLastWeek: number;
+    weekOverWeekChange: number; // percentage
+    breakdown: VertexAICostBreakdown[];
+    currency: string;
+  };
+  cloudRun: {
+    totalCost: number;
+    costThisWeek: number;
+  };
+  cloudSQL: {
+    totalCost: number;
+    costThisWeek: number;
+  };
+  totalGCPCost: number;
+  dataSource: "bigquery" | "api" | "estimated" | "unavailable";
+  lastUpdated: string;
+}
+
 export interface WeeklyStats {
   userGrowth: {
     totalUsers: number;
@@ -40,6 +69,7 @@ export interface WeeklyStats {
     uptime: number;
     dbStatus: string;
   };
+  gcpCosts?: GCPCostStats; // Optional: GCP cost statistics
 }
 
 /**
