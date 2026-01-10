@@ -20,14 +20,13 @@ function normalizeAssessmentSession(
     | UserDataResponse["assessmentSessions"][number],
 ): StoredAssessmentSession {
   if ("sessionKey" in session) {
-    const results =
-      "results" in session
-        ? session.results
-        : {
-            tech: session.techScore,
-            creative: session.creativeScore,
-            business: session.businessScore,
-          };
+    const results = (
+      session as { results?: UserDataInput["assessmentSessions"][number]["results"] }
+    ).results ?? {
+      tech: session.techScore,
+      creative: session.creativeScore,
+      business: session.businessScore,
+    };
     return { ...session, results };
   }
 
